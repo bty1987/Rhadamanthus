@@ -63,6 +63,51 @@ var utils = {
         r2 = Number(arg2.toString().replace(".",""));  
         
         return (r1 / r2) * Math.pow(10, t2 - t1);  
+	}, accExtend: function(obj, options){
+	    
+	    if($.isPlainObject(obj) && $.isArray(options)){
+	        $.each(options, function(i, v){
+	            cal(obj, v.split('-'));
+	        });
+	    }else if($.isPlainObject(obj) && typeof options == "string"){
+	        cal(obj, options.split('-'));
+	    }else if($.isNumeric(obj)){
+	        return parseInt(utils.accMul(obj, 1000));
+	    }
+	    
+	    function cal(o, props) {
+
+	        var prop = props.shift();
+
+	        if (props.length == 0 && $.isNumeric(o[prop])) {
+	            o[prop] = parseInt(utils.accMul(o[prop], 1000));
+	        } else if (o[prop]) {
+	            cal(o[prop], props);
+	        }
+	    }
+	    
+	}, accReduce: function(obj, options){
+	    
+	    if($.isPlainObject(obj) && $.isArray(options)){
+            $.each(options, function(i, v){
+                cal(obj, v.split('-'));
+            });
+        }else if($.isPlainObject(obj) && typeof options == "string"){
+            cal(obj, options.split('-'));
+        }else if($.isNumeric(obj)){
+            return utils.accDiv(obj, 1000);
+        }
+        
+        function cal(o, props) {
+
+            var prop = props.shift();
+
+            if (props.length == 0 && $.isNumeric(o[prop])) {
+                o[prop] = utils.accDiv(o[prop], 1000);
+            } else if (o[prop]) {
+                cal(o[prop], props);
+            }
+        }
 	}, changeTwoDecimal: function(floatvar){
 		var f_x = parseFloat(floatvar);
 		if (isNaN(f_x)){

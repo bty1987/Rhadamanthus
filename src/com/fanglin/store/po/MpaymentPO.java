@@ -12,21 +12,21 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="mpayment", catalog = "store")
-public class MpaymentPO implements Serializable{
+@Table(name = "mpayment", catalog = "store")
+public class MpaymentPO implements Serializable {
 
 	private static final long serialVersionUID = -4211290319807165352L;
 
 	public static final short STATUS_PAYMENT_SHORT = 1;
-	
+
 	private long mpid;
-	
+
 	private MorderPO morder;
-	
-	private float totalPrice;
-	
+
+	private long totalPrice;
+
 	private short type;
-	
+
 	private short status;
 
 	public MpaymentPO() {
@@ -40,7 +40,7 @@ public class MpaymentPO implements Serializable{
 
 	@Id
 	@GeneratedValue
-	@Column(name="mpid")
+	@Column(name = "mpid")
 	public long getMpid() {
 		return mpid;
 	}
@@ -50,7 +50,7 @@ public class MpaymentPO implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "oid", referencedColumnName="oid")
+	@JoinColumn(name = "oid", referencedColumnName = "oid")
 	public MorderPO getMorder() {
 		return morder;
 	}
@@ -59,16 +59,16 @@ public class MpaymentPO implements Serializable{
 		this.morder = morder;
 	}
 
-	@Column(name="totalPrice")
-	public float getTotalPrice() {
+	@Column(name = "totalPrice")
+	public long getTotalPrice() {
 		return totalPrice;
 	}
 
-	public void setTotalPrice(float totalPrice) {
+	public void setTotalPrice(long totalPrice) {
 		this.totalPrice = totalPrice;
 	}
-	
-	@Column(name="type")
+
+	@Column(name = "type")
 	public short getType() {
 		return type;
 	}
@@ -77,7 +77,7 @@ public class MpaymentPO implements Serializable{
 		this.type = type;
 	}
 
-	@Column(name="status")
+	@Column(name = "status")
 	public short getStatus() {
 		return status;
 	}
@@ -85,5 +85,5 @@ public class MpaymentPO implements Serializable{
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
+
 }

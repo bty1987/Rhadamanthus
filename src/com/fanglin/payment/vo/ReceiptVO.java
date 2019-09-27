@@ -22,7 +22,7 @@ public class ReceiptVO implements java.io.Serializable {
 	
 	private Short receiptType;
 	
-	private Float money;
+	private Long money;
 	
 	private Timestamp collectTime;
 	
@@ -84,11 +84,11 @@ public class ReceiptVO implements java.io.Serializable {
 		this.receiptType = receiptType;
 	}
 
-	public Float getMoney() {
+	public Long getMoney() {
 		return money;
 	}
 
-	public void setMoney(Float money) {
+	public void setMoney(Long money) {
 		this.money = money;
 	}
 

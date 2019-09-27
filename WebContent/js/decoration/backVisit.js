@@ -59,10 +59,10 @@ $(function(){
                 getList();
 
                 //动态key val
-                var tag_input = com.focusPage('#form-field-tags');
+                var tagInput = com.focusPage('#form-field-tags');
 
-                tag_input.tag({
-                    placeholder:tag_input.attr('placeholder'),
+                tagInput.tag({
+                    placeholder:tagInput.attr('placeholder'),
                     //enable typeahead by specifying the source array
                     isStaticResource : false,
                     flsource: {
@@ -107,8 +107,8 @@ $(function(){
                 "backVisit.orderId" : params.decorationOrderId,
                 "backVisit.content": backVisit.backVisitItems.backVisitContent.val()
             };
-            var _people = backVisit.backVisitItems.backVisitNoticePeople.val().split(',');
-            _people.length && $.each(_people, function(i,v){
+            var people = backVisit.backVisitItems.backVisitNoticePeople.val().split(',');
+            people.length && $.each(people, function(i,v){
                 if($.trim(v) != ""){
                     a['backVisit.receivers[' + i + ']'] = v;
                 }

@@ -19,61 +19,63 @@ import com.fanglin.information.vo.VreceiptVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class VpaymentAction extends BaseListAction{
+public class VpaymentAction extends BaseListAction {
 
 	private static final long serialVersionUID = -6554413241328869566L;
-	
+
 	@Autowired
 	private VpaymentService vpaymentService;
-	
+
 	@Autowired
 	private VreceiptService vreceiptService;
-	
+
 	private VpaymentVO vpayment;
-	
+
 	private VreceiptVO vreceipt;
-	
+
 	private List<?> counts;
-	
+
 	private List<VpaymentVO> vpayments;
 
-	@Action(value = "pageVpayment", results = {@Result (name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
-	public String pageVpayment() throws FLException{
-		
+	private List<Long> posids;
+
+	@Action(value = "pageVpayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageVpayment() throws FLException {
+
 		vpaymentService.pageVpayment(getPaging(), getFilters(), vpayment);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "createVpayment", results = {@Result (name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
-	public String createVpayment() throws FLException{
-		
+
+	@Action(value = "createVpayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String createVpayment() throws FLException {
+
 		vpaymentService.createVpayment(vpayment, queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "collectVpayment", results = {@Result (name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
-	public String collectVpayment() throws FLException{
-		
-		vpaymentService.collectVpayment(vpayments,vreceipt,queryUserId());
-		
+
+	@Action(value = "collectVpayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String collectVpayment() throws FLException {
+
+		vpaymentService.collectVpayment(vpayments, vreceipt, posids, queryUserId());
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryVpaymentByVrid", results = {@Result (name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
-	public String queryVpaymentByVrid() throws FLException{
-		
+
+	@Action(value = "queryVpaymentByVrid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryVpaymentByVrid() throws FLException {
+
 		vpayments = vpaymentService.queryVpaymentByVrid(vpayment);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryVreceiptByVrid", results = {@Result (name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
-	public String queryVreceiptByVrid() throws FLException{
-		
-		vreceipt=vreceiptService.queryVreceiptByVrid(vreceipt);
-		
+
+	@Action(value = "queryVreceiptByVrid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryVreceiptByVrid() throws FLException {
+
+		vreceipt = vreceiptService.queryVreceiptByVrid(vreceipt);
+
 		return SUCCESS;
 	}
 
@@ -108,5 +110,13 @@ public class VpaymentAction extends BaseListAction{
 	public void setVpayments(List<VpaymentVO> vpayments) {
 		this.vpayments = vpayments;
 	}
-	
+
+	public List<Long> getPosids() {
+		return posids;
+	}
+
+	public void setPosids(List<Long> posids) {
+		this.posids = posids;
+	}
+
 }

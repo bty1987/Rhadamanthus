@@ -13,23 +13,23 @@ import javax.persistence.Table;
 public class VprizePO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 3149648894029451412L;
-	
+
 	public static final short STATUS_INIT_INT = 0;
 
 	private long vpid;
-	
+
 	private long vaid;
-	
+
 	private String name;
-	
-	private float price;
-	
+
+	private int price;
+
 	private short status;
-	
+
 	public VprizePO() {
 		super();
 	}
-	
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "vpid")
@@ -60,11 +60,11 @@ public class VprizePO implements java.io.Serializable {
 	}
 
 	@Column(name = "price")
-	public float getPrice() {
+	public int getPrice() {
 		return price;
 	}
 
-	public void setPrice(float price) {
+	public void setPrice(int price) {
 		this.price = price;
 	}
 
@@ -77,5 +77,4 @@ public class VprizePO implements java.io.Serializable {
 		this.status = status;
 	}
 
-	
 }

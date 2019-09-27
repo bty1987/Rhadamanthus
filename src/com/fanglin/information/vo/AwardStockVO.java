@@ -1,39 +1,39 @@
 package com.fanglin.information.vo;
 
 public class AwardStockVO implements java.io.Serializable {
-	
+
 	private static final long serialVersionUID = -4378086317997964900L;
 
 	private Long asId;
-	
+
 	private String no;
-	
+
 	private String name;
-	
-	private Float price;
-	
-	private Float num;
-	
+
+	private Integer price;
+
+	private Integer num;
+
 	private Short status;
-	
+
 	private Short type;
-	
+
 	private Short subtype;
-	
+
 	private Short storeroom;
-	
-	private short isPrefor; //是否计算业绩
-	
-	private short isStock; //是否计算库存
-	
-	private short isPayment;//是否计入金额
-	
+
+	private short isPrefor; // 是否计算业绩
+
+	private short isStock; // 是否计算库存
+
+	private short isPayment;// 是否计入金额
+
 	private String content;
-	
+
 	private Integer company;
-	
+
 	private String format;
-	
+
 	public Long getAsId() {
 		return asId;
 	}
@@ -57,20 +57,20 @@ public class AwardStockVO implements java.io.Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	public Float getPrice() {
+
+	public Integer getPrice() {
 		return price;
 	}
 
-	public void setPrice(Float price) {
+	public void setPrice(Integer price) {
 		this.price = price;
 	}
 
-	public Float getNum() {
+	public Integer getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(Integer num) {
 		this.num = num;
 	}
 
@@ -89,7 +89,7 @@ public class AwardStockVO implements java.io.Serializable {
 	public void setType(Short type) {
 		this.type = type;
 	}
-	
+
 	public Short getSubtype() {
 		return subtype;
 	}
@@ -114,7 +114,6 @@ public class AwardStockVO implements java.io.Serializable {
 		this.isStock = isStock;
 	}
 
-	
 	public short getIsPayment() {
 		return isPayment;
 	}
@@ -154,5 +153,5 @@ public class AwardStockVO implements java.io.Serializable {
 	public void setFormat(String format) {
 		this.format = format;
 	}
-	
+
 }

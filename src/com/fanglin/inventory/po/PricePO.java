@@ -32,13 +32,13 @@ public class PricePO implements Serializable {
 
 	private short type;
 
-	private float purchase;
+	private int purchase;
 
-	private float selling;
+	private int selling;
 
 	private short ctype;
 
-	private float cvalue;
+	private int cvalue;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -79,20 +79,20 @@ public class PricePO implements Serializable {
 	}
 
 	@Column(name = "purchase")
-	public float getPurchase() {
+	public int getPurchase() {
 		return purchase;
 	}
 
-	public void setPurchase(float purchase) {
+	public void setPurchase(int purchase) {
 		this.purchase = purchase;
 	}
 
 	@Column(name = "selling")
-	public float getSelling() {
+	public int getSelling() {
 		return selling;
 	}
 
-	public void setSelling(float selling) {
+	public void setSelling(int selling) {
 		this.selling = selling;
 	}
 
@@ -100,17 +100,17 @@ public class PricePO implements Serializable {
 	public short getCtype() {
 		return ctype;
 	}
-
+	
 	public void setCtype(short ctype) {
 		this.ctype = ctype;
 	}
 
 	@Column(name = "cvalue")
-	public float getCvalue() {
+	public int getCvalue() {
 		return cvalue;
 	}
 
-	public void setCvalue(float cvalue) {
+	public void setCvalue(int cvalue) {
 		this.cvalue = cvalue;
 	}
 

@@ -8,9 +8,9 @@ import com.fanglin.payment.po.SalesPaymentPO;
 import com.fanglin.utils.Paging;
 
 public interface SalesPaymentDao extends Dao<SalesPaymentPO> {
-	
-	public List<SalesPaymentPO> queryCusSalesPayment(Paging paging,List<Filter> filters,String orderId);
-	
-	public Float countCusSalesPaymentForAmount(String orderId);
-	
+
+	public List<SalesPaymentPO> queryCusSalesPayment(Paging paging, List<Filter> filters, String orderId);
+
+	public long countCusSalesPaymentForAmount(String orderId);
+
 }

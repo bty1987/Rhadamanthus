@@ -20,31 +20,31 @@ public class MaterialReceiptVO implements java.io.Serializable {
 	
 	private Timestamp confirmTime;
 	
-	private Float cash;
+	private Long cash;
 	
 	private String cashInfo;
 	
-	private Float bank;
+	private Long bank;
 	
 	private String bankInfo;
 	
-	private Float checkv;
+	private Long checkv;
 	
 	private String checkvBank;
 	
-	private Float installment;
+	private Long installment;
 	
 	private String installmentBank;
 	
-	private Float accounts;
+	private Long accounts;
 	
 	private String accountsBank;
 	
-	private Float advance;
+	private Long advance;
 	
 	private Short advanceType;
 	
-	private Float coupon;
+	private Long coupon;
 	
 	private Short couponType;
 	
@@ -90,11 +90,11 @@ public class MaterialReceiptVO implements java.io.Serializable {
 		this.confirmTime = confirmTime;
 	}
 
-	public Float getCash() {
+	public Long getCash() {
 		return cash;
 	}
 
-	public void setCash(Float cash) {
+	public void setCash(Long cash) {
 		this.cash = cash;
 	}
 
@@ -106,11 +106,11 @@ public class MaterialReceiptVO implements java.io.Serializable {
 		this.cashInfo = cashInfo;
 	}
 
-	public Float getBank() {
+	public Long getBank() {
 		return bank;
 	}
 
-	public void setBank(Float bank) {
+	public void setBank(Long bank) {
 		this.bank = bank;
 	}
 
@@ -122,11 +122,11 @@ public class MaterialReceiptVO implements java.io.Serializable {
 		this.bankInfo = bankInfo;
 	}
 
-	public Float getCheckv() {
+	public Long getCheckv() {
 		return checkv;
 	}
 
-	public void setCheckv(Float checkv) {
+	public void setCheckv(Long checkv) {
 		this.checkv = checkv;
 	}
 
@@ -137,12 +137,12 @@ public class MaterialReceiptVO implements java.io.Serializable {
 	public void setCheckvBank(String checkvBank) {
 		this.checkvBank = checkvBank;
 	}
-	
-	public Float getInstallment() {
+
+	public Long getInstallment() {
 		return installment;
 	}
 
-	public void setInstallment(Float installment) {
+	public void setInstallment(Long installment) {
 		this.installment = installment;
 	}
 
@@ -154,11 +154,11 @@ public class MaterialReceiptVO implements java.io.Serializable {
 		this.installmentBank = installmentBank;
 	}
 
-	public Float getAccounts() {
+	public Long getAccounts() {
 		return accounts;
 	}
 
-	public void setAccounts(Float accounts) {
+	public void setAccounts(Long accounts) {
 		this.accounts = accounts;
 	}
 
@@ -170,11 +170,11 @@ public class MaterialReceiptVO implements java.io.Serializable {
 		this.accountsBank = accountsBank;
 	}
 
-	public Float getAdvance() {
+	public Long getAdvance() {
 		return advance;
 	}
 
-	public void setAdvance(Float advance) {
+	public void setAdvance(Long advance) {
 		this.advance = advance;
 	}
 
@@ -186,12 +186,16 @@ public class MaterialReceiptVO implements java.io.Serializable {
 		this.advanceType = advanceType;
 	}
 
-	public Float getCoupon() {
+	public Long getCoupon() {
 		return coupon;
 	}
 
-	public void setCoupon(Float coupon) {
+	public void setCoupon(Long coupon) {
 		this.coupon = coupon;
+	}
+
+	public void setCollectTime(Timestamp collectTime) {
+		this.collectTime = collectTime;
 	}
 
 	public Short getCouponType() {

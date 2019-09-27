@@ -30,13 +30,13 @@ public class CustomerVO implements Serializable {
 
 	private String relationshipType;
 
-	private Float balance;
+	private Long balance;
 
-	private Float materialBalance;
+	private Long materialBalance;
 
-	private Float zhenglinBalance;
+	private Long zhenglinBalance;
 
-	private Float projectBalance;
+	private Long projectBalance;
 
 	private String phone;
 
@@ -147,35 +147,35 @@ public class CustomerVO implements Serializable {
 		this.relationshipType = relationshipType;
 	}
 
-	public Float getBalance() {
+	public Long getBalance() {
 		return balance;
 	}
 
-	public void setBalance(Float balance) {
+	public void setBalance(Long balance) {
 		this.balance = balance;
 	}
 
-	public Float getMaterialBalance() {
+	public Long getMaterialBalance() {
 		return materialBalance;
 	}
 
-	public void setMaterialBalance(Float materialBalance) {
+	public void setMaterialBalance(Long materialBalance) {
 		this.materialBalance = materialBalance;
 	}
 
-	public Float getZhenglinBalance() {
+	public Long getZhenglinBalance() {
 		return zhenglinBalance;
 	}
 
-	public void setZhenglinBalance(Float zhenglinBalance) {
+	public void setZhenglinBalance(Long zhenglinBalance) {
 		this.zhenglinBalance = zhenglinBalance;
 	}
 
-	public Float getProjectBalance() {
+	public Long getProjectBalance() {
 		return projectBalance;
 	}
 
-	public void setProjectBalance(Float projectBalance) {
+	public void setProjectBalance(Long projectBalance) {
 		this.projectBalance = projectBalance;
 	}
 

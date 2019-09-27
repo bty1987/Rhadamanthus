@@ -29,8 +29,8 @@ public class PriceServiceImpl implements PriceService{
 		for(PricePO pricePO: pricePOs){
 			
 			priceVO = new PriceVO();
-			
-			String content = pricePO.getSelling() + " " + pricePO.getName();
+
+			String content = pricePO.getSelling() +" "+ pricePO.getName();
 			
 			BeanUtil.copyProperties(pricePO, priceVO);
 			priceVO.setContent(content);

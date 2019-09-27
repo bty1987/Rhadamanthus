@@ -1,21 +1,20 @@
 package com.fanglin.sales.vo;
 
-public class RefundsItemVO implements java.io.Serializable{
+public class RefundsItemVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 5543447445422987680L;
-	
+
 	private Long riid;
-	
+
 	private Long sid;
-	
+
 	private Long rid;
-	
+
 	private SalesItemVO salesItem;
-	
-	private Float num;
-		
-	private Float total;
-	
+
+	private Long num;
+
+	private Long total;
 
 	public RefundsItemVO() {
 		super();
@@ -50,19 +49,19 @@ public class RefundsItemVO implements java.io.Serializable{
 		this.rid = rid;
 	}
 
-	public Float getNum() {
+	public Long getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(Long num) {
 		this.num = num;
 	}
 
-	public Float getTotal() {
+	public Long getTotal() {
 		return total;
 	}
 
-	public void setTotal(Float total) {
+	public void setTotal(Long total) {
 		this.total = total;
 	}
 
@@ -73,5 +72,5 @@ public class RefundsItemVO implements java.io.Serializable{
 	public void setSalesItem(SalesItemVO salesItem) {
 		this.salesItem = salesItem;
 	}
-	
+
 }

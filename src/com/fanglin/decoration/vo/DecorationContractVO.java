@@ -41,11 +41,11 @@ public class DecorationContractVO implements Serializable {
 	
 	private String contractCode;
 	
-	private Float orderTotalPrice;
+	private Long orderTotalPrice;
 	
-	private Float netperfor;
+	private Long netperfor;
 	
-	private Float comperfor;
+	private Long comperfor;
 	
 	private List<DecorationPaymentVO> payments;
 	
@@ -126,11 +126,11 @@ public class DecorationContractVO implements Serializable {
 		this.payments = payments;
 	}
 
-	public Float getOrderTotalPrice() {
+	public Long getOrderTotalPrice() {
 		return orderTotalPrice;
 	}
 
-	public void setOrderTotalPrice(Float orderTotalPrice) {
+	public void setOrderTotalPrice(Long orderTotalPrice) {
 		this.orderTotalPrice = orderTotalPrice;
 	}
 
@@ -150,19 +150,19 @@ public class DecorationContractVO implements Serializable {
 		this.paymentRates = paymentRates;
 	}
 
-	public Float getNetperfor() {
+	public Long getNetperfor() {
 		return netperfor;
 	}
 
-	public void setNetperfor(Float netperfor) {
+	public void setNetperfor(Long netperfor) {
 		this.netperfor = netperfor;
 	}
 
-	public Float getComperfor() {
+	public Long getComperfor() {
 		return comperfor;
 	}
 
-	public void setComperfor(Float comperfor) {
+	public void setComperfor(Long comperfor) {
 		this.comperfor = comperfor;
 	}
 	

@@ -1,315 +1,216 @@
 $(function(){
+    var outsource = {
+        saveBtn : com.focusPage("#saveBtn"),
+        cancelBtn : com.focusPage("#cancelBtn"),
 
-    var $pid = params["pid"];
-    var $status = params["status"];
-    var $layerAdd = com.focusPage("#layerAdd");
-    var $layerImport = com.focusPage("#layerImport");
+        modals: {
+            outsourceModal: com.focusPage("#outsourceModal"),
+            layerImportModal: com.focusPage("#layerImportModal")
+        },
+        items : {
+            comment : com.focusPage("#comment")
+        },
+        editFlg : true,
+        outsourcePostData : {},
+        pid : params["pid"],
+        status : params["status"]
+    };
 
-    var displayFunc  = (function(){
+    outsource.saveBtn.bindClick(saveData);
 
-        var renderList = function(tableId,listData){
+    outsource.modals.outsourceModal.on("hide.bs.modal", function(){
+        com.clearValidator();
+        com.cleanItems(outsource.items);
+    });
 
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
+    var displayFunc = (function(){
 
-            if(listData && listData.length){
-                $.each(listData,function(i, v){
+        var renderList = function (tableId, listData) {
+            var $tableWrap = com.focusPage('#' + tableId).empty();
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                    var $h3 = $('<h3></h3>').addClass('oid');
-                    var $title = $('<small></small>').addClass('blue') .html(v.comment);
-                    var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            if (listData && listData.length) {
+                $.each(listData, function (i, v) {
+                    var $liLine = creatLine(v);
 
-                    var $btnimport = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('图表');
-                    var $btnChild = $('<a></a>').addClass(' btn btn-minier btn-success').html('外协项');
-                    var $btnReceipt = $('<a></a>').addClass(' btn btn-minier btn-warning').html('收货');
-                    var $btnaBolition = $('<a></a>').addClass(' btn btn-minier btn-inverse').html('废除');
-                    var $btnEdit = $('<a></a>').addClass(' btn btn-minier btn-danger').html('编辑');
-
-
-                    var propertyArr = [
-                        ["状态:",v.status == 0 ? "未到货" : (v.status == 1 ? "已到货" :  "废除"),"grey"]
-                    ];
-
-                    $.each(propertyArr, function (index,value) {
-                        var $liProperty = $('<li></li>');
-                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                        $liProperty.appendTo($ulProperty);
-                    });
-
-                    if (v.status ==0 && ($status != 4 && $status != 5)){
-                        $btnDiv.append($btnChild).append($btnimport).append($btnEdit).append($btnReceipt).append($btnaBolition);
-
-                    }else{
-                        $btnDiv.append($btnChild).append($btnimport);
-                    }
-
-                    $h3.append($title).append($btnDiv);
-                    $liLine.append($h3).append($ulProperty).appendTo($ul);
-
-
-                    $btnimport.click(function () {
-
-                        productionUtils.clearForm('form1');
-                        openlayerImport();
-
-                        $layerImport.find(".infobox").remove();
-
-                        if(v.path){
-                            createLine(v.path, v.comment);
-                        }
-
-                        com.focusPage('#importProductionPicture').empty();
-
-                        hidBtn( com.focusPage('#importProductionPicture'), v.status);
-
-                        var $downloadGroup = com.focusPage("#layerImport").find("#downLoad");
-                        com.downloadFile($downloadGroup, v.path, null);
-
-
-
-                        com.focusPage("#importProductionPicture").Huploadify({
-                            'debug': false, // 开启调试
-                            'auto': true, // 是否自动上传
-                            'successTimeout': 150, // 超时时间
-                            'formData': { // 附带值
-                                'uploadType': 2
-                            },
-                            'buttonClass': 'btn btn-success col-sm-12',
-                            'buttonText': "添加上传文件",
-                            'overrideEvents': ['onDialogClose'], // 不执行默认的onSelect事件
-                            'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-                            'uploader': config.media + api.common.uploadImg.url, // 上传处理程序
-
-                            'height': '30', // 浏览按钮的高度
-                            'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-                            'fileTypeExts': "*.xlsx", // 允许上传的文件后缀
-                            'fileSizeLimit': '5MB', // 上传文件的大小限制
-                            'multi': false,
-                            'queueSizeLimit': 1, // 上传数量
-                            'onUploadSuccess': function (file, data, response) {
-                                updateoutsourcePath(data, v.oid);
-                            }
-                        });
-                    });
-
-                    $btnEdit.click(function() {
-
-                        productionUtils.clearForm('form1');
-                        var comment = com.focusPage("#layerEdit").find('input[name="comment"]').val(v.comment);
-                        com.clearValidator();
-                        com.focusPage("#layerEdit").attr("attr-oid",v.oid);
-                        openlayerEdit(function (index, layero) {
-                            var id =  com.focusPage("#layerEdit").attr("attr-oid");
-                            if (!com.validate("layerEdit",null)) {
-                                saveData(id,function () {
-                                    com.closePopup();
-                                });
-                            }
-                        });
-                    });
-
-                    $btnReceipt.click(function () {
-                        com.showConfirm("是否确认到货", function(){
-                            outsourceArrived(v.oid,function(){
-                                com.showAlert(com.info, "操作成功");
-                            });
-                        });
-                    });
-
-                    $btnaBolition.click(function () {
-                        com.showConfirm("是否确认废除", function(){
-                            outsourceDestory(v.oid,function(){
-                                com.showAlert(com.info, "操作成功");
-                            });
-                        });
-                    });
-
-                    $btnChild.click(function () {
-                        params["oid"] = v.oid;
-                        params.outsourceStatus = v.status;
-                        params.productionStatus = $status;
-                        com.switchPage(api.index.outsourceItemIndex.url);
-                    });
-
+                    $liLine.appendTo($ul);
                 });
 
                 $ul.appendTo($tableWrap);
             }
         };
 
+        var  creatLine = function(v) {
+
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid');
+            var $title = $('<small></small>').addClass('blue') .html(v.comment);
+            var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+
+            var $btnimport = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('图表');
+            var $btnChild = $('<a></a>').addClass(' btn btn-minier btn-success').html('外协项');
+            var $btnReceipt = $('<a></a>').addClass(' btn btn-minier btn-warning').html('收货');
+            var $btnaBolition = $('<a></a>').addClass(' btn btn-minier btn-inverse').html('废除');
+            var $btnEdit = $('<a></a>').addClass(' btn btn-minier btn-danger').html('编辑');
+
+            var propertyArr = [
+                ["状态:",v.status == 0 ? "未到货" : (v.status == 1 ? "已到货" :  "废除"),"grey"]
+            ];
+
+            $.each(propertyArr, function (index,value) {
+                var $liProperty = $('<li></li>');
+                $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                $liProperty.appendTo($ulProperty);
+            });
+
+            $liLine.append($h3).append($ulProperty);
+            if (v.status ==0 && (outsource.status != 4 && outsource.status != 5)){
+                $btnDiv.append($btnChild).append($btnimport).append($btnEdit).append($btnReceipt).append($btnaBolition);
+
+            }else{
+                $btnDiv.append($btnChild).append($btnimport);
+            }
+
+            $h3.append($title).append($btnDiv);
+
+
+            $btnReceipt.click(function () {
+                com.showConfirm("是否确认到货", function(){
+                    arrivedAndDestory(v.oid,"1");
+                });
+            });
+
+            $btnaBolition.click(function () {
+                com.showConfirm("是否确认废除", function(){
+                    arrivedAndDestory(v.oid,"2");
+                });
+            });
+
+            $btnEdit.click(function() {
+                outsource.editFlg = false;
+                outsource.items.oid = v.oid;
+                outsource.items.comment.val(v.comment);
+                outsource.modals.outsourceModal.modal("show");
+            });
+
+            $btnimport.click(function () {
+
+                outsource.modals.layerImportModal.modal("show").find(".infobox").remove();
+                if(v.path){
+                    createLine(v.path, v.comment);//显示文件与下载
+                }
+
+                com.focusPage('#importProductionPicture').empty();
+                hidBtn( com.focusPage('#importProductionPicture'), v.status);
+
+                com.uploadify("#importProductionPicture","添加上传文件",'btn btn-success col-sm-12',"*.xlsx","'uploadType': 2",1,function(data) {
+                    var option = {
+                        "outsource.oid": v.oid,
+                        "outsource.path": data.resUrl
+                    };
+                    com.post(api.production.updateOutsource,option,function(res){
+                        com.showAlert(com.info, "操作成功");
+                        salesSearcher.doSearch();
+                    });
+                });
+            });
+
+            $btnChild.click(function () {
+                params["oid"] = v.oid;
+                params.outsourceStatus = v.status;
+                params.productionStatus = outsource.status;
+                com.switchPage(api.index.outsourceItemIndex.url);
+            });
+
+            return $liLine;
+        };
+
         return {
             init : function(tableId,listData){
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
+            },
+            drawLine : function(v){
+                return creatLine(v);
             }
         };
     })();
-    
-    var _condArr = [];
 
     var salesSearcher = new Searcher();
 
-    salesSearcher.init( _condArr, "condList", api.production.pageOutsource, function(data){
+    salesSearcher.init(null, "condList", api.production.pageOutsource, function(data){
         displayFunc.init('resultList', data);
-    }, "pagenation", "outsourcePostData",{"pid":$pid}, false, null,function () {
+    }, "pagenation", "salesPostData",{"pid":outsource.pid}, false, null,function() {
 
-        var $adda = $('<a></a>').addClass('btn btn-xs btn-info pull-left').attr('name', 'add').css("margin", "0px 3px");
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addOutsource').css("margin", "0px 3px");
+        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
-        var $backBtn = $('<a></a>').addClass('btn btn-xs pull-left').attr('name', 'backProductionVersion').css("margin", "0px 3px").html('返回');
+        var $backBtn = $('<a></a>').addClass('btn btn-minier pull-left').attr('id', 'backs').css("margin", "0px 3px");
+        var $backBtns = $('<i></i>').addClass('icon-mail-forward bigger-110').appendTo($backBtn);
+        var $backSpan = $('<span></span>').text('返回').appendTo($backBtn);
 
         hidBtn($adda,0);
-
-        $adda.click(function () {
-            productionUtils.clearForm('form3');
-            com.clearValidator();
-            openlayer(function (index, layero) {
-                if (!com.validate("layerAdd",null)) {
-                    saveData(null, function () {
-                    });
-                }
-            });
-        });
-
-
-        $backBtn.click(function() {
-            com.switchPage(api.index.productionIndex.url)
-        });
-
         return [$adda,$backBtn];
+    });
 
-    },"resultList");
+    com.focusPage('#backs').click(function() {
+        com.switchPage(api.index.productionIndex.url)
+    });
 
-    function outsourceArrived(id,callback){
+    com.focusPage("#addOutsource").click(function() {
+        outsource.editFlg = true;
+        outsource.modals.outsourceModal.modal("show");
+    });
+
+    function arrivedAndDestory(id,statusType){
 
         com.post(api.production.updateOutsourceForStatus, {
             "outsource.oid":id ,
-            "outsource.status": "1"
+            "outsource.status": statusType//状态为 1或2 1.收货 2.废除
         },function(res){
-            callback();
-            salesSearcher.doSearch();
-        });
-    }
-    
-    function outsourceDestory(id,callback){
-
-        com.post(api.production.updateOutsourceForStatus,{
-            "outsource.oid":id ,
-            "outsource.status": "2"
-        },function(res){
-            callback();
+            com.showAlert(com.info, "操作成功");
             salesSearcher.doSearch();
         });
     }
 
-    function openlayer(callback) {
-        com.closePopup();
-        layer.open({
-            type: 1,
-            title: "添加",
-            skin: 'layui-layer-lan',
-            content: com.focusPage('#layerAdd'),
-            area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定', '取消'],
-            yes: function (index, layero) {
-                callback(index, layero);
-
-            },
-            btn2: function (index, layero) {
-                //按钮【按钮二】的回调
-            },
-            cancel: function () {
-                //右上角关闭回调
-            }
-        });
-
-    }
-    function openlayerEdit(callback) {
-        com.closePopup();
-        layer.open({
-            type: 1,
-            skin: 'layui-layer-lan',
-            title: "修改",
-            content: com.focusPage('#layerEdit'),
-            area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定', '取消'],
-            yes: function (index, layero) {
-                callback(index, layero);
-
-            },
-            btn2: function (index, layero) {
-                //按钮【按钮二】的回调
-            },
-            cancel: function () {
-                //右上角关闭回调
-            }
-        });
-    }
-
-    function saveData(id, callback) {
-        var $layer = com.focusPage('#layerAdd');
-
-        var comment = $layer.find('input[name="comment"]').val();
-        var path = com.focusPage('#layerEdit').find('input[name="path"]').val();
-        var commen = com.focusPage('#layerEdit').find('input[name="comment"]').val();
-
-        if (!id) {
-
-            com.post(api.production.addOutsource, {
-                "outsource.pid": $pid,
-                "outsource.comment": comment
-            }, function (res) {
-                salesSearcher.doSearch();
-                com.showAlert(com.info, "操作成功");
-            });
-
-        }else {
-            com.post(api.production.updateOutsource, {
-                "outsource.oid": id,
-                "outsource.path":"",
-                "outsource.comment": commen
-            }, function (res) {
-                salesSearcher.doSearch();
-                com.showAlert(com.info, "操作成功");
-            });
-
+    function saveData() {
+        if (com.validate('outsourceModal')) {
+            return false;
         }
+        var url;
+        var options = {
+            "outsource.pid": outsource.pid,
+            "outsource.path" : "",
+            "outsource.comment":  outsource.items.comment.val()
+        };
+        //判断editFlg是否为true或false true执行添加 false执行更新
+        outsource.editFlg ? url = api.production.addOutsource : url = api.production.updateOutsource, options["outsource.oid"] = outsource.items.oid;
+
+        com.post(url, options, function(res){
+            com.closePopup();
+            salesSearcher.doSearch();
+            com.showAlert(com.info, "操作成功");
+        });
+        outsource.modals.outsourceModal.modal("hide");
     }
 
-    function openlayerImport(){
-        com.closePopup();
-        layer.open({
-            type: 1,
-            skin: 'layui-layer-lan',
-            title: "导入excel",
-            content: com.focusPage('#layerImport'),
-            area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定'],
-            success: function (layers, index) {
-
-            },
-            end: function () {
-
-            }
-        });
+    function hidBtn(btnId,otherStatus){
+        btnId.removeClass('hide');
+        if (outsource.status == 5 || outsource.status == 4 ) {
+            btnId.addClass('hide');
+        }else if(otherStatus != 0 ){
+            btnId.addClass('hide');
+        }
     }
 
     function createLine(path, comment){
 
-        var $line = $layerImport.find(".infobox-container");
-
+        var $line = outsource.modals.layerImportModal.find("#download");
         var $name = comment+".xlsx";
 
         var $box = $("<div></div>").addClass("infobox infobox-blue infobox-dark");
-
         var $iconGrouop = $("<div></div>").addClass("infobox-icon");
         var $icondownload = $("<a></a>").addClass("icon-download-alt");
         com.downloadFile($icondownload, path, $name);
@@ -322,33 +223,4 @@ $(function(){
         $box.append($iconGrouop).append($dataGrouop);
         $line.append($box)
     }
-
-    function updateoutsourcePath(data,oid){
-
-        var dateObj = eval("(" + data + ")");
-        var option = {};
-
-        option["outsource.oid"] = oid;
-
-        if (dateObj.errorCode == 0) {
-            option["outsource.path"] = dateObj.resUrl;
-        }else{
-            com.showAlert(com.warning, "上传失败");
-        }
-
-        com.post(api.production.updateOutsource,option,function(res){
-            com.showAlert(com.info, "操作成功");
-            salesSearcher.doSearch();
-        })
-    }
-
-    function hidBtn(btnId,otherStatus){
-        btnId.removeClass('hide');
-        if ($status == 5 || $status == 4 ) {
-            btnId.addClass('hide');
-        }else if(otherStatus != 0 ){
-            btnId.addClass('hide');
-        }
-    }
-
 });

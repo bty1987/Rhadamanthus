@@ -185,8 +185,26 @@
 		{"key":"-", "value":"-"},
 		{"key":"座", "value":"座"},
 		{"key":"门", "value":"门"}
-	],"cardType": [
-	"身份证", "军官证", "护照"
+	],"buildruleOne" : [
+        {"key":"#", "value":"#"},
+        {"key":"", "value":""},
+        {"key":"-", "value":"-"},
+        {"key":"座", "value":"座"},
+        {"key":"门", "value":"门"}
+    ],"buildruleTwo" : [
+        {"key":"-", "value":"-"},
+        {"key":"#", "value":"#"},
+        {"key":"", "value":""},
+        {"key":"座", "value":"座"},
+        {"key":"门", "value":"门"}
+    ],"buildruleThr" : [
+        {"key":"-", "value":"-"},
+        {"key":"#", "value":"#"},
+        {"key":"", "value":""},
+        {"key":"座", "value":"座"},
+        {"key":"门", "value":"门"}
+    ],"cardType": [
+	   "身份证", "军官证", "护照"
 	],
 	"errorCode": 0,
 	"errorMsg": null

@@ -21,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.inventory.dao.ColorDao;
+import com.fanglin.inventory.dao.FormatDao;
 import com.fanglin.inventory.dao.GoodsDao;
 import com.fanglin.inventory.dao.GoodsPackageDao;
 import com.fanglin.inventory.dao.GoodsStorehouseStockDao;
@@ -35,7 +37,6 @@ import com.fanglin.inventory.po.StorehousePO;
 import com.fanglin.inventory.po.StorehouseUserPO;
 import com.fanglin.inventory.service.GoodsStorehouseStockService;
 import com.fanglin.inventory.service.ManifestService;
-import com.fanglin.inventory.vo.CheckListVO;
 import com.fanglin.inventory.vo.ColorVO;
 import com.fanglin.inventory.vo.FormatVO;
 import com.fanglin.inventory.vo.GoodsStorehouseStockVO;
@@ -67,6 +68,12 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 
 	@Autowired
 	private ManifestService manifestService;
+	
+	@Autowired
+	private ColorDao colorDao;
+	
+	@Autowired
+	private FormatDao formatDao;
 	
 	@Override
 	public void pageGoodsStorehouseStock(Paging paging, List<Filter> filters, String userId) {
@@ -109,9 +116,9 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 	}
 
 	@Override
-	public Float queryGoodsStorehouseStockByGid(GoodsStorehouseStockVO goodsStorehouseStockVO) {
+	public Integer queryGoodsStorehouseStockByGid(GoodsStorehouseStockVO goodsStorehouseStockVO) {
 
-		Float nums = goodsStorehouseStockDao.queryGoodsStorehouseStockByGid(goodsStorehouseStockVO.getGoods().getGid(), goodsStorehouseStockVO.getColor().getCid(), goodsStorehouseStockVO.getFormat().getFid());
+		Integer nums = goodsStorehouseStockDao.queryGoodsStorehouseStockByGid(goodsStorehouseStockVO.getGoods().getGid(), goodsStorehouseStockVO.getColor().getCid(), goodsStorehouseStockVO.getFormat().getFid());
 
 		return nums;
 	}
@@ -147,7 +154,7 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 		BeanUtil.copyPropertie(goodsStorehouseStockVO.getFormat(), goodsStorehouseStockPO.getFormat());
 		BeanUtil.copyPropertie(goodsStorehouseStockVO.getStorehouse(), goodsStorehouseStockPO.getStorehouse());
 
-		goodsStorehouseStockPO.setNum(0f);
+		goodsStorehouseStockPO.setNum(0);
 
 		goodsStorehouseStockDao.save(goodsStorehouseStockPO);
 
@@ -156,25 +163,32 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void checkGoodsStorehouseStock(CheckListVO checkListVO, String userId, int company) throws FLException {
+	public void surplusGoodsStorehouseStock(GoodsStorehouseStockVO goodsStorehouseStockVO, String userId, int company) throws FLException {
+
+		int num = goodsStorehouseStockVO.getNum();
 		
-		short type = checkListVO.getType();
-		float num = checkListVO.getNum();
-		
-		long shid = checkListVO.getStorehouse().getShid();
+		long shid = goodsStorehouseStockVO.getStorehouse().getShid();
 		
 		List<ManifestItemVO> manifestItemVOs = new ArrayList<ManifestItemVO>();
 		
-		if (type == 0) { // type 0: 盘盈 , 1: 盘亏
-			manifestItemVOs.add(new ManifestItemVO().init(checkListVO.getGoods().getGid(), checkListVO.getColor().getCid(), checkListVO.getFormat().getFid(), shid, null, 0, 0, num));
+		manifestItemVOs.add(new ManifestItemVO().init(goodsStorehouseStockVO.getGoods().getGid(), goodsStorehouseStockVO.getColor().getCid(), goodsStorehouseStockVO.getFormat().getFid(), shid, null, 0, 0, num));
 			
-			manifestService.addManifestForCP(manifestItemVOs, userId, company);
-		} else if (type == 1) {
-			manifestItemVOs.add(new ManifestItemVO().init(checkListVO.getGoods().getGid(), checkListVO.getColor().getCid(), checkListVO.getFormat().getFid(), null, shid, 0, 0, num));
-			
-			manifestService.addManifestForCL(manifestItemVOs, userId, company);
-		}
+		manifestService.addManifestForCP(manifestItemVOs, userId, company);
+	}
+	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void lossesGoodsStorehouseStock(GoodsStorehouseStockVO goodsStorehouseStockVO, String userId,int company) throws FLException {
 		
+		int num = goodsStorehouseStockVO.getNum();
+		
+		long shid = goodsStorehouseStockVO.getStorehouse().getShid();
+		
+		List<ManifestItemVO> manifestItemVOs = new ArrayList<ManifestItemVO>();
+		
+		manifestItemVOs.add(new ManifestItemVO().init(goodsStorehouseStockVO.getGoods().getGid(), goodsStorehouseStockVO.getColor().getCid(), goodsStorehouseStockVO.getFormat().getFid(), null, shid, 0, 0, num));
+			
+		manifestService.addManifestForCL(manifestItemVOs, userId, company);
 	}
 
 	@Override
@@ -189,7 +203,7 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 			throw new FLException(260041, "套餐不存在");
 		}
 
-		float num = goodsStorehouseStockVO.getNum();
+		int num = goodsStorehouseStockVO.getNum();
 		long shid = goodsStorehouseStockVO.getStorehouse().getShid();
 
 		manifestItemVOs.add(new ManifestItemVO().init(goodsStorehouseStockVO.getGoods().getGid(), goodsStorehouseStockVO.getColor().getCid(), goodsStorehouseStockVO.getFormat().getFid(), shid, null, 0, 0, num));
@@ -217,7 +231,7 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 			throw new FLException(260041, "套餐不存在");
 		}
 
-		float num = goodsStorehouseStockVO.getNum();
+		int num = goodsStorehouseStockVO.getNum();
 		long shid = goodsStorehouseStockVO.getStorehouse().getShid();
 
 		manifestItemVOs.add(new ManifestItemVO().init(goodsStorehouseStockVO.getGoods().getGid(), goodsStorehouseStockVO.getColor().getCid(), goodsStorehouseStockVO.getFormat().getFid(), null, shid, 0, 0, num));
@@ -233,7 +247,7 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 		return 0;
 	}
 
-	public StorehousePO instorehouse(long gid, long cid, long fid, long shid, float num) throws FLException {
+	public StorehousePO instorehouse(long gid, long cid, long fid, long shid, int num) throws FLException {
 
 		if (goodsDao.get(gid) == null) {
 			throw new FLException(260004, "商品不存在");
@@ -247,13 +261,21 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 
 		if (inGoodsStorehouseStockPO == null) {
 			inGoodsStorehouseStockPO = new GoodsStorehouseStockPO();
+			
+			ColorPO colorPO = colorDao.get(cid);
+			FormatPO formatPO = formatDao.get(fid);
+
+			if (colorPO.getGid() != gid || formatPO.getGid() != gid) {
+				throw new FLException(260053, "商品不匹配");
+			}
 
 			inGoodsStorehouseStockPO.setGoods(new GoodsPO(gid));
 			inGoodsStorehouseStockPO.setColor(new ColorPO(cid));
 			inGoodsStorehouseStockPO.setFormat(new FormatPO(fid));
 			inGoodsStorehouseStockPO.setStorehouse(new StorehousePO(shid));
 
-			inGoodsStorehouseStockPO.setNum(0f);
+			inGoodsStorehouseStockPO.setNum(0);
+			
 		}
 
 		inGoodsStorehouseStockPO.setNum(Arith.add(inGoodsStorehouseStockPO.getNum(), num));
@@ -263,7 +285,7 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 		return inGoodsStorehouseStockPO.getStorehouse();
 	}
 
-	public StorehousePO outstorehouse(long gid, long cid, long fid, long shid, float num) throws FLException {
+	public StorehousePO outstorehouse(long gid, long cid, long fid, long shid, int num) throws FLException {
 
 		GoodsStorehouseStockPO outGoodsStorehouseStockPO = goodsStorehouseStockDao.queryGoodsStorehouseStockByShidAGid(gid, cid, fid, shid);
 

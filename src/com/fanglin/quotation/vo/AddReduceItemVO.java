@@ -5,37 +5,37 @@ public class AddReduceItemVO implements java.io.Serializable {
 	private static final long serialVersionUID = -8622530142993960730L;
 
 	private Long ariId;
-	
-	private Integer arId;
-	
+
+	private Long arId;
+
 	private String itemName;
-	
+
 	private Short type;
-	
+
 	private Short subtype;
-	
+
 	private String measurementUnit;
-	
+
 	private String workType;
-	
-	private Float addPrice;
-	
-	private Float unitPrice;
-	
-	private Float subPrice;
-	
-	private Float num;
-	
+
+	private Integer addPrice;
+
+	private Integer unitPrice;
+
+	private Integer subPrice;
+
+	private Integer num;
+
 	private Long quotationFunctionAreaId;
-	
+
 	private String quotationFunctionAreaName;
-	
+
 	private Short quotationFunctionAreaType;
-	
+
 	private Long quoteItemId;
-	
+
 	private String content;
-	
+
 	private Short discount;
 
 	public Long getAriId() {
@@ -46,11 +46,11 @@ public class AddReduceItemVO implements java.io.Serializable {
 		this.ariId = ariId;
 	}
 
-	public Integer getArId() {
+	public Long getArId() {
 		return arId;
 	}
 
-	public void setArId(Integer arId) {
+	public void setArId(Long arId) {
 		this.arId = arId;
 	}
 
@@ -94,35 +94,35 @@ public class AddReduceItemVO implements java.io.Serializable {
 		this.workType = workType;
 	}
 
-	public Float getAddPrice() {
+	public Integer getAddPrice() {
 		return addPrice;
 	}
 
-	public void setAddPrice(Float addPrice) {
+	public void setAddPrice(Integer addPrice) {
 		this.addPrice = addPrice;
 	}
 
-	public Float getUnitPrice() {
+	public Integer getUnitPrice() {
 		return unitPrice;
 	}
 
-	public void setUnitPrice(Float unitPrice) {
+	public void setUnitPrice(Integer unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 
-	public Float getSubPrice() {
+	public Integer getSubPrice() {
 		return subPrice;
 	}
 
-	public void setSubPrice(Float subPrice) {
+	public void setSubPrice(Integer subPrice) {
 		this.subPrice = subPrice;
 	}
 
-	public Float getNum() {
+	public Integer getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(Integer num) {
 		this.num = num;
 	}
 
@@ -141,7 +141,7 @@ public class AddReduceItemVO implements java.io.Serializable {
 	public void setQuotationFunctionAreaName(String quotationFunctionAreaName) {
 		this.quotationFunctionAreaName = quotationFunctionAreaName;
 	}
-	
+
 	public Short getQuotationFunctionAreaType() {
 		return quotationFunctionAreaType;
 	}

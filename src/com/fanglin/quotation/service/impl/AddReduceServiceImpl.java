@@ -132,13 +132,13 @@ public class AddReduceServiceImpl implements AddReduceService {
 		addReducePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		addReducePO.setStatus(AddReducePO.STATUS_UNSUBMIT_INT);
 
-		addReducePO.setTotal(0f);
-		addReducePO.setManageRate(0f);
-		addReducePO.setManagePrice(0f);
-		addReducePO.setUndisPrice(0f);
-		addReducePO.setDisPrice(0f);
-		addReducePO.setUncalPrice(0f);
-		addReducePO.setCalPrice(0f);
+		addReducePO.setTotal(0);
+		addReducePO.setManageRate(0);
+		addReducePO.setManagePrice(0);
+		addReducePO.setUndisPrice(0);
+		addReducePO.setDisPrice(0);
+		addReducePO.setUncalPrice(0);
+		addReducePO.setCalPrice(0);
 
 		addReduceDao.save(addReducePO);
 
@@ -161,7 +161,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 		addReducePO.setDisPrice(addReduceVO.getDisPrice());
 		addReducePO.setUncalPrice(addReduceVO.getUncalPrice());
 		addReducePO.setCalPrice(addReduceVO.getCalPrice());
-		
+
 		addReduceDao.update(addReducePO);
 
 		return 0;
@@ -202,7 +202,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 		List<Integer> status = Arrays.asList(new Integer[] { AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT });
 
-		int arId = addReduceVO.getArId();
+		long arId = addReduceVO.getArId();
 
 		AddReducePO addReducePO = addReduceDao.get(arId);
 
@@ -216,7 +216,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 		List<AddReduceItemPO> addReduceItemPOs = addReduceItemDao.queryAddReduceItemByAddReduceId(arId);
 
-		Integer divisor = Integer.parseInt(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
+		Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
 
 		for (AddReduceItemPO addReduceItemPO : addReduceItemPOs) {
 
@@ -228,30 +228,34 @@ public class AddReduceServiceImpl implements AddReduceService {
 					throw new FLException(200013, "报价项不存在");
 				}
 
-				float quotationFunctionAreaItemNum = quotationFunctionAreaItemPO.getNum();
-				float addReduceItemNum = addReduceItemPO.getNum();
+				int quotationFunctionAreaItemNum = quotationFunctionAreaItemPO.getNum();
+				int addReduceItemNum = addReduceItemPO.getNum();
 
 				quotationFunctionAreaItemPO.setNum(Arith.add(quotationFunctionAreaItemNum, addReduceItemNum));
 				quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
 			} else if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_ADD_ITEM_INT) {
+
 				AddReduceItemPO _addReduceItemPO = addReduceItemDao.get(addReduceItemPO.getQuoteItemId());
 
 				if (_addReduceItemPO == null) {
 					throw new FLException(140036, "增减项目不存在");
 				}
 
-				float _addReduceItemNum = _addReduceItemPO.getNum();
-				float addReduceItemNum = addReduceItemPO.getNum();
+				int _addReduceItemNum = _addReduceItemPO.getNum();
+				int addReduceItemNum = addReduceItemPO.getNum();
 
 				_addReduceItemPO.setNum(Arith.add(_addReduceItemNum, addReduceItemNum));
 				addReduceItemDao.update(_addReduceItemPO);
 			} else if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_EXTENSION_ITEM_INT) {
+
 				ExtensionItemPO extensionItemPO = extensionItemDao.get(addReduceItemPO.getQuoteItemId());
+
 				if (extensionItemPO == null) {
 					throw new FLException(200027, "扩展项不存在");
 				}
-				float _extensionItemNum = extensionItemPO.getNum();
-				float addReduceItemNum = addReduceItemPO.getNum();
+
+				int _extensionItemNum = extensionItemPO.getNum();
+				int addReduceItemNum = addReduceItemPO.getNum();
 
 				extensionItemPO.setNum(Arith.add(_extensionItemNum, addReduceItemNum));
 				addReduceItemDao.update(extensionItemPO);
@@ -302,10 +306,11 @@ public class AddReduceServiceImpl implements AddReduceService {
 			decorationPaymentPO = new DecorationPaymentPO();
 		}
 
-		if (addReducePO.getStatus() == AddReducePO.STATUS_UNSUBMIT_INT) {
-			// 初始
+		if (addReducePO.getStatus() == AddReducePO.STATUS_UNSUBMIT_INT) { // 初始
+
 			decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT);
-			decorationPaymentPO.setReferMoney((float) Math.rint(addReduceVO.getTotal()));
+			decorationPaymentPO.setReferMoney(Arith.mul(Arith.div(addReduceVO.getTotal(), 1000000), 1000000));
+
 			if (addReducePO.getType() == AddReducePO.TYPE_ADD_INT || addReducePO.getType() == AddReducePO.TYPE_LEAKAGE_INT) {
 				decorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_ADD_INT);
 				decorationPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_ADD_REDUCE_INT);
@@ -313,6 +318,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 				decorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
 				decorationPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_ADD_REDUCE_INT);
 			}
+
 			decorationPaymentPO.setDecoration(decorationPO);
 			decorationPaymentPO.setCreater(userDao.queryUserByUserId(userId));
 			decorationPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
@@ -320,18 +326,17 @@ public class AddReduceServiceImpl implements AddReduceService {
 			decorationPaymentPO.setPaymentType(addReducePO.getType() == 0 ? DecorationPaymentPO.PAYMENTTYPE_ADD_STR : DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR);
 			decorationPaymentPO.setCompany(decorationPO.getCompany());
 
-		} else if (addReducePO.getStatus() == AddReducePO.STATUS_SUBMIT_INT) {
-			// 提交
-			decorationPaymentPO.setReferMoney((float) Math.rint(addReduceVO.getTotal()));
+		} else if (addReducePO.getStatus() == AddReducePO.STATUS_SUBMIT_INT) { // 提交
+			decorationPaymentPO.setReferMoney(Arith.mul(Arith.div(addReduceVO.getTotal(), 1000000), 1000000));
 		}
 
 		decorationPaymentDao.saveOrUpdate(decorationPaymentPO);
 
 		addReducePO.setStatus(AddReducePO.STATUS_SUBMIT_INT);
 		addReducePO.setDpId(decorationPaymentPO.getDpid());
-		
+
 		convertAddReduceVOToPOForAdvance(addReduceVO, addReducePO);
-		
+
 		addReduceDao.update(addReducePO);
 
 		return 0;

@@ -94,7 +94,7 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 
-		String content = String.format("订单号:%s,参与活动:%s", approvalDecorationActivityVO.getOrderId(), approvalDecorationActivityVO.getActivityName());
+		String content = String.format("装修单号:%s,参与活动:%s", approvalDecorationActivityVO.getOrderId(), approvalDecorationActivityVO.getActivityName());
 
 		approvalPO = new ApprovalPO().init(sender, receiver, orderId, ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT, content, company);
 
@@ -131,8 +131,8 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(approvalDecorationActivityPO.getOrderId());
 
-		float couponCut = decorationPO.getCouponCut();
-		float thingCut = decorationPO.getThingCut();
+		long couponCut = decorationPO.getCouponCut();
+		long thingCut = decorationPO.getThingCut();
 
 		List<ApprovalDecorationActivityItemPO> approvalDecorationActivityItemPOs = approvalDecorationActivityItemDao.queryApprovalDecorationActivityItemByAaId(approvalDecorationActivityPO.getAdaId());
 

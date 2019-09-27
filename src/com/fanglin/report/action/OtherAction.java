@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.information.service.VawardService;
 import com.fanglin.information.service.VpaymentService;
 import com.fanglin.information.service.VticketService;
 
@@ -27,6 +28,9 @@ public class OtherAction extends BaseListAction {
 	@Autowired
 	private VpaymentService vpaymentService;
 	
+	@Autowired
+	private VawardService vawardService;
+	
 	private List<?> counts;
 	
 	private short param;
@@ -35,9 +39,17 @@ public class OtherAction extends BaseListAction {
     public String countVticket(){
 		
 		counts = vticketService.countVticket(param);
-        
+		
         return SUCCESS;
     }
+	
+	@Action(value="countVaward", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String countVaward() throws FLException{
+		
+		counts = vawardService.countVaward();
+		
+		return SUCCESS;
+	}
 	
 	@Action(value="countVpayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String countVpayment() throws FLException{

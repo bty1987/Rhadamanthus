@@ -18,15 +18,15 @@ import com.fanglin.quotation.vo.AddReduceItemVO;
 import com.fanglin.quotation.vo.AddReduceVO;
 
 public interface AddReduceItemService {
-	
-	public List<AddReduceItemVO> queryAddReduceItemByAddReduceId(AddReduceVO addReduceVO)throws FLException;
-	
-	public List<AddReduceItemVO> queryAddReduceItemByAddReduceIds(List<Integer> addReduceIds)throws FLException;
-	
+
+	public List<AddReduceItemVO> queryAddReduceItemByAddReduceId(AddReduceVO addReduceVO) throws FLException;
+
+	public List<AddReduceItemVO> queryAddReduceItemByAddReduceIds(List<Long> addReduceIds) throws FLException;
+
 	public int updateAddReduceItem(AddReduceVO addReduceVO, AddReduceItemVO addReduceItemVO) throws FLException;
-	
+
 	public int updateAddReduceItemForAdvance(AddReduceVO addReduceVO, AddReduceItemVO addReduceItemVO) throws FLException;
-	
+
 	public int deleteAddReduceItem(AddReduceVO addReduceVO, AddReduceItemVO addReduceItemVO) throws FLException;
-	
+
 }

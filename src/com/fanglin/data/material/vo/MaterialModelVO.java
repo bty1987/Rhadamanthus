@@ -13,46 +13,46 @@ package com.fanglin.data.material.vo;
 
 import java.io.Serializable;
 
-public class MaterialModelVO implements Serializable{
+public class MaterialModelVO implements Serializable {
 
 	private static final long serialVersionUID = -5221234193724730179L;
-	
+
 	private Integer mmId;
-	
+
 	private String materialModelNo;
-	
+
 	private String materialModelName;
-	
+
 	private Long materialTypeId;
-	
+
 	private String materialTypeName;
-	
+
 	private Long materialBrandId;
-	
+
 	private String materialBrandName;
-	
+
 	private Integer measurementUnitId;
-	
+
 	private String measurementUnitName;
-	
-	private Float materialUnitPrice;
-	
-	private Float materialPurchasePrice;
-	
-	private Float discount;
-	
+
+	private Integer materialUnitPrice;
+
+	private Integer materialPurchasePrice;
+
+	private Integer discount;
+
 	private Integer calcType;
-	
-	private Float point;
-	
-	private Float base;
-	
+
+	private Integer point;
+
+	private Integer base;
+
 	private String calcTypeName;
-	
-	private Float calcValue;
-	
+
+	private Integer calcValue;
+
 	private Short status;
-	
+
 	private Integer company;
 
 	public Integer getMmId() {
@@ -127,27 +127,27 @@ public class MaterialModelVO implements Serializable{
 		this.measurementUnitName = measurementUnitName;
 	}
 
-	public Float getMaterialUnitPrice() {
+	public Integer getMaterialUnitPrice() {
 		return materialUnitPrice;
 	}
 
-	public void setMaterialUnitPrice(Float materialUnitPrice) {
+	public void setMaterialUnitPrice(Integer materialUnitPrice) {
 		this.materialUnitPrice = materialUnitPrice;
 	}
 
-	public Float getMaterialPurchasePrice() {
+	public Integer getMaterialPurchasePrice() {
 		return materialPurchasePrice;
 	}
 
-	public void setMaterialPurchasePrice(Float materialPurchasePrice) {
+	public void setMaterialPurchasePrice(Integer materialPurchasePrice) {
 		this.materialPurchasePrice = materialPurchasePrice;
 	}
 
-	public Float getDiscount() {
+	public Integer getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(Float discount) {
+	public void setDiscount(Integer discount) {
 		this.discount = discount;
 	}
 
@@ -159,19 +159,19 @@ public class MaterialModelVO implements Serializable{
 		this.calcType = calcType;
 	}
 
-	public Float getPoint() {
+	public Integer getPoint() {
 		return point;
 	}
 
-	public void setPoint(Float point) {
+	public void setPoint(Integer point) {
 		this.point = point;
 	}
 
-	public Float getBase() {
+	public Integer getBase() {
 		return base;
 	}
 
-	public void setBase(Float base) {
+	public void setBase(Integer base) {
 		this.base = base;
 	}
 
@@ -183,11 +183,11 @@ public class MaterialModelVO implements Serializable{
 		this.calcTypeName = calcTypeName;
 	}
 
-	public Float getCalcValue() {
+	public Integer getCalcValue() {
 		return calcValue;
 	}
 
-	public void setCalcValue(Float calcValue) {
+	public void setCalcValue(Integer calcValue) {
 		this.calcValue = calcValue;
 	}
 
@@ -207,8 +207,4 @@ public class MaterialModelVO implements Serializable{
 		this.company = company;
 	}
 
-	
-	
-	
-	
 }

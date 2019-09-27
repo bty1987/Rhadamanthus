@@ -25,7 +25,7 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 	
 	public static final short STATUS_CONFIRM_INT = 2;
 	
-	public static final float COLUMN_MONEY_INT = 0f;
+	public static final long COLUMN_MONEY_INT = 0;
 	
 	private long arId;
 	
@@ -45,27 +45,27 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 	
 	private Timestamp confirmTime;
 	
-	private float cash;
+	private long cash;
 	
 	private String cashInfo;
 	
-	private float bank;
+	private long bank;
 	
 	private String bankInfo;
 	
-	private float checkv;
+	private long checkv;
 	
 	private String checkvBank;
 	
-	private float installment;
+	private long installment;
 	
 	private String installmentBank;
 	
-	private float accounts;
+	private long accounts;
 	
 	private String accountsBank;
 	
-	private float transfer;
+	private long transfer;
 	
 	private String comment;
 
@@ -165,11 +165,11 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 	}
 
 	@Column(name = "cash")
-	public float getCash() {
+	public long getCash() {
 		return this.cash;
 	}
 
-	public void setCash(float cash) {
+	public void setCash(long cash) {
 		this.cash = cash;
 	}
 	
@@ -183,11 +183,11 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 	}
 
 	@Column(name = "bank")
-	public float getBank() {
+	public long getBank() {
 		return this.bank;
 	}
 
-	public void setBank(float bank) {
+	public void setBank(long bank) {
 		this.bank = bank;
 	}
 
@@ -201,11 +201,11 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 	}
 
 	@Column(name = "checkv")
-	public float getCheckv() {
+	public long getCheckv() {
 		return this.checkv;
 	}
 
-	public void setCheckv(float checkv) {
+	public void setCheckv(long checkv) {
 		this.checkv = checkv;
 	}
 
@@ -219,11 +219,11 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 	}
 	
 	@Column(name = "installment")
-	public float getInstallment() {
+	public long getInstallment() {
 		return this.installment;
 	}
 
-	public void setInstallment(float installment) {
+	public void setInstallment(long installment) {
 		this.installment = installment;
 	}
 
@@ -237,11 +237,11 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 	}
 
 	@Column(name = "accounts")
-	public float getAccounts() {
+	public long getAccounts() {
 		return this.accounts;
 	}
 
-	public void setAccounts(float accounts) {
+	public void setAccounts(long accounts) {
 		this.accounts = accounts;
 	}
 
@@ -255,11 +255,11 @@ public class AdvanceReceiptPO implements java.io.Serializable {
 	}
 
 	@Column(name = "transfer")
-	public float getTransfer() {
+	public long getTransfer() {
 		return transfer;
 	}
 
-	public void setTransfer(float transfer) {
+	public void setTransfer(long transfer) {
 		this.transfer = transfer;
 	}
 

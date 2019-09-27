@@ -277,8 +277,10 @@ var ExtensionDetail = (function(){
                 
                 arCalculator.changeQuoFee($item);
                 arCalculator.calculateArFees();
+                
+                var _params = $.extend(true, {}, extensionDetail.basicParams, args);
 
-                com.post(api.quotation.updateExtensionItem, $.extend(true, {}, extensionDetail.basicParams, args), function(res){
+                com.post(api.quotation.updateExtensionItem, _params, function(res){
                     $item.find('input[name="eiid"]').val(res.extensionItem.eiid);
                 }, null, false);
 
@@ -447,7 +449,9 @@ var ExtensionDetail = (function(){
 
                 com.clearValidator();
                 
-                com.post(api.quotation.updateExtensionItem, $.extend(true, {},extensionDetail.basicParams, args), function(res){
+                var _params = $.extend(true, {},extensionDetail.basicParams, args);
+                
+                com.post(api.quotation.updateExtensionItem, _params, function(res){
                     
                     that.$nowLine.find('input[name="eiid"]').val(res.extensionItem.eiid);
                     that.$nowLine.attr("data-eiid", res.extensionItem.eiid);
@@ -700,8 +704,6 @@ var ExtensionDetail = (function(){
                 extensionDetail.qid = quotation.qid;
 
                 extensionDetail.versionId = quotation.no;
-                
-                console.log(extensionDetail);
                 
                 extensionDetail.discounts.text(quotation.discount);
             }, null, false);

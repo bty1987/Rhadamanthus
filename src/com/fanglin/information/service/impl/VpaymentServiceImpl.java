@@ -23,6 +23,8 @@ import com.fanglin.information.po.VticketPO;
 import com.fanglin.information.service.VpaymentService;
 import com.fanglin.information.vo.VpaymentVO;
 import com.fanglin.information.vo.VreceiptVO;
+import com.fanglin.payment.dao.PointofsalesDao;
+import com.fanglin.payment.po.PointofsalesPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -52,6 +54,9 @@ public class VpaymentServiceImpl implements VpaymentService {
 	@Autowired
 	private EmemberDao ememberDao;
 
+	@Autowired
+	private PointofsalesDao pointofsalesDao;
+
 	@Override
 	public void pageVpayment(Paging paging, List<Filter> filters, VpaymentVO vpaymentVO) {
 
@@ -78,15 +83,21 @@ public class VpaymentServiceImpl implements VpaymentService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int createVpayment(VpaymentVO vpaymentVO, String userId) {
+	public int createVpayment(VpaymentVO vpaymentVO, String userId) throws FLException {
 
 		VpaymentPO vpaymentPO = new VpaymentPO();
 
 		UserPO createrPO = userDao.queryUserByUserId(userId);
+		VticketPO vticketPO = vticketDao.queryVticketByTno(vpaymentVO.getMno());
+
+		if (vticketPO == null) {
+			throw new FLException(160026, "活动票不存在");
+		}
 
 		BeanUtil.copyProperties(vpaymentVO, vpaymentPO, Arrays.asList("creater", "vreceipt"));
 		vpaymentPO.setCreater(createrPO);
 		vpaymentPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
+		vpaymentPO.setVaid(vticketPO.getVaid());
 
 		vpaymentDao.save(vpaymentPO);
 
@@ -106,7 +117,7 @@ public class VpaymentServiceImpl implements VpaymentService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int collectVpayment(List<VpaymentVO> vpayments, VreceiptVO vreceiptVO, String userId) throws FLException {
+	public int collectVpayment(List<VpaymentVO> vpayments, VreceiptVO vreceiptVO, List<Long> posids, String userId) throws FLException {
 
 		VreceiptPO vreceiptPO = new VreceiptPO();
 
@@ -118,14 +129,14 @@ public class VpaymentServiceImpl implements VpaymentService {
 		if (vreceiptVO.getCash() != null) {
 			vreceiptPO.setCash(vreceiptVO.getCash());
 		} else {
-			vreceiptPO.setCash(VreceiptPO.COLUMN_CASH_INT);
+			vreceiptPO.setCash(0);
 		}
 
 		if (vreceiptVO.getBank() != null) {
 			vreceiptPO.setBank(vreceiptVO.getBank());
 			vreceiptPO.setBankInfo(vreceiptVO.getBankInfo());
 		} else {
-			vreceiptPO.setBank(VreceiptPO.COLUMN_BANK_INT);
+			vreceiptPO.setBank(0);
 			vreceiptPO.setBankInfo("");
 		}
 
@@ -133,15 +144,15 @@ public class VpaymentServiceImpl implements VpaymentService {
 			vreceiptPO.setCoupon(vreceiptVO.getCoupon());
 			vreceiptPO.setCouponInfo(vreceiptVO.getCouponInfo());
 		} else {
-			vreceiptPO.setCoupon(VreceiptPO.COLUMN_COUPON_INT);
+			vreceiptPO.setCoupon(0);
 			vreceiptPO.setCouponInfo("");
 		}
 
 		vreceiptDao.save(vreceiptPO);
 
-		Float referMoney = vreceiptPO.getCash() + vreceiptPO.getBank() + vreceiptPO.getCoupon();
+		long referMoney = Arith.add(Arith.add(vreceiptPO.getCash(), vreceiptPO.getBank()), vreceiptPO.getCoupon());
 
-		Float realMoney = 0f;
+		long realMoney = 0;
 
 		String mno = null;
 
@@ -172,7 +183,7 @@ public class VpaymentServiceImpl implements VpaymentService {
 			throw new FLException(160046, "活动票未到场");
 		}
 
-		if (Arith.sub(referMoney, realMoney) != VreceiptPO.COLUMN_CASH_INT) {
+		if (Arith.sub(referMoney, realMoney) != 0) {
 			throw new FLException(160034, "活动款金额不正确");
 		}
 
@@ -188,8 +199,12 @@ public class VpaymentServiceImpl implements VpaymentService {
 
 		EmemberPO ememberPO = ememberDao.queryEmemberByNo(mno);
 
+		if (posids != null && posids.size() > 0) {
+			pointofsalesDao.updatePointofsales(posids, PointofsalesPO.STATUS_USED_INT);
+		}
+
 		if (ememberPO != null) {
-			messageService.sendMessage(ememberPO.getUnionId(), "活动收款", mno, String.format("活动收款总额: %.2f", realMoney) );
+			messageService.sendMessage(ememberPO.getUnionId(), "活动收款", mno, String.format("活动收款总额: %.3f", Arith.div(realMoney, 1000.0)));
 		}
 
 		return 0;

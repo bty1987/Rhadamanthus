@@ -16,41 +16,41 @@ import javax.persistence.Table;
 public class SubjectBalancePO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -4186283504248226538L;
-	
+
 	public static final String COLUMN_SUBJECT_STR = "subject";
-	
+
 	public static final String COLUMN_SUBJECT_CODE_STR = "subject.code";
-	
+
 	public static final String COLUMN_PERIOD_STR = "period";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final short STATUS_INIT_INT = 0;
-	
+
 	public static final short STATUS_EXPIRED_INT = 1;
-	
+
 	private long sbId;
-	
+
 	private SubjectPO subject;
-	
+
 	private String period;
-	
-	private float total;
-	
-	private float initial;
-	
-	private float balance;
-	
-	private float debit;
-	
-	private float credit;
-	
-	private float annual;
-	
-	private float adebit;
-	
-	private float acredit;
-	
+
+	private long total;
+
+	private long initial;
+
+	private long balance;
+
+	private long debit;
+
+	private long credit;
+
+	private long annual;
+
+	private long adebit;
+
+	private long acredit;
+
 	private short status;
 
 	@Id
@@ -84,74 +84,74 @@ public class SubjectBalancePO implements java.io.Serializable {
 	}
 
 	@Column(name = "total")
-	public float getTotal() {
+	public long getTotal() {
 		return total;
 	}
 
-	public void setTotal(float total) {
+	public void setTotal(long total) {
 		this.total = total;
 	}
 
 	@Column(name = "initial")
-	public float getInitial() {
+	public long getInitial() {
 		return this.initial;
 	}
 
-	public void setInitial(float initial) {
+	public void setInitial(long initial) {
 		this.initial = initial;
 	}
 
 	@Column(name = "balance")
-	public float getBalance() {
+	public long getBalance() {
 		return this.balance;
 	}
 
-	public void setBalance(float balance) {
+	public void setBalance(long balance) {
 		this.balance = balance;
 	}
 
 	@Column(name = "annual")
-	public float getAnnual() {
+	public long getAnnual() {
 		return this.annual;
 	}
 
-	public void setAnnual(float annual) {
+	public void setAnnual(long annual) {
 		this.annual = annual;
 	}
 
 	@Column(name = "debit")
-	public float getDebit() {
+	public long getDebit() {
 		return debit;
 	}
 
-	public void setDebit(float debit) {
+	public void setDebit(long debit) {
 		this.debit = debit;
 	}
 
 	@Column(name = "credit")
-	public float getCredit() {
+	public long getCredit() {
 		return credit;
 	}
 
-	public void setCredit(float credit) {
+	public void setCredit(long credit) {
 		this.credit = credit;
 	}
 
 	@Column(name = "adebit")
-	public float getAdebit() {
+	public long getAdebit() {
 		return adebit;
 	}
 
-	public void setAdebit(float adebit) {
+	public void setAdebit(long adebit) {
 		this.adebit = adebit;
 	}
 
 	@Column(name = "acredit")
-	public float getAcredit() {
+	public long getAcredit() {
 		return acredit;
 	}
 
-	public void setAcredit(float acredit) {
+	public void setAcredit(long acredit) {
 		this.acredit = acredit;
 	}
 

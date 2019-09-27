@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.information.dao.VactivityDao;
 import com.fanglin.information.po.VactivityPO;
@@ -71,6 +72,25 @@ public class VactivityServiceImpl implements VactivityService {
 		}
 		
 		return vactivityVOs;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateVactivityForStatus(VactivityVO vactivityVO) throws FLException {
+		
+		VactivityPO vactivityPO = vactivityDao.get(vactivityVO.getVaid());
+		
+		if (vactivityPO == null) {
+			throw new FLException(160011, "活动信息不存在");
+		}
+		
+		if (vactivityPO.getStatus() != VactivityPO.STATUS_INIT_INT) {
+			throw new FLException(160052, "活动不可操作");
+		}
+		
+		vactivityPO.setStatus(vactivityVO.getStatus());
+		
+		vactivityDao.update(vactivityPO);
 	}
 
 }

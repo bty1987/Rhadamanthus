@@ -6,53 +6,52 @@ import com.fanglin.inventory.vo.ColorVO;
 import com.fanglin.inventory.vo.FormatVO;
 import com.fanglin.inventory.vo.GoodsVO;
 
-
 public class SalesItemVO implements Serializable {
 
 	private static final long serialVersionUID = -8723694814795039927L;
 
 	private Long siid;
-	
+
 	private Long sid;
-	
+
 	private GoodsVO goods;
-	
+
 	private ColorVO color;
-	
+
 	private FormatVO format;
-	
-	private Float purchase;
-	
-	private Float selling;
-	
-	private	Float discount;
-	
-	private	Float disPrice;
-	
-	private	Float postDis;
-	
-	private	Float price;
-	
-	private	Float num;
-	
-	private	Float total;
-	
-	private	String comment;
-	
-	private	Short rawCtype;
-	
-	private	Float rawCvalue;
-	
-	private	Short ctype;
-	
-	private	Float cvalue;
-	
-	private	Short priceType;
-	
+
+	private Integer purchase;
+
+	private Integer selling;
+
+	private Integer discount;
+
+	private Integer disPrice;
+
+	private Integer postDis;
+
+	private Integer price;
+
+	private Long num;
+
+	private Long total;
+
+	private String comment;
+
+	private Short rawCtype;
+
+	private Integer rawCvalue;
+
+	private Short ctype;
+
+	private Integer cvalue;
+
+	private Short priceType;
+
 	public SalesItemVO() {
 		super();
 	}
-	
+
 	public SalesItemVO(GoodsVO goods, ColorVO color, FormatVO format) {
 		super();
 		this.goods = goods;
@@ -75,7 +74,7 @@ public class SalesItemVO implements Serializable {
 	public void setSid(Long sid) {
 		this.sid = sid;
 	}
-	
+
 	public GoodsVO getGoods() {
 		return goods;
 	}
@@ -100,67 +99,67 @@ public class SalesItemVO implements Serializable {
 		this.format = format;
 	}
 
-	public Float getPurchase() {
+	public Integer getPurchase() {
 		return purchase;
 	}
 
-	public void setPurchase(Float purchase) {
+	public void setPurchase(Integer purchase) {
 		this.purchase = purchase;
 	}
 
-	public Float getSelling() {
+	public Integer getSelling() {
 		return selling;
 	}
 
-	public void setSelling(Float selling) {
+	public void setSelling(Integer selling) {
 		this.selling = selling;
 	}
 
-	public Float getDiscount() {
+	public Integer getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(Float discount) {
+	public void setDiscount(Integer discount) {
 		this.discount = discount;
 	}
 
-	public Float getDisPrice() {
+	public Integer getDisPrice() {
 		return disPrice;
 	}
 
-	public void setDisPrice(Float disPrice) {
+	public void setDisPrice(Integer disPrice) {
 		this.disPrice = disPrice;
 	}
 
-	public Float getPostDis() {
+	public Integer getPostDis() {
 		return postDis;
 	}
 
-	public void setPostDis(Float postDis) {
+	public void setPostDis(Integer postDis) {
 		this.postDis = postDis;
 	}
 
-	public Float getPrice() {
+	public Integer getPrice() {
 		return price;
 	}
 
-	public void setPrice(Float price) {
+	public void setPrice(Integer price) {
 		this.price = price;
 	}
 
-	public Float getNum() {
+	public Long getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(Long num) {
 		this.num = num;
 	}
 
-	public Float getTotal() {
+	public Long getTotal() {
 		return total;
 	}
 
-	public void setTotal(Float total) {
+	public void setTotal(Long total) {
 		this.total = total;
 	}
 
@@ -180,11 +179,11 @@ public class SalesItemVO implements Serializable {
 		this.rawCtype = rawCtype;
 	}
 
-	public Float getRawCvalue() {
+	public Integer getRawCvalue() {
 		return rawCvalue;
 	}
 
-	public void setRawCvalue(Float rawCvalue) {
+	public void setRawCvalue(Integer rawCvalue) {
 		this.rawCvalue = rawCvalue;
 	}
 
@@ -196,11 +195,11 @@ public class SalesItemVO implements Serializable {
 		this.ctype = ctype;
 	}
 
-	public Float getCvalue() {
+	public Integer getCvalue() {
 		return cvalue;
 	}
 
-	public void setCvalue(Float cvalue) {
+	public void setCvalue(Integer cvalue) {
 		this.cvalue = cvalue;
 	}
 

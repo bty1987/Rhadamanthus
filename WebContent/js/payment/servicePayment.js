@@ -341,6 +341,7 @@ jQuery(function($) {
 				 ['服务费', 'serviceMoney'],
 				 ['收款人', 'serviceReceipt.collecter.currentName'],
 				 ['收款时间', 'serviceReceipt.collectTime'],
+				 ['类型', 'type == "0" ? "收款" : "退款"'],
 				 ['状态', 'status == "1" ? "已付款" : "已确认"'],
 				 ['备注', 'comment'],
 				 ['现金', 'serviceReceipt.cash'],

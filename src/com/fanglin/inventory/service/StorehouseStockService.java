@@ -19,6 +19,6 @@ public interface StorehouseStockService {
 	
 	public List<StorehouseStockVO> queryStorehouseStock();
 	
-	public int updateStorehouseStock(long shId, String month, float num);
+	public int updateStorehouseStock(long shId, String month, int num);
 
 }

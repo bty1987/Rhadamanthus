@@ -6,7 +6,7 @@ $(function () {
         confirm: com.focusPage("#confirm")
     };
     goodsStorehouseStock.confirm.bindClick(saveData);
-    goodsStorehouseStock.formStore =com.focusPage('#formStore');
+    goodsStorehouseStock.formStore = com.focusPage('#formStore');
     com.initTypeahead("name", api.inventory.queryGoodsByName, "goods.name", {}, "goodes", "gid", "name", function (list, k, v) {
         com.focusPage('#layerAddGoodsStorehouseStock').find('input[name="name"]').attr('data-gid', k);
         com.post(api.inventory.queryColorForEnableByGid, {
@@ -271,15 +271,22 @@ $(function () {
         var $layer = com.focusPage('#layerAddStrore');
         var type = com.focusPage('#formStore').attr('_data-type');
         var newNum = $layer.find('input[name="newNum"]').val();
+        var url;
+        var option = {
+            "goodsStorehouseStock.goods.gid": goodsStorehouseStock.goods.goods.gid,
+            "goodsStorehouseStock.storehouse.shid": goodsStorehouseStock.goods.storehouse.shid,
+            "goodsStorehouseStock.color.cid": goodsStorehouseStock.goods.color.cid,
+            "goodsStorehouseStock.format.fid": goodsStorehouseStock.goods.format.fid,
+            "goodsStorehouseStock.num": Math.abs(parseFloat(newNum))
+        };
 
-        com.post(api.inventory.checkGoodsStorehouseStock, {
-            "checkList.goods.gid": goodsStorehouseStock.goods.goods.gid,
-            "checkList.storehouse.shid": goodsStorehouseStock.goods.storehouse.shid,
-            "checkList.color.cid": goodsStorehouseStock.goods.color.cid,
-            "checkList.format.fid": goodsStorehouseStock.goods.format.fid,
-            "checkList.type": type,
-            "checkList.num": Math.abs(parseFloat(newNum))
-        }, function (res) {
+        if (type == 0) {
+            url = api.inventory.surplusGoodsStorehouseStock
+        } else if (type == 1) {
+            url = api.inventory.lossesGoodsStorehouseStock
+        }
+
+        com.post(url, option, function (res) {
             com.clearValidator("#newNum", true);
             com.focusPage('#formStore').removeAttr('_data-type');
             com.closePopup();

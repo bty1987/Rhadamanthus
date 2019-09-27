@@ -182,8 +182,8 @@ public class PaymentServiceImpl implements PaymentService {
 			advancePaymentPO.setCompany(decorationPO.getCompany());
 		}		
 
-		float balance = 0;
-		float recharge = gatherPayment(paymentVO);
+		long balance = 0;
+		long recharge = gatherPayment(paymentVO);
 		Short type = paymentVO.getType();
 		Short paymentType = paymentVO.getPaymentType();
 		
@@ -192,7 +192,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 		balance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, paymentType);
 
-		float overBalance = 0;
+		long overBalance = 0;
 
 		if(!paymentTypes.contains(paymentType)){
 			throw new FLException(150028, "预付款类型错误");
@@ -248,9 +248,9 @@ public class PaymentServiceImpl implements PaymentService {
 		}
 		
 		if(paymentPO.getPaymentType() == 0){
-			decorationService.sendMessage(paymentPO.getOrderId(), "装修单", String.format("合同预付款金额%s元", paymentPO.getRecharge()));
+			decorationService.sendMessage(paymentPO.getOrderId(), "装修单", String.format("合同预付款金额%.3f元", Arith.div(paymentPO.getRecharge(), 1000.0)));
 		}else if(paymentPO.getPaymentType() == 2){
-			decorationService.sendMessage(paymentPO.getOrderId(), "主材单", String.format("主材预付款金额%s元", paymentPO.getRecharge()));
+			decorationService.sendMessage(paymentPO.getOrderId(), "主材单", String.format("主材预付款金额%.3f元", Arith.div(paymentPO.getRecharge(), 1000.0)));
 		}
 		
 		return 0;
@@ -305,13 +305,13 @@ public class PaymentServiceImpl implements PaymentService {
 			throw new FLException(150010, "预付款余额不足");
 		}
 
-		float balance = 0;
-		float recharge = gatherPayment(paymentVO);
+		long balance = 0;
+		long recharge = gatherPayment(paymentVO);
 		Short paymentType = paymentVO.getPaymentType();
 
 		balance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, paymentType);
 
-		float overBalance = 0;
+		long overBalance = 0;
 
 		if(balance < recharge){
 			throw new FLException(150010, "预付款余额不足");
@@ -360,7 +360,7 @@ public class PaymentServiceImpl implements PaymentService {
 			name = "主材预付款";
 		}
 		
-		decorationService.sendMessage(paymentPO.getOrderId(), name, name + "退款金额" + paymentPO.getRecharge() + "元");
+		decorationService.sendMessage(paymentPO.getOrderId(), name, String.format("%s退款金额%.3f元", name, Arith.div(paymentPO.getRecharge(), 1000.0)));
 
 		return 0;
 	}
@@ -385,13 +385,13 @@ public class PaymentServiceImpl implements PaymentService {
 			throw new FLException(150010, "预付款余额不足");
 		}
 
-		float balance = 0;
-		float recharge = gatherPayment(paymentVO);
+		long balance = 0;
+		long recharge = gatherPayment(paymentVO);
 		Short paymentType = paymentVO.getPaymentType();
 
 		balance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, paymentType);
 
-		float overBalance = 0;
+		long overBalance = 0;
 
 		if(balance < recharge){
 			throw new FLException(150010, "预付款余额不足");
@@ -439,7 +439,7 @@ public class PaymentServiceImpl implements PaymentService {
 	@Transactional(rollbackFor=Exception.class)
 	public int updatePayment(PaymentVO paymentVO) throws FLException{
 		
-		float realMoney = 0;
+		long realMoney = 0;
 
 		PaymentPO paymentPO = paymentDao.get(paymentVO.getPid());
 		
@@ -453,9 +453,9 @@ public class PaymentServiceImpl implements PaymentService {
 			throw new FLException(150036, "款项状态不可操作");
 		}
 		
-		Float cash = paymentVO.getCash();
-		Float bank = paymentVO.getBank();
-		Float checkv = paymentVO.getCheckv();
+		Long cash = paymentVO.getCash();
+		Long bank = paymentVO.getBank();
+		Long checkv = paymentVO.getCheckv();
 
 		if(cash != null && cash != 0){
 			advanceReceiptPO.setCash(paymentVO.getCash());
@@ -494,14 +494,14 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 
 	//计算各个付款方式总共的操作金额
-	public static float gatherPayment(PaymentVO paymentVO){
+	public static long gatherPayment(PaymentVO paymentVO){
 
-		float recharge = 0;
+		long recharge = 0;
 
-		Float cash = paymentVO.getCash();
-		Float bank = paymentVO.getBank();
-		Float checkv = paymentVO.getCheckv();
-		Float transfer = paymentVO.getTransfer();
+		Long cash = paymentVO.getCash();
+		Long bank = paymentVO.getBank();
+		Long checkv = paymentVO.getCheckv();
+		Long transfer = paymentVO.getTransfer();
 
 		if(cash != null){
 			recharge = Arith.add(cash, recharge);
@@ -522,7 +522,7 @@ public class PaymentServiceImpl implements PaymentService {
 		return recharge;
 	}
 
-	public static PaymentVO advancePaymentBalance(String paymentName, Float advance, Short _paymentType, Float customerAdvance, String userId, Long customerId, AdvancePaymentPO advancePaymentPO, String orderId) throws FLException{
+	public static PaymentVO advancePaymentBalance(String paymentName, Long advance, Short _paymentType, Long customerAdvance, String userId, Long customerId, AdvancePaymentPO advancePaymentPO, String orderId) throws FLException{
 		
 		PaymentVO paymentVO = new PaymentVO();
 		

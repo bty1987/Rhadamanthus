@@ -2,28 +2,28 @@ package com.fanglin.sales.vo;
 
 import java.io.Serializable;
 
-public class SalesBalanceItemVO implements Serializable{
+public class SalesBalanceItemVO implements Serializable {
 
 	private static final long serialVersionUID = -1711636143764240276L;
-	
+
 	private Long sbiid;
-	
+
 	private Long sbid;
-	
+
 	private SalesItemVO salesItem;
-	
+
 	private Short rawCtype;
-	
-	private Float rawCvalue;
-	
+
+	private Integer rawCvalue;
+
 	private Short ctype;
-	
-	private Float cvalue;
-	
-	private Float num;
-	
-	private Float total;
-	
+
+	private Integer cvalue;
+
+	private Long num;
+
+	private Long total;
+
 	public SalesBalanceItemVO() {
 		super();
 	}
@@ -65,11 +65,11 @@ public class SalesBalanceItemVO implements Serializable{
 		this.rawCtype = rawCtype;
 	}
 
-	public Float getRawCvalue() {
+	public Integer getRawCvalue() {
 		return rawCvalue;
 	}
 
-	public void setRawCvalue(Float rawCvalue) {
+	public void setRawCvalue(Integer rawCvalue) {
 		this.rawCvalue = rawCvalue;
 	}
 
@@ -81,28 +81,28 @@ public class SalesBalanceItemVO implements Serializable{
 		this.ctype = ctype;
 	}
 
-	public Float getCvalue() {
+	public Integer getCvalue() {
 		return cvalue;
 	}
 
-	public void setCvalue(Float cvalue) {
+	public void setCvalue(Integer cvalue) {
 		this.cvalue = cvalue;
 	}
 
-	public Float getNum() {
+	public Long getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(Long num) {
 		this.num = num;
 	}
 
-	public Float getTotal() {
+	public Long getTotal() {
 		return total;
 	}
 
-	public void setTotal(Float total) {
+	public void setTotal(Long total) {
 		this.total = total;
 	}
-	
+
 }

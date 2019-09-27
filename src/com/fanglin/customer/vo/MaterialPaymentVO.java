@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-public class MaterialPaymentVO implements Serializable{
+public class MaterialPaymentVO implements Serializable {
 
 	private static final long serialVersionUID = 57078245084828724L;
 
@@ -17,22 +17,22 @@ public class MaterialPaymentVO implements Serializable{
 
 	private String no;
 
-	private Float referMoney;
+	private Long referMoney;
 
 	private Timestamp collectTime;
 
-	private Float coupon;
+	private Long coupon;
 
 	private String couponInfo;
 
-	private Short paymentStatus; 
+	private Short paymentStatus;
 
 	private Short paymentType;
 
-	public MaterialPaymentVO(){
+	public MaterialPaymentVO() {
 		super();
 	}
-	
+
 	public String getOrderId() {
 		return orderId;
 	}
@@ -65,11 +65,11 @@ public class MaterialPaymentVO implements Serializable{
 		this.no = no;
 	}
 
-	public Float getReferMoney() {
+	public Long getReferMoney() {
 		return referMoney;
 	}
 
-	public void setReferMoney(Float referMoney) {
+	public void setReferMoney(Long referMoney) {
 		this.referMoney = referMoney;
 	}
 
@@ -82,11 +82,11 @@ public class MaterialPaymentVO implements Serializable{
 		this.collectTime = collectTime;
 	}
 
-	public Float getCoupon() {
+	public Long getCoupon() {
 		return coupon;
 	}
 
-	public void setCoupon(Float coupon) {
+	public void setCoupon(Long coupon) {
 		this.coupon = coupon;
 	}
 

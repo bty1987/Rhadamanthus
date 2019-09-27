@@ -24,7 +24,7 @@ public class ApprovalSalesRefundPO implements java.io.Serializable {
 
 	private long sid;
 
-	private float refund;
+	private long refund;
 
 	private short type;
 
@@ -58,11 +58,11 @@ public class ApprovalSalesRefundPO implements java.io.Serializable {
 	}
 
 	@Column(name = "refund")
-	public float getRefund() {
+	public long getRefund() {
 		return this.refund;
 	}
 
-	public void setRefund(float refund) {
+	public void setRefund(long refund) {
 		this.refund = refund;
 	}
 

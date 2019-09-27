@@ -15,35 +15,35 @@ import com.fanglin.payment.po.SalesPaymentPO;
 import com.fanglin.utils.Paging;
 
 @Service("salesPaymentOrderService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class SalesPaymentServiceImpl implements SalesPaymentService {
-	
+
 	@Autowired
 	private SalesPaymentDao salesPaymentDao;
 
 	@Override
-	public void queryCusSalesPayment(Paging paging, List<Filter> filters,SalesPaymentVO salesPaymentVO) {
-			
-			List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.queryCusSalesPayment(paging, filters, salesPaymentVO.getOrderId());
-	        List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();
-	        
-	        if(salesPaymentPOs.size() != 0 && salesPaymentPOs != null){
-	        	
-	        	for(SalesPaymentPO salesPaymentPO : salesPaymentPOs){
-					
-					salesPaymentVO = new SalesPaymentVO();
-					
-					salesPaymentVO.setOrderId(salesPaymentPO.getSales().getOrderId());
-					salesPaymentVO.setMoney(salesPaymentPO.getReferMoney());
-					salesPaymentVO.setStatus(salesPaymentPO.getStatus());
-					salesPaymentVO.setPaymentType(salesPaymentPO.getType());
-					salesPaymentVO.setBrand(salesPaymentPO.getBrand());
-					
-					if(salesPaymentPO.getSalesReceipt() != null){
-						salesPaymentVO.setCollectTime(salesPaymentPO.getSalesReceipt().getCollectTime());
-					}
-					
-					salesPaymentVOs.add(salesPaymentVO);
+	public void queryCusSalesPayment(Paging paging, List<Filter> filters, SalesPaymentVO salesPaymentVO) {
+
+		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.queryCusSalesPayment(paging, filters, salesPaymentVO.getOrderId());
+		List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();
+
+		if (salesPaymentPOs.size() != 0 && salesPaymentPOs != null) {
+
+			for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
+
+				salesPaymentVO = new SalesPaymentVO();
+
+				salesPaymentVO.setOrderId(salesPaymentPO.getSales().getOrderId());
+				salesPaymentVO.setMoney(salesPaymentPO.getReferMoney());
+				salesPaymentVO.setStatus(salesPaymentPO.getStatus());
+				salesPaymentVO.setPaymentType(salesPaymentPO.getType());
+				salesPaymentVO.setBrand(salesPaymentPO.getBrand());
+
+				if (salesPaymentPO.getSalesReceipt() != null) {
+					salesPaymentVO.setCollectTime(salesPaymentPO.getSalesReceipt().getCollectTime());
+				}
+
+				salesPaymentVOs.add(salesPaymentVO);
 			}
 		}
 
@@ -51,10 +51,10 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 	}
 
 	@Override
-	public Float countCusSalesPaymentForAmount(SalesPaymentVO salesPaymentVO) {
-		
-		float total = salesPaymentDao.countCusSalesPaymentForAmount(salesPaymentVO.getOrderId());
-		
+	public Long countCusSalesPaymentForAmount(SalesPaymentVO salesPaymentVO) {
+
+		long total = salesPaymentDao.countCusSalesPaymentForAmount(salesPaymentVO.getOrderId());
+
 		return total;
 	}
 

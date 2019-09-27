@@ -15,19 +15,19 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "cart", catalog = "store")
-public class CartPO implements Serializable{
+public class CartPO implements Serializable {
 
 	private static final long serialVersionUID = -183752142668984998L;
-	
+
 	public static final String COLUMN_UID_STR = "uid";
 
 	private long cid;
-	
+
 	private long uid;
-	
+
 	private MpricePO mprice;
-	
-	private short num;
+
+	private int num;
 
 	public CartPO() {
 		super();
@@ -59,22 +59,21 @@ public class CartPO implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "pid", referencedColumnName="pid")
+	@JoinColumn(name = "pid", referencedColumnName = "pid")
 	public MpricePO getMprice() {
 		return mprice;
 	}
 
-	
 	public void setMprice(MpricePO mprice) {
 		this.mprice = mprice;
 	}
-	
+
 	@Column(name = "num")
-	public short getNum() {
+	public int getNum() {
 		return num;
 	}
 
-	public void setNum(short num) {
+	public void setNum(int num) {
 		this.num = num;
 	}
 

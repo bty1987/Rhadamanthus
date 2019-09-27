@@ -19,19 +19,17 @@ import com.fanglin.data.quotation.vo.FunctionAreaVO;
 import com.fanglin.utils.Paging;
 
 public interface FunctionAreaService {
-	
-	public void pageFunctionArea(Paging paging, List<Filter> filters,int company);
-	
+
+	public void pageFunctionArea(Paging paging, List<Filter> filters, int company);
+
 	public FunctionAreaVO queryFunctionAreaByIdAVersionId(FunctionAreaVO functionAreaVO) throws FLException;
-	
+
 	public List<FunctionAreaVO> queryFunctionAreaByVersionId(FunctionAreaVO functionAreaVO) throws FLException;
-	
-	public int addFunctionArea(FunctionAreaVO functionAreaVO,int company) throws FLException;
-	
+
+	public int addFunctionArea(FunctionAreaVO functionAreaVO, int company) throws FLException;
+
 	public int updateFunctionArea(FunctionAreaVO functionAreaVO) throws FLException;
-	
-	public void deleteFunctionAreaByIds(List<Long> ids);
-	
-	public void deleteFunctionArea(FunctionAreaVO functionAreaVO);
+
+	public int deleteFunctionArea(FunctionAreaVO functionAreaVO);
 
 }

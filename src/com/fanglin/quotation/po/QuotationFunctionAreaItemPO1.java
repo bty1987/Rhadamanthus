@@ -27,43 +27,43 @@ import com.fanglin.data.po.QuotationItemPO;
 
 @Entity
 @Table(name = "quotationfunctionareaitem1", catalog = "quotation")
-public class QuotationFunctionAreaItemPO1 extends QuotationFunctionAreaItemPO implements Serializable{
+public class QuotationFunctionAreaItemPO1 extends QuotationFunctionAreaItemPO implements Serializable {
 
 	private static final long serialVersionUID = -416961628763903496L;
 
 	private long qfaiId;
 
 	private String itemName;
-	
+
 	private String measurementUnit;
-	
+
 	private String workType;
-	
-	private float unitPrice;
-	
+
+	private int unitPrice;
+
 	private String formula;
-	
-	private float initNum;
-	
-	private float num;
-	
+
+	private int initNum;
+
+	private int num;
+
 	private short type;
-	
+
 	private short subtype;
-	
+
 	private short discount;
-	
+
 	private QuotationFunctionAreaPO quotationFunctionArea;
-	
+
 	private QuotationItemPO quotationItem;
-	
+
 	private String content;
-	
+
 	private int index;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "qfaiId") 
+	@Column(name = "qfaiId")
 	public long getQfaiId() {
 		return qfaiId;
 	}
@@ -71,7 +71,7 @@ public class QuotationFunctionAreaItemPO1 extends QuotationFunctionAreaItemPO im
 	public void setQfaiId(long qfaiId) {
 		this.qfaiId = qfaiId;
 	}
-	
+
 	@Column(name = "itemName")
 	public String getItemName() {
 		return itemName;
@@ -100,13 +100,14 @@ public class QuotationFunctionAreaItemPO1 extends QuotationFunctionAreaItemPO im
 	}
 
 	@Column(name = "unitPrice")
-	public float getUnitPrice() {
+	public int getUnitPrice() {
 		return unitPrice;
 	}
 
-	public void setUnitPrice(float unitPrice) {
+	public void setUnitPrice(int unitPrice) {
 		this.unitPrice = unitPrice;
 	}
+
 	@Column(name = "formula")
 	public String getFormula() {
 		return formula;
@@ -115,22 +116,22 @@ public class QuotationFunctionAreaItemPO1 extends QuotationFunctionAreaItemPO im
 	public void setFormula(String formula) {
 		this.formula = formula;
 	}
-	
+
 	@Column(name = "initNum")
-	public float getInitNum() {
+	public int getInitNum() {
 		return initNum;
 	}
 
-	public void setInitNum(float initNum) {
+	public void setInitNum(int initNum) {
 		this.initNum = initNum;
 	}
 
 	@Column(name = "num")
-	public float getNum(){
+	public int getNum() {
 		return num;
 	}
-	
-	public void setNum(float num){
+
+	public void setNum(int num) {
 		this.num = num;
 	}
 
@@ -162,21 +163,21 @@ public class QuotationFunctionAreaItemPO1 extends QuotationFunctionAreaItemPO im
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "quotationFunctionAreaId", referencedColumnName = "qfaId")
-	public QuotationFunctionAreaPO getQuotationFunctionArea(){
+	public QuotationFunctionAreaPO getQuotationFunctionArea() {
 		return quotationFunctionArea;
 	}
-	
-	public void setQuotationFunctionArea(QuotationFunctionAreaPO quotationFunctionArea){
+
+	public void setQuotationFunctionArea(QuotationFunctionAreaPO quotationFunctionArea) {
 		this.quotationFunctionArea = quotationFunctionArea;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "quotationItemId", referencedColumnName = "qiId")
-	public QuotationItemPO getQuotationItem(){
+	public QuotationItemPO getQuotationItem() {
 		return quotationItem;
 	}
-	
-	public void setQuotationItem(QuotationItemPO quotationItem){
+
+	public void setQuotationItem(QuotationItemPO quotationItem) {
 		this.quotationItem = quotationItem;
 	}
 
@@ -188,6 +189,7 @@ public class QuotationFunctionAreaItemPO1 extends QuotationFunctionAreaItemPO im
 	public void setContent(String content) {
 		this.content = content;
 	}
+
 	@Column(name = "index")
 	public int getIndex() {
 		return index;

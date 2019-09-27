@@ -25,7 +25,7 @@ public class SalaryVO implements Serializable {
 
 	private Short thrtype;
 
-	private Float money;
+	private Long money;
 
 	private Short status;
 
@@ -34,15 +34,15 @@ public class SalaryVO implements Serializable {
 	private Timestamp operateTime;
 
 	private String comment;
-	
-	public SalaryVO(){
+
+	public SalaryVO() {
 		super();
 	}
-	
-	public SalaryVO(UserBaseVO user,UserBaseVO operater){
+
+	public SalaryVO(UserBaseVO user, UserBaseVO operater) {
 		super();
-		this.user=user;
-		this.operater=operater;
+		this.user = user;
+		this.operater = operater;
 	}
 
 	public Long getSid() {
@@ -61,7 +61,7 @@ public class SalaryVO implements Serializable {
 		this.user = user;
 	}
 
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -102,11 +102,11 @@ public class SalaryVO implements Serializable {
 		this.thrtype = thrtype;
 	}
 
-	public Float getMoney() {
+	public Long getMoney() {
 		return money;
 	}
 
-	public void setMoney(Float money) {
+	public void setMoney(Long money) {
 		this.money = money;
 	}
 
@@ -126,7 +126,7 @@ public class SalaryVO implements Serializable {
 		this.operater = operater;
 	}
 
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getOperateTime() {
 		return operateTime;
 	}
@@ -142,5 +142,5 @@ public class SalaryVO implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 }

@@ -1,5 +1,5 @@
 $(function () {
-    var createCustomerSource = {
+    var customerSource = {
         saveBtn: com.focusPage("#saveBtn"),
 
         items: {
@@ -13,15 +13,21 @@ $(function () {
         },
 
         csid: null,
+        
+        status: {},
 
         grade: ["A", "B", "C", "D"]
     };
 
-    createCustomerSource.saveBtn.bindClick(saveData);
+    customerSource.saveBtn.bindClick(saveData);
+    
+    com.post(api.ds.customer, {}, function (res) {
+        customerSource.status = res.customerSourceStatus.split('key', 'value');
+    }, null, false);
 
     com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", { "duty": "", "user.status": 0}, "userBases", "uid", "currentName", null);
 
-    createCustomerSource.items.grade.bindData(createCustomerSource.grade, "key", "value", false);
+    customerSource.items.grade.bindData(customerSource.grade, "key", "value", false);
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
@@ -62,6 +68,7 @@ $(function () {
                 ["楼牌号: ", v.houseNumber, "blue"],
                 ["建筑面积: ", v.buildArea, "blue"],
                 ["装修单号: ", com.checkNull(v.orderId, '无'), "blue"],
+                ["状态: ", customerSource.status[v.status], "red"],
                 ["备注: ", com.checkNull(v.comment, '无'), "grey"]
             ];
             $.each(propertyArr, function (index, value) {
@@ -78,7 +85,7 @@ $(function () {
             $belonger.click(function () {
 
                 com.popup4model('#customersourceforbelonger', "编辑归属人", function () {
-                    createCustomerSource.csid = v.csid;
+                    customerSource.csid = v.csid;
                     com.updateTypeahead("belonger", v.belonger.uid, com.checkNull(v.belonger.userName, ''));
                 });
             });
@@ -112,7 +119,7 @@ $(function () {
         }
 
         var option = {
-            "customerOrigin.csid": createCustomerSource.csid,
+            "customerOrigin.csid": customerSource.csid,
             "customerOrigin.belonger.uid": com.typeahead("belonger")
         };
 

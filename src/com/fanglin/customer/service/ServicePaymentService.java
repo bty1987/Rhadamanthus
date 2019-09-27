@@ -9,7 +9,7 @@ import com.fanglin.utils.Paging;
 public interface ServicePaymentService {
 
 	public void queryCusServicePayment(Paging paging, List<Filter> filters, ServicePaymentVO servicePaymentVO);
-	
-	public float countCusServicePaymentForAmount(ServicePaymentVO servicePaymentVO);
-	
+
+	public long countCusServicePaymentForAmount(ServicePaymentVO servicePaymentVO);
+
 }

@@ -27,11 +27,11 @@ public class QuotationVersionVO implements Serializable {
 
 	private Short defaultFlag;
 
-	private Float trafficRate;
+	private Integer trafficRate;
 
 	private Short trafficDiscount;
 
-	private Float manageRate;
+	private Integer manageRate;
 
 	private Short manageDiscount;
 
@@ -75,11 +75,11 @@ public class QuotationVersionVO implements Serializable {
 		this.defaultFlag = defaultFlag;
 	}
 
-	public Float getTrafficRate() {
+	public Integer getTrafficRate() {
 		return trafficRate;
 	}
 
-	public void setTrafficRate(Float trafficRate) {
+	public void setTrafficRate(Integer trafficRate) {
 		this.trafficRate = trafficRate;
 	}
 
@@ -91,11 +91,11 @@ public class QuotationVersionVO implements Serializable {
 		this.trafficDiscount = trafficDiscount;
 	}
 
-	public Float getManageRate() {
+	public Integer getManageRate() {
 		return manageRate;
 	}
 
-	public void setManageRate(Float manageRate) {
+	public void setManageRate(Integer manageRate) {
 		this.manageRate = manageRate;
 	}
 

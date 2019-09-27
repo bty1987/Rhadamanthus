@@ -34,6 +34,7 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.QuotationPO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 
 @Service("approvalQuotationDiscountService")
@@ -93,7 +94,7 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 
-		String content = String.format("订单号:%s,报价编号:%s,折扣:%s,修改为折扣:%s", orderId, String.valueOf(qid), quotationPO.getDiscount(), approvalQuotationDiscountVO.getNewDiscount());
+		String content = String.format("装修单号:%s,报价ID:%s,折扣:%.3f,修改为折扣:%s", orderId, String.valueOf(qid), Arith.div(quotationPO.getDiscount(), 1000.0), Arith.div(approvalQuotationDiscountVO.getNewDiscount(), 1000.0));
 
 		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(qid), ApprovalPO.APPROVAL_TYPE_QUOTATION_DISCOUNT_INT, content, company);
 
@@ -146,10 +147,10 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 
 			quotationPO.setDiscount(approvalQuotationDiscountPO.getNewDiscount());
 			quotationPO.setBasePrice(approvalQuotationDiscountPO.getBasePrice());
-			
+
 			if (quotationPO.getDefaults() == QuotationPO.DEFAULTS_DEFAULT_INT) {
 				decorationPO.setDiscount(quotationPO.getDiscount());
-				
+
 				decorationDao.update(decorationPO);
 			}
 

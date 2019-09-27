@@ -21,9 +21,9 @@ public class SalesReceiptPO  implements Serializable{
 	
 	public static final String COLUMN_SRID_STR = "srId";
 	
-	public static final float COLUMN_COUPON_INT = 0f;
+	public static final long COLUMN_COUPON_INT = 0;
 	
-	public static final float COLUMN_MONEY_INT = 0f;
+	public static final long COLUMN_MONEY_INT = 0;
 	
 	public static final short COLUMN_ADVANCETYPE_INT = 0;
 	
@@ -49,31 +49,31 @@ public class SalesReceiptPO  implements Serializable{
 	
 	private Timestamp confirmTime;
 	
-	private float cash;                
+	private long cash;                
 	
 	private String cashInfo;           
 	
-	private float bank;                
+	private long bank;                
 	
 	private String bankInfo;           
 	
-	private float checkv;              
+	private long checkv;              
 	
 	private String checkvBank;
 	
-	private float installment;         
+	private long installment;         
 	
 	private String installBank;        
 	
-	private float accounts;            
+	private long accounts;            
 	
 	private String accountsBank; 
 	
-	private float advance;             
+	private long advance;             
 	
 	private short advanceType;         
 	
-	private float coupon;              
+	private long coupon;              
 	
 	private String couponInfo;         
 	
@@ -168,11 +168,11 @@ public class SalesReceiptPO  implements Serializable{
 	}
 
 	@Column(name = "cash")
-	public float getCash() {
+	public long getCash() {
 		return cash;
 	}
 
-	public void setCash(float cash) {
+	public void setCash(long cash) {
 		this.cash = cash;
 	}
 
@@ -186,11 +186,11 @@ public class SalesReceiptPO  implements Serializable{
 	}
 
 	@Column(name = "bank")
-	public float getBank() {
+	public long getBank() {
 		return bank;
 	}
 
-	public void setBank(float bank) {
+	public void setBank(long bank) {
 		this.bank = bank;
 	}
 
@@ -204,11 +204,11 @@ public class SalesReceiptPO  implements Serializable{
 	}
 
 	@Column(name = "checkv")
-	public float getCheckv() {
+	public long getCheckv() {
 		return checkv;
 	}
 
-	public void setCheckv(float checkv) {
+	public void setCheckv(long checkv) {
 		this.checkv = checkv;
 	}
 
@@ -222,11 +222,11 @@ public class SalesReceiptPO  implements Serializable{
 	}
 	
 	@Column(name = "installment")
-	public float getInstallment() {
+	public long getInstallment() {
 		return installment;
 	}
 
-	public void setInstallment(float installment) {
+	public void setInstallment(long installment) {
 		this.installment = installment;
 	}
 
@@ -240,11 +240,11 @@ public class SalesReceiptPO  implements Serializable{
 	}
 
 	@Column(name = "accounts")
-	public float getAccounts() {
+	public long getAccounts() {
 		return accounts;
 	}
 
-	public void setAccounts(float accounts) {
+	public void setAccounts(long accounts) {
 		this.accounts = accounts;
 	}
 
@@ -258,11 +258,11 @@ public class SalesReceiptPO  implements Serializable{
 	}
 
 	@Column(name = "advance")
-	public float getAdvance() {
+	public long getAdvance() {
 		return advance;
 	}
 
-	public void setAdvance(float advance) {
+	public void setAdvance(long advance) {
 		this.advance = advance;
 	}
 
@@ -276,11 +276,11 @@ public class SalesReceiptPO  implements Serializable{
 	}
 
 	@Column(name = "coupon")
-	public float getCoupon() {
+	public long getCoupon() {
 		return coupon;
 	}
 
-	public void setCoupon(float coupon) {
+	public void setCoupon(long coupon) {
 		this.coupon = coupon;
 	}
 

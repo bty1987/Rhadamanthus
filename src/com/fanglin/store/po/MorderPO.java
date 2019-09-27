@@ -16,54 +16,54 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "morder", catalog = "store")
-public class MorderPO implements Serializable{
+public class MorderPO implements Serializable {
 
 	private static final long serialVersionUID = -586716249741389800L;
-	
+
 	public static final String COLUMN_UNIONID_STR = "unionId";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final String COLUMN_NO_STR = "no";
-	
+
 	public static final String COLUMN_CREATETIME_STR = "createTime";
-	
+
 	public static final short STATUS_INIT_SHORT = 0;
-	
+
 	public static final short STATUS_WAITINGSEND_SHORT = 1;
-	
+
 	public static final short STATUS_ENDSEND_SHORT = 2;
-	
+
 	public static final short STATUS_WAITINGEVALUATION_SHORT = 3;
-	
+
 	public static final short STATUS_DELETE_SHORT = 5;
-	
+
 	public static final short STATUS_COMPLETED_SHORT = 6;
-	
+
 	private long oid;
-	
+
 	private String no;
-	
+
 	private String unionId;
-	
+
 	private String rmunionId;
-	
+
 	private CouponPO coupon;
-	
-	private float total;
-	
+
+	private long total;
+
 	private Timestamp createTime;
-	
+
 	private Timestamp paymentTime;
-	
+
 	private String address;
-	
+
 	private short status;
 
 	public MorderPO() {
 		super();
 	}
-	
+
 	public MorderPO(CouponPO coupon) {
 		super();
 		this.coupon = coupon;
@@ -108,7 +108,7 @@ public class MorderPO implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cid", referencedColumnName="cid")
+	@JoinColumn(name = "cid", referencedColumnName = "cid")
 	public CouponPO getCoupon() {
 		return coupon;
 	}
@@ -118,11 +118,11 @@ public class MorderPO implements Serializable{
 	}
 
 	@Column(name = "total")
-	public float getTotal() {
+	public long getTotal() {
 		return total;
 	}
 
-	public void setTotal(float total) {
+	public void setTotal(long total) {
 		this.total = total;
 	}
 
@@ -152,7 +152,7 @@ public class MorderPO implements Serializable{
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
@@ -161,5 +161,5 @@ public class MorderPO implements Serializable{
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
+
 }

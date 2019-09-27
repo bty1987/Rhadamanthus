@@ -16,46 +16,47 @@ import com.fanglin.data.common.vo.PaymentScaleItemVO;
 @Controller
 @ParentPackage("base")
 @Namespace("/")
-public class PaymentScaleItemAction extends BaseListAction{
+public class PaymentScaleItemAction extends BaseListAction {
 
 	private static final long serialVersionUID = 4931624886904941777L;
-	
-	@Autowired PaymentScaleItemService  paymentScaleItemService;
-	
-	private PaymentScaleItemVO paymentScaleitem;
-	
+
+	@Autowired
+	private PaymentScaleItemService paymentScaleItemService;
+
+	private PaymentScaleItemVO paymentScaleItem;
+
 	private List<PaymentScaleItemVO> paymentScaleItems;
 
-	@Action(value="queryPaymentScaleItemByPsid", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryPaymentScaleItemByPsid (){
-		
-			paymentScaleItems = paymentScaleItemService.queryPaymentScaleItemByPsid(paymentScaleitem);
-		
-			return SUCCESS;
-	}
-	
-	@Action(value="addPaymentScaleItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addPaymentScaleItem (){
-		
-			paymentScaleItemService.addPaymentScaleItem(paymentScaleitem);
-		
-			return SUCCESS;
-	}
-	
-	@Action(value="deletePaymentScaleItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String deletePaymentScaleItem (){
-		
-			paymentScaleItemService.deletePaymentScaleItem(paymentScaleitem);
-	
-			return SUCCESS;
+	@Action(value = "queryPaymentScaleItemByPsid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryPaymentScaleItemByPsid() {
+
+		paymentScaleItems = paymentScaleItemService.queryPaymentScaleItemByPsid(paymentScaleItem);
+
+		return SUCCESS;
 	}
 
-	public PaymentScaleItemVO getPaymentScaleitem() {
-		return paymentScaleitem;
+	@Action(value = "addPaymentScaleItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addPaymentScaleItem() {
+
+		paymentScaleItemService.addPaymentScaleItem(paymentScaleItem);
+
+		return SUCCESS;
 	}
 
-	public void setPaymentScaleitem(PaymentScaleItemVO paymentScaleitem) {
-		this.paymentScaleitem = paymentScaleitem;
+	@Action(value = "deletePaymentScaleItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deletePaymentScaleItem() {
+
+		paymentScaleItemService.deletePaymentScaleItem(paymentScaleItem);
+
+		return SUCCESS;
+	}
+
+	public PaymentScaleItemVO getPaymentScaleItem() {
+		return paymentScaleItem;
+	}
+
+	public void setPaymentScaleItem(PaymentScaleItemVO paymentScaleItem) {
+		this.paymentScaleItem = paymentScaleItem;
 	}
 
 	public List<PaymentScaleItemVO> getPaymentScaleItems() {
@@ -65,5 +66,5 @@ public class PaymentScaleItemAction extends BaseListAction{
 	public void setPaymentScaleItems(List<PaymentScaleItemVO> paymentScaleItems) {
 		this.paymentScaleItems = paymentScaleItems;
 	}
-	
+
 }

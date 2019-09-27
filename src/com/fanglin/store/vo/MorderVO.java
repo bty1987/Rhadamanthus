@@ -6,30 +6,30 @@ import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
 
-public class MorderVO implements Serializable{
+public class MorderVO implements Serializable {
 
 	private static final long serialVersionUID = 1482416278109134854L;
 
 	private Long oid;
-	 
+
 	private String no;
-	
+
 	private String unionId;
-	
+
 	private String rmunionId;
-	
+
 	private CouponVO coupon;
-	
-	private Float total;
-	
+
+	private Long total;
+
 	private Timestamp createTime;
-	
+
 	private Timestamp paymentTime;
-	
+
 	private String address;
-	
+
 	private Short status;
-	
+
 	private List<MorderItemVO> items;
 
 	public MorderVO() {
@@ -81,15 +81,15 @@ public class MorderVO implements Serializable{
 		this.coupon = coupon;
 	}
 
-	public Float getTotal() {
+	public Long getTotal() {
 		return total;
 	}
 
-	public void setTotal(Float total) {
+	public void setTotal(Long total) {
 		this.total = total;
 	}
 
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -98,7 +98,7 @@ public class MorderVO implements Serializable{
 		this.createTime = createTime;
 	}
 
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getPaymentTime() {
 		return paymentTime;
 	}
@@ -114,7 +114,7 @@ public class MorderVO implements Serializable{
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	
+
 	public Short getStatus() {
 		return status;
 	}

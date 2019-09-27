@@ -34,11 +34,11 @@ public class AuditRecordPO implements Serializable{
 	
 	private String comment;
 	
-	private float unitprice;
+	private long unitprice;
 	
-	private float num;
+	private long num;
 	
-	private float discount;
+	private long discount;
 	
 	private UserPO creater;
 	
@@ -80,29 +80,29 @@ public class AuditRecordPO implements Serializable{
 	}
 
 	@Column(name="unitprice")
-	public float getUnitprice() {
+	public long getUnitprice() {
 		return unitprice;
 	}
 
-	public void setUnitprice(float unitprice) {
+	public void setUnitprice(long unitprice) {
 		this.unitprice = unitprice;
 	}
 
 	@Column(name="num")
-	public float getNum() {
+	public long getNum() {
 		return num;
 	}
 
-	public void setNum(float num) {
+	public void setNum(long num) {
 		this.num = num;
 	}
 
 	@Column(name="discount")
-	public float getDiscount() {
+	public long getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(float discount) {
+	public void setDiscount(long discount) {
 		this.discount = discount;
 	}
 

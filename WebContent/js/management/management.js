@@ -200,8 +200,6 @@ jQuery(function($) {
 	        constructionNodes = res.constructionNodes.split("sort", "name");
 	    }, null, false);
 	    
-	    console.log(constructionNodes);
-
         com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": orderId}, function(res){
             
             var constructionSchedules = res.constructionSchedules;
@@ -209,8 +207,6 @@ jQuery(function($) {
             $.each(constructionSchedules, function(i, v){
                 v["name"] = constructionNodes[v["schedule"]];
             });
-            
-            console.log(constructionSchedules)
             
             management.items.csid4constructionschedule.bindData(constructionSchedules, 'csid', 'name');
         }, null, false);
@@ -331,7 +327,7 @@ jQuery(function($) {
 
 		var options = {
 			"decoration.orderId": com.focusPage("#oldOrderId").val(),
-			"decorationId": com.focusPage("#newOrderId").val(),
+			"decorationOrderId": com.focusPage("#newOrderId").val(),
 		};
 
 		com.post(api.decoration.changeDecorationForOrderId, options, function(res){
@@ -567,7 +563,7 @@ jQuery(function($) {
 			"quotationFunctionAreaItem.unitPrice": management.items.manageRate.val(),
 		};
 		
-		com.post(api.common.updateQuotationFunctionAreaItemByQuotationIdAType, options, function(res){
+		com.post(api.quotation.updateQuotationFunctionAreaItemByQuotationIdAType, options, function(res){
 			com.showAlert(com.info, "操作成功");
 		});
 

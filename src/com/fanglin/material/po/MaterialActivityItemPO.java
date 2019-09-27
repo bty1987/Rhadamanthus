@@ -56,9 +56,9 @@ public class MaterialActivityItemPO implements Serializable {
 
 	private String name;
 
-	private float num;
+	private int num;
 
-	private float money;
+	private int money;
 	
 	private short state;
 	
@@ -135,20 +135,20 @@ public class MaterialActivityItemPO implements Serializable {
 	}
 
 	@Column(name = "num")
-	public float getNum() {
+	public int getNum() {
 		return num;
 	}
 
-	public void setNum(float num) {
+	public void setNum(int num) {
 		this.num = num;
 	}
-
+	
 	@Column(name = "money")
-	public float getMoney() {
+	public int getMoney() {
 		return money;
 	}
 
-	public void setMoney(float money) {
+	public void setMoney(int money) {
 		this.money = money;
 	}
 

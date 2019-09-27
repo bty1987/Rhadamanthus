@@ -12,31 +12,31 @@ public class AwardRecordVO implements Serializable {
 	private static final long serialVersionUID = 1819823248528353629L;
 
 	private int arid;
-	
+
 	private String orderId;
 
 	private AwardStockVO awardStock;
 
 	private Short type;
-	
+
 	private Short onetype;
-	
+
 	private Short subtype;
-	
+
 	private Short isStock;
 
-	private Float num;
+	private Integer num;
 
-	private Float totalPrice;
+	private Integer unitPrice;
 
-	private Float unitPrice;
+	private Long totalPrice;
 
 	private UserVO creater;
 
 	private Timestamp operateTime;
 
 	private String content;
-	
+
 	public AwardRecordVO(AwardStockVO awardStock, UserVO creater) {
 		super();
 		this.awardStock = awardStock;
@@ -54,7 +54,7 @@ public class AwardRecordVO implements Serializable {
 	public void setArid(int arid) {
 		this.arid = arid;
 	}
-	
+
 	public String getOrderId() {
 		return orderId;
 	}
@@ -78,7 +78,7 @@ public class AwardRecordVO implements Serializable {
 	public void setType(Short type) {
 		this.type = type;
 	}
-	
+
 	public Short getSubtype() {
 		return subtype;
 	}
@@ -94,7 +94,7 @@ public class AwardRecordVO implements Serializable {
 	public void setOnetype(Short onetype) {
 		this.onetype = onetype;
 	}
-	
+
 	public Short getIsStock() {
 		return isStock;
 	}
@@ -103,27 +103,27 @@ public class AwardRecordVO implements Serializable {
 		this.isStock = isStock;
 	}
 
-	public Float getNum() {
+	public Integer getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(Integer num) {
 		this.num = num;
 	}
 
-	public Float getTotalPrice() {
+	public Long getTotalPrice() {
 		return totalPrice;
 	}
 
-	public void setTotalPrice(Float totalPrice) {
+	public void setTotalPrice(Long totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 
-	public Float getUnitPrice() {
+	public Integer getUnitPrice() {
 		return unitPrice;
 	}
 
-	public void setUnitPrice(Float unitPrice) {
+	public void setUnitPrice(Integer unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 
@@ -134,13 +134,13 @@ public class AwardRecordVO implements Serializable {
 	public void setCreater(UserVO creater) {
 		this.creater = creater;
 	}
-	
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getOperateTime() {
 		return operateTime;
 	}
-	
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public void setOperateTime(Timestamp operateTime) {
 		this.operateTime = operateTime;
 	}
@@ -153,5 +153,4 @@ public class AwardRecordVO implements Serializable {
 		this.content = content;
 	}
 
-	
 }

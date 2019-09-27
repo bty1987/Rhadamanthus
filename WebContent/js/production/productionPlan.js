@@ -1,215 +1,226 @@
+$(function(){
 
-jQuery(function ($) {
+    var productionPlan = {
 
-	var $layerImport = com.focusPage("#layerImport");
-    var pid = params.pid;
-    var $productionStatus = params["status"];
-    var productionPlan ={
-        pid : null,
-        configFlag : false,
-    };
+        saveBtn: com.focusPage("#saveBtn"),
+        cancelBtn : com.focusPage("#cancelBtn"),
 
-    com.datetime(com.focusPage(".date-picker"), "date");
+        modals: {
+            productionPlanModal: com.focusPage("#productionPlanModal"),
+            layerImport: com.focusPage("#layerImport")
+        },
 
-    var displayFunc = (function () {
+        items: {
+            startTime: com.focusPage("#startTime"),
+            endTime: com.focusPage("#endTime"),
+            comment: com.focusPage("#comment")
+        },
+
+        editFlg: true,
+
+        PostData : {
+            pid: params.pid,
+            status: params.status
+        },
+
+        status: {},
+    }
+
+    productionPlan.saveBtn.bindClick(saveData);
+
+    com.datetime(com.focusPage(".date-picker-date"));//时间初始化
+
+    productionPlan.modals.productionPlanModal.on("hide.bs.modal", function () {
+        com.cleanItems(productionPlan.items);
+        com.closeTip();
+    });
+
+    var displayFunc  = (function(){
+
         var renderList = function(tableId,listData){
-            var $tableWrap = com.focusPage('#'+tableId);
-            var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
+            var $tableWrap = com.focusPage('#' + tableId).empty();
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if(listData && listData.length){
-                $.each(listData,function(i,v){
-                  
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                    var $h3 = $('<h3></h3>').addClass('oid');
-                    var $title = $('<small></small>').addClass('blue').html(' ' + v.no);
-                    var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+                $.each(listData,function(i, v){
+                    var $liLine = creatLine(v);
 
-                    var $btnSub = $('<a></a>').addClass('btn btn-minier btn-yellow').html('子项');
-                    var $btnPrograss = $('<a></a>').addClass('btn btn-minier btn-success').html('生产进度');
-                    var $btnUpload = $('<a></a>').addClass('btn btn-minier btn-warning').html('上传');
-                    var $product = $('<a></a>').addClass('btn btn-minier btn-inverse').html('开始生产');
-                    var $btnStorehouse = $('<a></a>').addClass('btn btn-minier btn-danger').html('入库');
-                    var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-pink').html('编辑');
-                    var $btnDelivery = $('<a></a>').addClass('btn btn-minier btn-purple').html('送货');
-                    var propertyArr = [
-                        ["投料时间:", v.startTime, "green"],
-                        ["出货时间:", v.endTime, "green"],
-                        ["状态:", v.status == 0 ? '初始' : v.status == 1 ? '入库' : v.status == 2 ? '送货' : '生产中', "red"],
-                        ["备注:",v.comment,"grey"]
-                    ];
-
-                    $.each(propertyArr, function (index,value) {
-                        var $liProperty = $('<li></li>');
-                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                        $liProperty.appendTo($ulProperty);
-                    });
-
-                    if($productionStatus == 4 || $productionStatus == 5){
-                        $btnDiv.append($btnSub).append($btnPrograss).append($btnUpload);
-                    }else{
-
-                        if(v.status == 0){//状态为初始
-                            $btnDiv.append($btnSub).append($btnPrograss).append($btnUpload).append($product).append($btnEdit);
-                        }
-
-                        if(v.status == 3){//状态为生产中
-                            $btnDiv.append($btnSub).append($btnPrograss).append($btnUpload).append($btnStorehouse);
-                        }
-
-                        if(v.status == 1){//状态为入库
-                            $btnDiv.append($btnSub).append($btnPrograss).append($btnUpload).append($btnDelivery);
-                        }
-
-                        if(v.status == 2 ){//状态为送货
-                            $btnDiv.append($btnSub).append($btnPrograss).append($btnUpload);
-                        }
-                    }
-
-                    $h3.append($title).append($btnDiv);
                     $liLine.appendTo($ul);
-                    $liLine.append($h3).append($ulProperty);
-                    
-                    $btnSub.click(function () {
-                        params["productionPlan.ppid"] = v.ppid;
-                        params["productionPlan.status"] = v.status;
-                        params["production"] = $productionStatus;
-                        com.switchPage(api.index.productionPlanItemIndex.url);
-                    });
-
-                    $btnPrograss.click(function () {
-                        params["productionPlan.ppid"] = v.ppid;
-                        params["productionPlan.status"] = v.status;
-                        params["production.status"] = $productionStatus;
-                        com.switchPage(api.index.productionPlanDetailIndex.url);
-
-                    });
-
-                    $btnUpload.click(function(){
-
-                        com.focusPage("#layerImport").find('.infobox').remove();
-                        openlayerImport();
-
-                        if(v.path){
-                            createLine(v.path, v.comment);
-                        }
-
-                        com.focusPage('#importProductionPlanExcel').empty();
-
-                        hidBtn(com.focusPage('#importProductionPlanExcel'), v.status);
-
-                        com.focusPage("#importProductionPlanExcel").Huploadify({
-                            'debug': false, // 开启调试
-                            'auto': true, // 是否自动上传
-                            'successTimeout': 99999, // 超时时间
-                            'formData': { // 附带值
-                                'uploadType': 2
-                            },
-                            'buttonClass': 'btn btn-success blue',
-                            'buttonText': "添加上传文件",
-                            'overrideEvents': ['onDialogClose'], // 不执行默认的onSelect事件
-                            'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-                            'uploader':config.media + api.common.uploadOther.url, // 上传处理程序
-                            'width' : '100',
-                            'height': '30', // 浏览按钮的高度
-                            'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-                            'fileTypeExts': "*.xlsx", // 允许上传的文件后缀
-                            'fileSizeLimit': '5MB', // 上传文件的大小限制
-                            'multi': true,
-                            'queueSizeLimit': 1, // 上传数量
-                            'onUploadSuccess': function (file, data, response) {
-                                updateProductionPlanPath(data, v.ppid);
-                                // 上传到服务器,服务器返回相应信息到data里
-                            }});
-
-                    });
-
-                    $btnEdit.click(function () {
-                        productionPlan.ppid = v.ppid;
-                        com.focusPage('#startTime').val(v.startTime);
-                        com.focusPage('#endTime').val(v.endTime);
-                        com.focusPage('#comment').val(v.comment);
-                        editProductionPlan(function () {
-                            if(checkTime()==true){
-                                var startTime = com.focusPage('#startTime').val();
-                                var endTime = com.focusPage('#endTime').val();
-                                var comment = com.focusPage('#comment').val();
-                                var ppid = productionPlan.ppid;
-                                com.post(api.production.updateProductionPlan,{
-                                    "productionPlan.ppid" : ppid,
-                                    "productionPlan.startTime" : startTime,
-                                    "productionPlan.endTime" : endTime,
-                                    "productionPlan.comment" : comment
-                                },function (res) {
-                                    $('#layerAdd').find('input').val("");
-                                    com.showAlert(com.info, "操作成功");
-                                    searcher.doSearch();
-                                })
-                            }else{
-                                com.showAlert(com.warning, "请检查投料时间和出货时间");
-                            }
-                        });
-                    });
-
-                    $btnStorehouse.click(function () {
-                        var status = v.status;
-                        var ppid = v.ppid;
-
-                        com.post(api.production.updateProductionPlanForStatus,{
-                            "productionPlan.ppid" : ppid,
-                            "productionPlan.status" : 1
-                        },function (res) {
-                            com.showAlert(com.info, "操作成功");
-                            searcher.doSearch();
-                        });
-                    });
-
-                    $product.click(function () {
-                        var status = v.status;
-                        var ppid = v.ppid;
-
-                        if($productionStatus == 0 || $productionStatus == 1){
-                            com.showAlert(com.warning, "未审核无法进行生产");
-                            return false;
-                        }
-                        //将生产单的状态更改为生产
-                        com.post(api.production.updateProductionPlanForStatus,{
-                            "productionPlan.ppid" : ppid,
-                            "productionPlan.status" : 3
-                        },function (res) {
-                            searcher.doSearch();
-                            if($productionStatus != 3 ){
-                                com.post(api.production.updateProductionForStatus,{"production.pid":pid,"production.status":3}, function (res) {
-                                    $productionStatus = 3;
-                                    com.showAlert(com.info, "操作成功");
-                                },null,false);
-                            }
-                        })
-                    });
-
-                    $btnDelivery.click(function () {
-                        var status = v.status;
-                        var ppid = v.ppid;
-
-                        com.post(api.production.updateProductionPlanForStatus,{
-                            "productionPlan.ppid" : ppid,
-                            "productionPlan.status" : 2
-                        },function (res) {
-                            com.showAlert(com.info, "操作成功");
-                            searcher.doSearch();
-                        })
-                    });
                 });
+
                 $ul.appendTo($tableWrap);
             }
         };
+
+        var creatLine = function(v){
+
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid');
+            var $title = $('<small></small>').addClass('blue').html(' ' + v.no);
+            var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+
+            var $btnSub = $('<a></a>').addClass('btn btn-minier btn-yellow').html('子项');
+            var $btnPrograss = $('<a></a>').addClass('btn btn-minier btn-success').html('生产进度');
+            var $btnUpload = $('<a></a>').addClass('btn btn-minier btn-warning').html('上传');
+            var $product = $('<a></a>').addClass('btn btn-minier btn-inverse').html('开始生产');
+            var $btnStorehouse = $('<a></a>').addClass('btn btn-minier btn-danger').html('入库');
+            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-pink').html('编辑');
+            var $btnDelivery = $('<a></a>').addClass('btn btn-minier btn-purple').html('送货');
+
+            com.post(api.ds.production, {}, function (res) {
+                productionPlan.status = res.productionPlanStatus.split("key", "value");
+            });
+
+            var propertyArr = [
+                ["投料时间:", v.startTime, "green"],
+                ["出货时间:", v.endTime, "green"],
+                ["状态:", productionPlan.status[v.status], "red"],
+                ["备注:",v.comment,"grey"]
+            ];
+
+            $.each(propertyArr, function (index,value) {
+                var $liProperty = $('<li></li>');
+                $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                $liProperty.appendTo($ulProperty);
+            });
+
+            if(productionPlan.PostData.status == 4 || productionPlan.PostData.status == 5){
+                $btnDiv.append($btnSub).append($btnPrograss).append($btnUpload);
+            }else{
+
+                if(v.status == 0){//状态为初始
+                    $btnDiv.append($btnSub).append($btnPrograss).append($btnUpload).append($product).append($btnEdit);
+                }
+
+                if(v.status == 3){//状态为生产中
+                    $btnDiv.append($btnSub).append($btnPrograss).append($btnUpload).append($btnStorehouse);
+                }
+
+                if(v.status == 1){//状态为入库
+                    $btnDiv.append($btnSub).append($btnPrograss).append($btnUpload).append($btnDelivery);
+                }
+
+                if(v.status == 2 ){//状态为送货
+                    $btnDiv.append($btnSub).append($btnPrograss).append($btnUpload);
+                }
+            }
+
+            $h3.append($title).append($btnDiv);
+            $liLine.append($h3).append($ulProperty);
+
+            $btnSub.click(function () {
+                params["productionPlan.ppid"] = v.ppid;
+                params["productionPlan.status"] = v.status;
+                params["production"] = productionPlan.PostData.status;
+                com.switchPage(api.index.productionPlanItemIndex.url);
+            });
+
+            $btnPrograss.click(function () {
+                params["productionPlan.ppid"] = v.ppid;
+                params["productionPlan.status"] = v.status;
+                params["production.status"] = productionPlan.PostData.status;
+                com.switchPage(api.index.productionPlanDetailIndex.url);
+
+            });
+
+            $btnUpload.click(function(){
+
+                //删除createLine画出来的上一个元素防止叠加
+                com.focusPage("#layerImport").find('.infobox').remove();
+
+                if(v.path){
+                    createLine(v.path, v.comment);
+                }
+
+                hidBtn(com.focusPage('#importProductionPlanExcel'), v.status);
+
+                com.uploadify("#importProductionPlanExcel", "添加上传文件", 'btn btn-success blue ', "*.xlsx", {'uploadType': 2}, 1, function(data){
+
+                    var option = {
+                        "productionPlan.ppid": v.ppid,
+                        "productionPlan.path": data.resUrl
+                    };
+
+                    com.post(api.production.updateProductionPlan,option,function(res){
+                        com.showAlert(com.info, "操作成功");
+                        searcher.doSearch();
+                    });
+                });
+
+                productionPlan.modals.layerImport.modal("show");
+            });
+
+            $btnEdit.click(function () {
+                productionPlan.editFlg = false;
+
+                productionPlan.items.ppid = v.ppid;
+                productionPlan.items.startTime.val(v.startTime.substring(0, 10));
+                productionPlan.items.endTime.val(v.endTime.substring(0, 10));
+                productionPlan.items.comment.val(v.comment);
+
+                productionPlan.modals.productionPlanModal.modal("show");
+
+            });
+
+            $btnStorehouse.click(function () {
+
+                com.post(api.production.updateProductionPlanForStatus,{
+                    "productionPlan.ppid" : v.ppid,
+                    "productionPlan.status" : 1
+                },function () {
+                    com.showAlert(com.info, "操作成功");
+                    searcher.doSearch();
+                });
+            });
+
+            $product.click(function () {
+
+                if(productionPlan.PostData.status == 0 || productionPlan.PostData.status == 1){
+                    com.showAlert(com.warning, "未审核无法进行生产");
+                    return false;
+                }
+                //将生产单的状态更改为生产
+                com.post(api.production.updateProductionPlanForStatus,{
+                    "productionPlan.ppid" : v.ppid,
+                    "productionPlan.status" : 3
+                },function () {
+                    searcher.doSearch();
+                    if(productionPlan.PostData.status != 3 ){
+                        com.post(api.production.updateProductionForStatus, {
+                            "production.pid":productionPlan.PostData.pid,"production.status":3
+                        }, function () {
+                            productionPlan.PostData.status = 3;
+                            com.showAlert(com.info, "操作成功");
+                        },null,false);
+                    }
+                })
+            });
+
+            $btnDelivery.click(function () {
+
+                com.post(api.production.updateProductionPlanForStatus,{
+                    "productionPlan.ppid" : v.ppid,
+                    "productionPlan.status" : 2
+                },function () {
+                    com.showAlert(com.info, "操作成功");
+                    searcher.doSearch();
+                })
+            });
+
+            return $liLine;
+        };
+
         return {
             init : function(tableId,listData){
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
+            },
+            drawLine : function(v){
+                return creatLine(v);
             }
-        }
+        };
     })();
 
     var searcher  = new Searcher();
@@ -218,150 +229,64 @@ jQuery(function ($) {
 
     searcher.init(_arr,'condList',api.production.pageProductionPlan,function (data) {
         displayFunc.init('resultList', data);
-    },"pagenation","productionPlanPostData",{"production.pid" : pid},false,null,function () {
+    },"pagenation","productionPlanPostData",{"production.pid" : productionPlan.PostData.pid},false,null,function () {
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addProductionPlan').css("margin", "0px 3px");
+        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        var $adda = $('<a></a>').addClass('btn btn-xs btn-info pull-left').attr('name', 'add').css("margin", "0px 3px").html('添加');
-
-        hidBtn($adda,0);
-
-        $adda.click(function () {
-            com.focusPage('#layerAdd').find('input').val("");
-            addProductionPlan(function () {
-
-                if(submitValidate() == true && checkTime() == true){
-                    addProduction();
-                }else{
-                    com.showAlert(com.warning, "请检查投料时间和出货时间");
-                }
-            });
-        });
-
-        var $back = $('<a></a>').addClass('btn btn-xs pull-left').attr('name', 'back').css("margin", "0px 3px");
-        var $backi = $('<i></i>').addClass('m-icon-swapleft').appendTo($back);
+        var $back = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'back').css("margin", "0px 3px");
+        var $backi = $('<i></i>').addClass('icon-mail-forward bigger-110').appendTo($back);
         var $backspan = $('<span></span>').text('返回').appendTo($back);
 
-        $back.click(function () {
-            com.switchPage(api.index.productionIndex.url);
-        });
         return [$adda,$back];
 
     });
-    
-    function addProductionPlan(addCallBack) {
-        com.closePopup();
-        layer.open({
-            type: 1,
-            skin: 'layui-layer-lan',
-            title: "新增",
-            content: com.focusPage('#layerAdd'),
-            area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定', '取消'],
-            yes: function (index, layero) {
 
-                addCallBack(index,layero)
-            },
-            btn2: function (index, layero) {
-                //按钮【按钮二】的回调
-            },
-            cancel: function () {
-                //右上角关闭回调
-            }
-        });
-    }
+    com.focusPage("#confirmBtn").click(function(){
+        productionPlan.modals.layerImport.modal("hide");
+    });
 
-    function editProductionPlan(callback){
-        com.closePopup();
-        layer.open({
-            type: 1,
-            skin: 'layui-layer-lan',
-            title: "编辑",
-            content: com.focusPage('#layerAdd'),
-            area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定', '取消'],
-            yes: function (index, layero) {
-                callback(index,layero);
-            },
-            btn2: function (index, layero) {
-                //按钮【按钮二】的回调
-            },
-            cancel: function () {
-                //右上角关闭回调
-            }
-        });
-    }
+    com.focusPage("#back").click(function () {
+        com.switchPage(api.index.productionIndex.url);
+    });
 
-    var submitValidate = function () {
-        var flag = true;
-        if(com.focusPage('#startTime').val() == ""){
-            com.showAlert(com.warning, "请填写投料时间");
-            flag = false;
+    com.focusPage("#addProductionPlan").click(function() {
+        productionPlan.editFlg = true;
+        productionPlan.modals.productionPlanModal.modal("show");
+    });
+
+    function saveData() {
+
+        if (com.validate('productionPlanModal')) {
+            return false;
         }
-        if(com.focusPage('#endTime').val() == ""){
-            com.showAlert(com.warning, "请填写出货时间");
-            flag = false;
+
+        if(productionPlan.items.startTime.val() > productionPlan.items.endTime.val()) {
+            com.showAlert(com.warning, "请检查投料时间和出货时间");
+            return false;
         }
-        return flag;
-    };
-
-    function checkTime(){
-
-        var flag = true;
-        var startTime = com.focusPage('#startTime').val();
-        var endTime = com.focusPage('#endTime').val();
-
-        if(startTime == "" || endTime == ""){
-            flag = false;
+        var url;
+        var options = {
+            "productionPlan.pid":  productionPlan.PostData.pid,
+            "productionPlan.startTime" : productionPlan.items.startTime.val(),
+            "productionPlan.endTime" : productionPlan.items.endTime.val(),
+            "productionPlan.comment" : productionPlan.items.comment.val()
         }
-        var beginTime = new Date(startTime);
-        var finishTime = new Date(endTime);
-        if(beginTime.getTime() > finishTime.getTime()){
-            flag = false;
-        }
-        return flag;
-    }
 
-    function addProduction() {
-        var startTime = com.focusPage('#startTime').val();
-        var endTime = com.focusPage('#endTime').val();
-        var comment = com.focusPage('#comment').val();
-        com.post(api.production.addProductionPlan,{
-            "productionPlan.pid" : pid,
-            "productionPlan.startTime" : startTime,
-            "productionPlan.endTime" : endTime,
-            "productionPlan.comment" : comment
-        },function () {
+        productionPlan.editFlg ? url = api.production.addProductionPlan :
+                                 url = api.production.updateProductionPlan, options["productionPlan.ppid"] = productionPlan.items.ppid;
+
+        com.post(url, options, function(){
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
         });
-    }
 
-    function openlayerImport(){
-        com.closePopup();
-        layer.open({
-            type: 1,
-            skin: 'layui-layer-lan',
-            title: "导入excel",
-            content: com.focusPage('#layerImport'),
-            area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定'],
-            success: function (layers, index) {
-
-            },
-            end: function () {
-
-            }
-        });
+        productionPlan.modals.productionPlanModal.modal("hide");
     }
 
     function createLine(path, comment){
 
-        var $line = $layerImport.find(".infobox-container");
+        var $line = productionPlan.modals.layerImport.find(".infobox-container");
 
         var $name = comment+".xlsx";
 
@@ -378,32 +303,11 @@ jQuery(function ($) {
         $iconGrouop.append($icondownload);
         $box.append($iconGrouop).append($dataGrouop);
         $line.append($box)
-
-    }
-
-
-    function updateProductionPlanPath(data,ppid){
-
-        var dateObj = eval("(" + data + ")");
-        var option = {};
-
-        option["productionPlan.ppid"] = ppid;
-
-        if (dateObj.errorCode == 0) {
-            option["productionPlan.path"] = dateObj.resUrl;
-        }else{
-            com.showAlert(com.warning, "上传失败");
-        }
-
-        com.post(api.production.updateProductionPlan,option,function(res){
-            com.showAlert(com.info, "操作成功");
-            searcher.doSearch();
-        });
     }
 
     function hidBtn(btnId,otherStatus){
         btnId.removeClass('hide');
-        if($productionStatus == 5 || $productionStatus == 4 || $productionStatus == 3) {
+        if(productionPlan.PostData.status == 5 || productionPlan.PostData.status == 4 || productionPlan.PostData.status == 3) {
             btnId.addClass('hide');
         }else if(otherStatus != 0 ){
             btnId.addClass('hide');
@@ -412,4 +316,3 @@ jQuery(function ($) {
     }
 
 });
-

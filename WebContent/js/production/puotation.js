@@ -1,15 +1,55 @@
-﻿$(function () {
-    var backBtn = com.focusPage('#backBtn');
-    var addpuotationBtn = com.focusPage('#addpuotationBtn');
-    var pid =params["pid"];
-    var status =params["status"];
+﻿$(function (){
 
-    if (status == 5 || status == 4 || status == 3) {
-        addpuotationBtn.addClass('hide');
-    }
-    var discount = null;
-    var tot = null;
-    var initList = function (listData) {
+    var puotation={
+
+        btns:{
+            editConfirmBtn : com.focusPage('#editConfirmBtn'),//报价信息确定按钮
+            distConfirmBtn : com.focusPage('#distConfirmBtn'),//报价折让信息确定按钮
+            backBtn : com.focusPage('#backBtn'),//返回按钮
+            addpuotationBtn : com.focusPage('#addpuotationBtn'),//创建按钮
+        },
+
+        models:{
+            discountModal:com.focusPage("#discountModal"),
+            editModal:com.focusPage("#editModal")
+        },
+
+        items:{
+            qid: com.focusPage("#qid"),
+            creater : com.focusPage("#creater"),
+            total : com.focusPage("#total"),
+            discount : com.focusPage('#discount'),
+            name: com.focusPage("#name"),
+            comment: com.focusPage("#comment")
+        },
+        pid : params.pid,
+        status : params["status"],
+        discount : null,
+        tot : null
+    };
+
+
+        puotation.btns.distConfirmBtn.bindClick(saveDis);
+
+        puotation.btns.editConfirmBtn.bindClick(saveData);
+
+        puotation.btns.backBtn.click(function () {
+            com.switchPage(api.index.productionIndex.url);
+        });
+
+        puotation.btns.addpuotationBtn.click(function () {
+            com.switchPage(api.index.createPutationIndex.url);
+        });
+
+        puotation.models.discountModal.on("hide.bs.modal", function () {
+            com.closeTip();
+        });
+
+        puotation.models.editModal.on("hide.bs.modal", function () {
+            com.closeTip();
+        });
+
+   var initList = function (listData) {
         var $tableWrap = com.focusPage('#list');
         var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
 
@@ -48,7 +88,7 @@
                 $liLine.appendTo($ul);
                 $liLine.append($h3).append($ulProperty);
 
-                if(status != 3 &&status != 4 && status != 5){
+                if(puotation.status != 3 &&puotation.status != 4 && puotation.status != 5){
                     if(v.status==0){
                         $btnDiv.append($btnAdd).append($btnItem).append($btnDis).append($btnDelete).append($btnStatus).append($btnEdit);
                     }else if(v.status==1){
@@ -61,172 +101,155 @@
                 $h3.append($title).append($btnDiv);
 
                 $btnAdd.click(function () {
-                    params["qid"] = v.qid;
-                    params["discount"] = v.discount;
-                    params["total"] = v.total;
-                    params["name"] = v.name;
-                    params["comment"] = v.comment;
-
-                    com.switchPage(api.index.addPuotationItemIndex.url);
+                    addPuotationItem(v);
                 });
 
                 $btnItem.click(function () {
-                    params["qid"] = v.qid;
-                    params["status"] = status;
-                    params["use"] = v.status ;
-                  com.switchPage(api.index.puotationItemIndex.url);
+                    showItem(v);
                 });
 
                 $btnDelete.click(function (e) {
-                    com.showConfirm("是否确认删除", function(){
-                        com.post(api.production.deletePuotation, {"puotation.qid": v.qid}, function () {
-                            com.focusPage('#list ul.item-list').remove();
-                            queryPuotationByPid(v.pid);
-                        });
-                    });
+                    delectPuotation(v);
                 });
 
                 $btnStatus.click(function (e) {
-                    com.showConfirm("确定更改状态为" + (v.status == 0 ? "正使用" : "未使用"), function(){
-                        com.post(api.production.updatePuotationForDefault, {"puotation.qid": v.qid}, function () {
-                            com.focusPage('#list ul.item-list').remove();
-                            queryPuotationByPid(v.pid);
-                        });
-                    });
+                    statusPuotation(v);
                 });
-                
-                $btnEdit.click(function(){
-                    var name = com.focusPage('#layerAdd').find('input[name="name"]').val(v.name);
-                    var comment = com.focusPage('#layerAdd').find('input[name="comment"]').val(v.comment);
 
-                    com.focusPage('#layerAdd').attr('data-qid', v.qid);
-                    openlayer(function(){
-                        var id = com.focusPage('#layerAdd').attr('data-qid');
-                        saveData(id);
-                    });
-                });
+                $btnEdit.click(function(){
+                    showUpdate(v);
+               });
 
                 $btnDis.click(function(){
-                    var dis = com.focusPage('#layerAdd2').find('input[name="dis"]').val(v.discount);
-                    discount= v.discount;
-                    var total = com.focusPage('#layerAdd2').find('input[name="total"]').val(v.total);
-                    tot = v.total;
-                    com.focusPage('#layerAdd2').attr('data-qid', v.qid);
-                    com.clearValidator();
-
-                    openlayer2(function(){
-                        var id = com.focusPage('#layerAdd2').attr('data-qid');
-                        if(!com.validate("layerAdd2",null)){
-                            saveDis(id);
-                        }
-                    });
+                    viewDiscountInfo(v);
                 });
             });
             $ul.appendTo($tableWrap);
         }
     };
-    queryPuotationByPid(pid);
+
+    queryPuotationByPid(puotation.pid);
+
+    function viewDiscountInfo(v){
+
+        com.clearValidator();
+
+        puotation.items.qid = v.qid;
+        puotation.items.discount.val(v.discount);
+        puotation.items.total.val(v.total);
+        puotation.discount= v.discount;
+        puotation.tot = v.total;
+        puotation.models.discountModal.modal("show");
+    }
+
+    function showUpdate(v) {
+        com.clearValidator();
+
+        puotation.items.qid = v.qid;
+        puotation.items.name.val(v.name);
+        puotation.items.comment.val(v.comment);
+        puotation.models.editModal.modal("show");
+    }
+
+    function addPuotationItem(v){
+
+           params["qid"] = v.qid;
+           params["discount"] = v.discount;
+           params["total"] = v.total;
+           params["name"] = v.name;
+           params["comment"] = v.comment;
+
+        com.switchPage(api.index.addPuotationItemIndex.url);
+    };
+
+    function showItem(v){
+
+           params["qid"] = v.qid;
+           params["status"] = puotation.status;
+           params["use"] = v.status ;
+        com.switchPage(api.index.puotationItemIndex.url);
+    };
+
+    function delectPuotation(v) {
+        com.showConfirm("是否确认删除", function(){
+            com.post(api.production.deletePuotation, {"puotation.qid": v.qid}, function () {
+                com.focusPage('#list ul.item-list').remove();
+                queryPuotationByPid(v.pid);
+                com.showAlert(com.info, "操作成功");
+            });
+        });
+
+    };
+
+    function statusPuotation(v) {
+        com.showConfirm("确定更改状态为" + (v.status == 0 ? "正使用" : "未使用"), function(){
+            com.post(api.production.updatePuotationForDefault, {"puotation.qid": v.qid}, function () {
+                com.focusPage('#list ul.item-list').remove();
+                queryPuotationByPid(v.pid);
+                com.showAlert(com.info, "操作成功");
+            });
+        });
+    };
+
+    function saveData(){
+        if (com.validate('editModal')) {
+            return false;
+        }
+
+        var options = {
+            "puotation.qid" :  puotation.items.qid,
+            "puotation.name" : puotation.items.name.val(),
+            "puotation.comment" : puotation.items.comment.val()
+        };
+
+        com.post(api.production.updatePuotation,options,function () {
+            com.focusPage('#list ul.item-list').remove();
+            com.showAlert(com.info, "操作成功");
+            queryPuotationByPid(puotation.pid)
+            puotation.models.editModal.modal("hide");
+        })
+    };
+
+    function saveDis(){
+        if (com.validate('discountModal')) {
+            return false;
+        };
+
+        if(puotation.items.discount.val()> 1 || puotation.items.discount.val()<0.01) {
+            com.showAlert(com.warning, "请输入0到1之间的两位小数");
+            return false;
+        };
+
+        var options = {
+            "puotation.qid": puotation.items.qid,
+            "puotation.discount": puotation.items.discount.val(),
+            "puotation.total": puotation.items.total.val()
+        };
+
+        com.post(api.production.updatePuotationForAdvance, options, function () {
+            com.focusPage('#list ul.item-list').remove();
+            com.showAlert(com.info, "操作成功");
+            queryPuotationByPid(puotation.pid)
+            puotation.models.discountModal.modal("hide");
+        });
+    };
 
     function queryPuotationByPid(pid) {
-        com.post(api.production.queryPuotationByPid, {"puotation.pid": pid}, function (data) {
+        com.post(api.production.queryPuotationByPid, {"puotation.pid": puotation.pid}, function (data) {
             initList(data.puotations);
+
         }, function (e) {
             com.showAlert(com.error, e.errorMsg);
         }, false);
-    }
-    
-    backBtn.click(function () {
-        com.switchPage(api.index.productionIndex.url);
-    });
-    
-    addpuotationBtn.click(function () {
-            com.switchPage(api.index.createPutationIndex.url);
-    });
+    };
 
-    function openlayer(callback){
-        com.closePopup();
-        layer.open({
-            type: 1,
-            title:"报价信息",
-            content: com.focusPage('#layerAdd'),
-            area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
-            maxmin: false,
-            zIndex:9000,
-            btn: ['确定', '取消'],
-            yes: function(index, layero){
-                callback(index,layero);
-            },
-            btn2: function(index, layero){
-                //按钮【按钮二】的回调
-            },
-            cancel: function(){
-                //右上角关闭回调
-            }
-        });
-    }
-    function openlayer2(callback){
-        com.closePopup();
-        layer.open({
-            type: 1,
-            title:"报价折让信息",
-            content: com.focusPage('#layerAdd2'),
-            area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
-            maxmin: false,
-            zIndex:9000,
-            btn: ['确定', '取消'],
-            yes: function(index, layero){
-                callback(index,layero);
-            },
-            btn2: function(index, layero){
-                //按钮【按钮二】的回调
-            },
-            cancel: function(){
-                //右上角关闭回调
-            }
-        });
-    }
-
-    function saveData(id){
-        var $layer = com.focusPage('#layerAdd');
-        var name = $layer.find('input[name="name"]').val();
-        var comment = $layer.find('input[name="comment"]').val();
-            com.post(api.production.updatePuotation, {
-                "puotation.qid": id,
-                "puotation.name": name,
-                "puotation.comment": comment
-            }, function(res){
-                com.showAlert(com.info, "操作成功");
-                com.focusPage('#list ul.item-list').remove();
-                queryPuotationByPid(pid);
-            });
-    }
-
-    com.focusPage('#dis').on("change",function () {
-        com.clearValidator();
-        if(!com.validate("layerAdd2",null)) {
-            com.focusPage('#total').val(utils.accMul(utils.accDiv(parseFloat(tot),parseFloat(discount)), parseFloat($('#dis').val())));
+    puotation.items.discount.on("change",function () {
+         com.clearValidator();
+        if(!com.validate("discountModal",null)) {
+            com.focusPage('#total').val(utils.accMul(utils.accDiv(parseFloat(puotation.tot),parseFloat(puotation.discount)), parseFloat($('#discount').val())));
         }
+
     });
 
-    //$('#total').on("change",function () {
-    //    com.clearValidator();
-    //    if(!com.validate("layerAdd2",null)) {
-    //        $('#dis').val(utils.accDiv( parseFloat($('#total').val()),utils.accDiv(parseFloat(tot),parseFloat(discount))).toFixed(2));
-    //    }
-    //});
-
-    function saveDis(id){
-        var $layer = com.focusPage('#layerAdd2');
-        var dis = $layer.find('input[name="dis"]').val();
-        var total = $layer.find('input[name="total"]').val();
-            com.post(api.production.updatePuotationForAdvance, {
-                "puotation.qid": id,
-                "puotation.discount": dis,
-                "puotation.total": total
-            }, function(res){
-                com.focusPage('#list ul.item-list').remove();
-                queryPuotationByPid(pid);
-            });   
-    }
 
 });

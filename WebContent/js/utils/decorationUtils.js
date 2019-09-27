@@ -310,21 +310,17 @@ var decorationUtils = {
             var couponCut = 0;
             var thingCut = 0;
 
-            for (var i = 0; i < decorationActivityItems.length; i++) {
-                if (decorationActivityItems[i].type == 0 && decorationActivityItems[i].state != 1) {//0卷
+            for (var i = 0; i < decorationActivityItems.length; i++) {//0: 初始 , 1: 失效 , 2: 已领 , 3: 退货 , 4: 配送 , 5: 未退 , 6: 升级 , 7: 消耗
+                if (decorationActivityItems[i].type == 0 && [0, 2, 4, 5, 6].indexOf(decorationActivityItems[i].state) != -1) {//0卷
                     couponCut = utils.accAdd(couponCut, utils.accMul(decorationActivityItems[i].money, decorationActivityItems[i].num));
-                } else if (decorationActivityItems[i].type == 1 && decorationActivityItems[i].state != 1) {//物品
-                    thingCut = utils.accAdd(thingCut, utils.accMul(decorationActivityItems[i].money, decorationActivityItems[i].num));
-                }else if (decorationActivityItems[i].type == 2 && decorationActivityItems[i].state != 1) {//特殊券
-                    couponCut = utils.accAdd(couponCut, utils.accMul(decorationActivityItems[i].money, decorationActivityItems[i].num));
-                }else if (decorationActivityItems[i].type == 3 && decorationActivityItems[i].state != 1){//特殊物品
+                } else if (decorationActivityItems[i].type == 1 && [0, 2, 4, 5, 6].indexOf(decorationActivityItems[i].state) != -1) {//物品
                     thingCut = utils.accAdd(thingCut, utils.accMul(decorationActivityItems[i].money, decorationActivityItems[i].num));
                 }
 
                 activityPriceInfo.html("");
-                var couponCutSpan = $("<div></div>").addClass("col-sm-4").append($("<h4></h4>").html("券优惠:").append($('<strong></strong>').addClass("red").html(couponCut))).appendTo(activityPriceInfo);
-                var thingCutSpan = $("<div></div>").addClass("col-sm-4").append($("<h4></h4>").html("物品优惠:").append($('<strong></strong>').addClass("red").html(thingCut))).appendTo(activityPriceInfo);
-                var detailSpan = $("<div></div>").addClass("col-sm-4").append($("<h4></h4>").html("优惠总额:").append($('<strong></strong>').addClass("red").html(utils.accAdd(couponCut, thingCut)))).appendTo(activityPriceInfo);
+                var couponCutSpan = $("<div></div>").attr("id", "_couponCut").addClass("col-sm-4").append($("<h4></h4>").html("券优惠:").append($('<strong></strong>').addClass("red").html(couponCut))).appendTo(activityPriceInfo);
+                var thingCutSpan = $("<div></div>").attr("id", "_thingCut").addClass("col-sm-4").append($("<h4></h4>").html("物品优惠:").append($('<strong></strong>').addClass("red").html(thingCut))).appendTo(activityPriceInfo);
+                var detailSpan = $("<div></div>").attr("id", "_detail").addClass("col-sm-4").append($("<h4></h4>").html("优惠总额:").append($('<strong></strong>').addClass("red").html(utils.accAdd(couponCut, thingCut)))).appendTo(activityPriceInfo);
                 decorationUtils.addActivityItemForDiv(activityItems, decorationActivityItems[i], uiBtnMethod);
             }
 
@@ -348,8 +344,9 @@ var decorationUtils = {
 
         var pricingSpan = $("<div></div>").addClass("col-md-6").css("margin", "5px 0px").attr("id", "pricing_" + _activityItem.daiId).prependTo(_activityItems);
         var widgetBox = $("<div></div>").appendTo(pricingSpan);
+        var total = [0, 2, 4, 5, 6].indexOf(_activityItem.state) != -1 ? utils.accMul(_activityItem.money, _activityItem.num) : 0;
 
-        var widgetBody = $("<div class='module_activity_border'></div>").appendTo(widgetBox);
+        var widgetBody = $("<div class='module_activity_border'></div>").attr("data-type", _activityItem.type).attr("data-total", total).appendTo(widgetBox);
         var widgetMain = $("<div></div>").addClass("widget-main no-padding").appendTo(widgetBody);
 
         var widgetHeader = $("<div></div>").addClass("").attr("id", "widgetHeader_" + _activityItem.daiId).appendTo(widgetMain);
@@ -371,10 +368,10 @@ var decorationUtils = {
         var numSpan = $("<span></span>").addClass("blue").attr("id", "money_" + _activityItem.daiId).text(_activityItem.num).appendTo(numLi);
         var totalLi = $("<li></li>").appendTo(ul);
         var totalState = $("<strong></strong>").text("合计:").appendTo(totalLi);
-        var totalSpan = $("<span></span>").addClass("blue").attr("id", "money_" + _activityItem.daiId).text(utils.accMul(_activityItem.money, _activityItem.num)).appendTo(totalLi);
+        var totalSpan = $("<span></span>").addClass("blue").attr("id", "total_" + _activityItem.daiId).text(utils.accMul(_activityItem.money, _activityItem.num)).appendTo(totalLi);
 
         var uiPgDiv = $("<div></div>").addClass("ui-pg-div").css("padding-left", "8px").css("padding-bottom", "10px").appendTo(widgetBody);
-        
+
         if (uiBtnMethod != null) {
             if(uiBtnMethod == "uiBtnMethod"){
                 var abateBtn = $("<a></a>").addClass("btn btn-minier btn-yellow").html("失效").css("margin", "0px 3px").attr("id", "abate_" + _activityItem.daiId).appendTo(uiPgDiv);
@@ -386,7 +383,11 @@ var decorationUtils = {
                         com.post(api.decoration.abateDecorationActivityItem, {"decorationActivityItem.daiId": _activityItem.daiId}, function (res) {
 
                             com.showAlert(com.info, "操作成功");
-                            com.focusPage("#widgetHeader_" + res.decorationActivityItem.daiId).addClass("header-color-grey");
+
+                            decorationUtils.countTatol(res.decorationActivityItem.daiId);
+
+                            com.focusPage("#widgetHeader_" + res.decorationActivityItem.daiId);
+                            com.focusPage("#state_" + res.decorationActivityItem.daiId).html("失效");
                         });
                     });
                 });
@@ -1213,5 +1214,25 @@ var decorationUtils = {
         $a.click(function () {
             $li.remove();
         });
+    },
+    countTatol: function (daiId) {
+
+        com.focusPage("#pricing_" + daiId + " .module_activity_border").data("total", 0);
+        var coupon = 0;
+        var thing = 0;
+
+        $.each(com.focusPage(".module_activity_border"), function (i, e) {
+            var _ = $(e);
+            if(_.data().type == 0){
+                coupon += _.data().total;
+            }else if(_.data().type == 1){
+                thing += _.data().total
+            }
+
+        });
+        com.focusPage("#_couponCut strong").html(coupon);
+        com.focusPage("#_thingCut strong").html(thing);
+        com.focusPage("#_detail strong").html(utils.accAdd(coupon, thing));
+
     }
 };

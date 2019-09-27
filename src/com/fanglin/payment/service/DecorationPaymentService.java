@@ -44,7 +44,7 @@ public interface DecorationPaymentService {
 	
 	public int addDecorationPayment(DecorationPaymentVO decorationPaymentVO, String userId) throws FLException;
 	
-	public int makeDecorationPayment(DecorationPO decorationPO, float money, long psid, String createUserId) throws FLException;
+	public int makeDecorationPayment(DecorationPO decorationPO, long money, long psid, String createUserId) throws FLException;
 	
 	public int changeDecorationPaymentForTime(DecorationPaymentVO decorationPaymentVO, Timestamp dateTime, String userId);
 	

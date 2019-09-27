@@ -36,11 +36,6 @@ public class VticketDaoImpl extends DaoImpl<VticketPO> implements VticketDao {
 	}
 
 	@Override
-	public VticketPO queryVticketForTake() {
-		return (VticketPO) session().createCriteria(VticketPO.class).add(Restrictions.isNull("belonger")).add(Restrictions.eq("expire", VticketPO.EXPIRE_INIT_INT)).setMaxResults(1).uniqueResult();
-	}
-
-	@Override
 	public List<?> countVticket(short param) {
 
 		String sql = null;

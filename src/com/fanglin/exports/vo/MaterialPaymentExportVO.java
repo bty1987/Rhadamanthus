@@ -14,50 +14,50 @@ package com.fanglin.exports.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class MaterialPaymentExportVO implements Serializable{
+public class MaterialPaymentExportVO implements Serializable {
 
 	private static final long serialVersionUID = 8288554491562070139L;
 
 	private String orderId;
-	
+
 	private String msoNo;
-	
+
 	private String orderAddr;
-	
+
 	private String customerName;
-	
+
 	private String salesmanName;
-	
+
 	private String departmentName;
-	
+
 	private String regionName;
-	
+
 	private String materialType;
-	
+
 	private String materialBrand;
-	
-	private Float cash;
-	
-	private Float bank;
-	
+
+	private Long cash;
+
+	private Long bank;
+
 	private String bankInfo;
-	
-	private Float msoCoupon;
-	
+
+	private Integer msoCoupon;
+
 	private String msoCouponInfo;
-	
-	private Float coupon;
-	
+
+	private Long coupon;
+
 	private String couponInfo;
-	
+
 	private String paymentTypeName;
-	
-	private Float referMoney;
-	
+
+	private Long referMoney;
+
 	private String createUserName;
-	
+
 	private String collectUserName;
-	
+
 	private Timestamp collectTime;
 
 	public String getOrderId() {
@@ -132,19 +132,19 @@ public class MaterialPaymentExportVO implements Serializable{
 		this.materialBrand = materialBrand;
 	}
 
-	public Float getCash() {
+	public Long getCash() {
 		return cash;
 	}
 
-	public void setCash(Float cash) {
+	public void setCash(Long cash) {
 		this.cash = cash;
 	}
 
-	public Float getBank() {
+	public Long getBank() {
 		return bank;
 	}
 
-	public void setBank(Float bank) {
+	public void setBank(Long bank) {
 		this.bank = bank;
 	}
 
@@ -156,11 +156,11 @@ public class MaterialPaymentExportVO implements Serializable{
 		this.bankInfo = bankInfo;
 	}
 
-	public Float getMsoCoupon() {
+	public Integer getMsoCoupon() {
 		return msoCoupon;
 	}
 
-	public void setMsoCoupon(Float msoCoupon) {
+	public void setMsoCoupon(Integer msoCoupon) {
 		this.msoCoupon = msoCoupon;
 	}
 
@@ -172,11 +172,11 @@ public class MaterialPaymentExportVO implements Serializable{
 		this.msoCouponInfo = msoCouponInfo;
 	}
 
-	public Float getCoupon() {
+	public Long getCoupon() {
 		return coupon;
 	}
 
-	public void setCoupon(Float coupon) {
+	public void setCoupon(Long coupon) {
 		this.coupon = coupon;
 	}
 
@@ -196,11 +196,11 @@ public class MaterialPaymentExportVO implements Serializable{
 		this.paymentTypeName = paymentTypeName;
 	}
 
-	public Float getReferMoney() {
+	public Long getReferMoney() {
 		return referMoney;
 	}
 
-	public void setReferMoney(Float referMoney) {
+	public void setReferMoney(Long referMoney) {
 		this.referMoney = referMoney;
 	}
 
@@ -227,6 +227,5 @@ public class MaterialPaymentExportVO implements Serializable{
 	public void setCollectTime(Timestamp collectTime) {
 		this.collectTime = collectTime;
 	}
-	
 
 }

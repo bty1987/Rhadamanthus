@@ -1,10 +1,59 @@
 $(function(){
+    
+  //定义全局变量  json
+    var systemDefineItem = {
+            
+        btns: {
+            saveBtn: com.focusPage("#saveAddItemBtn")
+        },
 
-    /**
-     * 回调函数必须提供 init(tableId, result.list)方法
-     * tableId ,用来显示的div的id
-     * result.list 列表的json数组
-     * */
+        modals: {
+            addItemModal: com.focusPage("#addItemModal")
+        },
+        
+        items: {
+            sdiid: com.focusPage("#sdiid"),
+            quotationBigCategory: com.focusPage("#quotationBigCategory"),
+            itemName: com.focusPage("#itemName"),
+            measurementUnit: com.focusPage("#measurementUnit"),
+            itemWorkType: com.focusPage("#itemWorkType"),
+            quotationItemDes: com.focusPage("#quotationItemDes"),
+            addPrice: com.focusPage("#addPrice"),
+            unitPrice: com.focusPage("#unitPrice"),
+            subPrice: com.focusPage("#subPrice"),
+            itemId: com.focusPage("#itemId")
+        },
+        
+        validator: {
+            systemDefineItem: {
+                type: "v_systemDefaineItemId", 
+                regex: /^SI_\d{5}$/,
+                errorMsg: "请以SI_作为前缀 , 之后以五个位数字组成(如SI_00001)."
+            }
+        },
+    };
+    
+    $.extend(com.validator, systemDefineItem.validator); //将多个对象合并成一个对象
+    
+    com.post(api.common.queryMeasurementUnit, {}, function(res){
+        com.focusPage("#measurementUnit").bindData(res.measurementUnits, "id", "name");
+    });
+    
+    com.post(api.quotation.queryQuotationBigCategory, {}, function(res){
+        com.focusPage("#quotationBigCategory").bindData(res.quotationBigCategorys, "id", "name");
+    });
+    
+    com.post(api.common.queryWorkType,{},function(res){
+        com.focusPage("#itemWorkType").bindData(res.workTypes, "id", "name");
+    });
+    
+    systemDefineItem.btns.saveBtn.on("click", saveData);
+    
+    systemDefineItem.modals.addItemModal.on('hide.bs.modal', function(e){
+        com.clearValidator();
+        com.cleanItems("addItemModal");
+    });
+
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
@@ -13,9 +62,7 @@ $(function(){
 
             if(listData && listData.length){
                 $.each(listData,function(i, v){
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
+                    creatLine(v).appendTo($ul);
                 });
 
                 $ul.appendTo($tableWrap);
@@ -57,7 +104,6 @@ $(function(){
                 $liProperty.appendTo($ulProperty);
             });
 
-
 			$btnStatus.append($statusSwitch).append($span);
 			$btnDiscount.append($discountSwitch).append($dspan);
 
@@ -67,7 +113,7 @@ $(function(){
 
            //编辑按钮的点击事件
             $btnDelete.click(function(){
-            	removeSystemDefine(v.sdiId);
+            	remove(v.sdiid);
             });
             
             $btnEdit.click(function(){
@@ -76,14 +122,17 @@ $(function(){
 
 			v.status && $statusSwitch.prop("checked", true);
 			$statusSwitch.switchBtn("status-lbl").on("click",function() {
-				$statusSwitch.prop("checked") ? (updateStatus(v.sdiId, 1, function(){$statusSwitch.removeAttr("checked");})) : (updateStatus(v.sdiId, 0,function(){$statusSwitch.prop("checked");}));
+				updateStatus(v.sdiid, $statusSwitch.prop("checked") ? 1 : 0, function(){
+				    $statusSwitch.removeAttr("checked");
+				});
 			});
 
 			v.discount && $discountSwitch.prop("checked", true);
 			$discountSwitch.switchBtn("discount-lbl").on("click",function() {
-				$discountSwitch.prop("checked") ? (updateDiscount(v.sdiId, 1, function(){$discountSwitch.removeAttr("checked");})) : (updateDiscount(v.sdiId, 0,function(){$discountSwitch.prop("checked");}));
+				updateDiscount(v.sdiid, $discountSwitch.prop("checked") ? 1 : 0, function(){
+				    $discountSwitch.removeAttr("checked");
+				});
 			});
-
 
 			return $liLine;
         };
@@ -99,11 +148,11 @@ $(function(){
         };
     })();
 
-    var _condArr = ['itemName','quotationBigCategoryId','quotationWorkTypeId'];//与condition.js中名字相同
+    var _condArr = ['itemName', 'quotationBigCategoryId', 'quotationWorkTypeId'];//与condition.js中名字相同
    
-   var systemDefineItemSeacher = new Searcher();
+   var searcher = new Searcher();
    
-    systemDefineItemSeacher.init( _condArr, "condList", api.quotation.pageSystemDefineItem, function(data){
+    searcher.init( _condArr, "condList", api.quotation.pageSystemDefineItem, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "SystemDefineItemPostData", null, false, null, function(){
     	
@@ -114,251 +163,120 @@ $(function(){
     	return [$adda];
     });
     
-    //定义全局变量  json
-    var systemDefineItem = {
-    		
-		saveBtn: com.focusPage("#saveAddItemBtn").on("click", saveData),//绑定事件
-		cancelBtn: null,
-
-		modal: null,
-		systemDefineItemItems: {},
-		
-		addSystemDefineItemUrl:api.quotation.addSystemDefineItem,
-		
-		updateSystemDefineItemUrl:api.quotation.updateSystemDefineItem,
-		
-		queryQuotationTypeUrl:api.common.queryWorkType,
-		
-		queryQuotationClassificationUrl: api.quotation.queryQuotationClassification,
-		
-		queryQuotationBigCategoryUrl: api.quotation.queryQuotationBigCategory,
-		
-		queryQuotationSmallCategoryUrl: api.quotation.queryQuotationSmallCategory,
-		
-		querySystemDefineItemUrl:api.quotation.pageSystemDefineItem,
-		
-		checkItemIdUrl:api.quotation.querySystemDefineItemByItemId,
-		
-		quotationTypes:null,
-		quotationClassifications:null,
-		quotationBigCategorys:null,
-		quotationSmallCategorys:null,
-		measurementUnits:null,
-		workTypes:null,
-		
-		quotationTypesStr:"",
-		quotationClassificationsStr:"",
-		quotationBigCategorysStr:"",
-		quotationSmallCategorysStr:"",
-		measurementUnitsStr:"",
-		workTypesStr:"",
-		
-		validator: {
-			region: {
-				type: "v_itemId", 
-				regex: /^SI_\d{5}$/g,
-				errorMsg: "请以SI_作为前缀 , 之后以五个位数字组成(如SI_00001)."
-			}
-		},
-		editFlag: false,
-		repeatFlg:false
-	};
-    	
-   //给全局变量赋值(主要操作是制定页面标签)
-	//systemDefineItem.saveBtn = $("#saveAddItemBtn").on("click", saveData);
-	systemDefineItem.cancelBtn = com.focusPage("#cancelBtn");
-	systemDefineItem.modal = com.focusPage("#addItemModal");
-
-	systemDefineItem.systemDefineItemItems.sdiId = com.focusPage("#sdiId");
-	systemDefineItem.systemDefineItemItems.quotationBigCategory = com.focusPage("#quotationBigCategory");
-	systemDefineItem.systemDefineItemItems.itemName = com.focusPage("#itemName");
-	systemDefineItem.systemDefineItemItems.measurementUnit = com.focusPage("#measurementUnit");
-	systemDefineItem.systemDefineItemItems.itemWorkType = com.focusPage("#itemWorkType");
-	systemDefineItem.systemDefineItemItems.quotationItemDes = com.focusPage("#quotationItemDes");
-	systemDefineItem.systemDefineItemItems.addPrice = com.focusPage("#addPrice");
-	systemDefineItem.systemDefineItemItems.unitPrice = com.focusPage("#unitPrice");
-	systemDefineItem.systemDefineItemItems.subPrice = com.focusPage("#subPrice");
-	systemDefineItem.systemDefineItemItems.itemId = com.focusPage("#itemId").on("blur",function(){
-		$this = $(this);
-		if($this.val() == ""){
-			return;
-		}
-		
-		com.post(systemDefineItem.checkItemIdUrl, {"systemDefineItem.itemId":$this.val()}, function(res){
-			if(res.systemDefineItem && res.systemDefineItem.itemId){
-				com.showTips($this, "该版本的编号已存在", true);
-				systemDefineItem.repeatFlg = true;
-			}else{
-				com.clearValidator("#itemId", true);
-				systemDefineItem.repeatFlg = false;
-			}
-		}, function(res){
-			com.clearValidator("#itemId", true);
-			systemDefineItem.repeatFlg = false;
-		});
-	});
-	
-	systemDefineItem.modal.on('shown.bs.modal', function(e){
-		com.clearValidator();
-		com.clearValidator("#itemId", true);
-		
-		if(systemDefineItem.editFlg == false){
-			systemDefineItem.systemDefineItemItems.quotationBigCategory.get(0).selectedIndex = 0;
-			systemDefineItem.systemDefineItemItems.itemWorkType.get(0).selectedIndex = 0;
-			systemDefineItem.systemDefineItemItems.measurementUnit.get(0).selectedIndex = 0;
-		}
-	
-	});
-	$.extend(com.validator, systemDefineItem.validator); //将多个对象合并成一个对象
-	
-	initDataMap();
-
-	//给select下拉列表绑定数据
-	function initDataMap(){
-    	
-    	com.post(api.common.queryMeasurementUnit, {}, function(res){
-
-    		systemDefineItem.measurementUnits = res.measurementUnits;
-    		systemDefineItem.measurementUnitsStr = "";
-    		
-    		for(var tem=0;tem<res.measurementUnits.length;++tem){
-    			systemDefineItem.measurementUnitsStr+=(res.measurementUnits[tem].id+":"+res.measurementUnits[tem].name+";");
-    		}
-    		
-    		systemDefineItem.measurementUnitsStr = systemDefineItem.measurementUnitsStr.substr(0,systemDefineItem.measurementUnitsStr.length-1);
-    		com.focusPage("#measurementUnit").bindData(systemDefineItem.measurementUnits, "id", "name");// bindData 给select标签 绑定一组数据
-    		
-    	}, null, false);
-    	
-    	com.post(systemDefineItem.queryQuotationBigCategoryUrl,{},function(res){
-    	
-    		systemDefineItem.quotationBigCategorys = res.quotationBigCategorys;
-    		systemDefineItem.quotationBigCategorysStr = "";
-    		
-    		for(var tem=0;tem<res.quotationBigCategorys.length;++tem){
-    			systemDefineItem.quotationBigCategorysStr+=(res.quotationBigCategorys[tem].id+":"+res.quotationBigCategorys[tem].name+";");
-    		}
-    		systemDefineItem.quotationBigCategorysStr = systemDefineItem.quotationBigCategorysStr.substr(0,systemDefineItem.quotationBigCategorysStr.length-1);
-    		
-    		
-    		com.focusPage("#quotationBigCategory").bindData(systemDefineItem.quotationBigCategorys, "id", "name");
-    		
-    	}, null, false);
-    	
-    	com.post(api.common.queryWorkType,{},function(res){
-
-    		systemDefineItem.workTypes = res.workTypes;
-    		systemDefineItem.workTypesStr = "";
-    		
-    		for(var tem=0;tem<res.workTypes.length;++tem){
-    			systemDefineItem.workTypesStr += (res.workTypes[tem].id+":"+res.workTypes[tem].name+";");
-    		}
-    		systemDefineItem.workTypesStr = systemDefineItem.workTypesStr.substr(0,systemDefineItem.workTypesStr.length-1);
-    		
-    		com.focusPage("#itemWorkType").bindData(systemDefineItem.workTypes, "id", "name");
-    	
-    	}, null, false);
-    }
-    
     //编辑
     function edit(row){
     	//给页面标签赋值
     	
-    	systemDefineItem.editFlg=true;
-    	systemDefineItem.repeatFlg=false;
-		systemDefineItem.systemDefineItemItems.sdiId.val(row.sdiId);
-		systemDefineItem.systemDefineItemItems.itemId.val(row.itemId);
-		systemDefineItem.systemDefineItemItems.itemName.val(row.itemName);
-		systemDefineItem.systemDefineItemItems.quotationBigCategory.val(row.quotationBigCategoryId); 
-		systemDefineItem.systemDefineItemItems.itemWorkType.val(row.itemWorkTypeId); 
-		systemDefineItem.systemDefineItemItems.measurementUnit.val(row.measurementUnitId); 
+		systemDefineItem.items.sdiid.val(row.sdiid);
+		systemDefineItem.items.itemId.val(row.itemId);
+		systemDefineItem.items.itemName.val(row.itemName);
+		systemDefineItem.items.quotationBigCategory.val(row.quotationBigCategoryId); 
+		systemDefineItem.items.itemWorkType.val(row.itemWorkTypeId); 
+		systemDefineItem.items.measurementUnit.val(row.measurementUnitId); 
 		
-		systemDefineItem.systemDefineItemItems.quotationItemDes.val(row.quotationItemDes);
-		systemDefineItem.systemDefineItemItems.addPrice.val(row.addPrice);
-		systemDefineItem.systemDefineItemItems.unitPrice.val(row.unitPrice);
-		systemDefineItem.systemDefineItemItems.subPrice.val(row.subPrice);
-		systemDefineItem.systemDefineItemItems.itemId.prop("disabled", true);
+		systemDefineItem.items.quotationItemDes.val(row.quotationItemDes);
+		systemDefineItem.items.addPrice.val(row.addPrice);
+		systemDefineItem.items.unitPrice.val(row.unitPrice);
+		systemDefineItem.items.subPrice.val(row.subPrice);
+		systemDefineItem.items.itemId.prop("disabled", true);
 
-		systemDefineItem.modal.modal("show"); //弹出弹层
+		systemDefineItem.modals.addItemModal.modal("show"); //弹出弹层
     }
     
     function saveData(){
-    	if(com.validate()|| systemDefineItem.repeatFlg)
-    		return;
-    	
-    	var url;
-    	var options = {
-    		"systemDefineItem.itemId":systemDefineItem.systemDefineItemItems.itemId.val(),
-    		"systemDefineItem.itemName": systemDefineItem.systemDefineItemItems.itemName.val(),
-    		"systemDefineItem.quotationBigCategoryId": systemDefineItem.systemDefineItemItems.quotationBigCategory.val(),
-    		"systemDefineItem.quotationBigCategory": "",
-    		"systemDefineItem.measurementUnitId": systemDefineItem.systemDefineItemItems.measurementUnit.val(),
-    		"systemDefineItem.measurementUnit": "",
-    		"systemDefineItem.itemWorkTypeId": systemDefineItem.systemDefineItemItems.itemWorkType.val(),
-    		"systemDefineItem.itemWorkType": "",
-    		"systemDefineItem.quotationItemDes": systemDefineItem.systemDefineItemItems.quotationItemDes.val(),
-    		"systemDefineItem.addPrice": systemDefineItem.systemDefineItemItems.addPrice.val(),
-    		"systemDefineItem.unitPrice": systemDefineItem.systemDefineItemItems.unitPrice.val(),
-    		"systemDefineItem.subPrice": systemDefineItem.systemDefineItemItems.subPrice.val(),
-    	};
-    	
-    	if(systemDefineItem.editFlg) {
-    		url = systemDefineItem.updateSystemDefineItemUrl;
-    		options["systemDefineItem.sdiId"] = systemDefineItem.systemDefineItemItems.sdiId.val();
-    	}else{
-    		url = systemDefineItem.addSystemDefineItemUrl;
+        
+        com.clearValidator();
+        
+    	if(com.validate("addItemModal")){
+    		return false;
     	}
     	
-    	com.post(url, options, successCallback);
+    	console.log("baity");
     	
-    	systemDefineItem.modal.modal("hide");
+    	if(!checkNo(systemDefineItem.items.itemId.val())){
+    	    return false;
+    	}
+    	
+    	var url = api.quotation.addSystemDefineItem;
+    	var options = {
+    		"systemDefineItem.itemId": systemDefineItem.items.itemId.val(),
+    		"systemDefineItem.itemName": systemDefineItem.items.itemName.val(),
+    		"systemDefineItem.quotationBigCategoryId": systemDefineItem.items.quotationBigCategory.val(),
+    		"systemDefineItem.quotationBigCategory": "",
+    		"systemDefineItem.measurementUnitId": systemDefineItem.items.measurementUnit.val(),
+    		"systemDefineItem.measurementUnit": "",
+    		"systemDefineItem.itemWorkTypeId": systemDefineItem.items.itemWorkType.val(),
+    		"systemDefineItem.itemWorkType": "",
+    		"systemDefineItem.quotationItemDes": systemDefineItem.items.quotationItemDes.val(),
+    		"systemDefineItem.addPrice": systemDefineItem.items.addPrice.val(),
+    		"systemDefineItem.unitPrice": systemDefineItem.items.unitPrice.val(),
+    		"systemDefineItem.subPrice": systemDefineItem.items.subPrice.val(),
+    	};
+    	
+    	if(systemDefineItem.items.sdiid.val()) {
+    		url = api.quotation.updateSystemDefineItem;
+    		options["systemDefineItem.sdiid"] = systemDefineItem.items.sdiid.val();
+    	}
+    	
+    	com.post(url, options, function(res){
+    	    searcher.doSearch();
+    	    systemDefineItem.modals.addItemModal.modal("hide");
+    	});
     }
     
     //添加
-    com.focusPage('[name="addSystemDefineItem"]' , '#pagenation').on("click",function(){  //选择器 [属性名="属性值"]  匿名函数
-    	systemDefineItem.editFlg = false;
-		systemDefineItem.systemDefineItemItems.itemId.prop("disabled", false);
-		com.cleanItems(systemDefineItem.systemDefineItemItems);
-		systemDefineItem.modal.modal("show");
+    com.focusPage('[name="addSystemDefineItem"]', '#pagenation').on("click", function(){  //选择器 [属性名="属性值"]  匿名函数
+        
+		systemDefineItem.items.itemId.prop("disabled", false);
+		
+		com.cleanItems(systemDefineItem.items);
+		
+		systemDefineItem.modals.addItemModal.modal("show");
     });
 
     //删除
-     function removeSystemDefine(id) {
+     function remove(sdiid) {
         com.showConfirm("是否删除所选记录", function() {
-            com.post(api.quotation.deleteSystemDefineItemByIds, {"ids[0]" :id}, successCallback);
+            com.post(api.quotation.deleteSystemDefineItem, {"systemDefineItem.sdiid": sdiid}, function(res){
+                searcher.doSearch();
+            });
         });
     }
 
 	//启用禁用功能
-	function updateStatus(id, status, failcallBack) {
+	function updateStatus(sdiid, status, failcallBack) {
+	    
+	    var options = {
+            "systemDefineItem.sdiid": sdiid,
+            "systemDefineItem.discount": discount
+        }
 
-		com.post(api.quotation.updateSystemDefineItemForStatus, {
-			"systemDefineItem.sdiId": id,
-			"systemDefineItem.status": status
-		}, function () {
-
-		}, function () {
-			failcallBack && failcallBack();
-		});
+		com.post(api.quotation.updateSystemDefineItemForStatus, options);
 	}
-
 
 	//是否打折设置
-	function updateDiscount(id, discount, failcallBack) {
+	function updateDiscount(sdiid, discount, failcallBack) {
+	    
+	    var options = {
+            "systemDefineItem.sdiid": sdiid,
+            "systemDefineItem.discount": discount
+	    }
 
-		com.post(api.quotation.updateSystemDefineItemForDiscount, {
-			"systemDefineItem.sdiId": id,
-			"systemDefineItem.discount": discount
-		}, function () {
-
-		}, function () {
-			failcallBack && failcallBack();
-		});
+		com.post(api.quotation.updateSystemDefineItemForDiscount, options);
+	}
+	
+	function checkNo(no){
+	    
+	    var flag = true;
+	    
+	    com.post(api.quotation.querySystemDefineItemByItemId, {"systemDefineItem.itemId": no}, function(res){
+            if(res.systemDefineItem && res.systemDefineItem.itemId){
+                com.showPopover(systemDefineItem.items.itemId, "编号已存在", "right");
+                flag = false;
+            }
+        }, null, false);
+	    
+	    return false;
 	}
 		
-    function successCallback(){
-    	//$('button.btn-search','#condList').click();//调用成功后,执行查询操作  
-    	systemDefineItemSeacher.doSearch();//调用成功后,执行com.Seacher中的doSeach方法
-    }
-    
 });

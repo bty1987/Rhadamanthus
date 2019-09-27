@@ -35,7 +35,6 @@ CREATE TABLE `circledrawing` (
 DROP TABLE IF EXISTS `customerorigin`;
 CREATE TABLE `customerorigin` (
   `coid` int(11) NOT NULL AUTO_INCREMENT COMMENT '客源ID',
-  `cid` int(11) NOT NULL COMMENT '客户ID',
   `name` varchar(32) NOT NULL,
   `gender` varchar(2) DEFAULT NULL,
   `phone` varchar(32) NOT NULL COMMENT '电话',
@@ -48,7 +47,14 @@ CREATE TABLE `customerorigin` (
   `buid` int(11) DEFAULT NULL COMMENT '归属人',
   `did` int(11) DEFAULT NULL COMMENT '归属部门',
   `rdid` int(11) DEFAULT NULL COMMENT '归属分区',
-  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态',
+  `vid` int(11) DEFAULT NULL COMMENT '楼盘ID',
+  `houseNumber` varchar(32) NOT NULL COMMENT '楼号',
+  `buildArea` decimal(10,2) NOT NULL COMMENT '面积',
+  `cid` int(11) DEFAULT NULL COMMENT '客户ID',
+  `hid` int(11) DEFAULT NULL COMMENT '绑定房产ID',
+  `duid` int(11) DEFAULT NULL COMMENT '设计师',
+  `orderId` varchar(15) DEFAULT NULL COMMENT '生成装修单',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态 , 0(初始) , 1(审批) , 2(绑定装修单) , 3(失效)',
   `comment` varchar(128) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`coid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客源表';
@@ -73,39 +79,9 @@ CREATE TABLE `decoration`  (
   `address` varchar(128) NOT NULL,
   `defaultFlag` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`doId`),
+  UNIQUE KEY `uniqueone` (`unionId`,`orderId`),
   KEY `indexone` (`unionId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户订单信息';
-
-DROP TABLE IF EXISTS `decorationcircle`;
-CREATE TABLE `decorationcircle` (
-  `dcid` int(11) NOT NULL AUTO_INCREMENT,
-  `orderId` varchar(32) NOT NULL,
-  `address` varchar(64) NOT NULL,
-  `cuid` int(11) NOT NULL,
-  `content` varchar(255) DEFAULT NULL,
-  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `praise` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`dcid`),
-  KEY `oneindex` (`orderId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='服务圈';
-
-DROP TABLE IF EXISTS `decorationcirclebackground`;
-CREATE TABLE `decorationcirclebackground` (
-  `dcbid` int(11) NOT NULL AUTO_INCREMENT,
-  `unionId` varchar(64) NOT NULL,
-  `path` varchar(255) NOT NULL,
-  PRIMARY KEY (`dcbid`),
-  UNIQUE KEY `oneindex` (`unionId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='服务圈背景图片';
-
-DROP TABLE IF EXISTS `decorationcirclepicture`;
-CREATE TABLE `decorationcirclepicture` (
-  `dcpid` int(11) NOT NULL AUTO_INCREMENT,
-  `dcid` int(11) NOT NULL,
-  `path` varchar(255) NOT NULL,
-  PRIMARY KEY (`dcpid`),
-  KEY `oneindex` (`dcid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='服务圈图片';
 
 DROP TABLE IF EXISTS `emember`;
 CREATE TABLE `emember`  (
@@ -117,6 +93,7 @@ CREATE TABLE `emember`  (
   `unionId` varchar(32) NOT NULL,
   `ticket` varchar(32) DEFAULT NULL,
   `status` tinyint(1) DEFAULT '0',
+  `activity` int(11) DEFAULT '1',
   PRIMARY KEY (`emid`),
   UNIQUE KEY `uniqueone` (`no`),
   KEY `indexone` (`unionId`)
@@ -194,6 +171,8 @@ CREATE TABLE `vustomer` (
   `vid` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `unionId` varchar(32) NOT NULL COMMENT '微信ID',
   `buid` int(11) DEFAULT NULL,
+  `referrer` varchar(32) NOT NULL,
+  `referphone` varchar(32) NOT NULL,
   `name` varchar(32) NOT NULL COMMENT '姓名',
   `phone` varchar(32) NOT NULL COMMENT '电话',
   `address` varchar(255) NOT NULL COMMENT '地址',
@@ -214,34 +193,3 @@ CREATE TABLE `vustomernet` (
   PRIMARY KEY (`vnid`),
   KEY `indexone` (`unionId`,`netunionId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 CHARSET=utf8;
-
-DROP TABLE IF EXISTS `decorationcircle`;
-CREATE TABLE `decorationcircle`  (
-  `dcid` int(11) NOT NULL AUTO_INCREMENT,
-  `orderId` varchar(32) NOT NULL,
-  `address` varchar(64) NOT NULL,
-  `cuid` int(11) NOT NULL,
-  `content` varchar(255),
-  `createTime` timestamp NOT NULL,
-  `praise` int(11) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`dcid`),
-  INDEX `oneindex`(`orderId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='服务圈';
-
-DROP TABLE IF EXISTS `decorationcirclepicture`;
-CREATE TABLE `decorationcirclepicture`  (
-  `dcpid` int(11) NOT NULL AUTO_INCREMENT,
-  `dcid` int(11) NOT NULL,
-  `path` varchar(255) NOT NULL,
-  PRIMARY KEY (`dcpid`),
-  INDEX `oneindex`(`dcid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='服务圈图片';
-
-DROP TABLE IF EXISTS `decorationcirclebackground`;
-CREATE TABLE `decorationcirclebackground`  (
-  `dcbid` int(11) NOT NULL AUTO_INCREMENT,
-  `unionId` varchar(64) NOT NULL,
-  `path` varchar(255) NOT NULL,
-  PRIMARY KEY (`dcbid`),
-  UNIQUE INDEX `oneindex`(`unionId`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='服务圈背景图片';

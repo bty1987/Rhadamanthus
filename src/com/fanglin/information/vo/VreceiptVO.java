@@ -12,32 +12,32 @@ public class VreceiptVO implements Serializable {
 	private static final long serialVersionUID = 4435925467853249226L;
 
 	private Long vrid;// 活动收据ID
-	
+
 	private String orderId;// 装修单号
 
 	private UserBaseVO collecter;// 收款人
 
 	private Timestamp collectTime;// 收款时间
 
-	private Float cash;// 现金
+	private Long cash;// 现金
 
-	private Float bank;// 刷卡
+	private Long bank;// 刷卡
 
 	private String bankInfo;// 刷卡信息
-	
-	private Float coupon;//券值
-	
-	private String couponInfo;//券信息
+
+	private Long coupon;// 券值
+
+	private String couponInfo;// 券信息
 
 	private String comment;// 说明
-	
-	public VreceiptVO(){
+
+	public VreceiptVO() {
 		super();
 	}
-	
+
 	public VreceiptVO(UserBaseVO collecter) {
 		super();
-		this.collecter=collecter;
+		this.collecter = collecter;
 	}
 
 	public Long getVrid() {
@@ -47,7 +47,7 @@ public class VreceiptVO implements Serializable {
 	public void setVrid(Long vrid) {
 		this.vrid = vrid;
 	}
-	
+
 	public String getOrderId() {
 		return orderId;
 	}
@@ -73,19 +73,19 @@ public class VreceiptVO implements Serializable {
 		this.collectTime = collectTime;
 	}
 
-	public Float getCash() {
+	public Long getCash() {
 		return cash;
 	}
 
-	public void setCash(Float cash) {
+	public void setCash(Long cash) {
 		this.cash = cash;
 	}
 
-	public Float getBank() {
+	public Long getBank() {
 		return bank;
 	}
 
-	public void setBank(Float bank) {
+	public void setBank(Long bank) {
 		this.bank = bank;
 	}
 
@@ -97,11 +97,11 @@ public class VreceiptVO implements Serializable {
 		this.bankInfo = bankInfo;
 	}
 
-	public Float getCoupon() {
+	public Long getCoupon() {
 		return coupon;
 	}
 
-	public void setCoupon(Float coupon) {
+	public void setCoupon(Long coupon) {
 		this.coupon = coupon;
 	}
 
@@ -120,5 +120,5 @@ public class VreceiptVO implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 }

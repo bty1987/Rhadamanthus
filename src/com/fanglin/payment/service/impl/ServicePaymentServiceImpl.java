@@ -187,19 +187,19 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		
 		SystemConfigPO servicePaymentRatio = systemConfigDao.querySystemConfig(String.format("servicePaymentRatio%d", decoration.getType()), decoration.getCompany());
 		
-		float ratio = servicePaymentRatio != null ? Float.parseFloat(servicePaymentRatio.getValue()) : 1.1f;
+		int ratio = servicePaymentRatio != null ? Integer.parseInt(servicePaymentRatio.getValue()) : 1100;
 
 		//应收款
-		Float money = servicePaymentVO.getReferMoney();
-		//预付款=应收款/服务款比率
-		servicePaymentPO.setAdvanceMoney((float)(int)Arith.div(money, ratio));
+		Long money = servicePaymentVO.getReferMoney();
+		//预付款=应收款/服务款比率 
+		servicePaymentPO.setAdvanceMoney(Arith.mul(Arith.div(Arith.div(money, ratio), 1000000), 1000000));
 		//服务费=应收款-预付款
 		servicePaymentPO.setServiceMoney(Arith.sub(money, servicePaymentPO.getAdvanceMoney()));
 
 		//实收服务费 decorationHolonomy.getServicePaidup()  服务费decorationHolonomy.getServicePrice()
 		if(Arith.add(servicePaymentPO.getServiceMoney(), decorationHolonomy.getServicePaidup())>decorationHolonomy.getServicePrice()){
-			Float sumMoney = Arith.add(servicePaymentPO.getServiceMoney(), decorationHolonomy.getServicePaidup());
-			Float subMoney = Arith.sub(sumMoney, decorationHolonomy.getServicePrice());
+			Long sumMoney = Arith.add(servicePaymentPO.getServiceMoney(), decorationHolonomy.getServicePaidup());
+			Long subMoney = Arith.sub(sumMoney, decorationHolonomy.getServicePrice());
 			servicePaymentPO.setAdvanceMoney(Arith.add(servicePaymentPO.getAdvanceMoney(), subMoney));
 			servicePaymentPO.setServiceMoney(Arith.sub(money, servicePaymentPO.getAdvanceMoney()));
 		}
@@ -222,10 +222,10 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		}else{
 			advancePaymentPO = new AdvancePaymentPO(new CustomerPO());
 			BeanUtil.copyProperties(decoration.getCustomer(), advancePaymentPO.getCustomer());
-			advancePaymentPO.setBalance(0f);
-			advancePaymentPO.setProjectBalance(0f);
+			advancePaymentPO.setBalance(0);
+			advancePaymentPO.setProjectBalance(0);
 			advancePaymentPO.setMaterialBalance(servicePaymentPO.getAdvanceMoney());
-			advancePaymentPO.setZhenglinBalance(0f);
+			advancePaymentPO.setZhenglinBalance(0);
 			advancePaymentPO.setCompany(decoration.getCompany());
 			advancePaymentDao.save(advancePaymentPO);
 		}
@@ -251,7 +251,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		servicePaymentPO.setPid(new Long(payment.getPid()).intValue());
 		servicePaymentDao.update(servicePaymentPO);
 		
-		decorationService.sendMessage(servicePaymentPO.getDecoration().getOrderId(), "装修单", String.format("服务款交款金额%s元", money));
+		decorationService.sendMessage(servicePaymentPO.getDecoration().getOrderId(), "装修单", String.format("服务款交款金额%.3f元", Arith.div(money, 1000.0)));
 
 		return 0;
 	}
@@ -290,7 +290,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		decorationHolonomy.setServicePaidup(Arith.add(servicePaymentPO.getServiceMoney(), decorationHolonomy.getServicePaidup()));
 		decorationHolonomyDao.update(decorationHolonomy);
 		
-		decorationService.sendMessage(servicePaymentPO.getDecoration().getOrderId(), "装修单", String.format("服务款交款金额%s元", servicePaymentPO.getServiceMoney()));
+		decorationService.sendMessage(servicePaymentPO.getDecoration().getOrderId(), "装修单", String.format("服务款交款金额%.3f元", Arith.div(servicePaymentPO.getServiceMoney(), 1000.0)));
 
 		return 0;
 	}
@@ -324,10 +324,10 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 
 		generateServicePayment(servicePaymentVO,serviceReceiptVO,cuid);
 
-		decorationHolonomy.setServicePaidup(DecorationHolonomyPO.MONEY_SERVICEPAIDUP_FLOAT);
+		decorationHolonomy.setServicePaidup(DecorationHolonomyPO.MONEY_SERVICEPAIDUP_INT);
 		decorationHolonomyDao.update(decorationHolonomy);
 		
-		decorationService.sendMessage(servicePaymentPO.getDecoration().getOrderId(), "装修单", String.format("服务款退款金额%s元", servicePaymentPO.getServiceMoney()));
+		decorationService.sendMessage(servicePaymentPO.getDecoration().getOrderId(), "装修单", String.format("服务款退款金额%.3f元", Arith.div(servicePaymentPO.getServiceMoney(), 1000.0)));
 
 		return 0;
 	}
@@ -374,7 +374,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 	@Transactional(rollbackFor=Exception.class)
 	public void updateServicePayment(ServicePaymentVO servicePayment, ServiceReceiptVO serviceReceipt) throws FLException {
 		
-		float realMoney = 0;
+		long realMoney = 0;
 
 		ServicePaymentPO servicePaymentPO = servicePaymentDao.get(servicePayment.getSpid());
 
@@ -388,38 +388,38 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 			throw new FLException(150036, "款项状态不可操作");
 		}
 
-		Float cash = serviceReceipt.getCash();
-		Float bank = serviceReceipt.getBank();
-		Float checkv = serviceReceipt.getCheckv();
+		Long cash = serviceReceipt.getCash();
+		Long bank = serviceReceipt.getBank();
+		Long checkv = serviceReceipt.getCheckv();
 
-		if (cash != null && cash.floatValue() != 0f) {
+		if (cash != null && cash != 0) {
 			serviceReceiptPO.setCash(cash);
 			serviceReceiptPO.setCashInfo(serviceReceipt.getCashInfo());
 			realMoney = Arith.add(cash, realMoney);
 		} else {
-			serviceReceiptPO.setCash(0f);
+			serviceReceiptPO.setCash(0);
 			serviceReceiptPO.setCashInfo("");
 		}
 		
-		if (bank != null && bank.floatValue() != 0f) {
+		if (bank != null && bank != 0) {
 			serviceReceiptPO.setBank(bank);
 			serviceReceiptPO.setBankInfo(serviceReceipt.getBankInfo());
 			realMoney = Arith.add(bank, realMoney);
 		} else {
-			serviceReceiptPO.setBank(0f);
+			serviceReceiptPO.setBank(0);
 			serviceReceiptPO.setBankInfo("");
 		}
 		
-		if (checkv != null && checkv.floatValue() != 0f) {
+		if (checkv != null && checkv != 0) {
 			serviceReceiptPO.setCheckv(checkv);
 			serviceReceiptPO.setCheckvBank(serviceReceipt.getCheckvBank());
 			realMoney = Arith.add(checkv, realMoney);
 		} else {
-			serviceReceiptPO.setCheckv(0f);
+			serviceReceiptPO.setCheckv(0);
 			serviceReceiptPO.setCheckvBank("");
 		}
 		
-		float referMoney = Arith.add(servicePaymentPO.getAdvanceMoney(), servicePaymentPO.getServiceMoney());
+		long referMoney = Arith.add(servicePaymentPO.getAdvanceMoney(), servicePaymentPO.getServiceMoney());
 
 		if (referMoney != realMoney) {
 			throw new FLException(150025, "款项金额不正确");
@@ -429,7 +429,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 	}
 
 	@Transactional(rollbackFor=Exception.class)
-	private AdvanceReceiptPO addAdvanceReceipt(Float advanceMoney, String comment, String userId){
+	private AdvanceReceiptPO addAdvanceReceipt(Long advanceMoney, String comment, String userId){
 
 		AdvanceReceiptPO advanceReceiptPO = new AdvanceReceiptPO();
 		UserPO user = userDao.queryUserByUserId(userId);

@@ -1,5 +1,11 @@
-<div >
-    <div id="fl-statement"><div class="page-header"><h1>生产单<small><i class="icon-double-angle-right"></i>五金单</small></h1></div></div>
+<div id="materialSubOrderPageContent">
+<div>
+    <div id="fl-statement"><div class="page-header">
+          <h1>生产单
+        <small><i class="icon-double-angle-right"></i>五金单</small>
+          </h1>
+       </div>
+    </div>
 
     <div class="row">
         <div class="col-xs-12">
@@ -15,65 +21,72 @@
 </div>
 
 
-<div id="layerAddItem" style="padding: 40px 0;display:none;">
-    <div class="row-fluid">
-        <form class="form-horizontal" novalidate="novalidate" id="form1">
-            <div class="widget-main">
-                <div class="row" style="margin-right: 0px">
-                    <div class="col-xs-12">
+    <div class="modal fade" id="addHardwareItemModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">添加五金项</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
                         <div class="form-group">
-                            <label class="control-label col-xs-4 no-padding-center" for="itemName">名称</label>
-                            <div class="controls col-xs-8">
-                                <input class="m-wrap m-ctrl-medium col-xs-7 v_required" size="16" type="text" value="" id="itemName"/>
-                                <i class="icon-asterisk"></i>
+                            <label class="col-sm-3 control-label no-padding-right " for="name">名称</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="name" maxlength="12" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual'/>
                             </div>
                         </div>
+
                         <div class="form-group">
-                            <label class="control-label col-xs-4 no-padding-center" for="unitPrice" >单价</label>
-                            <div class="controls col-xs-8">
-                                <input class="m-wrap m-ctrl-medium col-xs-7 v_required v_float" size="16" type="text" value="" id="unitPrice" readonly/>
-                                <i class="icon-asterisk"></i>
+                            <label class="col-sm-3 control-label no-padding-right " for="unitPrice">单价</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="unitPrice" size="16" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" readonly/>
                             </div>
                         </div>
-                        <div class="space5"></div>
+
                         <div class="form-group">
-                            <label class="control-label col-xs-4 no-padding-center" for="itemNum" >数量</label>
-                            <div class="controls col-xs-8">
-                                <input class="m-wrap m-ctrl-medium col-xs-7 v_required v_float" size="16" type="text" value="" id="itemNum"/>
-                                <i class="icon-asterisk"></i>
+                            <label class="col-sm-3 control-label no-padding-right " for="itemNum">数量</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="itemNum" size="16" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual'/>
                             </div>
                         </div>
-                        <div class="space5"></div>
+
+
                         <div class="form-group">
-                            <label class="control-label col-xs-4 no-padding-center" for="measurementUnit" >单位</label>
-                            <div class="controls col-xs-8">
-                                <input class="m-wrap m-ctrl-medium col-xs-7 v_required" size="16" type="text" value="" id="measurementUnit" readonly/>
-                                <i class="icon-asterisk"></i>
+                            <label class="col-sm-3 control-label no-padding-right " for="measurementUnit">单位</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="measurementUnit" size="16" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" readonly/>
                             </div>
                         </div>
-                        <div class="space5"></div>
+
                         <div class="form-group">
-                            <label class="control-label col-xs-4 no-padding-center" for="total" >总价</label>
-                            <div class="controls col-xs-8">
-                                <input class="m-wrap m-ctrl-medium col-xs-7 v_required v_float" size="16" type="text" value="" id="total"/>
-                                <i class="icon-asterisk"></i>
+                            <label class="col-sm-3 control-label no-padding-right " for="total">总价</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="total" size="16" class="col-xs-10 col-sm-7 v_required" data-toggle="popover"  readonly/>
                             </div>
                         </div>
-                        <div class="space5"></div>
+
+
                         <div class="form-group">
-                            <label class="control-label col-xs-4 no-padding-center" for="comment" >备注</label>
-                            <div class="controls col-xs-8">
-                                <input class="m-wrap m-ctrl-medium col-xs-7" size="16" type="text" value="" id="comment"/>
+                            <label class="col-sm-3 control-label no-padding-right " for="comment">备注</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="comment" size="16" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual'/>
                             </div>
                         </div>
-                        <div class="space5"></div>
-                    </div>
+
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 
+
 <script type="text/javascript">
-	$.loadScript(['js/production/hardwareItem.js','js/production/productionUtils.js']);
+	$.loadScript(['js/production/hardwareItem.js']);
 </script>

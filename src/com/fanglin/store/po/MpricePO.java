@@ -15,48 +15,48 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "mprice", catalog = "store")
-public class MpricePO implements Serializable{
+public class MpricePO implements Serializable {
 
 	private static final long serialVersionUID = 2425009342852807536L;
-	
+
 	public static final String COLUMN_GID_STR = "mgoods.gid";
-	
+
 	public static final String COLUMN_CID_STR = "mcolor.cid";
-	
+
 	public static final String COLUMN_FID_STR = "mformat.fid";
-	
+
 	public static final String COLUMN_BID_STR = "mgoods.mbrand.bid";
-	
+
 	public static final String COLUMN_PID_STR = "pid";
-	
+
 	public static final String COLUMN_PRICE_STR = "price";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final short STATUS_ENABLE_INT = 0;
-	
+
 	public static final short STATUS_DISABLE_INT = 1;
-	
+
 	private long pid;
-	
+
 	private MgoodsPO mgoods;
-	
+
 	private McolorPO mcolor;
-	
+
 	private MformatPO mformat;
-	
+
 	private String name;
-	 
-	private float price;
-	
+
+	private long price;
+
 	private String img;
-	
+
 	private short status;
 
 	public MpricePO() {
 		super();
 	}
-	
+
 	public MpricePO(MgoodsPO goods, McolorPO color, MformatPO format) {
 		super();
 		this.mgoods = goods;
@@ -76,7 +76,7 @@ public class MpricePO implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "gid", referencedColumnName="gid")
+	@JoinColumn(name = "gid", referencedColumnName = "gid")
 	public MgoodsPO getMgoods() {
 		return mgoods;
 	}
@@ -86,7 +86,7 @@ public class MpricePO implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cid", referencedColumnName="cid")
+	@JoinColumn(name = "cid", referencedColumnName = "cid")
 	public McolorPO getMcolor() {
 		return mcolor;
 	}
@@ -94,9 +94,9 @@ public class MpricePO implements Serializable{
 	public void setMcolor(McolorPO mcolor) {
 		this.mcolor = mcolor;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "fid", referencedColumnName="fid")
+	@JoinColumn(name = "fid", referencedColumnName = "fid")
 	public MformatPO getMformat() {
 		return mformat;
 	}
@@ -113,21 +113,21 @@ public class MpricePO implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@Column(name = "price")
-	public float getPrice() {
+	public long getPrice() {
 		return price;
 	}
 
-	public void setPrice(float price) {
+	public void setPrice(long price) {
 		this.price = price;
 	}
-	
+
 	@Column(name = "img")
 	public String getImg() {
 		return img;
 	}
-	
+
 	public void setImg(String img) {
 		this.img = img;
 	}
@@ -140,5 +140,5 @@ public class MpricePO implements Serializable{
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
+
 }

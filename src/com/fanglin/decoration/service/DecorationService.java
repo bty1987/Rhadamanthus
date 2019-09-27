@@ -71,7 +71,7 @@ public interface DecorationService {
 
 	public void obsoleteDecoration(DecorationVO decorationVO, String userName) throws FLException;
 
-	public void terminalDecoration(DecorationVO decorationVO, float refundValue, float paymentValue, Authentication authentication) throws FLException;
+	public void terminalDecoration(DecorationVO decorationVO, long refundValue, long paymentValue, Authentication authentication) throws FLException;
 
 	public void subDecorationForQuotationTime(DecorationVO decorationVO, String userId) throws FLException;
 

@@ -27,17 +27,17 @@ public class SalesBalanceVO implements Serializable{
 	
 	private Timestamp venderTime;
 	
-	private Float allowance;
+	private Long allowance;
 	
-	private Float total;
+	private Long total;
 	
-	private Float balance;
+	private Long balance;
 	
-	private Float difference;
+	private Long difference;
 	
-	private Float vbalance;
+	private Long vbalance;
 	
-	private Float pbalance;
+	private Long pbalance;
 	
 	private Short type;
 	
@@ -127,51 +127,51 @@ public class SalesBalanceVO implements Serializable{
 		this.venderTime = venderTime;
 	}
 	
-	public void setAllowance(Float allowance) {
+	public Long getAllowance() {
+		return allowance;
+	}
+	
+	public void setAllowance(Long allowance) {
 		this.allowance = allowance;
 	}
 
-	public Short getOnetype() {
-		return onetype;
-	}
-
-	public Float getTotal() {
+	public Long getTotal() {
 		return total;
 	}
 
-	public void setTotal(Float total) {
+	public void setTotal(Long total) {
 		this.total = total;
 	}
 
-	public Float getBalance() {
+	public Long getBalance() {
 		return balance;
 	}
 
-	public void setBalance(Float balance) {
+	public void setBalance(Long balance) {
 		this.balance = balance;
 	}
 
-	public Float getDifference() {
+	public Long getDifference() {
 		return difference;
 	}
 
-	public void setDifference(Float difference) {
+	public void setDifference(Long difference) {
 		this.difference = difference;
 	}
 
-	public Float getVbalance() {
+	public Long getVbalance() {
 		return vbalance;
 	}
 
-	public void setVbalance(Float vbalance) {
+	public void setVbalance(Long vbalance) {
 		this.vbalance = vbalance;
 	}
 
-	public Float getPbalance() {
+	public Long getPbalance() {
 		return pbalance;
 	}
 
-	public void setPbalance(Float pbalance) {
+	public void setPbalance(Long pbalance) {
 		this.pbalance = pbalance;
 	}
 
@@ -183,10 +183,10 @@ public class SalesBalanceVO implements Serializable{
 		this.type = type;
 	}
 	
-	public Float getAllowance() {
-		return allowance;
+	public Short getOnetype() {
+		return onetype;
 	}
-
+	
 	public void setOnetype(Short onetype) {
 		this.onetype = onetype;
 	}

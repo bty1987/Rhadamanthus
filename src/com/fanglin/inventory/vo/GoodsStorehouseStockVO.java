@@ -14,7 +14,7 @@ public class GoodsStorehouseStockVO implements java.io.Serializable {
 	
 	private StorehouseVO storehouse;
 	
-	private Float num;
+	private Integer num;
 	
 	public GoodsStorehouseStockVO() {
 		super();
@@ -69,11 +69,11 @@ public class GoodsStorehouseStockVO implements java.io.Serializable {
 		this.storehouse = storehouse;
 	}
 
-	public Float getNum() {
+	public Integer getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(Integer num) {
 		this.num = num;
 	}
 

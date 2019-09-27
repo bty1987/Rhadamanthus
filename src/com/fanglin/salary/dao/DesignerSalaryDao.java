@@ -7,13 +7,11 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.salary.po.DesignerSalaryPO;
 import com.fanglin.utils.Paging;
 
-public interface DesignerSalaryDao  extends Dao<DesignerSalaryPO>{
+public interface DesignerSalaryDao extends Dao<DesignerSalaryPO> {
 
-	public List<DesignerSalaryPO> pagedesignerSalary(Paging paging, List<Filter> filter);
-	
-	public DesignerSalaryPO  queryDesignerSalaryBydsid(Integer dsid);
-	
-	public DesignerSalaryPO queryDesignerSalaryByduid(Integer duid);	
-	
-	public void deleteDesignerSalary(Integer dsid);
+	public List<DesignerSalaryPO> pageDesignerSalary(Paging paging, List<Filter> filter);
+
+	public DesignerSalaryPO queryDesignerSalaryByDuid(long duid);
+
+	public void deleteDesignerSalary(long dsid);
 }

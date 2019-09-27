@@ -7,48 +7,47 @@ import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.personel.vo.UserBaseVO;
 
-public class DecorationVO implements Serializable{
+public class DecorationVO implements Serializable {
 
 	private static final long serialVersionUID = -8166272101127100147L;
 
 	private String orderId;
-	
+
 	private String unionId;
-	
-	private Float houseArea;
-	
+
+	private Integer houseArea;
+
 	private String address;
-	
+
 	private Short type;
-	
+
 	private UserBaseVO designer;
-	
+
 	private UserBaseVO salesman;
-	
+
 	private UserBaseVO supervisor;
-	
+
 	private Long customerId;
-	
+
 	private String customerPhone;
-	
-	private Float orderTotalPrice;
-	
+
+	private Long orderTotalPrice;
+
 	private Timestamp contractTime;
-	
+
 	private Timestamp createTime;
-	
+
 	private Timestamp depositTime;
-	
+
 	private Timestamp measureTime;
-	
+
 	private Short defaultFlag;
 
 	public DecorationVO() {
 		super();
 	}
 
-	public DecorationVO(UserBaseVO designer, UserBaseVO salesman,
-			UserBaseVO supervisor) {
+	public DecorationVO(UserBaseVO designer, UserBaseVO salesman, UserBaseVO supervisor) {
 		super();
 		this.designer = designer;
 		this.salesman = salesman;
@@ -71,11 +70,11 @@ public class DecorationVO implements Serializable{
 		this.unionId = unionId;
 	}
 
-	public Float getHouseArea() {
+	public Integer getHouseArea() {
 		return houseArea;
 	}
 
-	public void setHouseArea(Float houseArea) {
+	public void setHouseArea(Integer houseArea) {
 		this.houseArea = houseArea;
 	}
 
@@ -127,15 +126,15 @@ public class DecorationVO implements Serializable{
 		this.customerId = customerId;
 	}
 
-	public Float getOrderTotalPrice() {
+	public Long getOrderTotalPrice() {
 		return orderTotalPrice;
 	}
 
-	public void setOrderTotalPrice(Float orderTotalPrice) {
+	public void setOrderTotalPrice(Long orderTotalPrice) {
 		this.orderTotalPrice = orderTotalPrice;
 	}
 
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getContractTime() {
 		return contractTime;
 	}
@@ -144,7 +143,7 @@ public class DecorationVO implements Serializable{
 		this.contractTime = contractTime;
 	}
 
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -153,7 +152,7 @@ public class DecorationVO implements Serializable{
 		this.createTime = createTime;
 	}
 
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getDepositTime() {
 		return depositTime;
 	}
@@ -162,7 +161,7 @@ public class DecorationVO implements Serializable{
 		this.depositTime = depositTime;
 	}
 
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getMeasureTime() {
 		return measureTime;
 	}
@@ -186,5 +185,5 @@ public class DecorationVO implements Serializable{
 	public void setCustomerPhone(String customerPhone) {
 		this.customerPhone = customerPhone;
 	}
-	
+
 }

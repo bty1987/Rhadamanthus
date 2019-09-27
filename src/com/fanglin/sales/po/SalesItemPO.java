@@ -20,52 +20,52 @@ import com.fanglin.inventory.po.GoodsPO;
 public class SalesItemPO implements Serializable {
 
 	private static final long serialVersionUID = 317677385751139684L;
-	
-	public static final String COLUMN_SID_STR ="sid";
-	
-	public static final String COLUMN_SIID_STR ="siid";
-	
+
+	public static final String COLUMN_SID_STR = "sid";
+
+	public static final String COLUMN_SIID_STR = "siid";
+
 	public static final short CTYPE_RESERVEPRICE_INT = 0;
-	
+
 	public static final short CTYPE_POINT_INT = 1;
-	
+
 	private long siid;
-	
+
 	private long sid;
-	
+
 	private GoodsPO goods;
-	
+
 	private ColorPO color;
-	
+
 	private FormatPO format;
-	
-	private float purchase;
-	
-	private float selling;
-	
-	private	float discount;
-	
-	private	float disPrice;
-	
-	private	float postDis;
-	
-	private	float price;
-	
-	private	float num;
-	
-	private	float total;
-	
-	private	String comment;
-	
-	private	short rawCtype;
-	
-	private	float rawCvalue;
-	
-	private	short ctype;
-	
-	private	float cvalue;
-	
-	private	short priceType;
+
+	private int purchase;
+
+	private int selling;
+
+	private int discount;
+
+	private int disPrice;
+
+	private int postDis;
+
+	private int price;
+
+	private long num;
+
+	private long total;
+
+	private String comment;
+
+	private short rawCtype;
+
+	private int rawCvalue;
+
+	private short ctype;
+
+	private int cvalue;
+
+	private short priceType;
 
 	public SalesItemPO() {
 		super();
@@ -80,17 +80,16 @@ public class SalesItemPO implements Serializable {
 
 	@Id
 	@GeneratedValue
-	@Column(name="siid")
+	@Column(name = "siid")
 	public long getSiid() {
 		return siid;
 	}
-
 
 	public void setSiid(long siid) {
 		this.siid = siid;
 	}
 
-	@Column(name="sid")
+	@Column(name = "sid")
 	public long getSid() {
 		return sid;
 	}
@@ -98,9 +97,9 @@ public class SalesItemPO implements Serializable {
 	public void setSid(long sid) {
 		this.sid = sid;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "gId", referencedColumnName="gId")
+	@JoinColumn(nullable = false, name = "gId", referencedColumnName = "gId")
 	public GoodsPO getGoods() {
 		return goods;
 	}
@@ -110,7 +109,7 @@ public class SalesItemPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "cId", referencedColumnName="cId")
+	@JoinColumn(nullable = false, name = "cId", referencedColumnName = "cId")
 	public ColorPO getColor() {
 		return color;
 	}
@@ -120,7 +119,7 @@ public class SalesItemPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "fId", referencedColumnName="fId")
+	@JoinColumn(nullable = false, name = "fId", referencedColumnName = "fId")
 	public FormatPO getFormat() {
 		return format;
 	}
@@ -128,80 +127,80 @@ public class SalesItemPO implements Serializable {
 	public void setFormat(FormatPO format) {
 		this.format = format;
 	}
-	
-	@Column(name="purchase")
-	public float getPurchase() {
+
+	@Column(name = "purchase")
+	public int getPurchase() {
 		return purchase;
 	}
 
-	public void setPurchase(float purchase) {
+	public void setPurchase(int purchase) {
 		this.purchase = purchase;
 	}
-	
-	@Column(name="selling")
-	public float getSelling() {
+
+	@Column(name = "selling")
+	public int getSelling() {
 		return selling;
 	}
 
-	public void setSelling(float selling) {
+	public void setSelling(int selling) {
 		this.selling = selling;
 	}
-	
-	@Column(name="discount")
-	public float getDiscount() {
+
+	@Column(name = "discount")
+	public int getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(float discount) {
+	public void setDiscount(int discount) {
 		this.discount = discount;
 	}
-	
-	@Column(name="disprice")
-	public float getDisPrice() {
+
+	@Column(name = "disprice")
+	public int getDisPrice() {
 		return disPrice;
 	}
 
-	public void setDisPrice(float disPrice) {
+	public void setDisPrice(int disPrice) {
 		this.disPrice = disPrice;
 	}
-	
-	@Column(name="postdis")
-	public float getPostDis() {
+
+	@Column(name = "postdis")
+	public int getPostDis() {
 		return postDis;
 	}
 
-	public void setPostDis(float postDis) {
+	public void setPostDis(int postDis) {
 		this.postDis = postDis;
 	}
-	
-	@Column(name="price")
-	public float getPrice() {
+
+	@Column(name = "price")
+	public int getPrice() {
 		return price;
 	}
 
-	public void setPrice(float price) {
+	public void setPrice(int price) {
 		this.price = price;
 	}
 
-	@Column(name="num")
-	public float getNum() {
+	@Column(name = "num")
+	public long getNum() {
 		return num;
 	}
 
-	public void setNum(float num) {
+	public void setNum(long num) {
 		this.num = num;
 	}
-	
-	@Column(name="total")
-	public float getTotal() {
+
+	@Column(name = "total")
+	public long getTotal() {
 		return total;
 	}
 
-	public void setTotal(float total) {
+	public void setTotal(long total) {
 		this.total = total;
 	}
-	
-	@Column(name="comment")
+
+	@Column(name = "comment")
 	public String getComment() {
 		return comment;
 	}
@@ -209,8 +208,8 @@ public class SalesItemPO implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
-	@Column(name="rawctype")
+
+	@Column(name = "rawctype")
 	public short getRawCtype() {
 		return rawCtype;
 	}
@@ -218,17 +217,17 @@ public class SalesItemPO implements Serializable {
 	public void setRawCtype(short rawCtype) {
 		this.rawCtype = rawCtype;
 	}
-	
-	@Column(name="rawcvalue")
-	public float getRawCvalue() {
+
+	@Column(name = "rawcvalue")
+	public int getRawCvalue() {
 		return rawCvalue;
 	}
 
-	public void setRawCvalue(float rawCvalue) {
+	public void setRawCvalue(int rawCvalue) {
 		this.rawCvalue = rawCvalue;
 	}
-	
-	@Column(name="ctype")
+
+	@Column(name = "ctype")
 	public short getCtype() {
 		return ctype;
 	}
@@ -236,17 +235,17 @@ public class SalesItemPO implements Serializable {
 	public void setCtype(short ctype) {
 		this.ctype = ctype;
 	}
-	
-	@Column(name="cvalue")
-	public float getCvalue() {
+
+	@Column(name = "cvalue")
+	public int getCvalue() {
 		return cvalue;
 	}
 
-	public void setCvalue(float cvalue) {
+	public void setCvalue(int cvalue) {
 		this.cvalue = cvalue;
 	}
-	
-	@Column(name="priceType")
+
+	@Column(name = "priceType")
 	public short getPriceType() {
 		return priceType;
 	}

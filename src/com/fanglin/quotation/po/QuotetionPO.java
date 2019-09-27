@@ -20,37 +20,37 @@ public class QuotetionPO implements Serializable {
 	private static final long serialVersionUID = -7574124519130135638L;
 
 	private long qid;
-	
+
 	private String no;
-	
+
 	private String name;
-	
+
 	private String version;
-	
+
 	private long cuid;
-	
+
 	private Timestamp createTime;
-	
-	private float undisPrice;
-	
-	private float disPrice;
-	
-	private float discount;
-	
-	private float totalPrice;
-	
+
+	private long undisPrice;
+
+	private long disPrice;
+
+	private int discount;
+
+	private long totalPrice;
+
 	private String content;
-	
-	private float managePrice;
-	
-	private float manageRate;
-	
-	private float trafficPrice;
-	
-	private float trafficRate;
-	
-	private float basePrice;
-	
+
+	private long managePrice;
+
+	private int manageRate;
+
+	private long trafficPrice;
+
+	private int trafficRate;
+
+	private long basePrice;
+
 	public QuotetionPO() {
 		super();
 	}
@@ -117,38 +117,38 @@ public class QuotetionPO implements Serializable {
 	}
 
 	@Column(name = "undisPrice")
-	public float getUndisPrice() {
+	public long getUndisPrice() {
 		return undisPrice;
 	}
 
-	public void setUndisPrice(float undisPrice) {
+	public void setUndisPrice(long undisPrice) {
 		this.undisPrice = undisPrice;
 	}
-	
+
 	@Column(name = "disPrice")
-	public float getDisPrice() {
+	public long getDisPrice() {
 		return disPrice;
 	}
 
-	public void setDisPrice(float disPrice) {
+	public void setDisPrice(long disPrice) {
 		this.disPrice = disPrice;
 	}
 
 	@Column(name = "discount")
-	public float getDiscount() {
+	public int getDiscount() {
 		return discount;
 	}
-	
-	public void setDiscount(float discount) {
+
+	public void setDiscount(int discount) {
 		this.discount = discount;
 	}
 
 	@Column(name = "totalPrice")
-	public float getTotalPrice() {
+	public long getTotalPrice() {
 		return totalPrice;
 	}
 
-	public void setTotalPrice(float totalPrice) {
+	public void setTotalPrice(long totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 
@@ -162,62 +162,62 @@ public class QuotetionPO implements Serializable {
 	}
 
 	@Column(name = "managePrice")
-	public float getManagePrice() {
+	public long getManagePrice() {
 		return managePrice;
 	}
 
-	public void setManagePrice(float managePrice) {
+	public void setManagePrice(long managePrice) {
 		this.managePrice = managePrice;
 	}
 
 	@Column(name = "manageRate")
-	public float getManageRate() {
+	public int getManageRate() {
 		return manageRate;
 	}
 
-	public void setManageRate(float manageRate) {
+	public void setManageRate(int manageRate) {
 		this.manageRate = manageRate;
 	}
 
 	@Column(name = "trafficPrice")
-	public float getTrafficPrice() {
+	public long getTrafficPrice() {
 		return trafficPrice;
 	}
 
-	public void setTrafficPrice(float trafficPrice) {
+	public void setTrafficPrice(long trafficPrice) {
 		this.trafficPrice = trafficPrice;
 	}
 
 	@Column(name = "trafficRate")
-	public float getTrafficRate() {
+	public int getTrafficRate() {
 		return trafficRate;
 	}
 
-	public void setTrafficRate(float trafficRate) {
+	public void setTrafficRate(int trafficRate) {
 		this.trafficRate = trafficRate;
 	}
-	
+
 	@Column(name = "basePrice")
-	public float getBasePrice() {
+	public long getBasePrice() {
 		return basePrice;
 	}
 
-	public void setBasePrice(float basePrice) {
+	public void setBasePrice(long basePrice) {
 		this.basePrice = basePrice;
 	}
 
-	public void ptp(String name,String version,long cuid){
-		
+	public void ptp(String name, String version, long cuid) {
+
 		this.setName(name);
 		this.setVersion(version);
 		this.setNo(UUIDUtil.getUuid().substring(0, 15));
 		this.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		this.setCuid(cuid);
-		this.setDiscount(10);
+		this.setDiscount(10000);
 		this.setTotalPrice(0);
 		this.setContent("");
 		this.setBasePrice(0);
-		
+
 	}
-	
+
 }

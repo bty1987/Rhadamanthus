@@ -80,23 +80,23 @@ public class DecorationVO implements Serializable {
 
 	private QuotationVersionVO version;
 
-	private Float orderTotalPrice;
+	private Long orderTotalPrice;
 
-	private Float quotationPrice;
+	private Long quotationPrice;
 
-	private Float notSalesmanRate;
+	private Integer notSalesmanRate;
 
-	private Float discount;
+	private Integer discount;
 
-	private Float couponCut;
+	private Long couponCut;
 
-	private Float thingCut;
+	private Long thingCut;
 
-	private Float netperfor;
+	private Long netperfor;
 
-	private Float comperfor;
+	private Long comperfor;
 	
-	private Float precontractPrice;
+	private Long precontractPrice;
 
 	private String dompany;
 
@@ -106,7 +106,7 @@ public class DecorationVO implements Serializable {
 	
 	private String grade;
 	
-	private Float factPrice;
+	private Long factPrice;
 	
 	public DecorationVO(){
 		super();
@@ -291,19 +291,19 @@ public class DecorationVO implements Serializable {
 		this.creater = creater;
 	}
 
-	public Float getOrderTotalPrice() {
+	public Long getOrderTotalPrice() {
 		return orderTotalPrice;
 	}
 
-	public void setOrderTotalPrice(Float orderTotalPrice) {
+	public void setOrderTotalPrice(Long orderTotalPrice) {
 		this.orderTotalPrice = orderTotalPrice;
 	}
 
-	public Float getNotSalesmanRate() {
+	public Integer getNotSalesmanRate() {
 		return notSalesmanRate;
 	}
 
-	public void setNotSalesmanRate(Float notSalesmanRate) {
+	public void setNotSalesmanRate(Integer notSalesmanRate) {
 		this.notSalesmanRate = notSalesmanRate;
 	}
 
@@ -347,19 +347,19 @@ public class DecorationVO implements Serializable {
 		this.resourceType = resourceType;
 	}
 
-	public Float getDiscount() {
+	public Integer getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(Float discount) {
+	public void setDiscount(Integer discount) {
 		this.discount = discount;
 	}
 
-	public Float getQuotationPrice() {
+	public Long getQuotationPrice() {
 		return quotationPrice;
 	}
 
-	public void setQuotationPrice(Float quotationPrice) {
+	public void setQuotationPrice(Long quotationPrice) {
 		this.quotationPrice = quotationPrice;
 	}
 
@@ -380,43 +380,43 @@ public class DecorationVO implements Serializable {
 		this.accountTime = accountTime;
 	}
 
-	public Float getCouponCut() {
+	public Long getCouponCut() {
 		return couponCut;
 	}
 
-	public void setCouponCut(Float couponCut) {
+	public void setCouponCut(Long couponCut) {
 		this.couponCut = couponCut;
 	}
 
-	public Float getThingCut() {
+	public Long getThingCut() {
 		return thingCut;
 	}
 
-	public void setThingCut(Float thingCut) {
+	public void setThingCut(Long thingCut) {
 		this.thingCut = thingCut;
 	}
 
-	public Float getNetperfor() {
+	public Long getNetperfor() {
 		return netperfor;
 	}
 
-	public void setNetperfor(Float netperfor) {
+	public void setNetperfor(Long netperfor) {
 		this.netperfor = netperfor;
 	}
 
-	public Float getComperfor() {
+	public Long getComperfor() {
 		return comperfor;
 	}
 
-	public void setComperfor(Float comperfor) {
+	public void setComperfor(Long comperfor) {
 		this.comperfor = comperfor;
 	}
 	
-	public Float getPrecontractPrice() {
+	public Long getPrecontractPrice() {
 		return precontractPrice;
 	}
 
-	public void setPrecontractPrice(Float precontractPrice) {
+	public void setPrecontractPrice(Long precontractPrice) {
 		this.precontractPrice = precontractPrice;
 	}
 
@@ -440,11 +440,11 @@ public class DecorationVO implements Serializable {
 		this.scale = scale;
 	}
 
-	public Float getFactPrice() {
+	public Long getFactPrice() {
 		return factPrice;
 	}
 
-	public void setFactPrice(Float factPrice) {
+	public void setFactPrice(Long factPrice) {
 		this.factPrice = factPrice;
 	}
 

@@ -4,8 +4,8 @@ $.extend(api.index, {
     brandIndex: {url: "/views/data/brand.html"},
     customerIndex: {url: "/views/data/customer.html"},
     villageIndex: {url: "/views/data/village.html"},
-	PaymentScale: {url: "/views/data/paymentScale.html"},
-    houseIndex:{url: "/views/data/house.html"},
+	paymentScale: {url: "/views/data/paymentScale.html"},
+    houseIndex: {url: "/views/data/house.html"},
     checkUser: {url: "/views/data/checkUser.html"},
     userLabel: {url: "/views/data/userLabel.html"},
 });
@@ -48,10 +48,10 @@ $.extend(api, {data: {
     addCustomer: {url: "addCustomer.do", server: "communion"},
     updateCustomer: {url: "updateCustomer.do", server: "communion"},
     addCustomerPhone: {url:"addCustomerPhone.do", server: "communion"},
-    updateCustomerPhoneForStatus:{url:"updateCustomerPhoneForStatus.do", server: "communion"},
-    updateCustomerNameAPhone:{url:"updateCustomerNameAPhone.do", server: "communion"},
-    updateCustomerPhoneForDefault:{url:"updateCustomerPhoneForDefault.do", server: "communion"},
-    existCustomer:{url:"existCustomer.do", server: "communion"},
+    updateCustomerPhoneForStatus: {url:"updateCustomerPhoneForStatus.do", server: "communion"},
+    updateCustomerNameAPhone: {url:"updateCustomerNameAPhone.do", server: "communion"},
+    updateCustomerPhoneForDefault: {url:"updateCustomerPhoneForDefault.do", server: "communion"},
+    existCustomer: {url:"existCustomer.do", server: "communion"},
 	
     pageVillage: {url: "pageVillage.do", demo: true},
     queryVillage: {url: "queryVillage.do"},
@@ -64,50 +64,145 @@ $.extend(api, {data: {
     updateVillageForPosition: {url: "updateVillageForPosition.do", server: "communion"},
     updateVillageForUrl : {url:"updateVillageForUrl.do",server: "communion"},
     
-    pageHouse:{url:"pageHouse.do"},
-    queryHouseByHid:{url:"queryHouseByHid.do"},
-    queryHouseByNoAHnum:{url:"queryHouseByNoAHnum.do"},
-    addHouse:{url:"addHouse.do", server: "communion"},
-    updateHouse:{url:"updateHouse.do", server: "communion"},
-    existHouse:{url:"existHouse.do", server: "communion"},
+    pageHouse: {
+        url:"pageHouse.do",
+        type: "query", 
+        tranargs: [{
+            result: "paging-data", 
+            args: ["buildArea"]
+        }]
+    },
+    queryHouseByHid: {
+        url:"queryHouseByHid.do",
+        type: "query", 
+        tranargs: [{
+            result: "house", 
+            args: ["buildArea"]
+        }]
+    },
+    queryHouseByNoAHnum: {
+        url:"queryHouseByNoAHnum.do",
+        type: "query", 
+        tranargs: [{
+            result: "house", 
+            args: ["buildArea"]
+        }]
+    },
+    addHouse: {
+        url:"addHouse.do", 
+        server: "communion",
+        type: "update",
+        tranargs: {
+            args: ["house.buildArea"],
+            query:[{
+                result: "house",
+                args:["buildArea"]
+            }]
+        }
+    },
+    updateHouse: {
+        url:"updateHouse.do", 
+        server: "communion",
+        type: "update",
+        tranargs: {
+            args: ["house.buildArea"]
+        }
+    },
+    existHouse: {
+        url:"existHouse.do", 
+        server: "communion",
+        type: "update",
+        tranargs: {
+            args: ["house.buildArea"]
+        }
+    },
    
     pageDrawlineGroup: {url:"pageDrawlineGroup.do"},
-    queryDrawlineGroup:{url:"queryDrawlineGroup.do"},
+    queryDrawlineGroup: {url:"queryDrawlineGroup.do"},
     addDrawlineGroup: {url:"addDrawlineGroup.do"},
     updateDrawlineGroup: {url:"updateDrawlineGroup.do"},
-    updateDrawlineGroupForStatus:{url:"updateDrawlineGroupForStatus.do"},
+    updateDrawlineGroupForStatus: {url:"updateDrawlineGroupForStatus.do"},
 
-    pageMeasurementUnit:{url:"pageMeasurementUnit.do"},
-    queryMeasurementUnit:{url:"queryMeasurementUnit.do"},
-    addMeasurementUnit:{url:"addMeasurementUnit.do", server: "communion"},
-    updateMeasurementUnit:{url:"updateMeasurementUnit.do", server: "communion"},
+    pageMeasurementUnit: {url:"pageMeasurementUnit.do"},
+    queryMeasurementUnit: {url:"queryMeasurementUnit.do"},
+    addMeasurementUnit: {url:"addMeasurementUnit.do", server: "communion"},
+    updateMeasurementUnit: {url:"updateMeasurementUnit.do", server: "communion"},
 
-    pageConstructionNode:{url:"pageConstructionNode.do"},
-    queryConstructionNode:{url:"queryConstructionNode.do"},
-    queryConstructionNodeByOrderId:{url:"queryConstructionNodeByOrderId.do"},
-    addConstructionNode:{url:"addConstructionNode.do", server: "communion"},
-    updateConstructionNode: {url: "updateConstructionNode.do", server: "communion"},
-    updateConstructionNodeForStatus:{url:"updateConstructionNodeForStatus.do", server: "communion"},
+    pageConstructionNode: {
+        url:"pageConstructionNode.do",
+        type: "query", 
+        tranargs: [{
+            result: "paging-data", 
+            args: ["precheck", "postcheck"]
+        }]
+    },
+    queryConstructionNode: {
+        url:"queryConstructionNode.do",
+        type: "query", 
+        tranargs: [{
+            result: "contructionNodes", 
+            args: ["precheck", "postcheck"]
+        }]
+    },
+    queryConstructionNodeByOrderId: {
+        url:"queryConstructionNodeByOrderId.do",
+        type: "query", 
+        tranargs: [{
+            result: "contructionNodes", 
+            args: ["precheck", "postcheck"]
+        }]
+    },
+    addConstructionNode: {
+        url:"addConstructionNode.do", 
+        server: "communion",
+        type: "update",
+        tranargs: {
+            args: ["constructionNode.precheck", "constructionNode.postcheck"]
+        }
+    },
+    updateConstructionNode: {
+        url: "updateConstructionNode.do", 
+        server: "communion",
+        type: "update",
+        tranargs: {
+            args: ["constructionNode.precheck", "constructionNode.postcheck"]
+        }
+    },
+    updateConstructionNodeForStatus: {url:"updateConstructionNodeForStatus.do", server: "communion"},
 	
-    queryPaymentScaleByCid:{url:"queryPaymentScaleByCid.do"},
-    addPaymentScale: {url:"addPaymentScale.do", server: "communion"},
-    deletePaymentScale: {url:"deletePaymentScale.do", server: "communion"},
-    queryPaymentScaleItemByPsid:{url:"queryPaymentScaleItemByPsid.do"},
-    addPaymentScaleItem:{url:"addPaymentScaleItem.do", server: "communion"},
-    deletePaymentScaleItem:{url:"deletePaymentScaleItem.do", server: "communion"},
+    queryPaymentScaleByCid: {url:"queryPaymentScaleByCid.do"},
+    addPaymentScale: {url:"addPaymentScale.do",},
+    deletePaymentScale: {url:"deletePaymentScale.do"},
+    queryPaymentScaleItemByPsid: {
+        url:"queryPaymentScaleItemByPsid.do",
+        type: "query", 
+        tranargs: [{
+            result: "paymentScaleItems", 
+            args: ["scale"]
+        }]
+    },
+    addPaymentScaleItem: {
+        url:"addPaymentScaleItem.do", 
+        server: "communion",
+        type: "update",
+        tranargs: {
+            args: ["paymentScaleItem.scale"]
+        }
+    },
+    deletePaymentScaleItem: {url:"deletePaymentScaleItem.do"},
 
     queryChainPage: {url:"queryChainPage.do"},
     queryChainPageForSelf: {url:"queryChainPageForSelf.do"},
     addChainPage: {url:"addChainPage.do"},
     deleteChainPage: {url:"deleteChainPage.do"},
 
-    pageLabel :{url : "pageLabel.do"},
-    queryLabel :{url : "queryLabel.do"},
-    addLabel :{url : "addLabel.do"},
+    pageLabel : {url : "pageLabel.do"},
+    queryLabel : {url : "queryLabel.do"},
+    addLabel : {url : "addLabel.do"},
     updateLabel : {url : "updateLabel.do"},
-    updateLabelForStatus :{url : "updateLabelForStatus.do"},
-    queryUserLabelByUid :{url : "queryUserLabelByUid.do"},
+    updateLabelForStatus : {url : "updateLabelForStatus.do"},
+    queryUserLabelByUid : {url : "queryUserLabelByUid.do"},
     pickUserLabel : {url : "pickUserLabel.do"},
-    addUserLabel :{url : "addUserLabel.do"},
+    addUserLabel : {url : "addUserLabel.do"},
     deleteUserLabel : {url : "deleteUserLabel.do"},
 }});

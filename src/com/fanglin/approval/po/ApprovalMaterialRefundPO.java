@@ -1,9 +1,10 @@
 package com.fanglin.approval.po;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -12,17 +13,17 @@ import javax.persistence.Table;
 public class ApprovalMaterialRefundPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -7756649919263545860L;
-	
+
 	public static final String COLUMN_AID_STR = "aid";
 
 	private int amrId;
-	
+
 	private long aid;
-	
+
 	private long mid;
-	
-	private float refund;
-	
+
+	private long refund;
+
 	private short type;
 
 	@Id
@@ -55,11 +56,11 @@ public class ApprovalMaterialRefundPO implements java.io.Serializable {
 	}
 
 	@Column(name = "refund")
-	public float getRefund() {
+	public long getRefund() {
 		return this.refund;
 	}
 
-	public void setRefund(float refund) {
+	public void setRefund(long refund) {
 		this.refund = refund;
 	}
 

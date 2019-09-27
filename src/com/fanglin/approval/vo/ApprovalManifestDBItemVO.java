@@ -5,7 +5,6 @@ import java.io.Serializable;
 import com.fanglin.inventory.vo.ColorVO;
 import com.fanglin.inventory.vo.FormatVO;
 import com.fanglin.inventory.vo.GoodsVO;
-
 import com.fanglin.inventory.vo.StorehouseVO;
 
 public class ApprovalManifestDBItemVO implements Serializable {
@@ -26,7 +25,7 @@ public class ApprovalManifestDBItemVO implements Serializable {
 
 	private StorehouseVO outstorehouse;
 
-	private Float num;
+	private Integer num;
 
 	private String comment;
 
@@ -99,11 +98,11 @@ public class ApprovalManifestDBItemVO implements Serializable {
 		this.outstorehouse = outstorehouse;
 	}
 
-	public Float getNum() {
+	public Integer getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(Integer num) {
 		this.num = num;
 	}
 

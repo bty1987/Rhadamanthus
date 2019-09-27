@@ -1,65 +1,67 @@
 <div id="materialSubOrderPageContent">
+    <div>
+        <div class="row">
+            <div class="col-xs-12">
+                <!-- 查询条件-->
+                <div id="condList" class="fl_search clearfix"></div>
+                <!--查询结果-->
+                <div id="resultList" class="clearfix tab-pane active"></div>
+                <!--分页-->
+                <div id="pagenation" class="fl-page-wrap clearfix"></div>
+            </div>
+        </div>
 
-    <div class="row">
-        <div class="col-xs-12">
-            <div id="condList" class="fl_search clearfix"></div>
+        <div class="modal fade" id="productionModal" tabindex="-1">
+            <div class="modal-dialog" style="margin-top: 10%;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">添加生产单</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right " for="orderId">装修单号</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="orderId" maxlength="12" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual'/>
+                                </div>
+                            </div>
 
-            <div class="clearfix" id="resultList"></div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right " for="orderAddr">楼盘地址</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="orderAddr" maxlength="12" class="col-xs-10 col-sm-7 v_required" data-toggle="popover"  readonly/>
+                                </div>
+                            </div>
 
-            <div class="fl-page-wrap clearfix pagination" id="pagenation" style="display: block;"></div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="designer">设计师</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="designer" maxlength="12" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual'/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="timeLimit">工期</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="timeLimit" maxlength="12" class="col-xs-10 col-sm-7 v_required v_number" data-toggle="popover" data-trigger='manual'/>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+                        <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
 </div>
 
-<div id="layerAdd" style="padding: 40px 0; display: none;">
-        <div class="row-fluid">
-            <form class="form-horizontal" novalidate="novalidate" id="form1">
-
-                <div class="widget-main">
-                    <div class="row" style="margin-right:0px">
-                        <div class="col-xs-12">
-
-                            <div class="form-group">
-                                <label class="control-label col-xs-4">装修单号</label>
-                                <div class="controls col-xs-8">
-                                    <input type="text" class="span6 m-wrap col-xs-8 v_required" name="orderId"  rules="{required:true}" >
-                                </div>
-                            </div>
-                            <div class="space5"></div>
-
-                            <div class="form-group">
-                                <label class="control-label col-xs-4">楼盘地址</label>
-                                <div class="controls col-xs-8">
-                                    <input type="text" class="span6 m-wrap col-xs-8" name="orderAddr"  rules="{required:true}" readonly>
-                                </div>
-                            </div>
-                            <div class="space5"></div>
-
-                            <div class="form-group">
-                                <label class="control-label col-xs-4">设计师</label>
-                                <div class="controls col-xs-8">
-                                    <input type="text" class="span6 m-wrap col-xs-8 v_required" name="designer"  rules="{required:true}" >
-                                </div>
-                            </div>
-                            <div class="space5"></div>
-
-                            <div class="form-group">
-                                <label class="control-label col-xs-4">工期</label>
-                                <div class="controls col-xs-8">
-                                    <input type="text" class="span6 m-wrap col-xs-8 v_required v_number" name="timeLimit"  rules="{required:true}" >
-                                </div>
-                            </div>
-                            <div class="space5"></div>
-
-                        </div>
-                    </div>
-                </div>
-
-            </form>
-        </div>
-    </div>
-
 <script type="text/javascript">
-	$.loadScript(['js/production/production.js','js/production/productionUtils.js']);
+    $.loadScript(['js/production/production.js']);
 </script>

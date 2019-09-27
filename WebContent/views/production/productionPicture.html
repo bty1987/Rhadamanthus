@@ -22,36 +22,50 @@
     </div>
 </div>
 
+<div class="modal fade" id="layerProductionImport" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myTitleLabel">导入图纸</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" novalidate="novalidate">
+                    <div class="widget-main">
+                        <div class="row" style="margin-right:0px">
+                            <div class="col-xs-12">
 
+                                <div class="form-group">
 
-<div id="layerProductionImport" style="padding: 40px 0; display: none;">
-    <div class="row-fluid">
-        <form class="form-horizontal" novalidate="novalidate" id="form1">
-            <div class="widget-main">
-                <div class="row" style="margin-right:0px">
-                    <div class="col-xs-12">
+                                    <label class="control-label col-xs-3 no-padding-right" for="comment">图纸说明</label>
+                                    <div class="controls col-xs-8">
+                                        <input type="text" id="comment" maxlength="12" class="span6 m-wrap col-xs-6 v_required"
+                                               data-toggle="popover" data-trigger='manual'/>
+                                    </div>
 
-                        <div class="form-group">
-                            <label class="control-label col-xs-4 no-padding-right">图纸说明</label>
-                            <div class="controls col-xs-8">
-                                <input type="text" class="span6 m-wrap col-xs-8 v_required" name="pictureComment"
-                                       rules="{required:true}">
+                                </div>
+                                <div class="space5"></div>
+
+                                <div class="form-group">
+                                    <div class="control-label col-xs-3 no-padding-right" style="margin-left: 10%"
+                                         id="importProductionPicture"></div>
+                                </div>
+                                <div class="space5"></div>
+
                             </div>
                         </div>
-                        <div class="space5"></div>
-
-                        <div class="form-group">
-                            <div class="control-label col-xs-8 no-padding-right" style="margin-left: 10%" id="importProductionPicture"></div>
-                        </div>
-                        <div class="space5"></div>
-
                     </div>
-                </div>
+                </form>
             </div>
-        </form>
+            <div class="modal-footer">
+                <button type="button" id="confirmBtn" class="btn btn-default">确定</button>
+            </div>
+        </div>
     </div>
 </div>
 
+
 <script type="text/javascript">
-	$.loadScript(['js/production/productionUtils.js','js/production/productionPicture.js']);
+	$.loadScript(['js/production/productionPicture.js']);
 </script>

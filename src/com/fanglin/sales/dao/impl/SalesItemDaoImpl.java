@@ -32,7 +32,7 @@ public class SalesItemDaoImpl extends DaoImpl<SalesItemPO> implements SalesItemD
 	}
 
 	@Override
-	public Float countSalesItemForAmount(long sid) {
+	public Long countSalesItemForAmount(long sid) {
 		
 		String sql="SELECT SUM(sales.salesitem.total) FROM sales.salesitem where sid=:sid";
 		
@@ -42,7 +42,7 @@ public class SalesItemDaoImpl extends DaoImpl<SalesItemPO> implements SalesItemD
 			sum = BigDecimal.ZERO;
 		}
 		
-		return sum.floatValue();
+		return sum.longValue();
 	}
 
 }

@@ -45,13 +45,13 @@ public class ManifestItemPO implements java.io.Serializable {
 	
 	private short type;
 	
-	private float inprice;
+	private int inprice;
 	
-	private float outprice;
+	private int outprice;
 
-	private float num;
+	private int num;
 	
-	private float surplus;
+	private int surplus;
 
 	private String comment;
 
@@ -183,51 +183,52 @@ public class ManifestItemPO implements java.io.Serializable {
 	}
 
 	@Column(name = "inprice")
-	public float getInprice() {
+	public int getInprice() {
 		return inprice;
 	}
 
-	public void setInprice(float inprice) {
+	public void setInprice(int inprice) {
 		this.inprice = inprice;
 	}
 
 	@Column(name = "outprice")
-	public float getOutprice() {
+	public int getOutprice() {
 		return outprice;
 	}
 
-	public void setOutprice(float outprice) {
+	public void setOutprice(int outprice) {
 		this.outprice = outprice;
 	}
 
 	@Column(name = "num")
-	public float getNum() {
-		return this.num;
+	public int getNum() {
+		return num;
 	}
 
-	public void setNum(float num) {
+	public void setNum(int num) {
 		this.num = num;
 	}
 	
 	@Column(name = "surplus")
-	public float getSurplus() {
+	public int getSurplus() {
 		return surplus;
 	}
 
-	public void setSurplus(float surplus) {
+	public void setSurplus(int surplus) {
 		this.surplus = surplus;
 	}
 
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
 
 	@Column(name = "comment")
 	public String getComment() {
 		return this.comment;
 	}
 	
-	public ManifestItemPO init(long mid, Long siid, Long piid, Long aiid, Long qiid, long gid, long cid, long fid, short type, float inprice, float outprice, float num, StorehousePO inStorehousePO, StorehousePO outStorehousePO){
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+	
+	public ManifestItemPO init(long mid, Long siid, Long piid, Long aiid, Long qiid, long gid, long cid, long fid, short type, int inprice, int outprice, int num, StorehousePO inStorehousePO, StorehousePO outStorehousePO){
 		
 		setMid(mid);
 		

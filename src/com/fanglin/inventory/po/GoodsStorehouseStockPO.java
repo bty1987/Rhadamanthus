@@ -45,7 +45,7 @@ public class GoodsStorehouseStockPO implements java.io.Serializable {
 	
 	private StorehousePO storehouse;
 	
-	private float num;
+	private int num;
 	
 	public GoodsStorehouseStockPO() {
 		super();
@@ -110,11 +110,11 @@ public class GoodsStorehouseStockPO implements java.io.Serializable {
 	}
 
 	@Column(name = "num")
-	public float getNum() {
-		return this.num;
+	public int getNum() {
+		return num;
 	}
 
-	public void setNum(float num) {
+	public void setNum(int num) {
 		this.num = num;
 	}
 

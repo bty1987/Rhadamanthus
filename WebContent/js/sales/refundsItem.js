@@ -3,9 +3,14 @@ $(function () {
 	var refund = {
 	    sid: params.sid
 	};
-	
+    com.focusPage('#fl-statement').statement("销售单", "退货");
+
 	com.post(api.inventory.queryRefundsItemBySid,{"refunds.sid": refund.sid},function (data) {
-        initList(data.refundsItems);
+        if(data.refundsItems.length == 0){
+            emptyData("list");
+        }else{
+            initList(data.refundsItems);
+        }
     });
 
     var initList = function(listData) {
@@ -53,4 +58,11 @@ $(function () {
             $ul.appendTo($tableWrap);
         }
     };
+
+    function emptyData(id) {
+        var $resultList = com.focusPage('#' + id).html('');
+        var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
+        var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
+        var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
+    }
 });

@@ -34,13 +34,9 @@ public class DecorationAction extends BaseListAction {
 
 	private String decorationOrderId;
 
-	private int conditions = 0;
+	private long refundValue = 0;
 
-	private double contractTotal = 0;
-
-	private float refundValue = 0;
-
-	private float paymentValue = 0;
+	private long paymentValue = 0;
 
 	private short timeType;
 
@@ -260,27 +256,11 @@ public class DecorationAction extends BaseListAction {
 		this.decorationOrderId = decorationOrderId;
 	}
 
-	public int getConditions() {
-		return conditions;
-	}
-
-	public void setConditions(int conditions) {
-		this.conditions = conditions;
-	}
-
-	public double getContractTotal() {
-		return contractTotal;
-	}
-
-	public void setContractTotal(double contractTotal) {
-		this.contractTotal = contractTotal;
-	}
-
-	public float getRefundValue() {
+	public long getRefundValue() {
 		return refundValue;
 	}
 
-	public void setRefundValue(float refundValue) {
+	public void setRefundValue(long refundValue) {
 		this.refundValue = refundValue;
 	}
 
@@ -288,11 +268,11 @@ public class DecorationAction extends BaseListAction {
 		return decorationOrderId;
 	}
 
-	public float getPaymentValue() {
+	public long getPaymentValue() {
 		return paymentValue;
 	}
 
-	public void setPaymentValue(float paymentValue) {
+	public void setPaymentValue(long paymentValue) {
 		this.paymentValue = paymentValue;
 	}
 

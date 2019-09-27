@@ -1,9 +1,10 @@
 package com.fanglin.approval.po;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -12,39 +13,39 @@ import javax.persistence.Table;
 public class ApprovalDecorationActivityItemPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -5325357230277494348L;
-	
+
 	public static final String COLUMN_AAID_STR = "adaId";
-	
+
 	public static final String COLUMN_ORDERID_STR = "orderId";
-	
+
 	public static final int COLUMN_COUPON_INT = 0;
-	
+
 	public static final int COLUMN_THING_INT = 1;
-	
+
 	public static final int COLUMN_SPECIAL_COLUMN_COUPON_INT = 2;
-	
+
 	public static final int COLUMN_SPECIAL_ARTICLE_INT = 3;
 
 	private long adaiId;
-	
+
 	private long adaId;
-	
+
 	private String orderId;
-	
+
 	private String activityName;
-	
+
 	private String activityItemName;
-	
+
 	private short type;
-	
+
 	private int num;
-	
-	private float money;
-	
+
+	private int money;
+
 	private String content;
-	
+
 	private short stateType;
-	
+
 	private long asid;
 
 	@Id
@@ -113,11 +114,11 @@ public class ApprovalDecorationActivityItemPO implements java.io.Serializable {
 	}
 
 	@Column(name = "money")
-	public float getMoney() {
+	public int getMoney() {
 		return this.money;
 	}
 
-	public void setMoney(float money) {
+	public void setMoney(int money) {
 		this.money = money;
 	}
 

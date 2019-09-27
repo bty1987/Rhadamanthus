@@ -10,30 +10,30 @@ import com.fanglin.utils.Paging;
 public interface CustomerOriginService {
 
 	public void pageCustomerOrigin(Paging paging, List<Filter> filters, String userId);
-	
+
 	public void pageCustomerOriginForDesign(Paging paging, List<Filter> filters, String userId);
 
 	public void pageCustomerOriginForAdvance(Paging paging, List<Filter> filters, String userId);
-	
+
 	public void pageCustomerOriginForCommunion(Paging paging, List<Filter> filters);
-	
+
 	public CustomerOriginVO queryCustomerOriginByCsid(CustomerOriginVO customerOrigin);
-	
+
 	public void addCustomerOrigin(CustomerOriginVO customerOriginVO, String userId);
 
-	public void updateCustomerOrigin(CustomerOriginVO customerOriginVO, String userId) throws FLException; 
+	public void updateCustomerOrigin(CustomerOriginVO customerOriginVO, String userId) throws FLException;
 
 	public void updateCustomerOriginForBelonger(CustomerOriginVO customerOriginVO, String userId) throws FLException;
-	
+
 	public void freeCustomerOrigin(CustomerOriginVO customerOriginVO, String userId) throws FLException;
-	
+
 	public void takeCustomerOrigin(CustomerOriginVO customerOriginVO, String userId) throws FLException;
-	
+
 	public void bindCustomerOrigin(CustomerOriginVO customerOrigin, String userId) throws FLException;
 
 	public void commitCustomerOrigin(CustomerOriginVO customerOrigin) throws FLException;
 
-	public void confirmCustomerOrigin(CustomerOriginVO customerOrigin) throws FLException;
+	public void confirmCustomerOrigin(CustomerOriginVO customerOrigin, String securityCode, String verifyCode) throws FLException;
 
 	public void cancelCustomerOrigin(CustomerOriginVO customerOrigin) throws FLException;
 

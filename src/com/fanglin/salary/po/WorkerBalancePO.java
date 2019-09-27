@@ -22,7 +22,7 @@ public class WorkerBalancePO implements Serializable {
 	private static final long serialVersionUID = -4634252524595404538L;
 
 	public static final String COLUMN_UID_STR = "user.uid";
-	
+
 	public static final short STATUS_VALID_INT = 0;// 有效
 
 	public static final short STATUS_NULL_INT = 1;// 无效
@@ -31,14 +31,14 @@ public class WorkerBalancePO implements Serializable {
 
 	private UserPO user;
 
-	private float deposit;
+	private long deposit;
 
-	private float salary;
+	private long salary;
 
-	private float toplimit;
+	private long toplimit;
 
 	private short status;
-	
+
 	private int company;
 
 	public WorkerBalancePO() {
@@ -67,29 +67,29 @@ public class WorkerBalancePO implements Serializable {
 	}
 
 	@Column(name = "deposit")
-	public float getDeposit() {
+	public long getDeposit() {
 		return deposit;
 	}
 
-	public void setDeposit(float deposit) {
+	public void setDeposit(long deposit) {
 		this.deposit = deposit;
 	}
 
 	@Column(name = "salary")
-	public float getSalary() {
+	public long getSalary() {
 		return salary;
 	}
 
-	public void setSalary(float salary) {
+	public void setSalary(long salary) {
 		this.salary = salary;
 	}
 
 	@Column(name = "toplimit")
-	public float getToplimit() {
+	public long getToplimit() {
 		return toplimit;
 	}
 
-	public void setToplimit(float toplimit) {
+	public void setToplimit(long toplimit) {
 		this.toplimit = toplimit;
 	}
 

@@ -2,17 +2,17 @@ package com.fanglin.store.vo;
 
 import java.io.Serializable;
 
-public class CartVO implements Serializable{
+public class CartVO implements Serializable {
 
 	private static final long serialVersionUID = 3912729427287367340L;
 
 	private Long cid;
-	
+
 	private Long uid;
-	
+
 	private MpriceVO mprice;
-	
-	private Short num;
+
+	private Integer num;
 
 	public CartVO() {
 		super();
@@ -47,11 +47,11 @@ public class CartVO implements Serializable{
 		this.mprice = mprice;
 	}
 
-	public Short getNum() {
+	public Integer getNum() {
 		return num;
 	}
 
-	public void setNum(Short num) {
+	public void setNum(Integer num) {
 		this.num = num;
 	}
 

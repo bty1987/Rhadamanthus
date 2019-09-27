@@ -73,7 +73,11 @@ jQuery(function () {
                 com.post(api.inventory.queryPriceByGid, {"price.gid": k}, function (res) {
                     if (res.prices.length != 0) {
 
-                        sales.leftitems.purchase.bindData(res.prices, "pid", "content", false, null, "selling");
+                        $.each(res.prices, function (key, value) {
+                            value.name = value.selling + " "  + value.name;
+                        });
+
+                        sales.leftitems.purchase.bindData(res.prices, "pid", "name", false, null, "selling");
                         
                         var price = res.prices[0];
 
@@ -195,7 +199,7 @@ jQuery(function () {
             ['单位: ', sales.leftitems.measurementUnit.val()],
             ['颜色: ', sales.leftitems.color.find("option:selected").text()],
             ['规格: ', sales.leftitems.format.find("option:selected").text()],
-            ['售价: ', $purchase, 'blue'],
+            ['售价: ', price.selling, 'blue'],
             ['折扣价: ', $disPrice],
             ['折让价: ', $selling, 'blue'],
             ['数量: ', $num, 'red'],
@@ -300,7 +304,7 @@ jQuery(function () {
 
             var $v = $(v);
             var data = $v.data();
-            
+
             options["salesItems[" + i + "].goods.gid"] = data.goods;
             options["salesItems[" + i + "].color.cid"] = data.color;
             options["salesItems[" + i + "].format.fid"] = data.format;
@@ -319,7 +323,7 @@ jQuery(function () {
             options["salesItems[" + i + "].cvalue"] = data.cvalue;
             options["salesItems[" + i + "].priceType"] = data.pricetype;
         });
-        
+
         com.post(api.inventory.addSales, options, function () {
             com.showAlert(com.info, "添加成功");
             com.focusPage('#salesItemList').empty();
@@ -354,7 +358,7 @@ jQuery(function () {
         $li.length && $li.each(function (i, v) {
             var $v = $(v);
             var data = $v.data();
-            _total = utils.accAdd(_total, data.total);
+            _total = utils.changeThrDecimal(utils.accAdd(_total, data.total));
         });
         sales.rightitems.totals.val(_total);
     }

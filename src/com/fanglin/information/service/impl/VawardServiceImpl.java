@@ -30,6 +30,7 @@ import com.fanglin.information.po.VprizePO;
 import com.fanglin.information.po.VticketPO;
 import com.fanglin.information.service.VawardService;
 import com.fanglin.information.vo.VawardVO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 
 @Service("vawardService")
@@ -108,10 +109,32 @@ public class VawardServiceImpl implements VawardService {
 		EmemberPO ememberPO = ememberDao.queryEmemberByNo(no);
 
 		if (ememberPO != null) {
-			messageService.sendMessage(ememberPO.getUnionId(), "活动奖品", no, String.format("活动奖品: %s, 数量: %.2f, 领取成功", vprizePO.getName(), vawardVO.getNum()));
+			messageService.sendMessage(ememberPO.getUnionId(), "活动奖品", no, String.format("活动奖品: %s, 数量: %.3f, 领取成功", vprizePO.getName(), Arith.div(vawardVO.getNum(), 1000.0)));
 		}
 		
 		return 0;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int deleteVaward(VawardVO vawardVO) throws FLException {
+		
+		VawardPO vawardPO = vawardDao.get(vawardVO.getVaid());
+		
+		if (vawardPO == null) {
+			throw new FLException(160048, "奖品不存在");
+		}
+		
+		vawardDao.delete(vawardPO);
+		
+		return 0;
+	}
+
+	@Override
+	public List<?> countVaward() {
+		
+		List<?> counts = vawardDao.countVaward();
+		
+		return counts;
+	}
 }

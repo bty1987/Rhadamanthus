@@ -20,17 +20,17 @@ import com.fanglin.finance.vo.SubjectVO;
 import com.fanglin.utils.Paging;
 
 public interface SubjectBalanceService {
-	
+
 	public void pageSubjectBalance(Paging paging, List<Filter> filters);
-	
+
 	public List<SubjectBalanceVO> querySubjectBalance(List<Filter> filters);
-	
+
 	public int addSubjectBalanceForSubject(SubjectVO subjectVO);
-	
+
 	public int updateSubjectBalanceForBalance(SubjectBalanceVO subjectBalanceVO) throws FLException;
-	
-	public int alowSubjectBalanceForBalanceByCodeAPeriod(String code, String period, float debit, float credit);
-	
+
+	public int alowSubjectBalanceForBalanceByCodeAPeriod(String code, String period, long debit, long credit);
+
 	public int deleteSubjectBalanceBySId(long sId);
 
 }

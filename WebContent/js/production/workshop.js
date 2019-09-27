@@ -1,6 +1,24 @@
 $(function () {
 
-    var $workshopName = com.focusPage('#workshopName');
+    var workshop = {
+        saveBtn : com.focusPage("#saveBtn"),
+        cancelBtn : com.focusPage("#cancelBtn"),
+
+        modals: {
+            workshopModal: com.focusPage("#workshopModal")
+        },
+        items : {
+            name : com.focusPage("#name")
+        },
+        editFlg : true,
+    };
+
+    workshop.saveBtn.bindClick(saveData);
+
+    workshop.modals.workshopModal.on("hide.bs.modal", function(){
+        com.clearValidator();
+        com.cleanItems(workshop.items);
+    });
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
@@ -92,30 +110,24 @@ $(function () {
                 .append($optionWrap);
 
             $btnEdit.click(function () {
-                productionUtils.clearForm("form1");
-                com.clearValidator();
-                $workshopName.val(v.name);
-                openlayer("编辑",function () {
-                    if (!com.validate("layerAdd", null)) {
-                        saveData(v.wsid);
-                    }
-                });
+                workshop.editFlg = false;
+
+                workshop.items.wsid = v.wsid;
+                workshop.items.name.val(v.name);
+                workshop.modals.workshopModal.modal("show");
             });
 
             $btnStart.click(function () {
-                changeQuoteTypeStatus(v.wsid, 0, (v.status == 0) ,function(){
-                    com.showAlert(com.info, "操作成功");
-                });
+                changeQuoteTypeStatus(v.wsid, 0, v.status);
             });
 
             $btnStop.click(function () {
-                changeQuoteTypeStatus(v.wsid, 1, (v.status == 1) ,function(){
-                    com.showAlert(com.info, "操作成功");
-                });
+                changeQuoteTypeStatus(v.wsid, 1, v.status);
             });
 
             $btncheck.click(function () {
-                queryWorkplan(v.wsid);
+                com.focusPage('#viewPopUp').attr('data-wsid', v.wsid);
+                com.popup4page("#viewPopUp","views/production/viewWorkshop.html","查看工序组");
             });
 
             return $liLine;
@@ -135,107 +147,57 @@ $(function () {
     var workshopSeacher = new Searcher();
 
     workshopSeacher.init(['p_workshopName'], "condList", api.production.pageWorkshop, function (data) {
-
         displayFunc.init('resultList', data);
-
     }, "pagenation", "workshopPostData", null, false, null, function () {
 
-        //var $adda = $('<a></a>').addClass('btn mini pull-left').attr('name', 'addWorkshopVersion').css('margin-top', '-2px').html('添加');
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px");
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addWorkshop').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        $adda.click(function () {
-            productionUtils.clearForm("form1");
-            com.clearValidator();
-            openlayer("添加",function (index, layero) {
-                if (!com.validate("layerAdd", null)) {
-                    saveData(null, function () {
-                        workshopSeacher.doSearch();
-                    });
-                }
-            });
-        });
-
         return [$adda];
-    }, 'resultList');
+    });
 
-    function openlayer(layerType,callback) {
-        com.closePopup();
-        layer.open({
-            type: 1,
-            skin: 'layui-layer-lan',
-            title: layerType,
-            content: com.focusPage('#layerAdd'),
-            area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定', '取消'],
-            yes: function (index, layero) {
-                callback(index, layero);
-            },
-            btn2: function (index, layero) {
-                //按钮【按钮二】的回调
-            },
-            cancel: function () {
-                //右上角关闭回调
-            }
-        });
-    }
+    com.focusPage("#addWorkshop").click(function() {
+        workshop.editFlg = true;
+        workshop.modals.workshopModal.modal("show");
+    });
 
-    function changeQuoteTypeStatus(id, btnType, statusFlag, callback) {
+
+    function changeQuoteTypeStatus(id, btnType, statusFlag) {
+
+        var status = btnType == 0 ? "启用" : "禁用";
+
+        if(statusFlag == btnType){
+            com.showAlert(com.info, "已"+status+"无需重复当前操作");
+            return false;
+        }
+
         com.post(api.production.updateWorkshopForStatus, {
             "workshop.wsid": id,
             "workshop.status": btnType
         }, function (res) {
-            callback();
+            com.showAlert(com.info, "已"+status);
             workshopSeacher.doSearch();
         });
     }
 
     function saveData(id) {
-        var name = $workshopName.val();
-        if (!id) {
-            com.post(api.production.addWorkshop, {
-                "workshop.name": name
-            }, function (res) {
-                workshopSeacher.doSearch();
-                com.showAlert(com.info, "操作成功");
-            });
-        } else {
-            com.post(api.production.updateWorkshop, {
-                "workshop.wsid": id,
-                "workshop.name": name
-            }, function (res) {
-                workshopSeacher.doSearch();
-                com.showAlert(com.info, "操作成功");
-            });
-        }
-    }
 
-    function queryWorkplan(id) {
-        var $popup = com.focusPage('#viewPopUp');
-        $popup.attr('data-wsid', id);
-        com.closePopup();
-        layer.open({
-            type: 1,
-            skin: 'layui-layer-lan',
-            title: "查看工序组",
-            content: $popup,
-            area: ($(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['取消'],
-            success: function (layer, index) {
-                $popup.load("views/production/viewWorkshop.html");
-            },
-            end: function () {
-                $popup.attr('data-mid', null);
-            },
-            btn2: function (index, layero) {
-            },
-            cancel: function () {
-            }
+        if (com.validate('workshopModal')) {
+            return false;
+        }
+        var url;
+        var options = {
+            "workshop.name": workshop.items.name.val()
+        };
+
+        workshop.editFlg ? url = api.production.addWorkshop : url = api.production.updateWorkshop, options["workshop.wsid"] =  workshop.items.wsid;
+
+        com.post(url, options, function(res){
+            com.closePopup();
+            com.showAlert(com.info, "操作成功");
+            workshopSeacher.doSearch();
         });
+        workshop.modals.workshopModal.modal("hide");
     }
 });

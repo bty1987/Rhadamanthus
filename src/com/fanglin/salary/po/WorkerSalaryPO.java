@@ -26,9 +26,9 @@ public class WorkerSalaryPO implements Serializable {
 	public static final String COLUMN_CSID_STR = "csid";
 
 	public static final String COLUMN_USERID_STR = "user.userId";
-	
+
 	public static final String COLUMN_CREATETIME_STR = "createTime";
-	
+
 	public static final String COLUMN_APPROVETIME_STR = "approveTime";
 
 	public static final short TYPE_SALARY_STRONE = 1;
@@ -93,7 +93,7 @@ public class WorkerSalaryPO implements Serializable {
 
 	private Timestamp balanceTime;
 
-	private float salary;
+	private long salary;
 
 	private short type;
 
@@ -107,9 +107,9 @@ public class WorkerSalaryPO implements Serializable {
 
 	private long csid;
 
-	private float money;
+	private long money;
 
-	private float deposit;
+	private long deposit;
 
 	private short onetype;
 
@@ -121,7 +121,7 @@ public class WorkerSalaryPO implements Serializable {
 		super();
 	}
 
-	public WorkerSalaryPO(DecorationPO decoration, UserPO user, UserPO creater,UserPO approver) {
+	public WorkerSalaryPO(DecorationPO decoration, UserPO user, UserPO creater, UserPO approver) {
 		super();
 		this.decoration = decoration;
 		this.user = user;
@@ -200,11 +200,11 @@ public class WorkerSalaryPO implements Serializable {
 	}
 
 	@Column(name = "salary")
-	public float getSalary() {
+	public long getSalary() {
 		return salary;
 	}
 
-	public void setSalary(float salary) {
+	public void setSalary(long salary) {
 		this.salary = salary;
 	}
 
@@ -302,20 +302,20 @@ public class WorkerSalaryPO implements Serializable {
 	}
 
 	@Column(name = "money")
-	public float getMoney() {
+	public long getMoney() {
 		return money;
 	}
 
-	public void setMoney(float money) {
+	public void setMoney(long money) {
 		this.money = money;
 	}
 
 	@Column(name = "deposit")
-	public float getDeposit() {
+	public long getDeposit() {
 		return deposit;
 	}
 
-	public void setDeposit(float deposit) {
+	public void setDeposit(long deposit) {
 		this.deposit = deposit;
 	}
 

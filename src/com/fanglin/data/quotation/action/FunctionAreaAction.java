@@ -31,85 +31,75 @@ import com.fanglin.data.quotation.vo.FunctionAreaVO;
 public class FunctionAreaAction extends BaseListAction {
 
 	private static final long serialVersionUID = -9139698916609681549L;
-	
+
 	@Autowired
 	private FunctionAreaService functionAreaService;
-	
+
 	private FunctionAreaVO functionArea;
-	
-	private List<Long> ids;
-	
+
 	private List<FunctionAreaVO> functionAreas;
-	
-	@Action(value="pageFunctionArea", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageFunctionArea() throws FLException{
-		
-		functionAreaService.pageFunctionArea(getPaging(), getFilters(),queryCompany());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="queryFunctionAreaByIdAVersionId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryFunctionAreaByIdAVersionId() throws FLException{
-		
-		functionArea = functionAreaService.queryFunctionAreaByIdAVersionId(functionArea);
-	    
+
+	@Action(value = "pageFunctionArea", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageFunctionArea() throws FLException {
+
+		functionAreaService.pageFunctionArea(getPaging(), getFilters(), queryCompany());
+
 		return SUCCESS;
 	}
 
-	@Action(value="queryFunctionAreaByVersionId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryFunctionAreaByVersionId() throws FLException{
-		
-		functionAreas = functionAreaService.queryFunctionAreaByVersionId(functionArea);
-		
+	@Action(value = "queryFunctionAreaByIdAVersionId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryFunctionAreaByIdAVersionId() throws FLException {
+
+		functionArea = functionAreaService.queryFunctionAreaByIdAVersionId(functionArea);
+
 		return SUCCESS;
 	}
-	
-	@Action(value="addFunctionArea", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addFunctionArea() throws FLException{
+
+	@Action(value = "queryFunctionAreaByVersionId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryFunctionAreaByVersionId() throws FLException {
+
+		functionAreas = functionAreaService.queryFunctionAreaByVersionId(functionArea);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "addFunctionArea", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addFunctionArea() throws FLException {
 
 		functionAreaService.addFunctionArea(functionArea, queryCompany());
-	    
+
 		return SUCCESS;
 	}
-	
-	@Action(value="updateFunctionArea", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateFunctionArea() throws FLException{
+
+	@Action(value = "updateFunctionArea", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateFunctionArea() throws FLException {
 
 		functionAreaService.updateFunctionArea(functionArea);
-	    
-		return SUCCESS;
-	}
-	
-	@Action(value="deleteFunctionArea", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String deleteFunctionArea(){
 
-		functionAreaService.deleteFunctionAreaByIds(ids);
-	    
 		return SUCCESS;
 	}
-	
-	public FunctionAreaVO getFunctionArea(){
+
+	@Action(value = "deleteFunctionArea", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteFunctionArea() {
+
+		functionAreaService.deleteFunctionArea(functionArea);
+
+		return SUCCESS;
+	}
+
+	public FunctionAreaVO getFunctionArea() {
 		return functionArea;
 	}
 
-	public void setFunctionArea(FunctionAreaVO functionArea){
+	public void setFunctionArea(FunctionAreaVO functionArea) {
 		this.functionArea = functionArea;
 	}
 
-	public List<Long> getIds() {
-		return ids;
-	}
-
-	public void setIds(List<Long> ids) {
-		this.ids = ids;
-	}
-
-	public void setFunctionAreas(List<FunctionAreaVO> functionAreas){
+	public void setFunctionAreas(List<FunctionAreaVO> functionAreas) {
 		this.functionAreas = functionAreas;
 	}
 
-	public List<FunctionAreaVO> getFunctionAreas(){
+	public List<FunctionAreaVO> getFunctionAreas() {
 		return functionAreas;
 	}
 

@@ -98,7 +98,7 @@ public class DecorationPaymentPO implements Serializable {
 	
 	private Timestamp createTime;
 	
-	private float referMoney =  0f;
+	private long referMoney;
 	
 	private short sort;
 	
@@ -195,11 +195,11 @@ public class DecorationPaymentPO implements Serializable {
 	}
 	
 	@Column(name = "referMoney")
-	public float getReferMoney(){
+	public long getReferMoney(){
 		return referMoney;
 	}
 
-	public void setReferMoney(float referMoney){
+	public void setReferMoney(long referMoney){
 		this.referMoney = referMoney;
 	}
 

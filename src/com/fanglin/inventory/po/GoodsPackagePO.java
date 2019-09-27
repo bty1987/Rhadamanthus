@@ -31,7 +31,7 @@ public class GoodsPackagePO implements Serializable {
 
 	private FormatPO format;
 
-	private float num;
+	private int num;
 
 	public GoodsPackagePO() {
 		super();
@@ -100,11 +100,11 @@ public class GoodsPackagePO implements Serializable {
 	}
 
 	@Column(name = "num")
-	public float getNum() {
+	public int getNum() {
 		return num;
 	}
 
-	public void setNum(float num) {
+	public void setNum(int num) {
 		this.num = num;
 	}
 

@@ -24,147 +24,146 @@ import com.fanglin.communion.po.MeasurementUnitPO;
 import com.fanglin.communion.po.QuotationBigCategoryPO;
 import com.fanglin.communion.po.WorkTypePO;
 
-
 @Entity
 @Table(name = "systemDefineitem", catalog = "quotation")
 public class SystemDefineItemPO implements Serializable {
 
 	private static final long serialVersionUID = -7382384455511126014L;
-	
-	public static final int TYPE_SYSTEMDEFINEITEM_INT = 3;	
-	
-	public static final String COLUMN_COMPANY_STR ="company";
-	
-	private long sdiId;
-	
+
+	public static final int TYPE_SYSTEMDEFINEITEM_INT = 3;
+
+	public static final String COLUMN_COMPANY_STR = "company";
+
+	private long sdiid;
+
 	private String itemId;
-	
+
 	private String itemName;
-	
-	private float addPrice;  //增补价
-	
-	private float unitPrice; //单价
-	
-	private float subPrice;  //退减价
-	
+
+	private int addPrice; // 增补价
+
+	private int unitPrice; // 单价
+
+	private int subPrice; // 退减价
+
 	private QuotationBigCategoryPO quotationBigCategory;
-	
+
 	private MeasurementUnitPO measurementUnit;
-	
+
 	private WorkTypePO workType;
-	
+
 	private String quotationItemDes;
-	
+
 	private short status;
-	
+
 	private short discount;
-	
+
 	private int company;
-	
-	public SystemDefineItemPO(){
+
+	public SystemDefineItemPO() {
 		super();
 	}
-	
-	public SystemDefineItemPO(long sdiId){
-		this.sdiId = sdiId;
+
+	public SystemDefineItemPO(long sdiid) {
+		this.sdiid = sdiid;
 	}
-	
+
 	@Id
 	@GeneratedValue
-	@Column(name="sdiId")
-	public long getSdiId(){
-		return sdiId;
+	@Column(name = "sdiid")
+	public long getSdiid() {
+		return sdiid;
 	}
 
-	public void setSdiId(long sdiId){
-		this.sdiId = sdiId;
+	public void setSdiid(long sdiid) {
+		this.sdiid = sdiid;
 	}
 
-	@Column(name="itemId")
-	public String getItemId(){
+	@Column(name = "itemId")
+	public String getItemId() {
 		return itemId;
 	}
 
-	public void setItemId(String itemId){
+	public void setItemId(String itemId) {
 		this.itemId = itemId;
 	}
-	
-	@javax.persistence.ManyToOne(fetch=FetchType.LAZY)
-	@javax.persistence.JoinColumn(name="quotationBigCategoryId")
-	public QuotationBigCategoryPO getQuotationBigCategory(){
+
+	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
+	@javax.persistence.JoinColumn(name = "quotationBigCategoryId")
+	public QuotationBigCategoryPO getQuotationBigCategory() {
 		return quotationBigCategory;
 	}
 
-	public void setQuotationBigCategory(QuotationBigCategoryPO quotationBigCategory){
+	public void setQuotationBigCategory(QuotationBigCategoryPO quotationBigCategory) {
 		this.quotationBigCategory = quotationBigCategory;
 	}
 
-	@Column(name="itemName")
-	public String getItemName(){
+	@Column(name = "itemName")
+	public String getItemName() {
 		return itemName;
 	}
 
-	public void setItemName(String itemName){
+	public void setItemName(String itemName) {
 		this.itemName = itemName;
 	}
 
-	@javax.persistence.ManyToOne(fetch=FetchType.LAZY)
-	@javax.persistence.JoinColumn(name="measurementUnitId")
-	public MeasurementUnitPO getMeasurementUnit(){
+	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
+	@javax.persistence.JoinColumn(name = "measurementUnitId")
+	public MeasurementUnitPO getMeasurementUnit() {
 		return measurementUnit;
 	}
 
-	public void setMeasurementUnit(MeasurementUnitPO measurementUnit){
+	public void setMeasurementUnit(MeasurementUnitPO measurementUnit) {
 		this.measurementUnit = measurementUnit;
 	}
 
-	@javax.persistence.ManyToOne(fetch=FetchType.LAZY)
-	@javax.persistence.JoinColumn(name="itemWorkTypeId")
-	public WorkTypePO getWorkType(){
+	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
+	@javax.persistence.JoinColumn(name = "itemWorkTypeId")
+	public WorkTypePO getWorkType() {
 		return workType;
 	}
 
-	public void setWorkType(WorkTypePO workType){
+	public void setWorkType(WorkTypePO workType) {
 		this.workType = workType;
 	}
 
-	@Column(name="quotationItemDes")
-	public String getQuotationItemDes(){
+	@Column(name = "quotationItemDes")
+	public String getQuotationItemDes() {
 		return quotationItemDes;
 	}
 
-	public void setQuotationItemDes(String quotationItemDes){
+	public void setQuotationItemDes(String quotationItemDes) {
 		this.quotationItemDes = quotationItemDes;
 	}
 
-	@Column(name="addPrice")
-	public float getAddPrice() {
+	@Column(name = "addPrice")
+	public int getAddPrice() {
 		return addPrice;
 	}
 
-	public void setAddPrice(float addPrice) {
+	public void setAddPrice(int addPrice) {
 		this.addPrice = addPrice;
 	}
 
-	@Column(name="unitPrice")
-	public float getUnitPrice(){
+	@Column(name = "unitPrice")
+	public int getUnitPrice() {
 		return unitPrice;
 	}
 
-	public void setUnitPrice(float unitPrice){
+	public void setUnitPrice(int unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 
-	@Column(name="subPrice")
-	public float getSubPrice() {
+	@Column(name = "subPrice")
+	public int getSubPrice() {
 		return subPrice;
 	}
 
-	public void setSubPrice(float subPrice) {
+	public void setSubPrice(int subPrice) {
 		this.subPrice = subPrice;
 	}
 
-	@Column(name="status")
+	@Column(name = "status")
 	public short getStatus() {
 		return status;
 	}
@@ -173,7 +172,7 @@ public class SystemDefineItemPO implements Serializable {
 		this.status = status;
 	}
 
-	@Column(name="discount")
+	@Column(name = "discount")
 	public short getDiscount() {
 		return discount;
 	}
@@ -182,7 +181,7 @@ public class SystemDefineItemPO implements Serializable {
 		this.discount = discount;
 	}
 
-	@Column(name="company")
+	@Column(name = "company")
 	public int getCompany() {
 		return company;
 	}
@@ -190,5 +189,5 @@ public class SystemDefineItemPO implements Serializable {
 	public void setCompany(int company) {
 		this.company = company;
 	}
-	
+
 }

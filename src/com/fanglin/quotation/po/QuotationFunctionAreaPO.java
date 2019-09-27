@@ -29,35 +29,35 @@ public class QuotationFunctionAreaPO implements Serializable {
 	private static final long serialVersionUID = 7743703726911437039L;
 
 	public static final short TYPE_MANAGEMENT_INT = 0; // 管理
-	
-	public static final short TYPE_PROJECT_NUM_INT = 1; // 工程量
-	
-	public static final short TYPE_FUNCTIONAREA_TOTAL_INT = 2; // 功能区总价
-	
-	public static final short TYPE_NOT_COUNT_INT = 3; // 不计算
-	
-	private long qfaId;
-	
-	private QuotationPO quotation;
-	
-	private String functionAreaName;
-	
-	private int functionAreaOrder;
-	
-	private String functionAreaType;
-	
-	private short type;
-	
-	private float total;
 
-	public QuotationFunctionAreaPO(){
+	public static final short TYPE_PROJECT_NUM_INT = 1; // 工程量
+
+	public static final short TYPE_FUNCTIONAREA_TOTAL_INT = 2; // 功能区总价
+
+	public static final short TYPE_NOT_COUNT_INT = 3; // 不计算
+
+	private long qfaId;
+
+	private QuotationPO quotation;
+
+	private String functionAreaName;
+
+	private int functionAreaOrder;
+
+	private String functionAreaType;
+
+	private short type;
+
+	private long total;
+
+	public QuotationFunctionAreaPO() {
 		super();
 	}
-	
-	public QuotationFunctionAreaPO(long qfaId){
+
+	public QuotationFunctionAreaPO(long qfaId) {
 		this.qfaId = qfaId;
 	}
-	
+
 	public QuotationFunctionAreaPO(QuotationPO quotation, String functionAreaName, int functionAreaOrder, short type) {
 		this.quotation = quotation;
 		this.functionAreaName = functionAreaName;
@@ -67,46 +67,46 @@ public class QuotationFunctionAreaPO implements Serializable {
 
 	@Id
 	@GeneratedValue
-	@Column(name="qfaId")
-	public long getQfaId(){
+	@Column(name = "qfaId")
+	public long getQfaId() {
 		return qfaId;
 	}
 
-	public void setQfaId(long qfaId){
+	public void setQfaId(long qfaId) {
 		this.qfaId = qfaId;
 	}
 
-	public String getFunctionAreaName(){
+	public String getFunctionAreaName() {
 		return functionAreaName;
 	}
 
-	public void setFunctionAreaName(String functionAreaName){
+	public void setFunctionAreaName(String functionAreaName) {
 		this.functionAreaName = functionAreaName;
 	}
 
-	public void setQuotation(QuotationPO quotation){
+	public void setQuotation(QuotationPO quotation) {
 		this.quotation = quotation;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "quotationId",referencedColumnName = "qId")
-	public QuotationPO getQuotation(){
+	@JoinColumn(nullable = false, name = "quotationId", referencedColumnName = "qId")
+	public QuotationPO getQuotation() {
 		return quotation;
 	}
 
-	public void setFunctionAreaOrder(int functionAreaOrder){
+	public void setFunctionAreaOrder(int functionAreaOrder) {
 		this.functionAreaOrder = functionAreaOrder;
 	}
 
-	public int getFunctionAreaOrder(){
+	public int getFunctionAreaOrder() {
 		return functionAreaOrder;
 	}
 
-	public void setFunctionAreaType(String functionAreaType){
+	public void setFunctionAreaType(String functionAreaType) {
 		this.functionAreaType = functionAreaType;
 	}
 
-	public String getFunctionAreaType(){
+	public String getFunctionAreaType() {
 		return functionAreaType;
 	}
 
@@ -118,11 +118,11 @@ public class QuotationFunctionAreaPO implements Serializable {
 		this.type = type;
 	}
 
-	public float getTotal() {
+	public long getTotal() {
 		return total;
 	}
 
-	public void setTotal(float total) {
+	public void setTotal(long total) {
 		this.total = total;
 	}
 

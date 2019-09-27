@@ -17,33 +17,26 @@ public class ServicePaymentDaoImpl extends DaoImpl<ServicePaymentPO> implements 
 
 	@Override
 	public List<ServicePaymentPO> queryCusServicePayment(Paging paging, List<Filter> filters, String orderId) {
-		
+
 		PagingQuery<ServicePaymentPO> query = pagingQuery(paging, ServicePaymentPO.class);
-		
+
 		query.alias("decoration", "decoration");
-		
+
 		query.add(Restrictions.eq("decoration.orderId", orderId));
-		
+
 		query.desc("createTime");
 
 		return query.list();
 	}
 
 	@Override
-	public Float countCusServicePaymentForAmount(String orderId) {
-		
+	public long countCusServicePaymentForAmount(String orderId) {
+
 		String sql = "select sum(IF(payment.servicepayment.type = 1,-payment.servicepayment.serviceMoney ,payment.servicepayment.serviceMoney)) from payment.servicepayment where payment.servicepayment.`status` in (1,2) and payment.servicepayment.orderId = :orderId";
-		
+
 		BigDecimal nums = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).uniqueResult();
-		
-		if(nums==null){
-			
-			nums = BigDecimal.ZERO;
-			
-		}
-		
-		return nums.floatValue();
-		
+
+		return nums == null ? 0 : nums.longValue();
 	}
 
 }

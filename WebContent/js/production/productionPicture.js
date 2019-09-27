@@ -1,25 +1,33 @@
 $(function(){
 
-    var $uploadBtn = com.focusPage("#uploadBtn");
-    var $back = com.focusPage("#backBtn");
-    var $layerImport = com.focusPage("#layerProductionImport");
+    var productionPicture={
+          btns:{
+              uploadBtn:com.focusPage("#uploadBtn"),
+              back:com.focusPage("#backBtn"),
+          },
+          models:{
+              layerProductionImport :com.focusPage("#layerProductionImport"),
+          },
+          items:{
+          comment:com.focusPage("#comment"),
+          },
 
-    var $pid = params["pid"];
-    var $status = params["status"];
-
-    var $pictureStatus = false;
-    var $replacePicture = {};
+        pid:params.pid,
+        status:params,
+        pictureStatus :false,
+        replacePicture :{}
+    };
 
     createPage();
 
     function createPage(){
 
-        com.post(api.production.queryProductionPictureByPid,{"productionPicture.pid":$pid},function(listData){
+        com.post(api.production.queryProductionPictureByPid,{"productionPicture.pid":productionPicture.pid},function(listData){
 
             $.each(listData.productionPictures,function(i,v){
                 if(v.status != 2){
-                    $pictureStatus = true;
-                    $replacePicture["production["+i+"].pid"] = v.ppid;
+                    productionPicture.pictureStatus = true;
+                    productionPicture.replacePicture["production["+i+"].pid"] = v.ppid;
                 }else{
                     return true;
                 }
@@ -61,21 +69,21 @@ $(function(){
     }
 
 
-    $back.click(function(){
+    productionPicture.btns.back.click(function(){
         com.switchPage(api.index.productionIndex.url);
     });
 
     
-    $uploadBtn.click(function(){
+    productionPicture.btns.uploadBtn.click(function(){
         com.clearValidator();
-        productionUtils.clearForm('form1');
 
-        if($status == 4 || $status == 5 ||$status == 3){
+
+        if(productionPicture.status == 4 || productionPicture.status == 5 ||productionPicture.status == 3){
             $("#importProductionPicture").addClass("hide")
         }
 
         com.focusPage('#importProductionPicture').empty();
-        openlayerImportProduction();
+
 
         com.focusPage("#importProductionPicture").click(function(){
             if(com.validate("layerProductionImport",null)){
@@ -83,73 +91,34 @@ $(function(){
             }
         });
 
-        com.focusPage("#importProductionPicture").Huploadify({
-            'debug': false, // 开启调试
-            'auto': true, // 是否自动上传
-            'successTimeout': 99999, // 超时时间
-            'formData': { // 附带值
-                'uploadType': 2
-            },
-            'buttonClass': 'btn btn-success blue',
-            'buttonText': "添加上传文件",
-            'overrideEvents': ['onDialogClose'], // 不执行默认的onSelect事件
-            'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-            'uploader':config.media + api.common.uploadOther.url, // 上传处理程序
-            'width' : '100',
-            'height': '30', // 浏览按钮的高度
-            'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-            'fileTypeExts': "*.dwg;*.dwt", // 允许上传的文件后缀
-            'fileSizeLimit': '5MB', // 上传文件的大小限制
-            'multi': true,
-            'queueSizeLimit': 1, // 上传数量
-            'onUploadSuccess': function (file, data, response) {
-                addProductionPicture(data);
-                // 上传到服务器,服务器返回相应信息到data里
-            }});
+        com.uploadify("#importProductionPicture", "添加上传文件", 'btn btn-success blue ', "*.dwg;*.dwt", {'uploadType': 2}, 1, function(data){
+
+            var option = {};
+
+            if (data.errorCode == 0) {
+                option["productionPicture.pid"] = productionPicture.pid;
+                option["productionPicture.name"] = data.strutsUploadsFileName;
+                option["productionPicture.path"] = data.resUrl;
+                option["productionPicture.comment"] = productionPicture.items.comment.val();
+                option["productionPicture.status"] = 0;
+            }
+
+            com.post(api.production.addProductionPicture,option,function(data){
+                com.showAlert(com.info, "上传成功");
+                createPage();
+            },function(e){
+                com.showAlert(com.info, "上传失败");
+            });
+
+        });
+        com.focusPage("#uploadCAD").empty();
+        productionPicture.models.layerProductionImport.modal("show");
 
     });
 
-    function openlayerImportProduction(){
-        com.closePopup();
-        layer.open({
-            type: 1,
-            skin: 'layui-layer-lan',
-            title: "导入图纸",
-            content: $layerImport ,
-            area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定'],
-            success: function (layers, index) {
+    com.focusPage("#confirmBtn").click(function () {
 
-            },
-            end: function () {
-                com.focusPage("#uploadCAD").empty();
-                createPage();
-            }
-        });
-    }
-
-
-    function addProductionPicture(data){
-
-        var option = {};
-        var dateObj = eval("(" + data + ")");
-
-        if (dateObj.errorCode == 0) {
-            option["productionPicture.pid"] = $pid;
-            option["productionPicture.name"] = dateObj.strutsUploadsFileName;
-            option["productionPicture.path"] = dateObj.resUrl;
-            option["productionPicture.comment"] = $layerImport.find("input[name='pictureComment']").val();
-            option["productionPicture.status"] = 0;
-        }
-
-        com.post(api.production.addProductionPicture,option,function(data){
-            layer.close();
-        },function(e){
-            com.showAlert(com.info, "上传失败");
-        });
-
-    }
+        productionPicture.models.layerProductionImport.modal("hide");
+    })
 
 });

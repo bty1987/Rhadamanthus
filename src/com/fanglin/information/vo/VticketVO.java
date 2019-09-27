@@ -13,6 +13,8 @@ public class VticketVO implements java.io.Serializable {
 	
 	private Long vtid;
 	
+	private Long vaid;
+	
 	private String tno;
 	
 	private UserVO creater;
@@ -55,6 +57,14 @@ public class VticketVO implements java.io.Serializable {
 
 	public void setVtid(Long vtid) {
 		this.vtid = vtid;
+	}
+	
+	public Long getVaid() {
+		return vaid;
+	}
+
+	public void setVaid(Long vaid) {
+		this.vaid = vaid;
 	}
 	
 	public String getTno() {

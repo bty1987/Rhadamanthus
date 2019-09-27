@@ -46,7 +46,7 @@ public class DecorationContractPO implements Serializable {
 	
 	private String  contractCode;
 	
-	private float orderTotalPrice;
+	private long orderTotalPrice;
 	
 	public DecorationContractPO(){
 	}
@@ -126,11 +126,11 @@ public class DecorationContractPO implements Serializable {
 		return workingDuration;
 	}
 
-	public float getOrderTotalPrice() {
+	public long getOrderTotalPrice() {
 		return orderTotalPrice;
 	}
 
-	public void setOrderTotalPrice(float orderTotalPrice) {
+	public void setOrderTotalPrice(long orderTotalPrice) {
 		this.orderTotalPrice = orderTotalPrice;
 	}
 }

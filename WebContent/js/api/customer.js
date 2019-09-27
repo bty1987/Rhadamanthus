@@ -7,22 +7,88 @@
 });
 
 $.extend(api, {customer: {
-	pageVustomer: {url: "pageVustomer.do"},
-	queryVustomerByUnionId: {url: "queryVustomerByUnionId.do"},
-	addVustomer: {url: "addVustomer.do"},
-	updateVustomer: {url: "updateVustomer.do"},
+    pageVustomer: {
+        url: "pageVustomer.do",
+        type: "query",
+        tranargs: [{
+            result: "paging-data",
+            args: ["contractPrice"]
+        }]
+    },
+    queryVustomerByUnionId: {
+        url: "queryVustomerByUnionId.do",
+        type: "query",
+        tranargs: [{
+            result: "vustomers",
+            args: ["contractPrice"]
+        }]
+    },
+    addVustomer: {
+        url: "addVustomer.do",
+        type: "update",
+        tranargs: {
+            args: ["vustomer.contractPrice"]
+        }
+    },
+    updateVustomer: {
+        url: "updateVustomer.do",
+        type: "update",
+        tranargs: {
+            args: ["vustomer.contractPrice"]
+        }
+    },
 	deleteVustomer: {url: "deleteVustomer.do"},
 	
 	pageVrecord: {url: "pageVrecord.do"},
 	queryVrecordByVid: {url: "queryVrecordByVid.do"},
 	addVrecord: {url: "addVrecord.do"},
 	
-	pageCustomerOrigin: {url:"pageCustomerOrigin.do"},
-	pageCustomerOriginForDesign: {url:"pageCustomerOriginForDesign.do"},
-	pageCustomerOriginForAdvance: {url:"pageCustomerOriginForAdvance.do"},
-	pageCustomerOriginForCommunion: {url:"pageCustomerOriginForCommunion.do"},
-	addCustomerOrigin: {url:"addCustomerOrigin.do"},
-	updateCustomerOrigin: {url:"updateCustomerOrigin.do"},
+    pageCustomerOrigin: {
+        url: "pageCustomerOrigin.do",
+        type: "query",
+        tranargs: [{
+            result: "paging-data",
+            args: ["buildArea"]
+        }]
+    },
+    pageCustomerOriginForDesign: {
+        url: "pageCustomerOriginForDesign.do",
+        type: "query",
+        tranargs: [{
+            result: "paging-data",
+            args: ["buildArea"]
+        }]
+    },
+    pageCustomerOriginForAdvance: {
+        url: "pageCustomerOriginForAdvance.do",
+        type: "query",
+        tranargs: [{
+            result: "paging-data",
+            args: ["buildArea"]
+        }]
+    },
+    pageCustomerOriginForCommunion: {
+        url: "pageCustomerOriginForCommunion.do",
+        type: "query",
+        tranargs: [{
+            result: "paging-data",
+            args: ["buildArea"]
+        }]
+    },
+    addCustomerOrigin: {
+        url: "addCustomerOrigin.do",
+        type: "update",
+        tranargs: {
+            args: ["customerOrigin.buildArea"]
+        }
+    },
+    updateCustomerOrigin: {
+        url: "updateCustomerOrigin.do",
+        type: "update",
+        tranargs: {
+            args: ["customerOrigin.buildArea"]
+        }
+    },
 	updateCustomerOriginForBelonger: {url:"updateCustomerOriginForBelonger.do"},
 	freeCustomerOrigin: {url:"freeCustomerOrigin.do"},
 	takeCustomerOrigin: {url:"takeCustomerOrigin.do"},
@@ -44,8 +110,22 @@ $.extend(api, {customer: {
     pickupVscore : {url : "pickupVscore.do"},
     updateVscoreRecordForStatus : {url : "updateVscoreRecordForStatus.do"},
    
-    pageVustomerForAdvance : {url : "pageVustomerForAdvance.do"},
-    pageVustomerForCommunion : {url : "pageVustomerForCommunion.do"},
+    pageVustomerForAdvance: {
+        url: "pageVustomerForAdvance.do",
+        type: "query",
+        tranargs: [{
+            result: "paging-data",
+            args: ["contractPrice"]
+        }]
+    },
+    pageVustomerForCommunion: {
+        url: "pageVustomerForCommunion.do",
+        type: "query",
+        tranargs: [{
+            result: "paging-data",
+            args: ["contractPrice"]
+        }]
+    },
     freeVustomer : {url : "freeVustomer.do"},
     takeVustomer : {url : "takeVustomer.do"},
     updateVustomerForBelonger : {url : "updateVustomerForBelonger.do"},

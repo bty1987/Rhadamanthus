@@ -7,17 +7,17 @@ public class ApprovalMaterialRefundItemVO implements java.io.Serializable {
 	private static final long serialVersionUID = -6670407153414810186L;
 
 	private Integer amriId;
-	
+
 	private Integer amrId;
-	
+
 	private Long msoId;
-	
-	private Float num;
-	
-	private Float total;
-	
+
+	private Long num;
+
+	private Long total;
+
 	private String packageName;
-	
+
 	private MaterialItemVO materialItem;
 
 	public ApprovalMaterialRefundItemVO() {
@@ -53,19 +53,19 @@ public class ApprovalMaterialRefundItemVO implements java.io.Serializable {
 		this.msoId = msoId;
 	}
 
-	public Float getNum() {
+	public Long getNum() {
 		return this.num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(Long num) {
 		this.num = num;
 	}
 
-	public Float getTotal() {
+	public Long getTotal() {
 		return this.total;
 	}
 
-	public void setTotal(Float total) {
+	public void setTotal(Long total) {
 		this.total = total;
 	}
 

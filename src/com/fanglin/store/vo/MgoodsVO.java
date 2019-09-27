@@ -2,28 +2,28 @@ package com.fanglin.store.vo;
 
 import java.io.Serializable;
 
-public class MgoodsVO implements Serializable{
-	
+public class MgoodsVO implements Serializable {
+
 	private static final long serialVersionUID = -4319485472492429001L;
-	
+
 	private Long gid;
-	
+
 	private String no;
-	
+
 	private String name;
-	
+
 	private String pinyin;
-	
+
 	private MbrandVO mbrand;
-	
+
 	private String barcode;
-	
+
 	private String title;
-	
+
 	private String defaultImg;
-	
-	private Float price;
-	
+
+	private Long price;
+
 	private Short status;
 
 	public MgoodsVO() {
@@ -34,7 +34,7 @@ public class MgoodsVO implements Serializable{
 		super();
 		this.mbrand = mbrand;
 	}
-	
+
 	public Long getGid() {
 		return gid;
 	}
@@ -42,7 +42,7 @@ public class MgoodsVO implements Serializable{
 	public void setGid(Long gid) {
 		this.gid = gid;
 	}
-	
+
 	public String getNo() {
 		return no;
 	}
@@ -50,7 +50,7 @@ public class MgoodsVO implements Serializable{
 	public void setNo(String no) {
 		this.no = no;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -58,7 +58,7 @@ public class MgoodsVO implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public String getPinyin() {
 		return pinyin;
 	}
@@ -74,7 +74,7 @@ public class MgoodsVO implements Serializable{
 	public void setMbrand(MbrandVO mbrand) {
 		this.mbrand = mbrand;
 	}
-	
+
 	public String getBarcode() {
 		return barcode;
 	}
@@ -82,7 +82,7 @@ public class MgoodsVO implements Serializable{
 	public void setBarcode(String barcode) {
 		this.barcode = barcode;
 	}
-	
+
 	public String getTitle() {
 		return title;
 	}
@@ -90,7 +90,7 @@ public class MgoodsVO implements Serializable{
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	
+
 	public String getDefaultImg() {
 		return defaultImg;
 	}
@@ -98,12 +98,12 @@ public class MgoodsVO implements Serializable{
 	public void setDefaultImg(String defaultImg) {
 		this.defaultImg = defaultImg;
 	}
-	
-	public Float getPrice() {
+
+	public Long getPrice() {
 		return price;
 	}
 
-	public void setPrice(Float price) {
+	public void setPrice(Long price) {
 		this.price = price;
 	}
 

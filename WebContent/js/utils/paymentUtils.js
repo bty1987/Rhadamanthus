@@ -801,12 +801,22 @@ var paymentUtils = {
         }
 
         if(collectOrRefund != "refund"){
+            var couponFlag = true;
             if(singleFlag == "single" && collectOrRefund != "update"){
                 option["sales.sid"] = sid;
             }
 
-            option["salesReceipt.advance"] = payAdvance;
-            option["salesReceipt.advanceType"] = advanceType;
+            if(collectOrRefund == "collect"){
+                if (com.focusPage('#advanceDiv').hasClass('hide')) {
+                    couponFlag = false;
+                }
+            }
+
+            if(couponFlag){
+                option["salesReceipt.advance"] = payAdvance;
+                option["salesReceipt.advanceType"] = advanceType;
+            }
+
         }
 
         if(spid != null){
@@ -821,13 +831,6 @@ var paymentUtils = {
             $.each(spids, function (i, v) {
                 option["spids[" + i + "]"] = v;
             });
-        }
-
-        if(collectOrRefund == "collect"){
-            if (!com.focusPage('#advanceDiv').hasClass('hide')) {
-                option["salesPayment.advanceType"] = advanceType;
-                option["salesPayment.advance"] = parseFloat(payAdvance).toFixed(2);
-            }
         }
 
         com.post(url, option, function () {

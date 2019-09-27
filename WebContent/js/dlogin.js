@@ -46,6 +46,8 @@ jQuery(function (a) {
     config.demo && (config.server = 'result/', config.communion = 'result/', config.media = 'result/', QRCode = '/QRCode.json', queryVode = '/queryVode.json');
 
     verifyCode();
+    
+    console.log(config.communion + QRCode + "?timestamp=" + new Date().getTime() + "&prefix=" + config.prefix + "&type=1");
 
     var initQRCode = function () {
         $.ajax(config.communion + QRCode + "?timestamp=" + new Date().getTime() + "&prefix=" + config.prefix).done(function (data) {

@@ -79,7 +79,7 @@ public class UserInfoPO implements java.io.Serializable {
 
 	private String medicalNum;
 
-	private float salary;
+	private long salary;
 
 	private String lover;
 
@@ -378,11 +378,11 @@ public class UserInfoPO implements java.io.Serializable {
 	}
 
 	@Column(name = "salary")
-	public float getSalary() {
+	public long getSalary() {
 		return this.salary;
 	}
 
-	public void setSalary(float salary) {
+	public void setSalary(long salary) {
 		this.salary = salary;
 	}
 

@@ -1,14 +1,14 @@
 package com.fanglin.approval.po;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import static javax.persistence.GenerationType.IDENTITY;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.fanglin.material.po.MaterialItemPO;
@@ -18,21 +18,21 @@ import com.fanglin.material.po.MaterialItemPO;
 public class ApprovalMaterialRefundItemPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 7616304742054234800L;
-	
+
 	public static final String COLUMN_AMRID_STR = "amrId";
 
 	private int amriId;
-	
+
 	private int amrId;
-	
+
 	private long mid;
-	
-	private float num;
-	
-	private float total;
-	
+
+	private long num;
+
+	private long total;
+
 	private String packageName;
-	
+
 	private MaterialItemPO materialItem;
 
 	@Id
@@ -65,20 +65,20 @@ public class ApprovalMaterialRefundItemPO implements java.io.Serializable {
 	}
 
 	@Column(name = "num")
-	public float getNum() {
+	public long getNum() {
 		return this.num;
 	}
 
-	public void setNum(float num) {
+	public void setNum(long num) {
 		this.num = num;
 	}
 
 	@Column(name = "total")
-	public float getTotal() {
+	public long getTotal() {
 		return this.total;
 	}
 
-	public void setTotal(float total) {
+	public void setTotal(long total) {
 		this.total = total;
 	}
 
@@ -92,7 +92,7 @@ public class ApprovalMaterialRefundItemPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "miid", referencedColumnName="miid")
+	@JoinColumn(name = "miid", referencedColumnName = "miid")
 	public MaterialItemPO getMaterialItem() {
 		return materialItem;
 	}
@@ -100,5 +100,5 @@ public class ApprovalMaterialRefundItemPO implements java.io.Serializable {
 	public void setMaterialItem(MaterialItemPO materialItem) {
 		this.materialItem = materialItem;
 	}
-	
+
 }

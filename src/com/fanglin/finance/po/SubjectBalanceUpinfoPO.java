@@ -13,36 +13,36 @@ import javax.persistence.Table;
 public class SubjectBalanceUpinfoPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 7651176706696685835L;
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final String COLUMN_SID_STR = "sid";
-	
+
 	public static final String COLUMN_PERIOD_STR = "period";
-	
+
 	public static final short STATUS_INIT_INT = 0;
-	
+
 	public static final short STATUS_HANDLED_INT = 1;
 
 	private long sbuId;
-	
+
 	private String code;
-	
+
 	private String period;
-	
-	private float debit;
-	
-	private float credit;
-	
+
+	private long debit;
+
+	private long credit;
+
 	private short direction;
-	
+
 	private short status;
-	
+
 	public SubjectBalanceUpinfoPO() {
 		super();
 	}
 
-	public SubjectBalanceUpinfoPO(String code, String period, float debit, float credit, short direction, short status) {
+	public SubjectBalanceUpinfoPO(String code, String period, long debit, long credit, short direction, short status) {
 		super();
 		this.code = code;
 		this.period = period;
@@ -82,20 +82,20 @@ public class SubjectBalanceUpinfoPO implements java.io.Serializable {
 	}
 
 	@Column(name = "debit")
-	public float getDebit() {
+	public long getDebit() {
 		return this.debit;
 	}
 
-	public void setDebit(float debit) {
+	public void setDebit(long debit) {
 		this.debit = debit;
 	}
 
 	@Column(name = "credit")
-	public float getCredit() {
+	public long getCredit() {
 		return this.credit;
 	}
 
-	public void setCredit(float credit) {
+	public void setCredit(long credit) {
 		this.credit = credit;
 	}
 

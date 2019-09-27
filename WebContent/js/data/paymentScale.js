@@ -1,6 +1,22 @@
 $(function () {
 
-    var PaymentScale = {
+    var paymentScale = {
+            
+        btns: {
+            addBtn: com.focusPage("#addBtn"),
+            saveBtn: com.focusPage("#savePaymenScaleBtn"),
+        },
+        
+        modals: {
+            itemModal: com.focusPage("#itemModal"),
+            paymentScaleModal: com.focusPage("#paymentScaleModal"),
+        },
+        
+        items: {
+            names: com.focusPage("#names"),
+            comment: com.focusPage("#comment")
+        },
+            
         saveBtn: null,
         cancelBtn: null,
         items: {},
@@ -15,13 +31,14 @@ $(function () {
         }
     };
     
-    $.extend(com.validator, PaymentScale.validator);
+    $.extend(com.validator, paymentScale.validator);
     
-    PaymentScale.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
-    PaymentScale.items.names = com.focusPage("#names");
-    PaymentScale.items.comment = com.focusPage("#comment");
+    paymentScale.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+    paymentScale.items.names = com.focusPage("#names");
+    paymentScale.items.comment = com.focusPage("#comment");
 
     var displayFunc = (function () {
+        
         var renderList = function (tableId, listData) {
             if (listData && listData.length) {
                 $.each(listData, function (i, v) {
@@ -52,11 +69,11 @@ $(function () {
             });
 
             $btnshow.click(function () {
-                showPaymentScaleitem(v);
+                showPaymentScaleItem(v);
             });
 
             $btnDel.click(function () {
-                DelePaymentScale(v.psid);
+                deletePaymentScale(v.psid);
             });
         };
 
@@ -69,30 +86,40 @@ $(function () {
             }
         };
     })();
-
-    var $h3 = $('<h3 style="font-size:22px;"></h3>').addClass('blue').html(params.company.name).appendTo(com.focusPage('#resultList'));
-    com.post(api.data.queryPaymentScaleByCid, {"paymentScale.cid": params.company.cid}, function (data) {
-        displayFunc.init('resultList', data.paymentScales);
-    }, null, false);
-
-    function DelePaymentScale(psid) {
-        com.post(api.data.deletePaymentScale, {"paymentScale.psid": psid}, function () {
-            com.switchPage(api.index.PaymentScale.url);
+    
+    reloadPaymentScale();
+    
+    function reloadPaymentScale(){
+        
+        var resultList = com.focusPage('#resultList').html("");
+        
+        var $h3 = $('<h3 style="font-size:22px;"></h3>').addClass('blue').html(params.company.name).appendTo(resultList);
+        
+        com.post(api.data.queryPaymentScaleByCid, {"paymentScale.cid": params.company.cid}, function (data) {
+            displayFunc.init('resultList', data.paymentScales);
         });
     }
 
-    com.focusPage("#addBtn").click(function () {
-        com.cleanItems(PaymentScale.items);
-        com.focusPage("#paymentScaleModal").modal("show");
+    function deletePaymentScale(psid) {
+        com.post(api.data.deletePaymentScale, {"paymentScale.psid": psid}, function () {
+            reloadPaymentScale();
+        });
+    }
+
+    paymentScale.btns.addBtn.click(function () {
+        com.cleanItems(paymentScale.items);
+        paymentScale.modals.paymentScaleModal.modal("show");
     });
 
-    function showPaymentScaleitem(res) {
+    function showPaymentScaleItem(res) {
 
         var paymentList = com.focusPage("#itemlist");
 
         paymentList.html("");
-        PaymentScale.psid = res.psid;
-        com.post(api.data.queryPaymentScaleItemByPsid, {"paymentScaleitem.psid": res.psid}, function (data) {
+        paymentScale.psid = res.psid;
+        
+        com.post(api.data.queryPaymentScaleItemByPsid, {"paymentScaleItem.psid": res.psid}, function (data) {
+            
             $.each(data.paymentScaleItems, function (i, v) {
 
                 var $diva = $('<div></div>').addClass("col-sm-12 ").attr("name", v.psiid).css({
@@ -113,7 +140,7 @@ $(function () {
                 var $sortSpan = $('<span></span>').text(v.sort).appendTo($sortlabel);
 
                 var $delete = $("<button>删除</button>").addClass("btn btn-xs btn-danger pull-right").click(function () {
-                    com.post(api.data.deletePaymentScaleItem, {"paymentScaleitem.psiid": v.psiid}, function () {
+                    com.post(api.data.deletePaymentScaleItem, {"paymentScaleItem.psiid": v.psiid}, function () {
                         $delete.parents('div[name="' + v.psiid + '"]').remove();
                     });
                     return false;
@@ -142,34 +169,41 @@ $(function () {
             var slInput = $('<input/>').addClass("col-sm-5 v_required v_newNum").attr("id", "sort").attr("maxlength", "2").attr("type", "text").appendTo(slDiv);
 
         });
+        
         com.focusPage("#itemModal").modal("show");
     }
 
-    com.focusPage("#savePaymenScaleBtn").on("click", function () {
-
-        if (!com.validate("form3")) {
-            com.post(api.data.addPaymentScaleItem, {
-                "paymentScaleitem.name": com.focusPage("#scalname").val(),
-                "paymentScaleitem.psid": PaymentScale.psid,
-                "paymentScaleitem.scale": com.focusPage("#sscal").val(),
-                "paymentScaleitem.sort": com.focusPage("#sort").val()
-            }, function () {
-                com.focusPage("#itemModal").modal("hide");
-            });
+    paymentScale.btns.saveBtn.on("click", function () {
+        
+        if (com.validate("form3")) return false;
+        
+        var options = {
+            "paymentScaleItem.name": com.focusPage("#scalname").val(),
+            "paymentScaleItem.psid": paymentScale.psid,
+            "paymentScaleItem.scale": com.focusPage("#sscal").val(),
+            "paymentScaleItem.sort": com.focusPage("#sort").val()
         }
+
+        com.post(api.data.addPaymentScaleItem, options, function () {
+            reloadPaymentScale();
+            com.focusPage("#itemModal").modal("hide");
+        });
     });
 
     function saveData() {
-        if (!com.validate("form1")) {
-            com.post(api.data.addPaymentScale, {
-                "paymentScale.cid": params.company.cid,
-                "paymentScale.name": PaymentScale.items.names.val(),
-                "paymentScale.comment": PaymentScale.items.comment.val()
-            }, function () {
-                com.switchPage(api.index.PaymentScale.url);
-            });
-            com.focusPage("#paymentScaleModal").modal("hide");
+        
+        if (com.validate("form1")) return false; 
+        
+        var options = {
+            "paymentScale.cid": params.company.cid,
+            "paymentScale.name": paymentScale.items.names.val(),
+            "paymentScale.comment": paymentScale.items.comment.val()
         }
+        
+        com.post(api.data.addPaymentScale, options, function () {
+            reloadPaymentScale();
+            paymentScale.modals.paymentScaleModal.modal("hide");
+        });
     }
 
 });

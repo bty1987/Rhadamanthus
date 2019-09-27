@@ -16,53 +16,53 @@ import java.io.Serializable;
 public class MaterialRefundVO implements Serializable {
 
 	private static final long serialVersionUID = 8997198619142688407L;
-	
+
 	private Long mrid;
-	
+
 	private Long mid;
-	
+
 	private Long miid;
-	
+
 	private Long mpId;
-	
+
 	private Integer ident;
-	
+
 	private String no;
-	
+
 	private String name;
-	
+
 	private String category;
-	
+
 	private String brand;
-	
+
 	private String measurementUnit;
-	
+
 	private String packageName;
-	
-	private Float unitPrice;
-	
-	private Float purchasePrice;
-	
-	private Float salePrice;
-	
-	private Float price;
-	
-	private Float discount;
-	
-	private Float postDiscount;
-	
-	private Float num;
-	
-	private Float total;
-	
+
+	private Integer unitPrice;
+
+	private Integer purchasePrice;
+
+	private Long salePrice;
+
+	private Long price;
+
+	private Integer discount;
+
+	private Integer postDiscount;
+
+	private Long num;
+
+	private Long total;
+
 	private Integer status;
-	
+
 	private Integer balanceType;
-	
-	private Float prePoint;
-	
+
+	private Integer prePoint;
+
 	private String comment;
-	
+
 	public Long getMrid() {
 		return mrid;
 	}
@@ -86,7 +86,7 @@ public class MaterialRefundVO implements Serializable {
 	public void setMiid(Long miid) {
 		this.miid = miid;
 	}
-	
+
 	public Long getMpId() {
 		return mpId;
 	}
@@ -151,67 +151,67 @@ public class MaterialRefundVO implements Serializable {
 		this.packageName = packageName;
 	}
 
-	public Float getUnitPrice() {
+	public Integer getUnitPrice() {
 		return unitPrice;
 	}
 
-	public void setUnitPrice(Float unitPrice) {
+	public void setUnitPrice(Integer unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 
-	public Float getPurchasePrice() {
+	public Integer getPurchasePrice() {
 		return purchasePrice;
 	}
 
-	public void setPurchasePrice(Float purchasePrice) {
+	public void setPurchasePrice(Integer purchasePrice) {
 		this.purchasePrice = purchasePrice;
 	}
 
-	public Float getSalePrice() {
+	public Long getSalePrice() {
 		return salePrice;
 	}
 
-	public void setSalePrice(Float salePrice) {
+	public void setSalePrice(Long salePrice) {
 		this.salePrice = salePrice;
 	}
 
-	public Float getPrice() {
+	public Long getPrice() {
 		return price;
 	}
 
-	public void setPrice(Float price) {
+	public void setPrice(Long price) {
 		this.price = price;
 	}
 
-	public Float getDiscount() {
+	public Integer getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(Float discount) {
+	public void setDiscount(Integer discount) {
 		this.discount = discount;
 	}
 
-	public Float getPostDiscount() {
+	public Integer getPostDiscount() {
 		return postDiscount;
 	}
 
-	public void setPostDiscount(Float postDiscount) {
+	public void setPostDiscount(Integer postDiscount) {
 		this.postDiscount = postDiscount;
 	}
 
-	public Float getNum() {
+	public Long getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(Long num) {
 		this.num = num;
 	}
 
-	public Float getTotal() {
+	public Long getTotal() {
 		return total;
 	}
 
-	public void setTotal(Float total) {
+	public void setTotal(Long total) {
 		this.total = total;
 	}
 
@@ -230,12 +230,12 @@ public class MaterialRefundVO implements Serializable {
 	public void setBalanceType(Integer balanceType) {
 		this.balanceType = balanceType;
 	}
-	
-	public Float getPrePoint() {
+
+	public Integer getPrePoint() {
 		return prePoint;
 	}
 
-	public void setPrePoint(Float prePoint) {
+	public void setPrePoint(Integer prePoint) {
 		this.prePoint = prePoint;
 	}
 
@@ -246,5 +246,5 @@ public class MaterialRefundVO implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 }

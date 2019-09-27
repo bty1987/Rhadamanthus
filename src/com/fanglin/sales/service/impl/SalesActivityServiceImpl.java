@@ -155,7 +155,7 @@ public class SalesActivityServiceImpl implements SalesActivityService {
 				throw new FLException(160043, "物品不存在!");
 			}
 			
-			float num = Arith.sub(awardStockPO.getNum(), salesActivityItemPO.getNum());
+			int num = Arith.sub(awardStockPO.getNum(), salesActivityItemPO.getNum());
 
 			if (num < 0) {
 				throw new FLException(160038, "奖品库存数量不足!");
@@ -200,7 +200,7 @@ public class SalesActivityServiceImpl implements SalesActivityService {
 		
 		if(salesActivityItemPO.getIsStock() == SalesActivityItemPO.ISSTOCK_COUNTIN_INT){//计入库存
 			
-			float num = Arith.sub(awardStockPO.getNum(), salesActivityItemPO.getNum());
+			int num = Arith.sub(awardStockPO.getNum(), salesActivityItemPO.getNum());
 			if(num < 0){
 				throw new FLException(160038, "奖品库存数量不足!");
 			}

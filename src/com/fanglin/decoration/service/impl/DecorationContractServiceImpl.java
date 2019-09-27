@@ -109,15 +109,15 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		}
 
 		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(orderId, paymentStatus, DecorationPaymentPO.ONETYPE_ADD_INT, DecorationPaymentPO.TWOTYPE_DEAL_INT);
-		List<DecorationPaymentVO> payments = new ArrayList<DecorationPaymentVO>();
+		List<DecorationPaymentVO> decorationPaymentVOs = new ArrayList<DecorationPaymentVO>();
 
 		for (DecorationPaymentPO decorationPaymentPO : decorationPaymentPOs) {
-			DecorationPaymentVO _decorationPaymentVO = new DecorationPaymentVO();
-			BeanUtil.copyProperties(decorationPaymentPO, _decorationPaymentVO, Arrays.asList("decoration", "creater", "collecter", "confirmer"));
+			DecorationPaymentVO decorationPaymentVO = new DecorationPaymentVO();
+			BeanUtil.copyProperties(decorationPaymentPO, decorationPaymentVO, Arrays.asList("decoration", "creater", "collecter", "confirmer"));
 
-			payments.add(_decorationPaymentVO);
+			decorationPaymentVOs.add(decorationPaymentVO);
 		}
-		decorationContractVO.setPayments(payments);
+		decorationContractVO.setPayments(decorationPaymentVOs);
 
 		return decorationContractVO;
 	}
@@ -131,7 +131,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		if (decorationContractPO != null) {
 			BeanUtil.copyProperties(decorationContractPO, decorationContractVO);
 
-			if (decorationContractPO.getOrderTotalPrice() == 0f && decorationContractPO.getDecorationPO() != null) {
+			if (decorationContractPO.getOrderTotalPrice() == 0 && decorationContractPO.getDecorationPO() != null) {
 				decorationContractPO.setOrderTotalPrice(decorationContractPO.getDecorationPO().getOrderTotalPrice());
 
 				decorationContractDao.update(decorationContractPO);

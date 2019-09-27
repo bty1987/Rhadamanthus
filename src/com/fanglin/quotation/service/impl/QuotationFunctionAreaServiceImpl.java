@@ -55,7 +55,7 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 
 	@Autowired
 	private ExtensionItemDao extensionItemDao;
-	
+
 	@Autowired
 	private AddReduceItemDao addReduceItemDao;
 
@@ -77,7 +77,7 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 
 		List<QuotationFunctionAreaPO> quotationFunctionAreaPOs = quotationFunctionAreaDao.queryQuotationFunctionAreaByQuotationId(quotationVO.getQid());
 
-		Integer divisor = Integer.parseInt(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
+		Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
 
 		for (QuotationFunctionAreaPO quotationFunctionAreaPO : quotationFunctionAreaPOs) {
 			QuotationFunctionAreaVO quotationFunctionAreaVO = new QuotationFunctionAreaVO();
@@ -191,7 +191,7 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 				quotationFunctionAreaItemVO.setUnitPrice(quotationItemPO.getUnitPrice());
 				quotationFunctionAreaItemVO.setType(itemType);
 				quotationFunctionAreaItemVO.setQuotationFunctionAreaId(quotationFunctionAreaPO.getQfaId());
-				quotationFunctionAreaItemVO.setNum(0f);
+				quotationFunctionAreaItemVO.setNum(0);
 
 				quotationFunctionAreaItemVOs.add(quotationFunctionAreaItemVO);
 			}
@@ -242,7 +242,7 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 		if (extensionItemDao.countExtensionItemForFunctionArea(quotationFunctionAreas) > 0) {
 			throw new FLException(200028, "功能区存在拓展项");
 		}
-		
+
 		if (addReduceItemDao.countAddReduceItemForFunctionArea(quotationFunctionAreas) > 0) {
 			throw new FLException(200032, "功能区存在增减项");
 		}
@@ -255,7 +255,7 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 
 		quotationFunctionAreaDao.deleteQuotationFunctionAreaByIds(qfaIds);
 
-		Integer divisor = Integer.parseInt(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
+		Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
 
 		String tableName = QuotationFunctionAreaItemPO.quotationFunctionAreaItemTable(qfaId, divisor);
 

@@ -57,7 +57,10 @@ CREATE TABLE `awardrecord` (
   `ouid` int(11) NOT NULL COMMENT '操作人',
   `operateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
   `content` varchar(64) DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`arid`)
+  PRIMARY KEY (`arid`),
+  KEY `indexone` (`orderId`),
+  KEY `indextwo` (`operateTime`),
+  KEY `indexthr` (`asid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='库存信息';
 
 DROP TABLE IF EXISTS `awardstock`;
@@ -168,7 +171,7 @@ CREATE TABLE `plan` (
   `tid` int(11) NOT NULL,
   `args` varchar(128) DEFAULT NULL COMMENT '参数',
   `cuid` int(11) NOT NULL COMMENT '创建人',
-  `createtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON COMMENT '创建时间',
+  `createtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `executetime` varchar(10) DEFAULT NULL COMMENT '执行时间',
   `resultfilepath` varchar(128) COMMENT '结果文件路径',
   `infofilepath` varchar(128) COMMENT '信息文件路径',
@@ -288,3 +291,18 @@ CREATE TABLE `vticket` (
   PRIMARY KEY (`vtid`),
   UNIQUE KEY `indexone` (`tno`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='活动票表';
+
+DROP TABLE IF EXISTS `worksheet`;
+CREATE TABLE `worksheet` (
+  `wsid` int(11) NOT NULL AUTO_INCREMENT COMMENT '工单ID',
+  `code` varchar(256) NOT NULL COMMENT '单号',
+  `module` varchar(256) NOT NULL COMMENT '模块',
+  `content` varchar(256) DEFAULT NULL COMMENT '内容',
+  `cuid` int(11) NOT NULL COMMENT '创建人',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态',
+  `huid` int(11) DEFAULT NULL COMMENT '处理人',
+  `handTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '处理时间',
+  `result` varchar(256) DEFAULT NULL COMMENT '结果',
+  PRIMARY KEY (`wsid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工单';

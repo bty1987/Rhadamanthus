@@ -26,7 +26,7 @@ public class DecorationInclusivePO implements java.io.Serializable {
 
 	public static final String COLUMN_COMPANY_STR = "decoration.no";
 	
-	public static final float MONEY_ZERO_FLOAT = 0f;
+	public static final long MONEY_ZERO_LONG = 0;
 	
 	public static final short STATUS_INIT_SHORT = 0;
 	
@@ -34,19 +34,19 @@ public class DecorationInclusivePO implements java.io.Serializable {
 	
 	private DecorationPO decoration;
 	
-	private float contractPrice;
+	private long contractPrice;
 	
-	private float projectPrice;
+	private long projectPrice;
 		
-	private float cdiff;	
+	private long cdiff;	
 		
-	private float mdiff;
+	private long mdiff;
 	
-	private float managePrice;	
+	private long managePrice;	
 	
-	private float manageRate;	
+	private int manageRate;	
 
-	private float materialPaidup;
+	private long materialPaidup;
 	
 	public DecorationInclusivePO() {
 		super();
@@ -79,65 +79,65 @@ public class DecorationInclusivePO implements java.io.Serializable {
 	}
 	
 	@Column(name = "contractPrice")
-	public float getContractPrice() {
+	public long getContractPrice() {
 		return contractPrice;
 	}
 
-	public void setContractPrice(float contractPrice) {
+	public void setContractPrice(long contractPrice) {
 		this.contractPrice = contractPrice;
 	}
 	
 	@Column(name = "projectPrice")
-	public float getProjectPrice() {
+	public long getProjectPrice() {
 		return projectPrice;
 	}
 
-	public void setProjectPrice(float projectPrice) {
+	public void setProjectPrice(long projectPrice) {
 		this.projectPrice = projectPrice;
 	}
 	
 	@Column(name = "cdiff")
-	public float getCdiff() {
+	public long getCdiff() {
 		return cdiff;
 	}
 
-	public void setCdiff(float cdiff) {
+	public void setCdiff(long cdiff) {
 		this.cdiff = cdiff;
 	}
 	
 	@Column(name = "mdiff")
-	public float getMdiff() {
+	public long getMdiff() {
 		return mdiff;
 	}
 
-	public void setMdiff(float mdiff) {
+	public void setMdiff(long mdiff) {
 		this.mdiff = mdiff;
 	}
 	
 	@Column(name = "managePrice")
-	public float getManagePrice() {
+	public long getManagePrice() {
 		return managePrice;
 	}
 
-	public void setManagePrice(float managePrice) {
+	public void setManagePrice(long managePrice) {
 		this.managePrice = managePrice;
 	}
 	
 	@Column(name = "manageRate")
-	public float getManageRate() {
+	public int getManageRate() {
 		return manageRate;
 	}
 
-	public void setManageRate(float manageRate) {
+	public void setManageRate(int manageRate) {
 		this.manageRate = manageRate;
 	}
 	
 	@Column(name = "materialPaidup")
-	public float getMaterialPaidup() {
+	public long getMaterialPaidup() {
 		return materialPaidup;
 	}
 
-	public void setMaterialPaidup(float materialPaidup) {
+	public void setMaterialPaidup(long materialPaidup) {
 		this.materialPaidup = materialPaidup;
 	}
 

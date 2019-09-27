@@ -25,7 +25,7 @@ public class DecorationHolonomyPO implements java.io.Serializable {
 
 	public static final String COLUMN_COMPANY_STR = "decoration.company";
 
-	public static final float MONEY_SERVICEPAIDUP_FLOAT = 0f;
+	public static final long MONEY_SERVICEPAIDUP_INT = 0;
 
 	public static final short STATUS_INIT_SHORT = 0;
 	
@@ -35,29 +35,29 @@ public class DecorationHolonomyPO implements java.io.Serializable {
 
 	private String name;
 
-	private float maching;
+	private int maching;
 
-	private float discount;
+	private int discount;
 	
-	private float discountBase; // 基数
+	private long discountBase; // 基数
 
-	private float projectBase; // 工程基础
+	private long projectBase; // 工程基础
 
-	private float projectPrice;
+	private long projectPrice;
 
-	private float managePrice;
+	private long managePrice;
 
-	private float manageRate;
+	private int manageRate;
 
-	private float materialPrice;
+	private long materialPrice;
 
-	private float servicePrice;
+	private long servicePrice;
 
-	private float serviceRate;
+	private int serviceRate;
 
-	private float materialPaidup;
+	private long materialPaidup;
 
-	private float servicePaidup;
+	private long servicePaidup;
 
 	private short status;
 
@@ -101,92 +101,92 @@ public class DecorationHolonomyPO implements java.io.Serializable {
 	}
 
 	@Column(name = "maching")
-	public float getMaching() {
+	public int getMaching() {
 		return maching;
 	}
 
-	public void setMaching(float maching) {
+	public void setMaching(int maching) {
 		this.maching = maching;
 	}
 
 	@Column(name = "discount")
-	public float getDiscount() {
+	public int getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(float discount) {
+	public void setDiscount(int discount) {
 		this.discount = discount;
 	}
 
 	@Column(name = "projectPrice")
-	public float getProjectPrice() {
+	public long getProjectPrice() {
 		return projectPrice;
 	}
 
-	public void setProjectPrice(float projectPrice) {
+	public void setProjectPrice(long projectPrice) {
 		this.projectPrice = projectPrice;
 	}
 
 	@Column(name = "managePrice")
-	public float getManagePrice() {
+	public long getManagePrice() {
 		return managePrice;
 	}
 
-	public void setManagePrice(float managePrice) {
+	public void setManagePrice(long managePrice) {
 		this.managePrice = managePrice;
 	}
 
 	@Column(name = "manageRate")
-	public float getManageRate() {
+	public int getManageRate() {
 		return manageRate;
 	}
 
-	public void setManageRate(float manageRate) {
+	public void setManageRate(int manageRate) {
 		this.manageRate = manageRate;
 	}
 
 	@Column(name = "materialPrice")
-	public float getMaterialPrice() {
+	public long getMaterialPrice() {
 		return materialPrice;
 	}
 
-	public void setMaterialPrice(float materialPrice) {
+	public void setMaterialPrice(long materialPrice) {
 		this.materialPrice = materialPrice;
 	}
 
 	@Column(name = "servicePrice")
-	public float getServicePrice() {
+	public long getServicePrice() {
 		return servicePrice;
 	}
 
-	public void setServicePrice(float servicePrice) {
+	public void setServicePrice(long servicePrice) {
 		this.servicePrice = servicePrice;
 	}
 
 	@Column(name = "serviceRate")
-	public float getServiceRate() {
+	public int getServiceRate() {
 		return serviceRate;
 	}
 
-	public void setServiceRate(float serviceRate) {
+	public void setServiceRate(int serviceRate) {
 		this.serviceRate = serviceRate;
 	}
 
 	@Column(name = "materialPaidup")
-	public float getMaterialPaidup() {
+	public long getMaterialPaidup() {
 		return materialPaidup;
 	}
 
-	public void setMaterialPaidup(float materialPaidup) {
+	public void setMaterialPaidup(long materialPaidup) {
 		this.materialPaidup = materialPaidup;
 	}
 
 	@Column(name = "servicePaidup")
-	public float getServicePaidup() {
+	public long getServicePaidup() {
 		return servicePaidup;
 	}
 
-	public void setServicePaidup(float servicePaidup) {
+	public void setServicePaidup(long servicePaidup) {
 		this.servicePaidup = servicePaidup;
 	}
 
@@ -200,20 +200,20 @@ public class DecorationHolonomyPO implements java.io.Serializable {
 	}
 
 	@Column(name = "discountBase")
-	public float getDiscountBase() {
+	public long getDiscountBase() {
 		return discountBase;
 	}
 
-	public void setDiscountBase(float discountBase) {
+	public void setDiscountBase(long discountBase) {
 		this.discountBase = discountBase;
 	}
 
 	@Column(name = "projectBase")
-	public float getProjectBase() {
+	public long getProjectBase() {
 		return projectBase;
 	}
 
-	public void setProjectBase(float projectBase) {
+	public void setProjectBase(long projectBase) {
 		this.projectBase = projectBase;
 	}
 

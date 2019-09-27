@@ -59,7 +59,7 @@ public class DecorationOperatePO implements java.io.Serializable {
 	
 	private Timestamp operateTime;
 	
-	private float value;
+	private long value;
 	
 	private short type;
 	
@@ -79,9 +79,9 @@ public class DecorationOperatePO implements java.io.Serializable {
 	
 	private long smrid;
 	
-	private float drate;
+	private long drate;
 	
-	private float srate;
+	private long srate;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -123,11 +123,11 @@ public class DecorationOperatePO implements java.io.Serializable {
 	}
 
 	@Column(name = "value")
-	public float getValue() {
+	public long getValue() {
 		return value;
 	}
 
-	public void setValue(float value) {
+	public void setValue(long value) {
 		this.value = value;
 	}
 
@@ -213,20 +213,20 @@ public class DecorationOperatePO implements java.io.Serializable {
 	}
 
 	@Column(name = "drate")
-	public float getDrate() {
+	public long getDrate() {
 		return drate;
 	}
 
-	public void setDrate(float drate) {
+	public void setDrate(long drate) {
 		this.drate = drate;
 	}
 
 	@Column(name = "srate")
-	public float getSrate() {
+	public long getSrate() {
 		return srate;
 	}
 
-	public void setSrate(float srate) {
+	public void setSrate(long srate) {
 		this.srate = srate;
 	}
 	
@@ -242,7 +242,7 @@ public class DecorationOperatePO implements java.io.Serializable {
 		return this;
 	}
 	
-	public DecorationOperatePO sign(String orderId, UserPO operater, Float value){
+	public DecorationOperatePO sign(String orderId, UserPO operater, Long value){
 		
 		setOrderId(orderId);
 		setOperater(operater);
@@ -256,7 +256,7 @@ public class DecorationOperatePO implements java.io.Serializable {
 		return this;
 	}
 	
-	public DecorationOperatePO resign(String orderId, UserPO operater, Float value){
+	public DecorationOperatePO resign(String orderId, UserPO operater, Long value){
 		
 		setOrderId(orderId);
 		setOperater(operater);

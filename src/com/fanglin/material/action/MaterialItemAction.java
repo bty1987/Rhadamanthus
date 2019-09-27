@@ -42,7 +42,7 @@ public class MaterialItemAction extends BaseListAction {
 
 	private List<MaterialItemVO> materialItems;
 
-	private Float num;
+	private Integer num;
 
 	private List<Long> miids;
 
@@ -168,11 +168,11 @@ public class MaterialItemAction extends BaseListAction {
 		this.mid = mid;
 	}
 
-	public Float getNum() {
+	public Integer getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(Integer num) {
 		this.num = num;
 	}
 

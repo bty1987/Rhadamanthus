@@ -31,7 +31,7 @@ public class VustomerVO implements Serializable {
 
 	private String orderId;
 
-	private Float contractPrice;
+	private Long contractPrice;
 
 	private Short status;
 
@@ -127,11 +127,11 @@ public class VustomerVO implements Serializable {
 		this.orderId = orderId;
 	}
 
-	public Float getContractPrice() {
+	public Long getContractPrice() {
 		return contractPrice;
 	}
 
-	public void setContractPrice(Float contractPrice) {
+	public void setContractPrice(Long contractPrice) {
 		this.contractPrice = contractPrice;
 	}
 

@@ -118,21 +118,21 @@ public class DecorationPO implements Serializable {
 
 	private DecorationAdditionPO addition;
 
-	private float orderTotalPrice;
+	private long orderTotalPrice;
 
-	private float quotationPrice;
+	private long quotationPrice;
 
-	private float couponCut;
+	private long couponCut;
 
-	private float thingCut;
+	private long thingCut;
 	
-	private float factPrice;
+	private long factPrice;
 
-	private float netperfor;
+	private long netperfor;
 
-	private float comperfor;
+	private long comperfor;
 	
-	private float precontractPrice;
+	private long precontractPrice;
 
 	private Timestamp contractTime;
 
@@ -154,7 +154,7 @@ public class DecorationPO implements Serializable {
 
 	private QuotationVersionPO version;
 
-	private float notSalesmanRate = 0f;
+	private int notSalesmanRate = 0;
 
 	private int quotationTimeLimit;
 
@@ -162,7 +162,7 @@ public class DecorationPO implements Serializable {
 
 	private short paySacle;
 
-	private float discount;
+	private int discount;
 	
 	public DecorationPO() {
 	}
@@ -352,19 +352,19 @@ public class DecorationPO implements Serializable {
 		this.version = version;
 	}
 
-	public float getOrderTotalPrice() {
+	public long getOrderTotalPrice() {
 		return orderTotalPrice;
 	}
 
-	public void setOrderTotalPrice(float orderTotalPrice) {
+	public void setOrderTotalPrice(long orderTotalPrice) {
 		this.orderTotalPrice = orderTotalPrice;
 	}
 
-	public float getNotSalesmanRate() {
+	public int getNotSalesmanRate() {
 		return notSalesmanRate;
 	}
 
-	public void setNotSalesmanRate(float notSalesmanRate) {
+	public void setNotSalesmanRate(int notSalesmanRate) {
 		this.notSalesmanRate = notSalesmanRate;
 	}
 
@@ -428,11 +428,11 @@ public class DecorationPO implements Serializable {
 		this.resourceType = resourceType;
 	}
 
-	public float getQuotationPrice() {
+	public long getQuotationPrice() {
 		return quotationPrice;
 	}
 
-	public void setQuotationPrice(float quotationPrice) {
+	public void setQuotationPrice(long quotationPrice) {
 		this.quotationPrice = quotationPrice;
 	}
 
@@ -444,51 +444,51 @@ public class DecorationPO implements Serializable {
 		this.paySacle = paySacle;
 	}
 
-	public float getDiscount() {
+	public int getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(float discount) {
+	public void setDiscount(int discount) {
 		this.discount = discount;
 	}
 
-	public float getCouponCut() {
+	public long getCouponCut() {
 		return couponCut;
 	}
 
-	public void setCouponCut(float couponCut) {
+	public void setCouponCut(long couponCut) {
 		this.couponCut = couponCut;
 	}
 
-	public float getThingCut() {
+	public long getThingCut() {
 		return thingCut;
 	}
 
-	public void setThingCut(float thingCut) {
+	public void setThingCut(long thingCut) {
 		this.thingCut = thingCut;
 	}
 
-	public float getNetperfor() {
+	public long getNetperfor() {
 		return netperfor;
 	}
 
-	public void setNetperfor(float netperfor) {
+	public void setNetperfor(long netperfor) {
 		this.netperfor = netperfor;
 	}
 
-	public float getComperfor() {
+	public long getComperfor() {
 		return comperfor;
 	}
 
-	public void setComperfor(float comperfor) {
+	public void setComperfor(long comperfor) {
 		this.comperfor = comperfor;
 	}
 	
-	public float getPrecontractPrice() {
+	public long getPrecontractPrice() {
 		return precontractPrice;
 	}
 
-	public void setPrecontractPrice(float precontractPrice) {
+	public void setPrecontractPrice(long precontractPrice) {
 		this.precontractPrice = precontractPrice;
 	}
 
@@ -521,11 +521,11 @@ public class DecorationPO implements Serializable {
 	}
 	
 	@Column(name = "factPrice")
-	public float getFactPrice() {
+	public long getFactPrice() {
 		return factPrice;
 	}
 
-	public void setFactPrice(float factPrice) {
+	public void setFactPrice(long factPrice) {
 		this.factPrice = factPrice;
 	}
 
@@ -533,7 +533,7 @@ public class DecorationPO implements Serializable {
 		BeanUtil.copyProperties(this, decorationVO, Arrays.asList("house", "customer", "designer", "salesman", "supervisor", "version", "creater", "quoter", "escorter", "contractUserId"));
 
 		if (decorationVO.getOrderTotalPrice() == null) {
-			decorationVO.setOrderTotalPrice(new Float(0));
+			decorationVO.setOrderTotalPrice(new Long(0));
 		}
 
 		decorationVO.setHouse(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))));

@@ -18,47 +18,47 @@ import javax.persistence.Table;
 public class AccountPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 3302011664287660940L;
-	
+
 	public static final short STATUS_TYPE_PRECUT_INT = 0;
-	
+
 	public static final short STATUS_TYPE_FORMAL_INT = 1;
-	
+
 	public static final short STATUS_TYPE_CLOSED_INT = 2;
-	
+
 	public static final String COLUMN_AID_STR = "aid";
 
 	private long aid;
-	
+
 	private VoucherPO voucher;
-	
+
 	private AssistantPO assistant;
-	
+
 	private String word;
-	
+
 	private Timestamp createTime;
-	
+
 	private String period;
-	
+
 	private int saId;
-	
+
 	private String abstracts;
-	
+
 	private String oneCode;
-	
+
 	private String twoCode;
-	
+
 	private String thrCode;
-	
+
 	private String subjectName;
-	
-	private float debit;
-	
-	private float credit;
-	
+
+	private long debit;
+
+	private long credit;
+
 	private Timestamp businessTime;
-	
+
 	private short status;
-	
+
 	private short sbstatus;
 
 	@Id
@@ -174,20 +174,20 @@ public class AccountPO implements java.io.Serializable {
 	}
 
 	@Column(name = "debit")
-	public float getDebit() {
+	public long getDebit() {
 		return this.debit;
 	}
 
-	public void setDebit(float debit) {
+	public void setDebit(long debit) {
 		this.debit = debit;
 	}
 
 	@Column(name = "credit")
-	public float getCredit() {
+	public long getCredit() {
 		return this.credit;
 	}
 
-	public void setCredit(float credit) {
+	public void setCredit(long credit) {
 		this.credit = credit;
 	}
 
@@ -217,5 +217,5 @@ public class AccountPO implements java.io.Serializable {
 	public void setSbstatus(short sbstatus) {
 		this.sbstatus = sbstatus;
 	}
-	
+
 }

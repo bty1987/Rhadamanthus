@@ -10,85 +10,85 @@ import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
-public class HouseSourceVO implements Serializable{
+public class HouseSourceVO implements Serializable {
 
 	private static final long serialVersionUID = -4319485351492418005L;
-	
+
 	private Long hsid;
-	
+
 	private String no;
-	
+
 	private Short type;
-	
+
 	private Short sourceType;
-	
+
 	private HouseVO house;
-	
+
 	private CustomerVO customer;
-	
+
 	private String deedNum;
-	
-	private Float deedValue;
-	
-	private Float unitPrice;
-	
-	private Float totalPrice;
-	
+
+	private Long deedValue;
+
+	private Long unitPrice;
+
+	private Long totalPrice;
+
 	private Timestamp decorateTime;
-	
+
 	private Short decorateDegree;
-	
+
 	private Short discussType;
-	
+
 	private Short rentType;
-	
+
 	private String indoores;
-	
+
 	private String history;
-	
-	private Float propertyFee;
-	
+
+	private Long propertyFee;
+
 	private Short elevator;
-	
+
 	private Short onlyHousing;
-	
+
 	private Timestamp documentsDate;
-	
+
 	private Short allowLoan;
-	
+
 	private Short beingLoan;
-	
+
 	private String checkingTime;
-	
+
 	private UserBaseVO create;
-	
+
 	private Timestamp createTime;
-	
+
 	private UserBaseVO followUser;
-	
+
 	private DepartmentVO department;
-	
+
 	private DepartmentVO region;
-	
+
 	private UserBaseVO keyer;
-	
+
 	private String housingGrade;
-	
+
 	private Short status;
-	
+
 	private String path;
-	
+
 	private String comment;
-	
+
 	public HouseSourceVO() {
 		super();
 	}
-	
+
 	public HouseSourceVO(HouseVO house) {
 		super();
 		this.house = house;
 	}
-	
+
 	public HouseSourceVO(HouseVO house, CustomerVO customer, UserBaseVO create, UserBaseVO followUser, UserBaseVO keyer, DepartmentVO department, DepartmentVO region) {
 		super();
 		this.house = house;
@@ -115,7 +115,7 @@ public class HouseSourceVO implements Serializable{
 	public void setNo(String no) {
 		this.no = no;
 	}
-	
+
 	public Short getType() {
 		return type;
 	}
@@ -156,27 +156,27 @@ public class HouseSourceVO implements Serializable{
 		this.deedNum = deedNum;
 	}
 
-	public Float getDeedValue() {
+	public Long getDeedValue() {
 		return deedValue;
 	}
 
-	public void setDeedValue(Float deedValue) {
+	public void setDeedValue(Long deedValue) {
 		this.deedValue = deedValue;
 	}
 
-	public Float getUnitPrice() {
+	public Long getUnitPrice() {
 		return unitPrice;
 	}
 
-	public void setUnitPrice(Float unitPrice) {
+	public void setUnitPrice(Long unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 
-	public Float getTotalPrice() {
+	public Long getTotalPrice() {
 		return totalPrice;
 	}
 
-	public void setTotalPrice(Float totalPrice) {
+	public void setTotalPrice(Long totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 
@@ -229,11 +229,11 @@ public class HouseSourceVO implements Serializable{
 		this.history = history;
 	}
 
-	public Float getPropertyFee() {
+	public Long getPropertyFee() {
 		return propertyFee;
 	}
 
-	public void setPropertyFee(Float propertyFee) {
+	public void setPropertyFee(Long propertyFee) {
 		this.propertyFee = propertyFee;
 	}
 
@@ -333,7 +333,7 @@ public class HouseSourceVO implements Serializable{
 	public void setPath(String path) {
 		this.path = path;
 	}
-	
+
 	public UserBaseVO getKeyer() {
 		return keyer;
 	}
@@ -365,5 +365,5 @@ public class HouseSourceVO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 }

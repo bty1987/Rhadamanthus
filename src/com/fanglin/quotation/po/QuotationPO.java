@@ -33,65 +33,66 @@ public class QuotationPO implements Serializable {
 
 	private static final long serialVersionUID = 3361405245563596740L;
 
-	public static final short 	DEFAULTS_NONDEFAULT_INT = 0;
-	
-	public static final short 	DEFAULTS_DEFAULT_INT = 1;
-	
+	public static final short DEFAULTS_NONDEFAULT_INT = 0;
+
+	public static final short DEFAULTS_DEFAULT_INT = 1;
+
 	public static final short STATUS_LOCK_INT = 1;
-	
+
 	public static final short STATUS_INIT_INT = 0;
 
 	private long qid;
-	
+
 	private String orderId;
-	
+
 	private String quotationName;
-	
+
 	private String decorationStyle;
-	
+
 	private Timestamp createTime;
-	
+
 	private UserPO creater;
-	
+
 	private String content;
 
-	private float undisPrice;
-	
-	private float disPrice;
-	
-	private float discount;
-	
-	private float totalPrice;
-	
-	private short defaults;
-	
-	private short status;
-	
-	private float managePrice;
-	
-	private float manageRate;
-	
-	private float trafficPrice;
-	
-	private float trafficRate;
-	
-	private float basePrice;
+	private long undisPrice;
 
-	public QuotationPO(long qid){
+	private long disPrice;
+
+	private int discount;
+
+	private long totalPrice;
+
+	private short defaults;
+
+	private short status;
+
+	private long managePrice;
+
+	private int manageRate;
+
+	private long trafficPrice;
+
+	private int trafficRate;
+
+	private long basePrice;
+
+	public QuotationPO(long qid) {
 		this.qid = qid;
 	}
-	
-	public QuotationPO(){
-		
+
+	public QuotationPO() {
+
 	}
+
 	@Id
 	@GeneratedValue
 	@Column(name = "qId")
-	public long getQid(){
+	public long getQid() {
 		return qid;
 	}
 
-	public void setQid(long qid){
+	public void setQid(long qid) {
 		this.qid = qid;
 	}
 
@@ -114,52 +115,51 @@ public class QuotationPO implements Serializable {
 		this.creater = creater;
 	}
 
-
 	@Column(name = "quotationName")
-	public String getQuotationName(){
+	public String getQuotationName() {
 		return quotationName;
 	}
 
-	public void setQuotationName(String quotationName){
+	public void setQuotationName(String quotationName) {
 		this.quotationName = quotationName;
 	}
-	
+
 	@Column(name = "decorationStyle")
-	public String getDecorationStyle(){
+	public String getDecorationStyle() {
 		return decorationStyle;
 	}
 
-	public void setDecorationStyle(String decorationStyle){
+	public void setDecorationStyle(String decorationStyle) {
 		this.decorationStyle = decorationStyle;
 	}
-	
+
 	@Column(name = "createTime")
-	public Timestamp getCreateTime(){
+	public Timestamp getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(Timestamp createTime){
+	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
-	
+
 	@Column(name = "content")
-	public String getContent(){
+	public String getContent() {
 		return content;
 	}
-	
-	public void setContent(String content){
+
+	public void setContent(String content) {
 		this.content = content;
 	}
-	
+
 	@Column(name = "discount")
-	public float getDiscount(){
+	public int getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(float discount){
+	public void setDiscount(int discount) {
 		this.discount = discount;
 	}
-	
+
 	@Column(name = "defaults")
 	public short getDefaults() {
 		return defaults;
@@ -168,8 +168,7 @@ public class QuotationPO implements Serializable {
 	public void setDefaults(short defaults) {
 		this.defaults = defaults;
 	}
-	
-	
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
@@ -180,85 +179,86 @@ public class QuotationPO implements Serializable {
 	}
 
 	@Column(name = "totalPrice")
-	public float getTotalPrice(){
+	public long getTotalPrice() {
 		return totalPrice;
 	}
 
-	public void setTotalPrice(float totalPrice){
+	public void setTotalPrice(long totalPrice) {
 		this.totalPrice = totalPrice;
 	}
-	
+
 	@Column(name = "managePrice")
-	public float getManagePrice() {
+	public long getManagePrice() {
 		return managePrice;
 	}
 
-	public void setManagePrice(float managePrice) {
+	public void setManagePrice(long managePrice) {
 		this.managePrice = managePrice;
 	}
-	
+
 	@Column(name = "manageRate")
-	public float getManageRate() {
+	public int getManageRate() {
 		return manageRate;
 	}
 
-	public void setManageRate(float manageRate) {
+	public void setManageRate(int manageRate) {
 		this.manageRate = manageRate;
 	}
-	
+
 	@Column(name = "trafficPrice")
-	public float getTrafficPrice() {
+	public long getTrafficPrice() {
 		return trafficPrice;
 	}
 
-	public void setTrafficPrice(float trafficPrice) {
+	public void setTrafficPrice(long trafficPrice) {
 		this.trafficPrice = trafficPrice;
 	}
-	
+
 	@Column(name = "undisPrice")
-	public float getUndisPrice() {
+	public long getUndisPrice() {
 		return undisPrice;
 	}
 
-	public void setUndisPrice(float undisPrice) {
+	public void setUndisPrice(long undisPrice) {
 		this.undisPrice = undisPrice;
 	}
+
 	@Column(name = "disPrice")
-	public float getDisPrice() {
+	public long getDisPrice() {
 		return disPrice;
 	}
 
-	public void setDisPrice(float disPrice) {
+	public void setDisPrice(long disPrice) {
 		this.disPrice = disPrice;
 	}
 
 	@Column(name = "trafficRate")
-	public float getTrafficRate() {
+	public int getTrafficRate() {
 		return trafficRate;
 	}
 
-	public void setTrafficRate(float trafficRate) {
+	public void setTrafficRate(int trafficRate) {
 		this.trafficRate = trafficRate;
 	}
-	
+
 	@Column(name = "basePrice")
-	public float getBasePrice() {
+	public long getBasePrice() {
 		return basePrice;
 	}
 
-	public void setBasePrice(float basePrice) {
+	public void setBasePrice(long basePrice) {
 		this.basePrice = basePrice;
 	}
 
-	public void ptp(String orderId,UserPO userPO,String name,String style){
-		
+	public void ptp(String orderId, UserPO userPO, String name, String style) {
+
 		this.setOrderId(orderId);
 		this.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		this.setCreater(userPO);
 		this.setQuotationName(name);
 		this.setDecorationStyle(style);
-		this.setDiscount(10);
-		this.setTotalPrice(0);
+		this.setDiscount(10000);
+		this.setTotalPrice(0L);
 		this.setContent("");
 		this.setDefaults(QuotationPO.DEFAULTS_DEFAULT_INT); // 设置复制报价为默认报价
 	}

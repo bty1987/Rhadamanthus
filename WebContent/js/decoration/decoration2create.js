@@ -15,7 +15,7 @@ jQuery(function($) {
 		customerItems: {},
 		houseItems: {},
 		houseFlag:false,
-		valideteresult: null
+		valiDeteResult: null
 	};
 
 	orderEntry.orderItems.customerId = com.focusPage("#customerId");
@@ -104,19 +104,19 @@ jQuery(function($) {
 	});
 
 	orderEntry.houseItems.door = com.focusPage("#door").on("blur", function (e) {
-		validatehouse();
+        valiDateHouse();
 	});
 	orderEntry.houseItems.builtrule = com.focusPage("#builtrule").on("change", function (e) {
-		validatehouse();
+        valiDateHouse();
 	});
 	orderEntry.houseItems.unitrule = com.focusPage("#unitrule").on("change", function (e) {
-		validatehouse();
+        valiDateHouse();
 	});
 	orderEntry.houseItems.floorrule = com.focusPage("#floorrule").on("change", function (e) {
-		validatehouse();
+        valiDateHouse();
 	});
 	orderEntry.houseItems.doorrule = com.focusPage("#doorrule").on("change", function (e) {
-		validatehouse();
+        valiDateHouse();
 	});
 	
 	com.focusPage("#customerModal").on('hide.bs.modal', function (e) {
@@ -262,7 +262,7 @@ jQuery(function($) {
 		}
 
 		if(orderEntry.houseFlag){
-			validatehouse();
+            valiDateHouse();
 			return;
 		}else{
 			saveHouse();
@@ -352,7 +352,7 @@ jQuery(function($) {
 		if (com.validate("houseModal", "top") || orderEntry.houseItems.no.val() == "") return;
 
 		if(orderEntry.houseFlag){
-			validatehouse();
+            valiDateHouse();
 			return;
 		}
 		houseOptions["house.village.no"] = com.typeahead("no");
@@ -459,14 +459,14 @@ jQuery(function($) {
         }
     }
 
-	function validatehouse(no, houseNumber) {
+	function valiDateHouse(no, houseNumber) {
 
-		orderEntry.valideteresult = houseUtils.anytimevalidate(orderEntry.houseItems, null, true);
+		orderEntry.valiDeteResult = houseUtils.anytimevalidate(orderEntry.houseItems, null, true);
 
-		if (orderEntry.valideteresult.prehouse != undefined) {
-			orderEntry.houseFlag = orderEntry.valideteresult.prehouse.Flag;
+		if (orderEntry.valiDeteResult.prehouse != undefined) {
+			orderEntry.houseFlag = orderEntry.valiDeteResult.prehouse.Flag;
 		}
-		orderEntry.houseItems.houseNumber = orderEntry.valideteresult.houseNumber;
+		orderEntry.houseItems.houseNumber = orderEntry.valiDeteResult.houseNumber;
 	}
 
 

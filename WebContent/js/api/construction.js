@@ -36,9 +36,24 @@ $.extend(api, {construction: {
     queryAcceptance: {url: "queryAcceptance.do", demo: true},
     updateAcceptance: {url: "updateAcceptance.do"},
 
-    pageConstruction: {url: "pageConstruction.do", demo: true},
+    pageConstruction: {url: "pageConstruction.do", demo: true,
+        type: "query",
+        tranargs: [{
+            result:"paging-data",
+            args:["orderTotalPrice"]
+        },{
+            result:"paging-data-house",
+            args:["buildArea"]
+        }]},
+
     pageConstructionForSupervision: {url: "pageConstructionForSupervision.do", demo: true},
-    pageConstructionForAcceptance: {url: "pageConstructionForAcceptance.do", demo: true},
+    pageConstructionForAcceptance: {url: "pageConstructionForAcceptance.do", demo: true,
+        type: "query",
+        tranargs: [{
+            result:"paging-data-house",
+            args:["buildArea"]
+        }]},
+
     queryConstructionByOrderId: {url: "queryConstructionByOrderId.do", demo: true},
     updateConstructionByOrderId: {url: "updateConstructionByOrderId.do"},
     nextConstructionByOrderId: {url: "nextConstructionByOrderId.do"},
@@ -93,8 +108,23 @@ $.extend(api, {construction: {
     queryConstructerCidByUserId:{url: "queryConstructerCidByUserId.do"},
     updateConstructerForRate: {url: "updateConstructerForRate.do"},
     
-    pageDrawLineForPlan: {url: "pageDrawLineForPlan.do", demo: true},
-    queryDrawLine: {url: "queryDrawLine.do", demo: true},
+    pageDrawLineForPlan: {url: "pageDrawLineForPlan.do", demo: true,
+        type: "query",
+        tranargs: [{
+            result:"paging-data-decoration-house",
+            args:["buildArea"]
+        }]},
+
+    queryDrawLine: {url: "queryDrawLine.do", demo: true,
+        type: "query",
+        tranargs: [{
+            result:"drawLines-decoration",
+            args:["orderTotalPrice"]
+        },{
+            result:"drawLines-decoration-house",
+            args:["buildArea"]
+        }]},
+
     countDrawLine: {url: "countDrawLine.do"},
     updateDrawLine: {url: "updateDrawLine.do"},
     resetDrawLine: {url: "resetDrawLine.do"},

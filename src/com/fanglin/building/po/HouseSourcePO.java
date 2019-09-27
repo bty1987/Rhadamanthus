@@ -18,97 +18,97 @@ import com.fanglin.communion.po.HousePO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name="houseSource", catalog = "building")
-public class HouseSourcePO implements Serializable{
+@Table(name = "houseSource", catalog = "building")
+public class HouseSourcePO implements Serializable {
 
 	private static final long serialVersionUID = -4319485351492418004L;
-	
+
 	public static final String COLUMN_HSID_STR = "hsid";
-	
+
 	public static final String COLUMN_HID_STR = "house.hid";
-	
+
 	public static final String COLUMN_CID_STR = "customer.cid";
-	
+
 	public static final String COLUMN_NO_STR = "no";
-	
+
 	public static final String COLUMN_TYPE_STR = "type";
-	
+
 	public static final short STATUS_INIT_SHORT = 0;
-	
+
 	public static final short STATUS_SIGN_SHORT = 1;
-	
+
 	public static final short STATUS_DISABLE_SHORT = 1;
-	
+
 	private long hsid;
-	
+
 	private String no;
-	
+
 	private short type;
-	
+
 	private short sourceType;
-	
+
 	private HousePO house;
-	
+
 	private CustomerPO customer;
-	
+
 	private String deedNum;
-	
-	private float deedValue;
-	
-	private float unitPrice;
-	
-	private float totalPrice;
-	
+
+	private long deedValue;
+
+	private long unitPrice;
+
+	private long totalPrice;
+
 	private Timestamp decorateTime;
-	
+
 	private short decorateDegree;
-	
+
 	private short discussType;
-	
+
 	private short rentType;
-	
+
 	private String indoores;
-	
+
 	private String history;
-	
-	private float propertyFee;
-	
+
+	private long propertyFee;
+
 	private short elevator;
-	
+
 	private short onlyHousing;
-	
+
 	private Timestamp documentsDate;
-	
+
 	private short allowLoan;
-	
+
 	private short beingLoan;
-	
+
 	private String checkingTime;
-	
+
 	private UserPO create;
-	
+
 	private Timestamp createTime;
-	
+
 	private UserPO followUser;
-	
+
 	private DepartmentPO department;
-	
+
 	private DepartmentPO region;
-	
+
 	private UserPO keyer;
-	
+
 	private String housingGrade;
-	
+
 	private short status;
-	
+
 	private String path;
-	
+
 	private String comment;
-	
+
 	public HouseSourcePO() {
 		super();
 	}
-	
+
 	public HouseSourcePO(HousePO house) {
 		super();
 		this.house = house;
@@ -127,7 +127,7 @@ public class HouseSourcePO implements Serializable{
 
 	@Id
 	@GeneratedValue
-	@Column(name="hsid")
+	@Column(name = "hsid")
 	public long getHsid() {
 		return hsid;
 	}
@@ -135,8 +135,8 @@ public class HouseSourcePO implements Serializable{
 	public void setHsid(long hsid) {
 		this.hsid = hsid;
 	}
-	
-	@Column(name="no")
+
+	@Column(name = "no")
 	public String getNo() {
 		return no;
 	}
@@ -145,7 +145,7 @@ public class HouseSourcePO implements Serializable{
 		this.no = no;
 	}
 
-	@Column(name="type")
+	@Column(name = "type")
 	public short getType() {
 		return type;
 	}
@@ -154,7 +154,7 @@ public class HouseSourcePO implements Serializable{
 		this.type = type;
 	}
 
-	@Column(name="sourceType")
+	@Column(name = "sourceType")
 	public short getSourceType() {
 		return sourceType;
 	}
@@ -164,7 +164,7 @@ public class HouseSourcePO implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "hid", referencedColumnName="hid")
+	@JoinColumn(name = "hid", referencedColumnName = "hid")
 	public HousePO getHouse() {
 		return house;
 	}
@@ -174,7 +174,7 @@ public class HouseSourcePO implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cid", referencedColumnName="cid")
+	@JoinColumn(name = "cid", referencedColumnName = "cid")
 	public CustomerPO getCustomer() {
 		return customer;
 	}
@@ -183,7 +183,7 @@ public class HouseSourcePO implements Serializable{
 		this.customer = customer;
 	}
 
-	@Column(name="deedNum")
+	@Column(name = "deedNum")
 	public String getDeedNum() {
 		return deedNum;
 	}
@@ -192,34 +192,34 @@ public class HouseSourcePO implements Serializable{
 		this.deedNum = deedNum;
 	}
 
-	@Column(name="deedValue")
-	public float getDeedValue() {
+	@Column(name = "deedValue")
+	public long getDeedValue() {
 		return deedValue;
 	}
 
-	public void setDeedValue(float deedValue) {
+	public void setDeedValue(long deedValue) {
 		this.deedValue = deedValue;
 	}
 
-	@Column(name="unitPrice")
-	public float getUnitPrice() {
+	@Column(name = "unitPrice")
+	public long getUnitPrice() {
 		return unitPrice;
 	}
 
-	public void setUnitPrice(float unitPrice) {
+	public void setUnitPrice(long unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 
-	@Column(name="totalPrice")
-	public float getTotalPrice() {
+	@Column(name = "totalPrice")
+	public long getTotalPrice() {
 		return totalPrice;
 	}
 
-	public void setTotalPrice(float totalPrice) {
+	public void setTotalPrice(long totalPrice) {
 		this.totalPrice = totalPrice;
 	}
 
-	@Column(name="decorateTime")
+	@Column(name = "decorateTime")
 	public Timestamp getDecorateTime() {
 		return decorateTime;
 	}
@@ -228,7 +228,7 @@ public class HouseSourcePO implements Serializable{
 		this.decorateTime = decorateTime;
 	}
 
-	@Column(name="decorateDegree")
+	@Column(name = "decorateDegree")
 	public short getDecorateDegree() {
 		return decorateDegree;
 	}
@@ -237,7 +237,7 @@ public class HouseSourcePO implements Serializable{
 		this.decorateDegree = decorateDegree;
 	}
 
-	@Column(name="discussType")
+	@Column(name = "discussType")
 	public short getDiscussType() {
 		return discussType;
 	}
@@ -246,7 +246,7 @@ public class HouseSourcePO implements Serializable{
 		this.discussType = discussType;
 	}
 
-	@Column(name="rentType")
+	@Column(name = "rentType")
 	public short getRentType() {
 		return rentType;
 	}
@@ -255,7 +255,7 @@ public class HouseSourcePO implements Serializable{
 		this.rentType = rentType;
 	}
 
-	@Column(name="indoores")
+	@Column(name = "indoores")
 	public String getIndoores() {
 		return indoores;
 	}
@@ -264,7 +264,7 @@ public class HouseSourcePO implements Serializable{
 		this.indoores = indoores;
 	}
 
-	@Column(name="history")
+	@Column(name = "history")
 	public String getHistory() {
 		return history;
 	}
@@ -273,16 +273,16 @@ public class HouseSourcePO implements Serializable{
 		this.history = history;
 	}
 
-	@Column(name="propertyFee")
-	public float getPropertyFee() {
+	@Column(name = "propertyFee")
+	public long getPropertyFee() {
 		return propertyFee;
 	}
 
-	public void setPropertyFee(float propertyFee) {
+	public void setPropertyFee(long propertyFee) {
 		this.propertyFee = propertyFee;
 	}
 
-	@Column(name="elevator")
+	@Column(name = "elevator")
 	public short getElevator() {
 		return elevator;
 	}
@@ -291,7 +291,7 @@ public class HouseSourcePO implements Serializable{
 		this.elevator = elevator;
 	}
 
-	@Column(name="onlyHousing")
+	@Column(name = "onlyHousing")
 	public short getOnlyHousing() {
 		return onlyHousing;
 	}
@@ -300,7 +300,7 @@ public class HouseSourcePO implements Serializable{
 		this.onlyHousing = onlyHousing;
 	}
 
-	@Column(name="documentsDate")
+	@Column(name = "documentsDate")
 	public Timestamp getDocumentsDate() {
 		return documentsDate;
 	}
@@ -309,7 +309,7 @@ public class HouseSourcePO implements Serializable{
 		this.documentsDate = documentsDate;
 	}
 
-	@Column(name="allowLoan")
+	@Column(name = "allowLoan")
 	public short getAllowLoan() {
 		return allowLoan;
 	}
@@ -318,7 +318,7 @@ public class HouseSourcePO implements Serializable{
 		this.allowLoan = allowLoan;
 	}
 
-	@Column(name="beingLoan")
+	@Column(name = "beingLoan")
 	public short getBeingLoan() {
 		return beingLoan;
 	}
@@ -327,7 +327,7 @@ public class HouseSourcePO implements Serializable{
 		this.beingLoan = beingLoan;
 	}
 
-	@Column(name="checkingTime")
+	@Column(name = "checkingTime")
 	public String getCheckingTime() {
 		return checkingTime;
 	}
@@ -337,7 +337,7 @@ public class HouseSourcePO implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cuid", referencedColumnName="uid")
+	@JoinColumn(name = "cuid", referencedColumnName = "uid")
 	public UserPO getCreate() {
 		return create;
 	}
@@ -346,7 +346,7 @@ public class HouseSourcePO implements Serializable{
 		this.create = create;
 	}
 
-	@Column(name="createTime")
+	@Column(name = "createTime")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -356,7 +356,7 @@ public class HouseSourcePO implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "fuid", referencedColumnName="uid")
+	@JoinColumn(name = "fuid", referencedColumnName = "uid")
 	public UserPO getFollowUser() {
 		return followUser;
 	}
@@ -365,7 +365,7 @@ public class HouseSourcePO implements Serializable{
 		this.followUser = followUser;
 	}
 
-	@Column(name="housingGrade")
+	@Column(name = "housingGrade")
 	public String getHousingGrade() {
 		return housingGrade;
 	}
@@ -374,7 +374,7 @@ public class HouseSourcePO implements Serializable{
 		this.housingGrade = housingGrade;
 	}
 
-	@Column(name="status")
+	@Column(name = "status")
 	public short getStatus() {
 		return status;
 	}
@@ -383,7 +383,7 @@ public class HouseSourcePO implements Serializable{
 		this.status = status;
 	}
 
-	@Column(name="path")
+	@Column(name = "path")
 	public String getPath() {
 		return path;
 	}
@@ -391,9 +391,9 @@ public class HouseSourcePO implements Serializable{
 	public void setPath(String path) {
 		this.path = path;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "keyer", referencedColumnName="uid")
+	@JoinColumn(name = "keyer", referencedColumnName = "uid")
 	public UserPO getKeyer() {
 		return keyer;
 	}
@@ -403,7 +403,7 @@ public class HouseSourcePO implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "did", referencedColumnName="did")
+	@JoinColumn(name = "did", referencedColumnName = "did")
 	public DepartmentPO getDepartment() {
 		return department;
 	}
@@ -413,7 +413,7 @@ public class HouseSourcePO implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "rid", referencedColumnName="did")
+	@JoinColumn(name = "rid", referencedColumnName = "did")
 	public DepartmentPO getRegion() {
 		return region;
 	}
@@ -422,7 +422,7 @@ public class HouseSourcePO implements Serializable{
 		this.region = region;
 	}
 
-	@Column(name="comment")
+	@Column(name = "comment")
 	public String getComment() {
 		return comment;
 	}
@@ -431,8 +431,4 @@ public class HouseSourcePO implements Serializable{
 		this.comment = comment;
 	}
 
-	
-	
-	
-	
 }

@@ -156,6 +156,14 @@
             url = server + api.url;
             opts["authentication"] = params.authentication;
         }
+        
+        if (api.type == 'update' && api.tranargs){
+            $.each(opts, function(k, v){
+                if(api.tranargs.args.indexOf(k.replace(/\[\d+\]/, '')) != -1){
+                    utils.accExtend(opts, k);
+                }
+            });
+        }
 
         $.ajax({
             url: url,
@@ -169,6 +177,24 @@
                 }
                 
                 if (res.errorCode == 0) {
+                    
+                    if((api.type == 'query' && api.tranargs) || (api.type == "update" && api.tranargs.query)){
+                        
+                        var tranargs = api.tranargs.query ? api.tranargs.query : api.tranargs;
+                        
+                        $.each(tranargs, function(i, v){
+                            
+                            com.getProp(res, v.result, '-', function(o){
+                                if($.isArray(o)){
+                                    $.each(o, function(i, vv){
+                                        utils.accReduce(vv, v.args);
+                                    });
+                                }else if($.isPlainObject(o)){
+                                    utils.accReduce(o, v.args);
+                                }
+                            });
+                        });
+                    }
                 	
                 	if(api.cache) {
                 		params[api.cache] = res;
@@ -281,22 +307,17 @@
         var _placement = placement == "" || placement == null || placement == undefined ? 'right' : placement;
 
         var _count = 0;
-
+        
         $.each(com.validator, function (k, value) {
 
             com.focusPage(_scopeID + " ." + value.type + ":visible").each(function (i, v) {
 
                 var $this = $(v);
-
+                
                 if (!$this.prop("disabled")) {
 
-                    var $datafor = $this;
-
-                    if ($this.data("for")) {
-                        $datafor = $("#" + $this.data("for"));
-                    }
                     if (value.func) {
-                        if (value.func($datafor)) {
+                        if (value.func($this)) {
                             com.showPopover($this, value, _placement);
                             _count++;
                         } else {
@@ -306,14 +327,14 @@
                         return true;
                     } else {
                         var _regex = value.regex;
-
-                        if (!( _regex.test($datafor.val()))) {
+                        
+                        if (!_regex.test($this.val())) {
                             com.showPopover($this, value, _placement);
                             _count++;
                         }
                     }
                 }
-            })
+            });
         });
 
         return _count == 0 ? false : true;
@@ -693,9 +714,11 @@
 
         var $media = '', imgUrl = '';
 
-        if (type) {
+        if (type == 1) {
             $media = config.dmedia;
             imgUrl = url ? $media + url + '_' + alt + '.jpg' : defaultUrl;
+        } else if (type == 2) {
+            return com.showObs($e, url, width, height, alt, defaultUrl, type);
         } else {
             $media = config.media;
             imgUrl = url ? $media + api.common.showImg.url + '?imgBasePath=' + url + '&divFlag=1&width=' + width + '&height=' + height + '&timestamp=' + new Date().getTime() : defaultUrl;
@@ -710,6 +733,16 @@
     showOss: function ($e, url, width, height, alt, defaultUrl, type) {
 
         var imgUrl = url + '?x-oss-process=image/resize,m_fill,h_' + height + ',w_' + width;
+
+        $e.attr("src", imgUrl).attr("alt", alt).error(function () {
+            $(this).hide();
+        });
+
+        return url;
+    },
+    showObs: function ($e, url, width, height, alt, defaultUrl, type) {
+        
+        var imgUrl = url + '?x-image-process=image/resize,m_fill,h_' + height + ',w_' + width;
 
         $e.attr("src", imgUrl).attr("alt", alt).error(function () {
             $(this).hide();
@@ -1105,6 +1138,17 @@
             });
         });
     },
+    /**
+     * 上传文件/图片
+     * @param container 上传容器
+     * @param title 标题
+     * @param clazz 样式
+     * @param exts 支持格式
+     * @param args 请求参数
+     * @param limit 限制数量
+     * @param success 成功回调
+     * @param fail 失败回调
+     */
     uploadify: function(container, title, clazz, exts, args, limit, success, fail){
         
         if(container && typeof(container) == "object" && container.length) container = container;
@@ -1144,6 +1188,31 @@
                 }
             }
         });
+    },
+    /**
+     * 获取对象中属性
+     * @param o 对象
+     * @param props 属性 , 可以为字符串或数组
+     * @param flag 拆分属性分隔标识
+     * @param callback 回调方法
+     */
+    getProp: function(o, props, flag, callback){
+        
+        if(!props) callback(o);
+        
+        if(typeof props == 'string') props = props.split(flag);
+
+        var prop = props.shift();
+
+        if (props.length == 0) {
+            callback(o[prop]);
+        } else if ($.isArray(o[prop])) {
+            $.each(o[prop], function(i, v){
+                com.getProp(v, $.extend([], props), flag, callback);
+            });
+        } else {
+            com.getProp(o[prop], props, flag, callback);
+        }
     }
 };
 

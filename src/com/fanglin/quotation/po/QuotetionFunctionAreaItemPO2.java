@@ -18,34 +18,34 @@ public class QuotetionFunctionAreaItemPO2 extends QuotetionFunctionAreaItemPO im
 	private long qfaiId;
 
 	private long qfaid;
-	
+
 	private long qiid;
-	
+
 	private String name;
-	
-	private float unitPrice;
-	
+
+	private int unitPrice;
+
 	private int index;
 
 	private String formula;
-	
-	private float num;
-	
+
+	private int num;
+
 	private short type;
-	
+
 	private short subtype;
-	
+
 	private String measurementUnit;
-	
+
 	private String workType;
-	
+
 	private short discount;
-	
+
 	private String content;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="qfaiId")
+	@Column(name = "qfaiId")
 	public long getQfaiId() {
 		return qfaiId;
 	}
@@ -54,7 +54,7 @@ public class QuotetionFunctionAreaItemPO2 extends QuotetionFunctionAreaItemPO im
 		this.qfaiId = qfaiId;
 	}
 
-	@Column(name="qfaid")
+	@Column(name = "qfaid")
 	public long getQfaid() {
 		return qfaid;
 	}
@@ -63,7 +63,7 @@ public class QuotetionFunctionAreaItemPO2 extends QuotetionFunctionAreaItemPO im
 		this.qfaid = qfaid;
 	}
 
-	@Column(name="qiid")
+	@Column(name = "qiid")
 	public long getQiid() {
 		return qiid;
 	}
@@ -72,7 +72,7 @@ public class QuotetionFunctionAreaItemPO2 extends QuotetionFunctionAreaItemPO im
 		this.qiid = qiid;
 	}
 
-	@Column(name="name")
+	@Column(name = "name")
 	public String getName() {
 		return name;
 	}
@@ -81,16 +81,16 @@ public class QuotetionFunctionAreaItemPO2 extends QuotetionFunctionAreaItemPO im
 		this.name = name;
 	}
 
-	@Column(name="unitPrice")
-	public float getUnitPrice() {
+	@Column(name = "unitPrice")
+	public int getUnitPrice() {
 		return unitPrice;
 	}
 
-	public void setUnitPrice(float unitPrice) {
+	public void setUnitPrice(int unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 
-	@Column(name="[index]")
+	@Column(name = "[index]")
 	public int getIndex() {
 		return index;
 	}
@@ -99,7 +99,7 @@ public class QuotetionFunctionAreaItemPO2 extends QuotetionFunctionAreaItemPO im
 		this.index = index;
 	}
 
-	@Column(name="formula")
+	@Column(name = "formula")
 	public String getFormula() {
 		return formula;
 	}
@@ -108,16 +108,16 @@ public class QuotetionFunctionAreaItemPO2 extends QuotetionFunctionAreaItemPO im
 		this.formula = formula;
 	}
 
-	@Column(name="num")
-	public float getNum() {
+	@Column(name = "num")
+	public int getNum() {
 		return num;
 	}
 
-	public void setNum(float num) {
+	public void setNum(int num) {
 		this.num = num;
 	}
 
-	@Column(name="type")
+	@Column(name = "type")
 	public short getType() {
 		return type;
 	}
@@ -126,7 +126,7 @@ public class QuotetionFunctionAreaItemPO2 extends QuotetionFunctionAreaItemPO im
 		this.type = type;
 	}
 
-	@Column(name="subtype")
+	@Column(name = "subtype")
 	public short getSubtype() {
 		return subtype;
 	}
@@ -135,7 +135,7 @@ public class QuotetionFunctionAreaItemPO2 extends QuotetionFunctionAreaItemPO im
 		this.subtype = subtype;
 	}
 
-	@Column(name="measurementUnit")
+	@Column(name = "measurementUnit")
 	public String getMeasurementUnit() {
 		return measurementUnit;
 	}
@@ -144,7 +144,7 @@ public class QuotetionFunctionAreaItemPO2 extends QuotetionFunctionAreaItemPO im
 		this.measurementUnit = measurementUnit;
 	}
 
-	@Column(name="workType")
+	@Column(name = "workType")
 	public String getWorkType() {
 		return workType;
 	}
@@ -153,7 +153,7 @@ public class QuotetionFunctionAreaItemPO2 extends QuotetionFunctionAreaItemPO im
 		this.workType = workType;
 	}
 
-	@Column(name="discount")
+	@Column(name = "discount")
 	public short getDiscount() {
 		return discount;
 	}
@@ -162,7 +162,7 @@ public class QuotetionFunctionAreaItemPO2 extends QuotetionFunctionAreaItemPO im
 		this.discount = discount;
 	}
 
-	@Column(name="content")
+	@Column(name = "content")
 	public String getContent() {
 		return content;
 	}

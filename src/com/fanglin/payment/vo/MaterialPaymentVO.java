@@ -49,33 +49,33 @@ public class MaterialPaymentVO implements Serializable{
 	
 	private Timestamp confirmTime;
 	
-	private Float referMoney;
+	private Long referMoney;
 	
-	private Float cash;
+	private Long cash;
 	
 	private String cashInfo;
 	
-	private Float bank;
+	private Long bank;
 	
 	private String bankInfo;
 	
-	private Float checkv;
+	private Long checkv;
 	
 	private String checkvBank;
 	
-	private Float installment;
+	private Long installment;
 	
 	private String installmentBank;
 	
-	private Float accounts;
+	private Long accounts;
 	
 	private String accountsBank;
 	
-	private Float advance;
+	private Long advance;
 	
 	private Short advanceType;
 	
-	private Float coupon;
+	private Long coupon;
 	
 	private Short couponType;
 	
@@ -207,19 +207,19 @@ public class MaterialPaymentVO implements Serializable{
 		this.confirmTime = confirmTime;
 	}
 
-	public Float getReferMoney(){
+	public Long getReferMoney() {
 		return referMoney;
 	}
 
-	public void setReferMoney(Float referMoney){
+	public void setReferMoney(Long referMoney) {
 		this.referMoney = referMoney;
 	}
 
-	public Float getCash(){
+	public Long getCash() {
 		return cash;
 	}
 
-	public void setCash(Float cash){
+	public void setCash(Long cash) {
 		this.cash = cash;
 	}
 
@@ -231,84 +231,84 @@ public class MaterialPaymentVO implements Serializable{
 		this.cashInfo = cashInfo;
 	}
 
-	public Float getBank(){
+	public Long getBank() {
 		return bank;
 	}
 
-	public void setBank(Float bank){
+	public void setBank(Long bank) {
 		this.bank = bank;
 	}
 
-	public String getCheckvBank(){
-		return checkvBank;
-	}
-
-	public void setCheckvBank(String checkvBank){
-		this.checkvBank = checkvBank;
-	}
-	
-	public Float getInstallment(){
-		return installment;
-	}
-
-	public void setInstallment(Float installment){
-		this.installment = installment;
-	}
-
-	public String getInstallmentBank(){
-		return installmentBank;
-	}
-
-	public void setInstallmentBank(String installmentBank){
-		this.installmentBank = installmentBank;
-	}
-
-	public Float getAccounts(){
-		return accounts;
-	}
-
-	public void setAccounts(Float accounts){
-		this.accounts = accounts;
-	}
-
-	public String getAccountsBank(){
-		return accountsBank;
-	}
-
-	public void setAccountsBank(String accountsBank){
-		this.accountsBank = accountsBank;
-	}
-
-	public Float getCoupon(){
-		return coupon;
-	}
-
-	public void setCoupon(Float coupon){
-		this.coupon = coupon;
-	}
-
-	public Float getCheckv(){
+	public Long getCheckv() {
 		return checkv;
 	}
 
-	public void setCheckv(Float checkv){
+	public void setCheckv(Long checkv) {
 		this.checkv = checkv;
 	}
 
-	public Short getCouponType(){
-		return couponType;
+	public String getCheckvBank() {
+		return checkvBank;
 	}
 
-	public void setCouponType(Short couponType){
-		this.couponType = couponType;
+	public void setCheckvBank(String checkvBank) {
+		this.checkvBank = checkvBank;
 	}
 
-	public Float getAdvance(){
+	public Long getInstallment() {
+		return installment;
+	}
+
+	public void setInstallment(Long installment) {
+		this.installment = installment;
+	}
+
+	public String getInstallmentBank() {
+		return installmentBank;
+	}
+
+	public void setInstallmentBank(String installmentBank) {
+		this.installmentBank = installmentBank;
+	}
+
+	public Long getAccounts() {
+		return accounts;
+	}
+
+	public void setAccounts(Long accounts) {
+		this.accounts = accounts;
+	}
+
+	public String getAccountsBank() {
+		return accountsBank;
+	}
+
+	public void setAccountsBank(String accountsBank) {
+		this.accountsBank = accountsBank;
+	}
+
+	public Long getAdvance() {
 		return advance;
 	}
 
-	public void setAdvance(Float advance){
+	public void setAdvance(Long advance) {
 		this.advance = advance;
+	}
+
+	public Long getCoupon() {
+		return coupon;
+	}
+
+	public void setCoupon(Long coupon) {
+		this.coupon = coupon;
+	}
+
+	public Short getCouponType() {
+		return couponType;
+	}
+
+	public void setCouponType(Short couponType) {
+		this.couponType = couponType;
 	}
 
 	public Short getAdvanceType(){

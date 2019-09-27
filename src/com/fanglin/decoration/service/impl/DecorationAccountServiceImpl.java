@@ -18,7 +18,6 @@ import com.fanglin.decoration.service.DecorationAccountService;
 import com.fanglin.decoration.vo.DecorationAccountVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
-import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -53,18 +52,12 @@ public class DecorationAccountServiceImpl implements DecorationAccountService{
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void makeDecorationAccount(DecorationAccountVO decorationAccountVO,Authentication authentication) throws FLException {
+	public void makeDecorationAccount(DecorationAccountVO decorationAccountVO, Authentication authentication) throws FLException {
 		
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationAccountVO.getOrderId());
 		
-		if(decorationPO == null){
-			throw new FLException(140013, "订单不存在");
-		}
-		
-		UserPO operater = userDao.queryUserByUserId(authentication.getUserId());
-		
 		if(decorationPO.getStatus() != DecorationPO.STATUS_SIGNED_INT){
-			throw new FLException(140004,"装修单状态不可操作");
+			throw new FLException(140004, "装修单状态不可操作");
 		}
 		
 		decorationPO.setStatus(DecorationPO.STATUS_FINAL_INT);
@@ -73,13 +66,9 @@ public class DecorationAccountServiceImpl implements DecorationAccountService{
 		
 		DecorationAccountPO decorationAccountPO = new DecorationAccountPO();
 		
-		Float servicePrice = (float) Math.floor(Arith.mul(decorationAccountVO.getMaterialPrice(), decorationAccountVO.getServiceRate()));
+		BeanUtil.copyPropertie(decorationAccountVO, decorationAccountPO);
 		
-		BeanUtil.copyProperties(decorationAccountVO,decorationAccountPO);
-		
-		decorationAccountPO.setMaterialPrice(decorationAccountVO.getMaterialPrice());
-		decorationAccountPO.setType(decorationAccountVO.getType());
-		decorationAccountPO.setServicePrice(servicePrice);
+		UserPO operater = userDao.queryUserByUserId(authentication.getUserId());
 		
 		decorationAccountDao.save(decorationAccountPO);
 		

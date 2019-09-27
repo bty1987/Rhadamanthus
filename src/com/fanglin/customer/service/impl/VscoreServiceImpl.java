@@ -47,31 +47,31 @@ public class VscoreServiceImpl implements VscoreService {
 
 		return vscoreVO;
 	}
-	
+
 	@Override
 	public void pageVscoreRecordByUnionId(Paging paging, List<Filter> filters, String unionId) {
-		
+
 		List<VscoreRecordPO> vscoreRecordPOs = vscoreRecordDao.pageVscoreRecordByUnionId(paging, filters, unionId);
 		List<VscoreRecordVO> vscoreRecordVOs = new ArrayList<VscoreRecordVO>();
-		
-		if(vscoreRecordPOs.size() != 0 && vscoreRecordPOs != null){
-			
+
+		if (vscoreRecordPOs.size() != 0 && vscoreRecordPOs != null) {
+
 			for (VscoreRecordPO vscoreRecordPO : vscoreRecordPOs) {
-				
+
 				VscoreRecordVO vscoreRecordVO = new VscoreRecordVO(new UserBaseVO());
-				
+
 				BeanUtil.copyProperties(vscoreRecordPO, vscoreRecordVO, Arrays.asList("operater"));
 				BeanUtil.copyProperties(vscoreRecordPO.getOperater(), vscoreRecordVO.getOperater(), Arrays.asList("duty", "dept"));
-				
+
 				vscoreRecordVO.setOperateTime(vscoreRecordPO.getOperateTime());
-				
+
 				vscoreRecordVOs.add(vscoreRecordVO);
 			}
 		}
-		
+
 		paging.setData(vscoreRecordVOs);
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void raiseVscore(VscoreVO vscoreVO, String userId) {
@@ -79,17 +79,17 @@ public class VscoreServiceImpl implements VscoreService {
 		VscorePO vscorePO = vscoreDao.queryVscoreByUnionId(vscoreVO.getUnionId());
 
 		if (vscorePO != null) {
-			
+
 			vscoreRecord(vscorePO.getUnionId(), vscoreVO.getScore(), userDao.queryUserByUserId(userId), VscoreRecordPO.TYPE_ADDED_INT, VscoreRecordPO.STATUS_INITIAL_INT);
 
 		} else {
 			VscorePO vscorePOs = new VscorePO();
-			
+
 			BeanUtil.copyProperties(vscoreVO, vscorePOs);
 			vscorePOs.setScore(VscorePO.COLUMN_SCORE_INT);
-			
+
 			vscoreDao.save(vscorePOs);
-			
+
 			vscoreRecord(vscorePOs.getUnionId(), vscoreVO.getScore(), userDao.queryUserByUserId(userId), VscoreRecordPO.TYPE_ADDED_INT, VscoreRecordPO.STATUS_INITIAL_INT);
 		}
 
@@ -98,64 +98,64 @@ public class VscoreServiceImpl implements VscoreService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void pickupVscore(VscoreVO vscoreVO, String userId) throws FLException {
-		
+
 		VscorePO vscorePO = vscoreDao.queryVscoreByUnionId(vscoreVO.getUnionId());
-		
+
 		if (vscorePO == null) {
 			throw new FLException(160036, "积分不存在");
 		}
-		
+
 		if (vscoreVO.getScore() > vscorePO.getScore()) {
 			throw new FLException(160037, "积分不足");
 		}
-		
+
 		vscoreRecord(vscorePO.getUnionId(), vscoreVO.getScore(), userDao.queryUserByUserId(userId), VscoreRecordPO.TYPE_EXTRACT_INT, VscoreRecordPO.STATUS_INITIAL_INT);
-		
-		vscorePO.setScore((int) Arith.sub(vscorePO.getScore(), vscoreVO.getScore()));
-		
+
+		vscorePO.setScore(Arith.sub(vscorePO.getScore(), vscoreVO.getScore()));
+
 		vscoreDao.update(vscorePO);
-		
+
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void updateVscoreRecordForStatus(VscoreRecordVO vscoreRecordVO) {
-		
+
 		VscoreRecordPO vscoreRecordPO = vscoreRecordDao.get(vscoreRecordVO.getVsrid());
-		
+
 		vscoreRecordPO.setStatus(vscoreRecordVO.getStatus());
-		
+
 		vscoreRecordDao.update(vscoreRecordPO);
-		
+
 		VscorePO vscorePO = vscoreDao.queryVscoreByUnionId(vscoreRecordPO.getUnionId());
-		
-		if(vscoreRecordPO.getType() == VscoreRecordPO.TYPE_EXTRACT_INT && vscoreRecordPO.getStatus() == VscoreRecordPO.STATUS_DOWN_INT){
-			
-			vscorePO.setScore((int) Arith.add(vscorePO.getScore(), vscoreRecordPO.getScore()));
-			 
+
+		if (vscoreRecordPO.getType() == VscoreRecordPO.TYPE_EXTRACT_INT && vscoreRecordPO.getStatus() == VscoreRecordPO.STATUS_DOWN_INT) {
+
+			vscorePO.setScore(Arith.add(vscorePO.getScore(), vscoreRecordPO.getScore()));
+
 		}
-		
-		if(vscoreRecordPO.getType() == VscoreRecordPO.TYPE_ADDED_INT && vscoreRecordPO.getStatus() == VscoreRecordPO.STATUS_PASS_INT){
-			
-			vscorePO.setScore((int) Arith.add(vscorePO.getScore(), vscoreRecordPO.getScore()));
-			
+
+		if (vscoreRecordPO.getType() == VscoreRecordPO.TYPE_ADDED_INT && vscoreRecordPO.getStatus() == VscoreRecordPO.STATUS_PASS_INT) {
+
+			vscorePO.setScore(Arith.add(vscorePO.getScore(), vscoreRecordPO.getScore()));
+
 		}
-		
+
 		vscoreDao.update(vscorePO);
-		
+
 	}
-	
+
 	public void vscoreRecord(String unionId, Integer score, UserPO operater, Short type, Short status) {
 
 		VscoreRecordPO vscoreRecordPO = new VscoreRecordPO();
-		
+
 		vscoreRecordPO.setUnionId(unionId);
 		vscoreRecordPO.setScore(score);
 		vscoreRecordPO.setOperater(operater);
 		vscoreRecordPO.setOperateTime(new Timestamp(System.currentTimeMillis()));
 		vscoreRecordPO.setType(type);
 		vscoreRecordPO.setStatus(status);
-		
+
 		vscoreRecordDao.save(vscoreRecordPO);
 	}
 

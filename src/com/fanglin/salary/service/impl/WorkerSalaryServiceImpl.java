@@ -147,7 +147,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	public List<WorkerSalaryVO> queryWorkerSalary(WorkerSalaryVO workerSalaryVO) {
 
 		List<WorkerSalaryPO> workerSalaryPOs = new ArrayList<WorkerSalaryPO>();
-		
+
 		workerSalaryPOs = workerSalaryDao.queryWorkerSalary(workerSalaryVO.getUser().getUserId(), workerSalaryVO.getCsid());
 
 		List<WorkerSalaryVO> workerSalarys = new ArrayList<WorkerSalaryVO>();
@@ -205,24 +205,21 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		WorkerBalancePO workerBalancePO = workerBalanceDao.queryWorkerBalanceByUserId(worker.getUid(), company);
 		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig("workerDepositLimit", company);
 
-		short _type = 0;
-		float _money = Math.abs(workerSalaryVO.getMoney());
-
 		if (workerBalancePO == null) {
 
 			workerBalancePO = new WorkerBalancePO();
 
 			workerBalancePO.setUser(worker);
-			workerBalancePO.setToplimit(systemConfigPO == null ? 0f : Float.parseFloat(systemConfigPO.getValue()));
-			workerBalancePO.setDeposit(0f);
-			workerBalancePO.setSalary(0f);
+			workerBalancePO.setToplimit(systemConfigPO == null ? 0 : Arith.mul(Integer.valueOf(systemConfigPO.getValue()), 1000));
+			workerBalancePO.setDeposit(0);
+			workerBalancePO.setSalary(0);
 			workerBalancePO.setStatus(WorkerBalancePO.STATUS_VALID_INT);
 			workerBalancePO.setCompany(company);
 
 			workerBalanceDao.save(workerBalancePO);
 		}
 
-		addSalary(_type, _money, workerSalaryVO, workerBalancePO, workerSalaryPO, company);
+		addSalary(workerSalaryVO, workerBalancePO, workerSalaryPO, company);
 
 		return 0;
 	}
@@ -268,7 +265,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 						}
 					} else {
 						_workerSalary.setSalary(_workerSalary.getMoney());
-						_workerSalary.setDeposit(0f);
+						_workerSalary.setDeposit(0);
 						workerCollect.setSalary(Arith.add(workerCollect.getSalary(), _workerSalary.getMoney()));
 					}
 				}
@@ -308,17 +305,19 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 				throw new FLException(280004, "工人帐户不存在");
 			}
 
-			if (_workerSalary.getType() == WorkerSalaryPO.TYPE_ADD_INT) {// 类型加 减操作
+			if (_workerSalary.getType() == WorkerSalaryPO.TYPE_ADD_INT) {// 类型加
+																			// 减操作
 				if (Arith.sub(workerBalancePO.getSalary(), _workerSalary.getMoney()) < 0) {
 					workerBalancePO.setDeposit(Arith.sub(workerBalancePO.getDeposit(), Arith.sub(_workerSalary.getMoney(), workerBalancePO.getSalary())));
-					workerBalancePO.setSalary(0f);
+					workerBalancePO.setSalary(0);
 				} else {
 					workerBalancePO.setSalary(Arith.sub(workerBalancePO.getSalary(), _workerSalary.getMoney()));
 					workerBalancePO.setDeposit(workerBalancePO.getDeposit());
 				}
 			}
 
-			if (_workerSalary.getType() == WorkerSalaryPO.TYPE_SUB_INT) {// 类型减 加操作
+			if (_workerSalary.getType() == WorkerSalaryPO.TYPE_SUB_INT) {// 类型减
+																			// 加操作
 				if (Arith.sub(Arith.add(workerBalancePO.getDeposit(), _workerSalary.getMoney()), workerBalancePO.getToplimit()) > 0) {
 					workerBalancePO.setSalary(Arith.add(workerBalancePO.getSalary(), Arith.sub(Arith.add(workerBalancePO.getDeposit(), _workerSalary.getMoney()), workerBalancePO.getToplimit())));
 					workerBalancePO.setDeposit(workerBalancePO.getToplimit());
@@ -377,14 +376,14 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			} else {
 
 				workSalaryPO.setDeposit(workerSalarys.getMoney());
-				workSalaryPO.setSalary(0f);
+				workSalaryPO.setSalary(0);
 				workerBalancePO.setDeposit(Arith.add(workerBalancePO.getDeposit(), workerSalarys.getMoney()));
 			}
 
 		} else {// 超过质保金上限
 
 			workSalaryPO.setSalary(workerSalarys.getMoney());
-			workSalaryPO.setDeposit(0f);
+			workSalaryPO.setDeposit(0);
 			workerBalancePO.setSalary(Arith.add(workerBalancePO.getSalary(), workerSalarys.getMoney()));
 
 		}
@@ -526,37 +525,37 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 		WorkerSalaryPO workerSalaryPO = new WorkerSalaryPO();
 		WorkerSalaryPO workSalary = new WorkerSalaryPO();
-		
+
 		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig("workerDepositLimit", company);
-	
+
 		if (workerBalanceSource == null) {
-		
+
 			workerBalanceSource = new WorkerBalancePO();
 			workerBalanceSource.setUser(source);
-			workerBalanceSource.setToplimit(systemConfigPO==null?0f:Float.parseFloat(systemConfigPO.getValue()));
-			workerBalanceSource.setDeposit(0f);
-			workerBalanceSource.setSalary(0f);
+			workerBalanceSource.setToplimit(systemConfigPO == null ? 0 : Arith.mul(Integer.valueOf(systemConfigPO.getValue()), 1000));
+			workerBalanceSource.setDeposit(0);
+			workerBalanceSource.setSalary(0);
 			workerBalanceSource.setStatus(WorkerBalancePO.STATUS_VALID_INT);
 			workerBalanceSource.setCompany(company);
 
 			workerBalanceDao.save(workerBalanceSource);
-		} 
-	
+		}
+
 		tranWorkerSalaryTOpayWorkerSalary(workerSalaryPO, workerSalarys, workerBalanceSource);
-		
+
 		if (workerBalancetTarget == null) {
-			
+
 			workerBalancetTarget = new WorkerBalancePO();
 			workerBalancetTarget.setUser(target);
-			workerBalanceSource.setToplimit(systemConfigPO==null?0f:Float.parseFloat(systemConfigPO.getValue()));
-			workerBalancetTarget.setDeposit(0f);
-			workerBalancetTarget.setSalary(0f);
+			workerBalanceSource.setToplimit(systemConfigPO == null ? 0 : Arith.mul(Integer.valueOf(systemConfigPO.getValue()), 1000));
+			workerBalancetTarget.setDeposit(0);
+			workerBalancetTarget.setSalary(0);
 			workerBalancetTarget.setStatus(WorkerBalancePO.STATUS_VALID_INT);
 			workerBalancetTarget.setCompany(company);
-		
+
 			workerBalanceDao.save(workerBalancetTarget);
 		}
-	
+
 		workerSalaryPO.setCompany(company);
 		workerSalaryPO.setComment(workerSalarys.getComment());
 		workerSalaryPO.setCreater(createWorker);
@@ -580,8 +579,8 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		workSalary.setOnetype(WorkerSalaryPO.ONETYPE_TRAN_INT);
 		workSalary.setTwotype(WorkerSalaryPO.TWOTYPE_MAINTAIN_INT);
 		workSalary.setCwsid(workerSalaryPO.getWsId());
-		workSalary.setDeposit(0f);
-		workSalary.setSalary(0f);
+		workSalary.setDeposit(0);
+		workSalary.setSalary(0);
 
 		workerSalaryDao.save(workSalary);
 
@@ -664,29 +663,28 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 	public void chargeWorkerSalary(WorkerSalaryPO workerSalaryPO, WorkerSalaryVO workerSalarys, WorkerBalancePO workerBalancePO) throws FLException {
 
-		Float money = workerSalarys.getMoney(); // 操作金额
-		Float workerBalance = workerBalancePO.getDeposit(); // 工人账户质保金
-		Float workerSalary = workerBalancePO.getSalary(); // 工人账户工费
+		long money = workerSalarys.getMoney(); // 操作金额
+		long workerBalance = workerBalancePO.getDeposit(); // 工人账户质保金
+		long workerSalary = workerBalancePO.getSalary(); // 工人账户工费
 
-		Float _salary = 0f;
-		Float difference = 0f;
+		long _salary = 0;
+		long difference = 0;
 
 		if (Arith.sub(workerSalary, money) < 0) {
 
 			difference = Arith.sub(money, workerSalary); // 操作金额大于工人账户工费的剩余操作金额
 
 			_salary = workerSalary;
-			workerBalancePO.setSalary(0f);
+			workerBalancePO.setSalary(0);
 			workerBalancePO.setDeposit(Arith.sub(workerBalance, difference));
-			workerBalanceDao.update(workerBalancePO);
 
+			workerBalanceDao.update(workerBalancePO);
 		} else {
 
 			_salary = money;
 			workerBalancePO.setSalary(Arith.sub(workerSalary, money));
 
 			workerBalanceDao.update(workerBalancePO);
-
 		}
 
 		workerSalaryPO.setMoney(money);
@@ -697,19 +695,19 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 	public void tranWorkerSalaryTOpayWorkerSalary(WorkerSalaryPO workerSalaryPO, WorkerSalaryVO workerSalarys, WorkerBalancePO workerBalancePO) throws FLException {
 
-		Float money = workerSalarys.getMoney(); // 操作金额
-		Float workerBalance = workerBalancePO.getDeposit(); // 扣款人工人账户质保金
-		Float workerSalary = workerBalancePO.getSalary(); // 扣款人工人账户工费
+		long money = workerSalarys.getMoney(); // 操作金额
+		long workerBalance = workerBalancePO.getDeposit(); // 扣款人工人账户质保金
+		long workerSalary = workerBalancePO.getSalary(); // 扣款人工人账户工费
 
-		Float _salary = 0f;
-		Float difference = 0f;
+		long _salary = 0;
+		long difference = 0;
 
 		if (Arith.sub(workerSalary, money) < 0) {
 
 			difference = Arith.sub(money, workerSalary); // 操作金额大于工人账户工费的剩余操作金额
 
 			_salary = workerSalary;
-			workerBalancePO.setSalary(0f);
+			workerBalancePO.setSalary(0);
 			workerBalancePO.setDeposit(Arith.sub(workerBalance, difference));
 
 		} else {
@@ -725,16 +723,19 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		workerSalaryPO.setDeposit(difference);
 	}
 
-	public void addSalary(short _type, float _money, WorkerSalaryVO workerSalaryVO, WorkerBalancePO workerBalancePO, WorkerSalaryPO workerSalaryPO, int company) {
+	public void addSalary(WorkerSalaryVO workerSalaryVO, WorkerBalancePO workerBalancePO, WorkerSalaryPO workerSalaryPO, int company) {
+
+		short _type = 0;
+		long _money = Math.abs(workerSalaryVO.getMoney());
 		
 		if (workerSalaryVO.getMoney() < 0) {
 
 			_type = WorkerSalaryPO.TYPE_SUB_INT;
 
-			Float workerBalanceDeposit = workerBalancePO.getDeposit(); // 工人账户质保金
-			Float workerSalary = workerBalancePO.getSalary(); // 工人账户工费
+			long workerDeposit = workerBalancePO.getDeposit(); // 工人账户质保金
+			long workerSalary = workerBalancePO.getSalary(); // 工人账户工费
 
-			Float difference = 0f;
+			long difference = 0;
 
 			if (Arith.sub(workerSalary, _money) < 0) {
 
@@ -742,21 +743,21 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 				workerSalaryPO.setSalary(workerSalary);
 				workerSalaryPO.setDeposit(difference);
-				workerBalancePO.setSalary(0f);
-				workerBalancePO.setDeposit(Arith.sub(workerBalanceDeposit, difference));
+				workerBalancePO.setSalary(0);
+				workerBalancePO.setDeposit(Arith.sub(workerDeposit, difference));
 
 				workerBalanceDao.update(workerBalancePO);
 			} else {
 
 				workerSalaryPO.setSalary(_money);
-				workerSalaryPO.setDeposit(0f);
+				workerSalaryPO.setDeposit(0);
 				workerBalancePO.setSalary(Arith.sub(workerSalary, _money));
 
 				workerBalanceDao.update(workerBalancePO);
 			}
 		} else {
-			workerSalaryPO.setSalary(0f);
-			workerSalaryPO.setDeposit(0f);
+			workerSalaryPO.setSalary(0);
+			workerSalaryPO.setDeposit(0);
 			_type = WorkerSalaryPO.TYPE_ADD_INT;
 		}
 

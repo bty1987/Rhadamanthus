@@ -32,9 +32,11 @@ jQuery(function ($) {
         },
         
         drawLineGroup: [],
-        status: {}
+        status: {},
+        
+        pageType: params['urlLoadParams'].type
     };
-
+    
     drawline.btns.saveBtn.bindClick(saveData);
     drawline.btns.saveInfoBtn.bindClick(saveInfoData);
     drawline.btns.deployedBtn.bindClick(deploved);
@@ -111,7 +113,7 @@ jQuery(function ($) {
 
             var $tableWrap = com.focusPage("#group" + gid);
             
-            if ($tableWrap.length == 0) {
+            if ($tableWrap.length == 0 && v.group.gid != null) {
                 
                 var resultList = com.focusPage("#resultList");
                 
@@ -121,6 +123,7 @@ jQuery(function ($) {
                 
                 var groupH5 = $("<h4></h4>").appendTo(groupWidgetHeader);
                 var groupStrong = $("<strong></strong>").text(v.group.name).appendTo(groupH5);
+ 
                 var groupWidgetBody = $("<div></div>").addClass("widget-body").appendTo(groupWidgetBox);
                 var groupWidgetBodyInner = $("<div></div>").addClass("widget-body-inner").css("display", "block").appendTo(groupWidgetBody);
                 var resultList = $('<div></div>').attr("id", "group" + gid).addClass("clearfix tab-pane active").appendTo(groupWidgetBodyInner);
@@ -139,9 +142,10 @@ jQuery(function ($) {
             var $btnDeplory = $('<a></a>').addClass('btn btn-minier btn-warning').html('人员部署');
             var $btnReset = $('<a></a>').addClass('btn btn-minier btn-inverse').html('重置');
             var $successBtn = $('<a></a>').addClass('btn btn-minier btn-info').html('放线');
-
-            var startTime=v.startTime.substr(11);
-            var endTime=v.endTime.substr(11);
+            if(v.startTime !=null && v.endTime != null){
+               var startTime = v.startTime.substr(11);
+               var endTime = v.endTime.substr(11);
+            }
             var actualTime=v.actualTime;
 
             var propertyArr = [
@@ -149,7 +153,9 @@ jQuery(function ($) {
                 ["面积:", v.decoration.house.buildArea, "blue"],
                 ["合同额:", v.decoration.orderTotalPrice, "blue"],
                 ["申请人:", v.appler.currentName, "grey"],
+                ["设计师:", v.decoration.designer.currentName, "grey"],
                 ["监理:", v.decoration.supervisor == null ? "" : v.decoration.supervisor.currentName, "grey"],
+                ["设计师:", v.decoration.designer.currentName, "grey"],
                 ["放线时间:", actualTime, "green"],
                 ["开始时间:", startTime, "green"],
                 ["结束时间:", endTime, "green"],
@@ -165,7 +171,7 @@ jQuery(function ($) {
                 $liProperty.appendTo($ulProperty);
             });
 
-            if (v.status == 1) {
+            if (drawline.pageType != "open" && v.status == 1){
                 $divBtnWrap.append($btnInfo).append($btnEdit).append($btnDeplory).append($btnReset).append($successBtn).appendTo($h3);
             }
 
@@ -205,10 +211,10 @@ jQuery(function ($) {
     })();
 
     var searcher = new Searcher();
-    searcher.init(["c_orderId", "c_drawLineStatus", "c_actualDate"], "condList", api.construction.queryDrawLine, function (data) {
+    searcher.init(["c_orderId", "c_designer", "c_drawLineStatus", "c_actualDate"], "condList", api.construction.queryDrawLine, function (data) {
         com.focusPage("#resultList").html("");
         displayFunc.init('resultList', data);
-    }, "pagenation", "drawLineSetupPostData", null, true, "drawLines");
+    }, "pagenation", "drawLineOpenPostData", null, true, "drawLines");
     com.focusPage("#condList").append('<button id="showDrawLineApplyInfos" style="marg" class="btn btn-xs btn-yellow btn-search">申请信息</button>');
     com.focusPage('#showDrawLineApplyInfos').on('click', function () {
         drawline.modals.applyModal.modal("show");

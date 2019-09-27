@@ -23,7 +23,7 @@ public interface VticketService {
 
 	public void registVticket(VticketVO vticketVO) throws FLException;
 
-	public void takeVticket(String userId) throws FLException;
+	public void takeVticket(VticketVO vticketVO, String userId) throws FLException;
 
 	public void freeVticket(VticketVO vticketVO, String userId) throws FLException;
 

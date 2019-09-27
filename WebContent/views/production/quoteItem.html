@@ -1,90 +1,73 @@
-
 <div>
     <div class="row">
         <div class="col-xs-12">
+            <!-- 查询条件-->
             <div id="condList" class="fl_search clearfix"></div>
+            <!--查询结果-->
+            <div id="resultList" class="clearfix tab-pane active"></div>
+            <!--分页-->
+            <div id="pagenation" class="fl-page-wrap clearfix"></div>
+        </div>
+    </div>
 
-            <div class="clearfix" id="resultList"></div>
 
-            <div class="fl-page-wrap clearfix pagination" id="pagenation" style="display: block;"></div>
+    <div class="modal fade" id="quoteItemModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">报价类型</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="name">名称</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="name" maxlength="12" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="format">型号</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="format" maxlength="12" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="belonger" class="col-sm-3 control-label no-padding-right orange">单位</label>
+                            <div class="col-sm-9">
+                                <select class="col-xs-10 col-sm-7 v_required" id="measureunit" data-placeholder="" data-toggle="popover" ></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="unitprice">单价</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="unitprice" maxlength="12" class="col-xs-10 col-sm-7  v_required v_price" data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="belonger" class="col-sm-3 control-label no-padding-right orange">类型</label>
+                            <div class="col-sm-9">
+                                <select class="col-xs-10 col-sm-7 v_required" id="quoteType" data-placeholder="" data-toggle="popover" ></select>
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveBtn" class="btn btn-primary">确定</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-
-<div id="layerAdd" style="padding: 40px 0; display: none">
-    <div class="row-fluid">
-        <form class="form-horizontal" novalidate="novalidate" id="form1">
-            <div class="widget-main">
-                <div class="row" style="margin-right:0px">
-                    <div class="col-xs-12">
-                        <div class="form-group">
-
-                            <label class="control-label col-xs-4 no-padding-right">名称<i class="icon-asterisk"></i></label>
-
-                            <div class="controls col-xs-8">
-
-                                <input type="text" class="col-xs-6 m-wrap v_required" name="name"  rules="{required:true}" >
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label class="control-label col-xs-4 no-padding-right">型号<i class="icon-asterisk"></i></label>
-
-                            <div class="controls col-xs-8">
-
-                                <input type="text" class="col-xs-6 m-wrap v_required" name="format"  rules="{required:true}" >
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label class="control-label col-xs-4 no-padding-right">单位<i class="icon-asterisk"></i></label>
-
-                            <div class="controls col-xs-8">
-
-                                <select class="col-xs-6 m-wrap v_required" name="measureunit"  rules="{required:true}"></select>
-
-                            </div>
-
-                        </div>
-
-                        <div class="form-group">
-
-                            <label class="control-label col-xs-4 no-padding-right">单价<i class="icon-asterisk"></i></label>
-
-                            <div class="controls col-xs-8">
-
-                                <input type="text" class="col-xs-6 m-wrap v_required v_price" name="unitprice"   rules="{required:true}">
-
-                            </div>
-
-                        </div>
-
-                        <div class="form-group">
-
-                            <label class="control-label col-xs-4 no-padding-right">类型<i class="icon-asterisk"></i></label>
-
-                            <div class="controls col-xs-8">
-                                <select name="quoteType" class="col-xs-6 m-wrap v_required" rules="{required:true}"></select>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-
-</div>
-
 <script type="text/javascript">
-	$.loadScript(['js/production/productionUtils.js','js/production/quoteItem.js']);
+	$.loadScript(['js/production/quoteItem.js']);
 </script>

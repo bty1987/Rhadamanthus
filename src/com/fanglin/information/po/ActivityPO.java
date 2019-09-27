@@ -41,6 +41,12 @@ public class ActivityPO implements java.io.Serializable {
 	
 	public static final short DEFAULTS_COMMON_INT = 1;
 	
+	public static final short TYPE_DECORATION_INT = 1;
+	
+	public static final short TYPE_MATERIAL_INT = 2;
+	
+	public static final short TYPE_SALES_INT = 3;
+	
 	private long aid;
 	
 	private String name;

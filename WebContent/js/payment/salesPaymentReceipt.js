@@ -33,7 +33,7 @@ jQuery(function($) {
 
     }, null, false);
 
-    var querySalesPaymentForNotInitBySrId = api.payment.querySalesPaymentForNotInitBySrId;
+    var querySalesPaymentForNotInitBySrId = api.payment.querySalesPaymentForNotInitBySrid;
 
     com.post(api.ds.payment, {}, function(res){
         for(var i=0;i<res.advanceTypeForSalesMaterial.length;i++){

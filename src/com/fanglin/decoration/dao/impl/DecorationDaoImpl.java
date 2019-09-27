@@ -28,6 +28,7 @@ import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
@@ -368,8 +369,8 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 				} else if ("salesmanType".equals(field)) {
 					query.add(query.getCriterion("salesmanType", data, op));
 				} else if ("houseArea".equals(field)) {
-					Float dataF = Float.parseFloat(data);
-					query.add(query.getCriterion("house.buildArea", dataF, op));
+					int dataF = Integer.parseInt(data);
+					query.add(query.getCriterion("house.buildArea", Arith.mul(dataF, 1000000), op));
 				} else if ("signTimeDateRange".equals(field)) {
 					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
 					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";

@@ -64,9 +64,9 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 	private DecorationDao decorationDao;
 	
 	@Override
-	public List<Float> queryAdvancePaymentByCustomerId(CustomerVO customerVO, int company) {
+	public List<Long> queryAdvancePaymentByCustomerId(CustomerVO customerVO, int company) {
 		
-		List<Float> advances = new ArrayList<Float>();
+		List<Long> advances = new ArrayList<Long>();
 		
 		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerVO.getCid(),company);
 		
@@ -76,16 +76,16 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 			advances.add(advancePaymentPO.getMaterialBalance());
 			advances.add(advancePaymentPO.getZhenglinBalance());
 		}else{
-			advances = Arrays.asList(new Float[]{0f, 0f, 0f, 0f});
+			advances = Arrays.asList(new Long[]{0L, 0L, 0L, 0L});
 		}
 		
 		return advances;
 	}
 
 	@Override
-	public List<Float> queryAdvancePaymentByOrderId(DecorationVO decorationVO) throws FLException {
+	public List<Long> queryAdvancePaymentByOrderId(DecorationVO decorationVO) throws FLException {
 		
-		List<Float> advances = new ArrayList<Float>();	
+		List<Long> advances = new ArrayList<Long>();	
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
 		
 		if(decorationPO == null){
@@ -100,7 +100,7 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 			advances.add(advancePaymentPO.getMaterialBalance());
 			advances.add(advancePaymentPO.getZhenglinBalance());
 		}else{
-			advances = Arrays.asList(new Float[]{0f, 0f, 0f, 0f});
+			advances = Arrays.asList(new Long[]{0L, 0L, 0L, 0L});
 		}
 		
 		return advances;
@@ -110,7 +110,7 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 	@Transactional(rollbackFor=Exception.class)
 	public int updateAdvancePayment(PaymentVO paymentVO, int company) throws FLException {
 		
-		float recharge = 0;
+		long recharge = 0;
 		
 		CustomerPO customerPO = customerDao.get(paymentVO.getCustomer().getCid());
 		
@@ -132,7 +132,7 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 		//计算recharge操作金额
 		recharge = PaymentServiceImpl.gatherPayment(paymentVO);
 		
-		float balance = 0;
+		long balance = 0;
 		Short type = paymentVO.getType();
 		Short paymentType = paymentVO.getPaymentType();
 		
@@ -140,7 +140,7 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 		balance = getCustomerBalanceByType(advancePaymentPO, paymentType);
 		
 		//收款(余额加上操作金额),付款(预付款余额减去操作的金额)之后得到的余额
-		float overBalance = 0;
+		long overBalance = 0;
 		if(type == PaymentPO.PAYMENT_TYPE_COLLECTION_INT){
 			overBalance = Arith.add(balance, recharge);
 		} else {
@@ -191,10 +191,10 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 	public static void setCustomerBalance(AdvancePaymentPO advancePaymentPO, CustomerVO customerVO){
 		
 		if(advancePaymentPO == null){
-			customerVO.setBalance(0f);
-			customerVO.setMaterialBalance(0f);
-			customerVO.setProjectBalance(0f);
-			customerVO.setZhenglinBalance(0f);
+			customerVO.setBalance(0L);
+			customerVO.setMaterialBalance(0L);
+			customerVO.setProjectBalance(0L);
+			customerVO.setZhenglinBalance(0L);
 		}else{
 			customerVO.setBalance(advancePaymentPO.getBalance());
 			customerVO.setMaterialBalance(advancePaymentPO.getMaterialBalance());
@@ -204,8 +204,8 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 	}
 
 	//计算当前款项类型的预付款的余额
-	public static float getCustomerBalanceByType(AdvancePaymentPO advancePaymentPO, Short type){
-		float value = 0;
+	public static long getCustomerBalanceByType(AdvancePaymentPO advancePaymentPO, Short type){
+		long value = 0;
 		
 		if(type == CustomerPO.BALANCE_TYPE_BALANCE_INT){
 			value = advancePaymentPO.getBalance();
@@ -221,7 +221,7 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 	}
 	
 	//设置当前款项类型的预付款(advancePayment)的余额
-	public static void setCustomerBalanceByType(AdvancePaymentPO advancePaymentPO, Short type, float value){
+	public static void setCustomerBalanceByType(AdvancePaymentPO advancePaymentPO, Short type, long value){
 		
 		if(type == CustomerPO.BALANCE_TYPE_BALANCE_INT){
 			advancePaymentPO.setBalance(value);

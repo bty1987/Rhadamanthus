@@ -45,7 +45,7 @@ public class  RefundsPO  implements  java.io.Serializable{
 	
 	private long spid; //款项id
 	
-	private float total; //合计
+	private long total; //合计
 	
 	private short status; //状态
 	
@@ -97,11 +97,11 @@ public class  RefundsPO  implements  java.io.Serializable{
 	}
 
 	@Column(name="total")
-	public float getTotal() {
+	public long getTotal() {
 		return total;
 	}
 
-	public void setTotal(float total) {
+	public void setTotal(long total) {
 		this.total = total;
 	}
 

@@ -8,7 +8,8 @@ $(function () {
             fullPaymentRefund: 5   //补款退款
         },
         modals:{
-            decorationInfo:com.focusPage("#decorationInfo")
+            decorationInfo:com.focusPage("#decorationInfo"),
+            ascription : com.focusPage("#ascription")
         },
         items:{
             total: com.focusPage('#total'), //款项中的总价
@@ -32,7 +33,10 @@ $(function () {
             layerAdd : com.focusPage('#layerAdd'),//款项按钮的弹窗
             fullPaymentTotal : com.focusPage('#fullPaymentTotal'),//折让审批弹窗中的补款总额
             approver : com.focusPage('#approver'),//折让审批弹窗中的审批人
-            approvalComment : com.focusPage('#approvalComment')//折让审批弹窗中的备注信息
+            approvalComment : com.focusPage('#approvalComment'),//折让审批弹窗中的备注信息
+            uSalesman  : com.focusPage('#uSalesman'),
+            uInstorer  : com.focusPage('#uInstorer'),
+            uGuider  : com.focusPage('#uGuider')
         },
         btns:{
             saveBtn : com.focusPage("#saveBtn"),//确认按钮
@@ -50,15 +54,21 @@ $(function () {
             couponRefundBtn: com.focusPage('#couponRefundBtn'), //劵信息退券按钮
             malingBtn: com.focusPage('#malingBtn'), //抹零修改按钮
             malingCommitBtn: com.focusPage('#malingCommitBtn'), //抹零提交按钮
-            malingCancelBtn: com.focusPage('#malingCancelBtn') //抹零取消按钮
+            malingCancelBtn: com.focusPage('#malingCancelBtn'), //抹零取消按钮
+            ascriptionBtn : com.focusPage('#ascriptionBtn')
         },
         statues: {},
         balanceStatuses: {},
         sales: {},
         url : api.inventory.pageSales,
         postData : "salesPostData",
-        pageType : params['urlLoadParams'].type
+        pageType : params['urlLoadParams'].type,
+        ascriptionBySid : null
     };
+
+    com.initTypeahead('uSalesman', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value',null);
+    com.initTypeahead('uInstorer', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value',null);
+    com.initTypeahead('uGuider', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value',null);
 
     //初始化状态/结算状态
     com.post(api.ds.sales, {}, function(res){
@@ -103,6 +113,7 @@ $(function () {
                     var $btnAct = $('<a></a>').addClass(' btn btn-minier btn-grey').html('活动');
                     var $btnDecoration = $('<a></a>').addClass('btn btn-minier btn-purple').html('装修单');
                     var $inventory = $('<a></a>').addClass('btn btn-minier btn-blue').html('仓储');
+                    var $ascription = $('<a></a>').addClass('btn btn-minier btn-inverse').html('归属');
 
                     var propertyArr = [
                         ["装修单号:", v.orderId, "blue"],
@@ -145,7 +156,7 @@ $(function () {
                     $small.appendTo($h3);
 
                     if(sales.pageType == "advance"){
-                        $btnDiv.append($inventory)
+                        $btnDiv.append($ascription).append($inventory)
                     }
 
                     $btnDiv.append($btnDecoration);
@@ -181,6 +192,14 @@ $(function () {
                         }
                     }
                     $btnDiv.appendTo($h3);
+                    //归属修改
+                    $ascription.click(function () {
+                        sales.ascriptionBySid = v.sid;
+                        com.updateTypeahead("uSalesman", v.salesman.userId, v.salesman.currentName + "-" +v.salesman.dept.name);
+                        com.updateTypeahead("uInstorer", v.instorer.userId, v.instorer.currentName + "-" +v.instorer.dept.name);
+                        com.updateTypeahead("uGuider", v.guider.userId, v.guider.currentName + "-" +v.guider.dept.name);
+                        sales.modals.ascription.modal("show");
+                    });
 
                     $inventory.click(function () {
                         params["sid"] = v.sid;
@@ -316,6 +335,25 @@ $(function () {
         displayFunc.init('resultList', data);
 
     }, "pagenation", sales.postData, null, false, null);
+
+    //提交归属
+    sales.btns.ascriptionBtn.on('click',function () {
+
+        if(com.validate('ascription', 'bottom')) return false;
+        var options = {
+            'sales.sid': sales.ascriptionBySid,
+            "sales.salesman.userId": com.typeahead("uSalesman"),
+            "sales.instorer.userId": com.typeahead("uInstorer"),
+            "sales.guider.userId": com.typeahead("uGuider")
+        };
+
+        com.post(api.inventory.updateSalesForBelong, options, function (res) {
+            com.showAlert(com.info, "修改归属成功");
+            sales.modals.ascription.modal("hide");
+            salesSearcher.doSearch();
+        });
+
+    });
 
     //确定
     sales.btns.saveBtn.on('click',function () {

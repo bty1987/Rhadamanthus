@@ -38,6 +38,8 @@ import com.fanglin.customer.vo.CustomerOriginVO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.impl.DecorationServiceImpl;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.information.po.MessagePO;
+import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -64,6 +66,9 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 
 	@Autowired
 	private DecorationServiceImpl decorationService;
+
+	@Autowired
+	private MessageService messageService;
 
 	@Override
 	public ApprovalCustomerOriginTDecorationVO queryApprovalCustomerOriginTDecoration(ApprovalVO approvalVO) throws FLException {
@@ -195,6 +200,12 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 		decorationVO.setGrade("B");
 
 		decorationService.tranDecorationFromCustomerOrigin(decorationVO, customerOriginPO.getCsid(), approvalPO.getReceiver().getCompany());
+
+		String content = String.format("客源转装修单成功,客户名:%s,楼盘:%s,电话:%s,装修单号:%s", customerOriginPO.getName(), customerOriginPO.getHouse().getVillage().getName(), customerOriginPO.getPhone(), customerOriginPO.getOrderId());
+
+		UserPO designer = customerOriginPO.getDesigner();
+
+		messageService.sendMessage(designer.getUserId(), null, content, MessagePO.TYPE_SEND_APPROVAL_INT, designer.getCompany());
 
 		return 0;
 	}

@@ -81,7 +81,7 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 		StringBuffer newBelongUserName = new StringBuffer();
 		StringBuffer newBelongRate = new StringBuffer();
 
-		float rateCount = 0f;
+		int rateCount = 0;
 		int defaultCount = 0;
 
 		String orderId = approvalDecorationBelongVO.getOrderId();
@@ -118,7 +118,7 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 			oldBelongUserName.append(belongUserPO.getCurrentName());
 			oldBelongUserName.append(",");
 
-			oldBelongRate.append(decorationBelongPO.getRate());
+			oldBelongRate.append(Arith.div(decorationBelongPO.getRate(), 1000.0));
 			oldBelongRate.append(",");
 		}
 
@@ -133,7 +133,7 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 			newBelongUserName.append(userPO.getCurrentName());
 			newBelongUserName.append(",");
 
-			newBelongRate.append(approvalDecorationBelongItemVO.getRate());
+			newBelongRate.append(Arith.div(approvalDecorationBelongItemVO.getRate(), 1000.0));
 			newBelongRate.append(",");
 
 			rateCount = Arith.add(rateCount, approvalDecorationBelongItemVO.getRate());
@@ -143,7 +143,7 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 			}
 		}
 
-		if (rateCount != 1f) {
+		if (rateCount != 1000) {
 			throw new FLException(140016, "订单归属人员比例和不为1");
 		}
 
@@ -154,7 +154,7 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 
-		String content = String.format("订单号:%s,类型:%s,现归属:%s比例:%s修改为归属:%s比例:%s", orderId, (approvalDecorationBelongVO.getBelongType() == 0 ? "设计" : "业务"), oldBelongUserName.toString(), oldBelongRate.toString(), newBelongUserName.toString(), newBelongRate.toString());
+		String content = String.format("装修单号:%s,类型:%s,现归属:%s比例:%s修改为归属:%s比例:%s", orderId, (approvalDecorationBelongVO.getBelongType() == 0 ? "设计" : "业务"), oldBelongUserName.toString(), oldBelongRate.toString(), newBelongUserName.toString(), newBelongRate.toString());
 
 		approvalPO = new ApprovalPO().init(sender, receiver, orderId, ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT, content, company);
 

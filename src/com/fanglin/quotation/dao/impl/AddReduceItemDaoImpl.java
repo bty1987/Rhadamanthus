@@ -25,26 +25,26 @@ import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 
 @Repository("addReduceItemDao")
 public class AddReduceItemDaoImpl extends DaoImpl<AddReduceItemPO> implements AddReduceItemDao {
-	
-	public AddReduceItemDaoImpl(){
+
+	public AddReduceItemDaoImpl() {
 		super(AddReduceItemPO.class);
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<AddReduceItemPO> queryAddReduceItemByAddReduceId(int addReduceId) {
+	public List<AddReduceItemPO> queryAddReduceItemByAddReduceId(long addReduceId) {
 		return session().createCriteria(AddReduceItemPO.class).add(Restrictions.eq(AddReduceItemPO.COLUMN_ARID_STR, addReduceId)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<AddReduceItemPO> queryAddReduceItemByAddReduceIds(List<Integer> addReduceIds) {
+	public List<AddReduceItemPO> queryAddReduceItemByAddReduceIds(List<Long> addReduceIds) {
 		return session().createCriteria(AddReduceItemPO.class).add(Restrictions.in(AddReduceItemPO.COLUMN_ARID_STR, addReduceIds)).list();
 	}
 
 	@Override
 	public long countAddReduceItemForFunctionArea(long qfaid) {
-		
+
 		String sql = "select count(*) from quotation.addreduceitem where quotationFunctionAreaId =:qfaid";
 
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("qfaid", qfaid).uniqueResult();

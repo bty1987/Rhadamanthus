@@ -71,7 +71,10 @@ jQuery(function () {
     });
 
     com.initTypeahead('goods', api.inventory.queryGoodsByName, "goods.name", {}, 'goodes', 'gid', 'name', function (list, k, v) {
-        
+
+        com.cleanItems(sales.leftitems);
+        com.focusPage('#left').find('select').empty();
+
         var $content = com.focusPage('#left');
         
         //赋值商品信息
@@ -89,7 +92,11 @@ jQuery(function () {
                 com.post(api.inventory.queryPriceByGid, {"price.gid": k}, function (res) {
                     if (res.prices.length != 0) {
 
-                        sales.leftitems.purchase.bindData(res.prices, "pid", "content",false,null,"selling");
+                        $.each(res.prices, function (key, value) {
+                            value.name = value.selling + " "  + value.name;
+                        });
+                        
+                        sales.leftitems.purchase.bindData(res.prices, "pid", "name",false,null,"selling");
 
                         var price = res.prices[0];
                         sales.leftitems.discount.val(1);
@@ -134,7 +141,7 @@ jQuery(function () {
     });
 
     function initList(v) {
-
+        
         sales.$liList = $('<li></li>').addClass('list-group-item item-orange').attr({
             'data-selling': v.price,
             'data-disPrice': v.disPrice,
@@ -177,7 +184,7 @@ jQuery(function () {
             ['单位: ', v.goods.measurementUnit],
             ['颜色: ', v.color.name],
             ['规格: ', v.format.info],
-            ['售价: ', v.purchase, 'blue'],
+            ['售价: ', v.selling, 'blue'],
             ['折扣价: ', v.disPrice, 'blue'],
             ['折让价: ', v.price, 'blue'],
             ['数量: ', v.num, 'red num'],
@@ -358,7 +365,7 @@ jQuery(function () {
         com.post(api.inventory.addSalesItem, options, function (data) {
             
             com.showAlert(com.info, "操作成功");
-
+            
             initList(data.salesItem);
             cycTotal();
             

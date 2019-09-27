@@ -12,33 +12,33 @@ public class DecorationHolonomyVO implements Serializable {
 
 	private String name;
 
-	private Float maching;
+	private Integer maching;
 
-	private Float discount;
+	private Integer discount;
 
-	private Float projectPrice;
+	private Long projectPrice;
 
-	private Float managePrice;
+	private Long managePrice;
 
-	private Float manageRate;
+	private Integer manageRate;
 
-	private Float materialPrice;
+	private Long materialPrice;
 
-	private Float servicePrice;
+	private Long servicePrice;
 
-	private Float serviceRate;
+	private Integer serviceRate;
 
-	private Float materialPaidup;
+	private Long materialPaidup;
 
-	private Float servicePaidup;
+	private Long servicePaidup;
 
 	private Short status;
 
 	private Long psId;
 
-	private Float discountBase;
+	private Long discountBase;
 
-	private Float projectBase;
+	private Long projectBase;
 
 	public DecorationHolonomyVO() {
 		super();
@@ -73,83 +73,83 @@ public class DecorationHolonomyVO implements Serializable {
 		this.name = name;
 	}
 
-	public Float getMaching() {
+	public Integer getMaching() {
 		return maching;
 	}
 
-	public void setMaching(Float maching) {
+	public void setMaching(Integer maching) {
 		this.maching = maching;
 	}
 
-	public Float getDiscount() {
+	public Integer getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(Float discount) {
+	public void setDiscount(Integer discount) {
 		this.discount = discount;
 	}
 
-	public Float getProjectPrice() {
+	public Long getProjectPrice() {
 		return projectPrice;
 	}
 
-	public void setProjectPrice(Float projectPrice) {
+	public void setProjectPrice(Long projectPrice) {
 		this.projectPrice = projectPrice;
 	}
 
-	public Float getManagePrice() {
+	public Long getManagePrice() {
 		return managePrice;
 	}
 
-	public void setManagePrice(Float managePrice) {
+	public void setManagePrice(Long managePrice) {
 		this.managePrice = managePrice;
 	}
 
-	public Float getManageRate() {
+	public Integer getManageRate() {
 		return manageRate;
 	}
 
-	public void setManageRate(Float manageRate) {
+	public void setManageRate(Integer manageRate) {
 		this.manageRate = manageRate;
 	}
 
-	public Float getMaterialPrice() {
+	public Long getMaterialPrice() {
 		return materialPrice;
 	}
 
-	public void setMaterialPrice(Float materialPrice) {
+	public void setMaterialPrice(Long materialPrice) {
 		this.materialPrice = materialPrice;
 	}
 
-	public Float getServicePrice() {
+	public Long getServicePrice() {
 		return servicePrice;
 	}
 
-	public void setServicePrice(Float servicePrice) {
+	public void setServicePrice(Long servicePrice) {
 		this.servicePrice = servicePrice;
 	}
 
-	public Float getServiceRate() {
+	public Integer getServiceRate() {
 		return serviceRate;
 	}
 
-	public void setServiceRate(Float serviceRate) {
+	public void setServiceRate(Integer serviceRate) {
 		this.serviceRate = serviceRate;
 	}
 
-	public Float getMaterialPaidup() {
+	public Long getMaterialPaidup() {
 		return materialPaidup;
 	}
 
-	public void setMaterialPaidup(Float materialPaidup) {
+	public void setMaterialPaidup(Long materialPaidup) {
 		this.materialPaidup = materialPaidup;
 	}
 
-	public Float getServicePaidup() {
+	public Long getServicePaidup() {
 		return servicePaidup;
 	}
 
-	public void setServicePaidup(Float servicePaidup) {
+	public void setServicePaidup(Long servicePaidup) {
 		this.servicePaidup = servicePaidup;
 	}
 
@@ -169,20 +169,19 @@ public class DecorationHolonomyVO implements Serializable {
 		this.psId = psId;
 	}
 
-	public Float getDiscountBase() {
+	public Long getDiscountBase() {
 		return discountBase;
 	}
 
-	public void setDiscountBase(Float discountBase) {
+	public void setDiscountBase(Long discountBase) {
 		this.discountBase = discountBase;
 	}
 
-	public Float getProjectBase() {
+	public Long getProjectBase() {
 		return projectBase;
 	}
 
-	public void setProjectBase(Float projectBase) {
+	public void setProjectBase(Long projectBase) {
 		this.projectBase = projectBase;
 	}
-
 }

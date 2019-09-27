@@ -107,7 +107,7 @@ public class MessageServiceImpl implements MessageService {
 
 		String userName = "";
 
-		if (!sender.equals("") && sender != null) {
+		if (sender != null && !sender.equals("")) {
 			UserPO userPO = userDao.queryUserByUserId(sender);
 			userName = userPO.getUserName();
 			messagePO.setSender(userPO);

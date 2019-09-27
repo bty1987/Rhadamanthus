@@ -10,11 +10,11 @@ import com.fanglin.personel.vo.UserBaseVO;
 public class VpaymentVO implements Serializable {
 
 	private static final long serialVersionUID = 6240866246932423141L;
-	
+
 	private Long vrid;
 
 	private VreceiptVO vreceipt;// 活动收据ID
-	
+
 	private Long vpid;// 活动款ID
 
 	private String mno;// 会员号
@@ -30,36 +30,36 @@ public class VpaymentVO implements Serializable {
 	private Timestamp collectTime;// 收款时间
 
 	private Short type;// 类型 , 0: 装修款 , 1: 主材款
-	
+
 	private Short status;// 状态 , 0: 未付款 , 1: 已付款
 
 	private String brand;// 品牌
 
-	private Float money;// 金额
-	
-	private Float cash;//现金
-	
-	private Float bank;//刷卡
-	
-	private String bankInfo;//刷卡信息
-	
-	private Float coupon;//券值
-	
-	private String couponInfo;//券信息
+	private Long money;// 金额
+
+	private Long cash;// 现金
+
+	private Long bank;// 刷卡
+
+	private String bankInfo;// 刷卡信息
+
+	private Long coupon;// 券值
+
+	private String couponInfo;// 券信息
 
 	private String comment;// 备注
-	
+
 	public VpaymentVO() {
 		super();
 	}
 
-	public VpaymentVO(UserBaseVO creater, UserBaseVO collecter,VreceiptVO vreceipt) {
+	public VpaymentVO(UserBaseVO creater, UserBaseVO collecter, VreceiptVO vreceipt) {
 		super();
 		this.creater = creater;
 		this.collecter = collecter;
-		this.vreceipt=vreceipt;
+		this.vreceipt = vreceipt;
 	}
-	
+
 	public VreceiptVO getVreceipt() {
 		return vreceipt;
 	}
@@ -134,11 +134,11 @@ public class VpaymentVO implements Serializable {
 		this.brand = brand;
 	}
 
-	public Float getMoney() {
+	public Long getMoney() {
 		return money;
 	}
 
-	public void setMoney(Float money) {
+	public void setMoney(Long money) {
 		this.money = money;
 	}
 
@@ -166,19 +166,19 @@ public class VpaymentVO implements Serializable {
 		this.status = status;
 	}
 
-	public Float getCash() {
+	public Long getCash() {
 		return cash;
 	}
 
-	public void setCash(Float cash) {
+	public void setCash(Long cash) {
 		this.cash = cash;
 	}
 
-	public Float getBank() {
+	public Long getBank() {
 		return bank;
 	}
 
-	public void setBank(Float bank) {
+	public void setBank(Long bank) {
 		this.bank = bank;
 	}
 
@@ -190,10 +190,6 @@ public class VpaymentVO implements Serializable {
 		this.bankInfo = bankInfo;
 	}
 
-	public void setMoney(float money) {
-		this.money = money;
-	}
-
 	public Long getVrid() {
 		return vrid;
 	}
@@ -202,11 +198,11 @@ public class VpaymentVO implements Serializable {
 		this.vrid = vrid;
 	}
 
-	public Float getCoupon() {
+	public Long getCoupon() {
 		return coupon;
 	}
 
-	public void setCoupon(Float coupon) {
+	public void setCoupon(Long coupon) {
 		this.coupon = coupon;
 	}
 

@@ -76,7 +76,8 @@ CREATE TABLE `color` (
   `gid` int(11) NOT NULL,
   `name` varchar(32) NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`cid`)
+  PRIMARY KEY (`cid`),
+  KEY `indexone` (`gid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='商品颜色';
 
 DROP TABLE IF EXISTS `format`;
@@ -152,7 +153,8 @@ CREATE TABLE `manifest` (
   PRIMARY KEY (`mid`),
   UNIQUE KEY `uniqueone` (`code`),
   KEY `indexone` (`code`),
-  KEY `indextwo` (`cuid`)
+  KEY `indextwo` (`cuid`),
+  KEY `indexthr` (`manifestTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='货单';
 
 
@@ -190,7 +192,7 @@ CREATE TABLE `manifesttemplate` (
   `mtid` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL,
   `comment` varchar(128) NOT NULL DEFAULT '',
-  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
   `company` int(11) NOT NULL,
   PRIMARY KEY (`mtid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='货单模版';
@@ -207,6 +209,7 @@ CREATE TABLE `price` (
   `pid` int(11) NOT NULL AUTO_INCREMENT,
   `gid` int(11) NOT NULL,
   `name` varchar(32) NOT NULL,
+  `type` tinyint(1) NOT NULL,
   `purchase` decimal(10,3) NOT NULL DEFAULT '0.000',
   `selling` decimal(10,3) NOT NULL DEFAULT '0.000',
   `ctype` tinyint(1) NOT NULL DEFAULT '0',

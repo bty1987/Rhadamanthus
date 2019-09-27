@@ -13,73 +13,73 @@ package com.fanglin.material.vo;
 
 import java.io.Serializable;
 
-public class MaterialItemVO implements Serializable{
+public class MaterialItemVO implements Serializable {
 
 	private static final long serialVersionUID = -8098978785825170596L;
-	
+
 	private Long miid;
-	
+
 	private Long mid;
-	
+
 	private String no;
-	
+
 	private String name;
-	
+
 	private String category;
-	
+
 	private String brand;
-	
+
 	private String measurementUnit;
-	
+
 	private String packageName;
-	
-	private Float unitPrice;
-	
-	private Float purchasePrice;
-	
-	private Float salePrice;
-	
-	private Float price;
-	
-	private Float discount;
-	
-	private Float postDiscount;
-	
-	private Float num;
-	
-	private Float total;
-	
+
+	private Integer unitPrice;
+
+	private Integer purchasePrice;
+
+	private Long salePrice;
+
+	private Long price;
+
+	private Integer discount;
+
+	private Integer postDiscount;
+
+	private Long num;
+
+	private Long total;
+
 	private Short status; // 无 , 退货 , 预结算 , 结算 , 删除
-	
+
 	private Short balanceStatus;
-	
+
 	private Short refundStatus;
-	
+
 	private Short rawCalcType;
-	
-	private Float rawPoint;
-	
+
+	private Integer rawPoint;
+
 	private Short calcType;
-	
-	private Float prePoint;
-	
-	private Float postPoint;
-	
+
+	private Integer prePoint;
+
+	private Integer postPoint;
+
 	private String comment;
-	
+
 	private boolean isLeaf;
-	
+
 	private boolean expanded;
-	
+
 	private Integer level;
-	
+
 	private Integer parent;
-	
+
 	private Integer id;
-	
-	private Float base;
-	
-	private Float point;
+
+	private Integer base;
+
+	private Integer point;
 
 	public Long getMiid() {
 		return miid;
@@ -145,67 +145,67 @@ public class MaterialItemVO implements Serializable{
 		this.packageName = packageName;
 	}
 
-	public Float getUnitPrice() {
+	public Integer getUnitPrice() {
 		return unitPrice;
 	}
 
-	public void setUnitPrice(Float unitPrice) {
+	public void setUnitPrice(Integer unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 
-	public Float getPurchasePrice() {
+	public Integer getPurchasePrice() {
 		return purchasePrice;
 	}
 
-	public void setPurchasePrice(Float purchasePrice) {
+	public void setPurchasePrice(Integer purchasePrice) {
 		this.purchasePrice = purchasePrice;
 	}
 
-	public Float getSalePrice() {
+	public Long getSalePrice() {
 		return salePrice;
 	}
 
-	public void setSalePrice(Float salePrice) {
+	public void setSalePrice(Long salePrice) {
 		this.salePrice = salePrice;
 	}
 
-	public Float getPrice() {
+	public Long getPrice() {
 		return price;
 	}
 
-	public void setPrice(Float price) {
+	public void setPrice(Long price) {
 		this.price = price;
 	}
 
-	public Float getDiscount() {
+	public Integer getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(Float discount) {
+	public void setDiscount(Integer discount) {
 		this.discount = discount;
 	}
 
-	public Float getPostDiscount() {
+	public Integer getPostDiscount() {
 		return postDiscount;
 	}
 
-	public void setPostDiscount(Float postDiscount) {
+	public void setPostDiscount(Integer postDiscount) {
 		this.postDiscount = postDiscount;
 	}
 
-	public Float getNum() {
+	public Long getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(Long num) {
 		this.num = num;
 	}
 
-	public Float getTotal() {
+	public Long getTotal() {
 		return total;
 	}
 
-	public void setTotal(Float total) {
+	public void setTotal(Long total) {
 		this.total = total;
 	}
 
@@ -241,11 +241,11 @@ public class MaterialItemVO implements Serializable{
 		this.rawCalcType = rawCalcType;
 	}
 
-	public Float getRawPoint() {
+	public Integer getRawPoint() {
 		return rawPoint;
 	}
 
-	public void setRawPoint(Float rawPoint) {
+	public void setRawPoint(Integer rawPoint) {
 		this.rawPoint = rawPoint;
 	}
 
@@ -257,20 +257,24 @@ public class MaterialItemVO implements Serializable{
 		this.calcType = calcType;
 	}
 
-	public Float getPrePoint() {
+	public Integer getPrePoint() {
 		return prePoint;
 	}
 
-	public void setPrePoint(Float prePoint) {
+	public void setPrePoint(Integer prePoint) {
 		this.prePoint = prePoint;
 	}
 
-	public Float getPostPoint() {
+	public Integer getPostPoint() {
 		return postPoint;
 	}
 
-	public void setPostPoint(Float postPoint) {
+	public void setPostPoint(Integer postPoint) {
 		this.postPoint = postPoint;
+	}
+
+	public void setLeaf(boolean isLeaf) {
+		this.isLeaf = isLeaf;
 	}
 
 	public String getComment() {
@@ -280,61 +284,61 @@ public class MaterialItemVO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
-	public boolean getIsLeaf(){
+
+	public boolean getIsLeaf() {
 		return isLeaf;
 	}
 
-	public void setIsLeaf(boolean isLeaf){
+	public void setIsLeaf(boolean isLeaf) {
 		this.isLeaf = isLeaf;
 	}
-	
-	public boolean isExpanded(){
+
+	public boolean isExpanded() {
 		return expanded;
 	}
 
-	public void setExpanded(boolean expanded){
+	public void setExpanded(boolean expanded) {
 		this.expanded = expanded;
 	}
-	
-	public Integer getLevel(){
+
+	public Integer getLevel() {
 		return level;
 	}
 
-	public void setLevel(Integer level){
+	public void setLevel(Integer level) {
 		this.level = level;
 	}
-	
-	public Integer getParent(){
+
+	public Integer getParent() {
 		return parent;
 	}
 
-	public void setParent(Integer parent){
+	public void setParent(Integer parent) {
 		this.parent = parent;
 	}
-	
-	public Integer getId(){
+
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Integer id){
+	public void setId(Integer id) {
 		this.id = id;
 	}
-	
-	public Float getBase() {
+
+	public Integer getBase() {
 		return base;
 	}
 
-	public void setBase(Float base) {
+	public void setBase(Integer base) {
 		this.base = base;
 	}
 
-	public Float getPoint() {
+	public Integer getPoint() {
 		return point;
 	}
 
-	public void setPoint(Float point) {
+	public void setPoint(Integer point) {
 		this.point = point;
 	}
-	
+
 }

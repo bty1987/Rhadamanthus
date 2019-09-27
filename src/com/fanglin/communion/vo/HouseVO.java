@@ -22,7 +22,7 @@ public class HouseVO implements Serializable {
 
 	private Short type;
 
-	private Float buildArea;
+	private Integer buildArea;
 
 	private Short maxFloor;
 
@@ -122,11 +122,11 @@ public class HouseVO implements Serializable {
 		this.type = type;
 	}
 
-	public Float getBuildArea() {
+	public Integer getBuildArea() {
 		return buildArea;
 	}
 
-	public void setBuildArea(Float buildArea) {
+	public void setBuildArea(Integer buildArea) {
 		this.buildArea = buildArea;
 	}
 

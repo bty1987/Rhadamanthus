@@ -46,14 +46,14 @@ public class GoodsImportService implements com.fanglin.imports.service.GoodsImpo
 			String barcode = _salary.get(2);
 
 			String category = _salary.get(3);
-			
+
 			Long bid = (long) Math.floor(Double.parseDouble(_salary.get(4)));
 
 			String brand = _salary.get(5);
 
 			String measurementUnit = _salary.get(6);
 
-			Float pieceNum = Float.valueOf(_salary.get(7));
+			Integer pieceNum = Integer.valueOf(_salary.get(7));
 
 			String accessoriesTypeName = _salary.get(8);
 
@@ -77,8 +77,7 @@ public class GoodsImportService implements com.fanglin.imports.service.GoodsImpo
 
 			List<String> pinyins = PinYin4Util.getPinyin(name);
 
-			goodsPO.setPinyin(pinyins.subList(0,
-					pinyins.size() >= 2 ? 2 : pinyins.size()).toString());
+			goodsPO.setPinyin(pinyins.subList(0, pinyins.size() >= 2 ? 2 : pinyins.size()).toString());
 
 			goodsPO.setCompany(company);
 

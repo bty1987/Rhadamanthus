@@ -38,9 +38,7 @@ public class ServicePaymentPO  implements java.io.Serializable {
 	
 	public static final short COLUMN_CONFIRMEDSTATUS_INT = 2; 
 	
-	public static final float COLUMN_RATIO_INT = 1.1f; 
-	
-	public static final float COLUMN_MONEY_INT = 0f;
+	public static final long COLUMN_MONEY_INT = 0;
 	
 	private long spid;
 	
@@ -58,9 +56,9 @@ public class ServicePaymentPO  implements java.io.Serializable {
 	
 	private Timestamp createTime;
 	
-	private float serviceMoney;
+	private long serviceMoney;
 	
-	private float advanceMoney;
+	private long advanceMoney;
 	
 	private String comment;
 	
@@ -159,20 +157,20 @@ public class ServicePaymentPO  implements java.io.Serializable {
 	}
 
 	@Column(name = "serviceMoney")
-	public float getServiceMoney() {
+	public long getServiceMoney() {
 		return serviceMoney;
 	}
 
-	public void setServiceMoney(float serviceMoney) {
+	public void setServiceMoney(long serviceMoney) {
 		this.serviceMoney = serviceMoney;
 	}
 
 	@Column(name = "advanceMoney")
-	public float getAdvanceMoney() {
+	public long getAdvanceMoney() {
 		return advanceMoney;
 	}
 
-	public void setAdvanceMoney(float advanceMoney) {
+	public void setAdvanceMoney(long advanceMoney) {
 		this.advanceMoney = advanceMoney;
 	}
 

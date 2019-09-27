@@ -16,65 +16,66 @@ import javax.persistence.Table;
 
 import com.fanglin.personel.po.UserPO;
 
-
 @Entity
 @Table(name = "vpayment", catalog = "information")
-public class VpaymentPO implements Serializable{
+public class VpaymentPO implements Serializable {
 
 	private static final long serialVersionUID = -5292403662672343953L;
 
 	public static final String COLUMN_MNO_STR = "mno";
-	
+
 	public static final String COLUMN_BRAND_STR = "brand";
-	
-	public static final String COLUMN_CREATER_STR="creater.userId";
-	
+
+	public static final String COLUMN_CREATER_STR = "creater.userId";
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final String COLUMN_EXPIRE_STR = "expire";
-	
+
 	public static final short STATUS_INIT_INT = 0;
-	
+
 	public static final short STATUS_PAYED_INT = 1;
-	
+
 	public static final short EXPIRE_INIT_INT = 0;
 	
-	private long vpid;//活动款ID
+	private long vpid;
 	
-	private String mno;//会员号
-	
-	private String orderId;//装修单号
-	
-	private UserPO creater;//创建人 
-	
-	private Timestamp createTime;//创建时间
-	
-	private short type;//类型 , 0: 装修款 , 1: 主材款
-	
-	private String brand;//品牌
-	
-	private float money;//金额
-	
-	private VreceiptPO vreceipt;//活动收据ID
-	
-	private short status;//状态 , 0: 未付款 , 1: 已付款
-	
+	private long vaid;
+
+	private String mno;// 会员号
+
+	private String orderId;// 装修单号
+
+	private UserPO creater;// 创建人
+
+	private Timestamp createTime;// 创建时间
+
+	private short type;// 类型 , 0: 装修款 , 1: 主材款
+
+	private String brand;// 品牌
+
+	private long money;// 金额
+
+	private VreceiptPO vreceipt;// 活动收据ID
+
+	private short status;// 状态 , 0: 未付款 , 1: 已付款
+
 	private short expire; // 到期标识 , 0: 有效 , 1: 到期
-	
-	private String comment;//备注
-	
+
+	private String comment;
+
 	public VpaymentPO() {
 		super();
 	}
 
-	public VpaymentPO(UserPO creater,VreceiptPO vreceipt) {
+	public VpaymentPO(UserPO creater, VreceiptPO vreceipt) {
 		super();
 		this.creater = creater;
-		this.vreceipt=vreceipt;
+		this.vreceipt = vreceipt;
 	}
- 
+
 	@Id
-	@GeneratedValue(strategy = IDENTITY) //主键由数据库自动生成
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "vpid")
 	public long getVpid() {
 		return vpid;
@@ -82,6 +83,15 @@ public class VpaymentPO implements Serializable{
 
 	public void setVpid(long vpid) {
 		this.vpid = vpid;
+	}
+	
+	@Column(name = "vaid")
+	public long getVaid() {
+		return vaid;
+	}
+
+	public void setVaid(long vaid) {
+		this.vaid = vaid;
 	}
 
 	@Column(name = "mno")
@@ -129,7 +139,7 @@ public class VpaymentPO implements Serializable{
 	public void setType(short type) {
 		this.type = type;
 	}
-	
+
 	@Column(name = "brand")
 	public String getBrand() {
 		return brand;
@@ -138,16 +148,16 @@ public class VpaymentPO implements Serializable{
 	public void setBrand(String brand) {
 		this.brand = brand;
 	}
-	
+
 	@Column(name = "money")
-	public float getMoney() {
+	public long getMoney() {
 		return money;
 	}
 
-	public void setMoney(float money) {
+	public void setMoney(long money) {
 		this.money = money;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "vrid", referencedColumnName = "vrid")
 	public VreceiptPO getVreceipt() {
@@ -157,7 +167,7 @@ public class VpaymentPO implements Serializable{
 	public void setVreceipt(VreceiptPO vreceipt) {
 		this.vreceipt = vreceipt;
 	}
-	
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
@@ -184,5 +194,5 @@ public class VpaymentPO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 }

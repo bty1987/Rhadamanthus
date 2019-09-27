@@ -338,7 +338,6 @@ jQuery(function ($) {
             }, function () {
                 com.showAlert(com.info, "操作成功");
                 showPaymentScale();
-                //com.switchPage(api.index.PaymentScale.url);
             });
             com.focusPage("#paymentScaleModal").modal("hide");
         }

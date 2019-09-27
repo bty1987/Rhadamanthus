@@ -277,54 +277,19 @@ var QuotationDetail = (function(){
 		calculateTotalFee: function(discount){
 			var  _manageDiscount, _transDiscount, _totalfee = 0, _dtotalfee = 0, _transfee = 0, _managefee = 0, _manageRate = 0, _total = 0,cdiscount=0,ndiscount = 0;
 
-			var $arr = com.focusPage('.fl-quo-item');
-			var _discount = utils.accDiv(discount, 10);
-
-			$arr.length && $arr.each(function(i, v){
-				
-				var $quote = $(v);
-				
-				if(['0', '1'].indexOf($quote.find(".cell.type").attr('data-type')) == -1) return true;
-				if(['3'].indexOf($quote.find(".cell.line").attr('data-areatype')) != -1) return true;
-				
-				var _num = parseFloat($quote.find('.num .cell-wrap').text());
-				var _unitprice = parseFloat($quote.find('.unitprice .cell-wrap').text());
-				var _discountFlag = $quote.find('.discountprice').attr('data-discount');//1打折,0不打折
-				var _discountprice = utils.accMul(_unitprice, (_discountFlag == 1 ?_discount : 1));
-
-				var _totalprice = utils.accMul(_num,  _unitprice);
-				var _totalpriced =  utils.accMul(_num,  _discountprice);
-
-				// _discountFlag:1打折 0:不打折
-				_discountFlag == 1 ? cdiscount = utils.accAdd(cdiscount, _totalprice) : ndiscount = utils.accAdd(ndiscount, _totalprice);
-
-				_totalfee = utils.accAdd(_totalfee, _totalprice);
-				_dtotalfee = utils.accAdd(_dtotalfee, _totalpriced);
-			});
-			
-			var manageCost = com.focusPage('#manageCost'); // 管理费
-			var converyanceCost = com.focusPage('#conveyanceCost'); // 车运费
-			
-			_manageDiscount = manageCost.find('.discountprice').attr('data-discount') == "1" ? _discount : 1; // 获取管理费折扣
-			_transDiscount = converyanceCost.find('.discountprice').attr('data-discount') == "1" ? _discount : 1; // 获取车运费折扣
-			
-			_manageRate = parseFloat(manageCost.find('.discountprice .cell-wrap').text()); // 获取管理费比例(根据报价版本获得)
-			_tranRate = parseFloat(converyanceCost.find('.unitprice .cell-wrap').text()); // 获取车运费比例(根据报价版本获得)
-			
-			_dtransfee =  utils.accMul(utils.accMul(_totalfee, _tranRate), _transDiscount);
-			_dmanagefee = utils.accMul(utils.accMul(utils.accAdd(_totalfee, utils.accMul(_totalfee, _tranRate)), _manageRate), _manageDiscount);
-
-			_total = utils.changeThrDecimal(utils.accAdd(utils.accAdd(_dtotalfee, _dtransfee), _dmanagefee));
-			
 			var _undisPrice = quo.basicParams["quotation.undisPrice"];
 			var _disPrice = quo.basicParams["quotation.disPrice"];
+			var _dtransfee = quo.basicParams["quotation.trafficPrice"];
+			var _dmanagefee = quo.basicParams["quotation.managePrice"];
 			
-			drawTable(_undisPrice, _disPrice, _dtransfee, _dmanagefee, _discount);
+			drawTable(_undisPrice, _disPrice, _dtransfee, _dmanagefee, discount);
 			//报价计算器
 			function drawTable(undisPrice, disPrice, transfee, managefee, discount) {
 			    
+			    var _discount = utils.accDiv(discount, 10);
+			    
 				var total = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accAdd(undisPrice, disPrice), transfee), managefee)); // 折前总额
-				var dtotal = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(disPrice, discount), undisPrice), transfee), managefee)); // 半包折扣总额
+				var dtotal = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul(disPrice, _discount), undisPrice), transfee), managefee)); // 半包折扣总额
 
 				var table = com.focusPage('#calculateTotalFeeModal').find('.fl-quo-cal').html(null);
 
@@ -654,14 +619,16 @@ var QuotationDetail = (function(){
 				
 				quo.calculateQuoFees();
 				quo.quoModals.$manageRateModal.modal("hide");
-
-				com.post(api.quotation.updateQuotationFunctionAreaItemForSpec,{
-                    "quotationFunctionAreaItem.qfaiId": _manageId,
+				
+				var args = {
+			        "quotationFunctionAreaItem.qfaiId": _manageId,
                     "quotationFunctionAreaItem.quotationFunctionAreaId": _qfaId,
-                    "quotationFunctionAreaItem.unitPrice": _manageRate,
-                	"quotationFunctionAreaItem.basePrice": quo.basicParams['quotation.basePrice']
-                }, function(res){}, null, false);
-				com.post(api.quotation.updateQuotationForAdvance, quo.basicParams, function(res){}, null, false);
+                    "quotationFunctionAreaItem.unitPrice": _manageRate
+				}
+				
+				var _params = $.extend(true, {}, args, quo.basicParams);
+
+				com.post(api.quotation.updateQuotationFunctionAreaItemForSpec, _params);
 			});
 		},
 		//折扣窗体配置基数
@@ -816,7 +783,6 @@ var QuotationDetail = (function(){
 				quo.calculateQuoFees();
 
 				com.clearValidator();
-
 
 				that.$nowLine.find(".icon-arrow-up").removeClass("grey").addClass("green"),that.$nowLine.find(".icon-arrow-down").removeClass("grey").addClass("red");
 
@@ -981,7 +947,9 @@ var QuotationDetail = (function(){
 				com.focusPage('[data-qfaid="'+ domain.nowEditDomain.attr('data-qfaid') +'"]', '#functionAreaSumList').find('label.no-padding-left').text(_fee);
 				quo.calculateQuoFees();
 				quote.sortQuote(domain.nowEditDomain);
+				
 				var _params = $.extend({}, args, quo.basicParams);
+				
 				com.post(api.quotation.updateQuotationFunctionAreaItem, _params, function(res){
 					$item.find('input[name="deleteItems"]').val(res.quotationFunctionAreaItem.qfaiId);
 				}, null, false);
@@ -1135,10 +1103,10 @@ var QuotationDetail = (function(){
 			_data["quotationFunctionAreaItems["+1+"].index"] = _nowline;
 
 			var _quotationFunctionArea = {"quotationFunctionArea.qfaId":$quote.parents('div.widget-box.transparent').attr('data-qfaid')};
+			
+			var _params = $.extend({},_data,_quotationFunctionArea)
 
-			com.post(api.quotation.updateQuotationFunctionAreaItemForIndex,$.extend({},_data,_quotationFunctionArea) , function(res){
-
-			}, null, false);
+			com.post(api.quotation.updateQuotationFunctionAreaItemForIndex, _params);
 		},
 		init : function(){
 			this.saveCustomQuotesAdd();
@@ -1267,8 +1235,6 @@ var QuotationDetail = (function(){
 			
 			var discount = utils.accDiv(quo.basicParams['quotation.discount'], 10)
 			
-			console.log(qv);
-
 			var _dcp = 0;
 			var _num = qv.num;
 			var _unitPrice = qv.unitPrice;
@@ -1496,7 +1462,7 @@ var QuotationDetail = (function(){
 			com.post(api.quotation.queryQuotationById, {"quotation.qid" : quo.quotationid}, function(data){
 			    
 			    var quotation = data.quotation;
-				
+			    
 				//将报价数据获取到全局变量中
 				quo.basicParams = {
 					"quotation.qid" : quotation.qid,//报价Id

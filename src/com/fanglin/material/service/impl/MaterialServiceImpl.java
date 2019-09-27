@@ -291,8 +291,8 @@ public class MaterialServiceImpl implements MaterialService {
 
 		CompanyPO companyPO = companyDao.get(company);
 
-		float total = 0;
-		float discountTotal = 0;
+		long total = 0;
+		long discountTotal = 0;
 
 		Map<String, List<MaterialItemPO>> packageItems = new HashMap<String, List<MaterialItemPO>>();
 
@@ -322,15 +322,15 @@ public class MaterialServiceImpl implements MaterialService {
 		String no = String.format("M%s%s%s", companyPO.getShortname(), currentDate, FormatUtil.fillZero(FormatUtil.offset(count), "0000"));
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(materialVO.getOrderId());
-		
-		if(decorationPO.getGrade().equals("C") && decorationPO.getCompany() == 1 && company == 1){
+
+		if (decorationPO.getGrade().equals("C") && decorationPO.getCompany() == 1 && company == 1) {
 			materialPO.setGrade("B");
 		} else {
 			materialPO.setGrade("");
 		}
-		
+
 		// 赋值默认活动信息
-		ActivityPO activityPO = activityDao.queryActivityForDefault(MaterialPO.PACKAGE_ENABLE_INT);
+		ActivityPO activityPO = activityDao.queryActivityForDefault(ActivityPO.TYPE_MATERIAL_INT);
 		materialPO.setActivityId(activityPO == null ? 0 : activityPO.getAid());
 
 		materialPO.setBrand(brandPO.getName());
@@ -351,8 +351,8 @@ public class MaterialServiceImpl implements MaterialService {
 
 		if (materialItemVOs != null) {
 
-			float _total = MaterialItemServiceImpl.packageMaterialItem(materialPO, materialItemVOs, packageItems);
-			float _discountTotal = MaterialItemServiceImpl.setDisCountTotal(materialPO, materialItemVOs);
+			long _total = MaterialItemServiceImpl.packageMaterialItem(materialPO, materialItemVOs, packageItems);
+			long _discountTotal = MaterialItemServiceImpl.setDisCountTotal(materialPO, materialItemVOs);
 			total = Arith.add(total, _total);
 			discountTotal = Arith.add(discountTotal, _discountTotal);
 			for (String packageName : packageItems.keySet()) {
@@ -485,7 +485,7 @@ public class MaterialServiceImpl implements MaterialService {
 	@Transactional(rollbackFor = Exception.class)
 	public void preBalanceMaterial(List<Long> mids, String userId, String userName) throws FLException {
 
-		float totalBalance;
+		long totalBalance;
 		List<String> materialItemPackageNameList = new ArrayList<String>();
 
 		for (Long mid : mids) {
@@ -504,13 +504,13 @@ public class MaterialServiceImpl implements MaterialService {
 					materialItemPO.setBalanceStatus(MaterialItemPO.BALANCESTATUS_TYPE_PREBALANCE_INT);
 					materialItemPO.setPostPoint(materialItemPO.getPrePoint());
 
-					float balance = 0;
+					long balance = 0;
 
-					float salePrice = materialItemPO.getSalePrice(); // 折扣价
-					float price = materialItemPO.getPrice(); // 售价
-					float total = materialItemPO.getTotal(); // 总价
-					float num = materialItemPO.getNum(); // 数量
-					float prePoint = materialItemPO.getPrePoint(); // 预结算点位;
+					long salePrice = materialItemPO.getSalePrice(); // 折扣价
+					long price = materialItemPO.getPrice(); // 售价
+					long total = materialItemPO.getTotal(); // 总价
+					long num = materialItemPO.getNum(); // 数量
+					int prePoint = materialItemPO.getPrePoint(); // 预结算点位;
 
 					if (!"".equals(materialItemPO.getPackageName())) {
 						if (materialItemPackageNameList.indexOf(mid.toString() + materialItemPO.getPackageName()) == -1) {
@@ -525,9 +525,8 @@ public class MaterialServiceImpl implements MaterialService {
 						} else if (materialItemPO.getCalcType() == MaterialItemPO.CALCTYPE_TYPE_POINT_INT) {
 							// 利润 : (售价 - 折扣价 * (1 - 点位)) * 数量 , 成本 : 折扣价 * (1 -
 							// 点位) * 数量
-							balance = Arith.mul(Arith.sub(price, Arith.mul(salePrice, Arith.sub(1f, prePoint))), num);
+							balance = Arith.mul(Arith.sub(price, Arith.mul(salePrice, Arith.sub(1000, prePoint))), num);
 						}
-
 					}
 
 					totalBalance = Arith.add(totalBalance, balance);
@@ -562,7 +561,7 @@ public class MaterialServiceImpl implements MaterialService {
 
 		long mid = materialVO.getMid();
 
-		float totalBalance;
+		long totalBalance;
 		List<String> materialItemPackageNameList = new ArrayList<String>();
 
 		MaterialPO materialPO = materialDao.get(mid);
@@ -580,13 +579,13 @@ public class MaterialServiceImpl implements MaterialService {
 			for (MaterialItemPO materialItemPO : materialItemPOs) {
 				materialItemPO.setBalanceStatus(MaterialItemPO.BALANCESTATIS_TYPE_POSTBALANCE_INT);
 
-				float balance = 0;
+				long balance = 0;
 
-				float salePrice = materialItemPO.getSalePrice(); // 折扣价
-				float num = materialItemPO.getNum();
-				float total = materialItemPO.getTotal();
-				float prePoint = materialItemPO.getPrePoint();
-				float postPoint = materialItemPO.getPostPoint();
+				long salePrice = materialItemPO.getSalePrice(); // 折扣价
+				long num = materialItemPO.getNum();
+				long total = materialItemPO.getTotal();
+				int prePoint = materialItemPO.getPrePoint();
+				int postPoint = materialItemPO.getPostPoint();
 
 				if (!"".equals(materialItemPO.getPackageName())) {
 					if (materialItemPackageNameList.indexOf(String.valueOf(mid) + materialItemPO.getPackageName()) == -1) {

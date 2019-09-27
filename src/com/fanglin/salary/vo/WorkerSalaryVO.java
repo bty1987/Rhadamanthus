@@ -4,68 +4,68 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
+
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
+public class WorkerSalaryVO implements Serializable {
 
-public class WorkerSalaryVO  implements Serializable{
-	
 	private static final long serialVersionUID = -1896969348501581246L;
 
 	private Long wsId;
-	
+
 	private Long cwsid;
-	
+
 	private DecorationVO decoration;
-	
+
 	private Long cid;
-	
+
 	private UserBaseVO user;
-	
-	private  UserBaseVO creater;
-	
+
+	private UserBaseVO creater;
+
 	private Timestamp createTime;
-	
-	private  UserBaseVO approver;
-	
-	private Timestamp approveTime ;
-	
-	private Float salary;
-	
+
+	private UserBaseVO approver;
+
+	private Timestamp approveTime;
+
+	private Long salary;
+
 	private Short type;
-	
-	private Short subtype ;
-	
+
+	private Short subtype;
+
 	private Short status;
-	
+
 	private Timestamp balanceTime;
-	
-	private String comment ;
-	
+
+	private String comment;
+
 	private Long csid;
-	
-	private Float money;
-	
-	private Float deposit;
-	
+
+	private Long money;
+
+	private Long deposit;
+
 	private Short onetype;
-	
+
 	private Short twotype;
-	
+
 	private Short schedule;
 
 	public WorkerSalaryVO() {
 		super();
 	}
 
-	public WorkerSalaryVO(DecorationVO decoration, UserBaseVO user,UserBaseVO creater,UserBaseVO approver) {
+	public WorkerSalaryVO(DecorationVO decoration, UserBaseVO user, UserBaseVO creater, UserBaseVO approver) {
 		super();
 		this.decoration = decoration;
 		this.user = user;
 		this.creater = creater;
 		this.approver = approver;
 	}
-	
+
 	public Long getWsId() {
 		return wsId;
 	}
@@ -122,7 +122,7 @@ public class WorkerSalaryVO  implements Serializable{
 		this.approver = approver;
 	}
 
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -130,8 +130,8 @@ public class WorkerSalaryVO  implements Serializable{
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
-	
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getBalanceTime() {
 		return balanceTime;
 	}
@@ -140,11 +140,11 @@ public class WorkerSalaryVO  implements Serializable{
 		this.balanceTime = balanceTime;
 	}
 
-	public Float getSalary() {
+	public Long getSalary() {
 		return salary;
 	}
 
-	public void setSalary(Float salary) {
+	public void setSalary(Long salary) {
 		this.salary = salary;
 	}
 
@@ -163,7 +163,8 @@ public class WorkerSalaryVO  implements Serializable{
 	public void setStatus(Short status) {
 		this.status = status;
 	}
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getApproveTime() {
 		return approveTime;
 	}
@@ -196,19 +197,19 @@ public class WorkerSalaryVO  implements Serializable{
 		this.csid = csid;
 	}
 
-	public Float getMoney() {
+	public Long getMoney() {
 		return money;
 	}
 
-	public void setMoney(Float money) {
+	public void setMoney(Long money) {
 		this.money = money;
 	}
 
-	public Float getDeposit() {
+	public Long getDeposit() {
 		return deposit;
 	}
 
-	public void setDeposit(Float deposit) {
+	public void setDeposit(Long deposit) {
 		this.deposit = deposit;
 	}
 
@@ -235,5 +236,5 @@ public class WorkerSalaryVO  implements Serializable{
 	public void setSchedule(Short schedule) {
 		this.schedule = schedule;
 	}
-	
+
 }

@@ -26,9 +26,9 @@ public class PaymentVO implements Serializable {
 	
 	private CustomerVO customer;
 	
-	private Float balance = 0f;
+	private Long balance = 0L;
 	
-	private Float recharge = 0f;
+	private Long recharge = 0L;
 	
 	private Short type;
 	
@@ -44,27 +44,27 @@ public class PaymentVO implements Serializable {
 	
 	private Short status;
 	
-	private Float cash = 0f;
+	private Long cash = 0L;
 	
 	private String cashInfo;
 	
-	private Float bank = 0f;
+	private Long bank = 0L;
 	
 	private String bankInfo;
 	
-	private Float checkv = 0f;
+	private Long checkv = 0L;
 	
 	private String checkvBank;
 	
-	private Float installment = 0f;
+	private Long installment = 0L;
 	
 	private String installmentBank;
 	
-	private Float accounts = 0f;
+	private Long accounts = 0L;
 	
 	private String accountsBank;
 	
-	private Float transfer = 0f;
+	private Long transfer = 0L;
 	
 	private String comment;
 	
@@ -105,19 +105,19 @@ public class PaymentVO implements Serializable {
 		this.customer = customer;
 	}
 
-	public Float getBalance() {
+	public Long getBalance() {
 		return balance;
 	}
 
-	public void setBalance(Float balance) {
+	public void setBalance(Long balance) {
 		this.balance = balance;
 	}
 
-	public Float getRecharge() {
+	public Long getRecharge() {
 		return recharge;
 	}
 
-	public void setRecharge(Float recharge) {
+	public void setRecharge(Long recharge) {
 		this.recharge = recharge;
 	}
 
@@ -179,11 +179,11 @@ public class PaymentVO implements Serializable {
 		this.status = status;
 	}
 
-	public Float getCash() {
+	public Long getCash() {
 		return cash;
 	}
 
-	public void setCash(Float cash) {
+	public void setCash(Long cash) {
 		this.cash = cash;
 	}
 
@@ -195,11 +195,11 @@ public class PaymentVO implements Serializable {
 		this.cashInfo = cashInfo;
 	}
 
-	public Float getBank() {
+	public Long getBank() {
 		return bank;
 	}
 
-	public void setBank(Float bank) {
+	public void setBank(Long bank) {
 		this.bank = bank;
 	}
 
@@ -211,11 +211,11 @@ public class PaymentVO implements Serializable {
 		this.bankInfo = bankInfo;
 	}
 
-	public Float getCheckv() {
+	public Long getCheckv() {
 		return checkv;
 	}
 
-	public void setCheckv(Float checkv) {
+	public void setCheckv(Long checkv) {
 		this.checkv = checkv;
 	}
 
@@ -226,12 +226,12 @@ public class PaymentVO implements Serializable {
 	public void setCheckvBank(String checkvBank) {
 		this.checkvBank = checkvBank;
 	}
-	
-	public Float getInstallment() {
+
+	public Long getInstallment() {
 		return installment;
 	}
 
-	public void setInstallment(Float installment) {
+	public void setInstallment(Long installment) {
 		this.installment = installment;
 	}
 
@@ -243,11 +243,11 @@ public class PaymentVO implements Serializable {
 		this.installmentBank = installmentBank;
 	}
 
-	public Float getAccounts() {
+	public Long getAccounts() {
 		return accounts;
 	}
 
-	public void setAccounts(Float accounts) {
+	public void setAccounts(Long accounts) {
 		this.accounts = accounts;
 	}
 
@@ -259,11 +259,11 @@ public class PaymentVO implements Serializable {
 		this.accountsBank = accountsBank;
 	}
 
-	public Float getTransfer() {
+	public Long getTransfer() {
 		return transfer;
 	}
 
-	public void setTransfer(Float transfer) {
+	public void setTransfer(Long transfer) {
 		this.transfer = transfer;
 	}
 

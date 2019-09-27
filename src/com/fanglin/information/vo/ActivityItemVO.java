@@ -5,19 +5,19 @@ public class ActivityItemVO implements java.io.Serializable {
 	private static final long serialVersionUID = 2606014203338812720L;
 
 	private Long aiid;
-	
+
 	private Long aid;
-	
+
 	private String name;
-	
+
 	private Short type;
-	
+
 	private Long asid;
-	
-	private Float money;
-	
+
+	private Integer money;
+
 	private String activity;
-	
+
 	public ActivityItemVO() {
 		super();
 	}
@@ -62,11 +62,11 @@ public class ActivityItemVO implements java.io.Serializable {
 		this.asid = asid;
 	}
 
-	public Float getMoney() {
+	public Integer getMoney() {
 		return money;
 	}
 
-	public void setMoney(Float money) {
+	public void setMoney(Integer money) {
 		this.money = money;
 	}
 
@@ -77,5 +77,5 @@ public class ActivityItemVO implements java.io.Serializable {
 	public void setActivity(String activity) {
 		this.activity = activity;
 	}
-	
+
 }

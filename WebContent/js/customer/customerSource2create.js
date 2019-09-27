@@ -35,6 +35,7 @@ jQuery(function ($) {
     createcustomerOrigin.items.gender.switchBtn("gender");
 
     function addcustomerOrigin() {
+        
         if (com.validate("addcustomersource")) return false;
 
         var options = {

@@ -20,7 +20,7 @@ public class PurchaseBalanceVO implements Serializable{
 	
 	private Timestamp createTime;
 	
-	private Float balance;
+	private Long balance;
 	
 	private Short status;
 	
@@ -68,11 +68,11 @@ public class PurchaseBalanceVO implements Serializable{
 		this.createTime = createTime;
 	}
 
-	public Float getBalance() {
+	public Long getBalance() {
 		return balance;
 	}
 
-	public void setBalance(Float balance) {
+	public void setBalance(Long balance) {
 		this.balance = balance;
 	}
 

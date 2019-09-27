@@ -14,7 +14,7 @@ public class RefundsVO  implements Serializable{
 	
 	private Long spid;
 	
-	private Float total;
+	private Long total;
 	
 	private Short status;
 	
@@ -50,11 +50,11 @@ public class RefundsVO  implements Serializable{
 		this.spid = spid;
 	}
 
-	public Float getTotal() {
+	public Long getTotal() {
 		return total;
 	}
 
-	public void setTotal(Float total) {
+	public void setTotal(Long total) {
 		this.total = total;
 	}
 

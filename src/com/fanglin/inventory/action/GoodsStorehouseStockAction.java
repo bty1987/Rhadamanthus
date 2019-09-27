@@ -23,7 +23,6 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.inventory.service.GoodsStorehouseStockService;
-import com.fanglin.inventory.vo.CheckListVO;
 import com.fanglin.inventory.vo.GoodsStorehouseStockVO;
 
 @ParentPackage("base")
@@ -40,9 +39,7 @@ public class GoodsStorehouseStockAction extends BaseListAction {
 
 	private List<GoodsStorehouseStockVO> goodsStorehouseStocks;
 
-	private CheckListVO checkList;
-
-	private Float nums;
+	private Integer nums;
 
 	@Action(value = "pageGoodsStorehouseStock", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageGoodsStorehouseStock() throws FLException {
@@ -68,10 +65,18 @@ public class GoodsStorehouseStockAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "checkGoodsStorehouseStock", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String checkGoodsStorehouseStock() throws FLException {
+	@Action(value = "surplusGoodsStorehouseStock", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String surplusGoodsStorehouseStock() throws FLException {
 
-		goodsStorehouseStockService.checkGoodsStorehouseStock(checkList, queryUserId(), queryCompany());
+		goodsStorehouseStockService.surplusGoodsStorehouseStock(goodsStorehouseStock, queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "lossesGoodsStorehouseStock", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String lossesGoodsStorehouseStock() throws FLException {
+
+		goodsStorehouseStockService.lossesGoodsStorehouseStock(goodsStorehouseStock, queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -100,14 +105,6 @@ public class GoodsStorehouseStockAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	public CheckListVO getCheckList() {
-		return checkList;
-	}
-
-	public void setCheckList(CheckListVO checkList) {
-		this.checkList = checkList;
-	}
-
 	public GoodsStorehouseStockVO getGoodsStorehouseStock() {
 		return goodsStorehouseStock;
 	}
@@ -124,11 +121,11 @@ public class GoodsStorehouseStockAction extends BaseListAction {
 		this.goodsStorehouseStocks = goodsStorehouseStocks;
 	}
 
-	public Float getNums() {
+	public Integer getNums() {
 		return nums;
 	}
 
-	public void setNums(Float nums) {
+	public void setNums(Integer nums) {
 		this.nums = nums;
 	}
 

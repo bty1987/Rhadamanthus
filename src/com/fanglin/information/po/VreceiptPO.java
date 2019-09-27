@@ -21,47 +21,43 @@ import com.fanglin.personel.po.UserPO;
 public class VreceiptPO implements Serializable {
 
 	private static final long serialVersionUID = 7438878699667566721L;
-	
+
 	public static final String COLUMN_ORDERID_STR = "orderId";
-	
+
 	public static final String COLUMN_BANKINFO_STR = "bankInfo";
-	
-	public static final String COLUMN_VRID_STR="vrid";
-	
-	public static final float COLUMN_CASH_INT = 0f;
-	
-	public static final float COLUMN_BANK_INT = 0f;
-	
-	public static final float COLUMN_COUPON_INT = 0f;
+
+	public static final String COLUMN_VRID_STR = "vrid";
 
 	private long vrid;// 活动收据ID
-	
+
 	private UserPO collecter;// 收款人
-	
+
 	private Timestamp collectTime;// 收款时间
-	
-	private float cash;// 现金
-	
-	private float bank;// 刷卡
-	
+
+	private long cash;// 现金
+
+	private long bank;// 刷卡
+
 	private String bankInfo;// 刷卡信息
-	
-	private float coupon;//券值
-	
-	private String couponInfo;//券信息
-	
+
+	private long coupon;// 券值
+
+	private String couponInfo;// 券信息
+
 	private String comment;// 说明
-	
-	public VreceiptPO(){
+
+	public VreceiptPO() {
 		super();
 	}
+
 	public VreceiptPO(UserPO collecter) {
 		super();
 		this.collecter = collecter;
 	}
 
 	@Id
-	@GeneratedValue(strategy = IDENTITY)// 主键由数据库自动生成
+	@GeneratedValue(strategy = IDENTITY)
+	// 主键由数据库自动生成
 	@Column(name = "vrid")
 	public long getVrid() {
 		return vrid;
@@ -76,6 +72,7 @@ public class VreceiptPO implements Serializable {
 	public UserPO getCollecter() {
 		return collecter;
 	}
+
 	public void setCollecter(UserPO collecter) {
 		this.collecter = collecter;
 	}
@@ -84,26 +81,26 @@ public class VreceiptPO implements Serializable {
 	public Timestamp getCollectTime() {
 		return collectTime;
 	}
-	
+
 	public void setCollectTime(Timestamp collectTime) {
 		this.collectTime = collectTime;
 	}
-	
+
 	@Column(name = "cash")
-	public float getCash() {
+	public long getCash() {
 		return cash;
 	}
 
-	public void setCash(float cash) {
+	public void setCash(long cash) {
 		this.cash = cash;
 	}
 
 	@Column(name = "bank")
-	public float getBank() {
+	public long getBank() {
 		return bank;
 	}
 
-	public void setBank(float bank) {
+	public void setBank(long bank) {
 		this.bank = bank;
 	}
 
@@ -115,23 +112,25 @@ public class VreceiptPO implements Serializable {
 	public void setBankInfo(String bankInfo) {
 		this.bankInfo = bankInfo;
 	}
-	
+
 	@Column(name = "coupon")
-	public float getCoupon() {
+	public long getCoupon() {
 		return coupon;
 	}
-	public void setCoupon(float coupon) {
+
+	public void setCoupon(long coupon) {
 		this.coupon = coupon;
 	}
-	
+
 	@Column(name = "couponInfo")
 	public String getCouponInfo() {
 		return couponInfo;
 	}
+
 	public void setCouponInfo(String couponInfo) {
 		this.couponInfo = couponInfo;
 	}
-	
+
 	@Column(name = "comment")
 	public String getComment() {
 		return comment;
@@ -140,5 +139,5 @@ public class VreceiptPO implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 }

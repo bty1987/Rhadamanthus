@@ -35,15 +35,15 @@ jQuery(function($) {
                 "class": "ace ace-checkbox-2"
             }).val(v.eid);
             var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.content);
-
+            
             var propertyArr = [
                 ["非打折总额:", v.undisPrice, "grey"],
                 ["打折总额:", v.disPrice, "grey"],
                 ["总价:", v.total, "grey"],
-                ["类型",typeDict[v.type],'grey'],
-                ["状态:", v.status == 0 ? "初始" : v.status == 1?"已提交":"-" , "red"],
+                ["类型", typeDict[v.type], 'grey'],
+                ["状态:", v.status == 0 ? "初始" : v.status == 1 ? "已提交" : "-" , "red"],
                 ["添加时间:", v.createTime, "grey"],
-                ["说明:", v.content,"grey"]
+                ["说明:", v.content, "grey"]
             ];
 
             $.each(propertyArr, function (index,value) {

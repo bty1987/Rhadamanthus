@@ -62,9 +62,9 @@ public class PaymentPO implements Serializable {
 	
 	private CustomerPO customer;
 	
-	private float balance;
+	private long balance;
 	
-	private float recharge;
+	private long recharge;
 	
 	private short type;
 	
@@ -131,20 +131,20 @@ public class PaymentPO implements Serializable {
 	}
 
 	@Column(nullable = false, name="balance")
-	public float getBalance(){
+	public long getBalance(){
 		return balance;
 	}
 
-	public void setBalance(float balance){
+	public void setBalance(long balance){
 		this.balance = balance;
 	}
 
 	@Column(nullable = false, name="recharge")
-	public float getRecharge(){
+	public long getRecharge(){
 		return recharge;
 	}
 
-	public void setRecharge(float recharge){
+	public void setRecharge(long recharge){
 		this.recharge = recharge;
 	}
 

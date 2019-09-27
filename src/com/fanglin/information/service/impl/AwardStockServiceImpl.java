@@ -145,7 +145,7 @@ public class AwardStockServiceImpl implements AwardStockService {
 			throw new FLException(160038, "库存不足");
 		}
 
-		float num = awardStockVO.getNum();
+		int num = awardStockVO.getNum();
 
 		awardStockPO.setNum(Arith.sub(awardStockPO.getNum(), num));
 
@@ -170,7 +170,7 @@ public class AwardStockServiceImpl implements AwardStockService {
 			throw new FLException(160041, "物品不能入库");
 		}
 
-		float num = awardStockVO.getNum();
+		int num = awardStockVO.getNum();
 
 		awardStockPO.setNum(Arith.add(awardStockPO.getNum(), num));
 
@@ -198,7 +198,7 @@ public class AwardStockServiceImpl implements AwardStockService {
 
 		short type = awardStockPO.getNum() > awardStockVO.getNum() ? AwardRecordPO.TYPE_LOSSES_INT : AwardRecordPO.TYPE_SURPLUS_INT;
 
-		float num = awardStockVO.getNum();
+		int num = awardStockVO.getNum();
 
 		awardStockVO.setNum(Math.abs(Arith.sub(awardStockPO.getNum(), awardStockVO.getNum())));
 		awardStockPO.setNum(num);

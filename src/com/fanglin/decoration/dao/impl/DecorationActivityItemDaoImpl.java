@@ -11,16 +11,16 @@
 
 package com.fanglin.decoration.dao.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
-import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.type.StandardBasicTypes;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.decoration.dao.DecorationActivityItemDao;
 import com.fanglin.decoration.po.DecorationActivityItemPO;
+import com.fanglin.utils.Arith;
 
 @Repository("decorationActivityItemDao")
 public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityItemPO> implements DecorationActivityItemDao {
@@ -46,13 +46,10 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 	}
 	
 	@Override
-	public float amountDecorationActivityItemForIsPayment(String orderId, short isPayment) {
-		
+	public long amountDecorationActivityItemForIsPayment(String orderId, short isPayment) {
 		String sql = "select COALESCE(SUM(money*num), 0) as priceSum from decoration.decorationActivityitem where orderId =:orderId and type = 0 and isPayment =:isPayment and state = 0";
-	    SQLQuery sqlQuery = session().createSQLQuery(sql);
-	    sqlQuery.addScalar("priceSum", StandardBasicTypes.FLOAT).setString("orderId", orderId).setShort("isPayment", isPayment);
-	    
-	    return ((Float) sqlQuery.uniqueResult()).floatValue();
+		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).setShort("isPayment", isPayment).uniqueResult();
+		
+		return Arith.div(sqlQuery.longValue(), 1000000);
 	}
-
 }

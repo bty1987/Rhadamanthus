@@ -8,29 +8,29 @@ public class WorkerBalanceVO implements Serializable {
 
 	private static final long serialVersionUID = 5454778312323725130L;
 
-    private Long wbid;
-	
+	private Long wbid;
+
 	private UserBaseVO user;
-	
-	private Float deposit;
-	
-	private Float salary;
-	
-	private Float toplimit;
-	
+
+	private Long deposit;
+
+	private Long salary;
+
+	private Long toplimit;
+
 	private Short status;
-	
+
 	private Integer company;
 
-	public WorkerBalanceVO(){
+	public WorkerBalanceVO() {
 		super();
 	}
-	
-	public WorkerBalanceVO(UserBaseVO user){
+
+	public WorkerBalanceVO(UserBaseVO user) {
 		super();
 		this.user = user;
 	}
-	
+
 	public Long getWbid() {
 		return wbid;
 	}
@@ -47,27 +47,27 @@ public class WorkerBalanceVO implements Serializable {
 		this.user = user;
 	}
 
-	public Float getDeposit() {
+	public Long getDeposit() {
 		return deposit;
 	}
 
-	public void setDeposit(Float deposit) {
+	public void setDeposit(Long deposit) {
 		this.deposit = deposit;
 	}
 
-	public Float getSalary() {
+	public Long getSalary() {
 		return salary;
 	}
 
-	public void setSalary(Float salary) {
+	public void setSalary(Long salary) {
 		this.salary = salary;
 	}
 
-	public Float getToplimit() {
+	public Long getToplimit() {
 		return toplimit;
 	}
 
-	public void setToplimit(Float toplimit) {
+	public void setToplimit(Long toplimit) {
 		this.toplimit = toplimit;
 	}
 
@@ -85,6 +85,6 @@ public class WorkerBalanceVO implements Serializable {
 
 	public void setCompany(Integer company) {
 		this.company = company;
-	} 
-	
+	}
+
 }

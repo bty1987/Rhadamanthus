@@ -1,9 +1,12 @@
 $(function () {
-    var customerSourceDesigner = {
+    var customerSource = {
+            
         updateAndApprovalBtn: com.focusPage("#updateAndApprovalBtn"),
+        
         modals:{
             sustomersourceDesignerModal: com.focusPage("#sustomersourceDesigner")
         },
+        
         items: {
             name: com.focusPage("#name"),
             phone: com.focusPage("#phone"),
@@ -23,34 +26,40 @@ $(function () {
         houseNumberGroup: com.focusPage("#houseNumberGroup"),
         currentCustomerSource: {},
         typeArray: {},
-        currentVillageName: null
+        currentVillageName: null,
+        
+        status: {}
     };
 
-    customerSourceDesigner.updateAndApprovalBtn.bindClick(customerApproval);
+    customerSource.updateAndApprovalBtn.bindClick(customerApproval);
 
-    customerSourceDesigner.modals.sustomersourceDesignerModal.on("hide.bs.modal", function(){
+    customerSource.modals.sustomersourceDesignerModal.on("hide.bs.modal", function(){
         com.closeTip();
-        com.cleanItems(customerSourceDesigner.items);
+        com.cleanItems(customerSource.items);
 
-        customerSourceDesigner.items.rule.html("");
-        customerSourceDesigner.items.houseNumber.removeAttr("data-content");
-        customerSourceDesigner.items.name.removeAttr("data-content");
+        customerSource.items.rule.html("");
+        customerSource.items.houseNumber.removeAttr("data-content");
+        customerSource.items.name.removeAttr("data-content");
 
-        customerSourceDesigner.items.villageNoDesiger.prop("disabled", false);
-        customerSourceDesigner.items.houseNumber.removeAttr("readOnly");
-        customerSourceDesigner.items.name.removeAttr("readOnly");
-        customerSourceDesigner.items.phone.removeAttr("readOnly");
+        customerSource.items.villageNoDesiger.prop("disabled", false);
+        customerSource.items.houseNumber.removeAttr("readOnly");
+        customerSource.items.name.removeAttr("readOnly");
+        customerSource.items.phone.removeAttr("readOnly");
     });
 
     com.post(api.ds.decoration, {}, function (res) {
-        customerSourceDesigner.items.houseClass.bindData(res.houseClass, 'key', 'value');
-        customerSourceDesigner.items.salesmanType.bindData(res.salesmanType, 'key', 'value');
-        customerSourceDesigner.items.orderType.bindData(res.type, 'key', 'value');
-        customerSourceDesigner.items.resourceType.bindData(res.status, 'key', 'value');
+        customerSource.items.houseClass.bindData(res.houseClass, 'key', 'value');
+        customerSource.items.salesmanType.bindData(res.salesmanType, 'key', 'value');
+        customerSource.items.orderType.bindData(res.type, 'key', 'value');
+        customerSource.items.resourceType.bindData(res.status, 'key', 'value');
     }, null, false);
 
     com.initTypeahead('villageNoDesiger', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", null);
     com.initTypeahead('salesman', api.personel.queryUserByPinyin, "pinyinName", {"user.status": 0}, 'autoFillKeyValue', 'key', 'value', null);
+    
+    com.post(api.ds.customer, {}, function (res) {
+        customerSource.status = res.customerSourceStatus.split('key', 'value');
+    }, null, false);
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
@@ -90,6 +99,7 @@ $(function () {
                 ["楼牌号: ", v.houseNumber, "blue"],
                 ["建筑面积: ", v.buildArea, "blue"],
                 ["装修单号: ", com.checkNull(v.orderId, '无'), "blue"],
+                ["状态: ", customerSource.status[v.status], "red"],
                 ["备注: ", com.checkNull(v.comment, '无'), "grey"]
             ];
 
@@ -112,7 +122,7 @@ $(function () {
             //转装修单提交审批
             $btnApproval.click(function () {
                 initqueryApprovalUserForCheckbox("approveMan", 14);
-                customerSourceDesigner.currentCustomerSource = v;
+                customerSource.currentCustomerSource = v;
                 com.focusPage("#sustomersourceDesignerDialog").html("提交审批");
 
                 editcustomerOrigin(v);
@@ -137,32 +147,32 @@ $(function () {
         displayFunc.init("resultList", data);
     }, "pagenation", "customerOriginDesignerPostData", null, false, null, null);
 
-    customerSourceDesigner.items.villageNoDesiger.on('change', function () {
-        com.post(api.data.queryVillageById, {"village.no": customerSourceDesigner.items.villageNoDesiger.val()}, function (res) {
-            customerSourceDesigner.items.rule.html("推荐楼牌号规则: " + res.village.rule);
+    customerSource.items.villageNoDesiger.on('change', function () {
+        com.post(api.data.queryVillageById, {"village.no": customerSource.items.villageNoDesiger.val()}, function (res) {
+            customerSource.items.rule.html("推荐楼牌号规则: " + res.village.rule);
         }, null, false);
     });
 
     function editcustomerOrigin(d) {
-        com.cleanItems(customerSourceDesigner.items);
+        com.cleanItems(customerSource.items);
         com.clearValidator();
 
-        customerSourceDesigner.items.villageNoDesiger.prop("disabled", true);
-        customerSourceDesigner.items.houseNumber.attr("disabled", "disabled");
-        customerSourceDesigner.items.name.attr("disabled", "disabled");
-        customerSourceDesigner.items.phone.attr("disabled", "disabled");
+        customerSource.items.villageNoDesiger.prop("disabled", true);
+        customerSource.items.houseNumber.attr("disabled", "disabled");
+        customerSource.items.name.attr("disabled", "disabled");
+        customerSource.items.phone.attr("disabled", "disabled");
 
-        customerSourceDesigner.items.name.val(d.name);
-        customerSourceDesigner.items.phone.val(d.phone);
-        customerSourceDesigner.items.houseNumber.val(d.houseNumber);
+        customerSource.items.name.val(d.name);
+        customerSource.items.phone.val(d.phone);
+        customerSource.items.houseNumber.val(d.houseNumber);
 
         if(d.village != null && d.village.name != null){
             com.updateTypeahead('villageNoDesiger', d.village.no, d.village.name + "-" + d.village.cityProper.name);
-            customerSourceDesigner.currentVillageName = d.village.name;
+            customerSource.currentVillageName = d.village.name;
         }else{
             com.cleanTypeahead('villageNoDesiger');
         }
-        customerSourceDesigner.modals.sustomersourceDesignerModal.modal("show");
+        customerSource.modals.sustomersourceDesignerModal.modal("show");
     }
 
     //提交审批
@@ -181,13 +191,13 @@ $(function () {
         com.showConfirm("是否确认提交审批", function(){
             var option = {
                 "approval.receiver.userId": receiverId,
-                "approvalCustomerOriginTDecoration.customerOrigin.csid" : customerSourceDesigner.currentCustomerSource.csid,
-                "approvalCustomerOriginTDecoration.type": customerSourceDesigner.items.orderType.val(),
+                "approvalCustomerOriginTDecoration.customerOrigin.csid" : customerSource.currentCustomerSource.csid,
+                "approvalCustomerOriginTDecoration.type": customerSource.items.orderType.val(),
                 "approvalCustomerOriginTDecoration.salesman.userId": com.typeahead("salesman"),
-                "approvalCustomerOriginTDecoration.salesmanType": customerSourceDesigner.items.salesmanType.val(),
-                "approvalCustomerOriginTDecoration.houseType": customerSourceDesigner.items.houseType.val(),
-                "approvalCustomerOriginTDecoration.houseClass": customerSourceDesigner.items.houseClass.val(),
-                "approvalCustomerOriginTDecoration.resourceType": customerSourceDesigner.items.resourceType.val()
+                "approvalCustomerOriginTDecoration.salesmanType": customerSource.items.salesmanType.val(),
+                "approvalCustomerOriginTDecoration.houseType": customerSource.items.houseType.val(),
+                "approvalCustomerOriginTDecoration.houseClass": customerSource.items.houseClass.val(),
+                "approvalCustomerOriginTDecoration.resourceType": customerSource.items.resourceType.val()
             };
 
             com.post(api.approval.submitApprovalForCustomerOriginTDecoration, option, function (res) {
@@ -195,7 +205,7 @@ $(function () {
                     com.showAlert(com.info, "操作成功");
                     com.clearValidator();
                     searcher.doSearch();
-                    customerSourceDesigner.modals.sustomersourceDesignerModal.modal("hide");
+                    customerSource.modals.sustomersourceDesignerModal.modal("hide");
                 }else{
                     com.showAlert(com.error, "提交失败");
                 }

@@ -29,11 +29,11 @@ public class AccessoriesItemPO implements Serializable {
 
 	private GoodsPO goods;
 	
-	private float selling;
+	private int selling;
 
-	private float num;
+	private int num;
 	
-	private float surplus;
+	private int surplus;
 
 	public AccessoriesItemPO() {
 		super();
@@ -75,33 +75,33 @@ public class AccessoriesItemPO implements Serializable {
 	}
 
 	@Column(name = "selling")
-	public float getSelling() {
+	public int getSelling() {
 		return selling;
 	}
 
-	public void setSelling(float selling) {
+	public void setSelling(int selling) {
 		this.selling = selling;
 	}
 
 	@Column(name = "num")
-	public float getNum() {
+	public int getNum() {
 		return num;
 	}
 
-	public void setNum(float num) {
+	public void setNum(int num) {
 		this.num = num;
 	}
 	
 	@Column(name = "surplus")
-	public float getSurplus() {
+	public int getSurplus() {
 		return surplus;
 	}
 
-	public void setSurplus(float surplus) {
+	public void setSurplus(int surplus) {
 		this.surplus = surplus;
 	}
 
-	public AccessoriesItemPO init(long aid, long gid, float selling, float num){
+	public AccessoriesItemPO init(long aid, long gid, int selling, int num){
 		
 		setAid(aid);
 		

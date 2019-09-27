@@ -6,23 +6,23 @@ import java.util.List;
 public class QuotationFunctionAreaVO implements Serializable {
 
 	private static final long serialVersionUID = 793543025071046420L;
-	
+
 	private Integer id; // 配合页面存储信息
 
 	private Long qfaId;
-	
+
 	private String functionAreaName;
-	
+
 	private Integer functionAreaOrder;
-	
-	private Float sum;
-	
+
+	private Long sum;
+
 	private String functionAreaType;
-	
+
 	private Short type;
-	
-	private Float total;
-	
+
+	private Long total;
+
 	private List<QuotationFunctionAreaItemVO> quotationFunctionAreaItems;
 
 	public Integer getId() {
@@ -33,52 +33,51 @@ public class QuotationFunctionAreaVO implements Serializable {
 		this.id = id;
 	}
 
-	public Long getQfaId(){
+	public Long getQfaId() {
 		return qfaId;
 	}
 
-	public void setQfaId(Long qfaId){
+	public void setQfaId(Long qfaId) {
 		this.qfaId = qfaId;
 	}
 
-	public String getFunctionAreaName(){
+	public String getFunctionAreaName() {
 		return functionAreaName;
 	}
 
-	public void setFunctionAreaName(String functionAreaName){
+	public void setFunctionAreaName(String functionAreaName) {
 		this.functionAreaName = functionAreaName;
 	}
 
-	public Integer getFunctionAreaOrder(){
+	public Integer getFunctionAreaOrder() {
 		return functionAreaOrder;
 	}
 
-	public void setFunctionAreaOrder(Integer functionAreaOrder){
+	public void setFunctionAreaOrder(Integer functionAreaOrder) {
 		this.functionAreaOrder = functionAreaOrder;
 	}
 
-	public void setFunctionAreaType(String functionAreaType){
+	public void setFunctionAreaType(String functionAreaType) {
 		this.functionAreaType = functionAreaType;
 	}
 
-	public String getFunctionAreaType(){
+	public String getFunctionAreaType() {
 		return functionAreaType;
 	}
 
-	public void setSum(Float sum){
+	public void setSum(Long sum) {
 		this.sum = sum;
 	}
 
-	public Float getSum(){
+	public Long getSum() {
 		return sum;
 	}
-	
+
 	public List<QuotationFunctionAreaItemVO> getQuotationFunctionAreaItems() {
 		return quotationFunctionAreaItems;
 	}
 
-	public void setQuotationFunctionAreaItems(
-			List<QuotationFunctionAreaItemVO> quotationFunctionAreaItems) {
+	public void setQuotationFunctionAreaItems(List<QuotationFunctionAreaItemVO> quotationFunctionAreaItems) {
 		this.quotationFunctionAreaItems = quotationFunctionAreaItems;
 	}
 
@@ -90,11 +89,11 @@ public class QuotationFunctionAreaVO implements Serializable {
 		this.type = type;
 	}
 
-	public Float getTotal() {
+	public Long getTotal() {
 		return total;
 	}
 
-	public void setTotal(Float total) {
+	public void setTotal(Long total) {
 		this.total = total;
 	}
 

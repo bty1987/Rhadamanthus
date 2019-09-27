@@ -80,7 +80,8 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 
 		List<AddReduceItemPO> addReduceItemPOs = addReduceItemDao.queryAddReduceItemByAddReduceId(addReduceVO.getArId());
 		List<AddReduceItemVO> addReduceItemVOs = new ArrayList<AddReduceItemVO>();
-		Integer divisor = Integer.parseInt(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
+
+		Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
 
 		for (AddReduceItemPO addReduceItemPO : addReduceItemPOs) {
 
@@ -134,13 +135,14 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 	}
 
 	@Override
-	public List<AddReduceItemVO> queryAddReduceItemByAddReduceIds(List<Integer> addReduceIds) throws FLException {
+	public List<AddReduceItemVO> queryAddReduceItemByAddReduceIds(List<Long> arids) throws FLException {
 
 		List<AddReduceItemVO> addReduceItemVOs = new ArrayList<AddReduceItemVO>();
 
-		if (addReduceIds != null && addReduceIds.size() > 0) {
-			List<AddReduceItemPO> addReduceItemPOs = addReduceItemDao.queryAddReduceItemByAddReduceIds(addReduceIds);
-			Integer divisor = Integer.parseInt(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
+		if (arids != null && arids.size() > 0) {
+			List<AddReduceItemPO> addReduceItemPOs = addReduceItemDao.queryAddReduceItemByAddReduceIds(arids);
+
+			Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
 
 			for (AddReduceItemPO addReduceItemPO : addReduceItemPOs) {
 
@@ -220,7 +222,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 
 		AddReduceItemPO addReduceItemPO = null;
 
-		Integer divisor = Integer.parseInt(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
+		Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
 
 		if (addReduceItemVO.getAriId() == null) {
 
@@ -318,7 +320,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 		}
 
 		if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_QUOTATION_ITEM_INT) {
-			Integer divisor = Integer.parseInt(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
+			Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
 			handleQuotationItem(addReduceItemPO.getQuotationFunctionArea().getQfaId(), divisor, addReduceItemPO.getQuoteItemId(), 0, addReduceItemPO.getNum());
 		} else if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_ADD_ITEM_INT) {
 			handleAddReduceItem(addReduceItemPO.getQuoteItemId(), 0, addReduceItemPO.getNum());
@@ -336,7 +338,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 		return 0;
 	}
 
-	private int handleQuotationItem(long quotationFunctionAreaId, Integer divisor, long quotationItemId, float vonum, float ponum) throws FLException {
+	private int handleQuotationItem(long quotationFunctionAreaId, long divisor, long quotationItemId, int vonum, int ponum) throws FLException {
 
 		QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaId, divisor), quotationItemId);
 
@@ -344,8 +346,8 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 			throw new FLException(200013, "报价项不存在");
 		}
 
-		float quotationFunctionAreaItemNum = quotationFunctionAreaItemPO.getNum();
-		float _diff = Arith.sub(vonum, ponum);
+		int quotationFunctionAreaItemNum = quotationFunctionAreaItemPO.getNum();
+		int _diff = Arith.sub(vonum, ponum);
 
 		if (_diff > 0 && quotationFunctionAreaItemNum < _diff) {
 			throw new FLException(140039, "减项工程量大于引用项目");
@@ -358,7 +360,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 		return 0;
 	}
 
-	private int handleAddReduceItem(long quotationItemId, float vonum, float ponum) throws FLException {
+	private int handleAddReduceItem(long quotationItemId, int vonum, int ponum) throws FLException {
 
 		AddReduceItemPO _addReduceItemPO = addReduceItemDao.get(quotationItemId);
 
@@ -366,49 +368,57 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 			throw new FLException(140036, "增减项目不存在");
 		}
 
-		float _addReduceItemNum = _addReduceItemPO.getNum();
-		float _diff = Arith.sub(vonum, ponum);
+		int _addReduceItemNum = _addReduceItemPO.getNum();
+		int _diff = Arith.sub(vonum, ponum);
 
 		if (_diff > 0 && _addReduceItemNum < _diff) {
 			throw new FLException(140039, "减项工程量大于引用项目");
 		}
 
 		_addReduceItemPO.setNum(Arith.add(_addReduceItemNum, Arith.sub(ponum, vonum)));
+
 		addReduceItemDao.update(_addReduceItemPO);
 
 		return 0;
 	}
 
-	private int handleExtensionItem(long quotationItemId, float vonum, float ponum) throws FLException {
+	private int handleExtensionItem(long quotationItemId, int vonum, int ponum) throws FLException {
 
 		ExtensionItemPO _extensionItemPO = extensionItemDao.get(quotationItemId);
+
 		if (_extensionItemPO == null) {
 			throw new FLException(140036, "增减项目不存在");
 		}
-		float _extensionItemNum = _extensionItemPO.getNum();
-		float _diff = Arith.sub(vonum, ponum);
+
+		int _extensionItemNum = _extensionItemPO.getNum();
+		int _diff = Arith.sub(vonum, ponum);
 
 		if (_diff > 0 && _extensionItemNum < _diff) {
 			throw new FLException(140039, "减项工程量大于引用项目");
 		}
 
 		_extensionItemPO.setNum(Arith.add(_extensionItemNum, Arith.sub(ponum, vonum)));
+
 		extensionItemDao.update(_extensionItemPO);
 
 		return 0;
 	}
 
-	private int handleDecorationPayment(AddReducePO addReducePO) {
+	private int handleDecorationPayment(AddReducePO addReducePO) throws FLException {
+
 		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.get(addReducePO.getDpId());
 
-		if (decorationPaymentPO != null) {
+		if (decorationPaymentPO == null)
+			return 0;
 
-			decorationPaymentPO.setReferMoney((float) Math.rint(addReducePO.getTotal()));
-
-			decorationPaymentDao.update(decorationPaymentPO);
+		if (decorationPaymentPO.getPaymentStatus() != DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT) {
+			throw new FLException(140035, "当前增减项款项状态不可操作");
 		}
+
+		decorationPaymentPO.setReferMoney(Arith.mul(Arith.div(addReducePO.getTotal(), 1000000), 1000000));
+
+		decorationPaymentDao.update(decorationPaymentPO);
 
 		return 0;
 	}
-
 }

@@ -109,16 +109,16 @@ public class MaterialItemServiceImpl implements MaterialItemService {
 
 		MaterialPO materialPO = materialDao.get(materialVO.getMid());
 
-		float total = 0;
-		float discountTotal = 0;
-		
+		long total = 0;
+		long discountTotal = 0;
+
 		Map<String, List<MaterialItemPO>> packageItems = new HashMap<String, List<MaterialItemPO>>();
 		Map<String, List<MaterialItemPO>> originalPackageItems = new HashMap<String, List<MaterialItemPO>>();
 
 		if (materialPO == null) {
 			throw new FLException(180001, "主材单不存在");
 		}
-		
+
 		if (materialPO.getStatus() != MaterialPO.STATUS_TYPE_INIT_INT) {
 			throw new FLException(180025, "主材单不可操作");
 		}
@@ -153,19 +153,19 @@ public class MaterialItemServiceImpl implements MaterialItemService {
 
 		if (materialItemVOs != null) {
 
-			float _total = packageMaterialItem(materialPO, materialItemVOs, packageItems);
-			float _discountTotal = setDisCountTotal(materialPO, materialItemVOs);
+			long _total = packageMaterialItem(materialPO, materialItemVOs, packageItems);
+			long _discountTotal = setDisCountTotal(materialPO, materialItemVOs);
 			total = Arith.add(total, _total);
 			discountTotal = Arith.add(_discountTotal, discountTotal);
 			for (String packageName : packageItems.keySet()) {
 
-				float tmpTotal = 0;
+				long tmpTotal = 0;
 				List<MaterialItemPO> tmpItems = packageItems.get(packageName);
 
 				if (originalPackageItems.containsKey(packageName)) {
 
 					tmpTotal = tmpItems.get(0).getTotal();
-					float _tmpTotal = tmpItems.get(0).getTotal();
+					long _tmpTotal = tmpItems.get(0).getTotal();
 					List<MaterialItemPO> tmpOriginalItems = originalPackageItems.get(packageName);
 
 					for (MaterialItemPO materialItemPO : tmpOriginalItems) {
@@ -187,7 +187,7 @@ public class MaterialItemServiceImpl implements MaterialItemService {
 		}
 
 		materialPO.setDistotal(discountTotal);
-		materialPO.setTotal(Arith.round(total, 2));
+		materialPO.setTotal(total);
 		materialDao.save(materialPO);
 
 		return 0;
@@ -202,7 +202,7 @@ public class MaterialItemServiceImpl implements MaterialItemService {
 		if (materialPO == null) {
 			throw new FLException(180001, "主材单不存在");
 		}
-		
+
 		if (materialPO.getStatus() != MaterialPO.STATUS_TYPE_INIT_INT) {
 			throw new FLException(180025, "主材单不可操作");
 		}
@@ -212,29 +212,29 @@ public class MaterialItemServiceImpl implements MaterialItemService {
 		}
 
 		MaterialItemPO materialItemPO = materialItemDao.get(materialItemVO.getMiid());
-		
-		if(materialItemPO == null){
-			throw new FLException(180022, "主材项不存在");
-		}
-		
-		if(materialItemPO.getStatus() != MaterialItemPO.STATUS_TYPE_INIT_INT){
+
+		if (materialItemPO == null) {
 			throw new FLException(180022, "主材项不存在");
 		}
 
-		float originalTotal = 0;
-		float discountTotal = 0;
-		
+		if (materialItemPO.getStatus() != MaterialItemPO.STATUS_TYPE_INIT_INT) {
+			throw new FLException(180022, "主材项不存在");
+		}
+
+		long originalTotal = 0;
+		long discountTotal = 0;
+
 		originalTotal = materialItemPO.getTotal();
 		discountTotal = Arith.mul(Arith.sub(materialItemVO.getNum(), materialItemPO.getNum()), materialItemPO.getSalePrice());
-		
+
 		materialItemPO.setNum(materialItemVO.getNum());
 		materialItemPO.setTotal(materialItemVO.getTotal());
-		
+
 		materialItemDao.update(materialItemPO);
-		
+
 		materialPO.setTotal(Arith.add(Arith.sub(materialItemVO.getTotal(), originalTotal), materialPO.getTotal()));
 		materialPO.setDistotal(Arith.add(materialPO.getDistotal(), discountTotal));
-		
+
 		materialDao.update(materialPO);
 	}
 
@@ -247,7 +247,7 @@ public class MaterialItemServiceImpl implements MaterialItemService {
 		if (materialPO == null) {
 			throw new FLException(180001, "主材单不存在");
 		}
-		
+
 		if (materialPO.getStatus() != MaterialPO.STATUS_TYPE_INIT_INT) {
 			throw new FLException(180025, "主材单不可操作");
 		}
@@ -256,39 +256,39 @@ public class MaterialItemServiceImpl implements MaterialItemService {
 			throw new FLException(180025, "主材单不可操作");
 		}
 
-		float originalTotal = 0;
-		float total = 0;
-		float originalDiscountTotal = 0;
-		float discountTotal = 0;
-		
+		long originalTotal = 0;
+		long total = 0;
+		long originalDiscountTotal = 0;
+		long discountTotal = 0;
+
 		for (MaterialItemVO materialItemVO : materialItemVOs) {
-			
+
 			MaterialItemPO materialItemPO = materialItemDao.get(materialItemVO.getMiid());
-			
-			if(materialItemPO == null){
+
+			if (materialItemPO == null) {
 				throw new FLException(180022, "主材项不存在");
 			}
-			
-			if(materialItemPO.getStatus() != MaterialItemPO.STATUS_TYPE_INIT_INT){
+
+			if (materialItemPO.getStatus() != MaterialItemPO.STATUS_TYPE_INIT_INT) {
 				throw new FLException(180022, "主材项不存在");
 			}
 
 			originalTotal = materialItemPO.getTotal();
 			total = materialItemVO.getTotal();
 			originalDiscountTotal = materialPO.getDistotal();
-			
+
 			materialItemPO.setNum(materialItemVO.getNum());
 			materialItemPO.setTotal(materialItemVO.getTotal());
 			materialItemPO.setComment(materialItemVO.getComment());
-			
+
 			materialItemDao.update(materialItemPO);
-			
+
 			discountTotal = Arith.mul(materialItemPO.getSalePrice(), Arith.sub(materialItemVO.getNum(), materialItemPO.getNum()));
 		}
 
 		materialPO.setDistotal(Arith.add(originalDiscountTotal, discountTotal));
 		materialPO.setTotal(Arith.add(Arith.sub(total, originalTotal), materialPO.getTotal()));
-		
+
 		materialDao.update(materialPO);
 	}
 
@@ -297,8 +297,8 @@ public class MaterialItemServiceImpl implements MaterialItemService {
 	public int changeMaterialItemForCaclType(MaterialItemVO materialItemVO, String userId) throws FLException {
 
 		MaterialItemPO materialItemPO = materialItemDao.get(materialItemVO.getMiid());
-		
-		if(materialItemPO == null){
+
+		if (materialItemPO == null) {
 			throw new FLException(180022, "主材项不存在");
 		}
 
@@ -318,7 +318,7 @@ public class MaterialItemServiceImpl implements MaterialItemService {
 			materialItemPO.setCalcType(MaterialItemPO.CALCTYPE_TYPE_BASE_INT);
 		}
 
-		materialItemPO.setPrePoint(0f);
+		materialItemPO.setPrePoint(0);
 
 		materialItemDao.update(materialItemPO);
 
@@ -342,13 +342,13 @@ public class MaterialItemServiceImpl implements MaterialItemService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int deleteMaterialItem(List<Long> miids, long mid) throws FLException {
-		
+
 		MaterialPO materialPO = materialDao.get(mid);
-		
+
 		if (materialPO == null) {
 			throw new FLException(180001, "主材单不存在");
 		}
-		
+
 		if (materialPO.getStatus() != MaterialPO.STATUS_TYPE_INIT_INT) {
 			throw new FLException(180025, "主材单不可操作");
 		}
@@ -356,15 +356,15 @@ public class MaterialItemServiceImpl implements MaterialItemService {
 		if (materialPO.getFullStatus() != MaterialPO.FINANCE_STATUS_TYPE_INIT_INT) {
 			throw new FLException(180025, "主材单不可操作");
 		}
-		
-		if (materialPO.getBalanceStatus() != MaterialPO.BALANCE_STATUS_TYPE_INIT_INT){
+
+		if (materialPO.getBalanceStatus() != MaterialPO.BALANCE_STATUS_TYPE_INIT_INT) {
 			throw new FLException(180025, "主材单不可操作");
 		}
 
 		int redirect = 0;
-		float _deleteTotal = 0;
-		float _deleteDiscountTotal = 0;
-		
+		long _deleteTotal = 0;
+		long _deleteDiscountTotal = 0;
+
 		MaterialItemPO materialItemPO = null;
 		List<String> materialItemPackageNames = new ArrayList<String>();
 
@@ -396,8 +396,8 @@ public class MaterialItemServiceImpl implements MaterialItemService {
 				}
 			}
 
-			float total = Arith.sub(materialPO.getTotal(), _deleteTotal);
-			float discountTotal = Arith.sub(materialPO.getDistotal(), _deleteDiscountTotal);
+			long total = Arith.sub(materialPO.getTotal(), _deleteTotal);
+			long discountTotal = Arith.sub(materialPO.getDistotal(), _deleteDiscountTotal);
 
 			materialPO.setTotal(total > 0 ? total : 0);
 			materialPO.setDistotal(discountTotal > 0 ? discountTotal : 0);
@@ -408,9 +408,9 @@ public class MaterialItemServiceImpl implements MaterialItemService {
 		return redirect;
 	}
 
-	public static float packageMaterialItem(MaterialPO materialPO, List<MaterialItemVO> materialItemVOs, Map<String, List<MaterialItemPO>> packageItems) {
+	public static long packageMaterialItem(MaterialPO materialPO, List<MaterialItemVO> materialItemVOs, Map<String, List<MaterialItemPO>> packageItems) {
 
-		float total = 0;
+		long total = 0;
 		short fullFlag = 0;
 		long mid = materialPO.getMid();
 
@@ -434,11 +434,11 @@ public class MaterialItemServiceImpl implements MaterialItemService {
 				String packageName = materialItemVO.getPackageName();
 
 				materialItemPO.setCalcType(MaterialItemPO.CALCTYPE_TYPE_POINT_INT);
-				materialItemPO.setPrePoint(0f);
+				materialItemPO.setPrePoint(0);
 
 				if (packageItems.containsKey(packageName)) {
 					List<MaterialItemPO> tmpItems = packageItems.get(packageName);
-					float tmpTotal = Arith.add(tmpItems.get(0).getTotal(), materialItemPO.getTotal());
+					long tmpTotal = Arith.add(tmpItems.get(0).getTotal(), materialItemPO.getTotal());
 					tmpItems.add(materialItemPO);
 
 					for (MaterialItemPO item : tmpItems) {
@@ -471,14 +471,14 @@ public class MaterialItemServiceImpl implements MaterialItemService {
 		return total;
 	}
 
-	public static float setDisCountTotal(MaterialPO materialPO, List<MaterialItemVO> materialItemVOs) {
-		float discountTotal = 0;
+	public static long setDisCountTotal(MaterialPO materialPO, List<MaterialItemVO> materialItemVOs) {
+		long discountTotal = 0;
 		for (MaterialItemVO materialItemVO : materialItemVOs) {
 			discountTotal = Arith.add(discountTotal, Arith.mul(materialItemVO.getNum(), materialItemVO.getSalePrice()));
 		}
 		return discountTotal;
 	}
-	
+
 	private List<MaterialItemVO> packageMaterialItems(List<MaterialItemPO> materialItemPOs) {
 
 		List<MaterialItemVO> materialItemVOs = new ArrayList<MaterialItemVO>();
@@ -531,9 +531,9 @@ public class MaterialItemServiceImpl implements MaterialItemService {
 					materialItemPackage.setPostPoint(materialItemPO.getPostPoint());
 
 					materialItemVO.setLevel(1);
-					materialItemVO.setTotal(0f);
-					materialItemVO.setPrePoint(0f);
-					materialItemVO.setPostPoint(0f);
+					materialItemVO.setTotal(0l);
+					materialItemVO.setPrePoint(0);
+					materialItemVO.setPostPoint(0);
 
 					packageFlagMap.put(packageName, materialItemPackage);
 
@@ -547,9 +547,9 @@ public class MaterialItemServiceImpl implements MaterialItemService {
 
 					materialItemPackage = packageFlagMap.get(packageName);
 					materialItemVO.setLevel(1);
-					materialItemVO.setTotal(0f);
-					materialItemVO.setPrePoint(0f);
-					materialItemVO.setPostPoint(0f);
+					materialItemVO.setTotal(0l);
+					materialItemVO.setPrePoint(0);
+					materialItemVO.setPostPoint(0);
 
 					packageItemsList.add(materialItemVO);
 				}

@@ -1,9 +1,10 @@
 package com.fanglin.approval.po;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -12,19 +13,19 @@ import javax.persistence.Table;
 public class ApprovalDecorationBelongItemPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -6194667291773962401L;
-	
+
 	public static final String COLUMN_AOBID_STR = "adbId";
 
 	private int adbiId;
-	
+
 	private int adbId;
-	
+
 	private String orderId;
-	
+
 	private int buid;
-	
-	private float rate;
-	
+
+	private int rate;
+
 	private short defaultFlag;
 
 	@Id
@@ -66,11 +67,11 @@ public class ApprovalDecorationBelongItemPO implements java.io.Serializable {
 	}
 
 	@Column(name = "rate")
-	public float getRate() {
+	public int getRate() {
 		return this.rate;
 	}
 
-	public void setRate(float rate) {
+	public void setRate(int rate) {
 		this.rate = rate;
 	}
 

@@ -200,10 +200,10 @@
             return;
         }
 
-        var cId = params["customer.customerId"];
+        var cid = params["customer.customerId"];
 
         var options = {
-            "customer.cid": cId,
+            "customer.cid": cid,
             "customer.name": com.focusPage("#customerName").val(),
             "customer.phone": com.focusPage("#phone").val(),
             "decorationContract.orderId": params["decoration.orderId"],
@@ -391,7 +391,7 @@
                     });
 
                     btnView.click(function () {
-                        viewdecorationDetail(v.orderId, v.type, v.version == null ? null : v.version.versionId, v.notSalesmanRate, order.decorationOrderStatus[v.status]);
+                        viewDecorationDetail(v.orderId, v.type, v.version == null ? null : v.version.versionId, v.notSalesmanRate, order.decorationOrderStatus[v.status]);
                     });
 
                     btnPrice.click(function () {
@@ -399,7 +399,7 @@
                     });
 
                     btnRevie.click(function () {
-                        viewdecorationBackVisitIndex(v.orderId);
+                        viewDecorationBackVisitIndex(v.orderId);
                     });
 
                     btnLine.click(function () {
@@ -411,15 +411,15 @@
                     });
 
                     btnAddMinus.click(function () {
-                        viewdecorationInDecreaseIndex(v.orderId, v.type);
+                        viewDecorationInDecreaseIndex(v.orderId, v.type);
                     });
 
                     btnInfo.click(function () {
-                        viewdecorationTimelineIndex(v.orderId);
+                        viewDecorationTimelineIndex(v.orderId);
                     });
 
                     btnScal.click(function () {
-                        viewdecorationInAudit(v.orderId);
+                        viewDecorationInAudit(v.orderId);
                     });
 
                     btnExtension.click(function () {
@@ -550,7 +550,7 @@
             }
         };
         //查看
-        var viewdecorationDetail = function (decorationOrderId, type, versionId, notSalesmanRate, status) {
+        var viewDecorationDetail = function (decorationOrderId, type, versionId, notSalesmanRate, status) {
             params["decorationOrderId"] = decorationOrderId;
             params["orderType"] = type;
             params["versionId"] = versionId;
@@ -569,13 +569,13 @@
             com.switchPage(api.index.quotationIndex.url);
         };
         //回访
-        var viewdecorationBackVisitIndex = function (decorationOrderId) {
+        var viewDecorationBackVisitIndex = function (decorationOrderId) {
             params["decorationOrderId"] = decorationOrderId;
             params.historyPage = api.index.decorationIndex.url;
             com.focusPage("#decorationPageContent").load(api.index.backVisitIndex.url);
         };
         //放线
-        var modalDrawLineModal = function (v, company) {
+        var modalDrawLineModal = function (v) {
             contract.decorationOrderId = v.orderId;
 
             com.post(api.decoration.queryDecorationContractByOrderId, {"decorationContract.orderId": v.orderId}, function (res) {
@@ -627,21 +627,21 @@
             });
         };
         //增减项
-        var viewdecorationInDecreaseIndex = function (decorationOrderId, type) {
+        var viewDecorationInDecreaseIndex = function (decorationOrderId, type) {
             params.decorationOrderId = decorationOrderId;
             params.decorationType = type;
             params.historyPage = api.index.decorationIndex.url;
             com.switchPage(api.index.addReduceIndex.url);
         };
         //扣款
-        var viewdecorationInAudit = function (orderId) {
+        var viewDecorationInAudit = function (orderId) {
             params['decorationOrderId'] = orderId;
             params['auditStatusType'] = 'select';
             params['historyPage'] = api.index.decorationIndex.url;
             com.switchPage(api.index.auditRecordIndex.url);
         };
         //时间轴
-        var viewdecorationTimelineIndex = function (orderId) {
+        var viewDecorationTimelineIndex = function (orderId) {
             params.decorationOrderId = orderId;
             params.historyPage = api.index.decorationIndex.url;
             com.switchPage(api.index.decorationTimelineIndex.url);

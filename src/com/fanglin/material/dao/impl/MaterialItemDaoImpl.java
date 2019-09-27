@@ -65,20 +65,20 @@ public class MaterialItemDaoImpl extends DaoImpl<MaterialItemPO> implements Mate
 	}
 
 	@Override
-	public void deleteMaterialItemByMid(long mid) {
-		String sql = "delete from material.materialitem where mid = ?";
-
-		session().createSQLQuery(sql).setLong(0, mid).executeUpdate();
-	}
-
-	@Override
-	public Float queryMaterialItemByTotal(long mid) {
+	public int amountMaterialItemForTotal(long mid) {
 
 		String sql = "select sum(money) from (select if(packagename = '', sum(total), total) money from material.materialitem where mid = :mid and status = 0 group by packagename) t";
 
 		BigDecimal num = (BigDecimal) session().createSQLQuery(sql).setLong("mid", mid).uniqueResult();
 
-		return num == null ? 0f : num.floatValue();
+		return num == null ? 0 : num.intValue();
+	}
+
+	@Override
+	public void deleteMaterialItemByMid(long mid) {
+		String sql = "delete from material.materialitem where mid = ?";
+
+		session().createSQLQuery(sql).setLong(0, mid).executeUpdate();
 	}
 
 }

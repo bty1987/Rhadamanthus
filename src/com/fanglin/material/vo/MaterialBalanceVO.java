@@ -24,17 +24,17 @@ public class MaterialBalanceVO implements java.io.Serializable {
 	
 	private Timestamp postTime;
 	
-	private Float balance;
+	private Long balance;
 	
-	private Float difference;
+	private Long difference;
 	
-	private Float vbalance;
+	private Long vbalance;
 	
-	private Float post;
+	private Long post;
 	
 	private Timestamp vbalanceTime;
 	
-	private Float total;
+	private Long total;
 	
 	private Short status;
 	
@@ -114,38 +114,6 @@ public class MaterialBalanceVO implements java.io.Serializable {
 		this.postTime = postTime;
 	}
 
-	public Float getBalance() {
-		return balance;
-	}
-
-	public void setBalance(Float balance) {
-		this.balance = balance;
-	}
-
-	public Float getDifference() {
-		return difference;
-	}
-
-	public void setDifference(Float difference) {
-		this.difference = difference;
-	}
-
-	public Float getVbalance() {
-		return vbalance;
-	}
-
-	public void setVbalance(Float vbalance) {
-		this.vbalance = vbalance;
-	}
-
-	public Float getPost() {
-		return post;
-	}
-
-	public void setPost(Float post) {
-		this.post = post;
-	}
-
 	@JSON(format="yyyy-MM-dd HH:mm:ss")
 	public Timestamp getVbalanceTime() {
 		return vbalanceTime;
@@ -155,11 +123,43 @@ public class MaterialBalanceVO implements java.io.Serializable {
 		this.vbalanceTime = vbalanceTime;
 	}
 
-	public Float getTotal() {
+	public Long getBalance() {
+		return balance;
+	}
+
+	public void setBalance(Long balance) {
+		this.balance = balance;
+	}
+
+	public Long getDifference() {
+		return difference;
+	}
+
+	public void setDifference(Long difference) {
+		this.difference = difference;
+	}
+
+	public Long getVbalance() {
+		return vbalance;
+	}
+
+	public void setVbalance(Long vbalance) {
+		this.vbalance = vbalance;
+	}
+
+	public Long getPost() {
+		return post;
+	}
+
+	public void setPost(Long post) {
+		this.post = post;
+	}
+
+	public Long getTotal() {
 		return total;
 	}
 
-	public void setTotal(Float total) {
+	public void setTotal(Long total) {
 		this.total = total;
 	}
 

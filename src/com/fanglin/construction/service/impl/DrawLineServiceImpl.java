@@ -104,10 +104,6 @@ public class DrawLineServiceImpl implements DrawLineService {
 			files.add(filter.getField());
 		}
 
-		if (!files.contains("actualDate")) {
-			return drawLineVOs;
-		}
-
 		List<DrawLinePO> drawLinePOs = drawLineDao.queryDrawLine(filters, company);
 
 		for (DrawLinePO drawLinePO : drawLinePOs) {

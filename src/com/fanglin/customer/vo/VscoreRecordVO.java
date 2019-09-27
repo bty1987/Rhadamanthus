@@ -8,32 +8,32 @@ import org.apache.struts2.json.annotations.JSON;
 import com.fanglin.personel.vo.UserBaseVO;
 
 public class VscoreRecordVO implements Serializable {
-	
+
 	private static final long serialVersionUID = 7800980304053070233L;
-	
+
 	private Long vsrid;
-	
+
 	private String unionId;
-	
+
 	private String orderId;
-	
-	private Float score;
-	
-	private UserBaseVO operater; 
-	
+
+	private Integer score;
+
+	private UserBaseVO operater;
+
 	private Timestamp operateTime;
-	
+
 	private Short type;
-	
+
 	private Short status;
-	
+
 	private String comment;
-	
-	public VscoreRecordVO(){
+
+	public VscoreRecordVO() {
 		super();
 	}
-	
-	public VscoreRecordVO(UserBaseVO operater){
+
+	public VscoreRecordVO(UserBaseVO operater) {
 		super();
 		this.operater = operater;
 	}
@@ -62,11 +62,11 @@ public class VscoreRecordVO implements Serializable {
 		this.orderId = orderId;
 	}
 
-	public Float getScore() {
+	public Integer getScore() {
 		return score;
 	}
 
-	public void setScore(Float score) {
+	public void setScore(Integer score) {
 		this.score = score;
 	}
 
@@ -77,7 +77,7 @@ public class VscoreRecordVO implements Serializable {
 	public void setOperater(UserBaseVO operater) {
 		this.operater = operater;
 	}
-	
+
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getOperateTime() {
 		return operateTime;
@@ -110,5 +110,5 @@ public class VscoreRecordVO implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 }

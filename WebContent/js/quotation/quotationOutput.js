@@ -2,6 +2,7 @@
 function printHeader(headStr){
 	
 	var quotation = quotationUtils.quotationDetail.quotation;
+	var decoration = quotation.decoration;
 	
 	var headHtml = "";
 	
@@ -13,14 +14,14 @@ function printHeader(headStr){
 	headHtml += '<td colspan="8" height="10"></td>';
 	headHtml += '</tr>';
 	headHtml += '<tr bgcolor="#FFFFFF">';
-	headHtml += '<td colspan="3" width="40%">客户姓名:' + quotation.customerName + '</td>';
-	headHtml += '<td colspan="3" width="40%">装修单号:' + quotation.orderId + '</td>';
-	headHtml += '<td colspan="2" width="20%">设 计 师:' + quotation.designerName + '</td>';
+	headHtml += '<td colspan="3" width="40%">客户姓名: ' + decoration.customer.name + '</td>';
+	headHtml += '<td colspan="3" width="40%">装修单号: ' + quotation.orderId + '</td>';
+	headHtml += '<td colspan="2" width="20%">设 计 师: ' + decoration.designer.currentName + '</td>';
 	headHtml += '</tr>';
 	headHtml += '<tr bgcolor="#FFFFFF">';
-	headHtml += '<td colspan="3" width="40%">签约店面:' + quotation.designDepartmentName + '</td>';
-	headHtml += '<td colspan="3" width="40%">工程地址:' + quotation.orderAddr + '</td>';
-	headHtml += '<td colspan="2" width="20%">房屋面积:' + quotation.houseArea + '</td>';
+	headHtml += '<td colspan="3" width="40%">签约店面: ' + decoration.designer.dept.name + '</td>';
+	headHtml += '<td colspan="3" width="40%">工程地址: ' + decoration.house.village.name + " " + decoration.house.houseNumber + '</td>';
+	headHtml += '<td colspan="2" width="20%">房屋面积: ' + decoration.house.buildArea + '</td>';
 	headHtml += '</tr>';
 	headHtml += '<tr bgcolor="#FFFFFF">';
 	headHtml += '<td colspan="8" height="10"></td>';
@@ -65,6 +66,8 @@ function printProjectTable(){
 		contentHtml += '</tr>';
 
 		$.each(v, function (j, qv){
+		    
+		    if([1, 3].indexOf(qv.subtype) == -1) return true;
 
 			contentHtml += '<tr bgcolor="#FFFFFF">';
 			contentHtml += '<td width="4%" align="center">' + (j+1) + '</td>';
@@ -424,14 +427,18 @@ jQuery(function($) {
 	
 	quotationUtils.quotationDetail = {};
 	var url = api.quotation.queryQuotationById;
-
-	com.post(url, {"quotation.qid":params.quotationId }, function(res){
+	
+	com.post(url, {"quotation.qid": params.quotationId}, function(res){
 		quotationUtils.quotationDetail.quotation = res.quotation;
+	}, null, false);
+	
+	com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": params.decorationOrderId}, function(res){
+	    quotationUtils.quotationDetail.quotation.decoration = res.decoration;
 	}, null, false);
 	
 	url = api.quotation.queryQuotationFunctionAreaByQuotationId;
 
-	com.post(url, {"quotation.qid":params.quotationId }, function(res){
+	com.post(url, {"quotation.qid": params.quotationId}, function(res){
 		quotationUtils.quotationDetail.quotationFunctionAreas = res.quotationFunctionAreas;
 	}, null, false);
 

@@ -20,11 +20,11 @@ public class PurchaseItemVO implements Serializable {
 
 	private StorehouseVO storehouse;
 
-	private Float inprice;
+	private Integer inprice;
 
-	private Float num;
+	private Integer num;
 
-	private Float surplus;
+	private Integer surplus;
 
 	public PurchaseItemVO() {
 		super();
@@ -93,27 +93,29 @@ public class PurchaseItemVO implements Serializable {
 		this.storehouse = storehouse;
 	}
 
-	public Float getInprice() {
+	public Integer getInprice() {
 		return inprice;
 	}
 
-	public void setInprice(Float inprice) {
+	public void setInprice(Integer inprice) {
 		this.inprice = inprice;
 	}
 
-	public Float getNum() {
+	public Integer getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(Integer num) {
 		this.num = num;
 	}
 
-	public Float getSurplus() {
+	public Integer getSurplus() {
 		return surplus;
 	}
 
-	public void setSurplus(Float surplus) {
+	public void setSurplus(Integer surplus) {
 		this.surplus = surplus;
 	}
+	
 }
+	

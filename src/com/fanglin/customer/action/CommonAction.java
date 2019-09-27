@@ -21,22 +21,26 @@ public class CommonAction extends BaseListAction {
 
 	@Autowired
 	private CustomerOriginService customerOriginService;
-	
+
 	private CustomerOriginVO customerOrigin;
-	
-	@Action(value = "queryCustomerOriginByCsid", results = { @Result ( name = "success", type = "json", params = {"ignoreHierarchy", "false"}) }, params = {"contentType", "text/html"})
-	public String queryCustomerOriginByCsid(){
-		
+
+	private String securityCode;
+
+	private String verifyCode;
+
+	@Action(value = "queryCustomerOriginByCsid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCustomerOriginByCsid() {
+
 		customerOrigin = customerOriginService.queryCustomerOriginByCsid(customerOrigin);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "confirmCustomerOrigin", results = { @Result ( name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String confirmCustomerOrigin() throws FLException{
-		
-		customerOriginService.confirmCustomerOrigin(customerOrigin);
-		
+
+	@Action(value = "confirmCustomerOrigin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String confirmCustomerOrigin() throws FLException {
+
+		customerOriginService.confirmCustomerOrigin(customerOrigin, securityCode, verifyCode);
+
 		return SUCCESS;
 	}
 
@@ -47,5 +51,21 @@ public class CommonAction extends BaseListAction {
 	public void setCustomerOrigin(CustomerOriginVO customerOrigin) {
 		this.customerOrigin = customerOrigin;
 	}
-	
+
+	public String getSecurityCode() {
+		return securityCode;
+	}
+
+	public void setSecurityCode(String securityCode) {
+		this.securityCode = securityCode;
+	}
+
+	public String getVerifyCode() {
+		return verifyCode;
+	}
+
+	public void setVerifyCode(String verifyCode) {
+		this.verifyCode = verifyCode;
+	}
+
 }

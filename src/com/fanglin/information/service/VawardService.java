@@ -21,5 +21,9 @@ public interface VawardService {
 	public List<VawardVO> queryVawardByNo(VawardVO vawardVO);
 	
 	public int addVaward(VawardVO vawardVO) throws FLException;
+	
+	public int deleteVaward(VawardVO vawardVO) throws FLException; 
+	
+	public List<?> countVaward();
 
 }

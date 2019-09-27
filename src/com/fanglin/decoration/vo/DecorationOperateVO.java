@@ -16,7 +16,7 @@ public class DecorationOperateVO implements java.io.Serializable {
 	
 	private Timestamp operateTime;
 	
-	private Float value;
+	private Long value;
 	
 	private Short type;
 	
@@ -56,11 +56,11 @@ public class DecorationOperateVO implements java.io.Serializable {
 		this.operateTime = operateTime;
 	}
 
-	public Float getValue() {
+	public Long getValue() {
 		return value;
 	}
 
-	public void setValue(Float value) {
+	public void setValue(Long value) {
 		this.value = value;
 	}
 

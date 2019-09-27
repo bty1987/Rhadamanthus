@@ -124,14 +124,14 @@ var quotationUtils = {
         for (var i = 0; i < quotationFunctionAreaLength; ++i) {
 
             var quotationFunctionArea = quotationFunctionAreas[i];
-            var quotationFunctionAreaItems = quotationFunctionArea.quotationFunctionAreaItems;
-            quotationFunctionAreaItems = quotationUtils.sortQuo(quotationFunctionAreaItems);
+            
+            var quotationFunctionAreaItems = quotationUtils.sortQuo(quotationFunctionArea.quotationFunctionAreaItems);
             var quotationFunctionAreaItemLength = quotationFunctionAreaItems.length;
 
             for (var j = 0; j < quotationFunctionAreaItemLength; j++) {
 
                 var quotationFunctionAreaItem = quotationFunctionAreaItems[j];
-
+                
                 if (quotationFunctionArea.type != 3 && quotationFunctionArea.type != 0 && quotationFunctionAreaItem.type != 3 && quotationFunctionAreaItem.type != 2) {
                     if (quotationFunctionAreaItem.discount == 0) {
                         $quotationTotalPrice = utils.accAdd($quotationTotalPrice, utils.changeThrDecimal(utils.accMul(quotationFunctionAreaItem.unitPrice, quotationFunctionAreaItem.initNum)));
@@ -173,7 +173,7 @@ var quotationUtils = {
         for (var i = 0; i < addReduceItemLength; ++i) {
 
             var addReduceItem = addReduceItems[i];
-
+            
             var addReduceItemNum = addReduceItem.num;
             if ([1, 3, 4, 5].indexOf(addReduceItem.type) != -1){
                 addReduceItemNum = -addReduceItemNum;
@@ -215,7 +215,7 @@ var quotationUtils = {
         quotationUtils.quotationDetail.extensionItemTotalPrice = $addExtensionItemTotalPrice;//扩展项总额
 
     },
-    initQuotationDetailItem: function (quotation, quotationFunctionAreas, addReduceItems, extensionItems,orderType,dataProcessing) {
+    initQuotationDetailItem: function (quotation, quotationFunctionAreas, addReduceItems, extensionItems, orderType, dataProcessing) {
         var addReduceItemtypeDict = {"0": "普通", "1": "系统", "2": "自定义", "3": "报价中", "4": "增项", "5": "扩展项"};
         var extensionItemtypeDict = {"0" :"扩展项增项","1":"扩展项增项 自定义","2":"扩展项减项","3":"扩展项减项 自定义", "4": "拓展项减项"};
 
@@ -234,16 +234,16 @@ var quotationUtils = {
         for (var i = 0; i < quotationFunctionAreaLength; ++i) {
 
             var quotationFunctionArea = quotationFunctionAreas[i];
-            var quotationFunctionAreaItems = quotationFunctionArea.quotationFunctionAreaItems;
-            quotationFunctionAreaItems = quotationUtils.sortQuo(quotationFunctionAreaItems);
+            
+            var quotationFunctionAreaItems = quotationUtils.sortQuo(quotationFunctionArea.quotationFunctionAreaItems);
             var quotationFunctionAreaItemLength = quotationFunctionAreaItems.length;
+            
             quotationFunctionAreaItemCs[quotationFunctionArea.qfaId + '-' + quotationFunctionArea.functionAreaName] = [];
-
 
             for (var j = 0; j < quotationFunctionAreaItemLength; j++) {
 
                 var quotationFunctionAreaItem = quotationFunctionAreaItems[j];
-
+                
                 if (!quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType]) {
                     quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType] = {};
                 }
@@ -293,10 +293,8 @@ var quotationUtils = {
                 }
 
                 quotationFunctionAreaItemCs[quotationFunctionArea.qfaId + '-' + quotationFunctionArea.functionAreaName].push(quotationFunctionAreaItem);
-
             }
         }
-
 
         if (extensionItems != null && extensionItems != '') {
 
@@ -341,7 +339,7 @@ var quotationUtils = {
         for (var i = 0; i < addReduceItemLength; ++i) {
 
             var addReduceItem = addReduceItems[i];
-
+            
             if ([0, 2].indexOf(addReduceItem.type) != -1) {
                 addReduceItem.typestr = "增项 " + addReduceItemtypeDict[addReduceItem.type];
             } else {
@@ -433,7 +431,6 @@ var quotationUtils = {
 
             var linenum = 1;
             $.each(v, function (j, qv) {
-
 
                 var $item = $('<li></li>').addClass('fl-quo-item').prop('title',qv.content ? qv.content : "-");
 

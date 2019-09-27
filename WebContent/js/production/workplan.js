@@ -1,6 +1,28 @@
 $(function(){
+    var workPlan = {
+        saveBtn : com.focusPage("#saveBtn"),
+        cancelBtn : com.focusPage("#cancelBtn"),
+
+        modals: {
+            workplanModal: com.focusPage("#workplanModal")
+        },
+        items : {
+            name : com.focusPage("#name"),
+            workshop : com.focusPage("#workshop"),
+            comment : com.focusPage("#comment")
+        },
+        editFlg : true,
+        wsid : null
+    }
+    workPlan.saveBtn.bindClick(saveData);
+
+    workPlan.modals.workplanModal.on("hide.bs.modal", function(){
+        com.clearValidator();
+        com.cleanItems(workPlan.items);
+    });
 
     var displayFunc  = (function(){
+
         var renderList = function(tableId,listData){
             var $tableWrap = com.focusPage('#' + tableId);
             if(listData && listData.length){
@@ -55,48 +77,32 @@ $(function(){
             var $btnView = $('<li></li>').append($('<a></a>').html('工序'));
             var $btnStart = $('<li></li>').append($('<a></a>').html('启用')) ;
             var $btnStop = $('<li></li>').append($('<a></a>').html('禁用')) ;
-            $btnUl
-                .append($btnEdit)
-                .append($btnView)
-                .append($btnStart)
-                .append($btnStop);
-            $btnGroup
-                .append($btn)
-                .append($btnUl)
-                .appendTo($cellOption);
+            $btnUl.append($btnEdit).append($btnView).append($btnStart).append($btnStop);
+            $btnGroup.append($btn).append($btnUl).appendTo($cellOption);
             $cellOption.appendTo($optionWrap);
-            $liLine.append($indexWrap)
-                .append($contentWrap)
-                .append($optionWrap);
+            $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
             $btnEdit.click(function(){
-                productionUtils.clearForm("form1");
-                com.clearValidator();
-                com.focusPage('#layerAdd').find('input[name="name"]').val(v.name);
-                com.focusPage('#layerAdd').find('select[name="workshop"]').val(v.workshop.wsid);
-                com.focusPage('#layerAdd').find('input[name="comment"]').val(v.comment);
-                openlayer("编辑",function(){
-                    if(!com.validate("layerAdd",null)){
-                        saveData(v.wpid);
-                    }
-                });
+                workPlan.editFlg = true;
+                workPlan.items.wpid = v.wpid
+                workPlan.wsid = v.workshop.wsid;
+                workPlan.items.name.val(v.name);
+                workPlan.items.comment.val(v.comment);
+                workPlan.modals.workplanModal.modal("show");
             });
 
             //查看
             $btnView.click(function () {
-                checkWorkflow(v.wpid);
+                com.focusPage('#checkWorkflow').attr('data-wpid', v.wpid);
+                com.popup4page("#checkWorkflow","views/production/checkWorkflow.html","查看工序");
+
             });
 
-            $btnStart.click(function(){
-                changeQuoteTypeStatus(v.wpid, 0, (v.status == 0) ,function(){
-                    com.showAlert(com.info, "操作成功");
-                });
+            $btnStart.click(function() {
+                changeQuoteTypeStatus(v.wpid, 0, v.status);
             });
-
             $btnStop.click(function () {
-                changeQuoteTypeStatus(v.wpid, 1, (v.status == 1) ,function(){
-                    com.showAlert(com.info, "操作成功");
-                });
+                changeQuoteTypeStatus(v.wpid, 1, v.status);
             });
 
             return $liLine;
@@ -110,118 +116,69 @@ $(function(){
             drawLine : function(v){
                 return creatLine(v);
             }
-        }
+        };
     })();
-
     var workplanSeacher = new Searcher();
 
-    workplanSeacher.init( ["p_workplanName"], "condList", api.production.pageWorkplan, function(data){
-
+    workplanSeacher.init(['p_workplanName'], "condList", api.production.pageWorkplan, function (data) {
         displayFunc.init('resultList', data);
+    }, "pagenation", "assisTypePostData", null, false, null, function () {
 
-    }, "pagenation", "assisTypePostData", null, false, null, function(){
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addWorkplan').css("margin", "0px 3px");
+        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-
-         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px");
-         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-         var $addspan = $('<span></span>').text('添加').appendTo($adda);
-
-        $adda.click(function(){
-            productionUtils.clearForm('form1');
-            com.clearValidator();
-            openlayer("添加",function(index, layero){
-                if(!com.validate("layerAdd",null)){
-                    saveData(null);
-                }
-            });
-        });
         return [$adda];
-    },'resultList');
+    });
 
     //绑定车间下拉菜单
     com.post(api.production.queryWorkshop,{},function(res){
-        com.focusPage('select[name="workshop"]').bindData(res.workshops,"wsid","name");
+        com.focusPage("#workshop").bindData(res.workshops,"wsid","name");
     });
 
-    function checkWorkflow(wpid) {
-        var $popup = com.focusPage('#checkWorkflow');
-        $popup.attr('data-wpid',wpid);
-        //弹出即全屏
-        layer.open({
-            type: 1,
-            skin: 'layui-layer-molv',
-            title: "查看工序",
-            content: $popup,
-            area:["800px",( $(window).height()*0.84 < 620 ?  $(window).height()*0.84 : 620 )+"px"],
-            maxmin: false,
-            zIndex: 9000,
-            success: function (layer, index) {
-                $popup.load("views/production/checkWorkflow.html");
-            },
-            end: function () {
-                $popup.attr('data-wpid', null);
-            }
-        });
-    }
+    com.focusPage("#addWorkplan").click(function() {
+        workPlan.editFlg = true;
+        workPlan.wsid = workPlan.modals.workplanModal.find('select[name="workshop"] option:selected').val();
+        workPlan.modals.workplanModal.modal("show");
+    });
 
-    function openlayer(layerType,callback){
-        com.closePopup();
-        layer.open({
-            type: 1,
-            title:layerType,
-            content: com.focusPage('#layerAdd'),
-            area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定', '取消'],
-            yes: function(index, layero){
-                callback(index,layero);
-            },
-            btn2: function(index, layero){
-                //按钮【按钮二】的回调
-            },
-            cancel: function(){
-                //右上角关闭回调
-            }
-        });
-    }
+    function changeQuoteTypeStatus(qtid,btnType,statusFlag) {
 
-    function changeQuoteTypeStatus(qtid,btnType,statusFlag ,callback) {
+        var status = btnType == 0 ? "启用" : "禁用";
+
+        if(statusFlag == btnType){
+            com.showAlert(com.info, "已"+status+"无需重复当前操作");
+            return false;
+        }
+
         com.post(api.production.updateWorkplanForStatus, {
             "workplan.wpid": qtid,
             "workplan.status": btnType
         }, function (res) {
-            callback();
+            com.showAlert(com.info, "已"+status);
+            workplanSeacher.doSearch();
         });
     }
 
-    function saveData(id){
-        var $layer = com.focusPage('#layerAdd');
-        var name = $layer.find('input[name="name"]').val();
-        var workshop = $layer.find('select[name="workshop"] option:selected').val();
-        var comment = $layer.find('input[name="comment"]').val();
+    function saveData() {
 
-        if(!id){
-            com.post(api.production.addWorkplan, {
-                "workplan.name": name,
-                "workplan.comment": comment,
-                "workplan.workshop.wsid": workshop
-            }, function(res){
-                workplanSeacher.doSearch();
-                com.showAlert(com.info, "操作成功");
-            });
-        }else{
-            com.post(api.production.updateWorkplan, {
-                "workplan.wpid": id,
-                "workplan.name": name,
-                "workplan.comment": comment,
-                "workplan.workshop.wsid": workshop
-            }, function(res){
-                workplanSeacher.doSearch();
-                com.showAlert(com.info, "操作成功");
-            });
+        if (com.validate('workplanModal')) {
+            return false;
         }
+        var url;
+        var options = {
+            "workplan.name" : workPlan.items.name.val(),
+            "workplan.comment" : workPlan.items.comment.val(),
+            "workplan.workshop.wsid" : workPlan.wsid
+        };
+
+        workPlan.editFlg ? url = api.production.addWorkplan : url = api.production.updateWorkplan, options["workplan.wpid"] =  workPlan.items.wpid;
+
+        com.post(url, options, function(res){
+            com.closePopup();
+            com.showAlert(com.info, "操作成功");
+            workplanSeacher.doSearch();
+        });
+        workPlan.modals.workplanModal.modal("hide");
     }
-
 });
-

@@ -132,24 +132,24 @@ public class DecorationInclusiveServiceImpl implements DecorationInclusiveServic
 			throw new FLException(140060, "活动未锁定");
 		}
 
-		float undisPrice = 0f;
-		float disPrice = 0f;
-		float total = 0f;
+		long undisPrice = 0;
+		long disPrice = 0;
+		long total = 0;
 
 		List<ExtensionPO> extensionPOs = extensionDao.queryExtensionByOrderId(orderId);
 
 		for (ExtensionPO extensionPO : extensionPOs) {
 
-			undisPrice = Arith.add(undisPrice, Arith.mul(extensionPO.getUndisPrice(), extensionPO.getType() == ExtensionPO.TYPE_ADD_INT ? 1 : -1));
-			disPrice = Arith.add(disPrice, Arith.mul(extensionPO.getDisPrice(), extensionPO.getType() == ExtensionPO.TYPE_ADD_INT ? 1 : -1));
+			undisPrice = Arith.add(undisPrice, Arith.mul(extensionPO.getUndisPrice(), extensionPO.getType() == ExtensionPO.TYPE_ADD_INT ? 1000 : -1000));
+			disPrice = Arith.add(disPrice, Arith.mul(extensionPO.getDisPrice(), extensionPO.getType() == ExtensionPO.TYPE_ADD_INT ? 1000 : -1000));
 
 			extensionPO.setStatus(ExtensionPO.STATUS_LOCK_INT);
 
 			extensionDao.update(extensionPO);
 		}
-		
-		total = Arith.add(Arith.add(quotationPO.getTotalPrice(), undisPrice), Arith.div(Arith.mul(disPrice, quotationPO.getDiscount()), 10));
-		
+
+		total = Arith.add(Arith.add(quotationPO.getTotalPrice(), undisPrice), Arith.div(Arith.mul(disPrice, quotationPO.getDiscount()), 10000));
+
 		DecorationInclusivePO decorationInclusivePO = decorationInclusiveDao.queryDecorationInclusiveByOrderId(orderId);
 
 		if (decorationInclusivePO == null) {
@@ -159,9 +159,9 @@ public class DecorationInclusiveServiceImpl implements DecorationInclusiveServic
 		BeanUtil.copyPropertie(decorationInclusiveVO, decorationInclusivePO, Arrays.asList("decoration"));
 
 		decorationInclusivePO.setProjectPrice(total);
-		decorationInclusivePO.setCdiff(DecorationInclusivePO.MONEY_ZERO_FLOAT);
-		decorationInclusivePO.setMdiff(DecorationInclusivePO.MONEY_ZERO_FLOAT);
-		decorationInclusivePO.setMaterialPaidup(DecorationInclusivePO.MONEY_ZERO_FLOAT);
+		decorationInclusivePO.setCdiff(DecorationInclusivePO.MONEY_ZERO_LONG);
+		decorationInclusivePO.setMdiff(DecorationInclusivePO.MONEY_ZERO_LONG);
+		decorationInclusivePO.setMaterialPaidup(DecorationInclusivePO.MONEY_ZERO_LONG);
 		decorationInclusivePO.setManagePrice(quotationPO.getManagePrice());
 		decorationInclusivePO.setManageRate(quotationPO.getManageRate());
 

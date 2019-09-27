@@ -63,11 +63,11 @@ public class GoodsPO implements java.io.Serializable {
 
 	private String measurementUnit;
 
-	private float purchase;
+	private int purchase;
 
-	private float selling;
+	private int selling;
 
-	private float pieceNum;
+	private int pieceNum;
 
 	private AccessoriesTypePO accessoriesType;
 
@@ -175,29 +175,29 @@ public class GoodsPO implements java.io.Serializable {
 	}
 
 	@Column(name = "purchase")
-	public float getPurchase() {
+	public int getPurchase() {
 		return purchase;
 	}
 
-	public void setPurchase(float purchase) {
+	public void setPurchase(int purchase) {
 		this.purchase = purchase;
 	}
 
 	@Column(name = "selling")
-	public float getSelling() {
+	public int getSelling() {
 		return selling;
 	}
 
-	public void setSelling(float selling) {
+	public void setSelling(int selling) {
 		this.selling = selling;
 	}
 
 	@Column(name = "pieceNum")
-	public float getPieceNum() {
+	public int getPieceNum() {
 		return pieceNum;
 	}
 
-	public void setPieceNum(float pieceNum) {
+	public void setPieceNum(int pieceNum) {
 		this.pieceNum = pieceNum;
 	}
 

@@ -30,13 +30,13 @@ public class PurchaseItemDaoImpl extends DaoImpl<PurchaseItemPO> implements Purc
 	}
 	
 	@Override
-	public float amountPurchaseItemForNum(long pid) {
+	public int amountPurchaseItemForNum(long pid) {
 		
 		String sql = "select sum(surplus) from inventory.purchaseitem where pid = :pid";
 		
 		BigDecimal sum = (BigDecimal) session().createSQLQuery(sql).setLong("pid", pid).uniqueResult();
 	    
-	    return sum.floatValue();
+	    return sum.intValue();
 	}
 
 }

@@ -71,17 +71,17 @@ public class MaterialBalancePO implements java.io.Serializable {
 	
 	private Timestamp postTime;
 	
-	private float balance;
+	private long balance;
 	
-	private float difference;
+	private long difference;
 	
-	private float vbalance;
+	private long vbalance;
 	
-	private float post;
+	private long post;
 	
 	private Timestamp vbalanceTime;
 	
-	private float total;
+	private long total;
 	
 	private short status;
 	
@@ -161,38 +161,38 @@ public class MaterialBalancePO implements java.io.Serializable {
 	}
 
 	@Column(name = "balance")
-	public float getBalance() {
+	public long getBalance() {
 		return balance;
 	}
 
-	public void setBalance(float balance) {
+	public void setBalance(long balance) {
 		this.balance = balance;
 	}
 
 	@Column(name = "difference")
-	public float getDifference() {
+	public long getDifference() {
 		return difference;
 	}
 
-	public void setDifference(float difference) {
+	public void setDifference(long difference) {
 		this.difference = difference;
 	}
 
 	@Column(name = "vbalance")
-	public float getVbalance() {
+	public long getVbalance() {
 		return vbalance;
 	}
 
-	public void setVbalance(float vbalance) {
+	public void setVbalance(long vbalance) {
 		this.vbalance = vbalance;
 	}
 
 	@Column(name = "post")
-	public float getPost() {
+	public long getPost() {
 		return post;
 	}
 
-	public void setPost(float post) {
+	public void setPost(long post) {
 		this.post = post;
 	}
 
@@ -206,19 +206,20 @@ public class MaterialBalancePO implements java.io.Serializable {
 	}
 
 	@Column(name = "total")
-	public float getTotal() {
+	public long getTotal() {
 		return total;
 	}
 
-	public void setTotal(float total) {
+	public void setTotal(long total) {
 		this.total = total;
 	}
+
 
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
 	}
-
+	
 	public void setStatus(short status) {
 		this.status = status;
 	}

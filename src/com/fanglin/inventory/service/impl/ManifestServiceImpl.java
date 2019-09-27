@@ -215,8 +215,8 @@ public class ManifestServiceImpl implements ManifestService {
 			long cid = manifestItemVO.getColor().getCid();
 			long fid = manifestItemVO.getFormat().getFid();
 
-			float inprice = manifestItemVO.getInprice();
-			float num = manifestItemVO.getNum();
+			int inprice = manifestItemVO.getInprice();
+			int num = manifestItemVO.getNum();
 
 			StorehousePO inStorehousePO = goodsStorehouseStockService.instorehouse(gid, cid, fid, manifestItemVO.getInstorehouse().getShid(), num);
 
@@ -262,8 +262,8 @@ public class ManifestServiceImpl implements ManifestService {
 			long cid = manifestItemVO.getColor().getCid();
 			long fid = manifestItemVO.getFormat().getFid();
 
-			float outprice = manifestItemVO.getOutprice();
-			float num = manifestItemVO.getNum();
+			int outprice = manifestItemVO.getOutprice();
+			int num = manifestItemVO.getNum();
 
 			StorehousePO outStorehousePO = goodsStorehouseStockService.outstorehouse(gid, cid, fid, manifestItemVO.getOutstorehouse().getShid(), num);
 
@@ -325,8 +325,8 @@ public class ManifestServiceImpl implements ManifestService {
 			long cid = manifestItemPO.getColor().getCid();
 			long fid = manifestItemPO.getFormat().getFid();
 
-			float outprice = manifestItemPO.getInprice();
-			float num = manifestItemVO.getNum();
+			int outprice = manifestItemPO.getInprice();
+			int num = manifestItemVO.getNum();
 
 			if (manifestItemPO.getSurplus() < num) {
 				throw new FLException(260026, "货单项数量不符");
@@ -389,8 +389,8 @@ public class ManifestServiceImpl implements ManifestService {
 			long cid = manifestItemPO.getColor().getCid();
 			long fid = manifestItemPO.getFormat().getFid();
 
-			float inprice = manifestItemPO.getOutprice();
-			float num = manifestItemVO.getNum();
+			int inprice = manifestItemPO.getOutprice();
+			int num = manifestItemVO.getNum();
 
 			if (manifestItemPO.getSurplus() < num) {
 				throw new FLException(260026, "货单项数量不符");
@@ -437,9 +437,9 @@ public class ManifestServiceImpl implements ManifestService {
 			long cid = manifestItemVO.getColor().getCid();
 			long fid = manifestItemVO.getFormat().getFid();
 
-			float inprice = manifestItemVO.getInprice();
-			float outprice = manifestItemVO.getOutprice();
-			float num = manifestItemVO.getNum();
+			int inprice = manifestItemVO.getInprice();
+			int outprice = manifestItemVO.getOutprice();
+			int num = manifestItemVO.getNum();
 
 			if (manifestItemVO.getInstorehouse() == null || manifestItemVO.getOutstorehouse() == null) {
 				throw new FLException(260026, "货单项数量不符");
@@ -504,8 +504,8 @@ public class ManifestServiceImpl implements ManifestService {
 			long cid = purchaseItemPO.getColor().getCid();
 			long fid = purchaseItemPO.getFormat().getFid();
 
-			float inprice = purchaseItemPO.getInprice();
-			float num = purchaseItemVO.getNum();
+			int inprice = purchaseItemPO.getInprice();
+			int num = purchaseItemVO.getNum();
 
 			if (purchaseItemPO.getSurplus() < num) {
 				throw new FLException(260026, "采购项项数量不符");
@@ -586,8 +586,8 @@ public class ManifestServiceImpl implements ManifestService {
 			long cid = accessoriesItemVO.getColor().getCid();
 			long fid = accessoriesItemVO.getFormat().getFid();
 
-			float outprice = accessoriesItemVO.getOutprice();
-			float num = accessoriesItemVO.getNum();
+			int outprice = accessoriesItemVO.getOutprice();
+			int num = accessoriesItemVO.getNum();
 
 			StorehousePO outStorehousePO = goodsStorehouseStockService.outstorehouse(gid, cid, fid, accessoriesItemVO.getStorehouse().getShid(), num);
 
@@ -650,7 +650,7 @@ public class ManifestServiceImpl implements ManifestService {
 			long cid = accessoriesItemVO.getColor().getCid();
 			long fid = accessoriesItemVO.getFormat().getFid();
 
-			float num = accessoriesItemVO.getNum();
+			int num = accessoriesItemVO.getNum();
 			
 			if (accessoriesItemPO.getSurplus() < num) {
 				throw new FLException(260051, "辅料项数量不足");
@@ -700,9 +700,9 @@ public class ManifestServiceImpl implements ManifestService {
 			long cid = manifestItemVO.getColor().getCid();
 			long fid = manifestItemVO.getFormat().getFid();
 
-			float inprice = manifestItemVO.getInprice();
-			float outprice = manifestItemVO.getOutprice();
-			float num = manifestItemVO.getNum();
+			int inprice = manifestItemVO.getInprice();
+			int outprice = manifestItemVO.getOutprice();
+			int num = manifestItemVO.getNum();
 
 			if (manifestItemVO.getInstorehouse() != null) {
 				StorehousePO inStorehousePO = goodsStorehouseStockService.instorehouse(gid, cid, fid, manifestItemVO.getInstorehouse().getShid(), num);
@@ -748,9 +748,9 @@ public class ManifestServiceImpl implements ManifestService {
 			long cid = manifestItemVO.getColor().getCid();
 			long fid = manifestItemVO.getFormat().getFid();
 
-			float inprice = manifestItemVO.getInprice();
-			float outprice = manifestItemVO.getOutprice();
-			float num = manifestItemVO.getNum();
+			int inprice = manifestItemVO.getInprice();
+			int outprice = manifestItemVO.getOutprice();
+			int num = manifestItemVO.getNum();
 
 			if (manifestItemVO.getInstorehouse() != null) {
 				StorehousePO inStorehousePO = goodsStorehouseStockService.instorehouse(gid, cid, fid, manifestItemVO.getInstorehouse().getShid(), num);
@@ -795,8 +795,8 @@ public class ManifestServiceImpl implements ManifestService {
 			long cid = manifestItemVO.getColor().getCid();
 			long fid = manifestItemVO.getFormat().getFid();
 
-			float inprice = manifestItemVO.getInprice();
-			float num = manifestItemVO.getNum();
+			int inprice = manifestItemVO.getInprice();
+			int num = manifestItemVO.getNum();
 
 			StorehousePO inStorehousePO = goodsStorehouseStockService.instorehouse(gid, cid, fid, manifestItemVO.getInstorehouse().getShid(), num);
 			manifestItemPO = new ManifestItemPO().init(manifestPO.getMid(), null, null, null, null, gid, cid, fid, ManifestPO.TYPE_CP_INT, inprice, 0, num, inStorehousePO, null);
@@ -834,8 +834,8 @@ public class ManifestServiceImpl implements ManifestService {
 			long cid = manifestItemVO.getColor().getCid();
 			long fid = manifestItemVO.getFormat().getFid();
 
-			float outprice = manifestItemVO.getOutprice();
-			float num = manifestItemVO.getNum();
+			int outprice = manifestItemVO.getOutprice();
+			int num = manifestItemVO.getNum();
 
 			StorehousePO outStorehousePO = goodsStorehouseStockService.outstorehouse(gid, cid, fid, manifestItemVO.getOutstorehouse().getShid(), num);
 			manifestItemPO = new ManifestItemPO().init(manifestPO.getMid(), null, null, null, null, gid, cid, fid, ManifestPO.TYPE_CL_INT, 0, outprice, num, null, outStorehousePO);

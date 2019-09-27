@@ -1,6 +1,30 @@
-$(function(){
+$(function() {
+    var quoteItem = {
+        saveBtn: com.focusPage("#saveBtn"),
+        cancelBtn: com.focusPage("#cancelBtn"),
 
-    var $layeradd = com.focusPage('#layerAdd');
+        modals: {
+            quoteItemModal: com.focusPage("#quoteItemModal")
+        },
+        items: {
+            name: com.focusPage("#name"),
+            format: com.focusPage("#format"),
+            measureunit: com.focusPage("#measureunit"),
+            unitprice: com.focusPage("#unitprice"),
+            quoteType: com.focusPage("#quoteType")
+        },
+        editFlg: true,
+    };
+
+    quoteItem.saveBtn.bindClick(saveData);
+
+    quoteItem.modals.quoteItemModal.on("hide.bs.modal", function(){
+        quoteItem.items.name.removeAttr("disabled", "disabled");
+        quoteItem.items.measureunit.removeAttr("disabled", "disabled");
+        quoteItem.items.quoteType.removeAttr("disabled", "disabled");
+        com.clearValidator();
+        com.cleanItems(quoteItem.items);
+    });
 
     var displayFunc = (function(){
 
@@ -40,7 +64,7 @@ $(function(){
 
             return $ulTitle;
         };
-        
+
         //绘制表体
         function createLine(i, v, lastFlag) {
             var $liLine = $('<li></li>').addClass('line');
@@ -77,16 +101,12 @@ $(function(){
 
             //启用功能
             $btnStart.click(function () {
-                changeQuoteTypeStatus(v.qiid, 0,(v.status == 0) ,function(){
-                    com.showAlert(com.info, "操作成功");
-                });
+                changeQuoteTypeStatus(v.qiid, 0,v.status);
             });
 
             //禁用功能
             $btnStop.click(function () {
-                changeQuoteTypeStatus(v.qiid, 0,(v.status == 0) ,function(){
-                    com.showAlert(com.info, "操作成功");
-                });
+                changeQuoteTypeStatus(v.qiid, 1,v.status);
             });
 
             $btnEdit.click(function () {
@@ -94,20 +114,19 @@ $(function(){
                     com.showAlert(com.warning, "禁用状态下不允许修改");
                     return false;
                 }
+                quoteItem.editFlg = false;
+                quoteItem.items.qiid = v.qiid;
+                quoteItem.items.name.attr("disabled", "disabled");
+                quoteItem.items.measureunit.attr("disabled", "disabled");
+                quoteItem.items.quoteType.attr("disabled", "disabled");
 
-                productionUtils.clearForm("form1");
-                editOnly();
+                quoteItem.items.name.val(v.name);
+                quoteItem.items.format.val(v.format);
+                quoteItem.items.measureunit.find("option:selected").text(v.measurementunit);
+                quoteItem.items.unitprice.val(v.unitprice);
+                quoteItem.items.quoteType.val(v.quoteType.qtid);
 
-                $layeradd.find('input[name = "name"]').val(v.name);
-                $layeradd.find('input[name = "format"]').val(v.format);
-                $layeradd.find('select[name = "measureunit"] option[text = '+v.measurementunit+']');
-                $layeradd.find('input[name = "unitprice"]').val(v.unitprice);
-                $layeradd.find('select[name = "quoteType"]').val(v.quoteType.qtid);
-
-                openlayer("添加",function(){
-                    saveData(v.qiid);
-                });
-
+                quoteItem.modals.quoteItemModal.modal("show");
             });
             return $liLine;
         }
@@ -115,130 +134,84 @@ $(function(){
             init: function (tableId, listData) {
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
-
             },
             drawLine: function (v) {
                 return createLine(v);
             }
         };
-
     })();
 
     var searcher = new Searcher();
     var _arr = ['p_quoteItemName','p_quotetype'];
     searcher.init(_arr,"condList",api.production.pageQuoteItem,function (data) {
-
         displayFunc.init('resultList', data);
+    }, "pagenation", "Workflow",null,false, null,function() {
 
-    },"pagenation", "quoteItemPostData", null, false, null,function () {
-
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px");
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addQuoteItem').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        $adda.click(function () {
-            productionUtils.clearForm("form1");
-            closeEditReadOnly();
-            openlayer("添加",function(){
-                saveData(null);
-            });
-        });
-
         return [$adda];
+    });
 
-    },'resultList');
+    com.focusPage("#addQuoteItem").click(function() {
+        quoteItem.editFlg = true;
 
-    function openlayer(layerType,callback) {
-        com.closePopup();
-        layer.open({
-            type: 1,
-            title: layerType,
-            content: $layeradd,
-            area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定', '取消'],
-            yes: function (index, layero) {
-                callback(index,layero);
-            },
-            btn2: function (index, layero) {
-                //按钮【按钮二】的回调
-            },
-            cancel: function () {
-                //右上角关闭回调;
-            }
-        });
-    }
+        quoteItem.modals.quoteItemModal.modal("show");
+    });
 
-    /*btnType:0 启用功能,1 禁用功能
-     statusFlag:当前状态是否与想要完成的功能相冲 */
-    function changeQuoteTypeStatus(id,btnType,statusFlag ,callback) {
+        /*btnType:0 启用功能,1 禁用功能
+         statusFlag:当前状态是否与想要完成的功能相冲 */
+    function changeQuoteTypeStatus(id,btnType,statusFlag ) {
+
+        var status = btnType == 0 ? "启用" : "禁用";
+
+        if(statusFlag == btnType){
+            com.showAlert(com.info, "已"+status+"无需重复当前操作");
+            return false;
+        }
+
         com.post(api.production.updateQuoteItemForStatus, {
             "quoteItem.qiid": id,
             "quoteItem.status": btnType
         }, function (res) {
-            callback();
+            com.showAlert(com.info, "已"+status);
             searcher.doSearch();
         });
     }
-    
-    function editOnly() {
-        $layeradd.find('input[name="name"]').attr('disabled', 'disabled');
-        $layeradd.find('select[name="measureunit"]').attr('disabled', 'disabled');
-        $layeradd.find('select[name="quoteType"]').attr('disabled', 'disabled');
-    }
 
-    function closeEditReadOnly() {
-        $layeradd.find('input[name="name"]').removeAttr('disabled');
-        $layeradd.find('select[name="measureunit"]').removeAttr('disabled');
-        $layeradd.find('select[name="quoteType"]').removeAttr('disabled');
-    }
     //绑定报价类型
     com.post(api.production.queryQuoteType,{},function (res) {
-        com.focusPage('select[name = "quoteType"]').bindData(res.quoteTypes,"qtid","name");
+        quoteItem.items.quoteType.bindData(res.quoteTypes,"qtid","name");
     });
 
     //绑定单位
     com.post(api.data.queryMeasurementUnit,{},function(res){
-        com.focusPage('select[name = "measureunit"]').bindData(res.measurementUnits,"id","name");
+        quoteItem.items.measureunit.bindData(res.measurementUnits,"id","name");
     });
 
     //添加方法
-    function saveData(id) {
-        var name = $layeradd.find('input[name="name"]').val();
-        var format = $layeradd.find('input[name="format"]').val();
-        var measureunit = $layeradd.find('select[name="measureunit"] option:selected').text();
-        var unitprice = $layeradd.find('input[name = "unitprice"]').val();
-        var quoteType = $layeradd.find('select[name="quoteType"]').val();
+    function saveData() {
 
-        com.clearValidator();
-        
-        if(com.validate("layerAdd",null)){
+        if (com.validate('quoteItemModal')) {
             return false;
         }
+        var url;
+        var options = {
+            "quoteItem.name": quoteItem.items.name.val(),
+            "quoteItem.format" : quoteItem.items.format.val(),
+            "quoteItem.measurementunit" : quoteItem.items.measureunit.find("option:selected").text(),
+            "quoteItem.unitprice" :  quoteItem.items.unitprice.val(),
+            "quoteItem.quoteType.qtid" : quoteItem.items.quoteType.val()
+        };
 
-        if(id){
-            com.post(api.production.updateQuoteItem,{
-                "quoteItem.qiid" : id,
-                "quoteItem.format" : format,
-                "quoteItem.unitprice" : unitprice
-            },function () {
-                searcher.doSearch();
-                com.showAlert(com.info, "操作成功");
-            });
-        }else{
-            com.post(api.production.addQuoteItem,{
-                "quoteItem.name" : name,
-                "quoteItem.format" : format,
-                "quoteItem.measurementunit" : measureunit,
-                "quoteItem.unitprice" : unitprice,
-                "quoteItem.quoteType.qtid" : quoteType
-            },function () {
-                searcher.doSearch();
-                com.showAlert(com.info, "操作成功");
-            });
-        }
+        quoteItem.editFlg ? url = api.production.addQuoteItem : url = api.production.updateQuoteItem, options["quoteItem.qiid"] =  quoteItem.items.qiid;
 
+        com.post(url, options, function(res){
+            com.closePopup();
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
+        });
+        quoteItem.modals.quoteItemModal.modal("hide");
     }
-
 });

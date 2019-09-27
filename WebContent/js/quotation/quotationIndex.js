@@ -57,7 +57,7 @@ $(function () {
 
     com.focusPage('#saveBtn').click(function () {
         
-        if (com.validate()) {
+        if (com.validate("quotationModal")) {
             return;
         }
         
@@ -127,7 +127,7 @@ $(function () {
 
     com.focusPage("#replicaBtn").bindClick(function () {
         
-        if (com.validate()) {
+        if (com.validate("replicaQuotationModal")) {
             return;
         }
         
@@ -208,14 +208,9 @@ $(function () {
             "quotation.orderId": decorationQuotation.decorationOrderId,
         };
         com.post(api.quotation.queryQuotationByOrderId, options, function (res) {
-            if (res.errorCode == 0) {
-                if (res.quotations == null || res.quotations.length == 0) {
-                    return;
-                }
-                $.each(res.quotations, function (i, v) {
-                    drawquotation(v);
-                });
-            }
+            $.each(res.quotations, function (i, v) {
+                drawquotation(v);
+            });
         }, null, false);
     }
 
@@ -243,15 +238,15 @@ $(function () {
         var quotationWidgetInfoDiv = $('<div></div>').css("padding", "5px").appendTo(quotationWidgetMain);
 
         var quotationWidgetDivOne = $('<div></div>').appendTo(quotationWidgetInfoDiv);
-        var quotationWidgetLabelOne = $('<label></label>').attr('for', 'form-field').attr('id', 'name_' + qid).text('名称:' + quotation.quotationName).appendTo(quotationWidgetDivOne);
+        var quotationWidgetLabelOne = $('<label></label>').attr('for', 'form-field').attr('id', 'name_' + qid).text('名称: ' + quotation.quotationName).appendTo(quotationWidgetDivOne);
         var quotationWidgetDivTwo = $('<div></div>').appendTo(quotationWidgetInfoDiv);
-        var quotationWidgetLabelTwo = $('<label></label>').attr('for', 'form-field').attr('id', 'style_' + qid).text('风格:' + quotation.decorationStyle).appendTo(quotationWidgetDivTwo);
+        var quotationWidgetLabelTwo = $('<label></label>').attr('for', 'form-field').attr('id', 'style_' + qid).text('风格: ' + quotation.decorationStyle).appendTo(quotationWidgetDivTwo);
         var quotationWidgetDivThr = $('<div></div>').appendTo(quotationWidgetInfoDiv);
-        var quotationWidgetLabelThr = $('<label></label>').attr('for', 'form-field').attr('id', 'time_' + qid).text('时间:' + quotation.createTime).appendTo(quotationWidgetDivThr);
+        var quotationWidgetLabelThr = $('<label></label>').attr('for', 'form-field').attr('id', 'time_' + qid).text('时间: ' + quotation.createTime).appendTo(quotationWidgetDivThr);
         var quotationWidgetDivFiv = $('<div></div>').appendTo(quotationWidgetInfoDiv);
-        var quotationWidgetLabelFiv = $('<label></label>').attr('for', 'form-field').attr('id', 'totalPrice_' + qid).text('总价:' + quotation.totalPrice).appendTo(quotationWidgetDivFiv);
+        var quotationWidgetLabelFiv = $('<label></label>').attr('for', 'form-field').attr('id', 'totalPrice_' + qid).text('总价: ' + quotation.totalPrice).appendTo(quotationWidgetDivFiv);
         var quotationWidgetDivSix = $('<div></div>').appendTo(quotationWidgetInfoDiv);
-        var quotationWidgetLabelSix = $('<label></label>').attr('for', 'form-field').attr('id', 'content_' + qid).text('备注:' + quotation.content).appendTo(quotationWidgetDivSix);
+        var quotationWidgetLabelSix = $('<label></label>').attr('for', 'form-field').attr('id', 'content_' + qid).text('备注: ' + quotation.content).appendTo(quotationWidgetDivSix);
 
         var quotationWidgetToolDiv = $('<div></div>').addClass("action-buttons").appendTo(quotationWidgetMain);
         
@@ -285,9 +280,7 @@ $(function () {
             decorationQuotation.quotationItems.qid.val($(this).attr("data"));
             decorationQuotation.quotationItems.decorationStyle.get(0).selectedIndex = 0;
             com.post(api.quotation.queryQuotationById, {"quotation.qid": $(this).attr("data")}, function (res) {
-                if (res.quotation != null) {
-                    decorationQuotation.quotationModal.modal("show");
-                }
+                decorationQuotation.quotationModal.modal("show");
             });
         });
 
@@ -298,13 +291,13 @@ $(function () {
             com.clearValidator();
             
             com.post(api.quotation.queryQuotationById, {"quotation.qid": $(this).attr("data")}, function (res) {
-                if (res.quotation != null) {
-                    decorationQuotation.quotationItems.qid.val(res.quotation.qid);
-                    decorationQuotation.quotationItems.quotationName.val(res.quotation.quotationName);
-                    decorationQuotation.quotationItems.decorationStyle.val(res.quotation.decorationStyle);
-                    decorationQuotation.quotationItems.content.val(res.quotation.content);
-                    decorationQuotation.quotationModal.modal("show");
-                }
+                
+                decorationQuotation.quotationItems.qid.val(res.quotation.qid);
+                decorationQuotation.quotationItems.quotationName.val(res.quotation.quotationName);
+                decorationQuotation.quotationItems.decorationStyle.val(res.quotation.decorationStyle);
+                decorationQuotation.quotationItems.content.val(res.quotation.content);
+                
+                decorationQuotation.quotationModal.modal("show");
             });
         });
         
@@ -326,8 +319,7 @@ $(function () {
                 });
                 
                 that.addClass("hide");
-            }, null, false);
-            
+            });
         });
 
         deleteBtn.on(ace.click_event, function () {
@@ -343,7 +335,7 @@ $(function () {
             com.showConfirm("确定要删除报价: " + dataname, function(){
                 com.post(api.quotation.deleteQuotationById, {"quotation.qid": autoData, "quotation.orderId": decorationQuotation.decorationOrderId}, function (res) {
                     com.focusPage("#quotationDiv_" + autoData).remove();
-                }, null, false);
+                });
             });
         });
 
@@ -364,8 +356,7 @@ $(function () {
             com.post(api.quotation.lockQuotation, options, function (res) {
                 that.addClass("hide");
                 unlockBtn.removeClass("hide");
-            }, null, false);
-            
+            });
         });
         
         unlockBtn.on(ace.click_event, function(){
@@ -381,7 +372,7 @@ $(function () {
             com.post(api.quotation.unlockQuotation, options, function (res) {
                 that.addClass("hide");
                 lockBtn.removeClass("hide");
-            }, null, false);
+            });
             
         });
 

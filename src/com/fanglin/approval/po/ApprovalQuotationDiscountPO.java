@@ -1,9 +1,10 @@
 package com.fanglin.approval.po;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -12,22 +13,22 @@ import javax.persistence.Table;
 public class ApprovalQuotationDiscountPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -7234919961337358956L;
-	
+
 	public static final String COLUMN_AID_STR = "aid";
 
 	private int aqdid;
-	
+
 	private long aid;
-	
+
 	private String orderId;
-	
+
 	private long qid;
-	
-	private float oldDiscount;
-	
-	private float newDiscount;
-	
-	private float basePrice;
+
+	private int oldDiscount;
+
+	private int newDiscount;
+
+	private int basePrice;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -68,30 +69,30 @@ public class ApprovalQuotationDiscountPO implements java.io.Serializable {
 	}
 
 	@Column(name = "oldDiscount")
-	public float getOldDiscount() {
+	public int getOldDiscount() {
 		return this.oldDiscount;
 	}
 
-	public void setOldDiscount(float oldDiscount) {
+	public void setOldDiscount(int oldDiscount) {
 		this.oldDiscount = oldDiscount;
 	}
 
 	@Column(name = "newDiscount")
-	public float getNewDiscount() {
+	public int getNewDiscount() {
 		return this.newDiscount;
 	}
 
-	public void setNewDiscount(float newDiscount) {
+	public void setNewDiscount(int newDiscount) {
 		this.newDiscount = newDiscount;
 	}
-	
+
 	@Column(name = "basePrice")
-	public float getBasePrice() {
+	public int getBasePrice() {
 		return basePrice;
 	}
 
-	public void setBasePrice(float basePrice) {
+	public void setBasePrice(int basePrice) {
 		this.basePrice = basePrice;
 	}
-	
+
 }

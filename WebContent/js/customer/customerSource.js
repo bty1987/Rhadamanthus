@@ -1,14 +1,17 @@
 $(function () {
     var customerSource = {
+            
         saveDesignerBtn: com.focusPage("#saveDesignerBtn"),
         updateAndApprovalBtn: com.focusPage("#updateAndApprovalBtn"),
         approvalBtn: com.focusPage("#approvalBtn"),
+        
         modals: {
             bindAllInfoModal: com.focusPage("#bindAllInfo"),
             sustomerSourceModal: com.focusPage("#sustomersource"),
             commitApproveModal: com.focusPage("#commitApprove"),
             codeModal: com.focusPage("#codeModal")
         },
+        
         items: {
             name: com.focusPage("#name"),
             gender: com.focusPage("#gender"),
@@ -59,6 +62,8 @@ $(function () {
         bindCustomerDiv: com.focusPage("#bindCustomerDiv"),
 
         csid: null,
+        
+        status: {},
 
         grade: ["A", "B", "C", "D"],
         currentCustomerSource: {}
@@ -70,12 +75,16 @@ $(function () {
 
     customerSource.items.gender.switchBtn("gender");
     customerSource.items.grade.bindData(customerSource.grade, "key", "value", false);
+    
+    com.post(api.ds.customer, {}, function (res) {
+        customerSource.status = res.customerSourceStatus.split('key', 'value');
+    }, null, false);
 
     com.post(api.ds.building, {}, function (res) {
-        customerSource.items.builtrule.bindData(res.buildrule, "key", "value");
-        customerSource.items.unitrule.bindData(res.buildrule, "key", "value");
-        customerSource.items.floorrule.bindData(res.buildrule, "key", "value");
-        customerSource.items.doorrule.bindData(res.buildrule, "key", "value");
+        customerSource.items.builtrule.bindData(res.buildruleOne, "key", "value");
+        customerSource.items.unitrule.bindData(res.buildruleTwo, "key", "value");
+        customerSource.items.floorrule.bindData(res.buildruleTwo, "key", "value");
+        customerSource.items.doorrule.bindData(res.buildruleThr, "key", "value");
     }, null, false);
 
     com.post(api.ds.decoration, {}, function (res) {
@@ -156,6 +165,7 @@ $(function () {
                 ["楼牌号: ", v.houseNumber, "blue"],
                 ["建筑面积: ", v.buildArea, "blue"],
                 ["装修单号: ", com.checkNull(v.orderId, '无'), "blue"],
+                ["状态: ", customerSource.status[v.status], "red"],
                 ["备注: ", com.checkNull(v.comment, '无'), "grey"]
             ];
 

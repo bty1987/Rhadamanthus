@@ -10,9 +10,9 @@ public class ConstructionNodeVO implements Serializable {
 
 	private String name;
 
-	private Float precheck;
+	private Integer precheck;
 
-	private Float postcheck;
+	private Integer postcheck;
 
 	private Short status;
 
@@ -38,19 +38,19 @@ public class ConstructionNodeVO implements Serializable {
 		this.name = name;
 	}
 
-	public Float getPrecheck() {
+	public Integer getPrecheck() {
 		return precheck;
 	}
 
-	public void setPrecheck(Float precheck) {
+	public void setPrecheck(Integer precheck) {
 		this.precheck = precheck;
 	}
 
-	public Float getPostcheck() {
+	public Integer getPostcheck() {
 		return postcheck;
 	}
 
-	public void setPostcheck(Float postcheck) {
+	public void setPostcheck(Integer postcheck) {
 		this.postcheck = postcheck;
 	}
 

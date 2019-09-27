@@ -221,7 +221,7 @@ $(function () {
                 var nameSpan = $("<span></span>").text(_salesActivity[0]).appendTo(nameLi);
                 var moneyH2 = $("<h3></h3>").text("总价:").appendTo(ul);
                 var moneyLi = $("<li></li>").appendTo(ul);
-                var moneySpan = $("<span></span>").text(_salesActivity[1]).appendTo(moneyLi);
+                var moneySpan = $("<span></span>").text(utils.accDiv(_salesActivity[1], 1000)).appendTo(moneyLi);
 
                 salesActivityContent.append(ul);
             }

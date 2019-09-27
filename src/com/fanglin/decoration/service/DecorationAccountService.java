@@ -8,6 +8,6 @@ public interface DecorationAccountService {
 	
 	public DecorationAccountVO queryDecorationAccount(DecorationAccountVO decorationAccountVO);
 	
-	public void makeDecorationAccount(DecorationAccountVO decorationAccountVO,Authentication authentication) throws FLException;
+	public void makeDecorationAccount(DecorationAccountVO decorationAccountVO, Authentication authentication) throws FLException;
 	
 }

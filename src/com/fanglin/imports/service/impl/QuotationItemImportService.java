@@ -17,38 +17,42 @@ import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.dao.QuotationItemDao;
 
 @Service("quotationItemImportService")
-@Transactional(readOnly=true)
-public class QuotationItemImportService implements com.fanglin.imports.service.QuotationItemImportService{
-	
+@Transactional(readOnly = true)
+public class QuotationItemImportService implements com.fanglin.imports.service.QuotationItemImportService {
+
 	@Autowired
 	private QuotationItemDao quotationItemDao;
-	
+
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public void importQuotationItem(List<List<String>> excels, String userId) {
-		
+
 		int index = 1;
-		
-		for(int i = 1; i < excels.size(); i++){
-			
+
+		for (int i = 1; i < excels.size(); i++) {
+
 			List<String> _quoitem = excels.get(i);
 			String itemId = _quoitem.get(1);
 			String versionId = _quoitem.get(2);
 			String itemName = _quoitem.get(3);
-			int quoType = (int)Double.parseDouble(_quoitem.get(4));
-			int quoClass  = (int)Double.parseDouble(_quoitem.get(5));
-			int bigCategory = (int)Double.parseDouble(_quoitem.get(6));
-			int smallCategory = (int)Double.parseDouble(_quoitem.get(7));
-			int measurementUnitId = (int)Double.parseDouble(_quoitem.get(8));
-			int workId = (int)Double.parseDouble(_quoitem.get(9));
+
+			int quoType = Integer.valueOf(_quoitem.get(4));
+			int quoClass = Integer.valueOf(_quoitem.get(5));
+			int bigCategory = Integer.valueOf(_quoitem.get(6));
+			int smallCategory = Integer.valueOf(_quoitem.get(7));
+			int measurementUnitId = Integer.valueOf(_quoitem.get(8));
+			int workId = Integer.valueOf(_quoitem.get(9));
+
 			String quotationItemDes = _quoitem.get(10);
-			float addPrice = Float.parseFloat(_quoitem.get(11));
-			float unitPrice = Float.parseFloat(_quoitem.get(12));
-			float subPrice = Float.parseFloat(_quoitem.get(13));
-			short status = (short)Double.parseDouble(_quoitem.get(14));
-			short discount = (short)Double.parseDouble(_quoitem.get(15));
-			
+
+			int addPrice = Integer.valueOf(_quoitem.get(11));
+			int unitPrice = Integer.valueOf(_quoitem.get(12));
+			int subPrice = Integer.valueOf(_quoitem.get(13));
+			short status = Short.valueOf(_quoitem.get(14));
+			short discount = Short.valueOf(_quoitem.get(15));
+
 			QuotationItemPO quoItem = new QuotationItemPO();
+
 			quoItem.setItemId(itemId);
 			quoItem.setQuotationVersion(new QuotationVersionPO(versionId));
 			quoItem.setItemName(itemName);
@@ -64,12 +68,12 @@ public class QuotationItemImportService implements com.fanglin.imports.service.Q
 			quoItem.setSubPrice(subPrice);
 			quoItem.setStatus(status);
 			quoItem.setDiscount(discount);
-			
+
 			quotationItemDao.save(quoItem);
-			
+
 			index++;
-			
-			if(index % 50 == 0){
+
+			if (index % 50 == 0) {
 				quotationItemDao.flush();
 			}
 		}

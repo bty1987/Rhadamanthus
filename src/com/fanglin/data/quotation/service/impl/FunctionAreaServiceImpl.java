@@ -23,7 +23,6 @@ import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.data.po.FunctionAreaItemPO;
 import com.fanglin.data.po.FunctionAreaPO;
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.dao.FunctionAreaDao;
@@ -39,7 +38,7 @@ import com.fanglin.utils.Paging;
 @Service("functionAreaService")
 @Transactional(readOnly = true)
 public class FunctionAreaServiceImpl implements FunctionAreaService {
-	
+
 	@Autowired
 	private CompanyDao companyDao;
 
@@ -120,10 +119,10 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addFunctionArea(FunctionAreaVO functionAreaVO, int company) throws FLException {
-		
+
 		CompanyPO companyPO = companyDao.get(company);
-		
-		if(companyPO == null){
+
+		if (companyPO == null) {
 			throw new FLException(230015, "公司不存在");
 		}
 
@@ -161,7 +160,6 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 		}
 
 		if (!functionAreaPO.getFunctionAreaType().equals(functionAreaVO.getFunctionAreaType())) { // 功能区的类型改变时
-																									// 清楚所包含的报价项
 			functionAreaItemDao.deleteFunctionAreaItemByFunctionAreaId(functionAreaPO.getFaId());
 		}
 
@@ -174,25 +172,10 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void deleteFunctionAreaByIds(List<Long> ids) {
-		for (Long id : ids) {
-			List<FunctionAreaItemPO> functionAreaItemPOs = functionAreaItemDao.queryFunctionAreaItemByFunctionAreaId(id);
+	public int deleteFunctionArea(FunctionAreaVO functionAreaVO) {
 
-			for (FunctionAreaItemPO functionAreaItemPO : functionAreaItemPOs) {
-				functionAreaItemDao.delete(functionAreaItemPO);
-			}
+		functionAreaDao.deleteById(functionAreaVO.getFaId());
 
-			functionAreaDao.deleteById(id);
-		}
+		return 0;
 	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void deleteFunctionArea(FunctionAreaVO functionAreaVO) {
-		FunctionAreaPO functionAreaPO = new FunctionAreaPO();
-		BeanUtil.copyProperties(functionAreaVO, functionAreaPO);
-
-		functionAreaDao.delete(functionAreaPO);
-	}
-
 }
