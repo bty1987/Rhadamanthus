@@ -28,11 +28,19 @@ public class Business {
 
 	private String is_divistion;
 
+	// regist
+
+	private String usercode;
+
 	// query
 
 	private String src_usercode;
 
 	// division
+
+	private String sref_no;
+
+	private String account_date;
 
 	private String payee_usercode;
 
@@ -77,12 +85,16 @@ public class Business {
 	public Business(String payee_usercode, String out_trade_no, Double total_amount, String division_mode) {
 		super();
 
+		// this.out_trade_no = out_trade_no;
+		// this.out_batch_no = StringUtils.getNo("S", 0, 7);
+
 		this.payee_usercode = payee_usercode;
-		this.out_trade_no = out_trade_no;
+		this.sref_no = out_trade_no;
 		this.total_amount = total_amount;
 		this.division_mode = division_mode;
 
-		this.out_batch_no = StringUtils.getNo("S", 0, 7);
+		this.account_date = DateUtil.getCurrentDate("yyyyMMdd");
+		// this.sref_no = StringUtils.getNo("S", 0, 7);
 		this.is_divistion = DIVISION_YES_STR;
 		this.is_again_division = REDIVISION_NO_STR;
 		this.accounts = new ArrayList<Account>();
@@ -100,6 +112,30 @@ public class Business {
 
 		this.shopdate = DateUtil.getCurrentDate("yyyyMMdd");
 		this.out_request_no = StringUtils.getNo("RD", 0, 7);
+	}
+
+	public String getUsercode() {
+		return usercode;
+	}
+
+	public void setUsercode(String usercode) {
+		this.usercode = usercode;
+	}
+
+	public String getSref_no() {
+		return sref_no;
+	}
+
+	public void setSref_no(String sref_no) {
+		this.sref_no = sref_no;
+	}
+
+	public String getAccount_date() {
+		return account_date;
+	}
+
+	public void setAccount_date(String account_date) {
+		this.account_date = account_date;
 	}
 
 	public String getSrc_usercode() {
@@ -245,6 +281,15 @@ public class Business {
 		return this;
 	}
 
+	public String regist() {
+
+		Map<String, Object> param = new HashMap<String, Object>();
+
+		param.put("usercode", this.usercode);
+
+		return StringUtils.toJson(param);
+	}
+
 	public String query() {
 
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -261,8 +306,10 @@ public class Business {
 
 		Map<String, Object> param = new HashMap<String, Object>();
 
-		param.put("out_batch_no", this.out_batch_no);
-		param.put("out_trade_no", this.out_trade_no);
+		// param.put("out_batch_no", this.out_batch_no);
+		// param.put("out_trade_no", this.out_trade_no);
+		param.put("sref_no", this.sref_no);
+		param.put("account_date", "20191008");
 		param.put("payee_usercode", this.payee_usercode);
 		// param.put("sys_flag", this.sys_flag);
 		param.put("total_amount", this.total_amount);

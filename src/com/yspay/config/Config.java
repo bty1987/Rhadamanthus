@@ -9,9 +9,9 @@ public class Config {
 
 	public static final String PASSWORD = "Fanglin1918!";
 
-	public static final String PUBLICKEYPATH = System.getProperty("user.dir") + System.getProperty("file.separator") + "conf" + "/826235152110030.cer";
+	public static final String PUBLICKEYPATH = System.getProperty("user.dir") + System.getProperty("file.separator") + "cert" + "/826235152110030.cer";
 
-	public static final String PRIVATEKEYPATH = System.getProperty("user.dir") + System.getProperty("file.separator") + "conf" + "/826235152110030.pfx";
+	public static final String PRIVATEKEYPATH = System.getProperty("user.dir") + System.getProperty("file.separator") + "cert" + "/826235152110030.pfx";
 
 	// public static final String PRIVATEKEYPATH = System.getProperty("user.dir") + "/java_demo" +
 	// System.getProperty("file.separator") + "cert" + "/dsf1.pfx";

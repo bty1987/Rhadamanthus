@@ -24,9 +24,8 @@ public class Base {
 
 	private Business business;
 
-	public Base(String method, String partner_id, String notify_url) {
+	public Base(String partner_id, String notify_url) {
 		super();
-		this.method = method;
 		this.partner_id = partner_id;
 		this.notify_url = notify_url;
 
@@ -36,9 +35,8 @@ public class Base {
 		this.version = "3.0";
 	}
 
-	public Base(String method, String partner_id, String timestamp, String charset, String sign_type, String notify_url, String version) {
+	public Base(String partner_id, String timestamp, String charset, String sign_type, String notify_url, String version) {
 		super();
-		this.method = method;
 		this.partner_id = partner_id;
 		this.timestamp = timestamp;
 		this.charset = charset;
@@ -126,6 +124,25 @@ public class Base {
 		return this;
 	}
 
+	public Map<String, String> regist() {
+
+		Map<String, String> params = new HashMap<String, String>();
+
+		params.put("method", this.method);
+		params.put("partner_id", this.partner_id);
+		params.put("timestamp", this.timestamp);
+		params.put("charset", this.charset);
+		params.put("sign_type", this.sign_type);
+		params.put("notify_url", this.notify_url);
+		params.put("version", this.version);
+
+		params.put("biz_content", this.business.regist());
+
+		params.put("sign", SignUtils.getSign(params));
+
+		return params;
+	}
+
 	public Map<String, String> query() {
 
 		Map<String, String> params = new HashMap<String, String>();
@@ -160,8 +177,6 @@ public class Base {
 		params.put("biz_content", this.business.division());
 
 		params.put("sign", SignUtils.getSign(params));
-
-		System.out.println(params);
 
 		return params;
 	}
