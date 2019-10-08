@@ -6,6 +6,8 @@ public class Response {
 
 	private division ysepay_single_division_online_accept_response;
 
+	private division ysepay_single_division_offline_accept_response;
+
 	private String code;
 
 	private String msg;
@@ -32,7 +34,7 @@ public class Response {
 		this.code = ysepay_single_division_online_accept_response.getCode();
 		this.msg = ysepay_single_division_online_accept_response.getMsg();
 		this.returnCode = ysepay_single_division_online_accept_response.getReturnCode();
-		this.returnInfo = ysepay_single_division_online_accept_response.getReturnInfo();
+		this.returnInfo = ysepay_single_division_online_accept_response.getRetrunInfo();
 	}
 
 	public String getCode() {
@@ -73,7 +75,12 @@ public class Response {
 			this.code = ysepay_single_division_online_accept_response.getCode();
 			this.msg = ysepay_single_division_online_accept_response.getMsg();
 			this.returnCode = ysepay_single_division_online_accept_response.getReturnCode();
-			this.returnInfo = ysepay_single_division_online_accept_response.getReturnInfo();
+			this.returnInfo = ysepay_single_division_online_accept_response.getRetrunInfo();
+		} else if (this.ysepay_single_division_offline_accept_response != null) {
+			this.code = ysepay_single_division_offline_accept_response.getCode();
+			this.msg = ysepay_single_division_offline_accept_response.getMsg();
+			this.returnCode = ysepay_single_division_offline_accept_response.getReturnCode();
+			this.returnInfo = ysepay_single_division_offline_accept_response.getRetrunInfo();
 		}
 
 		return this;
@@ -87,7 +94,7 @@ public class Response {
 
 		private String returnCode;
 
-		private String returnInfo;
+		private String retrunInfo;
 
 		public String getCode() {
 			return code;
@@ -113,12 +120,12 @@ public class Response {
 			this.returnCode = returnCode;
 		}
 
-		public String getReturnInfo() {
-			return returnInfo;
+		public String getRetrunInfo() {
+			return retrunInfo;
 		}
 
-		public void setReturnInfo(String returnInfo) {
-			this.returnInfo = returnInfo;
+		public void setRetrunInfo(String retrunInfo) {
+			this.retrunInfo = retrunInfo;
 		}
 	}
 
