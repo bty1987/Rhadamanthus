@@ -28,6 +28,8 @@ public class Business {
 
 	private String is_divistion;
 
+	private String sref_no;
+
 	// regist
 
 	private String usercode;
@@ -38,7 +40,7 @@ public class Business {
 
 	// division
 
-	private String sref_no;
+	private String term_no;
 
 	private String account_date;
 
@@ -74,15 +76,18 @@ public class Business {
 	public Business(String src_usercode, String out_trade_no) {
 		super();
 
-		this.src_usercode = src_usercode;
-		this.out_trade_no = out_trade_no;
+		// this.out_trade_no = out_trade_no;
+		// this.out_batch_no = StringUtils.getNo("S", 0, 7);
+		// this.sys_flag = "DD";
 
-		this.out_batch_no = StringUtils.getNo("S", 0, 7);
-		this.sys_flag = "DD";
+		this.src_usercode = src_usercode;
+		this.sref_no = out_trade_no;
+
+		this.account_date = DateUtil.getCurrentDate("yyyyMMdd");
 	}
 
 	// division
-	public Business(String payee_usercode, String out_trade_no, Double total_amount, String division_mode) {
+	public Business(String payee_usercode, String out_trade_no, Double total_amount, String division_mode, String account_date) {
 		super();
 
 		// this.out_trade_no = out_trade_no;
@@ -92,9 +97,8 @@ public class Business {
 		this.sref_no = out_trade_no;
 		this.total_amount = total_amount;
 		this.division_mode = division_mode;
+		this.account_date = account_date;
 
-		this.account_date = DateUtil.getCurrentDate("yyyyMMdd");
-		// this.sref_no = StringUtils.getNo("S", 0, 7);
 		this.is_divistion = DIVISION_YES_STR;
 		this.is_again_division = REDIVISION_NO_STR;
 		this.accounts = new ArrayList<Account>();
@@ -120,6 +124,14 @@ public class Business {
 
 	public void setUsercode(String usercode) {
 		this.usercode = usercode;
+	}
+
+	public String getTerm_no() {
+		return term_no;
+	}
+
+	public void setTerm_no(String term_no) {
+		this.term_no = term_no;
 	}
 
 	public String getSref_no() {
@@ -294,10 +306,13 @@ public class Business {
 
 		Map<String, Object> param = new HashMap<String, Object>();
 
-		param.put("src_usercode", this.src_usercode);
-		param.put("out_batch_no", this.out_batch_no);
-		param.put("out_trade_no", this.out_trade_no);
-		param.put("sys_flag", this.sys_flag);
+		// param.put("src_usercode", this.src_usercode);
+		// param.put("out_batch_no", this.out_batch_no);
+		// param.put("out_trade_no", this.out_trade_no);
+		// param.put("sys_flag", this.sys_flag);
+
+		param.put("sref_no", this.sref_no);
+		param.put("account_date", this.account_date);
 
 		return StringUtils.toJson(param);
 	}
@@ -309,7 +324,8 @@ public class Business {
 		// param.put("out_batch_no", this.out_batch_no);
 		// param.put("out_trade_no", this.out_trade_no);
 		param.put("sref_no", this.sref_no);
-		param.put("account_date", "20191008");
+		// param.put("term_no", this.term_no);
+		param.put("account_date", this.account_date);
 		param.put("payee_usercode", this.payee_usercode);
 		// param.put("sys_flag", this.sys_flag);
 		param.put("total_amount", this.total_amount);
