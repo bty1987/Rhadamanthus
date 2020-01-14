@@ -14,7 +14,11 @@ import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
+import com.fanglin.construction.dao.ConstructionAccessoryDao;
+import com.fanglin.construction.dao.ConstructionDao;
 import com.fanglin.construction.dao.ConstructionScheduleDao;
+import com.fanglin.construction.po.ConstructionAccessoryPO;
+import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.construction.po.ConstructionSchedulePO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
@@ -32,6 +36,7 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
@@ -61,6 +66,12 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 
 	@Autowired
 	private CountingService countingService;
+	
+	@Autowired
+	private ConstructionDao constructionDao;
+	
+	@Autowired
+	private ConstructionAccessoryDao constructionAccessoryDao;
 
 	@Override
 	public void pageAccessories(Paging paging, List<Filter> filters, int company) {
@@ -116,12 +127,22 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		
 		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByOrderId(orderId, accessoriesVO.getSchedule());
 		
+		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(orderId);
+		
 		if(constructionSchedulePO == null){
 			throw new FLException(120024, "工程环节不存在");
 		}
 		
 		if(constructionSchedulePO.getStatus() == ConstructionSchedulePO.STATUS_INIT_INT){
 			throw new FLException(120025, "工程环节不可操作");
+		}
+		
+		if (constructionPO.getAccessory() != ConstructionPO.ACCESSORY_OPEN_SHORT) {
+			throw new FLException(120028, "辅料已禁用");
+		}
+		
+		if(Arith.add(constructionPO.getAccessoryTotal(), accessoriesVO.getTotal()) > constructionPO.getAccessoryLimit()){
+			throw new FLException(260058, "辅料总额已达上限");
 		}
 
 		String currentDate = DateUtil.current("yyMMdd").toString();
@@ -138,9 +159,28 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 			accessoriesPO.setSupervisor(userDao.queryUserByUserId(accessoriesVO.getSupervisor().getUserId()));
 		}
 		
+		constructionPO.setAccessoryTotal(Arith.add(constructionPO.getAccessoryTotal(), accessoriesVO.getTotal()));
+		
+		constructionDao.update(constructionPO);
+		
 		accessoriesDao.save(accessoriesPO);
 
 		for (AccessoriesItemVO accessoriesItemVO : accessoriesItemVOs) {
+			
+			ConstructionAccessoryPO constructionAccessoryPO = constructionAccessoryDao.queryConstructionAccessory(constructionPO.getCid(),accessoriesItemVO.getGoods().getGid());
+			
+			if (constructionAccessoryPO != null) {
+				if (constructionAccessoryPO.getCheckup() == ConstructionAccessoryPO.CHECKUP_VERIFY_SHORT) {
+					if (Arith.add(constructionAccessoryPO.getNum(), accessoriesItemVO.getNum()) > constructionAccessoryPO.getNumLimit()) {
+						throw new FLException(260059, "辅料总数已达上限");
+					}
+				}
+				
+				constructionAccessoryPO.setTotal(Arith.add(constructionAccessoryPO.getTotal(), accessoriesItemVO.getTotal()));
+				constructionAccessoryPO.setNum(Arith.add(constructionAccessoryPO.getNum(), accessoriesItemVO.getNum()));
+				constructionAccessoryDao.update(constructionAccessoryPO);
+			}
+
 			accessoriesItemDao.save(new AccessoriesItemPO().init(accessoriesPO.getAid(), accessoriesItemVO.getGoods().getGid(), accessoriesItemVO.getSelling(), accessoriesItemVO.getNum()));
 		}
 
@@ -154,7 +194,7 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
 		AccessoriesPO accessoriesPO = accessoriesDao.get(accessoriesVO.getAid());
-
+		
 		if (accessoriesPO == null) {
 			throw new FLException(260023, "辅料单不存在");
 		}
@@ -162,6 +202,29 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		if (accessoriesPO.getStatus() != 0) {
 			throw new FLException(260024, "辅料单状态不可操作");
 		}
+		
+		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(accessoriesPO.getOrderId());
+		
+		List<AccessoriesItemPO> accessoriesItemPOs = accessoriesItemDao.queryAccessoriesItemByAid(accessoriesVO.getAid());
+		
+		long total = 0;
+		
+		for (AccessoriesItemPO accessoriesItemPO : accessoriesItemPOs) {
+			
+			ConstructionAccessoryPO constructionAccessoryPO = constructionAccessoryDao.queryConstructionAccessory(constructionPO.getCid(),accessoriesItemPO.getGoods().getGid());
+			
+			if (constructionAccessoryPO != null) {
+				constructionAccessoryPO.setTotal(Arith.sub(constructionAccessoryPO.getTotal(),Arith.mul(accessoriesItemPO.getNum(), accessoriesItemPO.getSelling())));
+				constructionAccessoryPO.setNum(Arith.sub(constructionAccessoryPO.getNum(), accessoriesItemPO.getNum()));
+				
+				constructionAccessoryDao.update(constructionAccessoryPO);
+			}
+			total += Arith.mul(accessoriesItemPO.getNum(), accessoriesItemPO.getSelling());
+		}
+		
+		constructionPO.setAccessoryTotal(Arith.sub(constructionPO.getAccessoryTotal(), total));
+		
+		constructionDao.update(constructionPO);
 
 		accessoriesPO.setStatus(accessoriesVO.getStatus());
 		accessoriesPO.setApprover(userPO);

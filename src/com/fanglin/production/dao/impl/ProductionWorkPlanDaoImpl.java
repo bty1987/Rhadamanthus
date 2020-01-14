@@ -1,5 +1,6 @@
 package com.fanglin.production.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -23,9 +24,26 @@ public class ProductionWorkPlanDaoImpl extends DaoImpl<ProductionWorkPlanPO> imp
 	}
 
 	@Override
-	public ProductionWorkPlanPO queryProductionWorkPlanByPpidAWpid(long ppid, long wpid) {
-
-		return (ProductionWorkPlanPO) session().createCriteria(ProductionWorkPlanPO.class).add(Restrictions.eq(ProductionWorkPlanPO.COLUMN_PPID_STR, ppid)).add(Restrictions.eq(ProductionWorkPlanPO.COLUMN_WFID_STR, wpid)).uniqueResult();
+	public int queryProductionWorkPlanByPpidAWpid(long ppid, long wpid) {
+		String sql = "select count(*) from production.productionworkplan where ppid = :ppid and wpid = :wpid and status != :status";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("ppid", ppid).setLong("wpid", wpid).setShort("status", ProductionWorkPlanPO.STATUS_INVALID_INT).uniqueResult();
+		return count.intValue();
 	}
 
+	@Override
+	public int countProductionWorkPlanByPpid(long ppid) {
+		String sql = "select count(*) from production.productionworkplan where ppid = :ppid";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("ppid", ppid).uniqueResult();
+		return count.intValue();
+	}
+	
+	@Override
+	public int countProductionWorkPlanByPpidAStatus(Long ppid, Short sort, Short status) {
+		String sql = "select count(*) from production.productionworkplan where ppid = :ppid and sort < :sort and status < :status ";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("ppid", ppid).setShort("sort", sort).setShort("status", status).uniqueResult();
+		return count.intValue();
+	}		
+
 }
+
+

@@ -4,6 +4,9 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.data.material.vo.ColorVO;
+import com.fanglin.data.material.vo.FormatVO;
+import com.fanglin.data.material.vo.GoodsVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
 public class CheckListVO implements java.io.Serializable {

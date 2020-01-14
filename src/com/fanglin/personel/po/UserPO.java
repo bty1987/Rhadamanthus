@@ -39,6 +39,14 @@ public class UserPO implements Serializable {
 
 	public static final short ISLOGIN_FS_INT = 2;
 
+	public static final short EXTRANET_NONE_INT = 0;
+
+	public static final short EXTRANET_MAC_INT = 1;
+
+	public static final short EXTRANET_IP_INT = 2;
+
+	public static final short EXTRANET_QCODE_INT = 4;
+
 	public static final short FREEDOM_TIMEOUT_INT = 1;
 
 	public static final short FREEDOM_ROLLCALL_INT = 2;
@@ -48,18 +56,24 @@ public class UserPO implements Serializable {
 	public static final short STATUS_ENABLE_INT = 0;
 
 	public static final short STATUS_DISABLE_INT = 1;
-	 
+
 	public static final short ISUPDATE_INIT_INT = 0;
-	
+
 	public static final short ISUPDATE_UPDATE_INT = 1;
-	
+
 	public static final short ISUPDATE_ADD_INT = 2;
+
+	public static final short TYPE_USER_INT = 0;
+
+	public static final short TYPE_SUPPLIER_INT = 1;
 
 	private int uid;
 
 	private String userId;
 
 	private String oldUserId;
+
+	private short type;
 
 	private RolePO role;
 
@@ -98,7 +112,7 @@ public class UserPO implements Serializable {
 	private short extranet;
 
 	private short freedom;
-	
+
 	private short isUpdate;
 
 	public UserPO() {
@@ -146,6 +160,15 @@ public class UserPO implements Serializable {
 
 	public void setOldUserId(String oldUserId) {
 		this.oldUserId = oldUserId;
+	}
+
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

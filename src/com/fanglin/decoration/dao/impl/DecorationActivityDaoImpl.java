@@ -37,22 +37,22 @@ public class DecorationActivityDaoImpl extends DaoImpl<DecorationActivityPO> imp
 
 	@Override
 	public int countDecorationActivity(String orderId, Short status) {
-		
+
 		StringBuffer sql = new StringBuffer();
-		
+
 		sql.append("select count(*) from decoration.decorationactivity where orderId = :orderId");
-		
-		if(status != null){
+
+		if (status != null) {
 			sql.append(" and status = :status");
-			
+
 		}
 		SQLQuery sqlQuery = session().createSQLQuery(sql.toString());
 		sqlQuery.setString("orderId", orderId);
-		
-		if(status != null){
-		sqlQuery.setShort("status", status);
+
+		if (status != null) {
+			sqlQuery.setShort("status", status);
 		}
-		
+
 		return ((BigInteger) sqlQuery.uniqueResult()).intValue();
 	}
 

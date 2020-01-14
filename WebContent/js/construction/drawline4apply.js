@@ -27,10 +27,14 @@ jQuery(function ($) {
             endTime: com.focusPage("#endTime"),
             drawLineGroup: com.focusPage("#drawLineGroup"),
 
-            ishovel: com.focusPage("#ishovel"),
-            iskey: com.focusPage("#iskey"),
-            isCeremony: com.focusPage("#isCeremony"),
-            comment: com.focusPage("#comment")
+            ishovel  : com.focusPage("#ishovel"),
+            iskey  : com.focusPage("#iskey"),
+            timeLimit : com.focusPage("#timeLimit"),
+            finishTime : com.focusPage("#finishTime"),
+            keyTime : com.focusPage("#keyTime"),
+            drawlineTime : com.focusPage("#drawlineTime"),
+            isCeremony  : com.focusPage("#isCeremony"),
+            comment   : com.focusPage("#comment")
         }
     };
 
@@ -64,7 +68,9 @@ jQuery(function ($) {
 
     com.datetime(drawline.items.applayTime);
     com.datetime(drawline.items.actualDate);
-    
+    com.datetime(drawline.items.finishTime);
+    com.datetime(drawline.items.keyTime);
+    com.datetime(drawline.items.drawlineTime);
     com.datetime(drawline.items.startTime, "time");
     com.datetime(drawline.items.endTime,"time");
 
@@ -303,6 +309,16 @@ jQuery(function ($) {
             drawline.items.ishovel.val(data.ishovel);
             drawline.items.iskey.val(data.iskey);
             drawline.items.isCeremony.val(data.isCeremony);
+            drawline.items.timeLimit.val(data.timeLimit);
+            if(data.finishTime != null){
+                drawline.items.finishTime.val(data.finishTime.substr(0,10));
+            }
+            if(data.keyTime != null){
+                drawline.items.keyTime.val(data.keyTime.substr(0,10));
+            }
+            if(data.drawlineTime != null){
+                drawline.items.drawlineTime.val(data.drawlineTime.substr(0,10));
+            }
             drawline.items.comment.val(data.comment);
         });
 
@@ -314,9 +330,13 @@ jQuery(function ($) {
 
         var options = {
             "constructionInfo.orderId" : drawline.items.orderId,
+            "constructionInfo.timeLimit" : drawline.items.timeLimit.val(),
             "constructionInfo.ishovel": drawline.items.ishovel.val(),
             "constructionInfo.iskey": drawline.items.iskey.val(),
-            "constructionInfo.isCeremony": drawline.items.isCeremony.val(),
+            "constructionInfo.isCeremony" : drawline.items.isCeremony.val(),
+            "constructionInfo.finishTime" : drawline.items.finishTime.val() + " 00:00:00",
+            "constructionInfo.keyTime" : drawline.items.keyTime.val() + " 00:00:00",
+            "constructionInfo.drawlineTime" : drawline.items.drawlineTime.val() + " 00:00:00",
             "constructionInfo.comment": drawline.items.comment.val()
         };
 

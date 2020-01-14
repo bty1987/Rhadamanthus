@@ -31,6 +31,8 @@ public interface DecorationPaymentService {
 	public void pageDecorationPaymentForCollect(Paging paging, List<Filter> filters, Integer company);
 	
 	public void pageDecorationPaymentForConfirm(Paging paging, List<Filter> filters, Integer company);
+	
+	public List<DecorationPaymentVO> queryDecorationPayment(List<Filter> filters, Integer company);
 
 	public DecorationPaymentVO queryDecorationPaymentById(DecorationPaymentVO decorationPaymentVO);
 	
@@ -46,9 +48,9 @@ public interface DecorationPaymentService {
 	
 	public int makeDecorationPayment(DecorationPO decorationPO, long money, long psid, String createUserId) throws FLException;
 	
-	public int changeDecorationPaymentForTime(DecorationPaymentVO decorationPaymentVO, Timestamp dateTime, String userId);
+	public int changeDecorationPaymentForTime(DecorationPaymentVO decorationPaymentVO, Timestamp dateTime, String userId) throws FLException;
 	
-	public int collectDecorationPayment(DecorationPaymentVO decorationPaymentVO, List<DecorationActivityItemVO> decorationActivityItemVOs, String userId, Integer company) throws FLException;
+	public int collectDecorationPayment(DecorationPaymentVO decorationPaymentVO, List<DecorationActivityItemVO> decorationActivityItemVOs, List<Long> posids, String userId, Integer company) throws FLException;
 	
 	public int refundDecorationPayment(DecorationPaymentVO decorationPaymentVO, String userId, Integer company) throws FLException;
 
@@ -57,5 +59,5 @@ public interface DecorationPaymentService {
 	public int updateDecorationPayment(DecorationPaymentVO decorationPaymentVO) throws FLException;
 	
 	public int deleteDecorationPaymentById(DecorationPaymentVO decorationPaymentVO);
-	
+
 }

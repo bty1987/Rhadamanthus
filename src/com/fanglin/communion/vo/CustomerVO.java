@@ -30,6 +30,12 @@ public class CustomerVO implements Serializable {
 
 	private String relationshipType;
 
+	private String photoPath;
+
+	private String identityPathF;
+
+	private String identityPathB;
+
 	private Long balance;
 
 	private Long materialBalance;
@@ -145,6 +151,30 @@ public class CustomerVO implements Serializable {
 
 	public void setRelationshipType(String relationshipType) {
 		this.relationshipType = relationshipType;
+	}
+
+	public String getPhotoPath() {
+		return photoPath;
+	}
+
+	public void setPhotoPath(String photoPath) {
+		this.photoPath = photoPath;
+	}
+
+	public String getIdentityPathF() {
+		return identityPathF;
+	}
+
+	public void setIdentityPathF(String identityPathF) {
+		this.identityPathF = identityPathF;
+	}
+
+	public String getIdentityPathB() {
+		return identityPathB;
+	}
+
+	public void setIdentityPathB(String identityPathB) {
+		this.identityPathB = identityPathB;
 	}
 
 	public Long getBalance() {

@@ -11,6 +11,8 @@
 
 package com.fanglin.right.dao.impl;
 
+import java.util.List;
+
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -25,11 +27,19 @@ public class BrandUserRightDaoImpl extends DaoImpl<BrandUserRightPO> implements 
 		super(BrandUserRightPO.class);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public BrandUserRightPO queryBrandUserRightByUid(int uid){
+	public List<BrandUserRightPO> queryBrandUserRightByUid(int uid){
+		return session().createCriteria(BrandUserRightPO.class).add(Restrictions.eq(BrandUserRightPO.COLUMN_UID_STR, uid)).list();
+	}
+
+	@Override
+	public int deleteBrandUserRightByUid(int uid) {
 		
-		return (BrandUserRightPO) createCriteria(BrandUserRightPO.class).add(Restrictions.eq(BrandUserRightPO.COLUMN_UID_STR, uid)).uniqueResult();
+		String sql = "DELETE FROM communion.branduserright WHERE uid= :uid";
+		session().createSQLQuery(sql).setInteger("uid", uid).executeUpdate();
 		
+		return 0;
 	}
 
 }

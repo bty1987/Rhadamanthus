@@ -43,7 +43,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 	@Autowired
 	private CustomerPhoneDao customerPhoneDao;
-	
+
 	@Override
 	public List<DecorationPO> pageDecoration(Paging paging, List<Filter> filters) {
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
@@ -114,6 +114,8 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
 
+		query.add(query.getCriterion("company", company, "eq"));
+
 		queryFilterExcute(query, filters);
 
 		query.desc("doid");
@@ -133,7 +135,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 			query.alias("designer.dept", "designerDept");
 			query.add(Restrictions.in("designerDept.did", designDepartmentIds));
 		}
-		
+
 		if (statuses != null && statuses.size() > 0) {
 			query.add(Restrictions.in("status", statuses));
 		}
@@ -371,6 +373,8 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 				} else if ("houseArea".equals(field)) {
 					int dataF = Integer.parseInt(data);
 					query.add(query.getCriterion("house.buildArea", Arith.mul(dataF, 1000000), op));
+				} else if ("projectStatus".equals(field)) {
+					query.add(query.getCriterion("projectStatus", Short.valueOf(data), op));
 				} else if ("signTimeDateRange".equals(field)) {
 					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
 					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
@@ -437,7 +441,19 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 					query.add(query.getCriterion("precontractTime", eTimestamp, "le"));
 					query.add(query.getCriterion("precontractTime", sTimestamp, "ge"));
-				} 
+				} else if ("accountTime".equals(field)) {
+					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
+					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
+
+					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
+					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+
+					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
+					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
+
+					query.add(query.getCriterion("accountTime", eTimestamp, "le"));
+					query.add(query.getCriterion("accountTime", sTimestamp, "ge"));
+				}
 			}
 		}
 

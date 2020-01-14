@@ -48,7 +48,7 @@ jQuery(function($) {
 
 			$liLine.append($h3).append($ulProperty);
 
-			!v.status && $statusSwitch.prop("checked", true);
+			!v.status ? $statusSwitch.prop("checked", true) : $statusSwitch.prop("disabled", true);
 
 			$invalid.click(function(){
 				var cvalue = $statusSwitch.prop("checked") ? 0:1;
@@ -80,7 +80,7 @@ jQuery(function($) {
 
 		com.post(api.information.updateVactivityForStatus, {"vactivity.vaid": aid, "vactivity.status": newstatus}, function(){
 
-			newstatus == 0? com.showAlert(com.info, "已启动") : com.showAlert(com.info, "已禁用");
+			newstatus == 0 ? com.showAlert(com.info, "已启动") : com.showAlert(com.info, "已禁用");
 
 			searcher.doSearch();
 		});

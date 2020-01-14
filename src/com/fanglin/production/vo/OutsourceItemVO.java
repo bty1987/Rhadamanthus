@@ -8,17 +8,17 @@ public class OutsourceItemVO {
 
 	private String name;
 
-	private Float height;
+	private Integer height;
 
-	private Float width;
+	private Integer width;
 
-	private Float thick;
+	private Integer thick;
 
 	private String modelling;
 
-	private Float num;
+	private Integer num;
 
-	private Float unitprice;
+	private Integer unitprice;
 
 	private Long total;
 
@@ -52,27 +52,27 @@ public class OutsourceItemVO {
 		this.name = name;
 	}
 
-	public Float getHeight() {
+	public Integer getHeight() {
 		return height;
 	}
 
-	public void setHeight(Float height) {
+	public void setHeight(Integer height) {
 		this.height = height;
 	}
 
-	public Float getWidth() {
+	public Integer getWidth() {
 		return width;
 	}
 
-	public void setWidth(Float width) {
+	public void setWidth(Integer width) {
 		this.width = width;
 	}
 
-	public Float getThick() {
+	public Integer getThick() {
 		return thick;
 	}
 
-	public void setThick(Float thick) {
+	public void setThick(Integer thick) {
 		this.thick = thick;
 	}
 
@@ -84,19 +84,19 @@ public class OutsourceItemVO {
 		this.modelling = modelling;
 	}
 
-	public Float getNum() {
+	public Integer getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(Integer num) {
 		this.num = num;
 	}
 
-	public Float getUnitprice() {
+	public Integer getUnitprice() {
 		return unitprice;
 	}
 
-	public void setUnitprice(Float unitprice) {
+	public void setUnitprice(Integer unitprice) {
 		this.unitprice = unitprice;
 	}
 

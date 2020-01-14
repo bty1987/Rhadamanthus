@@ -29,9 +29,12 @@ public class WorkflowServiceImpl implements WorkflowService {
 		List<WorkflowPO> workflowActionPOs = workflowDao.pageWorkflow(paging, filter, company);
 		List<WorkflowVO> workflowActionVOs = new ArrayList<WorkflowVO>();
 
+		WorkflowVO workflowActionVO;
+		
 		for (WorkflowPO workflowActionPO : workflowActionPOs) {
 
-			WorkflowVO workflowActionVO = new WorkflowVO();
+			workflowActionVO = new WorkflowVO();
+			
 			BeanUtil.copyProperties(workflowActionPO, workflowActionVO);
 
 			workflowActionVOs.add(workflowActionVO);
@@ -46,9 +49,12 @@ public class WorkflowServiceImpl implements WorkflowService {
 		List<WorkflowPO> workflowPOs = workflowDao.queryWorkflow(company);
 		List<WorkflowVO> workflows = new ArrayList<WorkflowVO>();
 		
+		WorkflowVO workflowVO;
+		
 		for (WorkflowPO workflowPO : workflowPOs) {
 
-			WorkflowVO workflowVO = new WorkflowVO();
+			workflowVO = new WorkflowVO();
+			
 			workflowVO.setWfid(workflowPO.getWfid());
 			workflowVO.setName(workflowPO.getName());
 			workflowVO.setStatus(workflowPO.getStatus());
@@ -64,6 +70,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 	public void addWorkflow(WorkflowVO workflow, int company) {
 
 		WorkflowPO workflowPO = new WorkflowPO();
+		
 		workflowPO.setCompany(company);
 		workflowPO.setName(workflow.getName());
 		workflowPO.setStatus(WorkflowPO.COLUMN_STATUS_STR);

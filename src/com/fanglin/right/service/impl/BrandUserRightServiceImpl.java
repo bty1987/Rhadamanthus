@@ -46,41 +46,25 @@ public class BrandUserRightServiceImpl implements BrandUserRightService {
 	@Override
 	public BrandUserRightVO queryBrandUserRightByUid(BrandUserRightVO brandUserRightVO) {
 		
-		int uid = brandUserRightVO.getUid();
+		List<BrandUserRightPO> brandUserRightPOs = brandUserRightDao.queryBrandUserRightByUid(brandUserRightVO.getUid());
 		
-		BrandUserRightPO brandUserRightPO = brandUserRightDao.queryBrandUserRightByUid(uid);
+		List<BrandVO> brandVOs = new ArrayList<BrandVO>();
 		
-		if(brandUserRightPO == null){
-			brandUserRightVO.setUid(uid);
-			brandUserRightVO.setBrandId("");
-		}else{
-			BeanUtil.copyProperties(brandUserRightPO, brandUserRightVO, Arrays.asList("brands"));
+		for(BrandUserRightPO brandUserRightPO : brandUserRightPOs){
 			
-			if(!"".equals(brandUserRightPO.getBrandId())){
-				
-				List<String> brandId = Arrays.asList(brandUserRightPO.getBrandId().split("#"));
-				List<Long> brandIds = new ArrayList<Long>();
-				for(int i=0;i<brandId.size();i++) {
-					brandIds.add(Long.parseLong(brandId.get(i)));
-				}
-				List<BrandPO> brandPOs = brandDao.queryBrandByBids(brandIds); 
-				List<BrandVO> brandVOs = new ArrayList<BrandVO>();
-				
-				for(BrandPO brandPO : brandPOs){
-				
-					BrandVO brandVO = new BrandVO();
-					
-					BeanUtil.copyProperties(brandPO, brandVO,Arrays.asList("category"));
-					brandVO.setCategoryId(brandPO.getCategory().getNo());
-					brandVO.setCategoryName(brandPO.getCategory().getName());
-					brandVO.setCid(brandPO.getCategory().getCid());
-					
-					brandVOs.add(brandVO);
-				}
-
-				brandUserRightVO.setBrands(brandVOs);
-			}
+			BrandPO brandPO = brandDao.queryBrandByBid(brandUserRightPO.getBrand().getBid());
+			
+			BrandVO brandVO = new BrandVO();
+			
+			BeanUtil.copyProperties(brandPO, brandVO,Arrays.asList("category", "supplier"));
+			brandVO.setCategoryId(brandPO.getCategory().getNo());
+			brandVO.setCategoryName(brandPO.getCategory().getName());
+			brandVO.setCid(brandPO.getCategory().getCid());
+			
+			brandVOs.add(brandVO);
 		}
+		
+		brandUserRightVO.setBrands(brandVOs);
 		
 		return brandUserRightVO;
 	}
@@ -90,41 +74,27 @@ public class BrandUserRightServiceImpl implements BrandUserRightService {
 		
 		UserPO user = userDao.queryUserByUserId(userId);
 		
-		BrandUserRightPO brandUserRightPO = brandUserRightDao.queryBrandUserRightByUid(user.getUid());
+		List<BrandUserRightPO> brandUserRightPOs = brandUserRightDao.queryBrandUserRightByUid(user.getUid());
 		
 		BrandUserRightVO brandUserRightVO = new BrandUserRightVO();
 		
-		if(brandUserRightPO == null){
-			brandUserRightVO.setUid(user.getUid());
-			brandUserRightVO.setBrandId("");
-		}else{
-			BeanUtil.copyProperties(brandUserRightPO, brandUserRightVO, Arrays.asList("brands"));
+		List<BrandVO> brandVOs = new ArrayList<BrandVO>();
+		
+		for(BrandUserRightPO brandUserRightPO : brandUserRightPOs){
 			
-			if(!"".equals(brandUserRightPO.getBrandId())){
-				
-				List<String> brandId = Arrays.asList(brandUserRightPO.getBrandId().split("#"));
-				List<Long> brandIds = new ArrayList<Long>();
-				for(int i=0;i<brandId.size();i++) {
-					brandIds.add(Long.parseLong(brandId.get(i)));
-				}
-				List<BrandPO> brandPOs = brandDao.queryBrandByBids(brandIds); 
-				List<BrandVO> brandVOs = new ArrayList<BrandVO>();
-				
-				for(BrandPO brandPO : brandPOs){
-				
-					BrandVO brandVO = new BrandVO();
-					
-					BeanUtil.copyProperties(brandPO, brandVO,Arrays.asList("category"));
-					brandVO.setCategoryId(brandPO.getCategory().getNo());
-					brandVO.setCategoryName(brandPO.getCategory().getName());
-					brandVO.setCid(brandPO.getCategory().getCid());
-					
-					brandVOs.add(brandVO);
-				}
-
-				brandUserRightVO.setBrands(brandVOs);
-			}
+			BrandPO brandPO = brandDao.queryBrandByBid(brandUserRightPO.getBrand().getBid());
+			
+			BrandVO brandVO = new BrandVO();
+			
+			BeanUtil.copyProperties(brandPO, brandVO,Arrays.asList("category", "supplier"));
+			brandVO.setCategoryId(brandPO.getCategory().getNo());
+			brandVO.setCategoryName(brandPO.getCategory().getName());
+			brandVO.setCid(brandPO.getCategory().getCid());
+			
+			brandVOs.add(brandVO);
 		}
+		
+		brandUserRightVO.setBrands(brandVOs);
 		
 		return brandUserRightVO;
 		
@@ -132,20 +102,21 @@ public class BrandUserRightServiceImpl implements BrandUserRightService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void updateBrandUserRight(BrandUserRightVO brandUserRightVO) {
+	public void updateBrandUserRight(BrandUserRightVO brandUserRightVO, List<Long> bids) {
 		
-		BrandUserRightPO brandUserRightPO = brandUserRightDao.queryBrandUserRightByUid(brandUserRightVO.getUid());
+		brandUserRightDao.deleteBrandUserRightByUid(brandUserRightVO.getUid());
 		
-		if(brandUserRightPO == null){
-			brandUserRightPO = new BrandUserRightPO();
-			
-			brandUserRightPO.setUid(brandUserRightVO.getUid());
-			brandUserRightPO.setBrandId(brandUserRightVO.getBrandId());
-		}else{
-			brandUserRightPO.setBrandId(brandUserRightVO.getBrandId());
+		if(bids != null && bids.size() > 0){
+			for (Long bid : bids) {
+				BrandUserRightPO brandUserRightPO = new BrandUserRightPO();
+
+				brandUserRightPO.setUid(brandUserRightVO.getUid());
+				brandUserRightPO.setBrand(new BrandPO(bid));
+
+				brandUserRightDao.save(brandUserRightPO);
+			}
 		}
 		
-		brandUserRightDao.saveOrUpdate(brandUserRightPO);
 	}
 
 }

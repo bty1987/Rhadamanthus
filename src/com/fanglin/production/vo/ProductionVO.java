@@ -5,6 +5,8 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.communion.vo.BrandVO;
+import com.fanglin.communion.vo.CategoryVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
@@ -14,33 +16,49 @@ public class ProductionVO implements Serializable {
 
 	private Long pid;
 
-	private Long orderId;
+	private String orderId;
+	
+	private String spid;
 
 	private String pno;
 
 	private HouseVO house;
-
-	private Float total;
+	
+    private BrandVO brand; //品牌
+	
+	private CategoryVO category; //品类
 
 	private UserBaseVO creater;
+	
+	private UserBaseVO salesman;//销售员
 
 	private UserBaseVO designer;
+	
+	private UserBaseVO spliter;// 拆单员
 
+	private Timestamp createTime;// 创建时间
+	
+	private Timestamp designTime;// 设计时间
+
+	private Timestamp divideTime;// 生产时间
+	
+	private Timestamp storeTime;// 入库时间
+	
+	private Timestamp planTime;// 物流时间
+	
+	private Timestamp tranTime;//运输
+	
+	private Timestamp mountTime;// 安装时间
+	
+	private Timestamp finishTime;// 完结时间
+	
+	private Timestamp updateTime;// 更新时间
+
+	private Integer timeLimit;
+	
+	private Long total;
+	
 	private Short status;
-
-	private Timestamp createTime;
-
-	private Timestamp divideTime;
-
-	private Timestamp confirmTime;
-
-	private Short diliverystatus;
-
-	private Timestamp diliveryTime;
-
-	private Float timeLimit;
-
-	private String spid;
 
 	private Short type;
 
@@ -50,11 +68,29 @@ public class ProductionVO implements Serializable {
 		super();
 	}
 
-	public ProductionVO(HouseVO house, UserBaseVO creater, UserBaseVO designer) {
+	public ProductionVO(HouseVO house) {
+		super();
+		this.house = house;
+	}
+
+	public ProductionVO(HouseVO house, UserBaseVO creater, UserBaseVO salesman, UserBaseVO designer, UserBaseVO spliter) {
 		super();
 		this.house = house;
 		this.creater = creater;
+		this.salesman = salesman;
 		this.designer = designer;
+		this.spliter = spliter;
+	}
+
+	public ProductionVO(HouseVO house, BrandVO brand, CategoryVO category, UserBaseVO creater, UserBaseVO salesman, UserBaseVO designer, UserBaseVO spliter) {
+		super();
+		this.house = house;
+		this.brand = brand;
+		this.category = category;
+		this.creater = creater;
+		this.salesman = salesman;
+		this.designer = designer;
+		this.spliter = spliter;
 	}
 
 	public Long getPid() {
@@ -64,29 +100,37 @@ public class ProductionVO implements Serializable {
 	public void setPid(Long pid) {
 		this.pid = pid;
 	}
+	
+	public String getSpid() {
+		return spid;
+	}
 
-	public Long getOrderId() {
+	public void setSpid(String spid) {
+		this.spid = spid;
+	}
+	
+	public String getPno() {
+		return pno;
+	}
+
+	public void setPno(String pno) {
+		this.pno = pno;
+	}
+
+	public String getOrderId() {
 		return orderId;
 	}
 
-	public void setOrderId(Long orderId) {
+	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
-
+	
 	public HouseVO getHouse() {
 		return house;
 	}
 
 	public void setHouse(HouseVO house) {
 		this.house = house;
-	}
-
-	public Float getTotal() {
-		return total;
-	}
-
-	public void setTotal(Float total) {
-		this.total = total;
 	}
 
 	public UserBaseVO getCreater() {
@@ -97,6 +141,14 @@ public class ProductionVO implements Serializable {
 		this.creater = creater;
 	}
 
+	public UserBaseVO getSalesman() {
+		return salesman;
+	}
+
+	public void setSalesman(UserBaseVO salesman) {
+		this.salesman = salesman;
+	}
+
 	public UserBaseVO getDesigner() {
 		return designer;
 	}
@@ -105,12 +157,91 @@ public class ProductionVO implements Serializable {
 		this.designer = designer;
 	}
 
-	public Short getStatus() {
-		return status;
+	public UserBaseVO getSpliter() {
+		return spliter;
 	}
 
-	public void setStatus(Short status) {
-		this.status = status;
+	public void setSpliter(UserBaseVO spliter) {
+		this.spliter = spliter;
+	}
+
+	public BrandVO getBrand() {
+		return brand;
+	}
+
+	public void setBrand(BrandVO brand) {
+		this.brand = brand;
+	}
+
+	public CategoryVO getCategory() {
+		return category;
+	}
+
+	public void setCategory(CategoryVO category) {
+		this.category = category;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getDesignTime() {
+		return designTime;
+	}
+
+	public void setDesignTime(Timestamp designTime) {
+		this.designTime = designTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getStoreTime() {
+		return storeTime;
+	}
+
+	public void setStoreTime(Timestamp storeTime) {
+		this.storeTime = storeTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getPlanTime() {
+		return planTime;
+	}
+
+	public void setPlanTime(Timestamp planTime) {
+		this.planTime = planTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getTranTime() {
+		return tranTime;
+	}
+
+	public void setTranTime(Timestamp tranTime) {
+		this.tranTime = tranTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getMountTime() {
+		return mountTime;
+	}
+
+	public void setMountTime(Timestamp mountTime) {
+		this.mountTime = mountTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Timestamp finishTime) {
+		this.finishTime = finishTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Timestamp updateTime) {
+		this.updateTime = updateTime;
 	}
 
 	@JSON(format = "yyyy-MM-dd")
@@ -131,37 +262,12 @@ public class ProductionVO implements Serializable {
 		this.divideTime = divideTime;
 	}
 
-	public Short getDiliverystatus() {
-		return diliverystatus;
-	}
-
-	public void setDiliverystatus(Short diliverystatus) {
-		this.diliverystatus = diliverystatus;
-	}
-
-	@JSON(format = "yyyy-MM-dd")
-	public Timestamp getDiliveryTime() {
-		return diliveryTime;
-	}
-
-	public void setDiliveryTime(Timestamp diliveryTime) {
-		this.diliveryTime = diliveryTime;
-	}
-
-	public Float getTimeLimit() {
+	public Integer getTimeLimit() {
 		return timeLimit;
 	}
 
-	public void setTimeLimit(Float timeLimit) {
+	public void setTimeLimit(Integer timeLimit) {
 		this.timeLimit = timeLimit;
-	}
-
-	public String getSpid() {
-		return spid;
-	}
-
-	public void setSpid(String spid) {
-		this.spid = spid;
 	}
 
 	public Short getType() {
@@ -179,22 +285,21 @@ public class ProductionVO implements Serializable {
 	public void setCompany(Integer company) {
 		this.company = company;
 	}
-
-	@JSON(format = "yyyy-MM-dd")
-	public Timestamp getConfirmTime() {
-		return confirmTime;
+	
+	public Long getTotal() {
+		return total;
 	}
 
-	public void setConfirmTime(Timestamp confirmTime) {
-		this.confirmTime = confirmTime;
+	public void setTotal(Long total) {
+		this.total = total;
+	}
+	
+	public Short getStatus() {
+		return status;
 	}
 
-	public String getPno() {
-		return pno;
-	}
-
-	public void setPno(String pno) {
-		this.pno = pno;
+	public void setStatus(Short status) {
+		this.status = status;
 	}
 
 }

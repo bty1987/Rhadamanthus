@@ -8,8 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.information.po.TaskPO;
-import com.fanglin.information.vo.TaskVO;
+import com.fanglin.data.common.vo.TaskVO;
+import com.fanglin.data.po.TaskPO;
+
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserVO;

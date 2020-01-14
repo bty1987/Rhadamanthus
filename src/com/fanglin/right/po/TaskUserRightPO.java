@@ -9,7 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.information.po.TaskPO;
+import com.fanglin.data.po.TaskPO;
 
 @Entity
 @Table(name = "taskuserright", catalog = "platform")

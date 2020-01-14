@@ -70,7 +70,7 @@ jQuery(function($) {
 		com.initTypeahead('salesmanName', api.personel.queryUserByPinyin  , "pinyinName", {"user.status":"0","departmentType.name":""}, "autoFillKeyValue", "key", "value",null);
 		com.initTypeahead('materialerName', api.personel.queryUserByPinyin  , "pinyinName", {"user.status":"0","departmentType.name":"主材部"}, "autoFillKeyValue", "key", "value",null);
 		com.initTypeahead('instoreName', api.personel.queryUserByPinyin , "pinyinName", {"user.status":"0","departmentType.name":"主材部"}, "autoFillKeyValue", "key", "value",null);
-		com.initTypeahead('materialBrand', api.data.queryBrandForPinYinNameAname, "pinyinName", {}, "brands", "bid", "alias",null);
+		com.initTypeahead('materialBrand', api.data.queryBrandByPinyin, "pinyinName", {}, "brands", "bid", "alias",null);
 
 		com.updateTypeahead("salesmanName", materialSaleOrderPostData["materialSubOrder.designerId"], materialSaleOrderPostData["materialSubOrder.designerName"]);
 

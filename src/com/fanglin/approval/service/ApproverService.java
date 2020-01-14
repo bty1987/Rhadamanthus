@@ -17,14 +17,13 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface ApproverService {
-	
-	public void pageApprover(Paging paging, List<Filter> filters,int company);
-	
-	public List<ApproverVO> queryApprovalUserByType(ApproverVO userApproveVO,int company);
-	
-	public int addApprover(ApproverVO userApproveVO) throws FLException;
+
+	public void pageApprover(Paging paging, List<Filter> filters, int company);
+
+	public List<ApproverVO> queryApproverByType(ApproverVO approver, int company);
+
+	public int addApprover(ApproverVO approver, int company) throws FLException;
 
 	public void deleteApprover(ApproverVO approver) throws FLException;
-
 
 }

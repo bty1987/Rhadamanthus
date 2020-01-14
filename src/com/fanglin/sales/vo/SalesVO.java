@@ -20,6 +20,8 @@ public class SalesVO implements Serializable {
 	
 	private String orderId;
 	
+	private UserBaseVO supplier;
+	
 	private HouseVO house;
 	
 	private CustomerVO customer;
@@ -101,6 +103,21 @@ public class SalesVO implements Serializable {
 		this.guideDept = guideDept;
 		this.instorer = instorer;
 	}
+	
+	public SalesVO(HouseVO house, CustomerVO customer, UserBaseVO salesman,
+			DepartmentVO dept, DepartmentVO region, UserBaseVO guider,
+			DepartmentVO guideDept, UserBaseVO instorer, UserBaseVO supplier) {
+		super();
+		this.house = house;
+		this.customer = customer;
+		this.salesman = salesman;
+		this.dept = dept;
+		this.region = region;
+		this.guider = guider;
+		this.guideDept = guideDept;
+		this.instorer = instorer;
+		this.supplier = supplier;
+	}
 
 	public Long getSid() {
 		return sid;
@@ -124,6 +141,14 @@ public class SalesVO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	public UserBaseVO getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(UserBaseVO supplier) {
+		this.supplier = supplier;
 	}
 
 	public HouseVO getHouse() {

@@ -22,6 +22,10 @@ public class CustomerPO implements Serializable {
 
 	public static final short BALANCE_TYPE_ZHENGLIN_INT = 3;
 
+	public static final short STATUS_INIT_INT = 0;
+
+	public static final short STATUS_AUTH_INT = 1;
+
 	private long cid;
 
 	private String no;
@@ -44,11 +48,25 @@ public class CustomerPO implements Serializable {
 
 	private String wechat;
 
+	private String phone;
+
 	private String email;
 
 	private String address;
 
 	private String relationshipType;
+
+	private String photoPath;
+
+	private String identityPathF;
+
+	private String identityPathB;
+
+	private String signno;
+
+	private String token;
+
+	private short status;
 
 	private int company;
 
@@ -144,6 +162,15 @@ public class CustomerPO implements Serializable {
 		this.passport = passport;
 	}
 
+	@Column(name = "phone")
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
 	@Column(name = "qq")
 	public String getQq() {
 		return qq;
@@ -187,6 +214,58 @@ public class CustomerPO implements Serializable {
 
 	public void setRelationshipType(String relationshipType) {
 		this.relationshipType = relationshipType;
+	}
+
+	@Column(name = "photoPath")
+	public String getPhotoPath() {
+		return photoPath;
+	}
+
+	public void setPhotoPath(String photoPath) {
+		this.photoPath = photoPath;
+	}
+
+	@Column(name = "identityPathF")
+	public String getIdentityPathF() {
+		return identityPathF;
+	}
+
+	public void setIdentityPathF(String identityPathF) {
+		this.identityPathF = identityPathF;
+	}
+
+	@Column(name = "identityPathB")
+	public String getIdentityPathB() {
+		return identityPathB;
+	}
+
+	public void setIdentityPathB(String identityPathB) {
+		this.identityPathB = identityPathB;
+	}
+
+	public String getSignno() {
+		return signno;
+	}
+
+	public void setSignno(String signno) {
+		this.signno = signno;
+	}
+
+	@Column(name = "token")
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
 	}
 
 	@Column(name = "company")

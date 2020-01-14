@@ -14,48 +14,47 @@ import com.fanglin.utils.Paging;
 @Repository("workerBalanceDao")
 public class WorkerBalanceDaoImpl extends DaoImpl<WorkerBalancePO> implements WorkerBalanceDao {
 
-	public WorkerBalanceDaoImpl(){
+	public WorkerBalanceDaoImpl() {
 		super(WorkerBalancePO.class);
 	}
-	
+
 	@Override
-	public List<WorkerBalancePO> pageWorkerBalance(Paging paging,List<Filter> filters, int company) {
+	public List<WorkerBalancePO> pageWorkerBalance(Paging paging, List<Filter> filters, int company) {
 
 		PagingQuery<WorkerBalancePO> query = pagingQuery(paging, WorkerBalancePO.class);
-		
+
 		query.add(Restrictions.eq("company", company));
 
 		queryFilterExcuteForWorker(query, filters);
 
 		return query.list();
 	}
-	
+
 	@Override
-	public WorkerBalancePO queryWorkerBalanceByUserId(int uid, int company) {
-		
+	public WorkerBalancePO queryWorkerBalance(int uid, int company) {
 		return (WorkerBalancePO) session().createCriteria(WorkerBalancePO.class).createAlias("user", "user").add(Restrictions.eq(WorkerBalancePO.COLUMN_UID_STR, uid)).add(Restrictions.eq("company", company)).uniqueResult();
 	}
-	
-	private void queryFilterExcuteForWorker(PagingQuery<?> query,List<Filter> filters) {
-		if (filters != null) {
-			for (Filter filter : filters) {
 
-				String filet = filter.getField();
-				String data = filter.getData();
-				String op = filter.getOp();
+	private void queryFilterExcuteForWorker(PagingQuery<?> query, List<Filter> filters) {
 
-				if ("userName".equals(filet)) {
-					query.alias("user", "user");
-					query.add(query.getCriterion("user.userId", data, op));
-				}
+		if (filters == null)
+			return;
 
-				if ("duty".equals(filet)) {
-					query.alias("user", "user");
-					query.alias("user.duty", "duty");
-					query.add(query.getCriterion("duty.name", data, op));
+		for (Filter filter : filters) {
 
-				}
+			String filet = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if ("userName".equals(filet)) {
+				query.alias("user", "user");
+				query.add(query.getCriterion("user.userId", data, op));
+			} else if ("duty".equals(filet)) {
+				query.alias("user", "user");
+				query.alias("user.duty", "duty");
+				query.add(query.getCriterion("duty.name", data, op));
 			}
 		}
 	}
+
 }

@@ -32,6 +32,8 @@ public interface MaterialPaymentService {
 	
 	public void pageMaterialPaymentForConfirm(Paging paging, List<Filter> filters, int company);
 	
+	public List<MaterialPaymentVO> queryMaterialPayment(List<Filter> filters, int company);
+	
 	public List<MaterialPaymentVO> queryMaterialPaymentByOrderId(MaterialPaymentVO materialPaymentVO);
 	
 	public List<MaterialPaymentVO> queryMaterialPaymentByMid(MaterialPaymentVO materialPaymentVO);
@@ -50,9 +52,9 @@ public interface MaterialPaymentService {
 	
 	public int changeMaterialPaymentForTime(MaterialPaymentVO materialPaymentVO, Timestamp dateTime, String userId) throws FLException;
 	
-	public int collectMaterialPayment(MaterialPaymentVO materialPaymentVO, List<DecorationActivityItemVO> decorationActivityItemVOs, String userId, Integer company) throws FLException;
+	public int collectMaterialPayment(MaterialPaymentVO materialPaymentVO, List<DecorationActivityItemVO> decorationActivityItemVOs, List<Long> posids, String userId, Integer company) throws FLException;
 	
-	public int collectMaterialPayments(MaterialVO materialVO, List<MaterialPaymentVO> materialPaymentVOs, MaterialReceiptVO materialReceiptVO, String userId, Integer company) throws FLException;
+	public int collectMaterialPayments(MaterialVO materialVO, List<MaterialPaymentVO> materialPaymentVOs, MaterialReceiptVO materialReceiptVO, List<Long> posids, String userId, Integer company) throws FLException;
 	
 	public int refundMaterialPayment(MaterialPaymentVO materialPaymentVO, String userId, Integer company) throws FLException;
 	

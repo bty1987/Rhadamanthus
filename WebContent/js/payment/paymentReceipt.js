@@ -75,7 +75,7 @@ jQuery(function ($) {
                 "paymentType": getPaymentType(payment.paymentType),
                 "money": parseFloat(payment.checkv),
                 "bankInfo": checkvParams[0],
-                "paymentWay": "转账"
+                "paymentWay": "银行"
             };
             paymentItems.push(tem);
             receipt.receiptsNum = checkvParams[1] + 1;
@@ -153,7 +153,7 @@ jQuery(function ($) {
 
             for (var j = 0; j < paymentInfo[i].length; j++) {
                 var receiptItems = paymentInfo[i][j];
-                if (receiptItems["paymentWay"] == "刷卡" || receiptItems["paymentWay"] == "转账") {
+                if (receiptItems["paymentWay"] == "刷卡" || receiptItems["paymentWay"] == "银行") {
                     var InfoReceiptTr = $('<tr></tr>').appendTo(receiptTable);
                     var typeInfoReceiptTd = $('<td style="width: 25%; text-align: center;" rowspan="' + (receiptItems.bankInfo.length + 1) + '"></td>').text(receiptItems["paymentType"]).appendTo(InfoReceiptTr);
                     var bankInfoReceiptTd = $('<td style="width: 12%; text-align: center;" rowspan="' + (receiptItems.bankInfo.length + 1) + '"></td>').text(receiptItems.paymentWay).appendTo(InfoReceiptTr);

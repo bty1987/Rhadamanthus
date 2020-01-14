@@ -84,7 +84,7 @@ public class DecorationExportServiceImpl implements DecorationExportService {
 				decorationExportVO.setSupervisor(decorationPO.getSupervisor().getCurrentName());
 			}
 
-			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCid(decorationPO.getCustomer().getCid(), decorationPO.getCompany());
+			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByOrderId(decorationPO.getOrderId());
 			if (advancePaymentPO != null) {
 				decorationExportVO.setAdvancePayment(advancePaymentPO.getBalance());
 			} else {

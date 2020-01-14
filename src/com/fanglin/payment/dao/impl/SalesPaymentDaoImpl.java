@@ -2,6 +2,7 @@ package com.fanglin.payment.dao.impl;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import org.hibernate.criterion.Restrictions;
@@ -59,6 +60,17 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 
 		return query.list();
 	}
+	
+	@Override
+	public List<SalesPaymentPO> querySalesPayment(List<Filter> filters) {
+		
+		PagingQuery<SalesPaymentPO> query = pagingQuery(new Paging(), SalesPaymentPO.class);
+
+		queryFilterExecute(query, filters);
+		query.notPaging();
+
+		return query.list();
+	}
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -85,9 +97,10 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 	}
 	
 	@Override
-	@SuppressWarnings("unchecked")
-	public List<SalesPaymentPO> querySalesPaymentsBySidAndTypes(long sid, List<Short> types) {
-		return session().createCriteria(SalesPaymentPO.class).add(Restrictions.eq(SalesPaymentPO.COLUMN_SALES_SID_STR, sid)).add(Restrictions.in(SalesPaymentPO.COLUMN_TYPE_STR, types)).list();
+	public int countSalesPayment(long sid, List<Short> types) {
+		String sql = "select count(*) from payment.salespayment where sid =:sid and type in :types";
+		BigInteger num = (BigInteger)session().createSQLQuery(sql).setLong("sid", sid).setParameterList("types", types).uniqueResult();
+		return num.intValue();
 	}
 
 	@Override
@@ -166,16 +179,25 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 						Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
 						Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
 						
-						query.add(query.getCriterion(SalesPaymentPO.COLUMN_COLLECTTIME_STR, eTimestamp, "le"));
-						query.add(query.getCriterion(SalesPaymentPO.COLUMN_COLLECTTIME_STR, sTimestamp, "ge"));
+						query.add(query.getCriterion(SalesPaymentPO.COLUMN_CONFIRMTIME_STR, eTimestamp, "le"));
+						query.add(query.getCriterion(SalesPaymentPO.COLUMN_CONFIRMTIME_STR, sTimestamp, "ge"));
 					}else{
-						query.add(query.getCriterion(SalesPaymentPO.COLUMN_COLLECTTIME_STR, filter.getData(), filter.getOp()));
+						query.add(query.getCriterion(SalesPaymentPO.COLUMN_CONFIRMTIME_STR, filter.getData(), filter.getOp()));
 					}
 				}else if("company".equals(filter.getField())){
 					query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
+				}else if("sales.dompany".equals(filter.getField())){
+					query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
+				}else if("sales.company".equals(filter.getField())){
+					query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
+				}else if("sales.pompany".equals(filter.getField())){
+					query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
+				}else if("type".equals(field)){
+					List<Short> types = Arrays.asList(SalesPaymentPO.TYPE_DEPOSIT_INT, SalesPaymentPO.TYPE_REPLENISHMENT_INT);
+					query.add(query.getCriterion(field, types, op));
 				}
 			}
 		}
 	}
-	
+
 }

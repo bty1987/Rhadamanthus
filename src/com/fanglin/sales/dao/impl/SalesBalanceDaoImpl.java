@@ -7,11 +7,15 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.sales.dao.SalesBalanceDao;
 import com.fanglin.sales.po.SalesBalancePO;
+import com.fanglin.sales.po.SalesPO;
 import com.fanglin.utils.DateUtil;
+import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
+import com.fanglin.utils.SystemConfig;
 
 @Repository("salesBalanceDao")
 public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements SalesBalanceDao {
@@ -62,6 +66,20 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 		return query.list();
 	}
 	
+	@Override
+	public List<SalesBalancePO> pageSalesBalanceForSupplier(Paging paging, List<Filter> filters, int pompany, int uid) {
+		
+		PagingQuery<SalesBalancePO> query = pagingQuery(paging, SalesBalancePO.class);
+		
+		query.alias("sales", "sales").alias("sales.supplier", "supplier").add(query.getCriterion(SalesPO.COLUMN_OCUID_STR, uid, "eq"));
+		
+		queryFilterExcute(query, filters);
+		
+		query.desc("sbid");
+		
+		return query.list();
+	}
+	
 	private void queryFilterExcute(PagingQuery<SalesBalancePO> query,List<Filter> filters) {
 		
 		if(filters != null){
@@ -93,6 +111,11 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 					query.add(query.getCriterion(SalesBalancePO.COLUMN_STATUS_STR, Short.valueOf(data), op));
 				}else if (SalesBalancePO.COLUMN_TYPE_STR.equals(field)){
 					query.add(query.getCriterion(SalesBalancePO.COLUMN_TYPE_STR, Short.valueOf(data), op));
+				}else if ("dompany".equals(field)){
+					try {
+						int cid = FormatUtil.decodeCompany(AESHelper.decrypt(filter.getData(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
+						query.add(query.getCriterion("sales.dompany", cid, op));
+					} catch (Exception e) {}
 				}else if (SalesBalancePO.COLUMN_SALESFULLPAYTIME_STR.equals(field)){
 					
 					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";

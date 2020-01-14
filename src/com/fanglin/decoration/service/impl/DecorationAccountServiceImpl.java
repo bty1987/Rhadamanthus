@@ -21,58 +21,60 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
-
 @Service("decorationAccountService")
-@Transactional(readOnly=true)
-public class DecorationAccountServiceImpl implements DecorationAccountService{
+@Transactional(readOnly = true)
+public class DecorationAccountServiceImpl implements DecorationAccountService {
 
 	@Autowired
 	private DecorationAccountDaoImpl decorationAccountDao;
-	
+
 	@Autowired
 	private DecorationDao decorationDao;
-	
+
 	@Autowired
 	private UserDao userDao;
-	
+
 	@Autowired
 	private DecorationOperateDao decorationOperateDao;
-	
+
 	@Override
 	public DecorationAccountVO queryDecorationAccount(DecorationAccountVO decorationAccountVO) {
-		
+
 		DecorationAccountPO decorationAccountPO = decorationAccountDao.queryDecorationAccount(decorationAccountVO.getOrderId());
-		
+
 		decorationAccountVO = new DecorationAccountVO();
-		
+
 		BeanUtil.copyPropertie(decorationAccountPO, decorationAccountVO);
-		
+
 		return decorationAccountVO;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public void makeDecorationAccount(DecorationAccountVO decorationAccountVO, Authentication authentication) throws FLException {
-		
+
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationAccountVO.getOrderId());
-		
-		if(decorationPO.getStatus() != DecorationPO.STATUS_SIGNED_INT){
+
+		if (decorationPO.getStatus() != DecorationPO.STATUS_SIGNED_INT) {
 			throw new FLException(140004, "装修单状态不可操作");
 		}
-		
+
+		if (decorationPO.getPaySacle() < 99) {
+			throw new FLException(120018, "装修款比例不足");
+		}
+
 		decorationPO.setStatus(DecorationPO.STATUS_FINAL_INT);
 		decorationPO.setAccountTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationDao.update(decorationPO);
-		
+
 		DecorationAccountPO decorationAccountPO = new DecorationAccountPO();
-		
+
 		BeanUtil.copyPropertie(decorationAccountVO, decorationAccountPO);
-		
+
 		UserPO operater = userDao.queryUserByUserId(authentication.getUserId());
-		
+
 		decorationAccountDao.save(decorationAccountPO);
-		
+
 		decorationOperateDao.save(new DecorationOperatePO().account(decorationAccountVO.getOrderId(), operater));
 	}
-
 }

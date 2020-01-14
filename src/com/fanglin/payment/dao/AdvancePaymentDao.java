@@ -11,13 +11,17 @@
 
 package com.fanglin.payment.dao;
 
+import java.util.List;
+
 import com.fanglin.core.dao.Dao;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.po.AdvancePaymentPO;
+import com.fanglin.utils.Paging;
 
 public interface AdvancePaymentDao extends Dao<AdvancePaymentPO> {
 	
-	public AdvancePaymentPO queryAdvancePaymentByCid(long cid,int company);
+	public List<AdvancePaymentPO> pageAdvancePayment(Paging paging, List<Filter> filters);
 	
-	public AdvancePaymentPO queryAdvancePaymentByCustomerId(long cid,int company);
+	public AdvancePaymentPO queryAdvancePaymentByOrderId(String orderId);
 	
 }

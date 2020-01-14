@@ -11,9 +11,14 @@ jQuery(function ($) {
     _params.server = window.server;
     _params.authentication = parent.params.authentication;
 
-    com.post(api.inventory.queryManifestByAid, {"accessories.aid": _params["accessories.aid"]}, function (res) {
+    var options = {
+        "accessoriesManifest.accessories.aid": _params["accessories.aid"],
+        "accessoriesManifest.manifest.type": 7
+    };
 
-        var manifest = res.manifest;
+    com.post(api.inventory.queryManifestByAid, options, function (res) {
+
+        var manifest = res.manifests;
 
         var commonInfo = {};
 
@@ -26,13 +31,15 @@ jQuery(function ($) {
 
         com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": commonInfo["orderId"]}, function (data) {
             commonInfo["address"] = data.decoration.house.village.name + " " + data.decoration.house.houseNumber;
-            commonInfo["supervisor"] = data.decoration.supervisor.userName == null?"---":data.decoration.supervisor.userName;
+            commonInfo["supervisor"] = data.decoration.supervisor.userName == null ? "---" : data.decoration.supervisor.userName;
         }, null, false);
 
-        com.post(api.inventory.queryManifestItemByMid, {"manifest.mid":manifest.mid}, function(res){
-            createReceiptTable(commonInfo, res.manifestItems);
-        }, null, false);
-
+        $.each(manifest, function (i, v) {
+            commonInfo["mno"] = v.code;
+            com.post(api.inventory.queryManifestItemByMid, {"manifest.mid": v.mid}, function (res) {
+                createReceiptTable(commonInfo, res.manifestItems);
+            }, null, false);
+        });
     }, null, false);
 
     function createReceiptTable(commonInfo, itemInfo) {
@@ -51,15 +58,16 @@ jQuery(function ($) {
         var headReceiptH2 = $('<h2></h2>').text("辅料单信息").appendTo(headReceiptDiv);
 
         var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
-        var codeTd = $('<td colspan="5" style="padding-left: 10px;font"></td>').text('货单号: ' + commonInfo["no"]);
+        var codeTd = $('<td colspan="5" style="padding-left: 10px;font"></td>').text('货单号: ' + commonInfo["mno"]);
         var createTimeTd = $('<td colspan="2" style="padding-left: 10px;"></td>').text('创建时间: ' + commonInfo["createTime"]);
         var manifestTimeTd = $('<td colspan="4" style="padding-left: 10px;"></td>').text('货单时间: ' + commonInfo["manifestTime"]);
         orderReceiptTr.append(codeTd).append(createTimeTd).append(manifestTimeTd);
 
         var presonReceiptTr = $('<tr></tr>').appendTo(receiptTable);
-        var createrTd = $('<td colspan="5" style="padding-left: 10px;"></td>').text('装修单号: ' + commonInfo["orderId"]);
-        var designerReceiptTd = $('<td colspan="6" id="manifestType" style="padding-left: 10px;"></td>').text('创  建  人: ' + commonInfo["creater"]);
-        presonReceiptTr.append(createrTd).append(designerReceiptTd);
+        var anoTd = $('<td colspan="5" style="padding-left: 10px;font"></td>').text('辅料单号: ' + commonInfo["no"]);
+        var createrTd = $('<td colspan="2" style="padding-left: 10px;"></td>').text('装修单号: ' + commonInfo["orderId"]);
+        var designerReceiptTd = $('<td colspan="4" id="manifestType" style="padding-left: 10px;"></td>').text('创  建  人: ' + commonInfo["creater"]);
+        presonReceiptTr.append(anoTd).append(createrTd).append(designerReceiptTd);
 
         var totalReceiptTr = $('<tr></tr>').appendTo(receiptTable);
         var totalTd = $('<td colspan="5" style="padding-left: 10px;"></td>').text('地   址: ' + commonInfo["address"]);
@@ -74,7 +82,6 @@ jQuery(function ($) {
         var numTd = $('<td style="text-align: center;" colspan="1"></td>').html('<strong>数量</strong>').appendTo(receReceiptTr);
 
 
-
         $.each(itemInfo, function (i, v) {
 
             var outstorehouseName = v.outstorehouse.name == null ? "---" : v.outstorehouse.name;
@@ -84,7 +91,7 @@ jQuery(function ($) {
             var goodsNameTd = $('<td style="text-align: center;" colspan="1"></td>').html(outstorehouseName).appendTo(receReceiptTr);
             var measurementUnitTd = $('<td style="text-align: center;" colspan="7"></td>').html(v.goods.name).appendTo(receReceiptTr);
             var outstorehouseNameTd = $('<td style="text-align: center;" colspan="1"></td>').html(v.goods.measurementUnit).appendTo(receReceiptTr);
-            var numTd = $('<td style="text-align: center;" colspan="1"></td>').html(v.num).appendTo(receReceiptTr);
+            var numTd = $('<td style="text-align: center;" colspan="1"></td>').html(v.surplus).appendTo(receReceiptTr);
         });
 
         var headReceiptTr1 = $('<tr></tr>').appendTo(receiptTable);

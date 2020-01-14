@@ -109,7 +109,7 @@ public class Division {
 
 		Base base = new Base("826235152110030", "");
 
-		base.setBusiness(new Business("826235152110030", "751998037096"));
+		base.setBusiness(new Business("826235152110030", "464245026044"));
 
 		Response response = new Division().query(base).execute();
 
@@ -119,10 +119,10 @@ public class Division {
 
 		// Base base = new Base("826235152110030", "http://223.100.27.233:30080/divisionCallback.do?authentication=eX3o2SZdrpVOV9HC4UYTRA==");
 		//
-		// base.setBusiness(new Business("826235152110030", "751998037096", 0.1, Business.DIVISION_MODE_AMOUNT_STR, "20191012"));
+		// base.setBusiness(new Business("826235152110030", "464245026044", 0.5, Business.DIVISION_MODE_AMOUNT_STR, "20191023"));
 		//
-		// base.addAccount("826221789120030", 0.05, Account.CHARGEFEE_COLLECT_STR);
-		// base.addAccount("826235189120027", 0.05, Account.CHARGEFEE_FREE_STR);
+		// base.addAccount("826221789120030", 0.3, Account.CHARGEFEE_COLLECT_STR);
+		// base.addAccount("826235189120027", 0.2, Account.CHARGEFEE_FREE_STR);
 		//
 		// Response response = new Division().redivision(base).execute();
 		//

@@ -4,6 +4,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +17,7 @@ import javax.persistence.Table;
 
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.utils.DateUtil;
 
 @Entity
 @Table(name = "workerSalary", catalog = "salary")
@@ -31,7 +33,7 @@ public class WorkerSalaryPO implements Serializable {
 
 	public static final String COLUMN_APPROVETIME_STR = "approveTime";
 
-	public static final short TYPE_SALARY_STRONE = 1;
+	public static final String COLUMN_STATUS_STR = "status";
 
 	public static final short STATUS_INIT_INT = 0; // 初始
 
@@ -40,8 +42,6 @@ public class WorkerSalaryPO implements Serializable {
 	public static final short STATUS_REJECT_INT = 2; // 驳回
 
 	public static final short STATUS_REPEAL_INT = 3; // 撤销
-
-	public static final String COLUMN_STATUS_STR = "status";
 
 	public static final short TYPE_ADD_INT = 0;// 加
 
@@ -79,19 +79,25 @@ public class WorkerSalaryPO implements Serializable {
 
 	private long cid;
 
+	private long csid;
+
 	private DecorationPO decoration;
 
 	private UserPO user;
 
 	private UserPO creater;
 
-	private Timestamp createTime;
-
 	private UserPO approver;
+
+	private Timestamp createTime;
 
 	private Timestamp approveTime;
 
 	private Timestamp balanceTime;
+
+	private long money;
+
+	private long deposit;
 
 	private long salary;
 
@@ -99,23 +105,59 @@ public class WorkerSalaryPO implements Serializable {
 
 	private short subtype;
 
+	private short onetype;
+
+	private short twotype;
+
 	private short status;
+
+	private short schedule;
 
 	private String comment;
 
 	private int company;
 
-	private long csid;
+	public WorkerSalaryPO init(UserPO worker, UserPO creater, String comment, int company) {
 
-	private long money;
+		setUser(worker);
+		setCreater(creater);
 
-	private long deposit;
+		setComment(comment);
+		setCompany(company);
 
-	private short onetype;
+		setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
-	private short twotype;
+		return this;
+	}
 
-	private short schedule;
+	public WorkerSalaryPO init(long money, long deposit, long salary) {
+
+		setMoney(money);
+		setDeposit(deposit);
+		setSalary(salary);
+
+		return this;
+	}
+
+	public WorkerSalaryPO init(short type, short onetype, short twotype, short status) {
+
+		setType(type);
+		setOnetype(onetype);
+		setTwotype(twotype);
+
+		setStatus(status);
+
+		return this;
+	}
+
+	public WorkerSalaryPO approve(UserPO approver) {
+
+		setApprover(approver);
+
+		setApproveTime(DateUtil.getDateToTimestamp(new Date()));
+
+		return this;
+	}
 
 	public WorkerSalaryPO() {
 		super();

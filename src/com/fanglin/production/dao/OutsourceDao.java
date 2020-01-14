@@ -9,6 +9,12 @@ import com.fanglin.utils.Paging;
 
 public interface OutsourceDao extends Dao<OutsourcePO> {
 
-	public List<OutsourcePO> pageOutsource(Paging paging, List<Filter> filter);
+	public List<OutsourcePO> pageOutsource(Paging paging, List<Filter> filter,int company);
 
+	public List<OutsourcePO> queryOutsourceByPid(Long pid,int company);
+
+	public List<OutsourcePO> pageOutsourceForSupplier(Paging paging,List<Filter> filters, int uid,int company);
+	
+	public int countOutsource(Long pid, Short status);
+	
 }

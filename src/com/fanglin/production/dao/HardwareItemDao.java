@@ -10,6 +10,6 @@ import com.fanglin.utils.Paging;
 public interface HardwareItemDao extends Dao<HardwareItemPO> {
 
 	public List<HardwareItemPO> pageHardwareItemByHid(Paging paging, List<Filter> filters, long hid);
-
-	public List<HardwareItemPO> queryHardwareItemByHid(long hid);
+	
+	public int deleteHardwareItemByHid(long hid);
 }

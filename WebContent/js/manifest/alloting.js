@@ -172,7 +172,7 @@ jQuery(function ($) {
 
         $line.append($indexWrap).append($lineInfoWrap).append($optWrap);
 
-        com.initTypeahead(".name input", api.inventory.queryGoodsByName, "goods.name", {}, "goodes", "gid", "name", function (list, k, v) {
+        com.initTypeahead(".name input", api.data.queryGoodsByName, "goods.name", {}, "goodes", "gid", "name", function (list, k, v) {
 
             $.each(list, function (index, val) {
                 if (val.gid == k) {
@@ -186,13 +186,13 @@ jQuery(function ($) {
                     $lineInfoWrap.find('.instorehouse select').bindData(manifest.storehouses, "shid", "name");
                     $lineInfoWrap.find('.outstorehouse select').bindData(manifest.storehouses, "shid", "name");
 
-                    com.post(api.inventory.queryColorForEnableByGid, {
+                    com.post(api.data.queryColorForEnableByGid, {
                         "color.gid": val.gid
                     }, function (res) {
                         com.focusPage('li[data-gid="' + val.gid + '_' + lineindex + '"] .color select').bindData(res.colors, "cid", "name");
                     });
 
-                    com.post(api.inventory.queryFormatForEnableByGid, {
+                    com.post(api.data.queryFormatForEnableByGid, {
                         "format.gid": val.gid
                     }, function (res) {
                         com.focusPage('li[data-gid="' + val.gid + '_' + lineindex + '"] .format select').bindData(res.formats, "fid", "info");

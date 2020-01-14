@@ -1,0 +1,73 @@
+<div >
+    <div id="fl-statement"><div class="page-header"><h1>生产单<small><i class="icon-double-angle-right"></i>相关销售单信息</small></h1></div></div>
+
+    <div class="row">
+        <div class="col-xs-12">
+
+            <div id="resultList" class="clearfix tab-pane active"></div>
+
+            <div style="margin-top: 10px">
+                <div>
+                    <a id="bindBtn" class="btn btn-minier btn-primary pull-left" style="margin-right: 10px">
+                        <i class="icon-plus bigger-110"></i>
+                        <span>绑定</span>
+                    </a>
+                </div>
+                <div>
+                    <a id="backBtn" class="btn btn-minier">
+                        <i class="icon-mail-forward bigger-110"></i>
+                        <span>返回</span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="productionSalesModal" tabindex="-1">
+    <div class="modal-dialog" style="margin-top: 10%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">绑定</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-xs-4" for="salesType">订单类型</label>
+                        <div class="controls col-xs-8">
+
+                            <select class="col-xs-10 col-sm-8 v_required" id="salesType"  data-required="1" data-toggle="popover" data-trigger='manual' >
+                            </select>
+                            <span class="required"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-4">单据编号</label>
+                        <div class="controls col-xs-8">
+                            <input type="text" class="span6 m-wrap col-xs-8 v_required" id="saleNo" rules="{required:true}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-4">品类品牌</label>
+                        <div class="controls col-xs-8">
+                            <input type="text" class="span6 m-wrap col-xs-8 v_required" id="brand" rules="{required:true}" readonly>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveBtn" class="btn btn-primary">确定</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/production/production2bind.js']);
+</script>

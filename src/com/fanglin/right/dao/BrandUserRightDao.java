@@ -11,11 +11,15 @@
 
 package com.fanglin.right.dao;
 
+import java.util.List;
+
 import com.fanglin.core.dao.Dao;
 import com.fanglin.right.po.BrandUserRightPO;
 
 public interface BrandUserRightDao extends Dao<BrandUserRightPO> {
 	
-	public BrandUserRightPO queryBrandUserRightByUid(int uid);
+	public List<BrandUserRightPO> queryBrandUserRightByUid(int uid);
+	
+	public int deleteBrandUserRightByUid(int uid);
 
 }

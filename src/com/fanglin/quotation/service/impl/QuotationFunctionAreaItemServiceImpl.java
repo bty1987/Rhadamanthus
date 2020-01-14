@@ -24,6 +24,7 @@ import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
+import com.fanglin.quotation.dao.SelectionItemDao;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.po.QuotationPO;
@@ -50,6 +51,9 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 	@Autowired
 	private SystemConfigDao systemConfigDao;
 
+	@Autowired
+	private SelectionItemDao selectionItemDao;
+
 	@Override
 	public List<QuotationFunctionAreaItemVO> queryQuotationFunctionAreaItemByQuotationFunctionAreaId(QuotationFunctionAreaItemVO quotationFunctionAreaItemVO) throws FLException {
 
@@ -68,7 +72,8 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 			if (quotationFunctionAreaItemPO.getQuotationItem() != null) {
 
 				QuotationItemPO quotationItemPO = quotationFunctionAreaItemPO.getQuotationItem();
-
+				
+				quotationFunctionAreaItemVO.setQuotationItemId(quotationItemPO.getQiId());
 				quotationFunctionAreaItemVO.setContent(quotationItemPO.getQuotationItemDes());
 				quotationFunctionAreaItemVO.setAddPrice(quotationItemPO.getAddPrice());
 				quotationFunctionAreaItemVO.setSubPrice(quotationItemPO.getSubPrice());
@@ -99,9 +104,18 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 			if (quotationFunctionAreaItemPO == null) {
 				throw new FLException(200013, "报价项不存在");
 			}
+			
+			if (quotationFunctionAreaItemPO.getQuotationItem() != null) {
+				
+				if (selectionItemDao.countSelectionItem(quotationPO.getOrderId(), quotationFunctionAreaItemPO.getQuotationFunctionArea().getQfaId()) > 0) {
+					throw new FLException(200037, "存在关联选材项");
+				}
+			}
+
 			quotationFunctionAreaItemPO.setFormula(quotationFunctionAreaItemVO.getFormula());
 			quotationFunctionAreaItemPO.setNum(quotationFunctionAreaItemVO.getNum());
 			quotationFunctionAreaItemPO.setInitNum(quotationFunctionAreaItemVO.getInitNum());
+
 			quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
 		} else {
 
@@ -118,6 +132,7 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 				quotationFunctionAreaItemPO.setContent(quotationFunctionAreaItemVO.getContent());
 				quotationFunctionAreaItemPO.setQuotationItem(null);
 			}
+
 			quotationFunctionAreaItemDao.save(quotationFunctionAreaItemPO);
 
 			quotationFunctionAreaItemVO.setQfaiId(quotationFunctionAreaItemPO.getQfaiId());
@@ -220,11 +235,15 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 			throw new FLException(200012, "功能区不存在");
 		}
 
-		QuotationServiceImpl.convertQuotationVOToPOForAdvance(quotationVO, quotationPO);
+		if (selectionItemDao.countSelectionItem(quotationPO.getOrderId(), quotationFunctionAreaPO.getQfaId()) > 0) {
+			throw new FLException(200037, "存在关联选材项");
+		}
 
 		if (qfaiIds != null && qfaiIds.size() > 0) {
 
 			Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
+
+			QuotationServiceImpl.convertQuotationVOToPOForAdvance(quotationVO, quotationPO);
 
 			String tableName = QuotationFunctionAreaItemPO.quotationFunctionAreaItemTable(quotationFunctionAreaPO.getQfaId(), divisor);
 

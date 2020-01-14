@@ -28,6 +28,7 @@ var Api = function(){
             var dtd = $.Deferred();
 
             fillApi(path + 'approval.js');
+            fillApi(path + 'balance.js');
             fillApi(path + 'common.js');
             fillApi(path + 'construction.js');
             fillApi(path + 'data.js');
@@ -51,6 +52,7 @@ var Api = function(){
             fillApi(path + 'customer.js');
 			fillApi(path + 'store.js');
 			fillApi(path + 'market.js');
+            fillApi(path + 'sales.js');
 			
             return dtd.promise();
         }

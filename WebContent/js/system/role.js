@@ -19,6 +19,8 @@ jQuery(function($) {
             }
         },
         
+        system: 1,
+        
         postParam: {},
         
         editFlg: false,
@@ -99,6 +101,7 @@ jQuery(function($) {
 
             var $chainPage = $('<a></a>').addClass('btn btn-minier btn-yellow').html('外链配置');
             var $btnModule = $('<a></a>').addClass('btn btn-minier btn-success').html('模块配置');
+            var $officeModule = $('<a></a>').addClass('btn btn-minier btn-info').html('办公配置');
             var $btnOperation = $('<a></a>').addClass('btn btn-minier btn-warning').html('操作配置');
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-inverse').html('编辑');
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
@@ -115,12 +118,17 @@ jQuery(function($) {
                $liProperty.appendTo($ulProperty);
            });
 
-            $divBtnWrap.append($chainPage).append($btnModule).append($btnOperation).append($btnEdit).append($btnDel).appendTo($h3);
+            $divBtnWrap.append($chainPage).append($btnModule).append($officeModule).append($btnOperation).append($btnEdit).append($btnDel).appendTo($h3);
             
             $liLine.append($h3).append($ulProperty);
 
             $btnModule.click(function(){
-                queryModuleByRoleId(v.rid);
+                queryModuleByRoleId(v.rid, 1);
+                role.moduleModal.attr('data-roleid', v.rid).modal('show');
+            });
+            
+            $officeModule.click(function(){
+                queryModuleByRoleId(v.rid, 2);
                 role.moduleModal.attr('data-roleid', v.rid).modal('show');
             });
 
@@ -194,10 +202,13 @@ jQuery(function($) {
         role.modal.modal("show");
     });
     
-    function queryModuleByRoleId(roleId){
+    function queryModuleByRoleId(roleId, system){
+        
+        role.system = system;
+        
         var $wrap = com.focusPage('#moduleModal').find('.modal-body').empty();
-        //获取全部模块
-        com.post(api.system.queryModuleForLogin, {'module.system' : 1}, function(data){
+        
+        com.post(api.system.queryModuleForLogin, {'module.system' : system}, function(data){
 
             var menuArr = {
                 level1 : [],
@@ -340,7 +351,7 @@ jQuery(function($) {
         }, null, false);
 
         //获取角色的模块
-        com.post(api.system.queryModuleByRid, {'module.system' : 1, "role.rid": roleId}, function(data){
+        com.post(api.system.queryModuleByRid, {'module.system' : system, "role.rid": roleId}, function(data){
             $.each(data.modules, function(i, v){
                 $wrap.find('input[name="module"][value="'+ v.mid +'"]').prop('checked', true);
             });
@@ -406,7 +417,7 @@ jQuery(function($) {
         var roleid = role.moduleModal.attr('data-roleid');
 
         var params = {
-            "module.system": 1,
+            "module.system": role.system,
             "role.rid": roleid
         };
 

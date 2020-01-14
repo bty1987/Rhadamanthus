@@ -17,63 +17,62 @@ import com.fanglin.salary.vo.DesignerSalaryVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class DesignerSalaryAction  extends BaseListAction{
-
+public class DesignerSalaryAction extends BaseListAction {
 
 	private static final long serialVersionUID = -2158654624555009996L;
 	@Autowired
-	private  DesignerSalaryService  designerSalaryService;
-	
-	private List<DesignerSalaryVO>   designerSalarys;
-	
-	private DesignerSalaryVO  designerSalary; 
-	
+	private DesignerSalaryService designerSalaryService;
+
+	private List<DesignerSalaryVO> designerSalarys;
+
+	private DesignerSalaryVO designerSalary;
+
 	@Action(value = "pageDesignerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public  String pageDesignerSalarys (){
-	
+	public String pageDesignerSalarys() {
+
 		designerSalaryService.pagedesignerSalary(getPaging(), getFilters());
-		
-		return  SUCCESS;
-	}
-	
-	@Action(value = "adddesignerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String adddesignerSalary() throws FLException{
-		
-		designerSalaryService.adddesignerSalary(designerSalary,queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "updatedesignerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateWorkerSalary() throws FLException{
-		
+
+	@Action(value = "addDesignerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String adddesignerSalary() throws FLException {
+
+		designerSalaryService.adddesignerSalary(designerSalary, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateDesignerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateWorkerSalary() throws FLException {
+
 		designerSalaryService.updatedesignerSalary(designerSalary);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "adoptdesignerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String adoptWorkerSalary() throws FLException{
-		
-		designerSalaryService.adoptdesignerSalary(designerSalarys,queryUserId());
-			
+
+	@Action(value = "adoptDesignerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String adoptWorkerSalary() throws FLException {
+
+		designerSalaryService.adoptdesignerSalary(designerSalarys, queryUserId());
+
 		return SUCCESS;
-			}
-	
-	@Action(value = "rejectdesignerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String rejectdesignerSalary() throws FLException{
-		
-		designerSalaryService.rejectdesignerSalary(designerSalarys,queryUserId());
-			
+	}
+
+	@Action(value = "rejectDesignerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String rejectdesignerSalary() throws FLException {
+
+		designerSalaryService.rejectdesignerSalary(designerSalarys, queryUserId());
+
 		return SUCCESS;
-			}
-	
-	@Action(value = "deletedesignerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public  String deletedesignerSalary () throws FLException{
-	
+	}
+
+	@Action(value = "deleteDesignerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deletedesignerSalary() throws FLException {
+
 		designerSalaryService.deletedesignerSalary(designerSalary);
-		
-		return  SUCCESS;
+
+		return SUCCESS;
 	}
 
 	public List<DesignerSalaryVO> getDesignerSalarys() {
@@ -91,5 +90,5 @@ public class DesignerSalaryAction  extends BaseListAction{
 	public void setDesignerSalary(DesignerSalaryVO designerSalary) {
 		this.designerSalary = designerSalary;
 	}
-	
+
 }

@@ -1,0 +1,220 @@
+<div>
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="col-xs-3 form-horizontal">
+				<div>
+					<div class="portlet-title">
+						<div class="caption">
+						</div>
+					</div>
+				</div>
+
+				<div class="" id="left">
+					<div class="widget-main" style="border-right: 1px solid #c5d0dc;">
+
+						<div class="form-group">
+							<label for="name" class="col-sm-3 control-label no-padding-right orange">报价名</label>
+							<div class="col-sm-9">
+								<input type="text" class="col-xs-10 col-sm-10 v_required" data-toggle="popover"
+									    data-trigger="click" id="name" placeholder="请输入报价项名称">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="brand" class="col-sm-3 control-label no-padding-right">类型</label>
+							<div class="col-sm-9">
+								<input type="text" class="col-xs-10 col-sm-10" data-toggle="popover"
+									    data-trigger="click" id="brand"  readonly>
+
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="measurementunit" class="col-sm-3 control-label no-padding-right">单位</label>
+							<div class="col-sm-9">
+								<input type="text" class="col-xs-10 col-sm-10" data-toggle="popover"
+									    data-trigger="click" id="measurementunit"  readonly>
+
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="format1" class="col-sm-3 control-label no-padding-right">规格</label>
+							<div class="col-sm-9">
+								<input type="text" class="col-xs-10 col-sm-10" data-toggle="popover"
+									    data-trigger="click" id="format1"  >
+
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="height" class="col-sm-3 control-label no-padding-right orange" >长度</label>
+							<div class="col-sm-9">
+								<input type="text" class="col-xs-10 col-sm-10 v_required v_float" data-toggle="popover"
+									    data-trigger="click" id="height" placeholder="米" >
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="width" class="col-sm-3 control-label no-padding-right orange" >宽度</label>
+							<div class="col-sm-9">
+								<input type="text" class="col-xs-10 col-sm-10 v_required v_float" data-toggle="popover"
+									    data-trigger="click" id="width" placeholder="米" >
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="thick" class="col-sm-3 control-label no-padding-right orange" >厚度</label>
+							<div class="col-sm-9">
+								<input type="text" class="col-xs-10 col-sm-10 v_required v_float" data-toggle="popover"
+									    data-trigger="click" id="thick" placeholder="米" >
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right">面积</label>
+							<div class="col-sm-9">
+								<input type="text" class="col-xs-10 col-sm-10" data-toggle="popover"
+									    data-trigger="click" id="area" placeholder="平米" readonly>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="unitprice" class="col-sm-3 control-label no-padding-right orange" >售价</label>
+							<div class="col-sm-9">
+								<input type="text" class="col-xs-10 col-sm-10 v_required v_price" data-toggle="popover"
+									    data-trigger="click" id="unitprice"  >
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="num" class="col-sm-3 control-label no-padding-right orange" >数量</label>
+							<div class="col-sm-9">
+								<input type="text" class="col-xs-10 col-sm-10 v_required v_float" data-toggle="popover"
+									    data-trigger="click" id="num"  >
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="total" class="col-sm-3 control-label no-padding-right">总价</label>
+							<div class="col-sm-9">
+								<input type="text" class="col-xs-10 col-sm-10" data-toggle="popover"
+									    data-trigger="click" id="total"  readonly>
+
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="remark" class="col-sm-3 control-label no-padding-right">备注</label>
+							<div class="col-sm-9">
+								<input type="text" class="col-xs-10 col-sm-10" data-toggle="popover"
+									    data-trigger="click" id="remark"  >
+
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="specil" class="col-sm-3 control-label no-padding-right">特型</label>
+							<div class="col-sm-9">
+								<input type="text" class="col-xs-10 col-sm-10" data-toggle="popover"
+									    data-trigger="click" id="specil"  >
+
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="col-sm-9">
+							</div>
+						</div>
+
+						<div class="form-group buttons row-fluid col-xs-12">
+							<button id="addBtn" type="button" class="btn btn-primary pull-left col-xs-3">
+
+								<span>添加</span>
+							</button>
+							<button id="submitBtn" type="button" class="btn btn-success pull-left col-xs-3">
+
+								<span>提交</span>
+							</button>
+							<button id="refreshBtn" type="button" class="btn btn-danger pull-left col-xs-3">
+
+								<span>重置</span>
+							</button>
+							<button id="resetBtn" type="button" class="btn btn-grey pull-left col-xs-3">
+
+								<span>返回</span>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+				<!--补充内容-->
+				<div class="tab-content col-xs-9"  style="border: 0;">
+					<div class="form-horizontal">
+						<div>
+							<div class="caption">
+							</div>
+						</div>
+						<div class="widget-body"  style="border: 0px;">
+							<div class="widget-main" id="searchInfo" style="border-bottom: 1px solid #c5d0dc">
+
+								<div class="form-group">
+									<div class="lable_input col-xs-6">
+										<label for="brands" class="col-sm-3 control-label no-padding-right orange" >品牌</label>
+										<div class="col-sm-9">
+											<input id="brands" type="text" class="order_inputinfo col-xs-10 col-sm-10" readonly>
+										</div>
+
+									</div>
+									<div class="lable_input col-xs-6">
+										<label for="comment" class="col-sm-3 control-label no-padding-right">备注</label>
+										<div class="col-sm-9">
+											<input id="comment" type="text" class="order_inputinfo col-xs-10 col-sm-10" readonly>
+
+										</div>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<div class="lable_input col-xs-6">
+										<label for="discount" class="col-sm-3 control-label no-padding-right">折让</label>
+										<div class="col-sm-9">
+											<input id="discount" type="text" class="col-xs-10 col-sm-10" readonly>
+
+										</div>
+									</div>
+									<div class="lable_input col-xs-6">
+										<label for="totals" class="col-sm-3 control-label no-padding-right">总额</label>
+										<div class="col-sm-9">
+											<input id="totals" type="text" class="col-xs-10 col-sm-10" readonly>
+
+										</div>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<div class="lable_input col-xs-6">
+										<label for="orderAddr"
+											   class="col-sm-3 control-label no-padding-right">楼盘地址</label>
+										<div class="col-sm-9">
+											<input id="orderAddr" type="text" class="col-xs-10 col-sm-10" readonly>
+
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+					<!--已添加的主材-->
+					<div class="form-horizontal">
+
+						<ul id="puotationItemList" class="widget-main col-xs-11"
+							style="overflow: auto;height: 520px;width: 98%;">
+						</ul>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+</div>
+
+<script type="text/javascript">
+	$.loadScript(['js/production/puotationItem2add.js']);
+</script>
+
+
+
+

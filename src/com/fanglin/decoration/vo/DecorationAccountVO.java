@@ -2,38 +2,40 @@ package com.fanglin.decoration.vo;
 
 import java.io.Serializable;
 
-public class DecorationAccountVO implements Serializable{
+public class DecorationAccountVO implements Serializable {
 
 	private static final long serialVersionUID = 1175981581653015544L;
-	
+
 	private Long daid;
-	
+
 	private String orderId;
-	
+
 	private Short type;
-	
+
 	private Short arcal;
-	
+
 	private Integer matching;
-	
+
 	private Integer discount;
-	
+
 	private Long discountBase;
-	
+
 	private Integer serviceRate;
-	
+
 	private Long materialPrice;
-	
+
 	private Long servicePrice;
-	
+
 	private Long difference;
-	
+
 	private Long coupon;
-	
+
 	private Long fulldel;
-	
+
 	private Long cashback;
-	
+
+	private String comment;
+
 	public Long getDaid() {
 		return daid;
 	}
@@ -41,7 +43,7 @@ public class DecorationAccountVO implements Serializable{
 	public void setDaid(Long daid) {
 		this.daid = daid;
 	}
-	
+
 	public String getOrderId() {
 		return orderId;
 	}
@@ -144,5 +146,13 @@ public class DecorationAccountVO implements Serializable{
 
 	public void setCashback(Long cashback) {
 		this.cashback = cashback;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 }

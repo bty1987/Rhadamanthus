@@ -14,8 +14,7 @@
     	{"key": "6", "value": "券退款"},
     	{"key": "7", "value": "定金退款"}
     ], "advanceType": [
-    	{"key":"1", "value":"主材"},
-    	{"key":"2", "value":"正林"}
+    	{"key":"1", "value":"主材"}
     ], "advanceTypeForSalesMaterial": [
         {"key":"1", "value":"合同"},
         {"key":"2", "value":"工程"},
@@ -102,6 +101,25 @@
 		{"key":"3", "value":"对公"},
 		{"key":"4", "value":"分期"},
 		{"key":"5", "value":"优惠"}
+	],
+	"activityPayment":[
+		{"key":"0","value":"装修款"},
+		{"key":"1","value":"装修定金"},
+		{"key":"2","value":"主材款"},
+		{"key":"3","value":"主材定金"}
+	],
+	"ways":[
+		{"key":"0","value":"现金"}
+	],
+	"posway": [
+		{"key": "acquire", "value": "刷卡"},
+		{"key": "wxpay", "value": "微信"},
+		{"key": "alipay", "value": "支付宝"}
+	],
+	"activityCouponType": [
+		{"key":"2019主材劵","value":"2019主材劵"},
+		{"key":"随付贷劵","value":"随付贷劵"},
+		{"key":"内部转账","value":"内部转账"}
 	],
     "errorCode": 0,
     "errorMsg": null

@@ -26,7 +26,15 @@ public class RefundsAction extends BaseListAction {
 	
 	private RefundsVO refunds;
 	
+	private List<RefundsVO>  refundVOs;
+	
 	private List<RefundsItemVO>  refundsItems;
+	
+	@Action(value = "queryRefundsBySid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryRefundsBySid(){
+		refundVOs = refundsItemService.queryRefundsBySid(refunds);
+		return SUCCESS;
+}
 	
 	@Action(value = "queryRefundsItemBySid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 		public String queryRefundsItemBySid(){
@@ -40,6 +48,14 @@ public class RefundsAction extends BaseListAction {
 
 	public void setRefunds(RefundsVO refunds) {
 		this.refunds = refunds;
+	}
+
+	public List<RefundsVO> getRefundVOs() {
+		return refundVOs;
+	}
+
+	public void setRefundVOs(List<RefundsVO> refundVOs) {
+		this.refundVOs = refundVOs;
 	}
 
 	public List<RefundsItemVO> getRefundsItems() {

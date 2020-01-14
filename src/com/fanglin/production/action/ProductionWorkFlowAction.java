@@ -23,26 +23,26 @@ public class ProductionWorkFlowAction extends BaseAction {
 
 	@Autowired
 	private ProductionWorkFlowService productionWorkFlowService;
+	
 	private ProductionWorkFlowVO productionWorkFlow;
+	
 	private List<ProductionWorkFlowVO> productionWorkFlows;
-	private String no;
-	private Integer uid;
-
-	@Action(value = "queryProductionWorkFlowByPwpid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryProductionWorkFlowByPwpid() {
-		productionWorkFlows = productionWorkFlowService.queryProductionWorkFlowByPwpid(productionWorkFlow);
-		return SUCCESS;
-	}
 
 	@Action(value = "queryProductionWorkFlowByPwpidAWfid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryProductionWorkFlowByPwpidAWfid() throws FLException {
 		productionWorkFlow = productionWorkFlowService.queryProductionWorkFlowByPwpidAWfid(productionWorkFlow);
 		return SUCCESS;
 	}
+	
+	@Action(value = "queryProductionWorkFlowByPwpid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryProductionWorkFlowByPwpid() {
+		productionWorkFlows = productionWorkFlowService.queryProductionWorkFlowByPwpid(productionWorkFlow);
+		return SUCCESS;
+	}
 
 	@Action(value = "operateProductionWorkFlow", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String operateProductionWorkFlow() throws FLException {
-		productionWorkFlowService.operateProductionWorkFlow(no, uid, productionWorkFlow);
+		productionWorkFlowService.operateProductionWorkFlow(productionWorkFlow, queryUserId());
 		return SUCCESS;
 	}
 
@@ -60,22 +60,6 @@ public class ProductionWorkFlowAction extends BaseAction {
 
 	public void setProductionWorkFlows(List<ProductionWorkFlowVO> productionWorkFlows) {
 		this.productionWorkFlows = productionWorkFlows;
-	}
-
-	public String getNo() {
-		return no;
-	}
-
-	public void setNo(String no) {
-		this.no = no;
-	}
-
-	public Integer getUid() {
-		return uid;
-	}
-
-	public void setUid(Integer uid) {
-		this.uid = uid;
 	}
 
 }

@@ -11,6 +11,8 @@
 
 package com.fanglin.right.action;
 
+import java.util.List;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -35,6 +37,10 @@ public class BrandUserRightAction extends BaseListAction {
 	
 	private BrandUserRightVO brandUserRight;
 	
+//	private List<BrandUserRightVO> brandUserRights;
+	
+	private List<Long> bids;
+	
 	@Action(value="queryBrandUserRightByUid", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryBrandUserRightByUid() throws FLException{
 		
@@ -53,8 +59,8 @@ public class BrandUserRightAction extends BaseListAction {
 	
 	@Action(value="updateBrandUserRight", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateBrandUserRight() throws FLException{
-		
-		brandUserRightService.updateBrandUserRight(brandUserRight);
+
+		brandUserRightService.updateBrandUserRight(brandUserRight, bids);
 		
 		return SUCCESS;
 	}
@@ -65,6 +71,14 @@ public class BrandUserRightAction extends BaseListAction {
 
 	public void setBrandUserRight(BrandUserRightVO brandUserRight) {
 		this.brandUserRight = brandUserRight;
+	}
+
+	public List<Long> getBids() {
+		return bids;
+	}
+
+	public void setBids(List<Long> bids) {
+		this.bids = bids;
 	}
 
 }

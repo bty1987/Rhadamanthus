@@ -4,13 +4,14 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.communion.po.CustomerPO;
+import com.fanglin.decoration.po.DecorationPO;
 
 @Entity
 @Table(name = "advancepayment", catalog = "payment")
@@ -22,7 +23,7 @@ public class AdvancePaymentPO implements java.io.Serializable {
 	
 	private int apId;
 	
-	private CustomerPO customer;
+	private DecorationPO decoration;
 	
 	private long balance;
 	
@@ -32,15 +33,13 @@ public class AdvancePaymentPO implements java.io.Serializable {
 	
 	private long zhenglinBalance;
 	
-	private int company;
-	
 	public AdvancePaymentPO() {
 		super();
 	}
-	
-	public AdvancePaymentPO(CustomerPO customer) {
+
+	public AdvancePaymentPO(DecorationPO decoration) {
 		super();
-		this.customer = customer;
+		this.decoration = decoration;
 	}
 
 	@Id
@@ -53,15 +52,15 @@ public class AdvancePaymentPO implements java.io.Serializable {
 	public void setApId(int apId) {
 		this.apId = apId;
 	}
-	
-	@ManyToOne
-	@JoinColumn(nullable = true, name = "customerId", referencedColumnName="cid")
-	public CustomerPO getCustomer() {
-		return customer;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, name = "orderId", referencedColumnName = "orderId")
+	public DecorationPO getDecoration() {
+		return decoration;
 	}
 
-	public void setCustomer(CustomerPO customer) {
-		this.customer = customer;
+	public void setDecoration(DecorationPO decoration) {
+		this.decoration = decoration;
 	}
 
 	@Column(name = "balance")
@@ -98,15 +97,6 @@ public class AdvancePaymentPO implements java.io.Serializable {
 
 	public void setZhenglinBalance(long zhenglinBalance) {
 		this.zhenglinBalance = zhenglinBalance;
-	}
-	
-	@Column(name = "company")
-	public int getCompany() {
-		return company;
-	}
-
-	public void setCompany(int company) {
-		this.company = company;
 	}
 
 }

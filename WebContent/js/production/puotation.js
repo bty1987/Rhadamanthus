@@ -29,33 +29,39 @@
     };
 
 
-        puotation.btns.distConfirmBtn.bindClick(saveDis);
+    puotation.btns.distConfirmBtn.bindClick(saveDis);
 
-        puotation.btns.editConfirmBtn.bindClick(saveData);
+    puotation.btns.editConfirmBtn.bindClick(saveData);
 
-        puotation.btns.backBtn.click(function () {
-            com.switchPage(api.index.productionIndex.url);
-        });
+    puotation.btns.backBtn.click(function () {
+        com.switchPage(api.index.productionIndex.url);
+    });
 
-        puotation.btns.addpuotationBtn.click(function () {
-            com.switchPage(api.index.createPutationIndex.url);
-        });
+    puotation.btns.addpuotationBtn.click(function () {
+        com.switchPage(api.index.createPutationIndex.url);
+    });
 
-        puotation.models.discountModal.on("hide.bs.modal", function () {
-            com.closeTip();
-        });
+    puotation.models.discountModal.on("hide.bs.modal", function () {
+        com.closeTip();
+    });
 
-        puotation.models.editModal.on("hide.bs.modal", function () {
-            com.closeTip();
-        });
+    puotation.models.editModal.on("hide.bs.modal", function () {
+        com.closeTip();
+    });
 
-   var initList = function (listData) {
-        var $tableWrap = com.focusPage('#list');
+    var initList = function (listData) {
+        var $tableWrap = com.focusPage('#list').empty();
         var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
 
-        if (listData && listData.length) {
-            $.each(listData, function (i, v) {
+        if(!listData.length){
+            var $resultList = com.focusPage("#list").addClass('dz-default dz-message').html('');
+            var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
+            var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
+            var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
+            return $resultList;
+        }else if (listData && listData.length) {
 
+            $.each(listData, function (i, v) {
                 var $liLine = $('<li></li>').addClass('clearfix item-orange');
                 var $h3 = $('<h3></h3>').addClass('oid');
                 var $title = $('<small></small>').addClass('blue').html( v.name);
@@ -88,7 +94,7 @@
                 $liLine.appendTo($ul);
                 $liLine.append($h3).append($ulProperty);
 
-                if(puotation.status != 3 &&puotation.status != 4 && puotation.status != 5){
+                if(puotation.status != 6 &&puotation.status != 7 && puotation.status != 8){
                     if(v.status==0){
                         $btnDiv.append($btnAdd).append($btnItem).append($btnDis).append($btnDelete).append($btnStatus).append($btnEdit);
                     }else if(v.status==1){
@@ -109,7 +115,7 @@
                 });
 
                 $btnDelete.click(function (e) {
-                    delectPuotation(v);
+                    removeRow(v.qid);
                 });
 
                 $btnStatus.click(function (e) {
@@ -118,7 +124,7 @@
 
                 $btnEdit.click(function(){
                     showUpdate(v);
-               });
+                });
 
                 $btnDis.click(function(){
                     viewDiscountInfo(v);
@@ -153,28 +159,29 @@
 
     function addPuotationItem(v){
 
-           params["qid"] = v.qid;
-           params["discount"] = v.discount;
-           params["total"] = v.total;
-           params["name"] = v.name;
-           params["comment"] = v.comment;
+        params["qid"] = v.qid;
+        params["discount"] = v.discount;
+        params["total"] = v.total;
+        params["name"] = v.name;
+        params["comment"] = v.comment;
 
         com.switchPage(api.index.addPuotationItemIndex.url);
     };
 
     function showItem(v){
 
-           params["qid"] = v.qid;
-           params["status"] = puotation.status;
-           params["use"] = v.status ;
-        com.switchPage(api.index.puotationItemIndex.url);
+        params["qid"] = v.qid;
+        params["status"] = puotation.status;
+        params["use"] = v.status ;
+
+        com.popup4page("#layerPopUp", "views/production/puotationItem.html", "子项");
     };
 
-    function delectPuotation(v) {
+    function removeRow(id) {
         com.showConfirm("是否确认删除", function(){
-            com.post(api.production.deletePuotation, {"puotation.qid": v.qid}, function () {
+            com.post(api.production.deletePuotation, {"puotation.qid": id}, function () {
                 com.focusPage('#list ul.item-list').remove();
-                queryPuotationByPid(v.pid);
+                queryPuotationByPid(id);
                 com.showAlert(com.info, "操作成功");
             });
         });
@@ -244,12 +251,14 @@
     };
 
     puotation.items.discount.on("change",function () {
-         com.clearValidator();
+        com.clearValidator();
         if(!com.validate("discountModal",null)) {
             com.focusPage('#total').val(utils.accMul(utils.accDiv(parseFloat(puotation.tot),parseFloat(puotation.discount)), parseFloat($('#discount').val())));
         }
 
     });
 
-
+    if (puotation.status != 0) {
+        puotation.btns.addpuotationBtn.addClass('hide');
+    }
 });

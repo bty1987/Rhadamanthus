@@ -3,6 +3,8 @@ package com.fanglin.information.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import org.apache.struts2.json.annotations.JSON;
+
+import com.fanglin.data.common.vo.TaskVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
 

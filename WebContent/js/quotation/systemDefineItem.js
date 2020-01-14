@@ -191,12 +191,6 @@ $(function(){
     		return false;
     	}
     	
-    	console.log("baity");
-    	
-    	if(!checkNo(systemDefineItem.items.itemId.val())){
-    	    return false;
-    	}
-    	
     	var url = api.quotation.addSystemDefineItem;
     	var options = {
     		"systemDefineItem.itemId": systemDefineItem.items.itemId.val(),
@@ -245,38 +239,24 @@ $(function(){
 
 	//启用禁用功能
 	function updateStatus(sdiid, status, failcallBack) {
-	    
+
 	    var options = {
             "systemDefineItem.sdiid": sdiid,
-            "systemDefineItem.discount": discount
-        }
+            "systemDefineItem.status": status
+        };
 
 		com.post(api.quotation.updateSystemDefineItemForStatus, options);
 	}
 
 	//是否打折设置
 	function updateDiscount(sdiid, discount, failcallBack) {
-	    
+
 	    var options = {
             "systemDefineItem.sdiid": sdiid,
             "systemDefineItem.discount": discount
-	    }
+	    };
 
 		com.post(api.quotation.updateSystemDefineItemForDiscount, options);
-	}
-	
-	function checkNo(no){
-	    
-	    var flag = true;
-	    
-	    com.post(api.quotation.querySystemDefineItemByItemId, {"systemDefineItem.itemId": no}, function(res){
-            if(res.systemDefineItem && res.systemDefineItem.itemId){
-                com.showPopover(systemDefineItem.items.itemId, "编号已存在", "right");
-                flag = false;
-            }
-        }, null, false);
-	    
-	    return false;
 	}
 		
 });

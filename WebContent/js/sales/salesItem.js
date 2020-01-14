@@ -31,7 +31,7 @@ $(function () {
 
     com.focusPage('#fl-statement').statement("销售单", "子项");
 
-    com.post(api.inventory.querySalesBySid, {"sales.sid":salesItem.sid}, function (res) {
+    com.post(api.sales.querySalesBySid, {"sales.sid":salesItem.sid}, function (res) {
         salesItem.sales = res.sales;
     }, null,false);
 
@@ -65,8 +65,10 @@ $(function () {
                     ["售价:", v.selling, "blue"],
                     ["折扣价:", v.disPrice, "blue"],
                     ["折让价:", v.price, "blue"],
-                    ["数量:", v.num, "blue"],
+                    ["数量:", v.num, "blue itemnum"],
                     ["总价:", v.total, "blue"],
+                    ["结算值:", v.cvalue, "blue"],
+                    ["结算方式:", v.ctype == 0 ? "底价" : "点位", "red"],
                     ["类型:", v.priceType == "0" ? "正价" : "特价", "red"],
                     ["备注:", v.comment, "grey"]
                 ];
@@ -111,7 +113,7 @@ $(function () {
                     };
 
                     com.showConfirm('确定要删除吗?', function (indexo, layero) {
-                        com.post(api.inventory.deleteSalesItem, ops, function () {
+                        com.post(api.sales.deleteSalesItem, ops, function () {
                             $btnDelete.parents('li.clearfix').remove();
                             com.focusPage('#list').empty();
                             querySalesItemBySid();
@@ -147,7 +149,7 @@ $(function () {
     querySalesItemBySid();
     
     function querySalesItemBySid() {
-        com.post(api.inventory.querySalesItemBySid, {"sales.sid": salesItem.sid}, function (data) {
+        com.post(api.sales.querySalesItemBySid, {"sales.sid": salesItem.sid}, function (data) {
             if(data.salesItems.length == 0){
                 emptyData("list");
             }else{
@@ -175,7 +177,7 @@ $(function () {
     salesItem.btns.refundCommitBtn.click(function () {
 
         salesItem.approvalType = 1;
-        
+
         if (!calcRefundData(false)) return false;
         com.popup4mini("#miniPopUp", "#layerRefund","退货信息", "", function () {
             com.clearValidator();
@@ -237,8 +239,8 @@ $(function () {
             return false;
         }
 
-        var num = com.focusPage('#salesItemDetialnum').val();
-        var total = com.focusPage('#salesItemDetialtotal').val();
+        var num = utils.changeThrDecimal(com.focusPage('#salesItemDetialnum').val());
+        var total = utils.changeThrDecimal(com.focusPage('#salesItemDetialtotal').val());
         var comment = com.focusPage('#salesItemDetialcomment').val();
 
         var $lis = com.focusPage(".item-orange" ,"#layerPopUp");//拿到每条子项li
@@ -259,11 +261,11 @@ $(function () {
             "sales.total": priceTotalEdit
         };
 
-        com.post(api.inventory.updateSalesItem, editArr, function () {
+        com.post(api.sales.updateSalesItem, editArr, function () {
             com.focusPage('#list ul.item-list').remove();
             com.clearValidator();
             com.closePopup(com.focusPage("#editSaveBtn"));
-            com.post(api.inventory.querySalesItemBySid, {"sales.sid": salesItem.sid}, function (data) {
+            com.post(api.sales.querySalesItemBySid, {"sales.sid": salesItem.sid}, function (data) {
                 initList(data.salesItems);
             }, null, false);
         });
@@ -299,6 +301,8 @@ $(function () {
             refundLayerOut();
             salesItem.items.approver.empty();
             com.showAlert(com.info, "操作成功");
+            com.focusPage("#list").empty();
+            querySalesItemBySid();
             com.closePopup(com.focusPage("#approverSaveBtn"));
         });
     });
@@ -323,7 +327,6 @@ $(function () {
     function closeRefundlayer() {
         salesItem.items.refundTotal.val("");
         salesItem.items.refundDes.val("");
-        com.focusPage('#list li.clearfix div.action-buttons').empty();
     }
 
     function hideButtons(buttons) {
@@ -339,7 +342,7 @@ $(function () {
     }
 
     function calcRefundData(isAll, options) {
-        
+
         salesItem.options = {};
 
         var flag = true;
@@ -350,60 +353,73 @@ $(function () {
             return false;
         }
 
+        var index = 0;
+        var fullRefund = false;//全退/倒单数量验证
+        var partRefund = true;//部分退货数量验证
+        var partZore = false;//部分退货数量全为0验证
+
         com.focusPage('#list input[name="num"]').each(function (i) {
 
             var that = $(this);
-
             var siid = that.attr('data-siid');
-
             var selling = parseFloat(that.attr('selling'));
             var num = parseFloat(that.val());
-
             var max = parseFloat(that.attr('max'));
+            
             if(!isAll){
-
-                if(max < num){
-                    com.showTip(that,"数量错误!","bottom");
-                    total = 0;
-                    return false;
-                }else {
-                    var _total = utils.changeThrDecimal(utils.accMul(selling, num));
-                    total += _total;
-                    if (max >= num) {
-                        salesItem.options["approvalSalesRefundItem[" + i + "].sid"] = salesItem.sid;
-                        salesItem.options["approvalSalesRefundItem[" + i + "].salesItem.siid"] = siid;
-                        salesItem.options["approvalSalesRefundItem[" + i + "].num"] = num;
-                        salesItem.options["approvalSalesRefundItem[" + i + "].total"] = _total;
-                    }
-                    return true;
+                var _total = utils.changeThrDecimal(utils.accMul(selling, num));
+                total += _total;
+                if (max >= num && num > 0) {
+                    salesItem.options["approvalSalesRefundItem[" + index + "].sid"] = salesItem.sid;
+                    salesItem.options["approvalSalesRefundItem[" + index + "].salesItem.siid"] = siid;
+                    salesItem.options["approvalSalesRefundItem[" + index + "].num"] = num;
+                    salesItem.options["approvalSalesRefundItem[" + index + "].total"] = _total;
+                    index += 1;
                 }
+                
+                fullRefund = true;
+                if(num > max) partRefund = false;
+                if(num > 0) partZore = true;
 
             }else {
-
                 itemTotal = utils.changeThrDecimal(utils.accMul(max, selling));
                 total += itemTotal;
-                salesItem.options["approvalSalesRefundItem[" + i + "].sid"] = salesItem.sid;
-                salesItem.options["approvalSalesRefundItem[" + i + "].salesItem.siid"] = siid;
-                salesItem.options["approvalSalesRefundItem[" + i + "].num"] = max;
-                salesItem.options["approvalSalesRefundItem[" + i + "].total"] = itemTotal;
-
+                partRefund = true;
+                partZore = true;
+                
+                if(max > 0) fullRefund = true;
+                if(max > 0){
+                    salesItem.options["approvalSalesRefundItem[" + index + "].sid"] = salesItem.sid;
+                    salesItem.options["approvalSalesRefundItem[" + index + "].salesItem.siid"] = siid;
+                    salesItem.options["approvalSalesRefundItem[" + index + "].num"] = max;
+                    salesItem.options["approvalSalesRefundItem[" + index + "].total"] = itemTotal;
+                    index += 1;
+                }
             }
-
         });
 
-        if(total == 0){
-            com.showAlert(com.warning, "总退款数量为0");
+        if(!fullRefund){
+            com.showAlert(com.warning, "销售项数量有误");
             return false;
         }
-        
+
+        if(!partRefund){
+            com.showAlert(com.warning, "销售项数量有误");
+            return false;
+        }
+
+        if(!partZore){
+            com.showAlert(com.warning, "请填写销售项数量");
+            return false;
+        }
+
         salesItem.items.refundTotal.val(utils.changeThrDecimal(total));
 
-        if(!isAll && utils.changeThrDecimal(parseFloat(utils.accSub(salesItem.sales.amount, utils.accAdd(salesItem.sales.coupon, salesItem.sales.venderMaling)))) <= utils.changeThrDecimal(parseFloat(salesItem.items.refundTotal.val()))) {
+        if(!isAll && utils.changeThrDecimal(parseFloat(utils.accSub(salesItem.sales.amount, utils.accAdd(salesItem.sales.coupon, salesItem.sales.venderMaling)))) < utils.changeThrDecimal(parseFloat(salesItem.items.refundTotal.val()))) {
             com.showAlert(com.warning, "退款金额大于当前总额减劵值减厂商抹零");
             return false;
         }
         return flag;
-
     }
 
     function refundLayerOut() {
@@ -413,6 +429,7 @@ $(function () {
 
     function recordMoney(ishide) {
         com.focusPage('#list li.clearfix div.action-buttons').each(function (i) {
+            $(this).html("");
             var $inputNum = $('<input>').addClass('span1 v_float_3').attr('name', 'num').attr('value', '0').attr('type', 'number')
                 .attr('min', '0').attr('max', $(this).attr('data-num')).attr('step', '0.001')
                 .attr('selling', $(this).attr('data-selling'))
@@ -437,7 +454,7 @@ $(function () {
     //导出点击事件
     salesItem.btns.importBtn.click(function () {
 
-        com.post(api.inventory.querySalesItemBySid, {"sales.sid": salesItem.sid}, function (data) {
+        com.post(api.sales.querySalesItemBySid, {"sales.sid": salesItem.sid}, function (data) {
 
             $.exceler({
                 column: [

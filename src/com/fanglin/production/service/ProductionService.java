@@ -13,8 +13,26 @@ public interface ProductionService {
 	
 	public int addProduction(ProductionVO productionVO,String userId,int company) throws FLException;
 	
-	public int updateProductionForStatus(ProductionVO productionVO) throws FLException;
+	public int updateProduction(ProductionVO productionVO) throws FLException;
 	
-	public int updateProductionForDeliveryStatus(ProductionVO productionVO) throws FLException;
+	public int updateProductionForAdvance(ProductionVO productionVO) throws FLException;
 	
+	public int designProduction(ProductionVO productionVO) throws FLException;
+	
+	public int splitProduction(ProductionVO productionVO) throws FLException;
+	
+	public int instoreProduction(ProductionVO productionVO) throws FLException;
+	
+	public int planProduction(ProductionVO productionVO) throws FLException;
+	
+	public int mountProduction(ProductionVO productionVO) throws FLException;
+	
+	public int finishProduction(ProductionVO productionVO) throws FLException;
+	
+	public int terminalProduction(ProductionVO productionVO) throws FLException;
+
+	public int tranProduction(ProductionVO production) throws FLException;
+
+	public int upholdProduction(ProductionVO productionVO) throws FLException;
+
 }

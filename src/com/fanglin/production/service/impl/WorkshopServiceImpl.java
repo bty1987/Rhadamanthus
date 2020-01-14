@@ -29,8 +29,12 @@ public class WorkshopServiceImpl implements WorkshopService {
 		List<WorkshopPO> workshopPOs = workshopDao.pageWorkshop(paging, filters, company);
 		List<WorkshopVO> workshopVOs = new ArrayList<WorkshopVO>();
 
+		WorkshopVO workshopVO;
+		
 		for (WorkshopPO workshopPO : workshopPOs) {
-			WorkshopVO workshopVO = new WorkshopVO();
+			
+			workshopVO = new WorkshopVO();
+			
 			BeanUtil.copyProperties(workshopPO, workshopVO);
 
 			workshopVOs.add(workshopVO);
@@ -45,8 +49,11 @@ public class WorkshopServiceImpl implements WorkshopService {
 		List<WorkshopPO> workshopPOs = workshopDao.queryWorkshop(company);
 		List<WorkshopVO> workshopVOs = new ArrayList<WorkshopVO>();
 
+		WorkshopVO workshopVO;
+		
 		for (WorkshopPO workshopPO : workshopPOs) {
-			WorkshopVO workshopVO = new WorkshopVO();
+			
+			workshopVO = new WorkshopVO();
 
 			BeanUtil.copyProperties(workshopPO, workshopVO);
 

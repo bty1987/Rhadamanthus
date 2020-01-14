@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.inventory.dao.PriceDao;
-import com.fanglin.inventory.po.PricePO;
+import com.fanglin.data.material.dao.PriceDao;
+import com.fanglin.data.po.PricePO;
 
 @Service("priceImportService")
 @Transactional(readOnly = true)

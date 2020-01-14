@@ -16,6 +16,10 @@ $(function () {
 
             ishovel  : com.focusPage("#ishovel"),
             iskey  : com.focusPage("#iskey"),
+            timeLimit : com.focusPage("#timeLimit"),
+            finishTime : com.focusPage("#finishTime"),
+            keyTime : com.focusPage("#keyTime"),
+            drawlineTime : com.focusPage("#drawlineTime"),
             isCeremony  : com.focusPage("#isCeremony"),
             comment   : com.focusPage("#comment")
         }
@@ -30,6 +34,10 @@ $(function () {
         com.closeTip();
     });
 
+    com.datetime(constructionNodes.items.finishTime);
+    com.datetime(constructionNodes.items.keyTime);
+    com.datetime(constructionNodes.items.drawlineTime);
+
     com.post(api.ds.construction, {}, function (res) {
         
         constructionNodes.constructionSchedule = res.constructionSchedule.split("key", "value");
@@ -38,7 +46,7 @@ $(function () {
         constructionNodes.items.iskey.bindData(res.isKey, "key", "value", false);
         constructionNodes.items.isCeremony.bindData(res.isCeremony, "key", "value", false);
 
-    });
+    }, null, false);
 
     var displayFunc = (function () {
 
@@ -125,9 +133,9 @@ $(function () {
 
     var seacher = new Searcher();
 
-    seacher.init(['c_orderId', 'c_village', 'c_houseNumber', 'c_designer', 'c_schedule', 'c_projectStatusFlag'], "CondList", api.construction.pageConstruction, function (list) {
-        displayFunc.init('ResultList', list);
-    }, "Pagenation", "supervisionSeacherPostData", params["supervisionPostData"]);
+    seacher.init(['c_orderId', 'c_village', 'c_houseNumber', 'c_designer', 'c_schedule', 'c_projectStatusFlag'], "supervisionCondList", api.construction.pageConstruction, function (list) {
+        displayFunc.init('supervisionResultList', list);
+    }, "supervisionPagenation", "supervisionSeacherPostData", null, false, null, null, "supervisionResultList");
 
     function viewSupervisionDetail(orderId) {
         params.orderId = orderId;
@@ -157,11 +165,21 @@ $(function () {
         com.post(api.construction.queryConstructionInfoByOrderId, {"constructionInfo.orderId": orderId}, function (res) {
 
             data = res.constructionInfo;
-            
+
             constructionNodes.items.orderId = orderId;
             constructionNodes.items.ishovel.val(data.ishovel);
             constructionNodes.items.iskey.val(data.iskey);
             constructionNodes.items.isCeremony.val(data.isCeremony);
+            constructionNodes.items.timeLimit.val(data.timeLimit);
+            if(data.finishTime != null){
+                constructionNodes.items.finishTime.val(data.finishTime.substr(0,10));
+            }
+            if(data.keyTime != null){
+                constructionNodes.items.keyTime.val(data.keyTime.substr(0,10));
+            }
+            if(data.drawlineTime != null){
+                constructionNodes.items.drawlineTime.val(data.drawlineTime.substr(0,10));
+            }
             constructionNodes.items.comment.val(data.comment);
         });
 
@@ -172,9 +190,13 @@ $(function () {
 
         var options = {
             "constructionInfo.orderId" : constructionNodes.items.orderId,
+            "constructionInfo.timeLimit" : constructionNodes.items.timeLimit.val(),
             "constructionInfo.ishovel": constructionNodes.items.ishovel.val(),
             "constructionInfo.iskey": constructionNodes.items.iskey.val(),
-            "constructionInfo.isCeremony": constructionNodes.items.isCeremony.val(),
+            "constructionInfo.isCeremony" : constructionNodes.items.isCeremony.val(),
+            "constructionInfo.finishTime" : constructionNodes.items.finishTime.val() + " 00:00:00",
+            "constructionInfo.keyTime" : constructionNodes.items.keyTime.val() + " 00:00:00",
+            "constructionInfo.drawlineTime" : constructionNodes.items.drawlineTime.val() + " 00:00:00",
             "constructionInfo.comment": constructionNodes.items.comment.val()
         };
 

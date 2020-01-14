@@ -1,5 +1,8 @@
 package com.fanglin.sales.dao.impl;
 
+import java.util.List;
+
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -13,6 +16,14 @@ public class RefundsDaoImpl extends DaoImpl<RefundsPO> implements RefundsDao{
 		super(RefundsPO.class);
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<RefundsPO> queryRefundsBySid(Long sid) {
+		
+		return createCriteria(RefundsPO.class).add(Restrictions.eq(RefundsPO.COLUMN_SID_STR, sid)).list();
+		
+	}
+	
 	@Override
 	public void updateRefundsForStatusBySpid( Long spid,short status) {
 		

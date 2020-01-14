@@ -28,20 +28,26 @@ public class OutsourceAction extends BaseListAction{
 	@Autowired
 	private OutsourceService  outsourceService;
 	
-	private long pid ;  
-	
 	@Action(value = "pageOutsource", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public  String pageOutsource (){
+	public  String pageOutsource () throws FLException{
 		
-		outsourceService.pageOutsource(getPaging(), getFilters(),pid);
+		outsourceService.pageOutsource(getPaging(), getFilters(), queryCompany());
+		
+		return  SUCCESS;
+	}
+	
+	@Action(value = "pageOutsourceForSupplier", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public  String pageOutsourceForSupplier () throws FLException{
+		
+		outsourceService.pageOutsourceForSupplier(getPaging(), getFilters(),queryUserId(),queryCompany());
 		
 		return  SUCCESS;
 	}
 	
 	@Action(value = "addOutsource", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public  String addOutsource(){
+	public  String addOutsource() throws FLException{
 	
-		outsourceService.addOutsource(outsource);
+		outsourceService.addOutsource(outsource,queryUserId(), queryCompany());
 		
 		return  SUCCESS;
 	}
@@ -54,10 +60,34 @@ public class OutsourceAction extends BaseListAction{
 		return  SUCCESS;
 	}
 	
-	@Action(value = "updateOutsourceForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public  String updateOutsourceForStatus() throws FLException{
+	@Action(value = "queryOutsourceByPid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public  String queryOutsourceByPid() throws FLException{
 	
-		outsourceService.updateOutsourceForStatus(outsource);
+		outsources = outsourceService.queryOutsourceByPid(outsource,queryCompany());
+		
+		return  SUCCESS;
+	}
+	
+	@Action(value = "passOutsource", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public  String passOutsource() throws FLException{
+
+		outsourceService.passOutsource(outsource);
+		
+		return  SUCCESS;
+	}
+	
+	@Action(value = "confirmOutsource", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public  String confirmOutsource() throws FLException{
+	
+		outsourceService.confirmOutsource(outsource);
+		
+		return  SUCCESS;
+	}
+	
+	@Action(value = "finishOutsource", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public  String finishOutsource() throws FLException{
+	
+		outsourceService.finishOutsource(outsource,queryUserId());
 		
 		return  SUCCESS;
 	}
@@ -86,12 +116,4 @@ public class OutsourceAction extends BaseListAction{
 		this.outsources = outsources;
 	}
 
-	public Long getPid() {
-		return pid;
-	}
-
-	public void setPid(Long pid) {
-		this.pid = pid;
-	}
-	
 }

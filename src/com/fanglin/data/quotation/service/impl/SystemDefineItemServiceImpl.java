@@ -180,7 +180,10 @@ public class SystemDefineItemServiceImpl implements SystemDefineItemService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void deleteSystemDefineItem(SystemDefineItemVO systemDefineItemVO) {
-		systemDefineItemDao.delete(systemDefineItemVO.getSdiid());
+		
+		SystemDefineItemPO systemDefineItemPO = systemDefineItemDao.get(systemDefineItemVO.getSdiid());
+		
+		systemDefineItemDao.deleteById(systemDefineItemPO.getSdiid());
 	}
 
 }

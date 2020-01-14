@@ -3,7 +3,7 @@ $.extend(api.index, {
     supervisionIndex: {url: "/views/construction/supervision.html"},
     supervisionDetailIndex: {url: "/views/construction/supervisionDetail.html"},
     supervisionInDecreaseIndex: {url: "/views/construction/supervisionInDecrease.html"},
-
+    constructionIndex: {url: "/views/construction/construction.html"},
     reworkIndex: {url: "/views/construction/rework.html"},
 
     onsiteInspectionRecordIndex: {url: "/views/construction/onsiteInspectionRecord.html"},
@@ -29,6 +29,8 @@ $.extend(api.index, {
 
     workerAllocationIndex: {url: "/views/construction/workerAllocation.html"},
     workerAllocationDetailIndex: {url: "/views/construction/workerAllocationDetail.html"},
+
+    constructionAccessoryIndex: {url: "/views/construction/constructionAccessory.html"},
     
 });
 
@@ -45,6 +47,19 @@ $.extend(api, {construction: {
             result:"paging-data-house",
             args:["buildArea"]
         }]},
+        
+    pageConstructionForBase:{url: "pageConstructionForBase.do", demo: true,
+        type: "query",
+        tranargs: [{
+            result:"paging-data",
+            args:["accessoryLimit", "salaryLimit", "salaryTotal", "accessoryTotal"]
+        },{
+            result:"paging-data-decoration",
+            args:["orderTotalPrice"]
+        },{
+            result:"paging-data-decoration-house",
+            args:["buildArea"]
+        }]},
 
     pageConstructionForSupervision: {url: "pageConstructionForSupervision.do", demo: true},
     pageConstructionForAcceptance: {url: "pageConstructionForAcceptance.do", demo: true,
@@ -56,7 +71,15 @@ $.extend(api, {construction: {
 
     queryConstructionByOrderId: {url: "queryConstructionByOrderId.do", demo: true},
     updateConstructionByOrderId: {url: "updateConstructionByOrderId.do"},
+    updateConstructionForAdvance: {url: "updateConstructionForAdvance.do",        
+    	type:"update",
+        tranargs:{
+            args: ["construction.accessoryLimit", "construction.salaryLimit"]
+        }},
     nextConstructionByOrderId: {url: "nextConstructionByOrderId.do"},
+    openAccessory: {url: "openAccessory.do"},
+    lockAccessory: {url: "lockAccessory.do"},
+    
 
     queryConstructionScheduleByOrderId: {url: "queryConstructionScheduleByOrderId.do"},
     queryConstructionScheduleByCid: {url: "queryConstructionScheduleByCid.do"},
@@ -132,9 +155,44 @@ $.extend(api, {construction: {
     successDrawLine: {url: "successDrawLine.do"},
     failureDrawLine: {url: "failureDrawLine.do"},
     
-    queryConstructionInfo: {url: "queryConstructionInfo.do"},
-    updateConstructionInfo: {url: "updateConstructionInfo.do"},
-    queryConstructionInfoByOrderId: {url: "queryConstructionInfoByOrderId.do"},
-    updateConstructionInfoByOrderId: {url: "updateConstructionInfoByOrderId.do"}
+    queryConstructionInfo: {url: "queryConstructionInfo.do",
+    type: "query",
+    tranargs: [{
+         result:"constructionInfo",
+         args:["timeLimit"]
+    }]},
+    updateConstructionInfo: {url: "updateConstructionInfo.do",
+    type:"update",
+    tranargs:{
+         args: ["constructionInfo.timeLimit"]
+    }},
+    queryConstructionInfoByOrderId: {url: "queryConstructionInfoByOrderId.do",
+     type: "query",
+     tranargs: [{
+         result:"constructionInfo",
+         args:["timeLimit"]
+     }]},
+    updateConstructionInfoByOrderId: {url: "updateConstructionInfoByOrderId.do",
+    type:"update",
+    tranargs:{
+         args: ["constructionInfo.timeLimit"]
+    }},
     
+    pageConstructionAccessory: {url: "pageConstructionAccessory.do", demo: true,
+        type: "query",
+        tranargs: [{
+            result:"paging-data",
+            args:["total","num", "numLimit"]
+    }]},
+    addConstructionAccessory: {url: "addConstructionAccessory.do",
+        type:"update",
+        tranargs:{
+            args: ["constructionAccessory.numLimit"]
+        }},
+    updateConstructionAccessory: {url: "updateConstructionAccessory.do",
+        type:"update",
+        tranargs:{
+            args: ["constructionAccessory.numLimit"]
+        }},
+      
 }});

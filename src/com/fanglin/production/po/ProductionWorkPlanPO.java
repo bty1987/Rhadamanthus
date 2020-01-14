@@ -28,19 +28,29 @@ public class ProductionWorkPlanPO implements Serializable {
 
 	public static final Short STATUS_INIT_INT = 0;
 
-	public static final Short STATUS_OPERATED_INT = 1;
+	public static final Short STATUS_OPERATED_INT = 1;//执行
+	
+	public static final Short STATUS_COMPLETE_INT = 2;//完成
 
-	private Long pwpid;
+	public static final Short STATUS_INVALID_INT = 3;//删除
+	
+	public static final Short NUM_ONE_INT = 1;
 
-	private Long ppid;
+	private Long pwpid;// 工序组ID
 
-	private WorkplanPO workplan;
+	private Long ppid;// 计划ID
 
-	private UserPO creater;
+	private WorkplanPO workplan;// 工序组类型
 
-	private Timestamp createTime;
+	private UserPO creater;// 创建人
 
-	private Short status;
+	private Timestamp createTime;// 创建时间
+	
+	private Timestamp finishTime;//完结时间
+
+	private Short status;//初始0, 已执行1, 完成2
+	
+	private Short sort;//排序
 
 	public ProductionWorkPlanPO() {
 		super();
@@ -106,6 +116,15 @@ public class ProductionWorkPlanPO implements Serializable {
 		this.createTime = createTime;
 	}
 
+	@Column(name = "finishTime")
+	public Timestamp getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Timestamp finishTime) {
+		this.finishTime = finishTime;
+	}
+
 	@Column(name = "status")
 	public Short getStatus() {
 		return status;
@@ -113,6 +132,15 @@ public class ProductionWorkPlanPO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	@Column(name = "sort")
+	public Short getSort() {
+		return sort;
+	}
+
+	public void setSort(Short sort) {
+		this.sort = sort;
 	}
 
 }

@@ -25,7 +25,7 @@ public interface ApprovalMaterialRefundService {
 
 	public int submitApprovalForMaterialRefund(ApprovalVO approvalVO, ApprovalMaterialRefundVO approvalMaterialRefundVO, List<ApprovalMaterialRefundItemVO> approvalMaterialRefundItemVOs, String userId, int company) throws FLException;
 
-	public int approvalForMaterialRefund(ApprovalPO approvalPO) throws FLException;
+	public int approveForMaterialRefund(ApprovalPO approvalPO) throws FLException;
 
 	public int refuseForMaterialRefund(ApprovalPO approvalPO) throws FLException;
 

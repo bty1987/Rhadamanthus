@@ -99,15 +99,18 @@ var Searcher = function(){
 
             var _rname = condRule['submitConfig']['name'];//向后台提交提交时的参数名
             var _rop = condRule['submitConfig']['op'];//提交给后台时的查询条件:等于或者包含
-            if(condRule['dataSource']){
-                var _rurl = condRule['dataSource']['url'];//autofill和select标签获取可选值的接口
-                var _rkey = condRule['dataSource']["keyPath"];//autofill和select取值时调用接口后处理返回值时用来作为提交项的参数名
-                var _rvalue = condRule['dataSource']["valuePath"];//autofill和select取值时调用接口后处理返回值时用来显示的参数名
-                var _rpostParam = condRule['dataSource']["postData"];//autofill和select取值时调用接口时传的参数
-                var _rresult = condRule['dataSource']["listPath"];//autofill和select取值时调用接口后取值用的eg:data.deptList
-                var _rquery = condRule['dataSource']["query"]
+            var _ds = condRule['dataSource'];
+            
+            if(_ds){
+                var _rurl = _ds['url'];//autofill和select标签获取可选值的接口
+                var _rkey = _ds["keyPath"];//autofill和select取值时调用接口后处理返回值时用来作为提交项的参数名
+                var _rvalue = _ds["valuePath"];//autofill和select取值时调用接口后处理返回值时用来显示的参数名
+                var _rpostParam = _ds["postData"];//autofill和select取值时调用接口时传的参数
+                var _rresult = _ds["listPath"];//autofill和select取值时调用接口后取值用的eg:data.deptList
+                var _rquery = _ds["query"]; // 提交参数名称,默认为pinyinName
+                var _rappr = _ds["appresult"] ? _ds["appresult"] : []; // 返回结果补充对象
             }
-
+            
             var setOption = function(data){
                 data && data.length &&(
                     $.each(data,function(i,v){
@@ -200,7 +203,7 @@ var Searcher = function(){
                     }, matcher: function (item) {
                         return true;
                     }, callback: function(data){
-                        this.options.list = data[_rresult];
+                        this.options.list = _rappr.concat(data[_rresult]);
                         this.flprocess(this.options.list,[_rkey],[_rvalue]);
                     },
                     isResultTypeMap: true, //必填值为true,获取key,value的标识,
@@ -214,7 +217,7 @@ var Searcher = function(){
             }
 
             if(_rtype == "select"){
-
+                
                 $showItem = $('<select></select>').attr({
                     "name" : condCode,
                     "data-rqs" : _rname,
@@ -224,7 +227,7 @@ var Searcher = function(){
 
                 if(_rurl){
                     com.post(_rurl, _rpostParam, function(result){
-                        var data = result[_rresult];
+                        var data = _rappr.concat(result[_rresult]);
                         setOption(data);
                     }, null, false);
 
@@ -253,7 +256,7 @@ var Searcher = function(){
                         data = params.selectCaching[condCode];
                     } else {
                         com.post(_rurl, _rpostParam, function (result) {
-                            data = result[_rresult];
+                            data = _rappr.concat(result[_rresult]);
                             params.selectCaching[condCode] = data;
                         }, null, false);
 

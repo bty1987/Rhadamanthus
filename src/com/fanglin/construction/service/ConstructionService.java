@@ -25,11 +25,19 @@ public interface ConstructionService {
 	public void pageConstructionForSupervision(Paging paging, List<Filter> filters, String userId) throws FLException;
 
 	public void pageConstructionForAcceptance(Paging paging, List<Filter> filters, Integer company);
+	
+	public void pageConstructionForBase(Paging paging, List<Filter> filters, Integer company);
 
 	public ConstructionVO queryConstructionById(int cid) throws FLException;
 
 	public ConstructionVO queryConstructionByOrderId(ConstructionVO constructionVO) throws FLException;
 
 	public void updateConstructionByOrderId(ConstructionVO constructionVO) throws FLException;
+	
+	public int updateConstructionForAdvance(ConstructionVO constructionVO) throws FLException;
+	
+	public int openAccessory(ConstructionVO constructionVO) throws FLException;
+	
+	public int lockAccessory(ConstructionVO constructionVO) throws FLException;
 
 }

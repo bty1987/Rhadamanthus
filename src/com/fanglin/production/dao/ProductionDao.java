@@ -10,5 +10,7 @@ import com.fanglin.utils.Paging;
 public interface ProductionDao extends Dao<ProductionPO>{
 	
 	public List<ProductionPO> pageProduction(Paging paging, List<Filter> filters,int company);
+
+	public ProductionPO queryProductionByPno(String pno);
 	
 }

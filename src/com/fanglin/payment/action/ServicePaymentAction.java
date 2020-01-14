@@ -36,6 +36,8 @@ public class ServicePaymentAction extends BaseListAction {
 	
 	private List<Long> spIds;
 	
+	private List<Long> posids;
+	
 	@Action(value = "pageServicePaymentForCollect", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageServicePaymentForCollect() throws FLException{
 		
@@ -87,7 +89,7 @@ public class ServicePaymentAction extends BaseListAction {
 	@Action(value = "collectServicePayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String collectServicePayment() throws FLException{
 		
-		servicePaymentService.collectServicePayment(servicePayment, serviceReceipt, queryUserId(), queryCompany());
+		servicePaymentService.collectServicePayment(servicePayment, serviceReceipt, posids, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -95,7 +97,7 @@ public class ServicePaymentAction extends BaseListAction {
 	@Action(value = "collectServicePaymentForService", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String collectServicePaymentForService() throws FLException{
 		
-		servicePaymentService.collectServicePaymentForService(servicePayment, serviceReceipt, queryUserId(), queryCompany());
+		servicePaymentService.collectServicePaymentForService(servicePayment, serviceReceipt, posids, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -154,6 +156,14 @@ public class ServicePaymentAction extends BaseListAction {
 
 	public void setServicePayments(List<ServicePaymentVO> servicePayments) {
 		this.servicePayments = servicePayments;
+	}
+
+	public List<Long> getPosids() {
+		return posids;
+	}
+
+	public void setPosids(List<Long> posids) {
+		this.posids = posids;
 	}
 	
 }

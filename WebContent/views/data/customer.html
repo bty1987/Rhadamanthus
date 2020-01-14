@@ -32,7 +32,8 @@
 										<div class="form-group">
 											<label class="col-sm-3 control-label no-padding-right" for="gender">性别</label>
 											<div class="col-sm-9">
-												<input type="checkbox" id="gender" />
+												<input type="checkbox" id="gender" class="ace ace-switch ace-switch-5"/>
+												<span class="lbl gender"></span>
 											</div>
 										</div>
 
@@ -53,14 +54,14 @@
 										<div class="form-group">
 											<label class="col-sm-3 control-label no-padding-right" for="passport">护照</label>
 											<div class="col-sm-9">
-												<input type="text" maxlength="21" id="passport" class="col-xs-10 col-sm-6  " data-toggle="popover" data-trigger='manual'/>
+												<input type="text" maxlength="21" id="passport" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual'/>
 											</div>
 										</div>
 
 										<div class="form-group" id="phonehide">
 											<label class="col-sm-3 control-label no-padding-right orange" for="phone">联系方式</label>
 											<div class="col-sm-9">
-												<input type="text" id="phone" maxlength="64" class="col-xs-10 col-sm-6 " data-toggle="popover" data-trigger='manual'/>
+												<input type="text" id="phone" maxlength="64" class="col-xs-10 col-sm-6 v_phone" data-toggle="popover" data-trigger='manual'/>
 											</div>
 										</div>
 
@@ -130,9 +131,9 @@
 			<div class="modal-body" >
 				<div id="customerphoneList"></div>
 				<div class="form-group row">
-					<label class="col-sm-2 control-label "  for="addphone"><b>添加电话:</b></label>
-					<input class="col-sm-7 " id="addphone"  data-placement="bottom">
-					<button class="col-sm-1 btn btn-sm btn-primary" style="margin-left: 20px"  id="phonesaveBtn">保存</button>
+					<label class="col-sm-2 control-label" for="addphone"><b>添加电话:</b></label>
+					<input class="col-sm-7" id="addphone" data-placement="bottom">
+					<button class="col-sm-1 btn btn-sm btn-primary" style="margin-left: 20px" id="addPhoneBtn">保存</button>
 				</div>
 
 			</div>

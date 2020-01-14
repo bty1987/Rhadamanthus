@@ -19,16 +19,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.vo.WorkTypeVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.material.vo.AccessoriesTypeVO;
+import com.fanglin.data.material.vo.ColorVO;
+import com.fanglin.data.material.vo.FormatVO;
+import com.fanglin.data.material.vo.GoodsVO;
 import com.fanglin.inventory.dao.ManifestDao;
 import com.fanglin.inventory.dao.ManifestItemDao;
 import com.fanglin.inventory.po.ManifestItemPO;
 import com.fanglin.inventory.po.ManifestPO;
 import com.fanglin.inventory.service.GoodsStorehouseStockService;
 import com.fanglin.inventory.service.ManifestItemService;
-import com.fanglin.inventory.vo.ColorVO;
-import com.fanglin.inventory.vo.FormatVO;
-import com.fanglin.inventory.vo.GoodsVO;
 import com.fanglin.inventory.vo.ManifestItemVO;
 import com.fanglin.inventory.vo.ManifestVO;
 import com.fanglin.inventory.vo.StorehouseVO;
@@ -57,15 +59,23 @@ public class ManifestItemServiceImpl implements ManifestItemService {
 
 		for (ManifestItemPO manifestItemPO : manifestItemPOs) {
 
-			manifestItemVO = new ManifestItemVO(new GoodsVO(), new ColorVO(), new FormatVO(), new StorehouseVO(), new StorehouseVO());
+			manifestItemVO = new ManifestItemVO(new GoodsVO(new AccessoriesTypeVO(new WorkTypeVO())), new ColorVO(), new FormatVO(), new StorehouseVO(), new StorehouseVO());
 
 			BeanUtil.copyProperties(manifestItemPO, manifestItemVO, Arrays.asList("goods", "color", "format", "instorehouse", "outstorehouse"));
 			BeanUtil.copyProperties(manifestItemPO.getGoods(), manifestItemVO.getGoods(), Arrays.asList("accessoriesType"));
+			if (manifestItemPO.getGoods().getAccessoriesType() != null) {
+
+				BeanUtil.copyProperties(manifestItemPO.getGoods().getAccessoriesType(), manifestItemVO.getGoods().getAccessoriesType(), Arrays.asList("workType"));
+
+				if (manifestItemPO.getGoods().getAccessoriesType().getWorkType() != null) {
+					BeanUtil.copyProperties(manifestItemPO.getGoods().getAccessoriesType().getWorkType(), manifestItemVO.getGoods().getAccessoriesType().getWorkType());
+				}
+			}
 			BeanUtil.copyProperties(manifestItemPO.getColor(), manifestItemVO.getColor());
 			BeanUtil.copyProperties(manifestItemPO.getFormat(), manifestItemVO.getFormat());
 			BeanUtil.copyProperties(manifestItemPO.getInstorehouse(), manifestItemVO.getInstorehouse());
 			BeanUtil.copyProperties(manifestItemPO.getOutstorehouse(), manifestItemVO.getOutstorehouse());
-
+			
 			manifestItemVOs.add(manifestItemVO);
 		}
 

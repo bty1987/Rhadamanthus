@@ -30,13 +30,15 @@ public class PuoteItemDaoImpl extends DaoImpl<PuoteItemPO> implements PuoteItemD
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public List<PuoteItemPO> queryQuoteItemByPinyin(String pinyin, String name, int limit, int company) {
-		return session().createCriteria(PuoteItemPO.class)
-				.add(Restrictions.eq(PuoteItemPO.COLUMN_STATUS_STR, PuoteItemPO.STATUS_UNLOCK_SHORT))
-				.add(Restrictions.eq(PuoteItemPO.COLUMN_COMPANY_INT, company))
-				.add(Restrictions.or(Restrictions.eq(PuoteItemPO.COLUMN_NAME_STR, name), Restrictions.ilike(PuoteItemPO.COLUMN_PINYIN_STR, pinyin, MatchMode.ANYWHERE)))
-				.setMaxResults(limit).list();
+	public List<PuoteItemPO> queryQuoteItemByPinyin(Paging paging, String pinyin, Integer company) {
+		PagingQuery<PuoteItemPO> query = pagingQuery(paging, PuoteItemPO.class);
+
+		query.add(Restrictions.or(Restrictions.ilike(PuoteItemPO.COLUMN_NAME_STR, pinyin, MatchMode.ANYWHERE), Restrictions.ilike(PuoteItemPO.COLUMN_PINYIN_STR, pinyin, MatchMode.ANYWHERE)));
+		if(company != null){
+			query.add(Restrictions.eq("company", company));
+		}
+
+		return query.list();
 	}
 
 	public void queryFilterExcute(PagingQuery<PuoteItemPO> query, List<Filter> filters) {

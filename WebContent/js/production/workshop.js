@@ -110,6 +110,7 @@ $(function () {
                 .append($optionWrap);
 
             $btnEdit.click(function () {
+
                 workshop.editFlg = false;
 
                 workshop.items.wsid = v.wsid;
@@ -127,7 +128,7 @@ $(function () {
 
             $btncheck.click(function () {
                 com.focusPage('#viewPopUp').attr('data-wsid', v.wsid);
-                com.popup4page("#viewPopUp","views/production/viewWorkshop.html","查看工序组");
+                com.popup4page("#viewPopUp","views/production/workshop4view.html",v.name);
             });
 
             return $liLine;
@@ -168,7 +169,7 @@ $(function () {
         var status = btnType == 0 ? "启用" : "禁用";
 
         if(statusFlag == btnType){
-            com.showAlert(com.info, "已"+status+"无需重复当前操作");
+            com.showAlert(com.warning, "已"+status+"无需重复当前操作");
             return false;
         }
 

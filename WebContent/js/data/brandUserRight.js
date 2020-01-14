@@ -1,52 +1,52 @@
+jQuery(function ($) {
 
-jQuery(function($) {
-	
-	var materialBrandRight = {
-		saveBtn: null,
-		cancelBtn: null,
-		modal: null,
-		
-		editFlg: false,
-		
-		postParam: {
-			"user.duty.name": "驻店导购"
-		},
-		
-		userId: "",
-	};
-	
-	materialBrandRight.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
-	materialBrandRight.cancelBtn = com.focusPage("#cancelBtn");
-	materialBrandRight.modal = com.focusPage("#materialBrandRightModal");
-	
-	var tag_input = com.focusPage("#brandright");
+    var materialBrandRight = {
+        saveBtn: null,
+        cancelBtn: null,
+        modal: null,
 
-	tag_input.tag({
-		placeholder:tag_input.attr('placeholder'),
-		//enable typeahead by specifying the source array
-		isStaticResource : false,
-		flsource: {
-			url : api.data.queryBrandForPinYinName,
-			postData : {},
-			resultList : "brands",
-			keyPath : "bid",
-			valuePath : "name",
-			isResultTypeMap : true, //是否是key - value 形式的列表
-		},
-	});
-	
-	com.post(api.data.queryBrand, {}, function(res){
-		materialBrandRight.materialBrands = res.brands;
-	});
-	
-	var displayFunc  = (function(){
+        editFlg: false,
 
-        var renderList = function(tableId,listData){
+        postParam: {
+            "user.duty.name": "驻店导购"
+        },
+
+        userId: "",
+        bids: []
+    };
+
+    materialBrandRight.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+    materialBrandRight.cancelBtn = com.focusPage("#cancelBtn");
+    materialBrandRight.modal = com.focusPage("#materialBrandRightModal");
+
+    var tag_input = com.focusPage("#brandright");
+
+    tag_input.tag({
+        placeholder: tag_input.attr('placeholder'),
+        //enable typeahead by specifying the source array
+        isStaticResource: false,
+        flsource: {
+            url: api.data.queryBrandByPinyin,
+            postData: {},
+            resultList: "brands",
+            keyPath: "bid",
+            valuePath: "name",
+            isResultTypeMap: true, //是否是key - value 形式的列表
+        },
+    });
+
+    com.post(api.data.queryBrand, {}, function (res) {
+        materialBrandRight.materialBrands = res.brands;
+    });
+
+    var displayFunc = (function () {
+
+        var renderList = function (tableId, listData) {
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-            if(listData && listData.length){ 
-                $.each(listData,function(i, v){
+            if (listData && listData.length) {
+                $.each(listData, function (i, v) {
                     var $liLine = creatLine(v);
 
                     $liLine.appendTo($ul);
@@ -56,103 +56,100 @@ jQuery(function($) {
             }
         };
 
-        var creatLine = function(v){
-        	
+        var creatLine = function (v) {
+
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.userName));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnConfig = $('<a></a>').addClass('btn btn-minier btn-yellow').html('品牌权限');
-            
+
             var propertyArr = [
-               ["编号:", v.userId, "grey"],
-               ["用户名:", v.loginId, "grey"],
-           ];
-            
-           $.each(propertyArr, function (index,value) {
-               var $liProperty = $('<li></li>');
-               $('<strong></strong>').html(value[0]).appendTo($liProperty);
-               $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-               $liProperty.appendTo($ulProperty);
-           });
+                ["编号:", v.userId, "grey"],
+                ["用户名:", v.loginId, "grey"],
+            ];
+
+            $.each(propertyArr, function (index, value) {
+                var $liProperty = $('<li></li>');
+                $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                $liProperty.appendTo($ulProperty);
+            });
 
             $divBtnWrap.append($btnConfig).appendTo($h3);
-            
+
             $liLine.append($h3).append($ulProperty);
-            
-            $btnConfig.click(function(){
-            	dialogMaterialBrandRight(v.uid);
+
+            $btnConfig.click(function () {
+                dialogMaterialBrandRight(v.uid);
             });
-            
+
             return $liLine;
         };
-        
+
         return {
-            init : function(tableId,listData){
+            init: function (tableId, listData) {
                 com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
+                renderList(tableId, listData);
             },
-            drawLine : function(v){
+            drawLine: function (v) {
                 return creatLine(v);
             }
         }
     })();
-	
-	var searcher = new Searcher();
-	
-	searcher.init(["materialerName"], "condList", api.personel.pageUser, function(data){
-		displayFunc.init('resultList', data);
-	}, "pagenation", "materialBrandRightPostData", materialBrandRight.postParam);
-	
-	function dialogMaterialBrandRight(uid){
 
-		materialBrandRight.userId = uid;
+    var searcher = new Searcher();
 
-		com.post(api.right.queryBrandUserRightByUid, {"brandUserRight.uid": uid}, function(res){
+    searcher.init(["materialerName"], "condList", api.personel.pageUser, function (data) {
+        displayFunc.init('resultList', data);
+    }, "pagenation", "materialBrandRightPostData", materialBrandRight.postParam);
 
-			var _tag = com.focusPage('#brandright').data('tag');
+    function dialogMaterialBrandRight(uid) {
 
-			while(_tag.values.length > 0){
-				_tag.remove(0)
-			}
+        materialBrandRight.userId = uid;
 
-			if(res.brandUserRight.brands.length){
-				$.each(res.brandUserRight.brands, function(i, v){
-					_tag.fladd(v.bid.toString(), v.name);
-				});
+        com.post(api.right.queryBrandUserRightByUid, {"brandUserRight.uid": uid}, function (res) {
 
-			}
-		});
+            var _tag = com.focusPage('#brandright').data('tag');
 
-		materialBrandRight.modal.modal("show");
-	}
-	
-	function saveData(){
-		if(com.validate())
-			return;
-		
-		var options = {};
-		var brandright = "#";
-		
-		var brandIds = com.focusPage("#brandright").val();
-		if(brandIds == null){
-			brandright = "";
-		}else{
-			/*for(var i=0;i<brandIds.length;i++){
-				brandright += brandIds[i] + "#";
-			}*/
+            while (_tag.values.length > 0) {
+                _tag.remove(0)
+            }
 
-			brandIds = brandIds.split(', ');
-			brandright = brandIds.join('#');
-		}
-		
-		options["brandUserRight.uid"] = materialBrandRight.userId;
-		options["brandUserRight.brandId"] = brandright;
-		
-		com.post(api.right.updateBrandUserRight, options);
-		
-		materialBrandRight.modal.modal("hide");   
-	}
-	
+            if (res.brandUserRight.brands.length) {
+                $.each(res.brandUserRight.brands, function (i, v) {
+                    _tag.fladd(v.bid.toString(), v.name);
+                });
+
+            }
+        });
+
+        materialBrandRight.modal.modal("show");
+    }
+
+    function saveData() {
+        if (com.validate())
+            return;
+
+        var options = {};
+
+        var brandIds = com.focusPage("#brandright").val();
+
+        options["brandUserRight.uid"] = materialBrandRight.userId;
+
+        if (brandIds) {
+            brandIds = brandIds.split(', ');
+            if (brandIds.length) {
+                $.each(brandIds, function (i, v) {
+                    options['bids[' + i + ']'] = v;
+                });
+            }
+        }
+
+        com.post(api.right.updateBrandUserRight, options);
+
+        materialBrandRight.modal.modal("hide");
+    }
+
 });

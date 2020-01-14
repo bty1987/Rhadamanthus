@@ -580,9 +580,15 @@
      * @param isKey 是否获取key , 否则为val的信息
      * @return 自动补全的key/value
      */
-    typeahead: function(id, defaults, isKey){
-        var _ = com.focusPage('#' + id).attr('data-typeahead-key');
-        if(isKey) _ = com.focusPage('#' + id).val();
+    typeahead: function(container, defaults, isKey){
+        
+        if(container && typeof(container) == "object" && container.length) container = container;
+        else if(container && typeof(container) == "object") container = [container];
+        else if(container && typeof(container) == "string") container = com.focusPage(!/\W+/.test(container) ? '#' + container : container);
+        else return false;
+        
+        var _ = container.attr('data-typeahead-key');
+        if(isKey) _ = container.val();
         if(!defaults) defaults = '';
         return  _ ? _ : defaults;
     },
@@ -596,11 +602,14 @@
      * @param value 补全元素value值
      * @param callback 回调方法 , 选中元素之后执行
      */
-    initTypeahead: function (id, url, name, args, result, key, value, callback){
+    initTypeahead: function (container, url, name, args, result, key, value, callback){
         
-        id = !/\W+/.test(id) ? '#' + id : id;
+        if(container && typeof(container) == "object" && container.length) container = container;
+        else if(container && typeof(container) == "object") container = [container];
+        else if(container && typeof(container) == "string") container = com.focusPage(!/\W+/.test(container) ? '#' + container : container);
+        else return false;
         
-        var $ele = com.focusPage(id).typeahead({
+        var $ele = container.typeahead({
             url: url,
             list: [],
             postData: {},
@@ -630,11 +639,14 @@
      * @param value 补全元素value值
      * @param callback 回调方法 , 选中元素之后执行
      */
-    selectTypeahead: function (id, data, key, value, callback){
+    selectTypeahead: function (container, data, key, value, callback){
         
-        id = !/\W+/.test(id) ? '#' + id : id;
+        if(container && typeof(container) == "object" && container.length) container = container;
+        else if(container && typeof(container) == "object") container = [container];
+        else if(container && typeof(container) == "string") container = com.focusPage(!/\W+/.test(container) ? '#' + container : container);
+        else return false;
         
-        var $ele = com.focusPage(id).typeahead({
+        var $ele = container.typeahead({
             list: data,
             source: function (query, process) {
                 
@@ -671,8 +683,8 @@
      * @param value 补全元素value值
      * @param callback 回调方法 , 选中元素之后执行
      */
-    autoTypeahead: function (id, url, name, args, result, key, value, callback){
-        com.initTypeahead(id, url, name, args, result, key, value, callback);
+    autoTypeahead: function (container, url, name, args, result, key, value, callback){
+        com.initTypeahead(container, url, name, args, result, key, value, callback);
     },
     /**
      * 更新自动补全 , 显示内容 , 对应key值
@@ -680,25 +692,41 @@
      * @param key 补全元素key值
      * @param value 补全元素value值
      */
-    updateTypeahead: function(id, key, value){
-        com.focusPage('#' + id).val(value).attr('data-typeahead-key', key);
+    updateTypeahead: function(container, key, value){
+        
+        if(container && typeof(container) == "object" && container.length) container = container;
+        else if(container && typeof(container) == "object") container = [container];
+        else if(container && typeof(container) == "string") container = com.focusPage(!/\W+/.test(container) ? '#' + container : container);
+        else return false;
+        
+        container.val(value).attr('data-typeahead-key', key);
     },
     /**
      * 重置自动补全数据源
      * @param id 页面标签/元素ID
      * @param data 数据源
      */
-    resetTypeahead: function(id, data){
-        id = !/\W+/.test(id) ? '#' + id : id;
+    resetTypeahead: function(container, data){
         
-        com.focusPage(id).typeahead("list", data)
+        if(container && typeof(container) == "object" && container.length) container = container;
+        else if(container && typeof(container) == "object") container = [container];
+        else if(container && typeof(container) == "string") container = com.focusPage(!/\W+/.test(container) ? '#' + container : container);
+        else return false;
+        
+        container.typeahead("list", data)
     },
     /**
      * 获取自动补全对应key值
      * @param id 页面标签/元素ID
      */
-    cleanTypeahead: function(id){
-        com.focusPage('#' + id).val("").removeAttr('data-typeahead-key');
+    cleanTypeahead: function(container){
+        
+        if(container && typeof(container) == "object" && container.length) container = container;
+        else if(container && typeof(container) == "object") container = [container];
+        else if(container && typeof(container) == "string") container = com.focusPage(!/\W+/.test(container) ? '#' + container : container);
+        else return false;
+        
+        container.val("").removeAttr('data-typeahead-key');
     },
     /**
      * 显示图片 , 图片标签赋值地址 , 返回显示图片地址
@@ -769,7 +797,10 @@
         
         var _area = [_width + "px", _height + "px"];
         
+        var _id = "popup-printer";
+        
         var options = {
+            id: _id,
             type: 2,
             skin: 'layui-layer-lan',
             area: _area,
@@ -779,30 +810,34 @@
             maxmin: false,
             move: false,
             success: function () {
-                if (success != null && typeof(success) == 'function') {
-                    success();
-                }
+                if (success != null && typeof(success) == 'function') success();
             },
             cancel: function () {
-                if (cancel != null && typeof(cancel) == 'function') {
-                    cancel();
-                }
-            }
+                if (cancel != null && typeof(cancel) == 'function') cancel();
+            },
+            end: function () {
+                if (cancel != null && typeof(cancel) == 'function') cancel();
+            },
         };
 
         if(isPrint){
             
             var printConf = {
                 skin: "layui-layer-hong",
-                btn: ["打印"],
+                btn: ["普通打印", "热敏打印"],
                 btn1: function(index, layero){
                     var body = layer.getChildFrame('body', index);
                     var iframeWin = window[layero.find('iframe')[0]['name']];
                     iframeWin.print();
-                }, 
-                success: function (index, layero) {
-                    var $title = $('.layui-layer-title').text("");
-
+                    return false;
+                },
+                btn2: function(index, layero){
+                    printer.handle();
+                    return false;
+                },
+                success: function (layero, index) {
+                    var $title = $(layero).find('.layui-layer-title').text("");
+                    
                     var divM = $("<div></div>").appendTo($title);
                     var div1 = $("<div></div>").attr("id","FL-titleDiv").css({"float":"left","width":"33%"}).text(title).appendTo(divM);
                     var div2 = $(".layui-layer-btn").css({"float":"right","width":"65%"}).appendTo(divM);
@@ -838,7 +873,10 @@
         var _width = (_holder.width() > 521 ? _holder.width() + 50 : 521);
         var _height = _container.height() > $(window).height() * 0.8 ? $(window).height() * 0.8 : _container.height() + 50;
         
+        var _id = "popup-mini";
+        
         var options = {
+            id: _id,
             type: 1,
             skin: 'layui-layer-lan',
             title: title,
@@ -879,7 +917,10 @@
         var _width = (_holder.width() > 521 ? _holder.width() + 50 : 521);
         var _height = _holder.height() > $(window).height() * 0.8 ? $(window).height() * 0.8 : _holder.height() + 50;
         
+        var _id = "popup-model";
+        
         var options = {
+            id: _id,
             type: 1,
             skin: 'layui-layer-lan',
             title: title,
@@ -892,6 +933,10 @@
                 if(success && typeof(success) == 'function') success();
             },
             cancel: function () {
+                layer.closeAll();
+                if(cancel && typeof(cancel) == 'function') cancel();
+            },
+            end: function () {
                 layer.closeAll();
                 if(cancel && typeof(cancel) == 'function') cancel();
             }
@@ -920,7 +965,10 @@
         
         var _area = [_width + "px", _height + "px"]
         
+        var _id = "popup-page";
+        
         var options = {
+            id: _id,
             type: 1,
             skin: 'layui-layer-lan',
             title: title,
@@ -934,6 +982,10 @@
                 if(success && typeof(success) == 'function') success();
             },
             cancel: function () {
+                layer.closeAll();
+                if(cancel && typeof(cancel) == 'function') cancel();
+            },
+            end: function () {
                 layer.closeAll();
                 if(cancel && typeof(cancel) == 'function') cancel();
             }

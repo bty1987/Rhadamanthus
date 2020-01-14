@@ -1,0 +1,58 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+        <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+        <div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+    </div>
+</div>
+
+<div id="optPopUp" class="portlet box page-content"></div>
+
+<div id="addLayer" style="display: none;">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="formSoods">
+
+            <div class="widget-main">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label no-padding-right orange">名称</label>
+                            <div class="col-md-9">
+                                <input type="text" class="col-xs-10 col-sm-7 v_required" id="name" name="name"
+                                       data-required="1"
+                                       data-toggle="popover" data-trigger='manual'>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label no-padding-right orange">报价项</label>
+                            <div class="col-md-9">
+                                <select class="col-xs-10 col-sm-7 v_required" id="quote" name="quote" data-required="1"
+                                        data-toggle="popover" data-trigger='manual'></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label no-padding-right orange">数量</label>
+                            <div class="col-md-9">
+                                <input type="text" class="col-xs-10 col-sm-7 v_required" id="num" name="num"
+                                       data-required="1" data-toggle="popover" data-trigger='manual'>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-3 col-md-9">
+                                <a class="btn btn-success btn-sm" id="submitBtn">提交</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/data/soods.js']);
+</script>

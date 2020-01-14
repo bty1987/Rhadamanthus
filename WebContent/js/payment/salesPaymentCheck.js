@@ -10,7 +10,6 @@ $(function () {
             payAdvance: com.focusPage("#payAdvance"),
             collectDes: com.focusPage("#collectDes")
         },
-        bankNums: [],
         checkvNums: [],
         coupon: 0,
         couponInfo: null,
@@ -26,6 +25,7 @@ $(function () {
         checkBank: [],
         accounts: [],
         couponType: [],
+        posValues: {},
 
         cashUtil: [],
         bankUtil: [],
@@ -48,7 +48,6 @@ $(function () {
         com.cleanItems(salesPaymentForStatus.items);
         com.closeTip();
 
-        salesPaymentForStatus.bankNums=[];
         salesPaymentForStatus.checkvNums=[];
         salesPaymentForStatus.bankUtilForGrade = [];
         salesPaymentForStatus.checkBankUtilForGrade = [];
@@ -62,28 +61,18 @@ $(function () {
         com.focusPage('.search-choice').find('input').val('');
 
         com.cleanTypeahead('salesCheckcashInfo');
+
+        com.focusPage("#salesCheckposDivGroup").html("");
     });
 
     baseClick();
 
-    com.focusPage("#advanceType").bindData([{"key": "1", "value": "合同预付款"}, {"key": "2", "value": "工程预付款"}, {"key": "3", "value": "主材预付款"}, {"key": "4", "value": "正林预付款"}], 'key', 'value');
+    com.focusPage("#advanceType").bindData([{"key": "3", "value": "主材预付款"}], 'key', 'value');
 
-    //现金 转账 刷卡
+    //现金
     com.selectTypeahead("salesCheckcashInfo", salesPaymentForStatus.cashUtil, "key", "value", null);
 
-    com.focusPage("#salesCheckbankAdd").on('click',function(){
-        var num = $(this).attr("num");
-        var nextNum = parseInt(num)+1;
-        $(this).attr("num", nextNum);
-
-        var maxNum = $(this).attr("maxnum");
-        maxNum = parseInt(maxNum)+1;
-        $(this).attr("maxnum", maxNum);
-        paymentUtils.addBankUtil(maxNum, "bankDiv", "#salesCheckbankDivGroup", salesPaymentForStatus.bankNums, salesPaymentForStatus.bankUtilForGrade, salesPaymentForStatus.htmlName, 'layerAddSalesCheck');
-
-        return false;
-    });
-
+    //转账(银行)
     com.focusPage("#salesCheckcheckvAdd").on('click',function(){
         var num = $(this).attr("num");
         var nextNum = parseInt(num)+1;
@@ -92,7 +81,7 @@ $(function () {
         var maxNum = $(this).attr("maxnum");
         maxNum = parseInt(maxNum)+1;
         $(this).attr("maxnum", maxNum);
-        paymentUtils.addBankUtil(maxNum, "checkvDiv", "#salesCheckcheckvDivGroup", salesPaymentForStatus.checkvNums, salesPaymentForStatus.checkBankUtilForGrade, salesPaymentForStatus.htmlName, 'layerAddSalesCheck');
+        paymentUtils.addBankUtil(maxNum, "checkvDiv", "#salesCheckcheckvDivGroup", salesPaymentForStatus.checkvNums, salesPaymentForStatus.checkBankUtilForGrade, salesPaymentForStatus);
 
         return false;
     });
@@ -173,8 +162,8 @@ $(function () {
             var styleArr = [];
 
             v.salesReceipt.cash != null && v.salesReceipt.cash != "0" ? styleArr.push(["现金:", v.salesReceipt.cash, "blue"]) : true;
-            v.salesReceipt.bank != null && v.salesReceipt.bank != "0" ? styleArr.push(["银行:", paymentUtils.splitBankInfo(v.salesReceipt.bank, v.salesReceipt.bankInfo, salesPaymentForStatus.bankInfo), "blue"]) : true;
-            v.salesReceipt.checkv != null && v.salesReceipt.checkv != "0" ? styleArr.push(["转账:", paymentUtils.splitBankInfo(v.salesReceipt.checkv, v.salesReceipt.checkvBank, salesPaymentForStatus.checkBankInfo), "blue"]) : true;
+            v.salesReceipt.bank != null && v.salesReceipt.bank != "0" ? styleArr.push(["刷卡:", paymentUtils.splitBankInfo(v.salesReceipt.bank, v.salesReceipt.bankInfo, salesPaymentForStatus.bankInfo), "blue"]) : true;
+            v.salesReceipt.checkv != null && v.salesReceipt.checkv != "0" ? styleArr.push(["银行:", paymentUtils.splitBankInfo(v.salesReceipt.checkv, v.salesReceipt.checkvBank, salesPaymentForStatus.checkBankInfo), "blue"]) : true;
             v.salesReceipt.installment != null && v.salesReceipt.installment != "0" ? styleArr.push(["分期:", v.salesReceipt.installment, "blue"]) : true;
             v.salesReceipt.accounts != null && v.salesReceipt.accounts != "0" ? styleArr.push(["对公帐户:", v.salesReceipt.accounts, "blue"]) : true;
             v.salesReceipt.advance != null && v.salesReceipt.advance != "0" ? styleArr.push(["预付款:", v.salesReceipt.advance, "blue"]) : true;
@@ -237,6 +226,8 @@ $(function () {
         return [$adda, $impa]
     }, 'resultList');
 
+    salesPaymentForStatus.salesPaymentSearcher = salesPaymentSearcher;
+
     var hdisplayFunc = (function () {
         var renderList = function (tableId, listData) {
             var $tableWrap = com.focusPage('#' + tableId);
@@ -285,8 +276,8 @@ $(function () {
             var styleArr = [];
 
             v.salesReceipt.cash != null && v.salesReceipt.cash != "0" ? styleArr.push(["现金:", v.salesReceipt.cash, "blue"]) : true;
-            v.salesReceipt.bank != null && v.salesReceipt.bank != "0" ? styleArr.push(["银行:", paymentUtils.splitBankInfo(v.salesReceipt.bank, v.salesReceipt.bankInfo, salesPaymentForStatus.bankInfo), "blue"]) : true;
-            v.salesReceipt.checkv != null && v.salesReceipt.checkv != "0" ? styleArr.push(["转账:", paymentUtils.splitBankInfo(v.salesReceipt.checkv, v.salesReceipt.checkvBank, salesPaymentForStatus.checkBankInfo), "blue"]) : true;
+            v.salesReceipt.bank != null && v.salesReceipt.bank != "0" ? styleArr.push(["刷卡:", paymentUtils.splitBankInfo(v.salesReceipt.bank, v.salesReceipt.bankInfo, salesPaymentForStatus.bankInfo), "blue"]) : true;
+            v.salesReceipt.checkv != null && v.salesReceipt.checkv != "0" ? styleArr.push(["银行:", paymentUtils.splitBankInfo(v.salesReceipt.checkv, v.salesReceipt.checkvBank, salesPaymentForStatus.checkBankInfo), "blue"]) : true;
             v.salesReceipt.installment != null && v.salesReceipt.installment != "0" ? styleArr.push(["分期:", v.salesReceipt.installment, "blue"]) : true;
             v.salesReceipt.accounts != null && v.salesReceipt.accounts != "0" ? styleArr.push(["对公帐户:", v.salesReceipt.accounts, "blue"]) : true;
             v.salesReceipt.advance != null && v.salesReceipt.advance != "0" ? styleArr.push(["预付款:", v.salesReceipt.advance, "blue"]) : true;
@@ -339,6 +330,8 @@ $(function () {
         return [$impa];
     }, "hresultList");
 
+    salesPaymentForStatus.hsearcher = hsearcher;
+
     function salesPaymentForCollentImport(id) {
         if (com.focusPage('span[name="totalRecords"]', '#' + id).text() == 0) {
             com.showAlert(com.warning, "请通过条件进行查询");
@@ -364,8 +357,8 @@ $(function () {
                     ['状态', 'status'],
                     ['备注', 'salesReceipt.comment'],
                     ['现金', 'salesReceipt.cash'],
-                    ['银行', ['salesReceipt.bank', 'salesReceipt.bankInfo']],
-                    ['转账', ['salesReceipt.checkv', 'salesReceipt.checkvBank']],
+                    ['刷卡', ['salesReceipt.bank', 'salesReceipt.bankInfo']],
+                    ['银行', ['salesReceipt.checkv', 'salesReceipt.checkvBank']],
                     ['分期', ['salesReceipt.installment', 'salesReceipt.installBank']],
                     ['对公', ['salesReceipt.accounts', 'salesReceipt.accountsBank']],
                     ['预付款', 'salesReceipt.advance'],
@@ -436,8 +429,8 @@ $(function () {
                     ['状态', 'status'],
                     ['备注', 'salesReceipt.comment'],
                     ['现金', 'salesReceipt.cash'],
-                    ['银行', ['salesReceipt.bank', 'salesReceipt.bankInfo']],
-                    ['转账', ['salesReceipt.checkv', 'salesReceipt.checkvBank']],
+                    ['刷卡', ['salesReceipt.bank', 'salesReceipt.bankInfo']],
+                    ['银行', ['salesReceipt.checkv', 'salesReceipt.checkvBank']],
                     ['分期', ['salesReceipt.installment', 'salesReceipt.installBank']],
                     ['对公', ['salesReceipt.accounts', 'salesReceipt.accountsBank']],
                     ['预付款', 'salesReceipt.advance'],
@@ -545,7 +538,5 @@ $(function () {
         var referMoney = com.focusPage('#referMoney').val();
 
         paymentUtils.aboutcollectAndRefundMoney(null, spid, null, referMoney, salesPaymentForStatus.coupon, salesPaymentForStatus.couponInfo, "single", api.payment.updateSalesPayment, "update", salesPaymentForStatus);
-        salesPaymentSearcher.doSearch();
-        hsearcher.doSearch();
     });
 });

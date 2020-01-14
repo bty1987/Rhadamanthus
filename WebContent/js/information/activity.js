@@ -25,18 +25,18 @@ $(function(){
 
     activity.saveBtn.bindClick(saveData);
 
+    com.post(api.ds.information, {}, function (res) {
+        activity.items.types.bindData(res.activityTypes, "key", "value", true);
+
+        activity.types = res.activityTypes.split("key", "value");
+    },null ,false);
+
     activity.modals.activityModal.on("hide.bs.modal", function () {
         com.clearValidator();
         com.cleanItems(activity.items);
     });
 
     com.datetime(com.focusPage(".date-picker-date"));
-
-    com.post(api.ds.information, {}, function (res) {
-        activity.items.types.bindData(res.activityTypes, "key", "value", true);
-
-        activity.types = res.activityTypes.split("key", "value");
-    });
 
     var displayFunc  = (function(){
 
@@ -112,7 +112,7 @@ $(function(){
             $btnDelStatus.click(function(){
 				com.showConfirm("确定删除吗?", function(reslut) {
 				    com.post(api.information.updateActivityForStatus, {"activity.aid": v.aid, "activity.status": 2}, function(res){
-                        ActivitySeacher.doSearch();
+                        activitySeacher.doSearch();
 					    com.showAlert(com.info, "操作成功");
                 	});
  				});           
@@ -126,10 +126,12 @@ $(function(){
                     com.showAlert(com.warning, "该活动已是默认活动");
                     return false;
                 }
+
                 com.post(api.information.updateActivityForDefault, {
                     "activity.aid": v.aid
                 }, function(res){
-                    ActivitySeacher.doSearch();
+                    com.showAlert(com.info, "操作成功");
+                    activitySeacher.doSearch();
                 });
             });
 
@@ -161,8 +163,8 @@ $(function(){
         };
     })();
 
-    var ActivitySeacher = new Searcher();
-    ActivitySeacher.init( ['activityName', 'activityType', 'activityStatus'], "condList", api.information.pageActivity, function(list){
+    var activitySeacher = new Searcher();
+    activitySeacher.init( ['activityName', 'activityType', 'activityStatus'], "condList", api.information.pageActivity, function(list){
         displayFunc.init('resultList', list);
     }, "pagenation", "activitySeacherPostData", null, false, null, function(){
 
@@ -205,7 +207,7 @@ $(function(){
 
         com.post(url, options, function(res){
             com.showAlert(com.info, "操作成功");
-            ActivitySeacher.doSearch();
+            activitySeacher.doSearch();
         });
         activity.modals.activityModal.modal("hide")
     }
@@ -216,7 +218,7 @@ $(function(){
 
             newstatus == 0? com.showAlert(com.info, "已启用") : com.showAlert(com.info, "已禁用");
 
-            ActivitySeacher.doSearch();
+            activitySeacher.doSearch();
         })
     }
 });

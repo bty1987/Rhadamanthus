@@ -47,7 +47,7 @@
 									</label>
 									<label class="inline">
 										<input type="checkbox" class="ace" id="checkvCheckbox" key="checkv" select="1">
-										<span class="lbl"> 转账</span>
+										<span class="lbl"> 银行</span>
 									</label>
 								</div>
 
@@ -103,17 +103,23 @@
 									<div class="space-4 "></div>
 								</div>
 
+								<div id="posDiv" referCheckbox="bankCheckbox" style="display: none;">
+									<h4 class="header blue bolder smaller">
+										POS
+									</h4>
+									<div id="serviceCheckposDivGroup"></div>
+								</div>
+
 								<div id="bankDiv" style="display: none;" referCheckbox="bankCheckbox">
 									<h4 class="header blue bolder smaller">
-										银行卡
-										<button id="serviceCheckbankAdd" class="btn btn-minier btn-success pull-right inline" num="0" maxnum="0">添加</button>
+										POS
 									</h4>
 									<div id="serviceCheckbankDivGroup"></div>
 								</div>
 
 								<div id="checkvDiv" style="display: none;" referCheckbox="checkvCheckbox">
 									<h4 class="header blue bolder smaller">
-										转账
+										银行
 										<button id="serviceCheckcheckvAdd" class="btn btn-minier btn-success pull-right inline" num="0" maxnum="0">添加</button>
 									</h4>
 									<div id="serviceCheckcheckvDivGroup"></div>

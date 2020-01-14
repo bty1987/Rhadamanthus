@@ -10,13 +10,15 @@ import com.fanglin.utils.Paging;
 
 public interface SalesPaymentService {
 
-	public void pageSalesPaymentForInit(Paging paging, List<Filter> filters, int company);
+	public void pageSalesPaymentForInit(Paging paging, List<Filter> filters, int company, String companyType);
 	
-	public void pageSalesPaymentForNotInit(Paging paging, List<Filter> filters, int company);
+	public void pageSalesPaymentForNotInit(Paging paging, List<Filter> filters, int company, String companyType);
 	
 	public void pageSalesPaymentForCollect(Paging paging, List<Filter> filters, int company);
 	
 	public void pageSalesPaymentForConfirm(Paging paging, List<Filter> filters, int company);
+	
+	public List<SalesPaymentVO> querySalesPayment(List<Filter> filters, int company, String companyType);
 	
 	public List<SalesPaymentVO> querySalesPaymentBySid(SalesPaymentVO salesPaymentVO);
 	
@@ -28,9 +30,9 @@ public interface SalesPaymentService {
 	
 	public int addSalesPaymentForFullpay(SalesPaymentVO salesPaymentVO, String userId, int company) throws FLException;
 	
-	public int collectSalesPayment(SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, String userId, Integer company) throws FLException;
+	public int collectSalesPayment(SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, List<Long> posids, String userId, Integer company) throws FLException;
 	
-	public int collectSalesPayments(List<Long> spids, SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, String userId, Integer company) throws FLException;
+	public int collectSalesPayments(List<Long> spids, SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, List<Long> posids, String userId, Integer company) throws FLException;
 	
 	public int refundSalesPayment(SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, String userId, Integer company) throws FLException;
 

@@ -4,12 +4,14 @@ $(function () {
         saveDesignerBtn: com.focusPage("#saveDesignerBtn"),
         updateAndApprovalBtn: com.focusPage("#updateAndApprovalBtn"),
         approvalBtn: com.focusPage("#approvalBtn"),
+        firstApprovalBtn: com.focusPage("#firstApprovalBtn"),
         
         modals: {
             bindAllInfoModal: com.focusPage("#bindAllInfo"),
             sustomerSourceModal: com.focusPage("#sustomersource"),
             commitApproveModal: com.focusPage("#commitApprove"),
-            codeModal: com.focusPage("#codeModal")
+            codeModal: com.focusPage("#codeModal"),
+            commitFirstApprove: com.focusPage("#commitFirstApprove")
         },
         
         items: {
@@ -55,7 +57,9 @@ $(function () {
             houseClass: com.focusPage("#houseClass"),
             orderType: com.focusPage("#orderType"),
             resourceType: com.focusPage("#resourceType"),
-            approveComment: com.focusPage("#approveComment")
+            approveComment: com.focusPage("#approveComment"),
+
+            firstApproveComment: com.focusPage("#firstApproveComment")
         },
 
         bindHouseDiv: com.focusPage("#bindHouseDiv"),
@@ -72,6 +76,7 @@ $(function () {
     customerSource.saveDesignerBtn.bindClick(bindAllInfo);
     customerSource.updateAndApprovalBtn.bindClick(customerUpdate);
     customerSource.approvalBtn.bindClick(customerApproval);
+    customerSource.firstApprovalBtn.bindClick(firstApproval);
 
     customerSource.items.gender.switchBtn("gender");
     customerSource.items.grade.bindData(customerSource.grade, "key", "value", false);
@@ -119,6 +124,10 @@ $(function () {
         com.cleanItems(customerSource.items);
     });
 
+    customerSource.modals.commitFirstApprove.on("hide.bs.modal", function(){
+        com.cleanItems(customerSource.items);
+    });
+
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
             var $tableWrap = com.focusPage('#' + tableId);
@@ -143,7 +152,7 @@ $(function () {
             var $btnBind = $("<a></a>").addClass("btn btn-minier btn-success").html("绑定");
             var $release = $("<a></a>").addClass("btn btn-minier btn-warning").html("释放");
             var $record = $("<a></a>").addClass("btn btn-minier btn-pink").html("记录");
-            var $commit = $("<a></a>").addClass("btn btn-minier btn-blue").html("提交");
+            var $firstApprove = $("<a></a>").addClass("btn btn-minier btn-blue").html("初审");
             var $backout = $("<a></a>").addClass("btn btn-minier btn-danger").html("撤销");
             var $confirm = $("<a></a>").addClass("btn btn-minier btn-inverse").html("确认");
             var $btnApproval = $("<a></a>").addClass("btn btn-minier btn-success").html("审批");
@@ -176,17 +185,15 @@ $(function () {
                 $liProperty.appendTo($ulProperty);
             });
 
-            $divBtnWrap.append($btnCode);
-
             if(v.status == 0){
-                $divBtnWrap.append($btnView).append($btnBind).append($commit).append($release);
-            }else  if(v.status == 1){
-                $divBtnWrap.append($confirm);
-            }else if([2, 5].contains(v.status)){
+                $divBtnWrap.append($btnView).append($btnBind).append($firstApprove).append($release);
+            }else  if(v.status == 2){
+                $divBtnWrap.append($btnCode).append($confirm);
+            }else if([3, 6].contains(v.status)){
                 $divBtnWrap.append($btnApproval)
             }
 
-            if([1, 2, 5].contains(v.status)){
+            if([2, 3, 6].contains(v.status)){
                 $divBtnWrap.append($backout);
             }
 
@@ -246,14 +253,11 @@ $(function () {
                 customerSource.modals.bindAllInfoModal.modal("show");
             });
 
-            //提交
-            $commit.click(function(){
-                com.showConfirm("是否确认提交客源", function(){
-                    com.post(api.customer.commitCustomerOrigin, {"customerOrigin.csid": v.csid}, function(res){
-                        searcher.doSearch();
-                        com.showAlert(com.info, "提交成功!");
-                    })
-                });
+            //提交客源初审审批
+            $firstApprove.click(function(){
+                initqueryApprovalUserForCheckbox("firstApproveMan", 17);
+                customerSource.currentCustomerSource = v;
+                customerSource.modals.commitFirstApprove.modal("show");
             });
 
             //撤销
@@ -498,6 +502,7 @@ $(function () {
         com.showConfirm("是否确认提交审批", function(){
             var option =  {
                 "approval.receiver.userId": receiverId,
+                "approval.comment": customerSource.items.approveComment.val(),
                 "approvalCustomerOriginTDecoration.customerOrigin.csid" : customerSource.currentCustomerSource.csid,
                 "approvalCustomerOriginTDecoration.type": customerSource.items.orderType.val(),
                 "approvalCustomerOriginTDecoration.salesman.userId": com.typeahead("salesman"),
@@ -513,6 +518,38 @@ $(function () {
                     com.clearValidator();
                     searcher.doSearch();
                     customerSource.modals.commitApproveModal.modal("hide");
+                }else{
+                    com.showAlert(com.error, "提交失败");
+                }
+            });
+        });
+    }
+
+    //提交初审
+    function firstApproval(){
+        if (com.validate("commitFirstApprove")) {
+            return false;
+        }
+
+        var firstApproveUserId = com.focusPage("#firstApproveMan").find('input:checked').attr('userid');
+        if(firstApproveUserId == null || firstApproveUserId == ""){
+            com.showAlert(com.error,"请选择审批人!");
+            return false;
+        }
+
+        com.showConfirm("是否确认提交审批", function(){
+            var option =  {
+                "approval.receiver.userId": firstApproveUserId,
+                "approval.comment": customerSource.items.firstApproveComment.val(),
+                "approvalCustomerOrigin.csid" : customerSource.currentCustomerSource.csid
+        };
+
+            com.post(api.approval.submitApprovalForCustomerOrigin, option, function (res) {
+                if(res.errorCode == 0){
+                    com.showAlert(com.info, "操作成功");
+                    com.clearValidator();
+                    searcher.doSearch();
+                    customerSource.modals.commitFirstApprove.modal("hide");
                 }else{
                     com.showAlert(com.error, "提交失败");
                 }

@@ -41,4 +41,12 @@ public interface CustomerService {
 
 	public int updateCustomerPhoneForDefault(CustomerPhoneVO customerPhoneVO) throws FLException;
 
+	public int registerCustomer(CustomerVO customerVO) throws FLException;
+
+	public String authCustomer(CustomerVO customerVO) throws FLException;
+
+	public int confirmCustomer(CustomerVO customerVO) throws FLException;
+
+	public int signateCustomer(CustomerVO customerVO, String imgbase) throws FLException;
+
 }

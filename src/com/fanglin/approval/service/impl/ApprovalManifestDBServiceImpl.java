@@ -19,14 +19,14 @@ import com.fanglin.approval.vo.ApprovalManifestDBItemVO;
 import com.fanglin.approval.vo.ApprovalManifestDBVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.inventory.po.ColorPO;
-import com.fanglin.inventory.po.FormatPO;
-import com.fanglin.inventory.po.GoodsPO;
+import com.fanglin.data.material.vo.ColorVO;
+import com.fanglin.data.material.vo.FormatVO;
+import com.fanglin.data.material.vo.GoodsVO;
+import com.fanglin.data.po.ColorPO;
+import com.fanglin.data.po.FormatPO;
+import com.fanglin.data.po.GoodsPO;
 import com.fanglin.inventory.po.StorehousePO;
 import com.fanglin.inventory.service.ManifestService;
-import com.fanglin.inventory.vo.ColorVO;
-import com.fanglin.inventory.vo.FormatVO;
-import com.fanglin.inventory.vo.GoodsVO;
 import com.fanglin.inventory.vo.ManifestItemVO;
 import com.fanglin.inventory.vo.StorehouseVO;
 import com.fanglin.personel.dao.UserDao;
@@ -99,7 +99,7 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 
-		ApprovalPO approvalPO = new ApprovalPO().init(sender, receiver, "", ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT, approvalVO.getContents(), company);
+		ApprovalPO approvalPO = new ApprovalPO().init(sender, receiver, "", ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT, "", approvalVO.getComment(), company);
 
 		approvalDao.save(approvalPO);
 

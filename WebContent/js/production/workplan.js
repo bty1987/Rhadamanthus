@@ -83,9 +83,10 @@ $(function(){
             $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
             $btnEdit.click(function(){
-                workPlan.editFlg = true;
+
+                workPlan.editFlg = false;
                 workPlan.items.wpid = v.wpid
-                workPlan.wsid = v.workshop.wsid;
+                workPlan.items.workshop.val(v.workshop.wsid);
                 workPlan.items.name.val(v.name);
                 workPlan.items.comment.val(v.comment);
                 workPlan.modals.workplanModal.modal("show");
@@ -94,7 +95,7 @@ $(function(){
             //查看
             $btnView.click(function () {
                 com.focusPage('#checkWorkflow').attr('data-wpid', v.wpid);
-                com.popup4page("#checkWorkflow","views/production/checkWorkflow.html","查看工序");
+                com.popup4page("#checkWorkflow","views/production/workflow2check.html",v.name);
 
             });
 
@@ -138,7 +139,6 @@ $(function(){
 
     com.focusPage("#addWorkplan").click(function() {
         workPlan.editFlg = true;
-        workPlan.wsid = workPlan.modals.workplanModal.find('select[name="workshop"] option:selected').val();
         workPlan.modals.workplanModal.modal("show");
     });
 
@@ -147,7 +147,7 @@ $(function(){
         var status = btnType == 0 ? "启用" : "禁用";
 
         if(statusFlag == btnType){
-            com.showAlert(com.info, "已"+status+"无需重复当前操作");
+            com.showAlert(com.warning, "已"+status+"无需重复当前操作");
             return false;
         }
 
@@ -169,7 +169,7 @@ $(function(){
         var options = {
             "workplan.name" : workPlan.items.name.val(),
             "workplan.comment" : workPlan.items.comment.val(),
-            "workplan.workshop.wsid" : workPlan.wsid
+            "workplan.workshop.wsid" : workPlan.items.workshop.val()
         };
 
         workPlan.editFlg ? url = api.production.addWorkplan : url = api.production.updateWorkplan, options["workplan.wpid"] =  workPlan.items.wpid;

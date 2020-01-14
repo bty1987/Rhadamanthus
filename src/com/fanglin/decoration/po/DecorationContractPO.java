@@ -14,6 +14,7 @@ package com.fanglin.decoration.po;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -22,115 +23,162 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fadada.bean.Contract;
+import com.fanglin.communion.po.ContractPO;
+import com.fanglin.personel.po.UserPO;
+
 @Entity
-@Table(name = "decorationContract", catalog = "decoration")
-public class DecorationContractPO implements Serializable {
+@Table(name = "decorationcontract", catalog = "decoration")
+public class DecorationContractPO implements Serializable, Contract {
 
 	private static final long serialVersionUID = -5971474052433501162L;
 
-	private long autoId;
-	
-	private DecorationPO decorationPO;
-	
-	private String additionalInfo;
-	
-	private String templateHtml;
-	
-	private Timestamp signTime;
-	
-	private int workingDuration;
-	
-	private Timestamp startTime;
-	
-	private Timestamp endTime;
-	
-	private String  contractCode;
-	
-	private long orderTotalPrice;
-	
-	public DecorationContractPO(){
+	public static final short STATUS_VALID_INT = 0;// 初始
+
+	public static final short STATUS_NULL_INT = 1;// 无效
+
+	public static final short STATUS_FILE_INT = 2;// 归档
+
+	private long dcid;
+
+	private String orderId;
+
+	private ContractPO contract;
+
+	private String download;
+
+	private String viewpdf;
+
+	private UserPO creater;
+
+	private Timestamp createTime;
+
+	private short status;
+
+	public DecorationContractPO() {
+		super();
 	}
-	
+
+	public DecorationContractPO(ContractPO contract, UserPO creater) {
+		super();
+		this.contract = contract;
+		this.creater = creater;
+	}
+
 	@Id
 	@GeneratedValue
-	public long getAutoId(){
-		return autoId;
+	@Column(name = "dcid")
+	public long getDcid() {
+		return dcid;
 	}
 
-	public void setAutoId(long autoId){
-		this.autoId = autoId;
-	}
-	
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(nullable = false, name = "orderId", referencedColumnName = "orderId")
-	public DecorationPO getDecorationPO(){
-		return decorationPO;
+	public void setDcid(long dcid) {
+		this.dcid = dcid;
 	}
 
-	public void setDecorationPO(DecorationPO decorationPO){
-		this.decorationPO = decorationPO;
-	}
-	
-	public String getAdditionalInfo(){
-		return additionalInfo;
-	}
-	
-	public void setAdditionalInfo(String additionalInfo){
-		this.additionalInfo = additionalInfo;
-	}
-	public String getTemplateHtml(){
-		return templateHtml;
-	}
-	
-	public void setTemplateHtml(String templateHtml){
-		this.templateHtml = templateHtml;
-	}
-	
-	public Timestamp getSignTime(){
-		return signTime;
-	}
-	
-	public void setSignTime(Timestamp signTime){
-		this.signTime = signTime;
-	}
-	
-	public void setContractCode(String contractCode){
-		this.contractCode = contractCode;
-	}
-	
-	public String getContractCode(){
-		return contractCode;
-	}
-	
-	public void setEndTime(Timestamp endTime){
-		this.endTime = endTime;
-	}
-	
-	public Timestamp getEndTime(){
-		return endTime;
-	}
-	
-	public void setStartTime(Timestamp startTime){
-		this.startTime = startTime;
-	}
-	
-	public Timestamp getStartTime(){
-		return startTime;
-	}
-	
-	public void setWorkingDuration(int workingDuration){
-		this.workingDuration = workingDuration;
-	}
-	
-	public int getWorkingDuration(){
-		return workingDuration;
+	@Column(name = "orderId")
+	public String getOrderId() {
+		return orderId;
 	}
 
-	public long getOrderTotalPrice() {
-		return orderTotalPrice;
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
-	public void setOrderTotalPrice(long orderTotalPrice) {
-		this.orderTotalPrice = orderTotalPrice;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cid", referencedColumnName = "cid")
+	public ContractPO getContract() {
+		return contract;
 	}
+
+	public void setContract(ContractPO contract) {
+		this.contract = contract;
+	}
+
+	@Column(name = "download")
+	public String getDownload() {
+		return download;
+	}
+
+	public void setDownload(String download) {
+		this.download = download;
+	}
+
+	@Column(name = "viewpdf")
+	public String getViewpdf() {
+		return viewpdf;
+	}
+
+	public void setViewpdf(String viewpdf) {
+		this.viewpdf = viewpdf;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cuid", referencedColumnName = "uid")
+	public UserPO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
+	}
+
+	@Column(name = "createTime")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
+	}
+
+	@Override
+	public String download() {
+		return download;
+	}
+
+	@Override
+	public void download(String download) {
+		this.download = download;
+	}
+
+	@Override
+	public String viewpdf() {
+		return viewpdf;
+	}
+
+	@Override
+	public void viewpdf(String viewpdf) {
+		this.viewpdf = viewpdf;
+	}
+
+	@Override
+	public String templateCode() {
+		return contract.getNo();
+	}
+
+	@Override
+	public String contentCode() {
+		return String.format("%s%s", orderId, dcid);
+	}
+
+	@Override
+	public String title() {
+		return contract.getTitle();
+	}
+
+	@Override
+	public void status(short status) {
+		this.status = status;
+	}
+
 }

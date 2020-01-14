@@ -52,21 +52,21 @@ public class MaterialModelServiceImpl implements MaterialModelService{
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		List<MaterialModelPO> materialModelPOs = new ArrayList<MaterialModelPO>();
 		
-		BrandUserRightPO brandUserRightPO = brandUserRightDao.queryBrandUserRightByUid(userPO.getUid());
+		List<BrandUserRightPO> brandUserRightPOs = brandUserRightDao.queryBrandUserRightByUid(userPO.getUid());
 		
-		if(brandUserRightPO == null){
+		if(brandUserRightPOs.size() == 0){
 			throw new FLException(180020, "无主材型号操作权限");
 		}
 		
-		if(!"".equals(brandUserRightPO.getBrandId())){
-			List<Long> brandIDs = new ArrayList<Long>();
-			String[] brandIds = brandUserRightPO.getBrandId().split("#");
-			for(String id : brandIds){
-				brandIDs.add(Long.parseLong(id));
-			}
-			materialModelPOs = materialModelDao.pageMaterialModelByBrandIds(paging, filters, brandIDs);
+		List<Long> brandIDs = new ArrayList<Long>();
+		
+		for(BrandUserRightPO brandUserRightPO : brandUserRightPOs){
+			Long brandIds = brandUserRightPO.getBrand().getBid();
+			brandIDs.add(brandIds);
 		}
 		
+		materialModelPOs = materialModelDao.pageMaterialModelByBrandIds(paging, filters, brandIDs);
+
 		List<MaterialModelVO> materialModelVOs = new ArrayList<MaterialModelVO>();
 		
 		for(MaterialModelPO materialModelPO: materialModelPOs){

@@ -1,145 +1,123 @@
-
 jQuery(function ($) {
 
     var accessories = {
-            
-        orderId: com.focusPage('#refundPopUp').attr('data-orderId'),
-        aid: com.focusPage('#refundPopUp').attr('data-aid'),
-        
-        createTime: com.focusPage('#refundPopUp').attr('data-createTime'),
-        status: com.focusPage('#refundPopUp').attr('data-status'),
-        saveBtn: com.focusPage("#saveBtn"),
+        aid: params["accessories.aid"],
+
+        refundBtn: com.focusPage("#refundBtn"),
         cancellBtn: com.focusPage("#cancelBtn"),
-        
-        record: {},
-        supervisorId: null
+
+        items: {
+            list: com.focusPage('#list'),
+        },
     };
-    
-    com.datetime(accessories.createTime,"date",false);
 
-    com.post(api.decoration.queryDecorationForCommonByOrderId, {
-        "decoration.orderId": accessories.orderId
-    }, function (res) {
-        orderInfo('orderInfo', res.decoration);
-    });
+    accessories.refundBtn.click(function () {
 
-    com.post(api.inventory.queryStorehouseForSelf, {}, function (res) {
-        var storehousesStatus = [];
-
-        $.each(res.storehouses, function (i, v) {
-            if (v.status == 0) {
-                storehousesStatus.push(v);
-            }
-        });
-        accessories.storehouses = storehousesStatus;
-    }, null, false);
-
-    var $btnConfirm = $('<a></a>').addClass('btn btn-success btn-sm').attr({
-        'name': 'subbtn',
-        'href': 'javascript:void(0);'
-    }).css({'margin-left': '120px', 'margin-top': '12px'}).text('退回');
-
-    var $btnCancel = $('<a></a>').addClass('btn btn-sm').attr({
-        'name': 'cancelbtn',
-        'href': 'javascript:void(0);'
-    }).css({'margin-left': '3px', 'margin-top': '12px'}).text('取消');
-    var $condList1 = com.focusPage('#refundPopUp').parents('.layui-layer.layui-anim.layui-layer-page.layui-layer-lan');
-    var $div = $('<div class="layui-layer-btn0" style="position: relative;top:-10%;left:73%;"></div>');
-    $div.append($btnConfirm).append($btnCancel).appendTo($condList1);
-
-    $btnConfirm.click(function () {
-        
         if (com.validate('list', 'bottom')) {
             return false;
         }
-        var $lines = com.focusPage('li.line', '#list');
-        var flag = true;
-        if (!$lines.length) {
-            com.showAlert(com.warning, "辅料单不能为空");
+
+        var $checks = com.focusPage('input[type="checkbox"]:checked', '#list');
+        if ($checks.length == 0) {
+            com.showAlert(com.warning, "请选择商品");
             return false;
         }
 
-        var options = {};
+        var options = {
+            "accessories[0].aid": accessories.aid
+        };
 
-        var $list = com.focusPage('li.line', '#list');
-        var $fetchTime = com.focusPage('[name="date"]','#fetchTime');
+        for (var i = 0; i < $checks.length; i++) {
 
-        if($fetchTime.val() == null || $fetchTime.val() == ""){
-            com.showAlert(com.warning,'请选择领取时间');
-            return;
+            var $check = $($checks[i]);
+            var $line = $check.parents('li.line');
+            var crnumInput = $line.find(".num input").addClass('v_float_3');
+            if (com.validate($line.attr("id"), "left")) {
+                return false;
+            }
+
+            var num = $line.find(".surplus").text();
+            var crnum = crnumInput.val();
+            if (utils.accSub(num, crnum) < 0) {
+                com.showAlert(com.warning, "辅料项退货数不足");
+                crnumInput.select();
+                return false;
+            }
+            options["accessoriesItems[" + i + "].miid"] = $line.attr("data-miid");
+            options["accessoriesItems[" + i + "].aiid"] = $line.attr("data-aiid");
+            options["accessoriesItems[" + i + "].goods.gid"] = $line.attr("data-gid");
+            options["accessoriesItems[" + i + "].color.cid"] = $line.attr("data-cid");
+            options["accessoriesItems[" + i + "].format.fid"] = $line.attr("data-fid");
+            options["accessoriesItems[" + i + "].storehouse.shid"] = $line.attr("data-shid");
+            options["accessoriesItems[" + i + "].outprice"] = $line.find(".outprice").text();
+            options["accessoriesItems[" + i + "].num"] = crnum;
         }
 
-        options["accessories.orderId"] = accessories.orderId;
-        options["accessories.supervisor.userId"] = accessories.supervisorId == null || "" ? "---" : accessories.supervisorId;
-        options["accessories.fetchTime"] = $fetchTime.val();
-
-
-        $list.length && $list.each(function (i) {
-            var $this = $(this);
-
-            options["accessoriesItems[" + i + "].goods.gid"] = $this.attr('data-gid');//– 商品id
-            options["accessoriesItems[" + i + "].color.cid"] = $this.find('.color select').val();
-            options["accessoriesItems[" + i + "].format.fid"] = $this.find('.format select').val();
-            options["accessoriesItems[" + i + "].storehouse.shid"] = $this.find('.storehouse select').val();//– 仓库ID
-            options["accessoriesItems[" + i + "].num"] = -$this.find('.number').text();//– 数量
-
-        });
-
-        com.post(api.inventory.refundAccessories, options, function (data) {
-            com.showAlert(com.info, "操作成功");
-            com.focusPage('#list').empty();
-        }, function (e) {
-            com.showAlert(com.error, e.errorMsg);
-        });
+        com.post(api.inventory.addManifestForAR, options);
 
     });
 
-    $btnCancel.click(function () {
+    accessories.cancellBtn.click(function () {
         com.closePopup();
     });
 
+    function resultList(list) {
+        $.each(list, function (i, v) {
+            var $line = addline(i + 1).appendTo(accessories.items.list).attr({
+                "data-gid": v.goods.gid,
+                "data-miid": v.miid,
+                "data-aiid": v.aiid,
+                "data-cid": v.color.cid,
+                "data-fid": v.format.fid,
+                "data-shid": v.outstorehouse.shid,
+                "id": "line" + v.goods.gid
+            });
+            $line.find('div.no').text(v.goods.no);
+            $line.find('div.name').text(v.goods.name);
+            $line.find('div.category').text(v.goods.category);
+            $line.find('div.brand').text(v.goods.brand);
+            $line.find('div.color').text(v.color.name);
+            $line.find('div.format').text(v.format.info);
+            $line.find('div.measurementUnit').text(v.goods.measurementUnit);
+            $line.find('div.storehouse').text(v.outstorehouse.name);
+            $line.find('div.outprice').text(v.outprice);
+            $line.find('div.surplus').text(v.surplus);
+        });
+    }
 
     //添加一个空行
     function addline(lineindex) {
 
         var $line = $('<li></li>').addClass('line');
-        var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').text(lineindex));
-        var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col8');
+        var _label = $('<label></label>');
+        var $input = $('<input>').attr({"type": "checkbox"}).addClass('ace ace-checkbox-2 hide');
+        var _span = $('<span></span>').addClass('lbl grey bigger-150').css('font-weight', 'bold');
+
+        _label.append($input).append(_span);
+
+        var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(_label));
+        var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col11');
+
         var _lineInfoSet = [
             {cellClass: "no blue"},//编号
             {cellClass: "name grey"},//名称
-            {cellClass: "color", hasColorSelect: !0},//颜色
-            {cellClass: "format", hasFormatSelect: !0},//规格
+            {cellClass: "category grey"},//品类
+            {cellClass: "brand grey"},//品牌
+            {cellClass: "color grey"},//颜色
+            {cellClass: "format grey"},//规格
             {cellClass: "measurementUnit grey"},//单位
-            {cellClass: "storehouse grey", hasSelect: !0},//仓库
-            {cellClass: "number blue"},//数量
-            {cellClass: "des grey", hasInput: !0}//备注
+            {cellClass: "storehouse grey"},//出货仓库
+            {cellClass: "outprice blue"},//出库价
+            {cellClass: "surplus blue"},//数量
+            {cellClass: "num", hasInput: true},//退货数量
         ];
 
         $.each(_lineInfoSet, function (i, v) {
-            var $input;
+
             var $cell = $('<div></div>').addClass('cell ' + v.cellClass);
+
             if (v.hasInput) {
-                $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable');
-                if (v.cellClass == "des") {
-                    $input.attr('maxlength', '128');
-                }
-                $cell.append($input);
-            }
-
-            if (v.hasSelect) {
-                var $select = $('<select class="v_required"></select>');
-                $select.bindData(accessories.storehouses, "shid", "name");
-                $cell.append($select);
-            }
-
-            if (v.hasColorSelect) {
-                var $select = $('<select class="v_required"></select>');
-                $cell.append($select);
-            }
-            if (v.hasFormatSelect) {
-                var $select = $('<select class="v_required"></select>');
-                $cell.append($select);
+                $cell.append($('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable'));
             }
 
             $cell.appendTo($lineInfoWrap);
@@ -152,77 +130,22 @@ jQuery(function ($) {
     }
 
     function accessoriesAdd() {
-        var aid = accessories.aid;
-        var index = com.focusPage('.line', '#list').length;
-        com.post(api.inventory.queryAccessoriesItemByAid, {
-            "accessoriesItem.aid": aid
-        }, function (res) {
-            for (var i = 0; i < res.accessoriesItems.length; i++) {
-                index = com.focusPage('.line', '#list').length;
-                autoAddline(index, i, res);
-            }
-        });
+
+        var options = {
+            "accessoriesManifest.accessories.aid": params["accessories.aid"],
+            "accessoriesManifest.manifest.type": 7
+        };
+
+        com.post(api.inventory.queryManifestByAid, options, function (res) {
+            $.each(res.manifests, function (i, v) {
+                com.post(api.inventory.queryManifestItemByMid, {"manifest.mid": v.mid}, function (res) {
+                    resultList(res.manifestItems);
+                });
+            })
+        }, null, false);
+
     }
 
     accessoriesAdd();
-
-    function autoAddline(index, i, res) {
-
-        index = com.focusPage('.line', '#list').length;
-        addline(1 + index).appendTo(com.focusPage('#list'));
-        var $lineInfoWrap1 = com.focusPage('#list li:nth-of-type(' + (index + 1) + ') div.content');
-        com.focusPage('#list li:nth-of-type(' + (index + 1) + ')').attr({'data-gid': res.accessoriesItems[i].goods.gid});
-        $lineInfoWrap1.find('div.no').text(res.accessoriesItems[i].goods.no);
-        $lineInfoWrap1.find('div.name').text(res.accessoriesItems[i].goods.name);
-
-        $lineInfoWrap1.find('div.measurementUnit').text(res.accessoriesItems[i].goods.measurementUnit);
-        $lineInfoWrap1.find('div.number').text(res.accessoriesItems[i].num);
-
-        com.post(api.inventory.queryColorForEnableByGid, {
-            "color.gid": res.accessoriesItems[i].goods.gid
-        }, function (data) {
-            $lineInfoWrap1.find('.color select').bindData(data.colors, "cid", "name");
-
-        });
-        com.post(api.inventory.queryFormatForEnableByGid, {
-            "format.gid": res.accessoriesItems[i].goods.gid
-        }, function (data) {
-            $lineInfoWrap1.find('.format select').bindData(data.formats, "fid", "info");
-        })
-    }
-
-    function orderInfo(tableId, v) {
-
-        com.focusPage('#' + tableId).html(null);
-        var $tableWrap = com.focusPage('#' + tableId);
-        var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-        var status ={
-            '0':'初始', '1':'定金' , '2' : '签约' ,'3' : '重签' , '4' : '废单','5' : '终止','6' : '决算','7' : '完结'
-        };
-        accessories.supervisorId = v.supervisor.userId;
-        var propertyArr = [
-            ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"],
-            ["客户名:", v.customer.name, "grey"],
-            ["设计部:", v.designer.dept.deptName, "grey"],
-            ["设计师:", v.designer.currentName, "grey"],
-            ["业务部:", v.salesman.dept.deptName, "grey"],
-            ["业务员:", v.salesman.currentName, "grey"],
-            ["监理:", v.supervisor.currentName == null ||"" ? "----" : v.supervisor.currentName, "grey"],
-            ["面积:", v.house.buildArea + "m²", "blue"],
-            ["合同报价:", v.orderTotalPrice, "blue"],
-            ["签单时间:", v.contractTime == null || "" ? "----" : v.contractTime, "green"],
-            ["量房时间:", v.measureTime == null || "" ? "----" : v.measureTime, "green"],
-            ["状态:", status[v.status], "red"]
-        ];
-        $.each(propertyArr, function (index, value) {
-            var $liProperty = $('<li></li>').css({"border-bottom": "0px"});
-            $('<strong></strong>').html(value[0]).appendTo($liProperty);
-            $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-            $liProperty.appendTo($ulProperty);
-        });
-
-        $ulProperty.appendTo($tableWrap);
-
-    }
 
 });

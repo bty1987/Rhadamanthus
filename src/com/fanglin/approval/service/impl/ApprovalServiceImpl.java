@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.approval.po.ApprovalPO;
+import com.fanglin.approval.service.ApprovalCustomerOriginService;
 import com.fanglin.approval.service.ApprovalCustomerOriginTDecorationService;
 import com.fanglin.approval.service.ApprovalDecorationActivityService;
 import com.fanglin.approval.service.ApprovalDecorationBelongService;
@@ -90,6 +91,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 	@Autowired
 	private ApprovalDecorationHolonomyService approvalDecorationHolonomyService;
+
+	@Autowired
+	private ApprovalCustomerOriginService approvalCustomerOriginService;
 
 	@Autowired
 	private UserDao userDao;
@@ -170,37 +174,41 @@ public class ApprovalServiceImpl implements ApprovalService {
 			// aprovalDecorationHouseService.approvalDecorationHouse(approvalPO);
 			break;
 		case ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT:
-			approvalDecorationBelongService.approvalForDecorationBelong(approvalPO);
+			approvalDecorationBelongService.approveForDecorationBelong(approvalPO);
 			break;
 		case ApprovalPO.APPROVAL_TYPE_QUOTATION_DISCOUNT_INT:
-			approvalQuotationDiscountService.approvalForQuotationDiscount(approvalPO);
+			approvalQuotationDiscountService.approveForQuotationDiscount(approvalPO);
 			break;
 		case ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT:
-			approvalDecorationRefundService.approvalForDecorationRefund(approvalPO);
+			approvalDecorationRefundService.approveForDecorationRefund(approvalPO);
 			break;
 		case ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT:
-			approvalMaterialRefundService.approvalForMaterialRefund(approvalPO);
+			approvalMaterialRefundService.approveForMaterialRefund(approvalPO);
 			break;
 		case ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT:
-			approvalDecorationActivityService.approvalForDecorationActivity(approvalPO);
+			approvalDecorationActivityService.approveForDecorationActivity(approvalPO);
 			break;
 		case ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT:
-			approvalMaterialFullPaymentService.approvalForMaterialFullPayment(approvalPO);
+			approvalMaterialFullPaymentService.approveForMaterialFullPayment(approvalPO);
 			break;
 		case ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT:
-			approvalSalesRefundService.approvalForSalesRefund(approvalPO);
+			approvalSalesRefundService.approveForSalesRefund(approvalPO);
 			break;
 		case ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT:
 			approvalManifestDBService.approvalManifestDB(approvalPO);
 			break;
 		case ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT:
-			approvalSalesDiscountService.approvalForSalesDiscount(approvalPO);
+			approvalSalesDiscountService.approveForSalesDiscount(approvalPO);
 			break;
 		case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT:
-			approvalCustomerOriginTDecorationService.approvalForApprovalForCustomerOriginTDecoration(approvalPO);
+			approvalCustomerOriginTDecorationService.approveForCustomerOriginTDecoration(approvalPO);
 			break;
 		case ApprovalPO.APPROVAL_TYPE_DECORATION_HOLONOMY_INT:
-			approvalDecorationHolonomyService.approvalForApprovalForDecorationHolonomy(approvalPO);
+			approvalDecorationHolonomyService.approveForDecorationHolonomy(approvalPO);
+			break;
+		case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_INT:
+			approvalCustomerOriginService.approveForCustomerOrigin(approvalPO);
+			break;
 		default:
 			break;
 		}
@@ -219,6 +227,8 @@ public class ApprovalServiceImpl implements ApprovalService {
 		if (approvalPO.getStatus() != ApprovalPO.APPROVAL_STATUS_INIT_INT) {
 			throw new FLException(240001, "不能重复审批");
 		}
+
+		approvalPO.setAnnotate(approvalVO.getAnnotate());
 
 		approvalPO = approve(approvalPO);
 
@@ -258,6 +268,8 @@ public class ApprovalServiceImpl implements ApprovalService {
 			throw new FLException(240001, "不能重复审批");
 		}
 
+		approvalPO.setAnnotate(approvalVO.getAnnotate());
+
 		short type = approvalPO.getType();
 
 		switch (type) {
@@ -277,7 +289,10 @@ public class ApprovalServiceImpl implements ApprovalService {
 			approvalSalesDiscountService.refuseForSalesDiscount(approvalPO);
 			break;
 		case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT:
-			approvalCustomerOriginTDecorationService.refuseForApprovalForCustomerOriginTDecoration(approvalPO);
+			approvalCustomerOriginTDecorationService.refuseForCustomerOriginTDecoration(approvalPO);
+			break;
+		case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_INT:
+			approvalCustomerOriginService.refuseForCustomerOrigin(approvalPO);
 			break;
 		default:
 			break;

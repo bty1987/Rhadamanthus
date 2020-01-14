@@ -23,7 +23,7 @@ public interface BrandService {
 
 	public List<BrandVO> queryBrand(int company);
 
-	public List<BrandVO> queryBrandForPinYinName(String pinyinName, int company);
+	public List<BrandVO> queryBrandForPinYinName(String pinyinName, Integer company);
 
 	public BrandVO queryBrandByBid(BrandVO brandVO);
 

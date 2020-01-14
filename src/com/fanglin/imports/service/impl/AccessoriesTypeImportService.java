@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.dao.WorkTypeDao;
 import com.fanglin.communion.po.WorkTypePO;
-import com.fanglin.inventory.dao.AccessoriesTypeDao;
-import com.fanglin.inventory.po.AccessoriesTypePO;
+import com.fanglin.data.material.dao.AccessoriesTypeDao;
+import com.fanglin.data.po.AccessoriesTypePO;
 
 @Service("accessoriesTypeImportService")
 @Transactional(readOnly = true)
@@ -29,6 +29,8 @@ public class AccessoriesTypeImportService implements com.fanglin.imports.service
 
 		int index = 1;
 
+		AccessoriesTypePO accessoriesTypePO;
+
 		for (int i = 0; i < excels.size(); i++) {
 
 			List<String> _salary = excels.get(i);
@@ -41,31 +43,19 @@ public class AccessoriesTypeImportService implements com.fanglin.imports.service
 
 			String comment = _salary.get(2);
 
-			AccessoriesTypePO accessoriesTypePO = accessoriesTypeDao.queryAccessoriesTypeByName(name);
+			accessoriesTypePO = new AccessoriesTypePO();
 
-			if (accessoriesTypePO != null) {
+			accessoriesTypePO.setName(name);
 
-				index++;
+			accessoriesTypePO.setWorkType(workTypePO);
 
-				continue;
+			accessoriesTypePO.setStatus(COLUMN_STATUS_INT);
 
-			} else {
+			accessoriesTypePO.setComment(comment);
 
-				accessoriesTypePO = new AccessoriesTypePO();
+			accessoriesTypeDao.save(accessoriesTypePO);
 
-				accessoriesTypePO.setName(name);
-
-				accessoriesTypePO.setWorkType(workTypePO);
-
-				accessoriesTypePO.setStatus(COLUMN_STATUS_INT);
-
-				accessoriesTypePO.setComment(comment);
-
-				accessoriesTypeDao.save(accessoriesTypePO);
-
-				index++;
-
-			}
+			index++;
 
 			if (index % 100 == 0) {
 				workTypeDao.flush();
@@ -74,5 +64,4 @@ public class AccessoriesTypeImportService implements com.fanglin.imports.service
 		}
 
 	}
-
 }

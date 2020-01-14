@@ -23,9 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.dao.ConstructionNodeDao;
 import com.fanglin.communion.po.ConstructionNodePO;
+import com.fanglin.construction.dao.ConstructionAccessoryDao;
+import com.fanglin.construction.dao.ConstructionCostDao;
 import com.fanglin.construction.dao.ConstructionDao;
 import com.fanglin.construction.dao.ConstructionScheduleDao;
 import com.fanglin.construction.dao.DrawLineDao;
+import com.fanglin.construction.po.ConstructionCostPO;
 import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.construction.po.ConstructionSchedulePO;
 import com.fanglin.construction.po.DrawLinePO;
@@ -44,6 +47,8 @@ import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -74,8 +79,17 @@ public class DrawLineServiceImpl implements DrawLineService {
 	private ConstructionNodeDao constructionNodeDao;
 
 	@Autowired
-	private UserDao userDao;
+	private ConstructionCostDao constructionCostDao;
 
+	@Autowired
+	private UserDao userDao;
+	
+	@Autowired
+	private SystemConfigDao systemConfigDao;
+	
+	@Autowired
+	private ConstructionAccessoryDao constructionAccessoryDao;
+	
 	@Override
 	public List<DrawLineVO> pageDrawLine(Paging paging, List<Filter> filters, int company) {
 
@@ -177,10 +191,35 @@ public class DrawLineServiceImpl implements DrawLineService {
 			constructionPO = new ConstructionPO(decorationPO);
 		}
 
+		ConstructionCostPO constructionCostPO = constructionCostDao.queryConstructionCost(drawLinePO.getDecoration().getHouse().getBuildArea(), decorationPO.getCompany());
+		SystemConfigPO accessoryLimit = systemConfigDao.querySystemConfig("accessoryLimit", decorationPO.getCompany());
+		SystemConfigPO salaryLimit = systemConfigDao.querySystemConfig("salaryLimit", decorationPO.getCompany());
+		
+		long ccid = 0;
+		
+		if(constructionCostPO == null){
+			constructionPO.setAccessoryLimit(accessoryLimit == null ? ConstructionCostPO.ACCESSORY_DEFAULT_LONG : Long.valueOf(accessoryLimit.getValue()));
+			constructionPO.setSalaryLimit(salaryLimit == null ? ConstructionCostPO.SALARY_DEFAULT_LONG : Long.valueOf(accessoryLimit.getValue()));
+		}else {
+			constructionPO.setAccessoryLimit(constructionCostPO.getAccessory());
+			constructionPO.setSalaryLimit(constructionCostPO.getSalary());
+			ccid = constructionCostPO.getCcid();
+		}
+
 		constructionPO.setStartTime(drawLineVO.getApplayTime());
 
 		constructionDao.saveOrUpdate(constructionPO);
-
+		
+		ConstructionPO _constructionPO = constructionDao.queryConstructionByOrderId(orderId);
+		
+		int count = constructionAccessoryDao.countConstructionAccessory(_constructionPO.getCid());
+		
+		if(count == 0){
+			
+		    constructionAccessoryDao.makeConstructionAccessory(_constructionPO.getCid(),ccid);
+		    
+		}
+		
 		return 0;
 	}
 
@@ -213,7 +252,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 		drawLinePO.setGroup(drawLineGroupPO);
 
 		drawLineDao.update(drawLinePO);
-
+		
 		return 1;
 	}
 

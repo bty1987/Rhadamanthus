@@ -11,6 +11,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.data.po.ColorPO;
+import com.fanglin.data.po.FormatPO;
+import com.fanglin.data.po.GoodsPO;
+
 @Entity
 @Table(name = "manifestitem", catalog = "inventory")
 public class ManifestItemPO implements java.io.Serializable {

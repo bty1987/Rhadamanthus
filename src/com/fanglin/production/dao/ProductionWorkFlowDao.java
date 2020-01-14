@@ -10,4 +10,6 @@ public interface ProductionWorkFlowDao extends Dao<ProductionWorkFlowPO>{
      public List<ProductionWorkFlowPO> queryProductionWorkFlowByPwpid(long pwpid);
      
      public ProductionWorkFlowPO queryProductionWorkFlowByPwpidAWfid(long pwpid,long wfid);
+
+	 public int countProductionWorkFlowByPwpid(Long pwpid, Short status, Long pwfid);
 }

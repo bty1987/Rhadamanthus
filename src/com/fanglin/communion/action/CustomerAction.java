@@ -11,7 +11,6 @@ package com.fanglin.communion.action;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -42,8 +41,6 @@ public class CustomerAction extends BaseListAction {
 
 	private List<CustomerPhoneVO> customerPhones;
 
-	private Set<Integer> customerIds;
-
 	private List<KeyValueVO> autoFillCustomer;
 
 	private List<String> autoFillList;
@@ -53,6 +50,10 @@ public class CustomerAction extends BaseListAction {
 	private CustomerPhoneVO customerPhone;
 
 	private String pinyinName;
+
+	private String redirect;
+
+	private String imgbase;
 
 	@Action(value = "pageCustomer", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageCustomer() throws FLException {
@@ -174,20 +175,60 @@ public class CustomerAction extends BaseListAction {
 		return "success";
 	}
 
+	@Action(value = "registerCustomer", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String registerCustomer() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		customerService.registerCustomer(customer);
+
+		return "success";
+	}
+
+	@Action(value = "authCustomer", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String authCustomer() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		redirect = customerService.authCustomer(customer);
+
+		return "success";
+	}
+
+	@Action(value = "confirmCustomer", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String confirmCustomer() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		customerService.confirmCustomer(customer);
+
+		return "success";
+	}
+
+	@Action(value = "signateCustomer", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String signateCustomer() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		customerService.signateCustomer(customer, imgbase);
+
+		return "success";
+	}
+
 	public CustomerVO getCustomer() {
 		return customer;
 	}
 
 	public void setCustomer(CustomerVO customer) {
 		this.customer = customer;
-	}
-
-	public Set<Integer> getCustomerIds() {
-		return customerIds;
-	}
-
-	public void setCustomerIds(Set<Integer> customerIds) {
-		this.customerIds = customerIds;
 	}
 
 	public List<KeyValueVO> getAutoFillCustomer() {
@@ -242,6 +283,22 @@ public class CustomerAction extends BaseListAction {
 
 	public void setCustomers(List<CustomerVO> customers) {
 		this.customers = customers;
+	}
+
+	public String getRedirect() {
+		return redirect;
+	}
+
+	public void setRedirect(String redirect) {
+		this.redirect = redirect;
+	}
+
+	public String getImgbase() {
+		return imgbase;
+	}
+
+	public void setImgbase(String imgbase) {
+		this.imgbase = imgbase;
 	}
 
 }

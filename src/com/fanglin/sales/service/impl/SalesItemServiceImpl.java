@@ -9,12 +9,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.inventory.po.ColorPO;
-import com.fanglin.inventory.po.FormatPO;
-import com.fanglin.inventory.po.GoodsPO;
-import com.fanglin.inventory.vo.ColorVO;
-import com.fanglin.inventory.vo.FormatVO;
-import com.fanglin.inventory.vo.GoodsVO;
+import com.fanglin.data.material.vo.ColorVO;
+import com.fanglin.data.material.vo.FormatVO;
+import com.fanglin.data.material.vo.GoodsVO;
+import com.fanglin.data.po.ColorPO;
+import com.fanglin.data.po.FormatPO;
+import com.fanglin.data.po.GoodsPO;
 import com.fanglin.sales.dao.SalesDao;
 import com.fanglin.sales.dao.SalesItemDao;
 import com.fanglin.sales.po.SalesItemPO;
@@ -100,6 +100,8 @@ public class SalesItemServiceImpl implements SalesItemService {
 		BeanUtil.copyProperties(salesItemVO, salesItemPO, Arrays.asList("goods", "color", "format"));
 
 		salesItemPO.setSid(salesVO.getSid());
+		salesItemPO.setPunum(salesItemVO.getNum());
+		salesItemPO.setXgnum(salesItemVO.getNum());
 		salesPO.setOtherStatus(salesVO.getOtherStatus());
 
 		salesItemDao.save(salesItemPO);
@@ -142,6 +144,8 @@ public class SalesItemServiceImpl implements SalesItemService {
 		salesPO.setAmount(salesVO.getTotal());
 
 		salesItemPO.setNum(salesItemVO.getNum());
+		salesItemPO.setPunum(salesItemVO.getNum());
+		salesItemPO.setXgnum(salesItemVO.getNum());
 		salesItemPO.setTotal(salesItemVO.getTotal());
 		salesItemPO.setComment(salesItemVO.getComment());
 
@@ -161,7 +165,17 @@ public class SalesItemServiceImpl implements SalesItemService {
 		if (salesItemPO == null) {
 			throw new FLException(260023, "销售项不存在");
 		}
-
+		
+		SalesPO salesPO = salesDao.get(salesItemPO.getSid());
+		
+		if (salesPO.getFullpayStatus() != SalesPO.FULLPAYSTATUS_CONFIRM_SHORT) {
+			throw new FLException(260045, "销售项状态不可操作");
+		}
+		
+		if (salesPO.getBalanceStatus() != SalesPO.BALANCESTATUS_INIT_SHORT) {
+			throw new FLException(260045, "销售项状态不可操作");
+		}
+		
 		salesItemPO.setCtype(salesItemVO.getCtype());
 		salesItemPO.setCvalue(salesItemVO.getCvalue());
 

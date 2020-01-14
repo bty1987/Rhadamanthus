@@ -1,0 +1,19 @@
+{
+  "isType" :[
+    {"key":"0", "value":"支出" },
+    {"key":"1", "value":"收款"},
+    {"key":"2", "value":"提款"}
+  ],  "isStatus" :[
+  {"key":"0", "value":"初始" },
+  {"key":"1", "value":"完结"}
+  ],
+  "isAccountType" :[
+    {"key":"0", "value":"结算" },
+    {"key":"1", "value":"出纳"}
+  ],  "isAccountStatus" :[
+    {"key":"0", "value":"有效" },
+    {"key":"1", "value":"无效"}
+],
+  "errorCode": 0,
+  "errorMsg": null
+}

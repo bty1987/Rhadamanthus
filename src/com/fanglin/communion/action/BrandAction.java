@@ -79,26 +79,27 @@ public class BrandAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "queryBrandForPinYinName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryBrandForPinYinName() throws FLException {
+	@Action(value = "queryBrandByPinyin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryBrandByPinyin() throws FLException {
 
 		brands = brandService.queryBrandForPinYinName(pinyinName, queryCompany());
 
 		for (BrandVO brandVO : brands) {
 			KeyValueVO keyValueVO = new KeyValueVO();
 			keyValueVO.setKey(brandVO.getNo());
-			keyValueVO.setValue(brandVO.getName());
+			keyValueVO.setValue(String.format("%s-%s", brandVO.getName(), brandVO.getCategoryName()));
 			getAutoFillKeyValue().add(keyValueVO);
-			getAutoFillList().add(brandVO.getName());
+			getAutoFillList().add(brandVO.getCategoryName());
+			brandVO.setAlias(String.format("%s-%s", brandVO.getName(), brandVO.getCategoryName()));
 		}
 
 		return SUCCESS;
 	}
 
-	@Action(value = "queryBrandForPinYinNameAname", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryBrandForPinYinNameAname() throws FLException {
+	@Action(value = "queryBrandByPinyinForAll", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryBrandByPinyinForAll() throws FLException {
 
-		brands = brandService.queryBrandForPinYinName(pinyinName, queryCompany());
+		brands = brandService.queryBrandForPinYinName(pinyinName, null);
 
 		for (BrandVO brandVO : brands) {
 			KeyValueVO keyValueVO = new KeyValueVO();

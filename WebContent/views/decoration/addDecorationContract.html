@@ -1,0 +1,38 @@
+<div class="row">
+    <div class="widget-container-span col-md-12">
+        <div class="widget-box transparent">
+            <div class="widget-header">
+                <h3><strong>录入合同</strong></h3>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <form class="form-horizontal" id="form">
+                        <div class="widget-box no-border">
+                            <div class="widget-body">
+                                <div class="widget-main" style="padding: 20px 40px;">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="contract" class="col-sm-4 control-label no-padding-right">模板</label>
+                                                <div class="col-sm-7">
+                                                    <select class='col-xs-10 col-sm-7 v_required' id='contract'></select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <a class="btn btn-minier btn-success pull-left" id="preservation"><span>保存</span></a>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/decoration/addDecorationContract.js']);
+</script>

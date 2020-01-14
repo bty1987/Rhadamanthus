@@ -1,5 +1,6 @@
 package com.fanglin.production.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -27,4 +28,11 @@ public class ProductionWorkFlowDaoImpl extends DaoImpl<ProductionWorkFlowPO> imp
 		return (ProductionWorkFlowPO) session().createCriteria(ProductionWorkFlowPO.class).add(Restrictions.eq(ProductionWorkFlowPO.COLUMN_PWPID_STR, pwpid)).add(Restrictions.eq(ProductionWorkFlowPO.COLUMN_WORKFLOW_STR, wfid)).uniqueResult();
 	}
 
+	@Override
+	public int countProductionWorkFlowByPwpid(Long pwpid, Short status, Long pwfid) {
+
+		String sql = "select count(*) from production.productionworkflow where pwpid = :pwpid and status < :status and pwfid != :pwfid";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("pwpid", pwpid).setShort("status", status).setLong("pwfid", pwfid).uniqueResult();
+		return  count.intValue();
+	}
 }

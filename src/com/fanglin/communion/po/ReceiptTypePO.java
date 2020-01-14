@@ -67,6 +67,8 @@ public class ReceiptTypePO implements java.io.Serializable {
 	private String kiname;
 
 	private String assistant;
+	
+	private String value;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -203,6 +205,15 @@ public class ReceiptTypePO implements java.io.Serializable {
 
 	public void setAssistant(String assistant) {
 		this.assistant = assistant;
+	}
+
+	@Column(name = "value")
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
 	}
 
 }

@@ -38,6 +38,8 @@ public class VpaymentPO implements Serializable {
 
 	public static final short EXPIRE_INIT_INT = 0;
 	
+	public static final short EXPIRE_INVALID_INT = 1;
+	
 	private long vpid;
 	
 	private long vaid;

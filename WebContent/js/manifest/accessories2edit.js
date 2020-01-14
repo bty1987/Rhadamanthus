@@ -2,6 +2,7 @@ jQuery(function ($) {
 
     var accessories = {
         aid: params["accessories.aid"],
+        orderId: params["accessories.orderId"],
         items: {},
         record: {},
     };
@@ -16,7 +17,8 @@ jQuery(function ($) {
             var $line = addline(1 + $lines.length).attr({
                 'data-gid': v.goods.gid,
                 'data-aiid': v.aiid,
-                'data-selling': v.selling
+                'data-selling': v.selling,
+                'data-caid': v.caid
             });
 
             $line.find('div.no').text(v.goods.no);
@@ -75,17 +77,21 @@ jQuery(function ($) {
 
         $line.append($indexWrap).append($lineInfoWrap).append($optWrap);
 
-        com.initTypeahead(".name input", api.inventory.queryGoodsByName, "goods.name", {}, "goodes", "gid", "name", function (list, k, v) {
+        var optionss = {
+            "orderId": accessories.orderId
+        };
+
+        com.initTypeahead(".name input", api.data.queryAoodsByName, "aoods.goods.name", optionss, "aoodes", "gid", "name", function (list, k, v) {
             $.each(list, function (index, val) {
 
-                if (val.gid == k) {
-                    $lineInfoWrap.find('.no').text(val.no);
-                    $lineInfoWrap.find('.measurementUnit').text(val.measurementUnit);
-                    $lineInfoWrap.find('.category').text(val.category);
-                    $lineInfoWrap.find('.brand').text(val.brand);
-                    $lineInfoWrap.find('.pieceNum').text(val.pieceNum);
+                if (val.goods.gid == k) {
+                    $lineInfoWrap.find('.no').text(val.goods.no);
+                    $lineInfoWrap.find('.measurementUnit').text(val.goods.measurementUnit);
+                    $lineInfoWrap.find('.category').text(val.goods.category);
+                    $lineInfoWrap.find('.brand').text(val.goods.brand);
+                    $lineInfoWrap.find('.pieceNum').text(val.goods.pieceNum);
 
-                    $line.attr({'data-gid': val.gid, 'data-selling': val.selling});
+                    $line.attr({'data-gid': val.goods.gid, 'data-selling': val.goods.selling});
                 }
             });
 
@@ -110,6 +116,7 @@ jQuery(function ($) {
                 "accessoriesItem.goods.gid": gid,
                 "accessoriesItem.num": num,
                 "accessoriesItem.selling": selling,
+                "accessoriesItem.total" : utils.accMul(num, selling)
             };
 
             if (aiid) {

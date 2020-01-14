@@ -11,6 +11,8 @@
 
 package com.fanglin.right.service;
 
+import java.util.List;
+
 import com.fanglin.right.vo.BrandUserRightVO;
 
 public interface BrandUserRightService {
@@ -19,6 +21,6 @@ public interface BrandUserRightService {
 	
 	public BrandUserRightVO queryBrandUserRightForLogin(String userId);
 	
-	public void updateBrandUserRight(BrandUserRightVO brandUserRightVO);
+	public void updateBrandUserRight(BrandUserRightVO brandUserRightVO, List<Long> bids);
 
 }

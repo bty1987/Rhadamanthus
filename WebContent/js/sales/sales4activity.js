@@ -209,7 +209,7 @@ $(function () {
 
     //查询活动信息
     function querySalesActivity() {
-        com.post(api.inventory.querySalesActivity, options, function (res) {
+        com.post(api.sales.querySalesActivity, options, function (res) {
             var salesActivity = res.salesActivitys;
             var salesActivityContent = com.focusPage("#salesActivityItem").empty();
 
@@ -233,7 +233,7 @@ $(function () {
 
     //查询活动物品
     function querySalesActivityItem() {
-        com.post(api.inventory.querySalesActivityItem, options, function (res) {
+        com.post(api.sales.querySalesActivityItem, options, function (res) {
 
             var salesActivityItems = res.saleActivityItems;
             var salesActivityContent = com.focusPage("#salesActivityItems").empty();
@@ -305,7 +305,7 @@ $(function () {
             if (activityItem.state == 0) {
                 salesActivityItem.items.commentName.html("领取");
                 salesActivityItem.saiid = activityItem.saiid;
-                salesActivityItem.url = api.inventory.receiveSalesActivityItem;
+                salesActivityItem.url = api.sales.receiveSalesActivityItem;
                 salesActivityItem.info = "领取成功!";
                 salesActivityItem.modal.salesActivityCommentModal.modal("show");
             }else{
@@ -317,7 +317,7 @@ $(function () {
         refundBtn.click(function () {
             salesActivityItem.items.commentName.html("退货");
             salesActivityItem.saiid = activityItem.saiid;
-            salesActivityItem.url = api.inventory.refundSalesActivityItem;
+            salesActivityItem.url = api.sales.refundSalesActivityItem;
             salesActivityItem.info = "退货成功!";
             salesActivityItem.modal.salesActivityCommentModal.modal("show");
         });
@@ -326,7 +326,7 @@ $(function () {
         deliveBtn.click(function () {
             salesActivityItem.items.commentName.html("配送");
             salesActivityItem.saiid = activityItem.saiid;
-            salesActivityItem.url = api.inventory.deliveSalesActivityItem;
+            salesActivityItem.url = api.sales.deliveSalesActivityItem;
             salesActivityItem.info = "配送成功!";
             salesActivityItem.modal.salesActivityCommentModal.modal("show");
         });
@@ -353,7 +353,7 @@ $(function () {
                 "salesActivityItem.saiid": saiid
             };
 
-            com.post(api.inventory.abateSalesActivityItem, options, function (res) {
+            com.post(api.sales.abateSalesActivityItem, options, function (res) {
                 com.showAlert(com.info, "失效成功!");
                 querySalesActivityItem();
             });
@@ -368,7 +368,7 @@ $(function () {
             var options = {
                 "salesActivityItem.saiid": saiid
             };
-            com.post(api.inventory.unrefundSalesActivityItem, options, function (res) {
+            com.post(api.sales.unrefundSalesActivityItem, options, function (res) {
                 com.showAlert(com.info, "未退成功!");
                 querySalesActivityItem();
             });
@@ -383,7 +383,7 @@ $(function () {
             var options = {
                 "salesActivityItem.saiid": saiid
             };
-            com.post(api.inventory.expendSalesActivityItem, options, function (res) {
+            com.post(api.sales.expendSalesActivityItem, options, function (res) {
                 com.showAlert(com.info, "消耗成功!");
                 querySalesActivityItem();
             });
@@ -404,7 +404,7 @@ $(function () {
             "sales.sid": sid,
             "sales.activityId": aid
         };
-        com.post(api.inventory.updateSalesForActivity, options, function (res) {
+        com.post(api.sales.updateSalesForActivity, options, function (res) {
             querySalesActivity();
             salesNo(res.sales.activityId);
             com.showAlert(com.info, "修改成功")
@@ -469,7 +469,7 @@ $(function () {
             return;
         }
 
-        com.post(api.inventory.addSalesActivityItem, options, function (res) {
+        com.post(api.sales.addSalesActivityItem, options, function (res) {
             querySalesActivityItem();
         });
         salesActivityItem.salesActivityItemModal.modal("hide");

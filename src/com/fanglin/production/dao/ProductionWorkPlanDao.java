@@ -9,5 +9,9 @@ public interface ProductionWorkPlanDao extends Dao<ProductionWorkPlanPO>{
 	
 	public List<ProductionWorkPlanPO> queryProductionWorkPlanByPpid(long ppid);
 	
-	public ProductionWorkPlanPO queryProductionWorkPlanByPpidAWpid(long ppid,long wpid);
+	public int queryProductionWorkPlanByPpidAWpid(long ppid,long wpid);
+
+	public int countProductionWorkPlanByPpid(long ppid);
+
+	public int countProductionWorkPlanByPpidAStatus(Long ppid, Short sort, Short status);
 }

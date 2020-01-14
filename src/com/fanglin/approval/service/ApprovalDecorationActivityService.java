@@ -20,10 +20,10 @@ import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
 
 public interface ApprovalDecorationActivityService {
-	
-	public int submitApprovalForDecorationActivity(ApprovalVO approvalVO, ApprovalDecorationActivityVO approvalDecorationActivityVO, List<ApprovalDecorationActivityItemVO> approvalDecorationActivityItemVOs, String userId,int company) throws FLException;
-	
-	public int approvalForDecorationActivity(ApprovalPO approvalPO) throws FLException;
+
+	public int submitApprovalForDecorationActivity(ApprovalVO approvalVO, ApprovalDecorationActivityVO approvalDecorationActivityVO, List<ApprovalDecorationActivityItemVO> approvalDecorationActivityItemVOs, String userId, int company) throws FLException;
+
+	public int approveForDecorationActivity(ApprovalPO approvalPO) throws FLException;
 
 	public List<ApprovalDecorationActivityItemVO> queryApprovalDecorationActivity(ApprovalVO approvalVO) throws FLException;
 

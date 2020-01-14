@@ -1,0 +1,36 @@
+<div>
+    <div class="flex-wrap" id="form">
+
+        <div class="stay-bottom">
+            <button class="btn btn-yellow" id="addWorkPlan" >添加一条工序信息</button>
+            <button id="submitHardwareItem" class="btn btn-info" data-loading-text="提交中..." type="submit"><i class="icon-ok"></i>保存</button>
+        </div>
+
+    </div>
+
+    <ul class="flex-table">
+        <li class="line table-title">
+
+            <div class="line-wrap order">
+                <div class="cell index"></div>
+            </div>
+
+            <div class="line-wrap content col2">
+                <div class="cell">工序名</div>
+                <div class="cell">状态</div>
+            </div>
+
+            <div class="line-wrap action">
+                <div class="cell option">操作</div>
+            </div>
+
+        </li>
+    </ul>
+
+    <ul class="flex-table" id="list"></ul>
+
+</div>
+
+<script type="text/javascript">
+	$.loadScript(['js/production/workflow2check.js']);
+</script>

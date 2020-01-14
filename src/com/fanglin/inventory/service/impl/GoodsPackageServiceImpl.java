@@ -8,14 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.data.material.vo.ColorVO;
+import com.fanglin.data.material.vo.FormatVO;
+import com.fanglin.data.material.vo.GoodsVO;
 import com.fanglin.inventory.dao.GoodsPackageDao;
 
 import com.fanglin.inventory.po.GoodsPackagePO;
 import com.fanglin.inventory.service.GoodsPackageService;
-import com.fanglin.inventory.vo.ColorVO;
-import com.fanglin.inventory.vo.FormatVO;
 import com.fanglin.inventory.vo.GoodsPackageVO;
-import com.fanglin.inventory.vo.GoodsVO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("goodsPackageService")

@@ -5,8 +5,10 @@ import java.util.List;
 import com.fanglin.core.dao.Dao;
 import com.fanglin.decoration.po.DecorationServicePO;
 
-public interface DecorationServiceDao extends Dao<DecorationServicePO>{
+public interface DecorationServiceDao extends Dao<DecorationServicePO> {
 
 	public List<DecorationServicePO> queryDecorationServiceByOrderId(String orderId);
-	
+
+	public int makeDecorationService(short type, String orderId, int ouid);
+
 }

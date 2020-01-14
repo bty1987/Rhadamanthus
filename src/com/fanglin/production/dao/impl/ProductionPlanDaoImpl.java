@@ -1,5 +1,6 @@
 package com.fanglin.production.dao.impl;
 
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -22,12 +23,14 @@ public class ProductionPlanDaoImpl extends DaoImpl<ProductionPlanPO> implements 
 	}
 
 	@Override
-	public List<ProductionPlanPO> pageProductionPlan(Paging paging, List<Filter> filters, long pid) {
+	public List<ProductionPlanPO> pageProductionPlan(Paging paging, List<Filter> filters, int company) {
 		
 		PagingQuery<ProductionPlanPO> query = pagingQuery(paging, ProductionPlanPO.class);
 		
-		query.add(query.getCriterion(ProductionPlanPO.COLUMN_PID_STR, pid, "eq"));
+		query.add(query.getCriterion(ProductionPlanPO.COLUMN_COMPANY_STR, company, "eq"));
 		queryFilterExcute(query, filters);
+		
+		query.desc("ppid");
 		
 		return query.list();
 	}
@@ -46,40 +49,74 @@ public class ProductionPlanDaoImpl extends DaoImpl<ProductionPlanPO> implements 
 	private void queryFilterExcute(PagingQuery<ProductionPlanPO> query, List<Filter> filters) {
 
 		if (filters != null) {
+			
 			for (Filter filter : filters) {
+				
 				String field = filter.getField();
 				String data = filter.getData();
 				String op = filter.getOp();
+				
+				query.alias("production", "production");
+				query.alias("production.house", "house");
+				
+				if (field.startsWith("creater")) {
+					query.alias("creater", "creater");
+
+					if (field.contains("Department")) {
+						query.alias("creater.dept", "createrDept");
+					}
+
+					if (field.contains("Region")) {
+						query.alias("creater.dept", "createrDept");
+						query.alias("createrDept.fatherDept", "createrRegion");
+					}
+				} else if (field.startsWith("village")) {
+					query.alias("house.village", "village");
+				}
+				
 				if (ProductionPlanPO.COLUMN_STATUS_STR.equals(field)) {
 					query.add(query.getCriterion(ProductionPlanPO.COLUMN_STATUS_STR, Short.parseShort(data), op));
+				} else if (ProductionPlanPO.COLUMN_PNO_STR.equals(field)) {
+					query.add(query.getCriterion(ProductionPlanPO.COLUMN_PRODUCTIONPNO_STR, data, op));
+				} else if (ProductionPlanPO.COLUMN_NO_STR.equals(field)) {
+					query.add(query.getCriterion(ProductionPlanPO.COLUMN_NO_STR, data, op));
 				} else if (ProductionPlanPO.COLUMN_STRATTIME_STR.equals(field)) {
-					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-
-					query.add(query.getCriterion(ProductionPlanPO.COLUMN_STRATTIME_STR, eTimestamp, "le"));
-					query.add(query.getCriterion(ProductionPlanPO.COLUMN_STRATTIME_STR, sTimestamp, "ge"));
+					queryFilterTimeInfo(query, data,"createTime");
 				} else if (ProductionPlanPO.COLUMN_ENDTIME_STR.equals(field)) {
-					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-
-					query.add(query.getCriterion(ProductionPlanPO.COLUMN_ENDTIME_STR, eTimestamp, "le"));
-					query.add(query.getCriterion(ProductionPlanPO.COLUMN_ENDTIME_STR, sTimestamp, "ge"));
-				}
+					queryFilterTimeInfo(query, data,"finishTime");
+				} else if ("houseNumber".equals(field)) {
+					query.add(query.getCriterion("house.houseNumber", data, op));
+				} else if ("orderId".equals(field)) {
+					query.add(query.getCriterion("production.orderId", data, op));
+				} else if ("createrId".equals(field)) {
+					query.add(query.getCriterion("creater.userId", data, op));
+				} else if ("villageId".equals(field)) {
+					query.add(query.getCriterion("village.no", data, op));
+				} 
 			}
 		}
+	}
 
+	private void queryFilterTimeInfo(PagingQuery<ProductionPlanPO> query, String data ,String timeType) {
+		
+		String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
+		String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
+
+		Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
+		Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+
+		Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
+		Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
+
+		query.add(query.getCriterion(timeType, eTimestamp, "le"));
+		query.add(query.getCriterion(timeType, sTimestamp, "ge"));
+	}
+
+	@Override
+	public int countProductionPlan(Long pid, Short status) {
+		String sql = "select count(*) from production.productionplan where pid = :pid and status < :status";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("pid", pid).setShort("status", status).uniqueResult();
+		return  count.intValue();
 	}
 
 }

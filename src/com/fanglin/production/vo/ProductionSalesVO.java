@@ -13,6 +13,8 @@ public class ProductionSalesVO implements Serializable {
 	private Long sid;
 
 	private Short type;
+	
+	private Long total;
 
 	public Long getPsid() {
 		return psid;
@@ -46,4 +48,11 @@ public class ProductionSalesVO implements Serializable {
 		this.type = type;
 	}
 
+	public Long getTotal() {
+		return total;
+	}
+
+	public void setTotal(Long total) {
+		this.total = total;
+	}
 }

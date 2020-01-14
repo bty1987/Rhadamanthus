@@ -14,7 +14,6 @@ import com.fanglin.production.po.ProductionPO;
 import com.fanglin.production.po.ProductionSalesPO;
 import com.fanglin.production.service.ProductionSalesService;
 import com.fanglin.production.vo.ProductionSalesVO;
-import com.fanglin.production.vo.ProductionVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 
@@ -34,15 +33,13 @@ public class ProductionSalesServiceImpl implements ProductionSalesService {
 		List<ProductionSalesPO> productionSalesPOs = productionsalesDao.queryProductionSalesByPid(productionSalesVO.getPid());
 		List<ProductionSalesVO> productionSalesVOs = new ArrayList<ProductionSalesVO>();
 
-		ProductionSalesVO _productionSalesVO;
-
 		for (ProductionSalesPO productionSalesPO : productionSalesPOs) {
 
-			_productionSalesVO = new ProductionSalesVO();
+			productionSalesVO = new ProductionSalesVO();
 
-			BeanUtil.copyProperties(productionSalesPO, _productionSalesVO);
+			BeanUtil.copyProperties(productionSalesPO, productionSalesVO);
 
-			productionSalesVOs.add(_productionSalesVO);
+			productionSalesVOs.add(productionSalesVO);
 		}
 
 		return productionSalesVOs;
@@ -50,22 +47,26 @@ public class ProductionSalesServiceImpl implements ProductionSalesService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int bindProductionSales(ProductionSalesVO productionSalesVO, ProductionVO productionVO) throws FLException {
+	public int bindProductionSales(ProductionSalesVO productionSalesVO) throws FLException {
 
+		Integer countProductionSalesByPidASid = productionsalesDao.countProductionSalesByPidASid(productionSalesVO.getPid(),productionSalesVO.getSid());
+
+		if(countProductionSalesByPidASid != 0){
+			throw new FLException(220028 , "绑定销售单已存在");
+		}
+		
 		ProductionSalesPO productionSalesPO = new ProductionSalesPO();
-
-		ProductionPO productionPO = new ProductionPO();
-
-		productionPO = productionDao.get(productionSalesVO.getPid());
-
-		float newTotal = Arith.add(productionPO.getTotal(), productionVO.getTotal());
-		productionPO.setTotal(newTotal);
-
-		productionDao.update(productionPO);
 
 		BeanUtil.copyPropertie(productionSalesVO, productionSalesPO);
 
 		productionsalesDao.save(productionSalesPO);
+		
+		ProductionPO productionPO = productionDao.get(productionSalesVO.getPid());
+
+		long newTotal = Arith.add(productionPO.getTotal(), productionSalesVO.getTotal());
+		productionPO.setTotal(newTotal);
+
+		productionDao.update(productionPO);
 
 		return 0;
 	}

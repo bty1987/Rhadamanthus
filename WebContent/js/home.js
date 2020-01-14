@@ -191,8 +191,6 @@ jQuery(function(){
                                     return (ev._id == calEvent._id);
                                 })
                             });
-
-
                         }
                     } ,
                     "close" : {

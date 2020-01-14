@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private DutyDao dutyDao;
-	
+
 	@Autowired
 	private RoleDao roleDao;
 
@@ -226,11 +226,11 @@ public class UserServiceImpl implements UserService {
 		Paging paging = new Paging(0, 10);
 
 		int dtid = 0;
-		
-		if(userVO.getStatus()==null){
+
+		if (userVO.getStatus() == null) {
 			userVO.setStatus(UserPO.STATUS_ENABLE_INT);
 		}
-		
+
 		if (departmentType != null && departmentType.getName() != null && departmentType.getName().length() != 0) {
 			dtid = departmentTypeDao.queryDepartmentTypeByName(departmentType.getName()).getDtid();
 		}
@@ -250,17 +250,21 @@ public class UserServiceImpl implements UserService {
 		UserPO userPO = userDao.queryUserByLoginId(loginId);
 		UserVO userVO = null;
 
-		if (userPO != null) {
-			if (userPO.getPassword().equals(MD5Helper.MD5(password)) && userPO.getStatus() != 1) {
+		if (userPO == null)
+			return userVO;
 
-				userVO = new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO());
+		if (userPO.getStatus() != UserPO.STATUS_ENABLE_INT)
+			return userVO;
 
-				BeanUtil.copyProperties(userPO, userVO, Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
-				BeanUtil.copyProperties(userPO.getRole(), userVO.getRole());
+		if (!userPO.getPassword().equals(MD5Helper.MD5(password)))
+			return userVO;
 
-				userVO.setCompanys(String.valueOf(userPO.getCompany()));
-			}
-		}
+		userVO = new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO());
+
+		BeanUtil.copyProperties(userPO, userVO, Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
+		BeanUtil.copyProperties(userPO.getRole(), userVO.getRole());
+
+		userVO.setCompanys(String.valueOf(userPO.getCompany()));
 
 		return userVO;
 	}
@@ -331,7 +335,8 @@ public class UserServiceImpl implements UserService {
 		userPO.setLoginId(userVO.getLoginId());
 
 		userPO.setRole(new RolePO(Integer.valueOf(visitor.getValue())));
-		userPO.setIsLogin((short) 0);
+		userPO.setIsLogin(UserPO.ISLOGIN_FIP_INT);
+		userPO.setType(UserPO.TYPE_USER_INT);
 		userPO.setCompany(company);
 
 		BeanUtil.copyProperties(userVO, userPO, Arrays.asList("role", "dept", "duty", "uId", "userId", "loginId", "password", "role", "isLogin", "company", "extranet"));
@@ -340,10 +345,8 @@ public class UserServiceImpl implements UserService {
 
 		userPO.setDuty(new DutyPO(userVO.getDuty().getDid()));
 
-		List<String> pinyins = PinYin4Util.getPinyin(userVO.getCurrentName());
+		userPO.setPinYin(PinYin4Util.getPinyin(userVO.getCurrentName()).get(0));
 
-		userPO.setPinYin(pinyins.get(0));
-		
 		userPO.setIsUpdate(UserPO.ISUPDATE_ADD_INT);
 
 		userDao.save(userPO);
@@ -411,8 +414,8 @@ public class UserServiceImpl implements UserService {
 		List<String> pinyins = PinYin4Util.getPinyin(userVO.getCurrentName());
 
 		userPO.setPinYin(pinyins.get(0));
-		
-		if(userPO.getIsUpdate() == UserPO.ISUPDATE_INIT_INT){
+
+		if (userPO.getIsUpdate() == UserPO.ISUPDATE_INIT_INT) {
 			userPO.setIsUpdate(UserPO.ISUPDATE_UPDATE_INT);
 		}
 
@@ -501,20 +504,20 @@ public class UserServiceImpl implements UserService {
 		if (userPO == null) {
 			throw new FLException(190005, "人员不存在");
 		}
-		
+
 		RolePO roleCO = roleDao.get(rid);
-		
-		if(roleCO == null){
+
+		if (roleCO == null) {
 			throw new FLException(230010, "角色不存在");
 		}
-		
+
 		RolePO rolePO = roleDao.get(userVO.getRole().getRid());
-		
-		if(rolePO == null){
+
+		if (rolePO == null) {
 			throw new FLException(230010, "角色不存在");
 		}
-		
-		if(roleCO.getLevel() < rolePO.getLevel()){
+
+		if (roleCO.getLevel() < rolePO.getLevel()) {
 			throw new FLException(-1, "无操作权限");
 		}
 
@@ -543,7 +546,7 @@ public class UserServiceImpl implements UserService {
 			if (SystemConfig.getInt("multicompany", 0) == 0)
 				throw new FLException(230017, "公司获取失败");
 		}
-		
+
 		userPO.setRole(rolePO);
 		userPO.setExtranet(userVO.getExtranet());
 		userPO.setIsUpdate(UserPO.ISUPDATE_UPDATE_INT);
@@ -707,7 +710,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private UserBaseVO convertBaseBean(UserPO userPO) throws FLException {
-		
+
 		UserBaseVO userBaseVO = new UserBaseVO(new DutyVO(), new DepartmentVO());
 
 		BeanUtil.copyProperties(userPO, userBaseVO, Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
@@ -718,5 +721,5 @@ public class UserServiceImpl implements UserService {
 
 		return userBaseVO;
 	}
-	
+
 }

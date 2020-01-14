@@ -9,6 +9,6 @@ public interface ApprovalDecorationHolonomyService {
 
 	public int submitApprovalForDecorationHolonomy(ApprovalVO approvalVO, ApprovalDecorationHolonomyVO approvalDecorationHolonomyVO, String userId, int company) throws FLException;
 
-	public int approvalForApprovalForDecorationHolonomy(ApprovalPO approvalPO) throws FLException;
-	
+	public int approveForDecorationHolonomy(ApprovalPO approvalPO) throws FLException;
+
 }

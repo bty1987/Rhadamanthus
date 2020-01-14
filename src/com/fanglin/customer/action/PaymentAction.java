@@ -128,7 +128,7 @@ public class PaymentAction extends BaseListAction {
 	@Action(value = "queryCusAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCusAdvance() throws FLException {
 
-		advance = advanceService.queryCusAdvance(advance, orderId);
+		advance = advanceService.queryCusAdvance(orderId);
 
 		return SUCCESS;
 	}

@@ -11,6 +11,10 @@ import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fanglin.data.po.ColorPO;
+import com.fanglin.data.po.FormatPO;
+import com.fanglin.data.po.GoodsPO;
+
 @Entity
 @Table(name = "goodsstorehousestock", catalog = "inventory")
 public class GoodsStorehouseStockPO implements java.io.Serializable {

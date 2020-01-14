@@ -96,7 +96,8 @@ jQuery(function($) {
             // 打折标识 , 0/2表示不打折 , 1/3表示打折 , 0/1表示配比 , 2/3表示非配比
 
             var _type = [1, 3, 4, 5].indexOf(type) != -1 ? 1 : 0; // 减项类型/增项类型
-            var _discount = ([1, 3].indexOf(type) != -1 && ([1, 3].indexOf(addReduceItem.discount) != -1 || [2, 3, 4].indexOf($decorationType) != -1)) ? utils.accDiv(discount, 10) : 1;
+            var _discount = ([1, 3].indexOf(type) != -1 && ([1, 3].indexOf(addReduceItem.discount) != -1 || [2, 3, 4].indexOf(addReduceDetail.decoration.type) != -1)) ? utils.accDiv(discount, 10) : 1;
+            
             var _dcp = utils.accMul(unitPrice, _discount);
             var _total = utils.accMul(num ,  _dcp); // 计算总价
 

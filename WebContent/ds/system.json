@@ -1,6 +1,7 @@
 {
 
-    "alertInfo_": "'你知道吗?亲!<br>layer != layui<br><br>layer只是作为Layui的一个弹层模块,由于其用户基数较大,所以常常会有人以为layui是layerui<br><br>layer虽然已被 Layui 收编为内置的弹层模块,但仍然会作为一个独立组件全力维护\\升级.<br><br>我们此后的征途是星辰大海 ^_^'",
+    "alertInfo_": "<div class='home-layer-content'><div>你知道吗?亲!<br>layer != layui<br><br>layer只是作为Layui的一个弹层模块,由于其用户基数较大,所以常常会有人以为layui是layerui<br><br>layer虽然已被 Layui 收编为内置的弹层模块,但仍然会作为一个独立组件全力维护\\升级.<br><br>我们此后的征途是星辰大海 ^_^</div></div>",
+    "blessing": "<div class='home-layer-content' style='background-color: #da4b4b'><div><h4>祝福我们的祖国</h4>天更蓝<br>山更绿<br>水更清<br>经济更繁荣<br>人民更幸福<br>国力更强盛<br>祖国的明天更美好<br><h4>祖国母亲70岁生日快乐</h4></div></div>",
     "versionInfo_": "<p>决算计算,统一计算功能,结合合同/报价/增减项/拓展项等信息,签单类型以及决算类型进行汇总计算,同时给出最后决算结果,简化决算过程多次查询信息,避免手动计算出现问题.</p><p>报价,由于半价/满减/减上捡等不同签单方式,报价项目计算折扣的出入,将单个项目调整为不计算折后价格,利用统一总额信息来完成折扣计算过程.</p><p>更多详情,请参考版本信息.</p>",
 
     "errorCode": 0,

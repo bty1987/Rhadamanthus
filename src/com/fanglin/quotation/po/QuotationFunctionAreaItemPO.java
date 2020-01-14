@@ -250,5 +250,4 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 			throw new FLException(200029, "报价项存储对象错误");
 		}
 	}
-
 }

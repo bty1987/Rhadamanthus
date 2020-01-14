@@ -20,15 +20,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.vo.Filter;
+import com.fanglin.data.material.vo.ColorVO;
+import com.fanglin.data.material.vo.FormatVO;
+import com.fanglin.data.material.vo.GoodsVO;
 import com.fanglin.inventory.dao.CheckListDao;
 import com.fanglin.inventory.dao.StorehouseUserDao;
 import com.fanglin.inventory.po.CheckListPO;
 import com.fanglin.inventory.po.StorehouseUserPO;
 import com.fanglin.inventory.service.CheckListService;
 import com.fanglin.inventory.vo.CheckListVO;
-import com.fanglin.inventory.vo.ColorVO;
-import com.fanglin.inventory.vo.FormatVO;
-import com.fanglin.inventory.vo.GoodsVO;
 import com.fanglin.inventory.vo.StorehouseVO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;

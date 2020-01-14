@@ -5,29 +5,53 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.personel.vo.UserBaseVO;
+
 public class ProductionPlanVO implements Serializable {
 
 	private static final long serialVersionUID = 4559894231877224250L;
 
 	private Long ppid;
 
-	private Long pid;
+	private ProductionVO production;
 
 	private String no;
 
 	private String path;
+	
+	private UserBaseVO creater;
 
-	private Timestamp startTime;
+	private Timestamp createTime;
 
-	private Timestamp endTime;
+	private Timestamp finishTime;
+	
+	private Integer timeLimit;
 
 	private Short status;
+	
+	private Integer company;
 
 	private String comment;
+	
+	private Integer num;
+
+	public Integer getNum() {
+		return num;
+	}
+
+	public void setNum(Integer num) {
+		this.num = num;
+	}
 
 	public ProductionPlanVO() {
 		super();
 
+	}
+	
+	public ProductionPlanVO(ProductionVO production, UserBaseVO creater) {
+		super();
+		this.production = production;
+		this.creater = creater;
 	}
 
 	public Long getPpid() {
@@ -38,12 +62,12 @@ public class ProductionPlanVO implements Serializable {
 		this.ppid = ppid;
 	}
 
-	public Long getPid() {
-		return pid;
+	public ProductionVO getProduction() {
+		return production;
 	}
 
-	public void setPid(Long pid) {
-		this.pid = pid;
+	public void setProduction(ProductionVO production) {
+		this.production = production;
 	}
 
 	public String getNo() {
@@ -62,22 +86,38 @@ public class ProductionPlanVO implements Serializable {
 		this.path = path;
 	}
 
+	public UserBaseVO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserBaseVO creater) {
+		this.creater = creater;
+	}
+
 	@JSON(format = "yyyy-MM-dd")
-	public Timestamp getStartTime() {
-		return startTime;
+	public Timestamp getCreateTime() {
+		return createTime;
 	}
 
-	public void setStartTime(Timestamp startTime) {
-		this.startTime = startTime;
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
 	}
 
 	@JSON(format = "yyyy-MM-dd")
-	public Timestamp getEndTime() {
-		return endTime;
+	public Timestamp getFinishTime() {
+		return finishTime;
 	}
 
-	public void setEndTime(Timestamp endTime) {
-		this.endTime = endTime;
+	public void setFinishTime(Timestamp finishTime) {
+		this.finishTime = finishTime;
+	}
+	
+	public Integer getTimeLimit() {
+		return timeLimit;
+	}
+
+	public void setTimeLimit(Integer timeLimit) {
+		this.timeLimit = timeLimit;
 	}
 
 	public Short getStatus() {
@@ -86,6 +126,14 @@ public class ProductionPlanVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
 	}
 
 	public String getComment() {

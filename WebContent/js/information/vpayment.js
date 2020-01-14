@@ -57,7 +57,7 @@ jQuery(function ($) {
         com.cleanItems(vpayment.items);
     });
 
-    com.initTypeahead('brand', api.data.queryBrandForPinYinName, "pinyinName", {}, "autoFillKeyValue", "value", "value" ,null);
+    com.initTypeahead('brand', api.data.queryBrandByPinyin, "pinyinName", {}, "autoFillKeyValue", "value", "value" ,null);
     com.selectTypeahead("couponType", vpayment.couponType, 'key', 'value' ,null);
 
     com.post(api.ds.information, {}, function (res) {

@@ -34,7 +34,7 @@ $(function () {
         goods.items.accessoriesType.bindData(res.accessoriesTypes, 'atid', 'name', true);
     });
 
-    com.initTypeahead("brand", api.data.queryBrandForPinYinName, "pinyinName", {}, "brands","bid", "name", function (list, k, v) {
+    com.initTypeahead("brand", api.data.queryBrandByPinyin, "pinyinName", {}, "brands","bid", "name", function (list, k, v) {
 
         $.each(list, function (index, val) {
 

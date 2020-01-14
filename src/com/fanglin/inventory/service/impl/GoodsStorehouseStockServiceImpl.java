@@ -21,26 +21,26 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.inventory.dao.ColorDao;
-import com.fanglin.inventory.dao.FormatDao;
-import com.fanglin.inventory.dao.GoodsDao;
+import com.fanglin.data.material.dao.ColorDao;
+import com.fanglin.data.material.dao.FormatDao;
+import com.fanglin.data.material.dao.GoodsDao;
+import com.fanglin.data.material.vo.ColorVO;
+import com.fanglin.data.material.vo.FormatVO;
+import com.fanglin.data.material.vo.GoodsVO;
+import com.fanglin.data.po.ColorPO;
+import com.fanglin.data.po.FormatPO;
+import com.fanglin.data.po.GoodsPO;
 import com.fanglin.inventory.dao.GoodsPackageDao;
 import com.fanglin.inventory.dao.GoodsStorehouseStockDao;
 import com.fanglin.inventory.dao.StorehouseDao;
 import com.fanglin.inventory.dao.StorehouseUserDao;
-import com.fanglin.inventory.po.ColorPO;
-import com.fanglin.inventory.po.FormatPO;
-import com.fanglin.inventory.po.GoodsPO;
 import com.fanglin.inventory.po.GoodsPackagePO;
 import com.fanglin.inventory.po.GoodsStorehouseStockPO;
 import com.fanglin.inventory.po.StorehousePO;
 import com.fanglin.inventory.po.StorehouseUserPO;
 import com.fanglin.inventory.service.GoodsStorehouseStockService;
 import com.fanglin.inventory.service.ManifestService;
-import com.fanglin.inventory.vo.ColorVO;
-import com.fanglin.inventory.vo.FormatVO;
 import com.fanglin.inventory.vo.GoodsStorehouseStockVO;
-import com.fanglin.inventory.vo.GoodsVO;
 import com.fanglin.inventory.vo.ManifestItemVO;
 import com.fanglin.inventory.vo.StorehouseVO;
 import com.fanglin.utils.Arith;
@@ -163,7 +163,7 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void surplusGoodsStorehouseStock(GoodsStorehouseStockVO goodsStorehouseStockVO, String userId, int company) throws FLException {
+	public void plusGoodsStorehouseStock(GoodsStorehouseStockVO goodsStorehouseStockVO, String userId, int company) throws FLException {
 
 		int num = goodsStorehouseStockVO.getNum();
 		
@@ -178,7 +178,7 @@ public class GoodsStorehouseStockServiceImpl implements GoodsStorehouseStockServ
 	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void lossesGoodsStorehouseStock(GoodsStorehouseStockVO goodsStorehouseStockVO, String userId,int company) throws FLException {
+	public void loseGoodsStorehouseStock(GoodsStorehouseStockVO goodsStorehouseStockVO, String userId,int company) throws FLException {
 		
 		int num = goodsStorehouseStockVO.getNum();
 		

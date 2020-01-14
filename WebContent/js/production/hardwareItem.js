@@ -2,8 +2,8 @@ $(function () {
 
     var hardwareItem = {
         btns:{
-            saveBtn : com.focusPage("#saveBtn"),
-            cancelBtn : com.focusPage("#canceBtn")
+            saveItemBtn : com.focusPage("#saveItemBtn"),
+            canceItemlBtn : com.focusPage("#canceItemlBtn")
         },
 
         models:{
@@ -16,7 +16,7 @@ $(function () {
             itemNum : com.focusPage("#itemNum"),
             measurementUnit : com.focusPage("#measurementUnit"),
             total : com.focusPage("#total"),
-            comment : com.focusPage("#comment")
+            comment : com.focusPage("#Comment")
         },
         hid: params.hid,
         hardwareStatus : params.hardwareStatus,
@@ -24,7 +24,7 @@ $(function () {
     };
 
 
-    hardwareItem.btns.saveBtn.bindClick(addItem);
+    hardwareItem.btns.saveItemBtn.bindClick(addItem);
 
     hardwareItem.models.addHardwareItemModal.on("hide.bs.modal", function(){
         com.clearValidator();
@@ -101,25 +101,17 @@ $(function () {
    
     var hardwareItemSearcher = new Searcher();
 
-    var _condArr = [];
-
-    hardwareItemSearcher.init(_condArr,"condList",api.production.pageHardwareItemByHid,function(data){
-
-        displayFunc.init("resultList",data);
-
-    },"pagenation","hardwareItemPostData",{"hardware.hid" : hardwareItem.hid}, false, null, function (){
+    hardwareItemSearcher.init([],"condList",api.production.pageHardwareItemByHid,function(data){
+        displayFunc.init("itemResultList",data);
+    },"itemPagenation","hardwareItemPostData",{"hardware.hid" : hardwareItem.hid}, false, null, function (){
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addHardwareItem').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
-        var $backBtn = $('<a></a>').addClass('btn btn-minier pull-left').attr('id', 'back').css("margin", "0px 3px");
-        var $backBtns = $('<i></i>').addClass('icon-mail-forward bigger-110').appendTo($backBtn);
-        var $backSpan = $('<span></span>').text('返回').appendTo($backBtn);
 
         hidBtn($adda,hardwareItem.hardwareStatus);
-
-        return [$adda, $backBtn];
-    });
+        return [$adda];
+    },"itemResultList");
 
     com.focusPage('#addHardwareItem').click(function() {
         hardwareItem.models.addHardwareItemModal.modal("show");
@@ -156,7 +148,6 @@ $(function () {
             "hardwareItems[0].comment": hardwareItem.items.comment.val(),
     };
         com.post(api.production.addHardwareItem,options,function(res){
-            com.closePopup();
             hardwareItemSearcher.doSearch();
             com.showAlert(com.info,"添加成功");
         });
@@ -179,41 +170,27 @@ $(function () {
 
     function hidBtn(btnId,otherStatus){
         btnId.removeClass('hide');
-        if (hardwareItem.productionStatus == 5 || hardwareItem.productionStatus == 4 ) {
-            btnId.addClass('hide');
-        }else if(otherStatus != 0 ){
+        if (hardwareItem.productionStatus != null){
+           if (hardwareItem.productionStatus == 9 || hardwareItem.productionStatus == 10 ) {
+               btnId.addClass('hide');
+            }
+        }else if(otherStatus == 3|| otherStatus == 4){
             btnId.addClass('hide');
         }
 
     };
 
-    hardwareItem.items.name.typeahead({
-        url: api.production.queryQuoteItemByPinyin,
-        list: [],
-        postData: {},
-        source: function (query, process) {
-            var params = $.extend({"quoteItem.name": query, "quoteItem.pinyin": query}, this.options.postData);
-            com.post(this.options.url, params, $.proxy(this.options.callback, this));
-        }, matcher: function (item) {
-            return true;
-        }, callback: function (data) {
-            this.options.list = data['quoteItems'];
-            this.flprocess(this.options.list, 'qiid', 'name');
-        },
-        isResultTypeMap: true
-        , flupdater: function (k, v) {
-            var list = this.options.list;
-
-            $.each(list, function (index, val) {
+    com.initTypeahead('name', api.production.queryQuoteItemByPinyin,"quoteItem.pinyin","quoteItem.name", "quoteItems", "qiid", "name",function(list,k, v) {
+        $.each(list, function (index, val) {
 
                 if (val.qiid == k) {
                     hardwareItem.items.measurementUnit.val(val.measurementunit);
                     hardwareItem.items.unitPrice.val(val.unitprice);
+                    hardwareItem.items.itemNum.val(1);
+                    hardwareItem.items.total.val(utils.accMul(val.unitprice, hardwareItem.items.itemNum.val()));
                 }
-
             });
-            return v;
-        }
+        return v;
     });
 
 });

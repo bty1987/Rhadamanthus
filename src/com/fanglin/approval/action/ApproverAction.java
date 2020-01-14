@@ -27,32 +27,32 @@ public class ApproverAction extends BaseListAction {
 	private ApproverService approverService;
 
 	private ApproverVO approver;
-	
+
 	private List<ApproverVO> approvers;
-	
+
 	private List<KeyValueVO> autoFillKeyValue;
-	
+
 	@Action(value = "pageApprover", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryPageapprover() throws FLException{
-		
-		approverService.pageApprover(getPaging(), getFilters(),queryCompany());
-		
+	public String queryPageapprover() throws FLException {
+
+		approverService.pageApprover(getPaging(), getFilters(), queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryApproverByType", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryApproverByType() throws FLException{
-		
-		approvers = approverService.queryApprovalUserByType(approver, queryCompany());
-		
+	public String queryApproverByType() throws FLException {
+
+		approvers = approverService.queryApproverByType(approver, queryCompany());
+
 		return SUCCESS;
 	}
 
 	@Action(value = "addApprover", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addApprover() throws FLException{
-		
-		approverService.addApprover(approver);
-		
+	public String addApprover() throws FLException {
+
+		approverService.addApprover(approver, queryCompany());
+
 		return SUCCESS;
 	}
 
@@ -60,7 +60,7 @@ public class ApproverAction extends BaseListAction {
 	public String deleteApprover() throws FLException {
 
 		approverService.deleteApprover(approver);
-		
+
 		return SUCCESS;
 	}
 
@@ -82,15 +82,13 @@ public class ApproverAction extends BaseListAction {
 
 	public List<KeyValueVO> getAutoFillKeyValue() {
 		if (autoFillKeyValue == null) {
-		     autoFillKeyValue = new ArrayList<KeyValueVO>();
-		    }
+			autoFillKeyValue = new ArrayList<KeyValueVO>();
+		}
 		return autoFillKeyValue;
 	}
 
 	public void setAutoFillKeyValue(List<KeyValueVO> autoFillKeyValue) {
 		this.autoFillKeyValue = autoFillKeyValue;
 	}
-
-
 
 }

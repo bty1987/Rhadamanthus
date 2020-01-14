@@ -38,6 +38,8 @@ public class AddReduceItemVO implements java.io.Serializable {
 
 	private Short discount;
 
+	private Long quotationItemId;
+	
 	public Long getAriId() {
 		return ariId;
 	}
@@ -172,6 +174,14 @@ public class AddReduceItemVO implements java.io.Serializable {
 
 	public void setDiscount(Short discount) {
 		this.discount = discount;
+	}
+
+	public Long getQuotationItemId() {
+		return quotationItemId;
+	}
+
+	public void setQuotationItemId(Long quotationItemId) {
+		this.quotationItemId = quotationItemId;
 	}
 
 }

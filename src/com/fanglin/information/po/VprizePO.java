@@ -15,6 +15,8 @@ public class VprizePO implements java.io.Serializable {
 	private static final long serialVersionUID = 3149648894029451412L;
 
 	public static final short STATUS_INIT_INT = 0;
+	
+	public static final short STATUS_INVALID_INT = 1;
 
 	private long vpid;
 

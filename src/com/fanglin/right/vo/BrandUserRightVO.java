@@ -12,7 +12,7 @@ public class BrandUserRightVO implements java.io.Serializable {
 	
 	private Integer uid;
 	
-	private String brandId;
+	private Long bid;
 	
 	private List<BrandVO> brands;
 
@@ -32,20 +32,20 @@ public class BrandUserRightVO implements java.io.Serializable {
 		this.uid = uid;
 	}
 
-	public String getBrandId() {
-		return brandId;
-	}
-
-	public void setBrandId(String brandId) {
-		this.brandId = brandId;
-	}
-
 	public List<BrandVO> getBrands() {
 		return brands;
 	}
 
 	public void setBrands(List<BrandVO> brands) {
 		this.brands = brands;
+	}
+
+	public Long getBid() {
+		return bid;
+	}
+
+	public void setBid(Long bid) {
+		this.bid = bid;
 	}
 	
 }

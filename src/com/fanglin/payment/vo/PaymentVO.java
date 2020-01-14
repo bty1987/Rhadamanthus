@@ -70,6 +70,8 @@ public class PaymentVO implements Serializable {
 	
 	private String uniqueid;
 	
+	private Long arId;
+	
 	public PaymentVO() {
 		super();
 	}
@@ -281,6 +283,14 @@ public class PaymentVO implements Serializable {
 
 	public void setUniqueid(String uniqueid) {
 		this.uniqueid = uniqueid;
+	}
+
+	public Long getArId() {
+		return arId;
+	}
+
+	public void setArId(Long arId) {
+		this.arId = arId;
 	}
 
 }

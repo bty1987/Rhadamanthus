@@ -21,9 +21,9 @@ public class PuotationVO implements Serializable {
 
 	private Timestamp createTime;
 
-	private Float total;
+	private Long total;
 
-	private Float discount;
+	private Integer discount;
 
 	private Short status;
 
@@ -80,19 +80,19 @@ public class PuotationVO implements Serializable {
 		this.createTime = createTime;
 	}
 
-	public Float getTotal() {
+	public Long getTotal() {
 		return total;
 	}
 
-	public void setTotal(Float total) {
+	public void setTotal(Long total) {
 		this.total = total;
 	}
 
-	public Float getDiscount() {
+	public Integer getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(Float discount) {
+	public void setDiscount(Integer discount) {
 		this.discount = discount;
 	}
 

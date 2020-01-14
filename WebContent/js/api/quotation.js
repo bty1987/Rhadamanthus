@@ -22,6 +22,7 @@ $.extend(api.index, {
     quotetionPartIndex : {url:"/views/quotation/quotetionPart.html"},
     quotetionCompareIndex : {url:"/views/quotation/quotetionCompare.html"},
 
+    selectionIndex:{url: "/views/quotation/selection.html"},
 });
 
 $.extend(api, {quotation: {
@@ -211,7 +212,7 @@ $.extend(api, {quotation: {
     },
     updateSystemDefineItemForStatus: {url: "updateSystemDefineItemForStatus.do"},
     updateSystemDefineItemForDiscount: {url: "updateSystemDefineItemForDiscount.do"},
-    deleteSystemDefineItemByIds: {url: "deleteSystemDefineItemByIds.do"},
+    deleteSystemDefineItem: {url: "deleteSystemDefineItem.do"},
 
     pageQuotationBigCategory: {url: "pageQuotationBigCategory.do"},
     pageQuotationType: {url: "pageQuotationType.do"},
@@ -603,7 +604,171 @@ $.extend(api, {quotation: {
                "quotetion.discount", "quotetion.totalPrice", "quotetion.undisPrice", "quotetion.disPrice", "quotetion.manageRate", "quotetion.managePrice", "quotetion.trafficRate", "quotetion.trafficPrice", "quotetion.basePrice"
             ],
         }
-    }
+    },
+    // -------- 选材单 -------------------------
+    querySelectionByOrderId: {
+        url: "querySelectionByOrderId.do",
+        demo: true,
+        type: "query",
+        tranargs: [{
+            result: "selection",
+            args: [
+                "total",
+                "quotationTotal",
+                "extensionAddTotal",
+                "extensionReduceTotal",
+                "addReduceAddTotal",
+                "addReduceMinusTotal"
+            ]
+        }]
+    },
+    querySelectionByQid: {
+        url: "querySelectionByQid.do",
+        demo: true,
+        type: "query",
+        tranargs: [{
+            result: "selection",
+            args: [
+                "total",
+                "quotationTotal",
+                "extensionAddTotal",
+                "extensionReduceTotal",
+                "addReduceAddTotal",
+                "addReduceMinusTotal"
+            ]
+        }]
+    },
+    updateSelectionForAdvance: {
+        url: "updateSelectionForAdvance.do",
+        intercept: true,
+        type: "update",
+        tranargs: {
+            args: [
+                "selection.total",
+                "selection.quotationTotal",
+                "selection.extensionAddTotal",
+                "selection.extensionReduceTotal",
+                "selection.addReduceAddTotal",
+                "selection.addReduceMinusTotal"
+            ],
+        }
+    },
+    // -------- 选材项 -------------------------
+    pageSelectionItem: {
+        url: "pageSelectionItem.do",
+        demo: true,
+        type: "query",
+        tranargs: [{
+            result: "paging-data",
+            args: ["num", "initNum", "selling"]
+        },{
+            result: "paging-data-decoration-house",
+            args: ["buildArea"]
+        }]
+    },
+    pageSelectionItemForSupplier: {
+        url: "pageSelectionItemForSupplier.do", 
+        demo: true,
+        type: "query", 
+        tranargs: [{
+            result: "paging-data", 
+            args: ["num", "initNum", "selling"]
+        },{
+            result: "paging-data-decoration-house",
+            args: ["buildArea"]
+        }]
+    },
+    querySelectionItemByOrderId: {
+        url: "querySelectionItemByOrderId.do",
+        demo: true,
+        type: "query",
+        tranargs: [{
+            result: "selectionItems",
+            args: ["num", "initNum", "selling"]
+        }]
+    },
+    querySelectionItem: {
+        url: "querySelectionItem.do",
+        demo: true,
+        type: "query",
+        tranargs: [{
+            result: "selectionItems",
+            args: ["num", "initNum", "selling"]
+        }]
+    },
+    addSelectionItem: {
+        url: "addSelectionItem.do",
+        intercept: true,
+        type: "update",
+        tranargs: {
+            args: [
+                "selection.total",
+                "selection.quotationTotal",
+                "selection.extensionAddTotal",
+                "selection.extensionReduceTotal",
+                "selection.addReduceAddTotal",
+                "selection.addReduceMinusTotal",
+                "selectionItem.initNum",
+                "selectionItem.num",
+                "selectionItem.selling"
+            ],
+            query: [{
+                result: "selectionItem",
+                args: ["num", "initNum", "selling"]
+            }]
+        }
+    },
+    updateSelectionItem: {
+        url: "updateSelectionItem.do",
+        intercept: true,
+        type: "update",
+        tranargs: {
+            args: [
+                "selection.total",
+                "selection.quotationTotal",
+                "selection.extensionAddTotal",
+                "selection.extensionReduceTotal",
+                "selection.addReduceAddTotal",
+                "selection.addReduceMinusTotal",
+                "selectionItem.num"
+            ],
+        }
+    },
+    tranSelectionItem: {
+        url: "tranSelectionItem.do",
+        intercept: true,
+        type: "update",
+        tranargs: {
+            args: ["selectionItem.num"]
+        }
+    },
+    checkSelectionItem: {url: "checkSelectionItem.do"},
+    confirmSelectionItem: {url: "confirmSelectionItem.do"},
+    finishSelectionItem: {
+        url: "finishSelectionItem.do",
+        intercept: true,
+        type: "update",
+        tranargs: {
+            args: ["selectionItem.refnum"]
+        }
+    },
+    balanceSelectionItem: {url: "balanceSelectionItem.do"},
+    deleteSelectionItem: {
+        url: "deleteSelectionItem.do",
+        intercept: true,
+        type: "update",
+        tranargs: {
+            args: [
+                "selection.total",
+                "selection.quotationTotal",
+                "selection.extensionAddTotal",
+                "selection.extensionReduceTotal",
+                "selection.addReduceAddTotal",
+                "selection.addReduceMinusTotal"
+            ],
+        }
+    },
+
 
 }});
 
@@ -688,6 +853,7 @@ $.extend(api, {addReduce: {
             args: ["addPrice", "unitPrice", "subPrice", "num"]
         }]
     },
+    
     queryAddReduceItemByAddReduceIds: {
         url: "queryAddReduceItemByAddReduceIds.do", 
         demo: true,
@@ -723,6 +889,6 @@ $.extend(api, {addReduce: {
         tranargs: {
             args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice"],
         }
-    }
-    
+    },
+
 }});

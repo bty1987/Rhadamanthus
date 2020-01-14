@@ -30,16 +30,18 @@ public class CustomerOriginPO implements Serializable {
 	public static final String COLUMN_DESIGNER_STR = "designer.uid";
 
 	public static final short STATUS_INIT_INT = 0; // 初始
+	
+	public static final short STATUS_FIRSTAPPROVAL_INT = 1; // 初审
 
-	public static final short STATUS_COMMIT_INT = 1; // 提交
+	public static final short STATUS_COMMIT_INT = 2; // 提交
 
-	public static final short STATUS_CONFIRM_INT = 2; // 确认
+	public static final short STATUS_CONFIRM_INT = 3; // 确认
 
-	public static final short STATUS_APPROVE_INT = 3; // 审批
+	public static final short STATUS_APPROVE_INT = 4; // 审批
 
-	public static final short STATUS_BIND_INT = 4; // 绑定
+	public static final short STATUS_BIND_INT = 5; // 绑定
 
-	public static final short STATUS_REFUSE_INT = 5; // 拒绝
+	public static final short STATUS_REFUSE_INT = 6; // 拒绝
 
 	private long csid;
 

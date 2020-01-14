@@ -28,7 +28,19 @@ public class PointofsalesPO implements java.io.Serializable {
 
 	public static final short STATUS_INVALID_INT = 3; // 失效
 
-	public static final short STATUS_USED_INT = 4;
+	public static final short STATUS_USED_INT = 4; 
+	
+	public static final short TYPE_ADVANCE_INT = 0; //预付款
+	
+	public static final short TYPE_DECORATION_INT = 1; //装修款
+	
+	public static final short TYPE_MATERIAL_INT = 2; //主材款
+	
+	public static final short TYPE_SALES_INT = 3; //销售款
+	
+	public static final short TYPE_SERVICE_INT = 4; //服务款
+	
+	public static final short TYPE_ACTIVITY_INT = 5; //活动款
 
 	private long posid;
 
@@ -55,6 +67,8 @@ public class PointofsalesPO implements java.io.Serializable {
 	private String rstcode;
 
 	private String rstmsg;
+	
+	private long rid;
 
 	public PointofsalesPO() {
 		super();
@@ -183,6 +197,15 @@ public class PointofsalesPO implements java.io.Serializable {
 
 	public void setRstmsg(String rstmsg) {
 		this.rstmsg = rstmsg;
+	}
+
+	@Column(name = "rid")
+	public long getRid() {
+		return rid;
+	}
+
+	public void setRid(long rid) {
+		this.rid = rid;
 	}
 
 }

@@ -1,11 +1,25 @@
 jQuery(function($){
 
     var approvalTrack = {
-        approvalTypeData:{},
-        postParam: {},
+        
         type: ["劵", "物品"],
-        url : null,
+        url: null,
         postData : null,
+        
+        btns: {
+            submitBtn: com.focusPage("#submitBtn")
+        },
+        
+        modals: {
+            itemModel: com.focusPage('#itemModel'),
+            approveModal: com.focusPage("#approveModal"),
+        },
+        
+        items: {
+            result: com.focusPage('#result'),
+            annotate: com.focusPage('#annotate'),
+        },
+        
         approvalItemInfo : {
             "6": {
                 "api": api.approval.queryApprovalMaterialRefundItem,
@@ -68,7 +82,12 @@ jQuery(function($){
                     ['10', '设计部: ', "customerOrigin.designer.dept.name"],
                 ]
             }
-        }
+        },
+        
+        approvalTypeData:{},
+        
+        aid: null,
+        submitUrl : null,
     };
 
     if (params['urlLoadParams'].type == 'send') {
@@ -81,12 +100,17 @@ jQuery(function($){
         approvalTrack.url = api.approval.pageApprovalForReceiveDept;
         approvalTrack.postData = "approvalDeptTrackPostData"
     }
-
-    com.post(api.ds.approval, {
-        "timestamp": new Date().getTime()
-    }, function (res) {
+    
+    com.post(api.ds.approval, {}, function (res) {
         approvalTrack.approvalTypeData = res.approvalType.split("key", "value");
     }, null, false);
+    
+    approvalTrack.btns.submitBtn.on("click", approve);
+    
+    approvalTrack.modals.approveModal.on('hide.bs.modal', function(e){
+        com.clearValidator();
+        com.cleanItems(approvalTrack.items);
+    });
 
     var displayFunc = (function () {
 
@@ -97,9 +121,7 @@ jQuery(function($){
 
             if (listData && listData.length) {
                 $.each(listData, function (i, v) {
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
+                    creatLine(v).appendTo($ul);
                 });
 
                 $ul.appendTo($tableWrap);
@@ -119,11 +141,14 @@ jQuery(function($){
             var $btnRefuse = $('<a></a>').addClass('btn btn-minier btn-danger').html('拒绝').prepend($('<i></i>'));
 
             var propertyArr = [
-                ["申请人:", v.sender.currentName, "grey"],
-                ["审批人:", v.receiver.currentName, "grey"],
-                ["提交时间:", v.createTime, "grey"],
-                ["审批时间:", v.approvalTime, "grey"],
-                ["状态:", v.status == 0 ? "等待" : (v.status == 1 ? "通过" : v.status == 3 ? "审批中" : "拒绝"), "red"]
+                ["申请人 : ", v.sender.currentName, "grey"],
+                ["审批人 : ", v.receiver.currentName, "grey"],
+                ["提交时间 : ", v.createTime, "grey"],
+                ["审批时间 : ", v.approvalTime, "grey"],
+                ["状态 : ", v.status == 0 ? "等待" : (v.status == 1 ? "通过" : v.status == 3 ? "审批中" : "拒绝"), "red"],
+                ["说明 : ", v.contents, "grey"],
+                ["备注 : ", v.comment, "grey"],
+                ["批注 : ", v.annotate, "grey"],
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -133,21 +158,19 @@ jQuery(function($){
                 $liProperty.appendTo($ulProperty);
             });
 
-            var $content = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').append($('<li></li>').append($('<strong></strong>').append($('<b></b>').text(v.contents==null?"":v.contents).addClass("grey"))));
-
             $divBtnWrap.appendTo($h3);
 
             if (v.status == 0 && params['urlLoadParams'].type != 'send') {
                 $divBtnWrap.append($btnPass).append($btnRefuse).appendTo($h3);
             }
 
-            $liLine.append($h3).append($ulProperty).append($content);
+            $liLine.append($h3).append($ulProperty);
             $btnPass.bindClick(function () {
-                approve(v.aid, api.approval.approveApproval);
+                proapprove(v.aid, api.approval.approveApproval, "通过");
             });
 
             $btnRefuse.bindClick(function () {
-                approve(v.aid, api.approval.refuseApproval);
+                proapprove(v.aid, api.approval.refuseApproval, "拒绝");
             });
 
             if ([6, 8, 10, 14].indexOf(v.type) != -1) {
@@ -191,13 +214,35 @@ jQuery(function($){
         },
         "pagenation", approvalTrack.postData);
     }
-
-    function approve(aid, url, $this) {
-        com.post(url, {"approval.aid": aid}, function (res) {
-            searcher.doSearch();
-        }, null, false);
+    
+    function proapprove(aid, submitUrl, result){
+        
+        approvalTrack.aid = aid;
+        approvalTrack.submitUrl = submitUrl;
+        
+        approvalTrack.items.annotate.val("");
+        approvalTrack.items.result.text(result);
+        
+        approvalTrack.modals.approveModal.modal("show");
     }
 
+    function approve() {
+        
+        var options = {
+            "approval.aid": approvalTrack.aid,
+            "approval.annotate": approvalTrack.items.annotate.val(),
+        }
+        
+        com.post(approvalTrack.submitUrl, options, function (res) {
+            searcher.doSearch();
+            
+            approvalTrack.aid = null;
+            approvalTrack.submitUrl = null;
+            
+            approvalTrack.modals.approveModal.modal("hide");
+        });
+    }
+    
     function queryInformationItem(aid, type) {
 
         if (com.focusPage('#itemList').children()) {
@@ -237,10 +282,9 @@ jQuery(function($){
             
             if(itemInfo.caleTotal) com.focusPage('#totalMoney').html("总金额:" + totalMoney).show();
             
-            com.focusPage('#itemModel').modal("show");
+            approvalTrack.modals.itemModel.modal("show");
 
-        }, null, false);
-
+        });
     }
 
     function getElement(o, props) {

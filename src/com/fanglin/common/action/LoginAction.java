@@ -43,27 +43,27 @@ import com.fanglin.utils.SystemConfig;
 @Namespace("/")
 @Controller
 public class LoginAction extends BaseListAction {
-	
+
 	private static final long serialVersionUID = 597878314944213650L;
-	
+
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private LoginService loginService;
-	
+
 	@Autowired
 	private LoginLogService loginLogService;
-	
+
 	private String authentication;
-	
+
 	private UserVO user;
-	
+
 	private String company;
-	
-	@Action(value = "doLogin", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
+
+	@Action(value = "doLogin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String doLogin() {
 
 		String inputCode = request.getParameter("verifyCode");
@@ -75,75 +75,69 @@ public class LoginAction extends BaseListAction {
 		try {
 			String verifyCode = AESHelper.decrypt(securityCode, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
 
-			if(verifyCode == null || !verifyCode.equals(inputCode)){
+			if (verifyCode == null || !verifyCode.equals(inputCode)) {
 				throw new FLException(110001, "验证码错误");
-			}else{
-				
-				LoginLogVO loginLogVO = new LoginLogVO(loginId, ip, DateUtil.getDateToTimestamp(new Date()));
-				
-				int times = loginLogService.isCanLogin(loginLogVO);
-				if(times == -1){
-					throw new FLException(110003, "密码输入错误次数过多,拒绝登陆");
-				}
-				
-				UserVO user = userService.validateUser(loginId, password);
-				
-				if(user == null){
-					
-					String errorMessage = String.format("用户名或者密码错误,还可以尝试%s次输入", String.valueOf((times - 1)));
-					
-					loginLogVO.setSuccessFlag(0);
-					loginLogService.addLoginLog(loginLogVO);
-					
-					throw new FLException(110002, errorMessage);
-				}else{
-					
-				    if((user.getIsLogin() & UserPO.ISLOGIN_FIP_INT) != UserPO.ISLOGIN_FIP_INT){
-			            throw new FLException(110004, "该用户不能登陆系统");
-				    }
-				    
-				    if(user.getExtranet() == 0 && !(ip.startsWith("192.168") || ip.startsWith("127") || SystemConfig.getString("localHost").contains(ip))){
-				    	throw new FLException(110007, "网络问题");
-				    }
-				    
-				    Authentication authenticationUtil = new Authentication(user.getUserId(), user.getCurrentName(), user.getRole().getRid(), (new Date()).getTime(), false, Integer.parseInt(user.getCompanys()), user.getFreedom());
-				    
-				    authentication = AESHelper.encrypt(authenticationUtil.getAuthenticationStr(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
-					
-					loginLogVO.setSuccessFlag(1);
-					loginLogService.addLoginLog(loginLogVO);
-				}
 			}
+
+			LoginLogVO loginLogVO = new LoginLogVO(loginId, ip, DateUtil.getDateToTimestamp(new Date()));
+
+			int times = loginLogService.isCanLogin(loginLogVO);
+			if (times == -1) {
+				throw new FLException(110003, "密码输入错误次数过多,拒绝登陆");
+			}
+
+			UserVO user = userService.validateUser(loginId, password);
+
+			if (user == null) {
+
+				String errorMessage = String.format("用户名或者密码错误,还可以尝试%s次输入", String.valueOf((times - 1)));
+
+				loginLogVO.setSuccessFlag(0);
+				loginLogService.addLoginLog(loginLogVO);
+
+				throw new FLException(110002, errorMessage);
+			}
+
+			if ((user.getIsLogin() & UserPO.ISLOGIN_FIP_INT) != UserPO.ISLOGIN_FIP_INT) {
+				throw new FLException(110004, "该用户不能登陆系统");
+			}
+
+			Authentication authenticationUtil = new Authentication(user.getUserId(), user.getCurrentName(), user.getRole().getRid(), (new Date()).getTime(), false, Integer.parseInt(user.getCompanys()), user.getFreedom());
+
+			authentication = AESHelper.encrypt(authenticationUtil.getAuthenticationStr(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
+
+			loginLogVO.setSuccessFlag(1);
+			loginLogService.addLoginLog(loginLogVO);
 		} catch (FLException e) {
 			setErrorCode(e.getCode());
 			setErrorMsg(e.getErrorMessage());
 		} catch (Exception e) {
-			
+
 			setErrorCode(110000);
 			setErrorMsg("系统处理问题");
-			
+
 			LogUtils.logging(logger, e, "doLogin", "common");
 		}
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "logout", results = { @Result(name = "success", type = "dispatcher", location = "/") })
-	public String logout(){
+	public String logout() {
 
 		CookieUtil.delCookie(request, response, Constant.COOKIE_AUTHENTICATION);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "requestAuthCode", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
-	public String requestAuthCode() throws FLException{
-		
+
+	@Action(value = "requestAuthCode", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String requestAuthCode() throws FLException {
+
 		try {
 			String userId = request.getParameter("userId");
 			String code = request.getParameter("code");
 			String secret = request.getParameter("secret");
-			
+
 			setAuthentication(loginService.requestAuthCode(userId, code, secret));
 		} catch (FLException e) {
 			setErrorCode(e.getCode());
@@ -151,21 +145,21 @@ public class LoginAction extends BaseListAction {
 		} catch (Exception e) {
 			setErrorCode(110000);
 			setErrorMsg("系统处理问题");
-			
+
 			LogUtils.logging(logger, e, "requestAuthCode", "common");
 		}
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "changeAuthCode", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
-	public String changeAuthCode() throws FLException{
-		
+
+	@Action(value = "changeAuthCode", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String changeAuthCode() throws FLException {
+
 		try {
-			if(getAuthentication() == null){
+			if (getAuthentication() == null) {
 				throw new FLException(110008, "验证信息错误");
 			}
-			
+
 			setAuthentication(loginService.changeAuthCode(getAuthentication(), getCompany()));
 		} catch (FLException e) {
 			setErrorCode(e.getCode());
@@ -173,52 +167,52 @@ public class LoginAction extends BaseListAction {
 		} catch (Exception e) {
 			setErrorCode(110000);
 			setErrorMsg("系统处理问题");
-			
+
 			LogUtils.logging(logger, e, "changeAuthCode", "common");
 		}
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "updateAuthCode", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
-	public String updateAuthCode(){
-		
+
+	@Action(value = "updateAuthCode", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateAuthCode() {
+
 		try {
-			if(getAuthentication() == null){
+			if (getAuthentication() == null) {
 				throw new FLException(110008, "验证信息错误");
 			}
-			
+
 			setAuthentication(loginService.updateAuthCode(getAuthentication(), user.getPassword()));
 		} catch (FLException e) {
 			setErrorCode(e.getCode());
 			setErrorMsg(e.getErrorMessage());
 		}
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "behead", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
-	public String behead() throws FLException{
-		
+
+	@Action(value = "behead", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String behead() throws FLException {
+
 		String cmd = "sh /home/fanglin/bin/behead";
-		
+
 		Runtime run = Runtime.getRuntime();
-		
+
 		try {
 			run.exec(cmd);
 		} catch (Exception e) {
 			setErrorCode(110000);
 			setErrorMsg("系统处理问题");
 		}
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "ping", results = { @Result(name = "success", type = "json", params={"ignoreHierarchy","false"}) }, params = {"contentType", "text/html" })
-	public String ping() throws FLException{
+
+	@Action(value = "ping", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String ping() throws FLException {
 		return SUCCESS;
 	}
-	
+
 	public String getAuthentication() {
 		return authentication;
 	}

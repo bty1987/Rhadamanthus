@@ -75,27 +75,27 @@ public class WorkerSalaryImportService implements com.fanglin.imports.service.Wo
 			short subtype = Short.valueOf(_salary.get(3));
 			String comment = _salary.get(4);
 
-			UserPO user = userDao.queryUserByUserId(userid);
+			UserPO worker = userDao.queryUserByUserId(userid);
 			UserPO creater = userDao.queryUserByUserId(userId);
-			WorkerSalaryPO workerSalarypo = new WorkerSalaryPO(user, creater);
+
+			WorkerSalaryPO workerSalaryPO = new WorkerSalaryPO(worker, creater);
 
 			if (subtype <= SUBTYPY_SHORTTHREE && subtype > SUBTYPY_SHORTONE) {
-				workerSalarypo.setType(WorkerSalaryPO.STATUS_INIT_INT);
-
+				workerSalaryPO.setType(WorkerSalaryPO.TYPE_ADD_INT);
 			} else {
-				workerSalarypo.setType(WorkerSalaryPO.TYPE_SALARY_STRONE);
-
+				workerSalaryPO.setType(WorkerSalaryPO.TYPE_SUB_INT);
 			}
-			workerSalarypo.setCompany(creater.getCompany());
-			workerSalarypo.setUser(user);
-			workerSalarypo.setSubtype(subtype);
-			workerSalarypo.setComment(comment);
-			workerSalarypo.setSalary(salary);
-			workerSalarypo.setCreater(creater);
-			workerSalarypo.setCreateTime(new Timestamp(System.currentTimeMillis()));
-			workerSalarypo.setCsid(0);
 
-			workerSalaryDao.save(workerSalarypo);
+			workerSalaryPO.setCompany(creater.getCompany());
+			workerSalaryPO.setUser(worker);
+			workerSalaryPO.setSubtype(subtype);
+			workerSalaryPO.setComment(comment);
+			workerSalaryPO.setSalary(salary);
+			workerSalaryPO.setCreater(creater);
+			workerSalaryPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
+			workerSalaryPO.setCsid(0);
+
+			workerSalaryDao.save(workerSalaryPO);
 		}
 
 		if (index % 100 == 0) {

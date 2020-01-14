@@ -29,6 +29,7 @@ jQuery(function () {
         bid : params.bid,
         cid: null,
         flag: true,
+        otherStatus: null,
         salePostData: {},
         priceArray: []
     };
@@ -70,7 +71,7 @@ jQuery(function () {
 
                 var $supplementDiv = $("<div></div>").addClass("pull-right col-sm-2").appendTo($h3);
                 var $supplementLabel = $('<label></label>').addClass("col-sm-4").css("line-height", "28px").html("数量:").appendTo($supplementDiv);
-                var $supplementInput = $('<input/>').addClass("col-sm-6 v_float").css("font-size","14px").css("margin-right","5px").css("width","100px").css("height","26px").attr("name", "inputNumber").appendTo($supplementDiv);
+                var $supplementInput = $('<input/>').addClass("col-sm-6 v_float_3").css("font-size","14px").css("margin-right","5px").css("width","100px").css("height","26px").attr("name", "inputNumber").val(0).appendTo($supplementDiv);
 
                 $supplementInput.on("change", function () {
 
@@ -125,7 +126,7 @@ jQuery(function () {
     querySalesItemBySid(sales.sid);
 
     function querySalesItemBySid(sid) {
-        com.post(api.inventory.querySalesItemBySid, {"sales.sid": sid}, function (data) {
+        com.post(api.sales.querySalesItemBySid, {"sales.sid": sid}, function (data) {
             initList(data.salesItems);
         }, function (e) {
             com.showAlert(com.error, e.errorMsg);
@@ -139,9 +140,8 @@ jQuery(function () {
 
         if (com.validate('searchInfo', 'bottom') == false) {
 
-            if (submitCheck() == false) {
-                return;
-            }
+            if (submitCheck() == false) return;
+            if(com.validate("salesItemList" , "bottom")) return;
 
             _option = {
                 "sales.orderId": sales.items.SupplementOrderId.val(),
@@ -150,12 +150,13 @@ jQuery(function () {
                 "sales.instorer.userId": com.typeahead("instorer"),
                 "sales.salesman.userId": com.typeahead("salesmanName"),
                 "sales.bid": sales.bid,
-                "sales.coupon": sales.items.SupplementCoupon.val() != "" ? parseFloat(sales.items.SupplementCoupon.val()) : 0,
+                "sales.coupon": sales.items.SupplementCoupon.val() != "" ? utils.changeThrDecimal(parseFloat(sales.items.SupplementCoupon.val())) : 0,
                 "sales.comment": sales.items.comment.val(),
-                "sales.maling": sales.items.SupplementMaling.val() != "" ? parseFloat(sales.items.SupplementMaling.val()) : 0,
-                "sales.total":  isNaN(parseFloat(sales.items.totals.val())) ? 0 : parseFloat(sales.items.totals.val()),
+                "sales.maling": sales.items.SupplementMaling.val() != "" ? utils.changeThrDecimal(parseFloat(sales.items.SupplementMaling.val())) : 0,
+                "sales.total":  isNaN(parseFloat(sales.items.totals.val())) ? 0 : utils.changeThrDecimal(parseFloat(sales.items.totals.val())),
                 "sales.house.hid": sales.salePostData["sales.house.hid"],
-                "sales.dompanys": sales.salePostData["sales.dompanys"]
+                "sales.dompanys": sales.salePostData["sales.dompanys"],
+                "sales.otherStatus":sales.otherStatus
             };
 
             if (sales.items.SupplementCoupon.val() == "" || sales.items.SupplementCoupon.val() == 0) {
@@ -166,21 +167,14 @@ jQuery(function () {
 
             var $lis = com.focusPage('.item-orange', "#salesItemList");
 
-            var $otherStatus = 0;
             var index = 0;
             $lis && $lis.length && $.each($lis, function (i, v) {
                 var $v = $(v);
 
-                var $status = $v.attr('data-otherStatus');
-                
-                if ($status == 1) {
-                    $otherStatus = 1;
-                }
                 var numberParam = $v.find("input[name='inputNumber']").val();
 
-                if(numberParam != ""){
+                if(numberParam != "" && numberParam != 0){
                     flgs = true;
-
                     _option["salesItems[" + index + "].goods.gid"] = $v.attr("data-gid");
                     _option["salesItems[" + index + "].color.cid"] = $v.attr("data-cid");
                     _option["salesItems[" + index + "].format.fid"] = $v.attr("data-fid");
@@ -191,7 +185,7 @@ jQuery(function () {
                     _option["salesItems[" + index + "].postDis"] = $v.attr("data-postDis");
                     _option["salesItems[" + index + "].price"] = $v.attr("data-price");
                     _option["salesItems[" + index + "].num"] = numberParam;
-                    _option["salesItems[" + index + "].total"] = utils.accMul(numberParam, sales.priceArray[i]);
+                    _option["salesItems[" + index + "].total"] = utils.changeThrDecimal(utils.accMul(numberParam, sales.priceArray[i]));
                     _option["salesItems[" + index + "].comment"] = $v.attr("data-comment");
                     _option["salesItems[" + index + "].rawCtype"] = $v.attr("data-rawCtype");
                     _option["salesItems[" + index + "].rawCvalue"] = $v.attr("data-rawCvalue");
@@ -203,12 +197,12 @@ jQuery(function () {
 
             });
             if(flgs){
-                com.post(api.inventory.addSales, _option, function (data) {
+                com.post(api.sales.addSales, _option, function (data) {
 
                     com.showAlert(com.info, "补单成功");
 
                     com.focusPage('.order_inputinfo').val(null);
-                    sales.items.salesItemList.find("input[name='inputNumber']").val("");
+                    sales.items.salesItemList.find("input[name='inputNumber']").val(0);
                     
                     com.cleanTypeahead("salesmanName");
                     com.cleanTypeahead("instorer");
@@ -249,9 +243,10 @@ jQuery(function () {
         return flag;
     }
 
-    com.post(api.inventory.querySalesBySid, {
+    com.post(api.sales.querySalesBySid, {
         "sales.sid": sales.sid
     }, function (res) {
+        sales.otherStatus = res.sales.otherStatus;
         sales.items.SupplementOrderId.val(res.sales.orderId);
         sales.items.customerName.val(res.sales.customer.name);
         sales.items.brands.attr({'data-brand': res.sales.brand,'data-category':res.sales.category}).val(res.sales.brand+'-'+res.sales.category);

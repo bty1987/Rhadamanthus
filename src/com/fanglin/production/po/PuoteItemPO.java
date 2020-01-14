@@ -44,7 +44,7 @@ public class PuoteItemPO implements Serializable {
 
 	private short status;
 
-	private float unitprice;
+	private int unitprice;
 
 	private int company;
 
@@ -125,11 +125,11 @@ public class PuoteItemPO implements Serializable {
 	}
 
 	@Column(name = "unitprice")
-	public float getUnitprice() {
+	public int getUnitprice() {
 		return unitprice;
 	}
 
-	public void setUnitprice(float unitprice) {
+	public void setUnitprice(int unitprice) {
 		this.unitprice = unitprice;
 	}
 

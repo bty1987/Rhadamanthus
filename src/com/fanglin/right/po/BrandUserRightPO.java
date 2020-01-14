@@ -4,9 +4,14 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.communion.po.BrandPO;
 
 @Entity
 @Table(name = "branduserright", catalog = "communion")
@@ -20,7 +25,21 @@ public class BrandUserRightPO implements java.io.Serializable {
 	
 	private int uid;
 	
-	private String brandId;
+	private BrandPO brand;
+	
+//	private String brandId;
+
+	public BrandUserRightPO(){
+		super();
+	}
+	
+	public BrandUserRightPO(int uid, BrandPO brand) {
+		super();
+		this.uid = uid;
+		this.brand = brand;
+	}
+
+
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -42,13 +61,23 @@ public class BrandUserRightPO implements java.io.Serializable {
 		this.uid = uid;
 	}
 
-	@Column(name = "brandId")
-	public String getBrandId() {
-		return brandId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, name = "bid", referencedColumnName = "bid")
+	public BrandPO getBrand() {
+		return brand;
 	}
 
-	public void setBrandId(String brandId) {
-		this.brandId = brandId;
+	public void setBrand(BrandPO brand) {
+		this.brand = brand;
 	}
+
+//	@Column(name = "brandId")
+//	public String getBrandId() {
+//		return brandId;
+//	}
+//
+//	public void setBrandId(String brandId) {
+//		this.brandId = brandId;
+//	}
 
 }

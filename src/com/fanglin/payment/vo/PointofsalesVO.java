@@ -11,11 +11,11 @@ public class PointofsalesVO implements Serializable {
 
 	private static final long serialVersionUID = 1447438476628722570L;
 
-	private long posid;
+	private Long posid;
 
 	private String pid;
 
-	private short type;
+	private Short type;
 
 	private String no;
 
@@ -25,9 +25,9 @@ public class PointofsalesVO implements Serializable {
 
 	private String outOrderNo;
 
-	private short status;
+	private Short status;
 
-	private long money;
+	private Long money;
 
 	private Timestamp createTime;
 
@@ -38,6 +38,8 @@ public class PointofsalesVO implements Serializable {
 	private String rstmsg;
 
 	private String way;
+	
+	private Long rid;
 
 	public PointofsalesVO() {
 		super();
@@ -48,11 +50,11 @@ public class PointofsalesVO implements Serializable {
 		this.creater = creater;
 	}
 
-	public long getPosid() {
+	public Long getPosid() {
 		return posid;
 	}
 
-	public void setPosid(long posid) {
+	public void setPosid(Long posid) {
 		this.posid = posid;
 	}
 
@@ -64,11 +66,11 @@ public class PointofsalesVO implements Serializable {
 		this.pid = pid;
 	}
 
-	public short getType() {
+	public Short getType() {
 		return type;
 	}
 
-	public void setType(short type) {
+	public void setType(Short type) {
 		this.type = type;
 	}
 
@@ -104,19 +106,19 @@ public class PointofsalesVO implements Serializable {
 		this.outOrderNo = outOrderNo;
 	}
 
-	public short getStatus() {
+	public Short getStatus() {
 		return status;
 	}
 
-	public void setStatus(short status) {
+	public void setStatus(Short status) {
 		this.status = status;
 	}
 
-	public long getMoney() {
+	public Long getMoney() {
 		return money;
 	}
 
-	public void setMoney(long money) {
+	public void setMoney(Long money) {
 		this.money = money;
 	}
 
@@ -159,6 +161,14 @@ public class PointofsalesVO implements Serializable {
 
 	public void setWay(String way) {
 		this.way = way;
+	}
+
+	public Long getRid() {
+		return rid;
+	}
+
+	public void setRid(Long rid) {
+		this.rid = rid;
 	}
 
 }

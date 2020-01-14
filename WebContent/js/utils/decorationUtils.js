@@ -414,7 +414,7 @@ var decorationUtils = {
 
         var decorationPayments = null;
         //通过装修单号获取预付款金额
-        com.post(api.payment.queryAdvancePaymentByOrderId, {"decoration.orderId": decorationDetail.decorationOrderId}, function (res) {
+        com.post(api.payment.queryAdvancePaymentByOrderId, {"advancePayment.decoration.orderId": decorationDetail.decorationOrderId}, function (res) {
             com.focusPage("#balanceAdvance").text(res.balanceAdvance);
             com.focusPage("#projectAdvance").text(res.projectAdvance);
             com.focusPage("#materialAdvance").text(res.materialAdvance);

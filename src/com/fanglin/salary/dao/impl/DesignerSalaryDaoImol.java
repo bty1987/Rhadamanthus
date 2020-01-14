@@ -44,56 +44,50 @@ public class DesignerSalaryDaoImol extends DaoImpl<DesignerSalaryPO> implements 
 		session().createSQLQuery(sql).setLong("dsid", dsid).executeUpdate();
 	}
 
-	private void queryFilterExcute(PagingQuery<DesignerSalaryPO> query, List<Filter> filter) {
+	private void queryFilterExcute(PagingQuery<DesignerSalaryPO> query, List<Filter> filters) {
 
-		if (filter != null) {
-			for (Filter filters : filter) {
+		if (filters == null)
+			return;
 
-				String filet = filters.getField();
-				String data = filters.getData();
-				String op = filters.getOp();
+		for (Filter filter : filters) {
 
-				if ("userName".equals(filet)) {
-					query.alias("duser", "duser");
-					query.add(query.getCriterion("duser.userName", data, op));
-				}
+			String filet = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
 
-				if ("status".equals(filet)) {
-					query.add(query.getCriterion(DesignerSalaryPO.STATUS_INIT_STRA, Short.parseShort(data), op));
-				}
+			if ("userName".equals(filet)) {
+				query.alias("duser", "duser");
+				query.add(query.getCriterion("duser.userName", data, op));
+			} else if ("status".equals(filet)) {
+				query.add(query.getCriterion(DesignerSalaryPO.STATUS_INIT_STRA, Short.parseShort(data), op));
+			} else if ("approveTime".equals(filter.getField())) {
 
-				if ("approveTime".equals(filters.getField())) {
+				String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
+				String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
 
-					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
+				Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
+				Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
 
-					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+				Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
+				Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
 
-					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
+				query.add(query.getCriterion(WorkerSalaryPO.COLUMN_APPROVETIME_STR, eTimestamp, "le"));
+				query.add(query.getCriterion(WorkerSalaryPO.COLUMN_APPROVETIME_STR, sTimestamp, "ge"));
+			} else if ("createTime".equals(filter.getField())) {
 
-					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_APPROVETIME_STR, eTimestamp, "le"));
-					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_APPROVETIME_STR, sTimestamp, "ge"));
-				}
-				if ("createTime".equals(filters.getField())) {
+				String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
+				String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
 
-					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
+				Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
+				Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
 
-					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+				Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
+				Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
 
-					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-
-					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_CREATETIME_STR, eTimestamp, "le"));
-					query.add(query.getCriterion(WorkerSalaryPO.COLUMN_CREATETIME_STR, sTimestamp, "ge"));
-				}
-
+				query.add(query.getCriterion(WorkerSalaryPO.COLUMN_CREATETIME_STR, eTimestamp, "le"));
+				query.add(query.getCriterion(WorkerSalaryPO.COLUMN_CREATETIME_STR, sTimestamp, "ge"));
 			}
 		}
-
 	}
 
 }

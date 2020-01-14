@@ -28,6 +28,8 @@ public interface ConstructionDao extends Dao<ConstructionPO> {
 
 	public List<ConstructionPO> pageConstructionForAcceptance(Paging paging, List<Filter> filters, Integer company);
 
+	public List<ConstructionPO> pageConstructionForBase(Paging paging, List<Filter> filters, Integer company);
+
 	public List<ConstructionPO> queryConstructionForSupervisionByUserId(List<Filter> filters, String supervisionUserId);
 
 	public ConstructionPO queryConstructionByOrderId(String orderId);

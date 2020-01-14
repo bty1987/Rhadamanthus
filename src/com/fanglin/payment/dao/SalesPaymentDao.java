@@ -16,6 +16,8 @@ public interface SalesPaymentDao extends Dao<SalesPaymentPO>{
 	
 	public List<SalesPaymentPO> pageSalesPaymentForNotInit(Paging paging, List<Filter> filters);
 	
+	public List<SalesPaymentPO> querySalesPayment(List<Filter> filters);
+	
 	public List<SalesPaymentPO> querySalesPaymentsBySid(long sid);
 	
 	public List<SalesPaymentPO> querySalesPaymentBySids(List<Long> sids);
@@ -24,7 +26,7 @@ public interface SalesPaymentDao extends Dao<SalesPaymentPO>{
 	
 	public SalesPaymentPO querySalesPaymentsBySidAndType(long sid, short type);
 	
-	public List<SalesPaymentPO> querySalesPaymentsBySidAndTypes(long sid, List<Short> types);
+	public int countSalesPayment(long sid, List<Short> types);
 	
 	public int countSalesPaymentBySid(long sid);
 	

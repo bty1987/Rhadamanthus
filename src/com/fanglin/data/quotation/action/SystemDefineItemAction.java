@@ -95,7 +95,7 @@ public class SystemDefineItemAction extends BaseListAction {
 	}
 
 	@Action(value = "deleteSystemDefineItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteSystemDefineItemByIds() {
+	public String deleteSystemDefineItem() {
 
 		systemDefineItemService.deleteSystemDefineItem(systemDefineItem);
 

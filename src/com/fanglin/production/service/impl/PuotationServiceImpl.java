@@ -13,8 +13,10 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.production.dao.ProductionDao;
 import com.fanglin.production.dao.PuotationDao;
 import com.fanglin.production.dao.PuotationItemDao;
+import com.fanglin.production.po.ProductionPO;
 import com.fanglin.production.po.PuotationItemPO;
 import com.fanglin.production.po.PuotationPO;
 import com.fanglin.production.service.PuotationService;
@@ -30,6 +32,9 @@ public class PuotationServiceImpl implements PuotationService {
 
 	@Autowired
 	private PuotationDao puotationDao;
+	
+	@Autowired
+	private ProductionDao productionDao;
 
 	@Autowired
 	private PuotationItemDao puotationItemDao;
@@ -80,6 +85,16 @@ public class PuotationServiceImpl implements PuotationService {
 	@Transactional(rollbackFor = Exception.class)
 	public int addPuotation(PuotationVO puotationVO, List<PuotationItemVO> puotationItems, String userId) throws FLException {
 
+        ProductionPO productionPO = productionDao.get(puotationVO.getPid());
+        
+		if(productionPO == null){
+			throw new FLException(220001, "生产单不存在");
+		}
+        
+		if(productionPO.getStatus() != ProductionPO.STATUS_INIT_SHORT){
+			throw new FLException(220002, "生产单状态不可操作");
+		}
+		
 		PuotationPO puotationPO = new PuotationPO();
 
 		UserPO creater = userDao.queryUserByUserId(userId);
@@ -89,7 +104,7 @@ public class PuotationServiceImpl implements PuotationService {
 		puotationPO.setCreater(creater);
 		puotationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		puotationPO.setTotal(puotationVO.getTotal());
-		puotationPO.setDiscount((short) 1);
+		puotationPO.setDiscount(1000);
 		puotationPO.setComment(puotationVO.getComment());
 
 		puotationDao.save(puotationPO);
@@ -107,27 +122,36 @@ public class PuotationServiceImpl implements PuotationService {
 				puotationItemDao.save(puotationItemPO);
 
 			}
-
 		}
 
 		return 0;
 	}
 
+	
 	@Override
+	@SuppressWarnings("unused")
 	@Transactional(rollbackFor = Exception.class)
 	public int addPuotationItem(PuotationItemVO puotationItemVO) throws FLException {
-
-		PuotationItemPO puotationItemPO = new PuotationItemPO();
-
+		
 		PuotationPO puotationPO = puotationDao.queryPuotationByQid(puotationItemVO.getQid());
-		if (puotationPO == null) {
-			throw new FLException(220014, "报价不存在");
+		
+		ProductionPO productionPO = productionDao.get(puotationPO.getPid());
+		
+		PuotationItemPO puotationItemPO = new PuotationItemPO();
+		
+		if(productionPO.getStatus() != ProductionPO.STATUS_INIT_SHORT){
+			throw new FLException(220002, "生产单状态不可操作");
 		}
+		
+		if(puotationPO == null){
+			throw new FLException(220014 , "报价不存在");
+		}
+		
 		BeanUtil.copyProperties(puotationItemVO, puotationItemPO);
 
 		puotationItemDao.save(puotationItemPO);
 
-		float total = puotationPO.getTotal();
+		long total = puotationPO.getTotal();
 		puotationPO.setTotal(Arith.add(total, Arith.mul(puotationItemVO.getTotal(), puotationPO.getDiscount())));
 
 		puotationDao.update(puotationPO);
@@ -136,10 +160,16 @@ public class PuotationServiceImpl implements PuotationService {
 	}
 
 	@Override
+	@SuppressWarnings("unused")
 	@Transactional(rollbackFor = Exception.class)
 	public int updatePuotation(PuotationVO puotationVO) throws FLException {
 
 		PuotationPO puotationPO = puotationDao.queryPuotationByQid(puotationVO.getQid());
+		ProductionPO productionPO = productionDao.get(puotationPO.getPid());
+		
+		if(productionPO.getStatus() != ProductionPO.STATUS_INIT_SHORT){
+			throw new FLException(220002, "生产单状态不可操作");
+		}
 		
 		if (puotationPO == null) {
 			throw new FLException(220014, "报价不存在");
@@ -155,11 +185,16 @@ public class PuotationServiceImpl implements PuotationService {
 	}
 
 	@Override
+	@SuppressWarnings("unused")
 	@Transactional(rollbackFor = Exception.class)
 	public int updatePuotationForAdvance(PuotationVO puotationVO) throws FLException {
 
 		PuotationPO puotationPO = puotationDao.queryPuotationByQid(puotationVO.getQid());
+        ProductionPO productionPO = productionDao.get(puotationPO.getPid());
 		
+		if(productionPO.getStatus() != ProductionPO.STATUS_INIT_SHORT){
+			throw new FLException(220002, "生产单状态不可操作");
+		}
 		if (puotationPO == null) {
 			throw new FLException(220014, "报价不存在");
 		}
@@ -174,10 +209,16 @@ public class PuotationServiceImpl implements PuotationService {
 	}
 
 	@Override
+	@SuppressWarnings("unused")
 	@Transactional(rollbackFor = Exception.class)
 	public int updatePuotationForDefault(PuotationVO puotationVO) throws FLException {
 
 		PuotationPO puotationPO = puotationDao.queryPuotationByQid(puotationVO.getQid());
+        ProductionPO productionPO = productionDao.get(puotationPO.getPid());
+		
+		if(productionPO.getStatus() != ProductionPO.STATUS_INIT_SHORT){
+			throw new FLException(220002, "生产单状态不可操作");
+		}
 		
 		if (puotationPO == null) {
 			throw new FLException(220014, "报价不存在");
@@ -191,11 +232,17 @@ public class PuotationServiceImpl implements PuotationService {
 	}
 
 	@Override
+	@SuppressWarnings("unused")
 	@Transactional(rollbackFor = Exception.class)
 	public int deletePuotation(PuotationVO puotationVO) throws FLException {
 
 		PuotationPO puotationPO = puotationDao.queryPuotationByQid(puotationVO.getQid());
-
+        ProductionPO productionPO = productionDao.get(puotationPO.getPid());
+		
+		if(productionPO.getStatus() != ProductionPO.STATUS_INIT_SHORT){
+			throw new FLException(220002, "生产单状态不可操作");
+		}
+		
 		if (puotationPO == null) {
 			throw new FLException(220014, "报价不存在");
 		}
@@ -207,24 +254,25 @@ public class PuotationServiceImpl implements PuotationService {
 	}
 
 	@Override
+	@SuppressWarnings("unused")
 	@Transactional(rollbackFor = Exception.class)
 	public int deletePuotationItem(PuotationItemVO puotationItemVO) throws FLException {
 
-		PuotationItemPO puotationItemPO = puotationItemDao.queryPuotationItemByQiid(puotationItemVO.getQiid());
-
-		if (puotationItemPO == null) {
-			throw new FLException(220015, "报价中报价项不存在");
+		PuotationPO puotationPO = puotationDao.queryPuotationByQid(puotationItemVO.getQid());
+        ProductionPO productionPO = productionDao.get(puotationPO.getPid());
+		
+		if(productionPO.getStatus() != ProductionPO.STATUS_INIT_SHORT){
+			throw new FLException(220002, "生产单状态不可操作");
 		}
-
-		PuotationPO puotationPO = puotationDao.queryPuotationByQid(puotationItemPO.getQid());
 		
 		if (puotationPO == null) {
 			throw new FLException(220014, "报价不存在");
 		}
 
+		PuotationItemPO puotationItemPO = puotationItemDao.queryPuotationItemByQiid(puotationItemVO.getQiid());
 		puotationItemDao.delete(puotationItemPO);
 
-		float total = puotationPO.getTotal();
+		long total = puotationPO.getTotal();
 		puotationPO.setTotal(Arith.sub(total, Arith.mul(puotationItemPO.getTotal(), puotationPO.getDiscount())));
 
 		puotationDao.update(puotationPO);

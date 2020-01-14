@@ -31,10 +31,14 @@ public class WorkplanServiceImpl implements WorkplanService {
 		List<WorkplanPO> workplanPOs = workplanDao.pageWorkplan(paging, filters, company);
 		List<WorkplanVO> workplanVOs = new ArrayList<WorkplanVO>();
 
+		WorkplanVO workplanVO; 
+		
 		for (WorkplanPO workplanPO : workplanPOs) {
-			WorkplanVO workplanVO = new WorkplanVO(new WorkshopVO());
+			workplanVO = new WorkplanVO(new WorkshopVO());
+			
 			BeanUtil.copyProperties(workplanPO, workplanVO, Arrays.asList("workshop"));
 			BeanUtil.copyProperties(workplanPO.getWorkshop(), workplanVO.getWorkshop());
+			
 			workplanVOs.add(workplanVO);
 		}
 		
@@ -47,8 +51,12 @@ public class WorkplanServiceImpl implements WorkplanService {
 		List<WorkplanPO> workplanPOs = workplanDao.queryWorkplan(company);
 		List<WorkplanVO> workplanVOs = new ArrayList<WorkplanVO>();
 
+		WorkplanVO workplanVO;
+		
 		for (WorkplanPO workplanPO : workplanPOs) {
-			WorkplanVO workplanVO = new WorkplanVO(new WorkshopVO());
+			
+			workplanVO = new WorkplanVO(new WorkshopVO());
+			
 			BeanUtil.copyProperties(workplanPO, workplanVO, Arrays.asList("workshop"));
 			BeanUtil.copyProperties(workplanPO.getWorkshop(), workplanVO.getWorkshop());
 
@@ -65,9 +73,12 @@ public class WorkplanServiceImpl implements WorkplanService {
 		List<WorkplanVO> workplanVOs = new ArrayList<WorkplanVO>();
 
 		for (WorkplanPO workplanPO : workplanPOs) {
+			
 			workplanVO = new WorkplanVO(new WorkshopVO());
+			
 			BeanUtil.copyProperties(workplanPO, workplanVO, Arrays.asList("workshop"));
 			BeanUtil.copyProperties(workplanPO.getWorkshop(), workplanVO.getWorkshop());
+			
 			workplanVOs.add(workplanVO);
 		}
 		

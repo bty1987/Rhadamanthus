@@ -22,7 +22,7 @@ public interface BrandDao extends Dao<BrandPO> {
 
 	public List<BrandPO> pageBrand(Paging paging, List<Filter> filters, int company);
 
-	public List<BrandPO> pageBrandByPinYinName(Paging paging, String pinyinName, int company);
+	public List<BrandPO> pageBrandByPinYinName(Paging paging, String pinyinName, Integer company);
 
 	public List<BrandPO> queryBrandByCid(long cid);
 

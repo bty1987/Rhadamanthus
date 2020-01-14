@@ -198,9 +198,9 @@
         {"key":"座", "value":"座"},
         {"key":"门", "value":"门"}
     ],"buildruleThr" : [
+		{"key":"", "value":""},
         {"key":"-", "value":"-"},
         {"key":"#", "value":"#"},
-        {"key":"", "value":""},
         {"key":"座", "value":"座"},
         {"key":"门", "value":"门"}
     ],"cardType": [

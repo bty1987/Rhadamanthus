@@ -14,5 +14,7 @@ public interface VticketDao extends Dao<VticketPO> {
 	public VticketPO queryVticketByTno(String tno);
 
 	public List<?> countVticket(short param);
+	
+	public int updateVticketStatusForFailure(long vaid);
 
 }

@@ -75,5 +75,4 @@ public class PuoteItemAction extends BaseListAction {
 	public void setQuoteItems(List<PuoteItemVO> quoteItems) {
 		this.quoteItems = quoteItems;
 	}
-
 }

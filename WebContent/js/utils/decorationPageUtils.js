@@ -433,7 +433,9 @@ $(function () {
 
             com.post(api.right.queryDecorationFunctionRightByName, {"decorationFunctionRight.name": page}, function (res) {
 
-                $.each(res.decorationFunctionRights, function (i, v) {
+            	var rights = res.decorationFunctionRights.sort(function(a, b){return a.decorationFunction.sort - b.decorationFunction.sort;});
+            	
+                $.each(rights, function (i, v) {
 
                     var data = v.decorationFunction;
 

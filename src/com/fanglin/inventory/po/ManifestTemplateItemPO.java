@@ -11,6 +11,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fanglin.data.po.GoodsPO;
+
 @Entity
 @Table(name = "manifesttemplateitem", catalog = "inventory")
 public class ManifestTemplateItemPO implements java.io.Serializable {

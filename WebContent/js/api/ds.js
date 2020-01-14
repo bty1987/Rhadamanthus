@@ -1,6 +1,7 @@
 $.extend(api, {
     ds: {
         approval: {url: "ds/approval.json", demo: true, cache: "jsonapproval"},
+        balance: {url: "ds/balance.json", demo: true, cache: "jsonbalance"},
         construction: {url: "ds/construction.json", demo: true, cache: "jsonconstruction"},
         decoration: {url: "ds/decoration.json", demo: true, cache: "jsondecoration"},
         department: {url: "ds/department.json", demo: true, cache: "jsondepartment"},
@@ -18,6 +19,7 @@ $.extend(api, {
         sales: {url: "ds/sales.json", demo: true, cache: "jsonsales"},
         help: {url: "ds/help.json", demo: true, cache: "jsonhelp"},
         system: {url: "ds/system.json", demo: true, cache: "jsonsystem"},
-        material: {url: "ds/material.json", demo: true, cache: "jsonmaterial"}
+        material: {url: "ds/material.json", demo: true, cache: "jsonmaterial"},
+        customer: {url: "ds/customer.json", demo: true, cache: "jsoncustomer"}
     }
 });

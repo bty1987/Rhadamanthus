@@ -7,14 +7,14 @@ $(function () {
     };
     goodsStorehouseStock.confirm.bindClick(saveData);
     goodsStorehouseStock.formStore = com.focusPage('#formStore');
-    com.initTypeahead("name", api.inventory.queryGoodsByName, "goods.name", {}, "goodes", "gid", "name", function (list, k, v) {
+    com.initTypeahead("name", api.data.queryGoodsByName, "goods.name", {}, "goodes", "gid", "name", function (list, k, v) {
         com.focusPage('#layerAddGoodsStorehouseStock').find('input[name="name"]').attr('data-gid', k);
-        com.post(api.inventory.queryColorForEnableByGid, {
+        com.post(api.data.queryColorForEnableByGid, {
             "color.gid": k
         }, function (res) {
             com.focusPage('#layerAddGoodsStorehouseStock').find('select[name="color"]').bindData(res.colors, 'cid', 'name');
         });
-        com.post(api.inventory.queryFormatForEnableByGid, {
+        com.post(api.data.queryFormatForEnableByGid, {
             "format.gid": k
         }, function (res) {
             com.focusPage('#layerAddGoodsStorehouseStock').find('select[name="format"]').bindData(res.formats, 'fid', 'info');
@@ -281,9 +281,9 @@ $(function () {
         };
 
         if (type == 0) {
-            url = api.inventory.surplusGoodsStorehouseStock
+            url = api.inventory.plusGoodsStorehouseStock
         } else if (type == 1) {
-            url = api.inventory.lossesGoodsStorehouseStock
+            url = api.inventory.loseGoodsStorehouseStock
         }
 
         com.post(url, option, function (res) {
@@ -295,7 +295,7 @@ $(function () {
 
     }
 
-    function addData(callback) {
+    function addData() {
         if (com.validate("formStore2", "right")) {
             return false;
         }
@@ -310,10 +310,9 @@ $(function () {
             "goodsStorehouseStock.color.cid": cid,
             "goodsStorehouseStock.format.fid": fid,
             "goodsStorehouseStock.storehouse.shid": shid
-        }, function (res) {
-            callback();
-
+        }, function () {
             com.showAlert(com.info, "操作成功");
+            com.closePopup();
             goodsStorehouseSeacher.doSearch();
         })
     }

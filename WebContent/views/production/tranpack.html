@@ -1,0 +1,38 @@
+<div class="row">
+    <div class="col-xs-12">
+        <!-- 查询条件-->
+        <div id="tranpackCondList" class="fl_search clearfix"></div>
+        <!--查询结果-->
+        <div id="tranpackResultList" class="clearfix tab-pane active"></div>
+        <!--分页-->
+        <div id="tranpackPagenation" class="fl-page-wrap clearfix"></div>
+    </div>
+</div>
+
+<div class="modal fade" id="qrcodeModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content col-md-12">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" >物流包二维码</h4>
+            </div>
+            <div class="modal-body">
+                <div class="qrcode" id="Qrcode" style="border: 0px;">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button"  class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //$.loadScript(['js/production/tranpack.js']);
+</script>
+
+<script src="js/utils/productionPageUtils.js"></script>
+<script src="js/utils/productionUtils.js"></script>
+<script src="js/production/tranpack.js"></script>

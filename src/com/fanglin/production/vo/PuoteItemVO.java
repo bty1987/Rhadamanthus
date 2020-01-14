@@ -16,7 +16,7 @@ public class PuoteItemVO implements Serializable {
 
 	private String measurementunit;
 
-	private Float unitprice;
+	private Integer unitprice;
 
 	private Short status;
 
@@ -74,11 +74,11 @@ public class PuoteItemVO implements Serializable {
 		this.measurementunit = measurementunit;
 	}
 
-	public Float getUnitprice() {
+	public Integer getUnitprice() {
 		return unitprice;
 	}
 
-	public void setUnitprice(float unitprice) {
+	public void setUnitprice(Integer unitprice) {
 		this.unitprice = unitprice;
 	}
 

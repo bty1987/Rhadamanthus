@@ -31,7 +31,9 @@ import com.fanglin.payment.dao.PaymentDao;
 import com.fanglin.payment.po.AdvancePaymentPO;
 import com.fanglin.payment.po.AdvanceReceiptPO;
 import com.fanglin.payment.po.PaymentPO;
+import com.fanglin.payment.po.PointofsalesPO;
 import com.fanglin.payment.service.PaymentService;
+import com.fanglin.payment.service.PointofsalesService;
 import com.fanglin.payment.vo.PaymentVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
@@ -65,6 +67,9 @@ public class PaymentServiceImpl implements PaymentService {
 	
 	@Autowired
 	private DecorationService decorationService;
+	
+	@Autowired
+	private PointofsalesService pointofsalesService;
 	
 	@Override
 	public void pagePaymentForCollect(Paging paging, List<Filter> filters, int company) {
@@ -158,10 +163,11 @@ public class PaymentServiceImpl implements PaymentService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int collectPayment(PaymentVO paymentVO, String userId) throws FLException {
+	public int collectPayment(PaymentVO paymentVO, String userId, List<Long> posids) throws FLException {
 
 		long customerId = paymentVO.getCustomer().getCid();
 
+		//这里暂留是因为后面的paymentPO需要给customer赋值
 		CustomerPO customerPO = customerDao.get(customerId);
 
 		if(customerPO == null){
@@ -174,12 +180,11 @@ public class PaymentServiceImpl implements PaymentService {
 			throw new FLException(140013, "订单不存在");
 		}
 
-		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCid(customerId, decorationPO.getCompany());
+		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByOrderId(paymentVO.getOrderId());
 
 		if(advancePaymentPO == null){
 			advancePaymentPO = new AdvancePaymentPO();
-			advancePaymentPO.setCustomer(new CustomerPO(customerId));
-			advancePaymentPO.setCompany(decorationPO.getCompany());
+			advancePaymentPO.setDecoration(new DecorationPO(paymentVO.getOrderId()));
 		}		
 
 		long balance = 0;
@@ -253,6 +258,11 @@ public class PaymentServiceImpl implements PaymentService {
 			decorationService.sendMessage(paymentPO.getOrderId(), "主材单", String.format("主材预付款金额%.3f元", Arith.div(paymentPO.getRecharge(), 1000.0)));
 		}
 		
+		//更新销售点信息
+		if(posids != null && posids.size() > 0){
+			pointofsalesService.updatePointofsales(posids, advanceReceiptPO.getArId(), PointofsalesPO.STATUS_USED_INT, PointofsalesPO.TYPE_ADVANCE_INT);
+		}
+		
 		return 0;
 	}
 
@@ -298,8 +308,12 @@ public class PaymentServiceImpl implements PaymentService {
 		}
 		
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(paymentVO.getOrderId());
+		
+		if(decorationPO == null){
+			throw new FLException(140013, "订单不存在");
+		}
 
-		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCid(customerId, decorationPO.getCompany());
+		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByOrderId(paymentVO.getOrderId());
 
 		if(advancePaymentPO == null){
 			throw new FLException(150010, "预付款余额不足");
@@ -370,6 +384,10 @@ public class PaymentServiceImpl implements PaymentService {
 	public int payPayment(PaymentVO paymentVO, String userId) throws FLException{
 
 		DecorationPO decorationPO =  decorationDao.queryDecorationByOrderId(paymentVO.getOrderId());
+		
+		if(decorationPO == null){
+			throw new FLException(140013, "订单不存在");
+		}
 
 		long customerId = decorationPO.getCustomer().getCid();
 
@@ -379,7 +397,7 @@ public class PaymentServiceImpl implements PaymentService {
 			throw new FLException(230001, "客户信息不存在");
 		}
 
-		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCid(customerId, decorationPO.getCompany());
+		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByOrderId(paymentVO.getOrderId());
 
 		if(advancePaymentPO == null){
 			throw new FLException(150010, "预付款余额不足");

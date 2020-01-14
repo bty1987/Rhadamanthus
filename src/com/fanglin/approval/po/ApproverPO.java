@@ -24,32 +24,34 @@ import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "approver", catalog = "approval")
-public class ApproverPO implements Serializable{
+public class ApproverPO implements Serializable {
 
-    private static final long serialVersionUID = 950904568941125216L;
+	private static final long serialVersionUID = 950904568941125216L;
 
-    public static final String COLUMN_TYPE_STR = "type";
-    
+	public static final String COLUMN_TYPE_STR = "type";
+
 	private long aid;
-    
-    private UserPO  user;
-   
-    private short  type;
-    
-    private String comment;
-    
-    public ApproverPO(){
-        super();
-    }
-    
-    public ApproverPO(UserPO user){
-        super();
-        this.user = user;
-    }
 
-    @Id
-    @GeneratedValue
-    @Column(name = "aid")
+	private UserPO user;
+
+	private short type;
+
+	private int company;
+
+	private String comment;
+
+	public ApproverPO() {
+		super();
+	}
+
+	public ApproverPO(UserPO user) {
+		super();
+		this.user = user;
+	}
+
+	@Id
+	@GeneratedValue
+	@Column(name = "aid")
 	public long getAid() {
 		return aid;
 	}
@@ -58,26 +60,35 @@ public class ApproverPO implements Serializable{
 		this.aid = aid;
 	}
 
-	@ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(nullable=false, name="auid", referencedColumnName="uid")
-    public UserPO getUser(){
-        return user;
-    }
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, name = "auid", referencedColumnName = "uid")
+	public UserPO getUser() {
+		return user;
+	}
 
-    public void setUser(UserPO user){
-        this.user = user;
-    }
-    
-    @Column(name = "type")
-    public short getType(){
-        return type;
-    }
+	public void setUser(UserPO user) {
+		this.user = user;
+	}
 
-    public void setType(short type){
-        this.type = type;
-    }
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
 
-    @Column(name = "comment")
+	public void setType(short type) {
+		this.type = type;
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
+
+	@Column(name = "comment")
 	public String getComment() {
 		return comment;
 	}

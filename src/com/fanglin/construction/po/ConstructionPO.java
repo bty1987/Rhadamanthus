@@ -64,6 +64,10 @@ public class ConstructionPO implements Serializable{
 	
 	public static final String COLUMN_CID_STR = "cid";
 	
+	public static final short ACCESSORY_OPEN_SHORT = 0;
+	
+	public static final short ACCESSORY_LOCK_SHORT = 1;
+	
 	private long cid;
 	
 	private DecorationPO decoration;
@@ -75,6 +79,16 @@ public class ConstructionPO implements Serializable{
 	private Timestamp startTime;
 	
 	private Timestamp endTime;
+	
+	private short accessory;
+	
+	private long accessoryLimit;
+	
+	private long salaryLimit;
+	
+	private long accessoryTotal;
+	
+	private long salaryTotal;
 
 	public ConstructionPO() {
 		super();
@@ -149,4 +163,50 @@ public class ConstructionPO implements Serializable{
 	public void setEndTime(Timestamp endTime) {
 		this.endTime = endTime;
 	}
+	
+	@Column(name="accessory")
+	public short getAccessory() {
+		return accessory;
+	}
+
+	public void setAccessory(short accessory) {
+		this.accessory = accessory;
+	}
+	
+	@Column(name="accessoryLimit")
+	public long getAccessoryLimit() {
+		return accessoryLimit;
+	}
+
+	public void setAccessoryLimit(long accessoryLimit) {
+		this.accessoryLimit = accessoryLimit;
+	}
+
+	@Column(name="salaryLimit")
+	public long getSalaryLimit() {
+		return salaryLimit;
+	}
+
+	public void setSalaryLimit(long salaryLimit) {
+		this.salaryLimit = salaryLimit;
+	}
+
+	@Column(name="accessoryTotal")
+	public long getAccessoryTotal() {
+		return accessoryTotal;
+	}
+
+	public void setAccessoryTotal(long accessoryTotal) {
+		this.accessoryTotal = accessoryTotal;
+	}
+
+	@Column(name="salaryTotal")
+	public long getSalaryTotal() {
+		return salaryTotal;
+	}
+
+	public void setSalaryTotal(long salaryTotal) {
+		this.salaryTotal = salaryTotal;
+	}
+
 }

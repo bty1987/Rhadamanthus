@@ -76,8 +76,8 @@
   ],
   "receiptType":[
     {"key" : "1", "value" : "现金"},
-    {"key" : "2", "value" : "银行"},
-    {"key" : "3", "value" : "转账"},
+    {"key" : "2", "value" : "刷卡"},
+    {"key" : "3", "value" : "银行"},
     {"key" : "4", "value" : "对公账户"},
     {"key" : "5", "value" : "券"}
   ],
@@ -86,6 +86,10 @@
     {"key" : "A", "value" : "A"},
     {"key" : "B", "value" : "B"},
     {"key" : "C", "value" : "C"}
+  ],
+  "costStatus": [
+    {"key" : "0", "value" : "启用"},
+    {"key" : "1", "value" : "禁用"}
   ],
 
   "errorCode": 0,

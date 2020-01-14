@@ -31,6 +31,7 @@ import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.dao.AddReduceItemDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
+import com.fanglin.quotation.dao.SelectionItemDao;
 import com.fanglin.quotation.po.AddReduceItemPO;
 import com.fanglin.quotation.po.AddReducePO;
 import com.fanglin.quotation.po.ExtensionItemPO;
@@ -70,6 +71,9 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 	@Autowired
 	private SystemConfigDao systemConfigDao;
+
+	@Autowired
+	private SelectionItemDao selectionItemDao;
 
 	@Override
 	public void pageAddReduceByOrderId(Paging paging, List<Filter> filters, AddReduceVO addReduceVO) {
@@ -212,6 +216,10 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 		if (status.contains(addReducePO.getStatus())) {
 			throw new FLException(140035, "当前增减项款项状态不可操作");
+		}
+
+		if (selectionItemDao.countSelectionItem(addReducePO.getOrderId(), addReducePO.getArId()) > 0) {
+			throw new FLException(200037, "存在关联选材项");
 		}
 
 		List<AddReduceItemPO> addReduceItemPOs = addReduceItemDao.queryAddReduceItemByAddReduceId(arId);

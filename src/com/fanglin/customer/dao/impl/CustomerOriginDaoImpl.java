@@ -41,6 +41,8 @@ public class CustomerOriginDaoImpl extends DaoImpl<CustomerOriginPO> implements 
 					query.add(Restrictions.sqlRestriction("buid is ? ", null, Hibernate.STRING));
 				} else if ("designer".equals(filter.getField())) {
 					query.add(Restrictions.eq(CustomerOriginPO.COLUMN_DESIGNER_STR, Integer.valueOf(filter.getData())));
+				}else if ("status".equals(filter.getField())) {
+					query.add(query.getCriterion("status", Short.valueOf(filter.getData()),filter.getOp()));
 				}
 			}
 		}

@@ -1,109 +1,108 @@
-<div id="materialSubOrderPageContent">
-    <div>
-        <div id="fl-statement"><div class="page-header"><h1>外协单<small><i class="icon-double-angle-right"></i>外协项</small></h1></div></div>
-        <div class="row">
-            <div class="col-xs-12">
-                <!-- 查询条件-->
-                <div id="condList" class="fl_search clearfix"></div>
-                <!--查询结果-->
-                <div id="resultList" class="clearfix tab-pane active"></div>
-                <!--分页-->
-                <div id="pagenation" class="fl-page-wrap clearfix"></div>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="page-content">
+            <div class="page-header">
+                <h1>
+                    <span>外协单<small><i class="icon-double-angle-right"></i>外协项</small></span>
+                </h1>
             </div>
+            <!--查询结果-->
+            <div id="itemResultList" class="clearfix tab-pane active"></div>
+            <!--分页-->
+            <div id="itemPagenation" class="fl-page-wrap clearfix"></div>
         </div>
+    </div>
+</div>
 
-        <div class="modal fade" id="outsourceItemModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="myModalLabel">添加外协单</h4>
+<div class="modal fade" id="outsourceItemModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">添加外协单</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="itemName">名称</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="itemName" maxlength="12" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual'/>
+                        </div>
                     </div>
-                    <div class="modal-body">
-                        <form class="form-horizontal">
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right " for="itemName">名称</label>
-                                <div class="col-sm-9">
-                                    <input type="text" id="itemName" maxlength="12" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual'/>
-                                </div>
-                            </div>
 
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right " for="height">高度</label>
-                                <div class="col-sm-9">
-                                    <input type="text" id="height" size="16"  class="col-xs-10 col-sm-7 v_required v_float" data-toggle="popover"  data-trigger='manual'/>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right" for="width">宽度</label>
-                                <div class="col-sm-9">
-                                    <input type="text" id="width" size="16"  class="col-xs-10 col-sm-7 v_required v_float" data-toggle="popover" data-trigger='manual'/>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right" for="thick">厚度</label>
-                                <div class="col-sm-9">
-                                    <input type="text" id="thick" size="16" class="col-xs-10 col-sm-7 v_required v_float" data-toggle="popover" data-trigger='manual'/>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right" for="modeling">造型</label>
-                                <div class="col-sm-9">
-                                    <input type="text" id="modeling" size="16" class="col-xs-10 col-sm-7 " data-toggle="popover" readonly/>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right " for="measurementUnit">单位</label>
-                                <div class="col-sm-9">
-                                    <input type="text" id="measurementUnit" size="16" class="col-xs-10 col-sm-7 " data-toggle="popover" readonly/>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right " for="unitPrice">单价</label>
-                                <div class="col-sm-9">
-                                    <input type="text" id="unitPrice" size="16" class="col-xs-10 col-sm-7 " data-toggle="popover" readonly/>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right " for="itemNum">数量</label>
-                                <div class="col-sm-9">
-                                    <input type="text" id="itemNum" size="16" class="col-xs-10 col-sm-7 v_number" data-toggle="popover" data-trigger='manual'/>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right " for="total">总价</label>
-                                <div class="col-sm-9">
-                                    <input type="text" id="total" size="16" class="col-xs-10 col-sm-7 v_required" data-toggle="popover"  readonly/>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right " for="comment">备注</label>
-                                <div class="col-sm-9">
-                                    <input type="text" id="comment" size="16" class="col-xs-10 col-sm-7" data-toggle="popover" data-trigger='manual'/>
-                                </div>
-                            </div>
-                        </form>
-
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="height">高度</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="height" size="16"  class="col-xs-10 col-sm-7 v_required v_float" data-toggle="popover"  data-trigger='manual'/>
+                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-                        <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="width">宽度</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="width" size="16"  class="col-xs-10 col-sm-7 v_required v_float" data-toggle="popover" data-trigger='manual'/>
+                        </div>
                     </div>
-                </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="thick">厚度</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="thick" size="16" class="col-xs-10 col-sm-7 v_required v_float" data-toggle="popover" data-trigger='manual'/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="modeling">造型</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="modeling" size="16" class="col-xs-10 col-sm-7 " data-toggle="popover" readonly/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="measurementUnit">单位</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="measurementUnit" size="16" class="col-xs-10 col-sm-7 " data-toggle="popover" readonly/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="unitprice">单价</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="unitprice" size="16" class="col-xs-10 col-sm-7 " data-toggle="popover" readonly/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right " for="itemNum">数量</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="itemNum" size="16" class="col-xs-10 col-sm-7 v_number" data-toggle="popover" data-trigger='manual'/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="total">总价</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="total" size="16" class="col-xs-10 col-sm-7 v_required" data-toggle="popover"  readonly/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right " for="comment">备注</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="comment" size="16" class="col-xs-10 col-sm-7" data-toggle="popover" data-trigger='manual'/>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveBtnOutsourceItems" class="btn btn-primary">保存</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
             </div>
         </div>
     </div>
-
 </div>
 
 <script type="text/javascript">
-	$.loadScript(['js/production/outsourceItem.js']);
+    $.loadScript(['js/production/outsourceItem.js']);
 </script>

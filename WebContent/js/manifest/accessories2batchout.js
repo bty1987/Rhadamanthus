@@ -134,13 +134,13 @@ jQuery(function ($) {
         
         $line.find('.storehouse select').bindData(accessories.storehouses, "shid", "name");
 
-        com.post(api.inventory.queryColorForEnableByGid, {
+        com.post(api.data.queryColorForEnableByGid, {
             "color.gid": res.accessoriesItems[i].goods.gid
         }, function (data) {
             $lineInfoWrap1.find('.color select').bindData(data.colors, "cid", "name");
         });
         
-        com.post(api.inventory.queryFormatForEnableByGid, {
+        com.post(api.data.queryFormatForEnableByGid, {
             "format.gid": res.accessoriesItems[i].goods.gid
         }, function (data) {
             $lineInfoWrap1.find('.format select').bindData(data.formats, "fid", "info");

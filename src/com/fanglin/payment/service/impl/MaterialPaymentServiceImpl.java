@@ -47,8 +47,10 @@ import com.fanglin.payment.po.AdvancePaymentPO;
 import com.fanglin.payment.po.MaterialPaymentPO;
 import com.fanglin.payment.po.MaterialReceiptPO;
 import com.fanglin.payment.po.PaymentPO;
+import com.fanglin.payment.po.PointofsalesPO;
 import com.fanglin.payment.service.AdvancePaymentService;
 import com.fanglin.payment.service.MaterialPaymentService;
+import com.fanglin.payment.service.PointofsalesService;
 import com.fanglin.payment.vo.MaterialPaymentVO;
 import com.fanglin.payment.vo.MaterialReceiptVO;
 import com.fanglin.payment.vo.PaymentVO;
@@ -61,7 +63,6 @@ import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
-import com.fanglin.utils.SystemConfig;
 
 @Service("materialPaymentService")
 @Transactional(readOnly=true)
@@ -102,15 +103,16 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 	
 	@Autowired
 	private MaterialItemDao materialItemDao;
+	
+	@Autowired
+	private PointofsalesService pointofsalesService;
 
 	@Override
 	public void pageMaterialPaymentForInit(Paging paging, List<Filter> filters, int company) {
 
 		if(filters.size() == 0) return;
 		
-		if (SystemConfig.getInt("multicompany", 0) != 0) {
-			filters.add(new Filter("company", String.valueOf(company), "eq"));
-		}
+		filters.add(new Filter("company", String.valueOf(company), "eq"));
 
 		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
 		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.pageMaterialPaymentForStatus(paging, filters, MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT, "eq");
@@ -141,9 +143,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 		if(filters.size() == 0) return ;
 		
-		if (SystemConfig.getInt("multicompany", 0) != 0) {
-			filters.add(new Filter("company", String.valueOf(company), "eq"));
-		}
+		filters.add(new Filter("company", String.valueOf(company), "eq"));
 
 		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
 		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.pageMaterialPaymentForStatus(paging, filters, MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT, "ne");
@@ -269,6 +269,40 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		}
 
 		paging.setData(materialPaymentVOs);
+	}
+	
+	@Override
+	public List<MaterialPaymentVO> queryMaterialPayment(List<Filter> filters, int company) {
+
+		if(filters.size() == 0) return null;
+		
+		filters.add(new Filter("company", String.valueOf(company), "eq"));
+		
+		filters.add(new Filter(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, String.valueOf(MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT), "eq"));
+		filters.add(new Filter(MaterialPaymentPO.COLUMN_PAYMENTTYPE_STR, "", "in"));
+
+		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
+		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPayment(filters);
+
+		MaterialPaymentVO materialPaymentVO;
+
+		for(MaterialPaymentPO materialPaymentPO: materialPaymentPOs){
+
+			materialPaymentVO = new MaterialPaymentVO(new MaterialVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))),new CustomerVO()),new UserBaseVO());
+
+			BeanUtil.copyProperties(materialPaymentPO, materialPaymentVO, Arrays.asList("material", "creater"));
+			BeanUtil.copyProperties(materialPaymentPO.getCreater(), materialPaymentVO.getCreater(), Arrays.asList("dept", "duty"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial(), materialPaymentVO.getMaterial(), Arrays.asList("house", "customer", "salesman", "materialer", "instorer", "region", "department", "materialDepartment"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getCustomer(), materialPaymentVO.getMaterial().getCustomer());
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse(), materialPaymentVO.getMaterial().getHouse(), Arrays.asList("village"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage(), materialPaymentVO.getMaterial().getHouse().getVillage(), Arrays.asList("cityProper"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage().getCityProper(), materialPaymentVO.getMaterial().getHouse().getVillage().getCityProper(), Arrays.asList("city"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage().getCityProper().getCity(), materialPaymentVO.getMaterial().getHouse().getVillage().getCityProper().getCity(), Arrays.asList("region"));
+
+			materialPaymentVOs.add(materialPaymentVO);
+		}
+
+		return materialPaymentVOs;
 	}
 
 	@Override
@@ -515,8 +549,12 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			}else if(_paymentType == MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_REFUND_INT){
 				paymentType = MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_REFUND_STR;
 			}
+			
+			if(materialReceiptPO.getConfirmTime() == null){
+				throw new FLException(150036, "款项状态不可操作");
+			}
 
-			if(materialReceiptPO.getConfirmTime() != null && materialReceiptPO.getConfirmTime().before(dateTime)){
+			if(materialReceiptPO.getConfirmTime().before(dateTime)){
 				oldConfirmTime = materialReceiptPO.getConfirmTime();
 
 				materialReceiptPO.setConfirmTime(dateTime);
@@ -543,7 +581,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int collectMaterialPayment(MaterialPaymentVO materialPaymentVO, List<DecorationActivityItemVO> decorationActivityItemVOs, String userId, Integer company) throws FLException{
+	public int collectMaterialPayment(MaterialPaymentVO materialPaymentVO, List<DecorationActivityItemVO> decorationActivityItemVOs, List<Long> posids, String userId, Integer company) throws FLException{
 
 		long realMoney = 0;
 
@@ -647,7 +685,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 				throw new FLException(230001, "客户信息不存在");
 			}
 
-			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerPO.getCid(),materialPaymentPO.getMaterial().getCompany());
+			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByOrderId(materialPO.getOrderId());
 
 			if(advancePaymentPO == null){
 				throw new FLException(150010, "预付款余额不足");
@@ -679,6 +717,10 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		}
 
 		materialPaymentVO.setMrId(materialReceiptPO.getMrId());
+		
+		if(posids != null && posids.size() > 0){
+			pointofsalesService.updatePointofsales(posids, materialReceiptPO.getMrId(), PointofsalesPO.STATUS_USED_INT, PointofsalesPO.TYPE_MATERIAL_INT);
+		}
 
 		decorationService.sendMessage(materialPaymentPO.getMaterial().getOrderId(), "主材单", String.format("主材交款金额%.3f元", Arith.div(materialPaymentPO.getReferMoney(), 1000.0)));
 
@@ -687,7 +729,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int collectMaterialPayments(MaterialVO materialVO, List<MaterialPaymentVO> materialPaymentVOs, MaterialReceiptVO materialReceiptVO, String userId, Integer company) throws FLException{
+	public int collectMaterialPayments(MaterialVO materialVO, List<MaterialPaymentVO> materialPaymentVOs, MaterialReceiptVO materialReceiptVO, List<Long> posids, String userId, Integer company) throws FLException{
 
 		long total = 0;
 
@@ -756,7 +798,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 				throw new FLException(230001, "客户信息不存在");
 			}
 
-			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(customerPO.getCid(),decorationPO.getCompany());
+			AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByOrderId(materialVO.getOrderId());
 
 			if(advancePaymentPO == null){
 				throw new FLException(150010, "预付款余额不足");
@@ -847,6 +889,10 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			materialReceiptVO.setMrId(materialReceiptPO.getMrId());
 
 			totalMoney = Arith.add(totalMoney, materialPaymentPO.getReferMoney());
+		}
+		
+		if(posids != null && posids.size() > 0){
+			pointofsalesService.updatePointofsales(posids, materialReceiptPO.getMrId(), PointofsalesPO.STATUS_USED_INT, PointofsalesPO.TYPE_MATERIAL_INT);
 		}
 		
 		decorationService.sendMessage(materialVO.getOrderId(), "主材单", String.format("主材交款金额%.3f元", Arith.div(totalMoney, 1000.0)));

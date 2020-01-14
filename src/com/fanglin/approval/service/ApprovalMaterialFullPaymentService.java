@@ -17,11 +17,11 @@ import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
 
 public interface ApprovalMaterialFullPaymentService {
-	
+
 	public int submitApprovalForDecorationRefund(ApprovalVO approvalVO, ApprovalMaterialFullPaymentVO approvalMaterialFullPaymentVO, String userId, int company) throws FLException;
-	
-	public int approvalForMaterialFullPayment(ApprovalPO approvalPO) throws FLException;
-	
+
+	public int approveForMaterialFullPayment(ApprovalPO approvalPO) throws FLException;
+
 	public int refuseForMaterialFullPayment(ApprovalPO approvalPO) throws FLException;
 
 }

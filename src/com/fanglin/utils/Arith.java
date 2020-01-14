@@ -1,4 +1,5 @@
 package com.fanglin.utils;
+
 /**
  * @File Name		: A.java
  * @Package   	: com.fanglin.utils
@@ -195,6 +196,22 @@ public class Arith {
 		return b1.divide(b2, DEF_SCALE).doubleValue();
 	}
 
+	public static int round(int v, int scale, int type) {
+
+		BigDecimal b1 = new BigDecimal(v).setScale(DEF_SCALE);
+		BigDecimal b2 = new BigDecimal(Math.pow(10, DEF_SCALE));
+
+		return b1.divide(b2, scale, type).multiply(b2).intValue();
+	}
+
+	public static long round(long v, int scale, int type) {
+
+		BigDecimal b1 = new BigDecimal(v).setScale(DEF_SCALE);
+		BigDecimal b2 = new BigDecimal(Math.pow(10, DEF_SCALE));
+
+		return b1.divide(b2, scale, type).multiply(b2).longValue();
+	}
+
 	public static double round(double v, int scale) {
 
 		BigDecimal b = new BigDecimal(Double.toString(v));
@@ -269,7 +286,6 @@ public class Arith {
 
 		System.out.println(Arith.mul(Arith.div(1111, 1000000), 1000000));
 
-		Integer.parseInt("1.2");
-
+		System.out.println(Arith.round(13134, 0, BigDecimal.ROUND_FLOOR));
 	}
 };

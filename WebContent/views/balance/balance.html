@@ -1,0 +1,58 @@
+
+<div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+            <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+            <div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+        </div>
+    </div>
+
+    <div class="modal fade" id="addModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabe1">添加完结单</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+
+                        <div class="form-group">
+                            <label for="belongerName" class="col-sm-3 control-label no-padding-right orange" >归属人</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-6 v_required" data-toggle="popover"
+                                       data-placement="bottom" data-trigger="manual" id="belongerName" placeholder="按拼音查询归属人">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right ">类型</label>
+                            <div class="col-md-9">
+                                <select id='type' class='col-xs-10 col-sm-6'></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="amount">金额</label>
+                            <div class="col-sm-9">
+                                <input type="text" maxlength="64" id="amount" class="col-xs-10 col-sm-6  v_number" data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="addConfirmBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="addCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="stockRecordPopUp" class="portlet box page-content"></div>
+<script type="text/javascript">
+    $.loadScript(['js/balance/balance.js']);
+</script>
+

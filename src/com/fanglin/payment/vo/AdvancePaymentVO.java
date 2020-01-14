@@ -1,7 +1,6 @@
 package com.fanglin.payment.vo;
 
-import com.fanglin.communion.vo.CustomerVO;
-
+import com.fanglin.decoration.vo.DecorationVO;
 
 public class AdvancePaymentVO implements java.io.Serializable {
 
@@ -9,7 +8,7 @@ public class AdvancePaymentVO implements java.io.Serializable {
 
 	private Integer apId;
 	
-	private CustomerVO customer;
+	private DecorationVO decoration;
 	
 	private Long balance;
 	
@@ -23,9 +22,9 @@ public class AdvancePaymentVO implements java.io.Serializable {
 		super();
 	}
 
-	public AdvancePaymentVO(CustomerVO customer) {
+	public AdvancePaymentVO(DecorationVO decoration) {
 		super();
-		this.customer = customer;
+		this.decoration = decoration;
 	}
 
 	public Integer getApId() {
@@ -36,12 +35,12 @@ public class AdvancePaymentVO implements java.io.Serializable {
 		this.apId = apId;
 	}
 
-	public CustomerVO getCustomer() {
-		return customer;
+	public DecorationVO getDecoration() {
+		return decoration;
 	}
 
-	public void setCustomer(CustomerVO customer) {
-		this.customer = customer;
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
 	}
 
 	public Long getBalance() {
