@@ -22,9 +22,9 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.material.vo.GoodsVO;
 import com.fanglin.inventory.service.ManifestTemplateItemService;
 import com.fanglin.inventory.service.ManifestTemplateService;
-import com.fanglin.inventory.vo.GoodsVO;
 import com.fanglin.inventory.vo.ManifestTemplateItemVO;
 import com.fanglin.inventory.vo.ManifestTemplateVO;
 

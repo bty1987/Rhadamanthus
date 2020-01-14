@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.personel.po.UserPO;
+
 @Entity
 @Table(name = "brand", catalog = "communion")
 public class BrandPO implements java.io.Serializable {
@@ -42,6 +44,8 @@ public class BrandPO implements java.io.Serializable {
 	private String kino;
 
 	private String kiname;
+	
+	private UserPO supplier;
 
 	public BrandPO() {
 		super();
@@ -125,6 +129,16 @@ public class BrandPO implements java.io.Serializable {
 
 	public void setKiname(String kiname) {
 		this.kiname = kiname;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ocuid", referencedColumnName = "uid")
+	public UserPO getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(UserPO supplier) {
+		this.supplier = supplier;
 	}
 
 }

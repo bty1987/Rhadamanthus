@@ -65,18 +65,18 @@ public class GoodsStorehouseStockAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "surplusGoodsStorehouseStock", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String surplusGoodsStorehouseStock() throws FLException {
+	@Action(value = "plusGoodsStorehouseStock", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String plusGoodsStorehouseStock() throws FLException {
 
-		goodsStorehouseStockService.surplusGoodsStorehouseStock(goodsStorehouseStock, queryUserId(), queryCompany());
+		goodsStorehouseStockService.plusGoodsStorehouseStock(goodsStorehouseStock, queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}
 	
-	@Action(value = "lossesGoodsStorehouseStock", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String lossesGoodsStorehouseStock() throws FLException {
+	@Action(value = "loseGoodsStorehouseStock", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String loseGoodsStorehouseStock() throws FLException {
 
-		goodsStorehouseStockService.lossesGoodsStorehouseStock(goodsStorehouseStock, queryUserId(), queryCompany());
+		goodsStorehouseStockService.loseGoodsStorehouseStock(goodsStorehouseStock, queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}

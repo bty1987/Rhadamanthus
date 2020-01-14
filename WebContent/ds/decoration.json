@@ -86,10 +86,16 @@
         {"key":"6", "value":"升级"},
         {"key":"7", "value":"消耗"}
     ], "orderGrade":[
-		{"key":"A", "value":"A"},
-		{"key":"B", "value":"B"},
-		{"key":"C", "value":"C"}
-	],
+        {"key":"A", "value":"A"},
+        {"key":"B", "value":"B"},
+        {"key":"C", "value":"C"}
+    ], "decorationOrderType":[
+        {"key":"0", "value":"半包"},
+        {"key":"1", "value":"套餐"},
+        {"key":"2", "value":"半价"},
+        {"key":"3", "value":"满减"},
+        {"key":"4", "value":"减上捡"}
+    ],
     "errorCode": 0,
     "errorMsg": null
 }

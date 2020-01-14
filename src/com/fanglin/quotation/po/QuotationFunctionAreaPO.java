@@ -125,5 +125,4 @@ public class QuotationFunctionAreaPO implements Serializable {
 	public void setTotal(long total) {
 		this.total = total;
 	}
-
 }

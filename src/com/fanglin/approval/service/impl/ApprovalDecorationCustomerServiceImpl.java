@@ -77,7 +77,7 @@ public class ApprovalDecorationCustomerServiceImpl implements ApprovalDecoration
 
 		String content = String.format("客户名:%s,修改为客户名:%s,新增电话:%s", customerPO.getName(), approvalDecorationCustomerVO.getNewCustomerName(), approvalDecorationCustomerVO.getNewCustomerPhone());
 
-		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(customerId), ApprovalPO.APPROVAL_TYPE_CUSTOMER_INT, content, company);
+		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(customerId), ApprovalPO.APPROVAL_TYPE_CUSTOMER_INT, content, approvalVO.getComment(), company);
 
 		approvalDao.save(approvalPO);
 
@@ -95,7 +95,7 @@ public class ApprovalDecorationCustomerServiceImpl implements ApprovalDecoration
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int approvalForCustomer(ApprovalPO approvalPO) throws FLException {
+	public int approveForCustomer(ApprovalPO approvalPO) throws FLException {
 
 		ApprovalDecorationCustomerPO approvalDecorationCustomerPO = approvalDecorationCustomerDao.queryApprovalDecorationCustomerByAId(approvalPO.getAid());
 

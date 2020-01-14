@@ -55,12 +55,13 @@ $(function () {
             malingBtn: com.focusPage('#malingBtn'), //抹零修改按钮
             malingCommitBtn: com.focusPage('#malingCommitBtn'), //抹零提交按钮
             malingCancelBtn: com.focusPage('#malingCancelBtn'), //抹零取消按钮
-            ascriptionBtn : com.focusPage('#ascriptionBtn')
+            ascriptionBtn : com.focusPage('#ascriptionBtn'),
+            depositPrintBtn : com.focusPage('#depositPrintBtn')
         },
         statues: {},
         balanceStatuses: {},
         sales: {},
-        url : api.inventory.pageSales,
+        url : api.sales.pageSales,
         postData : "salesPostData",
         pageType : params['urlLoadParams'].type,
         ascriptionBySid : null
@@ -69,6 +70,7 @@ $(function () {
     com.initTypeahead('uSalesman', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value',null);
     com.initTypeahead('uInstorer', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value',null);
     com.initTypeahead('uGuider', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value',null);
+    com.initTypeahead('uSupplier', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value',null);
 
     //初始化状态/结算状态
     com.post(api.ds.sales, {}, function(res){
@@ -77,14 +79,17 @@ $(function () {
     }, null, false);
 
     if (sales.pageType == "advance") {
-        sales.url = api.inventory.pageSalesForAdvance;
+        sales.url = api.sales.pageSalesForAdvance;
         sales.postData = "salesForAdvancePostData";
     } else if (sales.pageType == "dompany") {
-        sales.url = api.inventory.pageSalesForDompany;
+        sales.url = api.sales.pageSalesForDompany;
         sales.postData = "salesForDompanyPostData";
     }else if(sales.pageType == "pompany"){
-        sales.url = api.inventory.pageSalesForPompany;
+        sales.url = api.sales.pageSalesForPompany;
         sales.postData = "salesForPompanyPostData";
+    }else if(sales.pageType == "supplier"){
+        sales.url = api.sales.pageSalesForSupplier;
+        sales.postData = "salesForSupplierPostData";
     }
 
     var displayFunc = (function () {
@@ -114,6 +119,8 @@ $(function () {
                     var $btnDecoration = $('<a></a>').addClass('btn btn-minier btn-purple').html('装修单');
                     var $inventory = $('<a></a>').addClass('btn btn-minier btn-blue').html('仓储');
                     var $ascription = $('<a></a>').addClass('btn btn-minier btn-inverse').html('归属');
+                    var $finish = $('<a></a>').addClass('btn btn-minier btn-inverse').html('完结');
+                    var $terminal = $('<a></a>').addClass('btn btn-minier btn-danger').html('废单');
 
                     var propertyArr = [
                         ["装修单号:", v.orderId, "blue"],
@@ -186,19 +193,41 @@ $(function () {
                         }
 
                         if (v.status != 4) {
-                            $btnDiv.append($btnSub).append($btnMoney).append($btnCollect).append($btnRefund).append($btnPrint).append($btnAct).appendTo($h3);
+                            if(sales.pageType == "supplier"){
+                                $btnDiv.append($btnSub).append($btnMoney).append($btnCollect).append($btnRefund).append($btnPrint).append($btnAct).appendTo($h3);
+                            }else{
+                                $btnDiv.append($btnSub).append($btnMoney).append($btnCollect).append($btnRefund).append($btnPrint).append($btnAct).append($finish).appendTo($h3);
+                            }
                         } else {
                             $btnDiv.append($btnSub).append($btnCollect).append($btnRefund).appendTo($h3);
                         }
                     }
+
+                    if (v.status != 4) {
+                        $btnDiv.append($terminal);
+                    }
+
                     $btnDiv.appendTo($h3);
+
                     //归属修改
                     $ascription.click(function () {
                         sales.ascriptionBySid = v.sid;
                         com.updateTypeahead("uSalesman", v.salesman.userId, v.salesman.currentName + "-" +v.salesman.dept.name);
                         com.updateTypeahead("uInstorer", v.instorer.userId, v.instorer.currentName + "-" +v.instorer.dept.name);
                         com.updateTypeahead("uGuider", v.guider.userId, v.guider.currentName + "-" +v.guider.dept.name);
+                        com.updateTypeahead("uSupplier", v.supplier.userId, v.supplier.currentName);
                         sales.modals.ascription.modal("show");
+                    });
+
+                    $finish.click(function () {
+
+                        com.showConfirm('确定要将单号为 ' + v.no + ' 的销售单更新为完结状态吗?', function () {
+                            com.post(api.sales.finishSales,{"sales.sid":v.sid}, function () {
+                                com.showAlert(com.info, "更新成功");
+                                salesSearcher.doSearch();
+
+                            });
+                        });
                     });
 
                     $inventory.click(function () {
@@ -292,6 +321,7 @@ $(function () {
 
                     $btnRefund.click(function () {
                         params["sid"] = v.sid;
+                        params["sales"] = v;
                         com.popup4page("#layerPopUp", "views/sales/refundsItem.html", "退货");
 
                     });
@@ -306,11 +336,23 @@ $(function () {
                         });
                     });
 
-                    /*$btnPrint.click(function () {
+                    $btnPrint.click(function () {
+                        
+                        printPayment(v.orderId, v.sid, v, "fullPay");
+                        
+                     });
 
-                     printPayment(v.orderId, v.sid);
+                    $terminal.click(function () {
 
-                     });*/
+                        com.showConfirm('确定要将单号为 ' + v.no + ' 的销售单更新为废单吗?', function () {
+                            com.post(api.sales.terminalSales,{"sales.sid":v.sid}, function () {
+                                com.showAlert(com.info, "更新成功");
+                                salesSearcher.doSearch();
+                            });
+                        });
+
+                    });
+
                 });
 
                 $ul.appendTo($tableWrap);
@@ -324,9 +366,13 @@ $(function () {
             }
         };
     })();
-
+    
     /*分页*/
     var _condArr = ['sales_no', 'sales_orderId', 'sales_instorer', 'sales_salesman', 'sales_bid',  'sales_deptName'];
+
+    if(sales.pageType == "dompany") _condArr[4] = 'sales_brand_all';
+
+    if(sales.pageType == "pompany") _condArr.push('salesDompany');
 
     var salesSearcher = new Searcher();
 
@@ -344,10 +390,11 @@ $(function () {
             'sales.sid': sales.ascriptionBySid,
             "sales.salesman.userId": com.typeahead("uSalesman"),
             "sales.instorer.userId": com.typeahead("uInstorer"),
-            "sales.guider.userId": com.typeahead("uGuider")
+            "sales.guider.userId": com.typeahead("uGuider"),
+            "sales.supplier.userId": com.typeahead("uSupplier")
         };
 
-        com.post(api.inventory.updateSalesForBelong, options, function (res) {
+        com.post(api.sales.updateSalesForBelong, options, function (res) {
             com.showAlert(com.info, "修改归属成功");
             sales.modals.ascription.modal("hide");
             salesSearcher.doSearch();
@@ -416,7 +463,7 @@ $(function () {
             com.showAlert(com.error, "定金输入不正确");
             return false;
         }
-
+        
         var opt = {
             "salesPayment.sales.sid" : sales.sales.sid,
             "salesPayment.referMoney" : sales.items.depositPayment.val(),
@@ -432,7 +479,7 @@ $(function () {
 
     //定金撤销
     sales.btns.depositCancelBtn.on('click', function () {
-
+        
         var opt = {
             "salesPayment.sales.sid": sales.sales.sid,
             "salesPayment.type" : sales.type.depositPayment
@@ -453,12 +500,27 @@ $(function () {
 
         return false;
     });
+    
+    //定金打印
+    sales.btns.depositPrintBtn.on('click', function () {
+        
+        var printSales = null;
+        com.closePopup(com.focusPage("#layerAdd"));
+        
+        com.post(api.sales.querySalesBySid,{"sales.sid":sales.sales.sid},function (res) {
+            printSales = res.sales
+        }, null, false);
+
+        printPayment(printSales.orderId, printSales.sid, printSales, "deposit");
+
+        return false;
+
+    });
 
     //补款
     sales.btns.fullPaymentBtn.on('click', function () {
-
         //判断otherStatus状态
-        com.post(api.inventory.querySalesBySid, {'sales.sid': sales.sales.sid}, function (res) {
+        com.post(api.sales.querySalesBySid, {'sales.sid': sales.sales.sid}, function (res) {
             if (res.sales.otherStatus == 1) {
 
                 com.popup4mini("#miniPopUp", "#layerSubmit","补款审批", "", function () {
@@ -477,7 +539,7 @@ $(function () {
                     "salesPayment.type" : sales.type.fullPayment
                 };
                 com.post(api.payment.addSalesPaymentForFullpay, opt, function (data) {
-                    initLabel(sales.sales.depositpayStatus, 0, sales.sales.total, sales.sales.depositpay, sales.sales.fullpay,'');
+                    initLabel(res.sales.depositpayStatus, 0, sales.sales.total, sales.sales.depositpay, sales.sales.fullpay,'');
                 });
             }
         });
@@ -494,8 +556,13 @@ $(function () {
             "salesPayment.type" : flag ? sales.type.fullPayment : sales.type.fullPaymentRefund
         };
 
+        var printSales = null;
+        com.post(api.sales.querySalesBySid,{"sales.sid":sales.sales.sid},function (res) {
+            printSales = res.sales
+        }, null, false);
+
         com.post(api.payment.cancelSalesPaymentForFullpay, opts, function () {
-            initLabel(sales.sales.depositpayStatus, -1, sales.sales.total, sales.sales.depositpay, sales.sales.fullpay,'');
+            initLabel(printSales.depositpayStatus, -1, sales.sales.total, sales.sales.depositpay, sales.sales.fullpay,'');
         });
         
         return false;
@@ -504,7 +571,7 @@ $(function () {
     //补款退款
     sales.btns.fullPaymentRefundBtn.on('click', function () {
 
-        com.post(api.inventory.querySalesBySid, {'sales.sid': sales.sales.sid}, function (res) {
+        com.post(api.sales.querySalesBySid, {'sales.sid': sales.sales.sid}, function (res) {
             if (res.sales.otherStatus == 1) {
 
                 com.popup4mini("#miniPopUp", "#layerSubmit","补款退款审批", "", function () {
@@ -562,7 +629,7 @@ $(function () {
             "sales.couponInfo": "#" + sales.items.couponType.val() + ":" + sales.items.couponValue.val() + "#"
         };
         
-        com.post(api.inventory.updateSalesForCoupon, couponPostData, function () {
+        com.post(api.sales.updateSalesForCoupon, couponPostData, function () {
 
             sales.items.couponInf.val(sales.items.couponType.val() + ":" + sales.items.couponValue.val());
             sales.items.coupon.val(sales.items.couponValue.val());
@@ -613,7 +680,7 @@ $(function () {
             "sales.venderMaling": sales.items.malingValue.val()
         };
 
-        com.post(api.inventory.updateSalesForMaling, malingPostData, function () {
+        com.post(api.sales.updateSalesForMaling, malingPostData, function () {
             sales.items.maling.val(sales.items.malingValue.val());
             sales.items.malingInfoDiv.css('display', 'none');
             sales.items.malingValue.val(0);
@@ -638,6 +705,7 @@ $(function () {
         sales.btns.fullCancelBtn.addClass('hide');//补款撤销按钮
         sales.btns.depositPaymentBtn.addClass('hide');//定金交款按钮
         sales.btns.depositCancelBtn.addClass('hide');//定金撤销按钮
+        sales.btns.depositPrintBtn.addClass('hide');//定金打印按钮
         sales.btns.depositRefundBtn.addClass('hide');//定金退款按钮
         sales.btns.couponBtn.addClass('hide');//劵信息修改按钮
         sales.btns.couponCommitBtn.addClass('hide');//劵信息提交按钮
@@ -846,6 +914,10 @@ $(function () {
             sales.btns.fullPaymentBtn.addClass('hide');
         }
 
+        if(depositpayStatus == 0){
+            sales.btns.depositPrintBtn.removeAttr('class', 'hide');
+        }
+
     }
 
     function calcFullpayment(total) {
@@ -863,10 +935,10 @@ $(function () {
         return val == "" || val < 0 ? 0 : val;
     }
 
-    function printPayment(orderId, sid) {
+    function printPayment(orderId, sid, v, flag) {
         params.salesSid = sid;
-        com.popup("专用合同__装修单号：" + orderId, api.index.salesPrintIndex.url, function () {
-            parent.layer.getFrameIndex(window.name);
-        }, null, true);
+        params.data = v;
+        params.flag = flag;
+        com.popup("销售购货单：" + orderId, api.index.salesPrintIndex.url, null, null, true);
     }
 });

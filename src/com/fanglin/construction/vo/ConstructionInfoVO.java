@@ -1,6 +1,7 @@
 package com.fanglin.construction.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 public class ConstructionInfoVO implements Serializable {
 
@@ -9,6 +10,8 @@ public class ConstructionInfoVO implements Serializable {
 	private Long ciid;
 
 	private String orderId;
+	
+	private Integer timeLimit;
 
 	private Long cid;
 
@@ -17,6 +20,12 @@ public class ConstructionInfoVO implements Serializable {
 	private Short iskey;
 
 	private Short isCeremony;
+	
+	private Timestamp finishTime;
+	
+	private Timestamp keyTime;
+	
+	private Timestamp drawlineTime;
 
 	private String comment;
 
@@ -34,6 +43,14 @@ public class ConstructionInfoVO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	public Integer getTimeLimit() {
+		return timeLimit;
+	}
+
+	public void setTimeLimit(Integer timeLimit) {
+		this.timeLimit = timeLimit;
 	}
 
 	public Long getCid() {
@@ -66,6 +83,30 @@ public class ConstructionInfoVO implements Serializable {
 
 	public void setIsCeremony(Short isCeremony) {
 		this.isCeremony = isCeremony;
+	}
+
+	public Timestamp getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Timestamp finishTime) {
+		this.finishTime = finishTime;
+	}
+
+	public Timestamp getKeyTime() {
+		return keyTime;
+	}
+
+	public void setKeyTime(Timestamp keyTime) {
+		this.keyTime = keyTime;
+	}
+
+	public Timestamp getDrawlineTime() {
+		return drawlineTime;
+	}
+
+	public void setDrawlineTime(Timestamp drawlineTime) {
+		this.drawlineTime = drawlineTime;
 	}
 
 	public String getComment() {

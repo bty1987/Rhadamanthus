@@ -40,6 +40,8 @@ public class VticketPO implements java.io.Serializable {
 	public static final short ISREGIST_YES_INT = 1;
 
 	public static final short EXPIRE_INIT_INT = 0;
+	
+	public static final short EXPIRE_INVALID_INT = 1;
 
 	private long vtid;
 

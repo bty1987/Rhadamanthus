@@ -39,12 +39,15 @@ import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
 import com.fanglin.quotation.dao.QuotetionDao;
 import com.fanglin.quotation.dao.QuotetionFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotetionFunctionAreaItemDao;
+import com.fanglin.quotation.dao.SelectionDao;
+import com.fanglin.quotation.dao.SelectionItemDao;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.po.QuotetionFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotetionFunctionAreaPO;
 import com.fanglin.quotation.po.QuotetionPO;
+import com.fanglin.quotation.po.SelectionPO;
 import com.fanglin.quotation.service.QuotationService;
 import com.fanglin.quotation.vo.QuotationVO;
 import com.fanglin.system.dao.SystemConfigDao;
@@ -94,6 +97,12 @@ public class QuotationServiceImpl implements QuotationService {
 
 	@Autowired
 	private AddReduceItemDao addReduceItemDao;
+	
+	@Autowired
+	private SelectionDao selectionDao;
+	
+	@Autowired
+	private SelectionItemDao selectionItemDao;
 
 	@Override
 	public QuotationVO queryQuotationByQid(long qId) {
@@ -154,19 +163,19 @@ public class QuotationServiceImpl implements QuotationService {
 		String orderId = quotationVO.getOrderId();
 
 		QuotationPO quotationPO = new QuotationPO();
-
+		
 		if (quotationDao.countQuotationByOrderId(orderId) >= (quotationlimit == null ? 3 : Integer.parseInt(quotationlimit.getValue()))) {
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
 
 		DecorationPO decorationPO = checkQuotationForDefaultByOrderId(orderId);
-
+		
 		BeanUtil.copyProperties(quotationVO, quotationPO, Arrays.asList("creater"));
 
 		if (decorationPO == null) {
 			throw new FLException(140013, "订单不存在");
 		}
-
+		
 		QuotationVersionPO quotationVersionPO = decorationPO.getVersion();
 
 		if (quotationVersionPO == null) {
@@ -176,11 +185,12 @@ public class QuotationServiceImpl implements QuotationService {
 		quotationPO.setOrderId(orderId);
 		quotationPO.setCreater(userDao.queryUserByUserId(userId));
 		quotationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		
 		quotationPO.setManageRate(quotationVersionPO.getManageRate());
 		quotationPO.setTrafficRate(quotationVersionPO.getTrafficRate());
 		quotationPO.setDiscount(10000);
 		QuotationPO defaultQuotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
-
+		
 		if (defaultQuotationPO == null) {
 			quotationPO.setDefaults(QuotationPO.DEFAULTS_DEFAULT_INT);
 		} else {
@@ -188,6 +198,8 @@ public class QuotationServiceImpl implements QuotationService {
 		}
 
 		quotationDao.save(quotationPO);
+		
+		createSelection(quotationPO);
 
 		BeanUtil.copyProperties(quotationPO, quotationVO, Arrays.asList("creater"));
 
@@ -387,12 +399,14 @@ public class QuotationServiceImpl implements QuotationService {
 
 		QuotationPO defaultQuotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
 
-		if (defaultQuotationPO != null) {
-			deleteQuotationByQId(defaultQuotationPO.getQid());
+		if (defaultQuotationPO != null) {// 不是第一个报价, 把默认删除
+			deleteQuotationByQId(defaultQuotationPO.getQid(), defaultQuotationPO.getOrderId());
 		}
 
 		quotationDao.save(quotationPO);
-
+		
+		createSelection(quotationPO);
+		
 		copyQuotetion(quotationPO.getQid(), copyQuotetionPO.getQid());
 
 		BeanUtil.copyProperties(quotationPO, quotationVO, Arrays.asList("creater"));
@@ -454,10 +468,12 @@ public class QuotationServiceImpl implements QuotationService {
 		QuotationPO defaultQuotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
 
 		if (defaultQuotationPO != null) {
-			deleteQuotationByQId(defaultQuotationPO.getQid());
+			deleteQuotationByQId(defaultQuotationPO.getQid(), defaultQuotationPO.getOrderId());
 		}
 
 		quotationDao.save(quotationPO);
+		
+		createSelection(quotationPO);
 
 		copyQuotation(replicaQId, quotationPO.getQid());
 
@@ -515,6 +531,8 @@ public class QuotationServiceImpl implements QuotationService {
 			quotationPO.setDefaults(QuotationPO.DEFAULTS_NONDEFAULT_INT);
 		}
 		quotationDao.save(quotationPO);
+		
+		createSelection(quotationPO);
 
 		copyQuotation(copyQId, quotationPO.getQid());
 
@@ -535,7 +553,7 @@ public class QuotationServiceImpl implements QuotationService {
 			throw new FLException(200014, "默认报价不能删除");
 		}
 
-		deleteQuotationByQId(quotationVO.getQid());
+		deleteQuotationByQId(quotationVO.getQid(), quotationPO.getOrderId());
 
 		return 0;
 	}
@@ -623,7 +641,7 @@ public class QuotationServiceImpl implements QuotationService {
 	}
 
 	@Transactional(rollbackFor = Exception.class)
-	private int deleteQuotationByQId(long qId) throws FLException {
+	private int deleteQuotationByQId(long qId, String orderId) throws FLException {
 
 		List<QuotationFunctionAreaPO> quotationFunctionAreas = quotationFunctionAreaDao.queryQuotationFunctionAreaByQuotationId(qId);
 
@@ -641,12 +659,16 @@ public class QuotationServiceImpl implements QuotationService {
 
 			long quotatoinFunctionAreaId = quotationFunctionAreaPO.getQfaId();
 
+			if (selectionItemDao.countSelectionItem(orderId, quotatoinFunctionAreaId) > 0) {
+				throw new FLException(200037, "存在关联选材项");
+			}
+			
 			String tableName = QuotationFunctionAreaItemPO.quotationFunctionAreaItemTable(quotationFunctionAreaPO.getQfaId(), divisor);
 
 			quotationFunctionAreaItemDao.deleteQuotationFunctionAreaItemByFunctionAreaId(tableName, quotatoinFunctionAreaId); // 删除报价项
 			quotationFunctionAreaDao.deleteById(quotatoinFunctionAreaId); // 删除功能区
 		}
-
+		
 		quotationDao.deleteById(qId); // 删除报价
 
 		return 0;
@@ -698,15 +720,15 @@ public class QuotationServiceImpl implements QuotationService {
 	};
 
 	private DecorationPO checkQuotationForDefaultByOrderId(String orderId) throws FLException {
-
+		
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
-
+		
 		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT });
 
 		if (decorationPO == null) {
 			throw new FLException(140013, "订单不存在");
 		}
-
+		
 		if (!status.contains(decorationPO.getStatus())) {
 			throw new FLException(200005, "报价不能修改");
 		}
@@ -727,5 +749,20 @@ public class QuotationServiceImpl implements QuotationService {
 
 		return quotationPO;
 	}
-
+	
+	@Transactional(rollbackFor = Exception.class)
+	private int createSelection(QuotationPO quotationPO) throws FLException {
+		
+		SelectionPO selectionPO = new SelectionPO();
+		
+		selectionPO.setOrderId(quotationPO.getOrderId());
+		selectionPO.setQid(quotationPO.getQid());
+		selectionPO.setStatus(SelectionPO.STATUS_INIT_INT);
+		selectionPO.setTotal(0L);	
+		
+		selectionDao.save(selectionPO);
+		
+		return 0;
+	}
+	
 }

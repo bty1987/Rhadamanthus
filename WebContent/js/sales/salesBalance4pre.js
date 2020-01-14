@@ -2,7 +2,7 @@ $(function () {
     
     var salesPre = {
         salesPre_data:{},
-        url : api.inventory.pageSalesForBalance,
+        url : api.sales.pageSalesForBalance,
         postData : "salesPreBalancePostData",
         pageType : params['urlLoadParams'].type,
         btns:{
@@ -11,10 +11,10 @@ $(function () {
     };
 
     if (salesPre.pageType == "dompany") {
-        salesPre.url = api.inventory.pageSalesForBalanceByDompany;
+        salesPre.url = api.sales.pageSalesForBalanceByDompany;
         salesPre.postData = "salesPreBalanceForDompanyPostData";
     }else if(salesPre.pageType == "pompany"){
-        salesPre.url = api.inventory.pageSalesForBalanceByPompany;
+        salesPre.url = api.sales.pageSalesForBalanceByPompany;
         salesPre.postData = "salesPreBalanceForPompanyPostData";
     }
 
@@ -133,7 +133,7 @@ $(function () {
                         _option["sid[0]"] = v.sid;
 
                         com.showConfirm('确定要将单号为 ' + v.no + ' 的销售单进行预结算吗?', function (index, layero) {
-                            com.post(api.inventory.preSalesBalance, _option, function (res) {
+                            com.post(api.sales.preSalesBalance, _option, function (res) {
                                 com.showAlert(com.info, "预结算成功");
                                 salesPreBalance.doSearch();
                             });
@@ -202,7 +202,7 @@ $(function () {
             });
 
             com.showConfirm('确定要将选中的销售单进行预结算吗?', function (index, layero) {
-                com.post(api.inventory.preSalesBalance, _option, function (res) {
+                com.post(api.sales.preSalesBalance, _option, function (res) {
 
                     com.showAlert(com.info, "操作成功");
                     salesPreBalance.doSearch();
@@ -240,7 +240,7 @@ $(function () {
             });
 
             com.showConfirm('确定要将选中的销售单进行完结吗?', function (index, layero) {
-                com.post(api.inventory.passSalesBalance, _option, function (res) {
+                com.post(api.sales.passSalesBalance, _option, function (res) {
 
                     com.showAlert(com.info, "操作成功");
                     salesPreBalance.doSearch();
@@ -264,7 +264,7 @@ $(function () {
     salesPre.btns.preSaveBtn.on('click', function () {
         if (!checkRowValue()) {return;}
 
-            com.post(api.inventory.updateSalesForMaling, {
+            com.post(api.sales.updateSalesForMaling, {
                 "sales.sid": salesPre.salesPre_data.sid,
                 "sales.maling": utils.accSub(com.focusPage('#maling').val(), com.focusPage('#editVenderMaling').val()),
                 "sales.venderMaling": com.focusPage('#editVenderMaling').val()

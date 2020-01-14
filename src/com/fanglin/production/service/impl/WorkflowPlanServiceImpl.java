@@ -33,6 +33,7 @@ public class WorkflowPlanServiceImpl implements WorkFlowPlanService {
 		List<WorkflowPlanVO> workflowPlans = new ArrayList<WorkflowPlanVO>();
 		
 		for (WorkflowPlanPO workflowPlanPO : WorkflowPlanPOS) {
+			
 			workflowPlanVO = new WorkflowPlanVO(new WorkflowVO(), new WorkplanVO(), new WorkshopVO());
 
 			BeanUtil.copyProperties(workflowPlanPO, workflowPlanVO, Arrays.asList("workflow", "workplan"));
@@ -53,6 +54,7 @@ public class WorkflowPlanServiceImpl implements WorkFlowPlanService {
 		List<WorkflowPlanVO> workflowPlans = new ArrayList<WorkflowPlanVO>();
 		
 		for (WorkflowPlanPO workflowPlanPO : WorkflowPlanPOS) {
+			
 			workflowPlanVO = new WorkflowPlanVO(new WorkflowVO(), new WorkplanVO());
 
 			BeanUtil.copyProperties(workflowPlanPO, workflowPlanVO, Arrays.asList("workflow", "workplan"));

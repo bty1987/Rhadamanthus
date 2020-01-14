@@ -222,6 +222,15 @@ $(function () {
 
     }
 
+    function selectionQuotation(quotationId) {
+        params["editFlg"] = true;
+        params.historyPage = api.index.quotationIndex.url;
+        params["decorationOrderId"] = decorationQuotation.decorationOrderId;
+        params["quotationId"] = quotationId;
+        com.switchPage(api.index.selectionIndex.url);
+
+    }
+
     function drawquotation(quotation) {
 
         var $color = ['header-color-blue', 'header-color-green', 'header-color-red'];
@@ -258,7 +267,8 @@ $(function () {
         
         var lockBtn = $('<a></a>').addClass('btn btn-minier btn-pink').append($('<i>').addClass('icon-copy')).text('锁定').attr('id', 'lockQuotation_' + qid).attr('data', qid).appendTo(quotationWidgetToolDiv);
         var unlockBtn = $('<a></a>').addClass('btn btn-minier btn-info').append($('<i>').addClass('icon-copy')).text('解锁').attr('id', 'unlockQuotation_' + qid).attr('data', qid).appendTo(quotationWidgetToolDiv);
-        
+        var selectionBtn = $('<a></a>').addClass('btn btn-minier btn-purple').append($('<i>').addClass('icon-copy')).text('选材').attr('id', 'selectionQuotation_' + qid).attr('data', qid).appendTo(quotationWidgetToolDiv);
+
         if (quotation.defaults == 1) {
             defaultBtn.addClass("hide");
             decorationQuotation.defaultsQid = quotation.qid;
@@ -374,6 +384,10 @@ $(function () {
                 lockBtn.removeClass("hide");
             });
             
+        });
+
+        selectionBtn.on(ace.click_event, function(){
+            selectionQuotation($(this).attr("data"));
         });
 
     }

@@ -1,124 +1,180 @@
 $(function(){
+    var productionPicture1 = {
 
-    var productionPicture={
-          btns:{
-              uploadBtn:com.focusPage("#uploadBtn"),
-              back:com.focusPage("#backBtn"),
-          },
-          models:{
-              layerProductionImport :com.focusPage("#layerProductionImport"),
-          },
-          items:{
-          comment:com.focusPage("#comment"),
-          },
-
-        pid:params.pid,
-        status:params,
-        pictureStatus :false,
-        replacePicture :{}
-    };
-
-    createPage();
-
-    function createPage(){
-
-        com.post(api.production.queryProductionPictureByPid,{"productionPicture.pid":productionPicture.pid},function(listData){
-
-            $.each(listData.productionPictures,function(i,v){
-                if(v.status != 2){
-                    productionPicture.pictureStatus = true;
-                    productionPicture.replacePicture["production["+i+"].pid"] = v.ppid;
-                }else{
-                    return true;
-                }
-            });
-            createLine(listData);
-        },function(e){
-
-        });
+        picturePage: com.focusPage("#picturePage"),
+        pid: params.pid,
+        status : params["status"]
     }
 
+    com.post(api.production.queryProductionPictureByPid ,{"productionPicture.pid": productionPicture1.pid} ,function (res) {
 
-    function createLine(data){
+        productionPicture1.picturePage.append(drawProductionPicture());
 
-        var $tableWrap = com.focusPage('#resultList').find("#uploadCAD");
+        var productionPictures = res.productionPictures;
 
-        $.each(data.productionPictures,function(i,v){
-
-            if(v.status == 2){
-                return true;
+        for (var i = 0; i < productionPictures.length; i++) {
+            var productionPicture = productionPictures[i];
+            if (productionPicture.type == 0) {
+                addCAD(com.focusPage("#productionUploadTheCAD"), productionPicture);
+            } else if (productionPicture.type == 1) {
+                addPicture(com.focusPage("#productionUploadPlan"), productionPicture);
             }
-
-            var $box = $("<div></div>").addClass("infobox infobox-blue infobox-dark");
-
-            var $iconGrouop = $("<div></div>").addClass("infobox-icon");
-            var $icondownload = $("<a></a>").addClass("icon-download-alt");
-            com.downloadFile($icondownload, v.path, v.name);
-
-            var $dataGrouop = $("<div></div>").addClass("infobox-data");
-            var $name = $("<div></div>").addClass("infobox-content").html(v.name);
-            var $time = $("<div></div>").addClass("infobox-content").html(v.createTime);
-            var $comment = $("<div></div>").addClass("infobox-content").html(v.comment);
-
-            $dataGrouop.append($name).append($time).append($comment);
-            $iconGrouop.append($icondownload);
-            $box.append($iconGrouop).append($dataGrouop).appendTo($tableWrap);;
-
-        });
-
-    }
-
-
-    productionPicture.btns.back.click(function(){
-        com.switchPage(api.index.productionIndex.url);
-    });
-
-    
-    productionPicture.btns.uploadBtn.click(function(){
-        com.clearValidator();
-
-
-        if(productionPicture.status == 4 || productionPicture.status == 5 ||productionPicture.status == 3){
-            $("#importProductionPicture").addClass("hide")
         }
 
-        com.focusPage('#importProductionPicture').empty();
+        productionUtils.loadHuploadify("CADUploadProduction", "上传文件", "*.dwg;*.dwt", false, function (data) {
+            addDecorationPicture (data, '0');
+        }, "btn btn-warning");
 
+        productionUtils.loadHuploadify("pictureUploadProduction", "上传设计图", "*.jpg;*.jpge;*.gif;*.png", true, function (data) {
+            addDecorationPicture (data, '1');
+        }, "btn btn-success");
 
-        com.focusPage("#importProductionPicture").click(function(){
-            if(com.validate("layerProductionImport",null)){
-                return false;
+        com.focusPage('.ace-thumbnails [data-rel="colorbox"]').colorbox({
+            reposition: true,
+            scalePhotos: true,
+            scrolling: false,
+            previous: '<i class="icon-arrow-left"></i>',
+            next: '<i class="icon-arrow-right"></i>',
+            close: '&times;',
+            current: '{current} of {total}',
+            maxWidth: '100%',
+            maxHeight: '100%'
+        });
+    }, null, false);
+
+    function queryDate (){
+        com.post(api.production.queryProductionPictureByPid ,{"productionPicture.pid": productionPicture1.pid} ,function (res) {
+
+            var productionPictures = res.productionPictures;
+
+            com.focusPage("#productionUploadTheCAD").empty();
+            com.focusPage("#productionUploadPlan").empty();
+
+            for (var i = 0; i < productionPictures.length; i++) {
+                var productionPicture = productionPictures[i];
+                if (productionPicture.type == 0) {
+                    addCAD(com.focusPage("#productionUploadTheCAD"), productionPicture);
+                } else if (productionPicture.type == 1) {
+                    addPicture(com.focusPage("#productionUploadPlan"), productionPicture);
+                }
             }
         });
+    }
 
-        com.uploadify("#importProductionPicture", "添加上传文件", 'btn btn-success blue ', "*.dwg;*.dwt", {'uploadType': 2}, 1, function(data){
+    function addPicture (e, i) {
 
-            var option = {};
+        var $li = $('<li></li>').attr("id", "imgLi_" + i.ppid).appendTo(e);
+        var $img = $('<img></img>').attr('width', 200).attr('height', 200);
+        var $imgA = $('<a></a>').attr('data-rel', 'colorbox').addClass('cboxElement').attr('href', com.showImg($img, i.path, 200, 200, '200x200')).attr('target', '_blank').append($img).appendTo($li);
 
-            if (data.errorCode == 0) {
-                option["productionPicture.pid"] = productionPicture.pid;
-                option["productionPicture.name"] = data.strutsUploadsFileName;
-                option["productionPicture.path"] = data.resUrl;
-                option["productionPicture.comment"] = productionPicture.items.comment.val();
-                option["productionPicture.status"] = 0;
-            }
+        var $tags = $('<div></div>').addClass('tags').appendTo($li);
+        var $nameHolder = $('<span></span>').addClass('label-holder').appendTo($tags);
+        var $nameInfo = $('<span></span>').addClass('label label-info arrowed').text(i.name).appendTo($nameHolder);
+        var $timeHolder = $('<span></span>').addClass('label-holder').appendTo($tags);
+        var $timeInfo = $('<span></span>').addClass('label label-danger arrowed').text(i.createTime).appendTo($timeHolder);
 
-            com.post(api.production.addProductionPicture,option,function(data){
-                com.showAlert(com.info, "上传成功");
-                createPage();
-            },function(e){
-                com.showAlert(com.info, "上传失败");
+        var $tools = $('<div></div>').addClass('tools tools-top').appendTo($li);
+        var $toolLabel = $('<label></label>').appendTo($tools);
+        var $downA = $('<a></a>').addClass("icon-download-alt").appendTo($tools);
+
+        var $delA = $('<a></a>').addClass("icon-remove").appendTo($tools);
+
+        $delA.click(function () {
+
+            com.post(api.production.deleteProductionPicture, {"productionPicture.ppid": i.ppid}, function (res) {
+                com.focusPage("#imgLi_" + res.productionPicture.ppid).remove();
             });
-
         });
-        com.focusPage("#uploadCAD").empty();
-        productionPicture.models.layerProductionImport.modal("show");
 
-    });
+        com.downloadFile($downA, i.path, i.name);
 
-    com.focusPage("#confirmBtn").click(function () {
+    }
+    function addCAD (e, i) {
 
-        productionPicture.models.layerProductionImport.modal("hide");
-    })
+        var $name = i.name;
 
+        var $infobox = $('<div></div>').addClass('infobox infobox-blue infobox-dark').attr("id", "cad_" + i.ppid).appendTo(e);
+        var $infoboxIcon = $('<div></div>').addClass('infobox-icon').appendTo($infobox);
+        var $downIcon = $('<a></a>').addClass('icon-download-alt').appendTo($infoboxIcon);
+
+        com.downloadFile($downIcon, i.path, new Date().getTime() + '.' + $name.split('.')[1]);
+
+        var $infoboxData = $('<div></div>').addClass('infobox-data').appendTo($infobox);
+        var $infoboxLeft = $('<div></div>').css('float', 'left').appendTo($infoboxData);
+        var $infoboxContent = $('<div></div>').addClass('infobox-content').text($name.split('.')[0].substr(0, 8) + '.' + $name.split('.')[1]).appendTo($infoboxLeft);
+        var $infoboxContent = $('<div></div>').addClass('infobox-content').text(i.createTime).appendTo($infoboxLeft);
+
+
+        var $delA = $('<a></a>').addClass("icon-remove").css({
+            'float': 'right',
+            'font-size': '22px',
+            'color': 'white'
+        }).appendTo($infoboxData);
+
+        $delA.click(function () {
+            com.post(api.production.deleteProductionPicture, {"productionPicture.ppid": i.ppid}, function (res) {
+                com.focusPage("#cad_" + res.productionPicture.ppid).remove();
+            });
+        });
+    };
+
+    function drawProductionPicture(res) {
+
+        function createDiv(classes, id, css) {
+            var div = $('<div></div>').attr("class", classes);
+            if (id) div.attr("id", id);
+            if (css) div.attr("style", css);
+            return div;
+        }
+
+        function createLabel(classes, text, forId) {
+            var label = $('<label></label>').attr("class", classes).text(text);
+            if (forId) label.attr("for", forId);
+            return label;
+        }
+
+        function createUl(id, classes, css) {
+            var ul = $("<ul></ul>").attr("class", classes);
+            if (css) ul.attr("style", css);
+            if (id) ul.attr("id", id);
+            return ul;
+        }
+
+        var row1 = createDiv("row").append(createDiv("col-md-6").append(createDiv("col-md-2", "pictureUploadProduction"),createDiv("col-md-2", "CADUploadProduction")));
+
+        var row2 = createDiv("row").append(
+            createDiv("col-xs-12").append(createLabel("control-label", "设计图:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createUl("productionUploadPlan", "ace-thumbnails")))
+            , createDiv("col-xs-12").append(createLabel("control-label", "文件:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createDiv("col-sm-7 infobox-container", "productionUploadTheCAD")))
+
+        );
+
+        return [row1, row2];
+    }
+
+    function addDecorationPicture (data, type) {
+
+        var dateObj = eval("(" + data + ")");
+
+        if (dateObj.errorCode == 0) {
+
+            var option = {
+                "productionPicture.pid": productionPicture1.pid,
+                "productionPicture.name": dateObj.strutsUploadsFileName,
+                "productionPicture.path": dateObj.resUrl,
+                "productionPicture.status": 0,
+                "productionPicture.type": type
+            }
+
+            com.post(api.production.addProductionPicture, option, function (res) {
+                queryDate();
+            });
+        } else {
+            com.showAlert(com.error, dateObj.errorMsg);
+        }
+    };
+
+    if (productionPicture1.status != 1) {
+        com.focusPage("#CADUploadProduction").addClass('hide');
+        com.focusPage("#pictureUploadProduction").addClass('hide');
+    };
 });

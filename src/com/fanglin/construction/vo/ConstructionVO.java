@@ -13,6 +13,7 @@ package com.fanglin.construction.vo;
 
 import java.io.Serializable;
 
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
 public class ConstructionVO implements Serializable{
@@ -23,18 +24,36 @@ public class ConstructionVO implements Serializable{
 	
 	private String orderId;
 	
+	private DecorationVO decoration;
+	
 	private UserBaseVO supervisor;
 	
 	private String supervisorQualityName;
 	
 	private Integer schedule;
 	
+	private Short accessory;
+	
+	private Long accessoryLimit;
+	
+	private Long salaryLimit;
+	
+	private Long accessoryTotal;
+	
+	private Long salaryTotal;
+	
 	public ConstructionVO() {
 		super();
 	}
-
+	
 	public ConstructionVO(UserBaseVO supervisor) {
 		super();
+		this.supervisor = supervisor;
+	}
+
+	public ConstructionVO(DecorationVO decoration,UserBaseVO supervisor) {
+		super();
+		this.decoration = decoration;
 		this.supervisor = supervisor;
 	}
 	
@@ -61,6 +80,14 @@ public class ConstructionVO implements Serializable{
 	public void setOrderId(String orderId){
 		this.orderId = orderId;
 	}
+	
+	public DecorationVO getDecoration() {
+		return decoration;
+	}
+
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
+	}
 
 	public Integer getSchedule(){
 		return schedule;
@@ -76,6 +103,46 @@ public class ConstructionVO implements Serializable{
 
 	public void setSupervisorQualityName(String supervisorQualityName){
 		this.supervisorQualityName = supervisorQualityName;
+	}
+
+	public Short getAccessory() {
+		return accessory;
+	}
+
+	public void setAccessory(Short accessory) {
+		this.accessory = accessory;
+	}
+
+	public Long getAccessoryLimit() {
+		return accessoryLimit;
+	}
+
+	public void setAccessoryLimit(Long accessoryLimit) {
+		this.accessoryLimit = accessoryLimit;
+	}
+
+	public Long getSalaryLimit() {
+		return salaryLimit;
+	}
+
+	public void setSalaryLimit(Long salaryLimit) {
+		this.salaryLimit = salaryLimit;
+	}
+
+	public Long getAccessoryTotal() {
+		return accessoryTotal;
+	}
+
+	public void setAccessoryTotal(Long accessoryTotal) {
+		this.accessoryTotal = accessoryTotal;
+	}
+
+	public Long getSalaryTotal() {
+		return salaryTotal;
+	}
+
+	public void setSalaryTotal(Long salaryTotal) {
+		this.salaryTotal = salaryTotal;
 	}
 	
 }

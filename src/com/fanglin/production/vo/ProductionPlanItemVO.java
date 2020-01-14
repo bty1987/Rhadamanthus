@@ -14,19 +14,19 @@ public class ProductionPlanItemVO implements Serializable {
 
 	private String name;
 
-	private Float height;
+	private Integer height;
 
-	private Float width;
+	private Integer width;
 
-	private Float thick;
+	private Integer thick;
 
 	private String color;
 
-	private Float unitprice;
+	private Integer unitprice;
 
-	private Float num;
+	private Integer num;
 
-	private Float total;
+	private Long total;
 
 	private String comment;
 
@@ -71,27 +71,27 @@ public class ProductionPlanItemVO implements Serializable {
 		this.name = name;
 	}
 
-	public Float getHeight() {
+	public Integer getHeight() {
 		return height;
 	}
 
-	public void setHeight(Float height) {
+	public void setHeight(Integer height) {
 		this.height = height;
 	}
 
-	public Float getWidth() {
+	public Integer getWidth() {
 		return width;
 	}
 
-	public void setWidth(Float width) {
+	public void setWidth(Integer width) {
 		this.width = width;
 	}
 
-	public Float getThick() {
+	public Integer getThick() {
 		return thick;
 	}
 
-	public void setThick(Float thick) {
+	public void setThick(Integer thick) {
 		this.thick = thick;
 	}
 
@@ -103,27 +103,27 @@ public class ProductionPlanItemVO implements Serializable {
 		this.color = color;
 	}
 
-	public Float getUnitprice() {
+	public Integer getUnitprice() {
 		return unitprice;
 	}
 
-	public void setUnitprice(Float unitprice) {
+	public void setUnitprice(Integer unitprice) {
 		this.unitprice = unitprice;
 	}
 
-	public Float getNum() {
+	public Integer getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(Integer num) {
 		this.num = num;
 	}
 
-	public Float getTotal() {
+	public Long getTotal() {
 		return total;
 	}
 
-	public void setTotal(Float total) {
+	public void setTotal(Long total) {
 		this.total = total;
 	}
 

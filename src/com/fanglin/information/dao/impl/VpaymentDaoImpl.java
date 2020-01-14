@@ -61,6 +61,15 @@ public class VpaymentDaoImpl extends DaoImpl<VpaymentPO> implements VpaymentDao{
 	public List<VpaymentPO> queryVpaymentByVrid(long vrid) {
 		return session().createCriteria(VpaymentPO.class).createAlias("vreceipt", "vreceipt").add(Restrictions.eq("vreceipt.vrid", vrid)).list();
 	}
+	
+	@Override
+	public int updateVpaymentStatusForFailure(long vaid) {
+		
+		String sql = "update information.vpayment set expire = :expire where vaid = :vaid";
+		session().createSQLQuery(sql).setShort("expire", VpaymentPO.EXPIRE_INVALID_INT).setLong("vaid", vaid).executeUpdate();
+		
+		return 0;
+	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
@@ -84,4 +93,5 @@ public class VpaymentDaoImpl extends DaoImpl<VpaymentPO> implements VpaymentDao{
 			}
 		}
 	}
+
 }

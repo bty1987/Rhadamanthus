@@ -16,6 +16,7 @@ import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.quotation.dao.ExtensionDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
+import com.fanglin.quotation.dao.SelectionItemDao;
 import com.fanglin.quotation.po.ExtensionItemPO;
 import com.fanglin.quotation.po.ExtensionPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
@@ -43,6 +44,9 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 
 	@Autowired
 	private QuotationDao quotationDao;
+
+	@Autowired
+	private SelectionItemDao selectionItemDao;
 
 	@Override
 	public List<ExtensionItemVO> queryExtensionItemByEid(ExtensionItemVO extensionItemVO) {
@@ -91,6 +95,10 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 
 			extensionItemPO = extensionItemDao.get(extensionItemVO.getEiid());
 
+			if (selectionItemDao.countSelectionItem(extensionPO.getOrderId(), extensionPO.getEid(), extensionItemPO.getQuoteItemId()) > 0) {
+				throw new FLException(200037, "存在关联选材项");
+			}
+
 			BeanUtil.copyProperties(extensionItemVO, extensionItemPO, Arrays.asList("quotationFunctionArea"));
 
 			extensionItemPO.setQuotationFunctionArea(new QuotationFunctionAreaPO(extensionItemVO.getQuotationFunctionAreaId()));
@@ -124,6 +132,12 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 
 		if (extensionItemPO == null) {
 			throw new FLException(200027, "扩展项不存在");
+		}
+
+		int count = selectionItemDao.countSelectionItem(extensionPO.getOrderId(), extensionPO.getEid(), extensionItemPO.getQuoteItemId());
+
+		if (count > 0) {
+			throw new FLException(200037, "存在关联选材项");
 		}
 
 		extensionPO.setUndisPrice(extensionVO.getUndisPrice());

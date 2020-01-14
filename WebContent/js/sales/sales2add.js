@@ -50,7 +50,7 @@ jQuery(function () {
         brand: null
     };
 
-    com.post(api.inventory.querySalesBySid, {"sales.sid": sales.sid}, function (res) {
+    com.post(api.sales.querySalesBySid, {"sales.sid": sales.sid}, function (res) {
         
         var data = res.sales;
         
@@ -70,7 +70,7 @@ jQuery(function () {
         sales.brand = data.brand;
     });
 
-    com.initTypeahead('goods', api.inventory.queryGoodsByName, "goods.name", {}, 'goodes', 'gid', 'name', function (list, k, v) {
+    com.initTypeahead('goods', api.data.queryGoodsByName, "goods.name", {}, 'goodes', 'gid', 'name', function (list, k, v) {
 
         com.cleanItems(sales.leftitems);
         com.focusPage('#left').find('select').empty();
@@ -89,7 +89,7 @@ jQuery(function () {
                 sales.leftitems.measurementUnit.val(val.measurementUnit);
 
                 //赋值售价信息
-                com.post(api.inventory.queryPriceByGid, {"price.gid": k}, function (res) {
+                com.post(api.data.queryPriceByGid, {"price.gid": k}, function (res) {
                     if (res.prices.length != 0) {
 
                         $.each(res.prices, function (key, value) {
@@ -110,7 +110,7 @@ jQuery(function () {
                     }
                 });
                 //赋值颜色信息
-                com.post(api.inventory.queryColorForEnableByGid, {"color.gid": k}, function (res) {
+                com.post(api.data.queryColorForEnableByGid, {"color.gid": k}, function (res) {
                     if (res.colors.length != 0) {
                         sales.leftitems.color.bindData(res.colors, "cid", "name");
                     } else {
@@ -118,7 +118,7 @@ jQuery(function () {
                     }
                 });
                 //赋值规格信息
-                com.post(api.inventory.queryFormatForEnableByGid, {"format.gid": k}, function (res) {
+                com.post(api.data.queryFormatForEnableByGid, {"format.gid": k}, function (res) {
                     if (res.formats.length != 0) {
                         sales.leftitems.format.bindData(res.formats, "fid", "info");
                     } else {
@@ -134,7 +134,7 @@ jQuery(function () {
         com.focusPage('#itemList').html("");
     });
 
-    com.post(api.inventory.querySalesItemBySid, {"sales.sid": sales.sid}, function (res) {
+    com.post(api.sales.querySalesItemBySid, {"sales.sid": sales.sid}, function (res) {
         $.each(res.salesItems, function (i, v) {
             initList(v);
         });
@@ -225,7 +225,7 @@ jQuery(function () {
             var $siid = $info.siid;
             var $num = $item.find("input").val();
             var $price = $info.selling;
-            
+
             var $itemTotal = utils.changeThrDecimal(utils.accMul($price, $num));
             var $total = sales.rightitems.totals.val();
             
@@ -233,10 +233,11 @@ jQuery(function () {
                 "salesItem.siid": $siid,
                 "salesItem.num": $num,
                 "salesItem.total": $itemTotal,
+                "salesItem.comment": $info.remark,
                 "sales.total": utils.changeThrDecimal(utils.accSub(utils.accAdd($total, $itemTotal), $info.total))
             };
             
-            com.post(api.inventory.updateSalesItem, options, function (res) {
+            com.post(api.sales.updateSalesItem, options, function (res) {
                 
                 com.showAlert(com.info, "操作成功");
                 
@@ -288,7 +289,7 @@ jQuery(function () {
                 "sales.total": utils.changeThrDecimal(utils.accSub($total, $itemTotal))
             };
 
-            com.post(api.inventory.deleteSalesItem, options, function () {
+            com.post(api.sales.deleteSalesItem, options, function () {
                 
                 com.showAlert(com.info, "操作成功");
                 
@@ -310,7 +311,7 @@ jQuery(function () {
         }
 
         var price = {};
-        com.post(api.inventory.queryPriceByPid, {"price.pid": sales.leftitems.purchase.val()}, function (data) {
+        com.post(api.data.queryPriceByPid, {"price.pid": sales.leftitems.purchase.val()}, function (data) {
             price = data.price;
         },null, false);
 
@@ -362,7 +363,7 @@ jQuery(function () {
         options["salesItem.color.name"] = sales.leftitems.color.find("option:selected").text();
         options["salesItem.format.info"] = sales.leftitems.format.find("option:selected").text();
 
-        com.post(api.inventory.addSalesItem, options, function (data) {
+        com.post(api.sales.addSalesItem, options, function (data) {
             
             com.showAlert(com.info, "操作成功");
             

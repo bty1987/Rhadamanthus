@@ -1,6 +1,7 @@
 package com.fanglin.construction.po;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,12 +27,20 @@ public class ConstructionInfoPO implements Serializable {
 	private long cid;
 
 	private String orderId;
+	
+	private int timeLimit;
 
 	private short ishovel;
 
 	private short iskey;
 
 	private short isCeremony;
+	
+	private Timestamp finishTime;
+	
+	private Timestamp keyTime;
+	
+	private Timestamp drawlineTime;
 
 	private String comment;
 
@@ -63,6 +72,15 @@ public class ConstructionInfoPO implements Serializable {
 	@Column(name = "orderId")
 	public String getOrderId() {
 		return orderId;
+	}
+
+	@Column(name = "timeLimit")
+	public int getTimeLimit() {
+		return timeLimit;
+	}
+
+	public void setTimeLimit(int timeLimit) {
+		this.timeLimit = timeLimit;
 	}
 
 	public void setOrderId(String orderId) {
@@ -104,6 +122,33 @@ public class ConstructionInfoPO implements Serializable {
 
 	public void setIsCeremony(short isCeremony) {
 		this.isCeremony = isCeremony;
+	}
+
+	@Column(name = "finishTime")
+	public Timestamp getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Timestamp finishTime) {
+		this.finishTime = finishTime;
+	}
+
+	@Column(name = "keyTime")
+	public Timestamp getKeyTime() {
+		return keyTime;
+	}
+
+	public void setKeyTime(Timestamp keyTime) {
+		this.keyTime = keyTime;
+	}
+	
+	@Column(name = "drawlineTime")
+	public Timestamp getDrawlineTime() {
+		return drawlineTime;
+	}
+
+	public void setDrawlineTime(Timestamp drawlineTime) {
+		this.drawlineTime = drawlineTime;
 	}
 
 	@Column(name = "comment")

@@ -15,33 +15,29 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
-import org.apache.struts2.json.annotations.JSON;
-
+import com.fanglin.communion.vo.ContractVO;
 import com.fanglin.payment.vo.DecorationPaymentVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class DecorationContractVO implements Serializable {
 
 	private static final long serialVersionUID = -6225111181876631L;
-
-	private Long autoId;
+	
+	private Long dcid;
 	
 	private String orderId;
-
-	private String additionalInfo;
 	
-	private String templateHtml;
+	private ContractVO contract;
 	
-	private Timestamp signTime;
+	private String download;
 	
-	private Integer workingDuration;
+	private String viewpdf;
 	
-	private Timestamp startTime;
+	private UserBaseVO creater;
 	
-	private Timestamp endTime;
+	private Timestamp createTime;
 	
-	private String contractCode;
-	
-	private Long orderTotalPrice;
+	private Short status;
 	
 	private Long netperfor;
 	
@@ -50,88 +46,23 @@ public class DecorationContractVO implements Serializable {
 	private List<DecorationPaymentVO> payments;
 	
 	private List<Integer> paymentRates;
-
-	public Long getAutoId(){
-		return autoId;
+	
+	public DecorationContractVO(){
+		super();
+	}
+	
+	public DecorationContractVO(ContractVO contract, UserBaseVO creater){
+		super();
+		this.contract = contract;
+		this.creater = creater;
 	}
 
-	public void setAutoId(Long autoId){
-		this.autoId = autoId;
+	public Long getDcid() {
+		return dcid;
 	}
 
-	public String getAdditionalInfo(){
-		return additionalInfo;
-	}
-
-	public void setAdditionalInfo(String additionalInfo){
-		this.additionalInfo = additionalInfo;
-	}
-
-	public String getTemplateHtml(){
-		return templateHtml;
-	}
-
-	public void setTemplateHtml(String templateHtml){
-		this.templateHtml = templateHtml;
-	}
-
-	@JSON(format="yyyy-MM-dd")
-	public Timestamp getSignTime(){
-		return signTime;
-	}
-
-	public void setSignTime(Timestamp signTime){
-		this.signTime = signTime;
-	}
-
-	public void setContractCode(String contractCode){
-		this.contractCode = contractCode;
-	}
-
-	public String getContractCode(){
-		return contractCode;
-	}
-
-	public void setEndTime(Timestamp endTime){
-		this.endTime = endTime;
-	}
-
-	@JSON(format="yyyy-MM-dd")
-	public Timestamp getEndTime(){
-		return endTime;
-	}
-
-	public void setStartTime(Timestamp startTime){
-		this.startTime = startTime;
-	}
-
-	@JSON(format="yyyy-MM-dd")
-	public Timestamp getStartTime(){
-		return startTime;
-	}
-
-	public void setWorkingDuration(Integer workingDuration){
-		this.workingDuration = workingDuration;
-	}
-
-	public Integer getWorkingDuration(){
-		return workingDuration;
-	}
-
-	public List<DecorationPaymentVO> getPayments() {
-		return payments;
-	}
-
-	public void setPayments(List<DecorationPaymentVO> payments) {
-		this.payments = payments;
-	}
-
-	public Long getOrderTotalPrice() {
-		return orderTotalPrice;
-	}
-
-	public void setOrderTotalPrice(Long orderTotalPrice) {
-		this.orderTotalPrice = orderTotalPrice;
+	public void setDcid(Long dcid) {
+		this.dcid = dcid;
 	}
 
 	public String getOrderId() {
@@ -140,6 +71,62 @@ public class DecorationContractVO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	public ContractVO getContract() {
+		return contract;
+	}
+
+	public void setContract(ContractVO contract) {
+		this.contract = contract;
+	}
+
+	public String getDownload() {
+		return download;
+	}
+
+	public void setDownload(String download) {
+		this.download = download;
+	}
+
+	public String getViewpdf() {
+		return viewpdf;
+	}
+
+	public void setViewpdf(String viewpdf) {
+		this.viewpdf = viewpdf;
+	}
+
+	public UserBaseVO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserBaseVO creater) {
+		this.creater = creater;
+	}
+
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
+	}
+
+	public List<DecorationPaymentVO> getPayments() {
+		return payments;
+	}
+
+	public void setPayments(List<DecorationPaymentVO> payments) {
+		this.payments = payments;
 	}
 
 	public List<Integer> getPaymentRates() {

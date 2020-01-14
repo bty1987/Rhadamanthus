@@ -160,7 +160,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Override
 	public List<DepartmentVO> queryDepartmentByName(DepartmentVO departmentVO, int company) {
 
-		List<DepartmentPO> departmentPOs = departmentDao.pageDepartmentByName(new Paging(0, 50), departmentVO.getName(), company, departmentVO.getType().getDtid());
+		List<DepartmentPO> departmentPOs = departmentDao.pageDepartmentByName(new Paging(0, 10), departmentVO.getName(), company, departmentVO.getType().getDtid());
 		List<DepartmentVO> departmentVOs = new ArrayList<DepartmentVO>();
 
 		for (DepartmentPO departmentPO : departmentPOs) {

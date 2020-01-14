@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fadada.signature.Signature;
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.communion.dao.CustomerDao;
@@ -279,11 +280,21 @@ public class CustomerServiceImpl implements CustomerService {
 	public int addCustomerPhone(CustomerPhoneVO customerPhoneVO, Integer company) throws FLException {
 
 		if (customerPhoneDao.queryCustomerPhoneByPhone(customerPhoneVO.getPhone(), CustomerPhonePO.STATUS_ENABLE_INT, company).size() != 0) {
-
 			throw new FLException(130006, "客户电话已存在");
 		}
 
+		CustomerPO customerPO = customerDao.get(customerPhoneVO.getCid());
+
+		if (customerPO == null) {
+			throw new FLException(130002, "客户信息不存在");
+		}
+
+		if (customerPO.getStatus() != CustomerPO.STATUS_INIT_INT) {
+			throw new FLException(130028, "客户状态不可操作");
+		}
+
 		CustomerPhonePO customerPhonePO = new CustomerPhonePO();
+
 		customerPhonePO.setCid(customerPhoneVO.getCid());
 		customerPhonePO.setPhone(customerPhoneVO.getPhone());
 		customerPhonePO.setStatus(CustomerPhonePO.STATUS_ENABLE_INT);
@@ -304,6 +315,10 @@ public class CustomerServiceImpl implements CustomerService {
 
 		if (customerPO == null) {
 			throw new FLException(130002, "客户信息不存在");
+		}
+
+		if (customerPO.getStatus() != CustomerPO.STATUS_INIT_INT) {
+			throw new FLException(130028, "客户状态不可操作");
 		}
 
 		BeanUtil.copyProperties(customerVO, customerPO);
@@ -355,6 +370,16 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130023, "客户电话未启用");
 		}
 
+		CustomerPO customerPO = customerDao.get(customerPhonePO.getCid());
+
+		if (customerPO == null) {
+			throw new FLException(130002, "客户信息不存在");
+		}
+
+		if (customerPO.getStatus() != CustomerPO.STATUS_INIT_INT) {
+			throw new FLException(130028, "客户状态不可操作");
+		}
+
 		if (customerPhonePO.getDefaults() == CustomerPhonePO.DEFAULTS_DISABLE_INT) {
 
 			customerPhoneDao.clearCustomerPhoneForDefault(customerPhonePO.getCid());
@@ -364,7 +389,95 @@ public class CustomerServiceImpl implements CustomerService {
 			customerDao.update(customerPhonePO);
 		}
 
+		if (customerPO.getStatus() == CustomerPO.STATUS_INIT_INT) {
+			customerPO.setPhone(customerPhonePO.getPhone());
+
+			customerDao.update(customerPO);
+		}
+
 		BeanUtil.copyProperties(customerPhonePO, customerPhoneVO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int registerCustomer(CustomerVO customerVO) throws FLException {
+
+		CustomerPO customerPO = customerDao.get(customerVO.getCid());
+
+		if (customerPO == null) {
+			throw new FLException(130002, "客户信息不存在");
+		}
+
+		if (customerPO.getStatus() != CustomerPO.STATUS_INIT_INT) {
+			throw new FLException(130028, "客户状态不可操作");
+		}
+
+		Signature.register(customerPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public String authCustomer(CustomerVO customerVO) throws FLException {
+
+		CustomerPO customerPO = customerDao.get(customerVO.getCid());
+
+		if (customerPO == null) {
+			throw new FLException(130002, "客户信息不存在");
+		}
+
+		if (customerPO.getStatus() != CustomerPO.STATUS_INIT_INT) {
+			throw new FLException(130028, "客户状态不可操作");
+		}
+
+		String redirect = Signature.authenticate(customerPO);
+
+		customerDao.update(customerPO);
+
+		return redirect;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int confirmCustomer(CustomerVO customerVO) throws FLException {
+
+		CustomerPO customerPO = customerDao.get(customerVO.getCid());
+
+		if (customerPO == null) {
+			throw new FLException(130002, "客户信息不存在");
+		}
+
+		if (customerPO.getStatus() != CustomerPO.STATUS_INIT_INT) {
+			throw new FLException(130028, "客户状态不可操作");
+		}
+
+		Signature.person(customerPO);
+
+		customerDao.update(customerPO);
+		
+		customerVO.setName(customerPO.getName());
+		customerVO.setGender(customerPO.getGender());
+		customerVO.setPhone(customerPO.getPhone());
+		customerVO.setAddress(customerPO.getAddress());
+		customerVO.setRelationshipType(customerPO.getRelationshipType());
+		customerVO.setIdentity(customerPO.getIdentity());
+		
+		return 0;
+	}
+
+	@Override
+	public int signateCustomer(CustomerVO customerVO, String imgbase) throws FLException {
+
+		CustomerPO customerPO = customerDao.get(customerVO.getCid());
+
+		if (customerPO == null) {
+			throw new FLException(130002, "客户信息不存在");
+		}
+
+		Signature.signature(customerPO, imgbase);
 
 		return 0;
 	}

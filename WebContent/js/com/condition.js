@@ -47,11 +47,11 @@ var Condition = function (api) {
                 op: "eq",
                 validate: null
             }, dataSource: {//从后台取数据的各种配置
-                url: api.data.queryBrandForPinYinName,//获取数据要调用的接口
+                url: api.data.queryBrandByPinyin,//获取数据要调用的接口
                 postData: {},//获取数据时的请求参数
-                listPath: "autoFillKeyValue",//响应list的json路径
-                keyPath: "value",//用来向后台提交的字段的json路径
-                valuePath: "value"//用来在页面显示的字段的json路径
+                listPath: "brands",//响应list的json路径
+                keyPath: "name",//用来向后台提交的字段的json路径
+                valuePath: "name"//用来在页面显示的字段的json路径
             }
         },
         paymentDesigner: {
@@ -166,7 +166,7 @@ var Condition = function (api) {
             }
         },
         //select
-        designerRegionId: {
+        designerRegionId1: {
             label: "设计中心",
             type: "selectCaching",
             submitConfig: {
@@ -202,6 +202,38 @@ var Condition = function (api) {
                 validate: null
             }
         },
+        accountTimeDateRange: {
+            label: "决算时间",
+            type: "dateRangePicker",
+            submitConfig: {
+                name: "accountTime",
+                op: "cn",
+                validate: null
+            }
+        },
+
+        c_projectStatus: {
+            label: "工程状态",
+            type: "selectCaching",
+            submitConfig: {
+                name: "projectStatus",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.data.queryConstructionNode,
+                postData: {},
+                listPath: "constructionNodes",
+                keyPath: "sort",
+                valuePath: "name",
+                appresult: [
+                    {"sort": 0, "name": "初始"},
+                    {"sort": 1, "name": "开工"},
+                    {"sort": 2, "name": "完工"}
+                ]
+            }
+        },
+        
         //---------------系统配置------------------
         systemConfig: {
             label: "关键字查询",
@@ -498,7 +530,7 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.data.queryBrandForPinYinName,//获取数据要调用的接口
+                url: api.data.queryBrandByPinyin,//获取数据要调用的接口
                 postData: {},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "value",//用来向后台提交的字段的json路径
@@ -653,6 +685,127 @@ var Condition = function (api) {
                 listPath: "StockType",
                 keyPath: "key",
                 valuePath:"value"
+            }
+        },
+        //数据-材料-辅材
+        aoodsGoodsName :{
+            label: "商品名",
+            type: "text",
+            submitConfig: {
+                name: "goods.name",
+                op: "cn",
+                validate: null
+            }
+        },
+        aoodsAname: {
+            label: "辅类",
+            type: "text",
+            submitConfig: {
+                name: "accessoriesType.name",
+                op: "cn",
+                validate: null
+            }
+        },aoodsStatus: {
+            label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: null,
+                postData: null,
+                listPath: [
+                    {key: "0", value: "启用"},
+                    {key: "1", value: "禁用"}
+                ],
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },aoodsBcompany:{
+            label: "归属公司",
+            type: "select",
+            submitConfig: {
+                name: "bompany",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.system.queryCompany,
+                postData: {},
+                listPath: "companys",
+                keyPath: "cid",
+                valuePath: "name"
+            }
+        },
+        //数据-材料-选材
+        soodsGoodsName :{
+            label: "商品名",
+            type: "text",
+            submitConfig: {
+                name: "goods.name",
+                op: "cn",
+                validate: null
+            }
+        },
+        soodsQName :{
+            label: "报价名称",
+            type: "text",
+            submitConfig: {
+                name: "quotationItem.itemName",
+                op: "cn",
+                validate: null
+            }
+        },
+        soodsVersion :{
+            label: "报价版本",
+            type: "select",
+            submitConfig: {
+                name: "quotationItem.quotationVersion.no",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.quotation.queryQuotationVersion,
+                postData: {},
+                listPath: "quotationVersions",
+                keyPath: "no",
+                valuePath: "name"
+            }
+        },
+        soodsGoodsBrand : {
+            label: "品牌",
+            type: "text",
+            submitConfig: {
+                name: "goods.brand",
+                op: "cn",
+                validate: null
+            },
+        },
+        soodsGoodsCategory : {
+            label: "品类",
+            type: "text",
+            submitConfig: {
+                name: "goods.category",
+                op: "cn",
+                validate: null
+            },
+        },
+        soodsQuotationSmallCategoryId: {
+            label: "小类",
+            type: "select",
+            submitConfig: {
+                name: "quotationSmallCategory.id",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.quotation.queryQuotationSmallCategory,
+                postData: {},
+                listPath: "quotationSmallCategorys",
+                keyPath: "id",
+                valuePath: "name"
             }
         },
         //-------数据-报价-报价版本
@@ -928,7 +1081,7 @@ var Condition = function (api) {
                 validate: null//校验规则
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.data.queryBrandForPinYinName,//获取数据要调用的接口
+                url: api.data.queryBrandByPinyin,//获取数据要调用的接口
                 postData: {},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "value",//用来向后台提交的字段的json路径
@@ -1296,17 +1449,35 @@ var Condition = function (api) {
                 valuePath: "value"//用来在页面显示的字段的json路径
             }
         },
+        designerRegionId: {
+            label: "设计中心",
+            type: "autofill",
+            submitConfig: {//向后台提交的配置
+                name: "designerRegionId",//接口中的参数名
+                op: "eq",//查询方式
+                validate: null
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.communion.queryDepartmentByName,//获取数据要调用的接口
+                query: "dept.name",
+                postData: {"dept.type.dtid": 1},//获取数据时的请求参数
+                listPath: "deptList",//响应list的json路径
+                keyPath: "no",//用来向后台提交的字段的json路径
+                valuePath: "name"//用来在页面显示的字段的json路径
+            }
+        },
         designerDepartmentId: {
             label: "设计部",
-            type: "selectCaching",
+            type: "autofill",
             submitConfig: {
                 name: "designerDepartmentId",
                 op: "eq",
                 validate: null
             },
             dataSource: {
-                url: api.communion.queryDepartment,
-                postData: {"dept.type.name": "设计部"},
+                url: api.communion.queryDepartmentByName,
+                query: "dept.name",
+                postData: {"dept.type.dtid": 3},//获取数据时的请求参数
                 listPath: "deptList",
                 keyPath: "no",
                 valuePath: "name"
@@ -1314,15 +1485,16 @@ var Condition = function (api) {
         },
         salesmanRegionId: {
             label: "业务中心",
-            type: "selectCaching",
+            type: "autofill",
             submitConfig: {
                 name: "salesmanRegionId",
                 op: "eq",
                 validate: null
             },
             dataSource: {
-                url: api.communion.queryDepartment,
-                postData: {"dept.type.name": "业务大区"},
+                url: api.communion.queryDepartmentByName,
+                query: "dept.name",
+                postData: {"dept.type.dtid": 2},
                 listPath: "deptList",
                 keyPath: "no",
                 valuePath: "name"
@@ -1330,15 +1502,16 @@ var Condition = function (api) {
         },
         salesmanDepartmentId: {
             label: "业务部",
-            type: "selectCaching",
+            type: "autofill",
             submitConfig: {
                 name: "salesmanDepartmentId",
                 op: "eq",
                 validate: null
             },
             dataSource: {
-                url: api.communion.queryDepartment,
-                postData: {},
+                url: api.communion.queryDepartmentByName,
+                query: "dept.name",
+                postData: {"dept.type.dtid": 0},
                 listPath: "deptList",
                 keyPath: "no",
                 valuePath: "name"
@@ -1693,7 +1866,7 @@ var Condition = function (api) {
                 op: "cn",
                 validate: null
             }, dataSource: {//从后台取数据的各种配置
-                url: api.data.queryBrandForPinYinName,//获取数据要调用的接口
+                url: api.data.queryBrandByPinyin,//获取数据要调用的接口
                 postData: {},//获取数据时的请求参数
                 listPath: "autoFillKeyValue",//响应list的json路径
                 keyPath: "key",//用来向后台提交的字段的json路径
@@ -2226,6 +2399,32 @@ var Condition = function (api) {
                 validate: null
             }
         },
+        occessoriesNo: {
+            label: "外辅单号",
+            type: "text",
+            submitConfig: {
+                name: "no",
+                op: "eq",
+                validate: null
+            }
+        },
+        occessoriesStatus: {
+            label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.ds.manifest,
+                postData: {},
+                listPath: "occessoriesStatus",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+
 
         fullpayTimeRange : {
             label:"补款时间",
@@ -2466,36 +2665,299 @@ var Condition = function (api) {
                 validate: null
             }
         },
-        p_startTime:{
-            label:"投料时间",
+
+        /*------ 生产单计划查询 ----------*/
+        p_orderId : {
+            label:"装修单号",
+            type:"text",
+            submitConfig : {
+                name : "orderId",
+                op : "eq",
+                validate:{
+                    "reg" : /^[A-Z0-9]*$/,
+                    "msg" : "格式不正确A-Z,0-9"
+                }
+            }
+        },
+        p_productionPNo:{
+            label: "生产单号",
+            type: "text",
+            submitConfig: {
+                name: "pno",
+                op: "eq",
+                validate: null}
+        },
+        p_productionPlanNo : {
+            label: "计划单号",
+            type: "text",
+            submitConfig: {
+                name: "no",
+                op: "eq",
+                validate: null
+            }
+        },
+        p_hardwareNo:{
+            label: "五金单号",
+            type: "text",
+            submitConfig: {
+                name: "no",
+                op: "eq",
+                validate: null}
+        },
+        p_outsourceNo:{
+            label: "外协单号",
+            type: "text",
+            submitConfig: {
+                name: "no",
+                op: "eq",
+                validate: null}
+        },
+        p_tranpackNo:{
+            label: "物流单号",
+            type: "text",
+            submitConfig: {
+                name: "no",
+                op: "eq",
+                validate: null}
+        },
+        p_village:{
+            label: "楼盘",
+            type: "autofill",
+            submitConfig: {
+                name: "villageId",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.data.queryVillageForNameByPinyin,
+                postData: {},
+                listPath: "autoFillKeyValue",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        p_houseNumber: {
+            label: "楼号",
+            type: "text",
+            submitConfig: {
+                name: "houseNumber",
+                op: "cn",
+                validate: null
+            }
+        },
+        p_creater: {
+            label: "创建人",//中文名
+            type: "autofill",//类型
+            submitConfig: {//向后台提交的配置
+                name: "createrId",//接口中的参数名
+                op: "eq",//查询方式
+                validate: null//校验规则
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.personel.queryUserByPinyin,//获取数据要调用的接口
+                postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
+                listPath: "autoFillKeyValue",//响应list的json路径
+                keyPath: "key",//用来向后台提交的字段的json路径
+                valuePath: "value"//用来在页面显示的字段的json路径
+            }
+        },
+        p_designer: {
+            label: "设计师",//中文名
+            type: "autofill",//类型
+            submitConfig: {//向后台提交的配置
+                name: "designerId",//接口中的参数名
+                op: "eq",//查询方式
+                validate: null//校验规则
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.personel.queryUserByPinyin,//获取数据要调用的接口
+                postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
+                listPath: "autoFillKeyValue",//响应list的json路径
+                keyPath: "key",//用来向后台提交的字段的json路径
+                valuePath: "value"//用来在页面显示的字段的json路径
+            }
+        },
+        p_salesman: {
+            label: "销售员",//中文名
+            type: "autofill",//类型
+            submitConfig: {//向后台提交的配置
+                name: "salesmanId",//接口中的参数名
+                op: "eq",//查询方式
+                validate: null//校验规则
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.personel.queryUserByPinyin,//获取数据要调用的接口
+                postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
+                listPath: "autoFillKeyValue",//响应list的json路径
+                keyPath: "key",//用来向后台提交的字段的json路径
+                valuePath: "value"//用来在页面显示的字段的json路径
+            }
+        },
+        p_spliter: {
+            label: "拆单员",//中文名
+            type: "autofill",//类型
+            submitConfig: {//向后台提交的配置
+                name: "spliterId",//接口中的参数名
+                op: "eq",//查询方式
+                validate: null//校验规则
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.personel.queryUserByPinyin,//获取数据要调用的接口
+                postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
+                listPath: "autoFillKeyValue",//响应list的json路径
+                keyPath: "key",//用来向后台提交的字段的json路径
+                valuePath: "value"//用来在页面显示的字段的json路径
+            }
+        },
+        p_supplier: {
+            label: "厂商",//中文名
+            type: "autofill",//类型
+            submitConfig: {//向后台提交的配置
+                name: "supplierId",//接口中的参数名
+                op: "eq",//查询方式
+                validate: null//校验规则
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.personel.querySupplierByPinyin,//获取数据要调用的接口
+                postData: {"user.status" : 0},//获取数据时的请求参数
+                listPath: "suppliers",//响应list的json路径
+                keyPath: "userId",//用来向后台提交的字段的json路径
+                valuePath: "userName",//用来在页面显示的字段的json路径
+                query: "supplier.pinYin"//用来向后台提交要查询的属性值的json路径
+            }
+        },
+        p_sender: {
+            label: "送货人",//中文名
+            type: "autofill",//类型
+            submitConfig: {//向后台提交的配置
+                name: "senderId",//接口中的参数名
+                op: "eq",//查询方式
+                validate: null//校验规则
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.personel.queryUserByPinyin,//获取数据要调用的接口
+                postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
+                listPath: "autoFillKeyValue",//响应list的json路径
+                keyPath: "key",//用来向后台提交的字段的json路径
+                valuePath: "value"//用来在页面显示的字段的json路径
+            }
+        },
+        p_mounter: {
+            label: "安装人",//中文名
+            type: "autofill",//类型
+            submitConfig: {//向后台提交的配置
+                name: "mounterId",//接口中的参数名
+                op: "eq",//查询方式
+                validate: null//校验规则
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.personel.queryUserByPinyin,//获取数据要调用的接口
+                postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
+                listPath: "autoFillKeyValue",//响应list的json路径
+                keyPath: "key",//用来向后台提交的字段的json路径
+                valuePath: "value"//用来在页面显示的字段的json路径
+            }
+        },
+        p_createTime:{
+            label:"创建时间",
             type:"dateRangePicker",
             submitConfig:{
-                name:"startTime",
+                name:"createTime",
                 op:"between",
                 validate:null
             }
         },
-        p_endTime:{
-            label:"出货时间",
+        p_designTime:{
+            label:"设计时间",
             type:"dateRangePicker",
             submitConfig:{
-                name:"endTime",
+                name:"designTime",
                 op:"between",
                 validate:null
             }
         },
-        p_productionPlanStatus:{
-            label: "状态",
+        p_divideTime:{
+            label:"生产时间",
+            type:"dateRangePicker",
+            submitConfig:{
+                name:"divideTime",
+                op:"between",
+                validate:null
+            }
+        },
+        p_storeTime:{
+            label:"入库时间",
+            type:"dateRangePicker",
+            submitConfig:{
+                name:"storeTime",
+                op:"between",
+                validate:null
+            }
+        },
+        p_planTime:{
+            label:"物流时间",
+            type:"dateRangePicker",
+            submitConfig:{
+                name:"planTime",
+                op:"between",
+                validate:null
+            }
+        },
+        p_tranTime:{
+            label:"运输时间",
+            type:"dateRangePicker",
+            submitConfig:{
+                name:"tranTime",
+                op:"between",
+                validate:null
+            }
+        },
+        p_mountTime:{
+            label:"安装时间",
+            type:"dateRangePicker",
+            submitConfig:{
+                name:"mountTime",
+                op:"between",
+                validate:null
+            }
+        },
+        p_finishTime:{
+            label:"完成时间",
+            type:"dateRangePicker",
+            submitConfig:{
+                name:"finishTime",
+                op:"between",
+                validate:null
+            }
+        },
+        p_tranpackType:{
+            label: "类型",
             type: "select",
             submitConfig: {
-                name: "status",
+                name: "type",
                 op: "eq",
                 validate: null
             },
             dataSource : {
                 url : api.ds.production,
                 postData : {},
-                listPath : "productionplanStatus",
+                listPath :"tranpackType",
+                keyPath:"key",
+                valuePath:"value"
+            }
+        },
+        p_productionType:{
+            label: "类型",
+            type: "select",
+            submitConfig: {
+                name: "type",
+                op: "eq",
+                validate: null
+            },
+            dataSource : {
+                url : api.ds.production,
+                postData : {},
+                listPath :"productionType",
                 keyPath:"key",
                 valuePath:"value"
             }
@@ -2507,18 +2969,6 @@ var Condition = function (api) {
                 name: "name",
                 op: "cn",
                 validata: null
-            }
-        },
-        p_orderId : {
-            label:"装修单号",
-            type:"text",
-            submitConfig : {
-                name : "orderId",
-                op : "eq",
-                validate:{
-                    "reg" : /^[A-Z0-9]*$/,
-                    "msg" : "格式不正确A-Z,0-9"
-                }
             }
         },
         p_productionStatus:{
@@ -2537,13 +2987,69 @@ var Condition = function (api) {
                 valuePath:"value"
             }
         },
-        p_productionPNo:{
-            label: "生产单号",
-            type: "text",
+        p_productionPlanStatus:{
+            label: "状态",
+            type: "select",
             submitConfig: {
-                name: "pno",
+                name: "status",
                 op: "eq",
-                validate: null}
+                validate: null
+            },
+            dataSource : {
+                url : api.ds.production,
+                postData : {},
+                listPath : "productionPlanStatus",
+                keyPath:"key",
+                valuePath:"value"
+            }
+        },
+        p_hardwareStatus:{
+            label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource : {
+                url : api.ds.production,
+                postData : {},
+                listPath :"hardwareStatus",
+                keyPath:"key",
+                valuePath:"value"
+            }
+        },
+        p_outsourceStatus:{
+            label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource : {
+                url : api.ds.production,
+                postData : {},
+                listPath :"outsourceStatus",
+                keyPath:"key",
+                valuePath:"value"
+            }
+        },
+        p_tranpackStatus:{
+            label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource : {
+                url : api.ds.production,
+                postData : {},
+                listPath :"tranpackStatus",
+                keyPath:"key",
+                valuePath:"value"
+            }
         },
 
         /*-------房产building : start----*/
@@ -2916,14 +3422,30 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {
-                url: api.data.queryBrandForPinYinNameAname,
+                url: api.data.queryBrandByPinyin,
                 postData: {},
                 listPath: "brands",
                 keyPath: "bid",
                 valuePath: "name"
             }
         },
-		
+        //销售单-装修 品牌查询
+        sales_brand_all:{
+            label: "品牌",
+            type: "autofill",
+            submitConfig: {
+                name: "bid",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.data.queryBrandByPinyinForAll,
+                postData: {},
+                listPath: "brands",
+                keyPath: "bid",
+                valuePath: "name"
+            }
+        },
         sales_no : {
             label:"销售单号",
             type:"text",
@@ -3000,6 +3522,23 @@ var Condition = function (api) {
             }
         },
 
+        salesDompany: {
+            label: "公司",
+            type: "select",
+            submitConfig: {
+                name: "dompany",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.system.queryCompany,
+                postData: {},
+                listPath: "companys",
+                keyPath: "cid",
+                valuePath: "name"
+            }
+        },
+
 
         sales_brade:{
             label: "品牌",
@@ -3010,11 +3549,11 @@ var Condition = function (api) {
                 validate: null
             },
             dataSource: {
-                url: api.data.queryBrandForPinYinName,
+                url: api.data.queryBrandByPinyin,
                 postData: {},
-                listPath: "autoFillKeyValue",
-                keyPath: "value",
-                valuePath: "value"
+                listPath: "brands",
+                keyPath: "name",
+                valuePath: "name"
             }
         },
 
@@ -3045,11 +3584,11 @@ var Condition = function (api) {
                 validate: null//校验规则
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.data.queryBrandForPinYinName,//获取数据要调用的接口
+                url: api.data.queryBrandByPinyin,//获取数据要调用的接口
                 postData: {},//获取数据时的请求参数
-                listPath: "autoFillKeyValue",//响应list的json路径
-                keyPath: "value",//用来向后台提交的字段的json路径
-                valuePath: "value"//用来在页面显示的字段的json路径
+                listPath: "brands",//响应list的json路径
+                keyPath: "name",//用来向后台提交的字段的json路径
+                valuePath: "name"//用来在页面显示的字段的json路径
             }
         },
         sales_balanceVillage:{
@@ -3362,6 +3901,15 @@ var Condition = function (api) {
                 validate: null
             }
         },
+		cc_name: {
+            label: "名称",
+            type: "text",
+            submitConfig: {
+                name: "name",
+                op: "cn",
+                validate: null
+            }
+        },
         /*-------工程construction : end----*/
         
         /*-------客户customer : start----*/
@@ -3537,7 +4085,7 @@ var Condition = function (api) {
                 validate:null
             },
             dataSource: {
-                url: api.information.queryTask,
+                url: api.data.queryTask,
                 postData: {},
                 listPath: "tasks",
                 keyPath: "tid",
@@ -3850,6 +4398,47 @@ var Condition = function (api) {
                 validate:null
             }
         },
+		ap_mno: {
+            label: "会员号",
+            type: "text",
+            submitConfig: {
+                name: "mno",
+                op: "eq",
+                validate:null
+            }
+        },
+        ap_brand: {
+            label: "品牌",
+            type: "autofill",
+            submitConfig: {
+                name: "brand",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.data.queryBrandByPinyin,
+                postData: {},
+                listPath: "autoFillKeyValue",
+                keyPath: "value",
+                valuePath: "value"
+            }
+        },
+        ap_createrName: {
+            label: "创建人",
+            type: "autofill",
+            submitConfig: {
+                name: "creater",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.personel.queryUserByPinyin,
+                postData: {"user.status":"0" },
+                listPath: "autoFillKeyValue",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
         /*-------款项payment新增 : end----*/
 
         /*-------信息worksheet新增 : start-------*/
@@ -3909,8 +4498,162 @@ var Condition = function (api) {
                 keyPath: "userId",
                 valuePath: "currentName"
             }
-        }
+        },
+        /*-------合同模板-------*/
+        contractName: {
+            label: "名称",
+            type: "text",
+            submitConfig: {
+                name: "name",
+                op: "cn",
+                validate: null
+            }
+        },
+        /*-------签章-------*/
+        signetName: {
+            label: "名称",
+            type: "text",
+            submitConfig: {
+                name: "name",
+                op: "cn",
+                validate: null
+            }
+        },
         /*-------信息worksheet新增 : end-------*/
+
+        /*-------报价selectionItem新增 : start-------*/
+        selectionItemOrderId:{
+            label:"装修单号",
+            type:"text",
+            submitConfig : {
+                name : "orderId",
+                op : "eq",
+                validate:{
+                    "reg" : /^[A-Z0-9]*$/,
+                    "msg" : "格式不正确A-Z,0-9"
+                }
+            }
+        },
+        selectionItemStatus: {
+            label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: null,
+                postData: null,
+                listPath: [
+                    {key: "0", value: "初始"},
+                    {key: "1", value: "配送"},
+                    {key: "2", value: "审核"},
+                    {key: "3", value: "确认"},
+                    {key: "4", value: "完结"},
+                    {key: "5", value: "结算"},
+                ],
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        selectionItemGoodsCategory : {
+            label: "品类",
+            type: "text",
+            submitConfig: {
+                name: "goods.category",
+                op: "cn",
+                validate: null
+            },
+        },
+        selectionItemGoodsBrand : {
+            label: "品牌",
+            type: "text",
+            submitConfig: {
+                name: "goods.brand",
+                op: "cn",
+                validate: null
+            },
+        },
+        selectionItemGoodsName : {
+            label: "商品名",
+            type: "text",
+            submitConfig: {
+                name: "goods.name",
+                op: "cn",
+                validate: null
+            }
+        },
+        /*-------报价selectionItem新增 : end-------*/
+		
+		        /*-------账户--------*/
+        accountName: {
+            label: "名称",
+            type: "text",
+            submitConfig: {
+                name: "name",
+                op: "eq",
+                validate: null
+            }
+        },
+        accountStatus: {
+            label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: null,
+                postData: null,
+                listPath: [{key: "0", value: "有效"}, {key: "1", value: "无效"}],
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        /*--------------结算单--------------*/
+        balanceNo: {
+            label: "结算单编号",
+            type: "text",
+            submitConfig: {
+                name: "no",
+                op: "cn",
+                validate: null
+            }
+        },
+        balanceType: {
+            label: "类型",
+            type: "select",
+            submitConfig: {
+                name: "type",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: null,
+                postData: null,
+                listPath: [{key: "0", value: "支出"}, {key: "1", value: "收款"}],
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        balanStatus: {
+            label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: null,
+                postData: null,
+                listPath: [{key: "0", value: "初始"}, {key: "1", value: "完结"}],
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
     };
     return {
         getRuleByCondName: function (condName) {

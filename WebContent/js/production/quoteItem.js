@@ -110,10 +110,7 @@ $(function() {
             });
 
             $btnEdit.click(function () {
-                if(v.status == 1){
-                    com.showAlert(com.warning, "禁用状态下不允许修改");
-                    return false;
-                }
+
                 quoteItem.editFlg = false;
                 quoteItem.items.qiid = v.qiid;
                 quoteItem.items.name.attr("disabled", "disabled");
@@ -167,7 +164,7 @@ $(function() {
         var status = btnType == 0 ? "启用" : "禁用";
 
         if(statusFlag == btnType){
-            com.showAlert(com.info, "已"+status+"无需重复当前操作");
+            com.showAlert(com.warning, "已"+status+"无需重复当前操作");
             return false;
         }
 

@@ -19,29 +19,29 @@ public class ProductionPlanItemPO implements Serializable {
 
 	public static final String COLUMN_PPID_STR = "productionPlan.ppid";
 
-	private long ppiid;
+	private long ppiid;// 计划项ID
 
-	private ProductionPlanPO productionPlan;
+	private ProductionPlanPO productionPlan;// 计划ID
 
-	private String typeno;
+	private String typeno;// 类型编号
 
-	private String name;
+	private String name;// 名称
 
-	private float height;
+	private int height;// 高
 
-	private float width;
+	private int width;// 宽
 
-	private float thick;
+	private int thick;// 厚
 
-	private String color;
+	private String color;// 颜色
 
-	private float unitprice;
+	private int unitprice;// 单价
 
-	private float num;
+	private int num;// 数量
 
-	private float total;
+	private long total;// 总价
 
-	private String comment;
+	private String comment;// 备注
 
 	public ProductionPlanItemPO() {
 		super();
@@ -93,29 +93,29 @@ public class ProductionPlanItemPO implements Serializable {
 	}
 
 	@Column(name = "height")
-	public float getHeight() {
+	public int getHeight() {
 		return height;
 	}
 
-	public void setHeight(float height) {
+	public void setHeight(int height) {
 		this.height = height;
 	}
 
 	@Column(name = "width")
-	public float getWidth() {
+	public int getWidth() {
 		return width;
 	}
 
-	public void setWidth(float width) {
+	public void setWidth(int width) {
 		this.width = width;
 	}
 
 	@Column(name = "thick")
-	public float getThick() {
+	public int getThick() {
 		return thick;
 	}
 
-	public void setThick(float thick) {
+	public void setThick(int thick) {
 		this.thick = thick;
 	}
 
@@ -129,29 +129,29 @@ public class ProductionPlanItemPO implements Serializable {
 	}
 
 	@Column(name = "unitprice")
-	public float getUnitprice() {
+	public int getUnitprice() {
 		return unitprice;
 	}
 
-	public void setUnitprice(float unitprice) {
+	public void setUnitprice(int unitprice) {
 		this.unitprice = unitprice;
 	}
 
 	@Column(name = "num")
-	public float getNum() {
+	public int getNum() {
 		return num;
 	}
 
-	public void setNum(float num) {
+	public void setNum(int num) {
 		this.num = num;
 	}
 
 	@Column(name = "total")
-	public float getTotal() {
+	public long getTotal() {
 		return total;
 	}
 
-	public void setTotal(float total) {
+	public void setTotal(long total) {
 		this.total = total;
 	}
 

@@ -11,13 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.dao.UserDao;
-import com.fanglin.personel.po.UserPO;
-import com.fanglin.production.dao.ProductionPlanDao;
-import com.fanglin.production.dao.ProductionUserWorkFlowDao;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.production.dao.ProductionWorkFlowDao;
 import com.fanglin.production.dao.ProductionWorkPlanDao;
-import com.fanglin.production.po.ProductionPlanPO;
-import com.fanglin.production.po.ProductionUserWorkFlowPO;
 import com.fanglin.production.po.ProductionWorkFlowPO;
 import com.fanglin.production.po.ProductionWorkPlanPO;
 import com.fanglin.production.service.ProductionWorkFlowService;
@@ -34,16 +30,10 @@ public class ProductionWorkFlowServiceImpl implements ProductionWorkFlowService 
 	private ProductionWorkFlowDao productionworkflowDao;
 
 	@Autowired
-	private ProductionWorkPlanDao productionworkPlanDao;
+	private ProductionWorkPlanDao productionWorkPlanDao;
 
 	@Autowired
 	private UserDao userDao;
-
-	@Autowired
-	private ProductionPlanDao productionPlanDao;
-
-	@Autowired
-	private ProductionUserWorkFlowDao productionUserWorkFlowDao;
 
 	@Override
 	public List<ProductionWorkFlowVO> queryProductionWorkFlowByPwpid(ProductionWorkFlowVO productionworkflowVO) {
@@ -52,57 +42,68 @@ public class ProductionWorkFlowServiceImpl implements ProductionWorkFlowService 
 		List<ProductionWorkFlowVO> productionworkflowVOs = new ArrayList<ProductionWorkFlowVO>();
 
 		for (ProductionWorkFlowPO productionWorkFlowPO : productionworkflowPOs) {
-			productionworkflowVO = new ProductionWorkFlowVO(new WorkflowVO());
-			BeanUtil.copyProperties(productionWorkFlowPO, productionworkflowVO, Arrays.asList("workflow"));
+			
+			productionworkflowVO = new ProductionWorkFlowVO(new UserBaseVO(), new WorkflowVO());
+			
+			BeanUtil.copyProperties(productionWorkFlowPO, productionworkflowVO, Arrays.asList("operator","workflow"));
+			BeanUtil.copyProperties(productionWorkFlowPO.getOperater(), productionworkflowVO.getOperator(), Arrays.asList("duty", "dept"));
 			BeanUtil.copyProperties(productionWorkFlowPO.getWorkflow(), productionworkflowVO.getWorkflow());
+			
 			productionworkflowVOs.add(productionworkflowVO);
 		}
+		
 		return productionworkflowVOs;
 	}
 
 	@Override
 	public ProductionWorkFlowVO queryProductionWorkFlowByPwpidAWfid(ProductionWorkFlowVO productionworkflowVO) throws FLException {
-		
+
 		ProductionWorkFlowPO productionWorkFlowPO = productionworkflowDao.queryProductionWorkFlowByPwpidAWfid(productionworkflowVO.getPwpid(), productionworkflowVO.getWorkflow().getWfid());
 
 		if (productionWorkFlowPO == null) {
 			throw new FLException(220012, "计划工序不存在");
 		}
 
-		ProductionWorkFlowVO productionWorkFlowVO = new ProductionWorkFlowVO(new WorkflowVO());
-		BeanUtil.copyProperties(productionWorkFlowPO, productionWorkFlowVO, Arrays.asList("workflow"));
-		BeanUtil.copyProperties(productionWorkFlowPO.getWorkflow(), productionWorkFlowVO.getWorkflow());
-
+		ProductionWorkFlowVO productionWorkFlowVO = new ProductionWorkFlowVO(new UserBaseVO(), new WorkflowVO());
+		BeanUtil.copyProperties(productionWorkFlowPO, productionworkflowVO, Arrays.asList("operator","workflow"));
+		BeanUtil.copyProperties(productionWorkFlowPO.getOperater(), productionworkflowVO.getOperator(), Arrays.asList("duty", "dept"));
+		BeanUtil.copyProperties(productionWorkFlowPO.getWorkflow(), productionworkflowVO.getWorkflow());
+		
 		return productionWorkFlowVO;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int operateProductionWorkFlow(String no, int uid, ProductionWorkFlowVO productionworkflowVO) throws FLException {
+	public int operateProductionWorkFlow(ProductionWorkFlowVO productionworkflowVO, String userId) throws FLException {
 
-		ProductionPlanPO productionPlanPO = productionPlanDao.queryProductionPlanByNo(no);
+		ProductionWorkFlowPO productionWorkFlowPO = productionworkflowDao.get(productionworkflowVO.getPwfid());
 
-		if (productionPlanPO == null) {
-			throw new FLException(220008, "计划单不存在");
+		if (productionWorkFlowPO == null) {
+			throw new FLException(220012, "计划工序不存在");
+		}
+		
+		if (productionWorkFlowPO.getStatus() == ProductionWorkFlowPO.STATUS_OPERATED_INT) {
+			throw new FLException(220013 , "计划工序不可操作");
 		}
 
-		List<ProductionWorkPlanPO> productionworkplans = productionworkPlanDao.queryProductionWorkPlanByPpid(productionPlanPO.getPpid());
-		ProductionWorkFlowPO productionworkflowPO = null;
-		for (ProductionWorkPlanPO productionWorkPlanPO : productionworkplans) {
-			
-			productionworkflowPO = productionworkflowDao.queryProductionWorkFlowByPwpidAWfid(productionWorkPlanPO.getPwpid(), productionworkflowVO.getWorkflow().getWfid());
-			
-			if (productionworkflowPO == null) {
-				continue;
-			}
+		productionWorkFlowPO.setStatus(ProductionWorkFlowPO.STATUS_OPERATED_INT);
+		productionWorkFlowPO.setOperater(userDao.queryUserByUserId(userId));
+		productionWorkFlowPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 
-			ProductionUserWorkFlowPO productionUserWorkFlowPO = new ProductionUserWorkFlowPO(new ProductionWorkFlowPO(), new UserPO());
-			productionUserWorkFlowPO.setProductionworkflow(productionworkflowPO);
-			productionUserWorkFlowPO.setOperator(userDao.get(uid));
-			productionUserWorkFlowPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+		productionworkflowDao.update(productionWorkFlowPO);
 
-			productionUserWorkFlowDao.save(productionUserWorkFlowPO);
+		Integer countProductionWorkFlowByPwpid = productionworkflowDao.countProductionWorkFlowByPwpid(productionWorkFlowPO.getPwpid(), ProductionWorkPlanPO.STATUS_OPERATED_INT, productionworkflowVO.getPwfid());
 
+		ProductionWorkPlanPO productionWorkPlanPO = productionWorkPlanDao.get(productionWorkFlowPO.getPwpid());
+
+		if (productionWorkPlanPO.getStatus() == ProductionWorkPlanPO.STATUS_INVALID_INT) {
+			throw new FLException(220013 , "计划工序不可操作");
+		}
+		
+		if(countProductionWorkFlowByPwpid == 0){
+
+			productionWorkPlanPO.setStatus(ProductionWorkPlanPO.STATUS_OPERATED_INT);
+			productionWorkPlanDao.update(productionWorkPlanPO);
 		}
 
 		return 0;

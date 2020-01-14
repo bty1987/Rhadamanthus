@@ -13,7 +13,6 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.production.service.ProductionSalesService;
 import com.fanglin.production.vo.ProductionSalesVO;
-import com.fanglin.production.vo.ProductionVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -29,8 +28,6 @@ public class ProductionSalesAction extends BaseListAction{
 	
 	private List<ProductionSalesVO> productionSaless;
 	
-	private ProductionVO production;
-	
 	@Action(value = "queryProductionSalesByPid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryProductionSalesByPid(){
 		 
@@ -42,7 +39,7 @@ public class ProductionSalesAction extends BaseListAction{
 	@Action(value = "bindProductionSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String bindProductionSales() throws FLException{
 		
-		productionsalesService.bindProductionSales(productionSales,production);
+		productionsalesService.bindProductionSales(productionSales);
 		
 		return SUCCESS;
 	}
@@ -62,16 +59,5 @@ public class ProductionSalesAction extends BaseListAction{
 	public void setProductionSales(ProductionSalesVO productionSales) {
 		this.productionSales = productionSales;
 	}
-
-	public ProductionVO getProduction() {
-		return production;
-	}
-
-	public void setProduction(ProductionVO production) {
-		this.production = production;
-	}
-	
-	
-
 	
 }

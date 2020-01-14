@@ -49,6 +49,8 @@ public class  RefundsPO  implements  java.io.Serializable{
 	
 	private short status; //状态
 	
+	private short type; //类型
+	
 	private String comment; //说明
 	
 	private UserPO creater; //创建人
@@ -103,6 +105,15 @@ public class  RefundsPO  implements  java.io.Serializable{
 
 	public void setTotal(long total) {
 		this.total = total;
+	}
+	
+	@Column(name="type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
 	}
 
 	@Column(name="status")

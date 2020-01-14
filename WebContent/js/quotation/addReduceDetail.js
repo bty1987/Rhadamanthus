@@ -600,7 +600,7 @@ var AddReduceDetail = (function(){
 					return false;
 				}
 				
-				var oldmum = that.$nowLine.find('num .cell-wrap').text() ? that.$nowLine.find('num .cell-wrap').text() : '0';
+				var oldmum = that.$nowLine.find('.cell.num .cell-wrap').text() ? that.$nowLine.find('.cell.num .cell-wrap').text() : '0';
 				that.$nowLine.find('.cell.num .cell-wrap').text(num);
 				$line = that.$nowLine.next('.fl-quo-item');
 				var _type = that.$nowLine.find('.typedict').attr('data-type');
@@ -634,7 +634,7 @@ var AddReduceDetail = (function(){
 				arCalculator.calculateFees();
 				
 				var _params = $.extend(true, {}, args, addReduceDetail.basicParams);
-				
+
 				com.post(api.addReduce.updateAddReduceItem, _params, function(res){
 					that.$nowLine.find('input[name="ariid"]').val(res.addReduceItem.ariId);
 					that.$nowLine.attr("data-ariid", res.addReduceItem.ariId);
@@ -646,6 +646,11 @@ var AddReduceDetail = (function(){
 				}, function(res){
 					com.showAlert(com.error, res.errorMsg);
 					that.$nowLine.find('.cell.num .cell-wrap').text(oldmum);
+
+					arCalculator.calculateQuoteFee(that.$nowLine);
+					arCalculator.calculateFees();
+
+					that.hideInputWrap();
 				}, false);
 				
 				return;
@@ -718,17 +723,18 @@ var AddReduceDetail = (function(){
 	        }
 	        
 		    var _params = $.extend(true, {}, args, addReduceDetail.basicParams);
-		    
+
 		    com.post(api.addReduce.updateAddReduceItemForAdvance, _params, function(res){
 		        $quote.attr("data-discount", _discount)
 		    }, null, false);
 		},
 		//删除报价项
 		deleteQuote : function($quote){
-		    
+
 			var that = this;
 			var _ariid = $quote.attr("data-ariid");
-			
+			var quotationItemId = $quote.attr("data-quotationItemId");
+
 			$quote.attr("data-del", "1")
 			
 			if(!_ariid){
@@ -739,6 +745,7 @@ var AddReduceDetail = (function(){
 				
 				var _params = $.extend({}, addReduceDetail.basicParams);
 				_params["addReduceItem.ariId"] = _ariid;
+				_params["addReduceItem.quotationItemId"] = quotationItemId;
 
 				com.post(api.addReduce.deleteAddReduceItem, _params, function(res){
 					$quote.remove();
@@ -914,7 +921,8 @@ var AddReduceDetail = (function(){
 			    "data-addPrice": qv.addPrice,
 			    "data-unitPrice": qv.unitPrice,
 			    "data-subPrice": qv.subPrice,
-			    "data-discount": qv.discount
+			    "data-discount": qv.discount,
+				"data-quotationItemId": qv.quotationItemId
 			}
 
 			 $item.attr(itemInfo);

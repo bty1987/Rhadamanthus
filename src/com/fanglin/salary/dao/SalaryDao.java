@@ -8,7 +8,7 @@ import com.fanglin.salary.po.SalaryPO;
 import com.fanglin.utils.Paging;
 
 public interface SalaryDao extends Dao<SalaryPO> {
-	
-	public List<SalaryPO> pageSalaryPO(Paging paging, List<Filter> filters);
+
+	public List<SalaryPO> pageSalary(Paging paging, List<Filter> filters);
 
 }

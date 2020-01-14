@@ -36,9 +36,9 @@ public class PuotationPO implements Serializable {
 
 	private Timestamp createTime;
 
-	private float total;
+	private long total;
 
-	private float discount;
+	private int discount;
 
 	private short status;
 
@@ -93,20 +93,20 @@ public class PuotationPO implements Serializable {
 	}
 
 	@Column(name = "total")
-	public float getTotal() {
+	public long getTotal() {
 		return total;
 	}
 
-	public void setTotal(float total) {
+	public void setTotal(long total) {
 		this.total = total;
 	}
 
 	@Column(name = "discount")
-	public float getDiscount() {
+	public int getDiscount() {
 		return discount;
 	}
 
-	public void setDiscount(float discount) {
+	public void setDiscount(int discount) {
 		this.discount = discount;
 	}
 

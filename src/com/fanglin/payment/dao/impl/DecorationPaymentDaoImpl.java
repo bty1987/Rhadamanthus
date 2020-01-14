@@ -62,6 +62,7 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 		PagingQuery<DecorationPaymentPO> query = pagingQuery(new Paging(), DecorationPaymentPO.class);
 		
 		queryFilterExcute(query, filters);
+		query.asc("createTime");
 		query.notPaging();
 		
 		return query.list();
@@ -182,8 +183,10 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 						}
 					}else if("company".equals(filter.getField())){
 						query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
+					}else if("oneType".equals(filter.getField())){
+						query.add(query.getCriterion(filter.getField(), Short.valueOf(filter.getData()), filter.getOp()));
 					}else {
-						query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
+						query.add(query.getCriterion(filter.getField(), filter.getData().split(","), filter.getOp()));
 					}
 				}
 			}

@@ -104,4 +104,19 @@ public class Airpos {
 			throw new FLException(150044, "推送失败");
 		}
 	}
+
+	public static void main(String[] args) throws Exception {
+
+		Airpos.regist();
+
+		// NLTransApi nlTransApi = NLApiFactory.createNLTransApi();
+
+		// nlTransApi.transCollection("wxpay", "1912230010", "1").execute("850160353328963693499026456");
+
+		// BeanQuery query = nlTransApi.msgQuery("728066468340929763980619151", "32703320330197525367200393673911");
+
+		// System.out.println(query.state);
+		// System.out.println(query.handlemsg);
+
+	}
 }

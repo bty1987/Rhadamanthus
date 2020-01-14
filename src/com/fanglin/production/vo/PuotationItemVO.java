@@ -14,17 +14,17 @@ public class PuotationItemVO implements Serializable {
 
 	private String format;
 
-	private Float height;
+	private Integer height;
 
-	private Float width;
+	private Integer width;
 
-	private Float thick;
+	private Integer thick;
 
-	private Float unitPrice;
+	private Integer unitPrice;
 
-	private Float num;
+	private Integer num;
 
-	private Float total;
+	private Long total;
 
 	private String measurementUnit;
 
@@ -66,51 +66,51 @@ public class PuotationItemVO implements Serializable {
 		this.format = format;
 	}
 
-	public Float getHeight() {
+	public Integer getHeight() {
 		return height;
 	}
 
-	public void setHeight(Float height) {
+	public void setHeight(Integer height) {
 		this.height = height;
 	}
 
-	public Float getWidth() {
+	public Integer getWidth() {
 		return width;
 	}
 
-	public void setWidth(Float width) {
+	public void setWidth(Integer width) {
 		this.width = width;
 	}
 
-	public Float getThick() {
+	public Integer getThick() {
 		return thick;
 	}
 
-	public void setThick(Float thick) {
+	public void setThick(Integer thick) {
 		this.thick = thick;
 	}
 
-	public Float getUnitPrice() {
+	public Integer getUnitPrice() {
 		return unitPrice;
 	}
 
-	public void setUnitPrice(Float unitPrice) {
+	public void setUnitPrice(Integer unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 
-	public Float getNum() {
+	public Integer getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(Integer num) {
 		this.num = num;
 	}
 
-	public Float getTotal() {
+	public Long getTotal() {
 		return total;
 	}
 
-	public void setTotal(Float total) {
+	public void setTotal(Long total) {
 		this.total = total;
 	}
 

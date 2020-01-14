@@ -58,6 +58,14 @@ public class ConstructionAction extends BaseListAction {
 
 		return SUCCESS;
 	}
+	
+	@Action(value = "pageConstructionForBase", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageConstructionForBase() throws FLException {
+
+		constructionService.pageConstructionForBase(getPaging(), getFilters(), queryCompany());
+
+		return SUCCESS;
+	}
 
 	@Action(value = "queryConstructionByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryConstructionByOrderId() throws FLException {
@@ -74,7 +82,31 @@ public class ConstructionAction extends BaseListAction {
 
 		return SUCCESS;
 	}
+	
+	@Action(value = "updateConstructionForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateConstructionForAdvance() throws FLException {
 
+		constructionService.updateConstructionForAdvance(construction);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "openAccessory", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String openAccessory() throws FLException {
+
+		constructionService.openAccessory(construction);
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "lockAccessory", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String lockAccessory() throws FLException {
+
+		constructionService.lockAccessory(construction);
+
+		return SUCCESS;
+	}
+	
 	public ConstructionVO getConstruction() {
 		return construction;
 	}
@@ -82,5 +114,4 @@ public class ConstructionAction extends BaseListAction {
 	public void setConstruction(ConstructionVO construction) {
 		this.construction = construction;
 	}
-
 }

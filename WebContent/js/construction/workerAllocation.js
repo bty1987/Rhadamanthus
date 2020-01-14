@@ -16,6 +16,10 @@ $(function () {
 
             ishovel  : com.focusPage("#ishovel"),
             iskey  : com.focusPage("#iskey"),
+            timeLimit : com.focusPage("#timeLimit"),
+            finishTime : com.focusPage("#finishTime"),
+            keyTime : com.focusPage("#keyTime"),
+            drawlineTime : com.focusPage("#drawlineTime"),
             isCeremony  : com.focusPage("#isCeremony"),
             comment   : com.focusPage("#comment")
 
@@ -29,6 +33,10 @@ $(function () {
         com.cleanItems(constructionNodes.items);
         com.closeTip();
     });
+
+    com.datetime(constructionNodes.items.finishTime);
+    com.datetime(constructionNodes.items.keyTime);
+    com.datetime(constructionNodes.items.drawlineTime);
 
     com.post(api.ds.construction, {}, function (res) {
 
@@ -125,11 +133,21 @@ $(function () {
         com.post(api.construction.queryConstructionInfoByOrderId, {"constructionInfo.orderId": orderId}, function (res) {
 
             data = res.constructionInfo;
-            
+
             constructionNodes.items.orderId = orderId;
             constructionNodes.items.ishovel.val(data.ishovel);
             constructionNodes.items.iskey.val(data.iskey);
             constructionNodes.items.isCeremony.val(data.isCeremony);
+            constructionNodes.items.timeLimit.val(data.timeLimit);
+            if(data.finishTime != null){
+                constructionNodes.items.finishTime.val(data.finishTime.substr(0,10));
+            }
+            if(data.keyTime != null){
+                constructionNodes.items.keyTime.val(data.keyTime.substr(0,10));
+            }
+            if(data.drawlineTime != null){
+                constructionNodes.items.drawlineTime.val(data.drawlineTime.substr(0,10));
+            }
             constructionNodes.items.comment.val(data.comment);
         });
 
@@ -140,9 +158,13 @@ $(function () {
 
         var options = {
             "constructionInfo.orderId" : constructionNodes.items.orderId,
+            "constructionInfo.timeLimit" : constructionNodes.items.timeLimit.val(),
             "constructionInfo.ishovel": constructionNodes.items.ishovel.val(),
             "constructionInfo.iskey": constructionNodes.items.iskey.val(),
-            "constructionInfo.isCeremony": constructionNodes.items.isCeremony.val(),
+            "constructionInfo.isCeremony" : constructionNodes.items.isCeremony.val(),
+            "constructionInfo.finishTime" : constructionNodes.items.finishTime.val() + " 00:00:00",
+            "constructionInfo.keyTime" : constructionNodes.items.keyTime.val() + " 00:00:00",
+            "constructionInfo.drawlineTime" : constructionNodes.items.drawlineTime.val() + " 00:00:00",
             "constructionInfo.comment": constructionNodes.items.comment.val()
         };
 

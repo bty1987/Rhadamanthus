@@ -2,6 +2,10 @@ package com.fanglin.inventory.vo;
 
 import java.io.Serializable;
 
+import com.fanglin.data.material.vo.ColorVO;
+import com.fanglin.data.material.vo.FormatVO;
+import com.fanglin.data.material.vo.GoodsVO;
+
 public class AccessoriesItemVO implements Serializable {
 
 	private static final long serialVersionUID = -4448576124164007315L;
@@ -9,6 +13,8 @@ public class AccessoriesItemVO implements Serializable {
 	private Long aiid;
 
 	private Long aid;
+	
+	private Long miid;
 
 	private GoodsVO goods;
 
@@ -25,6 +31,12 @@ public class AccessoriesItemVO implements Serializable {
 	private Integer num;
 	
 	private Integer surplus;
+	
+	private Short checkup;
+	
+	private Long caid;
+	
+	private Long total;
 
 	public AccessoriesItemVO() {
 		super();
@@ -49,6 +61,14 @@ public class AccessoriesItemVO implements Serializable {
 
 	public void setAid(Long aid) {
 		this.aid = aid;
+	}
+
+	public Long getMiid() {
+		return miid;
+	}
+
+	public void setMiid(Long miid) {
+		this.miid = miid;
 	}
 
 	public GoodsVO getGoods() {
@@ -113,6 +133,30 @@ public class AccessoriesItemVO implements Serializable {
 
 	public void setSurplus(Integer surplus) {
 		this.surplus = surplus;
+	}
+
+	public Short getCheckup() {
+		return checkup;
+	}
+
+	public void setCheckup(Short checkup) {
+		this.checkup = checkup;
+	}
+
+	public Long getCaid() {
+		return caid;
+	}
+
+	public void setCaid(Long caid) {
+		this.caid = caid;
+	}
+
+	public Long getTotal() {
+		return total;
+	}
+
+	public void setTotal(Long total) {
+		this.total = total;
 	}
 
 }

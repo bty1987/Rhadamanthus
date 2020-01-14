@@ -1,0 +1,77 @@
+<div class="row">
+    <div class="col-xs-12">
+        <!-- 查询条件-->
+        <div id="outsourceCondList" class="fl_search clearfix"></div>
+        <!--查询结果-->
+        <div id="outsourceResultList" class="clearfix tab-pane active"></div>
+        <!--分页-->
+        <div id="outsourcePagenation" class="fl-page-wrap clearfix"></div>
+    </div>
+</div>
+
+<!-- 查看 外协单--外协项 窗口 -->
+<div id="outsourceViewPopUp" class="portlet box"></div>
+
+<div class="modal fade" id="layerImportModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel-1">图表</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+
+                    <div class="form-group">
+                        <div class="col-sm-5 infobox-container no-padding-right" style="margin-left: 10%" id="download"></div>
+                    </div>
+                    <div class="space5"></div>
+
+                    <div class="form-group">
+                        <div class="control-label col-xs-3 no-padding-right" style="margin-left: 10%" id="importProductionPicture"></div>
+                    </div>
+                    <div class="space5"></div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="tranpackModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel-2">信息</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="num">物流包数量</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="num" maxlength="12" class="col-xs-10 col-sm-7 v_required v_number" data-toggle="popover" data-trigger='manual'/>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="tranpackBtn" class="btn btn-primary">保存</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //$.loadScript(['js/production/outsource4view.js']);
+</script>
+<script src="js/utils/productionPageUtils.js"></script>
+<script src="js/utils/productionUtils.js"></script>
+<script src="js/production/outsource4view.js"></script>

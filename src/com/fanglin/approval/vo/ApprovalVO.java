@@ -11,35 +11,37 @@ public class ApprovalVO implements java.io.Serializable {
 	private static final long serialVersionUID = -1448433204227173452L;
 
 	private Long aid;
-	
+
 	private UserBaseVO receiver;
-	
+
 	private UserBaseVO sender;
-	
+
 	private Short type;
-	
+
 	private Short status;
-	
+
 	private Timestamp createTime;
-	
+
 	private Timestamp approvalTime;
-	
+
 	private String contents;
-	
+
 	private String comment;
-	
+
+	private String annotate;
+
 	private String processinstanceid;
 
-	public ApprovalVO(){
+	public ApprovalVO() {
 		super();
 	}
-	
+
 	public ApprovalVO(UserBaseVO receiver, UserBaseVO sender) {
 		super();
 		this.receiver = receiver;
 		this.sender = sender;
 	}
-	
+
 	public Long getAid() {
 		return this.aid;
 	}
@@ -80,7 +82,7 @@ public class ApprovalVO implements java.io.Serializable {
 		this.status = status;
 	}
 
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return this.createTime;
 	}
@@ -89,7 +91,7 @@ public class ApprovalVO implements java.io.Serializable {
 		this.createTime = createTime;
 	}
 
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getApprovalTime() {
 		return this.approvalTime;
 	}
@@ -112,6 +114,14 @@ public class ApprovalVO implements java.io.Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public String getAnnotate() {
+		return annotate;
+	}
+
+	public void setAnnotate(String annotate) {
+		this.annotate = annotate;
 	}
 
 	public String getProcessinstanceid() {

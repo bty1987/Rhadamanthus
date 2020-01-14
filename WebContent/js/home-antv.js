@@ -86,7 +86,7 @@ $(function () {
         
         com.focusPage("h4[name='versionCode']").after($(res.versionInfo ? res.versionInfo : "<p>版本信息</p>"));
         
-        res.alertInfo && (layer.open({
+        res.blessing && (layer.open({
             type: 1,
             title: false,
             closeBtn: false,
@@ -95,7 +95,7 @@ $(function () {
             id: 'homeAlert',
             btn: ['了解了'],
             moveType: 1,
-            content: '<div class="home-layer-content"><div>' + res.alertInfo + '</div></div>',
+            content: res.blessing,
             success: function(layero){
                 layero.find('.layui-layer-btn').css('text-align', 'center');
             }

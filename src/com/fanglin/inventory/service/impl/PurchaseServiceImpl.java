@@ -13,11 +13,11 @@ import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.data.po.ColorPO;
+import com.fanglin.data.po.FormatPO;
+import com.fanglin.data.po.GoodsPO;
 import com.fanglin.inventory.dao.PurchaseDao;
 import com.fanglin.inventory.dao.PurchaseItemDao;
-import com.fanglin.inventory.po.ColorPO;
-import com.fanglin.inventory.po.FormatPO;
-import com.fanglin.inventory.po.GoodsPO;
 import com.fanglin.inventory.po.PurchaseItemPO;
 import com.fanglin.inventory.po.PurchasePO;
 import com.fanglin.inventory.service.PurchaseService;
@@ -26,13 +26,15 @@ import com.fanglin.inventory.vo.PurchaseVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
-import com.fanglin.sales.dao.SalesDao;
+import com.fanglin.sales.dao.SalesItemDao;
 import com.fanglin.sales.dao.SalesPurchaseDao;
+import com.fanglin.sales.po.SalesItemPO;
 import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.po.SalesPurchasePO;
 import com.fanglin.sales.vo.SalesVO;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
@@ -58,10 +60,10 @@ public class PurchaseServiceImpl implements PurchaseService {
 	private UserDao userDao;
 
 	@Autowired
-	private SalesDao salesDao;
-
-	@Autowired
 	private SalesPurchaseDao salesPurchaseDao;
+	
+	@Autowired
+	private SalesItemDao salesItemDao;
 
 	@Override
 	public void pagePurchase(Paging paging, List<Filter> filters, int company) {
@@ -164,28 +166,34 @@ public class PurchaseServiceImpl implements PurchaseService {
 
 			purchaseItemPO.setPid(purchasePO.getPid());
 
-			BeanUtil.copyProperties(purchaseItemVO, purchaseItemPO, Arrays.asList("goods", "color", "format", "supplier"));
+			BeanUtil.copyProperties(purchaseItemVO, purchaseItemPO, Arrays.asList("goods", "color", "format"));
 			BeanUtil.copyProperties(purchaseItemVO.getGoods(), purchaseItemPO.getGoods());
 			BeanUtil.copyProperties(purchaseItemVO.getColor(), purchaseItemPO.getColor());
 			BeanUtil.copyProperties(purchaseItemVO.getFormat(), purchaseItemPO.getFormat());
 
 			purchaseItemPO.setSurplus(purchaseItemVO.getNum());
-
+			
 			purchaseItemDao.save(purchaseItemPO);
+			
+			if(purchaseItemVO.getSiid() == null)
+				continue;
+			
+			SalesItemPO salesItemPO = salesItemDao.get(purchaseItemVO.getSiid());
+			
+			if(salesItemPO == null)
+				continue;
+			
+			if (purchaseItemPO.getSurplus() < purchaseItemVO.getNum()) {
+				throw new FLException(260028, "采购项剩余数量不足");
+			} else {
+				salesItemPO.setPunum(Arith.sub(salesItemPO.getPunum(),purchaseItemVO.getNum()));
+				salesItemDao.update(salesItemPO);
+			}
 		}
 
-		SalesPO salesPO;
-		SalesPurchasePO salesPurchasePO;
-
 		if (sids != null && sids.size() != 0) {
-
 			for (Long sid : sids) {
-
-				salesPO = salesDao.get(sid);
-
-				salesPurchasePO = new SalesPurchasePO(salesPO, purchasePO);
-
-				salesPurchaseDao.save(salesPurchasePO);
+				salesPurchaseDao.save(new SalesPurchasePO(new SalesPO(sid), purchasePO));
 			}
 		}
 

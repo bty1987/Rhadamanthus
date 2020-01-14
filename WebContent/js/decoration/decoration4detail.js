@@ -3,14 +3,6 @@ jQuery(function ($) {
     var decorationDetail = {
         decorationOrderId: null,
         orderType: "",
-
-        type: {
-            "半包": 0,
-            "全包": 1,
-            "半价": 2,
-            "满减": 3,
-            "减上捡": 4
-        },
         decoration: {},
         customer: {},
         village: {},
@@ -543,12 +535,18 @@ jQuery(function ($) {
 
         if ([2, 3, 4].indexOf(decorationDetail.orderType) != -1) { // 半价/满减/捡捡
             com.post(api.decoration.queryDecorationConfig, {"decoration.type": decorationDetail.orderType}, function (res) {
-
-                com.focusPage('#decorationDiscount').bindData(res.config.machingType, "id", "dd", false, null, '');
-
+                
+                var machingType = [];
+                
                 $.each(res.config.machingType, function(i, v){
+                    
+                    if ((v['v'] & 4) != 4) return;
+                    
                     decorationMachingTypes[v.id] = v;
+                    machingType.push(v);
                 });
+
+                com.focusPage('#decorationDiscount').bindData(machingType, "id", "dd", false, null, '');
             });
         }
 

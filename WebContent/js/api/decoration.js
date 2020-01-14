@@ -9,7 +9,7 @@ $.extend(api.index, {
     decorationBelongDetailIndex: {url: "/views/decoration/decorationBelong.html"},
     decorationBelongInfoIndex: {url: "/views/decoration/decorationBelong4info.html"},
 
-    decorationOutputIndex: {url: "/views/decoration/decorationOutput.html"},
+    decorationAccountOutputIndex: {url: "/views/decoration/decorationAccountOutput.html"},
 
     decorationTimelineIndex: {url: "/views/decoration/decoration4timeline.html"},
     backVisitIndex: {url: "/views/decoration/backVisit.html"},
@@ -20,7 +20,9 @@ $.extend(api.index, {
 
     decorationServiceIndex: {url: "/views/decoration/decorationService.html"},
 
-    decorationFinalSettlementIndex: {url: "/views/decoration/decoration4account.html"}
+    decorationFinalSettlementIndex: {url: "/views/decoration/decoration4account.html"},
+
+    decorationContractIndex: {url: "/views/decoration/decorationContract.html"},
 });
 
 $.extend(api, {decoration: {
@@ -440,6 +442,12 @@ $.extend(api, {decoration: {
 
         queryDecorationFunction: {url: "queryDecorationFunction.do"},
         queryDecorationFunctionByName: {url: "queryDecorationFunctionByName.do"},
+        addDecorationContract: {url: "addDecorationContract.do"},
+        
+        signDecorationContractForCompany : {url: "signDecorationContractForCompany.do"},
+        signDecorationContractForCustomer : {url: "signDecorationContractForCustomer.do"},
+        viewDecorationContract : {url: "viewDecorationContract.do"},
+        fillingDecorationContract : {url: "fillingDecorationContract.do"},
 
     }
 });

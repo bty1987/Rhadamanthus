@@ -1,0 +1,147 @@
+<style type="text/css">
+    #signatureparent {
+        color:darkblue;
+        background-color:darkgrey;
+        /*max-width:600px;*/
+        padding:20px;
+    }
+
+    /*This is the div within which the signature canvas is fitted*/
+    #signature {
+        border: 2px dotted black;
+        background-color:lightgrey;
+    }
+
+</style>
+
+<div class="row">
+    <div class="widget-container-span col-md-6" style="padding-bottom: 50px;">
+        <div class="widget-box transparent">
+            <div class="widget-header">
+                <h3><strong>客户信息</strong></h3>
+            </div>
+            <div id="customer">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                    <div class="profile-user-info">
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">客户姓名</div>
+                            <div class="profile-info-value">
+                                <span id="customerName"></span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">客户性别</div>
+                            <div class="profile-info-value">
+                                <span id="customerGender"></span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">客户电话</div>
+                            <div class="profile-info-value">
+                                <span id="customerPhone"></span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">客户地址</div>
+                            <div class="profile-info-value">
+                                <span id="customerAddress"></span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">客户关系</div>
+                            <div class="profile-info-value">
+                                <span id="customerRelationshipType"></span>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-row">
+                            <div class="profile-info-name">客户身份证</div>
+                            <div class="profile-info-value">
+                                <span id="customerIdentity"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+        </div>
+    </div>
+    <div class="widget-container-span col-md-6" style="padding-bottom: 50px;">
+        <div class="widget-box transparent">
+            <div class="widget-header">
+                <h3><strong>功能</strong></h3>
+            </div>
+            <div id="function">
+                <span class="btn btn-app btn-sm btn-yellow no-hover" id="register">注册</span>
+                <span class="btn btn-app btn-sm btn-success no-hover" id="authentication">认证</span>
+                <span class="btn btn-app btn-sm btn-warning no-hover" id="confirm">确认</span>
+                <span class="btn btn-app btn-sm btn-inverse no-hover" id="seal">印章</span>
+                <span class="btn btn-app btn-sm btn-danger no-hover" id="deleteSeal">清除印章</span>
+            </div>
+            <div class="col-md-6" style="padding: 20px">
+                <div id="content">
+                    <div id="signatureparent">
+                        <div id="signature"></div>
+                    </div>
+                <div id="scrollgrabber"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="widget-container-span col-md-12" style="padding-bottom: 50px;">
+        <div class="widget-box transparent">
+            <div class="widget-header">
+                <h3><strong>合同信息</strong></h3>
+            </div>
+            <div id="customers"></div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <a class="btn btn-minier btn-success pull-left" id="saveBtn"><i class="icon-plus bigger-110"></i><span>添加合同</span></a>
+        <a class="btn btn-minier btn-info" id="backBtn" style="float: right"><i class="icon-mail-forward bigger-110"></i><span>返回</span></a>
+    </div>
+</div>
+
+<div id="decorationContractPopUp" class="portlet box page-content"></div>
+<div id="decorationContractAuthentication" class="portlet box page-content"></div>
+
+<div class="modal fade" id="decorationContractModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">印章</h4>
+            </div>
+
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">选择印章:</label>
+                        <div class="col-sm-9">
+                            <select id='signet' class='col-xs-10 col-sm-6'></select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="saveBtnBalance" class="btn btn-primary">提交</button>
+                <button type="button" id="cancelBtnBalance" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['assets/altogether/js/jSignature.min.js', 'js/decoration/decorationContract.js']);
+</script>
+
+

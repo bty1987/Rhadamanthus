@@ -2,7 +2,6 @@ package com.fanglin.production.dao.impl;
 
 import java.util.List;
 
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -47,10 +46,10 @@ public class HardwareItemDaoImpl extends DaoImpl<HardwareItemPO> implements Hard
 
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public List<HardwareItemPO> queryHardwareItemByHid(long hid) {
-		return session().createCriteria(HardwareItemPO.class).add(Restrictions.eq(HardwareItemPO.COLUMN_HID_STR, hid)).list();
+	public int deleteHardwareItemByHid(long hid) {
+		String sql = "delete from production.hardwareitem where hid = :hid";
+		return session().createSQLQuery(sql).setLong("hid",hid).executeUpdate();
 	}
 
 }

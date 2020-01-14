@@ -5,9 +5,14 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "productionplan", catalog = "production")
@@ -15,37 +20,47 @@ public class ProductionPlanPO implements Serializable {
 
 	private static final long serialVersionUID = 6565378267211756040L;
 
-	public static final String COLUMN_PID_STR = "pid";
+	public static final short STATUS_CREATE_INT = 0;//初始
+
+	public static final short STATUS_FINISH_INT = 1;//完结
+	
+	public static final String COLUMN_PID_STR = "production.pid";
+	
+	public static final String COLUMN_COMPANY_STR = "company";
 
 	public static final String COLUMN_NO_STR = "no";
 
-	public static final short STATUS_INIT_INT = 0;
-
-	public static final short STATUS_STOREHOUSE_INT = 1;
-
-	public static final short STATUS_DILIVERY_INT = 2;
-
 	public static final String COLUMN_STATUS_STR = "status";
 
-	public static final String COLUMN_STRATTIME_STR = "startTime";
+	public static final String COLUMN_STRATTIME_STR = "createTime";
 
-	public static final String COLUMN_ENDTIME_STR = "endTime";
+	public static final String COLUMN_ENDTIME_STR = "finishTime";
+	
+	public static final String COLUMN_PNO_STR = "pno";
+	
+	public static final String COLUMN_PRODUCTIONPNO_STR = "production.pno";
+	
+	private long ppid;// 计划ID
 
-	private long ppid;
+	private ProductionPO production;// 生产单
 
-	private long pid;
+	private String no;// 计划单编号
 
-	private String no;
+	private String path;// 路径
+	
+	private UserPO creater;// 创建人
 
-	private String path;
+	private Timestamp createTime;// 创建时间
 
-	private Timestamp startTime;
+	private Timestamp finishTime;// 完成时间
+	
+	private int timeLimit;// 工期
 
-	private Timestamp endTime;
+	private short status;// 状态 0: 初始, 1: 完结
+	
+	private int company;// 公司
 
-	private short status;
-
-	private String comment;
+	private String comment;// 备注
 
 	public ProductionPlanPO() {
 		super();
@@ -54,6 +69,12 @@ public class ProductionPlanPO implements Serializable {
 	public ProductionPlanPO(long ppid) {
 		super();
 		this.ppid = ppid;
+	}
+	
+	public ProductionPlanPO(ProductionPO production, UserPO creater) {
+		super();
+		this.production = production;
+		this.creater = creater;
 	}
 
 	@Id
@@ -66,14 +87,25 @@ public class ProductionPlanPO implements Serializable {
 	public void setPpid(long ppid) {
 		this.ppid = ppid;
 	}
-
-	@Column(name = "pid")
-	public long getPid() {
-		return pid;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, name = "pid", referencedColumnName = "pid")
+	public ProductionPO getProduction() {
+		return production;
 	}
 
-	public void setPid(Long pid) {
-		this.pid = pid;
+	public void setProduction(ProductionPO production) {
+		this.production = production;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, name = "cuid", referencedColumnName = "uid")
+	public UserPO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
 	}
 
 	@Column(name = "no")
@@ -94,22 +126,31 @@ public class ProductionPlanPO implements Serializable {
 		this.path = path;
 	}
 
-	@Column(name = "startTime")
-	public Timestamp getStartTime() {
-		return startTime;
+	@Column(name = "createTime")
+	public Timestamp getCreateTime() {
+		return createTime;
 	}
 
-	public void setStartTime(Timestamp startTime) {
-		this.startTime = startTime;
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
 	}
 
-	@Column(name = "endTime")
-	public Timestamp getEndTime() {
-		return endTime;
+	@Column(name = "finishTime")
+	public Timestamp getFinishTime() {
+		return finishTime;
 	}
 
-	public void setEndTime(Timestamp endTime) {
-		this.endTime = endTime;
+	public void setFinishTime(Timestamp finishTime) {
+		this.finishTime = finishTime;
+	}
+
+	@Column(name = "timeLimit")
+	public int getTimeLimit() {
+		return timeLimit;
+	}
+
+	public void setTimeLimit(int timeLimit) {
+		this.timeLimit = timeLimit;
 	}
 
 	@Column(name = "status")
@@ -120,6 +161,15 @@ public class ProductionPlanPO implements Serializable {
 	public void setStatus(short status) {
 		this.status = status;
 	}
+	
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
 
 	@Column(name = "comment")
 	public String getComment() {
@@ -129,5 +179,4 @@ public class ProductionPlanPO implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-
 }

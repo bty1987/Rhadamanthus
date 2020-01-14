@@ -67,7 +67,7 @@ function printProjectTable(){
 
 		$.each(v, function (j, qv){
 		    
-		    if([1, 3].indexOf(qv.subtype) == -1) return true;
+		    if([0, 1, 3].indexOf(qv.subtype) == -1) return true;
 
 			contentHtml += '<tr bgcolor="#FFFFFF">';
 			contentHtml += '<td width="4%" align="center">' + (j+1) + '</td>';

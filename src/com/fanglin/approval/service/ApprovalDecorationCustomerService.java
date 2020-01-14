@@ -17,9 +17,9 @@ import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
 
 public interface ApprovalDecorationCustomerService {
-	
-	public int submitApprovalForCustomer(ApprovalVO approvalVO, ApprovalDecorationCustomerVO approvalDecorationCustomerVO, String userId,int company) throws FLException;
-	
-	public int approvalForCustomer(ApprovalPO approvalPO) throws FLException;
+
+	public int submitApprovalForCustomer(ApprovalVO approvalVO, ApprovalDecorationCustomerVO approvalDecorationCustomerVO, String userId, int company) throws FLException;
+
+	public int approveForCustomer(ApprovalPO approvalPO) throws FLException;
 
 }

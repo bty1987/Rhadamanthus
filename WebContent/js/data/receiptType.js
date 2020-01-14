@@ -8,7 +8,7 @@ $(function ($) {
         items: {},
         editFlg: false,
         cleanItemsitems:{},
-        typeArray: ["现金", "银行", "转账", "对公账户", "券"]
+        typeArray: ["现金", "刷卡", "银行", "对公账户", "券"]
     };
 
     $.extend(com.validate(),receiptType.validator);
@@ -23,6 +23,7 @@ $(function ($) {
     receiptType.items.kino = com.focusPage("#kino");
     receiptType.items.kiname = com.focusPage("#kiname");
     receiptType.items.assistant = com.focusPage("#assistant");
+    receiptType.items.value = com.focusPage("#value");
 
     com.post(api.ds.data, {}, function(res){
         receiptType.items.grade.bindData(res.grade, "key", "value");
@@ -51,8 +52,8 @@ $(function ($) {
 
             switch (v.type){
                 case 1: v.type = "现金"; break;
-                case 2: v.type = "银行";break;
-                case 3: v.type = "转账"; break;
+                case 2: v.type = "刷卡";break;
+                case 3: v.type = "银行"; break;
                 case 4: v.type = "对公账户";break;
                 case 5: v.type = "券";break;
             }
@@ -63,7 +64,8 @@ $(function ($) {
                 ["等级:", com.checkNull(v.grade, "无"), "red"],
                 ["金蝶编号:", com.checkNull(v.kino, "无"), "grey"],
                 ["金蝶名称:", com.checkNull(v.kiname, "无"), "grey"],
-                ["辅核项:", com.checkNull(v.assistant, "无"), "grey"]
+                ["辅核项:", com.checkNull(v.assistant, "无"), "grey"],
+                ["POS值:", com.checkNull(v.value, "无"), "grey"]
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -97,6 +99,7 @@ $(function ($) {
                 receiptType.items.kino.val(v.kino);
                 receiptType.items.kiname.val(v.kiname);
                 receiptType.items.assistant.val(v.assistant);
+                receiptType.items.value.val(v.value);
                 editFlg = false;
                 receiptType.modal.modal("show")
 
@@ -143,7 +146,8 @@ $(function ($) {
             "receiptType.grade" : receiptType.items.grade.val(),
             "receiptType.kino" : receiptType.items.kino.val(),
             "receiptType.kiname" : receiptType.items.kiname.val(),
-            "receiptType.assistant" : receiptType.items.assistant.val()
+            "receiptType.assistant" : receiptType.items.assistant.val(),
+            "receiptType.value" : receiptType.items.value.val()
         };
 
         if(com.validate("form1")){

@@ -52,6 +52,26 @@ public class PointofsalesServiceImpl implements PointofsalesService {
 		return pointofsalesVOs;
 
 	}
+	
+	@Override
+	public List<PointofsalesVO> queryPointofsalesByPidAndRid(PointofsalesVO pointofsales) {
+
+		List<PointofsalesPO> pointofsalesPOs = pointofsalesDao.queryPointofsalesByPidAndRid(pointofsales.getPid(), pointofsales.getRid());
+		List<PointofsalesVO> pointofsalesVOs = new ArrayList<PointofsalesVO>();
+
+		for (PointofsalesPO pointofsalesPO : pointofsalesPOs) {
+
+			PointofsalesVO pointofsalesVO = new PointofsalesVO(new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO()));
+
+			BeanUtil.copyProperties(pointofsalesPO, pointofsalesVO, Arrays.asList("creater"));
+			BeanUtil.copyProperties(pointofsalesPO.getCreater(), pointofsalesVO.getCreater(), Arrays.asList("role", "dept", "duty"));
+
+			pointofsalesVOs.add(pointofsalesVO);
+		}
+
+		return pointofsalesVOs;
+
+	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -122,5 +142,19 @@ public class PointofsalesServiceImpl implements PointofsalesService {
 		pointofsalesPO.setStatus(PointofsalesPO.STATUS_INVALID_INT);
 
 		pointofsalesDao.update(pointofsalesPO);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updatePointofsales(List<Long> posids, Long rid, Short status, Short type) throws FLException {
+		
+		int count = pointofsalesDao.countPointofsalesByPosids(posids);
+		
+		if(count > 0){
+			throw new FLException(150047, "POS支付不可操作");
+		}
+		
+		pointofsalesDao.updatePointofsales(posids, rid, status, type);
+		
 	}
 }

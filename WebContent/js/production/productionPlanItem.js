@@ -2,8 +2,8 @@ $(function(){
 
     var productionPlanItem = {
 
-        saveBtn: com.focusPage("#saveBtn"),
-        cancelBtn : com.focusPage("#cancelBtn"),
+        saveBtn: com.focusPage("#planItemSaveBtn"),
+        cancelBtn : com.focusPage("#planItemCancelBtn"),
 
         modals: {
             productionPlanItemModal: com.focusPage("#productionPlanItemModal")
@@ -14,7 +14,7 @@ $(function(){
             height: com.focusPage("#height"),
             width: com.focusPage("#width"),
             thick: com.focusPage("#thick"),
-            num: com.focusPage("#num"),
+            num: com.focusPage("#itemNum"),
             color: com.focusPage("#color"),
             comment: com.focusPage("#comment"),
             measurementUnit: com.focusPage("#measurementUnit"),
@@ -23,9 +23,9 @@ $(function(){
 
         params: {
             ppid: params["productionPlan.ppid"],
-            productionStatus: params["production"],
-            productionPlanStatus: params["productionPlan.status"]
-        }
+            status: params["productionPlan.status"],
+        },
+        productionStatus: params.productionStatus
     };
 
     productionPlanItem.saveBtn.bindClick(saveData);
@@ -35,17 +35,17 @@ $(function(){
         com.closeTip();
     });
 
-    var query = productionPlanItem.items.name.val();
-
-    com.initTypeahead("#itemName",api.production.queryQuoteItemByPinyin, "quoteItem.pinyin", {
-        "quoteItem.name": query, "quoteItem.pinyin": query
-    }, "quoteItems", "qiid", "name", function(list, k, v){
+    com.initTypeahead("#itemName",api.production.queryQuoteItemByPinyin, "quoteItem.pinyin","quoteItem.name", "quoteItems", "qiid", "name", function(list, k, v){
 
         $.each(list, function (index, val) {
 
             if (val.qiid == k) {
                 productionPlanItem.items.measurementUnit.val(val.measurementunit);
                 productionPlanItem.items.typeno.val(val.format);
+                productionPlanItem.items.width.val(0);
+                productionPlanItem.items.height.val(0);
+                productionPlanItem.items.thick.val(0);
+                productionPlanItem.items.num.val(1);
             }
         });
         return v;
@@ -85,7 +85,7 @@ $(function(){
                 ["厚:",v.thick,"blue"],
                 ["颜色:",v.color,"grey"],
                 ["数量:",v.num,"blue"],
-                ["说明:",v.comment,"grey"],
+                ["备注:",v.comment,"grey"],
             ];
 
             $.each(propertyArr, function (index,value) {
@@ -95,11 +95,11 @@ $(function(){
                 $liProperty.appendTo($ulProperty);
             });
 
-            $btnDiv.append($btnDel);
+            if (productionPlanItem.params.status == 0) {
+                $btnDiv.append($btnDel);
+            }
             $h3.append($title).append($btnDiv);
             $liLine.append($h3).append($ulProperty);
-
-            hidBtn($btnDel,productionPlanItem.params.productionPlanStatus);
 
             $btnDel.click(function(){
                 com.showConfirm("确定删除吗?", function() {
@@ -127,31 +127,29 @@ $(function(){
     var searcher  = new Searcher();
 
     searcher.init([],'condList',api.production.pageProductionPlanItemByPpid,function (data) {
-        displayFunc.init('resultList', data);
-    },"pagenation","productionPlanItemPostData",{"productionPlanItem.productionPlan.ppid" :productionPlanItem.params.ppid},false,null,function () {
+        displayFunc.init('itemResultList', data);
+    },"itemPagenation","productionPlanItemPostData",{"productionPlanItem.productionPlan.ppid" :productionPlanItem.params.ppid},false,null,function () {
 
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addProductionPlanItem').css("margin", "0px 3px");
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addProductionPlanItem');
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        var $back = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'back').css("margin", "0px 3px");
-        var $backi = $('<i></i>').addClass('icon-mail-forward bigger-110').appendTo($back);
-        var $backspan = $('<span></span>').text('返回').appendTo($back);
-
-        return [$adda,$back];
-    });
+        hidBtn($adda,productionPlanItem.params.status);
+        return [$adda];
+    },'itemResultList');
 
     com.focusPage("#addProductionPlanItem").click(function() {
         productionPlanItem.modals.productionPlanItemModal.modal("show");
     });
 
-    com.focusPage("#back").click(function () {
-        com.switchPage(api.index.productionPlanIndex.url);
-    });
-
     function saveData() {
 
         if (com.validate('productionPlanItemModal')) {
+            return false;
+        }
+
+        if (productionPlanItem.params.status != 0) {
+            com.showAlert(com.warning, "计划单状态已完结不能添加子项");
             return false;
         }
 
@@ -177,15 +175,13 @@ $(function(){
         productionPlanItem.modals.productionPlanItemModal.modal("hide");
     }
 
-    var status = productionPlanItem.params.productionStatus;
-
     function hidBtn(btnId,otherStatus){
         btnId.removeClass('hide');
-        if (status == 5 || status == 4 || status == 3) {
+        if (productionPlanItem.productionStatus == 3 || productionPlanItem.productionStatus == 4 ) {
             btnId.addClass('hide');
         }else if(otherStatus != 0 ){
             btnId.addClass('hide');
         }
-
     }
+
 });

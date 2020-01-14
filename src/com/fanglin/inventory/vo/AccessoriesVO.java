@@ -37,7 +37,9 @@ public class AccessoriesVO implements Serializable {
 	private Short schedule;
 
 	private Short status;
-
+	
+	private Long total;
+	
 	public AccessoriesVO() {
 		super();
 	}
@@ -159,6 +161,14 @@ public class AccessoriesVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Long getTotal() {
+		return total;
+	}
+
+	public void setTotal(Long total) {
+		this.total = total;
 	}
 
 }

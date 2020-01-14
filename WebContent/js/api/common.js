@@ -39,6 +39,9 @@ $.extend(api, {common: {
     updateQuotationFunctionAreaItemByQuotationIdAType: {url: "updateQuotationFunctionAreaItemByQuotationIdAType.do"},
 
     exportMaterialPayment: {url: "exportMaterialPayment.do"},
+    
+    checkMacontrol: {url: "checkMacontrol.do", server: "communion"},
+    checkLicense: {url: "checkLicense.do", server: "communion"},
 
     showImg: {url: "showImg.do"},
     downloadFile: {url: "downloadFile.do"},

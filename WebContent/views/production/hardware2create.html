@@ -1,0 +1,122 @@
+<div id="fl-statement"><div class="page-header"><h1>生产单<small><i class="icon-double-angle-right"></i>五金单</small></h1></div></div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="row" style="margin-left:10px;margin-right:10px">
+            <div id="list"></div>
+            <div>
+                    <div>
+                        <a class="btn btn-minier btn-primary pull-left" id="addHardwareBtn" style="margin-top: 7px;margin-left: 2px"><i class="icon-plus bigger-110"></i>添加</a>
+                    </div>
+                    <div>
+                        <a id="backBtn" class="btn btn-minier pull-left" style="margin-top: 7px;margin-left: 10px"><i class="icon-mail-forward bigger-110"></i>返回</a>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="hardwareModal" tabindex="-1">
+    <div class="modal-dialog" style="margin-top: 10%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="addModalLabel">五金单信息</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group" id="typeDisplay">
+                        <label class="col-sm-3 control-label no-padding-right" for="hrStatus">订单类型</label>
+                        <div class="col-sm-9">
+                            <select class="span6 m-wrap col-xs-8 v_required" id="hrStatus"  data-required="1" data-toggle="popover" data-trigger='manual' >
+                            </select>
+                            <span class="required"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="timeLimitDisplay">
+                        <label class="col-sm-3 control-label no-padding-right" for="timeLimit">订单工期</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="span6 m-wrap col-xs-8 v_required v_number" id="timeLimit" rules="{required:true}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="comment">订单说明</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="span6 m-wrap col-xs-8 v_required" id="comment" rules="{required:true}">
+                        </div>
+
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveBtn" class="btn btn-primary">确认</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="finishModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="finishModelLabel">完结五金单</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="num">生成物流包数量</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="num" maxlength="12" class="col-xs-10 col-sm-7 v_required v_number" data-toggle="popover" data-trigger='manual'/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveFinishBtn" class="btn btn-primary">确定</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="layerImportModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel-1">图表</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+
+                    <div class="form-group">
+                        <div class="col-sm-5 infobox-container no-padding-right" style="margin-left: 10%" id="download"></div>
+                    </div>
+                    <div class="space5"></div>
+
+                    <div class="form-group">
+                        <div class="control-label col-xs-3 no-padding-right" style="margin-left: 10%" id="importHardwareExcel"></div>
+                    </div>
+                    <div class="space5"></div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="layerPopUp" class="portlet box"></div>
+<script type="text/javascript">
+    $.loadScript(['js/production/hardware2create.js']);
+</script>

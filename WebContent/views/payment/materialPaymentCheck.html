@@ -48,7 +48,7 @@
 									</label>
 									<label class="inline">
 										<input type="checkbox" class="ace" id="checkvCheckbox" key="checkv" select="1">
-										<span class="lbl"> 转账</span>
+										<span class="lbl"> 银行</span>
 									</label>
 									<label class="inline">
 										<input type="checkbox" class="ace" id="advanceCheckbox" key="advance" select="1">
@@ -103,17 +103,23 @@
 									<div class="space-4"></div>
 								</div>
 
+								<div id="posDiv" referCheckbox="bankCheckbox" style="display: none;">
+									<h4 class="header blue bolder smaller">
+										POS
+									</h4>
+									<div id="materialCheckposDivGroup"></div>
+								</div>
+
 								<div id="bankDiv" referCheckbox="bankCheckbox" style="display: none;">
 									<h4 class="header blue bolder smaller">
-										银行卡
-										<button id="materialCheckbankAdd" class="btn btn-minier btn-success pull-right inline" num="0" maxnum="0">添加</button>
+										POS
 									</h4>
 									<div id="materialCheckbankDivGroup"></div>
 								</div>
 
 								<div id="checkvDiv" referCheckbox="checkvCheckbox" style="display: none;">
 									<h4 class="header blue bolder smaller">
-										转账
+										银行
 										<button id="materialCheckcheckvAdd" class="btn btn-minier btn-success pull-right inline" num="0" maxnum="0">添加</button>
 									</h4>
 									<div id="materialCheckcheckvDivGroup"></div>
@@ -132,12 +138,6 @@
 										<label class="col-sm-3 control-label no-padding-right" for="materialAdvance" >主材余额</label>
 										<div class="col-sm-9">
 											<input type="text" id="materialAdvance"  class="col-xs-10 col-sm-5"  data-toggle="popover" data-trigger='manual' >
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="zaterialAdvance" >正林余额</label>
-										<div class="col-sm-9">
-											<input type="text" id="zaterialAdvance"  class="col-xs-10 col-sm-5"  data-toggle="popover" data-trigger='manual' >
 										</div>
 									</div>
 									<div class="form-group">

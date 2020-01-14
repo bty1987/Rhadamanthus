@@ -49,7 +49,7 @@
 							</label>
 							<label class="inline">
 								<input type="checkbox" class="ace" id="checkvCheckbox">
-								<span class="lbl"> 转账</span>
+								<span class="lbl"> 银行</span>
 							</label>
 						</div>
 						<div class="space-4 "></div>
@@ -116,18 +116,24 @@
 							</div>
 							<div class="space-4"></div>
 						</div>
+
+						<div id="posDiv" referCheckbox="bankCheckbox" style="display: none;">
+							<h4 class="header blue bolder smaller">
+								POS
+							</h4>
+							<div id="paymentposDivGroup"></div>
+						</div>
 						
 						<div id="bankDiv" referCheckbox="bankCheckbox" style='display: none'>
 							<h4 class="header blue bolder smaller">
-								银行卡
-								<button id="paymentbankAdd" class="btn btn-minier btn-success pull-right inline" num="0" maxnum="0">添加</button>
+								POS
 							</h4>
 							<div id="paymentbankDivGroup"></div>
 						</div>
 
 						<div id="checkvDiv" referCheckbox="checkvCheckbox" style="display: none;">
 							<h4 class="header blue bolder smaller">
-								转账
+								银行
 								<button id="paymentcheckvAdd" class="btn btn-minier btn-success pull-right inline" num="0" maxnum="0">添加</button>
 							</h4>
 							<div id="paymentcheckvDivGroup"></div>

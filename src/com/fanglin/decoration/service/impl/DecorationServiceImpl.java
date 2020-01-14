@@ -26,7 +26,6 @@ import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.po.ServiceRecordPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.communion.dao.HouseDao;
-import com.fanglin.communion.dao.ServiceNodeDao;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.po.ServiceNodePO;
@@ -55,12 +54,13 @@ import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.decoration.po.DecorationInfoPO;
 import com.fanglin.decoration.po.DecorationOperatePO;
 import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.decoration.po.DecorationServicePO;
 import com.fanglin.decoration.service.DecorationService;
 import com.fanglin.decoration.vo.DecorationInfoVO;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.dao.DecorationReceiptDao;
+import com.fanglin.payment.po.AdvancePaymentPO;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.payment.po.DecorationReceiptPO;
 import com.fanglin.personel.dao.UserDao;
@@ -126,9 +126,6 @@ public class DecorationServiceImpl implements DecorationService {
 	private ServiceRecordDao serviceRecordDao;
 
 	@Autowired
-	private ServiceNodeDao serviceNodeDao;
-
-	@Autowired
 	private DecorationServiceDao decorationServiceDao;
 
 	@Autowired
@@ -163,6 +160,9 @@ public class DecorationServiceImpl implements DecorationService {
 
 	@Autowired
 	private CustomerOriginDao customerOriginDao;
+
+	@Autowired
+	private AdvancePaymentDao advancePaymentDao;
 
 	@Override
 	public void pageDecoration(Paging paging, List<Filter> filters, Authentication authentication, List<Short> statuses) {
@@ -347,8 +347,6 @@ public class DecorationServiceImpl implements DecorationService {
 
 	@Override
 	public void pageDecorationForSalesman(Paging paging, List<Filter> filters, Authentication authentication) {
-		if (filters.size() == 0)
-			return;
 
 		String userId = authentication.getUserId();
 		int company = authentication.getCompany();
@@ -358,38 +356,9 @@ public class DecorationServiceImpl implements DecorationService {
 		if (userPO == null)
 			return;
 
-		List<Integer> designDepartmentIds = null;
-		List<Short> statuses = null;
+		filters.add(new Filter("salesmanId", userPO.getUserId(), "eq"));
 
-		List<DecorationDesignDepartmentRightPO> decorationDesignDepartmentRightPOs = decorationDesignDepartmentRightDao.queryDecorationDesignDepartmentRightByUId(userPO.getUid(), company);
-
-		designDepartmentIds = new ArrayList<Integer>();
-
-		for (DecorationDesignDepartmentRightPO decorationDesignDepartmentRightPO : decorationDesignDepartmentRightPOs) {
-			designDepartmentIds.add(decorationDesignDepartmentRightPO.getDid());
-		}
-
-		List<DecorationStatusRightPO> decorationStatusRightPOs = decorationStatusRightDao.queryDecorationStatusRightByUId(userPO.getUid(), company);
-
-		statuses = new ArrayList<Short>();
-
-		for (DecorationStatusRightPO decorationStatusRightPO : decorationStatusRightPOs) {
-			statuses.add(decorationStatusRightPO.getStatus());
-		}
-
-		if (statuses.size() == 0 || designDepartmentIds.size() == 0) {
-			return;
-		}
-
-		if (designDepartmentIds.size() == 1 && designDepartmentIds.get(0) == DecorationDesignDepartmentRightPO.DEPARTMENT_ALL_ENABLE_INT) {
-			designDepartmentIds = null;
-		}
-
-		if (statuses.size() == 1 && DecorationStatusRightPO.STATUS_ALL_ENABLE_INT == statuses.get(0)) {
-			statuses = null;
-		}
-
-		List<DecorationPO> decorationPOs = decorationDao.pageDecoration(paging, filters, designDepartmentIds, statuses, company);
+		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForSalesman(paging, filters, company);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (DecorationPO decorationPO : decorationPOs) {
@@ -781,9 +750,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		CompanyPO companyPO = companyDao.get(company);
 
-		if (checkOverDecoration(decorationVO.getHouse().getHid(), company) != null) {
-			throw new FLException(140034, "订单楼盘,楼号已存在");
-		}
+		checkOverDecoration(decorationVO.getCustomer().getCid(), decorationVO.getHouse().getHid(), company);
 
 		DecorationPO decorationPO = new DecorationPO();
 
@@ -801,13 +768,7 @@ public class DecorationServiceImpl implements DecorationService {
 		String orderId = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
 
 		decorationPO.setOrderId(orderId);
-
-		if (decorationVO.getNotSalesmanRate() == null || decorationVO.getNotSalesmanRate() > 1 || decorationVO.getNotSalesmanRate() < 0) {
-			decorationPO.setNotSalesmanRate(0);
-		} else {
-			decorationPO.setNotSalesmanRate(decorationVO.getNotSalesmanRate());
-		}
-
+		decorationPO.setNotSalesmanRate(decorationVO.getNotSalesmanRate());
 		decorationPO.setHouseClass(decorationVO.getHouseClass());
 		decorationPO.setHouseType(decorationVO.getHouseType());
 		decorationPO.setStatus(DecorationPO.STATUS_INIT_INT);
@@ -852,11 +813,10 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationDao.save(decorationPO);
 
-		DecorationInfoPO decorationInfo = new DecorationInfoPO();
+		DecorationInfoPO decorationInfo = new DecorationInfoPO(orderId);
 
 		if (decorationInfoVO != null)
 			BeanUtil.copyPropertie(decorationInfoVO, decorationInfo);
-		decorationInfo.setOrderId(orderId);
 
 		decorationInfoDao.save(decorationInfo);
 
@@ -871,31 +831,15 @@ public class DecorationServiceImpl implements DecorationService {
 		additionInfo.setDesign(decorationPO.getDesigner().getCurrentName(), decorationPO.getDesigner().getDept().getName(), decorationPO.getDesigner().getDept().getName());
 		additionInfo.setSales(decorationPO.getSalesman().getCurrentName(), decorationPO.getSalesman().getDept().getName(), decorationPO.getSalesman().getDept().getFatherDept().getName());
 
-		decorationAdditionDao.save(additionInfo);
+		decorationAdditionDao.save(additionInfo); // 辅助信息
+
+		advancePaymentDao.save(new AdvancePaymentPO(decorationPO));
 
 		decorationOperateDao.save(new DecorationOperatePO().create(orderId, operater)); // 创建装修单操作信息
 
-		List<ServiceNodePO> serviceNodes = serviceNodeDao.queryServiceNodeByType(ServiceNodePO.SERVICE_TYPE_DECORTAION_INT);
+		decorationServiceDao.makeDecorationService(ServiceNodePO.SERVICE_TYPE_DECORTAION_INT, orderId, decorationPO.getDesigner().getUid()); // 服务节点
 
-		if (serviceNodes != null) {
-
-			for (ServiceNodePO serviceNodePO : serviceNodes) {
-
-				DecorationServicePO decorationServicePO = new DecorationServicePO();
-				decorationServicePO.setOrderId(decorationPO.getOrderId());
-				decorationServicePO.setOperater(decorationPO.getDesigner());
-				decorationServicePO.setName(serviceNodePO.getName());
-				decorationServicePO.setDetail(serviceNodePO.getDetail());
-				decorationServicePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
-				decorationServicePO.setStatus(DecorationServicePO.SERVICESTATUS_INIT_INT);
-				decorationServicePO.setComment("");
-
-				decorationServiceDao.save(decorationServicePO);
-			}
-
-		}
-
-		auditDao.save(new AuditPO(decorationPO));
+		auditDao.save(new AuditPO(decorationPO)); // 预算审核
 
 		decorationVO.setOrderId(decorationPO.getOrderId());
 	}
@@ -1279,35 +1223,34 @@ public class DecorationServiceImpl implements DecorationService {
 			throw new FLException(190005, "人员不存在");
 		}
 
-		DecorationPO decorationPO = checkOverDecoration(customerOriginPO.getHouse().getHid(), company);
+		checkOverDecoration(customerOriginPO.getCustomer().getCid(), customerOriginPO.getHouse().getHid(), company);
 
-		if (decorationPO == null) {// 没撞尺 , 创建装修单
+		createDecoration(decorationVO, null, operater.getUserId(), company);
 
-			createDecoration(decorationVO, null, operater.getUserId(), company);
+		customerOriginPO.setOrderId(decorationVO.getOrderId());
+		customerOriginPO.setStatus(CustomerOriginPO.STATUS_BIND_INT);
 
-			customerOriginPO.setOrderId(decorationVO.getOrderId());
-			customerOriginPO.setStatus(CustomerOriginPO.STATUS_BIND_INT);
-
-			customerOriginDao.update(customerOriginPO);
-
-		} else {
-
-			throw new FLException(140063, String.format("装修单存在,装修单号:%s,设计师:%s", decorationPO.getOrderId(), decorationPO.getDesigner().getCurrentName()));
-		}
+		customerOriginDao.update(customerOriginPO);
 
 	}
 
-	public DecorationPO checkOverDecoration(long hid, int company) {
+	public void checkOverDecoration(long cid, long hid, int company) throws FLException {
 
 		List<Short> unstatus = Arrays.asList(DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT);
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByHid(hid, company);
 
 		if (decorationPO != null && !unstatus.contains(decorationPO.getStatus())) {
-			return decorationPO;
+			throw new FLException(140063, String.format("装修单存在,装修单号:%s,设计师:%s", decorationPO.getOrderId(), decorationPO.getDesigner().getCurrentName()));
 		}
 
-		return null;
+		List<DecorationPO> decorationPOs = decorationDao.queryDecorationByCustomer(cid, null, company);
+
+		if (decorationPOs.size() > 0) {
+			decorationPO = decorationPOs.get(0);
+			throw new FLException(140063, String.format("装修单存在,装修单号:%s,设计师:%s", decorationPO.getOrderId(), decorationPO.getDesigner().getCurrentName()));
+		}
+
 	}
 
 	private void addition(DecorationAdditionPO addition, DecorationVO decorationVO) {

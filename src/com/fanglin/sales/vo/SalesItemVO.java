@@ -2,9 +2,9 @@ package com.fanglin.sales.vo;
 
 import java.io.Serializable;
 
-import com.fanglin.inventory.vo.ColorVO;
-import com.fanglin.inventory.vo.FormatVO;
-import com.fanglin.inventory.vo.GoodsVO;
+import com.fanglin.data.material.vo.ColorVO;
+import com.fanglin.data.material.vo.FormatVO;
+import com.fanglin.data.material.vo.GoodsVO;
 
 public class SalesItemVO implements Serializable {
 
@@ -33,6 +33,10 @@ public class SalesItemVO implements Serializable {
 	private Integer price;
 
 	private Long num;
+	
+	private Long punum;
+	
+	private Long xgnum;
 
 	private Long total;
 
@@ -153,6 +157,22 @@ public class SalesItemVO implements Serializable {
 
 	public void setNum(Long num) {
 		this.num = num;
+	}
+
+	public Long getPunum() {
+		return punum;
+	}
+
+	public void setPunum(Long punum) {
+		this.punum = punum;
+	}
+
+	public Long getXgnum() {
+		return xgnum;
+	}
+
+	public void setXgnum(Long xgnum) {
+		this.xgnum = xgnum;
 	}
 
 	public Long getTotal() {

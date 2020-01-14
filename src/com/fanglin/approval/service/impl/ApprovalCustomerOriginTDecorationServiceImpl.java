@@ -25,6 +25,8 @@ import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.approval.service.ApprovalCustomerOriginTDecorationService;
 import com.fanglin.approval.vo.ApprovalCustomerOriginTDecorationVO;
 import com.fanglin.approval.vo.ApprovalVO;
+import com.fanglin.communion.po.HousePO;
+import com.fanglin.communion.po.VillagePO;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentTypeVO;
 import com.fanglin.communion.vo.DepartmentVO;
@@ -35,7 +37,6 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.dao.CustomerOriginDao;
 import com.fanglin.customer.po.CustomerOriginPO;
 import com.fanglin.customer.vo.CustomerOriginVO;
-import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.impl.DecorationServiceImpl;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.po.MessagePO;
@@ -124,15 +125,8 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 	@Transactional(rollbackFor = Exception.class)
 	public int submitApprovalForCustomerOriginTDecoration(ApprovalVO approvalVO, ApprovalCustomerOriginTDecorationVO approvalCustomerOriginTDecorationVO, String userId, int company) throws FLException {
 
-		List<Short> status = Arrays.asList(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_STATUS_APPROVE_INT);
-
 		Long csid = approvalCustomerOriginTDecorationVO.getCustomerOrigin().getCsid();
-
-		CustomerOriginPO customerOriginPO = customerOriginDao.get(csid);
-
-		if (customerOriginPO == null) {
-			throw new FLException(330001, "客源不存在");
-		}
+		List<Short> status = Arrays.asList(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_STATUS_APPROVE_INT);
 
 		ApprovalPO approvalPO = approvalDao.queryApprovalByChange(status, ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT, String.valueOf(csid));
 
@@ -140,16 +134,27 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 			throw new FLException(240004, "正在审批中,不能提交新审批");
 		}
 
-		DecorationPO decorationPO = decorationService.checkOverDecoration(customerOriginPO.getHouse().getHid(), company);
+		CustomerOriginPO customerOriginPO = customerOriginDao.get(csid);
 
-		if (decorationPO != null) {
-			throw new FLException(140063, String.format("装修单存在,装修单号:%s,设计师:%s", decorationPO.getOrderId(), decorationPO.getDesigner().getCurrentName()));
+		if (customerOriginPO == null) {
+			throw new FLException(330001, "客源不存在");
 		}
+
+		if (!Arrays.asList(CustomerOriginPO.STATUS_CONFIRM_INT, CustomerOriginPO.STATUS_REFUSE_INT).contains(customerOriginPO.getStatus())) {
+			throw new FLException(330014, "客源状态不可操作");
+		}
+
+		decorationService.checkOverDecoration(customerOriginPO.getCustomer().getCid(), customerOriginPO.getHouse().getHid(), company);
 
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 
-		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(csid), ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT, "", company);
+		HousePO housePO = customerOriginPO.getHouse();
+		VillagePO villagePO = housePO.getVillage();
+
+		String content = String.format("客源转装修单,客户名:%s,楼盘:%s %s %s %s", customerOriginPO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber());
+
+		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(csid), ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT, content, approvalVO.getComment(), company);
 
 		approvalDao.save(approvalPO);
 
@@ -175,7 +180,7 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int approvalForApprovalForCustomerOriginTDecoration(ApprovalPO approvalPO) throws FLException {
+	public int approveForCustomerOriginTDecoration(ApprovalPO approvalPO) throws FLException {
 
 		ApprovalCustomerOriginTDecorationPO approvalCustomerOriginTDecorationPO = approvalCustomerOriginTDecorationDao.queryCustomerOriginTDecorationByAid(approvalPO.getAid());
 
@@ -197,11 +202,15 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 		decorationVO.setCustomer(new CustomerVO(customerOriginPO.getCustomer().getCid()));
 		decorationVO.setDesigner(new UserBaseVO(customerOriginPO.getDesigner().getUserId()));
 		decorationVO.setSalesman(new UserBaseVO(approvalCustomerOriginTDecorationPO.getSalesman().getUserId()));
-		decorationVO.setGrade("B");
+		decorationVO.setGrade("A");
+		decorationVO.setNotSalesmanRate(0);
 
-		decorationService.tranDecorationFromCustomerOrigin(decorationVO, customerOriginPO.getCsid(), approvalPO.getReceiver().getCompany());
+		decorationService.tranDecorationFromCustomerOrigin(decorationVO, customerOriginPO.getCsid(), approvalPO.getSender().getCompany());
 
-		String content = String.format("客源转装修单成功,客户名:%s,楼盘:%s,电话:%s,装修单号:%s", customerOriginPO.getName(), customerOriginPO.getHouse().getVillage().getName(), customerOriginPO.getPhone(), customerOriginPO.getOrderId());
+		HousePO housePO = customerOriginPO.getHouse();
+		VillagePO villagePO = housePO.getVillage();
+
+		String content = String.format("客源转装修单成功,客户名:%s,楼盘:%s %s,装修单号:%s,批注:%s", customerOriginPO.getName(), villagePO.getName(), housePO.getHouseNumber(), customerOriginPO.getPhone(), customerOriginPO.getOrderId(), approvalPO.getAnnotate());
 
 		UserPO designer = customerOriginPO.getDesigner();
 
@@ -212,7 +221,7 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int refuseForApprovalForCustomerOriginTDecoration(ApprovalPO approvalPO) throws FLException {
+	public int refuseForCustomerOriginTDecoration(ApprovalPO approvalPO) throws FLException {
 
 		ApprovalCustomerOriginTDecorationPO approvalCustomerOriginTDecorationPO = approvalCustomerOriginTDecorationDao.queryCustomerOriginTDecorationByAid(approvalPO.getAid());
 
@@ -229,6 +238,15 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 		customerOriginPO.setStatus(CustomerOriginPO.STATUS_REFUSE_INT);
 
 		customerOriginDao.update(customerOriginPO);
+
+		HousePO housePO = customerOriginPO.getHouse();
+		VillagePO villagePO = housePO.getVillage();
+
+		String content = String.format("客源转装修单失败,审批拒绝,客户名:%s,楼盘:%s %s,批注:%s", customerOriginPO.getName(), villagePO.getName(), housePO.getHouseNumber(), customerOriginPO.getPhone(), approvalPO.getAnnotate());
+
+		UserPO designer = customerOriginPO.getDesigner();
+
+		messageService.sendMessage(designer.getUserId(), null, content, MessagePO.TYPE_SEND_APPROVAL_INT, designer.getCompany());
 
 		return 0;
 	}

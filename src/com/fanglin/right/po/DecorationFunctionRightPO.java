@@ -18,18 +18,18 @@ import com.fanglin.decoration.po.DecorationFunctionPO;
 public class DecorationFunctionRightPO implements Serializable {
 
 	private static final long serialVersionUID = -565492413799408188L;
-	
+
 	private long dfrid;
-	
+
 	private String name;
-	
+
 	private DecorationFunctionPO decorationFunction;
-	
+
 	private int company;
 
 	@Id
 	@GeneratedValue
-	@Column(name="dfrid")
+	@Column(name = "dfrid")
 	public long getDfrid() {
 		return dfrid;
 	}
@@ -38,7 +38,7 @@ public class DecorationFunctionRightPO implements Serializable {
 		this.dfrid = dfrid;
 	}
 
-	@Column(name="name")
+	@Column(name = "name")
 	public String getName() {
 		return name;
 	}
@@ -47,7 +47,7 @@ public class DecorationFunctionRightPO implements Serializable {
 		this.name = name;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "dfid", referencedColumnName = "dfid")
 	public DecorationFunctionPO getDecorationFunction() {
 		return decorationFunction;
@@ -57,7 +57,7 @@ public class DecorationFunctionRightPO implements Serializable {
 		this.decorationFunction = decorationFunction;
 	}
 
-	@Column(name="company")
+	@Column(name = "company")
 	public int getCompany() {
 		return company;
 	}
@@ -65,5 +65,5 @@ public class DecorationFunctionRightPO implements Serializable {
 	public void setCompany(int company) {
 		this.company = company;
 	}
-	
+
 }

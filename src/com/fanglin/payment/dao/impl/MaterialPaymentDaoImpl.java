@@ -13,6 +13,7 @@ package com.fanglin.payment.dao.impl;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import org.hibernate.Criteria;
@@ -198,7 +199,7 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 				}else if("designer".equals(field)){
 					query.add(query.getCriterion("salesman.userId", filter.getData(), filter.getOp()));
 				}else if(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR.equals(field)){
-					query.add(query.getCriterion(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, Integer.parseInt(data), op));
+					query.add(query.getCriterion(field, Short.valueOf(data), op));
 				}else if(MaterialPaymentPO.COLUMN_COLLECTTIME_STR.equals(field)){
 					query.alias("materialReceipt", "materialReceipt");
 					
@@ -220,6 +221,9 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 					}
 				}else if("company".equals(filter.getField())){
 					query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
+				}else if("paymentType".equals(field)){
+					List<Short> types = Arrays.asList(MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT, MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT);
+					query.add(query.getCriterion(field, types, op));
 				}
 			}
 		}

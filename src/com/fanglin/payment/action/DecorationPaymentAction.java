@@ -58,6 +58,8 @@ public class DecorationPaymentAction extends BaseListAction {
 	
 	private Timestamp dateTime;
 	
+	private List<Long> posids;
+	
 	@Action(value = "pageDecorationPaymentForCommit", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDecorationPaymentForCommit() throws FLException{
 		
@@ -86,6 +88,14 @@ public class DecorationPaymentAction extends BaseListAction {
 	public String pageDecorationPaymentForConfirm() throws FLException{
 		
 		decorationPaymentService.pageDecorationPaymentForConfirm(getPaging(), getFilters(), queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryDecorationPayment", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationPayment() throws FLException{
+		
+		decorationPayments = decorationPaymentService.queryDecorationPayment(getFilters(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -149,7 +159,7 @@ public class DecorationPaymentAction extends BaseListAction {
 	@Action(value = "collectDecorationPayment", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String collectDecorationPayment() throws FLException{
 		
-		decorationPaymentService.collectDecorationPayment(decorationPayment, decorationActivityItems, queryUserId(), queryCompany());
+		decorationPaymentService.collectDecorationPayment(decorationPayment, decorationActivityItems, posids, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -241,6 +251,14 @@ public class DecorationPaymentAction extends BaseListAction {
 
 	public void setDecorationReceipt(DecorationReceiptVO decorationReceipt) {
 		this.decorationReceipt = decorationReceipt;
+	}
+
+	public List<Long> getPosids() {
+		return posids;
+	}
+
+	public void setPosids(List<Long> posids) {
+		this.posids = posids;
 	}
 
 }

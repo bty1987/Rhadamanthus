@@ -3,35 +3,30 @@ $.extend(api.index, {
     salesPaymentReceiptIndex : {url : "/views/payment/salesPaymentReceipt.html"},
 		
 	decorationPaymentIndex: {url: "/views/payment/decorationPayment.html"},
-	changeItemIndex: {url: "/views/payment/changePaymentItem.html"},
-	decorationPaymentCheckIndex: {url: "/views/payment/decorationPaymentCheck.html"},
+	decorationPaymentCheckIndex: {url: "/views/payment/decorationPayment2check.html"},
 	decorationPaymentReceiptIndex: {url: "/views/payment/decorationPaymentReceipt.html"},
+	activityPaymentReceiptIndex: {url: "/views/payment/activityPaymentReceipt.html"},
 
 	materialPaymentIndex: {url: "/views/payment/materialPayment.html"},
 	materialPaymentReceiptIndex: {url: "/views/payment/materialPaymentReceipt.html"},
-	materialPaymentCheckIndex: {url: "/views/payment/materialPaymentCheck.html"},
-
-	materialOutsideCheckIndex: {url: "/views/payment/materialOutsideCheck.html"},
-		
-	materialInsidePaymentIndex: {url: "/views/payment/materialInsidePayment.html"},
-	materialInsidePaymentCheckIndex: {url: "/views/payment/materialInsidePaymentCheck.html"},
+	materialPaymentCheckIndex: {url: "/views/payment/materialPayment2check.html"},
 
 	paymentIndex: {url: "/views/payment/payment.html"},
-	paymentCheckIndex: {url: "/views/payment/paymentCheck.html"},
+	paymentCheckIndex: {url: "/views/payment/payment2check.html"},
 	paymentReceiptIndex: {url: "/views/payment/paymentReceipt.html"},
 
 	servicePaymentReceiptIndex: {url: "/views/payment/servicePaymentReceipt.html"},
 		
-	userSalaryIndex: {url: "/views/payment/userSalary.html"}
 });
 
 $.extend(api, {payment: {
-	queryAdvancePaymentByCustomerId: {
-		url: "queryAdvancePaymentByCustomerId.do",
+	pageAdvancePayment: {
+		url: "pageAdvancePayment.do",
+		demo: true,
 		type: "query",
 		tranargs: [{
-			result: "",
-			args: ["balanceAdvance", "projectAdvance", "materialAdvance", "zaterialAdvance"]
+			result: "paging-data",
+			args: ["balance", "projectBalance", "materialBalance", "zhenglinBalance"]
 		}]
 	},
 	queryAdvancePaymentByOrderId: {
@@ -137,6 +132,15 @@ $.extend(api, {payment: {
 			args: ["referMoney", "cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"]
 		}]
 	},
+	queryDecorationPayment: {
+		url: "queryDecorationPayment.do",
+		demo: true,
+		type: "query",
+		tranargs: [{
+			result: "decorationPayments",
+			args: ["referMoney"]
+		}]
+	},
 	queryDecorationPaymentByOrderId: {
 		url: "queryDecorationPaymentByOrderId.do",
 		demo: true,
@@ -239,6 +243,15 @@ $.extend(api, {payment: {
 			args: ["referMoney", "cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"]
 		}]
 	},
+	queryMaterialPayment: {
+		url: "queryMaterialPayment.do",
+		demo: true,
+		type: "query",
+		tranargs: [{
+			result: "materialPayments",
+			args: ["referMoney"]
+		}]
+	},
 	queryMaterialPaymentByOrderId: {
 		url: "queryMaterialPaymentByOrderId.do",
 		demo: true,
@@ -281,7 +294,7 @@ $.extend(api, {payment: {
 			args: ["materialPayment.referMoney"],
 			query: [{
 				result: "materialPayment",
-				args: ["referMoney"],
+				args: ["referMoney"]
 			}]
 		}
 	},
@@ -292,7 +305,7 @@ $.extend(api, {payment: {
 			args: ["materialPayment.referMoney"],
 			query: [{
 				result: "materialPayment",
-				args: ["referMoney"],
+				args: ["referMoney"]
 			}]
 		}
 	},
@@ -379,6 +392,14 @@ $.extend(api, {payment: {
 			args: ["cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"]
 		}]
 	},
+	querySalesPayment: {
+		url: "querySalesPayment.do",
+		type: "query",
+		tranargs: [{
+			result: "salesPayments",
+			args: ["referMoney"]
+		}]
+	},
 	querySalesPaymentBySid: {
 		url: "querySalesPaymentBySid.do",
 		type: "query",
@@ -424,7 +445,7 @@ $.extend(api, {payment: {
 			args: ["salesPayment.referMoney"],
 			query: [{
 				result: "salesPayment",
-				args: ["referMoney"],
+				args: ["referMoney"]
 			}]
 		}
 	},
@@ -435,7 +456,7 @@ $.extend(api, {payment: {
 			args: ["salesPayment.referMoney"],
 			query: [{
 				result: "salesPayment",
-				args: ["referMoney"],
+				args: ["referMoney"]
 			}]
 		}
 	},
@@ -587,6 +608,14 @@ $.extend(api, {payment: {
 			args: ["money"]
 		}]
 	},
+	queryPointofsalesByPidAndRid: {
+		url: "queryPointofsalesByPidAndRid.do",
+		type: "query",
+		tranargs: [{
+			result: "pointofsaleses",
+			args: ["money"]
+		}]
+	},
 	addPointofsales: {
 		url: "addPointofsales.do",
 		type: "update",
@@ -598,7 +627,49 @@ $.extend(api, {payment: {
             }]
 		}
 	},
-	checkPointofsales: {url : "checkPointofsales.do"},
-	cancelPointofsales: {url : "cancelPointofsales.do"}
+	checkPointofsales: {url : "checkPointofsales.do"}, //无需要更改数值
+	cancelPointofsales: {url : "cancelPointofsales.do"},
 	
+	pageActivityPayment: {url: "pageActivityPayment.do",
+        type: "query",
+        tranargs: [{
+            result: "paging-data",
+            args: ["money","cash","bank","coupon"]
+        }]
+    },
+    queryActivityPaymentByNo: {url: "queryActivityPaymentByNo.do",
+        type: "query",
+        tranargs: [{
+            result: "activityPayments",
+            args: ["money"]
+        }]
+    },
+    queryActivityPaymentByArid: {url: "queryActivityPaymentByArid.do",
+        type: "query",
+        tranargs: [{
+            result: "activityPayments",
+            args: ["money"]
+        }]
+    },
+    createActivityPayment: {url: "createActivityPayment.do",
+        type: "update",
+        tranargs: {
+            args: ["activityPayment.money"]
+        }
+    },
+    collectActivityPayment: {url: "collectActivityPayment.do",
+        type: "update",
+        tranargs: {
+            args: ["activityReceipt.cash","activityReceipt.bank", "activityReceipt.coupon"]
+        }
+    },
+//    deleteActivityPaymentId: {url: "deleteActivityPaymentId.do"},
+    countActivityPayment: {url: "countActivityPayment.do"},
+    queryActivityReceiptByArid: {url: "queryActivityReceiptByArid.do",
+        type: "query",
+        tranargs: [{
+            result: "activityReceipt",
+            args: ["cash","bank","coupon"]
+        }]
+    },
 }});

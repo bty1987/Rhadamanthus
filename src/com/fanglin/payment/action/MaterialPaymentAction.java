@@ -59,6 +59,8 @@ public class MaterialPaymentAction extends BaseListAction{
 	
 	private List<Long> mrIds;
 	
+	private List<Long> posids;
+	
 	private Timestamp dateTime;
 	
 	@Action(value="pageMaterialPaymentForInit", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
@@ -89,6 +91,14 @@ public class MaterialPaymentAction extends BaseListAction{
 	public String pageMaterialPaymentForConfirm() throws FLException{
 		
 		materialPaymentService.pageMaterialPaymentForConfirm(getPaging(), getFilters(), queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value="queryMaterialPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String queryMaterialPayment() throws FLException{
+		
+		materialPayments = materialPaymentService.queryMaterialPayment(getFilters(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -168,7 +178,7 @@ public class MaterialPaymentAction extends BaseListAction{
 	@Action(value="collectMaterialPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String collectMaterialPayment() throws FLException{
 		
-		materialPaymentService.collectMaterialPayment(materialPayment, decorationActivityItems, queryUserId(), queryCompany());
+		materialPaymentService.collectMaterialPayment(materialPayment, decorationActivityItems, posids, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -176,7 +186,7 @@ public class MaterialPaymentAction extends BaseListAction{
 	@Action(value="collectMaterialPayments", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String collectMaterialPayments() throws FLException{
 		
-		materialPaymentService.collectMaterialPayments(material, materialPayments, materialReceipt, queryUserId(), queryCompany());
+		materialPaymentService.collectMaterialPayments(material, materialPayments, materialReceipt, posids, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -299,6 +309,14 @@ public class MaterialPaymentAction extends BaseListAction{
 
 	public void setMrIds(List<Long> mrIds) {
 		this.mrIds = mrIds;
+	}
+
+	public List<Long> getPosids() {
+		return posids;
+	}
+
+	public void setPosids(List<Long> posids) {
+		this.posids = posids;
 	}
 
 }

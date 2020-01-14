@@ -22,6 +22,8 @@ public class ProductionPictureVO implements Serializable {
 	private Timestamp createTime;
 
 	private String path;
+	
+	private Short type;
 
 	private Short status;
 
@@ -83,6 +85,14 @@ public class ProductionPictureVO implements Serializable {
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
 	}
 
 	public Short getStatus() {

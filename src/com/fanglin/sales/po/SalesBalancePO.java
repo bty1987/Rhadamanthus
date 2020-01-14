@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
@@ -84,6 +85,12 @@ public class SalesBalancePO implements Serializable{
 	
 	private UserPO poster;
 	
+	private UserPO salesman;
+
+	private DepartmentPO dept;
+
+	private DepartmentPO region;
+	
 	private Timestamp postTime;
 	
 	private Timestamp venderTime;
@@ -112,22 +119,30 @@ public class SalesBalancePO implements Serializable{
 		super();
 	}
 
-	public SalesBalancePO(SalesPO sales, UserPO creater, UserPO poster) {
+	public SalesBalancePO(SalesPO sales, UserPO creater, UserPO poster, UserPO salesman, DepartmentPO dept,
+			DepartmentPO region) {
 		super();
 		this.sales = sales;
 		this.creater = creater;
 		this.poster = poster;
+		this.salesman = salesman;
+		this.dept = dept;
+		this.region = region;
 	}
 
 	public SalesBalancePO(SalesPO sales, RefundsPO refunds, UserPO creater,
-			UserPO poster) {
+			UserPO poster, UserPO salesman, DepartmentPO dept,
+			DepartmentPO region) {
 		super();
 		this.sales = sales;
 		this.refunds = refunds;
 		this.creater = creater;
 		this.poster = poster;
+		this.salesman = salesman;
+		this.dept = dept;
+		this.region = region;
 	}
-
+	
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "sbid")
@@ -186,6 +201,36 @@ public class SalesBalancePO implements Serializable{
 
 	public void setPoster(UserPO poster) {
 		this.poster = poster;
+	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "suid", referencedColumnName = "uid")
+	public UserPO getSalesman() {
+		return salesman;
+	}
+
+	public void setSalesman(UserPO salesman) {
+		this.salesman = salesman;
+	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "did", referencedColumnName = "did")
+	public DepartmentPO getDept() {
+		return dept;
+	}
+
+	public void setDept(DepartmentPO dept) {
+		this.dept = dept;
+	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "drid", referencedColumnName = "did")
+	public DepartmentPO getRegion() {
+		return region;
+	}
+
+	public void setRegion(DepartmentPO region) {
+		this.region = region;
 	}
 
 	@Column(name = "postTime")

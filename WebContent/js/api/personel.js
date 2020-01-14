@@ -14,6 +14,7 @@ $.extend(api, {personel: {
     queryUserForSelfByUserId: {url: "queryUserForSelfByUserId.do", demo: true ,server:"communion"},
     queryUserByOldUserId: {url: "queryUserByOldUserId.do"},
     queryUserByPinyin: {url: "queryUserByPinyin.do"},
+	querySupplierByPinyin: {url: "querySupplierByPinyin.do"},
     queryUserByUids:{url:"queryUserByUids.do" },
     addUser: {url: "addUser.do", server: "communion"},
     updateUserForBaseInfo: {url: "updateUserForBaseInfo.do", server: "communion"},
@@ -49,6 +50,15 @@ $.extend(api, {personel: {
     refuseUserRequire:{url: "refuseUserRequire.do", server: "communion"},
 
     pagePerformance:{url: "pagePerformance.do"},
-    addPreformance:{url: "addPreformance.do", server: "communion"}
+    addPreformance:{url: "addPreformance.do", server: "communion"},
+    
+    pageSupplier: {url: "pageSupplier.do"},
+    querySupplierByPinyin: {url: "querySupplierByPinyin.do"},
+    addSupplier: {url: "addSupplier.do", server: "communion"},
+    
+    queryMacontrol: {url: "queryMacontrol.do"},
+    checkMacontrol: {url: "checkMacontrol.do", server: "communion"},
+    addMacontrol: {url: "addMacontrol.do", server: "communion"},
+    deleteMacontrol: {url: "deleteMacontrol.do", server: "communion"},
 
 }});

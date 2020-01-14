@@ -2,6 +2,10 @@ package com.fanglin.inventory.vo;
 
 import java.io.Serializable;
 
+import com.fanglin.data.material.vo.ColorVO;
+import com.fanglin.data.material.vo.FormatVO;
+import com.fanglin.data.material.vo.GoodsVO;
+
 public class PurchaseItemVO implements Serializable {
 
 	private static final long serialVersionUID = -2810451235285442491L;

@@ -1,6 +1,6 @@
 $.extend(api.index, {
 	morders: {url: "/views/store/morderitem.html"},
-	mordersitem: {url: "/views/store/morder.html"},
+	mordersitem: {url: "/views/store/morder.html"}
 });
 
 $.extend(api, {store: {
@@ -42,35 +42,31 @@ $.extend(api, {store: {
 	updateMformatForStatus: {url: "updateMformatForStatus.do"},
 	
 	pageMgoods: {
-	    url: "pageMgoods.do", 
-	    server: "store",
-	    type: "query", 
+	    url: "pageMgoods.do",
+	    type: "query",
         tranargs: [{
-            result: "paging-data", 
+            result: "paging-data",
             args: ["price"]
         }]
 	},
 	queryMgoods: {
-	    url: "queryMgoods.do", 
-	    server: "store",
-	    type: "query", 
+	    url: "queryMgoods.do",
+	    type: "query",
         tranargs: [{
-            result: "mgoods", 
+            result: "mgoods",
             args: ["price"]
         }]
 	},
 	queryMgoodsByPinyin: {url: "queryMgoodsByPinyin.do"},
 	addMgoods: {
-	    url: "addMgoods.do", 
-	    server: "store",
+	    url: "addMgoods.do",
 	    type: "update",
         tranargs: {
             args: ["mgoods.price"]
         }
 	},
 	updateMgoods: {
-	    url: "updateMgoods.do", 
-	    server: "store",
+	    url: "updateMgoods.do",
 	    type: "update",
         tranargs: {
             args: ["mgoods.price"]
@@ -78,28 +74,25 @@ $.extend(api, {store: {
 	},
 	updateMgoodsForDefaultImg: {url: "updateMgoodsForDefaultImg.do"},
 	updateMgoodsForStatus: {url: "updateMgoodsForStatus.do"},
-	
+
 	pageMorder: {
-	    url: "pageMorder.do", 
-	    server: "store",
-	    type: "query", 
+	    url: "pageMorder.do",
+	    type: "query",
         tranargs: [{
-            result: "paging-data", 
+            result: "paging-data",
             args: ["total"]
         }]
 	},
 	queryMorderByUnionId: {
-	    url: "queryMorderByUnionId.do", 
-	    server: "store",
-	    type: "query", 
+	    url: "queryMorderByUnionId.do",
+	    type: "query",
         tranargs: [{
-            result: "paging-data", 
+            result: "paging-data",
             args: ["total"]
         }]
 	},
 	addMorder: {
-	    url: "addMorder.do", 
-	    server: "store",
+	    url: "addMorder.do",
 	    type: "update",
         tranargs: {
             args: ["morder.total"]
@@ -107,122 +100,111 @@ $.extend(api, {store: {
 	},
 	updateMorderForStatus: {url: "updateMorderForStatus.do"},
 	deleteMorder: {url: "deleteMorder.do"},
-	
+
 	queryMorderItemByOid: {url: "queryMorderItemByOid.do"},
 
 	queryMprice: {
-	    url: "queryMprice.do", 
-	    server: "store",
-	    type: "query", 
+	    url: "queryMprice.do",
+	    type: "query",
         tranargs: [{
-            result: "prices", 
+            result: "prices",
             args: ["price"]
         }]
 	},
 	queryMpriceByGid: {
-	    url: "queryMpriceByGid.do", 
-	    server: "store",
-	    type: "query", 
+	    url: "queryMpriceByGid.do",
+	    type: "query",
         tranargs: [{
-            result: "prices", 
+            result: "prices",
             args: ["price"]
         }]
 	},
 	queryMpriceByBid: {
-	    url: "queryMpriceByBid.do", 
-	    server: "store",
-	    type: "query", 
+	    url: "queryMpriceByBid.do",
+	    type: "query",
         tranargs: [{
-            result: "prices", 
+            result: "prices",
             args: ["price"]
         }]
 	},
 	queryMpriceByPinyin: {
-	    url: "queryMpriceByPinyin.do", 
-	    server: "store",
-	    type: "query", 
+	    url: "queryMpriceByPinyin.do",
+	    type: "query",
         tranargs: [{
-            result: "prices", 
+            result: "prices",
             args: ["price"]
         }]
 	},
 	queryMpriceForShow: {
-	    url: "queryMpriceForShow.do", 
-	    server: "store",
-	    type: "query", 
+	    url: "queryMpriceForShow.do",
+	    type: "query",
         tranargs: [{
-            result: "prices", 
+            result: "prices",
             args: ["price"]
         }]
 	},
 	addMprice: {
-	    url: "addMprice.do", 
-	    server: "store",
+	    url: "addMprice.do",
 	    type: "update",
         tranargs: {
             args: ["mprice.price"]
         }
 	},
 	updateMpriceForStatus: {url: "updateMpriceForStatus.do"},
-	
+
 	pageMuser: {url: "pageMuser.do"},
 	queryMuserByUnionId: {url: "queryMuserByUnionId.do"},
 	saveMuser: {url: "saveMuser.do"},
 	updateMuser: {url: "updateMuser.do"},
-	
+
 	queryPictureByGid: {url: "queryPictureByGid.do"},
 	queryPicture: {url: "queryPicture.do"},
 	addPicture: {url: "addPicture.do"},
 	updatePictureForSort: {url: "updatePictureForSort.do"},
 	deletePicture: {url: "deletePicture.do"},
-	
+
 	querySlide: {url: "querySlide.do"},
 	querySlideForShow: {url: "querySlideForShow.do"},
 	addSlide: {url: "addSlide.do"},
 	updateSlide: {url: "updateSlide.do"},
 	updateSlideForStatus: {url: "updateSlideForStatus.do"},
-	
+
 	addMpayment: {
-	    url: "addMpayment.do", 
-	    server: "store",
+	    url: "addMpayment.do",
 	    type: "update",
         tranargs: {
             args: ["mpayment.totalPrice"]
         }
 	},
-	
+
 	pageEvaluate: {url: "pageEvaluate.do"},
 	addEvaluate: {url: "addEvaluate.do"},
-	
+
 	pageCoupon: {
-	    url: "pageCoupon.do", 
-	    server: "store",
-	    type: "query", 
+	    url: "pageCoupon.do",
+	    type: "query",
         tranargs: [{
-            result: "paging-data", 
+            result: "paging-data",
             args: ["value"]
         }]
 	},
 	queryCouponByCid: {
-	    url: "queryCouponByCid.do", 
-	    server: "store",
-	    type: "query", 
+	    url: "queryCouponByCid.do",
+	    type: "query",
         tranargs: [{
-            result: "coupons", 
+            result: "coupons",
             args: ["value"]
         }]
 	},
 	addCoupon: {
-	    url: "addCoupon.do", 
-	    server: "store",
+	    url: "addCoupon.do",
 	    type: "update",
         tranargs: {
             args: ["coupon.value"]
         }
 	},
 	updateCoupon: {
-	    url: "updateCoupon.do", 
-	    server: "store",
+	    url: "updateCoupon.do",
 	    type: "update",
         tranargs: {
             args: ["coupon.value"]
@@ -232,5 +214,5 @@ $.extend(api, {store: {
 	
 	pageMuserCoupon: {url: "pageMuserCoupon.do"},
 	queryMuserCouponByUnionId: {url: "queryMuserCouponByUnionId.do"},
-	addMuserCoupon: {url: "addMuserCoupon.do"},
+	addMuserCoupon: {url: "addMuserCoupon.do"}
 }});

@@ -33,6 +33,8 @@ public class SalesBalanceAction extends BaseListAction {
 	
 	private List<Long> sid;
 	
+	private List<SalesBalanceVO> salesBalances;
+	
 	private List<SalesBalanceItemVO> salesBalanceItems;
 	
 	@Action(value = "pageSalesBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
@@ -59,6 +61,14 @@ public class SalesBalanceAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "pageSalesBalanceForSupplier", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageSalesBalanceForSupplier() throws FLException{
+		
+		salesBalanceService.pageSalesBalanceForSupplier(getPaging(), getFilters(),queryUserId(), queryCompany());
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "updateSalesBalanceForVBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateSalesBalanceForVBalance() throws FLException{
 		
@@ -71,6 +81,14 @@ public class SalesBalanceAction extends BaseListAction {
 	public String updateSalesBalanceForPBalance() throws FLException{
 		
 		salesBalanceService.updateSalesBalanceForPBalance(salesBalance);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "rpreSalesBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String rpreSalesBalance() throws FLException{
+		
+		salesBalanceService.rpreSalesBalance(salesBalance);
 		
 		return SUCCESS;
 	}
@@ -94,7 +112,7 @@ public class SalesBalanceAction extends BaseListAction {
 	@Action(value = "vpostSalesBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String vpostSalesBalance() throws FLException{
 		
-		salesBalanceService.vpostSalesBalance(salesBalance);
+		salesBalanceService.vpostSalesBalance(salesBalances);
 		
 		return SUCCESS;
 	}
@@ -102,7 +120,7 @@ public class SalesBalanceAction extends BaseListAction {
 	@Action(value = "postSalesBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String postSalesBalance() throws FLException{
 		
-		salesBalanceService.postSalesBalance(salesBalance,queryUserId());
+		salesBalanceService.postSalesBalance(salesBalances,queryUserId());
 		
 		return SUCCESS;
 	}
@@ -129,6 +147,14 @@ public class SalesBalanceAction extends BaseListAction {
 
 	public void setSid(List<Long> sid) {
 		this.sid = sid;
+	}
+
+	public List<SalesBalanceVO> getSalesBalances() {
+		return salesBalances;
+	}
+
+	public void setSalesBalances(List<SalesBalanceVO> salesBalances) {
+		this.salesBalances = salesBalances;
 	}
 
 	public List<SalesBalanceItemVO> getSalesBalanceItems() {

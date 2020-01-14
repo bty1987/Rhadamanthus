@@ -61,7 +61,7 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 
 		sql.append("select c.* ");
 		sql.append("from communion.customer c left join communion.customerphone cp on c.cid = cp.cid ");
-		sql.append("where (c.pinyinAll like :pinyinAll or c.pinyinAB like :pinyinAB or c.name like :name) or (cp.phone like :phone and status = :status) ");
+		sql.append("where (c.pinyinAll like :pinyinAll or c.pinyinAB like :pinyinAB or c.name like :name) or (cp.phone like :phone and cp.status = :status) ");
 
 		if (SystemConfig.getInt("multicompany", 0) != 0) {
 			sql.append("and c.company =:company ");

@@ -7,7 +7,7 @@ $(function(){
     
     if(salesBalance4detail.dompanyFlag == 'true'){
 
-        com.post(api.inventory.querySalesBySid,{"sales.sid" : salesBalance4detail._sid}, function (res) {
+        com.post(api.sales.querySalesBySid,{"sales.sid" : salesBalance4detail._sid}, function (res) {
             var v = res.sales;
             var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
@@ -58,7 +58,7 @@ $(function(){
                 _option["sid[0]"] = v.sid;
 
                 com.showConfirm('确定要将单号为 ' + v.no + ' 的销售单进行预结算吗?', function (index, layero) {
-                    com.post(api.inventory.preSalesBalance, _option, function (res) {
+                    com.post(api.sales.preSalesBalance, _option, function (res) {
                         com.showAlert(com.info, "预结算成功");
                     });
                 });
@@ -150,7 +150,7 @@ $(function(){
                                "salesItem.ctype":ctype,
                                "salesItem.cvalue":cvalue
                            };
-                           com.post(api.inventory.updateSalesItemForBalance,_option,function(res){
+                           com.post(api.sales.updateSalesItemForBalance,_option,function(res){
                                com.showAlert(com.info, "更改成功");
                                viewSalesItems(salesBalance4detail._sid);
                            });
@@ -191,7 +191,7 @@ $(function(){
     viewSalesItems(salesBalance4detail._sid);
 
     function viewSalesItems(sid) {
-        com.post(api.inventory.querySalesItemBySid, {
+        com.post(api.sales.querySalesItemBySid, {
             "sales.sid": sid
         }, function (res) {
             initList.init('resultList1', res.salesItems);

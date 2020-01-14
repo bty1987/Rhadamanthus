@@ -1,11 +1,12 @@
 {
   "customerSourceStatus":[
     {"key":"0","value":"初始"},
-    {"key":"1","value":"提交"},
-    {"key":"2","value":"确认 "},
-    {"key":"3","value":"审批"},
-    {"key":"4","value":"绑定"},
-    {"key":"5","value":"拒绝"}
+    {"key":"1","value":"初审"},
+    {"key":"2","value":"提交"},
+    {"key":"3","value":"确认"},
+    {"key":"4","value":"审批"},
+    {"key":"5","value":"绑定"},
+    {"key":"6","value":"拒绝"}
   ],
   "errorCode": 0,
   "errorMsg": ""

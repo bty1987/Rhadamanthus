@@ -18,16 +18,20 @@ public interface SalesBalanceService {
 	
 	public void pageSalesBalanceForPompany(Paging paging,List<Filter> filter,int pompany);
 	
+	public void pageSalesBalanceForSupplier(Paging paging,List<Filter> filter,String userId, int pompany);
+	
 	public int updateSalesBalanceForVBalance(SalesBalanceVO salesBalanceVO) throws FLException;
 	
 	public int updateSalesBalanceForPBalance(SalesBalanceVO salesBalanceVO) throws FLException;
+	
+	public int rpreSalesBalance(SalesBalanceVO salesBalanceVO) throws FLException;
 	
 	public int passSalesBalance(List<Long> sid) throws FLException;
 	
 	public int preSalesBalance(List<Long> sid , String userId) throws FLException;
 	
-	public int vpostSalesBalance(SalesBalanceVO salesBalanceVO) throws FLException;
+	public int vpostSalesBalance(List<SalesBalanceVO> sbid) throws FLException;
 	
-	public int postSalesBalance(SalesBalanceVO salesBalanceVO,String userId) throws FLException;
+	public int postSalesBalance(List<SalesBalanceVO> sbids,String userId) throws FLException;
 	
 }

@@ -208,8 +208,7 @@ $(function () {
                 ["商品规格:", v.format.info, "grey"],
                 ["单位:", v.goods.measurementUnit, "grey"],
                 ["数量:", v.num, "blue"],
-                ["件数:", v.goods.pieceNum, "blue"],
-                ["价格:", v.inprice, "blue"]
+                ["件数:", v.goods.pieceNum, "blue"]
             ];
         }
 
@@ -220,8 +219,7 @@ $(function () {
                 ["单位:", v.goods.measurementUnit, "grey"],
                 ["进货仓库:", v.instorehouse.name, "grey"],
                 ["数量:", v.num, "blue"],
-                ["件数:", v.goods.pieceNum, "blue"],
-                ["价格:", v.inprice, "blue"]
+                ["件数:", v.goods.pieceNum, "blue"]
             ];
         }
         return propertyArrManifestItem;

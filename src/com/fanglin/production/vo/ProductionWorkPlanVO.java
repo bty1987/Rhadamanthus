@@ -1,6 +1,9 @@
 package com.fanglin.production.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+
+import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.personel.vo.UserBaseVO;
 
@@ -15,6 +18,12 @@ public class ProductionWorkPlanVO implements Serializable {
 	private WorkplanVO workplan;
 
 	private UserBaseVO creater;
+	
+	private Timestamp createTime;
+	
+	private Timestamp finishTime;
+	
+	private short sort;
 
 	private short status;
 
@@ -66,6 +75,32 @@ public class ProductionWorkPlanVO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Timestamp finishTime) {
+		this.finishTime = finishTime;
+	}
+
+	public short getSort() {
+		return sort;
+	}
+
+	public void setSort(short sort) {
+		this.sort = sort;
 	}
 
 }

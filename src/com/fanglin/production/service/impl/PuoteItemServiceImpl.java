@@ -37,8 +37,12 @@ public class PuoteItemServiceImpl implements PuoteItemService {
 		List<PuoteItemPO> quoteItemPOs = quoteItemDao.pageQuoteItem(paging, filter);
 		List<PuoteItemVO> quoteItemVOs = new ArrayList<PuoteItemVO>();
 
+		PuoteItemVO quoteItemVO;
+		
 		for (PuoteItemPO quoteItemPO : quoteItemPOs) {
-			PuoteItemVO quoteItemVO = new PuoteItemVO(new QuoteTypeVO());
+			
+			quoteItemVO = new PuoteItemVO(new QuoteTypeVO());
+			
 			BeanUtil.copyProperties(quoteItemPO, quoteItemVO, Arrays.asList("quoteType"));
 			BeanUtil.copyProperties(quoteItemPO.getQuoteType(), quoteItemVO.getQuoteType());
 
@@ -51,13 +55,18 @@ public class PuoteItemServiceImpl implements PuoteItemService {
 	@Override
 	public List<PuoteItemVO> queryQuoteItemByPinyin(PuoteItemVO quoteItemVO, int company) {
 
-		List<PuoteItemPO> quoteItemPOs = quoteItemDao.queryQuoteItemByPinyin(quoteItemVO.getPinyin(), quoteItemVO.getName(), 10, company);
+		Paging paging = new Paging(0, 10);
+		
+		List<PuoteItemPO> quoteItemPOs = quoteItemDao.queryQuoteItemByPinyin(paging, quoteItemVO.getPinyin(), company);
 		List<PuoteItemVO> quoteItemVOs = new ArrayList<PuoteItemVO>();
 
 		for (PuoteItemPO quoteItemPO : quoteItemPOs) {
+			
 			quoteItemVO = new PuoteItemVO(new QuoteTypeVO());
+			
 			BeanUtil.copyProperties(quoteItemPO, quoteItemVO, Arrays.asList("quoteType"));
 			BeanUtil.copyProperties(quoteItemPO.getQuoteType(), quoteItemVO.getQuoteType());
+			
 			quoteItemVOs.add(quoteItemVO);
 		}
 		

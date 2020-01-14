@@ -12,15 +12,15 @@ public class HardwareItemVO implements Serializable{
 	
 	private String name;
 	
-	private Float num;
+	private Integer num;
 	
-	private Float unitprice;
+	private Integer unitprice;
 	
 	private String measurementunit;
 	
 	private String comment;
 	
-	private Float total;
+	private Long total;
 	
 	public HardwareItemVO() {
 		super();
@@ -50,19 +50,19 @@ public class HardwareItemVO implements Serializable{
 		this.name = name;
 	}
 
-	public Float getNum() {
+	public Integer getNum() {
 		return num;
 	}
 
-	public void setNum(Float num) {
+	public void setNum(Integer num) {
 		this.num = num;
 	}
 
-	public Float getUnitprice() {
+	public Integer getUnitprice() {
 		return unitprice;
 	}
 
-	public void setUnitprice(Float unitprice) {
+	public void setUnitprice(Integer unitprice) {
 		this.unitprice = unitprice;
 	}
 
@@ -82,11 +82,11 @@ public class HardwareItemVO implements Serializable{
 		this.comment = comment;
 	}
 
-	public Float getTotal() {
+	public Long getTotal() {
 		return total;
 	}
 
-	public void setTotal(Float total) {
+	public void setTotal(Long total) {
 		this.total = total;
 	}
 	

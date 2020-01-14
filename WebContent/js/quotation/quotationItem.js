@@ -29,6 +29,7 @@ $(function(){
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
+            var $btnSelection = $('<a></a>').addClass('btn btn-minier btn-success').html('选材');
 
             //启用禁用
             var $btnStatus = $('<div></div>').addClass('pull-right');
@@ -64,7 +65,7 @@ $(function(){
             $btnStatus.append($statusSwitch).append($span);
             $btnDiscount.append($discountSwitch).append($dspan);
 
-            $divBtnWrap.append($btnEdit).append($btnDiscount).append($btnStatus).appendTo($h3);
+            $divBtnWrap.append($btnSelection).append($btnEdit).append($btnDiscount).append($btnStatus).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
@@ -72,6 +73,11 @@ $(function(){
                 queryQuotationBigCategory(v.qtid);
                 queryQuotationSmallCategory(v.qtid);
                 edit(v);
+            });
+
+            $btnSelection.click(function(){
+                params["qiid"] = v.qiId;
+                com.popup4page("#createSoodsPopUp", "/views/data/createSoods.html", "添加选材");
             });
 
             !v.status && $statusSwitch.prop("checked", true);
@@ -337,8 +343,8 @@ $(function(){
 				],
 				list: res.paging.data,
 			},function(v){
-                v.discount = v.discount == 0 ? '不打折':'打折';
-                v.status = v.status == 0 ? '禁用' : '启用';
+                v.discount = v.discount == 0 ? '不打折' : '打折';
+                v.status = v.status == 0 ? '启用' : '禁用';
             });
 		});
     });

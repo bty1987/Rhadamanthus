@@ -12,43 +12,45 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "decorationaccount", catalog = "decoration")
-public class DecorationAccountPO implements Serializable{
+public class DecorationAccountPO implements Serializable {
 
 	private static final long serialVersionUID = -2745701305737937262L;
-	
+
 	public static final String DECORATIONACCOUNT_ORDERID_STR = "orderId";
 
 	private long daid;
-	
+
 	private String orderId;
-	
+
 	private short type;
-	
+
 	private short arcal;
-	
+
 	private int matching;
-	
+
 	private int discount;
-	
+
 	private long discountBase;
-	
+
 	private int serviceRate;
-	
+
 	private long materialPrice;
-	
+
 	private long servicePrice;
-	
+
 	private long difference;
-	
+
 	private long coupon;
-	
+
 	private long fulldel;
-	
+
 	private long cashback;
-	
+
+	private String comment;
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "daid") 
+	@Column(name = "daid")
 	public long getDaid() {
 		return daid;
 	}
@@ -56,7 +58,7 @@ public class DecorationAccountPO implements Serializable{
 	public void setDaid(long daid) {
 		this.daid = daid;
 	}
-	
+
 	@Column(name = "orderId")
 	public String getOrderId() {
 		return orderId;
@@ -173,5 +175,14 @@ public class DecorationAccountPO implements Serializable{
 	public void setCashback(long cashback) {
 		this.cashback = cashback;
 	}
-	
+
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
 }

@@ -1,11 +1,80 @@
 $(function () {
 
 	var refund = {
-	    sid: params.sid
+	    sid: params.sid,
+        sales: params.sales
 	};
     com.focusPage('#fl-statement').statement("销售单", "退货");
 
-	com.post(api.inventory.queryRefundsItemBySid,{"refunds.sid": refund.sid},function (data) {
+
+    com.post(api.ds.sales, {}, function(res){
+        refund.refundType = res.refundType.split("key", "value");
+    }, null, false);
+
+    com.post(api.sales.queryRefundsBySid, {"refunds.sid": refund.sid}, function (res) {
+        var $list = [];
+        var $tableWrap = com.focusPage('#fl-statement');
+        var $div = $('<div></div>').attr("id", "listItems").addClass('col-xs-12');
+        var $ul;
+
+        $.each(res.refundVOs, function (i, v) {
+            if($list.indexOf(v.rid) == -1){
+                $list.push(v.rid);
+                $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list').attr("id", v.rid).css("margin-bottom", "20px");
+            }
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid');
+            var $small = $('<small></small>').addClass('blue').html(refund.sales.no);
+            var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
+
+            var $print = $('<a></a>').addClass('btn btn-minier btn-pink').attr("id",v.rid).attr("type",refund.refundType[v.type]).attr("createTime",v.createTime).html('打印').appendTo($btnDiv);
+
+            var propertyArr = [
+                ["商品品类:", refund.sales.category, "grey"],
+                ["商品品牌:", refund.sales.brand, "grey"],
+                ["退款总额:", v.total, "blue"],
+                ["类型:", refund.refundType[v.type], "red"],
+                ["创建人:", v.creater.currentName, "grey"],
+                ["创建时间:", v.createTime, "green"],
+                ["备注:", v.comment, "grey"]
+            ];
+
+            $.each(propertyArr, function (index, value) {
+                var $liProperty = $('<li></li>');
+                $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                $liProperty.appendTo($ulProperty);
+            });
+
+            $liLine.appendTo($ul);
+            $liLine.append($h3).append($ulProperty);
+            $small.appendTo($h3);
+            $btnDiv.appendTo($h3);
+            $ul.appendTo($div);
+
+            $print.click(function () {
+                var $this = $(this);
+                var rid = $this.attr("id");
+                var type = $this.attr("type");
+                var createTime = $this.attr("createTime");
+                params.data = refund.sales;
+                params.rid = rid;
+                params.type = type;
+                params.createTime = createTime;
+                params.flag = "refund";
+                com.popup("销售退货单：" + refund.sales.orderId, api.index.salesRefundsPrintIndex.url, function () {
+                    parent.layer.getFrameIndex(window.name);
+                }, null, true);
+            });
+        });
+
+        $div.appendTo($tableWrap);
+
+
+    }, null, false);
+
+	com.post(api.sales.queryRefundsItemBySid,{"refunds.sid": refund.sid},function (data) {
         if(data.refundsItems.length == 0){
             emptyData("list");
         }else{
@@ -14,12 +83,9 @@ $(function () {
     });
 
     var initList = function(listData) {
-        var $tableWrap = com.focusPage('#list');
-        var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
-
         if (listData && listData.length) {
             $.each(listData, function (i, v) {
-
+                var rid = v.rid;
                 var $liLine = $('<li></li>').addClass('item-orange clearfix');
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                 var $h3 = $('<h3></h3>').addClass('oid');
@@ -49,13 +115,11 @@ $(function () {
                     $liProperty.appendTo($ulProperty);
                 });
 
-                $liLine.appendTo($ul);
                 $liLine.append($h3).append($ulProperty);
-
                 $small.appendTo($h3);
                 $btnDiv.appendTo($h3);
+                $liLine.appendTo(com.focusPage("#"+ rid));
             });
-            $ul.appendTo($tableWrap);
         }
     };
 

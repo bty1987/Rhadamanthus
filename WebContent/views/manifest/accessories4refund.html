@@ -1,50 +1,37 @@
 <div class="row">
-    <div class="col-xs-12 pull-left">
-        <div class="inline col-xs-12">
-            <label>领取时间</label>
-            <div class="inline">
-                <input name="date" class="m-wrap m-ctrl-medium date-picker" readonly="readonly" size="16" type="text" value="">
+
+    <div class="flex-wrap" id="form"></div>
+
+    <ul class="flex-table">
+        <li class="line table-title">
+            <div class="line-wrap order">
+                <div class="cell index"></div>
             </div>
-        </div>
-    </div>
-    
-    <div class="col-xs-12">
-        <div id="accessoriesOrderId" class="table-responsive col-xs-12" >
-            <div id="orderInfo" class="clearfix tab-pane active"></div>
-        </div>
-
-        <div id="accessoriesItem" class="col-xs-12 column">
-
-            <ul class="flex-table">
-                <li class="line table-title">
-                    <div class="line-wrap order">
-                        <div class="cell index"></div>
-                    </div>
-                    <div class="line-wrap content col8">
-                        <div class="cell">商品编号</div>
-                        <div class="cell">名称</div>
-                        <div class="cell">颜色</div>
-                        <div class="cell">规格</div>
-                        <div class="cell">单位</div>
-                        <div class="cell">仓库</div>
-                        <div class="cell">数量</div>
-                        <div class="cell">备注</div>
-                    </div>
-                </li>
-            </ul>
-
-            <ul class="flex-table" id="list"></ul>
-
-            <div style="margin-top: 15px;">
-                <div class="inline">
-                    <label>备注</label>
-                    <div class="inline long">
-                        <input type="text" id="comment" maxlength="64">
-                    </div>
-                </div>
+            <div class="line-wrap content col11">
+                <div class="cell">商品编号</div>
+                <div class="cell">商品名称</div>
+                <div class="cell">品类</div>
+                <div class="cell">品牌</div>
+                <div class="cell">颜色</div>
+                <div class="cell">规格</div>
+                <div class="cell">单位</div>
+                <div class="cell">出货仓库</div>
+                <div class="cell">出库价</div>
+                <div class="cell">数量</div>
+                <div class="cell">退货数量</div>
             </div>
+        </li>
+    </ul>
 
+    <ul class="flex-table" id="list"></ul>
+
+    <div style="margin-top: 15px">
+
+        <div class="pull-right inline">
+            <a class="btn btn-info btn-sm" id="refundBtn">退货</a>
+            <a class="btn btn-grey btn-sm" id="cancelBtn">取消</a>
         </div>
+
     </div>
 </div>
 

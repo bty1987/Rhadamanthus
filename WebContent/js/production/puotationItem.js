@@ -11,13 +11,13 @@ $(function () {
     };
 
     var initList = function (listData) {
-        var $tableWrap = com.focusPage('#list');
+        var $tableWrap = com.focusPage('#puotationItemList').empty();
         var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
 
         if (listData && listData.length) {
             $.each(listData, function (i, v) {
 
-                var $liLine = $('<li></li>').addClass('clearfix item-orange');
+                var $liLine = $('<li></li>').addClass('clearfix item-orange').attr("id", "li" + v.qiid);
                 var $h3 = $('<h3></h3>').addClass('oid');
                 var $title = $('<small></small>').addClass('blue').html( v.name);
                 var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
@@ -64,28 +64,26 @@ $(function () {
             $ul.appendTo($tableWrap);
         }
     };
-    queryPuotationItemByQid(puotationItem.qid);
-
-
-    function delectpuotationItem(qiid){
-        com.showConfirm("是否确认删除", function(){
-            com.post(api.production.deletePuotationItem, {"puotationItem.qiid": qiid}, function () {
-                com.focusPage('#list ul.item-list').remove();
-                queryPuotationItemByQid(puotationItem.qid);
-            });
-        });
-    }
 
     function queryPuotationItemByQid(qid) {
-        com.post(api.production.queryPuotationItemByQid, {"puotation.qid": puotationItem.qid}, function (data) {
+        com.post(api.production.queryPuotationItemByQid, {"puotation.qid": qid}, function (data) {
             initList(data.puotationItems);
         }, function (e) {
             com.showAlert(com.error, e.errorMsg);
         }, false);
     }
 
-    puotationItem.btns.backBtn.click(function () {
-        com.switchPage(api.index.puotationIndex.url);
-    });
+    queryPuotationItemByQid(puotationItem.qid);
+
+
+    function delectpuotationItem(qiid){
+        com.showConfirm("是否确认删除", function(){
+            com.post(api.production.deletePuotationItem, {"puotationItem.qiid": qiid,"puotationItem.qid": puotationItem.qid}, function () {
+                com.focusPage('#li' + qiid).remove();
+                queryPuotationItemByQid(puotationItem.qid);
+            });
+        });
+    }
+
 
 });

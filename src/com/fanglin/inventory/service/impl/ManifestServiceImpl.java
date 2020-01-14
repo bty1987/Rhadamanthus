@@ -22,8 +22,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
+import com.fanglin.construction.dao.ConstructionAccessoryDao;
+import com.fanglin.construction.dao.ConstructionDao;
+import com.fanglin.construction.po.ConstructionAccessoryPO;
+import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.data.material.dao.GoodsDao;
+import com.fanglin.data.po.GoodsPO;
 import com.fanglin.inventory.dao.AccessoriesDao;
 import com.fanglin.inventory.dao.AccessoriesItemDao;
 import com.fanglin.inventory.dao.AccessoriesManifestDao;
@@ -52,7 +58,9 @@ import com.fanglin.inventory.vo.PurchaseVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.sales.dao.SalesItemDao;
 import com.fanglin.sales.dao.SalesManifestDao;
+import com.fanglin.sales.po.SalesItemPO;
 import com.fanglin.sales.po.SalesManifestPO;
 import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.vo.SalesVO;
@@ -106,6 +114,18 @@ public class ManifestServiceImpl implements ManifestService {
 
 	@Autowired
 	private SalesManifestDao salesManifestDao;
+	
+	@Autowired
+	private SalesItemDao salesItemDao;
+	
+	@Autowired
+	private GoodsDao goodsDao;
+	
+	@Autowired
+	private ConstructionDao constructionDao;
+	
+	@Autowired
+	private ConstructionAccessoryDao constructionAccessoryDao;
 
 	@Override
 	public void pageManifest(Paging paging, List<Filter> filters, int company) {
@@ -255,7 +275,7 @@ public class ManifestServiceImpl implements ManifestService {
 		manifestDao.save(manifestPO);
 
 		ManifestItemPO manifestItemPO;
-
+		
 		for (ManifestItemVO manifestItemVO : manifestItemVOs) {
 
 			long gid = manifestItemVO.getGoods().getGid();
@@ -264,12 +284,27 @@ public class ManifestServiceImpl implements ManifestService {
 
 			int outprice = manifestItemVO.getOutprice();
 			int num = manifestItemVO.getNum();
-
+			
 			StorehousePO outStorehousePO = goodsStorehouseStockService.outstorehouse(gid, cid, fid, manifestItemVO.getOutstorehouse().getShid(), num);
-
+			
 			manifestItemPO = new ManifestItemPO().init(manifestPO.getMid(), manifestItemVO.getSiid(), null, null, null, gid, cid, fid, ManifestPO.TYPE_XG_INT, 0, outprice, num, null, outStorehousePO);
 
 			manifestItemDao.save(manifestItemPO);
+			
+			if(manifestItemVO.getSiid() == null)
+				continue;
+			
+			SalesItemPO salesItemPO = salesItemDao.get(manifestItemVO.getSiid());
+			
+			if(salesItemPO == null)
+				continue;
+			
+			if(manifestItemPO.getSurplus() < num){
+				throw new FLException(260008, "出货数量不符");
+			}else{
+				salesItemPO.setXgnum(Arith.sub(salesItemPO.getXgnum(), num));
+				salesItemDao.update(salesItemPO);
+			}
 		}
 
 		if (sids != null && sids.size() != 0) {
@@ -397,6 +432,13 @@ public class ManifestServiceImpl implements ManifestService {
 			} else {
 				manifestItemPO.setSurplus(Arith.sub(manifestItemPO.getSurplus(), num));
 			}
+			
+			SalesItemPO salesItemPO = salesItemDao.get(manifestItemPO.getSiid());
+			
+			if(salesItemPO != null){
+				salesItemPO.setXgnum(Arith.add(salesItemPO.getXgnum(), num));
+				salesItemDao.update(salesItemPO);
+			}
 
 			StorehousePO inStorehousePO = goodsStorehouseStockService.instorehouse(gid, cid, fid, manifestItemPO.getOutstorehouse().getShid(), num);
 
@@ -514,7 +556,7 @@ public class ManifestServiceImpl implements ManifestService {
 			}
 
 			StorehousePO inStorehousePO = goodsStorehouseStockService.instorehouse(gid, cid, fid, purchaseItemVO.getStorehouse().getShid(), purchaseItemVO.getNum());
-
+			
 			manifestItemPO = new ManifestItemPO().init(manifestPO.getMid(), purchaseItemPO.getSiid(), purchaseItemPO.getPiid(), null, null, gid, cid, fid, ManifestPO.TYPE_PU_INT, inprice, 0, num, inStorehousePO, null);
 
 			manifestItemDao.save(manifestItemPO);
@@ -582,12 +624,20 @@ public class ManifestServiceImpl implements ManifestService {
 
 		for (AccessoriesItemVO accessoriesItemVO : accessoriesItemVOs) {
 
+			AccessoriesItemPO accessoriesItemPO = accessoriesItemDao.get(accessoriesItemVO.getAiid());
+			
 			long gid = accessoriesItemVO.getGoods().getGid();
 			long cid = accessoriesItemVO.getColor().getCid();
 			long fid = accessoriesItemVO.getFormat().getFid();
 
 			int outprice = accessoriesItemVO.getOutprice();
 			int num = accessoriesItemVO.getNum();
+			
+			if (accessoriesItemPO.getSurplus() < num) {
+				throw new FLException(260051, "辅料项数量不足");
+			} else {
+				accessoriesItemPO.setSurplus(Arith.sub(accessoriesItemPO.getSurplus(), num));
+			}
 
 			StorehousePO outStorehousePO = goodsStorehouseStockService.outstorehouse(gid, cid, fid, accessoriesItemVO.getStorehouse().getShid(), num);
 
@@ -604,6 +654,7 @@ public class ManifestServiceImpl implements ManifestService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int addManifestForAR(List<AccessoriesVO> accessoriesVOs, List<AccessoriesItemVO> accessoriesItemVOs, String userId, int company) throws FLException {
 
 		CompanyPO companyPO = companyDao.get(company);
@@ -620,7 +671,7 @@ public class ManifestServiceImpl implements ManifestService {
 
 		List<AccessoriesPO> accessoriesPOs = new ArrayList<AccessoriesPO>();
 
-		AccessoriesPO accessoriesPO;
+		AccessoriesPO accessoriesPO = new AccessoriesPO();
 		for (AccessoriesVO accessoriesVO : accessoriesVOs) {
 
 			accessoriesPO = accessoriesDao.get(accessoriesVO.getAid());
@@ -631,6 +682,8 @@ public class ManifestServiceImpl implements ManifestService {
 
 			accessoriesPOs.add(accessoriesPO);
 		}
+		
+		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(accessoriesPO.getOrderId());
 
 		String currentDate = DateUtil.current("yyMMdd").toString();
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_AS_INT, currentDate, company);
@@ -642,28 +695,46 @@ public class ManifestServiceImpl implements ManifestService {
 
 		ManifestItemPO manifestItemPO;
 
+		long totals = 0;
 		for (AccessoriesItemVO accessoriesItemVO : accessoriesItemVOs) {
 			
-			AccessoriesItemPO accessoriesItemPO = accessoriesItemDao.get(accessoriesItemVO.getAiid());
+			manifestItemPO = manifestItemDao.get(accessoriesItemVO.getMiid());
 			
 			long gid = accessoriesItemVO.getGoods().getGid();
 			long cid = accessoriesItemVO.getColor().getCid();
 			long fid = accessoriesItemVO.getFormat().getFid();
+			
+			GoodsPO goodsPO = goodsDao.get(gid);
 
 			int num = accessoriesItemVO.getNum();
 			
-			if (accessoriesItemPO.getSurplus() < num) {
+			if (manifestItemPO.getSurplus() < num) {
 				throw new FLException(260051, "辅料项数量不足");
 			} else {
-				accessoriesItemPO.setSurplus(Arith.sub(accessoriesItemPO.getSurplus(), num));
+				manifestItemPO.setSurplus(Arith.sub(manifestItemPO.getSurplus(), num));
 			}
-
+			
+			ConstructionAccessoryPO constructionAccessoryPO = constructionAccessoryDao.queryConstructionAccessory(constructionPO.getCid(),gid);
+			
+			if (constructionAccessoryPO != null) {
+				long total = Arith.mul(goodsPO.getSelling(), num);
+				
+				constructionAccessoryPO.setTotal(Arith.sub(constructionAccessoryPO.getTotal(), total));
+				constructionAccessoryPO.setNum(Arith.sub(constructionAccessoryPO.getNum(), num));
+				constructionAccessoryDao.update(constructionAccessoryPO);
+			}
+			
+			totals += Arith.mul(goodsPO.getSelling(), num);
+			
 			StorehousePO inStorehousePO = goodsStorehouseStockService.instorehouse(gid, cid, fid, accessoriesItemVO.getStorehouse().getShid(), num);
 
 			manifestItemPO = new ManifestItemPO().init(manifestPO.getMid(), null, null, accessoriesItemVO.getAiid(), null, gid, cid, fid, ManifestPO.TYPE_AR_INT, 0, 0, num, inStorehousePO, null);
 
 			manifestItemDao.save(manifestItemPO);
 		}
+		
+		constructionPO.setAccessoryTotal(Arith.sub(constructionPO.getAccessoryTotal(), totals));
+		constructionDao.update(constructionPO);
 
 		for (AccessoriesPO accessories : accessoriesPOs) {
 			accessoriesManifestDao.save(new AccessoriesManifestPO(accessories, manifestPO));

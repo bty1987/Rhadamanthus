@@ -382,7 +382,8 @@ var ExtensionDetail = (function(){
                     "subtype" :$this.attr("data-quotationType") ,
                     "eid" : "",//增减项中报价项的id
                     "quoteItemId" : $this.val(),//id(隐藏属性)
-                    "discount" : discount
+                    "discount" : discount,
+                    "quotationitemid" : $this.attr("data-quotationItemId"),
                 };
                 var $item = painter.createQuote( _index + i + 1, _quotval);
                 $item.appendTo($arwrap.find('.fl-quo-list'));
@@ -416,8 +417,9 @@ var ExtensionDetail = (function(){
                 if(com.validate()){
                     return false;
                 }
-                
-                var oldmum = that.$nowLine.find('num .cell-wrap').text() ? that.$nowLine.find('num .cell-wrap').text() : '0';
+
+                var oldmum = that.$nowLine.find('.cell.num .cell-wrap').text() ? that.$nowLine.find('.cell.num .cell-wrap').text() : '0';
+
                 that.$nowLine.find('.cell.num .cell-wrap').text(num);
                 $line = that.$nowLine.next('.fl-quo-item');
                 var _type = that.$nowLine.find('.typedict').attr('data-type');
@@ -443,14 +445,16 @@ var ExtensionDetail = (function(){
                 if(_type == 1||_type == 3){
                     args["extensionItem.content"] = that.$nowLine.prop('title');// , 报价项说明 , 自定义类型报价项需要传递 ;
                 }
+                if (_type == 4) {
+                    args["extensionItem.quoteItemId"] = that.$nowLine.find('input[name="eiid"]').attr("data-quotationItemId")
+                }
 
                 arCalculator.changeQuoFee(that.$nowLine);
                 arCalculator.calculateArFees();
 
                 com.clearValidator();
-                
+
                 var _params = $.extend(true, {},extensionDetail.basicParams, args);
-                
                 com.post(api.quotation.updateExtensionItem, _params, function(res){
                     
                     that.$nowLine.find('input[name="eiid"]').val(res.extensionItem.eiid);
@@ -464,6 +468,11 @@ var ExtensionDetail = (function(){
                 }, function(res){
                     com.showAlert(com.error, res.errorMsg);
                     that.$nowLine.find('.cell.num .cell-wrap').text(oldmum);
+
+                    arCalculator.changeQuoFee(that.$nowLine);
+                    arCalculator.calculateArFees();
+
+                    that.hideInputWrap();
                 }, false);
                 return;
             }
@@ -548,14 +557,14 @@ var ExtensionDetail = (function(){
         createQuoteModalItem : function(v, idname){
             var $liLine = $('<li></li>').addClass('item-blue clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').css({"margin-bottom" : 0});
-            
             var $label = $('<label></label>');
             var $input = $('<input>').attr({
                 "type" : "checkbox",
                 "name" : "modalQuots",
                 "class" : "ace ace-checkbox-2",
                 "data-discount-flag" : v.discount,
-                "data-quotationType" : v.quotationTypeId
+                "data-quotationType" : v.quotationTypeId,
+                "data-quotationItemId" : v.quotationItemId
                 //功能区
             }).val(v[idname]);
             var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.itemName);
@@ -633,7 +642,8 @@ var ExtensionDetail = (function(){
             $input = $('<input>').attr({
                 "type" : "hidden",
                 "name" : "eiid",
-                "data-quoteItemId" : qv.quoteItemId
+                "data-quoteItemId" : qv.quoteItemId,
+                "data-quotationItemId": qv.quotationitemid
             }).val(qv.eiid);
             
             $btnDel = $('<a></a>').attr({"href": "javascript:void(0)"}).css({"padding-left": "5px"}).append('<i class="bigger-125 icon-remove pink"></i>').mouseenter(function(){

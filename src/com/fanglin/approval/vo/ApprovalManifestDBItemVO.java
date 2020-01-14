@@ -2,9 +2,9 @@ package com.fanglin.approval.vo;
 
 import java.io.Serializable;
 
-import com.fanglin.inventory.vo.ColorVO;
-import com.fanglin.inventory.vo.FormatVO;
-import com.fanglin.inventory.vo.GoodsVO;
+import com.fanglin.data.material.vo.ColorVO;
+import com.fanglin.data.material.vo.FormatVO;
+import com.fanglin.data.material.vo.GoodsVO;
 import com.fanglin.inventory.vo.StorehouseVO;
 
 public class ApprovalManifestDBItemVO implements Serializable {

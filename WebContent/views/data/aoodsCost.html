@@ -1,0 +1,50 @@
+<div class="row">
+    <div id="condListCost" class="fl_search clearfix"></div> <!-- 查询条件-->
+    <div id="resultListCost" class="clearfix tab-pane active"></div> <!--查询结果-->
+    <div id="pagenationCost" class="fl-page-wrap clearfix" style="text-align: center;max-width: 680px;"></div><!--分页-->
+</div>
+
+
+<div style="margin-top: -6.7%">
+    <a class="btn btn-minier btn-success pull-left" id="addBtn" style="margin-top: -2px; margin-left: 4px;">
+        <i class="icon-plus bigger-110"></i>
+        <span>添加</span>
+    </a>
+    <a class="btn btn-minier btn-primary pull-left" id="backBtn" style="margin-top: -2px; margin-left: 4px;">
+        <i class="icon-mail-forward "></i>
+        <span>返回</span>
+    </a>
+</div>
+
+<div id="addAoodsCost" class="page-content" style="display: none;">
+    <form class="form-horizontal" novalidate="novalidate" id="formAoodsCost">
+
+        <div class="form-group">
+            <label class="col-md-3 control-label no-padding-right orange">工程成本</label>
+            <div class="col-md-9">
+                <select class="col-xs-10 col-sm-7 v_required" id="constructionCost" name="constructionCost"
+                        data-required="1"
+                        data-toggle="popover" data-trigger='manual'></select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-3 control-label no-padding-right orange">数量限制</label>
+            <div class="col-md-9">
+                <input type="text" class="col-xs-10 col-sm-7 v_required" id="numLimit" name="numLimit" data-required="1"
+                       data-toggle="popover" data-trigger='manual'>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-3 col-md-9">
+                <a class="btn btn-success btn-sm" id="confirmBtn">确定</a>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/data/aoodsCost.js']);
+</script>

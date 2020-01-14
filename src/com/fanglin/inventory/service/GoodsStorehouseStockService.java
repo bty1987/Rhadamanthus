@@ -29,9 +29,9 @@ public interface GoodsStorehouseStockService {
 
 	public int makeGoodsStorehouseStock(GoodsStorehouseStockVO goodsStorehouseStockVO) throws FLException;
 
-	public void surplusGoodsStorehouseStock(GoodsStorehouseStockVO goodsStorehouseStockVO, String userId, int company) throws FLException;
+	public void plusGoodsStorehouseStock(GoodsStorehouseStockVO goodsStorehouseStockVO, String userId, int company) throws FLException;
 	              
-	public void lossesGoodsStorehouseStock(GoodsStorehouseStockVO goodsStorehouseStockVO, String userId, int company) throws FLException;
+	public void loseGoodsStorehouseStock(GoodsStorehouseStockVO goodsStorehouseStockVO, String userId, int company) throws FLException;
 
 	public int mergePackage(GoodsStorehouseStockVO goodsStorehouseStockVO, String userId, int company) throws FLException;
 

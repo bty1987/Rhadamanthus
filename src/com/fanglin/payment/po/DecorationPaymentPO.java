@@ -119,7 +119,7 @@ public class DecorationPaymentPO implements Serializable {
 		this.dpid = dpid;
 	}
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, name = "orderId", referencedColumnName = "orderId")
 	public DecorationPO getDecoration(){
 		return decoration;

@@ -10,7 +10,6 @@ jQuery(function($) {
 			checkvCheckbox: com.focusPage("#checkvCheckbox")
 		},
 		orderId: null,
-		bankNums: [],
 		checkvNums: [],
 		spid: null,
 		pid: null,
@@ -24,6 +23,7 @@ jQuery(function($) {
 		bank: [],
 		checkBank: [],
 		accounts: [],
+		posValues: {},
 
 		cashUtil: [],
 		bankUtil: [],
@@ -35,51 +35,40 @@ jQuery(function($) {
 		accountsInfo: {},
 
 		bankUtilForGrade: [],
-		checkBankUtilForGrade: []
+		checkBankUtilForGrade: [],
+
+		mno: null,
+		_posway: [],
+		pointofsalesType: 4
 	};
 
 	//隐藏触发
 	servicePayment.modals.baseModal.on('hide.bs.modal', function () {
 		servicePayment.bankUtilForGrade = [];
 		servicePayment.checkBankUtilForGrade = [];
+		com.focusPage("#serviceposDivGroup").html("");
+		com.focusPage("#servicebankDivGroup").html("");
+		com.focusPage("#bankCheckbox").removeAttr("disabled");
 		com.closeTip();
-	});
-
-	com.focusPage("#refundBankCard").on("click",function(e) {
-		com.focusPage("#refundCashInfoDiv").addClass("hide");
-
-		com.focusPage("#refundBankCardDiv").removeClass("hide");
-		com.focusPage("#refundBankName").addClass("v_required");
-		com.focusPage("#refundBankName").get(0).selectedIndex = 0;
-	});
-
-	com.focusPage("#refundCash").on("click",function(e) {
-		com.focusPage("#refundCashInfoDiv").removeClass("hide");
-
-		com.focusPage("#refundBankCardDiv").addClass("hide");
-		com.focusPage("#refundBankName").removeClass("v_required");
 	});
 
     com.focusPage("#baseItemModal :checkbox").on("change", function(){
         $(this).prop("checked") ? com.focusPage("[referCheckbox="+this.id+"]").show() : com.focusPage("[referCheckbox="+this.id+"]").hide()
-    });
+		if($(this).prop("checked") && this.id == "bankCheckbox"){
+			com.focusPage("#servicebankDivGroup").html("");
+			paymentUtils.addBankPosUtil("#servicebankDivGroup", servicePayment.bankUtilForGrade, servicePayment);
+		}
+	});
 
 	paymentUtils.getReceiptType(servicePayment);
 
 	com.selectTypeahead("servicecashInfo", servicePayment.cashUtil, "key", "value", null);
 
-	com.focusPage("#servicebankAdd").click(function(){
-		var num = $(this).attr("num");
-		var nextNum = parseInt(num)+1;
-		$(this).attr("num", nextNum);
-
-		var maxNum = $(this).attr("maxnum");
-		maxNum = parseInt(maxNum)+1;
-		$(this).attr("maxnum", maxNum);
-		paymentUtils.addBankUtil(maxNum, "bankDiv", "#servicebankDivGroup", servicePayment.bankNums, servicePayment.bankUtilForGrade, servicePayment.htmlName, 'baseItemModal');
-
-		return false;
-	});
+	com.post(api.ds.payment, {}, function(res){
+		$.each(res.posway, function (i, v) {
+			servicePayment._posway.push(v);
+		});
+	}, null, false);
 
 	com.focusPage("#servicecheckvAdd").click(function(){
 		var num = $(this).attr("num");
@@ -89,7 +78,7 @@ jQuery(function($) {
 		var maxNum = $(this).attr("maxnum");
 		maxNum = parseInt(maxNum)+1;
 		$(this).attr("maxnum", maxNum);
-		paymentUtils.addBankUtil(maxNum, "checkvDiv", "#servicecheckvDivGroup", servicePayment.checkvNums, servicePayment.checkBankUtilForGrade, servicePayment.htmlName, 'baseItemModal');
+		paymentUtils.addBankUtil(maxNum, "checkvDiv", "#servicecheckvDivGroup", servicePayment.checkvNums, servicePayment.checkBankUtilForGrade, servicePayment);
 
 		return false;
 	});
@@ -153,6 +142,7 @@ jQuery(function($) {
 			$liLine.append($h3).append($ulProperty);
 
 			$btnCollect.click(function(){
+				getServicePosInfo(v.decoration.orderId);
 				servicePayment.modals.baseModal.attr("ChargeType","1");
 				paymentUtils.serviceDialogPayment(v, servicePayment);
 			});
@@ -162,6 +152,7 @@ jQuery(function($) {
                     com.showAlert(com.error, "当前服务费已交满,不能重复交款!");
                     return false;
                 }
+				getServicePosInfo(v.decoration.orderId);
 				servicePayment.modals.baseModal.attr("ChargeType","2");
 				paymentUtils.serviceDialogPayment(v, servicePayment);
 			});
@@ -245,8 +236,8 @@ jQuery(function($) {
 			var styleArr = [];
 
 			v.serviceReceipt.cash != null && v.serviceReceipt.cash != "0" ? styleArr.push(["现金:", v.serviceReceipt.cash, "blue"]) : true;
-			v.serviceReceipt.bank != null && v.serviceReceipt.bank != "0" ? styleArr.push(["银行:", paymentUtils.splitBankInfo(v.serviceReceipt.bank, v.serviceReceipt.bankInfo, servicePayment.bankInfo), "blue"]) : true;
-			v.serviceReceipt.checkv != null && v.serviceReceipt.checkv != "0" ? styleArr.push(["转账:", paymentUtils.splitBankInfo(v.serviceReceipt.checkv, v.serviceReceipt.checkvBank, servicePayment.checkBankInfo), "blue"]) : true;
+			v.serviceReceipt.bank != null && v.serviceReceipt.bank != "0" ? styleArr.push(["刷卡:", paymentUtils.splitBankInfo(v.serviceReceipt.bank, v.serviceReceipt.bankInfo, servicePayment.bankInfo), "blue"]) : true;
+			v.serviceReceipt.checkv != null && v.serviceReceipt.checkv != "0" ? styleArr.push(["银行:", paymentUtils.splitBankInfo(v.serviceReceipt.checkv, v.serviceReceipt.checkvBank, servicePayment.checkBankInfo), "blue"]) : true;
 			v.serviceReceipt.installment != null && v.serviceReceipt.installment != "0" ? styleArr.push(["分期:", v.serviceReceipt.installment, "blue"]) : true;
 			v.serviceReceipt.accounts != null && v.serviceReceipt.accounts != "0" ? styleArr.push(["对公帐户:", v.serviceReceipt.accounts, "blue"]) : true;
 
@@ -285,6 +276,18 @@ jQuery(function($) {
 				servicePayment.modals.baseModal.attr("ChargeType","4");
 				servicePayment.spid = v.spid;
 				servicePayment.pid = v.pid;
+
+				com.post(api.payment.queryPointofsalesByPidAndRid, {"pointofsales.pid": v.decoration.orderId, "pointofsales.rid": v.serviceReceipt.srId}, function(res){
+					$.each(res.pointofsaleses, function(i, value){
+						if(value.status == 4) {
+							paymentUtils.addPos(value, servicePayment.htmlName);
+							com.focusPage("#bankCheckbox").prop("checked", true);
+							com.focusPage("#posDiv").prop("style", "display: block");
+							com.focusPage("#bankDiv").prop("style", "display: block");
+						}
+					});
+				});
+
 				paymentUtils.serviceDialogPayment(v, servicePayment);
 			});
 
@@ -345,8 +348,8 @@ jQuery(function($) {
 				 ['状态', 'status == "1" ? "已付款" : "已确认"'],
 				 ['备注', 'comment'],
 				 ['现金', 'serviceReceipt.cash'],
-				 ['银行', ['serviceReceipt.bank', 'serviceReceipt.bankInfo']],
-				 ['转账', ['serviceReceipt.checkv', 'serviceReceipt.checkvBank']],
+				 ['刷卡', ['serviceReceipt.bank', 'serviceReceipt.bankInfo']],
+				 ['银行', ['serviceReceipt.checkv', 'serviceReceipt.checkvBank']],
 				 ['分期', ['serviceReceipt.installment', 'serviceReceipt.installBank']],
 				 ['对公', ['serviceReceipt.accounts', 'serviceReceipt.accountsBank']]
 				 ],
@@ -385,5 +388,20 @@ jQuery(function($) {
 			 });
 		 });
 	 });
+
+	//获取销售点信息
+	function getServicePosInfo(orderId){
+		com.post(api.payment.queryPointofsalesByPidAndRid, {"pointofsales.pid": orderId}, function(res){
+			$.each(res.pointofsaleses, function(i, value){
+				if(value.status == 0 || value.status == 1) {
+					paymentUtils.addPos(value, servicePayment.htmlName);
+					com.focusPage("#bankCheckbox").prop("checked", true);
+					com.focusPage("#posDiv").prop("style", "display: block");
+					com.focusPage("#bankDiv").prop("style", "display: block");
+				}
+			});
+			res.pointofsaleses.length > 0 ? paymentUtils.addBankPosUtil("#servicebankDivGroup", servicePayment.bankUtilForGrade, servicePayment) : "";
+		});
+	}
 });
 

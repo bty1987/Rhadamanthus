@@ -317,6 +317,7 @@
         jses += '<script src="js/com/condition.js?version=' + versionCode + '"><\/script>';
         jses += '<script src="js/com/searcher.js?version=' + versionCode + '"><\/script>';
         jses += '<script src="js/com/exporter.js?version=' + versionCode + '"><\/script>';
+        jses += '<script src="js/com/printer.js?version=' + versionCode + '"><\/script>';
         jses += '<script src="js/index.js?version=' + versionCode + '"><\/script>';
 
         if(!parent.window.isPC && !parent.window.isEncryption){
@@ -339,6 +340,7 @@
             win.evalNWBin(null, 'js/com/exporter.bin');
             win.evalNWBin(null, 'js/index.bin');
             win.evalNWBin(null, 'js/com/nw.bin');
+            win.evalNWBin(null, 'js/com/printer.bin');
         }
 
         //$(function(){

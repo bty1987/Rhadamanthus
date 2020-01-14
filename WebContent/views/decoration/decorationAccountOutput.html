@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	
+	<script src="../../assets/altogether/js/jquery-2.0.3.min.js"></script>
+	<script src="../../assets/ace/js/bootstrap.min.js"></script>
+	<script src="../../assets/ace/js/ace.js"></script>
+	
+	<script src="../../js/decoration/decorationAccountOutput.js"></script>
+	
+	<style type="text/css">
+		.PageNext {
+			page-break-after: always;
+		}
+		
+		table tr td {
+			border: 1px solid #b3b3b3;
+		}
+		
+		td {
+			height: 25px;
+			padding-left: 10px;
+		}
+		
+		.tdHead {
+            height: 35px;
+		}
+	</style>
+
+</head>
+<body>
+
+	<div id="manifestPrint">
+		<div align="center">
+			<p>
+				<b><font size="5">决算打印</font> </b>
+			</p>
+		</div>
+		<table style="width: 100%; border-collapse:collapse;">
+			<tbody>
+				<tr>
+					<td colspan="1">签单日期</td>
+					<td colspan="1" id="contractTime"></td>
+					<td colspan="1">参与活动</td>
+					<td colspan="1" id="decorationActivity"></td>
+					<td colspan="1">监理</td>
+					<td colspan="1" id="supervisor"></td>
+					<td colspan="1">面积</td>
+					<td colspan="1" id="buildArea"></td>
+				</tr>
+				<tr>
+					<td colspan="1">装修单号</td>
+					<td colspan="1" id="orderId"></td>
+					<td colspan="1">楼盘地址</td>
+					<td colspan="1" id="orderAddr"></td>
+					<td colspan="1">设计师</td>
+					<td colspan="1" id="designer"></td>
+					<td colspan="1">工程验收日期</td>
+					<td colspan="1" id="drawTime"></td>
+				</tr>
+				<tr>
+					<td colspan="1">客户姓名</td>
+					<td colspan="1" id="customerName"></td>
+					<td colspan="1">客户电话</td>
+					<td colspan="1" id="customerPhone"></td>
+					<td colspan="1">设计部门</td>
+					<td colspan="1" id="designDept"></td>
+					<td colspan="2"></td>
+				</tr>
+			</tbody>
+		</table>
+		<table style="width: 100%; border-collapse:collapse;">
+			<tbody>
+
+				<tr>
+					<td colspan="12" class="tdHead">基础报价</td>
+				</tr>
+				<tr>
+					<td colspan="3">折前总价</td>
+					<td colspan="3">折前直接费</td>
+					<td colspan="3">管理费</td>
+					<td colspan="3">折扣</td>
+				</tr>
+				<tr>
+					<td colspan="3" id="foldFrontTotal"></td>
+					<td colspan="3" id="foldFrontFee"></td>
+					<td colspan="3" id="managePrice"></td>
+					<td colspan="3" id="managePrice"></td>
+				</tr>
+
+				<tr>
+					<td colspan="12" class="tdHead">合同</td>
+				</tr>
+				<tr>
+					<td colspan="2">合同额</td>
+					<td colspan="2">优惠券</td>
+					<td colspan="2">服务费</td>
+					<td colspan="2">已收服务费</td>
+					<td colspan="2">合同实收</td>
+					<td colspan="2">主材配比</td>
+				</tr>
+				<tr>
+					<td colspan="2" id="signPrice"></td>
+					<td colspan="2" id="coupon"></td>
+					<td colspan="2" id="servicePrice"></td>
+					<td colspan="2" id="servicePaidup"></td>
+					<td colspan="2" id="signFactPrice"></td>
+					<td colspan="2" id="mm"></td>
+				</tr>
+
+				<tr>
+					<td colspan="12" class="tdHead">主材</td>
+				</tr>
+				<tr>
+					<td colspan="3">配比总额</td>
+					<td colspan="3">总金额</td>
+					<td colspan="3">优惠券</td>
+					<td colspan="3">实收额</td>
+				</tr>
+				<tr>
+					<td colspan="3" id="materialRatio"></td>
+					<td colspan="3" id="materialTotal"></td>
+					<td colspan="3" id="materialCoupon"></td>
+					<td colspan="3" id="materialFactPrice"></td>
+				</tr>
+
+				<tr>
+					<td colspan="12" class="tdHead">增减</td>
+				</tr>
+				<tr>
+					<td colspan="3">增项已收</td>
+					<td colspan="3" id="addDone"></td>
+					<td colspan="3">减项已退</td>
+					<td colspan="3" id="minusDone"></td>
+				</tr>
+
+				<tr>
+					<td colspan="12">预付款</td>
+				</tr>
+				<tr>
+					<td colspan="3">合同预付款</td>
+					<td colspan="3" id="contractAdvance"></td>
+					<td colspan="3">主材预付款</td>
+					<td colspan="3" id="materialAdvance"></td>
+				</tr>
+
+				<tr>
+					<td colspan="12" class="tdHead">决算</td>
+				</tr>
+				<tr>
+					<td colspan="3">决算折前总额</td>
+					<td colspan="3">决算直接费</td>
+					<td colspan="3">决算管理费</td>
+					<td colspan="3">决算实花配比</td>
+				</tr>
+				<tr>
+					<td colspan="3" id="direct">0</td>
+					<td colspan="3" id="beforeTotal">0</td>
+					<td colspan="3" id="management">0</td>
+					<td colspan="3" id="flowerRatio">0</td>
+				</tr>
+				<tr>
+					<td colspan="3">决算主材额</td>
+					<td colspan="3">决算合同额</td>
+					<td colspan="3">决算服务费</td>
+					<td colspan="3">差额</td>
+				</tr>
+				<tr>
+					<td colspan="3" id="materialAccount">0</td>
+					<td colspan="3" id="accountForehead">0</td>
+					<td colspan="3" id="accountServicePrice">0</td>
+					<td colspan="3" id="balanceSum">0</td>
+				</tr>
+				<tr>
+					<td colspan="3">决算类型</td>
+					<td colspan="3" id="accountType"></td>
+					<td colspan="3">增减是否计入配比</td>
+					<td colspan="3" id="matching"></td>
+				</tr>
+				<tr>
+					<td colspan="12" class="tdHead">优惠</td>
+				</tr>
+				<tr>
+					<td colspan="2">优惠券</td>
+					<td colspan="2" id="preferences"></td>
+					<td colspan="2">满减</td>
+					<td colspan="2" id="fulldel"></td>
+					<td colspan="2">返现</td>
+					<td colspan="2" id="cashback"></td>
+				</tr>
+
+			</tbody>
+		</table>
+		<table style="width: 100%; border-collapse:collapse;">
+			<tbody>
+
+				<tr>
+					<td colspan="1" style="width: 15%;">开户行省份</td>
+					<td colspan="7"></td>
+				</tr>
+				<tr>
+					<td colspan="1">开户行城市</td>
+					<td colspan="7"></td>
+				</tr>
+				<tr>
+					<td colspan="1">开户行网点</td>
+					<td colspan="7"></td>
+				</tr>
+				<tr>
+					<td colspan="1">持卡人姓名</td>
+					<td colspan="7"></td>
+				</tr>
+				<tr>
+					<td colspan="1">持卡人电话</td>
+					<td colspan="7"><br>
+					</td>
+				</tr>
+				<tr>
+                    <td colspan="1">银行卡号</td>
+                    <td colspan="7"><br>
+                    </td>
+                </tr>
+
+				<tr>
+					<td colspan="1" rowspan="3" style="height: 80px;">备注</td>
+					<td colspan="7">1.该决算需在工程总验收后，并且主材确认无退货</td>
+				</tr>
+				<tr>
+					<td colspan="7">2.若决算差额低于10元，则以0元进行处理</td>
+				</tr>
+				<tr>
+					<td colspan="7">3.决算差额不含合同预付款及主材预付款金额</td>
+				</tr>
+			</tbody>
+		</table>
+		<table style="width: 100%; border-collapse:collapse;">
+			<tbody>
+				<tr>
+					<td colspan="1" style="width: 15%;">主材管家签字</td>
+					<td colspan="3"></td>
+					<td colspan="1" style="width: 15%;">日期</td>
+					<td colspan="3"></td>
+				</tr>
+
+				<tr>
+					<td colspan="1" style="width: 15%;">设计师签字</td>
+					<td colspan="3"></td>
+					<td colspan="1" style="width: 15%;">设计经理签字</td>
+					<td colspan="3"></td>
+				</tr>
+
+				<tr>
+					<td colspan="1" style="width: 15%;">客户签字</td>
+					<td colspan="3"></td>
+					<td colspan="1" style="width: 15%;">日期</td>
+					<td colspan="3"></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+</body>
+</html>

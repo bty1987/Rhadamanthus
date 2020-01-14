@@ -19,7 +19,6 @@ jQuery(function($) {
 		editFlg: false,
 		paymentType: "增项款",
 		orderId: null,
-		bankNums: [],
 		checkvNums: [],
 		paymentStatusArray: ["未付款", "已付款", "已确认", "审批中", "历史"],
 		htmlName: "",
@@ -35,6 +34,7 @@ jQuery(function($) {
 		checkBank: [],
 		accounts: [],
 		couponType: [],
+		posValues: {},
 
 		cashUtil: [],
 		bankUtil: [],
@@ -48,7 +48,11 @@ jQuery(function($) {
 
 		bankUtilForGrade: [],
 		checkBankUtilForGrade: [],
-		addReduceItemType: []
+		addReduceItemType: [],
+
+		mno: null,
+		_posway: [],
+		pointofsalesType: 1
 	};
 
 	//隐藏触发
@@ -56,6 +60,8 @@ jQuery(function($) {
 		decorationPayment.bankUtilForGrade = [];
 		decorationPayment.checkBankUtilForGrade = [];
 		com.focusPage("#couponUl").html("");
+		com.focusPage("#posDivGroup").html("");
+		com.focusPage("#bankDivGroup").html("");
 		com.closeTip();
 	});
 
@@ -68,31 +74,28 @@ jQuery(function($) {
 			decorationPayment.addReduceItemType[v.key] = v.value;
 		});
 	});
-	
+
+	com.post(api.ds.payment, {}, function(res){
+		$.each(res.posway, function (i, v) {
+			decorationPayment._posway.push(v);
+		});
+	});
+
 	com.focusPage("#collectBtn").bindClick(function(){
 		paymentUtils.payment(decorationPayment, decorationPaymentPostData, searcher, hsearcher);
 	});
 
 	com.focusPage("#saveRefundBtn").bindClick(refund);
 
-	com.focusPage("#refundBankCard").on("click",function(e) {
-		com.focusPage("#refundCashInfoDiv").addClass("hide");
-		com.focusPage("#refundBankCardDiv").removeClass("hide");
-		com.focusPage("#refundBank").addClass("v_required");
-		com.focusPage("#refundBank").get(0).selectedIndex = 0;
-	});
-
-	com.focusPage("#refundCash").on("click",function(e) {
-		com.focusPage("#refundCashInfoDiv").removeClass("hide");
-		com.focusPage("#refundBankCardDiv").addClass("hide");
-		com.focusPage("#refundBank").removeClass("v_required");
-	});
-
 	com.focusPage("#baseItemModal :checkbox").on("change", function(){
-		$(this).prop("checked") ? com.focusPage("[referCheckbox="+this.id+"]").show() : com.focusPage("[referCheckbox="+this.id+"]").hide()
+		$(this).prop("checked") ? com.focusPage("[referCheckbox="+this.id+"]").show() : com.focusPage("[referCheckbox="+this.id+"]").hide();
+		if($(this).prop("checked") && this.id == "bankCheckbox"){
+			com.focusPage("#bankDivGroup").html("");
+			paymentUtils.addBankPosUtil("#bankDivGroup", decorationPayment.bankUtilForGrade, decorationPayment);
+		}
 	});
 
-	com.focusPage("#advanceType").bindData([{"key":"1", "value":"合同"}, {"key":"2", "value":"工程"}], 'key', 'value');
+	com.focusPage("#advanceType").bindData([{"key":"1", "value":"合同"}], 'key', 'value');
 
 	//绑定收款单位的基础信息
 	paymentUtils.getReceiptType(decorationPayment);
@@ -113,20 +116,7 @@ jQuery(function($) {
 		com.focusPage("#couponType").val('');
 	});
 
-	//刷卡方式
-	com.focusPage("#bankAdd").click(function(){
-		var num = $(this).attr("num");
-		var nextNum = parseInt(num)+1;
-		$(this).attr("num", nextNum);
-
-		var maxNum = $(this).attr("maxnum");
-		maxNum = parseInt(maxNum)+1;
-		$(this).attr("maxnum", maxNum);
-		paymentUtils.addBankUtil(maxNum, "bankDiv", "#bankDivGroup", decorationPayment.bankNums, decorationPayment.bankUtilForGrade, decorationPayment.htmlName, 'baseItemModal');
-		return false;
-	});
-
-	//转账方式
+	//转账方式(银行)
 	com.focusPage("#checkvAdd").click(function(){
 		var num = $(this).attr("num");
 		var nextNum = parseInt(num)+1;
@@ -135,7 +125,7 @@ jQuery(function($) {
 		var maxNum = $(this).attr("maxnum");
 		maxNum = parseInt(maxNum)+1;
 		$(this).attr("maxnum", maxNum);
-		paymentUtils.addBankUtil(maxNum, "checkvDiv", "#checkvDivGroup", decorationPayment.checkvNums, decorationPayment.checkBankUtilForGrade, decorationPayment.htmlName, 'baseItemModal');
+		paymentUtils.addBankUtil(maxNum, "checkvDiv", "#checkvDivGroup", decorationPayment.checkvNums, decorationPayment.checkBankUtilForGrade, decorationPayment);
 		return false;
 	});
 
@@ -203,6 +193,19 @@ jQuery(function($) {
 			//退款 增减项款 收款点击显示模态框
             $btnCollect.click(function(){
 				decorationPayment.typeUpdate = 1;
+				if(v.oneType == 0){
+					com.post(api.payment.queryPointofsalesByPidAndRid, {"pointofsales.pid": v.decoration.orderId}, function(res){
+						$.each(res.pointofsaleses, function(i, value){
+							if(value.status == 0 || value.status == 1) {
+								paymentUtils.addPos(value, decorationPayment.htmlName);
+								com.focusPage("#bankCheckbox").prop("checked", true);
+								com.focusPage("#posDiv").prop("style", "display: block");
+								com.focusPage("#bankDiv").prop("style", "display: block");
+							}
+						});
+						res.pointofsaleses.length > 0 ? paymentUtils.addBankPosUtil("#bankDivGroup", decorationPayment.bankUtilForGrade, decorationPayment) : "";
+					});
+				}
             	dialogPayment(v);
             });
 
@@ -281,8 +284,8 @@ jQuery(function($) {
             var styleArr = [];
 			
 			v.cash != null && v.cash != "0" ? styleArr.push(["现金:", v.cash, "blue"]) : true;
-			v.bank != null && v.bank != "0" ? styleArr.push(["银行:", paymentUtils.splitBankInfo(v.bank, v.bankInfo, decorationPayment.bankInfo), "blue"]) : true;
-			v.checkv != null && v.checkv != "0" ? styleArr.push(["转账:", paymentUtils.splitBankInfo(v.checkv, v.checkvBank, decorationPayment.checkBankInfo), "blue"]) : true;
+			v.bank != null && v.bank != "0" ? styleArr.push(["刷卡:", paymentUtils.splitBankInfo(v.bank, v.bankInfo, decorationPayment.bankInfo), "blue"]) : true;
+			v.checkv != null && v.checkv != "0" ? styleArr.push(["银行:", paymentUtils.splitBankInfo(v.checkv, v.checkvBank, decorationPayment.checkBankInfo), "blue"]) : true;
 			v.installment != null && v.installment != "0" ? styleArr.push(["分期:", v.installment, "blue"]) : true;
 			v.accounts != null && v.accounts != "0" ? styleArr.push(["对公帐户:", v.accounts, "blue"]) : true;
 			v.advance != null && v.advance != "0" ? styleArr.push(["预付款:", v.advance, "blue"]) : true;
@@ -332,8 +335,18 @@ jQuery(function($) {
 				var updateReturnParams = paymentUtils.dialogPaymentUpdate(v, decorationPayment);
 				decorationPaymentPostData.paymentInfo = updateReturnParams[0];
 				decorationPaymentPostData.orderId = updateReturnParams[1];
-				decorationPaymentPostData.customerId = updateReturnParams[2];
 				decorationPayment.couponUpdate = updateReturnParams[3];
+
+				com.post(api.payment.queryPointofsalesByPidAndRid, {"pointofsales.pid": v.decoration.orderId, "pointofsales.rid": v.drId}, function(res){
+					$.each(res.pointofsaleses, function(i, value){
+						if(value.status == 4) {
+							paymentUtils.addPos(value, decorationPayment.htmlName);
+							com.focusPage("#bankCheckbox").prop("checked", true);
+							com.focusPage("#posDiv").prop("style", "display: block");
+							com.focusPage("#bankDiv").prop("style", "display: block");
+						}
+					});
+				});
 			});
             
             return $liLine;
@@ -405,11 +418,14 @@ jQuery(function($) {
 
 		if(payment.oneType == 1){// 退款
 			paymentUtils.initBaseModal(payment, decorationPayment);
+
+			//退款时不能使用刷卡方式 init中会重置状态 这个必须放到initBaseModal方法后
+			com.focusPage("#bankCheckbox").attr("disabled","disabled");
+
 			com.focusPage("#myModalPayLabel").text("退款信息");
 			com.focusPage("#referMoney").val(payment.referMoney).attr("disabled", "disabled");
 			com.focusPage('#advanceCheckbox').parents('.inline').css('cssText','display:none!important');
 			decorationPaymentPostData.orderId = payment.decoration.orderId;
-			decorationPaymentPostData.customerId = payment.decoration.customer.cid;
 			com.focusPage("#collectBtn").addClass("hide");
 			com.focusPage("#saveRefundBtn").removeClass("hide");
 		}else{
@@ -418,17 +434,17 @@ jQuery(function($) {
 			com.focusPage("#referMoney").val(payment.referMoney).attr("disabled", "disabled");
 			com.focusPage('#advanceCheckbox').parents('.inline').css('cssText','display:inline-block!important');
 			decorationPaymentPostData.orderId = payment.decoration.orderId;
-			decorationPaymentPostData.customerId = payment.decoration.customer.cid;
 			com.focusPage("#collectBtn").removeClass("hide");
 			com.focusPage("#saveRefundBtn").addClass("hide");
 		}
 
-        com.post(api.payment.queryAdvancePaymentByCustomerId, {"customer.cid": decorationPaymentPostData.customerId},function(res){
+        com.post(api.payment.queryAdvancePaymentByOrderId, {"advancePayment.decoration.orderId": decorationPaymentPostData.orderId},function(res){
 			com.focusPage("#balanceAdvance").val(res.balanceAdvance).attr("readonly", "readonly");
-			com.focusPage("#projectAdvance").val(res.projectAdvance).attr("readonly", "readonly");
         });
 
 		decorationPayment.editFlg =  false;
+
+		decorationPayment.mno = payment.decoration.orderId;
 	}
 
 	//增减项详细信息
@@ -504,7 +520,7 @@ jQuery(function($) {
 		var orderId = "";
 		var couponCount = 0;
 
-		var returnParams = paymentUtils.getBankInfoParams(decorationPayment.paymentModelNameData, "", decorationPayment.bankNums, decorationPayment.checkvNums, couponCount, decorationPayment.typeUpdate, 0);
+		var returnParams = paymentUtils.getBankInfoParams(decorationPayment.paymentModelNameData, "", decorationPayment.checkvNums, couponCount, decorationPayment.typeUpdate, 0);
 
 		var realPayment = returnParams[0];
 		var args = returnParams[1];
@@ -576,8 +592,8 @@ jQuery(function($) {
 					['状态', 'paymentStatus'],
 					['备注', 'comment'],
 					['现金', 'cash'],
-					['银行', ['bank', 'bankInfo']],
-					['转账', ['checkv', 'checkvBank']],
+					['刷卡', ['bank', 'bankInfo']],
+					['银行', ['checkv', 'checkvBank']],
 					['分期', ['installment', 'installmentBank']],
 					['对公', ['accounts', 'accountsBank']],
 					['预付款', 'advance'],

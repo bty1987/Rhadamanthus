@@ -35,10 +35,15 @@ public class ProductionPlanItemServiceImpl implements ProductionPlanItemService 
 		List<ProductionPlanItemPO> productionPlanItemPOs = productionPlanItemDao.pageProductionPlanItemByPpid(paging, filters, ppid);
 		List<ProductionPlanItemVO> productionPlanItemVOs = new ArrayList<ProductionPlanItemVO>();
 
+		ProductionPlanItemVO productionPlanItemVO;
+		
 		for (ProductionPlanItemPO productionPlanItemPO : productionPlanItemPOs) {
-			ProductionPlanItemVO productionPlanItemVO = new ProductionPlanItemVO(new ProductionPlanVO());
+			
+			productionPlanItemVO = new ProductionPlanItemVO(new ProductionPlanVO());
+			
 			BeanUtil.copyProperties(productionPlanItemPO, productionPlanItemVO, Arrays.asList("productionPlan"));
-			BeanUtil.copyProperties(productionPlanItemPO.getProductionPlan(), productionPlanItemVO.getProductionPlan());
+			BeanUtil.copyProperties(productionPlanItemPO.getProductionPlan(), productionPlanItemVO.getProductionPlan(), Arrays.asList("creater", "production"));
+			
 			productionPlanItemVOs.add(productionPlanItemVO);
 		}
 		

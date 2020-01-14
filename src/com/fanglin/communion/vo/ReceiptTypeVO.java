@@ -21,6 +21,8 @@ public class ReceiptTypeVO implements java.io.Serializable {
 	private String kiname;
 
 	private String assistant;
+	
+	private String value;
 
 	public Integer getRtId() {
 		return this.rtId;
@@ -92,6 +94,14 @@ public class ReceiptTypeVO implements java.io.Serializable {
 
 	public void setAssistant(String assistant) {
 		this.assistant = assistant;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
 	}
 
 }

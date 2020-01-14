@@ -47,7 +47,14 @@
 	],	"backVisitTypeData" :[
 		{"key":"0", "value":"普通" },
 		{"key":"1", "value":"重要"}
-	],
+	],  "isAccessory" :[
+	    {"key":"0", "value":"开启" },
+	    {"key":"1", "value":"锁定"}
+    ], "isCheckup" :[
+	    {"key":"0", "value":"验证" },
+	    {"key":"1", "value":"通过"}
+    ],
+
     "errorCode": 0,
     "errorMsg": null
 }

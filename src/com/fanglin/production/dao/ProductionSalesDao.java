@@ -9,4 +9,6 @@ public interface ProductionSalesDao extends Dao<ProductionSalesPO>{
 	
 	public List<ProductionSalesPO> queryProductionSalesByPid(long pid);
 
+	public int countProductionSalesByPidASid(Long pid, Long sid);
+
 }

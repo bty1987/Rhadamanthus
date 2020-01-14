@@ -19,12 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.data.material.vo.GoodsVO;
+import com.fanglin.data.po.GoodsPO;
 import com.fanglin.inventory.dao.ManifestTemplateItemDao;
-import com.fanglin.inventory.po.GoodsPO;
 import com.fanglin.inventory.po.ManifestTemplateItemPO;
 import com.fanglin.inventory.po.ManifestTemplatePO;
 import com.fanglin.inventory.service.ManifestTemplateItemService;
-import com.fanglin.inventory.vo.GoodsVO;
 import com.fanglin.inventory.vo.ManifestTemplateItemVO;
 import com.fanglin.inventory.vo.ManifestTemplateVO;
 import com.fanglin.utils.BeanUtil;

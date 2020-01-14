@@ -1,5 +1,9 @@
 package com.fanglin.inventory.vo;
 
+import com.fanglin.data.material.vo.ColorVO;
+import com.fanglin.data.material.vo.FormatVO;
+import com.fanglin.data.material.vo.GoodsVO;
+
 public class ManifestItemVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 5004663304502267708L;
@@ -7,6 +11,8 @@ public class ManifestItemVO implements java.io.Serializable {
 	private Long miid;
 
 	private Long mid;
+	
+	private Long aiid;
 
 	private Long siid;
 
@@ -63,6 +69,14 @@ public class ManifestItemVO implements java.io.Serializable {
 
 	public void setMid(Long mid) {
 		this.mid = mid;
+	}
+
+	public Long getAiid() {
+		return aiid;
+	}
+
+	public void setAiid(Long aiid) {
+		this.aiid = aiid;
 	}
 
 	public Long getSiid() {

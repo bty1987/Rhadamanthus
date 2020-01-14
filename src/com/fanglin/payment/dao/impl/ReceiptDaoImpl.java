@@ -12,7 +12,6 @@ import com.fanglin.payment.dao.ReceiptDao;
 import com.fanglin.payment.po.ReceiptPO;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
-import com.fanglin.utils.SystemConfig;
 
 @Repository("receiptDao")
 public class ReceiptDaoImpl extends DaoImpl<ReceiptPO> implements ReceiptDao {
@@ -24,9 +23,7 @@ public class ReceiptDaoImpl extends DaoImpl<ReceiptPO> implements ReceiptDao {
 	@Override
 	public List<ReceiptPO> pageReceipt(Paging paging, List<Filter> filters, int company) {
 		
-		if (SystemConfig.getInt("multicompany", 0) != 0) {
-			filters.add(new Filter("company", String.valueOf(company), "eq"));
-		}
+		filters.add(new Filter("company", String.valueOf(company), "eq"));
 		
 		PagingQuery<ReceiptPO> query = pagingQuery(paging, ReceiptPO.class);
 		

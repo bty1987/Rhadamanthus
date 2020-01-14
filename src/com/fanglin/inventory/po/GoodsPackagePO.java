@@ -13,6 +13,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.data.po.ColorPO;
+import com.fanglin.data.po.FormatPO;
+import com.fanglin.data.po.GoodsPO;
+
 @Entity
 @Table(name = "goodspackage", catalog = "inventory")
 public class GoodsPackagePO implements Serializable {

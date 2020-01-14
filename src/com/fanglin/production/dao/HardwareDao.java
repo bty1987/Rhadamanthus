@@ -9,6 +9,9 @@ import com.fanglin.utils.Paging;
 
 public interface HardwareDao extends Dao<HardwarePO> {
 
-	public List<HardwarePO> pageHardware(Paging paging, List<Filter> filters, long pid);
+	public List<HardwarePO> pageHardware(Paging paging, List<Filter> filters, int company);
+	
+	public List<HardwarePO> queryHardwareByPid(long pid);
 
+	public int countHardware(Long pid, Short status);;
 }

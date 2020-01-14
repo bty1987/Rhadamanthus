@@ -54,6 +54,8 @@ public class SalesPO implements Serializable {
 
 	public static final short BALANCESTATUS_SETTLEMENT_SHORT = 3;
 
+	public static final short BALANCESTATUS_FINISH_SHORT = 4;
+
 	public static final short DESPOSITPAYSTATUS_INIT_SHORT = -1;
 
 	public static final short DESPOSITPAYSTATUS_UNPAY_SHORT = 0;
@@ -69,7 +71,7 @@ public class SalesPO implements Serializable {
 	public static final short FULLPAYSTATUS_PAYED_SHORT = 1;
 
 	public static final short FULLPAYSTATUS_CONFIRM_SHORT = 2;
-	
+
 	public static final short FULLPAYSTATUS_APPROVAL_INT = 3;
 
 	public static final String COLUMN_NO_STR = "no";
@@ -79,7 +81,7 @@ public class SalesPO implements Serializable {
 	public static final String COLUMN_COMPANY_STR = "company";
 
 	public static final String COLUMN_DOMPANY_STR = "dompany";
-	
+
 	public static final String COLUMN_POMPANY_STR = "pompany";
 
 	public static final String COLUMN_ORDERID_STR = "orderId";
@@ -99,7 +101,7 @@ public class SalesPO implements Serializable {
 	public static final String COLUMN_FULLPAYTIME_RANGE_STR = "fullpayTimeRange";
 
 	public static final String COLUMN_SID_STR = "sid";
-	
+
 	public static final String COLUMN_BID_STR = "bid";
 
 	public static final String COLUMN_DEPT_STR = "dept.name";
@@ -112,11 +114,15 @@ public class SalesPO implements Serializable {
 
 	public static final String COLUMN_STATUS_STR = "status";
 
+	public static final String COLUMN_OCUID_STR = "supplier.uid";
+
 	private long sid;
 
 	private String no;
 
 	private String orderId;
+
+	private UserPO supplier;
 
 	private HousePO house;
 
@@ -125,9 +131,9 @@ public class SalesPO implements Serializable {
 	private int company;
 
 	private int dompany;
-	
+
 	private int pompany;
-	
+
 	private String grade;
 
 	private UserPO salesman;
@@ -169,7 +175,7 @@ public class SalesPO implements Serializable {
 	private short balanceStatus;
 
 	private long total;
-	
+
 	private long amount;
 
 	private int maling;
@@ -193,7 +199,7 @@ public class SalesPO implements Serializable {
 		this.sid = sid;
 	}
 
-	public SalesPO(HousePO house, CustomerPO customer, UserPO salesman, DepartmentPO dept, DepartmentPO region, UserPO guider, DepartmentPO guideDept, UserPO instorer) {
+	public SalesPO(HousePO house, CustomerPO customer, UserPO salesman, DepartmentPO dept, DepartmentPO region, UserPO guider, DepartmentPO guideDept, UserPO instorer, UserPO supplier) {
 		super();
 		this.house = house;
 		this.customer = customer;
@@ -203,6 +209,7 @@ public class SalesPO implements Serializable {
 		this.guider = guider;
 		this.guideDept = guideDept;
 		this.instorer = instorer;
+		this.supplier = supplier;
 	}
 
 	@Id
@@ -232,6 +239,16 @@ public class SalesPO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ocuid", referencedColumnName = "uid")
+	public UserPO getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(UserPO supplier) {
+		this.supplier = supplier;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -271,7 +288,7 @@ public class SalesPO implements Serializable {
 	public void setDompany(int dompany) {
 		this.dompany = dompany;
 	}
-	
+
 	@Column(name = "pompany")
 	public int getPompany() {
 		return pompany;
@@ -475,7 +492,7 @@ public class SalesPO implements Serializable {
 	public void setTotal(long total) {
 		this.total = total;
 	}
-	
+
 	@Column(name = "amount")
 	public long getAmount() {
 		return amount;
@@ -541,7 +558,7 @@ public class SalesPO implements Serializable {
 
 	public void ptv(SalesVO salesVO) {
 
-		BeanUtil.copyProperties(this, salesVO, Arrays.asList("salesman", "dept", "region", "guider", "instorer", "guideDept", "house", "customer"));
+		BeanUtil.copyProperties(this, salesVO, Arrays.asList("salesman", "dept", "region", "guider", "instorer", "guideDept", "house", "customer", "supplier"));
 		BeanUtil.copyProperties(this.getSalesman(), salesVO.getSalesman(), Arrays.asList("dept", "duty"));
 		BeanUtil.copyProperties(this.getDept(), salesVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
 		BeanUtil.copyProperties(this.getRegion(), salesVO.getRegion(), Arrays.asList("fatherDept", "type", "manager"));

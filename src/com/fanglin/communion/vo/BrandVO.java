@@ -1,5 +1,7 @@
 package com.fanglin.communion.vo;
 
+import com.fanglin.personel.vo.UserBaseVO;
+
 public class BrandVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -7415918438727720875L;
@@ -25,6 +27,17 @@ public class BrandVO implements java.io.Serializable {
 	private String kino;
 
 	private String kiname;
+	
+	private UserBaseVO supplier;
+	
+	public BrandVO(){
+		super();
+	}
+
+	public BrandVO(UserBaseVO supplier) {
+		super();
+		this.supplier = supplier;
+	}
 
 	public Long getBid() {
 		return bid;
@@ -112,6 +125,14 @@ public class BrandVO implements java.io.Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	public UserBaseVO getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(UserBaseVO supplier) {
+		this.supplier = supplier;
 	}
 
 }

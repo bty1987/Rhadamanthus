@@ -21,6 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.information.dao.VactivityDao;
+import com.fanglin.information.dao.VpaymentDao;
+import com.fanglin.information.dao.VprizeDao;
+import com.fanglin.information.dao.VticketDao;
 import com.fanglin.information.po.VactivityPO;
 import com.fanglin.information.service.VactivityService;
 import com.fanglin.information.vo.VactivityVO;
@@ -33,6 +36,15 @@ public class VactivityServiceImpl implements VactivityService {
 	
 	@Autowired
 	private VactivityDao vactivityDao;
+	
+	@Autowired
+	private VprizeDao vprizeDao;
+	
+	@Autowired
+	private VpaymentDao vpaymentDao;
+	
+	@Autowired
+	private VticketDao vticketDao;
 
 	@Override
 	public void pageVactivity(Paging paging, List<Filter> filters) {
@@ -91,6 +103,12 @@ public class VactivityServiceImpl implements VactivityService {
 		vactivityPO.setStatus(vactivityVO.getStatus());
 		
 		vactivityDao.update(vactivityPO);
+		
+		vpaymentDao.updateVpaymentStatusForFailure(vactivityPO.getVaid());
+		
+		vticketDao.updateVticketStatusForFailure(vactivityPO.getVaid());
+		
+		vprizeDao.updateVprizeStatusForFailure(vactivityPO.getVaid());
 	}
 
 }

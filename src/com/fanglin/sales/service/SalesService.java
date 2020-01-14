@@ -27,9 +27,13 @@ public interface SalesService {
 	
 	public void pageSalesForBalanceByPompany(Paging paging,List<Filter> filter,String userId,int pompany);
 	
+	public void pageSalesForSupplier(Paging paging,List<Filter> filter,String userId,int company);
+	
 	public SalesVO querySalesBySid(SalesVO salesVO) throws FLException;
 	
 	public SalesVO querySalesByNo(SalesVO salesVO) throws FLException;
+	
+	public int checkSales(SalesVO salesVO) throws FLException;
 	
 	public int addSales(SalesVO salesVO,List<SalesItemVO> salesItemVOs,int company) throws FLException;
 	
@@ -42,5 +46,9 @@ public interface SalesService {
 	public int updateSalesForActivity(SalesVO salesVO) throws FLException;
 	
 	public int updateSalesForBelong(SalesVO salesVO) throws FLException;
+	
+	public int terminalSales(SalesVO salesVO) throws FLException;
+	
+	public int finishSales(SalesVO salesVO) throws FLException;
 	
 }

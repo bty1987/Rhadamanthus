@@ -101,22 +101,6 @@
                 <div class="modal-body">
                     <form class="form-horizontal">
 
-                        <h4 class="oid">合同信息</h4>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right">工期:</label>
-                            <span class="col-xs-10 col-sm-6" style="margin-top: 5px;" id="working"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right">开工时间:</label>
-                            <span class="col-xs-10 col-sm-6" style="margin-top: 5px;" id="start"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right">完工时间:</label>
-                            <span class="col-xs-10 col-sm-6" style="margin-top: 5px" id="end"></span>
-                        </div>
-                        <hr>
                         <h4 class="oid">客户信息</h4>
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right">姓名:</label>
@@ -126,15 +110,22 @@
                             <label class="col-sm-3 control-label no-padding-right">身份证信息:</label>
                             <span class="col-xs-10 col-sm-6" style="margin-top: 5px;" id="identity"></span>
                         </div>
+                        
                         <hr>
                         <h4 class="oid">工程信息</h4>
+                        
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">工期</label>
+                            <div class="col-sm-9">
+                                <input type="text" id='timeLimit' class='col-xs-10 col-sm-6'></input>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right">铲大白</label>
                             <div class="col-md-9">
                                 <select id='ishovel' class='col-xs-10 col-sm-6'></select>
                             </div>
                         </div>
-
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right">钥匙</label>
                             <div class="col-sm-9">
@@ -145,6 +136,24 @@
                             <label class="col-sm-3 control-label no-padding-right">开工仪式</label>
                             <div class="col-sm-9">
                                 <select id='isCeremony' class='col-xs-10 col-sm-6'></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">预计放线时间</label>
+                            <div class="col-sm-9">
+                                <input type="text" id='drawlineTime' class='col-xs-10 col-sm-6'></input>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">预计完工时间</label>
+                            <div class="col-sm-9">
+                                <input type="text" id='finishTime' class='col-xs-10 col-sm-6'></input>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">预计领钥匙时间</label>
+                            <div class="col-sm-9">
+                                <input type="text" id='keyTime' class='col-xs-10 col-sm-6'></input>
                             </div>
                         </div>
                         <div class="form-group">
@@ -160,17 +169,14 @@
                             <input class="hide" id="dischargeLineOrderId" type="text"/>
                             <label for="applayTime" class="col-sm-3 control-label no-padding-right">放线时间</label>
                             <div class="col-sm-9">
-                                <input class="col-xs-10 col-sm-5 v_required" id="applayTime" type="text"
-                                       data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'
-                                       readonly/>
+                                <input class="col-xs-10 col-sm-5 v_required" id="applayTime" type="text" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual' readonly/>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="applayDes" class="col-sm-3 control-label no-padding-right">备注</label>
                             <div class="col-sm-9">
-                                <textarea id="applayDes" class="col-xs-10 col-sm-5 v_name" rows="3"
-                                          data-toggle="popover" data-trigger='manual' maxlength="100"></textarea>
+                                <textarea id="applayDes" class="col-xs-10 col-sm-5 v_name" rows="3" data-toggle="popover" data-trigger='manual' maxlength="100"></textarea>
                             </div>
                         </div>
                     </form>

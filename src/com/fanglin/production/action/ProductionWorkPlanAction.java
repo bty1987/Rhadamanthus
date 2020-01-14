@@ -40,6 +40,12 @@ public class ProductionWorkPlanAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "finishProductionWorkPlan", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String finishProductionWorkPlan() throws FLException {
+		productionworkplanservice.finishProductionWorkPlan(productionWorkPlan);
+		return SUCCESS;
+	}
+	
 	@Action(value = "deleteProductionWorkPlan", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteProductionWorkPlan() throws FLException {
 		productionworkplanservice.deleteProductionWorkPlan(productionWorkPlan);

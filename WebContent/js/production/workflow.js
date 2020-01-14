@@ -94,6 +94,7 @@ $(function(){
             $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
             $btnEdit.click(function () {
+
                 workflow.editFlg = false;
 
                 workflow.items.wfid = v.wfid;
@@ -171,7 +172,7 @@ $(function(){
         var status = btnType == 0 ? "启用" : "禁用";
 
         if(statusFlag == btnType){
-            com.showAlert(com.info, "已"+status+"无需重复当前操作");
+            com.showAlert(com.warning, "已"+status+"无需重复当前操作");
             return false;
         }
 

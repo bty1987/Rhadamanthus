@@ -16,6 +16,7 @@ import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.quotation.dao.ExtensionDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
+import com.fanglin.quotation.dao.SelectionItemDao;
 import com.fanglin.quotation.po.ExtensionPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.service.ExtensionService;
@@ -39,6 +40,9 @@ public class ExtensionServiceImpl implements ExtensionService {
 
 	@Autowired
 	private QuotationDao quotationDao;
+
+	@Autowired
+	private SelectionItemDao selectionItemDao;
 
 	@Override
 	public void pageExtensionByOrderId(Paging paging, List<Filter> filters, ExtensionVO extensionVO) {
@@ -136,6 +140,10 @@ public class ExtensionServiceImpl implements ExtensionService {
 		}
 
 		checkExtension(extensionPO);
+
+		if (selectionItemDao.countSelectionItem(extensionPO.getOrderId(), extensionPO.getEid()) > 0) {
+			throw new FLException(200037, "存在关联选材项");
+		}
 
 		extensionItemDao.deleteExtensionItem(extensionVO.getEid());
 		extensionDao.delete(extensionPO);

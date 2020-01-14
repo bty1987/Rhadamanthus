@@ -15,67 +15,68 @@ import com.fanglin.utils.Paging;
 
 @Repository("salaryDao")
 public class SalaryDaoImpl extends DaoImpl<SalaryPO> implements SalaryDao {
-	
-	public SalaryDaoImpl(){
+
+	public SalaryDaoImpl() {
 		super(SalaryPO.class);
 	}
 
 	@Override
-	public List<SalaryPO> pageSalaryPO(Paging paging, List<Filter> filters) {
-		
+	public List<SalaryPO> pageSalary(Paging paging, List<Filter> filters) {
+
 		PagingQuery<SalaryPO> query = pagingQuery(paging, SalaryPO.class);
 
 		queryFilterExcuteForWorker(query, filters);
 
 		return query.list();
 	}
-	
+
 	private void queryFilterExcuteForWorker(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters != null) {
-			for (Filter filter : filters) {
+		if (filters == null)
+			return;
 
-				String filet = filter.getField();
-				String data = filter.getData();
-				String op = filter.getOp();
+		for (Filter filter : filters) {
 
-				if ("userName".equals(filet)) {
-					query.alias("user", "user");
-					query.add(query.getCriterion("user.userId", data, op));
-				}
+			String filet = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
 
-				if ("status".equals(filet)) {
-					query.add(query.getCriterion(SalaryPO.COLUMN_STATUS_STR, Short.parseShort(data), op));
-				}
+			if ("userName".equals(filet)) {
+				query.alias("user", "user");
+				query.add(query.getCriterion("user.userId", data, op));
+			}
 
-				if ("operateTime".equals(filter.getField())) {
+			if ("status".equals(filet)) {
+				query.add(query.getCriterion(SalaryPO.COLUMN_STATUS_STR, Short.parseShort(data), op));
+			}
 
-					String sTime = data.split("-")[0].replaceAll("/", "-")+ " 00:00:00";
-					String eTime = data.split("-")[1].replaceAll("/", "-")+ " 23:59:59";
+			if ("operateTime".equals(filter.getField())) {
 
-					Date sDate = DateUtil.parseDate(sTime,"yyyy-MM-dd HH:mm:ss");
-					Date eDate = DateUtil.parseDate(eTime,"yyyy-MM-dd HH:mm:ss");
+				String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
+				String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
 
-					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
+				Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
+				Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
 
-					query.add(query.getCriterion(SalaryPO.COLUMN_OPERATETIME_STR, eTimestamp, "le"));
-					query.add(query.getCriterion(SalaryPO.COLUMN_OPERATETIME_STR, sTimestamp, "ge"));
-				}
-				if ("createTime".equals(filter.getField())) {
+				Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
+				Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
 
-					String sTime = data.split("-")[0].replaceAll("/", "-")+ " 00:00:00";
-					String eTime = data.split("-")[1].replaceAll("/", "-")+ " 23:59:59";
+				query.add(query.getCriterion(SalaryPO.COLUMN_OPERATETIME_STR, eTimestamp, "le"));
+				query.add(query.getCriterion(SalaryPO.COLUMN_OPERATETIME_STR, sTimestamp, "ge"));
+			}
+			if ("createTime".equals(filter.getField())) {
 
-					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+				String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
+				String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
 
-					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
+				Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
+				Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
 
-					query.add(query.getCriterion(SalaryPO.COLUMN_CREATETIME_STR, eTimestamp, "le"));
-					query.add(query.getCriterion(SalaryPO.COLUMN_CREATETIME_STR, sTimestamp, "ge"));
-				}
+				Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
+				Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
+
+				query.add(query.getCriterion(SalaryPO.COLUMN_CREATETIME_STR, eTimestamp, "le"));
+				query.add(query.getCriterion(SalaryPO.COLUMN_CREATETIME_STR, sTimestamp, "ge"));
 			}
 		}
 	}

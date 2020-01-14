@@ -10,7 +10,7 @@ import com.fanglin.utils.Paging;
 public interface PuoteItemService {
 	public void pageQuoteItem(Paging paging,List<Filter> filter);
 	
-	public List<PuoteItemVO> queryQuoteItemByPinyin(PuoteItemVO quoteItemVO,int company);
+	public List<PuoteItemVO> queryQuoteItemByPinyin(PuoteItemVO quoteItem,int company);
 	
 	public int addQuoteItem(PuoteItemVO quoteItemVO,int company) throws FLException;
 	

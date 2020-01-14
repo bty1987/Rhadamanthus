@@ -57,13 +57,14 @@ public class ApproverServiceImpl implements ApproverService {
 
 			approverVOs.add(approverVO);
 		}
+
 		paging.setData(approverVOs);
 	}
 
 	@Override
-	public List<ApproverVO> queryApprovalUserByType(ApproverVO userApproveVO, int company) {
+	public List<ApproverVO> queryApproverByType(ApproverVO userApproveVO, int company) {
 
-		List<ApproverPO> approverPOs = approverDao.queryApprovalUserByType(userApproveVO.getType(), company);
+		List<ApproverPO> approverPOs = approverDao.queryApproverByType(userApproveVO.getType(), company);
 
 		List<ApproverVO> approverVOs = new ArrayList<ApproverVO>();
 
@@ -82,21 +83,22 @@ public class ApproverServiceImpl implements ApproverService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addApprover(ApproverVO approverVO) throws FLException {
+	public int addApprover(ApproverVO approverVO, int company) throws FLException {
 
-		List<ApproverPO> approvers = approverDao.queryApproverByUserId(approverVO.getUserBase().getUserId());
+		String userId = approverVO.getUserBase().getUserId();
 
-		for (ApproverPO approver : approvers) {
-			if (approver.getType() == approverVO.getType()) {
-				throw new FLException(230008, "审批人员已有该审批权限");
-			}
+		if (approverDao.queryApprovalByType(userId, approverVO.getType(), company) != null) {
+			throw new FLException(230008, "审批人员已有该审批权限");
 		}
 
+		UserPO approer = userDao.queryUserByUserId(approverVO.getUserBase().getUserId());
+
 		ApproverPO approverPO = new ApproverPO();
-		UserPO user = userDao.queryUserByUserId(approverVO.getUserBase().getUserId());
+
+		approverPO.setUser(approer);
 		approverPO.setType(approverVO.getType());
-		approverPO.setUser(user);
 		approverPO.setComment(approverVO.getComment());
+		approverPO.setCompany(company);
 
 		approverDao.save(approverPO);
 
@@ -110,7 +112,6 @@ public class ApproverServiceImpl implements ApproverService {
 		ApproverPO approverPO = approverDao.get(approver.getAid());
 
 		approverDao.delete(approverPO);
-
 	}
 
 }

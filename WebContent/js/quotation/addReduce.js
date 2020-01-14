@@ -55,7 +55,7 @@ jQuery(function($) {
 			
 			var propertyArr = [
 				["类别:", typeDict[v.type + ''], "grey"],
-				["创建时间时间:", v.createTime, "green"],
+				["创建时间:", v.createTime, "green"],
 				["非打折总额:", v.undisPrice, "blue"],
 				["打折总额:", v.disPrice, "blue"],
 				["总价:", v.total, "blue"],
@@ -159,7 +159,7 @@ jQuery(function($) {
 
 	function saveData(){
 
-		if(com.validate()) return false;
+		if(com.validate("addReduceModal")) return false;
 
 		var url;
 		var options = {

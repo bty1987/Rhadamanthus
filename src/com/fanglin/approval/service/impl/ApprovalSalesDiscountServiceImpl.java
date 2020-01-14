@@ -78,7 +78,7 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 
 		String content = String.format("装修单号:%s,销售单号:%s,应收金额:%.3f", salesPO.getOrderId(), salesPO.getNo(), Arith.div(approvalSalesDiscountVO.getReferMoney(), 1000.0));
 
-		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(sid), ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT, content, company);
+		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(sid), ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT, content, approvalVO.getComment(), company);
 
 		approvalDao.save(approvalPO);
 
@@ -96,7 +96,7 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int approvalForSalesDiscount(ApprovalPO approvalPO) throws FLException {
+	public int approveForSalesDiscount(ApprovalPO approvalPO) throws FLException {
 
 		ApprovalSalesDiscountPO approvalSalesDiscountPO = approvalSalesDiscountDao.queryApprovalSalesDiscountByAId(approvalPO.getAid());
 

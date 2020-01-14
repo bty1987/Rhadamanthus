@@ -83,9 +83,9 @@ jQuery(function ($) {
     })();
 
     var searcher = new Searcher();
-    searcher.init(['c_orderId', 'c_village', 'c_houseNumber', 'c_designer', 'c_schedule'], "CondList", api.construction.pageConstruction, function (list) {
-        displayFunc.init('ResultList', list);
-    }, "Pagenation", "customerServiceSeacherPostData");
+    searcher.init(['c_orderId', 'c_village', 'c_houseNumber', 'c_designer', 'c_schedule'], "customerServiceCondList", api.construction.pageConstruction, function (list) {
+        displayFunc.init('customerServiceResultList', list);
+    }, "customerServicePagenation", "customerServiceSeacherPostData", null, false, null, null,"customerServiceResultList");
 
     function viewCustomerServiceDetailIndex(orderId) {
         params.orderId = orderId;

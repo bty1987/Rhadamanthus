@@ -96,12 +96,12 @@ $(function () {
             var $btnView = $('<li></li>').append($('<a></a>').html('查看'));
             var $btnOut = $('<li></li>').append($('<a></a>').html('出货'));
             var $btnEdit = $('<li></li>').append($('<a></a>').html('修改'));
-            //var $btnReturn = $('<li></li>').append($('<a></a>').html('退回'));
+            var $btnReturn = $('<li></li>').append($('<a></a>').html('退货'));
             var $btnPrint = $('<li></li>').append($('<a></a>').html('打印'));
 
             v.status != 4 && ($btnUl.append($btnEdit));
             v.status == 0 && ($btnUl.append($btnOut));//初始：出货，修改
-            v.status == 1 && ($btnUl.append($btnView).append($btnOut).append($btnEdit).append($btnPrint));//出货：出货 修改 退回 打印
+            v.status == 1 && ($btnUl.append($btnView).append($btnOut).append($btnEdit).append($btnReturn).append($btnPrint));//出货：出货 修改 退回 打印
             v.status == 4 && ($btnUl.append($btnView));
             
             $btnGroup.append($btn).append($btnUl).appendTo($cellOption);
@@ -141,8 +141,15 @@ $(function () {
             	}
             	
             	params["accessories.aid"] = v.aid;
+                params["accessories.orderId"] = v.orderId;
 
                 com.popup4page('#layerPopUp', "views/manifest/accessories2edit.html", "辅料单 : " + v.no);
+            });
+
+            $btnReturn.click(function () {
+
+                params["accessories.aid"] = v.aid;
+                com.popup4page('#layerPopUp', "views/manifest/accessories4refund.html", "辅料单 : " + v.no);
             });
 
             $btnPrint.click(function(){

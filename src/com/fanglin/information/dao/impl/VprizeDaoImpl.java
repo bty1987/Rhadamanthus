@@ -45,6 +45,15 @@ public class VprizeDaoImpl extends DaoImpl<VprizePO> implements VprizeDao {
 		return session().createCriteria(VprizePO.class).add(Restrictions.eq("vaid", vaid)).list();
 	}
 	
+	@Override
+	public int updateVprizeStatusForFailure(long vaid) {
+		
+		String sql = "update information.vprize set status = :status where vaid = :vaid";
+		session().createSQLQuery(sql).setShort("status", VprizePO.STATUS_INVALID_INT).setLong("vaid", vaid).executeUpdate();
+		
+		return 0;
+	}
+	
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
 		
 		if(filters != null){

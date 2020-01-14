@@ -24,15 +24,15 @@ public class HardwareItemPO implements Serializable {
 
 	private String name;
 
-	private float num;
+	private int num;
 
-	private float unitprice;
+	private int unitprice;
 
 	private String measurementunit;
 
 	private String comment;
 
-	private float total;
+	private long total;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -64,20 +64,20 @@ public class HardwareItemPO implements Serializable {
 	}
 
 	@Column(name = "num")
-	public float getNum() {
+	public int getNum() {
 		return num;
 	}
 
-	public void setNum(float num) {
+	public void setNum(int num) {
 		this.num = num;
 	}
 
 	@Column(name = "unitprice")
-	public float getUnitprice() {
+	public int getUnitprice() {
 		return unitprice;
 	}
 
-	public void setUnitprice(float unitprice) {
+	public void setUnitprice(int unitprice) {
 		this.unitprice = unitprice;
 	}
 
@@ -100,11 +100,11 @@ public class HardwareItemPO implements Serializable {
 	}
 
 	@Column(name = "total")
-	public float getTotal() {
+	public long getTotal() {
 		return total;
 	}
 
-	public void setTotal(float total) {
+	public void setTotal(long total) {
 		this.total = total;
 	}
 

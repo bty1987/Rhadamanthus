@@ -20,17 +20,17 @@ public class OutsourceItemPO {
 
 	private String name;
 
-	private float height;
+	private int height;
 
-	private float width;
+	private int width;
 
-	private float thick;
+	private int thick;
 
 	private String modelling;
 
-	private float num;
+	private int num;
 
-	private float unitprice;
+	private int unitprice;
 
 	private long total;
 
@@ -70,29 +70,29 @@ public class OutsourceItemPO {
 	}
 
 	@Column(name = "height")
-	public float getHeight() {
+	public int getHeight() {
 		return height;
 	}
 
-	public void setHeight(float height) {
+	public void setHeight(int height) {
 		this.height = height;
 	}
 
 	@Column(name = "width")
-	public float getWidth() {
+	public int getWidth() {
 		return width;
 	}
 
-	public void setWidth(float width) {
+	public void setWidth(int width) {
 		this.width = width;
 	}
 
 	@Column(name = "thick")
-	public float getThick() {
+	public int getThick() {
 		return thick;
 	}
 
-	public void setThick(float thick) {
+	public void setThick(int thick) {
 		this.thick = thick;
 	}
 
@@ -106,20 +106,20 @@ public class OutsourceItemPO {
 	}
 
 	@Column(name = "num")
-	public float getNum() {
+	public int getNum() {
 		return num;
 	}
 
-	public void setNum(float num) {
+	public void setNum(int num) {
 		this.num = num;
 	}
 
 	@Column(name = "unitprice")
-	public float getUnitprice() {
+	public int getUnitprice() {
 		return unitprice;
 	}
 
-	public void setUnitprice(float unitprice) {
+	public void setUnitprice(int unitprice) {
 		this.unitprice = unitprice;
 	}
 

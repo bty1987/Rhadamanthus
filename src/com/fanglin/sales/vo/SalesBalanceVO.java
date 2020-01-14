@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
 public class SalesBalanceVO implements Serializable{
@@ -18,6 +19,12 @@ public class SalesBalanceVO implements Serializable{
 	private RefundsVO refunds;
 	
 	private UserBaseVO creater;
+	
+	private UserBaseVO salesman;
+	
+	private DepartmentVO dept;
+	
+	private DepartmentVO region;
 	
 	private Timestamp createTime;
 	
@@ -52,14 +59,18 @@ public class SalesBalanceVO implements Serializable{
 	}
 
 	public SalesBalanceVO(SalesVO sales, RefundsVO refunds, UserBaseVO creater,
-			UserBaseVO poster) {
+			UserBaseVO poster, UserBaseVO salesman, DepartmentVO dept,
+			DepartmentVO region) {
 		super();
 		this.sales = sales;
 		this.refunds = refunds;
 		this.creater = creater;
 		this.poster = poster;
+		this.salesman = salesman;
+		this.dept = dept;
+		this.region = region;
 	}
-
+	
 	public Long getSbid() {
 		return sbid;
 	}
@@ -92,6 +103,30 @@ public class SalesBalanceVO implements Serializable{
 		this.creater = creater;
 	}
 	
+	public UserBaseVO getSalesman() {
+		return salesman;
+	}
+
+	public void setSalesman(UserBaseVO salesman) {
+		this.salesman = salesman;
+	}
+
+	public DepartmentVO getDept() {
+		return dept;
+	}
+
+	public void setDept(DepartmentVO dept) {
+		this.dept = dept;
+	}
+
+	public DepartmentVO getRegion() {
+		return region;
+	}
+
+	public void setRegion(DepartmentVO region) {
+		this.region = region;
+	}
+
 	@JSON(format="yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;

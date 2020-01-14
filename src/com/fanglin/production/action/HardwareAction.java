@@ -34,14 +34,24 @@ public class HardwareAction extends BaseListAction{
 	
 	private HardwareVO hardware;
 	
+	private List<HardwareVO> hardwares;
+	
 	private HardwareItemVO hardwareItem;
 	
 	private List<HardwareItemVO> hardwareItems;
 	
 	@Action(value = "pageHardware", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageHardware(){
+	public String pageHardware() throws FLException{
 		
-		hardwareService.pageHardware(getPaging(), getFilters(), production);
+		hardwareService.pageHardware(getPaging(), getFilters(), queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryHardwareByPid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryHardwareByPid(){
+		
+		hardwares = hardwareService.queryHardwareByPid(hardware);
 		
 		return SUCCESS;
 	}
@@ -58,7 +68,7 @@ public class HardwareAction extends BaseListAction{
 	@Action(value = "addHardware", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addHardware() throws FLException{
 		
-		hardwareService.addHardware(hardware);
+		hardwareService.addHardware(hardware, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -78,11 +88,19 @@ public class HardwareAction extends BaseListAction{
 		
 		return SUCCESS;
 	}
-	
-	@Action(value = "updateHardwareForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateHardwareForStatus() throws FLException{
+			
+	@Action(value = "instoreHardware", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String instoreHardware() throws FLException{
+        
+		hardwareService.instoreHardware(hardware);
 		
-		hardwareService.updateHardwareForStatus(hardware);
+		return SUCCESS;
+	}
+	
+	@Action(value = "finishHardware", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String finishHardware() throws FLException{
+		
+		hardwareService.finishHardware(hardware,queryUserId());
 		
 		return SUCCESS;
 	}
@@ -117,6 +135,14 @@ public class HardwareAction extends BaseListAction{
 
 	public void setHardware(HardwareVO hardware) {
 		this.hardware = hardware;
+	}
+	
+	public List<HardwareVO> getHardwares() {
+		return hardwares;
+	}
+
+	public void setHardwares(List<HardwareVO> hardwares) {
+		this.hardwares = hardwares;
 	}
 
 	public HardwareItemVO getHardwareItem() {

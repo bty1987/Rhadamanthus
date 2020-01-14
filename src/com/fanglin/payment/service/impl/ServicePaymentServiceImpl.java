@@ -25,8 +25,10 @@ import com.fanglin.payment.dao.ServiceReceiptDao;
 import com.fanglin.payment.po.AdvancePaymentPO;
 import com.fanglin.payment.po.AdvanceReceiptPO;
 import com.fanglin.payment.po.PaymentPO;
+import com.fanglin.payment.po.PointofsalesPO;
 import com.fanglin.payment.po.ServicePaymentPO;
 import com.fanglin.payment.po.ServiceReceiptPO;
+import com.fanglin.payment.service.PointofsalesService;
 import com.fanglin.payment.service.ServicePaymentService;
 import com.fanglin.payment.vo.ServicePaymentVO;
 import com.fanglin.payment.vo.ServiceReceiptVO;
@@ -72,6 +74,9 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 	
 	@Autowired
 	private DecorationService decorationService;
+	
+	@Autowired
+	private PointofsalesService pointofsalesService;
 	
 	@Override
 	public void pageServicePaymentForCollect(Paging paging, List<Filter> filters, Integer company) {
@@ -165,7 +170,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int collectServicePayment(ServicePaymentVO servicePaymentVO, ServiceReceiptVO serviceReceiptVO, String cuid, Integer company) throws FLException {
+	public int collectServicePayment(ServicePaymentVO servicePaymentVO, ServiceReceiptVO serviceReceiptVO, List<Long> posids, String cuid, Integer company) throws FLException {
 		DecorationHolonomyPO  decorationHolonomy = decorationHolonomyDao.queryDecorationHolonomyByOrderId(servicePaymentVO.getDecoration().getOrderId());
 
 		if(decorationHolonomy == null){
@@ -215,18 +220,16 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		decorationHolonomy.setServicePaidup(Arith.add(servicePaymentPO.getServiceMoney(), decorationHolonomy.getServicePaidup()));
 		decorationHolonomyDao.update(decorationHolonomy);
 
-		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByCustomerId(decoration.getCustomer().getCid(),decoration.getCompany());
+		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByOrderId(decoration.getOrderId());
 		if(advancePaymentPO != null){
 			advancePaymentPO.setMaterialBalance(Arith.add(advancePaymentPO.getMaterialBalance(), servicePaymentPO.getAdvanceMoney()));
 			advancePaymentDao.update(advancePaymentPO);
 		}else{
-			advancePaymentPO = new AdvancePaymentPO(new CustomerPO());
-			BeanUtil.copyProperties(decoration.getCustomer(), advancePaymentPO.getCustomer());
+			advancePaymentPO = new AdvancePaymentPO(decoration);
 			advancePaymentPO.setBalance(0);
 			advancePaymentPO.setProjectBalance(0);
 			advancePaymentPO.setMaterialBalance(servicePaymentPO.getAdvanceMoney());
 			advancePaymentPO.setZhenglinBalance(0);
-			advancePaymentPO.setCompany(decoration.getCompany());
 			advancePaymentDao.save(advancePaymentPO);
 		}
 
@@ -251,6 +254,11 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		servicePaymentPO.setPid(new Long(payment.getPid()).intValue());
 		servicePaymentDao.update(servicePaymentPO);
 		
+		//更新销售点信息
+		if(posids != null && posids.size() > 0){
+			pointofsalesService.updatePointofsales(posids, servicePaymentPO.getServiceReceipt().getSrId(), PointofsalesPO.STATUS_USED_INT, PointofsalesPO.TYPE_SERVICE_INT);
+		}
+		
 		decorationService.sendMessage(servicePaymentPO.getDecoration().getOrderId(), "装修单", String.format("服务款交款金额%.3f元", Arith.div(money, 1000.0)));
 
 		return 0;
@@ -258,7 +266,7 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int collectServicePaymentForService(ServicePaymentVO servicePaymentVO, ServiceReceiptVO serviceReceiptVO, String cuid, Integer company) throws FLException {
+	public int collectServicePaymentForService(ServicePaymentVO servicePaymentVO, ServiceReceiptVO serviceReceiptVO, List<Long> posids, String cuid, Integer company) throws FLException {
 
 		DecorationHolonomyPO  decorationHolonomy = decorationHolonomyDao.queryDecorationHolonomyByOrderId(servicePaymentVO.getDecoration().getOrderId());
 
@@ -289,6 +297,11 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 
 		decorationHolonomy.setServicePaidup(Arith.add(servicePaymentPO.getServiceMoney(), decorationHolonomy.getServicePaidup()));
 		decorationHolonomyDao.update(decorationHolonomy);
+		
+		//更新销售点信息
+		if(posids != null && posids.size() > 0){
+			pointofsalesService.updatePointofsales(posids, servicePaymentPO.getServiceReceipt().getSrId(), PointofsalesPO.STATUS_USED_INT, PointofsalesPO.TYPE_SERVICE_INT);
+		}
 		
 		decorationService.sendMessage(servicePaymentPO.getDecoration().getOrderId(), "装修单", String.format("服务款交款金额%.3f元", Arith.div(servicePaymentPO.getServiceMoney(), 1000.0)));
 

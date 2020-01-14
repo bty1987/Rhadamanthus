@@ -1,5 +1,7 @@
 package com.fanglin.inventory.vo;
 
+import com.fanglin.data.material.vo.GoodsVO;
+
 
 public class ManifestTemplateItemVO implements java.io.Serializable {
 

@@ -79,6 +79,10 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 
 		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT, orderId);
 
+		if (approvalPO != null) {
+			throw new FLException(240004, "正在审批中,不能提交新审批");
+		}
+
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
 		List<Short> statuses = Arrays.asList(DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT);
@@ -87,8 +91,8 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 			throw new FLException(140003, "装修单已签约");
 		}
 
-		if (approvalPO != null) {
-			throw new FLException(240004, "正在审批中,不能提交新审批");
+		if (decorationActivityDao.countDecorationActivity(orderId, DecorationActivityPO.STATUS_LOCK_INT) > 0) {
+			throw new FLException(140061, "已参加活动");
 		}
 
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
@@ -96,7 +100,7 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 
 		String content = String.format("装修单号:%s,参与活动:%s", approvalDecorationActivityVO.getOrderId(), approvalDecorationActivityVO.getActivityName());
 
-		approvalPO = new ApprovalPO().init(sender, receiver, orderId, ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT, content, company);
+		approvalPO = new ApprovalPO().init(sender, receiver, orderId, ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT, content, approvalVO.getComment(), company);
 
 		approvalDao.save(approvalPO);
 
@@ -121,7 +125,7 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int approvalForDecorationActivity(ApprovalPO approvalPO) throws FLException {
+	public int approveForDecorationActivity(ApprovalPO approvalPO) throws FLException {
 
 		ApprovalDecorationActivityPO approvalDecorationActivityPO = approvalDecorationActivityDao.queryApprovalDecorationActivityByAId(approvalPO.getAid());
 

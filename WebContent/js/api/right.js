@@ -32,4 +32,7 @@ $.extend(api, {right: {
     queryDecorationFunctionRightByName: {url: "queryDecorationFunctionRightByName.do"},
     updateDecorationFunctionRight: {url: "updateDecorationFunctionRight.do"},
 
+    queryProductionFunctionRightByName: {url: "queryProductionFunctionRightByName.do"},
+    updateProductionFunctionRight: {url: "updateProductionFunctionRight.do"},
+
 }});

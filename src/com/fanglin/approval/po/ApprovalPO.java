@@ -53,6 +53,8 @@ public class ApprovalPO implements java.io.Serializable {
 
 	public static final short APPROVAL_TYPE_DECORATION_HOLONOMY_INT = 16;
 
+	public static final short APPROVAL_TYPE_CUSTOMER_ORIGIN_INT = 17;
+
 	public static final short APPROVAL_STATUS_INIT_INT = 0;
 
 	public static final short APPROVAL_STATUS_APPROVAL_INT = 1;
@@ -95,9 +97,11 @@ public class ApprovalPO implements java.io.Serializable {
 
 	private String comment;
 
+	private String annotate;
+
 	private int company;
 
-	private String processinstanceid;
+	private String piid;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -193,6 +197,15 @@ public class ApprovalPO implements java.io.Serializable {
 		this.comment = comment;
 	}
 
+	@Column(name = "annotate")
+	public String getAnnotate() {
+		return annotate;
+	}
+
+	public void setAnnotate(String annotate) {
+		this.annotate = annotate;
+	}
+
 	@Column(name = "company")
 	public int getCompany() {
 		return company;
@@ -202,16 +215,16 @@ public class ApprovalPO implements java.io.Serializable {
 		this.company = company;
 	}
 
-	@Column(name = "processinstanceid")
-	public String getProcessinstanceid() {
-		return processinstanceid;
+	@Column(name = "piid")
+	public String getPiid() {
+		return piid;
 	}
 
-	public void setProcessinstanceid(String processinstanceid) {
-		this.processinstanceid = processinstanceid;
+	public void setPiid(String piid) {
+		this.piid = piid;
 	}
 
-	public ApprovalPO init(UserPO sender, UserPO receiver, String ident, short type, String content, int company) {
+	public ApprovalPO init(UserPO sender, UserPO receiver, String ident, short type, String content, String comment, int company) {
 
 		setSender(sender);
 		setReceiver(receiver);
@@ -221,8 +234,8 @@ public class ApprovalPO implements java.io.Serializable {
 
 		setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
 		setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		setComment("");
 
+		setComment(comment);
 		setContents(content);
 		setCompany(company);
 

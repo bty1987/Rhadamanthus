@@ -35,6 +35,8 @@ public class ProductionPicturePO implements Serializable {
 	private Timestamp createTime;
 
 	private String path;
+	
+	private short type;
 
 	private short status;
 
@@ -79,7 +81,7 @@ public class ProductionPicturePO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "cuId", referencedColumnName = "uId")
+	@JoinColumn(nullable = false, name = "cuid", referencedColumnName = "uid")
 	public UserPO getCreater() {
 		return creater;
 	}
@@ -104,6 +106,15 @@ public class ProductionPicturePO implements Serializable {
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+	
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
 	}
 
 	@Column(name = "status")

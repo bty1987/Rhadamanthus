@@ -133,7 +133,7 @@ $(function () {
     /*分页*/
 
     function doSearcher() {
-        com.post(api.inventory.queryPackage, {
+        com.post(api.data.queryPackage, {
             "goodsPackage.pid": _goodsStorehouseStock.goods.gid
         }, function (res) {
             displayFunc.init(splitAndMergePopUp.attr('data-title') == "拆分" ? 'resultListSplit' : 'resultListMerge', res.goodsPackages)

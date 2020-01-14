@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.data.po.GoodsPO;
+
 @Entity
 @Table(name = "accessoriesitem", catalog = "inventory")
 public class AccessoriesItemPO implements Serializable {
@@ -26,6 +28,8 @@ public class AccessoriesItemPO implements Serializable {
 	private long aiid;
 
 	private long aid;
+	
+	private long caid;
 
 	private GoodsPO goods;
 	
@@ -99,6 +103,15 @@ public class AccessoriesItemPO implements Serializable {
 
 	public void setSurplus(int surplus) {
 		this.surplus = surplus;
+	}
+
+	@Column(name = "caid")
+	public long getCaid() {
+		return caid;
+	}
+
+	public void setCaid(long caid) {
+		this.caid = caid;
 	}
 
 	public AccessoriesItemPO init(long aid, long gid, int selling, int num){

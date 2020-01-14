@@ -10,9 +10,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.inventory.po.ColorPO;
-import com.fanglin.inventory.po.FormatPO;
-import com.fanglin.inventory.po.GoodsPO;
+import com.fanglin.data.po.ColorPO;
+import com.fanglin.data.po.FormatPO;
+import com.fanglin.data.po.GoodsPO;
 import com.fanglin.inventory.po.StorehousePO;
 
 @Entity

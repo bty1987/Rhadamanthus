@@ -30,6 +30,7 @@ import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
+import com.fanglin.quotation.dao.SelectionItemDao;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.po.QuotationPO;
@@ -67,6 +68,9 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 
 	@Autowired
 	private SystemConfigDao systemConfigDao;
+
+	@Autowired
+	private SelectionItemDao selectionItemDao;
 
 	@Override
 	public List<QuotationFunctionAreaVO> queryQuotationFunctionAreaByQuotationId(QuotationVO quotationVO) throws FLException {
@@ -239,12 +243,18 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 
 		List<QuotationFunctionAreaPO> quotationFunctionAreas = new ArrayList<QuotationFunctionAreaPO>(Arrays.asList(new QuotationFunctionAreaPO(quotationFunctionAreaVO.getQfaId())));
 
+		QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(quotationFunctionAreaVO.getQfaId());
+
 		if (extensionItemDao.countExtensionItemForFunctionArea(quotationFunctionAreas) > 0) {
 			throw new FLException(200028, "功能区存在拓展项");
 		}
 
 		if (addReduceItemDao.countAddReduceItemForFunctionArea(quotationFunctionAreas) > 0) {
 			throw new FLException(200032, "功能区存在增减项");
+		}
+
+		if (selectionItemDao.countSelectionItem(quotationPO.getOrderId(), quotationFunctionAreaPO.getQfaId()) > 0) {
+			throw new FLException(200037, "存在关联选材项");
 		}
 
 		QuotationServiceImpl.convertQuotationVOToPOForAdvance(quotationVO, quotationPO);

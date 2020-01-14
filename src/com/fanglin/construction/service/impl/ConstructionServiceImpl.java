@@ -91,6 +91,28 @@ public class ConstructionServiceImpl implements ConstructionService {
 
 		paging.setData(decorationVOs);
 	}
+	
+	@Override
+	public void pageConstructionForBase(Paging paging, List<Filter> filters,Integer company) {
+		
+		List<ConstructionPO> constructionPOs = constructionDao.pageConstructionForBase(paging, filters, company);
+		List<ConstructionVO> constructionVOs = new ArrayList<ConstructionVO>();
+		
+		ConstructionVO constructionVO;
+		for (ConstructionPO constructionPO : constructionPOs) {
+			
+			constructionVO = new ConstructionVO(new DecorationVO(), new UserBaseVO());
+
+			BeanUtil.copyProperties(constructionPO, constructionVO, Arrays.asList("decoration", "supervisor"));
+			BeanUtil.copyProperties(decorationPOToVO(constructionPO.getDecoration()), constructionVO.getDecoration());
+			BeanUtil.copyProperties(constructionPO.getSupervisor(), constructionVO.getSupervisor(), Arrays.asList("duty", "dept"));
+			
+			constructionVOs.add(constructionVO);
+		}
+		
+		paging.setData(constructionVOs);
+		
+	}
 
 	@Override
 	public ConstructionVO queryConstructionById(int cid) throws FLException {
@@ -154,6 +176,58 @@ public class ConstructionServiceImpl implements ConstructionService {
 
 		decorationDao.update(decorationPO);
 	}
+	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int openAccessory(ConstructionVO constructionVO) throws FLException {
+		
+		ConstructionPO constructionPO = constructionDao.get(constructionVO.getCid());
+		
+		if (constructionPO == null) {
+			throw new FLException(120020, "工程信息不存在");
+		}
+		
+		constructionPO.setAccessory(ConstructionPO.ACCESSORY_OPEN_SHORT);
+		
+		constructionDao.update(constructionPO);
+		
+		return 0;
+	}
+	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateConstructionForAdvance(ConstructionVO constructionVO) throws FLException {
+		
+		ConstructionPO constructionPO = constructionDao.get(constructionVO.getCid());
+		
+		if (constructionPO == null) {
+			throw new FLException(120020, "工程信息不存在");
+		}
+		
+		constructionPO.setAccessoryLimit(constructionVO.getAccessoryLimit());
+		constructionPO.setSalaryLimit(constructionVO.getSalaryLimit());
+		
+		constructionDao.update(constructionPO);
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int lockAccessory(ConstructionVO constructionVO) throws FLException {
+		
+		ConstructionPO constructionPO = constructionDao.get(constructionVO.getCid());
+			
+		if (constructionPO == null) {
+			throw new FLException(120020, "工程信息不存在");
+		}	
+		
+		constructionPO.setAccessory(ConstructionPO.ACCESSORY_LOCK_SHORT);
+			
+		constructionDao.update(constructionPO);
+				
+		return 0;
+	}
 
 	private DecorationVO decorationPOToVO(DecorationPO decorationPO) {
 
@@ -165,4 +239,5 @@ public class ConstructionServiceImpl implements ConstructionService {
 
 		return decorationVO;
 	}
+
 }

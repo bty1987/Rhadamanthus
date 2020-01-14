@@ -52,14 +52,14 @@ public class ApprovalDecorationHolonomyServiceImpl implements ApprovalDecoration
 			throw new FLException(240004, "正在审批中,不能提交新审批");
 		}
 
-		DecorationHolonomyPO decorationHolonomyPO = decorationHolonomyDao.queryDecorationHolonomyByOrderId(orderId);
-
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 
+		DecorationHolonomyPO decorationHolonomyPO = decorationHolonomyDao.queryDecorationHolonomyByOrderId(orderId);
+
 		String content = String.format("装修单号:%s,主材配比额:%.3f,修改为主材配比额:%.3f", orderId, Arith.div(decorationHolonomyPO.getMaterialPrice(), 1000.0), Arith.div(approvalDecorationHolonomyVO.getMaterialPrice(), 1000.0));
 
-		approvalPO = new ApprovalPO().init(sender, receiver, orderId, ApprovalPO.APPROVAL_TYPE_DECORATION_HOLONOMY_INT, content, company);
+		approvalPO = new ApprovalPO().init(sender, receiver, orderId, ApprovalPO.APPROVAL_TYPE_DECORATION_HOLONOMY_INT, content, approvalVO.getComment(), company);
 
 		approvalDao.save(approvalPO);
 
@@ -77,7 +77,7 @@ public class ApprovalDecorationHolonomyServiceImpl implements ApprovalDecoration
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int approvalForApprovalForDecorationHolonomy(ApprovalPO approvalPO) throws FLException {
+	public int approveForDecorationHolonomy(ApprovalPO approvalPO) throws FLException {
 
 		ApprovalDecorationHolonomyPO approvalDecorationHolonomyPO = approvalDecorationHolonomyDao.queryApprovalDecorationHolonomyByAId(approvalPO.getAid());
 

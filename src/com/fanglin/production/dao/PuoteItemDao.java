@@ -11,5 +11,5 @@ public interface PuoteItemDao extends Dao<PuoteItemPO> {
 	
 	public List<PuoteItemPO> pageQuoteItem(Paging paging,List<Filter> filter);
 	
-	public List<PuoteItemPO> queryQuoteItemByPinyin(String pinyin,String name,int limit,int company);
+	public List<PuoteItemPO> queryQuoteItemByPinyin(Paging paging, String pinyin, Integer company);
 }

@@ -1,37 +1,34 @@
 var paymentUtils = {
-    addBankUtil : function (index, divName, divGroup, bankArray, bankUtil, pageName, baseItemModal){
+    addBankUtil : function (index, divName, divGroup, bankArray, bankUtil, payment){
         var d = new Date();
         var name;
         var bankUtilName;
 
         bankArray.push(index);
 
-        if(divName == "bankDiv"){
-            name = "bank";
-            bankUtilName = "bankName_";
-        } else if (divName == "checkvDiv"){
+        if (divName == "checkvDiv"){
             name = "checkv";
             bankUtilName = "checkvName_";
         }
 
         var currentData = d.getFullYear() + "-" + ((d.getMonth() + 1).toString().length == 1 ? "0" : "") + (d.getMonth() + 1) + "-" + (d.getDate().toString().length == 1 ? "0" : "") + d.getDate();
 
-        var bankDiv = $('<div></div>').attr("id", pageName + divName + index).appendTo(com.focusPage(divGroup));
+        var bankDiv = $('<div></div>').attr("id", payment.htmlName + divName + index).appendTo(com.focusPage(divGroup));
 
         var bankNameDiv_ = $('<div></div>').addClass('form-group').appendTo(bankDiv);
         var bankNameLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('开户行').appendTo(bankNameDiv_);
         var bankNameDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankNameDiv_);
-        var bankNameSelect = $('<input/>').addClass('col-xs-10 col-sm-6 v_typeahead v_required').attr({'type': 'text', 'id': pageName + name + "Name_" + index, 'data-toggle': 'popover', 'data-trigger': 'manual', 'data-placement': 'bottom'}).appendTo(bankNameDiv);
+        var bankNameSelect = $('<input/>').addClass('col-xs-10 col-sm-6 v_typeahead v_required').attr({'type': 'text', 'id': payment.htmlName + name + "Name_" + index, 'data-toggle': 'popover', 'data-trigger': 'manual', 'data-placement': 'bottom'}).appendTo(bankNameDiv);
         var bankDelDiv = $('<div></div>').addClass('col-sm-1').appendTo(bankNameDiv_);
-        var bankDelBtn = $('<button></button>').addClass('btn btn-minier btn-danger pull-right inline').text("删除").attr("id", pageName + name + "Del_" + index).attr("index", index).appendTo(bankDelDiv).click(function(){
+        var bankDelBtn = $('<button></button>').addClass('btn btn-minier btn-danger pull-right inline').text("删除").attr("id", payment.htmlName + name + "Del_" + index).attr("index", index).appendTo(bankDelDiv).click(function(){
 
             var removeNo = bankArray.indexOf(parseInt($(this).attr("index")));
             if (removeNo != -1) {
                 bankArray.splice(removeNo, 1);
             }
 
-            com.focusPage("#"+ pageName + divName + $(this).attr("index")).remove();
-            var bankAdd = com.focusPage("#" + pageName + name + "Add");
+            com.focusPage("#"+ payment.htmlName + divName + $(this).attr("index")).remove();
+            var bankAdd = com.focusPage("#" + payment.htmlName + name + "Add");
             var num = bankAdd.attr("num");
             bankAdd.attr("num", parseInt(num)-1);
 
@@ -41,25 +38,138 @@ var paymentUtils = {
         var bankMoneyDiv_ = $('<div></div>').addClass('form-group').appendTo(bankDiv);
         var bankMoneyLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('刷卡金额').appendTo(bankMoneyDiv_);
         var bankMoneyDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankMoneyDiv_);
-        var bankMoneyInput = $('<input/>').addClass("col-sm-6 v_required v_float_3").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", pageName + name + "_"+index).appendTo(bankMoneyDiv);
+        var bankMoneyInput = $('<input/>').addClass("col-sm-6 v_required v_float_3").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", payment.htmlName + name + "_"+index).appendTo(bankMoneyDiv);
 
         var bankDateDiv_ = $('<div></div>').addClass('form-group').appendTo(bankDiv);
         var bankDateLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('日期').appendTo(bankDateDiv_);
         var bankDateDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankDateDiv_);
-        var bankDateInput = $('<input/>').addClass("date-picker-date col-sm-6 v_required").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", pageName + name + "Date_"+index).attr("data-date-format", "yyyy-mm-dd").val(currentData).appendTo(bankDateDiv);
+        var bankDateInput = $('<input/>').addClass("date-picker-date col-sm-6 v_required").attr("readonly", "readonly").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", payment.htmlName + name + "Date_"+index).attr("data-date-format", "yyyy-mm-dd").val(currentData).appendTo(bankDateDiv);
         com.datetime(bankDateInput);
 
         var bankTimeDiv_ = $('<div></div>').addClass('form-group').appendTo(bankDiv);
         var bankTimeLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('时间').appendTo(bankTimeDiv_);
         var bankTimeDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankTimeDiv_);
         var bankTimePicker = $('<div></div>').addClass('bootstrap-timepicker').appendTo(bankTimeDiv);
-        var bankTimeInput = $('<input/>').addClass('timepicker col-sm-6 v_required').attr("type", "text").attr("id", pageName + name + "Time_"+index).appendTo(bankTimePicker);
+        var bankTimeInput = $('<input/>').addClass('timepicker col-sm-6 v_required').attr("type", "text").attr("id", payment.htmlName + name + "Time_"+index).appendTo(bankTimePicker);
         com.datetime(bankTimeInput, "time");
 
-        com.selectTypeahead(pageName + bankUtilName +index, bankUtil, "key", "value", null);
+        com.selectTypeahead(payment.htmlName + bankUtilName +index, bankUtil, "key", "value", null);
     },
 
-    getBankInfoParams:  function(nameData, htmlName, bankNums, checkvNums, couponCount, typeUpdate, couponUpdate){//1.decorationPayment.paymentModelNameData, 2."material"装修的是空"" 3.decorationPayment.bankNums, 4 decorationPayment.checkvNums 5、couponCount 6. decorationPayment.typeUpdate 7. decorationPayment.couponUpdate
+    addBankPosUtil: function(divGroup, bankUtil, payment){
+        var bankDiv = $('<div></div>').attr("id", payment.htmlName + "bankPosDiv").appendTo(com.focusPage(divGroup));
+
+        var bankNameDiv_ = $('<div></div>').addClass('form-group').appendTo(bankDiv);
+        var bankNameLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('开户行').appendTo(bankNameDiv_);
+        var bankNameDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankNameDiv_);
+        var bankNameSelect = $('<input/>').addClass('col-xs-10 col-sm-6 v_typeahead v_required').attr({'type': 'text', 'id':payment.htmlName + "bankName", 'data-toggle': 'popover', 'data-trigger': 'manual', 'data-placement': 'bottom', 'autocomplete' : 'off'}).appendTo(bankNameDiv);
+
+        var bankMoneyDiv_ = $('<div></div>').addClass('form-group').appendTo(bankDiv);
+        var bankMoneyLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('刷卡金额').appendTo(bankMoneyDiv_);
+        var bankMoneyDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankMoneyDiv_);
+        var bankMoneyInput = $('<input/>').addClass("col-sm-6 v_required v_float_3").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bank").appendTo(bankMoneyDiv);
+
+        var bankPosDiv_ = $('<div></div>').addClass('form-group').appendTo(bankDiv);
+        var bankPosLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('方式').appendTo(bankPosDiv_);
+        var bankPosDiv = $('<div></div>').addClass('col-sm-8').appendTo(bankPosDiv_);
+        var poswayDiv = $('<select></select>').addClass("col-sm-6 inline").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("id", "posway").appendTo(bankPosDiv);
+        poswayDiv.bindData(payment._posway, "key", "value");
+
+        var posSendBtn = $('<button></button>').addClass('btn btn-minier btn-orange pull-right inline').text("POS推送").attr("id", "posSend").appendTo(bankNameDiv).click(function () {
+            var _index = $(this).attr("index");
+
+            paymentUtils.bankIsChecked(payment.htmlName, true);
+            if(com.validate(payment.htmlName + "bankDivGroup")) return false;
+
+            //为了防止销售点信息中无pid, 再更新可以选择删除也可以保留
+            if(payment.mno == null || payment.mno == undefined){
+                com.showAlert(com.warning, "无装修单号信息!!!");
+                return;
+            }
+
+            var options = {
+                "pointofsales.pid": payment.mno,
+                "pointofsales.type": payment.pointofsalesType,
+                "pointofsales.no": com.typeahead(payment.htmlName + "bankName"),
+                "pointofsales.sn": payment.posValues[com.typeahead(payment.htmlName + "bankName")].value, //收据类型中pos的value值
+                "pointofsales.money": com.focusPage("#bank").val(),
+                "pointofsales.way": com.focusPage("#posway").val()
+            };
+
+            com.post(api.payment.addPointofsales, options, function(res){
+                res.pointofsales.status = 0;
+                paymentUtils.addPos(res.pointofsales, payment.htmlName);
+            });
+
+            return false;
+        });
+
+        com.selectTypeahead(payment.htmlName + "bankName", bankUtil, "key", "value", null);
+    },
+
+    addPos: function(v, htmlName){
+
+        if(v.status == 2 || v.status == 3) return false;
+
+        var posDivGroup = com.focusPage("#" + htmlName + "posDivGroup");
+
+        var ul = $("<ul></ul>").addClass("list-unstyled fl-inline-list clearfix positem").attr("id", "pos" + v.posid).appendTo(posDivGroup);
+        var liname = $("<li></li>").append($("<strong></strong>").text("名称:")).append($("<b></b>").addClass("grey").text(v.no)).appendTo(ul);
+        var limoney = $("<li></li>").append($("<strong></strong>").text("金额:")).append($("<b></b>").addClass("blue").text(v.money)).appendTo(ul);
+
+        ul.attr({"data-posid": v.posid, "data-type": v.type, "data-no": v.no, "data-money": v.money, "data-createTime": v.createTime, "data-status": v.status});
+
+        if(v.status == 1 || v.status == 4){
+            $("<li></li>").append($("<strong></strong>").text("时间:")).append($("<b></b>").addClass("blue").text(v.createTime)).appendTo(ul);
+            $("<li></li>").append($("<strong></strong>").text("状态:")).append($("<b></b>").addClass("red").text("已付款")).appendTo(ul);
+            return false;
+        }
+
+        var btns = $("<li></li>").attr("id", "posbtns" + v.posid).appendTo(ul);
+        var check = $("<button></button>").addClass("btn btn-minier btn-orange pull-right inline").text("验证").attr("id", "poscheck" + v.posid).appendTo(btns);
+        var cancel = $("<button></button>").addClass("btn btn-minier btn-danger pull-right inline hide").text("撤销").attr("id", "poscancel" + v.posid).appendTo(btns);
+
+        ul.attr({"data-posid": v.posid, "data-type": v.type, "data-no": v.no, "data-money": v.money, "data-createTime": v.createTime, "data-status": v.status});
+
+        check.click(function(){
+
+            com.post(api.payment.checkPointofsales, {"pointofsales.posid": v.posid}, function(res){
+
+                var pointofsales = res.pointofsales;
+
+                var posid = pointofsales.posid;
+                var posul = com.focusPage("#pos" + posid);
+
+                if(pointofsales.status == 0) return false;
+
+                if(pointofsales.status != 1) {
+                    posul.remove();
+                    com.showAlert(com.error, "POS支付失败");
+                }
+
+                posul.attr({"data-status": pointofsales.status, "data-createTime": pointofsales.createTime});
+
+                $("<li></li>").append($("<strong></strong>").text("时间:")).append($("<b></b>").addClass("blue").text(pointofsales.createTime)).appendTo(posul);
+                $("<li></li>").append($("<strong></strong>").text("状态:")).append($("<b></b>").addClass("red").text("已付款")).appendTo(posul);
+
+                com.focusPage("#posbtns" + posid).remove();
+            });
+
+            return false;
+        });
+
+        cancel.click(function(){
+
+            com.post(api.payment.cancelPointofsales, {"pointofsales.posid": v.posid}, function(res){
+                com.focusPage("#pos" + res.pointofsales.posid).remove();
+            });
+
+            return false;
+        });
+
+    },
+
+    getBankInfoParams:  function(nameData, htmlName, checkvNums, couponCount, typeUpdate, couponUpdate){//1.decorationPayment.paymentModelNameData, 2."material"装修的是空"" 3. decorationPayment.checkvNums 5、couponCount 6. decorationPayment.typeUpdate 7. decorationPayment.couponUpdate
         var realPayment = 0;
         var args = {};
 
@@ -81,26 +191,34 @@ var paymentUtils = {
                     args["cashInfo"] = com.typeahead(htmlName + "cashInfo");
 
                     _payment = com.focusPage("#cash").val();
-                }else if(_paymentName == "bank" || _paymentName == "checkv"){
-                    var _bank = 0;
-                    var _bankInfo = "#";
+                }else if(_paymentName == "bank"){
+                    var _bankPos = 0;
+                    var _bankInfoPos = "#";
+                    var posids = {};
 
-                    var name;
-                    var numArray;
-                    var bankFlag;
-                    var flagInfo;
+                    var positems = com.focusPage(".positem");
 
-                    if(_paymentName == "bank"){
-                        name = htmlName + "bank";
-                        numArray = bankNums;
-                        bankFlag = "bank";
-                        flagInfo = "bankInfo";
-                    }else if(_paymentName == "checkv"){
-                        name = htmlName + "checkv";
-                        numArray = checkvNums;
-                        bankFlag = "checkv";
-                        flagInfo = "checkvBank";
+                    if(positems.length > 0){
+                        $.each(positems, function(i, v){
+                            var data = $(v).data();
+
+                            _bankInfoPos += data.no + "|" + data.money + "|" + data.createtime + "#";
+
+                            _bankPos = utils.accAdd(parseFloat(data.money), _bankPos);
+
+                            posids["posids[" + i + "]"] = data.posid;
+                        });
                     }
+
+                    args["bank"] = _bankPos;
+                    args["bankInfo"] = _bankInfoPos;
+
+                    _payment = _bankPos;
+                }else if(_paymentName == "checkv"){
+                    var name = htmlName + "checkv";
+                    var numArray = checkvNums;
+                    var bankFlag = "checkv";
+                    var flagInfo = "checkvBank";
 
                     var returnBankParam = paymentUtils.returnBankParams(numArray, name);
 
@@ -142,7 +260,7 @@ var paymentUtils = {
             }
         }
 
-        return [realPayment, args];
+        return [realPayment, args, posids];
     },
 
     returnBankParams: function (nameNums, name){
@@ -167,7 +285,7 @@ var paymentUtils = {
         var info = bank + ", ";
         if(bankInfo.indexOf("#") != -1){
             var _s = bankInfo.split('#');
-            for(var i=1;i<_s.length-1;i++){
+            for(var i=1;i<utils.accSub(_s.length, 1);i++){
                 var _i = _s[i].split('|');
                 info += bankArray[_i[0]] + " " + _i[1] + ", ";
             }
@@ -202,10 +320,7 @@ var paymentUtils = {
 
             com.focusPage(_checkboxId).removeAttr("checked").removeAttr("disabled");
 
-            if(_name == "bank"){
-                com.focusPage("#"  + decorationPayment.htmlName + "bankDivGroup").html("");
-                com.focusPage("#"  + decorationPayment.htmlName + "bankAdd").attr("num", 0).attr("maxnum",0);
-            }else if(_name == "checkv"){
+            if(_name == "checkv"){
                 com.focusPage("#"  + decorationPayment.htmlName + "checkvDivGroup").html("");
                 com.focusPage("#"  + decorationPayment.htmlName + "checkvAdd").attr("num", 0).attr("maxnum",0);
             }
@@ -215,7 +330,6 @@ var paymentUtils = {
 
         com.cleanTypeahead('cashInfo');
 
-        decorationPayment.bankNums = [];
         decorationPayment.checkvNums = [];
 
         //根据装修单等级获取收据类型等级
@@ -248,8 +362,12 @@ var paymentUtils = {
         com.cleanTypeahead('cashInfo');
 
         paymentUtils.initBaseModal(payment,  decorationPayment);
+        com.focusPage("#bankCheckbox").attr("disabled","disabled");
         com.focusPage("#advanceCheckbox").attr("disabled","disabled");
         com.focusPage("#couponCheckbox").attr("disabled","disabled");
+
+        com.focusPage("#myModalPayLabel").text("付款信息");
+        com.focusPage('#advanceCheckbox').parents('.inline').css('cssText','display:inline-block!important');
 
         if(payment.advance!="" && payment.advance!=null && payment.advance!=0){
             com.focusPage("#advanceCheckbox").removeAttr("disabled");
@@ -271,13 +389,13 @@ var paymentUtils = {
 
         //历史收款信息
         com.focusPage("#cashHistory").text("现金: "+com.checkNull(decorationPayment.cashInfo[payment.cashInfo],"")+" "+com.checkNull(payment.cash,"无"));
-        com.focusPage("#bankHistory").text("银行卡: " + (payment.bank == 0 ? "无" : paymentUtils.splitBankInfo(payment.bank, payment.bankInfo, decorationPayment.bankInfo)));
-        com.focusPage("#checkvHistory").text("转账: " + (payment.checkv == 0 ? "无" : paymentUtils.splitBankInfo(payment.checkv, payment.checkvBank, decorationPayment.checkBankInfo)));
+        com.focusPage("#bankHistory").text("刷卡: " + (payment.bank == 0 ? "无" : paymentUtils.splitBankInfo(payment.bank, payment.bankInfo, decorationPayment.bankInfo)));
+        com.focusPage("#checkvHistory").text("银行: " + (payment.checkv == 0 ? "无" : paymentUtils.splitBankInfo(payment.checkv, payment.checkvBank, decorationPayment.checkBankInfo)));
         com.focusPage("#installmentHistory").text("分期: "+com.checkNull(decorationPayment.bankInfo[payment.installmentBank],"")+" "+com.checkNull(payment.installment,"无"));
         com.focusPage("#accountsHistory").text("对公账户: "+com.checkNull(decorationPayment.accountsInfo[payment.accountsBank],"")+" "+com.checkNull(payment.accounts,"无"));
 
         //预付款
-        com.post(api.payment.queryAdvancePaymentByCustomerId, {"customer.cid": payment.decoration.customer.cid},function(res){
+        com.post(api.payment.queryAdvancePaymentByOrderId, {"advancePayment.decoration.orderId": payment.decoration.orderId},function(res){
             com.focusPage("#balanceAdvance").val(res.balanceAdvance).attr("readonly", "readonly");
             com.focusPage("#projectAdvance").val(res.projectAdvance).attr("readonly", "readonly");
         });
@@ -308,6 +426,9 @@ var paymentUtils = {
 
     //装修款收款
     payment: function(decorationPayment, decorationPaymentPostData, searcher, hsearcher){
+        //收款是不验证银行下的输入框
+        paymentUtils.bankIsChecked(decorationPayment.htmlName, false);
+
         if(com.validate(decorationPayment.modelId)){
             return;
         }
@@ -321,10 +442,17 @@ var paymentUtils = {
         var orderId = "";
         var couponCount = 0;
 
-        var returnParams = paymentUtils.getBankInfoParams(decorationPayment.paymentModelNameData, decorationPayment.htmlName, decorationPayment.bankNums, decorationPayment.checkvNums, couponCount, decorationPayment.typeUpdate, decorationPayment.couponUpdate);
+        //验证是否存在未处理的POS收款
+        if(com.focusPage('.positem[data-status=0]').length != 0){
+            com.showAlert(com.warning, "存在未处理POS收款");
+            return false;
+        }
 
-        var realPayment = returnParams[0];
-        var args = returnParams[1];
+        var returnParams = paymentUtils.getBankInfoParams(decorationPayment.paymentModelNameData, decorationPayment.htmlName, decorationPayment.checkvNums, couponCount, decorationPayment.typeUpdate, decorationPayment.couponUpdate);
+
+        //在原有基础上增加pos的金额
+        realPayment = returnParams[0];
+        args = returnParams[1];
 
         if(referPayment != realPayment){
             com.showAlert(com.warning, "当前实收款项总数与应收款项不等,请核实再进行提交!");
@@ -357,6 +485,7 @@ var paymentUtils = {
         if(decorationPayment.typeUpdate == 1){
             url = api.payment.collectDecorationPayment;
             options["decorationPayment.comment"] = com.focusPage("#collectDes").val();
+            $.extend(options, {}, returnParams[2]);
         }else{
             url = api.payment.updateDecorationPayment;
         }
@@ -371,8 +500,8 @@ var paymentUtils = {
         options["decorationPayment.dpid"] = _info.dpid;
 
         com.post(url, options, function(result){
-            searcher.doSearch();
-            hsearcher.doSearch();
+            searcher != null && searcher != undefined ? searcher.doSearch() : "";
+            hsearcher != null && hsearcher != undefined ? hsearcher.doSearch() : "";
             decorationPayment.modals.baseModal.modal("hide");
 
             var argsDrId = result.decorationPayment.drId;
@@ -397,7 +526,6 @@ var paymentUtils = {
         com.focusPage("#couponDiv div.form-group").removeClass("hide");
         com.focusPage('.couponBlue').remove();
 
-        materialPayment.bankNums = [];
         materialPayment.checkvNums = [];
 
         for(var i=0;i<materialPayment.paymentModelNameData.length;i++){
@@ -418,10 +546,7 @@ var paymentUtils = {
             com.focusPage(_inputId).val("");
             com.focusPage(_selectId).val("");
 
-            if(_name == "bank"){
-                com.focusPage("#" + materialPayment.htmlName + "bankDivGroup").html("");
-                com.focusPage("#" + materialPayment.htmlName + "bankAdd").attr("num", 0).attr("maxnum", 0);
-            }else if(_name == "checkv"){
+            if(_name == "checkv"){
                 com.focusPage("#" + materialPayment.htmlName + "checkvDivGroup").html("");
                 com.focusPage("#" + materialPayment.htmlName + "checkvAdd").attr("num", 0).attr("maxnum", 0);
             }
@@ -457,6 +582,7 @@ var paymentUtils = {
         com.focusPage("#saveRefundBtn").addClass("hide");
         com.focusPage("#saveBtn").removeClass("hide");
         paymentUtils.materialInitBaseModal(payment.material.grade, materialPayment);
+        com.focusPage('#advanceCheckbox').parents('.inline').css('cssText','display:inline-block!important');
         com.focusPage("#advanceCheckbox").attr("disabled","disabled");
         com.focusPage("#couponCheckbox").attr("disabled","disabled");
 
@@ -480,8 +606,8 @@ var paymentUtils = {
 
         //历史收款信息
         com.focusPage("#cashHistoryM").text("现金: "+com.checkNull(materialPayment.cashInfo[payment.cashInfo],"")+" "+com.checkNull(payment.cash,"无"));
-        com.focusPage("#bankHistoryM").text("银行卡: "+ (payment.bank == 0 ? "无" : paymentUtils.splitBankInfo(payment.bank, payment.bankInfo, materialPayment.bankInfo)));
-        com.focusPage("#checkvHistoryM").text("转账: "+ (payment.checkv == 0 ? "无" : paymentUtils.splitBankInfo(payment.checkv, payment.checkvBank, materialPayment.checkBankInfo)));
+        com.focusPage("#bankHistoryM").text("刷卡: "+ (payment.bank == 0 ? "无" : paymentUtils.splitBankInfo(payment.bank, payment.bankInfo, materialPayment.bankInfo)));
+        com.focusPage("#checkvHistoryM").text("银行: "+ (payment.checkv == 0 ? "无" : paymentUtils.splitBankInfo(payment.checkv, payment.checkvBank, materialPayment.checkBankInfo)));
         com.focusPage("#installmentHistoryM").text("分期: "+com.checkNull(materialPayment.bankInfo[payment.installmentBank],"")+" "+com.checkNull(payment.installment,"无"));
         com.focusPage("#accountsHistoryM").text("对公账户: "+com.checkNull(materialPayment.accountsInfo[payment.accountsBank],"")+" "+com.checkNull(payment.accounts,"无"));
 
@@ -490,7 +616,7 @@ var paymentUtils = {
         com.focusPage("#referMoney").val(materialPayment.historyMaterialPayment);
 
         //预付款
-        com.post(api.payment.queryAdvancePaymentByCustomerId, {"customer.cid": customerId},function(res){
+        com.post(api.payment.queryAdvancePaymentByOrderId, {"advancePayment.decoration.orderId": orderId},function(res){
             com.focusPage("#materialAdvance").val(res.materialAdvance).attr("readonly", "readonly");
             com.focusPage("#zaterialAdvance").val(res.zaterialAdvance).attr("readonly", "readonly");
         },null,false);
@@ -520,6 +646,9 @@ var paymentUtils = {
 
     //主材支付
     materialPayment: function(materialPayment, materialPaymentPostData, searcher, hsearcher){
+        //收款是不验证银行下的输入框
+        paymentUtils.bankIsChecked(materialPayment.htmlName, false);
+
         if(com.validate(materialPayment.modelId)){
             return;
         }
@@ -535,7 +664,16 @@ var paymentUtils = {
 
         var mpIds = "";
 
-        var returnParams = paymentUtils.getBankInfoParams(materialPayment.paymentModelNameData, materialPayment.htmlName, materialPayment.bankNums, materialPayment.checkvNums, couponCount, materialPayment.typeUpdate, materialPayment.couponUpdate);
+        var _bankPos = 0;
+        var _bankInfoPos = "";
+
+        //验证是否存在未处理的POS收款
+        if(com.focusPage('.positem[data-status=0]').length != 0){
+            com.showAlert(com.warning, "存在未处理POS收款");
+            return false;
+        }
+
+        var returnParams = paymentUtils.getBankInfoParams(materialPayment.paymentModelNameData, materialPayment.htmlName, materialPayment.checkvNums, couponCount, materialPayment.typeUpdate, materialPayment.couponUpdate);
 
         var realPayment = returnParams[0];
         var args = returnParams[1];
@@ -572,6 +710,7 @@ var paymentUtils = {
                 options["materialPayments["+i+"].mpId"] = v.mpId;
             });
             options["materialReceipt.comment"] = com.focusPage("#des").val();
+            $.extend(options, {}, returnParams[2]);
         }else{
             url = api.payment.updateMaterialPayment;
             $.each(materialPaymentPostData.paymentInfo, function(i, v){
@@ -588,8 +727,8 @@ var paymentUtils = {
         options["material.orderId"] = materialPaymentPostData.orderId;
 
         com.post(url, options, function(result){
-            searcher.doSearch();
-            hsearcher.doSearch();
+            searcher != null && searcher != undefined ? searcher.doSearch() : "";
+            hsearcher != null && hsearcher != undefined ? hsearcher.doSearch() : "";
             materialPayment.historyFlag = false;
 
             if(materialPayment.typeUpdate == 1){
@@ -619,6 +758,7 @@ var paymentUtils = {
         com.focusPage('#collectDes').val(payment.salesReceipt.comment).attr("readonly", "readonly");
         com.focusPage("#historyUpdateSA").removeClass("hide");
 
+        com.focusPage("#bankCheckbox").attr("disabled","disabled");
         com.focusPage('#advanceCheckbox').parents('.inline').removeClass('hidden');
         com.focusPage('#advanceCheckbox').parents('.inline').css('cssText','display:inline-block!important');
         com.focusPage('#advanceCheckbox').parents('.inline').addClass('show');
@@ -641,7 +781,7 @@ var paymentUtils = {
             com.focusPage("#advanceDiv").removeClass("hide");
             com.focusPage("#advanceType").val(3).attr("disabled", "disabled");
 
-            com.post(api.payment.queryAdvancePaymentByCustomerId, {"customer.cid": payment.sales.customer.cid},function(res){
+            com.post(api.payment.queryAdvancePaymentByOrderId, {"advancePayment.decoration.orderId": payment.sales.orderId},function(res){
                 com.focusPage("#advance").val(res.materialAdvance);
                 com.focusPage("#payAdvance").val(payment.salesReceipt.advance).attr("readonly", "readonly");
             });
@@ -671,8 +811,8 @@ var paymentUtils = {
 
         //历史收款信息
         com.focusPage("#cashHistorySA").text("现金: "+com.checkNull(salesPayment.cashInfo[payment.salesReceipt.cashInfo],"")+" "+com.checkNull(payment.salesReceipt.cash,"无"));
-        com.focusPage("#bankHistorySA").text("银行卡: " + (payment.salesReceipt.bank == 0 ? "无" : paymentUtils.splitBankInfo(payment.salesReceipt.bank, payment.salesReceipt.bankInfo, salesPayment.bankInfo)));
-        com.focusPage("#checkvHistorySA").text("转账: " + (payment.salesReceipt.checkv == 0 ? "无" : paymentUtils.splitBankInfo(payment.salesReceipt.checkv, payment.salesReceipt.checkvBank, salesPayment.checkBankInfo)));
+        com.focusPage("#bankHistorySA").text("刷卡: " + (payment.salesReceipt.bank == 0 ? "无" : paymentUtils.splitBankInfo(payment.salesReceipt.bank, payment.salesReceipt.bankInfo, salesPayment.bankInfo)));
+        com.focusPage("#checkvHistorySA").text("银行: " + (payment.salesReceipt.checkv == 0 ? "无" : paymentUtils.splitBankInfo(payment.salesReceipt.checkv, payment.salesReceipt.checkvBank, salesPayment.checkBankInfo)));
         com.focusPage("#installmentHistorySA").text("分期: "+com.checkNull(salesPayment.bankInfo[payment.salesReceipt.installmentBank],"")+" "+com.checkNull(payment.salesReceipt.installment,"无"));
         com.focusPage("#accountsHistorySA").text("对公账户: "+com.checkNull(salesPayment.accountsInfo[payment.salesReceipt.accountsBank],"")+" "+com.checkNull(payment.salesReceipt.accounts,"无"));
 
@@ -697,13 +837,34 @@ var paymentUtils = {
         salesPayment.bankUtilForGrade = returnGradeParams[0];
         salesPayment.checkBankUtilForGrade = returnGradeParams[1];
 
+        //查询是否有pos推送数据
+        com.post(api.payment.queryPointofsalesByPidAndRid, {"pointofsales.pid": payment.sales.orderId, "pointofsales.rid": payment.salesReceipt.srId}, function(res){
+            $.each(res.pointofsaleses, function(i, value){
+                if(value.status == 4) {
+                    paymentUtils.addPos(value, salesPayment.htmlName);
+                    com.focusPage("#bankCheckbox").prop("checked", true);
+                    com.focusPage("#posDiv").prop("style", "display: block");
+                    com.focusPage("#bankDiv").prop("style", "display: block");
+                }
+            });
+        });
+
         salesPayment.modals.layerAdd.modal("show");
     },
 
     //销售收款
     aboutcollectAndRefundMoney: function(sid, spid, spids, referMoney, coupon, couponInfo, singleFlag, url, collectOrRefund, salesPayment){
+        //收款是不验证银行下的输入框
+        paymentUtils.bankIsChecked(salesPayment.htmlName, false);
+
         if(com.validate(salesPayment.modelId)){
             return;
+        }
+
+        //验证是否存在未处理的POS收款
+        if(com.focusPage('.positem[data-status=0]').length != 0){
+            com.showAlert(com.warning, "存在未处理POS收款");
+            return false;
         }
 
         var layerAdd = salesPayment.modals.layerAdd;
@@ -725,25 +886,32 @@ var paymentUtils = {
         var cash = 0;
         var cashInfo = "";
         var bank = 0;
-        var bankInfo = "";
+        var bankInfo = "#";
         var checkv = 0;
         var checkvBank = "";
         var payAdvance = 0;
         var advanceType;
+        var posids = {};
 
+        var option = {
+            "salesReceipt.comment": des
+        };
 
         if(com.focusPage("#cashCheckbox").prop("checked")){
             cash = layerAdd.find('#cash').val() != "" ? layerAdd.find('#cash').val() : 0;
-            cashInfo = com.typeahead(salesPayment.htmlName + 'cashInfo')
+            cashInfo = com.typeahead(salesPayment.htmlName + 'cashInfo');
+            option["salesReceipt.cash"] = cash;
+            option["salesReceipt.cashInfo"] = cashInfo;
         }
 
         if(com.focusPage("#bankCheckbox").prop("checked")){
-            var aboutBankParams = paymentUtils.returnBankParams(salesPayment.bankNums, salesPayment.htmlName + "bank");
+            var aboutBankParams = paymentUtils.getPosValue();
             bank = aboutBankParams[0];
             bankInfo = aboutBankParams[1];
-            if (bank == 0) {
-                bankInfo = "";
-            }
+            posids = aboutBankParams[2];
+
+            option["salesReceipt.bank"] = bank;
+            option["salesReceipt.bankInfo"] = bankInfo;
         }
 
         if(com.focusPage("#checkvCheckbox").prop("checked")){
@@ -753,6 +921,8 @@ var paymentUtils = {
             if (checkv == 0) {
                 checkvBank = "";
             }
+            option["salesReceipt.checkv"] = checkv;
+            option["salesReceipt.checkvBank"] = checkvBank;
         }
 
         var realMoney = utils.accAdd(utils.accAdd(cash, bank), checkv);
@@ -786,16 +956,6 @@ var paymentUtils = {
             return false;
         }
 
-        var option = {
-            "salesReceipt.cash": cash,
-            "salesReceipt.cashInfo": cashInfo,
-            "salesReceipt.bank": bank,
-            "salesReceipt.bankInfo": bankInfo,
-            "salesReceipt.checkv": checkv,
-            "salesReceipt.checkvBank": checkvBank,
-            "salesReceipt.comment": des
-        };
-
         if(collectOrRefund != "update"){
             option["salesPayment.sales.sid"] = sid;
         }
@@ -810,6 +970,8 @@ var paymentUtils = {
                 if (com.focusPage('#advanceDiv').hasClass('hide')) {
                     couponFlag = false;
                 }
+                //option增加pos相关的posids
+                $.extend(option, {}, posids);
             }
 
             if(couponFlag){
@@ -842,6 +1004,8 @@ var paymentUtils = {
                 com.showAlert(com.info, '更新成功')
             }
 
+            salesPayment.salesPaymentSearcher != null && salesPayment.salesPaymentSearcher != undefined  ? salesPayment.salesPaymentSearcher.doSearch() : "";
+            salesPayment.hsearcher != null && salesPayment.hsearcher !=  undefined ? salesPayment.hsearcher.doSearch() : "";
             salesPayment.modals.layerAdd.modal("hide");
         });
     },
@@ -872,8 +1036,9 @@ var paymentUtils = {
 
     //预付款更新
     paymentDialogPaymentUpdate: function (v, payment) {
-    	payment.bankNums=[];
     	payment.checkvNums=[];
+
+        com.focusPage("#bankCheckbox").attr("disabled","disabled");
 
     	// 根据等级在数组中筛选出符合要求的用于显示
         var gradeParam;
@@ -930,8 +1095,8 @@ var paymentUtils = {
 
     	//历史收款信息
     	com.focusPage("#cashHistoryP").text("现金: "+com.checkNull(payment.cashInfo[v.cashInfo],"")+" "+com.checkNull(v.cash,"无"));
-    	com.focusPage("#bankHistoryP").text("银行卡: " + (v.bank == 0 ? "无" : paymentUtils.splitBankInfo(v.bank, v.bankInfo, payment.bankInfo)));
-    	com.focusPage("#checkvHistoryP").text("转账: " + (v.checkv == 0 ? "无" : paymentUtils.splitBankInfo(v.checkv, v.checkvBank, payment.checkBankInfo)));
+    	com.focusPage("#bankHistoryP").text("刷卡: " + (v.bank == 0 ? "无" : paymentUtils.splitBankInfo(v.bank, v.bankInfo, payment.bankInfo)));
+    	com.focusPage("#checkvHistoryP").text("银行: " + (v.checkv == 0 ? "无" : paymentUtils.splitBankInfo(v.checkv, v.checkvBank, payment.checkBankInfo)));
     	com.focusPage("#installmentHistoryP").text("分期: "+com.checkNull(payment.bankInfo[v.installmentBank],"")+" "+com.checkNull(v.installment,"无"));
     	com.focusPage("#accountsHistoryP").text("对公账户: "+com.checkNull(payment.accountsInfo[v.accountsBank],"")+" "+com.checkNull(v.accounts,"无"));
 
@@ -940,8 +1105,11 @@ var paymentUtils = {
     },
 
     //预付款付款
-    paymentSaveData: function(payment, hsearcher){
+    paymentSaveData: function(payment, searcher, hsearcher){
         com.focusPage('.payWayError').hide();
+
+        //收款是不验证银行下的输入框
+        paymentUtils.bankIsChecked(payment.htmlName, false);
 
         if(com.validate(payment.modelId)){
             return;
@@ -952,12 +1120,18 @@ var paymentUtils = {
             return;
         }
 
+        //验证是否存在未处理的POS收款
+        if(com.focusPage('.positem[data-status=0]').length != 0){
+            com.showAlert(com.warning, "存在未处理POS收款");
+            return false;
+        }
+
         var url = "";
         var total = 0;
         var options = {};
+        var posids = {};
 
         options["payment.customer.cid"] = payment.temp.customer.cid;
-        options["payment.balance"] = payment.temp.balance;
         options["payment.paymentType"] = com.focusPage("#paymentTypeSel").val();
         options["payment.orderId"] = params.orderId;
 
@@ -969,12 +1143,13 @@ var paymentUtils = {
         }
 
         if(com.focusPage("#bankCheckbox").prop("checked")){
-            var bankParams = paymentUtils.returnBankParams(payment.bankNums, payment.htmlName + "bank");
-
-            total = utils.accAdd(bankParams[0], total);
+            var bankParams = paymentUtils.getPosValue();
 
             options["payment.bank"] = bankParams[0];
             options["payment.bankInfo"] = bankParams[1];
+            posids = bankParams[2];
+
+            total = utils.accAdd(bankParams[0], total);
         }
 
         if(com.focusPage("#checkvCheckbox").prop("checked")){
@@ -991,6 +1166,8 @@ var paymentUtils = {
             options["payment.type"] = 1; //收款
             options["payment.comment"] = com.focusPage("#des").val().trim();
             options["payment.uniqueid"] = new Date().getTime();
+            $.extend(options, {}, posids);
+
             if(parseFloat(total) <= 0){
                 com.showAlert(com.warning, "收款金额需要大于零!");
                 return false;
@@ -1020,11 +1197,6 @@ var paymentUtils = {
             options["payment.uniqueid"] = new Date().getTime();
 
         }else if(payment.typeUpdate == 3){
-            if(parseFloat(total) <= 0){
-                com.showAlert(com.warning, "提款金额需要大于零!");
-                return false;
-            }
-
             if(parseFloat(total) != parseFloat(payment.historyPayment)){
                 com.showAlert(com.warning, "当前更新款项金额与原收款金额不等,请核实再进行提交!");
                 return false;
@@ -1035,19 +1207,8 @@ var paymentUtils = {
         }
 
         com.post(url, options, function(res){
-            //searcher.doSearch();
-            hsearcher.doSearch();
-
-            com.post(api.payment.queryAdvancePaymentByCustomerId, {"customer.cid": res.payment.customer.cid}, function(resBalance){
-                if(com.focusPage("#"+params.orderId+"contractBalance").length>0){
-                    com.focusPage("#"+params.orderId+"contractBalance").html(resBalance.balanceAdvance);
-                    com.focusPage("#"+params.orderId+"projectBalance").html(resBalance.projectAdvance);
-                    com.focusPage("#"+params.orderId+"materialBalance").html(resBalance.materialAdvance);
-                    com.focusPage("#"+params.orderId+"zaterialBalance").html(resBalance.zaterialAdvance);
-                }else{
-                    paymentUtils.paymentUl(params, resBalance);
-                }
-            });
+            searcher != null && searcher != undefined ? searcher.doSearch() : "";
+            hsearcher != null && hsearcher != undefined ? hsearcher.doSearch() : "";
 
             if(payment.paymentTypes != null){
                 if(payment.paymentTypes.search('收款') != -1 || payment.paymentTypes == "收款" && payment.typeUpdate == 1){
@@ -1062,14 +1223,6 @@ var paymentUtils = {
         });
 
         payment.modals.modal.modal("hide");
-    },
-
-    paymentUl: function(v,res) {
-        ul = com.focusPage("#"+v.orderId+"ul");
-        paymentUtils.paymentBalance(ul,"合同预付款 ",res.balanceAdvance,"blue",v.orderId+"contractBalance");
-        paymentUtils.paymentBalance(ul,"工程预付款 ",res.projectAdvance,"blue",v.orderId+"projectBalance");
-        paymentUtils.paymentBalance(ul,"主材预付款 ",res.materialAdvance,"blue",v.orderId+"materialBalance");
-        paymentUtils.paymentBalance(ul,"正林预付款 ",res.zaterialAdvance,"blue",v.orderId+"zaterialBalance");
     },
 
     paymentBalance: function($ulProperty,key,value,cls,id) {
@@ -1109,7 +1262,6 @@ var paymentUtils = {
             }
         }
 
-        servicePayment.bankNums=[];
         servicePayment.checkvNums=[];
 
         com.focusPage("#collectDes").val("").removeAttr("readonly");
@@ -1146,7 +1298,7 @@ var paymentUtils = {
             com.focusPage("#myModalLabel").text("付款信息");
             com.focusPage("#collectBtn").text("收款");
             com.focusPage("#serviceMoney").css("display","block");
-            com.focusPage("#sMoney").val(v.servicePrice - v.servicePaidup);
+            com.focusPage("#sMoney").val(utils.accSub(v.servicePrice, v.servicePaidup));
             com.focusPage("#sMoney").attr("readonly","readonly");
             com.focusPage("#referMoney").val("");
             com.focusPage("#collectDes").val("");
@@ -1157,6 +1309,7 @@ var paymentUtils = {
             com.focusPage("#referMoney").val(v.servicePaidup);
             com.focusPage("#referMoney").attr("readonly","readonly");
             com.focusPage("#collectDes").val("");
+            com.focusPage("#bankCheckbox").attr("disabled","disabled");
         }else if(servicePayment.modals.baseModal.attr("ChargeType")==4){
             com.focusPage("#historyUpdateS").removeClass("hide");
             com.focusPage("#myModalLabel").text("更新付款信息");
@@ -1164,16 +1317,18 @@ var paymentUtils = {
             com.focusPage("#serviceMoney").css("display","none");
             com.focusPage("#referMoney").val(v.serviceMoney+ v.advanceMoney).attr("readonly", "readonly");
             com.focusPage("#collectDes").val(v.comment).attr("readonly", "readonly");
+            com.focusPage("#bankCheckbox").attr("disabled","disabled");
 
             //历史收款信息
             com.focusPage("#cashHistoryS").text("现金: "+com.checkNull(servicePayment.cashInfo[v.serviceReceipt.cashInfo],"")+" "+com.checkNull(v.serviceReceipt.cash,"无"));
-            com.focusPage("#bankHistoryS").text("银行卡: " + (v.serviceReceipt.bank == 0 ? "无" : paymentUtils.splitBankInfo(v.serviceReceipt.bank, v.serviceReceipt.bankInfo, servicePayment.bankInfo)));
-            com.focusPage("#checkvHistoryS").text("转账: " + (v.serviceReceipt.checkv == 0 ? "无" : paymentUtils.splitBankInfo(v.serviceReceipt.checkv, v.serviceReceipt.checkvBank, servicePayment.checkBankInfo)));
+            com.focusPage("#bankHistoryS").text("刷卡: " + (v.serviceReceipt.bank == 0 ? "无" : paymentUtils.splitBankInfo(v.serviceReceipt.bank, v.serviceReceipt.bankInfo, servicePayment.bankInfo)));
+            com.focusPage("#checkvHistoryS").text("银行: " + (v.serviceReceipt.checkv == 0 ? "无" : paymentUtils.splitBankInfo(v.serviceReceipt.checkv, v.serviceReceipt.checkvBank, servicePayment.checkBankInfo)));
             com.focusPage("#installmentHistoryS").text("分期: "+com.checkNull(servicePayment.bankInfo[v.serviceReceipt.installmentBank],"")+" "+com.checkNull(v.serviceReceipt.installment,"无"));
             com.focusPage("#accountsHistoryS").text("对公账户: "+com.checkNull(servicePayment.accountsInfo[v.serviceReceipt.accountsBank],"")+" "+com.checkNull(v.serviceReceipt.accounts,"无"));
 
         }
 
+        servicePayment.mno = v.decoration.orderId;
         servicePayment.modals.baseModal.modal("show");
 
         servicePayment.moreMsg[0]=$.extend({},v);
@@ -1181,8 +1336,17 @@ var paymentUtils = {
 
     //服务款交款
     servicePaymentCollect: function(servicePayment, searcher, hsearcher){
+        //收款是不验证银行下的输入框
+        paymentUtils.bankIsChecked(servicePayment.htmlName, false);
+
         if(com.validate(servicePayment.modelId)){
             return;
+        }
+
+        //验证是否存在未处理的POS收款
+        if(com.focusPage('.positem[data-status=0]').length != 0){
+            com.showAlert(com.warning, "存在未处理POS收款");
+            return false;
         }
 
         var v = servicePayment.moreMsg[0];
@@ -1192,9 +1356,10 @@ var paymentUtils = {
         var cash = 0;
         var cashbInfo = "";
         var bank = 0;
-        var bankInfo = "";
+        var bankInfo = "#";
         var checkv = 0;
         var checkvBank = "";
+        var posids = {};
 
         if(com.focusPage("#cashCheckbox").prop("checked")){
             cash = com.focusPage("#cash").val();
@@ -1202,9 +1367,10 @@ var paymentUtils = {
         }
 
         if(com.focusPage("#bankCheckbox").prop("checked")){
-            var aboutBankParams = paymentUtils.returnBankParams(servicePayment.bankNums, servicePayment.htmlName + "bank");
+            var aboutBankParams = paymentUtils.getPosValue();
             bank = aboutBankParams[0];
             bankInfo = aboutBankParams[1];
+            posids = aboutBankParams[2];
         }
 
         if(com.focusPage("#checkvCheckbox").prop("checked")){
@@ -1260,11 +1426,13 @@ var paymentUtils = {
         if(servicePayment.modals.baseModal.attr("ChargeType")==1){
             currentUrl = api.payment.collectServicePayment;
             currentOption = option;
+            $.extend(currentOption, {}, posids);
             successMessage = "收款成功";
             failMessage = "收款失败";
         }else if(servicePayment.modals.baseModal.attr("ChargeType")==2){
             currentUrl = api.payment.collectServicePaymentForService;
             currentOption = option;
+            $.extend(currentOption, {}, posids);
             successMessage = "收款成功";
             failMessage = "收款失败";
         }else if(servicePayment.modals.baseModal.attr("ChargeType")==3){
@@ -1282,14 +1450,14 @@ var paymentUtils = {
         }
 
         com.post(currentUrl, currentOption, function () {
-            searcher.doSearch();
+            searcher != null && searcher != undefined ? searcher.doSearch() : "";
             if(servicePayment.modals.baseModal.attr("ChargeType")==4) {
-                hsearcher.doSearch();
+                hsearcher != null && hsearcher != undefined ? hsearcher.doSearch() : "";
             }
             com.showAlert(com.info, successMessage);
             servicePayment.modals.baseModal.modal("hide");
         }, function () {
-            searcher.doSearch();
+            searcher != null && searcher != undefined ? searcher.doSearch() : "";
             com.showAlert(com.error, failMessage);
             servicePayment.modals.baseModal.modal("hide");
         });
@@ -1297,7 +1465,7 @@ var paymentUtils = {
 
     //获取收款类型的基础信息 info信息是分页显示信息的, util和cash,bank,checkBank是下拉框信息(下拉框不显示禁用)
     getReceiptType: function(payment){
-        var notCouponPageName = ["payment", "paymentCheck", "service", "serviceCheck"];
+        var notCouponPageName = ["payment", "paymentCheck", "service", "serviceCheck", "paymentPos", "servicePos"];
         com.post(api.common.queryReceiptType, {}, function(res){
             $.each(res.receiptTypes, function(i, v){
                 if(v.type == 1){
@@ -1309,6 +1477,7 @@ var paymentUtils = {
                 }else if(v.type == 2){
                     if(v.status == 1){
                         payment.bank.push(v);
+                        payment.posValues[v.no] = v;
                         payment.bankUtil.push({"key": v.no, "value": v.name});
                     }
                     payment.bankInfo[v.no] = v.name;
@@ -1357,5 +1526,43 @@ var paymentUtils = {
         $a.click(function () {
             $li.remove();
         });
+    },
+
+    //银行卡输入框 是否验证
+    bankIsChecked: function(htmlName, flag){
+        if(flag){
+            com.focusPage("#" + htmlName + "bankName").addClass("v_required v_typeahead");
+            com.focusPage("#bank").addClass("v_required v_float_3");
+        } else {
+            com.focusPage("#" + htmlName + "bankName").removeClass("v_required v_typeahead");
+            com.focusPage("#bank").removeClass("v_required v_float_3");
+        }
+    },
+
+    //刷卡方式是选中时, 获取pos金额
+    getPosValue: function(){
+        var bank = 0;
+        var bankInfo = "#";
+        var posids = {};
+
+        var positems = com.focusPage(".positem");
+
+        if(positems.length > 0){
+            $.each(positems, function(i, v){
+                var data = $(v).data();
+
+                bankInfo += data.no + "|" + data.money + "|" + data.createtime + "#";
+
+                bank = utils.accAdd(parseFloat(data.money), bank);
+
+                posids["posids[" + i + "]"] = data.posid;
+            });
+        }
+
+        if (bank == 0) {
+            bankInfo = "";
+        }
+
+        return [bank, bankInfo, posids];
     }
 };

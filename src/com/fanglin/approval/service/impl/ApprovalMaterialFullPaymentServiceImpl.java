@@ -84,7 +84,7 @@ public class ApprovalMaterialFullPaymentServiceImpl implements ApprovalMaterialF
 
 		String content = String.format("装修单号:%s,主材单号:%s,金额:%.3f,补款审批", materialPO.getOrderId(), materialPO.getNo(), Arith.div(approvalMaterialFullPaymentVO.getReferMoney(), 1000.0));
 
-		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(mid), ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT, content, company);
+		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(mid), ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT, content, approvalVO.getComment(), company);
 
 		approvalDao.save(approvalPO);
 
@@ -100,7 +100,7 @@ public class ApprovalMaterialFullPaymentServiceImpl implements ApprovalMaterialF
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int approvalForMaterialFullPayment(ApprovalPO approvalPO) throws FLException {
+	public int approveForMaterialFullPayment(ApprovalPO approvalPO) throws FLException {
 
 		ApprovalMaterialFullPaymentPO approvalMaterialFullPaymentPO = approvalMaterialFullPaymentDao.queryApprovalMaterialFullPaymentByAId(approvalPO.getAid());
 

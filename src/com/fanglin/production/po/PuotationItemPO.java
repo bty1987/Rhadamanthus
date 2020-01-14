@@ -28,17 +28,17 @@ public class PuotationItemPO implements Serializable {
 
 	private String format;
 
-	private float height;
+	private int height;
 
-	private float width;
+	private int width;
 
-	private float thick;
+	private int thick;
 
-	private float unitPrice;
+	private int unitPrice;
 
-	private float num;
+	private int num;
 
-	private float total;
+	private long total;
 
 	private String measurementUnit;
 
@@ -87,56 +87,56 @@ public class PuotationItemPO implements Serializable {
 	}
 
 	@Column(name = "height")
-	public float getHeight() {
+	public int getHeight() {
 		return height;
 	}
 
-	public void setHeight(float height) {
+	public void setHeight(int height) {
 		this.height = height;
 	}
 
 	@Column(name = "width")
-	public float getWidth() {
+	public int getWidth() {
 		return width;
 	}
 
-	public void setWidth(float width) {
+	public void setWidth(int width) {
 		this.width = width;
 	}
 
 	@Column(name = "thick")
-	public float getThick() {
+	public int getThick() {
 		return thick;
 	}
 
-	public void setThick(float thick) {
+	public void setThick(int thick) {
 		this.thick = thick;
 	}
 
 	@Column(name = "unitprice")
-	public float getUnitPrice() {
+	public int getUnitPrice() {
 		return unitPrice;
 	}
 
-	public void setUnitPrice(float unitPrice) {
+	public void setUnitPrice(int unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 
 	@Column(name = "num")
-	public float getNum() {
+	public int getNum() {
 		return num;
 	}
 
-	public void setNum(float num) {
+	public void setNum(int num) {
 		this.num = num;
 	}
 
 	@Column(name = "total")
-	public float getTotal() {
+	public long getTotal() {
 		return total;
 	}
 
-	public void setTotal(float total) {
+	public void setTotal(long total) {
 		this.total = total;
 	}
 

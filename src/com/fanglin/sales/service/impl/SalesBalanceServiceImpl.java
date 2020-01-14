@@ -66,13 +66,13 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 
 		for (SalesBalancePO salesBalancePO : salesBalancePOs) {
 
-			SalesBalanceVO salesBalanceVO = new SalesBalanceVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new RefundsVO(), new UserBaseVO(), new UserBaseVO());
+			SalesBalanceVO salesBalanceVO = new SalesBalanceVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO() ,new UserBaseVO()), new RefundsVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO());
 
-			BeanUtil.copyPropertie(salesBalancePO, salesBalanceVO, Arrays.asList("sales", "refunds", "creater", "poster"));
-			BeanUtil.copyPropertie(salesBalancePO.getSales(), salesBalanceVO.getSales(), Arrays.asList("salesman", "dept", "region", "guider", "instorer", "guideDept", "house", "customer"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getSalesman(), salesBalanceVO.getSales().getSalesman(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getDept(), salesBalanceVO.getSales().getDept(), Arrays.asList("fatherDept", "type", "manager"));
-			BeanUtil.copyProperties(salesBalancePO.getSales().getRegion(), salesBalanceVO.getSales().getRegion(), Arrays.asList("fatherDept", "type", "manager"));
+			BeanUtil.copyPropertie(salesBalancePO, salesBalanceVO, Arrays.asList("sales", "refunds", "creater", "poster", "salesman", "dept", "region"));
+			BeanUtil.copyPropertie(salesBalancePO.getSales(), salesBalanceVO.getSales(), Arrays.asList("salesman", "dept", "region", "guider", "instorer", "guideDept", "house", "customer", "supplier"));
+			BeanUtil.copyProperties(salesBalancePO.getSalesman(), salesBalanceVO.getSalesman(), Arrays.asList("dept", "duty"));
+			BeanUtil.copyProperties(salesBalancePO.getDept(), salesBalanceVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
+			BeanUtil.copyProperties(salesBalancePO.getRegion(), salesBalanceVO.getRegion(), Arrays.asList("fatherDept", "type", "manager"));
 			BeanUtil.copyProperties(salesBalancePO.getSales().getInstorer(), salesBalanceVO.getSales().getInstorer(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyProperties(salesBalancePO.getSales().getGuider(), salesBalanceVO.getSales().getGuider(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyProperties(salesBalancePO.getSales().getGuideDept(), salesBalanceVO.getSales().getGuideDept(), Arrays.asList("fatherDept", "type", "manager"));
@@ -82,6 +82,10 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 			BeanUtil.copyPropertie(salesBalancePO.getRefunds(), salesBalanceVO.getRefunds(), Arrays.asList("creater"));
 			BeanUtil.copyPropertie(salesBalancePO.getCreater(), salesBalanceVO.getCreater(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyPropertie(salesBalancePO.getPoster(), salesBalanceVO.getPoster(), Arrays.asList("dept", "duty"));
+			
+			if(salesBalancePO.getSales().getSupplier() != null){
+				BeanUtil.copyPropertie(salesBalancePO.getSales().getSupplier(), salesBalanceVO.getSales().getSupplier(), Arrays.asList("dept", "duty"));
+			}
 
 			salesBalanceVOs.add(salesBalanceVO);
 		}
@@ -124,6 +128,25 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 			return;
 
 		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalanceForPompany(paging, filters, pompany);
+
+		List<SalesBalanceVO> salesBalanceVOs = pageSalesBalance(salesBalancePOs);
+
+		paging.setData(salesBalanceVOs);
+
+	}
+
+	@Override
+	public void pageSalesBalanceForSupplier(Paging paging, List<Filter> filters, String userId, int pompany) {
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		if (filters.size() == 0)
+			return;
+
+		if (userPO == null)
+			return;
+
+		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalanceForSupplier(paging, filters, pompany, userPO.getUid());
 
 		List<SalesBalanceVO> salesBalanceVOs = pageSalesBalance(salesBalancePOs);
 
@@ -175,6 +198,40 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int rpreSalesBalance(SalesBalanceVO salesBalanceVO) throws FLException {
+
+		SalesBalancePO salesBalancePO = salesBalanceDao.get(salesBalanceVO.getSbid());
+
+		if (salesBalancePO == null) {
+			throw new FLException(260037, "销售结算信息不存在");
+		}
+
+		if (salesBalancePO.getStatus() != SalesBalancePO.STATUS_VENDORBALANCE_INT) {
+			throw new FLException(260038, "销售结算状态不可操作");
+		}
+
+		SalesPO salesPO = salesDao.get(salesBalancePO.getSales().getSid());
+
+		if (salesPO == null) {
+			throw new FLException(260021, "销售单不存在");
+		}
+
+		if (salesBalancePO.getOnetype() == SalesBalancePO.ONETYPE_INIT_INT) {
+
+			salesPO.setBalanceStatus(SalesPO.BALANCESTATUS_PRESETTLEMENT_SHORT);
+
+			salesDao.update(salesPO);
+
+		}
+
+		salesBalancePO.setStatus(SalesBalancePO.STATUS_PREBALANCE_INT);
+		salesBalanceDao.update(salesBalancePO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int passSalesBalance(List<Long> sids) throws FLException {
 
 		for (long sid : sids) {
@@ -185,11 +242,11 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 				throw new FLException(260021, "销售单不存在");
 			}
 
-			if (salesPO.getStatus() != SalesPO.STATUS_INIT_SHORT) {
+			if (salesPO.getStatus() != SalesPO.STATUS_INIT_SHORT && salesPO.getStatus() != SalesPO.STATUS_END_SHORT) {
 				throw new FLException(260022, "销售单状态不可操作");
 			}
 
-			salesPO.setStatus(SalesPO.STATUS_END_SHORT);
+			salesPO.setBalanceStatus(SalesPO.BALANCESTATUS_FINISH_SHORT);
 
 			salesDao.update(salesPO);
 
@@ -211,7 +268,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 				throw new FLException(260021, "销售单不存在");
 			}
 
-			if (salesPO.getStatus() != SalesPO.STATUS_INIT_SHORT) {
+			if (salesPO.getStatus() != SalesPO.STATUS_INIT_SHORT && salesPO.getStatus() != SalesPO.STATUS_END_SHORT) {
 				throw new FLException(260022, "销售单状态不可操作");
 			}
 
@@ -236,11 +293,12 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 			salesBalancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 			salesBalancePO.setTotal(salesPO.getTotal());
 			salesBalancePO.setBalance(balance);
-			salesBalancePO.setVbalance(0);
-			salesBalancePO.setPbalance(0);
 			salesBalancePO.setType(SalesBalancePO.TYPE_INIT_INT);
 			salesBalancePO.setStatus(SalesBalancePO.STATUS_PREBALANCE_INT);
 			salesBalancePO.setComment(salesPO.getComment());
+			salesBalancePO.setSalesman(salesPO.getSalesman());
+			salesBalancePO.setDept(salesPO.getDept());
+			salesBalancePO.setRegion(salesPO.getRegion());
 
 			salesBalanceDao.save(salesBalancePO);
 
@@ -276,12 +334,16 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 				salesBalanceItemPO.setTotal(salesItemPO.getTotal());
 
 				salesBalanceItemDao.save(salesBalanceItemPO);
-
 			}
 
 			salesBalancePO.setAllowance(_allowance);
 			salesBalancePO.setOnetype(SalesBalancePO.ONETYPE_INIT_INT);
 			salesBalancePO.setBalance(balance);
+
+			long vbalance = Arith.sub(Arith.round(salesPO.getTotal(), 0, Arith.ROUND_FLOOR), Arith.round(balance, 0, Arith.ROUND_CEILING));
+
+			salesBalancePO.setVbalance(vbalance);
+			salesBalancePO.setPbalance(vbalance);
 			salesBalancePO.setDifference(Arith.sub(salesBalancePO.getTotal(), balance));
 
 			salesBalanceDao.update(salesBalancePO);
@@ -289,7 +351,6 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 			salesPO.setBalanceStatus(SalesPO.BALANCESTATUS_PRESETTLEMENT_SHORT);
 
 			salesDao.update(salesPO);
-
 		}
 
 		return 0;
@@ -297,36 +358,39 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int vpostSalesBalance(SalesBalanceVO salesBalanceVO) throws FLException {
+	public int vpostSalesBalance(List<SalesBalanceVO> sbids) throws FLException {
 
-		SalesBalancePO salesBalancePO = salesBalanceDao.get(salesBalanceVO.getSbid());
+		for (SalesBalanceVO salesBalanceVO : sbids) {
 
-		if (salesBalancePO == null) {
-			throw new FLException(260037, "销售结算信息不存在");
+			SalesBalancePO salesBalancePO = salesBalanceDao.get(salesBalanceVO.getSbid());
+
+			if (salesBalancePO == null) {
+				throw new FLException(260037, "销售结算信息不存在");
+			}
+
+			if (salesBalancePO.getStatus() != SalesBalancePO.STATUS_PREBALANCE_INT) {
+				throw new FLException(260038, "销售结算状态不可操作");
+			}
+
+			SalesPO salesPO = salesDao.get(salesBalancePO.getSales().getSid());
+
+			if (salesPO == null) {
+				throw new FLException(260021, "销售单不存在");
+			}
+
+			salesBalancePO.setStatus(SalesBalancePO.STATUS_VENDORBALANCE_INT);
+			salesBalancePO.setVenderTime(DateUtil.getDateToTimestamp(new Date()));
+
+			salesBalanceDao.update(salesBalancePO);
+
+			if(salesBalancePO.getOnetype() == SalesBalancePO.ONETYPE_INIT_INT){
+				
+				salesPO.setBalanceStatus(SalesPO.BALANCESTATUS_VENDORSETTLEMENT_SHORT);
+				salesDao.update(salesPO);
+				
+			}
+			
 		}
-
-		if (salesBalancePO.getStatus() != SalesBalancePO.STATUS_PREBALANCE_INT) {
-			throw new FLException(260038, "销售结算状态不可操作");
-		}
-
-		SalesPO salesPO = salesDao.get(salesBalancePO.getSales().getSid());
-
-		if (salesPO == null) {
-			throw new FLException(260021, "销售单不存在");
-		}
-
-		if (salesPO.getStatus() == SalesPO.STATUS_END_SHORT) {
-			throw new FLException(260022, "销售单状态不可操作");
-		}
-
-		salesBalancePO.setStatus(SalesBalancePO.STATUS_VENDORBALANCE_INT);
-		salesBalancePO.setVenderTime(DateUtil.getDateToTimestamp(new Date()));
-
-		salesBalanceDao.update(salesBalancePO);
-
-		salesPO.setBalanceStatus(SalesPO.BALANCESTATUS_VENDORSETTLEMENT_SHORT);
-
-		salesDao.update(salesPO);
 
 		return 0;
 
@@ -334,40 +398,44 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int postSalesBalance(SalesBalanceVO salesBalanceVO, String userId) throws FLException {
+	public int postSalesBalance(List<SalesBalanceVO> sbids, String userId) throws FLException {
 
-		SalesBalancePO salesBalancePO = salesBalanceDao.get(salesBalanceVO.getSbid());
+		for (SalesBalanceVO salesBalanceVO : sbids) {
 
-		if (salesBalancePO == null) {
-			throw new FLException(260037, "销售结算信息不存在");
+			SalesBalancePO salesBalancePO = salesBalanceDao.get(salesBalanceVO.getSbid());
+
+			if (salesBalancePO == null) {
+				throw new FLException(260037, "销售结算信息不存在");
+			}
+
+			if (salesBalancePO.getStatus() != SalesBalancePO.STATUS_VENDORBALANCE_INT) {
+				throw new FLException(260038, "销售结算状态不可操作");
+			}
+
+			SalesPO salesPO = salesDao.get(salesBalancePO.getSales().getSid());
+
+			if (salesPO == null) {
+				throw new FLException(260021, "销售单不存在");
+			}
+
+			UserPO poster = userDao.queryUserByUserId(userId);
+
+			salesBalancePO.setStatus(SalesBalancePO.STATUS_BALANCE_INT);
+			salesBalancePO.setPoster(poster);
+			salesBalancePO.setPostTime(DateUtil.getDateToTimestamp(new Date()));
+
+			salesBalanceDao.update(salesBalancePO);
+
+			if(salesBalancePO.getOnetype() == SalesBalancePO.ONETYPE_INIT_INT){
+				
+				salesPO.setBalanceStatus(SalesPO.BALANCESTATUS_SETTLEMENT_SHORT);
+				salesPO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
+
+				salesDao.update(salesPO);
+				
+			}
+			
 		}
-
-		if (salesBalancePO.getStatus() != SalesBalancePO.STATUS_VENDORBALANCE_INT) {
-			throw new FLException(260038, "销售结算状态不可操作");
-		}
-
-		SalesPO salesPO = salesDao.get(salesBalancePO.getSales().getSid());
-
-		if (salesPO == null) {
-			throw new FLException(260021, "销售单不存在");
-		}
-
-		if (salesPO.getStatus() == SalesPO.STATUS_END_SHORT) {
-			throw new FLException(260022, "销售单状态不可操作");
-		}
-
-		UserPO poster = userDao.queryUserByUserId(userId);
-
-		salesBalancePO.setStatus(SalesBalancePO.STATUS_BALANCE_INT);
-		salesBalancePO.setPoster(poster);
-		salesBalancePO.setPostTime(DateUtil.getDateToTimestamp(new Date()));
-
-		salesBalanceDao.update(salesBalancePO);
-
-		salesPO.setBalanceStatus(SalesPO.BALANCESTATUS_SETTLEMENT_SHORT);
-		salesPO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
-
-		salesDao.update(salesPO);
 
 		return 0;
 

@@ -3,7 +3,9 @@ package com.fanglin.sales.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-import com.fanglin.personel.po.UserPO;
+import org.apache.struts2.json.annotations.JSON;
+
+import com.fanglin.personel.vo.UserVO;
 
 public class RefundsVO  implements Serializable{
 	private static final long serialVersionUID = 5543447445422987680L;
@@ -16,15 +18,26 @@ public class RefundsVO  implements Serializable{
 	
 	private Long total;
 	
+	private Short type;
+	
 	private Short status;
 	
-	private UserPO creater;
+	private UserVO creater;
 	
 	private String comment;
 	
 	private Timestamp createTime;
 	 
 	private Timestamp balanceTime;
+	
+	public RefundsVO() {
+		super();
+	}
+
+	public RefundsVO(UserVO creater) {
+		super();
+		this.creater = creater;
+	}
 
 	public Long getRid() {
 		return rid;
@@ -58,6 +71,14 @@ public class RefundsVO  implements Serializable{
 		this.total = total;
 	}
 
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
+	}
+
 	public Short getStatus() {
 		return status;
 	}
@@ -66,14 +87,15 @@ public class RefundsVO  implements Serializable{
 		this.status = status;
 	}
 
-	public UserPO getCreater() {
+	public UserVO getCreater() {
 		return creater;
 	}
 
-	public void setCreater(UserPO creater) {
+	public void setCreater(UserVO creater) {
 		this.creater = creater;
 	}
-
+	
+	@JSON(format="yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}

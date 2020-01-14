@@ -57,7 +57,7 @@ $(function () {
         planMission("export");
     });
 
-    com.initTypeahead("brand", api.data.queryBrandForPinYinName, "pinyinName", {}, "brands", "bid", "name", function (list, k, v) {
+    com.initTypeahead("brand", api.data.queryBrandByPinyin, "pinyinName", {}, "brands", "bid", "name", function (list, k, v) {
         $.each(list, function (index, val) {
 
             if (val.bid == k) {
@@ -548,7 +548,7 @@ $(function () {
         },
         onUploadSuccess: function (a, b, c) {
             a = eval("(" + b + ")");
-            0 == a.errorCode ? com.focusPage("#filePath").val(a.resUrl) : alert(b)
+            0 == a.errorCode ? com.focusPage("#filePath").val(a.resUrl) : alert(b);
         },
         itemTemplate: '<div id="${fileID}" class="uploadify-queue-item" style="position:absolute;top:-30px;width:200px;left:-200px;">\r\n\t\t\t<div class="cancel">\r\n\t\t\t\t<a href="javascript:$(\'#${instanceID}\').uploadify(\'cancel\', \'${fileID}\')">X</a>\r\n\t\t\t</div>\r\n\t\t\t<span class="fileName">${fileName} (${fileSize})</span><span class="data"></span>\r\n\t\t\t<div class="uploadify-progress">\r\n\t\t\t\t<div class="uploadify-progress-bar"><!--Progress Bar--></div>\r\n\t\t\t</div>\r\n\t\t</div>'
     });

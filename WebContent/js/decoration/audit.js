@@ -3,12 +3,15 @@ jQuery(function($) {
 	
 	var audit = {
 		decorationOrderStatus: {},
-        type: {0: "半包", 1: "套餐", 2: "半价", 3: "满减", 4: "减上捡"}
+        type: {}
 	};
 	
 	com.post(api.ds.decoration, {}, function (res) {
 		$.each(res.decorationOrderStatus, function(i,v){
 			audit.decorationOrderStatus[v.key] = v.value;
+		});
+		$.each(res.decorationOrderType, function(i,v){
+			audit.type[v.key] = v.value;
 		});
     }, null, false);
 

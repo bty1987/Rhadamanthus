@@ -2,7 +2,7 @@ package com.fanglin.right.vo;
 
 import java.io.Serializable;
 
-import com.fanglin.information.vo.TaskVO;
+import com.fanglin.data.common.vo.TaskVO;
 
 public class TaskUserRightVO implements Serializable {
 

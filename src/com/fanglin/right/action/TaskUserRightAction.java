@@ -11,7 +11,8 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.information.vo.TaskVO;
+import com.fanglin.data.common.vo.TaskVO;
+
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.right.service.TaskUserRightService;
 

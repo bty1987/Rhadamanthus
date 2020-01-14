@@ -59,12 +59,15 @@ public class ProductionWorkPlanServiceImpl implements ProductionWorkPlanService 
 
 	@Override
 	public List<ProductionWorkPlanVO> queryProductionWorkPlanByPpid(long ppid) {
-		
+
 		List<ProductionWorkPlanPO> ProductionWorkPlanPOs = productionWorkPlanDao.queryProductionWorkPlanByPpid(ppid);
 		List<ProductionWorkPlanVO> ProductionWorkPlanVOs = new ArrayList<ProductionWorkPlanVO>();
 
+		ProductionWorkPlanVO productionWorkPlanVO;
+		
 		for (ProductionWorkPlanPO productionWorkPlanPO : ProductionWorkPlanPOs) {
-			ProductionWorkPlanVO productionWorkPlanVO = new ProductionWorkPlanVO(new WorkplanVO(new WorkshopVO()), new UserBaseVO());
+			
+			productionWorkPlanVO = new ProductionWorkPlanVO(new WorkplanVO(new WorkshopVO()), new UserBaseVO());
 
 			BeanUtil.copyProperties(productionWorkPlanPO, productionWorkPlanVO, Arrays.asList("workplan", "creater"));
 			BeanUtil.copyProperties(productionWorkPlanPO.getWorkplan(), productionWorkPlanVO.getWorkplan(), Arrays.asList("workshop"));
@@ -73,7 +76,7 @@ public class ProductionWorkPlanServiceImpl implements ProductionWorkPlanService 
 
 			ProductionWorkPlanVOs.add(productionWorkPlanVO);
 		}
-		
+
 		return ProductionWorkPlanVOs;
 	}
 
@@ -82,37 +85,76 @@ public class ProductionWorkPlanServiceImpl implements ProductionWorkPlanService 
 	public int addProductionWorkPlan(ProductionWorkPlanVO productionWorkPlanVO, String userId) throws FLException {
 
 		ProductionPlanPO productionPlanPO = productionplanDao.get(productionWorkPlanVO.getPpid());
-		
+
 		if (productionPlanPO == null) {
 			throw new FLException(220008, "生产计划单不存在");
 		}
 
-		ProductionWorkPlanPO productionworkplanPO = productionWorkPlanDao.queryProductionWorkPlanByPpidAWpid(productionWorkPlanVO.getPpid(), productionWorkPlanVO.getWorkplan().getWpid());
-		
-		if (productionworkplanPO != null) {
+		Integer queryProductionWorkPlanByPpidAWpid = productionWorkPlanDao.queryProductionWorkPlanByPpidAWpid(productionWorkPlanVO.getPpid(), productionWorkPlanVO.getWorkplan().getWpid());
+
+		if (queryProductionWorkPlanByPpidAWpid != 0 ) {
 			throw new FLException(220010, "该工序组已存在");
 		}
 
 		ProductionWorkPlanPO productionWorkPlanPO = new ProductionWorkPlanPO(new WorkplanPO(), new UserPO());
 		BeanUtil.copyPropertie(productionWorkPlanVO, productionWorkPlanPO, Arrays.asList("workplan", "creater"));
 		BeanUtil.copyProperties(workplanDao.get(productionWorkPlanVO.getWorkplan().getWpid()), productionWorkPlanPO.getWorkplan());
+		productionWorkPlanPO.setSort((short) (productionWorkPlanDao.countProductionWorkPlanByPpid(productionWorkPlanVO.getPpid()) + ProductionWorkPlanPO.NUM_ONE_INT));
 		productionWorkPlanPO.setCreater(userDao.queryUserByUserId(userId));
 		productionWorkPlanPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		productionWorkPlanDao.save(productionWorkPlanPO);
 
 		List<WorkflowPlanPO> workflowplans = workflowplanDao.queryWorkflowPlanByWpid(productionWorkPlanVO.getWorkplan().getWpid());
-		
+
 		if (workflowplans.size() == 0) {
 			throw new FLException(2200020, "工序组中暂无工序，请在该工序组中添加工序。");
 		}
+
+		ProductionWorkFlowPO productionWorkFlowPO;
 		
 		for (WorkflowPlanPO workflowplan : workflowplans) {
-			ProductionWorkFlowPO productionWorkFlowPO = new ProductionWorkFlowPO(new WorkflowPO());
+			
+			productionWorkFlowPO = new ProductionWorkFlowPO(new WorkflowPO());
+			
 			productionWorkFlowPO.setPwpid(productionWorkPlanPO.getPwpid());
+			productionWorkFlowPO.setStatus(ProductionWorkFlowPO.STATUS_INIT_INT);
 			productionWorkFlowPO.setWorkflow(workflowDao.get(workflowplan.getWorkflow().getWfid()));
+			
 			productionworkflowDao.save(productionWorkFlowPO);
 		}
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int finishProductionWorkPlan(ProductionWorkPlanVO productionWorkPlanVO) throws FLException {
+
+		ProductionPlanPO productionPlanPO = productionplanDao.get(productionWorkPlanVO.getPpid());
+
+		if (productionPlanPO == null) {
+			throw new FLException(220008, "生产计划单不存在");
+		}
+
+		ProductionWorkPlanPO productionworkplanPO = productionWorkPlanDao.get(productionWorkPlanVO.getPwpid());
+
+		if (productionworkplanPO == null) {
+			throw new FLException(220026, "计划工序组不存在");
+		}
+
+		if (productionworkplanPO.getStatus() != ProductionWorkPlanPO.STATUS_OPERATED_INT) {
+			throw new FLException(220011, "计划工序组状态不可操作");
+		}
+
+		if (productionWorkPlanDao.countProductionWorkPlanByPpidAStatus(productionworkplanPO.getPpid(), productionworkplanPO.getSort(), ProductionWorkPlanPO.STATUS_COMPLETE_INT) > 0) {
+			throw new FLException(220027, "计划工序组执行顺序异常");
+		}
+
+		productionworkplanPO.setStatus(ProductionWorkPlanPO.STATUS_COMPLETE_INT);
+		productionworkplanPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
 		
+		productionWorkPlanDao.update(productionworkplanPO);
+
 		return 0;
 	}
 
@@ -120,29 +162,22 @@ public class ProductionWorkPlanServiceImpl implements ProductionWorkPlanService 
 	@Transactional(rollbackFor = Exception.class)
 	public int deleteProductionWorkPlan(ProductionWorkPlanVO productionWorkPlanVO) throws FLException {
 
-		ProductionWorkPlanPO productionworkplanPO = productionWorkPlanDao.queryProductionWorkPlanByPpidAWpid(productionWorkPlanVO.getPpid(), productionWorkPlanVO.getWorkplan().getWpid());
-		
+		ProductionWorkPlanPO productionworkplanPO = productionWorkPlanDao.get(productionWorkPlanVO.getPwpid());
+
 		if (productionworkplanPO == null) {
-			throw new FLException(220014, "计划工序组不存在");
+			throw new FLException(220026, "计划工序组不存在");
 		}
-		
+
 		if (productionworkplanPO.getStatus() == ProductionWorkPlanPO.STATUS_OPERATED_INT) {
 			throw new FLException(220011, "计划工序组状态不可操作");
 		}
+
+		productionworkplanPO.setStatus(ProductionWorkPlanPO.STATUS_INVALID_INT);
 		
-		// 删除工序
-		List<ProductionWorkFlowPO> productionWorkFlowPOs = productionworkflowDao.queryProductionWorkFlowByPwpid(productionworkplanPO.getPwpid());
-		
-		if (productionWorkFlowPOs.size() != 0) {
-			for (ProductionWorkFlowPO productionWorkFlowPO : productionWorkFlowPOs) {
-				productionworkflowDao.delete(productionWorkFlowPO);
-			}
-		}
-		
-		// 最后删除工序组
-		productionWorkPlanDao.delete(productionworkplanPO);
+		productionWorkPlanDao.update(productionworkplanPO);
 
 		return 0;
 	}
 
 }
+

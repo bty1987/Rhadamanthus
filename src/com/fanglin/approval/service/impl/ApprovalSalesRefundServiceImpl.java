@@ -20,9 +20,9 @@ import com.fanglin.approval.vo.ApprovalSalesRefundItemVO;
 import com.fanglin.approval.vo.ApprovalSalesRefundVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.inventory.vo.ColorVO;
-import com.fanglin.inventory.vo.FormatVO;
-import com.fanglin.inventory.vo.GoodsVO;
+import com.fanglin.data.material.vo.ColorVO;
+import com.fanglin.data.material.vo.FormatVO;
+import com.fanglin.data.material.vo.GoodsVO;
 import com.fanglin.payment.dao.SalesPaymentDao;
 import com.fanglin.payment.po.SalesPaymentPO;
 import com.fanglin.personel.dao.UserDao;
@@ -136,6 +136,10 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			throw new FLException(260021, "销售单不存在");
 		}
 
+		if (salesPO.getStatus() != SalesPO.STATUS_INIT_SHORT) {
+			throw new FLException(260022, "销售单状态不可操作");
+		}
+
 		approvalPO = new ApprovalPO();
 
 		BeanUtil.copyProperties(approvalVO, approvalPO, Arrays.asList("receiver", "sender"));
@@ -146,7 +150,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		String refundType = approvalSalesRefundVO.getType() == SalesPO.STATUS_ALLBACK_SHORT ? "全退" : approvalSalesRefundVO.getType() == SalesPO.STATUS_DBACKORDER_SHORT ? "倒单" : "退货";
 		String content = String.format("装修单号:%s,销售单号:%s,品牌:%s,退款金额:%.3f,类型:%s", salesPO.getOrderId(), salesPO.getNo(), salesPO.getBrand(), Arith.div(approvalSalesRefundVO.getRefund(), 1000.0), refundType);
 
-		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(sid), ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT, content, company);
+		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(sid), ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT, content, approvalVO.getComment(), company);
 
 		approvalDao.save(approvalPO);
 
@@ -159,32 +163,35 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		approvalSalesRefundDao.save(approvalSalesRefundPO);
 
 		for (ApprovalSalesRefundItemVO approvalSalesRefundItemVO : approvalSalesRefundItemVOs) {
-			if (approvalSalesRefundItemVO != null) {
-				SalesItemPO salesItemPO = salesItemDao.get(approvalSalesRefundItemVO.getSalesItem().getSiid());
 
-				salesItemPO.setNum(Arith.sub(salesItemPO.getNum(), approvalSalesRefundItemVO.getNum()));
-				salesItemPO.setTotal(Arith.sub(salesItemPO.getTotal(), approvalSalesRefundItemVO.getTotal()));
+			if (approvalSalesRefundItemVO == null)
+				continue;
 
-				salesItemDao.update(salesItemPO);
+			SalesItemPO salesItemPO = salesItemDao.get(approvalSalesRefundItemVO.getSalesItem().getSiid());
 
-				ApprovalSalesRefundItemPO approvalSalesRefundItemPO = new ApprovalSalesRefundItemPO();
+			salesItemPO.setNum(Arith.sub(salesItemPO.getNum(), approvalSalesRefundItemVO.getNum()));
+			salesItemPO.setTotal(Arith.sub(salesItemPO.getTotal(), approvalSalesRefundItemVO.getTotal()));
 
-				approvalSalesRefundItemPO.setNum(approvalSalesRefundItemVO.getNum());// 退货数量
-				approvalSalesRefundItemPO.setTotal(approvalSalesRefundItemVO.getTotal());// 退货金额
-				approvalSalesRefundItemPO.setAsrid(approvalSalesRefundPO.getAsrid());
-				approvalSalesRefundItemPO.setSid(sid);
-				approvalSalesRefundItemPO.setSalesItem(salesItemPO);// 销售单型号信息类
+			salesItemDao.update(salesItemPO);
 
-				approvalSalesRefundItemDao.save(approvalSalesRefundItemPO);
-			}
+			ApprovalSalesRefundItemPO approvalSalesRefundItemPO = new ApprovalSalesRefundItemPO();
+
+			approvalSalesRefundItemPO.setNum(approvalSalesRefundItemVO.getNum());// 退货数量
+			approvalSalesRefundItemPO.setTotal(approvalSalesRefundItemVO.getTotal());// 退货金额
+			approvalSalesRefundItemPO.setAsrid(approvalSalesRefundPO.getAsrid());
+			approvalSalesRefundItemPO.setSid(sid);
+			approvalSalesRefundItemPO.setSalesItem(salesItemPO);// 销售单型号信息类
+
+			approvalSalesRefundItemDao.save(approvalSalesRefundItemPO);
 		}
+
 		return 0;
 	}
 
 	// 批准销售退款
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int approvalForSalesRefund(ApprovalPO approvalPO) throws FLException {
+	public int approveForSalesRefund(ApprovalPO approvalPO) throws FLException {
 
 		ApprovalSalesRefundPO approvalSalesRefundPO = approvalSalesRefundDao.queryApprovalSalesRefundByAId(approvalPO.getAid());
 
@@ -222,6 +229,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		refundsPO.setSpid(salesPaymentPO.getSpid());
 		refundsPO.setCreater(userPO);
 		refundsPO.setTotal(approvalSalesRefundPO.getRefund());
+		refundsPO.setType(approvalSalesRefundPO.getType());
 		refundsPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		refundsPO.setStatus(RefundsPO.STATUS_TYPE_REFUNDS_INT);
 		refundsPO.setComment(approvalPO.getContents());
@@ -245,6 +253,10 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			salesBalancePO.setType(balanceStatus == SalesPO.BALANCESTATUS_SETTLEMENT_SHORT ? SalesBalancePO.TYPE_BALANCEREFUNDS_INT : SalesBalancePO.TYPE_PREBALANCEREFUNDS_INT);
 			salesBalancePO.setStatus(SalesBalancePO.STATUS_PREBALANCE_INT);
 			salesBalancePO.setComment(salesPO.getComment());
+
+			salesBalancePO.setSalesman(salesPO.getSalesman());
+			salesBalancePO.setDept(salesPO.getSalesman().getDept());
+			salesBalancePO.setRegion(salesPO.getSalesman().getDept().getFatherDept());
 
 			salesBalanceDao.save(salesBalancePO);
 		}
@@ -306,9 +318,14 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 
 		if (balanceStatuses.contains(balanceStatus)) { // 结算状态为预结算/厂商结算/结算
 
+			long vbalance = Arith.sub(Arith.round(-refundsPO.getTotal(), 0, Arith.ROUND_FLOOR), Arith.round(balance, 0, Arith.ROUND_CEILING));
+
 			salesBalancePO.setAllowance(allowance);
 			salesBalancePO.setBalance(balance);
 			salesBalancePO.setOnetype(approvalSalesRefundPO.getType());
+
+			salesBalancePO.setVbalance(vbalance);
+			salesBalancePO.setPbalance(vbalance);
 
 			salesBalanceDao.update(salesBalancePO);
 		}
@@ -342,6 +359,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		}
 
 		salesPO.setStatus(SalesPO.STATUS_INIT_SHORT);
+
 		salesDao.update(salesPO);
 
 		List<ApprovalSalesRefundItemPO> approvalSalesRefundItemPOs = approvalSalesRefundItemDao.queryApprovalSalesRefundItemByAsrId(approvalSalesRefundPO.getAsrid());

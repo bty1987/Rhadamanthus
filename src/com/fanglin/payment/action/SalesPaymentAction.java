@@ -34,10 +34,14 @@ public class SalesPaymentAction extends BaseListAction {
 	
 	private List<Long> spids;
 	
+	private List<Long> posids;
+	
+	private String companyType;
+	
 	@Action(value = "pageSalesPaymentForInit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSalesPaymentForInit() throws FLException{
 		
-		salesPaymentService.pageSalesPaymentForInit(getPaging(), getFilters(), queryCompany());
+		salesPaymentService.pageSalesPaymentForInit(getPaging(), getFilters(), queryCompany(), companyType);
 		
 		return SUCCESS;
 	}
@@ -45,7 +49,7 @@ public class SalesPaymentAction extends BaseListAction {
 	@Action(value = "pageSalesPaymentForNotInit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSalesPaymentForNotInit() throws FLException{
 		
-		salesPaymentService.pageSalesPaymentForNotInit(getPaging(), getFilters(), queryCompany());
+		salesPaymentService.pageSalesPaymentForNotInit(getPaging(), getFilters(), queryCompany(), companyType);
 		
 		return SUCCESS;
 	}
@@ -62,6 +66,14 @@ public class SalesPaymentAction extends BaseListAction {
 	public String pageSalesPaymentForConfirm() throws FLException{
 		
 		salesPaymentService.pageSalesPaymentForConfirm(getPaging(), getFilters(), queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "querySalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String querySalesPayment() throws FLException{
+		
+		salesPayments = salesPaymentService.querySalesPayment(getFilters(), queryCompany(), companyType);
 		
 		return SUCCESS;
 	}
@@ -125,7 +137,7 @@ public class SalesPaymentAction extends BaseListAction {
 	@Action(value = "collectSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String collectSalesPayment() throws FLException{
 		
-		salesPaymentService.collectSalesPayment(salesPayment, salesReceipt, queryUserId(), queryCompany());
+		salesPaymentService.collectSalesPayment(salesPayment, salesReceipt, posids, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -133,7 +145,7 @@ public class SalesPaymentAction extends BaseListAction {
 	@Action(value = "collectSalesPayments", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String collectSalesPayments() throws FLException{
 		
-		salesPaymentService.collectSalesPayments(spids,salesPayment, salesReceipt, queryUserId(), queryCompany());
+		salesPaymentService.collectSalesPayments(spids,salesPayment, salesReceipt, posids, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -216,6 +228,22 @@ public class SalesPaymentAction extends BaseListAction {
 
 	public void setSpids(List<Long> spids) {
 		this.spids = spids;
+	}
+
+	public List<Long> getPosids() {
+		return posids;
+	}
+
+	public void setPosids(List<Long> posids) {
+		this.posids = posids;
+	}
+
+	public String getCompanyType() {
+		return companyType;
+	}
+
+	public void setCompanyType(String companyType) {
+		this.companyType = companyType;
 	}
 	
 }

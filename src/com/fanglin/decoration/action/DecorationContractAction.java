@@ -11,6 +11,8 @@
 
 package com.fanglin.decoration.action;
 
+import java.util.List;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -18,11 +20,12 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.communion.vo.SignetVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.service.DecorationContractService;
 import com.fanglin.decoration.vo.DecorationContractVO;
-import com.fanglin.decoration.vo.DecorationMidpackVO;
 import com.fanglin.decoration.vo.DecorationVO;
 
 @ParentPackage("base")
@@ -33,77 +36,107 @@ public class DecorationContractAction extends BaseListAction {
 	private static final long serialVersionUID = -1599812124963548111L;
 
 	private DecorationContractVO decorationContract;
-	
+
+	private List<DecorationContractVO> decorationContracts;
+
 	private DecorationVO decoration;
-	
+
 	private String decorationOrderId;
-	
-	private DecorationMidpackVO decorationMidpack;
-	
+
+	private CustomerVO customer;
+
+	private SignetVO signet;
+
+	private String redirect;
+
 	@Autowired
 	private DecorationContractService decorationContractService;
-	
-	@Action(value = "queryDecorationContractByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDecorationContractByOrderId() throws FLException{
-		
-		decorationContract = decorationContractService.queryDecorationContractByOrderId(decorationContract);
-		
+
+	@Action(value = "queryDecorationContractByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationContractByOrderId() throws FLException {
+
+		decorationContracts = decorationContractService.queryDecorationContractByOrderId(decorationContract);
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "saveDecorationContract", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String saveDecorationContract() throws FLException{
-		
-		decorationContractService.saveDecorationContract(decorationContract, queryCompany());
-		
+
+	@Action(value = "addDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addDecorationContract() throws FLException {
+
+		decorationContractService.addDecorationContract(decorationContract, queryUserId());
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "signDecorationContract", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String signDecorationContract() throws FLException{
-		
+
+	@Action(value = "signDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String signDecorationContract() throws FLException {
+
 		decorationContractService.signDecorationContract(decorationContract, authentication());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "resignDecorationContract", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String resignDecorationContract() throws FLException{
-		
+
+	@Action(value = "resignDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String resignDecorationContract() throws FLException {
+
 		decorationContractService.resignDecorationContract(decorationContract, queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "presignDecorationContract", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String presignDecorationContract() throws FLException{
-		
+
+	@Action(value = "presignDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String presignDecorationContract() throws FLException {
+
 		decorationContractService.presignDecorationContract(decoration, queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "makeDecorationMidpack", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String makeDecorationMidpack() throws FLException{
-		
-		decorationContractService.makeDecorationMidpack(decorationMidpack, queryUserId());
-		
+
+	@Action(value = "signDecorationContractForCompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String signDecorationContractForCompany() throws FLException {
+
+		decorationContractService.signDecorationContractForCompany(signet, decorationContract);
+
 		return SUCCESS;
 	}
-	
-	public String getDecorationOrderId(){
+
+	@Action(value = "signDecorationContractForCustomer", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String signDecorationContractForCustomer() throws FLException {
+
+		redirect = decorationContractService.signDecorationContractForCustomer(decorationContract, customer);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "viewDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String viewDecorationContract() throws FLException {
+
+		redirect = decorationContractService.viewDecorationContract(decorationContract);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "fillingDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String fillingDecorationContract() throws FLException {
+
+		decorationContractService.fillingDecorationContract(decorationContract);
+
+		return SUCCESS;
+	}
+
+	public String getDecorationOrderId() {
 		return decorationOrderId;
 	}
 
-	public void setDecorationOrderId(String decorationOrderId){
+	public void setDecorationOrderId(String decorationOrderId) {
 		this.decorationOrderId = decorationOrderId;
 	}
 
-	public void setDecorationContract(DecorationContractVO decorationContract){
+	public void setDecorationContract(DecorationContractVO decorationContract) {
 		this.decorationContract = decorationContract;
 	}
 
-	public DecorationContractVO getDecorationContract(){
+	public DecorationContractVO getDecorationContract() {
 		return decorationContract;
 	}
 
@@ -115,12 +148,36 @@ public class DecorationContractAction extends BaseListAction {
 		this.decoration = decoration;
 	}
 
-	public DecorationMidpackVO getDecorationMidpack() {
-		return decorationMidpack;
+	public List<DecorationContractVO> getDecorationContracts() {
+		return decorationContracts;
 	}
 
-	public void setDecorationMidpack(DecorationMidpackVO decorationMidpack) {
-		this.decorationMidpack = decorationMidpack;
+	public void setDecorationContracts(List<DecorationContractVO> decorationContracts) {
+		this.decorationContracts = decorationContracts;
 	}
-	
+
+	public CustomerVO getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(CustomerVO customer) {
+		this.customer = customer;
+	}
+
+	public String getRedirect() {
+		return redirect;
+	}
+
+	public void setRedirect(String redirect) {
+		this.redirect = redirect;
+	}
+
+	public SignetVO getSignet() {
+		return signet;
+	}
+
+	public void setSignet(SignetVO signet) {
+		this.signet = signet;
+	}
+
 }

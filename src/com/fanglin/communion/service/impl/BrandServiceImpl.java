@@ -27,6 +27,9 @@ import com.fanglin.communion.po.CategoryPO;
 import com.fanglin.communion.service.BrandService;
 import com.fanglin.communion.vo.BrandVO;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
@@ -42,6 +45,9 @@ public class BrandServiceImpl implements BrandService {
 
 	@Autowired
 	private CountingService countingService;
+	
+	@Autowired
+	private UserDao userDao;
 
 	@Override
 	public void pageBrand(Paging paging, List<Filter> filters, int company) {
@@ -50,8 +56,9 @@ public class BrandServiceImpl implements BrandService {
 		List<BrandVO> brandVOs = new ArrayList<BrandVO>();
 
 		for (BrandPO brandPO : brandPOs) {
-			BrandVO brandVO = new BrandVO();
-			BeanUtil.copyProperties(brandPO, brandVO, Arrays.asList("category"));
+			BrandVO brandVO = new BrandVO(new UserBaseVO());
+			BeanUtil.copyProperties(brandPO, brandVO, Arrays.asList("category", "supplier"));
+			BeanUtil.copyProperties(brandPO.getSupplier(), brandVO.getSupplier(), Arrays.asList("role", "dept", "duty"));
 
 			CategoryPO categoryPO = brandPO.getCategory();
 
@@ -73,7 +80,7 @@ public class BrandServiceImpl implements BrandService {
 
 		for (BrandPO brandPO : brandPOs) {
 			BrandVO brandVO = new BrandVO();
-			BeanUtil.copyProperties(brandPO, brandVO, Arrays.asList("category"));
+			BeanUtil.copyProperties(brandPO, brandVO, Arrays.asList("category", "supplier"));
 
 			CategoryPO categoryPO = brandPO.getCategory();
 
@@ -88,7 +95,7 @@ public class BrandServiceImpl implements BrandService {
 	}
 
 	@Override
-	public List<BrandVO> queryBrandForPinYinName(String pinyinName, int company) {
+	public List<BrandVO> queryBrandForPinYinName(String pinyinName, Integer company) {
 
 		Paging paging = new Paging(0, 10);
 
@@ -98,7 +105,7 @@ public class BrandServiceImpl implements BrandService {
 		for (BrandPO brandPO : brandPOs) {
 			BrandVO _brandVO = new BrandVO();
 
-			BeanUtil.copyProperties(brandPO, _brandVO, Arrays.asList("category"));
+			BeanUtil.copyProperties(brandPO, _brandVO, Arrays.asList("category", "supplier"));
 
 			CategoryPO categoryPO = brandPO.getCategory();
 
@@ -116,7 +123,7 @@ public class BrandServiceImpl implements BrandService {
 
 		BrandPO brandPO = brandDao.queryBrandByBid(brandVO.getBid());
 
-		BeanUtil.copyProperties(brandPO, brandVO, Arrays.asList("category"));
+		BeanUtil.copyProperties(brandPO, brandVO, Arrays.asList("category", "supplier"));
 
 		CategoryPO categoryPO = brandPO.getCategory();
 
@@ -131,7 +138,7 @@ public class BrandServiceImpl implements BrandService {
 
 		BrandPO brandPO = brandDao.queryBrandByNo(brandVO.getNo());
 
-		BeanUtil.copyProperties(brandPO, brandVO, Arrays.asList("category"));
+		BeanUtil.copyProperties(brandPO, brandVO, Arrays.asList("category", "supplier"));
 
 		CategoryPO categoryPO = brandPO.getCategory();
 
@@ -149,7 +156,7 @@ public class BrandServiceImpl implements BrandService {
 
 		for (BrandPO brandPO : brandPOs) {
 			brandVO = new BrandVO();
-			BeanUtil.copyProperties(brandPO, brandVO, Arrays.asList("category"));
+			BeanUtil.copyProperties(brandPO, brandVO, Arrays.asList("category", "supplier"));
 
 			CategoryPO categoryPO = brandPO.getCategory();
 
@@ -169,13 +176,16 @@ public class BrandServiceImpl implements BrandService {
 		BrandPO brandPO = new BrandPO();
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_BRAND_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
 
+		UserPO supplier = userDao.queryUserByUserId(brandVO.getSupplier().getUserId());
+		
 		StringBuffer brandNo = new StringBuffer();
 		brandNo.append(SystemConfig.getString("brandIdent", "B_"));
 		brandNo.append(FormatUtil.fillZero(count, "000"));
 		brandPO.setNo(brandNo.toString());
-		BeanUtil.copyProperties(brandVO, brandPO, Arrays.asList("no", "category"));
+		BeanUtil.copyProperties(brandVO, brandPO, Arrays.asList("no", "category", "supplier"));
 		brandPO.setCompany(company);
 		brandPO.setCategory(new CategoryPO(brandVO.getCid()));
+		brandPO.setSupplier(supplier);
 		brandPO.setPinyin(PinYin4Util.getPinyin(brandVO.getName()).get(0).toString());
 		brandDao.save(brandPO);
 
@@ -188,9 +198,12 @@ public class BrandServiceImpl implements BrandService {
 
 		BrandPO brandPO = brandDao.get(brandVO.getBid());
 
-		BeanUtil.copyProperties(brandVO, brandPO, Arrays.asList("category", "company"));
+		UserPO supplier = userDao.queryUserByUserId(brandVO.getSupplier().getUserId());
+		
+		BeanUtil.copyProperties(brandVO, brandPO, Arrays.asList("category", "supplier", "company"));
 
 		brandPO.setCategory(new CategoryPO(brandVO.getCid()));
+		brandPO.setSupplier(supplier);
 
 		if (brandVO.getName() != null) {
 			brandPO.setPinyin(PinYin4Util.getPinyin(brandVO.getName()).toString());

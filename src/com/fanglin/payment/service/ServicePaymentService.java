@@ -19,9 +19,9 @@ public interface ServicePaymentService {
 	
 	public List<ServicePaymentVO> queryServicePaymentForNotInitBySrId(ServiceReceiptVO serviceReceiptVO);
 	
-	public int collectServicePayment(ServicePaymentVO servicePaymentVO, ServiceReceiptVO serviceReceiptVO, String cuid, Integer company) throws FLException;
+	public int collectServicePayment(ServicePaymentVO servicePaymentVO, ServiceReceiptVO serviceReceiptVO, List<Long> posids, String cuid, Integer company) throws FLException;
 	
-	public int collectServicePaymentForService(ServicePaymentVO servicePaymentVO, ServiceReceiptVO serviceReceiptVO, String userId, Integer company) throws FLException;
+	public int collectServicePaymentForService(ServicePaymentVO servicePaymentVO, ServiceReceiptVO serviceReceiptVO, List<Long> posids, String userId, Integer company) throws FLException;
 	
 	public int refundServicePaymentForService(ServicePaymentVO servicePaymentVO, ServiceReceiptVO serviceReceiptVO, String userId, Integer company) throws FLException;
 	

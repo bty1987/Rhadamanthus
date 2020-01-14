@@ -32,7 +32,9 @@ public class UserWorkflowServiceImpl implements UserWorkflowService {
 		List<UserWorkflowVO> userWorkflowVOs = new ArrayList<UserWorkflowVO>();
 
 		for (UserWorkflowPO userWorkflowPO : userWorkflowPOs) {
+			
 			userWorkflowVO = new UserWorkflowVO(new WorkflowVO());
+			
 			BeanUtil.copyProperties(userWorkflowPO, userWorkflowVO, Arrays.asList("workflow"));
 			BeanUtil.copyProperties(userWorkflowPO.getWorkflow(), userWorkflowVO.getWorkflow());
 

@@ -42,12 +42,14 @@ public class BrandDaoImpl extends DaoImpl<BrandPO> implements BrandDao {
 	}
 
 	@Override
-	public List<BrandPO> pageBrandByPinYinName(Paging paging, String pinyinName, int company) {
+	public List<BrandPO> pageBrandByPinYinName(Paging paging, String pinyinName, Integer company) {
 
 		PagingQuery<BrandPO> query = pagingQuery(paging, BrandPO.class);
 
 		query.add(Restrictions.or(Restrictions.ilike(BrandPO.COLUMN_NAME_STR, pinyinName, MatchMode.ANYWHERE), Restrictions.ilike(BrandPO.COLUMN_PINYIN_STR, pinyinName, MatchMode.ANYWHERE)));
-		query.add(Restrictions.eq("company", company));
+		if(company != null){
+			query.add(Restrictions.eq("company", company));
+		}
 
 		return query.list();
 	}

@@ -4,7 +4,11 @@
 		postParam: {},
 		userAdvanceItems: {},
 		companysel:{},
-		task:{}
+		task:{},
+		
+		user: {
+		    uid: null,
+		}
 	};
 	var $wrap = null;
 
@@ -168,7 +172,9 @@
 			userAdvance.userAdvanceItems.company.bindData(userAdvance.companysel , "cid", "name");
 			userAdvance.userAdvanceItems.roleSel.bindData(userAdvance.roleList, "rid", "name");
 			userAdvance.userAdvanceItems.isLogin.prop("checked", (user.isLogin & 1) == 1 ? true : false);
-			userAdvance.userAdvanceItems.extranet.prop("checked", user.extranet == 1 ? true : false);
+			userAdvance.userAdvanceItems.macs.prop("checked", (user.extranet & 1) == 1);
+			userAdvance.userAdvanceItems.ips.prop("checked", (user.extranet & 2) == 2);
+			userAdvance.userAdvanceItems.qcode.prop("checked", (user.extranet & 4) == 4);
 
 			userAdvance.userAdvanceItems.oldcompany.val(user.companys);
 			userAdvance.userAdvanceItems.company.val();
@@ -178,10 +184,11 @@
 	}
 
 	function saveData(){
+	    
 		var options = {
 			"user.userId": userAdvance.postData.userId,
 			"user.isLogin": userAdvance.userAdvanceItems.isLogin.prop("checked") ? 1 : -1,
-			"user.extranet": userAdvance.userAdvanceItems.extranet.prop("checked") ? 1 : 0,
+			"user.extranet": (userAdvance.userAdvanceItems.macs.prop("checked") ? 1 : 0) + (userAdvance.userAdvanceItems.ips.prop("checked") ? 2 : 0) + (userAdvance.userAdvanceItems.qcode.prop("checked") ? 4 : 0),
 			"user.role.rid": userAdvance.userAdvanceItems.roleSel.val(),
 			"user.companys": userAdvance.userAdvanceItems.company.val()
 		};
@@ -211,7 +218,9 @@
 	userAdvance.usertaskModal=com.focusPage("#taskModal");
 
 	userAdvance.userAdvanceItems.isLogin = com.focusPage("#isLogin").switchBtn("isOrNot");
-	userAdvance.userAdvanceItems.extranet = com.focusPage("#extranet").switchBtn("isOrNot");
+	userAdvance.userAdvanceItems.ips = com.focusPage("#ips").switchBtn("isOrNot");
+	userAdvance.userAdvanceItems.macs = com.focusPage("#macs").switchBtn("isOrNot");
+	userAdvance.userAdvanceItems.qcode = com.focusPage("#qcode").switchBtn("isOrNot");
 	userAdvance.userAdvanceItems.roleSel = com.focusPage("#roleSel");
 	userAdvance.userAdvanceItems.company = com.focusPage("#company");
 	userAdvance.userAdvanceItems.currentcompany=com.focusPage("#currentcompany");
@@ -226,7 +235,7 @@
 	com.post(api.system.queryCompany,{},function(res){
 		userAdvance.companysel = res.companys;
 	}, null, false);
-	com.post(api.information.queryTask,{},function(res){
+	com.post(api.data.queryTask,{},function(res){
 		userAdvance.task = res.tasks;
 	}, null, false);
 
@@ -243,7 +252,8 @@
 					var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
 					var $company = $('<a></a>').addClass('btn btn-minier btn-yellow').html('公司');
-					var $btnRight = $('<a></a>').addClass('btn btn-minier btn-success').html('权配');
+					var $btnRight = $('<a></a>').addClass('btn btn-minier btn-purple').html('权配');
+					var $btnMacontrol = $('<a></a>').addClass('btn btn-minier btn-success').html('权限');
 					var $btnTask=$('<a></a>').addClass('btn btn-minier btn-purple').html('任务权配');
 					var $btnDesigne = $('<a></a>').addClass('btn btn-minier btn-warning').html('订单设计');
 					var $btnSales = $('<a></a>').addClass('btn btn-minier btn-inverse').html('订单业务');
@@ -326,6 +336,11 @@
 								}
 							}, null, false);
 						});
+					});
+					
+					$btnMacontrol.click(function(){
+					    params["user.uid"] = v.uid;
+					    com.popup4page("#layerPopUp", "/views/personnel/macontrol.html", "权限");
 					});
 
 					$btnTask.unbind().bind('click', function () {
@@ -418,10 +433,11 @@
 					$defaultPassword.click(function(){
 						defaultPassword(v.userId, v.userName);
 					});
+					
 					$btnlogout.click(function(){
 						binding.openlogoutDialog(v.userId);
 					});
-					$divBtnWrap.append($company).append($btnRight).append($btnTask).append($btnDesigne).append($btnSales).append($btnStatus).append($btnHouse).append($btnCustomer).append($resetPassword).append($defaultPassword).append($btnlogout).appendTo($h3);
+					$divBtnWrap.append($company).append($btnRight).append($btnMacontrol).append($btnTask).append($btnDesigne).append($btnSales).append($btnStatus).append($btnHouse).append($btnCustomer).append($resetPassword).append($defaultPassword).append($btnlogout).appendTo($h3);
 
 					$liLine.append($h3).append($ulProperty).appendTo($ul);
 				});

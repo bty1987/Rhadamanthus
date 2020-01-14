@@ -1,0 +1,124 @@
+package com.fanglin.payment.vo;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
+
+import org.apache.struts2.json.annotations.JSON;
+
+import com.fanglin.personel.vo.UserBaseVO;
+
+public class ActivityReceiptVO implements Serializable {
+
+	private static final long serialVersionUID = -3928175619959271745L;
+
+	private Long arid;// 活动收据ID
+
+	private String orderId;// 装修单号
+
+	private UserBaseVO collecter;// 收款人
+
+	private Timestamp collectTime;// 收款时间
+
+	private Long cash;// 现金
+
+	private Long bank;// 刷卡
+
+	private String bankInfo;// 刷卡信息
+
+	private Long coupon;// 券值
+
+	private String couponInfo;// 券信息
+
+	private String comment;// 说明
+
+	public ActivityReceiptVO() {
+		super();
+	}
+
+	public ActivityReceiptVO(UserBaseVO collecter) {
+		super();
+		this.collecter = collecter;
+	}
+
+	public Long getArid() {
+		return arid;
+	}
+
+	public void setArid(Long arid) {
+		this.arid = arid;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
+	public UserBaseVO getCollecter() {
+		return collecter;
+	}
+
+	public void setCollecter(UserBaseVO collecter) {
+		this.collecter = collecter;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getCollectTime() {
+		return collectTime;
+	}
+
+	public void setCollectTime(Timestamp collectTime) {
+		this.collectTime = collectTime;
+	}
+
+	public Long getCash() {
+		return cash;
+	}
+
+	public void setCash(Long cash) {
+		this.cash = cash;
+	}
+
+	public Long getBank() {
+		return bank;
+	}
+
+	public void setBank(Long bank) {
+		this.bank = bank;
+	}
+
+	public String getBankInfo() {
+		return bankInfo;
+	}
+
+	public void setBankInfo(String bankInfo) {
+		this.bankInfo = bankInfo;
+	}
+
+	public Long getCoupon() {
+		return coupon;
+	}
+
+	public void setCoupon(Long coupon) {
+		this.coupon = coupon;
+	}
+
+	public String getCouponInfo() {
+		return couponInfo;
+	}
+
+	public void setCouponInfo(String couponInfo) {
+		this.couponInfo = couponInfo;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+}

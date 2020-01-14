@@ -54,7 +54,7 @@ jQuery(function () {
         dompany: null
     };
 
-    com.initTypeahead('goods', api.inventory.queryGoodsByName, "goods.name", {}, 'goodes', 'gid', 'name',function (list, k, v) {
+    com.initTypeahead('goods', api.data.queryGoodsByName, "goods.name", {}, 'goodes', 'gid', 'name',function (list, k, v) {
         
         com.cleanItems(sales.leftitems);
         sales.items.left.find('select').empty();
@@ -70,7 +70,7 @@ jQuery(function () {
                 sales.leftitems.measurementUnit.val(val.measurementUnit);
 
                 //赋值售价信息
-                com.post(api.inventory.queryPriceByGid, {"price.gid": k}, function (res) {
+                com.post(api.data.queryPriceByGid, {"price.gid": k}, function (res) {
                     if (res.prices.length != 0) {
 
                         $.each(res.prices, function (key, value) {
@@ -92,7 +92,7 @@ jQuery(function () {
                     }
                 });
                 //赋值颜色信息
-                com.post(api.inventory.queryColorForEnableByGid, {"color.gid": k}, function (colorData) {
+                com.post(api.data.queryColorForEnableByGid, {"color.gid": k}, function (colorData) {
                     if (colorData.colors.length != 0) {
                         sales.leftitems.color.bindData(colorData.colors, "cid", "name");
                     } else {
@@ -100,7 +100,7 @@ jQuery(function () {
                     }
                 });
                 //赋值规格信息
-                com.post(api.inventory.queryFormatForEnableByGid, {"format.gid": k}, function (formatData) {
+                com.post(api.data.queryFormatForEnableByGid, {"format.gid": k}, function (formatData) {
                     if (formatData.formats.length != 0) {
                         sales.leftitems.format.bindData(formatData.formats, "fid", "info");
                     } else {
@@ -116,7 +116,7 @@ jQuery(function () {
     com.initTypeahead('salesman', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value',null);
     com.initTypeahead('instorer', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value',null);
     com.initTypeahead('guider', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value',null);
-    com.initTypeahead('brands', api.data.queryBrandForPinYinNameAname, "pinyinName", {}, 'brands', 'no', 'alias',function (list, k, v) {
+    com.initTypeahead('brands', api.data.queryBrandByPinyin, "pinyinName", {}, 'brands', 'no', 'alias',function (list, k, v) {
         $.each(list, function (index, val){
             if(val['no'] == k){
                 sales.brand  = val;
@@ -141,7 +141,7 @@ jQuery(function () {
         
         var price = {};
         
-        com.post(api.inventory.queryPriceByPid, {"price.pid": sales.leftitems.purchase.val()}, function (data) {
+        com.post(api.data.queryPriceByPid, {"price.pid": sales.leftitems.purchase.val()}, function (data) {
             price = data.price;
         },null, false);
         
@@ -154,12 +154,12 @@ jQuery(function () {
         var $discount = sales.leftitems.discount.val(); // 折扣
         var $num = sales.leftitems.num.val();
         var $total = sales.leftitems.total.val();
-        
+
         var $otherStatus = $selling != $disPrice ? 1 : 0;
         
         var $liList = $('<li></li>').addClass('list-group-item').attr({
             'data-discount': $discount,
-            'data-selling': $selling,
+            'data-selling': price.selling,//售价
             'data-purchase': $purchase,
             'data-disPrice': $disPrice,
             'data-postDis': sales.leftitems.postDis.val(),
@@ -175,7 +175,8 @@ jQuery(function () {
             'data-comment': sales.leftitems.remark.val(),
             'data-ctype': price.ctype,
             'data-cvalue': price.cvalue,
-            'data-priceType': price.type
+            'data-priceType': price.type,
+            'data-price':$selling //折让价
         });
 
         var $h4 = $('<h4></h4>').html(goods + ' ' + goodsNo).attr('addGid', sales.goods.gid);
@@ -313,7 +314,7 @@ jQuery(function () {
             options["salesItems[" + i + "].discount"] = data.discount;
             options["salesItems[" + i + "].disPrice"] = data.disprice;
             options["salesItems[" + i + "].postDis"] = data.postdis;
-            options["salesItems[" + i + "].price"] = data.selling;
+            options["salesItems[" + i + "].price"] = data.price;//折让价
             options["salesItems[" + i + "].num"] = data.num;
             options["salesItems[" + i + "].total"] = data.total;
             options["salesItems[" + i + "].comment"] = data.comment;
@@ -324,7 +325,7 @@ jQuery(function () {
             options["salesItems[" + i + "].priceType"] = data.pricetype;
         });
 
-        com.post(api.inventory.addSales, options, function () {
+        com.post(api.sales.addSales, options, function () {
             com.showAlert(com.info, "添加成功");
             com.focusPage('#salesItemList').empty();
             sales.items.left.find('select').empty();

@@ -23,5 +23,7 @@ public interface VprizeDao extends Dao<VprizePO> {
 	public List<VprizePO> pageVprize(Paging paging, List<Filter> filters);
 	
 	public List<VprizePO> queryVprize(long vaid);
+	
+	public int updateVprizeStatusForFailure(long vaid);
 
 }

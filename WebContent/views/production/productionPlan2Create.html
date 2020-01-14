@@ -1,0 +1,132 @@
+<div>
+    <div id="fl-statement"><div class="page-header"><h1>生产单<small><i class="icon-double-angle-right"></i>计划单</small></h1></div></div>
+    <div class="row">
+        <div class="col-xs-12">
+
+
+            <div class="clearfix" id="planCreateResultList"></div>
+
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 20px">
+        <div class="col-xs-12">
+            <a class="btn btn-minier btn-primary pull-left" id="addPlan" style="margin-right: 10px">
+                <i class="icon-plus bigger-110"></i>
+                <span>添加</span>
+            </a>
+            <a class="btn btn-minier" id="back">
+                <i class="icon-mail-forward bigger-110"></i>
+                <span>返回</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="productionPlanFinishModal" tabindex="-1">
+    <div class="modal-dialog" style="margin-top: 10%;" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myFinishPlanModalLabel">完结生产计划单</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="num">物流包数量</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="num" maxlength="12" class="col-xs-10 col-sm-7 v_required v_number"
+                                   data-toggle="popover" data-trigger='manual'/>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="finishSaveBtn" class="btn btn-primary">保存</button>
+                <button type="button" id="finishCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="productionPlanCrateModal" tabindex="-1">
+    <div class="modal-dialog" style="margin-top: 10%;" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myCreatePlanModalLabel">创建生产计划单</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="timeLimit">工期</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="timeLimit" maxlength="12" class="col-xs-10 col-sm-7 v_required"
+                                   data-toggle="popover" data-trigger='manual'/>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="layerImport" tabindex="-1">
+    <div class="modal-dialog" style="margin-top: 10%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myTitleLabel">导入excel</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" novalidate="novalidate">
+                    <div class="widget-main">
+                        <div class="row" style="margin-right:0px">
+                            <div class="col-xs-12">
+
+                                <div class="form-group">
+
+                                    <div class="row-fluid">
+                                        <div class="col-sm-5 infobox-container no-padding-right" style="margin-left: 10%"
+                                             id="download">
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="space5"></div>
+
+                                <div class="form-group">
+                                    <div class="control-label col-xs-3 no-padding-right" style="margin-left: 10%"
+                                         id="importProductionPlanExcel"></div>
+                                </div>
+                                <div class="space5"></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="confirmBtn" class="btn btn-default">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="productionPlanPopUp" class="portlet box"></div>
+
+<script type="text/javascript">
+    $.loadScript(['js/production/productionPlan2create.js']);
+</script>

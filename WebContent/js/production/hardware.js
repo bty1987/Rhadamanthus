@@ -4,32 +4,44 @@ $(function(){
 
         btns:{
             saveBtn: com.focusPage("#saveBtn"),
+            saveFinishBtn : com.focusPage("#saveFinishBtn"),
             cancelBtn : com.focusPage("#cancelBtn"),
             confirmBtn : com.focusPage("#confirmBtn")
         },
         modals:{
             addHardwareModel: com.focusPage("#addHardwareModel"),
+            finishModal: com.focusPage("#finishModal"),
             layerImportModal: com.focusPage("#layerImportModal")
 
         },
         items: {
             comment: com.focusPage("#comment"),
+            num: com.focusPage("#num")
         },
-        editFlg : true,
-        pid : params.pid,
-        productionStatus : params.status
 
+       hdStatus : {},
     };
 
+    var pageConfig = drawNode.getConfig(params['urlLoadParams'].depage);
 
-    hardware.btns.saveBtn.bindClick(saveData);
-
+    hardware.btns.saveBtn.bindClick(update);
+    hardware.btns.saveFinishBtn.bindClick(finish);
 
     hardware.modals.addHardwareModel.on("hide.bs.modal", function () {
-        com.clearValidator();
         com.cleanItems(hardware.items);
+        com.clearValidator();
+        com.closeTip();
     });
 
+    hardware.modals.finishModal.on("hide.bs.modal", function () {
+        com.cleanItems(hardware.items);
+        com.clearValidator();
+        com.closeTip();
+    });
+
+    com.post(api.ds.production, {}, function(res){
+        hardware.hdStatus = res.hardwareStatus.split("key", "value");
+    },null ,false);
 
     var displayFunc  = (function(){
 
@@ -51,32 +63,63 @@ $(function(){
             var creatLine = function (v) {
                 var $liLine = $('<li></li>').addClass('item-orange clearfix');
                 var $h3 = $('<h3></h3>').addClass('oid')
-                var $title = $('<small></small>').addClass('blue').html(' ' + v.comment);
+                var $title = $('<small></small>').addClass('blue').html(' ' + v.no);
                 var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
                 var $btnEdit = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('编辑');
                 var $btnUpload = $('<a></a>').addClass(' btn btn-minier btn-success').html('图表');
                 var $btnHr = $('<a></a>').addClass(' btn btn-minier btn-warning').html('五金项');
-                var $btnArrival = $('<a></a>').addClass(' btn btn-minier btn-inverse').html('到货');
-                var $btnDestory = $('<a></a>').addClass(' btn btn-minier btn-danger').html('废弃');
+                var $btnInstore = $('<a></a>').addClass(' btn btn-minier btn-inverse').html('入库');
+                var $btnFinish = $('<a></a>').addClass(' btn btn-minier btn-danger').html('完结');
 
-                var status = "";
+                var remainDate = productionUtils.dateDiffer(v.createTime, v.timeLimit);//计算剩余工期
+                var remainDay = 0 ;  //显示剩余工期
 
-                switch (v.status) {
-                    case 0:
-                        status = "未到货";
-                        break;
-                    case 1:
-                        status = "已到货";
-                        break;
-                    case 2:
-                        status = "废除";
-                        break;
+                if(v.status == 3 || v.status == 4){
+                    remainDay = "订单已结束";
+                }else if(remainDate < 0){
+                    remainDay = "已超过期限"+Math.abs(remainDate)+"天";
+                }else {
+                    remainDay = "剩余工期"+Math.abs(remainDate)+"天"
                 }
-                var propertyArr = [
-                    ["状态:", status, "red"]
-                ];
+
+                var propertyArr = [];
+
+                $.each(pageConfig.propertyArr, function (pi, pv) {
+                    switch (pv) {
+                        case "productionNo":
+                            propertyArr.push(["生产单号:",v.production.pno,"blue"]);
+                            break;
+                        case "orderId":
+                            propertyArr.push(["装修单号:", v.production.orderId, "blue"]);
+                            break;
+                        case "address":
+                            propertyArr.push(["楼盘地址:", v.production.house.village.name + " " + v.production.house.houseNumber, "grey"]);
+                            break;
+                        case "creater":
+                            propertyArr.push(["创建人:", v.creater.userName, "grey"]);
+                            break;
+                        case "createTime":
+                            propertyArr.push(["创建时间:", v.createTime , "green"]);
+                            break;
+                        case "finishTime":
+                            propertyArr.push(["结束时间:",v.finishTime,"green"]);
+                            break;
+                        case "status":
+                            propertyArr.push(["状态:", hardware.hdStatus[v.status], "red"]);
+                            break;
+                        case "timeLimit":
+                            propertyArr.push(["工期:", v.timeLimit, "green"]);
+                            break;
+                        case "remainingTime":
+                            propertyArr.push(["订单剩余时间:",remainDay,(remainDate < 5 ? "red":"green")]);
+                            break;
+                        case "comment":
+                            propertyArr.push(["说明:", v.comment, "grey"]);
+                            break;
+                    }
+                });
 
                 $.each(propertyArr, function (index, value) {
                     var $liProperty = $('<li></li>');
@@ -85,16 +128,34 @@ $(function(){
                     $liProperty.appendTo($ulProperty);
                 });
 
-                $liLine.append($h3).append($ulProperty);
-                if (v.status == 0 && (hardware.productionStatus != 4 && hardware.productionStatus != 5)) {
-                    $btnDiv.append($btnEdit)
-                        .append($btnUpload).append($btnHr)
-                        .append($btnArrival).append($btnDestory)
-                } else {
-                    $btnDiv.append($btnUpload).append($btnHr)
-                }
+                $.each(pageConfig.pageBtn, function (k, b) {
+                    switch (b) {
+                        case "btnUpdate"://编辑
+                            if ([0, 1, 2].indexOf(v.status) != -1) {
+                                $btnDiv.append($btnEdit);
+                            }
+                            break;
+                        case "btnHard"://五金项
+                            $btnDiv.append($btnHr);
+                            break;
+                        case "btnImport"://图表
+                            $btnDiv.append($btnUpload);
+                            break;
+                        case "btnInstore"://入库
+                            if (v.status == 1) {
+                                $btnDiv.append($btnInstore);
+                            }
+                            break;
+                        case "btnFinish"://完结
+                            if (v.status == 2) {
+                                $btnDiv.append($btnFinish);
+                            }
+                            break;
+                    }
+                    $h3.append($title).append($btnDiv);
+                });
 
-                $h3.append($title).append($btnDiv);
+                $liLine.append($h3).append($ulProperty);
 
                 //编辑按钮
                 $btnEdit.click(function () {
@@ -106,21 +167,18 @@ $(function(){
                    unload(v);
                 });
 
-
                 //五金项按钮
                 $btnHr.click(function () {
                     showItem(v);
                 });
-
-                //废除按钮
-                $btnDestory.click(function () {
-                    hardwareDestory(v.hid);
-                });
-
-                //已到货按钮
-                $btnArrival.click(function () {
-                    hardwareArrived(v.hid);
-                });
+                //入库按钮
+                $btnInstore.click(function (){
+                    instore(v);
+                })
+                //完结按钮
+                $btnFinish.click(function () {
+                    showFinish(v);
+                })
 
                 return $liLine;
 
@@ -140,53 +198,91 @@ $(function(){
     /*分页*/
     var hardwareSearcher = new Searcher();
 
-    var _condArr = [];
+    hardwareSearcher.init( pageConfig.condArr, "hardwareCondList", pageConfig.apiPage, function(data){
+        displayFunc.init('hardwareResultList', data);
+    }, "hardwarePagenation", pageConfig.postDataName, null, false, null, null,"hardwareResultList");
 
-    hardwareSearcher.init( _condArr, "condList", api.production.pageHardware, function(data){
-        displayFunc.init('resultList', data);
-    }, "pagenation", "hardwarePostData", {"production.pid":hardware.pid}, false, null, function(){
-
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addHardware').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
-        var $backBtn = $('<a></a>').addClass('btn btn-minier pull-left').attr('id', 'backs').css("margin", "0px 3px");
-        var $backBtns = $('<i></i>').addClass('icon-mail-forward bigger-110').appendTo($backBtn);
-        var $backSpan = $('<span></span>').text('返回').appendTo($backBtn);
-
-
-        if (hardware.productionStatus == 5 || hardware.productionStatus == 4 ) {
-            $adda.addClass('hide');
-        }
-
-        return [$adda,$backBtn];
-
-    });
-
-
-    com.focusPage('#addHardware').click(function(){
-        hardware.editFlg = true;
+    function showUpdate(v){
         com.clearValidator();
+        hardware.items.hid = v.hid;
         hardware.modals.addHardwareModel.modal("show");
-    });
+    }
+    //五金项
+    function showItem(v){
+        params.hid = v.hid;
+        params.hardwareStatus = v.status;
+        params.productionStatus = hardware.productionStatus;
+        com.popup4page("#layerPopUp", "views/production/hardwareItem.html", "五金项");
+    };
 
-    com.focusPage('#backs').click(function(){
-        com.switchPage(api.index.productionIndex.url)
-    });
+    function showFinish(v){
+        hardware.items.hid = v.hid;
+        hardware.modals.finishModal.modal("show");
+    }
+
+    function instore(v) {
+        com.showConfirm("是否确认入库", function () {
+            com.post(api.production.instoreHardware, {
+                "hardware.hid": v.hid,
+                "hardware.status": "2"
+            }, function (res) {
+                com.showAlert(com.info, "操作成功");
+                hardwareSearcher.doSearch();
+            });
+        })
+    }
+
+    //修改
+    function update(){
+
+        if (com.validate('addHardwareModel')) {
+            return false;
+        };
+
+        var options ={
+            "hardware.hid":hardware.items.hid,
+            "hardware.comment": hardware.items.comment.val(),
+        };
+
+        com.post(api.production.updateHardware,options,function (res) {
+            com.closePopup();
+            com.showAlert(com.info, "操作成功");
+            hardwareSearcher.doSearch();
+        })
+        hardware.modals.addHardwareModel.modal("hide");
+    };
+    //完结
+    function finish() {
+        if (com.validate('finishModal')) {
+            return false;
+        };
+
+        var options ={
+            "hardware.hid":hardware.items.hid,
+            "hardware.num": hardware.items.num.val(),
+        };
+        com.post(api.production.finishHardware,options,function (res) {
+            com.focusPage('#list ul.item-list').remove();
+            com.showAlert(com.info, "操作成功");
+            hardwareSearcher.doSearch();
+        })
+        hardware.modals.finishModal.modal("hide");
+    }
 
     function unload(v) {
 
-        com.focusPage("#layerImportModal").find('.infobox').remove();
+        hardware.modals.layerImportModal.modal("show").find(".infobox").remove();
+        var $line = com.focusPage('#download');
 
         if(v.path){
-            createLine(v.path, v.comment);
+            productionUtils.createLine(v.path, v.no, $line);
         }
 
-        com.focusPage('#importHardwareExcel').empty();
+        com.focusPage('#importHardwareExcel').removeClass('hide');
 
-        if(v.status != 0 ){
-            btnId.addClass('hide');
+        if(v.status == 3 || v.status == 4 ){
+            com.focusPage('#importHardwareExcel').addClass('hide');
         }
-
 
         com.uploadify("#importHardwareExcel", "添加上传文件", 'btn btn-success blue ', "*.xlsx", {'uploadType': 2}, 1, function(data){
             var option = {};
@@ -198,108 +294,17 @@ $(function(){
             }else{
                 com.showAlert(com.warning, "上传失败");
             }
-
             com.post(api.production.updateHardware,option,function(res){
                 com.showAlert(com.info, "操作成功");
+                $line.find(".infobox").remove();
+                productionUtils.createLine(v.path, v.no, $line);
                 hardwareSearcher.doSearch();
             });
         });
-
-        hardware.modals.layerImportModal.modal("show");
-
-    }
-
-    function showItem(v){
-        params.hid = v.hid;
-        params.hardwareStatus = v.status;
-        params.productionStatus = hardware.productionStatus;
-        com.switchPage(api.index.hardwareItemIndex.url);
-    };
-
-
-    //状态已到货
-    function hardwareArrived(id){
-        com.showConfirm("是否确认到货", function () {
-            com.post(api.production.updateHardwareForStatus, {
-                "hardware.hid": id,
-                "hardware.status": "1"
-            }, function (res) {
-                com.showAlert(com.info, "操作成功");
-                hardwareSearcher.doSearch();
-            });
-        })
-    }
-
-    //状态废除
-    function hardwareDestory(id){
-
-        com.showConfirm("是否确认删除", function () {
-            com.post(api.production.updateHardwareForStatus,{
-                "hardware.hid":id,
-                "hardware.status":"2"
-            },function(res){
-                com.showAlert(com.info, "操作成功");
-                hardwareSearcher.doSearch();
-            });
-        });
-    };
-
-    function showUpdate(v){
-        com.clearValidator();
-        hardware.editFlg = false;
-        hardware.items.hid = v.hid;
-        hardware.items.comment.val(v.comment);
-        hardware.modals.addHardwareModel.modal("show");
-    }
-
-    function saveData(){
-
-        if (com.validate('addHardwareModel')) {
-            return false;
-        };
-
-        var url;
-        var options ={
-            "hardware.pid":hardware.pid,
-            "hardware.path":"",
-            "hardware.comment": hardware.items.comment.val(),
-        };
-
-        hardware.editFlg ? url = api.production.addHardware : url = api.production.updateHardware, options["hardware.hid"] = hardware.items.hid;
-
-        com.post(url,options,function (res) {
-            com.closePopup();
-            com.showAlert(com.info, "操作成功");
-            hardwareSearcher.doSearch();
-        })
-        hardware.modals.addHardwareModel.modal("hide");
-    };
-
-    function createLine(path, comment){
-
-        var $line = hardware.modals.layerImportModal.find(".infobox-container");
-
-        var $name = comment+".xlsx";
-
-        var $box = $("<div></div>").addClass("infobox infobox-blue infobox-dark");
-
-        var $iconGrouop = $("<div></div>").addClass("infobox-icon");
-        var $icondownload = $("<a></a>").addClass("icon-download-alt");
-        com.downloadFile($icondownload, path, $name);
-
-        var $dataGrouop = $("<div></div>").addClass("infobox-data");
-        var $name = $("<div></div>").addClass("infobox-content").html($name);
-
-        $dataGrouop.append($name);
-        $iconGrouop.append($icondownload);
-        $box.append($iconGrouop).append($dataGrouop);
-        $line.append($box)
     };
 
     hardware.btns.confirmBtn.click(function () {
         hardware.modals.layerImportModal.modal("hide");
-    })
-
-
+    });
 });
 

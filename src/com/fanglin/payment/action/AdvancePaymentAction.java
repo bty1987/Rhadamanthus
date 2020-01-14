@@ -20,11 +20,10 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.payment.service.AdvancePaymentService;
+import com.fanglin.payment.vo.AdvancePaymentVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -36,9 +35,7 @@ public class AdvancePaymentAction extends BaseListAction {
 	@Autowired
 	private AdvancePaymentService advancePaymentService;
 	
-	private CustomerVO customer;
-	
-	private DecorationVO decoration;
+	private AdvancePaymentVO advancePayment;
 	
 	private long balanceAdvance;
 	
@@ -48,23 +45,19 @@ public class AdvancePaymentAction extends BaseListAction {
 	
 	private long zaterialAdvance;
 	
-	@Action(value="queryAdvancePaymentByCustomerId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryAdvancePaymentByCustomerId() throws FLException{
+	@Action(value="pageAdvancePayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String pageAdvancePayment() throws FLException {
 		
-		List<Long> advances = advancePaymentService.queryAdvancePaymentByCustomerId(customer,queryCompany());
-		
-		balanceAdvance = advances.get(0);
-		projectAdvance = advances.get(1);
-		materialAdvance = advances.get(2);
-		zaterialAdvance = advances.get(3);
+		advancePaymentService.pageAdvancePayment(getPaging(), getFilters(), queryCompany());
 		
 		return SUCCESS;
+		
 	}
 	
 	@Action(value="queryAdvancePaymentByOrderId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryAdvancePaymentByOrderId() throws FLException{
 		
-		List<Long> advances = advancePaymentService.queryAdvancePaymentByOrderId(decoration);
+		List<Long> advances = advancePaymentService.queryAdvancePaymentByOrderId(advancePayment);
 		
 		balanceAdvance = advances.get(0);
 		projectAdvance = advances.get(1);
@@ -74,20 +67,12 @@ public class AdvancePaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	public CustomerVO getCustomer() {
-		return customer;
+	public AdvancePaymentVO getAdvancePayment() {
+		return advancePayment;
 	}
 
-	public void setCustomer(CustomerVO customer) {
-		this.customer = customer;
-	}
-
-	public DecorationVO getDecoration() {
-		return decoration;
-	}
-
-	public void setDecoration(DecorationVO decoration) {
-		this.decoration = decoration;
+	public void setAdvancePayment(AdvancePaymentVO advancePayment) {
+		this.advancePayment = advancePayment;
 	}
 
 	public long getBalanceAdvance() {

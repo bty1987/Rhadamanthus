@@ -25,32 +25,32 @@ public class ProductionPlanAction extends BaseListAction {
 	private static final long serialVersionUID = 6604239651370077705L;
 
 	@Autowired
-	private ProductionPlanService productionplanservice;
+	private ProductionPlanService productionPlanService;
 	@Autowired
-	private ProductionPlanItemService productionplanitemservice;
+	private ProductionPlanItemService productionPlanItemService;
+	
+	private ProductionVO production;
 
 	private ProductionPlanVO productionPlan;
-
-	private ProductionVO production;
+	
+	private List<ProductionPlanVO> productionPlans;
 
 	private ProductionPlanItemVO productionPlanItem;
 
-	private List<ProductionPlanVO> productionplans;
-
-	private List<ProductionPlanItemVO> productionplanitems;
+	private List<ProductionPlanItemVO> productionPlanItems;
 
 	@Action(value = "pageProductionPlan", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageProductionPlan() {
+	public String pageProductionPlan() throws FLException {
 		
-		productionplanservice.pageProductionPlan(getPaging(), getFilters(), production.getPid());
-
+		productionPlanService.pageProductionPlan(getPaging(), getFilters(), queryCompany());
+		
 		return SUCCESS;
 	}
 
 	@Action(value = "pageProductionPlanItemByPpid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageProductionPlanItemByPpid() {
 		
-		productionplanitemservice.pageProductionPlanItemByPpid(getPaging(), getFilters(), productionPlanItem.getProductionPlan().getPpid());
+		productionPlanItemService.pageProductionPlanItemByPpid(getPaging(), getFilters(), productionPlanItem.getProductionPlan().getPpid());
 		
 		return SUCCESS;
 	}
@@ -58,47 +58,39 @@ public class ProductionPlanAction extends BaseListAction {
 	@Action(value = "queryProductionPlanByPid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryProductionPlanByPid() {
 		
-		productionplans = productionplanservice.queryProductionPlanByPid(productionPlan);
-		
-		return SUCCESS;
-	}
-
-	@Action(value = "queryProductionPlanByNo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryProductionPlanByNo() throws FLException {
-		
-		productionPlan = productionplanservice.queryProductionPlanByNo(productionPlan);
+		productionPlans = productionPlanService.queryProductionPlanByPid(productionPlan);
 		
 		return SUCCESS;
 	}
 
 	@Action(value = "addProductionPlan", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addProductionPlan() throws FLException {
+		
+		productionPlanService.addProductionPlan(productionPlan, queryCompany(), queryUserId());
 
-		productionplanservice.addProductionPlan(productionPlan, queryCompany());
-
+		return SUCCESS;
+	}
+	
+	@Action(value = "updateProductionPlan", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateProductionPlan() throws FLException {
+		
+		productionPlanService.updateProductionPlan(productionPlan);
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "finishProductionPlan", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String finishProductionPlan() throws FLException {
+		
+		productionPlanService.finishProductionPlan(productionPlan, queryUserId());
+		
 		return SUCCESS;
 	}
 
 	@Action(value = "addProductionPlanItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addProductionPlanItem() throws FLException {
 		
-		productionplanitemservice.addProductionPlanItem(productionPlanItem);
-		
-		return SUCCESS;
-	}
-
-	@Action(value = "updateProductionPlan", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateProductionPlan() throws FLException {
-		
-		productionplanservice.updateProductionPlan(productionPlan);
-		
-		return SUCCESS;
-	}
-
-	@Action(value = "updateProductionPlanForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateProductionPlanForStatus() throws FLException {
-		
-		productionplanservice.updateProductionPlanForStatus(productionPlan);
+		productionPlanItemService.addProductionPlanItem(productionPlanItem);
 		
 		return SUCCESS;
 	}
@@ -106,9 +98,17 @@ public class ProductionPlanAction extends BaseListAction {
 	@Action(value = "deleteProductionPlanItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteProductionPlanItem() throws FLException {
 		
-		productionplanitemservice.deleteProductionPlanItem(productionPlanItem);
+		productionPlanItemService.deleteProductionPlanItem(productionPlanItem);
 		
 		return SUCCESS;
+	}
+	
+	public ProductionVO getProduction() {
+		return production;
+	}
+
+	public void setProduction(ProductionVO production) {
+		this.production = production;
 	}
 
 	public ProductionPlanVO getProductionPlan() {
@@ -119,6 +119,14 @@ public class ProductionPlanAction extends BaseListAction {
 		this.productionPlan = productionPlan;
 	}
 
+	public List<ProductionPlanVO> getProductionPlans() {
+		return productionPlans;
+	}
+
+	public void setProductionPlans(List<ProductionPlanVO> productionPlans) {
+		this.productionPlans = productionPlans;
+	}
+
 	public ProductionPlanItemVO getProductionPlanItem() {
 		return productionPlanItem;
 	}
@@ -126,29 +134,14 @@ public class ProductionPlanAction extends BaseListAction {
 	public void setProductionPlanItem(ProductionPlanItemVO productionPlanItem) {
 		this.productionPlanItem = productionPlanItem;
 	}
-
-	public List<ProductionPlanVO> getProductionplans() {
-		return productionplans;
+	
+	public List<ProductionPlanItemVO> getProductionPlanItems() {
+		return productionPlanItems;
 	}
 
-	public void setProductionplans(List<ProductionPlanVO> productionplans) {
-		this.productionplans = productionplans;
-	}
-
-	public List<ProductionPlanItemVO> getProductionplanitems() {
-		return productionplanitems;
-	}
-
-	public void setProductionplanitems(List<ProductionPlanItemVO> productionplanitems) {
-		this.productionplanitems = productionplanitems;
-	}
-
-	public ProductionVO getProduction() {
-		return production;
-	}
-
-	public void setProduction(ProductionVO production) {
-		this.production = production;
+	public void setProductionPlanItems(
+			List<ProductionPlanItemVO> productionPlanItems) {
+		this.productionPlanItems = productionPlanItems;
 	}
 
 }

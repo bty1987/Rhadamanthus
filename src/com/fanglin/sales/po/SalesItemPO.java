@@ -11,9 +11,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.inventory.po.ColorPO;
-import com.fanglin.inventory.po.FormatPO;
-import com.fanglin.inventory.po.GoodsPO;
+import com.fanglin.data.po.ColorPO;
+import com.fanglin.data.po.FormatPO;
+import com.fanglin.data.po.GoodsPO;
 
 @Entity
 @Table(name = "salesitem", catalog = "sales")
@@ -52,6 +52,10 @@ public class SalesItemPO implements Serializable {
 	private int price;
 
 	private long num;
+	
+	private long punum;
+	
+	private long xgnum;
 
 	private long total;
 
@@ -189,6 +193,24 @@ public class SalesItemPO implements Serializable {
 
 	public void setNum(long num) {
 		this.num = num;
+	}
+	
+	@Column(name = "punum")
+	public long getPunum() {
+		return punum;
+	}
+
+	public void setPunum(long punum) {
+		this.punum = punum;
+	}
+	
+	@Column(name = "xgnum")
+	public long getXgnum() {
+		return xgnum;
+	}
+
+	public void setXgnum(long xgnum) {
+		this.xgnum = xgnum;
 	}
 
 	@Column(name = "total")

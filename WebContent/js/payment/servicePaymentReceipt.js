@@ -92,7 +92,7 @@ jQuery(function ($) {
                 "collectUser": serviceReceipt.collecterName,
                 "money": parseFloat(serviceReceipt.checkv),
                 "bankInfo": checkvParams[0],
-                "paymentWay": "转账"
+                "paymentWay": "银行"
             };
             receipt.receipts.push(tem);
             receipt.receiptsNum = checkvParams[1] + 1;
@@ -177,7 +177,7 @@ jQuery(function ($) {
                 if (receipt.receipts[start].paymentWay.indexOf("预付款") == -1) {
                     sumMoney += receipt.receipts[start].money;
                 }
-                if (receipt.receipts[start].paymentWay == "刷卡" || receipt.receipts[start].paymentWay == "转账") {
+                if (receipt.receipts[start].paymentWay == "刷卡" || receipt.receipts[start].paymentWay == "银行") {
                     var receInfoReceiptTr = $('<tr></tr>').appendTo(receiptTable);
                     var bankInfoReceiptTd = $('<td style="width: 12%; text-align: center;" rowspan="' + (receipt.receipts[start].bankInfo.length + 1) + '"></td>').text(receipt.receipts[start].paymentWay).appendTo(receInfoReceiptTr);
 

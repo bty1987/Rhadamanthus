@@ -30,11 +30,13 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 
+		query.add(Restrictions.eq("company", company));
+		query.add(Restrictions.eq("type", UserPO.TYPE_USER_INT));
+
 		query.alias("role", "role");
 
 		queryFilterExcute(query, filters);
 
-		query.add(Restrictions.eq("company", company));
 		query.add(Restrictions.ne("role.no", RolePO.SUPER_NO_STR));
 
 		query.asc("userId");
@@ -62,17 +64,23 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 
+		if (SystemConfig.getInt("multicompany", 0) != 0) {
+			query.add(Restrictions.eq("company", company));
+		}
+
+		query.add(Restrictions.eq("type", UserPO.TYPE_USER_INT));
+
 		query.alias("role", "role");
-		
+
 		if (StringUtils.isNotEmpty(pinyinName)) {
-			
-		    Disjunction pinyinDisjunction = Restrictions.disjunction();
 
-		    pinyinDisjunction.add(Restrictions.like("currentName", pinyinName, MatchMode.ANYWHERE));
-		    pinyinDisjunction.add(Restrictions.like("pinYin", pinyinName, MatchMode.ANYWHERE));
-		    pinyinDisjunction.add(Restrictions.like("userId", pinyinName, MatchMode.ANYWHERE));
+			Disjunction pinyinDisjunction = Restrictions.disjunction();
 
-		    query.add(pinyinDisjunction);
+			pinyinDisjunction.add(Restrictions.like("currentName", pinyinName, MatchMode.ANYWHERE));
+			pinyinDisjunction.add(Restrictions.like("pinYin", pinyinName, MatchMode.ANYWHERE));
+			pinyinDisjunction.add(Restrictions.like("userId", pinyinName, MatchMode.ANYWHERE));
+
+			query.add(pinyinDisjunction);
 		}
 
 		query.add(Restrictions.ne("role.no", RolePO.SUPER_NO_STR));
@@ -80,12 +88,9 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		if (dtid != 0) {
 			query.add(Restrictions.eq("dtid", dtid));
 		}
-		
+
 		if (status != 3) {
 			query.add(Restrictions.eq("status", status));
-		}
-		if (SystemConfig.getInt("multicompany", 0) != 0) {
-			query.add(Restrictions.eq("company", company));
 		}
 
 		return query.list();
@@ -94,8 +99,7 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<UserPO> queryUserByPhoneAIdent(String phone, String ident) {
-
-		return session().createCriteria(UserPO.class).add(Restrictions.or(Restrictions.eq("phone", phone), Restrictions.eq("identity", ident))).list();
+		return session().createCriteria(UserPO.class).add(Restrictions.or(Restrictions.eq("phone", phone), Restrictions.eq("identity", ident))).add(Restrictions.eq("type", UserPO.TYPE_USER_INT)).list();
 	}
 
 	@Override
@@ -104,9 +108,9 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 
 		DutyPO dutyPO = (DutyPO) session().createCriteria(DutyPO.class).add(Restrictions.eq(DutyPO.COLUMN_NAME_STR, duty)).uniqueResult();
 
-		String sql = "select * from communion.user  where deptId= :deptId and did= :did";
+		String sql = "select * from communion.user where deptId= :deptId and did= :did and type = :type";
 
-		List<UserPO> userPOs = session().createSQLQuery(sql).addEntity(UserPO.class).setString("deptId", deptId).setLong("did", dutyPO.getDid()).list();
+		List<UserPO> userPOs = session().createSQLQuery(sql).addEntity(UserPO.class).setString("deptId", deptId).setLong("did", dutyPO.getDid()).setShort("type", UserPO.TYPE_USER_INT).list();
 
 		return userPOs;
 	}
@@ -114,26 +118,26 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<UserPO> queryUserByUserName(String userName) {
-		return session().createCriteria(UserPO.class).add(Restrictions.like("currentName", userName, MatchMode.START)).list();
+		return session().createCriteria(UserPO.class).add(Restrictions.like("currentName", userName, MatchMode.START)).add(Restrictions.eq("type", UserPO.TYPE_USER_INT)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<UserPO> queryUserByUserIds(List<String> userIds) {
-		return session().createCriteria(UserPO.class).add(Restrictions.in("userId", userIds)).list();
+		return session().createCriteria(UserPO.class).add(Restrictions.in("userId", userIds)).add(Restrictions.eq("type", UserPO.TYPE_USER_INT)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<UserPO> queryUserByUids(List<Integer> uids) {
-		return session().createCriteria(UserPO.class).add(Restrictions.in("uid", uids)).list();
+		return session().createCriteria(UserPO.class).add(Restrictions.in("uid", uids)).add(Restrictions.eq("type", UserPO.TYPE_USER_INT)).list();
 	}
 
 	@Override
 	public int countUserByCompany(int company) {
 
-		String sql = "select count(*) from communion.user where company = :company";
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("company", company).uniqueResult();
+		String sql = "select count(*) from communion.user where company = :company and type = :type";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("company", company).setShort("type", UserPO.TYPE_USER_INT).uniqueResult();
 
 		return count.intValue();
 	}
@@ -141,8 +145,8 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	@Override
 	public int countUserByRoleId(Integer rid) {
 
-		String sql = "select count(*) from communion.user where roleId = :roleId";
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("roleId", rid).uniqueResult();
+		String sql = "select count(*) from communion.user where roleId = :roleId and type = :type";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("roleId", rid).setShort("type", UserPO.TYPE_USER_INT).uniqueResult();
 
 		return count.intValue();
 	}
@@ -150,11 +154,11 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters != null) {
-			
+
 			query.alias("dept", "dept");
 			query.alias("role", "role");
 			query.alias("duty", "duty");
-			
+
 			for (Filter filter : filters) {
 
 				String field = filter.getField();

@@ -3,7 +3,6 @@ jQuery(function($) {
 	var decorationPaymentCheck = {
 		paymentStatusArray: ["未付款", "已付款", "已确认", "审批中", "历史"],
 		paymentModelNameData: ["cash", "bank", "checkv", "advance", "coupon"],
-		bankNums: [],
 		checkvNums: [],
 		items: {
 			cashCheckbox: com.focusPage("#cashCheckbox"),
@@ -27,6 +26,7 @@ jQuery(function($) {
 		checkBank: [],
 		accounts: [],
 		couponType: [],
+		posValues: {},
 
 		cashUtil: [],
 		bankUtil: [],
@@ -53,11 +53,12 @@ jQuery(function($) {
 		decorationPaymentCheck.bankUtilForGrade = [];
 		decorationPaymentCheck.checkBankUtilForGrade = [];
 		com.cleanTypeahead('decorationCheckcashInfo');
+		com.focusPage("#decorationCheckposDivGroup").html("");
 		com.closeTip();
 	});
 
 	com.focusPage("#baseItemModalDecorationCheck :checkbox").on("change", function(){
-		$(this).prop("checked") ? com.focusPage("[referCheckbox="+this.id+"]").show() : com.focusPage("[referCheckbox="+this.id+"]").hide()
+		$(this).prop("checked") ? com.focusPage("[referCheckbox="+this.id+"]").show() : com.focusPage("[referCheckbox="+this.id+"]").hide();
 	});
 
 	//绑定收款单位的基础信息
@@ -66,20 +67,7 @@ jQuery(function($) {
 	//现金方式
 	com.selectTypeahead("decorationCheckcashInfo", decorationPaymentCheck.cashUtil, "key", "value", null);
 
-	//刷卡方式
-	com.focusPage("#decorationCheckbankAdd").click(function(){
-		var num = $(this).attr("num");
-		var nextNum = parseInt(num)+1;
-		$(this).attr("num", nextNum);
-
-		var maxNum = $(this).attr("maxnum");
-		maxNum = parseInt(maxNum)+1;
-		$(this).attr("maxnum", maxNum);
-		paymentUtils.addBankUtil(maxNum, "bankDiv", "#decorationCheckbankDivGroup", decorationPaymentCheck.bankNums, decorationPaymentCheck.bankUtilForGrade, decorationPaymentCheck.htmlName, 'baseItemModalDecorationCheck');
-		return false;
-	});
-
-	//转账方式
+	//转账方式(银行)
 	com.focusPage("#decorationCheckcheckvAdd").click(function(){
 		var num = $(this).attr("num");
 		var nextNum = parseInt(num)+1;
@@ -88,11 +76,11 @@ jQuery(function($) {
 		var maxNum = $(this).attr("maxnum");
 		maxNum = parseInt(maxNum)+1;
 		$(this).attr("maxnum", maxNum);
-		paymentUtils.addBankUtil(maxNum, "checkvDiv", "#decorationCheckcheckvDivGroup", decorationPaymentCheck.checkvNums, decorationPaymentCheck.checkBankUtilForGrade, decorationPaymentCheck.htmlName, 'baseItemModalDecorationCheck');
+		paymentUtils.addBankUtil(maxNum, "checkvDiv", "#decorationCheckcheckvDivGroup", decorationPaymentCheck.checkvNums, decorationPaymentCheck.checkBankUtilForGrade, decorationPaymentCheck);
 		return false;
 	});
 
-	com.focusPage("#advanceType").bindData([{"key":"1", "value":"合同"}, {"key":"2", "value":"工程"}], 'key', 'value');
+	com.focusPage("#advanceType").bindData([{"key":"1", "value":"合同"}], 'key', 'value');
 	
 	com.focusPage("#decorationPaymentHistoryList").removeClass("active");
 	
@@ -153,8 +141,8 @@ jQuery(function($) {
 			var styleArr = [];
 
 			v.cash != null && v.cash != "0" ? styleArr.push(["现金:", v.cash, "blue"]) : true;
-			v.bank != null && v.bank != "0" ? styleArr.push(["银行:", paymentUtils.splitBankInfo(v.bank, v.bankInfo, decorationPaymentCheck.bankInfo), "blue"]) : true;
-			v.checkv != null && v.checkv != "0" ? styleArr.push(["转账:", paymentUtils.splitBankInfo(v.checkv, v.checkvBank, decorationPaymentCheck.checkBankInfo), "blue"]) : true;
+			v.bank != null && v.bank != "0" ? styleArr.push(["刷卡:", paymentUtils.splitBankInfo(v.bank, v.bankInfo, decorationPaymentCheck.bankInfo), "blue"]) : true;
+			v.checkv != null && v.checkv != "0" ? styleArr.push(["银行:", paymentUtils.splitBankInfo(v.checkv, v.checkvBank, decorationPaymentCheck.checkBankInfo), "blue"]) : true;
 			v.installment != null && v.installment != "0" ? styleArr.push(["分期:", v.installment, "blue"]) : true;
 			v.accounts != null && v.accounts != "0" ? styleArr.push(["对公帐户:", v.accounts, "blue"]) : true;
 			v.advance != null && v.advance != "0" ? styleArr.push(["预付款:", v.advance, "blue"]) : true;
@@ -176,6 +164,17 @@ jQuery(function($) {
 				decorationPaymentCheckPostData.orderId = updateReturnParams[1];
 				decorationPaymentCheckPostData.customerId = updateReturnParams[2];
 				decorationPaymentCheck.couponUpdate = updateReturnParams[3];
+
+				com.post(api.payment.queryPointofsalesByPidAndRid, {"pointofsales.pid": v.decoration.orderId, "pointofsales.rid": v.drId}, function(res){
+					$.each(res.pointofsaleses, function(i, value){
+						if(value.status == 4) {
+							paymentUtils.addPos(value, decorationPaymentCheck.htmlName);
+							com.focusPage("#bankCheckbox").prop("checked", true);
+							com.focusPage("#posDiv").prop("style", "display: block");
+							com.focusPage("#bankDiv").prop("style", "display: block");
+						}
+					});
+				});
 			});
             
             return $liLine;
@@ -254,8 +253,8 @@ jQuery(function($) {
             var styleArr = [];
 
 			v.cash != null && v.cash != "0" ? styleArr.push(["现金:", v.cash, "blue"]) : true;
-			v.bank != null && v.bank != "0" ? styleArr.push(["银行:", paymentUtils.splitBankInfo(v.bank, v.bankInfo, decorationPaymentCheck.bankInfo), "blue"]) : true;
-			v.checkv != null && v.checkv != "0" ? styleArr.push(["转账:", paymentUtils.splitBankInfo(v.checkv, v.checkvBank, decorationPaymentCheck.checkBankInfo), "blue"]) : true;
+			v.bank != null && v.bank != "0" ? styleArr.push(["刷卡:", paymentUtils.splitBankInfo(v.bank, v.bankInfo, decorationPaymentCheck.bankInfo), "blue"]) : true;
+			v.checkv != null && v.checkv != "0" ? styleArr.push(["银行:", paymentUtils.splitBankInfo(v.checkv, v.checkvBank, decorationPaymentCheck.checkBankInfo), "blue"]) : true;
 			v.installment != null && v.installment != "0" ? styleArr.push(["分期:", v.installment, "blue"]) : true;
 			v.accounts != null && v.accounts != "0" ? styleArr.push(["对公帐户:", v.accounts, "blue"]) : true;
 			v.advance != null && v.advance != "0" ? styleArr.push(["预付款:", v.advance, "blue"]) : true;
@@ -337,8 +336,8 @@ jQuery(function($) {
 					['状态', 'paymentStatus'],
 					['备注', 'comment'],
 					['现金', 'cash'],
-					['银行', ['bank', 'bankInfo']],
-					['转账', ['checkv', 'checkvBank']],
+					['刷卡', ['bank', 'bankInfo']],
+					['银行', ['checkv', 'checkvBank']],
 					['分期', ['installment', 'installmentBank']],
 					['对公', ['accounts', 'accountsBank']],
 					['预付款', 'advance'],

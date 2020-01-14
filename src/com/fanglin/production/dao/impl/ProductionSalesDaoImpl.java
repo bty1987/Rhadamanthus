@@ -1,5 +1,6 @@
 package com.fanglin.production.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -20,6 +21,13 @@ public class ProductionSalesDaoImpl extends DaoImpl<ProductionSalesPO> implement
 	@SuppressWarnings("unchecked")
 	public List<ProductionSalesPO> queryProductionSalesByPid(long pid) {
 		return (List<ProductionSalesPO>) createCriteria(ProductionSalesPO.class).add(Restrictions.eq(ProductionSalesPO.COLUMN_PID_STR, pid)).list();
+	}
+
+	@Override
+	public int countProductionSalesByPidASid(Long pid, Long sid) {
+		String sql = "select count(*) from production.productionsales where pid = :pid and sid = :sid";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("pid", pid).setLong("sid", sid).uniqueResult();
+		return  count.intValue();
 	}
 
 }

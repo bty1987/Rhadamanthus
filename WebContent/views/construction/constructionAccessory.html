@@ -1,0 +1,124 @@
+
+<div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+            <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+            <div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+        </div>
+    </div>
+
+    <div class="modal fade" id="updateModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabe2">更新工程辅料信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right ">验证标识</label>
+                            <div class="col-md-9">
+                                <select id='checkup' class='col-xs-10 col-sm-6'></select>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="numLimit">数量上限</label>
+                            <div class="col-sm-9">
+                                <input type="text" maxlength="64" id="numLimit" class="col-xs-10 col-sm-6  v_number" data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="updateBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabe1">添加工程辅料信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+
+                        <div class="form-group">
+                            <label for="goodsName" class="col-sm-3 control-label no-padding-right orange" >商品名</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-6 v_required" data-toggle="popover"
+                                       data-placement="bottom" data-trigger="manual" id="goodsName" placeholder="请输入商品名">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="goodsNo" class="col-sm-3 control-label no-padding-right ">编号</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-6" data-toggle="popover" data-placement="bottom"
+                                       data-trigger="manual" id="goodsNo" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="category" class="col-sm-3 control-label no-padding-right ">品类</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger="manual"
+                                       id="category" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="brand" class="col-sm-3 control-label no-padding-right ">品牌</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger="manual"
+                                       id="brand" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="measurementUnit" class="col-sm-3 control-label no-padding-right ">单位</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger="manual"
+                                       id="measurementUnit" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right ">验证标识</label>
+                            <div class="col-md-9">
+                                <select id='addCheckup' class='col-xs-10 col-sm-6'></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="addNumLimit">数量上限</label>
+                            <div class="col-sm-9">
+                                <input type="text" maxlength="64" id="addNumLimit" class="col-xs-10 col-sm-6  v_number" data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="addConfirmBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="addCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/construction/constructionAccessory.js']);
+</script>

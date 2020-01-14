@@ -33,6 +33,11 @@ $.extend(api, {communion: {
     pageServiceNode:{url:"pageServiceNode.do"},
     addServiceNode:{url:"addServiceNode.do"},
     updateServiceNode:{url:"updateServiceNode.do"},
-    updateServiceNodeForStatus:{url:"updateServiceNodeForStatus.do", intercept: true}
+    updateServiceNodeForStatus:{url:"updateServiceNodeForStatus.do", intercept: true},
+    
+    pageContract:{url:"pageContract.do"},
+    queryContract:{url:"queryContract.do"},
+    pageSignet:{url:"pageSignet.do"},
+    querySignet:{url:"querySignet.do"},
 
 }});

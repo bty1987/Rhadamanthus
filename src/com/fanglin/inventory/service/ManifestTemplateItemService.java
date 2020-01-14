@@ -13,7 +13,7 @@ package com.fanglin.inventory.service;
 
 import java.util.List;
 
-import com.fanglin.inventory.vo.GoodsVO;
+import com.fanglin.data.material.vo.GoodsVO;
 import com.fanglin.inventory.vo.ManifestTemplateItemVO;
 import com.fanglin.inventory.vo.ManifestTemplateVO;
 

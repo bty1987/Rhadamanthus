@@ -17,4 +17,6 @@ public interface VpaymentDao extends Dao<VpaymentPO>{
 	
 	public List<VpaymentPO> queryVpaymentByVrid(long vrid);
 	
+	public int updateVpaymentStatusForFailure(long vaid);
+	
 }

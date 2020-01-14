@@ -20,13 +20,15 @@ public class AccessoriesManifestPO implements Serializable {
 	private static final long serialVersionUID = 6057547291570119006L;
 
 	public static final String COLUMN_AID_STR = "accessories.aid";
-
+	
+	public static final String COLUMN_TYPE_STR = "manifest.type";
+	
 	private long amid;
 
 	private AccessoriesPO accessories;
 
 	private ManifestPO manifest;
-
+	
 	public AccessoriesManifestPO() {
 		super();
 	}

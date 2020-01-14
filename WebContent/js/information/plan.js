@@ -38,7 +38,7 @@ $(function () {
         plan.status = res.planStatus.split("key", "value");
     });
 
-    com.post(api.information.queryTask, {}, function (res) {
+    com.post(api.data.queryTask, {}, function (res) {
         plan.plugins = res.tasks.split("keyWord", "plugins");
     }, null, false);
 

@@ -200,7 +200,7 @@ public class VpaymentServiceImpl implements VpaymentService {
 		EmemberPO ememberPO = ememberDao.queryEmemberByNo(mno);
 
 		if (posids != null && posids.size() > 0) {
-			pointofsalesDao.updatePointofsales(posids, PointofsalesPO.STATUS_USED_INT);
+			pointofsalesDao.updatePointofsales(posids, vreceiptPO.getVrid(), PointofsalesPO.STATUS_USED_INT,  PointofsalesPO.TYPE_ACTIVITY_INT);
 		}
 
 		if (ememberPO != null) {
