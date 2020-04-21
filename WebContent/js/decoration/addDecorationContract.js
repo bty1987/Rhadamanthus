@@ -5,25 +5,42 @@ jQuery(function($) {
             contract: com.focusPage("#contract")
         },
         btns: {
-            preservation: com.focusPage("#preservation"),
+            preservation: com.focusPage("#preservation")
         },
+        htmls:{
+        	editContractPopUp: com.focusPage("#editContractPopUp")
+        },
+       decorationOrderId : params.decorationOrderId
     };
-    addDecorationContract.btns.preservation.on('click', function () {
-        if(com.validate('form')) return false;
-
-        com.showConfirm("确定要保存合同信息吗?", function () {
-            var options = {
-                "decorationContract.orderId": params.decorationOrderId,
-                "decorationContract.contract.cid": addDecorationContract.items.contract.val()
-            };
-            com.post(api.decoration.addDecorationContract, options, function (res) {
-                com.closePopup();
-            });
-        });
-    });
 
     com.post(api.communion.queryContract, {}, function (res) {
         addDecorationContract.items.contract.bindData(res.contracts, "cid", "name", true);
     });
 
+     addDecorationContract.items.contract.on('click', function () {
+
+          params.cidNumber = addDecorationContract.items.contract.val();
+          params.decorationData = addDecorationContract.decorationOrderId;
+          var url;
+
+         switch (params.cidNumber) {
+		  case '1':
+			  url = "views/decoration/decorationContract2edit.html";
+			break;
+		  case '2':
+			  url = "views/decoration/decorationContract2edit.html";
+			break;
+		  case '3':
+			  url = "views/decoration/decorationContract2edit.html";
+			break;
+		  case '4':
+			  url = "views/decoration/decorationContract0edit.html";
+			break;
+		  case '5':
+			  url = "views/decoration/decorationContract1edit.html";
+			break;
+		}
+
+        addDecorationContract.htmls.editContractPopUp.load(url);
+     });
 });

@@ -28,7 +28,7 @@ $(function () {
             var $small = $('<small></small>').addClass('blue').html(refund.sales.no);
             var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
 
-            var $print = $('<a></a>').addClass('btn btn-minier btn-pink').attr("id",v.rid).attr("type",refund.refundType[v.type]).attr("createTime",v.createTime).html('打印').appendTo($btnDiv);
+            var $print = $('<a></a>').addClass('btn btn-minier btn-pink').attr("id",v.rid).attr("type",refund.refundType[v.type]).attr("createTime",v.createTime).attr('total', v.total).html('打印').appendTo($btnDiv);
 
             var propertyArr = [
                 ["商品品类:", refund.sales.category, "grey"],
@@ -58,10 +58,12 @@ $(function () {
                 var rid = $this.attr("id");
                 var type = $this.attr("type");
                 var createTime = $this.attr("createTime");
+                var total = $this.attr("total");
                 params.data = refund.sales;
                 params.rid = rid;
                 params.type = type;
                 params.createTime = createTime;
+                params.total = total;
                 params.flag = "refund";
                 com.popup("销售退货单：" + refund.sales.orderId, api.index.salesRefundsPrintIndex.url, function () {
                     parent.layer.getFrameIndex(window.name);

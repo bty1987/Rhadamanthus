@@ -54,6 +54,10 @@ jQuery(function($) {
     role.chainPageModal = com.focusPage("#chainPageModal");
     role.roleItems.currentchainPage = com.focusPage("#currentchainPage");
     role.roleItems.chainList = com.focusPage("#chainList");
+    
+    role.chartPageModal = com.focusPage("#chartPageModal");
+    role.roleItems.currentchartPage = com.focusPage("#currentchartPage");
+    role.roleItems.chartList = com.focusPage("#chartList");
 
     role.modal.on('show.bs.modal',function(e){
         com.clearValidator();
@@ -64,12 +68,24 @@ jQuery(function($) {
     com.focusPage("#cancelRoleRightBtn").on("click",goBackRoleList);
     com.focusPage("#saveRoleRightBtn").on("click",saveRoleRight);
     com.focusPage("#saveChainPageBtn").on("click", saveChainPage);
+    com.focusPage("#saveChartPageBtn").on("click", saveChartPage);
     
     com.post(api.data.queryChainPage, {}, function(res){
         
         $.each(res.chainPages, function(i, v){
             var $tag = $("<div></div>").addClass("tag").appendTo(role.roleItems.chainList);
             var $check = $("<input></input>").attr({"type": "checkbox", "cpid": v.cpid}).addClass("ace").appendTo($tag);
+            var $lbl = $("<span></span>").addClass("lbl").appendTo($tag);
+            var $span = $("<span></span>").text(v.name).appendTo($tag);
+        });
+    });
+    
+    //
+    com.post(api.data.queryChart, {}, function(res){
+        
+        $.each(res.charts, function(i, v){
+            var $tag = $("<div></div>").addClass("tag").appendTo(role.roleItems.chartList);
+            var $check = $("<input></input>").attr({"type": "checkbox", "cid": v.cid}).addClass("ace").appendTo($tag);
             var $lbl = $("<span></span>").addClass("lbl").appendTo($tag);
             var $span = $("<span></span>").text(v.name).appendTo($tag);
         });
@@ -105,6 +121,7 @@ jQuery(function($) {
             var $btnOperation = $('<a></a>').addClass('btn btn-minier btn-warning').html('操作配置');
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-inverse').html('编辑');
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
+            var $btnChart = $('<a></a>').addClass('btn btn-minier btn-pink').html('图表配置');
             
             var propertyArr = [
                ["编号:", v.no, "grey"],
@@ -118,7 +135,7 @@ jQuery(function($) {
                $liProperty.appendTo($ulProperty);
            });
 
-            $divBtnWrap.append($chainPage).append($btnModule).append($officeModule).append($btnOperation).append($btnEdit).append($btnDel).appendTo($h3);
+            $divBtnWrap.append($chainPage).append($btnModule).append($officeModule).append($btnOperation).append($btnEdit).append($btnDel).append($btnChart).appendTo($h3);
             
             $liLine.append($h3).append($ulProperty);
 
@@ -163,6 +180,25 @@ jQuery(function($) {
                 });
 
                 role.chainPageModal.modal("show");
+            });
+            
+            $btnChart.click(function(){
+                role.rid = v.rid;
+                
+                role.roleItems.currentchartPage.html("");
+                role.roleItems.chartList.find("input[type='checkbox']").attr("checked", false);
+                
+                com.post(api.data.queryChartByRid, {"role.rid": v.rid}, function(res){
+                    
+                    $.each(res.charts, function(i, v){
+                        var $div=$('<div></div>').appendTo(role.roleItems.currentchartPage);
+                        var $span=$('<span class="tag"></span>').html(v.name).appendTo($div);
+                        
+                        role.roleItems.chartList.find("input[cid='" + v.cid + "']").click();
+                    });
+                });
+
+                role.chartPageModal.modal("show");
             });
 
             return $liLine;
@@ -428,7 +464,8 @@ jQuery(function($) {
                 var _link = role.moduleModal.find('input[name="link"][value="' + _mid + '"]:checked').length;
                 
                 params['modules[' + i + '].mid'] = $(this).val();
-                params['modules[' + i + '].link'] = _link == 0 ? 1 : 0;
+                
+                if(_link == 1) params['modules[' + i + '].link'] = 0;
             });
         }
 
@@ -578,4 +615,27 @@ jQuery(function($) {
         });
     }
     
+	function saveChartPage(){
+	        
+		var options = {
+		    "role.rid": role.rid
+		};
+	    
+	    var citems = role.roleItems.chartList.find('input[type="checkbox"]:checked');
+	    
+	    if(citems.length == 0){
+	        options["cids"] = [];
+	    }else{
+	        $.each(citems, function(i, e){
+	            options["cids" + "[" + i + "]"] = $(e).attr("cid");
+	        });
+	    }
+	    
+	    com.post(api.data.updateRoleChartByRid, options, function (res) {
+	    	
+	    	com.showAlert(com.info, "操作成功");
+	        role.chartPageModal.modal("hide");
+	    });
+	}
+
 });

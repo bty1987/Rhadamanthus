@@ -159,7 +159,7 @@ jQuery(function($) {
         if(com.validate("addAccountModal")){
             return false;
         }
-console.log(accountes.addItems.type.val());
+
         var options = {
             'account.belonger.userId': com.typeahead("belonger"),
             'account.name': accountes.addItems.name.val(),

@@ -9,8 +9,8 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.decoration.po.DecorationInfoPO;
 import com.fanglin.decoration.service.DecorationInfoService;
+import com.fanglin.decoration.vo.DecorationInfoVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -24,12 +24,28 @@ public class DecorationInfoAction extends BaseListAction {
 	@Autowired
 	private DecorationInfoService decorationInfoService;
 
-	private DecorationInfoPO decorationInfo;
+	private DecorationInfoVO decorationInfo;
 
 	@Action(value = "queryDecorationInfoByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationInfoByOrderId() throws FLException {
 
 		decorationInfo = decorationInfoService.queryDecorationInfoByOrderId(orderId);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "sendDecorationInfoForConfirm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String sendDecorationInfoForConfirm() throws FLException {
+
+		decorationInfoService.sendDecorationInfoForConfirm(decorationInfo);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "confirmDecorationInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String confirmDecorationInfo() throws FLException {
+
+		decorationInfoService.confirmDecorationInfo(decorationInfo);
 
 		return SUCCESS;
 	}
@@ -42,11 +58,11 @@ public class DecorationInfoAction extends BaseListAction {
 		this.orderId = orderId;
 	}
 
-	public DecorationInfoPO getDecorationInfo() {
+	public DecorationInfoVO getDecorationInfo() {
 		return decorationInfo;
 	}
 
-	public void setDecorationInfo(DecorationInfoPO decorationInfo) {
+	public void setDecorationInfo(DecorationInfoVO decorationInfo) {
 		this.decorationInfo = decorationInfo;
 	}
 

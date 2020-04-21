@@ -23,7 +23,6 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.decoration.vo.DecorationActivityItemVO;
 import com.fanglin.payment.service.DecorationPaymentService;
 import com.fanglin.payment.service.DecorationReceiptService;
 import com.fanglin.payment.vo.DecorationPaymentVO;
@@ -50,8 +49,6 @@ public class DecorationPaymentAction extends BaseListAction {
 	
 	private List<DecorationReceiptVO> decorationReceipts;
 	
-	private List<DecorationActivityItemVO> decorationActivityItems;
-
 	private List<Long> paymentIds;
 	
 	private List<Long> drIds;
@@ -159,7 +156,7 @@ public class DecorationPaymentAction extends BaseListAction {
 	@Action(value = "collectDecorationPayment", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String collectDecorationPayment() throws FLException{
 		
-		decorationPaymentService.collectDecorationPayment(decorationPayment, decorationActivityItems, posids, queryUserId(), queryCompany());
+		decorationPaymentService.collectDecorationPayment(decorationPayment, posids, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -218,15 +215,6 @@ public class DecorationPaymentAction extends BaseListAction {
 
 	public void setDateTime(Timestamp dateTime) {
 		this.dateTime = dateTime;
-	}
-
-	public List<DecorationActivityItemVO> getDecorationActivityItems() {
-		return decorationActivityItems;
-	}
-
-	public void setDecorationActivityItems(
-			List<DecorationActivityItemVO> decorationActivityItems) {
-		this.decorationActivityItems = decorationActivityItems;
 	}
 
 	public List<DecorationReceiptVO> getDecorationReceipts() {

@@ -41,15 +41,19 @@ public class AccessoriesPO implements Serializable {
 
 	public static final String COLUMN_NO_STR = "no";
 
-	public static final short STATUS_INIT_INT = 0;
+	public static final short STATUS_INIT_INT = 0;  //初始
+	
+	public static final short STATUS_ADVANCE_INT = 1;  //预出
 
-	public static final short STATUS_BATCHOUT_INT = 1;
+	public static final short STATUS_BATCHOUT_INT = 2;  //出货
 
-	public static final short STATUS_REJECT_INT = 2;
+	public static final short STATUS_REJECT_INT = 3;   //撤销
 
-	public static final short STATUS_UNDO_INT = 3;
+	public static final short STATUS_UNDO_INT = 4;   //拒绝
 
-	public static final short STATUS_RETURN_INT = 4;
+	public static final short STATUS_RETURN_INT = 5;  //退回
+	
+	public static final short STATUS_DELIVER_INT = 6;  //到货
 
 	private long aid;
 
@@ -71,13 +75,21 @@ public class AccessoriesPO implements Serializable {
 
 	private Timestamp approverTime;
 
-	private Timestamp fetchTime;
+	private Timestamp fetchTime; 
 
 	private short status;
 	
 	private short schedule;
+	
+	private int printnum;    //打印次数
 
 	private int company;
+	
+	private String comment;
+	
+	private UserPO deliver;
+	
+	private Timestamp deliverTime;
 	
 	public AccessoriesPO() {
 		super();
@@ -215,6 +227,15 @@ public class AccessoriesPO implements Serializable {
 	public void setStatus(short status) {
 		this.status = status;
 	}
+	
+	@Column(name = "printnum")
+	public int getPrintnum() {
+		return printnum;
+	}
+
+	public void setPrintnum(int printnum) {
+		this.printnum = printnum;
+	}
 
 	@Column(name = "company")
 	public int getCompany() {
@@ -225,7 +246,36 @@ public class AccessoriesPO implements Serializable {
 		this.company = company;
 	}
 	
-	public AccessoriesPO init(String no, String orderId, long csid, HousePO house, UserPO creater, Timestamp fetchTime, short schedule, int company){
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "duid", referencedColumnName = "uid")
+	public UserPO getDeliver() {
+		return deliver;
+	}
+
+	public void setDeliver(UserPO deliver) {
+		this.deliver = deliver;
+	}
+
+	
+	@Column(name = "deliverTime")
+	public Timestamp getDeliverTime() {
+		return deliverTime;
+	}
+
+	public void setDeliverTime(Timestamp deliverTime) {
+		this.deliverTime = deliverTime;
+	}
+
+	public AccessoriesPO init(String no, String orderId, long csid, HousePO house, UserPO creater, Timestamp fetchTime, short schedule, String comment, int company){
 		
 		setNo(no);
 		setOrderId(orderId);
@@ -238,6 +288,7 @@ public class AccessoriesPO implements Serializable {
 		setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		setSchedule(schedule);
 		setStatus(AccessoriesPO.STATUS_INIT_INT);
+		setComment(comment);
 		
 		setCompany(company);
 		

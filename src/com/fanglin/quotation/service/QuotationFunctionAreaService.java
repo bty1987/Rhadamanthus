@@ -29,4 +29,6 @@ public interface QuotationFunctionAreaService {
 	
 	public int deleteQuotationFunctionArea(QuotationFunctionAreaVO quotationFunctionAreaVO, QuotationVO quotationVO) throws FLException;
 
+	public void addQuotationFunctionArea(List<Long> functionAreaIds, QuotationVO quotation) throws FLException;
+
 }

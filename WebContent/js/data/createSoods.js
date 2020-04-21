@@ -129,8 +129,16 @@ $(function(){
             return false;
         }
 
+        var gid = com.typeahead("goodsName");
+
+        if (!gid) {
+            com.showAlert(com.error, "数据绑定失败");
+            soods.modals.addSoodsModal.modal("hide");
+            return false;
+        }
+
         var option = {
-            "soods.goods.gid": com.typeahead("goodsName"),
+            "soods.goods.gid": gid,
             "soods.quotationItem.qiId": soods.quoteId,
             "soods.num": soods.items.num.val(),
             "soods.selling": soods.items.selling.val()
@@ -139,9 +147,9 @@ $(function(){
         com.post(api.data.addSoods, option, function(e){
             displayFunc.init();
             com.showAlert(com.info, "操作成功");
-        });
 
-        soods.modals.addSoodsModal.modal("hide");
+            soods.modals.addSoodsModal.modal("hide");
+        });
     }
 
     function updateData() {
@@ -157,9 +165,9 @@ $(function(){
         com.post(api.data.updateSoods, option, function(e){
             displayFunc.init();
             com.showAlert(com.info, "操作成功");
-        });
 
-        soods.modals.updateSoodsModal.modal("hide");
+            soods.modals.updateSoodsModal.modal("hide");
+        });
     }
 
 })();

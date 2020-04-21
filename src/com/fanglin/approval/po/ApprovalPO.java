@@ -231,7 +231,8 @@ public class ApprovalPO implements java.io.Serializable {
 
 		setIdent(ident);
 		setType(type);
-
+		
+		setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
 		setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
 		setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 

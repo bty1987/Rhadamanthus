@@ -46,6 +46,8 @@ public class QuotationAction extends BaseListAction {
 	
 	private Map<String, List<String>> configs;
 	
+	private Map<String, Integer> norms;
+	
 	@Action(value = "queryQuotationByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationByOrderId(){
 		
@@ -65,7 +67,7 @@ public class QuotationAction extends BaseListAction {
 	@Action(value = "queryQuotationById", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationById(){
 		
-		quotation=quotationService.queryQuotationByQid(quotation.getQid());
+		quotation = quotationService.queryQuotationByQid(quotation.getQid());
 
 		return SUCCESS;
 	}
@@ -75,6 +77,22 @@ public class QuotationAction extends BaseListAction {
 		
 		configs = quotationService.queryQuotationForConfig(queryCompany());
 	    
+		return SUCCESS;
+	}
+	
+	@Action(value = "countQuotationForNormood", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String countQuotationForNormood() throws FLException{
+		
+		norms = quotationService.countQuotationForNormood(quotation);
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "countQuotationForNormrice", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String countQuotationForNormrice() throws FLException{
+		
+		norms = quotationService.countQuotationForNormrice(quotation);
+
 		return SUCCESS;
 	}
 	
@@ -205,4 +223,12 @@ public class QuotationAction extends BaseListAction {
 		this.no = no;
 	}
 
+	public Map<String, Integer> getNorms() {
+		return norms;
+	}
+
+	public void setNorms(Map<String, Integer> norms) {
+		this.norms = norms;
+	}
+	
 }

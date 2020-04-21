@@ -32,6 +32,10 @@ public class DecorationInfoVO implements Serializable {
 	private String backOrderPhone;
 
 	private String backOrderContent;
+	
+	private Short isConfirmPricture;
+	
+	private Short isConfirmDesign;
 
 	public Long getDiid() {
 		return diid;
@@ -95,6 +99,22 @@ public class DecorationInfoVO implements Serializable {
 
 	public void setBackOrderContent(String backOrderContent) {
 		this.backOrderContent = backOrderContent;
+	}
+
+	public Short getIsConfirmPricture() {
+		return isConfirmPricture;
+	}
+
+	public void setIsConfirmPricture(Short isConfirmPricture) {
+		this.isConfirmPricture = isConfirmPricture;
+	}
+
+	public Short getIsConfirmDesign() {
+		return isConfirmDesign;
+	}
+
+	public void setIsConfirmDesign(Short isConfirmDesign) {
+		this.isConfirmDesign = isConfirmDesign;
 	}
 
 }

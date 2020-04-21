@@ -631,7 +631,7 @@ $(function () {
 
         if(ops){
             com.post(api.sales.postSalesBalance, ops, function (res) {
-                com.showAlert(com.info, "厂商结算成功");
+                com.showAlert(com.info, "结算成功");
                 salesBalanceSearcher.doSearch();
             });
         }

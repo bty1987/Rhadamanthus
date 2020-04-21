@@ -24,13 +24,7 @@ public interface DecorationContractService {
 
 	public List<DecorationContractVO> queryDecorationContractByOrderId(DecorationContractVO decorationContract) throws FLException;
 
-	public int addDecorationContract(DecorationContractVO decorationContract, String userId) throws FLException;
-
-	public int signDecorationContract(DecorationContractVO decorationContractVO, Authentication authentication) throws FLException;
-
-	public int resignDecorationContract(DecorationContractVO decorationContractVO, String userId) throws FLException;
-
-	public int presignDecorationContract(DecorationVO decoration, String userId) throws FLException;
+	public int addDecorationContract(DecorationContractVO decorationContract, String data, String userId) throws FLException;
 
 	public int signDecorationContractForCompany(SignetVO signetVO, DecorationContractVO decorationContractVO) throws FLException;
 
@@ -39,4 +33,21 @@ public interface DecorationContractService {
 	public String viewDecorationContract(DecorationContractVO decorationContractVO) throws FLException;
 
 	public int fillingDecorationContract(DecorationContractVO decorationContractVO) throws FLException;
+
+	public void sendDecorationContractForAuth(DecorationContractVO decorationContractVO) throws FLException;
+
+	public void sendDecorationContractForSignet(DecorationContractVO decorationContractVO) throws FLException;
+
+	public void sendDecorationContractForSign(DecorationContractVO decorationContractVO) throws FLException;
+
+	public void sendDecorationContractForView(DecorationContractVO decorationContractVO) throws FLException;
+
+	public void sendDecorationContractForDownload(DecorationContractVO decorationContractVO) throws FLException;
+
+	public int signDecorationContract(DecorationContractVO decorationContractVO, Authentication authentication) throws FLException;
+
+	public int resignDecorationContract(DecorationContractVO decorationContractVO, String userId) throws FLException;
+
+	public int presignDecorationContract(DecorationVO decoration, String userId) throws FLException;
+
 }

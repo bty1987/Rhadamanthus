@@ -9,8 +9,8 @@ import org.springframework.stereotype.Repository;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.quotation.dao.SelectionItemDao;
+import com.fanglin.quotation.po.SelectionItemPD;
 import com.fanglin.quotation.po.SelectionItemPO;
-import com.fanglin.quotation.po.SelectionItemPO2;
 import com.fanglin.utils.Paging;
 
 @Repository("selectionItemDao")
@@ -21,9 +21,9 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 	}
 	
 	@Override
-	public List<SelectionItemPO2> pageSelectionItem(Paging paging, List<Filter> filters, Short status) {
+	public List<SelectionItemPD> pageSelectionItem(Paging paging, List<Filter> filters, Short status) {
 		
-		PagingQuery<SelectionItemPO2> query = pagingQuery(paging, SelectionItemPO2.class);
+		PagingQuery<SelectionItemPD> query = pagingQuery(paging, SelectionItemPD.class);
 		
 		queryFilterExcute(query, filters);
 		
@@ -35,9 +35,9 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 	}
 	
 	@Override
-	public List<SelectionItemPO2> pageSelectionItemForSupplier(Paging paging, List<Filter> filters, Long suid) {
+	public List<SelectionItemPD> pageSelectionItemForSupplier(Paging paging, List<Filter> filters, Long suid) {
 			
-		PagingQuery<SelectionItemPO2> query = pagingQuery(paging, SelectionItemPO2.class);
+		PagingQuery<SelectionItemPD> query = pagingQuery(paging, SelectionItemPD.class);
 	
 		queryFilterExcute(query, filters);
 	
@@ -56,13 +56,30 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<SelectionItemPO2> querySelectionItemObject(long sid) {
-		return createCriteria(SelectionItemPO2.class).createAlias("selection", "selection").add(Restrictions.eq(SelectionItemPO2.COLUMN_SELECTION_SID_STR, sid)).list();
+	public List<SelectionItemPD> querySelectionItemDBySid(long sid) {
+		return createCriteria(SelectionItemPD.class).add(Restrictions.eq(SelectionItemPD.COLUMN_SID_STR, sid)).list();
 	}
 
 	@Override
-	public SelectionItemPO querySoleSelectionItem(long sid, long areaId, long quoteId, short type) {
-		return (SelectionItemPO) session().createCriteria(SelectionItemPO.class).add(Restrictions.eq(SelectionItemPO.COLUMN_SID_STR, sid)).add(Restrictions.eq(SelectionItemPO.COLUMN_AREAID_STR, areaId)).add(Restrictions.eq(SelectionItemPO.COLUMN_QUOTEID_STR, quoteId)).add(Restrictions.eq(SelectionItemPO.COLUMN_TYPE_STR, type)).uniqueResult();
+	public SelectionItemPO querySelectionItem(long sid, long areaId, long quoteId, short type) {
+		return (SelectionItemPO) session()
+				.createCriteria(SelectionItemPO.class)
+				.add(Restrictions.eq(SelectionItemPO.COLUMN_SID_STR, sid))
+				.add(Restrictions.eq(SelectionItemPO.COLUMN_AREAID_STR, areaId))
+				.add(Restrictions.eq(SelectionItemPO.COLUMN_QUOTEID_STR, quoteId))
+				.add(Restrictions.eq(SelectionItemPO.COLUMN_TYPE_STR, type))
+				.uniqueResult();
+	}
+	
+	@Override
+	public SelectionItemPO querySelectionItem(String orderId, long areaId, long quoteId, short type) {
+		return (SelectionItemPO) session()
+				.createCriteria(SelectionItemPO.class)
+				.add(Restrictions.eq(SelectionItemPO.COLUMN_ORDERID_STR, orderId))
+				.add(Restrictions.eq(SelectionItemPO.COLUMN_AREAID_STR, areaId))
+				.add(Restrictions.eq(SelectionItemPO.COLUMN_QUOTEID_STR, quoteId))
+				.add(Restrictions.eq(SelectionItemPO.COLUMN_TYPE_STR, type))
+				.uniqueResult();
 	}
 
 	@Override
@@ -95,18 +112,19 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 				query.alias("decoration","decoration");
 				query.alias("goods", "goods");
 				
-				if (SelectionItemPO2.COLUMN_ORDERID_STR.equals(field)) {
-					query.add(query.getCriterion(SelectionItemPO2.COLUMN_DECORATION_ORDERID_STR, data, op));
-				} else if (SelectionItemPO2.COLUMN_STATUS_STR.equals(field)) {
-					query.add(query.getCriterion(SelectionItemPO2.COLUMN_STATUS_STR, Short.valueOf(data), op));
-				} else if (SelectionItemPO2.COLUMN_GOODS_NAME_STR.equals(field)) {
-					query.add(query.getCriterion(SelectionItemPO2.COLUMN_GOODS_NAME_STR, data, op));
-				} else if (SelectionItemPO2.COLUMN_GOODS_CATEGORY_STR.equals(field)) {
-					query.add(query.getCriterion(SelectionItemPO2.COLUMN_GOODS_CATEGORY_STR, data, op));
-				} else if (SelectionItemPO2.COLUMN_GOODS_BRAND_STR.equals(field)) {
-					query.add(query.getCriterion(SelectionItemPO2.COLUMN_GOODS_BRAND_STR, data, op));
+				if (SelectionItemPD.COLUMN_ORDERID_STR.equals(field)) {
+					query.add(query.getCriterion(SelectionItemPD.COLUMN_DECORATION_ORDERID_STR, data, op));
+				} else if (SelectionItemPD.COLUMN_STATUS_STR.equals(field)) {
+					query.add(query.getCriterion(SelectionItemPD.COLUMN_STATUS_STR, Short.valueOf(data), op));
+				} else if (SelectionItemPD.COLUMN_GOODS_NAME_STR.equals(field)) {
+					query.add(query.getCriterion(SelectionItemPD.COLUMN_GOODS_NAME_STR, data, op));
+				} else if (SelectionItemPD.COLUMN_GOODS_CATEGORY_STR.equals(field)) {
+					query.add(query.getCriterion(SelectionItemPD.COLUMN_GOODS_CATEGORY_STR, data, op));
+				} else if (SelectionItemPD.COLUMN_GOODS_BRAND_STR.equals(field)) {
+					query.add(query.getCriterion(SelectionItemPD.COLUMN_GOODS_BRAND_STR, data, op));
 				}
 			}
 		}
 	}
+
 }

@@ -1,4 +1,5 @@
 ﻿$(function(){
+    
     var user = {
         statusType: [],
         deptType: [],
@@ -9,7 +10,10 @@
         editLoginId: null,
         deptList: {},
         loginFlag: true,
-        simpleAddUserModal:null
+        simpleAddUserModal:null,
+        
+        modals: {},
+        items: {},
     };
 
     user.simpleAddUserModal = com.focusPage("#simpleAddUserModal");
@@ -17,6 +21,36 @@
         com.cleanItems(user.items);
         com.closeTip();
     });
+    
+    user.modals.qrcodeModal = com.initForm("qrcodeModal", "二维码", [{"id": "Qrcode", "type": "div", "clazz": "qrcode"}], []);
+    user.items.Qrcode = com.focusPage("#Qrcode");
+    
+    user.modals.importModal = com.initForm("importModal", "导入", [{"id": "import", "type": "div"}], []);
+    user.items.import = com.focusPage("#import");
+    
+    user.modals.userExpModal = com.initForm("userExpModal", "工作经历", [{"id": "userException", "type": "div"}], []);
+    user.items.userException = com.focusPage("#userException");
+    
+    user.modals.ddModal = com.initForm("ddModal", "钉钉部门", [{"id": "tree3", "type": "div", "clazz": "tree"}], [{"id": "savebtn", "clazz": "btn btn-primary", "name": "保存"}]);
+    user.items.tree3 = com.focusPage("#tree3");
+    
+    user.modals.simpleAddUserModal = com.initForm("simpleAddUserModal", "添加员工", 
+        [
+             {"id": "userName", "name": "姓名", "type": "text", "validator": "v_required"},
+             {"id": "currentName", "name": "现用名", "type": "text", "validator": "v_required"},
+             {"id": "gender", "name": "性别", "type": "switch", "validator": "v_required", "clazz": "gender"},
+             {"id": "birthday", "name": "出生日期", "type": "text", "validator": "v_required"},
+             {"id": "identity", "name": "身份证号", "type": "text", "validator": "v_required v_identity"},
+             {"id": "phone", "name": "手机号", "type": "text", "validator": "v_required v_phones"},
+             
+             {"id": "loginId", "name": "用户名", "type": "text", "validator": "v_required v_phones"},
+             {"id": "deptTypeSel", "name": "部门类型", "type": "select", "validator": "v_required"},
+             {"id": "deptSel", "name": "部门", "type": "select", "validator": "v_required"},
+             {"id": "dutySel", "name": "职位", "type": "select", "validator": "v_required"},
+             {"id": "statusSel", "name": "状态", "type": "select", "validator": "v_required"},
+        ], 
+        [{"id": "saveUserBtn", "clazz": "btn btn-primary", "name": "保存"}]
+    );
 
     com.post(api.ds.personel, {timestamp: (new Date).getTime()},function(a) {
         user.statusType = a.statusType;
@@ -41,10 +75,10 @@
                     var $qrcode = $('<a></a>').addClass('btn btn-minier btn-yellow').html('二维码');
                     var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-blue').html('查看');
                     var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-success').html('编辑');
-                    var $addDD=$('<a></a>').addClass('btn btn-minier btn-warning').html('添加到钉钉');
-                    var $updateDD=$('<a></a>').addClass('btn btn-minier btn-inverse').html('同步钉钉信息');
-                    var $deleteDD=$('<a></a>').addClass('btn btn-minier btn-danger').html('从钉钉删除');
-                    var $userexception=$('<a></a>').addClass('btn btn-minier btn-pink').html('工作经历');
+                    var $addDD = $('<a></a>').addClass('btn btn-minier btn-warning').html('添加到钉钉');
+                    var $updateDD = $('<a></a>').addClass('btn btn-minier btn-inverse').html('同步钉钉信息');
+                    var $deleteDD = $('<a></a>').addClass('btn btn-minier btn-danger').html('从钉钉删除');
+                    var $userexception = $('<a></a>').addClass('btn btn-minier btn-pink').html('工作经历');
 
                     var propertyArr = [
                         ["员工编号:", v.userId, "grey"],
@@ -63,24 +97,24 @@
                     });
 
                     $qrcode.click(function(){
-                        com.focusPage('#qrcodeModal').modal('show');
-                        com.focusPage('#Qrcode').html("");
 
-                        com.focusPage('#Qrcode').qrcode({
+                        user.items.Qrcode.html("").qrcode({
                             render: "canvas", //也可以替换为table
                             width: 150,
                             height: 150,
-                            text: "fanglinserver:"+v.userId
+                            text: "fanglinserver:" + v.userId
                         });
+                        
+                        user.modals.qrcodeModal.modal('show');
                     });
 
                     //查看
                     $btnCheck.click(function(){
-                        com.focusPage("text").css("line-height", "27px");
-                        com.post(api.personel.queryUserInfoByUserId, {"userInfo.user.userId": v.userId}, function(res){
-                            bindUserInfo(res.userInfo);
-                            com.focusPage("#checkUserInfo").modal('show');
+                        params.tempUserId = v.userId;
+                        com.popup4page("#layerPopUp", api.index.userViewIndex.url, "查看", null, function () {
+                            userSeacher.doSearch();
                         });
+                        
                     });
 
                     $btnEdit.click(function(){
@@ -282,19 +316,19 @@
                     });
 
                     $userexception.unbind().bind('click',function(){
-                        com.focusPage('#userExpModal').modal('show');
-                        com.focusPage('#userException').html("");
+                        user.modals.userExpModal.modal('show');
+                        user.items.userException.html("");
 
                         var $uli = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
                        
-                        var  userExperiences=null;
+                        var  userExperiences = null;
 
                         com.post(api.personel.queryUserExperienceByUid,{"userExperience.uid":v.uid},function(res) {
                             userExperiences = res.userExperiences;
                         }, null, false);
 
                         if(userExperiences && userExperiences.length){
-                            $.each(userExperiences,function(ind, val){
+                            $.each(userExperiences, function(ind, val){
                                 var $liLi = $('<li></li>').addClass('item-blue clearfix');
                                 var $ulPro = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                                 var $h2 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + val.type));
@@ -315,9 +349,9 @@
                                 $liLi.append($h2).append($ulPro).appendTo($uli)
                             })
                         }
-                        $uli.appendTo(com.focusPage('#userException'));
+                        $uli.appendTo(user.items.userException);
                     });
-
+                    
                     $divBtnWrap.append($qrcode).append($btnCheck).append($btnEdit).append($addDD).append($updateDD).append($deleteDD).append($userexception).appendTo($h3);
 
                     $liLine.append($h3).append($ulProperty).appendTo($ul);
@@ -368,10 +402,10 @@
     });
 
     com.focusPage('a[name="import"]','#pagenation').click(function(){
-        com.focusPage('#importModal').modal("show");
+        user.modals.importModal.modal("show");
     });
 
-    com.focusPage('#import').Huploadify({
+    user.items.import.Huploadify({
         'debug' : false, // 开启调试
         'auto':true, // 是否自动上传
         'successTimeout':config.uploadTimeout, // 超时时间
@@ -475,59 +509,6 @@
                 user.simpleAddUserModal.modal("hide");
             });
         }
-    }
-
-    //查看页面绑定人员信息
-    function bindUserInfo($userInfo){
-        com.focusPage("#userIdCheck").html(com.checkNull($userInfo.user.userId, "无"));
-        com.focusPage("#oldUserIdCheck").html(com.checkNull($userInfo.user.oldUserId, "无"));
-        com.focusPage("#userNameCheck").html($userInfo.user.userName);
-        com.focusPage("#currentNameCheck").html($userInfo.user.currentName);
-        com.focusPage("#genderCheck").html($userInfo.user.gender);
-        com.focusPage("#ageCheck").html($userInfo.age);
-        com.focusPage("#birthdayCheck").html($userInfo.user.birthday);
-        com.focusPage("#politicalSelCheck").html(com.checkNull($userInfo.political, "无"));
-        com.focusPage("#jobYearsCheck").html(com.checkNull($userInfo.jobYears, "无"));
-        com.focusPage("#identityCheck").html($userInfo.user.identity);
-        com.focusPage("#phoneCheck").html($userInfo.user.phone);
-        com.focusPage("#addressCheck").html(com.checkNull($userInfo.address, "无"));
-        com.focusPage("#hometownAddressCheck").html(com.checkNull($userInfo.hometownAddress, "无"));
-        com.focusPage("#householdSelCheck").html(com.checkNull($userInfo.householdType, "无"));
-        com.focusPage("#emergencyManCheck").html(com.checkNull($userInfo.emergencyMan, "无"));
-        com.focusPage("#emergencyPhoneCheck").html(com.checkNull($userInfo.emergencyPhone, "无"));
-        com.focusPage("#isPresentGraduateCheck").html(com.checkNull($userInfo.isPresentGraduate, "无"));
-        com.focusPage("#graduateTimeCheck").html(com.checkNull($userInfo.graduateTime, "无"));
-        com.focusPage("#schoolCheck").html(com.checkNull($userInfo.school, "无"));
-        com.focusPage("#educationSelCheck").html(com.checkNull($userInfo.education, "无"));
-        com.focusPage("#specialtyCheck").html(com.checkNull($userInfo.specialty, "无"));
-        com.focusPage("#isMarriedCheck").html(com.checkNull($userInfo.isMarried, "无"));
-        com.focusPage("#isBirthCheck").html(com.checkNull($userInfo.isBirth, "无"));
-        com.focusPage("#isHouseLoanCheck").html(com.checkNull($userInfo.isHouseLoan, "无"));
-        com.focusPage("#isCarLoanCheck").html(com.checkNull($userInfo.isCarLoan, "无"));
-        com.focusPage("#houseTypeSelCheck").html(com.checkNull($userInfo.houseType, "无"));
-        com.focusPage("#loverCheck").html(com.checkNull($userInfo.lover, "无"));
-        com.focusPage("#loginIdCheck").html($userInfo.user.loginId);
-        com.focusPage("#companyCheck").html(com.checkNull($userInfo.user.companys, "无"));
-
-        com.focusPage("#deptTypeSelCheck").html($userInfo.user.duty.departmentType.name);
-        com.focusPage("#deptSelCheck").html($userInfo.user.dept.name);
-        com.focusPage("#dutySelCheck").html($userInfo.user.duty.name);
-
-        com.focusPage("#statusSelCheck").html(user.statusType[$userInfo.user.status].value);
-        com.focusPage("#employWaySelCheck").html(com.checkNull($userInfo.employWay, "无"));
-        com.focusPage("#employTypeSelCheck").html(com.checkNull($userInfo.employType, "无"));
-        com.focusPage("#recommendManCheck").html(com.checkNull($userInfo.recommendMan, "无"));
-        com.focusPage("#entryTimeCheck").html($userInfo.entryTime);
-        com.focusPage("#employTimeCheck").html(com.checkNull($userInfo.employTime, "无"));
-        com.focusPage("#serviceYearsCheck").html(com.checkNull($userInfo.serviceYears, "无"));
-        com.focusPage("#isContractCheck").html(com.checkNull($userInfo.isContract, "无"));
-        com.focusPage("#isInsuranceCheck").html(com.checkNull($userInfo.isInsurance, "无"));
-        com.focusPage("#insuranceTimeCheck").html(com.checkNull($userInfo.insuranceTime, "无"));
-        com.focusPage("#pensionNumCheck").html(com.checkNull($userInfo.pensionNum, "无"));
-        com.focusPage("#medicalNumCheck").html(com.checkNull($userInfo.medicalNum, "无"));
-        com.focusPage("#salaryCheck").html($userInfo.salary);
-        com.focusPage("#bankCheck").html(com.checkNull($userInfo.bank, "无"));
-        com.focusPage("#bankCardNumCheck").html(com.checkNull($userInfo.bankCardNum, "无"));
     }
 
 });

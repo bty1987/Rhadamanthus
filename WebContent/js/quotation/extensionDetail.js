@@ -96,35 +96,35 @@ var ExtensionDetail = (function(){
 
             that.$btnItems = {
                 //选择普通报价项按钮点击(增项)
-                addNormalItemBtn : com.focusPage('#addNormalItemBtn').on(ace.click_event, function(){
+                addNormalItemBtn : com.focusPage('#addNormalItemBtn').on('click', function(){
                     modalEventBinding.showingModalName = "addNormalItemModal";
                     that.$modals.functionAreaModal.modal("show");
                 }),
               //选择普通报价项按钮点击(增项)
-                addQuotaionItemBtn : com.focusPage('#addQuotaionItemBtn').on(ace.click_event, function(){
+                addQuotaionItemBtn : com.focusPage('#addQuotaionItemBtn').on('click', function(){
                     modalEventBinding.showingModalName = "addQuotaionItemModal";
                     that.$modals.functionAreaModal.modal("show");
                 }),
                 //新增(增项)
-                addNewItemBtn : com.focusPage('#addNewItemBtn').on(ace.click_event, function(event){
+                addNewItemBtn : com.focusPage('#addNewItemBtn').on('click', function(event){
                     event.stopPropagation();
                     com.clearValidator();
                     that.$modals.addItemModal.modal("show");
                 }),
-                submitAddReduceDetailOKBtn : com.focusPage('#submitAddReduceDetailOKBtn').on(ace.click_event, function(event){
+                submitAddReduceDetailOKBtn : com.focusPage('#submitAddReduceDetailOKBtn').on('click', function(event){
                     
                     com.post( api.quotation.updateExtensionForAdvance, extensionDetail.basicParams, function(){
                         com.showAlert(com.info, '提交成功');
                     }, null, false);
 
                 }),//提交
-//				saveAddReduceDetailBtn : com.focusPage('#saveAddReduceDetailBtn').on(ace.click_event, function(event){
+//				saveAddReduceDetailBtn : com.focusPage('#saveAddReduceDetailBtn').on('click', function(event){
 //					//com.post( api.addReduce.updateAddReduceForAdvance, {'addReduce.arId' : addReduceDetail.arid, 'addReduce.total' : addReduceDetail.basicParams['addReduce.total']}, function(){
 //					com.post( api.addReduce.updateAddReduceItem, {'addReduce.arId' : addReduceDetail.arid, 'addReduce.total' : addReduceDetail.basicParams['addReduce.total']}, function(){
 //						com.showAlert(com.info, '保存成功');
 //					}, null, false);
 //				}),//保存
-                detailBckBtn : com.focusPage('#detailBckBtn').on(ace.click_event, function(){//返回
+                detailBckBtn : com.focusPage('#detailBckBtn').on('click', function(){//返回
                     com.switchPage(api.index.extensionIndex.url);
                 })
             };
@@ -193,7 +193,7 @@ var ExtensionDetail = (function(){
         //功能区选择弹层确认按钮
         functionAreaModalConfirm : function(){
             var that = this;
-            com.focusPage('#confirmItemBtn').off().on(ace.click_event, function(){
+            com.focusPage('#confirmItemBtn').off().on('click', function(){
                 
                 if(com.validate()) return false;
                 
@@ -227,20 +227,20 @@ var ExtensionDetail = (function(){
         // 0: 数据报价项(增项) , 1: 自定义(增项) , 2: 数据报价项(减项) , 3: 自定义(减项) , 4: 报价中项(减项)
         //普通报价项确认按钮点击
         addNormalItemModalConfirm : function(){
-            com.focusPage('#saveaddNormalItemBtn').off().on(ace.click_event, function(){
+            com.focusPage('#saveaddNormalItemBtn').off().on('click', function(){
                 quote.addQuotesFromModal(extensionDetail.type == 0 ? 0 : 2);
                 extensionDetail.$modals.addNormalItemModal.modal('hide');
             });
         },
         addQuotationItemModalConfirm : function(){
-            com.focusPage('#saveQuoteItemBtn').off().on(ace.click_event, function(){
+            com.focusPage('#saveQuoteItemBtn').off().on('click', function(){
                 quote.addQuotesFromModal(4);
                 extensionDetail.$modals.addQuotaionItemModal.modal('hide');
             });
         },
         //自定义报价项确认按钮点击
         addItemModalConfirm : function(){
-            com.focusPage("#saveAddItemBtn").on(ace.click_event, function(event){
+            com.focusPage("#saveAddItemBtn").on('click', function(event){
                 if(com.validate("addItemModal")) return;
 
                 var addRow = {
@@ -366,6 +366,8 @@ var ExtensionDetail = (function(){
                     discount = 1;
                 }
 
+                var subtype = type < 4 ? $this.attr("data-quotationType") : $this.attr("data-subtype");
+
                 var _quotval = {
                     "num" : 0,//工程预算量
                     "itemName" : $li.find('.lbl').text(),//名称
@@ -379,7 +381,7 @@ var ExtensionDetail = (function(){
                     "content" : $li.find("li .quotationItemDes").text(),//工艺说明
                     "workType" : $li.find("li .workType").text(),//工种
                     "type" : type,//类型(隐藏属性)
-                    "subtype" :$this.attr("data-quotationType") ,
+                    "subtype" : subtype,
                     "eid" : "",//增减项中报价项的id
                     "quoteItemId" : $this.val(),//id(隐藏属性)
                     "discount" : discount,
@@ -553,7 +555,6 @@ var ExtensionDetail = (function(){
 
     var painter = {
         //创建添加报价项弹窗中的报价项 .sdiId
-
         createQuoteModalItem : function(v, idname){
             var $liLine = $('<li></li>').addClass('item-blue clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').css({"margin-bottom" : 0});
@@ -564,6 +565,7 @@ var ExtensionDetail = (function(){
                 "class" : "ace ace-checkbox-2",
                 "data-discount-flag" : v.discount,
                 "data-quotationType" : v.quotationTypeId,
+                "data-subtype" : v.subtype,
                 "data-quotationItemId" : v.quotationItemId
                 //功能区
             }).val(v[idname]);

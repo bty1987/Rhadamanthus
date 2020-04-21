@@ -323,7 +323,7 @@ jQuery(function ($) {
         });
     }, null, false);
 
-    com.focusPage('#customerInfosBtn').on(ace.click_event, function () {
+    com.focusPage('#customerInfosBtn').on("click", function () {
         com.post(api.data.queryCustomerById, {"customer.cid": decorationDetail.customer.cid}, function (res) {
             decorationDetail.customer = res.customer;
             com.showInfo("客户敏感信息", '邮箱 :' + decorationDetail.customer.email + '<br /> QQ:' + decorationDetail.customer.qq + '<br /> 微信:' + decorationDetail.customer.wechat + '<br />  电话 :' + decorationDetail.customer.phone + '<br />  客户类型:' + decorationDetail.customer.relationshipType + '<br />');
@@ -332,7 +332,7 @@ jQuery(function ($) {
         return false;
     });
     //参加活动 保存按钮
-    com.focusPage("#submitDecorationActivityBtn").on(ace.click_event, function () {
+    com.focusPage("#submitDecorationActivityBtn").on("click", function () {
 
         if (com.validate("joinDecorationActivityModal")) {
             return;
@@ -354,7 +354,7 @@ jQuery(function ($) {
     });
 
     // 申领活动物品 保存按钮
-    com.focusPage("#submitDecorationActivityItemBtn").on(ace.click_event, function () {
+    com.focusPage("#submitDecorationActivityItemBtn").on("click", function () {
 
 
         var receiverId = com.focusPage("#approveActivityItemManSel").find('input:checked').attr('userid');
@@ -789,7 +789,7 @@ jQuery(function ($) {
         decorationDetail.quotationTotalPriceModal.modal("hide");
     });
 
-    com.focusPage('#btnBack').on(ace.click_event, function () {
+    com.focusPage('#btnBack').on("click", function () {
         com.switchPage(params.historyPage);
     });
 
@@ -835,6 +835,8 @@ jQuery(function ($) {
             decorationDetail.items.notSalesmanPhone.val(res.notSalesmanPhone);
             decorationDetail.items.notSalesmanName.val(res.notSalesmanName);
             decorationDetail.items.notSalesmanContent.val(res.notSalesmanContent);
+            com.focusPage('#designStatus').html(res.isConfirmDesign == 0 ? '未确认':'已确认');
+            com.focusPage('#prictureStatus').html(res.isConfirmPricture == 0 ? '未确认':'已确认');
         });
 
 

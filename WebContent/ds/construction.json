@@ -53,6 +53,9 @@
     ], "isCheckup" :[
 	    {"key":"0", "value":"验证" },
 	    {"key":"1", "value":"通过"}
+    ],"isConfirmPricture" :[
+	    {"key":"0", "value":"已确认" },
+	    {"key":"1", "value":"未确认"}
     ],
 
     "errorCode": 0,

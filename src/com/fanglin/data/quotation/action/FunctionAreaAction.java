@@ -38,7 +38,7 @@ public class FunctionAreaAction extends BaseListAction {
 	private FunctionAreaVO functionArea;
 
 	private List<FunctionAreaVO> functionAreas;
-
+	
 	@Action(value = "pageFunctionArea", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageFunctionArea() throws FLException {
 
@@ -62,7 +62,7 @@ public class FunctionAreaAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-
+	
 	@Action(value = "addFunctionArea", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addFunctionArea() throws FLException {
 
@@ -102,5 +102,5 @@ public class FunctionAreaAction extends BaseListAction {
 	public List<FunctionAreaVO> getFunctionAreas() {
 		return functionAreas;
 	}
-
+	
 }

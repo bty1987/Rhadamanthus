@@ -58,6 +58,8 @@ public class CustomerOriginVO implements Serializable {
 	private UserBaseVO designer;
 
 	private String orderId;
+	
+	private String salesmanType;
 
 	public CustomerOriginVO() {
 		super();
@@ -250,6 +252,14 @@ public class CustomerOriginVO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	public String getSalesmanType() {
+		return salesmanType;
+	}
+
+	public void setSalesmanType(String salesmanType) {
+		this.salesmanType = salesmanType;
 	}
 
 }

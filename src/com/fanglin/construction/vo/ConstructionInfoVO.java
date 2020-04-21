@@ -3,6 +3,10 @@ package com.fanglin.construction.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import org.apache.struts2.json.annotations.JSON;
+
+import com.fanglin.decoration.vo.DecorationVO;
+
 public class ConstructionInfoVO implements Serializable {
 
 	private static final long serialVersionUID = -8887915345535064194L;
@@ -10,6 +14,8 @@ public class ConstructionInfoVO implements Serializable {
 	private Long ciid;
 
 	private String orderId;
+	
+	private DecorationVO decoration;
 	
 	private Integer timeLimit;
 
@@ -21,6 +27,8 @@ public class ConstructionInfoVO implements Serializable {
 
 	private Short isCeremony;
 	
+	private Short isConfirmPricture;
+	
 	private Timestamp finishTime;
 	
 	private Timestamp keyTime;
@@ -28,7 +36,16 @@ public class ConstructionInfoVO implements Serializable {
 	private Timestamp drawlineTime;
 
 	private String comment;
-
+	
+	public ConstructionInfoVO() {
+		super();
+	}
+	
+	public ConstructionInfoVO(DecorationVO decoration) {
+		super();
+		this.decoration = decoration;
+	}
+	
 	public Long getCiid() {
 		return ciid;
 	}
@@ -43,6 +60,14 @@ public class ConstructionInfoVO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+	
+	public DecorationVO getDecoration() {
+		return decoration;
+	}
+
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
 	}
 
 	public Integer getTimeLimit() {
@@ -84,7 +109,16 @@ public class ConstructionInfoVO implements Serializable {
 	public void setIsCeremony(Short isCeremony) {
 		this.isCeremony = isCeremony;
 	}
+	
+	public Short getIsConfirmPricture() {
+		return isConfirmPricture;
+	}
 
+	public void setIsConfirmPricture(Short isConfirmPricture) {
+		this.isConfirmPricture = isConfirmPricture;
+	}
+	
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getFinishTime() {
 		return finishTime;
 	}
@@ -93,6 +127,7 @@ public class ConstructionInfoVO implements Serializable {
 		this.finishTime = finishTime;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getKeyTime() {
 		return keyTime;
 	}
@@ -101,6 +136,7 @@ public class ConstructionInfoVO implements Serializable {
 		this.keyTime = keyTime;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getDrawlineTime() {
 		return drawlineTime;
 	}

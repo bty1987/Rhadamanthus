@@ -33,15 +33,9 @@ $(function () {
                 + notice.startTime + ' 至 ' + notice.endTime + '</span>&nbsp;&nbsp;<span><i class="icon-user bigger-110"></i>&nbsp;'
                 + notice.creater.userName + '</span>&nbsp;&nbsp;</div></small>');
             if (notice.filePath != undefined && notice.filePath != null && notice.filePath != "") {
-            	var openWin = "";
+            	var openWin = "com.popup('" + notice.theme + "', '" + config.media + notice.filePath + "');";
             	
-            	if(parent.window.isPC){
-            		openWin = "nw.Window.open('" + config.media + notice.filePath + "', {}, function(new_win) { if(new_win) new_win.maximize();});";
-            	}else{
-            		openWin = "window.open('" + config.media + notice.filePath + "');";
-            	}
-            	
-                $(".pull-right", $bottomInfo).append('<span><i class="icon-download-alt bigger-110"></i>&nbsp;<a href=' + config.media + notice.filePath + "?t=" + new Date().getTime() + ' onclick="' + openWin + ' return false;">下载附件</a></span>');
+                $(".pull-right", $bottomInfo).append('<span><i class="icon-download-alt bigger-110"></i>&nbsp;<a href=' + config.media + notice.filePath + "?t=" + new Date().getTime() + ' onclick="' + openWin + ' return false;">查看附件</a></span>');
             }
 
             $wrap.append($title).append($contents).append($bottomInfo);
@@ -86,7 +80,7 @@ $(function () {
         
         com.focusPage("h4[name='versionCode']").after($(res.versionInfo ? res.versionInfo : "<p>版本信息</p>"));
         
-        res.blessing && (layer.open({
+        res.alertInfo && (layer.open({
             type: 1,
             title: false,
             closeBtn: false,
@@ -95,7 +89,7 @@ $(function () {
             id: 'homeAlert',
             btn: ['了解了'],
             moveType: 1,
-            content: res.blessing,
+            content: res.alertInfo,
             success: function(layero){
                 layero.find('.layui-layer-btn').css('text-align', 'center');
             }
@@ -169,11 +163,12 @@ $(function () {
     $('#updateActivities').click(function () {
         Signing.loadActivities();
     });
-
+    
     var date = new Date();
     var d = date.getDate();
     var m = date.getMonth();
     var y = date.getFullYear();
+    
     var calendar = $('#calendar').fullCalendar($.extend(com.calendardefault, {
         selectable: true,
         selectHelper: true,

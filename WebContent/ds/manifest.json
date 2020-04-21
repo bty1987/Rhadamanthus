@@ -23,10 +23,12 @@
     ],
     "accessoriesStatus": [
         {"key":"0","value":"初始"},
-        {"key":"1","value":"出货"},
-        {"key":"2","value":"撤销"},
-        {"key":"3","value":"拒绝"},
-        {"key":"4","value":"退回"}
+        {"key":"1","value":"预出"},
+        {"key":"2","value":"出货"},
+        {"key":"3","value":"撤销"},
+        {"key":"4","value":"拒绝"},
+        {"key":"5","value":"退回"},
+        {"key":"6","value":"到货"}
     ],
     "purchaseStatus": [
         {"key":"0","value":"初始"},

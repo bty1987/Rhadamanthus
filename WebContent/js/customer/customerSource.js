@@ -22,6 +22,7 @@ $(function () {
             intention: com.focusPage("#intention"),
             price: com.focusPage("#price"),
             grade: com.focusPage("#grade"),
+            salesmanTypeEdit: com.focusPage("#salesmanTypeEdit"),
             comment: com.focusPage("#comment"),
 
             villageNo: com.focusPage("#villageNo"),
@@ -95,6 +96,7 @@ $(function () {
     com.post(api.ds.decoration, {}, function (res) {
         customerSource.items.houseClass.bindData(res.houseClass, 'key', 'value');
         customerSource.items.salesmanType.bindData(res.salesmanType, 'key', 'value');
+        customerSource.items.salesmanTypeEdit.bindData(res.salesmanType, 'key', 'value');
         customerSource.items.orderType.bindData(res.type, 'key', 'value');
         customerSource.items.resourceType.bindData(res.status, 'key', 'value');
     }, null, false);
@@ -174,6 +176,7 @@ $(function () {
                 ["楼牌号: ", v.houseNumber, "blue"],
                 ["建筑面积: ", v.buildArea, "blue"],
                 ["装修单号: ", com.checkNull(v.orderId, '无'), "blue"],
+                ["业务员类型: ", v.salesmanType, "red"],
                 ["状态: ", customerSource.status[v.status], "red"],
                 ["备注: ", com.checkNull(v.comment, '无'), "grey"]
             ];
@@ -225,6 +228,7 @@ $(function () {
                 customerSource.items.houseNumber.attr("readOnly", "readOnly");
                 customerSource.items.name.attr("readOnly", "readOnly");
                 customerSource.items.phone.attr("readOnly", "readOnly");
+                customerSource.items.salesmanTypeEdit.attr("disabled", "disabled");
 
                 editcustomerOrigin(v);
             });
@@ -250,6 +254,7 @@ $(function () {
                 customerSource.items.houseNumberBind.val(v.houseNumber);
                 customerSource.items.nameBind.val(v.name);
                 customerSource.items.phoneBind.val(v.phone);
+                customerSource.items.salesmanType.val(v.salesmanType);
                 customerSource.modals.bindAllInfoModal.modal("show");
             });
 
@@ -327,6 +332,7 @@ $(function () {
         customerSource.items.comment.val(d.comment);
         customerSource.items.houseNumber.val(d.houseNumber);
         customerSource.items.buildArea.val(d.buildArea);
+        customerSource.items.salesmanTypeEdit.val(d.salesmanType);
 
         if(d.gender == "女"){
             customerSource.items.gender.prop("checked", true);
@@ -361,7 +367,6 @@ $(function () {
             "customerOrigin.grade": customerSource.items.grade.val(),
             "customerOrigin.comment": customerSource.items.comment.val(),
             "customerOrigin.village.no": com.typeahead("villageNo"),
-            "customerOrigin.houseNumber": customerSource.items.houseNumber.val(),
             "customerOrigin.buildArea": customerSource.items.buildArea.val()
         };
 
@@ -386,7 +391,8 @@ $(function () {
             "customerOrigin.designer.userId": com.typeahead("designer"),
             "customerOrigin.house.hid": hid,
             "customerOrigin.customer.cid": cid,
-            "customerOrigin.phone": customerSource.items.phoneBind.val() //为了避免编辑时修改电话号, 导致客源中和客户中信息对应不上情况
+            "customerOrigin.phone": customerSource.items.phoneBind.val(), //为了避免编辑时修改电话号, 导致客源中和客户中信息对应不上情况
+            "customerOrigin.salesmanType": customerSource.items.salesmanType.val()
         };
 
         com.post(api.customer.bindCustomerOrigin, options, function (res) {
@@ -506,7 +512,7 @@ $(function () {
                 "approvalCustomerOriginTDecoration.customerOrigin.csid" : customerSource.currentCustomerSource.csid,
                 "approvalCustomerOriginTDecoration.type": customerSource.items.orderType.val(),
                 "approvalCustomerOriginTDecoration.salesman.userId": com.typeahead("salesman"),
-                "approvalCustomerOriginTDecoration.salesmanType": customerSource.items.salesmanType.val(),
+                //"approvalCustomerOriginTDecoration.salesmanType": customerSource.items.salesmanType.val(),
                 "approvalCustomerOriginTDecoration.houseType": customerSource.items.houseType.val(),
                 "approvalCustomerOriginTDecoration.houseClass": customerSource.items.houseClass.val(),
                 "approvalCustomerOriginTDecoration.resourceType": customerSource.items.resourceType.val()

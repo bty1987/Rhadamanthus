@@ -25,6 +25,10 @@ public class DecorationInfoPO implements Serializable {
 
 	private static final long serialVersionUID = -7484137001624425538L;
 
+	public static final short STATUS_INIT_INT = 0;// 待确认
+
+	public static final short STATUS_COFIRM_INT = 1;// 确认
+
 	private long diid;
 
 	private String orderId;
@@ -40,6 +44,10 @@ public class DecorationInfoPO implements Serializable {
 	private String backOrderPhone;
 
 	private String backOrderContent;
+
+	private short isConfirmPricture;
+
+	private short isConfirmDesign;
 
 	public DecorationInfoPO() {
 		super();
@@ -122,6 +130,24 @@ public class DecorationInfoPO implements Serializable {
 
 	public void setBackOrderContent(String backOrderContent) {
 		this.backOrderContent = backOrderContent;
+	}
+
+	@Column(name = "isConfirmPricture")
+	public short getIsConfirmPricture() {
+		return isConfirmPricture;
+	}
+
+	public void setIsConfirmPricture(short isConfirmPricture) {
+		this.isConfirmPricture = isConfirmPricture;
+	}
+
+	@Column(name = "isConfirmDesign")
+	public short getIsConfirmDesign() {
+		return isConfirmDesign;
+	}
+
+	public void setIsConfirmDesign(short isConfirmDesign) {
+		this.isConfirmDesign = isConfirmDesign;
 	}
 
 }

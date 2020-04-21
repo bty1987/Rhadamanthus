@@ -269,7 +269,11 @@ $.extend(api, {
             }
         },
         refundAccessories: {url: "refundAccessories.do"},
-        updateAccessoriesForStatus: {url: "updateAccessoriesForStatus.do"},
+        preoutAccessories: {url: "preoutAccessories.do"},
+        cancelAccessories: {url: "cancelAccessories.do"},
+        refuseAccessories: {url: "refuseAccessories.do"},
+        updateAccessoriesForPrint: {url: "updateAccessoriesForPrint.do"},
+        deliveAccessories: {url: "deliveAccessories.do"},
         addAccessoriesItem: {
             url: "addAccessoriesItem.do",
             type: "update",

@@ -1,5 +1,6 @@
 package com.fanglin.decoration.service.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -45,24 +46,32 @@ public class DecorationAdditionImpl implements DecorationAdditionService {
 	public Map<String, Object> queryDecorationConfig(DecorationVO decorationVO, int company) {
 
 		Map<String, Object> config = new HashMap<String, Object>();
-		
+
 		List<Short> types = Arrays.asList(DecorationPO.TYPE_HOLONOMY_INT, DecorationPO.TYPE_FULLSUB_INT, DecorationPO.TYPE_DOUSUB_INT);
-		
+
 		JSONArray holonomyConfigs = new JSONArray();
-		
-		if(decorationVO != null && decorationVO.getType() != null){
-			SystemConfigPO _config = systemConfigDao.querySystemConfig(String.format(DecorationPO.CONFIG_KEY_HOLONOMY_STR, decorationVO.getType()), company);
-			holonomyConfigs.addAll(JSONArray.parseArray(_config == null ? "[]" : _config.value("[]")));
-		}else{
-			for(Short type: types){
-				SystemConfigPO _config = systemConfigDao.querySystemConfig(String.format(DecorationPO.CONFIG_KEY_HOLONOMY_STR, type), company);
-				holonomyConfigs.addAll(JSONArray.parseArray(_config == null ? "[]" : _config.value("[]")));
+
+		List<SystemConfigPO> systemConfigPOs = new ArrayList<SystemConfigPO>();
+
+		if (decorationVO != null && decorationVO.getType() != null) {
+			List<SystemConfigPO> _configs = systemConfigDao.obtainSystemConfig(String.format(DecorationPO.CONFIG_KEY_HOLONOMY_STR, decorationVO.getType()), company);
+
+			systemConfigPOs.addAll(_configs);
+
+		} else {
+			for (Short type : types) {
+				List<SystemConfigPO> _configs = systemConfigDao.obtainSystemConfig(String.format(DecorationPO.CONFIG_KEY_HOLONOMY_STR, type), company);
+
+				systemConfigPOs.addAll(_configs);
 			}
+		}
+
+		for (SystemConfigPO _config : systemConfigPOs) {
+			holonomyConfigs.addAll(JSONArray.parseArray(_config == null ? "[]" : _config.value("[]")));
 		}
 
 		config.put("machingType", holonomyConfigs);
 
 		return config;
 	}
-	
 }

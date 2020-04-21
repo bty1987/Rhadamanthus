@@ -11,6 +11,7 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.salary.dao.WorkerSalaryDao;
 import com.fanglin.salary.po.WorkerSalaryPO;
+import com.fanglin.utils.Arith;
 
 @Service("WorkerSalaryImportService")
 @Transactional(readOnly = true)
@@ -71,8 +72,8 @@ public class WorkerSalaryImportService implements com.fanglin.imports.service.Wo
 			List<String> _salary = excels.get(i);
 
 			String userid = _salary.get(0);
-			int salary = Integer.valueOf(_salary.get(2));
-			short subtype = Short.valueOf(_salary.get(3));
+			long salary = Double.valueOf(_salary.get(2)).longValue();
+			short subtype = Double.valueOf(_salary.get(3)).shortValue();
 			String comment = _salary.get(4);
 
 			UserPO worker = userDao.queryUserByUserId(userid);
@@ -90,7 +91,7 @@ public class WorkerSalaryImportService implements com.fanglin.imports.service.Wo
 			workerSalaryPO.setUser(worker);
 			workerSalaryPO.setSubtype(subtype);
 			workerSalaryPO.setComment(comment);
-			workerSalaryPO.setSalary(salary);
+			workerSalaryPO.setSalary((long)Arith.mul(salary, 1000.0));
 			workerSalaryPO.setCreater(creater);
 			workerSalaryPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			workerSalaryPO.setCsid(0);

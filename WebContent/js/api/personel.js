@@ -1,6 +1,7 @@
 
 $.extend(api.index, {
     userIndex: {url: "/views/personnel/user.html"},
+    userViewIndex: {url: "/views/personnel/user4view.html"},
     userEditIndex: {url: '/views/personnel/user2edit.html'},
     userContractIndex: {url: "/views/personnel/userContract.html"},
     userExperienceIndex: {url: "/views/personnel/userExperience.html"}
@@ -60,5 +61,7 @@ $.extend(api, {personel: {
     checkMacontrol: {url: "checkMacontrol.do", server: "communion"},
     addMacontrol: {url: "addMacontrol.do", server: "communion"},
     deleteMacontrol: {url: "deleteMacontrol.do", server: "communion"},
+	queryAttendance: {url: "queryAttendance.do"},
+	reportAttendance: {url: "reportAttendance.do"}
 
 }});

@@ -28,6 +28,7 @@ $(function(){
             status: 0,
             num: 0
         },
+        showSelling: false,
         typeList: [],
         statusList: [],
         postData : '',
@@ -38,6 +39,7 @@ $(function(){
     };
 
     if (selectionItem.pageType == "supplier") {
+        selectionItem.showSelling = true;
         selectionItem.query.push("selectionItemStatus");
         selectionItem.url = api.quotation.pageSelectionItemForSupplier;
         selectionItem.postData = "selectionItemForSupplierPostData";
@@ -102,7 +104,7 @@ $(function(){
             }
         };
 
-        var creatLine = function(v){
+        var creatLine = function(v) {
 
             var $liLine = $('<li></li>').addClass('item-blue clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.goods.name));
@@ -121,10 +123,9 @@ $(function(){
                 ["品牌:", v.goods.brand, "grey"],
                 ["品类:", v.goods.category, "grey"],
                 ["商品编号:", v.goods.no, "blue" ],
-                ["功能区名称:", v.functionAreaName, "grey"],
+                ["功能区名称:", v.areaName, "grey"],
                 ["类型:", selectionItem.typeList[v.type], "red"],
                 ["状态:", selectionItem.statusList[v.status], "red"],
-                ["结算价:", v.selling, "blue"],
                 ["数量:", v.num, "blue"],
                 ["备注:", v.comment, "grey"],
                 ["配送人:", v.traner.currentName, "grey"],
@@ -147,6 +148,17 @@ $(function(){
                 ["设计师:", v.decoration.designer.currentName, "grey"],
                 ["业务员:", v.decoration.salesman.currentName, "grey" ],
             ];
+
+            if (v.status <= 2) {// 显示工程量
+                var initNumArr = ["报价项工程量:", v.initNum, "blue"];
+
+                propertyArr.splice(7, 0, initNumArr);
+            }
+            if (selectionItem.showSelling || v.status == 5) {// 显示结算价
+                var sellingArr = ["结算价:", v.selling, "blue"];
+
+                propertyArr.splice(6, 0, sellingArr);
+            }
 
             $.each(propertyArr, function (index,value) {
                 var $liProperty = $('<li></li>');

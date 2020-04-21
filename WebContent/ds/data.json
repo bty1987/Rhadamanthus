@@ -91,6 +91,16 @@
     {"key" : "0", "value" : "启用"},
     {"key" : "1", "value" : "禁用"}
   ],
+  "talkingType":[
+    {"key" : "0", "value" : "工程合同补充条款"},
+    {"key" : "1", "value" : "降配比标写"},
+    {"key" : "2", "value" : "未含项目"}
+  ],
+  "talkingStatus": [
+    {"key" : "0", "value" : "启用"},
+    {"key" : "1", "value" : "禁用"}
+  ],
+
 
   "errorCode": 0,
   "errorMsg": null

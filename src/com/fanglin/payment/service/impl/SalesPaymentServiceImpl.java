@@ -90,7 +90,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		
 		filters.add(new Filter(SalesPaymentPO.COLUMN_STATUS_STR, String.valueOf(SalesPaymentPO.STATUS_INITIAL_INT), "eq"));
 
-		filters.add(new Filter(String.format("sales.%s", companyType), String.valueOf(company), "eq"));
+		if(companyType != null){
+			filters.add(new Filter(String.format("sales.%s", companyType), String.valueOf(company), "eq"));
+		}
 
 		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.pageSalesPaymentForInit(paging, filters);
 		List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();
@@ -117,7 +119,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		filters.add(new Filter(SalesPaymentPO.COLUMN_STATUS_STR, String.valueOf(SalesPaymentPO.STATUS_INITIAL_INT), "ne"));
 
-		filters.add(new Filter(String.format("sales.%s", companyType), String.valueOf(company), "eq"));
+		if(companyType != null){
+			filters.add(new Filter(String.format("sales.%s", companyType), String.valueOf(company), "eq"));
+		}
 
 		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.pageSalesPaymentForNotInit(paging, filters);
 		List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();
@@ -208,7 +212,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		filters.add(new Filter(SalesPaymentPO.COLUMN_STATUS_STR, String.valueOf(SalesPaymentPO.STATUS_INITIAL_INT), "eq"));
 		filters.add(new Filter(SalesPaymentPO.COLUMN_TYPE_STR, "", "in"));
 
-		filters.add(new Filter(String.format("sales.%s", companyType), String.valueOf(company), "eq"));
+		if(companyType != null){
+			filters.add(new Filter(String.format("sales.%s", companyType), String.valueOf(company), "eq"));
+		}
 
 		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.querySalesPayment(filters);
 		List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();

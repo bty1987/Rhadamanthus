@@ -66,6 +66,8 @@ public class CustomerPO implements Serializable {
 
 	private String token;
 
+	private String authurl;
+	
 	private short status;
 
 	private int company;
@@ -260,6 +262,15 @@ public class CustomerPO implements Serializable {
 		this.token = token;
 	}
 
+	@Column(name = "authurl")
+	public String getAuthurl() {
+		return authurl;
+	}
+
+	public void setAuthurl(String authurl) {
+		this.authurl = authurl;
+	}
+	
 	public short getStatus() {
 		return status;
 	}

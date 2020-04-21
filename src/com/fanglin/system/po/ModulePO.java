@@ -13,35 +13,36 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "module", catalog = "communion")
 public class ModulePO implements Serializable {
-	
+
 	private static final long serialVersionUID = -8993777631048468352L;
-	
+
 	public static final short LINK_LINK_INT = 0;
 
+	public static final short LINK_NO_INT = 1;
+
 	private int mid;
-	
+
 	private ModulePO fatherModule;
-	
+
 	private String name;
-	
+
 	private String alias;
-	
+
 	private String icon;
-	
+
 	private String url;
-	
+
 	private short level;
-	
+
 	private short system;
-	
+
 	private short order;
-	
+
 	private String helpKey;
-	
+
 	public ModulePO() {
 		super();
 	}
@@ -53,7 +54,7 @@ public class ModulePO implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name="mid")
+	@Column(name = "mid")
 	public int getMid() {
 		return mid;
 	}
@@ -143,5 +144,5 @@ public class ModulePO implements Serializable {
 	public void setHelpKey(String helpKey) {
 		this.helpKey = helpKey;
 	}
-	
+
 }

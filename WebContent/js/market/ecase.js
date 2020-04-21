@@ -1,4 +1,5 @@
 jQuery(function($) {
+    
     var decorationCase = {
         saveBtn: null,
         modal: null,
@@ -9,19 +10,7 @@ jQuery(function($) {
         validator: null,
         ecityItem: []
     };
-
-    var colorboxArgs = {
-        reposition:true,
-        scalePhotos:true,
-        scrolling:false,
-        previous:'<i class="icon-arrow-left"></i>',
-        next:'<i class="icon-arrow-right"></i>',
-        close:'&times;',
-        current:'{current} of {total}',
-        maxWidth:'100%',
-        maxHeight:'100%'
-    };
-
+    
     decorationCase.saveBtn = com.focusPage("#saveBtn").on("click", saveCaseData);
 
     decorationCase.modal = com.focusPage("#caseModal");
@@ -189,6 +178,7 @@ jQuery(function($) {
                         $.each(pictures, function(i, d){
                             appendGalleryElement("epicture", d.epid, d.url, 0, "", api.market.deleteEpicture, v.cid, api.market.updateEcase);
                         });
+                        com.popup4photos("#epicture");
                     }
                 }, null, false);
 
@@ -341,6 +331,7 @@ jQuery(function($) {
                     com.post(api.market.addEpicture, options, function(res){
                         var pic = res.epicture;
                         appendGalleryElement("epicture", pic.epid, dateObj.resUrl, 0, "", api.market.deleteEpicture, cid, api.market.updateEcase);
+                        com.popup4photos("#epicture");
                     });
                 }else{
                     console.log(data);
@@ -350,10 +341,15 @@ jQuery(function($) {
     }
 
     function appendGalleryElement(galleryId, imgId, imgUrl, type, editUrl, deleteUrl, cid, defaultUrl){
+        
         var gallery = com.focusPage("#" + galleryId);
+        
         var imgLi = $("<li></li>").attr("id", "gallery_li"+imgId).addClass("text-center").css("border-color", "#ddd").appendTo(gallery);
         var img = $('<img />');
-        var imgA = $("<a></a>").attr("href", com.showImg(img, imgUrl, 150, 150, '150x150', null, type)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(imgLi);
+        var imgA = $("<a></a>").css("height", "150px").append(img).appendTo(imgLi);
+        
+        com.showImg(img, imgUrl, 150, 150, '', null, type);
+        
         var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
         var toolsA = $("<a></a>").attr("href", "#").on("click", function(){
             var options = {};
@@ -375,7 +371,6 @@ jQuery(function($) {
             });
         }).appendTo(toolsDiv);
         $("<i></i>").addClass("icon-ok green").appendTo(toolsB);
-        imgA.colorbox(colorboxArgs);
     }
 
     function cycleChange(tag, cycleValue){

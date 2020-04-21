@@ -26,6 +26,7 @@ jQuery(function ($) {
             keyTime : com.focusPage("#keyTime"),
             drawlineTime : com.focusPage("#drawlineTime"),
             isCeremony  : com.focusPage("#isCeremony"),
+            isConfirmPricture :com.focusPage("#isConfirmPricture"),
             comment   : com.focusPage("#comment")
         },
 
@@ -60,6 +61,7 @@ jQuery(function ($) {
         construction.items.ishovel.bindData(res.isHovel, "key", "value", false);
         construction.items.iskey.bindData(res.isKey, "key", "value", false);
         construction.items.isCeremony.bindData(res.isCeremony, "key", "value", false);
+        construction.items.isConfirmPricture.bindData(res.isConfirmPricture, "key", "value", false);
 
     }, null, false);
 
@@ -221,6 +223,7 @@ jQuery(function ($) {
             construction.items.iskey.val(data.iskey);
             construction.items.isCeremony.val(data.isCeremony);
             construction.items.timeLimit.val(data.timeLimit);
+            construction.items.isConfirmPricture.val(data.isConfirmPricture);
             if(data.finishTime != null){
                 construction.items.finishTime.val(data.finishTime.substr(0,10));
             }

@@ -38,7 +38,7 @@ $(function(){
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 			
-			var $btnDown = $('<a></a>').addClass('btn btn-minier btn-success').html('下载');
+			var $btnDown = $('<a></a>').addClass('btn btn-minier btn-success').html('查看');
 
 			var myDate= new Date();
 			var starts = new Date(v.startTime);
@@ -52,7 +52,8 @@ $(function(){
 				["结束时间:", v.endTime, "grey"],
 				["公开:", moreNotices.noticeIsPublic[v.isPublic], "blue"],
 				["内容:", v.contents, "grey"],
-				["状态:", starts <= myDate && end >= myDate ? "有效":"无效", "blue"]
+				["状态:", starts <= myDate && end >= myDate ? "有效":"无效", "blue"],
+				["文件名:", v.fileName == "" || v.fileName == null ? "无" : v.fileName, "red"]
 			];
 
 			$.each(propertyArr, function (index,value) {
@@ -75,7 +76,7 @@ $(function(){
             	if(parent.window.isPC){
             		nw.Window.open(config.media + v.filePath, {}, function(new_win) { if(new_win) new_win.maximize();});
             	}else{
-            		window.open(config.media + v.filePath);
+            		com.popup("公告",config.media + v.filePath);
             	}
             	
             	return false;

@@ -776,7 +776,7 @@ var QuotetionDetail = (function () {
 
 $(function () {
     
-    com.focusPage("#compareBackBtn").on(ace.click_event, function () {
+    com.focusPage("#compareBackBtn").on('click', function () {
         com.showConfirm("是否确定返回上一页", function () {
             com.switchPage(params["historyQuotation"]);
         });

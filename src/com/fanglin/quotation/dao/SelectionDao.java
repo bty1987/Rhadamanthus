@@ -11,4 +11,6 @@ public interface SelectionDao extends Dao<SelectionPO>{
 	
 	public int updateSelectionForQidByOrderId(String orderId, long qid);
 	
+	public void deleteSelectionByQid(long qid);
+	
 }

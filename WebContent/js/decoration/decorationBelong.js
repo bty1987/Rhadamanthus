@@ -56,13 +56,13 @@ jQuery(function($) {
 	com.focusPage("#defaultFlag").switchBtn("isOrNot");
 	com.focusPage("#updateDefaultFlag").switchBtn("isOrNot");
 	
-	com.focusPage('#detailBckBtn').on(ace.click_event, function(){
+	com.focusPage('#detailBckBtn').on("click", function(){
 		com.switchPage(api.index.decorationBelongIndex.url);
 	});
 	
-	com.focusPage('#saveBelongInfoBtn').on(ace.click_event, saveOrderBelongInfo);
+	com.focusPage('#saveBelongInfoBtn').on("click", saveOrderBelongInfo);
 
-    com.focusPage("#addNewUserBtn").on(ace.click_event, function(event){
+    com.focusPage("#addNewUserBtn").on("click", function(event){
 
         if(com.validate("addUserModal"))
             return false;

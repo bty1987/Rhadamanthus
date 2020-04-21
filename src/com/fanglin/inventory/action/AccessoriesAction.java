@@ -53,10 +53,42 @@ public class AccessoriesAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "updateAccessoriesForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateAccessoriesForStatus() throws FLException {
+	@Action(value = "preoutAccessories", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String preoutAccessories() throws FLException {
 
-		accessoriesService.updateAccessoriesForStatus(accessories, queryUserId());
+		accessoriesService.preoutAccessories(accessories, queryUserId());
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "cancelAccessories", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String cancelAccessories() throws FLException {
+
+		accessoriesService.cancelAccessories(accessories, queryUserId());
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "refuseAccessories", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String refuseAccessories() throws FLException {
+
+		accessoriesService.refuseAccessories(accessories, queryUserId());
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "updateAccessoriesForPrint", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateAccessoriesForPrint() throws FLException {
+
+		accessoriesService.updateAccessoriesForPrint(accessories);
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "deliveAccessories", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deliveAccessories() throws FLException {
+
+		accessoriesService.deliveAccessories(accessories, queryUserId());
 
 		return SUCCESS;
 	}

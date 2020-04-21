@@ -156,7 +156,7 @@ jQuery(function () {
         var $total = sales.leftitems.total.val();
 
         var $otherStatus = $selling != $disPrice ? 1 : 0;
-        
+
         var $liList = $('<li></li>').addClass('list-group-item').attr({
             'data-discount': $discount,
             'data-selling': price.selling,//售价

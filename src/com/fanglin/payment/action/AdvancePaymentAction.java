@@ -66,6 +66,14 @@ public class AdvancePaymentAction extends BaseListAction {
 		
 		return SUCCESS;
 	}
+	
+	@Action(value="addAdvancePayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String addAdvancePayment() throws FLException{
+		
+		advancePaymentService.addAdvancePayment(advancePayment);
+		
+		return SUCCESS;
+	}
 
 	public AdvancePaymentVO getAdvancePayment() {
 		return advancePayment;

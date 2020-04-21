@@ -217,9 +217,7 @@ public class SignUtils {
 					keyAlias = (String) aliases.nextElement();
 
 					priKey = (PrivateKey) keystoreCA.getKey(keyAlias, password.toCharArray());
-
 				}
-
 			}
 		} catch (Exception e) {
 

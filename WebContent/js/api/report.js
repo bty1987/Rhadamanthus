@@ -41,5 +41,8 @@ $.extend(api, {report: {
     countDesignerDepartment: {url: "countDesignerDepartment.do", demo: true},
     countDesignerRegion: {url: "countDesignerRegion.do", demo: true},
 
-    reportCityCount: {url: "reportCityCount.do", demo: true}
+    reportCityCount: {url: "reportCityCount.do", demo: true},
+    queryDecoration7Construction: {url: "queryDecoration7Construction.do", demo: true},
+    updataDecoration7Construction: {url: "updataDecoration7Construction.do", demo: true}
+    
 }});

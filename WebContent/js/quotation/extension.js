@@ -129,7 +129,7 @@ jQuery(function($) {
 
     function saveData(){
 
-        if(com.validate())
+        if(com.validate("extensionModal"))
             return;
 
         var url;

@@ -10,19 +10,6 @@ $(function () {
     slide.slideItems.url = com.focusPage("#url");
     slide.slideItems.path = com.focusPage("#path");
 
-    var colorboxArgs = {
-        reposition:true,
-        scalePhotos:true,
-        scrolling:false,
-        previous:'<i class="icon-arrow-left"></i>',
-        next:'<i class="icon-arrow-right"></i>',
-        close:'&times;',
-        current:'{current} of {total}',
-        maxWidth:'100%',
-        maxHeight:'100%'
-    };
-
-
     var displayFunc = (function () {
         /*表格样式*/
         var renderList = function (tableId, listData) {
@@ -286,12 +273,18 @@ $(function () {
     }
 
     function editBrand(v) {
+        
         com.focusPage("#slideImg").html("");
+        
         slide.slideItems.url.val(v.url);
         slide.slideItems.path.val(v.img);
+        
         var img = $('<img />');
-        var imgA = $("<a></a>").attr("href", com.showImg(img, v.img, 150, 150, '150x150', null, 0)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(com.focusPage("#slideImg"));
-        imgA.colorbox(colorboxArgs);
+        var imgA = $("<a></a>").css("height", "150px").append(img).appendTo(com.focusPage("#slideImg"));
+        
+        com.showImg(img, v.img, 150, 150, '', null, 0);
+        
+        com.popup4photos("#slideImg");
     }
 
     com.focusPage("#pictureUpload").html("").Huploadify({
@@ -321,8 +314,11 @@ $(function () {
                 com.focusPage("#slideImg").html("");
                 slide.slideItems.path.val(dateObj.resUrl);
                 var img = $('<img />');
-                var imgA = $("<a></a>").attr("href", com.showImg(img, dateObj.resUrl, 150, 150, '150x150', null, 0)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(com.focusPage("#slideImg"));
-                imgA.colorbox(colorboxArgs);
+                var imgA = $("<a></a>").css("height", "150px").append(img).appendTo(com.focusPage("#slideImg"));
+                
+                com.showImg(img, dateObj.resUrl, 150, 150, '', null, 0);
+                
+                com.popup4photos("#slideImg");
             } else {
                 alert(data);
             }

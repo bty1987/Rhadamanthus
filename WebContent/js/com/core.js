@@ -70,7 +70,7 @@
         toolbox: {
             show : true,
             feature : {
-                saveAsImage : {show: true}
+                //saveAsImage : {show: true}
             }
         }
     },
@@ -408,8 +408,8 @@
      */
     showConfirm: function(content, success, cancel){
         layer.confirm(content, {title: false, closeBtn: false}, function(index){
+            layer.close(layer.index);
             success && success();
-            layer.close(index);
         }, function(index){
             cancel && cancel();
         });
@@ -525,7 +525,7 @@
 
         tabPane.load(page);
 
-        tabDel.on(ace.click_event, function(){
+        tabDel.on("click", function(){
             
             var _btn = $(this);
             var _tab = _btn.parents('li.flpage');
@@ -544,13 +544,13 @@
             _page.remove();
         });
         
-        taba.on(ace.click_event, function(){
+        taba.on("click", function(){
             tabClose.removeClass('show');
             params['urlLoadParams'] = com.splitUrl(page);
             breadcrumb(tabPane);
         });
         
-        tabRefresh.on(ace.click_event, function(){
+        tabRefresh.on("click", function(){
             var target = $($(this).parent().attr("href"));
             var height = parseInt(target.get(0).offsetHeight)-300;
             
@@ -740,23 +740,25 @@
      */
     showImg: function ($e, url, width, height, alt, defaultUrl, type) {
 
-        var $media = '', imgUrl = '';
+        var $media = '', imgUrl = '', sourceUrl = '';
 
         if (type == 1) {
             $media = config.dmedia;
             imgUrl = url ? $media + url + '_' + alt + '.jpg' : defaultUrl;
         } else if (type == 2) {
-            return com.showObs($e, url, width, height, alt, defaultUrl, type);
+            sourceUrl = com.showObs($e, url, width, height, alt, defaultUrl, type);
         } else {
             $media = config.media;
             imgUrl = url ? $media + api.common.showImg.url + '?imgBasePath=' + url + '&divFlag=1&width=' + width + '&height=' + height + '&timestamp=' + new Date().getTime() : defaultUrl;
         }
+        
+        sourceUrl = $media + api.common.showImg.url + '?imgBasePath=' + url;
 
-        $e.attr("src", imgUrl).attr("alt", alt).error(function () {
+        $e.attr("src", imgUrl).attr("layer-src", sourceUrl).attr("alt", alt).error(function () {
             $(this).hide();
         });
-
-        return $media + api.common.showImg.url + '?imgBasePath=' + url;
+        
+        return sourceUrl;
     },
     showOss: function ($e, url, width, height, alt, defaultUrl, type) {
 
@@ -819,28 +821,34 @@
                 if (cancel != null && typeof(cancel) == 'function') cancel();
             },
         };
-
+        
         if(isPrint){
             
             var printConf = {
                 skin: "layui-layer-hong",
-                btn: ["普通打印", "热敏打印"],
-                btn1: function(index, layero){
-                    var body = layer.getChildFrame('body', index);
-                    var iframeWin = window[layero.find('iframe')[0]['name']];
-                    iframeWin.print();
-                    return false;
-                },
-                btn2: function(index, layero){
-                    printer.handle();
-                    return false;
-                },
                 success: function (layero, index) {
                     var $title = $(layero).find('.layui-layer-title').text("");
                     
                     var divM = $("<div></div>").appendTo($title);
                     var div1 = $("<div></div>").attr("id","FL-titleDiv").css({"float":"left","width":"33%"}).text(title).appendTo(divM);
-                    var div2 = $(".layui-layer-btn").css({"float":"right","width":"65%"}).appendTo(divM);
+                    
+                    var btns = $('<div class="layui-layer-btn layui-layer-btn-" style="float: right; width: 65%;"></div>').appendTo(divM);
+                    var btn1 = $('<a class="layui-layer-btn0">普通打印</a>').appendTo(btns);
+                    var btn2 = $('<a class="layui-layer-btn0">热敏打印</a>').appendTo(btns);
+                    
+                    btn1.click(function(){
+                        var body = layer.getChildFrame('body', index);
+                        var iframeWin = window[layero.find('iframe')[0]['name']];
+                        iframeWin.print();
+                        if(typeof(isPrint) === 'function') isPrint();
+                        return false;
+                    })
+                    
+                    btn2.click(function(){
+                        printer.handle();
+                        if(typeof(isPrint) === 'function') isPrint();
+                        return false;
+                    })
                     
                     if (success != null && typeof(success) == 'function') {
                         success();
@@ -892,8 +900,9 @@
                 if(cancel && typeof(cancel) == 'function') cancel();
             },
             end: function(){
-                _container.html("");
                 layer.closeAll("tips");
+                if(cancel && typeof(cancel) == 'function') cancel();
+                _container.empty();
             }
         }
         
@@ -933,11 +942,10 @@
                 if(success && typeof(success) == 'function') success();
             },
             cancel: function () {
-                layer.closeAll();
                 if(cancel && typeof(cancel) == 'function') cancel();
             },
             end: function () {
-                layer.closeAll();
+                layer.closeAll("tips");
                 if(cancel && typeof(cancel) == 'function') cancel();
             }
         }
@@ -982,12 +990,12 @@
                 if(success && typeof(success) == 'function') success();
             },
             cancel: function () {
-                layer.closeAll();
                 if(cancel && typeof(cancel) == 'function') cancel();
             },
             end: function () {
-                layer.closeAll();
+                layer.closeAll("tips");
                 if(cancel && typeof(cancel) == 'function') cancel();
+                _holder.empty();
             }
         }
 
@@ -1005,6 +1013,10 @@
     popup4frame: function(title, url, success, cancel, isPrint){
         com.popup(title, url, success, cancel, isPrint);
     },
+    popup4photos: function(holder){
+        com.focusPage(holder).unbind();
+        layer.photos({"photos": holder, move: false});
+    },
     /**
      * 关闭弹窗
      * @param type 类型为字符串(tips/page) , 类型为对象 , 关闭对象所属的弹窗
@@ -1013,7 +1025,7 @@
         if(index && typeof(index) == "object"){
             layer.close(index.parents(".layui-layer").attr("times"));
         }else if(index && typeof(index) == "string"){
-            layer.closeAll(index)
+            layer.closeAll(index);
         }else{
             layer.closeAll()
         }
@@ -1128,7 +1140,7 @@
      * @param args 请求参数
      * @param styles 图标元素样式
      */
-    charts: function(parentId, elementId, args, clazz, styles, theme){
+    charts: function(parentId, elementId, url, args, clazz, styles, theme, excuter){
         
         if(!echarts) return false;
         
@@ -1148,9 +1160,10 @@
         
         $chart.showLoading();
         
-        com._post_(api.home.library, args, function(res){
+        com.post(url, args, function(res){
             $chart.hideLoading();
-            $chart.setOption($.extend($options, res));
+            if(excuter && typeof(excuter) == 'function') excuter(res);
+            $chart.setOption($.extend($options, res.option));
         });
         
         return $chart;
@@ -1265,7 +1278,66 @@
         } else {
             com.getProp(o[prop], props, flag, callback);
         }
+    },
+    
+    initForm: function(container, title, forms, btns, prop, show, post, hide){
+        
+        if(container && typeof(container) == "object" && container.length) container = container;
+        else if(container && typeof(container) == "object") container = [container];
+        else if(container && typeof(container) == "string") container = com.focusPage(!/\W+/.test(container) ? '#' + container : container);
+        else return false;
+        
+        if(prop && typeof(prop) === 'function') prop();
+        
+        container.addClass("modal fade");
+                    
+        var dialog = $("<div>").addClass("modal-dialog").appendTo(container);
+        var content = $("<div>").addClass("modal-content").appendTo(dialog);
+        var header = $("<div>").addClass("modal-header").appendTo(content);
+        
+        $("<span>").addClass("close").html("×").attr("data-dismiss", "modal").appendTo(header);
+        $("<h4>").addClass("modal-title").html(title).appendTo(header);
+        
+        var body = $("<div>").addClass("modal-body").appendTo(content);
+        var hform = $("<form>").addClass("form-horizontal").appendTo(body);
+        
+        $.each(forms, function(i, v){
+            
+            var group = $("<div>").addClass("form-group").appendTo(hform);
+            
+            if(v.type == "div"){
+                $("<div>").addClass(v.clazz).attr("id", v.id).appendTo(group);
+            }else{
+                
+                var $input = null;
+                
+                if(v.type == "select") $input = $("<select>");
+                else if(v.type == "switch") $input = $("<input>").attr("type", "checkbox").addClass("ace ace-switch ace-switch-5");
+                else $input = $("<input>").attr("type", v.type);
+                
+                $("<label>").addClass("col-md-3 control-label no-padding-right " + (v.validator.indexOf("v_require") != -1 ? "orange" : "")).text(v.name).appendTo(group);
+                
+                var inputCont = $("<div>").addClass("col-md-9").appendTo(group);
+                $input.addClass("col-md-7").addClass(v.validator).addClass(v.clazz).attr("id", v.id).appendTo(inputCont);
+                
+                if(v.type == "switch") inputCont.append($("<div>").addClass("lbl " + v.clazz));
+            }
+            
+        });
+        
+        var footer = $("<div>").addClass("modal-footer").appendTo(content);
+        
+        $.each(btns, function(i, v){
+            $("<button>").addClass("btn btn-default").addClass(v.clazz).attr("id", v.id).text(v.name).appendTo(footer);
+        });
+        
+        $("<button>").attr("data-dismiss", "modal").addClass("btn btn-default").text("取消").appendTo(footer);
+        
+        if(prop && typeof(prop) === 'function') prop();
+        
+        return container;
     }
+    
 };
 
 (function ($) {
@@ -1319,7 +1391,7 @@
 
         var addHelpBtn = function (v) {
             $(container).append(
-                $('<span class="badge badge-purple">帮助</span>').on(ace.click_event, function () {
+                $('<span class="badge badge-purple">帮助</span>').on("click", function () {
                     layer.open({
                         type: 1,
                         title: v.title,

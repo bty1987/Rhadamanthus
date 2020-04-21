@@ -1,0 +1,99 @@
+package com.fanglin.data.po;
+
+import static javax.persistence.GenerationType.IDENTITY;
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import com.fanglin.communion.po.ConstructionNodePO;
+
+@Entity
+@Table(name = "normrice", catalog = "data")
+public class NormricePO implements Serializable{
+
+	private static final long serialVersionUID = -7988435531109348843L;
+	
+	public static final String COLUMN_QIID_STR = "quotationItem.qiId";
+	
+	public static final short STATUS_VALID_STR = 0;
+	
+	public static final short STATUS_INVALID_STR = 1;
+
+	private long npid;// 定额工费id
+	
+	private QuotationItemPO quotationItem;// 报价id
+	
+	private ConstructionNodePO constructionNode;// 施工节点
+	
+	private int salary;// 工费
+	
+	private short status;// 状态
+	
+	public NormricePO() {
+		super();
+	}
+	
+	public NormricePO(QuotationItemPO quotationItem, ConstructionNodePO constructionNode) {
+		super();
+		this.quotationItem = quotationItem;
+		this.constructionNode = constructionNode;
+	}
+
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "npid")
+	public long getNpid() {
+		return npid;
+	}
+	
+	public void setNpid(long npid) {
+		this.npid = npid;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "qiid", referencedColumnName = "qiid")
+	public QuotationItemPO getQuotationItem() {
+		return quotationItem;
+	}
+
+	public void setQuotationItem(QuotationItemPO quotationItem) {
+		this.quotationItem = quotationItem;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cnid", referencedColumnName = "cnid")
+	public ConstructionNodePO getConstructionNode() {
+		return constructionNode;
+	}
+
+	public void setConstructionNode(ConstructionNodePO constructionNode) {
+		this.constructionNode = constructionNode;
+	}
+
+	@Column(name = "salary")
+	public int getSalary() {
+		return salary;
+	}
+
+	public void setSalary(int salary) {
+		this.salary = salary;
+	}
+
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
+	}
+	
+}

@@ -29,6 +29,7 @@ $.extend(api, {decoration: {
         pageBackVisitByOrderId: {url: "pageBackVisitByOrderId.do"},
         queryBackVisitByOrderId: {url: "queryBackVisitByOrderId.do", demo: true},
         addBackVisit: {url: "addBackVisit.do"},
+        
         queryDecorationActivityByOrderId: {url: "queryDecorationActivityByOrderId.do", demo: true},
         queryDecorationActivityItem: {
         	url: "queryDecorationActivityItem.do",
@@ -49,6 +50,7 @@ $.extend(api, {decoration: {
         refundDecorationActivityItem: {url: "refundDecorationActivityItem.do"},
         expendDecorationActivityItem: {url: "expendDecorationActivityItem.do"},
         amountDecorationActivityItem: {url: "amountDecorationActivityItem.do"},
+        
         queryDecorationContractByOrderId: {
         	url: "queryDecorationContractByOrderId.do", 
         	demo: true,
@@ -73,7 +75,9 @@ $.extend(api, {decoration: {
                 args: ["decoration.precontractPrice"]
             }
         },
+        
         makeDecorationMidpack: {url: "makeDecorationMidpack.do"},
+        
         pageDecorationForGeneral: {
         	url: "pageDecorationForGeneral.do",
             demo: true,
@@ -239,6 +243,8 @@ $.extend(api, {decoration: {
             }
         },
         queryDecorationInfoByOrderId: {url: "queryDecorationInfoByOrderId.do"},
+        sendDecorationInfoForConfirm: {url: "sendDecorationInfoForConfirm.do"},
+        confirmDecorationInfo: {url: "confirmDecorationInfo.do"},
         exportDecorationByContractTime: {url: "exportDecorationByContractTime.do"},
         queryDecorationBelongByOrderId: {
         	url: "queryDecorationBelongByOrderId.do",
@@ -408,13 +414,14 @@ $.extend(api, {decoration: {
                 result: "decorationAccount",
                 args: ["matching", "discount", "discountBase", "serviceRate", "materialPrice", "servicePrice", "difference", "coupon", "fulldel", "cashback"]
             }]},
-        makeDecorationAccount: {
-        	url: "makeDecorationAccount.do",
+        updateDecorationAccount: {
+        	url: "updateDecorationAccount.do",
         	type: "update",
             tranargs: {
                 args: ["decorationAccount.matching", "decorationAccount.discount", "decorationAccount.discountBase", "decorationAccount.serviceRate", "decorationAccount.materialPrice", "decorationAccount.servicePrice", "decorationAccount.difference", "decorationAccount.coupon", "decorationAccount.fulldel", "decorationAccount.cashback"]
             }},
 
+        makeDecorationAccount: {url: "makeDecorationAccount.do"},
         queryDecorationServiceByOrderId: {url: "queryDecorationServiceByOrderId.do"},
         completeDecorationService: {url: "completeDecorationService.do"},
         addDecorationService: {url: "addDecorationService.do"},
@@ -442,11 +449,17 @@ $.extend(api, {decoration: {
 
         queryDecorationFunction: {url: "queryDecorationFunction.do"},
         queryDecorationFunctionByName: {url: "queryDecorationFunctionByName.do"},
-        addDecorationContract: {url: "addDecorationContract.do"},
         
+        
+        sendDecorationContractForAuth : {url: "sendDecorationContractForAuth.do"},
+        sendDecorationContractForSignet : {url: "sendDecorationContractForSignet.do"},
+        sendDecorationContractForSign : {url: "sendDecorationContractForSign.do"},
+        sendDecorationContractForView : {url: "sendDecorationContractForView.do"},
+        sendDecorationContractForDownload : {url: "sendDecorationContractForDownload.do"},
+        viewDecorationContract : {url: "viewDecorationContract.do"},
         signDecorationContractForCompany : {url: "signDecorationContractForCompany.do"},
         signDecorationContractForCustomer : {url: "signDecorationContractForCustomer.do"},
-        viewDecorationContract : {url: "viewDecorationContract.do"},
+        addDecorationContract: {url: "addDecorationContract.do"},
         fillingDecorationContract : {url: "fillingDecorationContract.do"},
 
     }

@@ -47,8 +47,8 @@ import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.po.QuotetionFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotetionFunctionAreaPO;
 import com.fanglin.quotation.po.QuotetionPO;
-import com.fanglin.quotation.po.SelectionPO;
 import com.fanglin.quotation.service.QuotationService;
+import com.fanglin.quotation.service.SelectionService;
 import com.fanglin.quotation.vo.QuotationVO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
@@ -103,6 +103,9 @@ public class QuotationServiceImpl implements QuotationService {
 	
 	@Autowired
 	private SelectionItemDao selectionItemDao;
+	
+	@Autowired
+	private SelectionService selectionService;
 
 	@Override
 	public QuotationVO queryQuotationByQid(long qId) {
@@ -141,6 +144,31 @@ public class QuotationServiceImpl implements QuotationService {
 		handleListQuotation(quotationVOs, quotationPOs, quotationVO.getOrderId());
 
 		return quotationVOs;
+	}
+	
+	@Override
+	public Map<String, Integer> countQuotationForNormood(QuotationVO quotationVO) throws FLException {
+		
+		List<Long> qiids = getQuotationItemQiids(quotationVO.getQid());
+		
+		if (qiids.size() == 0) return null; 
+		
+		Map<String, Integer> norms = quotationDao.countQuotationForNormood(qiids);
+		
+		return norms;
+		
+	}
+
+	@Override
+	public Map<String, Integer> countQuotationForNormrice(QuotationVO quotationVO) throws FLException {
+		
+		List<Long> qiids = getQuotationItemQiids(quotationVO.getQid());
+		
+		if (qiids.size() == 0) return null; 
+		
+		Map<String, Integer> norms = quotationDao.countQuotationForNormrice(qiids);
+		
+		return norms;
 	}
 
 	@Override
@@ -199,7 +227,7 @@ public class QuotationServiceImpl implements QuotationService {
 
 		quotationDao.save(quotationPO);
 		
-		createSelection(quotationPO);
+		selectionService.addSelection(quotationPO.getQid());
 
 		BeanUtil.copyProperties(quotationPO, quotationVO, Arrays.asList("creater"));
 
@@ -405,7 +433,7 @@ public class QuotationServiceImpl implements QuotationService {
 
 		quotationDao.save(quotationPO);
 		
-		createSelection(quotationPO);
+		selectionService.addSelection(quotationPO.getQid());
 		
 		copyQuotetion(quotationPO.getQid(), copyQuotetionPO.getQid());
 
@@ -473,7 +501,7 @@ public class QuotationServiceImpl implements QuotationService {
 
 		quotationDao.save(quotationPO);
 		
-		createSelection(quotationPO);
+		selectionService.addSelection(quotationPO.getQid());
 
 		copyQuotation(replicaQId, quotationPO.getQid());
 
@@ -532,7 +560,7 @@ public class QuotationServiceImpl implements QuotationService {
 		}
 		quotationDao.save(quotationPO);
 		
-		createSelection(quotationPO);
+		selectionService.addSelection(quotationPO.getQid());
 
 		copyQuotation(copyQId, quotationPO.getQid());
 
@@ -670,6 +698,7 @@ public class QuotationServiceImpl implements QuotationService {
 		}
 		
 		quotationDao.deleteById(qId); // 删除报价
+		selectionDao.deleteSelectionByQid(qId);// 删除选材
 
 		return 0;
 	}
@@ -751,18 +780,25 @@ public class QuotationServiceImpl implements QuotationService {
 	}
 	
 	@Transactional(rollbackFor = Exception.class)
-	private int createSelection(QuotationPO quotationPO) throws FLException {
+	private List<Long> getQuotationItemQiids(Long qid) throws FLException {
 		
-		SelectionPO selectionPO = new SelectionPO();
+		List<QuotationFunctionAreaPO> QuotationFunctionAreaPOs = quotationFunctionAreaDao.queryQuotationFunctionAreaByQuotationId(qid);
+		List<Long> qiids = new ArrayList<Long>();
 		
-		selectionPO.setOrderId(quotationPO.getOrderId());
-		selectionPO.setQid(quotationPO.getQid());
-		selectionPO.setStatus(SelectionPO.STATUS_INIT_INT);
-		selectionPO.setTotal(0L);	
+		Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
 		
-		selectionDao.save(selectionPO);
+		for (QuotationFunctionAreaPO quotationFunctionAreaPO : QuotationFunctionAreaPOs) {
+			List<QuotationFunctionAreaItemPO> quotationFunctionAreaItemPOs = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByFunctionAreaId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), divisor), quotationFunctionAreaPO.getQfaId());
+			
+			for (QuotationFunctionAreaItemPO quotationFunctionAreaItemPO : quotationFunctionAreaItemPOs) {
+				if (quotationFunctionAreaItemPO.getQuotationItem() != null) {
+					
+					qiids.add(quotationFunctionAreaItemPO.getQuotationItem().getQiId());
+				}
+			}
+		}
 		
-		return 0;
+		return qiids;
 	}
 	
 }

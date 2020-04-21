@@ -56,9 +56,13 @@ public class NoticePO implements Serializable {
 	
 	private String contents;
 	
+	private String depts;
+	
 	private String filePath;
 	
 	private int company;
+	
+	private String fileName;
 	
 	public NoticePO(){
 		super();
@@ -160,6 +164,15 @@ public class NoticePO implements Serializable {
 	public void setContents(String contents){
 		this.contents = contents;
 	}
+	
+	@Column(name="depts")
+	public String getDepts() {
+		return depts;
+	}
+
+	public void setDepts(String depts) {
+		this.depts = depts;
+	}
 
 	@Column(name="filePath")
 	public String getFilePath(){
@@ -179,4 +192,15 @@ public class NoticePO implements Serializable {
 		this.company = company;
 	}
 
+	@Column(name="fileName")
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	
+	
+	
 }

@@ -33,7 +33,6 @@ import com.fanglin.decoration.dao.DecorationActivityItemDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationActivityItemPO;
 import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.decoration.vo.DecorationActivityItemVO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
@@ -453,7 +452,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int collectDecorationPayment(DecorationPaymentVO decorationPaymentVO, List<DecorationActivityItemVO> decorationActivityItemVOs, List<Long> posids, String userId, Integer company) throws FLException {
+	public int collectDecorationPayment(DecorationPaymentVO decorationPaymentVO, List<Long> posids, String userId, Integer company) throws FLException {
 
 		//这里的realMoney保留是想用作之后的判断
 		long realMoney = 0;

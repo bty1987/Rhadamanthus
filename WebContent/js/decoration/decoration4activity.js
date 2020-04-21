@@ -224,7 +224,7 @@ jQuery(function ($) {
     });
 
     //保存参加活动
-    com.focusPage("#submitDecorationActivityBtn").on(ace.click_event, function () {
+    com.focusPage("#submitDecorationActivityBtn").on("click", function () {
 
         if (com.validate("joinDecorationActivityModal")) {
             return;
@@ -241,7 +241,7 @@ jQuery(function ($) {
     });
 
     //保存-申领活动物品
-    com.focusPage("#submitDecorationActivityItemBtn").on(ace.click_event, function () {
+    com.focusPage("#submitDecorationActivityItemBtn").on("click", function () {
 
         var receiverId = com.focusPage("#approveActivityItemManSel").find('input:checked').attr('userid');
 

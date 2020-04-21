@@ -115,7 +115,7 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 
 		return functionAreaVOs;
 	}
-
+	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addFunctionArea(FunctionAreaVO functionAreaVO, int company) throws FLException {
@@ -178,4 +178,5 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 
 		return 0;
 	}
+
 }

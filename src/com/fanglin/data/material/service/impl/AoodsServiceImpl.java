@@ -188,7 +188,6 @@ public class AoodsServiceImpl implements AoodsService {
 		}
 		
 		aoodsPO.setStatus(aoodsVO.getStatus());
-		aoodsPO.getGoods().setStatus(aoodsVO.getStatus());
 		
 		aoodsDao.update(aoodsPO);
 		

@@ -5,7 +5,7 @@ $(function(){
         pid: params.pid,
         status : params["status"]
     }
-
+    
     com.post(api.production.queryProductionPictureByPid ,{"productionPicture.pid": productionPicture1.pid} ,function (res) {
 
         productionPicture1.picturePage.append(drawProductionPicture());
@@ -20,6 +20,8 @@ $(function(){
                 addPicture(com.focusPage("#productionUploadPlan"), productionPicture);
             }
         }
+        
+        com.popup4photos("#productionUploadPlan");
 
         productionUtils.loadHuploadify("CADUploadProduction", "上传文件", "*.dwg;*.dwt", false, function (data) {
             addDecorationPicture (data, '0');
@@ -29,17 +31,6 @@ $(function(){
             addDecorationPicture (data, '1');
         }, "btn btn-success");
 
-        com.focusPage('.ace-thumbnails [data-rel="colorbox"]').colorbox({
-            reposition: true,
-            scalePhotos: true,
-            scrolling: false,
-            previous: '<i class="icon-arrow-left"></i>',
-            next: '<i class="icon-arrow-right"></i>',
-            close: '&times;',
-            current: '{current} of {total}',
-            maxWidth: '100%',
-            maxHeight: '100%'
-        });
     }, null, false);
 
     function queryDate (){
@@ -58,6 +49,8 @@ $(function(){
                     addPicture(com.focusPage("#productionUploadPlan"), productionPicture);
                 }
             }
+            
+            com.popup4photos("#productionUploadPlan");
         });
     }
 
@@ -65,7 +58,9 @@ $(function(){
 
         var $li = $('<li></li>').attr("id", "imgLi_" + i.ppid).appendTo(e);
         var $img = $('<img></img>').attr('width', 200).attr('height', 200);
-        var $imgA = $('<a></a>').attr('data-rel', 'colorbox').addClass('cboxElement').attr('href', com.showImg($img, i.path, 200, 200, '200x200')).attr('target', '_blank').append($img).appendTo($li);
+        var $imgA = $('<a></a>').addClass('cboxElement').attr('target', '_blank').append($img).appendTo($li);
+        
+        com.showImg($img, i.path, 200, 200, '');
 
         var $tags = $('<div></div>').addClass('tags').appendTo($li);
         var $nameHolder = $('<span></span>').addClass('label-holder').appendTo($tags);

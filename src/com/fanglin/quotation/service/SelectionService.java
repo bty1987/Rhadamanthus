@@ -5,9 +5,13 @@ import com.fanglin.quotation.vo.SelectionVO;
 
 public interface SelectionService {
 	
-	public SelectionVO querySelectionByQid(SelectionVO selectionVO);
+	public SelectionVO querySelectionByQid(SelectionVO selectionVO) throws FLException;
 	
-	public SelectionVO querySelectionByOrderId(SelectionVO selectionVO);
+	public SelectionVO querySelectionByOrderId(SelectionVO selectionVO) throws FLException;
 	
 	public int updateSelectionForAdvance(SelectionVO selectionVO) throws FLException;
+	
+	public SelectionVO addSelection(SelectionVO selectionVO) throws FLException;
+	
+	public void addSelection(Long qid) throws FLException;
 }

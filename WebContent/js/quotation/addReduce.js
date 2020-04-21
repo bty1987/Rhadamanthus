@@ -1,4 +1,3 @@
-
 jQuery(function($) {
 	//searcher 第七个参数传参
 	var decorationOrderId = params.decorationOrderId;

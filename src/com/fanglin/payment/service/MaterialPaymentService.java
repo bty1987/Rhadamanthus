@@ -16,7 +16,6 @@ import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.decoration.vo.DecorationActivityItemVO;
 import com.fanglin.material.vo.MaterialVO;
 import com.fanglin.payment.vo.MaterialPaymentVO;
 import com.fanglin.payment.vo.MaterialReceiptVO;
@@ -52,7 +51,7 @@ public interface MaterialPaymentService {
 	
 	public int changeMaterialPaymentForTime(MaterialPaymentVO materialPaymentVO, Timestamp dateTime, String userId) throws FLException;
 	
-	public int collectMaterialPayment(MaterialPaymentVO materialPaymentVO, List<DecorationActivityItemVO> decorationActivityItemVOs, List<Long> posids, String userId, Integer company) throws FLException;
+	public int collectMaterialPayment(MaterialPaymentVO materialPaymentVO, List<Long> posids, String userId, Integer company) throws FLException;
 	
 	public int collectMaterialPayments(MaterialVO materialVO, List<MaterialPaymentVO> materialPaymentVOs, MaterialReceiptVO materialReceiptVO, List<Long> posids, String userId, Integer company) throws FLException;
 	

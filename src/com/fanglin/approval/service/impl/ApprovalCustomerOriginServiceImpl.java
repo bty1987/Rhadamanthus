@@ -88,6 +88,7 @@ public class ApprovalCustomerOriginServiceImpl implements ApprovalCustomerOrigin
 		UserPO receiver = userDao.queryUserByUserId(approvalVO.getReceiver().getUserId());
 		UserPO sender = userDao.queryUserByUserId(userId);
 
+		UserPO designer = customerOriginPO.getDesigner();
 		HousePO housePO = customerOriginPO.getHouse();
 		VillagePO villagePO = housePO.getVillage();
 
@@ -108,6 +109,10 @@ public class ApprovalCustomerOriginServiceImpl implements ApprovalCustomerOrigin
 		customerOriginPO.setStatus(CustomerOriginPO.STATUS_FIRSTAPPROVAL_INT);
 
 		customerOriginDao.update(customerOriginPO);
+		
+		String contents = String.format("客源初审提交,客户名:%s,楼盘:%s %s %s %s,批注:%s.", customerOriginPO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber(), approvalPO.getAnnotate());
+
+		messageService.sendMessage(receiver.getUserId(), null, contents, MessagePO.TYPE_SEND_APPROVAL_INT, designer.getCompany());
 
 		return 0;
 	}
@@ -169,7 +174,7 @@ public class ApprovalCustomerOriginServiceImpl implements ApprovalCustomerOrigin
 		HousePO housePO = customerOriginPO.getHouse();
 		VillagePO villagePO = housePO.getVillage();
 
-		String content = String.format("客源初审决绝,客户名:%s,楼盘:%s %s %s %s,批注:%s.", customerOriginPO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber(), approvalPO.getAnnotate());
+		String content = String.format("客源初审拒绝,客户名:%s,楼盘:%s %s %s %s,批注:%s.", customerOriginPO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber(), approvalPO.getAnnotate());
 
 		UserPO designer = customerOriginPO.getDesigner();
 

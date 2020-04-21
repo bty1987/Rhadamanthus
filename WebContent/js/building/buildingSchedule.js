@@ -8,18 +8,6 @@ jQuery(function($) {
 		thisPayType: params.type
 	};
 	
-	var colorboxArgs = {
-		reposition:true,
-		scalePhotos:true,
-		scrolling:false,
-		previous:'<i class="icon-arrow-left"></i>',
-		next:'<i class="icon-arrow-right"></i>',
-		close:'&times;',
-		current:'{current} of {total}',
-		maxWidth:'100%',
-		maxHeight:'100%'
-	};
-
 	//获取所有节点
 	com.post(api.building.queryBuildingNodeByType, {"buildingNode.type":buildingScheduleParams.thisPayType, "buildingNode.status":0}, function(res){
 		$.each(res.buildingNodes, function(i, v){
@@ -44,7 +32,7 @@ jQuery(function($) {
 			initWizardSept(sd);
 		});
 	},null,false);
-
+	
 	com.focusPage('#modal-wizard .modal-header').ace_wizard();
 	com.focusPage('#modal-wizard .wizard-actions .btn[data-dismiss=modal]').removeAttr('disabled');
 
@@ -165,9 +153,7 @@ jQuery(function($) {
 					com.showAlert(com.info, "当前房产单流转已完成");
 				});
 			}
-
 		});
-
 	}
 
 	//图片上传
@@ -215,11 +201,17 @@ jQuery(function($) {
 	}
 	
 	function appendGalleryElement(galleryId, imgId, imgUrl, type, editUrl, deleteUrl){
+	    
 		var gallery = com.focusPage("#" + galleryId);
+		
 		var imgLi = $("<li></li>").attr("id", "gallery_li"+imgId).addClass("col-xs-2 text-center").css("border-color", "#ddd").appendTo(gallery);
 		var img = $('<img />');
-		var imgA = $("<a></a>").attr("href", com.showImg(img, imgUrl, 150, 150, '150x150', null, type)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(imgLi);
+		var imgA = $("<a></a>").css("height", "150px").append(img).appendTo(imgLi);
+		
+		com.showImg(img, imgUrl, 150, 150, '', null, type);
+		
 		var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
+		
 		var toolsA = $("<a></a>").attr("href", "#").on("click", function(){
 			var options = {};
 			options["buildingDrawing.bdid"] = imgId;
@@ -229,7 +221,7 @@ jQuery(function($) {
 			});
 		}).appendTo(toolsDiv);
 		$("<i></i>").addClass("icon-remove red").appendTo(toolsA);
-		imgA.colorbox(colorboxArgs);
+		
 	}
 	
 	//画节点信息轴
@@ -349,6 +341,8 @@ jQuery(function($) {
 		var updateI = $("<i></i>").addClass("icon-ok bigger-110").html("更新").appendTo(updateBtn);
 		var nextBtn = $("<button></button>").addClass("btn btn-info btn-next").attr("data-last", "Finish").prop("id", sore + "btnNext").css("margin-right", "10px").html("下一步").appendTo(divWizard);
 		var nextI = $("<i></i>").addClass("icon-arrow-right icon-on-right").appendTo(nextBtn);
+		
+		com.popup4photos("#" + sore + "Gallery");
 	}
 
 	function addActive(sore){

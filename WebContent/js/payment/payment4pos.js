@@ -2,6 +2,7 @@ jQuery(function($) {
 	var payment = {
 		saveBtn: com.focusPage("#collectBtn"),
 		cancelBtn: com.focusPage("#cancelBtn"),
+		createBtn: com.focusPage("#createBtn"),
 		items: {
 			bankCheckbox: com.focusPage("#bankCheckbox"),
 			paymentTypeSel: com.focusPage("#paymentTypeSel"),
@@ -16,7 +17,8 @@ jQuery(function($) {
 		htmlName: "paymentPos",
 		modelId: 'paymentModal',
 		modals: {
-			modal: com.focusPage("#paymentModal")
+			modal: com.focusPage("#paymentModal"),
+			createModal: com.focusPage("#createPaymentModal")
 		},
 
 		cash: [],
@@ -44,6 +46,23 @@ jQuery(function($) {
 	
 	payment.saveBtn.bindClick(function(){
 		paymentUtils.paymentSaveData(payment, searcher);
+	});
+
+	payment.createBtn.bindClick(function(){
+		if(com.validate("createPaymentModal")){
+			return;
+		}
+
+		var url = api.payment.addAdvancePayment;
+		var createOptions = {
+			"advancePayment.decoration.orderId": com.focusPage("#decorationOrderId").val()
+		};
+
+		com.post(url, createOptions, function(res){
+			com.showAlert(com.info, "创建成功");
+			searcher.doSearch();
+			payment.modals.createModal.modal("hide");
+		});
 	});
 
 	payment.modals.modal.on('show.bs.modal',function(e){
@@ -172,7 +191,18 @@ jQuery(function($) {
 	
 	searcher.init(["orderId"], "condList", api.payment.pageAdvancePayment, function(data){
 		displayFunc.init('resultList', data);
-	}, "pagenation", "paymentPosPostData");
+	}, "pagenation", "paymentPosPostData", null, false, null, function(){
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'createPayment').css("margin", "0px 3px");
+		var $addspan = $('<span></span>').text('创建预付款').appendTo($adda);
+
+		return [$adda];
+	});
+
+	//创建预付款
+	com.focusPage('a[name="createPayment"]', '#pagenation').click(function(){
+		com.focusPage("#decorationOrderId").val("");
+		payment.modals.createModal.modal("show");
+	});
 
 	function showPaymentModal(v,res){
 		com.focusPage("#paymentTypeSel").removeAttr("disabled");

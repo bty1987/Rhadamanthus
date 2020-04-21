@@ -70,18 +70,6 @@ jQuery(function ($) {
         });
     });
 
-    com.focusPage("#refuseBtn").click(function () {
-
-    	var options = {
-			"accessories.aid": accessories.aid,
-            "accessories.status": 2
-    	};
-
-        com.post(api.inventory.updateAccessoriesForStatus, options, function (data) {
-            com.showAlert(com.info, "操作成功");
-        });
-    });
-
     com.focusPage("#cancelBtn").click(function () {
         com.closePopup();
     });

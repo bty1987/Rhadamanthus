@@ -169,13 +169,17 @@ $(function () {
     function drawPicture(conf) {
 
         var row1 = createDiv("row").append(createDiv("col-md-6").append(createDiv("col-md-2", "OriginalUpload"), createDiv("col-md-2", "designPictureUpload"), createDiv("col-md-2", "projectPictureUpload"), createDiv("col-md-2", "ContractUpload"),createDiv("col-md-2", "CADUpload")));
+        var row1s = createDiv("col-md-6").append($('<h5></h5>').append($('<strong></strong>').addClass('clearfix col-md-3 pull-right').html("设计状态: ").append($('<b></b>').attr('id','designStatus'))).append($('<strong></strong>').addClass('clearfix col-md-3 pull-right').html("效果图状态: ").append($('<b></b>').attr('id','prictureStatus')))).appendTo(row1);
 
         var contractMap = createDiv("col-xs-12").append(createLabel("control-label", "合同图:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createUl("ContractPictures", "ace-thumbnails")));
+
+        var $confirmDesign = $('<button></button>').attr("id", "confirmDesign").addClass('btn btn-minier btn-success pull-right').html("确认设计");
+        var $confirmPricture = $('<button></button>').attr("id", "confirmPricture").addClass('btn btn-minier btn-yellow pull-right').css('margin-right', '10px').html("确认效果图");
 
         var row2 = createDiv("row").append(
             createDiv("col-xs-12").append(createLabel("control-label", "原始图:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createUl("OriginalPicture", "ace-thumbnails")))
             , createDiv("col-xs-12").append(createLabel("control-label", "效果图:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createUl("designPictures", "ace-thumbnails")))
-            , createDiv("col-xs-12").append(createLabel("control-label", "工程图:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createUl("projectPictures", "ace-thumbnails")))
+            , createDiv("col-xs-12").append($confirmDesign).append($confirmPricture).append(createLabel("control-label", "工程图:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createUl("projectPictures", "ace-thumbnails")))
             , conf.contracts == "noShow" ? null : contractMap
             , createDiv("col-xs-12").append(createLabel("control-label", "工程文件:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createDiv("col-sm-7 infobox-container", "CADProjectPicture")))
 
@@ -193,7 +197,15 @@ $(function () {
             )
             , createDiv("tab-content").append(createDiv("tab-pane in active", "fanglinMaterialPayments" + conf, "margin-left: -12px;"), createDiv("tab-pane", "salesMaterialPayments" + conf, "margin-left: -12px;"))
         ));
-        var right = createDiv("col-xs-6 col-md-6 widget-container-span ui-sortable ").append(createDiv("widget-box transparent").append(createDiv("widget-header").append($("<h5></h5>").append($("<strong></strong>").text("品牌汇总"))), createDiv("widget-body").append(createDiv("widget-body-inner", "materialPaymentBrands" + conf))));
+        var right = createDiv("col-xs-6 col-md-6 widget-container-span ui-sortable ").append(createDiv("tabbable").append(
+            createUl("myTab", "nav nav-tabs", "margin-top: 7px;").append(
+            createLi("active").append($("<a></a>").attr("data-toggle", "tab").attr("href", "#materialPaymentBrands" + conf).css("color", "#4383b4").append($("<strong></strong>").text("品牌汇总")))
+             , createLi().append($("<a></a>").attr("data-toggle", "tab").attr("href", "#materialPurchasedCategory" + conf).css("color", "#4383b4").append($("<strong></strong>").text("已购品类")))
+                 , createLi().append($("<a></a>").attr("data-toggle", "tab").attr("href", "#materialUnpurchasedCategory" + conf).css("color", "#4383b4").append($("<strong></strong>").text("未购品类")))
+        )
+        , createDiv("tab-content").append(createDiv("tab-pane in active", "materialPaymentBrands" + conf, "margin-left: -12px;"), createDiv("tab-pane", "materialPurchasedCategory" + conf, "margin-left: -12px;"),
+             createDiv("tab-pane", "materialUnpurchasedCategory" + conf, "margin-left: -12px;"))
+        ));
         row.append(left, right);
         return [row];
     }

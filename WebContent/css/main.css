@@ -957,6 +957,10 @@ input[type=checkbox].ace.checked+.lbl::before {
     flex-grow: 1;
 }
 
+.flex-table .col15 .cell{
+    flex-basis: 6.14%;
+}
+
 .flex-table .col14 .cell {
     flex-basis: 7.14%;
 }
@@ -1349,7 +1353,6 @@ textarea[readonly] {
 .qrcode {
     text-align: center;
     padding-top: 10px;
-    border-bottom: 1px solid #ccc;
 }
 
 .help-content {
@@ -1505,4 +1508,46 @@ body .layer-alert-error {
 
 .btn.btn-app.btn-fastlink>i {
     font-size: 30px !important;
+}
+
+/* layer */
+
+.layui-layer-hong[type=dialog] {
+    min-width: 280px
+}
+
+.layui-layer-hong .layui-layer-title {
+    background: #4476A7;
+    color: #fff;
+    border: none
+}
+
+.layui-layer-hong .layui-layer-btn {
+    padding: 2px;
+    text-align: right;
+}
+
+.layui-layer-hong .layui-layer-btn a {
+    background: #d3413b;
+    border: none;
+    width: 100px;
+    text-align: center;
+}
+
+.layui-layer-hong .layui-layer-btn .layui-layer-btn1 {
+    background: #C9C5C5
+}
+
+.layui-layer-molv .layui-layer-title {
+    background: #009f95;
+    color: #fff;
+    border: none
+}
+
+.layui-layer-molv .layui-layer-btn a {
+    background: #009f95
+}
+
+.layui-layer-molv .layui-layer-btn .layui-layer-btn1 {
+    background: #92B8B1
 }

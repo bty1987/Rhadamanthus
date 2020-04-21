@@ -13,18 +13,6 @@ jQuery(function($) {
         ecityItem: []
     };
 
-    var colorboxArgs = {
-        reposition:true,
-        scalePhotos:true,
-        scrolling:false,
-        previous:'<i class="icon-arrow-left"></i>',
-        next:'<i class="icon-arrow-right"></i>',
-        close:'&times;',
-        current:'{current} of {total}',
-        maxWidth:'100%',
-        maxHeight:'100%'
-    };
-
     eperson.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
 
     $.extend(com.validator, eperson.validator);
@@ -53,7 +41,7 @@ jQuery(function($) {
             eperson.ecityItem[v.ecid] = v.city;
         })
     }, null, false);
-
+    
     com.initTypeahead('city', api.market.queryEcityByPinYin, "ecity.pinyin", {}, "autoFillKeyValue", "key", "value");
 
     initUploadBtn();
@@ -130,6 +118,7 @@ jQuery(function($) {
 
                 if(v.imgUrl != ""){
                     appendGalleryElement("imgUrl", v.imgUrl, 0);
+                    com.popup4photos("#imgUrl");
                 }
                 
                 com.focusPage("#epersonModal").modal("show");
@@ -240,10 +229,14 @@ jQuery(function($) {
             'onUploadSuccess':function(file, data, response){ //上传到服务器,服务器返回相应信息到data里
                 var dateObj=eval("("+data+")");
                 if(dateObj.errorCode == 0){
+                    
                     com.focusPage("#imgUrl").html("");
+                    
                     eperson.imgUrl = dateObj.resUrl;
                     eperson.items.path.val(dateObj.resUrl);
+                    
                     appendGalleryElement("imgUrl", dateObj.resUrl, 0);
+                    com.popup4photos("#imgUrl");
                 }else{
                     console.log(data);
                 }
@@ -252,10 +245,14 @@ jQuery(function($) {
     }
 
     function appendGalleryElement(galleryId, imgUrl, type){
+        
         var gallery = com.focusPage("#" + galleryId);
+        
         var img = $('<img />');
-        var imgA = $("<a></a>").attr("href", com.showImg(img, imgUrl, 150, 150, '150x150', null, type)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(gallery);
+        var imgA = $("<a></a>").css("height", "150px").append(img).appendTo(gallery);
+        
+        com.showImg(img, imgUrl, 150, 150, '', null, type);
+        
         var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(gallery);
-        imgA.colorbox(colorboxArgs);
     }
 });

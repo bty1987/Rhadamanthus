@@ -21,6 +21,7 @@ $(function () {
             keyTime : com.focusPage("#keyTime"),
             drawlineTime : com.focusPage("#drawlineTime"),
             isCeremony  : com.focusPage("#isCeremony"),
+            isConfirmPricture :com.focusPage("#isConfirmPricture"),
             comment   : com.focusPage("#comment")
         }
 
@@ -45,6 +46,7 @@ $(function () {
         constructionNodes.items.ishovel.bindData(res.isHovel, "key", "value", false);
         constructionNodes.items.iskey.bindData(res.isKey, "key", "value", false);
         constructionNodes.items.isCeremony.bindData(res.isCeremony, "key", "value", false);
+        constructionNodes.items.isConfirmPricture.bindData(res.isConfirmPricture, "key", "value", false);
 
     }, null, false);
 
@@ -171,6 +173,7 @@ $(function () {
             constructionNodes.items.iskey.val(data.iskey);
             constructionNodes.items.isCeremony.val(data.isCeremony);
             constructionNodes.items.timeLimit.val(data.timeLimit);
+            constructionNodes.items.isConfirmPricture.val(data.isConfirmPricture);
             if(data.finishTime != null){
                 constructionNodes.items.finishTime.val(data.finishTime.substr(0,10));
             }

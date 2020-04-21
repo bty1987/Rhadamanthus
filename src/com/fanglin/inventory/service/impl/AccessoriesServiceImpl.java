@@ -83,9 +83,9 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 
 		for (AccessoriesPO accessoriesPO : accessoriesPOs) {
 
-			accessoriesVO = new AccessoriesVO(new HouseVO(new VillageVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+			accessoriesVO = new AccessoriesVO(new HouseVO(new VillageVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
-			BeanUtil.copyProperties(accessoriesPO, accessoriesVO, Arrays.asList("house", "creater", "approver", "supervisor"));
+			BeanUtil.copyProperties(accessoriesPO, accessoriesVO, Arrays.asList("house", "creater", "approver", "supervisor", "deliver"));
 			BeanUtil.copyProperties(accessoriesPO.getHouse(), accessoriesVO.getHouse(), Arrays.asList("village"));
 			BeanUtil.copyPropertie(accessoriesPO.getHouse().getVillage(), accessoriesVO.getHouse().getVillage(), Arrays.asList("cityProper", "buildingNameRule"));
 
@@ -151,9 +151,11 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		
 		Timestamp fetchTime = accessoriesVO.getFetchTime();
 		
+		String comment = accessoriesVO.getComment();
+		
 		UserPO createrPO = userDao.queryUserByUserId(userId);
 
-		AccessoriesPO accessoriesPO = new AccessoriesPO().init(no, orderId, constructionSchedulePO.getCsid(), decorationPO.getHouse(), createrPO, fetchTime, constructionSchedulePO.getSchedule(), company);
+		AccessoriesPO accessoriesPO = new AccessoriesPO().init(no, orderId, constructionSchedulePO.getCsid(), decorationPO.getHouse(), createrPO, fetchTime, constructionSchedulePO.getSchedule(), comment, company);
 		
 		if (accessoriesVO.getSupervisor() != null) {
 			accessoriesPO.setSupervisor(userDao.queryUserByUserId(accessoriesVO.getSupervisor().getUserId()));
@@ -187,9 +189,85 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		return 0;
 	}
 
+	//预出状态
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateAccessoriesForStatus(AccessoriesVO accessoriesVO, String userId) throws FLException {
+	public int preoutAccessories(AccessoriesVO accessoriesVO, String userId) throws FLException {
+		
+		UserPO userPO =userDao.queryUserByUserId(userId);
+		
+		AccessoriesPO accessoriesPO = accessoriesDao.get(accessoriesVO.getAid());
+		
+		if (accessoriesPO == null) {
+			throw new FLException(260023, "辅料单不存在");
+		}
+
+		if (accessoriesPO.getStatus() != 0) {
+			throw new FLException(260024, "辅料单状态不可操作");
+		}
+		
+		accessoriesPO.setStatus(AccessoriesPO.STATUS_ADVANCE_INT);
+		accessoriesPO.setApprover(userPO);
+		accessoriesPO.setApproverTime(DateUtil.getDateToTimestamp(new Date()));
+
+		accessoriesDao.update(accessoriesPO);
+		
+		return 0;
+	}
+
+	//撤销状态
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int cancelAccessories(AccessoriesVO accessoriesVO, String userId) throws FLException {
+		
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		AccessoriesPO accessoriesPO = accessoriesDao.get(accessoriesVO.getAid());
+		
+		if (accessoriesPO == null) {
+			throw new FLException(260023, "辅料单不存在");
+		}
+
+		if (accessoriesPO.getStatus() != 0) {
+			throw new FLException(260024, "辅料单状态不可操作");
+		}
+		
+		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(accessoriesPO.getOrderId());
+		
+		List<AccessoriesItemPO> accessoriesItemPOs = accessoriesItemDao.queryAccessoriesItemByAid(accessoriesVO.getAid());
+		
+		long total = 0;
+		
+		for (AccessoriesItemPO accessoriesItemPO : accessoriesItemPOs) {
+			
+			ConstructionAccessoryPO constructionAccessoryPO = constructionAccessoryDao.queryConstructionAccessory(constructionPO.getCid(),accessoriesItemPO.getGoods().getGid());
+			
+			if (constructionAccessoryPO != null) {
+				constructionAccessoryPO.setTotal(Arith.sub(constructionAccessoryPO.getTotal(),Arith.mul(accessoriesItemPO.getNum(), accessoriesItemPO.getSelling())));
+				constructionAccessoryPO.setNum(Arith.sub(constructionAccessoryPO.getNum(), accessoriesItemPO.getNum()));
+				
+				constructionAccessoryDao.update(constructionAccessoryPO);
+			}
+			total += Arith.mul(accessoriesItemPO.getNum(), accessoriesItemPO.getSelling());
+		}
+		
+		constructionPO.setAccessoryTotal(Arith.sub(constructionPO.getAccessoryTotal(), total));
+		
+		constructionDao.update(constructionPO);
+
+		accessoriesPO.setStatus(AccessoriesPO.STATUS_REJECT_INT);
+		accessoriesPO.setApprover(userPO);
+		accessoriesPO.setApproverTime(DateUtil.getDateToTimestamp(new Date()));
+
+		accessoriesDao.update(accessoriesPO);
+		
+		return 0;
+	}
+
+	//拒绝状态
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int refuseAccessories(AccessoriesVO accessoriesVO, String userId) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
@@ -226,12 +304,58 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		
 		constructionDao.update(constructionPO);
 
-		accessoriesPO.setStatus(accessoriesVO.getStatus());
+		accessoriesPO.setStatus(AccessoriesPO.STATUS_UNDO_INT);
 		accessoriesPO.setApprover(userPO);
 		accessoriesPO.setApproverTime(DateUtil.getDateToTimestamp(new Date()));
 
 		accessoriesDao.update(accessoriesPO);
+		
+		return 0;
+	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateAccessoriesForPrint(AccessoriesVO accessoriesVO) throws FLException {
+		
+		AccessoriesPO accessoriesPO = accessoriesDao.get(accessoriesVO.getAid());
+		
+		if (accessoriesPO == null) {
+			throw new FLException(260023, "辅料单不存在");
+		}
+		
+		int num = Arith.add(accessoriesPO.getPrintnum(), 1);
+		
+		accessoriesPO.setPrintnum(num);
+		
+		accessoriesDao.update(accessoriesPO);
+		
+		accessoriesVO.setPrintnum(accessoriesPO.getPrintnum());
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int deliveAccessories(AccessoriesVO accessoriesVO, String userId) throws FLException {
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		AccessoriesPO accessoriesPO = accessoriesDao.get(accessoriesVO.getAid());
+		
+		if (accessoriesPO == null) {
+			throw new FLException(260023, "辅料单不存在");
+		}
+
+		if (accessoriesPO.getStatus() != AccessoriesPO.STATUS_BATCHOUT_INT) {
+			throw new FLException(260024, "辅料单状态不可操作");
+		}
+		
+		accessoriesPO.setStatus(AccessoriesPO.STATUS_DELIVER_INT);
+		accessoriesPO.setDeliver(userPO);
+		accessoriesPO.setDeliverTime(DateUtil.getDateToTimestamp(new Date()));
+
+		accessoriesDao.update(accessoriesPO);
+		
 		return 0;
 	}
 

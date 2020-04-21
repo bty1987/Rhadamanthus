@@ -40,6 +40,8 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 		query.add(query.getCriterion("decoration.company", company, "eq"));
 
 		queryFilterExcute(query, filters);
+		
+		query.desc("cid");
 
 		return query.list();
 	}
@@ -80,6 +82,8 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 		query.add(query.getCriterion("decoration.company", company, "eq"));
 
 		queryFilterExcute(query, filters);
+		
+		query.desc("cid");
 
 		return query.list();
 	}
@@ -92,6 +96,8 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 		query.add(query.getCriterion("decoration.company", company, "eq"));
 
 		queryFilterExcute(query, filters);
+		
+		query.desc("cid");
 
 		return query.list();
 	}

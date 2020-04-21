@@ -30,7 +30,7 @@ public class SelectionItemPO2 implements Serializable {
 	
 	public static final String COLUMN_GOODS_BRAND_STR = "goods.brand";
 	
-	public static final String COLUMN_SELECTION_SID_STR = "selection.sid";
+	public static final String COLUMN_SID_STR = "sid";
 
 	public static final String COLUMN_ORDERID_STR = "orderId";
 

@@ -10,18 +10,6 @@ $(function(){
     mbrand.mbrandItems.cid = com.focusPage("#categoryId");
     mbrand.mbrandItems.path = com.focusPage("#path");
 
-    var colorboxArgs = {
-        reposition:true,
-        scalePhotos:true,
-        scrolling:false,
-        previous:'<i class="icon-arrow-left"></i>',
-        next:'<i class="icon-arrow-right"></i>',
-        close:'&times;',
-        current:'{current} of {total}',
-        maxWidth:'100%',
-        maxHeight:'100%'
-    };
-
     com.post(api.store.queryMcategory, {}, function(res){
         com.focusPage("#categoryId").bindData(res.mcategorys, "cid", "name");
     });
@@ -263,13 +251,19 @@ $(function(){
     }
 
     function editBrand(v){
+        
         com.focusPage("#brandImg").html("");
+        
         mbrand.mbrandItems.cid.val(v.mcategory.cid);
         mbrand.mbrandItems.name.val(v.name);
         mbrand.mbrandItems.path.val(v.icon);
+        
         var img = $('<img />');
-        var imgA = $("<a></a>").attr("href", com.showImg(img, v.icon, 150, 150, '150x150', null, 0)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(com.focusPage("#brandImg"));
-        imgA.colorbox(colorboxArgs);
+        var imgA = $("<a></a>").css("height", "150px").append(img).appendTo(com.focusPage("#brandImg"));
+        
+        com.showImg(img, v.icon, 150, 150, '', null, 0);
+        
+        com.popup4photos("#brandImg");
     }
 
     com.focusPage("#pictureUpload").Huploadify({
@@ -299,8 +293,9 @@ $(function(){
                 com.focusPage("#brandImg").html("");
                 mbrand.mbrandItems.path.val(dateObj.resUrl);
                 var img = $('<img />');
-                var imgA = $("<a></a>").attr("href", com.showImg(img, dateObj.resUrl, 150, 150, '150x150', null, 0)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(com.focusPage("#brandImg"));
-                imgA.colorbox(colorboxArgs);
+                var imgA = $("<a></a>").css("height", "150px").append(img).appendTo(com.focusPage("#brandImg"));
+                com.showImg(img, dateObj.resUrl, 150, 150, '', null, 0);
+                com.popup4photos("#brandImg");
             }else{
                 alert(data);
             }

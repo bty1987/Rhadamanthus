@@ -419,7 +419,7 @@ $(function () {
             
             var num = parseFloat(com.focusPage("#num" + siid).val());
             var outnum = parseFloat(checke.parents('li').find('b.xg').text());
-
+            
             if(num > outnum) {
                 com.showAlert(com.warning, "转出库数量大于剩余数量");
                 return false;

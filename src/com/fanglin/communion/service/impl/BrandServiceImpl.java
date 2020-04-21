@@ -45,7 +45,7 @@ public class BrandServiceImpl implements BrandService {
 
 	@Autowired
 	private CountingService countingService;
-	
+
 	@Autowired
 	private UserDao userDao;
 
@@ -177,7 +177,7 @@ public class BrandServiceImpl implements BrandService {
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_BRAND_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
 
 		UserPO supplier = userDao.queryUserByUserId(brandVO.getSupplier().getUserId());
-		
+
 		StringBuffer brandNo = new StringBuffer();
 		brandNo.append(SystemConfig.getString("brandIdent", "B_"));
 		brandNo.append(FormatUtil.fillZero(count, "000"));
@@ -199,14 +199,14 @@ public class BrandServiceImpl implements BrandService {
 		BrandPO brandPO = brandDao.get(brandVO.getBid());
 
 		UserPO supplier = userDao.queryUserByUserId(brandVO.getSupplier().getUserId());
-		
+
 		BeanUtil.copyProperties(brandVO, brandPO, Arrays.asList("category", "supplier", "company"));
 
 		brandPO.setCategory(new CategoryPO(brandVO.getCid()));
 		brandPO.setSupplier(supplier);
 
 		if (brandVO.getName() != null) {
-			brandPO.setPinyin(PinYin4Util.getPinyin(brandVO.getName()).toString());
+			brandPO.setPinyin(PinYin4Util.getPinyin(brandVO.getName()).get(0).toString());
 		}
 
 		brandDao.update(brandPO);

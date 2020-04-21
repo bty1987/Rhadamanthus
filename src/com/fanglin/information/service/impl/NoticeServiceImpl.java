@@ -119,6 +119,7 @@ public class NoticeServiceImpl implements NoticeService{
 		noticePO.setCreater(userPO);
 		
 		noticePO.setPublishTime(DateUtil.current("yyyy-MM-dd"));
+		noticePO.setFileName(noticeVO.getFileName());
 		noticePO.setCompany(authentication.getCompany());
 		
 		noticeDao.save(noticePO);
@@ -147,6 +148,7 @@ public class NoticeServiceImpl implements NoticeService{
     	BeanUtil.copyProperties(noticeVO, noticePO, Arrays.asList("creater"));
     	
     	noticePO.setCreater(userPO);
+    	noticePO.setFileName(noticeVO.getFileName());
     	
 		noticeDao.update(noticePO);
 		
