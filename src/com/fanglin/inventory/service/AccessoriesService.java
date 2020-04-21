@@ -15,6 +15,14 @@ public interface AccessoriesService {
 	
 	public int addAccessories(AccessoriesVO accessoriesVO,List<AccessoriesItemVO> accessoriesItemVOs, String userId) throws FLException;
 	
-	public int updateAccessoriesForStatus(AccessoriesVO accessoriesVO,String userId) throws FLException;
+	public int preoutAccessories(AccessoriesVO accessoriesVO,String userId) throws FLException;
+	
+	public int cancelAccessories(AccessoriesVO accessoriesVO,String userId) throws FLException;
+	
+	public int refuseAccessories(AccessoriesVO accessoriesVO,String userId) throws FLException;
+	
+	public int updateAccessoriesForPrint(AccessoriesVO accessoriesVO) throws FLException;
+	
+	public int deliveAccessories(AccessoriesVO accessoriesVO,String userId) throws FLException;
 	
 }

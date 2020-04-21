@@ -24,6 +24,8 @@ public interface AdvancePaymentService {
 	public void pageAdvancePayment(Paging paging, List<Filter> filters, int company);
 	
 	public List<Long> queryAdvancePaymentByOrderId(AdvancePaymentVO advancePaymentVO) throws FLException;
+
+	public void addAdvancePayment(AdvancePaymentVO advancePayment) throws FLException;
 	
 	public int updateAdvancePayment(PaymentVO paymentVO, int company) throws FLException;
 	

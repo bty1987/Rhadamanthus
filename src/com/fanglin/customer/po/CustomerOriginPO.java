@@ -86,6 +86,8 @@ public class CustomerOriginPO implements Serializable {
 	private UserPO designer;
 
 	private String orderId;
+	
+	private String salesmanType;
 
 	public CustomerOriginPO() {
 		super();
@@ -314,6 +316,15 @@ public class CustomerOriginPO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	@Column(name = "salesmanType")
+	public String getSalesmanType() {
+		return salesmanType;
+	}
+
+	public void setSalesmanType(String salesmanType) {
+		this.salesmanType = salesmanType;
 	}
 
 }

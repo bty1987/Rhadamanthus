@@ -69,18 +69,24 @@ public class DecorationVO implements Serializable {
 	private Timestamp createTime;
 
 	private Timestamp accountTime;
+
+	private Timestamp sdesignTime;
+	
+	private Timestamp edesignTime ;
 	
 	private Timestamp precontractTime;
 
 	private Short status;
 
+	private Short designStatus;
+	
 	private Short projectStatus;
 
 	private Integer otherStatus;
 
 	private QuotationVersionVO version;
 
-	private Long orderTotalPrice;
+	private Long orderTotalPrice;	
 
 	private Long quotationPrice;
 
@@ -107,6 +113,8 @@ public class DecorationVO implements Serializable {
 	private String grade;
 	
 	private Long factPrice;
+	
+	private Integer company;
 	
 	public DecorationVO(){
 		super();
@@ -235,6 +243,24 @@ public class DecorationVO implements Serializable {
 	}
 	
 	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getSdesignTime() {
+		return sdesignTime;
+	}
+
+	public void setSdesignTime(Timestamp sdesignTime) {
+		this.sdesignTime = sdesignTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getEdesignTime() {
+		return edesignTime;
+	}
+
+	public void setEdesignTime(Timestamp edesignTime) {
+		this.edesignTime = edesignTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getPrecontractTime() {
 		return precontractTime;
 	}
@@ -257,6 +283,14 @@ public class DecorationVO implements Serializable {
 
 	public void setType(Short type) {
 		this.type = type;
+	}
+
+	public Short getDesignStatus() {
+		return designStatus;
+	}
+
+	public void setDesignStatus(Short designStatus) {
+		this.designStatus = designStatus;
 	}
 
 	public Short getProjectStatus() {
@@ -446,6 +480,14 @@ public class DecorationVO implements Serializable {
 
 	public void setFactPrice(Long factPrice) {
 		this.factPrice = factPrice;
+	}
+
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
 	}
 
 }

@@ -86,6 +86,10 @@ public class NoticeDepartmentServiceImpl implements NoticeDepartmentService {
 			noticeDepartmentDao.save(noticeDepartmentPO);
 		}
 		
+		notices.setDepts(noticeVO.getDepts());
+		
+		noticeDao.save(notices);
+		
 		return 0;
 	}
 

@@ -1,8 +1,15 @@
 package com.fanglin.construction.service;
 
+import java.util.List;
+
 import com.fanglin.construction.vo.ConstructionInfoVO;
+import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
+import com.fanglin.utils.Paging;
 
 public interface ConstructionInfoService {
+	
+	public void pageConstructionInfo(Paging paging, List<Filter> filters, Integer company);
 
 	public ConstructionInfoVO queryConstructionInfo(ConstructionInfoVO constructionInfoVO);
 
@@ -11,5 +18,9 @@ public interface ConstructionInfoService {
 	public void updateConstructionInfo(ConstructionInfoVO constructionInfoVO);
 
 	public void updateConstructionInfoByOrderId(ConstructionInfoVO constructionInfoVO);
+
+	public void confirmConstructionInfo(ConstructionInfoVO constructionInfoVO) throws FLException;
+	
+	public int sendConstructionInfoForConfirm(ConstructionInfoVO constructionInfoVO) throws FLException;
 
 }

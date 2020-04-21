@@ -50,7 +50,7 @@ $(function () {
         vid: null,
         no: null
     };
-
+    
     com.post(api.system.queryCity, {}, function (a) {
         village.cityList = a.citys;
         village.items.citySel.bindData(village.cityList, village.cityKey, village.cityValue, !1).trigger("change")
@@ -213,7 +213,6 @@ $(function () {
             village.modal.modal("hide");
             searcher.doSearch();
         });
-
     }
 
     // 编辑按钮
@@ -244,20 +243,9 @@ $(function () {
                 $.each(villageSourcePics, function (i, value) {
                     appendGalleryElement("villageDrawing", value);
                 });
+                com.popup4photos("#villageDrawing");
             }
         }, null, false);
-
-        com.focusPage('.ace-thumbnails [data-rel="colorbox"]').colorbox({
-            reposition: true,
-            scalePhotos: true,
-            scrolling: false,
-            previous: '<i class="icon-arrow-left"></i>',
-            next: '<i class="icon-arrow-right"></i>',
-            close: '&times;',
-            current: '{current} of {total}',
-            maxWidth: '100%',
-            maxHeight: '100%'
-        });
     }
 
     // 上传图片
@@ -294,8 +282,12 @@ $(function () {
                     options["dataDrawing.type"] = 0;
 
                     com.post(api.communion.addDataDrawing, options, function (res) {
+                        
                         var drawing = res.dataDrawing;
+                        
                         appendGalleryElement("villageDrawing", drawing);
+                        com.popup4photos("#villageDrawing");
+                        
                         if (village.url == null) {
                             updateVillageUrl(village.no, drawing.drawingUrl)
                         }
@@ -309,10 +301,14 @@ $(function () {
     }
 
     function appendGalleryElement(galleryId, value) {
+        
         var gallery = com.focusPage("#" + galleryId);
+        
         var imgLi = $("<li></li>").attr("id", "gallery_li" + value.ddid).addClass("text-center col-sm-4").css("border", "0px").css("border-color", "white").css("padding", "0px").css("height", "150px").css("width", "150px").appendTo(gallery);
         var img = $('<img/>');
-        var imgA = $("<a></a>").attr("data-rel", "colorbox").addClass('cboxElement').attr("href", com.showImg(img, value.drawingUrl, 150, 150, '150x150', null, value.type)).attr("target", "_blank").css("height", "150px").append(img).appendTo(imgLi);
+        var imgA = $("<a></a>").addClass('cboxElement').attr("target", "_blank").css("height", "150px").append(img).appendTo(imgLi);
+        
+        com.showImg(img, value.drawingUrl, 150, 150, '', null, value.type);
 
         var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
         var toolsA = $("<a></a>").attr("href", "#").on("click", function () {
@@ -320,11 +316,13 @@ $(function () {
                 com.focusPage("#gallery_li" + value.ddid).remove();
             });
         }).appendTo(toolsDiv);
+        
         $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
 
         var toolok = $("<a></a>").attr("href", "#").on("click", function () {
             updateVillageUrl(village.no, value.drawingUrl);
         }).appendTo(toolsDiv);
+        
         $("<i></i>").addClass("icon-ok green").appendTo(toolok);
     }
 

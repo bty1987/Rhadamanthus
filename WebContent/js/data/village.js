@@ -1,5 +1,5 @@
 $(function () {
-    
+
     var village = {
         saveBtn: com.focusPage("#saveBtn").on("click", saveData),
         cancellBtn: com.focusPage("#cancelBtn"),
@@ -59,11 +59,23 @@ $(function () {
         nameRuleValue: "ruleContent",
         url: null,
         vid: null,
-        no: null
+        no: null,
+        postData : '',
+        pageType : params['urlLoadParams'].type,
     };
 
-    var mp;
+    if(village.pageType == "village"){
 
+        village.url = api.data.pageVillage;
+        village.postData = "villageForVillagePostData"
+
+    }else if(village.pageType == "houseLayout"){
+
+        village.postData = "villageForHouseLayoutPostData"
+    }
+
+    var mp;
+    
     com.post(api.system.queryCity, {}, function (a) {
         village.cityList = a.citys;
         village.items.citySel.bindData(village.cityList, village.cityKey, village.cityValue, !1).trigger("change")
@@ -74,7 +86,7 @@ $(function () {
     }, null, false);
 
     village.items.nameRuleSel.bindData(village.nameRuleList, village.nameRuleValue, village.nameRuleValue, !1).trigger("change");
-    
+
     com.datetime(village.items.deliveryTime);
 
     initUploadBtn();
@@ -106,6 +118,7 @@ $(function () {
             var $btnPosition = $('<a></a>').addClass('btn btn-minier btn-yellow').html('位置');
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-success').html('编辑');
             var $drawingedit = $('<a></a>').addClass('btn btn-minier btn-warning').html('管理图片');
+            var $houseLayout = $("<a></a>").addClass("btn btn-minier btn-danger").html("户型");
 
             var $btnStatus = $('<div></div>').addClass('pull-right');
             var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type": "checkbox"});
@@ -130,7 +143,11 @@ $(function () {
 
             $btnStatus.append($statusSwitch).append($span);
 
-            $divBtnWrap.append($btnPosition).append($btnEdit).append($drawingedit).append($btnStatus).appendTo($h3);
+            if (village.pageType == "village"){
+                $divBtnWrap.append($btnPosition).append($btnEdit).append($drawingedit).append($btnStatus).appendTo($h3);
+            } else{
+                $divBtnWrap.append($houseLayout).appendTo($h3);
+            }
 
             $liLine.append($urldiv).append($h3).append($ulProperty);
 
@@ -149,6 +166,11 @@ $(function () {
                 village.no = v.no;
                 managedrawing(v.vid);
             });
+
+            $houseLayout.click(function(){
+                params.vid = v.vid;
+                com.popup4page("#villagePopUp","/views/data/houseLayout.html","户型");
+            })
 
             !v.status && $statusSwitch.prop("checked", true);
             $statusSwitch.switchBtn("status-lbl").on("click", function () {
@@ -260,20 +282,11 @@ $(function () {
                 $.each(villageSourcePics, function (i, value) {
                     appendGalleryElement("villageDrawing", value);
                 });
+                com.popup4photos("#villageDrawing");
             }
         }, null, false);
 
-        com.focusPage('.ace-thumbnails [data-rel="colorbox"]').colorbox({
-            reposition: true,
-            scalePhotos: true,
-            scrolling: false,
-            previous: '<i class="icon-arrow-left"></i>',
-            next: '<i class="icon-arrow-right"></i>',
-            close: '&times;',
-            current: '{current} of {total}',
-            maxWidth: '100%',
-            maxHeight: '100%'
-        });
+        
     }
 
     // 上传图片
@@ -310,8 +323,12 @@ $(function () {
                     options["dataDrawing.type"] = 0;
 
                     com.post(api.communion.addDataDrawing, options, function (res) {
+                        
                         var drawing = res.dataDrawing;
+                        
                         appendGalleryElement("villageDrawing", drawing);
+                        com.popup4photos("#villageDrawing");
+                        
                         if (village.url == null) {
                             updateVillageUrl(village.no, drawing.drawingUrl)
                         }
@@ -328,8 +345,8 @@ $(function () {
         var gallery = com.focusPage("#" + galleryId);
         var imgLi = $("<li></li>").attr("id", "gallery_li" + value.ddid).addClass("text-center col-sm-4").css("border", "0px").css("border-color", "white").css("padding", "0px").css("height", "150px").css("width", "150px").appendTo(gallery);
         var img = $('<img/>');
-        var imgA = $("<a></a>").attr("data-rel", "colorbox").addClass('cboxElement').attr("href", com.showImg(img, value.drawingUrl, 150, 150, '150x150', null, value.type)).attr("target", "_blank").css("height", "150px").append(img).appendTo(imgLi);
-
+        var imgA = $("<a></a>").addClass('cboxElement').attr("target", "_blank").css("height", "150px").append(img).appendTo(imgLi);
+        com.showImg(img, value.drawingUrl, 150, 150, value.name, null, value.drawingType);
         var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
         var toolsA = $("<a></a>").attr("href", "#").on("click", function () {
             com.post(api.communion.deleteDataDrawing, {"dataDrawing.ddid": value.ddid}, function (res) {

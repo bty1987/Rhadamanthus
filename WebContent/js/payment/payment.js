@@ -2,6 +2,7 @@ jQuery(function($) {
 	var payment = {
 		saveBtn: com.focusPage("#collectBtn"),
 		cancelBtn: com.focusPage("#cancelBtn"),
+		createBtn: com.focusPage("#createBtn"),
 		items: {
 			cashCheckbox: com.focusPage("#cashCheckbox"),
 			bankCheckbox: com.focusPage("#bankCheckbox"),
@@ -20,7 +21,8 @@ jQuery(function($) {
 		htmlName: "payment",
 		modelId: 'paymentModal',
 		modals: {
-			modal: com.focusPage("#paymentModal")
+			modal: com.focusPage("#paymentModal"),
+			createModal: com.focusPage("#createPaymentModal")
 		},
 
 		cash: [],
@@ -48,6 +50,23 @@ jQuery(function($) {
 	
 	payment.saveBtn.bindClick(function(){
 		paymentUtils.paymentSaveData(payment, searcher, hsearcher);
+	});
+
+	payment.createBtn.bindClick(function(){
+		if(com.validate("createPaymentModal")){
+			return;
+		}
+
+		var url = api.payment.addAdvancePayment;
+		var createOptions = {
+			"advancePayment.decoration.orderId": com.focusPage("#decorationOrderId").val()
+		};
+		
+		com.post(url, createOptions, function(res){
+			com.showAlert(com.info, "创建成功");
+			searcher.doSearch();
+			payment.modals.createModal.modal("hide");
+		});
 	});
 
 	payment.modals.modal.on('show.bs.modal',function(e){
@@ -211,7 +230,18 @@ jQuery(function($) {
 	
 	searcher.init(["orderId", "village", "houseNumber", "designer"], "condList", api.payment.pageAdvancePayment, function(data){
 		displayFunc.init('resultList', data);
-	}, "pagenation", "paymentPostData");
+	}, "pagenation", "paymentPostData", null, false, null, function(){
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'createPayment').css("margin", "0px 3px");
+		var $addspan = $('<span></span>').text('创建预付款').appendTo($adda);
+
+		return [$adda];
+	});
+
+	//创建预付款
+	com.focusPage('a[name="createPayment"]', '#pagenation').click(function(){
+		com.focusPage("#decorationOrderId").val("");
+		payment.modals.createModal.modal("show");
+	});
 	
 	var hdisplayFunc  = (function(){
         var renderList = function(tableId,listData){
@@ -229,7 +259,7 @@ jQuery(function($) {
 
         var creatLine = function(v){
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.customer.no));
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');

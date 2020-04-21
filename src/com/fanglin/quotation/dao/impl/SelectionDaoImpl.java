@@ -29,6 +29,12 @@ public class SelectionDaoImpl extends DaoImpl<SelectionPO> implements SelectionD
 	@Override
 	public SelectionPO querySelectionByOrderId(String orderId) {
 		return (SelectionPO) createCriteria(SelectionPO.class).add(Restrictions.eq(SelectionPO.COLUMN_ORDERID_STR, orderId)).uniqueResult();
+	}
+
+	@Override
+	public void deleteSelectionByQid(long qid) {
+		String sql = "delete from quotation.selection where qid = :qid";
+		session().createSQLQuery(sql).setLong(SelectionPO.COLUMN_QID_STR, qid).executeUpdate();
 	} 
 	
 	

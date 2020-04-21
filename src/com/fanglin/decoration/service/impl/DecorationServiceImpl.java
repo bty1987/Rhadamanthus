@@ -804,6 +804,7 @@ public class DecorationServiceImpl implements DecorationService {
 		UserPO operater = userDao.queryUserByUserId(userId);
 		decorationPO.setCreater(operater);
 
+		decorationPO.setDesignStatus(DecorationPO.DESIGNSTATUS_INITIA_INT);
 		decorationPO.setProjectStatus(DecorationPO.PROJECTSTATUS_INITIAL_INT);
 
 		decorationPO.setOtherStatus(0);

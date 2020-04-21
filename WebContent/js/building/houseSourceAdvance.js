@@ -59,18 +59,6 @@ jQuery(function($) {
 		repeatFlg: null
 	};
 
-	var colorboxArgs = {
-		reposition:true,
-		scalePhotos:true,
-		scrolling:false,
-		previous:'<i class="icon-arrow-left"></i>',
-		next:'<i class="icon-arrow-right"></i>',
-		close:'&times;',
-		current:'{current} of {total}',
-		maxWidth:'100%',
-		maxHeight:'100%'
-	};
-
 	com.datetime(houseSource.buildItems.signingTime);
 
 	houseSource.btns.deployedBtn.on("click", updateFollowUser);
@@ -241,6 +229,7 @@ jQuery(function($) {
 						$.each(houseSourcePics, function(i, d){
 							appendGalleryElement("houseSourceDrawing", d.bdid, d.drawingUrl, d.drawingType, "", api.building.deleteBuildingDrawing, v.hsid, api.building.updateHouseSourceForPath);
 						});
+						com.popup4photos("#houseSourceDrawing");
 					}
 				}, null, false);
 
@@ -492,6 +481,7 @@ jQuery(function($) {
 					com.post(api.building.addBuildingDrawing, options, function(res){
 						var drawing = res.buildingDrawing;
 						appendGalleryElement("houseSourceDrawing", drawing.bdid, dateObj.resUrl, 0, "", api.building.deleteBuildingDrawing, hsid, api.building.updateHouseSourceForPath);
+						com.popup4photos("#houseSourceDrawing");
 					});
 				}else{
 					console.log(data);
@@ -501,10 +491,15 @@ jQuery(function($) {
 	}
 
 	function appendGalleryElement(galleryId, imgId, imgUrl, type, editUrl, deleteUrl, hsid, defaultUrl){
+
 		var gallery = com.focusPage("#" + galleryId);
+		
 		var imgLi = $("<li></li>").attr("id", "gallery_li"+imgId).addClass("text-center").css("border-color", "#ddd").appendTo(gallery);
 		var img = $('<img />');
-		var imgA = $("<a></a>").attr("href", com.showImg(img, imgUrl, 150, 150, '150x150', null, type)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(imgLi);
+		var imgA = $("<a></a>").css("height", "150px").append(img).appendTo(imgLi);
+		
+		com.showImg(img, imgUrl, 150, 150, '', null, type);
+		
 		var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
 		var toolsA = $("<a></a>").attr("href", "#").on("click", function(){
 			var options = {};
@@ -526,7 +521,6 @@ jQuery(function($) {
 			});
 		}).appendTo(toolsDiv);
 		$("<i></i>").addClass("icon-ok green").appendTo(toolsB);
-		imgA.colorbox(colorboxArgs);
 	}
 
 });

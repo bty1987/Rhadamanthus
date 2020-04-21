@@ -24,8 +24,8 @@ import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.SelectionDao;
 import com.fanglin.quotation.dao.SelectionItemDao;
 import com.fanglin.quotation.po.QuotationPO;
+import com.fanglin.quotation.po.SelectionItemPD;
 import com.fanglin.quotation.po.SelectionItemPO;
-import com.fanglin.quotation.po.SelectionItemPO2;
 import com.fanglin.quotation.po.SelectionPO;
 import com.fanglin.quotation.service.SelectionItemService;
 import com.fanglin.quotation.vo.SelectionItemVO;
@@ -60,7 +60,7 @@ public class SelectionItemServiceImpl implements SelectionItemService{
 	@Override
 	public void pageSelectionItem(Paging paging, List<Filter> filters, SelectionItemVO selectionItemVO) throws FLException {
 		
-		List<SelectionItemPO2> selectionItemPO2s = selectionItemDao.pageSelectionItem(paging, filters, selectionItemVO.getStatus());
+		List<SelectionItemPD> selectionItemPO2s = selectionItemDao.pageSelectionItem(paging, filters, selectionItemVO.getStatus());
 
 		List<SelectionItemVO> selectionItemVOs = getSelectionItemVOs(selectionItemPO2s);
 		
@@ -71,9 +71,9 @@ public class SelectionItemServiceImpl implements SelectionItemService{
 	public void pageSelectionItemForSupplier(Paging paging, List<Filter> filters, String userId) throws FLException{
 
 		UserPO createrPO = userDao.queryUserByUserId(userId);
-		Long uid = (long) createrPO.getUid();
+		long uid = createrPO.getUid();
 		
-		List<SelectionItemPO2> selectionItemPO2s = selectionItemDao.pageSelectionItemForSupplier(paging, filters, uid);
+		List<SelectionItemPD> selectionItemPO2s = selectionItemDao.pageSelectionItemForSupplier(paging, filters, uid);
 		List<SelectionItemVO> selectionItemVOs = getSelectionItemVOs(selectionItemPO2s);
 		
 		paging.setData(selectionItemVOs);
@@ -82,7 +82,13 @@ public class SelectionItemServiceImpl implements SelectionItemService{
 	@Override
 	public List<SelectionItemVO> querySelectionItem(SelectionVO selectionVO) throws FLException {
 		
-		List<SelectionItemPO> selectionItemPOs = selectionItemDao.querySelectionItem(selectionVO.getSid());
+		SelectionPO selectionPO = selectionDao.get(selectionVO.getSid());
+		
+		if (selectionPO == null) {
+			throw new FLException(200035, "选材单不存在");
+		}
+		
+		List<SelectionItemPO> selectionItemPOs = selectionItemDao.querySelectionItem(selectionPO.getSid());
 		List<SelectionItemVO> selectionItemVOs = new ArrayList<SelectionItemVO>();
 		
 		for (SelectionItemPO selectionItemPO : selectionItemPOs) {
@@ -97,20 +103,25 @@ public class SelectionItemServiceImpl implements SelectionItemService{
 		return selectionItemVOs;
 	}
 	
-	@Override
+	@Override 
 	public List<SelectionItemVO> querySelectionItemByOrderId(SelectionItemVO selectionItemVO) throws FLException {
 		
 		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(selectionItemVO.getDecoration().getOrderId());
 		
+		if (quotationPO == null) {
+			throw new FLException(200017, "默认报价不存在");
+		}
+		
 		List<SelectionItemVO> selectionItemVOs = null;
 	
-		if (quotationPO != null) {
-			
-			SelectionPO selectionPO = selectionDao.querySelectionByQid(quotationPO.getQid());
-			
-			List<SelectionItemPO2> selectionItemPO2s = selectionItemDao.querySelectionItemObject(selectionPO.getSid());
-			selectionItemVOs = getSelectionItemVOs(selectionItemPO2s);
+		SelectionPO selectionPO = selectionDao.querySelectionByQid(quotationPO.getQid());
+		
+		if (selectionPO == null) {
+			throw new FLException(200035, "选材单不存在");
 		}
+		
+		List<SelectionItemPD> selectionItemPO2s = selectionItemDao.querySelectionItemDBySid(selectionPO.getSid());
+		selectionItemVOs = getSelectionItemVOs(selectionItemPO2s);
 		
 		return selectionItemVOs;
 	}
@@ -129,9 +140,9 @@ public class SelectionItemServiceImpl implements SelectionItemService{
 		
 		BrandPO brandPO = brandDao.get(goodsPO.getBid());
 
-		Long suid = (long) brandPO.getSupplier().getUid();
+		long suid = brandPO.getSupplier().getUid();
 	
-		SelectionItemPO _selectionItemPO = selectionItemDao.querySoleSelectionItem(selectionVO.getSid(), selectionItemVO.getAreaId(), selectionItemVO.getQuoteId(), selectionItemVO.getType());
+		SelectionItemPO _selectionItemPO = selectionItemDao.querySelectionItem(selectionVO.getSid(), selectionItemVO.getAreaId(), selectionItemVO.getQuoteId(), selectionItemVO.getType());
 		
 		if (_selectionItemPO == null) {
 			
@@ -367,11 +378,11 @@ public class SelectionItemServiceImpl implements SelectionItemService{
 		return 0;
 	}
 	
-	private List<SelectionItemVO> getSelectionItemVOs (List<SelectionItemPO2> selectionItemPO2s) {
+	private List<SelectionItemVO> getSelectionItemVOs (List<SelectionItemPD> selectionItemPO2s) {
 		
 		List<SelectionItemVO> selectionItemVOs = new ArrayList<SelectionItemVO>();
 		
-		for (SelectionItemPO2 selectionItemPO2 : selectionItemPO2s) {
+		for (SelectionItemPD selectionItemPO2 : selectionItemPO2s) {
 			
 			SelectionItemVO selectionItemVO = new SelectionItemVO(new GoodsVO(), new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 			

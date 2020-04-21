@@ -1,17 +1,6 @@
 $(function () {
     var pictures = [];
     var pictureUrl = [];
-    var colorboxArgs = {
-        reposition:true,
-        scalePhotos:true,
-        scrolling:false,
-        previous:'<i class="icon-arrow-left"></i>',
-        next:'<i class="icon-arrow-right"></i>',
-        close:'&times;',
-        current:'{current} of {total}',
-        maxWidth:'100%',
-        maxHeight:'100%'
-    };
 
     var slideImgs = [];
     var detailImgs = [];
@@ -19,7 +8,7 @@ $(function () {
 
     initUploadBtn(gid, 0, "slideImg", "slideBtn");
     initUploadBtn(gid, 1, "detailImg", "detailBtn");
-
+    
     com.post(api.store.queryPictureByGid, {"picture.gid": gid}, function (res) {
         pictures = res.pictures;
         $.each(pictures, function (i, v) {
@@ -32,6 +21,9 @@ $(function () {
                 appendGalleryElement("detailImg", v.pid, v.img, 0, api.store.deletePicture, api.store.updatePictureForSort);
             }
         });
+        
+        com.popup4photos("#slideImg");
+        com.popup4photos("#detailImg");
     });
 
     function initUploadBtn(gid, type, divId, btnDiv){
@@ -71,7 +63,9 @@ $(function () {
                 });
 
                 com.post(api.store.addPicture, options, function(res){
+                    
                     var pictures = res.pictures;
+                    
                     $.each(pictures, function(i, v){
                         if(type == 0){
                             slideImgs.push(v);
@@ -82,6 +76,9 @@ $(function () {
                         }
                     });
                     pictureUrl.length = 0;
+                    
+                    com.popup4photos("#slideImg");
+                    com.popup4photos("#detailImg");
                 });
             }
         });
@@ -91,9 +88,13 @@ $(function () {
     function appendGalleryElement(galleryId, imgId, imgUrl, type, deleteUrl, updateUrl){
         
         var gallery = com.focusPage("#" + galleryId);
+        
         var imgLi = $("<li></li>").attr("id", "gallery_li"+imgId).addClass("text-center").attr("data-pid", imgId).css("border-color", "#ddd").appendTo(gallery);
         var img = $('<img />');
-        var imgA = $("<a></a>").attr("href", com.showImg(img, imgUrl, 150, 150, '150x150', null, type)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(imgLi);
+        var imgA = $("<a></a>").css("height", "150px").append(img).appendTo(imgLi);
+        
+        com.showImg(img, imgUrl, 150, 150, '150x150', null, type);
+        
         var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
         
         var toolsA = $('<a></a>').attr({"href" : "javascript:void(0)"}).css({"padding-left" : "6px"}).append('<i class="icon-arrow-left bigger-110 green"></i>').appendTo(toolsDiv).mouseenter(function(){
@@ -163,6 +164,5 @@ $(function () {
                 com.showAlert(com.warning, "当前图片为最后一张,不能再向后更换");
             }
         });
-        imgA.colorbox(colorboxArgs);
     }
 });

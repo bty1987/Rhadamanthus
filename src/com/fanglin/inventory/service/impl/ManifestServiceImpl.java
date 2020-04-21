@@ -30,6 +30,8 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.material.dao.GoodsDao;
 import com.fanglin.data.po.GoodsPO;
+import com.fanglin.information.po.MessagePO;
+import com.fanglin.information.service.MessageService;
 import com.fanglin.inventory.dao.AccessoriesDao;
 import com.fanglin.inventory.dao.AccessoriesItemDao;
 import com.fanglin.inventory.dao.AccessoriesManifestDao;
@@ -126,6 +128,9 @@ public class ManifestServiceImpl implements ManifestService {
 	
 	@Autowired
 	private ConstructionAccessoryDao constructionAccessoryDao;
+	
+	@Autowired
+	private MessageService messageService;
 
 	@Override
 	public void pageManifest(Paging paging, List<Filter> filters, int company) {
@@ -593,13 +598,13 @@ public class ManifestServiceImpl implements ManifestService {
 		UserPO creater = userDao.queryUserByUserId(userId);
 
 		List<AccessoriesPO> accessoriesPOs = new ArrayList<AccessoriesPO>();
-		AccessoriesPO accessoriesPO;
+		AccessoriesPO accessoriesPO = null;
 		
 		for (AccessoriesVO accessoriesVO : accessoriesVOs) {
 
 			accessoriesPO = accessoriesDao.get(accessoriesVO.getAid());
 
-			if (accessoriesPO.getStatus() != AccessoriesPO.STATUS_INIT_INT) {
+			if (accessoriesPO.getStatus() != AccessoriesPO.STATUS_INIT_INT && accessoriesPO.getStatus() != AccessoriesPO.STATUS_ADVANCE_INT) {
 				throw new FLException(260024, "辅料单状态不可操作");
 			}
 
@@ -649,6 +654,10 @@ public class ManifestServiceImpl implements ManifestService {
 		for (AccessoriesPO accessories : accessoriesPOs) {
 			accessoriesManifestDao.save(new AccessoriesManifestPO(accessories, manifestPO));
 		}
+		
+		String content = String.format("辅料单:%s,已出库", accessoriesPO.getNo());
+		
+		messageService.sendMessage(accessoriesPO.getCreater().getUserId(), accessoriesPO.getApprover().getUserId(), content, MessagePO.TYPE_SEND_VISIT_INT, company);
 
 		return 0;
 	}

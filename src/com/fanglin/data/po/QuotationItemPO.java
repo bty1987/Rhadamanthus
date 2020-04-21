@@ -32,14 +32,16 @@ import com.fanglin.communion.po.WorkTypePO;
 public class QuotationItemPO implements Serializable {
 
 	private static final long serialVersionUID = -7382384455543326014L;
+	
+	public static final String[] COLUMN_ARRAYS_STR = {"quotationType", "quotationClassification","quotationBigCategory","quotationSmallCategory", "measurementUnit","workType","quotationVersion"};
 
 	public static final String COLUMN_STATUS_STR = "status";
+	
+	public static final String COLUMN_COMPANY_STR = "company";
 
 	public static final short STATUS_ENABLE_INT = 0;
 
 	public static final short STATUS_DISABLE_INT = 1;
-
-	public static final String COLUMN_COMPANY_STR = "company";
 
 	private long qiId;
 

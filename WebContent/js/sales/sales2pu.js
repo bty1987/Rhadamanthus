@@ -352,7 +352,6 @@ $(function () {
 
     }, 'resultList');
 
-
     salesPU.btns.puSaveBtn.on('click', function () {
         savePurchase(salesPU._params);
     });
@@ -387,7 +386,7 @@ $(function () {
         var checkList = com.focusPage('input[name="siids"]:checked', '#resultListItem');
 
         if (checkList.length === 0) {
-            com.showAlert(com.warning, "请选择需要转出库单的商品");
+            com.showAlert(com.warning, "请选择需要转采购单的商品");
             return false;
         }
 

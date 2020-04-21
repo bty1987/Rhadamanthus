@@ -26,6 +26,12 @@
             0: '初始',
             1: '开工',
             2: '已完工'
+        },
+
+        designStatusArr: {
+            0: '待设计',
+            1: '设计中',
+            2: '已完成'
         }
     };
     
@@ -248,6 +254,16 @@
         }, false);
     });
 
+    com.focusPage("#drawing").on("click", function () {
+        var options = {
+           "constructionInfo.orderId": contract.decorationOrderId
+        }
+
+          com.post(api.construction.sendConstructionInfoForConfirm,options,function (res) {
+            com.showAlert(com.info,"操作成功");
+        });
+    });
+
     com.focusPage("#updateProject").on("click", function () {
 
         var options = {
@@ -259,7 +275,8 @@
             "constructionInfo.finishTime": order.infoItems.finishTime.val() + " 00:00:00",
             "constructionInfo.keyTime": order.infoItems.keyTime.val() + " 00:00:00",
             "constructionInfo.drawlineTime": order.infoItems.drawlineTime.val() + " 00:00:00",
-            "constructionInfo.comment": order.infoItems.comment.val()
+            "constructionInfo.comment": order.infoItems.comment.val(),
+            "constructionInfo.isConfirmPricture": 1
         };
 
         com.post(api.construction.updateConstructionInfoByOrderId,options,function (res) {
@@ -386,6 +403,9 @@
                             case "contractTime":
                                 propertyArr.push(["签单时间:", v.contractTime, "green"]);
                                 break;
+                            case "sdesignTime":
+                                propertyArr.push(["设计时间:", v.sdesignTime, "green"]);
+                                break;
                             case "decorationType":
                                 propertyArr.push(["类型:", order.type[v.type], "red"]);
                                 break;
@@ -394,6 +414,9 @@
                                 break;
                             case "projectStatus":
                                 propertyArr.push(["工程状态:", order.projectStatusArr[v.projectStatus], "red"]);
+                                break;
+                            case "designStatus":
+                                propertyArr.push(["设计状态:", order.designStatusArr[v.designStatus], "red"]);
                                 break;
                             case "payScale":
                                 propertyArr.push(["付款比例:", v.paySacle, "green"]);
@@ -432,7 +455,7 @@
                     });
 
                     btnContract.click(function () {
-                        modalAgreementModal(v.orderId, v.customer.cid);
+                        modalAgreementModal(v.orderId, v.customer.cid, v);
                     });
 
                     btnAddMinus.click(function () {
@@ -640,7 +663,7 @@
         };
 
         //合同
-       var modalAgreementModal = function (decorationOrderId, cid) {
+       var modalAgreementModal = function (decorationOrderId, cid , data) {
            params.decorationOrderId = decorationOrderId;
            params.cid = cid;
            com.switchPage(api.index.decorationContractIndex.url);
@@ -677,6 +700,7 @@
             params.decorationOrderId = decorationOrderId;
             params.type = type;
             params.status = status;
+            params["viewNode"] = Object.values(pageConfig.nodes);
             params.historyPage = api.index.decorationIndex.url;
             com.switchPage(api.index.decorationFinalSettlementIndex.url);
         }

@@ -23,7 +23,8 @@ jQuery(function () {
             supervisorName: com.focusPage('#supervisorName'),
             orderAddr: com.focusPage('#orderAddr'),
             schedule: com.focusPage('#schedule'),
-            fetchTime: com.focusPage('#fetchTime')
+            fetchTime: com.focusPage('#fetchTime'),
+            comment: com.focusPage('#comment')
         },
         constructionNode: {}
     };
@@ -188,6 +189,7 @@ jQuery(function () {
             "accessories.supervisor.userId": accessories.postData.supervisor,
             "accessories.fetchTime": accessories.rightitems.fetchTime.val() + " 00:00:00",
             "accessories.schedule": accessories.rightitems.schedule.val(),
+            "accessories.comment": accessories.rightitems.comment.val(),
             "accessories.total": total
         };
 

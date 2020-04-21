@@ -451,4 +451,49 @@ $.extend(api, {
             }
         },
         deleteAoodsCost: {url: "deleteAoodsCost.do"},
+
+        queryHouseLayout:{url:"queryHouseLayout.do"},
+        addHouseLayout:{url:"addHouseLayout.do", server: "communion"},
+        deleteHouseLayout:{url:"deleteHouseLayout.do", server: "communion"},
+
+        //定额商品
+        queryNormriceByQiid: {
+            url: "queryNormriceByQiid.do",
+            type: "query",
+            tranargs: [{
+                result: "normrices",
+                args: ["salary"]
+            }]
+        },
+        addNormrice: {
+            url: "addNormrice.do",
+            type: "update",
+            tranargs: {
+                args: ["normrice.salary"]
+            }
+        },
+        deleteNormrice: {url: "deleteNormrice.do"},
+
+        // 定额工费
+        queryNormoodByQiid: {
+            url: "queryNormoodByQiid.do",
+            type: "query",
+            tranargs: [{
+                result: "normoods",
+                args: ["num"]
+            }]
+        },
+        addNormood: {
+            url: "addNormood.do",
+            type: "update",
+            tranargs: {
+                args: ["normood.num"]
+            }
+        },
+        deleteNormood: {url: "deleteNormood.do"},
+		pageChart:{url:"pageChart.do"},
+		queryChart:{url:"queryChart.do"},
+		queryChartForLogin:{url:"queryChartForLogin.do"},
+		queryChartByRid:{url:"queryChartByRid.do"},
+		updateRoleChartByRid:{url:"updateRoleChartByRid.do"},
 }});

@@ -107,6 +107,32 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
+	public void addAdvancePayment(AdvancePaymentVO advancePayment) throws FLException {
+		
+		String orderId = advancePayment.getDecoration().getOrderId();
+		
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+		
+		if(decorationPO == null){
+			throw new FLException(140013, "订单不存在");
+		}
+		
+		AdvancePaymentPO advancePaymentPO = null;
+		
+		advancePaymentPO = advancePaymentDao.queryAdvancePaymentByOrderId(orderId);
+		
+		if(advancePaymentPO != null){
+			throw new FLException(150033, "款项类型已存在");
+		}
+		
+		advancePaymentPO = new AdvancePaymentPO(decorationPO);
+		
+		advancePaymentDao.save(advancePaymentPO);
+		
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
 	public int updateAdvancePayment(PaymentVO paymentVO, int company) throws FLException {
 		
 		long recharge = 0;

@@ -69,6 +69,12 @@ public class DecorationPO implements Serializable {
 	public static final short PROJECTSTATUS_START_INT = 1; // 开工
 
 	public static final short PROJECTSTATUS_FINISH_INT = 2; // 完工
+	
+	public static final short DESIGNSTATUS_INITIA_INT = 0;//待设计 
+	
+	public static final short DESIGNSTATUS_CONDUCT_INT = 1;// 设计中
+	
+	public static final short DESIGNSTATUS_END_INT = 2;// 已完成
 
 	public static final short TYPE_PART_INT = 0;
 
@@ -144,10 +150,16 @@ public class DecorationPO implements Serializable {
 
 	private Timestamp accountTime;
 	
+	private Timestamp sdesignTime;
+	
+	private Timestamp edesignTime ;
+	
 	private Timestamp precontractTime;
 
 	private short status;
 
+	private short designStatus;
+	
 	private short projectStatus;
 
 	private int otherStatus;
@@ -292,6 +304,22 @@ public class DecorationPO implements Serializable {
 		this.createTime = createTime;
 	}
 	
+	public Timestamp getSdesignTime() {
+		return sdesignTime;
+	}
+
+	public void setSdesignTime(Timestamp sdesignTime) {
+		this.sdesignTime = sdesignTime;
+	}
+
+	public Timestamp getEdesignTime() {
+		return edesignTime;
+	}
+
+	public void setEdesignTime(Timestamp edesignTime) {
+		this.edesignTime = edesignTime;
+	}
+	
 	public Timestamp getPrecontractTime() {
 		return precontractTime;
 	}
@@ -314,6 +342,14 @@ public class DecorationPO implements Serializable {
 
 	public void setType(short type) {
 		this.type = type;
+	}
+	
+	public short getDesignStatus() {
+		return designStatus;
+	}
+
+	public void setDesignStatus(short designStatus) {
+		this.designStatus = designStatus;
 	}
 
 	public short getProjectStatus() {
@@ -509,8 +545,7 @@ public class DecorationPO implements Serializable {
 	public void setAddition(DecorationAdditionPO addition) {
 		this.addition = addition;
 	}
-	
-	
+
 	@Column(name = "grade")
 	public String getGrade() {
 		return grade;

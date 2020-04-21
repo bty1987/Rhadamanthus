@@ -43,11 +43,10 @@ jQuery(function($) {
 
 		var activityItems = res.activityItems;
 
-		for(var i=0;i<activityItems.length;i++){
-			var _activityItem = activityItems[i];
-			
-			addActivityItemForDiv(activityItem.items.activityItems, _activityItem);
-		}
+		$.each(activityItems, function(i, v){
+			addActivityItemForDiv(activityItem.items.activityItems, v);
+		})
+
 	});
 	
 	function addActivityItemForDiv(_activityItems, _activityItem){
@@ -111,6 +110,7 @@ jQuery(function($) {
 
 		com.post(api.information.addActivityItem, options, function(res){
 			com.showAlert(com.info, "操作成功");
+
 			if(activityItem.editFlag){
 				com.focusPage("#pricing_" + activityItem.activityItemPostData.aiid).remove();
 			}
@@ -123,17 +123,20 @@ jQuery(function($) {
 	}
 
 	function changeAwardStock () {
-		if(activityItem.items.awardStockstype.val()!=""){
+		if(activityItem.items.awardStockstype.val() != ""){
 			var awardStockstypes = activityItem.items.awardStockstype.val();
-			awardStockstypes = awardStockstypes==2?0:(awardStockstypes==3?1:awardStockstypes);
+
+			awardStockstypes = awardStockstypes == 2 ? 0 : (awardStockstypes == 3 ? 1 : awardStockstypes);
+
 			var options = {
 				"awardStock.type": awardStockstypes,
 				"awardStock.storeroom": params.type
 			};
-			com.post(api.information.queryAwardStockByType, options, function(res){
 
+			com.post(api.information.queryAwardStockByType, options, function(res){
 				activityItem.items.name.bindData(res.awardStocks, "asId", "name",true);
 			});
+
 			activityItem.items.awardStockshide.removeClass("hide");
 		}
 	}

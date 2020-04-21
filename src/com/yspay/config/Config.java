@@ -1,5 +1,6 @@
 package com.yspay.config;
 
+
 public class Config {
 
 	public static final String PASSWORD = "Fanglin1918!";
@@ -14,5 +15,7 @@ public class Config {
 	public static final String DIVISION_URL = "https://commonapi.ysepay.com/gateway.do";
 
 	public static final String DIVISION_REFUND_URL = "https://commonapi.ysepay.com/gateway.do";
+
+	public static final String NOTIFY_URL = "";
 
 }

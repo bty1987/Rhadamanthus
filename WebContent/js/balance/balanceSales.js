@@ -3,7 +3,20 @@ $(function (){
     var balanceSales={
 
         bid : params.bid,
+
+        types : {},
+        onetypes : {},
+        statues : {}
+
     };
+
+    com.post(api.ds.balance, {}, function(res){
+
+        balanceSales.types = res.isBalanceSalesType.split("key", "value");
+        balanceSales.onetypes = res.isBalanceSalesNoeType.split("key", "value");
+        balanceSales.statues = res.isBalanceSalesStatus.split("key", "value");
+
+    });
 
     var initList = function (v) {
 
@@ -31,10 +44,10 @@ $(function (){
                     ["楼盘地址:", v.sales.house.village.name + " " + v.sales.house.houseNumber,"grey"],
                     ["品类:",v.sales.category, "grey" ],
                     ["品牌:",v.sales.brand, "grey" ],
-                    ["类型:", v.type == 0 ? "购货" : v.type == 1 ? "预结算退货" : "结算退货", "red"],
+                    ["类型:", balanceSales.types[v.type], "red"],
                     ["结算值:", v.pbalance, "blue"],
-                    ["一类:", v.onetype == 0 ? "购货" : v.onetype == 1 ? "退货" : v.onetype == 2 ? "全退" : "倒单", "red"],
-                    ["状态:", v.status == 0 ? "预结算" : v.status == 1 ? "厂商结算" : "结算", "red"],
+                    ["一类:", balanceSales.onetypes[v.onetype], "red"],
+                    ["状态:", balanceSales.statues[v.status], "red"],
                 ];
 
                 $.each(propertyArr, function (index, value) {

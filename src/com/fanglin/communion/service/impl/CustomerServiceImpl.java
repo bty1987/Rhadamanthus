@@ -433,9 +433,16 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130028, "客户状态不可操作");
 		}
 
-		String redirect = Signature.authenticate(customerPO);
+		String redirect = "";
 
-		customerDao.update(customerPO);
+		if (customerPO.getAuthurl() != null && !"".equals(customerPO.getAuthurl())) {
+			redirect = customerPO.getAuthurl();
+		} else {
+			redirect = Signature.authenticate(customerPO);
+			customerDao.update(customerPO);
+		}
+
+		System.out.println(redirect);
 
 		return redirect;
 	}
@@ -457,14 +464,14 @@ public class CustomerServiceImpl implements CustomerService {
 		Signature.person(customerPO);
 
 		customerDao.update(customerPO);
-		
+
 		customerVO.setName(customerPO.getName());
 		customerVO.setGender(customerPO.getGender());
 		customerVO.setPhone(customerPO.getPhone());
 		customerVO.setAddress(customerPO.getAddress());
 		customerVO.setRelationshipType(customerPO.getRelationshipType());
 		customerVO.setIdentity(customerPO.getIdentity());
-		
+
 		return 0;
 	}
 

@@ -14,13 +14,7 @@ var selectionDetail = (function(){
         items: {
             goodsName: com.focusPage('#goodsName')
         },
-        boxs: {
-            quotationItemList: com.focusPage('#quotationItemList'),
-            extensionAddItemList: com.focusPage('#extensionAddItemList'),
-            extensionReduceItemList: com.focusPage('#extensionReduceItemList'),
-            addReduceAddItemList: com.focusPage('#addReduceAddItemList'),
-            addReduceReduceItemList: com.focusPage('#addReduceReduceItemList')
-        },
+        selectionBox: com.focusPage('#selectionBox'),
         totals: {
             total: com.focusPage('#total'),
             quotationTotal: com.focusPage('#quotationTotal'),
@@ -65,24 +59,21 @@ var selectionDetail = (function(){
         calculateAllDomainTotal: function() {
             var quotationTotal = 0, extensionAddTotal = 0, extensionReduceTotal = 0,addReduceAddTotal = 0,addReduceMinusTotal = 0;
 
-            selection.boxs.quotationItemList.find('.widget-box').each(function(i, v){
-                quotationTotal = utils.accAdd($(this).attr('data-total'), quotationTotal);
-            });
+            selection.selectionBox.find('.widget-box').each(function(i, v){
 
-            selection.boxs.extensionAddItemList.find('.widget-box').each(function(i, v){
-                extensionAddTotal = utils.accAdd($(this).attr('data-total'), extensionAddTotal);
-            });
-
-            selection.boxs.extensionReduceItemList.find('.widget-box').each(function(i, v){
-                extensionReduceTotal = utils.accAdd($(this).attr('data-total'), extensionReduceTotal);
-            });
-
-            selection.boxs.addReduceAddItemList.find('.widget-box').each(function(i, v){
-                addReduceAddTotal = utils.accAdd($(this).attr('data-total'), addReduceAddTotal);
-            });
-
-            selection.boxs.addReduceReduceItemList.find('.widget-box').each(function(i, v){
-                addReduceMinusTotal = utils.accAdd($(this).attr('data-total'), addReduceMinusTotal);
+                var type = $(this).attr('data-type');
+                switch (type) {
+                    case "0": quotationTotal = utils.accAdd($(this).attr('data-total'), quotationTotal);
+                        break;
+                    case "1": extensionAddTotal = utils.accAdd($(this).attr('data-total'), extensionAddTotal);
+                        break;
+                    case "2": extensionReduceTotal = utils.accAdd($(this).attr('data-total'), extensionReduceTotal);
+                        break;
+                    case "3": addReduceAddTotal = utils.accAdd($(this).attr('data-total'), addReduceAddTotal);
+                        break;
+                    case "4": addReduceMinusTotal = utils.accAdd($(this).attr('data-total'), addReduceMinusTotal);
+                        break;
+                }
             });
 
             var total = utils.accSub(utils.accSub(utils.accAdd(utils.accAdd(quotationTotal, extensionAddTotal), addReduceAddTotal), extensionReduceTotal), addReduceMinusTotal);
@@ -163,7 +154,7 @@ var selectionDetail = (function(){
                     "selection.addReduceAddTotal": selection.basicParams['selection.addReduceAddTotal'],
                     "selection.addReduceMinusTotal": selection.basicParams['selection.addReduceMinusTotal']
                 };
-                
+
                 com.post(api.quotation.addSelectionItem, option, function(res){
                     painter.createSelectionItem(res.selectionItem);
                     painter.updateHeight(selection.nowEditQuote.next());
@@ -221,7 +212,7 @@ var selectionDetail = (function(){
 
         createFunctionArea: function(name, type) {
 
-            var $domain = $('<div></div>').addClass('widget-box transparent').css({"margin-bottom" : "20px"}).attr({"data-total": 0, "data-name": name});
+            var $domain = $('<div></div>').addClass('widget-box transparent').css({"margin-bottom" : "20px"}).attr({"data-total": 0, "data-type": type, "data-name": name});
             var $dhead = $('<div></div>').addClass('widget-header');
             var $hname = $('<h5></h5>').append($('<strong></strong>').html(selectionItem.type[type] + "-" + name));
 
@@ -230,14 +221,15 @@ var selectionDetail = (function(){
 
             return $domain;
         },
-        createQuote: function(areaId, quoteId, itemName, type, num) {
+        createQuote: function(areaId, quoteId, quotationItemId, itemName, type, num) {
 
             var $rowDiv = $('<div></div>').addClass('row').css({'border-bottom': '1px solid #dce8f1', 'margin': '0 2px 0 2px'});
-            var $selectionItemLi = $('<li></li>').addClass("fl-quo-item col-md-6").prop('id', quoteId + '-' + type);
+            var $selectionItemLi = $('<li></li>').addClass("fl-quo-item col-md-6").prop('id', areaId + '-' + quoteId + '-' + type);
             var $quoteItemLi = $('<li></li>').addClass('fl-quo-item col-md-6').css({'border': 'none', 'border-right': '1px solid #dce8f1'}).attr({
                 'data-quoteId': quoteId,
                 'data-type': type,
-                'data-areaId': areaId
+                'data-areaId': areaId,
+                'data-quotationItemId': quotationItemId
             });
 
             var lineSet = [
@@ -256,13 +248,13 @@ var selectionDetail = (function(){
 
             var $btnSelection = $('<a></a>').addClass(' btn btn-minier btn-inverse').html('选材').css('visibility', 'hidden');
 
-            if (quoteId != null && quoteId != 0){
+            if (quotationItemId != null && quotationItemId != 0 && type != 4){
                 $btnSelection.css('visibility', 'visible');
             }
 
             $btnSelection.click(function (e) {
                 selection.nowEditQuote = $quoteItemLi;
-                selection.getGoodsInformation(quoteId);
+                selection.getGoodsInformation(quotationItemId);
             });
 
             $quoteItemLi.append($btnCell.append($btnCellWrap.append($btnSelection)));
@@ -271,11 +263,10 @@ var selectionDetail = (function(){
             return $rowDiv;
         },
         createSelectionItem: function(data) {
-            var $selectionItemLi = com.focusPage('#' + data.quoteId + '-' + data.type).empty();
+            var $selectionItemLi = com.focusPage('#' + data.areaId + '-' + data.quoteId + '-' + data.type).empty();
 
             var lineSet = [
                 ['name green', data.goods.name],
-                ['selling red', data.selling],
                 ['num blue', data.num]
             ];
 
@@ -319,77 +310,91 @@ var selectionDetail = (function(){
             var orderId = params.decorationOrderId;
             var editFlg = params.editFlg;
             var quotationId = null;
+            var selectionItemType = 0;
+
             editFlg ? quotationId = params.quotationId : com.post(api.quotation.queryQuotationForDefaultByOrderId, {'quotation.orderId': orderId}, function(e){
                 quotationId = e.quotation.qid;
             }, null, false);
 
-            com.post(api.quotation.querySelectionByQid, {'selection.qid': quotationId}, function(res){
+            com.post(api.quotation.querySelectionByQid, {'selection.qid': quotationId}, function(queryRes){
 
-                selection.basicParams['selection.sid'] = res.selection.sid;
-                selection.basicParams['selection.qid'] = res.selection.qid;
-                selection.basicParams['selection.status'] = res.selection.status;
-                selection.basicParams['selection.total'] = res.selection.total;
-                selection.basicParams['selection.quotationTotal'] = res.selection.quotationTotal;
-                selection.basicParams['selection.extensionAddTotal'] = res.selection.extensionAddTotal;
-                selection.basicParams['selection.extensionReduceTotal'] = res.selection.extensionReduceTotal;
-                selection.basicParams['selection.addReduceAddTotal'] = res.selection.addReduceAddTotal;
-                selection.basicParams['selection.addReduceMinusTotal'] = res.selection.addReduceMinusTotal;
-
-            }, null, false);
-
-            selectionItem.init();
-
-            com.post(api.quotation.queryQuotationFunctionAreaByQuotationId, {'quotation.qid' : selection.basicParams['selection.qid']}, function(res){
-                if (res.quotationFunctionAreas && res.quotationFunctionAreas.length) {
-                    $.each(res.quotationFunctionAreas, function(i, v){
-                        createQuote(v, 0);
+                if (queryRes.selection == null) {
+                    com.showConfirm("是否创建选材单", function () {
+                        com.post(api.quotation.addSelection, {"selection.qid": quotationId}, function(addRes) {
+                            loadPage(addRes);
+                        }, null, false);
+                    }, function() {
+                        com.switchPage(selection.historyPage);
                     });
                 }
+                loadPage(queryRes);
             }, null, false);
 
-            com.post(api.quotation.queryExtensionByOrderId, {'extension.orderId': orderId}, function(res){
-                if (res.extensions && res.extensions.length) {
-                    $.each(res.extensions, function(i, v){
-                        var type = v.type == 0 ? 1 : 2;
-                        createQuote(v, type);
-                    });
+            function loadPage(res) {
+
+                if (res.selection != null) {
+
+                    selection.basicParams['selection.sid'] = res.selection.sid;
+                    selection.basicParams['selection.qid'] = res.selection.qid;
+                    selection.basicParams['selection.status'] = res.selection.status;
+                    selection.basicParams['selection.total'] = res.selection.total;
+                    selection.basicParams['selection.quotationTotal'] = res.selection.quotationTotal;
+                    selection.basicParams['selection.extensionAddTotal'] = res.selection.extensionAddTotal;
+                    selection.basicParams['selection.extensionReduceTotal'] = res.selection.extensionReduceTotal;
+                    selection.basicParams['selection.addReduceAddTotal'] = res.selection.addReduceAddTotal;
+                    selection.basicParams['selection.addReduceMinusTotal'] = res.selection.addReduceMinusTotal;
+
+                    selectionItem.init();
+
+                    com.post(api.quotation.queryQuotationFunctionAreaByQuotationId, {'quotation.qid' : selection.basicParams['selection.qid']}, function(res){
+                        if (res.quotationFunctionAreas && res.quotationFunctionAreas.length) {
+                            $.each(res.quotationFunctionAreas, function(i, v){
+                                v.type != 0 ? createItem(v, selectionItemType) : null;
+                            });
+                        }
+                    }, null, false);
+
+                    com.post(api.quotation.queryExtensionByOrderId, {'extension.orderId': orderId}, function(res){
+                        if (res.extensions && res.extensions.length) {
+                            $.each(res.extensions, function(i, v){
+                                selectionItemType = v.type == 0 ? 1 : 2;
+                                createItem(v, selectionItemType);
+                            });
+                        }
+                    }, null, false);
+
+                    com.post(api.addReduce.queryAddReduceByOrderId, {'addReduce.orderId': orderId}, function(res){
+                        if (res.addReduces && res.addReduces.length) {
+                            $.each(res.addReduces, function(i, v){
+                                selectionItemType = v.type == 0 ? 3 : 4;
+                                createItem(v, selectionItemType);
+                            });
+                        }
+                    }, null, false);
+
+                    com.post(api.quotation.querySelectionItem, {'selection.sid': selection.basicParams['selection.sid']}, function(res){
+                        if (res.selectionItems && res.selectionItems.length) {
+                            $.each(res.selectionItems, function(i, v){
+                                var price = utils.accMul(v.selling, v.num);
+                                var $selectionItemLi = painter.createSelectionItem(v).attr('data-price', price);
+                                var $functionArea = $selectionItemLi.parents('.widget-box');
+
+                                $functionArea.attr('data-total', utils.accAdd($functionArea.attr('data-total'), price));
+
+                                painter.updateHeight($selectionItemLi);
+                            });
+                        }
+                    }, null, false);
+
+                    selection.init();
                 }
-            }, null, false);
+            }
 
-            com.post(api.addReduce.queryAddReduceByOrderId, {'addReduce.orderId': orderId}, function(res){
-                if (res.addReduces && res.addReduces.length) {
-                    $.each(res.addReduces, function(i, v){
-                        var type = v.type == 0 ? 3 : 4;
-                        createQuote(v, type);
-                    });
-                }
-            }, null, false);
+            function createItem(functionArea, type) {
 
-            com.post(api.quotation.querySelectionItem, {'selection.sid': selection.basicParams['selection.sid']}, function(res){
-                if (res.selectionItems && res.selectionItems.length) {
-                    $.each(res.selectionItems, function(i, v){
-                        var price = utils.accMul(v.selling, v.num);
-                        var $selectionItemLi = painter.createSelectionItem(v).attr('data-price', price);
-                        var $functionArea = $selectionItemLi.parents('.widget-box');
+                var selectionBox = selection.selectionBox;
 
-                        $functionArea.attr('data-total', utils.accAdd($functionArea.attr('data-total'), price));
-
-                        painter.updateHeight($selectionItemLi);
-                    });
-                }
-            }, null, false);
-
-            selection.init();
-
-            function createQuote(functionArea, type) {
-                var boxs = [
-                    selection.boxs.quotationItemList,
-                    selection.boxs.extensionAddItemList,
-                    selection.boxs.extensionReduceItemList,
-                    selection.boxs.addReduceAddItemList,
-                    selection.boxs.addReduceReduceItemList
-                ];
-                var list = [0, 1];
+                var subtypes = [0, 1];
                 var name = type === 0 ? functionArea.functionAreaName : functionArea.content;
 
                 var $domain = painter.createFunctionArea(name, type);
@@ -397,37 +402,33 @@ var selectionDetail = (function(){
 
                 if (type === 0) {
                     $.each(functionArea.quotationFunctionAreaItems, function(i, v){
-                        if (!list.includes(v.subtype)) {
-                            var $quoteItem = painter.createQuote(v.quotationFunctionAreaId,  v.quotationItemId, v.itemName, 0, v.num);
+                        if (!subtypes.includes(v.subtype)) {
+                            var $quoteItem = painter.createQuote(v.quotationFunctionAreaId, v.qfaiId, v.quotationItemId, v.itemName, 0, v.num);
                             $ul.append($quoteItem);
                         }
                     });
-                    boxs[type].append($domain.append($ul));
                 } else if (type === 1 || type === 2) {
                     com.post(api.quotation.queryExtensionItemByEid, {'extensionItem.eid': functionArea.eid}, function(res){
                         $.each(res.extensionItems, function(i, v){
-                            if (!list.includes(v.subtype)) {
-                                var $quoteItem = painter.createQuote(v.eid, v.quoteItemId, v.itemName, type, v.num);
+                            if (!subtypes.includes(v.subtype)) {
+                                var $quoteItem = painter.createQuote(v.eid, v.eiid, v.quoteItemId, v.itemName, type, v.num);
                                 $ul.append($quoteItem);
                             }
                         });
-
-                        boxs[type].append($domain.append($ul));
                     },null, false);
                 } else {
                     com.post(api.addReduce.queryAddReduceItemByAddReduceId, {'addReduce.arId': functionArea.arId}, function(res){
                         $.each(res.addReduceItems, function(i, v){
-                            if (!list.includes(v.subtype)) {
+                            if (!subtypes.includes(v.subtype)) {
                                 var quotationItemId = functionArea.type == 0 ? v.quoteItemId : v.quotationItemId;
-
-                                var $quoteItem = painter.createQuote(v.arId, quotationItemId, v.itemName, type, v.num);
+                                var $quoteItem = painter.createQuote(v.arId, v.ariId, quotationItemId, v.itemName, type, v.num);
                                 $ul.append($quoteItem);
                             }
                         });
-
-                        boxs[type].append($domain.append($ul));
                     },null, false);
                 }
+
+                selectionBox.append($domain.append($ul));
             }
         }
     }

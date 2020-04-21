@@ -1,0 +1,89 @@
+
+<div>
+    <div id="fl-statement">
+        <div class="page-header">
+            <h1>楼盘
+                <small><i class="icon-double-angle-right"></i>户型</small>
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="row" style="margin-left:10px;margin-right:10px">
+                <div id="list"></div>
+                <div>
+                    <div>
+                        <a class="btn btn-minier btn-primary pull-left" id="addHouseTypeBtn"
+                           style="margin-top: 7px;margin-left: 2px"><i class="icon-plus bigger-110"></i>添加</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="houseTypeModal" tabindex="-1">
+        <div class="modal-dialog" style="margin-top: 10%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span
+                            class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="addModalLabel">户型</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange">户型</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="col-sm-1 v_required v_number" style="float: none;" id="houseTypeOne" /> 室
+                                <input type="text" class="col-sm-1 v_required v_number" style="float: none;" id="houseTypeTwo" /> 厅
+                                <input type="text" class="col-sm-1 v_required v_number" style="float: none;" id="houseTypeThr" /> 厨
+                                <input type="text" class="col-sm-1 v_required v_number" style="float: none;" id="houseTypeFour" /> 卫
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">说明</label>
+                            <div class="col-sm-9">
+                                <textarea id="comment" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveDataBtn" class="btn btn-primary">确认</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="houseLayoutModal" tabindex="-1">
+        <div class="modal-dialog" style="width:60%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">户型图片信息</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="row-fluid">
+                                <ul class="ace-thumbnails" id="houseLayoutDrawing"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class=" col-sm-1" style="padding-top:2px;float: right; padding-right: 100px">
+                        <a class="form-group" id="houseLayoutUpload"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/data/houseLayout.js']);
+</script>

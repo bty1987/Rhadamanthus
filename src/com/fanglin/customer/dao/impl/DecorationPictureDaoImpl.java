@@ -14,22 +14,20 @@ import com.fanglin.utils.Paging;
 @Repository("decorationPictureOrderDao")
 public class DecorationPictureDaoImpl extends DaoImpl<DecorationPicturePO> implements DecorationPictureDao {
 
-	public DecorationPictureDaoImpl(){
+	public DecorationPictureDaoImpl() {
 		super(DecorationPicturePO.class);
 	}
-	
+
 	@Override
-	public List<DecorationPicturePO> queryCusDecorationPicture(Paging paging,List<Filter> filters, String orderId) {
-		
+	public List<DecorationPicturePO> queryCusDecorationPicture(Paging paging, List<Filter> filters, String orderId) {
+
 		PagingQuery<DecorationPicturePO> query = pagingQuery(paging, DecorationPicturePO.class);
 
 		query.add(query.getCriterion("orderId", orderId, "eq"));
-		
+
 		query.add(Restrictions.eq(DecorationPicturePO.COLUMN_STATUS_STR, DecorationPicturePO.STATUS_ENABLE_INT));
-		
-		query.add(Restrictions.eq(DecorationPicturePO.COLUMN_TYPE_STR, DecorationPicturePO.TYPE_EPICTURE_INT));
-		
+
 		return query.list();
 	}
-	
+
 }

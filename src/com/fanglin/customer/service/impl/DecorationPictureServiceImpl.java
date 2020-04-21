@@ -17,33 +17,31 @@ import com.fanglin.utils.Paging;
 @Service("decorationPictureService")
 @Transactional(readOnly = true)
 public class DecorationPictureServiceImpl implements DecorationPictureService {
-	
+
 	@Autowired
 	private DecorationPictureDao decorationPictureDao;
 
 	@Override
-	public void queryCusDecorationPicture(Paging paging, List<Filter> filters,String orderId) {
-			
-			List<DecorationPicturePO> decorationPicturePOs = decorationPictureDao.queryCusDecorationPicture(paging, filters, orderId);
-			List<DecorationPictureVO> decorationPictureVOs = new ArrayList<DecorationPictureVO>();
-			
-			if(decorationPicturePOs.size() != 0 && decorationPicturePOs != null){
-				
-				for(DecorationPicturePO decorationPicturePO: decorationPicturePOs){
-					
-					DecorationPictureVO decorationPictureVO=new DecorationPictureVO();
-					
-					decorationPictureVO.setName(decorationPicturePO.getName());
-					decorationPictureVO.setPath(decorationPicturePO.getPath());
-					decorationPictureVO.setType(decorationPicturePO.getType());
-					
-					decorationPictureVOs.add(decorationPictureVO);
-					
-				}
-				
+	public void queryCusDecorationPicture(Paging paging, List<Filter> filters, String orderId) {
+
+		List<DecorationPicturePO> decorationPicturePOs = decorationPictureDao.queryCusDecorationPicture(paging, filters, orderId);
+		List<DecorationPictureVO> decorationPictureVOs = new ArrayList<DecorationPictureVO>();
+
+		if (decorationPicturePOs.size() != 0 && decorationPicturePOs != null) {
+
+			for (DecorationPicturePO decorationPicturePO : decorationPicturePOs) {
+
+				DecorationPictureVO decorationPictureVO = new DecorationPictureVO();
+
+				decorationPictureVO.setName(decorationPicturePO.getName());
+				decorationPictureVO.setPath(decorationPicturePO.getPath());
+				decorationPictureVO.setType(decorationPicturePO.getType());
+
+				decorationPictureVOs.add(decorationPictureVO);
 			}
-			
-			paging.setData(decorationPictureVOs);
+		}
+
+		paging.setData(decorationPictureVOs);
 	}
-		
+
 }

@@ -12,6 +12,7 @@
 package com.fanglin.quotation.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.fanglin.core.dao.Dao;
 import com.fanglin.quotation.po.QuotationPO;
@@ -28,8 +29,12 @@ public interface QuotationDao extends Dao<QuotationPO> {
 	
 	public int countQuotationByOrderId(String orderId, short status);
 	
+	public Map<String, Integer> countQuotationForNormood(List<Long> qiids);
+	
+	public Map<String, Integer> countQuotationForNormrice(List<Long> qiids);
+	
 	public int updateQuotationForStatusByOrderId(String orderId, short status);
 
 	public int clearQuotationForDefaultByOrderId(String orderId);
-
+	
 }

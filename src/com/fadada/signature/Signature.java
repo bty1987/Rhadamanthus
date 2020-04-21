@@ -6,7 +6,9 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -16,6 +18,8 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Service;
+
+import Decoder.BASE64Decoder;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fadada.bean.Contract;
@@ -39,8 +43,8 @@ public class Signature {
 	private static String VERSION = "2.0";
 	private static String HOST = "https://testapi.fadada.com:8443/api/";
 
-	private static String NOTIFY_URL_STR = "http://fanglin.vip";
-	private static String RETURN_URL_STR = "http://fanglin.vip";
+	private static String NOTIFY_URL_STR = "";
+	private static String RETURN_URL_STR = ""; // http://fanglin.vip:30080/communion/signatureCallback.do
 
 	private static String configFilePathName = "/fadada.properties";
 
@@ -112,9 +116,12 @@ public class Signature {
 
 		JSONObject data = response.getJSONObject("data");
 
-		customerPO.setToken(data.getString("transactionNo"));
+		String authurl = decode(response.getJSONObject("data").getString("url"));
 
-		return decode(response.getJSONObject("data").getString("url"));
+		customerPO.setToken(data.getString("transactionNo"));
+		customerPO.setAuthurl(authurl);
+
+		return authurl;
 	}
 
 	public static void person(CustomerPO customerPO) throws FLException {
@@ -171,11 +178,13 @@ public class Signature {
 		}
 	}
 
-	public static void signature(CustomerPO customerPO, String name) throws FLException {
+	public static void signature(CustomerPO customerPO, String data) throws FLException {
 
 		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
 
-		String result = base.invokeaddSignature(customerPO.getSignno(), squarepng(name));
+		System.out.println(zoom(data));
+
+		String result = base.invokeaddSignature(customerPO.getSignno(), zoom(data));
 
 		System.out.println(result);
 
@@ -188,6 +197,33 @@ public class Signature {
 		if (response.getInteger("code") != 1) {
 			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
 		}
+	}
+
+	public static void template(String templateId, String path, String url) throws FLException {
+
+		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
+
+		File file = new File(path);
+		String doc_url = url;
+
+		if (!file.exists()) {
+			throw new FLException(-3, "文件上传失败");
+		}
+
+		String result = base.invokeUploadTemplate(templateId, file, doc_url);
+
+		System.out.println(result);
+
+		JSONObject response = JSONObject.parseObject(result);
+
+		if (response == null) {
+			throw new FLException(130030, "合同模版上传失败");
+		}
+
+		if (response.getInteger("code") != 1) {
+			throw new FLException(130030, String.format("合同模版上传失败,%s", response.getString("msg")));
+		}
+
 	}
 
 	public static void generate(Contract contract, JSONObject params) throws FLException {
@@ -213,8 +249,8 @@ public class Signature {
 			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
 		}
 
-		// contract.download(response.getString("download_url"));
-		// contract.viewpdf(response.getString("viewpdf_url"));
+		contract.download(response.getString("download_url"));
+		contract.viewpdf(response.getString("viewpdf_url"));
 	}
 
 	public static void autosign(Signet signet, Contract contract) throws FLException {
@@ -294,6 +330,7 @@ public class Signature {
 		return getFileForUUID.invokeFileForUUID(uuid);
 	}
 
+	@SuppressWarnings("unused")
 	private static String squarepng(String message) throws FLException {
 
 		int width = 100;
@@ -357,4 +394,43 @@ public class Signature {
 		return bizContent;
 	}
 
+	public static String zoom(String data) throws FLException {
+
+		try {
+			BASE64Decoder decoder = new BASE64Decoder();
+
+			byte[] b = decoder.decodeBuffer(data);
+			for (int i = 0; i < b.length; ++i) {
+				if (b[i] < 0) {// 调整异常数据
+					b[i] += 256;
+				}
+			}
+
+			BufferedImage img = ImageIO.read(new ByteArrayInputStream(b));
+
+			int _width = 100;
+			int _height = 70;
+
+			java.awt.Image _img = img.getScaledInstance(_width, _height, 1); // 获取缩放后的Image对象
+			BufferedImage image = new BufferedImage(_width, _height, BufferedImage.TYPE_INT_RGB); // 新建一个和Image对象相同大小的画布
+			Graphics2D graphics = image.createGraphics(); // 获取画笔
+			graphics.drawImage(_img, 0, 0, null); // 将Image对象画在画布上,最后一个参数,ImageObserver:接收有关 Image 信息通知的异步更新接口,没用到直接传空
+
+			graphics.dispose(); // 释放资源
+
+			ByteArrayOutputStream os = new ByteArrayOutputStream();
+
+			ImageIO.write(image, "png", os);
+
+			return new String(Base64.encodeBase64(os.toByteArray()));
+		} catch (Exception e) {
+			throw new FLException(140069, "客户签名失败");
+		}
+	}
+
+	public static void main(String[] args) throws FLException {
+
+		Signature.template("TEMP202004060001", "D:\\0405测试合同模板.pdf", "");
+
+	}
 }

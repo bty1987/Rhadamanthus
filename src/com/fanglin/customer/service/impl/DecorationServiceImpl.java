@@ -239,10 +239,18 @@ public class DecorationServiceImpl extends DaoImpl<DecorationPO> implements Deco
 	@Override
 	public int sendMessage(String orderId, String name, String content) {
 
+		sendMessage(orderId, name, content, null);
+
+		return 0;
+	}
+
+	@Override
+	public int sendMessage(String orderId, String name, String content, String path) {
+
 		List<DecorationPO> decorationPOs = decorationOrderDao.queryCusDecorationByOrderId(orderId);
 
 		for (DecorationPO decorationPO : decorationPOs) {
-			messageService.sendMessage(decorationPO.getUnionId(), name, orderId, content);
+			messageService.sendMessage(decorationPO.getUnionId(), name, orderId, content, path);
 		}
 
 		return 0;

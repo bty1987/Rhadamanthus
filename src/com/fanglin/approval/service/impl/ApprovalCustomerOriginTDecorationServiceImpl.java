@@ -168,12 +168,19 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 		UserPO salesman = userDao.queryUserByUserId(approvalCustomerOriginTDecorationVO.getSalesman().getUserId());
 
 		approvalCustomerOriginTDecorationPO.setSalesman(salesman);
+		approvalCustomerOriginTDecorationPO.setSalesmanType(customerOriginPO.getSalesmanType());
 
 		approvalCustomerOriginTDecorationDao.save(approvalCustomerOriginTDecorationPO);
 
 		customerOriginPO.setStatus(CustomerOriginPO.STATUS_APPROVE_INT);
 
 		customerOriginDao.update(customerOriginPO);
+		
+		String contents = String.format("客源转装修单提交,客户名:%s,楼盘:%s %s,装修单号:%s,批注:%s", customerOriginPO.getName(), villagePO.getName(), housePO.getHouseNumber(), customerOriginPO.getOrderId(), approvalPO.getAnnotate());
+
+		UserPO designer = customerOriginPO.getDesigner();
+
+		messageService.sendMessage(receiver.getUserId(), null, contents, MessagePO.TYPE_SEND_APPROVAL_INT, designer.getCompany());
 
 		return 0;
 	}
@@ -210,7 +217,7 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 		HousePO housePO = customerOriginPO.getHouse();
 		VillagePO villagePO = housePO.getVillage();
 
-		String content = String.format("客源转装修单成功,客户名:%s,楼盘:%s %s,装修单号:%s,批注:%s", customerOriginPO.getName(), villagePO.getName(), housePO.getHouseNumber(), customerOriginPO.getPhone(), customerOriginPO.getOrderId(), approvalPO.getAnnotate());
+		String content = String.format("客源转装修单成功,客户名:%s,楼盘:%s %s,装修单号:%s,批注:%s", customerOriginPO.getName(), villagePO.getName(), housePO.getHouseNumber(), customerOriginPO.getOrderId(), approvalPO.getAnnotate());
 
 		UserPO designer = customerOriginPO.getDesigner();
 
@@ -242,7 +249,7 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 		HousePO housePO = customerOriginPO.getHouse();
 		VillagePO villagePO = housePO.getVillage();
 
-		String content = String.format("客源转装修单失败,审批拒绝,客户名:%s,楼盘:%s %s,批注:%s", customerOriginPO.getName(), villagePO.getName(), housePO.getHouseNumber(), customerOriginPO.getPhone(), approvalPO.getAnnotate());
+		String content = String.format("客源转装修单失败,审批拒绝,客户名:%s,楼盘:%s %s,批注:%s", customerOriginPO.getName(), villagePO.getName(), housePO.getHouseNumber(), approvalPO.getAnnotate());
 
 		UserPO designer = customerOriginPO.getDesigner();
 

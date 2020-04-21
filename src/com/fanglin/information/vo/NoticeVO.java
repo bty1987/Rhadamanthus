@@ -37,7 +37,11 @@ public class NoticeVO implements Serializable {
 	
 	private String contents;
 	
+	private String depts;
+	
 	private String filePath;
+	
+	private String fileName;
 	
 	public NoticeVO(){
 		super();
@@ -127,6 +131,14 @@ public class NoticeVO implements Serializable {
 		this.contents = contents;
 	}
 
+	public String getDepts() {
+		return depts;
+	}
+
+	public void setDepts(String depts) {
+		this.depts = depts;
+	}
+	
 	public String getFilePath() {
 		return filePath;
 	}
@@ -135,4 +147,12 @@ public class NoticeVO implements Serializable {
 		this.filePath = filePath;
 	}
 
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	
 }

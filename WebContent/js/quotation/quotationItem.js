@@ -1,5 +1,9 @@
 $(function(){
 
+    var quotation = {
+        pageType: params['urlLoadParams'].type
+    };
+
     /**
      * 回调函数必须提供 init(tableId, result.list)方法
      * tableId ,用来显示的div的id
@@ -30,15 +34,17 @@ $(function(){
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
             var $btnSelection = $('<a></a>').addClass('btn btn-minier btn-success').html('选材');
+            var $btnNormood = $('<a></a>').addClass('btn btn-minier btn-warning').html('定额材料');
+            var $btnNormrice = $('<a></a>').addClass('btn btn-minier btn-inverse').html('定额工费');
 
             //启用禁用
             var $btnStatus = $('<div></div>').addClass('pull-right');
             var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
-            var $span = $('<span></span>').addClass('lbl');
+            var $span = $('<span></span>').addClass('lbl status-lbl');
             //是否打折
             var $btnDiscount = $('<div></div>').addClass('pull-right');
             var $discountSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
-            var $dspan = $('<span></span>').addClass('lbl');
+            var $dspan = $('<span></span>').addClass('lbl discount-lbl');
             
             var propertyArr = [
                 ["编号:", v.itemId, "blue"],
@@ -65,7 +71,13 @@ $(function(){
             $btnStatus.append($statusSwitch).append($span);
             $btnDiscount.append($discountSwitch).append($dspan);
 
-            $divBtnWrap.append($btnSelection).append($btnEdit).append($btnDiscount).append($btnStatus).appendTo($h3);
+            switch (quotation.pageType) {
+                case "selection":
+                    $divBtnWrap.append($btnSelection).appendTo($h3);
+                    break;
+                default :
+                    $divBtnWrap.append($btnNormrice).append($btnNormood).append($btnSelection).append($btnEdit).append($btnDiscount).append($btnStatus).appendTo($h3);
+            }
 
             $liLine.append($h3).append($ulProperty);
 
@@ -78,6 +90,16 @@ $(function(){
             $btnSelection.click(function(){
                 params["qiid"] = v.qiId;
                 com.popup4page("#createSoodsPopUp", "/views/data/createSoods.html", "添加选材");
+            });
+
+            $btnNormood.click(function(){
+                params["qiid"] = v.qiId;
+                com.popup4page("#normoodPopUp", "/views/data/normood.html", "定额材料");
+            });
+
+            $btnNormrice.click(function(){
+                params["qiid"] = v.qiId;
+                com.popup4page("#normricePopUp", "/views/data/normrice.html", "定额工费");
             });
 
             !v.status && $statusSwitch.prop("checked", true);
@@ -110,6 +132,8 @@ $(function(){
     quotationItemSeacher.init( _condArr, "condList", api.quotation.pageQuotationItem,  function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "quotationItemPostData", null, false, null, function(){
+
+        if (quotation.pageType == "selection") return false;
     	
     	var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'add').css("margin", "0px 3px");
     	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);

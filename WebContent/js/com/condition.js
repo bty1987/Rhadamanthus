@@ -1477,7 +1477,7 @@ var Condition = function (api) {
             dataSource: {
                 url: api.communion.queryDepartmentByName,
                 query: "dept.name",
-                postData: {"dept.type.dtid": 3},//获取数据时的请求参数
+                postData: {"dept.type.dtid": 2},//获取数据时的请求参数
                 listPath: "deptList",
                 keyPath: "no",
                 valuePath: "name"
@@ -1494,7 +1494,7 @@ var Condition = function (api) {
             dataSource: {
                 url: api.communion.queryDepartmentByName,
                 query: "dept.name",
-                postData: {"dept.type.dtid": 2},
+                postData: {"dept.type.dtid": 3},
                 listPath: "deptList",
                 keyPath: "no",
                 valuePath: "name"
@@ -1615,6 +1615,31 @@ var Condition = function (api) {
                 listPath: "decorationOrderStatus",
                 keyPath: "key",
                 valuePath: "value"
+            }
+        },
+        designStatus: {
+            label: "设计状态",
+            type: "select",
+            submitConfig: {
+                name: "designStatus",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.ds.decoration,
+                postData: {"timestamp": new Date().getTime()},
+                listPath: "designStatus",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        designTimeRange: {
+            label: "设计时间",
+            type: "dateRangePicker",
+            submitConfig: {
+                name: "designTimeRange",
+                op: "between",
+                validate: null
             }
         },
         orderType: {
@@ -2397,6 +2422,22 @@ var Condition = function (api) {
                 name: "approverTime",
                 op: "between",
                 validate: null
+            }
+        },
+        accessoriesStauts: {
+            label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.ds.manifest,
+                postData: {},
+                listPath: "accessoriesStatus",
+                keyPath: "key",
+                valuePath: "value"
             }
         },
         occessoriesNo: {
@@ -3910,6 +3951,33 @@ var Condition = function (api) {
                 validate: null
             }
         },
+        c_keyTime: {
+            label: "预计交钥匙时间",
+            type: "dateRangePicker",
+            submitConfig: {
+                name: "keyTime",
+                op: "between",
+                validate: null
+            }
+        },
+        c_drawlineTime: {
+            label: "预计放线时间",
+            type: "dateRangePicker",
+            submitConfig: {
+                name: "drawlineTime",
+                op: "between",
+                validate: null
+            }
+        },
+        c_finishTime: {
+            label: "预计竣工时间",
+            type: "dateRangePicker",
+            submitConfig: {
+                name: "finishTime",
+                op: "between",
+                validate: null
+            }
+        },
         /*-------工程construction : end----*/
         
         /*-------客户customer : start----*/
@@ -4516,6 +4584,67 @@ var Condition = function (api) {
             submitConfig: {
                 name: "name",
                 op: "cn",
+                validate: null
+            }
+        },
+        /*-------话术-------*/
+        talkingName: {
+            label: "名称",
+            type: "text",
+            submitConfig: {
+                name: "name",
+                op: "cn",
+                validate: null
+            }
+        },
+        talkingType: {
+            label: "类型",
+            type: "select",
+            submitConfig: {
+                name: "type",
+                op: "eq",
+                validate: null
+            },
+            dataSource : {
+                url : api.ds.data,
+                postData : {},
+                listPath :"talkingType",
+                keyPath:"key",
+                valuePath:"value"
+            }
+        },
+        talkingStatus: {
+            label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource : {
+                url : api.ds.data,
+                postData : {},
+                listPath :"talkingStatus",
+                keyPath:"key",
+                valuePath:"value"
+            }
+        },
+		/*-------图表-------*/
+        chartNo: {
+            label: "编号",
+            type: "text",
+            submitConfig: {
+                name: "no",
+                op: "eq",
+                validate: null
+            }
+        },
+        chartName: {
+            label: "名称",
+            type: "text",
+            submitConfig: {
+                name: "name",
+                op: "eq",
                 validate: null
             }
         },

@@ -12,20 +12,7 @@ jQuery(function ($) {
         editFlag: false
     };
 
-    var colorboxArgs = {
-        reposition: true,
-        scalePhotos: true,
-        scrolling: false,
-        previous: '<i class="icon-arrow-left"></i>',
-        next: '<i class="icon-arrow-right"></i>',
-        close: '&times;',
-        current: '{current} of {total}',
-        maxWidth: '100%',
-        maxHeight: '100%'
-    };
-
     com.focusPage('#fl-statement').statement("监理控制", "返工图纸");
-
 
     drawing.galleryId = "reworkDrawingGallery";
 
@@ -45,6 +32,7 @@ jQuery(function ($) {
 
             appendGalleryElement("reworkDrawingGallery", reworkDrawing.rwdId, reworkDrawing.rwdUrl, 0, "", api.construction.deleteReworkDrawingById.url, {});
         }
+        com.popup4photos("#reworkDrawingGallery");
     });
 
     com.focusPage("#pictureUpload").Huploadify({
@@ -80,6 +68,7 @@ jQuery(function ($) {
                 com.post(api.construction.addReworkDrawing, options, function (res) {
                     var reworkDrawing = res.reworkDrawing;
                     appendGalleryElement("reworkDrawingGallery", reworkDrawing.rwdId, dateObj.resUrl, 0, "", api.construction.deleteReworkDrawingById.url, {});
+                    com.popup4photos("#reworkDrawingGallery");
                 });
             } else {
                 console.log(data);
@@ -90,9 +79,13 @@ jQuery(function ($) {
     function appendGalleryElement(galleryId, imgId, imgUrl, type, editUrl, deleteUrl, operate) {
 
         var gallery = com.focusPage("#" + galleryId);
+        
         var imgLi = $("<li></li>").attr("id", "gallery_li" + imgId).css("border-color", "#ddd").appendTo(gallery);
         var img = $('<img/>');
-        var imgA = $("<a></a>").attr("href", com.showImg(img, imgUrl, 150, 150, '150x150', null, type)).attr("data-rel", "colorbox").append(img).appendTo(imgLi);
+        var imgA = $("<a></a>").append(img).appendTo(imgLi);
+        
+        com.showImg(img, imgUrl, 150, 150, '', null, type);
+        
         var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
         var toolsA = $("<a></a>").attr("href", "#").on("click", function () {
             var options = {
@@ -103,9 +96,9 @@ jQuery(function ($) {
                 com.focusPage("#gallery_li" + imgId).remove();
             });
         }).appendTo(toolsDiv);
+        
         $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
 
-        imgA.colorbox(colorboxArgs);
     }
 
 });

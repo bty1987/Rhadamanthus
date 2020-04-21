@@ -8,8 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.dao.BrandDao;
+import com.fanglin.communion.po.BrandPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.data.material.dao.GoodsDao;
 import com.fanglin.data.material.dao.SoodsDao;
 import com.fanglin.data.material.service.SoodsService;
 import com.fanglin.data.material.vo.GoodsVO;
@@ -28,6 +31,12 @@ public class SoodsServiceImpl implements SoodsService {
 	
 	@Autowired
 	private SoodsDao soodsDao;
+	
+	@Autowired
+	private GoodsDao goodsDao;
+	
+	@Autowired
+	private BrandDao brandDao;
 
 	@Override
 	public void pageSoods(Paging paging, List<Filter> filters, int company) {
@@ -81,7 +90,15 @@ public class SoodsServiceImpl implements SoodsService {
 			throw new FLException(130032, "选材已存在");
 		}
 		
-		soodsPO.setGoods(new GoodsPO(soodsVO.getGoods().getGid()));
+		GoodsPO goodsPO = goodsDao.get(soodsVO.getGoods().getGid());
+		
+		BrandPO brandPO = brandDao.queryBrandByBid(goodsPO.getBid());
+		
+		if (brandPO == null || brandPO.getSupplier() == null) {
+			throw new FLException(130036, "商品无关联厂商");
+		}
+		
+		soodsPO.setGoods(goodsPO);
 		soodsPO.setQuotationItem(new QuotationItemPO(soodsVO.getQuotationItem().getQiId()));
 		soodsPO.setNum(soodsVO.getNum());
 		soodsPO.setStatus(SoodsPO.STATUS_VALID_INT);

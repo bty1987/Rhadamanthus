@@ -48,7 +48,9 @@ $(function () {
             materialAccount: com.focusPage("#materialAccount"),
             accountForehead: com.focusPage("#accountForehead"),
             accountServicePrice: com.focusPage("#accountServicePrice"),
-            balanceSum: com.focusPage("#balanceSum")
+            balanceSum: com.focusPage("#balanceSum"),
+            difference: com.focusPage("#difference"),
+            superRatio: com.focusPage("#superRatio")
         },
         items: {
             calDiscountPrice: com.focusPage("#calDiscountPrice"),
@@ -68,11 +70,12 @@ $(function () {
         btns: {
             btnBack: com.focusPage('#btnBack'),
             calculateBtn: com.focusPage("#calculateBtn"),
+            updateBtn: com.focusPage("#update_btn"),
             submission: com.focusPage("#submission"),
-            print: com.focusPage("#print")
+            print: com.focusPage("#print").hide()
         }
     };
-    
+
     var decoration;
 
     decorationDetail.decorationOrderId = params.decorationOrderId;
@@ -111,6 +114,8 @@ $(function () {
 
         accountForehead: 0,
         balanceSum: 0,
+        difference: 0,
+        superRatio: 0,
 
         dd: 0,
         db: 0,
@@ -122,7 +127,20 @@ $(function () {
         isPrint: false
     };
 
-    decorationDetail.btns.btnBack.on(ace.click_event, function () {
+    $.each(params.viewNode, function (i, v) {
+        v.type == "account" && v.opt != null && $.each(v.opt.btn, function (j, x) {
+                switch (x) {
+                    case "accountPrint":
+                        decorationDetail.btns.print.show();
+                        break;
+                    case "btnAccountPrint":
+                        accountBasic.isPrint = true;
+                        break;
+                }
+        })
+    });
+
+    decorationDetail.btns.btnBack.on("click", function () {
         com.switchPage(params.historyPage);
     });
     
@@ -331,8 +349,6 @@ $(function () {
         
         decorationDetail.items.comment.val(decorationAccount.comment);
         
-        accountBasic.isPrint = true;
-        
         accountSuper();
         
     }, null, false);
@@ -341,6 +357,7 @@ $(function () {
 
         if (com.validate('controls')) return false;
 
+        decorationDetail.btns.updateBtn.removeAttr("disabled");
         decorationDetail.btns.submission.removeAttr("disabled");
 
         accountBasic.discount = decorationDetail.items.calDiscountPrice.val();
@@ -385,11 +402,9 @@ $(function () {
         com.popup("打印决算信息", api.index.decorationAccountOutputIndex.url, null, null, accountBasic.isPrint);
     });
 
-    decorationDetail.btns.submission.click(function () {
+    decorationDetail.btns.updateBtn.click(function () {
 
-        if (com.validate('controls')) return false;
-        
-        com.showConfirm("确定要提交决算信息吗?", function () {
+        com.showConfirm("确定要更新决算信息吗?", function () {
 
             var option = {
                 "decorationAccount.orderId": params.decorationOrderId,
@@ -409,12 +424,23 @@ $(function () {
                 "decorationAccount.comment": decorationDetail.items.comment.val()
             };
 
-            com.post(api.decoration.makeDecorationAccount, option, function (res) {
-                com.showAlert(com.info, "提交成功");
+            com.post(api.decoration.updateDecorationAccount, option, function (res) {
+                com.showAlert(com.info, "更新保存成功");
                 
                 accountBasic.isPrint = true;
             });
 
+        });
+    });
+
+    decorationDetail.btns.submission.click(function () {
+
+        if (com.validate('controls')) return false;
+
+        com.showConfirm("确定锁定新决算信息吗?", function () {
+           com.post(api.decoration.makeDecorationAccount, {"decorationAccount.orderId": params.decorationOrderId}, function (res) {
+                com.showAlert(com.info, "锁定成功");
+            });
         });
     });
     
@@ -446,6 +472,10 @@ $(function () {
         // 差额(算配比) = 决算合同额 + 决算服务费 - 合同实收 - 已收服务费 - 增项实收 + 减项实收 + 增项非配比总额 - 优惠券 - 满送 - 返现
         //
         // 差额(非配比) = 决算合同额 + 决算服务费 - 合同实收 - 已收服务费 - 优惠券 - 满送 - 返现
+        //
+        // 金额差 = 实收额 - 决算主材额
+        //
+        // 超配比 = (实收额 - 决算主材额) / 决算主材额
         
         var contartval = 0, _ = 0, service = 0, sub = 0, direct = 0, beforeTotal = 0, management = 0, materialAccount = 0;
 
@@ -491,6 +521,9 @@ $(function () {
         accountBasic.accountForehead = Math.round(contartval);
         accountBasic.accountServicePrice = Math.round(service);
         accountBasic.balanceSum = Math.round(sub);
+
+        accountBasic.difference = Math.round(accountBasic.materialFactPrice - accountBasic.materialAccount);
+        accountBasic.superRatio = accountBasic.materialAccount == null || accountBasic.materialAccount == 0 ? 0 : utils.changeThrDecimal(accountBasic.difference / accountBasic.materialAccount);
         
         accountBasic.preferences = decorationDetail.items.preferences.val() ? decorationDetail.items.preferences.val() : 0;
         accountBasic.fulldel = decorationDetail.items.fulldel.val() ? decorationDetail.items.fulldel.val() : 0;
@@ -506,6 +539,8 @@ $(function () {
         decorationDetail.accountItems.materialAccount.val(accountBasic.materialAccount);
         
         decorationDetail.accountItems.flowerRatio.html(accountBasic.flowerRatio);
+        decorationDetail.accountItems.difference.html(accountBasic.difference);
+        decorationDetail.accountItems.superRatio.html(accountBasic.superRatio);
     }
 
 });

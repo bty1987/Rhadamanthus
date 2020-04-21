@@ -1,20 +1,9 @@
 jQuery(function($) {
+    
     var businessCard = {
         saveBtn: null,
         modal: null,
         items: []
-    };
-
-    var colorboxArgs = {
-        reposition:true,
-        scalePhotos:true,
-        scrolling:false,
-        previous:'<i class="icon-arrow-left"></i>',
-        next:'<i class="icon-arrow-right"></i>',
-        close:'&times;',
-        current:'{current} of {total}',
-        maxWidth:'100%',
-        maxHeight:'100%'
     };
 
     businessCard.saveBtn = com.focusPage("#updateBtn").on("click", updateCardData);
@@ -38,7 +27,7 @@ jQuery(function($) {
     businessCard.items.path = com.focusPage("#path");
 
     initUploadBtn();
-
+    
     var displayFunc  = (function(){
         var renderList = function(tableId,listData){
             var $tableWrap = com.focusPage('#' + tableId);
@@ -102,6 +91,7 @@ jQuery(function($) {
                 businessCard.items.userPhoto.html("");
                 if(v.userPhoto != ""){
                     appendGalleryElement("userPhoto", v.userPhoto, 0);
+                    com.popup4photos("#userPhoto");
                 }
                 businessCard.modal.modal("show");
             });
@@ -115,6 +105,7 @@ jQuery(function($) {
                         $.each(cardPhotos, function(i, d){
                             appendGalleryElement("cardPhoto", d.url, 0);
                         });
+                        com.popup4photos("#cardPhoto");
                     }
                 }, null, false);
 
@@ -197,6 +188,7 @@ jQuery(function($) {
                     businessCard.userPhoto = dateObj.resUrl;
                     businessCard.items.path.val(dateObj.resUrl);
                     appendGalleryElement("userPhoto", dateObj.resUrl, 0);
+                    com.popup4photos("#userPhoto");
                 }else{
                     console.log(data);
                 }
@@ -207,8 +199,10 @@ jQuery(function($) {
     function appendGalleryElement(galleryId, imgUrl, type){
         var gallery = com.focusPage("#" + galleryId);
         var img = $('<img />');
-        var imgA = $("<a></a>").attr("href", com.showImg(img, imgUrl, 150, 150, '150x150', null, type)).attr("data-rel", "colorbox").css({"height": "150px","float": "left","margin-right":"10px","margin-top":"10px"}).append(img).appendTo(gallery);
+        var imgA = $("<a></a>").css({"height": "150px","float": "left","margin-right":"10px","margin-top":"10px"}).append(img).appendTo(gallery);
+        
+        com.showImg(img, imgUrl, 150, 150, '', null, type);
+        
         var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(gallery);
-        imgA.colorbox(colorboxArgs);
     }
 });

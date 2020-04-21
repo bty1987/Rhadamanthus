@@ -202,7 +202,7 @@
             com.showAlert(com.info, "操作成功");
             supplier.modals.addSupplierModal.modal("hide");
             
-            seacher.doSearcher();
+            seacher.doSearch();
         });
     }
 

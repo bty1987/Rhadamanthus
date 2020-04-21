@@ -25,6 +25,8 @@ import com.fanglin.data.po.FunctionAreaPO;
 import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.data.quotation.dao.FunctionAreaDao;
 import com.fanglin.data.quotation.dao.FunctionAreaItemDao;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.quotation.dao.AddReduceItemDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
@@ -71,6 +73,9 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 
 	@Autowired
 	private SelectionItemDao selectionItemDao;
+	
+	@Autowired
+	private DecorationDao decorationDao;
 
 	@Override
 	public List<QuotationFunctionAreaVO> queryQuotationFunctionAreaByQuotationId(QuotationVO quotationVO) throws FLException {
@@ -213,6 +218,38 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public void addQuotationFunctionArea(List<Long> functionAreaIds, QuotationVO quotation) throws FLException {
+		
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(quotation.getOrderId());
+		
+		if (decorationPO == null) {
+			throw new FLException(130014, "订单不存在");
+		}
+		
+		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationPO.getOrderId());
+		
+		if (quotationPO == null) {
+			throw new FLException(200017, "默认报价不存在");
+		}
+		
+		for (Long functionAreaId : functionAreaIds) {
+			FunctionAreaPO functionAreaPO = functionAreaDao.get(functionAreaId);
+			
+			QuotationFunctionAreaPO quotationFunctionAreaPO = new QuotationFunctionAreaPO();
+			
+			quotationFunctionAreaPO.setFunctionAreaName(functionAreaPO.getFunctionAreaName());
+			quotationFunctionAreaPO.setFunctionAreaOrder(functionAreaPO.getFunctionAreaOrder());
+			quotationFunctionAreaPO.setFunctionAreaType(functionAreaPO.getFunctionAreaType());
+			quotationFunctionAreaPO.setType(functionAreaPO.getType());
+			quotationFunctionAreaPO.setTotal(functionAreaPO.getTotal());
+			quotationFunctionAreaPO.setQuotation(quotationPO);
+
+			quotationFunctionAreaDao.save(quotationFunctionAreaPO);
+		}
+	}
+	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int updateQuotationFunctionArea(QuotationFunctionAreaVO quotationFunctionAreaVO, QuotationVO quotationVO) throws FLException {
 
 		QuotationPO quotationPO = checkQuotationForStatusByEnabled(quotationVO.getQid());
@@ -289,4 +326,5 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 
 		return quotationPO;
 	}
+
 }

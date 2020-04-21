@@ -356,7 +356,8 @@ jQuery(function ($) {
         'auto': true, // 是否自动上传
         'successTimeout': config.uploadTimeout, // 超时时间
         'formData': {
-            'uploadType': 4
+            'uploadType': 4,
+            'authentication': params.authentication
         },
         'buttonClass': 'btn btn-success col-sm-12',
         'overrideEvents': ['onDialogClose'], // 不执行默认的onSelect事件
@@ -370,6 +371,9 @@ jQuery(function ($) {
         'onUploadSuccess': function (file, data, response) { //上传到服务器，服务器返回相应信息到data里
 
             var dateObj = eval("(" + data + ")");
+            if(data.indexOf("导入文件错误") > 0 ){
+                com.showAlert(com.warning, "导入文件错误");
+            }
             searcher.doSearch();
 
         }

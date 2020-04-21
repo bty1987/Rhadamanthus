@@ -24,10 +24,11 @@ public class SelectionServiceImpl implements SelectionService{
 	private QuotationDao quotationDao;
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public SelectionVO querySelectionByQid(SelectionVO selectionVO) {
+	public SelectionVO querySelectionByQid(SelectionVO selectionVO) throws FLException {
 		
 		SelectionPO selectionPO = selectionDao.querySelectionByQid(selectionVO.getQid());
+		
+		if (selectionPO == null) return null;
 		
 		selectionVO = new SelectionVO();
 		
@@ -38,12 +39,17 @@ public class SelectionServiceImpl implements SelectionService{
 	
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public SelectionVO querySelectionByOrderId(SelectionVO selectionVO) {
+	public SelectionVO querySelectionByOrderId(SelectionVO selectionVO) throws FLException {
 		
 		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(selectionVO.getOrderId());
 		
-		SelectionPO selectionPO = selectionDao.querySelectionByOrderId(quotationPO.getOrderId());
+		if (quotationPO == null) {
+			throw new FLException(200017, "默认报价不存在");
+		}
+		
+		SelectionPO selectionPO = selectionDao.querySelectionByQid(quotationPO.getQid());
+		
+		if (selectionPO == null) return null;
 		
 		selectionVO = new SelectionVO();
 		
@@ -68,5 +74,43 @@ public class SelectionServiceImpl implements SelectionService{
 		
 		return 0;
 	}
+	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public SelectionVO addSelection(SelectionVO selectionVO) throws FLException{
+		
+		SelectionPO selectionPO = sevaOrgetSelectionPOByQid(selectionVO.getQid());
+		
+		BeanUtil.copyProperties(selectionPO, selectionVO);
+		
+		return selectionVO;
+	}
+	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void addSelection(Long qid) throws FLException{
+		
+		sevaOrgetSelectionPOByQid(qid);
+		
+	}
+	
+	private SelectionPO sevaOrgetSelectionPOByQid(Long qid) throws FLException{
+		
+		QuotationPO quotationPO = quotationDao.get(qid);
+		
+		if (quotationPO == null) {
+			throw new FLException(200003, "报价不存在");
+		}
+		
+		SelectionPO selectionPO = new SelectionPO();
+		
+		selectionPO.setOrderId(quotationPO.getOrderId());
+		selectionPO.setQid(quotationPO.getQid());
+		selectionPO.setStatus(SelectionPO.STATUS_INIT_INT);
+		selectionPO.setTotal(0L);
 
+		selectionDao.save(selectionPO);
+		
+		return selectionPO;
+	}
 }

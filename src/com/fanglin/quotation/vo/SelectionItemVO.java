@@ -3,6 +3,8 @@ package com.fanglin.quotation.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import org.apache.struts2.json.annotations.JSON;
+
 import com.fanglin.data.material.vo.GoodsVO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -177,6 +179,7 @@ public class SelectionItemVO implements Serializable {
 		this.selling = selling;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getTranTime() {
 		return tranTime;
 	}
@@ -185,6 +188,7 @@ public class SelectionItemVO implements Serializable {
 		this.tranTime = tranTime;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCheckTime() {
 		return checkTime;
 	}
@@ -193,6 +197,7 @@ public class SelectionItemVO implements Serializable {
 		this.checkTime = checkTime;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getConfirmTime() {
 		return confirmTime;
 	}
@@ -201,6 +206,7 @@ public class SelectionItemVO implements Serializable {
 		this.confirmTime = confirmTime;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getBalanceTime() {
 		return balanceTime;
 	}
@@ -209,6 +215,7 @@ public class SelectionItemVO implements Serializable {
 		this.balanceTime = balanceTime;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getFinishTime() {
 		return finishTime;
 	}

@@ -85,18 +85,6 @@ jQuery(function($) {
 		currentHsStatus: params.hsStatus
 	};
 
-	var colorboxArgs = {
-		reposition:true,
-		scalePhotos:true,
-		scrolling:false,
-		previous:'<i class="icon-arrow-left"></i>',
-		next:'<i class="icon-arrow-right"></i>',
-		close:'&times;',
-		current:'{current} of {total}',
-		maxWidth:'100%',
-		maxHeight:'100%'
-	};
-
 	com.datetime(houseSourceDetail.items.documentsDate);
 	com.datetime(houseSourceDetail.items.decorateTime);
 

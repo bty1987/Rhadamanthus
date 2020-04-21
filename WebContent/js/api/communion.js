@@ -39,5 +39,12 @@ $.extend(api, {communion: {
     queryContract:{url:"queryContract.do"},
     pageSignet:{url:"pageSignet.do"},
     querySignet:{url:"querySignet.do"},
+    
+    pageTalking:{url:"pageTalking.do"},
+    queryTalking:{url:"queryTalking.do"},
+    addTalking:{url:"addTalking.do", server: "communion"},
+    updateTalking:{url:"updateTalking.do", server: "communion"},
+    updateTalkingForStatus:{url:"updateTalkingForStatus.do", server: "communion"},
+    deleteTalking:{url:"deleteTalking.do", server: "communion"},
 
 }});

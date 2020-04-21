@@ -41,18 +41,6 @@ jQuery(function ($) {
         supervisionDetail.towtype = res.SalaryTwoType.split("key", "name");
     }, null, false);
 
-    var colorboxArgs = {
-        reposition: true,
-        scalePhotos: true,
-        scrolling: false,
-        previous: '<i class="icon-arrow-left"></i>',
-        next: '<i class="icon-arrow-right"></i>',
-        close: '&times;',
-        current: '{current} of {total}',
-        maxWidth: '100%',
-        maxHeight: '100%'
-    };
-
     $.extend(com.validator, supervisionDetail.validator);
     var orderId = params.orderId;
 
@@ -156,6 +144,7 @@ jQuery(function ($) {
 
                     appendGalleryElement(operate + "Gallery", drawing.cdId, drawing.drawingUrl, drawing.type, "", api.construction.deleteConstructionDrawing);
                 }
+                com.popup4photos("#" + operate + "Gallery");
             });
             initUploadBtn(operate, constructionSchedule, constructionNodes["num" + schedule]);
             com.focusPage('#' + operate + "Drawing").removeClass("active");
@@ -206,6 +195,7 @@ jQuery(function ($) {
                     com.post(api.construction.addConstructionDrawing, options, function (res) {
                         var drawing = res.constructionDrawing;
                         appendGalleryElement(operate + "Gallery", drawing.cdId, dateObj.resUrl, 0, "", api.construction.deleteConstructionDrawing);
+                        com.popup4photos("#" + operate + "Gallery");
                     });
                 } else {
                     console.log(data);
@@ -220,7 +210,8 @@ jQuery(function ($) {
         var gallery = com.focusPage("#" + galleryId);
         var imgLi = $("<li></li>").attr("id", "gallery_li" + imgId).addClass("col-xs-2 text-center").css("border-color", "#ddd").appendTo(gallery);
         var img = $('<img />');
-        var imgA = $("<a></a>").attr("href", com.showImg(img, imgUrl, 150, 150, '150x150', null, type)).attr("data-rel", "colorbox").css("height", "150px").append(img).appendTo(imgLi);
+        var imgA = $("<a></a>").css("height", "150px").append(img).appendTo(imgLi);
+        com.showImg(img, imgUrl, 150, 150, '150x150', null, type);
         var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
         var toolsA = $("<a></a>").attr("href", "#").on("click", function () {
             var options = {};
@@ -231,7 +222,6 @@ jQuery(function ($) {
             });
         }).appendTo(toolsDiv);
         $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
-        imgA.colorbox(colorboxArgs);
     }
 
     function _show_WorkerSalary(_index, csids) {

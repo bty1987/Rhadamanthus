@@ -34,6 +34,7 @@ jQuery(function ($) {
             keyTime : com.focusPage("#keyTime"),
             drawlineTime : com.focusPage("#drawlineTime"),
             isCeremony  : com.focusPage("#isCeremony"),
+            isConfirmPricture :com.focusPage("#isConfirmPricture"),
             comment   : com.focusPage("#comment")
         }
     };
@@ -43,25 +44,21 @@ jQuery(function ($) {
     drawline.btns.updateBtn.bindClick(updateData);
 
     drawline.modals.constructionInfoModal.on("hide.bs.modal", function(){
-
         com.cleanItems(drawline.items);
         com.closeTip();
     });
 
     drawline.modals.applyModal.on("hide.bs.modal", function(){
-
         com.cleanItems(drawline.items);
         com.closeTip();
     });
 
     drawline.modals.editModal.on("hide.bs.modal", function(){
-
         com.cleanItems(drawline.items);
         com.closeTip();
     });
     
     drawline.modals.updateModal.on("hide.bs.modal", function(){
-
         com.cleanItems(drawline.items);
         com.closeTip();
     });
@@ -77,8 +74,8 @@ jQuery(function ($) {
     com.post(api.ds.construction, {}, function (res) {
         drawline.items.ishovel.bindData(res.isHovel, "key", "value", false);
         drawline.items.iskey.bindData(res.isKey, "key", "value", false);
+        drawline.items.isConfirmPricture.bindData(res.isConfirmPricture, "key", "value", false);
         drawline.items.isCeremony.bindData(res.isCeremony, "key", "value", false);
-
     });
 
     com.post(api.data.queryDrawlineGroup, {}, function (res) {
@@ -310,6 +307,7 @@ jQuery(function ($) {
             drawline.items.iskey.val(data.iskey);
             drawline.items.isCeremony.val(data.isCeremony);
             drawline.items.timeLimit.val(data.timeLimit);
+            drawline.items.isConfirmPricture.val(data.isConfirmPricture);
             if(data.finishTime != null){
                 drawline.items.finishTime.val(data.finishTime.substr(0,10));
             }
@@ -321,7 +319,6 @@ jQuery(function ($) {
             }
             drawline.items.comment.val(data.comment);
         });
-
         drawline.modals.constructionInfoModal.modal("show");
 
     }

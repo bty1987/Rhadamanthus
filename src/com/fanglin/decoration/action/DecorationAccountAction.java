@@ -33,6 +33,14 @@ public class DecorationAccountAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
+	@Action(value = "updateDecorationAccount", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateDecorationAccount() throws  FLException{
+		
+		decorationAccountService.updateDecorationAccount(decorationAccount);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "makeDecorationAccount", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String makeDecorationAccountAction() throws  FLException{
 		

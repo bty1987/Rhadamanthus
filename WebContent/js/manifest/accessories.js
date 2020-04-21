@@ -1,19 +1,20 @@
-
 $(function () {
-	
-	var accessories = {
-		status: {},
-		schedule: {}
-	};
-	
-	com.post(api.ds.manifest, {}, function(res){
-		accessories.status = res.accessoriesStatus.split("key", "value");
-	}, null, false);
-	
-	com.post(api.data.queryConstructionNode, {}, function(res){
+
+    var accessories = {
+        status: {},
+        schedule: {},
+        pageType: params['urlLoadParams'].type,
+    };
+
+    com.post(api.ds.manifest, {}, function (res) {
+        accessories.status = res.accessoriesStatus.split("key", "value");
+    }, null, false);
+
+    com.post(api.data.queryConstructionNode, {}, function (res) {
         accessories.schedule = res.constructionNodes.split("sort", "name");
     }, null, false);
-	
+
+
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
@@ -23,7 +24,7 @@ $(function () {
 
                 var $ulTitle = createTableTitle();
                 var $ulData = $('<ul></ul>').addClass('flex-table');
-                
+
                 $tableWrap.append($ulTitle).append($ulData);
 
                 $.each(listData, function (i, v) {
@@ -63,10 +64,10 @@ $(function () {
                 "data-pid": v.pid,
                 "data-status": v.status
             });
-            var _span = $('<span></span>').addClass('lbl grey bigger-150').css('font-weight','bold');
+            var _span = $('<span></span>').addClass('lbl grey bigger-150').css('font-weight', 'bold');
 
             _label.append($input).append(_span);
-            
+
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(_label));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col8');
 
@@ -94,56 +95,115 @@ $(function () {
             var $btnUl = $('<ul></ul>').addClass('dropdown-menu').addClass(lastFlag ? 'bottom-up' : '');
 
             var $btnView = $('<li></li>').append($('<a></a>').html('查看'));
+            var $btnAdvance = $('<li></li>').append($('<a></a>').html('预出'));
             var $btnOut = $('<li></li>').append($('<a></a>').html('出货'));
             var $btnEdit = $('<li></li>').append($('<a></a>').html('修改'));
+            var $btnRefuse = $('<li></li>').append($('<a></a>').html('拒绝'));
             var $btnReturn = $('<li></li>').append($('<a></a>').html('退货'));
             var $btnPrint = $('<li></li>').append($('<a></a>').html('打印'));
+            var $btnDev = $('<li></li>').append($('<a></a>').html('到货'));
 
-            v.status != 4 && ($btnUl.append($btnEdit));
-            v.status == 0 && ($btnUl.append($btnOut));//初始：出货，修改
-            v.status == 1 && ($btnUl.append($btnView).append($btnOut).append($btnEdit).append($btnReturn).append($btnPrint));//出货：出货 修改 退回 打印
-            v.status == 4 && ($btnUl.append($btnView));
-            
+
+            if (accessories.pageType == "advance") {
+                v.status != 5 && ($btnUl.append($btnEdit));
+                v.status == 0 && ($btnUl.append($btnAdvance).append($btnEdit).append($btnRefuse));//初始：出货，修改
+                v.status == 1 && ($btnUl.append($btnPrint));//出货：出货 修改 退回 打印
+                v.status == 2 && ($btnUl.append($btnPrint));
+                v.status == 5 && ($btnUl.append($btnView));
+            } else {
+                v.status != 5 && ($btnUl.append($btnEdit));
+                v.status == 0 && ($btnUl.append($btnOut).append($btnEdit).append($btnRefuse));//初始：出货，修改
+                v.status == 1 && ($btnUl.append($btnOut).append($btnPrint));
+                v.status == 2 && ($btnUl.append($btnView).append($btnDev).append($btnReturn).append($btnPrint));//出货：出货 修改 退回 打印
+                v.status == 5 && ($btnUl.append($btnView));
+            }
+
             $btnGroup.append($btn).append($btnUl).appendTo($cellOption);
 
             $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
-            $btnView.click(function(){
-            	
-            	if(v.status == 0){
-            		com.showAlert(com.warning, "辅料单状态不可操作");
-            		return false;
-            	}
-            	
-            	params["accessories.aid"] = v.aid;
-            	
-            	com.popup4page('#layerPopUp', "views/manifest/accessories4view.html", "辅料单 : " + v.no);
+            $btnView.click(function () {
+
+                if (v.status == 0) {
+                    com.showAlert(com.warning, "辅料单状态不可操作");
+                    return false;
+                }
+
+                params["accessories.aid"] = v.aid;
+
+                com.popup4page('#layerPopUp', "views/manifest/accessories4view.html", "辅料单 : " + v.no);
+            });
+
+            $btnDev.click(function () {
+
+                if(v.status != 2){
+                    com.showAlert(com.warning, "辅料单状态不可操作");
+                    return false;
+                }
+
+                com.showConfirm("确认到货?", function () {
+                    com.post(api.inventory.deliveAccessories, {"accessories.aid": v.aid}, function () {
+                        com.showAlert(com.info, "操作成功");
+                        accessoriesSeacher.doSearch();
+                    })
+                })
+
             });
 
             $btnOut.click(function () {
-            	
-            	if(v.status != 0){
-            		com.showAlert(com.warning, "辅料单状态不可操作");
-            		return false;
-            	}
-            	
-            	params["accessories.aid"] = v.aid;
-            	params["accessories.orderId"] = v.orderId;
-            	
+
+                if (v.status != 0 && v.status != 1) {
+                    com.showAlert(com.warning, "辅料单状态不可操作");
+                    return false;
+                }
+
+                params["accessories.aid"] = v.aid;
+                params["accessories.orderId"] = v.orderId;
+
                 com.popup4page('#layerPopUp', "views/manifest/accessories2out.html", "辅料单 : " + v.no);
             });
 
+            $btnRefuse.click(function () {
+
+                if (v.status != 0) {
+                    com.showAlert(com.warning, "辅料单状态不可操作");
+                    return false;
+                }
+
+                com.showConfirm("是否确认拒绝辅料单", function () {
+                    com.post(api.inventory.refuseAccessories, {"accessories.aid": v.aid}, function () {
+                        com.showAlert(com.info, "操作成功");
+                        accessoriesSeacher.doSearch();
+                    })
+                })
+            });
+
             $btnEdit.click(function () {
-            	
-            	if(v.status != 0){
-            		com.showAlert(com.warning, "辅料单状态不可操作");
-            		return false;
-            	}
-            	
-            	params["accessories.aid"] = v.aid;
+
+                if (v.status != 0) {
+                    com.showAlert(com.warning, "辅料单状态不可操作");
+                    return false;
+                }
+
+                params["accessories.aid"] = v.aid;
                 params["accessories.orderId"] = v.orderId;
 
                 com.popup4page('#layerPopUp', "views/manifest/accessories2edit.html", "辅料单 : " + v.no);
+            });
+
+            $btnAdvance.click(function () {
+
+                if (v.status != 0) {
+                    com.showAlert(com.warning, "辅料单状态不可操作");
+                    return false;
+                }
+
+                com.showConfirm("是否确认预出辅料单", function () {
+                    com.post(api.inventory.preoutAccessories, {"accessories.aid": v.aid}, function () {
+                        com.showAlert(com.info, "操作成功");
+                        accessoriesSeacher.doSearch();
+                    })
+                })
             });
 
             $btnReturn.click(function () {
@@ -152,16 +212,22 @@ $(function () {
                 com.popup4page('#layerPopUp', "views/manifest/accessories4refund.html", "辅料单 : " + v.no);
             });
 
-            $btnPrint.click(function(){
+            $btnPrint.click(function () {
 
-                params["accessories.no"] = v.no;
-                params["accessories.orderId"] = v.orderId;
-                params["accessories.createTime"] = v.createTime;
-                params["accessories.creater"] = v.creater.userName;
-                params["accessories.aid"] = v.aid;
-                params["accessories.manifestTime"] = v.approverTime;
+                com.post(api.inventory.updateAccessoriesForPrint, {"accessories.aid": v.aid}, function (res) {
+                    params["accessories.printnum"] = res.accessories.printnum;
 
-                printAccessoriesItem(v.aid,v.no);
+                    params["accessories.no"] = v.no;
+                    params["accessories.orderId"] = v.orderId;
+                    params["accessories.createTime"] = v.createTime;
+                    params["accessories.creater"] = v.creater.userName;
+                    params["accessories.aid"] = v.aid;
+                    params["accessories.manifestTime"] = v.approverTime;
+                    params["accessories.status"] = v.status;
+
+                    printAccessoriesItem(v.aid, v.no);
+                });
+
             });
 
             return $liLine;
@@ -179,54 +245,54 @@ $(function () {
     })();
 
     var accessoriesSeacher = new Searcher();
-    var _Array = ['orderId', 'accessoriesNo', 'createrName', 'approverName', 'createTime', 'approverTime'];
-    
+    var _Array = ['orderId', 'accessoriesNo', 'createrName', 'approverName', 'createTime', 'approverTime', 'accessoriesStauts'];
+
     accessoriesSeacher.init(_Array, "condList", api.inventory.pageAccessories, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "accessoriesPostData", null, false, null, function () {
         var $adda = $('<a></a>').addClass('btn btn-success btn-minier pull-left').attr('name', 'shipment').css('margin-top', '-2px').html('批量出货');
 
         $adda.click(function () {
-        	batchout();
+            batchout();
         });
 
         return [];
     }, 'resultList');
-    
+
     function batchout() {
-    	
+
         var $checks = $('input[type="checkbox"]:checked', '.line');
         var $aids = [];
-        
-        if($checks.length == 0){
-        	com.showAlert(com.warning, "请选择辅料单");
-        	return false;
+
+        if ($checks.length == 0) {
+            com.showAlert(com.warning, "请选择辅料单");
+            return false;
         }
-        
-        for(var i=0;i<$checks.length;i++){
-        	
-        	var $check = $checks[i];
-        	
-        	if($check.attr("data-status") != 0){
-        		com.showAlert(com.warning, "辅料单状态不可操作");
-        		return false;
-        	}
-        	
-        	$aids.push($check.attr("data-aid"));
+
+        for (var i = 0; i < $checks.length; i++) {
+
+            var $check = $checks[i];
+
+            if ($check.attr("data-status") != 0) {
+                com.showAlert(com.warning, "辅料单状态不可操作");
+                return false;
+            }
+
+            $aids.push($check.attr("data-aid"));
         }
-        
+
         params["accessories.aids"] = $aids;
-        
-        com.popup4page('#layerPopUp', "views/manifest/accessories2batchout.html", "批量出货", function(){
-            goodsSeacher.doSearch();
+
+        com.popup4page('#layerPopUp', "views/manifest/accessories2batchout.html", "批量出货", function () {
+            accessoriesSeacher.doSearch();
         });
     }
 
     //打印货单项
-    function printAccessoriesItem(aid, no){
+    function printAccessoriesItem(aid, no) {
         com.popup4frame("辅料单号" + no, api.index.accessoriesPrintIndex.url, function () {
             parent.layer.getFrameIndex(window.name);
         }, null, true);
     }
-    
+
 });

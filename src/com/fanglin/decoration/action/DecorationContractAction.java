@@ -49,6 +49,8 @@ public class DecorationContractAction extends BaseListAction {
 
 	private String redirect;
 
+	private String data;
+
 	@Autowired
 	private DecorationContractService decorationContractService;
 
@@ -60,10 +62,50 @@ public class DecorationContractAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "sendDecorationContractForSignet", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String sendDecorationContractForSignet() throws FLException {
+
+		decorationContractService.sendDecorationContractForSignet(decorationContract);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "sendDecorationContractForAuth", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String sendDecorationContractForAuth() throws FLException {
+
+		decorationContractService.sendDecorationContractForAuth(decorationContract);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "sendDecorationContractForSign", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String sendDecorationContractForSign() throws FLException {
+
+		decorationContractService.sendDecorationContractForSign(decorationContract);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "sendDecorationContractForView", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String sendDecorationContractForView() throws FLException {
+
+		decorationContractService.sendDecorationContractForView(decorationContract);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "sendDecorationContractForDownload", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String sendDecorationContractForDownload() throws FLException {
+
+		decorationContractService.sendDecorationContractForDownload(decorationContract);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addDecorationContract() throws FLException {
 
-		decorationContractService.addDecorationContract(decorationContract, queryUserId());
+		decorationContractService.addDecorationContract(decorationContract, data, queryUserId());
 
 		return SUCCESS;
 	}
@@ -180,4 +222,11 @@ public class DecorationContractAction extends BaseListAction {
 		this.signet = signet;
 	}
 
+	public String getData() {
+		return data;
+	}
+
+	public void setData(String data) {
+		this.data = data;
+	}
 }

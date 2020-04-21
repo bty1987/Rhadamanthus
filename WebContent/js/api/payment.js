@@ -37,6 +37,7 @@ $.extend(api, {payment: {
 			args: ["balanceAdvance", "projectAdvance", "materialAdvance", "zaterialAdvance"]
 		}]
 	},
+	addAdvancePayment: {url: "addAdvancePayment.do"},
 	pagePaymentForCollect: {
 		url: "pagePaymentForCollect.do",
 		demo: true,

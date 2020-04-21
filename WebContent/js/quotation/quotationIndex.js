@@ -171,11 +171,11 @@ $(function () {
 
     initQuotationList();
 
-    com.focusPage('#btnBack').on(ace.click_event, function () {
+    com.focusPage('#btnBack').on('click', function () {
         com.switchPage("/views/decoration/decoration.html");
     });
 
-    com.focusPage('#createQuotation').on(ace.click_event, function () {
+    com.focusPage('#createQuotation').on('click', function () {
         decorationQuotation.editFlg = 0;
         com.clearValidator();
         com.cleanItems(decorationQuotation.quotationItems);
@@ -183,7 +183,7 @@ $(function () {
         decorationQuotation.quotationModal.modal("show");
     });
 
-    com.focusPage('#replicaQuotation').on(ace.click_event, function () {
+    com.focusPage('#replicaQuotation').on('click', function () {
         com.clearValidator();
         com.cleanItems(decorationQuotation.quotationItems);
         decorationQuotation.quotationItems.replicaType.on("change", function (e) {
@@ -280,7 +280,7 @@ $(function () {
             lockBtn.addClass("hide");
         }
         
-        copyBtn.on(ace.click_event, function () {
+        copyBtn.on('click', function () {
             
             decorationQuotation.editFlg = 2;
             
@@ -294,7 +294,7 @@ $(function () {
             });
         });
 
-        editBtn.on(ace.click_event, function () {
+        editBtn.on('click', function () {
             
             decorationQuotation.editFlg = 1;
             
@@ -311,7 +311,7 @@ $(function () {
             });
         });
         
-        defaultBtn.on(ace.click_event, function(){
+        defaultBtn.on('click', function(){
             
             var that = $(this)
             
@@ -332,7 +332,7 @@ $(function () {
             });
         });
 
-        deleteBtn.on(ace.click_event, function () {
+        deleteBtn.on('click', function () {
             
             if (com.focusPage("#defaultQuotation_" + $(this).attr("data")).hasClass("hide")) {
                 com.showAlert(com.warning, "默认报价不能删除");
@@ -349,11 +349,11 @@ $(function () {
             });
         });
 
-        enterBtn.on(ace.click_event, function () {
+        enterBtn.on('click', function () {
             enterQuotation($(this).attr("data"));
         });
         
-        lockBtn.on(ace.click_event, function(){
+        lockBtn.on('click', function(){
             
             var that = $(this);
             var qid = that.attr("data");
@@ -369,7 +369,7 @@ $(function () {
             });
         });
         
-        unlockBtn.on(ace.click_event, function(){
+        unlockBtn.on('click', function(){
             
             var that = $(this);
             var qid = that.attr("data");
@@ -386,7 +386,7 @@ $(function () {
             
         });
 
-        selectionBtn.on(ace.click_event, function(){
+        selectionBtn.on('click', function(){
             selectionQuotation($(this).attr("data"));
         });
 

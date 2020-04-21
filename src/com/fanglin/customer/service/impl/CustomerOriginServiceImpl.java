@@ -349,6 +349,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		UserPO designer = userDao.queryUserByUserId(customerOriginVO.getDesigner().getUserId());
 
 		customerOriginPO.setDesigner(designer);
+		customerOriginPO.setSalesmanType(customerOriginVO.getSalesmanType());
 
 		customerOriginDao.update(customerOriginPO);
 

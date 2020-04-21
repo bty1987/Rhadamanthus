@@ -27,6 +27,10 @@ public interface QuotationService {
 	
 	public Map<String, List<String>> queryQuotationForConfig(int company);
 	
+	public Map<String, Integer> countQuotationForNormood(QuotationVO quotationVO) throws FLException;
+	
+	public Map<String, Integer> countQuotationForNormrice(QuotationVO quotationVO) throws FLException;
+	
 	public int addQuotation(QuotationVO quotationVO, String userId, int company) throws FLException;
 	
 	public int updateQuotation(QuotationVO quotationVO) throws FLException;

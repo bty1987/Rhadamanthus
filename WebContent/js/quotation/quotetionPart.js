@@ -18,11 +18,11 @@ var QuotetionDetail = (function(){
                     that.quoModals.$domainTempletModal.modal("show");
                 }),
                 //折扣
-                $btnDiscount: com.focusPage('#discountBtn').on(ace.click_event, function(){ // 折扣界面
+                $btnDiscount: com.focusPage('#discountBtn').on('click', function(){ // 折扣界面
                     that.quoModals.$domainDiscountModal.modal("show");
                 }),
                 //计算总价
-                $btnCalculateTotal: com.focusPage('#calculateTotalBtn').on(ace.click_event, function(){
+                $btnCalculateTotal: com.focusPage('#calculateTotalBtn').on('click', function(){
                     com.focusPage('#calculateTotalFeeModal').find('.fl-quo-cal').html(null);
                     com.focusPage("#calDiscount").val("");
                     quo.calculateTotalFee(10);
@@ -44,7 +44,7 @@ var QuotetionDetail = (function(){
                 //    com.popup("打印报价",api.index.quotetionOutputIndex.url,null,null,true);
                 //}),
                 //返回
-                $btnBack: com.focusPage('#detailBckBtn').on(ace.click_event, function(){
+                $btnBack: com.focusPage('#detailBckBtn').on('click', function(){
                     com.showConfirm("当前页面存在重要数据,是否进行当前操作", function() {
                         com.switchPage(api.index.quotetionIndex.url);
                     });
@@ -410,7 +410,7 @@ var QuotetionDetail = (function(){
         //编辑功能区保存按钮点击
         saveDomainEdit : function(){
             var that = this;
-           com.focusPage('#saveFunctionAreaBtn').on(ace.click_event, function(){ // 编辑功能区页面
+           com.focusPage('#saveFunctionAreaBtn').on('click', function(){ // 编辑功能区页面
                 if(com.validate()){
                     return;
                 }
@@ -461,7 +461,7 @@ var QuotetionDetail = (function(){
             });
         },
         calculateTotal: function(){
-           com.focusPage('#calculateTotalFeeBtn').on(ace.click_event, function(){
+           com.focusPage('#calculateTotalFeeBtn').on('click', function(){
                 if(com.validate()){
                     return;
                 }
@@ -480,7 +480,7 @@ var QuotetionDetail = (function(){
         },
         //保存报价修改
         saveDiscountEdit : function(){
-           com.focusPage('#saveDisCountBtn').on(ace.click_event, function(){
+           com.focusPage('#saveDisCountBtn').on('click', function(){
                 if(com.validate()){
                     return;
                 }
@@ -906,7 +906,7 @@ var QuotetionDetail = (function(){
         },
         //添加自定义报价项
         saveCustomQuotesAdd : function(){
-           com.focusPage("#saveCustomFunctionAreaItemBtn").on(ace.click_event, function(event){
+           com.focusPage("#saveCustomFunctionAreaItemBtn").on('click', function(event){
                 var _areaType = domain.nowEditDomain.attr('data-areaType');
                 if(com.validate()){
                     return;
@@ -1024,7 +1024,7 @@ var QuotetionDetail = (function(){
             });
         },
         addHistoryQuotes : function(){
-           com.focusPage('#addHistoryItemsBtn').on(ace.click_event, function(event){
+           com.focusPage('#addHistoryItemsBtn').on('click', function(event){
                 quote.addDefaultQuotes();
                 quo.quoModals.$historyModal.modal("hide");
             });

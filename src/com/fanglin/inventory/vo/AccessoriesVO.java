@@ -40,6 +40,14 @@ public class AccessoriesVO implements Serializable {
 	
 	private Long total;
 	
+	private Integer printnum;
+	
+	private String comment;
+	
+	private UserBaseVO deliver;
+	
+	private Timestamp deliverTime;
+	
 	public AccessoriesVO() {
 		super();
 	}
@@ -49,12 +57,13 @@ public class AccessoriesVO implements Serializable {
 		this.creater = creater;
 	}
 
-	public AccessoriesVO(HouseVO house, UserBaseVO creater, UserBaseVO approver, UserBaseVO supervisor) {
+	public AccessoriesVO(HouseVO house, UserBaseVO creater, UserBaseVO approver, UserBaseVO supervisor, UserBaseVO deliver) {
 		super();
 		this.house = house;
 		this.creater = creater;
 		this.approver = approver;
 		this.supervisor = supervisor;
+		this.deliver = deliver;
 	}
 
 	public Long getAid() {
@@ -169,6 +178,39 @@ public class AccessoriesVO implements Serializable {
 
 	public void setTotal(Long total) {
 		this.total = total;
+	}
+
+	public Integer getPrintnum() {
+		return printnum;
+	}
+
+	public void setPrintnum(Integer printnum) {
+		this.printnum = printnum;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public UserBaseVO getDeliver() {
+		return deliver;
+	}
+
+	public void setDeliver(UserBaseVO deliver) {
+		this.deliver = deliver;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getDeliverTime() {
+		return deliverTime;
+	}
+
+	public void setDeliverTime(Timestamp deliverTime) {
+		this.deliverTime = deliverTime;
 	}
 
 }

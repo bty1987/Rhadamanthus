@@ -95,7 +95,7 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 
 			extensionItemPO = extensionItemDao.get(extensionItemVO.getEiid());
 
-			if (selectionItemDao.countSelectionItem(extensionPO.getOrderId(), extensionPO.getEid(), extensionItemPO.getQuoteItemId()) > 0) {
+			if (selectionItemDao.countSelectionItem(extensionPO.getOrderId(), extensionPO.getEid(), extensionItemPO.getEiid()) > 0) {
 				throw new FLException(200037, "存在关联选材项");
 			}
 
@@ -134,7 +134,7 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 			throw new FLException(200027, "扩展项不存在");
 		}
 
-		int count = selectionItemDao.countSelectionItem(extensionPO.getOrderId(), extensionPO.getEid(), extensionItemPO.getQuoteItemId());
+		int count = selectionItemDao.countSelectionItem(extensionPO.getOrderId(), extensionPO.getEid(), extensionItemPO.getEiid());
 
 		if (count > 0) {
 			throw new FLException(200037, "存在关联选材项");

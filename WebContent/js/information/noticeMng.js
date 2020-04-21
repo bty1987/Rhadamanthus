@@ -1,4 +1,3 @@
-
 $(function(){
 
     var notice = {
@@ -17,7 +16,8 @@ $(function(){
             endTime : com.focusPage("#endTime"),
             isPublic : com.focusPage("#isPublic"),
             contents : com.focusPage("#contents"),
-            filePath : com.focusPage("#filePath")
+            filePath : com.focusPage("#filePath"),
+            fileName : com.focusPage("#fileName")
         },
 
         noticeType: {},
@@ -25,7 +25,7 @@ $(function(){
         noticeIsPublic: {},
 
         editFlg: false,
-        postParam: {}
+        postParam: {},
     };
 
     notice.saveBtn.bindClick(saveData);
@@ -35,7 +35,6 @@ $(function(){
         com.clearValidator();
         com.cleanItems(notice.items);
     });
-
     com.post(api.ds.information, {}, function(res){
         notice.items.prioritySel.bindData(res.noticePriority, "key", "value");
         notice.items.typeSel.bindData(res.noticeType, "key", "value");
@@ -70,11 +69,11 @@ $(function(){
             var $liLine = $('<li></li>').addClass('item-blue clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.theme));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $ulDept = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            var $btnDown = $('<a></a>').addClass('btn btn-minier btn-yellow').html('下载');
+            var $btnDown = $('<a></a>').addClass('btn btn-minier btn-yellow').html('查看');
             var $management = $('<a></a>').addClass('btn btn-minier btn-success').html('管理');
-
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-warning').html('编辑');
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
 
@@ -90,8 +89,8 @@ $(function(){
                 ["结束时间:", v.endTime, "grey"],
                 ["公开:", notice.noticeIsPublic[v.isPublic], "blue"],
                 ["内容:", v.contents, "grey"],
-                ["状态:", starts <= myDate && end >= myDate ? "有效":"无效", "blue"]
-
+                ["状态:", starts <= myDate && end >= myDate ? "有效":"无效", "blue"],
+                ["文件名:", v.fileName == "" || v.fileName == null ? "无" : v.fileName, "red"]
             ];
 
             //循环出li中的属性
@@ -114,23 +113,32 @@ $(function(){
 
                 if(v.isPublic == 1) {
                     $divBtnWrap.append($management).appendTo($h3);
+
+                    var $liDepts = $('<li></li>');
+                    $('<strong></strong>').html('部门范围:').appendTo($liDepts);
+                    $('<b></b>').html(v.depts == null ? "无" : v.depts).addClass("red").appendTo($liDepts);
+
+                    $liDepts.appendTo($ulDept);
                 }
 
                 $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
-                $liLine.append($h3).append($ulProperty);
+                $liLine.append($h3).append($ulProperty).append($ulDept);
             }
 
             if(starts <= myDate && end >=myDate){
                 if(v.isPublic == 1) {
-                    $liLine.append($h3).append($ulProperty);
+                    $liLine.append($h3).append($ulProperty).append($ulDept);
                 }else{
-                    $liLine.append($h3).append($ulProperty);
+                    $liLine.append($h3).append($ulProperty).append($ulDept);
                 }
             }else{
-                $liLine.append($h3).append($ulProperty);
+                $liLine.append($h3).append($ulProperty).append($ulDept);
             }
             $btnDown.click(function(){
-            	window.open(config.media + v.filePath);
+                var url = config.media + v.filePath;
+
+                com.popup('公告', url);
+
             	return false;
             });
 
@@ -148,6 +156,7 @@ $(function(){
                 notice.items.isPublic.prop("checked", v.isPublic == 0);
                 notice.items.contents.val(v.contents);
                 notice.items.filePath.val(v.filePath);
+                notice.items.fileName.val(v.fileName);
 
                 notice.modals.noticeModal.modal("show");
             });
@@ -166,16 +175,38 @@ $(function(){
                 com.focusPage("#manageBtn").unbind().bind('click',function(){
                     var list = com.focusPage('input[name="module"]:checked', com.focusPage('#managements'));
                     var params = {"notice.nid": v.nid};
-                        
+
+                    if(list.length > 3){
+                        com.showAlert(com.warning, "部门数量最多3个");
+                        return false;
+                    }
+
+                    var checkedDepts = com.focusPage('input[name="module"]:checked').parents('.dd-handle');
+
+                    var dept =[];
+
+                    $.each(checkedDepts, function(i, v){
+
+                        dept[i] = $(this).text();
+
+                    })
+
+                    var depts = dept.join('-');
+
                     list.length && (
                         $.each(list, function(i, v){
+
                             var $v = $(this).val();
+
                             params["dids" + "[" + i + "]"] = $v;
+                            params["notice.depts"] = depts;
+
                             if($v == -1 || $v == '全部')
                                 return false;
                         }),
                         com.post(api.information.updateNoticeDepartment, params,function(res){
                             notice.modals.managementsModal.modal("hide");
+                            NoticeMngSeacher.doSearch();
                         }, null, false)
                     );
                 });
@@ -238,7 +269,8 @@ $(function(){
             "notice.endTime": notice.items.endTime.val(),
             "notice.isPublic": notice.items.isPublic.prop("checked") ? 0 : 1,
             "notice.contents": notice.items.contents.val(),
-            "notice.filePath": notice.items.filePath.val()
+            "notice.filePath": notice.items.filePath.val(),
+            "notice.fileName": notice.items.fileName.val()
         };
 
         notice.editFlg ? (url = api.information.updateNotice,options["notice.noticeId"] = notice.items.noticeId) : url = api.information.addNotice;
@@ -259,6 +291,8 @@ $(function(){
 
     function bindUploadfiy() {
         com.focusPage("#attachment").Huploadify({
+            fileTypeExts: '*.pdf',
+            fileSizeLimit: '5MB',
             auto: true,
             successTimeout: 99999,
             formData: {
@@ -272,37 +306,19 @@ $(function(){
             fileObjName: "strutsUploads",
             uploader: config.media + api.common.uploadOther.url,
             width: "78",
-            onSelectError: function(a, b, c) {
-                switch (b) {
-                    case -100:
-                        alert("上传的文件数量已经超出系统限制的" + com.focusPage("#file_upload").uploadify("settings", "queueSizeLimit") + "个文件!");
-                        break;
-                    case -110:
-                        alert("文件 [" + a.name + "] 大小超出系统限制的" + com.focusPage("#file_upload").uploadify("settings", "fileSizeLimit") + "大小!");
-                        break;
-                    case -120:
-                        alert("文件 [" + a.name + "] 大小异常");
-                        break;
-                    case -130:
-                        alert("文件 [" + a.name + "] 类型不正确");
-                }
-            },
+            'multi': false,
             onUploadSuccess: function(a, b, c) {
                 a = eval("(" + b + ")");
                 0 == a.errorCode ? com.focusPage("#filePath").val(a.resUrl) : alert(b);
+                0 == a.errorCode ? com.focusPage("#fileName").val(a.strutsUploadsFileName) : alert(b);
             },
-            itemTemplate: '<div id="${fileID}" class="uploadify-queue-item" style="position:absolute;top:-30px;width:200px;left:-200px;">\r\n\t\t\t<div class="cancel">\r\n\t\t\t\t<a href="javascript:$(\'#${instanceID}\').uploadify(\'cancel\', \'${fileID}\')">X</a>\r\n\t\t\t</div>\r\n\t\t\t<span class="fileName">${fileName} (${fileSize})</span><span class="data"></span>\r\n\t\t\t<div class="uploadify-progress">\r\n\t\t\t\t<div class="uploadify-progress-bar"><!--Progress Bar--></div>\r\n\t\t\t</div>\r\n\t\t</div>'
+            itemTemplate: '<div id="${fileID}" class="uploadify-queue-item"><div class="uploadify-progress" style="width: 75px;"><div class="uploadify-progress-bar"></div></div><span class="up_filename">${fileName}</span><br/><span class="uploadbtn">上传</span><span class="delfilebtn">删除</span></div>'
         });
     };
 
-    function showErrorAlert(a, b) {
-        var c = "";
-        "unsupported-file-type" === a ? c = "Unsupported format " + b : console.log("error uploading file", a, b);
-        $('<div class="alert"> <button type="button" class="close" data-dismiss="alert">&times;</button><strong>File upload error</strong> ' + c + " </div>").prependTo("#alerts");
-    }
-
     function showDepaermentModal() {
         $wrap = com.focusPage('#managements').find('.modal-body').empty();
+
         com.post(api.communion.queryDepartment, {}, function (res) {
             var treeData = res.deptList;
             if (!treeData || !treeData.length) {
@@ -319,7 +335,7 @@ $(function(){
                 level3 : {},
             };
             var $tree = $('<ol class="dd-list"></ol>');
-            
+
             $wrap.append($tree);
 
             menuArr.level1=[{did: -1, deptName: "全部"}];
@@ -344,9 +360,8 @@ $(function(){
                 $.each(menuArr.level1, function (i, v) {
                     var $li = $('<li></li>').addClass('dd-item');
                     var $div = $('<div></div>').addClass('dd-handle clearfix').text(v.name);
-                    var $input = $('<input>').attr({type: 'checkbox', name: 'module'}).addClass('ace').val(v.did);
                     var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom': '0', 'margin-top': '-5px'});
-                    var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
+                    var $label = $('<label></label>').append('<span class="lbl"></span>');
                     $indexCheck.append($label).appendTo($div);
                     $li.append($div).appendTo($tree);
                     menuObj.level1[v.did] = $li;
@@ -357,8 +372,9 @@ $(function(){
                 $.each(menuArr.level2, function (i, v) {
                     var $li = $('<li></li>').addClass('dd-item');
                     var $div = $('<div></div>').addClass('dd-handle clearfix').text(v.name);
+                    var $input = $('<input>').attr({type: 'checkbox', name: 'module'}).addClass('ace').val(v.did);
                     var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({'margin-bottom': '0', 'margin-top': '-5px'});
-                    var $label = $('<label></label>').append('<span class="lbl"></span>');
+                    var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
                     $indexCheck.append($label).appendTo($div);
                     menuObj.level2[v.did] = $li;
                     $li.append($div);

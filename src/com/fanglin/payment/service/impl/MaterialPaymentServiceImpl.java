@@ -33,7 +33,6 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.decoration.vo.DecorationActivityItemVO;
 import com.fanglin.material.dao.MaterialDao;
 import com.fanglin.material.dao.MaterialItemDao;
 import com.fanglin.material.dao.MaterialRefundDao;
@@ -581,7 +580,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int collectMaterialPayment(MaterialPaymentVO materialPaymentVO, List<DecorationActivityItemVO> decorationActivityItemVOs, List<Long> posids, String userId, Integer company) throws FLException{
+	public int collectMaterialPayment(MaterialPaymentVO materialPaymentVO, List<Long> posids, String userId, Integer company) throws FLException{
 
 		long realMoney = 0;
 

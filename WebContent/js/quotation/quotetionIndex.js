@@ -136,7 +136,7 @@ $(function() {
         }
     }, 5000);
 
-    com.focusPage('#createQuotetion').on(ace.click_event, function () {
+    com.focusPage('#createQuotetion').on('click', function () {
         quotetion.editFlg = 0;
         com.clearValidator();
         com.cleanItems(quotetion.quotetionItems);
@@ -146,7 +146,7 @@ $(function() {
         quotetion.quotetionModal.modal("show");
     });
 
-    com.focusPage('#replicaQuotetion').on(ace.click_event, function () {
+    com.focusPage('#replicaQuotetion').on('click', function () {
         com.clearValidator();
         com.cleanItems(quotetion.quotetionItems);
         quotetion.quotetionItems.replicaType.on("change", function (e) {
@@ -226,7 +226,7 @@ $(function() {
         });
 
         //复制
-        com.focusPage("#copyQuotation_" + qid).on(ace.click_event, function () {
+        com.focusPage("#copyQuotation_" + qid).on('click', function () {
             quotetion.editFlg = 2;
             com.clearValidator();
             com.cleanItems(quotetion.quotetionItems);
@@ -239,7 +239,7 @@ $(function() {
             });
         });
         //修改更新
-        com.focusPage("#editQuotation_"+qid).on(ace.click_event, function () {
+        com.focusPage("#editQuotation_"+qid).on('click', function () {
             quotetion.editFlg = 1;
             com.clearValidator();
             com.post(api.quotation.queryQuotetionByQid, {"quotetion.qid": $(this).attr("data")}, function (res) {
@@ -254,11 +254,11 @@ $(function() {
             });
         });
         //报价
-        com.focusPage("#editQuotationDetail_"+qid).on(ace.click_event, function () {
+        com.focusPage("#editQuotationDetail_"+qid).on('click', function () {
             editQuotationDetail($(this).attr("data"));
         });
         //删除
-        com.focusPage("#deleteQuotation_"+qid).on(ace.click_event, function(){
+        com.focusPage("#deleteQuotation_"+qid).on('click', function(){
 
             var dataname = $(this).attr("dataname");
             var option = {

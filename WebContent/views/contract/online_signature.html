@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+
+    <title>在线签名</title>
+
+	<link rel="shortcut icon" href="fanglin.ico" type="image/x-icon">
+
+    <style>
+		.zx11{
+        border: 1px;
+        border-color: red;
+		}
+		#signature {
+			border: 2px dotted black;
+		}
+		#signatureparent {
+        color:black;
+        background-color:darkgrey;
+		}
+		body{background:#F9F0DA}
+    </style>
+
+</head>
+<body>
+<div>
+<div class="container">
+    <div id="signatureparent">
+        <div id="signature"></div>
+    </div>
+    <br>
+    <button type="button" class="btn btn-primary btn-block" id="saveBtnBalance">提交</button>
+    <button type="button" class="btn btn-default btn-block" id="deleteSeal">清除</button>
+</div>
+	<img src="" alt="" id="image">
+</div>
+<script src="../../assets/altogether/js/jquery-2.0.3.min.js"></script>
+<script src="../../assets/altogether/js/jSignature.min.js"></script>
+<script type="text/javascript">
+
+   	var arguments = {
+		width: '100%',
+		height: '865px',
+		cssclass: 'zx11',
+		color:  'darkblue',
+		signatureLine: false,//去除默认画布上那条横线
+		lineWidth: '5'
+	};
+
+   $("#signature").jSignature(arguments);
+
+    //印章按钮
+   $("#saveBtnBalance").click(function () {
+
+	   var datapair =  $("#signature").jSignature("getData", "image");
+
+	    $.ajax({
+            type: "POST",
+			dataType: "json",
+            // contentType: "application/json; charset=utf-8",
+            url: "../../signateCustomers.do",
+            data: {
+            	"customer.cid": getQueryString('cid'),
+				"imgbase": datapair[1],
+				"authentication": "eX3o2SZdrpVOV9HC4UYTRA=="
+			},//避免base64长度过大，json传输
+			cache: false,
+            success: function (msg) {
+				if (msg.errorCode == 0) {
+					alert('上传成功');
+				} else {
+					alert('上传失败,请再次签名！');
+				}
+			}
+	    });
+
+   });
+
+    //清除印章按钮
+   $("#deleteSeal").click(function () {
+   	$("#signature").jSignature("reset");
+   });
+
+   //获取url属性值
+   function getQueryString(name) {
+	   var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+	   var r = window.location.search.substr(1).match(reg);
+	   if (r != null) return unescape(r[2]); return null;
+   }
+
+</script>
+</body>
+</html>

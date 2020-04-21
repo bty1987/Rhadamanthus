@@ -1,13 +1,18 @@
 var decorationUtils = {
+
     initMaterial: function (decorationDetail) {
     	var dataPage = params.urlLoadParams.depage;
         var $fanglinMaterial = com.focusPage('#fanglinMaterialPayments' + dataPage).html("");
         var $salesMaterialPayment = com.focusPage('#salesMaterialPayments' + dataPage).html("");
         var $brand = com.focusPage('#materialPaymentBrands' + dataPage).html("");
+        var $purCategory = com.focusPage('#materialPurchasedCategory' + dataPage).html("");
+        var $unpCategory = com.focusPage('#materialUnpurchasedCategory' + dataPage).html("");
         
         var $ulfanglin = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($fanglinMaterial);
         var $ulsales = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($salesMaterialPayment);
         var $ulbrand = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($brand);
+        var $purchasedCategory = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($purCategory);
+        var $unpurchasedCategory = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($unpCategory);
 
         var $total = 0;
         var $coupon = 0;
@@ -113,14 +118,27 @@ var decorationUtils = {
             });
         }
 
+        var purCategory = [];
+        var unpCategory = [];
+
         com.post(api.payment.querySalesPaymentByOrderId, {"sales.orderId": decorationDetail.decorationOrderId}, function (res) {
             salesPayments = res.salesPayments;
         }, null, false);
 
+        com.post(api.data.queryCategory, {}, function (res) {
+            $.each(res.categorys, function (index, value) {
+                if(unpCategory.indexOf(value.name) == -1 && (value.name) != "" ){
+                    unpCategory.push(value.name);
+                }
+            });
+        }, null, false);
+
         if (salesPayments && salesPayments.length) {
+
             $.each(salesPayments, function (i, v) {
                 var salesReceipt = v.salesReceipt;
                 if (v.status == 0) return true;
+                if (purCategory.indexOf(v.sales.category) == -1 && unpCategory.splice(unpCategory.indexOf(v.sales.category), 1)) {purCategory.push(v.sales.category); };
 
                 var $liLine = $('<li></li>').addClass('item-orange clearfix');
                 var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.sales.no + " " + materialUtils.materialPaymentTypeData[v.type]));
@@ -210,6 +228,10 @@ var decorationUtils = {
                 }
             });
         }
+
+        purCategory.length == 0 ?  noData("materialPurchasedCategory" + dataPage) : drawLineCategory(purCategory, $purchasedCategory);
+        drawLineCategory(unpCategory, $unpurchasedCategory);
+
         var material = {"total": $total, "coupon": $coupon};
 
         if ($ulfanglin.children("li").length == 0 && $ulsales.children("li").length == 0) {
@@ -242,6 +264,14 @@ var decorationUtils = {
             var $TotalPrice = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("实收额:" + ($total - $coupon)));
 
             $liLine.append($h4).append($couponPrice).append($TotalPrice).appendTo($ulbrand);
+        }
+
+        function drawLineCategory (list, div) {
+          $.each(list, function (index, value) {
+              var $liLine = $('<li></li>').addClass('item-orange clearfix col-md-4');
+              var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>')).html(value);
+              $liLine.append($h4).appendTo(div);
+          });
         }
         return material
     }, addDecorationActivityForDiv: function (_activitys, _decorationActivity, uiBtnMethod, couponCut, thingCut) {
@@ -695,6 +725,8 @@ var decorationUtils = {
         var $contract = com.focusPage("#" + contractId).html("");
         var $cad = com.focusPage("#" + cadId).html("");
         var $original =  com.focusPage("#" + originalId).html("");
+        
+        var options = ;
 
         com.post(api.decoration.queryDecorationPictureByOrderId, {"decorationPicture.orderId": orderId}, function (res) {
             var decorationPictures = res.decorationPictures;
@@ -715,23 +747,36 @@ var decorationUtils = {
                     decorationUtils.addPicture($original, decorationPicture);
                 }
             }
+            
+            com.popup4photos("#OriginalPicture");
+            com.popup4photos("#designPictures");
+            com.popup4photos("#projectPictures");
+            com.popup4photos("#ContractPictures");
+            com.popup4photos("#CADProjectPicture");
+        });
 
-            com.focusPage('.ace-thumbnails [data-rel="colorbox"]').colorbox({
-                reposition: true,
-                scalePhotos: true,
-                scrolling: false,
-                previous: '<i class="icon-arrow-left"></i>',
-                next: '<i class="icon-arrow-right"></i>',
-                close: '&times;',
-                current: '{current} of {total}',
-                maxWidth: '100%',
-                maxHeight: '100%'
+         com.focusPage("#confirmDesign").on('click', function () {
+            com.showConfirm("是否发送客户确认设计", function () {
+                com.post(api.decoration.sendDecorationInfoForConfirm, {"decorationInfo.orderId": orderId, "decorationInfo.isConfirmDesign": 1}, function () {
+                    com.showAlert(com.info, "发送成功");
+                });
             });
         });
+
+        com.focusPage("#confirmPricture").on('click', function () {
+            com.showConfirm("是否发送客户确认施工", function () {
+                com.post(api.decoration.sendDecorationInfoForConfirm, {"decorationInfo.orderId": orderId, "decorationInfo.isConfirmPricture": 1}, function () {
+                    com.showAlert(com.info, "发送成功");
+                });
+            });
+        });
+
     }, addPicture: function (e, i) {
         var $li = $('<li></li>').attr("id", "imgLi_" + i.dpId).appendTo(e);
         var $img = $('<img></img>').attr('width', 200).attr('height', 200);
-        var $imgA = $('<a></a>').attr('data-rel', 'colorbox').addClass('cboxElement').attr('href', com.showImg($img, i.path, 200, 200, '200x200')).attr('target', '_blank').append($img).appendTo($li);
+        var $imgA = $('<a></a>').addClass('cboxElement').attr('target', '_blank').append($img).appendTo($li);
+        
+        com.showImg($img, i.path, 200, 200, i.name);
 
         var $tags = $('<div></div>').addClass('tags').appendTo($li);
         var $nameHolder = $('<span></span>').addClass('label-holder').appendTo($tags);
@@ -743,15 +788,21 @@ var decorationUtils = {
         var $toolLabel = $('<label></label>').appendTo($tools);
         var $downA = $('<a></a>').addClass("icon-download-alt").appendTo($tools);
 
-            var $delA = $('<a></a>').addClass("icon-remove").appendTo($tools);
+        var $delA = $('<a></a>').addClass("icon-remove").appendTo($tools);
 
-            $delA.click(function () {
-                com.post(api.decoration.deleteDecorationPicture, {"decorationPicture.dpId": i.dpId}, function (res) {
-                    com.focusPage("#imgLi_" + res.decorationPicture.dpId).remove();
-                });
+        $delA.click(function () {
+            com.post(api.decoration.deleteDecorationPicture, {"decorationPicture.dpId": i.dpId}, function (res) {
+                com.focusPage("#imgLi_" + res.decorationPicture.dpId).remove();
             });
-
+        });
+        
         com.downloadFile($downA, i.path, i.name);
+        
+        com.popup4photos("#OriginalPicture");
+        com.popup4photos("#designPictures");
+        com.popup4photos("#projectPictures");
+        com.popup4photos("#ContractPictures");
+        com.popup4photos("#CADProjectPicture");
 
     }, addCAD: function (e, i) {
 
@@ -982,7 +1033,7 @@ var decorationUtils = {
                     ["col-md-4", "服务费", "servicePrice_account", false]
                 ]));
 
-                com.focusPage('#maching').html((utils.changeTwoDecimal(com.checkNull(res.maching * 100, 0)) + "%"));
+                com.focusPage('#maching').html((utils.changeTwoDecimal(com.checkNull(res.matching * 100, 0)) + "%"));
                 com.focusPage('#discount').html(com.checkNull(res.discount, 0));
                 com.focusPage('#projectPrice_account').html(com.checkNull(res.projectPrice, 0));
                 com.focusPage('#materialPrice_account').html(com.checkNull(res.materialPrice, 0));
@@ -1214,8 +1265,7 @@ var decorationUtils = {
         $a.click(function () {
             $li.remove();
         });
-    },
-    countTatol: function (daiId) {
+    }, countTatol: function (daiId) {
 
         com.focusPage("#pricing_" + daiId + " .module_activity_border").data("total", 0);
         var coupon = 0;

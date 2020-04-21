@@ -38,11 +38,11 @@ $(function () {
         "salesNo": params.params.data.no,
         "brand": params.params.data.brand,
         "createTime": params.params.data.createTime,
-        "referMoney": utils.accAdd(params.params.data.depositpay,params.params.data.fullpay),
-        "capitalize": utils.getCNMoney(utils.accAdd(params.params.data.depositpay,params.params.data.fullpay)),
+        "referMoney": utils.changeThrDecimal(params.params.total),
+        "capitalize": utils.getCNMoney(params.params.total),
         "salesItems": []
     };
-
+    
     com.post(querySalesItemBySid, {'refunds.sid':params.params.data.sid}, function (data) {
         createList(data.refundsItems).appendTo(trList);
     },null, false);

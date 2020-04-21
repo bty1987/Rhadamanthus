@@ -155,6 +155,13 @@ $.extend(api, {construction: {
     successDrawLine: {url: "successDrawLine.do"},
     failureDrawLine: {url: "failureDrawLine.do"},
     
+    pageConstructionInfo:{url: "pageConstructionInfo.do", demo: true,
+        type: "query",
+        tranargs: [{
+            result:"paging-data-decoration-house",
+            args:["buildArea"]
+        }]},
+    
     queryConstructionInfo: {url: "queryConstructionInfo.do",
     type: "query",
     tranargs: [{
@@ -177,6 +184,7 @@ $.extend(api, {construction: {
     tranargs:{
          args: ["constructionInfo.timeLimit"]
     }},
+    sendConstructionInfoForConfirm: {url: "sendConstructionInfoForConfirm.do"},
     
     pageConstructionAccessory: {url: "pageConstructionAccessory.do", demo: true,
         type: "query",

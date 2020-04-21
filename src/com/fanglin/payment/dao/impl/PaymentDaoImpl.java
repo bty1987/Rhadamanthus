@@ -35,8 +35,6 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 
 		PagingQuery<PaymentPO> query = pagingQuery(paging, PaymentPO.class);
 		
-		query.add(query.getCriterion("company", company, "eq"));
-		
 		queryFilterExcute(query, filters);
 
 		return query.list();
