@@ -15,7 +15,8 @@ jQuery(function($) {
 			activityItems : com.focusPage("#activityItems"),
 		    name : com.focusPage("#awardStocksname"),
 		    awardStockstype : com.focusPage("#awardStockstype"),
-		    money : com.focusPage("#money")
+		    money : com.focusPage("#money"),
+			integral : com.focusPage("#integral")
 		},
 
 		activityItemPostData : {
@@ -48,7 +49,7 @@ jQuery(function($) {
 		})
 
 	});
-	
+
 	function addActivityItemForDiv(_activityItems, _activityItem){
 
 		var pricingSpan = $("<div></div>").addClass("pricing-span").css("margin-right", "10px").attr("id", "pricing_" + _activityItem.aiid).prependTo(_activityItems);
@@ -74,10 +75,15 @@ jQuery(function($) {
 		var widgetBody = $("<div></div>").addClass("widget-body").appendTo(widgetBox);
 		var widgetMain = $("<div></div>").addClass("widget-main no-padding").appendTo(widgetBody);
 		var ul = $("<ul></ul>").addClass("list-unstyled list-striped pricing-table").appendTo(widgetMain);
+
 		var nameLi = $("<li></li>").appendTo(ul);
 		var nameSpan = $("<span></span>").attr("id", "activityItemName_" + _activityItem.aiid).text(_activityItem.name).appendTo(nameLi);
+
 		var moneyLi = $("<li></li>").text("金额:").appendTo(ul);
 		var moneySpan = $("<span></span>").attr("id", "money_" + _activityItem.aiid).text(_activityItem.money).appendTo(moneyLi);
+
+		var integralLi = $("<li></li>").text("积分:").appendTo(ul);
+		var integralSpan = $("<span></span>").attr("id", "integral_" + _activityItem.aiid).text(_activityItem.integral).appendTo(integralLi);
 
 		var uiPgDiv = $("<div></div>").addClass("ui-pg-div").appendTo(widgetBody);
 		var deleteBtn = $("<span></span>").addClass("ui-icon ui-icon-trash").attr("id", "delete_" + _activityItem.aiid).appendTo(uiPgDiv);
@@ -104,6 +110,7 @@ jQuery(function($) {
 			"activity.aid":activityItem.activityItemPostData.aid,
 			"activityItem.asid":activityItem.items.name.val(),
 			"activityItem.money":activityItem.items.money.val(),
+			"activityItem.integral" : activityItem.items.integral.val(),
 			"activityItem.type":activityItem.items.awardStockstype.val(),
 			"activityItem.activity":activityItem.activityItemPostData.activityName
 		};
@@ -114,11 +121,11 @@ jQuery(function($) {
 			if(activityItem.editFlag){
 				com.focusPage("#pricing_" + activityItem.activityItemPostData.aiid).remove();
 			}
-			
+
 			addActivityItemForDiv(activityItem.items.activityItems, res.activityItem);
 
 		});
-		
+
 		activityItem.modals.activityItemModal.modal("hide");
 	}
 

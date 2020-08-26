@@ -101,7 +101,7 @@ jQuery(function($) {
 	}, null, false);
 
 	com.post(api.ds.decoration, {}, function(res){
-		materialPayment.decorationType = res.type;
+		materialPayment.decorationType = res.typeness;
 	}, null, false);
 
 	com.selectTypeahead("materialcashInfo", materialPayment.cashUtil, "key", "value", null);
@@ -334,17 +334,12 @@ jQuery(function($) {
 			var mrId = v.mrId;
 
 			$btnPrint.click(function(){
-				if(v.collecter.userId!=params.userInfo.user.userId){
-					com.showAlert(com.warning, "收款人不匹配, 不能打印");
-					return false;
-				}else{
-					params.mrId = mrId;
-					params.decorationOrderMOrderId = v.material.orderId;
-					params.decorationReceiptDrId = v.drId;
-					com.popup("专用收款收据__装修单号: " + v.material.orderId  ,api.index.materialPaymentReceiptIndex.url ,function () {
-						parent.layer.getFrameIndex(window.name);
-					},null,true)
-				}
+				params.mrId = mrId;
+				params.decorationOrderMOrderId = v.material.orderId;
+				params.decorationReceiptDrId = v.drId;
+				com.popup("专用收款收据__装修单号: " + v.material.orderId  ,api.index.materialPaymentReceiptIndex.url ,function () {
+					parent.layer.getFrameIndex(window.name);
+				},null,true)
 			});
 
 			//显示装修单信息

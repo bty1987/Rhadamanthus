@@ -27,6 +27,8 @@ public class ContractPO implements Serializable {
 	private short status;
 	
 	private int company;
+	
+	public static final String COLUMN_COMPANY_STR = "company";
 
 	public ContractPO() {
 		super();

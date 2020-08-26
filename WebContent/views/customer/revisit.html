@@ -1,0 +1,66 @@
+<div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+            <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+            <div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+        </div>
+    </div>
+</div>
+ <div class="modal fade" id="addModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabe1">添加回访信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="decoration">装修单号:</label>
+                            <div class="col-sm-9">
+                                <input type="text" maxlength="64" id="decoration" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right ">回访类型:</label>
+                            <div class="col-md-9">
+                                <select id='type' class="col-xs-10 col-sm-6 v_type"></select>
+                            </div>
+                        </div>
+						<div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="ident">引用id:</label>
+                            <div class="col-sm-9">
+                                <input type="text" maxlength="64" id="ident" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+                         <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right ">满意度:</label>
+                            <div class="col-md-9">
+                                <select id='gladness' class='col-xs-10 col-sm-6'></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="content">内容</label>
+                            <div class="col-sm-9">
+                                <input type="text" maxlength="64" id="content" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+                        
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="addConfirmBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="addCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/customer/revisit.js']);
+</script>

@@ -38,14 +38,25 @@ import com.fanglin.core.security.SecurityCodeHelper;
 import com.fanglin.core.security.SecurityCodeHelper.SecurityCodeLevel;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.information.po.MessagePO;
+import com.fanglin.personel.dao.DutmentDao;
+import com.fanglin.personel.dao.UserContractDao;
 import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.dao.UserEducationDao;
 import com.fanglin.personel.dao.UserInfoDao;
+import com.fanglin.personel.dao.UserOperationDao;
+import com.fanglin.personel.po.DutmentPO;
+import com.fanglin.personel.po.UserContractPO;
+import com.fanglin.personel.po.UserEducationPO;
 import com.fanglin.personel.po.UserExperiencePO;
 import com.fanglin.personel.po.UserInfoPO;
+import com.fanglin.personel.po.UserOperationPO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.service.UserService;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.personel.vo.UserContractVO;
+import com.fanglin.personel.vo.UserEducationVO;
 import com.fanglin.personel.vo.UserInfoVO;
+import com.fanglin.personel.vo.UserOperationVO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.dao.RoleDao;
@@ -98,6 +109,18 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private DepartmentTypeDao departmentTypeDao;
+
+	@Autowired
+	private DutmentDao dutmentDao;
+	
+	@Autowired
+	private UserContractDao userContractDao;
+	
+	@Autowired
+	private UserEducationDao userEducationDao;
+	
+	@Autowired
+	private UserOperationDao userOperationDao;
 
 	@Override
 	public void pageUser(Paging paging, List<Filter> filters, UserVO userVO, Integer company) throws FLException {
@@ -169,8 +192,11 @@ public class UserServiceImpl implements UserService {
 		if (companyPO == null) {
 			throw new FLException(230015, "公司不存在");
 		}
+		BeanUtil.copyProperties(userInfoPO, userInfoVO, Arrays.asList("user", "fangliner"));
 
-		BeanUtil.copyProperties(userInfoPO, userInfoVO, Arrays.asList("user"));
+		if (userInfoPO.getFangliner() != null) {
+			userInfoVO.setFangliner(convertBean(userInfoPO.getFangliner()));
+		}
 
 		userInfoVO.setUser(convertBean(userInfoPO.getUser()));
 		userInfoVO.getUser().setCompanys(companyPO.getName());
@@ -190,9 +216,13 @@ public class UserServiceImpl implements UserService {
 			throw new FLException(190005, "人员不存在");
 		}
 
-		BeanUtil.copyProperties(userInfoPO, userInfoVO, Arrays.asList("user"));
+		BeanUtil.copyProperties(userInfoPO, userInfoVO, Arrays.asList("user", "fangliner"));
 
 		userInfoVO.setUser(convertBean(userInfoPO.getUser()));
+
+		if (userInfoPO.getFangliner() != null) {
+			userInfoVO.setFangliner(convertBean(userInfoPO.getFangliner()));
+		}
 
 		try {
 			userInfoVO.getUser().setCompanys(AESHelper.encrypt(FormatUtil.encodeCompany(userInfoPO.getUser().getCompany()), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
@@ -225,17 +255,18 @@ public class UserServiceImpl implements UserService {
 
 		Paging paging = new Paging(0, 10);
 
-		int dtid = 0;
-
 		if (userVO.getStatus() == null) {
-			userVO.setStatus(UserPO.STATUS_ENABLE_INT);
+			userVO.setStatus(UserPO.STATUS_ONJOB_INT);
 		}
 
+		int dtid = 0;
+
 		if (departmentType != null && departmentType.getName() != null && departmentType.getName().length() != 0) {
+
 			dtid = departmentTypeDao.queryDepartmentTypeByName(departmentType.getName()).getDtid();
 		}
 
-		List<UserPO> userPOs = userDao.pageUserForNameByPinyinName(paging, pinyinName, userVO.getStatus(), dtid, company);
+		List<UserPO> userPOs = userDao.pageUserForNameByPinyinName(paging, pinyinName, userVO.getStatus(), company, dtid);
 
 		for (UserPO userPO : userPOs) {
 			userBaseVOs.add(convertBaseBean(userPO));
@@ -253,7 +284,7 @@ public class UserServiceImpl implements UserService {
 		if (userPO == null)
 			return userVO;
 
-		if (userPO.getStatus() != UserPO.STATUS_ENABLE_INT)
+		if (userPO.getStatus() != UserPO.STATUS_ONJOB_INT)
 			return userVO;
 
 		if (!userPO.getPassword().equals(MD5Helper.MD5(password)))
@@ -285,7 +316,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void addUser(UserInfoVO userInfoVO, int company) throws FLException {
+	public void addUser(UserInfoVO userInfoVO, List<UserContractVO> userContractVOs, List<UserEducationVO> userEducationVOs, List<UserOperationVO> userOperationVOs, int company) throws FLException {
 
 		CompanyPO companyPO = companyDao.get(company);
 
@@ -315,12 +346,25 @@ public class UserServiceImpl implements UserService {
 			throw new FLException(310002, "部门不可添加人员");
 		}
 
+		DutmentPO dutmentPO = dutmentDao.queryDutmentByDids(userInfoVO.getUser().getDept().getDid(), userInfoVO.getUser().getDuty().getDid());
+
+		if (dutmentPO != null) {
+			
+			if (dutmentPO.getNum() >= dutmentPO.getLimit()) {
+				throw new FLException(190011, "人员数量已达上限");
+			}
+
+			dutmentPO.setNum(dutmentPO.getNum() + 1);
+
+			dutmentDao.update(dutmentPO);
+		}
+
 		SystemConfigPO visitor = systemConfigDao.querySystemConfig("visitor"); // 游客角色ID
 
 		if (visitor == null) {
 			throw new FLException(230010, "角色不存在");
 		}
-
+		
 		SystemConfigPO password = systemConfigDao.querySystemConfig("password", company);
 
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_USER_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
@@ -331,10 +375,12 @@ public class UserServiceImpl implements UserService {
 
 		userPO.setUserId(_userId.toString());
 
+		userPO.setGender(String.valueOf(userInfoVO.getGender()).equals("0") ? "女" : "男");
 		userPO.setPassword(MD5Helper.MD5(password == null ? "helloworld" : password.getValue()));
 		userPO.setLoginId(userVO.getLoginId());
 
 		userPO.setRole(new RolePO(Integer.valueOf(visitor.getValue())));
+
 		userPO.setIsLogin(UserPO.ISLOGIN_FIP_INT);
 		userPO.setType(UserPO.TYPE_USER_INT);
 		userPO.setCompany(company);
@@ -355,17 +401,63 @@ public class UserServiceImpl implements UserService {
 
 		UserInfoPO userInfoPO = new UserInfoPO();
 
-		BeanUtil.copyProperties(userInfoVO, userInfoPO, Arrays.asList("user"));
+		BeanUtil.copyProperties(userInfoVO, userInfoPO, Arrays.asList("user", "fangliner"));
+
+		if (userInfoVO.getFangliner().getUserId() != null) {
+			UserPO fangliner = userDao.queryUserByUserId(userInfoVO.getFangliner().getUserId());
+			userInfoPO.setFangliner(fangliner);
+		}
+		
+		if (userContractVOs != null && userContractVOs.size() != 0) {
+
+			for (UserContractVO userContractVO : userContractVOs) {
+				UserContractPO usercontract = new UserContractPO();
+				
+				String currentDate = DateUtil.current("yyMMdd").toString();
+				int count1 = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_SO_INT, currentDate, company);
+				String no =  companyPO.getShortname() + "P" + currentDate + FormatUtil.fillZero(FormatUtil.offset(count1), "0000");
+				
+				BeanUtil.copyPropertie(userContractVO, usercontract);
+				usercontract.setUid(userPO.getUid());
+				usercontract.setNo(no);
+				usercontract.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+				
+				userContractDao.save(usercontract);
+			}
+		}
+		
+		if (userEducationVOs != null && userEducationVOs.size() != 0) {
+			for (UserEducationVO userEducationVO : userEducationVOs) {
+				UserEducationPO userEducationPO = new UserEducationPO();
+				
+				BeanUtil.copyPropertie(userEducationVO, userEducationPO);
+				userEducationPO.setUid(userPO.getUid());
+				userEducationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+				userEducationDao.save(userEducationPO);
+			}
+		}
+		
+		if (userOperationVOs != null && userOperationVOs.size() != 0) {
+			for (UserOperationVO userOperationVO : userOperationVOs) {
+				UserOperationPO userOperationPO = new UserOperationPO();
+				
+				BeanUtil.copyPropertie(userOperationVO, userOperationPO);
+				userOperationPO.setUid(userPO.getUid());
+				userOperationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+				userOperationDao.save(userOperationPO);
+			}
+		}
 
 		userInfoPO.setUser(userPO);
 
 		userInfoDao.save(userInfoPO);
-
+		
 		UserExperiencePO userExperiencePO = new UserExperiencePO();
 
 		userExperiencePO.setUid(userPO.getUid());
 		userExperiencePO.setType("入职");
 		userExperiencePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		userExperiencePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		userExperiencePO.setComment(String.format("公司:%s,部门:%s,职位:%s", companyPO.getName(), userPO.getDept().getName(), dutyDao.get(userPO.getDuty().getDid()).getName()));
 
 		userExperienceDao.save(userExperiencePO);
@@ -394,15 +486,23 @@ public class UserServiceImpl implements UserService {
 		short newstatus = userInfoVO.getUser().getStatus();
 		short oldstatus = userPO.getStatus();
 
-		int newdeptId = userVO.getDept().getDid();
-		int olddeptId = userPO.getDept().getDid();
+		DepartmentPO newdept = departmentPO;
+		DepartmentPO olddept = userPO.getDept();
 
-		String newduty = dutyDao.get(userVO.getDuty().getDid()).getName();
-		String oldduty = userPO.getDuty().getName();
+		DutyPO newduty = dutyDao.get(userVO.getDuty().getDid());
+		DutyPO oldduty = userPO.getDuty();
 
 		userVO.setUid(userPO.getUid());
 
-		BeanUtil.copyProperties(userInfoVO, userInfoPO, Arrays.asList("user"));
+		BeanUtil.copyProperties(userInfoVO, userInfoPO, Arrays.asList("user", "fangliner"));
+
+		if (userInfoVO.getFangliner().getUserId() != null) {
+			UserPO fangliner = userDao.queryUserByUserId(userInfoVO.getFangliner().getUserId());
+			userInfoPO.setFangliner(fangliner);
+		}
+
+		userInfoDao.update(userInfoPO);
+
 		BeanUtil.copyProperties(userVO, userPO, Arrays.asList("role", "dept", "duty", "uId", "userId", "userName", "loginId", "password", "role", "isLogin", "company", "extranet"));
 
 		userPO.setDept(departmentPO);
@@ -420,21 +520,49 @@ public class UserServiceImpl implements UserService {
 		}
 
 		userDao.update(userPO);
+		
+		userDao.flush();
 
-		if (newstatus != oldstatus || newdeptId != olddeptId || !oldduty.equals(newduty)) {
+		if (newstatus != oldstatus || newdept.getDid() != olddept.getDid() || oldduty.getDid() != newduty.getDid()) {
 
-			DepartmentPO ndept = departmentDao.get(newdeptId);
-			DepartmentPO odept = departmentDao.get(olddeptId);
-
+			DutmentPO olddutment = dutmentDao.queryDutmentByDids(olddept.getDid(), oldduty.getDid());
+			DutmentPO newdutment = dutmentDao.queryDutmentByDids(newdept.getDid(), newduty.getDid());
+			
+			int oldCount = userDao.countUserByDid(olddept.getDid(), oldduty.getDid(), company);
+			int newCount = userDao.countUserByDid(newdept.getDid(), newduty.getDid(), company);
+			
+			if (olddutment != null) {
+				if (newstatus != oldstatus && newstatus == 0) {
+					if (olddutment.getNum() >= olddutment.getLimit()) {
+						throw new FLException(190011, "人员数量已达上限");
+					}
+				}
+				
+				olddutment.setNum(oldCount);
+				dutmentDao.update(olddutment);
+			}
+			
+			if (newdutment != null && olddutment != newdutment) {
+				if (newdutment.getNum() >= newdutment.getLimit()) {
+					throw new FLException(190011, "人员数量已达上限");
+				}
+				
+				newdutment.setNum(newCount);
+				dutmentDao.update(newdutment);
+			}
+			
 			UserExperiencePO userExperiencePO = new UserExperiencePO();
 
 			userExperiencePO.setUid(userPO.getUid());
 			userExperiencePO.setType((newstatus == oldstatus) ? "调职" : newstatus == 0 ? "入职" : "离职");
 			userExperiencePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-			userExperiencePO.setComment(String.format("原部:%s,原职:%s,现部:%s,现职:%s", odept.getName(), oldduty, ndept.getName(), newduty));
+			userExperiencePO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
+
+			userExperiencePO.setComment(String.format("原部:%s,原职:%s,现部:%s,现职:%s", olddept.getName(), oldduty.getName(), newdept.getName(), newduty.getName()));
 
 			userExperienceDao.save(userExperiencePO);
 		}
+
 	}
 
 	@Override
@@ -451,7 +579,6 @@ public class UserServiceImpl implements UserService {
 
 		UserPO userPO = userInfoPO.getUser();
 
-		userInfoPO.setAge(userInfoVO.getAge());
 		userInfoPO.setQq(userInfoVO.getQq());
 		userInfoPO.setWechat(userInfoVO.getWechat());
 		userInfoPO.setEmail(userInfoVO.getEmail());
@@ -672,8 +799,6 @@ public class UserServiceImpl implements UserService {
 			throw new FLException(190005, "人员不存在");
 		}
 
-		userInfoPO.setProfiles(userInfoVO.getProfiles());
-
 		userInfoDao.update(userInfoPO);
 	}
 
@@ -683,7 +808,9 @@ public class UserServiceImpl implements UserService {
 
 		BeanUtil.copyProperties(userPO, userVO, Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
 
-		BeanUtil.copyProperties(userPO.getDuty(), userVO.getDuty(), Arrays.asList("departmentType"));
+		if (userPO.getDuty() != null) {
+			BeanUtil.copyProperties(userPO.getDuty(), userVO.getDuty(), Arrays.asList("departmentType"));
+		}
 
 		if (userPO.getDuty().getDepartmentType() != null) {
 			userVO.getDuty().setDepartmentType(new DepartmentTypeVO());

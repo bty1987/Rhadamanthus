@@ -1,6 +1,6 @@
 jQuery(function ($) {
 
-    var balanceBalance = {
+    var payBalance = {
 
         refundBtn: com.focusPage("#refundBtn"),
         cancellBtn: com.focusPage("#cancelBtn"),
@@ -21,7 +21,7 @@ jQuery(function ($) {
 
     queryAccountes();
 
-    balanceBalance.refundBtn.click(function () {
+    payBalance.refundBtn.click(function () {
 
         if (com.validate('list', 'bottom')) {
             return false;
@@ -77,12 +77,12 @@ jQuery(function ($) {
 
     });
 
-    balanceBalance.cancellBtn.click(function () {
+    payBalance.cancellBtn.click(function () {
         com.closePopup();
     });
 
     function resultList(i, v) {
-        var $line = addline(i + 1).appendTo(balanceBalance.items.list).attr({
+        var $line = addline(i + 1).appendTo(payBalance.items.list).attr({
             "data-miid": v.aid,
         });
         $line.find('div.name').text(v.name);

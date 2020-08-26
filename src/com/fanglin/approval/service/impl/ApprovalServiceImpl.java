@@ -32,6 +32,7 @@ import com.fanglin.approval.service.ApprovalManifestDBService;
 import com.fanglin.approval.service.ApprovalMaterialFullPaymentService;
 import com.fanglin.approval.service.ApprovalMaterialRefundService;
 import com.fanglin.approval.service.ApprovalQuotationDiscountService;
+import com.fanglin.approval.service.ApprovalSalesDaymentService;
 import com.fanglin.approval.service.ApprovalSalesDiscountService;
 import com.fanglin.approval.service.ApprovalSalesRefundService;
 import com.fanglin.approval.service.ApprovalService;
@@ -94,6 +95,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 	@Autowired
 	private ApprovalCustomerOriginService approvalCustomerOriginService;
+
+	@Autowired
+	private ApprovalSalesDaymentService approvalSalesDaymentService;
 
 	@Autowired
 	private UserDao userDao;
@@ -209,6 +213,9 @@ public class ApprovalServiceImpl implements ApprovalService {
 		case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_INT:
 			approvalCustomerOriginService.approveForCustomerOrigin(approvalPO);
 			break;
+		case ApprovalPO.APPROVAL_TYPE_SALESDAYMENT_INT:
+			approvalSalesDaymentService.approveForSalesDayment(approvalPO);
+			break;
 		default:
 			break;
 		}
@@ -223,14 +230,51 @@ public class ApprovalServiceImpl implements ApprovalService {
 	public int approve(ApprovalVO approvalVO) throws FLException {
 
 		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
-
-		if (approvalPO.getStatus() != ApprovalPO.APPROVAL_STATUS_INIT_INT) {
-			throw new FLException(240001, "不能重复审批");
+		if (approvalPO == null) {
+			throw new FLException(240009, "审批信息不存在");
 		}
 
+		if (approvalPO.getStatus() == ApprovalPO.APPROVAL_STATUS_APPROVAL_INT) {
+			throw new FLException(240009, "审批状态不可操作");
+		}
+
+		if (approvalPO.getStatus() == ApprovalPO.APPROVAL_STATUS_REFUSE_INT) {
+			throw new FLException(240009, "审批状态不可操作");
+		}
+
+		if (approvalPO.getStatus() == ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT) {
+			throw new FLException(240009, "审批状态不可操作");
+		}
 		approvalPO.setAnnotate(approvalVO.getAnnotate());
 
 		approvalPO = approve(approvalPO);
+
+		approvalDao.update(approvalPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int affirm(ApprovalVO approvalVO) throws FLException {
+
+		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
+
+		if (approvalPO.getStatus() != ApprovalPO.APPROVAL_STATUS_INIT_INT) {
+			throw new FLException(240001, "审批状态不可操作");
+		}
+
+		short type = approvalPO.getType();
+
+		switch (type) {
+		case ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT:
+			approvalDecorationBelongService.confirmForDecorationBelong(approvalPO);
+			break;
+		default:
+			break;
+		}
+
+		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT);
 
 		approvalDao.update(approvalPO);
 
@@ -243,14 +287,13 @@ public class ApprovalServiceImpl implements ApprovalService {
 
 		ApprovalPO approvalPO = approvalDao.queryApprovalByProcessinstanceid(approvalVO.getProcessinstanceid());
 
-		if (approvalPO.getStatus() != ApprovalPO.APPROVAL_STATUS_APPROVE_INT) {
-			throw new FLException(240001, "不能重复审批");
+		if (approvalPO == null) {
+			throw new FLException(240001, "审批信息不存在");
 		}
 
 		approvalPO = approve(approvalPO);
 
 		approvalDao.update(approvalPO);
-
 		return 0;
 	}
 
@@ -264,10 +307,17 @@ public class ApprovalServiceImpl implements ApprovalService {
 			throw new FLException(240009, "审批信息不存在");
 		}
 
-		if (approvalPO.getStatus() != ApprovalPO.APPROVAL_STATUS_INIT_INT) {
-			throw new FLException(240001, "不能重复审批");
+		if (approvalPO.getStatus() == ApprovalPO.APPROVAL_STATUS_APPROVAL_INT) {
+			throw new FLException(240009, "审批状态不可操作");
 		}
 
+		if (approvalPO.getStatus() == ApprovalPO.APPROVAL_STATUS_REFUSE_INT) {
+			throw new FLException(240009, "审批状态不可操作");
+		}
+
+		if (approvalPO.getStatus() == ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT) {
+			throw new FLException(240009, "审批状态不可操作");
+		}
 		approvalPO.setAnnotate(approvalVO.getAnnotate());
 
 		short type = approvalPO.getType();

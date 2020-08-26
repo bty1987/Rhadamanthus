@@ -5,6 +5,7 @@ jQuery(function($) {
 		saveBtn: null,
 		cancellBtn: null,
 		modal: null,
+		type: {},
 		backVisitItems: {},
 		orderItems: {},
 		relationshipType: ["普通客户", "企业高端客户", "企业关系客户", "领导关系客户", "员工关系"],
@@ -27,6 +28,9 @@ jQuery(function($) {
 	orderEntry.orderItems.houseClass = com.focusPage("#houseClass");
 	orderEntry.orderItems.apartmentType = com.focusPage("#apartmentType");
 	orderEntry.orderItems.houseArea = com.focusPage("#houseArea");
+	orderEntry.orderItems.houseFreeArea = com.focusPage("#houseFreeArea");
+	orderEntry.orderItems.houseInnerArea = com.focusPage("#houseInnerArea");
+	orderEntry.orderItems.houseTotalArea = com.focusPage("#houseTotalArea");
 	orderEntry.orderItems.designerId = com.focusPage("#designerId");
 	orderEntry.orderItems.salesmanId = com.focusPage("#salesmanId");
 	orderEntry.orderItems.salesmanType = com.focusPage("#salesmanType");
@@ -64,6 +68,9 @@ jQuery(function($) {
 	orderEntry.houseItems.no = com.focusPage("#no");
 	orderEntry.houseItems.type = com.focusPage("#type");
 	orderEntry.houseItems.buildArea = com.focusPage("#buildArea");
+	orderEntry.houseItems.freeArea = com.focusPage("#freeArea");
+	orderEntry.houseItems.innerArea = com.focusPage("#innerArea");
+	orderEntry.houseItems.totalArea = com.focusPage("#totalArea");
 	orderEntry.houseItems.maxFloor = com.focusPage("#maxFloor");
 	orderEntry.houseItems.through = com.focusPage("#through");
 	orderEntry.houseItems.houseTypeOne = com.focusPage("#houseTypeOne");
@@ -135,7 +142,7 @@ jQuery(function($) {
 		orderEntry.salesmanType = res.salesmanType;
 		orderEntry.orderItems.salesmanType.bindData(orderEntry.salesmanType, 'key', 'value');
 
-		orderEntry.orderItems.orderType.bindData(res.type, 'key', 'value');
+		orderEntry.orderItems.orderType.bindData(res.typeness, 'key', 'value', 'type');
 
 		orderEntry.houseType = res.houseType;
 		orderEntry.orderItems.houseType.bindData(orderEntry.houseType, 'key', 'value');
@@ -148,6 +155,10 @@ jQuery(function($) {
 
         orderEntry.orderGrade = res.orderGrade;
         orderEntry.orderItems.orderGrade.bindData(orderEntry.orderGrade, 'key', 'value');
+
+        $.each(res.typeness, function (i, v) {
+            orderEntry.type[v.key] = v.type;
+        });
 	});
 	
 	com.initTypeahead('customerId', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value", function(list, key, value){
@@ -193,7 +204,7 @@ jQuery(function($) {
 		};
 
 		com.post(api.data.queryHouseByNoAHnum, housePostData, function (res) {
-			com.post(api.decoration.checkDecoration, {"filters[0].data": res.house.hid,"filters[0].field": "houseId","filters[0].op": "eq","filters[1].data": "5","filters[1].field": "status","filters[1].op": "ne","filters[2].data": "6","filters[2].field": "status","filters[2].op": "ne"}, function (des) {
+			com.post(api.decoration.checkDecoration, {"decoration.house.hid": res.house.hid}, function (des) {
 				if (des.decoration && des.decoration.orderId) {
 					com.showTip(orderEntry.orderItems.houseNumber, "订单已存在：订单号：" + des.decoration.orderId + " 订单所属设计师:" + des.decoration.designer.currentName, "right");
 					orderEntry.repeatFlg = true;
@@ -202,6 +213,9 @@ jQuery(function($) {
 						orderEntry.houseItems.hid = res.house.hid;
 						orderEntry.repeatFlg = false;
 						orderEntry.orderItems.houseArea.val(res.house.buildArea);
+						orderEntry.orderItems.houseFreeArea.val(res.house.freeArea);
+						orderEntry.orderItems.houseInnerArea.val(res.house.innerArea);
+						orderEntry.orderItems.houseTotalArea.val(res.house.totalArea);
 						orderEntry.orderItems.apartmentType.val(res.house.houseType);
                         com.showAlert(com.info, "绑定成功");
 					}, function () {
@@ -247,12 +261,20 @@ jQuery(function($) {
 
 	com.focusPage("#createHouse").on("click", function () {
 		clearHouse();
+		orderEntry.houseItems.buildArea.val(0);
+		orderEntry.houseItems.freeArea.val(0);
+		orderEntry.houseItems.innerArea.val(0);
+		orderEntry.houseItems.totalArea.val(0);
 		com.focusPage("#houseModal").modal("show");
 	});
 
 	com.focusPage("#cancelHouselBtn").on("click", function () {
 		clearHouse();
 		com.focusPage("#houseModal").modal("hide");
+	});
+
+	com.focusPage("#freeArea,#innerArea,#totalArea").on("click", function () {
+		orderEntry.houseItems.totalArea.val(orderEntry.houseItems.buildArea.val() * 1  + orderEntry.houseItems.freeArea.val() * 1);
 	});
 
 	com.focusPage("#saveHouseBtn").on("click", function () {
@@ -290,7 +312,8 @@ jQuery(function($) {
 			"decorationInfo.backOrderContent": orderEntry.orderItems.backOrderContent.val(),
 			"decoration.resourceType": orderEntry.orderItems.status.val(),
 			"decoration.approveStatus": 0,
-			"decoration.type": orderEntry.orderItems.orderType.val(),
+			"decoration.type": orderEntry.type[orderEntry.orderItems.orderType.val()],
+			"decoration.typeness": orderEntry.orderItems.orderType.val(),
 			"decoration.quoter.userId": com.typeahead("quoterId"),
 			"decoration.escorter.userId": com.typeahead("escorterId"),
 			"decoration.house.hid": orderEntry.houseItems.hid,
@@ -362,6 +385,9 @@ jQuery(function($) {
 		houseOptions["house.door"] = orderEntry.houseItems.door.val();
 		houseOptions["house.type"] = orderEntry.houseItems.type.val();
 		houseOptions["house.buildArea"] = utils.changeThrDecimal(orderEntry.houseItems.buildArea.val());
+		houseOptions["house.freeArea"] = utils.changeThrDecimal(orderEntry.houseItems.freeArea.val());
+		houseOptions["house.innerArea"] = utils.changeThrDecimal(orderEntry.houseItems.innerArea.val());
+		houseOptions["house.totalArea"] = utils.changeThrDecimal(orderEntry.houseItems.totalArea.val());
 		houseOptions["house.maxFloor"] = orderEntry.houseItems.maxFloor.val();
 		houseOptions["house.through"] = orderEntry.houseItems.through.val();
 		houseOptions["house.roomNum"] = orderEntry.houseItems.houseTypeOne.val();
@@ -385,6 +411,9 @@ jQuery(function($) {
 			orderEntry.orderItems.houseNumber.val(orderEntry.houseItems.houseNumber);
 			orderEntry.houseItems.hid = res.house.hid;
 			orderEntry.orderItems.houseArea.val(res.house.buildArea);
+			orderEntry.orderItems.houseFreeArea.val(res.house.freeArea);
+			orderEntry.orderItems.houseInnerArea.val(res.house.innerArea);
+			orderEntry.orderItems.houseTotalArea.val(res.house.totalArea);
 			orderEntry.orderItems.apartmentType.val(res.house.houseType);
 			clearHouse();
 			btn.button('reset');

@@ -126,7 +126,7 @@ jQuery(function ($) {
         var tableInfo = $('<tr></tr>').appendTo(receiptTable);
         var printer = $('<td colspan="4" style="padding-left: 10px;font"></td>').text('打印人: ' + _params.userInfo.user.currentName);
         var printerName = $('<td colspan="4" style="padding-left: 10px;font"></td>').text('打印时间: ' + new Date().toLocaleString());
-        var printNum = $('<td colspan="4" style="padding-left: 10px;font"></td>').text('打印次数: ' + commonInfo["printnum"]);
+        var printNum = $('<td colspan="4" style="padding-left: 10px;font" id="printNum"></td>').text('打印次数: ' + commonInfo["printnum"]);
         tableInfo.append(printer).append(printerName).append(printNum);
 
         var headReceiptTr1 = $('<tr></tr>').appendTo(receiptTable);

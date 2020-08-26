@@ -32,6 +32,18 @@ $.extend(api, {personel: {
     addUserContract: {url: "addUserContract.do", server: "communion"},
     updateUserContract: {url: "updateUserContract.do", server: "communion"},
     deleteUserContract: {url: "deleteUserContract.do", server: "communion"},
+    queryUserContract: {url: "queryUserContract.do"},
+    
+    queryUserEducation:{url: "queryUserEducation.do"},
+    addUserEducation:{url: "addUserEducation.do", server: "communion"},
+    updateUserEducation: {url: "updateUserEducation.do", server: "communion"},
+    deleteUserEducation: {url: "deleteUserEducation.do", server: "communion"},
+    
+    queryUserLabelByUid: {url: "queryUserLabelByUid.do"},
+    queryUserOperation: {url: "queryUserOperation.do"},
+    addUserOperation: {url: "addUserOperation.do", server: "communion"},
+    updateUserOperation: {url: "updateUserOperation.do", server: "communion"},
+    deleteUserOperation: {url: "deleteUserOperation.do", server: "communion"},
 
     queryUserExperienceByUid: {url: "queryUserExperienceByUid.do"},
 
@@ -62,6 +74,14 @@ $.extend(api, {personel: {
     addMacontrol: {url: "addMacontrol.do", server: "communion"},
     deleteMacontrol: {url: "deleteMacontrol.do", server: "communion"},
 	queryAttendance: {url: "queryAttendance.do"},
-	reportAttendance: {url: "reportAttendance.do"}
+	reportAttendance: {url: "reportAttendance.do"},
+	
+	queryDutmentByDeid: {url: "queryDutmentByDeid.do"},
+	queryDutmentByDuid: {url: "queryDutmentByDuid.do"},
+	addDutment: {url: "addDutment.do", server: "communion"},
+	updateDutment: {url: "updateDutment.do", server: "communion"},
+	deleteDutment: {url: "deleteDutment.do", server: "communion"},
+	queryDutmentByDid: {url: "queryDutmentByDid.do"},
+	updateUserExpirence: {url: "updateUserExpirence.do", server: "communion"}
 
 }});

@@ -16,6 +16,8 @@ var decorationUtils = {
 
         var $total = 0;
         var $coupon = 0;
+        var $totalSalesAndMaterial = 0;
+        var $totalDeposit = 0;
 
         var materialPayments = null;
         var salesPayments = null;
@@ -82,15 +84,24 @@ var decorationUtils = {
 
                 var $materialBrands = com.focusPage("[name='" + v.brand + "']");
 
+                if (![2, 7].contains(v.paymentType) && v.paymentStatus == 2) {
+                    var $totalMaterial = [4,5,6].contains(v.paymentType) ? -v.referMoney : v.referMoney;
+                    $totalSalesAndMaterial = utils.changeThrDecimal($totalSalesAndMaterial + $totalMaterial)
+                }
+
+                if (v.paymentType == 2) {
+                    $totalDeposit = utils.changeThrDecimal($totalDeposit + v.referMoney)
+                }
+
                 if ($materialBrands.length > 0) {
 
                     var $materialBrand = com.focusPage($materialBrands[0]);
                     var $brandTotal = com.focusPage($materialBrand.find("[name='total']")[0]);
 
                     var _value = parseFloat($brandTotal.attr('value'));
-                    var _refer = [2, 3].contains(v.paymentType) ? v.referMoney : -v.referMoney;
+                    var _refer = [2, 3, 8].contains(v.paymentType) ? v.referMoney : -v.referMoney;
                     var _total = utils.changeThrDecimal(_value + _refer);
-                    var _coupon = [2, 3].contains(v.paymentType) ? v.coupon : -v.coupon;
+                    var _coupon = [2, 3, 8].contains(v.paymentType) ? v.coupon : -v.coupon;
 
                     $brandTotal.attr("value", _total);
                     $brandTotal.html(_total);
@@ -103,8 +114,8 @@ var decorationUtils = {
                     var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.brand));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
-                    var _refer = [2, 3].contains(v.paymentType) ? v.referMoney : -v.referMoney;
-                    var _coupon = [2, 3].contains(v.paymentType) ? v.coupon : -v.coupon;
+                    var _refer = [2, 3, 8].contains(v.paymentType) ? v.referMoney : -v.referMoney;
+                    var _coupon = [2, 3, 8].contains(v.paymentType) ? v.coupon : -v.coupon;
 
                     $('<b></b>').html(v.category).addClass("grey").appendTo($('<strong></strong>').html("品类:").appendTo($('<li></li>').appendTo($ulProperty)));
                     $('<b></b>').html(v.brand).addClass("grey").appendTo($('<strong></strong>').html("品牌:").appendTo($('<li></li>').appendTo($ulProperty)));
@@ -121,13 +132,16 @@ var decorationUtils = {
         var purCategory = [];
         var unpCategory = [];
 
-        com.post(api.payment.querySalesPaymentByOrderId, {"sales.orderId": decorationDetail.decorationOrderId}, function (res) {
+        com.post(api.payment.querySalesPaymentByOrderId, {"salesPayment.sales.orderId": decorationDetail.decorationOrderId}, function (res) {
             salesPayments = res.salesPayments;
         }, null, false);
 
         com.post(api.data.queryCategory, {}, function (res) {
             $.each(res.categorys, function (index, value) {
-                if(unpCategory.indexOf(value.name) == -1 && (value.name) != "" ){
+
+                if (value.type == 0) return;
+
+                if(unpCategory.indexOf(value.name) == -1 && (value.name) != ""){
                     unpCategory.push(value.name);
                 }
             });
@@ -137,8 +151,14 @@ var decorationUtils = {
 
             $.each(salesPayments, function (i, v) {
                 var salesReceipt = v.salesReceipt;
+
                 if (v.status == 0) return true;
-                if (purCategory.indexOf(v.sales.category) == -1 && unpCategory.splice(unpCategory.indexOf(v.sales.category), 1)) {purCategory.push(v.sales.category); };
+
+                if (purCategory.indexOf(v.sales.category) == -1) {
+                    purCategory.push(v.sales.category);
+                };
+
+                if (unpCategory.indexOf(v.sales.category) != -1 && unpCategory.splice(unpCategory.indexOf(v.sales.category), 1));
 
                 var $liLine = $('<li></li>').addClass('item-orange clearfix');
                 var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.sales.no + " " + materialUtils.materialPaymentTypeData[v.type]));
@@ -155,6 +175,8 @@ var decorationUtils = {
                     ["收款时间:", salesReceipt.collectTime, "grey"],
                     ["状态:", materialUtils.paymentStatusInit(v.status), "red"]
                 ];
+
+
 
                 $.each(propertyArr, function (index, value) {
                     var $liProperty = $('<li></li>');
@@ -193,29 +215,37 @@ var decorationUtils = {
 
                 var $salesBrands = com.focusPage("[name='" + v.sales.brand + "']");
 
+                if (![2, 7].contains(v.type) && v.status == 2) {
+                    var $totalSales = [4,5,6].contains(v.type) ? -v.referMoney : v.referMoney;
+                    $totalSalesAndMaterial = utils.changeThrDecimal($totalSalesAndMaterial + $totalSales)
+                }
+
+                if (v.type == 2) {
+                    $totalDeposit = utils.changeThrDecimal($totalDeposit + v.referMoney)
+                }
+
                 if ($salesBrands.length > 0) {
 
                     var $salesBrand = com.focusPage($salesBrands[0]);
                     var $brandTotal = com.focusPage($salesBrand.find("[name='total']")[0]);
 
                     var _value = parseFloat($brandTotal.attr('value'));
-                    var _refer = [2, 3].contains(v.type) ? v.referMoney : -v.referMoney;
+                    var _refer = [2, 3, 8].contains(v.type) ? v.referMoney : -v.referMoney;
                     var _total = utils.changeThrDecimal(_value + _refer);
-                    var _coupon = [2, 3].contains(v.type) ? salesReceipt.coupon : -salesReceipt.coupon;
+                    var _coupon = [2, 3, 8].contains(v.type) ? salesReceipt.coupon : -salesReceipt.coupon;
 
                     $brandTotal.attr("value", _total);
                     $brandTotal.html(_total);
 
                     $total = utils.changeThrDecimal($total + _refer);
-
                     $coupon = utils.changeThrDecimal($coupon + _coupon);
                 } else {
                     var $liLine = $('<li></li>').addClass('item-orange clearfix').attr("name", v.sales.brand);
                     var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.sales.brand));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
-                    var _refer = [2, 3].contains(v.type) ? v.referMoney : -v.referMoney;
-                    var _coupon = [2, 3].contains(v.type) ? salesReceipt.coupon : -salesReceipt.coupon;
+                    var _refer = [2, 3, 8].contains(v.type) ? v.referMoney : -v.referMoney;
+                    var _coupon = [2, 3, 8].contains(v.type) ? salesReceipt.coupon : -salesReceipt.coupon;
 
                     $('<b></b>').html(v.sales.category).addClass("grey").appendTo($('<strong></strong>').html("品类:").appendTo($('<li></li>').appendTo($ulProperty)));
                     $('<b></b>').html(v.sales.brand).addClass("grey").appendTo($('<strong></strong>').html("品牌:").appendTo($('<li></li>').appendTo($ulProperty)));
@@ -262,8 +292,10 @@ var decorationUtils = {
             var $h4 = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("总金额:" + $total));
             var $couponPrice = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("优惠券:" + $coupon));
             var $TotalPrice = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("实收额:" + ($total - $coupon)));
+            var $TotalNetReceiptsTotalPrice = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("实收全款额:" + $totalSalesAndMaterial));
+            var $TotalDepositPrice = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("定金总额:" + ($totalDeposit)));
 
-            $liLine.append($h4).append($couponPrice).append($TotalPrice).appendTo($ulbrand);
+            $liLine.append($h4).append($couponPrice).append($TotalPrice).append($TotalNetReceiptsTotalPrice).append($TotalDepositPrice).appendTo($ulbrand);
         }
 
         function drawLineCategory (list, div) {
@@ -275,7 +307,7 @@ var decorationUtils = {
         }
         return material
     }, addDecorationActivityForDiv: function (_activitys, _decorationActivity, uiBtnMethod, couponCut, thingCut) {
-    	
+
         var pricingSpan = $("<div></div>").addClass("col-md-4").css("margin", "5px 0px").attr("id", "dactivity_" + _decorationActivity.daId).prependTo(_activitys);
         var widgetBox = $("<div class='module_activity_border'></div>").appendTo(pricingSpan);
 
@@ -308,7 +340,7 @@ var decorationUtils = {
         	}else{
         		uiBtnMethod(uiPgDiv, _decorationActivity);
         	}
-         
+
         }
 
     }, decorationActivityInfo: function (activitys, uiBtnMethod, orderId) {
@@ -341,9 +373,9 @@ var decorationUtils = {
             var thingCut = 0;
 
             for (var i = 0; i < decorationActivityItems.length; i++) {//0: 初始 , 1: 失效 , 2: 已领 , 3: 退货 , 4: 配送 , 5: 未退 , 6: 升级 , 7: 消耗
-                if (decorationActivityItems[i].type == 0 && [0, 2, 4, 5, 6].indexOf(decorationActivityItems[i].state) != -1) {//0卷
+                if (decorationActivityItems[i].type == 0 && [0, 2, 4, 5, 6].indexOf(decorationActivityItems[i].state) != -1 && decorationActivityItems[i].isPrefor == 0) {//0卷
                     couponCut = utils.accAdd(couponCut, utils.accMul(decorationActivityItems[i].money, decorationActivityItems[i].num));
-                } else if (decorationActivityItems[i].type == 1 && [0, 2, 4, 5, 6].indexOf(decorationActivityItems[i].state) != -1) {//物品
+                } else if (decorationActivityItems[i].type == 1 && [0, 2, 4, 5, 6].indexOf(decorationActivityItems[i].state) != -1 && decorationActivityItems[i].isPrefor == 0) {//物品
                     thingCut = utils.accAdd(thingCut, utils.accMul(decorationActivityItems[i].money, decorationActivityItems[i].num));
                 }
 
@@ -356,8 +388,9 @@ var decorationUtils = {
 
         });
     }, addActivityItemForDiv: function (_activityItems, _activityItem, uiBtnMethod) {
-    	
+
         var types= {};
+        var stateTypes= {};
         var states={};
 
         com.post(api.ds.information, {}, function (res) {
@@ -367,6 +400,9 @@ var decorationUtils = {
         }, null, false);
 
         com.post(api.ds.decoration, {}, function (res) {
+            $.each(res.receiveType, function (i, v) {
+                stateTypes[v.key] = v.value;
+            });
             $.each(res.activityItemType, function (i, v) {
                 states[v.key] = v.value;
             });
@@ -387,6 +423,9 @@ var decorationUtils = {
         var nameLi = $("<li></li>").appendTo(ul);
         var typeLi = $("<strong></strong>").text("类型:").appendTo(nameLi);
         var typeSpan = $("<span></span>").attr("id", "type_" + _activityItem.daiId).text(types[_activityItem.type]).appendTo(nameLi);
+        var $stateTypeLi = $("<li></li>").appendTo(ul);
+        var $stateTypeStrong = $("<strong></strong>").text("状态类型:").appendTo($stateTypeLi);
+        var $stateTypeSpan = $("<span></span>").addClass("red").attr("id", "stateType_" + _activityItem.daiId).text(stateTypes[_activityItem.stateType]).appendTo($stateTypeLi);
         var stateLi = $("<li></li>").appendTo(ul);
         var stateState = $("<strong></strong>").text("状态:").appendTo(stateLi);
         var stateSpan = $("<span></span>").addClass("red").attr("id", "state_" + _activityItem.daiId).text(states[_activityItem.state]).appendTo(stateLi);
@@ -407,7 +446,7 @@ var decorationUtils = {
                 var abateBtn = $("<a></a>").addClass("btn btn-minier btn-yellow").html("失效").css("margin", "0px 3px").attr("id", "abate_" + _activityItem.daiId).appendTo(uiPgDiv);
 
                 abateBtn.on("click", function () {
-                    
+
                     com.showConfirm("是否确认失效" + _activityItem.activityItemName + "活动物品?", function () {
 
                         com.post(api.decoration.abateDecorationActivityItem, {"decorationActivityItem.daiId": _activityItem.daiId}, function (res) {
@@ -424,7 +463,7 @@ var decorationUtils = {
             }else{
             	uiBtnMethod(uiPgDiv, _activityItem);
             }
-        
+
         }
 
     }, initPayment: function (decorationDetail, isDesign) {
@@ -725,8 +764,6 @@ var decorationUtils = {
         var $contract = com.focusPage("#" + contractId).html("");
         var $cad = com.focusPage("#" + cadId).html("");
         var $original =  com.focusPage("#" + originalId).html("");
-        
-        var options = ;
 
         com.post(api.decoration.queryDecorationPictureByOrderId, {"decorationPicture.orderId": orderId}, function (res) {
             var decorationPictures = res.decorationPictures;
@@ -747,7 +784,7 @@ var decorationUtils = {
                     decorationUtils.addPicture($original, decorationPicture);
                 }
             }
-            
+
             com.popup4photos("#OriginalPicture");
             com.popup4photos("#designPictures");
             com.popup4photos("#projectPictures");
@@ -756,16 +793,16 @@ var decorationUtils = {
         });
 
          com.focusPage("#confirmDesign").on('click', function () {
-            com.showConfirm("是否发送客户确认设计", function () {
-                com.post(api.decoration.sendDecorationInfoForConfirm, {"decorationInfo.orderId": orderId, "decorationInfo.isConfirmDesign": 1}, function () {
+            com.showConfirm("是否发送客户确认合同方案", function () {
+                com.post(api.decoration.sendDecorationInfoForConfirm, {"decorationInfo.orderId": orderId, "decorationInfo.sourceStatus": 1}, function () {
                     com.showAlert(com.info, "发送成功");
                 });
             });
         });
 
         com.focusPage("#confirmPricture").on('click', function () {
-            com.showConfirm("是否发送客户确认施工", function () {
-                com.post(api.decoration.sendDecorationInfoForConfirm, {"decorationInfo.orderId": orderId, "decorationInfo.isConfirmPricture": 1}, function () {
+            com.showConfirm("是否发送客户确认放线方案", function () {
+                com.post(api.decoration.sendDecorationInfoForConfirm, {"decorationInfo.orderId": orderId, "decorationInfo.sourceStatus": 2}, function () {
                     com.showAlert(com.info, "发送成功");
                 });
             });
@@ -1255,12 +1292,16 @@ var decorationUtils = {
                 }
             });
         }, null, false);
-    },  createCounpon: function(ulId, typeId, valId){
+    },  createCounpon: function(ulId, typeId, stateTypeId, valId){
         var $li = $("<li></li>").css({"background-color":"#91b8d0", "margin-bottom":"5px", "margin-right":"5px"}).appendTo(com.focusPage("#" + ulId));
         var $type = com.focusPage("#" + typeId).val();
+        var $stateType = com.focusPage("#" + stateTypeId).val();
         var $coupon = com.focusPage("#" + valId).val();
-        var $span = $("<span></span>").css({'color':'#fff'}).attr('typeName', $type).attr('num', $coupon).attr('asid', com.focusPage("#" + typeId).attr('data-typeahead-key')).html($type).appendTo($li);
-        var $spanTwo = $("<span></span>").css({'color':'#fff', 'margin':'0 5px'}).html("数量:"+$coupon).appendTo($span);
+        var $stateTypeText = com.focusPage("#" + stateTypeId).find("option:selected").text();
+
+        var $span = $("<span></span>").css({'color':'#fff'}).attr('typeName', $type).attr('value', $stateType).attr('num', $coupon).attr('asid', com.focusPage("#" + typeId).attr('data-typeahead-key')).html($type).appendTo($li);
+        var $spanOne = $("<span></span>").css({'color':'#fff', 'margin':'0 5px'}).html("状态类型 :"+ $stateTypeText).appendTo($span);
+        var $spanTwo = $("<span></span>").css({'color':'#fff', 'margin':'0 5px'}).html("数量 :"+ $coupon).appendTo($spanOne);
         var $a = $("<a></a>").addClass("glyphicon glyphicon-remove").css({'color':'#d15b47'}).appendTo($li);
         $a.click(function () {
             $li.remove();

@@ -146,7 +146,15 @@ $(function () {
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
 
-            if (listData && listData.length) {
+            if(listData.length == 0){
+
+                var $resultList = com.focusPage("#resultListItem").addClass('dz-default dz-message').html('');
+                var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
+                var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
+                var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
+                return $resultList;
+
+            } else if (listData && listData.length) {
                 $.each(listData, function (i, v) {
                     var $liLine = $('<li></li>').addClass('item-orange clearfix');
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').attr({
@@ -378,6 +386,12 @@ $(function () {
     manifest.btns.xgSaveBtn.on('click', function () {
         savePurchase(manifest.salesXG_params);
     });
+
+    var emptyData = function(){
+        var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
+        var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
+        var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
+    };
 
     function viewSalesItems(sid) {
         com.post(api.sales.querySalesItemBySid, {

@@ -3,13 +3,13 @@ jQuery(function($) {
 
     var constructionInfo = {
 
-        type:{},
+        typeness:{},
         projectStatus:{},
         editFlg: false,
     };
 
     com.post(api.ds.decoration, {}, function(res){
-        constructionInfo.type = res.type.split("key", "value");
+        constructionInfo.typeness = res.typeness.split("key", "value");
     },null ,false);
 
     com.post(api.ds.construction, {}, function(res){
@@ -42,11 +42,17 @@ jQuery(function($) {
             var propertyArr = [
                 ["楼盘地址:", (v.decoration.house.village.cityProper.city.name == null ? " " : v.decoration.house.village.cityProper.city.name) + " " + (v.decoration.house.village.cityProper == null ? " " : v.decoration.house.village.cityProper.name) + " " + v.decoration.house.village.name + " " + (v.decoration.house.houseNumber == null ? " " : v.decoration.house.houseNumber), "grey"],
                 ["面积:", v.decoration.house.buildArea, "blue"],
+                ["设计分区:", v.decoration.designer.dept.fatherDept.name, "grey"],
+                ["设计部:", v.decoration.designer.dept.name, "grey"],
+                ["设计师:", v.decoration.designer.userName, "grey"],
                 ["签单时间: ", v.decoration.contractTime, "grey"],
                 ["预计交钥匙时间: ", v.keyTime, "grey"],
                 ["预计放线时间: ", v.drawlineTime, "grey"],
-                ["预计竣工时间: ", v.finishTime, "grey"],
-                ["订单类型: ", constructionInfo.type[v.decoration.type], "red"],
+                ["预计完工时间: ", v.finishTime, "grey"],
+                ["预计设计完成时间: ", v.designTime, "grey"],
+                ["合同方案确认时间: ", v.decoration.sdesignTime, "grey"],
+                ["放线方案确认时间: ", v.decoration.edesignTime, "grey"],
+                ["订单类型: ", constructionInfo.typeness[v.decoration.typeness], "red"],
                 ["工程状态: ", constructionInfo.projectStatus[v.decoration.projectStatus], "red"],
             ];
 
@@ -76,9 +82,68 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["c_orderId","c_keyTime","c_drawlineTime","c_finishTime"], "condList", api.construction.pageConstructionInfo, function(data){
+    searcher.init(["c_orderId","c_keyTime","c_drawlineTime","c_finishTime","c_designTime","c_sdesignTimeRange","c_edesignTimeRange"], "condList", api.construction.pageConstructionInfo, function(data){
         displayFunc.init('resultList', data);
-    }, "pagenation", "constructionCostPostData",null, false, null,null);
+    }, "pagenation", "constructionInfoPostData",null, false, null,function(){
 
+        var $exporta = $('<a></a>').addClass('btn btn-minier btn-inverse').attr('id', 'export').css("margin", "0px 3px");
+        var $exporti = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($exporta);
+        var $exportspan = $('<span></span>').text('导出').appendTo($exporta);
+
+        return [$exporta];
+    },'resultList');
+
+    com.focusPage("#export").click(function() {
+        if (com.focusPage('span[name="totalRecords"]').text() == 0) {
+            com.showAlert(com.warning, "请通过条件进行查询");
+            return false;
+        }
+
+        if (com.focusPage('span[name="totalRecords"]').text() > 5000) {
+            com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
+            return false;
+        }
+
+        com.post(api.construction.pageConstructionInfo, $.extend({}, params.constructionInfoPostData, {"paging.noPage": 1}), function (res) {
+
+            $.exceler({
+                column: [
+                    ["装修单号", "decoration.orderId"],
+                    ["楼盘地址", "decoration.house.houseNumber"],
+                    ["面积", "decoration.house.buildArea"],
+                    ["设计分区", "decoration.designer.dept.fatherDept.name"],
+                    ["设计部", "decoration.designer.dept.name"],
+                    ["设计师", "decoration.designer.userName"],
+                    ["签单时间", "decoration.contractTime"],
+                    ["预计交钥匙时间", "keyTime"],
+                    ["预计放线时间", "drawlineTime"],
+                    ["预计完工时间", 'finishTime'],
+                    ["预计设计完成时间", 'designTime'],
+                    ["合同方案确认时间", 'decoration.sdesignTime'],
+                    ["放线方案确认时间", 'decoration.edesignTime'],
+                    ["订单类型", "decoration.typeness"],
+                    ["工程状态", "decoration.projectStatus"]
+                ],
+                list: res.paging.data
+
+            }, function (v) {
+
+                v.orderId = v.orderId == null ? "" : v.orderId;
+                v.decoration.house.houseNumber = (v.decoration.house == null ? " " : v.decoration.house.village.cityProper.city.name + " " + v.decoration.house.village.cityProper.name + " " + v.decoration.house.village.name + " " + v.decoration.house.houseNumber);
+                v.decoration.house.buildArea = (v.decoration.house == null ? " " : v.decoration.house.buildArea);
+                v.decoration.designer.userName = (v.decoration.designer == null ? " " : v.decoration.designer.userName);
+                v.decoration.designer.dept.name = (v.decoration.designer == null ? " " : v.decoration.designer.dept.name);
+                v.decoration.designer.dept.fatherDept.name = (v.decoration.designer == null ? " " : v.decoration.designer.dept.fatherDept.name);
+                v.decoration.contractTime = (v.decoration.contractTime == null ? "" : v.decoration.contractTime);
+                v.keyTime = (v.keyTime == null ? "" : v.keyTime);
+                v.drawlineTime = (v.drawlineTime == null ? "" : v.drawlineTime);
+                v.finishTime = (v.finishTime == null ? "" : v.finishTime);
+                v.decoration.sdesignTime = (v.decoration.sdesignTime == null ? "" : v.decoration.sdesignTime);
+                v.decoration.edesignTime = (v.decoration.edesignTime == null ? "" : v.decoration.edesignTime);
+                v.decoration.typeness = constructionInfo.typeness[v.decoration.typeness];
+                v.decoration.projectStatus = constructionInfo.projectStatus[v.decoration.projectStatus];
+            });
+        });
+    });
 
 })

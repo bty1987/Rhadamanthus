@@ -86,20 +86,49 @@ public class MessageServiceImpl implements MessageService {
 	public void sendMessage(MessageVO messageVO, int company) throws FLException {
 
 		if (messageVO.getSender() != null) {
-			sendMessage(messageVO.getReceiver().getUserId(), messageVO.getSender().getUserId(), messageVO.getContents(), messageVO.getType(), company);
+			sendMessage(messageVO.getReceiver().getUserId(), messageVO.getSender().getUserId(), messageVO.getContents(), messageVO.getType(),company);
 		} else {
-			sendMessage(messageVO.getReceiver().getUserId(), "", messageVO.getContents(), messageVO.getType(), company);
+			sendMessage(messageVO.getReceiver().getUserId(), "", messageVO.getContents(), messageVO.getType(),company);
 		}
 	}
-
+	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void sendMessage(String receiver, String sender, String contents, short type, int company) throws FLException {
+	public void sendMessage(String receiver, String sender, String contents, short type,int company) throws FLException {
 
 		MessagePO messagePO = new MessagePO();
 
 		messagePO.setReceiver(userDao.queryUserByUserId(receiver));
 		messagePO.setType(type);
+		messagePO.setContents(contents);
+		messagePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		messagePO.setStatus(MessagePO.STATUS_UNREAD_INT);
+		messagePO.setCompany(company);
+
+		String userName = "";
+
+		if (sender != null && !sender.equals("")) {
+			UserPO userPO = userDao.queryUserByUserId(sender);
+			userName = userPO.getUserName();
+			messagePO.setSender(userPO);
+		}
+
+		messageDao.save(messagePO);
+
+		messageDDService.sendMessage(receiver, userName, contents, messagePO.getMid(), company);
+
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void sendMessage(String receiver, String sender, String contents, short type, short subtype, long ident, int company) throws FLException {
+
+		MessagePO messagePO = new MessagePO();
+
+		messagePO.setReceiver(userDao.queryUserByUserId(receiver));
+		messagePO.setType(type);
+		messagePO.setIdent(ident);
+		messagePO.setSubtype(subtype);
 		messagePO.setContents(contents);
 		messagePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		messagePO.setStatus(MessagePO.STATUS_UNREAD_INT);

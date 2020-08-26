@@ -101,6 +101,14 @@ public class SalesAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "pageSalesByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageSalesByOrderId() throws FLException{
+		
+		salesService.pageSalesByOrderId(getPaging(), getFilters(), queryCompany(), queryUserId(), sales.getOrderId());
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "querySalesBySid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySalesBySid() throws FLException{
 		
@@ -221,6 +229,14 @@ public class SalesAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value="updateSalesForAdvance", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String updateSalesForAdvance() throws FLException{
+		
+		salesService.updateSalesForAdvance(sales);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value="terminalSales", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String terminalSales() throws FLException{
 		
@@ -232,7 +248,7 @@ public class SalesAction extends BaseListAction {
 	@Action(value="finishSales", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String finishSales() throws FLException{
 		
-		salesService.finishSales(sales);
+		salesService.finishSales(sales, queryUserId());
 		
 		return SUCCESS;
 	}

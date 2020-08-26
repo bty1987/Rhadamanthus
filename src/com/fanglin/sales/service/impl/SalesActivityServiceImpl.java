@@ -2,290 +2,153 @@ package com.fanglin.sales.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSONObject;
+import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.communion.vo.DepartmentVO;
+import com.fanglin.communion.vo.DutyVO;
+import com.fanglin.communion.vo.HouseVO;
+import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.decoration.dao.DecorationDao;
-import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.information.dao.AwardRecordDao;
-import com.fanglin.information.dao.AwardStockDao;
-import com.fanglin.information.po.AwardRecordPO;
-import com.fanglin.information.po.AwardStockPO;
-import com.fanglin.personel.dao.UserDao;
-import com.fanglin.personel.po.UserPO;
+import com.fanglin.core.vo.Filter;
+import com.fanglin.information.po.ActivityPO;
+import com.fanglin.information.vo.ActivityVO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.sales.dao.SalesActivityDao;
-import com.fanglin.sales.dao.SalesDao;
-import com.fanglin.sales.po.SalesActivityItemPO;
+import com.fanglin.sales.po.SalesActivityPO;
+import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.service.SalesActivityService;
-import com.fanglin.sales.vo.SalesActivityItemVO;
+import com.fanglin.sales.vo.SalesActivityVO;
+import com.fanglin.sales.vo.SalesVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
-import com.fanglin.utils.DateUtil;
+import com.fanglin.utils.Paging;
 
 @Service("salesActivityService")
 @Transactional(readOnly = true)
 public class SalesActivityServiceImpl implements SalesActivityService {
-	
+
 	@Autowired
 	private SalesActivityDao salesActivityDao;
-	
-	@Autowired
-	private DecorationDao decorationDao;
-	
-	@Autowired
-	private SalesDao salesDao;
-	
-	@Autowired
-	private UserDao userDao;
-	
-	@Autowired
-	private AwardStockDao awardStockDao;
-	
-	@Autowired
-	private AwardRecordDao awardRecordDao;
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public int addSalesActivityItem(List<SalesActivityItemVO> salesActivityItems) throws FLException {
-		
-		for(SalesActivityItemVO salesActivityItemVO:salesActivityItems){
-			
-			DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(salesActivityItemVO.getOrderId());
-			
-			if (decorationPO == null) {
-				throw new FLException(140013, "订单不存在");
-			}
-			
-			SalesActivityItemPO salesActivityItemPO = new SalesActivityItemPO();
-			
-			BeanUtil.copyProperties(salesActivityItemVO, salesActivityItemPO);
-			
-			salesActivityItemPO.setReceiveUserName("");
-			salesActivityItemPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
-			
-			salesActivityDao.save(salesActivityItemPO);
+	public void pageSalesActivity(Paging paging, List<Filter> filter, String orderId) {
+
+		List<SalesActivityPO> salesActivityPOs = salesActivityDao.pageSalesActivity(paging, filter, orderId);
+
+		List<SalesActivityVO> salesActivityVOs = new ArrayList<SalesActivityVO>();
+
+		SalesActivityVO salesActivityVO = null;
+
+		for (SalesActivityPO salesActivityPO : salesActivityPOs) {
+
+			ActivityPO activityPO = salesActivityPO.getActivity();
+
+			SalesPO salesPO = salesActivityPO.getSales();
+
+			salesActivityVO = new SalesActivityVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO()), new ActivityVO(new UserBaseVO()));
+
+			BeanUtil.copyProperties(salesPO, salesActivityVO.getSales(), Arrays.asList("salesman", "dept", "region", "guider", "instorer", "guideDept", "house", "customer", "supplier", "finisher"));
+			BeanUtil.copyProperties(salesPO.getInstorer(), salesActivityVO.getSales().getInstorer(), Arrays.asList("dept", "duty"));
+			BeanUtil.copyProperties(salesPO.getInstorer().getDept(), salesActivityVO.getSales().getInstorer().getDept(), Arrays.asList("fatherDept", "type", "manager"));
+			BeanUtil.copyProperties(salesPO.getGuider(), salesActivityVO.getSales().getGuider(), Arrays.asList("dept", "duty"));
+			BeanUtil.copyProperties(salesPO.getGuider().getDept(), salesActivityVO.getSales().getGuider().getDept(), Arrays.asList("fatherDept", "type", "manager"));
+			BeanUtil.copyProperties(salesPO.getGuideDept(), salesActivityVO.getSales().getGuideDept(), Arrays.asList("fatherDept", "type", "manager"));
+			BeanUtil.copyProperties(salesPO.getHouse(), salesActivityVO.getSales().getHouse(), Arrays.asList("village"));
+			BeanUtil.copyProperties(salesPO.getHouse().getVillage(), salesActivityVO.getSales().getHouse().getVillage(), Arrays.asList("cityProper"));
+			BeanUtil.copyProperties(salesPO.getCustomer(), salesActivityVO.getSales().getCustomer());
+
+			BeanUtil.copyProperties(activityPO, salesActivityVO.getActivity(), Arrays.asList("creater"));
+			BeanUtil.copyProperties(activityPO.getCreater(), salesActivityVO.getActivity().getCreater(), Arrays.asList("duty", "dept"));
+
+			salesActivityVOs.add(salesActivityVO);
+
 		}
+
+		paging.setData(salesActivityVOs);
+
+	}
+
+	@Override
+	public List<SalesActivityVO> amountSalesActivity(String orderId) {
+
+		List<Object> salesTotal = salesActivityDao.querySalesActivityByTotal(orderId);
+
+		List<SalesActivityVO> SalesActivityVOs = new ArrayList<SalesActivityVO>();
+
+		for (Iterator<Object> iterator = salesTotal.iterator(); iterator.hasNext();) {
+
+			SalesActivityVO salesActivityVO = new SalesActivityVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO()), new ActivityVO(new UserBaseVO()));
+
+			Object[] objects = (Object[]) iterator.next();
+
+			String amount = String.valueOf(objects[1]);
+			String name = String.valueOf(objects[0]);
+
+			salesActivityVO.setAmount(Long.valueOf(amount));
+			salesActivityVO.getActivity().setName(name);
+
+			SalesActivityVOs.add(salesActivityVO);
+		}
+
+		return SalesActivityVOs;
+	}
+
+	@Override
+	public int amountSalesActivityForActivity(SalesActivityVO salesActivityVO) {
+
+		long amount = salesActivityDao.amountSalesActivityForActivity(salesActivityVO.getSales().getOrderId());
+
+		salesActivityVO.setAmount(amount);
+
 		return 0;
 	}
 
 	@Override
-	public List<SalesActivityItemVO> querySalesActivityItem(String orderId) {
-		
-		List<SalesActivityItemPO> salesActivityItemPOs=salesActivityDao.querySalesActivityItem(orderId);
-		List<SalesActivityItemVO> salesActivityItemVOs=new ArrayList<SalesActivityItemVO>();
-		
-		for(SalesActivityItemPO salesActivityItemPO:salesActivityItemPOs){
-			
-			SalesActivityItemVO salesActivityItemVO=new SalesActivityItemVO();
-			
-			BeanUtil.copyProperties(salesActivityItemPO, salesActivityItemVO,Arrays.asList("receiveUserId"));
-			
-			if (salesActivityItemPO.getAsid() != 0) {
-				BeanUtil.copyProperties(salesActivityItemPO.getAsid(), salesActivityItemVO.getAsid());
-			}
+	public int amountSalesActivityForPayment(SalesActivityVO salesActivityVO) {
 
-			salesActivityItemVO.setReceiveUserId(new UserBaseVO());
-			BeanUtil.copyProperties(salesActivityItemPO.getReceiveUserId(), salesActivityItemVO.getReceiveUserId(), Arrays.asList("dept", "duty"));
+		long amount = salesActivityDao.amountSalesActivityForPayment(salesActivityVO.getSales().getOrderId());
 
-			salesActivityItemVOs.add(salesActivityItemVO);
-		}
-		return salesActivityItemVOs;
-	}
+		salesActivityVO.setAmount(amount);
 
-	@Override
-	public Object querySalesActivity(String orderId) {
-		
-		List<Object> salesTotal=salesDao.querySalesActivityByTotal(orderId);
-		
-		Object sales=JSONObject.toJSON(salesTotal);
-		
-		return sales;
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public int abateSalesActivityItem(SalesActivityItemVO salesActivityItemVO, String userId) throws FLException {
-		
-		SalesActivityItemPO salesActivityItemPO=salesActivityDao.get(salesActivityItemVO.getSaiid());
-		
-		if(salesActivityItemPO==null){
-			throw new FLException(140030, "订单活动物品不存在");
-		}
-		
-		if(salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_VALID_INT){//0--初始
-			throw new FLException(140057, "订单活动奖品不可操作");
-		}
-		
-		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_UNVALID_INT);
-		salesActivityItemPO.setIsStock(SalesActivityItemPO.STATUS_UNVALID_INT);
-		
 		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public int receiveSalesActivityItem(SalesActivityItemVO salesActivityItemVO, String userId, String userName) throws FLException {
+	public int checkSalesActivity(String orderId, long integral) throws FLException {
 
-		SalesActivityItemPO salesActivityItemPO=salesActivityDao.get(salesActivityItemVO.getSaiid());
-		
-		if(salesActivityItemPO == null){
-			throw new FLException(140030, "订单活动物品不存在");
+		long activity = salesActivityDao.amountSalesActivityForActivity(orderId);
+		long payment = salesActivityDao.amountSalesActivityForPayment(orderId);
+
+		if (Arith.add(activity, integral) > payment) {
+			throw new FLException(160037, "积分不足");
 		}
-		
-		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_RECEIVE_INT);
-		salesActivityItemPO.setIsStock(SalesActivityItemPO.STATUS_VALID_INT);
-		salesActivityItemPO.setReceiveUserId(userDao.queryUserByUserId(userId));
-		salesActivityItemPO.setReceiveUserName(userName);
-		salesActivityItemPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
 
-		salesActivityDao.update(salesActivityItemPO);
-		
-		AwardStockPO awardStockPO = awardStockDao.get(salesActivityItemPO.getAsid());
-		
-		if (salesActivityItemPO.getIsStock() == SalesActivityItemPO.ISSTOCK_COUNTIN_INT) {//0--计入库存
-
-			if(awardStockPO == null){
-				throw new FLException(160043, "物品不存在!");
-			}
-			
-			int num = Arith.sub(awardStockPO.getNum(), salesActivityItemPO.getNum());
-
-			if (num < 0) {
-				throw new FLException(160038, "奖品库存数量不足!");
-			}
-
-			awardStockPO.setNum(Arith.sub(awardStockPO.getNum(), salesActivityItemPO.getNum()));
-
-			awardStockDao.update(awardStockPO);
-
-		}
-		
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, userDao.queryUserByUserId(userId), salesActivityItemPO.getOrderId(), AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_RECEIVE_INT, AwardRecordPO.ONETYPE_SALES_INT, salesActivityItemPO.getIsStock(), salesActivityItemPO.getMoney(), salesActivityItemPO.getNum(), salesActivityItemVO.getContent());
-		
-		awardRecordDao.save(awardRecordPO);
-		
 		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void deliveSalesActivityItem(SalesActivityItemVO salesActivityItemVO, String userId,String userName) throws FLException {
-		
-		SalesActivityItemPO salesActivityItemPO = salesActivityDao.get(salesActivityItemVO.getSaiid());
-		
-		if(salesActivityItemPO == null){
-			throw new FLException(140030, "订单活动物品不存在");
-		}
-		
-		if(salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_VALID_INT){//0--初始
-			throw new FLException(140057, "订单活动奖品不可操作");
-		}
-		
-		UserPO creater = userDao.queryUserByUserId(userId);
-		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_DELIVERY_INT);//更改为状态4--配送
-		salesActivityItemPO.setIsStock(SalesActivityItemPO.ISSTOCK_COUNTIN_INT);//计入库存
-		salesActivityItemPO.setReceiveUserId(creater);
-		salesActivityItemPO.setReceiveUserName(userName);
-		salesActivityItemPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
-		salesActivityDao.update(salesActivityItemPO);
-		
-		AwardStockPO awardStockPO = awardStockDao.get(salesActivityItemPO.getAsid());
-		
-		if(salesActivityItemPO.getIsStock() == SalesActivityItemPO.ISSTOCK_COUNTIN_INT){//计入库存
-			
-			int num = Arith.sub(awardStockPO.getNum(), salesActivityItemPO.getNum());
-			if(num < 0){
-				throw new FLException(160038, "奖品库存数量不足!");
-			}
-			awardStockPO.setNum(Arith.sub(awardStockPO.getNum(), salesActivityItemPO.getNum()));
+	public int checkSalesActivity(long sid, long integral) throws FLException {
 
-			awardStockDao.update(awardStockPO);
-		}
-		
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, salesActivityItemPO.getOrderId(), AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_DELIVERY_INT, AwardRecordPO.ONETYPE_SALES_INT, salesActivityItemPO.getIsStock(), salesActivityItemPO.getMoney(), salesActivityItemPO.getNum(), salesActivityItemVO.getContent());
-		
-		awardRecordDao.save(awardRecordPO);
-	}
+		SalesActivityPO salesActivityPO = salesActivityDao.get(sid);
 
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void unrefundSalesActivityItem(SalesActivityItemVO salesActivityItemVO) throws FLException {
+		if (salesActivityPO == null) {
+			throw new FLException(260021, "销售单不存在");
+		}
 
-		SalesActivityItemPO salesActivityItemPO = salesActivityDao.get(salesActivityItemVO.getSaiid());
-		
-		if(salesActivityItemPO == null){
-			throw new FLException(140030, "订单活动物品不存在");
-		}
-		
-		if(salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_RECEIVE_INT){//已领--2
-			throw new FLException(140057, "订单活动奖品不可操作");
-		}
-		
-		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_UNRETURNED_INT);//更改为状态5--未退
-		
-		salesActivityDao.update(salesActivityItemPO);
-		
-	}
+		long activity = salesActivityDao.amountSalesActivityForActivity(salesActivityPO.getSales().getOrderId());
+		long payment = salesActivityDao.amountSalesActivityForPayment(salesActivityPO.getSales().getOrderId());
 
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void refundSalesActivityItem(SalesActivityItemVO salesActivityItemVO, String userId) throws FLException {
-		
-		SalesActivityItemPO salesActivityItemPO = salesActivityDao.get(salesActivityItemVO.getSaiid());
-		
-		if(salesActivityItemPO == null){
-			throw new FLException(140030, "订单活动物品不存在");
+		if (Arith.sub(payment, Arith.mul(integral, salesActivityPO.getActivity() == null ? 0 : salesActivityPO.getActivity().getMultiple())) < activity) {
+			throw new FLException(160037, "积分不足");
 		}
-		
-		if(salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_RECEIVE_INT && salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_UNRETURNED_INT && salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_DELIVERY_INT){//已领--2, 未退--5, 配送--4
-			throw new FLException(140057, "订单活动奖品不可操作");
-		}
-		
-		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_REFUND_INT);//更改为状态3--退货
-		
-		salesActivityDao.update(salesActivityItemPO);
-		
-		AwardStockPO awardStockPO = awardStockDao.get(salesActivityItemPO.getAsid());
-		
-		if(salesActivityItemPO.getIsStock() == SalesActivityItemPO.ISSTOCK_COUNTIN_INT){//0--计入库存
-			
-			awardStockPO.setNum(Arith.add(awardStockPO.getNum(), salesActivityItemPO.getNum()));
-			
-			awardStockDao.update(awardStockPO);
-			
-		}
-		
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, userDao.queryUserByUserId(userId), salesActivityItemPO.getOrderId(), AwardRecordPO.TYPE_CG_INT, AwardRecordPO.SUBTYPE_REFUND_INT, AwardRecordPO.ONETYPE_SALES_INT, salesActivityItemPO.getIsStock(), salesActivityItemPO.getMoney(), salesActivityItemPO.getNum(), salesActivityItemVO.getContent());
-		
-		awardRecordDao.save(awardRecordPO);
-		
-	}
 
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void expendSalesActivityItem(SalesActivityItemVO salesActivityItemVO) throws FLException {
-		
-		SalesActivityItemPO salesActivityItemPO = salesActivityDao.get(salesActivityItemVO.getSaiid());
-		
-		if(salesActivityItemPO == null){
-			throw new FLException(140030, "订单活动物品不存在");
-		}
-		
-		if(salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_RECEIVE_INT && salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_DELIVERY_INT){// 已领--2, 配送--4
-			throw new FLException(140057, "订单活动奖品不可操作");
-		}
-		
-		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_CONSUME_INT);//更改为状态7--消耗
-		
-		salesActivityDao.update(salesActivityItemPO);
-		
+		return 0;
 	}
 
 }

@@ -126,7 +126,7 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 	public int submitApprovalForCustomerOriginTDecoration(ApprovalVO approvalVO, ApprovalCustomerOriginTDecorationVO approvalCustomerOriginTDecorationVO, String userId, int company) throws FLException {
 
 		Long csid = approvalCustomerOriginTDecorationVO.getCustomerOrigin().getCsid();
-		List<Short> status = Arrays.asList(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_STATUS_APPROVE_INT);
+		List<Short> status = Arrays.asList(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_STATUS_APPROVE_INT, ApprovalPO.APPROVAL_STATUS_CONFIRM_INT, ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT, ApprovalPO.APPROVAL_STATUS_REJECT_INT);
 
 		ApprovalPO approvalPO = approvalDao.queryApprovalByChange(status, ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT, String.valueOf(csid));
 
@@ -168,14 +168,13 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 		UserPO salesman = userDao.queryUserByUserId(approvalCustomerOriginTDecorationVO.getSalesman().getUserId());
 
 		approvalCustomerOriginTDecorationPO.setSalesman(salesman);
-		approvalCustomerOriginTDecorationPO.setSalesmanType(customerOriginPO.getSalesmanType());
 
 		approvalCustomerOriginTDecorationDao.save(approvalCustomerOriginTDecorationPO);
 
 		customerOriginPO.setStatus(CustomerOriginPO.STATUS_APPROVE_INT);
 
 		customerOriginDao.update(customerOriginPO);
-		
+
 		String contents = String.format("客源转装修单提交,客户名:%s,楼盘:%s %s,装修单号:%s,批注:%s", customerOriginPO.getName(), villagePO.getName(), housePO.getHouseNumber(), customerOriginPO.getOrderId(), approvalPO.getAnnotate());
 
 		UserPO designer = customerOriginPO.getDesigner();

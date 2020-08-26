@@ -21,10 +21,13 @@ import com.fanglin.utils.SystemConfig;
 public class DutyAction extends BaseListAction {
 
 	private static final long serialVersionUID = 3246937855994579649L;
+	
 	@Autowired
 	private DutyService dutyService;
 
 	private DutyVO duty;
+	
+	private String pinyinName;
 
 	private List<DutyVO> dutys;
 
@@ -41,6 +44,14 @@ public class DutyAction extends BaseListAction {
 
 		dutys = dutyService.queryDuty();
 
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryDutyByName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDutyByName() {
+
+		dutys = dutyService.queryDutyByName(pinyinName, duty);
+		
 		return SUCCESS;
 	}
 
@@ -102,6 +113,14 @@ public class DutyAction extends BaseListAction {
 
 	public void setDutys(List<DutyVO> dutys) {
 		this.dutys = dutys;
+	}
+
+	public String getPinyinName() {
+		return pinyinName;
+	}
+
+	public void setPinyinName(String pinyinName) {
+		this.pinyinName = pinyinName;
 	}
 
 }

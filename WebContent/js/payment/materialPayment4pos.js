@@ -59,6 +59,7 @@ jQuery(function($) {
 	});
 
 	materialPayment.saveBtn.bindClick(function(){
+		var searcher = {"doSearch" : getMaterialPayment};
 		paymentUtils.materialPayment( materialPayment, materialPaymentPostData, searcher);
 	});
 	materialPayment.cancelBtn.on("click", function(){
@@ -90,8 +91,10 @@ jQuery(function($) {
 	}, null, false);
 
 	com.post(api.ds.decoration, {}, function(res){
-		materialPayment.decorationType = res.type;
+		materialPayment.decorationType = res.typeness;
 	}, null, false);
+
+	com.focusPage("#historyMaterialPaymentPosList").removeClass("active");
 
 	var displayFunc  = (function(){
         var renderList = function(tableId,listData){
@@ -182,11 +185,11 @@ jQuery(function($) {
         }
     })();
 
-	var searcher = new Searcher();
+	//画页面的过滤条件
+	paymentUtils.drawFilter(com.focusPage("#condList"), [{"labelVal":"装修单号", "inputId":"materialFilterOrderId"}, {"labelVal":"主材号", "inputId":"materialFilterNo"}], getMaterialPayment);
 
-	searcher.init(["orderId", "msoNo"], "condList", api.payment.queryMaterialPayment, function(data){
-		displayFunc.init('resultList', data);
-	}, "pagenation", "materialPaymentPosPostData", null, true, "materialPayments");
+	//页面初始查询
+	getMaterialPayment();
 
 	//批量收款
 	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'collects').css("margin", "0px 3px").appendTo(com.focusPage("#pagenation"));
@@ -350,6 +353,128 @@ jQuery(function($) {
 
 	});
 
+	//历史收款
+	var hdisplayFunc  = (function(){
+		var renderList = function(tableId,listData){
+			var $tableWrap = com.focusPage('#' + tableId);
+			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+			if(listData && listData.length){
+				$.each(listData,function(i, v){
+					var $liLine = creatLine(v);
+
+					$liLine.appendTo($ul);
+				});
+
+				$ul.appendTo($tableWrap);
+			}
+		};
+
+		var creatLine = function(v){
+			var $liLine = $('<li></li>').addClass('item-orange clearfix');
+			var $h3 = $('<h3></h3>').addClass('oid');
+			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+			var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+			var $decorationInfoBtn =  $('<a></a>').addClass('btn btn-minier btn-yellow').html('装修单信息');
+			var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-info').html('打印');
+
+			var propertyArr = [
+				["订单号:", v.material.orderId, "blue"],
+				["主材号:", v.material.no, "blue"],
+				["楼盘地址:", v.material.house.village.cityProper.city.name + ' ' + v.material.house.village.cityProper.name + ' ' + v.material.house.village.name + ' ' + v.material.house.houseNumber, "grey"],
+				["客户:", v.material.customer.name, "grey"],
+				["品牌:", v.brand, "grey"],
+				["操作人:", v.creater.currentName, "grey"],
+				["应收金额:", v.referMoney, "blue"],
+				["收款人:", v.collecter.currentName, "grey"],
+				["收款时间:", v.collectTime, "green"],
+				["状态:", v.paymentStatus == 1 ? '已付款' : '已确认', "red"],
+				["备注:", v.comment, "grey"]
+			];
+
+			var $label = $('<label></label>');
+			var $input = $('<input>').attr({
+				"type": "checkbox",
+				"name": "hmpIds",
+				"class": "ace ace-checkbox-2",
+				"mpId": v.mpId,
+				"mrId": v.mrId,
+				"orderId": v.material.orderId,
+				"referMoney": v.referMoney,
+				"customerId": v.material.customer.cid,
+				"paymentType": v.paymentType
+			}).val(v.arId);
+			var $span = $('<span></span>').addClass('lbl');
+
+			$.each(propertyArr, function (index,value) {
+				var $liProperty = $('<li></li>');
+				$('<strong></strong>').html(value[0]).appendTo($liProperty);
+				$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+				$liProperty.appendTo($ulProperty);
+			});
+
+			var styleArr = [];
+
+			v.cash != null && v.cash != "0" ? styleArr.push(["现金:", v.cash, "blue"]) : true;
+			v.bank != null && v.bank != "0" ? styleArr.push(["刷卡:", paymentUtils.splitBankInfo(v.bank, v.bankInfo, materialPayment.bankInfo), "blue"]) : true;
+			v.checkv != null && v.checkv != "0" ? styleArr.push(["银行:", paymentUtils.splitBankInfo(v.checkv, v.checkvBank, materialPayment.checkBankInfo), "blue"]) : true;
+			v.installment != null && v.installment != "0" ? styleArr.push(["分期:", v.installment, "blue"]) : true;
+			v.accounts != null && v.accounts != "0" ? styleArr.push(["对公帐户:", v.accounts, "blue"]) : true;
+			v.advance != null && v.advance != "0" ? styleArr.push(["预付款:", v.advance, "blue"]) : true;
+			v.coupon != null && v.coupon != "0" ? styleArr.push(["优惠券:", v.coupon + v.couponInfo.split('#').join(' '), "blue"]) : true;
+
+			$.each(styleArr, function (index, value) {
+				var $liProperty = $('<li></li>');
+				$('<strong></strong>').html(value[0]).appendTo($liProperty);
+				$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+				$liProperty.appendTo($ulStyle);
+			});
+
+			$label.append($input).append($span);
+			$h3.append($('<small></small>').addClass('blue').html(materialPayment.materialPaymentTypeData[v.paymentType]));
+
+			$divBtnWrap.append($decorationInfoBtn).append($btnPrint).appendTo($h3);
+
+			$liLine.append($h3).append($ulProperty).append($ulStyle);
+
+			var mrId = v.mrId;
+
+			$btnPrint.click(function(){
+				params.mrId = mrId;
+				params.decorationOrderMOrderId = v.material.orderId;
+				params.decorationReceiptDrId = v.drId;
+				com.popup("专用收款收据__装修单号: " + v.material.orderId  ,api.index.materialPaymentReceiptIndex.url ,function () {
+					parent.layer.getFrameIndex(window.name);
+				},null,true)
+			});
+
+			//显示装修单信息
+			$decorationInfoBtn.click(function(res){
+				paymentUtils.decorationInfoShow(v.material.orderId, materialPayment.decorationType);
+			});
+
+			return $liLine;
+		};
+
+		return {
+			init : function(tableId,listData){
+				com.focusPage('#' + tableId).html(null);
+				renderList(tableId,listData);
+			},
+			drawLine : function(v){
+				return creatLine(v);
+			}
+		}
+	})();
+
+	var hsearcher = new Searcher();
+
+	hsearcher.init(["orderId", "msoNo"], "hcondList", api.payment.pageMaterialPaymentForNotInit, function(data){
+		hdisplayFunc.init('hresultList', data);
+	}, "hpagenation", "hmaterialPaymentPostDataPos", null, false, null, null, "hresultList");
+
 	function dialogPayment(payment){
         com.cleanItems(materialPayment.items);
 
@@ -387,5 +512,22 @@ jQuery(function($) {
 		materialPaymentPostData.paymentInfo = [payment];
 
 		materialPayment.editFlg =  false;
+	}
+
+	//获取主材款
+	function getMaterialPayment(){
+		var materialPaymentOptions = {
+			"materialPayment.material.orderId" : com.focusPage("#materialFilterOrderId").val(),
+			"materialPayment.material.no" : com.focusPage("#materialFilterNo").val(),
+			"materialPayment.paymentStatus" : 0,
+			"filters[0].field": "paymentType",
+			"filters[0].data": "[2, 3]",
+			"filters[0].op": "in"
+		};
+
+		com.post(api.payment.queryMaterialPaymentByOrderId, materialPaymentOptions, function(res){
+			var data = res.materialPayments;
+			data != null && data.length > 0 ? displayFunc.init('resultList', data) : paymentUtils.emptyData(com.focusPage("#resultList"));
+		});
 	}
 });

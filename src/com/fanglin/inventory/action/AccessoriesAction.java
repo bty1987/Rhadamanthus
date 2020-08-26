@@ -27,6 +27,8 @@ public class AccessoriesAction extends BaseListAction {
 	private AccessoriesService accessoriesService;
 
 	private AccessoriesVO accessories;
+	
+	private List<AccessoriesVO> accessoriess;
 
 	private List<AccessoriesItemVO> accessoriesItems;
 
@@ -41,6 +43,14 @@ public class AccessoriesAction extends BaseListAction {
 	public String pageAccessories() throws FLException {
 
 		accessoriesService.pageAccessories(getPaging(), getFilters(), queryCompany());
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "queryAccessoriesByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryAccessoriesByOrderId() throws FLException {
+
+		accessoriess = accessoriesService.queryAccessoriesByOrderId(accessories);
 
 		return SUCCESS;
 	}
@@ -163,6 +173,14 @@ public class AccessoriesAction extends BaseListAction {
 
 	public void setAids(List<Long> aids) {
 		this.aids = aids;
+	}
+
+	public List<AccessoriesVO> getAccessoriess() {
+		return accessoriess;
+	}
+
+	public void setAccessoriess(List<AccessoriesVO> accessoriess) {
+		this.accessoriess = accessoriess;
 	}
 
 }

@@ -38,6 +38,14 @@ public class ApprovalCustomerOriginAction extends BaseListAction {
 
 	private ApprovalCustomerOriginVO approvalCustomerOrigin;
 
+	@Action(value = "queryApprovalCustomerOrigin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryApprovalForCustomerOrigin() throws FLException {
+
+		approvalCustomerOrigin = approvalCustomerOriginService.queryApprovalCustomerOrigin(approval);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "submitApprovalForCustomerOrigin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String submitApprovalForCustomerOrigin() throws FLException {
 

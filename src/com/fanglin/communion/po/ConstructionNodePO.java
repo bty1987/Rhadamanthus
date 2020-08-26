@@ -29,6 +29,10 @@ public class ConstructionNodePO implements Serializable {
 	private int precheck;
 
 	private int postcheck;
+	
+	private int stacheck;
+
+	private int fincheck;
 
 	private short status;
 
@@ -72,6 +76,24 @@ public class ConstructionNodePO implements Serializable {
 		this.postcheck = postcheck;
 	}
 
+	@Column(name = "stacheck")
+	public int getStacheck() {
+		return stacheck;
+	}
+
+	public void setStacheck(int stacheck) {
+		this.stacheck = stacheck;
+	}
+
+	@Column(name = "fincheck")
+	public int getFincheck() {
+		return fincheck;
+	}
+
+	public void setFincheck(int fincheck) {
+		this.fincheck = fincheck;
+	}
+	
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
@@ -80,7 +102,7 @@ public class ConstructionNodePO implements Serializable {
 	public void setStatus(short status) {
 		this.status = status;
 	}
-
+	
 	@Column(name = "sort")
 	public short getSort() {
 		return sort;

@@ -41,14 +41,7 @@ public class DecorationInfoAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-
-	@Action(value = "confirmDecorationInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String confirmDecorationInfo() throws FLException {
-
-		decorationInfoService.confirmDecorationInfo(decorationInfo);
-
-		return SUCCESS;
-	}
+	
 
 	public String getOrderId() {
 		return orderId;

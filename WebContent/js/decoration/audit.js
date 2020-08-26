@@ -10,7 +10,7 @@ jQuery(function($) {
 		$.each(res.decorationOrderStatus, function(i,v){
 			audit.decorationOrderStatus[v.key] = v.value;
 		});
-		$.each(res.decorationOrderType, function(i,v){
+		$.each(res.typeness, function(i,v){
 			audit.type[v.key] = v.value;
 		});
     }, null, false);
@@ -80,7 +80,7 @@ jQuery(function($) {
             $liLine.append($h3).append($ulProperty);
 
             $btnView.click(function(){
-                auditScale(v.decoration.orderId,v.decoration.type, v.versionId, v.notSalesmanRate);
+                auditScale(v.decoration.orderId,v.decoration.type, v.decoration.typeness, v.versionId, v.notSalesmanRate);
             });
 
             $btnPrice.click(function(){
@@ -144,13 +144,14 @@ jQuery(function($) {
     }
 
 
-    var auditScale = function (decorationOrderId, type, versionId, notSalesmanRate){
+    var auditScale = function (decorationOrderId, type, typeness, versionId, notSalesmanRate){
         params["decorationOrderId"] = decorationOrderId;
         params["orderType"] = type;
+        params["orderTypeness"] = typeness;
         params["versionId"] = versionId;
         params["notSalesmanRate"] = notSalesmanRate;
         params['historyPage'] = api.index.auditIndex.url;
-        params["viewNode"] = [{type:"basic",opt:{btn:["customerInfosBtn"]}},{type:"quotaion",opt:{btn:["btnPrintDefaultQuotationInfo"]}},{type:"picture",wizard:{"editPicture":true} },{type:"material"},{type:"activity"},{type:"payment"},{type:"belong"}, {type: "addreduce"}];
+        params["viewNode"] = [{type:"basic",opt:{btn:["customerInfosBtn"]}}, {type:"quotation",opt:{btn:["btnPrintDefaultQuotationInfo"]}}, {type:"picture",opt:{display:["OriginalPicture", "designPictures", "projectPictures", "contractMap", "CADProjectPicture"],show:["designPictureUpload", "projectPictureUpload", "CADUpload", "ContractUpload", "OriginalUpload"]}}, {type:"material"}, {type:"activity"},{type:"payment"},{type:"belong"}, {type: "addreduce"}];
         com.switchPage(api.index.decorationDetailIndex.url);
     };
 

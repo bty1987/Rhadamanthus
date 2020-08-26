@@ -68,7 +68,7 @@ jQuery(function($) {
 		paymentUtils.servicePaymentCollect(servicePayment, searcher);
 	});
 
-	com.focusPage("#historyService").removeClass("active");
+	com.focusPage("#historyServicePaymentPosList").removeClass("active");
 
 	var displayFunc  = (function(){
 		var renderList = function(tableId,listData){
@@ -155,6 +155,103 @@ jQuery(function($) {
 	searcher.init(["orderId"], "condList", api.decoration.pageDecorationHolonomy, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "decorationHolonomyPosPostData");
+
+	//历史收款页面
+	var hdisplayFunc  = (function(){
+		var renderList = function(tableId,listData){
+			var $tableWrap = com.focusPage('#' + tableId);
+			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+			if(listData && listData.length){
+				$.each(listData,function(i, v){
+					var $liLine = creatLine(v);
+					$liLine.appendTo($ul);
+				});
+				$ul.appendTo($tableWrap);
+			}
+		};
+
+		var creatLine = function(v){
+			var $liLine = $('<li></li>').addClass('item-orange clearfix');
+			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.type == 0 ? '收款' : '退款'));
+			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+			var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+			var $btnPrint = $('<a></a>').addClass('btn btn-minier');
+
+			var propertyArr = [
+				["订单号:", v.decoration.orderId, "blue"],
+				["楼盘地址:", v.decoration.house.village.cityProper.city.name + ' ' + v.decoration.house.village.cityProper.name + ' ' + v.decoration.house.village.name + ' ' + v.decoration.house.houseNumber, "grey"],
+				["客户:", v.decoration.customer.name, "grey"],
+				["设计师:", v.decoration.designer.currentName, "grey"],
+				["设计部:", v.decoration.designer.dept.name, "grey"],
+				["等级:", v.decoration.grade, "red"],
+				["预付款金额:", v.advanceMoney, "blue"],
+				["服务费:", v.serviceMoney, "blue"],
+				["收款人:", v.serviceReceipt.collecter.currentName, "grey"],
+				["收款时间:", v.serviceReceipt.collectTime, "green"],
+				["状态:", v.status == "1" ? "已付款" : "已确认", "red"],
+				["备注:", v.comment, "grey"]
+			];
+
+			$.each(propertyArr, function (index,value) {
+				var $liProperty = $('<li></li>');
+				$('<strong></strong>').html(value[0]).appendTo($liProperty);
+				$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+				$liProperty.appendTo($ulProperty);
+			});
+
+			//详情显示
+			var styleArr = [];
+
+			v.serviceReceipt.cash != null && v.serviceReceipt.cash != "0" ? styleArr.push(["现金:", v.serviceReceipt.cash, "blue"]) : true;
+			v.serviceReceipt.bank != null && v.serviceReceipt.bank != "0" ? styleArr.push(["刷卡:", paymentUtils.splitBankInfo(v.serviceReceipt.bank, v.serviceReceipt.bankInfo, servicePayment.bankInfo), "blue"]) : true;
+			v.serviceReceipt.checkv != null && v.serviceReceipt.checkv != "0" ? styleArr.push(["银行:", paymentUtils.splitBankInfo(v.serviceReceipt.checkv, v.serviceReceipt.checkvBank, servicePayment.checkBankInfo), "blue"]) : true;
+			v.serviceReceipt.installment != null && v.serviceReceipt.installment != "0" ? styleArr.push(["分期:", v.serviceReceipt.installment, "blue"]) : true;
+			v.serviceReceipt.accounts != null && v.serviceReceipt.accounts != "0" ? styleArr.push(["对公帐户:", v.serviceReceipt.accounts, "blue"]) : true;
+
+			$.each(styleArr, function (index, value) {
+				var $liProperty = $('<li></li>');
+				$('<strong></strong>').html(value[0]).appendTo($liProperty);
+				$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+				$liProperty.appendTo($ulStyle);
+			});
+
+			$divBtnWrap.append($btnPrint).appendTo($h3);
+
+			$btnPrint.text('打印').addClass("btn btn-minier btn-primary");
+
+			$btnPrint.click(function(){
+				params.decorationOrderSOrderId = v.decoration.orderId;
+				params.servicePaymentSOrderId = v.decoration.orderId;
+				params.serviceReceiptSrId = v.serviceReceipt.srId;
+				com.popup("专用收款收据__装修单号:" + v.decoration.orderId, api.index.servicePaymentReceiptIndex.url ,function () {
+					parent.layer.getFrameIndex(window.name);
+				},null,true)
+			});
+
+			$liLine.append($h3).append($ulProperty).append($ulStyle);
+
+			return $liLine;
+		};
+
+		return {
+			init : function(tableId,listData){
+				com.focusPage('#' + tableId).html(null);
+				renderList(tableId,listData);
+			},
+			drawLine : function(v){
+				return creatLine(v);
+			}
+		};
+	})();
+
+	var hsearcher = new Searcher();
+
+	hsearcher.init(["orderId"], "hcondList", api.payment.pageServicePaymentForHistory, function(data){
+		hdisplayFunc.init('hresultList', data);
+	}, "hpagenation", "servicePaymentPostDataPos", null, false, null, null, "hresultList");
 
 	//获取销售点信息
 	function getServicePosInfo(orderId){

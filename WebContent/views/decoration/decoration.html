@@ -141,27 +141,32 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right">预计放线时间</label>
                             <div class="col-sm-9">
-                                <input type="text" id='drawlineTime' class='col-xs-10 col-sm-6'></input>
+                                <input type="text" id='drawlineTime' class='col-xs-10 col-sm-6'/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right">预计完工时间</label>
                             <div class="col-sm-9">
-                                <input type="text" id='finishTime' class='col-xs-10 col-sm-6'></input>
+                                <input type="text" id='finishTime' class='col-xs-10 col-sm-6'/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right">预计领钥匙时间</label>
                             <div class="col-sm-9">
-                                <input type="text" id='keyTime' class='col-xs-10 col-sm-6'></input>
+                                <input type="text" id='keyTime' class='col-xs-10 col-sm-6'/>
+                            </div>
+                        </div>
+                         <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">预计设计完成时间</label>
+                            <div class="col-sm-9">
+                                <input type="text" id='designTime' class='col-xs-10 col-sm-6'/>
                             </div>
                         </div>
                        <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right">备注说明</label>
                             <div class="col-md-9">
                                 <textarea id="comment" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
-                                <button type="button" id="updateProject" class="btn btn-minier btn-success" style="margin-left: 98px;margin-top: 1px;">修改</button>
-                                <button type="button" id="drawing" class="btn btn-minier btn-yellow" style="margin-left: 98px;margin-top: 14px;">确认效果图</button>
+                                <button type="button" id="updateProject" class="btn btn-minier btn-yellow" style="margin-left: 155px;margin-top: 30px;">修改</button>
                             </div>
                         </div>
                         <hr>
@@ -259,19 +264,33 @@
 
                 <div class="modal-body">
                     <form class="form-horizontal">
+
                         <div class="form-group">
-                            <input class="hide" id="decorationOrderId" type="text"/>
-                            <label for="applayTime" class="col-sm-3 control-label no-padding-right">付款信息</label>
+                            <label for="decorationStatus" class="col-sm-3 control-label no-padding-right">订单状态</label>
                             <div class="col-sm-9">
-                                <span id="decorationPaymentInfo"></span>
+                                <div id="decorationStatus" class="col-xs-10 col-sm-8" style="padding-top: 5px;"></div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="refundValue" class="col-sm-3 control-label no-padding-right">退款金额</label>
+                            <label for="precontractPrice" class="col-sm-3 control-label no-padding-right">预签金额</label>
                             <div class="col-sm-9">
-                                <input id="refundValue" class="col-xs-10 col-sm-5 v_required v_float_3" type="text"
-                                       data-toggle="popover" data-trigger='manual'/>
+                                <input id="precontractPrice" class="col-xs-10 col-sm-5 v_float_3" type="text" data-toggle="popover" data-trigger='manual' readonly/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <input class="hide" id="decorationOrderId" type="text"/>
+                            <label for="decorationPaymentInfo" class="col-sm-3 control-label no-padding-right">付款信息</label>
+                            <div class="col-sm-9">
+                                <div id="decorationPaymentInfo" class="col-xs-10 col-sm-8" style="padding-top: 5px;"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="refundValue" class="col-sm-3 control-label no-padding-right">违约金额</label>
+                            <div class="col-sm-9">
+                                <input id="backup" class="col-xs-10 col-sm-5 v_required v_float_3" type="text" data-toggle="popover" data-trigger='manual'/>
                             </div>
                         </div>
                     </form>
@@ -299,7 +318,7 @@
                 <div class="modal-body">
                     <form class="form-horizontal">
                         <div class="form-group">
-                            <label for="refundValue" class="col-sm-3 control-label no-padding-right">客户姓名</label>
+                            <label for="customerName" class="col-sm-3 control-label no-padding-right">客户姓名</label>
                             <div class="col-sm-9">
                                 <input id="customerName" class="col-xs-10 col-sm-5 v_required v_name" type="text"
                                        data-toggle="popover" data-trigger='manual'/>
@@ -307,7 +326,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="refundValue" class="col-sm-3 control-label no-padding-right">联系方式</label>
+                            <label for="phone" class="col-sm-3 control-label no-padding-right">联系方式</label>
                             <div class="col-sm-9">
                                 <input id="phone" class="col-xs-10 col-sm-5 v_required v_phones2" type="text"
                                        data-toggle="popover" data-trigger='manual'/>

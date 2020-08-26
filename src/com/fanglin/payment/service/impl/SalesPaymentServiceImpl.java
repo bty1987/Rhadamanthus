@@ -17,6 +17,9 @@ import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.service.DecorationAdditionService;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.PointofsalesDao;
 import com.fanglin.payment.dao.SalesPaymentDao;
@@ -37,6 +40,7 @@ import com.fanglin.sales.dao.RefundsDao;
 import com.fanglin.sales.dao.SalesDao;
 import com.fanglin.sales.dao.SalesItemDao;
 import com.fanglin.sales.po.SalesPO;
+import com.fanglin.sales.service.SalesActivityService;
 import com.fanglin.sales.service.SalesBalanceService;
 import com.fanglin.sales.vo.SalesVO;
 import com.fanglin.system.vo.CityProperVO;
@@ -83,6 +87,15 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 	@Autowired
 	private PointofsalesDao pointofsalesDao;
 	
+	@Autowired
+	private DecorationDao decorationDao;
+	
+	@Autowired
+	private DecorationAdditionService decorationAdditionService;
+	
+	@Autowired
+	private SalesActivityService salesActivityService;
+	
 	@Override
 	public void pageSalesPaymentForInit(Paging paging, List<Filter> filters, int company, String companyType) {
 		
@@ -101,7 +114,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
 
-			salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO());
+			salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()));
 
 			salesPaymentVO = salesPaymentPOToVO(salesPaymentPO, salesPaymentVO);
 
@@ -134,10 +147,6 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 			salesPaymentVO = salesPaymentPOToVO(salesPaymentPO, salesPaymentVO);
 
-			BeanUtil.copyProperties(salesPaymentPO.getSalesReceipt(), salesPaymentVO.getSalesReceipt(), Arrays.asList("collecter", "confirmer"));
-			BeanUtil.copyProperties(salesPaymentPO.getSalesReceipt().getCollecter(), salesPaymentVO.getSalesReceipt().getCollecter(), Arrays.asList("role", "dept", "duty"));
-			BeanUtil.copyProperties(salesPaymentPO.getSalesReceipt().getConfirmer(), salesPaymentVO.getSalesReceipt().getConfirmer(), Arrays.asList("role", "dept", "duty"));
-
 			salesPaymentVOs.add(salesPaymentVO);
 
 		}
@@ -160,12 +169,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
 
-			salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO(new UserBaseVO()));
+			salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()));
 
 			salesPaymentVO = salesPaymentPOToVO(salesPaymentPO, salesPaymentVO);
-
-			BeanUtil.copyProperties(salesPaymentPO.getSalesReceipt(), salesPaymentVO.getSalesReceipt(), Arrays.asList("collecter", "confirmer"));
-			BeanUtil.copyProperties(salesPaymentPO.getSalesReceipt().getCollecter(), salesPaymentVO.getSalesReceipt().getCollecter(), Arrays.asList("role", "dept", "duty"));
 
 			salesPaymentVOs.add(salesPaymentVO);
 
@@ -193,44 +199,11 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 			salesPaymentVO = salesPaymentPOToVO(salesPaymentPO, salesPaymentVO);
 
-			BeanUtil.copyProperties(salesPaymentPO.getSalesReceipt(), salesPaymentVO.getSalesReceipt(), Arrays.asList("collecter", "confirmer"));
-			BeanUtil.copyProperties(salesPaymentPO.getSalesReceipt().getCollecter(), salesPaymentVO.getSalesReceipt().getCollecter(), Arrays.asList("role", "dept", "duty"));
-			BeanUtil.copyProperties(salesPaymentPO.getSalesReceipt().getConfirmer(), salesPaymentVO.getSalesReceipt().getConfirmer(), Arrays.asList("role", "dept", "duty"));
-
 			salesPaymentVOs.add(salesPaymentVO);
 
 		}
 
 		paging.setData(salesPaymentVOs);
-	}
-	
-	@Override
-	public List<SalesPaymentVO> querySalesPayment(List<Filter> filters, int company, String companyType) {
-
-		if(filters.size() == 0) return null;
-
-		filters.add(new Filter(SalesPaymentPO.COLUMN_STATUS_STR, String.valueOf(SalesPaymentPO.STATUS_INITIAL_INT), "eq"));
-		filters.add(new Filter(SalesPaymentPO.COLUMN_TYPE_STR, "", "in"));
-
-		if(companyType != null){
-			filters.add(new Filter(String.format("sales.%s", companyType), String.valueOf(company), "eq"));
-		}
-
-		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.querySalesPayment(filters);
-		List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();
-
-		SalesPaymentVO salesPaymentVO;
-
-		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
-
-			salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO());
-
-			salesPaymentVO = salesPaymentPOToVO(salesPaymentPO, salesPaymentVO);
-
-			salesPaymentVOs.add(salesPaymentVO);
-		}
-
-		return salesPaymentVOs;
 	}
 
 	@Override
@@ -241,11 +214,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
 
-			salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO());
+			salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()));
 
 			salesPaymentVO = salesPaymentPOToVO(salesPaymentPO, salesPaymentVO);
-
-			BeanUtil.copyProperties(salesPaymentPO.getSalesReceipt(), salesPaymentVO.getSalesReceipt(), Arrays.asList("collecter", "confirmer"));
 
 			salesPaymentVOs.add(salesPaymentVO);
 
@@ -255,23 +226,29 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 	}
 
 	@Override
-	public List<SalesPaymentVO> querySalesPaymentByOrderId(SalesVO salesVO) {
+	public List<SalesPaymentVO> querySalesPaymentByOrderId(SalesPaymentVO salesPayment, List<Filter> filters, int company, String companyType) {
+		
+		String orderId = salesPayment.getSales().getOrderId();
+		String no = salesPayment.getSales().getNo();
+		Short status = salesPayment.getStatus();
+		
+		if(orderId == "" && no == "") return null;
+		
+		if(no != null && no != ""){
+			filters.add(new Filter("no", no, "eq"));
+		}
+		
+		if(status != null){
+			filters.add(new Filter(SalesPaymentPO.COLUMN_STATUS_STR, String.valueOf(status), "eq"));
+		}
+		
 
-		List<SalesPO> salesPOs = salesDao.querySalesByOrderId(salesVO.getOrderId());
-
+		if(companyType != null && companyType != ""){
+			filters.add(new Filter(String.format("sales.%s", companyType), String.valueOf(company), "eq"));
+		}
+		
+		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.querySalesPaymentByOrderId(orderId, filters);
 		List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();
-
-		if (salesPOs == null || salesPOs.size() == 0) {
-			return salesPaymentVOs;
-		}
-
-		List<Long> sids = new ArrayList<Long>();
-
-		for (SalesPO sales : salesPOs) {
-			sids.add(sales.getSid());
-		}
-
-		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.querySalesPaymentBySids(sids);
 
 		SalesPaymentVO salesPaymentVO;
 
@@ -280,8 +257,6 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()));
 
 			salesPaymentVO = salesPaymentPOToVO(salesPaymentPO, salesPaymentVO);
-
-			BeanUtil.copyProperties(salesPaymentPO.getSalesReceipt(), salesPaymentVO.getSalesReceipt(), Arrays.asList("collecter", "confirmer"));
 
 			salesPaymentVOs.add(salesPaymentVO);
 		}
@@ -303,10 +278,6 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()));
 
 			salesPaymentVO = salesPaymentPOToVO(salesPaymentPO, salesPaymentVO);
-
-			BeanUtil.copyProperties(salesPaymentPO.getSalesReceipt(), salesPaymentVO.getSalesReceipt(), Arrays.asList("collecter", "confirmer"));
-			BeanUtil.copyProperties(salesPaymentPO.getSalesReceipt().getCollecter(), salesPaymentVO.getSalesReceipt().getCollecter(), Arrays.asList("role", "dept", "duty"));
-			BeanUtil.copyProperties(salesPaymentPO.getSalesReceipt().getConfirmer(), salesPaymentVO.getSalesReceipt().getConfirmer(), Arrays.asList("role", "dept", "duty"));
 
 			salesPaymentVOs.add(salesPaymentVO);
 
@@ -341,8 +312,10 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		if (sales.getStatus() != 0) {
 			throw new FLException(260022, "销售单状态不可操作");
 		}
+		
+		List<Short> types = Arrays.asList(salesPaymentVO.getType());
 
-		if (salesPaymentDao.countSalesPaymentBySidAType(salesPaymentVO.getSales().getSid(), SalesPaymentPO.TYPE_DEPOSIT_INT) > 0) {
+		if (salesPaymentDao.countSalesPayment(salesPaymentVO.getSales().getSid(), types) > 0) {
 			throw new FLException(150033, "款项类型已存在");
 		}
 
@@ -350,7 +323,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		BeanUtil.copyProperties(salesPaymentVO, salesPaymentPO, Arrays.asList("sales", "collecter", "confirmer"));
 		salesPaymentPO.setSales(sales);
-		salesPaymentPO.setType(SalesPaymentPO.TYPE_DEPOSIT_INT);
+		salesPaymentPO.setType(salesPaymentVO.getType());
 		salesPaymentPO.setStatus(SalesPaymentPO.STATUS_INITIAL_INT);
 		salesPaymentPO.setCategory(sales.getCategory());
 		salesPaymentPO.setBrand(sales.getBrand());
@@ -367,6 +340,8 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		sales.setDepositpay(salesPaymentVO.getReferMoney());
 		sales.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_UNPAY_SHORT);
+		sales.setCtype(salesPaymentVO.getSales().getCtype());
+		sales.setCvalue(salesPaymentVO.getSales().getCvalue());
 
 		salesDao.update(sales);
 
@@ -390,7 +365,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			throw new FLException(150040, "补款已存在");
 		}
 		
-		SalesPaymentPO depositSalesPaymentPO = salesPaymentDao.querySalesPaymentsBySidAndType(sid, SalesPaymentPO.TYPE_DEPOSIT_INT);
+		List<Short> deposiTtypes = Arrays.asList(SalesPaymentPO.TYPE_DEPOSIT_INT, SalesPaymentPO.TYPE_NOTDEPOSITREFUND_INT);
+		
+		SalesPaymentPO depositSalesPaymentPO = salesPaymentDao.querySalesPayment(sid, deposiTtypes);
 		
 		if(depositSalesPaymentPO != null && depositSalesPaymentPO.getStatus() == SalesPaymentPO.STATUS_INITIAL_INT){
 			throw new FLException(150041, "定金状态不可操作");
@@ -411,6 +388,11 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		
 		if (sales.getStatus() != 0) {
 			throw new FLException(260022, "销售单状态不可操作");
+		}
+		
+		if(salesPaymentVO.getReferMoney() < 0){
+			//验证销售活动积分
+			salesActivityService.checkSalesActivity(sid, Math.abs(salesPaymentVO.getReferMoney()));
 		}
 
 		SalesPaymentPO salesPaymentPO = new SalesPaymentPO(new UserPO(), new SalesPO());
@@ -558,7 +540,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		
 		salesPaymentDao.update(salesPayment);
 
-		if (salesPayment.getType() == SalesPaymentPO.TYPE_DEPOSIT_INT) {
+		if (salesPayment.getType() == SalesPaymentPO.TYPE_DEPOSIT_INT || salesPayment.getType() == SalesPaymentPO.TYPE_NOTDEPOSITREFUND_INT) {
 			sales.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_PAYED_SHORT);
 			salesDao.update(sales);
 		} else if (salesPayment.getType() == SalesPaymentPO.TYPE_REPLENISHMENT_INT) {
@@ -597,6 +579,11 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		if(posids != null && posids.size() > 0){
 			pointofsalesDao.updatePointofsales(posids, salesReceiptPO.getSrId(), PointofsalesPO.STATUS_USED_INT, PointofsalesPO.TYPE_SALES_INT);
 		}
+		
+		//更新装修单上的销售比例
+		DecorationPO decorationPO = decorationDao.get(sales.getOrderId());
+		
+		decorationAdditionService.updateDecorationForSaleScale(decorationPO);
 		
 		decorationService.sendMessage(salesPayment.getSales().getOrderId(), "主材单", String.format("主材交款金额%.3f元", Arith.div(salesPayment.getReferMoney(), 1000.0)));
 
@@ -720,7 +707,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			salesPayment.setStatus(SalesPaymentPO.STATUS_PAIDFOR_INT);
 			salesPaymentDao.update(salesPayment);
 
-			if (salesPayment.getType() == SalesPaymentPO.TYPE_DEPOSIT_INT) {
+			if (salesPayment.getType() == SalesPaymentPO.TYPE_DEPOSIT_INT || salesPayment.getType() == SalesPaymentPO.TYPE_NOTDEPOSITREFUND_INT) {
 
 				salesPO.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_PAYED_SHORT);
 
@@ -768,6 +755,11 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			pointofsalesDao.updatePointofsales(posids, salesReceiptPO.getSrId(), PointofsalesPO.STATUS_USED_INT, PointofsalesPO.TYPE_SALES_INT);
 		}
 		
+		//更新装修单上的销售比例
+		DecorationPO decorationPO = decorationDao.get(sales.getOrderId());
+		
+		decorationAdditionService.updateDecorationForSaleScale(decorationPO);
+		
 		decorationService.sendMessage(sales.getOrderId(), "主材单", String.format("主材交款金额%.3f元", Arith.div(totalMoney, 1000.0)));
 
 		return 0;
@@ -787,6 +779,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		if(salesPayment.getStatus() != SalesPaymentPO.STATUS_INITIAL_INT){
 			throw new FLException(150036, "款项状态不可操作");
 		}
+		
+		//验证销售活动积分
+		salesActivityService.checkSalesActivity(salesPayment.getSales().getSid(), salesPayment.getReferMoney());
 
 		SalesReceiptPO salesReceiptPO = new SalesReceiptPO();
 		
@@ -851,7 +846,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		salesPayment.setCompany(sales.getPompany());
 		salesPaymentDao.update(salesPayment);
 		
-		if(salesPayment.getType() == SalesPaymentPO.TYPE_DEPOSITREFUND_INT){
+		if(salesPayment.getType() == SalesPaymentPO.TYPE_DEPOSITREFUND_INT || salesPayment.getType() == SalesPaymentPO.TYPE_NOTDEPOSITREFUND_INT){
 			sales.setDepositpay(0);
 			sales.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_UNPAY_SHORT);
 			salesDao.update(sales);
@@ -864,6 +859,11 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			refundsDao.updateRefundsForStatusBySpid(salesPaymentVO.getSpid(), SalesPaymentPO.STATUS_PAIDFOR_INT);
 		}
 		
+		//更新装修单上的销售比例
+		DecorationPO decorationPO = decorationDao.get(sales.getOrderId());
+		
+		decorationAdditionService.updateDecorationForSaleScale(decorationPO);
+		
 		decorationService.sendMessage(salesPayment.getSales().getOrderId(), "主材单", String.format("主材退款金额%.3f元", Arith.div(salesPayment.getReferMoney(), 1000.0)));
 
 		return 0;
@@ -874,6 +874,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 	public int confirmSalesPayment(List<Long> spids, String userId) throws FLException {
 		
 		List<Long> salesIds = new ArrayList<Long>();
+		List<Long> salesIds4NotRefundDeposit = new ArrayList<Long>();
 
 		for (Long spid : spids) {
 
@@ -881,6 +882,11 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			
 			if(salesPayment == null){
 				throw new FLException(150003, "款项不存在");
+			}
+			
+			//不可退定金(后增加的8)也会生成预结算信息
+			if(salesPayment.getType() == SalesPaymentPO.TYPE_NOTDEPOSITREFUND_INT){
+				salesIds4NotRefundDeposit.add(salesPayment.getSales().getSid());
 			}
 			
 			//补款(3)和补款退款(5)的时候 , 会生成预结算信息
@@ -891,16 +897,16 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			salesPayment.setStatus(SalesPaymentPO.STATUS_CONFIRMED_INT);
 			salesPaymentDao.update(salesPayment);
 
-			SalesReceiptPO salesReceiptPO = salesReceiptDao.get(salesPayment.getSalesReceipt().getSrId());
+			SalesReceiptPO salesReceiptPO = salesPayment.getSalesReceipt();
 			salesReceiptPO.setConfirmTime(new Timestamp(System.currentTimeMillis()));
 			UserPO user = userDao.queryUserByUserId(userId);
 			salesReceiptPO.setConfirmer(user);
 			salesReceiptPO.setConfirmerName(user.getUserName());
 			salesReceiptDao.update(salesReceiptPO);
 
-			SalesPO salesPO = salesDao.get(salesPayment.getSales().getSid());
+			SalesPO salesPO = salesPayment.getSales();
 
-			if (salesPayment.getType() == SalesPaymentPO.TYPE_DEPOSIT_INT) {
+			if (salesPayment.getType() == SalesPaymentPO.TYPE_DEPOSIT_INT || salesPayment.getType() == SalesPaymentPO.TYPE_NOTDEPOSITREFUND_INT) {
 
 				salesPO.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_CONFIRM_SHORT);
 
@@ -922,7 +928,12 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		}
 		
+		if(salesIds4NotRefundDeposit.size() > 0){
+			salesBalanceService.advSalesBalance(salesIds4NotRefundDeposit, userId);
+		}
+		
 		if(salesIds.size() > 0){
+			salesBalanceService.revSalesBalance(salesIds, userId);
 			salesBalanceService.preSalesBalance(salesIds, userId);
 		}
 
@@ -935,14 +946,14 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 	public int cancelSalesPaymentForDeposit(SalesPaymentVO salesPaymentVO) throws FLException {
 		
 		long sid = salesPaymentVO.getSales().getSid();
-
-		SalesPaymentPO salesPayment = salesPaymentDao.querySalesPaymentsBySidAndType(sid, salesPaymentVO.getType());
 		
-		if(salesPaymentDao.countSalesPaymentBySidAType(sid, SalesPaymentPO.TYPE_REPLENISHMENT_INT) > 0){
+		if(salesPaymentDao.countSalesPayment(sid, Arrays.asList(SalesPaymentPO.TYPE_REPLENISHMENT_INT)) > 0){
 			throw new FLException(150040, "补款已存在");
 		}
 		
-		SalesPaymentPO depositSalesPaymentPO = salesPaymentDao.querySalesPaymentsBySidAndType(sid, SalesPaymentPO.TYPE_DEPOSIT_INT);
+		List<Short> types = Arrays.asList(SalesPaymentPO.TYPE_DEPOSIT_INT, SalesPaymentPO.TYPE_NOTDEPOSITREFUND_INT);
+
+		SalesPaymentPO depositSalesPaymentPO = salesPaymentDao.querySalesPayment(sid, types);
 
 		if (depositSalesPaymentPO == null) {
 			throw new FLException(150037, "定金不存在");
@@ -956,10 +967,12 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		salesPO.setDepositpay(0);
 		salesPO.setDepositpayStatus(SalesPO.DESPOSITPAYSTATUS_INIT_SHORT);
+		salesPO.setCtype(SalesPO.CTYPE_PASS_INT);
+		salesPO.setCvalue(0);
 
 		salesDao.update(salesPO);
 
-		salesPaymentDao.delete(salesPayment);
+		salesPaymentDao.delete(depositSalesPaymentPO);
 
 		return 0;
 	}
@@ -970,8 +983,10 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 	public int cancelSalesPaymentForFullpay(SalesPaymentVO salesPaymentVO) throws FLException {
 		
 		long sid = salesPaymentVO.getSales().getSid();
+		
+		List<Short> types = Arrays.asList(SalesPaymentPO.TYPE_REPLENISHMENT_INT, SalesPaymentPO.TYPE_MAKEAREFUND_INT);
 
-		SalesPaymentPO salesPayment = salesPaymentDao.querySalesPaymentsBySidAndType(sid, salesPaymentVO.getType());
+		SalesPaymentPO salesPayment = salesPaymentDao.querySalesPayment(sid, types);
 
 		if (salesPayment == null) {
 			throw new FLException(150038, "补款不存在");
@@ -1002,11 +1017,13 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		
 		SalesPO salesPO = salesDao.get(sid);
 		
-		if(salesPaymentDao.countSalesPaymentBySidAType(sid, SalesPaymentPO.TYPE_REPLENISHMENT_INT) > 0){
+		if(salesPaymentDao.countSalesPayment(sid, Arrays.asList(SalesPaymentPO.TYPE_REPLENISHMENT_INT)) > 0){
 			throw new FLException(150040, "补款已存在");
 		}
 		
-		SalesPaymentPO depositSalesPaymentPO = salesPaymentDao.querySalesPaymentsBySidAndType(sid, SalesPaymentPO.TYPE_DEPOSIT_INT);
+		List<Short> types = Arrays.asList(SalesPaymentPO.TYPE_DEPOSIT_INT);
+		
+		SalesPaymentPO depositSalesPaymentPO = salesPaymentDao.querySalesPayment(sid, types);
 
 		if (depositSalesPaymentPO == null) {
 			throw new FLException(150037, "定金不存在");
@@ -1015,6 +1032,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		if(depositSalesPaymentPO.getStatus() != SalesPaymentPO.STATUS_CONFIRMED_INT){
 			throw new FLException(150012, "款项不能进行退款");
 		}
+		
+		//验证销售活动积分
+		salesActivityService.checkSalesActivity(sid, depositSalesPaymentPO.getReferMoney());
 
 		SalesPaymentPO salesPaymentPO = new SalesPaymentPO(new UserPO(), new SalesPO());
 
@@ -1059,11 +1079,16 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			throw new FLException(150003, "款项不存在");
 		}
 		
-		SalesPaymentPO couponSalesPaymentPO = salesPaymentDao.querySalesPaymentsBySidAndType(sid, SalesPaymentPO.TYPE_VOUCHERREFUND_INT);
+		List<Short> type = Arrays.asList(SalesPaymentPO.TYPE_VOUCHERREFUND_INT);
+		
+		SalesPaymentPO couponSalesPaymentPO = salesPaymentDao.querySalesPayment(sid, type);
 
 		if(couponSalesPaymentPO != null){
 			throw new FLException(150032, "销售退券款项已存在");
 		}
+		
+		//验证销售活动积分
+		salesActivityService.checkSalesActivity(sid, salesVO.getCoupon());
 
 		SalesPaymentPO salesPaymentPO = new SalesPaymentPO(new UserPO(), new SalesPO());
 
@@ -1161,8 +1186,15 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		SalesPO salesPO = salesPaymentPO.getSales();
 		SalesVO salesVO = salesPaymentVO.getSales();
 		BeanUtil.copyProperties(salesPaymentPO, salesPaymentVO, Arrays.asList("creater", "sales", "salesReceipt"));
+		
+		if(salesPaymentPO.getSalesReceipt() != null){
+			BeanUtil.copyProperties(salesPaymentPO.getSalesReceipt(), salesPaymentVO.getSalesReceipt(), Arrays.asList("collecter", "confirmer"));
+			BeanUtil.copyProperties(salesPaymentPO.getSalesReceipt().getCollecter(), salesPaymentVO.getSalesReceipt().getCollecter(), Arrays.asList("role", "dept", "duty"));
+			BeanUtil.copyProperties(salesPaymentPO.getSalesReceipt().getConfirmer(), salesPaymentVO.getSalesReceipt().getConfirmer(), Arrays.asList("role", "dept", "duty"));
+		}
+		
 		salesPaymentVO.getCreater().setBaseInfo(salesPaymentPO.getCreater());
-		BeanUtil.copyProperties(salesPO, salesVO, Arrays.asList("house", "customer", "salesman", "dept", "region", "guider", "instorer", "guideDept", "supplier"));
+		BeanUtil.copyProperties(salesPO, salesVO, Arrays.asList("house", "customer", "salesman", "dept", "region", "guider", "instorer", "guideDept", "supplier", "finisher"));
 		BeanUtil.copyProperties(salesPO.getHouse(), salesVO.getHouse(), Arrays.asList("village"));
 		BeanUtil.copyProperties(salesPO.getHouse().getVillage(), salesVO.getHouse().getVillage(), Arrays.asList("cityProper"));
 		BeanUtil.copyProperties(salesPO.getHouse().getVillage().getCityProper(), salesVO.getHouse().getVillage().getCityProper(), Arrays.asList("city"));

@@ -46,5 +46,7 @@ $.extend(api, {common: {
     showImg: {url: "showImg.do"},
     downloadFile: {url: "downloadFile.do"},
     uploadImg: {url: "uploadImg.do"},
-    uploadOther: {url: "uploadOther.do"}
+    uploadOther: {url: "uploadOther.do"},
+    confirmApproval: {url: "confirmApproval.do"},
+    rejectApproval: {url: "rejectApproval.do"}
 }});

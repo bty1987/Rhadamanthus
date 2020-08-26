@@ -82,6 +82,7 @@ jQuery(function ($) {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
+            var $btnBalance = $('<a></a>').addClass('btn btn-minier btn-danger').html('结算');
 
             var propertyArr = [
                 ["品类: ", v.categoryName, "grey"],
@@ -97,12 +98,17 @@ jQuery(function ($) {
                 $liProperty.appendTo($ulProperty);
             });
 
-            $divBtnWrap.append($btnEdit).appendTo($h3);
+            $divBtnWrap.append($btnEdit).append($btnBalance).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
             $btnEdit.click(function () {
                 editBrand(v);
+            });
+
+            $btnBalance.click(function(){
+                params.bid = v.bid;
+                com.popup4page("#brandPopUp","/views/data/brandBalance.html","结算");
             });
 
             return $liLine;

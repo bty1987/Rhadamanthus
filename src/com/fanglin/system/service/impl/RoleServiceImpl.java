@@ -26,6 +26,7 @@ import com.fanglin.system.vo.RoleVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
+import com.fanglin.utils.PinYin4Util;
 
 @Service("roleService")
 @Transactional(readOnly = true)
@@ -98,15 +99,19 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-	public RoleVO queryRoleByName(RoleVO roleVO, Integer company) {
-
-		RolePO rolePO = roleDao.queryRoleByName(roleVO.getName(), company);
-
-		if (rolePO != null && !RolePO.SUPER_NO_STR.equals(rolePO.getNo())) {
-			BeanUtil.copyProperties(rolePO, roleVO);
+	public List<RoleVO> queryRoleByName(RoleVO roleVO, Integer company) {
+		
+		Paging paging = new Paging(0, 10);
+		List<RolePO> rolePOs = roleDao.queryRoleByName(paging, roleVO.getName(), company);
+		List<RoleVO> roleVOs = new ArrayList<RoleVO>();
+		
+		for(RolePO rolePO: rolePOs){
+			roleVO = new RoleVO();
+			BeanUtil.copyPropertie(rolePO, roleVO);
+			roleVOs.add(roleVO);
 		}
 
-		return roleVO;
+		return roleVOs;
 	}
 
 	@Override
@@ -131,7 +136,8 @@ public class RoleServiceImpl implements RoleService {
 
 		rolePO.setNo(roleId.toString());
 		rolePO.setCompany(company);
-
+		rolePO.setPinyin(PinYin4Util.getPinyin(roleVO.getName()).get(0).toString());
+		
 		roleDao.saveOrUpdate(rolePO);
 
 		return 0;
@@ -142,11 +148,12 @@ public class RoleServiceImpl implements RoleService {
 	public int updateRole(RoleVO roleVO) {
 
 		RolePO rolePO = roleDao.get(roleVO.getRid());
-
+		String name = roleVO.getName();	
 		if (rolePO != null) {
-
+			
 			BeanUtil.copyProperties(roleVO, rolePO, Arrays.asList("no"));
-
+			rolePO.setPinyin(PinYin4Util.getPinyin(name).get(0).toString());
+			
 			roleDao.saveOrUpdate(rolePO);
 		}
 

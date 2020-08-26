@@ -7,10 +7,14 @@ public class DecorationAccountVO implements Serializable {
 	private static final long serialVersionUID = 1175981581653015544L;
 
 	private Long daid;
+	
+	private String name;
 
 	private String orderId;
 
 	private Short type;
+	
+	private Short typeness;
 
 	private Short arcal;
 
@@ -29,6 +33,8 @@ public class DecorationAccountVO implements Serializable {
 	private Long difference;
 
 	private Long coupon;
+	
+	private Long internal;
 
 	private Long fulldel;
 
@@ -42,6 +48,14 @@ public class DecorationAccountVO implements Serializable {
 
 	public void setDaid(Long daid) {
 		this.daid = daid;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getOrderId() {
@@ -58,6 +72,14 @@ public class DecorationAccountVO implements Serializable {
 
 	public void setType(Short type) {
 		this.type = type;
+	}
+
+	public Short getTypeness() {
+		return typeness;
+	}
+
+	public void setTypeness(Short typeness) {
+		this.typeness = typeness;
 	}
 
 	public Integer getMatching() {
@@ -130,6 +152,14 @@ public class DecorationAccountVO implements Serializable {
 
 	public void setCoupon(Long coupon) {
 		this.coupon = coupon;
+	}
+
+	public Long getInternal() {
+		return internal;
+	}
+
+	public void setInternal(Long internal) {
+		this.internal = internal;
 	}
 
 	public Long getFulldel() {

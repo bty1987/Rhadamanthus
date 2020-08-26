@@ -206,7 +206,11 @@ $(function () {
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        return [$adda];
+        if (village.pageType == "houseLayout") {
+            return [];
+        } else {
+            return [$adda];
+        }
     });
 
     // 启用禁用功能

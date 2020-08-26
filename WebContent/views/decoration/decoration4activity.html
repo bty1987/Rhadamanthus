@@ -101,13 +101,7 @@
                                     data-trigger='manual'></select>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="activity" class="col-sm-3 control-label no-padding-right">状态类型</label>
-                        <div class="col-sm-9">
-                            <select class='col-xs-10 col-sm-5 v_required' id='receiveTypes' data-toggle="popover"
-                                    data-trigger='manual'></select>
-                        </div>
-                    </div>
+
                     <div class="form-group">
                         <div class="col-sm-3"></div>
                         <div class="col-sm-9">
@@ -118,6 +112,7 @@
                             <div class="col-sm-9" style="padding-left: 6px;" id="thingsInputs">
                                 <input type="text" id="thingsType" class="col-xs-10 col-sm-5 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" placeholder="请选择物品" />
                                 <input type="text" id="thingsVal" class="col-xs-10 col-sm-4 v_float_3 v_required" placeholder="请输入物品数量" style="margin: 0 10px">
+                                <select class='col-xs-12 col-sm-5 v_required' id='receiveType' data-trigger="manual" style="margin: 2px 0"></select>
                                 <button type="button" id="thingsAdd" class="btn btn-info btn-minier" style="width: 50px; line-height: 30px">添加</button>
                             </div>
                         </div>
@@ -135,9 +130,9 @@
                             <div class="col-sm-9" style="padding-left: 6px;" id="couponsInputs">
                                 <input type="text" id="couponsType" class="col-xs-10 col-sm-5 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" placeholder="请选择劵" />
                                 <input type="text" id="couponsVal" class="col-xs-10 col-sm-4 v_float_3 v_required" placeholder="请输入劵数量" style="margin: 0 10px">
+                                 <select class='col-xs-10 col-sm-5 v_required' id='receiveTypes' data-trigger="manual" style="margin: 2px 0"></select>
                                 <button type="button" id="couponsAdd" class="btn btn-info btn-minier" style="width: 50px; line-height: 30px">添加</button>
                             </div>
-
                         </div>
                     </div>
                     <div class="form-group">

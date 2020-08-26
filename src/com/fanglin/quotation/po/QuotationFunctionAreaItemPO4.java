@@ -153,6 +153,7 @@ public class QuotationFunctionAreaItemPO4 extends QuotationFunctionAreaItemPO im
 		this.subtype = subtype;
 	}
 
+	@Column(name = "discount")
 	public short getDiscount() {
 		return discount;
 	}
@@ -190,7 +191,7 @@ public class QuotationFunctionAreaItemPO4 extends QuotationFunctionAreaItemPO im
 		this.content = content;
 	}
 
-	@Column(name = "index")
+	@Column(name = "[index]")
 	public int getIndex() {
 		return index;
 	}

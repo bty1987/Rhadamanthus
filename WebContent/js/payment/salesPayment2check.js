@@ -207,6 +207,10 @@ $(function () {
     salesPaymentSearcher.init(["salesPaymentOrderId", "salesPaymentNo", "salesPaymentUserName", "salesPaymentVillage", "salesReceiptCollectTime"], 'condList', api.payment.pageSalesPaymentForCollect, function (data) {
         displayFunc.init('resultList', data);
     }, 'pagenation', 'salesPaymentForStatusPostData', null, false, null, function () {
+        var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'checks').css("margin", "0px 3px");
+        var $checki = $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
+        var $checkspan = $('<span></span>').text('全选').appendTo($checka);
+
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'collects').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-money bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('批量确认').appendTo($adda);
@@ -214,6 +218,10 @@ $(function () {
         var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
         var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
         var $impspan = $('<span></span>').text('导出').appendTo($impa);
+
+        $checka.click(function(){
+            paymentUtils.checkAll();
+        });
 
         $adda.click(function () {
             batchConfirm(salesPaymentSearcher, hsearcher);
@@ -223,7 +231,7 @@ $(function () {
             salesPaymentForCollentImport("pagenation");
         });
 
-        return [$adda, $impa]
+        return [$checka, $adda, $impa]
     }, 'resultList');
 
     salesPaymentForStatus.salesPaymentSearcher = salesPaymentSearcher;
@@ -504,15 +512,10 @@ $(function () {
     }
 
     function printPayment(orderId,srId,v){
-        if(v.salesReceipt.collecter.userId!=params.userInfo.user.userId){
-            com.showAlert(com.warning, "收款人不匹配, 不能打印");
-            return false;
-        }else{
-            params.salesReceiptSrId = srId;
-            com.popup("专用收款收据__装修单号: " + orderId ,api.index.salesPaymentReceiptIndex.url + "?salesReceipt.srId=" + srId + "&time=" + params.loginTime,function () {
-                parent.layer.getFrameIndex(window.name);
-            },null,true);
-        }
+    	params.salesReceiptSrId = srId;
+        com.popup("专用收款收据__装修单号: " + orderId ,api.index.salesPaymentReceiptIndex.url + "?salesReceipt.srId=" + srId + "&time=" + params.loginTime,function () {
+            parent.layer.getFrameIndex(window.name);
+        },null,true);
     }
 
     function baseClick() {

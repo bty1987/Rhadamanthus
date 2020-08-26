@@ -10,5 +10,7 @@ import com.fanglin.utils.Paging;
 public interface ContractDao extends Dao<ContractPO> {
 
 	public List<ContractPO> pageContract(Paging paging, List<Filter> filters, int company);
+
+	public List<ContractPO> queryContract(int company);
 	
 }

@@ -40,6 +40,8 @@ public class SalesActivityItemVO implements Serializable {
 	private String receiveUserName;
 
 	private Timestamp receiveTime;
+	
+	private Integer integral;
 
 	public SalesActivityItemVO(){
 		super();
@@ -164,6 +166,14 @@ public class SalesActivityItemVO implements Serializable {
 
 	public void setReceiveTime(Timestamp receiveTime) {
 		this.receiveTime = receiveTime;
+	}
+
+	public Integer getIntegral() {
+		return integral;
+	}
+
+	public void setIntegral(Integer integral) {
+		this.integral = integral;
 	}
 	
 }

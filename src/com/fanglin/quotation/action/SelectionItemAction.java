@@ -34,7 +34,7 @@ public class SelectionItemAction extends BaseListAction {
 	@Action(value = "pageSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSelectionItem() throws FLException {
 		
-		selectionItemService.pageSelectionItem(getPaging(), getFilters(), selectionItem);
+		selectionItemService.pageSelectionItem(getPaging(), getFilters(), queryCompany(), selectionItem);
 		
 		return SUCCESS;
 	}
@@ -42,7 +42,15 @@ public class SelectionItemAction extends BaseListAction {
 	@Action(value = "pageSelectionItemForSupplier", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSelectionItemForSupplier() throws FLException {
 		
-		selectionItemService.pageSelectionItemForSupplier(getPaging(), getFilters(), queryUserId());
+		selectionItemService.pageSelectionItemForSupplier(getPaging(), getFilters(), queryUserId(), queryCompany());
+		
+		return SUCCESS;
+	}
+	
+	@Action(value = "pageSelectionItemForEscorter", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageSelectionItemForEscorter() throws FLException {
+		
+		selectionItemService.pageSelectionItemForEscorter(getPaging(), getFilters(), queryUserId());
 		
 		return SUCCESS;
 	}
@@ -66,7 +74,7 @@ public class SelectionItemAction extends BaseListAction {
 	@Action(value = "addSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addSelectionItem() throws FLException {
 		
-		selectionItemService.addSelectionItem(selection, selectionItem);
+		selectionItemService.addSelectionItem(selection, selectionItem, queryCompany());
 		
 		return SUCCESS;
 	}
@@ -81,8 +89,8 @@ public class SelectionItemAction extends BaseListAction {
 	
 	@Action(value = "tranSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String tranSelectionItem() throws FLException {
-		
-		selectionItemService.tranSelectionItem(selectionItem, queryUserId());
+	
+		selectionItemService.tranSelectionItem(selectionItems, queryUserId());
 		
 		return SUCCESS;
 	}
@@ -114,7 +122,7 @@ public class SelectionItemAction extends BaseListAction {
 	@Action(value = "balanceSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String balanceSelectionItem() throws FLException {
 		
-		selectionItemService.balanceSelectionItem(selectionItem, queryUserId());
+		selectionItemService.balanceSelectionItem(selectionItems, queryUserId());
 		
 		return SUCCESS;
 	}

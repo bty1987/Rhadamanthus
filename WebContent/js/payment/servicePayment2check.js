@@ -181,6 +181,10 @@ jQuery(function($) {
 	searcher.init(["orderId", "paymentDesigner", "paymentVillage", "collectTimeDateRange"], "condList", api.payment.pageServicePaymentForCollect, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "pageServicePaymentForCollectPostData", null, false, null, function(){
+		var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'checks').css("margin", "0px 3px");
+		var $checki = $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
+		var $checkspan = $('<span></span>').text('全选').appendTo($checka);
+
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'confirms').css("margin", "0px 3px");
 		var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
 		var $addspan = $('<span></span>').text('批量确认').appendTo($adda);
@@ -189,7 +193,7 @@ jQuery(function($) {
 		var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
 		var $impspan = $('<span></span>').text('导出').appendTo($impa);
 
-		return [$adda, $impa];
+		return [$checka, $adda, $impa];
 	},"resultList");
 
 	com.focusPage('a[name="import"]', '#pagenation').click(function () {
@@ -346,6 +350,12 @@ jQuery(function($) {
 		hdisplayFunc.init('hresultList', data);
 	}, "hpagenation", "servicePaymentForConfirmPostData", null, false, null, function(){}, "hresultList");
 
+	//全选
+	com.focusPage('a[name="checks"]', '#pagenation').click(function(){
+		paymentUtils.checkAll();
+	});
+
+	//批量确认
 	com.focusPage('a[name="confirms"]', '#pagenation').click(function(){
 		var options = {};
 		var $inputs = com.focusPage('input[name="spids"]:checked');

@@ -958,7 +958,7 @@ input[type=checkbox].ace.checked+.lbl::before {
 }
 
 .flex-table .col15 .cell{
-    flex-basis: 6.14%;
+    flex-basis: 3.7%;
 }
 
 .flex-table .col14 .cell {
@@ -1551,3 +1551,15 @@ body .layer-alert-error {
 .layui-layer-molv .layui-layer-btn .layui-layer-btn1 {
     background: #92B8B1
 }
+
+/* home */
+.weather .item {
+	margin: 10px 0px; 
+	line-height: 20px;
+}
+
+.weather .title {
+    padding: 0px 40px 0px 40px;
+    line-height: 40px;
+}
+

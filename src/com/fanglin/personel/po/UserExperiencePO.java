@@ -33,6 +33,8 @@ public class UserExperiencePO implements Serializable {
 	private Timestamp createTime;
 
 	private String comment;
+	
+	private Timestamp operateTime;
 
 	public UserExperiencePO() {
 		super();
@@ -72,10 +74,10 @@ public class UserExperiencePO implements Serializable {
 		return createTime;
 	}
 
-	public void setCreateTime(Timestamp timestamp) {
-		this.createTime = timestamp;
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
 	}
-
+	
 	@Column(name = "comment")
 	public String getComment() {
 		return comment;
@@ -83,6 +85,15 @@ public class UserExperiencePO implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+	
+	@Column(name = "operateTime")
+	public Timestamp getOperateTime() {
+		return operateTime;
+	}
+
+	public void setOperateTime(Timestamp operateTime) {
+		this.operateTime = operateTime;
 	}
 
 }

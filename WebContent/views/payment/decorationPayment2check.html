@@ -167,6 +167,49 @@
 					</div>
 				</div>
 			</div>
+
+			<div class="modal fade" id="withholdModalDecorationCheck" tabindex="-1">
+				<div class="modal-dialog" style="width: 50%;">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+							<h4 class="modal-title">扣款信息</h4>
+						</div>
+						<div class="modal-body">
+							<div id="withholdRecord" style="margin-bottom: 30px"><ul id="withholdRecordUl"></ul></div>
+
+							<form class="form-horizontal">
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right" for="withholdUser">扣款人</label>
+									<div class="col-md-9">
+										<input type="text" id="withholdUser" class="col-xs-10 col-sm-6 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" />
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label for="withholdMoney" class="col-md-3 control-label no-padding-right">扣款金额</label>
+									<div class="col-md-9">
+										<input type="text" id="withholdMoney" class="col-xs-10 col-sm-6 v_required v_float_3" data-toggle="popover" data-trigger='manual' maxlength="8"/>
+									</div>
+								</div>
+
+								<div class="form-group" >
+									<label class="col-md-3 control-label no-padding-right" for="withholdComment" >说明</label>
+									<div class="col-md-9">
+										<textarea id="withholdComment" class="col-md-6 v_name v_required" rows="3" data-toggle="popover" data-trigger='manual' maxlength="40"></textarea>
+									</div>
+								</div>
+							</form>
+						</div>
+
+						<div class="modal-footer ">
+							<button type="button" id="withhold" class="btn btn-primary">扣款</button>
+							<button type="button" id="cancel" class="btn btn-default" data-dismiss="modal">取消</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
 		</div>
 	</div>
 </div>

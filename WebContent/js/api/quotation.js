@@ -23,6 +23,7 @@ $.extend(api.index, {
     quotetionCompareIndex : {url:"/views/quotation/quotetionCompare.html"},
 
     selectionIndex:{url: "/views/quotation/selection.html"},
+    selectionOutputIndex:{url: "/views/quotation/selectionOutput.html"},
 });
 
 $.extend(api, {quotation: {
@@ -665,7 +666,7 @@ $.extend(api, {quotation: {
         type: "query",
         tranargs: [{
             result: "paging-data",
-            args: ["num", "initNum", "selling"]
+            args: ["num", "initNum", "postprice", "preprice"]
         },{
             result: "paging-data-decoration-house",
             args: ["buildArea"]
@@ -677,7 +678,19 @@ $.extend(api, {quotation: {
         type: "query",
         tranargs: [{
             result: "paging-data",
-            args: ["num", "initNum", "selling"]
+            args: ["num", "initNum", "postprice", "preprice"]
+        },{
+            result: "paging-data-decoration-house",
+            args: ["buildArea"]
+        }]
+    },
+    pageSelectionItemForEscorter: {
+        url: "pageSelectionItemForEscorter.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+            result: "paging-data",
+            args: ["num", "initNum", "postprice", "preprice"]
         },{
             result: "paging-data-decoration-house",
             args: ["buildArea"]
@@ -689,7 +702,7 @@ $.extend(api, {quotation: {
         type: "query",
         tranargs: [{
             result: "selectionItems",
-            args: ["num", "initNum", "selling"]
+            args: ["num", "initNum", "postprice", "preprice"]
         }]
     },
     querySelectionItem: {
@@ -698,7 +711,7 @@ $.extend(api, {quotation: {
         type: "query",
         tranargs: [{
             result: "selectionItems",
-            args: ["num", "initNum", "selling"]
+            args: ["num", "initNum", "postprice", "preprice"]
         }]
     },
     addSelectionItem: {
@@ -715,11 +728,12 @@ $.extend(api, {quotation: {
                 "selection.addReduceMinusTotal",
                 "selectionItem.initNum",
                 "selectionItem.num",
-                "selectionItem.selling"
+                "selectionItem.postprice",
+                "selectionItem.preprice",
             ],
             query: [{
                 result: "selectionItem",
-                args: ["num", "initNum", "selling"]
+                args: ["num", "initNum", "postprice", "preprice"]
             }]
         }
     },
@@ -744,7 +758,7 @@ $.extend(api, {quotation: {
         intercept: true,
         type: "update",
         tranargs: {
-            args: ["selectionItem.num"]
+            args: ["selectionItems.num"]
         }
     },
     checkSelectionItem: {url: "checkSelectionItem.do"},

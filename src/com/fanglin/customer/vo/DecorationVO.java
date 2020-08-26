@@ -42,6 +42,8 @@ public class DecorationVO implements Serializable {
 	private Timestamp measureTime;
 
 	private Short defaultFlag;
+	
+	private Long factPrice;
 
 	public DecorationVO() {
 		super();
@@ -184,6 +186,14 @@ public class DecorationVO implements Serializable {
 
 	public void setCustomerPhone(String customerPhone) {
 		this.customerPhone = customerPhone;
+	}
+
+	public Long getFactPrice() {
+		return factPrice;
+	}
+
+	public void setFactPrice(Long factPrice) {
+		this.factPrice = factPrice;
 	}
 
 }

@@ -11,17 +11,24 @@
 
 package com.fanglin.approval.service.impl;
 
+import org.apache.struts2.convention.annotation.ParentPackage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONArray;
+import com.fanglin.approval.dao.ApprovalDao;
+import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.approval.service.ApprovalCommonService;
+import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.dingding.service.ApprovalService;
-
+@ParentPackage("common")
 @Service("approvalCommonService")
 public class ApprovalCommonServiceImpl implements ApprovalCommonService {
 
+	@Autowired
+	private ApprovalDao approvalDao;
 	@Autowired
 	private ApprovalService approvalDDService;
 
@@ -32,6 +39,45 @@ public class ApprovalCommonServiceImpl implements ApprovalCommonService {
 
 		approvalDDService.initiateApproval(code, userId, null, null, null, form, company);
 
+		return 0;
+	}
+	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int confirmApproval(ApprovalVO approvalVO) throws FLException {
+		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
+		if (approvalPO == null) {
+			throw new FLException(240009, "审批信息不存在");
+		}
+		
+		if (approvalPO.getStatus()!=ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT) {
+			throw new FLException(240009, "审批状态不可操作");
+		}
+		
+        approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_CONFIRM_INT);
+		
+		approvalDao.update(approvalPO);
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int rejectApproval(ApprovalVO approvalVO) throws FLException {
+		
+		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
+		if (approvalPO == null) {
+			throw new FLException(240009, "审批信息不存在");
+		}
+		
+		if (approvalPO.getStatus()!=ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT) {
+			throw new FLException(240009, "审批状态不可操作");
+		}
+		
+        approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_REJECT_INT);
+		
+		approvalDao.update(approvalPO);
+		
 		return 0;
 	}
 

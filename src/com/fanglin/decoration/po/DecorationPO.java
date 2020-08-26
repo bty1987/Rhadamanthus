@@ -75,16 +75,20 @@ public class DecorationPO implements Serializable {
 	public static final short DESIGNSTATUS_CONDUCT_INT = 1;// 设计中
 	
 	public static final short DESIGNSTATUS_END_INT = 2;// 已完成
+	
+	public static final short STATUS_INITIA_INT = 0;// 待确认
 
-	public static final short TYPE_PART_INT = 0;
+	public static final short STATUS_CONTRACT_CONFIRMATION_INT = 1;// 合同确认
 
-	public static final short TYPE_WHOLE_INT = 1;
-
+	public static final short STATUS_SETTING_OUT_CONFIRMATION_INT = 2;// 放线确认
+	
+	public static final short TYPE_INIT_SALESCALE_INT = 1918;// 销售比例默认值1918
+	
+	public static final short TYPE_MIDPACK_INT = 0; 
+	
+	public static final short TYPE_INCLUSIVE_INT = 1; 
+	
 	public static final short TYPE_HOLONOMY_INT = 2;
-	
-	public static final short TYPE_FULLSUB_INT = 3;
-	
-	public static final short TYPE_DOUSUB_INT = 4;
 
 	public static final String CONFIG_KEY_HOLONOMY_STR = "fullsub%s";
 
@@ -109,8 +113,10 @@ public class DecorationPO implements Serializable {
 	private UserPO escorter;
 
 	private UserPO contracter;
-
+	
 	private short type;
+	
+	private short typeness;
 	
 	private String grade;
 
@@ -134,10 +140,6 @@ public class DecorationPO implements Serializable {
 	
 	private long factPrice;
 
-	private long netperfor;
-
-	private long comperfor;
-	
 	private long precontractPrice;
 
 	private Timestamp contractTime;
@@ -162,6 +164,8 @@ public class DecorationPO implements Serializable {
 	
 	private short projectStatus;
 
+	private short sourceStatus;
+	
 	private int otherStatus;
 
 	private QuotationVersionPO version;
@@ -173,6 +177,8 @@ public class DecorationPO implements Serializable {
 	private int company;
 
 	private short paySacle;
+	
+	private short saleScale;
 
 	private int discount;
 	
@@ -344,6 +350,14 @@ public class DecorationPO implements Serializable {
 		this.type = type;
 	}
 	
+	public short getTypeness() {
+		return typeness;
+	}
+	
+	public void setTypeness(short typeness) {
+		this.typeness = typeness;
+	}
+	
 	public short getDesignStatus() {
 		return designStatus;
 	}
@@ -358,6 +372,14 @@ public class DecorationPO implements Serializable {
 
 	public void setProjectStatus(short projectStatus) {
 		this.projectStatus = projectStatus;
+	}
+
+	public short getSourceStatus() {
+		return sourceStatus;
+	}
+
+	public void setSourceStatus(short sourceStatus) {
+		this.sourceStatus = sourceStatus;
 	}
 
 	public Timestamp getContractTime() {
@@ -480,6 +502,14 @@ public class DecorationPO implements Serializable {
 		this.paySacle = paySacle;
 	}
 
+	public short getSaleScale() {
+		return saleScale;
+	}
+
+	public void setSaleScale(short saleScale) {
+		this.saleScale = saleScale;
+	}
+
 	public int getDiscount() {
 		return discount;
 	}
@@ -502,22 +532,6 @@ public class DecorationPO implements Serializable {
 
 	public void setThingCut(long thingCut) {
 		this.thingCut = thingCut;
-	}
-
-	public long getNetperfor() {
-		return netperfor;
-	}
-
-	public void setNetperfor(long netperfor) {
-		this.netperfor = netperfor;
-	}
-
-	public long getComperfor() {
-		return comperfor;
-	}
-
-	public void setComperfor(long comperfor) {
-		this.comperfor = comperfor;
 	}
 	
 	public long getPrecontractPrice() {

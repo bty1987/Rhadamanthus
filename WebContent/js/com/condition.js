@@ -283,11 +283,18 @@ var Condition = function (api) {
         },
         dutyName: {
             label: "职位名称",
-            type: "text",
+            type: "autofill",
             submitConfig: {
                 name: "name",
-                op: "cn",
+                op: "eq",
                 validate: null
+            },
+            dataSource: {
+                url: api.system.queryDutyByName,
+                postData: {"duty.status":"", "duty.departmentType.dtid": ""},//获取数据时的请求参数
+                listPath: "dutys",//响应list的json路径
+                keyPath: "did",//用来向后台提交的字段的json路径
+                valuePath: "name"//用来在页面显示的字段的json路径
             }
         },
         cityProperName: {
@@ -359,13 +366,22 @@ var Condition = function (api) {
                 validate: null
             }
         },
-        deptName: {
+
+		deptName: {
             label: "部门名称",
-            type: "text",
+            type: "autofill",
             submitConfig: {
                 name: "deptName",
-                op: "cn",
+                op: "eq",
                 validate: null
+            },
+            dataSource: {
+                url: api.communion.queryDepartmentByName,
+                query: "dept.name",
+                postData: {"dept.type.dtid": ""},//获取数据时的请求参数
+                listPath: "deptList",//响应list的json路径
+                keyPath: "did",//用来向后台提交的字段的json路径
+                valuePath: "name"//用来在页面显示的字段的json路径
             }
         },
         //-------信息-公告查询条件
@@ -378,6 +394,23 @@ var Condition = function (api) {
                 validate: null // 校验规则
             }
         },
+        inf_createrName : {
+            label: "发布人",
+            type: "autofill",
+            submitConfig: {
+                name: "creater",//后台判断匹配
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.personel.queryUserByPinyin,
+                postData: {"user.status": ""},
+                listPath: "autoFillKeyValue",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+
         dateRange: {
             label: "时间",
             type: "dateRangePicker",
@@ -1027,8 +1060,8 @@ var Condition = function (api) {
             label: "姓名",
             type: "autofill",
             submitConfig: {
-                name: "userName",
-                op: "cn",
+                name: "userId",
+                op: "eq",
                 validate: null
             }, dataSource: {
                 url: api.personel.queryUserByPinyin,
@@ -1174,18 +1207,11 @@ var Condition = function (api) {
         },
         userName: {
             label: "姓名",
-            type: "autofill",
+            type: "text",
             submitConfig: {
                 name: "userName",
-                op: "eq",
+                op: "cn",
                 validate: null
-            },
-            dataSource: {
-                url: api.personel.queryUserByPinyin,
-                postData: {"user.status":3},
-                listPath: "autoFillKeyValue",
-                keyPath: "key",
-                valuePath: "value"
             }
         },
         identity: { //
@@ -1211,18 +1237,19 @@ var Condition = function (api) {
         },
         roleId: {
             label: "角色",
-            type: "select",
+            type: "autofill",
             submitConfig: {
                 name: "roleId",
                 op: "eq",
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.system.queryRole,
+                url: api.system.queryRoleByName,
                 postData: {},
                 listPath: "roleList",
                 keyPath: "rid",
-                valuePath: "name"
+                valuePath: "name",
+                query:"role.name"// 请求参数
             }
         },
         deptType: {
@@ -1241,20 +1268,37 @@ var Condition = function (api) {
                 valuePath: "name"
             }
         },
+        deptStatus :{
+            label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {//从后台取数据的各种配置
+                url: api.ds.department,
+                postData: {},
+                listPath: "deptStatus",
+                keyPath: "key",
+                valuePath:"value"
+            }
+        },
         deptId: {
             label: "部门",
-            type: "selectCaching",
+            type: "autofill",
             submitConfig: {
                 name: "deptId",
                 op: "eq",
                 validate: null
             },
             dataSource: {//从后台取数据的各种配置
-                url: api.communion.queryDepartment,
-                postData: {},
-                listPath: "deptList",
-                keyPath: "no",
-                valuePath: "name"
+				url: api.communion.queryDepartmentByName,
+				query: "dept.name",
+				postData: {"dept.type.dtid": ""},//获取数据时的请求参数
+				listPath: "deptList",//响应list的json路径
+				keyPath: "did",//用来向后台提交的字段的json路径
+				valuePath: "name"//用来在页面显示的字段的json路径
             }
         },
 
@@ -1364,7 +1408,8 @@ var Condition = function (api) {
                 validate: {
                     "reg": /^[A-Z0-9]*$/,
                     "msg": "格式不正确A-Z,0-9"
-                }
+                },
+                alone: true
             }
         },
         relationshipType: {
@@ -1602,7 +1647,7 @@ var Condition = function (api) {
             }
         },
         status: {
-            label: "状态",
+            label: "订单状态",
             type: "select",
             submitConfig: {
                 name: "status",
@@ -1642,6 +1687,24 @@ var Condition = function (api) {
                 validate: null
             }
         },
+        sdesignTime: {
+            label: "合同确认时间",
+            type: "dateRangePicker",
+            submitConfig: {
+                name: "sdesignTime",
+                op: "between",
+                validate: null
+            }
+        },
+        edesignTime: {
+            label: "放线确认时间",
+            type: "dateRangePicker",
+            submitConfig: {
+                name: "edesignTime",
+                op: "between",
+                validate: null
+            }
+        },
         orderType: {
             label: "订单类型",
             type: "select",
@@ -1653,7 +1716,7 @@ var Condition = function (api) {
             dataSource: {
                 url: api.ds.decoration,
                 postData: {"timestamp": new Date().getTime()},
-                listPath: "orderType",
+                listPath: "typeness",
                 keyPath: "key",
                 valuePath: "value"
             }
@@ -1670,6 +1733,22 @@ var Condition = function (api) {
                 url: api.ds.decoration,
                 postData: {"timestamp": new Date().getTime()},
                 listPath: "salesmanType",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        sourceStatus: {
+            label: "确认状态",
+            type: "select",
+            submitConfig: {
+                name: "sourceStatus",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.ds.decoration,
+                postData: {"timestamp": new Date().getTime()},
+                listPath: "sourceStatus",
                 keyPath: "key",
                 valuePath: "value"
             }
@@ -2551,13 +2630,31 @@ var Condition = function (api) {
                 validate:null
             }
         },
-        roleName:{
-            label:"角色名称",
+        roleNo:{
+            label:"角色编号",
             type:"text",
             submitConfig:{
-                name:"roleName",
-                op:"cn",
+                name:"roleNo",// 字段
+                op:"eq",// 查询方式
                 validate:null
+            }
+        },
+
+        roleName:{
+            label:"角色名称",
+            type:"autofill",
+            submitConfig:{
+                name:"roleId",// 字段
+                op:"eq",// 查询方式
+                validate:null
+            },
+            dataSource: {
+                url: api.system.queryRoleByName,// 请求接口
+                postData: {},//获取数据时的请求参数
+                listPath: "roleList",// 返回值
+                keyPath: "rid",// 元素的key值
+                valuePath: "name",// 元素的value值
+                query:"role.name"// 请求参数
             }
         },
         approvalUserName : {
@@ -2630,6 +2727,22 @@ var Condition = function (api) {
                 url: api.ds.approval,
                 postData: {"timestamp": new Date().getTime()},
                 listPath: "approvalType",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        approval_Status: {
+            label: "审批状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.ds.approval,
+                postData: {"timestamp": new Date().getTime()},
+                listPath: "approvalStatus",
                 keyPath: "key",
                 valuePath: "value"
             }
@@ -3499,7 +3612,33 @@ var Condition = function (api) {
                 }
             }
         },
-
+        sales_goodsCategory : {
+            label: "品类",
+            type: "text",
+            submitConfig: {
+                name: "sales.category",
+                op: "cn",
+                validate: null
+            },
+        },
+        sales_goodsBrand : {
+            label: "品牌",
+            type: "text",
+            submitConfig: {
+                name: "sales.brand",
+                op: "cn",
+                validate: null
+            },
+        },
+        sales_activity : {
+            label: "活动名称", //中文名
+            type: "text", // 类型
+            submitConfig: { // 向后台提交的配置
+                name: "activity.name", // 接口中的参数名
+                op: "cn", // 查询方式
+                validate: null // 校验规则
+            }
+        },
         sales_orderId: {
             label: "装修单号",
             type: "text",
@@ -3970,10 +4109,37 @@ var Condition = function (api) {
             }
         },
         c_finishTime: {
-            label: "预计竣工时间",
+            label: "预计完工时间",
             type: "dateRangePicker",
             submitConfig: {
                 name: "finishTime",
+                op: "between",
+                validate: null
+            }
+        },
+        c_designTime: {
+            label: "预计设计完成时间",
+            type: "dateRangePicker",
+            submitConfig: {
+                name: "designTime",
+                op: "between",
+                validate: null
+            }
+        },
+        c_sdesignTimeRange: {
+            label: "合同方案确认时间",
+            type: "dateRangePicker",
+            submitConfig: {
+                name: "sdesignTimeRange",
+                op: "between",
+                validate: null
+            }
+        },
+        c_edesignTimeRange: {
+            label: "放线方案确认时间",
+            type: "dateRangePicker",
+            submitConfig: {
+                name: "edesignTimeRange",
                 op: "between",
                 validate: null
             }
@@ -3988,6 +4154,110 @@ var Condition = function (api) {
                 name : "name",
                 op : "eq",
                 validate:null
+            }
+        },
+        cu_type: {
+            label: "回访类型",
+            type: "select",
+            submitConfig: {
+                name: "type",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: null,
+                postData: null,
+                listPath: [
+                    {"key":"0","value":"保修"},
+  	                {"key":"1","value":"投诉"}
+                ],
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+		aepair_status: {
+            label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.ds.customer,
+                postData: {},
+                listPath: "aepair_status",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        cu_updaterName: {
+            label: "操作人",
+            type: "autofill",
+            submitConfig: {
+                name: "updater",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: api.personel.queryUserByPinyin,
+                postData: {"user.status":"" },
+                listPath: "autoFillKeyValue",
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        cu_complainStatus: {
+            label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: null,
+                postData: null,
+                listPath: [
+                    {"key":"0","value":"初始"},
+                    {"key":"1","value":"处理"},
+                    {"key":"2","value":"完结"},
+                    {"key":"3","value":"关闭"}
+                ],
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        cu_complainLevel: {
+            label: "等级",
+            type: "select",
+            submitConfig: {
+                name: "level",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: null,
+                postData: null,
+                listPath: [
+                    {"key":"0","value":"普通"},
+                    {"key":"1","value":"重大"},
+                    {"key":"2","value":"危机"}
+                ],
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        cu_orderId: {
+            label: "装修单号",
+            type: "text",
+            submitConfig: {
+                name: "decoration.orderId",
+                op: "eq",
+                validate: {
+                    "reg": /^[A-Z0-9]*$/,
+                    "msg": "格式不正确A-Z,0-9"
+                }
             }
         },
         /*-------客户customer : end----*/
@@ -4783,6 +5053,49 @@ var Condition = function (api) {
                 valuePath: "value"
             }
         },
+        /*-------薪资salary : start----*/
+        w_type: {
+            label: "类型",
+            type: "select",
+            submitConfig: {
+                name: "type",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: null,
+                postData: null,
+                listPath: [{key: "0", value: "普通"}, {key: "1", value: "装修款"}],
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        w_status: {
+            label: "状态",
+            type: "select",
+            submitConfig: {
+                name: "status",
+                op: "eq",
+                validate: null
+            },
+            dataSource: {
+                url: null,
+                postData: null,
+                listPath: [{key: "0", value: "初始"}],
+                keyPath: "key",
+                valuePath: "value"
+            }
+        },
+        w_createTime:{
+            label: "创建时间",
+            type: "dateRangePicker",
+            submitConfig: {
+                name: "createTime",
+                op: "between",
+                validate: null
+            }
+        }
+        /*-------薪资salary : end----*/
     };
     return {
         getRuleByCondName: function (condName) {

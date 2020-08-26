@@ -53,9 +53,11 @@ public class UserPO implements Serializable {
 
 	public static final short FREEDOM_REQUEST_AUTH_INT = 4;
 
-	public static final short STATUS_ENABLE_INT = 0;
+	public static final short STATUS_ONJOB_INT = 0;
 
-	public static final short STATUS_DISABLE_INT = 1;
+	public static final short STATUS_OFFJOB_INT = 1;
+
+	public static final short STATUS_KEEPJOB_INT = 2;
 
 	public static final short ISUPDATE_INIT_INT = 0;
 
@@ -93,13 +95,9 @@ public class UserPO implements Serializable {
 
 	private short status;
 
-	private int dtid;
-
 	private DutyPO duty;
 
 	private String gender;
-
-	private String birthday;
 
 	private String identity;
 
@@ -245,15 +243,6 @@ public class UserPO implements Serializable {
 		this.status = status;
 	}
 
-	@Column(name = "dtid")
-	public int getDtid() {
-		return dtid;
-	}
-
-	public void setDtid(int dtid) {
-		this.dtid = dtid;
-	}
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "did", referencedColumnName = "did", nullable = false)
 	public DutyPO getDuty() {
@@ -271,15 +260,6 @@ public class UserPO implements Serializable {
 
 	public void setGender(String gender) {
 		this.gender = gender;
-	}
-
-	@Column(name = "birthday")
-	public String getBirthday() {
-		return birthday;
-	}
-
-	public void setBirthday(String birthday) {
-		this.birthday = birthday;
 	}
 
 	@Column(name = "identity")

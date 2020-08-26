@@ -188,7 +188,6 @@
             "supplier.userName": supplier.items.userName.val().trim(),
             "supplier.currentName": supplier.items.userName.val().trim(),
             "supplier.gender": 0,
-            "supplier.birthday": "2016-01-01",
             "supplier.identity": "",
             "supplier.phone": supplier.items.phone.val(),
             

@@ -60,13 +60,7 @@ $.extend(api, {decoration: {
                 args: ["referMoney"]
             }]},
         saveDecorationContract: {url: "saveDecorationContract.do"},
-        signDecorationContract: {
-        	url: "signDecorationContract.do",
-            type: "update",
-            tranargs: {
-                args: ["decorationContract.netperfor", "decorationContract.comperfor"]
-            }
-        },
+        signDecorationContract: {url: "signDecorationContract.do"},
         resignDecorationContract: {url: "resignDecorationContract.do"},
         presignDecorationContract: {
         	url: "presignDecorationContract.do",
@@ -75,19 +69,31 @@ $.extend(api, {decoration: {
                 args: ["decoration.precontractPrice"]
             }
         },
-        
-        makeDecorationMidpack: {url: "makeDecorationMidpack.do"},
-        
+
+        queryDecorationMidpack: {
+            url: "queryDecorationMidpack.do",
+            type: "query",
+            tranargs: [{
+                args: ["decorationMidpack.materialPrice", "decorationMidpack.servicePrice"]
+            }]},
+        makeDecorationMidpack: {
+            url: "makeDecorationMidpack.do",
+            type: "update",
+            tranargs: {
+                args: ["decorationMidpack.materialPrice", "decorationMidpack.servicePrice"]
+            }
+        },
+
         pageDecorationForGeneral: {
         	url: "pageDecorationForGeneral.do",
             demo: true,
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "netperfor", "comperfor", "precontractPrice", "notSalesmanRate", "discount"]
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
             }, {
                 result: "paging-data-house",
-                args: ["buildArea"]
+                args: ["buildArea","freeArea","innerArea","totalArea"]
             }]},
         pageDecorationForCommon: {
         	url: "pageDecorationForCommon.do",
@@ -95,10 +101,44 @@ $.extend(api, {decoration: {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "netperfor", "comperfor", "precontractPrice", "notSalesmanRate", "discount"]
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
             }, {
                 result: "paging-data-house",
-                args: ["buildArea"]
+                args: ["buildArea","freeArea","innerArea","totalArea"]
+            }]},
+        pageDecorationForCompany: {
+            url: "pageDecorationForCompany.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
+            }, {
+                result: "paging-data-house",
+                args: ["buildArea","freeArea","innerArea","totalArea"]
+            }]},
+        pageDecorationForGrade: {
+        	url: "pageDecorationForGrade.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
+            }, {
+                result: "paging-data-house",
+                args: ["buildArea","freeArea","innerArea","totalArea"]
+            }]},
+            
+        pageDecorationForCustomer: {
+            url: "pageDecorationForCustomer.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
+            }, {
+                result: "paging-data-house",
+                args: ["buildArea","freeArea","innerArea","totalArea"]
             }]},
         pageDecorationForDesigner: {
         	url: "pageDecorationForDesigner.do",
@@ -106,10 +146,10 @@ $.extend(api, {decoration: {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "netperfor", "comperfor", "precontractPrice", "notSalesmanRate", "discount"]
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
             }, {
                 result: "paging-data-house",
-                args: ["buildArea"]
+                args: ["buildArea","freeArea","innerArea","totalArea"]
             }]},
         pageDecorationForSalesman: {
         	url: "pageDecorationForSalesman.do",
@@ -117,10 +157,10 @@ $.extend(api, {decoration: {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "netperfor", "comperfor", "precontractPrice", "notSalesmanRate", "discount"]
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
             }, {
                 result: "paging-data-house",
-                args: ["buildArea"]
+                args: ["buildArea","freeArea","innerArea","totalArea"]
             }]},
         pageDecorationForQuoter: {
         	url: "pageDecorationForQuoter.do",
@@ -128,10 +168,10 @@ $.extend(api, {decoration: {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "netperfor", "comperfor", "precontractPrice", "notSalesmanRate", "discount"]
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
             }, {
                 result: "paging-data-house",
-                args: ["buildArea"]
+                args: ["buildArea","freeArea","innerArea","totalArea"]
             }]},
         pageDecorationForEscorter: {
         	url: "pageDecorationForEscorter.do",
@@ -139,10 +179,10 @@ $.extend(api, {decoration: {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "netperfor", "comperfor", "precontractPrice", "notSalesmanRate", "discount"]
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
             }, {
                 result: "paging-data-house",
-                args: ["buildArea"]
+                args: ["buildArea","freeArea","innerArea","totalArea"]
             }]},
         pageDecorationForBelong: {
         	url: "pageDecorationForBelong.do",
@@ -150,10 +190,10 @@ $.extend(api, {decoration: {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "netperfor", "comperfor", "precontractPrice", "notSalesmanRate", "discount"]
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
             }, {
                 result: "paging-data-house",
-                args: ["buildArea"]
+                args: ["buildArea","freeArea","innerArea","totalArea"]
             }]},
         pageDecorationForDesignerManager: {
             url: "pageDecorationForDesignerManager.do",
@@ -161,10 +201,10 @@ $.extend(api, {decoration: {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "netperfor", "comperfor", "precontractPrice", "notSalesmanRate", "discount"]
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
             }, {
                 result: "paging-data-house",
-                args: ["buildArea"]
+                args: ["buildArea","freeArea","innerArea","totalArea"]
             }]
         },
         pageDecorationForSalesmanManager: {
@@ -173,10 +213,10 @@ $.extend(api, {decoration: {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "netperfor", "comperfor", "precontractPrice", "notSalesmanRate", "discount"]
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
             }, {
                 result: "paging-data-house",
-                args: ["buildArea"]
+                args: ["buildArea","freeArea","innerArea","totalArea"]
             }]},
         pageDecoration: {
         	url: "pageDecoration.do",
@@ -184,10 +224,10 @@ $.extend(api, {decoration: {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "netperfor", "comperfor", "precontractPrice", "notSalesmanRate", "discount"]
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
             }, {
                 result: "paging-data-house",
-                args: ["buildArea"]
+                args: ["buildArea","freeArea","innerArea","totalArea"]
             }]},
         checkDecoration: {url: "checkDecoration.do", intercept: true},
         queryDecorationByCustomerId: {
@@ -195,7 +235,7 @@ $.extend(api, {decoration: {
             type: "query",
             tranargs: [{
                 result: "decorations",
-                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "netperfor", "comperfor", "precontractPrice", "notSalesmanRate", "discount"]
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
             }]},
         queryDecorationByOrderId: {
         	url: "queryDecorationByOrderId.do",
@@ -203,10 +243,10 @@ $.extend(api, {decoration: {
             type: "query",
             tranargs: [{
                 result: "decoration",
-                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "netperfor", "comperfor", "precontractPrice", "notSalesmanRate", "discount"]
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
             }, {
                 result: "decoration-house",
-                args: ["buildArea"]
+                args: ["buildArea","freeArea","innerArea","totalArea"]
             }]},
         queryDecorationForCommonByOrderId: {
         	url: "queryDecorationForCommonByOrderId.do",
@@ -214,10 +254,10 @@ $.extend(api, {decoration: {
                 type: "query",
                 tranargs: [{
                     result: "decoration",
-                    args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "netperfor", "comperfor", "precontractPrice", "notSalesmanRate", "discount"]
+                    args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
                 }, {
                     result: "decoration-house",
-                    args: ["buildArea"]
+                    args: ["buildArea","freeArea","innerArea","totalArea"]
                 }]},
         createDecoration: {
         	url: "createDecoration.do",
@@ -231,7 +271,7 @@ $.extend(api, {decoration: {
         	url: "terminalDecoration.do",
         	type: "update",
             tranargs: {
-                args: ["refundValue", "paymentValue"]
+                args: ["backup"]
             }
         },
 
@@ -428,6 +468,7 @@ $.extend(api, {decoration: {
 
         queryDecorationAdditionByOrderId: {url: "queryDecorationAdditionByOrderId.do"},
         queryDecorationConfig: {url: "queryDecorationConfig.do"},
+        queryDecorationSchedule: {url: "queryDecorationSchedule.do"},
 
         queryDecorationUser: {url: "queryDecorationUser.do"},
         addDecorationUser: {url: "addDecorationUser.do"},
@@ -452,15 +493,13 @@ $.extend(api, {decoration: {
         
         
         sendDecorationContractForAuth : {url: "sendDecorationContractForAuth.do"},
-        sendDecorationContractForSignet : {url: "sendDecorationContractForSignet.do"},
-        sendDecorationContractForSign : {url: "sendDecorationContractForSign.do"},
-        sendDecorationContractForView : {url: "sendDecorationContractForView.do"},
-        sendDecorationContractForDownload : {url: "sendDecorationContractForDownload.do"},
         viewDecorationContract : {url: "viewDecorationContract.do"},
         signDecorationContractForCompany : {url: "signDecorationContractForCompany.do"},
         signDecorationContractForCustomer : {url: "signDecorationContractForCustomer.do"},
         addDecorationContract: {url: "addDecorationContract.do"},
-        fillingDecorationContract : {url: "fillingDecorationContract.do"},
+        filingDecorationContract : {url: "filingDecorationContract.do"},
+        sendDecorationContract : {url: "sendDecorationContract.do"},
+        redirectDecorationContract : {url: "redirectDecorationContract.do"}
 
-    }
+}
 });

@@ -287,5 +287,7 @@ public class Arith {
 		System.out.println(Arith.mul(Arith.div(1111, 1000000), 1000000));
 
 		System.out.println(Arith.round(13134, 0, BigDecimal.ROUND_FLOOR));
+
+		System.out.println(Arith.div(0, 0));
 	}
 };

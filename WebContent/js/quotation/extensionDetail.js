@@ -398,7 +398,6 @@ var ExtensionDetail = (function(){
             var $numCell = $line.find('.cell.num');
             var $arwrap = com.focusPage('#addReduceItemDiv');
             var $editInput = that.$nowEditInput ? that.$nowEditInput : $arwrap.find('.fl-quo-input');
-
             com.focusPage('.fl-quo-item.current').removeClass('current');
             $line.addClass('current');
             $editInput.removeClass('hide').appendTo($numCell).find('input').val(null).focus();
@@ -424,6 +423,7 @@ var ExtensionDetail = (function(){
 
                 that.$nowLine.find('.cell.num .cell-wrap').text(num);
                 $line = that.$nowLine.next('.fl-quo-item');
+
                 var _type = that.$nowLine.find('.typedict').attr('data-type');
 
                 var args = {
@@ -461,7 +461,7 @@ var ExtensionDetail = (function(){
                     
                     that.$nowLine.find('input[name="eiid"]').val(res.extensionItem.eiid);
                     that.$nowLine.attr("data-eiid", res.extensionItem.eiid);
-                    
+
                     if($line.length){
                         that.getNumCellFocus($line);
                     }else{
@@ -509,7 +509,7 @@ var ExtensionDetail = (function(){
         //点击页面其他位置时清除表格行的选中样式
         clearQuoteSelected : function(){
             var that = this;
-            com.focusPage('body').click( function(e){
+            $('body').click( function(e){
                 if(!$(e.target).is('.cell-wrap') && !$(e.target).is('[data-action="collapse"]')){
                     that.hideInputWrap();
                 }
@@ -537,13 +537,15 @@ var ExtensionDetail = (function(){
                 
                 var options = {
                     "extensionItem.eiid": _qid
-                }
+                };
                 
                 com.post(api.quotation.deleteExtensionItem, $.extend({}, options, extensionDetail.basicParams), function(res){
                     $quote.remove();
                 }, function(res){
                     com.showAlert(com.error, res.errorMsg);
-                    $quote.removeAttr('del-flag');
+                    $quote.removeAttr('data-del-flag');
+
+                    arCalculator.calculateArFees();
                 }, false);
             }
         },

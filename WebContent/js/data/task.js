@@ -65,6 +65,7 @@ $(function(){
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('查看');
+            var $btnTaskParam = $('<a></a>').addClass('btn btn-minier btn-success').html('任务字段');
 
 
             //启用禁用
@@ -89,9 +90,15 @@ $(function(){
 
             $btnStatus.append($statusSwitch).append($isShowSwitch).append($span);
 
-            $divBtnWrap.append($btnEdit).append($btnStatus).appendTo($h3);
+            $divBtnWrap.append($btnEdit).append($btnTaskParam).append($btnStatus).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
+
+            //编辑按钮的点击事件
+            $btnTaskParam.click(function(){
+                params['tid'] = v.tid;
+                com.popup4page("#stockRecordPopUp","/views/data/taskParam.html","任务字段")
+            });
 
             //编辑按钮的点击事件
             $btnEdit.click(function(){
@@ -109,7 +116,6 @@ $(function(){
                 task.saveBtn.addClass("hide");
 
             });
-
 
             !v.status && $statusSwitch.prop("checked", true);
             $statusSwitch.switchBtn("status-lbl").on("click",function() {

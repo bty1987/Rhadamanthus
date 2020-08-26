@@ -28,9 +28,11 @@ public class QuotetionFunctionAreaPO implements Serializable {
 	
 	private String name;
 	
-	private int index;
+	private int functionAreaOrder;
 	
 	private short type;
+	
+	private short index;
 
 	public QuotetionFunctionAreaPO() {
 		super();
@@ -40,11 +42,12 @@ public class QuotetionFunctionAreaPO implements Serializable {
 		this.qfaId = qfaId;
 	}
 
-	public QuotetionFunctionAreaPO(long qid, String name, int index, short type) {
+	public QuotetionFunctionAreaPO(long qid, String name, int functionAreaOrder, short type, short index) {
 		this.qid = qid;
 		this.name = name;
-		this.index = index;
+		this.functionAreaOrder = functionAreaOrder;
 		this.type = type;
+		this.index = index;
 	}
 
 	@Id
@@ -58,7 +61,7 @@ public class QuotetionFunctionAreaPO implements Serializable {
 		this.qfaId = qfaId;
 	}
 
-	@Column(name="[qid]")
+	@Column(name="qid")
 	public long getQid() {
 		return qid;
 	}
@@ -67,7 +70,7 @@ public class QuotetionFunctionAreaPO implements Serializable {
 		this.qid = qid;
 	}
 
-	@Column(name="[name]")
+	@Column(name="name")
 	public String getName() {
 		return name;
 	}
@@ -76,16 +79,16 @@ public class QuotetionFunctionAreaPO implements Serializable {
 		this.name = name;
 	}
 
-	@Column(name="[index]")
-	public int getIndex() {
-		return index;
+	@Column(name="functionAreaOrder")
+	public int getFunctionAreaOrder() {
+		return functionAreaOrder;
 	}
 
-	public void setIndex(int index) {
-		this.index = index;
+	public void setFunctionAreaOrder(int functionAreaOrder) {
+		this.functionAreaOrder = functionAreaOrder;
 	}
 
-	@Column(name="[type]")
+	@Column(name="type")
 	public short getType() {
 		return type;
 	}
@@ -93,6 +96,14 @@ public class QuotetionFunctionAreaPO implements Serializable {
 	public void setType(short type) {
 		this.type = type;
 	}
-	
+
+	@Column(name="[index]")
+	public short getIndex() {
+		return index;
+	}
+
+	public void setIndex(short index) {
+		this.index = index;
+	}
 	
 }

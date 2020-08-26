@@ -37,6 +37,32 @@ public class DecorationReportVO implements java.io.Serializable{
 	
 	private Integer cs13;
 	
+	private Integer cs14;
+	
+	private Integer cs15;
+	
+	private Integer cs16;
+	
+	private Integer cs17;
+	
+	private Integer cs18;
+	
+    private Integer cs19;
+	
+	private Integer cs20;
+	
+	private Integer cs21;
+	
+	private Integer cs22;
+	
+	private Integer cs23;
+	
+	private Integer cs24;
+	
+	private Integer cs25;
+	
+	private Integer cs26;
+	
 	public DecorationReportVO() {
 		super();
 	}
@@ -168,4 +194,109 @@ public class DecorationReportVO implements java.io.Serializable{
 	public void setCs13(Integer cs13) {
 		this.cs13 = cs13;
 	}
+
+	public Integer getCs14() {
+		return cs14;
+	}
+
+	public void setCs14(Integer cs14) {
+		this.cs14 = cs14;
+	}
+
+	public Integer getCs15() {
+		return cs15;
+	}
+
+	public void setCs15(Integer cs15) {
+		this.cs15 = cs15;
+	}
+
+	public Integer getCs16() {
+		return cs16;
+	}
+
+	public void setCs16(Integer cs16) {
+		this.cs16 = cs16;
+	}
+
+	public Integer getCs17() {
+		return cs17;
+	}
+
+	public void setCs17(Integer cs17) {
+		this.cs17 = cs17;
+	}
+
+	public Integer getCs18() {
+		return cs18;
+	}
+
+	public void setCs18(Integer cs18) {
+		this.cs18 = cs18;
+	}
+
+	public Integer getCs19() {
+		return cs19;
+	}
+
+	public void setCs19(Integer cs19) {
+		this.cs19 = cs19;
+	}
+
+	public Integer getCs20() {
+		return cs20;
+	}
+
+	public void setCs20(Integer cs20) {
+		this.cs20 = cs20;
+	}
+
+	public Integer getCs21() {
+		return cs21;
+	}
+
+	public void setCs21(Integer cs21) {
+		this.cs21 = cs21;
+	}
+
+	public Integer getCs22() {
+		return cs22;
+	}
+
+	public void setCs22(Integer cs22) {
+		this.cs22 = cs22;
+	}
+
+	public Integer getCs23() {
+		return cs23;
+	}
+
+	public void setCs23(Integer cs23) {
+		this.cs23 = cs23;
+	}
+
+	public Integer getCs24() {
+		return cs24;
+	}
+
+	public void setCs24(Integer cs24) {
+		this.cs24 = cs24;
+	}
+
+	public Integer getCs25() {
+		return cs25;
+	}
+
+	public void setCs25(Integer cs25) {
+		this.cs25 = cs25;
+	}
+
+	public Integer getCs26() {
+		return cs26;
+	}
+
+	public void setCs26(Integer cs26) {
+		this.cs26 = cs26;
+	}
+	
 }

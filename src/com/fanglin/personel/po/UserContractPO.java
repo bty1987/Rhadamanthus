@@ -10,6 +10,7 @@
 package com.fanglin.personel.po;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,19 +25,25 @@ public class UserContractPO implements Serializable {
 
 	private static final long serialVersionUID = 8111974803190366547L;
 	
-	private int ucId;
+	private long ucId;
 
-	private String contractId;
+	private long uid;
 	
-	private String userId;
+	private String no;
+	
+	private String name;
+	
+	private String signTime;
 	
 	private String startTime;
 	
 	private String endTime;
 	
-	private String createTime;
+	private Timestamp createTime;
 	
-	private String des;
+	private short status;
+	
+	private String comment;
 	
 	public UserContractPO(){
 		super();
@@ -45,65 +52,93 @@ public class UserContractPO implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ucId") 
-	public int getUcId() {
+	public long getUcId() {
 		return ucId;
 	}
 
-	public void setUcId(int ucId) {
+	public void setUcId(long ucId) {
 		this.ucId = ucId;
 	}
 
-	@Column(nullable = false)
-	public String getContractId(){
-		return contractId;
+	@Column(name = "uid") 
+	public long getUid() {
+		return uid;
 	}
 
-	public void setContractId(String contractId){
-		this.contractId = contractId;
+	public void setUid(long uid) {
+		this.uid = uid;
 	}
 
-	@Column(nullable = false)
-	public String getUserId(){
-		return userId;
+	@Column(name = "no") 
+	public String getNo() {
+		return no;
 	}
 
-	public void setUserId(String userId){
-		this.userId = userId;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
-	@Column(nullable = false)
-	public String getStartTime(){
+	@Column(name = "name") 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Column(name = "signTime") 
+	public String getSignTime() {
+		return signTime;
+	}
+
+	public void setSignTime(String signTime) {
+		this.signTime = signTime;
+	}
+
+	@Column(name = "startTime") 
+	public String getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(String startTime){
+	public void setStartTime(String startTime) {
 		this.startTime = startTime;
 	}
 
-	@Column(nullable = false)
-	public String getEndTime(){
+	@Column(name = "endTime") 
+	public String getEndTime() {
 		return endTime;
 	}
 
-	public void setEndTime(String endTime){
+	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
 
-	@Column(nullable = false)
-	public String getCreateTime(){
+	@Column(name = "createTime") 
+	public Timestamp getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(String createTime){
+	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
 
-	public String getDes(){
-		return des;
+	@Column(name = "status") 
+	public short getStatus() {
+		return status;
 	}
 
-	public void setDes(String des){
-		this.des = des;
+	public void setStatus(short status) {
+		this.status = status;
 	}
-	
+
+	@Column(name = "comment") 
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
 }

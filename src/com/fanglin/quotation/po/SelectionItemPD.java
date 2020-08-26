@@ -60,7 +60,11 @@ public class SelectionItemPD implements Serializable {
 	
 	private int initNum;// 工程量
 	
-	private int selling;// 售价
+	private int postprice;// 售价
+	
+	private int preprice;// 预算金额
+	
+	private Timestamp createTime;// 创建时间
 	
 	private Timestamp tranTime;// 配送时间
 	
@@ -85,6 +89,8 @@ public class SelectionItemPD implements Serializable {
 	private int refnum;// 退数量
 	
 	private String comment;// 注释
+	
+	private int company;
 
 	public SelectionItemPD() {
 		super();
@@ -204,15 +210,33 @@ public class SelectionItemPD implements Serializable {
 		this.initNum = initNum;
 	}
 
-	@Column(name = "selling")
-	public int getSelling() {
-		return selling;
+	@Column(name = "postprice")
+	public int getPostprice() {
+		return postprice;
 	}
 
-	public void setSelling(int selling) {
-		this.selling = selling;
+	public void setPostprice(int postprice) {
+		this.postprice = postprice;
 	}
 	
+	@Column(name = "preprice")
+	public int getPreprice() {
+		return preprice;
+	}
+
+	public void setPreprice(int preprice) {
+		this.preprice = preprice;
+	}
+
+	@Column(name = "createTime")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
 	@Column(name = "tranTime")
 	public Timestamp getTranTime() {
 		return tranTime;
@@ -334,4 +358,15 @@ public class SelectionItemPD implements Serializable {
 	public void setAreaName(String areaName) {
 		this.areaName = areaName;
 	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
+	
+	
 }

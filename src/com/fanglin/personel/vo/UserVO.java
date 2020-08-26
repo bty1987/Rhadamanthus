@@ -44,13 +44,9 @@ public class UserVO implements Serializable {
 
 	private Short status;
 
-	private Integer dtid;
-
 	private DutyVO duty;
 
 	private String gender;
-
-	private String birthday;
 
 	private String identity;
 
@@ -66,7 +62,7 @@ public class UserVO implements Serializable {
 
 	private String dutyName;
 	
-	private short isUpdate;
+	private Short isUpdate;
 
 	public UserVO() {
 		super();
@@ -185,14 +181,6 @@ public class UserVO implements Serializable {
 		this.status = status;
 	}
 
-	public Integer getDtid() {
-		return dtid;
-	}
-
-	public void setDtid(Integer dtid) {
-		this.dtid = dtid;
-	}
-
 	public DutyVO getDuty() {
 		return duty;
 	}
@@ -207,14 +195,6 @@ public class UserVO implements Serializable {
 
 	public void setGender(String gender) {
 		this.gender = gender;
-	}
-
-	public String getBirthday() {
-		return birthday;
-	}
-
-	public void setBirthday(String birthday) {
-		this.birthday = birthday;
 	}
 
 	public String getIdentity() {
@@ -280,12 +260,12 @@ public class UserVO implements Serializable {
 	public void setDutyName(String dutyName) {
 		this.dutyName = dutyName;
 	}
-
-	public short getIsUpdate() {
+	
+	public Short getIsUpdate() {
 		return isUpdate;
 	}
 
-	public void setIsUpdate(short isUpdate) {
+	public void setIsUpdate(Short isUpdate) {
 		this.isUpdate = isUpdate;
 	}
 

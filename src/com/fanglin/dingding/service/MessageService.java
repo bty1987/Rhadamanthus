@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.dingding.po.AppMessageDelivery;
+import com.fanglin.dingding.po.LinkMessage;
 import com.fanglin.dingding.po.MessageDelivery;
 import com.fanglin.dingding.po.OAMessage;
 import com.fanglin.dingding.po.TextMessage;
@@ -169,6 +170,33 @@ public class MessageService {
 		}
 
 		return 0;
+	}
+
+	public int sendLink(String accessToken, String title, String content, String jump, Integer company, Object... args) {
+
+		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
+
+		SystemConfigPO jumpUrl = systemConfigDao.querySystemConfig(jump, company);
+
+		String url = String.format(DDApi.DDAPI_ROBOT_SEND_STR, oapiHost.getValue(), accessToken);
+
+		if (accessToken == null || jumpUrl == null) {
+			return -1;
+		}
+
+		LinkMessage linkMessage = new LinkMessage(String.format(jumpUrl.getValue(), args), "", title, content);
+
+		MessageDelivery messageDelivery = new MessageDelivery().withMessage(linkMessage);
+
+		JSONObject json = null;
+
+		try {
+			json = HttpHelper.httpPost(url, messageDelivery.toJsonObject());
+		} catch (Exception e) {
+			LogUtils.logging(logger, url, -1, e.getMessage());
+		}
+
+		return json == null ? MessagePO.DRESULT_FAIL_INT : json.getShort("errcode");
 	}
 
 	public static void main(String[] args) {

@@ -1,5 +1,5 @@
 $(function () {
-    
+
     var salesActivityItem = {
         paramsOrderId : params.orderId,
         ssid : params.sid,
@@ -12,25 +12,29 @@ $(function () {
             thingsNum : com.focusPage("#thingsNum"),
             couponsName : com.focusPage("#couponsName"),
             couponsNum : com.focusPage("#couponsNum"),
-            activityInfo : com.focusPage("#activityInfo"),
             activity : com.focusPage("#activity"),
             commentName:com.focusPage("#commentName"),
             salesActivityComment : com.focusPage("#salesActivityComment")
         },
         modal:{
-            salesActivityCommentModal: com.focusPage("#salesActivityCommentModal")
+            salesActivityCommentModal: com.focusPage("#salesActivityCommentModal"),
         },
         btn:{
             submitSalesActivityCommentBtn : com.focusPage("#submitSalesActivityCommentBtn"),
-            cancelCommentBtn : com.focusPage("#cancelCommentBtn")
+            cancelCommentBtn : com.focusPage("#cancelCommentBtn"),
+            activityTab :com.focusPage("#activityTab")
         },
         activity: {},
         activityItemType : {},
-        name: {},
-        saiid:null,
-        url:null,
-        info:null
+        depositpayStatus : {},
+        fullpayStatus : {},
+        type : {},
+        saiid : null,
+        url : null,
+        info : null
     };
+
+    com.focusPage("#activitys").removeClass("active");
 
     salesActivityItem.items.content = com.focusPage("#salesActivityItemContent");
     salesActivityItem.salesActivityItemModal = com.focusPage("#salesActivityItemModal").on('show.bs.modal', function (e) {
@@ -38,9 +42,12 @@ $(function () {
         com.resetTypeahead("couponsName", []);
         com.clearValidator();
     });
-    salesActivityItem.salesActivityModal = com.focusPage("#salesActivityModal").on('show.bs.modal', function (e) {
-        com.clearValidator();
-    });
+
+    com.post(api.ds.sales, {}, function(res){
+        salesActivityItem.depositpayStatus = res.depositpayStatus.split("key", "value");
+        salesActivityItem.fullpayStatus = res.fullpayStatus.split("key", "value");
+        salesActivityItem.type = res.type.split("key", "value");
+    }, null, false);
 
     com.post(api.ds.manifest, {}, function (res) {
         $.each(res.salesActivityItemType,function(i,v){
@@ -113,23 +120,24 @@ $(function () {
         com.post(api.information.queryActivityItemByAid, options, function (res) {
 
             var _ = res.activityItems;
-            
+
             for (var i = 0; i < _.length; i++) {
 
                 var _activityItem = _[i];
-                
+
                 if (_activityItem.type == 0) {
                     _coupons.push({
                         asid: _activityItem.asid,
-                        activityItemName: _activityItem.name + " 金额:" + _activityItem.money
+                        activityItemName: _activityItem.name + " 金额:" + _activityItem.money + " 积分:" + _activityItem.integral
                     });
                 } else if (_activityItem.type == 1) {
                     _things.push({
                         asid: _activityItem.asid,
-                        activityItemName: _activityItem.name + " 金额:" + _activityItem.money
+                        activityItemName: _activityItem.name + " 金额:" + _activityItem.money + " 积分:" + _activityItem.integral
                     });
                 }
             }
+
             com.resetTypeahead("thingsName", _things);
             com.resetTypeahead("couponsName", _coupons);
         });
@@ -166,41 +174,37 @@ $(function () {
         return $divWarp;
     }
 
-    com.post(api.information.queryActivityForValid, {"activity.type": 3}, function (res) {
-        $.each(res.activitys, function (i, v) {
-            salesActivityItem.name[v.aid] = v.name;
-        });
-    },null,false);
-
     orderList();
-    salesNo(salesActivityItem.activityId);
 
-    function salesNo(activityId) {
+    salesNo();
+
+    function salesNo() {
+
         var $divWarp = com.focusPage("#paramsNo").empty();
-        var $btnSub = $('<a></a>').addClass('btn btn-minier btn-success').html('修改活动');
-        var $h4 = $('<h4></h4>').addClass('oid').append($('<small></small>').addClass('blue')).html("销售单号:" + salesActivityItem.salesno);
-        var $h4Name = $('<h4></h4>').addClass('oid').append($('<small></small>').addClass('blue')).html(salesActivityItem.name[activityId] == null ? "当前活动:无" : "当前活动名称:" + salesActivityItem.name[activityId]);
-        var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-        $divWarp.append($h4).append($h4Name);
-        $divBtnWrap.append($btnSub).appendTo($h4);
+        var amountPayment = $('<h4 id="payment"></h4>').addClass('oid').append($('<small></small>').addClass('blue'));
+        var amountActivity = $('<h4 id="activity_"></h4>').addClass('oid').append($('<small></small>').addClass('blue'));
+        var amount = $('<h4 id="num"></h4>').addClass('oid').append($('<small></small>').addClass('blue'));
 
-        $btnSub.click(function () {
+        $divWarp.append(amountPayment).append(amountActivity).append(amount);
 
-            com.post(api.information.queryActivityForValid, {"activity.type": 3}, function (res) {
-
-                var activitys = res.activitys;
-                var _activitys = [];
-
-                for (var i = 0; i < activitys.length; i++) {
-
-                    var _activity = activitys[i];
-                    _activitys.push({aid: _activity.aid, activityName: _activity.name, money: _activitys.money});
-                }
-                salesActivityItem.items.activityInfo.bindData(_activitys, "aid", "activityName", "money", false);
-            });
-            salesActivityItem.salesActivityModal.modal("show");
-        });
         return $divWarp
+    }
+
+    //活动积分
+    function amountSalesActivityForActivity(){
+
+        com.post(api.sales.amountSalesActivityForActivity, {"salesActivity.sales.orderId" : salesActivityItem.paramsOrderId}, function (res) {
+            com.focusPage("#activity_").html("使用积分: " + res.salesActivity.amount).attr("integral", res.salesActivity.amount);
+        },null,false);
+
+    }
+
+    //款项积分
+    function amountSalesActivityForPayment(){
+        com.post(api.sales.amountSalesActivityForPayment, {"salesActivity.sales.orderId" : salesActivityItem.paramsOrderId}, function (res) {
+            com.focusPage("#payment").html("总积分: " + res.salesActivity.amount).attr("integral", res.salesActivity.amount);
+        },null,false);
+
     }
 
     var options = {
@@ -209,7 +213,8 @@ $(function () {
 
     //查询活动信息
     function querySalesActivity() {
-        com.post(api.sales.querySalesActivity, options, function (res) {
+        com.post(api.sales.amountSalesActivity, options, function (res) {
+
             var salesActivity = res.salesActivitys;
             var salesActivityContent = com.focusPage("#salesActivityItem").empty();
 
@@ -218,29 +223,92 @@ $(function () {
                 var ul = $("<div></div>").addClass("list-unstyled list-striped pricing-table");
                 var nameH2 = $("<h3></h3>").text("活动名称:").appendTo(ul);
                 var nameLi = $("<li></li>").appendTo(ul);
-                var nameSpan = $("<span></span>").text(_salesActivity[0]).appendTo(nameLi);
-                var moneyH2 = $("<h3></h3>").text("总价:").appendTo(ul);
+                var nameSpan = $("<span></span>").text(_salesActivity.activity.name).appendTo(nameLi);
+                var moneyH2 = $("<h3></h3>").text("交款金额:").appendTo(ul);
                 var moneyLi = $("<li></li>").appendTo(ul);
-                var moneySpan = $("<span></span>").text(utils.accDiv(_salesActivity[1], 1000)).appendTo(moneyLi);
+                var moneySpan = $("<span></span>").text(utils.accDiv(_salesActivity.amount, 1000)).appendTo(moneyLi);
 
                 salesActivityContent.append(ul);
             }
-        });
+        }, null, false);
     }
 
-    querySalesActivity();
-    querySalesActivityItem();
+    var displayFunc  = (function(){
+
+        var renderList = function(tableId,listData){
+            var $tableWrap = com.focusPage('#' + tableId);
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+            if(listData && listData.length){
+                $.each(listData,function(i, v){
+                    var $liLine = creatLine(v);
+
+                    $liLine.appendTo($ul);
+                });
+
+                $ul.appendTo($tableWrap);
+            }
+        };
+
+        var creatLine = function(v){
+
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
+            var $h3 = $('<h3></h3>').addClass("oid").append($('<small></small>').addClass('blue').html(v.activity.name));
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var propertyArr = [
+                ["装修单号:", v.sales.orderId, "grey"],
+                ["楼盘地址:", v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"],
+                ["客户名:", v.sales.customer.name, "grey"],
+                ["品类:", v.sales.category, "grey"],
+                ["品牌:", v.sales.brand, "grey"],
+                ["定金:", v.sales.depositpay, "blue"],
+                ["补款:", v.sales.fullpay, "blue"],
+                ["定金状态:", salesActivityItem.depositpayStatus[v.sales.depositpayStatus], "red"],
+                ["补款状态:", salesActivityItem.fullpayStatus[v.sales.fullpayStatus], "red"],
+                ["总额:", v.sales.total, "blue"]
+            ];
+
+            $.each(propertyArr, function (index, value) {
+                var $liProperty = $('<li></li>');
+                $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
+                $liProperty.appendTo($ulProperty);
+            });
+
+
+            $liLine.append($h3).append($ulProperty);
+
+            return $liLine;
+        };
+
+        return {
+            init : function(tableId,listData){
+                com.focusPage('#' + tableId).html(null);
+                renderList(tableId,listData);
+            },
+            drawLine : function(v){
+                return creatLine(v);
+            }
+        };
+    })();
+
+    var searcher = new Searcher();
+
+    searcher.init(["sales_activity", "sales_goodsCategory", "sales_goodsBrand"], "condLists", api.sales.pageSalesActivity, function(data){
+        displayFunc.init('resultLists', data);
+    }, "pagenations", "sales4activityPostData", options, false, null, null ,"resultLists");
 
     //查询活动物品
     function querySalesActivityItem() {
         com.post(api.sales.querySalesActivityItem, options, function (res) {
 
-            var salesActivityItems = res.saleActivityItems;
+            var salesActivityItems = res.salesActivityItems;
+
             var salesActivityContent = com.focusPage("#salesActivityItems").empty();
 
             $.each(salesActivityItems, function (i, v) {
 
-                var pricingSpan = $("<div></div>").addClass("col-md-6").css("margin", "5px 0px").attr("id", "pricing_" + v.saiid);
+                var pricingSpan = $("<div></div>").addClass("col-md-6").css({"margin": "5px 0px", "min-height" : "127px"}).attr("id", "pricing_" + v.saiid);
 
                 var widgetBox = $("<div></div>").addClass("module_activity_border").appendTo(pricingSpan);
 
@@ -248,16 +316,24 @@ $(function () {
                 var widgetMain = $("<div></div>").addClass("widget-main no-padding").appendTo(widgetBody);
 
                 var widgetHeader = $("<div></div>").attr("id", "widgetHeader_" + v.saiid).appendTo(widgetMain);
-                var widgetHeaderH5 = $("<h4></h4>").addClass("bigger lighter").css("padding-left", "12px").appendTo(widgetHeader).text(v.activity);
+                var widgetHeaderH5 = $("<h4></h4>").addClass("bigger lighter").css("padding-left", "12px").appendTo(widgetHeader).text(v.name);
 
                 var ul = $("<ul></ul>").addClass("list-unstyled fl-inline-list clearfix").css("padding-left", "12px").appendTo(widgetMain);
                 var nameLi = $("<li></li>").appendTo(ul);
-                var nameStr = $("<strong></strong>").text("物品:").appendTo(nameLi);
-                var nameSpan = $("<span></span>").attr("id", "activityItemName_" + v.saiid).text(v.name).appendTo(nameLi);
+                var nameStr = $("<strong></strong>").text("活动名:").appendTo(nameLi);
+                var nameSpan = $("<span></span>").attr("id", "activityItemName_" + v.saiid).text(v.activity).appendTo(nameLi);
+
+                var typeLi = $("<li></li>").appendTo(ul);
+                var typeStr = $("<strong></strong>").text("类型:").appendTo(typeLi);
+                var typeSpan = $("<span></span>").addClass("red").attr("id", "money_" + v.saiid).text(salesActivityItem.type[v.type]).appendTo(typeLi);
 
                 var moneyLi = $("<li></li>").appendTo(ul);
                 var moneyStr = $("<strong></strong>").text("金额:").appendTo(moneyLi);
                 var moneySpan = $("<span></span>").addClass("blue").attr("id", "money_" + v.saiid).text(v.money).appendTo(moneyLi);
+
+                var integralLi = $("<li></li>").appendTo(ul);
+                var integralStr = $("<strong></strong>").text("积分:").appendTo(integralLi);
+                var integralSpan = $("<span></span>").addClass("red").attr("id", "money_" + v.saiid).text(v.integral).appendTo(integralLi);
 
                 var numLi = $("<li></li>").appendTo(ul);
                 var numStr = $("<strong></strong>").text("数量:").appendTo(numLi);
@@ -271,14 +347,26 @@ $(function () {
                 var totalStr = $("<strong></strong>").text("合计:").appendTo(totalLi);
                 var totalSpan = $("<span></span>").addClass("blue").attr("id", "money_" + v.saiid).text(utils.accMul(v.money, v.num)).appendTo(totalLi);
 
-                var uiPgDiv = $("<div></div>").addClass("ui-pg-div").appendTo(widgetBody);
+                var uiPgDiv = $("<div></div>").addClass("ui-pg-div").css({"padding-left" : "12px", "margin-bottom" : "5px"}).appendTo(widgetBody);
                 if (uiBtnMethod != null) {
                     uiBtnMethod(uiPgDiv, v);
                 }
                 salesActivityContent.append(pricingSpan)
-            })
+            });
         });
     }
+
+    amountSalesActivityForActivity();
+    amountSalesActivityForPayment();
+    integral();
+    querySalesActivity();
+    querySalesActivityItem();
+
+    function integral () {
+        $('#num').html("剩余积分: " + utils.accSub(parseFloat(com.focusPage("#payment").attr("integral")), parseFloat(com.focusPage("#activity_").attr("integral"))));
+    }
+
+
 
     function uiBtnMethod(uiPgDiv, activityItem) {
         //0: 初始 , 1: 失效 , 2: 已领 , 3: 退货 , 4: 配送 , 5: 未退 , 6: 升级 , 7: 消耗
@@ -342,7 +430,7 @@ $(function () {
         });
 
     }
-    
+
     //0: 初始 , 1: 失效 , 2: 已领 , 3: 退货 , 4: 配送 , 5: 未退 , 6: 升级 , 7: 消耗
     //失效
     function abateSalesActivityItem(saiid, activityItemName) {
@@ -356,6 +444,8 @@ $(function () {
             com.post(api.sales.abateSalesActivityItem, options, function (res) {
                 com.showAlert(com.info, "失效成功!");
                 querySalesActivityItem();
+                amountSalesActivityForActivity();
+                integral();
             });
 
         });
@@ -386,32 +476,12 @@ $(function () {
             com.post(api.sales.expendSalesActivityItem, options, function (res) {
                 com.showAlert(com.info, "消耗成功!");
                 querySalesActivityItem();
+                amountSalesActivityForActivity();
+                integral();
             });
 
         });
     }
-
-    //修改活动
-    com.focusPage("#submitSalesActivityBtn").on("click", function () {
-
-        if (com.validate("salesActivityModal","")) {
-            return;
-        }
-
-        var sid = salesActivityItem.ssid;
-        var aid = salesActivityItem.items.activityInfo.find("option:selected").val();
-        var options = {
-            "sales.sid": sid,
-            "sales.activityId": aid
-        };
-        com.post(api.sales.updateSalesForActivity, options, function (res) {
-            querySalesActivity();
-            salesNo(res.sales.activityId);
-            com.showAlert(com.info, "修改成功")
-        });
-        
-        salesActivityItem.salesActivityModal.modal("hide");
-    });
 
     //领取物品
     com.focusPage("#submitSalesActivityItemBtn").on("click", function () {
@@ -429,21 +499,27 @@ $(function () {
         var content = com.focusPage("#salesActivityItemContent").val();
 
         var index = 0;
-        var options = {};
+        var amount = 0;
+
+        var options = {
+            "salesActivity.sales.orderId" : orderId
+        };
 
         com.focusPage("#things li").each(function (i, e) {
 
             var _things = $(e);
 
-            options["saleActivityItems[" + index + "].orderId"] = orderId;
-            options["saleActivityItems[" + index + "].aid"] = aid;
-            options["saleActivityItems[" + index + "].asid"] = _things.children('span').attr("asid");
-            options["saleActivityItems[" + index + "].activity"] = activityName;
-            options["saleActivityItems[" + index + "].name"] = _things.children('span').attr("thingsName").split(" ")[0];
-            options["saleActivityItems[" + index + "].type"] = 1;
-            options["saleActivityItems[" + index + "].num"] = _things.children('span').attr("num");
-            options["saleActivityItems[" + index + "].money"] = _things.children('span').attr("thingsName").split(" ")[1].split(':')[1];
-            options["saleActivityItems[" + index + "].content"] = content;
+            options["salesActivityItems[" + index + "].aid"] = aid;
+            options["salesActivityItems[" + index + "].asid"] = _things.children('span').attr("asid");
+            options["salesActivityItems[" + index + "].activity"] = activityName;
+            options["salesActivityItems[" + index + "].name"] = _things.children('span').attr("thingsName").split(" ")[0];
+            options["salesActivityItems[" + index + "].type"] = 1;
+            options["salesActivityItems[" + index + "].num"] = _things.children('span').attr("num");
+            options["salesActivityItems[" + index + "].money"] = _things.children('span').attr("thingsName").split(" ")[1].split(':')[1];
+            options["salesActivityItems[" + index + "].content"] = content;
+            options["salesActivityItems[" + index + "].integral"] = _things.children('span').attr("thingsName").split(" ")[2].split(':')[1];
+
+            amount = amount + utils.accMul(parseFloat(_things.children('span').attr("thingsName").split(" ")[2].split(':')[1]), _things.children('span').attr("num"));
 
             index++;
         });
@@ -452,15 +528,17 @@ $(function () {
 
             var _coupons = $(e);
 
-            options["saleActivityItems[" + index + "].orderId"] = orderId;
-            options["saleActivityItems[" + index + "].aid"] = aid;
-            options["saleActivityItems[" + index + "].asid"] = _coupons.children('span').attr("asid");
-            options["saleActivityItems[" + index + "].activity"] = activityName;
-            options["saleActivityItems[" + index + "].name"] = _coupons.children('span').attr("couponsName").split(" ")[0];
-            options["saleActivityItems[" + index + "].type"] = 0;
-            options["saleActivityItems[" + index + "].num"] = _coupons.children('span').attr("num");
-            options["saleActivityItems[" + index + "].money"] = _coupons.children('span').attr("couponsName").split(" ")[1].split(':')[1];
-            options["saleActivityItems[" + index + "].content"] = content;
+            options["salesActivityItems[" + index + "].aid"] = aid;
+            options["salesActivityItems[" + index + "].asid"] = _coupons.children('span').attr("asid");
+            options["salesActivityItems[" + index + "].activity"] = activityName;
+            options["salesActivityItems[" + index + "].name"] = _coupons.children('span').attr("couponsName").split(" ")[0];
+            options["salesActivityItems[" + index + "].type"] = 0;
+            options["salesActivityItems[" + index + "].num"] = _coupons.children('span').attr("num");
+            options["salesActivityItems[" + index + "].money"] = _coupons.children('span').attr("couponsName").split(" ")[1].split(':')[1];
+            options["salesActivityItems[" + index + "].content"] = content;
+            options["salesActivityItems[" + index + "].integral"] = _coupons.children('span').attr("couponsName").split(" ")[2].split(':')[1];
+
+            amount = amount + utils.accMul(parseFloat(_coupons.children('span').attr("couponsName").split(" ")[2].split(':')[1]), _coupons.children('span').attr("num"));
 
             index++;
         });
@@ -469,8 +547,14 @@ $(function () {
             return;
         }
 
+        options["salesActivity.amount"] = amount;
+
+        console.log(amount)
+
         com.post(api.sales.addSalesActivityItem, options, function (res) {
             querySalesActivityItem();
+            amountSalesActivityForActivity();
+            integral();
         });
         salesActivityItem.salesActivityItemModal.modal("hide");
     });
@@ -485,15 +569,14 @@ $(function () {
         com.post(salesActivityItem.url, ops, function (res) {
             com.showAlert(com.info, salesActivityItem.info);
             querySalesActivityItem();
+            amountSalesActivityForActivity();
+            integral();
         });
 
         com.cleanItems(salesActivityItem.items);
         salesActivityItem.modal.salesActivityCommentModal.modal("hide");
     });
 
-    com.focusPage("#salesActivityModal").on('hide.bs.modal', function () {
-        com.clearValidator();
-    });
 
     com.focusPage("#salesActivityItemModal").on('hide.bs.modal', function () {
         salesActivityItem.items.things.html("");

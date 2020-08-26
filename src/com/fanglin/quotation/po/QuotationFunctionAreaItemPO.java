@@ -215,9 +215,7 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 		this.setContent(quotetionFunctionAreaItemPO.getContent());
 	}
 
-	public static String quotationFunctionAreaItemTable(Long quotationFunctionAreaId, Long div) {
-
-		int index = (int) (quotationFunctionAreaId / div);
+	public static String quotationFunctionAreaItemTable(Long quotationFunctionAreaId, Short index) {
 
 		String qfaItem = "QuotationFunctionAreaItemPO";
 
@@ -226,11 +224,10 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 		return quotationFunctionAreaItemTable;
 	}
 
-	public static QuotationFunctionAreaItemPO factoryToInstance(Long quotationFunctionAreaId, Long div) throws FLException {
+	public static QuotationFunctionAreaItemPO factoryToInstance(Long quotationFunctionAreaId, Short index) throws FLException {
 
 		try {
-			int index = (int) (quotationFunctionAreaId / div);
-
+			
 			Class<?> clazz = Class.forName("com.fanglin.quotation.po.QuotationFunctionAreaItemPO" + index);
 
 			return (QuotationFunctionAreaItemPO) clazz.newInstance();
@@ -240,11 +237,9 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 
 	}
 
-	public static Class<?> factoryToClazz(Long quotationFunctionAreaId, Long div) throws FLException {
+	public static Class<?> factoryToClazz(Long quotationFunctionAreaId, Short index) throws FLException {
 
 		try {
-			int index = (int) (quotationFunctionAreaId / div);
-
 			return Class.forName("com.fanglin.quotation.po.QuotationFunctionAreaItemPO" + index);
 		} catch (Exception e) {
 			throw new FLException(200029, "报价项存储对象错误");

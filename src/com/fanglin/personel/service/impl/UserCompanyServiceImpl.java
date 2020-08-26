@@ -15,6 +15,7 @@ import com.fanglin.personel.po.UserCompanyPO;
 import com.fanglin.personel.service.UserCompanyService;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserCompanyVO;
+import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.vo.CompanyVO;
 import com.fanglin.utils.BeanUtil;
@@ -27,6 +28,9 @@ public class UserCompanyServiceImpl implements UserCompanyService {
 
 	@Autowired
 	private UserCompanyDao userCompanyDao;
+
+	@Autowired
+	private CompanyDao companyDao;
 
 	@Override
 	public List<UserCompanyVO> queryUserCompany(UserBaseVO userVO) throws FLException {
@@ -65,17 +69,33 @@ public class UserCompanyServiceImpl implements UserCompanyService {
 
 		userCompanyDao.deleteUserCompany(uid);
 
-		if (cids != null) {
-			for (String cid : cids) {
-				try {
-					userCompanyDao.save(new UserCompanyPO(uid, new CompanyPO(FormatUtil.decodeCompany(AESHelper.decrypt(cid, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"))))));
-				} catch (Exception e) {
-					throw new FLException(230015, "公司不存在");
-				}
+		if (cids == null)
+			return 0;
+
+		for (String encrypt : cids) {
+
+			Integer cid = null;
+
+			try {
+				cid = FormatUtil.decodeCompany(AESHelper.decrypt(encrypt, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
+			} catch (Exception e) {
+				throw new FLException(230015, "公司不存在");
 			}
+
+			CompanyPO companyPO = companyDao.get(cid);
+
+			if (companyPO == null) {
+				throw new FLException(230015, "公司不存在");
+			}
+
+			userCompanyDao.save(new UserCompanyPO(uid, companyPO));
 		}
 
 		return 0;
 	}
 
+	public static void main(String[] args) throws Exception {
+		System.out.println(FormatUtil.decodeCompany(AESHelper.decrypt("f3jfJcbxHbdXJs3xJKtDCw==", "844dd1be967b6e9e", "cdb421d038104126")));
+		new UserCompanyPO(34, new CompanyPO(0));
+	}
 }

@@ -35,8 +35,6 @@ public class ActivityPO implements java.io.Serializable {
 	
 	public static final short STATUS_UNVALID_INT = 1;
 	
-	public static final short STATUS_DELETE_INT = 2;
-	
 	public static final short DEFAULTS_DEFAULT_INT = 0;
 	
 	public static final short DEFAULTS_COMMON_INT = 1;
@@ -58,6 +56,8 @@ public class ActivityPO implements java.io.Serializable {
 	private short type;
 	
 	private short defaults;
+	
+	private int multiple;
 	
 	private Timestamp createTime;
 	
@@ -98,6 +98,15 @@ public class ActivityPO implements java.io.Serializable {
 	public void setCreater(UserPO creater) {
 		this.creater = creater;
 	}
+	
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
+	}
 
 	@Column(name = "status")
 	public short getStatus() {
@@ -106,6 +115,24 @@ public class ActivityPO implements java.io.Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+	
+	@Column(name = "defaults")
+	public short getDefaults() {
+		return defaults;
+	}
+
+	public void setDefaults(short defaults) {
+		this.defaults = defaults;
+	}
+
+	@Column(name = "multiple")
+	public int getMultiple() {
+		return multiple;
+	}
+
+	public void setMultiple(int multiple) {
+		this.multiple = multiple;
 	}
 
 	@Column(name = "createTime")
@@ -153,22 +180,4 @@ public class ActivityPO implements java.io.Serializable {
 		this.company = company;
 	}
 	
-	@Column(name = "type")
-	public short getType() {
-		return type;
-	}
-
-	public void setType(short type) {
-		this.type = type;
-	}
-	
-	@Column(name = "defaults")
-	public short getDefaults() {
-		return defaults;
-	}
-
-	public void setDefaults(short defaults) {
-		this.defaults = defaults;
-	}
-
 }

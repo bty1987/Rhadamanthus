@@ -1,5 +1,5 @@
 $(function () {
-    
+
     var salesBalance = {
         salesBalance_Manufacturer_Data : {},
         salesBalance_Settlement_Data :{},
@@ -201,7 +201,7 @@ $(function () {
 
                     $btnVbalance.click(function (e) {
                         e.stopPropagation();
-                        
+
                         if (v.status != 0) {
                             com.showAlert(com.warning, "非预结算状态下不允许进行厂商结算");
                             return;
@@ -246,7 +246,7 @@ $(function () {
                     });
 
                     $btnBalance.click(function (e) {
-                        
+
                         e.stopPropagation();
 
                         if (v.status != 1) {
@@ -343,6 +343,10 @@ $(function () {
 
     }, 'pagenation', salesBalance.postData , null, false, null, function () {
 
+        var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'checks').css("margin", "0px 3px");
+        var $checki = $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
+        var $checkspan = $('<span></span>').text('全选').appendTo($checka);
+
         var $addaExportSales = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'importSalesBalance').css('margin-top','-2px');
         var $addaExporti = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($addaExportSales);
         var $addaExportspan = $('<span></span>').text('导出').appendTo($addaExportSales);
@@ -358,6 +362,10 @@ $(function () {
         var $balanceEnd = $('<a></a>').addClass('btn btn-minier btn-pink pull-left').attr('name', 'balanceEnd').css("margin", "-2px 3px");
         var $balanceiEnd = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($balanceEnd);
         var $balancespanEnd = $('<span></span>').text('结算单').appendTo($balanceEnd);
+
+        $checka.click(function(){
+           checkAll();
+        });
 
         $addaExportSales.click(function(){
             pageSalesBalanceExport();
@@ -376,30 +384,30 @@ $(function () {
         });
 
         if(salesBalance.pageType == "dompany" || salesBalance.pageType == "supplier"){
-            return [$addaExportSales, $adda, $balanceEnd];
+            return [$checka, $addaExportSales, $adda, $balanceEnd];
         }else {
-            return [$addaExportSales, $adda, $addaEnd, $balanceEnd];
+            return [$checka, $addaExportSales, $adda, $addaEnd, $balanceEnd];
         }
 
     }, 'resultList');
 
     salesBalance.btns.supplierSaveBtn.on('click', function () {
         var _vBalance = salesBalance.items.vbalanceValue.find('input[name="vbalanceValue"]').val();
-    
+
         if (com.validate('vbalanceValue','right')==false) {
-    
+
             com.post(api.sales.updateSalesBalanceForVBalance, {
                 "salesBalance.sbid": salesBalance.salesBalance_Manufacturer_Data.sbid,
                 "salesBalance.vbalance": _vBalance
             }, function (res) {
-    
+
                 com.closePopup();
                 com.showAlert(com.info, "更新成功");
                 clearinput(salesBalance.items.vbalanceValue);
                 salesBalanceSearcher.doSearch();
-    
+
             });
-    
+
         }
     });
 
@@ -422,7 +430,7 @@ $(function () {
 
         }
     });
-    
+
     //清空弹窗输入框的值
     function clearinput($line) {
         $line.find('input').val('');
@@ -504,7 +512,7 @@ $(function () {
                     var $h3 = $('<h3></h3>').addClass('oid');//.addClass('siid')
                     var $small = $('<small></small>').addClass('blue').html(v.salesItem.goods.name);
                     var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
-                    
+
                     var propertyArr = [
                         ["商品品类:", v.salesItem.goods.category, "grey", "category"],
                         ["商品颜色:", v.salesItem.color.name, "grey", "color"],
@@ -545,6 +553,16 @@ $(function () {
 
     })();
 
+    function checkAll (){
+        if (com.focusPage('input[type="checkbox"]').prop('checked')) {
+            com.focusPage('input[type="checkbox"]').removeAttr('checked');
+            com.focusPage('input[type="checkbox"]').prop('checked', false);
+        } else {
+            com.focusPage('input[type="checkbox"]').attr('checked', true);
+            com.focusPage('input[type="checkbox"]').prop('checked', true);
+        }
+    }
+
     function pageSalesBalanceExport(){
 
         if (com.focusPage('span[name="totalRecords"]').text() == 0) {
@@ -552,7 +570,7 @@ $(function () {
             return false;
         }
 
-        if (com.focusPage('span[name="totalRecords"]').text() > 1000) {
+        if (com.focusPage('span[name="totalRecords"]').text() > 3000) {
             com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
             return false;
         }
@@ -614,16 +632,16 @@ $(function () {
     function vpostBalance() {
 
         var ops = checkedInput(true);
-        
+
         if(ops){
-            
+
             com.post(api.sales.vpostSalesBalance, ops, function (res) {
                 com.showAlert(com.info, "厂商结算成功");
                 salesBalanceSearcher.doSearch();
             });
         }
     }
-    
+
     //批量结算
     function postBalance() {
 

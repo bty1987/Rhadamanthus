@@ -1,0 +1,114 @@
+<div>
+    <div class="row">
+        <div class="col-xs-3">
+            <div class="col-sm-12" id="leftTop">
+                <h3 class="header smaller lighter blue">装修单信息</h3>
+
+                <div class="col-sm-12">
+                    <p class="alert alert-info center" id="notTitle">
+                        未关联装修单信息
+                    </p>
+                    <ul id="decorationInfo" class="list-unstyled spaced"></ul>
+                </div>
+
+            </div>
+            <div class="col-sm-12" id="leftBottom">
+                <h3 class="header smaller lighter blue">咨询单信息</h3>
+                <div class="col-sm-12">
+                    <textarea class="v_required col-sm-12" id="comment" maxlength="256" rows="5" placeholder="转咨询单备注信息" data-original-title="" title=""></textarea>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <h3 class="header smaller lighter red"></h3>
+                <p class="center">
+                    <botton class="btn btn-success btn-sm" id="consultionBtn">转咨询</botton>
+                    <botton class="btn btn-warning btn-sm" id="aepairBtn">转报修</botton>
+                    <botton class="btn btn-danger btn-sm" id="complainBtn">转投诉</botton>
+                    <botton class="btn btn-sm" id="resetBtn">重置</botton>
+                </p>
+            </div>
+        </div>
+
+        <div class="col-xs-9" id="right" style="border-left: 1px solid #c1c1c1;">
+            <div id="queryView">
+                <h3 class="header smaller lighter blue">装修单查询</h3>
+                <div id="condList" class="fl_search clearfix"></div>
+                <div id="resultList" class="clearfix tab-pane action"></div>
+                <div id="pagenation" class="fl-page-wrap clearfix"></div>
+            </div>
+        </div>
+    </div>
+
+    <!--查看装修单信息-->
+    <div id="showDecorationInfo" class="portlet box"></div>
+    <!--查看装修单款项信息-->
+    <div id="showDecorationPaymentDetail" class="portlet box"></div>
+
+    <!--转保修弹窗-->
+    <div class="modal fade" id="addAepairModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">转报修单</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="aepairTargetTime">预计完成时间</label>
+                            <div class="bootstrap-timepicker col-sm-9">
+                                <input class="timepicker col-sm-6 v_required" type="text" id="aepairTargetTime" readonly="readonly" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="aepairComment">说明</label>
+                            <div class="col-sm-9">
+                                <textarea id="aepairComment" class=" m-wrap col-xs-6 v_required" maxlength="256" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button type="button" id="aepairSaveBtn" class="btn btn-primary" data-loading-text="提交中...">保存</button>
+                    <button type="button" id="aepairCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--转投诉弹窗-->
+    <div class="modal fade" id="addComplainModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">转投诉单</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="complainLevel">等级</label>
+                            <div class="col-sm-9">
+                                <select id="complainLevel" class="col-xs-10 col-sm-6 v_required " data-toggle="popover" data-trigger='manual'></select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button type="button" id="complainSaveBtn" class="btn btn-primary" data-loading-text="提交中...">保存</button>
+                    <button type="button" id="complainCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/utils/decorationPageUtils.js', 'js/utils/decorationUtils.js', 'js/customer/consultion2create.js']);
+</script>

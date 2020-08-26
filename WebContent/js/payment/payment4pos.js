@@ -97,7 +97,7 @@ jQuery(function($) {
 	}, null, false);
 
 	com.post(api.ds.decoration, {}, function(res){
-		payment.decorationType = res.type;
+		payment.decorationType = res.typeness;
 	}, null, false);
 	
 	com.focusPage("#paymentModal :checkbox").on("change", function(){
@@ -121,6 +121,8 @@ jQuery(function($) {
 
 	//info信息是分页显示信息的, util是下拉框信息
 	paymentUtils.getReceiptType(payment);
+
+	com.focusPage("#paymentHistoryPosList").removeClass("active");
 	
 	var displayFunc  = (function(){
         var renderList = function(tableId,listData){
@@ -203,6 +205,104 @@ jQuery(function($) {
 		com.focusPage("#decorationOrderId").val("");
 		payment.modals.createModal.modal("show");
 	});
+
+	//历史收款
+	var hdisplayFunc  = (function(){
+		var renderList = function(tableId,listData){
+			var $tableWrap = com.focusPage('#' + tableId);
+			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+			if(listData && listData.length){
+				$.each(listData,function(i, v){
+					var $liLine = creatLine(v);
+					$liLine.appendTo($ul);
+				});
+				$ul.appendTo($tableWrap);
+			}
+		};
+
+		var creatLine = function(v){
+			var $liLine = $('<li></li>').addClass('item-orange clearfix');
+			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
+			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+			var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+			var $btnDecorationInfo = $('<a></a>').addClass('btn btn-minier btn-yellow').html('装修单信息');
+			var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-info').html('打印');
+
+			var propertyArr = [
+				["客户:", v.customer.name, "grey"],
+				["收款类型:", payment.typeData[v.type], "red"],
+				["预付款类型:", payment.paymentTypeData[v.paymentType], "red"],
+				["操作金额:", v.recharge, "blue"],
+				["余额:", v.balance, "blue"],
+				["收款人:", v.collectUser.userName, "grey"],
+				["收款时间:", v.collectTime, "green"],
+				["状态:", payment.statusData[v.status], "red"],
+				["备注:", v.comment, "grey"]
+			];
+
+			$.each(propertyArr, function (index,value) {
+				var $liProperty = $('<li></li>');
+				$('<strong></strong>').html(value[0]).appendTo($liProperty);
+				$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+				$liProperty.appendTo($ulProperty);
+			});
+
+			var styleArr = [];
+
+			v.cash != null && v.cash != "0" ? styleArr.push(["现金:", v.cash, "blue"]) : true;
+			v.bank != null && v.bank != "0" ? styleArr.push(["刷卡:", paymentUtils.splitBankInfo(v.bank, v.bankInfo, payment.bankInfo), "blue"]) : true;
+			v.checkv != null && v.checkv != "0" ? styleArr.push(["银行:", paymentUtils.splitBankInfo(v.checkv, v.checkvBank, payment.checkBankInfo), "blue"]) : true;
+			v.installment != null && v.installment != "0" ? styleArr.push(["分期:", v.installment, "blue"]) : true;
+			v.accounts != null && v.accounts != "0" ? styleArr.push(["对公帐户:", v.accounts, "blue"]) : true;
+			v.advance != null && v.advance != "0" ? styleArr.push(["预付款:", v.advance, "blue"]) : true;
+			v.coupon != null && v.coupon != "0" ? styleArr.push(["优惠券:", v.coupon + v.couponInfo.split('#').join(' '), "blue"]) : true;
+			v.transfer != null && v.transfer != "0" ? styleArr.push(["预付款转换:", v.transfer, "blue"]) : true;
+
+			$.each(styleArr, function (index, value) {
+				var $liProperty = $('<li></li>');
+				$('<strong></strong>').html(value[0]).appendTo($liProperty);
+				$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+				$liProperty.appendTo($ulStyle);
+			});
+
+			$divBtnWrap.append($btnDecorationInfo).append($btnPrint).appendTo($h3);
+
+			$liLine.append($h3).append($ulProperty).append($ulStyle);
+
+			//查看装修单
+			$btnDecorationInfo.click(function(){
+				paymentUtils.decorationInfoShow(v.orderId, payment.decorationType);
+			});
+
+			$btnPrint.click(function(){
+				params.paymentPaymentId = v.pid;
+				com.popup("专用收款收据__装修单号:" + v.orderId  ,api.index.paymentReceiptIndex.url ,function () {
+					parent.layer.getFrameIndex(window.name);
+				},null,true)
+			});
+
+			return $liLine;
+		};
+
+		return {
+			init : function(tableId,listData){
+				com.focusPage('#' + tableId).html(null);
+				renderList(tableId,listData);
+			},
+			drawLine : function(v){
+				return creatLine(v);
+			}
+		}
+	})();
+
+	var hsearcher = new Searcher();
+
+	hsearcher.init(["orderId"], "hcondList", api.payment.pagePaymentForHistory, function(data){
+		hdisplayFunc.init('hresultList', data);
+	}, "hpagenation", "hpaymentPostDataPos", null, false, null, null, "hresultList");
 
 	function showPaymentModal(v,res){
 		com.focusPage("#paymentTypeSel").removeAttr("disabled");

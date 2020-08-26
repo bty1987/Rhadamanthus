@@ -7,16 +7,18 @@ public class ActivityItemVO implements java.io.Serializable {
 	private Long aiid;
 
 	private Long aid;
+	
+	private Long asid;
+	
+	private String activity;
 
 	private String name;
 
 	private Short type;
 
-	private Long asid;
-
 	private Integer money;
 
-	private String activity;
+	private Integer integral;
 
 	public ActivityItemVO() {
 		super();
@@ -37,6 +39,22 @@ public class ActivityItemVO implements java.io.Serializable {
 	public void setAid(Long aid) {
 		this.aid = aid;
 	}
+	
+	public Long getAsid() {
+		return asid;
+	}
+
+	public void setAsid(Long asid) {
+		this.asid = asid;
+	}
+	
+	public String getActivity() {
+		return activity;
+	}
+
+	public void setActivity(String activity) {
+		this.activity = activity;
+	}
 
 	public String getName() {
 		return name;
@@ -54,14 +72,6 @@ public class ActivityItemVO implements java.io.Serializable {
 		this.type = type;
 	}
 
-	public Long getAsid() {
-		return asid;
-	}
-
-	public void setAsid(Long asid) {
-		this.asid = asid;
-	}
-
 	public Integer getMoney() {
 		return money;
 	}
@@ -70,12 +80,12 @@ public class ActivityItemVO implements java.io.Serializable {
 		this.money = money;
 	}
 
-	public String getActivity() {
-		return activity;
+	public Integer getIntegral() {
+		return integral;
 	}
 
-	public void setActivity(String activity) {
-		this.activity = activity;
+	public void setIntegral(Integer integral) {
+		this.integral = integral;
 	}
-
+	
 }

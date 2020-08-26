@@ -25,19 +25,19 @@ jQuery(function($) {
 
          switch (params.cidNumber) {
 		  case '1':
-			  url = "views/decoration/decorationContract2edit.html";
+			  url = "views/contract/decorationContractTemp3.html";
 			break;
 		  case '2':
-			  url = "views/decoration/decorationContract2edit.html";
+			  url = "views/contract/decorationContractTemp3.html";
 			break;
 		  case '3':
-			  url = "views/decoration/decorationContract2edit.html";
+			  url = "views/contract/decorationContractTemp3.html";
 			break;
 		  case '4':
-			  url = "views/decoration/decorationContract0edit.html";
+			  url = "views/contract/decorationContractTemp1.html";
 			break;
 		  case '5':
-			  url = "views/decoration/decorationContract1edit.html";
+			  url = "views/contract/decorationContractTemp2.html";
 			break;
 		}
 

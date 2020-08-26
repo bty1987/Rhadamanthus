@@ -14,6 +14,8 @@ public class SelectionVO implements Serializable {
 	
 	private Short status;// 状态 , 0: 初始 , 1: 锁定
 	
+	private Integer company;// 公司
+	
 	private Long total;// 总额
 	
 	private Long quotationTotal;// 报价总额
@@ -60,6 +62,14 @@ public class SelectionVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+	
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
 	}
 
 	public Long getTotal() {

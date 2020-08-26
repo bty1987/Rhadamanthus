@@ -31,13 +31,11 @@ public interface MaterialPaymentService {
 	
 	public void pageMaterialPaymentForConfirm(Paging paging, List<Filter> filters, int company);
 	
-	public List<MaterialPaymentVO> queryMaterialPayment(List<Filter> filters, int company);
-	
-	public List<MaterialPaymentVO> queryMaterialPaymentByOrderId(MaterialPaymentVO materialPaymentVO);
+	public List<MaterialPaymentVO> queryMaterialPaymentByOrderId(MaterialPaymentVO materialPaymentVO, List<Filter> filters, int company);
 	
 	public List<MaterialPaymentVO> queryMaterialPaymentByMid(MaterialPaymentVO materialPaymentVO);
 	
-	public List<MaterialPaymentVO> queryMaterialPaymentForNotInitByMrId(MaterialReceiptVO materialReceiptVO, String userId);
+	public List<MaterialPaymentVO> queryMaterialPaymentForNotInitByMrId(MaterialReceiptVO materialReceiptVO);
 	
 	public void checkMaterialPayment(MaterialPaymentVO materialPaymentVO) throws FLException;
 	

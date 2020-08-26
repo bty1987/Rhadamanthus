@@ -31,6 +31,14 @@ public class WorkerBalanceAction extends BaseListAction {
 		return "success";
 	}
 	
+	@Action(value="addWorkerBalance", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String addWorkerBalance() throws FLException{
+	  
+		workerBalanceService.addWorkerBalance(workerBalance, queryCompany());
+    
+		return "success";
+	}
+	
 	@Action(value="updateWorkerBalance", results={@org.apache.struts2.convention.annotation.Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String updateWorkerBalance() throws FLException{
 	  
@@ -38,7 +46,7 @@ public class WorkerBalanceAction extends BaseListAction {
     
 		return "success";
 	}
-
+	
 	public WorkerBalanceVO getWorkerBalance() {
 		return workerBalance;
 	}

@@ -13,7 +13,6 @@ var AddReduceDetail = (function(){
 		managePrice: 0,
 		manageRate: 0,
 		isCountIn: false,
-		//isCountManage : true,
 		isCountManage : com.focusPage("#isCountManage"),
 		$isCountManageLabel : com.focusPage('#isCountManageLabel'),
 		basicParams : {
@@ -185,12 +184,26 @@ var AddReduceDetail = (function(){
             var _unitprice = parseFloat($quote.find('.unitprice .cell-wrap').text());
             var _discountFlag = parseInt($quote.attr('data-discount')); // 0: 不打折, 1: 打折, 2: 不打折(非配比), 3: 打折(非配比)
 
-			// 折扣说明 , 增项不打折 , 减项打折 , 同时折扣标识为1(打折)或者装修单类型为2(半价)/3(满减)/4(捡捡)
-            var _discount = ([1, 3].indexOf(_type) != -1 && ([1, 3].indexOf(_discountFlag) != -1 || [2, 3, 4].indexOf(addReduceDetail.ordertype) != -1)) ? utils.accDiv(addReduceDetail.discount, 10) : 1;
+			var _discount = null;
+			// 报价折扣
+			var quotationDiscount = utils.accDiv(addReduceDetail.discount, 10);
+			// 增项, 不打折
+			if (addReduceDetail.artype == 0) {
+				_discount = 1;
+				// 减项项目类型为 4(增项中报价项), 5(拓展中报价项) 不打折
+			} else if (_type == 4 || _type == 5) {
+				_discount = 1;
+				// 装修单类型为2 (半价, 满减, 减上减) 打折
+			} else if (addReduceDetail.ordertype == 2) {
+				_discount = quotationDiscount;
+				// 根据打折标识进行判断 0: 不打折 , 1: 打折 , 2: 不打折(非配比) , 3: 打折(非配比)
+			} else {
+				_discount = ([1, 3].indexOf(_discountFlag) != -1) ? quotationDiscount : 1;
+			}
 
             var _dcp = utils.changeThrDecimal(utils.accMul(_unitprice, _discount));
             var _sum = utils.changeThrDecimal(utils.accMul(_unitprice, _num));
-            var _sumd = utils.changeThrDecimal(utils.accMul(utils.accMul(_unitprice, _discount), _num));
+			var _sumd = utils.changeThrDecimal(utils.accMul(utils.accMul(_unitprice, _discount), _num));
 
             var _undisPrice = [0, 2].indexOf(_discountFlag) != -1 ? _sum : 0;
             var _disPrice = [1, 3].indexOf(_discountFlag) != -1 ? _sum : 0;
@@ -206,7 +219,7 @@ var AddReduceDetail = (function(){
                 "data-uncalprice": _uncalPrice,
                 "data-calprice": _calPrice,
                 "data-manageprice": _managePrice,
-            }
+            };
 
             $quote.find('.totalprice-discount .cell-wrap').text(_sumd);
             $quote.attr(itemInfo);
@@ -254,10 +267,10 @@ var AddReduceDetail = (function(){
 			//	manageprice = 0;
 			//}
 
-			if(addReduceDetail.isCountManage.prop("checked")){
+			if(addReduceDetail.isCountManage.prop("checked")) {
 				sum = utils.changeTwoDecimal(utils.accAdd(sum, manageprice));
 				sumd = utils.changeTwoDecimal(utils.accAdd(sumd, manageprice));
-			}else{
+			} else {
 				sum = utils.changeTwoDecimal(sum);
 				manageprice = 0;
 			}
@@ -294,7 +307,7 @@ var AddReduceDetail = (function(){
 				that.functionAreaId = funcid;
 				that.functionAreaName = com.focusPage('#quotationFunctionAreaId').find('option:selected').text();
 
-				if(that.showingModalName == "quotationItemModal"){
+				if (that.showingModalName == "quotationItemModal") {
 					var _params = {
 						"quotationFunctionAreaItem.quotationFunctionAreaId" : funcid
 					};
@@ -317,7 +330,7 @@ var AddReduceDetail = (function(){
 							$ul.appendTo($tableWrap);
 						}
 					}, null, false);
-				}else if(that.showingModalName == "addAddItemModal"){
+				} else if (that.showingModalName == "addAddItemModal") {
 
 					var index = 0;
 					var arIds = {};
@@ -833,8 +846,22 @@ var AddReduceDetail = (function(){
 			var $item = $('<li></li>').addClass('fl-quo-item').prop('title', qv.content);
 			var typeDict = {"0" : "普通", "1" : "系统", "2" : "自定义", "3" : "报价中", "4": "增项","5":"扩展项"};
 
-			// 折扣说明 , 增项不打折 , 减项打折 , 同时折扣标识为1(打折)或者装修单类型为2(半价)/3(满减)/4(捡捡)
-			var _discount = ([1, 3].indexOf(qv.type) != -1 && ([1, 3].indexOf(qv.discount) != -1 || [2, 3, 4].indexOf(addReduceDetail.ordertype) != -1)) ? utils.accDiv(addReduceDetail.discount, 10) : 1;
+			var _discount = null;
+			// 报价折扣
+			var quotationDiscount = utils.accDiv(addReduceDetail.discount, 10);
+			// 增项, 不打折
+			if (addReduceDetail.artype == 0) {
+				_discount = 1;
+			// 减项项目类型为 4(增项中报价项), 5(拓展中报价项) 不打折
+			} else if (qv.type == 4 || qv.type == 5) {
+				_discount = 1;
+			// 装修单类型为2 (半价, 满减, 减上减) 打折
+			} else if (addReduceDetail.ordertype == 2) {
+				_discount = quotationDiscount;
+			// 根据打折标识进行判断 0: 不打折 , 1: 打折 , 2: 不打折(非配比) , 3: 打折(非配比)
+			} else {
+				_discount = ([1, 3].indexOf(qv.discount) != -1) ? quotationDiscount : 1;
+			}
 
 			var _dcp = utils.changeThrDecimal(utils.accMul(qv.unitPrice, _discount));
 			var _sum = utils.changeThrDecimal(utils.accMul(qv.unitPrice, qv.num));
@@ -956,6 +983,7 @@ var AddReduceDetail = (function(){
 		        addReduceDetail.total = addReduce.total;
 	            addReduceDetail.managePrice = addReduce.managePrice;
                 addReduceDetail.manageRate = addReduce.manageRate;
+				addReduceDetail.status = addReduce.status;
 
                 addReduceDetail.basicParams["addReduce.arId"] = addReduce.arId;
                 addReduceDetail.basicParams["addReduceItem.arId"] = addReduce.arId;
@@ -1006,52 +1034,32 @@ var AddReduceDetail = (function(){
 
 			com.post(api.addReduce.queryAddReduceItemByAddReduceId, {"addReduce.arId" : addReduceDetail.arid}, function(res){
 
-				var $ul =$('<ul></ul>').addClass('fl-quo-list').appendTo(com.focusPage('#addReduceItemDiv'));
+				var $ul = $('<ul></ul>').addClass('fl-quo-list').appendTo(com.focusPage('#addReduceItemDiv'));
 				if(res.addReduceItems && res.addReduceItems.length){
 					$.each(res.addReduceItems, function(i, v){
 						painter.createQuote(i + 1, v).appendTo($ul);
 					});
 				}
-
 			}, null, false);
 
-			if (addReduceDetail.managePrice != 0 && addReduceDetail.manageRate != 0) {
+			if (addReduceDetail.status == 0) {
+
+				var isCountManageRule = {};
+				com.post(api.ds.quotation, {}, function(res){
+					isCountManageRule = res.isCountManageRule.split("company", "value");
+				}, null, false);
+
+				com.post(api.decoration.queryDecorationByOrderId, {"decorationOrderId": addReduceDetail.orderid}, function(res){
+
+					var company = res.decoration.company;
+
+					if (isCountManageRule[company] != undefined && isCountManageRule[company] != null) {
+						isCountManageRule[company] ? addReduceDetail.isCountManage.prop("checked", true) : addReduceDetail.isCountManage.prop("checked", false);
+					}
+				}, null, false);
+			} else if (addReduceDetail.managePrice != 0 && addReduceDetail.manageRate != 0) {
 				addReduceDetail.isCountManage.attr("checked", "checked");
 			}
-
-			//var isCountManageRule = null;
-			//com.post(api.ds.quotation, {}, function(res){
-			//	isCountManageRule = res.isCountManageRule.split("company", "value");
-			//}, null, false);
-            //
-			//com.post(api.decoration.queryDecorationByOrderId, {"decorationOrderId": addReduceDetail.orderid}, function(res){
-            //
-			//	var company = res.decoration.company;
-			//	// 签单时间
-			//	var contractTime = res.decoration.contractTime;
-            //
-			//	if (isCountManageRule[company] != undefined && isCountManageRule[company] != null) {
-			//		// 指定管理费时间
-			//		var setTime = isCountManageRule[company][1].timestamp;
-			//		// 指定管理费类型
-			//		var setType = isCountManageRule[company][0].type;
-			//		// 默认情况下计算管理费
-            //
-			//		// 类型1 指定管理费时间之后签单收取管理费
-			//		if (setType == 1 && setTime > contractTime) {
-			//			addReduceDetail.isCountManage = false;
-			//		}
-			//		// 类型2 指定管理费时间之前签单收取管理费
-			//		if (setType == 2 && setTime < contractTime) {
-			//			addReduceDetail.isCountManage = false;
-			//		}
-			//		// 类型3 不计算管理费
-			//		if (setType == 3) {
-			//			addReduceDetail.isCountManage = false;
-			//		}
-			//	}
-			//}, null, false);
-			//addReduceDetail.$isCountManageLabel.text(addReduceDetail.isCountManage ? "是" : "否");
 
 			arCalculator.calculateFees();
 

@@ -1,6 +1,4 @@
-jQuery(function($) {
-    
-	var params = {};
+var printAddReduceDetail = (function(){
 
 	api = parent.api;
 	config = parent.config ;
@@ -8,196 +6,189 @@ jQuery(function($) {
 	utils = parent.utils;
 	com = parent.com;
 
-	params.server = window.server;
-	params.authentication = parent.params.authentication;
-	params = parent.params;
-	
-	// 装修单类型  0: 半包 , 装修单 , 不包括主材单 , 1: 套餐 , 装修+主材单 , 2: 半价 , 主材配比 , 装修打折
-	var $decorationType = params.decorationType;
 	var addReduceDetail = {
-		addReduceDetails: [],
-		addItems: {},
-		reduceItems: {}
+		items: {},
 	};
+
 	var reduceNums = {};
-	var $addReduceItems = [];
-	var _addReduceIds = params.addReduceIds; //上一页面选中要打印的增减项
-	var _orderId = params.decorationOrderId;
-	
-	//查询该订单的信息
-    com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": _orderId}, function(res){
-        addReduceDetail.decoration = res.decoration;
-    }, null ,false);
-	
-	//查询该订单的信息
-	com.post(api.quotation.queryQuotationForDefaultByOrderId, {"quotation.orderId": _orderId}, function(res){
-		addReduceDetail.quotation = res.quotation;
-	}, null ,false);
 
-	var $addReduceIds = {};
-	var $manage = {};
-	
-	//通过订单编号获取增减项信息 查出该订单下所有的增减项
-	com.post(api.addReduce.queryAddReduceByOrderId, {"addReduce.orderId": _orderId}, function (res) {
-		$.each(res.addReduces, function (i, v) {
-		    
-		    if(_addReduceIds.indexOf(v.arId) == -1) return true;
-		    
-		    addReduceDetail.addItems[v.arId + "-" + v.type] = [];
-		    
-			$addReduceIds["addReduceIds[" + i + "]"] = v.arId;
-			if (params.addReduceIds.indexOf(v.arId) >= 0) {
-                $manage[v.arId] = {"arId": v.arId, "manageRate": v.manageRate, "managePrice": v.managePrice};
-			}
-		});
-	}, null, false);
-	
-	//通过增减项ID列表获取增减项中包含的报价项信息
-	com.post(api.addReduce.queryAddReduceItemByAddReduceIds, $addReduceIds, function (res) {
-		$addReduceItems = res.addReduceItems;
-	}, null, false);
+	var printer = {
 
-	calAddReduceSum();
-	generatePrintPage();
-	
-	function printHeader(headStr){
-		return headHtml;
-	}
+		printBody: function() {
+			var that = this;
 
-	//从所有的增减项中的报价详情中筛选出合适的报价并进行计算和处理
-	function calAddReduceSum(){
+			var html = "";
 
-		var discount = addReduceDetail.quotation.discount;
-		
-		$.each($addReduceItems, function(i, v){
-		    
-		    var addReduceItem = v;
-		    
-		    var arId = addReduceItem.arId;
-		    var unitPrice = v.unitPrice;
-		    var type = v.type;
-		    var num = v.num;
-		    
-		    var quoteItemId = addReduceItem.quoteItemId;
+			var decoration = addReduceDetail.decoration;
 
-            //type = 4 是增项中的报价项  没有type = 4时reduceNums空的
-            if ([4].indexOf(type) != -1) {
-                if (reduceNums[quoteItemId]) {
-                    reduceNums[quoteItemId] = utils.accAdd(reduceNums[quoteItemId], num);
-                } else {
-                    reduceNums[quoteItemId] = num;
-                }
-            }
-            
-            // 增项不打折 , 减项打折
-            // 装修单为半包/全包类型 , 减项 , 根据项目打折标记进行判断
-            // 装修单为满减类型 , 减项 , 全部打折
-            // 打折标识 , 0/2表示不打折 , 1/3表示打折 , 0/1表示配比 , 2/3表示非配比
+			$("#orderId").html("装修单号: " + decoration.orderId);
+			$("#orderAddr").html("楼盘地址: " + decoration.house.village.name + " " + decoration.house.houseNumber);
+			$("#supervisor").html("监理: " + (decoration.supervisor.currentName != null ? decoration.supervisor.currentName : "-"));
+			$("#designer").html("设计师: " + (decoration.designer.currentName != null ? decoration.designer.currentName : "-"));
 
-            var _type = [1, 3, 4, 5].indexOf(type) != -1 ? 1 : 0; // 减项类型/增项类型
-            var _discount = ([1, 3].indexOf(type) != -1 && ([1, 3].indexOf(addReduceItem.discount) != -1 || [2, 3, 4].indexOf(addReduceDetail.decoration.type) != -1)) ? utils.accDiv(discount, 10) : 1;
-            
-            var _dcp = utils.accMul(unitPrice, _discount);
-            var _total = utils.accMul(num ,  _dcp); // 计算总价
+			html += that.printItem(addReduceDetail.items);
 
-            addReduceItem.dcp = utils.changeThrDecimal(_dcp);
-            addReduceItem.total = utils.changeThrDecimal(_total);
-            
-            if(_addReduceIds.indexOf(arId) != -1) {
-                addReduceDetail.addItems[arId + "-" + _type].push(addReduceItem);
-            }
-		});
+			$("#content").html(html);
+		},
+		printItem: function(addReduces) {
+			var addReduceTotalPrice = 0;
+			var html = "";
 
-        $.each(addReduceDetail.addItems, function (i, e) {
-            
-            var arId = i.split('-')[0];
-            var manage = $manage[arId];
-            
-            if(!manage) return true;
-            
-            addReduceDetail.addItems[i].push({
-                "arId": arId,
-                "itemName": "管理费",
-                "quotationFunctionAreaName": "-",
-                "measurementUnit": "-",
-                "num": "-",
-                "unitPrice": "-",
-                "total": manage.managePrice
-            });
-        })
-	}
+			$.each(addReduces, function (i, addReduceItems) {
 
-	// 画每个报价详情的信息
-	function generateAddReduceItem(addReduceItems){
+				// 减项类型/增项类型
+				var addReduceType = addReduceItems[addReduceItems.length - 1].type;
 
-		var addReduceTotalPrice = 0;
-		var html = "";
-		$.each(addReduceItems, function (i, v) {
-		    
-			var addReduceType = i.split('-')[1];
-			var addReduceTotal = 0;
-			var index = 1;
-			
-			var typeName = addReduceType == '1' ? '减项' : '增项'
-			
-			html += typeName;
-			html += '<table width="100%" border="1" cellpadding="1" cellspacing="0" style="FONT-SIZE: 14px">';
-			html += '<tbody><tr bgcolor="#FFFFFF" align="center">';
-			html += '<td width="5%">序号</td>';
-			html += '<td width="40%">项目名称</td>';
-			html += '<td width="14%">功能区</td>';
-			html += '<td width="10%">单位</td>';
-			html += '<td width="8%">数量</td>';
-			html += '<td width="10%">单价</td>';
-			html += '<td width="13%">金额</td>';
-			html += '</tr>';
+				var addReduceTotal = 0;
+				var index = 1;
 
-			$.each(v, function (j, qv) {
+				var typeName = addReduceType == '1' ? '减项' : '增项';
 
-				if (reduceNums[qv.ariId]) {
-					qv.num = utils.changeThrDecimal(utils.accAdd(qv.num, reduceNums[qv.ariId]));
-					qv.total = utils.changeThrDecimal(utils.accMul(qv.num, qv.dcp));
-				}
-
-				html += '<tr align="center">';
-				html += '<td>' + index+++ '</td>';
-				html += '<td>' + qv.itemName + '</td>';
-				html += '<td>' + qv.quotationFunctionAreaName + '</td>';
-				html += '<td>' + qv.measurementUnit + '</td>';
-				html += '<td>' + qv.num + '</td>';
-				html += '<td>' + qv.unitPrice + '</td>';
-				html += '<td>' + qv.total + '</td>';
+				html += typeName;
+				html += '<table width="100%" border="1" cellpadding="1" cellspacing="0" style="FONT-SIZE: 14px">';
+				html += '<tbody><tr bgcolor="#FFFFFF" align="center">';
+				html += '<td width="5%">序号</td>';
+				html += '<td width="40%">项目名称</td>';
+				html += '<td width="14%">功能区</td>';
+				html += '<td width="10%">单位</td>';
+				html += '<td width="8%">数量</td>';
+				html += '<td width="10%">单价</td>';
+				html += '<td width="13%">金额</td>';
 				html += '</tr>';
 
-                addReduceTotal = utils.changeThrDecimal(utils.accAdd(qv.total, addReduceTotal));
-            });
+				$.each(addReduceItems, function (j, addReduceItem) {
 
-			html += '</tbody></table>';
-			html += typeName + '金额: ' + utils.changeThrDecimal(addReduceTotal)  + '元';
-			html += '<hr><p></p>';
-			addReduceTotalPrice = utils.changeThrDecimal(utils.accAdd(addReduceType == '1' ? utils.changeThrDecimal(-addReduceTotal) : utils.changeThrDecimal(addReduceTotal),addReduceTotalPrice));
-		});
-		
-		$("#labSumMoney").html("工程最终增减合计金额: " + utils.changeThrDecimal(addReduceTotalPrice) + "元");
-		
-		return html;
+					if (reduceNums[addReduceItem.ariId]) {
+						addReduceItem.num = utils.changeTwoDecimal(utils.accAdd(addReduceItem.num, reduceNums[addReduceItem.ariId]));
+						addReduceItem.total = utils.changeTwoDecimal(utils.accMul(addReduceItem.num, addReduceItem.discountPrice));
+					}
+
+					html += '<tr align="center">';
+					html += '<td>' + index++ + '</td>';
+					html += '<td>' + addReduceItem.itemName + '</td>';
+					html += '<td>' + addReduceItem.quotationFunctionAreaName + '</td>';
+					html += '<td>' + addReduceItem.measurementUnit + '</td>';
+					html += '<td>' + addReduceItem.num + '</td>';
+					html += '<td>' + addReduceItem.unitPrice + '</td>';
+					html += '<td>' + addReduceItem.total + '</td>';
+					html += '</tr>';
+
+					addReduceTotal = utils.changeTwoDecimal(utils.accAdd(addReduceItem.total, addReduceTotal));
+				});
+
+				html += '</tbody></table>';
+				html += typeName + '金额: ' + addReduceTotal  + '元';
+				html += '<hr><p></p>';
+				addReduceTotalPrice = utils.changeTwoDecimal(utils.accAdd(addReduceType == '1' ? -addReduceTotal : addReduceTotal, addReduceTotalPrice));
+			});
+
+			$("#labSumMoney").html("工程最终增减合计金额: " + addReduceTotalPrice + "元");
+
+			return html;
+		},
+		init: function() {
+			printer.printBody();
+		}
+	};
+
+	return {
+		init: function() {
+
+			var params = parent.params;
+			var decorationOrderId = params.decorationOrderId;
+
+			// 获取装修单信息
+			com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": decorationOrderId}, function(res){
+				addReduceDetail.decoration = res.decoration;
+			}, null ,false);
+
+			// 获取报价信息
+			com.post(api.quotation.queryQuotationForDefaultByOrderId, {"quotation.orderId": decorationOrderId}, function(res){
+				addReduceDetail.quotation = res.quotation;
+			}, null ,false);
+
+			// 获取增减信息
+			com.post(api.addReduce.queryAddReduceByOrderId, {"addReduce.orderId": decorationOrderId}, function (result) {
+
+				var addReduceIds = {};
+
+				$.each(result.addReduces, function(i, v) {
+					if(params.addReduceIds.indexOf(v.arId) == -1) return true;
+
+					addReduceDetail.items[v.arId] = [
+						{
+							"itemName": "管理费",
+							"quotationFunctionAreaName": "-",
+							"measurementUnit": "-",
+							"num": "-",
+							"unitPrice": "-",
+							"total": v.managePrice,
+							"type": v.type,
+						},
+					];
+
+					addReduceIds["addReduceIds["+i+"]"] = v.arId;
+				});
+
+				// 获取增减项信息
+				com.post(api.addReduce.queryAddReduceItemByAddReduceIds, addReduceIds, function (res) {
+					disposeAddReduceItemData(res.addReduceItems);
+				}, null, false);
+
+			}, null, false);
+
+			function disposeAddReduceItemData(addReduceItems) {
+
+				// 报价折扣
+				var quotationDiscount = utils.accDiv(addReduceDetail.quotation.discount, 10);
+				var decorationType = addReduceDetail.decoration.type;
+				// 用于处理数据顺序为题
+				addReduceItems = addReduceItems.reverse();
+
+				$.each(addReduceItems, function(i, addReduceItem){
+
+					// 4 (增项中报价项)
+					if (addReduceItem.type == 4) {
+						if (reduceNums[addReduceItem.quoteItemId]) {
+							reduceNums[addReduceItem.quoteItemId] = utils.changeThrDecimal(utils.accAdd(reduceNums[addReduceItem.quoteItemId], addReduceItem.num));
+						} else {
+							reduceNums[addReduceItem.quoteItemId] = addReduceItem.num;
+						}
+					}
+
+					// 减项类型/增项类型
+					var addReduceType = [1, 3, 4, 5].indexOf(addReduceItem.type) != -1 ? 1 : 0;
+
+					var discount = null;
+					// 增项, 不打折
+					if (addReduceType == 0) {
+						discount = 1;
+						// 减项项目类型为 4(增项中报价项), 5(拓展中报价项) 不打折
+					} else if (addReduceItem.type == 4 || addReduceItem.type == 5) {
+						discount = 1;
+						// 装修单类型为2 (半价, 满减, 减上减) 打折
+					} else if (decorationType == 2) {
+						discount = quotationDiscount;
+						// 根据打折标识进行判断 0: 不打折 , 1: 打折 , 2: 不打折(非配比) , 3: 打折(非配比)
+					} else {
+						discount = ([1, 3].indexOf(addReduceItem.discount) != -1) ? quotationDiscount : 1;
+					}
+
+					var discountPrice = utils.changeThrDecimal(utils.accMul(addReduceItem.unitPrice, discount));
+
+					addReduceItem.discountPrice = discountPrice;
+					addReduceItem.total = utils.changeThrDecimal(utils.accMul(addReduceItem.num ,  discountPrice));
+
+					addReduceDetail.items[addReduceItem.arId].unshift(addReduceItem);
+
+				});
+			}
+
+			printer.init();
+		}
 	}
+})();
 
-	// 画页面主
-	function generatePrintPage() {
-	    
-		var html = "";
-		
-		var decoration = addReduceDetail.decoration;
-
-		$("#orderId").html("装修单号: " + decoration.orderId);
-		$("#orderAddr").html("楼盘地址: " + decoration.house.village.name + " " + decoration.house.houseNumber);
-		$("#supervisor").html("监理: " + (decoration.supervisor != null ? decoration.supervisor.currentName : "-"));
-		$("#designer").html("设计师: " + (decoration.designer != null ? decoration.designer.currentName : "-"));
-
-		html += generateAddReduceItem(addReduceDetail.addItems);
-
-		$("#content").html(html);
-	}
+jQuery(function($) {
+	printAddReduceDetail.init();
 });
-

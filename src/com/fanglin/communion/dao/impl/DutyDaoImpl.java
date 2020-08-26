@@ -2,6 +2,9 @@ package com.fanglin.communion.dao.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -30,8 +33,9 @@ public class DutyDaoImpl extends DaoImpl<DutyPO> implements DutyDao {
 				String data = filter.getData();
 				String op = filter.getOp();
 
-				if (DutyPO.COLUMN_NAME_STR.equals(field)) {
-					query.add(query.getCriterion(field, data, op));
+				query.alias("departmentType", "departmentType");
+				if ("name".equals(field)) {
+					query.add(query.getCriterion(DutyPO.COLUMN_DID_STR, Long.valueOf(data), op));
 				}
 			}
 		}
@@ -60,6 +64,32 @@ public class DutyDaoImpl extends DaoImpl<DutyPO> implements DutyDao {
 	public List<DutyPO> queryDutyByDtid(Integer dtid) {
 
 		return session().createCriteria(DutyPO.class).add(Restrictions.eq("departmentType.dtid", dtid)).add(Restrictions.eq(DutyPO.COLUMN_STATUS_STR, DutyPO.COLUMN_STATUS_INT)).list();
+	}
+
+	@Override
+	public List<DutyPO> pageDutyByName(Paging paging, String name, Integer type, Short status) {
+	
+		PagingQuery<DutyPO> query = pagingQuery(paging, DutyPO.class);
+		
+		if (StringUtils.isNotEmpty(name)) {
+
+			Disjunction pinyinDisjunction = Restrictions.disjunction();
+
+			pinyinDisjunction.add(Restrictions.like("name", name, MatchMode.ANYWHERE));
+			pinyinDisjunction.add(Restrictions.like("pinYin", name, MatchMode.ANYWHERE));
+
+			query.add(pinyinDisjunction);
+		}
+		
+		query.add(Restrictions.eq("status", status));
+		
+		if (type != 0) {
+
+			query.alias("departmentType", "departmentType");
+			query.add(Restrictions.eq("departmentType.dtid", type));
+		}
+		
+		return query.list();
 	}
 
 }

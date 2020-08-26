@@ -1,0 +1,355 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Information Platform</title>
+
+    <meta charset="utf-8" />
+    <meta content="no-cache"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="fanglin.ico" type="image/x-icon">
+
+    <!-- altogether -->
+    <link rel="stylesheet" href="assets/altogether/css/pace.min.css" />
+    <script type="text/javascript" src='assets/altogether/js/pace.min.js'></script>
+    <!-- altogether end -->
+
+    <script type="text/javascript">
+
+        window.notOperate = false;
+
+        var isF5 = false;
+        document.onkeydown = function (e) {
+          var ev = window.event || e;
+            var code = ev.keyCode || ev.which;
+            if (code == 116) {
+                isF5 = true;
+            }
+        };
+
+        if(!parent.window.isPC) window.onbeforeunload = onclose;
+
+        function onclose(){
+            if(!isF5){
+                isF5 = false;
+                return "";
+            }
+        }
+
+        var server = './';
+        var versionCode = '';
+        var cookies = document.cookie.split(";");
+
+        for(var i=0;i<cookies.length;i++){
+            var cookie = cookies[i];
+            
+            if(cookie.indexOf("versionCode") != -1){
+                versionCode = cookie.split("=")[1];
+            }else if(cookie.indexOf("authentication") != -1){
+                window.authentication = cookie.substr(cookie.indexOf('=') + 1);
+            }else if(cookie.indexOf("loginTime") != -1){
+                window.loginTime = cookie.split("=")[1];
+            }else if(cookie.indexOf("communion") != -1){
+                window.communion = cookie.split("=")[1];
+            }
+        }
+
+        // 登录超时
+        if(window.loginTime == undefined ){
+            isF5 = true;
+            window.location.href = "/";
+        }
+
+        var csses = "";
+        /* ace */
+        csses += '<link rel="stylesheet" href="assets/ace/css/bootstrap.min.css" />'; // basic styles
+        csses += '<link rel="stylesheet" href="assets/ace/css/font-awesome-fa.min.css" />';
+        csses += '<link rel="stylesheet" href="assets/ace/css/fullcalendar.css" />';
+        csses += '<link rel="stylesheet" href="assets/ace/css/huploadify.css" />';
+        csses += '<link rel="stylesheet" href="assets/ace/css/ace.css" />';
+        /* ace end */
+
+        /* altogether */
+        csses += '<link rel="stylesheet" href="assets/altogether/css/font-awesome.min.css" />';
+        csses += '<link rel="stylesheet" href="assets/altogether/css/iconfont.css" />'; /*  iconfont  */
+        csses += '<link rel="stylesheet" href="assets/altogether/css/locking.css" />'; /*  lockscreen */
+        /* altogether end */
+        
+        csses += '<link rel="stylesheet" href="assets/layui/css/layui.css" />';
+
+        csses += '<link rel="stylesheet" href="' + server + 'css/main.css" />';
+
+        document.write(csses);
+
+        var jses = "";
+
+        if(!window.jQuery){
+            jses += '<script src="' + server + 'assets/altogether/js/jquery-2.0.3.min.js"><\/script>';
+        }
+
+        document.write(jses);
+    </script>
+
+</head>
+
+<body class="navbar-fixed">
+    <!--  lock bringins  -->
+    <div id="outLockingContent" style="display: none;">
+
+        <div class="login-form-sub fadeInUp">
+            <div class="lock-pic">
+                <img id="personalPicLock" class="editable img-responsive" alt="PersonalPic" src="#" />
+            </div>
+
+            <div class="flex-row">
+                <span  class='lf--input' placeholder='用户名' id="userNameLock" type='text' readonly></span>
+            </div>
+
+            <div class="form-group">
+                <span class="block input-icon input-icon-right">
+                    <input type="text" class="width-100" name="lockPassword" id="lockPassword" placeholder="请输入密码" onfocus="this.type='password'" />
+                </span>
+            </div>
+            <button value="登录" class="btn submit-btn" id="lockSubmit"> 登录 </button>
+        </div>
+
+    </div>
+    <!--  lock bringins end -->
+
+    <div class="navbar navbar-default navbar-fixed-top" id="navbar" style='display:none;height: 0px;'>
+
+        <div class="navbar-container" id="navbar-container">
+
+            <!-- 设置皮肤 隐藏-->
+            <div class="navbar-header pull-right hide">
+                <ul style="margin: 0px 10px">
+                    <li class="dropdown" style="height: 45px;">
+                        <a data-toggle="dropdown" class="dropdown-toggle clear-menu-nav" id="clearButton" href="#">
+                            <i class="icon-cog"></i>
+                        </a>
+                        <ul class="pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+                            <li>
+                                <a href="index-clear.html">
+                                    <span class="mail-tag badge badge-grey"></span>
+                                    clear
+                                </a>
+                            </li>
+                            <li>
+                                <a href="index-metro.html">
+                                    <span class="mail-tag badge badge-danger"></span>
+                                    metro
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="navbar-header pull-right">
+                <ul class="nav ace-nav">
+                    <li class="dark">
+                        <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                            <i class="icon-globe"></i>
+                            <span class="user-info companyinfo"><small>当前公司</small><span class="user-name companyName"></span></span>
+                            <i class="icon-caret-down"></i>
+                        </a>
+                        <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close" id="companysel"></ul>
+                    </li>
+                    <li class="red">
+                        <a href="#" id="faqInfo">
+                            <i class="icon-key"></i>
+                            <span class="dropdown-toggle">帮助</span>
+                        </a>
+                    </li>
+                    <li class="green">
+                        <a href="#" id="versionInfo">
+                            <i class="icon-bookmark"></i>
+                            <span class="user-info"><small>版本</small><small><span id="versionCode"></span></small></span>
+                        </a>
+                    </li>
+                    <li class="light-blue">
+                        <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                            <img class="nav-user-photo" alt="" src="assets/altogether/images/avatar2.png" id="userImg">
+                            <span class="user-info"><small>您好,</small><span class="user-name"></span></span>
+                            <i class="icon-caret-down"></i>
+                        </a>
+                        <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+							<li><div id="qrcode" class="qrcode"></div></li>
+                            <li><a id="changePassword" class='changePassword' href="#"><i class="icon-cog"></i>修改密码</a></li>
+                            <li><a id="userProfile" class='userProfile' href="#"><i class="icon-user"></i>个人资料</a></li>
+                            <li><a id="userLock" class='userLock' href="#"><i class="icon-lock"></i>锁屏</a></li>
+                            <li class="divider"></li>
+                            <li><a id="logout" class='logout' href="#"><i class="icon-off"></i>退出</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container" id="main-container" style='display:none;'>
+        <div class="main-container-inner">
+            <a class="menu-toggler" id="menu-toggler" href="#">
+                <span class="menu-text"></span>
+            </a>
+
+            <div class="sidebar sidebar-fixed" id="sidebar">
+                <div class="sidebar-shortcuts" id="sidebar-shortcuts">
+                    <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+                        <button id="indexBtn" class="btn btn-success">
+                            <i class="icon-bookmark bigger-130"></i>
+                        </button>
+                        <button id="messageBtn" class="btn btn-info messageList">
+                            <i class="icon-envelope bigger-130"></i>
+                            <span id='messageCount' class="badge badge-pink messageCount"></span>
+                        </button>
+                        <button class="btn btn-warning changePassword">
+                            <i class="icon-user bigger-130"></i>
+                            <span class='hidden'>修改密码</span>
+                        </button>
+                        <button class="btn btn-danger userProfile">
+                            <i class="icon-cogs bigger-130"></i>
+                            <span class='hidden'>个人信息</span>
+                        </button>
+                    </div>
+
+                    <div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+                        <span class="btn btn-success"></span>
+                        <span class="btn btn-info"></span>
+                        <span class="btn btn-warning"></span>
+                        <span class="btn btn-danger"></span>
+                    </div>
+                </div><!-- #sidebar-shortcuts -->
+
+                <ul class="nav nav-list"></ul><!-- /.nav-list -->
+
+                <div class="sidebar-collapse" id="sidebar-collapse">
+                    <i class="icon-double-angle-left" data-icon1="icon-double-angle-left" data-icon2="icon-double-angle-right"></i>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div class="breadcrumbs" id="breadcrumbs">
+                    <ul class="breadcrumb"></ul><!-- .breadcrumb -->
+                    
+                    <div class="nav-search" id="nav-search">
+                        <form class="form-search">
+                            <span class="input-icon">
+                                <input type="text" placeholder="查询页面内容 ..." class="nav-search-input" id="navsearch" autocomplete="off">
+                                <i class="icon-search nav-search-icon"></i>
+                            </span>
+                        </form>
+                    </div>
+                </div>
+                
+                <div id="fl-container"></div>
+            </div>
+        </div>
+
+        <a href="#" id="btn-scroll-license" class="btn-scroll-license btn btn-sm btn-inverse" style="position: fixed;">
+            <i class="icon-copyright icon-only bigger-110"></i>
+        </a>
+        
+        <a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse" style="position: fixed;">
+            <i class="icon-double-angle-up icon-only bigger-110"></i>
+        </a>
+    </div>
+
+    <div id="layerAdd" class="hide" style="padding: 40px 0;">
+        <div class="row-fluid">
+            <div class="progress" data-percent="0%">
+                <div class="progress-bar" style="width:0%;"></div>
+            </div>
+        </div>
+    </div>
+	
+    <script src="assets/altogether/js/jquery-2.0.3.min.js"></script>
+    <script src="assets/ace/js/ace.js"></script>
+    <script src="assets/ace/js/bootstrap.min.js"></script>
+    <script src="assets/ace/js/jquery.slimscroll.min.js"></script>
+    <script src="assets/ace/js/jquery.raty.min.js"></script>
+    <script src="assets/ace/js/ace-elements.js"></script>
+    <script src="assets/ace/js/ace-extra.min.js"></script>
+
+    <script src="assets/altogether/js/jquery.huploadify.js"></script> <!-- upload tools --> 
+    <script src="assets/altogether/js/fullcalendar.min.js"></script> <!-- calendar --> 
+    <script src="assets/altogether/js/spin.min.js"></script>
+
+    <script src="assets/layui/layui.all.js"></script>
+
+    <script src="assets/altogether/js/typeahead-bs2.min.js"></script> <!-- auto fill --> 
+    <script src="assets/altogether/js/tag.js"></script>
+    <script src="assets/altogether/js/base64.js"></script> <!--  --> 
+    <script src="assets/altogether/js/html2canvas.js"></script> <!-- export tools -->
+
+    <script src="assets/altogether/js/ztree/jquery.ztree.core-3.5.min.js"></script>
+    <script src="assets/altogether/js/ztree/jquery.ztree.excheck-3.5.min.js"></script>
+
+    <script src="assets/altogether/js/fuelux/fuelux.wizard.min.js"></script>
+    <script src="assets/altogether/js/fuelux/fuelux.spinner.min.js"></script>
+    <script src="assets/altogether/js/fuelux/fuelux.tree.js"></script>
+	<script src="assets/altogether/js/jquery.qrcode.min.js"></script>
+	
+	<script src="assets/altogether/js/echarts.min.js"></script>
+	
+    <script type="text/javascript">
+        
+        var layer = layui.layer;
+        var laydate = layui.laydate;
+        
+        if(parent.window.isPC){
+            var gui = require('nw.gui');
+            var win = gui.Window.get();
+        }
+
+        var jses = "";
+
+        jses += '<script src="js/com/config.js"><\/script>';
+        jses += '<script src="js/com/server.js"><\/script>';
+        jses += '<script src="js/com/api.js"><\/script>';
+        jses += '<script src="js/com/load.js"><\/script>';
+        jses += '<script src="js/com/version.js"><\/script>';
+        jses += '<script src="js/com/params.js"><\/script>';
+        jses += '<script src="js/com/utils.js"><\/script>';
+        jses += '<script src="js/com/error.js"><\/script>';
+        jses += '<script src="js/com/core.js"><\/script>';
+        jses += '<script src="js/com/validator.js"><\/script>';
+        jses += '<script src="js/com/condition.js"><\/script>';
+        jses += '<script src="js/com/searcher.js"><\/script>';
+        jses += '<script src="js/com/exporter.js"><\/script>';
+        jses += '<script src="js/com/printer.js"><\/script>';
+        jses += '<script src="js/index.js"><\/script>';
+
+        if(!parent.window.isPC && !parent.window.isEncryption){
+            document.write(jses);
+        }else if(parent.window.isPC && !parent.window.isEncryption){
+            jses += '<script src="js/com/nw.js"><\/script>';
+            document.write(jses);
+        }else if(parent.window.isPC && parent.window.isEncryption){
+
+            win.evalNWBin(null, 'js/com/config.bin');
+            win.evalNWBin(null, 'js/com/load.bin');
+            win.evalNWBin(null, 'js/com/version.bin');
+            win.evalNWBin(null, 'js/com/api.bin');
+            win.evalNWBin(null, 'js/com/params.bin');
+            win.evalNWBin(null, 'js/com/utils.bin');
+            win.evalNWBin(null, 'js/com/core.bin');
+            win.evalNWBin(null, 'js/com/validator.bin');
+            win.evalNWBin(null, 'js/com/condition.bin');
+            win.evalNWBin(null, 'js/com/searcher.bin');
+            win.evalNWBin(null, 'js/com/exporter.bin');
+            win.evalNWBin(null, 'js/index.bin');
+            win.evalNWBin(null, 'js/com/nw.bin');
+            win.evalNWBin(null, 'js/com/printer.bin');
+        }
+
+        //$(function(){
+        //	$('.pricing-span-body').slideDown(2000, 'easeOutBounce');
+        //	$('.declare').fadeIn(2000)
+        //});
+        
+    </script>
+
+</body>
+</html>

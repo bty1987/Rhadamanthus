@@ -17,43 +17,41 @@ import com.fanglin.decoration.vo.DecorationServiceVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class DecorationServiceAction extends BaseListAction{
+public class DecorationServiceAction extends BaseListAction {
 
 	private static final long serialVersionUID = 1515051131753670098L;
 
 	@Autowired
 	private DecorationServiceService decorationServiceService;
-	
+
 	private List<DecorationServiceVO> decorationServices;
-	
+
 	private DecorationServiceVO decorationService;
-	
-	
-	@Action(value = "queryDecorationServiceByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDecorationServiceByOrderId(){
-		
+
+	@Action(value = "queryDecorationServiceByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationServiceByOrderId() {
+
 		decorationServices = decorationServiceService.queryDecorationServiceByOrderId(decorationService);
-		
+
 		return SUCCESS;
 	}
 
-	@Action(value = "addDecorationService", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addDecorationService() throws FLException{
-	
-		decorationServiceService.addDecortionService(decorationService,authentication());
-		
+	@Action(value = "addDecorationService", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addDecorationService() throws FLException {
+
+		decorationServiceService.addDecortionService(decorationService, authentication());
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "completeDecorationService", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String completeDecorationService() throws FLException{
-		
+
+	@Action(value = "completeDecorationService", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String completeDecorationService() throws FLException {
+
 		decorationServiceService.completeDecorationService(decorationService);
-		
+
 		return SUCCESS;
 	}
-	
-	
+
 	public List<DecorationServiceVO> getDecorationServices() {
 		return decorationServices;
 	}
@@ -70,5 +68,4 @@ public class DecorationServiceAction extends BaseListAction{
 		this.decorationService = decorationService;
 	}
 
-	
 }

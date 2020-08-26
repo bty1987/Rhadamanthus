@@ -19,22 +19,40 @@
         </div>
 
         <div class="col-sm-8 widget-container-span">
-            <div class="widget-box transparent">
-                <div class="widget-header">
-                    <h2 class="lighter">活动物品</h2>
-                </div>
 
-                <div class="widget-header">
-                    <div id="paramsOrder"></div>
-                </div>
-
-            </div>
             <div class="row">
-                <div class="col-sm-12 pricing-span-body" style="padding: 30px;">
-                    <div id="salesActivityItems"></div>
+                <div class="col-xs-12">
+                    <div class="tabbable">
+                        <ul class="nav nav-tabs" id="myTab">
+                            <li class="active">
+                                <a data-toggle="tab" href="#activityItems" >活动物品</a>
+                            </li>
+                            <li class="">
+                                <a data-toggle="tab" href="#activitys" id="activityTab">活动详情</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="activityItems" class="tab-pane active">
+                                <div class="widget-box transparent">
+
+                                    <div class="widget-header">
+                                        <div id="paramsOrder"></div>
+                                    </div>
+
+                                </div>
+                                <div id="salesActivityItems" class="clearfix tab-pane active"></div>
+                            </div>
+
+                            <div id="activitys" class="tab-pane">
+                                <div id="condLists" class="fl_search clearfix"></div> <!-- 查询条件-->
+                                <div id="resultLists" class="clearfix tab-pane active"></div> <!--查询结果-->
+                                <div id="pagenations" class="fl-page-wrap clearfix"></div> <!--分页-->
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <hr/>
             </div>
+
         </div>
     </div>
 </div>
@@ -65,39 +83,6 @@
             <div class="modal-footer">
                 <button type="button" id="submitSalesActivityCommentBtn" class="btn btn-primary">保存</button>
                 <button type="button" id="cancelCommentBtn" class="btn btn-default" data-dismiss="modal">取消</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--参加活动-->
-<div class="modal fade" id="salesActivityModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">
-                    <span>&times;</span><span class="sr-only">Close</span>
-                </button>
-                <h4 class="modal-title" id="activityDialog">活动名称</h4>
-            </div>
-
-            <div class="modal-body">
-                <form class="form-horizontal">
-                    <div class="space-4"></div>
-                    <div class="form-group">
-                        <label for="activityInfo" class="col-sm-3 control-label no-padding-right">修改活动</label>
-                        <div class="col-sm-9">
-                            <select class='col-sm-5 v_required' id='activityInfo' data-toggle="popover"
-                                    data-trigger='manual'></select>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" id="submitSalesActivityBtn" class="btn btn-primary">保存</button>
-                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
             </div>
         </div>
     </div>
@@ -136,8 +121,8 @@
                                 <div id="thingsDiv">
                                     <input type="text" id="thingsName" class="col-sm-5 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" placeholder="请选择物品"/>
                                 </div>
-                            <input type="text" id="thingsNum" class="col-sm-4 v_float_3 v_required" placeholder="请输入数量" style="margin: 0 10px">
-                            <button type="button" id="thingsAdd" class="btn btn-info btn-minier" style="width: 50px; line-height: 30px">添加</button>
+                                <input type="text" id="thingsNum" class="col-sm-4 v_float_3 v_required" placeholder="请输入数量" style="margin: 0 10px">
+                                <button type="button" id="thingsAdd" class="btn btn-info btn-minier" style="width: 50px; line-height: 30px">添加</button>
                             </div>
                         </div>
                     </div>
@@ -152,8 +137,8 @@
                                 <div id="couponsDiv">
                                     <input type="text" id="couponsName" class="col-sm-5 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" placeholder="请选择券"/>
                                 </div>
-                            <input type="text" id="couponsNum" class="col-sm-4 v_float_3 v_required" placeholder="请输入数量" style="margin: 0 10px">
-                            <button type="button" id="couponsAdd" class="btn btn-info btn-minier" style="width: 50px; line-height: 30px">添加</button>
+                                <input type="text" id="couponsNum" class="col-sm-4 v_float_3 v_required" placeholder="请输入数量" style="margin: 0 10px">
+                                <button type="button" id="couponsAdd" class="btn btn-info btn-minier" style="width: 50px; line-height: 30px">添加</button>
                             </div>
                         </div>
                     </div>

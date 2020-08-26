@@ -54,20 +54,8 @@ jQuery(function($) {
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-			var $btnViews = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-			var $btnView = $('<a></a>').addClass('btn btn-minier btn-inverse').html("奖品");// 活动物品
-
-			$btnViews.click(function() {
-				com.updateTypeahead("belonger", v.belonger.userId, v.belonger.userName);
-				vticket.items.tno.attr("readOnly", true);
-				vticket.items.vtid.val(v.vtid);
-				vticket.items.tno.val(v.tno);
-				vticket.items.orderId.val(v.orderId);
-				vticket.items.name.val(v.name);
-				vticket.items.phone.val(v.phone);
-				vticket.items.address.val(v.address);
-				vticket.modals.vticketModal.modal("show");
-			});
+			var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
+			var $btnAward = $('<a></a>').addClass('btn btn-minier btn-inverse').html("奖品");// 活动物品
 
 			var propertyArr = [ 
 					[ "姓名:", v.name, "grey" ],
@@ -88,15 +76,30 @@ jQuery(function($) {
 				$liProperty.appendTo($ulProperty);
 			});
 
-			$divBtnWrap.append($btnView).append($btnViews).appendTo($h3);
+			$divBtnWrap.append($btnEdit).append($btnAward).appendTo($h3);
 
 			$liLine.append($h3).append($ulProperty);
 			
-			$btnView.click(function(){
-	            params.tno = v.tno;
-
-	            com.popup4page("#vawardPopUp", "/views/information/vawardItem.html", "活动奖品");
-	        });
+			$btnEdit.click(function() {
+			    
+                com.updateTypeahead("belonger", v.belonger.userId, v.belonger.userName);
+                
+                vticket.items.tno.attr("readOnly", true);
+                vticket.items.vtid.val(v.vtid);
+                vticket.items.tno.val(v.tno);
+                vticket.items.orderId.val(v.orderId);
+                vticket.items.name.val(v.name);
+                vticket.items.phone.val(v.phone);
+                vticket.items.address.val(v.address);
+                
+                vticket.modals.vticketModal.modal("show");
+            });
+			
+			$btnAward.click(function(){
+                params.tno = v.tno;
+                params.vticket = v;
+                com.popup4page("#vawardPopUp", "/views/information/vaward.html", "活动奖品");
+            });
 
 			return $liLine;
 		};

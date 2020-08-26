@@ -21,13 +21,14 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 	}
 	
 	@Override
-	public List<SelectionItemPD> pageSelectionItem(Paging paging, List<Filter> filters, Short status) {
+	public List<SelectionItemPD> pageSelectionItem(Paging paging, List<Filter> filters, Short status, Integer company) {
 		
 		PagingQuery<SelectionItemPD> query = pagingQuery(paging, SelectionItemPD.class);
 		
 		queryFilterExcute(query, filters);
-		
-		query.add(Restrictions.eq(SelectionItemPO.COLUMN_STATUS_STR, status));
+
+		query.add(Restrictions.eq(SelectionItemPO.COLUMN_COMPANY_STR, company));
+		if (status != null) query.add(Restrictions.eq(SelectionItemPO.COLUMN_STATUS_STR, status));
 
 		query.desc("siid");
 		
@@ -35,14 +36,33 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 	}
 	
 	@Override
-	public List<SelectionItemPD> pageSelectionItemForSupplier(Paging paging, List<Filter> filters, Long suid) {
+	public List<SelectionItemPD> pageSelectionItemForSupplier(Paging paging, List<Filter> filters, Long suid, Integer company) {
 			
 		PagingQuery<SelectionItemPD> query = pagingQuery(paging, SelectionItemPD.class);
 	
 		queryFilterExcute(query, filters);
 	
+		query.add(Restrictions.eq(SelectionItemPO.COLUMN_COMPANY_STR, company));
 		query.add(Restrictions.eq(SelectionItemPO.COLUMN_SUID_STR, suid));
 
+		query.desc("siid");
+		
+		return query.list();
+	}
+	
+	@Override
+	public List<SelectionItemPD> pageSelectionItemForEscorter(Paging paging, List<Filter> filters, String userId) {
+		
+		PagingQuery<SelectionItemPD> query = pagingQuery(paging, SelectionItemPD.class);
+		
+		queryFilterExcute(query, filters);
+		
+		query.alias("decoration", "decoration");
+		query.alias("decoration.escorter", "decorationEscorter");
+
+		query.add(Restrictions.eq("decorationEscorter.userId", userId));
+		query.add(Restrictions.eq(SelectionItemPO.COLUMN_STATUS_STR, (short) 1));
+		
 		query.desc("siid");
 		
 		return query.list();
@@ -54,12 +74,6 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 		return createCriteria(SelectionItemPO.class).add(Restrictions.eq(SelectionItemPO.COLUMN_SID_STR, sid)).list();
 	}
 	
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<SelectionItemPD> querySelectionItemDBySid(long sid) {
-		return createCriteria(SelectionItemPD.class).add(Restrictions.eq(SelectionItemPD.COLUMN_SID_STR, sid)).list();
-	}
-
 	@Override
 	public SelectionItemPO querySelectionItem(long sid, long areaId, long quoteId, short type) {
 		return (SelectionItemPO) session()
@@ -80,6 +94,12 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 				.add(Restrictions.eq(SelectionItemPO.COLUMN_QUOTEID_STR, quoteId))
 				.add(Restrictions.eq(SelectionItemPO.COLUMN_TYPE_STR, type))
 				.uniqueResult();
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<SelectionItemPD> querySelectionItemDBySid(long sid) {
+		return createCriteria(SelectionItemPD.class).add(Restrictions.eq(SelectionItemPD.COLUMN_SID_STR, sid)).list();
 	}
 
 	@Override

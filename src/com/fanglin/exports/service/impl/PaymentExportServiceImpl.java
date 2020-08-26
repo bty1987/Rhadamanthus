@@ -46,7 +46,7 @@ public class PaymentExportServiceImpl implements PaymentExportService {
 	@Override
 	public List<DecorationPaymentExportVO> queryDecorationPaymentExport(List<Filter> filters) {
 
-		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPayment(filters);
+		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByOrderId(filters);
 		List<DecorationPaymentExportVO> decorationPaymentExportVOs = new ArrayList<DecorationPaymentExportVO>();
 
 		DecorationPaymentExportVO decorationPaymentExportVO;
@@ -86,7 +86,7 @@ public class PaymentExportServiceImpl implements PaymentExportService {
 	@Override
 	public List<MaterialPaymentExportVO> queryMaterialPaymentExport(List<Filter> filters) {
 
-		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPayment(filters);
+		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPaymentByOrderId(filters);
 		List<MaterialPaymentExportVO> materialPaymentExportVOs = new ArrayList<MaterialPaymentExportVO>();
 
 		MaterialPO materialPO;

@@ -18,11 +18,9 @@ public interface SalesPaymentService {
 	
 	public void pageSalesPaymentForConfirm(Paging paging, List<Filter> filters, int company);
 	
-	public List<SalesPaymentVO> querySalesPayment(List<Filter> filters, int company, String companyType);
-	
 	public List<SalesPaymentVO> querySalesPaymentBySid(SalesPaymentVO salesPaymentVO);
 	
-	public List<SalesPaymentVO> querySalesPaymentByOrderId(SalesVO salesVO);
+	public List<SalesPaymentVO> querySalesPaymentByOrderId(SalesPaymentVO salesPaymentVO, List<Filter> filters, int company, String companyType);
 	
 	public List<SalesPaymentVO> querySalesPaymentForNotInitBySrid(SalesReceiptVO salesReceipt);
 	

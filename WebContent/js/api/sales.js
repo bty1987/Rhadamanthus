@@ -89,7 +89,7 @@ $.extend(api, {
             }
         },
         querySalesForGrade:{url: "querySalesForGrade.do"},
-
+        updateSalesForAdvance: {url:"updateSalesForAdvance.do"},
         terminalSales:{url: "terminalSales.do"},
         finishSales:{url: "finishSales.do"},
 
@@ -237,7 +237,7 @@ $.extend(api, {
             url: "addSalesActivityItem.do",
             type: "update",
             tranargs: {
-                args: ["saleActivityItems.money","saleActivityItems.num"]
+                args: ["salesActivityItems.money","salesActivityItems.num", "salesActivityItems.integral", "salesActivity.amount"]
             }
         },
 
@@ -245,11 +245,32 @@ $.extend(api, {
             url: "querySalesActivityItem.do",
             type: "query",
             tranargs: [{
-                result: "saleActivityItems",
-                args: ["money","num"]
+                result: "salesActivityItems",
+                args: ["money","num", "integral"]
             }]
         },
-        querySalesActivity : {url: "querySalesActivity.do"},
+        amountSalesActivity : {
+            url: "amountSalesActivity.do",
+            intercept: true
+        },
+        amountSalesActivityForActivity : {
+            url: "amountSalesActivityForActivity.do",
+            intercept: true,
+            type: "query",
+            tranargs: [{
+                result: "salesActivity",
+                args: ["amount"]
+            }]
+        },
+        amountSalesActivityForPayment : {
+            url: "amountSalesActivityForPayment.do",
+            intercept: true,
+            type: "query",
+            tranargs: [{
+                result: "salesActivity",
+                args: ["amount"]
+            }]
+        },
 
         updateSalesForActivity :{url:"updateSalesForActivity.do"},
 
@@ -266,7 +287,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["total","maling","coupon","depositpay","fullpay","amount","venderMaling"]
+                args: ["total","maling","coupon","depositpay","fullpay","interceptount","venderMaling"]
             }]
         },
 
@@ -312,6 +333,27 @@ $.extend(api, {
                 args: ["total","maling","coupon","depositpay","fullpay","amount","venderMaling"]
             }
             ]
-        }
+        },
+        pageSalesByOrderId: {
+            url: "pageSalesByOrderId.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance"]
+            },{
+                result: "paging-data-sales",
+                args: ["total","maling","coupon","depositpay","fullpay","amount","venderMaling"]
+            }]
+        },
+        advSalesBalance: {url: "advSalesBalance.do"},
+        revSalesBalance: {url: "revSalesBalance.do"},
+        pageSalesActivity : {
+            url: "pageSalesActivity.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data-sales",
+                args: ["total","fullpay","depositpay"]
+            }]
+        },
     }
 });

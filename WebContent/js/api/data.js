@@ -4,7 +4,7 @@ $.extend(api.index, {
     brandIndex: {url: "/views/data/brand.html"},
     customerIndex: {url: "/views/data/customer.html"},
     villageIndex: {url: "/views/data/village.html"},
-	paymentScale: {url: "/views/data/paymentScale.html"},
+    paymentScale: {url: "/views/data/paymentScale.html"},
     houseIndex: {url: "/views/data/house.html"},
     checkUser: {url: "/views/data/checkUser.html"},
     userLabel: {url: "/views/data/userLabel.html"},
@@ -73,7 +73,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["buildArea"]
+                args: ["buildArea", "freeArea", "innerArea", "totalArea"]
             }]
         },
         queryHouseByHid: {
@@ -81,7 +81,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "house",
-                args: ["buildArea"]
+                args: ["buildArea", "freeArea", "innerArea", "totalArea"]
             }]
         },
         queryHouseByNoAHnum: {
@@ -89,7 +89,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "house",
-                args: ["buildArea"]
+                args: ["buildArea", "freeArea", "innerArea", "totalArea"]
             }]
         },
         addHouse: {
@@ -97,10 +97,10 @@ $.extend(api, {
             server: "communion",
             type: "update",
             tranargs: {
-                args: ["house.buildArea"],
+                args: ["house.buildArea", "house.freeArea", "house.innerArea", "house.totalArea"],
                 query:[{
                     result: "house",
-                    args:["buildArea"]
+                    args: ["buildArea", "freeArea", "innerArea", "totalArea"]
                 }]
             }
         },
@@ -109,7 +109,7 @@ $.extend(api, {
             server: "communion",
             type: "update",
             tranargs: {
-                args: ["house.buildArea"]
+                args: ["house.buildArea", "house.freeArea", "house.innerArea", "house.totalArea"]
             }
         },
         existHouse: {
@@ -117,7 +117,7 @@ $.extend(api, {
             server: "communion",
             type: "update",
             tranargs: {
-                args: ["house.buildArea"]
+                args: ["house.buildArea", "house.freeArea", "house.innerArea", "house.totalArea"]
             }
         },
 
@@ -137,7 +137,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["precheck", "postcheck"]
+                args: ["precheck", "postcheck", "stacheck", "fincheck"]
             }]
         },
         queryConstructionNode: {
@@ -145,7 +145,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "contructionNodes",
-                args: ["precheck", "postcheck"]
+                args: ["precheck", "postcheck", "stacheck", "fincheck"]
             }]
         },
         queryConstructionNodeByOrderId: {
@@ -153,7 +153,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "contructionNodes",
-                args: ["precheck", "postcheck"]
+                args: ["precheck", "postcheck", "stacheck", "fincheck"]
             }]
         },
         addConstructionNode: {
@@ -161,7 +161,7 @@ $.extend(api, {
             server: "communion",
             type: "update",
             tranargs: {
-                args: ["constructionNode.precheck", "constructionNode.postcheck"]
+                args: ["constructionNode.precheck", "constructionNode.postcheck", "constructionNode.stacheck", "constructionNode.fincheck"]
             }
         },
         updateConstructionNode: {
@@ -169,7 +169,7 @@ $.extend(api, {
             server: "communion",
             type: "update",
             tranargs: {
-                args: ["constructionNode.precheck", "constructionNode.postcheck"]
+                args: ["constructionNode.precheck", "constructionNode.postcheck", "constructionNode.stacheck", "constructionNode.fincheck"]
             }
         },
         updateConstructionNodeForStatus: {url:"updateConstructionNodeForStatus.do", server: "communion"},
@@ -198,6 +198,11 @@ $.extend(api, {
         queryChainPageForSelf: {url:"queryChainPageForSelf.do"},
         addChainPage: {url:"addChainPage.do"},
         deleteChainPage: {url:"deleteChainPage.do"},
+        
+        querySalesMatching: {url:"querySalesMatching.do"},
+        addSalesMatching: {url:"addSalesMatching.do"},
+        updateSalesMatching: {url:"updateSalesMatching.do"},
+        updateSalesMatchingForStatus: {url:"updateSalesMatchingForStatus.do"},
 
         pageLabel : {url : "pageLabel.do"},
         queryLabel : {url : "queryLabel.do"},
@@ -213,35 +218,40 @@ $.extend(api, {
             url:"pageConstructionCost.do",
             type: "query",
             tranargs: [{
-                 result: "paging-data",
-                 args: ["areaLeft", "areaRight", "accessory", "salary"]
-             }]
+                result: "paging-data",
+                args: ["areaLeft", "areaRight", "accessory", "salary"]
+            }]
         },
         queryConstructionCost : {url : "queryConstructionCost.do"},
         addConstructionCost: {url: "addConstructionCost.do",
-             type:"update",
-             tranargs:{
-                  args: ["constructionCost.areaLeft", "constructionCost.areaRight", "constructionCost.accessory", "constructionCost.salary"]
-             }},
+            type:"update",
+            tranargs:{
+                args: ["constructionCost.areaLeft", "constructionCost.areaRight", "constructionCost.accessory", "constructionCost.salary"]
+            }},
         updateConstructionCost: {url: "updateConstructionCost.do",
-              type:"update",
-              tranargs:{
-                  args: ["constructionCost.areaLeft", "constructionCost.areaRight", "constructionCost.accessory", "constructionCost.salary"]
-              }},
+            type:"update",
+            tranargs:{
+                args: ["constructionCost.areaLeft", "constructionCost.areaRight", "constructionCost.accessory", "constructionCost.salary"]
+            }},
         updateConstructionCostForStatus: {url: "updateConstructionCostForStatus.do"},
         // 任务
         pageTask: {url: "pageTask.do"},
         queryTask: {url: "queryTask.do"},
-
         addTask: {url: "addTask.do"},
         updateTaskForStatus: {url: "updateTaskForStatus.do"},
         updateTaskForIsShow: {url: "updateTaskForIsShow.do"},
 
+        queryTaskParam: {url: "queryTaskParam.do"},
+        addTaskParam: {url: "addTaskParam.do"},
+        updateTaskParam: {url: "updateTaskParam.do"},
+        updateTaskParamForStatus: {url: "updateTaskParamForStatus.do"},
+        deleteTaskParam:{url: "deleteTaskParam.do"},
+        
         pageAccessoriesType: {url: "pageAccessoriesType.do"},
         queryAccessoriesType: {url: "queryAccessoriesType.do"},
         queryAccessoriesTypeByWtid: {url: "queryAccessoriesTypeByWtid.do"},
         updateAccessoriesTypeForStatus: {url:
-                "updateAccessoriesTypeForStatus.do"},
+            "updateAccessoriesTypeForStatus.do"},
         addAccessoriesType: {url: "addAccessoriesType.do"},
         updateAccessoriesType: {url: "updateAccessoriesType.do"},
 
@@ -349,7 +359,7 @@ $.extend(api, {
             }
         },
         deletePrice: {url: "deletePrice.do"},
-        
+
         pageAoods: {
             url: "pageAoods.do",
             type: "query",
@@ -373,9 +383,9 @@ $.extend(api, {
             url: "queryAoodsByAtid.do",
             type:"query",
             tranargs:[{
-                    result:"aoodes-goods",
-                    args: ["purchase","selling","pieceNum"]
-                }]
+                result:"aoodes-goods",
+                args: ["purchase","selling","pieceNum"]
+            }]
         },
         addAoods: {
             url: "addAoods.do",
@@ -395,6 +405,17 @@ $.extend(api, {
 
         pageSoods: {
             url: "pageSoods.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["num", "selling"]
+            },{
+                result:"paging-data-goods",
+                args:["purchase", "selling", "pieceNum"]
+            }]
+        },
+        pageSoodsByQiid: {
+            url: "pageSoodsByQiid.do",
             type: "query",
             tranargs: [{
                 result: "paging-data",
@@ -431,11 +452,11 @@ $.extend(api, {
             }
         },
         deleteSoods: {url: "deleteSoods.do"},
-        
+
         pageAoodsCost: {
-        	url: "pageAoodsCost.do",
-        	type: "query",
-        	tranargs: [{
+            url: "pageAoodsCost.do",
+            type: "query",
+            tranargs: [{
                 result: "paging-data",
                 args: ["numLimit"]
             },{
@@ -444,16 +465,30 @@ $.extend(api, {
             }]
         },
         addAoodsCost: {
-        	url: "addAoodsCost.do",
-        	type: "update",
+            url: "addAoodsCost.do",
+            type: "update",
             tranargs: {
                 args: ["aoodsCost.numLimit"]
             }
         },
         deleteAoodsCost: {url: "deleteAoodsCost.do"},
 
-        queryHouseLayout:{url:"queryHouseLayout.do"},
-        addHouseLayout:{url:"addHouseLayout.do", server: "communion"},
+        queryHouseLayout:{
+            url:"queryHouseLayout.do",
+            type: "query",
+            tranargs: [{
+                result:"houseLayouts",
+                args:["area"]
+            }]
+        },
+        addHouseLayout:{
+            url:"addHouseLayout.do",
+            server: "communion",
+            type: "update",
+            tranargs: {
+                args: ["houseLayout.Area"]
+            }
+        },
         deleteHouseLayout:{url:"deleteHouseLayout.do", server: "communion"},
 
         //定额商品
@@ -491,9 +526,51 @@ $.extend(api, {
             }
         },
         deleteNormood: {url: "deleteNormood.do"},
-		pageChart:{url:"pageChart.do"},
-		queryChart:{url:"queryChart.do"},
-		queryChartForLogin:{url:"queryChartForLogin.do"},
-		queryChartByRid:{url:"queryChartByRid.do"},
-		updateRoleChartByRid:{url:"updateRoleChartByRid.do"},
-}});
+        pageChart:{url:"pageChart.do"},
+        queryChart:{url:"queryChart.do"},
+        queryChartForLogin:{url:"queryChartForLogin.do"},
+        queryChartByRid:{url:"queryChartByRid.do"},
+        updateRoleChartByRid:{url:"updateRoleChartByRid.do"},
+
+        queryDecorationMatching:{
+            url:"queryDecorationMatching.do",
+            type: "query",
+            tranargs: [{
+                result: "decorationMatchings",
+                args: ["base","discount","material","service"]
+            }]
+        },
+        addDecorationMatching:{
+            url:"addDecorationMatching.do",
+            type: "update",
+            tranargs: {
+                args: ["decorationMatching.base","decorationMatching.discount","decorationMatching.material","decorationMatching.service"]
+            }
+        },
+        updateDecorationMatching:{
+            url:"updateDecorationMatching.do",
+            type: "update",
+            tranargs: {
+                args: ["decorationMatching.base","decorationMatching.discount","decorationMatching.material","decorationMatching.service"]
+            }
+        },
+        queryTaskRoleRightByUserId :{url:"queryTaskRoleRightByUserId.do"},
+        updateTaskRoleRight : {url:"updateTaskRoleRight.do"},
+
+        queryBrandBalance :{
+            url:"queryBrandBalance.do",
+            type: "query",
+            tranargs: [{
+                result: "brandBalances",
+                args: ["cvalue"]
+            }]
+        },
+        addBrandBalance :{
+            url:"addBrandBalance.do",
+            type: "update",
+            tranargs: {
+                args: ["brandBalance.cvalue"]
+            }
+        },
+        deleteBrandBalance :{url:"deleteBrandBalance.do"},
+    }});

@@ -13,6 +13,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.service.UserExperienceService;
 import com.fanglin.personel.vo.UserExperienceVO;
+import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -32,6 +33,18 @@ public class UserExperienceAction extends BaseListAction {
 	public String queryUserExperienceByUid() throws FLException {
 
 		userExperiences = userExperienceService.queryUserExperienceByUid(userExperience);
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "updateUserExpirence", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateUserExpirence() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+		
+		userExperienceService.updateUserExpirence(userExperience);
 
 		return SUCCESS;
 	}

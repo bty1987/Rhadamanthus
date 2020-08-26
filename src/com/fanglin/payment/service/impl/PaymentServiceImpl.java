@@ -25,6 +25,7 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.service.DecorationAdditionService;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.AdvanceReceiptDao;
 import com.fanglin.payment.dao.PaymentDao;
@@ -70,6 +71,9 @@ public class PaymentServiceImpl implements PaymentService {
 	
 	@Autowired
 	private PointofsalesService pointofsalesService;
+	
+	@Autowired
+	private DecorationAdditionService decorationAdditionService;
 	
 	@Override
 	public void pagePaymentForCollect(Paging paging, List<Filter> filters, int company) {
@@ -138,7 +142,7 @@ public class PaymentServiceImpl implements PaymentService {
 	}
 
 	@Override
-	public PaymentVO queryPaymentByPaymentId(PaymentVO paymentVO, String userId) throws FLException{
+	public PaymentVO queryPaymentByPaymentId(PaymentVO paymentVO) throws FLException{
 
 		PaymentPO paymentPO = paymentDao.get(paymentVO.getPid());
 
@@ -150,10 +154,6 @@ public class PaymentServiceImpl implements PaymentService {
 
 		if(advanceReceiptPO == null){
 			throw new FLException(150026, "收据不存在");
-		}
-
-		if(!userId.equals(advanceReceiptPO.getCollecter().getUserId())){
-			throw new FLException(150014, "收款人不匹配");
 		}
 		
 		PaymentVO payment = paymentPOToVO(paymentPO);
@@ -255,6 +255,9 @@ public class PaymentServiceImpl implements PaymentService {
 		if(paymentPO.getPaymentType() == 0){
 			decorationService.sendMessage(paymentPO.getOrderId(), "装修单", String.format("合同预付款金额%.3f元", Arith.div(paymentPO.getRecharge(), 1000.0)));
 		}else if(paymentPO.getPaymentType() == 2){
+			//更新装修单上的销售比例
+			decorationAdditionService.updateDecorationForSaleScale(decorationPO);
+			
 			decorationService.sendMessage(paymentPO.getOrderId(), "主材单", String.format("主材预付款金额%.3f元", Arith.div(paymentPO.getRecharge(), 1000.0)));
 		}
 		
@@ -372,6 +375,9 @@ public class PaymentServiceImpl implements PaymentService {
 			name = "合同预付款";
 		}else if(paymentPO.getPaymentType() == 2){
 			name = "主材预付款";
+			
+			//更新装修单上的销售比例
+			decorationAdditionService.updateDecorationForSaleScale(decorationPO);
 		}
 		
 		decorationService.sendMessage(paymentPO.getOrderId(), name, String.format("%s退款金额%.3f元", name, Arith.div(paymentPO.getRecharge(), 1000.0)));

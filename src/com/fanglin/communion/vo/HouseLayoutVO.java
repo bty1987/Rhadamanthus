@@ -12,6 +12,8 @@ public class HouseLayoutVO implements java.io.Serializable {
 	
 	private String comment;
 	
+	private Long area;
+	
 	public HouseLayoutVO() {
 		super();
 	}
@@ -52,7 +54,13 @@ public class HouseLayoutVO implements java.io.Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
-	
+
+	public Long getArea() {
+		return area;
+	}
+
+	public void setArea(Long area) {
+		this.area = area;
+	}
 	
 }

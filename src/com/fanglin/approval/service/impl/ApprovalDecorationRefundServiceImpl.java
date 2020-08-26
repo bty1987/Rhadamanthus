@@ -11,7 +11,9 @@
 
 package com.fanglin.approval.service.impl;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +32,6 @@ import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
-import com.fanglin.payment.service.impl.DecorationPaymentServiceImpl;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.quotation.dao.AddReduceDao;
@@ -53,9 +54,6 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 	private DecorationPaymentDao decorationPaymentDao;
 
 	@Autowired
-	private DecorationPaymentServiceImpl decorationPaymentService;
-
-	@Autowired
 	private MessageService messageService;
 
 	@Autowired
@@ -70,7 +68,9 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 
 		long paymentId = approvalDecorationRefundVO.getPaymentId();
 
-		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT, String.valueOf(paymentId));
+		List<Short> status = Arrays.asList(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_STATUS_APPROVE_INT, ApprovalPO.APPROVAL_STATUS_CONFIRM_INT, ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT, ApprovalPO.APPROVAL_STATUS_REJECT_INT);
+
+		ApprovalPO approvalPO = approvalDao.queryApprovalByChange(status, ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT, String.valueOf(paymentId));
 
 		if (approvalPO != null) {
 			throw new FLException(240004, "正在审批中,不能提交新审批");
@@ -132,10 +132,6 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 
 		if (decorationPO == null) {
 			throw new FLException(140013, "订单不存在");
-		}
-
-		if (decorationPaymentPO.getOneType() == DecorationPaymentPO.ONETYPE_ADD_INT && decorationPaymentPO.getTwoType() == DecorationPaymentPO.TWOTYPE_DEAL_INT) {
-			decorationPaymentService.updateDecrationPayScale(decorationPaymentPO, decorationPO);
 		}
 
 		DecorationPaymentPO decorationRefundPO = new DecorationPaymentPO();

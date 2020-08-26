@@ -18,9 +18,11 @@ jQuery(function ($) {
             decorationContractModal: com.focusPage("#decorationContractModal")
         },
         status: {
-            0: '有效',
-            1: '无效',
-            2: '归档'
+            0: '初始',
+            1: '待签订',
+            2: '已签订',
+            3: '失效',
+            4: '归档'
         },
         customer: {
             customerName: com.focusPage("#customerName"),
@@ -170,7 +172,7 @@ jQuery(function ($) {
     //签章通知
    function SignatureNotice(dcid) {
         com.showConfirm("是否发送签章通知?", function () {
-            com.post(api.decoration.sendDecorationContractForSignet, {"decorationContract.dcid" : dcid}, function (res) {
+            com.post(api.decoration.sendDecorationContract, {"decorationContract.dcid" : dcid,"decorationContract.type" : 1}, function (res) {
                 com.showAlert(com.info, "发送成功");
             });
         });
@@ -179,7 +181,7 @@ jQuery(function ($) {
     //签订通知
     function SignNotice(dcid) {
         com.showConfirm("是否发送签订通知?", function () {
-            com.post(api.decoration.sendDecorationContractForSign, {"decorationContract.dcid" : dcid}, function (res) {
+            com.post(api.decoration.sendDecorationContract, {"decorationContract.dcid" : dcid, "decorationContract.type" : 2}, function (res) {
                 com.showAlert(com.info, "发送成功");
             });
         });
@@ -188,7 +190,7 @@ jQuery(function ($) {
     //合同查看通知
     function ViewNotice(dcid) {
         com.showConfirm("是否发送查看通知?", function () {
-            com.post(api.decoration.sendDecorationContractForView, {"decorationContract.dcid" : dcid}, function (res) {
+            com.post(api.decoration.sendDecorationContract, {"decorationContract.dcid" : dcid, "decorationContract.type" : 3}, function (res) {
                 com.showAlert(com.info, "发送成功");
             });
         });
@@ -197,7 +199,7 @@ jQuery(function ($) {
     //合同下载通知
     function DownloadNotice(dcid) {
         com.showConfirm("是否发送下载通知?", function () {
-            com.post(api.decoration.sendDecorationContractForDownload, {"decorationContract.dcid" : dcid}, function (res) {
+            com.post(api.decoration.sendDecorationContract, {"decorationContract.dcid" : dcid, "decorationContract.type" : 4}, function (res) {
                 com.showAlert(com.info, "发送成功");
             });
         });
@@ -235,7 +237,7 @@ jQuery(function ($) {
     //合同归档按钮
     function FiledecorationContract(dcid) {
     	com.showConfirm("是否归档?", function () {
-        com.post(api.decoration.fillingDecorationContract  , {"decorationContract.dcid" : dcid}, function () {
+        com.post(api.decoration.filingDecorationContract , {"decorationContract.dcid" : dcid}, function () {
         	com.showAlert(com.info, "归档成功");
         });
     	});
@@ -249,4 +251,5 @@ jQuery(function ($) {
         decorationContract.customer.customerRelationshipType.html(customer.relationshipType);
         decorationContract.customer.customerIdentity.html(customer.identity == "" ? "暂无" : customer.identity);
     }
+
 });

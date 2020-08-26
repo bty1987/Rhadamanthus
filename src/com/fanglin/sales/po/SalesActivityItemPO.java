@@ -72,6 +72,8 @@ public class SalesActivityItemPO implements Serializable {
 
 	private Timestamp receiveTime;
 	
+	private int integral;
+	
 	public SalesActivityItemPO(){
 		super();
 	}
@@ -212,6 +214,15 @@ public class SalesActivityItemPO implements Serializable {
 
 	public void setReceiveTime(Timestamp receiveTime) {
 		this.receiveTime = receiveTime;
+	}
+
+	@Column(name = "integral")
+	public int getIntegral() {
+		return integral;
+	}
+
+	public void setIntegral(int integral) {
+		this.integral = integral;
 	}
 	
 }

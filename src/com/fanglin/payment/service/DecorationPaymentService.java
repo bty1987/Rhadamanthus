@@ -31,11 +31,9 @@ public interface DecorationPaymentService {
 	
 	public void pageDecorationPaymentForConfirm(Paging paging, List<Filter> filters, Integer company);
 	
-	public List<DecorationPaymentVO> queryDecorationPayment(List<Filter> filters, Integer company);
-
 	public DecorationPaymentVO queryDecorationPaymentById(DecorationPaymentVO decorationPaymentVO);
 	
-	public List<DecorationPaymentVO> queryDecorationPaymentByOrderId(DecorationPaymentVO decorationPaymentVO);
+	public List<DecorationPaymentVO> queryDecorationPaymentByOrderId(DecorationPaymentVO decorationPaymentVO, List<Filter> filters, Integer company);
 	
 	public List<DecorationPaymentVO> queryDecorationPaymentForContractByOrderId(DecorationPaymentVO decorationPaymentVO);
 	

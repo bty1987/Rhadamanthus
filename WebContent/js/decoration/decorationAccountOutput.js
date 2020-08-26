@@ -6,10 +6,11 @@ jQuery(function($) {
     
     var decoration = params.decoration;
     var accountBasic = params.accountBasic;
-    
+    var orderTypeness = params.orderTypeness;
+
     var decorationActivity = "";
     var drawTime = "";
-    
+
     com.post(api.decoration.queryDecorationActivityByOrderId, {"decorationActivity.orderId" : params.decorationOrderId}, function (res) {
         if(res.decorationActivitys.length > 0) decorationActivity = res.decorationActivitys[0].activity.name;
     }, null, false);
@@ -17,7 +18,8 @@ jQuery(function($) {
     com.post(api.construction.queryAcceptance, {"acceptance.orderId": params.decorationOrderId}, function (res) {
         drawTime = res.acceptance.acceptanceTime;
     }, null, false);
-    
+
+    $("#titleText").text(orderTypeness[decoration.typeness] + "更" + orderTypeness[accountBasic.typeness] + "增减" + (accountBasic.cal ? '计' : '不计') + "配比");
     $("#contractTime").text(decoration.contractTime);
     $("#decorationActivity").text(decorationActivity);
     $("#supervisor").text(decoration.supervisor.currentName == null ? "暂无" : decoration.supervisor.currentName);
@@ -35,15 +37,15 @@ jQuery(function($) {
     $("#foldFrontTotal").text(accountBasic.foldFrontTotal);
     $("#foldFrontFee").text(accountBasic.foldFrontFee);
     $("#managePrice").text(accountBasic.managePrice);
-    $("#basdiscount").text(accountBasic.basdiscount);
+    $("#basdiscount").text(accountBasic.discount);
     
     $("#signPrice").text(accountBasic.signPrice);
     $("#coupon").text(accountBasic.coupon);
     $("#servicePrice").text(accountBasic.servicePrice);
     $("#servicePaidup").text(accountBasic.servicePaidup);
     $("#signFactPrice").text(accountBasic.signFactPrice);
-    $("#mm").text(accountBasic.mm);
-    
+    $("#material").text(accountBasic.material);
+    console.log(accountBasic)
     $("#materialRatio").text(accountBasic.materialRatio);
     $("#materialTotal").text(accountBasic.materialTotal);
     $("#materialCoupon").text(accountBasic.materialCoupon);
@@ -64,7 +66,7 @@ jQuery(function($) {
     $("#accountServicePrice").text(accountBasic.accountServicePrice);
     $("#balanceSum").text(accountBasic.balanceSum);
     
-    $("#accountType").text(accountBasic.n);
+    $("#accountType").text(orderTypeness[accountBasic.typeness]);
     $("#matching").text(accountBasic.cal ? '是' : '否');
     
     $("#preferences").text(accountBasic.preferences);

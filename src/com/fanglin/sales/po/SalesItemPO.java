@@ -52,9 +52,9 @@ public class SalesItemPO implements Serializable {
 	private int price;
 
 	private long num;
-	
+
 	private long punum;
-	
+
 	private long xgnum;
 
 	private long total;
@@ -194,7 +194,7 @@ public class SalesItemPO implements Serializable {
 	public void setNum(long num) {
 		this.num = num;
 	}
-	
+
 	@Column(name = "punum")
 	public long getPunum() {
 		return punum;
@@ -203,7 +203,7 @@ public class SalesItemPO implements Serializable {
 	public void setPunum(long punum) {
 		this.punum = punum;
 	}
-	
+
 	@Column(name = "xgnum")
 	public long getXgnum() {
 		return xgnum;

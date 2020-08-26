@@ -70,18 +70,10 @@ public class SalesPaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "querySalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String querySalesPayment() throws FLException{
-		
-		salesPayments = salesPaymentService.querySalesPayment(getFilters(), queryCompany(), companyType);
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "querySalesPaymentByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String querySalesPaymentByOrderId(){
+	public String querySalesPaymentByOrderId() throws FLException{
 		
-		salesPayments = salesPaymentService.querySalesPaymentByOrderId(sales);
+		salesPayments = salesPaymentService.querySalesPaymentByOrderId(salesPayment, getFilters(), queryCompany(), companyType);
 		
 		return SUCCESS;
 	}

@@ -107,6 +107,10 @@ public class DecorationInclusiveServiceImpl implements DecorationInclusiveServic
 		if (decorationPO == null) {
 			throw new FLException(140013, "订单不存在");
 		}
+		
+		if (decorationPO.getType() == DecorationPO.TYPE_INCLUSIVE_INT) {
+			decorationPO.setSaleScale(DecorationPO.TYPE_INIT_SALESCALE_INT);
+		}
 
 		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT });
 

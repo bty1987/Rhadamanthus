@@ -39,7 +39,7 @@ public class SignetAction extends BaseListAction {
 	@Action(value = "querySignet", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySignet() throws FLException {
 
-		signets = signetService.querySignet();
+		signets = signetService.querySignet(queryCompany());
 
 		return SUCCESS;
 	}

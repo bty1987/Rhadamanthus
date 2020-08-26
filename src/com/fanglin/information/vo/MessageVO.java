@@ -28,6 +28,10 @@ public class MessageVO implements Serializable {
 	
 	private short type;
 	
+	private Short subtype;
+	
+	private Long ident;
+	
 	private String contents;
 	
 	private Timestamp createTime;
@@ -82,6 +86,22 @@ public class MessageVO implements Serializable {
 
 	public void setType(short type) {
 		this.type = type;
+	}
+	
+	public Short getSubtype() {
+		return subtype;
+	}
+
+	public void setSubtype(Short subtype) {
+		this.subtype = subtype;
+	}
+
+	public Long getIdent() {
+		return ident;
+	}
+
+	public void setIdent(Long ident) {
+		this.ident = ident;
 	}
 
 	public String getContents() {

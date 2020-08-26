@@ -9,6 +9,7 @@ var QuotetionDetail = (function(){
         settingBtns : {},
         quoteCalculation : {},
         machingType : {},
+        typeness: {},
         //定义左下角按钮重定义及指定弹窗显示
         initSettingBtns : function(){
             var that = this;
@@ -60,7 +61,7 @@ var QuotetionDetail = (function(){
             };
             return that;
         },
-//左下角按钮的弹窗显示及处理  每个功能区右上角的编辑功能区,添加工程项,添加自定义工程项,历史记录,管理费比例设置 弹窗处理
+        //左下角按钮的弹窗显示及处理  每个功能区右上角的编辑功能区,添加工程项,添加自定义工程项,历史记录,管理费比例设置 弹窗处理
         initQuoModals : function(){
             var that = this;
             that.quoModals = {
@@ -148,9 +149,14 @@ var QuotetionDetail = (function(){
                 com.focusPage("#quotetionType").bindData(res.quotationTypes,"id", "name");
             });
 
+            com.post(api.ds.decoration, {}, function (res) {
+                $.each(res.typeness, function(i, v){
+                    quo.typeness["typeness[" + i + "]"] = v.key;
+                });
+            }, null, false);
             //初始化半价/满减配比
-            com.post(api.decoration.queryDecorationConfig, {}, function (res) {
-                quo.machingType = res.config.machingType;
+            com.post(api.data.queryDecorationMatching, quo.typeness, function (res) {
+                quo.machingType = res.decorationMatchings;
             });
             return that;
         },
@@ -341,7 +347,10 @@ var QuotetionDetail = (function(){
                 ndiscount = utils.changeTwoDecimal(ndiscount);
                 var table =com.focusPage('#calculateTotalFeeModal').find('.fl-quo-cal').html(null);
                 var divItem1 = $('<div></div>').addClass('fl-quo-cal-item');
-                divItem1.append(createCalItem("基础",'normal border-right alert-info')).append(createCalItem("",'normal border-left-right alert-info')).append(createCalItem("",'normal border-left-right alert-info')).append(createCalItem("",'normal border-left-right alert-info')).append(createCalItem("",'normal border-left alert-info')).append(createCalItem("装修",' small border-left-right alert-success')).append(createCalItem("",'normal border-left alert-success')).append(createCalItem("主材",'small border-left-right alert-danger')).append(createCalItem("",'normal border-left-right alert-danger')).append(createCalItem("",'normal border-left-right alert-danger')).append(createCalItem("",'normal noborder'));
+                divItem1.append(createCalItem("基础",'normal border-right alert-info')).append(createCalItem("",'normal border-left-right alert-info')).append(createCalItem("",'normal border-left-right alert-info')).append(createCalItem("",'normal border-left-right alert-info')).append(createCalItem("",'normal border-left alert-info'))
+                    .append(createCalItem("装修",' small border-left-right alert-success')).append(createCalItem("",'normal border-left alert-success'))
+                    .append(createCalItem("主材",'small border-left-right alert-danger')).append(createCalItem("",'normal border-left-right alert-danger'))
+                    .append(createCalItem("综合",'normal border-left-right alert-warning')).append(createCalItem("",'normal border-left-right alert-warning'));
                 divItem1.appendTo(table);
                 var divItem2 = $('<div></div>').addClass('fl-quo-cal-item');
                 divItem2.append(createCalItem("版本",'normal')).append(createCalItem("折前总价",'normal')).append(createCalItem("打折项总额",'normal')).append(createCalItem("非打折项总额",'normal')).append(createCalItem("管理费",'normal')).append(createCalItem("折扣",'small')).append(createCalItem("折后总价",'normal')).append(createCalItem("配比",'small')).append(createCalItem("主材额",'normal')).append(createCalItem("服务费",'normal')).append(createCalItem("实花总额",' normal alert-warning'));
@@ -352,34 +361,34 @@ var QuotetionDetail = (function(){
 
                 $.each(quo.machingType,function (i,v) {
 
-                    if (v.v && v.v == 2) return true;
+                    if ((v.vision & 1) != 1 || v.type != 2) return true;
 
-                    var materialPrice = utils.changeTwoDecimal(utils.accMul(total,v.mm));
-                    var servicePrice = utils.changeTwoDecimal(utils.accMul(materialPrice,v.sr));
+                    var materialPrice = utils.changeTwoDecimal(utils.accMul(total,v.material));
+                    var servicePrice = utils.changeTwoDecimal(utils.accMul(materialPrice,v.service));
                     //余数 = 工程总额%基数
-                    var _balance = utils.accAdd(utils.accAdd(cdiscount,ndiscount),transfee) % v.db;
+                    var _balance = utils.accAdd(utils.accAdd(cdiscount,ndiscount),transfee) % v.base;
                     //工程总额
                     var _totalProject = utils.accAdd(utils.accAdd(cdiscount,ndiscount),transfee);
                     //满减折后总额   //折后工程总额=(工程总额-余数)*折扣 + (余数) + 管理费
-                    var _projectPrice = utils.changeTwoDecimal(utils.accAdd(utils.accAdd(utils.accMul(utils.accSub(_totalProject,_balance),utils.accDiv(v.dd, 10)),_balance),managefee));
+                    var _projectPrice = utils.changeTwoDecimal(utils.accAdd(utils.accAdd(utils.accMul(utils.accSub(_totalProject,_balance),utils.accDiv(v.discount, 10)),_balance),managefee));
                     var $_total = utils.changeTwoDecimal(utils.accAdd(_projectPrice,utils.accAdd(materialPrice,servicePrice)));
 
                     var halfPriceDiv = $('<div></div>').addClass('fl-quo-cal-item');
                     if (i == Math.ceil(quo.machingType.length / 2) - 1) {
-                        halfPriceDiv.append(createCalItem(v["n"], 'normal border-top'),
+                        halfPriceDiv.append(createCalItem(v.name, 'normal border-top'),
                             createCalItem(total, 'normal border-top'),
                             createCalItem(utils.accAdd(utils.accAdd(cdiscount, ndiscount), transfee), 'normal border-top'),
                             createCalItem("-", 'normal border-top'), createCalItem(managefee, 'normal border-top'),
-                            createCalItem(v["dd"], 'small'), createCalItem(_projectPrice, 'normal'),
-                            createCalItem(utils.accMul(v["mm"], 100) + "%", 'small'),
+                            createCalItem(v.discount, 'small'), createCalItem(_projectPrice, 'normal'),
+                            createCalItem(utils.accMul(v.material, 100) + "%", 'small'),
                             createCalItem(materialPrice, 'normal'), createCalItem(servicePrice, 'normal'), createCalItem($_total, 'normal alert-warning'));
                     } else {
-                        halfPriceDiv.append(createCalItem(v["n"], 'normal'),
+                        halfPriceDiv.append(createCalItem(v.name, 'normal'),
                             createCalItem(total, 'normal'),
                             createCalItem(utils.accAdd(utils.accAdd(cdiscount, ndiscount), transfee), 'normal'),
                             createCalItem("-", 'normal'), createCalItem(managefee, 'normal'),
-                            createCalItem(v["dd"], 'small'), createCalItem(_projectPrice, 'normal'),
-                            createCalItem(utils.accMul(v["mm"], 100) + "%", 'small'),
+                            createCalItem(v.discount, 'small'), createCalItem(_projectPrice, 'normal'),
+                            createCalItem(utils.accMul(v.material, 100) + "%", 'small'),
                             createCalItem(materialPrice, 'normal'), createCalItem(servicePrice, 'normal'), createCalItem($_total, 'normal alert-warning'));
                     }
                     halfPriceDiv.appendTo(table);
@@ -402,8 +411,8 @@ var QuotetionDetail = (function(){
         //编辑功能区
         editDomain : function($domain){
             this.nowEditDomain = $domain;
-           com.focusPage("#functionAreaName").val($domain.find('.widget-header strong').text());
-           com.focusPage("#functionAreaOrder").val($domain.attr('data-dlevel'));
+            com.focusPage("#functionAreaName").val($domain.find('.widget-header strong').text());
+            com.focusPage("#functionAreaOrder").val($domain.attr('data-dlevel'));
             quo.quoModals.$domainEditModal.modal("show");
             return false;
         },
@@ -418,7 +427,7 @@ var QuotetionDetail = (function(){
                 var _dorder =com.focusPage("#functionAreaOrder").val();
                 var _params = $.extend({}, {
                     "quotetionFunctionArea.name" : _dname,//功能区名 ;
-                    "quotetionFunctionArea.index" : _dorder ,// 排序 ;
+                    "quotetionFunctionArea.functionAreaOrder" : _dorder ,// 排序 ;
                     "quotetionFunctionArea.qfaId" :  that.nowEditDomain.attr('data-qfaid'), //功能区Id ;
                 }, quo.basicParams);
                 com.post(api.quotation.updateQuotetionFunctionArea, _params, function(res){
@@ -430,6 +439,7 @@ var QuotetionDetail = (function(){
                     that.nowEditDomain.attr('data-dlevel',_dorder);
                     that.insertDomainByOrder(_dorder, that.nowEditDomain, $domains, true);
                     var _index = that.nowEditDomain.index();
+
                     var $dmoney = com.focusPage('[data-qfaid="'+that.nowEditDomain.attr('data-qfaid') +'"]','#functionAreaSumList');
                     $dmoney.find('.order').text(_dorder);
                     $dmoney.find('.name').text(_dname);
@@ -529,7 +539,7 @@ var QuotetionDetail = (function(){
                     data.quotetionFunctionAreas.length && $.each(data.quotetionFunctionAreas, function(i, v){
                         var sum = 0, sumd = 0,sumdp = 0, $dmoney;
                         var $domain = painter.createdomain(v);
-                        that.insertDomainByOrder(v.index, $domain, $aimDomains, false);
+                        that.insertDomainByOrder(v.functionAreaOrder, $domain, $aimDomains, false);
                         sum = parseFloat($domain.attr('data-undisPrice'));
                         sumdp = parseFloat($domain.attr('data-disPrice'));
                         sumd = parseFloat($domain.attr('data-desTotalprice'));
@@ -656,14 +666,14 @@ var QuotetionDetail = (function(){
         showDiscountBasePrice: function () {
             com.focusPage("#showBaseVersion").empty();
             com.focusPage("#discount").prop("disabled","disabled");
-            com.post(api.decoration.queryDecorationConfig, {}, function (res) {
-                $.each(res.config.machingType, function(i, v){
-                    if (v['v'] && v['v']==2) return;  // 原报价显示v=0/2, 新报价显示v=0/1
+            com.post(api.data.queryDecorationMatching, quo.typeness, function (res) {
+                $.each(res.decorationMatchings, function(i, v){
+                    if ((v.vision & 2) != 2 || v.type != 2) return true;  // 原报价显示v=0/2, 新报价显示v=0/1
                     var radio = $('<div class="radio no-padding" style="margin-bottom:10px"></div>');
-                    var lableInput = $('<label> <input type="radio" name="basePrice" class="ace" value="'+ v['db'] +'" data-baseDiscount="'+ v['dd'] +'" data-name="'+ v['n'] +'"/> <sapn class="lbl"></sapn></label>');
-                    var lbl1 = $('<label>'+ v['n'] +'</label>').addClass('quotation-base-price-radio').addClass('quotation-base-price-radio-width15');
-                    var lbl2 = $('<label> 折扣数: '+v['dd'] +'</label>').addClass('quotation-base-price-lbl');
-                    var lbl3 = $('<label> 基数: '+v['db'] +'</label>').addClass('quotation-base-price-lbl').addClass('hide');
+                    var lableInput = $('<label> <input type="radio" name="basePrice" class="ace" value="'+ v.base +'" data-baseDiscount="'+ v.discount +'" data-name="'+ v.name +'"/> <sapn class="lbl"></sapn></label>');
+                    var lbl1 = $('<label>'+ v.name +'</label>').addClass('quotation-base-price-radio').addClass('quotation-base-price-radio-width15');
+                    var lbl2 = $('<label> 折扣数: '+v.discount+'</label>').addClass('quotation-base-price-lbl');
+                    var lbl3 = $('<label> 基数: '+v.base +'</label>').addClass('quotation-base-price-lbl').addClass('hide');
 
                     radio.append(lableInput).append(lbl1).append(lbl2).append(lbl3).appendTo(com.focusPage("#showBaseVersion"));
                 });
@@ -987,7 +997,7 @@ var QuotetionDetail = (function(){
         //点击页面其他位置时清除表格行的选中样式
         clearQuoteSelected : function(){
             var that = this;
-            com.focusPage('body').click( function(e){
+            $('body').click( function(e){
                 if(!com.focusPage(e.target).is('.cell-wrap') && !com.focusPage(e.target).is('[data-action="collapse"]')){
                     that.hideInputWrap();
                 }
@@ -1148,13 +1158,13 @@ var QuotetionDetail = (function(){
                 sumdp = 0,//功能区总价(打折前的打折总价)p
                 sumd = 0,//功能区总价(打折后总价)
             $domain = $('<div></div>').addClass('widget-box transparent').attr({
-                "data-dlevel" : dv.index,//排序
+                "data-dlevel" : dv.functionAreaOrder,//排序
                 "data-qfaId" : dv.qfaId,//报价项中的功能区ID
                 "data-areaType" : dv.type//类型 功能区的type
             }).css({"margin-bottom" : "20px"});
 
             $dhead = $('<div></div>').addClass('widget-header');
-            $dname = $('<h5></h5>').append($('<em></em>').text(dv.type == 0 ? '' : dv.index)).append('  ').append($('<strong></strong>').html(dv.name));
+            $dname = $('<h5></h5>').append($('<em></em>').text(dv.type == 0 ? '' : dv.functionAreaOrder)).append('  ').append($('<strong></strong>').html(dv.name));
             $dtoolbar = $('<div></div>').addClass('widget-toolbar no-border');
 
             $.each(_btnSet, function(k, v){
@@ -1283,7 +1293,7 @@ var QuotetionDetail = (function(){
             });
             //报价类型为普通跟自定义
             //"给deleteItems赋值"
-            if(qv.type < 2 ||qv.type ==4){
+            if(qv.type < 2 || qv.type == 4){
                 $btnCell = $('<div></div>').addClass('cell btns');
                 $btnCellWrap = $('<div></div>').addClass('cell-wrap');
                 $inputLable = $('<label></label>');
@@ -1312,7 +1322,7 @@ var QuotetionDetail = (function(){
                     com.showTip(this, "向下", "top");
                 }); // 初始化提示框
                 $btnCellWrap.append($btnDel).append($btnInfo).append($up).append($down);
-                qv.qfaiId ? ($up.find("i").addClass("green"),$down.find("i").addClass("red")) :($up.find("i").addClass("grey") ,$down.find("i").addClass("grey"));
+                qv.qfaiId ? ($up.find("i").addClass("green"), $down.find("i").addClass("red")) : ($up.find("i").addClass("grey"), $down.find("i").addClass("grey"));
                 //各种绑定事件
                 $item.click(function(){//编辑数量
                     quote.getNumCellFocus($item);
@@ -1443,7 +1453,7 @@ var QuotetionDetail = (function(){
         createDomainMoney : function (sum, v) {
             var $item = $('<div></div>').addClass('col-md-12');
             var $dwrap = $('<label></label>').addClass('col-md-6 no-padding-right');
-            var $dorder =$('<span class="order"></span>').text(v.index);//功能区排序
+            var $dorder =$('<span class="order"></span>').text(v.functionAreaOrder);//功能区排序
             var $dname = $('<span class="name"></span>').text(v.name);//功能区名字
             var $dsum = $('<label></label>').addClass('col-md-6 no-padding-left').text(sum);//折扣价
 

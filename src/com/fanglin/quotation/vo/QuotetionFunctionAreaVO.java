@@ -13,7 +13,7 @@ public class QuotetionFunctionAreaVO implements Serializable {
 	
 	private String name;
 	
-	private Integer index;
+	private Integer functionAreaOrder;
 	
 	private Short type;
 	
@@ -43,12 +43,12 @@ public class QuotetionFunctionAreaVO implements Serializable {
 		this.name = name;
 	}
 
-	public Integer getIndex() {
-		return index;
+	public Integer getFunctionAreaOrder() {
+		return functionAreaOrder;
 	}
 
-	public void setIndex(Integer index) {
-		this.index = index;
+	public void setFunctionAreaOrder(Integer functionAreaOrder) {
+		this.functionAreaOrder = functionAreaOrder;
 	}
 
 	public Short getType() {

@@ -1428,25 +1428,21 @@ var paymentUtils = {
             currentOption = option;
             $.extend(currentOption, {}, posids);
             successMessage = "收款成功";
-            failMessage = "收款失败";
         }else if(servicePayment.modals.baseModal.attr("ChargeType")==2){
             currentUrl = api.payment.collectServicePaymentForService;
             currentOption = option;
             $.extend(currentOption, {}, posids);
             successMessage = "收款成功";
-            failMessage = "收款失败";
         }else if(servicePayment.modals.baseModal.attr("ChargeType")==3){
             currentUrl = api.payment.refundServicePaymentForService;
             currentOption = option;
             successMessage = "退款成功";
-            failMessage = "退款失败";
         }else if(servicePayment.modals.baseModal.attr("ChargeType")==4){
             currentUrl = api.payment.updateServicePayment;
             currentOption = option;
             currentOption["servicePayment.spid"] = servicePayment.spid;
             currentOption["servicePayment.pid"] = servicePayment.pid;
             successMessage = "更新成功";
-            failMessage = "更新失败";
         }
 
         com.post(currentUrl, currentOption, function () {
@@ -1456,9 +1452,9 @@ var paymentUtils = {
             }
             com.showAlert(com.info, successMessage);
             servicePayment.modals.baseModal.modal("hide");
-        }, function () {
+        }, function (error) {
             searcher != null && searcher != undefined ? searcher.doSearch() : "";
-            com.showAlert(com.error, failMessage);
+            com.showAlert(com.error, error.errorMsg);
             servicePayment.modals.baseModal.modal("hide");
         });
     },
@@ -1509,7 +1505,7 @@ var paymentUtils = {
             var decorationInfo = res.decoration;
             com.focusPage("#orderId").html(decorationInfo.orderId);
             com.focusPage("#address").html(decorationInfo.house.village.cityProper.city.name + ' ' + decorationInfo.house.village.cityProper.name + ' ' + decorationInfo.house.village.name +' '+ decorationInfo.house.houseNumber);
-            com.focusPage("#type").html(decorationType[decorationInfo.type].value);
+            com.focusPage("#type").html(decorationType[decorationInfo.typeness].value);
             com.focusPage("#grade").html(decorationInfo.grade);
             com.focusPage("#decorationInfo").modal("show");
         });
@@ -1564,5 +1560,48 @@ var paymentUtils = {
         }
 
         return [bank, bankInfo, posids];
+    },
+
+    //全选
+    checkAll: function(){
+        if (com.focusPage('input[type="checkbox"]').prop('checked')) {
+            com.focusPage('input[type="checkbox"]').removeAttr('checked');
+            com.focusPage('input[type="checkbox"]').prop('checked', false);
+        } else {
+            com.focusPage('input[type="checkbox"]').attr('checked', true);
+            com.focusPage('input[type="checkbox"]').prop('checked', true);
+        }
+    },
+
+    //画过滤条件
+    drawFilter: function (condList, labelValList, callback){
+
+        $.each(labelValList, function(i, v){
+            $span = $('<span></span>').addClass('fl-filter-inline');
+            var $label = $('<label></label>').html(v.labelVal);
+            var $input = $('<input type="text" />').addClass("filterInput").prop("id", v.inputId);
+            $span.append($label).append($input).appendTo(condList);
+        });
+
+        var $searchButton = $('<button></button>').addClass("btn btn-xs btn-info btn-search").html("查询");
+        var $cleanButton = $('<button></button>').addClass("btn btn-xs btn-danger btn-clean").css("margin", "0px 3px").html("重置");
+
+        $searchButton.click(function(){
+            callback();
+        });
+
+        $cleanButton.click(function(){
+            com.focusPage(".filterInput").val("");
+        });
+
+        condList.append($searchButton).append($cleanButton);
+
+    },
+
+    emptyData: function(pagenation){
+        var $resultList = pagenation.html('');
+        var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
+        var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
+        var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
     }
 };

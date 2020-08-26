@@ -15,21 +15,20 @@ jQuery(function ($) {
         },
 
         items: {
-
-            accessoryLimit : com.focusPage("#accessoryLimit"),
-            salaryLimit : com.focusPage("#salaryLimit"),
-
             ishovel  : com.focusPage("#ishovel"),
             iskey  : com.focusPage("#iskey"),
             timeLimit : com.focusPage("#timeLimit"),
             finishTime : com.focusPage("#finishTime"),
             keyTime : com.focusPage("#keyTime"),
             drawlineTime : com.focusPage("#drawlineTime"),
+            designTime : com.focusPage("#designTime"),
             isCeremony  : com.focusPage("#isCeremony"),
-            isConfirmPricture :com.focusPage("#isConfirmPricture"),
             comment   : com.focusPage("#comment")
         },
-
+        updateItems: {
+            accessoryLimit : com.focusPage("#accessoryLimit"),
+            salaryLimit : com.focusPage("#salaryLimit"),
+        },
         cid : null,
         isAccessory : {},
 
@@ -45,13 +44,15 @@ jQuery(function ($) {
     });
 
     construction.modals.updateConstructionModal.on("hide.bs.modal", function () {
-        com.cleanItems(construction.items);
+
+        com.cleanItems(construction.updateItems);
         com.closeTip();
     });
 
     com.datetime(construction.items.finishTime);
     com.datetime(construction.items.keyTime);
     com.datetime(construction.items.drawlineTime);
+    com.datetime(construction.items.designTime);
 
     com.post(api.ds.construction, {}, function (res) {
 
@@ -61,7 +62,6 @@ jQuery(function ($) {
         construction.items.ishovel.bindData(res.isHovel, "key", "value", false);
         construction.items.iskey.bindData(res.isKey, "key", "value", false);
         construction.items.isCeremony.bindData(res.isCeremony, "key", "value", false);
-        construction.items.isConfirmPricture.bindData(res.isConfirmPricture, "key", "value", false);
 
     }, null, false);
 
@@ -163,8 +163,8 @@ jQuery(function ($) {
 
             $btnUpdate.click(function () {
                construction.cid = v.cid;
-               construction.items.accessoryLimit.val(v.accessoryLimit);
-               construction.items.salaryLimit.val(v.salaryLimit);
+               construction.updateItems.accessoryLimit.val(v.accessoryLimit);
+               construction.updateItems.salaryLimit.val(v.salaryLimit);
 
                construction.modals.updateConstructionModal.modal("show");
             });
@@ -223,7 +223,6 @@ jQuery(function ($) {
             construction.items.iskey.val(data.iskey);
             construction.items.isCeremony.val(data.isCeremony);
             construction.items.timeLimit.val(data.timeLimit);
-            construction.items.isConfirmPricture.val(data.isConfirmPricture);
             if(data.finishTime != null){
                 construction.items.finishTime.val(data.finishTime.substr(0,10));
             }
@@ -232,6 +231,9 @@ jQuery(function ($) {
             }
             if(data.drawlineTime != null){
                 construction.items.drawlineTime.val(data.drawlineTime.substr(0,10));
+            }
+            if(data.designTime != null){
+                construction.items.designTime.val(data.designTime.substr(0,10));
             }
             construction.items.comment.val(data.comment);
         });
@@ -272,6 +274,7 @@ jQuery(function ($) {
             "constructionInfo.finishTime" : construction.items.finishTime.val() + " 00:00:00",
             "constructionInfo.keyTime" : construction.items.keyTime.val() + " 00:00:00",
             "constructionInfo.drawlineTime" : construction.items.drawlineTime.val() + " 00:00:00",
+            "constructionInfo.designTime" : construction.items.designTime.val() + " 00:00:00",
             "constructionInfo.comment": construction.items.comment.val()
         };
 
@@ -287,8 +290,8 @@ jQuery(function ($) {
 
         var options = {
             "construction.cid" : construction.cid,
-            "construction.accessoryLimit" : construction.items.accessoryLimit.val(),
-            "construction.salaryLimit": construction.items.salaryLimit.val(),
+            "construction.accessoryLimit" : construction.updateItems.accessoryLimit.val(),
+            "construction.salaryLimit": construction.updateItems.salaryLimit.val(),
         };
 
         com.post(api.construction.updateConstructionForAdvance, options, function (res) {

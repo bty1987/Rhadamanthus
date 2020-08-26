@@ -359,4 +359,27 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		return 0;
 	}
 
+	@Override
+	public List<AccessoriesVO> queryAccessoriesByOrderId(AccessoriesVO accessoriesVO) {
+		
+		List<AccessoriesPO> accessoriesPOs = accessoriesDao.queryAccessoriesByOrderId(accessoriesVO.getOrderId());
+		List<AccessoriesVO> accessoriesVOs = new ArrayList<AccessoriesVO>();
+		
+		for(AccessoriesPO accessoriesPO : accessoriesPOs){
+			
+			accessoriesVO = new AccessoriesVO(new HouseVO(new VillageVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+			BeanUtil.copyProperties(accessoriesPO, accessoriesVO, Arrays.asList("house", "creater", "approver", "supervisor", "deliver"));
+			BeanUtil.copyProperties(accessoriesPO.getHouse(), accessoriesVO.getHouse(), Arrays.asList("village"));
+			BeanUtil.copyPropertie(accessoriesPO.getHouse().getVillage(), accessoriesVO.getHouse().getVillage(), Arrays.asList("cityProper", "buildingNameRule"));
+
+			accessoriesVO.getCreater().setBaseInfo(accessoriesPO.getCreater());
+			accessoriesVO.getApprover().setBaseInfo(accessoriesPO.getApprover());
+			accessoriesVO.getSupervisor().setBaseInfo(accessoriesPO.getSupervisor());
+
+			accessoriesVOs.add(accessoriesVO);
+		}
+		
+		return accessoriesVOs;
+	}
+
 }

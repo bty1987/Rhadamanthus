@@ -61,6 +61,26 @@ public class SoodsServiceImpl implements SoodsService {
 	}
 	
 	@Override
+	public void pageSoodsByQiid(Paging paging, List<Filter> filters, SoodsVO soodsVO) {
+
+		List<SoodsPO> soodsPOs = soodsDao.pageSoodsByQiid(paging, filters, soodsVO.getQuotationItem().getQiId());
+		List<SoodsVO> soodsVOs = new ArrayList<SoodsVO>();
+		
+		for (SoodsPO soodsPO : soodsPOs) {
+			soodsVO = new SoodsVO(new GoodsVO(), new QuotationItemVO());
+			
+			BeanUtil.copyProperties(soodsPO, soodsVO, Arrays.asList("goods", "quotationItem"));
+			BeanUtil.copyProperties(soodsPO.getGoods(), soodsVO.getGoods(), Arrays.asList("accessoriesType"));
+			BeanUtil.copyProperties(soodsPO.getQuotationItem(), soodsVO.getQuotationItem(), Arrays.asList("quotationType", "quotationClassification","quotationBigCategory","quotationSmallCategory", "measurementUnit","workType","quotationVersion"));
+			soodsVO.getQuotationItem().setVersion(soodsPO.getQuotationItem().getQuotationVersion().getName());
+			
+			soodsVOs.add(soodsVO);
+		}
+		
+		paging.setData(soodsVOs);
+	}
+	
+	@Override
 	public List<SoodsVO> querySoodsByQiid(SoodsVO soodsVO) throws FLException {
 
 		List<SoodsPO> soodsPOs = soodsDao.querySoodsByQiid(soodsVO.getQuotationItem().getQiId());
@@ -134,4 +154,5 @@ public class SoodsServiceImpl implements SoodsService {
 		
 		return 0;
 	}
+
 }

@@ -61,6 +61,30 @@
                         </div>
 
                         <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="freeArea">赠送面积</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="freeArea" maxlength="7" class="col-xs-6 col-sm-6 v_float_3 v_required" />
+                                <span style = "margin-left: 10px; line-height: 34px">平</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="totalArea">总面积</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="totalArea" maxlength="7" class="col-xs-6 col-sm-6 v_float_3 v_required"/>
+                                <span style = "margin-left: 10px; line-height: 34px">平</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="innerArea">套内面积</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="innerArea" maxlength="7" class="col-xs-6 col-sm-6 v_float_3 v_required" />
+                                <span style = "margin-left: 10px; line-height: 34px">平</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right">姓名</label>
                             <div class="col-sm-9">
                                 <input type="text" class="m-wrap col-xs-6 v_required" maxlength="32" id="name" style="margin-right: 35px;">
@@ -107,13 +131,6 @@
                             <label class="col-sm-3 control-label no-padding-right">客户等级</label>
                             <div class="col-sm-9">
                                 <select type="text" class="col-xs-6 m-wrap v_required" id="grade"></select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right">业务员类型</label>
-                            <div class="col-sm-9">
-                                <select type="text" class="col-xs-6 m-wrap v_required" id="salesmanTypeEdit"></select>
                             </div>
                         </div>
 
@@ -206,13 +223,6 @@
                                 <input type="text" class="col-sm-8 v_typeahead" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="designer">
                             </div>
                         </div>
-
-                        <div class="form-group">
-                            <label for="grade" class="col-sm-3 control-label no-padding-right orange">业务员类型</label>
-                            <div class="col-sm-9">
-                                <select class='col-xs-10 col-sm-8 v_required' id='salesmanType' ></select>
-                            </div>
-                        </div>
                     </form>
                 </div>
                 <div class="modal-footer" style="text-align: center">
@@ -266,6 +276,13 @@
                             <label class="col-sm-3 control-label no-padding-right" for="salesman">业务员</label>
                             <div class="col-sm-9">
                                 <input type="text" class="col-sm-6 v_typeahead" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="salesman">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">业务员类型</label>
+                            <div class="col-sm-9">
+                                <select type="text" class="col-xs-6 m-wrap" id="salesmanType"></select>
                             </div>
                         </div>
 

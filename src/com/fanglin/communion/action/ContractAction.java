@@ -39,7 +39,7 @@ public class ContractAction extends BaseListAction {
 	@Action(value = "queryContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryContract() throws FLException {
 
-		contracts = contractService.queryContract();
+		contracts = contractService.queryContract(queryCompany());
 
 		return SUCCESS;
 	}

@@ -12,7 +12,8 @@ $(function (){
             houseTypeTwo : com.focusPage("#houseTypeTwo"),
             houseTypeThr : com.focusPage("#houseTypeThr"),
             houseTypeFour : com.focusPage("#houseTypeFour"),
-            comment : com.focusPage("#comment"),
+            area : com.focusPage("#area"),
+            comment : com.focusPage("#comment")
         },
         modals:{
             houseTypeModal : com.focusPage("#houseTypeModal"),
@@ -20,8 +21,6 @@ $(function (){
         },
         vid : params.vid,
     };
-    
-    initUploadBtn();
 
     houseLayout.btns.saveBtn.bindClick(saveData);
 
@@ -59,7 +58,8 @@ $(function (){
 
                 var propertyArr = [
                     ["名称:", v.name , "green"],
-                    ["说明:",v.comment,"grey" ],
+                    ["面积:", v.area + '平方米', "red"],
+                    ["说明:", v.comment, "grey" ]
                 ];
 
                 $.each(propertyArr, function (index, value) {
@@ -68,7 +68,6 @@ $(function (){
                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                     $liProperty.appendTo($ulProperty);
                 });
-
                 $divBtnWrap.append($deletBtn).append($drawingedit);
                 $liLine.append($divBtnWrap).append($ulProperty).appendTo($ul);
 
@@ -110,9 +109,16 @@ $(function (){
         };
 
         var options ={};
+
         options["houseLayout.name"] = houseLayout.items.houseTypeOne.val() + "室" + houseLayout.items.houseTypeTwo.val() + "厅" + houseLayout.items.houseTypeThr.val() + "厨" + houseLayout.items.houseTypeFour.val() + "卫";
+        options["houseLayout.Area"] = houseLayout.items.area.val();
         options["houseLayout.comment"] = houseLayout.items.comment.val();
         options["houseLayout.vid"] = params.vid;
+
+        if(houseLayout.items.area.val() == 0 || isNaN(houseLayout.items.area.val())){
+            com.showAlert(com.warning, "户型面积输入错误");
+            return false;
+        }
 
         if(houseLayout.items.houseTypeOne.val() == 0 && houseLayout.items.houseTypeTwo.val() == 0 && houseLayout.items.houseTypeThr.val() == 0 && houseLayout.items.houseTypeFour.val() == 0){
             com.showAlert(com.warning, "户型输入错误");
@@ -129,82 +135,206 @@ $(function (){
 
     // 提交图片
     function managedrawing(hlid) {
+
         houseLayout.modals.houseLayoutModal.modal("show");
         com.focusPage('#houseLayoutDrawing').html("");
-        com.post(api.communion.queryDataDrawing, {"dataDrawing.sid": hlid, "dataDrawing.type": 1}, function (data) {
-            var houseLayoutSourcePics = data.dataDrawings;
-            if (houseLayoutSourcePics && houseLayoutSourcePics.length) {
-                $.each(houseLayoutSourcePics, function (i, value) {
-                    appendGalleryElement("houseLayoutDrawing", value);
-                });
-                com.popup4photos("#houseLayoutDrawing");
+
+        com.post(api.communion.queryDataDrawing, {"dataDrawing.sid": hlid, "dataDrawing.type": 2}, function (data) {
+
+            com.focusPage("#houseLayoutDrawing").append(drawProductionPicture());
+            var houseLayoutPictures = data.dataDrawings;
+
+            for (var i = 0; i < houseLayoutPictures.length; i++) {
+
+                var houseLayoutPicture = houseLayoutPictures[i];
+                //文件
+                if (houseLayoutPicture.type == 2) {
+                    addCAD(com.focusPage("#productionUploadTheCAD"), houseLayoutPicture);
+                }
+
             }
         }, null, false);
+
+        com.post(api.communion.queryDataDrawing, {"dataDrawing.sid": hlid, "dataDrawing.type": 1}, function (data) {
+
+            var houseLayoutPictures = data.dataDrawings;
+
+            for (var i = 0; i < houseLayoutPictures.length; i++) {
+
+                var houseLayoutPicture = houseLayoutPictures[i];
+                //图
+                if (houseLayoutPicture.type == 1) {
+                    addPicture(com.focusPage("#productionUploadPlan"), houseLayoutPicture);
+                }
+
+            }
+
+            com.popup4photos("#productionUploadPlan");
+
+            loadHuploadify("houseLayoutFileUpload", "上传文件", "*.dwg;*.dwt", false, function (data) {
+                addHouseLayoutPicture (data, 2);
+            }, "btn btn-warning");
+
+            loadHuploadify("houseLayoutUpload", "上传图片", "*.jpg;*.jpge;*.gif;*.png", true, function (data) {
+                addHouseLayoutPicture (data, 1);
+            }, "btn btn-success");
+
+        }, null, false);
+
     };
 
-    // 上传图片
-    function initUploadBtn() {
-        com.focusPage("#houseLayoutUpload").html("").Huploadify({
+    function loadHuploadify(eId, ename, fileType, multi, callback, btnstyle) {
+
+        com.focusPage("#" + eId).Huploadify({
             'debug': false, // 开启调试
             'auto': true, // 是否自动上传
             'successTimeout': 150, // 超时时间
             'formData': { // 附带值
-                'uploadType': 0,
-                'username': '用户名',
-                'rnd': '加密密文'
+                'uploadType': 2
             },
-            'multi': true, // 批量上传
-            'buttonClass': 'btn btn-success',
-            'buttonText': '上传图片',
-            'overrideEvents': ['onDialogClose'],  // 不执行默认的onSelect事件
-            'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称
-                                            // $_FILES个['upload']
+            'buttonClass': 'btn ' + btnstyle ? btnstyle : "btn-success",
+            'buttonText': ename,
+            'overrideEvents': ['onDialogClose'], // 不执行默认的onSelect事件
+            'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
             'uploader': config.media + api.common.uploadImg.url, // 上传处理程序
-            'height': '45', // 浏览按钮的高度
+            'width': '100', // 浏览按钮的宽度
+            'height': '32', // 浏览按钮的高度
             'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-            'fileTypeExts': '*.jpg;*.jpeg;*.gif;*.png;', // 允许上传的文件后缀
+            'fileTypeExts': fileType, // 允许上传的文件后缀
             'fileSizeLimit': '5MB', // 上传文件的大小限制
-            'queueSizeLimit': 10, // 上传数量
+            'multi': multi,
+            'queueSizeLimit': 5, // 上传数量
             'onUploadSuccess': function (file, data, response) { // 上传到服务器,服务器返回相应信息到data里
-                var dateObj = eval("(" + data + ")");
-                if (dateObj.errorCode == 0) {
-                    var options = {};
-                    options["dataDrawing.sid"] = params.hlid;
-                    options["dataDrawing.name"] = dateObj.strutsUploadsFileName;
-                    options["dataDrawing.drawingUrl"] = dateObj.resUrl;
-                    options["dataDrawing.drawingType"] = 0;
-                    options["dataDrawing.type"] = 1;
-                    com.post(api.communion.addDataDrawing, options, function (res) {
-                        var drawing = res.dataDrawing;
-                        appendGalleryElement("houseLayoutDrawing", drawing);
-                        com.popup4photos("#houseLayoutDrawing");
-                    });
-                    queryHouseLayout(houseLayout.vid);
-                } else {
-                    console.log(data);
-                }
+                callback(data);
+            }, createLine : function (path, no, $line){
+
+                var _name = no +".xlsx";
+
+                var $box = $("<div></div>").addClass("infobox infobox-blue infobox-dark");
+                var $iconGrouop = $("<div></div>").addClass("infobox-icon");
+                var $icondownload = $("<a></a>").addClass("icon-download-alt");
+                com.downloadFile($icondownload, path, _name);
+
+                var $dataGrouop = $("<div></div>").addClass("infobox-data");
+                var $name = $("<div></div>").addClass("infobox-content").html(_name);
+
+                $dataGrouop.append($name);
+                $iconGrouop.append($icondownload);
+                $box.append($iconGrouop).append($dataGrouop);
+                $line.append($box);
             }
         });
     }
-    //显示图片
-    function appendGalleryElement(galleryId, value) {
 
-        var gallery = com.focusPage("#" + galleryId);
-        var imgLi = $("<li></li>").attr("id", "gallery_li" + value.ddid).addClass("text-center col-sm-4").css("border", "0px").css("border-color", "white").css("padding", "0px").css("height", "150px").css("width", "150px").appendTo(gallery);
-        var img = $('<img/>');
-        var imgA = $("<a></a>").addClass('cboxElement').attr("target", "_blank").css("height", "150px").append(img).appendTo(imgLi);
+    function addPicture (i, v) {
+        var $li = $('<li></li>').attr("id", "imgLi_" + v.ddid).appendTo(i);
+        var $img = $('<img></img>').attr('width', 200).attr('height', 200);
+        var $imgA = $('<a></a>').addClass('cboxElement').attr('target', '_blank').append($img).appendTo($li);
 
-        com.showImg(img, value.drawingUrl, 150, 150, value.name, null, value.drawingType);
+        com.showImg($img, v.drawingUrl, 200, 200, v.name, null);
 
-        var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
-        var toolsA = $("<a></a>").attr("href", "#").on("click", function () {
-            com.post(api.communion.deleteDataDrawing, {"dataDrawing.ddid": value.ddid}, function (res) {
-                com.focusPage("#gallery_li" + value.ddid).remove();
+        var $tags = $('<div></div>').addClass('tags').appendTo($li);
+        var $nameHolder = $('<span></span>').addClass('label-holder').appendTo($tags);
+        var $nameInfo = $('<span></span>').addClass('label label-info arrowed').text(v.name).appendTo($nameHolder);
+        var $timeHolder = $('<span></span>').addClass('label-holder').appendTo($tags);
+        var $timeInfo = $('<span></span>').addClass('label label-danger arrowed').text(v.createTime).appendTo($timeHolder);
+
+        var $tools = $('<div></div>').addClass('tools tools-top').appendTo($li);
+        var $toolLabel = $('<label></label>').appendTo($tools);
+        var $downA = $('<a></a>').addClass("icon-download-alt").appendTo($tools);
+
+        var $delA = $('<a></a>').addClass("icon-remove").appendTo($tools);
+
+        $delA.click(function () {
+            com.post(api.communion.deleteDataDrawing, {"dataDrawing.ddid": v.ddid}, function (res) {
+                com.focusPage("#imgLi_" + v.ddid).remove();
             });
-        }).appendTo(toolsDiv);
-        $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
+        });
+
+        com.downloadFile($downA, v.drawingUrl, v.name);
 
     }
+    function addCAD (i, v) {
+
+        var $name = v.name;
+
+        var $infobox = $('<div></div>').addClass('infobox infobox-blue infobox-dark').attr("id", "cad_" + v.ddid).appendTo(i);
+        var $infoboxIcon = $('<div></div>').addClass('infobox-icon').appendTo($infobox);
+        var $downIcon = $('<a></a>').addClass('icon-download-alt').appendTo($infoboxIcon);
+
+        com.downloadFile($downIcon, v.drawingUrl, new Date().getTime() + '.' + $name.split('.')[1]);
+
+        var $infoboxData = $('<div></div>').addClass('infobox-data').appendTo($infobox);
+        var $infoboxLeft = $('<div></div>').css('float', 'left').appendTo($infoboxData);
+        var $infoboxContent = $('<div></div>').addClass('infobox-content').text($name.split('.')[0].substr(0, 8) + '.' + $name.split('.')[1]).appendTo($infoboxLeft);
+        var $infoboxContent = $('<div></div>').addClass('infobox-content').text(v.createTime).appendTo($infoboxLeft);
+
+
+        var $delA = $('<a></a>').addClass("icon-remove").css({
+            'float': 'right',
+            'font-size': '22px',
+            'color': 'white'
+        }).appendTo($infoboxData);
+
+        $delA.click(function () {
+            com.post(api.communion.deleteDataDrawing, {"dataDrawing.ddid": v.ddid}, function (res) {
+                com.focusPage("#cad_" + v.ddid).remove();
+            });
+        });
+    };
+
+    function drawProductionPicture(res) {
+        function createDiv(classes, id, css) {
+            var div = $('<div></div>').attr("class", classes);
+            if (id) div.attr("id", id);
+            if (css) div.attr("style", css);
+            return div;
+        }
+
+        function createLabel(classes, text, forId) {
+            var label = $('<label></label>').attr("class", classes).text(text);
+            if (forId) label.attr("for", forId);
+            return label;
+        }
+
+        function createUl(id, classes, css) {
+            var ul = $("<ul></ul>").attr("class", classes);
+            if (css) ul.attr("style", css);
+            if (id) ul.attr("id", id);
+            return ul;
+        }
+
+        var row1 = createDiv("row").append(createDiv("col-md-6").append(createDiv("col-md-2", "houseLayoutUpload"),createDiv("col-md-2", "houseLayoutFileUpload")));
+
+        var row2 = createDiv("row").append(
+            createDiv("col-xs-12").append(createLabel("control-label", "户型图:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createUl("productionUploadPlan", "ace-thumbnails")))
+            , createDiv("col-xs-12").append(createLabel("control-label", "文件:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createDiv("col-sm-7 infobox-container", "productionUploadTheCAD")))
+
+        );
+
+        return [row1, row2];
+    }
+
+    function addHouseLayoutPicture (data, type) {
+        var dateObj = eval("(" + data + ")");
+
+        if (dateObj.errorCode == 0) {
+            var options = {};
+
+            options["dataDrawing.sid"] = params.hlid;
+            options["dataDrawing.name"] = dateObj.strutsUploadsFileName;
+            options["dataDrawing.drawingUrl"] = dateObj.resUrl;
+            options["dataDrawing.drawingType"] = 0;
+            options["dataDrawing.type"] = type;
+
+            com.post(api.communion.addDataDrawing, options, function (res) {
+                managedrawing(params.hlid);
+            });
+        } else {
+            com.showAlert(com.error, dateObj.errorMsg);
+        }
+    };
 
 });
+
 

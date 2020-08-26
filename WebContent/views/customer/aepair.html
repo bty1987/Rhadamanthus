@@ -1,0 +1,88 @@
+<div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="condListData" class="fl_search clearfix"></div> <!-- 查询条件-->
+            <div id="resultListData" class="clearfix tab-pane active"></div> <!--查询结果-->
+            <div id="pagenationData" class="fl-page-wrap clearfix"></div> <!--分页-->
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="updateAepairModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myBindModal">更新报修单信息</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal" id="form">
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right">维修费用</label>
+                                        <div class="col-md-9">
+                                            <input type="text" id="outlay" class="col-xs-10 col-sm-8 v_float_3"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align: center">
+                <button type="button" id="updateSaveBtn" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="tranAepairModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="tranModal"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal" id="tranForm">
+                            <div class="row">
+
+                                <div class="form-group">
+                                    <label for="userName" class="col-sm-3 control-label no-padding-right orange">人员</label>
+                                    <div class="col-md-9">
+                                        <input type="text" class="col-sm-8 v_typeahead" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="userName" placeholder="名称">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align: center">
+                <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="repairPopUp" class="portlet box page-content"></div>
+
+<div id="repairPayPopUp" class="portlet box page-content"></div>
+
+<div id="layerPopUp"></div>
+<div id="layerPopUpRepairPay"></div>
+
+<script type="text/javascript">
+    $.loadScript(['js/customer/aepair.js']);
+</script>

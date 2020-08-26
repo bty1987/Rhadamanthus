@@ -3,7 +3,6 @@ package com.fanglin.quotation.po;
 import java.io.Serializable;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.utils.Arith;
 
 public class QuotetionFunctionAreaItemPO implements Serializable {
 
@@ -177,9 +176,7 @@ public class QuotetionFunctionAreaItemPO implements Serializable {
 		this.setContent(quotationFunctionAreaItemPO.getContent());
 	}
 
-	public static String quotetionFunctionAreaItemTable(Long qfaid, Long div) {
-
-		int index = new Long(Arith.div(qfaid, div)).intValue();
+	public static String quotetionFunctionAreaItemTable(Long qfaid, Short index) {
 
 		String qfaItem = "QuotetionFunctionAreaItemPO";
 
@@ -188,10 +185,9 @@ public class QuotetionFunctionAreaItemPO implements Serializable {
 		return quotetionFunctionAreaItemTable;
 	}
 
-	public static QuotetionFunctionAreaItemPO factoryToInstance(Long qfaid, Long div) throws FLException {
+	public static QuotetionFunctionAreaItemPO factoryToInstance(Long qfaid, Short index) throws FLException {
 
 		try {
-			int index = new Long(Arith.div(qfaid, div)).intValue();
 			Class<?> clazz = Class.forName("com.fanglin.quotation.po.QuotetionFunctionAreaItemPO" + index);
 			return (QuotetionFunctionAreaItemPO) clazz.newInstance();
 		} catch (Exception e) {
@@ -200,10 +196,9 @@ public class QuotetionFunctionAreaItemPO implements Serializable {
 
 	}
 
-	public static Class<?> factoryToClazz(Long qfaid, Long div) throws FLException {
+	public static Class<?> factoryToClazz(Long qfaid, Short index) throws FLException {
 
 		try {
-			int index = new Long(Arith.div(qfaid, div)).intValue();
 			return Class.forName("com.fanglin.quotation.po.QuotetionFunctionAreaItemPO" + index);
 		} catch (Exception e) {
 			throw new FLException(200029, "报价项存储对象错误");

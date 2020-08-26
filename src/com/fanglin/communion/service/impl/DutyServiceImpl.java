@@ -19,6 +19,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
+import com.fanglin.utils.PinYin4Util;
 
 @Service("dutyService")
 @Transactional(readOnly = true)
@@ -101,10 +102,12 @@ public class DutyServiceImpl implements DutyService {
 		dutyPO = new DutyPO(new DepartmentTypePO());
 		BeanUtil.copyProperties(dutyVO, dutyPO, Arrays.asList("departmentType"));
 		BeanUtil.copyProperties(dutyVO.getDepartmentType(), dutyPO.getDepartmentType());
-
+		
 		dutyPO.setStatus((short) 0);
+		dutyPO.setPinYin(PinYin4Util.getPinyin(dutyVO.getName()).get(0));
 
 		dutyDao.save(dutyPO);
+		
 		return 0;
 	}
 
@@ -142,5 +145,34 @@ public class DutyServiceImpl implements DutyService {
 		dutyDao.update(dutyPO);
 
 		return 0;
+	}
+
+	@Override
+	public List<DutyVO> queryDutyByName(String pinYinName, DutyVO dutyVO) {
+		
+		if (dutyVO.getStatus() == null) {
+			dutyVO.setStatus((short)0);
+		}
+		
+		int dtid = 0;
+
+		if (dutyVO.getDepartmentType() != null && dutyVO.getDepartmentType().getDtid() != 0 ) {
+			
+			dtid = dutyVO.getDepartmentType().getDtid();
+		}
+
+		List<DutyPO> dutyPOs = dutyDao.pageDutyByName(new Paging(0, 10), pinYinName, dtid, dutyVO.getStatus());
+		List<DutyVO> dutyVOs = new ArrayList<DutyVO>();
+
+		for (DutyPO dutyPO : dutyPOs) {
+			dutyVO = new DutyVO(new DepartmentTypeVO());
+			
+			BeanUtil.copyProperties(dutyPO, dutyVO, Arrays.asList("departmentType"));
+			BeanUtil.copyPropertie(dutyPO.getDepartmentType(), dutyVO.getDepartmentType());
+		
+			dutyVOs.add(dutyVO);
+		}
+
+		return dutyVOs;
 	}
 }

@@ -25,7 +25,8 @@ $(function () {
             submitBtn: com.focusPage("#submitBtn"),
             importBtn: com.focusPage("#importBtn"),
             exportBtn: com.focusPage("#exportBtn")
-        }
+        },
+        pageType: params['urlLoadParams'].type,
     };
 
     com.datetime(goods.items.executeDates,"date",false);
@@ -158,7 +159,11 @@ $(function () {
             var $btnStart = $('<li></li>').append($('<a></a>').html('启用'));
             var $btnStop = $('<li></li>').append($('<a></a>').html('禁用'));
 
-            $btnUl.append($btnEdit).append($btnColor).append($btnFormat).append($btnPrice).append($btnStart).append($btnStop);
+            if (goods.pageType == "basic") {
+                $btnUl.append($btnColor).append($btnFormat);
+            } else {
+                $btnUl.append($btnEdit).append($btnColor).append($btnFormat).append($btnPrice).append($btnStart).append($btnStop);
+            }
 
             $btnGroup.append($btn).append($btnUl).appendTo($cellOption);
             $cellOption.appendTo($optionWrap);
@@ -393,7 +398,12 @@ $(function () {
             com.popup4model("#exportGoods","导出商品")
         });
 
-        return [$addaExportGoods, $addaImportGood, $addaImportColor, $addaImportFormat, $addaImportPrice, $deleteImportPrice, $adda];
+        if (goods.pageType == "basic") {
+            return [$adda];
+        } else {
+            return [$addaExportGoods, $addaImportGood, $addaImportColor, $addaImportFormat, $addaImportPrice, $deleteImportPrice, $adda];
+        }
+
     }, 'resultList');
 
     function updateStatus(gid, status, callback) {

@@ -104,6 +104,8 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 
 		constructionNodePO.setPrecheck(0);
 		constructionNodePO.setPostcheck(0);
+		constructionNodePO.setStacheck(0);
+		constructionNodePO.setFincheck(0);
 
 		constructionNodeDao.save(constructionNodePO);
 	}
@@ -120,6 +122,9 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 
 		constructionNodePO.setPrecheck(constructionNodeVO.getPrecheck());
 		constructionNodePO.setPostcheck(constructionNodeVO.getPostcheck());
+		constructionNodePO.setStacheck(constructionNodeVO.getStacheck());
+		constructionNodePO.setFincheck(constructionNodeVO.getFincheck());
+
 
 		constructionNodeDao.update(constructionNodePO);
 	}

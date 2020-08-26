@@ -29,7 +29,6 @@ public class QuotationItemImport extends BaseImportAction{
 
 			List<List<String>> excels;
 			try {
-			
 				excels = PoiExcelUtil.readExcel(getStrutsUploads(), getStrutsUploadsFileName());
 				quotationItemImportService.importQuotationItem(excels, queryUserId());
 			

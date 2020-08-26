@@ -39,15 +39,11 @@ jQuery(function () {
 
     accessories.leftitems.goodsName.on("focus", function () {
 
-        var optionss = {
-            "orderId": accessories.postData.orderId
-        };
-
         if (accessories.postData.orderId == null) {
             return false;
         }
 
-        com.initTypeahead("goodsName", api.data.queryAoodsByName, "aoods.goods.name", optionss, "aoodes", "gid", "name", function (list, k, v) {
+        com.initTypeahead("goodsName", api.data.queryAoodsByName, "aoods.goods.name", {}, "aoodes", "gid", "name", function (list, k, v) {
 
             $.each(list, function (index, val) {
 
@@ -89,7 +85,7 @@ jQuery(function () {
         var $delete = $('<div></div>').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-danger btn-minier').html('删除'));
         var $query = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-primary btn-minier').html('查看')).click(function () {
             com.focusPage('#viewPopUp').attr({'data-gid': gid});
-            com.popup4page('#viewPopUp', "views/sales/salesItem4package.html", "查看套餐")
+            com.popup4page('#viewPopUp', "views/sales/salesItem4package.html", "查看套餐");
         });
 
         $h4.append($delete).appendTo($liList);
@@ -150,7 +146,7 @@ jQuery(function () {
 
         }, function (e) {
             com.showAlert(com.warning, "装修单不存在");
-            com.cleanItems(accessories.rightitems)
+            com.cleanItems(accessories.rightitems);
         });
 
         com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": orderId}, function (res) {
@@ -181,7 +177,7 @@ jQuery(function () {
         var total = 0;
         $list && $list.length && $.each($list, function (i, v) {
             var $v = $(v);
-            total += utils.accMul($v.attr('data-num'), $v.attr('data-selling'))
+            total += utils.accMul($v.attr('data-num'), $v.attr('data-selling'));
         });
 
         var options = {

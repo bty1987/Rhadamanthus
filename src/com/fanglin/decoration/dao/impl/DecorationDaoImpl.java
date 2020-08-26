@@ -11,25 +11,19 @@
 
 package com.fanglin.decoration.dao.impl;
 
-import java.sql.Timestamp;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.fanglin.communion.dao.CustomerPhoneDao;
-import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.utils.Arith;
-import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.utils.SystemConfig;
@@ -40,9 +34,6 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	public DecorationDaoImpl() {
 		super(DecorationPO.class);
 	}
-
-	@Autowired
-	private CustomerPhoneDao customerPhoneDao;
 
 	@Override
 	public List<DecorationPO> pageDecoration(Paging paging, List<Filter> filters) {
@@ -79,6 +70,20 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 
 	@Override
+	public List<DecorationPO> pageDecorationForCompany(Paging paging, List<Filter> filters, int company) {
+
+		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
+
+		query.add(query.getCriterion("company", company, "eq"));
+
+		queryFilterExcute(query, filters);
+
+		query.desc("doid");
+
+		return query.list();
+	}
+
+	@Override
 	public List<DecorationPO> pageDecorationForGeneral(Paging paging, List<Filter> filters, int company) {
 
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
@@ -90,6 +95,21 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 		query.add(Restrictions.not(Restrictions.in("status", nostatus)));
 
 		queryFilterExcute(query, filters);
+		query.desc("doid");
+
+		return query.list();
+	}
+
+	@Override
+	public List<DecorationPO> pageDecorationForGrade(Paging paging, List<Filter> filters, int company) {
+
+		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
+
+		query.add(query.getCriterion("company", company, "eq"));
+		query.add(query.getCriterion("grade", "A", "eq"));// 默认 等级条件 A
+
+		queryFilterExcute(query, filters);
+
 		query.desc("doid");
 
 		return query.list();
@@ -188,7 +208,10 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 	@Override
 	public DecorationPO queryDecorationByHid(long hid, int company) {
-		return (DecorationPO) session().createCriteria(DecorationPO.class).createAlias("house", "house").add(Restrictions.eq("house.hid", hid)).add(Restrictions.eq("company", company)).uniqueResult();
+
+		List<Short> statuss = Arrays.asList(DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT);
+
+		return (DecorationPO) session().createCriteria(DecorationPO.class).createAlias("house", "house").add(Restrictions.eq("house.hid", hid)).add(Restrictions.not(Restrictions.in("status", statuss))).add(Restrictions.eq("company", company)).uniqueResult();
 	}
 
 	@Override
@@ -229,21 +252,6 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 		session().createSQLQuery(sql).setString("newOrderId", newOrderId).setString("oldOrderId", oldOrderId).executeUpdate();
 
-	}
-
-	@Override
-	public List<DecorationPO> checkDeoration(Paging paging, List<Filter> filters, int company) {
-		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
-
-		query.add(query.getCriterion("company", company, "eq"));
-
-		queryFilterExcute(query, filters);
-
-		queryFilterExcute(query, filters, company);
-
-		query.desc("doid");
-
-		return query.list();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
@@ -367,7 +375,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 				} else if ("salesmanRegionId".equals(field)) {
 					query.add(query.getCriterion("salesmanRegion.no", data, op));
 				} else if ("orderType".equals(field)) {
-					query.add(query.getCriterion("type", Short.valueOf(data), op));
+					query.add(query.getCriterion("typeness", Short.valueOf(data), op));
 				} else if ("salesmanType".equals(field)) {
 					query.add(query.getCriterion("salesmanType", data, op));
 				} else if ("houseArea".equals(field)) {
@@ -377,119 +385,30 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 					query.add(query.getCriterion("designStatus", Short.valueOf(data), op));
 				} else if ("projectStatus".equals(field)) {
 					query.add(query.getCriterion("projectStatus", Short.valueOf(data), op));
+				} else if ("sourceStatus".equals(field)) {
+					query.add(query.getCriterion("sourceStatus", Short.valueOf(data), op));
 				} else if ("signTimeDateRange".equals(field)) {
-					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-
-					query.add(query.getCriterion("contractTime", eTimestamp, "le"));
-					query.add(query.getCriterion("contractTime", sTimestamp, "ge"));
+					query.timeranges("contractTime", "contractTime", data);
 				} else if ("createTimeDateRange".equals(field)) {
-					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-
-					query.add(query.getCriterion("createTime", eTimestamp, "le"));
-					query.add(query.getCriterion("createTime", sTimestamp, "ge"));
+					query.timeranges("createTime", "createTime", data);
 				} else if ("measureTimeDateRange".equals(field)) {
-					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-
-					query.add(query.getCriterion("measureTime", eTimestamp, "le"));
-					query.add(query.getCriterion("measureTime", sTimestamp, "ge"));
+					query.timeranges("measureTime", "measureTime", data);
 				} else if ("depositTimeDateRange".equals(field)) {
-					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-
-					query.add(query.getCriterion("depositTime", eTimestamp, "le"));
-					query.add(query.getCriterion("depositTime", sTimestamp, "ge"));
-				} else if ("putlineTimeDateRange".equals(field)) {
-					String sTime = data.split("-")[0].replaceAll("/", "-");
-					String eTime = data.split("-")[1].replaceAll("/", "-");
-
-					query.add(query.getCriterion("putlineConstructionSchedule.putlineTime", eTime, "le"));
-					query.add(query.getCriterion("putlineConstructionSchedule.putlineTime", sTime, "ge"));
+					query.timeranges("depositTime", "depositTime", data);
 				} else if ("precontractTime".equals(field)) {
-					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-
-					query.add(query.getCriterion("precontractTime", eTimestamp, "le"));
-					query.add(query.getCriterion("precontractTime", sTimestamp, "ge"));
+					query.timeranges("precontractTime", "precontractTime", data);
 				} else if ("accountTime".equals(field)) {
-					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-
-					query.add(query.getCriterion("accountTime", eTimestamp, "le"));
-					query.add(query.getCriterion("accountTime", sTimestamp, "ge"));
+					query.timeranges("accountTime", "accountTime", data);
 				} else if ("designTimeRange".equals(field)) {
-					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-
-					query.add(query.getCriterion("sdesignTime", eTimestamp, "le"));
-					query.add(query.getCriterion("edesignTime", sTimestamp, "ge"));
+					query.timeranges("sdesignTime", "edesignTime", data);
+				} else if ("sdesignTime".equals(field)) {
+					query.timeranges("sdesignTime", "sdesignTime", data);
+				} else if ("edesignTime".equals(field)) {
+					query.timeranges("edesignTime", "edesignTime", data);
 				}
 			}
 		}
 
-	}
-
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters, int company) {
-
-		if (filters != null) {
-			for (Filter filter : filters) {
-
-				String field = filter.getField();
-				String data = filter.getData();
-				String op = filter.getOp();
-				if ("customerPhone".equals(field)) {
-					Long cid = (long) -1;
-					List<CustomerPhonePO> customerPhones = customerPhoneDao.queryCustomerPhoneByPhone(data, (short) 0, company);
-					if (!customerPhones.isEmpty())
-						cid = customerPhones.get(0).getCid();
-					query.add(query.getCriterion("customer.cid", cid, op));
-				}
-			}
-		}
 	}
 
 }

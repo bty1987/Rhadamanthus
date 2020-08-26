@@ -30,6 +30,8 @@ public class SelectionPO implements Serializable {
 	
 	private short status;// 状态 , 0: 初始 , 1: 锁定
 	
+	private int company;
+	
 	private long total;// 总额
 	
 	private long quotationTotal;// 报价总额
@@ -82,6 +84,15 @@ public class SelectionPO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+	
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 	@Column(name = "total")

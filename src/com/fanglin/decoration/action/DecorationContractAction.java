@@ -1,14 +1,3 @@
-/**
- * @File Name		: DecorationContractAction
- * @Package   	: com.fanglin.action.quotation
- * @Version		: 1.0
- * @Date			: 2014-9-27
- * @Copyright	: Copyright Creators 2014
- * @Author		: bty1987
- * @Email			: bty1987@163.com
- * @Describing	: 
- */
-
 package com.fanglin.decoration.action;
 
 import java.util.List;
@@ -62,42 +51,10 @@ public class DecorationContractAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "sendDecorationContractForSignet", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String sendDecorationContractForSignet() throws FLException {
-
-		decorationContractService.sendDecorationContractForSignet(decorationContract);
-
-		return SUCCESS;
-	}
-
 	@Action(value = "sendDecorationContractForAuth", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String sendDecorationContractForAuth() throws FLException {
 
 		decorationContractService.sendDecorationContractForAuth(decorationContract);
-
-		return SUCCESS;
-	}
-
-	@Action(value = "sendDecorationContractForSign", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String sendDecorationContractForSign() throws FLException {
-
-		decorationContractService.sendDecorationContractForSign(decorationContract);
-
-		return SUCCESS;
-	}
-
-	@Action(value = "sendDecorationContractForView", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String sendDecorationContractForView() throws FLException {
-
-		decorationContractService.sendDecorationContractForView(decorationContract);
-
-		return SUCCESS;
-	}
-
-	@Action(value = "sendDecorationContractForDownload", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String sendDecorationContractForDownload() throws FLException {
-
-		decorationContractService.sendDecorationContractForDownload(decorationContract);
 
 		return SUCCESS;
 	}
@@ -158,10 +115,18 @@ public class DecorationContractAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "fillingDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String fillingDecorationContract() throws FLException {
+	@Action(value = "filingDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String filingDecorationContract() throws FLException {
 
-		decorationContractService.fillingDecorationContract(decorationContract);
+		decorationContractService.filingDecorationContract(decorationContract);
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "sendDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String sendDecorationContract() throws FLException {
+
+		decorationContractService.sendDecorationContract(decorationContract);
 
 		return SUCCESS;
 	}

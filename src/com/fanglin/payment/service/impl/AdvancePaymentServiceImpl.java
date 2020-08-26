@@ -197,14 +197,14 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 		
 		advanceReceiptDao.save(advanceReceiptPO);
 		
+		BeanUtil.copyProperties(paymentVO, paymentPO, Arrays.asList("customer", "collectUser"));
+		
 		paymentPO.setBalance(overBalance);
 		paymentPO.setCustomer(customerPO);
 		paymentPO.setAdvanceReceipt(advanceReceiptPO);
 		paymentPO.setCompany(company);
 		paymentPO.setCreater(userPO);
 		paymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		
-		BeanUtil.copyProperties(paymentVO, paymentPO, Arrays.asList("customer", "collectUser"));
 		
 		paymentPO.setUniqueid(paymentVO.getUniqueid());
 

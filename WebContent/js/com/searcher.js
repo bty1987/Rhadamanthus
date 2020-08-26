@@ -289,32 +289,28 @@ var Searcher = function(){
 
             _condArr && _condArr.length &&(
                 $.each(_condArr,function(i,val){
-                    var $input = $('[name=' + val + ']', basicConf.$searcher);
+                    
+                    var $input = com.focusPage('[name=' + val + ']', basicConf.$searcher);
                     var _inputType = $input.attr("data-type");
                     var _postName = $input.attr("data-rqs");
-                    var _rule = Condition.getRuleByCondName( val);
+                    
+                    var _rule = Condition.getRuleByCondName(val);
                     var _reg = _rule.submitConfig.validate;
+                    var _alone = _rule.submitConfig.alone;
+                    
                     var _inputValue = $input.val();
                     var _inputKey = _inputValue!=""?$input.attr("data-typeahead-key"):$input.removeAttr("data-typeahead-key");
                     var _op = $('[name=' + val + ']', basicConf.$searcher).attr('data-op');
                     if(_inputValue){
 
-                        if(_reg){
-                            if(!(_reg.reg).test(_inputValue)){
-                                
-                                com.showTip($input, _reg.msg, "top");
-
-                                _params = null;
-                                return false;
-
-                            }else{
-                                $input.removeClass("tooltip-info").removeAttr("data-rel").removeAttr("data-placement").removeAttr("data-original-title");
-                                _params['filters[' + _count + '].data'] = _inputType=="autofill"?_inputKey:_inputValue;
-                                _params['filters[' + _count + '].field'] = _postName;
-                                _params['filters[' + _count + '].op'] = _op;
-                                _params['filters[' + _count + '].inputValue'] = _inputValue;
-                                _count +=1;
-                            }
+                        if(_reg && !(_reg.reg).test(_inputValue)){
+                            com.showTip($input, _reg.msg, "top");
+                            _params = null;
+                            return false;
+                        }
+                        
+                        if(_alone){
+                            _params[_postName] = _inputValue;
                         }else{
                             $input.removeClass("tooltip-info").removeAttr("data-rel").removeAttr("data-placement").removeAttr("data-original-title");
                             _params['filters[' + _count + '].data'] = _inputType=="autofill"?_inputKey:_inputValue;
@@ -326,7 +322,7 @@ var Searcher = function(){
                     }
                 })
             );
-
+            
             if(_params){
                 _params["paging.page"] = this.nowPage["paging.page"];
                 _params["paging.rows"] = this.nowPage["paging.rows"];
@@ -456,32 +452,32 @@ var Searcher = function(){
 
         _condArr && _condArr.length &&(
             $.each(_condArr,function(i,val){
+                
                 var $input = com.focusPage('[name=' + val + ']', basicConf.$searcher);
+                
                 var _inputType = $input.attr("data-type");
                 var _postName = $input.attr("data-rqs");
+                
                 var _rule = Condition.getRuleByCondName( val);
                 var _reg = _rule.submitConfig.validate;
+                var _alone = _rule.submitConfig.alone;
+                
                 var _inputValue = $input.val();
                 var _inputKey = _inputValue!=""?$input.attr("data-typeahead-key"):$input.removeAttr("data-typeahead-key");
                 var _op = com.focusPage('[name=' + val + ']', basicConf.$searcher).attr('data-op');
+                
                 if(_inputValue){
 
-                    if(_reg){
-                        if(!(_reg.reg).test(_inputValue)){
-                            
-                            com.showTip($input, _reg.msg, "top");
+                    if(_reg && !(_reg.reg).test(_inputValue)){
+                        
+                        com.showTip($input, _reg.msg, "top");
 
-                            _params = null;
-                            return false;
-
-                        }else{
-                            $input.removeClass("tooltip-info").removeAttr("data-rel").removeAttr("data-placement").removeAttr("data-original-title");
-                            _params['filters[' + _count + '].data'] = _inputType=="autofill"?_inputKey:_inputValue;
-                            _params['filters[' + _count + '].field'] = _postName;
-                            _params['filters[' + _count + '].op'] = _op;
-                            _params['filters[' + _count + '].inputValue'] = _inputValue;
-                            _count += 1;
-                        }
+                        _params = null;
+                        return false;
+                    }
+                    
+                    if(_alone){
+                        _params[_postName] = _inputValue;
                     }else{
                         $input.removeClass("tooltip-info").removeAttr("data-rel").removeAttr("data-placement").removeAttr("data-original-title");
                         _params['filters[' + _count + '].data'] = _inputType=="autofill"?_inputKey:_inputValue;

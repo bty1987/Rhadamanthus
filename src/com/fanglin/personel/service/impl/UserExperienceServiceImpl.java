@@ -60,4 +60,17 @@ public class UserExperienceServiceImpl implements UserExperienceService {
 		return userExperienceVOs;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateUserExpirence(UserExperienceVO userExperienceVO) {
+		
+		UserExperiencePO userExperiencePO = userExperienceDao.get(userExperienceVO.getUpid());
+		
+		BeanUtil.copyPropertie(userExperienceVO, userExperiencePO);
+		
+		userExperienceDao.update(userExperiencePO);
+		
+		return 0;
+	}
+
 }

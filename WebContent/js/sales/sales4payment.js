@@ -14,12 +14,26 @@ jQuery(function () {
         salesCollectionPostData:{}
     };
 
+    var salesPayment = {
+        items : {
+            returnTotal : com.focusPage("#returnTotal"),
+            approver : com.focusPage("#salesItemDetialapprover"),
+            comment : com.focusPage("#comment")
+        },
+        btns : {
+            approverSaveBtn : com.focusPage("#approverSaveBtn"),
+            approverCancelBtn : com.focusPage("#approverCancelBtn")
+        },
+        options: {},
+        sid : null
+    }
+
     com.focusPage('#fl-statement').statement("销售单", "收款");
 
     salesPaymentForStatus.salesCollectionPostData["salesPayment.sales.sid"] = params.sid;
 
     com.post(api.common.queryReceiptType, {}, function (res) {
-        
+
         $.each(res.receiptTypes, function (i, v) {
             if (v.type == 1) {
                 salesPaymentForStatus.cash.push(v);
@@ -64,6 +78,8 @@ jQuery(function () {
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                 var $h3 = $('<h3></h3>').addClass('oid');
                 var $small = $('<small></small>').addClass('blue').html(salesPaymentForStatus.salesPaymentType[v.type]);
+                var $btnDiv = $('<div></div>').addClass('pull-right action-buttons');
+                var $btnRetrun = $('<a></a>').addClass('btn btn-minier btn-danger').html('退款');
 
                 var propertyArr = [
                     ["销售单号:", v.sales.no, "blue"],
@@ -106,11 +122,81 @@ jQuery(function () {
                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liPropertys);
                     $liPropertys.appendTo($ulProperty);
                 });
-                $small.appendTo($h3);
+
+                $btnDiv.append($btnRetrun);
+
+                if (v.type == 8) {
+
+                    $h3.append($small).append($btnDiv);
+                } else {
+
+                    $h3.append($small);
+                }
+
                 $liLine.append($h3).append($ulProperty).appendTo($ul);
+
+                $btnRetrun.click(function(){
+
+                    salesPayment.sid = v.sales.sid;
+
+                    com.popup4mini("#miniPopUp", "#layerReturn","退款信息", "", function () {
+                        com.clearValidator();
+                        closeReturnlayer();
+                        salesPayment.items.approver.empty();
+                    },function () {
+                        salesPayment.items.returnTotal.val(v.referMoney);
+                        approvalUtils.initqueryApprovalUser("salesItemDetialapprover", 18);
+                    });
+
+                });
+
             });
             $ul.appendTo($tableWrap);
         }
+    }
+
+    salesPayment.btns.approverSaveBtn.click(function () {
+
+        if (com.validate('miniPopUp', 'right')) {
+            return false;
+        }
+        var radios = com.focusPage("#salesItemDetialapprover").find('input:checked').attr('userid');
+        if (radios == null || radios == "") {
+            com.showAlert(com.warning, "请选择审批人");
+            return false;
+        }
+
+        var comment = $("#comment").val();
+
+        var options = {
+            "approval.receiver.userId": com.focusPage("#salesItemDetialapprover").find('input:checked').attr('userid'),
+            "approval.comment": comment,
+            "approvalSalesDayment.sid": salesPayment.sid
+        };
+
+        com.post(api.approval.submitApprovalForSalesDayment, $.extend(options, salesPayment.options), function () {
+            returnlayer();
+            salesPayment.items.approver.empty();
+            com.showAlert(com.info, "操作成功");
+            com.closePopup(com.focusPage("#approverSaveBtn"));
+        });
+    });
+
+    salesPayment.btns.approverCancelBtn.click(function () {
+        com.clearValidator();
+        closeReturnlayer();
+        com.closePopup(com.focusPage("#approverCancelBtn"));
+        salesPayment.items.approver.empty();
+    });
+
+    function returnlayer() {
+        salesPayment.items.comment.val("");
+        salesPayment.items.approver.val("");
+    }
+
+    function closeReturnlayer() {
+        salesPayment.items.returnTotal.val("");
+        salesPayment.items.comment.val("");
     }
 
     function emptyData(id) {

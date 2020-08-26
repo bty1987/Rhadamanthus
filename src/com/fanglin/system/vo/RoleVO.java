@@ -16,6 +16,8 @@ public class RoleVO implements Serializable {
 	
 	private Integer company; 
 	
+	private String pinyin;
+	
 	public RoleVO(Integer rid) {
 		super();
 		this.rid = rid;
@@ -68,6 +70,14 @@ public class RoleVO implements Serializable {
 
 	public void setCompany(Integer company) {
 		this.company = company;
+	}
+
+	public String getPinyin() {
+		return pinyin;
+	}
+
+	public void setPinyin(String pinyin) {
+		this.pinyin = pinyin;
 	}
 
 	

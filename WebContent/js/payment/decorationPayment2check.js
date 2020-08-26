@@ -15,10 +15,16 @@ jQuery(function($) {
 			cash: com.focusPage("#cash"),
 			advance: com.focusPage("#advance")
 		},
+		withholdItems: {
+			withholdUser: com.focusPage("#withholdUser"),
+			withholdMoney: com.focusPage("#withholdMoney"),
+			withholdComment: com.focusPage("#withholdComment")
+		},
 		htmlName: "decorationCheck",
 		modelId: "baseItemModalDecorationCheck",
 		modals: {
-			baseModal: com.focusPage("#baseItemModalDecorationCheck")
+			baseModal: com.focusPage("#baseItemModalDecorationCheck"),
+			withholdModal: com.focusPage("#withholdModalDecorationCheck")
 		},
 
 		cash: [],
@@ -39,7 +45,9 @@ jQuery(function($) {
 		couponTypeData: {},
 
 		bankUtilForGrade: [],
-		checkBankUtilForGrade: []
+		checkBankUtilForGrade: [],
+		currentWithholdPayment: {},
+		withholdType: []
 	};
 
 	var decorationPaymentCheckPostData = {};
@@ -56,6 +64,18 @@ jQuery(function($) {
 		com.focusPage("#decorationCheckposDivGroup").html("");
 		com.closeTip();
 	});
+
+	decorationPaymentCheck.modals.withholdModal.on('hide.bs.modal', function () {
+		com.focusPage("#withholdRecordUl").html("");
+		com.cleanItems(decorationPaymentCheck.withholdItems);
+		com.closeTip();
+	});
+
+	com.post(api.ds.salary, {}, function(res){
+		$.each(res.withholdType, function (i, v) {
+			decorationPaymentCheck.withholdType[v.key] = v.value;
+		});
+	}, null, false);
 
 	com.focusPage("#baseItemModalDecorationCheck :checkbox").on("change", function(){
 		$(this).prop("checked") ? com.focusPage("[referCheckbox="+this.id+"]").show() : com.focusPage("[referCheckbox="+this.id+"]").hide();
@@ -79,6 +99,9 @@ jQuery(function($) {
 		paymentUtils.addBankUtil(maxNum, "checkvDiv", "#decorationCheckcheckvDivGroup", decorationPaymentCheck.checkvNums, decorationPaymentCheck.checkBankUtilForGrade, decorationPaymentCheck);
 		return false;
 	});
+
+	//扣款人
+	com.initTypeahead('withholdUser', api.personel.queryUserByPinyin, "pinyinName", {"user.status": 0}, 'userBases', 'uid', 'currentName', null);
 
 	com.focusPage("#advanceType").bindData([{"key":"1", "value":"合同"}], 'key', 'value');
 	
@@ -196,6 +219,10 @@ jQuery(function($) {
 	searcher.init(["orderId", "paymentDesigner", "paymentVillage", "houseNumber", "collectTimeDateRange"], "condList", api.payment.pageDecorationPaymentForCollect, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "decorationPaymentCheckPostData", null, false, null, function(){
+		var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'checks').css("margin", "0px 3px");
+		var $checki = $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
+		var $checkspan = $('<span></span>').text('全选').appendTo($checka);
+
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'confirms').css("margin", "0px 3px");
     	var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
     	var $addspan = $('<span></span>').text('批量确认').appendTo($adda);
@@ -204,7 +231,7 @@ jQuery(function($) {
     	var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
     	var $impspan = $('<span></span>').text('导出').appendTo($impa);
     	
-    	return [$adda, $impa];
+    	return [$checka, $adda, $impa];
 	});
 	
 	var hdisplayFunc  = (function(){
@@ -227,6 +254,7 @@ jQuery(function($) {
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+			var $btnWithhold = $('<a></a>').addClass('btn btn-minier btn-danger').html('扣款');
 
             var propertyArr = [
                ["订单号:", v.decoration.orderId, "blue"],
@@ -267,7 +295,28 @@ jQuery(function($) {
 				$liProperty.appendTo($ulStyle);
 			});
 
+			if(v.paymentStatus == 2 && v.oneType == 0){
+				$btnWithhold.appendTo($divBtnWrap);
+			}
+			$divBtnWrap.appendTo($h3);
             $liLine.append($h3).append($ulProperty).append($ulStyle);
+
+			//扣款弹窗
+			$btnWithhold.click(function(){
+				decorationPaymentCheck.currentWithholdPayment = v;
+				
+				var withholdQueryOption = {
+					"withhold.ident": v.dpid,
+					"withhold.type": 1
+				};
+				com.post(api.salary.queryWithhold, withholdQueryOption, function(res){
+					var withholdRecords = res.withholds;
+					$.each(withholdRecords, function(i, withhold){
+						drawWithholdRecord(withhold);
+					});
+					decorationPaymentCheck.modals.withholdModal.modal("show");
+				});
+			});
 
             return $liLine;
         };
@@ -288,6 +337,12 @@ jQuery(function($) {
 		hdisplayFunc.init('hresultList', data);
 	}, "hpagenation", "hdecorationPaymentCheckPostData", null, false, null, null, "hresultList");
 
+	//全选
+	com.focusPage('a[name="checks"]', '#pagenation').click(function(){
+		paymentUtils.checkAll();
+	});
+
+	//批量确认
 	com.focusPage('a[name="confirms"]', '#pagenation').click(function(){
 		var options = {};
 		var $inputs = com.focusPage('input[name="dpIds"]:checked');
@@ -378,5 +433,57 @@ jQuery(function($) {
 			});
 		});
     });
+
+	//扣款
+	com.focusPage("#withhold").click(function(){
+		if(com.validate("withholdModalDecorationCheck")) return;
+
+		var withholdAddOption = {
+			"withhold.orderId": decorationPaymentCheck.currentWithholdPayment.decoration.orderId,
+			"withhold.ident": decorationPaymentCheck.currentWithholdPayment.dpid,
+			"withhold.type": 1,
+			"withhold.user.uid": com.typeahead("withholdUser"),
+			"withhold.money": decorationPaymentCheck.withholdItems.withholdMoney.val(),
+			"withhold.comment": decorationPaymentCheck.withholdItems.withholdComment.val()
+		};
+		com.post(api.salary.addWithhold, withholdAddOption, function(res){
+			var withhold = res.withhold;
+			withhold.money = decorationPaymentCheck.withholdItems.withholdMoney.val();
+			withhold.user.currentName = decorationPaymentCheck.withholdItems.withholdUser.val();
+			withhold.createTime = com.currentTime();
+			withhold.operater = {
+				"currentName" : params.userInfo.user.currentName
+			};
+			withhold.operateTime = com.currentTime();
+			drawWithholdRecord(withhold);
+			com.cleanItems(decorationPaymentCheck.withholdItems);
+		});
+	});
+
+	//画扣款记录
+	function drawWithholdRecord(withhold){
+		var $liLine = $('<li></li>').addClass('item-orange clearfix ').css({"list-style":"none"});
+		var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+		var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+		var optionArr = [
+			["扣款人:", withhold.user.currentName, "grey"],
+			["扣款类型:", decorationPaymentCheck.withholdType[withhold.type] , "red"],
+			["装修单号:", withhold.orderId, "blue"],
+			["扣款金额:", withhold.money, "blue"],
+			["创建时间:", withhold.createTime, "green"],
+			["操作人:", withhold.operater.currentName, "grey"],
+			["操作时间:", withhold.operateTime, "green"],
+			["扣款说明:", withhold.comment, "grey"]
+		];
+		$.each(optionArr, function (index, value) {
+			var $Lics = $('<li></li>').css("margin", "5px 0");
+			$('<strong></strong>').html(value[0]).appendTo($Lics);
+			$('<b></b>').html(value[1]).addClass(value[2]).appendTo($Lics);
+			$Lics.appendTo($ulProperty);
+		});
+
+		$liLine.append($ulProperty).appendTo(com.focusPage("#withholdRecordUl"));
+	}
 });
 

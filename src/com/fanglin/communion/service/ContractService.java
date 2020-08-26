@@ -10,6 +10,6 @@ public interface ContractService {
 	
 	public void pageContract(Paging paging, List<Filter> filters, int company);
 	
-	public List<ContractVO> queryContract();
+	public List<ContractVO> queryContract(int company);
 
 }

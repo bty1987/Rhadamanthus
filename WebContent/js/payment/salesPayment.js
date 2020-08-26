@@ -95,7 +95,7 @@ $(function () {
     }, null, false);
 
     com.post(api.ds.decoration, {}, function(res){
-        salesPayment.decorationType = res.type;
+        salesPayment.decorationType = res.typeness;
     }, null, false);
 
     com.focusPage("#advanceType").bindData([{"key": "3", "value": "主材预付款"}], 'key', 'value');
@@ -674,15 +674,10 @@ $(function () {
     }
 
     function printPayment(orderId, srId, v) {
-        if(v.salesReceipt.collecter.userId!=params.userInfo.user.userId){
-            com.showAlert(com.warning, "收款人不匹配, 不能打印");
-            return false;
-        }else{
-            params.salesReceiptSrId = srId;
-            com.popup("专用收款收据__装修单号: " + orderId, api.index.salesPaymentReceiptIndex.url, function () {
-                parent.layer.getFrameIndex(window.name);
-            }, null, true);
-        }
+    	params.salesReceiptSrId = srId;
+        com.popup("专用收款收据__装修单号: " + orderId, api.index.salesPaymentReceiptIndex.url, function () {
+            parent.layer.getFrameIndex(window.name);
+        }, null, true);
     }
 
     com.focusPage("#collectOrRefundBtn").click(function(){

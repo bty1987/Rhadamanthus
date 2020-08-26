@@ -2,6 +2,7 @@ package com.fanglin.personel.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.personel.dao.AttendanceDao;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.AttendancePO;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.service.AttendanceService;
 import com.fanglin.personel.vo.AttendanceVO;
 import com.fanglin.utils.BeanUtil;
@@ -24,15 +27,25 @@ public class AttendanceServiceImpl implements AttendanceService {
 	@Autowired
 	private AttendanceDao attendanceDao;
 	
+	@Autowired
+	private UserDao userDao;
+	
 	@Override
-	public List<AttendanceVO> queryAttendance(AttendanceVO attendanceVO) {
+	public List<AttendanceVO> queryAttendance(String userId) {
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		Calendar date = Calendar.getInstance();
+		String nowYear = String.valueOf(date.get(Calendar.YEAR));		//当前年
+	    int nowMonth = date.get(Calendar.MONTH) + 1;   					//当前月
+	    
+	    Integer months = Integer.parseInt(nowYear + FormatUtil.fillZero(nowMonth, "00"));
 		
-		List<AttendancePO> attendancePOs=attendanceDao.queryAttendance(attendanceVO.getUid(), attendanceVO.getMonth());
+		List<AttendancePO> attendancePOs=attendanceDao.queryAttendance(userPO.getUid(), months);
 		List<AttendanceVO> attendanceVOs=new ArrayList<AttendanceVO>();
 		
 		for (AttendancePO attendancePO : attendancePOs) {
 			
-			attendanceVO=new AttendanceVO();
+			AttendanceVO attendanceVO=new AttendanceVO();
 			BeanUtil.copyPropertie(attendancePO, attendanceVO);
 			
 			attendanceVOs.add(attendanceVO);
@@ -43,9 +56,16 @@ public class AttendanceServiceImpl implements AttendanceService {
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public JSONObject reportAttendance(AttendanceVO attendanceVO){
-	
-		List<Object[]> attendaList = (List<Object[]>) attendanceDao.queryList(attendanceVO.getUid(), attendanceVO.getMonth());	
+	public JSONObject reportAttendance(String userId){
+		
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		Calendar date = Calendar.getInstance();
+		String nowYear = String.valueOf(date.get(Calendar.YEAR));		//当前年
+	    int nowMonth = date.get(Calendar.MONTH) + 1;   					//当前月
+	    Integer months = Integer.parseInt(nowYear + FormatUtil.fillZero(nowMonth, "00"));
+	    
+		List<Object[]> attendaList = (List<Object[]>) attendanceDao.queryList(userPO.getUid(), months);	
 		
 		JSONObject options = new JSONObject();
 		JSONArray data = new JSONArray();
@@ -64,22 +84,22 @@ public class AttendanceServiceImpl implements AttendanceService {
 			
 		}
 		
-		if (Integer.parseInt(String.valueOf(attendanceVO.getMonth()).substring(4,6)) == 2) {
+		if (Integer.parseInt(String.valueOf(months).substring(4,6)) == 2) {
 			
-			yearSmall = Integer.parseInt(String.valueOf(attendanceVO.getMonth()).substring(0,4)) - 1;
+			yearSmall = Integer.parseInt(String.valueOf(months).substring(0,4)) - 1;
 			monthSmall = 12;
-		}else if (Integer.parseInt(String.valueOf(attendanceVO.getMonth()).substring(4,6)) == 1) {
+		}else if (Integer.parseInt(String.valueOf(months).substring(4,6)) == 1) {
 			
-			yearSmall = Integer.parseInt(String.valueOf(attendanceVO.getMonth()).substring(0,4)) - 1;
+			yearSmall = Integer.parseInt(String.valueOf(months).substring(0,4)) - 1;
 			monthSmall = 11;
 		}else{
 		
-			yearSmall = Integer.parseInt(String.valueOf(attendanceVO.getMonth()-2).substring(0,4));
-			monthSmall = Integer.parseInt(String.valueOf(attendanceVO.getMonth()-2).substring(4,6));
+			yearSmall = Integer.parseInt(String.valueOf(months-2).substring(0,4));
+			monthSmall = Integer.parseInt(String.valueOf(months-2).substring(4,6));
 		}
 		
-		int yearBig = Integer.parseInt(String.valueOf(attendanceVO.getMonth()).substring(0,4));
-		int monthBig = Integer.parseInt(String.valueOf(attendanceVO.getMonth()).substring(4,6));
+		int yearBig = Integer.parseInt(String.valueOf(months).substring(0,4));
+		int monthBig = Integer.parseInt(String.valueOf(months).substring(4,6));
 		
 		options = (JSONObject)JSONObject.parse("{\"visualMap\": { \"show\": false, \"min\": 0, \"max\": 40}, \"calendar\": { \"range\": \"\", \"dayLabel\": { \"firstDay\": 1, \"nameMap\": \"cn\" }, \"monthLabel\": {\"nameMap\": \"cn\", }, }, \"series\": {\"type\": \"heatmap\", \"coordinateSystem\": \"calendar\", \"data\": \"\" }}");
 	

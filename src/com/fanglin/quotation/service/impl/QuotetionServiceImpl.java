@@ -124,19 +124,20 @@ public class QuotetionServiceImpl implements QuotetionService {
 
 		BeanUtil.copyProperties(quotetionPO, quotetionVO);
 
-		QuotetionFunctionAreaPO autogeneration = new QuotetionFunctionAreaPO(quotetionPO.getQid(), "生成项目", 9999, QuotetionFunctionAreaPO.TYPE_MANAGEMENT_INT);
+		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig("quotetionFunctionAreaIndex");
+		Short index = systemConfigPO == null ? 0 : Short.valueOf(systemConfigPO.getValue());
+		
+		QuotetionFunctionAreaPO autogeneration = new QuotetionFunctionAreaPO(quotetionPO.getQid(), "生成项目", 9999, QuotetionFunctionAreaPO.TYPE_MANAGEMENT_INT, index);
 
 		quotetionFunctionAreaDao.save(autogeneration);
-
-		Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
-
-		QuotetionFunctionAreaItemPO trafficPrice = QuotetionFunctionAreaItemPO.factoryToInstance(autogeneration.getQfaId(), divisor);
+		
+		QuotetionFunctionAreaItemPO trafficPrice = QuotetionFunctionAreaItemPO.factoryToInstance(autogeneration.getQfaId(), index);
 
 		convertQuotetionPOForAdvance(trafficPrice, "车运费", "", "其他", quotationVersionPO.getTrafficRate(), "0", 0, QuotationFunctionAreaItemPO.TYPE_QUOTATION_TRAFFIC_SHORT, quotationVersionPO.getTrafficDiscount(), autogeneration, "", QuotetionFunctionAreaItemPO.SUBTYPE_QUOTATION_ENGINEERING_SHORT);
 
 		quotetionFunctionAreaItemDao.save(trafficPrice);
-
-		QuotetionFunctionAreaItemPO managePrice = QuotetionFunctionAreaItemPO.factoryToInstance(autogeneration.getQfaId(), divisor);
+		
+		QuotetionFunctionAreaItemPO managePrice = QuotetionFunctionAreaItemPO.factoryToInstance(autogeneration.getQfaId(), index);
 
 		convertQuotetionPOForAdvance(managePrice, "管理费", "", "其他", quotationVersionPO.getManageRate(), "0", 0, QuotetionFunctionAreaItemPO.TYPE_QUOTATION_MANAGE_SHORT, quotationVersionPO.getManageDiscount(), autogeneration, "", QuotetionFunctionAreaItemPO.SUBTYPE_QUOTATION_ENGINEERING_SHORT);
 
@@ -285,24 +286,27 @@ public class QuotetionServiceImpl implements QuotetionService {
 
 		List<QuotationFunctionAreaPO> quotationFunctionAreaPOs = quotationFunctionAreaDao.queryQuotationFunctionAreaByQuotationId(quotationId);
 
-		Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
-
+		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig("quotetionFunctionAreaIndex");
+		Short index = systemConfigPO == null ? 0 : Short.valueOf(systemConfigPO.getValue());
+		
 		for (QuotationFunctionAreaPO quotationFunctionAreaPO : quotationFunctionAreaPOs) {
 
 			QuotetionFunctionAreaPO _quotetionFunctionAreaPO = new QuotetionFunctionAreaPO();
-
+			
 			_quotetionFunctionAreaPO.setName(quotationFunctionAreaPO.getFunctionAreaName());
-			_quotetionFunctionAreaPO.setIndex(quotationFunctionAreaPO.getFunctionAreaOrder());
+	
+			_quotetionFunctionAreaPO.setFunctionAreaOrder(quotationFunctionAreaPO.getFunctionAreaOrder());
 			_quotetionFunctionAreaPO.setType(quotationFunctionAreaPO.getType());
 			_quotetionFunctionAreaPO.setQid(quotetionId);
+			_quotetionFunctionAreaPO.setIndex(index);
 
 			quotetionFunctionAreaDao.save(_quotetionFunctionAreaPO);
-
-			List<QuotationFunctionAreaItemPO> quotationFunctionAreaItemPOs = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByFunctionAreaId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), divisor), quotationFunctionAreaPO.getQfaId());
+			
+			List<QuotationFunctionAreaItemPO> quotationFunctionAreaItemPOs = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByFunctionAreaId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex()), quotationFunctionAreaPO.getQfaId());
 
 			for (QuotationFunctionAreaItemPO quotationFunctionAreaItem : quotationFunctionAreaItemPOs) {
-
-				QuotetionFunctionAreaItemPO clazz = QuotetionFunctionAreaItemPO.factoryToInstance(_quotetionFunctionAreaPO.getQfaId(), divisor);
+		
+				QuotetionFunctionAreaItemPO clazz = QuotetionFunctionAreaItemPO.factoryToInstance(_quotetionFunctionAreaPO.getQfaId(), index);
 
 				clazz.setQfaid(_quotetionFunctionAreaPO.getQfaId());
 
@@ -323,21 +327,23 @@ public class QuotetionServiceImpl implements QuotetionService {
 
 		List<QuotetionFunctionAreaPO> quotetionFunctionAreaPOs = quotetionFunctionAreaDao.queryQuotetionFunctionAreaByQuotetionId(quotetionId);
 
-		Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
-
+		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig("quotetionFunctionAreaIndex");
+		Short index = systemConfigPO == null ? 0 : Short.valueOf(systemConfigPO.getValue());
+		
 		for (QuotetionFunctionAreaPO quotetionFunctionAreaPO : quotetionFunctionAreaPOs) {
 
 			QuotetionFunctionAreaPO _quotetionFunctionAreaPO = new QuotetionFunctionAreaPO();
 			BeanUtil.copyProperties(quotetionFunctionAreaPO, _quotetionFunctionAreaPO, Arrays.asList("qfaId"));
 			_quotetionFunctionAreaPO.setQid(newQuotetionId);
+			_quotetionFunctionAreaPO.setIndex(index);
 
 			quotetionFunctionAreaDao.save(_quotetionFunctionAreaPO);
-
-			List<QuotetionFunctionAreaItemPO> quotetionFunctionAreaItemPOs = quotetionFunctionAreaItemDao.queryQuotetionFunctionAreaItemByFunctionAreaId(QuotetionFunctionAreaItemPO.factoryToClazz(quotetionFunctionAreaPO.getQfaId(), divisor), quotetionFunctionAreaPO.getQfaId());
+			
+			List<QuotetionFunctionAreaItemPO> quotetionFunctionAreaItemPOs = quotetionFunctionAreaItemDao.queryQuotetionFunctionAreaItemByFunctionAreaId(QuotetionFunctionAreaItemPO.factoryToClazz(quotetionFunctionAreaPO.getQfaId(), quotetionFunctionAreaPO.getIndex()), quotetionFunctionAreaPO.getQfaId());
 
 			for (QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO : quotetionFunctionAreaItemPOs) {
-
-				QuotetionFunctionAreaItemPO clazz = QuotetionFunctionAreaItemPO.factoryToInstance(_quotetionFunctionAreaPO.getQfaId(), divisor);
+				
+				QuotetionFunctionAreaItemPO clazz = QuotetionFunctionAreaItemPO.factoryToInstance(_quotetionFunctionAreaPO.getQfaId(), index);
 
 				BeanUtil.copyProperties(quotetionFunctionAreaItemPO, clazz, Arrays.asList("qfaiId"));
 				clazz.setQfaid(_quotetionFunctionAreaPO.getQfaId());
@@ -354,11 +360,9 @@ public class QuotetionServiceImpl implements QuotetionService {
 
 		List<QuotetionFunctionAreaPO> quotetionFunctionAreas = quotetionFunctionAreaDao.queryQuotetionFunctionAreaByQuotetionId(qId);
 
-		Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
-
 		for (QuotetionFunctionAreaPO quotetionFunctionAreaPO : quotetionFunctionAreas) {
-
-			String tableName = QuotetionFunctionAreaItemPO.quotetionFunctionAreaItemTable(quotetionFunctionAreaPO.getQfaId(), divisor);
+			
+			String tableName = QuotetionFunctionAreaItemPO.quotetionFunctionAreaItemTable(quotetionFunctionAreaPO.getQfaId(), quotetionFunctionAreaPO.getIndex());
 			quotetionFunctionAreaItemDao.deleteQuotetionFunctionAreaItemByFunctionAreaId(tableName, quotetionFunctionAreaPO.getQfaId()); // 删除报价项
 			quotetionFunctionAreaDao.deleteById(quotetionFunctionAreaPO.getQfaId()); // 删除功能区
 		}

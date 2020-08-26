@@ -10,19 +10,24 @@
 package com.fanglin.personel.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.common.po.CountingPO;
+import com.fanglin.common.service.CountingService;
 import com.fanglin.personel.dao.UserContractDao;
 import com.fanglin.personel.po.UserContractPO;
 import com.fanglin.personel.service.UserContractService;
 import com.fanglin.personel.vo.UserContractVO;
+import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
-import com.fanglin.utils.Paging;
+import com.fanglin.utils.FormatUtil;
 
 @Service("userContractService")
 @Transactional(readOnly = true)
@@ -30,74 +35,72 @@ public class UserContractServiceImpl implements UserContractService {
 
 	@Autowired
 	private UserContractDao userContractDao;
+	
+	@Autowired
+	private CountingService countingService;
+
+	@Autowired
+	private CompanyDao companyDao;
 
 	@Override
-	public void pageUserContractByUserId(Paging paging, String userId) {
-
-		List<UserContractPO> userContractPOs = userContractDao.pageUserContractByUserId(paging, userId);
-		List<UserContractVO> userContractVOs = new ArrayList<UserContractVO>();
-
-		for (UserContractPO userContractPO : userContractPOs) {
-			UserContractVO userContractVO = new UserContractVO();
-
-			BeanUtil.copyProperties(userContractPO, userContractVO);
-
-			userContractVOs.add(userContractVO);
-		}
-
-		paging.setData(userContractVOs);
-	}
-
-	@Override
-	public List<UserContractVO> queryUserContractByUserId(String userId) {
+	public List<UserContractVO> queryUserContract(UserContractVO userContractVO) {
 		
+		List<UserContractPO> userContractPOs = userContractDao.queryUserContract(userContractVO.getUid());
 		List<UserContractVO> userContractVOs = new ArrayList<UserContractVO>();
-		List<UserContractPO> userContractPOs = userContractDao.queryUserContractByUserId(userId);
-
+		
 		for (UserContractPO userContractPO : userContractPOs) {
-
-			UserContractVO userContractVO = new UserContractVO();
-
-			BeanUtil.copyProperties(userContractPO, userContractVO);
-
-			userContractVOs.add(userContractVO);
+			
+			UserContractVO userContract = new UserContractVO();
+			
+			BeanUtil.copyPropertie(userContractPO, userContract);
+			
+			userContractVOs.add(userContract);
 		}
-
+		
 		return userContractVOs;
 	}
 
-	@Transactional
-	public void saveOrUpdateUserContract(UserContractVO userContractVO) {
-
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int addUserContract(UserContractVO userContractVO, int company) {
+		
+		CompanyPO companyPO = companyDao.get(company);
 		UserContractPO userContractPO = new UserContractPO();
-
-		BeanUtil.copyProperties(userContractVO, userContractPO);
-
-		userContractPO.setCreateTime(DateUtil.current("yyyy-MM-dd HH:mm:ss"));
-
-		userContractDao.saveOrUpdate(userContractPO);
+		
+		BeanUtil.copyPropertie(userContractVO, userContractPO);
+		
+		String currentDate = DateUtil.current("yyMMdd").toString();
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_SO_INT, currentDate, company);
+		String no =  companyPO.getShortname() + "P" + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+		
+		userContractPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+		userContractPO.setNo(no);
+		
+		userContractDao.save(userContractPO);
+		
+		return 0;
 	}
 
-	@Transactional
-	public void saveOrUpdateUserContract(List<UserContractVO> userContractVOs) {
-
-		for (UserContractVO userContractVO : userContractVOs) {
-			saveOrUpdateUserContract(userContractVO);
-		}
-
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateUserContract(UserContractVO userContractVO) {
+		UserContractPO userContractPO = userContractDao.get(userContractVO.getUcId());
+		
+		BeanUtil.copyPropertie(userContractVO, userContractPO);
+		
+		userContractDao.update(userContractPO);
+		
+		return 0;
 	}
 
-	@Transactional
-	public void deleteUserContractById(String id) {
-		userContractDao.deleteById(id);
-	}
-
-	@Transactional
-	public void deleteUserContract(List<String> ids) {
-
-		for (String id : ids) {
-			userContractDao.deleteById(id);
-		}
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int deleteUserContract(UserContractVO userContractVO) {
+		
+		UserContractPO userContractPO = userContractDao.get(userContractVO.getUcId());
+		userContractDao.delete(userContractPO);
+		
+		return 0;
 	}
 
 }

@@ -27,10 +27,10 @@ public class EmemberServiceImpl implements EmemberService {
 
 	@Autowired
 	private EmemberDao ememberDao;
-	
+
 	@Autowired
 	private VticketDao vticketDao;
-	
+
 	@Autowired
 	private MessageService messageService;
 
@@ -52,7 +52,6 @@ public class EmemberServiceImpl implements EmemberService {
 		}
 
 		paging.setData(ememberVOs);
-
 	}
 
 	@Override
@@ -74,7 +73,7 @@ public class EmemberServiceImpl implements EmemberService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addEmember(EmemberVO ememberVO, String securityCode, String verifyCode) throws FLException {
-		
+
 		String no = ememberVO.getNo();
 		String unionId = ememberVO.getUnionId();
 
@@ -97,31 +96,31 @@ public class EmemberServiceImpl implements EmemberService {
 		if (ememberPO != null) {
 			throw new FLException(330013, "电子会员已存在");
 		}
-		
+
 		VticketPO vticketPO = vticketDao.queryVticketByTno(no);
-		
-		if(vticketPO == null){
+
+		if (vticketPO == null) {
 			throw new FLException(160026, "活动票不存在");
 		}
 
 		ememberPO = new EmemberPO();
 
 		BeanUtil.copyPropertie(ememberVO, ememberPO);
-		
+
 		ememberPO.setActivity(vticketPO.getVaid());
 		ememberPO.setStatus(EmemberPO.STATUS_INIT_INT);
 
 		ememberDao.save(ememberPO);
 
-		BeanUtil.copyPropertie(ememberPO, ememberVO);
-		
+		vticketPO.setName(ememberVO.getName());
+		vticketPO.setPhone(ememberVO.getPhone());
+		vticketPO.setAddress(ememberVO.getAddress());
 		vticketPO.setIsregist(VticketPO.ISREGIST_YES_INT);
-		
+
 		vticketDao.update(vticketPO);
-		
+
 		messageService.sendMessage(unionId, "活动票", no, String.format("活动票: %s, 注册成功", no));
 
 		return 0;
 	}
-
 }

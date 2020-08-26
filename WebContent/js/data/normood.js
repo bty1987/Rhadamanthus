@@ -28,7 +28,7 @@ $(function() {
         com.cleanItems(normood.items);
     });
 
-    com.initTypeahead('goodsName', api.data.queryGoodsByName, "goods.name", {}, "goodes", "gid", "name", null);
+    com.initTypeahead('goodsName', api.data.queryAoodsByName, "aoods.goods.name", {}, "aoodes", "gid", "name", null);
 
     var displayFunc  = (function(){
 

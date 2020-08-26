@@ -34,115 +34,115 @@ import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.SystemConfig;
 
 @Service("loginService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class LoginServiceImpl implements LoginService {
-	
+
 	@Autowired
 	private CompanyDao companyDao;
-	
+
 	@Autowired
 	private UserCompanyDao userCompanyDao;
-	
+
 	@Autowired
 	private TokenDao tokenDao;
-	
+
 	@Autowired
 	private UserDao userDao;
-	
+
 	@Override
 	public String requestAuthCode(String userId, String code, String secret) throws FLException {
-		
+
 		try {
-			
+
 			TokenPO tokenPO = tokenDao.queryTokenByKey(code);
-			
-			if(tokenPO == null){
+
+			if (tokenPO == null) {
 				throw new FLException(110008, "验证信息错误");
 			}
-			
-			if(code == null || secret == null || !code.equals(AESHelper.decrypt(secret, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")))){
+
+			if (code == null || secret == null || !code.equals(AESHelper.decrypt(secret, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")))) {
 				throw new FLException(110008, "验证信息错误");
 			}
-			
+
 			Authentication authentication = null;
 
 			int $company = 0;
-			
+
 			UserPO userPO = userDao.queryUserByUserId(userId);
-			
-			if(userPO == null){
+
+			if (userPO == null) {
 				throw new FLException(110004, "该用户不能登陆系统");
 			}
-			
+
 			$company = userPO.getCompany();
-			
+
 			authentication = new Authentication(userPO.getUserId(), userPO.getCurrentName(), userPO.getRole().getRid(), (new Date()).getTime(), true, $company, userPO.getFreedom());
 			authentication.setTimout((short) 1);
-			
+
 			return AESHelper.encrypt(authentication.getAuthenticationStr(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
 		} catch (FLException e) {
 			throw e;
-		}  catch (Exception e) {
+		} catch (Exception e) {
 			throw new FLException(110000, "系统处理问题");
 		}
-		
+
 	}
 
 	@Override
 	public String changeAuthCode(String auth, String company) throws FLException {
-		
+
 		try {
 			Authentication authentication = new Authentication(AESHelper.decrypt(auth, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
-			
+
 			CompanyPO companyPO = companyDao.get(FormatUtil.decodeCompany(AESHelper.decrypt(company, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"))));
-			
-			if(companyPO == null){
+
+			if (companyPO == null) {
 				throw new FLException(110011, "无权限登陆");
 			}
-			
+
 			UserPO userPO = userDao.queryUserByUserId(authentication.getUserId());
-			
-			if(userPO == null){
+
+			if (userPO == null) {
 				throw new FLException(110004, "该用户不能登陆系统");
 			}
-			
+
 			UserCompanyPO userCompanyPO = userCompanyDao.queryUserCompany(userPO.getUid(), companyPO.getCid());
-			
-			if(userCompanyPO == null){
+
+			if (userCompanyPO == null) {
 				throw new FLException(110011, "无权限登陆");
 			}
-			
+
 			authentication.setCompany(companyPO.getCid());
-			
+
 			return AESHelper.encrypt(authentication.getAuthenticationStr(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
-			
+
 		} catch (FLException e) {
 			throw e;
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new FLException(110000, "系统处理问题");
 		}
-		
+
 	}
 
 	@Override
 	public String updateAuthCode(String auth, String password) throws FLException {
-		
+
 		try {
 			Authentication authentication = new Authentication(AESHelper.decrypt(auth, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
-			
+
 			UserPO userPO = userDao.queryUserByUserId(authentication.getUserId());
-			
-			if(userPO == null){
+
+			if (userPO == null) {
 				throw new FLException(110004, "该用户不能登陆系统");
 			}
-			
-			if(!userPO.getPassword().equals(MD5Helper.MD5(password)) || userPO.getStatus() == UserPO.STATUS_DISABLE_INT){
+
+			if (!userPO.getPassword().equals(MD5Helper.MD5(password)) || userPO.getStatus() != UserPO.STATUS_ONJOB_INT) {
 				throw new FLException(110011, "无权限登陆");
 			}
-			
+
 			authentication.setUpdateTime(new Date().getTime());
-			
+
 			return AESHelper.encrypt(authentication.getAuthenticationStr(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
 		} catch (FLException e) {
 			throw e;

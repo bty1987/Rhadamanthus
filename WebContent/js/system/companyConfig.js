@@ -37,7 +37,7 @@ jQuery(function ($) {
     // 3.款项
     showModal(['paymentScaleModal','款项比例','myModalLabel'],
         [
-            ['names','款项名称','col-xs-10 col-sm-6 v_required','text'],
+            ['names','款项','col-xs-10 col-sm-6 v_required','text'],
             ['comment','备注','col-xs-10 col-sm-6','textarea']
         ],['savePaymentScale','cancelPaymentScale']
     );
@@ -51,7 +51,7 @@ jQuery(function ($) {
     // 6.收据类型
     showModal(['receiptTypeModal','收据类型','rtId'],
         [
-            ['name','收据类型名称','col-xs-10 col-sm-6 v_required','text'],
+            ['name','收据类型','col-xs-10 col-sm-6 v_required','text'],
             ['no','键值','col-xs-10 col-sm-6 v_required','text'],
             ['type','类型','col-xs-10 col-sm-6 v_required','select',{"1":"现金","2":"银行","3":"转账","4":"对公账户","5":"券"}]
         ],['saveReceiptTypeBtn','cancelReceiptTypeBtn']
@@ -180,7 +180,7 @@ jQuery(function ($) {
 
                 case 'quotationVersion':
                     propertyArr = [
-                        [data.versionId],
+                        [data.no],
                         [data.trafficRate],
                         [data.trafficDiscount == 0 ? '不打折' : data.trafficDiscount == 1 ? '打折' : '-'],
                         [data.manageRate],
@@ -311,8 +311,8 @@ jQuery(function ($) {
         com.clearValidator("#versionId", true);
         if (!com.validate("quotationVersionModal") && !companyConfig.quotationVersion.repeatFlg) {
             var options = {
-                "quotationVersion.versionId": companyConfig.quotationVersion.items.versionId.val(),
-                "quotationVersion.versionName": companyConfig.quotationVersion.items.versionName.val(),
+                "quotationVersion.no": companyConfig.quotationVersion.items.versionId.val(),
+                "quotationVersion.name": companyConfig.quotationVersion.items.versionName.val(),
                 "quotationVersion.trafficRate": companyConfig.quotationVersion.items.trafficRate.val(),
                 "quotationVersion.trafficDiscount": companyConfig.quotationVersion.items.trafficDiscount.prop("checked") ? 1 : 0,
                 "quotationVersion.manageRate": companyConfig.quotationVersion.items.manageRate.val(),

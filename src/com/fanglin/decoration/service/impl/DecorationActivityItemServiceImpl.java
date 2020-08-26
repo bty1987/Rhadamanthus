@@ -81,10 +81,55 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 		return decorationActivityItemVOs;
 	}
+	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int receiveDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId, String userName) throws FLException {
+		
+		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
+		
+		if (decorationActivityItemPO == null) {
+			throw new FLException(140030, "订单活动物品不存在");
+		}
+		
+		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT) {
+			throw new FLException(140057, "订单活动奖品不可操作");
+		}
+		
+		UserPO operater = userDao.queryUserByUserId(userId);
+		
+		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_RECEIVE_INT);
+		decorationActivityItemPO.setReceiveUserId(operater);
+		decorationActivityItemPO.setReceiveUserName(userName);
+		decorationActivityItemPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
+		
+		decorationActivityItemDao.update(decorationActivityItemPO);
+		
+		AwardStockPO awardStockPO = awardStockDao.get(decorationActivityItemPO.getAsid());
+		
+		if (decorationActivityItemPO.getIsStock() == DecorationActivityItemPO.ISSTOCK_CAL_INT) {
+			
+			int num = Arith.sub(awardStockPO.getNum(), decorationActivityItemPO.getNum());
+			
+			if (num < 0) {
+				throw new FLException(160038, "库存不足");
+			}
+			
+			awardStockPO.setNum(num);
+			
+			awardStockDao.update(awardStockPO);
+		}
+		
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, operater, decorationActivityItemPO.getOrderId(), AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_RECEIVE_INT, AwardRecordPO.ONETYPE_DECORATION_INT, decorationActivityItemPO.getIsStock(), decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum(), decorationActivityItemVO.getContent());
+		
+		awardRecordDao.save(awardRecordPO);
+		
+		return 0;
+	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int abateDecorationActionItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException {
+	public int abateDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId, String userName) throws FLException {
 		// 失效状态
 		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
 
@@ -109,6 +154,8 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		}
 
 		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_UNVALID_INT);
+		decorationActivityItemPO.setReceiveUserId(userDao.queryUserByUserId(userId));
+		decorationActivityItemPO.setReceiveUserName(userName);
 
 		decorationActivityItemDao.update(decorationActivityItemPO);
 
@@ -119,70 +166,27 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int receiveDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId, String userName) throws FLException {
+	public int deliveDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId, String userName) throws FLException {
 
 		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
 
 		if (decorationActivityItemPO == null) {
 			throw new FLException(140030, "订单活动物品不存在");
 		}
+
+		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT) {
+			throw new FLException(140057, "订单活动奖品不可操作");
+		}
+
+		UserPO operater = userDao.queryUserByUserId(userId);
 		
-		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT) {
-			throw new FLException(140057, "订单活动奖品不可操作");
-		}
-
-		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_RECEIVE_INT);
-		decorationActivityItemPO.setReceiveUserId(userDao.queryUserByUserId(userId));
-		decorationActivityItemPO.setReceiveUserName(userName);
-		decorationActivityItemPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
-
-		decorationActivityItemDao.update(decorationActivityItemPO);
-
-		AwardStockPO awardStockPO = awardStockDao.get(decorationActivityItemPO.getAsid());
-
-		UserPO creater = userDao.queryUserByUserId(userId);
-
-		if (decorationActivityItemPO.getIsStock() == DecorationActivityItemPO.ISSTOCK_CAL_INT) {
-
-			int num = Arith.sub(awardStockPO.getNum(), decorationActivityItemPO.getNum());
-
-			if (num < 0) {
-				throw new FLException(160038, "库存不足");
-			}
-
-			awardStockPO.setNum(num);
-
-			awardStockDao.update(awardStockPO);
-		}
-
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, decorationActivityItemPO.getOrderId(), AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_RECEIVE_INT, AwardRecordPO.ONETYPE_DECORATION_INT, decorationActivityItemPO.getIsStock(), decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum(), decorationActivityItemVO.getContent());
-
-		awardRecordDao.save(awardRecordPO);
-
-		return 0;
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public int deliveDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException {
-
-		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
-
-		if (decorationActivityItemPO == null) {
-			throw new FLException(140030, "订单活动物品不存在");
-		}
-
-		if (decorationActivityItemPO.getState() != DecorationActivityItemPO.STATUS_INIT_INT) {
-			throw new FLException(140057, "订单活动奖品不可操作");
-		}
-
 		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_DELIVERY_INT);
+		decorationActivityItemPO.setReceiveUserId(operater);
+		decorationActivityItemPO.setReceiveUserName(userName);
 
 		decorationActivityItemDao.update(decorationActivityItemPO);
 		
 		AwardStockPO awardStockPO = awardStockDao.get(decorationActivityItemPO.getAsid());
-
-		UserPO creater = userDao.queryUserByUserId(userId);
 
 		if (decorationActivityItemPO.getIsStock() == DecorationActivityItemPO.ISSTOCK_CAL_INT) {
 
@@ -197,7 +201,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			awardStockDao.update(awardStockPO);
 		}
 
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, decorationActivityItemPO.getOrderId(), AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_DELIVERY_INT, AwardRecordPO.ONETYPE_DECORATION_INT, decorationActivityItemPO.getIsStock(), decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum(), decorationActivityItemVO.getContent());
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, operater, decorationActivityItemPO.getOrderId(), AwardRecordPO.TYPE_XG_INT, AwardRecordPO.SUBTYPE_DELIVERY_INT, AwardRecordPO.ONETYPE_DECORATION_INT, decorationActivityItemPO.getIsStock(), decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum(), decorationActivityItemVO.getContent());
 
 		awardRecordDao.save(awardRecordPO);
 
@@ -206,7 +210,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int unrefundDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException {
+	public int unrefundDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId, String userName) throws FLException {
 
 		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
 
@@ -219,6 +223,8 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		}
 
 		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_WAIT_INT);
+		decorationActivityItemPO.setReceiveUserId(userDao.queryUserByUserId(userId));
+		decorationActivityItemPO.setReceiveUserName(userName);
 
 		decorationActivityItemDao.update(decorationActivityItemPO);
 
@@ -227,7 +233,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int refundDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException {
+	public int refundDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId, String userName) throws FLException {
 
 		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
 
@@ -246,14 +252,16 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		if (decorationPO == null) {
 			throw new FLException(140013, "订单不存在");
 		}
+
+		UserPO operater = userDao.queryUserByUserId(userId);
 		
 		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_RETREAT_INT);
+		decorationActivityItemPO.setReceiveUserId(operater);
+		decorationActivityItemPO.setReceiveUserName(userName);
 
 		decorationActivityItemDao.update(decorationActivityItemPO);
 
 		AwardStockPO awardStockPO = awardStockDao.get(decorationActivityItemPO.getAsid());
-
-		UserPO creater = userDao.queryUserByUserId(userId);
 
 		if (decorationActivityItemPO.getIsStock() == DecorationActivityItemPO.ISSTOCK_CAL_INT) {
 
@@ -264,7 +272,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			awardStockDao.update(awardStockPO);
 		}
 
-		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, creater, decorationActivityItemPO.getOrderId(), AwardRecordPO.TYPE_CG_INT, AwardRecordPO.SUBTYPE_REFUND_INT, AwardRecordPO.ONETYPE_DECORATION_INT, decorationActivityItemPO.getIsStock(), decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum(), decorationActivityItemVO.getContent());
+		AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, operater, decorationActivityItemPO.getOrderId(), AwardRecordPO.TYPE_CG_INT, AwardRecordPO.SUBTYPE_REFUND_INT, AwardRecordPO.ONETYPE_DECORATION_INT, decorationActivityItemPO.getIsStock(), decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum(), decorationActivityItemVO.getContent());
 
 		awardRecordDao.save(awardRecordPO);
 

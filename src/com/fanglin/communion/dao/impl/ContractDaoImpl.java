@@ -23,11 +23,17 @@ public class ContractDaoImpl extends DaoImpl<ContractPO> implements ContractDao 
 		
 		PagingQuery<ContractPO> query = pagingQuery(paging, ContractPO.class);
 		
-		query.add(Restrictions.eq("company", company));
+		query.add(Restrictions.eq(ContractPO.COLUMN_COMPANY_STR, company));
 		
 		queryFilterExcute(query, filters);
 		
 		return query.list();
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<ContractPO> queryContract(int company) {
+		return session().createCriteria(ContractPO.class).add(Restrictions.eq(ContractPO.COLUMN_COMPANY_STR, company)).list();
 	}
 	
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

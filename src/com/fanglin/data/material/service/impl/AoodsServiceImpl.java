@@ -91,11 +91,9 @@ public class AoodsServiceImpl implements AoodsService {
 	}
 	
 	@Override
-	public List<AoodsVO> queryAoodsByName(AoodsVO aoodsVO, String orderId) {
+	public List<AoodsVO> queryAoodsByName(AoodsVO aoodsVO, int company) {
 		
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
-		
-		List<AoodsPO> AoodsPOs = aoodsDao.queryAoodsByName(aoodsVO.getGoods().getName(), 10, decorationPO.getCompany());
+		List<AoodsPO> AoodsPOs = aoodsDao.queryAoodsByName(aoodsVO.getGoods().getName(), 10, company);
 		List<AoodsVO> AoodsVOs = new ArrayList<AoodsVO>();
 		
 		for (AoodsPO aoodsPO : AoodsPOs){

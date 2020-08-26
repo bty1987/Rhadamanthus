@@ -65,6 +65,13 @@
     {"key":"0", "value":"有效"},
     {"key":"1", "value":"无效"}
   ],
+  "withholdType" :[
+    {"key":"0", "value":"普通"},
+    {"key":"1", "value":"装修款"}
+  ],
+  "withholdStatus" :[
+    {"key":"0", "value":"初始"}
+  ],
 "errorCode": 0,
   "errorMsg": null
 }

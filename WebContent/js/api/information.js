@@ -1,6 +1,6 @@
 $.extend(api.index, {
-    messageIndex: {url: "/views/information/messageMng.html"},
-    moreNoticesIndex: {url: "/views/information/moreNotices.html"},
+    messageIndex: {url: "/views/information/message.html"},
+    moreNoticesIndex: {url: "/views/information/notice4more.html"},
     noticeIndex: {url: "/views/information/noticeMng.html"},
     activityIndex: {url: "/views/information/activity.html"},
     activityItemIndex: {url: "/views/information/activityItem.html"},
@@ -29,25 +29,37 @@ $.extend(api, {
         queryNoticeDepartment: {url: "queryNoticeDepartment.do"},
         updateNoticeDepartment: {url: "updateNoticeDepartment.do"},
 
-        pageActivity: {url: "pageActivity.do", demo: true},
+        pageActivity: {url: "pageActivity.do", demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["multiple"]
+            }]
+        },
         queryActivityForValid: {url: "queryActivityForValid.do", demo: true},
         queryActivityItemByAid: {url: "queryActivityItemByAid.do", demo: true,
             type: "query",
             tranargs: [{
                 result: "activityItems",
-                args: ["money"]
+                args: ["money", "integral"]
             }]
         },
-        addActivity: {url: "addActivity.do"},
+        addActivity: {url: "addActivity.do",
+            type: "update",
+            tranargs: {
+                args: ["activity.multiple"]
+            }
+        },
         addActivityItem: {url: "addActivityItem.do",
         	type: "update",
-        	tranargs: {
-        		args: ["activityItem.money"],
-        		query:[{
-        			result: "activityItem",
-        			args:["money"]
-        		}]
-        }},
+            tranargs: {
+                args: ["activityItem.money", "activityItem.integral"],
+                query:[{
+                    result: "activityItem",
+                    args:["money", "integral"]
+                }]
+            }
+        },
         updateActivity: {url: "updateActivity.do"},
         updateActivityForStatus:{url: "updateActivityForStatus.do"},
         updateActivityForDefault:{url: "updateActivityForDefault.do"},

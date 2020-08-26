@@ -64,6 +64,12 @@ public class CustomerOriginPO implements Serializable {
 	private String houseNumber;
 
 	private int buildArea;
+	
+	private int freeArea;
+	
+	private int totalArea;
+	
+	private int innerArea;
 
 	private UserPO creater;
 
@@ -86,8 +92,6 @@ public class CustomerOriginPO implements Serializable {
 	private UserPO designer;
 
 	private String orderId;
-	
-	private String salesmanType;
 
 	public CustomerOriginPO() {
 		super();
@@ -212,6 +216,33 @@ public class CustomerOriginPO implements Serializable {
 		this.buildArea = buildArea;
 	}
 
+	@Column(name = "freeArea")
+	public int getFreeArea() {
+		return freeArea;
+	}
+
+	public void setFreeArea(int freeArea) {
+		this.freeArea = freeArea;
+	}
+
+	@Column(name = "totalArea")
+	public int getTotalArea() {
+		return totalArea;
+	}
+
+	public void setTotalArea(int totalArea) {
+		this.totalArea = totalArea;
+	}
+
+	@Column(name = "innerArea")
+	public int getInnerArea() {
+		return innerArea;
+	}
+
+	public void setInnerArea(int innerArea) {
+		this.innerArea = innerArea;
+	}
+
 	@ManyToOne
 	@JoinColumn(nullable = true, name = "cuid", referencedColumnName = "uid")
 	public UserPO getCreater() {
@@ -316,15 +347,6 @@ public class CustomerOriginPO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
-	}
-
-	@Column(name = "salesmanType")
-	public String getSalesmanType() {
-		return salesmanType;
-	}
-
-	public void setSalesmanType(String salesmanType) {
-		this.salesmanType = salesmanType;
 	}
 
 }

@@ -11,6 +11,8 @@ public interface SoodsService {
 
 	public void pageSoods(Paging paging, List<Filter> filters, int company);
 	
+	public void pageSoodsByQiid(Paging paging, List<Filter> filters, SoodsVO soodsVO);
+	
 	public List<SoodsVO> querySoodsByQiid(SoodsVO soodsVO) throws FLException;
 	
 	public int addSoods(SoodsVO soodsVO, int company) throws FLException;

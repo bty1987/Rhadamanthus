@@ -10,93 +10,118 @@
 package com.fanglin.personel.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+
+import org.apache.struts2.json.annotations.JSON;
 
 public class UserContractVO implements Serializable {
 
 	private static final long serialVersionUID = 8111974803190366547L;
 	
-	private int ucId;
+	private Long ucId;
 
-	private String contractId;
+	private Long uid;
 	
-	private String userId;
+	private String no;
+	
+	private String name;
+	
+	private String signTime;
 	
 	private String startTime;
 	
 	private String endTime;
 	
-	private String createTime;
+	private Timestamp createTime;
 	
-	private String des;
+	private Short status;
 	
-	private String flag;
-
-	public int getUcId() {
+	private String comment;
+	
+	public Long getUcId() {
 		return ucId;
 	}
 
-	public void setUcId(int ucId) {
+	public void setUcId(Long ucId) {
 		this.ucId = ucId;
 	}
 
-	public String getContractId(){
-		return contractId;
+	public Long getUid() {
+		return uid;
 	}
 
-	public void setContractId(String contractId){
-		this.contractId = contractId;
+	public void setUid(Long uid) {
+		this.uid = uid;
 	}
 
-	public UserContractVO(){
-		super();
+	public String getNo() {
+		return no;
 	}
 
-	public String getUserId(){
-		return userId;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
-	public void setUserId(String userId){
-		this.userId = userId;
+	public String getName() {
+		return name;
 	}
 
-	public String getStartTime(){
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getSignTime() {
+		return signTime;
+	}
+
+	public void setSignTime(String signTime) {
+		this.signTime = signTime;
+	}
+
+	public String getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(String startTime){
+	public void setStartTime(String startTime) {
 		this.startTime = startTime;
 	}
 
-	public String getEndTime(){
+	public String getEndTime() {
 		return endTime;
 	}
 
-	public void setEndTime(String endTime){
+	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
 
-	public String getCreateTime(){
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(String createTime){
+	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
 
-	public String getDes(){
-		return des;
+	public Short getStatus() {
+		return status;
 	}
 
-	public void setDes(String des){
-		this.des = des;
+	public void setStatus(Short status) {
+		this.status = status;
 	}
 
-	public String getFlag(){
-		return flag;
+	public String getComment() {
+		return comment;
 	}
 
-	public void setFlag(String flag){
-		this.flag = flag;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
+
+	public UserContractVO() {
+		super();
+	}
+
 
 }

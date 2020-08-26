@@ -100,6 +100,44 @@ public class ConstructionInfoDaoImpl extends DaoImpl<ConstructionInfoPO> impleme
 					query.add(query.getCriterion(ConstructionInfoDO.COLUMN_FINISHTIME_STR, eTimestamp, "le"));
 					query.add(query.getCriterion(ConstructionInfoDO.COLUMN_FINISHTIME_STR, sTimestamp, "ge"));
 
+				} else if ("designTime".equals(filter.getField())) {
+
+					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
+					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
+
+					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
+					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+
+					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
+					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
+
+					query.add(query.getCriterion(ConstructionInfoDO.COLUMN_DESIGNTIME_STR, eTimestamp, "le"));
+					query.add(query.getCriterion(ConstructionInfoDO.COLUMN_DESIGNTIME_STR, sTimestamp, "ge"));
+
+				} else if ("sdesignTimeRange".equals(field)) {
+					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
+					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
+
+					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
+					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+
+					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
+					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
+
+					query.add(query.getCriterion(ConstructionInfoDO.COLUMN_SDESIGNTIME_STR, sTimestamp, "ge"));
+					query.add(query.getCriterion(ConstructionInfoDO.COLUMN_SDESIGNTIME_STR, eTimestamp, "le"));
+				} else if ("edesignTimeRange".equals(field)) {
+					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
+					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
+
+					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
+					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+
+					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
+					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
+
+					query.add(query.getCriterion(ConstructionInfoDO.COLUMN_EDESIGNTIME_STR, sTimestamp, "ge"));
+					query.add(query.getCriterion(ConstructionInfoDO.COLUMN_EDESIGNTIME_STR, eTimestamp, "le"));
 				}
 			}
 		}

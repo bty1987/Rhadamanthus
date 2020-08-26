@@ -16,5 +16,7 @@ import com.fanglin.personel.vo.UserExperienceVO;
 public interface UserExperienceService {
 
 	public List<UserExperienceVO> queryUserExperienceByUid(UserExperienceVO userExperienceVO) throws FLException;
+	
+	public int updateUserExpirence(UserExperienceVO userExperienceVO);
 
 }

@@ -13,6 +13,10 @@ public class ConstructionNodeVO implements Serializable {
 	private Integer precheck;
 
 	private Integer postcheck;
+	
+	private Integer stacheck;
+
+	private Integer fincheck;
 
 	private Short status;
 
@@ -52,6 +56,22 @@ public class ConstructionNodeVO implements Serializable {
 
 	public void setPostcheck(Integer postcheck) {
 		this.postcheck = postcheck;
+	}
+	
+	public Integer getStacheck() {
+		return stacheck;
+	}
+
+	public void setStacheck(Integer stacheck) {
+		this.stacheck = stacheck;
+	}
+
+	public Integer getFincheck() {
+		return fincheck;
+	}
+
+	public void setFincheck(Integer fincheck) {
+		this.fincheck = fincheck;
 	}
 
 	public Short getStatus() {

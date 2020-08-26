@@ -31,7 +31,7 @@ import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
-@Service("orderDesignPictureService")
+@Service("decorationPictureService")
 @Transactional(readOnly = true)
 public class DecorationPictureServiceImpl implements DecorationPictureService {
 

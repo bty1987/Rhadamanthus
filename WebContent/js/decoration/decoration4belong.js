@@ -12,7 +12,7 @@ jQuery(function($) {
 			decorationBelong.decorationOrderStatus[v.key] = v.value;
 		});
 		
-		$.each(res.type, function(i, v){
+		$.each(res.typeness, function(i, v){
             decorationBelong.decorationType[v.key] = v.value;
 		});
     }, null, false);

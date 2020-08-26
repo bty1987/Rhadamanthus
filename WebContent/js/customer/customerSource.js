@@ -22,12 +22,14 @@ $(function () {
             intention: com.focusPage("#intention"),
             price: com.focusPage("#price"),
             grade: com.focusPage("#grade"),
-            salesmanTypeEdit: com.focusPage("#salesmanTypeEdit"),
             comment: com.focusPage("#comment"),
 
             villageNo: com.focusPage("#villageNo"),
             houseNumber: com.focusPage("#houseNumber"),
             buildArea: com.focusPage("#buildArea"),
+            freeArea: com.focusPage("#freeArea"),
+            totalArea: com.focusPage("#totalArea"),
+            innerArea: com.focusPage("#innerArea"),
             rule: com.focusPage("#rule"),
 
             designer: com.focusPage("#designer"),
@@ -71,7 +73,8 @@ $(function () {
         status: {},
 
         grade: ["A", "B", "C", "D"],
-        currentCustomerSource: {}
+        currentCustomerSource: {},
+        decorationTypes: []
     };
 
     customerSource.saveDesignerBtn.bindClick(bindAllInfo);
@@ -96,9 +99,12 @@ $(function () {
     com.post(api.ds.decoration, {}, function (res) {
         customerSource.items.houseClass.bindData(res.houseClass, 'key', 'value');
         customerSource.items.salesmanType.bindData(res.salesmanType, 'key', 'value');
-        customerSource.items.salesmanTypeEdit.bindData(res.salesmanType, 'key', 'value');
-        customerSource.items.orderType.bindData(res.type, 'key', 'value');
+        customerSource.items.orderType.bindData(res.typeness, 'key', 'value');
         customerSource.items.resourceType.bindData(res.status, 'key', 'value');
+
+        $.each(res.typeness, function (i, v) {
+            customerSource.decorationTypes[v.key] = v.type;
+        });
     }, null, false);
 
     com.initTypeahead('designer', api.personel.queryUserByPinyin, "pinyinName", {"user.status": 0}, 'autoFillKeyValue', 'key', 'value', null);
@@ -128,6 +134,14 @@ $(function () {
 
     customerSource.modals.commitFirstApprove.on("hide.bs.modal", function(){
         com.cleanItems(customerSource.items);
+    });
+
+    customerSource.items.buildArea.on("change", function (e) {
+        getTotalArea();
+    });
+
+    customerSource.items.freeArea.on("change", function (e) {
+        getTotalArea();
     });
 
     var displayFunc = (function () {
@@ -175,8 +189,10 @@ $(function () {
                 ["楼盘名: ",com.checkNull(v.village.name,'无'), "grey"],
                 ["楼牌号: ", v.houseNumber, "blue"],
                 ["建筑面积: ", v.buildArea, "blue"],
+                ["赠送面积: ", v.freeArea, "blue"],
+                ["总面积: ", v.totalArea, "blue"],
+                ["套内面积: ", v.innerArea, "blue"],
                 ["装修单号: ", com.checkNull(v.orderId, '无'), "blue"],
-                ["业务员类型: ", v.salesmanType, "red"],
                 ["状态: ", customerSource.status[v.status], "red"],
                 ["备注: ", com.checkNull(v.comment, '无'), "grey"]
             ];
@@ -228,7 +244,7 @@ $(function () {
                 customerSource.items.houseNumber.attr("readOnly", "readOnly");
                 customerSource.items.name.attr("readOnly", "readOnly");
                 customerSource.items.phone.attr("readOnly", "readOnly");
-                customerSource.items.salesmanTypeEdit.attr("disabled", "disabled");
+                customerSource.items.totalArea.attr("readOnly", "readOnly");
 
                 editcustomerOrigin(v);
             });
@@ -254,7 +270,6 @@ $(function () {
                 customerSource.items.houseNumberBind.val(v.houseNumber);
                 customerSource.items.nameBind.val(v.name);
                 customerSource.items.phoneBind.val(v.phone);
-                customerSource.items.salesmanType.val(v.salesmanType);
                 customerSource.modals.bindAllInfoModal.modal("show");
             });
 
@@ -332,7 +347,9 @@ $(function () {
         customerSource.items.comment.val(d.comment);
         customerSource.items.houseNumber.val(d.houseNumber);
         customerSource.items.buildArea.val(d.buildArea);
-        customerSource.items.salesmanTypeEdit.val(d.salesmanType);
+        customerSource.items.freeArea.val(d.freeArea);
+        customerSource.items.totalArea.val(d.totalArea);
+        customerSource.items.innerArea.val(d.innerArea);
 
         if(d.gender == "女"){
             customerSource.items.gender.prop("checked", true);
@@ -367,7 +384,10 @@ $(function () {
             "customerOrigin.grade": customerSource.items.grade.val(),
             "customerOrigin.comment": customerSource.items.comment.val(),
             "customerOrigin.village.no": com.typeahead("villageNo"),
-            "customerOrigin.buildArea": customerSource.items.buildArea.val()
+            "customerOrigin.buildArea": customerSource.items.buildArea.val(),
+            "customerOrigin.freeArea" : customerSource.items.freeArea.val(),
+            "customerOrigin.totalArea" : customerSource.items.totalArea.val(),
+            "customerOrigin.innerArea" : customerSource.items.innerArea.val()
         };
 
         com.post(api.customer.updateCustomerOrigin, options, function (res) {
@@ -392,7 +412,6 @@ $(function () {
             "customerOrigin.house.hid": hid,
             "customerOrigin.customer.cid": cid,
             "customerOrigin.phone": customerSource.items.phoneBind.val(), //为了避免编辑时修改电话号, 导致客源中和客户中信息对应不上情况
-            "customerOrigin.salesmanType": customerSource.items.salesmanType.val()
         };
 
         com.post(api.customer.bindCustomerOrigin, options, function (res) {
@@ -431,6 +450,9 @@ $(function () {
             "house.floor" : customerSource.items.floor.val(),
             "house.door" : customerSource.items.door.val(),
             "house.buildArea" : customerSource.currentCustomerSource.buildArea,
+            "house.freeArea" : customerSource.currentCustomerSource.freeArea,
+            "house.totalArea" : customerSource.currentCustomerSource.totalArea,
+            "house.innerArea" : customerSource.currentCustomerSource.innerArea,
             "house.roomNum" : customerSource.items.houseTypeOne.val(),
             "house.houseType" : customerSource.items.houseTypeOne.val() + "室" + customerSource.items.houseTypeTwo.val() + "厅" + customerSource.items.houseTypeThr.val() + "厨" + customerSource.items.houseTypeFour.val() + "卫"
         };
@@ -510,9 +532,10 @@ $(function () {
                 "approval.receiver.userId": receiverId,
                 "approval.comment": customerSource.items.approveComment.val(),
                 "approvalCustomerOriginTDecoration.customerOrigin.csid" : customerSource.currentCustomerSource.csid,
-                "approvalCustomerOriginTDecoration.type": customerSource.items.orderType.val(),
+                "approvalCustomerOriginTDecoration.type": customerSource.decorationTypes[customerSource.items.orderType.val()],
+                "approvalCustomerOriginTDecoration.typeness": customerSource.items.orderType.val(),
                 "approvalCustomerOriginTDecoration.salesman.userId": com.typeahead("salesman"),
-                //"approvalCustomerOriginTDecoration.salesmanType": customerSource.items.salesmanType.val(),
+                "approvalCustomerOriginTDecoration.salesmanType": customerSource.items.salesmanType.val(),
                 "approvalCustomerOriginTDecoration.houseType": customerSource.items.houseType.val(),
                 "approvalCustomerOriginTDecoration.houseClass": customerSource.items.houseClass.val(),
                 "approvalCustomerOriginTDecoration.resourceType": customerSource.items.resourceType.val()
@@ -561,5 +584,11 @@ $(function () {
                 }
             });
         });
+    }
+    
+    function getTotalArea(){
+        var buildArea = parseFloat(customerSource.items.buildArea.val());
+        var freeArea = parseFloat(customerSource.items.freeArea.val());
+        customerSource.items.totalArea.val(utils.accAdd(buildArea, freeArea));
     }
 });

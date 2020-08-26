@@ -5,7 +5,12 @@ $(function () {
     api = parent.api;
     com = parent.com;
     utils = parent.utils;
-    printer = parent.printer;
+
+    var printer = {
+        name : null,
+        args : {}
+    }
+
     var params = {
         serverPath : window.server,
         authentication : parent.params.authentication,
@@ -17,7 +22,7 @@ $(function () {
     };
     var trList = $("#refundsReslist");
     var querySalesItemBySid = api.sales.queryRefundsItemBySid;
-    
+
     //初始化状态/结算状态
     com.post(api.ds.sales, {}, function(res){
         params.statues = res.statues.split("key", "value");
@@ -28,7 +33,7 @@ $(function () {
         params.designer = decorationInfo.designer.currentName == null ? "" : decorationInfo.designer.currentName;
         params.supervisor = decorationInfo.supervisor.currentName == null ? "" : decorationInfo.supervisor.currentName;
     },null, false);
-    
+
     printer.name = "salesPaymentForRefund";
     printer.args = {
         "orderId": params.params.data.orderId,
@@ -40,9 +45,10 @@ $(function () {
         "createTime": params.params.data.createTime,
         "referMoney": utils.changeThrDecimal(params.params.total),
         "capitalize": utils.getCNMoney(params.params.total),
-        "salesItems": []
+        "salesItems": [],
+        "title" : params.params.company.fullname + "主材代购退货单"
     };
-    
+
     com.post(querySalesItemBySid, {'refunds.sid':params.params.data.sid}, function (data) {
         createList(data.refundsItems).appendTo(trList);
     },null, false);
@@ -86,9 +92,9 @@ $(function () {
         var propertyArr = [];
         var total = 0;
         $.each(data, function (i, v) {
-            
+
             if(v.rid != params.params.rid) return true;
-            
+
             propertyArr.push([
                 v.salesItem.goods.name,
                 v.salesItem.format.info,
@@ -96,14 +102,15 @@ $(function () {
                 v.salesItem.price,
                 v.total
             ]);
-            
+
             total = utils.accAdd(total, v.total);
-            
             printer.args.salesItems.push({
                 "name":v.salesItem.goods.name,
                 "num":v.num,
+                "unit" : v.salesItem.goods.measurementUnit,
                 "price":v.salesItem.price,
-                "total":v.total
+                "total":v.total,
+                "comment" : v.salesItem.comment
             });
 
         });

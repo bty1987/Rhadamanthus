@@ -26,7 +26,7 @@ public interface UserDao extends Dao<UserPO> {
 
 	public UserPO queryUserByOldUserId(String oldUserId);
 
-	public List<UserPO> pageUserForNameByPinyinName(Paging paging, String pinyin, Short status, Integer dtid, Integer company);
+	public List<UserPO> pageUserForNameByPinyinName(Paging paging, String pinyin, Short status, Integer company, Integer dtid);
 
 	public List<UserPO> queryUserByPhoneAIdent(String phone, String ident);
 
@@ -41,5 +41,7 @@ public interface UserDao extends Dao<UserPO> {
 	public int countUserByCompany(int company);
 
 	public int countUserByRoleId(Integer rid);
+	
+	public int countUserByDid(Integer deptId, Long did, Integer company);
 
 }

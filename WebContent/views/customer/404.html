@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>无可用数据</title>
+    <link rel="shortcut icon" href="fanglin.ico" type="image/x-icon">
+</head>
+<body>
+<div class="row">
+    <div class="col-xs-12">
+        <div id="resultList404" class="clearfix tab-pane active"></div> <!--查询结果-->
+    </div>
+</div>
+<script type="text/javascript">
+    jQuery(function($) {
+        var $resultList = com.focusPage('#resultList404').addClass('dz-default dz-message').html('');
+        var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
+        var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
+        var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
+    });
+</script>
+</body>
+</html>

@@ -28,7 +28,7 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 
 	@Override
 	public List<SalesPO> pageSales(Paging paging, List<Filter> filters, int company, int uid) {
-
+		
 		PagingQuery<SalesPO> query = pagingQuery(paging, SalesPO.class);
 
 		query.add(query.getCriterion(SalesPO.COLUMN_COMPANY_STR, company, "eq"));
@@ -154,6 +154,18 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 
 		return query.list();
 	}
+	
+	@Override
+	public List<SalesPO> pageSalesByOrderId(Paging paging, List<Filter> filters, int company, String orderId) {
+		
+		PagingQuery<SalesPO> query = pagingQuery(paging, SalesPO.class);
+		
+		query.add(query.getCriterion(SalesPO.COLUMN_COMPANY_STR, company, "eq"));
+		
+		query.add(query.getCriterion("orderId", orderId, "eq"));
+		
+		return query.list();
+	}
 
 	@Override
 	public SalesPO querySalesByNo(String no) {
@@ -167,17 +179,6 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public List<Object> querySalesActivityByTotal(String orderId) {
-
-		String sql = "select ac.`name`, sum(if(s.type in (2, 3), s.refermoney, -s.refermoney)) from sales.sales sa,payment.salespayment s,information.activity ac where sa.sid=s.sid and s.status in (1,2) and sa.orderId= :orderId and sa.activityId=ac.aId group by sa.activityId";
-
-		List<Object> uniqueResult = session().createSQLQuery(sql).setString("orderId", orderId).list();
-
-		return uniqueResult;
-	}
-
-	@Override
 	public int countSalesByOrderId(String orderId, short status) {
 
 		String sql = "SELECT count(*) FROM sales.sales where orderId=:orderId and status=:status";
@@ -186,7 +187,7 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 
 		return count.intValue();
 	}
-
+	
 	private void queryFilterExcute(PagingQuery<SalesPO> query, List<Filter> filters) {
 		if (filters != null) {
 			for (Filter filter : filters) {

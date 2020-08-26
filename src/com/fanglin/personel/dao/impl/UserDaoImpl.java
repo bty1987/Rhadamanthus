@@ -60,7 +60,7 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	}
 
 	@Override
-	public List<UserPO> pageUserForNameByPinyinName(Paging paging, String pinyinName, Short status, Integer dtid, Integer company) {
+	public List<UserPO> pageUserForNameByPinyinName(Paging paging, String pinyinName, Short status, Integer company, Integer dtid) {
 
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 
@@ -71,7 +71,9 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		query.add(Restrictions.eq("type", UserPO.TYPE_USER_INT));
 
 		query.alias("role", "role");
-
+		query.alias("dept", "dept");
+		query.alias("dept.type", "dept.type");
+		
 		if (StringUtils.isNotEmpty(pinyinName)) {
 
 			Disjunction pinyinDisjunction = Restrictions.disjunction();
@@ -86,7 +88,7 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		query.add(Restrictions.ne("role.no", RolePO.SUPER_NO_STR));
 
 		if (dtid != 0) {
-			query.add(Restrictions.eq("dtid", dtid));
+			query.add(Restrictions.eq("dept.type.dtid", dtid));
 		}
 
 		if (status != 3) {
@@ -158,20 +160,20 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 			query.alias("dept", "dept");
 			query.alias("role", "role");
 			query.alias("duty", "duty");
-
+			
 			for (Filter filter : filters) {
 
 				String field = filter.getField();
 				String data = filter.getData();
-
+				
 				if ("userId".equals(field)) {
 					query.add(query.getCriterion("userId", filter));
 				} else if ("userName".equals(field)) {
-					query.add(query.getCriterion("userId", filter));
+					query.add(query.getCriterion("userName", filter));
 				} else if ("roleId".equals(field)) {
 					query.add(Restrictions.eq("role.rid", Integer.valueOf(data)));
 				} else if ("deptId".equals(field)) {
-					query.add(query.getCriterion("dept.no", filter));
+					query.add(Restrictions.eq("dept.did", Integer.valueOf(data)));
 				} else if ("status".equals(field)) {
 					query.add(Restrictions.eq("status", Short.valueOf(data)));
 				} else if ("duty.name".equals(field)) {
@@ -180,11 +182,21 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 					query.add(query.getCriterion("identity", filter));
 				} else if ("phone".equals(field)) {
 					query.add(query.getCriterion("phone", filter));
+				} else if ("no".equals(field)) {
+					query.add(Restrictions.eq("dept.no", data));
 				} else if ("deptType".equals(field)) {
-					query.add(Restrictions.eq("dtid", Integer.valueOf(data)));
+					query.add(Restrictions.eq("dept.type.dtid", Integer.valueOf(data)));
 				}
 			}
 		}
+	}
+
+	@Override
+	public int countUserByDid(Integer deptId, Long did, Integer company) {
+		String sql = "select count(*) from communion.user where deptId =:deptId and did = :did and company = :company and status = 0";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("deptId", deptId).setLong("did", did).setInteger("company", company).uniqueResult();
+
+		return count.intValue();
 	}
 
 }

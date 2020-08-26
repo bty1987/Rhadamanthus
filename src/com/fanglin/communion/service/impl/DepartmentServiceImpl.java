@@ -71,7 +71,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 		List<DepartmentVO> departmentVOs = new ArrayList<DepartmentVO>();
 
 		for (DepartmentPO departmentPO : departmentPOs) {
-
 			departmentVOs.add(convertBean(departmentPO));
 		}
 
@@ -160,7 +159,14 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Override
 	public List<DepartmentVO> queryDepartmentByName(DepartmentVO departmentVO, int company) {
 
-		List<DepartmentPO> departmentPOs = departmentDao.pageDepartmentByName(new Paging(0, 10), departmentVO.getName(), company, departmentVO.getType().getDtid());
+		int dtid = 0;
+
+		if (departmentVO.getType() != null && departmentVO.getType().getDtid() != 0) {
+
+			dtid = departmentVO.getType().getDtid();
+		}
+		
+		List<DepartmentPO> departmentPOs = departmentDao.pageDepartmentByName(new Paging(0, 10), departmentVO.getName(), company, dtid);
 		List<DepartmentVO> departmentVOs = new ArrayList<DepartmentVO>();
 
 		for (DepartmentPO departmentPO : departmentPOs) {
@@ -197,7 +203,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 			departmentPO.setType(departmentTypeDao.get(departmentVO.getType().getDtid()));
 		}
 
-		if (departmentVO.getFatherDept().getDid() != null) {
+		if (departmentVO.getFatherDept() != null && departmentVO.getFatherDept().getDid() != null) {
 			departmentPO.setFatherDept(departmentDao.get(departmentVO.getFatherDept().getDid()));
 		}
 
@@ -236,7 +242,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 			departmentPO.setType(departmentTypeDao.get(departmentVO.getType().getDtid()));
 		}
 
-		if (departmentVO.getFatherDept().getDid() != null) {
+		if (departmentVO.getFatherDept() != null && departmentVO.getFatherDept().getDid() != null) {
 			departmentPO.setFatherDept(departmentDao.get(departmentVO.getFatherDept().getDid()));
 		}
 

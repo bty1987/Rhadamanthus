@@ -14,7 +14,7 @@ import com.fanglin.customer.vo.DecorationPictureVO;
 import com.fanglin.decoration.po.DecorationPicturePO;
 import com.fanglin.utils.Paging;
 
-@Service("decorationPictureService")
+@Service("decorationPictureServiceC")
 @Transactional(readOnly = true)
 public class DecorationPictureServiceImpl implements DecorationPictureService {
 

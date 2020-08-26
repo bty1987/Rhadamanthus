@@ -49,7 +49,7 @@ public class AoodsAction  extends BaseListAction {
 	@Action(value = "queryAoodsByName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryAoodsByName() throws FLException{
 		
-		aoodes = aoodsService.queryAoodsByName(aoods, orderId);
+		aoodes = aoodsService.queryAoodsByName(aoods, queryCompany());
 		
 		return SUCCESS;
 	}
