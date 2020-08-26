@@ -15,6 +15,7 @@ import com.fanglin.communion.po.WorkTypePO;
 import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.dao.QuotationItemDao;
+import com.fanglin.utils.Arith;
 
 @Service("quotationItemImportService")
 @Transactional(readOnly = true)
@@ -36,20 +37,20 @@ public class QuotationItemImportService implements com.fanglin.imports.service.Q
 			String versionId = _quoitem.get(2);
 			String itemName = _quoitem.get(3);
 
-			int quoType = Integer.valueOf(_quoitem.get(4));
-			int quoClass = Integer.valueOf(_quoitem.get(5));
-			int bigCategory = Integer.valueOf(_quoitem.get(6));
-			int smallCategory = Integer.valueOf(_quoitem.get(7));
-			int measurementUnitId = Integer.valueOf(_quoitem.get(8));
-			int workId = Integer.valueOf(_quoitem.get(9));
+			int quoType = Double.valueOf(_quoitem.get(4)).intValue();
+			int quoClass = Double.valueOf(_quoitem.get(5)).intValue();
+			int bigCategory = Double.valueOf(_quoitem.get(6)).intValue();
+			int smallCategory = Double.valueOf(_quoitem.get(7)).intValue();
+			int measurementUnitId = Double.valueOf(_quoitem.get(8)).intValue();
+			int workId = Double.valueOf(_quoitem.get(9)).intValue();
 
 			String quotationItemDes = _quoitem.get(10);
 
-			int addPrice = Integer.valueOf(_quoitem.get(11));
-			int unitPrice = Integer.valueOf(_quoitem.get(12));
-			int subPrice = Integer.valueOf(_quoitem.get(13));
-			short status = Short.valueOf(_quoitem.get(14));
-			short discount = Short.valueOf(_quoitem.get(15));
+			int addPrice = Arith.mul(Double.valueOf(_quoitem.get(11)).intValue(), 1000);
+			int unitPrice = Arith.mul(Double.valueOf(_quoitem.get(12)).intValue(), 1000);
+			int subPrice = Arith.mul(Double.valueOf(_quoitem.get(13)).intValue(), 1000);
+			short status = Double.valueOf(_quoitem.get(14)).shortValue();
+			short discount = Double.valueOf(_quoitem.get(15)).shortValue();
 
 			QuotationItemPO quoItem = new QuotationItemPO();
 

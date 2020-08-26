@@ -26,6 +26,12 @@ public class ConstructionInfoDO implements Serializable{
 	public static final String COLUMN_DRAWLINETIME_STR = "drawlineTime";
 	
 	public static final String COLUMN_FINISHTIME_STR = "finishTime";
+	
+	public static final String COLUMN_DESIGNTIME_STR = "designTime";
+	
+	public static final String COLUMN_SDESIGNTIME_STR = "decoration.sdesignTime";
+	
+	public static final String COLUMN_EDESIGNTIME_STR = "decoration.edesignTime";
 
 	public static final String COLUMN_ORDERID_STR = "orderId";
 	
@@ -47,13 +53,13 @@ public class ConstructionInfoDO implements Serializable{
 
 	private short isCeremony;
 	
-	private short isConfirmPricture;
-	
 	private Timestamp finishTime;
 	
 	private Timestamp keyTime;
 	
 	private Timestamp drawlineTime;
+	
+	private Timestamp designTime;
 
 	private String comment;
 
@@ -143,15 +149,6 @@ public class ConstructionInfoDO implements Serializable{
 		this.isCeremony = isCeremony;
 	}
 
-	@Column(name = "isConfirmPricture")
-	public short getIsConfirmPricture() {
-		return isConfirmPricture;
-	}
-
-	public void setIsConfirmPricture(short isConfirmPricture) {
-		this.isConfirmPricture = isConfirmPricture;
-	}
-
 	@Column(name = "finishTime")
 	public Timestamp getFinishTime() {
 		return finishTime;
@@ -177,6 +174,15 @@ public class ConstructionInfoDO implements Serializable{
 
 	public void setDrawlineTime(Timestamp drawlineTime) {
 		this.drawlineTime = drawlineTime;
+	}
+
+	@Column(name = "designTime")
+	public Timestamp getDesignTime() {
+		return designTime;
+	}
+
+	public void setDesignTime(Timestamp designTime) {
+		this.designTime = designTime;
 	}
 
 	@Column(name = "comment")

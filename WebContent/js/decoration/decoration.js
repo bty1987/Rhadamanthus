@@ -5,8 +5,8 @@
         cancellBtn: null,
         modal: null,
         orderItems: {},
-        type: {},
-
+        typeness: {},
+        sourceStatus: {},
         decorationOrderStatus: {},
 
         orderStatus: [],
@@ -22,19 +22,11 @@
         	comperfor : com.focusPage("#comperfor")
         },
 
-        projectStatusArr: {
-            0: '初始',
-            1: '开工',
-            2: '已完工'
-        },
+        projectStatusArr: {},
+        designStatusArr: {}
 
-        designStatusArr: {
-            0: '待设计',
-            1: '设计中',
-            2: '已完成'
-        }
     };
-    
+
     order.cancelBtn = com.focusPage("#cancelBtn");
     order.decorationModal = com.focusPage("#decorationModal");
     order.agreementModal = com.focusPage("#agreementModal");
@@ -57,25 +49,25 @@
         com.cleanItems(order.infoItems);
         com.closeTip();
     });
-    
+
     //合同终止
     order.refundContractModal.on('hide.bs.modal', function (e) {
         com.cleanItems(order.infoItems);
         com.closeTip();
     });
-    
+
     //客户信息修改
     order.customerInfoModal.on('hide.bs.modal', function (e) {
         com.cleanItems(decorationAdvance.items);
         com.closeTip();
     });
-    
+
     //预签
     order.prosignModal.on('hide.bs.modal', function (e) {
         com.cleanItems(order.infoItems);
         com.closeTip();
     });
-    
+
     //结算
     order.dalanceModal.on('hide.bs.modal', function (e) {
     	com.cleanItems(order.infoItems);
@@ -88,19 +80,21 @@
     order.infoItems.isCeremony  = com.focusPage("#isCeremony");
     order.infoItems.finishTime  = com.focusPage("#finishTime");
     order.infoItems.keyTime  = com.focusPage("#keyTime");
+    order.infoItems.designTime  = com.focusPage("#designTime");
     order.infoItems.drawlineTime  = com.focusPage("#drawlineTime");
     order.infoItems.comment = com.focusPage("#comment");
     order.infoItems.applayDes = com.focusPage("#applayDes");
     order.infoItems.applayTime = com.focusPage("#applayTime");
-    order.infoItems.refundValue = com.focusPage("#refundValue");
+    order.infoItems.backup = com.focusPage("#backup");
     order.infoItems.prosignPrice = com.focusPage("#prosignPrice");
     order.infoItems.balance = com.focusPage("#balance");
     order.infoItems.deocBalance = com.focusPage("#deocBalance");
 
     com.datetime(order.infoItems.finishTime);
     com.datetime(order.infoItems.keyTime);
+    com.datetime(order.infoItems.designTime);
     com.datetime(order.infoItems.drawlineTime);
-    
+
     com.datetime(com.focusPage("#startTime"));
     com.datetime(com.focusPage("#endTime"));
     com.datetime(com.focusPage("#applayTime"));
@@ -182,29 +176,23 @@
         if (com.validate("refundContractModal")) {
             return;
         }
-        var refundValue = order.infoItems.refundValue.val();
+        var backup = order.infoItems.backup.val();
 
         var options = {
             "decoration.orderId": params["decoration.orderId"],
-            "refundValue": refundValue,
-            "paymentValue": order.paymentValue,
+            "backup": backup
         };
 
-        if (refundValue > order.paymentValue) {
-            com.showConfirm("请注意:退款金额大于已付款金额!", function () {
-                com.post(api.decoration.terminalDecoration, options, function (res) {
-                    com.showAlert(com.info, "申请成功");
-                    searcher.doSearch();
-                    com.focusPage("#" + params["decoration.rowId"] + "_terminalBtn").css("display", "none");
-                });
-            });
-        } else {
-            com.post(api.decoration.terminalDecoration, options, function (res) {
-                com.showAlert(com.info, "申请成功");
-                searcher.doSearch();
-                com.focusPage("#" + params["decoration.rowId"] + "_terminalBtn").css("display", "none");
-            });
+        if (backup > order.paymentValue) {
+            com.showAlert(com.error, "违约金金额大于已付款金额,操作失败");
+            return;
         }
+
+        com.post(api.decoration.terminalDecoration, options, function (res) {
+            com.showAlert(com.info, "申请成功");
+            searcher.doSearch();
+            com.focusPage("#" + params["decoration.rowId"] + "_terminalBtn").css("display", "none");
+        });
 
         order.refundContractModal.modal("hide");
     });
@@ -254,16 +242,6 @@
         }, false);
     });
 
-    com.focusPage("#drawing").on("click", function () {
-        var options = {
-           "constructionInfo.orderId": contract.decorationOrderId
-        }
-
-          com.post(api.construction.sendConstructionInfoForConfirm,options,function (res) {
-            com.showAlert(com.info,"操作成功");
-        });
-    });
-
     com.focusPage("#updateProject").on("click", function () {
 
         var options = {
@@ -274,6 +252,7 @@
             "constructionInfo.isCeremony": order.infoItems.isCeremony.val(),
             "constructionInfo.finishTime": order.infoItems.finishTime.val() + " 00:00:00",
             "constructionInfo.keyTime": order.infoItems.keyTime.val() + " 00:00:00",
+            "constructionInfo.designTime": order.infoItems.designTime.val() + " 00:00:00",
             "constructionInfo.drawlineTime": order.infoItems.drawlineTime.val() + " 00:00:00",
             "constructionInfo.comment": order.infoItems.comment.val(),
             "constructionInfo.isConfirmPricture": 1
@@ -288,23 +267,26 @@
         order.infoItems.ishovel.bindData(res.isHovel, "key", "value", false);
         order.infoItems.iskey.bindData(res.isKey, "key", "value", false);
         order.infoItems.isCeremony.bindData(res.isCeremony, "key", "value", false);
-    });
 
-    com.post(api.data.queryConstructionNode, {}, function (res) {
-    	var nodes = {};
-        $.each(res.constructionNodes, function (i, v) {
-        	nodes[v.sort] = v.name;
+        $.each(res.constructionSchedule, function (i, v) {
+            order.projectStatusArr[v.key] = v.value;
         });
-        $.extend(order.projectStatusArr, nodes);
-    }, null, false);
+    });
 
     com.post(api.ds.decoration, {}, function (res) {
         $.each(res.decorationOrderStatus, function (i, v) {
             order.decorationOrderStatus[v.key] = v.value;
         });
-        $.each(res.decorationOrderType, function (i, v) {
-            order.type[v.key] = v.value;
+        $.each(res.typeness, function (i, v) {
+            order.typeness[v.key] = v.value;
         });
+        $.each(res.sourceStatus, function (i, v) {
+            order.sourceStatus[v.key] = v.value;
+        });
+        $.each(res.designStatus, function (i, v) {
+            order.designStatusArr[v.key] = v.value;
+        });
+
     }, null, false);
 
     /**
@@ -351,6 +333,14 @@
                         switch (pv) {
                             case "address":
                                 propertyArr.push(["楼盘地址:",(v.house.village.cityProper.city.name == null ? " " : v.house.village.cityProper.city.name) + " " + (v.house.village.cityProper == null ? " " : v.house.village.cityProper.name) + " " + v.house.village.name + " " + (v.house.houseNumber == null ? " " : v.house.houseNumber), "grey"]);
+                                break;
+                            case "villageName":
+                                propertyArr.push(["楼盘:", (v.house.village.cityProper.city.name == null ? " " : v.house.village.cityProper.city.name) + " " + (v.house.village.cityProper == null ? " " : v.house.village.cityProper.name) + " " + v.house.village.name, "grey"]);
+                                break;
+                            case "houseNumber":
+                                if([2, 3, 4, 6, 7].contains(v.status)){
+                                    propertyArr.push(["楼号:", (v.house.houseNumber == null ? " " : v.house.houseNumber), "grey"]);
+                                }
                                 break;
                             case "customerName":
                                 propertyArr.push(["客户名:", v.customer.name, "grey"]);
@@ -404,19 +394,28 @@
                                 propertyArr.push(["签单时间:", v.contractTime, "green"]);
                                 break;
                             case "sdesignTime":
-                                propertyArr.push(["设计时间:", v.sdesignTime, "green"]);
+                                propertyArr.push(["确认合同方案时间:", v.sdesignTime, "green"]);
+                                propertyArr.push(["确认放线方案时间:", v.edesignTime, "green"]);
                                 break;
                             case "decorationType":
-                                propertyArr.push(["类型:", order.type[v.type], "red"]);
+                                propertyArr.push(["类型:", order.typeness[v.typeness], "red"]);
                                 break;
                             case "decorationStatus":
                                 propertyArr.push(["状态:", order.decorationOrderStatus[v.status], "red"]);
+                                break;
+                            case "sourceStatus":
+                                propertyArr.push(["确认状态:",  order.sourceStatus[v.sourceStatus], "red"]);
                                 break;
                             case "projectStatus":
                                 propertyArr.push(["工程状态:", order.projectStatusArr[v.projectStatus], "red"]);
                                 break;
                             case "designStatus":
                                 propertyArr.push(["设计状态:", order.designStatusArr[v.designStatus], "red"]);
+                                break;
+                            case "saleScale":
+                                if (v.saleScale != 1918) {
+                                    propertyArr.push(["销售比例:", v.saleScale, "green"]);
+                                }
                                 break;
                             case "payScale":
                                 propertyArr.push(["付款比例:", v.paySacle, "green"]);
@@ -435,13 +434,13 @@
                     });
 
                     btnView.click(function () {
-                        viewDecorationDetail(v.orderId, v.type, v.version == null ? null : v.version.versionId, v.notSalesmanRate, order.decorationOrderStatus[v.status]);
+                        viewDecorationDetail(v.orderId, v.type, v.typeness,v.version == null ? null : v.version.versionId, v.notSalesmanRate, v.status);
                     });
 
                     btnPrice.click(function () {
-                        viewDecorationQuotateIndex(v.orderId, v.type);
+                        viewDecorationQuotateIndex(v.orderId, v.type, v.typeness);
                     });
-                    
+
                     btnSelect.click(function () {
                         viewSelection(v.orderId);
                     });
@@ -459,7 +458,7 @@
                     });
 
                     btnAddMinus.click(function () {
-                        viewDecorationInDecreaseIndex(v.orderId, v.type);
+                        viewDecorationInDecreaseIndex(v.orderId, v.type, v.typeness);
                     });
 
                     btnInfo.click(function () {
@@ -475,7 +474,7 @@
                     });
 
                     btnCal.click(function () {
-                        viewDecorationFinalSettlement(v.orderId, v.type, v.status);
+                        viewDecorationFinalSettlement(v.orderId, v.typeness, v.status);
                     });
 
                     btnService.click(function () {
@@ -496,7 +495,7 @@
                     });
 
                     btnTerminal.click(function () {
-                        terminalOrder(v.orderId);
+                        terminalOrder(v.orderId, v.status, v.precontractPrice);
                     });
 
                     btnResign.click(function () {
@@ -581,7 +580,7 @@
                                 }
                                 break;
                             case "terminal"://合同终止
-                                if (v.status == 3) {
+                                if ([2, 3].indexOf(v.status) != -1) {
                                     $divBtnWrap.append(btnTerminal);
                                 }
                                 break;
@@ -603,32 +602,34 @@
             }
         };
         //查看
-        var viewDecorationDetail = function (decorationOrderId, type, versionId, notSalesmanRate, status) {
+        var viewDecorationDetail = function (decorationOrderId, type, typeness, versionId, notSalesmanRate, status) {
             params["decorationOrderId"] = decorationOrderId;
             params["orderType"] = type;
+            params["orderTypeness"] = typeness;
             params["versionId"] = versionId;
             params["notSalesmanRate"] = notSalesmanRate;
-            params["orederStatus"] = status;
+            params["orderStatus"] = status;
             params["viewNode"] = Object.values(pageConfig.nodes);
             params.historyPage = api.index.decorationIndex.url;
             com.switchPage(api.index.decorationDetailIndex.url);
         };
 
         //报价
-        var viewDecorationQuotateIndex = function (decorationOrderId, type) {
+        var viewDecorationQuotateIndex = function (decorationOrderId, type, typeness) {
             params["decorationOrderId"] = decorationOrderId;
             params["orderType"] = type;
+            params["orderTypeness"] = typeness;
             params.historyPage = api.index.decorationIndex.url;
             com.switchPage(api.index.quotationIndex.url);
         };
-        
+
         var viewSelection = function(decorationOrderId){
             params["editFlg"] = false;
             params["decorationOrderId"] = decorationOrderId;
             params.historyPage = api.index.decorationIndex.url;
             com.switchPage(api.index.selectionIndex.url);
         }
-        
+
         //回访
         var viewDecorationBackVisitIndex = function (decorationOrderId) {
             params["decorationOrderId"] = decorationOrderId;
@@ -651,6 +652,7 @@
                 order.infoItems.isCeremony.val(datas.isCeremony);
                 order.infoItems.finishTime.val(datas.finishTime ? datas.finishTime.substr(0,10) : "");
                 order.infoItems.keyTime.val(datas.keyTime ? datas.keyTime.substr(0,10) : "");
+                order.infoItems.designTime.val(datas.designTime ? datas.designTime.substr(0,10) : "");
                 order.infoItems.drawlineTime.val(datas.drawlineTime ? datas.drawlineTime.substr(0,10) : "");
                 order.infoItems.comment.val(datas.comment);
             });
@@ -669,9 +671,10 @@
            com.switchPage(api.index.decorationContractIndex.url);
        };
         //增减项
-        var viewDecorationInDecreaseIndex = function (decorationOrderId, type) {
+        var viewDecorationInDecreaseIndex = function (decorationOrderId, type, typeness) {
             params.decorationOrderId = decorationOrderId;
             params.decorationType = type;
+            params.decorationTypeness = typeness;
             params.historyPage = api.index.decorationIndex.url;
             com.switchPage(api.index.addReduceIndex.url);
         };
@@ -696,9 +699,9 @@
         };
 
         //决算
-        function viewDecorationFinalSettlement(decorationOrderId, type, status) {
+        function viewDecorationFinalSettlement(decorationOrderId, typeness, status) {
             params.decorationOrderId = decorationOrderId;
-            params.type = type;
+            params.typeness = typeness;
             params.status = status;
             params["viewNode"] = Object.values(pageConfig.nodes);
             params.historyPage = api.index.decorationIndex.url;
@@ -766,12 +769,6 @@
                         return false;
                     }
 
-                    netperfor = order.drawContractItems.netperfor.val();//净业绩
-                    comperfor = order.drawContractItems.comperfor.val();//复合业绩
-
-                    options["decorationContract.netperfor"] = netperfor;
-                    options["decorationContract.comperfor"] = comperfor;
-
                     if (utils.accSub(orderTotalPrice, res.quotation.totalPrice) > 100) {
                         com.showConfirm("合同金额与报价金额相差大于100，确认签单?", function () {
                             com.post(api.decoration.signDecorationContract, options, function (res) {
@@ -798,14 +795,14 @@
         }
 
         //合同终止
-        function terminalOrder(decorationOrderId, rowId) {
+        function terminalOrder(decorationOrderId, status, precontractPrice, rowId) {
 
             params["decoration.orderId"] = decorationOrderId;
             params["decoration.rowId"] = rowId;
 
             com.post(api.payment.queryDecorationPaymentForContractByOrderId, {"decorationPayment.decoration.orderId": decorationOrderId}, function (res) {
 
-                var refundValue = 0;
+                var backup = 0;
                 var decorationPaymentInfo = "";
                 var decorationPayments = res.decorationPayments;
 
@@ -818,18 +815,19 @@
 
                     if (paymentStatus == 1 || paymentStatus == 2) {
                         decorationPaymentInfo += paymentType + ":" + referMoney + "<br/>";
-                        refundValue = utils.accAdd(refundValue, referMoney);
+                        backup = utils.accAdd(backup, referMoney);
                     }
                 }
 
                 if (decorationPaymentInfo == "") {
-                    decorationPaymentInfo == "无付款信息";
+                    decorationPaymentInfo = "无付款信息";
                 }
 
+                com.focusPage("#decorationStatus").html(order.decorationOrderStatus[status]);
+                com.focusPage("#precontractPrice").val(precontractPrice);
                 com.focusPage("#decorationPaymentInfo").html(decorationPaymentInfo);
-                com.focusPage("#refundValue").val(refundValue);
-                com.focusPage("#paymentValue").val(refundValue);
-                order.paymentValue = refundValue;
+                com.focusPage("#backup").val(0);
+                order.paymentValue = status == 2 ? precontractPrice : backup;
 
                 order.refundContractModal.modal("show");
             });
@@ -907,16 +905,16 @@
     var extraParam = {};
     var pageName = params['urlLoadParams'].depage;
 
-    if (pageName == "streamlinedDesign" || pageName == "streamlinedBusiness") {
-        extraParam["statusas[0]"] = 3;//签约
-        extraParam["statusas[1]"] = 7;//决算
-    }
+    pageConfig.extraParam != null && $.each(pageConfig.extraParam, function (i, v) {
+        extraParam["statusas["+ i +"]"] = v;
+    })
+
     var searcher = new Searcher();
 
     searcher.init(pageConfig.condArr, "condList", pageConfig.apiPage, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", pageConfig.postDataName, extraParam, false, null, function () {
-    	
+
         if (pageConfig.hasExport != "" && pageConfig.hasExport != null) {
             var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
             var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
@@ -939,27 +937,31 @@
         }
 
         com.post(pageConfig.apiPage, $.extend({}, params[pageConfig.postDataName], {"paging.noPage": 1}), function (res) {
-        	
+
             $.exceler({
-                column:[["装修单号", "orderId"],
-                ['楼盘地址', ['house.village.name', 'house.houseNumber']],
-                ['客户名', 'customer.name'],
-                ['设计部', 'designer.dept.name'],
-                ['设计师编号', 'designer.userId'],
-                ['设计师', 'designer.currentName'],
-                ['业务部', 'salesman.dept.name'],
-                ['业务员编号', 'salesman.userId'],
-                ['业务员', 'salesman.currentName'],
-                ['面积', 'house.buildArea'],
-                ['合同报价', 'orderTotalPrice'],
-                ['量房时间', 'measureTime'],
-                ['签单时间', 'contractTime'],
-                ['状态', 'status'],
-                ['工程状态', 'projectStatus']],
+                column:[
+                    ["装修单号", "orderId"],
+                    ['楼盘', 'house.village.name'],
+                    ['楼号', 'house.houseNumber'],
+                    ['客户名', 'customer.name'],
+                    ['设计部', 'designer.dept.name'],
+                    ['设计师编号', 'designer.userId'],
+                    ['设计师', 'designer.currentName'],
+                    ['业务部', 'salesman.dept.name'],
+                    ['业务员编号', 'salesman.userId'],
+                    ['业务员', 'salesman.currentName'],
+                    ['面积', 'house.buildArea'],
+                    ['合同报价', 'orderTotalPrice'],
+                    ['量房时间', 'measureTime'],
+                    ['签单时间', 'contractTime'],
+                    ['状态', 'status'],
+                    ['工程状态', 'projectStatus']
+                ],
                 list: res.paging.data
             }, function (v) {
                 v.status = order.decorationOrderStatus[v.status];
                 v.projectStatus = order.projectStatusArr[v.projectStatus];
+                if([2, 3, 4, 6, 7].indexOf(v.status) == -1) v.house.houseNumber = '';
             });
 
         });

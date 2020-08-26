@@ -385,7 +385,25 @@
                                                 <div class="widget-body">
                                                     <div class="widget-body-inner">
                                                         <div class="clearfix" id="controls" style="margin-top: 15px; margin-bottom: 15px;">
-                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);"></div>
+                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
+
+                                                                <label class="col-sm-3 control-label no-padding-right" style="padding-top: 10px">决算名称:</label>
+                                                                <div class="col-md-9" style="padding-top: 10px">
+                                                                    <input type="text" readonly="readonly" class="cell col-sm-9" id="discountName" maxlength="12" style="text-align: center">
+                                                                </div>
+
+                                                                <label class="col-sm-3 control-label no-padding-right" style="padding-top: 10px">签单类型:</label>
+                                                                <div class="col-md-9" style="padding-top: 10px">
+                                                                    <input type="text" readonly="readonly" class="cell col-sm-9" id="decorationType" maxlength="12" style="text-align: center">
+                                                                </div>
+
+                                                                <label class="col-sm-3 control-label no-padding-right" style="padding-top: 10px">决算类型:</label>
+                                                                <div class="col-md-9" style="padding-top: 10px">
+                                                                    <input type="text" readonly="readonly" class="cell col-sm-9" id="accountType" maxlength="12" style="text-align: center">
+                                                                </div>
+
+                                                            </div>
+
                                                             <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227);">
                                                                 <label class="col-sm-3 control-label no-padding-right">类型:</label>
                                                                 <div class="col-md-9">
@@ -403,10 +421,14 @@
                                                                     <span id="cals" class="lbl isOrNot"></span>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
+                                                            <div class="col-md-4" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
                                                                 <label class="col-sm-3 control-label no-padding-right">优惠券:</label>
                                                                 <div class="col-md-9">
                                                                     <input type="text" class="cell col-sm-9 v_afloat_3" id="preferences" maxlength="11" style="text-align: center" value="0">
+                                                                </div>
+                                                                <label class="col-sm-3 control-label no-padding-right" style="padding-top: 10px">内部优惠劵:</label>
+                                                                <div class="col-md-9" style="padding-top: 10px">
+                                                                    <input type="text" class="cell col-sm-9 v_afloat_3" id="internalCoupon" maxlength="11" style="text-align: center" value="0">
                                                                 </div>
                                                                 <label class="col-sm-3 control-label no-padding-right" style="padding-top: 10px">满送:</label>
                                                                 <div class="col-md-9" style="padding-top: 10px">
@@ -418,7 +440,7 @@
                                                                 </div>
                                                                 <button type="button" id="calculateBtn" class="btn btn-xs btn-info col-sm-12" style="margin-top: 10px">计算</button>
                                                             </div>
-                                                            <div class="col-md-3" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
+                                                            <div class="col-md-2" style="border-left: 1px solid rgb(227, 227, 227); border-right: 1px solid rgb(227, 227, 227);">
                                                                 <label class="col-sm-3 control-label no-padding-right">备注:</label>
                                                                 <div class="col-md-9">
                                                                     <textarea rows="5" id="comment"></textarea>

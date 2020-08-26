@@ -1,10 +1,14 @@
 $(function ($) {
-    
+
     api = parent.api;
     com = parent.com;
     utils = parent.utils;
-    printer = parent.printer;
-    
+
+    var printer = {
+        name : null,
+        args : {}
+    }
+
     var params = {
         serverPath : window.server,
         authentication : parent.params.authentication,
@@ -14,16 +18,17 @@ $(function ($) {
         designer:null,//设计师
         supervisor:null//监理
     };
-    
+
     var trList = $("#reslist");
     var querySalesItemBySid = api.sales.querySalesItemBySid;
-    
+
     com.post(api.decoration.queryDecorationByOrderId, {"decorationOrderId" : params.params.data.orderId}, function(res){
         var decorationInfo = res.decoration;
         params.designer = decorationInfo.designer.currentName == null ? "" : decorationInfo.designer.currentName;
         params.supervisor = decorationInfo.supervisor.currentName == null ? "" : decorationInfo.supervisor.currentName;
     },null, false);
-    
+
+
     printer.name = "salesPaymentForDeposit";
     printer.args = {
         "orderId": params.params.data.orderId,
@@ -35,7 +40,8 @@ $(function ($) {
         "createTime": params.params.data.createTime,
         "referMoney": utils.changeThrDecimal(params.params.data.depositpay),
         "capitalize": utils.getCNMoney(utils.changeThrDecimal(params.params.data.depositpay)),
-        "salesItems": []
+        "salesItems": [],
+        "title" : params.params.company.fullname + "主材代购确认单-定金"
     };
 
     com.post(querySalesItemBySid, {
@@ -77,6 +83,9 @@ $(function ($) {
         var td14 = $('<td colspan="4" style="border: 1px solid;height: 54px;text-align: center;"></td>-->').text(params.params.data.createTime).appendTo(tr4);
 
         if(params.params.flag == "fullPay"){
+
+            printer.args.title = params.params.company.fullname + "主材代购确认单";
+
             moneryName = "实收金额";
             netReceipts = utils.changeThrDecimal(params.params.data.fullpay);
             var tr5 = $('<tr style="border: 1px solid;height: 54px;text-align: center;"></tr>').appendTo(table);
@@ -100,14 +109,16 @@ $(function ($) {
                     "name":v.goods.name,
                     "num":v.num,
                     "price":v.price,
-                    "total":v.total
+                    "unit" :  v.goods.measurementUnit,
+                    "total":v.total,
+                    "comment" : v.comment
                 });
             });
 
             printer.name = "salesPaymentForFullpay";
             printer.args.referMoney = utils.changeThrDecimal(params.params.data.fullpay);
             printer.args.capitalize = utils.getCNMoney(utils.changeThrDecimal(params.params.data.fullpay));
-            
+
             $.each(propertyArr, function (index, value) {
                 var tr = $('<tr style="border: 1px solid;height: 54px;text-align: center;"></tr>');
                 $.each(value, function (j, k) {

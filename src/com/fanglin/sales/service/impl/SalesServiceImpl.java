@@ -84,8 +84,8 @@ public class SalesServiceImpl implements SalesService {
 
 		for (SalesPO salesPO : salesPOs) {
 
-			SalesVO _salesVO = new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO());
-			BeanUtil.copyProperties(salesPO, _salesVO, Arrays.asList("salesman", "dept", "region", "guider", "instorer", "guideDept", "house", "customer", "supplier"));
+			SalesVO _salesVO = new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO());
+			BeanUtil.copyProperties(salesPO, _salesVO, Arrays.asList("salesman", "dept", "region", "guider", "instorer", "guideDept", "house", "customer", "supplier", "finisher"));
 			BeanUtil.copyProperties(salesPO.getSupplier(), _salesVO.getSupplier(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyProperties(salesPO.getSalesman(), _salesVO.getSalesman(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyProperties(salesPO.getSalesman().getDept(), _salesVO.getSalesman().getDept(), Arrays.asList("fatherDept", "type", "manager"));
@@ -98,6 +98,7 @@ public class SalesServiceImpl implements SalesService {
 			BeanUtil.copyProperties(salesPO.getGuideDept(), _salesVO.getGuideDept(), Arrays.asList("fatherDept", "type", "manager"));
 			BeanUtil.copyProperties(salesPO.getHouse(), _salesVO.getHouse(), Arrays.asList("village"));
 			BeanUtil.copyProperties(salesPO.getHouse().getVillage(), _salesVO.getHouse().getVillage(), Arrays.asList("cityProper"));
+			BeanUtil.copyProperties(salesPO.getFinisher(), _salesVO.getFinisher(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyProperties(salesPO.getCustomer(), _salesVO.getCustomer());
 
 			salesVOs.add(_salesVO);
@@ -184,13 +185,13 @@ public class SalesServiceImpl implements SalesService {
 	}
 
 	@Override
-	public void pageSalesForPompany(Paging paging, List<Filter> filters, String userId, int pompany){
+	public void pageSalesForPompany(Paging paging, List<Filter> filters, String userId, int pompany) {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
 		if (userPO == null)
 			return;
-		
+
 		List<SalesPO> salesPOs = salesDao.pageSalesForPompany(paging, filters, pompany);
 		List<SalesVO> salesVOs = pageSales(salesPOs);
 
@@ -212,20 +213,34 @@ public class SalesServiceImpl implements SalesService {
 		paging.setData(salesVOs);
 
 	}
-	
+
 	@Override
 	public void pageSalesForSupplier(Paging paging, List<Filter> filter, String userId, int company) {
-		
+
 		UserPO userPO = userDao.queryUserByUserId(userId);
-		
+
 		if (userPO == null)
 			return;
-		
+
 		List<SalesPO> salesPOs = salesDao.pageSalesForSupplier(paging, filter, company, userPO.getUid());
 		List<SalesVO> salesVOs = pageSales(salesPOs);
 
 		paging.setData(salesVOs);
-		
+
+	}
+
+	@Override
+	public void pageSalesByOrderId(Paging paging, List<Filter> filter, int company, String userId, String orderId) {
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		if (userPO == null)
+			return;
+
+		List<SalesPO> salesPOs = salesDao.pageSalesByOrderId(paging, filter, company, orderId);
+		List<SalesVO> salesVOs = pageSales(salesPOs);
+
+		paging.setData(salesVOs);
 	}
 
 	@Override
@@ -237,7 +252,7 @@ public class SalesServiceImpl implements SalesService {
 			throw new FLException(260021, "销售单不存在");
 		}
 
-		salesVO = new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO());
+		salesVO = new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
 		salesPO.ptv(salesVO);
 
@@ -253,22 +268,22 @@ public class SalesServiceImpl implements SalesService {
 			throw new FLException(260021, "销售单不存在");
 		}
 
-		salesVO = new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO());
+		salesVO = new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
 		salesPO.ptv(salesVO);
 
 		return salesVO;
 	}
-	
+
 	@Override
 	public int checkSales(SalesVO salesVO) throws FLException {
-		
+
 		int count = salesDao.countSalesByOrderId(salesVO.getOrderId(), SalesPO.STATUS_INIT_SHORT);
-		
-		if(count > 0){
+
+		if (count > 0) {
 			throw new FLException(260057, "销售单未完结");
 		}
-		
+
 		return 0;
 	}
 
@@ -300,7 +315,11 @@ public class SalesServiceImpl implements SalesService {
 			throw new FLException(140013, "订单不存在");
 		}
 
-		SalesPO salesPO = new SalesPO(new HousePO(), new CustomerPO(), new UserPO(), new DepartmentPO(), new DepartmentPO(), new UserPO(), new DepartmentPO(), new UserPO(),new UserPO());
+		if (decorationPO.getStatus() == DecorationPO.STATUS_WASTE_INT || decorationPO.getStatus() == DecorationPO.STATUS_TERMINATION_INT) {
+			throw new FLException(140004, "装修单状态不可操作");
+		}
+
+		SalesPO salesPO = new SalesPO(new HousePO(), new CustomerPO(), new UserPO(), new DepartmentPO(), new DepartmentPO(), new UserPO(), new DepartmentPO(), new UserPO(), new UserPO());
 
 		UserPO salesman = userDao.queryUserByUserId(salesVO.getSalesman().getUserId());
 		UserPO guider = userDao.queryUserByUserId(salesVO.getGuider().getUserId());
@@ -338,6 +357,9 @@ public class SalesServiceImpl implements SalesService {
 		salesPO.setAmount(salesVO.getTotal());
 		salesPO.setTotal(salesVO.getTotal());
 		salesPO.setSupplier(brandPO.getSupplier());
+		
+		salesPO.setCtype(SalesPO.CTYPE_PASS_INT);
+		salesPO.setCvalue(0);
 
 		salesPO.setGrade(decorationPO.getGrade().equals("C") ? "B" : "");
 
@@ -358,7 +380,7 @@ public class SalesServiceImpl implements SalesService {
 				salesItemPO.setSid(salesPO.getSid());
 				salesItemPO.setPunum(salesItemVO.getNum());
 				salesItemPO.setXgnum(salesItemVO.getNum());
-				
+
 				salesItemDao.save(salesItemPO);
 
 			}
@@ -376,7 +398,7 @@ public class SalesServiceImpl implements SalesService {
 		if (salesPO == null) {
 			throw new FLException(260021, "销售单不存在");
 		}
-		
+
 		if (salesPO.getStatus() != SalesPO.STATUS_INIT_SHORT) {
 			throw new FLException(260022, "销售单状态不可操作");
 		}
@@ -397,7 +419,7 @@ public class SalesServiceImpl implements SalesService {
 		if (salesPO == null) {
 			throw new FLException(260021, "销售单不存在");
 		}
-		
+
 		if (salesPO.getStatus() != SalesPO.STATUS_INIT_SHORT) {
 			throw new FLException(260022, "销售单状态不可操作");
 		}
@@ -419,7 +441,7 @@ public class SalesServiceImpl implements SalesService {
 		if (salesPO == null) {
 			throw new FLException(260021, "销售单不存在");
 		}
-		
+
 		if (salesPO.getStatus() != SalesPO.STATUS_INIT_SHORT) {
 			throw new FLException(260022, "销售单状态不可操作");
 		}
@@ -441,7 +463,7 @@ public class SalesServiceImpl implements SalesService {
 		if (salesPO == null) {
 			throw new FLException(260021, "销售单不存在");
 		}
-		
+
 		if (salesPO.getStatus() != SalesPO.STATUS_INIT_SHORT) {
 			throw new FLException(260022, "销售单状态不可操作");
 		}
@@ -462,11 +484,11 @@ public class SalesServiceImpl implements SalesService {
 		if (salesPO == null) {
 			throw new FLException(260021, "销售单不存在");
 		}
-		
+
 		if (salesPO.getStatus() != SalesPO.STATUS_INIT_SHORT) {
 			throw new FLException(260022, "销售单状态不可操作");
 		}
-		
+
 		UserPO salesman = userDao.queryUserByUserId(salesVO.getSalesman().getUserId());
 		UserPO guider = userDao.queryUserByUserId(salesVO.getGuider().getUserId());
 		UserPO instorer = userDao.queryUserByUserId(salesVO.getInstorer().getUserId());
@@ -485,60 +507,81 @@ public class SalesServiceImpl implements SalesService {
 
 		return 0;
 	}
-	
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateSalesForAdvance(SalesVO salesVO) throws FLException {
+
+		SalesPO salesPO = salesDao.get(salesVO.getSid());
+
+		if (salesPO == null) {
+			throw new FLException(260021, "销售单不存在");
+		}
+
+		salesPO.setStatus(SalesPO.STATUS_INIT_SHORT);
+
+		salesDao.update(salesPO);
+
+		return 0;
+	}
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int terminalSales(SalesVO salesVO) throws FLException {
 
 		SalesPO salesPO = salesDao.get(salesVO.getSid());
-		
-		if(salesPO == null){
-			throw new FLException(260021, "销售单不存在");
-		}
-		
-		if(salesPO.getStatus() != SalesPO.STATUS_INIT_SHORT){
-			throw new FLException(260022, "销售单状态不可操作");
-		}
-		
-		if(salesPO.getBalanceStatus() != SalesPO.BALANCESTATUS_INIT_SHORT){
-			throw new FLException(260022, "销售单状态不可操作");
-		}
-		
-		if(salesPO.getDepositpayStatus() != SalesPO.DESPOSITPAYSTATUS_INIT_SHORT){
-			throw new FLException(260022, "销售单状态不可操作");
-		}
-		
-		if(salesPO.getFullpayStatus() != SalesPO.FULLPAYSTATUS_INIT_SHORT){
-			throw new FLException(260022, "销售单状态不可操作");
-		}
-		
-		salesPO.setStatus(SalesPO.STATUS_WAST_SHORT);
-		
-		return 0;
-	}
-	
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public int finishSales(SalesVO salesVO) throws FLException {
-		
-		SalesPO salesPO = salesDao.get(salesVO.getSid());
-		
+
 		if (salesPO == null) {
 			throw new FLException(260021, "销售单不存在");
 		}
-		
+
 		if (salesPO.getStatus() != SalesPO.STATUS_INIT_SHORT) {
 			throw new FLException(260022, "销售单状态不可操作");
 		}
+
+		if (salesPO.getBalanceStatus() != SalesPO.BALANCESTATUS_INIT_SHORT) {
+			throw new FLException(260022, "销售单状态不可操作");
+		}
+
+		if (salesPO.getDepositpayStatus() != SalesPO.DESPOSITPAYSTATUS_INIT_SHORT) {
+			throw new FLException(260022, "销售单状态不可操作");
+		}
+
+		if (salesPO.getFullpayStatus() != SalesPO.FULLPAYSTATUS_INIT_SHORT) {
+			throw new FLException(260022, "销售单状态不可操作");
+		}
+
+		salesPO.setStatus(SalesPO.STATUS_WAST_SHORT);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int finishSales(SalesVO salesVO, String userId) throws FLException {
 		
+		UserPO finisher = userDao.queryUserByUserId(userId);
+
+		SalesPO salesPO = salesDao.get(salesVO.getSid());
+
+		if (salesPO == null) {
+			throw new FLException(260021, "销售单不存在");
+		}
+
+		if (salesPO.getStatus() != SalesPO.STATUS_INIT_SHORT) {
+			throw new FLException(260022, "销售单状态不可操作");
+		}
+
 		if (salesPO.getFullpayStatus() != SalesPO.FULLPAYSTATUS_CONFIRM_SHORT) {
 			throw new FLException(260022, "销售单状态不可操作");
 		}
-		
+
 		salesPO.setStatus(SalesPO.STATUS_END_SHORT);
-		
+		salesPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
+		salesPO.setFinisher(finisher);
+
 		salesDao.update(salesPO);
-		
+
 		return 0;
 	}
 

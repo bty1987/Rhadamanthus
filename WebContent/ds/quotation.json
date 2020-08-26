@@ -68,18 +68,12 @@
 		{"key":"2", "value":"拓展减"},
 		{"key":"3", "value":"增减增"},
 		{"key":"4", "value":"增减减"}
-	], "isCountManageRule": [
-		{"company":"101", "value": [{"type": 1}, {"timestamp": "2019-03-12"}], "comment": "辽宁方林 , 签单之后收取"},
-		{"company":"102", "value": [{"type": 1}, {"timestamp": "2019-04-01"}], "comment": "1918, 签单之后收取"},
-		{"company":"103", "value": [{"type": 1}, {"timestamp": "2020-04-01"}], "comment": "宜家 , 签单之后收取"},
-		{"company":"107", "value": [{"type": 1}, {"timestamp": "2019-04-01"}], "comment": "安徽方林 , 签单之后收取"},
-		{"company":"108", "value": [{"type": 1}, {"timestamp": "2019-03-12"}], "comment": "湖北方林 , 签单之后收取"},
-		{"company":"109", "value": [{"type": 1}, {"timestamp": "2020-04-01"}], "comment": "恩林 , 签单之后收取"},
-		{"company":"112", "value": [{"type": 3}, {}], "comment": "辽宁爱林 , 不计算管理费"},
-		{"company":"116", "value": [{"type": 1}, {"timestamp": "2019-03-12"}], "comment": "吉林方林 , 签单之后收取"},
-		{"company":"120", "value": [{"type": 3}, {}], "comment": "安徽爱林 , 不计算管理费"},
-		{"company":"121", "value": [{"type": 3}, {}], "comment": "吉林爱林 , 不计算管理费"},
-		{"company":"122", "value": [{"type": 3}, {}], "comment": "湖北爱林 , 不计算管理费"}
+	],
+
+	"isCountManageRule": [
+		{"company":"1", "value": true},
+		{"company":"2", "value": false},
+		{"company":"3", "value": true}
 	],
     "errorCode": 0,
     "errorMsg": null

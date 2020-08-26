@@ -37,7 +37,11 @@ public class SelectionItemVO implements Serializable {
 	
 	private Integer initNum;// 工程量
 	
-	private Integer selling;// 售价
+	private Integer postprice;// 售价
+	
+	private Integer preprice;// 预算金额
+	
+	private Timestamp createTime;// 创建时间
 	
 	private Timestamp tranTime;// 配送时间
 	
@@ -62,7 +66,9 @@ public class SelectionItemVO implements Serializable {
 	private Integer refnum;// 退数量
 	
 	private String comment;// 注释
-
+	
+	private Integer company;// 公司
+	
 	public SelectionItemVO() {
 		super();
 	}
@@ -171,12 +177,29 @@ public class SelectionItemVO implements Serializable {
 		this.initNum = initNum;
 	}
 
-	public Integer getSelling() {
-		return selling;
+	public Integer getPostprice() {
+		return postprice;
 	}
 
-	public void setSelling(Integer selling) {
-		this.selling = selling;
+	public void setPostprice(Integer postprice) {
+		this.postprice = postprice;
+	}
+
+	public Integer getPreprice() {
+		return preprice;
+	}
+
+	public void setPreprice(Integer preprice) {
+		this.preprice = preprice;
+	}
+	
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
 	}
 
 	@JSON(format = "yyyy-MM-dd")
@@ -287,4 +310,13 @@ public class SelectionItemVO implements Serializable {
 	public void setAreaName(String areaName) {
 		this.areaName = areaName;
 	}
+
+	public Integer getCompany() {
+		return company;
+	}
+
+	public void setCompany(Integer company) {
+		this.company = company;
+	}
+	
 }

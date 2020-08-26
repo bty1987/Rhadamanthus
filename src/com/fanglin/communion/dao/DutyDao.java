@@ -16,5 +16,7 @@ public interface DutyDao extends Dao<DutyPO> {
 	public List<DutyPO> queryDuty();
 
 	public List<DutyPO> queryDutyByDtid(Integer dtid);
+	
+	public List<DutyPO> pageDutyByName(Paging paging, String name, Integer type, Short status);
 
 }

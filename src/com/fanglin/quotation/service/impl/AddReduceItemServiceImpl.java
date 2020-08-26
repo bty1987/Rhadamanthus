@@ -13,6 +13,7 @@ package com.fanglin.quotation.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.dao.AddReduceItemDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
+import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
 import com.fanglin.quotation.dao.SelectionDao;
 import com.fanglin.quotation.dao.SelectionItemDao;
@@ -45,9 +47,9 @@ import com.fanglin.quotation.po.SelectionPO;
 import com.fanglin.quotation.service.AddReduceItemService;
 import com.fanglin.quotation.vo.AddReduceItemVO;
 import com.fanglin.quotation.vo.AddReduceVO;
-import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 
 @Service("addReduceItemService")
 @Transactional(readOnly = true)
@@ -78,21 +80,19 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 	private ExtensionItemDao extensionItemDao;
 
 	@Autowired
-	private SystemConfigDao systemConfigDao;
-
-	@Autowired
 	private SelectionItemDao selectionItemDao;
 	
 	@Autowired
 	private SelectionDao selectionDao;
 	
+	@Autowired
+	private QuotationFunctionAreaDao quotationFunctionAreaDao;
+	
 	@Override
 	public List<AddReduceItemVO> queryAddReduceItemByAddReduceId(AddReduceVO addReduceVO) throws FLException {
-
+		
 		List<AddReduceItemPO> addReduceItemPOs = addReduceItemDao.queryAddReduceItemByAddReduceId(addReduceVO.getArId());
 		List<AddReduceItemVO> addReduceItemVOs = new ArrayList<AddReduceItemVO>();
-
-		Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
 
 		for (AddReduceItemPO addReduceItemPO : addReduceItemPOs) {
 
@@ -116,7 +116,8 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 				}
 			} else if (addReduceItemType == AddReduceItemPO.TYPE_QUOTATION_ITEM_INT) {
 
-				QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(addReduceItemPO.getQuotationFunctionArea().getQfaId(), divisor), addReduceItemPO.getQuoteItemId());
+				QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(addReduceItemPO.getQuotationFunctionArea().getQfaId());
+				QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex()), addReduceItemPO.getQuoteItemId());
 				
 				if (quotationFunctionAreaItemPO != null) {
 					if (quotationFunctionAreaItemPO.getQuotationItem() != null) {
@@ -157,13 +158,11 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 
 	@Override
 	public List<AddReduceItemVO> queryAddReduceItemByAddReduceIds(List<Long> arids) throws FLException {
-
+	
 		List<AddReduceItemVO> addReduceItemVOs = new ArrayList<AddReduceItemVO>();
 
 		if (arids != null && arids.size() > 0) {
 			List<AddReduceItemPO> addReduceItemPOs = addReduceItemDao.queryAddReduceItemByAddReduceIds(arids);
-
-			Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
 
 			for (AddReduceItemPO addReduceItemPO : addReduceItemPOs) {
 
@@ -186,7 +185,8 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 					}
 				} else if (addReduceItemType == AddReduceItemPO.TYPE_QUOTATION_ITEM_INT) {
 
-					QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(addReduceItemPO.getQuotationFunctionArea().getQfaId(), divisor), addReduceItemPO.getQuoteItemId());
+					QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(addReduceItemPO.getQuotationFunctionArea().getQfaId());
+					QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex()), addReduceItemPO.getQuoteItemId());
 
 					if (quotationFunctionAreaItemPO != null) {
 						if (quotationFunctionAreaItemPO.getQuotationItem() != null) {
@@ -220,7 +220,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int updateAddReduceItem(AddReduceVO addReduceVO, AddReduceItemVO addReduceItemVO) throws FLException {
-		
+	
 		List<Integer> statuses = Arrays.asList(AddReducePO.STATUS_UNSUBMIT_INT, AddReducePO.STATUS_SUBMIT_INT);
 
 		AddReducePO addReducePO = addReduceDao.get(addReduceVO.getArId());
@@ -241,9 +241,9 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 
 		AddReduceServiceImpl.convertAddReduceVOToPOForAdvance(addReduceVO, addReducePO);
 
+		QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(addReduceItemVO.getQuotationFunctionAreaId());
+		
 		AddReduceItemPO addReduceItemPO = null;
-
-		Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
 
 		Long areaId = null;
 		
@@ -257,9 +257,9 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 
 			BeanUtil.copyProperties(addReduceItemVO, addReduceItemPO);
 
-			addReduceItemPO.setQuotationFunctionArea(new QuotationFunctionAreaPO(addReduceItemVO.getQuotationFunctionAreaId()));
+			addReduceItemPO.setQuotationFunctionArea(quotationFunctionAreaPO);
 			if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_QUOTATION_ITEM_INT) {
-				areaId = handleQuotationItem(addReduceItemPO.getQuotationFunctionArea().getQfaId(), divisor, addReduceItemPO.getQuoteItemId(), addReduceItemVO.getNum(), 0);
+				areaId = handleQuotationItem(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex(), addReduceItemPO.getQuoteItemId(), addReduceItemVO.getNum(), 0);
 			} else if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_ADD_ITEM_INT) {
 				areaId = handleAddReduceItem(addReduceItemPO.getQuoteItemId(), addReduceItemVO.getNum(), 0);
 			} else if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_EXTENSION_ITEM_INT) {
@@ -276,13 +276,13 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 			if (selectionItemDao.countSelectionItem(addReducePO.getOrderId(), addReducePO.getArId(), addReduceItemPO.getAriId()) > 0) {
 				throw new FLException(200037, "存在关联选材项");
 			}
-
+			
 			if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_QUOTATION_ITEM_INT) {
-				handleQuotationItem(addReduceItemPO.getQuotationFunctionArea().getQfaId(), divisor, addReduceItemPO.getQuoteItemId(), addReduceItemVO.getNum(), addReduceItemPO.getNum());
+				areaId = handleQuotationItem(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex(), addReduceItemPO.getQuoteItemId(), addReduceItemVO.getNum(), addReduceItemPO.getNum());
 			} else if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_ADD_ITEM_INT) {
-				handleAddReduceItem(addReduceItemPO.getQuoteItemId(), addReduceItemVO.getNum(), addReduceItemPO.getNum());
+				areaId = handleAddReduceItem(addReduceItemPO.getQuoteItemId(), addReduceItemVO.getNum(), addReduceItemPO.getNum());
 			} else if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_EXTENSION_ITEM_INT) {
-				handleExtensionItem(addReduceItemPO.getQuoteItemId(), addReduceItemVO.getNum(), addReduceItemPO.getNum());
+				areaId = handleExtensionItem(addReduceItemPO.getQuoteItemId(), addReduceItemVO.getNum(), addReduceItemPO.getNum());
 			}
 
 			addReduceItemPO.setNum(addReduceItemVO.getNum());
@@ -329,7 +329,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int deleteAddReduceItem(AddReduceVO addReduceVO, AddReduceItemVO addReduceItemVO) throws FLException {
-
+		
 		List<Integer> statuses = Arrays.asList(AddReducePO.STATUS_UNSUBMIT_INT, AddReducePO.STATUS_SUBMIT_INT);
 
 		AddReducePO addReducePO = addReduceDao.get(addReduceVO.getArId());
@@ -351,10 +351,11 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 		if (selectionItemDao.countSelectionItem(addReducePO.getOrderId(), addReducePO.getArId(), addReduceItemPO.getAriId()) > 0) {
 			throw new FLException(200037, "存在关联选材项");
 		}
-		
+	
+		QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(addReduceItemPO.getQuotationFunctionArea().getQfaId());
+	
 		if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_QUOTATION_ITEM_INT) {
-			Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
-			handleQuotationItem(addReduceItemPO.getQuotationFunctionArea().getQfaId(), divisor, addReduceItemPO.getQuoteItemId(), 0, addReduceItemPO.getNum());
+			handleQuotationItem(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex(), addReduceItemPO.getQuoteItemId(), 0, addReduceItemPO.getNum());
 		} else if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_ADD_ITEM_INT) {
 			handleAddReduceItem(addReduceItemPO.getQuoteItemId(), 0, addReduceItemPO.getNum());
 		} else if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_EXTENSION_ITEM_INT) {
@@ -371,9 +372,9 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 		return 0;
 	}
 
-	private Long handleQuotationItem(long quotationFunctionAreaId, long divisor, long quotationItemId, int vonum, int ponum) throws FLException {
+	private Long handleQuotationItem(long quotationFunctionAreaId, short index, long quotationItemId, int vonum, int ponum) throws FLException {
 
-		QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaId, divisor), quotationItemId);
+		QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaId, index), quotationItemId);
 
 		if (quotationFunctionAreaItemPO == null) {
 			throw new FLException(200013, "报价项不存在");
@@ -457,7 +458,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 	
 	private void addSelectionItem (AddReducePO addReducePO, AddReduceItemPO addReduceItemPO, Long areaId) throws FLException {
 
-		if (addReducePO == null || addReducePO.getType() == 0) return;
+		if (addReducePO.getType() == 0) return;
 		
 		SelectionItemPO querySelectionItem = null;
 		
@@ -471,10 +472,6 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 		
 		if (querySelectionItem != null) {
 			
-			if (querySelectionItem.getStatus() != SelectionItemPO.STATUS_INIT_SHORT) {
-				throw new FLException(200039, "选材项状态不可操作");
-			}	
-			
 			int num = addReduceItemPO.getNum();
 			
 			if (num > querySelectionItem.getNum()) {
@@ -487,19 +484,25 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 			
 			BeanUtil.copyProperties(querySelectionItem, selectionItemPO, Arrays.asList("siid", "goods", "traner", "checker", "confirmer", "balancer", "finish"));
 			
+			QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(addReduceItemPO.getQuotationFunctionArea().getQfaId());
+			
+			selectionItemPO.setAreaName(quotationFunctionAreaPO.getFunctionAreaName());
 			selectionItemPO.setAreaId(addReducePO.getArId());
 			selectionItemPO.setQuoteId(addReduceItemPO.getAriId());
 			selectionItemPO.setType(SelectionItemPO.TYPE_MINUSITEM_SHORT);
+			selectionItemPO.setStatus(SelectionItemPO.STATUS_INIT_SHORT);
 			selectionItemPO.setNum(num);
 			selectionItemPO.setInitNum(num);
+			selectionItemPO.setPreprice(addReduceItemPO.getSubPrice());
+			selectionItemPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 			
 			selectionItemDao.save(selectionItemPO);
 			
 			SelectionPO selectionPO = selectionDao.get(querySelectionItem.getSid());
-			
-			int price = Arith.sub(querySelectionItem.getSelling(), num);
+
+			int price = Arith.mul(querySelectionItem.getPostprice(), num);
 			long newAddReduceMinusTotal = Arith.add(selectionPO.getAddReduceMinusTotal(), price);
-			long newTotal = Arith.mul(selectionPO.getTotal(), newAddReduceMinusTotal);
+			long newTotal = Arith.sub(selectionPO.getTotal(), price);
 			
 			selectionPO.setTotal(newTotal);
 			selectionPO.setAddReduceMinusTotal(newAddReduceMinusTotal);

@@ -21,6 +21,8 @@ jQuery(function($) {
             
             precheck: com.focusPage("#precheck", "#updateModal"),
             postcheck: com.focusPage("#postcheck", "#updateModal"),
+            stacheck: com.focusPage("#stacheck", "#updateModal"),
+            fincheck: com.focusPage("#fincheck", "#updateModal")
         },
 
         editFlg: false,
@@ -67,6 +69,8 @@ jQuery(function($) {
                ["节点名称: ", v.name, "grey"],
                ["开工款项比: ", v.precheck, "blue"],
                ["完工款项比: ", v.postcheck, "blue"],
+               ["开工销售比例: ", v.stacheck, "blue"],
+               ["完工销售比例: ", v.fincheck, "blue"],
                ["状态: ", v.status == 0 ? "启用" : "禁用", "red"],
                ["排序: ", v.sort, "blue"],
            ];
@@ -93,6 +97,8 @@ jQuery(function($) {
                 
                 constructionNode.items.precheck.val(v.precheck);
                 constructionNode.items.postcheck.val(v.postcheck);
+                constructionNode.items.stacheck.val(v.stacheck);
+                constructionNode.items.fincheck.val(v.fincheck);
                 
                 constructionNode.modals.updateModal.modal("show");
             });
@@ -139,7 +145,9 @@ jQuery(function($) {
         var options = {
             "constructionNode.cnid": constructionNode.cnid,
             "constructionNode.precheck": constructionNode.items.precheck.val(),
-            "constructionNode.postcheck": constructionNode.items.postcheck.val()
+            "constructionNode.postcheck": constructionNode.items.postcheck.val(),
+            "constructionNode.stacheck": constructionNode.items.stacheck.val(),
+            "constructionNode.fincheck": constructionNode.items.fincheck.val()
         }
         
         com.post(api.data.updateConstructionNode, options, function(res){

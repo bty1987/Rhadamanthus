@@ -151,7 +151,6 @@ public class SupplierServiceImpl implements SupplierService {
 		supplierPO.setPinYin(PinYin4Util.getPinyin(supplierVO.getCurrentName()).get(0));
 
 		supplierPO.setIsLogin(UserPO.ISLOGIN_FIP_INT);
-		supplierPO.setIsUpdate(UserPO.ISUPDATE_ADD_INT);
 		supplierPO.setType(UserPO.TYPE_SUPPLIER_INT);
 
 		supplierDao.save(supplierPO);
@@ -160,6 +159,7 @@ public class SupplierServiceImpl implements SupplierService {
 
 		UserInfoPO userInfoPO = new UserInfoPO();
 
+		userInfoPO.setSalary("0");
 		userInfoPO.setUser(supplierPO);
 
 		userInfoDao.save(userInfoPO);

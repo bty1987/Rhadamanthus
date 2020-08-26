@@ -207,6 +207,8 @@ public class DrawLineServiceImpl implements DrawLineService {
 		}
 
 		constructionPO.setStartTime(drawLineVO.getApplayTime());
+		
+		constructionPO.setCreateTime((DateUtil.getDateToTimestamp(new Date())));
 
 		constructionDao.saveOrUpdate(constructionPO);
 		

@@ -13,6 +13,7 @@ package com.fanglin.construction.service.impl;
 
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -116,6 +117,7 @@ public class AcceptanceServiceImpl implements AcceptanceService{
 			
 			String endtTime = acceptanceVO.getAcceptanceTime()+" 00:00:00";
 			constructionPO.setEndTime(Timestamp.valueOf(endtTime));
+			constructionPO.setFinishTime((DateUtil.getDateToTimestamp(new Date())));
 			
 			constructionDao.update(constructionPO);
 		}

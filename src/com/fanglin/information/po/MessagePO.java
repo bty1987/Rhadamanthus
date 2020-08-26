@@ -39,6 +39,8 @@ public class MessagePO implements Serializable {
 	public static final short TYPE_SEND_VISIT_INT = 5;
 
 	public static final short TYPE_SEND_CUSTOMER_INT = 6;
+	
+	public static final short SUBTYPE_ACCESSORIES_INT = 1;//辅料单
 
 	private int mid;
 
@@ -47,6 +49,10 @@ public class MessagePO implements Serializable {
 	private UserPO sender;
 
 	private short type;
+	
+	private short subtype;
+	
+	private long ident;
 
 	private String contents;
 
@@ -101,6 +107,24 @@ public class MessagePO implements Serializable {
 
 	public void setType(short type) {
 		this.type = type;
+	}
+	
+	@Column(name = "subtype")
+	public short getSubtype() {
+		return subtype;
+	}
+
+	public void setSubtype(short subtype) {
+		this.subtype = subtype;
+	}
+
+	public long getIdent() {
+		return ident;
+	}
+
+	@Column(name = "ident")
+	public void setIdent(long ident) {
+		this.ident = ident;
 	}
 
 	@Column(nullable = false)

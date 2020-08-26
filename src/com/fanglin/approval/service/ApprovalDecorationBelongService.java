@@ -25,4 +25,6 @@ public interface ApprovalDecorationBelongService {
 
 	public int approveForDecorationBelong(ApprovalPO approvalPO) throws FLException;
 
+	public int confirmForDecorationBelong(ApprovalPO approvalPO) throws FLException;
+
 }

@@ -33,63 +33,65 @@ public class UserContractAction extends BaseListAction {
 
 	@Autowired
 	private UserContractService userContractService;
+	
+	private UserContractVO userContract;
 
-	private List<UserContractVO> userContractList;
+	private List<UserContractVO> userContracts;
 
 	private List<String> userContractIds;
 
 	private String editUserId;
+	
+	@Action(value = "queryUserContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryUserContract() {
 
-	@Action(value = "pageUserContractByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageUserContractByUserId() {
+		userContracts = userContractService.queryUserContract(userContract);
 
-		userContractService.pageUserContractByUserId(getPaging(), getEditUserId());
+		return SUCCESS;
+	}
+	
+	@Action(value = "addUserContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addUserContract() throws FLException {
+		
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+		
+		userContractService.addUserContract(userContract, queryCompany());
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "deleteUserContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteUserContract() throws FLException {
+		
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+		
+		userContractService.deleteUserContract(userContract);
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "updateUserContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateUserContract() throws FLException {
+		
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+		
+		userContractService.updateUserContract(userContract);
 
 		return SUCCESS;
 	}
 
-	@Action(value = "addUserContract", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addUserContract() throws FLException {
-
-		if (SystemConfig.getString("communion") == null) {
-			throw new FLException(-1, "无操作权限");
-		}
-
-		userContractService.saveOrUpdateUserContract(getUserContractList());
-
-		return "success";
+	public List<UserContractVO> getUserContracts() {
+		return userContracts;
 	}
 
-	@Action(value = "updateUserContract", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateUserContract() throws FLException {
-
-		if (SystemConfig.getString("communion") == null) {
-			throw new FLException(-1, "无操作权限");
-		}
-
-		userContractService.saveOrUpdateUserContract(getUserContractList());
-
-		return "success";
-	}
-
-	@Action(value = "deleteUserContract", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteUserContract() throws FLException {
-
-		if (SystemConfig.getString("communion") == null) {
-			throw new FLException(-1, "无操作权限");
-		}
-
-		userContractService.deleteUserContract(getUserContractIds());
-
-		return "success";
-	}
-
-	public List<UserContractVO> getUserContractList() {
-		return userContractList;
-	}
-
-	public void setUserContractList(List<UserContractVO> userContractList) {
-		this.userContractList = userContractList;
+	public void setUserContracts(List<UserContractVO> userContracts) {
+		this.userContracts = userContracts;
 	}
 
 	public List<String> getUserContractIds() {
@@ -106,6 +108,14 @@ public class UserContractAction extends BaseListAction {
 
 	public void setEditUserId(String editUserId) {
 		this.editUserId = editUserId;
+	}
+	
+	public UserContractVO getUserContract() {
+		return userContract;
+	}
+
+	public void setUserContract(UserContractVO userContract) {
+		this.userContract = userContract;
 	}
 
 }

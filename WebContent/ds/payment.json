@@ -12,7 +12,8 @@
     	{"key": "4", "value": "退款"},
     	{"key": "5", "value": "补款退款"},
     	{"key": "6", "value": "券退款"},
-    	{"key": "7", "value": "定金退款"}
+    	{"key": "7", "value": "定金退款"},
+		{"key": "8", "value": "不可退定金"}
     ], "advanceType": [
     	{"key":"1", "value":"主材"}
     ], "advanceTypeForSalesMaterial": [
@@ -37,7 +38,8 @@
     }, "balanceType": [
         {"key":"0", "value":"购货"},
         {"key":"1", "value":"预结算退货"},
-        {"key":"2", "value":"结算退货"}
+        {"key":"2", "value":"结算退货"},
+		{"key":"3", "value":"定金"}
     ], "balanceStatus": [
         {"key":"0", "value":"预结算"},
         {"key":"1", "value":"厂商结算"},

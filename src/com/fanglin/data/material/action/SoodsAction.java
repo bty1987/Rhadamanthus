@@ -36,6 +36,14 @@ public class SoodsAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "pageSoodsByQiid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageSoodsByQiid() throws FLException{
+		
+		soodsService.pageSoodsByQiid(getPaging(), getFilters(), soods);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "querySoodsByQiid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySoodsByQiid() throws FLException{
 		

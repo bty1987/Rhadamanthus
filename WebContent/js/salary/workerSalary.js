@@ -21,6 +21,7 @@ jQuery(function ($) {
         constructionSchedule:{},
         salaryType : {},
         twoType:{},
+        twotype:{},
         repeatFlg: false
 
     };
@@ -40,6 +41,7 @@ jQuery(function ($) {
         salary.type=data.type.split("id", "name");
         salary.oneType=data.oneType.split("id", "name");
         salary.twoType=data.SalaryTwoType.split("key", "oneType");
+        salary.twotype=data.SalaryTwoType.split("key", "name");
         salary.items.workersalarySubtype.bindData(data.SalaryTwoType,"key","name");
 
     }, null, false);
@@ -86,6 +88,8 @@ jQuery(function ($) {
                 ["楼盘地址:", (v.decoration.house) == null ? "无" : (v.decoration.house.village.name + " " + v.decoration.house.houseNumber), "grey"],
                 ["监理:", v.decoration.supervisor == null ? "无" : v.decoration.supervisor.userName, "grey"],
                 ["类型：",salary.type[v.type], "red"],
+                ["一类：",salary.oneType[v.onetype], "red"],
+                ["二类：",salary.twotype[v.twotype], "red"],
                 ["操作金额:", v.type == 0 ? v.money : -v.money, "blue"],
                 ["工费:", v.type == 0 ? v.salary : -v.salary, "blue"],
                 ["质保金:", v.type == 0 ? v.deposit : -v.deposit, "blue"],

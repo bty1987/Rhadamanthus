@@ -20,80 +20,136 @@ public class UserInfoPO implements java.io.Serializable {
 	private long uiid;
 
 	private UserPO user;
+	
+	private short level;
+	
+	private int gender;
+	
+	private int height;
+	
+	private int weight;
+	
+	private short political;
+	
+	private String nation;
+	
+	private String hobby;
+	
+	private String qq;
 
-	private String employWay;
+	private String wechat;
+
+	private String email;
+	
+	private short isMarried;
+	
+	private short isBirth;
+
+	private short isHouseLoan;
+
+	private short isCarLoan;
+	
+	private short isCarID;
+	
+	private short isPassID;
+	
+	private short isHMID;
+	
+	private short isTWID;
+	
+	private short householdType;
+	
+	private String hometownAddress;
+
+	private String address;
+	
+	private String lover;
+	
+	private String claner;
+	
+	private String clanerCom;
+	
+	private String emergencyMan;
+
+	private String emergencyPhone;
+	
+	private UserPO fangliner;
+	
+	private String firstTime;
+	
+	private String entryTime;
+	
+	private short employWay;
 
 	private String recommendMan;
 
 	private int jobYears;
 
-	private String employType;
-
-	private String entryTime;
+	private short employType;
 
 	private String employTime;
 
-	private int serviceYears;
-
-	private int age;
-
-	private String political;
-
-	private String emergencyMan;
-
-	private String emergencyPhone;
-
-	private String isPresentGraduate;
+	private short isPresentGraduate;
 
 	private String graduateTime;
 
 	private String school;
 
-	private String education;
+	private short education;
 
 	private String specialty;
 
-	private String isMarried;
-
-	private String isBirth;
-
-	private String isHouseLoan;
-
-	private String isCarLoan;
-
-	private String houseType;
-
-	private String householdType;
-
-	private String hometownAddress;
-
-	private String address;
-
 	private String isContract;
 
-	private String isInsurance;
+	private String signTime;
+	
+	private String eignTime;
+	
+	private String fignTime;
+	
+	private int signNum;
 
+	private String preformNum;
+	
+	private String formTime;
+	
+	private short isInsurance;
+	
+	private short insuranceType;
+	
 	private String insuranceTime;
 
 	private String pensionNum;
 
 	private String medicalNum;
 
-	private long salary;
+	private String publicNum;
+	
+	private String palary;
 
-	private String lover;
-
+	private String salary;
+	
 	private String bank;
 
 	private String bankCardNum;
+	
+	private String comment;
+	
+	private String rank;
+	
+	private short form;
+	
+	private String hometownPlace;
+	
+	public UserInfoPO() {
+		super();
+	}
 
-	private String qq;
-
-	private String wechat;
-
-	private String email;
-
-	private String profiles;
+	public UserInfoPO(UserPO user, UserPO fangliner) {
+		super();
+		this.user = user;
+		this.fangliner = fangliner;
+	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -116,15 +172,6 @@ public class UserInfoPO implements java.io.Serializable {
 		this.user = user;
 	}
 
-	@Column(name = "employWay")
-	public String getEmployWay() {
-		return this.employWay;
-	}
-
-	public void setEmployWay(String employWay) {
-		this.employWay = employWay;
-	}
-
 	@Column(name = "recommendMan")
 	public String getRecommendMan() {
 		return this.recommendMan;
@@ -141,60 +188,6 @@ public class UserInfoPO implements java.io.Serializable {
 
 	public void setJobYears(int jobYears) {
 		this.jobYears = jobYears;
-	}
-
-	@Column(name = "employType")
-	public String getEmployType() {
-		return this.employType;
-	}
-
-	public void setEmployType(String employType) {
-		this.employType = employType;
-	}
-
-	@Column(name = "entryTime")
-	public String getEntryTime() {
-		return this.entryTime;
-	}
-
-	public void setEntryTime(String entryTime) {
-		this.entryTime = entryTime;
-	}
-
-	@Column(name = "employTime")
-	public String getEmployTime() {
-		return this.employTime;
-	}
-
-	public void setEmployTime(String employTime) {
-		this.employTime = employTime;
-	}
-
-	@Column(name = "serviceYears")
-	public int getServiceYears() {
-		return this.serviceYears;
-	}
-
-	public void setServiceYears(int serviceYears) {
-		this.serviceYears = serviceYears;
-	}
-
-	@Column(name = "age")
-	public int getAge() {
-		return this.age;
-	}
-
-	public void setAge(int age) {
-		this.age = age;
-	}
-
-	@Column(name = "political")
-	public String getPolitical() {
-		return this.political;
-	}
-
-	public void setPolitical(String political) {
-		this.political = political;
 	}
 
 	@Column(name = "emergencyMan")
@@ -215,24 +208,6 @@ public class UserInfoPO implements java.io.Serializable {
 		this.emergencyPhone = emergencyPhone;
 	}
 
-	@Column(name = "isPresentGraduate")
-	public String getIsPresentGraduate() {
-		return this.isPresentGraduate;
-	}
-
-	public void setIsPresentGraduate(String isPresentGraduate) {
-		this.isPresentGraduate = isPresentGraduate;
-	}
-
-	@Column(name = "graduateTime")
-	public String getGraduateTime() {
-		return this.graduateTime;
-	}
-
-	public void setGraduateTime(String graduateTime) {
-		this.graduateTime = graduateTime;
-	}
-
 	@Column(name = "school")
 	public String getSchool() {
 		return this.school;
@@ -242,15 +217,6 @@ public class UserInfoPO implements java.io.Serializable {
 		this.school = school;
 	}
 
-	@Column(name = "education")
-	public String getEducation() {
-		return this.education;
-	}
-
-	public void setEducation(String education) {
-		this.education = education;
-	}
-
 	@Column(name = "specialty")
 	public String getSpecialty() {
 		return this.specialty;
@@ -258,60 +224,6 @@ public class UserInfoPO implements java.io.Serializable {
 
 	public void setSpecialty(String specialty) {
 		this.specialty = specialty;
-	}
-
-	@Column(name = "isMarried")
-	public String getIsMarried() {
-		return this.isMarried;
-	}
-
-	public void setIsMarried(String isMarried) {
-		this.isMarried = isMarried;
-	}
-
-	@Column(name = "isBirth")
-	public String getIsBirth() {
-		return this.isBirth;
-	}
-
-	public void setIsBirth(String isBirth) {
-		this.isBirth = isBirth;
-	}
-
-	@Column(name = "isHouseLoan")
-	public String getIsHouseLoan() {
-		return this.isHouseLoan;
-	}
-
-	public void setIsHouseLoan(String isHouseLoan) {
-		this.isHouseLoan = isHouseLoan;
-	}
-
-	@Column(name = "isCarLoan")
-	public String getIsCarLoan() {
-		return this.isCarLoan;
-	}
-
-	public void setIsCarLoan(String isCarLoan) {
-		this.isCarLoan = isCarLoan;
-	}
-
-	@Column(name = "houseType")
-	public String getHouseType() {
-		return this.houseType;
-	}
-
-	public void setHouseType(String houseType) {
-		this.houseType = houseType;
-	}
-
-	@Column(name = "householdType")
-	public String getHouseholdType() {
-		return this.householdType;
-	}
-
-	public void setHouseholdType(String householdType) {
-		this.householdType = householdType;
 	}
 
 	@Column(name = "hometownAddress")
@@ -341,24 +253,6 @@ public class UserInfoPO implements java.io.Serializable {
 		this.isContract = isContract;
 	}
 
-	@Column(name = "isInsurance")
-	public String getIsInsurance() {
-		return this.isInsurance;
-	}
-
-	public void setIsInsurance(String isInsurance) {
-		this.isInsurance = isInsurance;
-	}
-
-	@Column(name = "insuranceTime")
-	public String getInsuranceTime() {
-		return this.insuranceTime;
-	}
-
-	public void setInsuranceTime(String insuranceTime) {
-		this.insuranceTime = insuranceTime;
-	}
-
 	@Column(name = "pensionNum")
 	public String getPensionNum() {
 		return this.pensionNum;
@@ -375,15 +269,6 @@ public class UserInfoPO implements java.io.Serializable {
 
 	public void setMedicalNum(String medicalNum) {
 		this.medicalNum = medicalNum;
-	}
-
-	@Column(name = "salary")
-	public long getSalary() {
-		return this.salary;
-	}
-
-	public void setSalary(long salary) {
-		this.salary = salary;
 	}
 
 	@Column(name = "lover")
@@ -440,13 +325,393 @@ public class UserInfoPO implements java.io.Serializable {
 		this.email = email;
 	}
 
-	@Column(name = "profiles")
-	public String getProfiles() {
-		return profiles;
+	@Column(name = "level")
+	public short getLevel() {
+		return level;
 	}
 
-	public void setProfiles(String profiles) {
-		this.profiles = profiles;
+	public void setLevel(short level) {
+		this.level = level;
 	}
+
+	@Column(name = "gender")
+	public int getGender() {
+		return gender;
+	}
+
+	public void setGender(int gender) {
+		this.gender = gender;
+	}
+
+	@Column(name = "height")
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	@Column(name = "weight")
+	public int getWeight() {
+		return weight;
+	}
+
+	public void setWeight(int weight) {
+		this.weight = weight;
+	}
+
+	@Column(name = "political")
+	public short getPolitical() {
+		return political;
+	}
+
+	public void setPolitical(short political) {
+		this.political = political;
+	}
+
+	@Column(name = "nation")
+	public String getNation() {
+		return nation;
+	}
+
+	public void setNation(String nation) {
+		this.nation = nation;
+	}
+
+	@Column(name = "hobby")
+	public String getHobby() {
+		return hobby;
+	}
+
+	public void setHobby(String hobby) {
+		this.hobby = hobby;
+	}
+
+	@Column(name = "isMarried")
+	public short getIsMarried() {
+		return isMarried;
+	}
+
+	public void setIsMarried(short isMarried) {
+		this.isMarried = isMarried;
+	}
+
+	@Column(name = "isBirth")
+	public short getIsBirth() {
+		return isBirth;
+	}
+
+	public void setIsBirth(short isBirth) {
+		this.isBirth = isBirth;
+	}
+
+	@Column(name = "isHouseLoan")
+	public short getIsHouseLoan() {
+		return isHouseLoan;
+	}
+
+	public void setIsHouseLoan(short isHouseLoan) {
+		this.isHouseLoan = isHouseLoan;
+	}
+
+	@Column(name = "isCarLoan")
+	public short getIsCarLoan() {
+		return isCarLoan;
+	}
+
+	public void setIsCarLoan(short isCarLoan) {
+		this.isCarLoan = isCarLoan;
+	}
+
+	@Column(name = "isCarID")
+	public short getIsCarID() {
+		return isCarID;
+	}
+
+	public void setIsCarID(short isCarID) {
+		this.isCarID = isCarID;
+	}
+
+	@Column(name = "isPassID")
+	public short getIsPassID() {
+		return isPassID;
+	}
+
+	public void setIsPassID(short isPassID) {
+		this.isPassID = isPassID;
+	}
+
+	@Column(name = "isHMID")
+	public short getIsHMID() {
+		return isHMID;
+	}
+
+	public void setIsHMID(short isHMID) {
+		this.isHMID = isHMID;
+	}
+
+	@Column(name = "isTWID")
+	public short getIsTWID() {
+		return isTWID;
+	}
+
+	public void setIsTWID(short isTWID) {
+		this.isTWID = isTWID;
+	}
+
+	@Column(name = "householdType")
+	public short getHouseholdType() {
+		return householdType;
+	}
+
+	public void setHouseholdType(short householdType) {
+		this.householdType = householdType;
+	}
+
+	@Column(name = "claner")
+	public String getClaner() {
+		return claner;
+	}
+
+	public void setClaner(String claner) {
+		this.claner = claner;
+	}
+
+	@Column(name = "clanerCom")
+	public String getClanerCom() {
+		return clanerCom;
+	}
+
+	public void setClanerCom(String clanerCom) {
+		this.clanerCom = clanerCom;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fuid", referencedColumnName = "uid")
+	public UserPO getFangliner() {
+		return fangliner;
+	}
+
+	public void setFangliner(UserPO fangliner) {
+		this.fangliner = fangliner;
+	}
+
+	@Column(name = "firstTime")
+	public String getFirstTime() {
+		return firstTime;
+	}
+
+	public void setFirstTime(String firstTime) {
+		this.firstTime = firstTime;
+	}
+
+	@Column(name = "entryTime")
+	public String getEntryTime() {
+		return entryTime;
+	}
+
+	public void setEntryTime(String entryTime) {
+		this.entryTime = entryTime;
+	}
+
+	@Column(name = "employWay")
+	public short getEmployWay() {
+		return employWay;
+	}
+
+	public void setEmployWay(short employWay) {
+		this.employWay = employWay;
+	}
+
+	@Column(name = "employType")
+	public short getEmployType() {
+		return employType;
+	}
+
+	public void setEmployType(short employType) {
+		this.employType = employType;
+	}
+
+	@Column(name = "employTime")
+	public String getEmployTime() {
+		return employTime;
+	}
+
+	public void setEmployTime(String employTime) {
+		this.employTime = employTime;
+	}
+
+	@Column(name = "isPresentGraduate")
+	public short getIsPresentGraduate() {
+		return isPresentGraduate;
+	}
+
+	public void setIsPresentGraduate(short isPresentGraduate) {
+		this.isPresentGraduate = isPresentGraduate;
+	}
+
+	@Column(name = "graduateTime")
+	public String getGraduateTime() {
+		return graduateTime;
+	}
+
+	public void setGraduateTime(String graduateTime) {
+		this.graduateTime = graduateTime;
+	}
+
+	@Column(name = "education")
+	public short getEducation() {
+		return education;
+	}
+
+	public void setEducation(short education) {
+		this.education = education;
+	}
+
+	@Column(name = "signTime")
+	public String getSignTime() {
+		return signTime;
+	}
+
+	public void setSignTime(String signTime) {
+		this.signTime = signTime;
+	}
+
+	@Column(name = "eignTime")
+	public String getEignTime() {
+		return eignTime;
+	}
+
+	public void setEignTime(String eignTime) {
+		this.eignTime = eignTime;
+	}
+
+	@Column(name = "fignTime")
+	public String getFignTime() {
+		return fignTime;
+	}
+
+	public void setFignTime(String fignTime) {
+		this.fignTime = fignTime;
+	}
+
+	@Column(name = "signNum")
+	public int getSignNum() {
+		return signNum;
+	}
+
+	public void setSignNum(int signNum) {
+		this.signNum = signNum;
+	}
+
+	@Column(name = "preformNum")
+	public String getPreformNum() {
+		return preformNum;
+	}
+
+	public void setPreformNum(String preformNum) {
+		this.preformNum = preformNum;
+	}
+
+	@Column(name = "formTime")
+	public String getFormTime() {
+		return formTime;
+	}
+
+	public void setFormTime(String formTime) {
+		this.formTime = formTime;
+	}
+
+	@Column(name = "isInsurance")
+	public short getIsInsurance() {
+		return isInsurance;
+	}
+
+	public void setIsInsurance(short isInsurance) {
+		this.isInsurance = isInsurance;
+	}
+
+	@Column(name = "insuranceType")
+	public short getInsuranceType() {
+		return insuranceType;
+	}
+
+	public void setInsuranceType(short insuranceType) {
+		this.insuranceType = insuranceType;
+	}
+
+	@Column(name = "insuranceTime")
+	public String getInsuranceTime() {
+		return insuranceTime;
+	}
+
+	public void setInsuranceTime(String insuranceTime) {
+		this.insuranceTime = insuranceTime;
+	}
+
+	@Column(name = "publicNum")
+	public String getPublicNum() {
+		return publicNum;
+	}
+
+	public void setPublicNum(String publicNum) {
+		this.publicNum = publicNum;
+	}
+
+	@Column(name = "palary")
+	public String getPalary() {
+		return palary;
+	}
+
+	public void setPalary(String palary) {
+		this.palary = palary;
+	}
+
+	@Column(name = "salary")
+	public String getSalary() {
+		return salary;
+	}
+
+	public void setSalary(String salary) {
+		this.salary = salary;
+	}
+
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	@Column(name = "ranks")
+	public String getRank() {
+		return rank;
+	}
+
+	public void setRank(String rank) {
+		this.rank = rank;
+	}
+
+	@Column(name = "form")
+	public short getForm() {
+		return form;
+	}
+
+	public void setForm(short form) {
+		this.form = form;
+	}
+
+	@Column(name = "hometownPlace")
+	public String getHometownPlace() {
+		return hometownPlace;
+	}
+
+	public void setHometownPlace(String hometownPlace) {
+		this.hometownPlace = hometownPlace;
+	}
+
 
 }

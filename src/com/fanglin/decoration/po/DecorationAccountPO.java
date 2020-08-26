@@ -21,8 +21,12 @@ public class DecorationAccountPO implements Serializable {
 	private long daid;
 
 	private String orderId;
+	
+	private String name;
 
 	private short type;
+	
+	private Short typeness;
 
 	private short arcal;
 
@@ -41,6 +45,8 @@ public class DecorationAccountPO implements Serializable {
 	private long difference;
 
 	private long coupon;
+	
+	private long internal;
 
 	private long fulldel;
 
@@ -59,6 +65,15 @@ public class DecorationAccountPO implements Serializable {
 		this.daid = daid;
 	}
 
+	@Column(name = "name")
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	@Column(name = "orderId")
 	public String getOrderId() {
 		return orderId;
@@ -75,6 +90,15 @@ public class DecorationAccountPO implements Serializable {
 
 	public void setType(short type) {
 		this.type = type;
+	}
+
+	@Column(name = "typeness")
+	public Short getTypeness() {
+		return typeness;
+	}
+
+	public void setTypeness(Short typeness) {
+		this.typeness = typeness;
 	}
 
 	@Column(name = "matching")
@@ -158,6 +182,15 @@ public class DecorationAccountPO implements Serializable {
 		this.coupon = coupon;
 	}
 
+	@Column(name = "internal")	
+	public long getInternal() {
+		return internal;
+	}
+	
+	public void setInternal(long internal) {
+		this.internal = internal;
+	}
+	
 	@Column(name = "fulldel")
 	public long getFulldel() {
 		return fulldel;

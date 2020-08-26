@@ -48,7 +48,7 @@ $.extend(api, {customer: {
         type: "query",
         tranargs: [{
             result: "paging-data",
-            args: ["buildArea"]
+            args: ["buildArea", "freeArea", "totalArea", "innerArea"]
         }]
     },
     pageCustomerOriginForDesign: {
@@ -56,7 +56,7 @@ $.extend(api, {customer: {
         type: "query",
         tranargs: [{
             result: "paging-data",
-            args: ["buildArea"]
+            args: ["buildArea", "freeArea", "totalArea", "innerArea"]
         }]
     },
     pageCustomerOriginForAdvance: {
@@ -64,7 +64,7 @@ $.extend(api, {customer: {
         type: "query",
         tranargs: [{
             result: "paging-data",
-            args: ["buildArea"]
+            args: ["buildArea", "freeArea", "totalArea", "innerArea"]
         }]
     },
     pageCustomerOriginForCommunion: {
@@ -72,21 +72,21 @@ $.extend(api, {customer: {
         type: "query",
         tranargs: [{
             result: "paging-data",
-            args: ["buildArea"]
+            args: ["buildArea", "freeArea", "totalArea", "innerArea"]
         }]
     },
     addCustomerOrigin: {
         url: "addCustomerOrigin.do",
         type: "update",
         tranargs: {
-            args: ["customerOrigin.buildArea"]
+            args: ["customerOrigin.buildArea", "customerOrigin.freeArea", "customerOrigin.totalArea", "customerOrigin.innerArea"]
         }
     },
     updateCustomerOrigin: {
         url: "updateCustomerOrigin.do",
         type: "update",
         tranargs: {
-            args: ["customerOrigin.buildArea"]
+            args: ["customerOrigin.buildArea", "customerOrigin.freeArea", "customerOrigin.totalArea", "customerOrigin.innerArea"]
         }
     },
 	updateCustomerOriginForBelonger: {url:"updateCustomerOriginForBelonger.do"},
@@ -167,8 +167,69 @@ $.extend(api, {customer: {
     queryCusDecorationPicture : {url : "queryCusDecorationPicture.do"},
     queryCusConstructionDrawing : {url : "queryCusConstructionDrawing.do"},
     
-    addDecorationCircle:{url:"addDecorationCircle.do"}
+    addDecorationCircle:{url:"addDecorationCircle.do"},
+    pageConsultion : {url : "pageConsultion.do"},
+    queryConsultionByOrderId : {url : "queryConsultionByOrderId.do"},
+    addConsultion : {url : "addConsultion.do"},
+    pageRevisit:{url:"pageRevisit.do"},
+    queryRevisitByOrderId:{url:"queryRevisitByOrderId.do"},
+    queryRevisitForAepair:{url:"queryRevisitForAepair.do"},
+    queryRevisitForComplain:{url:"queryRevisitForComplain.do"},
+	visitRevisit:{url:"visitRevisit.do"},
+	
+    pageComplain:{url:"pageComplain.do"},
+    queryComplain:{url:"queryComplain.do"},
+    queryComplainByOrderId:{url:"queryComplainByOrderId.do"},
+    addComplain:{url:"addComplain.do"},
+    finishComplain:{url:"finishComplain.do"},
+    closeComplain:{url:"closeComplain.do"},
+    queryComplaint:{url:"queryComplaint.do"},
+    addComplaint:{url:"addComplaint.do"},
+    finishComplaint:{url:"finishComplaint.do"},
+    closeComplaint:{url:"closeComplaint.do"},
+    queryComplack:{url:"queryComplack.do"},
+    trackComplack:{url:"trackComplack.do"},
+	
+	pageAepair: {url:"pageAepair.do"},
+    queryAepair: {url:"queryAepair.do"},
+    queryAepairByOrderId: {url:"queryAepairByOrderId.do"},
+    addAepair: {url:"addAepair.do"},
+    updateAepair: {
+    	url:"updateAepair.do",
+    	type: "update",
+        tranargs: {
+            args: ["aepair.outlay"]
+        }
+    },
+    receiveAepair: {url:"receiveAepair.do"},
+    deliveAepair: {url:"deliveAepair.do"},
+    tranAepair: {url:"tranAepair.do"},
+    finishAepair: {url:"finishAepair.do"},
+    closeAepair: {url:"closeAepair.do"},
+    sendAepairMessage: {url:"sendAepairMessage.do"},
     
+    queryRepair: {url:"queryRepair.do"},
+    addRepair: {url:"addRepair.do"},
+    keepRepair: {url:"keepRepair.do"},
+    finishRepair: {url:"finishRepair.do"},
+    
+    queryRepairpay: {
+    	url:"queryRepairpay.do",
+    	type: "query",
+        tranargs: [{
+            result: "repairpays",
+            args: ["money"]
+        }]
+    },
+    addRepairpay: {
+    	url:"addRepairpay.do",
+    	type: "update",
+        tranargs: {
+            args: ["repairpay.money"]
+        }
+    },
+    deleteRepairpay: {url:"deleteRepairpay.do"}
+	
 }});
 
 

@@ -13,6 +13,8 @@ public class CategoryVO implements java.io.Serializable {
 	private String kino;
 
 	private String kiname;
+	
+	private Short type;
 
 	public Long getCid() {
 		return cid;
@@ -52,6 +54,14 @@ public class CategoryVO implements java.io.Serializable {
 
 	public void setKiname(String kiname) {
 		this.kiname = kiname;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
 	}
 
 }

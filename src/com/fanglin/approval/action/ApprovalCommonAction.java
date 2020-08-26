@@ -47,6 +47,24 @@ public class ApprovalCommonAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	//客户确认
+	@Action(value = "confirmApproval", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String confirmApproval() throws FLException {
+
+		approvalCommonService.confirmApproval(approval);
+
+		return SUCCESS;
+	}
+	
+	//客户拒绝
+	@Action(value = "rejectApproval", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String rejectApproval() throws FLException {
+
+		approvalCommonService.rejectApproval(approval);
+
+		return SUCCESS;
+	}
+	
 	public ApprovalVO getApproval() {
 		return approval;
 	}

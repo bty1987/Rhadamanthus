@@ -18,13 +18,13 @@ public class AttendanceDaoImpl extends DaoImpl<AttendancePO> implements Attendan
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<AttendancePO> queryAttendance(Long uid, Integer month) {
+	public List<AttendancePO> queryAttendance(Integer uid, Integer month) {
 		
 		return session().createCriteria(AttendancePO.class).add(Restrictions.eq("uid", uid)).add(Restrictions.eq("month", month)).list();
 	}
 
 	@Override
-	public List<?> queryList(Long uid, Integer month) {
+	public List<?> queryList(Integer uid, Integer month) {
 		
 		Integer monthSub = null;
 		

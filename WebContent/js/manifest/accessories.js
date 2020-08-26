@@ -105,18 +105,18 @@ $(function () {
 
 
             if (accessories.pageType == "advance") {
-                v.status != 5 && ($btnUl.append($btnEdit));
                 v.status == 0 && ($btnUl.append($btnAdvance).append($btnEdit).append($btnRefuse));//初始：出货，修改
                 v.status == 1 && ($btnUl.append($btnPrint));//出货：出货 修改 退回 打印
                 v.status == 2 && ($btnUl.append($btnPrint));
-                v.status == 5 && ($btnUl.append($btnView));
             } else {
-                v.status != 5 && ($btnUl.append($btnEdit));
                 v.status == 0 && ($btnUl.append($btnOut).append($btnEdit).append($btnRefuse));//初始：出货，修改
                 v.status == 1 && ($btnUl.append($btnOut).append($btnPrint));
                 v.status == 2 && ($btnUl.append($btnView).append($btnDev).append($btnReturn).append($btnPrint));//出货：出货 修改 退回 打印
-                v.status == 5 && ($btnUl.append($btnView));
             }
+
+            v.status == 5 && ($btnUl.append($btnView));
+            v.status == 6 && ($btnUl.append($btnView).append($btnReturn).append($btnPrint));
+            v.status != 6 && ($btnUl.append($btnEdit));
 
             $btnGroup.append($btn).append($btnUl).appendTo($cellOption);
 
@@ -136,7 +136,7 @@ $(function () {
 
             $btnDev.click(function () {
 
-                if(v.status != 2){
+                if (v.status != 2) {
                     com.showAlert(com.warning, "辅料单状态不可操作");
                     return false;
                 }
@@ -214,19 +214,16 @@ $(function () {
 
             $btnPrint.click(function () {
 
-                com.post(api.inventory.updateAccessoriesForPrint, {"accessories.aid": v.aid}, function (res) {
-                    params["accessories.printnum"] = res.accessories.printnum;
+                params["accessories.no"] = v.no;
+                params["accessories.orderId"] = v.orderId;
+                params["accessories.createTime"] = v.createTime;
+                params["accessories.creater"] = v.creater.userName;
+                params["accessories.aid"] = v.aid;
+                params["accessories.manifestTime"] = v.approverTime;
+                params["accessories.status"] = v.status;
+                params["accessories.printnum"] = v.printnum;
 
-                    params["accessories.no"] = v.no;
-                    params["accessories.orderId"] = v.orderId;
-                    params["accessories.createTime"] = v.createTime;
-                    params["accessories.creater"] = v.creater.userName;
-                    params["accessories.aid"] = v.aid;
-                    params["accessories.manifestTime"] = v.approverTime;
-                    params["accessories.status"] = v.status;
-
-                    printAccessoriesItem(v.aid, v.no);
-                });
+                printAccessoriesItem(v.aid, v.no);
 
             });
 
@@ -292,7 +289,12 @@ $(function () {
     function printAccessoriesItem(aid, no) {
         com.popup4frame("辅料单号" + no, api.index.accessoriesPrintIndex.url, function () {
             parent.layer.getFrameIndex(window.name);
-        }, null, true);
+            accessoriesSeacher.doSearch();
+        }, null, function (layero) {
+            com.post(api.inventory.updateAccessoriesForPrint, {"accessories.aid": aid}, function (res) {
+                layero.find("iframe").contents().find("#printNum").text("打印次数:" + res.accessories.printnum)
+            }, null, false)
+        });
     }
 
 });

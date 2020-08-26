@@ -28,19 +28,22 @@
         {"key":"守园","value":"守园"},
         {"key":"监理","value":"监理"},
         {"key":"400","value":"400"},
-        {"key":"网络","value":"网络"},
         {"key":"上门","value":"上门"},
         {"key":"公司","value":"公司"},
         {"key":"工人","value":"工人"},
         {"key":"设计师","value":"设计师"},
         {"key":"咨询","value":"咨询"},
-        {"key":"非业务人员","value":"非业务人员"}
-    ], "type": [
-        {"key":"0", "value":"半包"},
-        {"key":"1", "value":"全包"},
-        {"key":"2", "value":"半价"},
-        {"key":"3", "value":"满减"},
-        {"key":"4", "value":"减上捡"}
+        {"key":"非业务人员","value":"非业务人员"},
+        {"key":"网销公司网络","value":"网销公司网络"},
+        {"key":"约访公司","value":"约访公司"},
+        {"key":"网销自有网络","value":"网销自有网络"}
+    ], "typeness": [
+        {"key":"0", "value":"半包","type":"0"},
+        {"key":"1", "value":"整装","type":"1"},
+        {"key":"2", "value":"半价","type":"2"},
+        {"key":"3", "value":"满减","type":"2"},
+        {"key":"4", "value":"减上捡","type":"2"},
+        {"key":"5", "value":"达额减","type":"0"}
     ], "paymentType": [
         {"key":"0-0","value":"设计费"},
         {"key":"0-3","value":"VIP卡"},
@@ -51,15 +54,11 @@
         {"key":"1-3","value":"免息贷款"},
         {"key":"0-3","value":"增项服务费"},
         {"key":"0-3","value":"工程抵值款"},
-        {"key":"0-3","value":"配比优惠补差"}
+        {"key":"0-3","value":"配比优惠补差"},
+        {"key":"0-3","value":"砌墙包预收款"},
+        {"key":"0-3","value":"保证金"}
     ], "machingType": [
         {"key":"1.5", "value":"5"}
-    ], "orderType": [
-        {"key":"0", "value":"半包"},
-        {"key":"1", "value":"全包"},
-        {"key":"2", "value":"半价"},
-        {"key":"3", "value":"满减"},
-        {"key":"4", "value":"减上捡"}
     ], "perCharge": [
         {"key":"designer", "value":"9"},
         {"key":"manager", "value":"1"}
@@ -72,9 +71,9 @@
         {"key":"已审批","value":"已审批"},
         {"key":"未审批","value":"未审批"}
     ],  "receiveType":[
+        {"key":"2", "value":"签单"},
         {"key":"0", "value":"到店"},
         {"key":"1", "value":"定金"},
-        {"key":"2", "value":"签单"},
         {"key":"3", "value":"抽奖"},
         {"key":"4", "value":"特批"},
         {"key":"7", "value":"升级"}
@@ -91,16 +90,14 @@
         {"key":"A", "value":"A"},
         {"key":"B", "value":"B"},
         {"key":"C", "value":"C"}
-    ], "decorationOrderType":[
-        {"key":"0", "value":"半包"},
-        {"key":"1", "value":"套餐"},
-        {"key":"2", "value":"半价"},
-        {"key":"3", "value":"满减"},
-        {"key":"4", "value":"减上捡"}
     ], "designStatus":[
-        {"key":"0", "value":"待设计"},
+        {"key":"0", "value":"初始"},
         {"key":"1", "value":"设计中"},
         {"key":"2", "value":"已完成"}
+    ], "sourceStatus":[
+        {"key":"0", "value":"初始"},
+        {"key":"1", "value":"合同方案确认"},
+        {"key":"2", "value":"放线方案确认"}
     ],
     "errorCode": 0,
     "errorMsg": null

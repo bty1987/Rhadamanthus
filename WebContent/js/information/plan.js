@@ -42,8 +42,15 @@ $(function () {
         plan.plugins = res.tasks.split("keyWord", "plugins");
     }, null, false);
 
-    com.post(api.right.queryTaskUserRightByUserId, {"user.userId": params.userInfo.user.userId}, function (res) {
-        plan.planItems.task.bindData(res.tasks, "keyWord", "name", false);
+    com.post(api.data.queryTaskRoleRightByUserId, {"taskRoleRight.rid": params.userInfo.user.role.rid}, function (res) {
+        var task = [];
+
+        $.each(res.taskRoleRights, function(i, v){
+
+            task.push(v.task);
+        });
+
+        plan.planItems.task.bindData(task, "keyWord", "name", false);
     }, null, false);
 
     planUtils.bindUploadBtn("#attachment", 1070);

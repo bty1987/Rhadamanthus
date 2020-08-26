@@ -13,6 +13,8 @@ public interface AccessoriesService {
 	
 	public void pageAccessories(Paging paging, List<Filter> filters,int company);
 	
+	public List<AccessoriesVO> queryAccessoriesByOrderId(AccessoriesVO accessoriesVO);
+	
 	public int addAccessories(AccessoriesVO accessoriesVO,List<AccessoriesItemVO> accessoriesItemVOs, String userId) throws FLException;
 	
 	public int preoutAccessories(AccessoriesVO accessoriesVO,String userId) throws FLException;

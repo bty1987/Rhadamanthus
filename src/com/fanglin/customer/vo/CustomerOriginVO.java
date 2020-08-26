@@ -36,6 +36,12 @@ public class CustomerOriginVO implements Serializable {
 	private String houseNumber;
 
 	private Integer buildArea;
+	
+	private Integer freeArea;
+	
+	private Integer totalArea;
+	
+	private Integer innerArea;
 
 	private UserBaseVO creater;
 
@@ -58,8 +64,6 @@ public class CustomerOriginVO implements Serializable {
 	private UserBaseVO designer;
 
 	private String orderId;
-	
-	private String salesmanType;
 
 	public CustomerOriginVO() {
 		super();
@@ -165,6 +169,30 @@ public class CustomerOriginVO implements Serializable {
 		this.buildArea = buildArea;
 	}
 
+	public Integer getFreeArea() {
+		return freeArea;
+	}
+
+	public void setFreeArea(Integer freeArea) {
+		this.freeArea = freeArea;
+	}
+
+	public Integer getTotalArea() {
+		return totalArea;
+	}
+
+	public void setTotalArea(Integer totalArea) {
+		this.totalArea = totalArea;
+	}
+
+	public Integer getInnerArea() {
+		return innerArea;
+	}
+
+	public void setInnerArea(Integer innerArea) {
+		this.innerArea = innerArea;
+	}
+
 	public UserBaseVO getCreater() {
 		return creater;
 	}
@@ -252,14 +280,6 @@ public class CustomerOriginVO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
-	}
-
-	public String getSalesmanType() {
-		return salesmanType;
-	}
-
-	public void setSalesmanType(String salesmanType) {
-		this.salesmanType = salesmanType;
 	}
 
 }

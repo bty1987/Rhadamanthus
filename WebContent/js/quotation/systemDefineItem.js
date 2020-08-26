@@ -81,11 +81,11 @@ $(function(){
 			//启用禁用
 			var $btnStatus = $('<div></div>').addClass('pull-right');
 			var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
-			var $span = $('<span></span>').addClass('lbl');
+			var $span = $('<span></span>').addClass('lbl status-lbl');
 			//是否打折
 			var $btnDiscount = $('<div></div>').addClass('pull-right');
 			var $discountSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
-			var $dspan = $('<span></span>').addClass('lbl');
+			var $dspan = $('<span></span>').addClass('lbl discount-lbl');
 
             var propertyArr = [
                 ["编号:", v.itemId, "blue"],

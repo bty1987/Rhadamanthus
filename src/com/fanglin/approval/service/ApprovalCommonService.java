@@ -11,10 +11,17 @@
 
 package com.fanglin.approval.service;
 
-import com.fanglin.core.interceptor.FLException;
+import org.apache.struts2.convention.annotation.ParentPackage;
 
+import com.fanglin.approval.vo.ApprovalVO;
+import com.fanglin.core.interceptor.FLException;
+@ParentPackage("common")
 public interface ApprovalCommonService {
 	
 	public int submitApprovalForDing(String code, String forms, String userId, int company) throws FLException;
+	
+	public int confirmApproval(ApprovalVO approvalVO) throws FLException;
+	
+	public int rejectApproval(ApprovalVO approvalVO) throws FLException;
 	
 }

@@ -17,6 +17,8 @@ public class DutyVO implements Serializable {
 	private Integer type;
 
 	private Short lead;
+	
+	private String pinYin;
 
 	public DutyVO() {
 		super();
@@ -52,6 +54,14 @@ public class DutyVO implements Serializable {
 		this.status = status;
 	}
 
+	public DepartmentTypeVO getDepartmentType() {
+		return departmentType;
+	}
+
+	public void setDepartmentType(DepartmentTypeVO departmentType) {
+		this.departmentType = departmentType;
+	}
+
 	public Integer getType() {
 		return type;
 	}
@@ -68,12 +78,14 @@ public class DutyVO implements Serializable {
 		this.lead = lead;
 	}
 
-	public DepartmentTypeVO getDepartmentType() {
-		return departmentType;
+	public String getPinYin() {
+		return pinYin;
 	}
 
-	public void setDepartmentType(DepartmentTypeVO departmentType) {
-		this.departmentType = departmentType;
+	public void setPinYin(String pinYin) {
+		this.pinYin = pinYin;
 	}
+
+	
 
 }

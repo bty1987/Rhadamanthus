@@ -44,6 +44,8 @@ public class SalesVO implements Serializable {
 	
 	private UserBaseVO instorer;
 	
+	private UserBaseVO finisher;
+	
 	private String category;
 	
 	private Long bid;
@@ -57,6 +59,8 @@ public class SalesVO implements Serializable {
 	private Timestamp balanceTime;
 	
 	private Timestamp fullpayTime;
+	
+	private Timestamp finishTime;
 	
 	private Short status;
 	
@@ -85,7 +89,11 @@ public class SalesVO implements Serializable {
 	private Short otherStatus;
 	
 	private Long activityId;
-
+	
+	private Short ctype;
+	
+	private Integer cvalue;
+	
 	public SalesVO() {
 		super();
 	}
@@ -106,7 +114,7 @@ public class SalesVO implements Serializable {
 	
 	public SalesVO(HouseVO house, CustomerVO customer, UserBaseVO salesman,
 			DepartmentVO dept, DepartmentVO region, UserBaseVO guider,
-			DepartmentVO guideDept, UserBaseVO instorer, UserBaseVO supplier) {
+			DepartmentVO guideDept, UserBaseVO instorer, UserBaseVO supplier, UserBaseVO finisher) {
 		super();
 		this.house = house;
 		this.customer = customer;
@@ -117,8 +125,9 @@ public class SalesVO implements Serializable {
 		this.guideDept = guideDept;
 		this.instorer = instorer;
 		this.supplier = supplier;
+		this.finisher = finisher;
 	}
-
+	
 	public Long getSid() {
 		return sid;
 	}
@@ -238,6 +247,14 @@ public class SalesVO implements Serializable {
 	public void setInstorer(UserBaseVO instorer) {
 		this.instorer = instorer;
 	}
+	
+	public UserBaseVO getFinisher() {
+		return finisher;
+	}
+
+	public void setFinisher(UserBaseVO finisher) {
+		this.finisher = finisher;
+	}
 
 	public String getCategory() {
 		return category;
@@ -296,6 +313,15 @@ public class SalesVO implements Serializable {
 
 	public void setFullpayTime(Timestamp fullpayTime) {
 		this.fullpayTime = fullpayTime;
+	}
+	
+	@JSON(format="yyyy-MM-dd")
+	public Timestamp getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Timestamp finishTime) {
+		this.finishTime = finishTime;
 	}
 
 	public Short getStatus() {
@@ -408,6 +434,22 @@ public class SalesVO implements Serializable {
 
 	public void setActivityId(Long activityId) {
 		this.activityId = activityId;
+	}
+
+	public Short getCtype() {
+		return ctype;
+	}
+
+	public void setCtype(Short ctype) {
+		this.ctype = ctype;
+	}
+
+	public Integer getCvalue() {
+		return cvalue;
+	}
+
+	public void setCvalue(Integer cvalue) {
+		this.cvalue = cvalue;
 	}
 
 }

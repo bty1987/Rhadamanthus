@@ -98,7 +98,7 @@ public class DecorationPO implements Serializable{
 		BeanUtil.copyPropertie(decorationPO.getSalesman(), decorationVO.getSalesman(),Arrays.asList("dept","duty"));
 		BeanUtil.copyPropertie(decorationPO.getSupervisor(), decorationVO.getSupervisor(),Arrays.asList("dept","duty"));
 		
-		decorationVO.setType(decorationPO.getType());
+		decorationVO.setType(decorationPO.getTypeness());
 		decorationVO.setCustomerId(decorationPO.getCustomer().getCid());
 		decorationVO.setContractTime(decorationPO.getContractTime());
 		decorationVO.setAddress(this.getAddress());
@@ -109,6 +109,7 @@ public class DecorationPO implements Serializable{
 		decorationVO.setMeasureTime(decorationPO.getMeasureTime());
 		decorationVO.setOrderId(this.getOrderId());
 		decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
+		decorationVO.setFactPrice(decorationPO.getFactPrice());
 		
 	}
 }

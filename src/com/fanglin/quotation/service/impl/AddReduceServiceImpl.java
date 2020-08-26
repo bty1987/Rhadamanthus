@@ -30,15 +30,16 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.dao.AddReduceItemDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
+import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
 import com.fanglin.quotation.dao.SelectionItemDao;
 import com.fanglin.quotation.po.AddReduceItemPO;
 import com.fanglin.quotation.po.AddReducePO;
 import com.fanglin.quotation.po.ExtensionItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
+import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.service.AddReduceService;
 import com.fanglin.quotation.vo.AddReduceVO;
-import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -59,6 +60,9 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 	@Autowired
 	private QuotationFunctionAreaItemDao quotationFunctionAreaItemDao;
+	
+	@Autowired
+	private QuotationFunctionAreaDao quotationFunctionAreaDao;
 
 	@Autowired
 	private DecorationPaymentDao decorationPaymentDao;
@@ -68,9 +72,6 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 	@Autowired
 	private UserDao userDao;
-
-	@Autowired
-	private SystemConfigDao systemConfigDao;
 
 	@Autowired
 	private SelectionItemDao selectionItemDao;
@@ -203,7 +204,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int deleteAddReduceByArId(AddReduceVO addReduceVO) throws FLException {
-
+	
 		List<Integer> status = Arrays.asList(new Integer[] { AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT });
 
 		long arId = addReduceVO.getArId();
@@ -223,14 +224,13 @@ public class AddReduceServiceImpl implements AddReduceService {
 		}
 
 		List<AddReduceItemPO> addReduceItemPOs = addReduceItemDao.queryAddReduceItemByAddReduceId(arId);
-
-		Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
-
+		
 		for (AddReduceItemPO addReduceItemPO : addReduceItemPOs) {
 
 			if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_QUOTATION_ITEM_INT) {
-
-				QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(addReduceItemPO.getQuotationFunctionArea().getQfaId(), divisor), addReduceItemPO.getQuoteItemId());
+		
+				QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(addReduceItemPO.getQuotationFunctionArea().getQfaId());
+				QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex()), addReduceItemPO.getQuoteItemId());
 
 				if (quotationFunctionAreaItemPO == null) {
 					throw new FLException(200013, "报价项不存在");

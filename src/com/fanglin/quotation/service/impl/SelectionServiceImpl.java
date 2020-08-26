@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.decoration.dao.DecorationDao;
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.SelectionDao;
 import com.fanglin.quotation.po.QuotationPO;
@@ -22,6 +24,9 @@ public class SelectionServiceImpl implements SelectionService{
 	
 	@Autowired
 	private QuotationDao quotationDao;
+	
+	@Autowired
+	private DecorationDao decorationDao; 
 
 	@Override
 	public SelectionVO querySelectionByQid(SelectionVO selectionVO) throws FLException {
@@ -104,6 +109,9 @@ public class SelectionServiceImpl implements SelectionService{
 		
 		SelectionPO selectionPO = new SelectionPO();
 		
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(quotationPO.getOrderId());
+		
+		selectionPO.setCompany(decorationPO.getCompany());
 		selectionPO.setOrderId(quotationPO.getOrderId());
 		selectionPO.setQid(quotationPO.getQid());
 		selectionPO.setStatus(SelectionPO.STATUS_INIT_INT);

@@ -22,114 +22,114 @@ import com.fanglin.sales.vo.SalesBalanceVO;
 public class SalesBalanceAction extends BaseListAction {
 
 	private static final long serialVersionUID = -1983581510336617599L;
-	
+
 	@Autowired
 	private SalesBalanceService salesBalanceService;
-	
+
 	@Autowired
 	private SalesBalanceItemService salesBalanceItemService;
-	
-	private SalesBalanceVO salesBalance; 
-	
+
+	private SalesBalanceVO salesBalance;
+
 	private List<Long> sid;
-	
+
 	private List<SalesBalanceVO> salesBalances;
-	
+
 	private List<SalesBalanceItemVO> salesBalanceItems;
-	
+
 	@Action(value = "pageSalesBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageSalesBalance() throws FLException{
-		
-		salesBalanceService.pageSalesBalance(getPaging(), getFilters(),queryCompany());
-		
+	public String pageSalesBalance() throws FLException {
+
+		salesBalanceService.pageSalesBalance(getPaging(), getFilters(), queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "pageSalesBalanceForDompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageSalesBalanceForDompany() throws FLException{
-		
-		salesBalanceService.pageSalesBalanceForDompany(getPaging(), getFilters(),queryCompany());
-		
+	public String pageSalesBalanceForDompany() throws FLException {
+
+		salesBalanceService.pageSalesBalanceForDompany(getPaging(), getFilters(), queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "pageSalesBalanceForPompany", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageSalesBalanceForPompany() throws FLException{
-		
-		salesBalanceService.pageSalesBalanceForPompany(getPaging(), getFilters(),queryCompany());
-		
+	public String pageSalesBalanceForPompany() throws FLException {
+
+		salesBalanceService.pageSalesBalanceForPompany(getPaging(), getFilters(), queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "pageSalesBalanceForSupplier", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageSalesBalanceForSupplier() throws FLException{
-		
-		salesBalanceService.pageSalesBalanceForSupplier(getPaging(), getFilters(),queryUserId(), queryCompany());
-		
+	public String pageSalesBalanceForSupplier() throws FLException {
+
+		salesBalanceService.pageSalesBalanceForSupplier(getPaging(), getFilters(), queryUserId(), queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateSalesBalanceForVBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateSalesBalanceForVBalance() throws FLException{
-		
+	public String updateSalesBalanceForVBalance() throws FLException {
+
 		salesBalanceService.updateSalesBalanceForVBalance(salesBalance);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateSalesBalanceForPBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateSalesBalanceForPBalance() throws FLException{
-		
+	public String updateSalesBalanceForPBalance() throws FLException {
+
 		salesBalanceService.updateSalesBalanceForPBalance(salesBalance);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "rpreSalesBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String rpreSalesBalance() throws FLException{
-		
+	public String rpreSalesBalance() throws FLException {
+
 		salesBalanceService.rpreSalesBalance(salesBalance);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "passSalesBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String passSalesBalance() throws FLException{
-		
+	public String passSalesBalance() throws FLException {
+
 		salesBalanceService.passSalesBalance(sid);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "preSalesBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String preSalesBalance() throws FLException{
-		
+	public String preSalesBalance() throws FLException {
+
 		salesBalanceService.preSalesBalance(sid, queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "vpostSalesBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String vpostSalesBalance() throws FLException{
-		
+	public String vpostSalesBalance() throws FLException {
+
 		salesBalanceService.vpostSalesBalance(salesBalances);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "postSalesBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String postSalesBalance() throws FLException{
-		
-		salesBalanceService.postSalesBalance(salesBalances,queryUserId());
-		
+	public String postSalesBalance() throws FLException {
+
+		salesBalanceService.postSalesBalance(salesBalances, queryUserId());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "querySalesBalanceItemBySbid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String querySalesBalanceItemBySbid() throws FLException{
-		
+	public String querySalesBalanceItemBySbid() throws FLException {
+
 		salesBalanceItems = salesBalanceItemService.querySalesBalanceItemBySbid(salesBalance);
-		
+
 		return SUCCESS;
 	}
 
@@ -164,5 +164,5 @@ public class SalesBalanceAction extends BaseListAction {
 	public void setSalesBalanceItems(List<SalesBalanceItemVO> salesBalanceItems) {
 		this.salesBalanceItems = salesBalanceItems;
 	}
-	
+
 }

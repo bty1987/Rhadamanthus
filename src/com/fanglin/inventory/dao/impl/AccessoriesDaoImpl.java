@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -32,6 +33,12 @@ public class AccessoriesDaoImpl extends DaoImpl<AccessoriesPO> implements Access
 		query.desc("aid");
 		
 		return query.list();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<AccessoriesPO> queryAccessoriesByOrderId(String orderId) {
+		return session().createCriteria(AccessoriesPO.class).add(Restrictions.eq(AccessoriesPO.COLUMN_ORDERID_STR, orderId)).list();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){

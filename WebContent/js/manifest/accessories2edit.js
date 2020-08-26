@@ -67,7 +67,7 @@ jQuery(function ($) {
                 $('<input>').prop({
                     'type': 'text',
                     'autocomplete': 'off'
-                }).addClass('editable').addClass(v.validate ? v.validate : '').appendTo($cell)
+                }).addClass('editable').addClass(v.validate ? v.validate : '').appendTo($cell);
             }
 
             $cell.appendTo($lineInfoWrap);
@@ -77,11 +77,7 @@ jQuery(function ($) {
 
         $line.append($indexWrap).append($lineInfoWrap).append($optWrap);
 
-        var optionss = {
-            "orderId": accessories.orderId
-        };
-
-        com.initTypeahead(".name input", api.data.queryAoodsByName, "aoods.goods.name", optionss, "aoodes", "gid", "name", function (list, k, v) {
+        com.initTypeahead(".name input", api.data.queryAoodsByName, "aoods.goods.name", {}, "aoodes", "gid", "name", function (list, k, v) {
             $.each(list, function (index, val) {
 
                 if (val.goods.gid == k) {

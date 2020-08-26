@@ -5,7 +5,7 @@ jQuery(function($) {
         cancelBtn: null,
         modal: null,
         categoryItems:{},
-
+        type:{},
         editFlg: false,
         repeatFlg: false,
 
@@ -31,7 +31,11 @@ jQuery(function($) {
     category.categoryItems.categoryName = com.focusPage("#categoryName");
     category.categoryItems.kino = com.focusPage("#kino");
     category.categoryItems.kiname = com.focusPage("#kiname");
+    category.categoryItems.type = com.focusPage("#type");
 
+    com.post(api.ds.data, {}, function(res){
+        category.categoryItems.type.bindData(res.categoryType, "key", "value");
+    })
 
     $.extend(com.validator, category.validator);
 
@@ -63,7 +67,8 @@ jQuery(function($) {
 
             var propertyArr = [
                 ["金蝶编号: ", com.checkNull(v.kino, "无"), "grey"],
-                ["金蝶名称: ", com.checkNull(v.kiname, "无"), "grey"]
+                ["金蝶名称: ", com.checkNull(v.kiname, "无"), "grey"],
+                ["类型: ", v.type == 0 ? "普通" : "统计", "red"]
             ];
 
             $.each(propertyArr, function (index,value) {
@@ -126,6 +131,7 @@ jQuery(function($) {
         category.categoryItems.categoryName.val(v.name);
         category.categoryItems.kino.val(v.kino);
         category.categoryItems.kiname.val(v.kiname);
+        category.categoryItems.type.val(v.type);
 
         category.modal.modal("show");
     }
@@ -140,7 +146,8 @@ jQuery(function($) {
             'category.no': category.categoryItems.no.val(),
             'category.name': category.categoryItems.categoryName.val(),
             'category.kino': category.categoryItems.kino.val(),
-            'category.kiname': category.categoryItems.kiname.val()
+            'category.kiname': category.categoryItems.kiname.val(),
+            'category.type': category.categoryItems.type.val()
         };
 
         if(editFlg){

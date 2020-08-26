@@ -1,8 +1,9 @@
 $(function () {
-
+	
     var Signing = {
+    	        
         getNoticeDOM: function (notice) {
-        	
+
             var $wrap = $('<div class="alert alert-info clearfix" style="padding: 2px 10x;"></div>');
             var $title = $('<div><i class="icon-hand-right green"></i></div>');
             var $theme = $('<strong style="margin-left:7px;">' + notice.theme + ' </strong>').appendTo($title);
@@ -45,22 +46,32 @@ $(function () {
         loadNotices: function () {
             
             com.post(api.information.pageNoticeForSeenByType, {"paging.rows": 5, "paging.page": 1, "notice.type": 1}, function (data) {
-                if (data.paging.data.length == 0) return;
-                
-                $.each(data.paging.data, function (i, v) {
-                    Signing.getNoticeDOM(v).appendTo($("#noticeList").html(''));
-                });
+                if (data.paging.data && data.paging.data.length > 0){
+                	$.each(data.paging.data, function (i, v) {
+                        Signing.getNoticeDOM(v).appendTo($("#noticeList").html(''));
+                    });
+                }else {
+                	var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($("#noticeList").html(''));
+        	    	var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
+        	    	var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
+                }
             }, null, false);
 
         },
         loadActivities: function () {
             
             com.post(api.information.pageNoticeForSeenByType, {"paging.rows": 5, "paging.page": 1, "notice.type": 2}, function (data) {
-                if (data.paging.data.length == 0) return;
+            	
+                if(data.paging.data && data.paging.data.length > 0){
+                	$.each(data.paging.data, function (i, v) {
+                        Signing.getNoticeDOM(v).appendTo($("#activityList").html(''));
+                    });
+        		}else{
+        	    	var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($("#activityList").html(''));
+        	    	var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
+        	    	var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
+        		}
                 
-                $.each(data.paging.data, function (i, v) {
-                    Signing.getNoticeDOM(v).appendTo($("#activityList").html(''));
-                });
             }, null, false);
 
         },
@@ -75,10 +86,42 @@ $(function () {
     Signing.loadActivities();
     
     com.focusPage("h4[name='versionCode']").text(config.versionCode);
-    
     com.post(api.ds.system, {}, function(res){
+
+    	var ablockList = com.focusPage("#ablockList");
+    	
+    	$.each(res.ablocks, function(i,v){
+    		
+    		var $div = $('<div></div>').addClass(v[0]).html(v[1]).appendTo(ablockList);
+    		var $button = $('<button></button>').addClass('close').attr({'data-dismiss':'alert','type':'button'}).appendTo($div);
+    		var $i_remove = $('<i></i>').addClass('icon-remove').appendTo($button);
+    		
+    	});
+    	
+    	var advertList = com.focusPage("#advertList");
+    	
+    	$.each(res.adverts, function(i,v){
+    		var $div = $('<div></div>').html(v).appendTo(advertList);
+    	});
+    	
+    	com.focusPage("#updateBook").click(function(){
+    		setTimeout(function () {
+    			com.focusPage(".lead").html(res.tips[Math.floor(Math.random() * res.tips.length)]);
+            }, 1580);
+        	
+        });
         
         com.focusPage("h4[name='versionCode']").after($(res.versionInfo ? res.versionInfo : "<p>版本信息</p>"));
+        
+        com.focusPage(".lead").html(res.tips[Math.floor(Math.random() * res.tips.length)]);
+
+        com.focusPage("#moreMainMaterial").click(function(){
+        	com.showInfo('选材','正在筹建中 , 敬请期待');
+        });
+        
+        com.focusPage("#moreFuMaterial").click(function(){
+        	com.showInfo('选材','正在筹建中 , 敬请期待');
+        });
         
         res.alertInfo && (layer.open({
             type: 1,
@@ -97,21 +140,44 @@ $(function () {
     });
     
     com.post(api.system.queryModuleForLink, {"module.system": 1}, function(res){
-        
-        if(res.modules.length == 0) return false;
-        
-        var linklist = com.focusPage("#linklist").html('');
-        
-        $.each(res.modules, function(i, v){
+    	
+    	var data = res.modules;
+    	var arry = [], datas = [];
+    	var length = $('.submenu li a').length;
+    	
+    	for(var i = 0;i < length; i++){
+    		var menutext = $('.submenu li a:eq('+i+')').attr('menutext');
+    		var url = $('.submenu li a:eq('+i+')').attr('href');
+    		var mid = $('.submenu li a:eq('+i+')').attr('mid');
+    		var icon = $('.submenu li a:eq('+i+') i').attr('class');
+    		arry.push({"name":menutext,"url":url,"mid":mid,"icon":icon});
+    	}
+    	
+    	var array = arry.slice(0,8);
+    	
+    	if(data.length < 8){
+    		if(data.length == 0){
+    			num = array;
+    		}else{
+    			$.each(data,function(i,v){
+        			if(!v.url || v.url == "") return true;
+        			datas.push(v)
+        			num = datas.concat(array.slice(0,8 - datas.length))
+        		});
+    		}
+        }else{
+        	num = data;
+        }
+    	
+    	$.each(num, function(i, v){
+    		
+           if($(".btn-fastlink").length >= 8) return false;
+           var $div = $('<div></div>').addClass('col-sm-3 col-xs-6').appendTo(linklist);
+           var $a = $('<a></a>').addClass("btn btn-app btn-fastlink no-radius no-hover").attr({href: v.url, mid: v.mid, menutext: v.name, icon: v.icon}).appendTo($div);
+           var $i = $('<i></i>').addClass(v.icon).appendTo($a);
+           var $span = $('<span></span>').text(v.name).appendTo($a);
             
-            if(!v.url || v.url == "") return true;
-            if($(".btn-fastlink").length >= 8) return false;
-            
-            var $a = $('<a></a>').addClass("btn btn-app btn-fastlink no-radius no-hover col-xs-3").attr({href: v.url, mid: v.mid, menutext: v.name, icon: v.icon}).appendTo(linklist);
-            var $i = $('<i></i>').addClass(v.icon).appendTo($a);
-            var $span = $('<span></span>').text(v.name).appendTo($a);
-            
-            $a.click(function(){
+           $a.click(function(){
                 params['urlLoadParams'] = com.splitUrl(v.url);
                 com.loadPage(v.url, $(this));
                 return false;
@@ -177,7 +243,7 @@ $(function () {
             var items = {
                 title: com.focusPage('#addEvent [name="title"]'),
                 content: com.focusPage('#addEvent [name="content"]'),
-            }
+            };
             
             com.cleanItems(items);
             
@@ -330,6 +396,29 @@ $(function () {
     $('#calendarTab').click(function () {
         setTimeout("$('#calendar').fullCalendar('rerenderEvents')", 500)
     });
+    
+    drawWeather();
+
+    function drawWeather(){
+        
+        var $weatherList = $('#weatherList');
+        
+        com._post_(api.home.library,{
+            "redis": 0,
+            "api": "system.login.weather",
+            "loginTime": window.loginTime
+        }, function(res){
+            
+            if(typeof res == 'string') var data = JSON.parse(res)
+            else if(typeof res == 'object') var data = res
+
+            $.each(data, function(i, v){
+                var $item = $('<div></div>').addClass('col-sm-12 message-bar weather item').appendTo($weatherList);
+                var $title = $('<span></span>').addClass('blue bigger-160 weather title').text(v.name).appendTo($item);
+                var $content = $('<span></span>').addClass('grey bigger-90').html(v.weather.text + '&nbsp;&nbsp;温度：' + v.weather.temp + '°C' + '&nbsp;&nbsp;湿度：' + v.weather.rh + '&nbsp;&nbsp;' + v.weather.wind_dir + v.weather.wind_class).appendTo($item);
+            });
+        });
+    }
 });
 
 function loadMessageCount() {
@@ -347,4 +436,6 @@ function loadMessageCount() {
     }, function (res) {
         console.log("get message count fail...");
     });
+    
 }
+

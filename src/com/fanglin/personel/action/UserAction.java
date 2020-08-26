@@ -25,7 +25,10 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.service.UserService;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.personel.vo.UserContractVO;
+import com.fanglin.personel.vo.UserEducationVO;
 import com.fanglin.personel.vo.UserInfoVO;
+import com.fanglin.personel.vo.UserOperationVO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.utils.SystemConfig;
 
@@ -64,6 +67,12 @@ public class UserAction extends BaseListAction {
 	private DepartmentTypeVO departmentType;
 
 	private List<Integer> uids;
+	
+	private List<UserContractVO> userContracts;
+	
+	private List<UserEducationVO> userEducations;
+	
+	private List<UserOperationVO> userOperations;
 
 	@Action(value = "pageUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageUser() throws FLException {
@@ -152,8 +161,8 @@ public class UserAction extends BaseListAction {
 		if (SystemConfig.getString("communion") == null) {
 			throw new FLException(-1, "无操作权限");
 		}
-
-		userService.addUser(userInfo, queryCompany());
+	
+		userService.addUser(userInfo, userContracts, userEducations, userOperations, queryCompany());
 
 		return SUCCESS;
 	}
@@ -361,4 +370,28 @@ public class UserAction extends BaseListAction {
 		this.uids = uids;
 	}
 
+	public List<UserContractVO> getUserContracts() {
+		return userContracts;
+	}
+
+	public void setUserContracts(List<UserContractVO> userContracts) {
+		this.userContracts = userContracts;
+	}
+
+	public List<UserEducationVO> getUserEducations() {
+		return userEducations;
+	}
+
+	public void setUserEducations(List<UserEducationVO> userEducations) {
+		this.userEducations = userEducations;
+	}
+
+	public List<UserOperationVO> getUserOperations() {
+		return userOperations;
+	}
+
+	public void setUserOperations(List<UserOperationVO> userOperations) {
+		this.userOperations = userOperations;
+	}
+	
 }

@@ -273,6 +273,13 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		if(decorationHolonomy == null){
 			throw new FLException(260021, "半价信息不存在");
 		}
+		
+		long servicePrice = decorationHolonomy.getServicePrice();
+		long currentServicePrice = Arith.add(servicePaymentVO.getReferMoney(), decorationHolonomy.getServicePaidup());
+		
+		if(currentServicePrice > servicePrice){
+			throw new FLException(150025, "款项金额不正确");
+		}
 
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(servicePaymentVO.getDecoration().getOrderId());
 		
@@ -316,6 +323,10 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 
 		if(decorationHolonomy == null){
 			throw new FLException(260021, "半价信息不存在");
+		}
+		
+		if(decorationHolonomy.getServicePaidup() <= 0){
+			throw new FLException(150025, "款项金额不正确");
 		}
 
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(servicePaymentVO.getDecoration().getOrderId());

@@ -10,6 +10,6 @@ public interface SignetService {
 	
 	public void pageSignet(Paging paging, List<Filter> filters, int company);
 	
-	public List<SignetVO> querySignet();
+	public List<SignetVO> querySignet(int company);
 
 }

@@ -7,6 +7,7 @@ $(function () {
         var data = options.series.data;
         
         $.each(data, function(i, v){
+
             var m = Math.floor(v[1]/10);
             var e = Math.floor(v[1]%10);
             
@@ -31,9 +32,23 @@ $(function () {
     };
     
     com.post(api.data.queryChartForLogin, {}, function(res){
+    	
     	$.each(res.charts, function(i, v){
-    		com.charts("customize", v.no, com.getProp(v.api), JSON.parse(v.param), v.clazz, v.style, null, attendance);
+    		com.charts("customize", v.no, getApi({"api": api}, v.api.split(".")), JSON.parse(v.param), JSON.parse(v.clazz), JSON.parse(v.style), null, attendance);
     	});
+    	
 	});
+    
+    function getApi(o, props){
+        var prop = props.shift();
+
+        if(props.length == 0){
+            return o[prop];
+        } else if(o[prop]){
+            return getApi(o[prop], props);
+        }
+        return "";
+    }
+    
     
 });

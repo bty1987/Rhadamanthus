@@ -39,6 +39,7 @@ import com.fanglin.sales.po.SalesBalanceItemPO;
 import com.fanglin.sales.po.SalesBalancePO;
 import com.fanglin.sales.po.SalesItemPO;
 import com.fanglin.sales.po.SalesPO;
+import com.fanglin.sales.service.SalesActivityService;
 import com.fanglin.sales.vo.SalesItemVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
@@ -80,6 +81,9 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 
 	@Autowired
 	private SalesBalanceItemDao salesBalanceItemDao;
+
+	@Autowired
+	private SalesActivityService salesActivityService;
 
 	// 获取销售退货审批向信息
 	@Override
@@ -124,7 +128,9 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 
 		long sid = approvalSalesRefundVO.getSid();
 
-		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT, String.valueOf(sid));
+		List<Short> status = Arrays.asList(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_STATUS_APPROVE_INT, ApprovalPO.APPROVAL_STATUS_CONFIRM_INT, ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT, ApprovalPO.APPROVAL_STATUS_REJECT_INT);
+
+		ApprovalPO approvalPO = approvalDao.queryApprovalByChange(status, ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT, String.valueOf(sid));
 
 		if (approvalPO != null) {
 			throw new FLException(240004, "正在审批中,不能提交新审批");
@@ -139,6 +145,9 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		if (salesPO.getStatus() != SalesPO.STATUS_INIT_SHORT) {
 			throw new FLException(260022, "销售单状态不可操作");
 		}
+
+		// 判断销售单款项积分以及领取活动物品积分比较结果
+		salesActivityService.checkSalesActivity(sid, approvalSalesRefundVO.getRefund());
 
 		approvalPO = new ApprovalPO();
 
@@ -204,6 +213,9 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 		if (salesPO == null) {
 			throw new FLException(260021, "销售单不存在");
 		}
+
+		// 判断销售单款项积分以及领取活动物品积分比较结果
+		salesActivityService.checkSalesActivity(approvalSalesRefundPO.getSid(), approvalSalesRefundPO.getRefund());
 
 		long balance = 0;
 		long allowance = 0;

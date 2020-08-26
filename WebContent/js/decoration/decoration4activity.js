@@ -16,6 +16,8 @@ jQuery(function ($) {
     decorationActivityItem.activityItems.couponsVal = com.focusPage("#couponsVal");
     decorationActivityItem.activityItems.thingsType = com.focusPage("#thingsType");
     decorationActivityItem.activityItems.thingsVal = com.focusPage("#thingsVal");
+    decorationActivityItem.activityItems.receiveType = com.focusPage("#receiveType");
+    decorationActivityItem.activityItems.receiveTypes = com.focusPage("#receiveTypes");
     decorationActivityItem.activityItems.comment = com.focusPage("#comment");
     
 
@@ -57,7 +59,7 @@ jQuery(function ($) {
                     return;
                 }
 
-                decorationUtils.createCounpon("things", "thingsType", "thingsVal");
+                decorationUtils.createCounpon("things", "thingsType", "receiveType", "thingsVal");
 
                 com.cleanItems(decorationActivityItem.activityItems);
             });
@@ -69,7 +71,7 @@ jQuery(function ($) {
                     return;
                 }
 
-                decorationUtils.createCounpon("coupons", "couponsType", "couponsVal");
+                decorationUtils.createCounpon("coupons", "couponsType", "receiveTypes", "couponsVal");
 
                 com.cleanItems(decorationActivityItem.activityItems);
             });
@@ -260,7 +262,6 @@ jQuery(function ($) {
 
         var orderId = ActivityOrderId;
         var activityName = decorationActivityItem.activity.activity.find("option:selected").text();
-        var stateType = com.focusPage("#receiveTypes").val();
         var activityId = com.focusPage("#activity").val();
 
         var index = 0;
@@ -283,7 +284,7 @@ jQuery(function ($) {
             options["approvalDecorationActivityItems[" + index + "].num"] = _.children('span').attr('num');
             options["approvalDecorationActivityItems[" + index + "].money"] = _.children('span').attr("typename").split(" ")[1].split(':')[1];
             options["approvalDecorationActivityItems[" + index + "].content"] = "";
-            options["approvalDecorationActivityItems[" + index + "].stateType"] = stateType;
+            options["approvalDecorationActivityItems[" + index + "].stateType"] = _.children('span').attr('value');
             options["approvalDecorationActivityItems[" + index + "].asid"] = _.children('span').attr("asid");
             index++;
         });
@@ -298,7 +299,7 @@ jQuery(function ($) {
             options["approvalDecorationActivityItems[" + index + "].num"] = _.children('span').attr('num');
             options["approvalDecorationActivityItems[" + index + "].money"] = _.children('span').attr("typename").split(" ")[1].split(':')[1];
             options["approvalDecorationActivityItems[" + index + "].content"] = "";
-            options["approvalDecorationActivityItems[" + index + "].stateType"] = stateType;
+            options["approvalDecorationActivityItems[" + index + "].stateType"] = _.children('span').attr('value');
             options["approvalDecorationActivityItems[" + index + "].asid"] = _.children('span').attr("asid");
 
             index++;
@@ -404,7 +405,8 @@ jQuery(function ($) {
     }
 
     com.post(api.ds.decoration, {}, function (res) {
-        com.focusPage("#receiveTypes").bindData(res.receiveType, "key", "value", false);
+        com.focusPage("#receiveType").bindData(res.receiveType, "key", "value", false);
+         com.focusPage("#receiveTypes").bindData(res.receiveType, "key", "value", false);
     });
 
     //领取活动物品

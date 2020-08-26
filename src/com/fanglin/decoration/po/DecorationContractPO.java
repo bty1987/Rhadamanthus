@@ -34,10 +34,22 @@ public class DecorationContractPO implements Serializable, Contract {
 	private static final long serialVersionUID = -5971474052433501162L;
 
 	public static final short STATUS_VALID_INT = 0;// 初始
+	
+	public static final short STATUS_STAY_SIGN_INT = 1;// 待签订
+	
+	public static final short STATUS_END_SIGN_INT = 2;// 已签订
 
-	public static final short STATUS_NULL_INT = 1;// 无效
+	public static final short STATUS_NULL_INT = 3;// 无效
 
-	public static final short STATUS_FILE_INT = 2;// 归档
+	public static final short STATUS_FILE_INT = 4;// 归档
+	
+	public static final short TYPE_SIGNET_INT = 1;// 签章
+
+	public static final short TYPE_SIGN_INT = 2;// 签订
+
+	public static final short TYPE_VIEW_INT = 3;// 查看
+	
+	public static final short TYPE_DOWNLOAD_INT = 4;// 下载
 
 	private long dcid;
 

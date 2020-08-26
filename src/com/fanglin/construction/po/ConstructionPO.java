@@ -89,6 +89,10 @@ public class ConstructionPO implements Serializable{
 	private long accessoryTotal;
 	
 	private long salaryTotal;
+	
+	private Timestamp createTime;
+	
+	private Timestamp finishTime;
 
 	public ConstructionPO() {
 		super();
@@ -207,6 +211,24 @@ public class ConstructionPO implements Serializable{
 
 	public void setSalaryTotal(long salaryTotal) {
 		this.salaryTotal = salaryTotal;
+	}
+
+	@Column(name="createTime")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	@Column(name="finishTime")
+	public Timestamp getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Timestamp finishTime) {
+		this.finishTime = finishTime;
 	}
 
 }

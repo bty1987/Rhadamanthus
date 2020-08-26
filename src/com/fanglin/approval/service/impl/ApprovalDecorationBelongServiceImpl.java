@@ -30,6 +30,7 @@ import com.fanglin.approval.vo.ApprovalDecorationBelongItemVO;
 import com.fanglin.approval.vo.ApprovalDecorationBelongVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationAdditionDao;
 import com.fanglin.decoration.dao.DecorationBelongDao;
 import com.fanglin.decoration.dao.DecorationDao;
@@ -72,6 +73,9 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 	@Autowired
 	private DecorationAdditionDao decorationAdditionDao;
 
+	@Autowired
+	private DecorationService decorationService;
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int submitApprovalForDecorationBelong(ApprovalVO approvalVO, ApprovalDecorationBelongVO approvalDecorationBelongVO, List<ApprovalDecorationBelongItemVO> approvalDecorationBelongItemVOs, String userId, int company) throws FLException {
@@ -87,7 +91,9 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 		String orderId = approvalDecorationBelongVO.getOrderId();
 		Short belongType = approvalDecorationBelongVO.getBelongType();
 
-		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT, orderId);
+		List<Short> status = Arrays.asList(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_STATUS_APPROVE_INT, ApprovalPO.APPROVAL_STATUS_CONFIRM_INT, ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT, ApprovalPO.APPROVAL_STATUS_REJECT_INT);
+
+		ApprovalPO approvalPO = approvalDao.queryApprovalByChange(status, ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT, orderId);
 
 		if (approvalPO != null) {
 			throw new FLException(240004, "正在审批中,不能提交新审批");
@@ -267,4 +273,17 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 		return 0;
 	}
 
+	@Override
+	public int confirmForDecorationBelong(ApprovalPO approvalPO) throws FLException {
+
+		ApprovalDecorationBelongPO approvalDecorationBelongPO = approvalDecorationBelongDao.queryApprovalDecorationBelongByAId(approvalPO.getAid());
+
+		if (approvalDecorationBelongPO == null) {
+			throw new FLException(240003, "审批信息不完整");
+		}
+
+		decorationService.sendMessage(approvalDecorationBelongPO.getOrderId(), "装修归属确认", String.format("装修单:%s归属确认", approvalDecorationBelongPO.getOrderId()), "/page/approval/approval");
+
+		return 0;
+	}
 }

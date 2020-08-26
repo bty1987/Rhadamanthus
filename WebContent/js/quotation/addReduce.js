@@ -17,8 +17,8 @@ jQuery(function($) {
 
 	var displayFunc  = (function(){
 
-		var typeDict = {"0":"增项", "1":"减项", "2":"漏项"};
-		var statusDict = {"0":"未提交", "1":"未付款","2":"已付款","3":"已确认"};
+		var typeDict = {"0": "增项", "1": "减项", "2": "漏项"};
+		var statusDict = {"0": "未提交", "1": "未付款","2": "已付款","3": "已确认"};
 
 		var renderList = function(tableId,listData){
 			var $tableWrap = com.focusPage('#' + tableId);
@@ -113,15 +113,9 @@ jQuery(function($) {
 	//删除按钮方法
 	function removeRow(arid){
 		com.post(api.addReduce.deleteAddReduce, {"addReduce.arId" : arid}, function(res){
-			if(res.deleteFlag == "EXIST"){
-				com.showAlert(com.warning, "删除增减项中存在提交状态,不能删除!");
-			}else{
-				com.showAlert(com.info, "操作成功");
-				search.doSearch();
-			}
+			com.showAlert(com.info, "操作成功");
+			search.doSearch();
 		});
-
-		com.focusPage("#eData").trigger("click");
 	}
 
 	//添加按钮
@@ -143,7 +137,7 @@ jQuery(function($) {
 			_addReduceIds.push(parseInt($(v).val()));
 		});
 		params.addReduceIds = _addReduceIds;
-		//url += "quotation.orderId=" + params.decorationOrderId + "&orderType=" + params.decorationOrderType + "&time=" + parent.params.loginTime;
+
 		com.popup("增减项打印", url, null, null, true);
 	});
 
@@ -176,8 +170,7 @@ jQuery(function($) {
 			com.showAlert(com.info, "操作成功");
 			search.doSearch();
 
+			addReduce.modal.modal("hide");
 		});
-
-		addReduce.modal.modal("hide");
 	}
 });

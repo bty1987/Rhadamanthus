@@ -98,6 +98,7 @@ $.extend(api, {system: {
     updateDuty: {url: "updateDuty.do", server: "communion"},
     updateDutyForStatus: {url: "updateDutyForStatus.do", server: "communion"},
     queryDutyByDtid: {url: "queryDutyByDtid.do"},
+	queryDutyByName: {url: "queryDutyByName.do"},
 
     pageCompany: {url: "pageCompany.do", demo: true},
     queryCompany: {url: "queryCompany.do"},

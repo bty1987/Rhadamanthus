@@ -1,0 +1,45 @@
+<div class="col-xs-12">
+    <div class="col-xs-2" id="showLeft"></div>
+    <div class="col-xs-10" id="showRight">
+        <div class="col-xs-12" id="showGoods">
+            <div class="col-xs-12" id="goodsTop">
+                <i class="icon-fire" style="font-size: 16px;color: #d15b47"></i>
+                <span id="goodsTopName" style="font-size: 18px;font-weight: 700;">热点商品</span>
+                <div id="goodsTopList"></div>
+            </div>
+            <div class="col-xs-12" id="goodsDown" style="margin-top: 20px;">
+                <i class="icon-star" style="font-size: 16px;color: #87b87f"></i>
+                <span id="goodsDownName" style="font-size: 18px;font-weight: 700;">推荐商品</span>
+                <div id="goodsDownList"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="showGoodsDetail" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">商品信息</h4>
+            </div>
+            <div class="modal-body">
+                <div id="goodsDetailMap"  style="text-align: center;margin-top: 20px;"></div>
+                <div id="goodsDetailTitle" style="margin-top: 10px;">
+                    <span id="goodsDetailTitleSpan" style="margin-left: 20px;font-size: 16px;"></span>
+                </div>
+                <div id="goodsDetailPrice">
+                    <span id="goodsDetailPriceSpan" style="margin-left: 20px;font-weight: bold;"></span>
+                </div>
+                <div id="goodsDetailAllPic">
+                    <div style="margin-top: 20px;margin-bottom: 10px;text-align: center;font-size: 18px;font-weight: 700">商品详情</div>
+                    <div id="allPic" style="text-align: center;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/store/showMaterial.js']);
+</script>

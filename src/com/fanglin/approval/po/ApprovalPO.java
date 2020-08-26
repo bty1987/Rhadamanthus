@@ -54,6 +54,8 @@ public class ApprovalPO implements java.io.Serializable {
 	public static final short APPROVAL_TYPE_DECORATION_HOLONOMY_INT = 16;
 
 	public static final short APPROVAL_TYPE_CUSTOMER_ORIGIN_INT = 17;
+	
+	public static final short APPROVAL_TYPE_SALESDAYMENT_INT = 18;
 
 	public static final short APPROVAL_STATUS_INIT_INT = 0;
 
@@ -62,6 +64,12 @@ public class ApprovalPO implements java.io.Serializable {
 	public static final short APPROVAL_STATUS_REFUSE_INT = 2;
 
 	public static final short APPROVAL_STATUS_APPROVE_INT = 3;
+
+	public static final short APPROVAL_STATUS_CONFIRM_INT = 5;
+	
+	public static final short APPROVAL_STATUS_CONFIRMED_INT = 6;
+	
+	public static final short APPROVAL_STATUS_REJECT_INT = 7;  //客户拒绝
 
 	public static final String COLUMN_TYPE_STR = "type";
 
@@ -231,7 +239,7 @@ public class ApprovalPO implements java.io.Serializable {
 
 		setIdent(ident);
 		setType(type);
-		
+
 		setApprovalTime(DateUtil.getDateToTimestamp(new Date()));
 		setStatus(ApprovalPO.APPROVAL_STATUS_INIT_INT);
 		setCreateTime(DateUtil.getDateToTimestamp(new Date()));

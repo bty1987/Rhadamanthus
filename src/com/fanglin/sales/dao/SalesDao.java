@@ -25,11 +25,11 @@ public interface SalesDao extends Dao<SalesPO> {
 	
 	public List<SalesPO> pageSalesForSupplier(Paging paging, List<Filter> filter,int company,int uid);
 	
+	public List<SalesPO> pageSalesByOrderId(Paging paging, List<Filter> filter, int company, String orderId);
+	
 	public SalesPO querySalesByNo(String no);
 	
 	public List<SalesPO> querySalesByOrderId(String orderId);
-	
-	public List<Object> querySalesActivityByTotal(String orderId);
 	
 	public int countSalesByOrderId(String orderId, short status);
 	

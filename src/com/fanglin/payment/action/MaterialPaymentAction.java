@@ -92,18 +92,10 @@ public class MaterialPaymentAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
-	@Action(value="queryMaterialPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMaterialPayment() throws FLException{
-		
-		materialPayments = materialPaymentService.queryMaterialPayment(getFilters(), queryCompany());
-		
-		return SUCCESS;
-	}
-	
 	@Action(value="queryMaterialPaymentByOrderId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMaterialPaymentByOrderId(){
+	public String queryMaterialPaymentByOrderId() throws FLException{
 		
-		materialPayments = materialPaymentService.queryMaterialPaymentByOrderId(materialPayment);
+		materialPayments = materialPaymentService.queryMaterialPaymentByOrderId(materialPayment, getFilters(), queryCompany());
 		
 		return SUCCESS;
 	}
@@ -119,7 +111,7 @@ public class MaterialPaymentAction extends BaseListAction{
 	@Action(value="queryMaterialPaymentForNotInitByMrId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String queryMaterialPaymentForNotInitByMrId() throws FLException{
 		
-		materialPayments = materialPaymentService.queryMaterialPaymentForNotInitByMrId(materialReceipt, queryUserId());
+		materialPayments = materialPaymentService.queryMaterialPaymentForNotInitByMrId(materialReceipt);
 		
 		return SUCCESS;
 	}

@@ -33,8 +33,8 @@ jQuery(function ($) {
             finishTime : com.focusPage("#finishTime"),
             keyTime : com.focusPage("#keyTime"),
             drawlineTime : com.focusPage("#drawlineTime"),
+            designTime : com.focusPage("#designTime"),
             isCeremony  : com.focusPage("#isCeremony"),
-            isConfirmPricture :com.focusPage("#isConfirmPricture"),
             comment   : com.focusPage("#comment")
         }
     };
@@ -68,13 +68,13 @@ jQuery(function ($) {
     com.datetime(drawline.items.finishTime);
     com.datetime(drawline.items.keyTime);
     com.datetime(drawline.items.drawlineTime);
+    com.datetime(drawline.items.designTime);
     com.datetime(drawline.items.startTime, "time");
     com.datetime(drawline.items.endTime,"time");
 
     com.post(api.ds.construction, {}, function (res) {
         drawline.items.ishovel.bindData(res.isHovel, "key", "value", false);
         drawline.items.iskey.bindData(res.isKey, "key", "value", false);
-        drawline.items.isConfirmPricture.bindData(res.isConfirmPricture, "key", "value", false);
         drawline.items.isCeremony.bindData(res.isCeremony, "key", "value", false);
     });
 
@@ -307,7 +307,6 @@ jQuery(function ($) {
             drawline.items.iskey.val(data.iskey);
             drawline.items.isCeremony.val(data.isCeremony);
             drawline.items.timeLimit.val(data.timeLimit);
-            drawline.items.isConfirmPricture.val(data.isConfirmPricture);
             if(data.finishTime != null){
                 drawline.items.finishTime.val(data.finishTime.substr(0,10));
             }
@@ -316,6 +315,9 @@ jQuery(function ($) {
             }
             if(data.drawlineTime != null){
                 drawline.items.drawlineTime.val(data.drawlineTime.substr(0,10));
+            }
+            if(data.designTime != null){
+                drawline.items.designTime.val(data.designTime.substr(0,10));
             }
             drawline.items.comment.val(data.comment);
         });
@@ -334,6 +336,7 @@ jQuery(function ($) {
             "constructionInfo.finishTime" : drawline.items.finishTime.val() + " 00:00:00",
             "constructionInfo.keyTime" : drawline.items.keyTime.val() + " 00:00:00",
             "constructionInfo.drawlineTime" : drawline.items.drawlineTime.val() + " 00:00:00",
+            "constructionInfo.designTime" : drawline.items.designTime.val() + " 00:00:00",
             "constructionInfo.comment": drawline.items.comment.val()
         };
 

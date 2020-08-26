@@ -133,15 +133,6 @@ $.extend(api, {payment: {
 			args: ["referMoney", "cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"]
 		}]
 	},
-	queryDecorationPayment: {
-		url: "queryDecorationPayment.do",
-		demo: true,
-		type: "query",
-		tranargs: [{
-			result: "decorationPayments",
-			args: ["referMoney"]
-		}]
-	},
 	queryDecorationPaymentByOrderId: {
 		url: "queryDecorationPaymentByOrderId.do",
 		demo: true,
@@ -242,15 +233,6 @@ $.extend(api, {payment: {
 		tranargs: [{
 			result: "paging-data",
 			args: ["referMoney", "cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"]
-		}]
-	},
-	queryMaterialPayment: {
-		url: "queryMaterialPayment.do",
-		demo: true,
-		type: "query",
-		tranargs: [{
-			result: "materialPayments",
-			args: ["referMoney"]
 		}]
 	},
 	queryMaterialPaymentByOrderId: {
@@ -393,14 +375,6 @@ $.extend(api, {payment: {
 			args: ["cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"]
 		}]
 	},
-	querySalesPayment: {
-		url: "querySalesPayment.do",
-		type: "query",
-		tranargs: [{
-			result: "salesPayments",
-			args: ["referMoney"]
-		}]
-	},
 	querySalesPaymentBySid: {
 		url: "querySalesPaymentBySid.do",
 		type: "query",
@@ -418,6 +392,9 @@ $.extend(api, {payment: {
 		tranargs: [{
 			result: "salesPayments",
 			args: ["referMoney"]
+		},{
+			result: "salesPayments-salesReceipt",
+			args: ["cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"]
 		}]
 	},
 	querySalesReceiptBySrId: {
@@ -443,7 +420,7 @@ $.extend(api, {payment: {
 		url: "addSalesPaymentForDeposit.do",
 		type: "update",
 		tranargs: {
-			args: ["salesPayment.referMoney"],
+			args: ["salesPayment.referMoney", "salesPayment.sales.cvalue"],
 			query: [{
 				result: "salesPayment",
 				args: ["referMoney"]

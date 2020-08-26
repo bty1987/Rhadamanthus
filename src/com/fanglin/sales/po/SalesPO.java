@@ -74,6 +74,12 @@ public class SalesPO implements Serializable {
 
 	public static final short FULLPAYSTATUS_APPROVAL_INT = 3;
 
+	public static final short CTYPE_RESERVEPRICE_INT = 0;
+
+	public static final short CTYPE_POINT_INT = 1;
+
+	public static final short CTYPE_PASS_INT = 2;
+
 	public static final String COLUMN_NO_STR = "no";
 
 	public static final String COLUMN_BRAND_STR = "brand";
@@ -147,6 +153,8 @@ public class SalesPO implements Serializable {
 	private DepartmentPO guideDept;
 
 	private UserPO instorer;
+	
+	private UserPO finisher;
 
 	private String category;
 
@@ -161,6 +169,8 @@ public class SalesPO implements Serializable {
 	private Timestamp balanceTime;
 
 	private Timestamp fullpayTime;
+	
+	private Timestamp finishTime;
 
 	private short status;
 
@@ -189,6 +199,10 @@ public class SalesPO implements Serializable {
 	private short otherStatus;
 
 	private long activityId;
+
+	private short ctype;
+
+	private int cvalue;
 
 	public SalesPO() {
 		super();
@@ -366,6 +380,16 @@ public class SalesPO implements Serializable {
 	public void setInstorer(UserPO instorer) {
 		this.instorer = instorer;
 	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fuid", referencedColumnName = "uId")
+	public UserPO getFinisher() {
+		return finisher;
+	}
+
+	public void setFinisher(UserPO finisher) {
+		this.finisher = finisher;
+	}
 
 	@Column(name = "category")
 	public String getCategory() {
@@ -428,6 +452,15 @@ public class SalesPO implements Serializable {
 
 	public void setFullpayTime(Timestamp fullpayTime) {
 		this.fullpayTime = fullpayTime;
+	}
+	
+	@Column(name = "finishTime")
+	public Timestamp getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Timestamp finishTime) {
+		this.finishTime = finishTime;
 	}
 
 	@Column(name = "status")
@@ -556,10 +589,29 @@ public class SalesPO implements Serializable {
 		this.activityId = activityId;
 	}
 
+	@Column(name = "ctype")
+	public short getCtype() {
+		return ctype;
+	}
+
+	public void setCtype(short ctype) {
+		this.ctype = ctype;
+	}
+
+	@Column(name = "cvalue")
+	public int getCvalue() {
+		return cvalue;
+	}
+
+	public void setCvalue(int cvalue) {
+		this.cvalue = cvalue;
+	}
+
 	public void ptv(SalesVO salesVO) {
 
-		BeanUtil.copyProperties(this, salesVO, Arrays.asList("salesman", "dept", "region", "guider", "instorer", "guideDept", "house", "customer", "supplier"));
+		BeanUtil.copyProperties(this, salesVO, Arrays.asList("salesman", "dept", "region", "guider", "instorer", "guideDept", "house", "customer", "supplier", "finisher"));
 		BeanUtil.copyProperties(this.getSalesman(), salesVO.getSalesman(), Arrays.asList("dept", "duty"));
+		BeanUtil.copyProperties(this.getFinisher(), salesVO.getFinisher(), Arrays.asList("dept", "duty"));
 		BeanUtil.copyProperties(this.getDept(), salesVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
 		BeanUtil.copyProperties(this.getRegion(), salesVO.getRegion(), Arrays.asList("fatherDept", "type", "manager"));
 		BeanUtil.copyProperties(this.getGuider(), salesVO.getGuider(), Arrays.asList("dept", "duty"));

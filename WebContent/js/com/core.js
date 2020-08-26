@@ -282,15 +282,14 @@
             
             var item = items[i]
             
-            if (!item) continue;
+            if (!item || !item[0]) continue;
+            if (typeof item != 'object' && typeof item[0] != 'object') continue;
             
-            if (typeof item != 'object') continue;
             if (item[0].type == 'checkbox') {
                 item.prop("checked", false).trigger("change");
             } else if (item[0].type == 'select-one') {
                 if (item[0].options[0] != undefined) item[0].options[0].selected = true;
             } else {
-                
                 item.val("").removeAttr('data-typeahead-key');
             }
         }
@@ -548,6 +547,8 @@
             tabClose.removeClass('show');
             params['urlLoadParams'] = com.splitUrl(page);
             breadcrumb(tabPane);
+            
+            layer.closeAll("tips");
         });
         
         tabRefresh.on("click", function(){
@@ -612,12 +613,12 @@
         var $ele = container.typeahead({
             url: url,
             list: [],
-            postData: {},
+            postData: args,
             source: function (query, process) {
                 if(query.length < 2) return false;
                 var options = {};
                 options[name] = query;
-                com.post(this.options.url, $.extend(options, args), $.proxy(this.options.callback, this));
+                com.post(this.options.url, $.extend(options, this.options.postData), $.proxy(this.options.callback, this));
             }, matcher: function (item) {
                 return true;
             }, callback: function (data) {
@@ -705,15 +706,17 @@
      * 重置自动补全数据源
      * @param id 页面标签/元素ID
      * @param data 数据源
+     * @param args 请求参数
      */
-    resetTypeahead: function(container, data){
+    resetTypeahead: function(container, data, args){
         
         if(container && typeof(container) == "object" && container.length) container = container;
         else if(container && typeof(container) == "object") container = [container];
         else if(container && typeof(container) == "string") container = com.focusPage(!/\W+/.test(container) ? '#' + container : container);
         else return false;
         
-        container.typeahead("list", data)
+        if (data) container.typeahead("list", data);
+        if (args) container.typeahead("args", args);
     },
     /**
      * 获取自动补全对应key值
@@ -839,14 +842,14 @@
                     btn1.click(function(){
                         var body = layer.getChildFrame('body', index);
                         var iframeWin = window[layero.find('iframe')[0]['name']];
+                        if(typeof (isPrint) === "function")isPrint(layero);
                         iframeWin.print();
-                        if(typeof(isPrint) === 'function') isPrint();
                         return false;
                     })
                     
                     btn2.click(function(){
                         printer.handle();
-                        if(typeof(isPrint) === 'function') isPrint();
+                        if(typeof (isPrint) === "function")isPrint(layero);
                         return false;
                     })
                     

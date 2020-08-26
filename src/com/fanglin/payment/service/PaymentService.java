@@ -26,7 +26,7 @@ public interface PaymentService {
 	
 	public List<PaymentVO> queryPaymentByOrderId(PaymentVO paymentVO);
 	
-	public PaymentVO queryPaymentByPaymentId(PaymentVO paymentVO, String userId) throws FLException;
+	public PaymentVO queryPaymentByPaymentId(PaymentVO paymentVO) throws FLException;
 	
 	public int collectPayment(PaymentVO paymentVO, String userId, List<Long> posids) throws FLException;
 

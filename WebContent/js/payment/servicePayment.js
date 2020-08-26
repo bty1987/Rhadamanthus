@@ -253,17 +253,12 @@ jQuery(function($) {
             $btnPrint.text('打印').addClass("btn btn-minier btn-primary");
 
 			$btnPrint.click(function(){
-				if(v.serviceReceipt.collecter.userId!=params.userInfo.user.userId){
-					com.showAlert(com.warning, "收款人不匹配, 不能打印");
-					return false;
-				}else{
-					params.decorationOrderSOrderId = v.decoration.orderId;
-					params.servicePaymentSOrderId = v.decoration.orderId;
-					params.serviceReceiptSrId = v.serviceReceipt.srId;
-					com.popup("专用收款收据__装修单号:" + v.decoration.orderId, api.index.servicePaymentReceiptIndex.url ,function () {
-						parent.layer.getFrameIndex(window.name);
-					},null,true)
-				}
+				params.decorationOrderSOrderId = v.decoration.orderId;
+				params.servicePaymentSOrderId = v.decoration.orderId;
+				params.serviceReceiptSrId = v.serviceReceipt.srId;
+				com.popup("专用收款收据__装修单号:" + v.decoration.orderId, api.index.servicePaymentReceiptIndex.url ,function () {
+					parent.layer.getFrameIndex(window.name);
+				},null,true)
 			});
 
 			var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-success').html('更新');

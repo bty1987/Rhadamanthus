@@ -34,14 +34,14 @@ public class ApprovalAction extends BaseListAction {
 	private ApprovalService approvalService;
 
 	private ApprovalVO approval;
-	
+
 	private int count;
-	
+
 	@Action(value = "pageApprovalForReceive", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageApprovalForReceive() throws FLException {
-		
+
 		approvalService.pageApprovalForReceive(getPaging(), getFilters(), queryUserId(), queryCompany());
-		
+
 		return SUCCESS;
 	}
 
@@ -52,7 +52,7 @@ public class ApprovalAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "pageApprovalForReceiveDept", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageApprovalForReceiveDept() throws FLException {
 
@@ -61,46 +61,54 @@ public class ApprovalAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "queryApprovalByAId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	@Action(value = "queryApprovalByAId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryApprovalByAId() throws FLException {
-		
+
 		approval = approvalService.queryApprovalByAId(approval);
-		
+
 		return SUCCESS;
 	}
 
-	@Action(value = "approveApproval", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	@Action(value = "approveApproval", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String approve() throws FLException {
 
 		approvalService.approve(approval);
 
 		return SUCCESS;
 	}
-	
-	@Action(value = "refuseApproval", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+
+	@Action(value = "affirmApproval", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String affirm() throws FLException {
+
+		approvalService.affirm(approval);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "refuseApproval", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String refuseApproval() throws FLException {
 
 		approvalService.refuse(approval);
 
 		return SUCCESS;
 	}
-	
-	@Action(value = "countApprovalForReceive", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+
+	@Action(value = "countApprovalForReceive", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String countApprovalForReceive() throws FLException {
-		
-		count = approvalService.countApprovalForReceive(queryUserId(),queryCompany());
-		
+
+		count = approvalService.countApprovalForReceive(queryUserId(), queryCompany());
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "countApprovalForSend", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+
+	@Action(value = "countApprovalForSend", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String countApprovalForSend() throws FLException {
-		
-		count = approvalService.countApprovalForSend( queryUserId(),queryCompany());
-		
+
+		count = approvalService.countApprovalForSend(queryUserId(), queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	public ApprovalVO getApproval() {
 		return approval;
 	}
@@ -116,6 +124,5 @@ public class ApprovalAction extends BaseListAction {
 	public void setCount(int count) {
 		this.count = count;
 	}
-	
 
 }

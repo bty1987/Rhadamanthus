@@ -1,5 +1,6 @@
 package com.fanglin.decoration.action;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -30,6 +31,8 @@ public class DecorationAdditionAction extends BaseListAction {
 	private Map<String, Object> config;
 
 	private DecorationVO decoration;
+	
+	private List<Short> typeness;
 
 	@Action(value = "queryDecorationAdditionByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationAdditionByOrderId() {
@@ -42,7 +45,7 @@ public class DecorationAdditionAction extends BaseListAction {
 	@Action(value = "queryDecorationConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationConfig() throws FLException {
 
-		config = decorationAdditionService.queryDecorationConfig(decoration, queryCompany());
+		config = decorationAdditionService.queryDecorationConfig(typeness, queryCompany());
 
 		return SUCCESS;
 	}
@@ -71,4 +74,11 @@ public class DecorationAdditionAction extends BaseListAction {
 		this.decoration = decoration;
 	}
 
+	public List<Short> getTypeness() {
+		return typeness;
+	}
+
+	public void setTypeness(List<Short> typeness) {
+		this.typeness = typeness;
+	}
 }

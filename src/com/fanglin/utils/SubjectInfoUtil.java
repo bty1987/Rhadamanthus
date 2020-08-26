@@ -23,61 +23,61 @@ import org.dom4j.io.SAXReader;
 import com.fanglin.finance.po.SubjectPO;
 
 public class SubjectInfoUtil {
-	
+
 	private static final String configFilePathName = "/subjectInfo.xml";
-	
+
 	private static Document document;
-	
+
 	static {
-		try{
+		try {
 			SAXReader saxReader = new SAXReader();
-			
+
 			InputStream is = SubjectInfoUtil.class.getResourceAsStream(configFilePathName);
-			
+
 			document = saxReader.read(is);
-		}catch (Exception e) {
+		} catch (Exception e) {
 			throw new RuntimeException("config-file cannot be load: " + configFilePathName);
 		}
 	}
-	
-	public static Map<String, SubjectPO> getSubjectInfos(){
-		
+
+	public static Map<String, SubjectPO> getSubjectInfos() {
+
 		Element root = document.getRootElement();
-		
+
 		Map<String, SubjectPO> subjectPOs = new HashMap<String, SubjectPO>();
-		
-		for(Iterator<?> oi = root.elementIterator(); oi.hasNext();){
+
+		for (Iterator<?> oi = root.elementIterator(); oi.hasNext();) {
 			Element oe = (Element) oi.next();
-			
+
 			SubjectPO subjectPO = new SubjectPO();
-			
-			for(Iterator<?> ti = oe.elementIterator(); ti.hasNext();){
+
+			for (Iterator<?> ti = oe.elementIterator(); ti.hasNext();) {
 				Element te = (Element) ti.next();
-				
+
 				String name = te.attributeValue("name");
 				String value = te.getText();
-				
-				if(name.equals(SubjectPO.COLUMN_SID_STR)){
+
+				if (name.equals(SubjectPO.COLUMN_SID_STR)) {
 					subjectPO.setSid(Long.valueOf(value));
-				}else if(name.equals(SubjectPO.COLUMN_NAME_STR)){
+				} else if (name.equals(SubjectPO.COLUMN_NAME_STR)) {
 					subjectPO.setName(value);
-				}else if(name.equals(SubjectPO.COLUMN_ONECODE_STR)){
+				} else if (name.equals(SubjectPO.COLUMN_ONECODE_STR)) {
 					subjectPO.setOneCode(value);
-				}else if(name.equals(SubjectPO.COLUMN_TWOCODE_STR)){
+				} else if (name.equals(SubjectPO.COLUMN_TWOCODE_STR)) {
 					subjectPO.setTwoCode(value);
-				}else if(name.equals(SubjectPO.COLUMN_THRCODE_STR)){
+				} else if (name.equals(SubjectPO.COLUMN_THRCODE_STR)) {
 					subjectPO.setThrCode(value);
-				}else if(name.equals(SubjectPO.COLUMN_DIRECTION_STR)){
+				} else if (name.equals(SubjectPO.COLUMN_DIRECTION_STR)) {
 					subjectPO.setDirection(Short.valueOf(value));
 				}
 			}
-			
+
 			subjectPOs.put(String.valueOf(subjectPO.getSid()), subjectPO);
 		}
-		
+
 		return subjectPOs;
 	}
-	
+
 	public static void main(String[] args) {
 		Map<String, SubjectPO> subjectInfos = SubjectInfoUtil.getSubjectInfos();
 		System.out.println(subjectInfos.size());

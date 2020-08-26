@@ -1,0 +1,51 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div id="repairPayData" style="margin-top: 10px"></div> <!--查询结果-->
+    </div>
+</div>
+
+<div class="row" style="margin: 10px 0px 0px 10px">
+    <a class="btn btn-minier btn-primary pull-left" id="addRepairPay" style="margin-right: 10px">
+        <i class="icon-plus bigger-110"></i>
+        <span>创建维修款</span>
+    </a>
+</div>
+
+<div id="layerRepairPay" style="display: none;">
+    <div class="row-fluid">
+        <form class="form-horizontal">
+
+            <div class="widget-main">
+                <div class="row" style="margin-right: 0px;">
+                    <div class="col-md-11">
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label no-padding-right" for="type">类型</label>
+                            <div class="col-md-8">
+                                <select class="col-xs-10 col-sm-8 v_required" id="type" name="type" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}"></select>
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label no-padding-right" for="money">金额</label>
+                            <div class="col-md-8">
+                                <input type="text" id="money" class="col-xs-10 col-sm-8 v_float_3" />
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+                        <div class="form-group">
+                            <div class="col-md-offset-4 col-md-9">
+                                <a class="btn btn-success btn-sm" id="submitBtn">确定</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/customer/repairPay.js']);
+</script>

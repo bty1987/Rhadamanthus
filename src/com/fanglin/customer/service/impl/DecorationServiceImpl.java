@@ -30,7 +30,7 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.utils.SystemConfig;
 
-@Service("decorationOrderService")
+@Service("decorationServiceC")
 @Transactional(readOnly = true)
 public class DecorationServiceImpl extends DaoImpl<DecorationPO> implements DecorationService {
 
@@ -121,7 +121,7 @@ public class DecorationServiceImpl extends DaoImpl<DecorationPO> implements Deco
 			BeanUtil.copyPropertie(decorationPO.getSalesman(), decorationVO.getSalesman(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyPropertie(decorationPO.getSupervisor(), decorationVO.getSupervisor(), Arrays.asList("dept", "duty"));
 
-			decorationVO.setType(decorationPO.getType());
+			decorationVO.setType(decorationPO.getTypeness());
 			decorationVO.setCustomerId(decorationPO.getCustomer().getCid());
 			decorationVO.setContractTime(decorationPO.getContractTime());
 			decorationVO.setAddress(decorationPO.getHouse().getVillage().getName() + " " + decorationPO.getHouse().getHouseNumber());
@@ -131,6 +131,7 @@ public class DecorationServiceImpl extends DaoImpl<DecorationPO> implements Deco
 			decorationVO.setMeasureTime(decorationPO.getMeasureTime());
 			decorationVO.setOrderId(decorationPO.getOrderId());
 			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
+			decorationVO.setFactPrice(decorationPO.getFactPrice());
 
 		}
 

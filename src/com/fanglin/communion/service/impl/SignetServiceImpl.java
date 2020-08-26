@@ -40,9 +40,9 @@ public class SignetServiceImpl implements SignetService {
 	}
 
 	@Override
-	public List<SignetVO> querySignet() {
+	public List<SignetVO> querySignet(int company) {
 		
-		List<SignetPO> signetPOs = signetDao.list();
+		List<SignetPO> signetPOs = signetDao.querySignet(company);
 		List<SignetVO> signetVOs = new ArrayList<SignetVO>();
 		
 		for(SignetPO signetPO : signetPOs){

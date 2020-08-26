@@ -18,6 +18,8 @@ import com.fanglin.core.interceptor.FLException;
 
 public interface ApprovalCustomerOriginService {
 
+	public ApprovalCustomerOriginVO queryApprovalCustomerOrigin(ApprovalVO approvalVO) throws FLException;
+
 	public int submitApprovalForCustomerOrigin(ApprovalVO approvalVO, ApprovalCustomerOriginVO approvalCustomerOriginVO, String userId, int company) throws FLException;
 
 	public int approveForCustomerOrigin(ApprovalPO approvalPO) throws FLException;

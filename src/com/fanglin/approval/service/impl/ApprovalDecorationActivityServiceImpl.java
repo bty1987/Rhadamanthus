@@ -77,7 +77,9 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 
 		String orderId = approvalDecorationActivityVO.getOrderId();
 
-		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT, orderId);
+		List<Short> status = Arrays.asList(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_STATUS_APPROVE_INT, ApprovalPO.APPROVAL_STATUS_CONFIRM_INT, ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT, ApprovalPO.APPROVAL_STATUS_REJECT_INT);
+
+		ApprovalPO approvalPO = approvalDao.queryApprovalByChange(status, ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT, orderId);
 
 		if (approvalPO != null) {
 			throw new FLException(240004, "正在审批中,不能提交新审批");
@@ -158,6 +160,7 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 			decorationActivityItemPO.setIsPrefor(awardStockPO.getIsPrefor());
 			decorationActivityItemPO.setIsStock(awardStockPO.getIsStock());
 			decorationActivityItemPO.setIsPayment(awardStockPO.getIsPayment());
+			decorationActivityItemPO.setReceiveTime(approvalPO.getApprovalTime());
 
 			if (Arrays.asList(DecorationActivityItemPO.TYPE_COUPON_INT, DecorationActivityItemPO.TYPE_SPECIALCOUPON_INT).contains(decorationActivityItemPO.getType()) && decorationActivityItemPO.getIsPrefor() == DecorationActivityItemPO.ISPREFOR_CAL_INT) {
 				couponCut = Arith.add(couponCut, Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));

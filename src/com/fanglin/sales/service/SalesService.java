@@ -29,6 +29,8 @@ public interface SalesService {
 	
 	public void pageSalesForSupplier(Paging paging,List<Filter> filter,String userId,int company);
 	
+	public void pageSalesByOrderId(Paging paging,List<Filter> filter,int company, String userId, String orderId);
+	
 	public SalesVO querySalesBySid(SalesVO salesVO) throws FLException;
 	
 	public SalesVO querySalesByNo(SalesVO salesVO) throws FLException;
@@ -47,8 +49,10 @@ public interface SalesService {
 	
 	public int updateSalesForBelong(SalesVO salesVO) throws FLException;
 	
+	public int updateSalesForAdvance(SalesVO salesVO) throws FLException;
+	
 	public int terminalSales(SalesVO salesVO) throws FLException;
 	
-	public int finishSales(SalesVO salesVO) throws FLException;
+	public int finishSales(SalesVO salesVO, String userId) throws FLException;
 	
 }

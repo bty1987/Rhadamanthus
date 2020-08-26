@@ -1,14 +1,3 @@
-/**
- * @File Name		: DecorationContractService
- * @Package   	: com.fanglin.service.decoration;
- * @Version		: 1.0
- * @Date			: 2014-9-27
- * @Copyright	: Copyright Creators 2014
- * @Author		: bty1987
- * @Email			: 
- * @Describing	: 
- */
-
 package com.fanglin.decoration.service;
 
 import java.util.List;
@@ -32,22 +21,18 @@ public interface DecorationContractService {
 
 	public String viewDecorationContract(DecorationContractVO decorationContractVO) throws FLException;
 
-	public int fillingDecorationContract(DecorationContractVO decorationContractVO) throws FLException;
+	public int filingDecorationContract(DecorationContractVO decorationContractVO) throws FLException;
 
 	public void sendDecorationContractForAuth(DecorationContractVO decorationContractVO) throws FLException;
-
-	public void sendDecorationContractForSignet(DecorationContractVO decorationContractVO) throws FLException;
-
-	public void sendDecorationContractForSign(DecorationContractVO decorationContractVO) throws FLException;
-
-	public void sendDecorationContractForView(DecorationContractVO decorationContractVO) throws FLException;
-
-	public void sendDecorationContractForDownload(DecorationContractVO decorationContractVO) throws FLException;
 
 	public int signDecorationContract(DecorationContractVO decorationContractVO, Authentication authentication) throws FLException;
 
 	public int resignDecorationContract(DecorationContractVO decorationContractVO, String userId) throws FLException;
 
 	public int presignDecorationContract(DecorationVO decoration, String userId) throws FLException;
+	
+	public void sendDecorationContract(DecorationContractVO decorationContractVO) throws FLException;
+	
+	public String redirectDecorationContract(DecorationContractVO decorationContractVO) throws FLException;
 
 }

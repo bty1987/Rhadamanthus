@@ -1,6 +1,6 @@
 {
     "types": [
-        
+
     ],
     "statues": [
         {"key":"0","value":"初始"},
@@ -22,10 +22,26 @@
         {"key":"2","value":"全退"},
         {"key":"3","value":"倒单"}
     ],
-    "refundType":[
+    "refundType": [
         {"key":"1","value":"退货"},
         {"key":"2","value":"全退"},
         {"key":"3","value":"倒单 "}
+    ],
+    "depositpayStatus": [
+        {"key":"-1","value":"初始"},
+        {"key":"0","value":"未付款"},
+        {"key":"1","value":"已付款"},
+        {"key":"2","value":"已确认"}
+    ],
+    "fullpayStatus": [
+        {"key":"-1","value":"初始"},
+        {"key":"0","value":"未付款"},
+        {"key":"1","value":"已付款"},
+        {"key":"2","value":"已确认"}
+    ],
+    "type": [
+        {"key":"0","value":"劵"},
+        {"key":"1","value":"物品"}
     ],
     "paymentTypes": [],
     "errorCode": 0,

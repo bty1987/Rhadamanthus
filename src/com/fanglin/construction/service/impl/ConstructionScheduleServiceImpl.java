@@ -131,6 +131,10 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 		if (constructionSchedulePO.getCheckout() == ConstructionSchedulePO.CHECKOUT_VALID_INT && decorationPO.getPaySacle() < Arith.div(constructionNodePO.getPrecheck(), 1000.0)) {
 			throw new FLException(120018, "装修款比例不足");
 		}
+		
+		if (constructionSchedulePO.getCheckout() == ConstructionSchedulePO.CHECKOUT_VALID_INT && decorationPO.getSaleScale() < Arith.div(constructionNodePO.getStacheck(), 1000.0)) {
+			throw new FLException(120033, "销售比例不足");
+		}
 
 		constructionSchedulePO.setStatus(ConstructionSchedulePO.STATUS_BEGIN_INT);
 		constructionSchedulePO.setStartTime(DateUtil.getDateToTimestamp(new Date()));
@@ -184,6 +188,10 @@ public class ConstructionScheduleServiceImpl implements ConstructionScheduleServ
 
 		if (constructionSchedulePO.getCheckout() == ConstructionSchedulePO.CHECKOUT_VALID_INT && decorationPO.getPaySacle() < Arith.div(constructionNodePO.getPostcheck(), 1000.0)) {
 			throw new FLException(120018, "装修款比例不足");
+		}
+		
+		if (constructionSchedulePO.getCheckout() == ConstructionSchedulePO.CHECKOUT_VALID_INT && decorationPO.getSaleScale() < Arith.div(constructionNodePO.getFincheck(), 1000.0)) {
+			throw new FLException(120033, "销售比例不足");
 		}
 
 		constructionSchedulePO.setStatus(ConstructionSchedulePO.STATUS_FINISH_INT);

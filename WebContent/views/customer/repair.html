@@ -1,0 +1,86 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div id="resultList" style="margin-top: 10px"></div> <!--查询结果-->
+    </div>
+</div>
+
+<div class="row" style="margin: 10px 0px 0px 10px">
+    <a class="btn btn-minier btn-success pull-left" id="addRepair" style="margin-right: 10px">
+        <i class="icon-plus bigger-110"></i>
+        <span>创建维修单</span>
+    </a>
+</div>
+
+<div id="layerAdd" style="display: none;">
+    <div class="row-fluid">
+        <form class="form-horizontal">
+
+            <div class="widget-main">
+                <div class="row" style="margin-right: 0px;">
+                    <div class="col-md-11">
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label no-padding-right" for="schedule">进度</label>
+                            <div class="col-md-8">
+                                <select class="col-xs-10 col-sm-5 v_required" id="schedule" name="schedule" data-required="1" data-toggle="popover" data-trigger='manual' rules="{required:true}"></select>
+                            </div>
+                        </div>
+                        <div class="space5"></div>
+                        <div class="form-group">
+                            <div class="col-md-offset-4 col-md-9">
+                                <a class="btn btn-success btn-sm" id="submitBtn">确定</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="addRepairModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myBindModal">创建维修单</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal" id="form">
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="userNameRepair" class="col-sm-3 control-label no-padding-right">维修人</label>
+                                        <div class="col-md-9">
+                                            <input type="text" class="col-sm-8 v_typeahead" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="userNameRepair" placeholder="人员名称">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right">维修内容</label>
+                                        <div class="col-md-9">
+                                            <textarea id="content" maxlength="256" class="col-xs-10 col-sm-8"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="text-align: center">
+                <button type="button" id="addSaveBtn" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/customer/repair.js']);
+</script>

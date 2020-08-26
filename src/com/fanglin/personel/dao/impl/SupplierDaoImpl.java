@@ -100,7 +100,7 @@ public class SupplierDaoImpl extends DaoImpl<UserPO> implements SupplierDao {
 				if ("userId".equals(field)) {
 					query.add(query.getCriterion("userId", filter));
 				} else if ("userName".equals(field)) {
-					query.add(query.getCriterion("userId", filter));
+					query.add(query.getCriterion("userName", filter));
 				} else if ("roleId".equals(field)) {
 					query.add(Restrictions.eq("role.rid", Integer.valueOf(data)));
 				} else if ("deptId".equals(field)) {

@@ -49,6 +49,8 @@ public class DecorationVO implements Serializable {
 	private UserBaseVO escorter;
 
 	private Short type;
+	
+	private Short typeness;
 
 	private String salesmanType;
 
@@ -81,6 +83,8 @@ public class DecorationVO implements Serializable {
 	private Short designStatus;
 	
 	private Short projectStatus;
+	
+	private Short sourceStatus;
 
 	private Integer otherStatus;
 
@@ -98,15 +102,13 @@ public class DecorationVO implements Serializable {
 
 	private Long thingCut;
 
-	private Long netperfor;
-
-	private Long comperfor;
-	
 	private Long precontractPrice;
 
 	private String dompany;
 
 	private Short paySacle;
+	
+	private Short saleScale;
 
 	private String scale;
 	
@@ -284,6 +286,14 @@ public class DecorationVO implements Serializable {
 	public void setType(Short type) {
 		this.type = type;
 	}
+	
+	public Short getTypeness() {
+		return typeness;
+	}
+	
+	public void setTypeness(Short typeness) {
+		this.typeness = typeness;
+	}
 
 	public Short getDesignStatus() {
 		return designStatus;
@@ -299,6 +309,14 @@ public class DecorationVO implements Serializable {
 
 	public void setProjectStatus(Short projectStatus) {
 		this.projectStatus = projectStatus;
+	}
+
+	public Short getSourceStatus() {
+		return sourceStatus;
+	}
+
+	public void setSourceStatus(Short sourceStatus) {
+		this.sourceStatus = sourceStatus;
 	}
 
 	public Integer getOtherStatus() {
@@ -405,6 +423,14 @@ public class DecorationVO implements Serializable {
 		this.paySacle = paySacle;
 	}
 
+	public Short getSaleScale() {
+		return saleScale;
+	}
+
+	public void setSaleScale(Short saleScale) {
+		this.saleScale = saleScale;
+	}
+
 	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getAccountTime() {
 		return accountTime;
@@ -430,22 +456,6 @@ public class DecorationVO implements Serializable {
 		this.thingCut = thingCut;
 	}
 
-	public Long getNetperfor() {
-		return netperfor;
-	}
-
-	public void setNetperfor(Long netperfor) {
-		this.netperfor = netperfor;
-	}
-
-	public Long getComperfor() {
-		return comperfor;
-	}
-
-	public void setComperfor(Long comperfor) {
-		this.comperfor = comperfor;
-	}
-	
 	public Long getPrecontractPrice() {
 		return precontractPrice;
 	}

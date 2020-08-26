@@ -269,59 +269,47 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 		paging.setData(materialPaymentVOs);
 	}
-	
-	@Override
-	public List<MaterialPaymentVO> queryMaterialPayment(List<Filter> filters, int company) {
-
-		if(filters.size() == 0) return null;
-		
-		filters.add(new Filter("company", String.valueOf(company), "eq"));
-		
-		filters.add(new Filter(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, String.valueOf(MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT), "eq"));
-		filters.add(new Filter(MaterialPaymentPO.COLUMN_PAYMENTTYPE_STR, "", "in"));
-
-		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
-		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPayment(filters);
-
-		MaterialPaymentVO materialPaymentVO;
-
-		for(MaterialPaymentPO materialPaymentPO: materialPaymentPOs){
-
-			materialPaymentVO = new MaterialPaymentVO(new MaterialVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))),new CustomerVO()),new UserBaseVO());
-
-			BeanUtil.copyProperties(materialPaymentPO, materialPaymentVO, Arrays.asList("material", "creater"));
-			BeanUtil.copyProperties(materialPaymentPO.getCreater(), materialPaymentVO.getCreater(), Arrays.asList("dept", "duty"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial(), materialPaymentVO.getMaterial(), Arrays.asList("house", "customer", "salesman", "materialer", "instorer", "region", "department", "materialDepartment"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getCustomer(), materialPaymentVO.getMaterial().getCustomer());
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse(), materialPaymentVO.getMaterial().getHouse(), Arrays.asList("village"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage(), materialPaymentVO.getMaterial().getHouse().getVillage(), Arrays.asList("cityProper"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage().getCityProper(), materialPaymentVO.getMaterial().getHouse().getVillage().getCityProper(), Arrays.asList("city"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage().getCityProper().getCity(), materialPaymentVO.getMaterial().getHouse().getVillage().getCityProper().getCity(), Arrays.asList("region"));
-
-			materialPaymentVOs.add(materialPaymentVO);
-		}
-
-		return materialPaymentVOs;
-	}
 
 	@Override
-	public List<MaterialPaymentVO> queryMaterialPaymentByOrderId(MaterialPaymentVO materialPaymentVO) {
+	public List<MaterialPaymentVO> queryMaterialPaymentByOrderId(MaterialPaymentVO materialPaymentVO, List<Filter> filters, int company) {
 
 		String orderId = materialPaymentVO.getMaterial().getOrderId();
+		String no = materialPaymentVO.getMaterial().getNo();
+		Short paymentstatus = materialPaymentVO.getPaymentStatus();
+		
+		if(orderId == "" && no == "") return null;
+		
+		if(orderId != null && orderId != ""){
+			filters.add(new Filter(MaterialPaymentPO.COLUMN_ORDERID_STR, orderId, "eq"));
+		}
+		
+		if(no != null && no != ""){
+			filters.add(new Filter(MaterialPaymentPO.COLUMN_NO_STR, no, "eq"));
+		}
+		
+		if(paymentstatus != null){
+			filters.add(new Filter(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, String.valueOf(paymentstatus), "eq"));
+		}
 
 		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
-		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPaymentByOrderId(orderId);
+		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPaymentByOrderId(filters);
 
 		for(MaterialPaymentPO materialPaymentPO: materialPaymentPOs){
-			MaterialPaymentVO _materialPaymentVO = new MaterialPaymentVO(new MaterialVO());
+			MaterialPaymentVO _materialPaymentVO = new MaterialPaymentVO(new MaterialVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))),new CustomerVO()),new UserBaseVO());
 
 			BeanUtil.copyProperties(materialPaymentPO, _materialPaymentVO, Arrays.asList("material","creater","collecter","confirmer"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterialReceipt(), _materialPaymentVO, Arrays.asList("material","creater","collecter","confirmer"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial(), _materialPaymentVO.getMaterial(), Arrays.asList("house","customer","salesman","materialer","instorer","region","department","materialDepartment"));
 
 			if(materialPaymentPO.getMaterialReceipt() != null){
 				BeanUtil.copyProperties(materialPaymentPO.getMaterialReceipt(), _materialPaymentVO, Arrays.asList("material","creater","collecter","confirmer"));
 			}
+			
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial(), _materialPaymentVO.getMaterial(), Arrays.asList("house","customer","salesman","materialer","instorer","region","department","materialDepartment"));
+			BeanUtil.copyProperties(materialPaymentPO.getCreater(), _materialPaymentVO.getCreater(), Arrays.asList("dept", "duty"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getCustomer(), _materialPaymentVO.getMaterial().getCustomer());
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse(), _materialPaymentVO.getMaterial().getHouse(), Arrays.asList("village"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage(), _materialPaymentVO.getMaterial().getHouse().getVillage(), Arrays.asList("cityProper"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage().getCityProper(), _materialPaymentVO.getMaterial().getHouse().getVillage().getCityProper(), Arrays.asList("city"));
+			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage().getCityProper().getCity(), _materialPaymentVO.getMaterial().getHouse().getVillage().getCityProper().getCity(), Arrays.asList("region"));
 
 			materialPaymentVOs.add(_materialPaymentVO);
 		}
@@ -351,18 +339,12 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 
 	@Override
-	public List<MaterialPaymentVO> queryMaterialPaymentForNotInitByMrId(MaterialReceiptVO materialReceiptVO, String userId) {
+	public List<MaterialPaymentVO> queryMaterialPaymentForNotInitByMrId(MaterialReceiptVO materialReceiptVO) {
 
 		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.queryMaterialPaymentForNotInitByMrId(materialReceiptVO.getMrId());
 		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
 
 		for(MaterialPaymentPO materialPaymentPO: materialPaymentPOs){
-
-			MaterialReceiptPO materialReceiptPO = materialPaymentPO.getMaterialReceipt();
-
-			if(!userId.equals(materialReceiptPO.getCollecter().getUserId())){
-				continue;
-			}
 
 			MaterialPaymentVO materialPaymentVO = new MaterialPaymentVO();
 			BeanUtil.copyProperties(materialPaymentPO, materialPaymentVO,Arrays.asList("material","creater","collecter","confirmer"));

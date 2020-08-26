@@ -11,4 +11,6 @@ public interface AccessoriesDao extends Dao<AccessoriesPO>{
 	
 	public List<AccessoriesPO> pageAccessories(Paging paging,List<Filter> filters,int company);
 	
+	public List<AccessoriesPO> queryAccessoriesByOrderId(String orderId);
+	
 }

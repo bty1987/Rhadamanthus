@@ -29,6 +29,8 @@ public class SignetPO implements Serializable, Signet {
 	private short status;
 
 	private int company;
+	
+	public static final String COLUMN_COMPANY_STR = "company";
 
 	public SignetPO() {
 		super();

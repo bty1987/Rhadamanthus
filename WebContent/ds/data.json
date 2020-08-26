@@ -100,6 +100,28 @@
     {"key" : "0", "value" : "启用"},
     {"key" : "1", "value" : "禁用"}
   ],
+  "categoryType": [
+    {"key" : "0", "value" : "普通"},
+    {"key" : "1", "value" : "统计"}
+  ],
+  "visionType": [
+    {"key" : "1", "value" : "报价折扣"},
+    {"key" : "2", "value" : "报价计算"},
+    {"key" : "4", "value" : "生成款项"},
+    {"key" : "8", "value" : "决算计算"}
+  ],
+  "taskParamStatus": [
+    {"key" : "0", "value" : "有效"},
+    {"key" : "1", "value" : "无效"}
+  ],
+  "taskParamType": [
+    {"key" : "0", "value" : "文本"},
+    {"key" : "1", "value" : "数值"}
+  ],
+  "ctypes": [
+    {"key" : "0", "value" : "底价"},
+    {"key" : "1", "value" : "点位"}
+  ],
 
 
   "errorCode": 0,

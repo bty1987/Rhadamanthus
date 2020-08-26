@@ -13,6 +13,7 @@ jQuery(function($) {
             fieldData: com.focusPage("#fieldData"),
             functionData: com.focusPage("#functionData"),
             nodeData: com.focusPage("#nodeData"),
+            statusData: com.focusPage("#statusData"),
         },
         
         name: {},
@@ -43,7 +44,7 @@ jQuery(function($) {
 
     //显示所有api进行配置
     function apiConfig(key) {
-        
+
         decorationFunction.name = key;
         decorationFunction.dfids = [];
 
@@ -60,13 +61,14 @@ jQuery(function($) {
             decorationFunction.items.fieldData.empty();
             decorationFunction.items.functionData.empty();
             decorationFunction.items.nodeData.empty();
+            decorationFunction.items.statusData.empty();
+            var decorationFunctionArr = res.decorationFunctions;
 
-            $.each(res.decorationFunctions, function (i, v) {
+            $.each(decorationFunctionArr.sort(function (x, y) { return x['sort'] - y['sort']}), function (i, v) {
                 var $div = $('<div></div>').addClass('col-sm-4').attr("name", "function");
-
                 var $label = $('<label></label>');
                 var $input = $('<input>').attr({"type": "checkbox", "name": "dfids", "class": "ace"}).val(v.dfid);
-                var $span = $('<span></span>').addClass('lbl blue').text(v.name);
+                var $span = $('<span></span>').addClass('lbl blue').text(v.name + (v.type == 1 ? v.comment :""));
 
                 $label.append($input).append($span).appendTo($div);
 
@@ -89,6 +91,10 @@ jQuery(function($) {
 
                 if(v.type == 5){
                     $div.appendTo(decorationFunction.items.nodeData);
+                }
+
+                if(v.type == 6){
+                    $div.appendTo(decorationFunction.items.statusData);
                 }
 
                 if(decorationFunction.dfids.indexOf(v.dfid)!= -1){

@@ -290,7 +290,7 @@ $(function () {
 
         var options = {
             "approval.receiver.userId": com.focusPage("#salesItemDetialapprover").find('input:checked').attr('userid'),
-            "approval.comment": salesItem.items.refundDes.val(),
+            "approval.comment": $("#refundDes").val(),
             "approvalSalesRefund.sid": salesItem.sid,
             "approvalSalesRefund.type": salesItem.approvalType,
             "approvalSalesRefund.refund": parseInt(salesItem.items.refundTotal.val())

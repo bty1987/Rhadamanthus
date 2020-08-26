@@ -15,7 +15,10 @@ import com.fanglin.communion.vo.DepartmentTypeVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.personel.vo.UserContractVO;
+import com.fanglin.personel.vo.UserEducationVO;
 import com.fanglin.personel.vo.UserInfoVO;
+import com.fanglin.personel.vo.UserOperationVO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.utils.Paging;
 
@@ -43,7 +46,7 @@ public interface UserService {
 
 	public void defaultPassword(String userId, int company) throws FLException;
 
-	public void addUser(UserInfoVO userInfoVO, int company) throws FLException;
+	public void addUser(UserInfoVO userInfoVO, List<UserContractVO> userContractVOs, List<UserEducationVO> userEducationVOs, List<UserOperationVO> userOperationVOs, int company) throws FLException;
 
 	public void updateUser(UserInfoVO userInfoVO, int company) throws FLException;
 

@@ -19,4 +19,6 @@ public interface DutyService {
 	public int updateDuty(DutyVO dutyVO) throws FLException;
 
 	public int updateDutyForStatus(DutyVO dutyVO) throws FLException;
+	
+	public List<DutyVO> queryDutyByName(String pinYinName, DutyVO dutyVO);
 }

@@ -122,6 +122,7 @@ $.extend(api, {salary: {
             args: ["workerBalance.toplimit"]
         }
     },
+    addWorkerBalance: {url: "addWorkerBalance.do"},
     collectWorkerDeposit: {
         url: "collectWorkerDeposit.do",
         type: "update",
@@ -154,5 +155,18 @@ $.extend(api, {salary: {
     },
     passSalary: {url: "passSalary.do"},
     rejectSalary: {url: "rejectSalary.do"},
-    cancelSalary: {url: "cancelSalary.do"}
+    cancelSalary: {url: "cancelSalary.do"},
+    queryWithhold: {url: "queryWithhold.do",
+         type: "query",
+         tranargs: [{
+             result:"withholds",
+             args:["money"]
+         }]},
+    addWithhold: {
+         url: "addWithhold.do",
+         type: "update",
+         tranargs: {
+             args: ["withhold.money"]
+         }},
+     updateWithholdForStatus: {url: "updateWithholdForStatus.do"}
 }});

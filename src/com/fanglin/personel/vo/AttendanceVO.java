@@ -9,7 +9,7 @@ public class AttendanceVO implements Serializable {
 
 	private Long aid;
 	
-	private Long uid;
+	private Integer uid;
 	
 	private Integer month;
 	
@@ -87,11 +87,11 @@ public class AttendanceVO implements Serializable {
 		this.aid = aid;
 	}
 
-	public Long getUid() {
+	public Integer getUid() {
 		return uid;
 	}
 
-	public void setUid(Long uid) {
+	public void setUid(Integer uid) {
 		this.uid = uid;
 	}
 	

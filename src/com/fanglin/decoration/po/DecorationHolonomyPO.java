@@ -28,7 +28,7 @@ public class DecorationHolonomyPO implements java.io.Serializable {
 	public static final long MONEY_SERVICEPAIDUP_INT = 0;
 
 	public static final short STATUS_INIT_SHORT = 0;
-	
+
 	private long dhid;
 
 	private DecorationPO decoration;
@@ -38,7 +38,7 @@ public class DecorationHolonomyPO implements java.io.Serializable {
 	private int maching;
 
 	private int discount;
-	
+
 	private long discountBase; // 基数
 
 	private long projectBase; // 工程基础
@@ -189,7 +189,7 @@ public class DecorationHolonomyPO implements java.io.Serializable {
 	public void setServicePaidup(long servicePaidup) {
 		this.servicePaidup = servicePaidup;
 	}
-
+	
 	@Column(name = "status")
 	public short getStatus() {
 		return status;

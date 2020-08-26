@@ -5,6 +5,7 @@ jQuery(function($){
         type: ["劵", "物品"],
         url: null,
         postData : null,
+        stateType:["到店", "定金", "签单", "抽奖", "特批", "购买", "其他", "升级"],
         
         btns: {
             submitBtn: com.focusPage("#submitBtn")
@@ -43,9 +44,11 @@ jQuery(function($){
                     ['10', '活动名称  : ', "activityName"],
                     ['40', '活动项  : ', "activityItemName"],
                     ['40', '物品类型  : ', "type"],
+                    ['40', '状态类型  : ', "stateType"],
                     ['10', '金额  : ', "money"],
                     ['40', '数量  : ', "num"],
-                    ['40', '备注  : ', "content"]
+                    ['40', '备注  : ', "content"],
+                    
                 ],
                 "caleTotal": ["money", "num"]
             },
@@ -80,19 +83,38 @@ jQuery(function($){
                     ['10', '业务部: ', "salesman.dept.name"],
                     ['10', '设计师: ', "customerOrigin.designer.currentName"],
                     ['10', '设计部: ', "customerOrigin.designer.dept.name"],
+                    ['10', '装修单类型: ', "typeness"],
+                    ['10', '总面积: ', "customerOrigin.house.totalArea"],
+                ]
+            },
+            "17": {
+                "api": api.approval.queryApprovalCustomerOrigin,
+                "title": "客源信息",
+                "resultname": "approvalCustomerOrigin",
+                "args": [
+                    ['10', '城市: ', "customerOrigin.house.village.cityProper.city.name"],
+                    ['10', '城区: ', "customerOrigin.house.village.cityProper.name"],
+                    ['10', '楼盘: ', "customerOrigin.house.village.name"],
+                    ['10', '楼号: ', "customerOrigin.house.houseNumber"],
+                    ['10', '面积: ', "customerOrigin.house.buildArea"],
+                    ['10', '客户: ', "customerOrigin.customer.name"],
+                    ['10', '设计师: ', "customerOrigin.designer.currentName"],
+                    ['10', '设计部: ', "customerOrigin.designer.dept.name"],
+                    ['10', '总面积: ', "customerOrigin.house.totalArea"],
                 ]
             }
         },
         
         approvalTypeData:{},
-        
+        approvalStatus: {},
+        typenesses: {},
         aid: null,
         submitUrl : null,
     };
 
     if (params['urlLoadParams'].type == 'send') {
         approvalTrack.url = api.approval.pageApprovalForSend;
-        approvalTrack.postData = "approvalSenderTrackPostData"
+        approvalTrack.postData = "approvalSenderTrackPostData"	
     } else if (params['urlLoadParams'].type == 'receive') {
         approvalTrack.url = api.approval.pageApprovalForReceive;
         approvalTrack.postData = "approvalReceiveTrackPostData"
@@ -103,6 +125,11 @@ jQuery(function($){
     
     com.post(api.ds.approval, {}, function (res) {
         approvalTrack.approvalTypeData = res.approvalType.split("key", "value");
+        approvalTrack.approvalStatus = res.approvalStatus.split("key", "value");
+    }, null, false);
+    
+    com.post(api.ds.decoration, {}, function (res) {
+        approvalTrack.typenesses = res.typeness.split("key", "value");
     }, null, false);
     
     approvalTrack.btns.submitBtn.on("click", approve);
@@ -137,15 +164,17 @@ jQuery(function($){
             // 查看主材退款,主材详细信息按钮
             var $btnDetails = $('<a></a>').addClass('btn btn-minier btn-primary').html('详情');
 
+            var $btnAffirm = $('<a></a>').addClass('btn btn-minier btn-warning').html('客户确认').prepend($('<i></i>'));
             var $btnPass = $('<a></a>').addClass('btn btn-minier btn-success').html('通过').prepend($('<i></i>'));
             var $btnRefuse = $('<a></a>').addClass('btn btn-minier btn-danger').html('拒绝').prepend($('<i></i>'));
-
+            
+            
             var propertyArr = [
                 ["申请人 : ", v.sender.currentName, "grey"],
                 ["审批人 : ", v.receiver.currentName, "grey"],
                 ["提交时间 : ", v.createTime, "grey"],
                 ["审批时间 : ", v.approvalTime, "grey"],
-                ["状态 : ", v.status == 0 ? "等待" : (v.status == 1 ? "通过" : v.status == 3 ? "审批中" : "拒绝"), "red"],
+                ["状态 : ", approvalTrack.approvalStatus[v.status], "red"],
                 ["说明 : ", v.contents, "grey"],
                 ["备注 : ", v.comment, "grey"],
                 ["批注 : ", v.annotate, "grey"],
@@ -157,14 +186,29 @@ jQuery(function($){
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                 $liProperty.appendTo($ulProperty);
             });
-
             $divBtnWrap.appendTo($h3);
-
+            
+            
             if (v.status == 0 && params['urlLoadParams'].type != 'send') {
-                $divBtnWrap.append($btnPass).append($btnRefuse).appendTo($h3);
+                $divBtnWrap.append($btnAffirm).append($btnPass).append($btnRefuse).appendTo($h3);
+              
             }
-
+            if (v.status == 5 && params['urlLoadParams'].type != 'send') {
+                $divBtnWrap.append($btnAffirm).append($btnPass).append($btnRefuse).appendTo($h3);
+              
+            }
+            if (v.status == 6 && params['urlLoadParams'].type != 'send') {
+                $divBtnWrap.append($btnAffirm).append($btnPass).append($btnRefuse).appendTo($h3);
+              
+            }
+            
+            
             $liLine.append($h3).append($ulProperty);
+            
+            $btnAffirm.bindClick(function(){
+                affirm(v.aid);
+            });
+            
             $btnPass.bindClick(function () {
                 proapprove(v.aid, api.approval.approveApproval, "通过");
             });
@@ -173,13 +217,14 @@ jQuery(function($){
                 proapprove(v.aid, api.approval.refuseApproval, "拒绝");
             });
 
-            if ([6, 8, 10, 14].indexOf(v.type) != -1) {
-
+            if ([6, 8, 10, 14, 17].indexOf(v.type) != -1) {
+            		
                 $divBtnWrap.append($btnDetails).appendTo($h3);
 
                 // 详细信息按钮
                 $btnDetails.bindClick(function () {
                     queryInformationItem(v.aid, v.type);
+                    
                 });
             }
 
@@ -200,16 +245,16 @@ jQuery(function($){
     var searcher = new Searcher();
 
     if (params['urlLoadParams'].type == 'send') {
-        searcher.init(["approval_receiverName", "approval_Type", "approval_createTime", "approval_Time"], "condList", approvalTrack.url, function (data) {
+        searcher.init(["approval_receiverName", "approval_Type", "approval_Status", "approval_createTime", "approval_Time"], "condList", approvalTrack.url, function (data) {
             displayFunc.init('resultList', data);
         }, "pagenation", approvalTrack.postData);
     } else if (params['urlLoadParams'].type == 'receive') {
-        searcher.init(["approval_senderName", "approval_Type"], "condList", approvalTrack.url, function (data) {
+        searcher.init(["approval_senderName", "approval_Type", "approval_Status"], "condList", approvalTrack.url, function (data) {
             displayFunc.init('resultList', data);
         },
         "pagenation", approvalTrack.postData);
     } else if (params['urlLoadParams'].type == 'dept') {
-        searcher.init(["approval_senderName", "approval_Type"], "condList", approvalTrack.url, function (data) {
+        searcher.init(["approval_senderName", "approval_Type", "approval_Status"], "condList", approvalTrack.url, function (data) {
             displayFunc.init('resultList', data);
         },
         "pagenation", approvalTrack.postData);
@@ -243,6 +288,15 @@ jQuery(function($){
         });
     }
     
+    function affirm(aid){  
+        var options = {
+            "approval.aid": aid
+        }
+        com.post(api.approval.affirmApproval, options, function (res) {
+            searcher.doSearch();
+        });
+    }
+    
     function queryInformationItem(aid, type) {
 
         if (com.focusPage('#itemList').children()) {
@@ -261,12 +315,16 @@ jQuery(function($){
             com.focusPage("#itemTitle").html(itemInfo.title);
             
             var data = $.isArray(res[itemInfo.resultname]) ? res[itemInfo.resultname] : [res[itemInfo.resultname]]
-
+            
             $.each(data, function (i, v) {
-
+        
                 $.each(itemInfo.args, function (j, e) {
+     
                     if (e[2] == "type") infoList.append(approvalUtils.addspan(e[0], e[1], approvalTrack.type[getElement(v, e[2].split('.'))]));
-                    else infoList.append(approvalUtils.addspan(e[0], e[1], getElement(v, e[2].split('.'))))
+                    if (e[2] == "stateType") infoList.append(approvalUtils.addspan(e[0], e[1], approvalTrack.stateType[getElement(v, e[2].split('.'))]));
+                    if (e[2] == "typeness") infoList.append(approvalUtils.addspan(e[0], e[1], approvalTrack.typenesses[getElement(v, e[2].split('.'))]));
+                    
+                    if(e[2] != "type" && e[2] != "stateType" && e[2] != "typeness") infoList.append(approvalUtils.addspan(e[0], e[1], getElement(v, e[2].split('.'))))
                 });
                 
                 var caleTotal = itemInfo.caleTotal;

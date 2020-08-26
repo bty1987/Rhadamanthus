@@ -15,7 +15,7 @@ public interface RoleService {
 	
 	public RoleVO queryRoleByRid(RoleVO roleVO);
 	
-	public RoleVO queryRoleByName(RoleVO roleVO,Integer company);
+	public List<RoleVO> queryRoleByName(RoleVO roleVO, Integer company);
 	
 	public int addRole(RoleVO roleVO,Integer company) throws FLException;
 	

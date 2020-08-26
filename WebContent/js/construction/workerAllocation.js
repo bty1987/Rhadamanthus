@@ -20,8 +20,8 @@ $(function () {
             finishTime : com.focusPage("#finishTime"),
             keyTime : com.focusPage("#keyTime"),
             drawlineTime : com.focusPage("#drawlineTime"),
+            designTime : com.focusPage("#designTime"),
             isCeremony  : com.focusPage("#isCeremony"),
-            isConfirmPricture :com.focusPage("#isConfirmPricture"),
             comment   : com.focusPage("#comment")
 
         }
@@ -38,13 +38,13 @@ $(function () {
     com.datetime(constructionNodes.items.finishTime);
     com.datetime(constructionNodes.items.keyTime);
     com.datetime(constructionNodes.items.drawlineTime);
+    com.datetime(constructionNodes.items.designTime);
 
     com.post(api.ds.construction, {}, function (res) {
 
         constructionNodes.items.ishovel.bindData(res.isHovel, "key", "value", false);
         constructionNodes.items.iskey.bindData(res.isKey, "key", "value", false);
         constructionNodes.items.isCeremony.bindData(res.isCeremony, "key", "value", false);
-        constructionNodes.items.isConfirmPricture.bindData(res.isConfirmPricture, "key", "value", false);
     });
 
     com.post(api.ds.construction, {}, function (res) {
@@ -141,7 +141,6 @@ $(function () {
             constructionNodes.items.iskey.val(data.iskey);
             constructionNodes.items.isCeremony.val(data.isCeremony);
             constructionNodes.items.timeLimit.val(data.timeLimit);
-            constructionNodes.items.isConfirmPricture.val(data.isConfirmPricture);
             if(data.finishTime != null){
                 constructionNodes.items.finishTime.val(data.finishTime.substr(0,10));
             }
@@ -150,6 +149,9 @@ $(function () {
             }
             if(data.drawlineTime != null){
                 constructionNodes.items.drawlineTime.val(data.drawlineTime.substr(0,10));
+            }
+            if(data.designTime != null){
+                constructionNodes.items.designTime.val(data.designTime.substr(0,10));
             }
             constructionNodes.items.comment.val(data.comment);
         });
@@ -168,6 +170,7 @@ $(function () {
             "constructionInfo.finishTime" : constructionNodes.items.finishTime.val() + " 00:00:00",
             "constructionInfo.keyTime" : constructionNodes.items.keyTime.val() + " 00:00:00",
             "constructionInfo.drawlineTime" : constructionNodes.items.drawlineTime.val() + " 00:00:00",
+            "constructionInfo.designTime" : constructionNodes.items.designTime.val() + " 00:00:00",
             "constructionInfo.comment": constructionNodes.items.comment.val()
         };
 

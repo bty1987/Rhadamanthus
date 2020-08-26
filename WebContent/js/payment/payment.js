@@ -102,7 +102,7 @@ jQuery(function($) {
 	}, null, false);
 
 	com.post(api.ds.decoration, {}, function(res){
-		payment.decorationType = res.type;
+		payment.decorationType = res.typeness;
 	}, null, false);
 	
 	com.focusPage("#paymentModal :checkbox").on("change", function(){
@@ -319,15 +319,10 @@ jQuery(function($) {
 			});
 
 			$btnPrint.click(function(){
-				if(v.collectUser.userId!=params.userInfo.user.userId){
-					com.showAlert(com.warning, "收款人不匹配, 不能打印");
-					return false;
-				}else{
-					params.paymentPaymentId = v.pid;
-					com.popup("专用收款收据__装修单号:" + v.orderId  ,api.index.paymentReceiptIndex.url ,function () {
-						parent.layer.getFrameIndex(window.name);
-					},null,true)
-				}
+				params.paymentPaymentId = v.pid;
+				com.popup("专用收款收据__装修单号:" + v.orderId  ,api.index.paymentReceiptIndex.url ,function () {
+					parent.layer.getFrameIndex(window.name);
+				},null,true)
 			});
 
 			$btnUpdateP.click(function(){

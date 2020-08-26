@@ -100,9 +100,9 @@ public class ApprovalManifestDBServiceImpl implements ApprovalManifestDBService 
 		UserPO sender = userDao.queryUserByUserId(userId);
 
 		ApprovalPO approvalPO = new ApprovalPO().init(sender, receiver, "", ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT, "", approvalVO.getComment(), company);
-
+		
 		approvalDao.save(approvalPO);
-
+		
 		ApprovalManifestDBPO approvalManifestDBPO = new ApprovalManifestDBPO();
 
 		BeanUtil.copyProperties(approvalManifestDBVO, approvalManifestDBPO);

@@ -1,12 +1,16 @@
 package com.fanglin.payment.dao.impl;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Timestamp;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+
+import com.alibaba.fastjson.JSONArray;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.DateUtil;
@@ -62,9 +66,13 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 	}
 	
 	@Override
-	public List<SalesPaymentPO> querySalesPayment(List<Filter> filters) {
+	public List<SalesPaymentPO> querySalesPaymentByOrderId(String orderId, List<Filter> filters) {
 		
 		PagingQuery<SalesPaymentPO> query = pagingQuery(new Paging(), SalesPaymentPO.class);
+		
+		if(orderId != null && orderId != ""){
+			query.alias("sales", "sales").add(Restrictions.eq(SalesPaymentPO.COLUMN_SALES_ORDERID_STR, orderId));
+		}
 
 		queryFilterExecute(query, filters);
 		query.notPaging();
@@ -92,31 +100,38 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 	}
 	
 	@Override
-	public SalesPaymentPO querySalesPaymentsBySidAndType(long sid, short type) {
-		return (SalesPaymentPO) session().createCriteria(SalesPaymentPO.class).add(Restrictions.eq(SalesPaymentPO.COLUMN_SALES_SID_STR, sid)).add(Restrictions.eq(SalesPaymentPO.COLUMN_TYPE_STR, type)).uniqueResult();
+	public SalesPaymentPO querySalesPayment(long sid, List<Short> types) {
+		return (SalesPaymentPO) session().createCriteria(SalesPaymentPO.class).add(Restrictions.eq(SalesPaymentPO.COLUMN_SALES_SID_STR, sid)).add(Restrictions.in(SalesPaymentPO.COLUMN_TYPE_STR, types)).uniqueResult();
 	}
 	
 	@Override
 	public int countSalesPayment(long sid, List<Short> types) {
-		String sql = "select count(*) from payment.salespayment where sid =:sid and type in :types";
-		BigInteger num = (BigInteger)session().createSQLQuery(sql).setLong("sid", sid).setParameterList("types", types).uniqueResult();
+		
+		StringBuffer sql = new StringBuffer();
+		sql.append("select count(*) from payment.salespayment where sid =:sid");
+		
+		if(types != null && types.size() > 0){
+			sql.append(" and type in :types");
+		}
+		
+		Query query = session().createSQLQuery(sql.toString()).setLong("sid", sid);
+		
+		if(types != null && types.size() > 0){
+			query.setParameterList("types", types);
+		}
+		
+		BigInteger num = (BigInteger) query.uniqueResult();
+		
 		return num.intValue();
 	}
 
 	@Override
-	public int countSalesPaymentBySid(long sid) {
-
-		String sql = "select count(*) from payment.salespayment where sid =:sid";
-		BigInteger num = (BigInteger)session().createSQLQuery(sql).setLong("sid", sid).uniqueResult();
-		return num.intValue();
-	}
-
-	@Override
-	public int countSalesPaymentBySidAType(Long sid,Short type) {
-
-		String sql = "select count(*) from payment.salespayment where sid =:sid and type =:type";
-		BigInteger num = (BigInteger)session().createSQLQuery(sql).setLong("sid", sid).setShort("type", type).uniqueResult();
-		return num.intValue();
+	public long amountSalesPayment(String orderId) {
+		
+		String sql = "select sum(if(type in (2, 3, 8), referMoney, -refermoney)) from payment.salespayment sp, sales.sales s where s.orderId = :orderId and s.sid = sp.sid and sp.status != 0;";
+		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).uniqueResult();
+		
+		return sqlQuery == null ? 0 : sqlQuery.longValue();
 	}
 
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters){
@@ -193,8 +208,8 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 				}else if("sales.pompany".equals(filter.getField())){
 					query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
 				}else if("type".equals(field)){
-					List<Short> types = Arrays.asList(SalesPaymentPO.TYPE_DEPOSIT_INT, SalesPaymentPO.TYPE_REPLENISHMENT_INT);
-					query.add(query.getCriterion(field, types, op));
+					List<Short> type = JSONArray.parseArray(data, Short.class);
+					query.add(query.getCriterion(field, type, op));
 				}
 			}
 		}

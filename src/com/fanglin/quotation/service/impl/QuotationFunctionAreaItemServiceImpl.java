@@ -32,7 +32,6 @@ import com.fanglin.quotation.service.QuotationFunctionAreaItemService;
 import com.fanglin.quotation.vo.QuotationFunctionAreaItemVO;
 import com.fanglin.quotation.vo.QuotationFunctionAreaVO;
 import com.fanglin.quotation.vo.QuotationVO;
-import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.utils.BeanUtil;
 
 @Service("quotationFunctionAreaItemService")
@@ -49,17 +48,14 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 	private QuotationFunctionAreaDao quotationFunctionAreaDao;
 
 	@Autowired
-	private SystemConfigDao systemConfigDao;
-
-	@Autowired
 	private SelectionItemDao selectionItemDao;
 
 	@Override
 	public List<QuotationFunctionAreaItemVO> queryQuotationFunctionAreaItemByQuotationFunctionAreaId(QuotationFunctionAreaItemVO quotationFunctionAreaItemVO) throws FLException {
 
-		Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
-
-		List<QuotationFunctionAreaItemPO> quotationFunctionAreaItemPOs = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByFunctionAreaId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaItemVO.getQuotationFunctionAreaId(), divisor), quotationFunctionAreaItemVO.getQuotationFunctionAreaId());
+		QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(quotationFunctionAreaItemVO.getQuotationFunctionAreaId());
+		
+		List<QuotationFunctionAreaItemPO> quotationFunctionAreaItemPOs = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByFunctionAreaId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex()), quotationFunctionAreaItemVO.getQuotationFunctionAreaId());
 
 		List<QuotationFunctionAreaItemVO> quotationFunctionAreaItemVOs = new ArrayList<QuotationFunctionAreaItemVO>();
 
@@ -94,12 +90,12 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 		QuotationServiceImpl.convertQuotationVOToPOForAdvance(quotationVO, quotationPO);
 
 		Long qfaiId = quotationFunctionAreaItemVO.getQfaiId();
-
-		Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
+	
+		QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(quotationFunctionAreaItemVO.getQuotationFunctionAreaId());
 
 		if (qfaiId != null) {
 
-			QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaItemVO.getQuotationFunctionAreaId(), divisor), qfaiId);
+			QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex()), qfaiId);
 
 			if (quotationFunctionAreaItemPO == null) {
 				throw new FLException(200013, "报价项不存在");
@@ -119,7 +115,7 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 			quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
 		} else {
 
-			QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = QuotationFunctionAreaItemPO.factoryToInstance(quotationFunctionAreaItemVO.getQuotationFunctionAreaId(), divisor);
+			QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = QuotationFunctionAreaItemPO.factoryToInstance(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex());
 
 			BeanUtil.copyProperties(quotationFunctionAreaItemVO, quotationFunctionAreaItemPO);
 
@@ -151,13 +147,11 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 
 		List<Short> types = Arrays.asList(QuotationFunctionAreaItemPO.TYPE_QUOTATION_COMMON_SHORT, QuotationFunctionAreaItemPO.TYPE_QUOTATION_CUSTOMER_SHORT, QuotationFunctionAreaItemPO.TYPE_QUOTATION_FIX_SHORT);
 
-		Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
-
 		QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(quotationFunctionAreaItemVO.getQuotationFunctionAreaId());
 
 		checkQuotationForStatusByEnabled(null, quotationFunctionAreaPO.getQuotation());
-
-		QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaItemVO.getQuotationFunctionAreaId(), divisor), quotationFunctionAreaItemVO.getQfaiId());
+		
+		QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex()), quotationFunctionAreaItemVO.getQfaiId());
 
 		if (quotationFunctionAreaItemPO == null) {
 			throw new FLException(200013, "报价项不存在");
@@ -188,10 +182,8 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 		QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.queryQuotationFunctionAreaForTypeByQuotationId(quotationVO.getQid(), QuotationFunctionAreaPO.TYPE_MANAGEMENT_INT);
 
 		checkQuotationForStatusByEnabled(null, quotationFunctionAreaPO.getQuotation());
-
-		Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
-
-		QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemForTypeByQuotationFunctionAreaId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), divisor), quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaItemVO.getType());
+		
+		QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemForTypeByQuotationFunctionAreaId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex()), quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaItemVO.getType());
 
 		if (quotationFunctionAreaItemPO == null) {
 			throw new FLException(200013, "报价项不存在");
@@ -211,10 +203,10 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int updateQuotationFunctionAreaItemForIndex(List<QuotationFunctionAreaItemVO> QuotationFunctionAreaItemVOs, QuotationFunctionAreaVO quotationFunctionAreaVO) throws FLException {
-
-		Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
-
-		String table = QuotationFunctionAreaItemPO.quotationFunctionAreaItemTable(quotationFunctionAreaVO.getQfaId(), divisor);
+	
+		QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(quotationFunctionAreaVO.getQfaId());
+		
+		String table = QuotationFunctionAreaItemPO.quotationFunctionAreaItemTable(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex());
 
 		for (QuotationFunctionAreaItemVO quotationFunctionAreaItemVO : QuotationFunctionAreaItemVOs) {
 			quotationFunctionAreaItemDao.updateQuotationFunctionAreaItemForIndex(table, quotationFunctionAreaItemVO);
@@ -226,7 +218,7 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int deleteQuotationFunctionAreaItem(List<Long> qfaiIds, QuotationVO quotationVO, QuotationFunctionAreaVO quotationFunctionAreaVO) throws FLException {
-
+	
 		QuotationPO quotationPO = checkQuotationForStatusByEnabled(quotationVO.getQid(), null);
 
 		QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(quotationFunctionAreaVO.getQfaId());
@@ -241,11 +233,9 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 
 		if (qfaiIds != null && qfaiIds.size() > 0) {
 
-			Long divisor = Long.valueOf(systemConfigDao.querySystemConfig("quotationFunctionArea").getValue());
-
 			QuotationServiceImpl.convertQuotationVOToPOForAdvance(quotationVO, quotationPO);
-
-			String tableName = QuotationFunctionAreaItemPO.quotationFunctionAreaItemTable(quotationFunctionAreaPO.getQfaId(), divisor);
+	
+			String tableName = QuotationFunctionAreaItemPO.quotationFunctionAreaItemTable(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex());
 
 			quotationFunctionAreaItemDao.deleteQuotationFunctionAreaItemByQfaiIds(tableName, qfaiIds);
 		}

@@ -2,7 +2,11 @@ jQuery(function ($) {
 
     var decorationDetail = {
         decorationOrderId: null,
+        orderStatus: 0,
         orderType: "",
+        orderTypeness: "",
+        type: {},
+        typeness: {},
         decoration: {},
         customer: {},
         village: {},
@@ -32,7 +36,8 @@ jQuery(function ($) {
 
         vRepeatFlg: false,
         cRepeatFlg: false,
-        accountFlg: false
+        accountFlg: false,
+        btnViewFlg: false
     };
 
     var decorationMachingTypes = {};
@@ -51,15 +56,20 @@ jQuery(function ($) {
 
     decorationDetail.items.orderId = com.focusPage("#orderId");
     decorationDetail.items.customer = com.focusPage("#customer");
-    decorationDetail.items.houseAddr = com.focusPage("#houseAddr");
+    decorationDetail.items.villageName = com.focusPage("#villageName");
+    decorationDetail.items.houseNumber = com.focusPage("#houseNumber");
     decorationDetail.items.designer = com.focusPage("#designer");
     decorationDetail.items.salesman = com.focusPage("#salesman");
     decorationDetail.items.designDepartment = com.focusPage("#designDepartment");
     decorationDetail.items.businessDepartment = com.focusPage("#businessDepartment");
-
+    decorationDetail.items.houseTypeClass = com.focusPage("#houseTypeClass");
     decorationDetail.items.houseArea = com.focusPage("#houseArea");
+    decorationDetail.items.freeArea = com.focusPage("#freeArea");
+    decorationDetail.items.innerArea = com.focusPage("#innerArea");
+    decorationDetail.items.totalArea = com.focusPage("#totalArea");
     decorationDetail.items.status = com.focusPage("#status");
     decorationDetail.items.measureTime = com.focusPage("#measureTime");
+    decorationDetail.items.decorationDiscount = com.focusPage('#decorationDiscount');
 
     decorationDetail.items.houseType = com.focusPage('#houseType');
     decorationDetail.items.houseClass = com.focusPage('#houseClass');
@@ -89,6 +99,7 @@ jQuery(function ($) {
     decorationDetail.paymentItems.otherPaymentType = com.focusPage("#otherPaymentType");
     decorationDetail.paymentItems.otherPayment = com.focusPage("#otherPayment");
     decorationDetail.paymentItems.changeReason = com.focusPage('#changeReason');
+    decorationDetail.paymentItems.materialPrice = com.focusPage('#materialPrice');
 
     decorationDetail.customerItems.customerName = com.focusPage("#customerName");
     decorationDetail.customerItems.identity = com.focusPage("#identity");
@@ -103,6 +114,8 @@ jQuery(function ($) {
     decorationDetail.customerItems.addphone = com.focusPage("#addphone");
     decorationDetail.customerItems.savePhoneBtn = com.focusPage("#savePhoneBtn");
 
+    decorationDetail.btnViewFlg = params.btnViewFlg == false ? true : false;
+    decorationDetail.btnViewFlg == false ? com.focusPage('#btnDisplay').removeAttr("style", "display: none;") : com.focusPage('#btnDisplay').attr("style", "display: none;");
 
     com.post(api.ds.data, {}, function (res) {
         decorationDetail.relationshipTypes = [];
@@ -195,7 +208,7 @@ jQuery(function ($) {
             return;
         }
 
-        decorationUtils.createCounpon("things", "thingsType", "thingsVal");
+         decorationUtils.createCounpon("things", "thingsType", "receiveType", "thingsVal");
 
         com.cleanItems(decorationDetail.decorationActivityItems);
     });
@@ -205,7 +218,7 @@ jQuery(function ($) {
             return;
         }
 
-        decorationUtils.createCounpon("coupons", "couponsType", "couponsVal");
+       decorationUtils.createCounpon("coupons", "couponsType", "receiveTypes", "couponsVal");
 
         com.cleanItems(decorationDetail.decorationActivityItems);
     });
@@ -218,6 +231,8 @@ jQuery(function ($) {
     decorationDetail.decorationActivityItems.couponsType = com.focusPage("#couponsType");
     decorationDetail.decorationActivityItems.couponsVal = com.focusPage("#couponsVal");
     decorationDetail.decorationActivityItems.thingsType = com.focusPage("#thingsType");
+    decorationDetail.decorationActivityItems.receiveType = com.focusPage("#receiveType");
+    decorationDetail.decorationActivityItems.receiveTypes = com.focusPage("#receiveTypes");
     decorationDetail.decorationActivityItems.thingsVal = com.focusPage("#thingsVal");
 
     decorationDetail.activity.activityItemName = com.focusPage("#activityItemName");
@@ -286,17 +301,27 @@ jQuery(function ($) {
     decorationUtils.init();
 
     decorationDetail.decorationOrderId = params.decorationOrderId;
+    decorationDetail.orderStatus = params.orderStatus;
     decorationDetail.orderType = params.orderType;
+    decorationDetail.orderTypeness = params.orderTypeness;
     decorationDetail.versionId = params.versionId;
 
     decorationPayment.postParam.decorationOrderId = decorationDetail.decorationOrderId;
     decorationPayment.postParam["decorationPayment.decoration.orderId"] = decorationDetail.decorationOrderId;
 
     com.post(api.ds.decoration, {}, function (res) {
-        decorationDetail.items.orderType.bindData(res.type, 'key', 'value');
+        decorationDetail.items.orderType.bindData(res.typeness, 'key', 'value');
         decorationDetail.items.houseType.bindData(res.houseType, 'key', 'value');
         decorationDetail.items.houseClass.bindData(res.houseClass, 'key', 'value');
         decorationDetail.items.grade.bindData(res.orderGrade, 'key', 'value');
+        decorationDetail.items.salesmanType.bindData(res.salesmanType, 'key', 'value');
+        $.each(res.decorationOrderStatus, function (i, v) {
+            decorationDetail.decorationOrderStatus[v.key] = v.value;
+        });
+        $.each(res.typeness, function (i, v) {
+            decorationDetail.type[v.key] = v.type;
+            decorationDetail.typeness[v.key] = v.value;;
+        });
 
     }, null, false);
 
@@ -310,18 +335,12 @@ jQuery(function ($) {
     }, "autoFillKeyValue", "key", "value");
     com.initTypeahead('no', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value");
 
-    if ([2, 3, 4].indexOf(decorationDetail.orderType) != -1 ) { // 半价/满减/捡捡
+    if (decorationDetail.orderType == 2) {
         decorationUtils.initDecorationHolonomy(decorationDetail.decorationOrderId);
     }
     if (decorationDetail.orderType == 0) {
         decorationUtils.initDecorationInclusive(decorationDetail.decorationOrderId);
     }
-
-    com.post(api.ds.decoration, {}, function (res) {
-        $.each(res.decorationOrderStatus, function (i, v) {
-            decorationDetail.decorationOrderStatus[v.key] = v.value;
-        });
-    }, null, false);
 
     com.focusPage('#customerInfosBtn').on("click", function () {
         com.post(api.data.queryCustomerById, {"customer.cid": decorationDetail.customer.cid}, function (res) {
@@ -356,7 +375,6 @@ jQuery(function ($) {
     // 申领活动物品 保存按钮
     com.focusPage("#submitDecorationActivityItemBtn").on("click", function () {
 
-
         var receiverId = com.focusPage("#approveActivityItemManSel").find('input:checked').attr('userid');
 
         if (receiverId == null || receiverId == "") {
@@ -373,7 +391,6 @@ jQuery(function ($) {
 
         var orderId = params.decorationOrderId;
         var activityName = decorationDetail.activity.activity.find("option:selected").text();
-        var stateType = com.focusPage("#receiveTypes").val();
         var activityId = com.focusPage("#activity").val();
 
         var index = 0;
@@ -397,7 +414,7 @@ jQuery(function ($) {
             options["approvalDecorationActivityItems[" + index + "].num"] = _.children('span').attr('num');
             options["approvalDecorationActivityItems[" + index + "].money"] = _.children('span').attr("typename").split(" ")[1].split(':')[1];
             options["approvalDecorationActivityItems[" + index + "].content"] = "";
-            options["approvalDecorationActivityItems[" + index + "].stateType"] = stateType;
+            options["approvalDecorationActivityItems[" + index + "].stateType"] = _.children('span').attr('value');
             options["approvalDecorationActivityItems[" + index + "].asid"] = _.children('span').attr("asid");
 
             index++;
@@ -413,7 +430,7 @@ jQuery(function ($) {
             options["approvalDecorationActivityItems[" + index + "].num"] = _.children('span').attr('num');
             options["approvalDecorationActivityItems[" + index + "].money"] = _.children('span').attr("typename").split(" ")[1].split(':')[1];
             options["approvalDecorationActivityItems[" + index + "].content"] = "";
-            options["approvalDecorationActivityItems[" + index + "].stateType"] = stateType;
+            options["approvalDecorationActivityItems[" + index + "].stateType"] = _.children('span').attr('value');
             options["approvalDecorationActivityItems[" + index + "].asid"] = _.children('span').attr("asid");
 
             index++;
@@ -484,6 +501,7 @@ jQuery(function ($) {
 
         approvalUtils.initqueryApprovalUser("approveActivityItemManSel", 8);
         //新增类型
+        binding("receiveType");
         binding("receiveTypes");
         decorationDetail.applyDecorationActivityItemModal.modal("show");
     });
@@ -533,29 +551,32 @@ jQuery(function ($) {
     com.focusPage("#btnSetDecorationPaymentInfo").on('click', function (res) {
         com.clearValidator();
 
-        if ([2, 3, 4].indexOf(decorationDetail.orderType) != -1) { // 半价/满减/捡捡
-            com.post(api.decoration.queryDecorationConfig, {"decoration.type": decorationDetail.orderType}, function (res) {
+        if (decorationDetail.orderType == 2) { // 半价/满减/捡捡
+            com.post(api.data.queryDecorationMatching,  {"typeness[0]":decorationDetail.orderTypeness}, function (res) {
                 
                 var machingType = [];
                 
-                $.each(res.config.machingType, function(i, v){
-                    
-                    if ((v['v'] & 4) != 4) return;
-                    
-                    decorationMachingTypes[v.id] = v;
+                $.each(res.decorationMatchings, function(i, v){
+
+                    if ((v['vision'] & 4) != 4) return;
+
+                    decorationMachingTypes[v.dmid] = v;
                     machingType.push(v);
                 });
 
-                com.focusPage('#decorationDiscount').bindData(machingType, "id", "dd", false, null, '');
+                decorationDetail.items.decorationDiscount.bindData(machingType,  "dmid", "name", false);
             });
         }
 
         var orderType = com.focusPage('#detailOrderType').attr("orderType");
-        decorationDetail.items.detailOrderType.html(orderType == 0 ? "半包" : (orderType == 1 ? "全包" : (orderType == 2 ? "半价" : (orderType == 3 ? "满减" : "减上捡"))));
+        decorationDetail.items.detailOrderType.html(decorationDetail.typeness[orderType]);
         decorationDetail.items.detailHouseType.html(com.focusPage('#detailHouseType').attr("houseType"));
 
-        if ([2, 3, 4].indexOf(decorationDetail.orderType) != -1) { // 半价/满减/捡捡
+        if (decorationDetail.orderType == 2) {
             com.focusPage('#forDiscount').removeClass('hide');
+        } else if (decorationDetail.orderType == 0) {
+            com.focusPage("#forMaterialPrice").removeClass('hide');
+            decorationDetail.paymentItems.materialPrice.val(0);
         }
 
         com.post(api.data.queryPaymentScaleByCid, {"paymentScale.cid": params.company.cid}, function (res) {
@@ -594,7 +615,7 @@ jQuery(function ($) {
     com.focusPage("#btnOtherPayment").on('click', function (res) {
 
         com.post(api.ds.decoration, {}, function (res) {
-        	decorationDetail.paymentItems.otherPaymentType.bindData(res.paymentType, "key", "value", false);
+        	decorationDetail.paymentItems.otherPaymentType.bindData(res.paymentType, "key", "value", true);
         });
 
         decorationDetail.otherPaymentModal.modal("show");
@@ -690,11 +711,12 @@ jQuery(function ($) {
 
         var options = {
             "decorationMidpack.decoration.orderId": decorationDetail.decorationOrderId,
-            "decorationMidpack.psId": psId
+            "decorationMidpack.psId": psId,
+            "decorationMidpack.materialPrice": decorationDetail.paymentItems.materialPrice.val()
         };
 
 
-        if ([2, 3, 4].indexOf(decorationDetail.orderType) != -1) { // 半价/满减/捡捡
+        if (decorationDetail.orderType == 2) { // 半价/满减/捡捡
 
             var manageRate = 0;
             //通过订单编号获取默认报价信息
@@ -713,20 +735,19 @@ jQuery(function ($) {
                 return;
             }, false);
 
-            var id = com.focusPage('#decorationDiscount').val();//maching
-            var discout = com.focusPage('#decorationDiscount').find("option:selected").text();
+            var id = decorationDetail.items.decorationDiscount.val();
+            var decorationMaching = decorationMachingTypes[id];
 
-            var dict = decorationMachingTypes[id];
-
-            var serviceRate = dict.sr;//服务费配比
-            var discountBase = dict.db;//基数
-            var maching = dict.mm;
-            var names = dict.n;
+            var serviceRate = decorationMaching.service;//服务费配比
+            var discountBase = decorationMaching.base;//基数
+            var maching = decorationMaching.material;
+            var discount = decorationMaching.discount;
+            var names = decorationMaching.name;
 
             options = {
                 "decorationHolonomy.decoration.orderId": decorationDetail.decorationOrderId,
                 "decorationHolonomy.maching": maching,  // 主材配比
-                "decorationHolonomy.discount": discout,//折扣
+                "decorationHolonomy.discount": discount,//折扣
                 "decorationHolonomy.manageRate": parseFloat(manageRate) + parseFloat(decorationDetail.notSalesmanRate),//管理费比例   非提比例
                 "decorationHolonomy.serviceRate": serviceRate,// 服务费配比
                 "decorationHolonomy.status": 0,
@@ -778,13 +799,13 @@ jQuery(function ($) {
             }, function (e) {
                 com.showAlert(com.error, e.errorMsg);
             });
+
         } else {
             com.post(api.decoration.makeDecorationMidpack, options, function (res) {
                 com.showAlert(com.info, "保存成功");
                 decorationUtils.initPayment(decorationDetail, true);
             });
         }
-
 
         decorationDetail.quotationTotalPriceModal.modal("hide");
     });
@@ -803,15 +824,20 @@ jQuery(function ($) {
 
         decorationDetail.items.orderId.val(decoration.orderId);
         decorationDetail.items.customer.val(decoration.customer.name);
-        decorationDetail.items.houseAddr.val(decoration.house.village.name + decoration.house.houseNumber);
+        decorationDetail.items.villageName.val(decoration.house.village.name);
+        decorationDetail.items.houseNumber.val(decoration.house.houseNumber);
         decorationDetail.items.designDepartment.val(decoration.designer.dept.name);
         decorationDetail.items.designer.val(decoration.designer.currentName);
         decorationDetail.items.businessDepartment.val(decoration.salesman.dept.name);
         decorationDetail.items.salesman.val(decoration.salesman.currentName);
-        decorationDetail.items.orderType.val(decoration.type);
+        decorationDetail.items.orderType.val(decoration.typeness);
         decorationDetail.items.houseType.val(decoration.houseType);
         decorationDetail.items.houseClass.val(decoration.houseClass);
+        decorationDetail.items.houseTypeClass.val(decoration.house.houseType);
         decorationDetail.items.houseArea.val(decoration.house.buildArea);
+        decorationDetail.items.freeArea.val(decoration.house.freeArea);
+        decorationDetail.items.innerArea.val(decoration.house.innerArea);
+        decorationDetail.items.totalArea.val(decoration.house.totalArea);
         decorationDetail.items.status.val(decorationDetail.decorationOrderStatus[decoration.status]);
         decorationDetail.items.measureTime.val(decoration.measureTime);
         decorationDetail.items.notSalesmanRate.val(decoration.notSalesmanRate);
@@ -819,8 +845,10 @@ jQuery(function ($) {
         decorationDetail.items.grade.val(decoration.grade);
         decorationDetail.items.quoterId.val(decoration.quoter.currentName);
         decorationDetail.items.escorterId.val(decoration.escorter.currentName);
-        com.focusPage("#detailOrderType").attr("orderType", decoration.type);
+        com.focusPage("#detailOrderType").attr("orderType", decoration.typeness);
         com.focusPage("#detailHouseType").attr("houseType", decoration.houseType);
+        com.focusPage('#designStatus').html(decoration.sourceStatus == 0 ? '未确认':'已确认');
+        com.focusPage('#prictureStatus').html(decoration.sourceStatus != 2 ? '未确认':'已确认');
 
         if (decoration.status != 7) {
             decorationDetail.accountFlg = true;
@@ -835,14 +863,11 @@ jQuery(function ($) {
             decorationDetail.items.notSalesmanPhone.val(res.notSalesmanPhone);
             decorationDetail.items.notSalesmanName.val(res.notSalesmanName);
             decorationDetail.items.notSalesmanContent.val(res.notSalesmanContent);
-            com.focusPage('#designStatus').html(res.isConfirmDesign == 0 ? '未确认':'已确认');
-            com.focusPage('#prictureStatus').html(res.isConfirmPricture == 0 ? '未确认':'已确认');
         });
-
 
         decorationDetail.houseItems.shid = decoration.house.hid;
 
-        decorationDetail.items.salesmanType.val(decoration.salesmanType);
+        decorationDetail.items.salesmanType.val(decoration.salesmanType).prop("disabled", false);
         com.updateTypeahead('quoterId', decoration.quoter == null ? "" : decoration.quoter.userId, decoration.quoter.currentName == null ? "" : decoration.quoter.currentName);
         com.updateTypeahead('escorterId', decoration.escorter == null ? "" : decoration.escorter.userId, decoration.escorter.currentName == null ? "" : decoration.escorter.currentName);
 
@@ -857,7 +882,16 @@ jQuery(function ($) {
         decorationDetail.village.villageName = decoration.house.village.villageName;
         decorationDetail.village.houseNumber = decoration.house.houseNumber;
 
-        decorationDetail.decoration.type = decoration.type;
+        decorationDetail.decoration.type = decoration.typeness;
+        
+        if ([0, 1, 4].indexOf(decoration.status) == -1) {
+            decorationDetail.items.orderType.prop("disabled", true);
+        }
+        
+        if([2, 3, 4, 6, 7].indexOf(decoration.status) == -1){
+            decorationDetail.items.houseNumber.val("");
+        }
+        
     });
 
     function saveBaseDecorationInfo() {
@@ -868,15 +902,18 @@ jQuery(function ($) {
         var btn = com.focusPage("#btnSaveBasedecorationInfo");
         btn.button('loading');
         com.showConfirm("确定要保存基本信息吗?", function () {
+
             var options = {
                 "decoration.orderId": decorationDetail.decorationOrderId,
-                "decoration.type": decorationDetail.items.orderType.val(),
+                "decoration.type": decorationDetail.type[decorationDetail.items.orderType.val()],
+                "decoration.typeness": decorationDetail.items.orderType.val(),
                 "decoration.houseType": decorationDetail.items.houseType.val(),
                 "decoration.houseClass": decorationDetail.items.houseClass.val(),
                 "decoration.notSalesmanRate": decorationDetail.items.notSalesmanRate.val(),
                 "decorationInfo.notSalesmanName": decorationDetail.items.notSalesmanName.val(),
                 "decorationInfo.notSalesmanPhone": decorationDetail.items.notSalesmanPhone.val(),
                 "decorationInfo.notSalesmanContent": decorationDetail.items.notSalesmanContent.val(),
+                "decoration.salesmanType": decorationDetail.items.salesmanType.val(),
                 "decoration.quoter.userId": com.typeahead("quoterId"),
                 "decoration.escorter.userId": com.typeahead("escorterId"),
             };
@@ -899,10 +936,8 @@ jQuery(function ($) {
 
             info.direction === "previous" ? curstep = info.step - 1 : curstep = info.step;
 
-            curstep == 1 ? decorationDetail.btnSaveBasedecorationInfo.removeClass("hide") : decorationDetail.btnSaveBasedecorationInfo.addClass("hide");
-            
             var node = params.viewNode[curstep];
-            
+
             switch (node.type) {
 
                 case "quotation":
@@ -940,8 +975,6 @@ jQuery(function ($) {
             }
         }).on('stepclick', function (e, info) {
 
-            info.step == 1 ? decorationDetail.btnSaveBasedecorationInfo.removeClass("hide") : decorationDetail.btnSaveBasedecorationInfo.addClass("hide");
-            
             var node = params.viewNode[info.step - 1];
             
             switch (node.type) {
@@ -980,7 +1013,7 @@ jQuery(function ($) {
                     break;
             }
         }).on('previous', function (e, info) {
-            info.step == 1 ? decorationDetail.btnSaveBasedecorationInfo.removeClass("hide") : decorationDetail.btnSaveBasedecorationInfo.addClass("hide");
+            ![3, 7].includes(decorationDetail.orderStatus) && info.step == 1 ? decorationDetail.btnSaveBasedecorationInfo.removeClass("hide") : decorationDetail.btnSaveBasedecorationInfo.addClass("hide");
         }).on('finished', function (e) {
             com.switchPage(params.historyPage);
         });
@@ -1020,11 +1053,8 @@ jQuery(function ($) {
         };
 
         com.post(api.data.queryHouseByNoAHnum, options, function (res) {
-            com.post(api.decoration.checkDecoration, {
-                "filters[0].data": res.house.hid,
-                "filters[0].field": "houseId",
-                "filters[0].op": "eq"
-            }, function (des) {
+            com.post(api.decoration.checkDecoration, {"decoration.house.hid": res.house.hid}, function (des) {
+
                 if (des.decoration && des.decoration.orderId) {
                     com.showTips($("#door"), "订单已存在:订单号:" + des.decoration.orderId + " 订单所属设计师:" + des.decoration.designer.currentName, true);
                     decorationDetail.repeatFlg = true;
@@ -1041,7 +1071,8 @@ jQuery(function ($) {
                             "decoration.house.hid": decorationDetail.houseItems.thid
                         }, function (res) {
                             com.showAlert(com.info, "操作成功");
-                            decorationDetail.items.houseAddr.val(decorationDetail.houseItems.villageName + decorationDetail.houseItems.houseNumber);
+                            decorationDetail.items.villageName.val(decorationDetail.houseItems.villageName);
+                            decorationDetail.items.houseNumber.val(decorationDetail.houseItems.houseNumber);
                             decorationDetail.villageChangeModal.modal("hide");
                         }, null, false);
 

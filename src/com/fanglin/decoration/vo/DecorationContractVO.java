@@ -1,14 +1,3 @@
-/**
- * @File Name		: QuotationVO
- * @Package   	: com.fanglin.vo
- * @Version		: 1.0
- * @Date			: 2014-9-27
- * @Copyright	: Copyright Creators 2014
- * @Author		: bty1987
- * @Email			: 
- * @Describing	: 
- */
-
 package com.fanglin.decoration.vo;
 
 import java.io.Serializable;
@@ -29,6 +18,8 @@ public class DecorationContractVO implements Serializable {
 	
 	private ContractVO contract;
 	
+	private Short type;
+	
 	private String download;
 	
 	private String viewpdf;
@@ -38,10 +29,6 @@ public class DecorationContractVO implements Serializable {
 	private Timestamp createTime;
 	
 	private Short status;
-	
-	private Long netperfor;
-	
-	private Long comperfor;
 	
 	private List<DecorationPaymentVO> payments;
 	
@@ -79,6 +66,14 @@ public class DecorationContractVO implements Serializable {
 
 	public void setContract(ContractVO contract) {
 		this.contract = contract;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
 	}
 
 	public String getDownload() {
@@ -135,22 +130,6 @@ public class DecorationContractVO implements Serializable {
 
 	public void setPaymentRates(List<Integer> paymentRates) {
 		this.paymentRates = paymentRates;
-	}
-
-	public Long getNetperfor() {
-		return netperfor;
-	}
-
-	public void setNetperfor(Long netperfor) {
-		this.netperfor = netperfor;
-	}
-
-	public Long getComperfor() {
-		return comperfor;
-	}
-
-	public void setComperfor(Long comperfor) {
-		this.comperfor = comperfor;
 	}
 	
 }

@@ -249,6 +249,7 @@ $.extend(api, {
         updatePurchaseBalanceForStatus: {url: "updatePurchaseBalanceForStatus.do"},
 
         pageAccessories: {url: "pageAccessories.do"},
+        queryAccessoriesByOrderId: {url: "queryAccessoriesByOrderId.do"},
         queryAccessoriesItemByAid: {
             url: "queryAccessoriesItemByAid.do",
             type:"query",
@@ -260,7 +261,17 @@ $.extend(api, {
                 args:["purchase", "selling", "pieceNum"]
             }]
         },
-        queryAccessoriesItemByAids: {url: "queryAccessoriesItemByAids.do"},
+        queryAccessoriesItemByAids: {
+            url: "queryAccessoriesItemByAids.do",
+            type:"query",
+            tranargs:[{
+                result:"accessoriesItems",
+                args:["selling", "num", "surplus"]
+            },{
+                result:"accessoriesItems-goods",
+                args:["purchase", "selling", "pieceNum"]
+            }]
+        },
         addAccessories: {
             url: "addAccessories.do",
             type: "update",
@@ -272,7 +283,7 @@ $.extend(api, {
         preoutAccessories: {url: "preoutAccessories.do"},
         cancelAccessories: {url: "cancelAccessories.do"},
         refuseAccessories: {url: "refuseAccessories.do"},
-        updateAccessoriesForPrint: {url: "updateAccessoriesForPrint.do"},
+        updateAccessoriesForPrint: {url: "updateAccessoriesForPrint.do", intercept: true},
         deliveAccessories: {url: "deliveAccessories.do"},
         addAccessoriesItem: {
             url: "addAccessoriesItem.do",

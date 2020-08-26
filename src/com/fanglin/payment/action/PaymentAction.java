@@ -76,7 +76,7 @@ public class PaymentAction extends BaseListAction {
 	@Action(value = "queryPaymentByPaymentId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryPaymentByPaymentId() throws FLException{
 		
-		payment = paymentService.queryPaymentByPaymentId(payment, queryUserId());
+		payment = paymentService.queryPaymentByPaymentId(payment);
 		
 		return SUCCESS;
 	}

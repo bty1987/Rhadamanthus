@@ -28,7 +28,8 @@ $(function () {
         typeArray: {},
         currentVillageName: null,
         
-        status: {}
+        status: {},
+        decorationTypes: []
     };
 
     customerSource.updateAndApprovalBtn.bindClick(customerApproval);
@@ -50,8 +51,12 @@ $(function () {
     com.post(api.ds.decoration, {}, function (res) {
         customerSource.items.houseClass.bindData(res.houseClass, 'key', 'value');
         customerSource.items.salesmanType.bindData(res.salesmanType, 'key', 'value');
-        customerSource.items.orderType.bindData(res.type, 'key', 'value');
+        customerSource.items.orderType.bindData(res.typeness, 'key', 'value');
         customerSource.items.resourceType.bindData(res.status, 'key', 'value');
+
+        $.each(res.typeness, function (i, v) {
+            customerSource.decorationTypes[v.key] = v.type;
+        });
     }, null, false);
 
     com.initTypeahead('villageNoDesiger', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", null);
@@ -192,7 +197,8 @@ $(function () {
             var option = {
                 "approval.receiver.userId": receiverId,
                 "approvalCustomerOriginTDecoration.customerOrigin.csid" : customerSource.currentCustomerSource.csid,
-                "approvalCustomerOriginTDecoration.type": customerSource.items.orderType.val(),
+                "approvalCustomerOriginTDecoration.type": customerSource.decorationTypes[customerSource.items.orderType.val()],
+                "approvalCustomerOriginTDecoration.typeness": customerSource.items.orderType.val(),
                 "approvalCustomerOriginTDecoration.salesman.userId": com.typeahead("salesman"),
                 "approvalCustomerOriginTDecoration.salesmanType": customerSource.items.salesmanType.val(),
                 "approvalCustomerOriginTDecoration.houseType": customerSource.items.houseType.val(),

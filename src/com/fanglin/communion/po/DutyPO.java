@@ -38,6 +38,8 @@ public class DutyPO implements Serializable {
 	private int type;
 
 	private short lead;
+	
+	private String pinYin;
 
 	public DutyPO() {
 		super();
@@ -59,15 +61,15 @@ public class DutyPO implements Serializable {
 	public long getDid() {
 		return did;
 	}
+	
+	public void setDid(long did) {
+		this.did = did;
+	}
 
 	public DutyPO(long did, DepartmentTypePO departmentType) {
 		super();
 		this.did = did;
 		this.departmentType = departmentType;
-	}
-
-	public void setDid(long did) {
-		this.did = did;
 	}
 
 	@Column(name = "name")
@@ -114,6 +116,15 @@ public class DutyPO implements Serializable {
 
 	public void setLead(short lead) {
 		this.lead = lead;
+	}
+
+	@Column(name = "pinYin")
+	public String getPinYin() {
+		return pinYin;
+	}
+
+	public void setPinYin(String pinYin) {
+		this.pinYin = pinYin;
 	}
 
 }

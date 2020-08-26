@@ -40,9 +40,9 @@ public class ContractServiceImpl implements ContractService {
 	}
 
 	@Override
-	public List<ContractVO> queryContract() {
+	public List<ContractVO> queryContract(int company) {
 		
-		List<ContractPO> contractPOs = ccntractDao.list();
+		List<ContractPO> contractPOs = ccntractDao.queryContract(company);
 		List<ContractVO> contractVOs = new ArrayList<ContractVO>();
 		
 		for (ContractPO contractPO : contractPOs) {

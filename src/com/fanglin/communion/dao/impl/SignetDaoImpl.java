@@ -23,11 +23,17 @@ public class SignetDaoImpl extends DaoImpl<SignetPO> implements SignetDao {
 		
 		PagingQuery<SignetPO> query = pagingQuery(paging, SignetPO.class);
 		
-		query.add(Restrictions.eq("company", company));
+		query.add(Restrictions.eq(SignetPO.COLUMN_COMPANY_STR, company));
 		
 		queryFilterExcute(query, filters);
 
 		return query.list();
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<SignetPO> querySignet(int company) {
+		return session().createCriteria(SignetPO.class).add(Restrictions.eq(SignetPO.COLUMN_COMPANY_STR, company)).list();
 	}
 	
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

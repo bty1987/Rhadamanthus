@@ -11,6 +11,7 @@
 
 package com.fanglin.payment.dao.impl;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -55,9 +56,9 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 		
 		return query.list();
 	}
-	
+
 	@Override
-	public List<DecorationPaymentPO> queryDecorationPayment(List<Filter> filters) {
+	public List<DecorationPaymentPO> queryDecorationPaymentByOrderId(List<Filter> filters){
 		
 		PagingQuery<DecorationPaymentPO> query = pagingQuery(new Paging(), DecorationPaymentPO.class);
 		
@@ -66,12 +67,6 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 		query.notPaging();
 		
 		return query.list();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<DecorationPaymentPO> queryDecorationPaymentByOrderId(String orderId){
-		return session().createCriteria(DecorationPaymentPO.class).add(Restrictions.eq("decoration.orderId", orderId)).list();
 	}
 
 	@Override
@@ -118,6 +113,14 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 		String sql = "delete from payment.decorationpayment where orderId=:orderId and paymentType <> :paymentTypes and onetype = :onetype and twotype = :twotype";
 	    
 	    return session().createSQLQuery(sql).setString("orderId", orderId).setString("paymentTypes", DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR).setInteger("onetype", DecorationPaymentPO.ONETYPE_ADD_INT).setInteger("twotype", DecorationPaymentPO.TWOTYPE_DEAL_INT).executeUpdate();
+	}
+
+	@Override
+	public long amountDecorationPayment(String orderId, Short[] paymentStatus, short oneType, short twoType) {
+		String sql = "SELECT SUM(referMoney) from payment.decorationpayment where orderId = :orderId AND paymentStatus IN :paymentStatus AND onetype = :oneType AND twotype = :twoType";
+		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).setParameterList("paymentStatus", paymentStatus).setShort("oneType", oneType).setShort("twoType", twoType).uniqueResult();
+		
+		return sqlQuery == null ? 0 : sqlQuery.longValue();
 	}
 
 	private void queryFilterExcute(PagingQuery<DecorationPaymentPO> query,List<Filter> filters){

@@ -13,12 +13,14 @@ package com.fanglin.payment.dao.impl;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+
+import com.alibaba.fastjson.JSONArray;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.material.po.MaterialPO;
@@ -57,7 +59,7 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 	}
 
 	@Override
-	public List<MaterialPaymentPO> queryMaterialPayment(List<Filter> filters){
+	public List<MaterialPaymentPO> queryMaterialPaymentByOrderId(List<Filter> filters) {
 		
 		PagingQuery<MaterialPaymentPO> query = pagingQuery(new Paging(), MaterialPaymentPO.class);
 		
@@ -66,12 +68,6 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 		query.notPaging();
 		
 		return query.list();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<MaterialPaymentPO> queryMaterialPaymentByOrderId(String orderId) {
-		return session().createCriteria(MaterialPaymentPO.class).createAlias("material", "material").add(Restrictions.eq("material.orderId", orderId)).list();
 	}
 
 	@Override
@@ -222,8 +218,8 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 				}else if("company".equals(filter.getField())){
 					query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
 				}else if("paymentType".equals(field)){
-					List<Short> types = Arrays.asList(MaterialPaymentPO.PAYMENTTYPE_TYPE_DEPOSIT_INT, MaterialPaymentPO.PAYMENTTYPE_TYPE_FULL_INT);
-					query.add(query.getCriterion(field, types, op));
+					List<Short> type = JSONArray.parseArray(data, Short.class);
+					query.add(query.getCriterion(field, type, op));
 				}
 			}
 		}

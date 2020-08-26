@@ -25,14 +25,16 @@ public class ActivityItemPO implements java.io.Serializable {
 	private long aid;
 
 	private long asid;
+	
+	private String activity;
 
 	private String name;
 
 	private short type;
 
 	private int money;
-
-	private String activity;
+	
+	private int integral;
 
 	public ActivityItemPO() {
 		super();
@@ -56,6 +58,15 @@ public class ActivityItemPO implements java.io.Serializable {
 
 	public void setAid(long aid) {
 		this.aid = aid;
+	}
+	
+	@Column(name = "activity")
+	public String getActivity() {
+		return activity;
+	}
+
+	public void setActivity(String activity) {
+		this.activity = activity;
 	}
 
 	@Column(name = "name")
@@ -94,12 +105,13 @@ public class ActivityItemPO implements java.io.Serializable {
 		this.money = money;
 	}
 
-	@Column(name = "activity")
-	public String getActivity() {
-		return activity;
+	@Column(name = "integral")
+	public int getIntegral() {
+		return integral;
 	}
 
-	public void setActivity(String activity) {
-		this.activity = activity;
+	public void setIntegral(int integral) {
+		this.integral = integral;
 	}
+	
 }

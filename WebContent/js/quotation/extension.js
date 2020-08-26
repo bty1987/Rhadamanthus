@@ -1,7 +1,18 @@
 jQuery(function($) {
-    var decorationOrderId = params.decorationOrderId;
-    var extraParams = {"extension.orderId" : decorationOrderId};
+    var extension = {
+        decorationOrderId : params.decorationOrderId,
+        saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+        cancellBtn: com.focusPage("#cancelBtn"),
+        modal: com.focusPage("#extensionModal"),
+        extensionItems: {
+            addExtensionDes : com.focusPage("#extensionDes"),
+            addExtensionType : com.focusPage("#extensionType")
+        }
+    };
+
+    var extraParams = {"extension.orderId" : extension.decorationOrderId};
     var typeDict = {"0":"增项", "1":"减项"};
+
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
@@ -86,17 +97,6 @@ jQuery(function($) {
         displayFunc.init('resultList', data);
     }, null, "addExtensionPostData", extraParams, true, "extensions");
 
-    var extension = {
-        decorationOrderId : params.decorationOrderId,
-        saveBtn: com.focusPage("#saveBtn").on("click", saveData),
-        cancellBtn: com.focusPage("#cancelBtn"),
-        modal: com.focusPage("#extensionModal"),
-        extensionItems: {
-            addExtensionDes : com.focusPage("#extensionDes"),
-            addExtensionType : com.focusPage("#extensionType")
-        }
-    };
-
     //返回按钮
     com.focusPage('#btnBack').click(function(){
         com.switchPage("/views/decoration/decoration.html");
@@ -123,8 +123,6 @@ jQuery(function($) {
             com.showAlert(com.info, "操作成功!");
             search.doSearch();
         });
-
-        com.focusPage("#eData").trigger("click");
     }
 
     function saveData(){
@@ -146,8 +144,8 @@ jQuery(function($) {
         com.post(url, options, function(res){
             com.showAlert(com.info, "操作成功");
             search.doSearch();
-        });
 
-        extension.modal.modal("hide");
+            extension.modal.modal("hide");
+        });
     }
 });

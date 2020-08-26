@@ -1,8 +1,6 @@
 package com.fanglin.decoration.dao.impl;
 
-import java.sql.Timestamp;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -14,7 +12,6 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.AuditDao;
 import com.fanglin.decoration.po.AuditPO;
 import com.fanglin.decoration.po.DecorationPO;
-import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 
@@ -67,7 +64,7 @@ public class AuditDaoImpl extends DaoImpl<AuditPO> implements AuditDao{
 						query.alias("decoration.supervisorPO", "supervisor");
 						query.add(query.getCriterion("supervisor.userId", data, op));
 					}else if("orderType".equals(field)){
-						query.add(query.getCriterion("decoration.type", Short.valueOf(data), op));
+						query.add(query.getCriterion("decoration.typeness", Short.valueOf(data), op));
 					}else if("salesmanType".equals(field)){
 						query.add(query.getCriterion("decoration.salesmanType", data, op));
 					}else if("auditer".equals(field)){
@@ -78,29 +75,9 @@ public class AuditDaoImpl extends DaoImpl<AuditPO> implements AuditDao{
 						query.alias("designer.dept", "designerDept");
 						query.add(query.getCriterion("designerDept.no", data, op));
 					}else if("createTimeDateRange".equals(field)){
-						String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-						String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-						
-						Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-						Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-						
-						Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-						Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-						
-						query.add(query.getCriterion("decoration.createTime", eTimestamp, "le"));
-						query.add(query.getCriterion("decoration.createTime", sTimestamp, "ge"));
+						query.timeranges("decoration.createTime", "decoration.createTime", data);
 					}else if("signTimeDateRange".equals(field)){
-						String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-						String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-						
-						Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-						Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-						
-						Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-						Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-						
-						query.add(query.getCriterion("decoration.contractTime", eTimestamp, "le"));
-						query.add(query.getCriterion("decoration.contractTime", sTimestamp, "ge"));
+						query.timeranges("decoration.contractTime", "decoration.contractTime", data);
 					}else if("status".equals(field)){
 						query.add(query.getCriterion("decoration.status", Short.valueOf(data), op));
 					}else if("auditStatus".equals(field)){
@@ -110,17 +87,7 @@ public class AuditDaoImpl extends DaoImpl<AuditPO> implements AuditDao{
 							query.add(Restrictions.isNull("auditer"));
 						}
 					}else if("auditTime".equals(field)){
-						String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-						String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-						
-						Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-						Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-						
-						Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-						Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-						
-						query.add(query.getCriterion("auditTime", eTimestamp, "le"));
-						query.add(query.getCriterion("auditTime", sTimestamp, "ge"));
+						query.timeranges("auditTime", "auditTime", data);
 					}
 				}				
 			}				

@@ -16,7 +16,18 @@
 		{"key":"14","value":"客源转装修单"},
         {"key":"15","value":"归属"},
 		{"key":"16","value":"装修满减修改"},
-        {"key":"17","value":"客源初审"}
+        {"key":"17","value":"客源初审"},
+        {"key":"18","value":"销售不退定金"}
+    ],
+    "approvalStatus": [
+        {"key":"0","value":"等待"},
+        {"key":"1","value":"通过"},
+        {"key":"2","value":"拒绝"},
+        {"key":"3","value":"审批中"},
+        {"key":"4","value":"失败"},
+        {"key":"5","value":"客户确认"},
+        {"key":"6","value":"客户待确认"},
+        {"key":"7","value":"客户拒绝"}
     ],
     "errorCode": 0,
     "errorMsg": null

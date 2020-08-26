@@ -26,6 +26,16 @@ public class ApprovalCustomerOriginTDecorationVO implements Serializable {
 	private Short resourceType;
 
 	private UserBaseVO salesman;
+	
+	private short typeness;
+
+	public short getTypeness() {
+		return typeness;
+	}
+
+	public void setTypeness(short typeness) {
+		this.typeness = typeness;
+	}
 
 	public Long getAcodid() {
 		return acodid;

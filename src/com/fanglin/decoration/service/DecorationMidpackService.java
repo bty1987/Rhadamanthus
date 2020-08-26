@@ -16,6 +16,8 @@ import com.fanglin.decoration.vo.DecorationMidpackVO;
 
 public interface DecorationMidpackService {
 
+	public DecorationMidpackVO queryDecorationMidpack(DecorationMidpackVO decorationMidpackVO);
+	
 	public int makeDecorationMidpack(DecorationMidpackVO decorationMidpackVO, String userId) throws FLException;
-
+	
 }

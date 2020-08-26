@@ -14,7 +14,13 @@
         
         modals: {},
         items: {},
+        postData: null,
+        isExpert: true
     };
+    
+    var type = params['urlLoadParams'].type
+    
+    type == 'expert' ? (user.postData = 'userExpertPostData', user.isExpert = true) : (user.postData = 'userPostData', user.isExpert = false);
 
     user.simpleAddUserModal = com.focusPage("#simpleAddUserModal");
     user.simpleAddUserModal.on('hide.bs.modal',function(e){
@@ -28,9 +34,6 @@
     user.modals.importModal = com.initForm("importModal", "导入", [{"id": "import", "type": "div"}], []);
     user.items.import = com.focusPage("#import");
     
-    user.modals.userExpModal = com.initForm("userExpModal", "工作经历", [{"id": "userException", "type": "div"}], []);
-    user.items.userException = com.focusPage("#userException");
-    
     user.modals.ddModal = com.initForm("ddModal", "钉钉部门", [{"id": "tree3", "type": "div", "clazz": "tree"}], [{"id": "savebtn", "clazz": "btn btn-primary", "name": "保存"}]);
     user.items.tree3 = com.focusPage("#tree3");
     
@@ -39,7 +42,6 @@
              {"id": "userName", "name": "姓名", "type": "text", "validator": "v_required"},
              {"id": "currentName", "name": "现用名", "type": "text", "validator": "v_required"},
              {"id": "gender", "name": "性别", "type": "switch", "validator": "v_required", "clazz": "gender"},
-             {"id": "birthday", "name": "出生日期", "type": "text", "validator": "v_required"},
              {"id": "identity", "name": "身份证号", "type": "text", "validator": "v_required v_identity"},
              {"id": "phone", "name": "手机号", "type": "text", "validator": "v_required v_phones"},
              
@@ -79,6 +81,10 @@
                     var $updateDD = $('<a></a>').addClass('btn btn-minier btn-inverse').html('同步钉钉信息');
                     var $deleteDD = $('<a></a>').addClass('btn btn-minier btn-danger').html('从钉钉删除');
                     var $userexception = $('<a></a>').addClass('btn btn-minier btn-pink').html('工作经历');
+                    var $btnlookContract= $('<a></a>').addClass('btn btn-minier btn-purple').html('查看合同');
+					var $btnlookEducation= $('<a></a>').addClass('btn btn-minier btn-yellow').html('教育信息');
+					var $btnlookOperation= $('<a></a>').addClass('btn btn-minier btn-blue').html('工作信息');
+					var $btnDetail= $('<a></a>').addClass('btn btn-minier btn-success').html('简单查看');
 
                     var propertyArr = [
                         ["员工编号:", v.userId, "grey"],
@@ -111,6 +117,7 @@
                     //查看
                     $btnCheck.click(function(){
                         params.tempUserId = v.userId;
+                        params.isExpert = user.isExpert;
                         com.popup4page("#layerPopUp", api.index.userViewIndex.url, "查看", null, function () {
                             userSeacher.doSearch();
                         });
@@ -119,6 +126,8 @@
 
                     $btnEdit.click(function(){
                         params.tempUserId = v.userId;
+                        params.type = 1;
+                        params.isExpert = user.isExpert;
                         com.popup4page("#layerPopUp", api.index.userEditIndex.url, "编辑", null, function () {
                             userSeacher.doSearch();
                         });
@@ -290,6 +299,37 @@
                               }, null, false);
                         });
                     });
+                    
+					$btnlookContract.click(function(){
+						params.uid = v.uid;
+						com.popup4page("#layerPopUp", "views/personnel/userContract.html", "合同信息", null, function () {
+                            userSeacher.doSearch();
+                        });
+					});
+					
+					$btnlookEducation.click(function(){
+						params.uid = v.uid;
+						com.popup4page("#layerPopUp", "views/personnel/userEducation.html", "教育信息", null, function () {
+                            userSeacher.doSearch();
+                        });
+					});
+					
+					$btnlookOperation.click(function(){
+						params.uid = v.uid;
+						com.popup4page("#layerPopUp", "views/personnel/userOperation.html", "工作信息", null, function () {
+                            userSeacher.doSearch();
+                        });
+					});
+					
+					$btnDetail.click(function(){
+						params.tempUserId = v.userId;
+						params.uid = v.uid;
+						params.isExpert = user.isExpert;
+						com.popup4page("#layerPopUp", "views/personnel/userDetail.html", "人员信息", null, function () {
+                            userSeacher.doSearch();
+                        });
+					});
+                    
                     //删除点击事件
                     $deleteDD.click(function(){
                         var btn = $(this);
@@ -316,43 +356,13 @@
                     });
 
                     $userexception.unbind().bind('click',function(){
-                        user.modals.userExpModal.modal('show');
-                        user.items.userException.html("");
-
-                        var $uli = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-                       
-                        var  userExperiences = null;
-
-                        com.post(api.personel.queryUserExperienceByUid,{"userExperience.uid":v.uid},function(res) {
-                            userExperiences = res.userExperiences;
-                        }, null, false);
-
-                        if(userExperiences && userExperiences.length){
-                            $.each(userExperiences, function(ind, val){
-                                var $liLi = $('<li></li>').addClass('item-blue clearfix');
-                                var $ulPro = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                                var $h2 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + val.type));
-
-                                var ecperienceArr = [
-                                    ["类型:", val.type, "red"],
-                                    ["备注:", val.comment, "grey"],
-                                    ["调动时间:",val.createTime,"green"]
-                                ];
-
-                                $.each(ecperienceArr, function (index,value) {
-                                    var $liPro = $('<li></li>');
-                                    $('<strong></strong>').html(value[0]).appendTo($liPro);
-                                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liPro);
-                                    $liPro.appendTo($ulPro);
-                                });
-
-                                $liLi.append($h2).append($ulPro).appendTo($uli)
-                            })
-                        }
-                        $uli.appendTo(user.items.userException);
+                    	params.uid = v.uid;
+						com.popup4page("#layerPopUp", "views/personnel/userExperience.html", "工作经历", null, function () {
+                            userSeacher.doSearch();
+                        });
                     });
                     
-                    $divBtnWrap.append($qrcode).append($btnCheck).append($btnEdit).append($addDD).append($updateDD).append($deleteDD).append($userexception).appendTo($h3);
+                    $divBtnWrap.append($qrcode).append($btnCheck).append($btnEdit).append($addDD).append($updateDD).append($deleteDD).append($userexception).append($btnlookContract).append($btnlookEducation).append($btnlookOperation).append($btnDetail).appendTo($h3);
 
                     $liLine.append($h3).append($ulProperty).appendTo($ul);
                 });
@@ -367,13 +377,13 @@
             }
         }
     })();
-    var _condArr = ['userId', 'userName', 'roleId', 'deptType', 'deptId', 'userstatus', 'identity', 'phone'];
+    var _condArr = ['userId', 'userName', 'roleId', 'deptId', 'userstatus', 'identity', 'phone'];
 
     var userSeacher = new Searcher();
 
     userSeacher.init( _condArr, "condList", api.personel.pageUser, function(data){
         displayFunc.init('resultList', data);
-    }, "pagenation", "userPostData", null, false, null, function(){
+    }, "pagenation", user.postData, null, false, null, function(){
         var $addaS = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addUserSimple').css("margin", "0px 3px");
         var $addiS = $('<i></i>').addClass('icon-plus bigger-110').appendTo($addaS);
         var $addspanS = $('<span></span>').text('添加-简化').appendTo($addaS);
@@ -391,6 +401,8 @@
 
     com.focusPage('a[name="addUser"]','#pagenation').click(function(){
         params.tempUserId = null;
+        delete params.type;
+        params.isExpert = user.isExpert;
         com.popup4page("#layerPopUp", api.index.userEditIndex.url, "添加", null, function () {
             com.closePopup();
             userSeacher.doSearch();
@@ -447,7 +459,6 @@
     user.items.userName = com.focusPage("#userName");
     user.items.currentName = com.focusPage("#currentName");
     user.items.gender = com.focusPage("#gender").switchBtn("gender");
-    user.items.birthday = com.focusPage("#birthday");
     user.items.identity = com.focusPage("#identity");
     user.items.phone = com.focusPage("#phone");
     user.items.deptSel = com.focusPage("#deptSel");
@@ -467,8 +478,6 @@
 
     user.items.statusSel = com.focusPage("#statusSel").bindData(user.statusType,"key", "value");
 
-    com.datetime(com.focusPage("#birthday"));
-
     function saveData() {
         if( "" == user.items.loginId.val().trim() || user.items.loginId.val() == null) {
             com.showTip(com.focusPage("#loginId"), "用户名不能为空", "right");
@@ -480,7 +489,7 @@
                 "userInfo.user.userName": user.items.userName.val().trim(),
                 "userInfo.user.currentName": user.items.currentName.val(),
                 "userInfo.user.gender":  com.genderType[user.items.gender.prop("checked")],
-                "userInfo.user.birthday": user.items.birthday.val(),
+                "userInfo.gender": user.items.gender.prop("checked") == true ? 0 : 1,
                 "userInfo.user.identity": user.items.identity.val(),
                 "userInfo.user.phone": user.items.phone.val(),
                 "userInfo.user.loginId": user.items.loginId.val(),
@@ -488,23 +497,27 @@
                 "userInfo.user.dept.did": user.items.deptSel.val(),
                 "userInfo.user.duty.did": user.items.dutySel.val(),
                 "userInfo.user.status": user.items.statusSel.val(),
-                "userInfo.employWay": "",
+                "userInfo.salary": 0,
+                "userInfo.fangliner.userId": "",
                 "userInfo.entryTime": new Date().getFullYear() + "-" + utils.accAdd(new Date().getMonth(), 1) + "-" + new Date().getDate(),
-                "userInfo.political": "",
-                "userInfo.isMarried": "",
-                "userInfo.isBirth": "",
-                "userInfo.isHouseLoan": "",
-                "userInfo.isCarLoan": "",
-                "userInfo.householdType": "",
                 "userInfo.hometownAddress": "",
                 "userInfo.address": "",
-                "userInfo.isContract": "",
-                "userInfo.isInsurance": "",
                 "userInfo.bank": "",
-                "userInfo.bankCardNum": ""
+                "userInfo.bankCardNum": "",
+                "userInfo.isMarried": 1,
+                "userInfo.isBirth": 1,
+                "userInfo.isHouseLoan": 1,
+                "userInfo.isCarLoan": 1,
+                "userInfo.isCarID": 1,
+                "userInfo.isPassID": 1,
+                "userInfo.isHMID": 1,
+                "userInfo.isTWID": 1,
+                "userInfo.isPresentGraduate": 1,
+                "userInfo.isInsurance": 1
             };
 
             com.post(api.personel.addUser, options, function(res){
+            	
                 com.showAlert(com.info, "操作成功");
                 user.simpleAddUserModal.modal("hide");
             });

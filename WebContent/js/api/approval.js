@@ -43,6 +43,14 @@ $.extend(api, {
                 args: ["num","money"]
             }]
         },
+        queryApprovalCustomerOrigin: {
+            url: "queryApprovalCustomerOrigin.do",
+            type:"query",
+            tranargs:[{
+                result:"approvalCustomerOrigin-customerOrigin-house",
+                args: ["buildArea"]
+            }]
+        },
         queryApprovalCustomerOriginTDecoration: {
             url: "queryApprovalCustomerOriginTDecoration.do",
             type:"query",
@@ -122,12 +130,17 @@ $.extend(api, {
                 args: ["approvalDecorationHolonomy.materialPrice"]
             }
         },
+        
         submitApprovalForCustomerOrigin: {url: "submitApprovalForCustomerOrigin.do"},
 
         approveApproval: {url: "approveApproval.do"},
+        affirmApproval: {url: "affirmApproval.do"},
         refuseApproval: {url: "refuseApproval.do"},
         deleteApprover: {url: "deleteApprover.do"},
-        addApprover: {url: "addApprover.do"}
-
-    }
+        addApprover: {url: "addApprover.do"},
+        submitApprovalForSalesDayment: {url: "submitApprovalForSalesDayment.do"},
+        approveForSalesDayment: {url: "approveForSalesDayment.do"},
+        refuseForSalesDayment: {url: "refuseForSalesDayment.do"}
+    }  
 });
+

@@ -64,14 +64,6 @@ public class ConstructionInfoAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "sendConstructionInfoForConfirm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String sendConstructionInfoForConfirm() throws FLException {
-
-		constructionInfoService.sendConstructionInfoForConfirm(constructionInfo);
-
-		return SUCCESS;
-	}
-
 	public ConstructionInfoVO getConstructionInfo() {
 		return constructionInfo;
 	}

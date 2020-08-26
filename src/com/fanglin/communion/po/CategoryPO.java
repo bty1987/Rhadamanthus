@@ -27,6 +27,8 @@ public class CategoryPO implements java.io.Serializable {
 	private String kino;
 
 	private String kiname;
+	
+	private short type;
 
 	public CategoryPO() {
 		super();
@@ -82,6 +84,15 @@ public class CategoryPO implements java.io.Serializable {
 
 	public void setKiname(String kiname) {
 		this.kiname = kiname;
+	}
+	
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
 	}
 
 }

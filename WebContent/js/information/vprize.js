@@ -11,8 +11,8 @@ jQuery(function($) {
 		items : {
 			vactivity: com.focusPage("#vactivity"),
 			name: com.focusPage("#name"),
-			price: com.focusPage("#price")
-
+			price: com.focusPage("#price"),
+			unit: com.focusPage("#unit")
 		},
 
 		vpid: null
@@ -53,6 +53,7 @@ jQuery(function($) {
 			var propertyArr = [
 				["名称: ", v.name, "grey"],
 				["价格: ", v.price, "blue"],
+				["单位: ", v.unit, "red"],
 				["状态: ", v.status == 0 ? "启用" : "禁用", "red"]
 			];
 
@@ -70,10 +71,11 @@ jQuery(function($) {
 			$btnViews.click(function(){
 				vprize.items.vactivity.attr("disabled", "disabled");
 				vprize.vpid = v.vpid;
-				
+
 				vprize.items.vactivity.val(v.vaid);
 				vprize.items.name.val(v.name);
 				vprize.items.price.val(v.price);
+				vprize.items.unit.val(v.unit);
 				
 				vprize.modals.addVprizeModal.modal("show");
 			});
@@ -126,7 +128,8 @@ jQuery(function($) {
 		var options = {
 			'vprize.vaid': vprize.items.vactivity.val(),
 			'vprize.name': vprize.items.name.val(),
-			'vprize.price': vprize.items.price.val()
+			'vprize.price': vprize.items.price.val(),
+			'vprize.unit': vprize.items.unit.val()
 		};
 
 		if(vprize.vpid){

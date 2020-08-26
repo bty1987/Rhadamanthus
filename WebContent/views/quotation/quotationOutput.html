@@ -14,12 +14,11 @@
 	<script src="../../assets/ace/js/jquery.gritter.min.js"></script>
 	<script src="../../assets/ace/js/ace-elements.js"></script>
 	<script src="../../assets/ace/js/ace.js"></script>
-	<script src="../../js/utils/quotationUtils.js"></script>
 	<script src="../../js/quotation/quotationOutput.js"></script>
 	<link rel="stylesheet" href="../../css/main.css" />
 
 	<title>打印收据</title>
-	
+
 
 
 	<style>
@@ -33,7 +32,7 @@
 		mso-font-pitch: variable;
 		mso-font-signature: 3 680460288 22 0 262145 0;
 	}
-	
+
 	@font-face {
 		font-family: 宋体;
 		panose-1: 2 1 6 0 3 1 1 1 1 1;
@@ -43,7 +42,7 @@
 		mso-font-pitch: variable;
 		mso-font-signature: 3 680460288 22 0 262145 0;
 	}
-	
+
 	@font-face {
 		font-family: Calibri;
 		panose-1: 2 15 5 2 2 2 4 3 2 4;
@@ -52,7 +51,7 @@
 		mso-font-pitch: variable;
 		mso-font-signature: -536870145 1073786111 1 0 415 0;
 	}
-	
+
 	@font-face {
 		font-family: Simsun;
 		panose-1: 0 0 0 0 0 0 0 0 0 0;
@@ -63,7 +62,7 @@
 		mso-font-pitch: auto;
 		mso-font-signature: 0 0 0 0 0 0;
 	}
-	
+
 	@font-face {
 		font-family: "\@宋体";
 		panose-1: 2 1 6 0 3 1 1 1 1 1;
@@ -95,7 +94,7 @@
 		mso-bidi-theme-font: minor-bidi;
 		mso-font-kerning: 1.0pt;
 	}
-	
+
 	h2 {
 		mso-style-priority: 9;
 		mso-style-unhide: no;
@@ -111,7 +110,7 @@
 		font-family: 宋体;
 		mso-bidi-font-family: 宋体;
 	}
-	
+
 	h4 {
 		mso-style-priority: 9;
 		mso-style-unhide: no;
@@ -127,7 +126,7 @@
 		font-family: 宋体;
 		mso-bidi-font-family: 宋体;
 	}
-	
+
 	span.2Char {
 		mso-style-name: "标题 2 Char";
 		mso-style-priority: 9;
@@ -144,7 +143,7 @@
 		mso-font-kerning: 0pt;
 		font-weight: bold;
 	}
-	
+
 	span.4Char {
 		mso-style-name: "标题 4 Char";
 		mso-style-priority: 9;
@@ -161,12 +160,12 @@
 		mso-font-kerning: 0pt;
 		font-weight: bold;
 	}
-	
+
 	span.GramE {
 		mso-style-name: "";
 		mso-gram-e: yes;
 	}
-	
+
 	.MsoChpDefault {
 		mso-style-type: export-only;
 		mso-default-props: yes;
@@ -179,7 +178,7 @@
 		mso-page-border-surround-header: no;
 		mso-page-border-surround-footer: no;
 	}
-	
+
 	@page WordSection1 {
 		size: 595.3pt 841.9pt;
 		margin: 72.0pt 90.0pt 72.0pt 90.0pt;
@@ -188,7 +187,7 @@
 		mso-paper-source: 0;
 		layout-grid: 15.6pt;
 	}
-	
+
 	div.WordSection1 {
 		page: WordSection1;
 	}
@@ -203,42 +202,42 @@
 	</div>
 
 <!--	<script type="text/javascript">
-	
+
 		var server = "http://" + document.location.host + "/";
 		var versionCode = "";
 		var cookies = document.cookie.split(";");
-		
+
 		for(var i=0;i<cookies.length;i++){
 			var cookie = cookies[i];
-			
+
 			if(cookie.indexOf("versionCode") != -1){
 				versionCode = cookie.split("=")[1];
 			}else if(cookie.indexOf("authentication") != -1){
 				window.authentication = cookie.split("=")[1];
 			}
 		}
-		
+
 		var jses = "";
-		
+
 		if(!window.jQuery){
 			jses += '<script src="' + server + 'assets/altogether/js/jquery-2.0.3.min.js?version=' + versionCode + '"><\/script>';
 		}
-	
+
 		if("ontouchend" in document){
 			jses += '<script src="' + server + 'assets/ace/js/jquery.mobile.custom.min.js?version=' + versionCode + '"><\/script>';
 		}
-		
+
 		jses += '<script src="' + server + 'assets/ace/js/bootstrap.min.js?version=' + versionCode + '"><\/script>';
 		jses += '<script src="' + server + 'assets/ace/js/bootbox.min.js?version=' + versionCode + '"><\/script>';
-		
+
 		jses += '<script src="' + server + 'assets/ace/js/date-time/moment.min.js?version=' + versionCode + '"><\/script>';
 		jses += '<script src="' + server + 'assets/ace/js/date-time/daterangepicker.min.js?version=' + versionCode + '"><\/script>';
-		
+
 		jses += '<script src="' + server + 'assets/ace/js/jquery.gritter.min.js?version=' + versionCode + '"><\/script>';
-		
+
 		jses += '<script src="' + server + 'assets/ace/js/ace-elements.js?version=' + versionCode + '"><\/script>';
 		jses += '<script src="' + server + 'assets/ace/js/ace.js?version=' + versionCode + '"><\/script>';
-		
+
 		jses += '<script src="' + server + 'js/com/api.js?version=' + versionCode + '"><\/script>';
 		jses += '<script src="' + server + 'js/com/config.js?version=' + versionCode + '"><\/script>';
 		jses += '<script src="' + server + 'js/com/server.js?version=' + versionCode + '"><\/script>';
@@ -247,10 +246,10 @@
 		jses += '<script src="' + server + 'js/com/params.js?version=' + versionCode + '"><\/script>';
 		jses += '<script src="' + server + 'js/utils/quotationUtils.js?version=' + versionCode + '"><\/script>';
 		jses += '<script src="' + server + 'js/quotation/quotationOutput.js?version=' + versionCode + '"><\/script>';
-		
+
 		document.write(jses);
 	</script>-->
-	
+
 </body>
 
 </html>

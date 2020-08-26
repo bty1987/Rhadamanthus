@@ -14,6 +14,7 @@ $(function(){
             startTime : com.focusPage("#startTime"),
             endTime : com.focusPage("#endTime"),
             types : com.focusPage("#type"),
+            multiple : com.focusPage("#multiple"),
             content : com.focusPage("#content")
         },
 
@@ -63,7 +64,6 @@ $(function(){
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-            var $btnDelStatus = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
             var $default = $('<a></a>').addClass('btn btn-minier btn-warning').html('默认');
             var $btnView = $('<a></a>').addClass('btn btn-minier btn-inverse').html("\u6d3b\u52a8\u7269\u54c1");// 活动物品
 
@@ -77,9 +77,10 @@ $(function(){
                 ["开始时间:", v.startTime, "green"],
                 ["结束时间:", v.endTime, "green"],
                 ["状态:", v.status == 0 ? "有效":"无效", "red"],
-                ["类型:",activity.types[v.type],"red" ],
-                ["默认标识:",v.defaults == 0 ? "默认" : "普通", "grey" ],
-                ["说明:",v.content, "grey"]
+                ["类型:",activity.types[v.type], "red" ],
+                ["倍数:", v.multiple, "red" ],
+                ["默认标识:", v.defaults == 0 ? "默认" : "普通", "grey" ],
+                ["说明:", v.content, "grey"]
             ];
 
             $.each(propertyArr, function (index,value) {
@@ -90,7 +91,7 @@ $(function(){
             });
 
             $invalid.append($statusSwitch).append($span);
-            $divBtnWrap.append($btnEdit).append($btnView).append($invalid).append($btnDelStatus).append($default).appendTo($h3);
+            $divBtnWrap.append($btnEdit).append($btnView).append($invalid).append($default).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
@@ -102,21 +103,13 @@ $(function(){
                 activity.items.activityName.val(v.name);
                 activity.items.startTime.val(v.startTime.substring(0, 10)).attr("disabled", "disabled");
                 activity.items.types.val(v.type).attr("disabled", "disabled");
+                activity.items.multiple.val(v.multiple).attr("disabled", "disabled");
                 activity.items.endTime.val(v.endTime.substring(0, 10));
                 activity.items.content.val(v.content);
 
                 activity.modals.activityModal.modal("show");
 
             });
-
-            $btnDelStatus.click(function(){
-				com.showConfirm("确定删除吗?", function(reslut) {
-				    com.post(api.information.updateActivityForStatus, {"activity.aid": v.aid, "activity.status": 2}, function(res){
-                        activitySeacher.doSearch();
-					    com.showAlert(com.info, "操作成功");
-                	});
- 				});           
-			 });
 
             !v.status && $statusSwitch.prop("checked", true);
 
@@ -181,6 +174,7 @@ $(function(){
         activity.items.activityName.removeAttr("disabled", "disabled");
         activity.items.startTime.removeAttr("disabled", "disabled");
         activity.items.types.removeAttr("disabled", "disabled");
+        activity.items.multiple.removeAttr("disabled", "disabled");
         activity.modals.activityModal.modal("show");
     });
 
@@ -200,6 +194,7 @@ $(function(){
             "activity.startTime": activity.items.startTime.val(),
             "activity.endTime": String(activity.items.endTime.val()).substring(0,10)+ " 23:59:59",
             "activity.type" : activity.items.types.val(),
+            "activity.multiple" : activity.items.multiple.val(),
             "activity.content": activity.items.content.val()
         };
 

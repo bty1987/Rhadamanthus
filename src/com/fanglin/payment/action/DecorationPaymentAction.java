@@ -89,18 +89,10 @@ public class DecorationPaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "queryDecorationPayment", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDecorationPayment() throws FLException{
-		
-		decorationPayments = decorationPaymentService.queryDecorationPayment(getFilters(), queryCompany());
-		
-		return SUCCESS;
-	}
-	
 	@Action(value = "queryDecorationPaymentByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDecorationPaymentByOrderId(){
+	public String queryDecorationPaymentByOrderId() throws FLException{
 		
-		decorationPayments = decorationPaymentService.queryDecorationPaymentByOrderId(decorationPayment);
+		decorationPayments = decorationPaymentService.queryDecorationPaymentByOrderId(decorationPayment, getFilters(), queryCompany());
 		
 		return SUCCESS;
 	}

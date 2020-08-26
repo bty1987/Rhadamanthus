@@ -44,6 +44,11 @@ public class WorkerBalancePO implements Serializable {
 	public WorkerBalancePO() {
 		super();
 	}
+	
+	public WorkerBalancePO(UserPO user) {
+		super();
+		this.user = user;
+	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)

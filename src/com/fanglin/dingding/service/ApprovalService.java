@@ -48,11 +48,11 @@ public class ApprovalService {
 		if (copyPosition != null && !"".equals(copyPosition)) {
 			params.put("cc_position", copyPosition);
 		}
-		
-		if (approver != null && !"".equals(approver)){
+
+		if (approver != null && !"".equals(approver)) {
 			params.put("approvers", approver);
 		}
-		
+
 		params.put("process_code", processCode);
 		params.put("originator_user_id", sender);
 		params.put("dept_id", senderUser.getDepartment().get(0));
@@ -69,7 +69,7 @@ public class ApprovalService {
 			return response.getString("process_instance_id");
 		} else {
 			System.out.println(url);
-			System.out.println(String.format("%d-%s", response.getInteger("errorCode"), response.getString("errorMsg")));
+			System.out.println(String.format("%d-%s", response.getInteger("errcode"), response.getString("errmsg")));
 
 			return "";
 		}

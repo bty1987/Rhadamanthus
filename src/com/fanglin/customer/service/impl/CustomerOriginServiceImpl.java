@@ -336,11 +336,19 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		}
 
 		CustomerPO customerPO = customerDao.get(customerOriginVO.getCustomer().getCid());
+		
+		if (customerPO == null) {
+			throw new FLException(130002, "客户不存在");
+		}
 
 		customerOriginPO.setCustomer(customerPO);
 		customerOriginPO.setPhone(customerOriginVO.getPhone());
 
 		HousePO housePO = houseDao.get(customerOriginVO.getHouse().getHid());
+		
+		if (housePO == null) {
+			throw new FLException(130017, "房产不存在");
+		}
 
 		customerOriginPO.setHouse(housePO);
 		customerOriginPO.setVillage(housePO.getVillage());
@@ -349,7 +357,6 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		UserPO designer = userDao.queryUserByUserId(customerOriginVO.getDesigner().getUserId());
 
 		customerOriginPO.setDesigner(designer);
-		customerOriginPO.setSalesmanType(customerOriginVO.getSalesmanType());
 
 		customerOriginDao.update(customerOriginPO);
 

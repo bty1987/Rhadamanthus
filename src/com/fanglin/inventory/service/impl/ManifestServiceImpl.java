@@ -657,7 +657,7 @@ public class ManifestServiceImpl implements ManifestService {
 		
 		String content = String.format("辅料单:%s,已出库", accessoriesPO.getNo());
 		
-		messageService.sendMessage(accessoriesPO.getCreater().getUserId(), accessoriesPO.getApprover().getUserId(), content, MessagePO.TYPE_SEND_VISIT_INT, company);
+		messageService.sendMessage(accessoriesPO.getCreater().getUserId(), accessoriesPO.getApprover().getUserId(), content, MessagePO.TYPE_SEND_VISIT_INT, MessagePO.SUBTYPE_ACCESSORIES_INT,accessoriesPO.getAid(), company);
 
 		return 0;
 	}
@@ -685,7 +685,7 @@ public class ManifestServiceImpl implements ManifestService {
 
 			accessoriesPO = accessoriesDao.get(accessoriesVO.getAid());
 
-			if (accessoriesPO.getStatus() != AccessoriesPO.STATUS_BATCHOUT_INT) {
+			if (accessoriesPO.getStatus() != AccessoriesPO.STATUS_BATCHOUT_INT && accessoriesPO.getStatus() != AccessoriesPO.STATUS_DELIVER_INT) {
 				throw new FLException(260024, "辅料单状态不可操作");
 			}
 

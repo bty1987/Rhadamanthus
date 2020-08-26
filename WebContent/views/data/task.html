@@ -92,8 +92,107 @@
             </div>
         </div>
     </div>
-</div>
+    <div class="modal fade" id="addtaskParamModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span><span class="sr-only">Close</span>
+                    </button>
+                    <h4 class="modal-title">参数</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="taskName">字段编号</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="taskParamtpid" class="col-xs-10 col-sm-5 v_required"data-toggle="popover" data-trigger='manual' maxlength="32"/>
+                            </div>
+                        </div>
 
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="taskName">任务编号</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="taskParamtid" class="col-xs-10 col-sm-5 v_required"data-toggle="popover" data-trigger='manual' maxlength="32"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="taskName">编号</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="taskParamno" class="col-xs-10 col-sm-5 v_required"data-toggle="popover" data-trigger='manual' maxlength="32"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="taskName">任务名</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="taskParamname" class="col-xs-10 col-sm-5 v_required"data-toggle="popover" data-trigger='manual' maxlength="32"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="taskName">字段</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="taskParamparam" class="col-xs-10 col-sm-5 v_required"data-toggle="popover" data-trigger='manual' maxlength="32"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="taskName">别名</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="taskParamalias" class="col-xs-10 col-sm-5 v_required"data-toggle="popover" data-trigger='manual' maxlength="32"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="taskName">类型</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="taskParamtype" class="col-xs-10 col-sm-5 v_required"data-toggle="popover" data-trigger='manual' maxlength="32"/>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="taskName">处理过程</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="taskParamhandle" class="col-xs-10 col-sm-5 v_required"data-toggle="popover" data-trigger='manual' maxlength="32"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="taskName">状态</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="taskParamstatus" class="col-xs-10 col-sm-5 v_required"data-toggle="popover" data-trigger='manual' maxlength="32"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="taskName">排序</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="taskParamsort" class="col-xs-10 col-sm-5 v_required"data-toggle="popover" data-trigger='manual' maxlength="32"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="taskName">备注</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="taskParamcomment" class="col-xs-10 col-sm-5 v_required"data-toggle="popover" data-trigger='manual' maxlength="32"/>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+<!--                    <button type="button" id="addTaskBtn" class="btn btn-default">保存</button>
+                    <button type="button" id="cancelTaskBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="stockRecordPopUp" class="portlet box page-content"></div>
 <script type="text/javascript">
     $.loadScript(['js/data/task.js']);
 </script>

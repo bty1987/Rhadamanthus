@@ -27,14 +27,25 @@ import com.fanglin.approval.vo.ApprovalCustomerOriginVO;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.po.VillagePO;
+import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.communion.vo.DepartmentTypeVO;
+import com.fanglin.communion.vo.DepartmentVO;
+import com.fanglin.communion.vo.DutyVO;
+import com.fanglin.communion.vo.HouseVO;
+import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.dao.CustomerOriginDao;
 import com.fanglin.customer.po.CustomerOriginPO;
+import com.fanglin.customer.vo.CustomerOriginVO;
 import com.fanglin.decoration.service.impl.DecorationServiceImpl;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.personel.vo.UserVO;
+import com.fanglin.system.vo.CityProperVO;
+import com.fanglin.system.vo.CityVO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("approvalCustomerOriginService")
@@ -60,10 +71,55 @@ public class ApprovalCustomerOriginServiceImpl implements ApprovalCustomerOrigin
 	private MessageService messageService;
 
 	@Override
+	public ApprovalCustomerOriginVO queryApprovalCustomerOrigin(ApprovalVO approvalVO) throws FLException {
+
+		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
+
+		if (approvalPO == null) {
+			throw new FLException(240009, "审批信息不存在");
+		}
+
+		ApprovalCustomerOriginPO approvalCustomerOriginPO = approvalCustomerOriginDao.queryCustomerOriginByAid(approvalPO.getAid());
+
+		if (approvalCustomerOriginPO == null) {
+			throw new FLException(240001, "审批信息不存在");
+		}
+
+		CustomerOriginPO customerOriginPO = customerOriginDao.get(approvalCustomerOriginPO.getCsid());
+
+		if (customerOriginPO == null) {
+			throw new FLException(330001, "客源不存在");
+		}
+
+		CustomerOriginVO customerOriginVO = new CustomerOriginVO(new VillageVO(new CityProperVO()), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new CustomerVO(), new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())));
+
+		BeanUtil.copyProperties(customerOriginPO, customerOriginVO, Arrays.asList("village", "creater", "belonger", "department", "region", "customer", "house", "designer"));
+
+		BeanUtil.copyProperties(customerOriginPO.getCustomer(), customerOriginVO.getCustomer());
+		BeanUtil.copyProperties(customerOriginPO.getHouse(), customerOriginVO.getHouse(), Arrays.asList("village"));
+		BeanUtil.copyProperties(customerOriginPO.getDesigner(), customerOriginVO.getDesigner(), Arrays.asList("dept", "duty"));
+
+		BeanUtil.copyProperties(customerOriginPO.getHouse().getVillage(), customerOriginVO.getHouse().getVillage(), Arrays.asList("cityProper"));
+		BeanUtil.copyProperties(customerOriginPO.getHouse().getVillage().getCityProper(), customerOriginVO.getHouse().getVillage().getCityProper(), Arrays.asList("city"));
+		BeanUtil.copyProperties(customerOriginPO.getHouse().getVillage().getCityProper().getCity(), customerOriginVO.getHouse().getVillage().getCityProper().getCity(), Arrays.asList("region"));
+
+		if (customerOriginPO.getDesigner() != null) {
+			BeanUtil.copyProperties(customerOriginPO.getDesigner().getDept(), customerOriginVO.getDesigner().getDept(), Arrays.asList("type", "fatherDept", "manager"));
+			BeanUtil.copyProperties(customerOriginPO.getDesigner().getDept().getFatherDept(), customerOriginVO.getDesigner().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
+		}
+
+		ApprovalCustomerOriginVO approvalCustomerOriginVO = new ApprovalCustomerOriginVO();
+
+		approvalCustomerOriginVO.setCustomerOrigin(customerOriginVO);
+
+		return approvalCustomerOriginVO;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int submitApprovalForCustomerOrigin(ApprovalVO approvalVO, ApprovalCustomerOriginVO approvalCustomerOriginVO, String userId, int company) throws FLException {
 
-		List<Short> status = Arrays.asList(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_STATUS_APPROVE_INT);
+		List<Short> status = Arrays.asList(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_STATUS_APPROVE_INT, ApprovalPO.APPROVAL_STATUS_CONFIRM_INT, ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT, ApprovalPO.APPROVAL_STATUS_REJECT_INT);
 
 		Long csid = approvalCustomerOriginVO.getCsid();
 
@@ -109,7 +165,7 @@ public class ApprovalCustomerOriginServiceImpl implements ApprovalCustomerOrigin
 		customerOriginPO.setStatus(CustomerOriginPO.STATUS_FIRSTAPPROVAL_INT);
 
 		customerOriginDao.update(customerOriginPO);
-		
+
 		String contents = String.format("客源初审提交,客户名:%s,楼盘:%s %s %s %s,批注:%s.", customerOriginPO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber(), approvalPO.getAnnotate());
 
 		messageService.sendMessage(receiver.getUserId(), null, contents, MessagePO.TYPE_SEND_APPROVAL_INT, designer.getCompany());

@@ -72,27 +72,21 @@ public class WorkerSalaryImportService implements com.fanglin.imports.service.Wo
 			List<String> _salary = excels.get(i);
 
 			String userid = _salary.get(0);
-			long salary = Double.valueOf(_salary.get(2)).longValue();
-			short subtype = Double.valueOf(_salary.get(3)).shortValue();
-			String comment = _salary.get(4);
+			double money = Arith.mul(Double.valueOf(_salary.get(2)), 1000);
+			short type = Double.valueOf(_salary.get(3)).shortValue();
+			short onetype = Double.valueOf(_salary.get(4)).shortValue();
+			short twotype = Double.valueOf(_salary.get(5)).shortValue();
+			String comment = _salary.get(6);
 
 			UserPO worker = userDao.queryUserByUserId(userid);
 			UserPO creater = userDao.queryUserByUserId(userId);
 
 			WorkerSalaryPO workerSalaryPO = new WorkerSalaryPO(worker, creater);
-
-			if (subtype <= SUBTYPY_SHORTTHREE && subtype > SUBTYPY_SHORTONE) {
-				workerSalaryPO.setType(WorkerSalaryPO.TYPE_ADD_INT);
-			} else {
-				workerSalaryPO.setType(WorkerSalaryPO.TYPE_SUB_INT);
-			}
-
-			workerSalaryPO.setCompany(creater.getCompany());
-			workerSalaryPO.setUser(worker);
-			workerSalaryPO.setSubtype(subtype);
-			workerSalaryPO.setComment(comment);
-			workerSalaryPO.setSalary((long)Arith.mul(salary, 1000.0));
-			workerSalaryPO.setCreater(creater);
+			
+			
+			workerSalaryPO.init(type, onetype, twotype, WorkerSalaryPO.STATUS_INIT_INT);
+			workerSalaryPO.init(worker, creater, comment, creater.getCompany());
+			workerSalaryPO.setMoney((long)money);
 			workerSalaryPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 			workerSalaryPO.setCsid(0);
 

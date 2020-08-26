@@ -29,6 +29,8 @@ public class RolePO implements Serializable {
 	
 	private int company;
 	
+	private String pinyin;
+	
 	public RolePO(){
 		super();
 	}
@@ -97,6 +99,15 @@ public class RolePO implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+	
+	@Column(name = "pinyin")
+	public String getPinyin() {
+		return pinyin;
+	}
+
+	public void setPinyin(String pinyin) {
+		this.pinyin = pinyin;
 	}
 
 	

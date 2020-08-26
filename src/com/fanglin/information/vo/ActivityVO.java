@@ -22,6 +22,8 @@ public class ActivityVO implements java.io.Serializable {
 	
 	private Short defaults;
 	
+	private Integer multiple;
+	
 	private Timestamp createTime;
 	
 	private Timestamp startTime;
@@ -62,6 +64,14 @@ public class ActivityVO implements java.io.Serializable {
 	public void setCreater(UserBaseVO creater) {
 		this.creater = creater;
 	}
+	
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
+	}
 
 	public Short getStatus() {
 		return status;
@@ -69,6 +79,22 @@ public class ActivityVO implements java.io.Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+	
+	public Short getDefaults() {
+		return defaults;
+	}
+
+	public void setDefaults(Short defaults) {
+		this.defaults = defaults;
+	}
+
+	public Integer getMultiple() {
+		return multiple;
+	}
+
+	public void setMultiple(Integer multiple) {
+		this.multiple = multiple;
 	}
 
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")
@@ -104,22 +130,6 @@ public class ActivityVO implements java.io.Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
-	}
-
-	public Short getType() {
-		return type;
-	}
-
-	public void setType(Short type) {
-		this.type = type;
-	}
-
-	public Short getDefaults() {
-		return defaults;
-	}
-
-	public void setDefaults(Short defaults) {
-		this.defaults = defaults;
 	}
 
 }

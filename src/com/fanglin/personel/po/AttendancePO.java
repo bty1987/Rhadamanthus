@@ -18,7 +18,7 @@ public class AttendancePO implements Serializable {
 
 	private long aid;
 	
-	private long uid;
+	private Integer uid;
 	
 	private int month;
 	
@@ -100,11 +100,11 @@ public class AttendancePO implements Serializable {
 	}
 	
 	@Column(name = "uid")
-	public long getUid() {
+	public Integer getUid() {
 		return uid;
 	}
 
-	public void setUid(long uid) {
+	public void setUid(Integer uid) {
 		this.uid = uid;
 	}
 	

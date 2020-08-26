@@ -7,7 +7,7 @@ import com.fanglin.personel.vo.AttendanceVO;
 
 public interface AttendanceService {
 
-	public List<AttendanceVO> queryAttendance(AttendanceVO attendanceVO);
+	public List<AttendanceVO> queryAttendance(String userId);
 	
-	public JSONObject reportAttendance(AttendanceVO attendanceVO);
+	public JSONObject reportAttendance(String userId);
 }

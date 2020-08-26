@@ -88,7 +88,7 @@ $(function () {
         $.each(conf.opt.btn, function (i, v) {
             if (v == id) {
                 flag = true;
-                if (id = "houseType") {
+                if (id == "houseType") {
                     var statuses = ["初始", "定金"];
                     if (statuses.indexOf(params.orederStatus)) {
                         button.prop("disabled", false);
@@ -102,34 +102,42 @@ $(function () {
         return flag;
     }
 
-    function drawBasic(conf) {
-        var row1 = createDiv("row");
+    function drawBasic(conf, stepPane) {
+        
+        var row1 = createDiv("row").appendTo(stepPane);
         var form1 = createForm();
         var left1 = createDiv("col-xs-12 col-sm-5").append(createDiv("control-group").append(
             createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "订单号", "orderId"), createDiv("col-sm-9").append(createInput("orderId", "col-xs-10 col-sm-5", true, "text")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "客户名", "customer"), createDiv("col-sm-9").append(createInput("customer", "col-xs-10 col-sm-5", true, "text")))
-            , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "", "customerInfosBtn"), createDiv("col-sm-9").append(createButton(conf, "customerInfosBtn", "btn btn-xs btn-danger col-xs-10 col-sm-5", "客户信息", "button"), createButton(conf, "customerChangeBtn", "btn btn-xs btn-info", "修改客户信息", "button")))
-            , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "楼盘地址", "houseAddr"), createDiv("col-sm-9").append(createInput("houseAddr", "col-xs-10 col-sm-5", true), createButton(conf, "villageChangeBtn", "btn btn-xs btn-info", "修改房产信息", "button")))
+            , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "", "customerInfosBtn"), createDiv("col-sm-9").append(createButton(conf, "customerInfosBtn", "btn btn-xs btn-danger col-xs-10 col-sm-5", "客户信息", "button").css("padding","5px 4px"), createButton(conf, "customerChangeBtn", "btn btn-xs btn-info", "修改客户信息", "button")))
+            , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "楼盘", "villageName"), createDiv("col-sm-9").append(createInput("villageName", "col-xs-10 col-sm-5", true), createButton(conf, "villageChangeBtn", "btn btn-xs btn-info", "修改房产信息", "button")))
+            , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "楼号", "houseNumber"), createDiv("col-sm-9").append(createInput("houseNumber", "col-xs-10 col-sm-5", true, "text")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "设计部", "designDepartment"), createDiv("col-sm-9").append(createInput("designDepartment", "col-xs-10 col-sm-5", true, "text")))
+            , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "赠送面积", "freeArea"), createDiv("col-sm-9").append(createInput("freeArea", "col-xs-10 col-sm-5 v_float v_required", true, "text", "0")))
+            , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "总面积", "totalArea"), createDiv("col-sm-9").append(createInput("totalArea", "col-xs-10 col-sm-5 v_float v_required", true, "text", "0")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "设计师", "designer"), createDiv("col-sm-9").append(createInput("designer", "col-xs-10 col-sm-5", true, "text")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "业务部门", "businessDepartment"), createDiv("col-sm-9").append(createInput("businessDepartment", "col-xs-10 col-sm-5", true, "text")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "业务员", "salesman"), createDiv("col-sm-9").append(createInput("salesman", "col-xs-10 col-sm-5", true, "text")))
-            , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "业务人员类型", "salesmanType"), createDiv("col-sm-9").append(createInput("salesmanType", "col-xs-10 col-sm-5", true, "text")))
+            , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "业务类型", "salesmanType"), createDiv("col-sm-9").append(createSelect("salesmanType", "col-xs-10 col-sm-5", [], null, null,"popover", "manual")))
         ));
         var right1 = createDiv("col-xs-12 col-sm-5").append(createDiv("control-group").append(
             createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "等级", "grade"), createDiv("col-sm-9").append(createSelect("grade", "col-xs-10 col-sm-5", [], null, null, "popover", "manual")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "订单类型", "orderType"), createDiv("col-sm-9").append(createSelect("orderType", "col-xs-10 col-sm-5", [], null, null, "popover", "manual")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "房屋类别", "houseType"), createDiv("col-sm-9").append(createSelect("houseType", "col-xs-10 col-sm-5", [], null, null, "popover", "manual")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "房屋类型", "houseClass"), createDiv("col-sm-9").append(createSelect("houseClass", "col-xs-10 col-sm-5", [], null, null, "popover", "manual")))
+            , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "户型", "houseTypeClass"), createDiv("col-sm-9").append(createInput("houseTypeClass", "col-xs-10 col-sm-5 v_float v_required", true, "text", "0")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "建筑面积", "houseArea"), createDiv("col-sm-9").append(createInput("houseArea", "col-xs-10 col-sm-5 v_float v_required", true, "text", "0")))
+            , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "套内面积", "innerArea"), createDiv("col-sm-9").append(createInput("innerArea", "col-xs-10 col-sm-5 v_float v_required", true, "text", "0")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "订单状态", "status"), createDiv("col-sm-9").append(createInput("status", "col-xs-10 col-sm-5", true, "text", "0")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "量房时间", "measureTime"), createDiv("col-sm-9").append(createInput("measureTime", "col-xs-10 col-sm-5", true, "text", "0")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "报价员", "quoterId"), createDiv("col-sm-9").append(createInput("quoterId", "col-xs-10 col-sm-5",[], null, null, "popover", "manual")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "跟单员", "escorterId"), createDiv("col-sm-9").append(createInput("escorterId", "col-xs-10 col-sm-5", [], null, null, "popover", 'manual')))
         ));
         form1.append(left1, right1).appendTo(row1);
+        
+        $('<hr>').appendTo(stepPane);
 
-        var row2 = createDiv("row");
+        var row2 = createDiv("row").appendTo(stepPane);
         var form2 = createForm();
         var left2 = createDiv("col-xs-12 col-sm-5").append(
             createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "非业务人员名称", "notSalesmanName"), createDiv("col-sm-9").append(createInput("notSalesmanName", "col-xs-10 col-sm-5 v_name", true, "text").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("maxlength", "8")))
@@ -143,6 +151,18 @@ $(function () {
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "返单人员备注", "backOrderContent"), createDiv("col-sm-9").append('<textarea id="backOrderContent" class="col-xs-10 col-sm-5"rows="3" data-toggle="popover"data-trigger="manual" maxlength="128"readonly="readonly"></textarea>'))
         );
         form2.append(left2, right2).appendTo(row2);
+        
+        $.each(conf.opt.show, function (j, x) {
+            var $obj = com.focusPage("#" + x);
+            if ($obj[0].tagName.toLowerCase() == "input") {
+                $obj.removeAttr("readonly");
+            } else if ($obj[0].tagName.toLowerCase() == "select") {
+                $obj.prop("disabled", false);
+            } else if ($obj[0].tagName.toLowerCase() == "textarea") {
+                $obj.removeAttr("readonly");
+            }
+        });
+        
         return [row1, $('<hr>'), row2];
     }
 
@@ -166,24 +186,52 @@ $(function () {
         return [row];
     }
 
-    function drawPicture(conf) {
+    function drawPicture(conf, stepPane) {
 
-        var row1 = createDiv("row").append(createDiv("col-md-6").append(createDiv("col-md-2", "OriginalUpload"), createDiv("col-md-2", "designPictureUpload"), createDiv("col-md-2", "projectPictureUpload"), createDiv("col-md-2", "ContractUpload"),createDiv("col-md-2", "CADUpload")));
-        var row1s = createDiv("col-md-6").append($('<h5></h5>').append($('<strong></strong>').addClass('clearfix col-md-3 pull-right').html("设计状态: ").append($('<b></b>').attr('id','designStatus'))).append($('<strong></strong>').addClass('clearfix col-md-3 pull-right').html("效果图状态: ").append($('<b></b>').attr('id','prictureStatus')))).appendTo(row1);
+        var row1 = createDiv("row").append(createDiv("col-md-6").append(createDiv("inline", "OriginalUpload"), createDiv("inline", "designPictureUpload"), createDiv("inline", "projectPictureUpload"), createDiv("inline", "ContractUpload"),createDiv("inline", "CADUpload"))).appendTo(stepPane);
+        var row1s = createDiv("col-md-6").append($('<h5></h5>').append($('<strong></strong>').addClass('clearfix col-md-3 pull-right').html("合同方案: ").append($('<b></b>').attr('id','designStatus'))).append($('<strong></strong>').addClass('clearfix col-md-3 pull-right').html("放线方案: ").append($('<b></b>').attr('id','prictureStatus')))).appendTo(row1);
 
-        var contractMap = createDiv("col-xs-12").append(createLabel("control-label", "合同图:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createUl("ContractPictures", "ace-thumbnails")));
+        var $confirmDesign = $('<button></button>').attr("id", "confirmDesign").addClass('btn btn-minier btn-success pull-right').css({'margin-right':'10px','margin-top': '20px'}).html("确认合同方案");
+        var $confirmPricture = $('<button></button>').attr("id", "confirmPricture").addClass('btn btn-minier btn-yellow pull-right').css({'margin-right': '10px','margin-top': '20px'}).html("确认放线方案");
 
-        var $confirmDesign = $('<button></button>').attr("id", "confirmDesign").addClass('btn btn-minier btn-success pull-right').html("确认设计");
-        var $confirmPricture = $('<button></button>').attr("id", "confirmPricture").addClass('btn btn-minier btn-yellow pull-right').css('margin-right', '10px').html("确认效果图");
+        var $show = conf.opt == null ?  [] : conf.opt.show == null ? [] : conf.opt.show;
 
-        var row2 = createDiv("row").append(
-            createDiv("col-xs-12").append(createLabel("control-label", "原始图:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createUl("OriginalPicture", "ace-thumbnails")))
-            , createDiv("col-xs-12").append(createLabel("control-label", "效果图:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createUl("designPictures", "ace-thumbnails")))
-            , createDiv("col-xs-12").append($confirmDesign).append($confirmPricture).append(createLabel("control-label", "工程图:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createUl("projectPictures", "ace-thumbnails")))
-            , conf.contracts == "noShow" ? null : contractMap
-            , createDiv("col-xs-12").append(createLabel("control-label", "工程文件:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createDiv("col-sm-7 infobox-container", "CADProjectPicture")))
+        var $OriginalPicture = $show.includes("OriginalPicture") ? createDiv("col-xs-12").append(createLabel("control-label", "现场图:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createUl("OriginalPicture", "ace-thumbnails"))) : null;
+        var $designPictures = $show.includes("designPictures") ? createDiv("col-xs-12").append($confirmDesign).append(createLabel("control-label", "合同方案:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createUl("designPictures", "ace-thumbnails"))) : null;
+        var $projectPictures = $show.includes("projectPictures") ? createDiv("col-xs-12").append($confirmPricture).append(createLabel("control-label", "放线方案:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createUl("projectPictures", "ace-thumbnails"))) : null;
+        var $contractMap = $show.includes("contractMap") ? createDiv("col-xs-12").append(createLabel("control-label", "合同备档:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createUl("ContractPictures", "ace-thumbnails"))) : null;
+        var $CADProjectPicture = $show.includes("CADProjectPicture") ? createDiv("col-xs-12").append(createLabel("control-label", "工程文件CAD:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createDiv("col-sm-7 infobox-container", "CADProjectPicture"))) : null;
 
-        );
+        var row2 = createDiv("row").append($OriginalPicture).append( $designPictures).append($projectPictures).append($contractMap).append($CADProjectPicture).appendTo(stepPane);
+        
+        var $btns = conf.opt == null ?  [] : conf.opt.btn == null ? [] : conf.opt.btn;
+        
+        if ($btns.includes("designPictureUpload")) {
+            decorationUtils.loadHuploadify("designPictureUpload", "上传合同方案", "*.jpg;*.jpge;*.gif;*.png", true, function (data) {
+                decorationUtils.addDecorationPicture(data, 1, "designPictures");
+            }, "btn btn-success");
+        }
+        if ($btns.includes("projectPictureUpload")) {
+            decorationUtils.loadHuploadify("projectPictureUpload", "上传放线方案", "*.jpg;*.jpge;*.gif;*.png", true, function (data) {
+                decorationUtils.addDecorationPicture(data, 2, "projectPictures");
+            }, "btn btn-primary");
+        }
+        if ($btns.includes("OriginalUpload")) {
+            decorationUtils.loadHuploadify("OriginalUpload", "上传现场图", "*.jpg;*.jpge;*.gif;*.png", true, function (data) {
+                decorationUtils.addDecorationPicture(data, 4, "OriginalPicture");
+            }, "btn btn-purple");
+        }
+        if ($btns.includes("CADUpload")) {
+            decorationUtils.loadHuploadify("CADUpload", "上传工程文件CAD", "*.dwg;*.dwt", false, function (data) {
+                decorationUtils.addDecorationPicture(data, 0, "CADProjectPicture");
+            }, "btn btn-warning");
+        }
+        if ($btns.includes("ContractUpload")) {
+            decorationUtils.loadHuploadify("ContractUpload", "上传合同备档", "*.jpg;*.jpge;*.gif;*.png", true, function (data) {
+                decorationUtils.addDecorationPicture(data, 3, "ContractPictures");
+            }, "btn btn-inverse");
+        }
+        
         return [row1, row2];
     }
 
@@ -212,7 +260,7 @@ $(function () {
 
     function drawActivity(conf) {
         var row = createDiv("row").append(
-            createDiv("col-md-12").append(createButton(conf, "joinActivityBtn", "btn btn-info", "参加活动", "button", '<i class="icon-cog bigger-110"></i>'), createButton(conf, "applyActivityItemBtn", "btn btn-info", "申领活动物品", "button", '<i class="icon-cog bigger-110"></i>'), createDiv("col-sm-6", "activityPriceInfo").attr("style", "padding:0px;float:right;text-align:right;"))
+            createDiv("col-md-12").append(createButton(conf, "joinActivityBtn", "btn btn-info", "参加活动", "button", '<i class="icon-cog bigger-110"></i>'), createButton(conf, "applyActivityItemBtn", "btn btn-info", "申领活动物品", "button", '<i class="icon-cog bigger-110"></i>').attr("style","margin: 0 6px"), createDiv("col-sm-6", "activityPriceInfo").attr("style", "padding:0px;float:right;text-align:right;"))
             , createDiv("col-md-12 hr"), createDiv("col-md-12", null, "padding: 0;margin: 0 8px;font-size: 24px;color: #2679b5;").html("活动"), createDiv("col-md-12", "activitys"), createDiv("col-md-12 hr"), createDiv("col-md-12", null, "padding: 0;margin: 0 8px;font-size: 24px;color: #2679b5;").html("奖品"), createDiv("col-md-12", "activityItems")
         );
 
@@ -297,17 +345,17 @@ $(function () {
             $.each(nodes, function (i, v) {
                 params.detail.push(i);
                 ul.append(createWizardStep(i , title[v.type]));
-                var stepPane = createStepPane(i);
+                var stepPane = createStepPane(i).appendTo(container);
                 var rows = [];
                 switch (v.type) {
                     case "basic":
-                        rows = drawBasic(v);
+                        drawBasic(v, stepPane);
                         break;
                     case "quotation":
                         rows = drawQuotaion(v);
                         break;
                     case "picture":
-                        rows = drawPicture(v);
+                        drawPicture(v, stepPane);
                         break;
                     case "material":
                         rows = drawMaterial(dataPage);
@@ -334,69 +382,33 @@ $(function () {
                 $.each(rows, function (j, b) {
                     stepPane.append(b);
                 });
-                stepPane.appendTo(container);
 
-                if ($.isEmptyObject(v.opt)) return;
-                if ($.isEmptyObject(v.opt.show)) return;
-
-                $.each(v.opt.show, function (j, x) {
-                    var $Obj = com.focusPage("#" + x);
-                    if ($Obj[0].tagName.toLowerCase() == "input") {
-                        $Obj.removeAttr("readonly");
-                    } else if ($Obj[0].tagName.toLowerCase() == "select") {
-                        $Obj.prop("disabled", false);
-                    } else if ($Obj[0].tagName.toLowerCase() == "textarea") {
-                        $Obj.removeAttr("readonly");
-                    }
-                    if (v.type == "picture") {
-                        switch (x) {
-                            case "designPictureUpload":
-                                isdesignPictureUpload = true;
-                                break;
-                            case "projectPictureUpload":
-                                isprojectPictureUpload = true;
-                                break;
-                            case "OriginalUpload":
-                                isOriginalUpload = true;
-                                break;
-                            case "CADUpload":
-                                isCADUpload = true;
-                                break;
-                            case "ContractUpload":
-                                isContractUpload = true;
-                                break;
-                        }
-                    }
-                    if (x == 'orderType') {
-                        if (!(params.orederStatus == '初始' || params.orederStatus == '定金' || params.orederStatus == '重签')) {
-                            $Obj.prop("disabled", true);
-                        }
-                    }
-                });
             });
+            
             ul.appendTo(wizard);
+            
             if (isdesignPictureUpload) {
-                decorationUtils.loadHuploadify("designPictureUpload", "上传效果图", "*.jpg;*.jpge;*.gif;*.png", true, function (data) {
+                decorationUtils.loadHuploadify("designPictureUpload", "上传合同方案", "*.jpg;*.jpge;*.gif;*.png", true, function (data) {
                     decorationUtils.addDecorationPicture(data, 1, "designPictures");
                 }, "btn btn-success");
             }
             if (isprojectPictureUpload) {
-                decorationUtils.loadHuploadify("projectPictureUpload", "上传工程图", "*.jpg;*.jpge;*.gif;*.png", true, function (data) {
+                decorationUtils.loadHuploadify("projectPictureUpload", "上传放线方案", "*.jpg;*.jpge;*.gif;*.png", true, function (data) {
                     decorationUtils.addDecorationPicture(data, 2, "projectPictures");
                 }, "btn btn-primary");
             }
             if (isOriginalUpload) {
-                decorationUtils.loadHuploadify("OriginalUpload", "上传原始图片", "*.jpg;*.jpge;*.gif;*.png", true, function (data) {
+                decorationUtils.loadHuploadify("OriginalUpload", "上传现场图", "*.jpg;*.jpge;*.gif;*.png", true, function (data) {
                     decorationUtils.addDecorationPicture(data, 4, "OriginalPicture");
                 }, "btn btn-purple");
             }
             if (isCADUpload) {
-                decorationUtils.loadHuploadify("CADUpload", "上传工程文件", "*.dwg;*.dwt", false, function (data) {
+                decorationUtils.loadHuploadify("CADUpload", "上传工程文件CAD", "*.dwg;*.dwt", false, function (data) {
                     decorationUtils.addDecorationPicture(data, 0, "CADProjectPicture");
                 }, "btn btn-warning");
             }
             if (isContractUpload) {
-                decorationUtils.loadHuploadify("ContractUpload", "上传合同图片", "*.jpg;*.jpge;*.gif;*.png", true, function (data) {
+                decorationUtils.loadHuploadify("ContractUpload", "上传合同备档", "*.jpg;*.jpge;*.gif;*.png", true, function (data) {
                     decorationUtils.addDecorationPicture(data, 3, "ContractPictures");
                 }, "btn btn-inverse");
             }
@@ -409,6 +421,7 @@ $(function () {
                 "postDataName": page + "PostData",
                 "nodes": {},
                 "condArr": [],
+                "extraParam": [],
                 "propertyArr": [],
                 "hasExport": null
             };

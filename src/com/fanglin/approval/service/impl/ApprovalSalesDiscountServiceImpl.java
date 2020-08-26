@@ -2,6 +2,7 @@
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.sales.dao.SalesDao;
 import com.fanglin.sales.po.SalesPO;
+import com.fanglin.sales.service.SalesActivityService;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -44,13 +46,18 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 	@Autowired
 	private SalesPaymentDao salesPaymentDao;
 
+	@Autowired
+	private SalesActivityService salesActivityService;
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int submitApprovalSalesDiscount(ApprovalVO approvalVO, ApprovalSalesDiscountVO approvalSalesDiscountVO, String userId, int company) throws FLException {
 
 		long sid = approvalSalesDiscountVO.getSid();
 
-		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT, String.valueOf(sid));
+		List<Short> status = Arrays.asList(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_STATUS_APPROVE_INT, ApprovalPO.APPROVAL_STATUS_CONFIRM_INT, ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT, ApprovalPO.APPROVAL_STATUS_REJECT_INT);
+
+		ApprovalPO approvalPO = approvalDao.queryApprovalByChange(status, ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT, String.valueOf(sid));
 
 		if (approvalPO != null) {
 			throw new FLException(240004, "正在审批中,不能提交新审批");
@@ -114,6 +121,10 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 
 		if (fullStatus != SalesPO.FULLPAYSTATUS_INIT_SHORT && fullStatus != (short) 3) {
 			throw new FLException(260012, "销售订单当前状态不能提交补款");
+		}
+
+		if (approvalSalesDiscountPO.getPaymentType() == SalesPaymentPO.TYPE_MAKEAREFUND_INT) {
+			salesActivityService.checkSalesActivity(approvalSalesDiscountPO.getSid(), approvalSalesDiscountPO.getReferMoney());
 		}
 
 		UserPO sender = approvalPO.getSender();

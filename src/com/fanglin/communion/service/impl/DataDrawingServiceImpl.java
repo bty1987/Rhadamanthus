@@ -48,6 +48,7 @@ public class DataDrawingServiceImpl implements DataDrawingService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	@SuppressWarnings("deprecation")
 	public void addDataDrawing(DataDrawingVO dataDrawingVO, String userId) {
 
 		DataDrawingPO dataDrawingPO = new DataDrawingPO();
@@ -56,7 +57,11 @@ public class DataDrawingServiceImpl implements DataDrawingService {
 
 		dataDrawingPO.setCreater(userDao.queryUserByUserId(userId));
 
-		dataDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
+		Timestamp createTime = new Timestamp(System.currentTimeMillis());
+		
+		createTime.setHours(Integer.valueOf(String.valueOf(createTime).substring(11, 13)) + 8);
+		
+		dataDrawingPO.setCreateTime(createTime);
 
 		dataDrawingPO.setStatus(DataDrawingPO.STATUS_INIT_INT);
 

@@ -93,6 +93,10 @@ public class AddReduceItemPO implements java.io.Serializable {
 		return this.type;
 	}
 
+	public void setType(short type) {
+		this.type = type;
+	}
+	
 	@Column(name = "subtype")
 	public short getSubtype() {
 		return subtype;
@@ -100,10 +104,6 @@ public class AddReduceItemPO implements java.io.Serializable {
 
 	public void setSubtype(short subtype) {
 		this.subtype = subtype;
-	}
-
-	public void setType(short type) {
-		this.type = type;
 	}
 
 	@Column(name = "measurementUnit")

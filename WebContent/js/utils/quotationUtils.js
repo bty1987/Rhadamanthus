@@ -10,53 +10,81 @@ var quotationUtils = {
         return _items;
     },
     loadQuotationDetail: function () {
-    	
+
         quotationUtils.quotationDetail = {};
-        
+
         com.post(api.quotation.queryQuotationForDefaultByOrderId, {
             "quotation.orderId": params.decorationOrderId,
         }, function (res) {
             quotationUtils.quotationDetail.quotation = res.quotation;
         }, null, false);
-        
+
         var quotationId = quotationUtils.quotationDetail.quotation.qid;
         var status = quotationUtils.quotationDetail.quotation.status;
-        
+
         if (quotationId) {
             $("#printProjectBtn").click(function () {
                 params.quotationId = quotationId;
                 params.type = 1;
-                params.subtype = -1;
+                params.subtype = [-2];
+                params.showType = {itemtype: 7};
                 com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
-             });
-             $("#printFinanceBtn").click(function () {
-                 params.quotationId = quotationId;
-                 params.type = 2;
-                 params.subtype = -1;
-                 com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
-             });
-             $("#printCustomerBtn").click(function () {
-                 params.quotationId = quotationId;
-                 params.type = 3;
-                 params.subtype = -1;
-                 com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
-             });
+            });
+            $("#printFinanceBtn").click(function () {
+                params.quotationId = quotationId;
+                params.type = 2;
+                params.subtype = [-2];
+                params.showType = {itemtype: 7, "showStandardPrice": true};
+                com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
+            });
+            $("#printCustomerBtn").click(function () {
+                params.quotationId = quotationId;
+                params.type = 3;
+                params.subtype = [-2];
+                params.showType = {itemtype: 7};
+                com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
+            });
             $("#printEngineeringBtn").click(function () {
                 params.quotationId = quotationId;
                 params.type = 3;
-                params.subtype = 1;
+                params.subtype = [1];
+                params.showType = {itemtype: 7};
                 com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
             });
             $("#printMaterialBtn").click(function () {
                 params.quotationId = quotationId;
                 params.type = 3;
-                params.subtype = 2;
+                params.subtype = [2];
+                params.showType = {itemtype: 7};
                 com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
             });
             $("#printWorkBtn").click(function(){
                 params.quotationId = quotationId;
                 params.type = 4;
-                params.subtype = -1;
+                params.subtype = [-2];
+                params.showType = {itemtype: 7};
+                com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
+            });
+
+            $("#printQuoteItemBtn").click(function () {
+                params.quotationId = quotationId;
+                params.type = 2;
+                params.subtype = [1];
+                params.showType = {itemtype: 1, notManagementArea: "生成项目"};
+                com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
+            });
+            $("#printExtensionItemBtn").click(function () {
+                params.quotationId = quotationId;
+                params.type = 2;
+                params.subtype = [1];
+                params.showType = {itemtype: 2};
+                com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
+            });
+            $("#printAddReduceItemBtn").click(function(){
+                params.quotationId = quotationId;
+                params.type = 2;
+                params.subtype = [1];
+                params.showType = {itemtype: 4};
                 com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
             });
 
@@ -92,9 +120,18 @@ var quotationUtils = {
             com.post(api.quotation.queryExtensionItemByEids, extensionItemIDs, function (res) {
                 quotationUtils.quotationDetail.extensions = res.extensionItems;
             }, null, false);
-            quotationUtils.statisticalQuotationItem(quotationUtils.quotationDetail.quotationFunctionAreas,quotationUtils.quotationDetail.addReduceItems, quotationUtils.quotationDetail.extensions);
+            quotationUtils.statisticalQuotationItem(
+                quotationUtils.quotationDetail.quotationFunctionAreas,
+                quotationUtils.quotationDetail.addReduceItems,
+                quotationUtils.quotationDetail.extensions);
 
-            quotationUtils.initQuotationDetailItem(quotationUtils.quotationDetail.quotation,quotationUtils.quotationDetail.quotationFunctionAreas,quotationUtils.quotationDetail.addReduceItems, quotationUtils.quotationDetail.extensions,params.orderType,true);
+            var showType = {itemtype: 7};
+
+            quotationUtils.initQuotationDetailItem(
+                quotationUtils.quotationDetail.quotation,
+                quotationUtils.quotationDetail.quotationFunctionAreas,
+                quotationUtils.quotationDetail.addReduceItems,
+                quotationUtils.quotationDetail.extensions, params.orderType, true, showType);
 
             quotationUtils.initQuotationDetail();
 
@@ -106,32 +143,39 @@ var quotationUtils = {
         }
     },
     statisticalQuotationItem : function(quotationFunctionAreas, addReduceItems, extensionItems){
-        
+
         var $quotationUndisPrice = 0;//报价项折扣总额
         var $quotationTotalPrice = 0;//报价项非折扣总额
+
+        var $addExtensionItemTotalPrice = 0;//扩展项增项总额
+        var $minusExtensionItemTotalPrice = 0;//扩展项减项总额
+
         var $addReduceTotal = 0;//增项总额
         var $minusQuoTotalPrice = 0;//减项中的报价项非折扣总额
         var $minusQuoUndisPrice = 0;//减项中的报价折扣总额
+
         var $minusAddReduceTotal = 0;//减项中的增项总额
-        var $$minusDefineUndisPrice = 0;//定义项目打折项
-        var $minusDefineTotalPrice = 0; //定义项目非打折项
         var $minusExtensionTotalPrice = 0;//减项中的扩展项总额
-        var $addExtensionItemTotalPrice = 0;//扩展项增项总额
-        var $minusExtensionItemTotalPrice = 0;//扩展项减项总额
+
+        //var $$minusDefineUndisPrice = 0;//定义项目打折项
+        //var $minusDefineTotalPrice = 0; //定义项目非打折项
+
+
+
 
         var quotationFunctionAreaLength = quotationFunctionAreas.length;
 
         for (var i = 0; i < quotationFunctionAreaLength; ++i) {
 
             var quotationFunctionArea = quotationFunctionAreas[i];
-            
+
             var quotationFunctionAreaItems = quotationUtils.sortQuo(quotationFunctionArea.quotationFunctionAreaItems);
             var quotationFunctionAreaItemLength = quotationFunctionAreaItems.length;
 
             for (var j = 0; j < quotationFunctionAreaItemLength; j++) {
 
                 var quotationFunctionAreaItem = quotationFunctionAreaItems[j];
-                
+
                 if (quotationFunctionArea.type != 3 && quotationFunctionArea.type != 0 && quotationFunctionAreaItem.type != 3 && quotationFunctionAreaItem.type != 2) {
                     if (quotationFunctionAreaItem.discount == 0) {
                         $quotationTotalPrice = utils.accAdd($quotationTotalPrice, utils.changeThrDecimal(utils.accMul(quotationFunctionAreaItem.unitPrice, quotationFunctionAreaItem.initNum)));
@@ -141,7 +185,7 @@ var quotationUtils = {
                 }
             }
         }
-        
+
         if (extensionItems != null && extensionItems != '') {
 
             var extensionItemsLength = extensionItems.length;
@@ -149,20 +193,20 @@ var quotationUtils = {
             for (var i = 0; i < extensionItemsLength; ++i) {
 
                 var extensionItem = extensionItems[i];
-                
+
                 var _dcp = 0, _dcpt = 0;
 
                 if([0, 1].indexOf(extensionItem.type) != -1){
-                    
+
                     _dcp = extensionItem.unitPrice;
                     _dcpt = utils.changeThrDecimal(utils.accMul(extensionItem.num, _dcp));
-                    
+
                     $addExtensionItemTotalPrice = utils.accAdd($addExtensionItemTotalPrice, _dcpt);
                 }else if([2, 3, 4].indexOf(extensionItem.type) != -1){
-                    
+
                     _dcp = utils.changeThrDecimal(utils.accMul(extensionItem.unitPrice, utils.accDiv(quotationUtils.quotationDetail.quotation.discount, 10)));
                     _dcpt = utils.changeThrDecimal(utils.accMul(extensionItem.num, _dcp));
-                    
+
                     $minusExtensionItemTotalPrice = utils.accAdd($minusExtensionItemTotalPrice, _dcpt);
                 }
             }
@@ -173,229 +217,257 @@ var quotationUtils = {
         for (var i = 0; i < addReduceItemLength; ++i) {
 
             var addReduceItem = addReduceItems[i];
-            
-            var addReduceItemNum = addReduceItem.num;
-            if ([1, 3, 4, 5].indexOf(addReduceItem.type) != -1){
-                addReduceItemNum = -addReduceItemNum;
-            }
-            if ([0, 2].indexOf(addReduceItem.type) != -1) {
-                $addReduceTotal = utils.accAdd($addReduceTotal, utils.changeThrDecimal(utils.accMul(addReduceItemNum, addReduceItem.unitPrice)));
-            } else if ([4].indexOf(addReduceItem.type) != -1) {
-                $minusAddReduceTotal = utils.accAdd($minusAddReduceTotal, utils.changeThrDecimal(utils.accMul(addReduceItemNum, addReduceItem.unitPrice)));
-            } else if ([5].indexOf(addReduceItem.type) != -1) {
-                $minusExtensionTotalPrice = utils.accAdd($minusExtensionTotalPrice, utils.changeThrDecimal(utils.accMul(addReduceItemNum, addReduceItem.unitPrice)));
-            } else if ([1].indexOf(addReduceItem.type) != -1) {
-                if (addReduceItem.discount == 0) {
-                    $minusDefineTotalPrice = utils.accAdd($minusDefineTotalPrice, utils.changeThrDecimal(utils.accMul(addReduceItemNum, addReduceItem.unitPrice)));
-                }
-                if (addReduceItem.discount == 1) {
-                    $$minusDefineUndisPrice = utils.accAdd($$minusDefineUndisPrice, utils.changeThrDecimal(utils.accMul(addReduceItemNum, addReduceItem.unitPrice)));
-                }
-            } else if([3].indexOf(addReduceItem.type) != -1){
-                if (addReduceItem.discount == 0) {
-                    $minusQuoTotalPrice = utils.accAdd($minusQuoTotalPrice, utils.changeThrDecimal(utils.accMul(addReduceItemNum, addReduceItem.unitPrice)));
-                } else if (addReduceItem.discount == 1) {
-                    $minusQuoUndisPrice = utils.accAdd($minusQuoUndisPrice, utils.changeThrDecimal(utils.accMul(addReduceItemNum, addReduceItem.unitPrice)));
+
+            if ([0, 2].indexOf(addReduceItem.type) != -1) {// 统计增项总额
+                $addReduceTotal = utils.accAdd($addReduceTotal, utils.changeThrDecimal(utils.accMul(addReduceItem.num, addReduceItem.unitPrice)));
+            } else {
+                var addReduceItemNum = -addReduceItem.num;
+
+                var price = utils.changeThrDecimal(utils.accMul(addReduceItemNum, addReduceItem.unitPrice));
+                if (addReduceItem.type == 4 || addReduceItem.type == 5) {
+
+                    if (addReduceItem.type == 4) {// 统计减项中增项总额
+                        $minusAddReduceTotal = utils.accAdd($minusAddReduceTotal, price);
+                    } else {// 统计减项中拓展项总额
+                        $minusExtensionTotalPrice = utils.accAdd($minusExtensionTotalPrice, price);
+                    }
+
+                    // 统计减项中的报价项非折扣总额
+                    $minusQuoTotalPrice = utils.accAdd($minusQuoTotalPrice, price);
+
+                } else if (params.orderType == 2) {
+                    // 统计减项中的报价折扣总额
+                    $minusQuoUndisPrice = utils.accAdd($minusQuoUndisPrice, price);
+                } else {
+                    if ([0, 2].indexOf(addReduceItem.discount) != -1) {// 统计减项中的报价项非折扣总额
+                        $minusQuoTotalPrice = utils.accAdd($minusQuoTotalPrice, price);
+                    } else {// 统计减项中的报价折扣总额
+                        $minusQuoUndisPrice = utils.accAdd($minusQuoUndisPrice, price);
+                    }
                 }
             }
         }
 
-        $addReduceTotal = utils.changeThrDecimal(utils.accAdd($addReduceTotal, -$minusAddReduceTotal));
-        $addExtensionItemTotalPrice = utils.changeThrDecimal(utils.accAdd(utils.accAdd($addExtensionItemTotalPrice,-$minusExtensionItemTotalPrice), -$minusExtensionTotalPrice));
-        $minusQuoTotalPrice = utils.changeThrDecimal(utils.accAdd($minusQuoTotalPrice, $minusDefineTotalPrice));//定义项目非打折项
-        $minusQuoUndisPrice = utils.changeThrDecimal(utils.accAdd($minusQuoUndisPrice, $$minusDefineUndisPrice));//定义项目打折项
+        $addExtensionItemTotalPrice = utils.changeThrDecimal(utils.accAdd($addExtensionItemTotalPrice, -$minusExtensionItemTotalPrice));
 
         quotationUtils.quotationDetail.quotationUndisPrice = $quotationUndisPrice;//报价项折扣总额
         quotationUtils.quotationDetail.quotationTotalPrice = $quotationTotalPrice;//报价项非折扣总额
+
+        quotationUtils.quotationDetail.extensionItemTotalPrice = $addExtensionItemTotalPrice;//扩展项总额
+
         quotationUtils.quotationDetail.addReduceTotal = $addReduceTotal;//增项总额
+
         quotationUtils.quotationDetail.minusQuoTotalPrice = $minusQuoTotalPrice;//减项中的报价项非折扣总额
         quotationUtils.quotationDetail.minusQuoUndisPrice = $minusQuoUndisPrice;//减项中的报价折扣总额
         quotationUtils.quotationDetail.minusAddReduceTotal = $minusAddReduceTotal;//减项中的增项总额
         quotationUtils.quotationDetail.minusExtensionTotalPrice = $minusExtensionTotalPrice;//减项中的扩展项总额
-        quotationUtils.quotationDetail.extensionItemTotalPrice = $addExtensionItemTotalPrice;//扩展项总额
+
 
     },
-    initQuotationDetailItem: function (quotation, quotationFunctionAreas, addReduceItems, extensionItems, orderType, dataProcessing) {
-        var addReduceItemtypeDict = {"0": "普通", "1": "系统", "2": "自定义", "3": "报价中", "4": "增项", "5": "扩展项"};
-        var extensionItemtypeDict = {"0" :"扩展项增项","1":"扩展项增项 自定义","2":"扩展项减项","3":"扩展项减项 自定义", "4": "拓展项减项"};
+    initQuotationDetailItem: function (quotation, quotationFunctionAreas, addReduceItems, extensionItems, orderType, dataProcessing, showType) {
+        var addReduceItemtypeDict = {"0": "普通", "1": "系统", "2": "自定义", "3": "报价中", "4": "增项", "5": "拓展项"};
+        var extensionItemtypeDict = {"0": "拓展项增项", "1": "拓展项增项 自定义", "2": "拓展项减项", "3": "拓展项减项 自定义", "4": "拓展项减项"};
 
         var $decorationtype = orderType;
         var discount = quotation.discount;
         var quotationFunctionAreaItemCs = {};
         var quotationFunctionAreaItemWs = {};
+
         var reduceNums = {
             ariId: {},
             eiId: {},
             qfaiId: {},
         };
 
-        var quotationFunctionAreaLength = quotationFunctionAreas.length;
+        if (showType.itemtype & 1) {
+            var quotationFunctionAreaLength = quotationFunctionAreas.length;
 
-        for (var i = 0; i < quotationFunctionAreaLength; ++i) {
+            for (var i = 0; i < quotationFunctionAreaLength; ++i) {
 
-            var quotationFunctionArea = quotationFunctionAreas[i];
-            
-            var quotationFunctionAreaItems = quotationUtils.sortQuo(quotationFunctionArea.quotationFunctionAreaItems);
-            var quotationFunctionAreaItemLength = quotationFunctionAreaItems.length;
-            
-            quotationFunctionAreaItemCs[quotationFunctionArea.qfaId + '-' + quotationFunctionArea.functionAreaName] = [];
+                var quotationFunctionArea = quotationFunctionAreas[i];
 
-            for (var j = 0; j < quotationFunctionAreaItemLength; j++) {
+                if (showType.notManagementArea == quotationFunctionArea.functionAreaName) continue;
 
-                var quotationFunctionAreaItem = quotationFunctionAreaItems[j];
-                
-                if (!quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType]) {
-                    quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType] = {};
+                var quotationFunctionAreaItems = quotationUtils.sortQuo(quotationFunctionArea.quotationFunctionAreaItems);
+                var quotationFunctionAreaItemLength = quotationFunctionAreaItems.length;
+
+                quotationFunctionAreaItemCs[quotationFunctionArea.qfaId + '-' + quotationFunctionArea.functionAreaName] = [];
+
+                for (var j = 0; j < quotationFunctionAreaItemLength; j++) {
+
+                    var quotationFunctionAreaItem = quotationFunctionAreaItems[j];
+
+                    if (!quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType]) {
+                        quotationFunctionAreaItemWs[quotationFunctionAreaItem.workType] = {};
+                    }
+
+                    quotationFunctionAreaItem.typestr = quotationFunctionAreaItem.type == 0 ? "普通" : quotationFunctionAreaItem.type == 1 ? "自定义" : quotationFunctionAreaItem.type == 4  ? "不计算" : "-";
+                    var _dcp = 0;
+                    var _discountNum = 10;
+                    if ($decorationtype == 2) {
+                        _discountNum = discount;
+                        _dcp = quotationFunctionAreaItem.type < 2 || quotationFunctionAreaItem.type == 5 ? utils.changeThrDecimal(utils.accMul(quotationFunctionAreaItem.unitPrice, utils.accDiv(discount, 10))) : quotationFunctionAreaItem.unitPrice;
+                    } else {
+                        _discountNum = quotationFunctionAreaItem.discount == 1 ? discount : 10 ;
+                        _dcp = quotationFunctionAreaItem.type < 2 || quotationFunctionAreaItem.type == 5 ? utils.changeThrDecimal(utils.accMul(quotationFunctionAreaItem.unitPrice, (quotationFunctionAreaItem.discount == 1 ? utils.accDiv(discount, 10) : 1))) : quotationFunctionAreaItem.unitPrice;
+                    }
+                    var _dcpt = utils.changeThrDecimal(utils.accMul(quotationFunctionAreaItem.initNum, _dcp));
+
+                    if (quotationFunctionArea.type == 3) {
+                        quotationFunctionAreaItem.num = quotationFunctionAreaItem.initNum;
+                        quotationFunctionAreaItem.dcp = 0;
+                        quotationFunctionAreaItem.dcpt = 0;
+                        quotationFunctionAreaItem._discountNum = 0;
+                        quotationFunctionAreaItem.quotationTotalPrice = 0;
+                    } else {
+                        quotationFunctionAreaItem.num = quotationFunctionAreaItem.initNum;
+                        quotationFunctionAreaItem.dcp = _dcp;
+                        quotationFunctionAreaItem.dcpt = _dcpt;
+                        quotationFunctionAreaItem._discountNum = _discountNum;
+                        quotationFunctionAreaItem.quotationTotalPrice = utils.changeThrDecimal(utils.accMul(quotationFunctionAreaItem.initNum, quotationFunctionAreaItem.unitPrice));
+                    }
+
+                    if (quotationFunctionAreaItem.type == 2) {
+                        quotationUtils.quotationDetail.trafficDiscount = quotationFunctionAreaItem.discount;
+                        quotationFunctionAreaItem.num = quotation.trafficPrice;
+                        quotationFunctionAreaItem.dcpt = quotationFunctionAreaItem.discount == 1 || $decorationtype == 2 ? utils.changeThrDecimal(utils.accMul(quotation.trafficPrice,utils.accDiv(discount, 10))) : quotation.trafficPrice;
+                        quotationFunctionAreaItem.dcp = quotationFunctionAreaItem.unitPrice;
+                        quotationFunctionAreaItem.measurementUnit = "车运费";
+                        quotationFunctionAreaItem.quotationTotalPrice = quotation.trafficPrice;
+                    } else if (quotationFunctionAreaItem.type == 3) {
+                        quotationUtils.quotationDetail.manageDiscount = quotationFunctionAreaItem.discount;
+                        quotationFunctionAreaItem.num = quotation.managePrice;
+                        quotationFunctionAreaItem.measurementUnit = "管理费";
+                        quotationFunctionAreaItem.dcpt = quotationFunctionAreaItem.discount == 1 ? utils.changeThrDecimal(utils.accMul(quotation.managePrice,utils.accDiv(discount, 10))) : quotation.managePrice;
+                        quotationFunctionAreaItem._discountNum = quotationFunctionAreaItem.discount == 1 ? _discountNum : 10;
+                        quotationFunctionAreaItem.dcp = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItem.unitPrice,quotation.notSalesmanRate));
+                        quotationFunctionAreaItem.unitPrice = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItem.unitPrice ,quotation.notSalesmanRate));
+                        quotationFunctionAreaItem.quotationTotalPrice = quotation.managePrice;
+                    }
+
+                    quotationFunctionAreaItemCs[quotationFunctionArea.qfaId + '-' + quotationFunctionArea.functionAreaName].push(quotationFunctionAreaItem);
+
+                }
+            }
+        }
+
+        if (showType.itemtype & 2) {
+
+            if (extensionItems != null && extensionItems != '') {
+
+                var extensionItemsLength = extensionItems.length;
+
+                for (var i = 0; i < extensionItemsLength; ++i) {
+
+                    var extensionItem = extensionItems[i];
+
+                    var _dcp = 0, _dcpt = 0;
+
+                    if([0, 1].indexOf(extensionItem.type) != -1){
+
+                        extensionItem._discountNum = 10;
+
+                        _dcp = extensionItem.unitPrice;
+                        _dcpt = utils.changeThrDecimal(utils.accMul(_dcp, extensionItem.num));
+                    }else if([2, 3, 4].indexOf(extensionItem.type) != -1){
+
+                        extensionItem.unitPrice = -extensionItem.unitPrice;
+                        extensionItem._discountNum = discount;
+
+                        _dcp = utils.changeThrDecimal(utils.accMul(extensionItem.unitPrice, utils.accDiv(discount, 10)));
+                        _dcpt = utils.changeThrDecimal(utils.accMul(utils.accMul(extensionItem.unitPrice, extensionItem.num), utils.accDiv(discount, 10)));
+                    }
+
+                    extensionItem.typestr = extensionItemtypeDict[extensionItem.type];
+
+                    extensionItem.dcp = _dcp;
+                    extensionItem.dcpt = _dcpt;
+
+                    extensionItem.quotationTotalPrice = utils.changeThrDecimal(utils.accMul(extensionItem.unitPrice, extensionItem.num));
+
+                    if (quotationFunctionAreaItemCs[extensionItem.quotationFunctionAreaId + '-' + extensionItem.quotationFunctionAreaName] == undefined) {
+                        quotationFunctionAreaItemCs[extensionItem.quotationFunctionAreaId + '-' + extensionItem.quotationFunctionAreaName] = [];
+                    }
+
+                    if (quotationFunctionAreaItemCs[extensionItem.quotationFunctionAreaId + '-' + extensionItem.quotationFunctionAreaName]) {
+                        quotationFunctionAreaItemCs[extensionItem.quotationFunctionAreaId + '-' + extensionItem.quotationFunctionAreaName].push(extensionItem);
+                    }
+
+                }
+            }
+        }
+
+        if (showType.itemtype & 4) {
+            var addReduceItemLength = addReduceItems.length;
+
+            for (var i = 0; i < addReduceItemLength; ++i) {
+
+                var addReduceItem = addReduceItems[i];
+
+                if ([0, 2].indexOf(addReduceItem.type) != -1) {
+                    addReduceItem.typestr = "增项 " + addReduceItemtypeDict[addReduceItem.type];
+                } else {
+                    if ([4].indexOf(addReduceItem.type) != -1) {
+                        if (reduceNums.ariId[addReduceItem.quoteItemId]) {
+                            reduceNums.ariId[addReduceItem.quoteItemId].num = utils.accAdd(reduceNums.ariId[addReduceItem.quoteItemId].num, addReduceItem.num);
+                        } else {
+                            reduceNums.ariId[addReduceItem.quoteItemId] = {};
+                            reduceNums.ariId[addReduceItem.quoteItemId].num = addReduceItem.num;
+                            reduceNums.ariId[addReduceItem.quoteItemId].quotationFunctionType = addReduceItem.quotationFunctionAreaType;
+                        }
+                    } else if ([5].indexOf(addReduceItem.type) != -1) {
+                        if (reduceNums.eiId[addReduceItem.quoteItemId]) {
+                            reduceNums.eiId[addReduceItem.quoteItemId].num = utils.accAdd(reduceNums.eiId[addReduceItem.quoteItemId].num, addReduceItem.num);
+                        } else {
+                            reduceNums.eiId[addReduceItem.quoteItemId] = {};
+                            reduceNums.eiId[addReduceItem.quoteItemId].num = addReduceItem.num;
+                            reduceNums.eiId[addReduceItem.quoteItemId].quotationFunctionType = addReduceItem.quotationFunctionAreaType;
+                        }
+                    } else if ([1].indexOf(addReduceItem.type) != -1) {
+
+                    } else if([3].indexOf(addReduceItem.type) != -1){
+
+                    }
+                    
+                    addReduceItem.typestr = "减项 " + addReduceItemtypeDict[addReduceItem.type];
                 }
 
-                quotationFunctionAreaItem.typestr = quotationFunctionAreaItem.type == 0 ? "普通" : quotationFunctionAreaItem.type == 1 ? "自定义" : quotationFunctionAreaItem.type == 4  ? "不计算" : "-";
-                var _dcp = 0;
+                var _dcp = addReduceItem.unitPrice;
                 var _discountNum = 10;
-                if ($decorationtype == 2 || $decorationtype == 3) {
-                    _discountNum = discount;
-                    _dcp = quotationFunctionAreaItem.type < 2 || quotationFunctionAreaItem.type == 5 ? utils.changeThrDecimal(utils.accMul(quotationFunctionAreaItem.unitPrice, utils.accDiv(discount, 10))) : quotationFunctionAreaItem.unitPrice;
+                addReduceItem.quotationTotalPrice = utils.changeThrDecimal(utils.accMul(addReduceItem.num, addReduceItem.unitPrice));
+
+                if ([0, 2].indexOf(addReduceItem.type) != -1) {
+
                 } else {
-                    _discountNum = quotationFunctionAreaItem.discount == 1 ? discount : 10 ;
-                    _dcp = quotationFunctionAreaItem.type < 2 || quotationFunctionAreaItem.type == 5 ? utils.changeThrDecimal(utils.accMul(quotationFunctionAreaItem.unitPrice, (quotationFunctionAreaItem.discount == 1 ? utils.accDiv(discount, 10) : 1))) : quotationFunctionAreaItem.unitPrice;
-                }
-                var _dcpt = utils.changeThrDecimal(utils.accMul(quotationFunctionAreaItem.initNum, _dcp));
 
-                if (quotationFunctionArea.type == 3) {
-                    quotationFunctionAreaItem.num = quotationFunctionAreaItem.initNum;
-                    quotationFunctionAreaItem.dcp = 0;
-                    quotationFunctionAreaItem.dcpt = 0;
-                    quotationFunctionAreaItem._discountNum = 0;
-                    quotationFunctionAreaItem.quotationTotalPrice = 0;
-                } else {
-                    quotationFunctionAreaItem.num = quotationFunctionAreaItem.initNum;
-                    quotationFunctionAreaItem.dcp = _dcp;
-                    quotationFunctionAreaItem.dcpt = _dcpt;
-                    quotationFunctionAreaItem._discountNum = _discountNum;
-                    quotationFunctionAreaItem.quotationTotalPrice = utils.changeThrDecimal(utils.accMul(quotationFunctionAreaItem.initNum, quotationFunctionAreaItem.unitPrice));
-                }
+                    addReduceItem.num = -addReduceItem.num;
 
-                if (quotationFunctionAreaItem.type == 2) {
-                    quotationUtils.quotationDetail.trafficDiscount = quotationFunctionAreaItem.discount;
-                    quotationFunctionAreaItem.num = quotation.trafficPrice;
-                    quotationFunctionAreaItem.dcpt = quotationFunctionAreaItem.discount == 1 || $decorationtype == 2 || $decorationtype == 3 ? utils.changeThrDecimal(utils.accMul(quotation.trafficPrice,utils.accDiv(discount, 10))) : quotation.trafficPrice;
-                    quotationFunctionAreaItem.dcp = quotationFunctionAreaItem.unitPrice;
-                    quotationFunctionAreaItem.measurementUnit = "车运费";
-                    quotationFunctionAreaItem.quotationTotalPrice = quotation.trafficPrice;
-                } else if (quotationFunctionAreaItem.type == 3) {
-                    quotationUtils.quotationDetail.manageDiscount = quotationFunctionAreaItem.discount;
-                    quotationFunctionAreaItem.num = quotation.managePrice;
-                    quotationFunctionAreaItem.measurementUnit = "管理费";
-                    quotationFunctionAreaItem.dcpt = quotationFunctionAreaItem.discount == 1 ? utils.changeThrDecimal(utils.accMul(quotation.managePrice,utils.accDiv(discount, 10))) : quotation.managePrice;
-                    quotationFunctionAreaItem._discountNum = quotationFunctionAreaItem.discount == 1 ? _discountNum : 10;
-                    quotationFunctionAreaItem.dcp = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItem.unitPrice,quotation.notSalesmanRate));
-                    quotationFunctionAreaItem.unitPrice = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItem.unitPrice ,quotation.notSalesmanRate));
-                    quotationFunctionAreaItem.quotationTotalPrice = quotation.managePrice;
-                }
+                    if (addReduceItem.type == 4 || addReduceItem.type == 5) {
 
-                quotationFunctionAreaItemCs[quotationFunctionArea.qfaId + '-' + quotationFunctionArea.functionAreaName].push(quotationFunctionAreaItem);
-            }
-        }
-
-        if (extensionItems != null && extensionItems != '') {
-
-            var extensionItemsLength = extensionItems.length;
-
-            for (var i = 0; i < extensionItemsLength; ++i) {
-
-                var extensionItem = extensionItems[i];
-                
-                var _dcp = 0, _dcpt = 0;
-                
-                if([0, 1].indexOf(extensionItem.type) != -1){
-                    
-                    extensionItem._discountNum = 10;
-                    
-                    _dcp = extensionItem.unitPrice;
-                    _dcpt = utils.changeThrDecimal(utils.accMul(_dcp, extensionItem.num));
-                }else if([2, 3, 4].indexOf(extensionItem.type) != -1){
-                    
-                    extensionItem.unitPrice = -extensionItem.unitPrice;
-                    extensionItem._discountNum = discount;
-                    
-                    _dcp = utils.accMul(extensionItem.unitPrice, utils.accDiv(discount, 10));
-                    _dcpt = utils.changeThrDecimal(utils.accMul(utils.accMul(extensionItem.unitPrice, extensionItem.num), utils.accDiv(discount, 10)));
-                }
-                
-                extensionItem.typestr =extensionItemtypeDict[extensionItem.type];
-                
-                extensionItem.dcp = _dcp;
-                extensionItem.dcpt = _dcpt;
-                
-                extensionItem.quotationTotalPrice = utils.changeThrDecimal(utils.accMul(extensionItem.num, _dcpt));
-
-                if (quotationFunctionAreaItemCs[extensionItem.quotationFunctionAreaId + '-' + extensionItem.quotationFunctionAreaName]) {
-                    quotationFunctionAreaItemCs[extensionItem.quotationFunctionAreaId + '-' + extensionItem.quotationFunctionAreaName].push(extensionItem);
-                }
-            }
-        }
-
-        var addReduceItemLength = addReduceItems.length;
-
-        for (var i = 0; i < addReduceItemLength; ++i) {
-
-            var addReduceItem = addReduceItems[i];
-            
-            if ([0, 2].indexOf(addReduceItem.type) != -1) {
-                addReduceItem.typestr = "增项 " + addReduceItemtypeDict[addReduceItem.type];
-            } else {
-                if ([4].indexOf(addReduceItem.type) != -1) {
-                    if (reduceNums.ariId[addReduceItem.quoteItemId]) {
-                        reduceNums.ariId[addReduceItem.quoteItemId].num = utils.accAdd(reduceNums.ariId[addReduceItem.quoteItemId].num, addReduceItem.num);
+                    } else if ($decorationtype == 2) {
+                        _discountNum = discount;
+                        _dcp = utils.changeThrDecimal(utils.accMul(addReduceItem.unitPrice, utils.accDiv(discount, 10)));
                     } else {
-                        reduceNums.ariId[addReduceItem.quoteItemId] = {};
-                        reduceNums.ariId[addReduceItem.quoteItemId].num = addReduceItem.num;
-                        reduceNums.ariId[addReduceItem.quoteItemId].quotationFunctionType = addReduceItem.quotationFunctionAreaType;
+                        if ([1, 3].indexOf(addReduceItem.discount)) {
+                            _discountNum = discount;
+                            _dcp = utils.changeThrDecimal(utils.accMul(addReduceItem.unitPrice, utils.accDiv(discount, 10)));
+                        }
                     }
-                } else if ([5].indexOf(addReduceItem.type) != -1) {
-                    if (reduceNums.eiId[addReduceItem.quoteItemId]) {
-                        reduceNums.eiId[addReduceItem.quoteItemId].num = utils.accAdd(reduceNums.eiId[addReduceItem.quoteItemId].num, addReduceItem.num);
-                    } else {
-                        reduceNums.eiId[addReduceItem.quoteItemId] = {};
-                        reduceNums.eiId[addReduceItem.quoteItemId].num = addReduceItem.num;
-                        reduceNums.eiId[addReduceItem.quoteItemId].quotationFunctionType = addReduceItem.quotationFunctionAreaType;
-                    }
-                } else if ([1].indexOf(addReduceItem.type) != -1) {
-
-                } else if([3].indexOf(addReduceItem.type) != -1){
-
                 }
-                addReduceItem.num = -addReduceItem.num;
-                addReduceItem.typestr = "减项 " + addReduceItemtypeDict[addReduceItem.type];
-            }
+                _dcpt = utils.changeThrDecimal(utils.accMul(addReduceItem.num, _dcp));
 
-            var _dcp = addReduceItem.unitPrice;
-            var _discountNum = 10;
-            addReduceItem.quotationTotalPrice = utils.changeThrDecimal(utils.accMul(addReduceItem.num, addReduceItem.unitPrice));
-            if ($decorationtype == 0 && [1, 3].indexOf(addReduceItem.type) != -1 && addReduceItem.discount == 1) {
-                _discountNum = discount;
-                _dcp = utils.changeThrDecimal(utils.accMul(addReduceItem.unitPrice, utils.accDiv(discount, 10)));
-            } else if ($decorationtype == 1 && [1, 3].indexOf(addReduceItem.type) != -1 && addReduceItem.discount == 1) {
-                _discountNum = discount;
-                _dcp = utils.changeThrDecimal(utils.accMul(addReduceItem.unitPrice, utils.accDiv(discount, 10)));
-            } else if ($decorationtype == 2 || $decorationtype == 3) {
-                if ([0, 2, 4].indexOf(addReduceItem.type) != -1) {
-                    //_discountNum = config.addreduceDiscount;
-                    //_dcp = utils.changeThrDecimal(utils.accMul(addReduceItem.unitPrice, utils.accDiv(config.addreduceDiscount, 10)));
+                addReduceItem.dcp = _dcp;
+                addReduceItem.dcpt = _dcpt;
+                addReduceItem._discountNum = _discountNum;
 
-                } else if ([1, 3].indexOf(addReduceItem.type) != -1) {
-                    _discountNum = discount;
-                    _dcp = utils.changeThrDecimal(utils.accMul(addReduceItem.unitPrice, utils.accDiv(discount, 10)));
+                if (quotationFunctionAreaItemCs[addReduceItem.quotationFunctionAreaId + '-' + addReduceItem.quotationFunctionAreaName] == undefined) {
+                    quotationFunctionAreaItemCs[addReduceItem.quotationFunctionAreaId + '-' + addReduceItem.quotationFunctionAreaName] = [];
                 }
-            }
 
-            var _dcpt = utils.changeThrDecimal(utils.accMul(addReduceItem.num, _dcp));
+                if (quotationFunctionAreaItemCs[addReduceItem.quotationFunctionAreaId + '-' + addReduceItem.quotationFunctionAreaName]) {
+                    quotationFunctionAreaItemCs[addReduceItem.quotationFunctionAreaId + '-' + addReduceItem.quotationFunctionAreaName].push(addReduceItem);
+                }
 
-            addReduceItem.dcp = _dcp;
-            addReduceItem.dcpt = _dcpt;
-            addReduceItem._discountNum = _discountNum;
-
-            if (quotationFunctionAreaItemCs[addReduceItem.quotationFunctionAreaId + '-' + addReduceItem.quotationFunctionAreaName]) {
-                quotationFunctionAreaItemCs[addReduceItem.quotationFunctionAreaId + '-' + addReduceItem.quotationFunctionAreaName].push(addReduceItem);
             }
         }
 
@@ -405,12 +477,13 @@ var quotationUtils = {
     initQuotationDetail: function () {
 
         var quotationItemListDiv = $("#quotationItemListDiv").html("");
-        var db = 1;
+        var db = 1, _data = null;
         if ($("#showWay").val() == 0) {
             _data = quotationUtils.quotationDetail.quotationFunctionAreaItemCs;
         } else {
             _data = quotationUtils.quotationDetail.quotationFunctionAreaItemWs;
         }
+
         _data && $.each(_data, function (i, v) {
 
             var $dcpts = 0.0;
@@ -468,9 +541,10 @@ var quotationUtils = {
                 $printWork.click(function(){
                     params.quotationId = quotationUtils.quotationDetail.quotation.qid;
                     params.type = 4;
-                    params.subtype = -1;
+                    params.subtype = [-2];
                     params.workType = i.split('-')[1];
-                    com.popup("报价工种打印",api.index.quotationOutputIndex.url,null,null,true);
+                    params.showType = {itemtype: 7};
+                    com.popup("报价工种打印", api.index.quotationOutputIndex.url, null, null, true);
                 });
             }
             $item.append($total).appendTo($list);
@@ -535,8 +609,8 @@ var quotationUtils = {
                         qv.num = utils.accAdd(qv.num, reduceNums.ariId[qv.ariId].num);
                         qv.dcpt = utils.changeThrDecimal(utils.accMul(qv.num, qv.dcp));
                         qv.quotationTotalPrice = utils.changeThrDecimal(utils.accMul(qv.num, qv.unitPrice));
-                    } else if (qv.eiId && reduceNums.eiId[qv.eiId]) {
-                        qv.num = utils.accAdd(qv.num, reduceNums.eiId[qv.eiId].num);
+                    } else if (qv.eiid && reduceNums.eiId[qv.eiid]) {
+                        qv.num = utils.accAdd(qv.num, reduceNums.eiId[qv.eiid].num);
                         qv.dcpt = utils.changeThrDecimal(utils.accMul(qv.num, qv.dcp));
                         qv.quotationTotalPrice = utils.changeThrDecimal(utils.accMul(qv.num, qv.unitPrice));
                     }
@@ -566,31 +640,46 @@ var quotationUtils = {
     quotationCalculator: function (discount,basePrice) {
         var $quotationUndisPrice = quotationUtils.quotationDetail.quotationUndisPrice;//报价项折扣总额
         var $quotationTotalPrice = quotationUtils.quotationDetail.quotationTotalPrice;//报价项非折扣总额
+
+        var $extensionItemTotalPrice = quotationUtils.quotationDetail.extensionItemTotalPrice;//扩展项总额
+
         var $addReduceTotal = quotationUtils.quotationDetail.addReduceTotal;//增项总额
         var $minusQuoTotalPrice = quotationUtils.quotationDetail.minusQuoTotalPrice;//减项中的报价项非折扣总额
         var $minusQuoUndisPrice = quotationUtils.quotationDetail.minusQuoUndisPrice;//减项中的报价折扣总额
-        var $minusAddReduceTotal = quotationUtils.quotationDetail.minusAddReduceTotal;//减项中的增项总额
-        var $minusExtensionTotalPrice = quotationUtils.quotationDetail.minusExtensionTotalPrice;//减项中的扩展项总额
-        var $extensionItemTotalPrice = quotationUtils.quotationDetail.extensionItemTotalPrice;//扩展项总额
+        //var $minusAddReduceTotal = quotationUtils.quotationDetail.minusAddReduceTotal;//减项中的增项总额
+        //var $minusExtensionTotalPrice = quotationUtils.quotationDetail.minusExtensionTotalPrice;//减项中的扩展项总额
+
 
         var $discount = discount;
         var $basePrice = basePrice;
         var $managePrice = quotationUtils.quotationDetail.manageDiscount == 1 ? utils.changeThrDecimal(utils.accMul(quotationUtils.quotationDetail.quotation.managePrice,utils.accDiv($discount, 10))) : quotationUtils.quotationDetail.quotation.managePrice ;
         var $trafficPrice = quotationUtils.quotationDetail.trafficDiscount == 1  ? utils.changeThrDecimal(utils.accMul(quotationUtils.quotationDetail.quotation.trafficPrice,utils.accDiv($discount, 10))) : quotationUtils.quotationDetail.quotation.trafficPrice ;
-        var $Total=0,_$Total=0;
+        var $Total = 0;
 
-        if ($basePrice && $basePrice!=0){
-            //(工程基数 - 工程基数 % 基数) * 折扣 + 工程基数 % 基数 + 管理费
-            var total = utils.accAdd(utils.accAdd($quotationUndisPrice,$quotationTotalPrice),quotationUtils.quotationDetail.quotation.trafficPrice);  //工程基数
-            var remainder = utils.changeThrDecimal(total % $basePrice); //余数
-            var _dicProjectPrice = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accMul(utils.accSub(total,remainder),utils.accDiv($discount, 10)),remainder),$managePrice));
-            _$Total = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_dicProjectPrice, $extensionItemTotalPrice),$addReduceTotal),utils.accMul(utils.accAdd($minusQuoTotalPrice,$minusQuoUndisPrice),utils.accDiv($discount, 10))),$minusAddReduceTotal),$minusExtensionTotalPrice));
-        }else{
-            $Total = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accMul($quotationUndisPrice, utils.accDiv($discount, 10)), $quotationTotalPrice), $extensionItemTotalPrice), $addReduceTotal), utils.accMul($minusQuoUndisPrice, utils.accDiv($discount, 10))), $minusQuoTotalPrice), $minusExtensionTotalPrice), $minusAddReduceTotal));
+        if ($basePrice && $basePrice != 0){
+            // 工程基数
+            var total = utils.accAdd(utils.accAdd($quotationUndisPrice,$quotationTotalPrice),quotationUtils.quotationDetail.quotation.trafficPrice);
+            // 余数
+            var remainder = utils.changeThrDecimal(total % $basePrice);
+            // (工程基数 - 工程基数 % 基数) * 折扣 + 工程基数 % 基数 + 管理费
+            var _dicProjectPrice = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accMul(utils.accSub(total, remainder),utils.accDiv($discount, 10)), remainder), $managePrice));
+            // 增减增项总额 + 拓展项总额
+            var addTotal = utils.changeThrDecimal(utils.accAdd($addReduceTotal, $extensionItemTotalPrice));
+            // 减项非打折项 + 减项打折项 * 折扣
+            var reduceTotal = utils.changeThrDecimal(utils.accAdd($minusQuoTotalPrice, utils.accMul($minusQuoUndisPrice, utils.accDiv($discount, 10))));
+            $Total = utils.changeThrDecimal(utils.accAdd(utils.accAdd(_dicProjectPrice, addTotal), reduceTotal));
+
+        } else {
+
+            // 报价项打折价 * 折扣 + 报价项非打折价 + 增项 + 减项打折项 * 折扣 + 减项不打折项 + 拓展项总额 + 车运费 + 管理费
+            var quotationTotal = utils.changeThrDecimal(utils.accAdd(utils.accMul($quotationUndisPrice, utils.accDiv($discount, 10)), $quotationTotalPrice));
+            var addReduceTotal = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accMul($minusQuoUndisPrice, utils.accDiv($discount, 10)), $minusQuoTotalPrice), $addReduceTotal));
+
+            $Total = utils.changeThrDecimal(utils.accAdd(utils.accAdd(quotationTotal, addReduceTotal), $extensionItemTotalPrice));
             $Total = utils.changeThrDecimal(utils.accAdd(utils.accAdd($Total, $managePrice),$trafficPrice));
         }
 
-        return $basePrice && $basePrice!=0 ? _$Total : $Total;
+        return $Total;
     },
     quotationTotal : function(){
         var $quotationUndisPrice = quotationUtils.quotationDetail.quotationUndisPrice;//报价项折扣总额
@@ -598,11 +687,13 @@ var quotationUtils = {
         var $addReduceTotal = quotationUtils.quotationDetail.addReduceTotal;//增项总额
         var $minusQuoTotalPrice = quotationUtils.quotationDetail.minusQuoTotalPrice;//减项中的报价项非折扣总额
         var $minusQuoUndisPrice = quotationUtils.quotationDetail.minusQuoUndisPrice;//减项中的报价折扣总额
-        var $minusAddReduceTotal = quotationUtils.quotationDetail.minusAddReduceTotal;//减项中的增项总额
-        var $minusExtensionTotalPrice = quotationUtils.quotationDetail.minusExtensionTotalPrice;//减项中的扩展项总额
+        //var $minusAddReduceTotal = quotationUtils.quotationDetail.minusAddReduceTotal;//减项中的增项总额
+        //var $minusExtensionTotalPrice = quotationUtils.quotationDetail.minusExtensionTotalPrice;//减项中的扩展项总额
         var $extensionItemTotalPrice = quotationUtils.quotationDetail.extensionItemTotalPrice;//扩展项总额
 
-        var $Total = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd($quotationUndisPrice,$quotationTotalPrice),$addReduceTotal),$minusQuoTotalPrice),$minusQuoUndisPrice),$minusAddReduceTotal),$minusExtensionTotalPrice), $extensionItemTotalPrice),quotationUtils.quotationDetail.quotation.managePrice),quotationUtils.quotationDetail.quotation.trafficPrice));
+        var $Total = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(
+            utils.accAdd(utils.accAdd($quotationUndisPrice, $quotationTotalPrice), $addReduceTotal), $minusQuoTotalPrice),
+            $minusQuoUndisPrice), $extensionItemTotalPrice), quotationUtils.quotationDetail.quotation.managePrice), quotationUtils.quotationDetail.quotation.trafficPrice));
 
         return $Total;
     }

@@ -1,5 +1,6 @@
 package com.fanglin.sales.action;
 
+
 import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -12,8 +13,7 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.sales.service.SalesActivityService;
-import com.fanglin.sales.vo.SalesActivityItemVO;
-import com.fanglin.sales.vo.SalesVO;
+import com.fanglin.sales.vo.SalesActivityVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -25,110 +25,43 @@ public class SalesActivityAction extends BaseListAction {
 	@Autowired
 	private SalesActivityService salesActivityService;
 	
-	private List<SalesActivityItemVO> saleActivityItems;
+	private List<SalesActivityVO> salesActivitys;
 	
-	private SalesVO sales;
-	
-	private SalesActivityItemVO salesActivityItem;
+	private SalesActivityVO salesActivity;
 	
 	private String orderId;
 	
-	private Object salesActivitys;
 	
-	@Action(value="querySalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String querySalesActivityItem() throws FLException{
+	@Action(value="pageSalesActivity", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String pageSalesActivity() throws FLException{
 		
-		saleActivityItems = salesActivityService.querySalesActivityItem(orderId);
+		salesActivityService.pageSalesActivity(getPaging(), getFilters(), orderId);
 		
 		return SUCCESS;
 	}
 	
-	@Action(value="querySalesActivity", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String querySalesActivity() throws FLException{
+	@Action(value="amountSalesActivity", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String amountSalesActivity() throws FLException{
 		
-		salesActivitys=salesActivityService.querySalesActivity(orderId);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="addSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addSalesActivityItem() throws FLException{
-		
-		salesActivityService.addSalesActivityItem(saleActivityItems);
+		salesActivitys = salesActivityService.amountSalesActivity(orderId);
 		
 		return SUCCESS;
 	}
 	
-	@Action(value="abateSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String abateSalesActivityItem() throws FLException{
+	@Action(value="amountSalesActivityForActivity", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String amountSalesActivityForActivity() throws FLException{
 		
-		salesActivityService.abateSalesActivityItem(salesActivityItem, queryUserId());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="receiveSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String receiveSalesActivityItem() throws FLException{
-		
-		salesActivityService.receiveSalesActivityItem(salesActivityItem, queryUserId(), queryUserName());
+		salesActivityService.amountSalesActivityForActivity(salesActivity);
 		
 		return SUCCESS;
 	}
 	
-	@Action(value="deliveSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String deliveSalesActivityItem() throws FLException{
+	@Action(value="amountSalesActivityForPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String amountSalesActivityForPayment() throws FLException{
 		
-		salesActivityService.deliveSalesActivityItem(salesActivityItem, queryUserId(), queryUserName());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="unrefundSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String unrefundSalesActivityItem() throws FLException{
-		
-		salesActivityService.unrefundSalesActivityItem(salesActivityItem);
+		salesActivityService.amountSalesActivityForPayment(salesActivity);
 		
 		return SUCCESS;
-	}
-	
-	@Action(value="refundSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String refundSalesActivityItem() throws FLException{
-		
-		salesActivityService.refundSalesActivityItem(salesActivityItem, queryUserId());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="expendSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String expendSalesActivityItem() throws FLException{
-		
-		salesActivityService.expendSalesActivityItem(salesActivityItem);
-		
-		return SUCCESS;
-	}
-
-	public List<SalesActivityItemVO> getSaleActivityItems() {
-		return saleActivityItems;
-	}
-
-	public void setSaleActivityItems(List<SalesActivityItemVO> saleActivityItems) {
-		this.saleActivityItems = saleActivityItems;
-	}
-
-	public SalesVO getSales() {
-		return sales;
-	}
-
-	public void setSales(SalesVO sales) {
-		this.sales = sales;
-	}
-
-	public SalesActivityItemVO getSalesActivityItem() {
-		return salesActivityItem;
-	}
-
-	public void setSalesActivityItem(SalesActivityItemVO salesActivityItem) {
-		this.salesActivityItem = salesActivityItem;
 	}
 
 	public String getOrderId() {
@@ -139,12 +72,20 @@ public class SalesActivityAction extends BaseListAction {
 		this.orderId = orderId;
 	}
 
-	public Object getSalesActivitys() {
+	public List<SalesActivityVO> getSalesActivitys() {
 		return salesActivitys;
 	}
 
-	public void setSalesActivitys(Object salesActivitys) {
+	public void setSalesActivitys(List<SalesActivityVO> salesActivitys) {
 		this.salesActivitys = salesActivitys;
 	}
 
+	public SalesActivityVO getSalesActivity() {
+		return salesActivity;
+	}
+
+	public void setSalesActivity(SalesActivityVO salesActivity) {
+		this.salesActivity = salesActivity;
+	}
+	
 }

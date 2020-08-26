@@ -19,7 +19,9 @@ public interface MessageService {
 	
 	public void sendMessage(MessageVO messageVO,int company) throws FLException;
 	
-	public void sendMessage(String receiver,String sender,String contents,short type,int company) throws FLException;
+	public void sendMessage(String receiver, String sender, String contents, short type, int company) throws FLException;
+	
+	public void sendMessage(String receiver, String sender, String contents, short type, short subtype, long ident, int company) throws FLException;
 	
 	public void updateMessageForRead(List<Integer> messageIds);
 

@@ -45,14 +45,14 @@ $(function(){
         btns: {
             saveBtn: com.focusPage("#saveSelectItemBtn")
         },
-        
+        history: [],
         postParam: {}
     };
     
     $.extend(com.validator, functionArea.validator);
     
 	com.post(api.ds.quotation, {}, function(res){
-        com.focusPage('#type').bindData(res.functionType, 'key', 'value');
+        functionArea.items.type.bindData(res.functionType, 'key', 'value');
     });
 	
 	com.post(api.quotation.queryQuotationVersion, {}, function(res) {
@@ -81,7 +81,7 @@ $(function(){
 
         aitems.each(function(i){
             ids["ids[" + i + "]"] = $(this).val();
-        })
+        });
         
         removeFunctionAreaItem(ids);
     });
@@ -93,7 +93,7 @@ $(function(){
 	    if($(this).val() == "2"){
 	        functionArea.items.total.addClass('v_required').removeAttr('disabled');
 	    }else{
-	        functionArea.items.total.removeClass('v_required').attr('disabled', 'disabled');
+	        functionArea.items.total.removeClass('v_required').attr('disabled', 'disabled').val(0);
 	    }
     });
 
@@ -209,6 +209,8 @@ $(function(){
         
         if(v.type == 2){
             functionArea.items.total.val(v.total).removeAttr("disabled");
+        } else {
+            functionArea.items.total.attr("disabled", "disabled").val(0);
         }
 
         functionArea.items.functionAreaId.css("display", '').attr("disabled", "disabled");
@@ -233,14 +235,14 @@ $(function(){
             "functionArea.functionAreaType": functionArea.items.functionAreaType.val(),
             "functionArea.versionId": versionId,
             "functionArea.type": functionArea.items.type.val(),
-            "functionArea.total": functionArea.items.total.val() ? functionArea.items.total.val() : 0
-        }
+            "functionArea.total": functionArea.items.total.val()
+        };
         
         if(functionArea.items.faId.val() != '0'){
             url = api.quotation.updateFunctionArea;
             options["functionArea.faId"] = functionArea.items.faId.val();
         }
-        
+
         com.post(url, options, function(){
             com.showAlert(com.info, "操作成功");
             functionAreaSeacher.doSearch();
@@ -366,6 +368,13 @@ $(function(){
                     });
 
                     $ul.appendTo($tableWrap);
+
+                    if (quotationItem.history.length) {
+                        $.each(quotationItem.history, function(i, val) {
+                            var $input = com.focusPage("input[name='quotations'][value='" + $(val).val() + "']");
+                            $input.length && ($input.prop('checked', true));
+                        });
+                    }
                 }
             };
 
@@ -406,6 +415,16 @@ $(function(){
                 $label.append($input).append($span).appendTo($h3);
                 $liLine.append($h3).append($ulProperty);
 
+                $input.change(function () {
+                    if ($(this).is(':checked')) {
+                        quotationItem.history.push($(this));
+                    } else {
+                        quotationItem.history = $.map(quotationItem.history, function (v) {
+                            return v.val() == $(this).val() ? null : v;
+                        });
+                    }
+                });
+
                 return $liLine;
             };
 
@@ -433,28 +452,33 @@ $(function(){
     function addSelectItem() {
 
         var _params = {};
-        var $quos = $('input[type="checkbox"][name="quotations"]:checked');
-        
-        if($quos.length == 0) return false;
-        
+
+        var $historys = quotationItem.history;
+
+        if ($historys.length == 0) {
+            com.showAlert(com.warning, "请选择要添加的报价项");
+            return false;
+        }
+
         var faid = com.focusPage("#selectFunctionAreaId").val();
 
-        $quos.each(function(i, e){
+        $.each($historys, function(i, e){
             var functionAreaType = functionAreaItem.postParam["functionAreaItem.functionArea.functionAreaType"];
             
             var quotationClassification = $(e).attr('data-quotationClassification');
             var qiid = $(this).val();
-            
+
             _params["functionAreaItems[" + i + "].functionArea.faId"] = faid,
-            _params["functionAreaItems[" + i + "].quotationItem.qiId"] = $(this).val(),
+            _params["functionAreaItems[" + i + "].quotationItem.qiId"] = qiid,
             _params["functionAreaItems[" + i + "].quotationItem.quotationClassification"] = quotationClassification;
-        })
-        
+        });
+
         com.post(api.quotation.addFunctionAreaItem, _params, function(res){
             functionAreaItem.modals.selectItemModal.modal("hide");
             com.showAlert(com.info, "操作成功");
             initFunctionAreaItemList();
-        })
+            quotationItem.history = [];
+        });
     }
     
 });

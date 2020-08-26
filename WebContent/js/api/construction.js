@@ -184,8 +184,6 @@ $.extend(api, {construction: {
     tranargs:{
          args: ["constructionInfo.timeLimit"]
     }},
-    sendConstructionInfoForConfirm: {url: "sendConstructionInfoForConfirm.do"},
-    
     pageConstructionAccessory: {url: "pageConstructionAccessory.do", demo: true,
         type: "query",
         tranargs: [{

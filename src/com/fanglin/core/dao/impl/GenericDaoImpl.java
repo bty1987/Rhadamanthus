@@ -1,7 +1,9 @@
 package com.fanglin.core.dao.impl;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,28 +24,29 @@ import org.hibernate.type.StringType;
 
 import com.fanglin.core.dao.GenericDao;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 public abstract class GenericDaoImpl implements GenericDao {
 
 	protected SessionFactory sessionFactory;
-	
+
 	protected SessionFactory communionSessionFactory;
-	
+
 	protected SessionFactory financeSessionFactory;
 
-	public SessionFactory getSessionFactory(){
+	public SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
 
-	public void setSessionFactory(SessionFactory sessionFactory){
+	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
 
-	protected Session session(){
+	protected Session session() {
 		return this.sessionFactory.getCurrentSession();
 	}
-	
+
 	public SessionFactory getCommunionSessionFactory() {
 		return communionSessionFactory;
 	}
@@ -51,8 +54,8 @@ public abstract class GenericDaoImpl implements GenericDao {
 	public void setCommunionSessionFactory(SessionFactory communionSessionFactory) {
 		this.communionSessionFactory = communionSessionFactory;
 	}
-	
-	protected Session communionSession(){
+
+	protected Session communionSession() {
 		return this.communionSessionFactory.getCurrentSession();
 	}
 
@@ -63,90 +66,90 @@ public abstract class GenericDaoImpl implements GenericDao {
 	public void setFinanceSessionFactory(SessionFactory financeSessionFactory) {
 		this.financeSessionFactory = financeSessionFactory;
 	}
-	
-	protected Session financeSession(){
+
+	protected Session financeSession() {
 		return this.financeSessionFactory.getCurrentSession();
 	}
 
 	@Override
-	public void delete(Object obj){
+	public void delete(Object obj) {
 		session().delete(obj);
 	}
 
 	@Override
-	public void save(Object obj){
+	public void save(Object obj) {
 		session().save(obj);
 	}
-	
+
 	@Override
 	public void merge(Object obj) {
 		session().merge(obj);
 	}
 
 	@Override
-	public void update(Object obj){
+	public void update(Object obj) {
 		session().update(obj);
 	}
 
 	@Override
-	public void refresh(Object obj){
+	public void refresh(Object obj) {
 		session().refresh(obj);
 	}
 
-	protected Query createQuery(String hql){
+	protected Query createQuery(String hql) {
 		Query query = session().createQuery(hql);
 		return query;
 	}
 
-	protected SQLQuery createSQLQuery(String sql){
+	protected SQLQuery createSQLQuery(String sql) {
 		return session().createSQLQuery(sql);
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <E> E get(Class<E> clazz, Serializable id){
+	protected <E> E get(Class<E> clazz, Serializable id) {
 		return (E) session().get(clazz, id);
 	}
 
-	protected void deleteById(Class<?> clazz, Serializable id){
+	protected void deleteById(Class<?> clazz, Serializable id) {
 		Session session = session();
 		Object obj = session().get(clazz, id);
-		if(obj != null){
+		if (obj != null) {
 			session.delete(obj);
 		}
 	}
-	
-	protected Criteria createCriteria(Class<?> clazz){
+
+	protected Criteria createCriteria(Class<?> clazz) {
 		return session().createCriteria(clazz);
 	}
 
 	@Override
-	public void saveOrUpdate(Object obj){
+	public void saveOrUpdate(Object obj) {
 		session().saveOrUpdate(obj);
 	}
-	
+
 	@Override
-	public void flush(){
+	public void flush() {
 		session().flush();
 	}
-	
+
 	@Override
-	public void clear(){
+	public void clear() {
 		session().clear();
 	}
 
-	protected <E> TopQuery<E> topQuery(int maxResults, Class<E> clazz){
+	protected <E> TopQuery<E> topQuery(int maxResults, Class<E> clazz) {
 		return new TopQuery<E>(maxResults, clazz, null);
 	}
 
-	protected <E> TopQuery<E> topQuery(int maxResults, Class<E> clazz, String cacheRegion){
+	protected <E> TopQuery<E> topQuery(int maxResults, Class<E> clazz, String cacheRegion) {
 		return new TopQuery<E>(maxResults, clazz, cacheRegion);
 	}
 
-	protected <E> PagingQuery<E> pagingQuery(Paging paging, Class<E> clazz){
+	protected <E> PagingQuery<E> pagingQuery(Paging paging, Class<E> clazz) {
 		return new PagingQuery<E>(paging, clazz, null);
 	}
 
-	protected <E> PagingQuery<E> pagingQuery(Paging paging, Class<E> clazz, String cacheRegion){
+	protected <E> PagingQuery<E> pagingQuery(Paging paging, Class<E> clazz, String cacheRegion) {
 		return new PagingQuery<E>(paging, clazz, cacheRegion);
 	}
 
@@ -165,113 +168,113 @@ public abstract class GenericDaoImpl implements GenericDao {
 
 		int maxResults;
 
-		public TopQuery(int maxResults, Class<T> clazz, String cacheRegion){
+		public TopQuery(int maxResults, Class<T> clazz, String cacheRegion) {
 			this.maxResults = maxResults;
 			this.clazz = clazz;
 			this.cacheRegion = cacheRegion;
 		}
 
-		public TopQuery<T> add(Criterion c){
-			if(criterions == null){
+		public TopQuery<T> add(Criterion c) {
+			if (criterions == null) {
 				criterions = new LinkedList<Criterion>();
 			}
 			criterions.add(c);
 			return this;
 		}
-		
+
 		@SuppressWarnings("unchecked")
-		public Criterion getCriterion(String propertyName, Object value, String op){
-			
-			if("eq".equals(op)){
-				return Restrictions.eq(propertyName,value);
-			}else if("cn".equals(op)){
+		public Criterion getCriterion(String propertyName, Object value, String op) {
+
+			if ("eq".equals(op)) {
+				return Restrictions.eq(propertyName, value);
+			} else if ("cn".equals(op)) {
 				return Restrictions.ilike(propertyName, (String) value, MatchMode.ANYWHERE);
-			}else if("nc".equals(op)){
+			} else if ("nc".equals(op)) {
 				return Restrictions.not(Restrictions.ilike(propertyName, (String) value, MatchMode.ANYWHERE));
-			}else if("lt".equals(op)){
+			} else if ("lt".equals(op)) {
 				return Restrictions.lt(propertyName, value);
-			}else if("le".equals(op)){
+			} else if ("le".equals(op)) {
 				return Restrictions.le(propertyName, value);
-			}else if("gt".equals(op)){
+			} else if ("gt".equals(op)) {
 				return Restrictions.gt(propertyName, value);
-			}else if("ge".equals(op)){
+			} else if ("ge".equals(op)) {
 				return Restrictions.ge(propertyName, value);
-			}else if("bw".equals(op)){
+			} else if ("bw".equals(op)) {
 				return Restrictions.ilike(propertyName, (String) value, MatchMode.START);
-			}else if("ew".equals(op)){
+			} else if ("ew".equals(op)) {
 				return Restrictions.ilike(propertyName, (String) value, MatchMode.END);
-			}else if("bn".equals(op)){
+			} else if ("bn".equals(op)) {
 				return Restrictions.not(Restrictions.ilike(propertyName, (String) value, MatchMode.START));
-			}else if("en".equals(op)){
+			} else if ("en".equals(op)) {
 				return Restrictions.not(Restrictions.ilike(propertyName, (String) value, MatchMode.END));
-			}else if("ne".equals(op)){
-				return Restrictions.ne(propertyName,value);
-			}else if("in".equals(op)){
-				return Restrictions.in(propertyName, (List<T>)value);
-			}else if("ni".equals(op)){
-				return Restrictions.not(Restrictions.in(propertyName, (List<T>)value));
-			}else if("likecn".equals(op)){
+			} else if ("ne".equals(op)) {
+				return Restrictions.ne(propertyName, value);
+			} else if ("in".equals(op)) {
+				return Restrictions.in(propertyName, (List<T>) value);
+			} else if ("ni".equals(op)) {
+				return Restrictions.not(Restrictions.in(propertyName, (List<T>) value));
+			} else if ("likecn".equals(op)) {
 				return Restrictions.like(propertyName, value);
-			}else if("and".equals(op)){
+			} else if ("and".equals(op)) {
 				return Restrictions.sqlRestriction(propertyName + " & ?", (String) value, StringType.INSTANCE);
-			}else{
+			} else {
 				return Restrictions.eq(propertyName, value);
 			}
 		}
 
-		public TopQuery<T> asc(String field){
+		public TopQuery<T> asc(String field) {
 			return add(Order.asc(field));
 		}
 
-		public TopQuery<T> desc(String field){
+		public TopQuery<T> desc(String field) {
 			return add(Order.desc(field));
 		}
 
-		public TopQuery<T> alias(String field, String alias){
-			if(aliases == null){
+		public TopQuery<T> alias(String field, String alias) {
+			if (aliases == null) {
 				aliases = new HashMap<String, Alias>();
 			}
-			
-			if(aliases.get(field) == null){
+
+			if (aliases.get(field) == null) {
 				aliases.put(field, new Alias(field, alias));
 			}
-			
+
 			return this;
 		}
 
 		@SuppressWarnings("unchecked")
-		public List<T> list(){
+		public List<T> list() {
 			Criteria criteria = criteria(true);
-			if(maxResults > 0){
+			if (maxResults > 0) {
 				criteria.setMaxResults(maxResults);
 			}
 			return criteria.list();
 		}
-		
-		protected Criteria criteria(boolean sortable){
+
+		protected Criteria criteria(boolean sortable) {
 			Criteria criteria = createCriteria(clazz);
-			
-			if(criterions != null){
-				if(aliases != null){
+
+			if (criterions != null) {
+				if (aliases != null) {
 					Set<String> aliasKeys = aliases.keySet();
-					
-					for(String key: aliasKeys){
+
+					for (String key : aliasKeys) {
 						Alias alias = aliases.get(key);
 						criteria.createAlias(alias.field, alias.alias);
 					}
 				}
-				
-				for(Criterion criterion: criterions){
+
+				for (Criterion criterion : criterions) {
 					criteria.add(criterion);
 				}
 			}
-			
-			if(cacheRegion != null){
+
+			if (cacheRegion != null) {
 				criteria.setCacheRegion(cacheRegion);
 			}
 
-			if(sortable && orders != null){
-				for(Order order: orders){
+			if (sortable && orders != null) {
+				for (Order order : orders) {
 					criteria.addOrder(order);
 				}
 			}
@@ -279,8 +282,8 @@ public abstract class GenericDaoImpl implements GenericDao {
 			return criteria;
 		}
 
-		private TopQuery<T> add(Order order){
-			if(orders == null){
+		private TopQuery<T> add(Order order) {
+			if (orders == null) {
 				orders = new LinkedList<Order>();
 			}
 			orders.add(order);
@@ -289,110 +292,129 @@ public abstract class GenericDaoImpl implements GenericDao {
 	}
 
 	protected class PagingQuery<T> extends TopQuery<T> implements Serializable {
+
 		private static final long serialVersionUID = 397003060855915658L;
 
 		boolean pagingFlag = true;
 		Paging paging;
 
-		public PagingQuery(Paging paging, Class<T> clazz, String cacheRegion){
+		public PagingQuery(Paging paging, Class<T> clazz, String cacheRegion) {
 			super(paging.getRows(), clazz, cacheRegion);
 			this.paging = paging;
 		}
-		
+
 		@Override
-		public Criterion getCriterion(String propertyName, Object data, String op){
+		public Criterion getCriterion(String propertyName, Object data, String op) {
 			return super.getCriterion(propertyName, data, op);
 		}
-		
-		public Criterion getCriterion(String propertyName, Filter filter){
+
+		public Criterion getCriterion(String propertyName, Filter filter) {
 			return getCriterion(propertyName, filter.getData(), filter.getOp());
 		}
-		
-		public Criterion getCriterion(Filter filter){
-			return getCriterion(filter);
+
+		public Criterion getCriterion(Filter filter) {
+			return getCriterion(filter.getField(), filter.getData(), filter.getOp());
+		}
+
+		public void timeranges(String profield, String postfield, String datetime) {
+			String sTime = datetime.split("-")[0].replaceAll("/", "-") + " 00:00:00";
+			String eTime = datetime.split("-")[1].replaceAll("/", "-") + " 23:59:59";
+
+			Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
+			Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+
+			Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
+			Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
+
+			add(getCriterion(profield, sTimestamp, "ge"));
+			add(getCriterion(postfield, eTimestamp, "le"));
+		}
+
+		public void timeranges(String field, String datetime) {
+			timeranges(field, field, datetime);
 		}
 
 		@Override
 		@SuppressWarnings("unchecked")
-		public List<T> list(){
-			
+		public List<T> list() {
+
 			List<T> results = Collections.EMPTY_LIST;
-			
-			if(pagingFlag && paging.getNoPage() == 0){
-				
+
+			if (pagingFlag && paging.getNoPage() == 0) {
+
 				boolean query = true;
-				
+
 				// 统计数据总数
 				int totalCount = ((Number) criteria(false).setProjection(Projections.rowCount()).uniqueResult()).intValue();
 				paging.setTotalRecords(totalCount);
-				
-				if(totalCount <= (paging.getPage() - 1) * paging.getRows()){
+
+				if (totalCount <= (paging.getPage() - 1) * paging.getRows()) {
 					query = false;
 				}
-	
-				if(!query){
+
+				if (!query) {
 					paging.setPage(1);
 				}
-				
+
 				results = criteria(true).setFirstResult((paging.getPage() - 1) * paging.getRows()).setMaxResults(paging.getRows()).list();
 
 				int offset = totalCount % (paging.getRows()) == 0 ? 0 : 1;
 				paging.setTotalPage(totalCount / (paging.getRows()) + offset);
-			}else{
+			} else {
 				Criteria c = criteria(true);
 				results = c.list();
 			}
-			
+
 			paging.setData(results);
 
 			return results;
 		}
-		
+
 		@SuppressWarnings("unchecked")
-		public List<T> list(String id, String select, String from, String where){
-			
+		public List<T> list(String id, String select, String from, String where) {
+
 			boolean query = true;
-			
+
 			String hql = String.format("%s %s %s", select, from, where);
-			
+
 			int totalCount = ((Number) createQuery(String.format("select count(%s) %s %s", id, from, where)).uniqueResult()).intValue();
 			paging.setTotalRecords(totalCount);
-			
-			if(totalCount <= (paging.getPage() - 1) * paging.getRows()){
+
+			if (totalCount <= (paging.getPage() - 1) * paging.getRows()) {
 				query = false;
 			}
-			
+
 			List<T> results = Collections.EMPTY_LIST;
-			
-			if(pagingFlag){
-				if(!query){
+
+			if (pagingFlag) {
+				if (!query) {
 					paging.setPage(1);
 				}
-				
+
 				results = createQuery(hql).setFirstResult((paging.getPage() - 1) * paging.getRows()).setMaxResults(paging.getRows()).list();
 
 				int offset = totalCount % (paging.getRows()) == 0 ? 0 : 1;
 				paging.setTotalPage(totalCount / (paging.getRows()) + offset);
-			}else{
+			} else {
 				results = createQuery(hql).list();
 			}
-			
+
 			paging.setData(results);
-			
+
 			return results;
 		}
-		
+
 		@SuppressWarnings("unchecked")
-		public List<T> allList(){
+		public List<T> allList() {
 			int totalCount = ((Number) criteria(false).setProjection(Projections.rowCount()).uniqueResult()).intValue();
 			return criteria(true).setFirstResult(0).setMaxResults(totalCount).list();
 		}
-		
-		public void notPaging(){
+
+		public void notPaging() {
 			this.pagingFlag = false;
 		}
-		
-		public double sumForField(String field){
+
+		public double sumForField(String field) {
 			double sum = (Double) criteria(false).setProjection(Projections.sum(field)).uniqueResult();
 			return sum;
 		}
@@ -406,7 +428,7 @@ public abstract class GenericDaoImpl implements GenericDao {
 
 		private String alias;
 
-		public Alias(String field, String alias){
+		public Alias(String field, String alias) {
 			this.field = field;
 			this.alias = alias;
 		}

@@ -1,14 +1,3 @@
-/**
- * @File Name		: DecorationContractServiceImpl
- * @Package   	: com.fanglin.service.impl
- * @Version		: 1.0
- * @Date			: 2014-9-27
- * @Copyright	: Copyright Creators 2014
- * @Author		: bty1987
- * @Email			: bty1987@163.com
- * @Describing	: 
- */
-
 package com.fanglin.decoration.service.impl;
 
 import java.util.ArrayList;
@@ -165,82 +154,6 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	}
 
 	@Override
-	public void sendDecorationContractForSignet(DecorationContractVO decorationContractVO) throws FLException {
-
-		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());
-
-		if (decorationContractPO == null) {
-			throw new FLException(140067, "合同不存在");
-		}
-
-		String orderId = decorationContractPO.getOrderId();
-
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
-
-		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
-		}
-
-		ContractPO contractPO = decorationContractPO.getContract();
-
-		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, %s装修合同签署.", orderId, contractPO.getName()), Signature.extsign(decorationPO.getCustomer(), decorationContractPO));
-	}
-
-	@Override
-	public void sendDecorationContractForSign(DecorationContractVO decorationContractVO) throws FLException {
-
-		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());
-
-		if (decorationContractPO == null) {
-			throw new FLException(140067, "合同不存在");
-		}
-
-		String orderId = decorationContractPO.getOrderId();
-
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
-
-		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
-		}
-
-		SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
-
-		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 客户签名.", orderId), String.format("%s/signature.html?cid=%d", isv.getValue(), decorationPO.getCustomer().getCid()));
-	}
-
-	@Override
-	public void sendDecorationContractForView(DecorationContractVO decorationContractVO) throws FLException {
-
-		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());
-
-		if (decorationContractPO == null) {
-			throw new FLException(140067, "合同不存在");
-		}
-
-		String orderId = decorationContractPO.getOrderId();
-
-		ContractPO contractPO = decorationContractPO.getContract();
-
-		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, %s装修合同.", orderId, contractPO.getName()), decorationContractPO.getViewpdf());
-	}
-
-	@Override
-	public void sendDecorationContractForDownload(DecorationContractVO decorationContractVO) throws FLException {
-
-		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());
-
-		if (decorationContractPO == null) {
-			throw new FLException(140067, "合同不存在");
-		}
-
-		String orderId = decorationContractPO.getOrderId();
-
-		ContractPO contractPO = decorationContractPO.getContract();
-
-		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, %s装修合同.", orderId, contractPO.getName()), decorationContractPO.getDownload());
-	}
-
-	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addDecorationContract(DecorationContractVO decorationContract, String data, String userId) throws FLException {
 
@@ -306,7 +219,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int fillingDecorationContract(DecorationContractVO decorationContractVO) throws FLException {
+	public int filingDecorationContract(DecorationContractVO decorationContractVO) throws FLException {
 
 		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());
 
@@ -387,15 +300,8 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			resignFlag = true;
 		}
 
-		if (!resignFlag) {
-			decorationPO.setDesignStatus(DecorationPO.DESIGNSTATUS_CONDUCT_INT);
-			decorationPO.setSdesignTime(DateUtil.getDateToTimestamp(new Date()));
-		}
-
 		UserPO operater = userDao.queryUserByUserId(userId);
 
-		decorationPO.setNetperfor(decorationContractVO.getNetperfor());
-		decorationPO.setComperfor(decorationContractVO.getComperfor());
 		decorationPO.setStatus(DecorationPO.STATUS_SIGNED_INT);
 		decorationPO.setContracter(operater);
 
@@ -404,6 +310,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		DecorationAdditionPO decorationAdditionPO = decorationAdditionDao.queryDecorationAdditionByOrderId(orderId);
 
 		if (!resignFlag) {
+			decorationPO.setDesignStatus(DecorationPO.DESIGNSTATUS_CONDUCT_INT);
 			decorationPO.setContractTime(DateUtil.getDateToTimestamp(new Date()));
 		}
 
@@ -514,6 +421,66 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		decorationOperateDao.save(new DecorationOperatePO().prosign(orderId, operater)); // 创建装修单操作信息
 
 		return 0;
+	}
+
+	@Override
+	public void sendDecorationContract(DecorationContractVO decorationContractVO) throws FLException {
+		
+		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());
+
+		if (decorationContractPO == null) {
+			throw new FLException(130002, "合同信息不存在");
+		}
+		
+		String orderId = decorationContractPO.getOrderId();
+
+		SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
+		
+		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 合同信息.", orderId), String.format("%s/redirect.html?dcid=%d&type=%d", isv.getValue(), decorationContractPO.getDcid(), decorationContractVO.getType()));
+
+	}
+
+	@Override
+	public String redirectDecorationContract(DecorationContractVO decorationContractVO) throws FLException {
+		
+		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());
+
+		if (decorationContractPO == null) {
+			throw new FLException(130002, "合同信息不存在");
+		}
+		
+		String orderId = decorationContractPO.getOrderId();
+		String url = "";
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+		
+		if (decorationContractVO.getType() == DecorationContractPO.TYPE_SIGNET_INT && decorationContractPO.getStatus() == DecorationContractPO.STATUS_VALID_INT) {
+	
+			url = Signature.extsign(decorationPO.getCustomer(), decorationContractPO);
+	
+		} else if (decorationContractVO.getType() == DecorationContractPO.TYPE_SIGN_INT && decorationContractPO.getStatus() == DecorationContractPO.STATUS_STAY_SIGN_INT) {
+			
+			SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
+			url = String.format("%s/signature.html?cid=%d", isv.getValue(), decorationPO.getCustomer().getCid());
+			
+		} else if (decorationContractVO.getType() == DecorationContractPO.TYPE_VIEW_INT && decorationContractPO.getStatus() == DecorationContractPO.STATUS_STAY_SIGN_INT) {
+			
+			url = decorationContractPO.getViewpdf();
+			
+		} else if (decorationContractVO.getType() == DecorationContractPO.TYPE_DOWNLOAD_INT && decorationContractPO.getStatus() == DecorationContractPO.STATUS_END_SIGN_INT) {
+			
+			url =  decorationContractPO.getDownload();
+			
+		} else {
+			
+			throw new FLException(130028, "合同状态不可操作");
+		}
+		
+		return url;
 	}
 
 }

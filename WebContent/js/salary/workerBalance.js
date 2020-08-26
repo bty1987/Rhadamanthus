@@ -8,6 +8,7 @@ $(function () {
         LaborBtn:com.focusPage("#LaborBtn"),
         saveBtn: com.focusPage("#saveBtn"),
         cancelBtn: com.focusPage("#cancelBtn"),
+        addworkerBalanceBtn: com.focusPage("#addworkerBalanceBtn"),
 
         modals:{
             transferModal: com.focusPage("#transferModal"),
@@ -15,7 +16,8 @@ $(function () {
             workerGold:com.focusPage("#workerGold"),
             updateBalance: com.focusPage("#updateBalance"),
             workerSalary:com.focusPage("#workerSalary"),
-            workerLabor:com.focusPage("#workerLabor")
+            workerLabor:com.focusPage("#workerLabor"),
+            addworkerBananceModal:com.focusPage("#addworkerBananceModal")
         },
 
         items: {
@@ -35,6 +37,9 @@ $(function () {
             commentGold:com.focusPage("#commentGold"),
             toplimit:com.focusPage("#toplimit")
         },
+        addItem: {
+            workerUserName:com.focusPage("#workerUserName")
+        },
 
         statusBalance:{},
         uid: null,
@@ -48,6 +53,7 @@ $(function () {
     deposit.workerBtn.bindClick(pushSalary);
     deposit.LaborBtn.bindClick(cutSalary);
     deposit.saveBtn.bindClick(saveData);
+    deposit.addworkerBalanceBtn.bindClick(addworkerBananceData);
 
     deposit.modals.transferModal.on('hide.bs.modal', function (e) {
         com.cleanTypeahead("workertransferuser");
@@ -55,10 +61,18 @@ $(function () {
         com.cleanItems(deposit.items);
         com.closeTip();
     });
+    deposit.modals.addworkerBananceModal.on('hide.bs.modal', function (e){
+        com.cleanTypeahead("workercollectuser");
+        com.cleanItems(deposit.addItem);
+        com.closeTip();
+    });
+
 
     com.initTypeahead("workertransferuser", api.personel.queryUserByPinyin, "pinyinName", {"user.status": "0"}, "autoFillKeyValue", "key", "value",function(list,key,value){return value;});
 
     com.initTypeahead("workercollectuser", api.personel.queryUserByPinyin, "pinyinName", {"user.status": "0"}, "autoFillKeyValue", "key", "value",function(list,key,value){return value;});
+
+    com.initTypeahead("workerUserName", api.personel.queryUserByPinyin, "pinyinName", {"user.status": "0"}, "autoFillKeyValue", "key", "value",function(list,key,value){return value;});
 
     com.post(api.ds.salary, {}, function (data) {
         deposit.statusBalance=data.statusBalance.split("key", "value");
@@ -191,14 +205,18 @@ $(function () {
 
         var $addsalary = $('<a></a>').addClass('btn btn-minier btn-success').attr('name', 'addsalary').css("margin", "0px 3px");
         var $addsalaryi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($addsalary);
-        var $addsalaryspan = $('<span></span>').text('添加工费').appendTo($addsalary);
+        var $addsalaryspan = $('<span></span>').text('添加').appendTo($addsalary);
 
-        return [$tranbtn];
+        return [$tranbtn, $addsalary];
     });
 
     //转款
     com.focusPage('a[name="tran"]').on('click', function () {
         deposit.modals.transferModal.modal("show");
+    });
+
+    com.focusPage('a[name="addsalary"]').on('click', function () {
+        deposit.modals.addworkerBananceModal.modal("show");
     });
 
     //扣款工费
@@ -307,5 +325,22 @@ $(function () {
             });
             deposit.modals.transferModal.modal("hide");
         }
+    }
+
+    function addworkerBananceData() {
+
+        if (com.validate('addworkerBananceModal')) {
+            return false;
+        }
+        var option = {
+            "workerBalance.user.userId": com.typeahead("workerUserName"),
+        };
+
+        com.post(api.salary.addWorkerBalance, option, function (res) {
+            com.closePopup();
+            searcher.doSearch();
+            com.showAlert(com.info, "操作成功");
+        });
+        deposit.modals.addworkerBananceModal.modal("hide");
     }
 });

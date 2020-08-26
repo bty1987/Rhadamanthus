@@ -35,10 +35,11 @@ public class DecorationHolonomyVO implements Serializable {
 	private Short status;
 
 	private Long psId;
-
+	
 	private Long discountBase;
 
 	private Long projectBase;
+	
 
 	public DecorationHolonomyVO() {
 		super();
@@ -152,6 +153,7 @@ public class DecorationHolonomyVO implements Serializable {
 	public void setServicePaidup(Long servicePaidup) {
 		this.servicePaidup = servicePaidup;
 	}
+
 
 	public Short getStatus() {
 		return status;

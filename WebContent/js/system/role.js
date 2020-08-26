@@ -10,7 +10,8 @@ jQuery(function($) {
         operationModal : null,
         moduleModal : null,
         roleItems: {},
-        
+        task : {},
+
         validator: {
             roleId: {
                 type: "v_roleId", 
@@ -47,6 +48,9 @@ jQuery(function($) {
     role.modal = com.focusPage("#roleModal");
     role.operationModal = com.focusPage("#operationModal");
     role.moduleModal = com.focusPage("#moduleModal");
+
+    role.usertaskModal = com.focusPage("#taskModal");
+    role.roleItems.taskpermissions = com.focusPage("#taskpermissions");
     
     role.roleItems.no = com.focusPage("#roleId");
     role.roleItems.content = com.focusPage("#roleDes");
@@ -79,6 +83,10 @@ jQuery(function($) {
             var $span = $("<span></span>").text(v.name).appendTo($tag);
         });
     });
+
+    com.post(api.data.queryTask,{},function(res){
+        role.task = res.tasks;
+    }, null, false);
     
     //
     com.post(api.data.queryChart, {}, function(res){
@@ -117,6 +125,7 @@ jQuery(function($) {
 
             var $chainPage = $('<a></a>').addClass('btn btn-minier btn-yellow').html('外链配置');
             var $btnModule = $('<a></a>').addClass('btn btn-minier btn-success').html('模块配置');
+            var $btnTask = $('<a></a>').addClass('btn btn-minier btn-danger').html('任务配置');
             var $officeModule = $('<a></a>').addClass('btn btn-minier btn-info').html('办公配置');
             var $btnOperation = $('<a></a>').addClass('btn btn-minier btn-warning').html('操作配置');
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-inverse').html('编辑');
@@ -135,7 +144,7 @@ jQuery(function($) {
                $liProperty.appendTo($ulProperty);
            });
 
-            $divBtnWrap.append($chainPage).append($btnModule).append($officeModule).append($btnOperation).append($btnEdit).append($btnDel).append($btnChart).appendTo($h3);
+            $divBtnWrap.append($chainPage).append($btnModule).append($btnTask).append($officeModule).append($btnOperation).append($btnEdit).append($btnDel).append($btnChart).appendTo($h3);
             
             $liLine.append($h3).append($ulProperty);
 
@@ -143,7 +152,68 @@ jQuery(function($) {
                 queryModuleByRoleId(v.rid, 1);
                 role.moduleModal.attr('data-roleid', v.rid).modal('show');
             });
-            
+
+            $btnTask.unbind().bind('click', function () {
+                $("#taskdiv").empty();
+                var tasks = [];
+                var taskname = [];
+                var options = {
+                    "taskRoleRight.rid": v.rid
+                };
+                role.usertaskModal.modal("show");
+                com.post(api.data.queryTaskRoleRightByUserId, options, function (res) {
+                    $.each(res.taskRoleRights, function (i, val) {
+                        $.each(val, function(i, va){
+                            taskname.push(va.name);
+                        })
+                    });
+                }, null, false);
+
+                $.each(role.task, function (i, va) {
+                    var  $div=$('<div class="tag"></div>');
+                    var $input = $('<input/>').attr({
+                        "type" : "checkbox",
+                        "value": va.name,
+                        "name" : "corporabtask",
+                        "id": va.tid,
+                        "class" : "ace"
+                    });
+                    var $span = $('<span></span>').addClass('lbl');
+                    var $spans=$('<span></span>').html(va.name);
+                    $div.append($input).append($span).append($spans).appendTo(com.focusPage("#taskdiv"));
+                    if(taskname.indexOf(va.name)!= -1){
+                        $input.attr("checked",true);
+                    }
+                });
+
+                role.roleItems.taskpermissions.html("");
+                taskname && taskname.length && $.each(taskname, function (i, v) {
+                    var $div = $('<div></div>');
+                    var $span = $('<span class="tag"></span>').html(v).appendTo($div);
+                    role.roleItems.taskpermissions.append($div)
+                });
+
+                com.focusPage('button[name="saveTaskBtn"]').unbind().bind('click', function () {
+                    var $inputs = com.focusPage('input[name="corporabtask"]:checked');
+                    role.usertaskModal.modal("hide");
+                    var params = {
+                        "taskRoleRight.rid": v.rid
+                    };
+                    $.each($inputs, function (i, v) {
+                        var $input = $(v);
+                        var row = {
+                            "tid": $input.attr('id')
+                        };
+                        params["tids[" + i + "]"] = row.tid;
+                    });
+                    com.post(api.data.updateTaskRoleRight, params, function (res) {
+                        if (res != null) {
+                            com.showAlert(com.info, "操作成功");
+                        }
+                    }, null, false);
+                });
+            });
+
             $officeModule.click(function(){
                 queryModuleByRoleId(v.rid, 2);
                 role.moduleModal.attr('data-roleid', v.rid).modal('show');
@@ -217,7 +287,7 @@ jQuery(function($) {
     
     var searcher = new Searcher();
     
-    searcher.init(["roleName"], "condList", api.system.pageRole, function(data){
+    searcher.init(["roleName","roleNo"], "condList", api.system.pageRole, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "rolePostData", null, false, null, function(){
         
@@ -599,8 +669,6 @@ jQuery(function($) {
         }
         
         var cpitems = role.roleItems.chainList.find('input[type="checkbox"]:checked');
-        
-        console.log(cpitems);
         
         if(cpitems.length == 0){
             options["cpids"] = [];

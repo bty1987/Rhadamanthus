@@ -46,6 +46,7 @@ public class HouseLayoutServiceImpl implements HouseLayoutService {
 		
 		houseLayoutPO.setName(houseLayoutVO.getName());
 		houseLayoutPO.setVid(houseLayoutVO.getVid());
+		houseLayoutPO.setArea(houseLayoutVO.getArea());
 		houseLayoutPO.setComment(houseLayoutVO.getComment());
 		
 		houseLayoutDao.save(houseLayoutPO);

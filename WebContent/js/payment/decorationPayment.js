@@ -318,17 +318,12 @@ jQuery(function($) {
 			});
             
             $btnPrint.click(function(){
-				if(v.collecter.userId != params.userInfo.user.userId){
-					com.showAlert(com.warning, "收款人不匹配, 不能打印");
-					return false;
-				}else{
-					params.decorationOrderOrderId = v.decoration.orderId;
-					params.decorationPaymentOrderId = v.decoration.orderId;
-					params.decorationReceiptDrId = v.drId;
-					com.popup("专用收款收据__装修单号:" + v.decoration.orderId  ,api.index.decorationPaymentReceiptIndex.url,function () {
-						parent.layer.getFrameIndex(window.name);
-					},null,true);
-				}
+				params.decorationOrderOrderId = v.decoration.orderId;
+				params.decorationPaymentOrderId = v.decoration.orderId;
+				params.decorationReceiptDrId = v.drId;
+				com.popup("专用收款收据__装修单号:" + v.decoration.orderId  ,api.index.decorationPaymentReceiptIndex.url,function () {
+					parent.layer.getFrameIndex(window.name);
+				},null,true);
             });
 			$btnUpdate.click(function(){
 				decorationPayment.typeUpdate = 2;

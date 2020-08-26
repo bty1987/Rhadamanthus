@@ -1,5 +1,6 @@
 package com.fanglin.personel.vo;
 
+
 public class UserInfoVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -3235815301177677490L;
@@ -7,80 +8,126 @@ public class UserInfoVO implements java.io.Serializable {
 	private Long uiid;
 
 	private UserVO user;
-
-	private String employWay;
-
-	private String recommendMan;
-
-	private Integer jobYears;
-
-	private String employType;
-
-	private String entryTime;
-
-	private String employTime;
-
-	private Integer serviceYears;
-
-	private Integer age;
-
-	private String political;
-
-	private String emergencyMan;
-
-	private String emergencyPhone;
-
-	private String isPresentGraduate;
-
-	private String graduateTime;
-
-	private String school;
-
-	private String education;
-
-	private String specialty;
-
-	private String isMarried;
-
-	private String isBirth;
-
-	private String isHouseLoan;
-
-	private String isCarLoan;
-
-	private String houseType;
-
-	private String householdType;
-
-	private String hometownAddress;
-
-	private String address;
-
-	private String isContract;
-
-	private String isInsurance;
-
-	private String insuranceTime;
-
-	private String pensionNum;
-
-	private String medicalNum;
-
-	private Long salary;
-
-	private String lover;
-
-	private String bank;
-
-	private String bankCardNum;
-
+	
+	private Short level;
+	
+	private Integer gender;
+	
+	private Integer height;
+	
+	private Integer weight;
+	
+	private Short political;
+	
+	private String nation;
+	
+	private String hobby;
+	
 	private String qq;
 
 	private String wechat;
 
 	private String email;
+	
+	private Short isMarried;
+	
+	private Short isBirth;
 
-	private String profiles;
+	private Short isHouseLoan;
+
+	private Short isCarLoan;
+	
+	private Short isCarID;
+	
+	private Short isPassID;
+	
+	private Short isHMID;
+	
+	private Short isTWID;
+	
+	private Short householdType;
+	
+	private String hometownAddress;
+
+	private String address;
+	
+	private String lover;
+	
+	private String claner;
+	
+	private String clanerCom;
+	
+	private String emergencyMan;
+
+	private String emergencyPhone;
+	
+	private UserVO fangliner;
+	
+	private String firstTime;
+	
+	private String entryTime;
+	
+	private Short employWay;
+
+	private String recommendMan;
+
+	private Integer jobYears;
+
+	private Short employType;
+
+	private String employTime;
+
+	private Short isPresentGraduate;
+
+	private String graduateTime;
+
+	private String school;
+
+	private Short education;
+
+	private String specialty;
+
+	private String isContract;
+
+	private String signTime;
+	
+	private String eignTime;
+	
+	private String fignTime;
+	
+	private Integer signNum;
+
+	private String preformNum;
+	
+	private String formTime;
+	
+	private Short isInsurance;
+	
+	private Short insuranceType;
+	
+	private String insuranceTime;
+
+	private String pensionNum;
+
+	private String medicalNum;
+	
+	private String publicNum;
+	
+	private String palary;
+
+	private String salary;
+	
+	private String bank;
+
+	private String bankCardNum;
+	
+	private String comment;
+	
+	private String rank;
+	
+	private Short form;
+	
+	private String hometownPlace;
 
 	public UserInfoVO() {
 		super();
@@ -90,9 +137,15 @@ public class UserInfoVO implements java.io.Serializable {
 		super();
 		this.user = user;
 	}
+	
+	public UserInfoVO(UserVO user, UserVO fangliner) {
+		super();
+		this.user = user;
+		this.fangliner = fangliner;
+	}
 
 	public Long getUiid() {
-		return this.uiid;
+		return uiid;
 	}
 
 	public void setUiid(Long uiid) {
@@ -107,272 +160,64 @@ public class UserInfoVO implements java.io.Serializable {
 		this.user = user;
 	}
 
-	public String getEmployWay() {
-		return this.employWay;
+	public Short getLevel() {
+		return level;
 	}
 
-	public void setEmployWay(String employWay) {
-		this.employWay = employWay;
+	public void setLevel(Short level) {
+		this.level = level;
 	}
 
-	public String getRecommendMan() {
-		return this.recommendMan;
+	public Integer getGender() {
+		return gender;
 	}
 
-	public void setRecommendMan(String recommendMan) {
-		this.recommendMan = recommendMan;
+	public void setGender(Integer gender) {
+		this.gender = gender;
 	}
 
-	public Integer getJobYears() {
-		return this.jobYears;
+	public Integer getHeight() {
+		return height;
 	}
 
-	public void setJobYears(Integer jobYears) {
-		this.jobYears = jobYears;
+	public void setHeight(Integer height) {
+		this.height = height;
 	}
 
-	public String getEmployType() {
-		return this.employType;
+	public Integer getWeight() {
+		return weight;
 	}
 
-	public void setEmployType(String employType) {
-		this.employType = employType;
+	public void setWeight(Integer weight) {
+		this.weight = weight;
 	}
 
-	public String getEntryTime() {
-		return this.entryTime;
+	public Short getPolitical() {
+		return political;
 	}
 
-	public void setEntryTime(String entryTime) {
-		this.entryTime = entryTime;
-	}
-
-	public String getEmployTime() {
-		return this.employTime;
-	}
-
-	public void setEmployTime(String employTime) {
-		this.employTime = employTime;
-	}
-
-	public Integer getServiceYears() {
-		return this.serviceYears;
-	}
-
-	public void setServiceYears(Integer serviceYears) {
-		this.serviceYears = serviceYears;
-	}
-
-	public Integer getAge() {
-		return this.age;
-	}
-
-	public void setAge(Integer age) {
-		this.age = age;
-	}
-
-	public String getPolitical() {
-		return this.political;
-	}
-
-	public void setPolitical(String political) {
+	public void setPolitical(Short political) {
 		this.political = political;
 	}
 
-	public String getEmergencyMan() {
-		return this.emergencyMan;
+	public String getNation() {
+		return nation;
 	}
 
-	public void setEmergencyMan(String emergencyMan) {
-		this.emergencyMan = emergencyMan;
+	public void setNation(String nation) {
+		this.nation = nation;
 	}
 
-	public String getEmergencyPhone() {
-		return this.emergencyPhone;
+	public String getHobby() {
+		return hobby;
 	}
 
-	public void setEmergencyPhone(String emergencyPhone) {
-		this.emergencyPhone = emergencyPhone;
-	}
-
-	public String getIsPresentGraduate() {
-		return this.isPresentGraduate;
-	}
-
-	public void setIsPresentGraduate(String isPresentGraduate) {
-		this.isPresentGraduate = isPresentGraduate;
-	}
-
-	public String getGraduateTime() {
-		return this.graduateTime;
-	}
-
-	public void setGraduateTime(String graduateTime) {
-		this.graduateTime = graduateTime;
-	}
-
-	public String getSchool() {
-		return this.school;
-	}
-
-	public void setSchool(String school) {
-		this.school = school;
-	}
-
-	public String getEducation() {
-		return this.education;
-	}
-
-	public void setEducation(String education) {
-		this.education = education;
-	}
-
-	public String getSpecialty() {
-		return this.specialty;
-	}
-
-	public void setSpecialty(String specialty) {
-		this.specialty = specialty;
-	}
-
-	public String getIsMarried() {
-		return this.isMarried;
-	}
-
-	public void setIsMarried(String isMarried) {
-		this.isMarried = isMarried;
-	}
-
-	public String getIsBirth() {
-		return this.isBirth;
-	}
-
-	public void setIsBirth(String isBirth) {
-		this.isBirth = isBirth;
-	}
-
-	public String getIsHouseLoan() {
-		return this.isHouseLoan;
-	}
-
-	public void setIsHouseLoan(String isHouseLoan) {
-		this.isHouseLoan = isHouseLoan;
-	}
-
-	public String getIsCarLoan() {
-		return this.isCarLoan;
-	}
-
-	public void setIsCarLoan(String isCarLoan) {
-		this.isCarLoan = isCarLoan;
-	}
-
-	public String getHouseType() {
-		return this.houseType;
-	}
-
-	public void setHouseType(String houseType) {
-		this.houseType = houseType;
-	}
-
-	public String getHouseholdType() {
-		return this.householdType;
-	}
-
-	public void setHouseholdType(String householdType) {
-		this.householdType = householdType;
-	}
-
-	public String getHometownAddress() {
-		return this.hometownAddress;
-	}
-
-	public void setHometownAddress(String hometownAddress) {
-		this.hometownAddress = hometownAddress;
-	}
-
-	public String getAddress() {
-		return this.address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getIsContract() {
-		return this.isContract;
-	}
-
-	public void setIsContract(String isContract) {
-		this.isContract = isContract;
-	}
-
-	public String getIsInsurance() {
-		return this.isInsurance;
-	}
-
-	public void setIsInsurance(String isInsurance) {
-		this.isInsurance = isInsurance;
-	}
-
-	public String getInsuranceTime() {
-		return this.insuranceTime;
-	}
-
-	public void setInsuranceTime(String insuranceTime) {
-		this.insuranceTime = insuranceTime;
-	}
-
-	public String getPensionNum() {
-		return this.pensionNum;
-	}
-
-	public void setPensionNum(String pensionNum) {
-		this.pensionNum = pensionNum;
-	}
-
-	public String getMedicalNum() {
-		return this.medicalNum;
-	}
-
-	public void setMedicalNum(String medicalNum) {
-		this.medicalNum = medicalNum;
-	}
-
-	public Long getSalary() {
-		return this.salary;
-	}
-
-	public void setSalary(Long salary) {
-		this.salary = salary;
-	}
-
-	public String getLover() {
-		return this.lover;
-	}
-
-	public void setLover(String lover) {
-		this.lover = lover;
-	}
-
-	public String getBank() {
-		return this.bank;
-	}
-
-	public void setBank(String bank) {
-		this.bank = bank;
-	}
-
-	public String getBankCardNum() {
-		return this.bankCardNum;
-	}
-
-	public void setBankCardNum(String bankCardNum) {
-		this.bankCardNum = bankCardNum;
+	public void setHobby(String hobby) {
+		this.hobby = hobby;
 	}
 
 	public String getQq() {
-		return this.qq;
+		return qq;
 	}
 
 	public void setQq(String qq) {
@@ -380,7 +225,7 @@ public class UserInfoVO implements java.io.Serializable {
 	}
 
 	public String getWechat() {
-		return this.wechat;
+		return wechat;
 	}
 
 	public void setWechat(String wechat) {
@@ -388,19 +233,411 @@ public class UserInfoVO implements java.io.Serializable {
 	}
 
 	public String getEmail() {
-		return this.email;
+		return email;
 	}
 
 	public void setEmail(String email) {
 		this.email = email;
 	}
 
-	public String getProfiles() {
-		return profiles;
+	public Short getIsMarried() {
+		return isMarried;
 	}
 
-	public void setProfiles(String profiles) {
-		this.profiles = profiles;
+	public void setIsMarried(Short isMarried) {
+		this.isMarried = isMarried;
 	}
 
+	public Short getIsBirth() {
+		return isBirth;
+	}
+
+	public void setIsBirth(Short isBirth) {
+		this.isBirth = isBirth;
+	}
+
+	public Short getIsHouseLoan() {
+		return isHouseLoan;
+	}
+
+	public void setIsHouseLoan(Short isHouseLoan) {
+		this.isHouseLoan = isHouseLoan;
+	}
+
+	public Short getIsCarLoan() {
+		return isCarLoan;
+	}
+
+	public void setIsCarLoan(Short isCarLoan) {
+		this.isCarLoan = isCarLoan;
+	}
+
+	public Short getIsCarID() {
+		return isCarID;
+	}
+
+	public void setIsCarID(Short isCarID) {
+		this.isCarID = isCarID;
+	}
+
+	public Short getIsPassID() {
+		return isPassID;
+	}
+
+	public void setIsPassID(Short isPassID) {
+		this.isPassID = isPassID;
+	}
+
+	public Short getIsHMID() {
+		return isHMID;
+	}
+
+	public void setIsHMID(Short isHMID) {
+		this.isHMID = isHMID;
+	}
+
+	public Short getIsTWID() {
+		return isTWID;
+	}
+
+	public void setIsTWID(Short isTWID) {
+		this.isTWID = isTWID;
+	}
+
+	public Short getHouseholdType() {
+		return householdType;
+	}
+
+	public void setHouseholdType(Short householdType) {
+		this.householdType = householdType;
+	}
+
+	public String getHometownAddress() {
+		return hometownAddress;
+	}
+
+	public void setHometownAddress(String hometownAddress) {
+		this.hometownAddress = hometownAddress;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getLover() {
+		return lover;
+	}
+
+	public void setLover(String lover) {
+		this.lover = lover;
+	}
+
+	public String getClaner() {
+		return claner;
+	}
+
+	public void setClaner(String claner) {
+		this.claner = claner;
+	}
+
+	public String getClanerCom() {
+		return clanerCom;
+	}
+
+	public void setClanerCom(String clanerCom) {
+		this.clanerCom = clanerCom;
+	}
+
+	public String getEmergencyMan() {
+		return emergencyMan;
+	}
+
+	public void setEmergencyMan(String emergencyMan) {
+		this.emergencyMan = emergencyMan;
+	}
+
+	public String getEmergencyPhone() {
+		return emergencyPhone;
+	}
+
+	public void setEmergencyPhone(String emergencyPhone) {
+		this.emergencyPhone = emergencyPhone;
+	}
+
+	public UserVO getFangliner() {
+		return fangliner;
+	}
+
+	public void setFangliner(UserVO fangliner) {
+		this.fangliner = fangliner;
+	}
+
+	public String getFirstTime() {
+		return firstTime;
+	}
+
+	public void setFirstTime(String firstTime) {
+		this.firstTime = firstTime;
+	}
+
+	public String getEntryTime() {
+		return entryTime;
+	}
+
+	public void setEntryTime(String entryTime) {
+		this.entryTime = entryTime;
+	}
+
+	public Short getEmployWay() {
+		return employWay;
+	}
+
+	public void setEmployWay(Short employWay) {
+		this.employWay = employWay;
+	}
+
+	public String getRecommendMan() {
+		return recommendMan;
+	}
+
+	public void setRecommendMan(String recommendMan) {
+		this.recommendMan = recommendMan;
+	}
+
+	public Integer getJobYears() {
+		return jobYears;
+	}
+
+	public void setJobYears(Integer jobYears) {
+		this.jobYears = jobYears;
+	}
+
+	public Short getEmployType() {
+		return employType;
+	}
+
+	public void setEmployType(Short employType) {
+		this.employType = employType;
+	}
+
+	public String getEmployTime() {
+		return employTime;
+	}
+
+	public void setEmployTime(String employTime) {
+		this.employTime = employTime;
+	}
+
+	public Short getIsPresentGraduate() {
+		return isPresentGraduate;
+	}
+
+	public void setIsPresentGraduate(Short isPresentGraduate) {
+		this.isPresentGraduate = isPresentGraduate;
+	}
+
+	public String getGraduateTime() {
+		return graduateTime;
+	}
+
+	public void setGraduateTime(String graduateTime) {
+		this.graduateTime = graduateTime;
+	}
+
+	public String getSchool() {
+		return school;
+	}
+
+	public void setSchool(String school) {
+		this.school = school;
+	}
+
+	public Short getEducation() {
+		return education;
+	}
+
+	public void setEducation(Short education) {
+		this.education = education;
+	}
+
+	public String getSpecialty() {
+		return specialty;
+	}
+
+	public void setSpecialty(String specialty) {
+		this.specialty = specialty;
+	}
+
+	public String getIsContract() {
+		return isContract;
+	}
+
+	public void setIsContract(String isContract) {
+		this.isContract = isContract;
+	}
+
+	public String getSignTime() {
+		return signTime;
+	}
+
+	public void setSignTime(String signTime) {
+		this.signTime = signTime;
+	}
+
+	public String getEignTime() {
+		return eignTime;
+	}
+
+	public void setEignTime(String eignTime) {
+		this.eignTime = eignTime;
+	}
+
+	public String getFignTime() {
+		return fignTime;
+	}
+
+	public void setFignTime(String fignTime) {
+		this.fignTime = fignTime;
+	}
+
+	public Integer getSignNum() {
+		return signNum;
+	}
+
+	public void setSignNum(Integer signNum) {
+		this.signNum = signNum;
+	}
+
+	public String getPreformNum() {
+		return preformNum;
+	}
+
+	public void setPreformNum(String preformNum) {
+		this.preformNum = preformNum;
+	}
+
+	public String getFormTime() {
+		return formTime;
+	}
+
+	public void setFormTime(String formTime) {
+		this.formTime = formTime;
+	}
+
+	public Short getIsInsurance() {
+		return isInsurance;
+	}
+
+	public void setIsInsurance(Short isInsurance) {
+		this.isInsurance = isInsurance;
+	}
+
+	public Short getInsuranceType() {
+		return insuranceType;
+	}
+
+	public void setInsuranceType(Short insuranceType) {
+		this.insuranceType = insuranceType;
+	}
+
+	public String getInsuranceTime() {
+		return insuranceTime;
+	}
+
+	public void setInsuranceTime(String insuranceTime) {
+		this.insuranceTime = insuranceTime;
+	}
+
+	public String getPensionNum() {
+		return pensionNum;
+	}
+
+	public void setPensionNum(String pensionNum) {
+		this.pensionNum = pensionNum;
+	}
+
+	public String getMedicalNum() {
+		return medicalNum;
+	}
+
+	public void setMedicalNum(String medicalNum) {
+		this.medicalNum = medicalNum;
+	}
+
+	public String getPublicNum() {
+		return publicNum;
+	}
+
+	public void setPublicNum(String publicNum) {
+		this.publicNum = publicNum;
+	}
+
+	public String getPalary() {
+		return palary;
+	}
+
+	public void setPalary(String palary) {
+		this.palary = palary;
+	}
+
+	public String getSalary() {
+		return salary;
+	}
+
+	public void setSalary(String salary) {
+		this.salary = salary;
+	}
+
+	public String getBank() {
+		return bank;
+	}
+
+	public void setBank(String bank) {
+		this.bank = bank;
+	}
+
+	public String getBankCardNum() {
+		return bankCardNum;
+	}
+
+	public void setBankCardNum(String bankCardNum) {
+		this.bankCardNum = bankCardNum;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public String getRank() {
+		return rank;
+	}
+
+	public void setRank(String rank) {
+		this.rank = rank;
+	}
+
+	public Short getForm() {
+		return form;
+	}
+
+	public void setForm(Short form) {
+		this.form = form;
+	}
+
+	public String getHometownPlace() {
+		return hometownPlace;
+	}
+
+	public void setHometownPlace(String hometownPlace) {
+		this.hometownPlace = hometownPlace;
+	}
+	
 }

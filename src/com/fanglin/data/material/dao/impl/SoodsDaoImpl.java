@@ -29,7 +29,20 @@ public class SoodsDaoImpl extends DaoImpl<SoodsPO> implements SoodsDao {
 		
 		return query.list();
 	}
+	
+	@Override
+	public List<SoodsPO> pageSoodsByQiid(Paging paging, List<Filter> filters, long qiid) {
+		
+		PagingQuery<SoodsPO> query = pagingQuery(paging, SoodsPO.class);
+		
+		query.alias("quotationItem", "quotationItem");
 
+		query.add(query.getCriterion("quotationItem.qiId", qiid, "eq"));
+	
+		queryFilterExcute(query, filters);
+		
+		return query.list();
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -76,8 +89,7 @@ public class SoodsDaoImpl extends DaoImpl<SoodsPO> implements SoodsDao {
 					query.add(query.getCriterion(SoodsPO.COLUMN_QUOTATIONSMALLCATEGORYID_STR, Integer.valueOf(data), op));
 				}
 			}
-		}
-		
+		}	
 	}
 
 }

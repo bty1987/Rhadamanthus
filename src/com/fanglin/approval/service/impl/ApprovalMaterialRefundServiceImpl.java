@@ -12,6 +12,7 @@
 package com.fanglin.approval.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -133,7 +134,9 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 		List<String> packageNames = new ArrayList<String>();// 新建套餐数组
 
 		// 通过主材单编号,查出主材退货审批单
-		ApprovalPO approvalPO = approvalDao.queryApproval(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT, String.valueOf(mid));
+		List<Short> status = Arrays.asList(ApprovalPO.APPROVAL_STATUS_INIT_INT, ApprovalPO.APPROVAL_STATUS_APPROVE_INT, ApprovalPO.APPROVAL_STATUS_CONFIRM_INT, ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT, ApprovalPO.APPROVAL_STATUS_REJECT_INT);
+
+		ApprovalPO approvalPO = approvalDao.queryApprovalByChange(status, ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT, String.valueOf(mid));
 
 		if (approvalPO != null) {
 			throw new FLException(240004, "正在审批中,不能提交新审批");

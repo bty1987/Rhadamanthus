@@ -11,5 +11,7 @@ public interface WorkerBalanceService {
 	
 	public void pageWorkerBalance(Paging paging, List<Filter> filters,int company);
 	
+	public int addWorkerBalance(WorkerBalanceVO workerBalanceVO, int company) throws FLException;
+	
 	public int updateWorkerBalance(WorkerBalanceVO workerBalanceVO)throws FLException;
 }

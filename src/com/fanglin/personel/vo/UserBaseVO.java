@@ -30,8 +30,6 @@ public class UserBaseVO implements Serializable {
 
 	private DepartmentVO dept;
 
-	private String dutyName;
-
 	public UserBaseVO() {
 		super();
 	}
@@ -131,14 +129,6 @@ public class UserBaseVO implements Serializable {
 		this.dept = dept;
 	}
 
-	public String getDutyName() {
-		return dutyName;
-	}
-
-	public void setDutyName(String dutyName) {
-		this.dutyName = dutyName;
-	}
-
 	public UserBaseVO setBaseInfo(UserPO userPO) {
 
 		if (userPO != null) {
@@ -148,7 +138,6 @@ public class UserBaseVO implements Serializable {
 			setUserName(userPO.getUserName());
 			setUserPhoto(userPO.getUserPhoto());
 			setPhone(userPO.getPhone());
-			setDutyName(userPO.getDuty().getName());
 		}
 
 		return this;

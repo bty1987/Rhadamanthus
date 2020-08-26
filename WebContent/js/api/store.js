@@ -107,7 +107,7 @@ $.extend(api, {store: {
 	    url: "queryMprice.do",
 	    type: "query",
         tranargs: [{
-            result: "prices",
+            result: "mprices",
             args: ["price"]
         }]
 	},
@@ -115,15 +115,7 @@ $.extend(api, {store: {
 	    url: "queryMpriceByGid.do",
 	    type: "query",
         tranargs: [{
-            result: "prices",
-            args: ["price"]
-        }]
-	},
-	queryMpriceByBid: {
-	    url: "queryMpriceByBid.do",
-	    type: "query",
-        tranargs: [{
-            result: "prices",
+            result: "mprices",
             args: ["price"]
         }]
 	},
@@ -131,7 +123,7 @@ $.extend(api, {store: {
 	    url: "queryMpriceByPinyin.do",
 	    type: "query",
         tranargs: [{
-            result: "prices",
+            result: "mprices",
             args: ["price"]
         }]
 	},
@@ -139,9 +131,12 @@ $.extend(api, {store: {
 	    url: "queryMpriceForShow.do",
 	    type: "query",
         tranargs: [{
-            result: "prices",
+            result: "mprices",
             args: ["price"]
-        }]
+        },{
+			result: "mprices-mgoods",
+			args: ["price"]
+		}]
 	},
 	addMprice: {
 	    url: "addMprice.do",

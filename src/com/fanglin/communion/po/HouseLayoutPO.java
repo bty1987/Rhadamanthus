@@ -24,6 +24,8 @@ public class HouseLayoutPO implements Serializable {
 	
 	private String comment;
 	
+	private long area;
+	
 	public HouseLayoutPO() {
 		super();
 	}
@@ -71,18 +73,14 @@ public class HouseLayoutPO implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
+
+	@Column(name = "area")
+	public long getArea() {
+		return area;
+	}
+
+	public void setArea(long area) {
+		this.area = area;
+	}
 	
-	
-
-
-
-
-
-
-
-
-
-
-
-
 }

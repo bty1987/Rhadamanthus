@@ -49,6 +49,8 @@ public class QuotationFunctionAreaPO implements Serializable {
 	private short type;
 
 	private long total;
+	
+	private short index;
 
 	public QuotationFunctionAreaPO() {
 		super();
@@ -57,12 +59,13 @@ public class QuotationFunctionAreaPO implements Serializable {
 	public QuotationFunctionAreaPO(long qfaId) {
 		this.qfaId = qfaId;
 	}
-
-	public QuotationFunctionAreaPO(QuotationPO quotation, String functionAreaName, int functionAreaOrder, short type) {
+	
+	public QuotationFunctionAreaPO(QuotationPO quotation, String functionAreaName, int functionAreaOrder, short type, short index) {
 		this.quotation = quotation;
 		this.functionAreaName = functionAreaName;
 		this.functionAreaOrder = functionAreaOrder;
 		this.type = type;
+		this.index = index;
 	}
 
 	@Id
@@ -76,6 +79,17 @@ public class QuotationFunctionAreaPO implements Serializable {
 		this.qfaId = qfaId;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, name = "quotationId", referencedColumnName = "qId")
+	public QuotationPO getQuotation() {
+		return quotation;
+	}
+
+	public void setQuotation(QuotationPO quotation) {
+		this.quotation = quotation;
+	}
+
+	@Column(name = "functionAreaName")
 	public String getFunctionAreaName() {
 		return functionAreaName;
 	}
@@ -84,32 +98,25 @@ public class QuotationFunctionAreaPO implements Serializable {
 		this.functionAreaName = functionAreaName;
 	}
 
-	public void setQuotation(QuotationPO quotation) {
-		this.quotation = quotation;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "quotationId", referencedColumnName = "qId")
-	public QuotationPO getQuotation() {
-		return quotation;
+	@Column(name = "functionAreaOrder")
+	public int getFunctionAreaOrder() {
+		return functionAreaOrder;
 	}
 
 	public void setFunctionAreaOrder(int functionAreaOrder) {
 		this.functionAreaOrder = functionAreaOrder;
 	}
 
-	public int getFunctionAreaOrder() {
-		return functionAreaOrder;
+	@Column(name = "functionAreaType")
+	public String getFunctionAreaType() {
+		return functionAreaType;
 	}
 
 	public void setFunctionAreaType(String functionAreaType) {
 		this.functionAreaType = functionAreaType;
 	}
 
-	public String getFunctionAreaType() {
-		return functionAreaType;
-	}
-
+	@Column(name = "type")
 	public short getType() {
 		return type;
 	}
@@ -118,6 +125,7 @@ public class QuotationFunctionAreaPO implements Serializable {
 		this.type = type;
 	}
 
+	@Column(name = "total")
 	public long getTotal() {
 		return total;
 	}
@@ -125,4 +133,14 @@ public class QuotationFunctionAreaPO implements Serializable {
 	public void setTotal(long total) {
 		this.total = total;
 	}
+
+	@Column(name = "[index]")
+	public short getIndex() {
+		return index;
+	}
+
+	public void setIndex(short index) {
+		this.index = index;
+	}
+	
 }

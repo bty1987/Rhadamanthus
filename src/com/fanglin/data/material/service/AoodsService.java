@@ -9,9 +9,9 @@ import com.fanglin.utils.Paging;
 
 public interface AoodsService {
 	
-	public void pageAoods(Paging paging, List<Filter> filters,int company);
+	public void pageAoods(Paging paging, List<Filter> filters, int company);
 	
-	public List<AoodsVO> queryAoodsByName(AoodsVO aoodsVO, String orderId);
+	public List<AoodsVO> queryAoodsByName(AoodsVO aoodsVO, int company);
 	
 	public List<AoodsVO> queryAoodsByAtid(AoodsVO aoodsVO, String orderId);
 	

@@ -33,6 +33,7 @@ import com.fanglin.decoration.dao.DecorationActivityItemDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationActivityItemPO;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.service.DecorationAdditionService;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
@@ -102,6 +103,9 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	
 	@Autowired
 	private PointofsalesService pointofsalesService;
+	
+	@Autowired
+	private DecorationAdditionService decorationAdditionService;
 
 	@Override
 	public void pageDecorationPaymentForCommit(Paging paging, List<Filter> filters, int company) {
@@ -152,30 +156,6 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		pageDecorationPayment(paging, filters);
 	}
-	
-	@Override
-	public List<DecorationPaymentVO> queryDecorationPayment(List<Filter> filters, Integer company) {
-		if (filters.size() == 0)
-			return null;
-
-		filters.add(new Filter("oneType", String.valueOf(DecorationPaymentPO.ONETYPE_ADD_INT), "eq"));
-		filters.add(new Filter("paymentStatus", String.valueOf(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT), "eq"));
-
-		filters.add(new Filter("company", String.valueOf(company), "eq"));
-		
-		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPayment(filters);
-		List<DecorationPaymentVO> decorationPaymentVOs = new ArrayList<DecorationPaymentVO>(); 
-		
-		for (DecorationPaymentPO decorationPaymentPO : decorationPaymentPOs) {
-			
-			DecorationPaymentVO decorationPayment = changePOToVO(decorationPaymentPO);
-			
-			decorationPaymentVOs.add(decorationPayment);
-			
-		}
-		
-		return decorationPaymentVOs;
-	}
 
 	@Override
 	public DecorationPaymentVO queryDecorationPaymentById(DecorationPaymentVO decorationPaymentVO) {
@@ -189,9 +169,28 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	}
 
 	@Override
-	public List<DecorationPaymentVO> queryDecorationPaymentByOrderId(DecorationPaymentVO decorationPaymentVO) {
-
-		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByOrderId(decorationPaymentVO.getDecoration().getOrderId());
+	public List<DecorationPaymentVO> queryDecorationPaymentByOrderId(DecorationPaymentVO decorationPaymentVO, List<Filter> filters, Integer company) {
+		
+		String orderId = decorationPaymentVO.getDecoration().getOrderId();
+		Short oneType = decorationPaymentVO.getOneType();
+		Short paymentStatus = decorationPaymentVO.getPaymentStatus();
+		
+		if (orderId == "")
+			return null;
+		
+		if(orderId != null && orderId != ""){
+			filters.add(new Filter("orderId", orderId, "eq"));
+		}
+		
+		if(oneType != null){
+			filters.add(new Filter("oneType", String.valueOf(oneType), "eq"));
+		}
+		
+		if(paymentStatus != null){
+			filters.add(new Filter("paymentStatus", String.valueOf(paymentStatus), "eq"));
+		}
+		
+		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByOrderId(filters);
 		List<DecorationPaymentVO> decorationPaymentVOs = new ArrayList<DecorationPaymentVO>();
 
 		for (DecorationPaymentPO decorationPaymentPO : decorationPaymentPOs) {
@@ -550,9 +549,9 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		decorationReceiptPO.setCollecterName(user.getCurrentName());
 		decorationReceiptPO.setComment(decorationPaymentVO.getComment());
 
-		//更新装修单付款比例
+		//更新装修单上的付款比例
 		if (decorationPaymentPO.getOneType() == DecorationPaymentPO.ONETYPE_ADD_INT && decorationPaymentPO.getTwoType() == DecorationPaymentPO.TWOTYPE_DEAL_INT) {
-			updateDecrationPayScale(decorationPaymentPO, decorationPO);
+			decorationAdditionService.updateDecorationForPayScale(decorationPO);
 		}
 
 		decorationPaymentPO.setDecorationReceipt(decorationReceiptPO);
@@ -690,6 +689,9 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		}
 
 		decorationPaymentVO.setDrId(decorationReceiptPO.getDrId());
+		
+		//更新装修单上的付款比例
+		decorationAdditionService.updateDecorationForPayScale(decorationPaymentPO.getDecoration());
 		
 		decorationService.sendMessage(decorationPaymentPO.getDecoration().getOrderId(), "装修单", String.format("装修退款金额%.3f元", Arith.div(decorationPaymentPO.getReferMoney(), 1000.0)));
 
@@ -835,28 +837,6 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		}
 
 		paging.setData(decorationPaymentVOs);
-	}
-	
-	public void updateDecrationPayScale(DecorationPaymentPO decorationPaymentPO, DecorationPO decorationPO) {
-		
-		//这里的decorationPO需要传值, 不能在方法中通过decorationPaymentPO获取, 因为在款项中decorationPO之前已经为其它字段赋值了
-		
-		long payTotal = 0;
-		
-		Short[] paymentStatus = new Short[] {DecorationPaymentPO.PAYMENTSTATUS_PAY_INT, DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_INT};
-		
-		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(decorationPO.getOrderId(), paymentStatus, DecorationPaymentPO.ONETYPE_ADD_INT, DecorationPaymentPO.TWOTYPE_DEAL_INT);
-
-		for (DecorationPaymentPO decorationPayment : decorationPaymentPOs) {
-			payTotal = Arith.add(payTotal, decorationPayment.getReferMoney());
-		}
-		
-		short decorationPayScale = (short) Arith.mul(Arith.div(payTotal, decorationPO.getFactPrice()), 100);
-		
-		decorationPO.setPaySacle(decorationPayScale);
-		
-		decorationDao.update(decorationPO);
-		
 	}
 
 }

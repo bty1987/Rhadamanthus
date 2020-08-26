@@ -50,6 +50,8 @@ public class SalesPaymentPO  implements Serializable{
 	
 	public static final short TYPE_DEPOSITREFUND_INT = 7;
 	
+	public static final short TYPE_NOTDEPOSITREFUND_INT = 8;
+	
 	public static final String COLUMN_STATUS_STR = "status";
 	
 	public static final String COLUMN_SID_STR ="sid";

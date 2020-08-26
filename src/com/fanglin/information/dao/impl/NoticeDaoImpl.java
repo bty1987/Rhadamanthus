@@ -70,17 +70,21 @@ public class NoticeDaoImpl extends DaoImpl<NoticePO> implements NoticeDao {
 		if(filters != null){
 			
 			for(Filter filter: filters){
-			
+				
 				if("dateRange".equals(filter.getField())){
 					
 					String sTime = filter.getData().split("-")[0].replaceAll("/", "-");
 					String eTime = filter.getData().split("-")[1].replaceAll("/", "-");
 					
-					query.add(query.getCriterion("startTime", eTime, "le"));
-					query.add(query.getCriterion("endTime", sTime, "ge"));
+					query.add(query.getCriterion("startTime", sTime, "ge"));
+					query.add(query.getCriterion("endTime", eTime, "le"));
 					
 				} else if("theme".equals(filter.getField())){
 					query.add(query.getCriterion("theme", filter));
+					
+				} else if("creater".equals(filter.getField())){
+					query.alias("creater", "creater");
+					query.add(query.getCriterion("creater.userId", filter));
 				}
 			}
 		}

@@ -8,7 +8,73 @@
     {"key":"5","value":"绑定"},
     {"key":"6","value":"拒绝"}
   ],
+ "revisitGladness":[
+  	{"key":"0","value":"初始"},
+  	{"key":"1","value":"满意"},
+  	{"key":"2","value":"一般"},
+  	{"key":"3","value":"投诉"}
+  ],
+  "revisitType":[
+  	{"key":"0","value":"保修"},
+  	{"key":"1","value":"投诉"}
+  ],
+  "complainLevel":[
+    {"key":"0","value":"普通"},
+    {"key":"1","value":"重大"},
+    {"key":"2","value":"危机"}
+  ],
+  "complainStatus":[
+    {"key":"0","value":"初始"},
+    {"key":"1","value":"处理"},
+    {"key":"2","value":"完结"},
+    {"key":"3","value":"关闭"}
+  ],
+  "complainGladness":[
+    {"key":"0","value":"初始"},
+    {"key":"1","value":"满意"},
+    {"key":"2","value":"一般"},
+    {"key":"3","value":"投诉"}
+  ],
+  "complaintType":[
+    {"key":"0","value":"设计"},
+    {"key":"1","value":"业务"},
+    {"key":"2","value":"工程"},
+    {"key":"3","value":"销售"},
+    {"key":"4","value":"其他"},
+    {"key":"5","value":"无理"}
+  ],
+  "complaintStatus":[
+    {"key":"0","value":"初始"},
+    {"key":"1","value":"处理"},
+    {"key":"2","value":"完结"},
+    {"key":"3","value":"关闭"}
+  ],
+  "aepair_status": [
+    {"key":"0","value":"初始"},
+    {"key":"1","value":"维修"},
+    {"key":"2","value":"完工"},
+    {"key":"3","value":"关闭"}
+  ],
+  "aepair_gladness": [
+    {"key":"0","value":"初始"},
+    {"key":"1","value":"满意"},
+    {"key":"2","value":"一般"},
+    {"key":"3","value":"投诉"}
+  ],
+  "repairPayType": [
+    {"key":"0","value":"款项"},
+    {"key":"1","value":"扣款"},
+    {"key":"2","value":"成本"}
+  ],
+  "repairSchedule": [
+    {"key":"1","value":"水"},
+    {"key":"2","value":"电"},
+    {"key":"3","value":"瓦"},
+    {"key":"4","value":"木"},
+    {"key":"5","value":"油"}
+  ],
   "errorCode": 0,
   "errorMsg": ""
 }
+
 

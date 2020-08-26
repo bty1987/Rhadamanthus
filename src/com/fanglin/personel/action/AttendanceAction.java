@@ -11,8 +11,10 @@ import org.springframework.stereotype.Controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.action.BaseAction;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.personel.service.AttendanceService;
 import com.fanglin.personel.vo.AttendanceVO;
+
 
 @ParentPackage("base")
 @Namespace("/")
@@ -23,25 +25,24 @@ public class AttendanceAction extends BaseAction {
 
 	@Autowired
 	private AttendanceService attendanceService;
-	
-	private AttendanceVO attendance;
 
 	private List<AttendanceVO> attendances;
 	
 	private JSONObject option;
 
-	@Action(value = "queryAttendance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryAttendance() {
 
-		attendances = attendanceService.queryAttendance(attendance);
+	@Action(value = "queryAttendance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryAttendance() throws FLException {
+
+		attendances = attendanceService.queryAttendance(queryUserId());
 
 		return SUCCESS;
 	}
 	
 	@Action(value = "reportAttendance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String reportAttendance() {
+	public String reportAttendance() throws FLException {
 
-		option = attendanceService.reportAttendance(attendance);
+		option = attendanceService.reportAttendance(queryUserId());
 
 		return SUCCESS;
 	}
@@ -52,14 +53,6 @@ public class AttendanceAction extends BaseAction {
 
 	public void setOption(JSONObject option) {
 		this.option = option;
-	}
-
-	public AttendanceVO getAttendance() {
-		return attendance;
-	}
-
-	public void setAttendance(AttendanceVO attendance) {
-		this.attendance = attendance;
 	}
 
 	public List<AttendanceVO> getAttendances() {

@@ -28,7 +28,13 @@ public interface SalesBalanceService {
 	
 	public int passSalesBalance(List<Long> sid) throws FLException;
 	
-	public int preSalesBalance(List<Long> sid , String userId) throws FLException;
+	//不退定金销售结算 存在不退定金的销售单列表 , 根据销售单的结算类型和结算值完成结算数据的生成
+	public int advSalesBalance(List<Long> sid, String userId) throws FLException;
+	
+	//存在不退定金的销售单列表 , 根据销售单的结算类型和结算值完成反向不退定金结算数据的生成
+	public int revSalesBalance(List<Long> sid, String userId) throws FLException;
+	
+	public int preSalesBalance(List<Long> sid, String userId) throws FLException;
 	
 	public int vpostSalesBalance(List<SalesBalanceVO> sbid) throws FLException;
 	

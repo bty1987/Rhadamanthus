@@ -38,6 +38,8 @@ public class ApprovalCustomerOriginTDecorationPO implements Serializable {
 	private short resourceType;
 
 	private UserPO salesman;
+	
+	private short typeness;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -122,6 +124,15 @@ public class ApprovalCustomerOriginTDecorationPO implements Serializable {
 
 	public void setSalesman(UserPO salesman) {
 		this.salesman = salesman;
+	}
+	
+	@Column(name = "typeness")
+	public short getTypeness() {
+		return typeness;
+	}
+
+	public void setTypeness(short typeness) {
+		this.typeness = typeness;
 	}
 
 }

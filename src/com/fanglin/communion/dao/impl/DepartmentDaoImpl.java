@@ -47,6 +47,8 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
 
 		query.add(Restrictions.or(Restrictions.ilike(DepartmentPO.COLUMN_DEPTNAME_STR, name, MatchMode.ANYWHERE), Restrictions.ilike(DepartmentPO.COLUMN_PINYIN_STR, name, MatchMode.ANYWHERE)));
 
+		query.add(Restrictions.eq(DepartmentPO.COLUMN_STATUS_STR, DepartmentPO.STATUS_ENABLE_INT));
+		
 		if (company != null) {
 			query.add(Restrictions.eq(DepartmentPO.COLUMN_COMPANY_STR, company));
 		}
@@ -100,9 +102,11 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
 				if ("deptType".equals(filter.getField())) {
 					query.add(query.getCriterion("type.dtid", Integer.valueOf(filter.getData()), filter.getOp()));
 				} else if ("deptName".equals(filter.getField())) {
-					query.add(query.getCriterion("name", filter));
+					query.add(query.getCriterion("did", Integer.valueOf(filter.getData()), filter.getOp()));
 				} else if ("company".equals(filter.getField())) {
 					query.add(query.getCriterion("company", Integer.valueOf(filter.getData()), filter.getOp()));
+				} else if("status".equals(filter.getField())) {
+					query.add(query.getCriterion("status", Short.valueOf(filter.getData()), filter.getOp()));
 				}
 			}
 		}

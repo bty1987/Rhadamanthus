@@ -22,57 +22,12 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label no-padding-right orange" for="num">数量</label>
                                     <div class="col-sm-9">
-                                        <input type="text" id="num" maxlength="12" class="col-xs-10 col-sm-7 v_required v_number" data-toggle="popover" data-trigger='manual'/>
+                                        <input type="text" id="num" maxlength="12" class="col-xs-10 col-sm-7 v_required v_afloat_3" data-toggle="popover" data-trigger='manual'/>
                                     </div>
                                 </div>
 
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" id="updateBtn" class="btn btn-primary">保存</button>
-                            <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal fade" id="finishSelectionItemModal" tabindex="-1">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-                            <h4 class="modal-title" id="myModalLabe2">完结</h4>
-                        </div>
-                        <div class="modal-body">
-                            <form class="form-horizontal">
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label no-padding-right orange" for="refnum">退数量</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" id="refnum" maxlength="12" class="col-xs-10 col-sm-7 v_required v_number" data-toggle="popover" data-trigger='manual'/>
-                                    </div>
-                                </div>
-
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" id="finishSaveBtn" class="btn btn-primary">保存</button>
-                            <button type="button" id="finishCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal fade" id="checkSelectionItemModal" tabindex="-1">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-                            <h4 class="modal-title" id="myModalLabe3">审核</h4>
-                        </div>
-                        <div class="modal-body">
-                            <form class="form-horizontal">
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label no-padding-right orange" for="comment">注释</label>
+                                <div class="form-group" id="dcomment">
+                                    <label class="col-sm-3 control-label no-padding-right orange" for="comment">备注</label>
                                     <div class="col-sm-9">
                                         <input type="text" id="comment" maxlength="12" class="col-xs-10 col-sm-7 v_required" data-toggle="popover" data-trigger='manual'/>
                                     </div>
@@ -81,8 +36,8 @@
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" id="checkSaveBtn" class="btn btn-primary">保存</button>
-                            <button type="button" id="checkCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <button type="button" id="updateBtn" class="btn btn-primary">保存</button>
+                            <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
                         </div>
                     </div>
                 </div>

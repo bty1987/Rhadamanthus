@@ -23,11 +23,17 @@ import com.fanglin.utils.Paging;
 
 public interface DecorationService {
 
-	public void pageDecoration(Paging paging, List<Filter> filters, Authentication authentication, List<Short> status);
+	public void pageDecoration(Paging paging, List<Filter> filters, Authentication authentication, List<Short> statuses);
 
 	public void pageDecorationForGeneral(Paging paging, List<Filter> filters, Authentication authentication);
 
 	public void pageDecorationForCommon(Paging paging, List<Filter> filters, Authentication authentication);
+
+	public void pageDecorationForCompany(Paging paging, List<Filter> filters, int company, List<Short> statuses);
+
+	public void pageDecorationForGrade(Paging paging, List<Filter> filters, int company);
+
+	public void pageDecorationForCustomer(Paging paging, List<Filter> filters, String customerPhone, int company);
 
 	public void pageDecorationForDesigner(Paging paging, List<Filter> filters, Authentication authentication);
 
@@ -49,7 +55,7 @@ public interface DecorationService {
 
 	public DecorationVO queryDecorationForCommonByOrderId(DecorationVO decorationVO, String userId) throws FLException;
 
-	public DecorationVO checkDecoration(Paging paging, List<Filter> filters, Authentication authentication);
+	public DecorationVO checkDecoration(DecorationVO decorationVO, Authentication authentication);
 
 	public void checkDecorationForExist(DecorationVO decorationVO);
 
@@ -71,7 +77,7 @@ public interface DecorationService {
 
 	public void obsoleteDecoration(DecorationVO decorationVO, String userName) throws FLException;
 
-	public void terminalDecoration(DecorationVO decorationVO, long refundValue, long paymentValue, Authentication authentication) throws FLException;
+	public void terminalDecoration(DecorationVO decorationVO, long backup, Authentication authentication) throws FLException;
 
 	public void subDecorationForQuotationTime(DecorationVO decorationVO, String userId) throws FLException;
 

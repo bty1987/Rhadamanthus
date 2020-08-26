@@ -6,7 +6,8 @@ jQuery(function ($) {
         order: null,
         bankInfo: {},
         checkBankInfo: {},
-        receiptsNum: 0
+        receiptsNum: 0,
+        total: 0.0
     };
 
     var params = {};
@@ -15,6 +16,7 @@ jQuery(function ($) {
     server = parent.server;
     utils = parent.utils;
     com = parent.com;
+    printer = parent.printer;
 
     params.server = window.server;
     params.authentication = parent.params.authentication;
@@ -60,42 +62,24 @@ jQuery(function ($) {
 
         if (parseFloat(serviceReceipt.cash) != 0) {
             var tem = {
-                "paymentId": serviceReceipt.srId,
-                "collectTime": serviceReceipt.collectTime,
-                "collectUser": serviceReceipt.collecterName,
                 "money": parseFloat(serviceReceipt.cash),
                 "paymentWay": "现金"
             };
             receipt.receipts.push(tem);
             receipt.receiptsNum = receipt.receiptsNum + 1;
+            receipt.total += parseFloat(serviceReceipt.cash);
         }
 
         if (parseFloat(serviceReceipt.bank) != 0) {
-            var bankParams = getBankInfo(serviceReceipt.bankInfo, 0, null, receipt.receiptsNum, receipt.bankInfo, null);
-            var tem = {
-                "paymentId": serviceReceipt.srId,
-                "collectTime": serviceReceipt.collectTime,
-                "collectUser": serviceReceipt.collecterName,
-                "money": parseFloat(serviceReceipt.bank),
-                "bankInfo": bankParams[0],
-                "paymentWay": "刷卡"
-            };
-            receipt.receipts.push(tem);
-            receipt.receiptsNum = bankParams[1] + 1;
+            var bankParams = getBankInfo(serviceReceipt.bankInfo, 0, null, receipt.receiptsNum, receipt.bankInfo, null, receipt.receipts);
+            receipt.receiptsNum = bankParams;
+            receipt.total += parseFloat(serviceReceipt.bank);
         }
 
         if (parseFloat(serviceReceipt.checkv) != 0) {
-            var checkvParams = getBankInfo(serviceReceipt.checkvBank, 1, parseFloat(serviceReceipt.checkv), receipt.receiptsNum, null, receipt.checkBankInfo);
-            var tem = {
-                "paymentId": serviceReceipt.srId,
-                "collectTime": serviceReceipt.collectTime,
-                "collectUser": serviceReceipt.collecterName,
-                "money": parseFloat(serviceReceipt.checkv),
-                "bankInfo": checkvParams[0],
-                "paymentWay": "银行"
-            };
-            receipt.receipts.push(tem);
-            receipt.receiptsNum = checkvParams[1] + 1;
+            var checkvParams = getBankInfo(serviceReceipt.checkvBank, 1, parseFloat(serviceReceipt.checkv), receipt.receiptsNum, null, receipt.checkBankInfo, receipt.receipts);
+            receipt.receiptsNum = checkvParams;
+            receipt.total += parseFloat(serviceReceipt.checkv);
         }
 
         if (serviceReceipt.des && serviceReceipt.des != "") {
@@ -108,6 +92,19 @@ jQuery(function ($) {
 
     if (receipt.payments.length != 0 && receipt.receipts.length != 0) {
         generateOneReceipt();
+
+        printer.name = "payment";
+        printer.args = {
+            "title": params.company.name +"专用收据",
+            "orderId": receipt.order.orderId,
+            "orderAddr": receipt.order.house.village.cityProper.city.name + ' ' + receipt.order.house.village.cityProper.name + ' ' + receipt.order.house.village.name + receipt.order.house.houseNumber,
+            "collectTime": receipt.serviceReceipt.collectTime,
+            "collecter": receipt.serviceReceipt.collecter.currentName,
+            "referMoney": receipt.total,
+            "capitalize": utils.getCNMoney(receipt.total),
+            "payments": [{"paymentType": "预付款", "money": receipt.payments[0].advanceMoney}, {"paymentType": "服务费", "money": receipt.payments[0].serviceMoney}],
+            "receipts": receipt.receipts
+        };
     }
 
     function generateOneReceipt() {
@@ -145,9 +142,7 @@ jQuery(function ($) {
             var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
             var noReceiptTd = $('<td style="width: 25%"></td>').text('装修单号: ' + receipt.order.orderId).appendTo(orderReceiptTr);
             var addrReceiptTd = $('<td style="width: 40%" colspan="2"></td>').text('客户地址: ' + receipt.order.house.village.cityProper.city.name + ' ' + receipt.order.house.village.cityProper.name + ' ' + receipt.order.house.village.name + receipt.order.house.houseNumber).appendTo(orderReceiptTr);
-            var customerReceiptTd = $('<td style="width: 35%" colspan="2"></td>').html('收款日期: ' + first.collectTime).appendTo(orderReceiptTr);
-
-            var sumMoney = 0;
+            var customerReceiptTd = $('<td style="width: 35%" colspan="2"></td>').html('收款日期: ' + receipt.serviceReceipt.collectTime).appendTo(orderReceiptTr);
 
             var recePaymentTr = $('<tr></tr>').appendTo(receiptTable);
             var typeInfoPaymentTd = $('<td style="width: 25%; text-align: center;" rowspan="4"></td>').html("<strong>收款信息</strong>").appendTo(recePaymentTr);
@@ -173,19 +168,19 @@ jQuery(function ($) {
             var balanceReceiptTd = $('<td style="width: 40%; text-align: center;" colspan=2></td>').html('<strong>结算方式</strong>').appendTo(receReceiptTr);
             var amountReceiptTd = $('<td style="width: 35%; text-align: center;"></td>').html('<strong>收款金额(元)</strong>').appendTo(receReceiptTr);
 
+            var drawpaymentWay = "";
             for (; start < (i + 1) * receipt.onePageCount && start < num; ++start) {
-                if (receipt.receipts[start].paymentWay.indexOf("预付款") == -1) {
-                    sumMoney += receipt.receipts[start].money;
-                }
                 if (receipt.receipts[start].paymentWay == "刷卡" || receipt.receipts[start].paymentWay == "银行") {
                     var receInfoReceiptTr = $('<tr></tr>').appendTo(receiptTable);
-                    var bankInfoReceiptTd = $('<td style="width: 12%; text-align: center;" rowspan="' + (receipt.receipts[start].bankInfo.length + 1) + '"></td>').text(receipt.receipts[start].paymentWay).appendTo(receInfoReceiptTr);
+                    var bankInfoReceiptTd = $('<td style="width: 12%; text-align: center;" rowspan="' + (receipt.receipts[start].bankInfoNum) + '"></td>').text(receipt.receipts[start].paymentWay);
 
-                    for (var i = 0; i < receipt.receipts[start].bankInfo.length; i++) {
-                        var bankTr = $('<tr></tr>').appendTo(receiptTable);
-                        var balanceInfoReceiptTd = $('<td style="width: 28%; text-align: center;"></td>').text(receipt.receipts[start].bankInfo[i].key).appendTo(bankTr);
-                        var amountInfoReceiptTd = $('<td style="width: 35%; text-align: center;"></td>').text(receipt.receipts[start].bankInfo[i].value).appendTo(bankTr);
+                    if(drawpaymentWay != receipt.receipts[start].paymentWay){
+                        bankInfoReceiptTd.appendTo(receInfoReceiptTr);
+                        drawpaymentWay =receipt.receipts[start].paymentWay;
                     }
+
+                    var balanceInfoReceiptTd = $('<td style="width: 28%; text-align: center;"></td>').text(receipt.receipts[start].bankInfo).appendTo(receInfoReceiptTr);
+                    var amountInfoReceiptTd = $('<td style="width: 35%; text-align: center;"></td>').text(receipt.receipts[start].money).appendTo(receInfoReceiptTr);
                 } else {
                     var commonInfoReceiptTr = $('<tr></tr>').appendTo(receiptTable);
                     var balanceInfoReceiptTd = $('<td style="width: 40%; text-align: center;"  colspan=2></td>').text(receipt.receipts[start].paymentWay).appendTo(commonInfoReceiptTr);
@@ -195,8 +190,8 @@ jQuery(function ($) {
             }
 
             var moneyReceiptTr = $('<tr></tr>').appendTo(receiptTable);
-            var renReceiptTd = $('<td colspan="3"></td>').text('人民币大写: ' + utils.getCNMoney(sumMoney)).appendTo(moneyReceiptTr);
-            var renMoneyReceiptTd = $('<td></td>').text('实收: ¥' + sumMoney).appendTo(moneyReceiptTr);
+            var renReceiptTd = $('<td colspan="3"></td>').text('人民币大写: ' + utils.getCNMoney(receipt.total)).appendTo(moneyReceiptTr);
+            var renMoneyReceiptTd = $('<td></td>').text('实收: ¥' + receipt.total).appendTo(moneyReceiptTr);
 
             var summaryReceiptTr = $('<tr></tr>').appendTo(receiptTable);
             var summaryReceiptTd = $('<td colspan="5"></td>').appendTo(summaryReceiptTr);
@@ -206,32 +201,49 @@ jQuery(function ($) {
         }
     }
 
-    function getBankInfo(bankInfoString, type, money, receiptsNumParams, bankInfo, checkBankInfo) {
-        var bankinfo = [];
+    function getBankInfo(bankInfoString, type, money, receiptsNumParams, bankInfo, checkBankInfo, receipts) {
         var receiptsNum = receiptsNumParams;
 
         if(bankInfoString.indexOf("#") != -1){
             var stringSrray = bankInfoString.split('#');
-            for (var i = 1; i < stringSrray.length - 1; i++) {
 
+            for (var i = 1; i < stringSrray.length - 1; i++) {
+                var bankinfo = {};
                 if (stringSrray[i].length != 0) {
                     var _i = stringSrray[i].split('|');
+
                     if (type == 0) {
-                        bankinfo.push({"key": bankInfo[_i[0]], "value": _i[1]});
+                        bankinfo = {
+                            "money": parseFloat(_i[1]),
+                            "bankInfo": bankInfo[_i[0]],
+                            "paymentWay": "刷卡",
+                            "bankInfoNum": stringSrray.length-2
+                        };
                     } else if (type == 1) {
-                        bankinfo.push({"key": checkBankInfo[_i[0]], "value": _i[1]});
+                        bankinfo = {
+                            "money": parseFloat(_i[1]),
+                            "bankInfo": checkBankInfo[_i[0]],
+                            "paymentWay": "银行",
+                            "bankInfoNum": stringSrray.length-2
+                        };
                     }
                     receiptsNum = receiptsNum + 1;
+                    receipts.push(bankinfo);
                 }
             }
         }else{
             if(bankInfoString != "" && type == 1){
-                bankinfo.push({"key": checkBankInfo[bankInfoString], "value": money});
+                var bankinfo = {
+                    "money": parseFloat(money),
+                    "bankInfo": checkBankInfo[bankInfoString],
+                    "paymentWay": "银行"
+                };
                 receiptsNum = receiptsNumParams + 1;
+                receipts.push(bankinfo);
             }
         }
 
-        return [bankinfo, receiptsNum];
+        return receiptsNum;
 
     }
 });

@@ -9,7 +9,7 @@ var selectionDetail = (function(){
             addSelectionItemCancelBtn: com.focusPage('#addSelectionItemCancelBtn')
         },
         modals: {
-            addSelectionItemModal: com.focusPage('#addSelectionItemModal')
+            quotationItemSoodsModal: com.focusPage('#quotationItemSoodsModal')
         },
         items: {
             goodsName: com.focusPage('#goodsName')
@@ -36,11 +36,6 @@ var selectionDetail = (function(){
                     com.switchPage(selection.historyPage);
                     com.closePopover();
                 });
-            });
-        },
-        initSelectionModals: function() {
-            selection.modals.addSelectionItemModal.on('show.bs.modal', function(a) {
-                selection.items.goodsName.get(0).selectedIndex = 0;
             });
         },
         calculatePrice: function(selling, num) {
@@ -81,9 +76,9 @@ var selectionDetail = (function(){
             selection.totals.total.text(total);
             selection.totals.quotationTotal.text(quotationTotal);
             selection.totals.extensionAddTotal.text(extensionAddTotal);
-            selection.totals.extensionReduceTotal.text(extensionReduceTotal);
+            selection.totals.extensionReduceTotal.text(-extensionReduceTotal);
             selection.totals.addReduceAddTotal.text(addReduceAddTotal);
-            selection.totals.addReduceMinusTotal.text(addReduceMinusTotal);
+            selection.totals.addReduceMinusTotal.text(-addReduceMinusTotal);
             selection.basicParams['selection.total'] = utils.changeThrDecimal(total);
             selection.basicParams['selection.quotationTotal'] = utils.changeThrDecimal(quotationTotal);
             selection.basicParams['selection.extensionAddTotal'] = utils.changeThrDecimal(extensionAddTotal);
@@ -91,83 +86,135 @@ var selectionDetail = (function(){
             selection.basicParams['selection.addReduceAddTotal'] = utils.changeThrDecimal(addReduceAddTotal);
             selection.basicParams['selection.addReduceMinusTotal'] = utils.changeThrDecimal(addReduceMinusTotal);
         },
-        getGoodsInformation: function(quotationItemId){
-            // 10446
-            com.post(api.data.querySoodsByQiid, {"soods.quotationItem.qiId": quotationItemId}, function (res) {
-                if (res.soodes.length == 0) {
-                    com.showAlert(com.warning, '该报价没有选材信息');
-                    return false;
-                }
-                var list = [];
-                $.each(res.soodes, function (i, v) {
-
-                    var option = {
-                        "gid": v.goods.gid,
-                        "name": v.goods.name,
-                        "selling": v.selling
-                    };
-                    list.push(option);
-                });
-                selection.items.goodsName.bindData(list, "gid", "name", false, null, "selling");
-                selection.modals.addSelectionItemModal.modal("show");
-            }, null, false);
-        },
         init: function() {
             selection.initSettingBtns();
-            selection.initSelectionModals();
             selection.calculateAllDomainTotal();
         }
     };
 
-    var selectionItem = {
-        type: [],
-        addSelectionItem: function() {
-            selection.btns.addSelectionItemBtn.click(function() {
-                if(com.validate('addSelectionItemModal')) return;
+    var goods = {
 
-                var selling = selection.items.goodsName.find('option:selected').attr('other');
-                var num = selection.nowEditQuote.find('.num').text();
-                var price = selection.nowEditQuote.next().attr('data-price');
-                var total = selection.nowEditQuote.parents('.widget-box').attr('data-total');
+        GoodsPage: function(quotationItemId){
 
-                if (num === '0') {
-                    com.showAlert(com.warning, '工程量为空');
-                    return false;
-                }
+            var displayFunc = (function () {
 
-                selection.calculatePrice(selling, num);
-                selection.calculateAllDomainTotal();
+                var renderList = function (tableId, listData) {
+                    var $tableWrap = com.focusPage('#' + tableId);
+                    var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-                var option = {
-                    "selectionItem.goods.gid": selection.items.goodsName.val(),
-                    "selectionItem.selling": selling,
-                    "selectionItem.initNum": num,
-                    "selectionItem.quoteId": selection.nowEditQuote.attr('data-quoteId'),
-                    "selectionItem.type": selection.nowEditQuote.attr('data-type'),
-                    "selectionItem.areaId": selection.nowEditQuote.attr('data-areaId'),
-                    "selectionItem.areaName": selection.nowEditQuote.parents('.widget-box').attr("data-name"),
-                    "selection.sid": selection.basicParams['selection.sid'],
-                    "selection.total": selection.basicParams['selection.total'],
-                    "selection.quotationTotal": selection.basicParams['selection.quotationTotal'],
-                    "selection.extensionAddTotal": selection.basicParams['selection.extensionAddTotal'],
-                    "selection.extensionReduceTotal": selection.basicParams['selection.extensionReduceTotal'],
-                    "selection.addReduceAddTotal": selection.basicParams['selection.addReduceAddTotal'],
-                    "selection.addReduceMinusTotal": selection.basicParams['selection.addReduceMinusTotal']
+                    if (listData && listData.length) {
+                        $.each(listData, function (i, v) {
+                            var $liLine = creatLine(v);
+
+                            $liLine.appendTo($ul);
+                        });
+
+                        $ul.appendTo($tableWrap);
+                    }
                 };
 
-                com.post(api.quotation.addSelectionItem, option, function(res){
-                    painter.createSelectionItem(res.selectionItem);
-                    painter.updateHeight(selection.nowEditQuote.next());
-                    com.showAlert(com.info, "操作成功");
-                }, function(res) {
-                    com.showAlert(com.error, res.errorMsg);
-                    selection.nowEditQuote.next().attr('data-price', price);
-                    selection.nowEditQuote.parents('.widget-box').attr('data-total', total);
-                    selection.calculateAllDomainTotal();
-                }, false);
+                var creatLine = function (v) {
 
-                selection.modals.addSelectionItemModal.modal("hide");
-            });
+                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
+                    var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.goods.name));
+                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+                    var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+                    var $btnSoods = $('<a></a>').addClass('btn btn-minier btn-success').html('添加');
+
+                    var propertyArr = [
+                        ["品牌: ", v.goods.brand, "grey"],
+                        ["品类: ", v.goods.category, "grey"],
+                        ["单位: ", v.goods.measurementUnit, "grey"],
+                        ["数量: ", v.num, "blue"],
+                        ["状态: ", v.status == 0 ? "有效" : "无效", "red"],
+                        ["报价名称: ", v.quotationItem.itemName, "grey"],
+                        ["报价版本: ", v.quotationItem.version, "grey"],
+                    ];
+
+                    $.each(propertyArr, function (index, value) {
+                        var $liProperty = $('<li></li>');
+                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                        $liProperty.appendTo($ulProperty);
+                    });
+
+                    $divBtnWrap.append($btnSoods).appendTo($h3);
+
+                    $liLine.append($h3).append($ulProperty);
+
+                    $btnSoods.click(function(e) {
+                        selectionItem.addSelectionItem(v);
+                    });
+
+                    return $liLine;
+                };
+
+                return {
+                    init: function (tableId, listData) {
+                        com.focusPage('#' + tableId).html(null);
+                        renderList(tableId, listData);
+                    },
+                    drawLine: function (v) {
+                        return creatLine(v);
+                    }
+                }
+            })();
+
+            var soodsSeacher = new Searcher();
+
+            soodsSeacher.init(["aoodsGoodsName"], "condList", api.data.pageSoodsByQiid, function(data) {
+                displayFunc.init("resultList", data);
+            }, "pagenation", "selectionItemSoodsPostData", {"soods.quotationItem.qiId": quotationItemId}, false, null, null);
+
+        },
+    };
+
+    var selectionItem = {
+        type: [],
+        addSelectionItem: function(soods) {
+
+            var selling = soods.selling;
+            var num = selection.nowEditQuote.find('.num').text();
+            var price = selection.nowEditQuote.next().attr('data-price');
+            var total = selection.nowEditQuote.parents('.widget-box').attr('data-total');
+
+            if (num === '0') {
+                com.showAlert(com.warning, '工程量为空');
+                return false;
+            }
+
+            selection.calculatePrice(selling, num);
+            selection.calculateAllDomainTotal();
+
+            var option = {
+                "selectionItem.goods.gid": soods.goods.gid,
+                "selectionItem.postprice": selling,
+                "selectionItem.preprice": selection.nowEditQuote.attr('data-preprice'),
+                "selectionItem.initNum": num,
+                "selectionItem.quoteId": selection.nowEditQuote.attr('data-quoteId'),
+                "selectionItem.type": selection.nowEditQuote.attr('data-type'),
+                "selectionItem.areaId": selection.nowEditQuote.attr('data-areaId'),
+                "selectionItem.areaName": selection.nowEditQuote.attr('data-areaName'),
+                "selection.sid": selection.basicParams['selection.sid'],
+                "selection.total": selection.basicParams['selection.total'],
+                "selection.quotationTotal": selection.basicParams['selection.quotationTotal'],
+                "selection.extensionAddTotal": selection.basicParams['selection.extensionAddTotal'],
+                "selection.extensionReduceTotal": selection.basicParams['selection.extensionReduceTotal'],
+                "selection.addReduceAddTotal": selection.basicParams['selection.addReduceAddTotal'],
+                "selection.addReduceMinusTotal": selection.basicParams['selection.addReduceMinusTotal']
+            };
+
+            com.post(api.quotation.addSelectionItem, option, function(res){
+                painter.createSelectionItem(res.selectionItem);
+                painter.updateHeight(selection.nowEditQuote.next());
+                com.showAlert(com.info, "操作成功");
+            }, function(res) {
+                com.showAlert(com.error, res.errorMsg);
+                selection.nowEditQuote.next().attr('data-price', price);
+                selection.nowEditQuote.parents('.widget-box').attr('data-total', total);
+                selection.calculateAllDomainTotal();
+            }, false);
+            selection.modals.quotationItemSoodsModal.modal("hide");
         },
         deleteSelectionItem: function($selectionItemLi, selectionItem) {
             var price = $selectionItemLi.attr('data-price');
@@ -203,8 +250,6 @@ var selectionDetail = (function(){
             com.post(api.ds.quotation, {}, function(res){
                 selectionItem.type = res.selectionItemType.split("key", "value");
             }, null, false);
-
-            selectionItem.addSelectionItem();
         }
     };
 
@@ -212,7 +257,7 @@ var selectionDetail = (function(){
 
         createFunctionArea: function(name, type) {
 
-            var $domain = $('<div></div>').addClass('widget-box transparent').css({"margin-bottom" : "20px"}).attr({"data-total": 0, "data-type": type, "data-name": name});
+            var $domain = $('<div></div>').addClass('widget-box transparent').css({"margin-bottom" : "20px"}).attr({"data-total": 0, "data-type": type});
             var $dhead = $('<div></div>').addClass('widget-header');
             var $hname = $('<h5></h5>').append($('<strong></strong>').html(selectionItem.type[type] + "-" + name));
 
@@ -221,20 +266,22 @@ var selectionDetail = (function(){
 
             return $domain;
         },
-        createQuote: function(areaId, quoteId, quotationItemId, itemName, type, num) {
+        createQuote: function(data) {
 
             var $rowDiv = $('<div></div>').addClass('row').css({'border-bottom': '1px solid #dce8f1', 'margin': '0 2px 0 2px'});
-            var $selectionItemLi = $('<li></li>').addClass("fl-quo-item col-md-6").prop('id', areaId + '-' + quoteId + '-' + type);
+            var $selectionItemLi = $('<li></li>').addClass("fl-quo-item col-md-6").prop('id', data.areaId + '-' + data.quoteId + '-' + data.type);
             var $quoteItemLi = $('<li></li>').addClass('fl-quo-item col-md-6').css({'border': 'none', 'border-right': '1px solid #dce8f1'}).attr({
-                'data-quoteId': quoteId,
-                'data-type': type,
-                'data-areaId': areaId,
-                'data-quotationItemId': quotationItemId
+                'data-quoteId': data.quoteId,
+                'data-type': data.type,
+                'data-areaId': data.areaId,
+                'data-quotationItemId': data.quotationItemId,
+                'data-areaName': data.quotationFunctionAreaName,
+                'data-preprice': data.preprice,
             });
 
             var lineSet = [
-                ['name blue', itemName],
-                ['num red', num]
+                ['name blue', data.itemName],
+                ['num red', data.num]
             ];
 
             $.each(lineSet, function (i, v) {
@@ -248,13 +295,14 @@ var selectionDetail = (function(){
 
             var $btnSelection = $('<a></a>').addClass(' btn btn-minier btn-inverse').html('选材').css('visibility', 'hidden');
 
-            if (quotationItemId != null && quotationItemId != 0 && type != 4){
+            if (data.quotationItemId != null && data.quotationItemId != 0 && data.type != 4){
                 $btnSelection.css('visibility', 'visible');
             }
 
             $btnSelection.click(function (e) {
                 selection.nowEditQuote = $quoteItemLi;
-                selection.getGoodsInformation(quotationItemId);
+                goods.GoodsPage(data.quotationItemId);
+                selection.modals.quotationItemSoodsModal.modal("show");
             });
 
             $quoteItemLi.append($btnCell.append($btnCellWrap.append($btnSelection)));
@@ -267,7 +315,7 @@ var selectionDetail = (function(){
 
             var lineSet = [
                 ['name green', data.goods.name],
-                ['num blue', data.num]
+                ['num blue', [2, 4].indexOf(data.type) != -1 ? -data.num : data.num]
             ];
 
             $.each(lineSet, function(i, v){
@@ -375,7 +423,7 @@ var selectionDetail = (function(){
                     com.post(api.quotation.querySelectionItem, {'selection.sid': selection.basicParams['selection.sid']}, function(res){
                         if (res.selectionItems && res.selectionItems.length) {
                             $.each(res.selectionItems, function(i, v){
-                                var price = utils.accMul(v.selling, v.num);
+                                var price = utils.accMul(v.postprice, v.num);
                                 var $selectionItemLi = painter.createSelectionItem(v).attr('data-price', price);
                                 var $functionArea = $selectionItemLi.parents('.widget-box');
 
@@ -395,7 +443,7 @@ var selectionDetail = (function(){
                 var selectionBox = selection.selectionBox;
 
                 var subtypes = [0, 1];
-                var name = type === 0 ? functionArea.functionAreaName : functionArea.content;
+                var name = type === 0 ? functionArea.functionAreaName : selectionItem.type[type];
 
                 var $domain = painter.createFunctionArea(name, type);
                 var $ul = $('<ul></ul>').addClass('fl-quo-list');
@@ -403,7 +451,8 @@ var selectionDetail = (function(){
                 if (type === 0) {
                     $.each(functionArea.quotationFunctionAreaItems, function(i, v){
                         if (!subtypes.includes(v.subtype)) {
-                            var $quoteItem = painter.createQuote(v.quotationFunctionAreaId, v.qfaiId, v.quotationItemId, v.itemName, 0, v.num);
+                            var data = dataProcessing(v, functionArea, type, functionArea.functionAreaName);
+                            var $quoteItem = painter.createQuote(data);
                             $ul.append($quoteItem);
                         }
                     });
@@ -411,7 +460,8 @@ var selectionDetail = (function(){
                     com.post(api.quotation.queryExtensionItemByEid, {'extensionItem.eid': functionArea.eid}, function(res){
                         $.each(res.extensionItems, function(i, v){
                             if (!subtypes.includes(v.subtype)) {
-                                var $quoteItem = painter.createQuote(v.eid, v.eiid, v.quoteItemId, v.itemName, type, v.num);
+                                var data = dataProcessing(v, functionArea, type, null);
+                                var $quoteItem = painter.createQuote(data);
                                 $ul.append($quoteItem);
                             }
                         });
@@ -420,8 +470,8 @@ var selectionDetail = (function(){
                     com.post(api.addReduce.queryAddReduceItemByAddReduceId, {'addReduce.arId': functionArea.arId}, function(res){
                         $.each(res.addReduceItems, function(i, v){
                             if (!subtypes.includes(v.subtype)) {
-                                var quotationItemId = functionArea.type == 0 ? v.quoteItemId : v.quotationItemId;
-                                var $quoteItem = painter.createQuote(v.arId, v.ariId, quotationItemId, v.itemName, type, v.num);
+                                var data = dataProcessing(v, functionArea, type, null);
+                                var $quoteItem = painter.createQuote(data);
                                 $ul.append($quoteItem);
                             }
                         });
@@ -429,6 +479,68 @@ var selectionDetail = (function(){
                 }
 
                 selectionBox.append($domain.append($ul));
+            }
+
+            /**
+             * 该方法用于处理数据, 返回新的数据作为 painter.createQuote()方法的参数
+             * @param rawData 源数据
+             * @param functionArea 当前项目的功能区
+             * @param type 选材项的类型
+             * @param functionAreaName 功能区名
+             * @returns {*} 新数据
+             */
+            function dataProcessing(rawData, functionArea, type, functionAreaName) {
+
+                var preprice, quotationItemId, data;
+
+                if (type == 0) {
+
+                    data = {
+                        "areaId": rawData.quotationFunctionAreaId,
+                        "quoteId": rawData.qfaiId,
+                        "quotationItemId": rawData.quotationItemId,
+                        "itemName": rawData.itemName,
+                        "type": type,
+                        "num": rawData.num,
+                        "quotationFunctionAreaName": functionAreaName,
+                        "preprice": rawData.unitPrice,
+                    }
+                } else if (type == 1 || type == 2) {
+                    preprice = functionArea.type == 0 ? rawData.addPrice : rawData.subPrice;
+
+                    data = {
+                        "areaId": rawData.eid,
+                        "quoteId": rawData.eiid,
+                        "quotationItemId": rawData.quoteItemId,
+                        "itemName": rawData.itemName,
+                        "type": type,
+                        "num": rawData.num,
+                        "quotationFunctionAreaName": rawData.quotationFunctionAreaName,
+                        "preprice": preprice,
+                    }
+                } else if (type == 3 || type == 4) {
+
+                    if (functionArea.type == 0) {
+                        quotationItemId = rawData.quoteItemId;
+                        preprice = rawData.addPrice;
+                    } else {
+                        quotationItemId = rawData.quotationItemId;
+                        preprice = rawData.subPrice;
+                    }
+
+                    data = {
+                        "areaId": rawData.arId,
+                        "quoteId": rawData.ariId,
+                        "quotationItemId": quotationItemId,
+                        "itemName": rawData.itemName,
+                        "type": type,
+                        "num": rawData.num,
+                        "quotationFunctionAreaName": rawData.quotationFunctionAreaName,
+                        "preprice": preprice,
+                    }
+                }
+
+                return data;
             }
         }
     }
