@@ -19,7 +19,7 @@ jQuery(function($) {
 		}
 	});
 	
-	com.post(api.decoration.generateDecorationContract, {"decorationContract.orderId": orderId}, function(res) {
+	com.post(api.decoration.queryDecorationContractByOrderId, {"decorationContract.orderId": orderId}, function(res) {
 		if (res.decorationContract == null) {
 			$(".WordSection1").html("");
 			alert("还没有填写合同信息");

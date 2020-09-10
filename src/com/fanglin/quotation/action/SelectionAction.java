@@ -1,4 +1,4 @@
- package com.fanglin.quotation.action;
+package com.fanglin.quotation.action;
 
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -21,38 +21,38 @@ public class SelectionAction extends BaseListAction {
 
 	@Autowired
 	private SelectionService selectionService;
-	
+
 	private SelectionVO selection;
-	
+
 	@Action(value = "querySelectionByQid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySelectionByQid() throws FLException {
-		
+
 		selection = selectionService.querySelectionByQid(selection);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "querySelectionByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySelectionByOrderId() throws FLException {
-		
+
 		selection = selectionService.querySelectionByOrderId(selection);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateSelectionForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateSelectionForAdvance() throws FLException {
-		
+
 		selectionService.updateSelectionForAdvance(selection);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addSelection() throws FLException {
-		
+
 		selection = selectionService.addSelection(selection);
-		
+
 		return SUCCESS;
 	}
 

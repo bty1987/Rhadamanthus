@@ -121,7 +121,7 @@ jQuery(function ($) {
         var refundBtn= $("<a></a>").addClass("btn btn-minier btn-warning").html("退货").css("margin", "0px 3px").attr("id", "refund_" + activityItem.daiId).appendTo(uiPgDiv);
         var deliveryBtn= $("<a></a>").addClass("btn btn-minier btn-inverse").html("配送").css("margin", "0px 3px").attr("id", "delivery_" + activityItem.daiId).appendTo(uiPgDiv);
         var unrefundBtn= $("<a></a>").addClass("btn btn-minier btn-danger").html("未退").css("margin", "0px 3px").attr("id", "unrefund_" + activityItem.daiId).appendTo(uiPgDiv);
-        var expendBtn= $("<a></a>").addClass("btn btn-minier btn-purple ").html("消耗").css("margin", "0px 3px").attr("id", "expend_" + activityItem.daiId).appendTo(uiPgDiv);
+        var expendBtn= $("<a></a>").addClass("btn btn-minier btn-purple ").html("补款").css("margin", "0px 3px").attr("id", "expend_" + activityItem.daiId).appendTo(uiPgDiv);
 
         btnViewBtn.on("click", function () {
             abateDecorationActivityItem(activityItem.daiId, activityItem.activityItemName);
@@ -394,19 +394,17 @@ jQuery(function ($) {
             com.post(api.decoration.abateDecorationActivityItem, options, function (res) {
 
             	com.showAlert(com.info, "物品失效成功");
-                var daiId = res.decorationActivityItem.daiId;
 
                 decorationUtils.countTatol(daiId);
 
-                com.focusPage("#state_" + daiId).text("失效");
-
+                com.focusPage("#pricing_"+res.decorationActivityItem.daiId).remove();
             });
         });
     }
 
     com.post(api.ds.decoration, {}, function (res) {
         com.focusPage("#receiveType").bindData(res.receiveType, "key", "value", false);
-         com.focusPage("#receiveTypes").bindData(res.receiveType, "key", "value", false);
+        com.focusPage("#receiveTypes").bindData(res.receiveType, "key", "value", false);
     });
 
     //领取活动物品
@@ -421,10 +419,7 @@ jQuery(function ($) {
 
         	com.showAlert(com.info, "物品领取成功");
         	
-            var daiId = res.decorationActivityItem.daiId;
-
-            com.focusPage("#state_" + daiId).text("领取");
-          
+            com.focusPage("#state_" + res.decorationActivityItem.daiId).text("领取");
         });
     }
 
@@ -444,7 +439,6 @@ jQuery(function ($) {
             decorationUtils.countTatol(daiId);
 
             com.focusPage("#state_" + daiId).text("退货");
-
         });
     }
 
@@ -460,9 +454,7 @@ jQuery(function ($) {
 
         	com.showAlert(com.info, "物品配送成功");
         	
-            var daiId = res.decorationActivityItem.daiId;
-            com.focusPage("#state_" + daiId).text("配送");
-
+            com.focusPage("#state_" + res.decorationActivityItem.daiId).text("配送");
         });
     }
 
@@ -482,7 +474,6 @@ jQuery(function ($) {
                 var daiId = res.decorationActivityItem.daiId;
                 com.focusPage("#state_" + daiId).text("未退");
             });
-
         });
     }
 
@@ -504,7 +495,6 @@ jQuery(function ($) {
 
                 com.focusPage("#state_" + daiId).text("消耗");
             });
-
         });
     }
 });

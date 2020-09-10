@@ -29,67 +29,67 @@ import com.fanglin.information.vo.NoticeVO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("noticeDepartmentService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class NoticeDepartmentServiceImpl implements NoticeDepartmentService {
-	
+
 	@Autowired
 	private NoticeDao noticeDao;
-	
+
 	@Autowired
 	private NoticeDepartmentDao noticeDepartmentDao;
 
 	@Override
 	public List<NoticeDepartmentVO> queryNoticeDepartment(NoticeVO noticeVO) throws FLException {
-		
+
 		long nid = noticeVO.getNid();
-		
+
 		NoticePO noticePO = noticeDao.get(nid);
-		
-		if(noticePO == null){
+
+		if (noticePO == null) {
 			throw new FLException(160017, "公告不存在");
 		}
-		
+
 		List<NoticeDepartmentPO> noticeDepartmentPOs = noticeDepartmentDao.queryNoticeDepartmentByNid(nid);
 		List<NoticeDepartmentVO> noticeDepartmentVOs = new ArrayList<NoticeDepartmentVO>();
-		
+
 		NoticeDepartmentVO noticeDepartmentVO;
-		
-		for(NoticeDepartmentPO noticeDepartmentPO: noticeDepartmentPOs){
-			
+
+		for (NoticeDepartmentPO noticeDepartmentPO : noticeDepartmentPOs) {
+
 			noticeDepartmentVO = new NoticeDepartmentVO();
-			
+
 			BeanUtil.copyPropertie(noticeDepartmentPO, noticeDepartmentVO);
-			
+
 			noticeDepartmentVOs.add(noticeDepartmentVO);
 		}
-		
+
 		return noticeDepartmentVOs;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int updateNoticeDepartment(List<Integer> dids, NoticeVO noticeVO) throws FLException {
-		
+	@Transactional(rollbackFor = Exception.class)
+	public int updateNoticeDepartment(NoticeVO noticeVO, List<Integer> dids) throws FLException {
+
 		long nid = noticeVO.getNid();
-		
+
 		NoticePO notices = noticeDao.get(nid);
-		
-		if(notices ==  null){
+
+		if (notices == null) {
 			throw new FLException(160017, "公告不存在");
 		}
-		
+
 		noticeDepartmentDao.deleteNoticeDepartment(nid);
 
-		for (Integer did: dids) {
+		for (Integer did : dids) {
 			NoticeDepartmentPO noticeDepartmentPO = new NoticeDepartmentPO(nid, did);
-			
+
 			noticeDepartmentDao.save(noticeDepartmentPO);
 		}
-		
+
 		notices.setDepts(noticeVO.getDepts());
-		
+
 		noticeDao.save(notices);
-		
+
 		return 0;
 	}
 

@@ -13,11 +13,10 @@ public interface QuotetionFunctionAreaItemDao extends Dao<QuotetionFunctionAreaI
 
 	public List<QuotetionFunctionAreaItemPO> queryQuotetionFunctionAreaItemByFunctionAreaId(Class<?> clazz, long qfaid);
 
-	public int updateQuotetionFunctionAreaItemForIndex(String table,QuotetionFunctionAreaItemVO quotetionFunctionAreaItemVO) throws FLException;
+	public int updateQuotetionFunctionAreaItemForIndex(String table, QuotetionFunctionAreaItemVO quotetionFunctionAreaItemVO) throws FLException;
 
-	public int deleteQuotetionFunctionAreaItemByQfaiIds(String table,List<Long> qfaiIds);
-	
+	public int deleteQuotetionFunctionAreaItemByQfaiIds(String table, List<Long> qfaiIds);
+
 	public int deleteQuotetionFunctionAreaItemByFunctionAreaId(String clazz, long functionAreaId);
 
-	           
 }

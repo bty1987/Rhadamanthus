@@ -53,7 +53,7 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 
 	@Override
 	public List<QuotetionFunctionAreaVO> queryQuotetionFunctionAreaByQid(QuotetionVO quotetionVO) throws FLException {
-	
+
 		QuotetionFunctionAreaVO autogeneration = null;
 
 		List<QuotetionFunctionAreaVO> quotetionFunctionAreaVOs = new ArrayList<QuotetionFunctionAreaVO>();
@@ -67,7 +67,7 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 			BeanUtil.copyProperties(quotetionFunctionAreaPO, quotetionFunctionAreaVO);
 
 			List<QuotetionFunctionAreaItemVO> quotetionFunctionAreaItemVOs = new ArrayList<QuotetionFunctionAreaItemVO>();
-			
+
 			List<QuotetionFunctionAreaItemPO> quotetionFunctionAreaItemPOs = quotetionFunctionAreaItemDao.queryQuotetionFunctionAreaItemByFunctionAreaId(QuotetionFunctionAreaItemPO.factoryToClazz(quotetionFunctionAreaPO.getQfaId(), quotetionFunctionAreaPO.getIndex()), quotetionFunctionAreaPO.getQfaId());
 
 			for (QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO : quotetionFunctionAreaItemPOs) {
@@ -111,7 +111,7 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 
 		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig("quotetionFunctionAreaIndex");
 		Short index = systemConfigPO == null ? 0 : Short.valueOf(systemConfigPO.getValue());
-		
+
 		for (Long functionAreaId : functionAreaIds) {
 			FunctionAreaPO functionAreaPO = functionAreaDao.get(functionAreaId);
 
@@ -119,7 +119,7 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 
 			quotetionFunctionAreaVO.setQid(quotetionVO.getQid());
 			quotetionFunctionAreaVO.setName(functionAreaPO.getFunctionAreaName());
-			
+
 			quotetionFunctionAreaVO.setFunctionAreaOrder(functionAreaPO.getFunctionAreaOrder());
 			quotetionFunctionAreaVO.setType(functionAreaPO.getType());
 
@@ -188,7 +188,7 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 		}
 
 		quotetionFunctionAreaPO.setName(quotetionFunctionAreaVO.getName());
-		
+
 		quotetionFunctionAreaPO.setFunctionAreaOrder(quotetionFunctionAreaVO.getFunctionAreaOrder());
 
 		quotetionFunctionAreaDao.update(quotetionFunctionAreaPO);
@@ -214,7 +214,7 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 		List<Long> qfaIds = Arrays.asList(new Long[] { quotetionFunctionAreaVO.getQfaId() });
 
 		quotetionFunctionAreaDao.deleteQuotetionFunctionAreaByIds(qfaIds);
-		
+
 		String tableName = QuotetionFunctionAreaItemPO.quotetionFunctionAreaItemTable(qfaId, index);
 
 		quotetionFunctionAreaItemDao.deleteQuotetionFunctionAreaItemByFunctionAreaId(tableName, qfaId);
@@ -225,6 +225,7 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 	}
 
 	private QuotetionPO checkQuotetionForStatusByEnabled(long qid) throws FLException {
+
 		QuotetionPO quotetionPO = quotetionDao.get(qid);
 
 		if (quotetionPO == null) {

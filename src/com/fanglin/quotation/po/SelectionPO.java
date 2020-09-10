@@ -11,37 +11,37 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "selection", catalog = "quotation")
 public class SelectionPO implements Serializable {
-	
+
 	private static final long serialVersionUID = -5852812670584756277L;
-	
+
 	public static final String COLUMN_ORDERID_STR = "orderId";
-	
+
 	public static final String COLUMN_QID_STR = "qid";
-	
+
 	public static final short STATUS_LOCK_INT = 1;// 状态, 锁定
-	
+
 	public static final short STATUS_INIT_INT = 0;// 状态, 初始
 
 	private long sid;// 选材单ID
-	
+
 	private String orderId;// 装修单号
-	
+
 	private long qid;// 报价ID
-	
+
 	private short status;// 状态 , 0: 初始 , 1: 锁定
-	
+
 	private int company;
-	
+
 	private long total;// 总额
-	
+
 	private long quotationTotal;// 报价总额
-	
+
 	private long extensionAddTotal;// 拓展增总额
-	
+
 	private long extensionReduceTotal;// 拓展减总额
-	
+
 	private long addReduceAddTotal;// 增减增总额
-	
+
 	private long addReduceMinusTotal;// 增减减总额
 
 	public SelectionPO() {
@@ -85,7 +85,7 @@ public class SelectionPO implements Serializable {
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
+
 	@Column(name = "company")
 	public int getCompany() {
 		return company;

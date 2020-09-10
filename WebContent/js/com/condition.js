@@ -1399,7 +1399,7 @@ var Condition = function (api) {
                 validate: null
             }
         },
-        customerPhone: {
+        customerPhoneC: {
             label: "客户电话",
             type: "text",
             submitConfig: {
@@ -1408,8 +1408,7 @@ var Condition = function (api) {
                 validate: {
                     "reg": /^[A-Z0-9]*$/,
                     "msg": "格式不正确A-Z,0-9"
-                },
-                alone: true
+                }
             }
         },
         relationshipType: {
@@ -1614,6 +1613,19 @@ var Condition = function (api) {
                 valuePath: "value"
             }
         },
+        customerPhone: {
+            label: "客户电话",
+            type: "text",
+            submitConfig: {
+                name: "customerPhone",
+                op: "eq",
+                validate: {
+                    "reg": /^[A-Z0-9]*$/,
+                    "msg": "格式不正确A-Z,0-9"
+                },
+                alone: true
+            }
+        },
         auditName: {
             label: "审核人",//中文名
             type: "autofill",//类型
@@ -1722,7 +1734,7 @@ var Condition = function (api) {
             }
         },
         salesmanType: {
-            label: "业务员类型",
+            label: "业务类型",
             type: "select",
             submitConfig: {
                 name: "salesmanType",

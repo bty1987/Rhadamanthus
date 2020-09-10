@@ -37,7 +37,7 @@ public class AwardRecordServiceImpl implements AwardRecordService {
 		List<AwardRecordVO> awardRecordVOs = new ArrayList<AwardRecordVO>();
 
 		AwardRecordVO awardRecordVO = null;
-  
+
 		for (AwardRecordPO awardRecordPO : AwardRecordPOs) {
 
 			awardRecordVO = new AwardRecordVO(new AwardStockVO(), new UserVO());
@@ -51,5 +51,5 @@ public class AwardRecordServiceImpl implements AwardRecordService {
 
 		paging.setData(awardRecordVOs);
 	}
-	
+
 }

@@ -26,7 +26,7 @@ import com.fanglin.utils.BeanUtil;
 public class DutmentServiceImpl implements DutmentService {
 	@Autowired
 	private DutmentDao dutmentDao;
-	
+
 	@Autowired
 	private UserDao userDao;
 
@@ -82,18 +82,6 @@ public class DutmentServiceImpl implements DutmentService {
 	}
 
 	@Override
-	public DutmentVO queryDutmentByDid(DutmentVO dutmentVO) {
-
-		DutmentPO dutmentPO = dutmentDao.get(dutmentVO.getDid());
-
-		dutmentVO = new DutmentVO();
-
-		BeanUtil.copyPropertie(dutmentPO, dutmentVO, Arrays.asList("dept", "duty"));
-
-		return dutmentVO;
-	}
-
-	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addDutment(DutmentVO dutmentVO, int company) throws FLException {
 
@@ -108,7 +96,7 @@ public class DutmentServiceImpl implements DutmentService {
 		BeanUtil.copyPropertie(dutmentVO, dutmentPO, Arrays.asList("dept", "duty"));
 		BeanUtil.copyPropertie(dutmentVO.getDept(), dutmentPO.getDept(), Arrays.asList("type", "fatherDept"));
 		BeanUtil.copyPropertie(dutmentVO.getDuty(), dutmentPO.getDuty(), Arrays.asList("departmentType"));
-	
+
 		dutmentPO.setNum(userDao.countUserByDid(dutmentVO.getDept().getDid(), dutmentVO.getDuty().getDid(), company));
 		dutmentPO.setLimit(dutmentVO.getLimit());
 

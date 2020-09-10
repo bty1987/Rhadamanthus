@@ -167,6 +167,8 @@ public class CountingPO implements Serializable {
 
 	public static int TYPE_COMSULTION_NO_INT = 48;
 
+	public static int TYPE_RECEIPT_TYPE_INT = 49;
+
 	public static String COLUMN_DATE_STR = "date";
 
 	public static String COLUMN_TYPE_STR = "type";

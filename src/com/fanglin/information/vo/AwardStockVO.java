@@ -22,11 +22,11 @@ public class AwardStockVO implements java.io.Serializable {
 
 	private Short storeroom;
 
-	private short isPrefor; // 是否计算业绩
+	private Short isPrefor; // 是否计算业绩
 
-	private short isStock; // 是否计算库存
+	private Short isStock; // 是否计算库存
 
-	private short isPayment;// 是否计入金额
+	private Short isPayment;// 是否计入金额
 
 	private String content;
 
@@ -98,27 +98,27 @@ public class AwardStockVO implements java.io.Serializable {
 		this.subtype = subtype;
 	}
 
-	public short getIsPrefor() {
+	public Short getIsPrefor() {
 		return isPrefor;
 	}
 
-	public void setIsPrefor(short isPrefor) {
+	public void setIsPrefor(Short isPrefor) {
 		this.isPrefor = isPrefor;
 	}
 
-	public short getIsStock() {
+	public Short getIsStock() {
 		return isStock;
 	}
 
-	public void setIsStock(short isStock) {
+	public void setIsStock(Short isStock) {
 		this.isStock = isStock;
 	}
 
-	public short getIsPayment() {
+	public Short getIsPayment() {
 		return isPayment;
 	}
 
-	public void setIsPayment(short isPayment) {
+	public void setIsPayment(Short isPayment) {
 		this.isPayment = isPayment;
 	}
 

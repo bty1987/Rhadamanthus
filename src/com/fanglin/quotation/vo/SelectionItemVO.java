@@ -14,65 +14,65 @@ public class SelectionItemVO implements Serializable {
 	private static final long serialVersionUID = 1819457635219731341L;
 
 	private Long siid;// 选材项ID
-	
+
 	private Long sid;// 选材单ID
-	
+
 	private Long quoteId;// 引用项ID
-	
-	private Short type;// 类型 , 0: 报价项 , 1: 拓展增项 , 2: 拓展减项 , 3: 增项 , 4: 减项 
-	
-	private GoodsVO goods;// 商品 
-	
+
+	private Short type;// 类型 , 0: 报价项 , 1: 拓展增项 , 2: 拓展减项 , 3: 增项 , 4: 减项
+
+	private GoodsVO goods;// 商品
+
 	private Integer num;// 数量
-	
+
 	private DecorationVO decoration;// 装修单号
-	
+
 	private Long areaId;// 功能区id
-	
+
 	private String areaName;// 功能区名字
-	
+
 	private Long suid;// 厂商id
 
 	private Short status;// 状态 , 0: 初始 , 1: 配送 , 2: 审核 , 3: 确认 , 4: 结算
-	
+
 	private Integer initNum;// 工程量
-	
+
 	private Integer postprice;// 售价
-	
+
 	private Integer preprice;// 预算金额
-	
+
 	private Timestamp createTime;// 创建时间
-	
+
 	private Timestamp tranTime;// 配送时间
-	
+
 	private Timestamp checkTime;// 审核时间
-	
+
 	private Timestamp confirmTime;// 确认时间
-	
+
 	private Timestamp balanceTime;// 结算时间
-	
+
 	private Timestamp finishTime;// 完结时间
-	
+
 	private UserBaseVO traner;// 配送人
-	
+
 	private UserBaseVO checker;// 审核人
-	
+
 	private UserBaseVO confirmer;// 确认人
-	
+
 	private UserBaseVO balancer;// 结算人
-	
-	private UserBaseVO finish;// 完结人 
-	
+
+	private UserBaseVO finish;// 完结人
+
 	private Integer refnum;// 退数量
-	
+
 	private String comment;// 注释
-	
+
 	private Integer company;// 公司
-	
+
 	public SelectionItemVO() {
 		super();
 	}
-	
+
 	public SelectionItemVO(GoodsVO goods) {
 		super();
 		this.goods = goods;
@@ -192,7 +192,7 @@ public class SelectionItemVO implements Serializable {
 	public void setPreprice(Integer preprice) {
 		this.preprice = preprice;
 	}
-	
+
 	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
@@ -318,5 +318,5 @@ public class SelectionItemVO implements Serializable {
 	public void setCompany(Integer company) {
 		this.company = company;
 	}
-	
+
 }

@@ -6,7 +6,7 @@ $.extend(api.index, {
     salesCollectionIndex: {url: "views/sales/sales4payment.html"},
     salesPaymentReceiptIndex: {url: "/views/payment/salesPaymentReceipt.html"},
     salesPrintIndex: {url: "/views/sales/sales2print.html"},
-    salesRefundsPrintIndex: {url: "/views/sales/salesRefunds2print.html"},
+    salesRefundsPrintIndex: {url: "/views/sales/refunds2print.html"},
     salesActivityIndex:{url:"/views/sales/sales4activity.html"},
     salesSupplement: {url: "views/sales/sales2supple.html"}
 });
@@ -250,12 +250,10 @@ $.extend(api, {
             }]
         },
         amountSalesActivity : {
-            url: "amountSalesActivity.do",
-            intercept: true
+            url: "amountSalesActivity.do"
         },
         amountSalesActivityForActivity : {
             url: "amountSalesActivityForActivity.do",
-            intercept: true,
             type: "query",
             tranargs: [{
                 result: "salesActivity",
@@ -264,7 +262,6 @@ $.extend(api, {
         },
         amountSalesActivityForPayment : {
             url: "amountSalesActivityForPayment.do",
-            intercept: true,
             type: "query",
             tranargs: [{
                 result: "salesActivity",

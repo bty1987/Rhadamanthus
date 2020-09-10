@@ -7,9 +7,9 @@ public class ActivityItemVO implements java.io.Serializable {
 	private Long aiid;
 
 	private Long aid;
-	
+
 	private Long asid;
-	
+
 	private String activity;
 
 	private String name;
@@ -39,7 +39,7 @@ public class ActivityItemVO implements java.io.Serializable {
 	public void setAid(Long aid) {
 		this.aid = aid;
 	}
-	
+
 	public Long getAsid() {
 		return asid;
 	}
@@ -47,7 +47,7 @@ public class ActivityItemVO implements java.io.Serializable {
 	public void setAsid(Long asid) {
 		this.asid = asid;
 	}
-	
+
 	public String getActivity() {
 		return activity;
 	}
@@ -87,5 +87,5 @@ public class ActivityItemVO implements java.io.Serializable {
 	public void setIntegral(Integer integral) {
 		this.integral = integral;
 	}
-	
+
 }

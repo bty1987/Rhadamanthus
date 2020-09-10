@@ -8,7 +8,7 @@ import com.fanglin.information.po.WorksheetPO;
 import com.fanglin.utils.Paging;
 
 public interface WorksheetDao extends Dao<WorksheetPO> {
-	
+
 	public List<WorksheetPO> pageWorksheet(Paging paging, List<Filter> filters, int company);
 
 }

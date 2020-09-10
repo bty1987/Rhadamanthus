@@ -158,6 +158,9 @@ $(function(){
                 case "selection":
                     $divBtnWrap.append($btnSelection).appendTo($h3);
                     break;
+                case "norm":
+                    $divBtnWrap.append($btnNormrice).append($btnNormood).appendTo($h3);
+                    break;
                 default :
                     $divBtnWrap.append($btnNormrice).append($btnNormood).append($btnSelection).append($btnEdit).append($btnDiscount).append($btnStatus).appendTo($h3);
             }

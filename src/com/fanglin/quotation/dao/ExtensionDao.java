@@ -7,12 +7,12 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.quotation.po.ExtensionPO;
 import com.fanglin.utils.Paging;
 
-public interface ExtensionDao extends Dao<ExtensionPO>{
+public interface ExtensionDao extends Dao<ExtensionPO> {
 
 	public List<ExtensionPO> pageExtensionByOrderId(Paging paging, List<Filter> filters);
-	
-	public List<ExtensionPO> queryExtensionByOrderId(String  orderId);
-	
-	public List<ExtensionPO> queryExtensionForTypeByOrderId(String orderId,Short type);
-	
+
+	public List<ExtensionPO> queryExtensionByOrderId(String orderId);
+
+	public List<ExtensionPO> queryExtensionForTypeByOrderId(String orderId, Short type);
+
 }

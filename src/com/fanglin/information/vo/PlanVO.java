@@ -2,49 +2,49 @@ package com.fanglin.information.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+
 import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.data.common.vo.TaskVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
-
 public class PlanVO implements Serializable {
-	
+
 	private static final long serialVersionUID = -176596579933112324L;
 
 	private Long pid;
-	
+
 	private TaskVO task;
-	
+
 	private String args;
-	
+
 	private UserBaseVO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private String executeTime;
-	
+
 	private String resultFilepath;
-	
+
 	private String infoFilepath;
-	
+
 	private Short schedule;
-	
+
 	private Short status;
-	
+
 	private String info;
-	
-	public PlanVO(){
+
+	public PlanVO() {
 		super();
 	}
-	
+
 	public PlanVO(TaskVO task, UserBaseVO creater) {
 		super();
 		this.task = task;
 		this.creater = creater;
 	}
 
-    public Long getPid() {
+	public Long getPid() {
 		return pid;
 	}
 
@@ -135,7 +135,7 @@ public class PlanVO implements Serializable {
 
 	public PlanVO add(PlanVO planVO) {
 		return planVO;
-		
+
 	}
 
 }

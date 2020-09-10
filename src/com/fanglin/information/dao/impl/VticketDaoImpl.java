@@ -56,14 +56,14 @@ public class VticketDaoImpl extends DaoImpl<VticketPO> implements VticketDao {
 	}
 
 	@Override
-	public int updateVticketStatusForFailure(long vaid) {
-		
+	public int updateVticketForStatus(long vaid, short status) {
+
 		String sql = "update information.vticket set expire = :expire where vaid = :vaid";
-		session().createSQLQuery(sql).setShort("expire", VticketPO.EXPIRE_INVALID_INT).setLong("vaid", vaid).executeUpdate();
-		
+		session().createSQLQuery(sql).setLong("vaid", vaid).setShort("expire", status).executeUpdate();
+
 		return 0;
 	}
-	
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters != null) {

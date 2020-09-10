@@ -152,7 +152,9 @@ $(function () {
         );
         form2.append(left2, right2).appendTo(row2);
         
-        $.each(conf.opt.show, function (j, x) {
+        var $show = conf.opt == null ?  [] : conf.opt.show == null ? [] : conf.opt.show;
+        
+        $.each($show, function (j, x) {
             var $obj = com.focusPage("#" + x);
             if ($obj[0].tagName.toLowerCase() == "input") {
                 $obj.removeAttr("readonly");
@@ -167,6 +169,7 @@ $(function () {
     }
 
     function drawQuotaion(conf) {
+        
         var row = createDiv("row").append(
             createDiv("col-md-8").append(
                 createDiv("form-group").append(createLabel("col-md-2 control-label no-padding-right", "显示方式", "showWay")
@@ -178,8 +181,9 @@ $(function () {
             )
             , createDiv("col-md-4 text-right").append(
                 createDiv("form-group").append(
-                    createDiv("col-md-12").append(createButton(conf, "btnPrintDefaultQuotationInfo", "btn btn-info", "打印报价", null, '<i class="icon-print bigger-120"></i>'))
-                )
+                    createDiv("col-md-12").append($("<p></p>").append(createButton(conf, "btnPrintDefaultQuotationInfo", "btn btn-primary", "打印报价", null, '<i class="icon-print bigger-120"></i>'),
+                    createButton(conf, "btnPrintQuotationCN", "btn btn-info", "打印定额", null, '<i class="icon-print bigger-120"></i>'))
+                ))
             )
             , createDiv("col-md-12", "quotationItemListDiv"));
 
@@ -267,24 +271,47 @@ $(function () {
         return [row];
     }
 
-    function drawPayment(conf) {
-        var row1 = createDiv("row", "preparePayment");
-        row1.append(createDiv("widget-container-span").append(
+    function drawPayment(conf, stepPane) {
+        
+        var row1 = createDiv("row", "preparePayment").append(createDiv("widget-container-span").append(
             createDiv("widget-box transparent").append(
-                createDiv("widget-header").append($("<h4></h4>").append($("<strong></strong>").text("预付款项信息")))
-                , createDiv("widget-body").append(createDiv("widget-body-inner").append(createDiv("clearfix", null, "margin-top: 15px; margin-bottom: 15px;").append(
-                    createDiv("col-md-3", null, "border-left: 1px solid rgb(227, 227, 227);").append($("<h5></h5>").attr("class", "bigger-110 center").text("合同预付款"), $("<h2></h2>").attr("class", "oid bigger center").append($("<b></b>").attr("class", "blue").attr("id", "balanceAdvance").text(0)))
-                    , createDiv("col-md-3", null, "border-left: 1px solid rgb(227, 227, 227);").append($("<h5></h5>").attr("class", "bigger-110 center").text("工程预付款"), $("<h2></h2>").attr("class", "oid bigger center").append($("<b></b>").attr("class", "blue").attr("id", "projectAdvance").text(0)))
-                    , createDiv("col-md-3", null, "border-left: 1px solid rgb(227, 227, 227);").append($("<h5></h5>").attr("class", "bigger-110 center").text("主材预付款"), $("<h2></h2>").attr("class", "oid bigger center").append($("<b></b>").attr("class", "blue").attr("id", "materialAdvance").text(0)))
-                    , createDiv("col-md-3", null, "border-left: 1px solid rgb(227, 227, 227);").append($("<h5></h5>").attr("class", "bigger-110 center").text("正林预付款"), $("<h2></h2>").attr("class", "oid bigger center").append($("<b></b>").attr("class", "blue").attr("id", "zaterialAdvance").text(0)))
+                createDiv("widget-header").append($("<h4></h4>").append($("<strong></strong>").text("预付款项信息"))),
+                createDiv("widget-body").append(createDiv("widget-body-inner").append(createDiv("clearfix", null, "margin-top: 15px; margin-bottom: 15px;").append(
+                    createDiv("col-md-3", null, "border-left: 1px solid rgb(227, 227, 227);").append($("<h5></h5>").attr("class", "bigger-110 center").text("合同预付款"), $("<h2></h2>").attr("class", "oid bigger center").append($("<b></b>").attr("class", "blue").attr("id", "balanceAdvance").text(0))),
+                    createDiv("col-md-3", null, "border-left: 1px solid rgb(227, 227, 227);").append($("<h5></h5>").attr("class", "bigger-110 center").text("工程预付款"), $("<h2></h2>").attr("class", "oid bigger center").append($("<b></b>").attr("class", "blue").attr("id", "projectAdvance").text(0))),
+                    createDiv("col-md-3", null, "border-left: 1px solid rgb(227, 227, 227);").append($("<h5></h5>").attr("class", "bigger-110 center").text("主材预付款"), $("<h2></h2>").attr("class", "oid bigger center").append($("<b></b>").attr("class", "blue").attr("id", "materialAdvance").text(0))),
+                    createDiv("col-md-3", null, "border-left: 1px solid rgb(227, 227, 227);").append($("<h5></h5>").attr("class", "bigger-110 center").text("正林预付款"), $("<h2></h2>").attr("class", "oid bigger center").append($("<b></b>").attr("class", "blue").attr("id", "zaterialAdvance").text(0))),
                 )))
-            )
-            , createDiv("hr col-md-12")
-            )
-        );
-        var row2 = createDiv("row").append(createDiv("col-md-6").append(createButton(conf, "btnSetDecorationPaymentInfo", "btn btn-info", "生成款项", "button", '<i class="icon-cog bigger-110">'), createButton(conf, "btnOtherPayment", "btn btn-info", "其他款项", "button", '<i class="icon-cog bigger-110">').attr("style", "margin-left: 5px")));
-        var row3 = createDiv("row");
-        row3.append(createDiv("col-xs-6 col-md-6 widget-container-span ui-sortable").append(createDiv("widget-box transparent", "basePaymentWidget").append(createDiv("widget-header").append($("<h4></h4>").append($("<strong></strong>").text("基本款项信息"))), createDiv("widget-body").append(createDiv("widget-body-inner", "basePaymentDiv")))), createDiv("col-xs-6 col-md-6 widget-container-span ui-sortable").append(createDiv("widget-box transparent", "otherPaymentWidget").append(createDiv("widget-header").append($("<h4></h4>").append($("<strong></strong>").text("其他项信息"))), createDiv("widget-body").append(createDiv("widget-body-inner", "otherPaymentDiv")))));
+            ))
+        ).appendTo(stepPane);
+        
+        var row2 = createDiv("row").append(
+            createDiv("col-xs-6 col-md-6 widget-container-span ui-sortable").append(
+                createDiv("widget-box transparent", "basePaymentWidget").append(
+                    createDiv("widget-header").append($("<h4></h4>").append($("<strong></strong>").text("基本款项信息")), createButton(conf, "btnSetDecorationPaymentInfo", "btn btn-xs btn-info pull-right", "生成款项", "button", '<i class="icon-cog bigger-110">')), 
+                    createDiv("widget-body").append(createDiv("widget-body-inner", "basePaymentDiv")))), 
+            createDiv("col-xs-6 col-md-6 widget-container-span ui-sortable").append(
+                createDiv("widget-box transparent", "otherPaymentWidget").append(
+                    createDiv("widget-header").append($("<h4></h4>").append($("<strong></strong>").text("其他项信息")), createButton(conf, "btnOtherPayment", "btn btn-xs btn-warning pull-right", "其他款项", "button", '<i class="icon-cog bigger-110">')), 
+                    createDiv("widget-body").append(createDiv("widget-body-inner", "otherPaymentDiv"))))
+        ).appendTo(stepPane);
+        
+        //createDiv("hr col-md-12").appendTo(stepPane);
+        
+        var row3 = createDiv("row", "preparePayment").append(createDiv("widget-container-span").append(
+            createDiv("widget-box transparent").append(
+                createDiv("widget-header").append($("<h4></h4>").append($("<strong></strong>").text("已收款项信息"))),
+                createDiv("widget-body").append(createDiv("widget-body-inner").append(createDiv("clearfix", null, "margin-top: 15px; margin-bottom: 15px;").append(
+                    createDiv("col-md-2", null, "border-left: 1px solid rgb(227, 227, 227);").append($("<h5></h5>").attr("class", "bigger-110 center").text("已收工程款总额"), $("<h2></h2>").attr("class", "oid bigger center").append($("<b></b>").attr("class", "blue").attr("id", "projectTotal").text(0))),
+                    createDiv("col-md-2", null, "border-left: 1px solid rgb(227, 227, 227);").append($("<h5></h5>").attr("class", "bigger-110 center").text("已收工程款百分比"), $("<h2></h2>").attr("class", "oid bigger center").append($("<b></b>").attr("class", "blue").attr("id", "projectPercent").text(0))),
+                    createDiv("col-md-2", null, "border-left: 1px solid rgb(227, 227, 227);").append($("<h5></h5>").attr("class", "bigger-110 center").text("增项款总额"), $("<h2></h2>").attr("class", "oid bigger center").append($("<b></b>").attr("class", "blue").attr("id", "addTotal").text(0))),
+                    createDiv("col-md-2", null, "border-left: 1px solid rgb(227, 227, 227);").append($("<h5></h5>").attr("class", "bigger-110 center").text("减项款总额"), $("<h2></h2>").attr("class", "oid bigger center").append($("<b></b>").attr("class", "blue").attr("id", "reduceTotal").text(0))),
+                    createDiv("col-md-2", null, "border-left: 1px solid rgb(227, 227, 227);").append($("<h5></h5>").attr("class", "bigger-110 center").text("主材额"), $("<h2></h2>").attr("class", "oid bigger center").append($("<b></b>").attr("class", "blue").attr("id", "materialAmount").text(0))),
+                    createDiv("col-md-2", null, "border-left: 1px solid rgb(227, 227, 227);").append($("<h5></h5>").attr("class", "bigger-110 center").text("主基比"), $("<h2></h2>").attr("class", "oid bigger center").append($("<b></b>").attr("class", "blue").attr("id", "materialRate").text(0))),
+                )))
+            ))
+        ).appendTo(stepPane);
+        
         return [row1, row2, row3];
     }
 
@@ -306,7 +333,7 @@ $(function () {
 
     function drawService(conf) {
 
-        var row = createDiv("row", "serviceInfo ");
+        var row = createDiv("row", "serviceInfo");
         var left = createDiv("col-xs-12 col-md-12 widget-container-span ui-sortable").append(createDiv("widget-box transparent").append(createDiv("widget-header").append($("<h4></h4>").append($("<strong></strong>").text("服务信息"))), createDiv("widget-body").append(createDiv("widget-body-inner", "serviceInfo"))));
         row.append(left);
 
@@ -364,7 +391,7 @@ $(function () {
                         rows = drawActivity(v);
                         break;
                     case "payment":
-                        rows = drawPayment(v);
+                        drawPayment(v, stepPane);
                         break;
                     case "belong":
                         rows = drawBelong(v);

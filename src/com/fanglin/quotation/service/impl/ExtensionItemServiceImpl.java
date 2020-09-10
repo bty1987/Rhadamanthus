@@ -58,13 +58,13 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 	}
 
 	@Override
-	public List<ExtensionItemVO> queryExtensionItemByEids(List<Long> extensionItemIDs) {
+	public List<ExtensionItemVO> queryExtensionItemByEids(List<Long> extensionIds) {
 
-		if (extensionItemIDs == null || extensionItemIDs.size() == 0) {
+		if (extensionIds == null || extensionIds.size() == 0) {
 			return null;
 		}
 
-		List<ExtensionItemPO> extensionItemPOs = extensionItemDao.queryExtensionItemByEids(extensionItemIDs);
+		List<ExtensionItemPO> extensionItemPOs = extensionItemDao.queryExtensionItemByEids(extensionIds);
 		List<ExtensionItemVO> extensionItemVOs = handleExtensionItem(extensionItemPOs);
 
 		return extensionItemVOs;

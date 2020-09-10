@@ -285,6 +285,27 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		return salesPaymentVOs;
 	}
+
+	@Override
+	public long amountSalesPayment(SalesPaymentVO salesPayment) {
+		
+		String orderId = null;
+		
+		if (salesPayment.getSales().getSid() != null) {
+			SalesPO salesPO = salesDao.get(salesPayment.getSales().getSid());
+			
+			if (salesPO != null) {
+				orderId = salesPO.getOrderId();
+			}
+		} else if (salesPayment.getSales().getOrderId() != null) {
+			orderId = salesPayment.getSales().getOrderId();
+		}
+		
+		long amount = salesPaymentDao.amountSalesPayment(orderId);
+		
+		return amount;
+		
+	}
 	
 	//添加定金销售款
 	@Override

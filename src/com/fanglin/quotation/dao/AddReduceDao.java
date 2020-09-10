@@ -19,19 +19,19 @@ import com.fanglin.quotation.po.AddReducePO;
 import com.fanglin.utils.Paging;
 
 public interface AddReduceDao extends Dao<AddReducePO> {
-	
+
 	public List<AddReducePO> pageAddReduce(Paging paging, List<Filter> filters);
-	
+
 	public List<AddReducePO> pageAddReduceByOrderId(Paging paging, List<Filter> filters, String orderId);
-	
+
 	public AddReducePO queryAddReduceByDecorationPaymentId(Long orderPaymentId);
-	
+
 	public List<AddReducePO> queryAddReduceForNLeakageByOrderId(String orderId);
-	
+
 	public List<AddReducePO> queryAddReduceByOrderId(String orderId);
-	
+
 	public List<AddReducePO> queryAddReduceForPayedByOrderId(String orderId);
-	
+
 	public int countAddReduceByOrderId(String orderId);
 
 }

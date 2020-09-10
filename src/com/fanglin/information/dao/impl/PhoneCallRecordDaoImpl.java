@@ -9,13 +9,13 @@ import com.fanglin.information.po.PhoneCallRecordPO;
 
 @Repository("phoneCallRecordDao")
 public class PhoneCallRecordDaoImpl extends DaoImpl<PhoneCallRecordPO> implements PhoneCallRecordDao {
-	
-	public PhoneCallRecordDaoImpl(){
+
+	public PhoneCallRecordDaoImpl() {
 		super(PhoneCallRecordPO.class);
 	}
+
 	@Override
-	public PhoneCallRecordPO queryPhoneCallRecordByPcId(long pcId) {
-		// TODO Auto-generated method stub
-		return (PhoneCallRecordPO)session().createCriteria(PhoneCallRecordPO.class).add(Restrictions.eq("pcid", pcId)).uniqueResult();
+	public PhoneCallRecordPO queryPhoneCallRecord(long pcId) {
+		return (PhoneCallRecordPO) session().createCriteria(PhoneCallRecordPO.class).add(Restrictions.eq("pcid", pcId)).uniqueResult();
 	}
 }

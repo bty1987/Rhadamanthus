@@ -58,6 +58,6 @@ public interface UserService {
 
 	public void checkUserForPassword(String userId, String password, String rePassword) throws FLException;
 
-	public void updateUserForProfiles(UserInfoVO userInfoVO) throws FLException;
+	public void updateUserForProfile(UserInfoVO userInfoVO) throws FLException;
 
 }

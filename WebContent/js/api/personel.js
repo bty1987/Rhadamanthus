@@ -20,7 +20,7 @@ $.extend(api, {personel: {
     addUser: {url: "addUser.do", server: "communion"},
     updateUserForBaseInfo: {url: "updateUserForBaseInfo.do", server: "communion"},
     updateUser: {url: "updateUser.do", server: "communion"},
-    updateUserForProfiles: {url: "updateUserForProfiles.do" ,server: "communion"},
+    updateUserForProfile: {url: "updateUserForProfile.do" ,server: "communion"},
     
     updateUserForAdvance: {url: "updateUserForAdvance.do", server: "communion"},
     resetPassword: {url: "resetPassword.do", server: "communion"},
@@ -81,7 +81,6 @@ $.extend(api, {personel: {
 	addDutment: {url: "addDutment.do", server: "communion"},
 	updateDutment: {url: "updateDutment.do", server: "communion"},
 	deleteDutment: {url: "deleteDutment.do", server: "communion"},
-	queryDutmentByDid: {url: "queryDutmentByDid.do"},
-	updateUserExpirence: {url: "updateUserExpirence.do", server: "communion"}
+	updateUserExperience: {url: "updateUserExperience.do", server: "communion"}
 
 }});

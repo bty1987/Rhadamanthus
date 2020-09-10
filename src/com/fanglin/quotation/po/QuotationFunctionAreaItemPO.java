@@ -227,7 +227,7 @@ public class QuotationFunctionAreaItemPO implements Serializable {
 	public static QuotationFunctionAreaItemPO factoryToInstance(Long quotationFunctionAreaId, Short index) throws FLException {
 
 		try {
-			
+
 			Class<?> clazz = Class.forName("com.fanglin.quotation.po.QuotationFunctionAreaItemPO" + index);
 
 			return (QuotationFunctionAreaItemPO) clazz.newInstance();

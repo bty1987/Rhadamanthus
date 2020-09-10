@@ -24,44 +24,44 @@ public class QuotetionFunctionAreaAction extends BaseListAction {
 
 	@Autowired
 	private QuotetionFunctionAreaService quotetionFunctionAreaService;
-	
+
 	private QuotetionVO quotetion;
-	
+
 	private List<QuotetionFunctionAreaVO> quotetionFunctionAreas;
-	
+
 	private QuotetionFunctionAreaVO quotetionFunctionArea;
-	
+
 	private List<Long> functionAreaIds;
-	
-	@Action(value = "queryQuotetionFunctionAreaByQid", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryQuotetionFunctionAreaByQid() throws FLException{
-		
+
+	@Action(value = "queryQuotetionFunctionAreaByQid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotetionFunctionAreaByQid() throws FLException {
+
 		quotetionFunctionAreas = quotetionFunctionAreaService.queryQuotetionFunctionAreaByQid(quotetion);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "addQuotetionFuctionArea", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addQuotetionFuctionArea() throws FLException{
-		
-		quotetionFunctionAreas = quotetionFunctionAreaService.addQuotetionFuctionArea(functionAreaIds, quotetion);
-		
+
 		return SUCCESS;
 	}
 
-	@Action(value = "updateQuotetionFunctionArea", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateQuotetionFunctionArea() throws FLException{
-		
-		quotetionFunctionAreaService.updateQuotetionFunctionArea(quotetionFunctionArea, quotetion);
-		
+	@Action(value = "addQuotetionFuctionArea", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addQuotetionFuctionArea() throws FLException {
+
+		quotetionFunctionAreas = quotetionFunctionAreaService.addQuotetionFuctionArea(functionAreaIds, quotetion);
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "deleteQuotetionFunctionArea", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteQuotetionFunctionArea() throws FLException{
-	
+
+	@Action(value = "updateQuotetionFunctionArea", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateQuotetionFunctionArea() throws FLException {
+
+		quotetionFunctionAreaService.updateQuotetionFunctionArea(quotetionFunctionArea, quotetion);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "deleteQuotetionFunctionArea", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteQuotetionFunctionArea() throws FLException {
+
 		quotetionFunctionAreaService.deleteQuotetionFunctionArea(quotetionFunctionArea, quotetion);
-		
+
 		return SUCCESS;
 	}
 
@@ -77,8 +77,7 @@ public class QuotetionFunctionAreaAction extends BaseListAction {
 		return quotetionFunctionAreas;
 	}
 
-	public void setQuotetionFunctionAreas(
-			List<QuotetionFunctionAreaVO> quotetionFunctionAreas) {
+	public void setQuotetionFunctionAreas(List<QuotetionFunctionAreaVO> quotetionFunctionAreas) {
 		this.quotetionFunctionAreas = quotetionFunctionAreas;
 	}
 
@@ -86,8 +85,7 @@ public class QuotetionFunctionAreaAction extends BaseListAction {
 		return quotetionFunctionArea;
 	}
 
-	public void setQuotetionFunctionArea(
-			QuotetionFunctionAreaVO quotetionFunctionArea) {
+	public void setQuotetionFunctionArea(QuotetionFunctionAreaVO quotetionFunctionArea) {
 		this.quotetionFunctionArea = quotetionFunctionArea;
 	}
 
@@ -98,6 +96,5 @@ public class QuotetionFunctionAreaAction extends BaseListAction {
 	public void setFunctionAreaIds(List<Long> functionAreaIds) {
 		this.functionAreaIds = functionAreaIds;
 	}
-	
-	
+
 }

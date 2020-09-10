@@ -152,7 +152,7 @@ jQuery(function($) {
 		
 		com.showConfirm("是否需要删除" + activityItemName + "活动物品?", function(result) {
 
-			com.post(api.information.deleteActivityItemByAiid, {"activityItem.aiid": aiId}, function(res){
+			com.post(api.information.deleteActivityItem, {"activityItem.aiid": aiId}, function(res){
 				com.showAlert(com.info, "操作成功");
 
 				com.focusPage("#pricing_" + aiId).remove();

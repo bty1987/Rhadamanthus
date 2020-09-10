@@ -41,7 +41,7 @@ public class MessageService {
 	@Autowired
 	private SystemConfigDao systemConfigDao;
 
-	public short sendMessage(String receiveId, String senderName, String contents, int aimid, int company) throws FLException {
+	public short sendMessage(String receiveId, String senderName, String contents, long aimid, int company) throws FLException {
 
 		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
 

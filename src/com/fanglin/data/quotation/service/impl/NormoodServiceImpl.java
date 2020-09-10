@@ -20,55 +20,60 @@ import com.fanglin.utils.BeanUtil;
 
 @Service("normoodService")
 @Transactional(readOnly = true)
-public class NormoodServiceImpl implements NormoodService{
+public class NormoodServiceImpl implements NormoodService {
 
 	@Autowired
 	NormoodDao normoodDao;
-	
+
 	@Override
 	public List<NormoodVO> queryNormoodByQiid(Long qiid) {
-		
+
 		List<NormoodPO> normoodPOs = normoodDao.queryNormoodByQiid(qiid);
 		List<NormoodVO> normoodVOs = new ArrayList<NormoodVO>();
-		
+
 		for (NormoodPO normoodPO : normoodPOs) {
+
 			NormoodVO normoodVO = new NormoodVO(new GoodsVO(), new QuotationItemVO());
-			
-			BeanUtil.copyProperties(normoodPO, normoodVO,  Arrays.asList("goods", "quotationItem"));
+
+			QuotationItemPO quotationItemPO = normoodPO.getQuotationItem();
+
+			BeanUtil.copyProperties(normoodPO, normoodVO, Arrays.asList("goods", "quotationItem"));
 			BeanUtil.copyProperties(normoodPO.getGoods(), normoodVO.getGoods(), Arrays.asList("accessoriesType"));
-			BeanUtil.copyProperties(normoodPO.getQuotationItem(), normoodVO.getQuotationItem(), Arrays.asList(QuotationItemPO.COLUMN_ARRAYS_STR));
-			
+			BeanUtil.copyProperties(quotationItemPO, normoodVO.getQuotationItem(), Arrays.asList(QuotationItemPO.COLUMN_ARRAYS_STR));
+
+			normoodVO.getQuotationItem().setMeasurementUnit(quotationItemPO.getMeasurementUnit().getName());
+			normoodVO.getQuotationItem().setWorkType(quotationItemPO.getWorkType().getName());
+
 			normoodVOs.add(normoodVO);
 		}
-		
+
 		return normoodVOs;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int addNormood(NormoodVO normoodVO) {
-		
+
 		NormoodPO normoodPO = new NormoodPO(new QuotationItemPO(), new GoodsPO());
-		
+
+		BeanUtil.copyPropertie(normoodVO, normoodPO, Arrays.asList("goods", "quotationItem"));
 		BeanUtil.copyProperties(normoodVO.getGoods(), normoodPO.getGoods(), Arrays.asList("accessoriesType"));
 		BeanUtil.copyProperties(normoodVO.getQuotationItem(), normoodPO.getQuotationItem(), Arrays.asList(QuotationItemPO.COLUMN_ARRAYS_STR));
-		
+
 		normoodPO.setStatus(NormoodPO.STATUS_VALID_STR);
-		normoodPO.setNum(normoodVO.getNum());
-		
+
 		normoodDao.save(normoodPO);
-		
+
 		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int deleteNormood(NormoodVO normoodVO) {
-		
-		NormoodPO normoodPO = normoodDao.get(normoodVO.getNgid());
-		
-		normoodDao.deleteById(normoodPO.getNgid());
-		
+
+		normoodDao.deleteById(normoodVO.getNgid());
+
 		return 0;
 	}
+
 }

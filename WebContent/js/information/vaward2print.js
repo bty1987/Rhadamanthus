@@ -4,11 +4,7 @@ $(function ($) {
     com = parent.com;
     utils = parent.utils;
     params = parent.params;
-    
-    var printer = {
-        name : null,
-        args : {}
-    }
+    printer = parent.printer;
     
     var vticket = params.vticket;
     var vawards = params.vawards;
@@ -19,8 +15,8 @@ $(function ($) {
     printer.args = {
         "title" : "2020盛饰中国",
         "no": vticket.tno,
-        "address": vticket.address,
-        "belonger": vticket.belonger ? vticket.belonger.currentName : "",
+        "address": vticket.address ? vticket.address : "",
+        "belonger": (vticket.belonger && vticket.belonger.currentName) ? vticket.belonger.currentName : "",
         "items": vawards,
     };
     

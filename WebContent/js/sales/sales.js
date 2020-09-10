@@ -1056,7 +1056,7 @@ $(function () {
         params.salesSid = sid;
         params.data = v;
         params.flag = flag;
-        com.popup("销售购货单：" + orderId, api.index.salesPrintIndex.url, null, null, true);
+        com.popup("销售购货单: " + orderId, api.index.salesPrintIndex.url, null, null, true);
     }
 
     function brandBalance(bid){

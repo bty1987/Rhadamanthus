@@ -289,7 +289,7 @@ $.extend(api,{production:{
 		tranargs:{
 			args: ["outsource.timeLimit"]
 		}},
-	passOutsource:{url:"passOutsource.do"},
+	receiptOutsource:{url:"receiptOutsource.do"},
 	confirmOutsource:{url:"confirmOutsource.do"},
 	finishOutsource:{url:"finishOutsource.do"},
 	deleteOutsource:{url:"deleteOutsource.do"},

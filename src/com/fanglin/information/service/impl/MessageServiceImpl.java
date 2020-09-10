@@ -75,7 +75,6 @@ public class MessageServiceImpl implements MessageService {
 	public MessageVO queryMessageByMid(MessageVO message) {
 
 		MessagePO messagePO = messageDao.get(message.getMid());
-
 		MessageVO messageVO = convertBean(messagePO);
 
 		return messageVO;
@@ -86,15 +85,15 @@ public class MessageServiceImpl implements MessageService {
 	public void sendMessage(MessageVO messageVO, int company) throws FLException {
 
 		if (messageVO.getSender() != null) {
-			sendMessage(messageVO.getReceiver().getUserId(), messageVO.getSender().getUserId(), messageVO.getContents(), messageVO.getType(),company);
+			sendMessage(messageVO.getReceiver().getUserId(), messageVO.getSender().getUserId(), messageVO.getContents(), messageVO.getType(), company);
 		} else {
-			sendMessage(messageVO.getReceiver().getUserId(), "", messageVO.getContents(), messageVO.getType(),company);
+			sendMessage(messageVO.getReceiver().getUserId(), "", messageVO.getContents(), messageVO.getType(), company);
 		}
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void sendMessage(String receiver, String sender, String contents, short type,int company) throws FLException {
+	public void sendMessage(String receiver, String sender, String contents, short type, int company) throws FLException {
 
 		MessagePO messagePO = new MessagePO();
 
@@ -116,7 +115,6 @@ public class MessageServiceImpl implements MessageService {
 		messageDao.save(messagePO);
 
 		messageDDService.sendMessage(receiver, userName, contents, messagePO.getMid(), company);
-
 	}
 
 	@Override
@@ -145,41 +143,23 @@ public class MessageServiceImpl implements MessageService {
 		messageDao.save(messagePO);
 
 		messageDDService.sendMessage(receiver, userName, contents, messagePO.getMid(), company);
-
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void updateMessageForRead(List<Integer> ids) {
-
 		messageDao.updateMessageForRead(ids);
 	}
 
 	private MessageVO convertBean(MessagePO messagePO) {
+
 		MessageVO messageVO = new MessageVO();
 
 		BeanUtil.copyProperties(messagePO, messageVO, Arrays.asList("receiver", "sender"));
 
-		UserVO receiver = new UserVO();
-
-		UserPO _receiver = messagePO.getReceiver();
-
-		receiver.setUserName(_receiver.getUserName());
-		receiver.setCurrentName(_receiver.getCurrentName());
-		receiver.setUserId(_receiver.getUserId());
-
-		messageVO.setReceiver(receiver);
-
-		UserVO sender = new UserVO();
-		if (messagePO.getSender() != null) {
-			UserPO _sender = messagePO.getSender();
-			sender.setUserName(_sender.getUserName());
-			sender.setCurrentName(_sender.getCurrentName());
-			sender.setUserId(_sender.getUserId());
-			messageVO.setSender(sender);
-		}
+		messageVO.setReceiver(new UserVO().setBaseInfo(messagePO.getReceiver()));
+		messageVO.setSender(new UserVO().setBaseInfo(messagePO.getSender()));
 
 		return messageVO;
 	}
-
 }

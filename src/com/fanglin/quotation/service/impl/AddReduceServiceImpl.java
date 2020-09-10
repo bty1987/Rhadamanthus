@@ -60,7 +60,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 	@Autowired
 	private QuotationFunctionAreaItemDao quotationFunctionAreaItemDao;
-	
+
 	@Autowired
 	private QuotationFunctionAreaDao quotationFunctionAreaDao;
 
@@ -78,23 +78,30 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 	@Override
 	public void pageAddReduceByOrderId(Paging paging, List<Filter> filters, AddReduceVO addReduceVO) {
+
 		filters.add(new Filter(AddReducePO.COLUMN_ORDERID_STR, addReduceVO.getOrderId(), "eq"));
+
 		List<AddReducePO> addReducePOs = addReduceDao.pageAddReduceByOrderId(paging, filters, addReduceVO.getOrderId());
 		List<AddReduceVO> addReduceVOs = handleAddReduce(addReducePOs);
+
 		paging.setData(addReduceVOs);
 	}
 
 	@Override
 	public List<AddReduceVO> queryAddReduceByOrderId(AddReduceVO addReduceVO) {
+
 		List<AddReducePO> addReducePOs = addReduceDao.queryAddReduceByOrderId(addReduceVO.getOrderId());
 		List<AddReduceVO> addReduceVOs = handleAddReduce(addReducePOs);
+
 		return addReduceVOs;
 	}
 
 	@Override
 	public List<AddReduceVO> queryAddReduceForPayedByOrderId(AddReduceVO addReduceVO) {
+
 		List<AddReducePO> addReducePOs = addReduceDao.queryAddReduceForPayedByOrderId(addReduceVO.getOrderId());
 		List<AddReduceVO> addReduceVOs = handleAddReduce(addReducePOs);
+
 		return addReduceVOs;
 	}
 
@@ -204,7 +211,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int deleteAddReduceByArId(AddReduceVO addReduceVO) throws FLException {
-	
+
 		List<Integer> status = Arrays.asList(new Integer[] { AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT });
 
 		long arId = addReduceVO.getArId();
@@ -224,11 +231,11 @@ public class AddReduceServiceImpl implements AddReduceService {
 		}
 
 		List<AddReduceItemPO> addReduceItemPOs = addReduceItemDao.queryAddReduceItemByAddReduceId(arId);
-		
+
 		for (AddReduceItemPO addReduceItemPO : addReduceItemPOs) {
 
 			if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_QUOTATION_ITEM_INT) {
-		
+
 				QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(addReduceItemPO.getQuotationFunctionArea().getQfaId());
 				QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex()), addReduceItemPO.getQuoteItemId());
 
@@ -351,6 +358,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 	}
 
 	private List<AddReduceVO> handleAddReduce(List<AddReducePO> addReducePOs) {
+
 		List<AddReduceVO> addReduceVOs = new ArrayList<AddReduceVO>();
 
 		for (AddReducePO addReducePO : addReducePOs) {

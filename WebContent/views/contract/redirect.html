@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+
+    <title>合同信息</title>
+
+    <link rel="shortcut icon" href="fanglin.ico" type="image/x-icon">
+
+    <style></style>
+
+</head>
+<body>
+
+<div></div>
+
+<script src="/assets/altogether/js/jquery-2.0.3.min.js"></script>
+<script type="text/javascript">
+
+
+    //获取url属性值
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
+
+    $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: "../../redirectDecorationContract.do",
+        data: {
+            "decorationContract.dcid": getQueryString('dcid'),
+            "decorationContract.type": getQueryString('type'),
+            "authentication": "eX3o2SZdrpVOV9HC4UYTRA=="
+        },
+        cache: false,
+        success: function (msg) {
+            if (msg.errorCode == 0) {
+                window.location.href = msg.redirect;
+            } else {
+                alert(msg.errorMsg);
+            }
+        }
+    });
+
+</script>
+</body>
+</html>

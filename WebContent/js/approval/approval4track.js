@@ -189,19 +189,9 @@ jQuery(function($){
             $divBtnWrap.appendTo($h3);
             
             
-            if (v.status == 0 && params['urlLoadParams'].type != 'send') {
-                $divBtnWrap.append($btnAffirm).append($btnPass).append($btnRefuse).appendTo($h3);
-              
+            if ([0, 5, 6].indexOf(v.status) != -1 && params['urlLoadParams'].type != 'send') {
+                $divBtnWrap.append($btnPass).append($btnRefuse).appendTo($h3);
             }
-            if (v.status == 5 && params['urlLoadParams'].type != 'send') {
-                $divBtnWrap.append($btnAffirm).append($btnPass).append($btnRefuse).appendTo($h3);
-              
-            }
-            if (v.status == 6 && params['urlLoadParams'].type != 'send') {
-                $divBtnWrap.append($btnAffirm).append($btnPass).append($btnRefuse).appendTo($h3);
-              
-            }
-            
             
             $liLine.append($h3).append($ulProperty);
             
@@ -224,7 +214,6 @@ jQuery(function($){
                 // 详细信息按钮
                 $btnDetails.bindClick(function () {
                     queryInformationItem(v.aid, v.type);
-                    
                 });
             }
 
@@ -341,7 +330,6 @@ jQuery(function($){
             if(itemInfo.caleTotal) com.focusPage('#totalMoney').html("总金额:" + totalMoney).show();
             
             approvalTrack.modals.itemModel.modal("show");
-
         });
     }
 

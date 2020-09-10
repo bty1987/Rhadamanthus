@@ -16,19 +16,18 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.information.vo.NoticeVO;
 import com.fanglin.utils.Paging;
 
-
 public interface NoticeService {
-	
+
 	public void pageNotice(Paging paging, List<Filter> filters, Authentication authentication);
 
 	public void pageNoticeForSeenByType(Paging paging, List<Filter> filters, NoticeVO noticeVO, Authentication authentication) throws FLException;
-	
+
 	public NoticeVO queryNoticeByNid(NoticeVO noticeVO) throws FLException;
-	
+
 	public int addNotice(NoticeVO noticeVO, Authentication authentication) throws FLException;
-	
+
 	public int updateNotice(NoticeVO noticeVO) throws FLException;
-	
+
 	public int deleteNotice(NoticeVO noticeVO) throws FLException;
-	
+
 }

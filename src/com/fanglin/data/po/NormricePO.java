@@ -17,30 +17,34 @@ import com.fanglin.communion.po.ConstructionNodePO;
 
 @Entity
 @Table(name = "normrice", catalog = "data")
-public class NormricePO implements Serializable{
+public class NormricePO implements Serializable {
 
 	private static final long serialVersionUID = -7988435531109348843L;
-	
+
 	public static final String COLUMN_QIID_STR = "quotationItem.qiId";
-	
+
 	public static final short STATUS_VALID_STR = 0;
-	
+
 	public static final short STATUS_INVALID_STR = 1;
 
 	private long npid;// 定额工费id
-	
+
 	private QuotationItemPO quotationItem;// 报价id
-	
+
 	private ConstructionNodePO constructionNode;// 施工节点
-	
+
+	private String unit;
+
+	private int trannum;
+
 	private int salary;// 工费
-	
+
 	private short status;// 状态
-	
+
 	public NormricePO() {
 		super();
 	}
-	
+
 	public NormricePO(QuotationItemPO quotationItem, ConstructionNodePO constructionNode) {
 		super();
 		this.quotationItem = quotationItem;
@@ -53,7 +57,7 @@ public class NormricePO implements Serializable{
 	public long getNpid() {
 		return npid;
 	}
-	
+
 	public void setNpid(long npid) {
 		this.npid = npid;
 	}
@@ -78,6 +82,24 @@ public class NormricePO implements Serializable{
 		this.constructionNode = constructionNode;
 	}
 
+	@Column(name = "unit")
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
+	@Column(name = "trannum")
+	public int getTrannum() {
+		return trannum;
+	}
+
+	public void setTrannum(int trannum) {
+		this.trannum = trannum;
+	}
+
 	@Column(name = "salary")
 	public int getSalary() {
 		return salary;
@@ -95,5 +117,5 @@ public class NormricePO implements Serializable{
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
+
 }

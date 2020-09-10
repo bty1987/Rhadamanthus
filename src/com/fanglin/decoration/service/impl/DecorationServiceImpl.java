@@ -733,6 +733,8 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationVO.setOrderTotalPrice(decorationPO.getOrderTotalPrice());
 		}
 
+		addition(decorationPO.getAddition(), decorationVO);
+
 		try {
 			decorationVO.setDompany(AESHelper.encrypt(FormatUtil.encodeCompany(decorationPO.getCompany()), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
 		} catch (Exception e) {
@@ -1374,17 +1376,13 @@ public class DecorationServiceImpl implements DecorationService {
 
 	private void addition(DecorationAdditionPO addition, DecorationVO decorationVO) {
 
-		if (addition == null) {
-			decorationVO.getDesigner().setCurrentName("");
-			decorationVO.getSalesman().setCurrentName("");
-			decorationVO.getDesigner().getDept().setName("");
-			decorationVO.getSalesman().getDept().setName("");
-		} else {
+		if (addition != null) {
 			decorationVO.getDesigner().setCurrentName(addition.getDesigner());
 			decorationVO.getSalesman().setCurrentName(addition.getSalesman());
 			decorationVO.getDesigner().getDept().setName(addition.getDesignDepartment());
 			decorationVO.getSalesman().getDept().setName(addition.getSalesDepartment());
+			decorationVO.getDesigner().getDept().getFatherDept().setName(addition.getDesignRegion());
+			decorationVO.getSalesman().getDept().getFatherDept().setName(addition.getSalesRegion());
 		}
 	}
-
 }

@@ -38,6 +38,8 @@ public class SalesPaymentAction extends BaseListAction {
 	
 	private String companyType;
 	
+	private Long amount;
+	
 	@Action(value = "pageSalesPaymentForInit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSalesPaymentForInit() throws FLException{
 		
@@ -93,6 +95,14 @@ public class SalesPaymentAction extends BaseListAction {
 		
 		return SUCCESS;
 	}
+	
+	@Action(value = "amountSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String amountSalesPayment(){
+		
+		amount = salesPaymentService.amountSalesPayment(salesPayment);
+		
+		return SUCCESS;
+	} 
 	
 	@Action(value = "addSalesPaymentForDeposit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addSalesPaymentForDeposit() throws FLException{
@@ -236,6 +246,14 @@ public class SalesPaymentAction extends BaseListAction {
 
 	public void setCompanyType(String companyType) {
 		this.companyType = companyType;
+	}
+
+	public Long getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Long amount) {
+		this.amount = amount;
 	}
 	
 }

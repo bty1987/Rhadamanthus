@@ -33,35 +33,35 @@ import com.fanglin.information.vo.EventsVO;
 public class EventsAction extends BaseListAction {
 
 	private static final long serialVersionUID = -5326189050176199237L;
-	
+
 	@Autowired
 	private EventsService eventsService;
-	
+
 	private List<EventsVO> events;
-	
+
 	private EventsVO event;
-	
-	@Action(value="queryEvent", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryEvent() throws HibernateException, ParseException, FLException{
-		
+
+	@Action(value = "queryEvent", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryEvent() throws HibernateException, ParseException, FLException {
+
 		events = eventsService.queryEvents(event, queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="addEvent", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addEvents() throws ParseException, FLException{
-		
+
+	@Action(value = "addEvent", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addEvents() throws ParseException, FLException {
+
 		eventsService.addEvents(event, queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="deleteEvent", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String deleteEvent() throws FLException{
-		
+
+	@Action(value = "deleteEvent", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteEvent() throws FLException {
+
 		eventsService.deleteEvents(event, queryUserId());
-		
+
 		return SUCCESS;
 	}
 

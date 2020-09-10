@@ -36,17 +36,17 @@ public class QuotetionFunctionAreaItemServiceImpl implements QuotetionFunctionAr
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public QuotetionFunctionAreaItemVO updateQuotetionFunctionAreaItem(QuotetionFunctionAreaItemVO quotetionFunctionAreaItemVO, QuotetionVO quotetionVO) throws FLException {
-	
+
 		QuotetionPO quotetionPO = checkQuotetionForStatusByEnabled(quotetionVO.getQid());
 
 		QuotetionServiceImpl.convertQuotetionVOToPOForAdvance(quotetionVO, quotetionPO);
 
 		Long qfaiId = quotetionFunctionAreaItemVO.getQfaiId();
-	
+
 		QuotetionFunctionAreaPO quotetionFunctionAreaPO = quotetionFunctionAreaDao.get(quotetionFunctionAreaItemVO.getQfaid());
-		
+
 		if (qfaiId != null) {
-			
+
 			QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO = quotetionFunctionAreaItemDao.queryQuotetionFunctionAreaItemByQfaiId(QuotetionFunctionAreaItemPO.factoryToClazz(quotetionFunctionAreaPO.getQfaId(), quotetionFunctionAreaPO.getIndex()), qfaiId);
 
 			if (quotetionFunctionAreaItemPO == null) {
@@ -56,7 +56,7 @@ public class QuotetionFunctionAreaItemServiceImpl implements QuotetionFunctionAr
 			quotetionFunctionAreaItemPO.setNum(quotetionFunctionAreaItemVO.getNum());
 			quotetionFunctionAreaItemDao.update(quotetionFunctionAreaItemPO);
 		} else {
-	
+
 			QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO = QuotetionFunctionAreaItemPO.factoryToInstance(quotetionFunctionAreaPO.getQfaId(), quotetionFunctionAreaPO.getIndex());
 
 			BeanUtil.copyProperties(quotetionFunctionAreaItemVO, quotetionFunctionAreaItemPO);
@@ -82,7 +82,7 @@ public class QuotetionFunctionAreaItemServiceImpl implements QuotetionFunctionAr
 	public int updateQuotetionFunctionAreaItemForIndex(List<QuotetionFunctionAreaItemVO> quotetionFunctionAreaItemVOs, QuotetionFunctionAreaVO quotetionFunctionAreaVO) throws FLException {
 
 		QuotetionFunctionAreaPO quotetionFunctionAreaPO = quotetionFunctionAreaDao.get(quotetionFunctionAreaVO.getQfaId());
-	
+
 		String table = QuotetionFunctionAreaItemPO.quotetionFunctionAreaItemTable(quotetionFunctionAreaPO.getQfaId(), quotetionFunctionAreaPO.getIndex());
 
 		for (QuotetionFunctionAreaItemVO quotetionFunctionAreaItemVO : quotetionFunctionAreaItemVOs) {
@@ -95,7 +95,7 @@ public class QuotetionFunctionAreaItemServiceImpl implements QuotetionFunctionAr
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int updateQuotetionFunctionAreaItemForSpec(QuotetionFunctionAreaItemVO quotetionFunctionAreaItemVO, QuotetionVO quotetionVO) throws FLException {
-	
+
 		QuotetionPO quotetionPO = checkQuotetionForStatusByEnabled(quotetionVO.getQid());
 
 		QuotetionServiceImpl.convertQuotetionVOToPOForAdvance(quotetionVO, quotetionPO);
@@ -127,7 +127,7 @@ public class QuotetionFunctionAreaItemServiceImpl implements QuotetionFunctionAr
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int deleteQuotetionFunctionAreaItem(List<Long> qfaiIds, QuotetionVO quotetionVO, QuotetionFunctionAreaVO quotetionFunctionAreaVO) throws FLException {
-		
+
 		QuotetionPO quotetionPO = checkQuotetionForStatusByEnabled(quotetionVO.getQid());
 
 		QuotetionFunctionAreaPO quotetionFunctionAreaPO = quotetionFunctionAreaDao.get(quotetionFunctionAreaVO.getQfaId());
@@ -139,7 +139,7 @@ public class QuotetionFunctionAreaItemServiceImpl implements QuotetionFunctionAr
 		QuotetionServiceImpl.convertQuotetionVOToPOForAdvance(quotetionVO, quotetionPO);
 
 		if (qfaiIds != null && qfaiIds.size() > 0) {
-			
+
 			String tableName = QuotetionFunctionAreaItemPO.quotetionFunctionAreaItemTable(quotetionFunctionAreaPO.getQfaId(), quotetionFunctionAreaPO.getIndex());
 
 			quotetionFunctionAreaItemDao.deleteQuotetionFunctionAreaItemByQfaiIds(tableName, qfaiIds);

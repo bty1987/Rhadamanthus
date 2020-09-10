@@ -20,21 +20,21 @@ import com.fanglin.personel.po.UserPO;
 public class AssassinPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 8696621508235364905L;
-	
+
 	private int asId;
-	
+
 	private String api;
-	
+
 	private String content;
-	
+
 	private String server;
-	
+
 	private int errorcode;
-	
+
 	private String errormes;
-	
+
 	private UserPO operater;
-	
+
 	private Timestamp operateTime;
 
 	@Id
@@ -94,7 +94,7 @@ public class AssassinPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "ouid",referencedColumnName="uid")
+	@JoinColumn(nullable = false, name = "ouid", referencedColumnName = "uid")
 	public UserPO getOperater() {
 		return operater;
 	}
@@ -111,5 +111,5 @@ public class AssassinPO implements java.io.Serializable {
 	public void setOperateTime(Timestamp operateTime) {
 		this.operateTime = operateTime;
 	}
-	
+
 }

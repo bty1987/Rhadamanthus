@@ -17,26 +17,25 @@ import com.fanglin.information.vo.AwardRecordVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class AwardRecordAction extends BaseListAction{
+public class AwardRecordAction extends BaseListAction {
 
 	private static final long serialVersionUID = 3275601378781403080L;
 
 	@Autowired
 	private AwardRecordService awardRecordService;
-	
+
 	private AwardRecordVO awardRecord;
 
 	private List<AwardRecordVO> awardRecords;
 
-	
-	@Action(value = "pageAwardRecord", results = {@Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageAwardRecords() throws FLException{
-		
-		awardRecordService.pageAwardRecord(getPaging(),getFilters(),authentication(), awardRecord,queryCompany());
-		
+	@Action(value = "pageAwardRecord", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageAwardRecords() throws FLException {
+
+		awardRecordService.pageAwardRecord(getPaging(), getFilters(), authentication(), awardRecord, queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	public AwardRecordVO getAwardRecord() {
 		return awardRecord;
 	}
@@ -52,4 +51,5 @@ public class AwardRecordAction extends BaseListAction{
 	public void setAwardRecords(List<AwardRecordVO> awardRecords) {
 		this.awardRecords = awardRecords;
 	}
+
 }

@@ -23,7 +23,7 @@ public class VticketAction extends BaseListAction {
 
 	@Autowired
 	private VticketService vticketService;
-	
+
 	private List<VticketVO> vtickets;
 
 	private List<?> counts;
@@ -45,7 +45,7 @@ public class VticketAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "createVticket", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String createVticket() throws FLException {
 
@@ -117,5 +117,5 @@ public class VticketAction extends BaseListAction {
 	public void setVticket(VticketVO vticket) {
 		this.vticket = vticket;
 	}
-	
+
 }

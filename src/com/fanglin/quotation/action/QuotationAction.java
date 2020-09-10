@@ -35,176 +35,149 @@ public class QuotationAction extends BaseListAction {
 
 	@Autowired
 	private QuotationService quotationService;
-	
+
 	private QuotationVO quotation;
-	
+
 	private List<QuotationVO> quotations;
-	
-	private int canChange;
-	
+
 	private String no;
-	
+
 	private Map<String, List<String>> configs;
-	
-	private Map<String, Integer> norms;
-	
-	@Action(value = "queryQuotationByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryQuotationByOrderId(){
-		
+
+	@Action(value = "queryQuotationByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotationByOrderId() {
+
 		quotations = quotationService.queryQuotationByOrderId(quotation);
 
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryQuotationForDefaultByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryQuotationForDefaultByOrderId() throws FLException{
-		
+
+	@Action(value = "queryQuotationForDefaultByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotationForDefaultByOrderId() throws FLException {
+
 		quotation = quotationService.queryQuotationForDefaultByOrderId(quotation);
 
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryQuotationById", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryQuotationById(){
-		
+
+	@Action(value = "queryQuotationById", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotationById() {
+
 		quotation = quotationService.queryQuotationByQid(quotation.getQid());
 
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryQuotationForConfig", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryQuotationForConfig() throws FLException{
-		
+
+	@Action(value = "queryQuotationForConfig", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotationForConfig() throws FLException {
+
 		configs = quotationService.queryQuotationForConfig(queryCompany());
-	    
-		return SUCCESS;
-	}
-	
-	@Action(value = "countQuotationForNormood", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String countQuotationForNormood() throws FLException{
-		
-		norms = quotationService.countQuotationForNormood(quotation);
 
 		return SUCCESS;
 	}
-	
-	@Action(value = "countQuotationForNormrice", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String countQuotationForNormrice() throws FLException{
-		
-		norms = quotationService.countQuotationForNormrice(quotation);
 
-		return SUCCESS;
-	}
-	
-	@Action(value = "addQuotation", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addQuotation() throws FLException{
+	@Action(value = "addQuotation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addQuotation() throws FLException {
 
 		quotationService.addQuotation(quotation, queryUserId(), queryCompany());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "updateQuotation", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateQuotation() throws FLException{ 
-		
+
+	@Action(value = "updateQuotation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateQuotation() throws FLException {
+
 		quotationService.updateQuotation(quotation);
-	    
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "updateQuotationForAdvance", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateQuotationForAdvance() throws FLException{
-		
+
+	@Action(value = "updateQuotationForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateQuotationForAdvance() throws FLException {
+
 		quotationService.updateQuotationForAdvance(quotation);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "updateQuotationForStatus", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateQuotationForStatus() throws FLException{ 
-		
+
+	@Action(value = "updateQuotationForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateQuotationForStatus() throws FLException {
+
 		quotationService.updateQuotationForStatus(quotation, queryUserId());
-	    
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "deleteQuotationById", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteQuotationById() throws FLException{
-		
+
+	@Action(value = "deleteQuotationById", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteQuotationById() throws FLException {
+
 		quotationService.deleteQuotationById(quotation);
-	    
+
 		return SUCCESS;
 	}
 
-	@Action(value = "replicaQuotation", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String replicaQuotation() throws FLException{
-		
-		quotationService.replicaQuotation(quotation,queryUserId(), queryCompany());
-		
-		return SUCCESS;
-	}
-	@Action(value = "cloneQuotation", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String cloneQuotation() throws FLException{
-		
-		quotationService.cloneQuotation(quotation,no,queryUserId(), queryCompany());
-		
+	@Action(value = "replicaQuotation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String replicaQuotation() throws FLException {
+
+		quotationService.replicaQuotation(quotation, queryUserId(), queryCompany());
+
 		return SUCCESS;
 	}
 
-	@Action(value = "copyQuotation", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String copyQuotation() throws FLException{ 
-		
+	@Action(value = "cloneQuotation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String cloneQuotation() throws FLException {
+
+		quotationService.cloneQuotation(quotation, no, queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "copyQuotation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String copyQuotation() throws FLException {
+
 		quotationService.copyQuotation(quotation, queryUserId(), queryCompany());
-	    
+
 		return SUCCESS;
 	}
 
-	@Action(value = "changeQuotationForDefault", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String changeQuotationForDefault() throws FLException{ 
-		
+	@Action(value = "changeQuotationForDefault", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String changeQuotationForDefault() throws FLException {
+
 		quotationService.changeQuotationForDefault(quotation);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "lockQuotation", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String lockQuotation() throws FLException{ 
-		
-		quotationService.lockQuotation(quotation, queryUserId());
-	    
-		return SUCCESS;
-	}
-	
-	@Action(value = "unlockQuotation", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String unlockQuotation() throws FLException{ 
-		
-		quotationService.unlockQuotation(quotation, queryUserId());
-	    
+
 		return SUCCESS;
 	}
 
-	public QuotationVO getQuotation(){
+	@Action(value = "lockQuotation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String lockQuotation() throws FLException {
+
+		quotationService.lockQuotation(quotation, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "unlockQuotation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String unlockQuotation() throws FLException {
+
+		quotationService.unlockQuotation(quotation, queryUserId());
+
+		return SUCCESS;
+	}
+
+	public QuotationVO getQuotation() {
 		return quotation;
 	}
 
-	public void setQuotation(QuotationVO quotation){
+	public void setQuotation(QuotationVO quotation) {
 		this.quotation = quotation;
 	}
 
-	public void setQuotations(List<QuotationVO> quotations){
+	public void setQuotations(List<QuotationVO> quotations) {
 		this.quotations = quotations;
 	}
 
-	public List<QuotationVO> getQuotations(){
+	public List<QuotationVO> getQuotations() {
 		return quotations;
-	}
-
-	public void setCanChange(int canChange){
-		this.canChange = canChange;
-	}
-
-	public int getCanChange(){
-		return canChange;
 	}
 
 	public Map<String, List<String>> getConfigs() {
@@ -223,12 +196,4 @@ public class QuotationAction extends BaseListAction {
 		this.no = no;
 	}
 
-	public Map<String, Integer> getNorms() {
-		return norms;
-	}
-
-	public void setNorms(Map<String, Integer> norms) {
-		this.norms = norms;
-	}
-	
 }

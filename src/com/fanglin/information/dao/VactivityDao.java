@@ -19,9 +19,9 @@ import com.fanglin.information.po.VactivityPO;
 import com.fanglin.utils.Paging;
 
 public interface VactivityDao extends Dao<VactivityPO> {
-	
+
 	public List<VactivityPO> pageVactivity(Paging paging, List<Filter> filters);
-	
+
 	public List<VactivityPO> queryVactivity();
 
 }

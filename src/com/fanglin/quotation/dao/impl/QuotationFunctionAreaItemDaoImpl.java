@@ -11,7 +11,6 @@
 
 package com.fanglin.quotation.dao.impl;
 
-
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -23,11 +22,10 @@ import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.vo.QuotationFunctionAreaItemVO;
 
-
 @Repository("quotationFunctionAreaItemDao")
-public class QuotationFunctionAreaItemDaoImpl extends DaoImpl<QuotationFunctionAreaItemPO> implements QuotationFunctionAreaItemDao{
-	
-	public QuotationFunctionAreaItemDaoImpl(){
+public class QuotationFunctionAreaItemDaoImpl extends DaoImpl<QuotationFunctionAreaItemPO> implements QuotationFunctionAreaItemDao {
+
+	public QuotationFunctionAreaItemDaoImpl() {
 		super(QuotationFunctionAreaItemPO.class);
 	}
 
@@ -35,9 +33,9 @@ public class QuotationFunctionAreaItemDaoImpl extends DaoImpl<QuotationFunctionA
 	public QuotationFunctionAreaItemPO queryQuotationFunctionAreaItemByQfaiId(Class<?> clazz, long qfaiId) {
 		return (QuotationFunctionAreaItemPO) session().createCriteria(clazz).add(Restrictions.eq("qfaiId", qfaiId)).uniqueResult();
 	}
-	
+
 	@Override
-	public QuotationFunctionAreaItemPO queryQuotationFunctionAreaItemForTypeByQuotationFunctionAreaId(Class<?> clazz,Long quotationFunctionAreaId, Short type) {
+	public QuotationFunctionAreaItemPO queryQuotationFunctionAreaItemForTypeByQuotationFunctionAreaId(Class<?> clazz, Long quotationFunctionAreaId, Short type) {
 		return (QuotationFunctionAreaItemPO) session().createCriteria(clazz).add(Restrictions.eq("quotationFunctionArea.qfaId", quotationFunctionAreaId)).add(Restrictions.eq("type", type)).uniqueResult();
 	}
 
@@ -46,32 +44,37 @@ public class QuotationFunctionAreaItemDaoImpl extends DaoImpl<QuotationFunctionA
 	public List<QuotationFunctionAreaItemPO> queryQuotationFunctionAreaItemByFunctionAreaId(Class<?> clazz, long functionAreaId) {
 		return session().createCriteria(clazz).createAlias("quotationFunctionArea", "quotationFunctionArea").add(Restrictions.eq("quotationFunctionArea.qfaId", functionAreaId)).list();
 	}
-	
+
 	@Override
-	public QuotationFunctionAreaItemPO queryQuotationFunctionAreaItemByQuotationIdAType(Class<?> clazz, long qId, short type) {		
+	public QuotationFunctionAreaItemPO queryQuotationFunctionAreaItemByQuotationIdAType(Class<?> clazz, long qId, short type) {
 		return (QuotationFunctionAreaItemPO) session().createCriteria(clazz).add(Restrictions.eq("type", type)).createAlias("quotationFunctionArea", "quotationFunctionArea").add(Restrictions.eq("quotationFunctionArea.qfaId", qId)).uniqueResult();
 	}
 
 	@Override
-	public int updateQuotationFunctionAreaItemForIndex(String table,QuotationFunctionAreaItemVO QuotationFunctionAreaItemVO)throws FLException {
-		String hql = String.format("update %s  set index = :index where qfaiId = :qfaiId",table);
-		session().createQuery(hql).setInteger("index", QuotationFunctionAreaItemVO.getIndex()).setLong("qfaiId", QuotationFunctionAreaItemVO.getQfaiId()).executeUpdate();
+	public int updateQuotationFunctionAreaItemForIndex(String table, QuotationFunctionAreaItemVO QuotationFunctionAreaItemVO) throws FLException {
+
+		String sql = String.format("update %s  set index = :index where qfaiId = :qfaiId", table);
+		session().createQuery(sql).setInteger("index", QuotationFunctionAreaItemVO.getIndex()).setLong("qfaiId", QuotationFunctionAreaItemVO.getQfaiId()).executeUpdate();
+
 		return 0;
 	}
 
 	@Override
-	public int deleteQuotationFunctionAreaItemByFunctionAreaId(String table,  long functionAreaId) {
-		String hql = String.format("delete %s  q where q.quotationFunctionArea.qfaId = :quotationFunctionAreaId",table);
-		int deletedEntities = session().createQuery(hql).setLong("quotationFunctionAreaId", functionAreaId).executeUpdate();
-		
+	public int deleteQuotationFunctionAreaItemByFunctionAreaId(String table, long functionAreaId) {
+
+		String sql = String.format("delete %s  q where q.quotationFunctionArea.qfaId = :quotationFunctionAreaId", table);
+		int deletedEntities = session().createQuery(sql).setLong("quotationFunctionAreaId", functionAreaId).executeUpdate();
+
 		return deletedEntities;
 	}
-	
+
 	@Override
 	public int deleteQuotationFunctionAreaItemByQfaiIds(String table, List<Long> qfaiIds) {
-		String hql = String.format("delete %s q where q.qfaiId in :qfaiIds",table);
-		int deletedEntities = session().createQuery(hql).setParameterList("qfaiIds", qfaiIds).executeUpdate();
-		
+
+		String sql = String.format("delete %s q where q.qfaiId in :qfaiIds", table);
+		int deletedEntities = session().createQuery(sql).setParameterList("qfaiIds", qfaiIds).executeUpdate();
+
 		return deletedEntities;
 	}
+
 }

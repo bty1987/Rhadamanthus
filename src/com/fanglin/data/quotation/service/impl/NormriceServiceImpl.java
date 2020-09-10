@@ -20,55 +20,59 @@ import com.fanglin.utils.BeanUtil;
 
 @Service("normriceService")
 @Transactional(readOnly = true)
-public class NormriceServiceImpl implements NormriceService{
-	
+public class NormriceServiceImpl implements NormriceService {
+
 	@Autowired
 	NormriceDao normriceDao;
-	
+
 	@Override
 	public List<NormriceVO> queryNormriceByQiid(Long qiid) {
-		
+
 		List<NormricePO> normricePOs = normriceDao.queryNormriceByQiid(qiid);
 		List<NormriceVO> normriceVOs = new ArrayList<NormriceVO>();
-		
+
 		for (NormricePO normricePO : normricePOs) {
+
 			NormriceVO normriceVO = new NormriceVO(new ConstructionNodeVO(), new QuotationItemVO());
-			
+
+			QuotationItemPO quotationItemPO = normricePO.getQuotationItem();
+
 			BeanUtil.copyProperties(normricePO, normriceVO, Arrays.asList("constructionNode", "quotationItem"));
 			BeanUtil.copyProperties(normricePO.getConstructionNode(), normriceVO.getConstructionNode());
 			BeanUtil.copyProperties(normricePO.getQuotationItem(), normriceVO.getQuotationItem(), Arrays.asList(QuotationItemPO.COLUMN_ARRAYS_STR));
-			
+
+			normriceVO.getQuotationItem().setMeasurementUnit(quotationItemPO.getMeasurementUnit().getName());
+			normriceVO.getQuotationItem().setWorkType(quotationItemPO.getWorkType().getName());
+
 			normriceVOs.add(normriceVO);
 		}
-		
+
 		return normriceVOs;
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addNormrice(NormriceVO normriceVO) {
-		
+
 		NormricePO normricePO = new NormricePO(new QuotationItemPO(), new ConstructionNodePO());
-		
+
+		BeanUtil.copyPropertie(normriceVO, normricePO, Arrays.asList("constructionNode", "quotationItem"));
 		BeanUtil.copyProperties(normriceVO.getConstructionNode(), normricePO.getConstructionNode());
 		BeanUtil.copyProperties(normriceVO.getQuotationItem(), normricePO.getQuotationItem(), Arrays.asList(QuotationItemPO.COLUMN_ARRAYS_STR));
-		
-		normricePO.setSalary(normriceVO.getSalary());
+
 		normricePO.setStatus(NormricePO.STATUS_VALID_STR);
-		
+
 		normriceDao.save(normricePO);
-		
+
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int deleteNormrice(NormriceVO normriceVO) {
-		
-		NormricePO normricePO = normriceDao.get(normriceVO.getNpid());
-		
-		normriceDao.deleteById(normricePO.getNpid());
-		
+
+		normriceDao.deleteById(normriceVO.getNpid());
+
 		return 0;
 	}
 

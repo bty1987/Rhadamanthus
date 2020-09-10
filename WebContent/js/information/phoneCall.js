@@ -94,7 +94,7 @@ jQuery(function($) {
             $btnRecord.click(function(){
         		
         		var url = config.media + v.recordUrl;	
-            	com.popup("录音地址：" ,url,function () {
+            	com.popup("录音地址:" ,url,function () {
             	    	
         	    });
         		

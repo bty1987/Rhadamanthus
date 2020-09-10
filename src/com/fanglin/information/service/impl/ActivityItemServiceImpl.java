@@ -31,70 +31,72 @@ import com.fanglin.information.vo.ActivityVO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("activityItemService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class ActivityItemServiceImpl implements ActivityItemService {
-	
+
 	@Autowired
 	private ActivityItemDao activityItemDao;
-	
+
 	@Autowired
 	private ActivityDao activityDao;
-	
+
 	@Autowired
 	private AwardStockDao awardStockDao;
 
 	@Override
 	public List<ActivityItemVO> queryActivityItemByAid(ActivityVO activityVO) {
-		
+
 		List<ActivityItemPO> activityItemPOs = activityItemDao.queryActivityItemByAid(activityVO.getAid());
 		List<ActivityItemVO> activityItemVOs = new ArrayList<ActivityItemVO>();
-		
-		for(ActivityItemPO activityItemPO: activityItemPOs){
-			
+
+		for (ActivityItemPO activityItemPO : activityItemPOs) {
+
 			ActivityItemVO activityItemVO = new ActivityItemVO();
-			
-			if(activityItemPO.getAsid() == 0) continue;
-			
+
+			if (activityItemPO.getAsid() == 0)
+				continue;
+
 			BeanUtil.copyProperties(activityItemPO, activityItemVO);
-			
+
 			activityItemVOs.add(activityItemVO);
 		}
-		
+
 		return activityItemVOs;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int addActivityItem(ActivityVO activityVO, ActivityItemVO activityItemVO) throws FLException {
-		
+
 		ActivityPO activityPO = activityDao.get(activityVO.getAid());
-		
-		if(activityPO == null){
+
+		if (activityPO == null) {
 			throw new FLException(160011, "活动信息不存在");
 		}
-		
+
 		AwardStockPO awardStockPO = awardStockDao.get(activityItemVO.getAsid());
-		
+
 		ActivityItemPO activityItemPO = new ActivityItemPO();
-		
+
 		BeanUtil.copyProperties(activityItemVO, activityItemPO);
-		
+
 		activityItemPO.setName(awardStockPO.getName());
 		activityItemPO.setAid(activityPO.getAid());
-		
+
 		activityItemDao.save(activityItemPO);
-		
+
 		BeanUtil.copyProperties(activityItemPO, activityItemVO);
-		
+
 		return 0;
 	}
-	
+
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int deleteActivityItemByAiid(ActivityVO activityVO, ActivityItemVO activityItemVO) {
-		
+	@Transactional(rollbackFor = Exception.class)
+	public int deleteActivityItem(ActivityVO activityVO, ActivityItemVO activityItemVO) {
+
 		activityItemDao.deleteById(activityItemVO.getAiid());
-		
+
 		return 0;
 	}
+
 }

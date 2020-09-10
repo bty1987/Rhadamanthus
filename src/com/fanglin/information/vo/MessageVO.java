@@ -20,34 +20,34 @@ public class MessageVO implements Serializable {
 
 	private static final long serialVersionUID = -6328343602972691168L;
 
-	private int mid;
-	
+	private Long mid;
+
 	private UserVO receiver;
-	
+
 	private UserVO sender;
-	
-	private short type;
-	
+
+	private Short type;
+
 	private Short subtype;
-	
+
 	private Long ident;
-	
+
 	private String contents;
-	
+
 	private Timestamp createTime;
-	
-	private short status;
-	
+
+	private Short status;
+
 	private String args;
-	
-	private int company;
-	
-	private short dresult;
-	
-	public MessageVO(){
+
+	private Integer company;
+
+	private Short dresult;
+
+	public MessageVO() {
 		super();
 	}
-	
+
 	public MessageVO(String receiverId, String senderId, short type, String contents) {
 		super();
 		this.receiver = new UserVO(receiverId);
@@ -56,11 +56,11 @@ public class MessageVO implements Serializable {
 		this.contents = contents;
 	}
 
-	public int getMid() {
+	public Long getMid() {
 		return mid;
 	}
 
-	public void setMid(int mid) {
+	public void setMid(Long mid) {
 		this.mid = mid;
 	}
 
@@ -87,7 +87,7 @@ public class MessageVO implements Serializable {
 	public void setType(short type) {
 		this.type = type;
 	}
-	
+
 	public Short getSubtype() {
 		return subtype;
 	}
@@ -111,7 +111,7 @@ public class MessageVO implements Serializable {
 	public void setContents(String contents) {
 		this.contents = contents;
 	}
-	
+
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return createTime;
@@ -121,11 +121,11 @@ public class MessageVO implements Serializable {
 		this.createTime = createTime;
 	}
 
-	public short getStatus() {
+	public Short getStatus() {
 		return status;
 	}
 
-	public void setStatus(short status) {
+	public void setStatus(Short status) {
 		this.status = status;
 	}
 
@@ -137,19 +137,19 @@ public class MessageVO implements Serializable {
 		this.args = args;
 	}
 
-	public int getCompany() {
+	public Integer getCompany() {
 		return company;
 	}
 
-	public void setCompany(int company) {
+	public void setCompany(Integer company) {
 		this.company = company;
 	}
 
-	public short getDresult() {
+	public Short getDresult() {
 		return dresult;
 	}
 
-	public void setDresult(short dresult) {
+	public void setDresult(Short dresult) {
 		this.dresult = dresult;
 	}
 

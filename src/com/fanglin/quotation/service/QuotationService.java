@@ -18,39 +18,35 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.quotation.vo.QuotationVO;
 
 public interface QuotationService {
-	
+
 	public QuotationVO queryQuotationByQid(long qId);
 
 	public QuotationVO queryQuotationForDefaultByOrderId(QuotationVO quotationVO) throws FLException;
-	
+
 	public List<QuotationVO> queryQuotationByOrderId(QuotationVO quotationVO);
-	
+
 	public Map<String, List<String>> queryQuotationForConfig(int company);
-	
-	public Map<String, Integer> countQuotationForNormood(QuotationVO quotationVO) throws FLException;
-	
-	public Map<String, Integer> countQuotationForNormrice(QuotationVO quotationVO) throws FLException;
-	
+
 	public int addQuotation(QuotationVO quotationVO, String userId, int company) throws FLException;
-	
+
 	public int updateQuotation(QuotationVO quotationVO) throws FLException;
-	
+
 	public int changeQuotationForDefault(QuotationVO quotationVO) throws FLException;
-	
+
 	public int updateQuotationForAdvance(QuotationVO quotationVO) throws FLException;
-	
+
 	public int updateQuotationForStatus(QuotationVO quotationVO, String userId) throws FLException;
-	
+
 	public int lockQuotation(QuotationVO quotationVO, String userId) throws FLException;
-	
+
 	public int unlockQuotation(QuotationVO quotationVO, String userId) throws FLException;
-	
+
 	public int replicaQuotation(QuotationVO quotationVO, String userId, int company) throws FLException;
-	
-	public int cloneQuotation(QuotationVO quotationVO,String no, String userId, int company) throws FLException;
-	
+
+	public int cloneQuotation(QuotationVO quotationVO, String no, String userId, int company) throws FLException;
+
 	public int copyQuotation(QuotationVO quotationVO, String userId, int company) throws FLException;
-	
+
 	public int deleteQuotationById(QuotationVO quotationVO) throws FLException;
-	
+
 }

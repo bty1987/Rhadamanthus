@@ -49,10 +49,12 @@ public class ActivityServiceImpl implements ActivityService {
 		List<ActivityPO> activityPOs = activityDao.pageActivity(paging, filters, company);
 		List<ActivityVO> activityVOs = new ArrayList<ActivityVO>();
 
+		ActivityVO activityVO;
 
 		for (ActivityPO activityPO : activityPOs) {
-			
-			ActivityVO activityVO = new ActivityVO(new UserBaseVO());
+
+			activityVO = new ActivityVO(new UserBaseVO());
+
 			BeanUtil.copyProperties(activityPO, activityVO, Arrays.asList("creater"));
 			BeanUtil.copyProperties(activityPO.getCreater(), activityVO.getCreater(), Arrays.asList("dept", "duty"));
 
@@ -63,15 +65,15 @@ public class ActivityServiceImpl implements ActivityService {
 	}
 
 	@Override
-	public List<ActivityVO> queryActivityForValid(ActivityVO activity, int company) {
+	public List<ActivityVO> queryActivityForValid(ActivityVO activityVO, int company) {
 
-		List<ActivityPO> activityPOs = activityDao.queryActivityForValid(company, activity.getType());
+		List<ActivityPO> activityPOs = activityDao.queryActivityForValid(company, activityVO.getType());
 		List<ActivityVO> activityVOs = new ArrayList<ActivityVO>();
 
 		for (ActivityPO activityPO : activityPOs) {
-			
-			ActivityVO activityVO = new ActivityVO(new UserBaseVO());
-			
+
+			activityVO = new ActivityVO(new UserBaseVO());
+
 			BeanUtil.copyProperties(activityPO, activityVO, Arrays.asList("creater"));
 			BeanUtil.copyProperties(activityPO.getCreater(), activityVO.getCreater(), Arrays.asList("dept", "duty"));
 
@@ -83,16 +85,16 @@ public class ActivityServiceImpl implements ActivityService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void addActivity(ActivityVO activityVO, String userId, String userName, int company) {
+	public void addActivity(ActivityVO activityVO, String userId, int company) {
 
-		UserPO user = userDao.queryUserByUserId(userId);
+		UserPO creater = userDao.queryUserByUserId(userId);
 
 		ActivityPO activityPO = new ActivityPO();
 
 		BeanUtil.copyProperties(activityVO, activityPO);
 
 		activityPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		activityPO.setCreater(user);
+		activityPO.setCreater(creater);
 		activityPO.setCompany(company);
 		activityPO.setDefaults(ActivityPO.DEFAULTS_COMMON_INT);// 普通状态
 
@@ -108,7 +110,7 @@ public class ActivityServiceImpl implements ActivityService {
 		if (activityPO == null) {
 			throw new FLException(160011, "活动信息不存在");
 		}
-		
+
 		activityPO.setName(activityVO.getName());
 		activityPO.setEndTime(activityVO.getEndTime());
 		activityPO.setContent(activityVO.getContent());
@@ -125,8 +127,8 @@ public class ActivityServiceImpl implements ActivityService {
 		if (activityPO == null) {
 			throw new FLException(160011, "活动信息不存在");
 		}
-		
-		if(activityPO.getDefaults() == ActivityPO.DEFAULTS_DEFAULT_INT){
+
+		if (activityPO.getDefaults() == ActivityPO.DEFAULTS_DEFAULT_INT) {
 			throw new FLException(160047, "默认活动不可操作");
 		}
 
@@ -155,4 +157,5 @@ public class ActivityServiceImpl implements ActivityService {
 
 		activityDao.update(activityPO);
 	}
+
 }

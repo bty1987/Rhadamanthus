@@ -24,6 +24,8 @@ public interface SalesPaymentService {
 	
 	public List<SalesPaymentVO> querySalesPaymentForNotInitBySrid(SalesReceiptVO salesReceipt);
 	
+	public long amountSalesPayment(SalesPaymentVO salesPayment);
+	
 	public int addSalesPaymentForDeposit(SalesPaymentVO salesPaymentVO, String userId, int company) throws FLException;
 	
 	public int addSalesPaymentForFullpay(SalesPaymentVO salesPaymentVO, String userId, int company) throws FLException;

@@ -206,7 +206,7 @@ $.extend(api, {customer: {
     tranAepair: {url:"tranAepair.do"},
     finishAepair: {url:"finishAepair.do"},
     closeAepair: {url:"closeAepair.do"},
-    sendAepairMessage: {url:"sendAepairMessage.do"},
+    sendAepair: {url:"sendAepair.do"},
     
     queryRepair: {url:"queryRepair.do"},
     addRepair: {url:"addRepair.do"},

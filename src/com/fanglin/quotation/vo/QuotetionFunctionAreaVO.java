@@ -8,15 +8,15 @@ public class QuotetionFunctionAreaVO implements Serializable {
 	private static final long serialVersionUID = -6568973240707170532L;
 
 	private Long qfaId;
-	
+
 	private Long qid;
-	
+
 	private String name;
-	
+
 	private Integer functionAreaOrder;
-	
+
 	private Short type;
-	
+
 	private List<QuotetionFunctionAreaItemVO> quotetionFunctionAreaItems;
 
 	public Long getQfaId() {
@@ -66,6 +66,5 @@ public class QuotetionFunctionAreaVO implements Serializable {
 	public void setQuotetionFunctionAreaItems(List<QuotetionFunctionAreaItemVO> quotetionFunctionAreaItems) {
 		this.quotetionFunctionAreaItems = quotetionFunctionAreaItems;
 	}
-	
-	
+
 }

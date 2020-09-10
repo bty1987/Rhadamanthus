@@ -976,7 +976,7 @@ $(function(){
         		"userExperience.operateTime": com.focusPage('#operateTime', '#updateUserExperienceModal').val()
         };
         
-    	com.post(api.personel.updateUserExpirence, options, function(res){
+    	com.post(api.personel.updateUserExperience, options, function(res){
     		
     		com.showAlert(com.info, "操作成功");
     		queryAboutUser();

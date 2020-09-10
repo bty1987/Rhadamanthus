@@ -96,7 +96,7 @@ public class AddReduceItemPO implements java.io.Serializable {
 	public void setType(short type) {
 		this.type = type;
 	}
-	
+
 	@Column(name = "subtype")
 	public short getSubtype() {
 		return subtype;

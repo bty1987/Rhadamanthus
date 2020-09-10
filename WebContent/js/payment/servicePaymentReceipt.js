@@ -10,7 +10,6 @@ jQuery(function ($) {
         total: 0.0
     };
 
-    var params = {};
     api = parent.api;
     config = parent.config;
     server = parent.server;
@@ -18,8 +17,6 @@ jQuery(function ($) {
     com = parent.com;
     printer = parent.printer;
 
-    params.server = window.server;
-    params.authentication = parent.params.authentication;
     params = parent.params;
 
     com.post(api.common.queryReceiptType, {}, function (res) {

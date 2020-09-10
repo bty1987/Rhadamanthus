@@ -31,7 +31,7 @@ public class ExtensionItemAction extends BaseListAction {
 
 	private ExtensionVO extension;
 
-	private List<Long> extensionItemIDs;
+	private List<Long> extensionIds;
 
 	@Action(value = "queryExtensionItemByEid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryExtensionItemByEid() {
@@ -44,7 +44,7 @@ public class ExtensionItemAction extends BaseListAction {
 	@Action(value = "queryExtensionItemByEids", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryExtensionItemByEids() {
 
-		extensionItems = extensionItemService.queryExtensionItemByEids(extensionItemIDs);
+		extensionItems = extensionItemService.queryExtensionItemByEids(extensionIds);
 
 		return SUCCESS;
 	}
@@ -89,12 +89,12 @@ public class ExtensionItemAction extends BaseListAction {
 		this.extension = extension;
 	}
 
-	public List<Long> getExtensionItemIDs() {
-		return extensionItemIDs;
+	public List<Long> getExtensionIds() {
+		return extensionIds;
 	}
 
-	public void setExtensionItemIDs(List<Long> extensionItemIDs) {
-		this.extensionItemIDs = extensionItemIDs;
+	public void setExtensionIds(List<Long> extensionIds) {
+		this.extensionIds = extensionIds;
 	}
 
 }

@@ -305,8 +305,10 @@ $(function () {
             var salesActivityItems = res.salesActivityItems;
 
             var salesActivityContent = com.focusPage("#salesActivityItems").empty();
-
+            
             $.each(salesActivityItems, function (i, v) {
+                
+                if(v.state == 1) return true;
 
                 var pricingSpan = $("<div></div>").addClass("col-md-6").css({"margin": "5px 0px", "min-height" : "127px"}).attr("id", "pricing_" + v.saiid);
 
@@ -381,7 +383,7 @@ $(function () {
         //未退
         var unrefundBtn = $("<span></span>").addClass("btn btn-minier btn-danger").html("未退").css("margin", "3px").appendTo(uiPgDiv);
         //消耗
-        var expendBtn = $("<span></span>").addClass("btn btn-minier btn-purple").html("消耗").css("margin", "3px").appendTo(uiPgDiv);
+        var expendBtn = $("<span></span>").addClass("btn btn-minier btn-purple").html("补款").css("margin", "3px").appendTo(uiPgDiv);
 
         //失效按钮
         abateBtn.on("click", function () {
@@ -548,8 +550,6 @@ $(function () {
         }
 
         options["salesActivity.amount"] = amount;
-
-        console.log(amount)
 
         com.post(api.sales.addSalesActivityItem, options, function (res) {
             querySalesActivityItem();

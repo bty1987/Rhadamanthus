@@ -39,16 +39,16 @@ public class VawardServiceImpl implements VawardService {
 
 	@Autowired
 	private VawardDao vawardDao;
-	
+
 	@Autowired
 	private VticketDao vticketDao;
-	
+
 	@Autowired
 	private VprizeDao vprizeDao;
-	
+
 	@Autowired
 	private EmemberDao ememberDao;
-	
+
 	@Autowired
 	private MessageService messageService;
 
@@ -72,69 +72,70 @@ public class VawardServiceImpl implements VawardService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addVaward(VawardVO vawardVO) throws FLException {
-		
+
 		String no = vawardVO.getNo();
-		
+
 		VticketPO vticketPO = vticketDao.queryVticketByTno(no);
 
 		if (vticketPO == null) {
 			throw new FLException(160026, "活动票不存在");
 		}
-		
-		if(vticketPO.getIscome() != VticketPO.ISCOME_YES_INT){
+
+		if (vticketPO.getIscome() != VticketPO.ISCOME_YES_INT) {
 			throw new FLException(160046, "活动票未到场");
 		}
-		
+
 		VprizePO vprizePO = vprizeDao.get(vawardVO.getVpid());
-		
+
 		if (vprizePO == null) {
 			throw new FLException(160048, "奖品不存在");
 		}
-		
-		if(vprizePO.getVaid() != vticketPO.getVaid()){
+
+		if (vprizePO.getVaid() != vticketPO.getVaid()) {
 			throw new FLException(160049, "活动不同不可操作");
 		}
-		
+
 		VawardPO vawardPO = new VawardPO();
-		
+
 		vawardPO.setNo(no);
 		vawardPO.setVpid(vprizePO.getVpid());
 		vawardPO.setName(vprizePO.getName());
 		vawardPO.setPrice(vprizePO.getPrice());
 		vawardPO.setNum(vawardVO.getNum());
+		vawardPO.setUnit(vprizePO.getUnit());
 		vawardPO.setStatus(VawardPO.STATUS_INIT_INT);
-		
+
 		vawardDao.save(vawardPO);
-		
+
 		EmemberPO ememberPO = ememberDao.queryEmemberByNo(no);
 
 		if (ememberPO != null) {
 			messageService.sendMessage(ememberPO.getUnionId(), "活动奖品", no, String.format("活动奖品: %s, 数量: %.3f, 领取成功", vprizePO.getName(), Arith.div(vawardVO.getNum(), 1000.0)));
 		}
-		
+
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int deleteVaward(VawardVO vawardVO) throws FLException {
-		
+
 		VawardPO vawardPO = vawardDao.get(vawardVO.getVaid());
-		
+
 		if (vawardPO == null) {
 			throw new FLException(160048, "奖品不存在");
 		}
-		
+
 		vawardDao.delete(vawardPO);
-		
+
 		return 0;
 	}
 
 	@Override
 	public List<?> countVaward() {
-		
+
 		List<?> counts = vawardDao.countVaward();
-		
+
 		return counts;
 	}
 }

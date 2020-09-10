@@ -5,6 +5,6 @@ import com.fanglin.information.po.PhoneCallRecordPO;
 
 public interface PhoneCallRecordDao extends Dao<PhoneCallRecordPO> {
 
-	public PhoneCallRecordPO queryPhoneCallRecordByPcId(long pcId);
+	public PhoneCallRecordPO queryPhoneCallRecord(long pcId);
 
 }

@@ -25,7 +25,7 @@ public class ActivityItemPO implements java.io.Serializable {
 	private long aid;
 
 	private long asid;
-	
+
 	private String activity;
 
 	private String name;
@@ -33,7 +33,7 @@ public class ActivityItemPO implements java.io.Serializable {
 	private short type;
 
 	private int money;
-	
+
 	private int integral;
 
 	public ActivityItemPO() {
@@ -59,7 +59,7 @@ public class ActivityItemPO implements java.io.Serializable {
 	public void setAid(long aid) {
 		this.aid = aid;
 	}
-	
+
 	@Column(name = "activity")
 	public String getActivity() {
 		return activity;
@@ -113,5 +113,5 @@ public class ActivityItemPO implements java.io.Serializable {
 	public void setIntegral(int integral) {
 		this.integral = integral;
 	}
-	
+
 }

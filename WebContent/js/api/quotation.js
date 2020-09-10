@@ -221,8 +221,6 @@ $.extend(api, {quotation: {
     pageQuotationSmallCategory: {url: "pageQuotationSmallCategory.do"},
     pageQuotationClassification: {url: "pageQuotationClassification.do"},
 
-    countQuotationForNormood: {url: "countQuotationForNormood.do",demo: true},
-    countQuotationForNormrice: {url: "countQuotationForNormrice.do",demo: true},
     queryQuotationByOrderId: {
         url: "queryQuotationByOrderId.do",
         demo: true,
@@ -320,8 +318,8 @@ $.extend(api, {quotation: {
         }]
     },
     addQuotationFunctionArea: {url: "addQuotationFunctionArea.do"},
-    addQuotationFuctionAreaByFunctionAreaIds: {
-        url: "addQuotationFuctionAreaByFunctionAreaIds.do",
+    addQuotationFunctionAreaByFunctionAreaIds: {
+        url: "addQuotationFunctionAreaByFunctionAreaIds.do",
         type: "update",
         tranargs: {
             args: ["quotation.discount", "quotation.totalPrice", "quotation.undisPrice", "quotation.disPrice", "quotation.manageRate", "quotation.managePrice", "quotation.trafficRate", "quotation.trafficPrice", "quotation.basePrice"],
@@ -787,7 +785,58 @@ $.extend(api, {quotation: {
             ],
         }
     },
-
+    
+    // -------- 定额 -------------------------
+    queryQuotationNormood: {
+        url: "queryQuotationNormood.do",
+        type: "query",
+        tranargs: [{
+            result: "quotationFunctionAreas-quotationFunctionAreaItems",
+            args: ["unitPrice", "initNum", "num"]
+        },{
+            result: "quotationFunctionAreas-quotationFunctionAreaItems-normood",
+            args: ["num"]
+        },{
+            result: "quotationFunctionAreas-quotationFunctionAreaItems-normood-goods",
+            args: ["purchase", "selling", "pieceNum"]
+        }]
+    },
+    queryQuotationNormrice: {
+        url: "queryQuotationNormrice.do",
+        type: "query",
+        tranargs: [{
+            result: "quotationFunctionAreas-quotationFunctionAreaItems",
+            args: ["unitPrice", "initNum", "num"]
+        },{
+            result: "quotationFunctionAreas-quotationFunctionAreaItems-normrice",
+            args: ["trannum", "salary"]
+        },{
+            result: "quotationFunctionAreas-quotationFunctionAreaItems-normrice-constructionNode",
+            args: ["precheck", "postcheck", "stacheck", "fincheck"]
+        }]
+    },
+    amountQuotationNormood: {
+        url: "amountQuotationNormood.do",
+        type: "query",
+        tranargs: [{
+            result: "normoods",
+            args: ["num", "amount"]
+        },{
+            result: "normoods-goods",
+            args: ["purchase", "selling", "pieceNum"]
+        }]
+    },
+    amountQuotationNormrice: {
+        url: "amountQuotationNormrice.do",
+        type: "query",
+        tranargs: [{
+            result: "normrices",
+            args: ["trannum", "salary", "amount"]
+        },{
+            result: "normrices-constructionNode",
+            args: ["precheck", "postcheck", "stacheck", "fincheck"]
+        }]
+    },
 
 }});
 
@@ -909,5 +958,5 @@ $.extend(api, {addReduce: {
             args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice"],
         }
     },
-
+    
 }});

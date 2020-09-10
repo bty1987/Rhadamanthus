@@ -9,12 +9,12 @@ import com.fanglin.utils.Paging;
 
 public interface PhoneCallService {
 
-	public void  pagePhoneCall(Paging paging, List<Filter> filters)throws FLException;
-	
-	public int phoneCall(PhoneCallVO phoneCall)throws FLException;
-	
-	public int updatePhoneCallForInfo(PhoneCallVO phoneCall)throws FLException;
-	
-	public int updatePhoneCallForRecord(PhoneCallVO phoneCall)throws FLException;
-	
+	public void pagePhoneCall(Paging paging, List<Filter> filters) throws FLException;
+
+	public int phoneCall(PhoneCallVO phoneCall) throws FLException;
+
+	public int updatePhoneCallForInfo(PhoneCallVO phoneCall) throws FLException;
+
+	public int updatePhoneCallForRecord(PhoneCallVO phoneCall) throws FLException;
+
 }

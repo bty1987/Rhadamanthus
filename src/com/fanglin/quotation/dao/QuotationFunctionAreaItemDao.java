@@ -19,19 +19,19 @@ import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.vo.QuotationFunctionAreaItemVO;
 
 public interface QuotationFunctionAreaItemDao extends Dao<QuotationFunctionAreaItemPO> {
-	
+
 	public QuotationFunctionAreaItemPO queryQuotationFunctionAreaItemByQfaiId(Class<?> clazz, long qfaiId);
-	
+
 	public List<QuotationFunctionAreaItemPO> queryQuotationFunctionAreaItemByFunctionAreaId(Class<?> clazz, long functionAreaId);
 
 	public QuotationFunctionAreaItemPO queryQuotationFunctionAreaItemByQuotationIdAType(Class<?> clazz, long qId, short type);
-	
-	public QuotationFunctionAreaItemPO queryQuotationFunctionAreaItemForTypeByQuotationFunctionAreaId(Class<?> clazz,Long quotationFunctionAreaId, Short type);
-	
-	public int updateQuotationFunctionAreaItemForIndex(String table,QuotationFunctionAreaItemVO QuotationFunctionAreaItemVO) throws FLException;
+
+	public QuotationFunctionAreaItemPO queryQuotationFunctionAreaItemForTypeByQuotationFunctionAreaId(Class<?> clazz, Long quotationFunctionAreaId, Short type);
+
+	public int updateQuotationFunctionAreaItemForIndex(String table, QuotationFunctionAreaItemVO QuotationFunctionAreaItemVO) throws FLException;
 
 	public int deleteQuotationFunctionAreaItemByFunctionAreaId(String clazz, long functionAreaId);
-	
-	public int deleteQuotationFunctionAreaItemByQfaiIds(String table,List<Long> qfaiIds);
+
+	public int deleteQuotationFunctionAreaItemByQfaiIds(String table, List<Long> qfaiIds);
 
 }

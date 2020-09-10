@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.common.po.CountingPO;
+import com.fanglin.common.service.CountingService;
 import com.fanglin.communion.dao.ReceiptTypeDao;
 import com.fanglin.communion.po.ReceiptTypePO;
 import com.fanglin.communion.service.ReceiptTypeService;
@@ -21,6 +23,9 @@ public class ReceiptTypeServiceImpl implements ReceiptTypeService {
 
 	@Autowired
 	private ReceiptTypeDao receiptTypeDao;
+
+	@Autowired
+	private CountingService countingService;
 
 	@Override
 	public void pageReceiptType(Paging paging, List<Filter> filters, int company) {
@@ -77,16 +82,19 @@ public class ReceiptTypeServiceImpl implements ReceiptTypeService {
 	@Transactional(rollbackFor = Exception.class)
 	public int addReceiptType(ReceiptTypeVO receiptTypeVO, int company) throws FLException {
 
-		ReceiptTypePO receiptTypePO = receiptTypeDao.queryReceiptTypeByNo(receiptTypeVO.getNo(), company);
+		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_RECEIPT_TYPE_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
+		
+		ReceiptTypePO receiptTypePO = receiptTypeDao.queryReceiptTypeByNo(String.valueOf(count), company);
 
 		if (receiptTypePO != null) {
 			throw new FLException(130004, "收据类型键值已存在");
 		}
-
+		
 		receiptTypePO = new ReceiptTypePO();
 
 		BeanUtil.copyProperties(receiptTypeVO, receiptTypePO);
 
+		receiptTypePO.setNo(String.valueOf(count));
 		receiptTypePO.setCompany(company);
 		receiptTypePO.setSubjectName("");
 		receiptTypePO.setOneCode("");

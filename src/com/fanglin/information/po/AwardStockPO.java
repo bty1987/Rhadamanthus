@@ -60,6 +60,8 @@ public class AwardStockPO implements java.io.Serializable {
 
 	private short storeroom;
 
+	private String format;
+
 	private short isPrefor; // 是否计算业绩
 
 	private short isStock; // 是否计算库存
@@ -69,8 +71,6 @@ public class AwardStockPO implements java.io.Serializable {
 	private String content;
 
 	private int company;
-
-	private String format;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)

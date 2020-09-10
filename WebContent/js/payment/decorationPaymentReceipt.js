@@ -1,5 +1,4 @@
 jQuery(function ($) {
-    var params = {};
     var receipt = {
         onePageCount: 5,
         payments: [],
@@ -18,8 +17,6 @@ jQuery(function ($) {
     com = parent.com;
     printer = parent.printer;
 
-    params.server = window.server;
-    params.authentication = parent.params.authentication;
     params = parent.params;
 
     com.post(api.common.queryReceiptType, {}, function (res) {

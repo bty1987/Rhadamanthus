@@ -80,8 +80,6 @@ jQuery(function($) {
 	
 	$(".WordSection1").css("display", "block");
 	
-	var orderTotalMoney = parseFloat(decoration.orderTotalPrice) - parseFloat(decoration.couponCut);
-
 	if (decorationContract.signTime != null && decorationContract.signTime != "") {
 		var signSplit = decorationContract.signTime.split('-');
 
@@ -130,10 +128,10 @@ jQuery(function($) {
 		$(".WordSection1").html("");
 		alert("款项数量有误!");
 	}
+	
+	$("#orderTotalPrice").html(decoration.factPrice);
 
-	$("#orderTotalPrice").html(	orderTotalMoney);
-
-	var totalCN = utils.getCNMoney(orderTotalMoney);
+	var totalCN = utils.getCNMoney(decoration.factPrice);
 	$("#orderTotalPriceCN").html(totalCN);
 	$("#disgner").html(decoration.designer);
 	$("#disgnerPhone").html(decoration.designerPhone);
