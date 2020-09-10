@@ -354,7 +354,7 @@ var QuotationDetail = (function(){
 					_param['functionAreaIds[' + i + ']'] = $(v).val();
 				});
 
-				com.post(api.quotation.addQuotationFuctionAreaByFunctionAreaIds, _param, function(data){
+				com.post(api.quotation.addQuotationFunctionAreaByFunctionAreaIds, _param, function(data){
 					data.quotationFunctionAreas.length && $.each(data.quotationFunctionAreas, function(i, v){
 						var sum = 0, sumd = 0, $dmoney;
 						var $domain = painter.createdomain(v);

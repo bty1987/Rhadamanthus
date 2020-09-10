@@ -83,7 +83,7 @@ public class CustomerPhoneDaoImpl extends DaoImpl<CustomerPhonePO> implements Cu
 		sql.append("where cp.phone =:phone and cp.defaults = 1");
 
 		if (SystemConfig.getInt("multicompany", 0) != 0) {
-			sql.append("and c.company =:company ");
+			sql.append(" and c.company =:company ");
 		}
 
 		SQLQuery query = session().createSQLQuery(sql.toString()).addEntity(CustomerPhonePO.class);

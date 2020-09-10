@@ -8,7 +8,7 @@ import com.fanglin.information.vo.AwardRecordVO;
 import com.fanglin.utils.Paging;
 
 public interface AwardRecordService {
-	
+
 	public void pageAwardRecord(Paging paging, List<Filter> filters, Authentication authentication, AwardRecordVO awardRecordVO, int company);
-	
+
 }

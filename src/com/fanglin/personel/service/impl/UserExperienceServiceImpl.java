@@ -47,7 +47,6 @@ public class UserExperienceServiceImpl implements UserExperienceService {
 
 		List<UserExperiencePO> userExperiencePOs = userExperienceDao.queryUserExperiencesByUid(userExperience.getUid());
 
-
 		for (UserExperiencePO userExperiencePO : userExperiencePOs) {
 
 			UserExperienceVO userExperienceVO = new UserExperienceVO();
@@ -62,14 +61,14 @@ public class UserExperienceServiceImpl implements UserExperienceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateUserExpirence(UserExperienceVO userExperienceVO) {
-		
+	public int updateUserExperience(UserExperienceVO userExperienceVO) {
+
 		UserExperiencePO userExperiencePO = userExperienceDao.get(userExperienceVO.getUpid());
-		
+
 		BeanUtil.copyPropertie(userExperienceVO, userExperiencePO);
-		
+
 		userExperienceDao.update(userExperiencePO);
-		
+
 		return 0;
 	}
 

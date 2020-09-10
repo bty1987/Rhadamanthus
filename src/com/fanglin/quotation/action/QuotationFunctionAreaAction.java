@@ -29,66 +29,66 @@ import com.fanglin.quotation.vo.QuotationVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class QuotationFunctionAreaAction extends BaseListAction{
+public class QuotationFunctionAreaAction extends BaseListAction {
 
 	private static final long serialVersionUID = 5551824414631095737L;
-	
+
 	@Autowired
 	private QuotationFunctionAreaService quotationFunctionAreaService;
-	
+
 	private QuotationVO quotation;
-	
+
 	private List<QuotationFunctionAreaVO> quotationFunctionAreas;
-	
+
 	private QuotationFunctionAreaVO quotationFunctionArea;
-	
+
 	private List<Long> functionAreaIds;
-	
-	@Action(value = "queryQuotationFunctionAreaForCommonByQuotationId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryQuotationFunctionAreaForCommonByQuotationId() throws FLException{
-		
+
+	@Action(value = "queryQuotationFunctionAreaForCommonByQuotationId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotationFunctionAreaForCommonByQuotationId() throws FLException {
+
 		quotationFunctionAreas = quotationFunctionAreaService.queryQuotationFunctionAreaForCommonByQuotationId(quotation);
-	    
-		return SUCCESS;
-	}
-	
-	@Action(value = "queryQuotationFunctionAreaByQuotationId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryQuotationFunctionAreaByQuotationId() throws FLException{
-		
-		quotationFunctionAreas = quotationFunctionAreaService.queryQuotationFunctionAreaByQuotationId(quotation);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "addQuotationFuctionAreaByFunctionAreaIds", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addQuotationFuctionAreaByFunctionAreaIds() throws FLException{
-		
-		quotationFunctionAreas = quotationFunctionAreaService.addQuotationFuctionAreaByFunctionAreaIds(functionAreaIds, quotation);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "addQuotationFunctionArea", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addQuotationFunctionArea() throws FLException{
-		
-		quotationFunctionAreaService.addQuotationFunctionArea(functionAreaIds, quotation);
-		
+
 		return SUCCESS;
 	}
 
-	@Action(value = "updateQuotationFunctionArea", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateQuotationFunctionArea() throws FLException{
-		
-		quotationFunctionAreaService.updateQuotationFunctionArea(quotationFunctionArea, quotation);
-		
+	@Action(value = "queryQuotationFunctionAreaByQuotationId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotationFunctionAreaByQuotationId() throws FLException {
+
+		quotationFunctionAreas = quotationFunctionAreaService.queryQuotationFunctionAreaByQuotationId(quotation);
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "deleteQuotationFunctionArea", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteQuotationFunctionArea() throws FLException{
-		
+
+	@Action(value = "addQuotationFunctionAreaByFunctionAreaIds", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addQuotationFunctionAreaByFunctionAreaIds() throws FLException {
+
+		quotationFunctionAreas = quotationFunctionAreaService.addQuotationFunctionAreaByFunctionAreaIds(functionAreaIds, quotation);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "addQuotationFunctionArea", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addQuotationFunctionArea() throws FLException {
+
+		quotationFunctionAreaService.addQuotationFunctionArea(functionAreaIds, quotation);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateQuotationFunctionArea", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateQuotationFunctionArea() throws FLException {
+
+		quotationFunctionAreaService.updateQuotationFunctionArea(quotationFunctionArea, quotation);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "deleteQuotationFunctionArea", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteQuotationFunctionArea() throws FLException {
+
 		quotationFunctionAreaService.deleteQuotationFunctionArea(quotationFunctionArea, quotation);
-		
+
 		return SUCCESS;
 	}
 
@@ -104,8 +104,7 @@ public class QuotationFunctionAreaAction extends BaseListAction{
 		return quotationFunctionAreas;
 	}
 
-	public void setQuotationFunctionAreas(
-			List<QuotationFunctionAreaVO> quotationFunctionAreas) {
+	public void setQuotationFunctionAreas(List<QuotationFunctionAreaVO> quotationFunctionAreas) {
 		this.quotationFunctionAreas = quotationFunctionAreas;
 	}
 
@@ -121,9 +120,8 @@ public class QuotationFunctionAreaAction extends BaseListAction{
 		return quotationFunctionArea;
 	}
 
-	public void setQuotationFunctionArea(
-			QuotationFunctionAreaVO quotationFunctionArea) {
+	public void setQuotationFunctionArea(QuotationFunctionAreaVO quotationFunctionArea) {
 		this.quotationFunctionArea = quotationFunctionArea;
 	}
-	
+
 }

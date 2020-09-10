@@ -11,7 +11,7 @@
                                 <div class="step-content row-fluid position-relative" id="step-container"></div>
                                 <hr/>
                                 <div class="row-fluid wizard-actions" id="btnDisplay">
-                                    <button class="btn btn-info" type="button" id="btnSaveBasedecorationInfo"
+                                    <button class="btn btn-warning" type="button" id="btnSaveBasedecorationInfo"
                                             data-loading-text="保存中...">
                                         <i class="icon-ok bigger-110"></i>
                                         <span>保存</span>
@@ -378,22 +378,14 @@
                         <div class="form-group" id="nameRuleSel">
                             <label for="built" class="col-sm-3 control-label no-padding-right orange">楼牌号</label>
                             <div class="col-md-9">
-                                <input type="text" class="v_required col-sm-1" maxlength="7" style="float: none;"
-                                       id="built">
-                                <select id="builtrule"
-                                        style="padding: 0px;font-size: 1px; height: 25px; vertical-align: bottom"></select>
-                                <input type="text" class="v_required col-sm-1" maxlength="3" style="float: none;"
-                                       id="unit">
-                                <select id="unitrule"
-                                        style="padding: 0px;font-size: 1px; height: 25px; vertical-align: bottom"></select>
-                                <input type="text" class="v_required col-sm-1" maxlength="3" style="float: none;"
-                                       id="floor">
-                                <select id="floorrule"
-                                        style="padding: 0px;font-size: 1px; height: 25px; vertical-align: bottom"></select>
-                                <input type="text" class="v_required col-sm-1" maxlength="3" style="float: none;"
-                                       id="door">
-                                <select id="doorrule"
-                                        style="padding: 0px;font-size: 1px; height: 25px; vertical-align: bottom"></select>
+                                <input type="text" class="v_required col-sm-1" maxlength="7" style="float: none;" id="built">
+                                <select id="builtrule" style="padding: 0px;font-size: 1px; height: 25px; vertical-align: bottom"></select>
+                                <input type="text" class="v_required col-sm-1" maxlength="3" style="float: none;" id="unit">
+                                <select id="unitrule" style="padding: 0px;font-size: 1px; height: 25px; vertical-align: bottom"></select>
+                                <input type="text" class="v_required col-sm-1" maxlength="3" style="float: none;" id="floor">
+                                <select id="floorrule" style="padding: 0px;font-size: 1px; height: 25px; vertical-align: bottom"></select>
+                                <input type="text" class="v_required col-sm-1" maxlength="3" style="float: none;" id="door">
+                                <select id="doorrule" style="padding: 0px;font-size: 1px; height: 25px; vertical-align: bottom"></select>
                                 <div class="col-md-12" style="padding: 0px;">
                                     <span id="rule" class="red"></span>
                                 </div>
@@ -403,8 +395,35 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="vSaveBtn" class="btn btn-primary">保存</button>
-                    <button type="button" id="vCancelBtn" class="btn btn-default" data-dismiss="modal">取消
-                    </button>
+                    <button type="button" id="vCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="printQuotationCNModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">报价打印</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+
+                        <div class="form-group">
+                            <label for="no" class="col-sm-3 control-label no-padding-right orange">施工节点</label>
+                            <div class="col-md-9">
+                                <select id="quotationCNSelect" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual"></select>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="printConstructionNodeBtn" class="btn btn-primary">打印</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                 </div>
             </div>
         </div>

@@ -41,7 +41,6 @@ jQuery(function ($) {
     };
 
     var decorationMachingTypes = {};
-    drawNode.draw(params.viewNode);
 
     var decorationPayment = {
         postParam: {},
@@ -53,6 +52,14 @@ jQuery(function ($) {
 
         editFlag: 0
     };
+    
+    var decorationActivity = {
+        activityItemType: {},
+        stateTypes: {},
+        states: {},
+    };
+    
+    drawNode.draw(params.viewNode);
 
     decorationDetail.items.orderId = com.focusPage("#orderId");
     decorationDetail.items.customer = com.focusPage("#customer");
@@ -166,8 +173,10 @@ jQuery(function ($) {
         decorationDetail.houseItems.floorrule.bindData(res.buildrule, "key", "value");
         decorationDetail.houseItems.doorrule.bindData(res.buildrule, "key", "value");
     }, null, false);
-
+    
     decorationDetail.printQuotationModal = com.focusPage("#printQuotationModal");
+    decorationDetail.printQuotationCNModal = com.focusPage("#printQuotationCNModal");
+    
     //申请活动
     decorationDetail.activity.activity = com.focusPage("#activity").on("change", function () {
         var $this = $(this);
@@ -310,20 +319,37 @@ jQuery(function ($) {
     decorationPayment.postParam["decorationPayment.decoration.orderId"] = decorationDetail.decorationOrderId;
 
     com.post(api.ds.decoration, {}, function (res) {
+        
         decorationDetail.items.orderType.bindData(res.typeness, 'key', 'value');
         decorationDetail.items.houseType.bindData(res.houseType, 'key', 'value');
         decorationDetail.items.houseClass.bindData(res.houseClass, 'key', 'value');
         decorationDetail.items.grade.bindData(res.orderGrade, 'key', 'value');
         decorationDetail.items.salesmanType.bindData(res.salesmanType, 'key', 'value');
-        $.each(res.decorationOrderStatus, function (i, v) {
-            decorationDetail.decorationOrderStatus[v.key] = v.value;
-        });
-        $.each(res.typeness, function (i, v) {
-            decorationDetail.type[v.key] = v.type;
-            decorationDetail.typeness[v.key] = v.value;;
-        });
-
+        
+        decorationDetail.decorationOrderStatus = res.decorationOrderStatus.split("key", "value");
+        decorationDetail.type = res.typeness.split("key", "type");
+        decorationDetail.typeness = res.typeness.split("key", "value");
+        
+        decorationActivity.stateTypes = res.receiveType.split("key", "value");
+        decorationActivity.states = res.activityItemType.split("key", "value");
+        
     }, null, false);
+    
+    com.post(api.ds.information, {}, function (res) {
+        decorationActivity.types = res.activityItemType.split("key", "value");
+    }, null, false);
+
+    com.post(api.data.queryConstructionNode, {}, function(res){
+        decorationDetail.constructionNodes = res.constructionNodes.split("sort", 'name');
+    }, null, false);
+    
+    com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": decorationDetail.decorationOrderId}, function(res){
+        var constructionSchedules = res.constructionSchedules;
+        $.each(constructionSchedules, function(i, v){
+            if(decorationDetail.constructionNodes[v.schedule]) v.name = decorationDetail.constructionNodes[v.schedule];
+        });
+        com.focusPage("#quotationCNSelect").bindData(constructionSchedules, "schedule", "name");
+    });
 
     com.initTypeahead('quoterId', api.personel.queryUserByPinyin, "pinyinName", {
         "user.status": 0,
@@ -334,12 +360,13 @@ jQuery(function ($) {
         "departmentType.name": ""
     }, "autoFillKeyValue", "key", "value");
     com.initTypeahead('no', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value");
-
-    if (decorationDetail.orderType == 2) {
-        decorationUtils.initDecorationHolonomy(decorationDetail.decorationOrderId);
-    }
-    if (decorationDetail.orderType == 0) {
+    
+    if (decorationDetail.orderType == 0){
+        decorationUtils.initDecorationMidpack(decorationDetail.decorationOrderId);
+    }else if (decorationDetail.orderType == 1) {
         decorationUtils.initDecorationInclusive(decorationDetail.decorationOrderId);
+    }else if (decorationDetail.orderType == 2) {
+        decorationUtils.initDecorationHolonomy(decorationDetail.decorationOrderId);
     }
 
     com.focusPage('#customerInfosBtn').on("click", function () {
@@ -817,6 +844,10 @@ jQuery(function ($) {
     com.focusPage("#btnPrintDefaultQuotationInfo").on('click', function (res) {
         decorationDetail.printQuotationModal.modal("show");
     });
+    
+    com.focusPage("#btnPrintQuotationCN").on('click', function (res) {
+        decorationDetail.printQuotationCNModal.modal("show");
+    });
 
     initWizard(decorationDetail);
 
@@ -845,6 +876,7 @@ jQuery(function ($) {
         decorationDetail.items.grade.val(decoration.grade);
         decorationDetail.items.quoterId.val(decoration.quoter.currentName);
         decorationDetail.items.escorterId.val(decoration.escorter.currentName);
+        
         com.focusPage("#detailOrderType").attr("orderType", decoration.typeness);
         com.focusPage("#detailHouseType").attr("houseType", decoration.houseType);
         com.focusPage('#designStatus').html(decoration.sourceStatus == 0 ? '未确认':'已确认');
@@ -855,6 +887,7 @@ jQuery(function ($) {
         } else {
             decorationDetail.accountFlg = false;
         }
+        
         com.post(api.decoration.queryDecorationInfoByOrderId, {"orderId": decorationDetail.decorationOrderId}, function (res) {
             res = res.decorationInfo;
             decorationDetail.items.backOrderName.val(res.backOrderName);
@@ -954,7 +987,7 @@ jQuery(function ($) {
                     params.convertActivityItemId = decorationDetail.convertActivityItemId;
                     params.activity = decorationDetail.activity;
                     decorationUtils.decorationActivityInfo(decorationDetail.activitys, wizard["activityBtnMethod"], decorationDetail.decorationOrderId);
-                    decorationUtils.decorationActivityItemInfo(decorationDetail.activityPriceInfo, decorationDetail.activityItems, wizard["uiBtnMethod"], decorationDetail.decorationOrderId);
+                    decorationUtils.decorationActivityItemInfo(decorationDetail.activityPriceInfo, decorationDetail.activityItems, wizard["uiBtnMethod"], decorationDetail.decorationOrderId, decorationActivity);
                     break;
                 case "belong":
                     decorationUtils.initDecorationBelong(decorationDetail.decorationOrderId);
@@ -993,7 +1026,7 @@ jQuery(function ($) {
                     params.convertActivityItemId = decorationDetail.convertActivityItemId;
                     params.activity = decorationDetail.activity;
                     decorationUtils.decorationActivityInfo(decorationDetail.activitys, wizard["activityBtnMethod"], decorationDetail.decorationOrderId);
-                    decorationUtils.decorationActivityItemInfo(decorationDetail.activityPriceInfo, decorationDetail.activityItems, wizard["uiBtnMethod"], decorationDetail.decorationOrderId);
+                    decorationUtils.decorationActivityItemInfo(decorationDetail.activityPriceInfo, decorationDetail.activityItems, wizard["uiBtnMethod"], decorationDetail.decorationOrderId, decorationActivity);
                     break;
                 case "belong":
                     decorationUtils.initDecorationBelong(decorationDetail.decorationOrderId);

@@ -418,10 +418,10 @@
                                 }
                                 break;
                             case "payScale":
-                                propertyArr.push(["付款比例:", v.paySacle, "green"]);
+                                propertyArr.push(["付款比例:", v.paySacle, "blue"]);
                                 break;
                             case "accountTime":
-                                propertyArr.push(["决算时间:", v.accountTime, "green"]);
+                                propertyArr.push(["决算时间:", v.accountTime, "blue"]);
                                 break;
                         }
                     });

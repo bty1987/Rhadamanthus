@@ -23,73 +23,73 @@ public class SelectionItemPD implements Serializable {
 	private static final long serialVersionUID = -1306832847428925973L;
 
 	public static final String COLUMN_DECORATION_ORDERID_STR = "decoration.orderId";
-	
+
 	public static final String COLUMN_GOODS_CATEGORY_STR = "goods.category";
-	
+
 	public static final String COLUMN_GOODS_NAME_STR = "goods.name";
-	
+
 	public static final String COLUMN_GOODS_BRAND_STR = "goods.brand";
-	
+
 	public static final String COLUMN_SID_STR = "sid";
 
 	public static final String COLUMN_ORDERID_STR = "orderId";
 
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	private long siid;// 选材项ID
-	
+
 	private long sid;// 选材单ID
-	
+
 	private long quoteId;// 引用项ID
-	
-	private short type;// 类型 , 0: 报价项 , 1: 拓展增项 , 2: 拓展减项 , 3: 增项 , 4: 减项 
-	
-	private GoodsPO goods;// 商品 
-	
+
+	private short type;// 类型 , 0: 报价项 , 1: 拓展增项 , 2: 拓展减项 , 3: 增项 , 4: 减项
+
+	private GoodsPO goods;// 商品
+
 	private int num;// 数量
-	
+
 	private DecorationPO decoration;// 装修单号
-	
+
 	private long areaId;// 功能区id
-	
+
 	private String areaName;// 功能区名字
-	
+
 	private long suid;// 厂商id
 
 	private short status;// 状态 , 0: 初始 , 1: 配送 , 2: 审核 , 3: 确认 , 4: 结算
-	
+
 	private int initNum;// 工程量
-	
+
 	private int postprice;// 售价
-	
+
 	private int preprice;// 预算金额
-	
+
 	private Timestamp createTime;// 创建时间
-	
+
 	private Timestamp tranTime;// 配送时间
-	
+
 	private Timestamp checkTime;// 审核时间
-	
+
 	private Timestamp confirmTime;// 确认时间
-	
+
 	private Timestamp balanceTime;// 结算时间
-	
+
 	private Timestamp finishTime;// 完结时间
-	
+
 	private UserPO traner;// 配送人
-	
+
 	private UserPO checker;// 审核人
-	
+
 	private UserPO confirmer;// 确认人
-	
+
 	private UserPO balancer;// 结算人
-	
+
 	private UserPO finish;// 完结人
-	
+
 	private int refnum;// 退数量
-	
+
 	private String comment;// 注释
-	
+
 	private int company;
 
 	public SelectionItemPD() {
@@ -218,7 +218,7 @@ public class SelectionItemPD implements Serializable {
 	public void setPostprice(int postprice) {
 		this.postprice = postprice;
 	}
-	
+
 	@Column(name = "preprice")
 	public int getPreprice() {
 		return preprice;
@@ -272,7 +272,7 @@ public class SelectionItemPD implements Serializable {
 	public void setBalanceTime(Timestamp balanceTime) {
 		this.balanceTime = balanceTime;
 	}
-	
+
 	@Column(name = "finishTime")
 	public Timestamp getFinishTime() {
 		return finishTime;
@@ -317,7 +317,7 @@ public class SelectionItemPD implements Serializable {
 	public UserPO getBalancer() {
 		return balancer;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = true, name = "fuid", referencedColumnName = "uid")
 	public UserPO getFinish() {
@@ -331,7 +331,7 @@ public class SelectionItemPD implements Serializable {
 	public void setBalancer(UserPO balancer) {
 		this.balancer = balancer;
 	}
-	
+
 	@Column(name = "refnum")
 	public int getRefnum() {
 		return refnum;
@@ -367,6 +367,5 @@ public class SelectionItemPD implements Serializable {
 	public void setCompany(int company) {
 		this.company = company;
 	}
-	
-	
+
 }

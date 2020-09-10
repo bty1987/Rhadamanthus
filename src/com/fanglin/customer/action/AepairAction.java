@@ -21,18 +21,18 @@ import com.fanglin.customer.vo.ConsultionVO;
 public class AepairAction extends BaseListAction {
 
 	private static final long serialVersionUID = 955307519477721026L;
-	
+
 	@Autowired
 	private AepairService aepairService;
-	
+
 	private AepairVO aepair;
-	
+
 	private List<AepairVO> aepairs;
-	
+
 	private ConsultionVO consultion;
-	
+
 	private String code;
-	
+
 	@Action(value = "pageAepair", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageAepair() throws FLException {
 
@@ -40,15 +40,15 @@ public class AepairAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryAepair", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryAepair() throws FLException {
 
-		aepairs = aepairService .queryAepair(aepair);
+		aepairs = aepairService.queryAepair(aepair);
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryAepairByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryRepair() throws FLException {
 
@@ -56,7 +56,7 @@ public class AepairAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addAepair", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addAepair() throws FLException {
 
@@ -64,7 +64,7 @@ public class AepairAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateAepair", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateAepair() throws FLException {
 
@@ -72,7 +72,7 @@ public class AepairAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "receiveAepair", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String receiveAepair() throws FLException {
 
@@ -80,7 +80,7 @@ public class AepairAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "deliveAepair", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deliveAepair() throws FLException {
 
@@ -88,7 +88,7 @@ public class AepairAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "tranAepair", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String tranAepair() throws FLException {
 
@@ -96,7 +96,7 @@ public class AepairAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "finishAepair", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String finishAepair() throws FLException {
 
@@ -104,7 +104,7 @@ public class AepairAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "closeAepair", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String closeAepair() throws FLException {
 
@@ -112,15 +112,15 @@ public class AepairAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
-	@Action(value = "sendAepairMessage", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String sendAepairMessage() throws FLException {
 
-		aepairService.sendAepairMessage(code, aepair);
+	@Action(value = "sendAepair", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String sendAepair() throws FLException {
+
+		aepairService.sendAepair(code, aepair);
 
 		return SUCCESS;
 	}
-	
+
 	public AepairVO getAepair() {
 		return aepair;
 	}

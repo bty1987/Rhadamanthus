@@ -10,7 +10,7 @@ public interface ExtensionItemDao extends Dao<ExtensionItemPO> {
 
 	public List<ExtensionItemPO> queryExtensionItemByEid(Long eId);
 
-	public List<ExtensionItemPO> queryExtensionItemByEids(List<Long> extensionItemIDs);
+	public List<ExtensionItemPO> queryExtensionItemByEids(List<Long> eids);
 
 	public long countExtensionItemForFunctionArea(long qfaid);
 

@@ -97,13 +97,13 @@ public class QuotationServiceImpl implements QuotationService {
 
 	@Autowired
 	private AddReduceItemDao addReduceItemDao;
-	
+
 	@Autowired
 	private SelectionDao selectionDao;
-	
+
 	@Autowired
 	private SelectionItemDao selectionItemDao;
-	
+
 	@Autowired
 	private SelectionService selectionService;
 
@@ -145,31 +145,6 @@ public class QuotationServiceImpl implements QuotationService {
 
 		return quotationVOs;
 	}
-	
-	@Override
-	public Map<String, Integer> countQuotationForNormood(QuotationVO quotationVO) throws FLException {
-		
-		List<Long> qiids = getQuotationItemQiids(quotationVO.getQid());
-		
-		if (qiids.size() == 0) return null; 
-		
-		Map<String, Integer> norms = quotationDao.countQuotationForNormood(qiids);
-		
-		return norms;
-		
-	}
-
-	@Override
-	public Map<String, Integer> countQuotationForNormrice(QuotationVO quotationVO) throws FLException {
-		
-		List<Long> qiids = getQuotationItemQiids(quotationVO.getQid());
-		
-		if (qiids.size() == 0) return null; 
-		
-		Map<String, Integer> norms = quotationDao.countQuotationForNormrice(qiids);
-		
-		return norms;
-	}
 
 	@Override
 	public Map<String, List<String>> queryQuotationForConfig(int company) {
@@ -191,19 +166,19 @@ public class QuotationServiceImpl implements QuotationService {
 		String orderId = quotationVO.getOrderId();
 
 		QuotationPO quotationPO = new QuotationPO();
-		
+
 		if (quotationDao.countQuotationByOrderId(orderId) >= (quotationlimit == null ? 3 : Integer.parseInt(quotationlimit.getValue()))) {
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
 
 		DecorationPO decorationPO = checkQuotationForDefaultByOrderId(orderId);
-		
+
 		BeanUtil.copyProperties(quotationVO, quotationPO, Arrays.asList("creater"));
 
 		if (decorationPO == null) {
 			throw new FLException(140013, "订单不存在");
 		}
-		
+
 		QuotationVersionPO quotationVersionPO = decorationPO.getVersion();
 
 		if (quotationVersionPO == null) {
@@ -213,12 +188,12 @@ public class QuotationServiceImpl implements QuotationService {
 		quotationPO.setOrderId(orderId);
 		quotationPO.setCreater(userDao.queryUserByUserId(userId));
 		quotationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		
+
 		quotationPO.setManageRate(quotationVersionPO.getManageRate());
 		quotationPO.setTrafficRate(quotationVersionPO.getTrafficRate());
 		quotationPO.setDiscount(10000);
 		QuotationPO defaultQuotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
-		
+
 		if (defaultQuotationPO == null) {
 			quotationPO.setDefaults(QuotationPO.DEFAULTS_DEFAULT_INT);
 		} else {
@@ -226,18 +201,18 @@ public class QuotationServiceImpl implements QuotationService {
 		}
 
 		quotationDao.save(quotationPO);
-		
+
 		selectionService.addSelection(quotationPO.getQid());
 
 		BeanUtil.copyProperties(quotationPO, quotationVO, Arrays.asList("creater"));
 
 		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig("quotationFunctionAreaIndex");
 		Short index = systemConfigPO == null ? 0 : Short.valueOf(systemConfigPO.getValue());
-		
+
 		QuotationFunctionAreaPO autogeneration = new QuotationFunctionAreaPO(quotationPO, "生成项目", 9999, QuotationFunctionAreaPO.TYPE_MANAGEMENT_INT, index);
-		
+
 		quotationFunctionAreaDao.save(autogeneration);
-		
+
 		QuotationFunctionAreaItemPO trafficPrice = QuotationFunctionAreaItemPO.factoryToInstance(autogeneration.getQfaId(), index);
 		convertQuotationPOForAdvance(trafficPrice, "车运费", "", "其他", quotationVersionPO.getTrafficRate(), "0", 0, QuotationFunctionAreaItemPO.TYPE_QUOTATION_TRAFFIC_SHORT, quotationVersionPO.getTrafficDiscount(), autogeneration, "", QuotationFunctionAreaItemPO.SUBTYPE_QUOTATION_ENGINEERING_SHORT);
 
@@ -433,9 +408,9 @@ public class QuotationServiceImpl implements QuotationService {
 		}
 
 		quotationDao.save(quotationPO);
-		
+
 		selectionService.addSelection(quotationPO.getQid());
-		
+
 		copyQuotetion(quotationPO.getQid(), copyQuotetionPO.getQid());
 
 		BeanUtil.copyProperties(quotationPO, quotationVO, Arrays.asList("creater"));
@@ -501,7 +476,7 @@ public class QuotationServiceImpl implements QuotationService {
 		}
 
 		quotationDao.save(quotationPO);
-		
+
 		selectionService.addSelection(quotationPO.getQid());
 
 		copyQuotation(replicaQId, quotationPO.getQid());
@@ -560,7 +535,7 @@ public class QuotationServiceImpl implements QuotationService {
 			quotationPO.setDefaults(QuotationPO.DEFAULTS_NONDEFAULT_INT);
 		}
 		quotationDao.save(quotationPO);
-		
+
 		selectionService.addSelection(quotationPO.getQid());
 
 		copyQuotation(copyQId, quotationPO.getQid());
@@ -607,20 +582,20 @@ public class QuotationServiceImpl implements QuotationService {
 
 		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig("quotationFunctionAreaIndex");
 		Short index = systemConfigPO == null ? 0 : Short.valueOf(systemConfigPO.getValue());
-		
+
 		for (QuotationFunctionAreaPO quotationFunctionAreaPO : quotationFunctionAreaPOs) {
 
 			QuotationFunctionAreaPO _quotationFunctionAreaPO = new QuotationFunctionAreaPO();
 			BeanUtil.copyProperties(quotationFunctionAreaPO, _quotationFunctionAreaPO, Arrays.asList("qfaId"));
 			_quotationFunctionAreaPO.setQuotation(new QuotationPO(newQuotationId));
 			_quotationFunctionAreaPO.setIndex(index);
-		
+
 			List<QuotationFunctionAreaItemPO> quotationFunctionAreaItemPOs = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByFunctionAreaId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex()), quotationFunctionAreaPO.getQfaId());
 
 			quotationFunctionAreaDao.save(_quotationFunctionAreaPO);
 
 			for (QuotationFunctionAreaItemPO quotationFunctionAreaItemPO : quotationFunctionAreaItemPOs) {
-				
+
 				QuotationFunctionAreaItemPO clazz = QuotationFunctionAreaItemPO.factoryToInstance(_quotationFunctionAreaPO.getQfaId(), index);
 
 				BeanUtil.copyProperties(quotationFunctionAreaItemPO, clazz, Arrays.asList("qfaiId"));
@@ -639,35 +614,37 @@ public class QuotationServiceImpl implements QuotationService {
 
 		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig("quotationFunctionAreaIndex");
 		Short index = systemConfigPO == null ? 0 : Short.valueOf(systemConfigPO.getValue());
-		
+
 		for (QuotetionFunctionAreaPO quotetionFunctionAreaPO : quotetionFunctionAreaPOs) {
 
-			QuotationFunctionAreaPO _quotationFunctionAreaPO = new QuotationFunctionAreaPO();
-			_quotationFunctionAreaPO.setFunctionAreaName(quotetionFunctionAreaPO.getName());
-			_quotationFunctionAreaPO.setFunctionAreaOrder(quotetionFunctionAreaPO.getFunctionAreaOrder());
-			_quotationFunctionAreaPO.setType(quotetionFunctionAreaPO.getType());
-			_quotationFunctionAreaPO.setQuotation(new QuotationPO(quotationId));
-			_quotationFunctionAreaPO.setTotal(0);
-			_quotationFunctionAreaPO.setQfaId(quotationId);
-			_quotationFunctionAreaPO.setIndex(index);
+			QuotationFunctionAreaPO quotationFunctionAreaPO = new QuotationFunctionAreaPO();
+			quotationFunctionAreaPO.setFunctionAreaName(quotetionFunctionAreaPO.getName());
+			quotationFunctionAreaPO.setFunctionAreaOrder(quotetionFunctionAreaPO.getFunctionAreaOrder());
+			quotationFunctionAreaPO.setType(quotetionFunctionAreaPO.getType());
+			quotationFunctionAreaPO.setQuotation(new QuotationPO(quotationId));
+			quotationFunctionAreaPO.setTotal(0);
+			quotationFunctionAreaPO.setQfaId(quotationId);
+			quotationFunctionAreaPO.setIndex(index);
 
-			quotationFunctionAreaDao.save(_quotationFunctionAreaPO);
-			
+			quotationFunctionAreaDao.save(quotationFunctionAreaPO);
+
 			List<QuotetionFunctionAreaItemPO> quotetionFunctionAreaItemPOs = quotetionFunctionAreaItemDao.queryQuotetionFunctionAreaItemByFunctionAreaId(QuotetionFunctionAreaItemPO.factoryToClazz(quotetionFunctionAreaPO.getQfaId(), quotetionFunctionAreaPO.getIndex()), quotetionFunctionAreaPO.getQfaId());
 
 			for (QuotetionFunctionAreaItemPO quotetionFunctionAreaItem : quotetionFunctionAreaItemPOs) {
-				
-				QuotationFunctionAreaItemPO clazz = QuotationFunctionAreaItemPO.factoryToInstance(_quotationFunctionAreaPO.getQfaId(), index);
 
-				clazz.setQuotationFunctionArea(_quotationFunctionAreaPO);
+				QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = QuotationFunctionAreaItemPO.factoryToInstance(quotationFunctionAreaPO.getQfaId(), index);
+
+				quotationFunctionAreaItemPO.setQuotationFunctionArea(quotationFunctionAreaPO);
 
 				if (quotetionFunctionAreaItem.getQiid() != 0) {
-					clazz.setQuotationItem(quotationItemDao.get(quotetionFunctionAreaItem.getQiid()));
+					quotationFunctionAreaItemPO.setQuotationItem(quotationItemDao.get(quotetionFunctionAreaItem.getQiid()));
 				}
 
-				clazz.ptp(quotetionFunctionAreaItem);
+				quotationFunctionAreaItemPO.ptp(quotetionFunctionAreaItem);
 
-				quotationFunctionAreaItemDao.save(clazz);
+				quotationFunctionAreaItemPO.setIndex(index);
+
+				quotationFunctionAreaItemDao.save(quotationFunctionAreaItemPO);
 			}
 		}
 		return 0;
@@ -693,13 +670,13 @@ public class QuotationServiceImpl implements QuotationService {
 			if (selectionItemDao.countSelectionItem(orderId, quotatoinFunctionAreaId) > 0) {
 				throw new FLException(200037, "存在关联选材项");
 			}
-			
+
 			String tableName = QuotationFunctionAreaItemPO.quotationFunctionAreaItemTable(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex());
 
 			quotationFunctionAreaItemDao.deleteQuotationFunctionAreaItemByFunctionAreaId(tableName, quotatoinFunctionAreaId); // 删除报价项
 			quotationFunctionAreaDao.deleteById(quotatoinFunctionAreaId); // 删除功能区
 		}
-		
+
 		quotationDao.deleteById(qId); // 删除报价
 		selectionDao.deleteSelectionByQid(qId);// 删除选材
 
@@ -739,28 +716,30 @@ public class QuotationServiceImpl implements QuotationService {
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
+		QuotationVO quotationVO;
+
 		for (QuotationPO quotationPO : quotationPOs) {
-			QuotationVO _quotationVO = new QuotationVO();
+			quotationVO = new QuotationVO();
 
-			BeanUtil.copyProperties(quotationPO, _quotationVO, Arrays.asList("creater"));
+			BeanUtil.copyProperties(quotationPO, quotationVO, Arrays.asList("creater"));
 
-			_quotationVO.setNotSalesmanRate(decorationPO.getNotSalesmanRate());
-			_quotationVO.setNo(decorationPO.getVersion().getNo());
+			quotationVO.setNotSalesmanRate(decorationPO.getNotSalesmanRate());
+			quotationVO.setNo(decorationPO.getVersion().getNo());
 
-			quotationVOs.add(_quotationVO);
+			quotationVOs.add(quotationVO);
 		}
 	};
 
 	private DecorationPO checkQuotationForDefaultByOrderId(String orderId) throws FLException {
-		
+
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
-		
+
 		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT });
 
 		if (decorationPO == null) {
 			throw new FLException(140013, "订单不存在");
 		}
-		
+
 		if (!status.contains(decorationPO.getStatus())) {
 			throw new FLException(200005, "报价不能修改");
 		}
@@ -781,25 +760,5 @@ public class QuotationServiceImpl implements QuotationService {
 
 		return quotationPO;
 	}
-	
-	@Transactional(rollbackFor = Exception.class)
-	private List<Long> getQuotationItemQiids(Long qid) throws FLException {
-		
-		List<QuotationFunctionAreaPO> QuotationFunctionAreaPOs = quotationFunctionAreaDao.queryQuotationFunctionAreaByQuotationId(qid);
-		List<Long> qiids = new ArrayList<Long>();
 
-		for (QuotationFunctionAreaPO quotationFunctionAreaPO : QuotationFunctionAreaPOs) {
-			List<QuotationFunctionAreaItemPO> quotationFunctionAreaItemPOs = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByFunctionAreaId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex()), quotationFunctionAreaPO.getQfaId());
-			
-			for (QuotationFunctionAreaItemPO quotationFunctionAreaItemPO : quotationFunctionAreaItemPOs) {
-				if (quotationFunctionAreaItemPO.getQuotationItem() != null) {
-					
-					qiids.add(quotationFunctionAreaItemPO.getQuotationItem().getQiId());
-				}
-			}
-		}
-		
-		return qiids;
-	}
-	
 }

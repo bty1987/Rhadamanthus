@@ -25,6 +25,8 @@ public class VprizePO implements java.io.Serializable {
 	private String name;
 
 	private int price;
+	
+	private String unit;
 
 	private short status;
 
@@ -68,6 +70,15 @@ public class VprizePO implements java.io.Serializable {
 
 	public void setPrice(int price) {
 		this.price = price;
+	}
+	
+	@Column(name = "unit")
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 
 	@Column(name = "status")

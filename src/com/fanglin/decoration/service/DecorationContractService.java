@@ -13,26 +13,26 @@ public interface DecorationContractService {
 
 	public List<DecorationContractVO> queryDecorationContractByOrderId(DecorationContractVO decorationContract) throws FLException;
 
+	public void sendDecorationContractForAuth(DecorationContractVO decorationContractVO) throws FLException;
+
+	public void sendDecorationContract(DecorationContractVO decorationContractVO) throws FLException;
+
+	public String redirectDecorationContract(DecorationContractVO decorationContractVO) throws FLException;
+
+	public String viewDecorationContract(DecorationContractVO decorationContractVO) throws FLException;
+
 	public int addDecorationContract(DecorationContractVO decorationContract, String data, String userId) throws FLException;
 
 	public int signDecorationContractForCompany(SignetVO signetVO, DecorationContractVO decorationContractVO) throws FLException;
 
 	public String signDecorationContractForCustomer(DecorationContractVO decorationContractVO, CustomerVO customerVO) throws FLException;
 
-	public String viewDecorationContract(DecorationContractVO decorationContractVO) throws FLException;
-
 	public int filingDecorationContract(DecorationContractVO decorationContractVO) throws FLException;
-
-	public void sendDecorationContractForAuth(DecorationContractVO decorationContractVO) throws FLException;
 
 	public int signDecorationContract(DecorationContractVO decorationContractVO, Authentication authentication) throws FLException;
 
 	public int resignDecorationContract(DecorationContractVO decorationContractVO, String userId) throws FLException;
 
 	public int presignDecorationContract(DecorationVO decoration, String userId) throws FLException;
-	
-	public void sendDecorationContract(DecorationContractVO decorationContractVO) throws FLException;
-	
-	public String redirectDecorationContract(DecorationContractVO decorationContractVO) throws FLException;
 
 }

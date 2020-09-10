@@ -159,7 +159,16 @@ var AddReduceDetail = (function(){
 					}, null, false);
 				}),
 				updateAddReduceBtn: com.focusPage('#updateAddReduceBtn').on('click', function(event){
-                    com.post(api.addReduce.updateAddReduce, addReduceDetail.basicParams, function(){
+
+					var option = {
+						"addReduce.arId": addReduceDetail.basicParams["addReduce.arId"],
+						"addReduce.undisPrice": addReduceDetail.basicParams["addReduce.undisPrice"],
+						"addReduce.disPrice": addReduceDetail.basicParams["addReduce.disPrice"],
+						"addReduce.uncalPrice": addReduceDetail.basicParams["addReduce.uncalPrice"],
+						"addReduce.calPrice": addReduceDetail.basicParams["addReduce.calPrice"],
+					};
+
+                    com.post(api.addReduce.updateAddReduce, option, function(){
                         com.showAlert(com.info, '提交成功');
                     }, null, false);
                 }),
@@ -187,18 +196,12 @@ var AddReduceDetail = (function(){
 			var _discount = null;
 			// 报价折扣
 			var quotationDiscount = utils.accDiv(addReduceDetail.discount, 10);
-			// 增项, 不打折
-			if (addReduceDetail.artype == 0) {
+
+			// 根据折扣标识判断项目折扣
+			if ([0, 2].indexOf(_discountFlag) != -1) {
 				_discount = 1;
-				// 减项项目类型为 4(增项中报价项), 5(拓展中报价项) 不打折
-			} else if (_type == 4 || _type == 5) {
-				_discount = 1;
-				// 装修单类型为2 (半价, 满减, 减上减) 打折
-			} else if (addReduceDetail.ordertype == 2) {
+			} else if ([1, 3].indexOf(_discountFlag) != -1) {
 				_discount = quotationDiscount;
-				// 根据打折标识进行判断 0: 不打折 , 1: 打折 , 2: 不打折(非配比) , 3: 打折(非配比)
-			} else {
-				_discount = ([1, 3].indexOf(_discountFlag) != -1) ? quotationDiscount : 1;
 			}
 
             var _dcp = utils.changeThrDecimal(utils.accMul(_unitprice, _discount));
@@ -365,7 +368,7 @@ var AddReduceDetail = (function(){
 					var eids = {};
 					com.post(api.quotation.queryExtensionByOrderId, {"extension.orderId": addReduceDetail.orderid,"extension.type": 0}, function(res){
 						$.each(res.extensions, function(i, v){
-							eids['extensionItemIDs[' + index + ']'] = v.eid;
+							eids['extensionIds[' + index + ']'] = v.eid;
 							index++;
 						});
 					}, null, false);
@@ -572,6 +575,20 @@ var AddReduceDetail = (function(){
                     unitPrice = subPrice;
 				}
 
+				// 增减项打折标识
+				var discount = parseInt($this.attr('data-discount'));
+
+				// 项目类型为0
+				if (type == 0) {
+					discount = 0;
+					// 项目类型为4, 	5
+				} else if (type == 4 || type == 5) {
+					discount = 0;
+					// 装修单类型为满减
+				} else if (addReduceDetail.ordertype == 2) {
+					discount = 1;
+				}
+
 				var _quotval = {
 					"num" : 0, // 工程预算量
 					"itemName" : $li.find('.lbl').text(), // 名称
@@ -589,7 +606,7 @@ var AddReduceDetail = (function(){
 					"subtype" :$this.attr("data-quotationType"),
 					"ariId" : "", // 增减项中报价项的id
 					"quoteItemId" : $this.val(), // id(隐藏属性)
-					"discount" : parseInt($this.attr('data-discount'))
+					"discount" : discount, // 项目折扣标识
 				};
 				var $item = painter.createQuote( _index + i + 1, _quotval);
 				$item.appendTo($arwrap.find('.fl-quo-list'));
@@ -849,18 +866,12 @@ var AddReduceDetail = (function(){
 			var _discount = null;
 			// 报价折扣
 			var quotationDiscount = utils.accDiv(addReduceDetail.discount, 10);
-			// 增项, 不打折
-			if (addReduceDetail.artype == 0) {
+
+			// 根据折扣标识判断项目折扣
+			if ([0, 2].indexOf(qv.discount) != -1) {
 				_discount = 1;
-			// 减项项目类型为 4(增项中报价项), 5(拓展中报价项) 不打折
-			} else if (qv.type == 4 || qv.type == 5) {
-				_discount = 1;
-			// 装修单类型为2 (半价, 满减, 减上减) 打折
-			} else if (addReduceDetail.ordertype == 2) {
+			} else if ([1, 3].indexOf(qv.discount) != -1) {
 				_discount = quotationDiscount;
-			// 根据打折标识进行判断 0: 不打折 , 1: 打折 , 2: 不打折(非配比) , 3: 打折(非配比)
-			} else {
-				_discount = ([1, 3].indexOf(qv.discount) != -1) ? quotationDiscount : 1;
 			}
 
 			var _dcp = utils.changeThrDecimal(utils.accMul(qv.unitPrice, _discount));

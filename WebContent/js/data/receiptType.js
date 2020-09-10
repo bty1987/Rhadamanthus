@@ -17,7 +17,6 @@ $(function ($) {
     receiptType.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
     receiptType.items.rtId = com.focusPage("#rtId");
     receiptType.items.name = com.focusPage("#name");
-    receiptType.items.no = com.focusPage("#no");
     receiptType.items.type = com.focusPage("#type");
     receiptType.items.grade = com.focusPage("#grade");
     receiptType.items.kino = com.focusPage("#kino");
@@ -93,7 +92,6 @@ $(function ($) {
             $btnuptl.click(function () {
                 receiptType.items.rtId.val(v.rtId);
                 receiptType.items.name.val(v.name);
-                receiptType.items.no.val(v.no);
                 receiptType.items.type.val(utils.accAdd($.inArray(v.type, receiptType.typeArray), 1));
                 receiptType.items.grade.val(v.grade);
                 receiptType.items.kino.val(v.kino);
@@ -102,7 +100,6 @@ $(function ($) {
                 receiptType.items.value.val(v.value);
                 editFlg = false;
                 receiptType.modal.modal("show")
-
             });
 
             return $liLine;
@@ -141,7 +138,6 @@ $(function ($) {
     function saveData() {
         var options = {
             "receiptType.name" : receiptType.items.name.val(),
-            "receiptType.no" : receiptType.items.no.val(),
             "receiptType.type" : receiptType.items.type.val(),
             "receiptType.grade" : receiptType.items.grade.val(),
             "receiptType.kino" : receiptType.items.kino.val(),

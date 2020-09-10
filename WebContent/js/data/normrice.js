@@ -1,10 +1,12 @@
 $(function() {
-    // 定额材料
+    
     var normrice = {
         qiid: params.qiid,
         items: {
-            constructionNode: com.focusPage('#constructionNode'),
-            salary: com.focusPage('#salary')
+            constructionNode: com.focusPage('#constructionNode', "#addNormriceModal"),
+            unit: com.focusPage('#unit', "#addNormriceModal"),
+            trannum: com.focusPage('#trannum', "#addNormriceModal"),
+            salary: com.focusPage('#salary', "#addNormriceModal")
         },
         modals: {
             addNormriceModal: com.focusPage('#addNormriceModal')
@@ -27,8 +29,14 @@ $(function() {
         com.cleanTypeahead("constructionNode");
         com.cleanItems(normrice.items);
     });
-
-    com.initTypeahead('constructionNode', api.data.queryConstructionNode, "constructionNodes.name", {}, "constructionNodes", "cnid", "name", null);
+    
+    com.post(api.data.queryMeasurementUnit, {}, function (res) {
+        normrice.items.unit.bindData(res.measurementUnits, "name", "name");
+    });
+    
+    com.post(api.data.queryConstructionNode, {}, function (res) {
+        normrice.items.constructionNode.bindData(res.constructionNodes, "cnid", "name");
+    });
 
     var displayFunc  = (function(){
 
@@ -57,6 +65,9 @@ $(function() {
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
 
             var propertyArr = [
+                ["报价单位: ", v.quotationItem.measurementUnit, "gray"],
+                ["定额单位: ", v.unit, "gray"],
+                ["转换量: ", v.trannum, "blue"],
                 ["工费: ", v.salary, "blue"],
                 ["状态: ", v.status == 0 ? "有效":"无效", "red"]
             ];
@@ -102,20 +113,15 @@ $(function() {
     });
 
     function saveData(){
+        
         if (com.validate('addNormriceModal')) {
             return false;
         }
 
-        var cnid = com.typeahead("constructionNode");
-
-        if (!cnid) {
-            com.showAlert(com.error, "数据绑定失败");
-            normrice.modals.addNormriceModal.modal("hide");
-            return false;
-        }
-
         var option = {
-            "normrice.constructionNode.cnid": cnid,
+            "normrice.constructionNode.cnid": normrice.items.constructionNode.val(),
+            "normrice.unit": normrice.items.unit.val(),
+            "normrice.trannum": normrice.items.trannum.val(),
             "normrice.salary": normrice.items.salary.val(),
             "normrice.quotationItem.qiId": normrice.qiid
         };

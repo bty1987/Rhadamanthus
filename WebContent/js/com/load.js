@@ -1,5 +1,12 @@
 $.extend($,{
-    loadScript : function(filenames) {
+    /**
+     * 动态加载js文件, 同时支持WEB和PC方式
+     * @param filenames 文件路径和名称
+     * @param relative 文件相对路径
+     * @param frame PC方式的加载页面 , 可空为当前页面(frame)
+     * @param zquery WEB方式的加载JQ库 , 可空为当前页面(JQuery)
+     */
+    loadScript : function(filenames, relative, frame, zquery) {
 
         if (filenames.length == 0) {
             return;
@@ -8,17 +15,25 @@ $.extend($,{
         var filename = '';
 
         if (parent.window.isPC && parent.window.isEncryption) {
+            
+            if(!frame) frame = null;
+            
             filename = filenames.shift();
             filename = filename.substring(0, filename.lastIndexOf('.')) + '.bin';
 
-            win.evalNWBin(null, filename);
+            win.evalNWBin(frame, filename);
 
-            $.loadScript(filenames);
+            $.loadScript(filenames, relative, frame, zquery);
 
         } else {
+            
             filename = filenames.shift();
-            $.getScript(filename, function () {
-                $.loadScript(filenames);
+            
+            if(relative) filename = relative + filename;
+            if(!zquery) zquery = $;
+            
+            zquery.getScript(filename, function () {
+                $.loadScript(filenames, relative, frame, zquery);
             })
         }
     }

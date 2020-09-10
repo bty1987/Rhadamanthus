@@ -25,46 +25,46 @@ public class QuotetionFunctionAreaItemAction extends BaseListAction {
 
 	@Autowired
 	private QuotetionFunctionAreaItemService quotetionFunctionAreaItemService;
-	
+
 	private QuotetionVO quotetion;
-	
+
 	private List<QuotetionFunctionAreaItemVO> quotetionFunctionAreaItems;
-	
+
 	private QuotetionFunctionAreaItemVO quotetionFunctionAreaItem;
-	
+
 	private QuotetionFunctionAreaVO quotetionFunctionArea;
-	
+
 	private List<Long> qfaiIds;
-						
-	@Action(value = "updateQuotetionFunctionAreaItem", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateQuotetionFunctionAreaItem() throws FLException{
-		
+
+	@Action(value = "updateQuotetionFunctionAreaItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateQuotetionFunctionAreaItem() throws FLException {
+
 		quotetionFunctionAreaItem = quotetionFunctionAreaItemService.updateQuotetionFunctionAreaItem(quotetionFunctionAreaItem, quotetion);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "updateQuotetionFunctionAreaItemForIndex", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateQuotetionFunctionAreaItemForIndex() throws FLException{
-		
-		quotetionFunctionAreaItemService.updateQuotetionFunctionAreaItemForIndex(quotetionFunctionAreaItems,quotetionFunctionArea);
-		
+
+	@Action(value = "updateQuotetionFunctionAreaItemForIndex", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateQuotetionFunctionAreaItemForIndex() throws FLException {
+
+		quotetionFunctionAreaItemService.updateQuotetionFunctionAreaItemForIndex(quotetionFunctionAreaItems, quotetionFunctionArea);
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "updateQuotetionFunctionAreaItemForSpec", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateQuotetionFunctionAreaItemForSpec() throws FLException{
-		
+
+	@Action(value = "updateQuotetionFunctionAreaItemForSpec", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateQuotetionFunctionAreaItemForSpec() throws FLException {
+
 		quotetionFunctionAreaItemService.updateQuotetionFunctionAreaItemForSpec(quotetionFunctionAreaItem, quotetion);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "deleteQuotetionFunctionAreaItem", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteQuotetionFunctionAreaItem() throws FLException{
-		
-		quotetionFunctionAreaItemService.deleteQuotetionFunctionAreaItem(qfaiIds, quotetion,quotetionFunctionArea);
-		
+
+	@Action(value = "deleteQuotetionFunctionAreaItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteQuotetionFunctionAreaItem() throws FLException {
+
+		quotetionFunctionAreaItemService.deleteQuotetionFunctionAreaItem(qfaiIds, quotetion, quotetionFunctionArea);
+
 		return SUCCESS;
 	}
 
@@ -80,8 +80,7 @@ public class QuotetionFunctionAreaItemAction extends BaseListAction {
 		return quotetionFunctionAreaItems;
 	}
 
-	public void setQuotetionFunctionAreaItems(
-			List<QuotetionFunctionAreaItemVO> quotetionFunctionAreaItems) {
+	public void setQuotetionFunctionAreaItems(List<QuotetionFunctionAreaItemVO> quotetionFunctionAreaItems) {
 		this.quotetionFunctionAreaItems = quotetionFunctionAreaItems;
 	}
 
@@ -89,8 +88,7 @@ public class QuotetionFunctionAreaItemAction extends BaseListAction {
 		return quotetionFunctionAreaItem;
 	}
 
-	public void setQuotetionFunctionAreaItem(
-			QuotetionFunctionAreaItemVO quotetionFunctionAreaItem) {
+	public void setQuotetionFunctionAreaItem(QuotetionFunctionAreaItemVO quotetionFunctionAreaItem) {
 		this.quotetionFunctionAreaItem = quotetionFunctionAreaItem;
 	}
 
@@ -98,8 +96,7 @@ public class QuotetionFunctionAreaItemAction extends BaseListAction {
 		return quotetionFunctionArea;
 	}
 
-	public void setQuotetionFunctionArea(
-			QuotetionFunctionAreaVO quotetionFunctionArea) {
+	public void setQuotetionFunctionArea(QuotetionFunctionAreaVO quotetionFunctionArea) {
 		this.quotetionFunctionArea = quotetionFunctionArea;
 	}
 

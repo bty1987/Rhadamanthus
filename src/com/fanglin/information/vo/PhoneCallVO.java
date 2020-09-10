@@ -12,33 +12,33 @@ public class PhoneCallVO implements Serializable {
 	private static final long serialVersionUID = 1694518753890907733L;
 
 	private Long pcid;
-	
+
 	private String orderId;
-	
+
 	private UserVO operater;
-	
+
 	private Timestamp operateTime;
-	
+
 	private String callbackId;
-	
+
 	private String caller;
-	
+
 	private String callee;
-	
+
 	private Long startTime;
-	
+
 	private Long endTime;
-	
+
 	private Integer stopReason;
-	
+
 	private Integer duration;
-	
+
 	private Integer recordType;
-	
+
 	private String recordUrl;
-	
+
 	private String token;
-	
+
 	public PhoneCallVO() {
 		super();
 	}
@@ -72,7 +72,7 @@ public class PhoneCallVO implements Serializable {
 		this.operater = operater;
 	}
 
-	@JSON(format="yyyy-MM-dd hh:mm:ss")
+	@JSON(format = "yyyy-MM-dd hh:mm:ss")
 	public Timestamp getOperateTime() {
 		return operateTime;
 	}

@@ -1,10 +1,11 @@
 $(function() {
-    // 定额商品
+
     var normood = {
         qiid : params.qiid,
         items: {
-            goodsName: com.focusPage('#goodsName'),
-            num: com.focusPage('#num')
+            goodsName: com.focusPage('#goodsName', "#addNormoodModal"),
+            unit: com.focusPage('#unit', "#addNormoodModal"),
+            num: com.focusPage('#num', "#addNormoodModal")
         },
         modals: {
             addNormoodModal: com.focusPage('#addNormoodModal')
@@ -29,7 +30,11 @@ $(function() {
     });
 
     com.initTypeahead('goodsName', api.data.queryAoodsByName, "aoods.goods.name", {}, "aoodes", "gid", "name", null);
-
+    
+    com.post(api.common.queryMeasurementUnit, {}, function (res) {
+        normood.items.unit.bindData(res.measurementUnits, "name", "name");
+    });
+    
     var displayFunc  = (function(){
 
         var renderList = function (tableId, listData) {
@@ -57,10 +62,13 @@ $(function() {
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
 
             var propertyArr = [
-                ["商品编号:", v.goods.no, "blue"],
-                ["商品品牌: ", v.goods.brand, "blue"],
-                ["商品品类: ", v.goods.category, "blue"],
-                ["使用数量: ", v.num, "blue"],
+                ["编号:", v.goods.no, "blue"],
+                ["品牌: ", v.goods.brand, "gray"],
+                ["品类: ", v.goods.category, "gray"],
+                ["商品单位: ", v.goods.measurementUnit, "gray"],
+                ["报价单位: ", v.quotationItem.measurementUnit, "gray"],
+                ["定额单位: ", v.unit, "gray"],
+                ["定额量: ", v.num, "blue"],
                 ["状态: ", v.status == 0 ? "有效":"无效", "red"]
             ];
 
@@ -119,6 +127,7 @@ $(function() {
 
         var option = {
             "normood.goods.gid": gid,
+            "normood.unit": normood.items.unit.val(),
             "normood.num": normood.items.num.val(),
             "normood.quotationItem.qiId": normood.qiid
         };

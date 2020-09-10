@@ -76,7 +76,7 @@ jQuery(function($) {
             "userInfo.user.userId" : checkUser.userid,
             "userInfo.profiles" : com.focusPage("#text").val()
         };
-        com.post(api.personel.updateUserForProfiles, option, function(){
+        com.post(api.personel.updateUserForProfile, option, function(){
             com.post(api.personel.queryUserInfoByUserId, {"userInfo.user.userId" : checkUser.userid}, function(res){
                 com.focusPage("#content").html(res.userInfo.profiles);
             });

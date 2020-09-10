@@ -109,7 +109,7 @@ $(function () {
                     "code": "1b0c4d577a692ccbea1020147d2d851e1db9f9055d204872a3c76c9edab27204",
                     "aepair.aid": v.aid
                 };
-                com.post(api.customer.sendAepairMessage, option, function () {
+                com.post(api.customer.sendAepair, option, function () {
                     com.showAlert(com.info, '发送成功');
                 });
             });

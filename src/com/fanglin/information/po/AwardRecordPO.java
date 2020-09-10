@@ -48,7 +48,7 @@ public class AwardRecordPO implements java.io.Serializable {
 
 	public static final short SUBTYPE_DELIVERY_INT = 7;// 配送
 
-	private int arid;
+	private long arid;
 
 	private String orderId;
 
@@ -87,11 +87,11 @@ public class AwardRecordPO implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "arid")
-	public int getArid() {
+	public long getArid() {
 		return arid;
 	}
 
-	public void setArid(int arid) {
+	public void setArid(long arid) {
 		this.arid = arid;
 	}
 

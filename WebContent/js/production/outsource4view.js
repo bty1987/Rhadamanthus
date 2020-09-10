@@ -154,7 +154,7 @@ $(function(){
             $liLine.append($h3).append($ulProperty);
 
             $btnReceipt.click(function () {
-                com.showConfirm("是否确认", function(){
+                com.showConfirm("是否接收", function(){
                     updateStatus(v.oid,"1");
                 });
             });
@@ -240,7 +240,7 @@ $(function(){
 
         switch (status) {
             case '1':
-                url = api.production.passOutsource;
+                url = api.production.receiptOutsource;
                 break;
             case '2':
                 url = api.production.confirmOutsource;

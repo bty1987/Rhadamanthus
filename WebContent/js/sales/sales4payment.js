@@ -82,13 +82,13 @@ jQuery(function () {
                 var $btnRetrun = $('<a></a>').addClass('btn btn-minier btn-danger').html('退款');
 
                 var propertyArr = [
-                    ["销售单号:", v.sales.no, "blue"],
-                    ["品类：", v.sales.category, "grey"],
-                    ["品牌：", v.sales.brand, "grey"],
-                    ["应收额：", v.referMoney, "blue"],
-                    ["收款时间：", v.salesReceipt.collectTime, "grey"],
-                    ["确认时间：", v.salesReceipt.confirmTime, "grey"],
-                    ["状态：", v.status == 0 ? '初始' : v.status == 1 ? '待确认' : '已确认', "red"]
+                    ["销售单号: ", v.sales.no, "blue"],
+                    ["品类: ", v.sales.category, "grey"],
+                    ["品牌: ", v.sales.brand, "grey"],
+                    ["应收额: ", v.referMoney, "blue"],
+                    ["收款时间: ", v.salesReceipt.collectTime, "grey"],
+                    ["确认时间: ", v.salesReceipt.confirmTime, "grey"],
+                    ["状态: ", v.status == 0 ? '初始' : v.status == 1 ? '待确认' : '已确认', "red"]
                 ];
 
                 $.each(propertyArr, function (index, value) {
@@ -100,7 +100,7 @@ jQuery(function () {
 
                 var addPropertyArr = [];
                 v.salesReceipt.cash != null && v.salesReceipt.cash != "0" ? addPropertyArr.push(["现金:", v.salesReceipt.cash, "blue"]) : true;
-                v.salesReceipt.bank != null && v.salesReceipt.bank != "0" ? addPropertyArr.push(["银行信息：", (function (bank, bankInfo) {
+                v.salesReceipt.bank != null && v.salesReceipt.bank != "0" ? addPropertyArr.push(["银行信息: ", (function (bank, bankInfo) {
 
                     var info = bank + ", ";
                     var _s = bankInfo.split('#');

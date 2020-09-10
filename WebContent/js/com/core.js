@@ -144,7 +144,7 @@
         } else {
             server = config.server;
         }
-
+        
         if (config.demo) {
             if (!api.demo) {
                 com.showAlert(com.warning, "Demo状态不能完成此操作");
@@ -833,9 +833,9 @@
                     var $title = $(layero).find('.layui-layer-title').text("");
                     
                     var divM = $("<div></div>").appendTo($title);
-                    var div1 = $("<div></div>").attr("id","FL-titleDiv").css({"float":"left","width":"33%"}).text(title).appendTo(divM);
+                    var div1 = $("<div></div>").attr("id","FL-titleDiv").css({"float":"left", "width":"33%", "padding": "0px"}).text(title).appendTo(divM);
                     
-                    var btns = $('<div class="layui-layer-btn layui-layer-btn-" style="float: right; width: 65%;"></div>').appendTo(divM);
+                    var btns = $('<div class="layui-layer-btn layui-layer-btn-" style="float: right; width: 65%; padding: 0px;"></div>').appendTo(divM);
                     var btn1 = $('<a class="layui-layer-btn0">普通打印</a>').appendTo(btns);
                     var btn2 = $('<a class="layui-layer-btn0">热敏打印</a>').appendTo(btns);
                     

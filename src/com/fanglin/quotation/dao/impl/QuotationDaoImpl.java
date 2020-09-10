@@ -12,9 +12,7 @@
 package com.fanglin.quotation.dao.impl;
 
 import java.math.BigInteger;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -27,19 +25,16 @@ import com.fanglin.quotation.po.QuotationPO;
 @Repository("quotationDao")
 public class QuotationDaoImpl extends DaoImpl<QuotationPO> implements QuotationDao {
 
-	public QuotationDaoImpl(){
+	public QuotationDaoImpl() {
 		super(QuotationPO.class);
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<QuotationPO> queryQuotationByOrderId(String orderId){
-		return createCriteria(QuotationPO.class)
-				.add(Restrictions.eq("orderId", orderId))
-				.addOrder(Order.desc("createTime"))
-				.list();
+	public List<QuotationPO> queryQuotationByOrderId(String orderId) {
+		return createCriteria(QuotationPO.class).add(Restrictions.eq("orderId", orderId)).addOrder(Order.desc("createTime")).list();
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<QuotationPO> queryQuotationForDefaultByOrderIds(List<String> orderIds) {
@@ -47,72 +42,42 @@ public class QuotationDaoImpl extends DaoImpl<QuotationPO> implements QuotationD
 	}
 
 	@Override
-	public QuotationPO queryQuotationForDefaultByOrderId(String orderId){
-		return (QuotationPO) createCriteria(QuotationPO.class)
-				.add(Restrictions.eq("orderId", orderId))
-				.add(Restrictions.eq("defaults", QuotationPO.DEFAULTS_DEFAULT_INT))
-				.uniqueResult();
+	public QuotationPO queryQuotationForDefaultByOrderId(String orderId) {
+		return (QuotationPO) createCriteria(QuotationPO.class).add(Restrictions.eq("orderId", orderId)).add(Restrictions.eq("defaults", QuotationPO.DEFAULTS_DEFAULT_INT)).uniqueResult();
 	}
 
 	@Override
 	public int countQuotationByOrderId(String orderId, short status) {
-		
+
 		String sql = "select count(*) from quotation.quotation where orderId = :orderId and status = :status";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("orderId", orderId).setShort("status", status).uniqueResult();
-		
-		return count.intValue();
-	}
-	
-	@Override
-	public Map<String, Integer> countQuotationForNormood(List<Long> qiids) {
-		
-		String sql = "SELECT goods.name, SUM(normood.num) FROM data.normood normood RIGHT JOIN inventory.goods goods ON normood.gid = goods.gid WHERE normood.qiid in :qiids GROUP BY normood.gid";
-		
-		return getNorms(sql, qiids);
-	}
 
-	@Override
-	public Map<String, Integer> countQuotationForNormrice(List<Long> qiids) {
-		
-		String sql = "SELECT constructionnode.name, SUM(normrice.salary) FROM data.normrice normrice RIGHT JOIN communion.constructionnode constructionnode ON normrice.cnid = constructionnode.cnid WHERE normrice.qiid in :qiids GROUP BY normrice.cnid";
-		
-		return getNorms(sql, qiids);
+		return count.intValue();
 	}
 
 	@Override
 	public int updateQuotationForStatusByOrderId(String orderId, short status) {
 		String hql = "update  QuotationPO set status = :status where orderId = :orderId";
 		session().createQuery(hql).setShort("status", status).setString("orderId", orderId).executeUpdate();
+
 		return 0;
 	}
 
 	@Override
 	public int countQuotationByOrderId(String orderId) {
-		
+
 		String sql = "select count(*) from quotation.quotation where orderId = :orderId";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString("orderId", orderId).uniqueResult();
-		
+
 		return count.intValue();
 	}
 
 	@Override
-	public int clearQuotationForDefaultByOrderId(String orderId){
+	public int clearQuotationForDefaultByOrderId(String orderId) {
+
 		String sql = "update quotation.quotation q set q.defaults = 0 where q.orderId = :orderId";
-		return session().createSQLQuery(sql).setString("orderId", orderId).executeUpdate();
-	}
+		session().createSQLQuery(sql).setString("orderId", orderId).executeUpdate();
 
-	@SuppressWarnings("unchecked")
-	private Map<String, Integer> getNorms(String sql, List<Long> qiids) {
-		Map<String, Integer> norms = new HashMap<String, Integer>();
-		
-		List<Object[]> list = session().createSQLQuery(sql).setParameterList("qiids", qiids).list();
-
-		for(Object[] objects : list){
-			String key = objects[0].toString();
-			Integer value = Integer.parseInt(objects[1].toString());
-			norms.put(key, value);
-		}
-		
-		return norms;
+		return 0;
 	}
 }

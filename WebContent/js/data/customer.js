@@ -109,7 +109,7 @@ jQuery(function($) {
 
 	var searcher = new Searcher();
 	
-	searcher.init([ 'customerPhone','relationshipType'], "condList", api.data.pageCustomer, function(data){
+	searcher.init([ 'customerPhoneC','relationshipType'], "condList", api.data.pageCustomer, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "customerPostData", null, false, null, function(){
     	

@@ -11,5 +11,6 @@ public interface AwardStockDao extends Dao<AwardStockPO> {
 
 	public List<AwardStockPO> pageAwardStock(Paging paging, List<Filter> filters, int company);
 
-	public List<AwardStockPO> queryAwardStock(short type, short storeroom,int company);
+	public List<AwardStockPO> queryAwardStock(short type, short storeroom, int company);
+
 }

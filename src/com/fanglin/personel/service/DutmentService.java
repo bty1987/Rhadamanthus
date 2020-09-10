@@ -11,8 +11,6 @@ public interface DutmentService {
 
 	public List<DutmentVO> queryDutmentByDuid(DutmentVO dutmentVO, int company);
 
-	public DutmentVO queryDutmentByDid(DutmentVO dutmentVO);
-
 	public int addDutment(DutmentVO dutmentVO, int company) throws FLException;
 
 	public int updateDutment(DutmentVO dutmentVO) throws FLException;

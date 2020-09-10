@@ -54,18 +54,21 @@ $(function () {
             $ul.appendTo($div);
 
             $print.click(function () {
+                
                 var $this = $(this);
                 var rid = $this.attr("id");
                 var type = $this.attr("type");
                 var createTime = $this.attr("createTime");
                 var total = $this.attr("total");
+                
                 params.data = refund.sales;
                 params.rid = rid;
                 params.type = type;
                 params.createTime = createTime;
                 params.total = total;
                 params.flag = "refund";
-                com.popup("销售退货单：" + refund.sales.orderId, api.index.salesRefundsPrintIndex.url, function () {
+                
+                com.popup("销售退货单:" + refund.sales.orderId, api.index.salesRefundsPrintIndex.url, function () {
                     parent.layer.getFrameIndex(window.name);
                 }, null, true);
             });

@@ -1,5 +1,4 @@
 jQuery(function ($) {
-    var params = {};
     var receipt = {
         bankInfo: {},
         checkBankInfo: {},
@@ -22,8 +21,6 @@ jQuery(function ($) {
         });
     }, null, false);
 
-    params.server = window.server;
-    params.authentication = parent.params.authentication;
     params = parent.params;
 
     var queryPaymentByPaymentId = api.payment.queryPaymentByPaymentId;

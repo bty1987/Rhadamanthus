@@ -2,6 +2,9 @@ package com.fanglin.quotation.vo;
 
 import java.io.Serializable;
 
+import com.fanglin.data.quotation.vo.NormoodVO;
+import com.fanglin.data.quotation.vo.NormriceVO;
+
 public class QuotationFunctionAreaItemVO implements Serializable {
 
 	private static final long serialVersionUID = 735430251276046420L;
@@ -39,6 +42,24 @@ public class QuotationFunctionAreaItemVO implements Serializable {
 	private String content;
 
 	private Integer index;
+
+	private NormoodVO normood;
+
+	private NormriceVO normrice;
+
+	public QuotationFunctionAreaItemVO() {
+		super();
+	}
+
+	public QuotationFunctionAreaItemVO(NormoodVO normood) {
+		super();
+		this.normood = normood;
+	}
+
+	public QuotationFunctionAreaItemVO(NormriceVO normrice) {
+		super();
+		this.normrice = normrice;
+	}
 
 	public Long getQfaiId() {
 		return qfaiId;
@@ -175,4 +196,21 @@ public class QuotationFunctionAreaItemVO implements Serializable {
 	public void setIndex(Integer index) {
 		this.index = index;
 	}
+
+	public NormoodVO getNormood() {
+		return normood;
+	}
+
+	public void setNormood(NormoodVO normood) {
+		this.normood = normood;
+	}
+
+	public NormriceVO getNormrice() {
+		return normrice;
+	}
+
+	public void setNormrice(NormriceVO normrice) {
+		this.normrice = normrice;
+	}
+
 }

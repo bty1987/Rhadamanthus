@@ -67,11 +67,11 @@ public class UserAction extends BaseListAction {
 	private DepartmentTypeVO departmentType;
 
 	private List<Integer> uids;
-	
+
 	private List<UserContractVO> userContracts;
-	
+
 	private List<UserEducationVO> userEducations;
-	
+
 	private List<UserOperationVO> userOperations;
 
 	@Action(value = "pageUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
@@ -161,7 +161,7 @@ public class UserAction extends BaseListAction {
 		if (SystemConfig.getString("communion") == null) {
 			throw new FLException(-1, "无操作权限");
 		}
-	
+
 		userService.addUser(userInfo, userContracts, userEducations, userOperations, queryCompany());
 
 		return SUCCESS;
@@ -231,14 +231,14 @@ public class UserAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "updateUserForProfiles", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateUserForProfiles() throws FLException {
+	@Action(value = "updateUserForProfile", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateUserForProfile() throws FLException {
 
 		if (SystemConfig.getString("communion") == null) {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		userService.updateUserForProfiles(userInfo);
+		userService.updateUserForProfile(userInfo);
 
 		return SUCCESS;
 	}
@@ -393,5 +393,5 @@ public class UserAction extends BaseListAction {
 	public void setUserOperations(List<UserOperationVO> userOperations) {
 		this.userOperations = userOperations;
 	}
-	
+
 }

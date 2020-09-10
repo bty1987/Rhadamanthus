@@ -11,7 +11,7 @@ public class AwardRecordVO implements Serializable {
 
 	private static final long serialVersionUID = 1819823248528353629L;
 
-	private int arid;
+	private Long arid;
 
 	private String orderId;
 
@@ -47,11 +47,11 @@ public class AwardRecordVO implements Serializable {
 		super();
 	}
 
-	public int getArid() {
+	public Long getArid() {
 		return arid;
 	}
 
-	public void setArid(int arid) {
+	public void setArid(Long arid) {
 		this.arid = arid;
 	}
 

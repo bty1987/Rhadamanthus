@@ -98,7 +98,6 @@ public class VprizeServiceImpl implements VprizeService {
 		}
 
 		return vprizeVOs;
-
 	}
 
 	@Override
@@ -128,6 +127,7 @@ public class VprizeServiceImpl implements VprizeService {
 
 		vprizePO.setName(vprizeVO.getName());
 		vprizePO.setPrice(vprizeVO.getPrice());
+		vprizePO.setUnit(vprizeVO.getUnit());
 
 		vprizeDao.update(vprizePO);
 

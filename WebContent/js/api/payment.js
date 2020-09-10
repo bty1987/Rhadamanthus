@@ -416,6 +416,14 @@ $.extend(api, {payment: {
 			args: ["cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"]
 		}]
 	},
+	amountSalesPayment: {
+		url: "amountSalesPayment.do",
+		type: "query",
+		tranargs: [{
+			result: "",
+			args: ["amount"]
+		}]
+	},
 	addSalesPaymentForDeposit: {
 		url: "addSalesPaymentForDeposit.do",
 		type: "update",

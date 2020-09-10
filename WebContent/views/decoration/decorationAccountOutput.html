@@ -7,8 +7,6 @@
 	<script src="../../assets/ace/js/bootstrap.min.js"></script>
 	<script src="../../assets/ace/js/ace.js"></script>
 	
-	<script src="../../js/decoration/decorationAccountOutput.js"></script>
-	
 	<style type="text/css">
 		.PageNext {
 			page-break-after: always;
@@ -259,6 +257,10 @@
 			</tbody>
 		</table>
 	</div>
+	
+	<script>
+        parent.$.loadScript(['js/decoration/decorationAccountOutput.js'], "../../", window.frameElement, $);
+    </script>
 
 </body>
 </html>

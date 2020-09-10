@@ -36,15 +36,15 @@ public class UserExperienceAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
-	@Action(value = "updateUserExpirence", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateUserExpirence() throws FLException {
+
+	@Action(value = "updateUserExperience", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateUserExperience() throws FLException {
 
 		if (SystemConfig.getString("communion") == null) {
 			throw new FLException(-1, "无操作权限");
 		}
-		
-		userExperienceService.updateUserExpirence(userExperience);
+
+		userExperienceService.updateUserExperience(userExperience);
 
 		return SUCCESS;
 	}

@@ -1,15 +1,11 @@
 
 jQuery(function($) {
 
-	var params = {};
 	api = parent.api;
 	config = parent.config;
 	server = parent.server;
 	utils = parent.utils;
 	com = parent.com;
-
-	params.server = window.server;
-	params.authentication = parent.params.authentication;
 	params  = parent.params;
 	
 	var receipt = {

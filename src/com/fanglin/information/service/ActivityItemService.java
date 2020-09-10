@@ -18,11 +18,11 @@ import com.fanglin.information.vo.ActivityItemVO;
 import com.fanglin.information.vo.ActivityVO;
 
 public interface ActivityItemService {
-	
+
 	public List<ActivityItemVO> queryActivityItemByAid(ActivityVO activityVO);
-	
+
 	public int addActivityItem(ActivityVO activityVO, ActivityItemVO activityItemVO) throws FLException;
-	
-	public int deleteActivityItemByAiid(ActivityVO activityVO, ActivityItemVO activityItemVO);
+
+	public int deleteActivityItem(ActivityVO activityVO, ActivityItemVO activityItemVO);
 
 }

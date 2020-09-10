@@ -23,9 +23,9 @@ public class VactivityAction extends BaseListAction {
 
 	@Autowired
 	private VactivityService vactivityService;
-	
+
 	private List<VactivityVO> vactivitys;
-	
+
 	private VactivityVO vactivity;
 
 	@Action(value = "pageVactivity", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
@@ -43,12 +43,12 @@ public class VactivityAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
-	@Action(value="updateVactivityForStatus", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateVactivityForStatus () throws FLException{
-		
+
+	@Action(value = "updateVactivityForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateVactivityForStatus() throws FLException {
+
 		vactivityService.updateVactivityForStatus(vactivity);
-		
+
 		return SUCCESS;
 	}
 
@@ -68,5 +68,4 @@ public class VactivityAction extends BaseListAction {
 		this.vactivity = vactivity;
 	}
 
-	
 }

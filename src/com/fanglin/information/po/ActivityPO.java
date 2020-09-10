@@ -20,53 +20,53 @@ import com.fanglin.personel.po.UserPO;
 public class ActivityPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -649765382182810264L;
-	
+
 	public static final String COLUMN_AID_STR = "aid";
-	
+
 	public static final String COLUMN_CREATEUSERID_STR = "creater.userId";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final String COLUMN_TYPE_STR = "type";
-	
+
 	public static final String COLUMN_DEFAULTS_STR = "defaults";
-	
+
 	public static final short STATUS_VALID_INT = 0;
-	
+
 	public static final short STATUS_UNVALID_INT = 1;
-	
+
 	public static final short DEFAULTS_DEFAULT_INT = 0;
-	
+
 	public static final short DEFAULTS_COMMON_INT = 1;
-	
+
 	public static final short TYPE_DECORATION_INT = 1;
-	
+
 	public static final short TYPE_MATERIAL_INT = 2;
-	
+
 	public static final short TYPE_SALES_INT = 3;
-	
+
 	private long aid;
-	
+
 	private String name;
-	
+
 	private UserPO creater;
-	
+
 	private short status;
-	
+
 	private short type;
-	
+
 	private short defaults;
-	
+
 	private int multiple;
-	
+
 	private Timestamp createTime;
-	
+
 	private Timestamp startTime;
-	
+
 	private Timestamp endTime;
-	
+
 	private String content;
-	
+
 	private int company;
 
 	@Id
@@ -90,7 +90,7 @@ public class ActivityPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "cuid",referencedColumnName="uid")
+	@JoinColumn(nullable = false, name = "cuid", referencedColumnName = "uid")
 	public UserPO getCreater() {
 		return creater;
 	}
@@ -98,7 +98,7 @@ public class ActivityPO implements java.io.Serializable {
 	public void setCreater(UserPO creater) {
 		this.creater = creater;
 	}
-	
+
 	@Column(name = "type")
 	public short getType() {
 		return type;
@@ -116,7 +116,7 @@ public class ActivityPO implements java.io.Serializable {
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
+
 	@Column(name = "defaults")
 	public short getDefaults() {
 		return defaults;
@@ -170,7 +170,7 @@ public class ActivityPO implements java.io.Serializable {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
+
 	@Column(name = "company")
 	public int getCompany() {
 		return company;
@@ -179,5 +179,5 @@ public class ActivityPO implements java.io.Serializable {
 	public void setCompany(int company) {
 		this.company = company;
 	}
-	
+
 }

@@ -7,8 +7,8 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.information.po.AwardRecordPO;
 import com.fanglin.utils.Paging;
 
-public interface AwardRecordDao extends Dao<AwardRecordPO>{
-	
-	public List<AwardRecordPO> pageAwardRecord(Paging paging,List<Filter> filters, int company);
-	
+public interface AwardRecordDao extends Dao<AwardRecordPO> {
+
+	public List<AwardRecordPO> pageAwardRecord(Paging paging, List<Filter> filters, int company);
+
 }

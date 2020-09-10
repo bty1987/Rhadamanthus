@@ -35,55 +35,55 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
 @Service("eventsService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class EventsServiceImpl implements EventsService {
-	
+
 	@Autowired
 	private EventsDao eventsDao;
-	
+
 	@Autowired
 	private UserDao userDao;
 
 	@Override
 	public List<EventsVO> queryEvents(EventsVO eventsVO, String userId) throws HibernateException, ParseException {
-		
+
 		UserPO user = userDao.queryUserByUserId(userId);
-		
+
 		List<EventsPO> eventsPOs = eventsDao.queryEvents(user.getUid(), eventsVO.getBeginDate(), eventsVO.getEndDate());
 		List<EventsVO> eventsVOs = new ArrayList<EventsVO>();
-		
-		for(EventsPO eventsPO: eventsPOs){
+
+		for (EventsPO eventsPO : eventsPOs) {
 			eventsVO = new EventsVO(new UserVO(), new UserVO(), new DepartmentVO(), new DepartmentVO());
-			
+
 			BeanUtil.copyProperties(eventsPO, eventsVO, Arrays.asList("creater", "holder", "department", "region"));
-			
+
 			eventsVO.getCreater().setBaseInfo(eventsPO.getCreater());
 			eventsVO.getHolder().setBaseInfo(eventsPO.getHolder());
 			BeanUtil.copyProperties(eventsPO.getDepartment(), eventsVO.getDepartment(), Arrays.asList("fatherDept", "company", "manager"));
 			BeanUtil.copyProperties(eventsPO.getRegion(), eventsVO.getRegion(), Arrays.asList("fatherDept", "company", "manager"));
-			
+
 			eventsVOs.add(eventsVO);
 		}
-		
+
 		return eventsVOs;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int addEvents(EventsVO eventsVO, String userId) throws ParseException, FLException {
-		
+
 		UserPO userPO = userDao.queryUserByUserId(userId);
-		
-		if(userPO == null){
+
+		if (userPO == null) {
 			throw new FLException(190005, "人员不存在");
 		}
-		
-		if(eventsDao.countEvents(userPO.getUid(), DateUtil.getDateToDateString(eventsVO.getShowDate(), "yyyy-MM-dd")) >= 5){
+
+		if (eventsDao.countEvents(userPO.getUid(), DateUtil.getDateToDateString(eventsVO.getShowDate(), "yyyy-MM-dd")) >= 5) {
 			throw new FLException(160014, "事件数量到达上限");
 		}
-		
+
 		EventsPO eventsPO = new EventsPO();
-		
+
 		eventsPO.setTitle(eventsVO.getTitle());
 		eventsPO.setContent(eventsVO.getContent());
 		eventsPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
@@ -91,35 +91,35 @@ public class EventsServiceImpl implements EventsService {
 		eventsPO.setHolder(userPO);
 		eventsPO.setType(EventsPO.TYPE_CUSTOM_INT);
 		eventsPO.setShowDate(eventsVO.getShowDate());
-		
+
 		eventsDao.save(eventsPO);
-		
+
 		eventsVO.setEid(eventsPO.getEid());
 		eventsVO.setCreateTime(eventsPO.getCreateTime());
 		eventsVO.setCreater(new UserVO());
 		eventsVO.setHolder(new UserVO());
 		eventsVO.getCreater().setBaseInfo(userPO);
 		eventsVO.getHolder().setBaseInfo(userPO);
-		
+
 		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int deleteEvents(EventsVO eventsVO, String userId) throws FLException {
-		
+
 		EventsPO eventsPO = eventsDao.get(eventsVO.getEid());
-		
-		if(eventsPO == null){
+
+		if (eventsPO == null) {
 			throw new FLException(160015, "事件不存在");
 		}
-		
-		if(eventsPO.getType() == EventsPO.TYPE_SYSTEM_INT || !userId.equals(eventsPO.getCreater().getUserId())){
+
+		if (eventsPO.getType() == EventsPO.TYPE_SYSTEM_INT || !userId.equals(eventsPO.getCreater().getUserId())) {
 			throw new FLException(160016, "无权限删除事件");
 		}
-		
+
 		eventsDao.delete(eventsPO);
-		
+
 		return 0;
 	}
 

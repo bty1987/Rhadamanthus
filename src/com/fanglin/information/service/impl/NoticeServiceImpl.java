@@ -35,153 +35,153 @@ import com.fanglin.utils.Paging;
 
 @Service("noticeService")
 @Transactional(readOnly = true)
-public class NoticeServiceImpl implements NoticeService{
-	
+public class NoticeServiceImpl implements NoticeService {
+
 	@Autowired
 	private NoticeDepartmentDao noticeDepartmentDao;
-	
-    @Autowired
-    private NoticeDao noticeDao;
 
-    @Autowired
-    private UserDao userDao;
-    
-    @Override
-    public void pageNotice(Paging paging, List<Filter> filters, Authentication authentication){
+	@Autowired
+	private NoticeDao noticeDao;
 
-        List<NoticeVO> noticeVOs = new ArrayList<NoticeVO>();
-        
-        List<NoticePO> noticePOs = noticeDao.pageNotice(paging, filters, authentication.getUserId(), authentication.getCompany());
-        
-		for(NoticePO noticePO: noticePOs){
-            noticeVOs.add(convertBean(noticePO));
-        }
-        
-        paging.setData(noticeVOs);
-    }
-    
-    @Override
-    public NoticeVO queryNoticeByNid(NoticeVO noticeVO) throws FLException{
-    	
-        NoticePO noticePO = noticeDao.get(noticeVO.getNid());
-        
-        if(noticePO == null){
-			throw new FLException(160017, "公告不存在");
-		}
-        
-        if(noticePO != null){
-            noticeVO = convertBean(noticePO);
-        }
+	@Autowired
+	private UserDao userDao;
 
-        return noticeVO;
-    }
-    
-    @Override
-    public void pageNoticeForSeenByType(Paging paging, List<Filter> filters, NoticeVO noticeVO, Authentication authentication) throws FLException{
-    	
-    	UserPO userPO = userDao.queryUserByUserId(authentication.getUserId());
-    	
-    	if(userPO == null){
-    		throw new FLException(190005, "人员不存在");
-    	}
-    	
-    	List<NoticeDepartmentPO> noticeDepartmentPOs = noticeDepartmentDao.queryNoticeDepartmentByDid(userPO.getDept().getDid());
-    	List<Long> nids = new ArrayList<Long>();
-    	
-    	for(NoticeDepartmentPO noticeDepartmentPO: noticeDepartmentPOs){
-    		nids.add(noticeDepartmentPO.getNid());
-    	}
-    	
-    	List<NoticePO> noticePOs = noticeDao.pageNoticeForSeenByType(paging, filters, nids, noticeVO.getType(), authentication.getCompany());
-    	List<NoticeVO> noticeVOs = new ArrayList<NoticeVO>();
+	@Override
+	public void pageNotice(Paging paging, List<Filter> filters, Authentication authentication) {
 
-		for(NoticePO noticePO: noticePOs){
+		List<NoticeVO> noticeVOs = new ArrayList<NoticeVO>();
+
+		List<NoticePO> noticePOs = noticeDao.pageNotice(paging, filters, authentication.getUserId(), authentication.getCompany());
+
+		for (NoticePO noticePO : noticePOs) {
 			noticeVOs.add(convertBean(noticePO));
 		}
-		
+
 		paging.setData(noticeVOs);
-    }
-    
-    @Override
-    @Transactional(rollbackFor=Exception.class)
+	}
+
+	@Override
+	public NoticeVO queryNoticeByNid(NoticeVO noticeVO) throws FLException {
+
+		NoticePO noticePO = noticeDao.get(noticeVO.getNid());
+
+		if (noticePO == null) {
+			throw new FLException(160017, "公告不存在");
+		}
+
+		if (noticePO != null) {
+			noticeVO = convertBean(noticePO);
+		}
+
+		return noticeVO;
+	}
+
+	@Override
+	public void pageNoticeForSeenByType(Paging paging, List<Filter> filters, NoticeVO noticeVO, Authentication authentication) throws FLException {
+
+		UserPO userPO = userDao.queryUserByUserId(authentication.getUserId());
+
+		if (userPO == null) {
+			throw new FLException(190005, "人员不存在");
+		}
+
+		List<NoticeDepartmentPO> noticeDepartmentPOs = noticeDepartmentDao.queryNoticeDepartmentByDid(userPO.getDept().getDid());
+		List<Long> nids = new ArrayList<Long>();
+
+		for (NoticeDepartmentPO noticeDepartmentPO : noticeDepartmentPOs) {
+			nids.add(noticeDepartmentPO.getNid());
+		}
+
+		List<NoticePO> noticePOs = noticeDao.pageNotice(paging, filters, nids, noticeVO.getType(), authentication.getCompany());
+		List<NoticeVO> noticeVOs = new ArrayList<NoticeVO>();
+
+		for (NoticePO noticePO : noticePOs) {
+			noticeVOs.add(convertBean(noticePO));
+		}
+
+		paging.setData(noticeVOs);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int addNotice(NoticeVO noticeVO, Authentication authentication) throws FLException {
-    	
-    	UserPO userPO = userDao.queryUserByUserId(authentication.getUserId());
-    	
-    	if(userPO == null){
-    		throw new FLException(190005, "人员不存在");
-    	}
-    	
+
+		UserPO userPO = userDao.queryUserByUserId(authentication.getUserId());
+
+		if (userPO == null) {
+			throw new FLException(190005, "人员不存在");
+		}
+
 		NoticePO noticePO = new NoticePO(new UserPO());
-		
+
 		BeanUtil.copyProperties(noticeVO, noticePO, Arrays.asList("creater"));
-		
+
 		noticePO.setCreater(userPO);
-		
+
 		noticePO.setPublishTime(DateUtil.current("yyyy-MM-dd"));
 		noticePO.setFileName(noticeVO.getFileName());
 		noticePO.setCompany(authentication.getCompany());
-		
+
 		noticeDao.save(noticePO);
-		
+
 		return 0;
 	}
 
-    @Override
-    @Transactional(rollbackFor=Exception.class)
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int updateNotice(NoticeVO noticeVO) throws FLException {
-    	
-    	long nid = noticeVO.getNid();
-    	
-    	NoticePO noticePO = noticeDao.get(nid);
-    	
-    	if(noticePO == null){
+
+		long nid = noticeVO.getNid();
+
+		NoticePO noticePO = noticeDao.get(nid);
+
+		if (noticePO == null) {
 			throw new FLException(160017, "公告不存在");
 		}
-    	
-    	UserPO userPO = userDao.queryUserByUserId(noticeVO.getCreater().getUserId());
-    	
-    	if(userPO == null){
-    		throw new FLException(190005, "人员不存在");
-    	}
-     	
-    	BeanUtil.copyProperties(noticeVO, noticePO, Arrays.asList("creater"));
-    	
-    	noticePO.setCreater(userPO);
-    	noticePO.setFileName(noticeVO.getFileName());
-    	
+
+		UserPO userPO = userDao.queryUserByUserId(noticeVO.getCreater().getUserId());
+
+		if (userPO == null) {
+			throw new FLException(190005, "人员不存在");
+		}
+
+		BeanUtil.copyProperties(noticeVO, noticePO, Arrays.asList("creater"));
+
+		noticePO.setCreater(userPO);
+		noticePO.setFileName(noticeVO.getFileName());
+
 		noticeDao.update(noticePO);
-		
+
 		return 0;
 	}
 
-    @Override
-    @Transactional(rollbackFor=Exception.class)
-    public int deleteNotice(NoticeVO noticeVO) throws FLException{
-    	
-    	long nid = noticeVO.getNid();
-    	
-    	NoticePO notice = noticeDao.get(nid);
-		
-		if(notice ==  null){
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int deleteNotice(NoticeVO noticeVO) throws FLException {
+
+		long nid = noticeVO.getNid();
+
+		NoticePO notice = noticeDao.get(nid);
+
+		if (notice == null) {
 			throw new FLException(160017, "公告不存在");
 		}
-		
+
 		noticeDao.delete(notice);
-    	noticeDepartmentDao.deleteNoticeDepartment(nid);
-		
-    	return 0;
-    }
-    
-    private NoticeVO convertBean(NoticePO noticePO){
-    	
-        NoticeVO noticeVO = new NoticeVO(new UserVO());
-        
-        BeanUtil.copyProperties(noticePO, noticeVO, Arrays.asList("creater"));
-        
-        noticeVO.setCreater(new UserVO().setBaseInfo(noticePO.getCreater()));
-        
-        return noticeVO;
-    }
-    
+		noticeDepartmentDao.deleteNoticeDepartment(nid);
+
+		return 0;
+	}
+
+	private NoticeVO convertBean(NoticePO noticePO) {
+
+		NoticeVO noticeVO = new NoticeVO(new UserVO());
+
+		BeanUtil.copyProperties(noticePO, noticeVO, Arrays.asList("creater"));
+
+		noticeVO.setCreater(new UserVO().setBaseInfo(noticePO.getCreater()));
+
+		return noticeVO;
+	}
+
 }

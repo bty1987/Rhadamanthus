@@ -53,7 +53,7 @@ public class VticketServiceImpl implements VticketService {
 		List<VticketVO> vticketVOs = new ArrayList<VticketVO>();
 
 		for (VticketPO vticketPO : vticketPOs) {
-			vticketVOs.add(ptv(vticketPO));
+			vticketVOs.add(new VticketVO(new UserVO(), new UserVO(), new DepartmentVO(), new DepartmentVO()).ptv(vticketPO));
 		}
 
 		paging.setData(vticketVOs);
@@ -70,7 +70,7 @@ public class VticketServiceImpl implements VticketService {
 		List<VticketVO> vticketVOs = new ArrayList<VticketVO>();
 
 		for (VticketPO vticketPO : vticketPOs) {
-			vticketVOs.add(ptv(vticketPO));
+			vticketVOs.add(new VticketVO(new UserVO(), new UserVO(), new DepartmentVO(), new DepartmentVO()).ptv(vticketPO));
 		}
 
 		paging.setData(vticketVOs);
@@ -225,20 +225,6 @@ public class VticketServiceImpl implements VticketService {
 		vticketPO.setRegion(null);
 
 		vticketDao.update(vticketPO);
-	}
-
-	public VticketVO ptv(VticketPO vticketPO) {
-
-		VticketVO vticketVO = new VticketVO(new UserVO(), new UserVO(), new DepartmentVO(), new DepartmentVO());
-
-		BeanUtil.copyProperties(vticketPO, vticketVO, Arrays.asList("creater", "belonger", "department", "region"));
-
-		BeanUtil.copyProperties(vticketPO.getCreater(), vticketVO.getCreater(), Arrays.asList("role", "dept", "duty"));
-		BeanUtil.copyProperties(vticketPO.getBelonger(), vticketVO.getBelonger(), Arrays.asList("role", "dept", "duty"));
-		BeanUtil.copyProperties(vticketPO.getDepartment(), vticketVO.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
-		BeanUtil.copyProperties(vticketPO.getRegion(), vticketVO.getRegion(), Arrays.asList("type", "fatherDept", "manager"));
-
-		return vticketVO;
 	}
 
 }

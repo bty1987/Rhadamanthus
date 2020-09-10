@@ -21,72 +21,71 @@ import com.fanglin.personel.vo.UserVO;
 public class MessageAction extends BaseListAction {
 
 	private static final long serialVersionUID = 2327633841386704953L;
-	
+
 	@Autowired
 	private MessageService messageService;
-	
+
 	private MessageVO message;
-	
+
 	private List<Integer> mids;
-	
+
 	private int messageCount;
-	
-	@Action(value="pageMessage", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMessage() throws FLException{
-		
-		messageService.pageMessage(getPaging(), getFilters(), queryUserId(),queryCompany());
-		
+
+	@Action(value = "pageMessage", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageMessage() throws FLException {
+
+		messageService.pageMessage(getPaging(), getFilters(), queryUserId(), queryCompany());
+
 		return SUCCESS;
 	}
-	
-	@Action(value="countMessage", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String countMessage() throws FLException{
-		
-		messageCount = messageService.countMessage(queryUserId(),queryCompany());
-		
+
+	@Action(value = "countMessage", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String countMessage() throws FLException {
+
+		messageCount = messageService.countMessage(queryUserId(), queryCompany());
+
 		return SUCCESS;
 	}
-	
-	@Action(value="queryMessageByMid", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMessageByMid() throws FLException{
-		
+
+	@Action(value = "queryMessageByMid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryMessageByMid() throws FLException {
+
 		message = messageService.queryMessageByMid(message);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="sendMessage", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String sendMessage() throws FLException{
-		
+
+	@Action(value = "sendMessage", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String sendMessage() throws FLException {
+
 		message.setSender(new UserVO(queryUserId()));
-		
-		messageService.sendMessage(message,queryCompany());
-		
+
+		messageService.sendMessage(message, queryCompany());
+
 		return SUCCESS;
 	}
-	
-	@Action(value="updateMessageForRead", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateMessageForRead(){
-		
+
+	@Action(value = "updateMessageForRead", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateMessageForRead() {
+
 		messageService.updateMessageForRead(mids);
-		
+
 		return SUCCESS;
 	}
-	
-	
-	public MessageVO getMessage(){
+
+	public MessageVO getMessage() {
 		return message;
 	}
 
-	public void setMessage(MessageVO message){
+	public void setMessage(MessageVO message) {
 		this.message = message;
 	}
 
-	public int getMessageCount(){
+	public int getMessageCount() {
 		return messageCount;
 	}
 
-	public void setMessageCount(int messageCount){
+	public void setMessageCount(int messageCount) {
 		this.messageCount = messageCount;
 	}
 
@@ -98,6 +97,4 @@ public class MessageAction extends BaseListAction {
 		this.mids = mids;
 	}
 
-
-	
 }

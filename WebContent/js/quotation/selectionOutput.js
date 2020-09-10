@@ -1,15 +1,11 @@
 var printselectionDetail = (function() {
-    var params = {};
 
     api = parent.api;
     config = parent.config ;
     server = parent.server;
     utils = parent.utils;
     com = parent.com;
-
-    params.server = window.server;
     params = parent.params;
-
 
     var selectionDetail = {
         decoration: {},
@@ -126,7 +122,6 @@ var printselectionDetail = (function() {
             contentHtml += '<td><b>下料时间:________________</b></td>';
             contentHtml += '</tr><tr>';
             contentHtml += '</tr></tbody></table>';
-
 
             return contentHtml;
         }

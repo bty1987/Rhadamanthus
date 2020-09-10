@@ -10,29 +10,29 @@ public class WorksheetVO implements Serializable {
 	private static final long serialVersionUID = -8833128747186236841L;
 
 	private Long wsid;
-	
+
 	private String code;
-	
+
 	private String module;
-	
+
 	private String content;
-	
+
 	private UserVO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private Short status;
-	
+
 	private UserVO handler;
-	
+
 	private Timestamp handTime;
-	
+
 	private String result;
-	
+
 	public WorksheetVO() {
 		super();
 	}
-	
+
 	public WorksheetVO(UserVO creater, UserVO handler) {
 		super();
 		this.creater = creater;

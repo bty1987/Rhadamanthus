@@ -74,6 +74,53 @@ public class VpaymentServiceImpl implements VpaymentService {
 	}
 
 	@Override
+	public List<VpaymentVO> queryVpaymentByNo(VpaymentVO vpaymentVO) {
+
+		List<VpaymentPO> VpaymentPOs = vpaymentDao.queryVpaymentByNo(vpaymentVO.getMno());
+		List<VpaymentVO> vpayments = new ArrayList<VpaymentVO>();
+
+		for (VpaymentPO vpaymentPO : VpaymentPOs) {
+			vpaymentVO = new VpaymentVO(new UserBaseVO(), new UserBaseVO(), new VreceiptVO(new UserBaseVO()));
+
+			BeanUtil.copyProperties(vpaymentPO, vpaymentVO, Arrays.asList("creater", "vreceipt"));
+			BeanUtil.copyProperties(vpaymentPO.getCreater(), vpaymentVO.getCreater(), Arrays.asList("duty", "dept"));
+
+			if (vpaymentPO.getVreceipt() != null) {
+
+				BeanUtil.copyProperties(vpaymentPO.getVreceipt(), vpaymentVO, Arrays.asList("collecter"));
+				BeanUtil.copyProperties(vpaymentPO.getVreceipt().getCollecter(), vpaymentVO.getCollecter(), Arrays.asList("dept", "duty"));
+			}
+			vpayments.add(vpaymentVO);
+
+		}
+		return vpayments;
+	}
+
+	@Override
+	public List<VpaymentVO> queryVpaymentByVrid(VpaymentVO vpaymentVO) {
+
+		List<VpaymentPO> VpaymentPOs = vpaymentDao.queryVpaymentByVrid(vpaymentVO.getVreceipt().getVrid());
+		List<VpaymentVO> VpaymentVOs = new ArrayList<VpaymentVO>();
+
+		for (VpaymentPO vpaymentPO : VpaymentPOs) {
+			vpaymentVO = new VpaymentVO(new UserBaseVO(), new UserBaseVO(), new VreceiptVO(new UserBaseVO()));
+
+			BeanUtil.copyProperties(vpaymentPO, vpaymentVO, Arrays.asList("creater", "vreceipt"));
+			BeanUtil.copyProperties(vpaymentPO.getCreater(), vpaymentVO.getCreater(), Arrays.asList("duty", "dept"));
+
+			if (vpaymentPO.getVreceipt() != null) {
+
+				BeanUtil.copyProperties(vpaymentPO.getVreceipt(), vpaymentVO, Arrays.asList("collecter"));
+				BeanUtil.copyProperties(vpaymentPO.getVreceipt().getCollecter(), vpaymentVO.getCollecter(), Arrays.asList("dept", "duty"));
+			}
+			VpaymentVOs.add(vpaymentVO);
+
+		}
+
+		return VpaymentVOs;
+	}
+
+	@Override
 	public List<?> countVpayment() {
 
 		List<?> countList = vpaymentDao.countVpayment();
@@ -100,17 +147,6 @@ public class VpaymentServiceImpl implements VpaymentService {
 		vpaymentPO.setVaid(vticketPO.getVaid());
 
 		vpaymentDao.save(vpaymentPO);
-
-		return 0;
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public int deleteVpaymentId(VpaymentVO vpaymentVO) {
-
-		VpaymentPO vpaymentPO = vpaymentDao.get(vpaymentVO.getVpid());
-
-		vpaymentDao.delete(vpaymentPO);
 
 		return 0;
 	}
@@ -200,7 +236,7 @@ public class VpaymentServiceImpl implements VpaymentService {
 		EmemberPO ememberPO = ememberDao.queryEmemberByNo(mno);
 
 		if (posids != null && posids.size() > 0) {
-			pointofsalesDao.updatePointofsales(posids, vreceiptPO.getVrid(), PointofsalesPO.STATUS_USED_INT,  PointofsalesPO.TYPE_ACTIVITY_INT);
+			pointofsalesDao.updatePointofsales(posids, vreceiptPO.getVrid(), PointofsalesPO.STATUS_USED_INT, PointofsalesPO.TYPE_ACTIVITY_INT);
 		}
 
 		if (ememberPO != null) {
@@ -211,50 +247,14 @@ public class VpaymentServiceImpl implements VpaymentService {
 	}
 
 	@Override
-	public List<VpaymentVO> queryVpaymentByNo(VpaymentVO vpaymentVO) {
+	@Transactional(rollbackFor = Exception.class)
+	public int deleteVpaymentId(VpaymentVO vpaymentVO) {
 
-		List<VpaymentPO> VpaymentPOs = vpaymentDao.queryVpaymentByNo(vpaymentVO.getMno());
-		List<VpaymentVO> vpayments = new ArrayList<VpaymentVO>();
+		VpaymentPO vpaymentPO = vpaymentDao.get(vpaymentVO.getVpid());
 
-		for (VpaymentPO vpaymentPO : VpaymentPOs) {
-			vpaymentVO = new VpaymentVO(new UserBaseVO(), new UserBaseVO(), new VreceiptVO(new UserBaseVO()));
+		vpaymentDao.delete(vpaymentPO);
 
-			BeanUtil.copyProperties(vpaymentPO, vpaymentVO, Arrays.asList("creater", "vreceipt"));
-			BeanUtil.copyProperties(vpaymentPO.getCreater(), vpaymentVO.getCreater(), Arrays.asList("duty", "dept"));
-
-			if (vpaymentPO.getVreceipt() != null) {
-
-				BeanUtil.copyProperties(vpaymentPO.getVreceipt(), vpaymentVO, Arrays.asList("collecter"));
-				BeanUtil.copyProperties(vpaymentPO.getVreceipt().getCollecter(), vpaymentVO.getCollecter(), Arrays.asList("dept", "duty"));
-			}
-			vpayments.add(vpaymentVO);
-
-		}
-		return vpayments;
-	}
-
-	@Override
-	public List<VpaymentVO> queryVpaymentByVrid(VpaymentVO vpaymentVO) {
-
-		List<VpaymentPO> VpaymentPOs = vpaymentDao.queryVpaymentByVrid(vpaymentVO.getVreceipt().getVrid());
-		List<VpaymentVO> VpaymentVOs = new ArrayList<VpaymentVO>();
-
-		for (VpaymentPO vpaymentPO : VpaymentPOs) {
-			vpaymentVO = new VpaymentVO(new UserBaseVO(), new UserBaseVO(), new VreceiptVO(new UserBaseVO()));
-
-			BeanUtil.copyProperties(vpaymentPO, vpaymentVO, Arrays.asList("creater", "vreceipt"));
-			BeanUtil.copyProperties(vpaymentPO.getCreater(), vpaymentVO.getCreater(), Arrays.asList("duty", "dept"));
-
-			if (vpaymentPO.getVreceipt() != null) {
-
-				BeanUtil.copyProperties(vpaymentPO.getVreceipt(), vpaymentVO, Arrays.asList("collecter"));
-				BeanUtil.copyProperties(vpaymentPO.getVreceipt().getCollecter(), vpaymentVO.getCollecter(), Arrays.asList("dept", "duty"));
-			}
-			VpaymentVOs.add(vpaymentVO);
-
-		}
-
-		return VpaymentVOs;
+		return 0;
 	}
 
 	public VpaymentVO VpaymentPOtoVO(VpaymentPO vpaymentPO) {

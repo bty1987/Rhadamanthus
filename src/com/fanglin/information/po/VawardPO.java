@@ -27,6 +27,8 @@ public class VawardPO implements java.io.Serializable {
 	private int price;
 
 	private int num;
+	
+	private String unit;
 
 	private short status;
 
@@ -88,6 +90,15 @@ public class VawardPO implements java.io.Serializable {
 
 	public void setNum(int num) {
 		this.num = num;
+	}
+	
+	@Column(name = "unit")
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 
 	@Column(name = "status")

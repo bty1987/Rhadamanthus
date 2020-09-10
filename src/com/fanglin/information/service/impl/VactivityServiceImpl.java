@@ -25,90 +25,91 @@ import com.fanglin.information.dao.VpaymentDao;
 import com.fanglin.information.dao.VprizeDao;
 import com.fanglin.information.dao.VticketDao;
 import com.fanglin.information.po.VactivityPO;
+import com.fanglin.information.po.VpaymentPO;
+import com.fanglin.information.po.VprizePO;
+import com.fanglin.information.po.VticketPO;
 import com.fanglin.information.service.VactivityService;
 import com.fanglin.information.vo.VactivityVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
 @Service("vactivityService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class VactivityServiceImpl implements VactivityService {
-	
+
 	@Autowired
 	private VactivityDao vactivityDao;
-	
+
 	@Autowired
 	private VprizeDao vprizeDao;
-	
+
 	@Autowired
 	private VpaymentDao vpaymentDao;
-	
+
 	@Autowired
 	private VticketDao vticketDao;
 
 	@Override
 	public void pageVactivity(Paging paging, List<Filter> filters) {
-		
+
 		List<VactivityPO> vactivityPOs = vactivityDao.pageVactivity(paging, filters);
 		List<VactivityVO> vactivityVOs = new ArrayList<VactivityVO>();
-		
+
 		VactivityVO vactivityVO;
-		
-		for(VactivityPO vactivityPO: vactivityPOs){
-			
+
+		for (VactivityPO vactivityPO : vactivityPOs) {
+
 			vactivityVO = new VactivityVO();
-			
+
 			BeanUtil.copyPropertie(vactivityPO, vactivityVO);
-			
+
 			vactivityVOs.add(vactivityVO);
 		}
-		
+
 		paging.setData(vactivityVOs);
 	}
 
 	@Override
 	public List<VactivityVO> queryVactivity() {
-		
+
 		List<VactivityPO> vactivityPOs = vactivityDao.queryVactivity();
 		List<VactivityVO> vactivityVOs = new ArrayList<VactivityVO>();
-		
+
 		VactivityVO vactivityVO;
-		
-		for(VactivityPO vactivityPO: vactivityPOs){
-			
+
+		for (VactivityPO vactivityPO : vactivityPOs) {
+
 			vactivityVO = new VactivityVO();
-			
+
 			BeanUtil.copyPropertie(vactivityPO, vactivityVO);
-			
+
 			vactivityVOs.add(vactivityVO);
 		}
-		
+
 		return vactivityVOs;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void updateVactivityForStatus(VactivityVO vactivityVO) throws FLException {
-		
+
 		VactivityPO vactivityPO = vactivityDao.get(vactivityVO.getVaid());
-		
+
 		if (vactivityPO == null) {
 			throw new FLException(160011, "活动信息不存在");
 		}
-		
+
 		if (vactivityPO.getStatus() != VactivityPO.STATUS_INIT_INT) {
 			throw new FLException(160052, "活动不可操作");
 		}
-		
+
 		vactivityPO.setStatus(vactivityVO.getStatus());
-		
+
 		vactivityDao.update(vactivityPO);
-		
-		vpaymentDao.updateVpaymentStatusForFailure(vactivityPO.getVaid());
-		
-		vticketDao.updateVticketStatusForFailure(vactivityPO.getVaid());
-		
-		vprizeDao.updateVprizeStatusForFailure(vactivityPO.getVaid());
+
+		vpaymentDao.updateVpaymentForStatus(vactivityPO.getVaid(), VpaymentPO.EXPIRE_INVALID_INT);
+		vticketDao.updateVticketForStatus(vactivityPO.getVaid(), VticketPO.EXPIRE_INVALID_INT);
+		vprizeDao.updateVprizeForStatus(vactivityPO.getVaid(), VprizePO.STATUS_INVALID_INT);
 	}
 
 }

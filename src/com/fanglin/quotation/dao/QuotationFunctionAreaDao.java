@@ -16,11 +16,11 @@ import com.fanglin.core.dao.Dao;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 
 public interface QuotationFunctionAreaDao extends Dao<QuotationFunctionAreaPO> {
-	
+
 	public List<QuotationFunctionAreaPO> queryQuotationFunctionAreaByQuotationId(long quotationId);
-	
-	public QuotationFunctionAreaPO queryQuotationFunctionAreaForTypeByQuotationId(long quotationId,short type);
-	
-	public int deleteQuotationFunctionAreaByIds(List<Long> ids);
-	
+
+	public QuotationFunctionAreaPO queryQuotationFunctionAreaForTypeByQuotationId(long quotationId, short type);
+
+	public int deleteQuotationFunctionArea(List<Long> ids);
+
 }

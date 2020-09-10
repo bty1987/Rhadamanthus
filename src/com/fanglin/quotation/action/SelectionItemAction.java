@@ -24,117 +24,117 @@ public class SelectionItemAction extends BaseListAction {
 
 	@Autowired
 	private SelectionItemService selectionItemService;
-	
+
 	private SelectionVO selection;
-	
+
 	private SelectionItemVO selectionItem;
-	
+
 	private List<SelectionItemVO> selectionItems;
-	
+
 	@Action(value = "pageSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSelectionItem() throws FLException {
-		
+
 		selectionItemService.pageSelectionItem(getPaging(), getFilters(), queryCompany(), selectionItem);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "pageSelectionItemForSupplier", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSelectionItemForSupplier() throws FLException {
-		
+
 		selectionItemService.pageSelectionItemForSupplier(getPaging(), getFilters(), queryUserId(), queryCompany());
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "pageSelectionItemForEscorter", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSelectionItemForEscorter() throws FLException {
-		
+
 		selectionItemService.pageSelectionItemForEscorter(getPaging(), getFilters(), queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "querySelectionItemByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySelectionItemByOrderId() throws FLException {
-		
+
 		selectionItems = selectionItemService.querySelectionItemByOrderId(selectionItem);
-		
+
 		return SUCCESS;
 	}
 
 	@Action(value = "querySelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySelectionItem() throws FLException {
-		
+
 		selectionItems = selectionItemService.querySelectionItem(selection);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addSelectionItem() throws FLException {
-		
+
 		selectionItemService.addSelectionItem(selection, selectionItem, queryCompany());
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateSelectionItem() throws FLException {
-		
+
 		selectionItemService.updateSelectionItem(selectionItem);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "tranSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String tranSelectionItem() throws FLException {
-	
+
 		selectionItemService.tranSelectionItem(selectionItems, queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "checkSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String checkSelectionItem() throws FLException {
-		
+
 		selectionItemService.checkSelectionItem(selectionItem, queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "confirmSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String confirmSelectionItem() throws FLException {
-		
+
 		selectionItemService.confirmSelectionItem(selectionItem, queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "finishSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String finishSelectionItem() throws FLException {
-		
+
 		selectionItemService.finishSelectionItem(selectionItem, queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "balanceSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String balanceSelectionItem() throws FLException {
-		
+
 		selectionItemService.balanceSelectionItem(selectionItems, queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "deleteSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteSelectionItem() throws FLException {
-		
+
 		selectionItemService.deleteSelectionItem(selection, selectionItem);
-		
+
 		return SUCCESS;
 	}
-	
+
 	public SelectionVO getSelection() {
 		return selection;
 	}
@@ -158,5 +158,5 @@ public class SelectionItemAction extends BaseListAction {
 	public void setSelectionItems(List<SelectionItemVO> selectionItems) {
 		this.selectionItems = selectionItems;
 	}
-	
+
 }

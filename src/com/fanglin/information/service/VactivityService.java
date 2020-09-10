@@ -19,10 +19,11 @@ import com.fanglin.information.vo.VactivityVO;
 import com.fanglin.utils.Paging;
 
 public interface VactivityService {
-	
+
 	public void pageVactivity(Paging paging, List<Filter> filters);
-	
+
 	public List<VactivityVO> queryVactivity();
 
 	public void updateVactivityForStatus(VactivityVO vactivityVO) throws FLException;
+
 }

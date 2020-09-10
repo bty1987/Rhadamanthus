@@ -87,6 +87,14 @@ var quotationUtils = {
                 params.showType = {itemtype: 4};
                 com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
             });
+            $("#printConstructionNodeBtn").click(function(){
+                params.quotationId = quotationId;
+                params.type = 5;
+                params.subtype = [1];
+                params.showType = {itemtype: 4};
+                params.workType = com.focusPage("#quotationCNSelect", "#printQuotationCNModal").val();
+                com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
+            });
 
             com.post(api.quotation.queryQuotationFunctionAreaByQuotationId, {"quotation.qid": quotationId}, function (res) {
                 quotationUtils.quotationDetail.quotationFunctionAreas = res.quotationFunctionAreas;
@@ -107,19 +115,20 @@ var quotationUtils = {
                 quotationUtils.quotationDetail.addReduceItems = res.addReduceItems;
             }, null, false);
 
-            var extensionItemIDs = {};
+            var extensionIds = {};
 
             com.post(api.quotation.queryExtensionByOrderId, {"extension.orderId": params.decorationOrderId}, function (res) {
                 var extensions = res.extensions;
                 $.each(extensions, function (i, v) {
-                    extensionItemIDs["extensionItemIDs[" + i + "]"] = v.eid;
+                    extensionIds["extensionIds[" + i + "]"] = v.eid;
                 });
 
             }, null, false);
 
-            com.post(api.quotation.queryExtensionItemByEids, extensionItemIDs, function (res) {
+            com.post(api.quotation.queryExtensionItemByEids, extensionIds, function (res) {
                 quotationUtils.quotationDetail.extensions = res.extensionItems;
             }, null, false);
+
             quotationUtils.statisticalQuotationItem(
                 quotationUtils.quotationDetail.quotationFunctionAreas,
                 quotationUtils.quotationDetail.addReduceItems,
@@ -146,22 +155,13 @@ var quotationUtils = {
 
         var $quotationUndisPrice = 0;//报价项折扣总额
         var $quotationTotalPrice = 0;//报价项非折扣总额
-
         var $addExtensionItemTotalPrice = 0;//扩展项增项总额
         var $minusExtensionItemTotalPrice = 0;//扩展项减项总额
-
         var $addReduceTotal = 0;//增项总额
         var $minusQuoTotalPrice = 0;//减项中的报价项非折扣总额
         var $minusQuoUndisPrice = 0;//减项中的报价折扣总额
-
         var $minusAddReduceTotal = 0;//减项中的增项总额
         var $minusExtensionTotalPrice = 0;//减项中的扩展项总额
-
-        //var $$minusDefineUndisPrice = 0;//定义项目打折项
-        //var $minusDefineTotalPrice = 0; //定义项目非打折项
-
-
-
 
         var quotationFunctionAreaLength = quotationFunctionAreas.length;
 
@@ -252,21 +252,17 @@ var quotationUtils = {
 
         quotationUtils.quotationDetail.quotationUndisPrice = $quotationUndisPrice;//报价项折扣总额
         quotationUtils.quotationDetail.quotationTotalPrice = $quotationTotalPrice;//报价项非折扣总额
-
         quotationUtils.quotationDetail.extensionItemTotalPrice = $addExtensionItemTotalPrice;//扩展项总额
-
         quotationUtils.quotationDetail.addReduceTotal = $addReduceTotal;//增项总额
-
         quotationUtils.quotationDetail.minusQuoTotalPrice = $minusQuoTotalPrice;//减项中的报价项非折扣总额
         quotationUtils.quotationDetail.minusQuoUndisPrice = $minusQuoUndisPrice;//减项中的报价折扣总额
         quotationUtils.quotationDetail.minusAddReduceTotal = $minusAddReduceTotal;//减项中的增项总额
         quotationUtils.quotationDetail.minusExtensionTotalPrice = $minusExtensionTotalPrice;//减项中的扩展项总额
 
-
     },
     initQuotationDetailItem: function (quotation, quotationFunctionAreas, addReduceItems, extensionItems, orderType, dataProcessing, showType) {
-        var addReduceItemtypeDict = {"0": "普通", "1": "系统", "2": "自定义", "3": "报价中", "4": "增项", "5": "拓展项"};
-        var extensionItemtypeDict = {"0": "拓展项增项", "1": "拓展项增项 自定义", "2": "拓展项减项", "3": "拓展项减项 自定义", "4": "拓展项减项"};
+        var addReduceItemtypeDict = {"0": "普通", "1": "系统", "2": "自定义", "3": "报价中", "4": "增项", "5": "扩展项"};
+        var extensionItemtypeDict = {"0": "扩展项增项", "1": "扩展项增项 自定义", "2": "扩展项减项", "3": "扩展项减项 自定义", "4": "扩展项减项"};
 
         var $decorationtype = orderType;
         var discount = quotation.discount;
@@ -314,6 +310,7 @@ var quotationUtils = {
                     var _dcpt = utils.changeThrDecimal(utils.accMul(quotationFunctionAreaItem.initNum, _dcp));
 
                     if (quotationFunctionArea.type == 3) {
+                        quotationFunctionAreaItem.showItem = true;
                         quotationFunctionAreaItem.num = quotationFunctionAreaItem.initNum;
                         quotationFunctionAreaItem.dcp = 0;
                         quotationFunctionAreaItem.dcpt = 0;
@@ -434,7 +431,6 @@ var quotationUtils = {
 
                 var _dcp = addReduceItem.unitPrice;
                 var _discountNum = 10;
-                addReduceItem.quotationTotalPrice = utils.changeThrDecimal(utils.accMul(addReduceItem.num, addReduceItem.unitPrice));
 
                 if ([0, 2].indexOf(addReduceItem.type) != -1) {
 
@@ -454,6 +450,8 @@ var quotationUtils = {
                         }
                     }
                 }
+
+                addReduceItem.quotationTotalPrice = utils.changeThrDecimal(utils.accMul(addReduceItem.num, addReduceItem.unitPrice));
                 _dcpt = utils.changeThrDecimal(utils.accMul(addReduceItem.num, _dcp));
 
                 addReduceItem.dcp = _dcp;
@@ -620,7 +618,33 @@ var quotationUtils = {
 
         quotationUtils.quotationDetail.quotationFunctionAreaItemWs = quotationFunctionAreaItemWs;
         quotationUtils.quotationDetail.quotationFunctionAreaItemCs = quotationFunctionAreaItemCs;
-
+    },
+    quotationNormriceProcessing: function(quotationFunctionAreas, constructionNodes){
+        
+        var quotationFunctionAreaItemMs = {};
+        var index = 0;
+        
+        $.each(quotationFunctionAreas, function (i, v) {
+            
+            var functionAreaName = v.functionAreaName;
+            var functionAreaId = v.qfaid;
+            
+            $.each(v.quotationFunctionAreaItems, function (j, qv) {
+                
+                var normrice = qv.normrice;
+                
+                qv.quotationFunctionAreaId = functionAreaId;
+                qv.quotationFunctionAreaName = functionAreaName;
+                
+                if (!quotationFunctionAreaItemMs[normrice.constructionNode.sort + "-" + normrice.constructionNode.name]) {
+                    quotationFunctionAreaItemMs[normrice.constructionNode.sort + "-" + normrice.constructionNode.name] = [qv];
+                }else{
+                    quotationFunctionAreaItemMs[normrice.constructionNode.sort + "-" + normrice.constructionNode.name].push(qv);
+                }
+            });
+        });
+        
+        quotationUtils.quotationDetail.quotationFunctionAreaItemMs = quotationFunctionAreaItemMs;
     },
     //查询主材配比价格
     quotationMaterial:function(mm){

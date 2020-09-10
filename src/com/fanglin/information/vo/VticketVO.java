@@ -1,44 +1,47 @@
 package com.fanglin.information.vo;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.communion.vo.DepartmentVO;
+import com.fanglin.information.po.VticketPO;
 import com.fanglin.personel.vo.UserVO;
+import com.fanglin.utils.BeanUtil;
 
 public class VticketVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -649776482182811374L;
-	
+
 	private Long vtid;
-	
+
 	private Long vaid;
-	
+
 	private String tno;
-	
+
 	private UserVO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private UserVO belonger;
-	
+
 	private DepartmentVO department;
-	
+
 	private DepartmentVO region;
-	
+
 	private String orderId;
-	
+
 	private String name;
-	
+
 	private String phone;
-	
+
 	private String address;
-	
+
 	private Short isregist;
-	
+
 	private Short iscome;
-	
+
 	public VticketVO() {
 		super();
 	}
@@ -58,7 +61,7 @@ public class VticketVO implements java.io.Serializable {
 	public void setVtid(Long vtid) {
 		this.vtid = vtid;
 	}
-	
+
 	public Long getVaid() {
 		return vaid;
 	}
@@ -66,7 +69,7 @@ public class VticketVO implements java.io.Serializable {
 	public void setVaid(Long vaid) {
 		this.vaid = vaid;
 	}
-	
+
 	public String getTno() {
 		return tno;
 	}
@@ -74,7 +77,7 @@ public class VticketVO implements java.io.Serializable {
 	public void setTno(String tno) {
 		this.tno = tno;
 	}
-	
+
 	public UserVO getCreater() {
 		return creater;
 	}
@@ -82,7 +85,7 @@ public class VticketVO implements java.io.Serializable {
 	public void setCreater(UserVO creater) {
 		this.creater = creater;
 	}
-	
+
 	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
@@ -91,7 +94,7 @@ public class VticketVO implements java.io.Serializable {
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
-	
+
 	public UserVO getBelonger() {
 		return belonger;
 	}
@@ -99,7 +102,7 @@ public class VticketVO implements java.io.Serializable {
 	public void setBelonger(UserVO belonger) {
 		this.belonger = belonger;
 	}
-	
+
 	public DepartmentVO getDepartment() {
 		return department;
 	}
@@ -107,7 +110,7 @@ public class VticketVO implements java.io.Serializable {
 	public void setDepartment(DepartmentVO department) {
 		this.department = department;
 	}
-	
+
 	public DepartmentVO getRegion() {
 		return region;
 	}
@@ -115,7 +118,7 @@ public class VticketVO implements java.io.Serializable {
 	public void setRegion(DepartmentVO region) {
 		this.region = region;
 	}
-	
+
 	public String getOrderId() {
 		return orderId;
 	}
@@ -123,7 +126,7 @@ public class VticketVO implements java.io.Serializable {
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -131,7 +134,7 @@ public class VticketVO implements java.io.Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public String getPhone() {
 		return phone;
 	}
@@ -139,7 +142,7 @@ public class VticketVO implements java.io.Serializable {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	
+
 	public String getAddress() {
 		return address;
 	}
@@ -147,7 +150,7 @@ public class VticketVO implements java.io.Serializable {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	
+
 	public Short getIsregist() {
 		return isregist;
 	}
@@ -155,7 +158,7 @@ public class VticketVO implements java.io.Serializable {
 	public void setIsregist(Short isregist) {
 		this.isregist = isregist;
 	}
-	
+
 	public Short getIscome() {
 		return iscome;
 	}
@@ -163,5 +166,17 @@ public class VticketVO implements java.io.Serializable {
 	public void setIscome(Short iscome) {
 		this.iscome = iscome;
 	}
-	
+
+	public VticketVO ptv(VticketPO vticketPO) {
+
+		BeanUtil.copyProperties(vticketPO, this, Arrays.asList("creater", "belonger", "department", "region"));
+
+		BeanUtil.copyProperties(vticketPO.getCreater(), this.getCreater(), Arrays.asList("role", "dept", "duty"));
+		BeanUtil.copyProperties(vticketPO.getBelonger(), this.getBelonger(), Arrays.asList("role", "dept", "duty"));
+		BeanUtil.copyProperties(vticketPO.getDepartment(), this.getDepartment(), Arrays.asList("type", "fatherDept", "manager"));
+		BeanUtil.copyProperties(vticketPO.getRegion(), this.getRegion(), Arrays.asList("type", "fatherDept", "manager"));
+
+		return this;
+	}
+
 }

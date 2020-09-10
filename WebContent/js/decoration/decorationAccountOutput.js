@@ -45,7 +45,7 @@ jQuery(function($) {
     $("#servicePaidup").text(accountBasic.servicePaidup);
     $("#signFactPrice").text(accountBasic.signFactPrice);
     $("#material").text(accountBasic.material);
-    console.log(accountBasic)
+    
     $("#materialRatio").text(accountBasic.materialRatio);
     $("#materialTotal").text(accountBasic.materialTotal);
     $("#materialCoupon").text(accountBasic.materialCoupon);

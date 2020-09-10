@@ -24,67 +24,59 @@ public class DutmentAction extends BaseListAction {
 
 	@Autowired
 	private DutmentService dutmentService;
-	
+
 	private List<DutmentVO> dutments;
-	
+
 	private DutmentVO dutment;
 
 	@Action(value = "queryDutmentByDeid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDutmentByDeid() throws FLException {
-		
+
 		dutments = dutmentService.queryDutmentByDeid(dutment, queryCompany());
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryDutmentByDuid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDutmentByDuid() throws FLException {
-		
+
 		dutments = dutmentService.queryDutmentByDuid(dutment, queryCompany());
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addDutment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addDutment() throws FLException {
 
 		if (SystemConfig.getString("communion") == null) {
 			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		dutmentService.addDutment(dutment, queryCompany());
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateDutment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateDutment() throws FLException {
 
 		if (SystemConfig.getString("communion") == null) {
 			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		dutmentService.updateDutment(dutment);
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "deleteDutment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteDutment() throws FLException {
 
 		if (SystemConfig.getString("communion") == null) {
 			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		dutmentService.deleteDutment(dutment);
-
-		return SUCCESS;
-	}
-	
-	@Action(value = "queryDutmentByDid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDutmentByDid() throws FLException {
-
-		dutment = dutmentService.queryDutmentByDid(dutment);
 
 		return SUCCESS;
 	}
@@ -104,9 +96,5 @@ public class DutmentAction extends BaseListAction {
 	public void setDutment(DutmentVO dutment) {
 		this.dutment = dutment;
 	}
-
-	
-
-
 
 }

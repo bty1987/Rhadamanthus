@@ -39,7 +39,7 @@ public class AddReduceItemVO implements java.io.Serializable {
 	private Short discount;
 
 	private Long quotationItemId;
-	
+
 	public Long getAriId() {
 		return ariId;
 	}

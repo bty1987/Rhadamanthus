@@ -5,9 +5,9 @@ public class VactivityVO implements java.io.Serializable {
 	private static final long serialVersionUID = 1172470281307940364L;
 
 	private Long vaid;
-	
+
 	private String name;
-	
+
 	private Short status;
 
 	public Long getVaid() {
@@ -33,5 +33,5 @@ public class VactivityVO implements java.io.Serializable {
 	public void setStatus(Short status) {
 		this.status = status;
 	}
-	
+
 }

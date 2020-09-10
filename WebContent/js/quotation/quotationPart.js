@@ -34,12 +34,12 @@ var QuotationDetail = (function(){
 				}),
 				//统计
 				$btnReport : com.focusPage('#viewStatisticalBtn').bindClick(function() {
-					com.post(api.quotation.countQuotationForNormood, {'quotation.qid': quo.quotationid}, function(res){
-						quo.statisticsQuoteNormedData(res, 0);
+					com.post(api.quotation.amountQuotationNormood, {'quotation.qid': quo.quotationid}, function(res){
+						quo.statisticsQuoteNormedData(res.normoods, 0);
 					}, null, false);
 
-					com.post(api.quotation.countQuotationForNormrice, {'quotation.qid': quo.quotationid}, function(res){
-						quo.statisticsQuoteNormedData(res, 1);
+					com.post(api.quotation.amountQuotationNormrice, {'quotation.qid': quo.quotationid}, function(res){
+						quo.statisticsQuoteNormedData(res.normrices, 1);
 					}, null, false);
 
 					that.quoModals.$quotationStatisticalModal.modal('show');
@@ -391,11 +391,12 @@ var QuotationDetail = (function(){
 
 			return _fee;
 		},
-		statisticsQuoteNormedData: function(res, classify) {
+		statisticsQuoteNormedData: function(norms, classify) {
 
 			var title = {'0': '定额材料统计', '1': '定额工费统计'};
 			var nameStr = {'0': '商品名: ', '1': '工程节点: '};
-			var numStr = {'0': '商品使用数量: ', '1': '工人工费共计: '};
+			var numStr = {'0': '数量: ', '1': '工费共计: '};
+			var args = {"0": "goods", "1": "constructionNode"};
 
 			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
@@ -404,14 +405,14 @@ var QuotationDetail = (function(){
 
 			$liLine.append($h3);
 
-			if (res.norms != null) {
-				$.each(res.norms, function(name, number){
+			if (norms != null) {
+				$.each(norms, function(i, v){
 
 					var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
 					var propertyArr = [
-						[nameStr[classify], name, "blue"],
-						[numStr[classify], utils.accDiv(number, 1000), "blue"],
+						[nameStr[classify], v[args[classify]].name, "blue"],
+						[numStr[classify], v.amount, "blue"],
 					];
 
 					$.each(propertyArr, function (index, value) {
@@ -614,8 +615,10 @@ var QuotationDetail = (function(){
 				$.each($darr, function(i, v){
 					_param['functionAreaIds[' + i + ']'] = $(v).val();
 				});
+				
+				console.log(api.quotation.addQuotationFunctionAreaByFunctionAreaIds);
 
-				com.post(api.quotation.addQuotationFuctionAreaByFunctionAreaIds, _param, function(data){
+				com.post(api.quotation.addQuotationFunctionAreaByFunctionAreaIds, _param, function(data){
 					data.quotationFunctionAreas.length && $.each(data.quotationFunctionAreas, function(i, v){
 						var sum = 0, sumd = 0,sumdp = 0, $dmoney;
 						var $domain = painter.createdomain(v);

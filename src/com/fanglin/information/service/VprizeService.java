@@ -19,17 +19,17 @@ import com.fanglin.information.vo.VprizeVO;
 import com.fanglin.utils.Paging;
 
 public interface VprizeService {
-	
+
 	public void pageVprice(Paging paging, List<Filter> filters);
-	
+
 	public List<VprizeVO> queryVprize(VprizeVO vprizeVO);
-	
+
 	public List<VprizeVO> queryVprizeByNo(String no) throws FLException;
-	
+
 	public int addVprize(VprizeVO vprizeVO);
-	
+
 	public int updateVprize(VprizeVO vprizeVO) throws FLException;
-	
+
 	public int updateVprizeForStatus(VprizeVO vprizeVO) throws FLException;
 
 }

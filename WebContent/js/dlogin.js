@@ -47,8 +47,6 @@ jQuery(function (a) {
 
     verifyCode();
     
-    console.log(config.communion + QRCode + "?timestamp=" + new Date().getTime() + "&prefix=" + config.prefix + "&type=1");
-
     var initQRCode = function () {
         $.ajax(config.communion + QRCode + "?timestamp=" + new Date().getTime() + "&prefix=" + config.prefix).done(function (data) {
             $('#qrcode img').prop('src', data.QRCode);

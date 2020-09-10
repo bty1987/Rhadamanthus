@@ -31,16 +31,16 @@ public class WorksheetServiceImpl implements WorksheetService {
 
 	@Autowired
 	private UserDao userDao;
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void pageWorksheet(Paging paging, List<Filter> filters, int company) throws FLException {
-		
+
 		List<WorksheetPO> WorksheetPOs = worksheetDao.pageWorksheet(paging, filters, company);
 		List<WorksheetVO> WorksheetVOs = new ArrayList<WorksheetVO>();
 
 		for (WorksheetPO worksheetPO : WorksheetPOs) {
-			
+
 			WorksheetVO worksheetVO = new WorksheetVO(new UserVO(), new UserVO());
 
 			BeanUtil.copyProperties(worksheetPO, worksheetVO, Arrays.asList("creater", "handler"));
@@ -51,7 +51,6 @@ public class WorksheetServiceImpl implements WorksheetService {
 		}
 
 		paging.setData(WorksheetVOs);
-
 	}
 
 	@Override
@@ -59,42 +58,40 @@ public class WorksheetServiceImpl implements WorksheetService {
 	public void addWorksheet(WorksheetVO worksheetVO, String userId, int company) throws FLException {
 
 		UserPO creater = userDao.queryUserByUserId(userId);
-		
+
 		WorksheetPO worksheetPO = new WorksheetPO();
 		worksheetPO.setCreater(creater);
 		worksheetPO.setStatus(WorksheetPO.STATUS_INIT_INT);
 		worksheetPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		
+
 		BeanUtil.copyProperties(worksheetVO, worksheetPO, Arrays.asList("creater", "handler"));
-		
+
 		worksheetDao.save(worksheetPO);
-		
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void cancelWorksheet(WorksheetVO worksheetVO, String userId, int company) throws FLException {
-		
+
 		WorksheetPO worksheetPO = worksheetDao.get(worksheetVO.getWsid());
-		
+
 		if (worksheetPO == null) {
 			throw new FLException(160050, "工单不存在");
 		}
-		
-		if(worksheetPO.getStatus() != WorksheetPO.STATUS_INIT_INT){
+
+		if (worksheetPO.getStatus() != WorksheetPO.STATUS_INIT_INT) {
 			throw new FLException(160051, "工单不可操作");
 		}
 
 		UserPO handler = userDao.queryUserByUserId(userId);
-		
+
 		worksheetPO.setHandler(handler);
 		worksheetPO.setStatus(WorksheetPO.STATUS_CANCEL_INT);
 		worksheetPO.setHandTime(DateUtil.getDateToTimestamp(new Date()));
-		
+
 		BeanUtil.copyProperties(worksheetVO, worksheetPO, Arrays.asList("creater", "handler"));
-		
+
 		worksheetDao.update(worksheetPO);
-		
 	}
 
 	@Override
@@ -102,25 +99,24 @@ public class WorksheetServiceImpl implements WorksheetService {
 	public void handleWorksheet(WorksheetVO worksheetVO, String userId, int company) throws FLException {
 
 		WorksheetPO worksheetPO = worksheetDao.get(worksheetVO.getWsid());
-		
+
 		if (worksheetPO == null) {
 			throw new FLException(160050, "工单不存在");
 		}
-		
-		if(worksheetPO.getStatus() != WorksheetPO.STATUS_INIT_INT){
+
+		if (worksheetPO.getStatus() != WorksheetPO.STATUS_INIT_INT) {
 			throw new FLException(160051, "工单不可操作");
 		}
-		
+
 		UserPO handler = userDao.queryUserByUserId(userId);
-		
+
 		worksheetPO.setHandler(handler);
 		worksheetPO.setStatus(WorksheetPO.STATUS_HANDL_INT);
 		worksheetPO.setHandTime(DateUtil.getDateToTimestamp(new Date()));
-		
+
 		BeanUtil.copyProperties(worksheetVO, worksheetPO, Arrays.asList("creater", "handler"));
-		
+
 		worksheetDao.update(worksheetPO);
-		
 	}
 
 }

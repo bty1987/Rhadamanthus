@@ -399,12 +399,12 @@ var Printer = function(){
             打印机规格 , 佳博GP1324D蓝牙版
             纸张规格 , 热敏打印纸110x50
          */
-        
+         
         if(lib == null || iconv == null || ffi == null) return false;
 
         var length = options.items.length;
         
-        var height = String(length * 5 + 150);
+        var height = String(length * 5 + 80);
         
         lib.openport(name);
         lib.clearbuffer();
@@ -432,7 +432,7 @@ var Printer = function(){
         
         lib.sendcommand('BAR 5,' + line + ',750,2');line = line + lineH;
         
-        $.each(options.salesItems, function(i, v){
+        $.each(options.items, function(i, v){
             
             lib.windowsfont(5, line, 25, 0, 0, 0, "arial", iconv.encode(v.name, 'gbk'));
             lib.windowsfont(310, line, 25, 0, 0, 0, "arial", iconv.encode(v.unit, 'gbk'));

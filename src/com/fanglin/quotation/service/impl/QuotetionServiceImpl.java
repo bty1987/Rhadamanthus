@@ -71,10 +71,14 @@ public class QuotetionServiceImpl implements QuotetionService {
 
 	@Override
 	public List<QuotetionVO> queryQuotetion(String userId) {
+
 		UserPO userPO = userDao.queryUserByUserId(userId);
+
 		List<QuotetionVO> quotetionVOs = new ArrayList<QuotetionVO>();
 		List<QuotetionPO> quotetionPOs = quotetionDao.queryQuotetionByCuid(userPO.getUid());
+
 		handleListQuotetion(quotetionVOs, quotetionPOs);
+
 		return quotetionVOs;
 	}
 
@@ -83,16 +87,20 @@ public class QuotetionServiceImpl implements QuotetionService {
 
 		QuotetionPO quotetionPO = quotetionDao.get(quotetion.getQid());
 		QuotetionVO quotetionVO = new QuotetionVO();
+
 		handleQuotetion(quotetionVO, quotetionPO);
+
 		return quotetionVO;
 	}
 
 	@Override
 	public QuotetionVO queryQuotetionByNo(QuotetionVO quotetionVO) {
+
 		QuotetionPO quotetionPO = quotetionDao.queryQuotetionByNo(quotetionVO.getNo());
-		QuotetionVO quotetion = new QuotetionVO();
-		handleQuotetion(quotetion, quotetionPO);
-		return quotetion;
+
+		handleQuotetion(quotetionVO, quotetionPO);
+
+		return quotetionVO;
 	}
 
 	@Override
@@ -126,17 +134,17 @@ public class QuotetionServiceImpl implements QuotetionService {
 
 		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig("quotetionFunctionAreaIndex");
 		Short index = systemConfigPO == null ? 0 : Short.valueOf(systemConfigPO.getValue());
-		
+
 		QuotetionFunctionAreaPO autogeneration = new QuotetionFunctionAreaPO(quotetionPO.getQid(), "生成项目", 9999, QuotetionFunctionAreaPO.TYPE_MANAGEMENT_INT, index);
 
 		quotetionFunctionAreaDao.save(autogeneration);
-		
+
 		QuotetionFunctionAreaItemPO trafficPrice = QuotetionFunctionAreaItemPO.factoryToInstance(autogeneration.getQfaId(), index);
 
 		convertQuotetionPOForAdvance(trafficPrice, "车运费", "", "其他", quotationVersionPO.getTrafficRate(), "0", 0, QuotationFunctionAreaItemPO.TYPE_QUOTATION_TRAFFIC_SHORT, quotationVersionPO.getTrafficDiscount(), autogeneration, "", QuotetionFunctionAreaItemPO.SUBTYPE_QUOTATION_ENGINEERING_SHORT);
 
 		quotetionFunctionAreaItemDao.save(trafficPrice);
-		
+
 		QuotetionFunctionAreaItemPO managePrice = QuotetionFunctionAreaItemPO.factoryToInstance(autogeneration.getQfaId(), index);
 
 		convertQuotetionPOForAdvance(managePrice, "管理费", "", "其他", quotationVersionPO.getManageRate(), "0", 0, QuotetionFunctionAreaItemPO.TYPE_QUOTATION_MANAGE_SHORT, quotationVersionPO.getManageDiscount(), autogeneration, "", QuotetionFunctionAreaItemPO.SUBTYPE_QUOTATION_ENGINEERING_SHORT);
@@ -288,24 +296,24 @@ public class QuotetionServiceImpl implements QuotetionService {
 
 		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig("quotetionFunctionAreaIndex");
 		Short index = systemConfigPO == null ? 0 : Short.valueOf(systemConfigPO.getValue());
-		
+
 		for (QuotationFunctionAreaPO quotationFunctionAreaPO : quotationFunctionAreaPOs) {
 
 			QuotetionFunctionAreaPO _quotetionFunctionAreaPO = new QuotetionFunctionAreaPO();
-			
+
 			_quotetionFunctionAreaPO.setName(quotationFunctionAreaPO.getFunctionAreaName());
-	
+
 			_quotetionFunctionAreaPO.setFunctionAreaOrder(quotationFunctionAreaPO.getFunctionAreaOrder());
 			_quotetionFunctionAreaPO.setType(quotationFunctionAreaPO.getType());
 			_quotetionFunctionAreaPO.setQid(quotetionId);
 			_quotetionFunctionAreaPO.setIndex(index);
 
 			quotetionFunctionAreaDao.save(_quotetionFunctionAreaPO);
-			
+
 			List<QuotationFunctionAreaItemPO> quotationFunctionAreaItemPOs = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByFunctionAreaId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex()), quotationFunctionAreaPO.getQfaId());
 
 			for (QuotationFunctionAreaItemPO quotationFunctionAreaItem : quotationFunctionAreaItemPOs) {
-		
+
 				QuotetionFunctionAreaItemPO clazz = QuotetionFunctionAreaItemPO.factoryToInstance(_quotetionFunctionAreaPO.getQfaId(), index);
 
 				clazz.setQfaid(_quotetionFunctionAreaPO.getQfaId());
@@ -329,7 +337,7 @@ public class QuotetionServiceImpl implements QuotetionService {
 
 		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig("quotetionFunctionAreaIndex");
 		Short index = systemConfigPO == null ? 0 : Short.valueOf(systemConfigPO.getValue());
-		
+
 		for (QuotetionFunctionAreaPO quotetionFunctionAreaPO : quotetionFunctionAreaPOs) {
 
 			QuotetionFunctionAreaPO _quotetionFunctionAreaPO = new QuotetionFunctionAreaPO();
@@ -338,11 +346,11 @@ public class QuotetionServiceImpl implements QuotetionService {
 			_quotetionFunctionAreaPO.setIndex(index);
 
 			quotetionFunctionAreaDao.save(_quotetionFunctionAreaPO);
-			
+
 			List<QuotetionFunctionAreaItemPO> quotetionFunctionAreaItemPOs = quotetionFunctionAreaItemDao.queryQuotetionFunctionAreaItemByFunctionAreaId(QuotetionFunctionAreaItemPO.factoryToClazz(quotetionFunctionAreaPO.getQfaId(), quotetionFunctionAreaPO.getIndex()), quotetionFunctionAreaPO.getQfaId());
 
 			for (QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO : quotetionFunctionAreaItemPOs) {
-				
+
 				QuotetionFunctionAreaItemPO clazz = QuotetionFunctionAreaItemPO.factoryToInstance(_quotetionFunctionAreaPO.getQfaId(), index);
 
 				BeanUtil.copyProperties(quotetionFunctionAreaItemPO, clazz, Arrays.asList("qfaiId"));
@@ -361,7 +369,7 @@ public class QuotetionServiceImpl implements QuotetionService {
 		List<QuotetionFunctionAreaPO> quotetionFunctionAreas = quotetionFunctionAreaDao.queryQuotetionFunctionAreaByQuotetionId(qId);
 
 		for (QuotetionFunctionAreaPO quotetionFunctionAreaPO : quotetionFunctionAreas) {
-			
+
 			String tableName = QuotetionFunctionAreaItemPO.quotetionFunctionAreaItemTable(quotetionFunctionAreaPO.getQfaId(), quotetionFunctionAreaPO.getIndex());
 			quotetionFunctionAreaItemDao.deleteQuotetionFunctionAreaItemByFunctionAreaId(tableName, quotetionFunctionAreaPO.getQfaId()); // 删除报价项
 			quotetionFunctionAreaDao.deleteById(quotetionFunctionAreaPO.getQfaId()); // 删除功能区

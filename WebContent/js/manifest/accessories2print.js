@@ -1,15 +1,11 @@
 jQuery(function ($) {
 
-    var _params = {};
     api = parent.api;
     config = parent.config;
     server = parent.server;
     utils = parent.utils;
     com = parent.com;
     _params = parent.params;
-
-    _params.server = window.server;
-    _params.authentication = parent.params.authentication;
 
     var commonInfo = {};
 

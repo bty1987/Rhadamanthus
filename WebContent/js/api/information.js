@@ -63,7 +63,7 @@ $.extend(api, {
         updateActivity: {url: "updateActivity.do"},
         updateActivityForStatus:{url: "updateActivityForStatus.do"},
         updateActivityForDefault:{url: "updateActivityForDefault.do"},
-        deleteActivityItemByAiid: {url: "deleteActivityItemByAiid.do"},
+        deleteActivityItem: {url: "deleteActivityItem.do"},
 
         queryEvent: {url: "queryEvent.do", demo: true},
         addEvent: {url: "addEvent.do"},

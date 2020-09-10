@@ -18,32 +18,32 @@ public class NoticeVO implements Serializable {
 	private static final long serialVersionUID = 134049609579042097L;
 
 	private Long nid;
-	
+
 	private UserVO creater;
-	
+
 	private String theme;
-	
+
 	private Short type;
-	
+
 	private Short priority;
-	
+
 	private String startTime;
-	
+
 	private String endTime;
-	
+
 	private String publishTime;
-	
+
 	private Short isPublic;
-	
+
 	private String contents;
-	
+
 	private String depts;
-	
+
 	private String filePath;
-	
+
 	private String fileName;
-	
-	public NoticeVO(){
+
+	public NoticeVO() {
 		super();
 	}
 
@@ -138,7 +138,7 @@ public class NoticeVO implements Serializable {
 	public void setDepts(String depts) {
 		this.depts = depts;
 	}
-	
+
 	public String getFilePath() {
 		return filePath;
 	}
@@ -154,5 +154,5 @@ public class NoticeVO implements Serializable {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
-	
+
 }

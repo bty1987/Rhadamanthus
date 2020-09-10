@@ -18,9 +18,9 @@ import com.fanglin.information.vo.NoticeDepartmentVO;
 import com.fanglin.information.vo.NoticeVO;
 
 public interface NoticeDepartmentService {
-	
+
 	public List<NoticeDepartmentVO> queryNoticeDepartment(NoticeVO noticeVO) throws FLException;
-	
-	public int updateNoticeDepartment(List<Integer> dids, NoticeVO noticeVO) throws FLException;
+
+	public int updateNoticeDepartment(NoticeVO noticeVO, List<Integer> dids) throws FLException;
 
 }

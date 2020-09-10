@@ -7,36 +7,36 @@ import org.apache.struts2.json.annotations.JSON;
 import com.fanglin.personel.vo.UserBaseVO;
 
 public class ActivityVO implements java.io.Serializable {
-	
+
 	private static final long serialVersionUID = -8833128747186236841L;
 
 	private Long aid;
-	
+
 	private String name;
-	
+
 	private UserBaseVO creater;
-	
+
 	private Short status;
-	
+
 	private Short type;
-	
+
 	private Short defaults;
-	
+
 	private Integer multiple;
-	
+
 	private Timestamp createTime;
-	
+
 	private Timestamp startTime;
-	
+
 	private Timestamp endTime;
-	
+
 	private String content;
-	
-	public ActivityVO(){
+
+	public ActivityVO() {
 		super();
 	}
-	
-	public ActivityVO(UserBaseVO creater){
+
+	public ActivityVO(UserBaseVO creater) {
 		super();
 		this.creater = creater;
 	}
@@ -64,7 +64,7 @@ public class ActivityVO implements java.io.Serializable {
 	public void setCreater(UserBaseVO creater) {
 		this.creater = creater;
 	}
-	
+
 	public Short getType() {
 		return type;
 	}
@@ -80,7 +80,7 @@ public class ActivityVO implements java.io.Serializable {
 	public void setStatus(Short status) {
 		this.status = status;
 	}
-	
+
 	public Short getDefaults() {
 		return defaults;
 	}

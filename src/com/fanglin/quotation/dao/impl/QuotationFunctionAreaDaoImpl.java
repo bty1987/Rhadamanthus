@@ -24,32 +24,32 @@ import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 @Repository("quotationFunctionAreaDao")
 public class QuotationFunctionAreaDaoImpl extends DaoImpl<QuotationFunctionAreaPO> implements QuotationFunctionAreaDao {
 
-	public QuotationFunctionAreaDaoImpl(){
+	public QuotationFunctionAreaDaoImpl() {
 		super(QuotationFunctionAreaPO.class);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<QuotationFunctionAreaPO> queryQuotationFunctionAreaByQuotationId(long quotationId){
+	public List<QuotationFunctionAreaPO> queryQuotationFunctionAreaByQuotationId(long quotationId) {
 		return createCriteria(QuotationFunctionAreaPO.class).add(Restrictions.eq("quotation.qid", quotationId)).addOrder(Order.asc("functionAreaOrder")).list();
-	}
-	
-	@Override
-	public QuotationFunctionAreaPO queryQuotationFunctionAreaForTypeByQuotationId(long quotationId,short type){
-		return (QuotationFunctionAreaPO) createCriteria(QuotationFunctionAreaPO.class).add(Restrictions.eq("quotation.qid", quotationId)).add(Restrictions.eq("type",type)).uniqueResult();
 	}
 
 	@Override
-	public int deleteQuotationFunctionAreaByIds(List<Long> qfaIds){
-		
-		if(qfaIds.size() == 0){
+	public QuotationFunctionAreaPO queryQuotationFunctionAreaForTypeByQuotationId(long quotationId, short type) {
+		return (QuotationFunctionAreaPO) createCriteria(QuotationFunctionAreaPO.class).add(Restrictions.eq("quotation.qid", quotationId)).add(Restrictions.eq("type", type)).uniqueResult();
+	}
+
+	@Override
+	public int deleteQuotationFunctionArea(List<Long> qfaIds) {
+
+		if (qfaIds.size() == 0) {
 			return -1;
 		}
-		
+
 		String hql = "delete QuotationFunctionAreaPO q where q.qfaId in :qfaIds";
 		int deletedEntities = session().createQuery(hql).setParameterList("qfaIds", qfaIds).executeUpdate();
-		
+
 		return deletedEntities;
 	}
-	
+
 }

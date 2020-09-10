@@ -1,25 +1,15 @@
-<div>
-    <div class="row">
-        <div class="col-xs-12">
-            <div id="normoodCondList" class="fl_search clearfix"></div>
-            <div id="normoodResultList" class="clearfix tab-pane active col-xs-12"></div>
-            <div id="normoodPagenation" class="fl-page-wrap clearfix col-xs-12">
-
-                <div class="row" style="margin-top: 20px">
-                    <div class="col-xs-12">
-                        <a class="btn btn-minier btn-primary pull-left" id="addNormoodBtn" style="margin-right: 10px">
-                            <i class="icon-plus bigger-110"></i>
-                            <span>添加</span>
-                        </a>
-                        <a class="btn btn-minier" id="normoodBackBtn">
-                            <i class="icon-mail-forward bigger-110"></i>
-                            <span>返回</span>
-                        </a>
-                    </div>
-                </div>
-
-            </div>
-        </div>
+<div class="col-xs-12">
+    <div id="normoodCondList" class="fl_search clearfix"></div>
+    <div id="normoodResultList" class="clearfix"></div>
+    <div id="normoodPagenation" class="fl-page-wrap clearfix">
+        <a class="btn btn-minier btn-primary pull-left" id="addNormoodBtn" style="margin-right: 10px">
+            <i class="icon-plus bigger-110"></i>
+            <span>添加</span>
+        </a>
+        <a class="btn btn-minier" id="normoodBackBtn">
+            <i class="icon-mail-forward bigger-110"></i>
+            <span>返回</span>
+        </a>
     </div>
 </div>
 
@@ -33,14 +23,21 @@
             <div class="modal-body">
                 <form class="form-horizontal">
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="goodsName">商品</label>
+                        <label class="col-sm-3 control-label no-padding-right orange" for="goodsName">商品</label>
                         <div class="col-sm-9">
                             <input type="text" id="goodsName" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="15"/>
                         </div>
                     </div>
+                    
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="unit">定额单位</label>
+                        <div class="col-sm-9">
+                            <select  id="unit" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="15"></select>
+                        </div>
+                    </div>
 
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="num">使用数量</label>
+                        <label class="col-sm-3 control-label no-padding-right orange" for="num">使用数量</label>
                         <div class="col-sm-9">
                             <input type="text" id="num" class="col-xs-10 col-sm-5 v_required v_number" data-toggle="popover" data-trigger='manual' maxlength="5"/>
                         </div>

@@ -1,6 +1,5 @@
 jQuery(function($) {
 
-    var params = {};
     api = parent.api;
     config = parent.config ;
     server = parent.server;
@@ -8,9 +7,6 @@ jQuery(function($) {
     com = parent.com;
     params = parent.params;
 
-    params.server = window.server;
-    params.authentication = parent.params.authentication;
-    
     var mid = params["manifest.mid"];
     
     var manifestTypes = [''];

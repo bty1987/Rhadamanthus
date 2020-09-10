@@ -112,13 +112,13 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private DutmentDao dutmentDao;
-	
+
 	@Autowired
 	private UserContractDao userContractDao;
-	
+
 	@Autowired
 	private UserEducationDao userEducationDao;
-	
+
 	@Autowired
 	private UserOperationDao userOperationDao;
 
@@ -349,7 +349,7 @@ public class UserServiceImpl implements UserService {
 		DutmentPO dutmentPO = dutmentDao.queryDutmentByDids(userInfoVO.getUser().getDept().getDid(), userInfoVO.getUser().getDuty().getDid());
 
 		if (dutmentPO != null) {
-			
+
 			if (dutmentPO.getNum() >= dutmentPO.getLimit()) {
 				throw new FLException(190011, "人员数量已达上限");
 			}
@@ -364,7 +364,7 @@ public class UserServiceImpl implements UserService {
 		if (visitor == null) {
 			throw new FLException(230010, "角色不存在");
 		}
-		
+
 		SystemConfigPO password = systemConfigDao.querySystemConfig("password", company);
 
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_USER_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
@@ -407,40 +407,40 @@ public class UserServiceImpl implements UserService {
 			UserPO fangliner = userDao.queryUserByUserId(userInfoVO.getFangliner().getUserId());
 			userInfoPO.setFangliner(fangliner);
 		}
-		
+
 		if (userContractVOs != null && userContractVOs.size() != 0) {
 
 			for (UserContractVO userContractVO : userContractVOs) {
 				UserContractPO usercontract = new UserContractPO();
-				
+
 				String currentDate = DateUtil.current("yyMMdd").toString();
 				int count1 = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_SO_INT, currentDate, company);
-				String no =  companyPO.getShortname() + "P" + currentDate + FormatUtil.fillZero(FormatUtil.offset(count1), "0000");
-				
+				String no = companyPO.getShortname() + "P" + currentDate + FormatUtil.fillZero(FormatUtil.offset(count1), "0000");
+
 				BeanUtil.copyPropertie(userContractVO, usercontract);
 				usercontract.setUid(userPO.getUid());
 				usercontract.setNo(no);
 				usercontract.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-				
+
 				userContractDao.save(usercontract);
 			}
 		}
-		
+
 		if (userEducationVOs != null && userEducationVOs.size() != 0) {
 			for (UserEducationVO userEducationVO : userEducationVOs) {
 				UserEducationPO userEducationPO = new UserEducationPO();
-				
+
 				BeanUtil.copyPropertie(userEducationVO, userEducationPO);
 				userEducationPO.setUid(userPO.getUid());
 				userEducationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 				userEducationDao.save(userEducationPO);
 			}
 		}
-		
+
 		if (userOperationVOs != null && userOperationVOs.size() != 0) {
 			for (UserOperationVO userOperationVO : userOperationVOs) {
 				UserOperationPO userOperationPO = new UserOperationPO();
-				
+
 				BeanUtil.copyPropertie(userOperationVO, userOperationPO);
 				userOperationPO.setUid(userPO.getUid());
 				userOperationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
@@ -451,7 +451,7 @@ public class UserServiceImpl implements UserService {
 		userInfoPO.setUser(userPO);
 
 		userInfoDao.save(userInfoPO);
-		
+
 		UserExperiencePO userExperiencePO = new UserExperiencePO();
 
 		userExperiencePO.setUid(userPO.getUid());
@@ -520,37 +520,37 @@ public class UserServiceImpl implements UserService {
 		}
 
 		userDao.update(userPO);
-		
+
 		userDao.flush();
 
 		if (newstatus != oldstatus || newdept.getDid() != olddept.getDid() || oldduty.getDid() != newduty.getDid()) {
 
 			DutmentPO olddutment = dutmentDao.queryDutmentByDids(olddept.getDid(), oldduty.getDid());
 			DutmentPO newdutment = dutmentDao.queryDutmentByDids(newdept.getDid(), newduty.getDid());
-			
+
 			int oldCount = userDao.countUserByDid(olddept.getDid(), oldduty.getDid(), company);
 			int newCount = userDao.countUserByDid(newdept.getDid(), newduty.getDid(), company);
-			
+
 			if (olddutment != null) {
 				if (newstatus != oldstatus && newstatus == 0) {
 					if (olddutment.getNum() >= olddutment.getLimit()) {
 						throw new FLException(190011, "人员数量已达上限");
 					}
 				}
-				
+
 				olddutment.setNum(oldCount);
 				dutmentDao.update(olddutment);
 			}
-			
+
 			if (newdutment != null && olddutment != newdutment) {
 				if (newdutment.getNum() >= newdutment.getLimit()) {
 					throw new FLException(190011, "人员数量已达上限");
 				}
-				
+
 				newdutment.setNum(newCount);
 				dutmentDao.update(newdutment);
 			}
-			
+
 			UserExperiencePO userExperiencePO = new UserExperiencePO();
 
 			userExperiencePO.setUid(userPO.getUid());
@@ -789,7 +789,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public void updateUserForProfiles(UserInfoVO userInfoVO) throws FLException {
+	public void updateUserForProfile(UserInfoVO userInfoVO) throws FLException {
 
 		UserVO userVO = userInfoVO.getUser();
 

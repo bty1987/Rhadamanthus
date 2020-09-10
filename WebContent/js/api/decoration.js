@@ -74,8 +74,10 @@ $.extend(api, {decoration: {
             url: "queryDecorationMidpack.do",
             type: "query",
             tranargs: [{
-                args: ["decorationMidpack.materialPrice", "decorationMidpack.servicePrice"]
-            }]},
+                result: "decorationMidpack",
+                args: ["materialPrice", "materialPaidup", "servicePrice", "servicePaidup"]
+            }]
+        },
         makeDecorationMidpack: {
             url: "makeDecorationMidpack.do",
             type: "update",

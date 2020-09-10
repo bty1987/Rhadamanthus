@@ -16,6 +16,8 @@ public class VawardVO implements java.io.Serializable {
 
 	private Integer num;
 
+	private String unit;
+
 	private Short status;
 
 	public Long getVaid() {
@@ -64,6 +66,14 @@ public class VawardVO implements java.io.Serializable {
 
 	public void setNum(Integer num) {
 		this.num = num;
+	}
+
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 
 	public Short getStatus() {

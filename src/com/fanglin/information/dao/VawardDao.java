@@ -17,9 +17,9 @@ import com.fanglin.core.dao.Dao;
 import com.fanglin.information.po.VawardPO;
 
 public interface VawardDao extends Dao<VawardPO> {
-	
+
 	public List<VawardPO> queryVawardByNo(String no);
-	
+
 	public List<?> countVaward();
 
 }

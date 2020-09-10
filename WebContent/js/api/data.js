@@ -491,31 +491,37 @@ $.extend(api, {
         },
         deleteHouseLayout:{url:"deleteHouseLayout.do", server: "communion"},
 
-        //定额商品
+        // 定额
         queryNormriceByQiid: {
             url: "queryNormriceByQiid.do",
             type: "query",
             tranargs: [{
                 result: "normrices",
-                args: ["salary"]
+                args: ["trannum", "salary"]
+            },{
+                result: "normrices-constructionNode",
+                args: ["precheck", "postcheck", "stacheck", "fincheck"]
             }]
         },
         addNormrice: {
             url: "addNormrice.do",
             type: "update",
             tranargs: {
-                args: ["normrice.salary"]
+                args: ["normrice.trannum", "normrice.salary"]
             }
         },
         deleteNormrice: {url: "deleteNormrice.do"},
 
-        // 定额工费
+        
         queryNormoodByQiid: {
             url: "queryNormoodByQiid.do",
             type: "query",
             tranargs: [{
                 result: "normoods",
                 args: ["num"]
+            }, {
+                result: "normoods-goods",
+                args: ["purchase", "selling", "pieceNum"]
             }]
         },
         addNormood: {
@@ -526,6 +532,7 @@ $.extend(api, {
             }
         },
         deleteNormood: {url: "deleteNormood.do"},
+        
         pageChart:{url:"pageChart.do"},
         queryChart:{url:"queryChart.do"},
         queryChartForLogin:{url:"queryChartForLogin.do"},
