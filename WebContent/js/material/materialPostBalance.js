@@ -207,7 +207,7 @@ $(function(){
         };
     })();
    //侯骅峰4.7增加品牌，预结算时间，厂商结算时间，结算时间，楼盘地址查询字段(?添加业务员)
-    var _condArr = ['orderId','msoNo','material_brand', 'material_orderAddr','regionName','departmentName','balanceStatus', 'balanceType' ,'fullCollectTimeRange', 'preBalanceTimeRange','vbalanceTimeRange','postBalanceTimeRange'];
+    var _condArr = ['material-orderId','material-no','material-brand', 'material-orderAddr', 'material-region-name', 'material-dept-name', 'material-balance-status', 'material-balance-type' ,'material-fullpayTime', 'material-prebalanceTime','material-vbalanceTime','material-postBalanceTime'];
 
     var searcher = new Searcher();
     //seacher方法分页显示数据

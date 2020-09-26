@@ -20,25 +20,25 @@ import com.fanglin.store.vo.AddressVO;
 public class AddressAction extends BaseListAction {
 
 	private static final long serialVersionUID = 8177482425136856239L;
-	
+
 	@Autowired
 	private AddressService addressService;
 
 	private AddressVO address;
-	
+
 	private List<AddressVO> addresses;
-	
-	@Action(value = "queryAddressByUid", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
-	public String queryAddressByUid(){
-		
+
+	@Action(value = "queryAddressByUid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryAddressByUid() {
+
 		addresses = addressService.queryAddressByUid(address);
 
 		return SUCCESS;
 	}
-	
-	@Action(value = "updateAddressByAid", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+
+	@Action(value = "updateAddressByAid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateAddressByAid() throws FLException {
-		
+
 		addressService.updateAddressByAid(address);
 
 		return SUCCESS;

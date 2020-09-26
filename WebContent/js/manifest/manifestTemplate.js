@@ -159,7 +159,7 @@ $(function () {
 
     var searcher = new Searcher();
 
-    searcher.init(['manifestTemplateName'], "condList", api.inventory.pageManifestTemplate, function (data) {
+    searcher.init(['data-manifest-template-name'], "condList", api.inventory.pageManifestTemplate, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "manifestTemplatePostData", null, false, null, function () {
 

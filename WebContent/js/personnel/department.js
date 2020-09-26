@@ -134,7 +134,7 @@ jQuery(function ($) {
     })();
 
     var searcher = new Searcher();
-    var _condArr = ['deptName', 'deptStatus', 'deptType'];
+    var _condArr = ['personel-dept-name', 'personel-dept-status', 'personel-dept-type'];
     
     var postData = type == 'dept' ? 'designDeptPostData' : 'dutmentDeptPostData';
     

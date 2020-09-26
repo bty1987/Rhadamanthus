@@ -72,7 +72,7 @@ jQuery(function($) {
 
 	var searcher = new Searcher();
 
-	searcher.init(["vactivityName", "vactivityStatus"], "condList", api.information.pageVactivity, function(data){
+	searcher.init(["information-v-activity-name", "information-v-activity-status"], "condList", api.information.pageVactivity, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "vprizePostData",null, false, null, null);
 

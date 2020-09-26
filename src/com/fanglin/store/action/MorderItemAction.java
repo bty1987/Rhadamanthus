@@ -17,26 +17,25 @@ import com.fanglin.store.vo.MorderVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class MorderItemAction extends BaseListAction{
+public class MorderItemAction extends BaseListAction {
 
 	private static final long serialVersionUID = -4587634162177356129L;
 
-	@Autowired 
+	@Autowired
 	private MorderItemService morderItemService;
-	
+
 	private MorderVO morder;
-	
+
 	private List<MorderItemVO> morderItems;
-	
-	@Action(value="queryMorderItemByOid", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMorderItemByOid(){
-		
+
+	@Action(value = "queryMorderItemByOid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryMorderItemByOid() {
+
 		morderItems = morderItemService.queryMorderItemByOid(morder);
-		
+
 		return SUCCESS;
-		
 	}
-	
+
 	public MorderVO getMorder() {
 		return morder;
 	}

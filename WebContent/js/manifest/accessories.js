@@ -102,6 +102,7 @@ $(function () {
             var $btnReturn = $('<li></li>').append($('<a></a>').html('退货'));
             var $btnPrint = $('<li></li>').append($('<a></a>').html('打印'));
             var $btnDev = $('<li></li>').append($('<a></a>').html('到货'));
+            var $btnQuota = $('<li></li>').append($('<a></a>').html('定额'));
 
 
             if (accessories.pageType == "advance") {
@@ -111,7 +112,7 @@ $(function () {
             } else {
                 v.status == 0 && ($btnUl.append($btnOut).append($btnEdit).append($btnRefuse));//初始：出货，修改
                 v.status == 1 && ($btnUl.append($btnOut).append($btnPrint));
-                v.status == 2 && ($btnUl.append($btnView).append($btnDev).append($btnReturn).append($btnPrint));//出货：出货 修改 退回 打印
+                v.status == 2 && ($btnUl.append($btnView).append($btnDev).append($btnReturn).append($btnPrint).append($btnQuota));//出货：出货 修改 退回 打印
             }
 
             v.status == 5 && ($btnUl.append($btnView));
@@ -227,6 +228,12 @@ $(function () {
 
             });
 
+            $btnQuota.click(function () {
+                params["accessories.orderId"] = v.orderId;
+
+                com.popup4page('#layerPopUp', "views/manifest/quotaItem.html", "辅料单 : " + v.no);
+            });
+
             return $liLine;
         };
 
@@ -242,7 +249,7 @@ $(function () {
     })();
 
     var accessoriesSeacher = new Searcher();
-    var _Array = ['orderId', 'accessoriesNo', 'createrName', 'approverName', 'createTime', 'approverTime', 'accessoriesStauts'];
+    var _Array = ['inventory-accessories-orderId', 'inventory-accessories-no', 'inventory-accessories-createrName', 'inventory-accessories-approverName', 'inventory-accessories-createTime', 'inventory-accessories-approverTime', 'inventory-accessories-stauts'];
 
     accessoriesSeacher.init(_Array, "condList", api.inventory.pageAccessories, function (data) {
         displayFunc.init('resultList', data);

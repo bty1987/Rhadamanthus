@@ -27,11 +27,11 @@ $(function(){
         editFlg: true,
         url: api.quotation.pageSelectionItem,
         pageType : params['urlLoadParams'].type,
-        query: ["selectionItemOrderId", "selectionItemGoodsCategory", "selectionItemGoodsBrand", "selectionItemGoodsName"]
+        query: ["quotation-selection-orderId", "quotation-selection-category", "quotation-selection-brand", "quotation-selection-item-name"]
     };
 
     if (selectionItem.pageType == "supplier") {
-        selectionItem.query.push("selectionItemStatus");
+        selectionItem.query.push("quotation-selection-item-status");
         selectionItem.url = api.quotation.pageSelectionItemForSupplier;
         selectionItem.postData = "selectionItemForSupplierPostData";
     } else if (selectionItem.pageType == "escorter") {
@@ -39,7 +39,7 @@ $(function(){
         selectionItem.url = api.quotation.pageSelectionItemForEscorter;
         selectionItem.postData = "selectionItemForEscorterPostData";
     } else if (selectionItem.pageType == "expert") {
-        selectionItem.query.push("selectionItemStatus");
+        selectionItem.query.push("quotation-selection-item-status");
         selectionItem.status = {"selectionItem.status": null};
         selectionItem.postData = "selectionItemForExpertPostData";
     } else if (selectionItem.pageType == "init") {

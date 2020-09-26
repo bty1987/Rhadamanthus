@@ -25,13 +25,6 @@ jQuery(function ($) {
         options: {}
     };
 
-
-    com.post(api.data.queryConstructionNode, {}, function (res) {
-        $.each(res.constructionNodes, function (i, v) {
-            acceptanceDetail.constructionScheName[v.cnid] = v.name;
-        })
-    }, null, false);
-
     com.post(api.construction.queryAcceptance, {"acceptance.orderId": params.orderId}, function (res) {
         var acceptanceInfo = res.acceptance;
         acceptanceDetail.options["acceptance.actId"] = acceptanceInfo.actId;
@@ -62,11 +55,11 @@ jQuery(function ($) {
         var constructionSchedule = res.constructionSchedules;
 
         $.each(constructionSchedule, function (i, v) {
+            acceptanceDetail.constructionScheName[v.node.sort] = v.node.name;
             var nodeDiv = $("<div></div>").attr("id", acceptanceDetail.constructionScheName[v.schedule]).appendTo(com.focusPage("#constructerDiv"));
         });
     }, null, false);
 
-   
     com.post(api.construction.queryConstructerByOrderId, {"constructer.orderId": params.orderId}, function (res) {
         constructers = res.constructers;
 

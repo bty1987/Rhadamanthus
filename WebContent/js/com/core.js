@@ -763,6 +763,13 @@
         
         return sourceUrl;
     },
+    /**
+     * 清空图片 , 图片标签地址等信息
+     * @param $e 图片元素对象
+     */
+    clearImg: function($e){
+        return $e.removeAttr("src").removeAttr("layer-src").removeAttr("alt");
+    },
     showOss: function ($e, url, width, height, alt, defaultUrl, type) {
 
         var imgUrl = url + '?x-oss-process=image/resize,m_fill,h_' + height + ',w_' + width;
@@ -1016,9 +1023,14 @@
     popup4frame: function(title, url, success, cancel, isPrint){
         com.popup(title, url, success, cancel, isPrint);
     },
+    /**
+     * 弹窗 , 图片类型
+     * @param holder 页面容器
+     * @returns 弹窗索引
+     */
     popup4photos: function(holder){
         com.focusPage(holder).unbind();
-        layer.photos({"photos": holder, move: false});
+        return layer.photos({"photos": holder, move: false});
     },
     /**
      * 关闭弹窗
@@ -1210,14 +1222,16 @@
      * 上传文件/图片
      * @param container 上传容器
      * @param title 标题
+     * @param uapi 请求API
      * @param clazz 样式
      * @param exts 支持格式
      * @param args 请求参数
      * @param limit 限制数量
      * @param success 成功回调
      * @param fail 失败回调
+     * @param complete 完成回调
      */
-    uploadify: function(container, title, clazz, exts, args, limit, success, fail){
+    uploadify: function(container, title, uapi, clazz, exts, args, limit, success, fail, complete){
         
         if(container && typeof(container) == "object" && container.length) container = container;
         else if(container && typeof(container) == "string") container = com.focusPage(container);
@@ -1229,31 +1243,35 @@
         var fileTypeExts = exts ? exts : '*.jpg;*.jpeg;*.gif;*.png';
         var buttonClass = clazz ? clazz : 'btn btn-success';
         
+        var url = config.media + (uapi ? uapi.url : exts.indexOf('jpg') == -1 ? api.common.uploadOther.url : api.common.uploadImg.url);
+        
         container.html("").Huploadify({
             'debug': false, // 开启调试
             'auto': true, // 是否自动上传
-            'successTimeout': 150, // 超时时间
+            'successTimeout': config.uploadTimeout, // 超时时间
             'formData': formData, // 附带值
             'multi': multi, // 批量上传
             'buttonClass': buttonClass,
             'buttonText': title,
             'overrideEvents' : ['onDialogClose'],  // 不执行默认的onSelect事件
             'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-            'uploader':config.media + api.common.uploadImg.url, // 上传处理程序
+            'uploader': url, // 上传处理程序
             'height': '45', // 浏览按钮的高度
             'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
             'fileTypeExts': fileTypeExts, // 允许上传的文件后缀
             'fileSizeLimit': '5MB', // 上传文件的大小限制
             'queueSizeLimit' : limit, // 上传数量
-            'onUploadSuccess':function(file, data, response){ //上传到服务器,服务器返回相应信息到data里
+            'onUploadSuccess': function(file, data, response){ //上传到服务器,服务器返回相应信息到data里
                 var datas = eval("("+data+")");
                 if(datas.errorCode == 0 && typeof(success) == "function"){
-                    success(datas);
+                    success(datas, file);
                 }else{
                     com.showAlert(com.error, "上传失败");
                     console.log(datas);
                     if(typeof(fail) == "function") fail(datas);
                 }
+            }, 'onQueueComplete': function(){
+                if(typeof(complete) == "function") complete();
             }
         });
     },

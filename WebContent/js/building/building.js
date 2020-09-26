@@ -4,23 +4,16 @@ jQuery(function($) {
 	var building = {
 		
 		btns:{
-
 			saveBtn: com.focusPage("#saveBtn"),
 			cancelBtn: com.focusPage("#cancelBtn"),
 			deployedBtn: com.focusPage("#deployedBtn"),
 			createCustomerSaveBtn: com.focusPage("#createCustomerSaveBtn")
-
 		},
-
 		modals:{
-
 			buildingModal: com.focusPage("#buildingModal"),
 			customerModal: com.focusPage("#customerModal")
-
 		},
-
 		items: {
-
 			hsNo: com.focusPage("#hsNo"),
 			csNo: com.focusPage("#csNo"),
 			hsAUser: com.focusPage("#hsAUser"),
@@ -32,11 +25,8 @@ jQuery(function($) {
 			payType: com.focusPage("#payType"),
 			payTypes: com.focusPage("#payTypes"),
 			balanceStatus: com.focusPage("#balanceStatus")
-
 		},
-
 		customerItems: {
-
 			customerName: com.focusPage("#customerName"),
 			cardType: com.focusPage("#cardType"),
 			cardNum: com.focusPage("#cardNum"),
@@ -47,7 +37,6 @@ jQuery(function($) {
 			relationshipType: com.focusPage("#relationshipType"),
 			address: com.focusPage("#address"),
 			phone: com.focusPage("#phone")
-
 		},
 
 		bid: null,

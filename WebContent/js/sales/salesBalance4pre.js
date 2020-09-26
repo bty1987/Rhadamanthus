@@ -158,7 +158,7 @@ $(function () {
 
     })();
 
-    var _condArr = ['sales_no', 'sales_orderId', 'sales_brade', 'sales_instorer', 'sales_salesman', 'sales_deptName', 'sales_fullpayTimeRange'];
+    var _condArr = ['sales-no', 'sales-orderId', 'sales-brand', 'sales-instorer', 'sales-salesman', 'sales-dept-name', 'sales-fullpayTime'];
 
     var salesPreBalance = new Searcher();
 

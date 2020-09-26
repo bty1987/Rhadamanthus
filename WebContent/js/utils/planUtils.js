@@ -1,45 +1,18 @@
-/**
- * Created by Administrator on 2018/9/21.
- */
+
 var planUtils = {
     bindDatePicker: function (tag, index) {
         com.datetime(tag);
     },
     bindUploadBtn: function (tag) {
-        com.focusPage(tag).Huploadify({
-            auto: !0,
-            successTimeout: 99999,
-            formData: {
-                username: "用户名",
-                rnd: "加密密文",
-                uploadType: 3
-            },
-            buttonText: "上传附件",
-            buttonClass: "btn btn-sm btn-primary lineheight0",
-            overrideEvents: ["onDialogClose"],
-            fileObjName: "strutsUploads",
-            uploader: config.media + api.common.uploadOther.url,
-            width: "78",
-            onSelectError: function (a, b, c) {
-                switch (b) {
-                    case -100:
-                        alert("上传的文件数量已经超出系统限制的" + com.focusPage("#file_upload").uploadify("settings", "queueSizeLimit") + "个文件!");
-                        break;
-                    case -110:
-                        alert("文件 [" + a.name + "] 大小超出系统限制的" + com.focusPage("#file_upload").uploadify("settings", "fileSizeLimit") + "大小!");
-                        break;
-                    case -120:
-                        alert("文件 [" + a.name + "] 大小异常");
-                        break;
-                    case -130:
-                        alert("文件 [" + a.name + "] 类型不正确");
-                }
-            },
-            onUploadSuccess: function (a, b, c) {
-                a = eval("(" + b + ")");
-                0 == a.errorCode ? com.focusPage("#filePath").val(a.resUrl) : alert(b);
-            },
-            itemTemplate: '<div id="${fileID}" class="uploadify-queue-item" style="position:absolute;top:-30px;width:200px;left:-200px;">\r\n\t\t\t<div class="cancel">\r\n\t\t\t\t<a href="javascript:$(\'#${instanceID}\').uploadify(\'cancel\', \'${fileID}\')">X</a>\r\n\t\t\t</div>\r\n\t\t\t<span class="fileName">${fileName} (${fileSize})</span><span class="data"></span>\r\n\t\t\t<div class="uploadify-progress">\r\n\t\t\t\t<div class="uploadify-progress-bar"><!--Progress Bar--></div>\r\n\t\t\t</div>\r\n\t\t</div>'
+        
+        var uploadArgs = {
+            username: "用户名",
+            rnd: "加密密文",
+            uploadType: 3
+        }
+        
+        com.uploadify(tag, "上传附件", api.common.uploadOther, 'btn btn-sm btn-primary lineheight0', "*.*", uploadArgs, 1, function(data){
+            0 == data.errorCode ? com.focusPage("#filePath").val(data.resUrl) : alert(data.errorMsg);
         });
     },
     bindExecuteTimeBtn: function (tag) {

@@ -42,19 +42,6 @@ jQuery(function ($) {
     }, null, false);
 
     $.extend(com.validator, supervisionDetail.validator);
-    var orderId = params.orderId;
-
-    com.post(api.data.queryConstructionNode, {}, function (res) {
-
-        var newNodes = res.constructionNodes.sort(function(a, b){
-            return a.sort - b.sort;
-        });
-        $.each(newNodes, function (i, v) {
-            constructionNodes["num" + v.cnid] = v.cnid;
-            constructionNodes[v.sort] = v.name;
-        });
-    }, null, false);
-
     com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": params.orderId}, function (res) {
 
         var newSchedules = res.constructionSchedules.sort(function(a, b){
@@ -65,7 +52,8 @@ jQuery(function ($) {
         supervisionDetail.constructionSchedules = newSchedules;
 
         $.each(constructionSchedule, function (i, v) {
-
+            constructionNodes["num" + v.node.sort] = v.node.sort;
+            constructionNodes[v.node.sort] = v.node.name;
             constructionNode("#stepId", v.schedule);
             constructionPane("#step-container", v.schedule, v.schedule);
             params.cid = v.cid;
@@ -158,49 +146,24 @@ jQuery(function ($) {
 
     //上传图片
     function initUploadBtn(operate, ele, eleschedule) {
+        
+        com.uploadify("#" + operate + "Upload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {'uploadType': 0}, 1, function(data){
+            var options = {};
 
-        com.focusPage("#" + operate + "Upload").html("").Huploadify({
-            'debug': false, // 开启调试
-            'auto': true, // 是否自动上传
-            'successTimeout': 150, // 超时时间
-            'formData': { // 附带值
-                'username': '用户名',
-                'rnd': '加密密文'
-            },
-            'multi': true, // 批量上传
-            'buttonClass': 'btn btn-success',
-            'buttonText': '上传',
-            'overrideEvents': ['onDialogClose'],  // 不执行默认的onSelect事件
-            'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-            'uploader': config.media + api.common.uploadImg.url, // 上传处理程序
-            'height': '45', // 浏览按钮的高度
-            'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-            'fileTypeExts': '*.jpg;*.jpeg;*.gif;*.png', // 允许上传的文件后缀
-            'fileSizeLimit': '5MB', // 上传文件的大小限制
-            'queueSizeLimit': 10, // 上传数量
-            'onUploadSuccess': function (file, data, response) { //上传到服务器,服务器返回相应信息到data里
-                var dateObj = eval("(" + data + ")");
-                if (dateObj.errorCode == 0) {
-                    var options = {};
+            options["constructionDrawing.cdId"] = 0;
+            options["constructionDrawing.cid"] = params.cid;
+            options["constructionDrawing.drawingName"] = "";
+            options["constructionDrawing.drawingUrl"] = data.resUrl;
+            options["constructionDrawing.drawingAddUrl"] = "";
+            options["constructionDrawing.type"] = 0;
 
-                    options["constructionDrawing.cdId"] = 0;
-                    options["constructionDrawing.cid"] = params.cid;
-                    options["constructionDrawing.drawingName"] = "";
-                    options["constructionDrawing.drawingUrl"] = dateObj.resUrl;
-                    options["constructionDrawing.drawingAddUrl"] = "";
-                    options["constructionDrawing.type"] = 0;
+            options["constructionDrawing.schedule"] = eleschedule;
 
-                    options["constructionDrawing.schedule"] = eleschedule;
-
-                    com.post(api.construction.addConstructionDrawing, options, function (res) {
-                        var drawing = res.constructionDrawing;
-                        appendGalleryElement(operate + "Gallery", drawing.cdId, dateObj.resUrl, 0, "", api.construction.deleteConstructionDrawing);
-                        com.popup4photos("#" + operate + "Gallery");
-                    });
-                } else {
-                    console.log(data);
-                }
-            }
+            com.post(api.construction.addConstructionDrawing, options, function (res) {
+                var drawing = res.constructionDrawing;
+                appendGalleryElement(operate + "Gallery", drawing.cdId, data.resUrl, 0, "", api.construction.deleteConstructionDrawing);
+                com.popup4photos("#" + operate + "Gallery");
+            });
         });
     }
 

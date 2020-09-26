@@ -59,13 +59,14 @@ jQuery(function($) {
 
 			var propertyArr = [ 
 					[ "姓名:", v.name, "grey" ],
-					[ "电话:", v.phone, "grey" ], [ "地址:", v.address, "grey" ],
+					[ "电话:", v.phone, "grey" ], 
+					[ "地址:", v.address, "grey" ],
 					[ "装修单号:", v.orderId, "grey" ],
 					[ "归属人:", v.belonger.userName, "grey" ],
 					[ "归属部门:", v.department.name, "grey" ],
 					[ "归属分区:", v.region.name, "grey" ],
 					[ "创建人:", v.creater.userName, "grey" ],
-					[ "创建时间:", v.createTime, "grey" ],
+					[ "创建时间:", v.createTime, "green" ],
 					[ "是否注册:", v.isregist == 0 ? "未注册" : "已注册", "red" ],
 					[ "是否到场:", v.iscome == 0 ? "未到场" : "已到场", "red" ] ];
 
@@ -117,7 +118,7 @@ jQuery(function($) {
 
 	var searcher = new Searcher();
 
-	searcher.init([ "inf_tno", "inf_orderId", "inf_userName" ], "condList",api.information.pageVticket, function(data) {
+	searcher.init([ "information-v-ticket-no", "information-v-ticket-orderId", "information-v-ticket-name" ], "condList",api.information.pageVticket, function(data) {
 		displayFunc.init('resultList', data);
 	}, "pagenation", "vticketPostData", null, false, null, function() {
 

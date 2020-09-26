@@ -1,4 +1,4 @@
-<div>
+<div class="page-content">
     <div id="addPrice">
         <ul class="flex-table">
             <li class="line table-title">
@@ -11,11 +11,47 @@
                     <div class="cell">商品</div>
                     <div class="cell">颜色</div>
                     <div class="cell">规格</div>
-                    <div class="cell" id="img">图片</div>
+                    <div class="cell">图片</div>
                 </div>
                 <div class="line-wrap action">
                 <div class="cell option">操作</div>
             </div>
+            </li>
+            
+            <li class="line current">
+                <div class="line-wrap order">
+                    <div class="cell index"></div>
+                </div>
+                <div class="line-wrap content col7">
+                    <div class="cell name">
+                        <input type="text" autocomplete="off" data-toggle="popover" data-placement="bottom" class="editable v_required">
+                    </div>
+                    <div class="cell price">
+                        <input type="text" autocomplete="off" data-toggle="popover" data-placement="bottom" class="editable v_required v_amount">
+                    </div>
+                    <div class="cell goods">
+                        <input type="text" autocomplete="off" data-toggle="popover" data-placement="bottom" class="editable v_required" readonly="readonly">
+                    </div>
+                    <div class="cell color">
+                        <select class="editable v_required"></select>
+                    </div>
+                    <div class="cell format">
+                        <select class="editable v_required"></select>
+                    </div>
+                    <div class="cell img">
+                        <input id="select_btn_1" class="selectbtn" style="display:none;" type="text">
+                    </div>
+                </div>
+                <div class="line-wrap action">
+                    <div class="cell option">
+                        <a class="color-green green" style="font-size: 18px">
+                            <i class="icon-ok"></i>
+                        </a>
+                        <a class="color-red red" style="font-size: 18px">
+                            <i class="icon-remove"></i>
+                        </a>
+                    </div>
+                </div>
             </li>
         </ul>
 
@@ -23,13 +59,9 @@
     </div>
     <div id="showPrice">
         <div id="condListPrice" class="fl_search clearfix"></div>
-
         <div class="clearfix" id="resultListPrice"></div>
-
         <div class="fl-page-wrap clearfix pagination" id="pagenationPrice" style="display: block;"></div>
-
     </div>
-
 </div>
 
 

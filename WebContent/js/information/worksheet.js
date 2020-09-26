@@ -116,7 +116,7 @@ $(function(){
     })();
 
     var worksheetSeacher = new Searcher();
-    worksheetSeacher.init( ['worksheetCode', 'worksheetStatus', 'worksheetCreater', 'worksheetHandler'], "condList", api.information.pageWorksheet, function(list){
+    worksheetSeacher.init( ['information-worksheet-code', 'information-worksheet-status', 'information-worksheet-creater', 'information-worksheet-handler'], "condList", api.information.pageWorksheet, function(list){
         displayFunc.init('resultList', list);
     }, "pagenation", "worksheetSeacherPostData", null, false, null, function(){
 

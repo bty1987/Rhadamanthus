@@ -29,135 +29,130 @@ import com.fanglin.store.vo.PictureVO;
 public class MgoodScopeAction extends BaseListAction {
 
 	private static final long serialVersionUID = 3945695019546966632L;
-	
+
 	@Autowired
 	private MgoodsService mgoodsService;
-	
+
 	@Autowired
 	private McolorService mcolorService;
-	
+
 	@Autowired
 	private MformatService mformatService;
-	
+
 	@Autowired
 	private PictureService pictureService;
-	
+
 	@Autowired
 	private MpriceService mpriceService;
-	
+
 	private MgoodsVO mgoods;
-	
+
 	private List<MgoodsVO> mgoodses;
-	
+
 	private McolorVO mcolor;
-	
+
 	private List<McolorVO> mcolors;
-		
+
 	private MformatVO mformat;
-	
+
 	private List<MformatVO> mformats;
-	
-	private PictureVO  picture;
-	
+
+	private PictureVO picture;
+
 	private List<PictureVO> pictures;
-	
+
 	private MpriceVO mprice;
-	
+
 	private List<MpriceVO> mprices;
-	
+
 	private List<KeyValueVO> autoFillKeyValue;
-	
+
 	private List<String> autoFillList;
-	
-	@Action(value="queryMgoods", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMgoods (){
-		
+
+	@Action(value = "queryMgoods", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryMgoods() {
+
 		mgoodsService.pageMgoods(getPaging(), getFilters(), true);
-		
+
 		return SUCCESS;
-		
 	}
-	
-	@Action(value="queryMgoodsByPinyin", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMgoodsByPinyin(){
-		
-		mgoodses= mgoodsService.queryMgoodsByPinyin(mgoods);
-		
+
+	@Action(value = "queryMgoodsByPinyin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryMgoodsByPinyin() {
+
+		mgoodses = mgoodsService.queryMgoodsByPinyin(mgoods);
+
 		packageMgoodsName(mgoodses);
-		
+
 		return SUCCESS;
-		
 	}
-	
-	@Action(value="queryMcolor", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String  queryMcolor(){
-		
+
+	@Action(value = "queryMcolor", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryMcolor() {
+
 		mcolors = mcolorService.queryMcolor(mcolor);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="queryMformat", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMformat(){
-		
+
+	@Action(value = "queryMformat", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryMformat() {
+
 		mformats = mformatService.queryMformat(mformat);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="queryPicture", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryPicture(){
-		
+
+	@Action(value = "queryPicture", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryPicture() {
+
 		pictures = pictureService.queryPicture(picture);
-		
+
 		return SUCCESS;
-		
 	}
-	
-	@Action(value="queryMprice", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMprice(){
-		
+
+	@Action(value = "queryMprice", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryMprice() {
+
 		mprices = mpriceService.queryMprice(mprice);
-		
+
 		return SUCCESS;
-		
 	}
-	
-	@Action(value="queryMpriceByPinyin", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMpriceByPinyin(){
-		
+
+	@Action(value = "queryMpriceByPinyin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryMpriceByPinyin() {
+
 		mprices = mpriceService.queryMpriceByPinyin(mprice);
-		
+
 		return SUCCESS;
-		
 	}
-	
-	@Action(value="queryMpriceForShow", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMpriceForShow(){
-		
+
+	@Action(value = "queryMpriceForShow", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryMpriceForShow() {
+
 		mprices = mpriceService.queryMpriceForShow(mprice);
-		
+
 		return SUCCESS;
-		
+
 	}
-	
-	private void packageMgoodsName(List<MgoodsVO> mgoodses){
-		for(MgoodsVO mgoods: mgoodses){
+
+	private void packageMgoodsName(List<MgoodsVO> mgoodses) {
+		for (MgoodsVO mgoods : mgoodses) {
 			KeyValueVO keyValueVO = new KeyValueVO();
-			
+
 			StringBuffer value = new StringBuffer();
 			value.append(mgoods.getMbrand().getName());
 			value.append("-");
 			value.append(mgoods.getTitle());
-			
+
 			keyValueVO.setKey(String.valueOf(mgoods.getGid()));
 			keyValueVO.setValue(value.toString());
-			
+
 			getAutoFillKeyValue().add(keyValueVO);
 			getAutoFillList().add(mgoods.getName());
 		}
 	}
-	
+
 	public MgoodsVO getMgoods() {
 		return mgoods;
 	}
@@ -189,7 +184,7 @@ public class MgoodScopeAction extends BaseListAction {
 	public void setMcolor(McolorVO mcolor) {
 		this.mcolor = mcolor;
 	}
-	
+
 	public MformatVO getMformat() {
 		return mformat;
 	}
@@ -205,7 +200,7 @@ public class MgoodScopeAction extends BaseListAction {
 	public void setMformats(List<MformatVO> mformats) {
 		this.mformats = mformats;
 	}
-	
+
 	public PictureVO getPicture() {
 		return picture;
 	}
@@ -221,26 +216,26 @@ public class MgoodScopeAction extends BaseListAction {
 	public void setPictures(List<PictureVO> pictures) {
 		this.pictures = pictures;
 	}
-	
-	public List<KeyValueVO> getAutoFillKeyValue(){
-		if(autoFillKeyValue == null){
+
+	public List<KeyValueVO> getAutoFillKeyValue() {
+		if (autoFillKeyValue == null) {
 			autoFillKeyValue = new ArrayList<KeyValueVO>();
 		}
 		return autoFillKeyValue;
 	}
 
-	public void setAutoFillKeyValue(List<KeyValueVO> autoFillKeyValue){
+	public void setAutoFillKeyValue(List<KeyValueVO> autoFillKeyValue) {
 		this.autoFillKeyValue = autoFillKeyValue;
 	}
 
-	public List<String> getAutoFillList(){
-		if(autoFillList == null){
+	public List<String> getAutoFillList() {
+		if (autoFillList == null) {
 			autoFillList = new ArrayList<String>();
 		}
 		return autoFillList;
 	}
 
-	public void setAutoFillList(List<String> autoFillList){
+	public void setAutoFillList(List<String> autoFillList) {
 		this.autoFillList = autoFillList;
 	}
 

@@ -148,14 +148,12 @@ $(function(){
 
     function addDecorationPicture (data, type) {
 
-        var dateObj = eval("(" + data + ")");
-
-        if (dateObj.errorCode == 0) {
+        if (data.errorCode == 0) {
 
             var option = {
                 "productionPicture.pid": productionPicture1.pid,
-                "productionPicture.name": dateObj.strutsUploadsFileName,
-                "productionPicture.path": dateObj.resUrl,
+                "productionPicture.name": data.strutsUploadsFileName,
+                "productionPicture.path": data.resUrl,
                 "productionPicture.status": 0,
                 "productionPicture.type": type
             }
@@ -164,7 +162,7 @@ $(function(){
                 queryDate();
             });
         } else {
-            com.showAlert(com.error, dateObj.errorMsg);
+            com.showAlert(com.error, data.errorMsg);
         }
     };
 

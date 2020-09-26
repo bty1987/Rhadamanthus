@@ -32,81 +32,74 @@ import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Service("evaluateService")
-@Transactional(readOnly=true)
-public class EvaluateServiceImpl implements EvaluateService{
+@Transactional(readOnly = true)
+public class EvaluateServiceImpl implements EvaluateService {
 
 	@Autowired
 	private EvaluateDao evaluateDao;
-	
+
 	@Autowired
 	private MpriceDao mpriceDao;
-	
+
 	@Autowired
 	private MuserDao muserDao;
-	
+
 	@Autowired
 	private MorderDao morderDao;
-	
+
 	@Override
-	public void pageEvaluate (Paging paging, List<Filter> filters) {
+	public void pageEvaluate(Paging paging, List<Filter> filters) {
 
 		List<EvaluatePO> evaluatePOs = evaluateDao.pageEvaluate(paging, filters);
 		List<EvaluateVO> evaluateVOs = new ArrayList<EvaluateVO>();
-				
+
 		for (EvaluatePO evaluatePO : evaluatePOs) {
-			
+
 			EvaluateVO evaluateVO = new EvaluateVO(new MpriceVO(new MgoodsVO(), new McolorVO(), new MformatVO()));
-			
+
 			BeanUtil.copyProperties(evaluatePO, evaluateVO, Arrays.asList("mprice"));
-			
 			BeanUtil.copyProperties(evaluatePO.getMprice(), evaluateVO.getMprice(), Arrays.asList("mgoods", "mcolor", "mformat"));
-			
 			BeanUtil.copyProperties(evaluatePO.getMprice().getMgoods(), evaluateVO.getMprice().getMgoods(), Arrays.asList("mbrand"));
-			
 			BeanUtil.copyProperties(evaluatePO.getMprice().getMcolor(), evaluateVO.getMprice().getMcolor());
-			
 			BeanUtil.copyProperties(evaluatePO.getMprice().getMformat(), evaluateVO.getMprice().getMformat());
-			
+
 			evaluateVOs.add(evaluateVO);
-			
 		}
-		
+
 		paging.setData(evaluateVOs);
-		
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void addEvaluate (List<EvaluateVO> evaluates, MuserVO muser, MorderVO morder) throws FLException{
-		
+	public int addEvaluate(List<EvaluateVO> evaluates, MuserVO muser, MorderVO morder) throws FLException {
+
 		for (EvaluateVO evaluateVO : evaluates) {
-			
+
 			MuserPO muserPO = muserDao.queryMuserByUnionId(muser.getUnionId());
-			
-			if(muserPO == null){
+
+			if (muserPO == null) {
 				throw new FLException(340009, "用户不存在");
 			}
-			
+
 			MorderPO mroderPO = morderDao.get(morder.getOid());
-			
-			if(mroderPO == null){
+
+			if (mroderPO == null) {
 				throw new FLException(340012, "订单不存在");
 			}
-			
+
 			MpricePO mpricePO = mpriceDao.queryMpriceByPid(evaluateVO.getMprice().getPid());
-			
+
 			EvaluatePO evaluatePO = new EvaluatePO(mpricePO);
-			
+
 			BeanUtil.copyProperties(evaluateVO, evaluatePO, Arrays.asList("mprice", "oid", "unionId"));
-			
+
 			evaluatePO.setUnionId(muser.getUnionId());
-			
 			evaluatePO.setOid(morder.getOid());
-			
 			evaluatePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-			
+
 			evaluateDao.save(evaluatePO);
-			
 		}
+
+		return 0;
 	}
 }

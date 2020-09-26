@@ -7,11 +7,11 @@ public class McolorVO implements Serializable {
 	private static final long serialVersionUID = 2210447925127451057L;
 
 	private Long cid;
-	
+
 	private Long gid;
-	
+
 	private String color;
-	
+
 	private Short status;
 
 	public McolorVO() {

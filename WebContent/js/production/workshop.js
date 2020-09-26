@@ -147,7 +147,7 @@ $(function () {
 
     var workshopSeacher = new Searcher();
 
-    workshopSeacher.init(['p_workshopName'], "condList", api.production.pageWorkshop, function (data) {
+    workshopSeacher.init(["production-workshop-name"], "condList", api.production.pageWorkshop, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "workshopPostData", null, false, null, function () {
 

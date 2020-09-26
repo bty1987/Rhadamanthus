@@ -111,10 +111,12 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		List<DecorationContractVO> decorationContractVOs = new ArrayList<DecorationContractVO>();
 
 		for (DecorationContractPO decorationContractPO : decorationContractPOs) {
-			DecorationContractVO decorationContractVO = new DecorationContractVO(new ContractVO(), new UserBaseVO());
+			DecorationContractVO decorationContractVO = new DecorationContractVO(new ContractVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
-			BeanUtil.copyProperties(decorationContractPO, decorationContractVO, Arrays.asList("contract", "creater"));
+			BeanUtil.copyProperties(decorationContractPO, decorationContractVO, Arrays.asList("contract", "creater", "signner"));
 			BeanUtil.copyProperties(decorationContractPO.getCreater(), decorationContractVO.getCreater(), Arrays.asList("dept", "duty"));
+			BeanUtil.copyProperties(decorationContractPO.getSignner(), decorationContractVO.getSignner(), Arrays.asList("dept", "duty"));
+			BeanUtil.copyProperties(decorationContractPO.getFilinner(), decorationContractVO.getFilinner(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyProperties(decorationContractPO.getContract(), decorationContractVO.getContract());
 
 			decorationContractVOs.add(decorationContractVO);
@@ -130,10 +132,6 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		if (decorationContractPO == null) {
 			throw new FLException(130002, "合同信息不存在");
-		}
-
-		if (decorationContractPO.getStatus() != DecorationContractPO.STATUS_VALID_INT) {
-			throw new FLException(130028, "合同状态不可操作");
 		}
 
 		return Signature.view(decorationContractPO);
@@ -166,7 +164,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
 
-		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 合同信息.", orderId), String.format("%s/redirect.html?dcid=%d&type=%d", isv.getValue(), decorationContractPO.getDcid(), decorationContractVO.getType()));
+		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 合同信息.", orderId), String.format("%s/views/contract/redirect.html?dcid=%d&type=%d", isv.getValue(), decorationContractPO.getDcid(), decorationContractVO.getType()));
 	}
 
 	@Override
@@ -187,16 +185,17 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(140013, "订单不存在");
 		}
 
-		if (decorationContractVO.getType() == DecorationContractPO.TYPE_SIGNET_INT && decorationContractPO.getStatus() == DecorationContractPO.STATUS_VALID_INT) {
-			url = Signature.extsign(decorationPO.getCustomer(), decorationContractPO);
-		} else if (decorationContractVO.getType() == DecorationContractPO.TYPE_SIGN_INT && decorationContractPO.getStatus() == DecorationContractPO.STATUS_STAY_SIGN_INT) {
+		short type = decorationContractVO.getType();
+		short status = decorationContractPO.getStatus();
 
+		if (type == DecorationContractPO.TYPE_SIGNET_INT && status == DecorationContractPO.STATUS_VALID_INT) {
 			SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
-			url = String.format("%s/signature.html?cid=%d", isv.getValue(), decorationPO.getCustomer().getCid());
-
-		} else if (decorationContractVO.getType() == DecorationContractPO.TYPE_VIEW_INT && decorationContractPO.getStatus() == DecorationContractPO.STATUS_STAY_SIGN_INT) {
+			url = String.format("%s/views/contract/signature.html?cid=%d", isv.getValue(), decorationPO.getCustomer().getCid());
+		} else if (type == DecorationContractPO.TYPE_SIGN_INT && status == DecorationContractPO.STATUS_VALID_INT) {
+			url = Signature.extsign(decorationPO.getCustomer(), decorationContractPO);
+		} else if (type == DecorationContractPO.TYPE_VIEW_INT && status == DecorationContractPO.STATUS_VALID_INT) {
 			url = decorationContractPO.getViewpdf();
-		} else if (decorationContractVO.getType() == DecorationContractPO.TYPE_DOWNLOAD_INT && decorationContractPO.getStatus() == DecorationContractPO.STATUS_END_SIGN_INT) {
+		} else if (type == DecorationContractPO.TYPE_DOWNLOAD_INT && status == DecorationContractPO.STATUS_SIGN_INT) {
 			url = decorationContractPO.getDownload();
 		} else {
 			throw new FLException(130028, "合同状态不可操作");
@@ -224,8 +223,6 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		decorationContractDao.save(decorationContractPO);
 
-		System.out.println(data);
-
 		JSONObject params = JSONObject.parseObject(data);
 
 		Signature.generate(decorationContractPO, params);
@@ -234,9 +231,11 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int signDecorationContractForCompany(SignetVO signetVO, DecorationContractVO decorationContractVO) throws FLException {
 
 		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());
+
 		SignetPO signetPO = signetDao.get(signetVO.getSid());
 
 		if (decorationContractPO == null) {
@@ -249,6 +248,10 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		Signature.autosign(signetPO, decorationContractPO);
 
+		decorationContractPO.setComsignTime(DateUtil.getDateToTimestamp(new Date()));
+
+		decorationContractDao.update(decorationContractPO);
+
 		return 0;
 	}
 
@@ -256,6 +259,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 	public String signDecorationContractForCustomer(DecorationContractVO decorationContractVO, CustomerVO customerVO) throws FLException {
 
 		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());
+
 		CustomerPO customerPO = customerDao.get(customerVO.getCid());
 
 		if (decorationContractPO == null) {
@@ -271,7 +275,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int filingDecorationContract(DecorationContractVO decorationContractVO) throws FLException {
+	public int affixDecorationContract(DecorationContractVO decorationContractVO, String userId) throws FLException {
 
 		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());
 
@@ -283,7 +287,61 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(130028, "合同状态不可操作");
 		}
 
+		UserPO signner = userDao.queryUserByUserId(userId);
+
+		decorationContractPO.setSignner(signner);
+		decorationContractPO.setStatus(DecorationContractPO.STATUS_SIGN_INT);
+		decorationContractPO.setCussignTime(DateUtil.getDateToTimestamp(new Date()));
+
+		decorationContractDao.update(decorationContractPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int expireDecorationContract(DecorationContractVO decorationContractVO) throws FLException {
+
+		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());
+
+		if (decorationContractPO == null) {
+			throw new FLException(130002, "合同信息不存在");
+		}
+
+		if (decorationContractPO.getStatus() != DecorationContractPO.STATUS_VALID_INT) {
+			throw new FLException(130028, "合同状态不可操作");
+		}
+
+		decorationContractPO.setStatus(DecorationContractPO.STATUS_NULL_INT);
+
+		decorationContractDao.update(decorationContractPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int filingDecorationContract(DecorationContractVO decorationContractVO, String userId) throws FLException {
+
+		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());
+
+		if (decorationContractPO == null) {
+			throw new FLException(130002, "合同信息不存在");
+		}
+
+		if (decorationContractPO.getStatus() != DecorationContractPO.STATUS_SIGN_INT) {
+			throw new FLException(130028, "合同状态不可操作");
+		}
+
 		Signature.filing(decorationContractPO);
+
+		UserPO filinner = userDao.queryUserByUserId(userId);
+
+		decorationContractPO.setFilinner(filinner);
+		decorationContractPO.setStatus(DecorationContractPO.STATUS_FILE_INT);
+		decorationContractPO.setFilingTime(DateUtil.getDateToTimestamp(new Date()));
+
+		decorationContractDao.update(decorationContractPO);
 
 		return 0;
 	}

@@ -126,7 +126,7 @@ jQuery(function($) {
 	})();
 
 	var searcher = new Searcher();
-	var conditionList = ["houseSourceNo", "houseType", "b_houseSourceType", "b_villageName", "buildingArea", "b_totalPrice", "roomNum", "orientation", "b_decorateDegree", "b_allowLoan", "b_housingGrade", "b_rentType"];
+	var conditionList = ["building-houseSource-no", "building-houseType", "building-houseSource-type", "building-village", "building-Area", "building-totalPrice", "building-roomNum", "building-orientation", "building-decorateDegree", "building-allowLoan", "building-housingGrade", "building-rentType"];
 
 	searcher.init(conditionList, "condList", api.building.pageHouseSource, function(data){
 		displayFunc.init('resultList', data);

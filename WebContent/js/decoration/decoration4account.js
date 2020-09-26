@@ -151,7 +151,7 @@ $(function () {
     });
 
     decorationDetail.btns.btnBack.on("click", function () {
-        com.switchPage(params.historyPage);
+        //com.switchPage(params.historyPage);
     });
     
     decorationDetail.accountItems.materialAccount.blur(function(){

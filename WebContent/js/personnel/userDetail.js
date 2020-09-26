@@ -1079,19 +1079,17 @@ $(function(){
 	    com.post(api.personel.deleteUserOperation, {"userOperation.uoid": uoid}, function(){
 	    	
 	    	com.showAlert(com.info, "操作成功");
-	    	
 	    	queryAboutUser();
-	    },null,false);
+	    }, null, false);
 	}
     
 	function deleteContract(ucid){
 
 	    com.post(api.personel.deleteUserContract, {"userContract.ucId": ucid}, function(){
-	    	
+	        
 	    	com.showAlert(com.info, "操作成功");
-	    	
 	    	queryAboutUser();
-	    },null,false);
+	    }, null, false);
 	}
 	
 	function deleteEducation(ueid){
@@ -1099,59 +1097,31 @@ $(function(){
 	    com.post(api.personel.deleteUserEducation, {"userEducation.ueid": ueid}, function(){
 	    	
 	    	com.showAlert(com.info, "操作成功");
-	    	
 	    	queryAboutUser();
-	    },null,false);
+	    }, null, false);
 	}
     
 	function upload(v){
-		com.focusPage("#updateUserPhotoBtn").empty();
-		
-		com.focusPage("#updateUserPhotoBtn").Huploadify({
-	        'debug' : false, // 开启调试
-	        'auto':true, // 是否自动上传
-	        'successTimeout': 99999, //超时时间
-	        'formData': { //附带值
-	            'uploadType':0,
-	            'strutsUploadsFileName': '',
-	            'username':'用户名',
-	            'rnd':'加密密文'
-	        },
-	        'buttonClass': 'btn btn-sm btn-block btn-success icon-plus-sign bigger-120',
-	        'overrideEvents': ['onDialogClose'], // 不执行默认的onSelect事件
-	        'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-	        'uploader': config.media + api.common.uploadImg.url, // 上传处理程序
-	        'width': '100', // 浏览按钮的宽度
-	        'height': '32', // 浏览按钮的高度
-	        'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-	        'fileTypeExts': '*.jpg;*.jpge;*.gif;*.png', // 允许上传的文件后缀
-	        'fileSizeLimit': '3MB', // 上传文件的大小限制
-	        'queueSizeLimit': 25, // 上传数量
-	        'onUploadSuccess':function(file, data, response){
-				var dateObj=eval("("+data+")");
-				if(dateObj.errorCode == 0){
-					com.focusPage("#picture").val(dateObj.resUrl);
-					
-					parm = {
-							"userInfo.user.userPhoto":dateObj.resUrl,
-							"userInfo.user.userId": v.user.userId,
-							"userInfo.user.phone":v.user.phone,
-							"userInfo.emergencyMan":v.emergencyMan,
-							"userInfo.emergencyPhone":v.emergencyPhone,
-							"userInfo.qq":v.qq,
-							"userInfo.wechat":v.wechat,
-							"userInfo.email":v.email
-						};
+	    
+	    com.uploadify("#updateUserPhotoBtn", "上传头像", api.common.uploadImg, 'btn btn-sm btn-block btn-success icon-plus-sign bigger-120', '*.jpg;*.jpge;*.gif;*.png', {'uploadType': 2}, 1, function(data){
+	        com.focusPage("#picture").val(data.resUrl);
+            
+            parm = {
+                "userInfo.user.userPhoto":data.resUrl,
+                "userInfo.user.userId": v.user.userId,
+                "userInfo.user.phone":v.user.phone,
+                "userInfo.emergencyMan":v.emergencyMan,
+                "userInfo.emergencyPhone":v.emergencyPhone,
+                "userInfo.qq":v.qq,
+                "userInfo.wechat":v.wechat,
+                "userInfo.email":v.email
+            };
 
-					com.post(api.personel.updateUserForBaseInfo, parm, function(res){
-						com.showAlert(com.info, "操作成功");
-						queryUserInfo();
-					});
-				}else{
-					alert(data);
-				}
-	        }
-	    });
+            com.post(api.personel.updateUserForBaseInfo, parm, function(res){
+                com.showAlert(com.info, "操作成功");
+                queryUserInfo();
+            });
+        });
 	}
     
 });

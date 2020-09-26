@@ -224,7 +224,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 
-	searcher.init(["orderId", "advancePaymentcollectTime"], "condList", api.payment.pagePaymentForCollect, function(data){
+	searcher.init(["payment-orderId", "payment-collectTime"], "condList", api.payment.pagePaymentForCollect, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "paymentCheckCheckPostData", null, false, null, function(){
 		var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'checks').css("margin", "0px 3px");
@@ -321,7 +321,7 @@ jQuery(function($) {
 	})();
 
 	var hsearcher = new Searcher();
-	hsearcher.init(["orderId", "advancePaymentcollectTime"], "hcondList", api.payment.pagePaymentForConfirm, function(data){
+	hsearcher.init(["payment-orderId", "payment-collectTime"], "hcondList", api.payment.pagePaymentForConfirm, function(data){
 		hdisplayFunc.init('hresultList', data);
 	}, "hpagenation", "hpaymentCheckCheckPostData", null, false, null, null, "hresultList");
 

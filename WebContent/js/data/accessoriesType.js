@@ -151,27 +151,8 @@ $(function(){
         com.popup4model('#importLayer','导入辅类')
     });
     
-    com.focusPage('#importSelectAccessoriesType').Huploadify({
-
-        'debug' : false, // 开启调试
-        'auto':true, // 是否自动上传
-        'successTimeout':config.uploadTimeout, // 超时时间
-        'formData':{
-            'uploadType':4
-        },
-        'buttonClass': 'btn btn-success col-sm-6',
-        'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
-        'fileObjName':'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-        'uploader': config.server + 'importAccessoriesType.do', // 上传处理程序
-        'height':'30', // 浏览按钮的高度
-        'fileTypeDesc':'支持的格式：',  // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-        'fileTypeExts':'*.xls;*.xlsx', // 允许上传的文件后缀
-        'fileSizeLimit':'2MB', // 上传文件的大小限制
-        'queueSizeLimit' : 1, // 上传数量
-        'onUploadSuccess':function(file, data, response){ //上传到服务器，服务器返回相应信息到data里
-            //var dateObj = eval("("+data+")");
-            accessoriesTypeSearcher.doSearch();
-        }
+    com.uploadify("#importSelectAccessoriesType", "上传文件", api.data.importAccessoriesType, 'btn btn-success col-sm-6', "*.xls;*.xlsx", {'uploadType': 4}, 1, function(data){
+        accessoriesTypeSearcher.doSearch();
     });
     
     function clearForm(){

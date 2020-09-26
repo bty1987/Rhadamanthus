@@ -24,10 +24,13 @@ public class AoodsDaoImpl extends DaoImpl<AoodsPO> implements AoodsDao {
 	}
 
 	@Override
-	public List<AoodsPO> pageAoods(Paging paging, List<Filter> filters, int company) {
+	public List<AoodsPO> pageAoods(Paging paging, List<Filter> filters, int company, String companyType) {
 
 		PagingQuery<AoodsPO> query = pagingQuery(paging, AoodsPO.class);
-		query.add(query.getCriterion("company",company,"eq"));
+		
+		if (companyType != null) {
+			query.add(query.getCriterion(companyType, company, "eq"));
+		}
 		
 		queryFilterExcute(query, filters);
 		

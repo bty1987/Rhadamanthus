@@ -81,7 +81,7 @@ $(function () {
     })();
 
     var searcher = new Searcher();
-    var condCodeArrs = ["aoodsGoodsName", "soodsGoodsCategory", "soodsGoodsBrand", "soodsVersion", "soodsQName","soodsQuotationSmallCategoryId"];
+    var condCodeArrs = ["data-soods-name", "data-soods-category", "data-soods-brand", "data-soods-quotation-version", "data-soods-quotation-item-name","data-soods-quotation-smallcategory"];
 
     searcher.init(condCodeArrs, "condList", api.data.pageSoods, function (data) {
         displayFunc.init('resultList', data);

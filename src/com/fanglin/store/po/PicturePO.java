@@ -9,25 +9,25 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="picture", catalog = "store")
-public class PicturePO implements Serializable{
-	
+@Table(name = "picture", catalog = "store")
+public class PicturePO implements Serializable {
+
 	private static final long serialVersionUID = -4319485471492418004L;
-	
+
 	public static final String COLUMN_PID_STR = "pid";
-	
+
 	public static final String COLUMN_GID_STR = "gid";
-	
+
 	public static final String COLUMN_TYPE_STR = "type";
-	
+
 	private long pid;
-	
+
 	private long gid;
-	
+
 	private String img;
-	
+
 	private short type;
-	
+
 	private short sort;
 
 	public PicturePO() {
@@ -36,7 +36,7 @@ public class PicturePO implements Serializable{
 
 	@Id
 	@GeneratedValue
-	@Column(name="pid")
+	@Column(name = "pid")
 	public long getPid() {
 		return pid;
 	}
@@ -44,17 +44,17 @@ public class PicturePO implements Serializable{
 	public void setPid(long pid) {
 		this.pid = pid;
 	}
-	
-	@Column(name="gid")
+
+	@Column(name = "gid")
 	public long getGid() {
 		return gid;
 	}
-	
+
 	public void setGid(long gid) {
 		this.gid = gid;
 	}
 
-	@Column(name="img")
+	@Column(name = "img")
 	public String getImg() {
 		return img;
 	}
@@ -63,7 +63,7 @@ public class PicturePO implements Serializable{
 		this.img = img;
 	}
 
-	@Column(name="type")
+	@Column(name = "type")
 	public short getType() {
 		return type;
 	}
@@ -72,7 +72,7 @@ public class PicturePO implements Serializable{
 		this.type = type;
 	}
 
-	@Column(name="sort")
+	@Column(name = "sort")
 	public short getSort() {
 		return sort;
 	}
@@ -80,5 +80,5 @@ public class PicturePO implements Serializable{
 	public void setSort(short sort) {
 		this.sort = sort;
 	}
-	
+
 }

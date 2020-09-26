@@ -2,8 +2,13 @@ jQuery(function ($) {
 
     var constructionNodes = {};
 
-    com.post(api.ds.construction, {}, function (res) {
-        constructionNodes = res.constructionSchedule.split("key", "value");
+    com.post(api.data.queryConstructionNode,{}, function (res) {
+        constructionNodes = res.constructionNodes.split("sort", "name");
+
+        constructionNodes[0] = "初始";
+        constructionNodes[1] = "开工";
+        constructionNodes[2] = "完工";
+
     }, null, false);
 
     var displayFunc = (function () {
@@ -70,7 +75,7 @@ jQuery(function ($) {
     })();
 
     var searcher = new Searcher();
-    searcher.init(['c_orderId', 'c_village', 'c_houseNumber', 'c_supervisor', 'c_acceptanceFlag'], "condList", api.construction.pageConstructionForAcceptance, function (list) {
+    searcher.init(['construction-orderId', 'construction-village-name', 'construction-houseNumber-name', 'construction-supervisor', 'construction-acceptanceFlag'], "condList", api.construction.pageConstructionForAcceptance, function (list) {
         displayFunc.init('resultList', list);
     }, "pagenation", "acceptanceSeacherSeacherPostData");
 

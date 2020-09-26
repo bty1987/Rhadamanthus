@@ -356,41 +356,42 @@ var decorationUtils = {
             }
         });
 
-    }, decorationActivityItemInfo: function (activityPriceInfo, activityItems, uiBtnMethod, orderId, config) {
+    }, decorationActivityItemInfo: function (infopack, itempack, uiBtnMethod, orderId, config) {
 
-        var options = {
-            "decoration.orderId": orderId
-        };
-
-        activityItems.html("");
-
-        com.post(api.decoration.queryDecorationActivityItem, options, function (res) {
+        com.post(api.decoration.queryDecorationActivityItem, {"decoration.orderId": orderId}, function (res) {
+            
             var decorationActivityItems = res.decorationActivityItems;
 
             var couponCut = 0;
             var thingCut = 0;
+            
+            itempack.html("");
 
-            for (var i = 0; i < decorationActivityItems.length; i++) {//0: 初始 , 1: 失效 , 2: 已领 , 3: 退货 , 4: 配送 , 5: 未退 , 6: 升级 , 7: 消耗
-                if (decorationActivityItems[i].type == 0 && [0, 2, 4, 5, 6].indexOf(decorationActivityItems[i].state) != -1 && decorationActivityItems[i].isPrefor == 0) {//0卷
-                    couponCut = utils.accAdd(couponCut, utils.accMul(decorationActivityItems[i].money, decorationActivityItems[i].num));
-                } else if (decorationActivityItems[i].type == 1 && [0, 2, 4, 5, 6].indexOf(decorationActivityItems[i].state) != -1 && decorationActivityItems[i].isPrefor == 0) {//物品
-                    thingCut = utils.accAdd(thingCut, utils.accMul(decorationActivityItems[i].money, decorationActivityItems[i].num));
-                }
-
-                activityPriceInfo.html("");
-                var couponCutSpan = $("<div></div>").attr("id", "_couponCut").addClass("col-sm-4").append($("<h4></h4>").html("券优惠:").append($('<strong></strong>').addClass("red").html(couponCut))).appendTo(activityPriceInfo);
-                var thingCutSpan = $("<div></div>").attr("id", "_thingCut").addClass("col-sm-4").append($("<h4></h4>").html("物品优惠:").append($('<strong></strong>').addClass("red").html(thingCut))).appendTo(activityPriceInfo);
-                var detailSpan = $("<div></div>").attr("id", "_detail").addClass("col-sm-4").append($("<h4></h4>").html("优惠总额:").append($('<strong></strong>').addClass("red").html(utils.accAdd(couponCut, thingCut)))).appendTo(activityPriceInfo);
+            for (var i = 0; i < decorationActivityItems.length; i++) { //0: 初始 , 1: 失效 , 2: 已领 , 3: 退货 , 4: 配送 , 5: 未退 , 6: 升级 , 7: 补款
                 
-                decorationUtils.addActivityItemForDiv(activityItems, decorationActivityItems[i], uiBtnMethod, config);
+                var item = decorationActivityItems[i];
+                
+                if (item.type == 0 && [0, 2, 4, 5, 6].indexOf(item.state) != -1 && item.isPrefor == 0) {//0卷
+                    couponCut = utils.accAdd(couponCut, utils.accMul(item.money, item.num));
+                } else if (item.type == 1 && [0, 2, 4, 5, 6].indexOf(item.state) != -1 && item.isPrefor == 0) {//物品
+                    thingCut = utils.accAdd(thingCut, utils.accMul(item.money, item.num));
+                }
+                
+                decorationUtils.addActivityItemForDiv(itempack, item, uiBtnMethod, config);
             }
+            
+            infopack.html("");
+            
+            var couponCutSpan = $("<div></div>").attr("id", "_couponCut").addClass("col-sm-4").append($("<h4></h4>").html("券优惠:").append($('<strong></strong>').addClass("red").html(couponCut))).appendTo(infopack);
+            var thingCutSpan = $("<div></div>").attr("id", "_thingCut").addClass("col-sm-4").append($("<h4></h4>").html("物品优惠:").append($('<strong></strong>').addClass("red").html(thingCut))).appendTo(infopack);
+            var detailSpan = $("<div></div>").attr("id", "_detail").addClass("col-sm-4").append($("<h4></h4>").html("优惠总额:").append($('<strong></strong>').addClass("red").html(utils.accAdd(couponCut, thingCut)))).appendTo(infopack);
 
         });
-    }, addActivityItemForDiv: function (_activityItems, _activityItem, uiBtnMethod, config) {
+    }, addActivityItemForDiv: function (itempack, _activityItem, uiBtnMethod, config) {
         
         if(_activityItem.state == 1) return false;
 
-        var pricingSpan = $("<div></div>").addClass("col-md-6").css("margin", "5px 0px").attr("id", "pricing_" + _activityItem.daiId).prependTo(_activityItems);
+        var pricingSpan = $("<div></div>").addClass("col-md-6").css("margin", "5px 0px").attr("id", "pricing_" + _activityItem.daiId).prependTo(itempack);
         var widgetBox = $("<div></div>").appendTo(pricingSpan);
         var total = [0, 2, 4, 5, 6].indexOf(_activityItem.state) != -1 ? utils.accMul(_activityItem.money, _activityItem.num) : 0;
 
@@ -736,40 +737,18 @@ var decorationUtils = {
             });
         }
     }, loadHuploadify: function (eId, ename, fileType, multi, callback, btnstyle) {
-
-        com.focusPage("#" + eId).Huploadify({
-            'debug': false, // 开启调试
-            'auto': true, // 是否自动上传
-            'successTimeout': 150, // 超时时间
-            'formData': { // 附带值
-                'uploadType': 2
-            },
-            'buttonClass': 'btn ' + btnstyle ? btnstyle : "btn-success",
-            'buttonText': ename,
-            'overrideEvents': ['onDialogClose'], // 不执行默认的onSelect事件
-            'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-            'uploader': config.media + api.common.uploadImg.url, // 上传处理程序
-            'width': '100', // 浏览按钮的宽度
-            'height': '32', // 浏览按钮的高度
-            'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-            'fileTypeExts': fileType, // 允许上传的文件后缀
-            'fileSizeLimit': '5MB', // 上传文件的大小限制
-            'multi': multi,
-            'queueSizeLimit': 5, // 上传数量
-            'onUploadSuccess': function (file, data, response) { // 上传到服务器,服务器返回相应信息到data里
-                callback(data);
-            }
+        
+        com.uploadify("#" + eId, ename, api.common.uploadImg, ('btn ' + btnstyle ? btnstyle : "btn-success"), fileType, {'uploadType': 2}, 5, function(data){
+            callback(data);
         });
 
     }, addDecorationPicture: function (data, type, eId) {
 
-        var dateObj = eval("(" + data + ")");
-
-        if (dateObj.errorCode == 0) {
+        if (data.errorCode == 0) {
 
             var options = {
-                "decorationPicture.path": dateObj.resUrl,
-                "decorationPicture.name": dateObj.strutsUploadsFileName,
+                "decorationPicture.path": data.resUrl,
+                "decorationPicture.name": data.strutsUploadsFileName,
                 "decorationPicture.content": "",
                 "decorationPicture.orderId": params.decorationOrderId,
                 "decorationPicture.type": type
@@ -789,7 +768,7 @@ var decorationUtils = {
                 }
             });
         } else {
-            com.showAlert(com.error, dateObj.errorMsg);
+            com.showAlert(com.error, data.errorMsg);
         }
     }, initDecorationPicture: function (designId, pictureId, cadId, contractId,originalId, orderId) {
 

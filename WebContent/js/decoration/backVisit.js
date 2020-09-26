@@ -98,7 +98,7 @@ $(function(){
     };
 
     com.focusPage('#btnBack').click(function(){
-        com.switchPage(params.historyPage);
+        //com.switchPage(params.historyPage);
     });
 
     function saveData() {

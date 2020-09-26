@@ -325,7 +325,7 @@ $(function () {
         };
     })();
 
-    var _condArr = ['sales_no', 'sales_orderId', 'sales_instorer', 'sales_salesman', 'sales_deptName', 'sales_fullpayTime'];
+    var _condArr = ['sales-no', 'sales-orderId', 'sales-instorer', 'sales-salesman', 'sales-dept', 'sales-fullpayTime'];
 
     var salesSwitchManifestForXGSearcher = new Searcher();
 

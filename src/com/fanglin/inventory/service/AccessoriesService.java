@@ -11,7 +11,7 @@ import com.fanglin.utils.Paging;
 
 public interface AccessoriesService {
 	
-	public void pageAccessories(Paging paging, List<Filter> filters,int company);
+	public void pageAccessories(Paging paging, List<Filter> filters, int company);
 	
 	public List<AccessoriesVO> queryAccessoriesByOrderId(AccessoriesVO accessoriesVO);
 	

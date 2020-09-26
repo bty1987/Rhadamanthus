@@ -252,7 +252,7 @@ $(function () {
 
                 var stateLi = $("<li></li>").appendTo(ul);
                 var stateStr = $("<strong></strong>").text("状态:").appendTo(stateLi);
-                var stateSpan = $("<span></span>").addClass("red").attr("id", "state_" + v.maiid).text(v.state == 0 ? "初始" : v.state == 1 ? "失效" : v.state == 2 ? "已领" : v.state == 3 ? "退货" : v.state == 4 ? "配送" : v.state == 5 ? "未退" : "消耗").appendTo(stateLi);
+                var stateSpan = $("<span></span>").addClass("red").attr("id", "state_" + v.maiid).text(v.state == 0 ? "初始" : v.state == 1 ? "失效" : v.state == 2 ? "已领" : v.state == 3 ? "退货" : v.state == 4 ? "配送" : v.state == 5 ? "未退" : "补款").appendTo(stateLi);
 
                 var totalLi = $("<li></li>").appendTo(ul);
                 var totalStr = $("<strong></strong>").text("合计:").appendTo(totalLi);
@@ -274,7 +274,7 @@ $(function () {
         var deliveBtn = $("<span></span>").addClass("btn btn-minier btn-warning").html("配送").css("margin", "3px 3px").attr("id", "delive_" + activityItem.maiid).appendTo(uiPgDiv);
         var unredundBtn = $("<span></span>").addClass("btn btn-minier btn-inverse").html("未退").css("margin", "3px 3px").attr("id", "unrefund_" + activityItem.maiid).appendTo(uiPgDiv);
         var refundBtn = $("<span></span>").addClass("btn btn-minier btn-danger").html("退货").css("margin", "3px 3px").attr("id", "refund_" + activityItem.maiid).appendTo(uiPgDiv);
-        var expendBtn = $("<span></span>").addClass("btn btn-minier btn-pink").html("消耗").css("margin", "3px 3px").attr("id", "expend_" + activityItem.maiid).appendTo(uiPgDiv);
+        var expendBtn = $("<span></span>").addClass("btn btn-minier btn-pink").html("补款").css("margin", "3px 3px").attr("id", "expend_" + activityItem.maiid).appendTo(uiPgDiv);
 
         abateBtn.on("click", function () {
             abateMaterialActivityItem(activityItem.maiid, activityItem.activity);
@@ -342,7 +342,7 @@ $(function () {
 
     function expendMaterialActivityItem(maiid, activityItemName) {
 
-        com.showConfirm("是否消耗" + activityItemName + "的活动物品?", function () {
+        com.showConfirm("是否补款" + activityItemName + "的活动物品?", function () {
 
             var options = {
                 "materialActivityItem.maiid": maiid,

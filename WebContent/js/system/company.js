@@ -84,7 +84,7 @@
 
    var companySeacher = new Searcher();
 
-	companySeacher.init( ["companyName"], "condList", api.system.pageCompany, function(data){
+	companySeacher.init( ["system-company-name"], "condList", api.system.pageCompany, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "companyPostData", null, false, null, function(){
     	

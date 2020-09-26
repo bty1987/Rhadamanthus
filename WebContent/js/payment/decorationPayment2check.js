@@ -216,7 +216,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 	
-	searcher.init(["orderId", "paymentDesigner", "paymentVillage", "houseNumber", "collectTimeDateRange"], "condList", api.payment.pageDecorationPaymentForCollect, function(data){
+	searcher.init(["payment-orderId", "payment-designer", "payment-village", "payment-houseNumber", "payment-collectTime"], "condList", api.payment.pageDecorationPaymentForCollect, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "decorationPaymentCheckPostData", null, false, null, function(){
 		var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'checks').css("margin", "0px 3px");
@@ -333,7 +333,7 @@ jQuery(function($) {
     })();
 
 	var hsearcher = new Searcher();
-	hsearcher.init(["orderId", "paymentDesigner", "paymentVillage", "houseNumber", "collectTimeDateRange"], "hcondList", api.payment.pageDecorationPaymentForConfirm, function(data){
+	hsearcher.init(["payment-orderId", "payment-designer", "payment-village", "payment-houseNumber", "payment-collectTime"], "hcondList", api.payment.pageDecorationPaymentForConfirm, function(data){
 		hdisplayFunc.init('hresultList', data);
 	}, "hpagenation", "hdecorationPaymentCheckPostData", null, false, null, null, "hresultList");
 

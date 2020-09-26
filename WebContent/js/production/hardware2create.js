@@ -268,12 +268,13 @@ $(function (){
             com.focusPage('#importHardwareExcel').addClass('hide');
         }
 
-        com.uploadify("#importHardwareExcel","添加上传文件",'btn btn-success col-sm-12',"*.xlsx","'uploadType': 2",1,function(data) {
+        com.uploadify("#importHardwareExcel", "上传文件", api.common.uploadOther, 'btn btn-success col-sm-12', "*.xlsx", "'uploadType': 2", 1, function(data) {
 
             var option = {
                 "hardware.hid": v.hid,
                 "hardware.path": data.resUrl
             };
+            
             com.post(api.production.updateHardware,option,function(res){
                 com.showAlert(com.info, "操作成功");
                 $line.find(".infobox").remove();

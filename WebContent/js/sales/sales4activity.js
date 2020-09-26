@@ -184,27 +184,36 @@ $(function () {
         var amountPayment = $('<h4 id="payment"></h4>').addClass('oid').append($('<small></small>').addClass('blue'));
         var amountActivity = $('<h4 id="activity_"></h4>').addClass('oid').append($('<small></small>').addClass('blue'));
         var amount = $('<h4 id="num"></h4>').addClass('oid').append($('<small></small>').addClass('blue'));
+        var amountSalesPayment = $('<h4 id="amountSalesPayment"></h4>').addClass('oid').append($('<small></small>').addClass('blue'));
 
-        $divWarp.append(amountPayment).append(amountActivity).append(amount);
+        $divWarp.append(amountPayment).append(amountActivity).append(amount).append(amountSalesPayment);
 
         return $divWarp
     }
 
     //活动积分
     function amountSalesActivityForActivity(){
-
         com.post(api.sales.amountSalesActivityForActivity, {"salesActivity.sales.orderId" : salesActivityItem.paramsOrderId}, function (res) {
             com.focusPage("#activity_").html("使用积分: " + res.salesActivity.amount).attr("integral", res.salesActivity.amount);
-        },null,false);
-
+        }, null, false);
     }
 
     //款项积分
     function amountSalesActivityForPayment(){
         com.post(api.sales.amountSalesActivityForPayment, {"salesActivity.sales.orderId" : salesActivityItem.paramsOrderId}, function (res) {
             com.focusPage("#payment").html("总积分: " + res.salesActivity.amount).attr("integral", res.salesActivity.amount);
-        },null,false);
-
+        }, null, false);
+    }
+    
+    function integral() {
+        $('#num').html("剩余积分: " + utils.accSub(parseFloat(com.focusPage("#payment").attr("integral")), parseFloat(com.focusPage("#activity_").attr("integral"))));
+    }
+    
+    //销售实付
+    function amountSalesPayment(){
+        com.post(api.payment.amountSalesPayment, {"salesPayment.sales.orderId" : salesActivityItem.paramsOrderId}, function (res) {
+            com.focusPage("#amountSalesPayment").html("销售实付: " + res.amount).attr("amount", res.amount);
+        }, null, false);
     }
 
     var options = {
@@ -361,17 +370,12 @@ $(function () {
     amountSalesActivityForActivity();
     amountSalesActivityForPayment();
     integral();
+    amountSalesPayment();
     querySalesActivity();
     querySalesActivityItem();
 
-    function integral () {
-        $('#num').html("剩余积分: " + utils.accSub(parseFloat(com.focusPage("#payment").attr("integral")), parseFloat(com.focusPage("#activity_").attr("integral"))));
-    }
-
-
-
     function uiBtnMethod(uiPgDiv, activityItem) {
-        //0: 初始 , 1: 失效 , 2: 已领 , 3: 退货 , 4: 配送 , 5: 未退 , 6: 升级 , 7: 消耗
+        //0: 初始 , 1: 失效 , 2: 已领 , 3: 退货 , 4: 配送 , 5: 未退 , 6: 升级 , 7: 补款
         //失效
         var abateBtn = $("<span></span>").addClass("btn btn-minier btn-yellow").html("失效").css("margin", "3px").appendTo(uiPgDiv);
         //领取
@@ -382,7 +386,7 @@ $(function () {
         var deliveBtn = $("<span></span>").addClass("btn btn-minier btn-inverse").html("配送").css("margin", "3px").appendTo(uiPgDiv);
         //未退
         var unrefundBtn = $("<span></span>").addClass("btn btn-minier btn-danger").html("未退").css("margin", "3px").appendTo(uiPgDiv);
-        //消耗
+        //补款
         var expendBtn = $("<span></span>").addClass("btn btn-minier btn-purple").html("补款").css("margin", "3px").appendTo(uiPgDiv);
 
         //失效按钮
@@ -426,14 +430,14 @@ $(function () {
             unrefundSalesActivityItem(activityItem.saiid, activityItem.activity);
         });
 
-        //点击消耗按钮
+        //点击补款按钮
         expendBtn.click(function () {
             expendSalesActivityItem(activityItem.saiid, activityItem.activity);
         });
 
     }
 
-    //0: 初始 , 1: 失效 , 2: 已领 , 3: 退货 , 4: 配送 , 5: 未退 , 6: 升级 , 7: 消耗
+    //0: 初始 , 1: 失效 , 2: 已领 , 3: 退货 , 4: 配送 , 5: 未退 , 6: 升级 , 7: 补款
     //失效
     function abateSalesActivityItem(saiid, activityItemName) {
 
@@ -470,13 +474,13 @@ $(function () {
 
     //消耗
     function expendSalesActivityItem(saiid, activityItemName) {
-        com.showConfirm("是否确认消耗" + activityItemName + "活动物品?", function () {
+        com.showConfirm("是否确认补款" + activityItemName + "活动物品?", function () {
 
             var options = {
                 "salesActivityItem.saiid": saiid
             };
             com.post(api.sales.expendSalesActivityItem, options, function (res) {
-                com.showAlert(com.info, "消耗成功!");
+                com.showAlert(com.info, "补款成功!");
                 querySalesActivityItem();
                 amountSalesActivityForActivity();
                 integral();

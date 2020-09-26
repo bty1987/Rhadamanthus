@@ -48,6 +48,9 @@ public class ConstructionInfoDaoImpl extends DaoImpl<ConstructionInfoPO> impleme
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 		query.alias("decoration", "decoration");
+		query.alias("decoration.designer", "decoration.designer");
+		query.alias("decoration.designer.dept", "designerDept");
+		query.alias("designerDept.fatherDept", "designerRegion");
 
 		if (filters != null) {
 			for (Filter filter : filters) {
@@ -56,7 +59,11 @@ public class ConstructionInfoDaoImpl extends DaoImpl<ConstructionInfoPO> impleme
 				String data = filter.getData();
 				String op = filter.getOp();
 
-				if ("orderId".equals(field)) {
+			    if ("designerDepartmentId".equals(field)) {
+					query.add(query.getCriterion("designerDept.no", data, op));
+				} else if ("designerRegionId".equals(field)) {
+					query.add(query.getCriterion("designerRegion.no", data, op));
+				} else if ("orderId".equals(field)) {
 					query.add(query.getCriterion("decoration.orderId", data, op));
 				} else if ("keyTime".equals(filter.getField())) {
 					

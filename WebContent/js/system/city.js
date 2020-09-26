@@ -101,7 +101,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 	
-	searcher.init(["cityName", "region"], "condList", api.system.pageCity, function(data){
+	searcher.init(["system-city-name", "system-region"], "condList", api.system.pageCity, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "cityPostData", null, false, null, function(){
 		

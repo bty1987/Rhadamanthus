@@ -105,7 +105,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["orderId", "v_createrName", "cu_updaterName", "cu_complainStatus", "cu_complainLevel"], "condList", api.customer.pageComplain, function(data){
+    searcher.init(["customer-service-orderId", "customer-service-creater-name", "customer-service-updater-name", "customer-complain-status", "customer-complain-level"], "condList", api.customer.pageComplain, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "complainPostData",null, false, null, null,"resultList");
 

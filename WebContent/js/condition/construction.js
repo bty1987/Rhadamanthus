@@ -1,0 +1,272 @@
+
+Condition.addupRule("construction", {
+
+    "orderId" : {
+        label:"装修单号",
+        type:"text",
+        submitConfig : {
+            name : "orderId",
+            op : "eq",
+            validate:{
+                "reg" : /^[A-Z0-9]*$/,
+                "msg" : "格式不正确A-Z,0-9"
+            }
+        }
+    },
+    "village-name": {
+        label: "楼盘",
+        type: "autofill",
+        submitConfig: {
+            name: "village",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.data.queryVillageForNameByPinyin,
+            postData: {},
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "houseNumber-name": {
+        label: "楼号",
+        type: "text",
+        submitConfig: {
+            name: "houseNumber",
+            op: "cn",
+            validate: null
+        }
+    },
+    "designer": {
+        label: "设计师",//中文名
+        type: "autofill",//类型
+        submitConfig: {//向后台提交的配置
+            name: "designer",//接口中的参数名
+            op: "eq",//查询方式
+            validate: null//校验规则
+        },
+        dataSource: {//从后台取数据的各种配置
+            url: api.personel.queryUserByPinyin,//获取数据要调用的接口
+            postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
+            listPath: "autoFillKeyValue",//响应list的json路径
+            keyPath: "key",//用来向后台提交的字段的json路径
+            valuePath: "value"//用来在页面显示的字段的json路径
+        }
+    },
+    "schedule": {
+        label: "进度",
+        type: "select",
+        submitConfig: {
+            name: "schedule",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {//从后台取数据的各种配置
+            url: api.ds.construction,
+            postData: {"timestamp": (new Date).getTime()},
+            listPath: "constructionSchedule",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "projectStatusFlag": {
+        label: "完工状态",
+        type: "select",
+        submitConfig: {
+            name: "projectStatus",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {//从后台取数据的各种配置
+            url: null,
+            postData: null,
+            listPath: [
+                {key: "未完工", value: "未完工"},
+                {key: "已完工", value: "已完工"}
+            ],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "supervisor": {
+        label: "监理",//中文名
+        type: "autofill",//类型
+        submitConfig: {//向后台提交的配置
+            name: "supervisor",//接口中的参数名
+            op: "eq",//查询方式
+            validate: null//校验规则
+        },
+        dataSource: {//从后台取数据的各种配置
+            url: api.personel.queryUserByPinyin,//获取数据要调用的接口
+            postData: {"user.status":3,"departmentType.name":"工程部"},//获取数据时的请求参数
+            listPath: "autoFillKeyValue",//响应list的json路径
+            keyPath: "key",//用来向后台提交的字段的json路径
+            valuePath: "value"//用来在页面显示的字段的json路径
+        }
+    },
+    "acceptanceFlag": {
+        label: "验收状态",
+        type: "select",
+        submitConfig: {
+            name: "acceptanceFlag",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {//从后台取数据的各种配置
+            url: null,
+            postData: null,
+            listPath: [
+                {key: "notAcceptanced", value: "未验收"},
+                {key: "acceptanced", value: "已验收"}
+            ],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "salesman": {
+        label: "业务员",
+        type: "autofill",
+        submitConfig: {//向后台提交的配置
+            name: "salesman",//接口中的参数名
+            op: "eq",//查询方式
+            validate: null
+        },
+        dataSource: {//从后台取数据的各种配置
+            url: api.personel.queryUserByPinyin,//获取数据要调用的接口
+            postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
+            listPath: "autoFillKeyValue",//响应list的json路径
+            keyPath: "key",//用来向后台提交的字段的json路径
+            valuePath: "value"//用来在页面显示的字段的json路径
+        }
+    },
+    "drawLine-actualDate": {
+        label: "放线时间",
+        type: "datePicker",
+        submitConfig: {
+            name: "actualDate",
+            op: "between",
+            validate: null
+        }
+    },
+    "drawLine-applayTime": {
+        label: "申请时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "applayTime",
+            op: "between",
+            validate: null
+        }
+    },
+
+    "drawLine-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [
+                {"key": "1", "value": "申请放线"},
+                {"key": "3", "value": "放线失败"},
+                {"key": "2", "value": "放线成功"}
+            ],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "info-keyTime": {
+        label: "预计交钥匙时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "keyTime",
+            op: "between",
+            validate: null
+        }
+    },
+    "info-drawlineTime": {
+        label: "预计放线时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "drawlineTime",
+            op: "between",
+            validate: null
+        }
+    },
+    "info-finishTime": {
+        label: "预计完工时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "finishTime",
+            op: "between",
+            validate: null
+        }
+    },
+    "info-designTime": {
+        label: "预计设计完成时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "designTime",
+            op: "between",
+            validate: null
+        }
+    },
+    "info-sdesignTimeRange": {
+        label: "合同方案确认时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "sdesignTimeRange",
+            op: "between",
+            validate: null
+        }
+    },
+    "info-edesignTimeRange": {
+        label: "放线方案确认时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "edesignTimeRange",
+            op: "between",
+            validate: null
+        }
+    },
+    "designerRegionId": {
+        label: "设计中心",
+        type: "autofill",
+        submitConfig: {//向后台提交的配置
+            name: "designerRegionId",//接口中的参数名
+            op: "eq",//查询方式
+            validate: null
+        },
+        dataSource: {//从后台取数据的各种配置
+            url: api.communion.queryDepartmentByName,//获取数据要调用的接口
+            query: "dept.name",
+            postData: {"dept.type.dtid": 1},//获取数据时的请求参数
+            listPath: "deptList",//响应list的json路径
+            keyPath: "no",//用来向后台提交的字段的json路径
+            valuePath: "name"//用来在页面显示的字段的json路径
+        }
+    },
+    "designerDepartmentId": {
+        label: "设计部",
+        type: "autofill",
+        submitConfig: {
+            name: "designerDepartmentId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.communion.queryDepartmentByName,
+            query: "dept.name",
+            postData: {"dept.type.dtid": 2},//获取数据时的请求参数
+            listPath: "deptList",
+            keyPath: "no",
+            valuePath: "name"
+        }
+    },
+
+	
+})

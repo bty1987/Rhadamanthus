@@ -17,53 +17,49 @@ import com.fanglin.store.vo.PictureVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class PictureAction extends BaseListAction{
+public class PictureAction extends BaseListAction {
 
 	private static final long serialVersionUID = 6606015125690300464L;
 
 	@Autowired
 	private PictureService pictureService;
-	
+
 	private PictureVO picture;
-	
+
 	private List<PictureVO> pictures;
-	
+
 	private List<String> imgs;
-	
-	@Action(value="queryPictureByGid", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryPictureByGid(){
-		
+
+	@Action(value = "queryPictureByGid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryPictureByGid() {
+
 		pictures = pictureService.queryPictureByGid(picture);
-		
+
 		return SUCCESS;
-		
 	}
-	
-	@Action(value="addPicture", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addPicture(){
-		
+
+	@Action(value = "addPicture", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addPicture() {
+
 		pictures = pictureService.addPicture(picture, imgs);
-		
+
 		return SUCCESS;
-		
 	}
-	
-	@Action(value="updatePictureForSort", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updatePictureForSort() throws FLException{
-		
+
+	@Action(value = "updatePictureForSort", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updatePictureForSort() throws FLException {
+
 		pictureService.updatePictureForSort(pictures);
-		
+
 		return SUCCESS;
-		
 	}
-	
-	@Action(value="deletePicture", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String deletePicture(){
-		
+
+	@Action(value = "deletePicture", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deletePicture() {
+
 		pictureService.deletePicture(picture);
-		
+
 		return SUCCESS;
-		
 	}
 
 	public PictureVO getPicture() {
@@ -89,4 +85,5 @@ public class PictureAction extends BaseListAction{
 	public void setImgs(List<String> imgs) {
 		this.imgs = imgs;
 	}
+
 }

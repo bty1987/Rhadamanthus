@@ -85,7 +85,7 @@
         {"key":"4", "value":"配送"},
         {"key":"5", "value":"未退"},
         {"key":"6", "value":"升级"},
-        {"key":"7", "value":"消耗"}
+        {"key":"7", "value":"补款"}
     ], "orderGrade":[
         {"key":"A", "value":"A"},
         {"key":"B", "value":"B"},

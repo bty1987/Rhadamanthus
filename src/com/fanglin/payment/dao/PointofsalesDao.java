@@ -3,9 +3,13 @@ package com.fanglin.payment.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.po.PointofsalesPO;
+import com.fanglin.utils.Paging;
 
 public interface PointofsalesDao extends Dao<PointofsalesPO> {
+
+	public List<PointofsalesPO> pagePointofsales(Paging paging, List<Filter> filters);
 
 	public List<PointofsalesPO> queryPointofsalesByPid(String pid, Short type);
 	

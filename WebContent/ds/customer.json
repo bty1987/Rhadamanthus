@@ -8,6 +8,14 @@
     {"key":"5","value":"绑定"},
     {"key":"6","value":"拒绝"}
   ],
+  "cppointTypePoint":[
+	{"key":"0","value":"累积"}, 
+	{"key":"1","value":"消耗"}
+  ],
+   "cppointTypeTypePoint":[
+	{"key":"0","value":"装修"}, 
+	{"key":"1","value":"销售"}
+  ],
  "revisitGladness":[
   	{"key":"0","value":"初始"},
   	{"key":"1","value":"满意"},

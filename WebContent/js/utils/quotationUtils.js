@@ -93,7 +93,7 @@ var quotationUtils = {
                 params.subtype = [1];
                 params.showType = {itemtype: 4};
                 params.workType = com.focusPage("#quotationCNSelect", "#printQuotationCNModal").val();
-                com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
+                com.popup("打印报价", "/views/quotation/normriceOutput.html", null, null, !!status);
             });
 
             com.post(api.quotation.queryQuotationFunctionAreaByQuotationId, {"quotation.qid": quotationId}, function (res) {
@@ -645,6 +645,35 @@ var quotationUtils = {
         });
         
         quotationUtils.quotationDetail.quotationFunctionAreaItemMs = quotationFunctionAreaItemMs;
+    },
+    quotationNormoodProcessing: function(quotationFunctionAreas, constructionNodes){
+        
+        var quotationFunctionAreaItemAs = {};
+        var index = 0;
+        
+        $.each(quotationFunctionAreas, function (i, v) {
+            
+            var functionAreaName = v.functionAreaName;
+            var functionAreaId = v.qfaid;
+            
+            $.each(v.quotationFunctionAreaItems, function (j, qv) {
+                
+                var normood = qv.normood;
+                
+                normood.usenum = qv.initNum;
+                
+                if (!quotationFunctionAreaItemAs[normood.goods.gid + "-"]) {
+                    quotationFunctionAreaItemAs[normood.goods.gid + "-"] = normood;
+                }else{
+                    
+                    var item = quotationFunctionAreaItemAs[normood.goods.gid + "-"];
+                    
+                    item.usenum = utils.accAdd(item.usenum, normood.usenum);
+                }
+            });
+        });
+        
+        quotationUtils.quotationDetail.quotationFunctionAreaItemAs = quotationFunctionAreaItemAs;
     },
     //查询主材配比价格
     quotationMaterial:function(mm){

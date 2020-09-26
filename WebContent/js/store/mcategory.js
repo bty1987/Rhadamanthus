@@ -1,18 +1,17 @@
 $(function(){
     var mcategory = {
-        saveBtn: null,
-        cancelBtn: null,
-        modal: null,
-        mcategoryItems:{},
-        data:{
-            mcategoryData: {}
+            
+        items: {
+            name: com.focusPage("#name"),
+            icon: com.focusPage("#icon"),
         },
-        editFlg: false,
-        repeatFlg: false
+        
+        btns: {
+            saveBtn: com.focusPage("#saveBtn"),
+        },
     };
-
-    mcategory.mcategoryItems.name = com.focusPage("#name");
-    mcategory.mcategoryItems.icon = com.focusPage("#icon");
+    
+    mcategory.btns.saveBtn.click(saveData);
 
     var displayFunc  = (function(){
         /*表格样式*/
@@ -20,13 +19,14 @@ $(function(){
             var $tableWrap = com.focusPage('#' + tableId);
 
             if(listData && listData.length){
+                
                 var $ulTitle = createTableTitle();
                 var $ulData = $('<ul></ul>').addClass('flex-table');
+                
                 $tableWrap.append($ulTitle).append($ulData);
 
                 $.each(listData,function(i, v){
-                    var $liLine = creatLine(i, v, i == listData.length - 1);
-                    $liLine.appendTo($ulTitle);
+                    creatLine(i, v, i == listData.length - 1).appendTo($ulTitle);
                 });
             }
         };
@@ -55,9 +55,9 @@ $(function(){
 
         /*表格体*/
         var creatLine = function (i, v, lastFlag) {
+            
             var $liLine = $('<li></li>').addClass('line');
-            var id = i + 1;
-            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(id));
+            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
             var $contentWrap = $('<div></div>').addClass('line-wrap content col2');
 
             var propertyArr = [
@@ -77,8 +77,8 @@ $(function(){
             var $btn = $('<button></button>').addClass('btn btn-primary dropdown-toggle').attr('data-toggle', 'dropdown').append('操作').append('<i class="icon-angle-down"></i>');
             var $btnUl = $('<ul></ul>').addClass('dropdown-menu').addClass(lastFlag ? 'bottom-up' : '');
 
-            var $btnStart = $('<li></li>').append($('<a></a>').html('不显示'));
-            var $btnBan = $('<li></li>').append($('<a></a>').html('显示'));
+            var $btnBan = $('<li></li>').append($('<a></a>').html('不显示'));
+            var $btnStart = $('<li></li>').append($('<a></a>').html('显示'));
             var $update = $('<li></li>').append($('<a></a>').html('编辑'));
 
             $btnUl.append($btnStart).append($btnBan).append($update);
@@ -91,39 +91,25 @@ $(function(){
             $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
             $update.click(function(){
-                //editBrand(v);
+                
+                mcategory.cid = v.cid;
+                
+                com.cleanItems(mcategory.items);
+                
                 com.focusPage("#name").val(v.name);
                 com.focusPage("#icon").val(v.icon);
-                openlayer(function(index, layero){
-                    if(com.validate('form1'))
-                        return;
-
-                    updateData(v.cid, function(){
-                        com.clearValidator("#cid", true);
-                        com.clearValidator("#name", true);
-                        com.clearValidator();
-                        com.closePopup();
-                    });
+                
+                com.popup4model('#layerAdd', '编辑', null, function () {
+                    com.clearValidator();
                 });
             });
 
             $btnStart.click(function(){
-                com.focusPage('#layerAdd').attr('data-cid', v.cid);
-                com.focusPage('#layerAdd').attr('data-status', v.isShow);
-
-                var id = com.focusPage('#layerAdd').attr('data-cid');
-                var status = com.focusPage('#layerAdd').attr('data-status');
-                startStatus(id, status);
+                updateStatus(v.cid, 0);
             });
             
             $btnBan.click(function(){
-                com.focusPage('#layerAdd').attr('data-bid', v.cid);
-                com.focusPage('#layerAdd').attr('data-status', v.isShow);
-
-                var id = com.focusPage('#layerAdd').attr('data-bid');
-                var status = com.focusPage('#layerAdd').attr('data-status');
-
-                stopStatus(id, status);
+                updateStatus(v.cid, 1);
             });
             
             return $liLine;
@@ -133,7 +119,6 @@ $(function(){
             init : function(tableId,listData){
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
-
             },
             drawLine : function(v){
                 return creatLine(v);
@@ -141,11 +126,9 @@ $(function(){
         };
     })();
 
-    /*分页*/
-    var _condArr = ["mcategory"];
-    var mcategorySeacher = new Searcher();
+    var searcher = new Searcher();
 
-    mcategorySeacher.init( _condArr, "condList", api.store.pageMcategory, function(data){
+    searcher.init( ["store-mcategory"], "condList", api.store.pageMcategory, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "mcategoryPostData", null, false, null, function(){
 
@@ -154,89 +137,49 @@ $(function(){
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         $adda.click(function(){
-            com.cleanItems(mcategory.mcategoryItems);
-            openlayer(function(index, layero){
-                if(com.validate('form1'))
-                    return;
-                saveData(null, function(){
-                    com.clearValidator("#cid", true);
-                    com.clearValidator("#name", true);
-                    com.clearValidator();
-                    com.closePopup();
-                });
+            
+            com.cleanItems(mcategory.items);
+            
+            com.popup4model('#layerAdd', '添加', null, function () {
+                com.clearValidator();
             });
         });
-        return [$adda];
-    },'resultList');
-
-    function openlayer(callback){
-        com.closePopup();
-        layer.open({
-            type: 1,
-            title:" ",
-            content: com.focusPage('#layerAdd'),
-            area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
-            maxmin: false,
-            zIndex:9000,
-            btn: ['确定', '取消'],
-            yes: function(index, layero){
-                callback(index,layero);
-            },
-            btn2: function(index, layero){
-                //按钮【按钮二】的回调
-                com.clearValidator();
-            },
-            cancel: function(){
-                //右上角关闭回调
-            }
-        });
-    }
-
-    /*状态信息验证*/
-    function startStatus(id,isShow){
-        com.post(api.store.updateMcategoryForShow,{
-            "mcategory.cid": id,
-            "mcategory.isShow": 1
-        },function(res){
-            mcategorySeacher.doSearch();
-        });
-    }
-
-    function stopStatus(id, isShow, callback){
-        com.post(api.store.updateMcategoryForShow,{
-            "mcategory.cid": id,
-            "mcategory.isShow": 0
-        },function(res){
-            mcategorySeacher.doSearch();
+        
+        return [$adda]; 
+    }, 'resultList');
+    
+    function updateStatus(cid, status){
+        
+        var options = {
+            "mcategory.cid": cid,
+            "mcategory.isShow": status
+        }
+        
+        com.post(api.store.updateMcategoryForShow, options, function(res){
+            searcher.doSearch();
         });
     }
 
     /*添加信息*/
     function saveData(id, callback){
-        var $layer = com.focusPage('#layerAdd');
-        var mcategory = com.focusPage("#name").val();
-        var icon = com.focusPage("#icon").val();
-
-        com.post(api.store.addMcategory, {
-            "mcategory.name": mcategory,
-            "mcategory.icon": icon
-        }, function(res){
-            callback();
-            mcategorySeacher.doSearch();
+        
+        if(com.validate('form1')) return false;
+        
+        var url = api.store.addMcategory;
+        var options = {
+            "mcategory.name": mcategory.items.name.val(),
+            "mcategory.icon": mcategory.items.icon.val()
+        }
+        
+        if(mcategory.cid){
+            url = api.store.updateMcategory;
+            options["mcategory.cid"] = mcategory.cid;
+        }
+        
+        com.post(url, options, function(res){
+            com.closePopup();
+            searcher.doSearch();
         });
     }
 
-    function updateData(id, callback){
-        var $layer = com.focusPage('#layerAdd');
-        var name = com.focusPage("#name").val();
-        var icon = mcategory.mcategoryItems.icon.val();
-        com.post(api.store.updateMcategory, {
-            'mcategory.cid':id,
-            "mcategory.name": name,
-            "mcategory.icon": icon
-        }, function(res){
-            callback();
-            mcategorySeacher.doSearch();
-        });
-    }
 });

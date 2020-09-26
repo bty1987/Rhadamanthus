@@ -120,7 +120,7 @@ $(function(){
             var propertyArr = [
                 [v.no,'grey'],
                 [v.name,'grey'],
-                [v.num,'grey'],
+                [v.num,'blue'],
                 [awardStock.type[v.type],'grey'],
                 [awardStock.subtype[v.subtype] , "grey"],
                 [v.content,'grey'],
@@ -305,7 +305,7 @@ $(function(){
     })();
 
     var awardStockSeacher = new Searcher();
-    awardStockSeacher.init( ['prizeName', 'prizeNo', 'awardStockType', 'awardSubtype', 'awardStoreRoom'], "condList", api.information.pageAwardStock, function(data){
+    awardStockSeacher.init( ['information-award-no', 'information-award-name', 'information-awardStock-type', 'information-awardStock-subtype', 'information-awardStock-room'], "condList", api.information.pageAwardStock, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "pageAwardPostData", null, false, null, function() {
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addAwardStock').css('margin', '0px 3px');

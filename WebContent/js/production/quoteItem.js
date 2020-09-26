@@ -139,7 +139,7 @@ $(function() {
     })();
 
     var searcher = new Searcher();
-    var _arr = ['p_quoteItemName','p_quotetype'];
+    var _arr = ['production-quoteItem-name','production-quoteItem-type'];
     searcher.init(_arr,"condList",api.production.pageQuoteItem,function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "Workflow",null,false, null,function() {

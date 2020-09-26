@@ -61,11 +61,11 @@ public class AdvancePaymentDaoImpl extends DaoImpl<AdvancePaymentPO> implements 
 
 				if("orderId".equals(field)) {
 					query.add(query.getCriterion("decoration.orderId", data, op));
-				} else if ("villageId".equals(field)) {
+				} else if ("village".equals(field)) {
 					query.add(query.getCriterion("village.no", data, op));
 				} else if ("houseNumber".equals(field)) {
 					query.add(query.getCriterion("house.houseNumber", data, op));
-				} else if ("designerId".equals(field)) {
+				} else if ("designer".equals(field)) {
 					query.add(query.getCriterion("designer.userId", data, op));
 				} else if ("company".equals(field)) {
 					query.add(query.getCriterion("decoration.company", Integer.valueOf(data), op));

@@ -98,7 +98,7 @@ $(function () {
 
     var userSeacher = new Searcher();
 
-    userSeacher.init(["storehouseUserName"], "condList", api.personel.pageUser, function (data) {
+    userSeacher.init(["data-storehouse-righter"], "condList", api.personel.pageUser, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "storehouseUserPostData", null, false, null, null, 'resultList');
 

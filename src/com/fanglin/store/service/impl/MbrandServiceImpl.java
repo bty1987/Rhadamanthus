@@ -23,121 +23,119 @@ import com.fanglin.utils.Paging;
 @Service("mbrandService")
 @Transactional(readOnly = true)
 public class MbrandServiceImpl implements MbrandService {
-	
+
 	@Autowired
 	private MbrandDao mbrandDao;
-	
+
 	@Autowired
 	private McategoryDao mcategoryDao;
 
 	@Override
 	public void pageMbrand(Paging paging, List<Filter> filters) {
-		
+
 		List<MbrandPO> mbrandPOs = mbrandDao.pageMbrand(paging, filters);
 		List<MbrandVO> mbrandVOs = new ArrayList<MbrandVO>();
-		
+
 		for (MbrandPO mbrandPO : mbrandPOs) {
 			mbrandVOs.add(mbrandPOToVO(mbrandPO));
 		}
-		
+
 		paging.setData(mbrandVOs);
-		
 	}
 
 	@Override
 	public List<MbrandVO> queryMbrand(MbrandVO mbrand) {
-		
+
 		List<MbrandPO> mbrandPOs = mbrandDao.queryMbrand(mbrand.getMcategory().getCid());
 		List<MbrandVO> mbrandVOs = new ArrayList<MbrandVO>();
-		
+
 		for (MbrandPO mbrandPO : mbrandPOs) {
 			mbrandVOs.add(mbrandPOToVO(mbrandPO));
 		}
-		
+
 		return mbrandVOs;
-		
 	}
-	
+
 	@Override
 	public List<MbrandVO> queryMbrandByName(MbrandVO mbrand) {
-		
+
 		Paging paging = new Paging(0, 10);
-		
+
 		List<MbrandPO> mbrandPOs = mbrandDao.queryMbrandByName(paging, mbrand.getName());
 		List<MbrandVO> mbrandVOs = new ArrayList<MbrandVO>();
-		
+
 		for (MbrandPO mbrandPO : mbrandPOs) {
 			mbrandVOs.add(mbrandPOToVO(mbrandPO));
 		}
-		
+
 		return mbrandVOs;
-		
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void addMbrand(MbrandVO mbrandVO) throws FLException {
-		
+	@Transactional(rollbackFor = Exception.class)
+	public int addMbrand(MbrandVO mbrandVO) throws FLException {
+
 		McategoryPO mcategoryPO = mcategoryDao.get(mbrandVO.getMcategory().getCid());
-		
-		MbrandPO mbrandPO  = new MbrandPO(mcategoryPO);
-		
-		BeanUtil.copyProperties(mbrandVO, mbrandPO, Arrays.asList("mcategory","status"));
-		
+
+		MbrandPO mbrandPO = new MbrandPO(mcategoryPO);
+
+		BeanUtil.copyProperties(mbrandVO, mbrandPO, Arrays.asList("mcategory", "status"));
+
 		mbrandDao.save(mbrandPO);
-		
+
+		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void updateMbrand(MbrandVO mbrand) throws FLException {
-		
+	@Transactional(rollbackFor = Exception.class)
+	public int updateMbrand(MbrandVO mbrand) throws FLException {
+
 		MbrandPO mbrandPO = mbrandDao.get(mbrand.getBid());
-		
-		if(mbrandPO == null){
+
+		if (mbrandPO == null) {
 			throw new FLException(340004, "品牌不存在");
 		}
-		
+
 		BeanUtil.copyProperties(mbrand, mbrandPO, Arrays.asList("mcategory", "status"));
-		
-		if(mbrand.getMcategory() != null){
-			
+
+		if (mbrand.getMcategory() != null) {
+
 			McategoryPO mcategoryPO = mcategoryDao.get(mbrand.getMcategory().getCid());
-			
+
 			mbrandPO.setMcategory(mcategoryPO);
-			
 		}
-		
+
 		mbrandDao.update(mbrandPO);
-		
+
+		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void updateMbrandForStatus(MbrandVO mbrand) throws FLException {
-		
+	@Transactional(rollbackFor = Exception.class)
+	public int updateMbrandForStatus(MbrandVO mbrand) throws FLException {
+
 		MbrandPO mbrandPO = mbrandDao.get(mbrand.getBid());
-		
-		if(mbrandPO == null){
+
+		if (mbrandPO == null) {
 			throw new FLException(340004, "品牌不存在");
 		}
-		
+
 		mbrandPO.setStatus(mbrand.getStatus());
-		
+
 		mbrandDao.update(mbrandPO);
-		
+
+		return 0;
 	}
-	
-	public MbrandVO mbrandPOToVO(MbrandPO mbrandPO){
-		
+
+	public MbrandVO mbrandPOToVO(MbrandPO mbrandPO) {
+
 		MbrandVO mbrandVO = new MbrandVO(new McategoryVO());
-		
+
 		BeanUtil.copyProperties(mbrandPO, mbrandVO, Arrays.asList("mcategory"));
-		
+
 		BeanUtil.copyProperties(mbrandPO.getMcategory(), mbrandVO.getMcategory());
-		
+
 		return mbrandVO;
-		
 	}
 
 }

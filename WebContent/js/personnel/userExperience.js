@@ -44,9 +44,6 @@ jQuery(function($) {
             $ul.appendTo($tableWrap);
         }
     };
-    
-
-
 
     com.post(api.personel.queryUserExperienceByUid,{"userExperience.uid": params.uid}, function (data) {
         initList(data.userExperiences);

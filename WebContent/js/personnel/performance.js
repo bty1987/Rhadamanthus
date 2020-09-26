@@ -130,7 +130,7 @@ $(function () {
         performance.modal.modal("hide");
     }
 
-    var _condArr = ['userName', 'performanceType', 'performancestartTime', "performanceendTime"];
+    var _condArr = ['personel-userName', 'personel-performance-type', 'personel-performance-startTime', "personel-performance-endTime"];
 
     var performanceSeacher = new Searcher();
 

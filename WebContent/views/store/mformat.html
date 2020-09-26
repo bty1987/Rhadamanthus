@@ -1,31 +1,44 @@
-<div>
-    <div id="addFormat">
-        <ul class="flex-table">
-            <li class="line table-title">
-                <div class="line-wrap order">
-                    <div class="cell index"></div>
-                </div>
-                <div class="line-wrap content col1">
-                    <div class="cell">规格信息</div>
-                </div>
-                <div class="line-wrap action">
-                    <div class="cell option">操作</div>
-                </div>
-            </li>
-        </ul>
+<div class="page-content">
+	<div id="addFormat">
+		<ul class="flex-table">
+			<li class="line table-title">
+				<div class="line-wrap order">
+					<div class="cell index"></div>
+				</div>
+				<div class="line-wrap content col1">
+					<div class="cell">规格信息</div>
+				</div>
+				<div class="line-wrap action">
+					<div class="cell option">操作</div>
+				</div></li>
+		</ul>
 
-        <ul class="flex-table" id="list"></ul>
-    </div>
+		<ul class="flex-table" id="list">
+			<li class="line current"><div class="line-wrap order">
+					<div class="cell index"></div>
+				</div>
+				<div class="line-wrap content col1">
+					<div class="cell format">
+						<input type="text" autocomplete="off" class="editable v_required">
+					</div>
+				</div>
+				<div class="line-wrap action">
+					<div class="cell option">
+						<a class="color-green green" style="font-size: 18px"><i class="icon-ok"></i></a>
+						<a class="color-red red" style="font-size: 18px"><i class=" icon-remove"></i></a>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>
 
-    <div id="showFormat">
-        <div id="condListFormat" class="fl_search clearfix"></div>
-
-        <div class="clearfix" id="resultListFormat"></div>
-
-        <div class="fl-page-wrap clearfix pagination" id="pagenationFormat" style="display: block;"></div>
-    </div>
+	<div id="showFormat">
+		<div id="condListFormat" class="fl_search clearfix"></div>
+		<div class="clearfix" id="resultListFormat"></div>
+		<div class="fl-page-wrap clearfix pagination" id="pagenationFormat" style="display: block;"></div>
+	</div>
 </div>
 
 <script type="text/javascript">
-    $.loadScript(['js/store/mformat.js']);
+    $.loadScript([ 'js/store/mformat.js' ]);
 </script>

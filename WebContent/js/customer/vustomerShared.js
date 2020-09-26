@@ -62,7 +62,7 @@ $(function(){
 
     var searcher = new Searcher();
 
-    searcher.init(["cu_name"], "condList", api.customer.pageVustomerForCommunion, function(data){
+    searcher.init(["customer-v-name"], "condList", api.customer.pageVustomerForCommunion, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "vustomerSharedPostData", null, false, null, null);
 

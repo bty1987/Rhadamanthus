@@ -59,7 +59,7 @@ jQuery(function ($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["chartNo", "chartName"], "condList", api.data.pageChart, function (data) {
+    searcher.init(["data-chart-no", "data-chart-name"], "condList", api.data.pageChart, function (data) {
     	
         displayFunc.init('resultList', data);
     }, "pagenation", "brandPostData", null, false, null, function () {

@@ -40,9 +40,17 @@ $(function () {
     com.datetime(constructionNodes.items.drawlineTime);
     com.datetime(constructionNodes.items.designTime);
 
+    com.post(api.data.queryConstructionNode,{}, function(res){
+
+        constructionNodes.constructionSchedule = res.constructionNodes.split("sort","name");
+
+        constructionNodes.constructionSchedule[0] = "初始";
+        constructionNodes.constructionSchedule[1] = "开工";
+        constructionNodes.constructionSchedule[2] = "完工";
+
+    }, null, false);
+
     com.post(api.ds.construction, {}, function (res) {
-        
-        constructionNodes.constructionSchedule = res.constructionSchedule.split("key", "value");
 
         constructionNodes.items.ishovel.bindData(res.isHovel, "key", "value", false);
         constructionNodes.items.iskey.bindData(res.isKey, "key", "value", false);
@@ -135,7 +143,7 @@ $(function () {
 
     var seacher = new Searcher();
 
-    seacher.init(['c_orderId', 'c_village', 'c_houseNumber', 'c_designer', 'c_schedule', 'c_projectStatusFlag'], "supervisionCondList", api.construction.pageConstruction, function (list) {
+    seacher.init(['construction-orderId', 'construction-village-name', 'construction-houseNumber-name', 'construction-designer', 'construction-schedule', 'construction-projectStatusFlag'], "supervisionCondList", api.construction.pageConstruction, function (list) {
         displayFunc.init('supervisionResultList', list);
     }, "supervisionPagenation", "supervisionSeacherPostData", null, false, null, null, "supervisionResultList");
 

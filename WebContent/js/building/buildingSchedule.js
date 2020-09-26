@@ -155,49 +155,24 @@ jQuery(function($) {
 			}
 		});
 	}
-
-	//图片上传
+	
 	function initUploadBtn(sore, ele, dwName){
-		com.focusPage("#" + sore + "Upload").html("").Huploadify({
-			'debug' : false, // 开启调试
-			'auto':true, // 是否自动上传
-			'successTimeout':150, // 超时时间
-			'formData':{ // 附带值
-				'uploadType':0,
-				'username':'用户名',
-				'rnd':'加密密文'
-			},
-			'multi': true, // 批量上传
-			'buttonClass': 'btn btn-success',
-			'buttonText': '上传',
-			'overrideEvents' : ['onDialogClose'],  // 不执行默认的onSelect事件
-			'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-			'uploader':config.media + api.common.uploadImg.url, // 上传处理程序
-			'height': '45', // 浏览按钮的高度
-			'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-			'fileTypeExts': '*.jpg;*.jpeg;*.gif;*.png', // 允许上传的文件后缀
-			'fileSizeLimit': '5MB', // 上传文件的大小限制
-			'queueSizeLimit' : 10, // 上传数量
-			'onUploadSuccess':function(file, data, response){ //上传到服务器,服务器返回相应信息到data里
-				var dateObj=eval("("+data+")");
-				if(dateObj.errorCode == 0){
-					var options = {};
+	    
+	    com.uploadify("#" + sore + "Upload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {'uploadType': 2}, 1, function(data){
+	        
+	        var options = {};
 
-					options["buildingDrawing.sid"] = ele;
-					options["buildingDrawing.name"] = dwName + "图片";
-					options["buildingDrawing.drawingUrl"] = dateObj.resUrl;
-					options["buildingDrawing.drawingType"] = 0;
-					options["buildingDrawing.type"] = 3;
+	        options["buildingDrawing.sid"] = ele;
+	        options["buildingDrawing.name"] = dwName + "图片";
+	        options["buildingDrawing.drawingUrl"] = data.resUrl;
+	        options["buildingDrawing.drawingType"] = 0;
+	        options["buildingDrawing.type"] = 3;
 
-					com.post(api.building.addBuildingDrawing, options, function(res){
-						var drawing = res.buildingDrawing;
-						appendGalleryElement(sore + "Gallery", drawing.bdid, dateObj.resUrl, 0, "", api.building.deleteBuildingDrawing);
-					});
-				}else{
-					console.log(data);
-				}
-			}
-		});
+	        com.post(api.building.addBuildingDrawing, options, function(res){
+	            var drawing = res.buildingDrawing;
+	            appendGalleryElement(sore + "Gallery", drawing.bdid, data.resUrl, 0, "", api.building.deleteBuildingDrawing);
+	        });
+	    });
 	}
 	
 	function appendGalleryElement(galleryId, imgId, imgUrl, type, editUrl, deleteUrl){

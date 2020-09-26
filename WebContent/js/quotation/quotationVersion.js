@@ -70,7 +70,7 @@ $(function(){
         };
     })();
 
-    var _condArr = ['versionName'];
+    var _condArr = ['data-quotation-version-name'];
 
     var searcher = new Searcher();
     searcher.init( _condArr, "condList", api.quotation.pageQuotationVersion, function(data){

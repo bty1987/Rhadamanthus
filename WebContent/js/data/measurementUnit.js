@@ -74,7 +74,7 @@ $(function(){
     })();
 
     var searcher = new Searcher();
-    searcher.init(['measurementUnitName'], "condList", api.data.pageMeasurementUnit, function(data){
+    searcher.init(['data-unit-name'], "condList", api.data.pageMeasurementUnit, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "measurementData", null, false, null, function(){
 

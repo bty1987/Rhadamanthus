@@ -119,7 +119,7 @@ $(function () {
 	
 	var searcher = new Searcher();
 
-	searcher.init( ["talkingName","talkingType","talkingStatus"], "creatLine", api.communion.pageTalking, function(data){
+	searcher.init( ["data-talking-name","data-talking-type","data-talking-status"], "creatLine", api.communion.pageTalking, function(data){
 		displayFunc.init('resultList', data);
 	}, "pageTalking", "pageTalkingPost", null, false, null,function(res){
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addTalking').css("margin", "0px 3px");

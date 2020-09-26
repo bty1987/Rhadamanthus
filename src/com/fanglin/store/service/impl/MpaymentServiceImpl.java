@@ -21,52 +21,50 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
 @Service("MpaymentService")
-@Transactional(readOnly=true)
-public class MpaymentServiceImpl implements MpaymentService{
+@Transactional(readOnly = true)
+public class MpaymentServiceImpl implements MpaymentService {
 
 	@Autowired
 	private MpaymentDao mpaymentDao;
-	
+
 	@Autowired
 	private MorderDao morderDao;
-	
+
 	@Autowired
 	private MuserDao muserDao;
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void addMpayment(MpaymentVO mpaymentVO, MuserVO muserVO) throws FLException{
-		
+	public void addMpayment(MpaymentVO mpaymentVO, MuserVO muserVO) throws FLException {
+
 		MorderPO morderPO = morderDao.get(mpaymentVO.getMorder().getOid());
-		
 		MuserPO muserPO = muserDao.queryMuserByUnionId(muserVO.getUnionId());
-		
-		if(muserPO == null){
+
+		if (muserPO == null) {
 			throw new FLException(340009, "用户不存在");
 		}
-		
-		if(morderPO == null){
+
+		if (morderPO == null) {
 			throw new FLException(340012, "订单不存在");
 		}
-		
-		if(!muserVO.getUnionId().equals(morderPO.getUnionId())){
+
+		if (!muserVO.getUnionId().equals(morderPO.getUnionId())) {
 			throw new FLException(340001, "无操作权限");
 		}
-		
+
 		MpaymentPO mpaymentPO = new MpaymentPO(morderPO);
-		
+
 		BeanUtil.copyProperties(mpaymentVO, mpaymentPO, Arrays.asList("morder"));
 		BeanUtil.copyProperties(mpaymentVO.getMorder(), mpaymentPO.getMorder(), Arrays.asList("coupon"));
 		mpaymentPO.setTotalPrice(mpaymentPO.getMorder().getTotal());
 		mpaymentPO.setStatus(MpaymentPO.STATUS_PAYMENT_SHORT);
-		
+
 		mpaymentDao.save(mpaymentPO);
-		
+
 		morderPO.setStatus(MorderPO.STATUS_WAITINGSEND_SHORT);
 		morderPO.setPaymentTime(DateUtil.getDateToTimestamp(new Date()));
-		
+
 		morderDao.update(morderPO);
-		
 	}
 
 }

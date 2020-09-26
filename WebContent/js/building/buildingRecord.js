@@ -3,25 +3,17 @@ jQuery(function($) {
 	var buildingRecord = {
 
 		btns: {
-
 			saveBtn: com.focusPage("#saveBtn")
-
 		},
-
 		modals: {
-
 			buildingRecordModal: com.focusPage("#buildingRecordModal")
-
 		},
-
 		items: {
-
 			hsNo: com.focusPage("#hsNo"),
 			csNo: com.focusPage("#csNo"),
 			brType: com.focusPage("#brType"),
 			pattern: com.focusPage("#pattern"),
 			comment: com.focusPage("#comment")
-
 		},
 
 		recordType: [],
@@ -35,7 +27,6 @@ jQuery(function($) {
 		buildingRecordHsid: params.hsid,
 		buildingRecordCsid: params.csid,
 		currentPage: params.page
-
 	};
 
 	buildingRecord.btns.saveBtn.on("click", saveData);

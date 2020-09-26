@@ -220,7 +220,7 @@ jQuery(function ($) {
     })();
 
     var searcher = new Searcher();
-    searcher.init(["c_orderId", "c_designer", "c_drawLineStatus", "c_actualDate"], "condList", api.construction.queryDrawLine, function (data) {
+    searcher.init(['construction-orderId', 'construction-designer', "construction-drawLine-status", "construction-drawLine-actualDate"], "condList", api.construction.queryDrawLine, function (data) {
         com.focusPage("#resultList").html("");
         displayFunc.init('resultList', data);
     }, "pagenation", "drawLineOpenPostData", null, true, "drawLines");

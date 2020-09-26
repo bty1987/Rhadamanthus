@@ -1,16 +1,23 @@
 
 $(function(){
+    
     var muser = {
-        muserItems:{},
-        editFlg: false,
-        repeatFlg: false
+        items:{
+            name: com.focusPage("#name"),
+            phone: com.focusPage("#phone"),
+            unionvid: com.focusPage("#unionvid"),
+            gender: com.focusPage("#gender"),
+            birthday: com.focusPage("#birthday"),
+        },
+        
+        btns: {
+            saveBtn: com.focusPage("#saveBtn")
+        }
     };
-
-    muser.muserItems.name = com.focusPage("#name");
-    muser.muserItems.phone = com.focusPage("#phone");
-    muser.muserItems.unionvid = com.focusPage("#unionvid");
-    muser.muserItems.gender = com.focusPage("#gender");
-    muser.muserItems.birthday = com.focusPage("#birthday");
+    
+    com.datetime(com.focusPage(".date-picker"), "date");
+    
+    muser.btns.saveBtn.click(updateData);
 
     var displayFunc  = (function(){
         /*表格样式*/
@@ -18,13 +25,14 @@ $(function(){
             var $tableWrap = com.focusPage('#' + tableId);
 
             if(listData && listData.length){
+                
                 var $ulTitle = createTableTitle();
                 var $ulData = $('<ul></ul>').addClass('flex-table');
+                
                 $tableWrap.append($ulTitle).append($ulData);
 
                 $.each(listData,function(i, v){
-                    var $liLine = creatLine(i, v, i == listData.length - 1);
-                    $liLine.appendTo($ulTitle);
+                    creatLine(i, v, i == listData.length - 1).appendTo($ulTitle);
                 });
             }
         };
@@ -88,25 +96,27 @@ $(function(){
 
             //地址点击事件
             $address.click(function () {
-                openLayerSwitch('userAddressPopUp', v.uid, v.unionId, '地址', 'views/store/address.html');
+                
+                params.muser = v;
+                
+                com.popup4page("#userAddressPopUp", 'views/store/address.html', "地址", function(){
+                    searcher.doSearch();
+                });
             });
 
             //编辑
             $update.click(function(){
-                clearForm('form1');
-                editBrand(v);
-                openlayer(function(index, layero){
-                    if(com.validate('form1'))
-                        return;
-                    //编辑
-                    updateData(v, function(){
-                        com.clearValidator("#uid", true);
-                        com.clearValidator("#name", true);
-                        com.clearValidator();
-                        com.closePopup();
-                    });
+                
+                com.cleanItems(muser.items);
+                
+                initUpdate(v);
+                
+                com.popup4model('#layerAdd', '编辑', null, function () {
+                    com.clearValidator();
+                    searcher.doSearch();
                 });
             });
+            
             return $liLine;
         };
 
@@ -121,109 +131,38 @@ $(function(){
         };
     })();
 
-    /*分页*/
-    var _condArr = ["muserName"];
-    var muserSeacher = new Searcher();
+    var searcher = new Searcher();
 
-    muserSeacher.init( _condArr, "condList", api.store.pageMuser, function(data){
+    searcher.init( ["store-muser-name"], "condList", api.store.pageMuser, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "muserPostData", null, false, null, null,'resultList');
 
-    function openLayerSwitch(id, uid, unionid, title, url) {
-        var $PopUp = com.focusPage('#' + id);
-        $PopUp.attr({'data-unionid': unionid});
-        $PopUp.attr({'data-uid': uid});
-
-        //弹出即全屏
-        var index = layer.open({
-            type: 1,
-            skin: 'layui-layer-lan',
-            title: title,
-            content: $PopUp,
-            area: ["1200px", ( $(window).height() * 0.84 < 800 ? $(window).height() * 0.84 : 800 ) + "px"],
-            maxmin: false,
-            zIndex: 9000,
-            success: function (layer, index) {
-                $PopUp.load(url);
-            },
-            end: function () {
-                $PopUp.attr({'data-uid': null});
-                $PopUp.attr({'data-unionid': null});
-                $PopUp.empty();
-                muserSeacher.doSearch();
-            }
-        });
+    function initUpdate(v){
+        
+        muser.unionId = v.unionId;
+        
+        muser.items.name.val(v.name);
+        muser.items.phone.val(v.phone);
+        muser.items.gender.val(v.gender);
+        muser.items.birthday.val(v.birthday);
     }
 
-    function clearForm(formId){
-        var $form = com.focusPage("#"+formId);
-        var error = com.focusPage('.alert-error', $form);
-        var success = com.focusPage('.alert-success', $form);
-        com.focusPage('.control-group').removeClass("success").removeClass("error");
-        com.focusPage(".ok").remove();
-        com.focusPage(".help-inline").remove();
-        success.hide();
-        error.hide();
-        com.focusPage("span.checked",$form).removeClass("checked");
-        com.focusPage("tr.edit-on").removeClass("edit-on");
-        $form.removeClass("edit-item");
-        com.focusPage(".extra-wrap .control-group:not(.hide)").remove();//去掉辅助项
-        com.focusPage('input[type="hidden"]',$form).val('');
-        document.getElementById(formId).reset();
-    }
-
-    function openlayer(callback){
-        com.closePopup();
-        layer.open({
-            type: 1,
-            //skin: 'layui-layer-lan',
-            title:"                                              ",
-            content: com.focusPage('#layerAdd'),
-            area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
-            maxmin: false,
-            zIndex:9000,
-            btn: ['确定', '取消'],
-            yes: function(index, layero){
-                callback(index,layero);
-            },
-            btn2: function(index, layero){
-                com.focusPage(".dropdown-menu").css("z-index", 9999).css("top","38px");
-                //按钮【按钮二】的回调
-                com.clearValidator();
-            },
-            cancel: function(){
-                com.focusPage(".dropdown-menu").css("z-index", 9999).css("top","38px");
-                //右上角关闭回调
-            }
-        });
-    }
-
-    com.datetime(com.focusPage(".date-picker"), "date");
-
-    function editBrand(v){
-        com.clearValidator();
-        muser.muserItems.name.val(v.name);
-        muser.muserItems.phone.val(v.phone);
-        muser.muserItems.gender.val(v.gender);
-        muser.muserItems.birthday.val(v.birthday);
-    }
-
-    function updateData(v,callback){
-        var $layer = com.focusPage('#layerAdd');
-        var phone = com.focusPage("#phone").val();
-        var name = com.focusPage("#name").val();
-        var gender = com.focusPage("#gender").val();
-        var birthday = com.focusPage("#birthday").val();
-
-        com.post(api.store.updateMuser, {
-            "muser.unionId": v.unionId,
-            "muser.phone": phone,
-            "muser.name": name,
-            "muser.gender": gender,
-            "muser.birthday": birthday
-        }, function(res){
-            callback();
-            muserSeacher.doSearch();
+    function updateData(){
+        
+        if(com.validate('form1')) return false;
+        
+        var url = api.store.updateMuser;
+        var options = {
+            "muser.unionId": muser.unionId,
+            "muser.phone": muser.items.phone.val(),
+            "muser.name": muser.items.name.val(),
+            "muser.gender": muser.items.gender.val(),
+            "muser.birthday": muser.items.birthday.val()
+        }
+        
+        com.post(url, options, function(res){
+            com.closePopup();
+            searcher.doSearch();
         });
     }
 });

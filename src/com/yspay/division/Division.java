@@ -109,7 +109,10 @@ public class Division {
 
 		Base base = new Base("826235152110030", "");
 
-		base.setBusiness(new Business("826235152110030", "464245026044"));
+		Business business = new Business("826235152110030", "1600480573323");
+		business.setAccount_date("20200919");
+
+		base.setBusiness(business);
 
 		Response response = new Division().query(base).execute();
 

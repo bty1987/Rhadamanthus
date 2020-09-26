@@ -78,7 +78,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["inf_userName", "c_orderId", "w_type", "w_status", "w_createTime", "operateTime"], "condList", api.salary.pageWithhold, function(data){
+    searcher.init(["salary-user", "salary-orderId", "salary-withhold-type", "salary-withhold-status", "salary-createTime", "salary-operateTime"], "condList", api.salary.pageWithhold, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "WithholdPostData",null, false, null, null);
 

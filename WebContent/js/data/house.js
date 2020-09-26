@@ -184,7 +184,7 @@ $(function () {
         }
     })();
 
-    var _condArr = ['villageName', 'houseNumber', 'buildingArea', 'waterVapour', 'orientation', 'parlourType', 'heatingType', 'houseType', 'through', 'roomNum'];
+    var _condArr = ['data-village-name', 'building-houseNumber', 'building-area', 'building-waterVapour', 'building-orientation', 'building-parlourType', 'building-heatingType', 'building-houseType', 'building-through', 'building-roomNum'];
 
     var searcher = new Searcher();
 

@@ -80,7 +80,7 @@ public class CartServiceImpl implements CartService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void addCart(MuserVO muserVO, CartVO cartVO) throws FLException {
+	public int addCart(MuserVO muserVO, CartVO cartVO) throws FLException {
 
 		MuserPO muserPO = muserDao.queryMuserByUnionId(muserVO.getUnionId());
 
@@ -134,11 +134,13 @@ public class CartServiceImpl implements CartService {
 				cartDao.save(cartPO);
 			}
 		}
+
+		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateCart(MuserVO muserVO, CartVO cartVO) throws FLException {
+	public int updateCart(MuserVO muserVO, CartVO cartVO) throws FLException {
 
 		MuserPO muserPO = muserDao.queryMuserByUnionId(muserVO.getUnionId());
 
@@ -158,11 +160,13 @@ public class CartServiceImpl implements CartService {
 		cartPO.setNum(cartVO.getNum());
 
 		cartDao.update(cartPO);
+
+		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void clearCart(MuserVO muserVO, List<Long> cids) throws FLException {
+	public int clearCart(MuserVO muserVO, List<Long> cids) throws FLException {
 
 		MuserPO muserPO = muserDao.queryMuserByUnionId(muserVO.getUnionId());
 
@@ -171,6 +175,8 @@ public class CartServiceImpl implements CartService {
 		}
 
 		cartDao.clearCart(cids);
+
+		return 0;
 	}
 
 	public CartVO cartPOToVO(CartPO cartPO) {

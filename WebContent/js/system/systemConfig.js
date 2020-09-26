@@ -81,11 +81,9 @@
     })();
     var searcher = new Searcher();
 
-    searcher.init(['systemConfig'], "condList",api.system.pageSystemConfig, function(data){
-        //resultList是显示数据的DIV,data是返回值
+    searcher.init(['system-config'], "condList",api.system.pageSystemConfig, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation");
-
 
     //编辑
     function edit(row){

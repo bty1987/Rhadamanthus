@@ -15,9 +15,9 @@ public class McolorPO implements Serializable {
 	private static final long serialVersionUID = 8202883119458806724L;
 
 	public static final String COLUMN_GID_STR = "gid";
-	
+
 	public static final String COLUMN_CID_STR = "cid";
-	
+
 	public static final short STATUS_ABLE_SHORT = 0;
 
 	private long cid;
@@ -31,7 +31,7 @@ public class McolorPO implements Serializable {
 	public McolorPO() {
 		super();
 	}
-	
+
 	@Id
 	@GeneratedValue
 	@Column(name = "cid")
@@ -42,7 +42,7 @@ public class McolorPO implements Serializable {
 	public void setCid(long cid) {
 		this.cid = cid;
 	}
-	
+
 	@Column(name = "gid")
 	public long getGid() {
 		return gid;
@@ -60,7 +60,7 @@ public class McolorPO implements Serializable {
 	public void setColor(String color) {
 		this.color = color;
 	}
-	
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;

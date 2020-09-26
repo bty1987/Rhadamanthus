@@ -176,7 +176,7 @@ $(function () {
     })();
 
     var occessoriesSeacher = new Searcher();
-    var _Array = ['orderId', 'occessoriesNo', 'createrName', 'createTime', 'occessoriesStatus'];
+    var _Array = ['inventory-accessories-orderId', 'inventory-occessories-no', 'inventory-accessories-createrName', 'inventory-accessories-createTime', 'inventory-occessories-status'];
 
     occessoriesSeacher.init(_Array, "condList", api.inventory.pageOccessories, function (data) {
         displayFunc.init('resultList', data);

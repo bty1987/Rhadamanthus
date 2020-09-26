@@ -2,16 +2,16 @@ package com.fanglin.store.vo;
 
 import java.io.Serializable;
 
-public class MuserCouponVO implements Serializable{
+public class MuserCouponVO implements Serializable {
 
 	private static final long serialVersionUID = -100964866731440865L;
 
 	private Long mcid;
-	
+
 	private CouponVO coupon;
-	
+
 	private String unionId;
-	
+
 	private Short status;
 
 	public MuserCouponVO() {
@@ -54,5 +54,5 @@ public class MuserCouponVO implements Serializable{
 	public void setStatus(Short status) {
 		this.status = status;
 	}
-	
+
 }

@@ -4,26 +4,18 @@ jQuery(function($) {
 	var buildingNode = {
 
 		btns: {
-
 			saveBtn: com.focusPage("#saveBtn"),
 			cancelBtn: com.focusPage("#cancelBtn"),
 			viewDeployedBtn: com.focusPage("#viewDeployedBtn")
-
 		},
-
 		modals: {
-
 			viewBuildingNodeModal: com.focusPage("#viewBuildingNodeModal"),
 			buildingNodeModal: com.focusPage("#buildingNodeModal")
-
 		},
-
 		items: {
-
 			buildingNodeName: com.focusPage("#buildingNodeName"),
 			buildingNodeType: com.focusPage("#buildingNodeType"),
 			nodeName: com.focusPage("#nodeName")
-
 		},
 
 		editFlg: false,
@@ -34,13 +26,11 @@ jQuery(function($) {
 	buildingNode.btns.viewDeployedBtn.on("click", updateNodeName);
 
 	buildingNode.modals.buildingModal.on("hide.bs.modal", function(){
-
 		com.cleanItems(buildingNode.items);
 		com.closeTip();
 	});
 
 	buildingNode.modals.viewBuildingNodeModal.on("hide.bs.modal", function(){
-
 		com.cleanItems(buildingNode.items);
 		com.closeTip();
 	});
@@ -128,7 +118,7 @@ jQuery(function($) {
 
 	var searcher = new Searcher();
 
-	var _condArr = ['buildingNodeType'];
+	var _condArr = ['building-node-type'];
 	
 	searcher.init(_condArr, "condList", api.building.pageBuildingNode, function(data){
 		displayFunc.init('resultList', data);

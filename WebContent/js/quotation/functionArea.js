@@ -169,7 +169,7 @@ $(function(){
         };
     })();
 
-    var _condArr = ['versionId'];
+    var _condArr = ['data-quotation-version'];
 
     var functionAreaSeacher = new Searcher();
     functionAreaSeacher.init( _condArr, "condList", api.quotation.pageFunctionArea, function(data){
@@ -439,7 +439,7 @@ $(function(){
             };
         })();
 
-        var condArr = ['itemName', 'quotationTypeId', 'quotationClassificationId', 'quotationBigCategoryId', 'quotationSmallCategoryId'];
+        var condArr = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'data-worktype'];
 
         var quotationSeacher = new Searcher();
 

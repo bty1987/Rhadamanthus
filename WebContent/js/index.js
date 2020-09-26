@@ -2,6 +2,7 @@
 
     Api().init('js/api/');
     Condition = Condition(api);
+    Condition.init('js/condition/');
     Validator().init();
     Printer().init();
     

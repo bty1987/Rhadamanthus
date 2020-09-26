@@ -149,13 +149,13 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 				query.alias("sales.house", "house");
 				query.alias("house.village", "village");
 
-				if("sid".equals(field)){
+				if("orderId".equals(field)){
 					query.add(query.getCriterion(SalesPaymentPO.COLUMN_SALES_ORDERID_STR, data, op));
 				}else if("no".equals(field)){
 					query.add(query.getCriterion(SalesPaymentPO.COLUMN_SALES_NO_STR, data, op));
-				}else if("userName".equals(field)){
+				}else if("designer".equals(field)){
 					query.add(query.getCriterion(SalesPaymentPO.COLUMN_SALES_SALESMAN_USERID_STR, data, op));
-				}else if("villageName".equals(field)){
+				}else if("village".equals(field)){
 					query.add(query.getCriterion(SalesPaymentPO.COLUMN_SALES_VILLAGE_NO_STR, data, op));
 				}else if("status".equals(field)){
 					query.add(query.getCriterion(field, Short.valueOf(data), op));

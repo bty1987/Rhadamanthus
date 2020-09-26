@@ -152,7 +152,7 @@ jQuery(function($) {
 
 	var searcher = new Searcher();
 
-	searcher.init(["orderId"], "condList", api.decoration.pageDecorationHolonomy, function(data){
+	searcher.init(["payment-orderId"], "condList", api.decoration.pageDecorationHolonomy, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "decorationHolonomyPosPostData");
 
@@ -249,7 +249,7 @@ jQuery(function($) {
 
 	var hsearcher = new Searcher();
 
-	hsearcher.init(["orderId"], "hcondList", api.payment.pageServicePaymentForHistory, function(data){
+	hsearcher.init(["payment-orderId"], "hcondList", api.payment.pageServicePaymentForHistory, function(data){
 		hdisplayFunc.init('hresultList', data);
 	}, "hpagenation", "servicePaymentPostDataPos", null, false, null, null, "hresultList");
 

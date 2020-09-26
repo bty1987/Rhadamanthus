@@ -113,7 +113,7 @@ jQuery(function($) {
      */
     var searcher = new Searcher();
 
-    searcher.init(["approval_senderName", "approval_Type"], "condList", api.approval.pageApprover, function(data){
+    searcher.init(["approval-approver-username", "approval-type"], "condList", api.approval.pageApprover, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "approvalUserPostData", null, false, null, function(){
         

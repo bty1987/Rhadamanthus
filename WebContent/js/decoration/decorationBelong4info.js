@@ -13,7 +13,7 @@ jQuery(function($) {
 	decorationBelong.decorationOrderId = params.orderId;
 	
 	com.focusPage('#btnBack').on("click", function(){
-		com.switchPage(api.index.decorationBelongIndex.url);
+		//com.switchPage(api.index.decorationBelongIndex.url);
 	});
 	
 	decorationUtils.initDecorationBelong(decorationBelong.decorationOrderId);

@@ -152,7 +152,7 @@ $(function () {
 
     var purchaseSearcher = new Searcher();
 
-    purchaseSearcher.init(["purchaseNo", "purchaseUserName", "purchaseTime", "purchaseStatus"], "condList", api.inventory.pagePurchase, function (data) {
+    purchaseSearcher.init(["inventory-purchase-no", "inventory-purchase-createName", "inventory-purchase-createTime", "inventory-purchase-status"], "condList", api.inventory.pagePurchase, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "purchasePostData", null, false, null, function () {
 

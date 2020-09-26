@@ -191,7 +191,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 	
-	searcher.init(["orderId"], "condList", api.payment.pageAdvancePayment, function(data){
+	searcher.init(["payment-orderId"], "condList", api.payment.pageAdvancePayment, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "paymentPosPostData", null, false, null, function(){
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'createPayment').css("margin", "0px 3px");
@@ -300,7 +300,7 @@ jQuery(function($) {
 
 	var hsearcher = new Searcher();
 
-	hsearcher.init(["orderId"], "hcondList", api.payment.pagePaymentForHistory, function(data){
+	hsearcher.init(["payment-orderId"], "hcondList", api.payment.pagePaymentForHistory, function(data){
 		hdisplayFunc.init('hresultList', data);
 	}, "hpagenation", "hpaymentPostDataPos", null, false, null, null, "hresultList");
 

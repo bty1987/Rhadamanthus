@@ -160,7 +160,7 @@ jQuery(function ($) {
     })();
 
     var searcher = new Searcher();
-    searcher.init(["c_orderId", "c_designer", "c_salesman", "c_applayTime"], "condList", api.construction.pageDrawLineForPlan, function (data) {
+    searcher.init(['construction-orderId', 'construction-designer', "construction-salesman", "construction-drawLine-applayTime"], "condList", api.construction.pageDrawLineForPlan, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "drawLineApplyPostData");
 

@@ -121,7 +121,7 @@ $(function(){
     })();
     var workplanSeacher = new Searcher();
 
-    workplanSeacher.init(['p_workplanName'], "condList", api.production.pageWorkplan, function (data) {
+    workplanSeacher.init(["production-workplan-name"], "condList", api.production.pageWorkplan, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "assisTypePostData", null, false, null, function () {
 

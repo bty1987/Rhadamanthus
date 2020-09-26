@@ -22,6 +22,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+
 @Entity
 @Table(name="constructionschedule", catalog = "construction")
 public class ConstructionSchedulePO implements Serializable{
@@ -148,5 +149,5 @@ public class ConstructionSchedulePO implements Serializable{
 	public void setSchedule(short schedule) {
 		this.schedule = schedule;
 	}
-
+	
 }

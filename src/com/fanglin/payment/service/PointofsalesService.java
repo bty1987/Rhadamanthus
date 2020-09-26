@@ -3,9 +3,13 @@ package com.fanglin.payment.service;
 import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.vo.PointofsalesVO;
+import com.fanglin.utils.Paging;
 
 public interface PointofsalesService {
+
+	public void pagePointofsales(Paging paging, List<Filter> filters);
 
 	public List<PointofsalesVO> queryPointofsalesByPid(PointofsalesVO pointofsales);
 	

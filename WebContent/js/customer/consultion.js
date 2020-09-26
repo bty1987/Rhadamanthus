@@ -50,7 +50,7 @@ $(function () {
 
     var searcher = new Searcher();
 
-    searcher.init(["cu_orderId"], "condList", api.customer.pageConsultion, function (data) {
+    searcher.init(["customer-service-orderId"], "condList", api.customer.pageConsultion, function (data) {
         displayFunc.init("resultList", data);
     }, "pagenation", "consultionPostData", null, false, null, null);
 });

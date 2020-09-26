@@ -228,7 +228,39 @@ $.extend(api, {customer: {
             args: ["repairpay.money"]
         }
     },
-    deleteRepairpay: {url:"deleteRepairpay.do"}
+    deleteRepairpay: {url:"deleteRepairpay.do"},
+    
+    queryCppoint:{
+        url:"queryCppoint.do",
+        type: "query",
+        tranargs: [{
+            result: "cppoint",
+            args: ["dpoint", "spoint"]
+        }]
+    },
+    queryCppointRecord:{
+        url:"queryCppointRecord.do",
+        type: "query",
+        tranargs: [{
+            result: "cppoint",
+            args: ["dpoint", "spoint"]
+        }]
+    },
+    createCppoint:{url:"createCppoint.do"},
+    addupCppoint:{
+        url:"addupCppoint.do",
+        type: "update",
+        tranargs: {
+            args: ["cppoint.dpoint", "cppoint.spoint"]
+        }
+    },
+    useupCppoint:{
+        url:"useupCppoint.do",
+        type: "update",
+        tranargs: {
+            args: ["cppoint.dpoint", "cppoint.spoint"]
+        }
+    },
 	
 }});
 

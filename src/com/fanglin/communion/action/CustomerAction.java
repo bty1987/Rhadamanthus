@@ -211,18 +211,6 @@ public class CustomerAction extends BaseListAction {
 		return "success";
 	}
 
-	@Action(value = "signateCustomer", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String signateCustomer() throws FLException {
-
-		if (SystemConfig.getString("communion") == null) {
-			throw new FLException(-1, "无操作权限");
-		}
-
-		customerService.signateCustomer(customer, imgbase);
-
-		return "success";
-	}
-
 	public CustomerVO getCustomer() {
 		return customer;
 	}

@@ -331,7 +331,7 @@ $(function () {
     })();
 
     /*分页*/
-    var _condArr = ['sales_balanceOrderId', 'sales_balanceNo', 'sales_balanceBrand', 'sales_balanceVillage', 'sales_balanceRegion', 'sales_balanceDept', 'sales_balanceStatus', 'sales_balanceType', 'sales_balanceFullpayTime', 'sales_balanceCreateTime', 'sales_balanceVenderTime', 'sales_balancePostTiem'];
+    var _condArr = ['sales-balance-orderId', 'sales_balance-no', 'sales-village', 'sales-balance-brand', 'sales-region-name', 'sales-dept-name', 'sales-balance-status', 'sales-balance-type', 'sales-balance-fullpayTime', 'sales-balance-createTime', 'sales-balance-venderTime', 'sales-balance-postTime'];
 
     if(salesBalance.pageType == "pompany") _condArr.push('salesDompany');
 
@@ -570,7 +570,7 @@ $(function () {
             return false;
         }
 
-        if (com.focusPage('span[name="totalRecords"]').text() > 3000) {
+        if (com.focusPage('span[name="totalRecords"]').text() > 5000) {
             com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
             return false;
         }

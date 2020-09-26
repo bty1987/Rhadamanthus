@@ -19,23 +19,23 @@ public class AddressPO implements Serializable {
 	public static final Short STATUS_ABLE_SHORT = 0;
 
 	public static final Short STATUS_DEFAULT_SHORT = 1;
-	
+
 	public static final Short STATUS_DISABLE_SHORT = 2;
 
 	private long aid;
 
 	private long uid;
-	
+
 	private String name;
-	
+
 	private String phone;
-	
+
 	private String province;
-	
+
 	private String city;
-	
+
 	private String proper;
-	
+
 	private String address;
 
 	private short status;
@@ -54,7 +54,7 @@ public class AddressPO implements Serializable {
 	public void setAid(Long aid) {
 		this.aid = aid;
 	}
-	
+
 	@Column(name = "uid")
 	public long getUid() {
 		return uid;
@@ -72,7 +72,7 @@ public class AddressPO implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@Column(name = "phone")
 	public String getPhone() {
 		return phone;
@@ -81,7 +81,7 @@ public class AddressPO implements Serializable {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	
+
 	@Column(name = "province")
 	public String getProvince() {
 		return province;
@@ -99,7 +99,7 @@ public class AddressPO implements Serializable {
 	public void setCity(String city) {
 		this.city = city;
 	}
-	
+
 	@Column(name = "proper")
 	public String getProper() {
 		return proper;
@@ -116,7 +116,7 @@ public class AddressPO implements Serializable {
 
 	public void setAddress(String address) {
 		this.address = address;
-	}	
+	}
 
 	@Column(name = "status")
 	public Short getStatus() {

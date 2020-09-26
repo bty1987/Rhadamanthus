@@ -113,7 +113,7 @@ jQuery(function($) {
 
 	var searcher = new Searcher();
 
-	searcher.init(["serviceNodeType"], "condList", api.communion.pageServiceNode, function(data){
+	searcher.init(["data-serviceNode-type"], "condList", api.communion.pageServiceNode, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "serviceNodeData", null, false, null, function(){
 

@@ -1,71 +1,7 @@
-<div class="page-content">
 <div id="morderItems" class="page-content">
-    <div class="row">
-        <div class="col-xs-12">
-            <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
-            <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
-            <h3 class="clearfix">
-                <a  class="btn btn-minier btn-primary pull-left" id="backBtn" style="margin:0px 3px"><i class="icon-mail-forward ">返回</i></a>
-            </h3>
-            <div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
-
-        </div>
-    </div>
+    <div id="resultItemList" class="clearfix tab-pane active"></div>
 </div>
 
-<div class="modal fade" id="morderItemModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">
-                    <span>&times;</span>
-                    <span class="sr-only">Close</span>
-                </button>
-                <h4 class="modal-title" >订单</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal">
-                    <div class="form-group" id="ndeptId">
-                        <label class="col-sm-3 control-label no-padding-right orange" for="no">装修单号</label>
-                        <div class="col-sm-9">
-                            <input type="text" maxlength="10" id="no" class="col-xs-10 col-sm-6 " readonly="readonly"/>
-                        </div>
-                    </div>
-                    <div class="space-4"></div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right orange" for="price">价格</label>
-                        <div class="col-sm-9">
-                            <input type="text" maxlength="64" id="price" class="col-xs-10 col-sm-6 v_name v_required" data-toggle="popover" data-trigger='manual' readonly="readonly"/>
-                        </div>
-                    </div>
-
-                    <div class="space-4"></div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right orange" for="num">数量</label>
-                        <div class="col-sm-9">
-                            <input type="text" maxlength="64" id="num"  readonly="readonly" class="col-xs-10 col-sm-6 v_name v_required" data-toggle="popover" data-trigger='manual'/>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right orange" for="status">状态</label>
-                        <div class="col-sm-9">
-                            <select id="status" name="status" maxlength="256" class="col-xs-10 col-sm-6 v_required"></select>
-                        </div>
-                    </div>
-
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
 <script type="text/javascript">
     $.loadScript(['js/store/morderitem.js']);
 </script>

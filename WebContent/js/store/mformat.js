@@ -1,8 +1,23 @@
 $(function(){
-    var goodsFormatPopUp = com.focusPage('#goodsFormatPopUp');
-
+    
+    var mformat = {
+            
+        gid: params.goods.gid,
+        
+        items: {
+            format: com.focusPage(".cell.format input"),
+        },
+        
+        btns: {
+            submitBtn: com.focusPage(".color-green.green"),
+            clearBtn: com.focusPage(".color-red.red")
+        },
+    }
+    
+    mformat.btns.submitBtn.click(createFormat);
+    mformat.btns.clearBtn.click(clearFormat);
+    
     var displayFunc  = (function(){
-        /*表格样式*/
         var renderList = function(tableId,listData){
             var $tableWrap = com.focusPage('#' + tableId);
 
@@ -12,11 +27,8 @@ $(function(){
                 $tableWrap.append($ulTitle).append($ulData);
 
                 $.each(listData,function(i, v){
-                    var $liLine = creatLine(i, v, i == listData.length - 1);
-
-                    $liLine.appendTo($ulTitle);
+                    creatLine(i, v, i == listData.length - 1).appendTo($ulTitle);
                 });
-                com.focusPage('#resultListFormat').css({'width':'96%','margin':'0 auto','height':'560px','marigin-top':'20px'})
             }
         };
 
@@ -31,8 +43,7 @@ $(function(){
             var titleName = '规格,状态';
 
             $.each(titleName.split(','), function (i, v) {
-                var $cell = $('<div></div>').addClass('cell').html(v);
-                $cell.appendTo($contentWrap);
+                $('<div></div>').addClass('cell').html(v).appendTo($contentWrap);
             });
 
             var $optionWrap = $('<div></div>').addClass('line-wrap action').html($('<div>操作</div>').addClass('cell option'));
@@ -76,25 +87,11 @@ $(function(){
             $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
             $btnStart.click(function(){
-                
-                com.focusPage('#layerAdd').attr('data-fid', v.fid);
-                com.focusPage('#layerAdd').attr('data-status', v.status);
-
-                var id = com.focusPage('#layerAdd').attr('data-fid');
-                var status = com.focusPage('#layerAdd').attr('data-status');
-                
-                startStatus(id, status);
+                updateStatus(v.fid, 0);
             });
             
             $btnBan.click(function(){
-                
-                com.focusPage('#layerAdd').attr('data-fid', v.fid);
-                com.focusPage('#layerAdd').attr('data-status', v.status);
-
-                var id = com.focusPage('#layerAdd').attr('data-fid');
-                var status = com.focusPage('#layerAdd').attr('data-status');
-
-                stopStatus(id, status);
+                updateStatus(v.fid, 1);
             });
 
             return $liLine;
@@ -112,90 +109,49 @@ $(function(){
     })();
     
     function doSearcher(){
-        com.post(api.store.queryMformatByGid,{
-            "mformat.gid": goodsFormatPopUp.attr('data-gid')
-        },function(res){
-            displayFunc.init('resultListFormat',res.mformats);
-        })
-    }
-    doSearcher();
-
-    function addline(lineindex) {
-
-        var $line = $('<li></li>').addClass('line');
-        var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').text(lineindex));
-        var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col1');
-        var $optWrap = $('<div></div>').addClass('line-wrap action');
-        var _lineInfoSet = [
-            {cellClass : "format", hasInput : !0}//名称
-        ];
-        var $btncheck = $('<a class="color-green green" style="font-size: 18px"><i class="icon-ok"></i></a>');
-        var $btndel = $('<a class="color-red red" style="font-size: 18px"><i class=" icon-remove"></i></a>');
-
-        $.each(_lineInfoSet, function (i, v) {
-            var $input;
-            var $cell = $('<div></div>').addClass('cell ' + v.cellClass);
-            if (v.hasInput) {
-                $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable v_required');
-                $cell.append($input);
-            }
-            $cell.appendTo($lineInfoWrap);
-        });
-
-        $optWrap.append($('<div></div>').addClass('cell option').append($btncheck).append($btndel));
-
-        $line.append($indexWrap).append($lineInfoWrap).append($optWrap);
-
-        $btncheck.click(function (e) {
-            e.stopPropagation();
-            if(com.validate('addFormat','bottom')){
-                return;
-            }
-            var gid = $(this).parents('li.line.current').attr('data-gid');
-            var options = {
-                "mformat.gid":goodsFormatPopUp.attr('data-gid'),
-                "mformat.format": $lineInfoWrap.find('.format input').val()
-            };
-
-            com.post(api.store.addMformat,options,function(){
-                com.focusPage('#list').empty();
-                addline(1).addClass('current').appendTo('#list');
-                doSearcher();
-            },function(e){
-                com.showAlert(com.error, e.errorMsg);
-            })
-        });
-
-        $btndel.click(function (e) {
-            com.focusPage('#list').empty();
-            addline(1).addClass('current').appendTo('#list');
-        });
-
-        return $line;
-
-    }
-    addline(1).addClass('current').appendTo('#list');
-
-    function startStatus(id, status, callback){
-        com.post(api.store.updateMformatForStatus,{
-            "mformat.fid": id,
-            "mformat.status":"0"
-        },function(res){
-            doSearcher()
+        
+        var options = {
+            "mformat.gid": mformat.gid
+        }
+        
+        com.post(api.store.queryMformatByGid, options, function(res){
+            displayFunc.init('resultListFormat', res.mformats);
         });
     }
     
-    function stopStatus(id, status, callback){
-        com.post(api.store.updateMformatForStatus,{
-            "mformat.fid": id,
-            "mformat.status":"1"
-        },function(res){
-            doSearcher()
+    doSearcher();
+
+    function createFormat(){
+        
+        if(com.validate('addFormat', 'bottom')){
+            return false;
+        }
+        
+        var options = {
+            "mformat.gid": mformat.gid,
+            "mformat.format": mformat.items.format.val()
+        };
+
+        com.post(api.store.addMformat, options, function(){
+            com.cleanItems(mformat.items);
+            doSearcher();
+        });
+    }
+    
+    function clearFormat(){
+        com.cleanItems(mformat.items);
+    }
+    
+    function updateStatus(fid, status){
+        
+        var options = {
+            "mformat.fid": fid,
+            "mformat.status": status
+        }
+        
+        com.post(api.store.updateMformatForStatus, options, function(res){
+            doSearcher();
         });
     }
 
-    com.focusPage('.layui-layer-content').css('overflow','hidden');
-    com.focusPage('#showFormat').css('height','560px');
-    com.focusPage('#addFormat').css({'width':'96%','margin':'0 auto','margin-top':'15px'});
-    com.focusPage('#showFormat').css('overflow-y' , 'scroll');
 });

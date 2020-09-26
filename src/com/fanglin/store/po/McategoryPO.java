@@ -9,23 +9,23 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="mcategory", catalog = "store")
-public class McategoryPO implements Serializable{
-	
+@Table(name = "mcategory", catalog = "store")
+public class McategoryPO implements Serializable {
+
 	private static final long serialVersionUID = -4328485362492429004L;
-	
+
 	public static final String COLUMN_CID_STR = "cid";
-	
+
 	public static final short SHOW_INIT_SHORT = 0;
-	
+
 	public static final short SHOW_DISPLAY_SHORT = 1;
-	
+
 	private long cid;
-	
+
 	private String name;
-	
-	private String	icon;
-	
+
+	private String icon;
+
 	private short isShow;
 
 	public McategoryPO() {
@@ -34,7 +34,7 @@ public class McategoryPO implements Serializable{
 
 	@Id
 	@GeneratedValue
-	@Column(name="cid")
+	@Column(name = "cid")
 	public long getCid() {
 		return cid;
 	}
@@ -43,7 +43,7 @@ public class McategoryPO implements Serializable{
 		this.cid = cid;
 	}
 
-	@Column(name="name")
+	@Column(name = "name")
 	public String getName() {
 		return name;
 	}
@@ -51,8 +51,8 @@ public class McategoryPO implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	@Column(name="icon")
+
+	@Column(name = "icon")
 	public String getIcon() {
 		return icon;
 	}
@@ -61,7 +61,7 @@ public class McategoryPO implements Serializable{
 		this.icon = icon;
 	}
 
-	@Column(name="isShow")
+	@Column(name = "isShow")
 	public short getIsShow() {
 		return isShow;
 	}
@@ -69,5 +69,5 @@ public class McategoryPO implements Serializable{
 	public void setIsShow(short isShow) {
 		this.isShow = isShow;
 	}
-	
+
 }

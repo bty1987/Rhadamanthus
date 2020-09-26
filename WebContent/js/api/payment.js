@@ -585,7 +585,15 @@ $.extend(api, {payment: {
 			args: ["money"]
 		}]
 	},
-	
+
+	pagePointofsales: {
+		url: "pagePointofsales.do",
+		type: "query",
+		tranargs: [{
+			result: "paging-data",
+			args: ["money"]
+		}]
+	},
 	queryPointofsalesByPid: {
 		url: "queryPointofsalesByPid.do",
 		type: "query",

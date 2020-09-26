@@ -117,7 +117,7 @@ $(function ($) {
     })();
 
     var searcher = new Searcher();
-    var _condArr = ["receiptTypeName","receiptType","receiptTypeStatus"];
+    var _condArr = ["data-receiptType-name","data-receiptType-type","data-receiptType-status"];
 
     searcher.init(_condArr, "condList", api.common.pageReceiptType, function (data) {
         displayFunc.init('resultList', data);

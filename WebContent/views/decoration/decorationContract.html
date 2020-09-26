@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="widget-container-span col-md-6" style="padding-bottom: 50px;">
+    <div class="widget-container-span col-md-6" id="customerInfo">
         <div class="widget-box transparent">
             <div class="widget-header">
                 <h3><strong>客户信息</strong></h3>
@@ -55,7 +55,7 @@
             </div>
         </div>
     </div>
-    <div class="widget-container-span col-md-6" style="padding-bottom: 50px;">
+    <div class="widget-container-span col-md-6" id="customerFunction">
         <div class="widget-box transparent">
             <div class="widget-header">
                 <h3><strong>功能</strong></h3>
@@ -68,15 +68,15 @@
             </div>
         </div>
     </div>
-    <div class="widget-container-span col-md-12" style="padding-bottom: 50px;">
+    <div class="widget-container-span col-md-12">
         <div class="widget-box transparent">
             <div class="widget-header">
                 <h3><strong>合同信息</strong></h3>
             </div>
-            <div id="customers"></div>
+            <div id="contracts"></div>
         </div>
     </div>
-    <div class="col-md-12">
+    <div class="col-md-12" id="contractFunction">
         <a class="btn btn-minier btn-success pull-left" id="saveBtn"><i class="icon-plus bigger-110"></i><span>添加合同</span></a>
         <a class="btn btn-minier btn-info" id="backBtn" style="float: right"><i class="icon-mail-forward bigger-110"></i><span>返回</span></a>
     </div>
@@ -115,8 +115,9 @@
     </div>
 </div>
 
+<div id="qrcodeModal" ></div>
+
 <script type="text/javascript">
     $.loadScript(['assets/altogether/js/jSignature.min.js', 'js/decoration/decorationContract.js']);
 </script>
-
 

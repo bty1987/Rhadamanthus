@@ -433,7 +433,7 @@ function printNormrice(schedule){
     contentHtml += '<td width="9%" align="center">工费单价</td>';
     contentHtml += '<td width="8%" align="center">定额总额</td>';
     contentHtml += '<td width="8%" align="center">变更量</td>';
-    contentHtml += '<td width="8%" align="center">变更总量</td>';
+    contentHtml += '<td width="8%" align="center">变更总额</td>';
     contentHtml += '</tr>';
     contentHtml += '</tbody></table>';
 

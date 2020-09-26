@@ -838,7 +838,7 @@ jQuery(function ($) {
     });
 
     com.focusPage('#btnBack').on("click", function () {
-        com.switchPage(params.historyPage);
+        //com.switchPage(params.historyPage);
     });
 
     com.focusPage("#btnPrintDefaultQuotationInfo").on('click', function (res) {
@@ -921,8 +921,12 @@ jQuery(function ($) {
             decorationDetail.items.orderType.prop("disabled", true);
         }
         
-        if([2, 3, 4, 6, 7].indexOf(decoration.status) == -1){
+        if ([2, 3, 4, 6, 7].indexOf(decoration.status) == -1){
             decorationDetail.items.houseNumber.val("");
+        }
+        
+        if ([3, 7].indexOf(decoration.status) != -1) {
+            decorationDetail.items.salesmanType.prop("disabled", true);
         }
         
     });

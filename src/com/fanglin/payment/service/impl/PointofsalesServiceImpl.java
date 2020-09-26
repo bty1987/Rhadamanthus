@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.dao.PointofsalesDao;
 import com.fanglin.payment.po.PointofsalesPO;
 import com.fanglin.payment.service.PointofsalesService;
@@ -22,6 +23,7 @@ import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.vo.RoleVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.Paging;
 
 @Service("pointofsalesService")
 @Transactional(readOnly = true)
@@ -32,6 +34,26 @@ public class PointofsalesServiceImpl implements PointofsalesService {
 
 	@Autowired
 	private UserDao userDao;
+
+	@Override
+	public void pagePointofsales(Paging paging, List<Filter> filters) {
+
+		List<PointofsalesPO> pointofsalesPOs = pointofsalesDao.pagePointofsales(paging, filters);
+		List<PointofsalesVO> pointofsalesVOs = new ArrayList<PointofsalesVO>();
+
+		for (PointofsalesPO pointofsalesPO : pointofsalesPOs) {
+
+			PointofsalesVO pointofsalesVO = new PointofsalesVO(new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO()));
+
+			BeanUtil.copyProperties(pointofsalesPO, pointofsalesVO, Arrays.asList("creater"));
+			BeanUtil.copyProperties(pointofsalesPO.getCreater(), pointofsalesVO.getCreater(), Arrays.asList("role", "dept", "duty"));
+
+			pointofsalesVOs.add(pointofsalesVO);
+		}
+		
+		paging.setData(pointofsalesVOs);
+		
+	}
 
 	@Override
 	public List<PointofsalesVO> queryPointofsalesByPid(PointofsalesVO pointofsales) {

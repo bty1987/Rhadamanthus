@@ -10,8 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "quotetionfunctionareaitem", catalog = "quotetion")
-public class QuotetionFunctionAreaItemPO0 implements Serializable {
+@Table(name = "quotetionfunctionareaitem0", catalog = "quotetion")
+public class QuotetionFunctionAreaItemPO0 extends QuotetionFunctionAreaItemPO implements Serializable {
 
 	private static final long serialVersionUID = -1895357491534584997L;
 

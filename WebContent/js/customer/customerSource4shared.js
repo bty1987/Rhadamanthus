@@ -65,7 +65,7 @@ $(function () {
     })();
 
     var searcher = new Searcher();
-    searcher.init(["customerSourcePhone"], "condList", api.customer.pageCustomerOriginForCommunion, function (data) {
+    searcher.init(["customer-customerSource-phone"], "condList", api.customer.pageCustomerOriginForCommunion, function (data) {
         displayFunc.init("resultList", data);
     }, "pagenation", "customercommunionPostDat", null, false, null, null);
 

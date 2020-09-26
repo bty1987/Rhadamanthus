@@ -16,6 +16,8 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.communion.vo.ConstructionNodeVO;
+
 public class ConstructionScheduleVO implements Serializable {
 
 	private static final long serialVersionUID = -8887915345535064194L;
@@ -35,6 +37,17 @@ public class ConstructionScheduleVO implements Serializable {
 	private Short checkout;
 	
 	private Short schedule;
+	
+	private ConstructionNodeVO node;
+
+	public ConstructionScheduleVO() {
+		super();
+	}
+	
+	public ConstructionScheduleVO(ConstructionNodeVO node) {
+		super();
+		this.node = node;
+	}
 
 	public Long getCsid() {
 		return csid;
@@ -100,6 +113,14 @@ public class ConstructionScheduleVO implements Serializable {
 
 	public void setSchedule(Short schedule) {
 		this.schedule = schedule;
+	}
+
+	public ConstructionNodeVO getNode() {
+		return node;
+	}
+
+	public void setNode(ConstructionNodeVO node) {
+		this.node = node;
 	}
 	
 }

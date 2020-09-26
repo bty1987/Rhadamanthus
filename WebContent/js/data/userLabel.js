@@ -1,5 +1,7 @@
 $(function () {
+    
     var label = {};
+    
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
             var $tableWrap = com.focusPage('#' + tableId);
@@ -58,33 +60,21 @@ $(function () {
         }
     })();
 
-    var _condArr = ['userId', 'userName', 'deptType'];
+    var _condArr = ['personel-userId', 'personel-userName', 'personel-deptType'];
 
     var userSeacher = new Searcher();
 
     userSeacher.init(_condArr, "condList", api.personel.pageUser, function (data) {
         displayFunc.init('resultList', data);
-    }, "pagenation", "selectUser", null, false, null, function () {
-    });
+    }, "pagenation", "selectUser", null, false, null, null);
 
     function labelling(uid) {
+        
         var $label = com.focusPage('#label');
         $label.attr({'data-uid': uid});
-        var index = layer.open({
-            type: 1,
-            title: '标签管理',
-            content: $label,
-            area: [( $(window).width() * 0.7 < 1000 ? $(window).width() * 0.7 : 1000 ) + "px", ( $(window).height() * 0.84 < 620 ? $(window).height() * 0.84 : 620 ) + "px"],
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['取消'],
-            success: function (index, layero) {
-                params.id = uid;
-                $label.load("views/data/checkLabel.html")
-            },
-            end: function () {
-                $label.attr('data-uid', null)
-            }
-        });
+        
+        params["id"] = v.uid;
+        com.popup4page($label, "/views/data/checkLabel.html", "标签管理")
     }
+    
 });

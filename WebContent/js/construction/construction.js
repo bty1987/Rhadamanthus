@@ -6,12 +6,14 @@ jQuery(function ($) {
 
         modals:{
             constructionInfoModal : com.focusPage("#constructionInfoModal"),
-            updateConstructionModal: com.focusPage("#updateConstructionModal")
+            updateConstructionModal: com.focusPage("#updateConstructionModal"),
+            printQuotationCNModal: com.focusPage("#printQuotationCNModal"),
         },
 
         btns: {
             saveBtn: com.focusPage("#saveBtn"),
             updateConstructionBtn: com.focusPage("#updateConstructionBtn"),
+            printConstructionNodeBtn : com.focusPage("#printConstructionNodeBtn")
         },
 
         items: {
@@ -31,12 +33,14 @@ jQuery(function ($) {
         },
         cid : null,
         isAccessory : {},
-
+        constructionNodes: {},
+        constructionNode : com.focusPage("#constructionNode"),
+        quotationDetail: {},
     };
 
     construction.btns.saveBtn.bindClick(saveData);
     construction.btns.updateConstructionBtn.bindClick(update);
-
+    construction.btns.printConstructionNodeBtn.bindClick(printQuotation);
     construction.modals.constructionInfoModal.on("hide.bs.modal", function(){
 
         com.cleanItems(construction.items);
@@ -54,9 +58,22 @@ jQuery(function ($) {
     com.datetime(construction.items.drawlineTime);
     com.datetime(construction.items.designTime);
 
+
+    com.post(api.data.queryConstructionNode,{}, function(res){
+
+        construction.constructionNodes = res.constructionNodes.split("sort","name");
+
+        construction.constructionNodes[0] = "初始";
+        construction.constructionNodes[1] = "开工";
+        construction.constructionNodes[2] = "完工";
+
+        construction.constructionNode.bindData(res.constructionNodes, "sort", "name", false);
+
+    }, null, false);
+
+
     com.post(api.ds.construction, {}, function (res) {
 
-        construction.constructionSchedule = res.constructionSchedule.split("key", "value");
         construction.isAccessory = res.isAccessory.split("key", "value");
 
         construction.items.ishovel.bindData(res.isHovel, "key", "value", false);
@@ -97,6 +114,8 @@ jQuery(function ($) {
             var $btnOpen = $('<a></a>').addClass('btn btn-minier btn-danger').html('辅料开启');
             var $btnLock = $('<a></a>').addClass('btn btn-minier btn-pink').html('辅料锁定');
             var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-yellow').html("更新");
+            var $btnQuota = $('<a></a>').addClass('btn btn-minier btn-success').html("定额材料");
+            var $btnQuopt = $('<a></a>').addClass('btn btn-minier btn-warning').html('定额工费');
 
             var propertyArr = [
                 ["楼盘名:", v.decoration.house.village.name + " " + v.decoration.house.houseNumber, "grey"],
@@ -104,7 +123,7 @@ jQuery(function ($) {
                 ["监理:", v.decoration.supervisor ? v.decoration.supervisor.userName : "", "grey"],
                 ["总价:", v.decoration.orderTotalPrice, "blue"],
                 ["面积:", v.decoration.house.buildArea, "blue"],
-                ["进度:", construction.constructionSchedule [v.decoration.projectStatus], "red"],
+                ["进度:", construction.constructionNodes[v.decoration.projectStatus], "red"],
                 ["辅料额上限:", v.accessoryLimit, "blue"],
                 ["工费额上限:", v.salaryLimit, "blue"],
                 ["辅料总额:", v.accessoryTotal, "blue"],
@@ -119,7 +138,7 @@ jQuery(function ($) {
                 $liProperty.appendTo($ulProperty);
             });
 
-            $divBtnWrap.append($btnInfo).append($btnView).append($btnAddReduce).append($btnRe).append($btnAcs).append($btnUpdate).appendTo($h3);
+            $divBtnWrap.append($btnInfo).append($btnView).append($btnAddReduce).append($btnRe).append($btnAcs).append($btnUpdate).append($btnQuota).append($btnQuopt).appendTo($h3);
 
             if(v.accessory == 1){
                 $divBtnWrap.append($btnOpen);
@@ -161,6 +180,31 @@ jQuery(function ($) {
                 accessoryLock(v.cid);
             });
 
+            $btnQuota.click(function () {
+                params["accessories.orderId"] = v.decoration.orderId;
+                com.popup4page("#stockRecordPopUp","/views/manifest/quotaItem.html","定额材料")
+            });
+
+            $btnQuopt.click(function () {
+                construction.quotationDetail = {};
+                com.post(api.quotation.queryQuotationForDefaultByOrderId, {
+                    "quotation.orderId": v.decoration.orderId,
+                }, function (res) {
+                    construction.quotationDetail.quotation = res.quotation;
+                }, null, false);
+
+                var quotationId = construction.quotationDetail.quotation.qid;
+
+                params['decorationOrderId'] = v.decoration.orderId;
+                params['company.name'] = v.decoration.company.name;
+                params['orderType'] = v.decoration.type;
+                params.quotationId = quotationId;
+                params.type = 5;
+                params.subtype = [1];
+                params.showType = {itemtype: 4};
+                construction.modals.printQuotationCNModal.modal("show");
+            });
+
             $btnUpdate.click(function () {
                construction.cid = v.cid;
                construction.updateItems.accessoryLimit.val(v.accessoryLimit);
@@ -185,7 +229,7 @@ jQuery(function ($) {
 
     var seacher = new Searcher();
 
-    seacher.init(['c_orderId', 'c_village', 'c_houseNumber', 'c_designer', 'c_schedule', 'c_projectStatusFlag'], "constructionCondList", api.construction.pageConstructionForBase, function (list) {
+    seacher.init(['construction-orderId', 'construction-village-name', 'construction-houseNumber-name', 'construction-designer', 'construction-schedule', 'construction-projectStatusFlag'], "constructionCondList", api.construction.pageConstructionForBase, function (list) {
         displayFunc.init('constructionResultList', list);
     }, "constructionPagenation", "constructionPostData", null, false, null, null, "constructionResultList");
 
@@ -303,6 +347,10 @@ jQuery(function ($) {
         });
     }
 
-
+    function printQuotation() {
+        params['workType'] = construction.constructionNode.val();
+        com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, true);
+        construction.modals.printQuotationCNModal.modal("hide");
+    };
 
 });

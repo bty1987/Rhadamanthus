@@ -200,7 +200,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 	
-	searcher.init(["orderId", "msoNo", "paymentMsoDesigner", "paymentOrderAddr", "collectTimeDateRange"], "condList", api.payment.pageMaterialPaymentForCollect, function(data){
+	searcher.init(["payment-orderId", "payment-material-no", "payment-designer", "payment-village", "payment-collectTime"], "condList", api.payment.pageMaterialPaymentForCollect, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "materialPaymentCheckPostData", null, false, null, function(){
 		var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'checks').css("margin", "0px 3px");
@@ -304,7 +304,7 @@ jQuery(function($) {
 	
 	var hsearcher = new Searcher();
 	
-	hsearcher.init(["orderId", "msoNo", "paymentMsoDesigner", "paymentOrderAddr", "collectTimeDateRange"], "hcondList", api.payment.pageMaterialPaymentForConfirm, function(data){
+	hsearcher.init(["payment-orderId", "payment-material-no", "payment-designer", "payment-village", "payment-collectTime"], "hcondList", api.payment.pageMaterialPaymentForConfirm, function(data){
 		hdisplayFunc.init('hresultList', data);
 	}, "hpagenation", "hmaterialPaymentCheckPostData", null, false, null, null, "hresultList");
 

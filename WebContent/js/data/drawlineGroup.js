@@ -93,8 +93,7 @@ $(function(){
     })();
 
     var searcher = new Searcher();
-    //查询的字段名称,查询框DIV的ID,API地址,成功回调函数,分页DIV的ID,保存历史查询的查询名
-    searcher.init(['groupName'], "condList", api.data.pageDrawlineGroup, function(data){
+    searcher.init(['data-drawline-group-name'], "condList", api.data.pageDrawlineGroup, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "groupPostData", null, false, null, function(){
 

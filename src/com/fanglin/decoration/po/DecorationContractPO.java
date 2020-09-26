@@ -34,21 +34,19 @@ public class DecorationContractPO implements Serializable, Contract {
 	private static final long serialVersionUID = -5971474052433501162L;
 
 	public static final short STATUS_VALID_INT = 0;// 初始
-	
-	public static final short STATUS_STAY_SIGN_INT = 1;// 待签订
-	
-	public static final short STATUS_END_SIGN_INT = 2;// 已签订
 
-	public static final short STATUS_NULL_INT = 3;// 无效
+	public static final short STATUS_SIGN_INT = 1;// 已签
 
-	public static final short STATUS_FILE_INT = 4;// 归档
-	
+	public static final short STATUS_NULL_INT = 2;// 无效
+
+	public static final short STATUS_FILE_INT = 3;// 归档
+
 	public static final short TYPE_SIGNET_INT = 1;// 签章
 
 	public static final short TYPE_SIGN_INT = 2;// 签订
 
 	public static final short TYPE_VIEW_INT = 3;// 查看
-	
+
 	public static final short TYPE_DOWNLOAD_INT = 4;// 下载
 
 	private long dcid;
@@ -63,7 +61,17 @@ public class DecorationContractPO implements Serializable, Contract {
 
 	private UserPO creater;
 
+	private UserPO signner;
+
+	private UserPO filinner;
+
 	private Timestamp createTime;
+
+	private Timestamp comsignTime;
+
+	private Timestamp cussignTime;
+
+	private Timestamp filingTime;
 
 	private short status;
 
@@ -135,6 +143,26 @@ public class DecorationContractPO implements Serializable, Contract {
 		this.creater = creater;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "suid", referencedColumnName = "uid")
+	public UserPO getSignner() {
+		return signner;
+	}
+
+	public void setSignner(UserPO signner) {
+		this.signner = signner;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "fuid", referencedColumnName = "uid")
+	public UserPO getFilinner() {
+		return filinner;
+	}
+
+	public void setFilinner(UserPO filinner) {
+		this.filinner = filinner;
+	}
+
 	@Column(name = "createTime")
 	public Timestamp getCreateTime() {
 		return createTime;
@@ -142,6 +170,33 @@ public class DecorationContractPO implements Serializable, Contract {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	@Column(name = "comsignTime")
+	public Timestamp getComsignTime() {
+		return comsignTime;
+	}
+
+	public void setComsignTime(Timestamp comsignTime) {
+		this.comsignTime = comsignTime;
+	}
+
+	@Column(name = "cussignTime")
+	public Timestamp getCussignTime() {
+		return cussignTime;
+	}
+
+	public void setCussignTime(Timestamp cussignTime) {
+		this.cussignTime = cussignTime;
+	}
+
+	@Column(name = "filingTime")
+	public Timestamp getFilingTime() {
+		return filingTime;
+	}
+
+	public void setFilingTime(Timestamp filingTime) {
+		this.filingTime = filingTime;
 	}
 
 	@Column(name = "status")

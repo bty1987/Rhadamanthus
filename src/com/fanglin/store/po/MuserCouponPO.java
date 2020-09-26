@@ -13,20 +13,20 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "musercoupon", catalog = "store")
-public class MuserCouponPO implements Serializable{
+public class MuserCouponPO implements Serializable {
 
 	private static final long serialVersionUID = 6813452178210140419L;
-	
+
 	public static final Short STATUS_ABLE_SHORT = 0;
-	
-	public static final Short STATUS_DISABLE_SHORT = 1; 
-	
+
+	public static final Short STATUS_DISABLE_SHORT = 1;
+
 	private long mcid;
-	
+
 	private CouponPO coupon;
-	
+
 	private String unionId;
-	
+
 	private short status;
 
 	public MuserCouponPO() {
@@ -76,5 +76,5 @@ public class MuserCouponPO implements Serializable{
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
+
 }

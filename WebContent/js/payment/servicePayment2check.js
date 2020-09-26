@@ -178,7 +178,7 @@ jQuery(function($) {
 
 	var searcher = new Searcher();
 
-	searcher.init(["orderId", "paymentDesigner", "paymentVillage", "collectTimeDateRange"], "condList", api.payment.pageServicePaymentForCollect, function(data){
+	searcher.init(["payment-orderId", "payment-designer", "payment-village", "payment-collectTime"], "condList", api.payment.pageServicePaymentForCollect, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "pageServicePaymentForCollectPostData", null, false, null, function(){
 		var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'checks').css("margin", "0px 3px");
@@ -346,7 +346,7 @@ jQuery(function($) {
 	//查询服务款已确认信息
 	var hsearcher = new Searcher();
 
-	hsearcher.init(["orderId", "paymentDesigner", "paymentVillage", "collectTimeDateRange"], "hcondList", api.payment.pageServicePaymentForConfirm, function(data){
+	hsearcher.init(["payment-orderId", "payment-designer", "payment-village", "payment-collectTime"], "hcondList", api.payment.pageServicePaymentForConfirm, function(data){
 		hdisplayFunc.init('hresultList', data);
 	}, "hpagenation", "servicePaymentForConfirmPostData", null, false, null, function(){}, "hresultList");
 

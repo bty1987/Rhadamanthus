@@ -12,8 +12,14 @@ jQuery(function($) {
         constructionInfo.typeness = res.typeness.split("key", "value");
     },null ,false);
 
-    com.post(api.ds.construction, {}, function(res){
-        constructionInfo.projectStatus = res.constructionSchedule.split("key", "value");
+    com.post(api.data.queryConstructionNode,{}, function(res){
+
+        constructionInfo.projectStatus = res.constructionNodes.split("sort", "name");
+
+        constructionInfo.projectStatus[0] = "初始";
+        constructionInfo.projectStatus[1] = "开工";
+        constructionInfo.projectStatus[2] = "完工";
+
     },null ,false);
 
     var displayFunc  = (function(){
@@ -82,7 +88,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["c_orderId","c_keyTime","c_drawlineTime","c_finishTime","c_designTime","c_sdesignTimeRange","c_edesignTimeRange"], "condList", api.construction.pageConstructionInfo, function(data){
+    searcher.init(['construction-orderId',"construction-designerRegionId","construction-designerDepartmentId","construction-info-keyTime","construction-info-drawlineTime","construction-info-finishTime","construction-info-designTime","construction-info-sdesignTimeRange","construction-info-edesignTimeRange"], "condList", api.construction.pageConstructionInfo, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "constructionInfoPostData",null, false, null,function(){
 

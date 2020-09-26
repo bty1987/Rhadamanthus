@@ -18,37 +18,40 @@ public class McategoryDaoImpl extends DaoImpl<McategoryPO> implements McategoryD
 	public McategoryDaoImpl() {
 		super(McategoryPO.class);
 	}
-	
+
 	@Override
 	public List<McategoryPO> pageMcategory(Paging paging, List<Filter> filters) {
-		
+
 		PagingQuery<McategoryPO> query = pagingQuery(paging, McategoryPO.class);
-		
-		if(filters != null){
-			for (Filter filter : filters) {
-				String field = filter.getField();
-				String data = filter.getData();
-				String op = filter.getOp();
-				
-				if(field.equals("name")){
-					query.add(query.getCriterion(field, data, op));
-				}
-			}
-		}
-		
+
+		queryFilterExcute(query, filters);
+
 		return query.list();
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<McategoryPO> queryMcategory() {
 		return session().createCriteria(McategoryPO.class).addOrder(Order.asc("isShow")).addOrder(Order.asc("cid")).list();
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<McategoryPO> queryMcategoryForShow() {
 		return session().createCriteria(McategoryPO.class).add(Restrictions.eq("isShow", McategoryPO.SHOW_INIT_SHORT)).list();
+	}
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		for (Filter filter : filters) {
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if (field.equals("name")) {
+				query.add(query.getCriterion(field, data, op));
+			}
+		}
 	}
 
 }

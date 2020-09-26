@@ -429,11 +429,11 @@ $(function () {
     })();
 
     /*分页*/
-    var _condArr = ['sales_no', 'sales_orderId', 'sales_instorer', 'sales_salesman', 'sales_bid',  'sales_deptName'];
+    var _condArr = ['sales-no', 'sales-orderId', 'sales-instorer', 'sales-salesman', 'sales-brand-name',  'sales-dept'];
 
-    if(sales.pageType == "dompany") _condArr[4] = 'sales_brand_all';
+    if(sales.pageType == "dompany") _condArr[4] = 'sales_brand';
 
-    if(sales.pageType == "pompany") _condArr.push('salesDompany');
+    if(sales.pageType == "pompany") _condArr.push('sales-dompany');
 
     var salesSearcher = new Searcher();
 

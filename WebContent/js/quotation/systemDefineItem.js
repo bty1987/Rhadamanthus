@@ -148,7 +148,7 @@ $(function(){
         };
     })();
 
-    var _condArr = ['itemName', 'quotationBigCategoryId', 'quotationWorkTypeId'];//与condition.js中名字相同
+    var _condArr = ['data-quotation-item-name', 'data-quotation-bigcategory', 'data-worktype'];
    
    var searcher = new Searcher();
    

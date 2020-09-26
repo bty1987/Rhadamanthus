@@ -25,75 +25,70 @@ public class MformatServiceImpl implements MformatService {
 	public List<MformatVO> queryMformatByGid(MformatVO mformatVO) {
 
 		List<MformatPO> mformatPOs = mformatDao.queryMformatByGid(mformatVO.getGid(), mformatVO.getStatus());
-		
 		List<MformatVO> mformatVOs = new ArrayList<MformatVO>();
 
 		MformatVO mformat;
-		
+
 		for (MformatPO mformatPO : mformatPOs) {
 
 			mformat = new MformatVO();
-			
+
 			BeanUtil.copyPropertie(mformatPO, mformat);
-			
+
 			mformatVOs.add(mformat);
-			
 		}
-		
+
 		return mformatVOs;
-		
 	}
-	
+
 	@Override
 	public List<MformatVO> queryMformat(MformatVO mformatVO) {
 
 		List<MformatPO> mformatPOs = mformatDao.queryMformatByGid(mformatVO.getGid(), MformatPO.STATUS_ABLE_SHORT);
-		
 		List<MformatVO> mformatVOs = new ArrayList<MformatVO>();
 
 		MformatVO mformat;
-		
+
 		for (MformatPO mformatPO : mformatPOs) {
 
 			mformat = new MformatVO();
-		
+
 			BeanUtil.copyPropertie(mformatPO, mformat);
-			
+
 			mformatVOs.add(mformat);
-			
 		}
-		
+
 		return mformatVOs;
-		
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void addMformat(MformatVO mformatVO){
-		
+	public int addMformat(MformatVO mformatVO) {
+
 		MformatPO mformatPO = new MformatPO();
-		
+
 		BeanUtil.copyPropertie(mformatVO, mformatPO);
 
 		mformatDao.save(mformatPO);
-	
+
+		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateMformatForStatus(MformatVO mformatVO) throws FLException {
+	public int updateMformatForStatus(MformatVO mformatVO) throws FLException {
 
 		MformatPO mformatPO = mformatDao.get(mformatVO.getFid());
-		
+
 		if (mformatPO == null) {
 			throw new FLException(340007, "规格不存在");
 		}
 
 		mformatPO.setStatus(mformatVO.getStatus());
-		
+
 		mformatDao.update(mformatPO);
 
+		return 0;
 	}
-	
 
 }

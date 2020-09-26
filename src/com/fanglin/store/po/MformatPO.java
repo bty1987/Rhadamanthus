@@ -15,13 +15,13 @@ public class MformatPO implements Serializable {
 	private static final long serialVersionUID = -3873646957052842185L;
 
 	public static final String COLUMN_GID_STR = "gid";
-	
+
 	public static final Short STATUS_ABLE_SHORT = 0;
 
 	public static final Short STATUS_DISABLE_SHORT = 1;
 
 	private long fid;
-	
+
 	private long gid;
 
 	private String format;
@@ -42,7 +42,7 @@ public class MformatPO implements Serializable {
 	public void setFid(long fid) {
 		this.fid = fid;
 	}
-	
+
 	@Column(name = "gid")
 	public long getGid() {
 		return gid;

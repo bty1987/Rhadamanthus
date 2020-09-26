@@ -277,7 +277,7 @@ jQuery(function($) {
 
 	var hsearcher = new Searcher();
 
-	hsearcher.init(["orderId"], "hcondList", api.payment.pageDecorationPaymentForHistory, function(data){
+	hsearcher.init(["payment-orderId"], "hcondList", api.payment.pageDecorationPaymentForHistory, function(data){
 		hdisplayFunc.init('hresultList', data);
 	}, "hpagenation", "hdecorationPaymentPostDataPos", null, false, null, null, "hresultList");
 

@@ -195,7 +195,7 @@ $(function () {
 
     var searcher = new Searcher();
 
-    searcher.init(['jober', 'salaryWorkduty'], "condList", api.salary.pageWorkerBalance, function (data) {
+    searcher.init(['salary-jober', 'salary-salaryWorkduty'], "condList", api.salary.pageWorkerBalance, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "workerBalancePostData", null, false, null, function () {
 

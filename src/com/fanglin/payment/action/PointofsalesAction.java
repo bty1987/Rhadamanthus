@@ -27,8 +27,15 @@ public class PointofsalesAction extends BaseListAction {
 	private List<PointofsalesVO> pointofsaleses;
 
 	private PointofsalesVO pointofsales;
+	
+	@Action(value = "pagePointofsales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pagePointofsales() throws FLException {
+		
+		pointofsalesService.pagePointofsales(getPaging(), getFilters());
+		
+		return SUCCESS;
+	}
 
-	//这个接口是根据pid和type查询的, 但是type没啥用, 所以这个接口名字不用改但是内容要改成queryPointofsalesByPidAndRid中的内容 然后页面中的queryPointofsalesByPidAndRid要换成这个名字
 	@Action(value = "queryPointofsalesByPid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryPointofsalesByPid() throws FLException {
 

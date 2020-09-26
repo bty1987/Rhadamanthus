@@ -25,59 +25,57 @@ import com.fanglin.store.vo.MuserVO;
 public class MuserScopeAction extends BaseListAction {
 
 	private static final long serialVersionUID = 9221973082829442999L;
-	
+
 	@Autowired
 	private MuserService muserService;
-	
+
 	@Autowired
 	private AddressService addressService;
-	
+
 	@Autowired
 	private MorderService morderService;
-	
+
 	private MuserVO muser;
-	
+
 	private List<MuserVO> musers;
-	
+
 	private AddressVO address;
-	
+
 	private List<AddressVO> addresses;
-	
+
 	private List<MorderVO> morders;
-	
+
 	private MorderVO morder;
-	
+
 	private List<MorderItemVO> morderItem;
-	
+
 	private List<Long> cids;
-	
-	@Action(value="queryMuserByUnionId", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMuserByUnionId(){
-		
+
+	@Action(value = "queryMuserByUnionId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryMuserByUnionId() {
+
 		muser = muserService.queryMuserByUnionId(muser);
-		
+
 		return SUCCESS;
-		
 	}
-	
-	@Action(value="saveMuser", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String saveMuser(){
-		
+
+	@Action(value = "saveMuser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String saveMuser() {
+
 		muserService.saveMuser(muser);
-		
+
 		return SUCCESS;
-		
 	}
-	
-	@Action(value = "queryAddress", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+
+	@Action(value = "queryAddress", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryAddress() {
 
 		addresses = addressService.queryAddress(muser, address);
 
 		return SUCCESS;
 	}
-	
-	@Action(value = "addAddress", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+
+	@Action(value = "addAddress", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addAddress() throws FLException {
 
 		addressService.addAddress(address, muser);
@@ -85,49 +83,46 @@ public class MuserScopeAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "updateAddress", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	@Action(value = "updateAddress", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateAddress() throws FLException {
 
 		addressService.updateAddress(address, muser);
 
 		return SUCCESS;
 	}
-	
-	@Action(value = "updateAddressForStatus", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+
+	@Action(value = "updateAddressForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateAddressForStatus() throws FLException {
 
 		addressService.updateAddressForStatus(address, muser);
 
 		return SUCCESS;
 	}
-	
-	@Action(value="queryMorderByUnionId", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+
+	@Action(value = "queryMorderByUnionId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryMorderByUnionId() throws FLException {
-		
+
 		morderService.pageMorder(getPaging(), getFilters(), true);
-		
+
 		return SUCCESS;
-		
 	}
-	
-	@Action(value="addMorder", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addMorder() throws FLException{
-		
+
+	@Action(value = "addMorder", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addMorder() throws FLException {
+
 		morderService.addMorder(morder, morderItem, cids);
-		
+
 		return SUCCESS;
-		
 	}
-	
-	@Action(value="updateMorderForStatus", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateMorderForStatus() throws FLException{
-		
+
+	@Action(value = "updateMorderForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateMorderForStatus() throws FLException {
+
 		morderService.updateMorderForStatus(morder);
-		
+
 		return SUCCESS;
-		
 	}
-	
+
 	public MuserVO getMuser() {
 		return muser;
 	}
@@ -143,7 +138,7 @@ public class MuserScopeAction extends BaseListAction {
 	public void setMusers(List<MuserVO> musers) {
 		this.musers = musers;
 	}
-	
+
 	public AddressVO getAddress() {
 		return address;
 	}
@@ -191,4 +186,5 @@ public class MuserScopeAction extends BaseListAction {
 	public void setCids(List<Long> cids) {
 		this.cids = cids;
 	}
+
 }

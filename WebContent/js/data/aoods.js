@@ -19,7 +19,8 @@ $(function () {
         submitBtn: com.focusPage("#submitBtn"),
         editBtn: com.focusPage("#editBtn"),
 
-        company: []
+        company: [],
+        pageType: params['urlLoadParams'].type,
     };
 
     com.post(api.data.queryAccessoriesType, {}, function (res) {
@@ -147,9 +148,13 @@ $(function () {
 
     var searcher = new Searcher();
 
-    searcher.init(["aoodsGoodsName", "aoodsAname", "aoodsStatus", "aoodsBcompany"], "condList", api.data.pageAoods, function (data) {
+    var condCodeArrs = ["data-aoods-name", "data-aoods-type", "data-aoods-status", "data-aoods-bompany"];
+
+    if (aoods.pageType == "bompany") condCodeArrs.pop();
+
+    searcher.init(condCodeArrs, "condList", api.data.pageAoods, function (data) {
         displayFunc.init('resultList', data);
-    }, "pagenation", "aoodsPostData", null, false, null, function () {
+    }, "pagenation", "aoodsPostData" + aoods.pageType, {"companyType": aoods.pageType}, false, null, function () {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);

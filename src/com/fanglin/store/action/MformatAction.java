@@ -17,38 +17,38 @@ import com.fanglin.store.vo.MformatVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class MformatAction extends BaseListAction{
+public class MformatAction extends BaseListAction {
 
 	private static final long serialVersionUID = -1187121746359627763L;
 
 	@Autowired
 	private MformatService mformatService;
-	
+
 	private MformatVO mformat;
-	
+
 	private List<MformatVO> mformats;
-	
-	@Action(value="queryMformatByGid", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryMformatByGid(){
-		
+
+	@Action(value = "queryMformatByGid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryMformatByGid() {
+
 		mformats = mformatService.queryMformatByGid(mformat);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="addMformat", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addMformat(){
-		
-		mformatService.addMformat(mformat);
-		
+
 		return SUCCESS;
 	}
 
-	@Action(value="updateMformatForStatus", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateMformatForStatus() throws FLException{
-		
+	@Action(value = "addMformat", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addMformat() {
+
+		mformatService.addMformat(mformat);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateMformatForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateMformatForStatus() throws FLException {
+
 		mformatService.updateMformatForStatus(mformat);
-		
+
 		return SUCCESS;
 	}
 

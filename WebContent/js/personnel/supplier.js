@@ -161,7 +161,7 @@
             }
         }
     })();
-    var _condArr = ['userId', 'userName', 'userstatus', 'phone'];
+    var _condArr = ['personel-userId', 'personel-userName', 'personel-userstatus', 'personel-phone'];
 
     var seacher = new Searcher();
 

@@ -17,16 +17,6 @@ jQuery(function ($) {
 
     };
 
-    com.post(api.data.queryConstructionNode, {}, function (res) {
-        var newNodes = res.constructionNodes.sort(function(a, b){
-            return a.sort - b.sort;
-        });
-        $.each(newNodes, function (i, v) {
-            customerServiceDetail.constructionNode[v.sort] = v.name;
-        })
-    }, null, false);
-
-
     com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": params.orderId}, function (res) {
 
         var newSchedules = res.constructionSchedules.sort(function(a, b){
@@ -38,6 +28,7 @@ jQuery(function ($) {
         customerServiceDetail.constructionSchedules = newSchedules;
 
         $.each(constructionSchedule, function (i, v) {
+            customerServiceDetail.constructionNode[v.node.sort] = v.node.name;
             customerServiceNode("#stepIds", v.schedule);
             customerServicePane("#step-containers", v.schedule, v.schedule);
         });

@@ -1,18 +1,38 @@
 
 $(function(){
+    
     var mbrand = {
-        mbrandItems:{},
+            
+        bid: null,
+            
+        items:{
+            name: com.focusPage("#name"),
+            cid: com.focusPage("#categoryId"),
+            path: com.focusPage("#path"),
+            
+            brandImg: com.focusPage("#brandImg")
+        },
+        
+        btns: {
+            saveBtn: com.focusPage("#saveBtn")
+        },
+        
         editFlg: false,
         repeatFlg: false
     };
 
-    mbrand.mbrandItems.name = com.focusPage("#name");
-    mbrand.mbrandItems.cid = com.focusPage("#categoryId");
-    mbrand.mbrandItems.path = com.focusPage("#path");
-
     com.post(api.store.queryMcategory, {}, function(res){
         com.focusPage("#categoryId").bindData(res.mcategorys, "cid", "name");
     });
+    
+    com.uploadify("#pictureUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpge;*.gif;*.png', {'uploadType': 2}, 1, function(data){
+        
+        mbrand.items.path.val(data.resUrl);
+        
+        com.showImg(mbrand.items.brandImg, data.resUrl, 150, 150, '', null, 0);
+    });
+    
+    mbrand.btns.saveBtn.click(saveData);
 
     var displayFunc  = (function(){
         /*表格样式*/
@@ -20,13 +40,14 @@ $(function(){
             var $tableWrap = com.focusPage('#' + tableId);
 
             if(listData && listData.length){
+                
                 var $ulTitle = createTableTitle();
                 var $ulData = $('<ul></ul>').addClass('flex-table');
+                
                 $tableWrap.append($ulTitle).append($ulData);
 
                 $.each(listData,function(i, v){
-                    var $liLine = creatLine(i, v, i == listData.length - 1);
-                    $liLine.appendTo($ulTitle);
+                    creatLine(i, v, i == listData.length - 1).appendTo($ulTitle);
                 });
             }
         };
@@ -41,8 +62,7 @@ $(function(){
             var titleName ='图片,品类,品牌,状态';
 
             $.each(titleName.split(','), function (i, v) {
-                var $cell = $('<div></div>').addClass('cell').html(v);
-                $cell.appendTo($contentWrap);
+                $('<div></div>').addClass('cell').html(v).appendTo($contentWrap);
             });
 
             var $optionWrap = $('<div></div>').addClass('line-wrap action').html($('<div>操作</div>').addClass('cell option'));
@@ -57,14 +77,10 @@ $(function(){
             var id = i + 1;
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(id));
             var $contentWrap = $('<div></div>').addClass('line-wrap content col4');
-            var  propertyArrimg = [
-                [v.icon,'null']
-            ];
-            $.each(propertyArrimg, function (i, v) {
-                var $imgDiv = $('<div></div>').addClass('cell').appendTo($contentWrap);
-                var img = $('<img/>').appendTo($imgDiv);
-                com.showImg(img, v[0], 50, 50, '50x50', null, 0);
-            });
+            
+            var $imgDiv = $('<div></div>').addClass('cell').appendTo($contentWrap);
+            var img = $('<img/>').appendTo($imgDiv);
+            com.showImg(img, v.icon, 50, 50, '50x50', null, 0);
 
             var propertyArr = [
                 [v.mcategory.name,'grey'],
@@ -97,29 +113,26 @@ $(function(){
 
             //编辑
             $update.click(function(){
-                editBrand(v);
-                openlayer(function(index, layero){
-                    if(com.validate('form1'))
-                        return;
-                    updateData(v, function(){
-                        com.closePopup();
-                    });
+                
+                mbrand.bid = v.bid;
+                
+                com.popup4model('#layerAdd', '编辑', null, function () {
+                    com.clearValidator();
+                }, function(){
+                    initUpdate(v);
                 });
             });
 
             /*状态启用*/
             $btnStart.click(function(){
-                startStatus(v.bid, v.status, function(){
-                    com.showAlert(com.info, "操作成功");
-                });
+                updateStatus(v.bid, 0);
             });
 
             /*状态禁用*/
             $btnBan.click(function(){
-                stopStatus(v.bid, v.status, function(){
-                    com.showAlert(com.info, "操作成功");
-                });
+                updateStatus(v.bid, 1);
             });
+            
             return $liLine;
         };
 
@@ -134,11 +147,9 @@ $(function(){
         };
     })();
 
-    /*分页*/
-    var _condArr = ['mbrandName'];
-    var mbrandSeacher = new Searcher();
+    var searcher = new Searcher();
 
-    mbrandSeacher.init( _condArr, "condList", api.store.pageMbrand, function(data){
+    searcher.init( ["store-mbrand"], "condList", api.store.pageMbrand, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "mbrandPostData", null, false, null, function() {
 
@@ -147,158 +158,64 @@ $(function(){
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         $adda.click(function(){
-            com.focusPage("#brandImg").html("");
-            com.cleanItems(mbrand.mbrandItems);
-
-            openlayer(function(index, layero){
-                if(com.focusPage("#path").val() == null || com.focusPage("#path").val() == ""){
-                    com.focusPage("#brandImg").html("");
-                    var $text = $('<span></span>').html('请上传图片').css("color", "red").appendTo(com.focusPage("#brandImg"));
-                    return;
-                }
-
-                if(com.validate('form1')){
-                    return;
-                }
-
-                saveData(function(){
-                    com.closePopup();
-                });
+            
+            mbrand.bid = null;
+            
+            com.clearImg(mbrand.items.brandImg);
+            com.cleanItems(mbrand.items);
+            
+            com.popup4model('#layerAdd', '添加', null, function () {
+                com.clearValidator();
             });
         });
+        
         return [$adda];
-    },'resultList');
-
-    function openlayer(callback){
-        com.closePopup();
-        layer.open({
-            type: 1,
-            title:" ",
-            content: com.focusPage('#layerAdd'),
-            area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
-            maxmin: false,
-            zIndex:9000,
-            btn: ['确定', '取消'],
-            yes: function(index, layero){
-                var img =com.focusPage('#showImg').attr('src');
-                if(img == "#"){
-                    com.showAlert(com.warning, "请上传图片");
-                }else{
-                    callback(index,layero);
-                }
-            },
-            btn2: function(index, layero){
-                //按钮【按钮二】的回调
-                com.clearValidator();
-            },
-            cancel: function(){
-                //右上角关闭回调
-            }
-        });
-    }
-
-    /*状态信息验证*/
-    function startStatus(id, status, callback){
-        com.post(api.store.updateMbrandForStatus,{
-            "mbrand.bid" : id,
-            "mbrand.status" : "0"
-        },function(res){
-            callback();
-            mbrandSeacher.doSearch();
-        });
-    }
-
-    function stopStatus(id, status, callback){
-        com.post(api.store.updateMbrandForStatus,{
-            "mbrand.bid" : id,
-            "mbrand.status" : "1"
-        },function(res){
-            callback();
-            mbrandSeacher.doSearch();
+    }, 'resultList');
+    
+    function updateStatus(bid, status){
+        
+        var options = {
+            "mbrand.bid": bid,
+            "mbrand.status": status
+        }
+        
+        com.post(api.store.updateMbrandForStatus, options, function(res){
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
         });
     }
 
     /*添加信息*/
-    function saveData(callback){
-        var cid = mbrand.mbrandItems.cid.val();
-        var name = mbrand.mbrandItems.name.val();
-        var path = com.focusPage("#path").val();
-
-        com.post(api.store.addMbrand, {
-            "mbrand.mcategory.cid": cid,
-            "mbrand.name":name,
-            "mbrand.icon":path
-        }, function(res){
-            callback();
-            mbrandSeacher.doSearch();
-        });
-    }
-
-    function updateData(v, callback){
-        var cid = mbrand.mbrandItems.cid.val();
-        var name = mbrand.mbrandItems.name.val();
-        var path = com.focusPage("#path").val();
-
-        com.post(api.store.updateMbrand, {
-            'mbrand.bid' : v.bid,
-            "mbrand.mcategory.cid" : cid,
-            "mbrand.name" : name,
-            "mbrand.icon" : path
-        }, function(res){
-            callback();
-            mbrandSeacher.doSearch();
-        });
-    }
-
-    function editBrand(v){
+    function saveData(){
         
-        com.focusPage("#brandImg").html("");
+        if(com.validate('form1')) return false;
         
-        mbrand.mbrandItems.cid.val(v.mcategory.cid);
-        mbrand.mbrandItems.name.val(v.name);
-        mbrand.mbrandItems.path.val(v.icon);
-        
-        var img = $('<img />');
-        var imgA = $("<a></a>").css("height", "150px").append(img).appendTo(com.focusPage("#brandImg"));
-        
-        com.showImg(img, v.icon, 150, 150, '', null, 0);
-        
-        com.popup4photos("#brandImg");
-    }
-
-    com.focusPage("#pictureUpload").Huploadify({
-        'debug' : false, // 开启调试
-        'auto':true, // 是否自动上传
-        'successTimeout': 99999, //超时时间
-        'multi': false, // 批量上传
-        'buttonClass': 'btn btn-success',
-        'formData': { //附带值
-            'uploadType':0,
-            'strutsUploadsFileName': '',
-            'username':'用户名',
-            'rnd':'加密密文'
-        },
-        'overrideEvents': ['onDialogClose'], // 不执行默认的onSelect事件
-        'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-        'uploader': config.media + api.common.uploadImg.url, // 上传处理程序
-        'width': '100', // 浏览按钮的宽度
-        'height': '32', // 浏览按钮的高度
-        'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-        'fileTypeExts': '*.jpg;*.jpge;*.gif;*.png', // 允许上传的文件后缀
-        'fileSizeLimit': 3072, // 上传文件的大小限制
-        'queueSizeLimit': 25, // 上传数量
-        'onUploadSuccess':function(file, data, response){
-            var dateObj=eval("("+data+")");
-            if(dateObj.errorCode == 0){
-                com.focusPage("#brandImg").html("");
-                mbrand.mbrandItems.path.val(dateObj.resUrl);
-                var img = $('<img />');
-                var imgA = $("<a></a>").css("height", "150px").append(img).appendTo(com.focusPage("#brandImg"));
-                com.showImg(img, dateObj.resUrl, 150, 150, '', null, 0);
-                com.popup4photos("#brandImg");
-            }else{
-                alert(data);
-            }
+        var url = api.store.addMbrand;
+        var options = {
+            "mbrand.mcategory.cid": mbrand.items.cid.val(),
+            "mbrand.name": mbrand.items.name.val(),
+            "mbrand.icon": mbrand.items.path.val()
         }
-    });
+        
+        if(mbrand.bid){
+            options["mbrand.bid"] = mbrand.bid;
+            
+            url = api.store.updateMbrand;
+        }
+
+        com.post(url, options, function(res){
+            com.closePopup();
+            searcher.doSearch();
+        });
+    }
+
+    function initUpdate(v){
+        
+        mbrand.items.cid.val(v.mcategory.cid);
+        mbrand.items.name.val(v.name);
+        mbrand.items.path.val(v.icon);
+        
+        com.showImg(mbrand.items.brandImg, v.icon, 150, 150, '', null, 0);
+    }
+    
 });

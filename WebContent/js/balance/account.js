@@ -133,7 +133,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["accountName", "accountStatus"], "condList", api.balance.pageAccount, function(data){
+    searcher.init(["balance-account-name", "balance-account-status"], "condList", api.balance.pageAccount, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "accountPostData",null, false, null, function(){
 

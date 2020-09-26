@@ -78,7 +78,7 @@ jQuery(function ($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["orderId", "village", "houseNumber", "designer", "salesman"], "condList", api.decoration.pageDecorationForGeneral, function (data) {
+    searcher.init(["material-orderId", "material-village", "material-houseNumber", "material-designer", "material-salesman"], "condList", api.decoration.pageDecorationForGeneral, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", materialOrderPostData);
 
