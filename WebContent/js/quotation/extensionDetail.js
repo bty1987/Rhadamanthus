@@ -52,7 +52,7 @@ var ExtensionDetail = (function(){
 
             //普通报价项弹出层
             var extraParams  = {"quotationItem.versionId": extensionDetail.versionId};
-            var _condArrn = ['itemName', 'quotationBigCategoryId', 'quotationSmallCategoryId', 'quotationWorkTypeId'];
+            var _condArrn = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'data-worktype'];
             var normalItemSeacher = new Searcher();
             normalItemSeacher.init( _condArrn, "condListn", api.quotation.pageQuotationItemByVersionId,  function(data){
                 var $tableWrap = com.focusPage('#resultListn').empty();

@@ -133,7 +133,7 @@ $(function(){
 
     var searcher = new Searcher();
 
-    searcher.init(["cu_name"], "condList", api.customer.pageVustomerForAdvance, function(data){
+    searcher.init(["customer-v-name"], "condList", api.customer.pageVustomerForAdvance, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "vustomerPostData",null, false, null, null);
 

@@ -46,5 +46,12 @@ $.extend(api, {communion: {
     updateTalking:{url:"updateTalking.do", server: "communion"},
     updateTalkingForStatus:{url:"updateTalkingForStatus.do", server: "communion"},
     deleteTalking:{url:"deleteTalking.do", server: "communion"},
+	
+	  //积分模块api 5条
+    queryCppoint:{url:"queryCppoint.do"},
+    queryCppointRecord:{url:"queryCppointRecord.do"},
+    createCppoint:{url:"createCppoint.do"},
+    addupCppoint:{url:"addupCppoint.do"},
+    useupCppoint:{url:"useupCppoint.do"},
 
 }});

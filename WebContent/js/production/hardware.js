@@ -284,7 +284,7 @@ $(function(){
             com.focusPage('#importHardwareExcel').addClass('hide');
         }
 
-        com.uploadify("#importHardwareExcel", "添加上传文件", 'btn btn-success blue ', "*.xlsx", {'uploadType': 2}, 1, function(data){
+        com.uploadify("#importHardwareExcel", "上传文件", api.common.uploadOther, 'btn btn-success blue ', "*.xlsx", {'uploadType': 2}, 1, function(data){
             var option = {};
 
             option["hardware.hid"] = v.hid;
@@ -294,6 +294,7 @@ $(function(){
             }else{
                 com.showAlert(com.warning, "上传失败");
             }
+            
             com.post(api.production.updateHardware,option,function(res){
                 com.showAlert(com.info, "操作成功");
                 $line.find(".infobox").remove();

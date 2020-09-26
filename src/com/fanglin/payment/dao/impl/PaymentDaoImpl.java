@@ -78,7 +78,7 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 					query.add(query.getCriterion("customer.customerName", filter));
 				} else if("orderId".equals(filter.getField())){
 					query.add(query.getCriterion("orderId", filter));
-				} else if("collectTimeDateRange".equals(filter.getField())){
+				} else if("collectTime".equals(filter.getField())){
 					
 					String sTime = filter.getData().split("-")[0].replaceAll("/", "-") + " 00:00:00";
 					String eTime = filter.getData().split("-")[1].replaceAll("/", "-") + " 23:59:59";

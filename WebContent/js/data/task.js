@@ -141,7 +141,7 @@ $(function(){
     })();
 
     var taskSeacher = new Searcher();
-    taskSeacher.init( ["taskName"], "condList", api.data.pageTask, function(data){
+    taskSeacher.init( ["data-task-name"], "condList", api.data.pageTask, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "taskPostData", null, false, null, function(){
 

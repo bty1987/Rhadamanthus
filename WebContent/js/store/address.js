@@ -1,34 +1,40 @@
 $(function(){
+    
     var address = {
-        addressItems:{},
-        editFlg: false,
-        repeatFlg: false
+        uid: params.muser.uid,
+        unionId: params.muser.unionId,
+            
+        items:{
+            name: com.focusPage("#name1"),
+            phone: com.focusPage("#phone1"),
+            province: com.focusPage("#province"),
+            city: com.focusPage("#city"),
+            proper: com.focusPage("#proper"),
+            address: com.focusPage("#address"),
+        },
+        
+        btns: {
+            updateAddressBtn: com.focusPage("#updateAddressBtn"),
+        }
     };
-
-    address.addressItems.name = com.focusPage("#name1");
-    address.addressItems.phone = com.focusPage("#phone1");
-    address.addressItems.province = com.focusPage("#province");
-    address.addressItems.city = com.focusPage("#city");
-    address.addressItems.proper = com.focusPage("#proper");
-    address.addressItems.address = com.focusPage("#address");
-    var userAddressPopUp = com.focusPage('#userAddressPopUp');
-
+    
+    address.btns.updateAddressBtn.click(updateData);
+    
     var displayFunc  = (function(){
         /*表格样式*/
         var renderList = function(tableId,listData){
             var $tableWrap = com.focusPage('#' + tableId);
 
             if(listData && listData.length){
+                
                 var $ulTitle = createTableTitle();
                 var $ulData = $('<ul></ul>').addClass('flex-table');
+                
                 $tableWrap.append($ulTitle).append($ulData);
 
                 $.each(listData,function(i, v){
-                    var $liLine = creatLine(i, v, i == listData.length - 1);
-
-                    $liLine.appendTo($ulTitle);
+                    creatLine(i, v, i == listData.length - 1).appendTo($ulTitle);
                 });
-                $('#resultListAddress').css({'width':'96%','margin':'0 auto','height':'560px','marigin-top':'20px'})
             }
         };
 
@@ -88,18 +94,15 @@ $(function(){
             $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
             $update.click(function(){
-                clearForm('form2');
-                editBrand(v);
-                openlayer(function(index, layero){
-                    if(com.validate('form2'))
-                        return;
-                    //编辑
-                    updateData(v, function(){
-                        com.clearValidator("#aid", true);
-                        com.clearValidator("#name", true);
-                        com.clearValidator();
-                        com.closePopup();
-                    });
+                
+                address.aid = v.aid;
+                
+                com.cleanItems(address.items);
+                
+                initUpdate(v);
+                
+                com.popup4model('#layerAdd2', '编辑', null, function () {
+                    com.clearValidator();
                 });
             });
 
@@ -110,7 +113,6 @@ $(function(){
             init : function(tableId,listData){
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId,listData);
-
             },
             drawLine : function(v){
                 return creatLine(v);
@@ -121,109 +123,39 @@ $(function(){
     doSearcher();
 
     function doSearcher() {
-        com.post(api.store.queryAddressByUid, {"address.uid": userAddressPopUp.attr("data-uid")}, function (res) {
+        com.post(api.store.queryAddressByUid, {"address.uid": address.uid}, function (res) {
             displayFunc.init('resultListAddress', res.addresses);
         });
     }
 
-    function addline(lineindex) {
-        var $line = $('<li></li>').addClass('line');
-        var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').text(lineindex));
-        var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col1');
-        var $optWrap = $('<div></div>').addClass('line-wrap action');
-        var _lineInfoSet = [{cellClass : "info", hasInput : !0}];
-        var $btncheck = $('<a class="color-green green" style="font-size: 18px"><i class="icon-ok"></i></a>');
-        var $btndel = $('<a class="color-red red" style="font-size: 18px"><i class=" icon-remove"></i></a>');
-
-        $.each(_lineInfoSet, function (i, v) {
-            var $input;
-            var $cell = $('<div></div>').addClass('cell ' + v.cellClass);
-            if (v.hasInput) {
-                $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable v_required');
-                $cell.append($input);
-            }
-            $cell.appendTo($lineInfoWrap);
-        });
-
-        $btndel.click(function (e) {
-            com.focusPage('#list').empty();
-            addline(1).addClass('current').appendTo('#list');
-        });
-        return $line;
+    function initUpdate(v){
+        address.items.name.val(v.name);
+        address.items.phone.val(v.phone);
+        address.items.province.val(v.province);
+        address.items.city.val(v.city);
+        address.items.proper.val(v.proper);
+        address.items.address.val(v.address);
     }
 
-    addline(1).addClass('current').appendTo('#list');
-
-    function editBrand(v){
-        com.clearValidator();
-        address.addressItems.name.val(v.name);
-        address.addressItems.phone.val(v.phone);
-        address.addressItems.province.val(v.province);
-        address.addressItems.city.val(v.city);
-        address.addressItems.proper.val(v.proper);
-        address.addressItems.address.val(v.address);
-    }
-
-    function updateData(v,callback){
-        var $layer = com.focusPage('#layerAdd2');
-        var name = com.focusPage("#name1").val();
-        var province = com.focusPage("#province").val();
-        var city = com.focusPage("#city").val();
-        var proper = com.focusPage("#proper").val();
-        var address = com.focusPage("#address").val();
-        com.post(api.store.updateAddress, {
-            "muser.unionId": userAddressPopUp.attr("data-unionid"),
-            'address.aid':v.aid,
-            "address.name": name,
-            "address.province": province,
-            "address.city": city,
-            "address.proper": proper,
-            "address.address":address
-        }, function(res){
-            callback();
+    function updateData(){
+        
+        if(com.validate('form2')) return false;
+        
+        var url = api.store.updateAddress
+        var options = {
+            "muser.unionId": address.unionId,
+            "address.aid": address.aid,
+            "address.name": address.items.name.val(),
+            "address.province": address.items.province.val(),
+            "address.city": address.items.city.val(),
+            "address.proper": address.items.proper.val(),
+            "address.address": address.items.address.val()
+        }
+        
+        com.post(url, options, function(res){
+            com.closePopup();
+            doSearcher();
         });
     }
 
-    function clearForm(formId){
-        var $form = com.focusPage("#"+formId);
-        var error = com.focusPage('.alert-error', $form);
-        var success = com.focusPage('.alert-success', $form);
-        com.focusPage('.control-group').removeClass("success").removeClass("error");
-        com.focusPage(".ok").remove();
-        com.focusPage(".help-inline").remove();
-        success.hide();
-        error.hide();
-        com.focusPage("span.checked",$form).removeClass("checked");
-        com.focusPage("tr.edit-on").removeClass("edit-on");
-        $form.removeClass("edit-item");
-        com.focusPage(".extra-wrap .control-group:not(.hide)").remove();//去掉辅助项
-        com.focusPage('input[type="hidden"]',$form).val('');
-        document.getElementById(formId).reset();
-    }
-
-    function openlayer(callback){
-        layer.open({
-            type: 1,
-            title:"                                              ",
-            content: com.focusPage('#layerAdd2'),
-            area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
-            maxmin: false,
-            btn: ['确定', '取消'],
-            yes: function(index, layero){
-                callback(index,layero);
-            },
-            btn2: function(index, layero){
-                //按钮【按钮二】的回调
-                com.clearValidator();
-            },
-            cancel: function(){
-                //右上角关闭回调
-            }
-        });
-    }
-
-    com.focusPage('.layui-layer-content').css('overflow', 'hidden');
-    com.focusPage('#showAddress').css('height', '680px');
-    com.focusPage('#showAddress').css('overflow-y', 'scroll');
-    
 });

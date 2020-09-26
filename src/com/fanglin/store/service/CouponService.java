@@ -8,15 +8,15 @@ import com.fanglin.store.vo.CouponVO;
 import com.fanglin.utils.Paging;
 
 public interface CouponService {
-	
-	public void pageCoupon (Paging paging, List<Filter> filters);
-	
+
+	public void pageCoupon(Paging paging, List<Filter> filters);
+
 	public CouponVO queryCouponByCid(CouponVO couponVO);
-	
-	public void addCoupon (CouponVO couponVO) throws FLException;
-	
-	public void updateCoupon (CouponVO couponVO);
-	
-	public void updateCouponForStatus (CouponVO couponVO);
+
+	public int addCoupon(CouponVO couponVO) throws FLException;
+
+	public int updateCoupon(CouponVO couponVO);
+
+	public int updateCouponForStatus(CouponVO couponVO);
 
 }

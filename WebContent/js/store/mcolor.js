@@ -1,5 +1,21 @@
 $(function(){
-    var goodsColorPopUp = com.focusPage('#goodsColorPopUp');
+    
+    var mcolor = {
+        gid: params.goods.gid,
+        
+        items: {
+            name: com.focusPage(".cell.name input"),
+        },
+        
+        btns: {
+            submitBtn: com.focusPage(".color-green.green"),
+            clearBtn: com.focusPage(".color-red.red")
+        }
+    }
+    
+    mcolor.btns.submitBtn.click(createColor);
+    mcolor.btns.clearBtn.click(clearColor);
+    
     var displayFunc  = (function(){
 
         /*表格样式*/
@@ -16,8 +32,6 @@ $(function(){
                     $liLine.appendTo($ulTitle);
                 });
 
-                com.focusPage('#resultListColor').css({'width':'96%','margin':'0 auto','height':'560px','marigin-top':'20px'})
-
             }
         };
 
@@ -31,8 +45,7 @@ $(function(){
             var titleName = '颜色,状态';
 
             $.each(titleName.split(','), function (i, v) {
-                var $cell = $('<div></div>').addClass('cell').html(v);
-                $cell.appendTo($contentWrap);
+                $('<div></div>').addClass('cell').html(v).appendTo($contentWrap);
             });
 
             var $optionWrap = $('<div></div>').addClass('line-wrap action').html($('<div>操作</div>').addClass('cell option'));
@@ -77,24 +90,12 @@ $(function(){
 
             /*状态启用*/
             $btnStart.click(function(){
-                com.focusPage('#layerAdd').attr('data-cid', v.cid);
-                com.focusPage('#layerAdd').attr('data-status', v.status);
-
-                var id = com.focusPage('#layerAdd').attr('data-cid');
-                var status = com.focusPage('#layerAdd').attr('data-status');
-                
-                startStatus(id, status);
+                updateStatus(v.cid, 0);
             });
             
             /*状态禁用*/
             $btnBan.click(function(){
-                com.focusPage('#layerAdd').attr('data-cid', v.cid);
-                com.focusPage('#layerAdd').attr('data-status', v.status);
-
-                var id = com.focusPage('#layerAdd').attr('data-cid');
-                var status = com.focusPage('#layerAdd').attr('data-status');
-
-                stopStatus(id, status);
+                updateStatus(v.cid, 1);
             });
 
             return $liLine;
@@ -114,91 +115,49 @@ $(function(){
     
     /*分页*/
     function doSearcher(){
-        com.post(api.store.queryMcolorByGid,{
-            "mcolor.gid": goodsColorPopUp.attr('data-gid')
-        },function(res){
-            displayFunc.init('resultListColor',res.mcolors);
+        
+        var options = {
+            "mcolor.gid": mcolor.gid
+        }
+        
+        com.post(api.store.queryMcolorByGid, options, function(res){
+            displayFunc.init('resultListColor', res.mcolors);
         })
     }
     
     doSearcher();
-
-    function startStatus(id, status, callback){
-        com.post(api.store.updateMcolorForStatus,{
-            "mcolor.cid":id,
-            "mcolor.status":"0"
-        },function(res){
+    
+    function updateStatus(cid, status){
+        
+        var options = {
+            "mcolor.cid" : cid,
+            "mcolor.status" : status
+        }
+        
+        com.post(api.store.updateMcolorForStatus, options, function(res){
             doSearcher();
         });
     }
     
-    function stopStatus(id, status, callback){
-        com.post(api.store.updateMcolorForStatus,{
-            "mcolor.cid" : id,
-            "mcolor.status" : "1"
-        },function(res){
+    function createColor(){
+        
+        if(com.validate('addColor', 'bottom')){
+            return false;
+        }
+        
+        var options = {
+            "mcolor.gid": mcolor.gid,
+            "mcolor.color": mcolor.items.name.val()
+        };
+
+        com.post(api.store.addMcolor,options,function(){
+            com.cleanItems(mcolor.items);
             doSearcher();
-        });
+        })
+    }
+    
+    function clearColor(){
+        com.cleanItems(mcolor.items);
     }
 
-    function addline(lineindex) {
-        var $line = $('<li></li>').addClass('line');
-        var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').text(lineindex));
-        var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col1');
-        var $optWrap = $('<div></div>').addClass('line-wrap action');
-        var _lineInfoSet = [
-            {cellClass : "name", hasInput : !0}//名称
-        ];
-        var $btncheck = $('<a class="color-green green" style="font-size: 18px"><i class="icon-ok"></i></a>');
-        var $btndel = $('<a class="color-red red" style="font-size: 18px"><i class=" icon-remove"></i></a>');
-        $.each(_lineInfoSet, function (i, v) {
-            var $input;
-            var $cell = $('<div></div>').addClass('cell ' + v.cellClass);
-            
-            if (v.hasInput) {
-                $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable v_required');
-                $cell.append($input);
-            }
-
-            $cell.appendTo($lineInfoWrap);
-        });
-
-        $optWrap.append($('<div></div>').addClass('cell option').append($btncheck).append($btndel));
-
-        $line.append($indexWrap).append($lineInfoWrap).append($optWrap);
-
-        $btncheck.click(function (e) {
-            e.stopPropagation();
-            if(com.validate('addColor','bottom')){
-                return;
-            }
-            var gid = $(this).parents('li.line.current').attr('data-gid');
-            var options = {
-                "mcolor.gid":goodsColorPopUp.attr('data-gid'),
-                "mcolor.color": $lineInfoWrap.find('.name input').val()
-            };
-
-            com.post(api.store.addMcolor,options,function(){
-                com.focusPage('#list').empty();
-                addline(1).addClass('current').appendTo('#list');
-                doSearcher();
-            },function(e){
-                com.showAlert(com.error, e.errorMsg);
-            })
-        });
-
-        $btndel.click(function (e) {
-            com.focusPage('#list').empty();
-            addline(1).addClass('current').appendTo('#list');
-        });
-
-        return $line;
-    }
-
-    addline(1).addClass('current').appendTo('#list');
-
-    com.focusPage('.layui-layer-content').css('overflow','hidden');
-    com.focusPage('#showColor').css('height','560px');
-    com.focusPage('#addColor').css({'width':'96%','margin':'0 auto','margin-top':'15px'});
-    com.focusPage('#showColor').css('overflow-y' , 'scroll');
 });

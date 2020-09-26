@@ -1,43 +1,20 @@
 jQuery(function ($) {
+    
     var morder = {
-        saveBtn: null,
-        cancelBtn: null,
-        modal: null,
-        items: {},
-        editFlg: false
+        oid: params.morder.oid,
     };
-    var backBtn = com.focusPage('#backBtn');
-    morder.saveBtn = com.focusPage("#saveBtn").bindClick(saveData);
-    morder.cancelBtn = com.focusPage("#cancelBtn");
-    morder.items.no = com.focusPage("#no");
-    morder.items.price = com.focusPage("#price");
-    morder.items.num = com.focusPage("#num");
-    morder.items.status = com.focusPage("#status");
-    morder.modal = com.focusPage("#morderItemModal");
-    morder.modal.on('show.bs.modal', function (e) {
-        com.clearValidator();
-        com.clearValidator("#no", true);
-    });
-    var morderOid = params["morder.oid"];
-    var options = {
-        "morder.oid": morderOid
-    };
-
-    com.post(api.ds.store, {}, function (res) {
-        com.focusPage("#status").bindData(res.statusItem, "key", "value");
-        $.each(res.statusItem, function (i, v) {
-            status[v.key] = v.value;
-        })
-    }, null, false);
-
+    
     var displayFunc  = (function(){
         var renderList = function(tableId, listData){
+            
+            console.log(listData)
+            
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+            
             if(listData && listData.length){
                 $.each(listData,function(i, v){
-                    var $liLine = creatLine(v);
-                    $liLine.appendTo($ul);
+                    creatLine(v).appendTo($ul);
                 });
                 $ul.appendTo($tableWrap);
             }
@@ -85,29 +62,9 @@ jQuery(function ($) {
             }
         }
     })();
-
-    queryMorderItem();
-
-    function queryMorderItem() {
-        com.post(api.store.queryMorderItemByOid, options, function (res) {
-            displayFunc.init('resultList', res.morderItems);
-        }, function (res) {
-            console.log("失败")
-        }, false)
-    }
-
-    backBtn.click(function () {
-        com.switchPage(api.index.mordersitem.url);
+    
+    com.post(api.store.queryMorderItemByOid, {"morder.oid": morder.oid}, function (res) {
+        displayFunc.init('resultItemList', res.morderItems);
     });
 
-    function saveData() {
-        var options = {
-            'morderItem.oiid': morder.items.oiid,
-            'morderItem.status': morder.items.status.val()
-        };
-        com.post(api.store.updateMorderItemForStatus, options, function (res) {
-            morder.modal.modal("hide");
-            queryMorderItem()
-        });
-    }
 });

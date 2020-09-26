@@ -1,32 +1,44 @@
-<div>
-    <div id="addColor">
-        <ul class="flex-table">
-            <li class="line table-title">
-                <div class="line-wrap order">
-                    <div class="cell index"></div>
-                </div>
-                <div class="line-wrap content col1">
-                    <div class="cell">颜色</div>
-                </div>
-                <div class="line-wrap action">
-                    <div class="cell option">操作</div>
-                </div>
-            </li>
-        </ul>
+<div class="page-content">
+	<div id="addColor">
+		<ul class="flex-table">
+			<li class="line table-title">
+				<div class="line-wrap order">
+					<div class="cell index"></div>
+				</div>
+				<div class="line-wrap content col1">
+					<div class="cell">颜色</div>
+				</div>
+				<div class="line-wrap action">
+					<div class="cell option">操作</div>
+				</div></li>
+		</ul>
 
-        <ul class="flex-table" id="list"></ul>
-    </div>
+		<ul class="flex-table" id="list">
+			<li class="line current"><div class="line-wrap order">
+					<div class="cell index"></div>
+				</div>
+				<div class="line-wrap content col1">
+					<div class="cell name">
+						<input type="text" autocomplete="off" class="editable v_required">
+					</div>
+				</div>
+				<div class="line-wrap action">
+					<div class="cell option">
+						<a class="color-green green" style="font-size: 18px"><i class="icon-ok"></i></a>
+						<a class="color-red red" style="font-size: 18px"><i class=" icon-remove"></i></a>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>
 
-    <div id="showColor">
-        <div id="condListColor" class="fl_search clearfix"></div>
-
-        <div class="clearfix" id="resultListColor"></div>
-
-        <div class="fl-page-wrap clearfix pagination" id="pagenationColor" style="display: block;"></div>
-    </div>
+	<div id="showColor">
+		<div id="condListColor" class="fl_search clearfix"></div>
+		<div class="clearfix" id="resultListColor"></div>
+		<div class="fl-page-wrap clearfix pagination" id="pagenationColor" style="display: block;"></div>
+	</div>
 </div>
 
 <script type="text/javascript">
-    $.loadScript(['js/store/mcolor.js']);
+    $.loadScript([ 'js/store/mcolor.js' ]);
 </script>
-

@@ -4,36 +4,37 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
-public class EvaluateVO implements Serializable{
-	
+
+public class EvaluateVO implements Serializable {
+
 	private static final long serialVersionUID = -4753987975347003497L;
 
 	private Long eid;
-	
+
 	private Long oid;
-	
+
 	private MpriceVO mprice;
-	
+
 	private Long gid;
-	
+
 	private String unionId;
-	
+
 	private String name;
-	
+
 	private Timestamp createTime;
-	
+
 	private Short score;
-	
+
 	private String comment;
-	
+
 	private Short discribeRate;
-	
+
 	private Short logisticsRate;
-	
+
 	private Short serviceRate;
-	
+
 	private String imgs;
-	
+
 	public EvaluateVO() {
 		super();
 	}
@@ -58,7 +59,7 @@ public class EvaluateVO implements Serializable{
 	public void setOid(Long oid) {
 		this.oid = oid;
 	}
-	
+
 	public MpriceVO getMprice() {
 		return mprice;
 	}
@@ -66,7 +67,7 @@ public class EvaluateVO implements Serializable{
 	public void setMprice(MpriceVO mprice) {
 		this.mprice = mprice;
 	}
-	
+
 	public Long getGid() {
 		return gid;
 	}
@@ -91,7 +92,7 @@ public class EvaluateVO implements Serializable{
 		this.name = name;
 	}
 
-	@JSON(format="yyyy-MM-dd")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}

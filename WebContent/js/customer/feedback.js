@@ -61,7 +61,7 @@ $(function(){
 
     var searcher = new Searcher();
 
-    searcher.init(['feedbackCreateTime'], "condList",api.customer.pageFeedback, function(res){
+    searcher.init(['customer-feedback-createTime'], "condList",api.customer.pageFeedback, function(res){
         displayFunc.init("resultList",res);
     },"pagenation");
 

@@ -204,7 +204,7 @@ $(function () {
     })();
 
     var salesPaymentSearcher = new Searcher();
-    salesPaymentSearcher.init(["salesPaymentOrderId", "salesPaymentNo", "salesPaymentUserName", "salesPaymentVillage", "salesReceiptCollectTime"], 'condList', api.payment.pageSalesPaymentForCollect, function (data) {
+    salesPaymentSearcher.init(["payment-orderId", "payment-sales-no", "payment-designer", "payment-village", "payment-collectTime"], 'condList', api.payment.pageSalesPaymentForCollect, function (data) {
         displayFunc.init('resultList', data);
     }, 'pagenation', 'salesPaymentForStatusPostData', null, false, null, function () {
         var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'checks').css("margin", "0px 3px");
@@ -324,7 +324,7 @@ $(function () {
 
     var hsearcher = new Searcher();
 
-    hsearcher.init(["salesPaymentOrderId", "salesPaymentNo", "salesPaymentUserName", "salesPaymentVillage", "salesReceiptConfirmTime"], "hcondList", api.payment.pageSalesPaymentForConfirm, function (data) {
+    hsearcher.init(["payment-orderId", "payment-sales-no", "payment-designer", "payment-village", "payment-confirmTime"], "hcondList", api.payment.pageSalesPaymentForConfirm, function (data) {
         hdisplayFunc.init('hresultList', data);
     }, "hpagenation", "hsalesPaymentForStatusPostData", null, false, null, function () {
         var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");

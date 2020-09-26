@@ -9,19 +9,19 @@ public class AddressVO implements Serializable {
 	private Long aid;
 
 	private Long uid;
-	
+
 	private String name;
-	
+
 	private String phone;
 
 	private String province;
-	
+
 	private String city;
-	
+
 	private String proper;
-	
+
 	private String address;
-	
+
 	private Short status;
 
 	public AddressVO() {
@@ -59,7 +59,7 @@ public class AddressVO implements Serializable {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	
+
 	public String getProvince() {
 		return province;
 	}
@@ -83,7 +83,7 @@ public class AddressVO implements Serializable {
 	public void setProper(String proper) {
 		this.proper = proper;
 	}
-	
+
 	public String getAddress() {
 		return address;
 	}

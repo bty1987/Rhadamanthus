@@ -107,6 +107,22 @@ public class DecorationContractAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "affixDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String affixDecorationContract() throws FLException {
+
+		decorationContractService.affixDecorationContract(decorationContract, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "expireDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String expireDecorationContract() throws FLException {
+
+		decorationContractService.expireDecorationContract(decorationContract);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "viewDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String viewDecorationContract() throws FLException {
 
@@ -118,11 +134,11 @@ public class DecorationContractAction extends BaseListAction {
 	@Action(value = "filingDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String filingDecorationContract() throws FLException {
 
-		decorationContractService.filingDecorationContract(decorationContract);
+		decorationContractService.filingDecorationContract(decorationContract, queryUserId());
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "sendDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String sendDecorationContract() throws FLException {
 

@@ -127,7 +127,7 @@ $(function(){
 
     var Seacher = new Searcher();
 
-    Seacher.init(["p_workflowName"], "condList", api.production.pageWorkflow, function(data){
+    Seacher.init(["production-workflow-name"], "condList", api.production.pageWorkflow, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "Workflow",null,false, null,function() {
 

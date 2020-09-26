@@ -41,8 +41,8 @@ $(function(){
             var $liTitle = $('<li></li>').addClass('line table-title');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>'));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col10');
-            var titleName ='奖品,类型,子类,一类,数量,总价,单价,提交人,时间,说明';
+            var $contentWrap = $('<div></div>').addClass('line-wrap  content col11');
+            var titleName ='奖品,装修单号,类型,子类,一类,数量,总价,单价,提交人,时间,说明';
 
             $.each(titleName.split(','), function (i, v) {
                 var $cell = $('<div></div>').addClass('cell').html(v);
@@ -57,18 +57,19 @@ $(function(){
         var creatLine = function (i, v) {
             var $liLine = $('<li></li>').addClass('line');
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
-            var $contentWrap = $('<div></div>').addClass('line-wrap content col10');
+            var $contentWrap = $('<div></div>').addClass('line-wrap content col11');
 
             var propertyArr = [
                 [v.awardStock.name,'grey'],
-                [awardRecord.type[v.type],'grey'],
-                [awardRecord.subtype[v.subtype],'grey'],
-                [awardRecord.onetype[v.onetype] , 'grey'],
-                [v.num,'grey'],
-                [v.totalPrice,'grey'],
-                [v.unitPrice, 'grey'],
+                [v.orderId, 'grey'],
+                [awardRecord.type[v.type],'red'],
+                [awardRecord.subtype[v.subtype],'red'],
+                [awardRecord.onetype[v.onetype] , 'red'],
+                [v.num,'blue'],
+                [v.totalPrice,'blue'],
+                [v.unitPrice, 'blue'],
                 [v.creater.currentName,'grey'],
-                [v.operateTime,'red'],
+                [v.operateTime,'green'],
                 [v.content,'grey']
             ];
 
@@ -96,7 +97,7 @@ $(function(){
     })();
 
     var awardRecordSeacher = new Searcher();
-    awardRecordSeacher.init(["stockDate", "stockName", "StockType", "awardRecordSubtypes", "awardStockOneType"], "condList", api.information.pageAwardRecord, function(data){
+    awardRecordSeacher.init(["information-awardRecord-name", "information-awardRecord-type", "information-awardRecord-subtype", "information-awardRecord-onetype", "information-awardRecord-recordTime"], "condList", api.information.pageAwardRecord, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "pageAwardRecordPostData", {"awardRecord.awardStock.asid":""}, false, null, function() {
     },'resultList');

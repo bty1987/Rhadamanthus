@@ -35,7 +35,7 @@ public class AccessoriesAction extends BaseListAction {
 	private AccessoriesItemVO accessoriesItem;
 
 	private List<Long> aids;
-
+	
 	@Autowired
 	private AccessoriesItemService accessoriesItemService;
 

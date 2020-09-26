@@ -94,7 +94,7 @@ $(function(){
     })();
     
     var searcher = new Searcher();
-    searcher.init( ['goodsNo','goodsName','goodsBarcode'], "condList1", api.data.pageGoodsForAdvance, function(data){
+    searcher.init( ['data-goods-no','data-goods-name','data-goods-barcode'], "condList1", api.data.pageGoodsForAdvance, function(data){
         displayFunc.init('resultList1', data);
     }, "pagenation1", "manifestTemplateItemGoodsPostData", null, false, null, null,'resultList1');
     

@@ -14,9 +14,11 @@ import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
+import com.fanglin.construction.dao.AcceptanceDao;
 import com.fanglin.construction.dao.ConstructionAccessoryDao;
 import com.fanglin.construction.dao.ConstructionDao;
 import com.fanglin.construction.dao.ConstructionScheduleDao;
+import com.fanglin.construction.po.AcceptancePO;
 import com.fanglin.construction.po.ConstructionAccessoryPO;
 import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.construction.po.ConstructionSchedulePO;
@@ -72,10 +74,13 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 	
 	@Autowired
 	private ConstructionAccessoryDao constructionAccessoryDao;
+	
+	@Autowired
+	private AcceptanceDao acceptanceDao;
 
 	@Override
 	public void pageAccessories(Paging paging, List<Filter> filters, int company) {
-
+		
 		List<AccessoriesPO> accessoriesPOs = accessoriesDao.pageAccessories(paging, filters, company);
 		List<AccessoriesVO> accessoriesVOs = new ArrayList<AccessoriesVO>();
 
@@ -128,6 +133,12 @@ public class AccessoriesServiceImpl implements AccessoriesService {
 		ConstructionSchedulePO constructionSchedulePO = constructionScheduleDao.queryConstructionScheduleByOrderId(orderId, accessoriesVO.getSchedule());
 		
 		ConstructionPO constructionPO = constructionDao.queryConstructionByOrderId(orderId);
+		
+		AcceptancePO acceptancePO = acceptanceDao.queryAcceptanceByOrderId(orderId);
+		
+		if (acceptancePO != null){
+			throw new FLException(120034, "工程已验收");
+		}
 		
 		if(constructionSchedulePO == null){
 			throw new FLException(120024, "工程环节不存在");

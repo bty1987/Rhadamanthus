@@ -137,7 +137,7 @@ jQuery(function($) {
 
     var balanceSearcher = new Searcher();
 
-    balanceSearcher.init( ["balanceNo", "balanceType", "balanStatus"], "condList", api.balance.pageBalance, function(data){
+    balanceSearcher.init( ["balance-balance-no", "balance-balance-type", "balance-balance-status"], "condList", api.balance.pageBalance, function(data){
         displayFunc.init('resultList' ,data);
     }, "pagenation", "balancePostData", null, false, null,function(){
 

@@ -7,13 +7,13 @@ public class SlideVO implements Serializable {
 	private static final long serialVersionUID = 2105684459060449547L;
 
 	private Long sid;
-	
+
 	private Long gid;
-	
+
 	private String img;
-	
+
 	private String url;
-	
+
 	private Short status;
 
 	public SlideVO() {
@@ -27,7 +27,7 @@ public class SlideVO implements Serializable {
 	public void setSid(Long sid) {
 		this.sid = sid;
 	}
-	
+
 	public Long getGid() {
 		return gid;
 	}

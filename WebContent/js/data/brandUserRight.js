@@ -101,7 +101,7 @@ jQuery(function ($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["materialerName"], "condList", api.personel.pageUser, function (data) {
+    searcher.init(["data-model-righter"], "condList", api.personel.pageUser, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "materialBrandRightPostData", materialBrandRight.postParam);
 

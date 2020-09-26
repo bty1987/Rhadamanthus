@@ -1,26 +1,49 @@
 $(function () {
+    
     var slide = {
-        slideItems: {},
-        editFlg: false,
-        repeatFlg: false,
-        slideData: []
+            
+        sid: null,
+        gid: null,
+            
+        items: {
+            
+            mgoods: com.focusPage("#mgoods"),
+            url: com.focusPage("#url"),
+            path: com.focusPage("#path"),
+            img: com.focusPage("#slideImg")
+        },
+        
+        btns: {
+            saveBtn: com.focusPage("#saveBtn"),
+        }
     };
-
-    slide.slideItems.gid = com.focusPage("#name");
-    slide.slideItems.url = com.focusPage("#url");
-    slide.slideItems.path = com.focusPage("#path");
+    
+    com.initTypeahead("mgoods", api.store.queryMgoodsByPinyin, "mgoods.pinyin", {}, "mgoods", "gid", "name");
+    
+    com.uploadify("#pictureUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpge;*.gif;*.png', {'uploadType': 2}, 10, function(data){
+        
+        slide.items.path.val(data.resUrl);
+        
+        com.showImg(slide.items.img, data.resUrl, 150, 150, '', null, 0);
+    });
+    
+    slide.btns.saveBtn.click(saveData);
 
     var displayFunc = (function () {
         /*表格样式*/
         var renderList = function (tableId, listData) {
+            
             var $tableWrap = com.focusPage('#' + tableId);
+            
             if (listData && listData.length) {
+                
                 var $ulTitle = createTableTitle();
                 var $ulData = $('<ul></ul>').addClass('flex-table');
+                
                 $tableWrap.append($ulTitle).append($ulData);
+                
                 $.each(listData, function (i, v) {
-                    var $liLine = creatLine(i, v, i == listData.length - 1);
-                    $liLine.appendTo($ulTitle);
+                    creatLine(i, v, i == listData.length - 1).appendTo($ulTitle);
                 });
             }
         };
@@ -45,6 +68,7 @@ $(function () {
 
             return $ulTitle;
         };
+        
         /*表格体*/
         var creatLine = function (i, v, lastFlag) {
             var $liLine = $('<li></li>').addClass('line');
@@ -52,16 +76,10 @@ $(function () {
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(id));
             var $contentWrap = $('<div></div>').addClass('line-wrap content col2');
 
-            var propertyArrimg = [
-                [v.img, 'null']
-            ];
-
-            $.each(propertyArrimg, function (i, v) {
-                var $imgDiv = $('<div></div>').addClass('cell').appendTo($contentWrap);
-                var img = $('<img> </img>');
-                com.showImg(img, v[0], 70, 40, '70x40', null, 0);
-                img.appendTo($imgDiv);
-            });
+            var $imgDiv = $('<div></div>').addClass('cell').appendTo($contentWrap);
+            var img = $('<img> </img>');
+            com.showImg(img, v.img, 70, 40, '70x40', null, 0);
+            img.appendTo($imgDiv);
 
             var propertyArr = [
                 //[v.icon, 'black'],
@@ -79,7 +97,6 @@ $(function () {
             var $btnGroup = $('<div></div>').addClass('btn-group');
             var $btn = $('<button></button>').addClass('btn btn-primary dropdown-toggle').attr('data-toggle', 'dropdown').append('操作').append('<i class="icon-angle-down"></i>');
             var $btnUl = $('<ul></ul>').addClass('dropdown-menu').addClass(lastFlag ? 'bottom-up' : '');
-            // var $btnStart = $('<li></li>').append($('<a></a>').html('显示'));
             var $btnBan = $('<li></li>').append($('<a></a>').html('禁用'));
             var $btnStart = $('<li></li>').append($('<a></a>').html('启用'));
             var $update = $('<li></li>').append($('<a></a>').html('编辑'));
@@ -94,39 +111,25 @@ $(function () {
 
             //编辑
             $update.click(function () {
-                com.focusPage("#name").attr('data-gid',v.gid);
-                com.focusPage("#name").attr('data-typeahead-key',v.name);
+                
+                slide.sid = v.sid;
+                slide.gid = v.gid;
+                
                 com.focusPage("#mgoodsname").hide();
-                var $layer = com.focusPage('#layerAdd');
-                editBrand(v);
-                openlayer(function (index, layero) {
-                    if(com.validate('form1'))
-                        return;
-                    var id = $layer.find('input[id="name"]').attr("data-gid");
-                    updateData(v, function () {
-                        com.closePopup();
-                    });
+                
+                initUpdate(v);
+                
+                com.popup4model('#layerAdd', '编辑', null, function () {
+                    com.clearValidator();
                 });
             });
 
             $btnBan.click(function () {
-                com.focusPage('#layerAdd').attr('data-sid', v.sid);
-                com.focusPage('#layerAdd').attr('data-status', v.status);
-
-                var id = com.focusPage('#layerAdd').attr('data-sid');
-                var status = com.focusPage('#layerAdd').attr('data-status');
-
-                startStatus(id, status);
+                updateStatus(v.sid, 1);
             });
 
             $btnStart.click(function () {
-                com.focusPage('#layerAdd').attr('data-sid', v.sid);
-                com.focusPage('#layerAdd').attr('data-status', v.status);
-
-                var id = com.focusPage('#layerAdd').attr('data-sid');
-                var status = com.focusPage('#layerAdd').attr('data-status');
-
-                stopStatus(id, status);
+                updateStatus(v.sid, 0);
             });
 
             return $liLine;
@@ -143,8 +146,6 @@ $(function () {
         };
     })();
 
-    autoFill(api.store.queryMgoodsByPinyin, "mgoods", "gid", "name");
-
     //查询
     function doSearcher() {
         com.post(api.store.querySlide, {}, function (res) {
@@ -153,205 +154,62 @@ $(function () {
     }
 
     doSearcher();
-
-    function autoFill(url, id, key, value) {
-        com.focusPage('input[name=' + id + ']').typeahead({
-            url: url,
-            list: [],
-            postData: {},
-            source: function (query, process) {
-                var options = $.extend({"mgoods.pinyin": query}, this.options.postData);
-                com.post(this.options.url, options, $.proxy(this.options.callback, this));
-            }, matcher: function (item) {
-                return true;
-            }, callback: function (data) {
-                slide.slideData = [];
-                slide.slideData = data.autoFillKeyValue;
-                this.flprocess(slide.slideData, 'key', 'value');
-            },
-            isResultTypeMap: true,
-            flupdater: function (k, v) {
-                com.focusPage('input[name=' + id + ']').attr('data-gid',k);
-                return v;
-            }
-        });
-    }
-
-    function openlayer(callback) {
-        com.closePopup();
-        layer.open({
-            type: 1,
-            title: " ",
-            content: com.focusPage('#layerAdd'),
-            area: ( $(window).width() * 0.6 < 620 ? $(window).height() * 0.6 : 620 ) + "px",
-            maxmin: false,
-            zIndex: 9000,
-            btn: ['确定', '取消'],
-            yes: function (index, layero) {
-                var img =com.focusPage('#showImg').attr('src');
-                if(img == "#"){
-                    com.showAlert(com.warning, "请上传图片");
-                }else{
-                    callback(index,layero);
-                }
-            },
-            btn2: function (index, layero) {
-                //按钮【按钮二】的回调
-                com.focusPage("#name").removeAttr("data-gid");
-                com.focusPage("#name").removeAttr("data-typeahead-key");
-                com.clearValidator();
-            },
-            cancel: function () {
-                com.focusPage("#name").removeAttr("data-gid");
-                com.focusPage("#name").removeAttr("data-typeahead-key");
-                //右上角关闭回调
-            }
-        });
-    }
-
-    function startStatus(id, status) {
-        com.post(api.store.updateSlideForStatus, {
-            "slide.sid": id,
-            "slide.status": "1"
-        }, function (res) {
-            doSearcher();
-        });
-    }
-
-    function stopStatus(id, status) {
-        com.post(api.store.updateSlideForStatus, {
-            "slide.sid": id,
-            "slide.status": "0"
-        }, function (res) {
+    
+    function updateStatus(sid, status){
+        
+        var options = {
+            "slide.sid": sid,
+            "slide.status": status
+        }
+        
+        com.post(api.store.updateSlideForStatus, options, function (res) {
             doSearcher();
         });
     }
 
     /*添加信息*/
-    function saveData(id,callback){
-        var $layer = com.focusPage('#layerAdd');
-        var nameid = com.focusPage("#name").val();
-        var url = com.focusPage("#url").val();
-        var img = com.focusPage("#path").val();
-        if( nameid == "" ){
-            nameid = 0;
-            com.post(api.store.addSlide, {
-                "slide.gid": nameid,
-                "slide.url": url,
-                "slide.img": img
-            }, function(res){
-                doSearcher();
-                com.clearValidator();
-                com.closePopup();
-            });
-        }else{
-            nameid = $layer.find('input[id="name"]').attr("data-gid");
-            com.post(api.store.addSlide, {
-                "slide.gid": nameid,
-                "slide.url": url,
-                "slide.img": img
-            }, function (res) {
-                doSearcher();
-                com.clearValidator();
-                com.closePopup();
-            });
+    function saveData(){
+        
+        if(com.validate('form1')) return false;
+        
+        var url = api.store.addSlide;
+        var options = {
+            "slide.gid": com.typeahead(slide.items.mgoods),
+            "slide.url": slide.items.url.val(),
+            "slide.img": slide.items.path.val()
         }
-    }
-
-    function updateData(v, callback){
-        var $layer = com.focusPage('#layerAdd');
-        var path = com.focusPage("#path").val();
-        com.post(api.store.updateSlide, {
-            'slide.sid': v.sid,
-            "slide.gid":v.gid,
-            "slide.img": path,
-            "slide.url": slide.slideItems.url.val()
-        }, function(res){
+        
+        if(slide.sid){
+            url = api.store.updateSlide;
+            options["slide.sid"] = slide.sid;
+            options["slide.gid"] = slide.gid;
+        }
+        
+        com.post(url, options, function(res){
             doSearcher();
-            callback();
+            com.clearValidator();
+            com.closePopup();
         });
     }
 
-    function editBrand(v) {
+    function initUpdate(v) {
         
-        com.focusPage("#slideImg").html("");
+        slide.items.url.val(v.url);
+        slide.items.path.val(v.img);
         
-        slide.slideItems.url.val(v.url);
-        slide.slideItems.path.val(v.img);
-        
-        var img = $('<img />');
-        var imgA = $("<a></a>").css("height", "150px").append(img).appendTo(com.focusPage("#slideImg"));
-        
-        com.showImg(img, v.img, 150, 150, '', null, 0);
-        
-        com.popup4photos("#slideImg");
+        com.showImg(slide.items.img, v.img, 150, 150, '', null, 0);
     }
-
-    com.focusPage("#pictureUpload").html("").Huploadify({
-        'debug': false, // 开启调试
-        'auto': true, // 是否自动上传
-        'successTimeout': 99999, //超时时间
-        'buttonClass': 'btn btn-success',
-        'multi': false, // 批量上传
-        'formData': { //附带值
-            'uploadType': 0,
-            'strutsUploadsFileName': '',
-            'username': '用户名',
-            'rnd': '加密密文'
-        },
-        'overrideEvents': ['onDialogClose'], // 不执行默认的onSelect事件
-        'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-        'uploader': config.media + api.common.uploadImg.url, // 上传处理程序
-        'width': '100', // 浏览按钮的宽度
-        'height': '32', // 浏览按钮的高度
-        'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-        'fileTypeExts': '*.jpg;*.jpge;*.gif;*.png', // 允许上传的文件后缀
-        'fileSizeLimit': 3072, // 上传文件的大小限制
-        'queueSizeLimit': 25, // 上传数量
-        'onUploadSuccess': function (file, data, response) {
-            var dateObj = eval("(" + data + ")");
-            if (dateObj.errorCode == 0) {
-                com.focusPage("#slideImg").html("");
-                slide.slideItems.path.val(dateObj.resUrl);
-                var img = $('<img />');
-                var imgA = $("<a></a>").css("height", "150px").append(img).appendTo(com.focusPage("#slideImg"));
-                
-                com.showImg(img, dateObj.resUrl, 150, 150, '', null, 0);
-                
-                com.popup4photos("#slideImg");
-            } else {
-                alert(data);
-            }
-        }
-    });
 
     com.focusPage("#adda").click(function () {
+        
         com.focusPage("#mgoodsname").show();
-        com.focusPage("#slideImg").html("");
-        com.cleanItems(slide.slideItems);
-        openlayer(function (index, layero) {
-            if(com.focusPage("#path").val() == null || com.focusPage("#path").val() == ""){
-                com.focusPage("#slideImg").html("");
-                var $text = $('<span></span>').html('请上传图片').css("color", "red").appendTo($("#slideImg"));
-                return;
-            }
-            if(com.validate('form1')){
-                return;
-            }
-
-            if (slide.slideData.length == 0) {
-                if(com.focusPage("#name").val() != ""  ) {
-                    com.focusPage("#name").addClass('popover-notitle').attr({
-                        "data-rel": "popover",
-                        "data-placement": "right",
-                        "data-original-title": "",
-                        "title": "",
-                        "data-content": "请填写正确的品牌"
-                    }).popover('show');
-                    return;
-                }
-            }
-            saveData();
+        com.cleanItems(slide.items);
+        
+        com.clearImg(slide.items.img);
+        
+        com.popup4model('#layerAdd', '添加', null, function () {
+            com.clearValidator();
         });
     });
+    
 });

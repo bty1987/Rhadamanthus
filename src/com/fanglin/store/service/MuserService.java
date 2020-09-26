@@ -9,9 +9,9 @@ import com.fanglin.utils.Paging;
 public interface MuserService {
 
 	public void pageMuser(Paging paging, List<Filter> filters);
-	
+
 	public MuserVO queryMuserByUnionId(MuserVO muser);
 
-	public void saveMuser(MuserVO muser);
+	public int saveMuser(MuserVO muser);
 
 }

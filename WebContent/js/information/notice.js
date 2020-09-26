@@ -245,7 +245,7 @@ $(function(){
     })();
 
     var NoticeMngSeacher = new Searcher();
-    NoticeMngSeacher.init(['theme', 'dateRange', 'inf_createrName'], "condList", api.information.pageNotice, function(list){
+    NoticeMngSeacher.init(['information-notice-theme', 'information-notice-creater-name', 'information-notice-dateTime'], "condList", api.information.pageNotice, function(list){
         displayFunc.init('resultList', list);
     }, "pagenation", "noticeMngSeacherPostData", null, false, null, function(){
 

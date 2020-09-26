@@ -283,9 +283,9 @@ $(function () {
 
     var salesPaymentSearcher = new Searcher();
 
-    salesPaymentSearcher.init(["salesPaymentOrderId", "salesPaymentNo", "salesPaymentUserName", "salesPaymentVillage"], 'condList', api.payment.pageSalesPaymentForInit, function (data) {
+    salesPaymentSearcher.init(["payment-orderId", "payment-sales-no", "payment-designer", "payment-village"], 'condList', api.payment.pageSalesPaymentForInit, function (data) {
         displayFunc.init('resultList', data);
-    }, 'pagenation', 'salesPaymentPostData', {"companyType": pageConfig}, false, null, function () {
+    }, 'pagenation', 'salesPaymentPostData'+pageConfig, {"companyType": pageConfig}, false, null, function () {
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'collects').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-money bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('批量收款').appendTo($adda);
@@ -587,9 +587,9 @@ $(function () {
 
     var hsearcher = new Searcher();
 
-    hsearcher.init(["salesPaymentOrderId", "salesPaymentNo", "salesPaymentUserName", "salesPaymentVillage", "salesReceiptCollectTime"], "hcondList", api.payment.pageSalesPaymentForNotInit, function (data) {
+    hsearcher.init(["payment-orderId", "payment-sales-no", "payment-designer", "payment-village", "payment-collectTime"], "hcondList", api.payment.pageSalesPaymentForNotInit, function (data) {
         hdisplayFunc.init('hresultList', data);
-    }, "hpagenation", "hsalesPaymentPostData", {"companyType": pageConfig}, false, null, function () {
+    }, "hpagenation", "hsalesPaymentPostData"+pageConfig, {"companyType": pageConfig}, false, null, function () {
         var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");
         var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
         var $impspan = $('<span></span>').text('导出').appendTo($impa);
@@ -614,7 +614,7 @@ $(function () {
             return false;
         }
 
-        com.post(api.payment.pageSalesPaymentForNotInit, $.extend({}, params.hsalesPaymentPostData, {"paging.noPage": 1}), function (res) {
+        com.post(api.payment.pageSalesPaymentForNotInit, $.extend({}, params["hsalesPaymentPostData"+pageConfig], {"paging.noPage": 1}), function (res) {
             $.exceler({
                 column: [
                     ["订单号", "sales.orderId"],

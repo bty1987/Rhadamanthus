@@ -34,46 +34,21 @@ jQuery(function ($) {
         }
         com.popup4photos("#reworkDrawingGallery");
     });
+    
+    com.uploadify("#pictureUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpge;*.gif;*.png', {'uploadType': 0}, 1, function(data){
+        
+        var options = {
+            "reworkDrawing.rwId": params.rwId,
+            "reworkDrawing.rwdName": "",
+            "reworkDrawing.rwdUrl": data.resUrl,
+            "reworkDrawing.rwdAddUrl": ""
+        };
 
-    com.focusPage("#pictureUpload").Huploadify({
-        'debug': false, // 开启调试
-        'auto': true, // 是否自动上传
-        'successTimeout': 150, // 超时时间
-        'formData': { // 附带值
-            'username': '用户名',
-            'rnd': '加密密文'
-        },
-        'buttonClass': 'btn btn-success',
-        'buttonText': '上传',
-        'overrideEvents': ['onDialogClose'], // 不执行默认的onSelect事件
-        'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-        'uploader': config.media + api.common.uploadImg.url, // 上传处理程序
-        'height': '45', // 浏览按钮的高度
-        'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-        'fileTypeExts': '*.jpg;*.jpge;*.gif;*.png', // 允许上传的文件后缀
-        'fileSizeLimit': '3MB', // 上传文件的大小限制
-        'queueSizeLimit': 25, // 上传数量
-        'onUploadSuccess': function (file, data, response) { // 上传到服务器, 服务器返回相应信息到data里
-            var dateObj = eval("(" + data + ")");
-
-            if (dateObj.errorCode == 0) {
-
-                var options = {
-                    "reworkDrawing.rwId": params.rwId,
-                    "reworkDrawing.rwdName": "",
-                    "reworkDrawing.rwdUrl": dateObj.resUrl,
-                    "reworkDrawing.rwdAddUrl": ""
-                };
-
-                com.post(api.construction.addReworkDrawing, options, function (res) {
-                    var reworkDrawing = res.reworkDrawing;
-                    appendGalleryElement("reworkDrawingGallery", reworkDrawing.rwdId, dateObj.resUrl, 0, "", api.construction.deleteReworkDrawingById.url, {});
-                    com.popup4photos("#reworkDrawingGallery");
-                });
-            } else {
-                console.log(data);
-            }
-        }
+        com.post(api.construction.addReworkDrawing, options, function (res) {
+            var reworkDrawing = res.reworkDrawing;
+            appendGalleryElement("reworkDrawingGallery", reworkDrawing.rwdId, data.resUrl, 0, "", api.construction.deleteReworkDrawingById.url, {});
+            com.popup4photos("#reworkDrawingGallery");
+        });
     });
 
     function appendGalleryElement(galleryId, imgId, imgUrl, type, editUrl, deleteUrl, operate) {

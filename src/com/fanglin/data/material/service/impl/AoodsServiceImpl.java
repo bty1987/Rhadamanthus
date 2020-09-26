@@ -42,9 +42,9 @@ public class AoodsServiceImpl implements AoodsService {
 	private DecorationDao decorationDao;
 	
 	@Override
-	public void pageAoods(Paging paging, List<Filter> filters, int company) {
+	public void pageAoods(Paging paging, List<Filter> filters, int company, String companyType) {
 		
-		List<AoodsPO> AoodsPOs = aoodsDao.pageAoods(paging, filters, company);
+		List<AoodsPO> AoodsPOs = aoodsDao.pageAoods(paging, filters, company, companyType);
 		List<AoodsVO> AoodsVOs = new ArrayList<AoodsVO>();
 		
 		for (AoodsPO aoodsPO : AoodsPOs){

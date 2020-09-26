@@ -95,7 +95,8 @@
 		{"key":"1", "value":"装修款"},
 		{"key":"2", "value":"主材款"},
 		{"key":"3", "value":"销售款"},
-		{"key":"4", "value":"服务款"}
+		{"key":"4", "value":"服务款"},
+		{"key":"5", "value":"活动款"}
 	],"receiptType": [
 		{"key":"0", "value":"现金"},
 		{"key":"1", "value":"银行"},
@@ -122,6 +123,13 @@
 		{"key":"2019主材劵","value":"2019主材劵"},
 		{"key":"随付贷劵","value":"随付贷劵"},
 		{"key":"内部转账","value":"内部转账"}
+	],
+	"pointStatus":[
+		{"key":"0","value":"初始"},
+		{"key":"1","value":"成功"},
+		{"key":"2","value":"失败"},
+		{"key":"3","value":"失效"},
+		{"key":"4","value":"已用"}
 	],
     "errorCode": 0,
     "errorMsg": null

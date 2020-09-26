@@ -20,113 +20,110 @@ import com.fanglin.utils.Paging;
 @Service("mcategoryService")
 @Transactional(readOnly = true)
 public class McategoryServiceImpl implements McategoryService {
-	
+
 	@Autowired
 	private McategoryDao mcategoryDao;
-	
+
 	@Override
 	public void pageMcategory(Paging paging, List<Filter> filters) {
-		
+
 		List<McategoryPO> mcategoryPOs = mcategoryDao.pageMcategory(paging, filters);
 		List<McategoryVO> mcategoryVOs = new ArrayList<McategoryVO>();
-		
+
 		for (McategoryPO mcategoryPO : mcategoryPOs) {
-			
+
 			McategoryVO mcategoryVO = new McategoryVO();
-			
+
 			BeanUtil.copyProperties(mcategoryPO, mcategoryVO);
-			
+
 			mcategoryVOs.add(mcategoryVO);
-			
 		}
-		
+
 		paging.setData(mcategoryVOs);
-		
 	}
 
 	@Override
 	public List<McategoryVO> queryMcategory() {
-		
+
 		List<McategoryPO> mcategoryPOs = mcategoryDao.queryMcategory();
 		List<McategoryVO> mcategoryVOs = new ArrayList<McategoryVO>();
-		
+
 		for (McategoryPO mcategoryPO : mcategoryPOs) {
-			
+
 			McategoryVO mcategoryVO = new McategoryVO();
-			
+
 			BeanUtil.copyProperties(mcategoryPO, mcategoryVO);
-			
+
 			mcategoryVOs.add(mcategoryVO);
-			
 		}
-		
+
 		return mcategoryVOs;
-		
 	}
-	
+
 	@Override
 	public List<McategoryVO> queryMcategoryForShow() {
-		
+
 		List<McategoryPO> mcategoryPOs = mcategoryDao.queryMcategoryForShow();
-		
+
 		List<McategoryVO> mcategoryVOs = new ArrayList<McategoryVO>();
-		
+
 		for (McategoryPO mcategoryPO : mcategoryPOs) {
-			
+
 			McategoryVO mcategoryVO = new McategoryVO();
-			
+
 			BeanUtil.copyProperties(mcategoryPO, mcategoryVO);
-			
+
 			mcategoryVOs.add(mcategoryVO);
-			
 		}
-		
+
 		return mcategoryVOs;
-		
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void addMcategory(McategoryVO mcategoryVO) throws FLException {
-		
+	@Transactional(rollbackFor = Exception.class)
+	public int addMcategory(McategoryVO mcategoryVO) throws FLException {
+
 		McategoryPO mcategoryPO = new McategoryPO();
-		
+
 		BeanUtil.copyProperties(mcategoryVO, mcategoryPO, Arrays.asList("isShow"));
-		
+
 		mcategoryDao.save(mcategoryPO);
-		
+
+		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void updateMcategory(McategoryVO mcategory) throws FLException {
-		
+	@Transactional(rollbackFor = Exception.class)
+	public int updateMcategory(McategoryVO mcategory) throws FLException {
+
 		McategoryPO mcategoryPO = mcategoryDao.get(mcategory.getCid());
-		
-		if(mcategoryPO == null){
+
+		if (mcategoryPO == null) {
 			throw new FLException(340003, "品类不存在");
 		}
-		
+
 		BeanUtil.copyProperties(mcategory, mcategoryPO, Arrays.asList("isShow"));
-		
+
 		mcategoryDao.update(mcategoryPO);
 
+		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void updateMcategoryForShow(McategoryVO mcategory) throws FLException {
-		
+	@Transactional(rollbackFor = Exception.class)
+	public int updateMcategoryForShow(McategoryVO mcategory) throws FLException {
+
 		McategoryPO mcategoryPO = mcategoryDao.get(mcategory.getCid());
-		
-		if(mcategoryPO == null){
+
+		if (mcategoryPO == null) {
 			throw new FLException(340003, "品类不存在");
 		}
-		
+
 		mcategoryPO.setIsShow(mcategory.getIsShow());
-		
+
 		mcategoryDao.update(mcategoryPO);
 
+		return 0;
 	}
 
 }

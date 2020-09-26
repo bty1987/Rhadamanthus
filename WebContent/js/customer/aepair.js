@@ -171,7 +171,7 @@ $(function () {
 
     var seacher = new Searcher();
 
-    seacher.init(["v_createrName", "cu_updaterName", "aepair_status"], "condListData", api.customer.pageAepair, function (data) {
+    seacher.init(["customer-service-creater-name", "customer-service-updater-name", "customer-aepair-status"], "condListData", api.customer.pageAepair, function (data) {
         displayFunc.init('resultListData', data);
     }, "pagenationData", "aepairPostData", null, false, null, function () {
 

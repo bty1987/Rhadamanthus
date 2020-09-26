@@ -113,7 +113,7 @@ $(function () {
 
     var seacher = new Searcher();
 
-    seacher.init(["c_orderId","cu_type"], "condList", api.customer.pageRevisit, function (data) {
+    seacher.init(["customer-service-orderId","customer-service-revisit-type"], "condList", api.customer.pageRevisit, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "revisitPostData", null, false, null, function () {
     	

@@ -7,11 +7,11 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.store.po.MuserCouponPO;
 import com.fanglin.utils.Paging;
 
-public interface MuserCouponDao extends Dao<MuserCouponPO>{
-	
-	public List<MuserCouponPO> pageMuserCoupon (Paging paging, List<Filter> filters);
-	
-	public List<MuserCouponPO> queryMuserCouponByUnionId (String unionId);
+public interface MuserCouponDao extends Dao<MuserCouponPO> {
 
-	public void updateMuserCouponByCid(long cid);
+	public List<MuserCouponPO> pageMuserCoupon(Paging paging, List<Filter> filters);
+
+	public List<MuserCouponPO> queryMuserCouponByUnionId(String unionId);
+
+	public int updateMuserCouponByCid(long cid);
 }

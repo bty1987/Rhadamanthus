@@ -38,8 +38,7 @@ CREATE TABLE `acceptance` (
   `multiple` tinyint(1) DEFAULT NULL,
   `internal` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`actId`),
-  UNIQUE KEY `uniqueone` (`orderId`),
-  KEY `indexone` (`orderId`)
+  UNIQUE KEY `uniqueone` (`orderId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程验收表';
 
 DROP TABLE IF EXISTS `constructer`;
@@ -55,7 +54,9 @@ CREATE TABLE `constructer` (
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`crid`),
-  KEY `indexone` (`cid`,`wuid`)
+  KEY `indexone` (`cid`,`wuid`),
+  KEY `indextwo` (`orderId`),
+  KEY `indexthr` (`createTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='施工人员表';
 
 DROP TABLE IF EXISTS `construction`;
@@ -64,13 +65,47 @@ CREATE TABLE `construction` (
   `orderId` varchar(15) DEFAULT '',
   `suid` int(11) DEFAULT NULL,
   `schedule` tinyint(1) DEFAULT '0',
+  `createTime` timestamp NULL DEFAULT NULL,
+  `finishTime` timestamp NULL DEFAULT NULL,
   `startTime` timestamp NULL DEFAULT NULL,
   `endTime` timestamp NULL DEFAULT NULL,
+  `accessory` tinyint(1) DEFAULT '0',
+  `accessoryLimit` bigint(10) NOT NULL DEFAULT '0' COMMENT '辅料上限',
+  `salaryLimit` bigint(10) NOT NULL DEFAULT '0' COMMENT '工费上限',
+  `accessoryTotal` bigint(10) NOT NULL DEFAULT '0' COMMENT '辅料总额',
+  `salaryTotal` bigint(10) NOT NULL DEFAULT '0' COMMENT '工费总额',
   PRIMARY KEY (`cid`),
   KEY `indexone` (`orderId`),
   KEY `indextwo` (`suid`),
   KEY `indexthr` (`schedule`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程进度表';
+
+DROP TABLE IF EXISTS `constructionaccessory`;
+CREATE TABLE `constructionaccessory` (
+  `caid` int(11) NOT NULL AUTO_INCREMENT,
+  `cid` int(11) NOT NULL COMMENT '工程单ID',
+  `aid` int(11) NOT NULL COMMENT '辅材ID',
+  `checkup` tinyint(1) NOT NULL DEFAULT '0' COMMENT '验证标识',
+  `numLimit` bigint(10) NOT NULL DEFAULT '0' COMMENT '数量上限',
+  `num` bigint(10) NOT NULL DEFAULT '0' COMMENT '数量',
+  `total` bigint(10) NOT NULL DEFAULT '0' COMMENT '总额',
+  PRIMARY KEY (`caid`),
+  KEY `indexone` (`cid`,`aid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程辅料';
+
+DROP TABLE IF EXISTS `constructioncost`;
+CREATE TABLE `constructioncost` (
+  `ccid` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) NOT NULL,
+  `areaLeft` int(8) NOT NULL DEFAULT '0' COMMENT '起始面积',
+  `areaRight` int(8) NOT NULL DEFAULT '0' COMMENT '终止面积',
+  `accessory` bigint(10) NOT NULL DEFAULT '0' COMMENT '辅料上限',
+  `salary` bigint(10) NOT NULL DEFAULT '0' COMMENT '工费上限',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0: 启用, 1: 禁用',
+  `sort` tinyint(1) NOT NULL DEFAULT '0' COMMENT '排序',
+  `company` int(11) NOT NULL,
+  PRIMARY KEY (`ccid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程成本';
 
 DROP TABLE IF EXISTS `constructiondrawing`;
 CREATE TABLE `constructiondrawing` (
@@ -83,7 +118,8 @@ CREATE TABLE `constructiondrawing` (
   `cuid` int(11) NOT NULL COMMENT '创建人ID',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `schedule` tinyint(1) NOT NULL COMMENT '工程进度',
-  PRIMARY KEY (`cdid`)
+  PRIMARY KEY (`cdid`),
+  KEY `indexone` (`cid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程图纸表';
 
 DROP TABLE IF EXISTS `constructioninfo`;
@@ -94,8 +130,17 @@ CREATE TABLE `constructioninfo` (
   `ishovel` tinyint(1) NOT NULL DEFAULT '0' COMMENT '铲大白',
   `iskey` tinyint(1) NOT NULL DEFAULT '0' COMMENT '钥匙',
   `isCeremony` tinyint(1) NOT NULL DEFAULT '0' COMMENT '备注说明',
+  `timeLimit` int(8) NOT NULL DEFAULT '0' COMMENT '工期',
+  `finishTime` timestamp NULL DEFAULT NULL COMMENT '预计完工时间',
+  `keyTime` timestamp NULL DEFAULT NULL COMMENT '预计领钥匙时间',
+  `drawlineTime` timestamp NULL DEFAULT NULL COMMENT '预计放线时间',
+  `designTime` timestamp NULL DEFAULT NULL,
   `comment` varchar(255) NOT NULL DEFAULT '',
-  PRIMARY KEY (`ciid`)
+  PRIMARY KEY (`ciid`),
+  KEY `indexone` (`orderId`),
+  KEY `indextwo` (`cid`),
+  KEY `indexthr` (`drawlineTime`),
+  KEY `indexfor` (`finishTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程信息';
 DROP TABLE IF EXISTS `constructionschedule`;
 CREATE TABLE `constructionschedule` (

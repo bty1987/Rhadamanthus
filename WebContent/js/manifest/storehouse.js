@@ -112,7 +112,7 @@ $(function () {
         };
     })();
 
-    var _condArr = ['storehouseName', 'storehouseNumber'];
+    var _condArr = ['data-storehouse-no', 'data-storehouse-name'];
 
     var storehouseSeacher = new Searcher();
 

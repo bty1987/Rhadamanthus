@@ -7,8 +7,8 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.store.po.EvaluatePO;
 import com.fanglin.utils.Paging;
 
-public interface EvaluateDao extends Dao<EvaluatePO>{
-	
+public interface EvaluateDao extends Dao<EvaluatePO> {
+
 	public List<EvaluatePO> pageEvaluate(Paging paging, List<Filter> filters);
-	
+
 }

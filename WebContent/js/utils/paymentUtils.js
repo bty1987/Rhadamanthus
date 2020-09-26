@@ -1578,7 +1578,7 @@ var paymentUtils = {
 
         $.each(labelValList, function(i, v){
             $span = $('<span></span>').addClass('fl-filter-inline');
-            var $label = $('<label></label>').html(v.labelVal);
+            var $label = $('<label></label>').html(v.labelVal+":");
             var $input = $('<input type="text" />').addClass("filterInput").prop("id", v.inputId);
             $span.append($label).append($input).appendTo(condList);
         });

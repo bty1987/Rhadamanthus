@@ -224,7 +224,7 @@ jQuery(function($) {
 
 	var searcher = new Searcher();
 
-	searcher.init(["orderId", "msoNo", "paymentMsoDesigner", "paymentOrderAddr"], "condList", api.payment.pageMaterialPaymentForInit, function(data){
+	searcher.init(["payment-orderId", "payment-material-no", "payment-designer", "payment-village"], "condList", api.payment.pageMaterialPaymentForInit, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "materialPaymentPostData", null, false, null, function(){
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'collects').css("margin", "0px 3px");
@@ -382,7 +382,7 @@ jQuery(function($) {
 
 	var hsearcher = new Searcher();
 
-	hsearcher.init(["orderId", "msoNo", "paymentMsoDesigner", "paymentOrderAddr", "collectTimeDateRange"], "hcondList", api.payment.pageMaterialPaymentForNotInit, function(data){
+	hsearcher.init(["payment-orderId", "payment-material-no", "payment-designer", "payment-village", "payment-collectTime"], "hcondList", api.payment.pageMaterialPaymentForNotInit, function(data){
 		hdisplayFunc.init('hresultList', data);
 	}, "hpagenation", "hmaterialPaymentPostData", null, false, null, function(){
     	var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");

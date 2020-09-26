@@ -216,7 +216,7 @@ jQuery(function ($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["ap_mno", "ap_brand", "ap_createrName"], "condList", api.payment.pageActivityPayment, function (data) {
+    searcher.init(["payment-activity-no", "payment-activity-brand", "payment-activity-creater-name"], "condList", api.payment.pageActivityPayment, function (data) {
         displayFunc.init('resultList', data);
 
     }, "pagenation", "activityPaymentPostData", {"activityPayment.status": 0}, false, null, function () {
@@ -337,7 +337,7 @@ jQuery(function ($) {
 
     var hsearcher = new Searcher();
 
-    hsearcher.init(["ap_mno", "ap_brand", "ap_createrName"], "hcondList", api.payment.pageActivityPayment, function (data) {
+    hsearcher.init(["payment-activity-no", "payment-activity-brand", "payment-activity-creater-name"], "hcondList", api.payment.pageActivityPayment, function (data) {
         hdisplayFunc.init('hresultList', data);
     }, "hpagenation", "hactivityPaymentPostData", {"activityPayment.status": 1}, false, null, function () {}, 'hresultList');
 

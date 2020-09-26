@@ -109,7 +109,7 @@ $(function () {
     })();
 
     var searcher = new Searcher();
-    searcher.init(["customerSourcePhone"], "condList", api.customer.pageCustomerOriginForAdvance, function (data) {
+    searcher.init(["customer-customerSource-phone"], "condList", api.customer.pageCustomerOriginForAdvance, function (data) {
         displayFunc.init("resultList", data);
     }, "pagenation", "cusTomerSourcePostData", null, false, null, null);
 

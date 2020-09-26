@@ -123,7 +123,7 @@ $(function () {
 
     var searcher = new Searcher();
 
-    var _condArr = ['s_user', 's_status', 'cerateTime', 'operateTime'];
+    var _condArr = ["salary-user", "salary-salary-status", "salary-createTime", "salary-operateTime"];
     searcher.init(_condArr, "condList", api.salary.pageSalary, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "salaryPostData", null, false, null, function () {

@@ -1,13 +1,13 @@
 jQuery(function($) {
 
     var userEducation = {
-            uid: params.uid,
-            ueid: null,
-            modals: {
-            	addEducationModal: com.focusPage("#addEducationModal")
-            },
-            items:{},
-            flag: true
+        uid: params.uid,
+        ueid: null,
+        modals: {
+        	addEducationModal: com.focusPage("#addEducationModal")
+        },
+        items:{},
+        flag: true
     };
     
     userEducation.items.organ = com.focusPage("#organ");

@@ -58,14 +58,17 @@ $(function(){
 		};
 		/*表格体*/
 		var creatLine = function (i, v, lastFlag) {
+		    
 			var $liLine = $('<li></li>').addClass('line');
+			
 			var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index blue').html(i + 1));
 			var $contentWrap = $('<div></div>').addClass('line-wrap content col3');
+			
 			var propertyArr = [
-			                   [v.qtid,'blue'],
-			                   [v.name,'grey'],
-			                   [v.status == 0 ? "启用" : "禁用",'red']
-			                   ];
+               [v.qtid,'blue'],
+               [v.name,'grey'],
+               [v.status == 0 ? "启用" : "禁用",'red']
+           ];
 
 			$.each(propertyArr, function (i, v) {
 				var $cell = $('<div></div>').addClass('cell col-xs-4 '+v[1]+'').html(v[0]);
@@ -125,7 +128,7 @@ $(function(){
 
 	var quoteTypeSeacher = new Searcher();
 
-	quoteTypeSeacher.init(["p_quoteTypeName"], "condList", api.production.pageQuoteType, function (data) {
+	quoteTypeSeacher.init(["production-quoteType-name"], "condList", api.production.pageQuoteType, function (data) {
 		displayFunc.init('resultList', data);
 	}, "pagenation", " quoteTypePostData",null,false,null,function() {
 

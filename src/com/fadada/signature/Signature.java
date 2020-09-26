@@ -182,9 +182,7 @@ public class Signature {
 
 		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
 
-		System.out.println(zoom(data));
-
-		String result = base.invokeaddSignature(customerPO.getSignno(), zoom(data));
+		String result = base.invokeaddSignature(customerPO.getSignno(), data);
 
 		System.out.println(result);
 

@@ -287,7 +287,7 @@ jQuery(function($) {
     
     var searcher = new Searcher();
     
-    searcher.init(["roleName","roleNo"], "condList", api.system.pageRole, function(data){
+    searcher.init(["system-role-no", "system-role-name"], "condList", api.system.pageRole, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "rolePostData", null, false, null, function(){
         

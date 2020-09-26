@@ -70,7 +70,7 @@ $(function () {
 
     var seacher = new Searcher();
 
-    seacher.init(["cu_no","cu_phone"], "condList", api.customer.pageEmember, function (data) {
+    seacher.init(["customer-member-no","customer-member-phone"], "condList", api.customer.pageEmember, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "ememeberPostData", null, false, null, function () {
 

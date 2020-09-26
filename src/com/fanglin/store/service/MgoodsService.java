@@ -10,13 +10,13 @@ import com.fanglin.utils.Paging;
 public interface MgoodsService {
 
 	public void pageMgoods(Paging paging, List<Filter> filters, boolean flag);
-	
+
 	public List<MgoodsVO> queryMgoodsByPinyin(MgoodsVO mgoods);
-	
-	public void addMgoods(MgoodsVO mgoods);
 
-	public void updateMgoods(MgoodsVO mgoods) throws FLException;
+	public int addMgoods(MgoodsVO mgoods);
 
-	public void updateMgoodsForStatus(MgoodsVO mgoods) throws FLException;
-	
+	public int updateMgoods(MgoodsVO mgoods) throws FLException;
+
+	public int updateMgoodsForStatus(MgoodsVO mgoods) throws FLException;
+
 }

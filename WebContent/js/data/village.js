@@ -195,7 +195,7 @@ $(function () {
         }
     })();
 
-    var _condArr = ['villageName', 'datacity'];
+    var _condArr = ['data-village-name', 'system-city'];
 
     var searcher = new Searcher();
     searcher.init(_condArr, "condList", api.data.pageVillage, function (data) {
@@ -295,53 +295,29 @@ $(function () {
 
     // 上传图片
     function initUploadBtn() {
-        com.focusPage("#villageUpload").html("").Huploadify({
-            'debug': false, // 开启调试
-            'auto': true, // 是否自动上传
-            'successTimeout': 150, // 超时时间
-            'formData': { // 附带值
-                'uploadType': 0,
-                'username': '用户名',
-                'rnd': '加密密文'
-            },
-            'multi': true, // 批量上传
-            'buttonClass': 'btn btn-success',
-            'buttonText': '上传图片',
-            'overrideEvents': ['onDialogClose'],  // 不执行默认的onSelect事件
-            'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称
-                                            // $_FILES个['upload']
-            'uploader': config.media + api.common.uploadImg.url, // 上传处理程序
-            'height': '45', // 浏览按钮的高度
-            'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-            'fileTypeExts': '*.jpg;*.jpeg;*.gif;*.png', // 允许上传的文件后缀
-            'fileSizeLimit': '5MB', // 上传文件的大小限制
-            'queueSizeLimit': 10, // 上传数量
-            'onUploadSuccess': function (file, data, response) { // 上传到服务器,服务器返回相应信息到data里
-                var dateObj = eval("(" + data + ")");
-                if (dateObj.errorCode == 0) {
-                    var options = {};
-                    options["dataDrawing.sid"] = params.vid;
-                    options["dataDrawing.name"] = dateObj.strutsUploadsFileName;
-                    options["dataDrawing.drawingUrl"] = dateObj.resUrl;
-                    options["dataDrawing.drawingType"] = 0;
-                    options["dataDrawing.type"] = 0;
+        
+        com.uploadify("#villageUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {'uploadType': 0}, 1, function(data){
+            var options = {};
+            
+            options["dataDrawing.sid"] = params.vid;
+            options["dataDrawing.name"] = data.strutsUploadsFileName;
+            options["dataDrawing.drawingUrl"] = data.resUrl;
+            options["dataDrawing.drawingType"] = 0;
+            options["dataDrawing.type"] = 0;
 
-                    com.post(api.communion.addDataDrawing, options, function (res) {
-                        
-                        var drawing = res.dataDrawing;
-                        
-                        appendGalleryElement("villageDrawing", drawing);
-                        com.popup4photos("#villageDrawing");
-                        
-                        if (village.url == null) {
-                            updateVillageUrl(village.no, drawing.drawingUrl)
-                        }
-                    });
-                    searcher.doSearch();
-                } else {
-                    console.log(data);
+            com.post(api.communion.addDataDrawing, options, function (res) {
+                
+                var drawing = res.dataDrawing;
+                
+                appendGalleryElement("villageDrawing", drawing);
+                com.popup4photos("#villageDrawing");
+                
+                if (village.url == null) {
+                    updateVillageUrl(village.no, drawing.drawingUrl)
                 }
-            }
+            });
+            
+            searcher.doSearch();
         });
     }
 

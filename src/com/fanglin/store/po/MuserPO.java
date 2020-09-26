@@ -9,25 +9,25 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="muser", catalog = "store")
-public class MuserPO implements Serializable{
-	
+@Table(name = "muser", catalog = "store")
+public class MuserPO implements Serializable {
+
 	private static final long serialVersionUID = -4319485591492418004L;
 
 	public static final String COLUMN_UID_STR = "uid";
-	
+
 	public static final String COLUMN_UNIONID_STR = "unionId";
-	
+
 	private long uid;
-	
+
 	private String unionId;
-	
+
 	private String name;
-	
+
 	private String phone;
-	
+
 	private short gender;
-	
+
 	private String birthday;
 
 	public MuserPO() {
@@ -36,7 +36,7 @@ public class MuserPO implements Serializable{
 
 	@Id
 	@GeneratedValue
-	@Column(name="uid")
+	@Column(name = "uid")
 	public long getUid() {
 		return uid;
 	}
@@ -45,7 +45,7 @@ public class MuserPO implements Serializable{
 		this.uid = uid;
 	}
 
-	@Column(name="unionId")
+	@Column(name = "unionId")
 	public String getUnionId() {
 		return unionId;
 	}
@@ -54,7 +54,7 @@ public class MuserPO implements Serializable{
 		this.unionId = unionId;
 	}
 
-	@Column(name="name")
+	@Column(name = "name")
 	public String getName() {
 		return name;
 	}
@@ -63,7 +63,7 @@ public class MuserPO implements Serializable{
 		this.name = name;
 	}
 
-	@Column(name="phone")
+	@Column(name = "phone")
 	public String getPhone() {
 		return phone;
 	}
@@ -72,7 +72,7 @@ public class MuserPO implements Serializable{
 		this.phone = phone;
 	}
 
-	@Column(name="gender")
+	@Column(name = "gender")
 	public short getGender() {
 		return gender;
 	}
@@ -81,7 +81,7 @@ public class MuserPO implements Serializable{
 		this.gender = gender;
 	}
 
-	@Column(name="birthday")
+	@Column(name = "birthday")
 	public String getBirthday() {
 		return birthday;
 	}
@@ -89,5 +89,5 @@ public class MuserPO implements Serializable{
 	public void setBirthday(String birthday) {
 		this.birthday = birthday;
 	}
-	
+
 }

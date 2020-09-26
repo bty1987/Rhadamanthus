@@ -139,7 +139,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["cc_name"], "condList", api.data.pageConstructionCost, function(data){
+    searcher.init(["data-construction-cost-name"], "condList", api.data.pageConstructionCost, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "constructionCostPostData",null, false, null, function(){
 

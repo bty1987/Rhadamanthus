@@ -125,8 +125,7 @@ jQuery(function($) {
 	})();
 
 	var searcher = new Searcher();
-//2017.4.7 hhf添加品牌查询条件
-	searcher.init(["material_brand","orderId", "msoNo", "material_orderAddr", "material_salesman", "fullCollectTimeRange"], "condList", api.material.pageMaterialForPreBalance, function(data){
+	searcher.init(["material-orderId", "material-no", "material-village", "material-salesman","material-brand", "material-fullpayTime"], "condList", api.material.pageMaterialForPreBalance, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "materialOrderPreBalancePostData", null, false, null, function(){
 

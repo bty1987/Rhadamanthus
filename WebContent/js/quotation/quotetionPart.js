@@ -115,7 +115,7 @@ var QuotetionDetail = (function(){
             }, null, false);
             //初始化报价项选择弹层
             var extraParams  = {"quotationItem.versionId":  quo.basicParams["quotetion.version"]};
-            var _condArr = ['itemName', 'quotationBigCategoryId', 'quotationSmallCategoryId', 'quotationWorkTypeId'];
+            var _condArr = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'data-worktype'];
             var quotetionItemSeacher = new Searcher();
             // 通过报价版本编号获取分页方式获取状态为启用报价项信息
             quotetionItemSeacher.init( _condArr, "condList", api.quotation.pageQuotationItemByVersionId,  function(data){

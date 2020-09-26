@@ -181,7 +181,7 @@ $(function () {
 
     var goodsStorehouseSeacher = new Searcher();
 
-    goodsStorehouseSeacher.init(["storehouseName", "goodName", "goodsBarcode"], "condList", api.inventory.pageGoodsStorehouseStock, function (data) {
+    goodsStorehouseSeacher.init(["inventory-storehouse-name", 'inventory-goods-name', 'inventory-goods-barcode'], "condList", api.inventory.pageGoodsStorehouseStock, function (data) {
             displayFunc.init('resultList', data);
         }, "pagenation", "goodsStorehouseStockPostData", null, false, null, function () {
 

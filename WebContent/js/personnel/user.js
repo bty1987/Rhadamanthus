@@ -377,8 +377,8 @@
             }
         }
     })();
-    var _condArr = ['userId', 'userName', 'roleId', 'deptId', 'userstatus', 'identity', 'phone'];
-
+    
+    var _condArr = ['personel-userId', 'personel-userName', 'personel-roleId', 'personel-deptId', 'personel-userstatus', 'personel-identity', 'personel-phone'];
     var userSeacher = new Searcher();
 
     userSeacher.init( _condArr, "condList", api.personel.pageUser, function(data){
@@ -416,27 +416,8 @@
     com.focusPage('a[name="import"]','#pagenation').click(function(){
         user.modals.importModal.modal("show");
     });
-
-    user.items.import.Huploadify({
-        'debug' : false, // 开启调试
-        'auto':true, // 是否自动上传
-        'successTimeout':config.uploadTimeout, // 超时时间
-        'formData':{
-            'uploadType':4
-        },
-        'buttonClass': 'btn btn-success col-sm-12',
-        'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
-        'fileObjName':'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-        'uploader': config.server + 'importUserSalary.do', // 上传处理程序
-        'height':'30', // 浏览按钮的高度
-        'fileTypeDesc':'支持的格式:',  // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-        'fileTypeExts':'*.xls;*.xlsx', // 允许上传的文件后缀
-        'fileSizeLimit':'5MB', // 上传文件的大小限制
-        'queueSizeLimit' : 1, // 上传数量
-        'onUploadSuccess':function(file, data, response){ //上传到服务器, 服务器返回相应信息到data里
-            var dateObj = eval("("+data+")");
-        }
-    });
+    
+    com.uploadify(user.items.import, "上传文件", api.salary.importUserSalary, 'btn btn-success col-sm-12', '*.xls;*.xlsx', {'uploadType': 4}, 1);
 
     //添加人员(简化版)
     user.saveBtn = com.focusPage("#saveUserBtn").on("click", saveData);

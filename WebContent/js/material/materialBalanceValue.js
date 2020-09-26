@@ -163,7 +163,7 @@ jQuery(function($) {
 
     var seacher = new Searcher();
 
-    seacher.init(['materialModelName', 'categoryId', 'brandName'], "condList", api.material.pageMaterialModel, function(data){
+    seacher.init(['data-model-name', 'material-category-name', 'material-brand-name'], "condList", api.material.pageMaterialModel, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "materialBalanceValuePostData");
     

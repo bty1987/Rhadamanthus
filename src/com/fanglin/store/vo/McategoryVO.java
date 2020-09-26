@@ -2,22 +2,22 @@ package com.fanglin.store.vo;
 
 import java.io.Serializable;
 
-public class McategoryVO implements Serializable{
-	
+public class McategoryVO implements Serializable {
+
 	private static final long serialVersionUID = -4328485362403429005L;
-	
+
 	private Long cid;
-	
+
 	private String name;
-	
+
 	private String icon;
-	
+
 	private Short isShow;
 
 	public McategoryVO() {
 		super();
 	}
-	
+
 	public Long getCid() {
 		return cid;
 	}
@@ -25,7 +25,7 @@ public class McategoryVO implements Serializable{
 	public void setCid(Long cid) {
 		this.cid = cid;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -49,5 +49,5 @@ public class McategoryVO implements Serializable{
 	public void setIsShow(Short isShow) {
 		this.isShow = isShow;
 	}
-	
+
 }

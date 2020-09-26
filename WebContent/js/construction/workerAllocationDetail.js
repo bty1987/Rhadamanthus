@@ -16,14 +16,6 @@ $(function () {
         }
     };
 
-    var orderId = params.orderId;
-    
-    com.post(api.data.queryConstructionNode, {}, function (res) {
-        $.each(res.constructionNodes, function (i, v) {
-            constructionNode[v.sort] = v.name;
-        });
-    }, null, false);
-
     com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": params.orderId}, function (res) {
 
         var newSchedules = res.constructionSchedules.sort(function(a, b){
@@ -32,6 +24,7 @@ $(function () {
         var constructionSchedule = newSchedules;
         workerAllocationDetail.constructionSchedules = newSchedules;
             $.each(constructionSchedule, function (i, v) {
+                constructionNode[v.node.sort] = v.node.name;
                 constructerNode("#stepId1", v.schedule);
             constructerPane("#step-container1", v.schedule, v.schedule);
         });

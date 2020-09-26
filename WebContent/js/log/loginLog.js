@@ -67,7 +67,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 	
-	searcher.init(["loginId", "sourceIp", "loginTime", "successFlag"], "condList", api.log.pageLoginLog, function(data){
+	searcher.init(["log-loginId", "log-sourceIp", "log-loginTime", "log-successFlag"], "condList", api.log.pageLoginLog, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "loginLogPostData");
 	

@@ -22,7 +22,7 @@ public class AccessoriesDaoImpl extends DaoImpl<AccessoriesPO> implements Access
 	}
 	
 	@Override
-	public List<AccessoriesPO> pageAccessories(Paging paging, List<Filter> filters,int company) {
+	public List<AccessoriesPO> pageAccessories(Paging paging, List<Filter> filters, int company) {
 		
 		PagingQuery<AccessoriesPO> query = pagingQuery(paging, AccessoriesPO.class);
 		

@@ -204,7 +204,7 @@ $(function () {
     })();
 
 
-    var _condArr = ["manifestCode", "createrName", "manifestCreateTime", "manifestTime", "manifestType", "manifestStatus"];
+    var _condArr = ["inventory-manifest-code", "inventory-accessories-createrName", "inventory-manifest-createTime", "inventory-manifest-manifestTime", "inventory-manifest-manifestType", "inventory-manifest-manifestStatus"];
 
     var seacher = new Searcher();
 

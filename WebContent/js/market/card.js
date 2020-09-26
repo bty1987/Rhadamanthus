@@ -127,7 +127,7 @@ jQuery(function($) {
     })();
 
     var searcher = new Searcher();
-    var conditionList = ["e_customerName", "e_phone", "e_industry"];
+    var conditionList = ["market-customer-name", "market-phone", "market-industry"];
 
     searcher.init(conditionList, "condList", api.market.pageCard, function(data){
         displayFunc.init('resultList', data);
@@ -161,38 +161,17 @@ jQuery(function($) {
     }
 
     function initUploadBtn(){
-        com.focusPage("#upload").html("").Huploadify({
-            'debug' : false, // 开启调试
-            'auto':true, // 是否自动上传
-            'successTimeout':150, // 超时时间
-            'formData':{ // 附带值
-                'uploadType':0,
-                'username':'用户名',
-                'rnd':'加密密文'
-            },
-            'multi': false, // 批量上传
-            'buttonClass': 'btn btn-success',
-            'buttonText': '上传头像',
-            'overrideEvents' : ['onDialogClose'],  // 不执行默认的onSelect事件
-            'fileObjName': 'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-            'uploader':config.media + api.common.uploadImg.url, // 上传处理程序
-            'height': '45', // 浏览按钮的高度
-            'fileTypeDesc': '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-            'fileTypeExts': '*.jpg;*.jpeg;*.gif;*.png', // 允许上传的文件后缀
-            'fileSizeLimit': '5MB', // 上传文件的大小限制
-            'queueSizeLimit' : 10, // 上传数量
-            'onUploadSuccess':function(file, data, response){ //上传到服务器,服务器返回相应信息到data里
-                var dateObj=eval("("+data+")");
-                if(dateObj.errorCode == 0){
-                    com.focusPage("#userPhoto").html("");
-                    businessCard.userPhoto = dateObj.resUrl;
-                    businessCard.items.path.val(dateObj.resUrl);
-                    appendGalleryElement("userPhoto", dateObj.resUrl, 0);
-                    com.popup4photos("#userPhoto");
-                }else{
-                    console.log(data);
-                }
-            }
+        
+        com.uploadify("#upload", "上传头像", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {'uploadType': 0}, 1, function(data){
+            
+            com.focusPage("#userPhoto").html("");
+            
+            businessCard.userPhoto = data.resUrl;
+            businessCard.items.path.val(data.resUrl);
+            
+            appendGalleryElement("userPhoto", data.resUrl, 0);
+            
+            com.popup4photos("#userPhoto");
         });
     }
 

@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
+import org.apache.struts2.json.annotations.JSON;
+
 import com.fanglin.communion.vo.ContractVO;
 import com.fanglin.payment.vo.DecorationPaymentVO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -11,37 +13,49 @@ import com.fanglin.personel.vo.UserBaseVO;
 public class DecorationContractVO implements Serializable {
 
 	private static final long serialVersionUID = -6225111181876631L;
-	
+
 	private Long dcid;
-	
+
 	private String orderId;
-	
+
 	private ContractVO contract;
-	
+
 	private Short type;
-	
+
 	private String download;
-	
+
 	private String viewpdf;
-	
+
 	private UserBaseVO creater;
-	
+
+	private UserBaseVO signner;
+
+	private UserBaseVO filinner;
+
 	private Timestamp createTime;
-	
+
+	private Timestamp comsignTime;
+
+	private Timestamp cussignTime;
+
+	private Timestamp filingTime;
+
 	private Short status;
-	
+
 	private List<DecorationPaymentVO> payments;
-	
+
 	private List<Integer> paymentRates;
-	
-	public DecorationContractVO(){
+
+	public DecorationContractVO() {
 		super();
 	}
-	
-	public DecorationContractVO(ContractVO contract, UserBaseVO creater){
+
+	public DecorationContractVO(ContractVO contract, UserBaseVO creater, UserBaseVO signner, UserBaseVO filinner) {
 		super();
 		this.contract = contract;
 		this.creater = creater;
+		this.signner = signner;
+		this.filinner = filinner;
 	}
 
 	public Long getDcid() {
@@ -100,12 +114,56 @@ public class DecorationContractVO implements Serializable {
 		this.creater = creater;
 	}
 
+	public UserBaseVO getSignner() {
+		return signner;
+	}
+
+	public void setSignner(UserBaseVO signner) {
+		this.signner = signner;
+	}
+
+	public UserBaseVO getFilinner() {
+		return filinner;
+	}
+
+	public void setFilinner(UserBaseVO filinner) {
+		this.filinner = filinner;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getComsignTime() {
+		return comsignTime;
+	}
+
+	public void setComsignTime(Timestamp comsignTime) {
+		this.comsignTime = comsignTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getCussignTime() {
+		return cussignTime;
+	}
+
+	public void setCussignTime(Timestamp cussignTime) {
+		this.cussignTime = cussignTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getFilingTime() {
+		return filingTime;
+	}
+
+	public void setFilingTime(Timestamp filingTime) {
+		this.filingTime = filingTime;
 	}
 
 	public Short getStatus() {
@@ -131,5 +189,5 @@ public class DecorationContractVO implements Serializable {
 	public void setPaymentRates(List<Integer> paymentRates) {
 		this.paymentRates = paymentRates;
 	}
-	
+
 }

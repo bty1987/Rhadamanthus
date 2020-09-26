@@ -47,8 +47,14 @@ $(function () {
         constructionNodes.items.isCeremony.bindData(res.isCeremony, "key", "value", false);
     });
 
-    com.post(api.ds.construction, {}, function (res) {
-        constructionNodes.constructionSchedule = res.constructionSchedule.split("key", "value");
+    com.post(api.data.queryConstructionNode,{}, function(res){
+
+        constructionNodes.constructionSchedule = res.constructionNodes.split("sort","name");
+
+        constructionNodes.constructionSchedule[0] = "初始";
+        constructionNodes.constructionSchedule[1] = "开工";
+        constructionNodes.constructionSchedule[2] = "完工";
+
     }, null, false);
 
     var displayFunc = (function () {
@@ -121,7 +127,7 @@ $(function () {
     })();
 
     var searcher = new Searcher();
-    searcher.init(['c_orderId', 'c_village', 'c_designer', 'c_schedule'], "condList", api.construction.pageConstruction, function (list) {
+    searcher.init(['construction-orderId', 'construction-village-name', 'construction-designer', 'construction-schedule'], "condList", api.construction.pageConstruction, function (list) {
         displayFunc.init('resultList', list);
     }, "pagenation", "workerAllocationSeacherPostData");
 

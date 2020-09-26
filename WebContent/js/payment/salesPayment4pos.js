@@ -560,9 +560,9 @@ $(function () {
 
     var hsearcher = new Searcher();
 
-    hsearcher.init(["salesPaymentOrderId", "salesPaymentNo"], "hcondList", api.payment.pageSalesPaymentForNotInit, function (data) {
+    hsearcher.init(["payment-orderId", "payment-sales-no"], "hcondList", api.payment.pageSalesPaymentForNotInit, function (data) {
         hdisplayFunc.init('hresultList', data);
-    }, "hpagenation", "hsalesPaymentPostDataPos", {"companyType": pageConfig}, false, null, null, "hresultList");
+    }, "hpagenation", "hsalesPaymentPostDataPos"+pageConfig, {"companyType": pageConfig}, false, null, null, "hresultList");
 
     //隐藏触发
     com.focusPage("#layerAdd").on('hide.bs.modal', function(){

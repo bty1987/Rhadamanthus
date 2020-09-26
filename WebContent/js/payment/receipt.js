@@ -84,7 +84,7 @@ jQuery(function ($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["r_paymentType", "r_receiptType", "r_collectTime"], "condList", api.payment.pageReceipt, function (data) {
+    searcher.init(["payment-paymentType", "payment-receiptType", "payment-collectTime"], "condList", api.payment.pageReceipt, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "receiptPostData", null, false, null, function () {
         var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import').css("margin", "0px 3px");

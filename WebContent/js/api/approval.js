@@ -140,7 +140,18 @@ $.extend(api, {
         addApprover: {url: "addApprover.do"},
         submitApprovalForSalesDayment: {url: "submitApprovalForSalesDayment.do"},
         approveForSalesDayment: {url: "approveForSalesDayment.do"},
-        refuseForSalesDayment: {url: "refuseForSalesDayment.do"}
-    }  
+        refuseForSalesDayment: {url: "refuseForSalesDayment.do"},
+
+        pageProcess: {url: "pageProcess.do"},
+        queryProcess: {url: "queryProcess.do"},
+        queryProcessByPid: {url: "queryProcessByPid.do"},
+        queryProcessItem: {url: "queryProcessItem.do"},
+        addProcess: {url: "addProcess.do"},
+        updateProcess: {url: "updateProcess.do"},
+        updateProcessItem: {url: "updateProcessItem.do"},
+        deleteProcessItem: {url: "deleteProcessItem.do"},
+
+        queryProcessRefer: {url: "queryProcessRefer.do"}
+    }
 });
 

@@ -131,7 +131,7 @@ var QuotationDetail = (function(){
 			}, null, false);
 			//初始化报价项选择弹层
 			var extraParams  = {"quotationItem.versionId": quo.versionId};
-			var _condArr = ['itemName', 'quotationBigCategoryId', 'quotationSmallCategoryId', 'quotationWorkTypeId'];
+			var _condArr = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'data-worktype'];
 			var quotationItemSeacher = new Searcher();
 			quotationItemSeacher.init( _condArr, "condList", api.quotation.pageQuotationItemByVersionId,  function(data){
 				var $tableWrap = com.focusPage('#resultList').empty();
@@ -615,8 +615,6 @@ var QuotationDetail = (function(){
 				$.each($darr, function(i, v){
 					_param['functionAreaIds[' + i + ']'] = $(v).val();
 				});
-				
-				console.log(api.quotation.addQuotationFunctionAreaByFunctionAreaIds);
 
 				com.post(api.quotation.addQuotationFunctionAreaByFunctionAreaIds, _param, function(data){
 					data.quotationFunctionAreas.length && $.each(data.quotationFunctionAreas, function(i, v){

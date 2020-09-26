@@ -119,7 +119,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 	
-	searcher.init(["cityProperName", "region", "city"], "condList", api.system.pageCityProper, function(data){
+	searcher.init(["system-cityProper-name", "system-region", "system-city"], "condList", api.system.pageCityProper, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "cityProperPostData", null, false, null, function(){
 		

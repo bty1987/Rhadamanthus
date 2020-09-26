@@ -499,6 +499,8 @@ $.extend(api, {decoration: {
         signDecorationContractForCompany : {url: "signDecorationContractForCompany.do"},
         signDecorationContractForCustomer : {url: "signDecorationContractForCustomer.do"},
         addDecorationContract: {url: "addDecorationContract.do"},
+        affixDecorationContract: {url: "affixDecorationContract.do"},
+        expireDecorationContract: {url: "expireDecorationContract.do"},
         filingDecorationContract : {url: "filingDecorationContract.do"},
         sendDecorationContract : {url: "sendDecorationContract.do"},
         redirectDecorationContract : {url: "redirectDecorationContract.do"}

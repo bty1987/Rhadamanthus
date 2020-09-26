@@ -65,7 +65,7 @@ $(function(){
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
             var $default = $('<a></a>').addClass('btn btn-minier btn-warning').html('默认');
-            var $btnView = $('<a></a>').addClass('btn btn-minier btn-inverse').html("\u6d3b\u52a8\u7269\u54c1");// 活动物品
+            var $btnView = $('<a></a>').addClass('btn btn-minier btn-inverse').html("活动物品");// 活动物品
 
             //状态启用禁用
             var $invalid = $('<div></div>').addClass('pull-right');
@@ -78,8 +78,8 @@ $(function(){
                 ["结束时间:", v.endTime, "green"],
                 ["状态:", v.status == 0 ? "有效":"无效", "red"],
                 ["类型:",activity.types[v.type], "red" ],
-                ["倍数:", v.multiple, "red" ],
-                ["默认标识:", v.defaults == 0 ? "默认" : "普通", "grey" ],
+                ["倍数:", v.multiple, "blue" ],
+                ["默认标识:", v.defaults == 0 ? "默认" : "普通", "red" ],
                 ["说明:", v.content, "grey"]
             ];
 
@@ -157,7 +157,7 @@ $(function(){
     })();
 
     var activitySeacher = new Searcher();
-    activitySeacher.init( ['activityName', 'activityType', 'activityStatus'], "condList", api.information.pageActivity, function(list){
+    activitySeacher.init( ['information-activity-name', 'information-activity-type', 'information-activity-status'], "condList", api.information.pageActivity, function(list){
         displayFunc.init('resultList', list);
     }, "pagenation", "activitySeacherPostData", null, false, null, function(){
 

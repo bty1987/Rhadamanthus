@@ -186,7 +186,7 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 				
 				if(MaterialPaymentPO.COLUMN_ORDERID_STR.equals(field)){
 					query.add(query.getCriterion("material.orderId", data, op));
-				}else if("villageName".equals(field)){
+				}else if("village".equals(field)){
 					query.add(query.getCriterion("village.no", filter.getData(), filter.getOp()));
 				}else if(MaterialPO.COLUMN_NO_STR.equals(field)){
 					query.add(query.getCriterion("material.no", data, op));

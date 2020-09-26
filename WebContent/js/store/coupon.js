@@ -1,17 +1,24 @@
 
 $(function(){
+    
     var coupon = {
-        couponItems:{},
-        editFlg: false,
-        repeatFlg: false,
-        couponData: []
+            
+        items:{
+            mgoods: com.focusPage("#mgoods"),
+            title: com.focusPage("#title"),
+            vprice: com.focusPage("#vprice"),
+            type: com.focusPage("#type"),
+        },
+        
+        btns: {
+            saveBtn: com.focusPage("#saveBtn"),
+        }
     };
-
-    coupon.couponItems.mgoods = com.focusPage("#mgoods");
-    coupon.couponItems.title = com.focusPage("#title");
-    coupon.couponItems.vprice = com.focusPage("#vprice");
-    coupon.couponItems.type = com.focusPage("#type");
-
+    
+    com.initTypeahead(coupon.items.mgoods, api.store.queryMgoodsByPinyin, "mgoods.pinyin", {}, "mgoodses", "gid", "name");
+    
+    coupon.btns.saveBtn.click(saveData);
+    
     var displayFunc  = (function(){
         /*表格样式*/
         var renderList = function(tableId,listData){
@@ -46,30 +53,27 @@ $(function(){
 
             var $optionWrap = $('<div></div>').addClass('line-wrap action').html($('<div>操作</div>').addClass('cell option'));
 
-            $liTitle.append($indexWrap)
-                .append($contentWrap)
-                .append($optionWrap)
-                .appendTo($ulTitle);
+            $liTitle.append($indexWrap).append($contentWrap).append($optionWrap).appendTo($ulTitle);
 
             return $ulTitle;
         };
         /*表格体*/
         var creatLine = function (i, v, lastFlag) {
+            
             var $liLine = $('<li></li>').addClass('line');
-            var id = i + 1;
-            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(id));
+            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
             var $contentWrap = $('<div></div>').addClass('line-wrap content col5');
+            
             var propertyArr = [
                 [v.mgoods.title,'grey'],
                 [v.title,'grey'],
                 [v.value,'grey'],
-                [v.type =="0" ? "劵值" : "折扣",'red'],
-                [v.status =="0" ? "启用" : "禁用",'red']
+                [v.type =="0" ? "劵值" : "折扣", 'red'],
+                [v.status =="0" ? "启用" : "禁用", 'red']
             ];
 
             $.each(propertyArr, function (i, v) {
-                var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
-                $cell.appendTo($contentWrap);
+                $('<div></div>').addClass('cell ' + v[1]).html(v[0]).appendTo($contentWrap);
             });
 
             var $optionWrap = $('<div></div>').addClass('line-wrap action');
@@ -92,30 +96,24 @@ $(function(){
 
             //编辑
             $update.click(function(){
-                com.focusPage("#mgood").hide();
-                editBrand(v);
-                openlayer("编辑", function(index, layero){
-                    if(com.validate('form'))
-                        return;
-                    updateData(v, function(){
-                        com.closePopup();
-                    });
+                
+                initUpdate(v);
+                
+                com.popup4model('#layerAdd', '编辑', null, function () {
+                    com.clearValidator();
                 });
             });
 
             /*状态启用*/
             $btnStart.click(function(){
-                startStatus(v.cid, v.status, function(){
-                    com.showAlert(com.info, "操作成功");
-                });
+                updateStatus(v.cid, 0);
             });
 
             /*状态禁用*/
             $btnBan.click(function(){
-                stopStatus(v.cid, v.status, function(){
-                    com.showAlert(com.info, "操作成功");
-                });
+                updateStatus(v.cid, 1);
             });
+            
             return $liLine;
         };
 
@@ -130,12 +128,9 @@ $(function(){
         };
     })();
 
-    autoFill(api.store.queryMgoodsByPinyin, "mgoods", "gid", "name");
-
     /*分页*/
-    var _condArr = ["mgoodsno"];
-    var couponSeacher = new Searcher();
-    couponSeacher.init( _condArr, "condList", api.store.pageCoupon, function(data){
+    var searcher = new Searcher();
+    searcher.init( ["store-coupon-mgoods-no"], "condList", api.store.pageCoupon, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "couponPostData", null, false, null, function() {
 
@@ -144,160 +139,60 @@ $(function(){
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         $adda.click(function(){
+            
             com.focusPage("#mgood").show();
-            com.cleanItems(coupon.couponItems);
-            openlayer("添加", function(index, layero){
-                if(com.validate('form1')){
-                    return;
-                }
-                if (coupon.couponData.length == 0) {
-                        com.focusPage("#mgoods").addClass('popover-notitle').attr({
-                            "data-rel": "popover",
-                            "data-placement": "right",
-                            "data-original-title": "",
-                            "title": "",
-                            "data-content": "请填写正确的品牌"
-                        }).popover('show');
-                        return;
-                }
-                saveData();
+            com.cleanItems(coupon.items);
+            
+            com.popup4model('#layerAdd', '添加', null, function () {
+                com.clearValidator();
             });
+            
         });
         return [$adda];
     }, 'resultList');
 
-    function autoFill(url, id, key, value) {
-        com.focusPage('input[name=' + id + ']').typeahead({
-            url: url,
-            list: [],
-            postData: {},
-            source: function (query, process) {
-                var options = $.extend({"mgoods.pinyin": query}, this.options.postData);
-                com.post(this.options.url, options, $.proxy(this.options.callback, this));
-            }, matcher: function (item) {
-                return true;
-            }, callback: function (data) {
-                coupon.couponData = [];
-                coupon.couponData = data.autoFillKeyValue;
-                this.flprocess(coupon.couponData, 'key', 'value');
-            },
-            isResultTypeMap: true,
-            flupdater: function (k, v) {
-                com.focusPage('input[name=' + id + ']').attr('data-cid',k);
-                return v;
-            }
-        });
-    }
-
-    function openlayer(name, callback){
-        //var layer = $('#layerAdd');
-        com.closePopup();
-        layer.open({
-            type: 1,
-            title:name,
-            content: com.focusPage('#layerAdd'),
-            area: ( $(window).width()*0.6 < 620 ?  $(window).height()*0.6 : 620 )+"px",
-            maxmin: false,
-            zIndex:9000,
-            btn: ['确定', '取消'],
-            yes: function(index, layero){
-                callback(index, layero);
-            },
-            btn2: function(index, layero){
-                //按钮【按钮二】的回调
-                com.clearValidator();
-            },
-            cancel: function(){
-                //右上角关闭回调
-            }
-        });
-    }
-
-    /*状态信息验证*/
-    function startStatus(id, status, callback){
-        com.post(api.store.updateCouponForStatus,{
-            "coupon.cid":id,
-            "coupon.status":"0"
-        },function(res){
-            callback();
-            couponSeacher.doSearch();
-        });
-    }
-
-    function stopStatus(id, status, callback){
-        com.post(api.store.updateCouponForStatus,{
-            "coupon.cid":id,
-            "coupon.status":"1"
-        },function(res){
-            callback();
-            couponSeacher.doSearch();
-        });
-    }
-
-    /*添加信息*/
-    function saveData(callback){
-        if(coupon.couponItems.type.val() == 0){
-            var regex = /^[0-9]+\.{0,1}[0-9]{0,2}$/;
-            if(!regex.test(coupon.couponItems.vprice.val())){
-                com.showAlert(com.warning, "请输入正确的劵值");
-                return false;
-            }
-        }
-
-        if(coupon.couponItems.type.val() == 1){
-            var postDiscountRex =/^(1\.0{1,2}|1|0\.[0-9]{1,2})$/;
-            if(!postDiscountRex.test(coupon.couponItems.vprice.val())){
-                com.showAlert(com.warning, "请输入正确的折扣价");
-                return false;
-            }
-        }
-        var $layer = com.focusPage('#layerAdd');
-        var nameid = $layer.find('input[id="mgoods"]').attr("data-cid");
-        com.post(api.store.addCoupon, {
-            "coupon.mgoods.gid": nameid,
-            "coupon.title":coupon.couponItems.title.val(),
-            "coupon.value":coupon.couponItems.vprice.val(),
-            "coupon.type":coupon.couponItems.type.val()
-        }, function(res){
-            couponSeacher.doSearch();
-        });
-    }
-
-    function updateData(v, callback){
-        if(coupon.couponItems.type.val() == 0){
-            var regex =  /^[0-9]+\.{0,1}[0-9]{0,2}$/;
-            if(!regex.test(coupon.couponItems.vprice.val())){
-                com.showAlert(com.warning, "请输入正确的劵值");
-                return false;
-            }
-        }
-
-        if(coupon.couponItems.type.val() == 1){
-            var postDiscountRex =/^(1\.0{1,2}|1|0\.[0-9]{1,2})$/;
-            if(!postDiscountRex.test(coupon.couponItems.vprice.val())){
-                com.showAlert(com.info, "请输入正确的折扣价");
-                return false;
-            }
-        }
-
-        var $layer = com.focusPage('#layerAdd');
-        var nameid = $layer.find('input[id="mgoods"]').attr("data-cid");
+    function updateStatus(cid, status){
         
-        com.post(api.store.updateCoupon, {
-            'coupon.cid':v.cid,
-            "coupon.mgoods.gid": nameid,
-            "coupon.title": coupon.couponItems.title.val(),
-            "coupon.value": coupon.couponItems.vprice.val(),
-            "coupon.type": coupon.couponItems.type.val()
-        }, function(res){
-            callback();
-            couponSeacher.doSearch();
+        var options = {
+            "coupon.cid": cid,
+            "coupon.status": status
+        }
+        
+        com.post(api.store.updateCouponForStatus, options, function(res){
+            searcher.doSearch();
         });
     }
 
-    function editBrand(v){
-        coupon.couponItems.title.val(v.title);
-        coupon.couponItems.vprice.val(v.value);
-        coupon.couponItems.type.val(v.type);
+    function saveData(){
+        
+        if(com.validate('form')) return false;
+        
+        var url = api.store.addCoupon;
+        var options = {
+            "coupon.mgoods.gid": com.typeahead(coupon.items.mgoods),
+            "coupon.title": coupon.items.title.val(),
+            "coupon.value": coupon.items.vprice.val(),
+            "coupon.type": coupon.items.type.val()
+        }
+        
+        if(coupon.cid){
+            url = api.store.updateCoupon;
+            options["coupon.cid"] = coupon.cid;
+        }
+        
+        com.post(api.store.addCoupon, options, function(res){
+            com.closePopup();
+            searcher.doSearch();
+        });
+    }
+
+
+    function initUpdate(v){
+        
+        com.updateTypeahead(coupon.items.mgoods, v.mgoods.gid, v.mgoods.name);
+        
+        coupon.items.title.val(v.title);
+        coupon.items.vprice.val(v.value);
+        coupon.items.type.val(v.type);
     }
 });

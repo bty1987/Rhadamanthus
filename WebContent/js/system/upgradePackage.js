@@ -88,23 +88,23 @@ jQuery(function($) {
         }
     })();
 
-    var _condArr = [ 'upgradeNumber', 'upgradeCreateTime' ];
+    var _condArr = [ 'system-upgrade-version', 'system-upgrade-createTime' ];
     var upgradeSeacher = new Searcher();
     upgradeSeacher.init(_condArr, "condList", api.upgrade.pageUpgrade, function(list) {
         displayFunc.init('resultList', list);
         com.datetime(com.focusPage('[name="upgradeCreateTime"]'), "date");
     }, "pagenation", "upgradePostData", null, false, null, function() {
 
-                var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addUpgrade').css("margin", "0px 3px");
-                var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-                var $addspan = $('<span></span>').text('添加').appendTo($adda);
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addUpgrade').css("margin", "0px 3px");
+        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-                $adda.click(function() {
-                    upgrade.modal.modal("show")
-                });
+        $adda.click(function() {
+            upgrade.modal.modal("show")
+        });
 
-                return [$adda];
-            });
+        return [$adda];
+    });
 
     function saveData() {
         
@@ -129,36 +129,10 @@ jQuery(function($) {
         
         upgrade.modal.modal("hide");
     }
-
-    com.focusPage("#file").Huploadify({
-        'debug' : false, // 开启调试
-        'auto' : true, // 是否自动上传
-        'successTimeout' : 99999, // 超时时间
-        'formData' : { // 附带值
-            'uploadType' : 0,
-            'strutsUploadsFileName' : '',
-            'username' : '用户名',
-            'rnd' : '加密密文'
-        },
-        'overrideEvents' : [ 'onDialogClose' ], // 不执行默认的onSelect事件
-        'fileObjName' : 'strutsUploads', // 服务器端脚本使用的文件对象的名称
-                                            // $_FILES个['upload']
-        'uploader' : config.media + api.common.uploadOther.url, // 上传处理程序
-        'width' : '100', // 浏览按钮的宽度
-        'height' : '32', // 浏览按钮的高度
-        'fileTypeDesc' : '支持的格式:', // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-        'fileTypeExts' : '*.*', // 允许上传的文件后缀
-        'fileSizeLimit' : '50MB', // 上传文件的大小限制
-        'queueSizeLimit' : 25, // 上传数量
-        'onUploadSuccess' : function(file, data, response) {
-            var dateObj = eval("(" + data + ")");
-            if (dateObj.errorCode == 0) {
-                com.focusPage("#path").val(dateObj.resUrl);
-                com.focusPage("#fileSize").val(file.size);
-            } else {
-                alert(data);
-            }
-        }
+    
+    com.uploadify("#file", "上传升级包", api.common.uploadOther, 'btn btn-success blue ', "*.zip", {'uploadType': 0}, 1, function(data, file){
+        com.focusPage("#path").val(data.resUrl);
+        com.focusPage("#fileSize").val(file.size);
     });
 
     function empty() {

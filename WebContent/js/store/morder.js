@@ -1,40 +1,35 @@
 jQuery(function ($) {
+    
     var morder = {
-        saveBtn: null,
-        cancelBtn: null,
-        modal: null,
-        items: {},
-        editFlg: false
+        
+        items: {
+            no: com.focusPage("#no"),
+            user: com.focusPage("#user"),
+            address: com.focusPage("#address"),
+            total: com.focusPage("#total"),
+            status: com.focusPage("#status"),
+        },
+        
+        btns: {
+        },
+        
+        status: [],
     };
 
-    morder.saveBtn = com.focusPage("#saveBtn").bindClick(saveData);
-    morder.cancelBtn = com.focusPage("#cancelBtn");
-    morder.items.no = com.focusPage("#no");
-    morder.items.user = com.focusPage("#user");
-    morder.items.address = com.focusPage("#address");
-    morder.items.total = com.focusPage("#total");
-    morder.items.status = com.focusPage("#status");
-    morder.modal = com.focusPage("#morderModal");
-    morder.modal.on('show.bs.modal', function (e) {
-        com.clearValidator();
-        com.clearValidator("#no", true);
-    });
-
     com.post(api.ds.store, {}, function (res) {
-        com.focusPage("#status").bindData(res.status, "key", "value");
-        $.each(res.status, function (i, v) {
-            status[v.key] = v.value;
-        })
+        morder.items.status.bindData(res.status, "key", "value");
+        morder.status = res.status.split("key", "value");
     }, null, false);
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
+            
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+            
             if (listData && listData.length) {
                 $.each(listData, function (i, v) {
-                    var $liLine = creatLine(v);
-                    $liLine.appendTo($ul);
+                    creatLine(v).appendTo($ul);
                 });
                 $ul.appendTo($tableWrap);
             }
@@ -50,16 +45,6 @@ jQuery(function ($) {
             var $collect = $('<a></a>').addClass('btn btn-minier btn-yellow').html('收货');
             var $morderItem = $('<a></a>').addClass('btn btn-minier btn-success').html('订单项');
 
-            var status = {
-                "0": "待付款",
-                "1": "待发货",
-                "2": "已发货",
-                "3": "待评价",
-                "4": "退货",
-                "5": "已删除",
-                "6":"已完成"
-            };
-
             var address = JSON.parse(v.address);
 
             var propertyArr = [
@@ -68,7 +53,7 @@ jQuery(function ($) {
                 ["总价:", v.total, "grey"],
                 ["创建时间:", v.createTime, "green"],
                 ["支付时间:", v.paymentTime, "green"],
-                ["状态:", status[v.status], "red"]
+                ["状态:", morder.status[v.status], "red"]
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -99,45 +84,21 @@ jQuery(function ($) {
             $liLine.append($h3).append($ulProperty);
 
             $deliver.click(function () {
-                one(v.oid, status, function () {
-                    com.showAlert(com.info, "操作成功");
-                    searcher.doSearch();
+                com.showConfirm("是否确认发货", function(){
+                    updateStatus(v.oid, 2);
                 });
             });
 
             $collect.click(function () {
-                two(v.oid, status, function () {
-                    com.showAlert(com.info, "操作成功");
-                    searcher.doSearch();
+                com.showConfirm("是否确认收货", function(){
+                    updateStatus(v.oid, 3);
                 });
             });
 
             $morderItem.click(function () {
-                morderItem(v);
+                params.morder = v;
+                com.popup4page('#morderPopUp', "/views/store/morderitem.html", '订单项');
             });
-
-            function one(id, status, callback) {
-                com.showConfirm("是否确认发货", function(){
-                    if (status != "1") {
-                        com.post(api.store.updateMorderForStatus, {"morder.oid": id, "morder.status": "2"}, function (res) {
-                            callback();
-                            searcher.doSearch();
-                        })
-                    }
-                });
-            }
-
-            function two(id, status, callback) {
-                
-                com.showConfirm("是否确认收货", function(){
-                    if (status != "2") {
-                        com.post(api.store.updateMorderForStatus, {"morder.oid": id, "morder.status": "3"}, function (res) {
-                            callback();
-                            searcher.doSearch();
-                        })
-                    }
-                });
-            }
             
             return $liLine;
         };
@@ -154,27 +115,18 @@ jQuery(function ($) {
     })();
 
     var searcher = new Searcher();
-    var _condArr = ['morderNo', "morderByStatus"];
 
-    searcher.init(_condArr, "condList", api.store.pageMorder, function (data) {
+    searcher.init(['store-morder-no', "store-morder-status"], "condList", api.store.pageMorder, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "Morder", null, false, null, function () {
 
     });
-
-    function saveData() {
-        var options = {
-            'morder.oid': morder.items.oid,
-            'morder.status': morder.items.status.val()
-        };
-        com.post(api.store.updateMorderForStatus, options, function (res) {
-            morder.modal.modal("hide");
+    
+    function updateStatus(oid, status){
+        
+        com.post(api.store.updateMorderForStatus, {"morder.oid": oid, "morder.status": status}, function (res) {
             searcher.doSearch();
-        });
+        })
     }
 
-    function morderItem(v) {
-        params["morder.oid"] = v.oid;
-        com.switchPage(api.index.morders.url);
-    }
 });

@@ -14,31 +14,29 @@ import com.fanglin.store.vo.MuserVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class MuserAction extends BaseListAction{
+public class MuserAction extends BaseListAction {
 
 	private static final long serialVersionUID = 6605965645950300464L;
 
 	@Autowired
 	private MuserService muserService;
-	
+
 	private MuserVO muser;
-	
-	@Action(value="pageMuser", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMuser(){
-		
+
+	@Action(value = "pageMuser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageMuser() {
+
 		muserService.pageMuser(getPaging(), getFilters());
-		
+
 		return SUCCESS;
-		
 	}
-	
-	@Action(value="updateMuser", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateMuser(){
-		
+
+	@Action(value = "updateMuser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateMuser() {
+
 		muserService.saveMuser(muser);
-		
+
 		return SUCCESS;
-		
 	}
 
 	public MuserVO getMuser() {
@@ -48,5 +46,5 @@ public class MuserAction extends BaseListAction{
 	public void setMuser(MuserVO muser) {
 		this.muser = muser;
 	}
-	
+
 }

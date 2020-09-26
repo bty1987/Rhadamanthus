@@ -332,7 +332,7 @@ $(function () {
 
     var searcher = new Searcher();
 
-    searcher.init(["customerSourcePhone"], "condList", api.customer.pageCustomerOrigin, function (data) {
+    searcher.init(["customer-customerSource-phone"], "condList", api.customer.pageCustomerOrigin, function (data) {
         displayFunc.init("resultList", data);
     }, "pagenation", "customerOriginPostData", null, false, null, null);
 

@@ -80,7 +80,7 @@ $(function () {
         };
     })();
 
-    var _condArr = ['materialModelNo', 'materialModelName', 'materialTypeId', 'materialBrandName'];
+    var _condArr = ['data-model-no', 'data-model-name', 'data-model-category', 'data-model-brand'];
 
     var searcher = new Searcher();
 

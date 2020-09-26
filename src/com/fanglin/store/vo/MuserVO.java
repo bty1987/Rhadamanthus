@@ -2,26 +2,26 @@ package com.fanglin.store.vo;
 
 import java.io.Serializable;
 
-public class MuserVO implements Serializable{
-	
+public class MuserVO implements Serializable {
+
 	private static final long serialVersionUID = -4319484191492418004L;
-	
+
 	private Long uid;
-	
+
 	private String unionId;
-	
+
 	private String name;
-	
+
 	private String phone;
-	
+
 	private Short gender;
-	
+
 	private String birthday;
 
 	public MuserVO() {
 		super();
 	}
-	
+
 	public Long getUid() {
 		return uid;
 	}
@@ -45,7 +45,7 @@ public class MuserVO implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public String getPhone() {
 		return phone;
 	}
@@ -53,7 +53,7 @@ public class MuserVO implements Serializable{
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	
+
 	public Short getGender() {
 		return gender;
 	}
@@ -61,7 +61,7 @@ public class MuserVO implements Serializable{
 	public void setGender(Short gender) {
 		this.gender = gender;
 	}
-	
+
 	public String getBirthday() {
 		return birthday;
 	}
@@ -69,5 +69,5 @@ public class MuserVO implements Serializable{
 	public void setBirthday(String birthday) {
 		this.birthday = birthday;
 	}
-	
+
 }

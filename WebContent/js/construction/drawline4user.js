@@ -30,10 +30,16 @@ jQuery(function ($) {
 
     com.initTypeahead('supervisor', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name": "工程部", "user.status": 0}, "autoFillKeyValue", "key", "value", null);
 
-    com.post(api.ds.construction, {}, function (res) {
-        drawline.constructionNodes = res.constructionSchedule.split("key", "value");
-    }, null, false);
-    
+    com.post(api.data.queryConstructionNode,{}, function(res){
+
+        drawline.constructionNodes = res.constructionNodes.split("sort", "name");
+
+        drawline.constructionNodes[0] = "初始";
+        drawline.constructionNodes[1] = "开工";
+        drawline.constructionNodes[2] = "完工";
+
+    },null ,false);
+
     com.post(api.ds.decoration, {}, function (res) {
         $.each(res.decorationOrderStatus, function (i, v) {
             drawline.decorationStatus[v.key] = v.value;
@@ -107,7 +113,7 @@ jQuery(function ($) {
     })();
 
     var searcher = new Searcher();
-    searcher.init(["c_orderId", "c_designer", "c_salesman"], "condList", api.construction.pageConstruction, function (data) {
+    searcher.init(["construction-orderId", "construction-designer", "construction-salesman"], "condList", api.construction.pageConstruction, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "drawLinePersonPostData");
 

@@ -182,7 +182,7 @@ jQuery(function($) {
 
 	var searcher = new Searcher();
 
-	searcher.init(["orderId", "paymentDesigner", "village"], "condList", api.decoration.pageDecorationHolonomy, function(data){
+	searcher.init(["payment-orderId", "payment-designer", "decoration-village"], "condList", api.decoration.pageDecorationHolonomy, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "decorationHolonomyPostData");
 
@@ -304,7 +304,7 @@ jQuery(function($) {
 
     var hsearcher = new Searcher();
 
-    hsearcher.init(["orderId", "paymentDesigner", "paymentVillage", "collectTimeDateRange"], "hcondList", api.payment.pageServicePaymentForHistory, function(data){
+    hsearcher.init(["payment-orderId", "payment-designer", "payment-village", "payment-collectTime"], "hcondList", api.payment.pageServicePaymentForHistory, function(data){
 
 		hdisplayFunc.init('hresultList', data);
     }, "hpagenation", "servicePaymentPostData", null, false, null, function(){

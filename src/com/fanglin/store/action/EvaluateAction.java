@@ -19,37 +19,35 @@ import com.fanglin.store.vo.MuserVO;
 @ParentPackage("common")
 @Namespace("/")
 @Controller
-public class EvaluateAction extends BaseListAction{
+public class EvaluateAction extends BaseListAction {
 
 	private static final long serialVersionUID = -6818679723083046266L;
-	
+
 	@Autowired
 	private EvaluateService evaluateService;
-	
+
 	private EvaluateVO evaluate;
-	
-	private List<EvaluateVO> evaluates; 
-	
+
+	private List<EvaluateVO> evaluates;
+
 	private MuserVO muser;
-	
+
 	private MorderVO morder;
-	
-	@Action(value="pageEvaluate", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageEvaluate(){
-	
+
+	@Action(value = "pageEvaluate", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageEvaluate() {
+
 		evaluateService.pageEvaluate(getPaging(), getFilters());
 
 		return SUCCESS;
-		
 	}
-		
-	@Action(value="addEvaluate", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addEvaluate() throws FLException{
-		
+
+	@Action(value = "addEvaluate", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addEvaluate() throws FLException {
+
 		evaluateService.addEvaluate(evaluates, muser, morder);
-		
+
 		return SUCCESS;
-		
 	}
 
 	public EvaluateVO getEvaluate() {
@@ -83,5 +81,5 @@ public class EvaluateAction extends BaseListAction{
 	public void setMorder(MorderVO morder) {
 		this.morder = morder;
 	}
-	
+
 }

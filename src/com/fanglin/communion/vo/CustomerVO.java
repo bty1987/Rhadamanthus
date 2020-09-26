@@ -36,6 +36,8 @@ public class CustomerVO implements Serializable {
 
 	private String identityPathB;
 
+	private Short status;
+
 	private Long balance;
 
 	private Long materialBalance;
@@ -175,6 +177,14 @@ public class CustomerVO implements Serializable {
 
 	public void setIdentityPathB(String identityPathB) {
 		this.identityPathB = identityPathB;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
 	}
 
 	public Long getBalance() {

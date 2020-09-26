@@ -212,7 +212,7 @@ $(function(){
         };
     })();
 
-    var _condArr = ['itemName', 'quotationTypeId', 'quotationClassificationId', 'quotationBigCategoryId', 'quotationSmallCategoryId', 'versionId'];
+    var _condArr = ['data-quotation-item-name', 'data-quotation-item-type', 'data-quotation-item-classification', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'data-quotation-version'];
     var quotationItemSeacher = new Searcher();
     quotationItemSeacher.init( _condArr, "condList", api.quotation.pageQuotationItem,  function(data){
         displayFunc.init('resultList', data);
@@ -248,33 +248,9 @@ $(function(){
     com.focusPage('a[name="import"]').on("click", function () {
         com.focusPage('#importModal').modal("show");
     });
-
-    com.focusPage('#import').Huploadify({
-
-        'debug' : false, // 开启调试
-        'auto':true, // 是否自动上传
-        'successTimeout':config.uploadTimeout, // 超时时间
-        'formData':{
-            'uploadType':4,
-            'authentication': params.authentication
-        },
-        'buttonClass': 'btn btn-success col-sm-12',
-        'overrideEvents' : ['onDialogClose'], // 不执行默认的onSelect事件
-        'fileObjName':'strutsUploads', // 服务器端脚本使用的文件对象的名称 $_FILES个['upload']
-        'uploader': config.server + "importQuotationItem.do", // 上传处理程序
-        'height':'30', // 浏览按钮的高度
-        'fileTypeDesc':'支持的格式: ',  // 在浏览窗口底部的文件类型下拉菜单中显示的文本
-        'fileTypeExts':'*.xls;*.xlsx;', // 允许上传的文件后缀
-        'fileSizeLimit':'2MB', // 上传文件的大小限制
-        'queueSizeLimit' : 1, // 上传数量
-        'onUploadSuccess':function(file, data, response){ //上传到服务器,服务器返回相应信息到data里
-
-            var dateObj = eval("("+data+")");
-            if(data.indexOf("导入文件错误") > 0 ){
-                com.showAlert(com.warning, "导入文件错误");
-            }
-            quotationItemSeacher.doSearch();
-        }
+    
+    com.uploadify("#import", "上传文件", api.quotation.importQuotationItem, 'btn btn-success col-sm-12', "*.xls;*.xlsx;", {'uploadType': 4}, 1, function(data){
+        quotationItemSeacher.doSearch();
     });
 
     //导出功能

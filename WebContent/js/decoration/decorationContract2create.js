@@ -8,7 +8,7 @@ jQuery(function($) {
             preservation: com.focusPage("#preservation")
         },
         htmls:{
-        	editContractPopUp: com.focusPage("#editContractPopUp")
+        	contractPopUp: com.focusPage("#contractPopUp")
         },
        decorationOrderId : params.decorationOrderId
     };
@@ -21,6 +21,7 @@ jQuery(function($) {
 
           params.cidNumber = addDecorationContract.items.contract.val();
           params.decorationData = addDecorationContract.decorationOrderId;
+          
           var url;
 
          switch (params.cidNumber) {
@@ -41,6 +42,6 @@ jQuery(function($) {
 			break;
 		}
 
-        addDecorationContract.htmls.editContractPopUp.load(url);
+        addDecorationContract.htmls.contractPopUp.load(url);
      });
 });

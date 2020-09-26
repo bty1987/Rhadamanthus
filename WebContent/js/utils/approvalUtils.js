@@ -44,5 +44,6 @@ var approvalUtils = {
         } else if (px == '0') {
             return $10pxdiv.append($('<h3></h3>').html(value));
         }
-    }
+    },
+    
 };

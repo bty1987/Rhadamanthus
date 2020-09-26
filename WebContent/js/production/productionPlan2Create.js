@@ -137,7 +137,7 @@ $(function(){
                     com.focusPage('#importProductionPlanExcel').addClass('hide');
                 }
 
-                com.uploadify("#importProductionPlanExcel", "添加上传文件", 'btn btn-success blue ', "*.xlsx", {'uploadType': 2}, 1, function(data){
+                com.uploadify("#importProductionPlanExcel", "上传文件", api.common.uploadOther, 'btn btn-success blue ', "*.xlsx", {'uploadType': 2}, 1, function(data){
 
                     var option = {
                         "productionPlan.ppid": v.ppid,

@@ -141,7 +141,7 @@ $(function () {
 
     var planSeacher = new Searcher();
 
-    planSeacher.init(["taskselect", "planCreateDate", "planStatus"], "condList", api.information.pagePlan, function (data) {
+    planSeacher.init(["information-plan-task", "information-plan-createTime", "information-plan-status"], "condList", api.information.pagePlan, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "planPostData", null, false, null, function () {
 

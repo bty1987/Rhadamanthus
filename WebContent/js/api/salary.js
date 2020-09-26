@@ -156,6 +156,14 @@ $.extend(api, {salary: {
     passSalary: {url: "passSalary.do"},
     rejectSalary: {url: "rejectSalary.do"},
     cancelSalary: {url: "cancelSalary.do"},
+    pageWithhold:{
+        url: "pageWithhold.do",
+          type: "query",
+          tranargs: [{
+             result: "paging-data",
+             args: ["money"]
+          }]
+        },
     queryWithhold: {url: "queryWithhold.do",
          type: "query",
          tranargs: [{

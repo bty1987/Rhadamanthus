@@ -14,46 +14,46 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "evaluate", catalog = "store")
-public class EvaluatePO implements Serializable{
+public class EvaluatePO implements Serializable {
 
 	private static final long serialVersionUID = 1655684434156917492L;
-	
+
 	public static final String COLUMN_SCORE_STR = "score";
-	
+
 	public static final String COLUMN_UNIONID_STR = "unionId";
-	
+
 	public static final String COLUMN_PID_STR = "mprice.pid";
-	
+
 	private long eid;
-	
+
 	private long oid;
-	
+
 	private MpricePO mprice;
-	
+
 	private long gid;
-	
+
 	private String unionId;
-	
+
 	private String name;
-	
+
 	private Timestamp createTime;
-	
+
 	private short score;
-	
+
 	private String comment;
-	
+
 	private short discribeRate;
-	
+
 	private short logisticsRate;
-	
+
 	private short serviceRate;
-	
+
 	private String imgs;
-	
-	public EvaluatePO(){
+
+	public EvaluatePO() {
 		super();
 	}
-	
+
 	public EvaluatePO(MpricePO mprice) {
 		super();
 		this.mprice = mprice;
@@ -69,7 +69,7 @@ public class EvaluatePO implements Serializable{
 	public void setEid(long eid) {
 		this.eid = eid;
 	}
-	
+
 	@Column(name = "oid")
 	public long getOid() {
 		return oid;
@@ -88,7 +88,7 @@ public class EvaluatePO implements Serializable{
 	public void setMprice(MpricePO mprice) {
 		this.mprice = mprice;
 	}
-	
+
 	@Column(name = "gid")
 	public long getGid() {
 		return gid;
@@ -106,7 +106,7 @@ public class EvaluatePO implements Serializable{
 	public void setUnionId(String unionId) {
 		this.unionId = unionId;
 	}
-	
+
 	@Column(name = "name")
 	public String getName() {
 		return name;
@@ -133,7 +133,7 @@ public class EvaluatePO implements Serializable{
 	public void setScore(short score) {
 		this.score = score;
 	}
-	
+
 	@Column(name = "comment")
 	public String getComment() {
 		return comment;

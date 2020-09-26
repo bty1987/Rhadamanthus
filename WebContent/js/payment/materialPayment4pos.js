@@ -471,7 +471,7 @@ jQuery(function($) {
 
 	var hsearcher = new Searcher();
 
-	hsearcher.init(["orderId", "msoNo"], "hcondList", api.payment.pageMaterialPaymentForNotInit, function(data){
+	hsearcher.init(["payment-orderId", "payment-material-no"], "hcondList", api.payment.pageMaterialPaymentForNotInit, function(data){
 		hdisplayFunc.init('hresultList', data);
 	}, "hpagenation", "hmaterialPaymentPostDataPos", null, false, null, null, "hresultList");
 

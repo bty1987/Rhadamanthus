@@ -1,0 +1,133 @@
+
+function printHeader(headStr){
+
+    var quotation = quotationUtils.quotationDetail.quotation;
+    var decoration = quotation.decoration;
+
+    var headHtml = "";
+
+    headHtml += '<table style="font-size: 14px" width="100%" bgcolor="#000000" border="0" cellpadding="1" cellspacing="0">';
+    headHtml += '<tbody><tr bgcolor="#FFFFFF">';
+    headHtml += '<td colspan="8" style="font-size: 20px" align="center"> <b>' + headStr + '</b></td>';
+    headHtml += '</tr>';
+    headHtml += '<tr bgcolor="#FFFFFF">';
+    headHtml += '<td colspan="8" height="10"></td>';
+    headHtml += '</tr>';
+    headHtml += '<tr bgcolor="#FFFFFF">';
+    headHtml += '<td colspan="3" width="40%">客户姓名: ' + decoration.customer.name + '</td>';
+    headHtml += '<td colspan="3" width="40%">装修单号: ' + quotation.orderId + '</td>';
+    headHtml += '<td colspan="2" width="20%">设 计 师: ' + decoration.designer.currentName + '</td>';
+    headHtml += '</tr>';
+    headHtml += '<tr bgcolor="#FFFFFF">';
+    headHtml += '<td colspan="3" width="40%">签约店面: ' + decoration.designer.dept.name + '</td>';
+    headHtml += '<td colspan="3" width="40%">工程地址: ' + decoration.house.village.name + " " + decoration.house.houseNumber + '</td>';
+    headHtml += '<td colspan="2" width="20%">房屋面积: ' + decoration.house.buildArea + '</td>';
+    headHtml += '</tr>';
+    headHtml += '<tr bgcolor="#FFFFFF">';
+    headHtml += '<td colspan="8" height="10"></td>';
+    headHtml += '</tr>';
+    headHtml += '</tbody></table>';
+
+    return headHtml;
+}
+
+function printNormood(){
+    
+    var index = 0;
+    var contentHtml = '';
+    
+    var normtotal = 0;
+
+    contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
+    contentHtml += '<tbody><tr bgcolor="#FFFFFF">';
+    contentHtml += '<td width="8%" align="center">序号</td>';
+    contentHtml += '<td width="22%" align="center">商品编号</td>';
+    contentHtml += '<td width="30%" align="center">商品名称</td>';
+    contentHtml += '<td width="25%" align="center">定额上限</td>';
+    contentHtml += '<td width="15%" align="center">定额单位</td>';
+    contentHtml += '</tr>';
+    contentHtml += '</tbody></table>';
+
+    var normoods = quotationUtils.quotationDetail.quotationFunctionAreaItemAs;
+    
+    contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
+    contentHtml += '<tbody>';
+
+    $.each(normoods, function (j, v){
+        
+        var limit = utils.accMul(v.usenum, v.num);
+        
+        contentHtml += '<tr bgcolor="#FFFFFF">';
+        contentHtml += '<td width="8%" align="center">' + (index+1) + '</td>';
+        contentHtml += '<td width="22%" align="center">' + v.goods.no + '</td>';
+        contentHtml += '<td width="30%" align="center">' + v.goods.name + '</td>';
+        contentHtml += '<td width="25%" align="center">' + limit + '</td>';
+        contentHtml += '<td width="15%" align="center">' + v.unit + '</td>';
+        contentHtml += '</tr>';
+            
+        index++;
+    });
+    
+    contentHtml += '<tr bgcolor="#FFFFFF">';
+    contentHtml += '<td height="12" colspan="10" width="8%" align="center"></td>';
+    contentHtml += '</tr>';
+            
+    contentHtml += '</tbody>';
+    contentHtml += '</table>';
+
+    contentHtml += '<table style="font-size: 12px" width="100%" border="0" cellpadding="1" cellspacing="0">';
+    contentHtml += '<tbody>';
+    contentHtml += '<tr>';
+    contentHtml += '<td height="10"></td>';
+    contentHtml += '</tr>';
+    contentHtml += '<tr>';
+    contentHtml += '<td><b>&nbsp;甲方签字:</b></td>';
+    contentHtml += '<td><b>监理签字:</b></td>';
+    contentHtml += '<td><b>质检签字:</b></td>';
+    contentHtml += '<td><b>日期:</b></td>';
+    contentHtml += '</tr><tr>';
+    contentHtml += '</tr></tbody></table>';
+
+    return contentHtml;
+}
+
+jQuery(function($) {
+
+	api = parent.api;
+	config = parent.config ;
+	server = parent.server;
+	utils = parent.utils;
+	com = parent.com;
+	company = parent.company;
+	params = parent.params;
+
+	quotationUtils.quotationDetail = {};
+	var url = api.quotation.queryQuotationById;
+
+	com.post(url, {"quotation.qid": params.quotationId}, function(res){
+		quotationUtils.quotationDetail.quotation = res.quotation;
+	}, null, false);
+
+	com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": params.decorationOrderId}, function(res){
+		quotationUtils.quotationDetail.quotation.decoration = res.decoration;
+	}, null, false);
+
+	com.post(api.quotation.queryQuotationNormood, {"quotation.qid": params.quotationId}, function(res){
+	    quotationUtils.quotationNormoodProcessing(res.quotationFunctionAreas);
+	}, null, false);
+
+	generatePrintPage(params.type, params.subtype, params.workType, params.company.name, params.orderType, params.showType);
+
+});
+
+function generatePrintPage(type, subtype, workType, company, orderType, showType){
+    
+    var html = "";
+
+    html += printHeader(company + "定额工费项目单");
+    html += printNormood();
+
+	$("#quotationList").html(html);
+}
+
+

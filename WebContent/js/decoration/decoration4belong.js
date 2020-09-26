@@ -95,7 +95,7 @@ jQuery(function($) {
         };
     })();
 	
-	var _condArr = ['orderId', 'village', 'houseNumber', 'houseArea', 'designer', 'salesman','orderType','salesmanType'];
+	var _condArr = ['decoration-orderId', 'decoration-village', 'decoration-houseNumber', 'decoration-houseArea', 'decoration-designer', 'decoration-salesman','decoration-type','decoration-salesType'];
 	
 	var searcher = new Searcher();
 
@@ -105,19 +105,22 @@ jQuery(function($) {
 	
 	function viewDecorationBelongDetail(decorationOrderId){
 		params.orderId = decorationOrderId;
-		com.switchPage(api.index.decorationBelongInfoIndex.url);
+		//com.switchPage(api.index.decorationBelongInfoIndex.url);
+		com.popup4page("#layerPopUp", api.index.decorationBelongInfoIndex.url, "装修单归属: " + decorationOrderId);
 	}
 
 	function changeDecorationBelongDesigner(decorationOrderId){
 		params.orderId = decorationOrderId;
 		params.orderBelongType = 0;
-		com.switchPage(api.index.decorationBelongDetailIndex.url);
+		//com.switchPage(api.index.decorationBelongDetailIndex.url);
+		com.popup4page("#layerPopUp", api.index.decorationBelongDetailIndex.url, "装修单设计归属: " + decorationOrderId);
 	}
 
 	function changeDecorationBelongBussiness(decorationOrderId){
 		params.orderId = decorationOrderId;
 		params.orderBelongType = 1;
-		com.switchPage(api.index.decorationBelongDetailIndex.url);
+		//com.switchPage(api.index.decorationBelongDetailIndex.url);
+		com.popup4page("#layerPopUp", api.index.decorationBelongDetailIndex.url, "装修单业务归属: " + decorationOrderId);
 	}
 	
 });

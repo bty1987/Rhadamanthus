@@ -12,13 +12,13 @@ public interface MbrandService {
 	public void pageMbrand(Paging paging, List<Filter> filters);
 
 	public List<MbrandVO> queryMbrand(MbrandVO mbrand);
-	
+
 	public List<MbrandVO> queryMbrandByName(MbrandVO mbrand);
 
-	public void addMbrand(MbrandVO mbrand) throws FLException;
+	public int addMbrand(MbrandVO mbrand) throws FLException;
 
-	public void updateMbrand(MbrandVO mbrand) throws FLException;
+	public int updateMbrand(MbrandVO mbrand) throws FLException;
 
-	public void updateMbrandForStatus(MbrandVO mbrand) throws FLException;
+	public int updateMbrandForStatus(MbrandVO mbrand) throws FLException;
 
 }

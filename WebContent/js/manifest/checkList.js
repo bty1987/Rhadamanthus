@@ -93,7 +93,7 @@ $(function(){
 	
     var checkListSeacher = new Searcher();
     
-    checkListSeacher.init( ["storehouseName","CheckListGoodsName","goodsBrand"], "condList", api.inventory.pageCheckList, function(data){
+    checkListSeacher.init( ["inventory-storehouse-name", "inventory-goods-goodsName","inventory-brand-name"], "condList", api.inventory.pageCheckList, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "checkListPostData", null, false, null, null, 'resultList');
 });

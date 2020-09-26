@@ -17,38 +17,38 @@ import com.fanglin.store.vo.McolorVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class McolorAction extends BaseListAction{
+public class McolorAction extends BaseListAction {
 
 	private static final long serialVersionUID = 7084128294243545580L;
 
 	@Autowired
 	private McolorService mcolorService;
-	
+
 	private List<McolorVO> mcolors;
 
 	private McolorVO mcolor;
-	
-	@Action(value="queryMcolorByGid", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String  queryMcolorByGid(){
-		
+
+	@Action(value = "queryMcolorByGid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryMcolorByGid() {
+
 		mcolors = mcolorService.queryMcolorByGid(mcolor);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="addMcolor", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addMcolor() throws FLException{
-		
+
+	@Action(value = "addMcolor", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addMcolor() throws FLException {
+
 		mcolorService.addMcolor(mcolor);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="updateMcolorForStatus", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateMcolorForStatus() throws FLException{
-		
+
+	@Action(value = "updateMcolorForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateMcolorForStatus() throws FLException {
+
 		mcolorService.updateMcolorForStatus(mcolor);
-		
+
 		return SUCCESS;
 	}
 
@@ -67,4 +67,5 @@ public class McolorAction extends BaseListAction{
 	public void setMcolors(List<McolorVO> mcolors) {
 		this.mcolors = mcolors;
 	}
+
 }

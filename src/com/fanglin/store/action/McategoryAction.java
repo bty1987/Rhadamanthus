@@ -15,49 +15,45 @@ import com.fanglin.store.vo.McategoryVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class McategoryAction extends BaseListAction{
+public class McategoryAction extends BaseListAction {
 
 	private static final long serialVersionUID = 6606006629580300464L;
 
 	@Autowired
 	private McategoryService mcategoryService;
-	
+
 	private McategoryVO mcategory;
-	
-	@Action(value="pageMcategory", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMcategory(){
-		
+
+	@Action(value = "pageMcategory", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageMcategory() {
+
 		mcategoryService.pageMcategory(getPaging(), getFilters());
-		
+
 		return SUCCESS;
-		
 	}
-	
-	@Action(value="addMcategory", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addMcategory() throws FLException{
-		
+
+	@Action(value = "addMcategory", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addMcategory() throws FLException {
+
 		mcategoryService.addMcategory(mcategory);
-		
+
 		return SUCCESS;
-		
 	}
-	
-	@Action(value="updateMcategory", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateMcategory() throws FLException{
-		
+
+	@Action(value = "updateMcategory", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateMcategory() throws FLException {
+
 		mcategoryService.updateMcategory(mcategory);
-		
+
 		return SUCCESS;
-		
 	}
-	
-	@Action(value="updateMcategoryForShow", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateMcategoryForShow() throws FLException{
-		
+
+	@Action(value = "updateMcategoryForShow", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateMcategoryForShow() throws FLException {
+
 		mcategoryService.updateMcategoryForShow(mcategory);
-		
+
 		return SUCCESS;
-		
 	}
 
 	public McategoryVO getMcategory() {
@@ -67,5 +63,5 @@ public class McategoryAction extends BaseListAction{
 	public void setMcategory(McategoryVO mcategory) {
 		this.mcategory = mcategory;
 	}
-	
+
 }

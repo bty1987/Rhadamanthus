@@ -200,7 +200,7 @@ $(function () {
 
     var goodsSeacher = new Searcher();
 
-    goodsSeacher.init(['goodsNo', 'goodsName', 'goodsBarcode', 'goodsBrand', 'goodsStatus'], "condList", api.data.pageGoods, function (data) {
+    goodsSeacher.init(['data-goods-no', 'data-goods-name', 'data-goods-barcode', 'data-goods-brand-name', 'data-goods-status'], "condList", api.data.pageGoods, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "goodsPostData", null, false, null, function () {
 

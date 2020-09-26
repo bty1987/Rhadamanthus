@@ -16,24 +16,23 @@ import com.fanglin.store.vo.MuserVO;
 @ParentPackage("common")
 @Namespace("/")
 @Controller
-public class MpaymentAction extends BaseListAction{
+public class MpaymentAction extends BaseListAction {
 
 	private static final long serialVersionUID = 6383258978800424942L;
-	
+
 	@Autowired
 	private MpaymentService mpaymentService;
-	
+
 	private MpaymentVO mpayment;
-	
+
 	private MuserVO muser;
-	
-	@Action(value="addMpayment", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addMpayment() throws FLException{
-		
+
+	@Action(value = "addMpayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addMpayment() throws FLException {
+
 		mpaymentService.addMpayment(mpayment, muser);
-		
+
 		return SUCCESS;
-		
 	}
 
 	public MpaymentVO getMpayment() {

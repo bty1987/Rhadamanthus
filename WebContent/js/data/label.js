@@ -78,7 +78,7 @@ $(function(){
 
     var labelSearcher = new Searcher();
 
-    labelSearcher.init(["labelname"], "condList", api.data.pageLabel, function(data){
+    labelSearcher.init(["personel-label-name"], "condList", api.data.pageLabel, function(data){
         displayFunc.init('resultList',data);
     },'pagenation', "label", null, false, null, function(){
 

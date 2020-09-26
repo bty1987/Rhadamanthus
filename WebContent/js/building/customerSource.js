@@ -7,16 +7,11 @@ jQuery(function($) {
 			cancelBtn: com.focusPage("#cancelBtn"),
 			bsaveBtn: com.focusPage("#bsaveBtn")
 		},
-
 		modals: {
-
 			customerSourceModal: com.focusPage("#customerSourceModal"),
 			buildingModal: com.focusPage("#buildingModal")
-
 		},
-
 		items: {
-
 			csType: com.focusPage("#csType"),
 			purpose: com.focusPage("#purpose"),
 			intention: com.focusPage("#intention"),
@@ -31,9 +26,7 @@ jQuery(function($) {
 			comment: com.focusPage("#comment"),
 			gender: com.focusPage("#gender")
 		},
-
 		customerItems: {
-
 			customerName: com.focusPage("#customerName"),
 			cardType: com.focusPage("#cardType"),
 			cardNum: com.focusPage("#cardNum"),
@@ -44,11 +37,8 @@ jQuery(function($) {
 			relationshipType: com.focusPage("#relationshipType"),
 			address: com.focusPage("#address"),
 			phone: com.focusPage("#phone")
-
 		},
-
 		buildItems: {
-
 			hsNo: com.focusPage("#hsNo"),
 			csNo: com.focusPage("#csNo"),
 			hsAUser: com.focusPage("#hsAUser"),
@@ -59,7 +49,6 @@ jQuery(function($) {
 			loanPrice: com.focusPage("#loanPrice"),
 			payType: com.focusPage("#payType"),
 			balanceStatus: com.focusPage("#balanceStatus")
-
 		},
 
 		hsid: null,
@@ -364,7 +353,7 @@ jQuery(function($) {
 
 	var searcher = new Searcher();
 
-	searcher.init(["customerNo", "b_custumerName"], "CondList", api.building.pageCustomerSource, function(data){
+	searcher.init(["building-customer-no", "building-custumerName"], "CondList", api.building.pageCustomerSource, function(data){
 		displayFunc.init('ResultList', data);
 	}, "Pagenation", "customerSourcePostData",null, false, null, null);
 

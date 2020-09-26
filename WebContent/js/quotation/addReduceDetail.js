@@ -65,7 +65,7 @@ var AddReduceDetail = (function(){
 			};
 
 			//系统定义弹出层
-			var _condArr = ['itemName', 'quotationBigCategoryId', 'quotationWorkTypeId'];
+			var _condArr = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'data-worktype'];
 			var addReduceDetailSeacher = new Searcher();
 			addReduceDetailSeacher.init( _condArr, "condList", api.quotation.pageSystemDefineItemForEnable,  function(data){
 				var $tableWrap = com.focusPage('#resultList').empty();
@@ -83,7 +83,7 @@ var AddReduceDetail = (function(){
 
 			//普通报价项弹出层
 			var extraParams  = {"quotationItem.versionId": addReduceDetail.versionid};
-			var _condArrn = ['itemName', 'quotationBigCategoryId', 'quotationSmallCategoryId', 'quotationWorkTypeId'];
+			var _condArrn = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'data-worktype'];
 			var normalItemSeacher = new Searcher();
 			normalItemSeacher.init( _condArrn, "condListn", api.quotation.pageQuotationItemByVersionId,  function(data){
 				var $tableWrap = com.focusPage('#resultListn').empty();

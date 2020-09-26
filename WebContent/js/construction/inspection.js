@@ -75,7 +75,7 @@ $(function () {
     })();
 
     var searcher = new Searcher();
-    searcher.init(['c_orderId', 'c_village', 'c_designer', 'c_salesman', 'c_supervisor', 'c_schedule'], "condList", api.construction.pageConstruction, function (list) {
+    searcher.init(['construction-orderId', 'construction-village-name', 'construction-designer', "construction-salesman", 'construction-supervisor', 'construction-schedule'], "condList", api.construction.pageConstruction, function (list) {
         displayFunc.init('resultList', list);
     }, "pagenation", "inspectionSeacherSeacherPostData", params["inspectionPostData"]);
 

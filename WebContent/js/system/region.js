@@ -86,7 +86,7 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 	
-	searcher.init(["regionName"], "condList", api.system.pageRegion, function(data){         
+	searcher.init(["system-region-name"], "condList", api.system.pageRegion, function(data){         
 		displayFunc.init('resultList', data);
 	}, "pagenation", "regionPostData", null, false, null, function(){
 		

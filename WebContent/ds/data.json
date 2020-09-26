@@ -6,6 +6,10 @@
     {"key":"领导关系客户","value":"领导关系客户"},
     {"key":"员工关系","value":"员工关系"}
   ],
+   "addOrUseScpp_point": [
+   {"key":"0","value":"累积"},
+   {"key":"1","value":"消耗"}
+  ],
   "houseType" :[
     {"key":"0", "value":"住宅"},
     {"key":"1", "value":"半越住宅"},

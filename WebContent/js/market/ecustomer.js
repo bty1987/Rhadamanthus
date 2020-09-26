@@ -62,7 +62,7 @@ jQuery(function($) {
     })();
 
     var searcher = new Searcher();
-    var conditionList = ["e_cityId", "e_customerName"];
+    var conditionList = ["market-city", "market-customer-name"];
 
     searcher.init(conditionList, "condList", api.market.pageEcustomer, function(data){
         displayFunc.init('resultList', data);

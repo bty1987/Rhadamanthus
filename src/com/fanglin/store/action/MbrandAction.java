@@ -15,49 +15,45 @@ import com.fanglin.store.vo.MbrandVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class MbrandAction extends BaseListAction{
+public class MbrandAction extends BaseListAction {
 
 	private static final long serialVersionUID = 6606015629580300464L;
 
 	@Autowired
 	private MbrandService mbrandService;
-	
+
 	private MbrandVO mbrand;
-	
-	@Action(value="pageMbrand", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMbrand(){
-		
+
+	@Action(value = "pageMbrand", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageMbrand() {
+
 		mbrandService.pageMbrand(getPaging(), getFilters());
-		
+
 		return SUCCESS;
-		
 	}
-	
-	@Action(value="addMbrand", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addMbrand() throws FLException{
-		
+
+	@Action(value = "addMbrand", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addMbrand() throws FLException {
+
 		mbrandService.addMbrand(mbrand);
-		
+
 		return SUCCESS;
-		
 	}
-	
-	@Action(value="updateMbrand", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateMbrand() throws FLException{
-		
+
+	@Action(value = "updateMbrand", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateMbrand() throws FLException {
+
 		mbrandService.updateMbrand(mbrand);
-		
+
 		return SUCCESS;
-		
 	}
-	
-	@Action(value="updateMbrandForStatus", results={ @Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String updateMbrandForStatus() throws FLException{
-		
+
+	@Action(value = "updateMbrandForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateMbrandForStatus() throws FLException {
+
 		mbrandService.updateMbrandForStatus(mbrand);
-		
+
 		return SUCCESS;
-		
 	}
 
 	public MbrandVO getMbrand() {
@@ -67,5 +63,5 @@ public class MbrandAction extends BaseListAction{
 	public void setMbrand(MbrandVO mbrand) {
 		this.mbrand = mbrand;
 	}
-	
+
 }

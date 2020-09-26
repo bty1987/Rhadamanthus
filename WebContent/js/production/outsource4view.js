@@ -193,7 +193,7 @@ $(function(){
                     com.focusPage('#importProductionPicture').addClass('hide');
                 }
 
-                com.uploadify("#importProductionPicture","添加上传文件",'btn btn-success col-sm-12',"*.xlsx","'uploadType': 2",1,function(data) {
+                com.uploadify("#importProductionPicture", "上传文件", api.common.uploadOther, 'btn btn-success col-sm-12', "*.xlsx", "'uploadType': 2", 1, function(data) {
                     var option = {
                         "outsource.oid": v.oid,
                         "outsource.path": data.resUrl

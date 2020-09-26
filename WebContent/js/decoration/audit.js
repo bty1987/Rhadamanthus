@@ -122,8 +122,7 @@ jQuery(function($) {
             }
         };
     })();
-    var _condArr = ['orderId', 'village', 'designer','c_supervisor','designerDepartmentId',
-        'createTimeDateRange','signTimeDateRange','auditTime','status','auditStatus','auditName'];
+    var _condArr = ['decoration-orderId', 'decoration-village', 'decoration-designer','decoration-supervisor','decoration-design-dept', 'decoration-createTime', 'decoration-signTime', 'decoration-auditTime','decoration-status','decoration-auditStatus','decoration-auditor'];
     var searcher = new Searcher();
     //查询的字段名称,查询框DIV的ID,API地址,成功回调函数,分页DIV的ID,保存历史查询的查询名
     searcher.init(_condArr, "condList", api.decoration.pageAudit, function (data) {

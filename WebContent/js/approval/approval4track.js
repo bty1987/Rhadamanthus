@@ -234,16 +234,16 @@ jQuery(function($){
     var searcher = new Searcher();
 
     if (params['urlLoadParams'].type == 'send') {
-        searcher.init(["approval_receiverName", "approval_Type", "approval_Status", "approval_createTime", "approval_Time"], "condList", approvalTrack.url, function (data) {
+        searcher.init(["approval-receiver-name", "approval-type", "approval-status", "approval-createTime", "approval-approvalTime"], "condList", approvalTrack.url, function (data) {
             displayFunc.init('resultList', data);
         }, "pagenation", approvalTrack.postData);
     } else if (params['urlLoadParams'].type == 'receive') {
-        searcher.init(["approval_senderName", "approval_Type", "approval_Status"], "condList", approvalTrack.url, function (data) {
+        searcher.init(["approval-sender-name", "approval-type", "approval-status"], "condList", approvalTrack.url, function (data) {
             displayFunc.init('resultList', data);
         },
         "pagenation", approvalTrack.postData);
     } else if (params['urlLoadParams'].type == 'dept') {
-        searcher.init(["approval_senderName", "approval_Type", "approval_Status"], "condList", approvalTrack.url, function (data) {
+        searcher.init(["approval-sender-name", "approval-type", "approval-status"], "condList", approvalTrack.url, function (data) {
             displayFunc.init('resultList', data);
         },
         "pagenation", approvalTrack.postData);

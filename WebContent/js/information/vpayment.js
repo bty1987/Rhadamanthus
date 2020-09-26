@@ -116,9 +116,9 @@ jQuery(function ($) {
             var propertyArr = [
                 ["会员号:", v.mno, "grey"],
                 ["创建人:", v.creater.currentName, "grey"],
-                ["创建时间:", v.createTime, "blue"],
+                ["创建时间:", v.createTime, "green"],
                 ["收款人:", v.collecter.currentName, "grey"],
-                ["收款时间:", v.collectTime, "blue"],
+                ["收款时间:", v.collectTime, "green"],
                 ["类型:", vpayment.type[v.type], "grey"],
                 ["品牌:", v.brand == null || v.brand == "" ? "---" : v.brand, "grey"],
                 ["应收金额:", v.money, "blue"],
@@ -215,7 +215,7 @@ jQuery(function ($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["vp_mno", "vp_brand", "v_createrName"], "condList", api.information.pageVpayment, function (data) {
+    searcher.init(["information-v-payment-no", "information-v-payment-brand", "information-v-payment-creater-name"], "condList", api.information.pageVpayment, function (data) {
         displayFunc.init('resultList', data);
 
     }, "pagenation", "vpaymentPostData", {"vpayment.status": 0}, false, null, function () {

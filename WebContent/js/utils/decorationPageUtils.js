@@ -106,7 +106,7 @@ $(function () {
         
         var row1 = createDiv("row").appendTo(stepPane);
         var form1 = createForm();
-        var left1 = createDiv("col-xs-12 col-sm-5").append(createDiv("control-group").append(
+        var left1 = createDiv("col-xs-12 col-sm-6").append(createDiv("control-group").append(
             createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "订单号", "orderId"), createDiv("col-sm-9").append(createInput("orderId", "col-xs-10 col-sm-5", true, "text")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "客户名", "customer"), createDiv("col-sm-9").append(createInput("customer", "col-xs-10 col-sm-5", true, "text")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "", "customerInfosBtn"), createDiv("col-sm-9").append(createButton(conf, "customerInfosBtn", "btn btn-xs btn-danger col-xs-10 col-sm-5", "客户信息", "button").css("padding","5px 4px"), createButton(conf, "customerChangeBtn", "btn btn-xs btn-info", "修改客户信息", "button")))
@@ -120,7 +120,7 @@ $(function () {
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "业务员", "salesman"), createDiv("col-sm-9").append(createInput("salesman", "col-xs-10 col-sm-5", true, "text")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "业务类型", "salesmanType"), createDiv("col-sm-9").append(createSelect("salesmanType", "col-xs-10 col-sm-5", [], null, null,"popover", "manual")))
         ));
-        var right1 = createDiv("col-xs-12 col-sm-5").append(createDiv("control-group").append(
+        var right1 = createDiv("col-xs-12 col-sm-6").append(createDiv("control-group").append(
             createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "等级", "grade"), createDiv("col-sm-9").append(createSelect("grade", "col-xs-10 col-sm-5", [], null, null, "popover", "manual")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "订单类型", "orderType"), createDiv("col-sm-9").append(createSelect("orderType", "col-xs-10 col-sm-5", [], null, null, "popover", "manual")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "房屋类别", "houseType"), createDiv("col-sm-9").append(createSelect("houseType", "col-xs-10 col-sm-5", [], null, null, "popover", "manual")))
@@ -139,13 +139,13 @@ $(function () {
 
         var row2 = createDiv("row").appendTo(stepPane);
         var form2 = createForm();
-        var left2 = createDiv("col-xs-12 col-sm-5").append(
+        var left2 = createDiv("col-xs-12 col-sm-6").append(
             createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "非业务人员名称", "notSalesmanName"), createDiv("col-sm-9").append(createInput("notSalesmanName", "col-xs-10 col-sm-5 v_name", true, "text").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("maxlength", "8")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "非业务提点", "notSalesmanRate"), createDiv("col-sm-9").append(createInput("notSalesmanRate", "col-xs-10 col-sm-5  v_required v_float", true, "text").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("maxlength", "11").attr("value", "0")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "非业务人员手机", "notSalesmanPhone"), createDiv("col-sm-9").append(createInput("notSalesmanPhone", "col-xs-10 col-sm-5  v_phone", true, "text").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("maxlength", "11")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "非业务备注", "notSalesmanContent"), createDiv("col-sm-9").append('<textarea id="notSalesmanContent" class="col-xs-10 col-sm-5"rows="3" data-toggle="popover"data-trigger="manual" maxlength="128"readonly="readonly"></textarea>'))
         );
-        var right2 = createDiv("col-xs-12 col-sm-5").append(
+        var right2 = createDiv("col-xs-12 col-sm-6").append(
             createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "返单人员名称", "backOrderName"), createDiv("col-sm-9").append(createInput("backOrderName", "col-xs-10 col-sm-5 v_name", true, "text").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("maxlength", "8")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "返单人员电话", "backOrderPhone"), createDiv("col-sm-9").append(createInput("backOrderPhone", "col-xs-10 col-sm-5 v_phone", true, "text").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("maxlength", "11")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "返单人员备注", "backOrderContent"), createDiv("col-sm-9").append('<textarea id="backOrderContent" class="col-xs-10 col-sm-5"rows="3" data-toggle="popover"data-trigger="manual" maxlength="128"readonly="readonly"></textarea>'))

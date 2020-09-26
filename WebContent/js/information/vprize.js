@@ -53,7 +53,7 @@ jQuery(function($) {
 			var propertyArr = [
 				["名称: ", v.name, "grey"],
 				["价格: ", v.price, "blue"],
-				["单位: ", v.unit, "red"],
+				["单位: ", v.unit, "grey"],
 				["状态: ", v.status == 0 ? "启用" : "禁用", "red"]
 			];
 
@@ -96,7 +96,7 @@ jQuery(function($) {
 
 	var searcher = new Searcher();
 
-	searcher.init(["vprizeName", "vprizeStatus"], "condList", api.information.pageVprize, function(data){
+	searcher.init(["information-v-prize-name", "information-v-prize-status"], "condList", api.information.pageVprize, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "vprizePostData",null, false, null, function(){
 

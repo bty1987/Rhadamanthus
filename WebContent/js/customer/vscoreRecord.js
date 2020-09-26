@@ -79,7 +79,7 @@ jQuery(function($){
         var searcher = new Searcher();
         check();
 
-        searcher.init(["vscoreRecordType"], "condListas", api.customer.pageVscoreRecordByUnionId, function(data){
+        searcher.init(["customer-vscoreRecord-type"], "condListas", api.customer.pageVscoreRecordByUnionId, function(data){
             displayFunc.init('resultListas', data);
         },"pagenationas", "VscoreRecordPostData", {"unionId" : vscore.unionId}, false, null, function(){
         });

@@ -5,7 +5,12 @@ jQuery(function ($) {
         identi: {},
         activityItems: {}
     };
-
+    
+    var decorationActivity = {
+        stateTypes: {},
+        states: {},
+    };
+    
     var ActivityOrderId = params.decorationOrderId;
     var things = com.focusPage("#things");
     var coupons = com.focusPage("#coupons");
@@ -110,7 +115,7 @@ jQuery(function ($) {
     //初始化
     function initDraw(orderId) {
 
-        decorationUtils.decorationActivityItemInfo(decorationActivityItem.items.activityItems, decorationActivityItem.items.decorationActivityItems1, uiBtnMethod, orderId);
+        decorationUtils.decorationActivityItemInfo(decorationActivityItem.items.activityItems, decorationActivityItem.items.decorationActivityItems1, uiBtnMethod, orderId, decorationActivity);
         decorationUtils.decorationActivityInfo(decorationActivityItem.items.decorationActivityItems, activityBtnMethod, orderId);
     }
 
@@ -257,7 +262,6 @@ jQuery(function ($) {
             return;
         }
 
-
         var submitFlag = true;
 
         var orderId = ActivityOrderId;
@@ -338,7 +342,7 @@ jQuery(function ($) {
 
     //返回
     com.focusPage("#backBtn").on("click", function () {
-        com.switchPage(api.index.decorationIndex.url);
+        //com.switchPage(api.index.decorationIndex.url);
     });
 
     //删除活动
@@ -405,7 +409,14 @@ jQuery(function ($) {
     com.post(api.ds.decoration, {}, function (res) {
         com.focusPage("#receiveType").bindData(res.receiveType, "key", "value", false);
         com.focusPage("#receiveTypes").bindData(res.receiveType, "key", "value", false);
-    });
+        
+        decorationActivity.stateTypes = res.receiveType.split("key", "value");
+        decorationActivity.states = res.activityItemType.split("key", "value");
+    }, null, false);
+    
+    com.post(api.ds.information, {}, function (res) {
+        decorationActivity.types = res.activityItemType.split("key", "value");
+    }, null, false);
 
     //领取活动物品
     function receiveDecorationActivityItem(daiId) {
@@ -480,7 +491,7 @@ jQuery(function ($) {
     //消耗装修活动项
     function expendDecorationActivityItem(daiId, activityItemName) {
 
-        com.showConfirm("是否确认消耗" + activityItemName + "活动物品?", function () {
+        com.showConfirm("是否确认补款" + activityItemName + "活动物品?", function () {
 
             var options = {
                 "decorationActivityItem.daiId": daiId,
@@ -488,12 +499,12 @@ jQuery(function ($) {
 
             com.post(api.decoration.expendDecorationActivityItem, options, function (res) {
 
-            	com.showAlert(com.info, "物品消耗成功");
+            	com.showAlert(com.info, "物品补款成功");
                 var daiId = res.decorationActivityItem.daiId;
 
                 decorationUtils.countTatol(daiId);
 
-                com.focusPage("#state_" + daiId).text("消耗");
+                com.focusPage("#state_" + daiId).text("补款");
             });
         });
     }

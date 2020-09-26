@@ -19,71 +19,67 @@ import com.fanglin.utils.UUIDUtil;
 @Service("muserService")
 @Transactional(readOnly = true)
 public class MuserServiceImpl implements MuserService {
-	
+
 	@Autowired
 	private MuserDao muserDao;
 
 	@Override
 	public void pageMuser(Paging paging, List<Filter> filters) {
-		
+
 		List<MuserPO> muserPOs = muserDao.pageMuser(paging, filters);
 		List<MuserVO> muserVOs = new ArrayList<MuserVO>();
-		
+
 		for (MuserPO muserPO : muserPOs) {
-			
+
 			MuserVO muserVO = new MuserVO();
-			
+
 			BeanUtil.copyProperties(muserPO, muserVO);
-			
+
 			muserVOs.add(muserVO);
-			
 		}
-		
+
 		paging.setData(muserVOs);
-		
-	}
-	
-	@Override
-	public MuserVO queryMuserByUnionId(MuserVO muser) {
-		
-		MuserPO muserPO = muserDao.queryMuserByUnionId(muser.getUnionId());
-		
-		MuserVO muserVO = new MuserVO();
-		
-		BeanUtil.copyProperties(muserPO, muserVO);
-		
-		return muserVO;
-		
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void saveMuser(MuserVO muserVO) {
-		
-		MuserPO muserPO = muserDao.queryMuserByUnionId(muserVO.getUnionId());
-		
-		if(muserPO != null){
-			
-			BeanUtil.copyProperties(muserVO, muserPO);
-			
-			muserDao.update(muserPO);
-			
-		}else{
-			
-			muserPO = new MuserPO();
-			
-			String name =  UUIDUtil.getUuid();
-			
-			muserVO.setName(name);
-			
-			BeanUtil.copyProperties(muserVO, muserPO);
-			
-			muserDao.save(muserPO);
-			
-			muserVO.setUid(muserPO.getUid());
-			
-			muserVO.setName(muserPO.getName());
-			
-		}
+	public MuserVO queryMuserByUnionId(MuserVO muser) {
+
+		MuserPO muserPO = muserDao.queryMuserByUnionId(muser.getUnionId());
+
+		MuserVO muserVO = new MuserVO();
+
+		BeanUtil.copyProperties(muserPO, muserVO);
+
+		return muserVO;
 	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int saveMuser(MuserVO muserVO) {
+
+		MuserPO muserPO = muserDao.queryMuserByUnionId(muserVO.getUnionId());
+
+		if (muserPO != null) {
+
+			BeanUtil.copyProperties(muserVO, muserPO);
+
+			muserDao.update(muserPO);
+
+		} else {
+
+			muserPO = new MuserPO();
+
+			muserVO.setName(UUIDUtil.getUuid());
+
+			BeanUtil.copyProperties(muserVO, muserPO);
+
+			muserDao.save(muserPO);
+
+			muserVO.setUid(muserPO.getUid());
+			muserVO.setName(muserPO.getName());
+		}
+
+		return 0;
+	}
+
 }
