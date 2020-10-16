@@ -1,26 +1,35 @@
 $(function(){
-//定义全局变量  json
-    var  task= {
-        saveBtn: com.focusPage("#addTaskBtn").on("click", saveData),//绑定事件
+    
+    var task= {
+        
+        tid: null,
+        
+        btns: {
+            saveBtn: com.focusPage("#addTaskBtn").on("click", saveData),
+        },
+        
         modals: {
             addTaskModal: com.focusPage("#addtaskModal")
         },
         
-        cancelBtn : com.focusPage("#cancelTaskBtn"),
-        
         taskItems : {
 	        name : com.focusPage("#taskName"),
 	        filepath : com.focusPage("#filepath"),
+	        tasklevel : com.focusPage("#tasklevel"),
 	        tasktype : com.focusPage("#tasktype"),
 	        handle : com.focusPage("#handle"),
 	        plugins : com.focusPage("#plugins"),
 	        isShow : com.focusPage("#isShow"),
         },
+        
         editFlg: false,
+        
+        taskLevel: ["功能级", "模块级"],
         taskType:["python","shell"],
         isShow:["显示","不显示"],
 
-};
+    };
+    
     var taskRegular ={
         validator: {
             taskNumberAll:{
@@ -67,7 +76,6 @@ $(function(){
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('查看');
             var $btnTaskParam = $('<a></a>').addClass('btn btn-minier btn-success').html('任务字段');
 
-
             //启用禁用
             var $btnStatus = $('<div></div>').addClass('pull-right');
             var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
@@ -76,6 +84,7 @@ $(function(){
 
             var propertyArr = [
                 ["文件路径:", v.filepath, "grey"],
+                ["等级:", task.taskLevel[v.level], "grey"],
                 ["类型:", task.taskType[v.type], "grey"],
                 ["配置:", v.plugins, "grey"],
                 ["显示标识:", task.isShow[v.isShow],"grey"]
@@ -90,11 +99,14 @@ $(function(){
 
             $btnStatus.append($statusSwitch).append($isShowSwitch).append($span);
 
-            $divBtnWrap.append($btnEdit).append($btnTaskParam).append($btnStatus).appendTo($h3);
+            $divBtnWrap.append($btnEdit).append($btnStatus).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
-            //编辑按钮的点击事件
+            if (v.level == 1){
+                $divBtnWrap.append($btnTaskParam);
+            }
+
             $btnTaskParam.click(function(){
                 params['tid'] = v.tid;
                 com.popup4page("#stockRecordPopUp","/views/data/taskParam.html","任务字段")
@@ -103,8 +115,10 @@ $(function(){
             //编辑按钮的点击事件
             $btnEdit.click(function(){
 
-                task.editFlg=true;
+                task.tid = v.tid;
+                
                 task.taskItems.tid = v.tid;
+                task.taskItems.tasklevel.val(v.level);
                 task.taskItems.tasktype.val(v.type);
                 task.taskItems.filepath.val(v.filepath);
                 task.taskItems.name.val(v.name);
@@ -112,9 +126,6 @@ $(function(){
                 task.taskItems.isShow.val(v.isShow);
 
                 task.modals.addTaskModal.modal("show");
-
-                task.saveBtn.addClass("hide");
-
             });
 
             !v.status && $statusSwitch.prop("checked", true);
@@ -153,37 +164,38 @@ $(function(){
     });
 
     com.focusPage('#addTask' , '#pagenation').on("click",function(){
+        
+        task.tid = null;
 
         task.modals.addTaskModal.modal("show");
-        task.saveBtn.removeClass("hide");
-        task.editFlg = false;
-
     });
 
     function saveData(){
 
         if(com.validate('addtaskModal'))  return false;
-        var url;
-
+        
+        var url = api.data.addTask;
         var options = {
             "task.name": task.taskItems.name.val(),
             "task.filepath":task.taskItems.filepath.val(),
+            "task.level":task.taskItems.tasklevel.val(),
             "task.type":task.taskItems.tasktype.val(),
             "task.handle":task.taskItems.handle.val(),
             "task.plugins":task.taskItems.plugins.val(),
             "task.isShow":task.taskItems.isShow.val()
         };
-
-        if(task.editFlg) {
-            url = api.data.updatetask;
+        
+        if(task.tid) {
+            url = api.data.updateTask;
             options["task.tid"] =  task.taskItems.tid;
-        }else{
-            url = api.data.addTask;
         }
+        
+        console.log(options);
 
-        com.post(url, options, successCallback);
-
-        task.modals.addTaskModal.modal("hide");
+        com.post(url, options, function(){
+            taskSeacher.doSearch();
+            task.modals.addTaskModal.modal("hide");
+        });
     }
 
     function updateStatus(id, status, failcallBack) {
@@ -205,10 +217,6 @@ $(function(){
             failcallBack && failcallBack();
         });
 
-    }
-
-    function successCallback(){
-        taskSeacher.doSearch();
     }
 
 });

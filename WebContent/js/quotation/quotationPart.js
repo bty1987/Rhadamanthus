@@ -131,7 +131,7 @@ var QuotationDetail = (function(){
 			}, null, false);
 			//初始化报价项选择弹层
 			var extraParams  = {"quotationItem.versionId": quo.versionId};
-			var _condArr = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'data-worktype'];
+			var _condArr = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'quotation-worktype'];
 			var quotationItemSeacher = new Searcher();
 			quotationItemSeacher.init( _condArr, "condList", api.quotation.pageQuotationItemByVersionId,  function(data){
 				var $tableWrap = com.focusPage('#resultList').empty();
@@ -1360,7 +1360,7 @@ var QuotationDetail = (function(){
 			}
 			
 			if(qv.type == 3){ // 管理费 , 单价+非业务人员提点
-				_dcp = _unitPrice + quo.notSalesmanRate;
+				_dcp = utils.changeThrDecimal(_unitPrice + quo.notSalesmanRate);
 			}
 			
 			var _lineSet = [

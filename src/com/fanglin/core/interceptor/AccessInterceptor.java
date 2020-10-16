@@ -30,97 +30,97 @@ public class AccessInterceptor extends AbstractInterceptor {
 	private static final long serialVersionUID = -1754802896214390640L;
 
 	protected Logger logger = LoggerFactory.getLogger(getClass());
-	
+
 	@Autowired
 	private OperationService operationService;
-	
+
 	@Override
 	public String intercept(ActionInvocation invocation) throws Exception {
-		
+
 		ActionContext ctx = invocation.getInvocationContext();
 		HttpServletRequest request = (HttpServletRequest) ctx.get(StrutsStatics.HTTP_REQUEST);
 		HttpServletResponse response = (HttpServletResponse) ctx.get(StrutsStatics.HTTP_RESPONSE);
-		
+
 		String $authentication = request.getParameter("authentication");
-		
+
 		String userId = "base";
 		String actionName = invocation.getProxy().getActionName();
-		
+
 		ValueStack stack = invocation.getStack();
-		
+
 		try {
-			
-			if(operationService.checkOperation(actionName)){
+
+			if (operationService.checkOperation(actionName)) {
 				invocation.invoke();
-			}else{
-				
-				if($authentication == null){
+			} else {
+
+				if ($authentication == null) {
 					$authentication = CookieUtil.getCookie(request, Constant.COOKIE_AUTHENTICATION);
 				}
-				
-				if($authentication == null){
+
+				if ($authentication == null) {
 					throw new FLException(110005, "登陆超时");
 				}
-				
+
 				String decryptString = AESHelper.decrypt($authentication, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
-				
-				if(decryptString == null || "".equals(decryptString)){
+
+				if (decryptString == null || "".equals(decryptString)) {
 					LogUtils.logging(logger, actionName, 0, "aseerror");
 					throw new FLException(110005, "登陆超时");
 				}
-				
+
 				Authentication authentication = new Authentication(decryptString);
 				Timestamp startTime = DateUtil.getDateToTimestamp(new Date());
-				
-				if(authentication.getUserId() != null){
-					
+
+				if (authentication.getUserId() != null) {
+
 					userId = authentication.getUserId();
-					
+
 					LogUtils.logging(logger, authentication.getUserId(), actionName, authentication.getCompany());
-					
-					if(authentication.getUpdateTime() == -1){
+
+					if (authentication.getUpdateTime() == -1) {
 						CookieUtil.delCookie(request, response, Constant.COOKIE_AUTHENTICATION);
 						throw new FLException(110005, "登陆超时");
 					}
-					
-					if(authentication.getTimout() != Authentication.TIMEOUT_INT && authentication.isOverTime(SystemConfig.getInt("cookieOvertime", 30))){
+
+					if (authentication.getTimout() != Authentication.TIMEOUT_INT && authentication.isOverTime(SystemConfig.getInt("cookieOvertime", 30))) {
 						throw new FLException(110005, "登陆超时");
 					}
-					
-					if(operationService.checkOperation(authentication.getUserId(), actionName, authentication.getRollcall())){
+
+					if (operationService.checkOperation(authentication.getUserId(), actionName, authentication.getRollcall())) {
 						invocation.invoke();
-					}else{
+					} else {
 						throw new FLException(-2, "无操作权限");
 					}
-				}else{
+				} else {
 					throw new FLException(110005, "登陆超时");
 				}
-				
+
 				Timestamp endTime = DateUtil.getDateToTimestamp(new Date());
-				
-				if((Integer) stack.findValue("errorCode") != null){
-					
+
+				if ((Integer) stack.findValue("errorCode") != null) {
+
 					Long runTime = endTime.getTime() - startTime.getTime();
-					
-					if(runTime > 5000){
+
+					if (runTime > 5000) {
 						LogUtils.logging(logger, actionName, runTime);
 					}
 				}
 			}
-		}catch (LockAcquisitionException e) {
+		} catch (LockAcquisitionException e) {
 			stack.setValue("errorCode", "-2");
 			stack.setValue("errorMsg", "数据冲突,请重新再试!");
-		}catch (FLException e) {
+		} catch (FLException e) {
 			stack.setValue("errorCode", e.getCode());
 			stack.setValue("errorMsg", e.getErrorMessage());
-		}catch (Exception e) {
+		} catch (Exception e) {
 			stack.setValue("errorCode", "110000");
 			stack.setValue("errorMsg", "操作失败,请稍后重试");
-			
+
 			LogUtils.logging(logger, e, actionName, userId);
 		}
-		
+
 		return Action.SUCCESS;
 	}
-	
+
 }

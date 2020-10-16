@@ -59,6 +59,8 @@ jQuery(function ($) {
         com.clearValidator();
         com.cleanTypeahead("brand");
         com.cleanItems(activityPayment.items);
+        com.focusPage("#brand").attr('readonly', "readonly");
+        com.focusPage("#brand").removeClass('v_typeahead');
     });
 
     activityPayment.modals.layerAddActivity.on('hide.bs.modal', function () {
@@ -72,7 +74,7 @@ jQuery(function ($) {
         com.cleanTypeahead("activityCouponType");
     });
 
-    com.initTypeahead('brand', api.data.queryBrandByPinyin, "pinyinName", {}, "autoFillKeyValue", "value", "value" ,null);
+    com.initTypeahead('brand', api.data.queryBrandByPinyin, "pinyinName", {}, "autoFillKeyValue", "value", "value", null);
     com.selectTypeahead("activityCouponType", activityPayment.activityCouponType, 'key', 'value' ,null);
 
     com.focusPage("#layerAddActivity :checkbox").on("change", function(){
@@ -137,13 +139,14 @@ jQuery(function ($) {
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            var $btnCol = $('<a></a>').addClass('btn btn-minier btn-primary').html('收款');
+            var $btnCol = $('<a></a>').addClass('btn btn-minier btn-info').html('收款');
 
             var propertyArr = [
                 ["会员号:", v.mno, "grey"],
                 ["创建人:", v.creater.currentName, "grey"],
                 ["创建时间:", v.createTime, "blue"],
-                ["类型:", activityPayment.type[v.type], "grey"],
+                ["类型:", activityPayment.type[v.type], "red"],
+                ["品类:", v.category == null || v.category == "" ? "---" : v.category, "grey"],
                 ["品牌:", v.brand == null || v.brand == "" ? "---" : v.brand, "grey"],
                 ["应收金额:", v.money, "blue"],
                 ["状态:", v.status == 1 ? "已付款" : "未付款", "red"],
@@ -191,7 +194,7 @@ jQuery(function ($) {
                 activityPayment.apids.push(v.apid);
                 activityPayment.mno = v.mno;
 
-                com.post(api.payment.queryPointofsalesByPid, {"pointofsales.pid": v.mno, "pointofsales.type": 5}, function(res){
+                com.post(api.payment.queryPointofsales, {"pointofsales.pid": v.mno, "pointofsales.type": 5}, function(res){
                     $.each(res.pointofsaleses, function(i, v){
                         if(v.status == 0 || v.status == 1) paymentUtils.addPos(v, activityPayment.htmlName);
                     });
@@ -216,16 +219,16 @@ jQuery(function ($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["payment-activity-no", "payment-activity-brand", "payment-activity-creater-name"], "condList", api.payment.pageActivityPayment, function (data) {
+    searcher.init(["payment-activity-no", "payment-activity-category", "payment-activity-brand", "payment-activity-creater-name"], "condList", api.payment.pageActivityPayment, function (data) {
         displayFunc.init('resultList', data);
 
     }, "pagenation", "activityPaymentPostData", {"activityPayment.status": 0}, false, null, function () {
 
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'createActivityPayment').css("margin", "0px 3px");
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'createActivityPayment').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        var $batch = $('<a></a>').addClass('btn btn-minier pull-left btn-info').attr('id', 'collects').css("margin", "0px 3px");
+        var $batch = $('<a></a>').addClass('btn btn-minier pull-left btn-primary').attr('id', 'collects').css("margin", "0px 3px");
         var $batchi = $('<i></i>').addClass('icon-money bigger-110').appendTo($batch);
         var $batchspan = $('<span></span>').text('批量收款').appendTo($batch);
 
@@ -264,7 +267,8 @@ jQuery(function ($) {
                 ["创建时间:", v.createTime, "blue"],
                 ["收款人:", v.collecter.currentName, "grey"],
                 ["收款时间:", v.collectTime, "blue"],
-                ["类型:", activityPayment.type[v.type], "grey"],
+                ["类型:", activityPayment.type[v.type], "red"],
+                ["品类:", v.category == null || v.category == "" ? "---" : v.category, "grey"],
                 ["品牌:", v.brand == null || v.brand == "" ? "---" : v.brand, "grey"],
                 ["应收金额:", v.money, "blue"],
                 ["状态:", v.status == 1 ? "已付款" : "未付款", "red"],
@@ -337,7 +341,7 @@ jQuery(function ($) {
 
     var hsearcher = new Searcher();
 
-    hsearcher.init(["payment-activity-no", "payment-activity-brand", "payment-activity-creater-name"], "hcondList", api.payment.pageActivityPayment, function (data) {
+    hsearcher.init(["payment-activity-no", "payment-activity-category", "payment-activity-brand", "payment-activity-creater-name"], "hcondList", api.payment.pageActivityPayment, function (data) {
         hdisplayFunc.init('hresultList', data);
     }, "hpagenation", "hactivityPaymentPostData", {"activityPayment.status": 1}, false, null, function () {}, 'hresultList');
 
@@ -427,7 +431,7 @@ jQuery(function ($) {
         com.focusPage('#layerAddActivity').attr('mno', mnoId[0]);
         activityPayment.mno = mnoId[0];
 
-        com.post(api.payment.queryPointofsalesByPid, {"pointofsales.pid": mnoId[0], "pointofsales.type": 5}, function(res){
+        com.post(api.payment.queryPointofsales, {"pointofsales.pid": mnoId[0], "pointofsales.type": 5}, function(res){
             $.each(res.pointofsaleses, function(i, v){
                 if(v.status == 0 || v.status == 1) paymentUtils.addPos(v, activityPayment.htmlName);
             });
@@ -465,11 +469,13 @@ jQuery(function ($) {
             return false;
         }
 
+        var brand =  activityPayment.items.brand.val();
         var options = {
             'activityPayment.mno': activityPayment.items.mno.val(),
             'activityPayment.orderId': activityPayment.items.orderId.val(),
             'activityPayment.type': activityPayment.items.type.val(),
-            'activityPayment.brand': activityPayment.items.brand.val(),
+            'activityPayment.category':  brand.split("-")[1],
+            'activityPayment.brand':  brand.split("-")[0],
             'activityPayment.money': activityPayment.items.money.val(),
             'activityPayment.comment': activityPayment.items.comment.val()
         };

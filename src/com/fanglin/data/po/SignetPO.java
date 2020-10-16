@@ -1,4 +1,4 @@
-package com.fanglin.communion.po;
+package com.fanglin.data.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -13,10 +13,18 @@ import javax.persistence.Table;
 import com.fadada.bean.Signet;
 
 @Entity
-@Table(name = "signet", catalog = "communion")
+@Table(name = "signet", catalog = "data")
 public class SignetPO implements Serializable, Signet {
 
 	private static final long serialVersionUID = -5044490485583381348L;
+
+	public static final String COLUMN_COMPANY_STR = "company";
+
+	public static final short STATUS_INIT_INT = 0;
+
+	public static final short STATUS_REGIST_INT = 1;
+
+	public static final short STATUS_AUTH_INT = 2;
 
 	private long sid;
 
@@ -26,11 +34,17 @@ public class SignetPO implements Serializable, Signet {
 
 	private String keyword;
 
+	private String path;
+
 	private short status;
 
+	private String signno;
+
+	private String token;
+
+	private String authurl;
+
 	private int company;
-	
-	public static final String COLUMN_COMPANY_STR = "company";
 
 	public SignetPO() {
 		super();
@@ -74,6 +88,15 @@ public class SignetPO implements Serializable, Signet {
 		this.keyword = keyword;
 	}
 
+	@Column(name = "path")
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
@@ -90,6 +113,30 @@ public class SignetPO implements Serializable, Signet {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	public String getSignno() {
+		return signno;
+	}
+
+	public void setSignno(String signno) {
+		this.signno = signno;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public String getAuthurl() {
+		return authurl;
+	}
+
+	public void setAuthurl(String authurl) {
+		this.authurl = authurl;
 	}
 
 	@Override

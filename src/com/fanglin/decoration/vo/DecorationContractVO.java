@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.communion.vo.ContractVO;
+import com.fanglin.data.common.vo.ContractVO;
 import com.fanglin.payment.vo.DecorationPaymentVO;
 import com.fanglin.personel.vo.UserBaseVO;
 

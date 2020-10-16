@@ -35,18 +35,6 @@ $.extend(api, {communion: {
     updateServiceNode:{url:"updateServiceNode.do"},
     updateServiceNodeForStatus:{url:"updateServiceNodeForStatus.do"},
     
-    pageContract:{url:"pageContract.do"},
-    queryContract:{url:"queryContract.do"},
-    pageSignet:{url:"pageSignet.do"},
-    querySignet:{url:"querySignet.do"},
-    
-    pageTalking:{url:"pageTalking.do"},
-    queryTalking:{url:"queryTalking.do"},
-    addTalking:{url:"addTalking.do", server: "communion"},
-    updateTalking:{url:"updateTalking.do", server: "communion"},
-    updateTalkingForStatus:{url:"updateTalkingForStatus.do", server: "communion"},
-    deleteTalking:{url:"deleteTalking.do", server: "communion"},
-	
 	  //积分模块api 5条
     queryCppoint:{url:"queryCppoint.do"},
     queryCppointRecord:{url:"queryCppointRecord.do"},

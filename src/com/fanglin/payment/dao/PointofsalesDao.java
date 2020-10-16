@@ -11,10 +11,8 @@ public interface PointofsalesDao extends Dao<PointofsalesPO> {
 
 	public List<PointofsalesPO> pagePointofsales(Paging paging, List<Filter> filters);
 
-	public List<PointofsalesPO> queryPointofsalesByPid(String pid, Short type);
+	public List<PointofsalesPO> queryPointofsales(String pid, Short type, Long rid);
 	
-	public List<PointofsalesPO> queryPointofsalesByPidAndRid(String pid, Long rid);
-
 	//这里接口原本没有rid, 是后增加的, 应该是根据当前收据对应的推送信息更新而不是全部更新
 	public void updatePointofsales(List<Long> posids, Long rid, Short status, Short type);
 

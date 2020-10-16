@@ -838,7 +838,7 @@ var paymentUtils = {
         salesPayment.checkBankUtilForGrade = returnGradeParams[1];
 
         //查询是否有pos推送数据
-        com.post(api.payment.queryPointofsalesByPidAndRid, {"pointofsales.pid": payment.sales.orderId, "pointofsales.rid": payment.salesReceipt.srId}, function(res){
+        com.post(api.payment.queryPointofsales, {"pointofsales.pid": payment.sales.orderId, "pointofsales.rid": payment.salesReceipt.srId}, function(res){
             $.each(res.pointofsaleses, function(i, value){
                 if(value.status == 4) {
                     paymentUtils.addPos(value, salesPayment.htmlName);

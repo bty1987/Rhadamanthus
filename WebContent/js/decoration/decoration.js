@@ -675,9 +675,9 @@
            params.decorationOrderId = decorationOrderId;
            params.cid = cid;
            
-           params.historyPage = api.index.decorationIndex.url;
-           com.switchPage(api.index.decorationContractIndex.url);
-           //com.popup4page("#layerPopUp", api.index.decorationContractIndex.url, "装修单合同: " + decorationOrderId);
+           //params.historyPage = api.index.decorationIndex.url;
+           //com.switchPage(api.index.decorationContractIndex.url);
+           com.popup4page("#layerPopUp", api.index.decorationContractIndex.url, "装修单合同: " + decorationOrderId);
        };
         //增减项
         var viewDecorationInDecreaseIndex = function (decorationOrderId, type, typeness) {
@@ -690,8 +690,8 @@
         //扣款
         var viewDecorationInAudit = function (orderId) {
             
-            params['decorationOrderId'] = orderId;
-            params['auditStatusType'] = 'select';
+            params.decorationOrderId = orderId;
+            params.auditStatusType = 'select';
             
             //params['historyPage'] = api.index.decorationIndex.url;
             //com.switchPage(api.index.auditRecordIndex.url);

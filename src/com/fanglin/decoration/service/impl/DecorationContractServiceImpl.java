@@ -12,20 +12,20 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSONObject;
 import com.fadada.signature.Signature;
 import com.fanglin.approval.dao.ApprovalDao;
-import com.fanglin.communion.dao.ContractDao;
 import com.fanglin.communion.dao.CustomerDao;
-import com.fanglin.communion.dao.SignetDao;
-import com.fanglin.communion.po.ContractPO;
 import com.fanglin.communion.po.CustomerPO;
-import com.fanglin.communion.po.SignetPO;
-import com.fanglin.communion.vo.ContractVO;
 import com.fanglin.communion.vo.CustomerVO;
-import com.fanglin.communion.vo.SignetVO;
 import com.fanglin.construction.dao.ConstructionInfoDao;
 import com.fanglin.construction.po.ConstructionInfoPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Authentication;
 import com.fanglin.customer.service.DecorationService;
+import com.fanglin.data.common.dao.ContractDao;
+import com.fanglin.data.common.dao.SignetDao;
+import com.fanglin.data.common.vo.ContractVO;
+import com.fanglin.data.common.vo.SignetVO;
+import com.fanglin.data.po.ContractPO;
+import com.fanglin.data.po.SignetPO;
 import com.fanglin.decoration.dao.DecorationAdditionDao;
 import com.fanglin.decoration.dao.DecorationBelongDao;
 import com.fanglin.decoration.dao.DecorationContractDao;
@@ -113,7 +113,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		for (DecorationContractPO decorationContractPO : decorationContractPOs) {
 			DecorationContractVO decorationContractVO = new DecorationContractVO(new ContractVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
-			BeanUtil.copyProperties(decorationContractPO, decorationContractVO, Arrays.asList("contract", "creater", "signner"));
+			BeanUtil.copyProperties(decorationContractPO, decorationContractVO, Arrays.asList("contract", "creater", "signner", "filinner"));
 			BeanUtil.copyProperties(decorationContractPO.getCreater(), decorationContractVO.getCreater(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyProperties(decorationContractPO.getSignner(), decorationContractVO.getSignner(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyProperties(decorationContractPO.getFilinner(), decorationContractVO.getFilinner(), Arrays.asList("dept", "duty"));
@@ -192,7 +192,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
 			url = String.format("%s/views/contract/signature.html?cid=%d", isv.getValue(), decorationPO.getCustomer().getCid());
 		} else if (type == DecorationContractPO.TYPE_SIGN_INT && status == DecorationContractPO.STATUS_VALID_INT) {
-			url = Signature.extsign(decorationPO.getCustomer(), decorationContractPO);
+			url = Signature.extsign(decorationPO.getCustomer().getSignno(), decorationContractPO);
 		} else if (type == DecorationContractPO.TYPE_VIEW_INT && status == DecorationContractPO.STATUS_VALID_INT) {
 			url = decorationContractPO.getViewpdf();
 		} else if (type == DecorationContractPO.TYPE_DOWNLOAD_INT && status == DecorationContractPO.STATUS_SIGN_INT) {
@@ -232,7 +232,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int signDecorationContractForCompany(SignetVO signetVO, DecorationContractVO decorationContractVO) throws FLException {
+	public String signDecorationContractForCompany(SignetVO signetVO, DecorationContractVO decorationContractVO) throws FLException {
 
 		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());
 
@@ -246,13 +246,13 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(130028, "合同状态不可操作");
 		}
 
-		Signature.autosign(signetPO, decorationContractPO);
+		Signature.autosign(signetPO.getSignno(), signetPO.getKeyword(), decorationContractPO);
 
 		decorationContractPO.setComsignTime(DateUtil.getDateToTimestamp(new Date()));
 
 		decorationContractDao.update(decorationContractPO);
 
-		return 0;
+		return "";
 	}
 
 	@Override
@@ -270,7 +270,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(130028, "合同状态不可操作");
 		}
 
-		return Signature.extsign(customerPO, decorationContractPO);
+		return Signature.extsign(customerPO.getSignno(), decorationContractPO);
 	}
 
 	@Override
@@ -421,6 +421,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		if (!resignFlag) {
 			decorationPO.setDesignStatus(DecorationPO.DESIGNSTATUS_CONDUCT_INT);
+			decorationPO.setSdesignTime(DateUtil.getDateToTimestamp(new Date()));
 			decorationPO.setContractTime(DateUtil.getDateToTimestamp(new Date()));
 		}
 

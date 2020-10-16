@@ -1,17 +1,17 @@
 ﻿$(function(){
-    
+
     var supplier = {
             
         btns: {
             saveBtn: com.focusPage("#saveUserBtn"),
             
-            advanceSaveBtn: com.focusPage("#advanceSaveBtn"),
+            advanceSaveBtn: com.focusPage("#advanceSaveBtn")
         },
         
         modals: {
             addSupplierModal: com.focusPage("#addSupplierModal"),
             showSupplierModal: com.focusPage("#showSupplierModal"),
-            advanceModal: com.focusPage("#supplierAdvanceModal"),
+            advanceModal: com.focusPage("#supplierAdvanceModal")
         },
         
         items: {
@@ -37,11 +37,14 @@
         
         userId: null,
         company: null,
-    }
+        supplierUid: null
+    };
     
-    supplier.modals.addSupplierModal.on('hide.bs.modal',function(e){
+    supplier.modals.addSupplierModal.on('hidden.bs.modal',function(e){
         com.cleanItems(supplier.items);
         com.closeTip();
+        com.focusPage("#addSupplierModal").find(".form-group").removeClass("hide");
+        supplier.supplierUid = null;
     });
 
     com.post(api.ds.personel, {}, function(res) {
@@ -102,9 +105,10 @@
                     var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
                     
                     var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-blue').html('查看');
+                    var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
                     var $btnRight = $('<a></a>').addClass('btn btn-minier btn-success').html('权配');
-                    var $resetPassword = $('<a></a>').addClass('btn btn-minier btn-yellow').html('重置密码');
-                    var $defaultPassword = $('<a></a>').addClass('btn btn-minier btn-success').html('默认密码');
+                    var $resetPassword = $('<a></a>').addClass('btn btn-minier btn-danger').html('重置密码');
+                    var $defaultPassword = $('<a></a>').addClass('btn btn-minier btn-warning').html('默认密码');
 
                     var propertyArr = [
                         ["编号:", v.userId, "grey"],
@@ -133,7 +137,18 @@
                     com.focusPage('#closeM').click(function(){
                         com.focusPage("#tree3").removeData("tree");
                     });
-                    
+
+                    //编辑
+                    $btnEdit.click(function(){
+                        com.focusPage("#addSupplierModal").find("h4").html("编辑厂商");
+                        com.focusPage("#addSupplierModal").find(".form-group").addClass("hide");
+                        com.focusPage(".show").removeClass("hide");
+                        supplier.items.userName.val(v.userName);
+                        supplier.items.phone.val(v.phone);
+                        supplier.supplierUid = v.uid;
+                        supplier.modals.addSupplierModal.modal("show");
+                    });
+
                     $btnRight.click(function(){
                         showAdvance(v.userId);
                     });
@@ -146,7 +161,7 @@
                         defaultPassword(v.userId, v.userName);
                     });
                     
-                    $divBtnWrap.append($btnRight).append($resetPassword).append($defaultPassword).appendTo($h3);
+                    $divBtnWrap.append($btnEdit).append($btnRight).append($resetPassword).append($defaultPassword).appendTo($h3);
 
                     $liLine.append($h3).append($ulProperty).appendTo($ul);
                 });
@@ -176,6 +191,7 @@
     });
 
     com.focusPage('a[name="addSupplier"]','#pagenation').click(function(){
+        com.focusPage("#addSupplierModal").find("h4").html("添加厂商");
         supplier.modals.addSupplierModal.modal("show");
     });
 
@@ -194,10 +210,17 @@
             "supplier.dtid": supplier.items.deptTypeSel.val(),
             "supplier.dept.did": supplier.items.deptSel.val(),
             "supplier.duty.did": supplier.items.dutySel.val(),
-            "supplier.status": supplier.items.statusSel.val(),
+            "supplier.status": supplier.items.statusSel.val()
         };
 
-        com.post(api.personel.addSupplier, options, function(res){
+        var url = api.personel.addSupplier;
+
+        if(supplier.supplierUid != null){
+            url = api.personel.updateSupplier;
+            options["supplier.uid"] = supplier.supplierUid;
+        }
+
+        com.post(url, options, function(res){
             com.showAlert(com.info, "操作成功");
             supplier.modals.addSupplierModal.modal("hide");
             

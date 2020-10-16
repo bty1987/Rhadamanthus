@@ -99,7 +99,7 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 
 			decorationPO.setSourceStatus(decorationInfoVO.getSourceStatus());
 			decorationPO.setDesignStatus(DecorationPO.DESIGNSTATUS_END_INT);
-			decorationPO.setSdesignTime(DateUtil.getDateToTimestamp(new Date()));
+			decorationPO.setEdesignTime(DateUtil.getDateToTimestamp(new Date()));
 
 			messageService.sendMessage(designer.getUserId(), userId, String.format("装修单: %s , 地址: %s , 合同设计方案客户已确认通过 , 持续关注客户服务及放线开工推进 .", orderId, houseAddr), MessagePO.TYPE_SEND_PERSONEL_INT, designer.getCompany());
 		}
@@ -107,7 +107,6 @@ public class DecorationInfoServiceImpl implements DecorationInfoService {
 		if (decorationInfoVO.getSourceStatus() == DecorationPO.STATUS_SETTING_OUT_CONFIRMATION_INT) {
 
 			decorationPO.setSourceStatus(decorationInfoVO.getSourceStatus());
-			decorationPO.setEdesignTime(DateUtil.getDateToTimestamp(new Date()));
 
 			messageService.sendMessage(designer.getUserId(), userId, String.format("装修单: %s , 地址: %s , 放线开工设计方案客户已确认通过 , 持续关注客户服务及对接排放线事项安排 .", orderId, houseAddr), MessagePO.TYPE_SEND_PERSONEL_INT, designer.getCompany());
 		}

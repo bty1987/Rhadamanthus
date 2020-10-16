@@ -74,6 +74,8 @@ public class ActivityPaymentDaoImpl extends DaoImpl<ActivityPaymentPO> implement
 				
 				if(ActivityPaymentPO.COLUMN_MNO_STR.equals(field)){
 					query.add(query.getCriterion(ActivityPaymentPO.COLUMN_MNO_STR, data, op));
+				}else if(ActivityPaymentPO.COLUMN_CATEGORY_STR.equals(field)){
+					query.add(query.getCriterion(ActivityPaymentPO.COLUMN_CATEGORY_STR, data, op));
 				}else if(ActivityPaymentPO.COLUMN_BRAND_STR.equals(field)){
 					query.add(query.getCriterion(ActivityPaymentPO.COLUMN_BRAND_STR, data, op));
 				}else if("creater".equals(field)){

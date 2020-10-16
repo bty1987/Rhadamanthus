@@ -6,10 +6,6 @@
     {"key":"领导关系客户","value":"领导关系客户"},
     {"key":"员工关系","value":"员工关系"}
   ],
-   "addOrUseScpp_point": [
-   {"key":"0","value":"累积"},
-   {"key":"1","value":"消耗"}
-  ],
   "houseType" :[
     {"key":"0", "value":"住宅"},
     {"key":"1", "value":"半越住宅"},
@@ -100,6 +96,10 @@
     {"key" : "1", "value" : "降配比标写"},
     {"key" : "2", "value" : "未含项目"}
   ],
+  "taskLevel": [
+    {"key" : "0", "value" : "功能级"},
+    {"key" : "1", "value" : "模块级"}
+  ],
   "talkingStatus": [
     {"key" : "0", "value" : "启用"},
     {"key" : "1", "value" : "禁用"}
@@ -119,13 +119,33 @@
     {"key" : "1", "value" : "无效"}
   ],
   "taskParamType": [
-    {"key" : "0", "value" : "文本"},
-    {"key" : "1", "value" : "数值"}
+    {"key" : "0", "value" : "字段"},
+    {"key" : "1", "value" : "条件"}
   ],
   "ctypes": [
     {"key" : "0", "value" : "底价"},
     {"key" : "1", "value" : "点位"}
   ],
+  "taskParamIsmain": [
+    {"key" : "0", "value" : "主要"},
+    {"key" : "1", "value" : "不主要"}
+  ],
+  "taskParamModule": [
+    {"module" : "decoration", "name" : "装修"},
+    {"module" : "payment", "name" : "款项"},
+    {"module" : "sales", "name" : "销售"},
+    {"module" : "inventory", "name" : "仓储"},
+    {"module" : "construction", "name" : "工程"}
+  ],
+  "taskParamOneType": [
+    {"key" : "0", "value" : "文本"},
+    {"key" : "1", "value" : "数值"}
+  ],
+  "taskParamStatus": [
+    {"key" : "0", "value" : "启用"},
+    {"key" : "1", "value" : "禁用"}
+  ],
+
 
 
   "errorCode": 0,

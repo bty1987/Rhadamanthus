@@ -16,25 +16,37 @@ public class TaskParamPO implements Serializable {
 
 	private static final long serialVersionUID = 5787453455330623504L;
 	
+	public static final short STATUS_INIT_SHORT = 0;
+	
 	private long tpid;
 	
 	private long tid;
 	
-	private long no;
-	
 	private String name;
 	
-	private String param;
+	private String module;
+	
+	private short type;
+	
+	private short oneType;
+	
+	private String unionField;
+	
+	private String field;
 	
 	private String alias;
 	
-	private short type;
+	private String tableName;
+	
+	private short ismain;
 	
 	private String handle;
 	
 	private short status;
 	
-	private long sort;
+	private short sort;
+	
+	private short tableSort;
 	
 	private String comment;
 	
@@ -42,28 +54,6 @@ public class TaskParamPO implements Serializable {
 		super();
 	}
 	
-	public TaskParamPO(long tpid) {
-		super();
-		this.tpid = tpid;
-	}
-
-	public TaskParamPO(long tpid, long tid, long no, String name, String param,
-		String alias, short type, String handle, short status, long sort,
-		String comment) {
-		super();
-		this.tpid = tpid;
-		this.tid = tid;
-		this.no = no;
-		this.name = name;
-		this.param = param;
-		this.alias = alias;
-		this.type = type;
-		this.handle = handle;
-		this.status = status;
-		this.sort = sort;
-		this.comment = comment;
-	}
-
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "tpid")
@@ -74,7 +64,7 @@ public class TaskParamPO implements Serializable {
 	public void setTpid(long tpid) {
 		this.tpid = tpid;
 	}
-
+	
 	@Column(name = "tid")
 	public long getTid() {
 		return tid;
@@ -82,15 +72,6 @@ public class TaskParamPO implements Serializable {
 
 	public void setTid(long tid) {
 		this.tid = tid;
-	}
-
-	@Column(name = "no")
-	public long getNo() {
-		return no;
-	}
-
-	public void setNo(long no) {
-		this.no = no;
 	}
 
 	@Column(name = "name")
@@ -101,16 +82,52 @@ public class TaskParamPO implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	@Column(name = "param")
-	public String getParam() {
-		return param;
+
+	@Column(name = "module")
+	public String getModule() {
+		return module;
 	}
 
-	public void setParam(String param) {
-		this.param = param;
+	public void setModule(String module) {
+		this.module = module;
+	}
+
+	@Column(name = "type")
+	public short getType() {
+		return type;
 	}
 	
+	public void setType(short type) {
+		this.type = type;
+	}
+	
+	@Column(name = "oneType")
+	public short getOneType() {
+		return oneType;
+	}
+
+	public void setOneType(short oneType) {
+		this.oneType = oneType;
+	}
+	
+	@Column(name = "unionField")
+	public String getUnionField() {
+		return unionField;
+	}
+
+	public void setUnionField(String unionField) {
+		this.unionField = unionField;
+	}
+
+	@Column(name = "field")
+	public String getField() {
+		return field;
+	}
+
+	public void setField(String field) {
+		this.field = field;
+	}
+
 	@Column(name = "alias")
 	public String getAlias() {
 		return alias;
@@ -120,13 +137,22 @@ public class TaskParamPO implements Serializable {
 		this.alias = alias;
 	}
 
-	@Column(name = "type")
-	public short getType() {
-		return type;
+	@Column(name = "tableName")
+	public String getTableName() {
+		return tableName;
 	}
 
-	public void setType(short type) {
-		this.type = type;
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
+
+	@Column(name = "ismain")
+	public short getIsmain() {
+		return ismain;
+	}
+
+	public void setIsmain(short ismain) {
+		this.ismain = ismain;
 	}
 
 	@Column(name = "handle")
@@ -148,12 +174,21 @@ public class TaskParamPO implements Serializable {
 	}
 
 	@Column(name = "sort")
-	public long getSort() {
+	public short getSort() {
 		return sort;
 	}
 
-	public void setSort(long sort) {
+	public void setSort(short sort) {
 		this.sort = sort;
+	}
+	
+	@Column(name = "tableSort")
+	public short getTableSort() {
+		return tableSort;
+	}
+
+	public void setTableSort(short tableSort) {
+		this.tableSort = tableSort;
 	}
 
 	@Column(name = "comment")
@@ -164,5 +199,4 @@ public class TaskParamPO implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
 }

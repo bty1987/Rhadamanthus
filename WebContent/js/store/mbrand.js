@@ -16,9 +16,6 @@ $(function(){
         btns: {
             saveBtn: com.focusPage("#saveBtn")
         },
-        
-        editFlg: false,
-        repeatFlg: false
     };
 
     com.post(api.store.queryMcategory, {}, function(res){

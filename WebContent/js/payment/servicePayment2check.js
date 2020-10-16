@@ -148,7 +148,7 @@ jQuery(function($) {
 				servicePaymentCheck.spid = v.spid;
 				servicePaymentCheck.pid = v.pid;
 
-				com.post(api.payment.queryPointofsalesByPidAndRid, {"pointofsales.pid": v.decoration.orderId, "pointofsales.rid": v.serviceReceipt.srId}, function(res){
+				com.post(api.payment.queryPointofsales, {"pointofsales.pid": v.decoration.orderId, "pointofsales.rid": v.serviceReceipt.srId}, function(res){
 					$.each(res.pointofsaleses, function(i, value){
 						if(value.status == 4) {
 							paymentUtils.addPos(value, servicePaymentCheck.htmlName);

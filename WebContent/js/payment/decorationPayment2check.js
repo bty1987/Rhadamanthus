@@ -188,7 +188,7 @@ jQuery(function($) {
 				decorationPaymentCheckPostData.customerId = updateReturnParams[2];
 				decorationPaymentCheck.couponUpdate = updateReturnParams[3];
 
-				com.post(api.payment.queryPointofsalesByPidAndRid, {"pointofsales.pid": v.decoration.orderId, "pointofsales.rid": v.drId}, function(res){
+				com.post(api.payment.queryPointofsales, {"pointofsales.pid": v.decoration.orderId, "pointofsales.rid": v.drId}, function(res){
 					$.each(res.pointofsaleses, function(i, value){
 						if(value.status == 4) {
 							paymentUtils.addPos(value, decorationPaymentCheck.htmlName);

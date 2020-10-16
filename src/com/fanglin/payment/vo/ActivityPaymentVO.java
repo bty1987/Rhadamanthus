@@ -33,6 +33,8 @@ public class ActivityPaymentVO implements Serializable {
 
 	private Short status;// 状态 , 0: 未付款 , 1: 已付款
 
+	private String category;// 品类
+
 	private String brand;// 品牌
 
 	private Long money;// 金额
@@ -148,6 +150,14 @@ public class ActivityPaymentVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 	public String getBrand() {

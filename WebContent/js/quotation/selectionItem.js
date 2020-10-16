@@ -106,7 +106,8 @@ $(function(){
             var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-warning').html('审核');
             var $btnConfirm = $('<a></a>').addClass('btn btn-minier btn-inverse').html('确认');
             var $btnFinish = $('<a></a>').addClass('btn btn-minier btn-danger').html('完结');
-            var $btnBalance = $('<a></a>').addClass('btn btn-minier btn-pink').html('结算');
+            var $btnBalance = $('<a></a>').addClass('btn btn-minier btn-info').html('结算');
+            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-pink').html('删除');
             var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-purple').html('打印');
 
             var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.goods.name);
@@ -188,15 +189,15 @@ $(function(){
                 v.status == 2 ? $divBtnWrap.append($btnConfirm) : null;
             } else {
                 switch (v.status) {
-                    case 0 : $divBtnWrap.append($btnCompile).append($btnRran);
+                    case 0 : $divBtnWrap.append($btnCompile).append($btnRran).append($btnDel);
                         break;
-                    case 1 : $divBtnWrap.append($btnCompile).append($btnCheck);
+                    case 1 : $divBtnWrap.append($btnCompile).append($btnCheck).append($btnDel);
                         break;
-                    case 2 : $divBtnWrap.append($btnConfirm);
+                    case 2 : $divBtnWrap.append($btnConfirm).append($btnDel);
                         break;
-                    case 3 : $divBtnWrap.append($btnFinish);
+                    case 3 : $divBtnWrap.append($btnFinish).append($btnDel);
                         break;
-                    case 4 : $divBtnWrap.append($btnBalance);
+                    case 4 : $divBtnWrap.append($btnBalance).append($btnDel);
                         break;
                 }
             }
@@ -260,6 +261,13 @@ $(function(){
                     com.showAlert(com.info, "操作成功");
                 });
             });
+            
+            $btnDel.click(function(e){
+                com.post(api.quotation.cutoffSelectionItem, {"selectionItem.siid": v.siid}, function(e){
+                    selectionItemSeacher.doSearch();
+                    com.showAlert(com.info, "操作成功");
+                })
+            })
 
             $btnPrint.click(function(e) {
                 com.post(api.quotation.querySelectionByOrderId, {"selection.orderId": v.decoration.orderId}, function(res) {

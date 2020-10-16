@@ -24,6 +24,8 @@ public class ActivityPaymentPO implements Serializable {
 	
 	public static final String COLUMN_MNO_STR = "mno";
 
+	public static final String COLUMN_CATEGORY_STR = "category";
+	
 	public static final String COLUMN_BRAND_STR = "brand";
 
 	public static final String COLUMN_CREATER_STR = "creater.userId";
@@ -49,6 +51,8 @@ public class ActivityPaymentPO implements Serializable {
 	private Timestamp createTime;// 创建时间
 
 	private short type;// 类型 , 0: 装修款 , 1: 主材款
+
+	private String category;// 品类
 
 	private String brand;// 品牌
 
@@ -129,6 +133,15 @@ public class ActivityPaymentPO implements Serializable {
 
 	public void setType(short type) {
 		this.type = type;
+	}
+
+	@Column(name = "category")
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 	@Column(name = "brand")

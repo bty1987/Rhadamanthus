@@ -34,6 +34,8 @@ public class PlanVO implements Serializable {
 
 	private String info;
 
+	private PlanParamVO param;
+
 	public PlanVO() {
 		super();
 	}
@@ -135,7 +137,14 @@ public class PlanVO implements Serializable {
 
 	public PlanVO add(PlanVO planVO) {
 		return planVO;
+	}
 
+	public PlanParamVO getParam() {
+		return param;
+	}
+
+	public void setParam(PlanParamVO param) {
+		this.param = param;
 	}
 
 }

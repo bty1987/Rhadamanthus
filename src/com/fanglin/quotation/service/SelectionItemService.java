@@ -26,6 +26,8 @@ public interface SelectionItemService {
 
 	public int deleteSelectionItem(SelectionVO selectionVO, SelectionItemVO selectionItemVO) throws FLException;
 
+	public int cutoffSelectionItem(SelectionItemVO selectionItemVO) throws FLException;
+
 	public int tranSelectionItem(List<SelectionItemVO> selectionItemVOs, String userId) throws FLException;
 
 	public int checkSelectionItem(SelectionItemVO selectionItemVO, String userId) throws FLException;

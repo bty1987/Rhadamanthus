@@ -36,18 +36,10 @@ public class PointofsalesAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "queryPointofsalesByPid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryPointofsalesByPid() throws FLException {
+	@Action(value = "queryPointofsales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryPointofsales() throws FLException {
 
-		pointofsaleses = pointofsalesService.queryPointofsalesByPid(pointofsales);
-
-		return SUCCESS;
-	}
-	
-	@Action(value = "queryPointofsalesByPidAndRid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryPointofsalesByPidAndRid() throws FLException {
-
-		pointofsaleses = pointofsalesService.queryPointofsalesByPidAndRid(pointofsales);
+		pointofsaleses = pointofsalesService.queryPointofsales(pointofsales);
 
 		return SUCCESS;
 	}

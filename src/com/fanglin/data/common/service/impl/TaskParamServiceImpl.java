@@ -7,14 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.TaskParamDao;
 import com.fanglin.data.common.service.TaskParamService;
 import com.fanglin.data.common.vo.TaskParamVO;
-import com.fanglin.data.common.vo.TaskVO;
 import com.fanglin.data.po.TaskParamPO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.Paging;
 
-@Service("taskParamDaoService")
+@Service("taskParamService")
 @Transactional(readOnly = true)
 public class TaskParamServiceImpl implements TaskParamService {
 	
@@ -22,9 +23,29 @@ public class TaskParamServiceImpl implements TaskParamService {
 	private TaskParamDao taskParamDao;
 
 	@Override
-	public List<TaskParamVO> queryTaskParam(TaskVO taskVO) {
+	public void pageTaskParam(Paging paging, List<Filter> filters) {
 		
-		List<TaskParamPO> TaskParamPOs = taskParamDao.queryTaskParam(taskVO.getTid());
+		List<TaskParamPO> taskParamPOs = taskParamDao.pageTaskParam(paging, filters);
+		List<TaskParamVO> taskParamVOs = new ArrayList<TaskParamVO>();
+		
+		TaskParamVO taskParam;
+		
+		for (TaskParamPO taskParamPO : taskParamPOs) {
+			
+			taskParam = new TaskParamVO();
+			
+			BeanUtil.copyProperties(taskParamPO, taskParam);
+			
+			taskParamVOs.add(taskParam);
+		}
+		
+		paging.setData(taskParamVOs);
+	}
+	
+	@Override
+	public List<TaskParamVO> queryTaskParam(TaskParamVO taskParam) {
+		
+		List<TaskParamPO> TaskParamPOs = taskParamDao.queryTaskParam(taskParam.getTid());
 		List<TaskParamVO> TaskParamVOs = new ArrayList<TaskParamVO>();
 		
 		TaskParamVO taskParamVO;
@@ -45,11 +66,11 @@ public class TaskParamServiceImpl implements TaskParamService {
 	@Transactional(rollbackFor = Exception.class)
 	public int addTaskParam(TaskParamVO taskParamVO) {
 		
-		TaskParamPO taskParamPO = new TaskParamPO();
-		
-		BeanUtil.copyProperties(taskParamVO, taskParamPO);
-		
-		taskParamDao.save(taskParamPO);
+		TaskParamPO taskParam = new TaskParamPO();
+			
+		BeanUtil.copyProperties(taskParamVO, taskParam);
+			
+		taskParamDao.save(taskParam);
 		
 		return 0;
 	}
@@ -58,11 +79,28 @@ public class TaskParamServiceImpl implements TaskParamService {
 	@Transactional(rollbackFor = Exception.class)
 	public int updateTaskParam(TaskParamVO taskParamVO) {
 		
-		TaskParamPO taskParamPO = new TaskParamPO();
+		TaskParamPO taskParamPO = taskParamDao.get(taskParamVO.getTpid());
 		
-		BeanUtil.copyProperties(taskParamVO, taskParamPO);
+		if(taskParamPO != null){
+			
+			BeanUtil.copyProperties(taskParamVO, taskParamPO);
+			
+			taskParamDao.update(taskParamPO);
+		}
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int deleteTaskParam(TaskParamVO taskParamVO) {
 		
-		taskParamDao.update(taskParamPO);
+		TaskParamPO taskParamPO = taskParamDao.get(taskParamVO.getTpid());
+		
+		if(taskParamPO != null){
+			
+			taskParamDao.delete(taskParamPO);
+		}
 		
 		return 0;
 	}
@@ -73,21 +111,16 @@ public class TaskParamServiceImpl implements TaskParamService {
 		
 		TaskParamPO taskParamPO = taskParamDao.get(taskParamVO.getTpid());
 		
-		taskParamPO.setStatus(taskParamVO.getStatus());
-		
-		taskParamDao.update(taskParamPO);
-		return 0;
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public int deleteTaskParam(TaskParamVO taskParamVO) {
-		
-		TaskParamPO taskParamPO = taskParamDao.get(taskParamVO.getTpid());
-		
-		taskParamDao.delete(taskParamPO);
+		if(taskParamPO != null){
+			
+			taskParamPO.setStatus(taskParamVO.getStatus());
+			
+			taskParamDao.update(taskParamPO);
+		}
 		
 		return 0;
 	}
+	
+	
 
 }

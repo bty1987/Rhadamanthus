@@ -58,7 +58,7 @@ public class CustomerAction extends BaseListAction {
 	@Action(value = "pageCustomer", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageCustomer() throws FLException {
 
-		customerService.pageCustomer(getPaging(), getFilters(), queryCompany());
+		customerService.pageCustomer(getPaging(), getFilters(), customer, queryCompany());
 
 		return SUCCESS;
 	}
@@ -175,14 +175,14 @@ public class CustomerAction extends BaseListAction {
 		return "success";
 	}
 
-	@Action(value = "registerCustomer", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String registerCustomer() throws FLException {
+	@Action(value = "registCustomer", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String registCustomer() throws FLException {
 
 		if (SystemConfig.getString("communion") == null) {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		customerService.registerCustomer(customer);
+		customerService.registCustomer(customer);
 
 		return "success";
 	}

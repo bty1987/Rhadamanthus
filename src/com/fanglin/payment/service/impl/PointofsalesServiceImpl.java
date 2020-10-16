@@ -56,29 +56,9 @@ public class PointofsalesServiceImpl implements PointofsalesService {
 	}
 
 	@Override
-	public List<PointofsalesVO> queryPointofsalesByPid(PointofsalesVO pointofsales) {
+	public List<PointofsalesVO> queryPointofsales(PointofsalesVO pointofsales) {
 
-		List<PointofsalesPO> pointofsalesPOs = pointofsalesDao.queryPointofsalesByPid(pointofsales.getPid(), pointofsales.getType());
-		List<PointofsalesVO> pointofsalesVOs = new ArrayList<PointofsalesVO>();
-
-		for (PointofsalesPO pointofsalesPO : pointofsalesPOs) {
-
-			PointofsalesVO pointofsalesVO = new PointofsalesVO(new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO()));
-
-			BeanUtil.copyProperties(pointofsalesPO, pointofsalesVO, Arrays.asList("creater"));
-			BeanUtil.copyProperties(pointofsalesPO.getCreater(), pointofsalesVO.getCreater(), Arrays.asList("role", "dept", "duty"));
-
-			pointofsalesVOs.add(pointofsalesVO);
-		}
-
-		return pointofsalesVOs;
-
-	}
-	
-	@Override
-	public List<PointofsalesVO> queryPointofsalesByPidAndRid(PointofsalesVO pointofsales) {
-
-		List<PointofsalesPO> pointofsalesPOs = pointofsalesDao.queryPointofsalesByPidAndRid(pointofsales.getPid(), pointofsales.getRid());
+		List<PointofsalesPO> pointofsalesPOs = pointofsalesDao.queryPointofsales(pointofsales.getPid(), pointofsales.getType(), pointofsales.getRid());
 		List<PointofsalesVO> pointofsalesVOs = new ArrayList<PointofsalesVO>();
 
 		for (PointofsalesPO pointofsalesPO : pointofsalesPOs) {
@@ -156,8 +136,10 @@ public class PointofsalesServiceImpl implements PointofsalesService {
 		if (pointofsalesPO == null) {
 			throw new FLException(150043, "POS支付不存在");
 		}
+		
+		Airpos.check(pointofsalesPO);
 
-		if (pointofsalesPO.getStatus() != PointofsalesPO.STATUS_FAIL_INT) {
+		if (pointofsalesPO.getStatus() == PointofsalesPO.STATUS_SUCCESS_INT) {
 			throw new FLException(150047, "POS支付不可操作");
 		}
 

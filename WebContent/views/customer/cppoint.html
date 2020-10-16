@@ -1,0 +1,126 @@
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="condList" class="fl_search clearfix"></div>
+			<div id="resultList" class="clearfix tab-pane active"></div>
+			<div id="pagenation" class="fl-page-wrap clearfix"></div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="cppointModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="cppointDialog">客户积分</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-12">
+							<form class="form-horizontal">
+								<div class="col-md-12">
+
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="cppoint4decoration">装修积分</label>
+										<div class="col-sm-9">
+											<span id="cppoint4decoration"></span>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="cppoint4sales">销售积分</label>
+										<div class="col-sm-9">
+											<span id="cppoint4sales"></span>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="handleCppointModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title">积分操作</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-xs-12">
+							<form class="form-horizontal">
+								<div class="col-md-12">
+								
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right orange" for="type">操作</label>
+										<div class="col-sm-9">
+											<select class="col-xs-10 col-sm-6 v_required" id="type"></select>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right orange" for="pointType">类型</label>
+										<div class="col-sm-9">
+											<select class="col-xs-10 col-sm-6 v_required" id="pointType"></select>
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right orange" for="point">积分</label>
+										<div class="col-sm-9">
+											<input type="text" id="point" maxlength="32" class="col-xs-10 col-sm-6 v_required v_float3" />
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="cppointRecordModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content col-md-12">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span id="closeMo">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title">积分记录</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<div class="col-sm-12" id="cppointRecords"></div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<script type="text/javascript">
+	$.loadScript([ 'js/customer/cppoint.js' ]);
+</script>

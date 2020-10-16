@@ -1,6 +1,7 @@
 package com.fanglin.customer.po;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -41,6 +42,8 @@ public class EmemberPO implements Serializable {
 	private short status;
 	
 	private long activity;
+	
+	private Timestamp registerTime;
 
 	@Id
 	@GeneratedValue
@@ -123,6 +126,15 @@ public class EmemberPO implements Serializable {
 
 	public void setActivity(long activity) {
 		this.activity = activity;
+	}
+
+	@Column(name = "registerTime")
+	public Timestamp getRegisterTime() {
+		return registerTime;
+	}
+
+	public void setRegisterTime(Timestamp registerTime) {
+		this.registerTime = registerTime;
 	}
 
 }

@@ -5,21 +5,21 @@
 
     <title>在线签名</title>
 
-	<link rel="shortcut icon" href="fanglin.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="fanglin.ico" type="image/x-icon">
 
     <style>
-		.zx11{
-        border: 1px;
-        border-color: red;
-		}
-		#signature {
-			border: 2px dotted black;
-		}
-		#signatureparent {
-        color:black;
-        background-color:darkgrey;
-		}
-        #saveBtnBalance, #deleteSeal {
+        .zx11{
+            border: 1px;
+            border-color: red;
+        }
+        #signature {
+            border: 2px dotted black;
+        }
+        #signatureparent {
+            color:black;
+            background-color:darkgrey;
+        }
+        #uploadBtn, #clearBtn {
             width:280px;
             height:50px;
             border-radius: 20px;
@@ -35,7 +35,7 @@
             color: #FFF;
             font-size: 20px;
         }
-		body{
+        body{
             background: #FFF;
         }
     </style>
@@ -48,8 +48,8 @@
             <div id="signature"></div>
         </div>
         <div id="button">
-            <button type="button" id="saveBtnBalance"><span>提交</span></button>
-            <button type="button" id="deleteSeal"><span>清除</span></button>
+            <button type="button" id="uploadBtn"><span>提交</span></button>
+            <button type="button" id="clearBtn"><span>清除</span></button>
         </div>
     </div>
 
@@ -57,62 +57,65 @@
 <script src="/assets/altogether/js/jSignature.min.js"></script>
 <script type="text/javascript">
 
-   	var arguments = {
-		width: '100%',
-		height: '845px',
-		cssclass: 'zx11',
-		color:  'darkblue',
-		signatureLine: false,//去除默认画布上那条横线
-		lineWidth: '16'
-	};
+    var arguments = {
+        width: '100%',
+        height: '845px',
+        cssclass: 'zx11',
+        color: 'darkblue',
+        signatureLine: false,//去除默认画布上那条横线
+        lineWidth: '16'
+    };
 
-   $("#signature").jSignature(arguments);
+    $("#signature").jSignature(arguments);
 
     //印章按钮
-   $("#saveBtnBalance").click(function () {
+    $("#uploadBtn").click(function () {
 
-	   var datapair =  $("#signature").jSignature("getData", "image");
+        var datapair =  $("#signature").jSignature("getData", "image");
 
-	   var i = new Image();
-       i.src = "data:" + datapair[0] + "," + datapair[1];
-       i.image = datapair[1];
+        var i = new Image();
+        i.src = "data:" + datapair[0] + "," + datapair[1];
+        i.image = datapair[1];
 
-       //使用压缩
-       dealImage(i.src, 150, printing)
-
-   });
+        //使用压缩
+        zipimg(i.src, 150, uploadimg1)
+    });
 
     //清除印章按钮
-   $("#deleteSeal").click(function () {
-   	$("#signature").jSignature("reset");
-   });
+    $("#clearBtn").click(function () {
+        $("#signature").jSignature("reset");
+    });
 
-   //获取url属性值
-   function getQueryString(name) {
-	   var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-	   var r = window.location.search.substr(1).match(reg);
-	   if (r != null) return unescape(r[2]); return null;
-   }
+    //获取url属性值
+    function getQueryString(name) {
+       var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+       var r = window.location.search.substr(1).match(reg);
+       if (r != null) return unescape(r[2]); return null;
+    }
 
-   //压缩图片
-    function dealImage(base64, w, callback) {
+    //压缩图片
+    function zipimg(base64, width, callback) {
+    
         var newImage = new Image();
-        var quality = 0.98;    //压缩系数0-1之间
+        var quality = 0.5; // 压缩系数0-1之间
+        
         newImage.src = base64;
-        newImage.setAttribute("crossOrigin", 'Anonymous');	//url为外域时需要
+        newImage.setAttribute("crossOrigin", 'Anonymous');
+        
         var imgWidth, imgHeight;
+        
         newImage.onload = function () {
             imgWidth = this.width;
             imgHeight = this.height;
             var canvas = document.createElement("canvas");
             var ctx = canvas.getContext("2d");
-            if (Math.max(imgWidth, imgHeight) > w) {
+            if (Math.max(imgWidth, imgHeight) > width) {
                 if (imgWidth > imgHeight) {
-                    canvas.width = w;
-                    canvas.height = w * imgHeight / imgWidth;
+                    canvas.width = width;
+                    canvas.height = width * imgHeight / imgWidth;
                 } else {
-                    canvas.height = w;
-                    canvas.width = w * imgWidth / imgHeight;
+                    canvas.height = width;
+                    canvas.width = width * imgWidth / imgHeight;
                 }
             } else {
                 canvas.width = imgWidth;
@@ -122,12 +125,12 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
             var base64 = canvas.toDataURL("image/png", quality); //压缩语句
-
+            
             callback(base64);//必须通过回调函数返回，否则无法及时拿到该值
         }
     };
 
-    function printing(base64) {
+    function uploadimg(base64) {
 
         $.ajax({
             type: "POST",
@@ -136,20 +139,76 @@
             url: "../../signateCustomer.do",
             data: {
                 "customer.cid": getQueryString('cid'),
-				"imgbase": base64.replace("data:image/png;base64,", ""),
-				"authentication": "eX3o2SZdrpVOV9HC4UYTRA=="
-			},//避免base64长度过大，json传输
-			cache: false,
+                "imgbase": base64.replace("data:image/png;base64,", ""),
+                "authentication": "eX3o2SZdrpVOV9HC4UYTRA=="
+            },
+            cache: false,
             success: function (msg) {
-				if (msg.errorCode == 0) {
-					alert('上传成功');
+                if (msg.errorCode == 0) {
+                    alert('上传成功');
                     $("#signature").jSignature("reset");
-				} else {
-					alert(msg.errorMsg);
-				}
-			}
+                } else {
+                    alert(msg.errorMsg);
+                }
+            }
         });
     };
+    
+    function uploadimg1(base64) {
+    
+        var imgpath = null;
+        var form = new FormData();
+        
+        form.append("strutsUploads", dataURLtoBlob(base64), "strutsUploads.png");
+
+        $.ajax({
+            type: "POST",
+            contentType:false,
+            processData:false,
+            url: "../../Demeter/uploadImg.do",
+            data: form,
+            cache: false,
+            async: false,
+            success: function (msg) {
+                if (msg.errorCode == 0) {
+                    imgpath = msg.resUrl;
+                } else {
+                    alert(msg.errorMsg);
+                }
+            }
+        });
+        
+        console.log(imgpath);
+        
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "../../signateCustomer.do",
+            data: {
+                "customer.cid": getQueryString('cid'),
+                "customer.signPath": imgpath,
+                "imgbase": "http://www.fanglinserver.com/" + imgpath,
+                "authentication": "eX3o2SZdrpVOV9HC4UYTRA=="
+            },
+            success: function(msg){
+                if(msg.errorCode == 0){
+                    alert('上传成功');
+                    $("#signature").jSignature("reset");
+                } else {
+                    alert(msg.errorMsg);
+                }
+            }
+        })
+    };
+    
+    function dataURLtoBlob(dataurl) {
+        var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        while(n--){
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new Blob([u8arr], {type:mime});
+    }
 
 </script>
 </body>

@@ -1,42 +1,39 @@
-$(function (){
-
+$(function () {
     var taskParam = {
 
-        btns : {
-            editConfirmBtn : com.focusPage('#editConfirmBtn'),
-            backBtn : com.focusPage('#backBtn'),
-            addTaskParam : com.focusPage('#addTaskParam')
+        btns: {
+            editConfirmBtn: com.focusPage('#editConfirmBtn')
         },
 
-        modals : {
-            addItemModal:com.focusPage("#addItemModal")
+        modals: {
+            addItemModal: com.focusPage("#addItemModal")
         },
 
-        items : {
-            no : com.focusPage("#no"),
-            name : com.focusPage('#name'),
-            param: com.focusPage("#param"),
-            alias : com.focusPage('#alias'),
+        items: {
+            name: com.focusPage('#name'),
+            table: com.focusPage("#table"),
+            alias: com.focusPage('#alias'),
             type: com.focusPage("#type"),
-            handle : com.focusPage("#handles"),
-            status: com.focusPage("#status"),
-            sort : com.focusPage('#sort'),
-            comment: com.focusPage("#comment")
+            oneType : com.focusPage("#oneType"),
+            module: com.focusPage("#module"),
+            field: com.focusPage('#field'),
+            ismain: com.focusPage("#ismain"),
+            union : com.focusPage("#union"),
+            handle : com.focusPage("#handle"),
+            status : com.focusPage("#status"),
+            sort : com.focusPage("#sort"),
+            tableSort : com.focusPage("#tableSort"),
+            comment : com.focusPage("#comment")
         },
 
-        tid : params.tid,
-        tpid : null,
-        taskParamType : {},
-        taskParamStatus : {},
-        editFlg : true
+        tpid: null,
+        taskParamType: {},
+        editFlg: false,
+        taskParamIsmain: {},
+        taskParamModule: {},
+        taskParamOneType: {},
+        taskParamStatus : {}
     };
-
-    com.post(api.ds.data, {}, function (res) {
-        taskParam.items.type.bindData(res.taskParamType, "key", "value");
-        taskParam.taskParamType = res.taskParamType.split("key", "value");
-        taskParam.taskParamStatus = res.taskParamStatus.split("key", "value");
-    }, null, false);
-
 
     taskParam.btns.editConfirmBtn.bindClick(saveData);
 
@@ -45,104 +42,152 @@ $(function (){
         com.cleanItems(taskParam.items);
     });
 
-    var initList = function (listData) {
+    com.post(api.ds.data, {}, function (res) {
+        taskParam.items.type.bindData(res.taskParamType, "key", "value");
+        taskParam.items.module.bindData(res.taskParamModule, "module", "name");
+        taskParam.items.ismain.bindData(res.taskParamIsmain, "key", "value");
+        taskParam.items.oneType.bindData(res.taskParamOneType, "key", "value");
+        taskParam.taskParamType = res.taskParamType.split("key", "value");
+        taskParam.taskParamModule = res.taskParamModule.split("module", "name");
+        taskParam.taskParamIsmain = res.taskParamIsmain.split("key", "value");
+        taskParam.taskParamOneType = res.taskParamOneType.split("key", "value");
+        taskParam.taskParamStatus = res.taskParamStatus.split("key", "value");
+    }, null, false);
 
-        if (listData.length == 0) emptyData('list');
+    var displayFunc = (function () {
 
-        var $tableWrap = com.focusPage('#list');
-        var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
+        var renderList = function (tableId, listData) {
+            var $tableWrap = com.focusPage('#' + tableId);
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-        if (listData && listData.length) {
-            $.each(listData, function (i, v) {
+            if (listData && listData.length) {
+                $.each(listData, function (i, v) {
+                    var $liLine = creatLine(v);
 
-                var $liLine = $('<li></li>').addClass('clearfix item-orange');
-                var $h3 = $('<h3></h3>').addClass('oid');
-                var $title = $('<small></small>').addClass('blue').html(v.name);
-                var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
-                var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-
-                var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-                var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
-
-                var $invalid = $('<div></div>').addClass('pull-right');
-                var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
-                var $span = $('<span></span>').addClass('lbl status-lbl');
-
-                var propertyArr = [
-                    ["编号:",v.no , "grey"],
-                    ["字段:", v.param , "grey"],
-                    ["别名:", v.alias, "grey"],
-                    ["类型:", taskParam.taskParamType[v.type], "red"],
-                    ["处理过程:", v.handle, "grey"],
-                    ["状态:", taskParam.taskParamStatus[v.status], "red"],
-                    ["排序:", v.sort, "blue"],
-                    ["说明:", v.comment, "grey"]
-                ];
-
-                $.each(propertyArr, function (index, value) {
-                    var $liProperty = $('<li></li>');
-                    $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                    $liProperty.appendTo($ulProperty);
+                    $liLine.appendTo($ul);
                 });
+                $ul.appendTo($tableWrap);
+            }
+        };
 
-                $invalid.append($statusSwitch).append($span);
-                $btnDiv.append($invalid).append($btnUpdate).append($btnDelete);
-                $h3.append($title).append($btnDiv);
-                $liLine.append($h3).append($ulProperty);
-                $liLine.appendTo($ul);
+        var creatLine = function (v) {
 
-                $btnUpdate.click(function () {
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid')
+            var $title = $('<small></small>').addClass('blue').html(' ' + v.name);
+            var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
-                    taskParam.editFlg = false;
+            var $invalid = $('<div></div>').addClass('pull-right');
+            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
+            var $span = $('<span></span>').addClass('lbl status-lbl');
+            var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
+            var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
 
-                    taskParam.tpid = v.tpid;
-                    taskParam.items.no.val(v.no);
-                    taskParam.items.name.val(v.name);
-                    taskParam.items.param.val(v.param);
-                    taskParam.items.alias.val(v.alias);
-                    taskParam.items.type.val(v.type);
-                    taskParam.items.handle.val(v.handle);
-                    taskParam.items.sort.val(v.sort);
-                    taskParam.items.comment.val(v.comment);
-                    taskParam.modals.addItemModal.modal("show");
-                });
+            var propertyArr = [
+                ["模块:", taskParam.taskParamModule[v.module], "grey"],
+                ["字段:", v.field, "grey"],
+                ["别名:", v.alias, "grey"],
+                ["类型:", taskParam.taskParamType[v.type], "red"],
+                ["一类:", taskParam.taskParamOneType[v.oneType], "red"],
+                ["表名:", v.tableName, "grey"],
+                ["关联:", v.unionField, "grey"],
+                ["处理过程:", v.handle, "grey"],
+                ["状态:", taskParam.taskParamStatus[v.status], "red"],
+                ["排序:", v.sort, "grey"],
+                ["表排序:", v.tableSort, "grey"],
+                ["说明:", v.comment, "grey"],
+                ["是否主要:", taskParam.taskParamIsmain[v.ismain], "red"],
+            ];
 
-                $btnDelete.click(function (e) {
-                    delectItem(v);
-                });
-
-                !v.status && $statusSwitch.prop("checked", true);
-
-                $invalid.click(function(){
-                    var cvalue = $statusSwitch.prop("checked") ? 0:1;
-
-                    updatastatus(v.tpid, cvalue);
-                });
-
+            $.each(propertyArr, function (index, value) {
+                var $liProperty = $('<li></li>');
+                $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                $liProperty.appendTo($ulProperty);
             });
-            $ul.appendTo($tableWrap);
+
+            $invalid.append($statusSwitch).append($span);
+            $liLine.append($h3).append($ulProperty);
+            $btnDiv.append($invalid).append($btnUpdate).append($btnDelete);
+            $h3.append($title).append($btnDiv);
+
+            !v.status && $statusSwitch.prop("checked", true);
+
+            $btnUpdate.click(function(){
+
+                taskParam.editFlg = false;
+                taskParam.tpid = v.tpid;
+                taskParam.items.name.val(v.name);
+                taskParam.items.module.val(v.module);
+                taskParam.items.field.val(v.field);
+                taskParam.items.alias.val(v.alias);
+                taskParam.items.type.val(v.type);
+                taskParam.items.oneType.val(v.oneType);
+                taskParam.items.table.val(v.tableName);
+                taskParam.items.union.val(v.unionField);
+                taskParam.items.ismain.val(v.ismain);
+                taskParam.items.handle.val(v.handle);
+                taskParam.items.sort.val(v.sort);
+                taskParam.items.tableSort.val(v.tableSort);
+                taskParam.items.comment.val(v.comment);
+                taskParam.modals.addItemModal.modal("show");
+            });
+
+            $btnDelete.click(function(){
+                com.showConfirm("是否确认删除", function(){
+                    com.post(api.data.deleteTaskParam, {"taskParam.tpid" : v.tpid}, function () {
+                        searcher.doSearch();
+                        com.showAlert(com.info, "操作成功");
+                    });
+                });
+            });
+
+            $invalid.click(function(){
+                var cvalue = $statusSwitch.prop("checked") ? 0:1;
+
+                var options = {
+                    "taskParam.tpid": v.tpid,
+                    "taskParam.status": cvalue
+                }
+
+                com.post(api.data.updateTaskParamForStatus, options, function(res){
+                    cvalue == 0? com.showAlert(com.info, "已启用") : com.showAlert(com.info, "已禁用");
+                    searcher.doSearch();
+                });
+            });
+
+            return $liLine;
+        };
+
+        return {
+            init: function (tableId, listData) {
+                com.focusPage('#' + tableId).html(null);
+                renderList(tableId, listData);
+            },
+            drawLine: function (v) {
+                return creatLine(v);
+            }
         }
-    };
+    })();
 
-    taskParam.btns.addTaskParam.click(function() {
+    var searcher = new Searcher();
+
+    searcher.init(['data-taskParam-module'], "taskParamCondList", api.data.pageTaskParam, function(data){
+        displayFunc.init('taskParamResultList', data);
+    }, "taskParamPagenation", "taskParamPostData",null, false, null,function(){
+
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'addTaskParam').css("margin", "0px 3px");
+        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+
+        return [$adda];
+    },'resultList');
+
+    com.focusPage('#addTaskParam').click(function(){
         taskParam.editFlg = true;
-
         taskParam.modals.addItemModal.modal("show");
     });
-
-    function delectItem(v) {
-        com.showConfirm("是否确认删除", function(){
-            com.post(api.data.deleteTaskParam, {"taskParam.tpid" : v.tpid}, function () {
-                com.focusPage('#list').empty();
-
-                queryTaskParam();
-
-                com.showAlert(com.info, "操作成功");
-            });
-        });
-
-    };
 
     function saveData(){
 
@@ -153,60 +198,30 @@ $(function (){
         var url;
 
         var options = {
-            "taskParam.tid" : taskParam.tid,
-            "taskParam.no" : taskParam.items.no.val(),
             "taskParam.name" : taskParam.items.name.val(),
-            "taskParam.param" : taskParam.items.param.val(),
+            "taskParam.module" : taskParam.items.module.val(),
+            "taskParam.field" : taskParam.items.field.val(),
             "taskParam.alias" : taskParam.items.alias.val(),
             "taskParam.type" : taskParam.items.type.val(),
+            "taskParam.oneType" : taskParam.items.oneType.val(),
+            "taskParam.unionField" : taskParam.items.union.val(),
+            "taskParam.tableName" : taskParam.items.table.val(),
+            "taskParam.ismain" : taskParam.items.ismain.val(),
             "taskParam.handle" : taskParam.items.handle.val(),
             "taskParam.sort" : taskParam.items.sort.val(),
-            "taskParam.comment" : taskParam.items.comment.val()
+            "taskParam.tableSort" : taskParam.items.tableSort.val(),
+            "taskParam.comment" : taskParam.items.comment.val(),
         };
 
-
-        taskParam.editFlg ? url = api.data.addTaskParam : url = api.data.updateTaskParam , options["taskParam.tpid"] = taskParam.tpid;
+        taskParam.editFlg ? url = api.data.addTaskParam : url = api.data.updateTaskParam, options["taskParam.tpid"] = taskParam.tpid;
 
         com.post(url, options, function () {
             com.focusPage('#list').empty();
-
-            queryTaskParam();
-
+            searcher.doSearch();
             com.showAlert(com.info, "操作成功");
 
             taskParam.modals.addItemModal.modal("hide");
         })
     };
 
-    queryTaskParam();
-
-    function queryTaskParam() {
-        com.post(api.data.queryTaskParam, {"task.tid": taskParam.tid}, function (data) {
-            initList(data.taskParams);
-        }, function (e) {
-            com.showAlert(com.error, e.errorMsg);
-        }, false);
-    };
-
-    function updatastatus(aid, newstatus){
-
-        com.post(api.data.updateTaskParamForStatus, {"taskParam.tpid": aid, "taskParam.status": newstatus}, function(){
-
-            newstatus == 0 ? com.showAlert(com.info, "已启动") : com.showAlert(com.info, "已禁用");
-
-            com.focusPage('#list').empty();
-
-            queryTaskParam();
-        });
-    };
-
-    function emptyData(id) {
-        com.focusPage('#list').empty();
-
-        var $resultList = com.focusPage('#' + id).html('');
-        var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
-        var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
-        var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
-    };
-
-});
+})

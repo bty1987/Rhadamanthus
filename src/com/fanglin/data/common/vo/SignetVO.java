@@ -1,24 +1,28 @@
-package com.fanglin.communion.vo;
+package com.fanglin.data.common.vo;
 
 import java.io.Serializable;
 
 public class SignetVO implements Serializable {
 
 	private static final long serialVersionUID = 7539031381907707882L;
-	
+
 	private long sid;
-	
+
 	private String no;
-	
+
 	private String name;
-	
+
 	private String keyword;
-	
+
 	private short status;
-	
+
+	private String path;
+
+	private String data;
+
 	private int company;
-	
-	public SignetVO(){
+
+	public SignetVO() {
 		super();
 	}
 
@@ -60,6 +64,22 @@ public class SignetVO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public String getData() {
+		return data;
+	}
+
+	public void setData(String data) {
+		this.data = data;
 	}
 
 	public int getCompany() {

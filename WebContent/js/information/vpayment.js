@@ -57,7 +57,7 @@ jQuery(function ($) {
         com.cleanItems(vpayment.items);
     });
 
-    com.initTypeahead('brand', api.data.queryBrandByPinyin, "pinyinName", {}, "autoFillKeyValue", "value", "value" ,null);
+    com.initTypeahead('brand', api.data.queryBrandByPinyin, "pinyinName", {}, "autoFillKeyValue", "value", "value", null);
     com.selectTypeahead("couponType", vpayment.couponType, 'key', 'value' ,null);
 
     com.post(api.ds.information, {}, function (res) {
@@ -119,7 +119,8 @@ jQuery(function ($) {
                 ["创建时间:", v.createTime, "green"],
                 ["收款人:", v.collecter.currentName, "grey"],
                 ["收款时间:", v.collectTime, "green"],
-                ["类型:", vpayment.type[v.type], "grey"],
+                ["类型:", vpayment.type[v.type], "red"],
+                ["品类:", v.category == null || v.category == "" ? "---" : v.category, "grey"],
                 ["品牌:", v.brand == null || v.brand == "" ? "---" : v.brand, "grey"],
                 ["应收金额:", v.money, "blue"],
                 ["状态:", v.status == 1 ? "已付款" : "未付款", "red"],
@@ -180,7 +181,7 @@ jQuery(function ($) {
                     
                     vpayment.mno = v.mno;
                     
-                    com.post(api.payment.queryPointofsalesByPid, {"pointofsales.pid": v.mno, "pointofsales.type": 5}, function(res){
+                    com.post(api.payment.queryPointofsales, {"pointofsales.pid": v.mno, "pointofsales.type": 5}, function(res){
                         $.each(res.pointofsaleses, function(i, v){
                             if(v.status == 0 || v.status == 1) addPos(v);
                         });
@@ -263,7 +264,8 @@ jQuery(function ($) {
                 ["创建时间:", v.createTime, "blue"],
                 ["收款人:", v.collecter.currentName, "grey"],
                 ["收款时间:", v.collectTime, "blue"],
-                ["类型:", vpayment.type[v.type], "grey"],
+                ["类型:", vpayment.type[v.type], "red"],
+                ["品类:", v.category == null || v.category == "" ? "---" : v.category, "grey"],
                 ["品牌:", v.brand == null || v.brand == "" ? "---" : v.brand, "grey"],
                 ["应收金额:", v.money, "blue"],
                 ["状态:", v.status == 1 ? "已付款" : "未付款", "red"],
@@ -456,7 +458,7 @@ jQuery(function ($) {
             
             vpayment.mno = mnoId[0];
             
-            com.post(api.payment.queryPointofsalesByPid, {"pointofsales.pid": mnoId[0], "pointofsales.type": 5}, function(res){
+            com.post(api.payment.queryPointofsales, {"pointofsales.pid": mnoId[0], "pointofsales.type": 5}, function(res){
                 $.each(res.pointofsaleses, function(i, v){
                     if(v.status == 0 || v.status == 1) addPos(v);
                 });
@@ -516,15 +518,19 @@ jQuery(function ($) {
         if (com.validate('redact')) {
             return false;
         }
+        
+        var brand = vpayment.items.brand.val();
 
         var options = {
             'vpayment.mno': vpayment.items.mno.val(),
             'vpayment.orderId': vpayment.items.orderId.val(),
             'vpayment.type': vpayment.items.type.val(),
-            'vpayment.brand': vpayment.items.brand.val(),
+            'vpayment.category': brand.split("-")[1],
+            'vpayment.brand': brand.split("-")[0],
             'vpayment.money': vpayment.items.money.val(),
             'vpayment.comment': vpayment.items.comment.val()
         };
+        
         com.post(api.information.createVpayment, options, function (res) {
             searcher.doSearch();
             com.showAlert(com.info, "操作成功");

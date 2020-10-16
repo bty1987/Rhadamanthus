@@ -193,7 +193,7 @@ $(function () {
                     com.focusPage('#advanceCheckbox').parents('.inline').addClass('show');
 
                     //查询是否有pos推送数据
-                    com.post(api.payment.queryPointofsalesByPidAndRid, {"pointofsales.pid": v.sales.orderId}, function(res){
+                    com.post(api.payment.queryPointofsales, {"pointofsales.pid": v.sales.orderId}, function(res){
                         $.each(res.pointofsaleses, function(i, value){
                             if(value.status == 0 || value.status == 1) {
                                 paymentUtils.addPos(value, salesPayment.htmlName);
@@ -385,7 +385,7 @@ $(function () {
         salesPayment.checkBankUtilForGrade = returnGradeParams[1];
 
         //查询是否有pos推送数据
-        com.post(api.payment.queryPointofsalesByPidAndRid, {"pointofsales.pid": orderId[0]}, function(res){
+        com.post(api.payment.queryPointofsales, {"pointofsales.pid": orderId[0]}, function(res){
             $.each(res.pointofsaleses, function(i, value){
                 if(value.status == 0 || value.status == 1) {
                     paymentUtils.addPos(value, salesPayment.htmlName);

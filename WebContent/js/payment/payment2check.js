@@ -194,7 +194,7 @@ jQuery(function($) {
 				paymentCheck.temp = v;
 				paymentCheck.typeUpdate = 3;
 
-				com.post(api.payment.queryPointofsalesByPidAndRid, {"pointofsales.pid": v.orderId, "pointofsales.rid": v.arId}, function(res){
+				com.post(api.payment.queryPointofsales, {"pointofsales.pid": v.orderId, "pointofsales.rid": v.arId}, function(res){
 					$.each(res.pointofsaleses, function(i, value){
 						if(value.status == 4) {
 							paymentUtils.addPos(value, paymentCheck.htmlName);

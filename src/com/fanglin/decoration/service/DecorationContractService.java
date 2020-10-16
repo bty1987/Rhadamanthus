@@ -3,9 +3,9 @@ package com.fanglin.decoration.service;
 import java.util.List;
 
 import com.fanglin.communion.vo.CustomerVO;
-import com.fanglin.communion.vo.SignetVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Authentication;
+import com.fanglin.data.common.vo.SignetVO;
 import com.fanglin.decoration.vo.DecorationContractVO;
 import com.fanglin.decoration.vo.DecorationVO;
 
@@ -23,7 +23,7 @@ public interface DecorationContractService {
 
 	public int addDecorationContract(DecorationContractVO decorationContract, String data, String userId) throws FLException;
 
-	public int signDecorationContractForCompany(SignetVO signetVO, DecorationContractVO decorationContractVO) throws FLException;
+	public String signDecorationContractForCompany(SignetVO signetVO, DecorationContractVO decorationContractVO) throws FLException;
 
 	public String signDecorationContractForCustomer(DecorationContractVO decorationContractVO, CustomerVO customerVO) throws FLException;
 

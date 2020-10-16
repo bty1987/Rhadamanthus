@@ -36,6 +36,7 @@ $(function () {
                 ["姓名:", v.name, "grey"],
                 ["地址:", v.address, "grey"],
                 ["票号:", v.ticket, "grey"],
+                ["注册时间:", v.registerTime, "green"]
             ];
 
             $.each(propertyArr, function (index, value) {

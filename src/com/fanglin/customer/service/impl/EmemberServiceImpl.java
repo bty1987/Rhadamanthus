@@ -1,6 +1,7 @@
 package com.fanglin.customer.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import com.fanglin.dingding.service.MessageService;
 import com.fanglin.information.dao.VticketDao;
 import com.fanglin.information.po.VticketPO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.utils.SystemConfig;
 
@@ -109,6 +111,7 @@ public class EmemberServiceImpl implements EmemberService {
 
 		ememberPO.setActivity(vticketPO.getVaid());
 		ememberPO.setStatus(EmemberPO.STATUS_INIT_INT);
+		ememberPO.setRegisterTime(DateUtil.getDateToTimestamp(new Date()));
 
 		ememberDao.save(ememberPO);
 

@@ -84,7 +84,7 @@ jQuery(function($) {
         });
     });
 
-    com.post(api.data.queryTask,{},function(res){
+    com.post(api.data.queryTask,{"task.level": 0},function(res){
         role.task = res.tasks;
     }, null, false);
     

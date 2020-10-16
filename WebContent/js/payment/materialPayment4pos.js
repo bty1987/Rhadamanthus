@@ -313,7 +313,7 @@ jQuery(function($) {
 			//显示pos 以及mno赋值
 			materialPayment.mno = _orderId;
 
-			com.post(api.payment.queryPointofsalesByPidAndRid, {"pointofsales.pid": _orderId}, function(res){
+			com.post(api.payment.queryPointofsales, {"pointofsales.pid": _orderId}, function(res){
 				$.each(res.pointofsaleses, function(i, value){
 					if(value.status == 0 || value.status == 1) {
 						paymentUtils.addPos(value, materialPayment.htmlName);
@@ -492,7 +492,7 @@ jQuery(function($) {
 
 			materialPayment.mno = payment.material.orderId;
 
-			com.post(api.payment.queryPointofsalesByPidAndRid, {"pointofsales.pid": payment.material.orderId}, function(res){
+			com.post(api.payment.queryPointofsales, {"pointofsales.pid": payment.material.orderId}, function(res){
 				$.each(res.pointofsaleses, function(i, value){
 					if(value.status == 0 || value.status == 1) {
 						paymentUtils.addPos(value, materialPayment.htmlName);

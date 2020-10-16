@@ -37,11 +37,11 @@ public class VpaymentPO implements Serializable {
 	public static final short STATUS_PAYED_INT = 1;
 
 	public static final short EXPIRE_INIT_INT = 0;
-	
+
 	public static final short EXPIRE_INVALID_INT = 1;
-	
+
 	private long vpid;
-	
+
 	private long vaid;
 
 	private String mno;// 会员号
@@ -53,6 +53,8 @@ public class VpaymentPO implements Serializable {
 	private Timestamp createTime;// 创建时间
 
 	private short type;// 类型 , 0: 装修款 , 1: 主材款
+
+	private String category;
 
 	private String brand;// 品牌
 
@@ -86,7 +88,7 @@ public class VpaymentPO implements Serializable {
 	public void setVpid(long vpid) {
 		this.vpid = vpid;
 	}
-	
+
 	@Column(name = "vaid")
 	public long getVaid() {
 		return vaid;
@@ -140,6 +142,15 @@ public class VpaymentPO implements Serializable {
 
 	public void setType(short type) {
 		this.type = type;
+	}
+
+	@Column(name = "category")
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 	@Column(name = "brand")

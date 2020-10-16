@@ -11,9 +11,7 @@ public interface PointofsalesService {
 
 	public void pagePointofsales(Paging paging, List<Filter> filters);
 
-	public List<PointofsalesVO> queryPointofsalesByPid(PointofsalesVO pointofsales);
-	
-	public List<PointofsalesVO> queryPointofsalesByPidAndRid(PointofsalesVO pointofsales);
+	public List<PointofsalesVO> queryPointofsales(PointofsalesVO pointofsales);
 
 	public void addPointofsales(PointofsalesVO pointofsales, String userId) throws FLException;
 

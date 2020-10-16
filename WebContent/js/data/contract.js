@@ -1,4 +1,28 @@
 jQuery(function ($) {
+    
+    var contract = {
+        
+        btns: {
+            saveBtn: com.focusPage("#saveBtn")
+        },
+        
+        items: {
+            no: com.focusPage("#no"),
+            name: com.focusPage("#name"),
+            title: com.focusPage("#title"),
+            page: com.focusPage("#page"),
+            path: com.focusPage("#path"),
+        },
+        
+        cid: null,
+        
+    }
+    
+    com.uploadify("#fileUpload", "上传模版", api.common.uploadOther, 'btn btn-success', '*.pdf', {'uploadType': 2}, 1, function(data){
+        contract.items.path.val(data.resUrl);
+    });
+    
+    contract.btns.saveBtn.click(saveData);
 
     var displayFunc = (function () {
 
@@ -23,10 +47,15 @@ jQuery(function ($) {
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.no));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+            
+            var $btnUpdate = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('更新');
+
+            $divBtnWrap.append($btnUpdate).appendTo($h3);
 
             var propertyArr = [
                 ["名称: ", v.name, "grey"],
-                ["标题: ", v.title , "grey"],
+                ["标题: ", v.title, "grey"],
+                ["页面: ", v.page, "grey"],
                 ["状态: ", v.status == 0 ? "启用" : "禁用" , "red"],
             ];
 
@@ -40,6 +69,17 @@ jQuery(function ($) {
             $divBtnWrap.appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
+            
+            $btnUpdate.click(function(){
+                
+                contract.cid = v.cid;
+                
+                com.popup4model('#layerAdd', '编辑', null, function () {
+                    com.clearValidator();
+                }, function(){
+                    initUpdate(v);
+                });
+            });
 
             return $liLine;
         };
@@ -57,7 +97,61 @@ jQuery(function ($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["data-contract-name"], "condList", api.communion.pageContract, function (data) {
+    searcher.init(["data-contract-name"], "condList", api.data.pageContract, function (data) {
         displayFunc.init('resultList', data);
-    }, "pagenation", "contractPostData")
+    }, "pagenation", "contractPostData", null, false, null, function() {
+
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addContract').css('margin', '0px 3px');
+        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+
+        $adda.click(function(){
+            
+            contract.cid = null;
+            
+            com.cleanItems(contract.items);
+            
+            com.popup4model('#layerAdd', '添加', null, function () {
+                com.clearValidator();
+            });
+        });
+        
+        return [$adda];
+    }, 'resultList');
+    
+    function initUpdate(v){
+        
+        contract.items.no.val(v.no);
+        contract.items.name.val(v.name);
+        contract.items.title.val(v.title);
+        contract.items.page.val(v.page);
+        contract.items.path.val(v.path);
+    }
+    
+    function saveData(){
+        
+        if(com.validate('addContract')) return false;
+        
+        var url = api.data.addContract;
+        var options = {
+            "contract.no": contract.items.no.val(),
+            "contract.name": contract.items.name.val(),
+            "contract.title": contract.items.title.val(),
+            "contract.page": contract.items.page.val(),
+            "contract.path": contract.items.path.val(),
+            "contract.url": config.server + contract.items.path.val(),
+        }
+        
+        if(contract.cid){
+            options["contract.cid"] = contract.cid;
+            
+            url = api.data.updateContract;
+        }
+
+        com.post(url, options, function(res){
+            com.closePopup();
+            searcher.doSearch();
+        });
+    }
+    
 });
