@@ -255,7 +255,7 @@ jQuery(function($) {
 
 	//获取销售点信息
 	function getServicePosInfo(orderId){
-		com.post(api.payment.queryPointofsalesByPidAndRid, {"pointofsales.pid": orderId}, function(res){
+		com.post(api.payment.queryPointofsales, {"pointofsales.pid": orderId}, function(res){
 			$.each(res.pointofsaleses, function(i, value){
 				if(value.status == 0 || value.status == 1) {
 					paymentUtils.addPos(value, servicePayment.htmlName);

@@ -26,4 +26,6 @@ public interface SupplierService {
 
 	public void addSupplier(UserVO supplier, int company) throws FLException;
 
+	public void updateSupplier(UserVO supplier) throws FLException;
+
 }

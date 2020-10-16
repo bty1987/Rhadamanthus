@@ -33,6 +33,8 @@ public class VpaymentVO implements Serializable {
 
 	private Short status;// 状态 , 0: 未付款 , 1: 已付款
 
+	private String category;
+
 	private String brand;// 品牌
 
 	private Long money;// 金额
@@ -124,6 +126,14 @@ public class VpaymentVO implements Serializable {
 
 	public void setType(Short type) {
 		this.type = type;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 	public String getBrand() {

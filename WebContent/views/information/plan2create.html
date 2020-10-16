@@ -1,0 +1,104 @@
+<div id="row">
+    <div class="col-xs-4">
+        <div class="form-horizontal" id="formItems">
+            <h3 class="col-xs-12 header smaller lighter blue">字段</h3>
+            <div class="btn-toolbar" id="referquery"></div>
+            <div class="btn-toolbar" id="referfilling"></div>
+            <div class="btn-toolbar" id="referother"></div>
+        </div>
+    </div>
+    <div class="col-xs-8" id="right" style="border-left: 1px solid #c1c1c1;">
+        <div class="col-xs-12">
+            <h3 class="col-xs-12 header smaller lighter blue">已选字段列表</h3>
+        </div>
+        <div id="processForm">
+            <div class="form-horizontal col-sm-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right orange">任务选择</label>
+                    <div class="col-md-9">
+                        <select id="taskPlan" class="col-sm-6 v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-horizontal col-sm-6">
+                <div class="form-group ">
+                    <label class="col-sm-3 control-label no-padding-right" for="dataTime">执行日期</label>
+                    <!--X-->
+                    <div class="col-sm-9">
+                        <input class="date-picker-date col-xs-10 col-sm-6 v_required " id="dataTime" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="time">执行时间</label>
+                    <!--Y-->
+                    <div class="col-sm-9">
+                        <div class="bootstrap-timepicker">
+                            <input id="time" type="text" class="v_required col-xs-10 col-sm-6 "/>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="col-sm-12 form-horizontal">
+            <h4 class="header smaller lighter blue">已选字段</h4>
+            <div class="" id="notfield">
+                <p class="alert alert-info center">无选择字段</p>
+            </div>
+            <div>
+                <ul class="item-list fl-table-list ui-sortable" id="itemfield"></ul>
+            </div>
+        </div>
+        <div class="col-sm-12 form-horizontal">
+            <h4 class="header smaller lighter blue">条件</h4>
+            <div class="" id="notitem">
+                <p class="alert alert-info center">无选择条件</p>
+            </div>
+            <div>
+                <ul class="item-list fl-table-list ui-sortable" id="itemitem"></ul>
+            </div>
+        </div>
+
+    </div>
+
+    <hr class="col-xs-11" />
+
+    <div class="col-xs-12">
+        <button type="button" id="submitBtn" class="btn btn-primary pull-right">保存</button>
+    </div>
+</div>
+
+<!-- 输入必要信息-->
+<div class="modal fade" id="referModal" tabindex="-1">
+    <div class="modal-dialog" style="margin-top: 10%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">选择区间</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="formFiled">
+                    <div class="form-group show noUpdate">
+                        <label class="col-sm-4 control-label no-padding-right" for="cuTime">时间区间</label>
+                        <div class="col-sm-8">
+                            <input class="date-picker-date col-xs-10 col-sm-7 v_required " id="cuTime" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="modal-footer" style="text-align: center">
+                <button type="button" id="createPlanBtn" class="btn btn-primary">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/utils/planUtils.js','js/information/plan2create.js']);
+</script>

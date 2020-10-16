@@ -431,7 +431,7 @@ $(function () {
     /*分页*/
     var _condArr = ['sales-no', 'sales-orderId', 'sales-instorer', 'sales-salesman', 'sales-brand-name',  'sales-dept'];
 
-    if(sales.pageType == "dompany") _condArr[4] = 'sales_brand';
+    if(sales.pageType == "dompany") _condArr[4] = 'sales-brand-all';
 
     if(sales.pageType == "pompany") _condArr.push('sales-dompany');
 

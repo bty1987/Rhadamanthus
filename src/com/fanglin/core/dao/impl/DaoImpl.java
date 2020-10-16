@@ -13,14 +13,14 @@ import com.fanglin.core.dao.Dao;
 public class DaoImpl<T> extends GenericDaoImpl implements Dao<T> {
 
 	protected Class<T> entityClass; // 实体类型
-	
+
 	private boolean cacheable = false;
 
-	public DaoImpl(){
-		
+	public DaoImpl() {
+
 	}
 
-	public DaoImpl(Class<T> entityClass){
+	public DaoImpl(Class<T> entityClass) {
 		super();
 		this.entityClass = entityClass;
 	}
@@ -35,7 +35,7 @@ public class DaoImpl<T> extends GenericDaoImpl implements Dao<T> {
 	 * 根据ID获取数据对象
 	 */
 	@Override
-	public T get(Serializable id){
+	public T get(Serializable id) {
 		return get(entityClass, id);
 	}
 
@@ -43,57 +43,57 @@ public class DaoImpl<T> extends GenericDaoImpl implements Dao<T> {
 	 * 根据ID删除数据对象
 	 */
 	@Override
-	public void deleteById(Serializable id){
-		deleteById(entityClass, id);
+	public void deleteById(Serializable id) {
+		delete(entityClass, id);
 	}
 
-	protected Criteria createCriteria(){
+	protected Criteria createCriteria() {
 		return createCriteria(entityClass);
 	}
-	
-	public Criterion getCriterion(String propertyName, Object value, String op){
-		if("eq".equals(op)){
-			return Restrictions.eq(propertyName,value);
-		}else if("cn".equals(op)){
+
+	public Criterion getCriterion(String propertyName, Object value, String op) {
+		if ("eq".equals(op)) {
+			return Restrictions.eq(propertyName, value);
+		} else if ("cn".equals(op)) {
 			return Restrictions.ilike(propertyName, (String) value, MatchMode.ANYWHERE);
-		}else if("nc".equals(op)){
+		} else if ("nc".equals(op)) {
 			return Restrictions.not(Restrictions.ilike(propertyName, (String) value, MatchMode.ANYWHERE));
-		}else if("lt".equals(op)){
+		} else if ("lt".equals(op)) {
 			return Restrictions.lt(propertyName, value);
-		}else if("le".equals(op)){
+		} else if ("le".equals(op)) {
 			return Restrictions.le(propertyName, value);
-		}else if("gt".equals(op)){
+		} else if ("gt".equals(op)) {
 			return Restrictions.gt(propertyName, value);
-		}else if("ge".equals(op)){
+		} else if ("ge".equals(op)) {
 			return Restrictions.ge(propertyName, value);
-		}else if("bw".equals(op)){
+		} else if ("bw".equals(op)) {
 			return Restrictions.ilike(propertyName, (String) value, MatchMode.START);
-		}else if("ew".equals(op)){
+		} else if ("ew".equals(op)) {
 			return Restrictions.ilike(propertyName, (String) value, MatchMode.END);
-		}else if("bn".equals(op)){
+		} else if ("bn".equals(op)) {
 			return Restrictions.not(Restrictions.ilike(propertyName, (String) value, MatchMode.START));
-		}else if("en".equals(op)){
+		} else if ("en".equals(op)) {
 			return Restrictions.not(Restrictions.ilike(propertyName, (String) value, MatchMode.END));
-		}else if("ne".equals(op)){
-			return Restrictions.ne(propertyName,value);
-		}else if("likecn".equals(op)){
+		} else if ("ne".equals(op)) {
+			return Restrictions.ne(propertyName, value);
+		} else if ("likecn".equals(op)) {
 			return Restrictions.like(propertyName, value);
-		}else{
-			return Restrictions.eq(propertyName,value);
+		} else {
+			return Restrictions.eq(propertyName, value);
 		}
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<T> list(){
+	public List<T> list() {
 		return createCriteria().setCacheable(cacheable).list();
 	}
 
-	protected TopQuery<T> topQuery(int maxResults){
+	protected TopQuery<T> topQuery(int maxResults) {
 		return topQuery(maxResults, entityClass, null);
 	}
 
-	protected TopQuery<T> topQuery(int maxResults, String cacheRegion){
+	protected TopQuery<T> topQuery(int maxResults, String cacheRegion) {
 		return topQuery(maxResults, entityClass, cacheRegion);
 	}
 

@@ -13,7 +13,6 @@ jQuery(function($) {
         },
 
         items : {
-            
             cppoint4decoration: com.focusPage("#cppoint4decoration"),
             cppoint4sales: com.focusPage("#cppoint4sales"),
             
@@ -22,15 +21,19 @@ jQuery(function($) {
             point: com.focusPage("#point"),
             
             cppointRecords: com.focusPage("#cppointRecords"),
-
         },
-
         cid : null,
     };
     
-    cppoint.items.type.bindData([{"key" : "0", "value" : "累积"}, {"key" : "1", "value" : "消耗"}], "key", "value");
-    cppoint.items.pointType.bindData([{"key" : "0", "value" : "装修"}, {"key" : "1", "value" : "销售"}], "key", "value");
-
+    
+	com.post(api.ds.customer, {}, function(res) {
+		cppoint.items.type.bindData(res.type, "key","value");
+	});
+    
+	com.post(api.ds.customer, {}, function(res) {
+		cppoint.items.pointType.bindData(res.typePoint, "key","value");
+	});
+  
     cppoint.btns.saveBtn.on("click", saveData);
 
     cppoint.modals.handleCppointModal.on('hide.bs.modal', function(e) {
@@ -110,25 +113,26 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.init([ 'customer-phone', 'customer-relationship' ], "condList", api.data.pageCustomer, function(data) {
+    searcher.init(['customer-v-name'], "condList", api.data.pageCustomer, function(data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "cppointPostData", null, false, null, null);
 
     function showCppoint(v) {
         
         com.post(api.customer.queryCppoint, {"cppoint.cid" : v.cid}, function(res) {
-            
-            var cppoint = res.cppoint;
-            
-            cppoint.items.cppoint4decoration.text(cppoint.dpoint);
-            cppoint.items.cppoint4sales.text(cppoint.spoint);
+            var cppointValue = res.cppoint;     
+            if(cppointValue.dpoint==null||cppointValue.spoint==null){	
+            	cppoint.items.cppoint4decoration.text("该用户尚未创建积分");
+            	cppoint.items.cppoint4sales.text("该用户尚未创建积分");
+            }else{
+            	cppoint.items.cppoint4decoration.text(cppointValue.dpoint);
+            	cppoint.items.cppoint4sales.text(cppointValue.spoint);}
         });
 
         cppoint.modals.cppointModal.modal("show");
     }
 
     function addCppoint(v) {
-        
         com.showConfirm("是否创建客户积分", function(){
             com.post(api.customer.createCppoint, {"cppoint.cid": v.cid});
         });
@@ -144,7 +148,6 @@ jQuery(function($) {
     }
     
     function saveData(){
-        
         if (com.validate("handleCppointModal")) {
             return false;
         }
@@ -154,10 +157,11 @@ jQuery(function($) {
         }
         
         var type = cppoint.items.type.val();
+        var pointType = cppoint.items.pointType.val();
         
         var url = type == "0" ? api.customer.addupCppoint : api.customer.useupCppoint;
         
-        options[type == "0" ? "cppoint.dpoint" : "cppoint.spoint"] = cppoint.items.point.val();
+        options[pointType == "0" ? "cppoint.dpoint" : "cppoint.spoint"] = cppoint.items.point.val();      
         
         com.post(url, options, function(res) {
             com.showAlert(com.info, "操作成功");

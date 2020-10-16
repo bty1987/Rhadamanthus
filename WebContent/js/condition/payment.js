@@ -134,6 +134,22 @@ Condition.addupRule("payment", {
             validate:null
         }
     },
+    "activity-category": {
+        label: "品类",
+        type: "autofill",
+        submitConfig: {
+            name: "category",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.data.queryCategory,
+            postData: {},
+            listPath: "categorys",
+            keyPath: "name",
+            valuePath: "name"
+        }
+    },
     "activity-brand": {
         label: "品牌",
         type: "autofill",
@@ -145,9 +161,9 @@ Condition.addupRule("payment", {
         dataSource: {
             url: api.data.queryBrandByPinyin,
             postData: {},
-            listPath: "autoFillKeyValue",
-            keyPath: "value",
-            valuePath: "value"
+            listPath: "brands",
+            keyPath: "name",
+            valuePath: "name"
         }
     },
     "activity-creater-name": {

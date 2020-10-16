@@ -1,4 +1,4 @@
-package com.fanglin.communion.action;
+package com.fanglin.data.common.action;
 
 import java.util.List;
 
@@ -9,10 +9,10 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import com.fanglin.communion.service.TalkingService;
-import com.fanglin.communion.vo.TalkingVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.common.service.TalkingService;
+import com.fanglin.data.common.vo.TalkingVO;
 import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")

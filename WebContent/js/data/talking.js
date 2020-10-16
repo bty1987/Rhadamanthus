@@ -119,7 +119,7 @@ $(function () {
 	
 	var searcher = new Searcher();
 
-	searcher.init( ["data-talking-name","data-talking-type","data-talking-status"], "creatLine", api.communion.pageTalking, function(data){
+	searcher.init( ["data-talking-name","data-talking-type","data-talking-status"], "creatLine", api.data.pageTalking, function(data){
 		displayFunc.init('resultList', data);
 	}, "pageTalking", "pageTalkingPost", null, false, null,function(res){
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addTalking').css("margin", "0px 3px");
@@ -135,7 +135,7 @@ $(function () {
 	});
 
 	function updateTalkingForStatus(tid, newstatus){
-		com.post(api.communion.updateTalkingForStatus, {"talking.tid": tid, "talking.status": newstatus }, function (res) {
+		com.post(api.data.updateTalkingForStatus, {"talking.tid": tid, "talking.status": newstatus }, function (res) {
 			newstatus == 0 ? com.showAlert(com.info, "已启动") : com.showAlert(com.info, "已禁用");
 			searcher.doSearch();
 		},null, false);
@@ -143,7 +143,7 @@ $(function () {
 	};
 
 	function deleteTalking(tid){
-		com.post(api.communion.deleteTalking, {"talking.tid": tid}, function (res) {
+		com.post(api.data.deleteTalking, {"talking.tid": tid}, function (res) {
 			com.showAlert(com.info, "操作成功");
 			searcher.doSearch();
 		},null, false);
@@ -160,7 +160,7 @@ $(function () {
 		"talking.content":  talking.items.content.val()
 		};
 
-		talking.editFlg ? url = api.communion.addTalking : url = api.communion.updateTalking, options["talking.tid"] = talking.items.tid;
+		talking.editFlg ? url = api.data.addTalking : url = api.data.updateTalking, options["talking.tid"] = talking.items.tid;
 
 		com.post(url, options, function (res) {
 			com.closePopup();

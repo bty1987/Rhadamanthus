@@ -594,16 +594,8 @@ $.extend(api, {payment: {
 			args: ["money"]
 		}]
 	},
-	queryPointofsalesByPid: {
-		url: "queryPointofsalesByPid.do",
-		type: "query",
-		tranargs: [{
-			result: "pointofsaleses",
-			args: ["money"]
-		}]
-	},
-	queryPointofsalesByPidAndRid: {
-		url: "queryPointofsalesByPidAndRid.do",
+	queryPointofsales: {
+		url: "queryPointofsales.do",
 		type: "query",
 		tranargs: [{
 			result: "pointofsaleses",

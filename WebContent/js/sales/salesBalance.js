@@ -331,9 +331,9 @@ $(function () {
     })();
 
     /*分页*/
-    var _condArr = ['sales-balance-orderId', 'sales_balance-no', 'sales-village', 'sales-balance-brand', 'sales-region-name', 'sales-dept-name', 'sales-balance-status', 'sales-balance-type', 'sales-balance-fullpayTime', 'sales-balance-createTime', 'sales-balance-venderTime', 'sales-balance-postTime'];
+    var _condArr = ['sales-balance-orderId', 'sales-balance-no', 'sales-village', 'sales-balance-brand', 'sales-region-name', 'sales-dept-name', 'sales-balance-status', 'sales-balance-type', 'sales-balance-fullpayTime', 'sales-balance-createTime', 'sales-balance-venderTime', 'sales-balance-postTime'];
 
-    if(salesBalance.pageType == "pompany") _condArr.push('salesDompany');
+    if(salesBalance.pageType == "pompany") _condArr.push('sales-dompany');
 
     var salesBalanceSearcher = new Searcher();
 
@@ -570,7 +570,7 @@ $(function () {
             return false;
         }
 
-        if (com.focusPage('span[name="totalRecords"]').text() > 5000) {
+        if (com.focusPage('span[name="totalRecords"]').text() > 3000) {
             com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
             return false;
         }

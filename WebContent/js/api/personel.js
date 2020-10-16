@@ -68,6 +68,7 @@ $.extend(api, {personel: {
     pageSupplier: {url: "pageSupplier.do"},
     querySupplierByPinyin: {url: "querySupplierByPinyin.do"},
     addSupplier: {url: "addSupplier.do", server: "communion"},
+    updateSupplier: {url: "updateSupplier.do", server: "communion"},
     
     queryMacontrol: {url: "queryMacontrol.do"},
     checkMacontrol: {url: "checkMacontrol.do", server: "communion"},

@@ -345,7 +345,7 @@ Condition.addupRule("information", {
         },
         dataSource: {
             url: api.data.queryTask,
-            postData: {},
+            postData: {"task.level": 0},
             listPath: "tasks",
             keyPath: "tid",
             valuePath: "name"

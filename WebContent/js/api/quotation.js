@@ -785,6 +785,7 @@ $.extend(api, {quotation: {
             ],
         }
     },
+    cutoffSelectionItem: {url: "cutoffSelectionItem.do"},
     
     // -------- 定额 -------------------------
     queryQuotationNormood: {

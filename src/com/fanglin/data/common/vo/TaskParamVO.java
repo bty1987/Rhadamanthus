@@ -9,22 +9,32 @@ public class TaskParamVO implements Serializable{
 	private Long tpid;
 	
 	private Long tid;
-	
-	private Long no;
-	
+		
 	private String name;
 	
-	private String param;
+	private String module;
+	
+	private Short type;
+	
+	private Short oneType;
+	
+	private String unionField;
+	
+	private String field;
 	
 	private String alias;
 	
-	private Short type;
+	private String tableName;
+	
+	private Short ismain;
 	
 	private String handle;
 	
 	private Short status;
 	
-	private Long sort;
+	private Short sort;
+	
+	private Short Tablesort;
 	
 	private String comment;
 
@@ -48,14 +58,6 @@ public class TaskParamVO implements Serializable{
 		this.tid = tid;
 	}
 
-	public Long getNo() {
-		return no;
-	}
-
-	public void setNo(Long no) {
-		this.no = no;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -64,12 +66,44 @@ public class TaskParamVO implements Serializable{
 		this.name = name;
 	}
 
-	public String getParam() {
-		return param;
+	public String getModule() {
+		return module;
 	}
 
-	public void setParam(String param) {
-		this.param = param;
+	public void setModule(String module) {
+		this.module = module;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
+	}
+
+	public Short getOneType() {
+		return oneType;
+	}
+
+	public void setOneType(Short oneType) {
+		this.oneType = oneType;
+	}
+
+	public String getUnionField() {
+		return unionField;
+	}
+
+	public void setUnionField(String unionField) {
+		this.unionField = unionField;
+	}
+
+	public String getField() {
+		return field;
+	}
+
+	public void setField(String field) {
+		this.field = field;
 	}
 
 	public String getAlias() {
@@ -80,12 +114,20 @@ public class TaskParamVO implements Serializable{
 		this.alias = alias;
 	}
 
-	public Short getType() {
-		return type;
+	public String getTableName() {
+		return tableName;
 	}
 
-	public void setType(Short type) {
-		this.type = type;
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
+
+	public Short getIsmain() {
+		return ismain;
+	}
+
+	public void setIsmain(Short ismain) {
+		this.ismain = ismain;
 	}
 
 	public String getHandle() {
@@ -104,12 +146,20 @@ public class TaskParamVO implements Serializable{
 		this.status = status;
 	}
 
-	public Long getSort() {
+	public Short getSort() {
 		return sort;
 	}
 
-	public void setSort(Long sort) {
+	public void setSort(Short sort) {
 		this.sort = sort;
+	}
+
+	public Short getTablesort() {
+		return Tablesort;
+	}
+
+	public void setTablesort(Short tablesort) {
+		Tablesort = tablesort;
 	}
 
 	public String getComment() {
@@ -119,5 +169,5 @@ public class TaskParamVO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 }

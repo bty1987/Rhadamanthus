@@ -51,7 +51,8 @@ jQuery(function (a) {
         $.ajax(config.communion + QRCode + "?timestamp=" + new Date().getTime() + "&prefix=" + config.prefix).done(function (data) {
             $('#qrcode img').prop('src', data.QRCode);
         }).fail(function () {
-            alert("获取二维码失败!");
+            //alert("获取二维码失败!");
+            $('#qrcode img').remove();
         }).done(function (data) {
             var _flag = data.loginInfo.loginFlag;
 
@@ -62,7 +63,8 @@ jQuery(function (a) {
         $.ajax(config.communion + QRCode + "?timestamp=" + new Date().getTime() + "&prefix=" + config.prefix + "&type=1").done(function (data) {
             $('#wxcode img').prop('src', data.QRCode);
         }).fail(function () {
-            alert("获取二维码失败!");
+            //alert("获取二维码失败!");
+            $('#wxcode img').remove();
         }).done(function (data) {
             var _flag = data.loginInfo.loginFlag;
 

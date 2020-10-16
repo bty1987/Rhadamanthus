@@ -96,7 +96,7 @@ $(function(){
 		};
 	})();
 
-	var _condArr = ['theme', 'dateRange'];
+	var _condArr = ['information-notice-theme', 'information-notice-dateTime'];
 	var searcher = new Searcher();
 	searcher.init( _condArr, "condList", api.information.pageNoticeForSeenByType, function(list){
 		displayFunc.init('resultList', list);

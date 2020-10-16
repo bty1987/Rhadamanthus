@@ -2,87 +2,87 @@
 jQuery(function($) {
 
     var contractEdit = {
-        items : {
-            key1 : com.focusPage("#key1"),
-            key2 : com.focusPage("#key2"),
-            key3 : com.focusPage("#key3")
-        },
+        
+        customer: null,
+        decoration: null,
+        
+        cover: {},
+        
 		modal: {
             talkingModal : com.focusPage('#talkingModal')
         },
-        Payment : {},
-        decorationType: {},
-        queryTalking : {},
+        
+        contractArgs: params.contractArgs,
         decorationOrderId : params.decorationOrderId,
 
-        type: {},
         $input: null,
 	};
+    
+    if(contractEdit.contractArgs.agent == "1"){
+        com.focusPage(".agent", "#form").hide();
+    }
+    
+    contractEdit.cover["cov-sign-year"] = com.dateFormat(new Date(), "yyyy");
+    contractEdit.cover["cov-sign-month"] = com.dateFormat(new Date(), "MM");
+    contractEdit.cover["cov-sign-day"] = com.dateFormat(new Date(), "dd");
+    
+    com.post(api.data.queryCustomerById, {"customer.cid": params.cid}, function (res) {
 
-    // com.datetime(contractEdit.items.startTime);
+        var customer = res.customer;
+        
+        com.focusPage("#con-customer-name", "#form").val(customer.name);
+        com.focusPage("#con-customer-phone", "#form").val(customer.phone);
+        com.focusPage("#con-customer-ident", "#form").val(customer.identity);
+        
+        contractEdit.customer = customer;
+        
+        contractEdit.cover["cov-orderId"] = contractEdit.decorationOrderId;
+        contractEdit.cover["cov-customer-name"] = customer.name;
+        contractEdit.cover["cov-customer-phone"] = customer.phone  == "" ? "" : customer.phone;
+    });
 
-    // com.post(api.ds.decoration, {}, function (res) {
-    //     $.each(res.decorationOrderType, function (i, v) {
-    //         contractEdit.decorationType[v.key] = v.value;
-    //     });
-    // }, null, false);
+    com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": contractEdit.decorationOrderId}, function (res) {
+        
+        var data = res.decoration;
+        var house = data.house;
+        var village = house.village;
+        var proper = village.cityProper;
+        
+        com.focusPage("#con-city-name", "#form").val(proper.city.name);
+        com.focusPage("#con-proper-name", "#form").val(proper.name);
+        com.focusPage("#con-village-name", "#form").val(village.name);
+        com.focusPage("#con-housenumber", "#form").val(house.houseNumber);
+        com.focusPage("#con-buildarea", "#form").val(house.buildArea);
+        
+        com.focusPage("#con-designer-name", "#form").val(data.designer.currentName);
+        com.focusPage("#con-designer-phone", "#form").val(data.designer.phone);
 
-    // com.post(api.construction.queryConstructionInfoByOrderId, {"constructionInfo.orderId": contractEdit.decorationOrderId}, function (result) {
-    //             var datas = result.constructionInfo;
-    //             contractEdit.items.workingDuration.val(datas.timeLimit);
-    //             contractEdit.items.startTime.val(datas.finishTime ? datas.finishTime.substr(0,10) : "");
-    // });
+        contractEdit.decoration = data;
+        
+        contractEdit.cover["cov-buildarea"] = data.house.buildArea;
+        contractEdit.cover["cov-address"] = data.house.village.name + " " + data.house.houseNumber;
+        contractEdit.cover["cov-designer-name"] = data.designer.currentName;
+        contractEdit.cover["cov-designer-phone"] = data.designer.phone;
+    });
 
-    //通过装修单号获取装修款项信息
-    // com.post(api.payment.queryDecorationPaymentByOrderId, {"decorationPayment.decoration.orderId": contractEdit.decorationOrderId}, function (res) {
-    //     $.each(res.decorationPayments, function (i, v) {
-    //         contractEdit.Payment[v.paymentType] = v.referMoney;
-    //     });
-    //
-    //      contractEdit.items.first_payment.val(contractEdit.Payment['首付款'] == null ? 0 : contractEdit.Payment['首付款']);
-    //      contractEdit.items.down_payment.val(contractEdit.Payment['首付补款'] == null ? 0 : contractEdit.Payment['首付补款']);
-    //      contractEdit.items.two_installment.val(contractEdit.Payment['二期款'] == null ? 0 : contractEdit.Payment['二期款']);
-    //      contractEdit.items.tail_money.val(contractEdit.Payment['尾款']  == null ? 0 : contractEdit.Payment['尾款']);
-    //
-    // }, null, false);
-
-    // com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": contractEdit.decorationOrderId}, function (res) {
-    //     var data = res.decoration;
-    //
-    //     contractEdit.items.address.val((data.house.village.cityProper.city.name == null ? " " : data.house.village.cityProper.city.name) + " " + (data.house.village.cityProper == null ? " " : data.house.village.cityProper.name) + " " + data.house.village.name + " " + (data.house.houseNumber == null ? " " : data.house.houseNumber));
-    //     contractEdit.items.area.val(data.house.buildArea);
-    //     contractEdit.items.contract_mode.val(contractEdit.decorationType[data.type]);
-    //     contractEdit.items.rental.val(data.orderTotalPrice);
-    //     contractEdit.items.actualReceipt.val(data.factPrice);
-    //
-    // });
-
-    com.focusPage('#talkingResultList').click(function(){
+    com.focusPage('#talkingList').click(function(){
         contractEdit.modal.talkingModal.modal("hide");
     });
-
-    contractEdit.items.key3.dblclick(function(){
-        contractEdit.$input = "#key3";
-        contractEdit.type["types[0]"] = 0 ;
-        contractEdit.type["types[1]"] = 1 ;
-        talkingData ();
-        contractEdit.modal.talkingModal.modal("show");
+    
+    com.focusPage(".makeup.conitem").dblclick(function(){
+        talkingData($(this).attr("id"), {"types[0]": 0, "types[1]": 1});
     });
 
-    // contractEdit.items.provisions1.dblclick(function(){
-    //     contractEdit.$input = "#provisions1";
-    //     contractEdit.type = {} ;
-    //     contractEdit.type["types[0]"] = 2 ;
-    //     talkingData ();
-    //     contractEdit.modal.talkingModal.modal("show");
-    // });
-
-    function talkingData(){
-        com.post(api.communion.queryTalking,contractEdit.type, function (res) {
-
-            displayFunc.init("talkingResultList", res.talkings);
-
-        }, null, false);
+    function talkingData(content, options){
+        
+        contractEdit.$input = content;
+        
+        console.log(content);
+        
+        com.post(api.data.queryTalking, options, function (res) {
+            displayFunc.init("talkingList", res.talkings);
+            contractEdit.modal.talkingModal.modal("show");
+        });
     };
 
     var displayFunc = (function () {
@@ -105,9 +105,9 @@ jQuery(function($) {
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-             var propertyArr = [
-                  [" ", v.content, 'grey']
-                ];
+            var propertyArr = [
+                [" ", v.content, 'grey']
+            ];
 
             $.each(propertyArr, function (index, value) {
                 var $liProperty = $('<li></li>');
@@ -119,11 +119,10 @@ jQuery(function($) {
             $liLine.append($divBtnWrap).append($ulProperty);
 
            return $liLine.click(function(){
-                var $tmp = com.focusPage(contractEdit.$input);
+                var $tmp = com.focusPage("#" + contractEdit.$input);
                 var value = $tmp.val();
-                $tmp.val(value + v.content);
+                $tmp.val(value + v.content + "\n");
            });
-
         };
 
         return {
@@ -145,22 +144,55 @@ jQuery(function($) {
         };
     })();
 
-    com.focusPage("#preservation").on('click', function () {
+    com.focusPage("#preservation").unbind().on('click', function () {
+        
         if(com.validate('form')) return false;
-        com.showConfirm("确定要保存合同信息吗?", function () {
+        
+        var conitems = com.focusPage(".conitem:visible", "#form");
 
-
+        var data = {};
+        
+        $.each(conitems, function(i, e){
+            var content = $(e);
+            data[content.attr("id")] = content.val();
+        });
+        
+        console.log(data);
+        
+        data = $.extend({}, data, contractEdit.cover);
+        
+        console.log(data);
+        
+        data["con-design-money-cn"] = utils.getCNMoney(parseFloat(data["con-design-money"]));
+        data["con-design-rmoney-cn"] = utils.getCNMoney(parseFloat(data["con-design-rmoney"]));
+        
+        data["con-sign-year"] = com.dateFormat(new Date(), "yyyy");
+        data["con-sign-month"] = com.dateFormat(new Date(), "MM");
+        data["con-sign-day"] = com.dateFormat(new Date(), "dd");
+        
+        data["sin-customer-name"] = data["con-customer-name"];
+        data["sin-customer-phone"] = data["con-customer-phone"];
+        data["sin-customer-ident"] = data["con-customer-ident"];
+        
+        if(contractEdit.contractArgs.agent == "0"){
+            data["sin-agent-name"] = data["con-agent-name"];
+            data["sin-agent-phone"] = data["con-agent-phone"];
+            data["sin-agent-ident"] = data["con-agent-ident"];
+        }
+        
+        
+        com.showConfirm("请仔细认真检查合同填写内容", function () {
 
             var options = {
                 "decorationContract.orderId": params.decorationOrderId,
-                "decorationContract.contract.cid": params.cidNumber,
-                "data" : JSON.stringify({
-                    "key1" : contractEdit.items.key1.val(),
-                    "cs18": contractEdit.items.key2.val(),
-                    "key3": contractEdit.items.key3.val()
-                })
+                "decorationContract.contract.cid": params.contractArgs.cid,
+                "data" : JSON.stringify(data)
             };
-
+            
+            console.log(options);
+            
+            return false;
+            
             com.post(api.decoration.addDecorationContract, options, function (res) {
                 com.closePopup();
             });

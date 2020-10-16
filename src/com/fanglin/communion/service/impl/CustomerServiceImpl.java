@@ -10,7 +10,7 @@
 package com.fanglin.communion.service.impl;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -50,52 +50,28 @@ public class CustomerServiceImpl implements CustomerService {
 	private CountingService countingService;
 
 	@Override
-	public void pageCustomer(Paging paging, List<Filter> filters, Integer company) {
+	public void pageCustomer(Paging paging, List<Filter> filters, CustomerVO customerVO, Integer company) {
 
 		List<CustomerVO> customerVOs = new ArrayList<CustomerVO>();
 		List<CustomerPO> customerPOs;
 
-		HashSet<Long> cids = new HashSet<Long>();
+		List<Long> cids = null;
 
-		if (filters != null) {
+		if (customerVO != null && customerVO.getPhone() != null) {
 
-			for (Filter filter : filters) {
-				if ("customerPhone".equals(filter.getField())) {
+			cids = new ArrayList<Long>(Arrays.asList(-1L));
 
-					List<CustomerPhonePO> customerPhonePOs = customerPhoneDao.queryCustomerPhoneByPhone(filter.getData(), null, company);
+			List<CustomerPhonePO> customerPhonePOs = customerPhoneDao.queryCustomerPhoneByPhone(customerVO.getPhone(), null, company);
 
-					if (customerPhonePOs.size() == 0) {
-
-						paging.setData(customerVOs);
-
-						return;
-					} else {
-						for (CustomerPhonePO customerPhonePO : customerPhonePOs) {
-							cids.add(customerPhonePO.getCid());
-						}
-
-						customerPOs = customerDao.pageCustomer(paging, filters, cids, company);
-
-						for (CustomerPO customerPO : customerPOs) {
-
-							CustomerVO customerVO = new CustomerVO();
-
-							BeanUtil.copyProperties(customerPO, customerVO);
-
-							customerVOs.add(customerVO);
-						}
-						paging.setData(customerVOs);
-
-						return;
-					}
-				}
+			for (CustomerPhonePO customerPhonePO : customerPhonePOs) {
+				cids.add(customerPhonePO.getCid());
 			}
 		}
 
 		customerPOs = customerDao.pageCustomer(paging, filters, cids, company);
 
 		for (CustomerPO customerPO : customerPOs) {
-			CustomerVO customerVO = new CustomerVO();
+			customerVO = new CustomerVO();
 
 			BeanUtil.copyProperties(customerPO, customerVO);
 
@@ -402,7 +378,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int registerCustomer(CustomerVO customerVO) throws FLException {
+	public int registCustomer(CustomerVO customerVO) throws FLException {
 
 		CustomerPO customerPO = customerDao.get(customerVO.getCid());
 
@@ -476,6 +452,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int signateCustomer(CustomerVO customerVO, String imgbase) throws FLException {
 
 		CustomerPO customerPO = customerDao.get(customerVO.getCid());
@@ -484,9 +461,12 @@ public class CustomerServiceImpl implements CustomerService {
 			throw new FLException(130002, "客户信息不存在");
 		}
 
-		Signature.signature(customerPO, imgbase);
+		Signature.signature(customerPO.getSignno(), imgbase);
+
+		customerPO.setSignPath(customerVO.getSignPath());
+
+		customerDao.update(customerPO);
 
 		return 0;
 	}
-
 }

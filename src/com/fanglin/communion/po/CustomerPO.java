@@ -58,6 +58,8 @@ public class CustomerPO implements Serializable {
 
 	private String photoPath;
 
+	private String signPath;
+
 	private String identityPathF;
 
 	private String identityPathB;
@@ -67,7 +69,7 @@ public class CustomerPO implements Serializable {
 	private String token;
 
 	private String authurl;
-	
+
 	private short status;
 
 	private int company;
@@ -227,6 +229,15 @@ public class CustomerPO implements Serializable {
 		this.photoPath = photoPath;
 	}
 
+	@Column(name = "signPath")
+	public String getSignPath() {
+		return signPath;
+	}
+
+	public void setSignPath(String signPath) {
+		this.signPath = signPath;
+	}
+
 	@Column(name = "identityPathF")
 	public String getIdentityPathF() {
 		return identityPathF;
@@ -270,7 +281,7 @@ public class CustomerPO implements Serializable {
 	public void setAuthurl(String authurl) {
 		this.authurl = authurl;
 	}
-	
+
 	public short getStatus() {
 		return status;
 	}

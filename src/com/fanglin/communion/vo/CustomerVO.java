@@ -32,6 +32,8 @@ public class CustomerVO implements Serializable {
 
 	private String photoPath;
 
+	private String signPath;
+
 	private String identityPathF;
 
 	private String identityPathB;
@@ -161,6 +163,14 @@ public class CustomerVO implements Serializable {
 
 	public void setPhotoPath(String photoPath) {
 		this.photoPath = photoPath;
+	}
+
+	public String getSignPath() {
+		return signPath;
+	}
+
+	public void setSignPath(String signPath) {
+		this.signPath = signPath;
 	}
 
 	public String getIdentityPathF() {

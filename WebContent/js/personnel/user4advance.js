@@ -7,10 +7,12 @@
 		task:{},
 		
 		user: {
-		    uid: null,
+		    uid: null
 		}
 	};
 	var $wrap = null;
+
+	com.initTypeahead("roleSel", api.system.queryRoleByName, 'role.name', {}, "roleList", 'rid', 'name');
 
 	function showDepaermentModal(value) {
 		$wrap = com.focusPage('#moduleModal').find('.modal-body').empty();
@@ -170,7 +172,6 @@
 			var user = res.user;
 
 			userAdvance.userAdvanceItems.company.bindData(userAdvance.companysel , "cid", "name");
-			userAdvance.userAdvanceItems.roleSel.bindData(userAdvance.roleList, "rid", "name");
 			userAdvance.userAdvanceItems.isLogin.prop("checked", (user.isLogin & 1) == 1 ? true : false);
 			userAdvance.userAdvanceItems.macs.prop("checked", (user.extranet & 1) == 1);
 			userAdvance.userAdvanceItems.ips.prop("checked", (user.extranet & 2) == 2);
@@ -178,18 +179,18 @@
 
 			userAdvance.userAdvanceItems.oldcompany.val(user.companys);
 			userAdvance.userAdvanceItems.company.val();
-			userAdvance.userAdvanceItems.roleSel.val(user.role.rid);
+			com.updateTypeahead("roleSel", user.role.rid, user.role.name);
 			userAdvance.userAdvanceModal.modal("show");
 		}, null, false);
 	}
 
 	function saveData(){
-	    
+
 		var options = {
 			"user.userId": userAdvance.postData.userId,
 			"user.isLogin": userAdvance.userAdvanceItems.isLogin.prop("checked") ? 1 : -1,
 			"user.extranet": (userAdvance.userAdvanceItems.macs.prop("checked") ? 1 : 0) + (userAdvance.userAdvanceItems.ips.prop("checked") ? 2 : 0) + (userAdvance.userAdvanceItems.qcode.prop("checked") ? 4 : 0),
-			"user.role.rid": userAdvance.userAdvanceItems.roleSel.val(),
+			"user.role.rid": com.typeahead("roleSel"),
 			"user.companys": userAdvance.userAdvanceItems.company.val()
 		};
 
@@ -229,13 +230,10 @@
 	userAdvance.userAdvanceItems.advanceSaveBtn = com.focusPage("#advanceSaveBtn").on("click", saveData);
 	userAdvance.userAdvanceItems.advanceCancelBtn = com.focusPage("#advanceCancelBtn");
 
-	com.post(api.system.queryRole, {"timestamp": new Date().getTime()}, function(res){
-		userAdvance.roleList = res.roleList;
-	}, null, false);
 	com.post(api.system.queryCompany,{},function(res){
 		userAdvance.companysel = res.companys;
 	}, null, false);
-	com.post(api.data.queryTask,{},function(res){
+	com.post(api.data.queryTask,{"task.level": 0},function(res){
 		userAdvance.task = res.tasks;
 	}, null, false);
 
@@ -535,7 +533,7 @@
 		}
 	})();
 
-	var _condArr = ['userId', 'userName', 'roleId', 'deptType', 'deptId', 'userstatus', 'identity', 'phone'];
+	var _condArr = ['personel-userId', 'personel-userName', 'personel-roleId', 'personel-dept-type', 'personel-deptId', 'personel-userstatus', 'personel-identity', 'personel-phone'];
 
 	var userAdvanceSeacher = new Searcher();
 

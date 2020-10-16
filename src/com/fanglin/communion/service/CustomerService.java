@@ -19,7 +19,7 @@ import com.fanglin.utils.Paging;
 
 public interface CustomerService {
 
-	public void pageCustomer(Paging paging, List<Filter> filters, Integer company);
+	public void pageCustomer(Paging paging, List<Filter> filters, CustomerVO customerVO, Integer company);
 
 	public CustomerVO queryCustomerById(CustomerVO customerVO);
 
@@ -41,7 +41,7 @@ public interface CustomerService {
 
 	public int updateCustomerPhoneForDefault(CustomerPhoneVO customerPhoneVO) throws FLException;
 
-	public int registerCustomer(CustomerVO customerVO) throws FLException;
+	public int registCustomer(CustomerVO customerVO) throws FLException;
 
 	public String authCustomer(CustomerVO customerVO) throws FLException;
 

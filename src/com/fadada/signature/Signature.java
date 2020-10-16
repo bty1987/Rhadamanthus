@@ -23,16 +23,21 @@ import Decoder.BASE64Decoder;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fadada.bean.Contract;
-import com.fadada.bean.Signet;
 import com.fadada.sdk.client.FddClientBase;
 import com.fadada.sdk.client.FddClientExtra;
 import com.fadada.sdk.client.authForfadada.ApplyCert;
 import com.fadada.sdk.client.authForfadada.FindCertInfo;
+import com.fadada.sdk.client.authForfadada.GetCompanyVerifyUrl;
 import com.fadada.sdk.client.authForfadada.GetFileForUUID;
 import com.fadada.sdk.client.authForfadada.GetPersonVerifyUrl;
+import com.fadada.sdk.client.authForfadada.model.AgentInfoINO;
+import com.fadada.sdk.client.authForfadada.model.BankInfoINO;
+import com.fadada.sdk.client.authForfadada.model.CompanyInfoINO;
+import com.fadada.sdk.client.authForfadada.model.LegalInfoINO;
 import com.fadada.sdk.client.request.ExtsignReq;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.po.SignetPO;
 import com.fanglin.utils.SystemConfig;
 
 @Service("signature")
@@ -62,6 +67,99 @@ public class Signature {
 
 		} catch (Throwable e) {
 			throw new RuntimeException("config-file cannot be load: " + configFilePathName);
+		}
+	}
+
+	public static void register(SignetPO signetPO) throws FLException {
+
+		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
+
+		String result = base.invokeregisterAccount(signetPO.getNo(), "2"); // 注册类型 , 1: 个人 , 2: 公司
+
+		JSONObject response = JSONObject.parseObject(result);
+
+		if (response == null) {
+			throw new FLException(130027, "客户认证失败,请求错误");
+		}
+
+		if (response.getInteger("code") != 1) {
+			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
+		}
+
+		signetPO.setSignno(response.getString("data"));
+	}
+
+	public static String authenticate(SignetPO signetPO) throws FLException {
+
+		GetCompanyVerifyUrl comverify = new GetCompanyVerifyUrl(APPID, APPSECRET, VERSION, HOST);
+
+		String verifyed_way = "0"; // 认证套餐类型 , 0: 对公打款+纸质审核
+		String m_verified_way = "0";// 实名认证套餐类型 , 0: 三要素 , 1: 四要素
+		String page_modify = "1"; // 认证内容是否可修改 , 1: 允许
+		String company_principal_type = "1";// 1.法人，2代理人
+		String result_type = "1"; // 认证跳转方式 , 1: 直接跳转 , 2: 确认后跳转
+		String cert_flag = "1"; // 自动申请证书 , 0: 不申请 , 1: 自动申请
+
+		String signno = signetPO.getSignno();
+
+		CompanyInfoINO companyInfo = new CompanyInfoINO();
+		companyInfo.setCompany_name(signetPO.getName());
+		companyInfo.setCredit_no("");
+		companyInfo.setCredit_image_path("");
+
+		BankInfoINO bankInfo = new BankInfoINO();
+
+		LegalInfoINO legalInfo = new LegalInfoINO();
+
+		AgentInfoINO agentInfo = new AgentInfoINO();
+
+		String result = comverify.invokeCompanyVerifyUrl(companyInfo, bankInfo, legalInfo, agentInfo, signno, verifyed_way, m_verified_way, page_modify, company_principal_type, RETURN_URL_STR, NOTIFY_URL_STR, result_type, cert_flag);
+
+		System.out.println(result);
+
+		JSONObject response = JSONObject.parseObject(result);
+
+		if (response == null) {
+			throw new FLException(130027, "客户认证失败,请求错误");
+		}
+
+		if (response.getInteger("code") != 1) {
+			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
+		}
+
+		JSONObject data = response.getJSONObject("data");
+
+		String authurl = decode(data.getString("url"));
+
+		signetPO.setToken(data.getString("transactionNo"));
+		signetPO.setAuthurl(authurl);
+
+		return authurl;
+	}
+
+	public static void company(SignetPO signetPO) throws FLException {
+
+		FindCertInfo personCertInfo = new FindCertInfo(APPID, APPSECRET, VERSION, HOST);
+
+		String result = personCertInfo.invokeFindPersonCert(signetPO.getSignno(), "2");
+
+		System.out.println(result);
+
+		JSONObject response = JSONObject.parseObject(result);
+
+		if (response == null) {
+			throw new FLException(130027, "客户认证失败,请求错误");
+		}
+
+		if (response.getInteger("code") != 1) {
+			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
+		}
+
+		JSONObject data = response.getJSONObject("data");
+		JSONObject person = data.getJSONObject("person");
+
+		if (!"2".equals(person.getString("status"))) {
+			throw new FLException(130027, String.format("客户认证失败,%s", person.getString("status")));
 		}
 	}
 
@@ -116,7 +214,7 @@ public class Signature {
 
 		JSONObject data = response.getJSONObject("data");
 
-		String authurl = decode(response.getJSONObject("data").getString("url"));
+		String authurl = decode(data.getString("url"));
 
 		customerPO.setToken(data.getString("transactionNo"));
 		customerPO.setAuthurl(authurl);
@@ -178,11 +276,14 @@ public class Signature {
 		}
 	}
 
-	public static void signature(CustomerPO customerPO, String data) throws FLException {
+	public static void signature(String signno, String path) throws FLException {
 
 		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
 
-		String result = base.invokeaddSignature(customerPO.getSignno(), data);
+		System.out.println(signno);
+		System.out.println(path);
+
+		String result = base.invokeaddSignature(signno, null, path);
 
 		System.out.println(result);
 
@@ -197,18 +298,15 @@ public class Signature {
 		}
 	}
 
-	public static void template(String templateId, String path, String url) throws FLException {
+	public static void template(String templateId, File file, String url) throws FLException {
 
 		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
 
-		File file = new File(path);
-		String doc_url = url;
-
-		if (!file.exists()) {
+		if (file != null && !file.exists()) {
 			throw new FLException(-3, "文件上传失败");
 		}
 
-		String result = base.invokeUploadTemplate(templateId, file, doc_url);
+		String result = base.invokeUploadTemplate(templateId, file, url);
 
 		System.out.println(result);
 
@@ -221,7 +319,6 @@ public class Signature {
 		if (response.getInteger("code") != 1) {
 			throw new FLException(130030, String.format("合同模版上传失败,%s", response.getString("msg")));
 		}
-
 	}
 
 	public static void generate(Contract contract, JSONObject params) throws FLException {
@@ -229,7 +326,7 @@ public class Signature {
 		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
 
 		String font_size = "";
-		String font_type = "";
+		String font_type = "4";
 		String paramter = params.toJSONString();
 		String dynamic_tables = "";
 
@@ -251,21 +348,21 @@ public class Signature {
 		contract.viewpdf(response.getString("viewpdf_url"));
 	}
 
-	public static void autosign(Signet signet, Contract contract) throws FLException {
+	public static void autosign(String signno, String keyword, Contract contract) throws FLException {
 
 		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
 
 		ExtsignReq req = new ExtsignReq();
 
-		req.setCustomer_id(signet.code());
+		req.setCustomer_id(signno);
 		req.setContract_id(contract.contentCode());
-		req.setTransaction_id(String.format("%s%s", signet.code(), contract.contentCode()));
+		req.setTransaction_id(String.format("%s%s", signno, contract.contentCode()));
 
 		req.setDoc_title(contract.title()); // 文档标题
-		req.setSign_keyword(signet.keyword());
+		req.setSign_keyword(keyword);
 
 		req.setClient_role("1"); // 客户角色 , 接入平台
-		req.setKeyword_strategy("2"); // 签章策略 , 0: 所有 , 1: 第一个 , 2: 最后一个
+		req.setKeyword_strategy("0"); // 签章策略 , 0: 所有 , 1: 第一个 , 2: 最后一个
 
 		String result = base.invokeExtSignAuto(req);
 
@@ -278,18 +375,17 @@ public class Signature {
 		if (!"1000".equals(response.getString("code"))) {
 			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
 		}
-
 	}
 
-	public static String extsign(CustomerPO customerPO, Contract contract) {
+	public static String extsign(String signno, Contract contract) {
 
 		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
 
 		ExtsignReq req = new ExtsignReq();
 
-		req.setCustomer_id(customerPO.getSignno());
+		req.setCustomer_id(signno);
 		req.setContract_id(contract.contentCode());
-		req.setTransaction_id(String.format("%s%s", customerPO.getSignno(), contract.contentCode()));
+		req.setTransaction_id(String.format("%s%s", signno, contract.contentCode()));
 
 		req.setDoc_title(contract.title()); // 文档标题
 		req.setReturn_url(RETURN_URL_STR);
@@ -428,7 +524,8 @@ public class Signature {
 
 	public static void main(String[] args) throws FLException {
 
-		Signature.template("TEMP202004060001", "D:\\0405测试合同模板.pdf", "");
+		// Signature.template("TEMP202004060001", "D:\\0405测试合同模板.pdf");
+		// Signature.template1("TEMP202009270001", "http://www.fanglinserver.com/group3/M00/05/72/wKgFcF9v8fiAFFYcAAJc5ZwqSl4668.pdf");
 
 	}
 }

@@ -19,8 +19,11 @@ import com.fanglin.data.common.dao.TaskDao;
 import com.fanglin.data.common.vo.TaskVO;
 import com.fanglin.data.po.TaskPO;
 import com.fanglin.information.dao.PlanDao;
+import com.fanglin.information.dao.PlanParamDao;
 import com.fanglin.information.po.PlanPO;
+import com.fanglin.information.po.PlanParamPO;
 import com.fanglin.information.service.PlanService;
+import com.fanglin.information.vo.PlanParamVO;
 import com.fanglin.information.vo.PlanVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
@@ -37,6 +40,9 @@ public class PlanServiceImpl implements PlanService {
 
 	@Autowired
 	private PlanDao planDao;
+
+	@Autowired
+	private PlanParamDao planParamDao;
 
 	@Autowired
 	private TaskDao taskDao;
@@ -70,6 +76,24 @@ public class PlanServiceImpl implements PlanService {
 		}
 
 		paging.setData(planVOs);
+	}
+
+	@Override
+	public PlanVO queryPlan(PlanVO planVO) throws FLException {
+
+		PlanPO planPO = planDao.get(planVO.getPid());
+
+		BeanUtil.copyPropertie(planPO, planVO, Arrays.asList("param"));
+
+		PlanParamPO planParamPO = planParamDao.queryPlanParam(planVO.getPid());
+
+		if (planParamPO != null) {
+			planVO.setParam(new PlanParamVO());
+
+			BeanUtil.copyPropertie(planParamPO, planVO.getParam());
+		}
+
+		return planVO;
 	}
 
 	@Override
@@ -126,6 +150,18 @@ public class PlanServiceImpl implements PlanService {
 		planPO.setStatus(PlanPO.STATUS_INIT_INT);
 
 		planDao.save(planPO);
+
+		if (planVO.getParam() != null) {
+			
+			PlanParamVO paramVO = planVO.getParam();
+			PlanParamPO paramPO = new PlanParamPO();
+
+			BeanUtil.copyPropertie(paramVO, paramPO);
+			
+			paramPO.setPid(planPO.getPid());
+			
+			planParamDao.save(paramPO);
+		}
 
 		return 0;
 	}

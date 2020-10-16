@@ -354,7 +354,7 @@ jQuery(function($) {
 				materialPaymentPostData.paymentInfo = returnMaterialParams[2];
 				materialPayment.couponUpdate = returnMaterialParams[3];
 				com.focusPage("#bankCheckbox").attr("disabled","disabled");
-				com.post(api.payment.queryPointofsalesByPidAndRid, {"pointofsales.pid": v.material.orderId, "pointofsales.rid": v.mrId}, function(res){
+				com.post(api.payment.queryPointofsales, {"pointofsales.pid": v.material.orderId, "pointofsales.rid": v.mrId}, function(res){
 					$.each(res.pointofsaleses, function(i, value){
 						if(value.status == 4) {
 							paymentUtils.addPos(value, materialPayment.htmlName);
@@ -529,7 +529,7 @@ jQuery(function($) {
 			//显示pos 以及mno赋值
 			materialPayment.mno = _orderId;
 
-			com.post(api.payment.queryPointofsalesByPidAndRid, {"pointofsales.pid": _orderId}, function(res){
+			com.post(api.payment.queryPointofsales, {"pointofsales.pid": _orderId}, function(res){
 				$.each(res.pointofsaleses, function(i, value){
 					if(value.status == 0 || value.status == 1) {
 						paymentUtils.addPos(value, materialPayment.htmlName);
@@ -636,7 +636,7 @@ jQuery(function($) {
 
 			materialPayment.mno = payment.material.orderId;
 
-			com.post(api.payment.queryPointofsalesByPidAndRid, {"pointofsales.pid": payment.material.orderId}, function(res){
+			com.post(api.payment.queryPointofsales, {"pointofsales.pid": payment.material.orderId}, function(res){
 				$.each(res.pointofsaleses, function(i, value){
 					if(value.status == 0 || value.status == 1) {
 						paymentUtils.addPos(value, materialPayment.htmlName);

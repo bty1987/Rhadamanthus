@@ -144,7 +144,7 @@ jQuery(function($) {
             $btnCollect.click(function(){
 				decorationPayment.typeUpdate = 1;
 				if(v.oneType == 0){
-					com.post(api.payment.queryPointofsalesByPidAndRid, {"pointofsales.pid": v.decoration.orderId}, function(res){
+					com.post(api.payment.queryPointofsales, {"pointofsales.pid": v.decoration.orderId}, function(res){
 						$.each(res.pointofsaleses, function(i, value){
 							if(value.status == 0 || value.status == 1) {
 								paymentUtils.addPos(value, decorationPayment.htmlName);

@@ -35,15 +35,13 @@ public class PointofsalesDaoImpl extends DaoImpl<PointofsalesPO> implements Poin
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<PointofsalesPO> queryPointofsalesByPid(String pid, Short type) {
-		return session().createCriteria(PointofsalesPO.class).add(Restrictions.eq("pid", pid)).add(Restrictions.eq("type", type)).list();
-	}
-	
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<PointofsalesPO> queryPointofsalesByPidAndRid(String pid, Long rid) {
+	public List<PointofsalesPO> queryPointofsales(String pid, Short type, Long rid) {
 		
 		Criteria criteria = session().createCriteria(PointofsalesPO.class).add(Restrictions.eq("pid", pid));
+		
+		if(type != null){
+			criteria.add(Restrictions.eq("type", type));
+		}
 		
 		if(rid != null){
 			criteria.add(Restrictions.eq("rid", rid));

@@ -303,7 +303,7 @@ $(function () {
 
     var searcher = new Searcher();
 
-    searcher.init(["sales_activity", "sales_goodsCategory", "sales_goodsBrand"], "condLists", api.sales.pageSalesActivity, function(data){
+    searcher.init(["sales-activity", "sales-activity-category-name", "sales-activity-brand-name"], "condLists", api.sales.pageSalesActivity, function(data){
         displayFunc.init('resultLists', data);
     }, "pagenations", "sales4activityPostData", options, false, null, null ,"resultLists");
 

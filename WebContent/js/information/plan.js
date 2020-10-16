@@ -38,7 +38,7 @@ $(function () {
         plan.status = res.planStatus.split("key", "value");
     });
 
-    com.post(api.data.queryTask, {}, function (res) {
+    com.post(api.data.queryTask, {"task.level": 0}, function (res) {
         plan.plugins = res.tasks.split("keyWord", "plugins");
     }, null, false);
 
@@ -149,7 +149,11 @@ $(function () {
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span ></span>').text('添加').appendTo($adda);
 
-        return [$adda];
+        var $exporta = $('<a></a>').addClass('btn btn-minier btn-inverse').attr('id', 'createPlan').css("margin", "0px 3px");
+        var $exporti = $('<i></i>').addClass('icon-plus bigger-110').appendTo($exporta);
+        var $exportspan = $('<span></span>').text('创建').appendTo($exporta);
+
+        return [$adda,$exporta];
     });
 
     com.focusPage('#addPlan', '#pagenation').on("click", function () {
@@ -159,6 +163,11 @@ $(function () {
         taskArgs();
         plan.modals.planModal.modal("show");
         plan.editFlg = false;
+    });
+
+    com.focusPage('#createPlan', '#pagenation').on("click", function () {
+        params["planSeacher"] = planSeacher;
+        com.popup4page("#stockRecordPopUp","/views/information/plan2create.html","计划创建")
     });
 
     function saveData() {

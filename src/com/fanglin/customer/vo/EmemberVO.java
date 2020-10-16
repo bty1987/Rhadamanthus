@@ -1,6 +1,9 @@
 package com.fanglin.customer.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+
+import org.apache.struts2.json.annotations.JSON;
 
 public class EmemberVO implements Serializable {
 
@@ -21,6 +24,8 @@ public class EmemberVO implements Serializable {
 	private String ticket;
 
 	private Short status;
+	
+	private Timestamp registerTime;
 
 	public Long getEmid() {
 		return emid;
@@ -84,6 +89,15 @@ public class EmemberVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	public Timestamp getRegisterTime() {
+		return registerTime;
+	}
+
+	public void setRegisterTime(Timestamp registerTime) {
+		this.registerTime = registerTime;
 	}
 
 }

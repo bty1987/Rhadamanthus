@@ -1,76 +1,100 @@
-<div id='createOrder'>
-<div class="row">
-    <div class="col-xs-12">
+<div>
+	<div class="row">
+	    <div class="col-xs-12">
             <div class="widget-box">
                 <div class="widget-header header-color-blue"><div class="orange">*橙色名称标签为必填信息</div></div>
                 <div class="widget-body">
                     <div class="widget-main">
                         <div class="row">
+                        
                             <div class="col-md-12">
 
                                 <div class="form-group col-sm-6">
                                     <label for="customer_name" class="col-sm-3 control-label no-padding-right orange">甲方</label>
                                     <div class="col-sm-9">
-                                        <input type="text" maxlength="32" class="col-sm-7 col-xs-10" data-toggle="popover" data-trigger='manual' id="key1" placeholder="姓名">
+                                        <input id="con-customer-name" type="text" class="col-sm-7 col-xs-10 conitem v_required" maxlength="32" data-toggle="popover" data-trigger='manual'>
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-6">
                                     <label for="customer_phone" class="col-sm-3 control-label no-padding-right orange">联系电话</label>
                                     <div class="col-sm-9">
-                                        <input type="text"  class="col-sm-7 col-xs-10 " data-toggle="popover" data-placement="bottom" data-trigger="manual" id="key2" placeholder="请输入联系电话">
+                                        <input id="con-customer-phone" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-6">
                                     <label for="customerId" class="col-sm-3 control-label no-padding-right orange">身份证号</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="col-sm-7 col-xs-10 " data-toggle="popover" data-placement="bottom" data-trigger="manual" id="key3" placeholder="请输入身份证号">
+                                        <input id="con-customer-ident" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="customerId" class="col-sm-3 control-label no-padding-right orange">联系电话1</label>
+                                    <div class="col-sm-9">
+                                        <input id="sin-customer-phone1" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="customerId" class="col-sm-3 control-label no-padding-right orange">工作单位</label>
+                                    <div class="col-sm-9">
+                                        <input id="sin-customer-group" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual">
                                     </div>
                                 </div>
                             </div>
 
-                           <div class="col-md-12">
+                           <div class="col-md-12 agent">
                                 <div class="form-group col-sm-6">
-                                        <label for="agentName" class="col-sm-3 control-label no-padding-right">甲方代理人</label>
+                                    <label for="agentName" class="col-sm-3 control-label no-padding-right orange">甲方代理人</label>
                                     <div class="col-sm-9">
-                                        <input type="text" maxlength="32" class="col-sm-7 col-xs-10 " data-toggle="popover" data-trigger='manual' id="key4" placeholder="姓名">
+                                        <input id="con-agent-name" type="text" class="col-sm-7 col-xs-10 conitem v_required" maxlength="32" data-toggle="popover" data-trigger='manual'>
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-6">
-                                    <label for="agentPhone" class="col-sm-3 control-label no-padding-right">联系电话</label>
+                                    <label for="agentPhone" class="col-sm-3 control-label no-padding-right orange">联系电话</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="col-sm-7 col-xs-10 " data-toggle="popover" data-placement="bottom" data-trigger="manual" id="key5" placeholder="请输入代理人联系电话">
+                                        <input id="con-agent-phone" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-6">
-                                    <label for="agentId" class="col-sm-3 control-label no-padding-right">身份证号</label>
+                                    <label for="agentId" class="col-sm-3 control-label no-padding-right orange">身份证号</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="col-sm-7 col-xs-10" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="key6" placeholder="请输入代理人身份证号">
-                                    </div>
-                                </div>
-                            </div>
-
-                           <div class="col-md-12">
-                                <div class="form-group col-sm-6">
-                                    <label for="agentId" class="col-sm-3 control-label no-padding-right">乙方</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" class="col-sm-7 col-xs-10" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="key7" placeholder="方林家居装饰有限公司">
+                                        <input id="con-agent-ident" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual">
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="form-group" style="width:81.3%">
-                                <label class="col-md-2 control-label no-padding-right orange">施工地址</label>
-                                <div class="col-sm-7">
-                                    <input type="text" style="width:60px"   data-placement="top"   id="key8"
-                                           placeholder="辽宁" /> 省
-                                    <input type="text" style="width:60px"  data-placement="top"  id="key9" /> 市
-                                    <input type="text" style="width:60px"   data-placement="top"  id="key10" /> 区
-                                    <input type="text" style="width:137px"  data-placement="top"   id="key11" /> 园区
-                                    <input type="text" style="width:137px"  data-placement="top"   id="key12" /> 楼
+                           <div class="col-md-12 hide">
+                                <div class="form-group col-sm-6">
+                                    <label for="agentId" class="col-sm-3 control-label no-padding-right orange">乙方</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-company-name" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group col-sm-6">
+                                    <label class="col-md-3 control-label no-padding-right orange">施工地址</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-province-name" type="text" class="col-sm-3 conitem v_required" data-placement="top" />
+                                        <span class="col-sm-1 orange">省</span>
+                                        <input id="con-city-name" type="text" class="col-sm-3 conitem v_required" data-placement="top" />
+                                        <span class="col-sm-1 orange">市</span>
+                                        <input id="con-proper-name" type="text" class="col-sm-3 conitem v_required" data-placement="top" />
+                                        <span class="col-sm-1 orange">区</span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <div class="col-sm-9">
+                                        <input id="con-village-name" type="text" class="col-sm-4 conitem v_required" data-placement="top" />
+                                        <span class="col-sm-2 orange">园区</span>
+                                        <input id="con-housenumber" type="text" class="col-sm-6 conitem v_required" data-placement="top" />
+                                    </div>
                                 </div>
                             </div>
 
@@ -78,170 +102,153 @@
                                 <div class="form-group col-sm-6">
                                     <label for="manual" class="col-sm-3 control-label no-padding-right orange">面积</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="col-sm-7 col-xs-10" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="key13">
+                                        <input id="con-buildarea" type="text" class="col-sm-7 col-xs-10 conitem v_required v_float_3" data-toggle="popover" data-placement="bottom" data-trigger="manual">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-6">
                                     <label for="belonger" class="col-sm-3 control-label no-padding-right orange">房屋类型</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="col-sm-7 col-xs-10" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="key14">
+                                        <input id="con-housetype" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-6">
                                     <label for="area" class="col-sm-3 control-label no-padding-right orange">承揽形式</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="col-sm-7 col-xs-10" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="key15">
+                                        <input id="con-work-type" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-6">
-                                    <label for="contract_mode" class="col-sm-3 control-label no-padding-right">承揽模式</label>
+                                    <label for="contract_mode" class="col-sm-3 control-label no-padding-right orange">承揽模式</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="col-sm-7 col-xs-10" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="key16">
+                                        <input id="con-work-model" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-6">
                                     <label for="rental" class="col-sm-3 control-label no-padding-right orange">合同总额</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="col-sm-7 col-xs-10" data-toggle="popover"
-                                               data-placement="bottom" data-trigger="manual" id="key17">
+                                        <input id="con-contract-total" type="text" class="col-sm-7 col-xs-10 conitem v_required v_float_3" data-toggle="popover" data-placement="bottom" data-trigger="manual">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-6">
-                                    <label for="form_of_contract"
-                                           class="col-sm-3 control-label no-padding-right">大写</label>
+                                    <label for="form_of_contract" class="col-sm-3 control-label no-padding-right orange">优惠活动</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="col-sm-7 col-xs-10" data-toggle="popover"
-                                               data-placement="bottom" data-trigger="manual" id="key18">
+                                        <input id="con-activity-name" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual">
                                     </div>
                                 </div>
-
+                                
                                 <div class="form-group col-sm-6">
-                                    <label for="form_of_contract" class="col-sm-3 control-label no-padding-right">优惠活动</label>
+                                    <label for="form_of_contract" class="col-sm-3 control-label no-padding-right orange">实付合同额</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="col-sm-7 col-xs-10" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="key19">
+                                        <input id="con-contract-rtotal" type="text" class="col-sm-7 col-xs-10 conitem v_required v_float_3" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-12">
+                                <div class="form-group col-sm-6">
+                                    <label for="form_of_contract" class="col-sm-3 control-label no-padding-right orange">首付款</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-payment-first" type="text" class="col-sm-7 col-xs-10 conitem v_required v_float_3" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="form_of_contract" class="col-sm-3 control-label no-padding-right">首付款备注</label>
+                                    <div class="col-sm-9">
+                                        <textarea id="con-payment-first-comment" class="col-sm-7 col-xs-10 conitem" rows="3" data-toggle="popover" data-placement="bottom"  data-trigger='manual' maxlength="512"></textarea>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="form_of_contract" class="col-sm-3 control-label no-padding-right orange">首付二期款</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-payment-second" type="text" class="col-sm-7 col-xs-10 conitem v_required v_float_3" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="form_of_contract" class="col-sm-3 control-label no-padding-right">首付二期款备注</label>
+                                    <div class="col-sm-9">
+                                        <span class="col-sm-7 col-xs-10">甲方支付价款达到合同总价款的65%时，乙方方能开始施工</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="form_of_contract" class="col-sm-3 control-label no-padding-right orange">二期款</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-payment-third" type="text" class="col-sm-7 col-xs-10 conitem v_required v_float_3" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="form_of_contract" class="col-sm-3 control-label no-padding-right">二期款备注</label>
+                                    <div class="col-sm-9">
+                                        <textarea id="con-payment-third-comment" class="col-sm-7 col-xs-10 conitem" rows="3" data-toggle="popover" data-placement="bottom"  data-trigger='manual' maxlength="512"></textarea>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="form_of_contract" class="col-sm-3 control-label no-padding-right orange">尾款</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-payment-final" type="text" class="col-sm-7 col-xs-10 conitem v_required v_float_3" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="form_of_contract" class="col-sm-3 control-label no-padding-right">尾款备注</label>
+                                    <div class="col-sm-9">
+                                        <textarea id="con-payment-final-comment" class="col-sm-7 col-xs-10 conitem" rows="3" data-toggle="popover" data-placement="bottom"  data-trigger='manual' maxlength="512"></textarea>
                                     </div>
                                 </div>
                             </div>
 
-                                <div class="form-group col-md-11"  align="center">
-                                <table style="border: 1px solid black; text-align:center; width: 80%; height:30px;">
-                                <!-- tr -->
-                                <tr>
-                                    <td>四次付款</td>
-                                    <td>付款时间</td>
-                                    <td>付款百分比</td>
-                                    <td>金额</td>
-                                    <td>备注</td>
-                                </tr>
-                                <tr>
-                                    <td>首付款</td>
-                                    <td>签订合同日</td>
-                                    <td>总价款的30%</td>
-                                    <td><input type="text" class="col-sm-12 col-xs-10" data-toggle="popover"
-                                               data-placement="bottom" data-trigger="manual" id="key22"></td>
-                                    <td><input type="text" class="col-sm-12 col-xs-10" data-toggle="popover"
-                                               data-placement="bottom" data-trigger="manual" id="key23"></td>
-                                </tr>
-                                <tr>
-                                    <td>首付补款</td>
-                                    <td>开工时间</td>
-                                    <td>总价款的35%</td>
-                                    <td><input type="text" class="col-sm-12 col-xs-10" data-toggle="popover"
-                                               data-placement="bottom" data-trigger="manual" id="key24"></td>
-                                    <td>甲方支付价款达到合同总价款的65%时，乙方方能开始施工</td>
-                                </tr>
-                                <tr>
-                                    <td>二期款</td>
-                                    <td>木工进场前(瓦工完工3日内)</td>
-                                    <td>总价款的32%</td>
-                                    <td><input type="text" class="col-sm-12 col-xs-10" data-toggle="popover"
-                                               data-placement="bottom" data-trigger="manual" id="key25"></td>
-                                    <td><input type="text" class="col-sm-12 col-xs-10" data-toggle="popover"
-                                               data-placement="bottom" data-trigger="manual" id="key27"></td>
-                                </tr>
-                                <tr>
-                                    <td>尾款</td>
-                                    <td>灯、洁具安装前(油工完工3日内)</td>
-                                    <td>总价款的3%</td>
-                                    <td> <input type="text" class="col-sm-12 col-xs-10" data-toggle="popover"
-                                                data-placement="bottom" data-trigger="manual" id="key26"></td>
-                                    <td> <input type="text" class="col-sm-12 col-xs-10" data-toggle="popover"
-                                                data-placement="bottom" data-trigger="manual" id="key28"></td>
-                                </tr>
-                                </table>
-                                </div>
-
+                            <div class="col-md-12">
                                 <div class="form-group col-sm-6">
-                                    <label for="workingDuration" class="col-sm-3 control-label no-padding-right">工期</label>
+                                    <label for="workingDuration" class="col-sm-3 control-label no-padding-right orange">工期</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="col-sm-7 col-xs-10" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="key29">
+                                        <input id="con-work-number" type="text" class="col-sm-7 col-xs-10 conitem v_required v_float_3" data-toggle="popover" data-placement="bottom" data-trigger="manual">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-6">
-                                    <label class="col-sm-3 control-label no-padding-right" for="startTime">开工时间</label>
+                                    <label class="col-sm-3 control-label no-padding-right orange" for="startTime">开工时间</label>
                                     <div class="col-sm-9">
-                                        <input type="text"  style="width:100px"   data-placement="top"   id="key30" />年
-                                        <input type="text"  style="width:65px"  data-placement="top"  id="key31" />月
-                                        <input type="text"  style="width:65px"   data-placement="top"   id="key32" />日
+                                        <input id="con-work-year" type="text" class="col-sm-2 conitem v_required v_number" data-placement="top" />
+                                        <span class="col-sm-1">年</span>
+                                        <input id="con-work-month" type="text" class="col-sm-2 conitem v_required v_number" data-placement="top" />
+                                        <span class="col-sm-1">月</span>
+                                        <input id="con-work-day" type="text" class="col-sm-2 conitem v_required v_number" data-placement="top" />
+                                        <span class="col-sm-1">日</span>
                                     </div>
                                 </div>
 
-                                <div class="form-group col-sm-6">
-                                    <label for="down_payment" class="col-sm-3 control-label no-padding-right">工作单位</label>
-                                    <div class="col-sm-9">
-                                        <input type="text" class="col-sm-7 col-xs-10" data-toggle="popover" data-placement="bottom" data-trigger="manual" id="key34">
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-sm-6">
-                                    <label for="down_payment" class="col-sm-3 control-label no-padding-right">签订日期</label>
-                                    <div class="col-sm-9">
-                                        <input type="text"  style="width:100px"   data-placement="top"   id="key36" />年
-                                        <input type="text"  style="width:65px"  data-placement="top"  id="key37" />月
-                                        <input type="text"  style="width:65px"   data-placement="top"   id="key38" />日
-                                    </div>
-                                </div>
-
-                            <div class="form-group" style="width: 80%">
-                                 <div class="form-group">
-                                   <label class="col-md-2 control-label no-padding-right">补充条款</label>
-                                    <div class="col-md-10">
-                                        <textarea class="m-wrap col-xs-12" rows="8" data-toggle="popover"
-                                                  data-trigger='manual' maxlength="512" id="key33"
-                                                  placeholder="请双击获取内容或手动输入"></textarea>
-                                    </div>
-                                </div>
-
-                             <div class="form-group">
-                                   <label class="col-md-2 control-label no-padding-right">合同未包含项</label>
-                                    <div class="col-md-10">
-                                        <textarea class="m-wrap col-xs-12" rows="8" data-toggle="popover"
-                                                  data-trigger='manual' maxlength="512" id="key39"
-                                                  placeholder="请双击获取内容或手动输入"></textarea>
+                            </div>
+                            
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <textarea id="con-markup-one" class="m-wrap col-xs-12 conitem makeup" rows="8" data-toggle="popover" data-trigger='manual' maxlength="512" placeholder="补充条款 , 请双击获取内容或手动输入"></textarea>
                                     </div>
                                 </div>
 
                                <div class="form-group">
-                                    <label class="col-md-2 control-label no-padding-right">条款补充追加项</label>
-                                    <div class="col-md-10">
-                                        <textarea class="m-wrap col-xs-12" rows="8" data-toggle="popover"
-                                                  data-trigger='manual' maxlength="512" id="key40"
-                                                  placeholder="请手动输入内容"></textarea>
+                                    <div class="col-md-12">
+                                        <textarea id="con-markup-two" class="m-wrap col-xs-12 conitem makeup" rows="8" data-toggle="popover" data-trigger='manual' maxlength="512" placeholder="条款补充追加项 , 请手动输入内容"></textarea>
                                     </div>
                                 </div>
                             </div>
+                        
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
     </div>
-</div>
 </div>
 
 <div class="modal fade" id="talkingModal" tabindex="-1">
@@ -257,10 +264,9 @@
             <div class="modal-body">
                 <form class="form-horizontal">
                     <div class="form-group">
-                        <!--查询结果-->
-                        <div id="talkingResultList" name="resultList" class="clearfix tab-pane active"></div>
+                        <div id="talkingList" name="resultList" class="clearfix tab-pane active"></div>
                     </div>
-				</form>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
@@ -270,5 +276,6 @@
 </div>
 
 <script type="text/javascript">
-	$.loadScript(['js/contract/decorationContractTemp1.js']);
+    $.loadScript(['js/contract/decorationContractTemp1.js']);
 </script>
+

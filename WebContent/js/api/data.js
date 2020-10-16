@@ -52,7 +52,7 @@ $.extend(api, {
         updateCustomerNameAPhone: {url:"updateCustomerNameAPhone.do", server: "communion"},
         updateCustomerPhoneForDefault: {url:"updateCustomerPhoneForDefault.do", server: "communion", intercept: true},
         existCustomer: {url:"existCustomer.do", server: "communion"},
-        registerCustomer: {url:"registerCustomer.do", server: "communion"},
+        registCustomer: {url:"registCustomer.do", server: "communion"},
         authCustomer: {url:"authCustomer.do", server: "communion"},
         confirmCustomer: {url:"confirmCustomer.do", server: "communion"},
         signateCustomer: {url:"signateCustomer.do", server: "communion"},
@@ -580,4 +580,25 @@ $.extend(api, {
             }
         },
         deleteBrandBalance :{url:"deleteBrandBalance.do"},
-    }});
+        
+        pageContract:{url:"pageContract.do"},
+        queryContract:{url:"queryContract.do"},
+        addContract:{url:"addContract.do"},
+        
+        pageSignet: {url:"pageSignet.do"},
+        querySignet: {url:"querySignet.do"},
+        addSignet: {url:"addSignet.do"},
+        updateSignet: {url:"updateSignet.do"},
+        registSignet: {url:"registSignet.do"},
+        authSignet: {url:"authSignet.do"},
+        confirmSignet: {url:"confirmSignet.do"},
+        signateSignet: {url:"signateSignet.do"},
+        
+        pageTalking:{url:"pageTalking.do"},
+        queryTalking:{url:"queryTalking.do"},
+        addTalking:{url:"addTalking.do", server: "communion"},
+        updateTalking:{url:"updateTalking.do", server: "communion"},
+        updateTalkingForStatus:{url:"updateTalkingForStatus.do", server: "communion"},
+        deleteTalking:{url:"deleteTalking.do", server: "communion"},
+    }
+});

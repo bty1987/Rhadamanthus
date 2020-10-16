@@ -869,7 +869,7 @@
             $.extend(options, printConf);
         }
         
-        return layer.open(options);
+        return setTimeout(function(){layer.open(options)}, 200);
     },
     /**
      * 弹窗 , 密你页类型
@@ -916,7 +916,7 @@
             }
         }
         
-        return layer.open(options);
+        return setTimeout(function(){layer.open(options)}, 200);
     },
     /**
      * 弹窗 , 编辑页类型
@@ -960,7 +960,7 @@
             }
         }
         
-        return layer.open(options);
+        return setTimeout(function(){layer.open(options)}, 200);
     },
     /**
      * 弹窗 , 内嵌页类型
@@ -1009,7 +1009,7 @@
             }
         }
 
-        return layer.open(options);
+        return setTimeout(function(){layer.open(options)}, 200);
     },
     /**
      * 弹窗 , 单页类型 , 支持打印
@@ -1132,21 +1132,27 @@
      * @param name 名称
      */
     dateFormat: function(datetime, format){
-        var year = datetime.getFullYear();
-        var month = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
-        var date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
-        var hour = datetime.getHours()< 10 ? "0" + datetime.getHours() : datetime.getHours();
-        var minute = datetime.getMinutes()< 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
-        var second = datetime.getSeconds()< 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
-        return year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second;
+        
+        if(!datetime) datetime = new Date();
+        if(!format) format = "yyyy-MM-dd hh:mm:ss";
+        
+        var yyyy = datetime.getFullYear();
+        var MM = datetime.getMonth() + 1 < 10 ? "0" + (datetime.getMonth() + 1) : datetime.getMonth() + 1;
+        var dd = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate();
+        var hh = datetime.getHours()< 10 ? "0" + datetime.getHours() : datetime.getHours();
+        var mm = datetime.getMinutes()< 10 ? "0" + datetime.getMinutes() : datetime.getMinutes();
+        var ss = datetime.getSeconds()< 10 ? "0" + datetime.getSeconds() : datetime.getSeconds();
+        
+        format = format.replace("yyyy", yyyy).replace("MM", MM).replace("dd", dd).replace("hh", hh).replace("mm", mm).replace("ss", ss);
+        
+        return format;
     },
     /**
      * 当前时间 , 格式为yyyy-MM-dd hh:mm:ss
      * @param name 名称
      */
     currentTime: function () {
-        var date = new Date();
-        return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + " " + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+        return com.dateFormat();
     },
     /**
      * 图标工具方法
@@ -1505,7 +1511,7 @@
         var optionHTML = "";
 
         if (all) {
-            $("<option value=''>全部</option>").appendTo($this);
+            $("<option value=''>" + (typeof all == "string" ? all : "全部") +"</option>").appendTo($this);
         }
 
         for (var i = 0; i < data.length; i++) {

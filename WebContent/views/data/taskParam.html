@@ -1,22 +1,12 @@
 
 <div >
-    <div id="fl-statement"><div class="page-header"><h1>任务<small><i class="icon-double-angle-right"></i>任务字段</small></h1></div></div>
-
     <div class="row">
         <div class="col-xs-12">
-            <div class="row" style="margin-left:10px;margin-right:10px">
-                <div id="list"></div>
-                <div>
-                    <h3 class="clearfix" >
-                        <a  class="btn btn-minier btn-primary pull-left icon-plus bigger-110" id="addTaskParam" style="margin:0px 3px">添加</a>
-                    </h3>
-                </div>
-            </div>
+            <div id="taskParamCondList" class="fl_search clearfix"></div> <!-- 查询条件-->
+            <div id="taskParamResultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+            <div id="taskParamPagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
         </div>
     </div>
-
-</div>
-
 
 <div class="modal fade" id="addItemModal" tabindex="-1">
     <div class="modal-dialog">
@@ -28,13 +18,6 @@
             </div>
             <div class="modal-body">
                 <form class="form-horizontal" id="from">
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="no">编号</label>
-                        <div class="col-sm-9">
-                            <input type="text" id="no" maxlength="12" class="col-xs-10 col-sm-6 v_required"
-                                   data-toggle="popover" data-trigger='manual'  />
-                        </div>
-                    </div>
 
                     <div class="form-group">
                          <label class="col-sm-3 control-label no-padding-right" for="name">名称</label>
@@ -44,10 +27,47 @@
                          </div>
                     </div>
 
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="module">模块</label>
+                        <div class="col-sm-9">
+                            <select id="module" class='col-xs-10 col-sm-6'></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="type">类型</label>
+                        <div class="col-md-9">
+                            <select id="type" class='col-xs-10 col-sm-6'></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="oneType">一类</label>
+                        <div class="col-md-9">
+                            <select id="oneType" class='col-xs-10 col-sm-6'></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="union">关联</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="union" maxlength="12" class="col-xs-10 col-sm-6 v_required"
+                                   data-toggle="popover" data-trigger='manual'  />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="field">字段</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="field" maxlength="12" class="col-xs-10 col-sm-6 v_required"
+                                   data-toggle="popover" data-trigger='manual'/>
+                        </div>
+                    </div>
+
                      <div class="form-group">
-                          <label class="col-sm-3 control-label no-padding-right" for="param">字段</label>
+                          <label class="col-sm-3 control-label no-padding-right" for="table">表名</label>
                           <div class="col-sm-9">
-                              <input type="text" id="param" maxlength="12" class="col-xs-10 col-sm-6 v_required"
+                              <input type="text" id="table" maxlength="12" class="col-xs-10 col-sm-6 v_required"
                                       data-toggle="popover" data-trigger='manual'  />
                           </div>
                      </div>
@@ -61,36 +81,43 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="type">验证标识</label>
-                        <div class="col-md-9">
-                            <select id='type' class='col-xs-10 col-sm-6'></select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="handles">处理过程</label>
+                        <label class="col-sm-3 control-label no-padding-right" for="handle">处理过程</label>
                         <div class="col-sm-9">
-                            <input type="text" id="handles" maxlength="12" class="col-xs-10 col-sm-6 v_required"
-                                   data-toggle="popover" data-trigger='manual'/>
+                            <input type="text" id="handle" maxlength="12" class="col-xs-10 col-sm-6 v_required"
+                                   data-toggle="popover" data-trigger='manual' />
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-right" for="sort">排序</label>
                         <div class="col-sm-9">
-                            <input type="text" id="sort" maxlength="12" class="col-xs-10 col-sm-6 v_number v_required"
-                                   data-toggle="popover" data-trigger='manual'/>
+                            <input type="text" id="sort" maxlength="12" class="col-xs-10 col-sm-6 v_required v_number"
+                                   data-toggle="popover" data-trigger='manual' />
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="comment">备注</label>
+                        <label class="col-sm-3 control-label no-padding-right" for="tableSort">表排序</label>
                         <div class="col-sm-9">
-                            <input type="text" id="comment" maxlength="12" class="col-xs-10 col-sm-6 v_required"
-                                   data-toggle="popover" data-trigger='manual'/>
+                            <input type="text" id="tableSort" maxlength="12" class="col-xs-10 col-sm-6 v_required v_number"
+                                   data-toggle="popover" data-trigger='manual' />
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="comment">说明</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="comment" maxlength="12" class="col-xs-10 col-sm-6 v_required "
+                                   data-toggle="popover" data-trigger='manual' />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="ismain">是否主要</label>
+                        <div class="col-md-9">
+                            <select id="ismain" class='col-xs-10 col-sm-6'></select>
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -99,6 +126,7 @@
             </div>
         </div>
     </div>
+  </div>
 </div>
 
 <div id="layerPopUp" class="portlet box"></div>

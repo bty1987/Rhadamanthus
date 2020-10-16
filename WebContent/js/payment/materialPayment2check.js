@@ -172,7 +172,7 @@ jQuery(function($) {
 				materialPaymentCheckPostData.paymentInfo = returnMaterialParams[2];
 				materialPaymentCheck.couponUpdate = returnMaterialParams[3];
 				com.focusPage("#bankCheckbox").attr("disabled","disabled");
-				com.post(api.payment.queryPointofsalesByPidAndRid, {"pointofsales.pid": v.material.orderId, "pointofsales.rid": v.mrId}, function(res){
+				com.post(api.payment.queryPointofsales, {"pointofsales.pid": v.material.orderId, "pointofsales.rid": v.mrId}, function(res){
 					$.each(res.pointofsaleses, function(i, value){
 						if(value.status == 4) {
 							paymentUtils.addPos(value, materialPaymentCheck.htmlName);

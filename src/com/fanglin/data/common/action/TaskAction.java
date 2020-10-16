@@ -14,7 +14,6 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.service.TaskService;
 import com.fanglin.data.common.vo.TaskVO;
 
-
 @ParentPackage("base")
 @Namespace("/")
 @Controller
@@ -40,7 +39,7 @@ public class TaskAction extends BaseListAction {
 	@Action(value = "queryTask", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryTask() {
 
-		tasks = taskService.queryTask();
+		tasks = taskService.queryTask(task);
 
 		return SUCCESS;
 	}
@@ -60,7 +59,7 @@ public class TaskAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateTaskForIsShow", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateTaskForIsShow() throws FLException {
 

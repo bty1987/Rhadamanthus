@@ -13,7 +13,6 @@ import com.fanglin.data.common.dao.TaskDao;
 import com.fanglin.data.common.service.TaskService;
 import com.fanglin.data.common.vo.TaskVO;
 import com.fanglin.data.po.TaskPO;
-
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -25,6 +24,7 @@ public class TaskServiceImpl implements TaskService {
 	private TaskDao taskDao;
 
 	public void pageTask(Paging paging, List<Filter> filters) {
+
 		List<TaskPO> taskPOs = taskDao.pageTask(paging, filters);
 		List<TaskVO> taskVOs = new ArrayList<TaskVO>();
 
@@ -40,21 +40,19 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public List<TaskVO> queryTask() {
+	public List<TaskVO> queryTask(TaskVO taskVO) {
 
-		List<TaskPO> taskPOs = taskDao.queryTask();
+		List<TaskPO> taskPOs = taskDao.queryTask(taskVO.getLevel());
 		List<TaskVO> taskVOs = new ArrayList<TaskVO>();
-
-		TaskVO taskVO;
 
 		for (TaskPO taskPO : taskPOs) {
 			taskVO = new TaskVO();
-			
+
 			BeanUtil.copyProperties(taskPO, taskVO);
-			
+
 			taskVOs.add(taskVO);
 		}
-		
+
 		return taskVOs;
 	}
 

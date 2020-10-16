@@ -110,7 +110,7 @@ public abstract class GenericDaoImpl implements GenericDao {
 		return (E) session().get(clazz, id);
 	}
 
-	protected void deleteById(Class<?> clazz, Serializable id) {
+	protected void delete(Class<?> clazz, Serializable id) {
 		Session session = session();
 		Object obj = session().get(clazz, id);
 		if (obj != null) {

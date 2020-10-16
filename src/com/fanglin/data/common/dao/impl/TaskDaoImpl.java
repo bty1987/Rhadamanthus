@@ -9,7 +9,6 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.TaskDao;
 import com.fanglin.data.po.TaskPO;
-
 import com.fanglin.utils.Paging;
 
 @Repository("taskDao")
@@ -38,9 +37,8 @@ public class TaskDaoImpl extends DaoImpl<TaskPO> implements TaskDao {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<TaskPO> queryTask() {
-
-		return session().createCriteria(TaskPO.class).add(Restrictions.eq(TaskPO.COLUMN_STATUS_STR, TaskPO.STATUS_ENABLE_INT)).add(Restrictions.eq(TaskPO.COLUMN_SHOW_STR, TaskPO.SHOW_ABLE_INT)).list();
+	public List<TaskPO> queryTask(short level) {
+		return session().createCriteria(TaskPO.class).add(Restrictions.eq("level", level)).add(Restrictions.eq(TaskPO.COLUMN_STATUS_STR, TaskPO.STATUS_ENABLE_INT)).add(Restrictions.eq(TaskPO.COLUMN_SHOW_STR, TaskPO.SHOW_ABLE_INT)).list();
 	}
 
 	@Override

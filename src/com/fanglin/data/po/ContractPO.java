@@ -1,4 +1,4 @@
-package com.fanglin.communion.po;
+package com.fanglin.data.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -11,29 +11,37 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "contract", catalog = "communion")
+@Table(name = "contract", catalog = "data")
 public class ContractPO implements Serializable {
-	
+
 	private static final long serialVersionUID = -5586205565125318260L;
-	
-	private long cid;
-	
-	private String no;
-	
-	private String name;
-	
-	private String title;
-	
-	private short status;
-	
-	private int company;
-	
+
 	public static final String COLUMN_COMPANY_STR = "company";
+
+	public static final String COLUMN_STATUS_STR = "status";
+
+	public static final short STATUS_ENABLE_INT = 0;
+
+	private long cid;
+
+	private String no;
+
+	private String name;
+
+	private String title;
+
+	private String page;
+
+	private String path;
+
+	private short status;
+
+	private int company;
 
 	public ContractPO() {
 		super();
 	}
-	
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "cid")
@@ -70,6 +78,24 @@ public class ContractPO implements Serializable {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	@Column(name = "page")
+	public String getPage() {
+		return page;
+	}
+
+	public void setPage(String page) {
+		this.page = page;
+	}
+
+	@Column(name = "path")
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	@Column(name = "status")

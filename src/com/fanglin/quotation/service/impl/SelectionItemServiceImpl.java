@@ -256,6 +256,27 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int cutoffSelectionItem(SelectionItemVO selectionItemVO) throws FLException {
+
+		SelectionItemPO selectionItemPO = selectionItemDao.get(selectionItemVO.getSiid());
+
+		if (selectionItemPO == null) {
+			throw new FLException(200038, "选材项不存在");
+		}
+
+		if (selectionItemPO.getStatus() == SelectionItemPO.STATUS_BALANCE_SHORT) {
+			throw new FLException(200039, "选材项状态不可操作");
+		}
+
+		updateSelectionTotal(selectionItemPO, selectionItemPO.getNum());
+
+		selectionItemDao.delete(selectionItemPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int tranSelectionItem(List<SelectionItemVO> selectionItemVOs, String userId) throws FLException {
 
 		UserPO traner = userDao.queryUserByUserId(userId);
@@ -281,6 +302,7 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			selectionItemPO.setTraner(traner);
 			selectionItemPO.setTranTime(DateUtil.getDateToTimestamp(new Date()));
 			selectionItemPO.setStatus(SelectionItemPO.STATUS_TRAN_SHORT);
+
 			selectionItemDao.update(selectionItemPO);
 		}
 
@@ -292,6 +314,7 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 	public int checkSelectionItem(SelectionItemVO selectionItemVO, String userId) throws FLException {
 
 		SelectionItemPO selectionItemPO = selectionItemDao.get(selectionItemVO.getSiid());
+
 		UserPO checker = userDao.queryUserByUserId(userId);
 
 		if (selectionItemPO == null) {
@@ -307,15 +330,13 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 		}
 
 		if (selectionItemVO.getChecker() != null) {
-			Integer uid = selectionItemVO.getChecker().getUid();
-			if (uid != null) {
-				checker = userDao.get(uid);
-			}
+			checker = userDao.get(selectionItemVO.getChecker().getUid());
 		}
 
 		selectionItemPO.setChecker(checker);
 		selectionItemPO.setCheckTime(DateUtil.getDateToTimestamp(new Date()));
 		selectionItemPO.setStatus(SelectionItemPO.STATUS_CHECK_SHORT);
+
 		selectionItemDao.update(selectionItemPO);
 
 		return 0;
@@ -339,6 +360,7 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 		selectionItemPO.setConfirmer(confirmer);
 		selectionItemPO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
 		selectionItemPO.setStatus(SelectionItemPO.STATUS_CONFIRM_SHORT);
+
 		selectionItemDao.update(selectionItemPO);
 
 		return 0;
@@ -349,6 +371,7 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 	public int finishSelectionItem(SelectionItemVO selectionItemVO, String userId) throws FLException {
 
 		SelectionItemPO selectionItemPO = selectionItemDao.get(selectionItemVO.getSiid());
+
 		UserPO finish = userDao.queryUserByUserId(userId);
 
 		if (selectionItemPO == null) {
@@ -362,6 +385,7 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 		selectionItemPO.setFinish(finish);
 		selectionItemPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
 		selectionItemPO.setStatus(SelectionItemPO.STATUS_FINISH_SHORT);
+
 		selectionItemDao.update(selectionItemPO);
 
 		return 0;
@@ -388,6 +412,7 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			selectionItemPO.setBalancer(balancer);
 			selectionItemPO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
 			selectionItemPO.setStatus(SelectionItemPO.STATUS_BALANCE_SHORT);
+
 			selectionItemDao.update(selectionItemPO);
 		}
 

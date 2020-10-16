@@ -1,24 +1,30 @@
-package com.fanglin.communion.vo;
+package com.fanglin.data.common.vo;
 
 import java.io.Serializable;
 
 public class ContractVO implements Serializable {
 
 	private static final long serialVersionUID = -2099743893004142670L;
-	
+
 	private Long cid;
-	
+
 	private String no;
-	
+
 	private String name;
-	
+
 	private String title;
-	
+
 	private Short status;
-	
+
+	private String page;
+
+	private String path;
+
+	private String url;
+
 	private Integer company;
-	
-	public ContractVO(){
+
+	public ContractVO() {
 		super();
 	}
 
@@ -62,6 +68,30 @@ public class ContractVO implements Serializable {
 		this.status = status;
 	}
 
+	public String getPage() {
+		return page;
+	}
+
+	public void setPage(String page) {
+		this.page = page;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
 	public Integer getCompany() {
 		return company;
 	}
@@ -69,5 +99,5 @@ public class ContractVO implements Serializable {
 	public void setCompany(Integer company) {
 		this.company = company;
 	}
-	
+
 }
