@@ -40,34 +40,10 @@ public class SalesPaymentAction extends BaseListAction {
 	
 	private Long amount;
 	
-	@Action(value = "pageSalesPaymentForInit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageSalesPaymentForInit() throws FLException{
+	@Action(value = "pageSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageSalesPayment() throws FLException{
 		
-		salesPaymentService.pageSalesPaymentForInit(getPaging(), getFilters(), queryCompany(), companyType);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "pageSalesPaymentForNotInit", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageSalesPaymentForNotInit() throws FLException{
-		
-		salesPaymentService.pageSalesPaymentForNotInit(getPaging(), getFilters(), queryCompany(), companyType);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "pageSalesPaymentForCollect", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageSalesPaymentForCollect() throws FLException{
-		
-		salesPaymentService.pageSalesPaymentForCollect(getPaging(), getFilters(), queryCompany());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "pageSalesPaymentForConfirm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageSalesPaymentForConfirm() throws FLException{
-		
-		salesPaymentService.pageSalesPaymentForConfirm(getPaging(), getFilters(), queryCompany());
+		salesPaymentService.pageSalesPayment(getPaging(), getFilters(), salesPayment, queryCompany(), companyType);
 		
 		return SUCCESS;
 	}

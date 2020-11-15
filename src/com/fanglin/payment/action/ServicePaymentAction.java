@@ -38,26 +38,10 @@ public class ServicePaymentAction extends BaseListAction {
 	
 	private List<Long> posids;
 	
-	@Action(value = "pageServicePaymentForCollect", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageServicePaymentForCollect() throws FLException{
+	@Action(value = "pageServicePayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageServicePayment() throws FLException{
 		
-		servicePaymentService.pageServicePaymentForCollect(getPaging(), getFilters(), queryCompany());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "pageServicePaymentForConfirm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageServicePaymentForConfirm() throws FLException{
-		
-		servicePaymentService.pageServicePaymentForConfirm(getPaging(), getFilters(), queryCompany());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "pageServicePaymentForHistory", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageServicePaymentForHistory() throws FLException{
-		
-		servicePaymentService.pageServicePaymentForHistory(getPaging(), getFilters(), queryCompany());
+		servicePaymentService.pageServicePayment(getPaging(), getFilters(), servicePayment, queryCompany());
 		
 		return SUCCESS;
 	}

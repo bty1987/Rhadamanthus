@@ -76,13 +76,13 @@ public class PaymentServiceImpl implements PaymentService {
 	private DecorationAdditionService decorationAdditionService;
 	
 	@Override
-	public void pagePaymentForCollect(Paging paging, List<Filter> filters, int company) {
+	public void pagePayment(Paging paging, List<Filter> filters, PaymentVO payment, int company) {
 		
 		if(filters.size() == 0) return;
 		
-		filters.add(new Filter("status", String.valueOf(PaymentPO.PAYMENT_STATUS_PAID_INT), "eq"));
+		if (payment != null) payment.filter(filters);
 
-		List<PaymentPO> paymentPOs = paymentDao.pagePaymentForHistory(paging, filters, company);
+		List<PaymentPO> paymentPOs = paymentDao.pagePayment(paging, filters, company);
 		List<PaymentVO> paymentVOs = new ArrayList<PaymentVO>();
 
 		for(PaymentPO paymentPO: paymentPOs){
@@ -92,41 +92,6 @@ public class PaymentServiceImpl implements PaymentService {
 		paging.setData(paymentVOs);
 		
 	}
-
-
-	@Override
-	public void pagePaymentForConfirm(Paging paging, List<Filter> filters, int company) {
-		
-		if(filters.size() == 0) return;
-		
-		filters.add(new Filter("status", String.valueOf(PaymentPO.PAYMENT_STATUS_CONFIRMED_INT), "eq"));
-
-		List<PaymentPO> paymentPOs = paymentDao.pagePaymentForHistory(paging, filters, company);
-		List<PaymentVO> paymentVOs = new ArrayList<PaymentVO>();
-
-		for(PaymentPO paymentPO: paymentPOs){
-			paymentVOs.add(paymentPOToVO(paymentPO));
-		}
-
-		paging.setData(paymentVOs);
-		
-	}
-
-	@Override
-	public void pagePaymentForHistory(Paging paging, List<Filter> filters, int company){
-
-		if(filters.size() == 0) return;
-
-		List<PaymentPO> paymentPOs = paymentDao.pagePaymentForHistory(paging, filters, company);
-		List<PaymentVO> paymentVOs = new ArrayList<PaymentVO>();
-
-		for(PaymentPO paymentPO: paymentPOs){
-			paymentVOs.add(paymentPOToVO(paymentPO));
-		}
-
-		paging.setData(paymentVOs);
-	}
-
 
 	@Override
 	public List<PaymentVO> queryPaymentByOrderId(PaymentVO paymentVO) {
@@ -184,7 +149,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 		if(advancePaymentPO == null){
 			advancePaymentPO = new AdvancePaymentPO();
-			advancePaymentPO.setDecoration(new DecorationPO(paymentVO.getOrderId()));
+			advancePaymentPO.setDecoration(decorationPO);
 		}		
 
 		long balance = 0;
@@ -490,15 +455,6 @@ public class PaymentServiceImpl implements PaymentService {
 			advanceReceiptPO.setCashInfo("");
 		}
 		
-		if(bank != null && bank != 0){
-			advanceReceiptPO.setBank(bank);
-			advanceReceiptPO.setBankInfo(paymentVO.getBankInfo());
-			realMoney = Arith.add(bank, realMoney);
-		}else{
-			advanceReceiptPO.setBank(0);
-			advanceReceiptPO.setBankInfo("");
-		}
-		
 		if(checkv != null && checkv != 0){
 			advanceReceiptPO.setCheckv(checkv);
 			advanceReceiptPO.setCheckvBank(paymentVO.getCheckvBank());
@@ -506,6 +462,10 @@ public class PaymentServiceImpl implements PaymentService {
 		}else{
 			advanceReceiptPO.setCheckv(0);
 			advanceReceiptPO.setCheckvBank("");
+		}
+		
+		if(bank != null && bank != 0){
+			realMoney = Arith.add(bank, realMoney);
 		}
 		
 		if(paymentPO.getRecharge() != realMoney){

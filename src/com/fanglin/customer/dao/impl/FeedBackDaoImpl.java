@@ -1,7 +1,5 @@
 package com.fanglin.customer.dao.impl;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -10,49 +8,46 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.FeedbackDao;
 import com.fanglin.customer.po.FeedbackPO;
-import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Repository("feedbackDao")
-public class FeedbackDaoImpl extends DaoImpl<FeedbackPO> implements FeedbackDao{
-	
-	public FeedbackDaoImpl(){
+public class FeedbackDaoImpl extends DaoImpl<FeedbackPO> implements FeedbackDao {
+
+	public FeedbackDaoImpl() {
 		super(FeedbackPO.class);
 	}
 
 	@Override
 	public List<FeedbackPO> pageFeedback(Paging paging, List<Filter> filters) {
-		
-		PagingQuery<FeedbackPO> query = pagingQuery(paging, FeedbackPO.class);
-		
-		queryFilterExcute(query, filters);
-		
-		return query.list();
-		
-	}
-	
-	private void queryFilterExcute(PagingQuery<FeedbackPO> query,List<Filter> filters) {
-		
-		if (filters != null){
-			for (Filter filter : filters){
-				
-				if("createTime".equals(filter.getField())){
-					
-					String sTime = filter.getData().split("-")[0].replaceAll("/", "-") + " 00:00:00";
-					String eTime = filter.getData().split("-")[1].replaceAll("/", "-") + " 23:59:59";
-					
-					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-					
-					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-					
-					query.add(query.getCriterion("createTime", eTimestamp, "le"));
-					query.add(query.getCriterion("createTime", sTimestamp, "ge"));
 
-			 }
+		PagingQuery<FeedbackPO> query = pagingQuery(paging, FeedbackPO.class);
+
+		queryFilterExcute(query, filters);
+
+		return query.list();
+	}
+
+	private void queryFilterExcute(PagingQuery<FeedbackPO> query, List<Filter> filters) {
+
+		if (filters == null) {
+			return;
+		}
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if ("orderId".equals(field)) {
+				query.add(query.getCriterion(FeedbackPO.COLUMN_ORDERID_STR, data, op));
+			} else if ("type".equals(field)) {
+				query.add(query.getCriterion(FeedbackPO.COLUMN_TYPE_STR, Short.valueOf(data), op));
+			} else if ("phone".equals(field)) {
+				query.add(query.getCriterion(FeedbackPO.COLUMN_PHONE_STR, data, op));
+			} else if ("createTime".equals(filter.getField())) {
+				query.timeranges("createTime", "createTime", data);
 			}
 		}
 	}
-
 }

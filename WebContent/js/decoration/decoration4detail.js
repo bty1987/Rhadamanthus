@@ -108,18 +108,18 @@ jQuery(function ($) {
     decorationDetail.paymentItems.changeReason = com.focusPage('#changeReason');
     decorationDetail.paymentItems.materialPrice = com.focusPage('#materialPrice');
 
-    decorationDetail.customerItems.customerName = com.focusPage("#customerName");
-    decorationDetail.customerItems.identity = com.focusPage("#identity");
-    decorationDetail.customerItems.officer = com.focusPage("#officer");
-    decorationDetail.customerItems.passport = com.focusPage("#passport");
-    decorationDetail.customerItems.gender = com.focusPage("#gender").switchBtn("gender");
-    decorationDetail.customerItems.qq = com.focusPage("#qq");
-    decorationDetail.customerItems.wechat = com.focusPage("#wechat");
-    decorationDetail.customerItems.email = com.focusPage("#email");
-    decorationDetail.customerItems.address = com.focusPage("#address");
-    decorationDetail.customerItems.relationshipType = com.focusPage("#relationshipType");
-    decorationDetail.customerItems.addphone = com.focusPage("#addphone");
-    decorationDetail.customerItems.savePhoneBtn = com.focusPage("#savePhoneBtn");
+    decorationDetail.customerItems.customerName = com.focusPage("#customerName", "#customerChangeModal");
+    decorationDetail.customerItems.identity = com.focusPage("#identity", "#customerChangeModal");
+    decorationDetail.customerItems.officer = com.focusPage("#officer", "#customerChangeModal");
+    decorationDetail.customerItems.passport = com.focusPage("#passport", "#customerChangeModal");
+    decorationDetail.customerItems.gender = com.focusPage("#gender").switchBtn("gender", "#customerChangeModal");
+    decorationDetail.customerItems.qq = com.focusPage("#qq", "#customerChangeModal");
+    decorationDetail.customerItems.wechat = com.focusPage("#wechat", "#customerChangeModal");
+    decorationDetail.customerItems.email = com.focusPage("#email", "#customerChangeModal");
+    decorationDetail.customerItems.address = com.focusPage("#address", "#customerChangeModal");
+    decorationDetail.customerItems.relationshipType = com.focusPage("#relationshipType", "#customerChangeModal");
+    decorationDetail.customerItems.addphone = com.focusPage("#addphone", "#customerChangeModal");
+    decorationDetail.customerItems.savePhoneBtn = com.focusPage("#savePhoneBtn", "#customerChangeModal");
 
     decorationDetail.btnViewFlg = params.btnViewFlg == false ? true : false;
     decorationDetail.btnViewFlg == false ? com.focusPage('#btnDisplay').removeAttr("style", "display: none;") : com.focusPage('#btnDisplay').attr("style", "display: none;");
@@ -340,17 +340,9 @@ jQuery(function ($) {
     }, null, false);
 
     com.post(api.data.queryConstructionNode, {}, function(res){
-        decorationDetail.constructionNodes = res.constructionNodes.split("sort", 'name');
-    }, null, false);
-    
-    com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": decorationDetail.decorationOrderId}, function(res){
-        var constructionSchedules = res.constructionSchedules;
-        $.each(constructionSchedules, function(i, v){
-            if(decorationDetail.constructionNodes[v.schedule]) v.name = decorationDetail.constructionNodes[v.schedule];
-        });
-        com.focusPage("#quotationCNSelect").bindData(constructionSchedules, "schedule", "name");
+        com.focusPage("#quotationCNSelect").bindData(res.constructionNodes, "sort", "name");
     });
-
+    
     com.initTypeahead('quoterId', api.personel.queryUserByPinyin, "pinyinName", {
         "user.status": 0,
         "departmentType.name": ""
@@ -838,7 +830,7 @@ jQuery(function ($) {
     });
 
     com.focusPage('#btnBack').on("click", function () {
-        //com.switchPage(params.historyPage);
+        com.switchPage(params.historyPage);
     });
 
     com.focusPage("#btnPrintDefaultQuotationInfo").on('click', function (res) {
@@ -966,7 +958,7 @@ jQuery(function ($) {
     function initWizard(decorationDetail) {
         var wizard = {"activityBtnMethod": null, "uiBtnMethod": null, "isDesign": false};
 
-        decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", decorationDetail.decorationOrderId);
+        decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", "contractFiles", decorationDetail.decorationOrderId);
 
         com.focusPage('#fuelux-wizard').ace_wizard({"status": true}).on('change', function (e, info) {
             var curstep = 0;
@@ -981,7 +973,7 @@ jQuery(function ($) {
                     quotationUtils.loadQuotationDetail();
                     break;
                 case "picture":
-                    decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", decorationDetail.decorationOrderId);
+                    decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", "contractFiles", decorationDetail.decorationOrderId);
                     break;
                 case "material":
                     decorationUtils.initMaterial(decorationDetail);
@@ -1020,7 +1012,7 @@ jQuery(function ($) {
                     quotationUtils.loadQuotationDetail();
                     break;
                 case "picture":
-                    decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", decorationDetail.decorationOrderId);
+                    decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", "contractFiles", decorationDetail.decorationOrderId);
                     break;
                 case "material":
                     decorationUtils.initMaterial(decorationDetail);

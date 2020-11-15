@@ -45,18 +45,6 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 		
 		return query.list();
 	}
-	
-	@Override
-	public List<MaterialPaymentPO> pageMaterialPaymentForStatus(Paging paging, List<Filter> filters, Short status, String op) {
-		
-		PagingQuery<MaterialPaymentPO> query = pagingQuery(paging, MaterialPaymentPO.class);
-		
-		query.add(query.getCriterion(MaterialPaymentPO.COLUMN_PAYMENTSTATUS_STR, status, op));
-		
-		queryFilterExcute(query, filters);
-		
-		return query.list();
-	}
 
 	@Override
 	public List<MaterialPaymentPO> queryMaterialPaymentByOrderId(List<Filter> filters) {

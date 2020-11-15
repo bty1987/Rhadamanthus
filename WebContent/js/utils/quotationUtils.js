@@ -87,9 +87,17 @@ var quotationUtils = {
                 params.showType = {itemtype: 4};
                 com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
             });
-            $("#printConstructionNodeBtn").click(function(){
+            $("#printNormriceSBtn").click(function(){
                 params.quotationId = quotationId;
-                params.type = 5;
+                params.type = 1;
+                params.subtype = [1];
+                params.showType = {itemtype: 4};
+                params.workType = com.focusPage("#quotationCNSelect", "#printQuotationCNModal").val();
+                com.popup("打印报价", "/views/quotation/normriceOutput.html", null, null, !!status);
+            });
+            $("#printNormriceWBtn").click(function(){
+                params.quotationId = quotationId;
+                params.type = 2;
                 params.subtype = [1];
                 params.showType = {itemtype: 4};
                 params.workType = com.focusPage("#quotationCNSelect", "#printQuotationCNModal").val();

@@ -268,6 +268,13 @@ $.extend(api, {decoration: {
                 args: ["decoration.notSalesmanRate"]
             }
         },
+        createDecorationForAdvance: {
+            url: "createDecorationForAdvance.do",
+            type: "update",
+            tranargs: {
+                args: ["decoration.notSalesmanRate"]
+            }
+        },
         obsoleteDecoration: {url: "obsoleteDecoration.do"},
         terminalDecoration: {
         	url: "terminalDecoration.do",

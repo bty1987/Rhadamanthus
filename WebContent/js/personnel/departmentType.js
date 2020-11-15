@@ -67,10 +67,13 @@ jQuery(function($) {
 	$('a[name="departmentTypeModal"]', com.focusPage('#pagenation')).click(function(){
 		departmentType.modal.modal("show");
 	});
+	
 	function saveData(){
-		if(com.validate()){
+	    
+		if(com.validate("departmentTypeModal")){
 			return false;
 		}
+		
 		com.post(api.communion.addDepartmentType, {'departmentType.name': departmentType.items.departmentTypeName.val()}, function(res){
 			departmentType.modal.modal("hide");
 			searcher.doSearch();

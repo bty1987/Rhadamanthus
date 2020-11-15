@@ -9,11 +9,7 @@ import com.fanglin.utils.Paging;
 
 public interface ServicePaymentService {
 	
-	public void pageServicePaymentForCollect(Paging paging, List<Filter> filters, Integer company);
-	
-	public void pageServicePaymentForConfirm(Paging paging, List<Filter> filters, Integer company);
-	
-	public void pageServicePaymentForHistory(Paging paging, List<Filter> filters, Integer company);
+	public void pageServicePayment(Paging paging, List<Filter> filters,  ServicePaymentVO servicePayment,Integer company);
 	
 	public List<ServicePaymentVO> queryServicePaymentByOrderId(ServicePaymentVO ServicePaymentVO);
 	

@@ -44,7 +44,7 @@ jQuery(function($) {
     });
 
     decorationService.rollback && servicePage.btnBack.click(function () {
-        //com.switchPage(decorationService.rollback);
+        com.switchPage(decorationService.rollback);
     });
 
     function drawTable(decorationOrderId) {

@@ -261,6 +261,8 @@ $.extend(api, {customer: {
             args: ["cppoint.dpoint", "cppoint.spoint"]
         }
     },
+    queryFeedbackDrawing: {url:"queryFeedbackDrawing.do"},
+    addFeedbackDrawing: {url:"addFeedbackDrawing.do"},
 	
 	
 }});

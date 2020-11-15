@@ -439,7 +439,7 @@ $(function(){
             };
         })();
 
-        var condArr = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'data-worktype'];
+        var condArr = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'quotation-worktype'];
 
         var quotationSeacher = new Searcher();
 

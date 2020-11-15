@@ -66,9 +66,9 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 
 		for (SalesBalancePO salesBalancePO : salesBalancePOs) {
 
-			SalesBalanceVO salesBalanceVO = new SalesBalanceVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new RefundsVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO());
+			SalesBalanceVO salesBalanceVO = new SalesBalanceVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new RefundsVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(),new UserBaseVO());
 
-			BeanUtil.copyPropertie(salesBalancePO, salesBalanceVO, Arrays.asList("sales", "refunds", "creater", "poster", "salesman", "dept", "region"));
+			BeanUtil.copyPropertie(salesBalancePO, salesBalanceVO, Arrays.asList("sales", "refunds", "creater", "poster", "salesman", "dept", "region","checker"));
 			BeanUtil.copyPropertie(salesBalancePO.getSales(), salesBalanceVO.getSales(), Arrays.asList("salesman", "dept", "region", "guider", "instorer", "guideDept", "house", "customer", "supplier", "finisher"));
 			BeanUtil.copyProperties(salesBalancePO.getSalesman(), salesBalanceVO.getSalesman(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyProperties(salesBalancePO.getDept(), salesBalanceVO.getDept(), Arrays.asList("fatherDept", "type", "manager"));
@@ -83,6 +83,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 			BeanUtil.copyPropertie(salesBalancePO.getRefunds(), salesBalanceVO.getRefunds(), Arrays.asList("creater"));
 			BeanUtil.copyPropertie(salesBalancePO.getCreater(), salesBalanceVO.getCreater(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyPropertie(salesBalancePO.getPoster(), salesBalanceVO.getPoster(), Arrays.asList("dept", "duty"));
+			BeanUtil.copyPropertie(salesBalancePO.getChecker(), salesBalanceVO.getChecker(), Arrays.asList("dept", "duty"));
 
 			if (salesBalancePO.getSales().getSupplier() != null) {
 				BeanUtil.copyPropertie(salesBalancePO.getSales().getSupplier(), salesBalanceVO.getSales().getSupplier(), Arrays.asList("dept", "duty"));
@@ -148,6 +149,25 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 			return;
 
 		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalanceForSupplier(paging, filters, pompany, userPO.getUid());
+
+		List<SalesBalanceVO> salesBalanceVOs = pageSalesBalance(salesBalancePOs);
+
+		paging.setData(salesBalanceVOs);
+
+	}
+	
+	@Override
+	public void pageSalesBalanceForCheck(Paging paging, List<Filter> filters, String userId, int pompany) {
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		if (filters.size() == 0)
+			return;
+
+		if (userPO == null)
+			return;
+
+		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalanceForCheck(paging, filters, pompany, userPO.getUid());
 
 		List<SalesBalanceVO> salesBalanceVOs = pageSalesBalance(salesBalancePOs);
 

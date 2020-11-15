@@ -158,8 +158,9 @@
     }
     //保存
     function saveData(){
-    	if(com.validate()|| company.repeatFlg)
-    		return;
+        
+    	if(com.validate("addItemModal")|| company.repeatFlg)
+    		return false;
     	
     	var url;
     	var options = {

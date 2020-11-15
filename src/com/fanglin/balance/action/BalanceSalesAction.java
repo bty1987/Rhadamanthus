@@ -22,20 +22,22 @@ import com.fanglin.sales.vo.SalesBalanceVO;
 public class BalanceSalesAction extends BaseListAction {
 
 	private static final long serialVersionUID = 4861644463792131364L;
-	
+
 	@Autowired
 	private BalanceSalesService balanceSalesService;
-	
+
+	private BalanceVO balance;
+
 	private BalanceSalesVO balanceSales;
-	
-	private List<BalanceSalesVO> balanceSaless;
-	
-	private List<SalesBalanceVO> salesBalances;
-	
+
 	private List<BalanceVO> balances;
-	
+
+	private List<BalanceSalesVO> balanceSaless;
+
+	private List<SalesBalanceVO> salesBalances;
+
 	private SalesBalanceVO salesBalance;
-	
+
 	@Action(value = "queryBalanceSalesForSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryBalanceSalesForSales() {
 
@@ -43,7 +45,7 @@ public class BalanceSalesAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryBalanceSalesForBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryBalanceSalesForBalance() {
 
@@ -51,20 +53,20 @@ public class BalanceSalesAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "submitBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String submitBalanceSales() throws FLException {
 
-		balanceSalesService.submitBalanceSales(balanceSaless, queryUserId(), queryCompany());
+		balanceSalesService.submitBalanceSales(balance, balanceSaless, queryUserId(), queryCompany());
 		return SUCCESS;
 	}
 
-	public BalanceSalesService getBalanceSalesService() {
-		return balanceSalesService;
+	public BalanceVO getBalance() {
+		return balance;
 	}
 
-	public void setBalanceSalesService(BalanceSalesService balanceSalesService) {
-		this.balanceSalesService = balanceSalesService;
+	public void setBalance(BalanceVO balance) {
+		this.balance = balance;
 	}
 
 	public BalanceSalesVO getBalanceSales() {
@@ -106,7 +108,5 @@ public class BalanceSalesAction extends BaseListAction {
 	public void setBalances(List<BalanceVO> balances) {
 		this.balances = balances;
 	}
-	
-	
 
 }

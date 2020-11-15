@@ -105,7 +105,7 @@
 
     function saveData(){
         
-        if(com.validate()){
+        if(com.validate("system")){
             return false;
         }
 

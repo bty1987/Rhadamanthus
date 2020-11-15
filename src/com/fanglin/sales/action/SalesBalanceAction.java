@@ -68,7 +68,15 @@ public class SalesBalanceAction extends BaseListAction {
 
 		return SUCCESS;
 	}
+	
+	@Action(value = "pageSalesBalanceForCheck", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageSalesBalanceForCheck() throws FLException {
 
+		salesBalanceService.pageSalesBalanceForCheck(getPaging(), getFilters(), queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+	
 	@Action(value = "updateSalesBalanceForVBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateSalesBalanceForVBalance() throws FLException {
 

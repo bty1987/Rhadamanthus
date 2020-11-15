@@ -37,6 +37,8 @@ public class SelectionItemVO implements Serializable {
 
 	private Integer initNum;// 工程量
 
+	private Integer refnum;// 退数量
+
 	private Integer postprice;// 售价
 
 	private Integer preprice;// 预算金额
@@ -62,8 +64,6 @@ public class SelectionItemVO implements Serializable {
 	private UserBaseVO balancer;// 结算人
 
 	private UserBaseVO finish;// 完结人
-
-	private Integer refnum;// 退数量
 
 	private String comment;// 注释
 
@@ -177,6 +177,14 @@ public class SelectionItemVO implements Serializable {
 		this.initNum = initNum;
 	}
 
+	public Integer getRefnum() {
+		return refnum;
+	}
+
+	public void setRefnum(Integer refnum) {
+		this.refnum = refnum;
+	}
+
 	public Integer getPostprice() {
 		return postprice;
 	}
@@ -285,14 +293,6 @@ public class SelectionItemVO implements Serializable {
 
 	public void setFinish(UserBaseVO finish) {
 		this.finish = finish;
-	}
-
-	public Integer getRefnum() {
-		return refnum;
-	}
-
-	public void setRefnum(Integer refnum) {
-		this.refnum = refnum;
 	}
 
 	public String getComment() {

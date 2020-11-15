@@ -162,7 +162,7 @@ var selectionDetail = (function(){
 
             var soodsSeacher = new Searcher();
 
-            soodsSeacher.init(["aoodsGoodsName"], "condList", api.data.pageSoodsByQiid, function(data) {
+            soodsSeacher.init(["data-aoods-name"], "condList", api.data.pageSoodsByQiid, function(data) {
                 displayFunc.init("resultList", data);
             }, "pagenation", "selectionItemSoodsPostData", {"soods.quotationItem.qiId": quotationItemId}, false, null, null);
 

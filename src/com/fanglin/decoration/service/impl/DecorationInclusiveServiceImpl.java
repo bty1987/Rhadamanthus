@@ -107,7 +107,7 @@ public class DecorationInclusiveServiceImpl implements DecorationInclusiveServic
 		if (decorationPO == null) {
 			throw new FLException(140013, "订单不存在");
 		}
-		
+
 		if (decorationPO.getType() == DecorationPO.TYPE_INCLUSIVE_INT) {
 			decorationPO.setSaleScale(DecorationPO.TYPE_INIT_SALESCALE_INT);
 		}
@@ -157,7 +157,7 @@ public class DecorationInclusiveServiceImpl implements DecorationInclusiveServic
 		DecorationInclusivePO decorationInclusivePO = decorationInclusiveDao.queryDecorationInclusiveByOrderId(orderId);
 
 		if (decorationInclusivePO == null) {
-			decorationInclusivePO = new DecorationInclusivePO(new DecorationPO(orderId));
+			decorationInclusivePO = new DecorationInclusivePO(decorationPO);
 		}
 
 		BeanUtil.copyPropertie(decorationInclusiveVO, decorationInclusivePO, Arrays.asList("decoration"));

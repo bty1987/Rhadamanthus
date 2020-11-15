@@ -38,26 +38,9 @@ $.extend(api, {payment: {
 		}]
 	},
 	addAdvancePayment: {url: "addAdvancePayment.do"},
-	pagePaymentForCollect: {
-		url: "pagePaymentForCollect.do",
-		demo: true,
-		type: "query",
-		tranargs: [{
-			result: "paging-data",
-			args: ["recharge", "balance", "cash", "bank", "checkv", "installment", "accounts", "transfer"]
-		}]
-	},
-	pagePaymentForConfirm: {
-		url: "pagePaymentForConfirm.do",
-		demo: true,
-		type: "query",
-		tranargs: [{
-			result: "paging-data",
-			args: ["recharge", "balance", "cash", "bank", "checkv", "installment", "accounts", "transfer"]
-		}]
-	},
-	pagePaymentForHistory: {
-		url: "pagePaymentForHistory.do",
+
+	pagePayment: {
+		url: "pagePayment.do",
 		demo: true,
 		type: "query",
 		tranargs: [{
@@ -97,35 +80,8 @@ $.extend(api, {payment: {
 		}
 	},
 	
-	pageDecorationPaymentForCommit: {
-		url: "pageDecorationPaymentForCommit.do",
-		demo: true,
-		type: "query",
-		tranargs: [{
-			result: "paging-data",
-			args: ["referMoney"]
-		}]
-	},
-	pageDecorationPaymentForCollect: {
-		url: "pageDecorationPaymentForCollect.do",
-		demo: true,
-		type: "query",
-		tranargs: [{
-			result: "paging-data",
-			args: ["referMoney", "cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"]
-		}]
-	},
-	pageDecorationPaymentForConfirm: {
-		url: "pageDecorationPaymentForConfirm.do",
-		demo: true,
-		type: "query",
-		tranargs: [{
-			result: "paging-data",
-			args: ["referMoney", "cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"]
-		}]
-	},
-	pageDecorationPaymentForHistory: {
-		url: "pageDecorationPaymentForHistory.do",
+	pageDecorationPayment: {
+		url: "pageDecorationPayment.do",
 		demo: true,
 		type: "query",
 		tranargs: [{
@@ -199,35 +155,8 @@ $.extend(api, {payment: {
 	changeDecorationPaymentForTime: {url: "changeDecorationPaymentForTime.do"},	
 	exportDecorationPayment: {url: "exportDecorationPayment.do"},
 
-	pageMaterialPaymentForInit: {
-		url: "pageMaterialPaymentForInit.do",
-		demo: true,
-		type: "query",
-		tranargs: [{
-			result: "paging-data",
-			args: ["referMoney"]
-		}]
-	},
-	pageMaterialPaymentForCollect: {
-		url: "pageMaterialPaymentForCollect.do",
-		demo: true,
-		type: "query",
-		tranargs: [{
-			result: "paging-data",
-			args: ["referMoney", "cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"]
-		}]
-	},
-	pageMaterialPaymentForConfirm: {
-		url: "pageMaterialPaymentForConfirm.do",
-		demo: true,
-		type: "query",
-		tranargs: [{
-			result: "paging-data",
-			args: ["referMoney", "cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"]
-		}]
-	},
-	pageMaterialPaymentForNotInit: {
-		url: "pageMaterialPaymentForNotInit.do",
+	pageMaterialPayment: {
+		url: "pageMaterialPayment.do",
 		demo: true,
 		type: "query",
 		tranargs: [{
@@ -333,39 +262,9 @@ $.extend(api, {payment: {
 	},
 	changeMaterialPaymentForTime: {url: "changeMaterialPaymentForTime.do"},	
 	exportMaterialPayment: {url: "exportMaterialPayment.do"}, //export这种接口之后再注意下，目前页面功能没用, 所以没修改
-		
-	pageSalesPaymentForInit: {
-		url: "pageSalesPaymentForInit.do",
-		type: "query",
-		tranargs: [{
-			result: "paging-data",
-			args: ["referMoney"]
-		}]
-	},
-	pageSalesPaymentForCollect: {
-		url: "pageSalesPaymentForCollect.do",
-		type: "query",
-		tranargs: [{
-			result: "paging-data",
-			args: ["referMoney"]
-		},{
-			result: "paging-data-salesReceipt",
-			args: ["cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"]
-		}]
-	},
-	pageSalesPaymentForConfirm: {
-		url: "pageSalesPaymentForConfirm.do",
-		type: "query",
-		tranargs: [{
-			result: "paging-data",
-			args: ["referMoney"]
-		},{
-			result: "paging-data-salesReceipt",
-			args: ["cash", "bank", "checkv", "installment", "accounts", "advance", "coupon"]
-		}]
-	},
-	pageSalesPaymentForNotInit: {
-		url: "pageSalesPaymentForNotInit.do",
+
+	pageSalesPayment: {
+		url: "pageSalesPayment.do",
 		type: "query",
 		tranargs: [{
 			result: "paging-data",
@@ -501,30 +400,8 @@ $.extend(api, {payment: {
 			args: ["servicePayment.referMoney", "serviceReceipt.cash", "serviceReceipt.bank", "serviceReceipt.checkv"]
 		}
 	},
-	pageServicePaymentForCollect: {
-		url: "pageServicePaymentForCollect.do",
-		type: "query",
-		tranargs: [{
-			result: "paging-data",
-			args: ["advanceMoney", "serviceMoney"]
-		},{
-			result: "paging-data-serviceReceipt",
-			args: ["cash", "bank", "checkv", "installment", "accounts"]
-		}]
-	},
-	pageServicePaymentForConfirm: {
-		url: "pageServicePaymentForConfirm.do",
-		type: "query",
-		tranargs: [{
-			result: "paging-data",
-			args: ["advanceMoney", "serviceMoney"]
-		},{
-			result: "paging-data-serviceReceipt",
-			args: ["cash", "bank", "checkv", "installment", "accounts"]
-		}]
-	},
-	pageServicePaymentForHistory: {
-		url: "pageServicePaymentForHistory.do",
+	pageServicePayment: {
+		url: "pageServicePayment.do",
 		type: "query",
 		tranargs: [{
 			result: "paging-data",

@@ -10,13 +10,7 @@ import com.fanglin.utils.Paging;
 
 public interface SalesPaymentService {
 
-	public void pageSalesPaymentForInit(Paging paging, List<Filter> filters, int company, String companyType);
-	
-	public void pageSalesPaymentForNotInit(Paging paging, List<Filter> filters, int company, String companyType);
-	
-	public void pageSalesPaymentForCollect(Paging paging, List<Filter> filters, int company);
-	
-	public void pageSalesPaymentForConfirm(Paging paging, List<Filter> filters, int company);
+	public void pageSalesPayment(Paging paging, List<Filter> filters, SalesPaymentVO salesPaymentVO, int company, String companyType);
 	
 	public List<SalesPaymentVO> querySalesPaymentBySid(SalesPaymentVO salesPaymentVO);
 	

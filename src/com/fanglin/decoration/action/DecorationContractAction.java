@@ -40,6 +40,8 @@ public class DecorationContractAction extends BaseListAction {
 
 	private String data;
 
+	private String table;
+
 	@Autowired
 	private DecorationContractService decorationContractService;
 
@@ -62,7 +64,7 @@ public class DecorationContractAction extends BaseListAction {
 	@Action(value = "addDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addDecorationContract() throws FLException {
 
-		decorationContractService.addDecorationContract(decorationContract, data, queryUserId());
+		decorationContractService.addDecorationContract(decorationContract, data, table, queryUserId());
 
 		return SUCCESS;
 	}
@@ -209,5 +211,13 @@ public class DecorationContractAction extends BaseListAction {
 
 	public void setData(String data) {
 		this.data = data;
+	}
+
+	public String getTable() {
+		return table;
+	}
+
+	public void setTable(String table) {
+		this.table = table;
 	}
 }

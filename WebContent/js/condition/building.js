@@ -29,6 +29,15 @@ Condition.addupRule("building", {
             valuePath: "value"
         }
     },
+    "houseNumber": {
+        label: "楼号",
+        type: "text",
+        submitConfig: {
+            name: "houseNumber",
+            op: "cn",
+            validate: null
+        }
+    },
     "node-type" : {
         label: "节点类型",
         type: "select",

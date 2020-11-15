@@ -1,95 +1,134 @@
 jQuery(function ($) {
-
     var activityPayment = {
-        activityPaymentPostData: {},
-
-        saveBtn: com.focusPage("#saveBtn"),
-        collectPaymentBtn: com.focusPage("#collectPaymentBtn"),
-
-        modals: {
-            activityPaymentModal: com.focusPage("#activityPaymentModal"),
-            layerAddActivity: com.focusPage("#layerAddActivity")
-        },
+        htmlName: "activity",
+        type: params['urlLoadParams'].paytype,
+        paytypes: [],
+        payment: null,
 
         items: {
-            mno: com.focusPage('#mno'),
-            orderId: com.focusPage('#orderId'),
-            type: com.focusPage('#type'),
-            brand: com.focusPage('#brand'),
-            money: com.focusPage('#money'),
-            comment: com.focusPage('#comment'),
-            referMoney: com.focusPage('#referMoney'),
-            checkbox: com.focusPage('input[type=checkbox]'),
-            collectDes: com.focusPage('#collectDes'),
-            cash: com.focusPage('#cash'),
-            activityCouponType: com.focusPage("#activityCouponType"),
-            couponVal: com.focusPage('#couponVal'),
+            cashCheckbox: com.focusPage("#cashCheckbox", "#activityPayment"),
+            bankCheckbox: com.focusPage("#bankCheckbox", "#activityPayment"),
+            couponCheckbox: com.focusPage("#couponCheckbox", "#activityPayment"),
 
-            activityposDivGroup: com.focusPage("#activityposDivGroup"),
-            activitybankDivGroup: com.focusPage('#activitybankDivGroup'),
-            couponUl: com.focusPage('#couponUl'),
+            cashDiv: com.focusPage("#cashDiv", "#activityPayment"),
+            cash: com.focusPage("#cash", "#activityPayment"),
 
-            cashDiv: com.focusPage('#cashDiv'),
-            bankDiv: com.focusPage('#bankDiv'),
-            couponDiv: com.focusPage('#couponDiv')
+            bankName: com.focusPage("#bankName", "#activityPayment"),
+            bank: com.focusPage("#bank", "#activityPayment"),
+            posway: com.focusPage("#posway", "#activityPayment"),
+
+            couponType: com.focusPage("#couponType", "#activityPayment"),
+            couponVal: com.focusPage("#couponVal", "#activityPayment"),
+
+            posDiv: com.focusPage("#posDiv", "#activityPayment"),
+            posGroup: com.focusPage("#posGroup", "#activityPayment"),
+            bankDiv: com.focusPage("#bankDiv", "#activityPayment"),
+            bankGroup: com.focusPage("#bankGroup", "#activityPayment"),
+            couponDiv: com.focusPage("#couponDiv", "#activityPayment"),
+            couponInputs: com.focusPage("#couponInputs", "#activityPayment"),
+            couponGroup: com.focusPage("#couponGroup", "#activityPayment"),
+
+            referMoney: com.focusPage("#referMoney", "#activityPayment"),
+            collectDes: com.focusPage("#collectDes", "#activityPayment")
         },
-        
-        mno: null,
-        pointofsalesType: 5,
-        
-        type: {},
 
-        _posway: [],
-        _banks: [],
-        bankInfo: {},
-        bankUtil: [],
+        creareItems: {
+            mno: com.focusPage('#mno', "#activityPayment"),
+            orderId: com.focusPage('#orderId', "#activityPayment"),
+            type: com.focusPage('#type', "#activityPayment"),
+            brand: com.focusPage('#brand', "#activityPayment"),
+            money: com.focusPage('#money', "#activityPayment"),
+            comment: com.focusPage("#comment", "#activityPayment")
+        },
+
+        btns: {
+            saveBtn: com.focusPage("#saveBtn", "#activityPayment"),
+            collectBtn: com.focusPage("#collectBtn", "#activityPayment"),
+
+            couponAdd: com.focusPage("#couponAdd", "#activityPayment"),
+            posPush: com.focusPage("#posSend", "#activityPayment")
+        },
+
+        modals: {
+            createModal: com.focusPage("#createModal", "#activityPayment"),
+            collectModal: com.focusPage("#collectModal", "#activityPayment")
+        },
+
+        cash: [],
+        bank: [],
+        couponType: [],
         posValues: {},
 
+        cashUtil: [],
+        bankUtil: [],
+
+        bankInfo: {},
+        couponTypeData: {},
+
+        conditions: [],
+        extraParams: {},
+        functions: [],
         apids: [],
-        couponInfo: "#",
+        isCollects: false,
+
         activityCouponType: [],
-        htmlName: "activity"
+        paymentType: []
     };
 
-    activityPayment.saveBtn.bindClick(saveData);
-    activityPayment.collectPaymentBtn.bindClick(collectPayments);
 
     //隐藏触发
-    activityPayment.modals.activityPaymentModal.on("hide.bs.modal", function () {
-        com.clearValidator();
+    activityPayment.modals.createModal.on("hide.bs.modal", function () {
+        com.closeTip();
         com.cleanTypeahead("brand");
-        com.cleanItems(activityPayment.items);
-        com.focusPage("#brand").attr('readonly', "readonly");
-        com.focusPage("#brand").removeClass('v_typeahead');
+        com.cleanItems(activityPayment.creareItems);
+        activityPayment.creareItems.brand.attr('readonly', "readonly").removeClass('v_typeahead');
     });
 
-    activityPayment.modals.layerAddActivity.on('hide.bs.modal', function () {
+    activityPayment.modals.collectModal.on('hide.bs.modal', function () {
+
+        activityPayment.items.posGroup.html("");
+        activityPayment.items.bankGroup.removeClass('hide');
+
+        activityPayment.isCollects = false;
+        activityPayment.payment = null;
         activityPayment.apids = [];
-        com.clearValidator();
-        com.cleanItems(activityPayment.items);
-        activityPayment.items.couponUl.empty();
 
-        activityPayment.items.activityposDivGroup.empty();
-        activityPayment.items.activitybankDivGroup.empty();
-        com.cleanTypeahead("activityCouponType");
+        com.closeTip();
+        com.cleanItems(activityPayment.items);
+
+        activityPayment.items.bankName.removeClass("v_required v_typeahead");
+        activityPayment.items.bank.removeClass("v_required v_float_3");
     });
 
-    com.initTypeahead('brand', api.data.queryBrandByPinyin, "pinyinName", {}, "autoFillKeyValue", "value", "value", null);
-    com.selectTypeahead("activityCouponType", activityPayment.activityCouponType, 'key', 'value' ,null);
+    com.post(api.ds.payment, {}, function (res) {
 
-    com.focusPage("#layerAddActivity :checkbox").on("change", function(){
-        $(this).prop("checked") ? com.focusPage("[referCheckbox="+this.id+"]").show() : com.focusPage("[referCheckbox="+this.id+"]").hide();
-        if($(this).prop("checked") && this.id == "bankCheckbox"){
-            com.focusPage("#activitybankDivGroup").html("");
-            paymentUtils.addBankPosUtil("#activitybankDivGroup", activityPayment.bankUtil, activityPayment);
-        }
+        activityPayment.creareItems.type.bindData(res.activityPayment, "key", "value", false);
+        activityPayment.paymentType = res.activityPayment.split("key", "value");
+        com.focusPage("#cashInfo", "#activityPayment").bindData(res.ways, "key", "value", false);
+        activityPayment.items.posway.bindData(res.posway, "key", "value");
+
+        $.each(res.activityCouponType, function(i,v) {
+            activityPayment.activityCouponType.push(v);
+        });
+
+    }, null, false);
+
+    //checkbox选中时联动
+    com.focusPage("#collectModal :checkbox", "#activityPayment").on("change", function(){
+        var that = $(this);
+        var checked = that.prop("checked");
+        var id = that.attr("id");
+
+        var boxdiv = com.focusPage("[referCheckbox=" + id + "]", "#activityPayment");
+
+        checked ? boxdiv.show() : boxdiv.hide();
     });
 
     com.post(api.common.queryReceiptType, {}, function(res){
         $.each(res.receiptTypes, function(i, v){
             if(v.type == 2){
                 if(v.status == 1){
-                    activityPayment._banks.push(v);
+                    activityPayment.bank.push(v);
                     activityPayment.posValues[v.no] = v;
                     activityPayment.bankUtil.push({"key": v.no, "value": v.name});
                 }
@@ -97,25 +136,43 @@ jQuery(function ($) {
             }
         });
     }, null, false);
-    
-    com.post(api.ds.payment, {}, function (res) {
 
-        activityPayment.items.type.bindData(res.activityPayment, "key", "value", false);
-        com.focusPage("#cashInfo").bindData(res.ways, "key", "value", false);
+    com.initTypeahead('brand', api.data.queryBrandByPinyin, "pinyinName", {}, "autoFillKeyValue", "value", "value", null);
+    com.selectTypeahead("couponType", activityPayment.activityCouponType, 'key', 'value' ,null);
+    com.selectTypeahead("bankName", activityPayment.bankUtil, "key", "value", null);
 
-        activityPayment.type = res.activityPayment.split("key", "value");
+    activityPayment.btns.collectBtn.bindClick(collect);
+    activityPayment.btns.saveBtn.bindClick(create);
 
-        activityPayment.posway = res.posway.split("key", "value");
+    activityPayment.btns.posPush.unbind().click(function(){
+        paymentUtils.pushPos(activityPayment, 5, activityPayment.payment.mno);
+        return false;
+    });
 
-        $.each(res.posway, function (i, v) {
-            activityPayment._posway.push(v);
-        });
+    activityPayment.btns.couponAdd.unbind().click(function(){
 
-        $.each(res.activityCouponType, function(i,v) {
-            activityPayment.activityCouponType.push(v);
-        });
+        if(com.validate("couponInputs", "#activityPayment")) return false;
 
-    }, null, false);
+        paymentUtils.addCounpon();
+    });
+
+    //不同页面的不同参数
+    switch (activityPayment.type) {
+        case "common":
+            activityPayment.conditions = ["payment-activity-no", "payment-activity-category", "payment-activity-brand", "payment-activity-creater-name"];
+            activityPayment.functions = ["collect", "batchCollect", "add"];
+            activityPayment.extraParams = {"activityPayment.status": 0};
+
+            activityPayment.paytypes = ["cash", "bank", "coupon"];
+            break;
+
+        case "collect":
+            activityPayment.conditions = ["payment-activity-no", "payment-activity-category", "payment-activity-brand", "payment-activity-creater-name"];
+            activityPayment.functions = ["payway", "print"];
+            activityPayment.extraParams = {"activityPayment.status": 1};
+            activityPayment.paytypes = [];
+            break;
+    }
 
     var displayFunc = (function () {
 
@@ -140,12 +197,13 @@ jQuery(function ($) {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnCol = $('<a></a>').addClass('btn btn-minier btn-info').html('收款');
+            var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-pink').html('打印');
 
             var propertyArr = [
                 ["会员号:", v.mno, "grey"],
                 ["创建人:", v.creater.currentName, "grey"],
                 ["创建时间:", v.createTime, "blue"],
-                ["类型:", activityPayment.type[v.type], "red"],
+                ["类型:", activityPayment.paymentType[v.type], "red"],
                 ["品类:", v.category == null || v.category == "" ? "---" : v.category, "grey"],
                 ["品牌:", v.brand == null || v.brand == "" ? "---" : v.brand, "grey"],
                 ["应收金额:", v.money, "blue"],
@@ -153,54 +211,51 @@ jQuery(function ($) {
                 ["备注:", v.comment, "grey"]
             ];
 
-            var $label = $('<label></label>').addClass('control-label').css({
-                'color': 'grey',
-                'font-size': '20px',
-                "font-weight": "bold"
-            });
+            if (activityPayment.functions.contains("payway")) {
+                propertyArr.push(
+                    ["收款人:", v.collecter.currentName, "grey"],
+                    ["收款时间:", v.collectTime, "blue"]
+                )
+            }
 
             var _label = $('<label></label>');
+            var $input = $('<input>').attr({"type": "checkbox", "name": "apids"}).addClass('ace ace-checkbox-2');
+            $input.attr({"data-apid": v.apid, "data-mno": v.mno, "data-orderid": v.orderId, "data-money": v.money, "data-status": v.status});
 
-            var $input = $('<input>').attr({
-                "type": "checkbox",
-                "name": "apids",
-                "class": "",
-                "apid": v.apid,
-                "mno": v.mno,
-                "orderId": v.orderId,
-                "money": v.money,
-                "status": v.status
-            }).addClass('ace ace-checkbox-2');
+            if(activityPayment.functions.contains("batchCollect")) $input.appendTo(_label);
 
-            var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(activityPayment.type[v.type]);
+            var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(activityPayment.paymentType[v.type]);
 
-            _label.append($input).append(_span).appendTo($label);
+            _label.append(_span).appendTo($h3);
 
             $.each(propertyArr, function (index, value) {
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
                 $liProperty.appendTo($ulProperty);
-
-                $label.appendTo($h3);
             });
 
-            $divBtnWrap.append($btnCol).appendTo($h3);
-
+            $divBtnWrap.appendTo($h3);
             $liLine.append($h3).append($ulProperty);
 
+            if(activityPayment.functions.contains("payway")) paymentUtils.drawHistoryData(activityPayment, v, $liLine, "");
+
+            if(v.status == 0 && activityPayment.functions.contains("collect")) $divBtnWrap.append($btnCol);
+            if(v.status != 0 && activityPayment.functions.contains("print")) $divBtnWrap.append($btnPrint);
+
+            //收款
             $btnCol.click(function () {
-                activityPayment.items.referMoney.val(v.money);
                 activityPayment.apids.push(v.apid);
-                activityPayment.mno = v.mno;
+                initCollect(v, false);
+            });
 
-                com.post(api.payment.queryPointofsales, {"pointofsales.pid": v.mno, "pointofsales.type": 5}, function(res){
-                    $.each(res.pointofsaleses, function(i, v){
-                        if(v.status == 0 || v.status == 1) paymentUtils.addPos(v, activityPayment.htmlName);
-                    });
-                });
+            //打印
+            $btnPrint.click(function () {
+                params.activityPayment = v;
+                com.popup("专用收款收据__会员编号:" + v.mno, api.index.activityPaymentReceiptIndex.url, function () {
+                    parent.layer.getFrameIndex(window.name);
+                }, null, true);
 
-                activityPayment.modals.layerAddActivity.modal("show");
             });
 
             return $liLine;
@@ -219,376 +274,172 @@ jQuery(function ($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["payment-activity-no", "payment-activity-category", "payment-activity-brand", "payment-activity-creater-name"], "condList", api.payment.pageActivityPayment, function (data) {
+    searcher.init(activityPayment.conditions, "condList", api.payment.pageActivityPayment, function (data) {
         displayFunc.init('resultList', data);
-
-    }, "pagenation", "activityPaymentPostData", {"activityPayment.status": 0}, false, null, function () {
-
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'createActivityPayment').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+    }, "pagenation", "activityPaymentPostData"+activityPayment.type, activityPayment.extraParams, false, null, function () {
 
         var $batch = $('<a></a>').addClass('btn btn-minier pull-left btn-primary').attr('id', 'collects').css("margin", "0px 3px");
         var $batchi = $('<i></i>').addClass('icon-money bigger-110').appendTo($batch);
         var $batchspan = $('<span></span>').text('批量收款').appendTo($batch);
 
-        return [$batch, $adda];
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'createActivityPayment').css("margin", "0px 3px");
+        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+
+        var btnParams = [];
+
+        if(activityPayment.functions.contains("batchCollect")) btnParams.push($batch);
+        if(activityPayment.functions.contains("add")) btnParams.push($adda);
+
+        return btnParams;
+
     }, 'resultList');
 
-    var hdisplayFunc = (function () {
+    //添加活动款
+    function create() {
 
-        var hrenderList = function (tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        if (com.validate('createModal')) return false;
 
-            if (listData && listData.length) {
-                $.each(listData, function (i, v) {
-                    var $liLine = hcreatLine(v);
-                    $liLine.appendTo($ul);
-                });
-                $ul.appendTo($tableWrap);
-            }
-        };
+        var brand =  activityPayment.creareItems.brand.val();
 
-        var hcreatLine = function (v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue'));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-
-            var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-pink').html('打印');
-
-            var propertyArr = [
-                ["会员号:", v.mno, "grey"],
-                ["创建人:", v.creater.currentName, "grey"],
-                ["创建时间:", v.createTime, "blue"],
-                ["收款人:", v.collecter.currentName, "grey"],
-                ["收款时间:", v.collectTime, "blue"],
-                ["类型:", activityPayment.type[v.type], "red"],
-                ["品类:", v.category == null || v.category == "" ? "---" : v.category, "grey"],
-                ["品牌:", v.brand == null || v.brand == "" ? "---" : v.brand, "grey"],
-                ["应收金额:", v.money, "blue"],
-                ["状态:", v.status == 1 ? "已付款" : "未付款", "red"],
-                ["备注:", v.comment, "grey"]
-            ];
-
-            var $label = $('<label></label>').addClass('control-label').css({
-                'color': 'grey',
-                'font-size': '20px',
-                "font-weight": "bold"
-            });
-
-            var _label = $('<label></label>');
-
-            var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(activityPayment.type[v.type]);
-
-            _label.append(_span).appendTo($label);
-
-            $.each(propertyArr, function (index, value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-
-                $label.appendTo($h3);
-
-            });
-
-            $divBtnWrap.append($btnPrint).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            $btnPrint.click(function () {
-                params.activityPayment = v;
-                com.popup("专用收款收据__会员编号:" + v.mno, api.index.activityPaymentReceiptIndex.url, function () {
-                    parent.layer.getFrameIndex(window.name);
-                }, null, true);
-
-            });
-
-            var styleArr = [];
-
-            v.cash != null && v.cash != "0" ? styleArr.push(["现金:", v.cash, "blue"]) : true;
-            v.bank != null && v.bank != "0" ? styleArr.push(["银行:", paymentUtils.splitBankInfo(v.bank, v.bankInfo, activityPayment.bankInfo), "blue"]) : true;
-            v.coupon != null && v.coupon != "0" ? styleArr.push(["优惠券:", v.coupon + v.couponInfo.split('#').join(' '), "blue"]) : true;
-
-            $.each(styleArr, function (index, value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulStyle);
-                $label.appendTo($h3);
-            });
-
-            $liLine.append($h3).append($ulProperty).append($ulStyle);
-
-            return $liLine;
-        };
-
-        return {
-            init: function (tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                hrenderList(tableId, listData);
-            },
-            drawLine: function (v) {
-                return hcreatLine(v);
-            }
-        };
-    })();
-
-    var hsearcher = new Searcher();
-
-    hsearcher.init(["payment-activity-no", "payment-activity-category", "payment-activity-brand", "payment-activity-creater-name"], "hcondList", api.payment.pageActivityPayment, function (data) {
-        hdisplayFunc.init('hresultList', data);
-    }, "hpagenation", "hactivityPaymentPostData", {"activityPayment.status": 1}, false, null, function () {}, 'hresultList');
-
-    com.focusPage('#createActivityPayment', '#pagenation').click(function () {
-        activityPayment.modals.activityPaymentModal.modal("show");
-    });
-
-    com.focusPage('#type').on('change', function () {
-        var way = com.focusPage("#type").val();
-
-        if (way == 0 || way == 1) {
-            com.focusPage("#brand").attr('readonly', "readonly");
-            com.updateTypeahead("brand", "", "");
-            com.focusPage("#brand").removeClass('v_typeahead');
-        } else if (way == 2 || way == 3) {
-            com.focusPage("#brand").removeAttr('readonly');
-            com.focusPage("#brand").addClass('v_typeahead');
-        }
-    });
-
-    //批量收款
-    com.focusPage("#collects").click(function() {
-
-        var $inputs = com.focusPage('input[name="apids"]:checked', '#resultList');
-
-        activityPayment.apids = [];
-
-        var _mno = "";
-        var mnoId = [];
-        var mnoIdArr = [];
-        var referMoney = 0;
-        var flags = [];
-        var flag = 0;
-        var _paymentType = 0;
-
-        activityPayment.activityPaymentPostData.paymentInfo = [];
-
-        $.each($inputs, function (i, v) {
-            var $input = $(v);
-
-            var row = {
-                "apid": $input.attr('apid'),
-                "mno": $input.attr("mno"),
-                "orderId": $input.attr("orderId"),
-                "money": $input.attr("money"),
-                "status": $input.attr("status")
-            };
-            flags.push(row.status);
-
-            if (_paymentType == 0) {
-                _paymentType = row.status;
-            }
-
-            activityPayment.activityPaymentPostData.paymentInfo.push(row);
-
-            mnoIdArr.push(row.mno);
-            activityPayment.apids.push(row.apid);
-
-            referMoney += parseFloat(row.money);
-        });
-
-        $.each(mnoIdArr, function (i, v) {
-            if ($.inArray(v, mnoId) == -1) {
-                mnoId.push(v);
-            }
-        });
-        $.each(flags, function (i, v) {
-            if (["1"].indexOf(v) != -1) {
-                flag = 1;
-            }
-        });
-
-        if (!$inputs.length) {
-            com.showAlert(com.warning, "请选择结算款项");
-            return false;
-        }
-        if (flag == 1) {
-            com.showAlert(com.warning, "批量收款不支持已收款");
-            return false;
-        }
-        if (mnoId.length != 1) {
-            com.showAlert(com.warning, "批量收款不支持不同订单间的操作.");
-            return false;
-        }
-
-        activityPayment.items.referMoney.val(referMoney);
-        com.focusPage('#layerAddActivity').attr('mno', mnoId[0]);
-        activityPayment.mno = mnoId[0];
-
-        com.post(api.payment.queryPointofsales, {"pointofsales.pid": mnoId[0], "pointofsales.type": 5}, function(res){
-            $.each(res.pointofsaleses, function(i, v){
-                if(v.status == 0 || v.status == 1) paymentUtils.addPos(v, activityPayment.htmlName);
-            });
-        });
-
-        activityPayment.modals.layerAddActivity.modal("show");
-    });
-
-    com.focusPage("#couponAdd").unbind().click(function(){
-        
-        activityPayment.items.activityCouponType.addClass("v_typeahead");
-        activityPayment.items.couponVal.addClass("v_float_3");
-        
-        if(com.validate("couponInputs")){
-            return false;
-        }
-
-        var $li = $("<li></li>").css({"background-color":"#91b8d0", "margin-bottom":"5px", "margin-right":"5px"}).appendTo(com.focusPage("#couponUl"));
-        var $span = $("<span></span>").css({'color':'#fff'}).attr('typeName', com.typeahead("activityCouponType")).attr('money', activityPayment.items.couponVal.val()).html(com.typeahead("activityCouponType")).appendTo($li);
-        var $spanTwo = $("<span></span>").css({'font-size':'16px', 'color':'#fff', 'margin':'0 5px'}).html(activityPayment.items.couponVal.val()).appendTo($span);
-        var $a = $("<a></a>").addClass("glyphicon glyphicon-remove").css({'color':'#d15b47'}).appendTo($li);
-
-        $a.click(function () {
-            $li.remove();
-        });
-
-        com.cleanTypeahead("activityCouponType");
-        
-        activityPayment.items.couponVal.val("");
-    });
-
-    function saveData() {
-        
-        if (com.validate('redact')) {
-            return false;
-        }
-
-        var brand =  activityPayment.items.brand.val();
         var options = {
-            'activityPayment.mno': activityPayment.items.mno.val(),
-            'activityPayment.orderId': activityPayment.items.orderId.val(),
-            'activityPayment.type': activityPayment.items.type.val(),
+            'activityPayment.mno': activityPayment.creareItems.mno.val(),
+            'activityPayment.orderId': activityPayment.creareItems.orderId.val(),
+            'activityPayment.type': activityPayment.creareItems.type.val(),
             'activityPayment.category':  brand.split("-")[1],
             'activityPayment.brand':  brand.split("-")[0],
-            'activityPayment.money': activityPayment.items.money.val(),
-            'activityPayment.comment': activityPayment.items.comment.val()
+            'activityPayment.money': activityPayment.creareItems.money.val(),
+            'activityPayment.comment': activityPayment.creareItems.comment.val()
         };
+
         com.post(api.payment.createActivityPayment, options, function (res) {
             searcher.doSearch();
             com.showAlert(com.info, "操作成功");
         });
 
-        activityPayment.modals.activityPaymentModal.modal("hide");
+        activityPayment.modals.createModal.modal("hide");
     }
 
-    function collectPayments() {
-        paymentUtils.bankIsChecked(activityPayment.htmlName, false);
-        activityPayment.items.activityCouponType.removeClass("v_typeahead");
-        activityPayment.items.couponVal.removeClass("v_float_3");
+    //初始化模态框
+    function initCollect(payment, isCollects){
 
-        if(com.validate('layerAddActivity')) {
+        activityPayment.payment = payment;
+
+        paymentUtils.showPos(activityPayment, {"pointofsales.pid": payment.mno, "pointofsales.type": 5}, [0, 1]);
+
+        activityPayment.items.referMoney.val(payment.money).attr("disabled", "disabled");
+
+        if(activityPayment.paytypes.contains("cash")) paymentUtils.initCash(activityPayment);
+        if(activityPayment.paytypes.contains("bank")) paymentUtils.initBank(activityPayment, 0);
+        if(activityPayment.paytypes.contains("coupon")) paymentUtils.initCoupon(activityPayment, 0);
+
+        activityPayment.modals.collectModal.modal("show");
+
+        //是批量收款
+        activityPayment.isCollects = isCollects;
+    }
+
+    //收款
+    function collect() {
+
+        if(com.validate('collectModal')) {
             return false;
         }
 
-        var _cash = 0;
-        var _bank = 0;
-        var _bankInfo = "#";
-        var apids = activityPayment.apids;
+        var options = {
+            "activityReceipt.comment": activityPayment.items.collectDes.val()
+        };
+        var realPayment = 0;
         var referMoney = parseFloat(activityPayment.items.referMoney.val());
-        var coupon = 0;
-        var couponInfo = "#";
 
-        if(com.focusPage("#cashCheckbox").prop("checked")){
-            _cash = parseFloat(activityPayment.items.cash.val() != "" ? activityPayment.items.cash.val() : 0);
-        }
+        var cash = paymentUtils.paramCash(activityPayment, "activityReceipt", options);
 
-        if(com.focusPage('.positem[data-status=0]').length != 0){
+        realPayment = utils.accAdd(realPayment, parseFloat(cash));
+
+        var bank = paymentUtils.paramBank(activityPayment, activityPayment.payment, "activityReceipt", options, 0);
+
+        if(bank < 0){
             com.showAlert(com.warning, "存在未处理POS收款");
             return false;
         }
-        
-        if(com.focusPage("#bankCheckbox").prop("checked")){
-            var posids = {};
-            var positems = com.focusPage(".positem");
 
-            $.each(positems, function(i, v){
-                var data = $(v).data();
+        realPayment = utils.accAdd(realPayment, parseFloat(bank));
 
-                _bankInfo += data.no + "|" + data.money + "|" + data.createtime + "#";
+        var coupon = paymentUtils.paramCoupon(activityPayment, activityPayment.payment, "activityReceipt", options, 0);
 
-                _bank = utils.accAdd(parseFloat(data.money), _bank);
+        realPayment = utils.accAdd(realPayment, parseFloat(coupon));
 
-                posids["posids[" + i + "]"] = data.posid;
-            });
-
-            var bankitems = com.focusPage(".bankitem");
-
-            $.each(bankitems, function(i, v){
-
-                var index = $(v).data().index;
-
-                var bankName = $("#bankName_" + index).val();
-                var bankMoney = $("#bank_" + index).val();
-                var bankDate = $("#bankDate_" + index).val();
-                var bankTime = $("#bankTime_" + index).val();
-
-                _bankInfo += bankName + "|" + bankMoney + "|" + bankDate + " " + bankTime + "#";
-
-                _bank = utils.accAdd(parseFloat(bankMoney), _bank);
-            });
-        }
-        
-        var bank = _bank;
-        var bankInfo = _bankInfo;
-
-        if(com.focusPage("#couponCheckbox").prop("checked")){
-            com.focusPage("#couponUl li").each(function (i, e) {
-                var _ = $(e);
-                var item = _.children("span");
-                var money = parseFloat(item.attr("money"));
-                var typename = item.attr("typename");
-
-                coupon += money;
-
-                couponInfo += typename + "|" + money + "#";
-            });
-        }
-
-        var realMoney = parseFloat(_cash ? _cash : 0) + parseFloat(bank != "" ? bank : 0) + parseFloat(coupon != "" ? coupon : 0);
-
-        if (referMoney != realMoney) {
+        if (referMoney != realPayment) {
             com.showAlert(com.warning, "当前实收款项总数与应收款项不等,请核实再进行提交!");
             return false;
         }
 
-        var option = {
-            "activityReceipt.cash": _cash,
-            "activityReceipt.bank": bank,
-            "activityReceipt.bankInfo": bankInfo,
-            "activityReceipt.coupon": coupon,
-            "activityReceipt.couponInfo": couponInfo,
-            "activityReceipt.comment": com.focusPage('#collectDes').val()
-        };
-        
-        $.extend(option, {}, posids);
-        
-        $.each(apids, function (i, v) {
-            option["activityPayments[" + i + "].apid"] = v;
+        $.each(activityPayment.apids, function (i, v) {
+            options["activityPayments[" + i + "].apid"] = v;
         });
-        
-        com.post(api.payment.collectActivityPayment, option, function () {
-            com.closePopup();
-            com.showAlert(com.info,"收款成功");
-            activityPayment.modals.layerAddActivity.modal("hide");
+
+        com.post(api.payment.collectActivityPayment, options, function () {
             searcher.doSearch();
-            hsearcher.doSearch();
+            com.showAlert(com.info,"收款成功");
+            activityPayment.modals.collectModal.modal("hide");
         });
     }
+
+    //添加
+    com.focusPage('#createActivityPayment', '#pagenation').click(function () {
+        activityPayment.modals.createModal.modal("show");
+    });
+
+    //批量收款
+    com.focusPage("#collects", "#pagenation").click(function() {
+
+        var $inputs = com.focusPage('input[name="apids"]:checked', '#resultList');
+
+        var referMoney = 0;
+        var orderId = "";
+        var flag = false;
+
+        if (!$inputs.length) {
+            com.showAlert(com.warning, "请选择结算款项");
+            return false;
+        }
+
+        $.each($inputs, function (i, v) {
+            var $input = $(v);
+
+            if (i == 0) {
+                orderId = $input.attr("data-orderid")
+            }
+
+            if ($input.attr("data-orderid") != orderId) {
+                flag = true;
+                com.showAlert(com.warning, "批量收款不支持不同订单间的操作.");
+                return false;
+            }
+
+            referMoney += parseFloat($input.attr("data-money"));
+            activityPayment.apids.push($input.attr("data-apid"));
+
+        });
+
+        if (flag) return;
+
+        var payment = $($inputs[0]).data();
+        activityPayment.payment = {"apid": payment.apid, "mno": payment.mno, "orderId": payment.orderid, "money": referMoney, "status": payment.status};
+
+        initCollect(activityPayment.payment, true);
+
+    });
+
+    activityPayment.creareItems.type.on('change', function () {
+        var way = activityPayment.creareItems.type.val();
+
+        if (way == 0 || way == 1) {
+            activityPayment.creareItems.brand.attr('readonly', "readonly").removeClass('v_typeahead');
+            com.updateTypeahead("brand", "", "");
+        } else if (way == 2 || way == 3) {
+            activityPayment.creareItems.brand.removeAttr('readonly').addClass('v_typeahead');
+        }
+    });
 
 });

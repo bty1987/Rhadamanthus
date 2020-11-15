@@ -1,48 +1,48 @@
-    <div class="page-content">
-        <div class="row" id="fl-statement">
-            <div class="col-xs-12">
-                <div id="resultLists" class="clearfix tab-pane active"></div> <!--查询结果-->
+<div class="page-content">
+    <div class="row" id="fl-statement">
+        <div class="col-xs-12">
+            <div id="resultLists" class="clearfix tab-pane active"></div> <!--查询结果-->
+        </div>
+    </div>
+</div>
+
+<div id="layerReturn" class="page-content" style="display: none">
+    <div class="row">
+        <form class="form-horizontal">
+            <div class="form-group" style="margin-right: 0">
+                <label class="col-xs-3 control-label " for="returnTotal">不退金额</label>
+                <div class="col-xs-9">
+                    <input type="text" id="returnTotal" readonly/>
+                </div>
             </div>
-        </div>
+            <div class="space5"></div>
+
+            <div class="form-group" style="margin-right: 0">
+                <label class="col-xs-3 control-label " for="comment">备注信息</label>
+                <div class="col-xs-9">
+                    <textarea maxlength="128" id="comment" class="v_required" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="space5"></div>
+
+            <div class="form-group" style="margin-right: 0">
+                <label class="col-xs-3 control-label " for="salesItemDetialapprover">审批人</label>
+                <div class="col-xs-9 controls" id="salesItemDetialapprover">
+
+                </div>
+            </div>
+            <div class="space5"></div>
+
+            <div class="form-group pull-right" style="margin-right: 0">
+                <button type="button" id="approverSaveBtn" class="btn btn-success">确定</button>
+                <button type="button" id="approverCancelBtn" class="btn btn-grey">取消</button>
+            </div>
+
+            <div class="space5"></div>
+        </form>
     </div>
+</div>
 
-    <div id="layerReturn" class="page-content" style="display: none">
-        <div class="row">
-            <form class="form-horizontal">
-                <div class="form-group" style="margin-right: 0">
-                    <label class="col-xs-3 control-label " for="returnTotal">不退金额</label>
-                    <div class="col-xs-9">
-                        <input type="text" id="returnTotal" readonly/>
-                    </div>
-                </div>
-                <div class="space5"></div>
-
-                <div class="form-group" style="margin-right: 0">
-                    <label class="col-xs-3 control-label " for="comment">备注信息</label>
-                    <div class="col-xs-9">
-                        <textarea maxlength="128" id="comment" class="v_required" rows="3"></textarea>
-                    </div>
-                </div>
-                <div class="space5"></div>
-
-                <div class="form-group" style="margin-right: 0">
-                    <label class="col-xs-3 control-label " for="salesItemDetialapprover">审批人</label>
-                    <div class="col-xs-9 controls" id="salesItemDetialapprover">
-
-                    </div>
-                </div>
-                <div class="space5"></div>
-
-                <div class="form-group pull-right" style="margin-right: 0">
-                    <button type="button" id="approverSaveBtn" class="btn btn-success">确定</button>
-                    <button type="button" id="approverCancelBtn" class="btn btn-grey">取消</button>
-                </div>
-
-                <div class="space5"></div>
-            </form>
-        </div>
-    </div>
-
-    <script type="text/javascript">
-        $.loadScript(['js/sales/sales4payment.js']);
-    </script>
+<script type="text/javascript">
+    $.loadScript(['js/sales/sales4payment.js']);
+</script>

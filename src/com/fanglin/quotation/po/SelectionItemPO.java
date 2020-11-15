@@ -83,6 +83,8 @@ public class SelectionItemPO implements Serializable {
 
 	private int initNum;// 工程量
 
+	private int refnum;// 退数量
+
 	private int postprice;// 售价
 
 	private int preprice;// 预算金额
@@ -108,8 +110,6 @@ public class SelectionItemPO implements Serializable {
 	private UserPO balancer;// 结算人
 
 	private UserPO finish;// 完结人
-
-	private int refnum;// 退数量
 
 	private String comment;// 注释
 
@@ -224,6 +224,15 @@ public class SelectionItemPO implements Serializable {
 
 	public void setInitNum(int initNum) {
 		this.initNum = initNum;
+	}
+
+	@Column(name = "refnum")
+	public int getRefnum() {
+		return refnum;
+	}
+
+	public void setRefnum(int refnum) {
+		this.refnum = refnum;
 	}
 
 	@Column(name = "postprice")
@@ -346,15 +355,6 @@ public class SelectionItemPO implements Serializable {
 
 	public void setBalancer(UserPO balancer) {
 		this.balancer = balancer;
-	}
-
-	@Column(name = "refnum")
-	public int getRefnum() {
-		return refnum;
-	}
-
-	public void setRefnum(int refnum) {
-		this.refnum = refnum;
 	}
 
 	@Column(name = "comment")

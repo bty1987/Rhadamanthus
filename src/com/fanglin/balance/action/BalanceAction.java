@@ -9,7 +9,6 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-
 import com.fanglin.balance.service.BalanceService;
 import com.fanglin.balance.vo.AccountVO;
 import com.fanglin.balance.vo.BalanceVO;
@@ -19,48 +18,56 @@ import com.fanglin.core.interceptor.FLException;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class BalanceAction extends BaseListAction{
+public class BalanceAction extends BaseListAction {
 
 	private static final long serialVersionUID = 7465909881025416528L;
-	
+
 	@Autowired
 	private BalanceService balanceService;
-	
+
 	private BalanceVO balance;
-	
+
 	private List<BalanceVO> balances;
-	
+
 	private List<AccountVO> accountes;
-	
+
 	@Action(value = "pageBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageBalance() throws FLException{
-		
+	public String pageBalance() throws FLException {
+
 		balanceService.pageBalance(getPaging(), getFilters(), queryCompany());
-		
+
 		return SUCCESS;
 	}
-	
+
+	@Action(value = "queryBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryBalance() throws FLException {
+
+		balances = balanceService.queryBalance(balance, getFilters(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addBalance() throws FLException{
-		
+	public String addBalance() throws FLException {
+
 		balanceService.addBalance(balance, queryUserId(), queryCompany());
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "balanceBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String balanceBalance() throws FLException{
-		
+	public String balanceBalance() throws FLException {
+
 		balanceService.balanceBalance(balance, accountes, queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "payBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String payBalance() throws FLException{
-		
+	public String payBalance() throws FLException {
+
 		balanceService.payBalance(balance, accountes, queryUserId());
-		
+
 		return SUCCESS;
 	}
 
@@ -87,6 +94,5 @@ public class BalanceAction extends BaseListAction{
 	public void setAccountes(List<AccountVO> accountes) {
 		this.accountes = accountes;
 	}
-	
-	
+
 }

@@ -21,17 +21,7 @@ public class ServicePaymentDaoImpl  extends DaoImpl<ServicePaymentPO> implements
 	}
 	
 	@Override
-	public List<ServicePaymentPO> pageServicePaymentForCollect(Paging paging, List<Filter> filters) {
-
-		PagingQuery<ServicePaymentPO> query = pagingQuery(paging, ServicePaymentPO.class);
-
-		queryFilterExecute(query, filters);
-
-		return query.list();
-	}
-	
-	@Override
-	public List<ServicePaymentPO> pageServicePaymentForConfirm(Paging paging, List<Filter> filters) {
+	public List<ServicePaymentPO> pageServicePayment(Paging paging, List<Filter> filters) {
 
 		PagingQuery<ServicePaymentPO> query = pagingQuery(paging, ServicePaymentPO.class);
 

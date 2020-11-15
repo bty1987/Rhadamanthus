@@ -219,7 +219,7 @@
             user.loginFlag=false
         }
 
-        if (!com.validate() && !user.repeatFlg && user.loginFlag) {
+        if (!com.validate("simpleAddUserModal") && !user.repeatFlg && user.loginFlag) {
             var options = {
                 "userInfo.user.userName": user.items.userName.val().trim(),
                 "userInfo.user.currentName": user.items.currentName.val(),

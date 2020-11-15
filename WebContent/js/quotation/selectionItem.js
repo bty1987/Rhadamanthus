@@ -4,13 +4,16 @@ $(function(){
 
         modals: {
             updateSelectionItemModal: com.focusPage('#updateSelectionItemModal'),
+            finishSelectionItemModal: com.focusPage('#finishSelectionItemModal'),
         },
         btns: {
             updateBtn: com.focusPage('#updateBtn'),
+            finishBtn: com.focusPage('#finishBtn'),
         },
-        updateModalsItems: {
+        items: {
             num: com.focusPage("#num"),
             comment: com.focusPage('#comment'),
+            refnum: com.focusPage('#refnum'),
         },
         title: com.focusPage("#myModalLabel"),
         dcomment: com.focusPage("#dcomment"),
@@ -20,11 +23,11 @@ $(function(){
             status: 0,
             num: 0
         },
-        showPostprice: false,
         typeList: [],
         statusList: [],
         postData : '',
         editFlg: true,
+        
         url: api.quotation.pageSelectionItem,
         pageType : params['urlLoadParams'].type,
         query: ["quotation-selection-orderId", "quotation-selection-category", "quotation-selection-brand", "quotation-selection-item-name"]
@@ -69,10 +72,16 @@ $(function(){
 
     selectionItem.modals.updateSelectionItemModal.on("hide.bs.modal", function(){
         com.clearValidator();
-        com.cleanItems(selectionItem.updateModalsItems);
+        com.cleanItems(selectionItem.items);
+    });
+    
+    selectionItem.modals.finishSelectionItemModal.on("hide.bs.modal", function(){
+        com.clearValidator();
+        com.cleanItems(selectionItem.items);
     });
 
     selectionItem.btns.updateBtn.bindClick(updateData);
+    selectionItem.btns.finishBtn.bindClick(finishSelectionItem);
 
     var displayFunc  = (function(){
 
@@ -156,16 +165,22 @@ $(function(){
             ];
 
             if (v.status <= 2) {// 显示工程量
-                var initNumArr = ["报价项工程量:", v.initNum, "blue"];
+                var initNumArr = ["工程量:", v.initNum, "blue"];
 
                 propertyArr.splice(7, 0, initNumArr);
             }
+            
+            if(v.status >= 4) {
+                propertyArr.splice(7, 0, ["退数量:", v.refnum, "blue"], ["剩余数量:", parseFloat(v.num) - parseFloat(v.refnum), "blue"]);
+            }
+            
             if (selectionItem.pageType == "supplier" || v.status >= 4) {// 显示结算价
                 var postpriceArr = ["结算价:", v.postprice, "blue"];
                 var prepriceArr = ["预算金额:", v.preprice, "blue"];
 
                 propertyArr.splice(6, 0, postpriceArr, prepriceArr);
             }
+            
             if (selectionItem.pageType == "expert") {
                 var prepriceArr = ["报价项单价:", v.preprice, "blue"];
                 propertyArr.splice(6, 0, prepriceArr);
@@ -217,7 +232,7 @@ $(function(){
             $btnRran.click(function(e) {
                 selectionItem.editFlg = false;
                 selectionItem.parameters.siid = v.siid;
-                selectionItem.updateModalsItems.num.val(v.num);
+                selectionItem.items.num.val(v.num);
 
                 selectionItem.title.text("配送");
                 selectionItem.dcomment.hide();
@@ -249,10 +264,12 @@ $(function(){
             });
 
             $btnFinish.click(function(e) {
-                com.post(api.quotation.finishSelectionItem, {"selectionItem.siid": v.siid}, function(res) {
-                    selectionItemSeacher.doSearch();
-                    com.showAlert(com.info, "操作成功");
-                });
+                
+                selectionItem.parameters.siid = v.siid;
+                selectionItem.parameters.num = v.num;
+                selectionItem.items.refnum.val(0);
+
+                selectionItem.modals.finishSelectionItemModal.modal('show');
             });
 
             $btnBalance.click(function(e) {
@@ -362,14 +379,14 @@ $(function(){
 
         if (selectionItem.editFlg) {
             options = {
-                "selectionItem.num": selectionItem.updateModalsItems.num.val(),
-                "selectionItem.comment": selectionItem.updateModalsItems.comment.val(),
+                "selectionItem.num": selectionItem.items.num.val(),
+                "selectionItem.comment": selectionItem.items.comment.val(),
                 "selectionItem.siid": selectionItem.parameters.siid,
             };
             url = api.quotation.updateSelectionItem;
         } else {
             options = {
-                "selectionItems[0].num": selectionItem.updateModalsItems.num.val(),
+                "selectionItems[0].num": selectionItem.items.num.val(),
                 "selectionItems[0].siid": selectionItem.parameters.siid
             };
             url = api.quotation.tranSelectionItem;
@@ -381,6 +398,28 @@ $(function(){
         });
 
         selectionItem.modals.updateSelectionItemModal.modal("hide");
+    }
+    
+    function finishSelectionItem() {
+        
+        if(com.validate('finishSelectionItemModal')) return false;
+
+        if (selectionItem.items.refnum.val() > selectionItem.parameters.num) {
+            com.showAlert(com.warning, '退数量不能大于当前数量');
+            return false;
+        }
+
+        var options = {
+            "selectionItem.refnum": selectionItem.items.refnum.val(),
+            "selectionItem.siid": selectionItem.parameters.siid
+        };
+
+        com.post(api.quotation.finishSelectionItem, options, function(res) {
+            selectionItemSeacher.doSearch();
+            com.showAlert(com.info, "操作成功");
+        });
+
+        selectionItem.modals.finishSelectionItemModal.modal("hide");
     }
 
 });

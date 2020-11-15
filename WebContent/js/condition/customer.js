@@ -193,6 +193,44 @@ Condition.addupRule("customer", {
             validate: null
         }
     },
+    "feedback-orderId" : {
+        label:"装修单号",
+        type:"text",
+        submitConfig : {
+            name : "orderId",
+            op : "eq",
+            validate:null
+        }
+    },
+    "feedback-phone" : {
+        label:"装修单号",
+        type:"text",
+        submitConfig : {
+            name : "phone",
+            op : "cn",
+            validate:null
+        }
+    },
+    "feedback-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [
+                {"key":"0","value":"反馈"},
+                {"key":"1","value":"投诉"},
+                {"key":"2","value":"维修"}
+            ],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
     
     "member-no": {
         label: "会员编号",

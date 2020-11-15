@@ -193,6 +193,15 @@ Condition.addupRule("data", {
             valuePath: "name"
         }
     },
+    "quotation-additem-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
+        }
+    },
     
     "model-no": {
         label: "型号",
@@ -310,6 +319,40 @@ Condition.addupRule("data", {
             listPath: "statusType",
             keyPath: "key",
             valuePath:"value"
+        }
+    },
+    "brand-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
+        }
+    },
+    "brand-category": {
+        label: "品类",
+        type: "select",
+        submitConfig: {
+            name: "no",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {//从后台取数据的各种配置
+            url: api.data.queryCategory,
+            postData: {},
+            listPath: "categorys",
+            keyPath: "cid",
+            valuePath: "name"
+        }
+    },
+    "category-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "eq",
+            validate: null
         }
     },
     "goods-brand-name": {
@@ -604,6 +647,28 @@ Condition.addupRule("data", {
             listPath :"talkingStatus",
             keyPath:"key",
             valuePath:"value"
+        }
+    },
+    "taskParam-module": {
+        label: "模块",
+        type: "select",
+        submitConfig: {
+            name: "module",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {//从后台取数据的各种配置
+            url: null,
+            postData: null,
+            listPath: [
+                {key: "decoration", value: "装修"},
+                {key: "payment", value: "款项"},
+                {key: "sales", value: "销售"},
+                {key: "inventory", value: "仓储"},
+                {key: "construction", value: "工程"}
+            ],
+            keyPath: "key",
+            valuePath: "value"
         }
     },
     

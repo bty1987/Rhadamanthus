@@ -770,19 +770,22 @@ var decorationUtils = {
         } else {
             com.showAlert(com.error, data.errorMsg);
         }
-    }, initDecorationPicture: function (designId, pictureId, cadId, contractId,originalId, orderId) {
+    }, initDecorationPicture: function (designId, pictureId, cadId, contractId, originalId, agreeId, orderId) {
 
         var $desgin = com.focusPage("#" + designId).html("");
         var $picture = com.focusPage("#" + pictureId).html("");
         var $contract = com.focusPage("#" + contractId).html("");
         var $cad = com.focusPage("#" + cadId).html("");
         var $original =  com.focusPage("#" + originalId).html("");
-
+        var $agree = com.focusPage("#" + agreeId).html("");
+        
         com.post(api.decoration.queryDecorationPictureByOrderId, {"decorationPicture.orderId": orderId}, function (res) {
+            
             var decorationPictures = res.decorationPictures;
-            var decorationPictureLength = decorationPictures.length;
+            var length = decorationPictures.length;
 
-            for (var i = 0; i < decorationPictureLength; i++) {
+            for (var i = 0; i < length; i++) {
+                
                 var decorationPicture = decorationPictures[i];
 
                 if (decorationPicture.type == 0) {
@@ -803,6 +806,12 @@ var decorationUtils = {
             com.popup4photos("#projectPictures");
             com.popup4photos("#ContractPictures");
             com.popup4photos("#CADProjectPicture");
+        });
+        
+        com.post(api.decoration.queryDecorationContractByOrderId, {"decorationContract.orderId": orderId}, function(res){
+            $.each(res.decorationContracts, function(i, v){
+                decorationUtils.addContract($agree, v);
+            });
         });
 
          com.focusPage("#confirmDesign").on('click', function () {
@@ -869,18 +878,35 @@ var decorationUtils = {
         var $infoboxContent = $('<div></div>').addClass('infobox-content').text($name.split('.')[0].substr(0, 8) + '.' + $name.split('.')[1]).appendTo($infoboxLeft);
         var $infoboxContent = $('<div></div>').addClass('infobox-content').text(i.uploadTime).appendTo($infoboxLeft);
 
+        var $delA = $('<a></a>').addClass("icon-remove").css({
+            'float': 'right',
+            'font-size': '22px',
+            'color': 'white'
+        }).appendTo($infoboxData);
 
-            var $delA = $('<a></a>').addClass("icon-remove").css({
-                'float': 'right',
-                'font-size': '22px',
-                'color': 'white'
-            }).appendTo($infoboxData);
-
-            $delA.click(function () {
-                com.post(api.decoration.deleteDecorationPicture, {"decorationPicture.dpId": i.dpId}, function (res) {
-                    com.focusPage("#cad_" + res.decorationPicture.dpId).remove();
-                });
+        $delA.click(function () {
+            com.post(api.decoration.deleteDecorationPicture, {"decorationPicture.dpId": i.dpId}, function (res) {
+                com.focusPage("#cad_" + res.decorationPicture.dpId).remove();
             });
+        });
+    }, addContract: function(e, i){
+        
+        var $name = i.name;
+
+        var $infobox = $('<div></div>').addClass('infobox infobox-blue infobox-dark').attr("id", "contract_" + i.dcid).appendTo(e);
+        
+        var $infoboxData = $('<div></div>').addClass('infobox-data').appendTo($infobox);
+        var $infoboxLeft = $('<div></div>').css('float', 'left').appendTo($infoboxData);
+        var $infoboxContent = $('<div></div>').addClass('infobox-content').text(i.contract.name).appendTo($infoboxLeft);
+        var $infoboxContent = $('<div></div>').addClass('infobox-content').text(i.createTime).appendTo($infoboxLeft);
+        
+        $infobox.click(function(){
+            
+            com.post(api.decoration.viewDecorationContract , {"decorationContract.dcid" : i.dcid}, function (res) {
+                com.popup4frame("合同查看", res.redirect);
+            });
+        });
+        
     }, initConstructionScheduleInfo: function () {
 
         var options = {};

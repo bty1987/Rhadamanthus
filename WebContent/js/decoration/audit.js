@@ -17,20 +17,12 @@ jQuery(function($) {
 
 
     var displayFunc = (function () {
-        //ID名,API分页查询的返回值
         var renderList = function (tableId, listData) {
-            //创建DIV
             var $tableWrap = com.focusPage('#' + tableId);
-            //创建一对UL并添加bootstrap的样式
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-            //如果返回值不为null
             if (listData && listData.length) {
-                //循环返回值
                 $.each(listData, function (i, v) {
-
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
+                    creatLine(v).appendTo($ul);
                 });
 
                 $ul.appendTo($tableWrap);
@@ -50,7 +42,6 @@ jQuery(function($) {
             var $btnInfo = $('<a></a>').addClass('btn btn-minier btn-inverse').html('申请审核');
 
             var propertyArr = [
-                //显示的信息类型,显示信息的数据,显示信息的颜色
                 ["楼盘地址:", v.decoration.house.village.name + ' ' + v.decoration.house.houseNumber, "grey"],
                 ["客户:", v.decoration.customer.name, "grey"],
                 ["设计师:", v.decoration.designer.currentName, "grey"],
@@ -110,11 +101,8 @@ jQuery(function($) {
         };
 
         return {
-            //数据显示框的ID,分页查询API的返回值
             init: function (tableId, listData) {
-                //创建DIV 并且内容为null
                 com.focusPage('#' + tableId).html(null);
-
                 renderList(tableId, listData);
             },
             audit: function (v) {
@@ -124,24 +112,18 @@ jQuery(function($) {
     })();
     var _condArr = ['decoration-orderId', 'decoration-village', 'decoration-designer','decoration-supervisor','decoration-design-dept', 'decoration-createTime', 'decoration-signTime', 'decoration-auditTime','decoration-status','decoration-auditStatus','decoration-auditor'];
     var searcher = new Searcher();
-    //查询的字段名称,查询框DIV的ID,API地址,成功回调函数,分页DIV的ID,保存历史查询的查询名
     searcher.init(_condArr, "condList", api.decoration.pageAudit, function (data) {
-        //resultList是显示数据的DIV,data是返回值
         displayFunc.init('resultList', data);
     }, "pagenation");
 
-
     function applyAudit(aid){
         com.showConfirm("确认审核吗?",function(){
-            //如果为ture
             com.post(api.decoration.applyAudit, {"audit.aid":aid}, function(res){
                 com.showAlert(com.info, "操作成功");
                 searcher.doSearch();
             });
         });
-
     }
-
 
     var auditScale = function (decorationOrderId, type, typeness, versionId, notSalesmanRate){
         params["decorationOrderId"] = decorationOrderId;

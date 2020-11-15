@@ -26,6 +26,10 @@ public interface UserService {
 
 	public void pageUser(Paging paging, List<Filter> filters, UserVO userVO, Integer company) throws FLException;
 
+	public List<UserBaseVO> queryUserByPinyin(String pinyinName, UserVO userVO, DepartmentTypeVO departmentType, int company) throws FLException;
+
+	public List<UserBaseVO> queryUserByUids(List<Integer> uids) throws FLException;
+
 	public UserVO queryUserByLoginId(UserVO userVO) throws FLException;
 
 	public UserVO queryUserByUserId(UserVO userVO) throws FLException;
@@ -36,15 +40,9 @@ public interface UserService {
 
 	public UserVO queryUserByOldUserId(UserVO userVO) throws FLException;
 
-	public List<UserBaseVO> queryUserByPinyin(String pinyinName, UserVO userVO, DepartmentTypeVO departmentType, int company) throws FLException;
-
 	public UserVO validateUser(String loginId, String password) throws FLException;
 
-	public List<UserBaseVO> queryUserByUids(List<Integer> uids) throws FLException;
-
-	public int resetPassword(UserVO userVO, Integer company) throws FLException;
-
-	public void defaultPassword(String userId, int company) throws FLException;
+	public void checkUserForPassword(String userId, String password, String rePassword) throws FLException;
 
 	public void addUser(UserInfoVO userInfoVO, List<UserContractVO> userContractVOs, List<UserEducationVO> userEducationVOs, List<UserOperationVO> userOperationVOs, int company) throws FLException;
 
@@ -56,8 +54,10 @@ public interface UserService {
 
 	public void updateUserForAdvance(UserVO userVO, int rid) throws FLException;
 
-	public void checkUserForPassword(String userId, String password, String rePassword) throws FLException;
-
 	public void updateUserForProfile(UserInfoVO userInfoVO) throws FLException;
+
+	public void resetPassword(UserVO userVO, Integer company) throws FLException;
+
+	public void defaultPassword(String userId, int company) throws FLException;
 
 }

@@ -109,8 +109,8 @@ $(function(){
     }
 
     com.focusPage("#saveBtn").on('click', function(){
-        if(com.validate())
-            return;
+        
+        if(com.validate("labelModal")) return false;
 
         var $_modalBody = com.focusPage('.modal-body');
         var type = $_modalBody.find('select[name="type"] option:selected').val();

@@ -13,7 +13,16 @@ $.extend(api, {
             tranargs: [{
                 result:"paging-data",
                 args:["amount", "surplus"]
-            }]},
+            }]
+        },
+        queryBalance: {
+            url: "queryBalance.do",
+            type: "query",
+            tranargs: [{
+                result:"balances",
+                args:["amount", "surplus"]
+            }]
+        },
         addBalance: {url: "addBalance.do",
             type:"update",
             tranargs:{

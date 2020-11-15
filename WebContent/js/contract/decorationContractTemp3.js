@@ -22,10 +22,6 @@ jQuery(function($) {
         $input: null,
 	};
     
-    if(contractEdit.contractArgs.agent == "1"){
-        com.focusPage(".agent", "#form").hide();
-    }
-    
     contractEdit.cover["cov-sign-year"] = com.dateFormat(new Date(), "yyyy");
     contractEdit.cover["cov-sign-month"] = com.dateFormat(new Date(), "MM");
     contractEdit.cover["cov-sign-day"] = com.dateFormat(new Date(), "dd");
@@ -76,6 +72,9 @@ jQuery(function($) {
         var holonomy = res.decorationHolonomy;
         
         if(holonomy) holonomy.materialPrice = 0;
+        if(!holonomy.servicePrice) holonomy.servicePrice = 0;
+        
+        console.log(holonomy)
         
         com.focusPage("#con-material-total", "#form").val(holonomy.materialPrice);
         com.focusPage("#con-service-total", "#form").val(holonomy.servicePrice);
@@ -104,7 +103,6 @@ jQuery(function($) {
         data = $.extend({}, data, contractEdit.cover);
         
         data["con-material-total-cn"] = utils.getCNMoney(parseFloat(data["con-material-total"]));
-        data["con-service-total-cn"] = utils.getCNMoney(parseFloat(data["con-service-total"]));
         data["con-quotation-total-cn"] = utils.getCNMoney(parseFloat(data["con-quotation-total"]));
         data["con-quotation-total-undis-cn"] = utils.getCNMoney(parseFloat(data["con-quotation-total-undis"]));
         data["con-manage-total-cn"] = utils.getCNMoney(parseFloat(data["con-manage-total"]));
@@ -113,23 +111,7 @@ jQuery(function($) {
         data["con-sign-month"] = com.dateFormat(new Date(), "MM");
         data["con-sign-day"] = com.dateFormat(new Date(), "dd");
         
-        data["con-sign1-year"] = com.dateFormat(new Date(), "yyyy");
-        data["con-sign1-month"] = com.dateFormat(new Date(), "MM");
-        data["con-sign1-day"] = com.dateFormat(new Date(), "dd");
-        
-        data["con-customer1-name"] = data["con-customer-name"];
-        
         data["sin-customer-name"] = data["con-customer-name"];
-        
-        data["sin1-customer-name"] = data["sin-customer-name"];
-        data["sin1-customer-phone"] = data["sin-customer-phone"];
-        data["sin1-customer-ident"] = data["sin-customer-ident"];
-        
-        if(contractEdit.contractArgs.agent == "0"){
-            data["sin1-agent-name"] = data["sin-agent-name"];
-            data["sin1-agent-phone"] = data["sin-agent-phone"];
-            data["sin1-agent-ident"] = data["sin-agent-ident"];
-        }
         
         console.log(data);
         

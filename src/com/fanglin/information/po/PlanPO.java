@@ -1,8 +1,10 @@
 package com.fanglin.information.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,47 +18,49 @@ import com.fanglin.data.po.TaskPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name = "plan",catalog = "information")
-public class PlanPO implements Serializable{
-	
+@Table(name = "plan", catalog = "information")
+public class PlanPO implements Serializable {
+
 	private static final long serialVersionUID = 4258766333068282952L;
-	
+
 	public static final String COLUMN_CUID_STR = "cuid";
-    
-    public static final String COLUMN_STATUS_STR = "status";
-	
-	public static final String COLUMN_EXECUTETIME_STR ="executeTime";
-	
+
+	public static final String COLUMN_STATUS_STR = "status";
+
+	public static final String COLUMN_EXECUTETIME_STR = "executeTime";
+
 	public static final short STATUS_INIT_INT = 0;
-	
+
 	public static final short STATUS_CANCEL_INT = 1;
-	
+
+	public static final short STATUS_SUCCESS_INT = 2;
+
 	public static final short STATUS_FAIL_INT = 3;
-	
+
 	public static final short STATUS_IMME_INT = 4;
 
 	private long pid;
-	
+
 	private TaskPO task;
-	
+
 	private String args;
-	
+
 	private UserPO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private String executeTime;
-	
+
 	private String resultFilepath;
-	
+
 	private String infoFilepath;
-	
+
 	private short schedule;
-	
+
 	private short status;
-	
+
 	private String info;
-	
+
 	private long company;
 
 	@Id
@@ -108,9 +112,8 @@ public class PlanPO implements Serializable{
 		this.createTime = createTime;
 	}
 
-	
 	@Column(name = "executeTime")
-    public String getExecuteTime() {
+	public String getExecuteTime() {
 		return executeTime;
 	}
 
@@ -162,7 +165,7 @@ public class PlanPO implements Serializable{
 	public void setInfo(String info) {
 		this.info = info;
 	}
-	
+
 	@Column(name = "company")
 	public long getCompany() {
 		return company;
@@ -171,5 +174,5 @@ public class PlanPO implements Serializable{
 	public void setCompany(long company) {
 		this.company = company;
 	}
-	
+
 }

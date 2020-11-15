@@ -97,17 +97,17 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 	private SalesActivityService salesActivityService;
 	
 	@Override
-	public void pageSalesPaymentForInit(Paging paging, List<Filter> filters, int company, String companyType) {
+	public void pageSalesPayment(Paging paging, List<Filter> filters, SalesPaymentVO salesPayment, int company, String companyType) {
 		
 		if(filters.size() == 0) return;
-		
-		filters.add(new Filter(SalesPaymentPO.COLUMN_STATUS_STR, String.valueOf(SalesPaymentPO.STATUS_INITIAL_INT), "eq"));
 
 		if(companyType != null){
 			filters.add(new Filter(String.format("sales.%s", companyType), String.valueOf(company), "eq"));
 		}
+		
+		if (salesPayment != null) salesPayment.filter(filters);
 
-		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.pageSalesPaymentForInit(paging, filters);
+		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.pageSalesPayment(paging, filters);
 		List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();
 
 		SalesPaymentVO salesPaymentVO;
@@ -119,88 +119,6 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			salesPaymentVO = salesPaymentPOToVO(salesPaymentPO, salesPaymentVO);
 
 			salesPaymentVOs.add(salesPaymentVO);
-		}
-
-		paging.setData(salesPaymentVOs);
-	}
-
-	@Override
-	public void pageSalesPaymentForNotInit(Paging paging, List<Filter> filters, int company, String companyType) {
-
-		if (filters.size() == 0)
-			return;
-
-		filters.add(new Filter(SalesPaymentPO.COLUMN_STATUS_STR, String.valueOf(SalesPaymentPO.STATUS_INITIAL_INT), "ne"));
-
-		if(companyType != null){
-			filters.add(new Filter(String.format("sales.%s", companyType), String.valueOf(company), "eq"));
-		}
-
-		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.pageSalesPaymentForNotInit(paging, filters);
-		List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();
-
-		SalesPaymentVO salesPaymentVO;
-
-		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
-
-			salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()));
-
-			salesPaymentVO = salesPaymentPOToVO(salesPaymentPO, salesPaymentVO);
-
-			salesPaymentVOs.add(salesPaymentVO);
-
-		}
-
-		paging.setData(salesPaymentVOs);
-	}
-
-	@Override
-	public void pageSalesPaymentForCollect(Paging paging, List<Filter> filters, int company) {
-
-		if(filters.size() == 0) return;
-
-		filters.add(new Filter(SalesPaymentPO.COLUMN_STATUS_STR, String.valueOf(SalesPaymentPO.STATUS_PAIDFOR_INT), "eq"));
-		filters.add(new Filter("company", String.valueOf(company), "eq"));
-
-		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.pageSalesPaymentForCollect(paging, filters);
-		List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();
-
-		SalesPaymentVO salesPaymentVO;
-
-		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
-
-			salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()));
-
-			salesPaymentVO = salesPaymentPOToVO(salesPaymentPO, salesPaymentVO);
-
-			salesPaymentVOs.add(salesPaymentVO);
-
-		}
-
-		paging.setData(salesPaymentVOs);
-	}
-
-	@Override
-	public void pageSalesPaymentForConfirm(Paging paging, List<Filter> filters, int company) {
-
-		if(filters.size() == 0) return;
-
-		filters.add(new Filter(SalesPaymentPO.COLUMN_STATUS_STR, String.valueOf(SalesPaymentPO.STATUS_CONFIRMED_INT), "eq"));
-		filters.add(new Filter("company", String.valueOf(company), "eq"));
-
-		List<SalesPaymentPO> salesPaymentPOs = salesPaymentDao.pageSalesPaymentForCollect(paging, filters);
-		List<SalesPaymentVO> salesPaymentVOs = new ArrayList<SalesPaymentVO>();
-
-		SalesPaymentVO salesPaymentVO;
-
-		for (SalesPaymentPO salesPaymentPO : salesPaymentPOs) {
-
-			salesPaymentVO = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()));
-
-			salesPaymentVO = salesPaymentPOToVO(salesPaymentPO, salesPaymentVO);
-
-			salesPaymentVOs.add(salesPaymentVO);
-
 		}
 
 		paging.setData(salesPaymentVOs);
@@ -602,7 +520,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		}
 		
 		//更新装修单上的销售比例
-		DecorationPO decorationPO = decorationDao.get(sales.getOrderId());
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(sales.getOrderId());
 		
 		decorationAdditionService.updateDecorationForSaleScale(decorationPO);
 		
@@ -777,7 +695,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		}
 		
 		//更新装修单上的销售比例
-		DecorationPO decorationPO = decorationDao.get(sales.getOrderId());
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(sales.getOrderId());
 		
 		decorationAdditionService.updateDecorationForSaleScale(decorationPO);
 		
@@ -881,7 +799,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		}
 		
 		//更新装修单上的销售比例
-		DecorationPO decorationPO = decorationDao.get(sales.getOrderId());
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(sales.getOrderId());
 		
 		decorationAdditionService.updateDecorationForSaleScale(decorationPO);
 		
@@ -1169,15 +1087,6 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			salesReceiptPO.setCashInfo("");
 		}
 		
-		if (bank != null && bank != 0) {
-			salesReceiptPO.setBank(bank);
-			salesReceiptPO.setBankInfo(salesReceipt.getBankInfo());
-			realMoney = Arith.add(bank, realMoney);
-		} else {
-			salesReceiptPO.setBank(0);
-			salesReceiptPO.setBankInfo("");
-		}
-		
 		if (checkv != null && checkv != 0) {
 			salesReceiptPO.setCheckv(checkv);
 			salesReceiptPO.setCheckvBank(salesReceipt.getCheckvBank());
@@ -1185,6 +1094,10 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		} else {
 			salesReceiptPO.setCheckv(0);
 			salesReceiptPO.setCheckvBank("");
+		}
+		
+		if (bank != null && bank != 0) {
+			realMoney = Arith.add(bank, realMoney);
 		}
 		
 		if (coupon != null && coupon != 0) {

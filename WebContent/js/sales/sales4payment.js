@@ -25,7 +25,10 @@ jQuery(function () {
             approverCancelBtn : com.focusPage("#approverCancelBtn")
         },
         options: {},
-        sid : null
+        
+        sid : params["sid"],
+        
+        type: params["type"],
     }
 
     com.focusPage('#fl-statement').statement("销售单", "收款");
@@ -59,26 +62,28 @@ jQuery(function () {
         salesPaymentForStatus.salesPaymentType = res.materialPaymentType.split("key", "value");
     }, null, false);
 
-    com.post(api.payment.querySalesPaymentBySid,salesPaymentForStatus.salesCollectionPostData, function (listData) {
+    com.post(api.payment.querySalesPaymentBySid,{"salesPayment.sales.sid": salesPayment.sid}, function (listData) {
         if(listData.salesPayments.length == 0){
             emptyData("resultLists");
         }else{
             createLine('resultLists', listData);
         }
-    }, function (e) {
-        com.showAlert(com.warning, "没有对应信息");
     });
 
     function createLine(tableId, listData) {
+        
         var $tableWrap = com.focusPage('#' + tableId);
         var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        
         if (listData && listData.salesPayments.length) {
             $.each(listData.salesPayments, function (i, v) {
+                
                 var $liLine = $('<li></li>').addClass('item-orange  clearfix');
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                 var $h3 = $('<h3></h3>').addClass('oid');
                 var $small = $('<small></small>').addClass('blue').html(salesPaymentForStatus.salesPaymentType[v.type]);
                 var $btnDiv = $('<div></div>').addClass('pull-right action-buttons');
+                
                 var $btnRetrun = $('<a></a>').addClass('btn btn-minier btn-danger').html('退款');
 
                 var propertyArr = [
@@ -122,28 +127,26 @@ jQuery(function () {
                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liPropertys);
                     $liPropertys.appendTo($ulProperty);
                 });
-
+                
                 $btnDiv.append($btnRetrun);
-
-                if (v.type == 8) {
-
+                
+                if (v.type == 8 && salesPayment.type != "balance") {
                     $h3.append($small).append($btnDiv);
                 } else {
-
                     $h3.append($small);
                 }
 
                 $liLine.append($h3).append($ulProperty).appendTo($ul);
 
-                $btnRetrun.click(function(){
+                $btnRetrun.click(function () {
 
                     salesPayment.sid = v.sales.sid;
 
-                    com.popup4mini("#miniPopUp", "#layerReturn","退款信息", "", function () {
+                    com.popup4mini("#miniPopUp", "#layerReturn", "退款信息", "", function () {
                         com.clearValidator();
                         closeReturnlayer();
                         salesPayment.items.approver.empty();
-                    },function () {
+                    }, function () {
                         salesPayment.items.returnTotal.val(v.referMoney);
                         approvalUtils.initqueryApprovalUser("salesItemDetialapprover", 18);
                     });

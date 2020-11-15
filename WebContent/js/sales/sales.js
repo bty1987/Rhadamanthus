@@ -286,7 +286,6 @@ $(function () {
                         com.popup4page("#layerPopUp", "views/sales/salesItem.html", "子项",'',function () {
                             salesSearcher.doSearch();
                         })
-
                     });
 
                     //补单按钮
@@ -304,6 +303,7 @@ $(function () {
 
                     $btnCollect.click(function () {
                         params["sid"] = v.sid;
+                        params["type"] = "sales";
                         com.popup4page("#layerPopUp", "views/sales/sales4payment.html", "收款");
                     });
 

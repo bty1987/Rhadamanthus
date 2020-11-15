@@ -331,6 +331,18 @@ $.extend(api, {
             }
             ]
         },
+		pageSalesBalanceForCheck: {
+            url: "pageSalesBalanceForCheck.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance"]
+            },{
+                result: "paging-data-sales",
+                args: ["total","maling","coupon","depositpay","fullpay","amount","venderMaling"]
+            }
+            ]
+        },
         pageSalesByOrderId: {
             url: "pageSalesByOrderId.do",
             type: "query",

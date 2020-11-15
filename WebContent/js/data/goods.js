@@ -79,7 +79,7 @@ $(function () {
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>'));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col12');
 
-            var titleName = '编号,商品,条形码,品类,品牌,单位,进价,售价,件数,辅类,类型,状态';
+            var titleName = '编号,商品,条形码,品类,品牌,单位,控价,售价,件数,辅类,类型,状态';
 
             $.each(titleName.split(','), function (i, v) {
                 var $cell = $('<div></div>').addClass('cell').html(v);

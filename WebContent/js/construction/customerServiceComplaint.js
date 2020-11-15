@@ -211,8 +211,9 @@ jQuery(function ($) {
     }
 
     function saveHandleData() {
-        if (com.validate())
-            return;
+        
+        if (com.validate("complaintHandleModal"))
+            return false;
 
         if (complaint["customerServiceComplaint.complaintStatus"] == "1") {
             complaint.modals.handleModal.modal("hide");

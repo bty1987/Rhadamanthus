@@ -13,9 +13,11 @@ package com.fanglin.payment.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.core.vo.Filter;
 import com.fanglin.material.vo.MaterialVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
@@ -84,6 +86,8 @@ public class MaterialPaymentVO implements Serializable{
 	private String comment;
 	
 	private Integer company;
+	
+	private String paymentTypes;
 	
 	public MaterialPaymentVO() {
 		super();
@@ -349,6 +353,27 @@ public class MaterialPaymentVO implements Serializable{
 
 	public void setCompany(Integer company) {
 		this.company = company;
+	}
+
+	public String getPaymentTypes() {
+		return paymentTypes;
+	}
+
+	public void setPaymentTypes(String paymentTypes) {
+		this.paymentTypes = paymentTypes;
+	}
+
+	public MaterialPaymentVO filter(List<Filter> filters) {
+
+		if (getPaymentStatus() != null) {
+			filters.add(new Filter("paymentStatus", String.valueOf(getPaymentStatus()), "eq"));
+		}
+
+		if (getPaymentTypes() != null) {
+			filters.add(new Filter("paymentType", String.valueOf(getPaymentTypes()), "in"));
+		}
+
+		return this;
 	}
 
 }

@@ -12,9 +12,12 @@ import org.springframework.stereotype.Repository;
 
 import com.alibaba.fastjson.JSONArray;
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.DateUtil;
+import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
+import com.fanglin.utils.SystemConfig;
 import com.fanglin.payment.dao.SalesPaymentDao;
 import com.fanglin.payment.po.SalesPaymentPO;
 
@@ -26,37 +29,7 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 	}
 	
 	@Override
-	public List<SalesPaymentPO> pageSalesPaymentForInit(Paging paging, List<Filter> filters) {
-
-		PagingQuery<SalesPaymentPO> query = pagingQuery(paging, SalesPaymentPO.class);
-
-		queryFilterExecute(query, filters);
-
-		return query.list();
-	}
-	
-	@Override
-	public List<SalesPaymentPO> pageSalesPaymentForCollect(Paging paging, List<Filter> filters) {
-
-		PagingQuery<SalesPaymentPO> query = pagingQuery(paging, SalesPaymentPO.class);
-
-		queryFilterExecute(query, filters);
-
-		return query.list();
-	}
-	
-	@Override
-	public List<SalesPaymentPO> pageSalesPaymentForConfirm(Paging paging, List<Filter> filters) {
-
-		PagingQuery<SalesPaymentPO> query = pagingQuery(paging, SalesPaymentPO.class);
-
-		queryFilterExecute(query, filters);
-
-		return query.list();
-	}
-	
-	@Override
-	public List<SalesPaymentPO> pageSalesPaymentForNotInit(Paging paging, List<Filter> filters) {
+	public List<SalesPaymentPO> pageSalesPayment(Paging paging, List<Filter> filters) {
 
 		PagingQuery<SalesPaymentPO> query = pagingQuery(paging, SalesPaymentPO.class);
 
@@ -101,7 +74,7 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 	
 	@Override
 	public SalesPaymentPO querySalesPayment(long sid, List<Short> types) {
-		return (SalesPaymentPO) session().createCriteria(SalesPaymentPO.class).add(Restrictions.eq(SalesPaymentPO.COLUMN_SALES_SID_STR, sid)).add(Restrictions.in(SalesPaymentPO.COLUMN_TYPE_STR, types)).uniqueResult();
+		return (SalesPaymentPO) session().createCriteria(SalesPaymentPO.class).createAlias("sales", "sales").add(Restrictions.eq(SalesPaymentPO.COLUMN_SALES_SID_STR, sid)).add(Restrictions.in(SalesPaymentPO.COLUMN_TYPE_STR, types)).uniqueResult();
 	}
 	
 	@Override
@@ -199,8 +172,11 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 					}else{
 						query.add(query.getCriterion(SalesPaymentPO.COLUMN_CONFIRMTIME_STR, filter.getData(), filter.getOp()));
 					}
-				}else if("company".equals(filter.getField())){
-					query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
+				}else if("company".equals(field)){
+					try {
+						Integer cid = FormatUtil.decodeCompany(AESHelper.decrypt(data, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
+						query.add(query.getCriterion(field, cid, op));
+					} catch (Exception e) {}
 				}else if("sales.dompany".equals(filter.getField())){
 					query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
 				}else if("sales.company".equals(filter.getField())){

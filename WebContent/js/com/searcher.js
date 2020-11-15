@@ -295,6 +295,9 @@ var Searcher = function(){
                     var _postName = $input.attr("data-rqs");
                     
                     var _rule = Condition.getRuleByCondName(val);
+                    
+                    if(!_rule) return true;
+                    
                     var _reg = _rule.submitConfig.validate;
                     var _alone = _rule.submitConfig.alone;
                     

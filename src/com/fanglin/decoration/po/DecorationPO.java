@@ -51,7 +51,7 @@ public class DecorationPO implements Serializable {
 	public static final short STATUS_DEPOSIT_INT = 1;// 定金
 
 	public static final short STATUS_PROSIGN_INT = 2;// 预签
-	
+
 	public static final short STATUS_SIGNED_INT = 3;// 签约
 
 	public static final short STATUS_RESIGNED_INT = 4;// 重签
@@ -69,25 +69,25 @@ public class DecorationPO implements Serializable {
 	public static final short PROJECTSTATUS_START_INT = 1; // 开工
 
 	public static final short PROJECTSTATUS_FINISH_INT = 2; // 完工
-	
-	public static final short DESIGNSTATUS_INITIA_INT = 0;//待设计 
-	
+
+	public static final short DESIGNSTATUS_INITIA_INT = 0;// 待设计
+
 	public static final short DESIGNSTATUS_CONDUCT_INT = 1;// 设计中
-	
+
 	public static final short DESIGNSTATUS_END_INT = 2;// 已完成
-	
+
 	public static final short STATUS_INITIA_INT = 0;// 待确认
 
 	public static final short STATUS_CONTRACT_CONFIRMATION_INT = 1;// 合同确认
 
 	public static final short STATUS_SETTING_OUT_CONFIRMATION_INT = 2;// 放线确认
-	
+
 	public static final short TYPE_INIT_SALESCALE_INT = 1918;// 销售比例默认值1918
-	
-	public static final short TYPE_MIDPACK_INT = 0; 
-	
-	public static final short TYPE_INCLUSIVE_INT = 1; 
-	
+
+	public static final short TYPE_MIDPACK_INT = 0;
+
+	public static final short TYPE_INCLUSIVE_INT = 1;
+
 	public static final short TYPE_HOLONOMY_INT = 2;
 
 	public static final String CONFIG_KEY_HOLONOMY_STR = "fullsub%s";
@@ -113,11 +113,11 @@ public class DecorationPO implements Serializable {
 	private UserPO escorter;
 
 	private UserPO contracter;
-	
+
 	private short type;
-	
+
 	private short typeness;
-	
+
 	private String grade;
 
 	private String salesmanType = "守园";
@@ -137,7 +137,7 @@ public class DecorationPO implements Serializable {
 	private long couponCut;
 
 	private long thingCut;
-	
+
 	private long factPrice;
 
 	private long precontractPrice;
@@ -151,21 +151,21 @@ public class DecorationPO implements Serializable {
 	private Timestamp createTime;
 
 	private Timestamp accountTime;
-	
+
 	private Timestamp sdesignTime;
-	
-	private Timestamp edesignTime ;
-	
+
+	private Timestamp edesignTime;
+
 	private Timestamp precontractTime;
 
 	private short status;
 
 	private short designStatus;
-	
+
 	private short projectStatus;
 
 	private short sourceStatus;
-	
+
 	private int otherStatus;
 
 	private QuotationVersionPO version;
@@ -177,11 +177,11 @@ public class DecorationPO implements Serializable {
 	private int company;
 
 	private short paySacle;
-	
+
 	private short saleScale;
 
 	private int discount;
-	
+
 	public DecorationPO() {
 	}
 
@@ -190,6 +190,7 @@ public class DecorationPO implements Serializable {
 		this.orderId = orderId;
 	}
 
+	@Id
 	@GeneratedValue
 	@Column(name = "doid")
 	public long getDoid() {
@@ -200,7 +201,6 @@ public class DecorationPO implements Serializable {
 		this.doid = doid;
 	}
 
-	@Id
 	@Column(name = "orderId")
 	public String getOrderId() {
 		return orderId;
@@ -275,7 +275,7 @@ public class DecorationPO implements Serializable {
 	public void setSupervisor(UserPO supervisor) {
 		this.supervisor = supervisor;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = true, name = "ctuid", referencedColumnName = "uId")
 	public UserPO getContracter() {
@@ -309,7 +309,7 @@ public class DecorationPO implements Serializable {
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
-	
+
 	public Timestamp getSdesignTime() {
 		return sdesignTime;
 	}
@@ -325,7 +325,7 @@ public class DecorationPO implements Serializable {
 	public void setEdesignTime(Timestamp edesignTime) {
 		this.edesignTime = edesignTime;
 	}
-	
+
 	public Timestamp getPrecontractTime() {
 		return precontractTime;
 	}
@@ -349,15 +349,15 @@ public class DecorationPO implements Serializable {
 	public void setType(short type) {
 		this.type = type;
 	}
-	
+
 	public short getTypeness() {
 		return typeness;
 	}
-	
+
 	public void setTypeness(short typeness) {
 		this.typeness = typeness;
 	}
-	
+
 	public short getDesignStatus() {
 		return designStatus;
 	}
@@ -533,7 +533,7 @@ public class DecorationPO implements Serializable {
 	public void setThingCut(long thingCut) {
 		this.thingCut = thingCut;
 	}
-	
+
 	public long getPrecontractPrice() {
 		return precontractPrice;
 	}
@@ -549,7 +549,7 @@ public class DecorationPO implements Serializable {
 	public void setAccountTime(Timestamp accountTime) {
 		this.accountTime = accountTime;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = true, name = "orderId", referencedColumnName = "orderId", insertable = false, updatable = false)
 	public DecorationAdditionPO getAddition() {
@@ -568,7 +568,7 @@ public class DecorationPO implements Serializable {
 	public void setGrade(String grade) {
 		this.grade = grade;
 	}
-	
+
 	@Column(name = "factPrice")
 	public long getFactPrice() {
 		return factPrice;

@@ -21,7 +21,7 @@ $(function (){
     var initList = function (v) {
 
         var $tableWrap = com.focusPage('#list').empty();
-        var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
+        var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list').appendTo($tableWrap);
 
         if(!v.length){
             var $resultList = com.focusPage("#list").addClass('dz-default dz-message').html('');
@@ -34,10 +34,11 @@ $(function (){
 
             $.each(v,function (i, v) {
 
-                var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                var $h3 = $('<h3></h3>').addClass('oid');
-                var $title = $('<small></small>').addClass('blue').html(' ' + v.sales.no);
-                var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+                var $liLine = $('<li></li>').addClass('item-orange clearfix').appendTo($ul);
+                
+                var $h3 = $('<h3></h3>').addClass('oid').appendTo($liLine);
+                var $title = $('<small></small>').addClass('blue').html(' ' + v.sales.no).appendTo($h3);
+                var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').appendTo($liLine);
 
                 var propertyArr = [
                     ["装修单号:", v.sales.orderId, "blue"],
@@ -56,11 +57,27 @@ $(function (){
                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                     $liProperty.appendTo($ulProperty);
                 });
+                
+                var $ulDetail = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').appendTo($liLine);
+                
+                var detailArr = [
+                   ["销售收入: ", v.total - v.sales.venderMaling - v.sales.maling - v.sales.coupon, "blue"],
+                   ["供应商减免金额: ", v.sales.venderMaling, "blue"],
+                   ["折扣/抹零金额: ",v.allowance, "blue" ],
+                   ["销售金额: ",v.total + v.sales.venderMaling + v.allowance, "blue" ],
+                   ["销售成本: ", v.total + v.sales.venderMaling + v.allowance - v.balance, "blue"],
+                   ["销售成本比例: ", (v.total + v.sales.venderMaling + v.allowance - v.balance) / (v.total + v.sales.venderMaling + v.allowance), "blue"],
+                   ["应付账款: ", v.total + v.allowance - v.balance, "blue"],
+                   ["结算利润: ", v.balance, "blue"],
+                   ["公司利润: ", v.balance - v.allowance, "blue"],
+               ];
+                
+                $.each(detailArr, function (index, value) {
+                    var $liProperty = $('<li></li>').appendTo($ulDetail);
+                    $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                });
 
-                $liLine.appendTo($ul);
-                $liLine.append($h3).append($ulProperty);
-                $h3.append($title);
-                $ul.appendTo($tableWrap);
             })
         }
     };

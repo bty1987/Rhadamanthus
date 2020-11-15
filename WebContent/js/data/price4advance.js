@@ -44,7 +44,7 @@ $(function () {
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index'));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col7');
 
-            var titleName = '价格说明,进价,售价,结算类型,结算值,类型';
+            var titleName = '价格说明,控价,售价,结算类型,结算值,类型';
 
             $.each(titleName.split(','), function (i, v) {
                 var $cell = $('<div></div>').addClass('cell').html(v);

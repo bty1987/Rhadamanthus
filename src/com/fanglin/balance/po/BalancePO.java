@@ -18,37 +18,47 @@ import com.fanglin.personel.po.UserPO;
 @Entity
 @Table(name = "balance", catalog = "balance")
 public class BalancePO implements java.io.Serializable {
-	
+
 	private static final long serialVersionUID = -8637607309881551992L;
 
-	public static final short STATUS_FINISH_SHORT = 1; // 完结
-	
-	public static final short STATUS_VALUE_SHORT = 2;//提
-	
+	public static final short STATUS_INIT_INT = 0; // 初始
+
+	public static final short STATUS_FINISH_INT = 1; // 完结
+
+	public static final short TYPE_PAYOUT_INT = 0; // 支出
+
+	public static final short TYPE_COLLECT_INT = 1; // 收款
+
+	public static final short TYPE_WITHDRAW_INT = 2;// 提款
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final String COLUMN_TYPE_STR = "type";
-	
+
 	public static final String COLUMN_NO_STR = "no";
-	
+
 	private long bid;
-	
+
 	private String no;
-	
+
 	private UserPO belonger;
-	
+
 	private UserPO creater;
-	
+
 	private Timestamp createTime;
-	
+
+	private Timestamp startTime;
+
+	private Timestamp endTime;
+
 	private long amount;
-	
+
 	private long surplus;
-	
+
 	private short type;
-	
+
 	private short status;
-	
+
 	private int company;
 
 	public BalancePO() {
@@ -82,7 +92,7 @@ public class BalancePO implements java.io.Serializable {
 		this.belonger = belonger;
 	}
 
-	@Column(name="no")
+	@Column(name = "no")
 	public String getNo() {
 		return no;
 	}
@@ -101,7 +111,7 @@ public class BalancePO implements java.io.Serializable {
 		this.creater = creater;
 	}
 
-	@Column(name="createTime")
+	@Column(name = "createTime")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -110,7 +120,25 @@ public class BalancePO implements java.io.Serializable {
 		this.createTime = createTime;
 	}
 
-	@Column(name="amount")
+	@Column(name = "startTime")
+	public Timestamp getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Timestamp startTime) {
+		this.startTime = startTime;
+	}
+
+	@Column(name = "endTime")
+	public Timestamp getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Timestamp endTime) {
+		this.endTime = endTime;
+	}
+
+	@Column(name = "amount")
 	public long getAmount() {
 		return amount;
 	}
@@ -118,8 +146,8 @@ public class BalancePO implements java.io.Serializable {
 	public void setAmount(long amount) {
 		this.amount = amount;
 	}
-	
-	@Column(name="surplus")
+
+	@Column(name = "surplus")
 	public long getSurplus() {
 		return surplus;
 	}
@@ -128,7 +156,7 @@ public class BalancePO implements java.io.Serializable {
 		this.surplus = surplus;
 	}
 
-	@Column(name="type")
+	@Column(name = "type")
 	public short getType() {
 		return type;
 	}
@@ -137,7 +165,7 @@ public class BalancePO implements java.io.Serializable {
 		this.type = type;
 	}
 
-	@Column(name="status")
+	@Column(name = "status")
 	public short getStatus() {
 		return status;
 	}
@@ -146,7 +174,7 @@ public class BalancePO implements java.io.Serializable {
 		this.status = status;
 	}
 
-	@Column(name="company")
+	@Column(name = "company")
 	public int getCompany() {
 		return company;
 	}
@@ -154,7 +182,5 @@ public class BalancePO implements java.io.Serializable {
 	public void setCompany(int company) {
 		this.company = company;
 	}
-	
-	
 
 }

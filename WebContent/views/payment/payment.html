@@ -1,227 +1,220 @@
 
-<div>
+<div id="payment" class="col-md-12">
 	<div class="row">
-		<div class="col-xs-12">
-			<div class="paymentTab">
-				<ul class="nav nav-tabs" id="myTab">
-					<li class="active">
-						<a data-toggle="tab" href="#paymentList">预付款</a>
-					</li>
-					<li>
-						<a id="history" data-toggle="tab" href="#paymentHistoryList">历史收款</a>
-					</li>
-				</ul>
-				<div class="tab-content ">
-					<div id="paymentList" class="tab-pane active">
-						<div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
-						<div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
-						<div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
-					</div>
-					<div id="paymentHistoryList" class="tab-pane">
-						<div id="hcondList" class="fl_search clearfix"></div> <!-- 查询条件-->
-						<div id="hresultList" class="clearfix tab-pane active"></div> <!--查询结果-->
-						<div id="hpagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
-					</div>
-				</div>
-			</div>
+		<div id="paymentList">
+			<div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+			<div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+			<div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
 		</div>
-	</div>
-	
-	<div class="modal fade" id="paymentModal" tabindex="-1">
-		<div class="modal-dialog">
-			<div class="modal-content">
-      			<div class="modal-header">
-        			<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-        			<h4 class="modal-title" id="myModalLabel">收款信息</h4>
-      			</div>
-      			<div class="modal-body">
-      				<form class="form-horizontal">
-      					<div style='color:red;text-align:center;display:none;' class='payWayError'>请选择付款方式</div>
-	      				<div class="block clearfix pay_way">
-							<label class="col-md-3 control-label" id="paymentMethod">付款方式</label>
-							<label class="inline">
-								<input type="checkbox" class="ace" id="cashCheckbox">
-								<span class="lbl"> 现金</span>
-							</label>
-							<label class="inline">
-								<input type="checkbox" class="ace" id="bankCheckbox">
-								<span class="lbl"> 刷卡</span>
-							</label>
-							<label class="inline">
-								<input type="checkbox" class="ace" id="checkvCheckbox">
-								<span class="lbl"> 银行</span>
-							</label>
-						</div>
-						<div class="space-4 "></div>
 
-						<div class="form-group" id="paymentTypeDiv">
-							<label class="col-sm-3 control-label no-padding-right" for="paymentTypeSel">预付款类型</label>
-							<div class="col-sm-9">
-								<select id="paymentTypeSel" class="col-xs-10 col-sm-5" style="min-width: 50%; width: 170px;">
-									<option value='0'>合同预付款</option>
-									<option value='2'>主材预付款</option>
-								</select>
-							</div>
-						</div>
-						<div class="space-4 "></div>
-
-						<div class="form-group" id="refundSumBalanceDiv">
-							<label for="refundSum" class="col-md-3 control-label">余额</label>
-							<span class="col-md-9">
-								<input type="text" id="refundSum" class="col-md-5 v_required v_float_3" disabled/>
-							</span>
-						</div>
-						<div class="space-4 "></div>
-
-						<div class="form-group" id="refundSumWithdrawDiv">
-							<label for="refundSum" class="col-md-3 control-label">提现金额</label>
-							<div class="col-md-9">
-								<input type="text" id="refund" class="col-md-5 v_required v_float_3"/>
-							</div>
-						</div>
-						<div class="space-4 "></div>
-						
-						<div class="form-group" >
-							<label class="col-md-3 control-label no-padding-right" for="des" >说明</label>
-							<div class="col-md-9">
-								<textarea id="des" class="col-md-6 v_required" rows="3" data-toggle="popover" data-trigger='manual' maxlength="256"></textarea>
-							</div>
-						</div>
-
-						<div class="space-1" id="historyUpdateP">
-							<h4 class="header blue bolder smaller">历史收款</h4>
-							<span id="cashHistoryP" class="blue" style="font-size: 14px; margin-left: 20px;"></span><br/>
-							<span id="bankHistoryP" class="blue" style="font-size: 14px; margin-left: 20px;"></span><br/>
-							<span id="checkvHistoryP" class="blue" style="font-size: 14px; margin-left: 20px;"></span>
-							<span id="installmentHistoryP" class="blue" style="font-size: 14px; margin-left: 20px;"></span><br/>
-							<span id="accountsHistoryP" class="blue" style="font-size: 14px; margin-left: 20px;"></span>
-						</div>
-						
-	      				<div id="cashDiv" referCheckbox="cashCheckbox">
-	      					<h4 class="header blue bolder smaller">现金</h4>
-	      					<div class="form-group">
-								<label class="col-sm-3 control-label no-padding-right" for="paymentcashInfo">类型</label>
-								<div class="col-sm-9">
-									<input type="text" id="paymentcashInfo" class="col-xs-10 col-sm-5 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" />
+		<div class="modal fade" id="collectModal" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+						<h4 class="modal-title" id="myModalLabel">收款信息</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal">
+							<div style='color:red;text-align:center;display:none;' class='payWayError'>请选择付款方式</div>
+							<div class="form-group">
+								<label class="col-md-3 control-label" id="paymentMethod">付款方式</label>
+								<div class="col-sm-9" id="checkbox">
+									<label class="hide cashCheckbox">
+										<input type="checkbox" class="ace" id="cashCheckbox">
+										<span class="lbl"> 现金</span>
+									</label>
+									<label class="hide bankCheckbox">
+										<input type="checkbox" class="ace" id="bankCheckbox">
+										<span class="lbl"> 刷卡</span>
+									</label>
+									<label class="hide checkvCheckbox">
+										<input type="checkbox" class="ace" id="checkvCheckbox">
+										<span class="lbl"> 银行</span>
+									</label>
 								</div>
 							</div>
-							<div class="space-4"></div>
-							
-				      		<div class="form-group">
-								<label for="cash" class="col-md-3 control-label">现金金额</label>
+							<div class="space-4 "></div>
+
+							<div class="form-group" id="paymentTypeDiv">
+								<label class="col-sm-3 control-label no-padding-right" for="advanceType">预付款类型</label>
 								<div class="col-sm-9">
-									<input type="text" id="cash" class="col-xs-10 col-sm-5 v_required v_float_3"  data-toggle="popover" data-trigger='manual'/>
-									<span style='height:34px; line-height:34px;'>&nbsp;元</span>
+									<select id="advanceType" class="col-xs-10 col-sm-5" style="min-width: 50%; width: 170px;">
+										<option value='0'>合同预付款</option>
+										<option value='2'>主材预付款</option>
+									</select>
 								</div>
 							</div>
-							<div class="space-4"></div>
-						</div>
+							<div class="space-4 "></div>
 
-						<div id="posDiv" referCheckbox="bankCheckbox" style="display: none;">
-							<h4 class="header blue bolder smaller">
-								POS
-							</h4>
-							<div id="paymentposDivGroup"></div>
-						</div>
-						
-						<div id="bankDiv" referCheckbox="bankCheckbox" style='display: none'>
-							<h4 class="header blue bolder smaller">
-								POS
-							</h4>
-							<div id="paymentbankDivGroup"></div>
-						</div>
+							<div class="form-group" id="balanceDiv">
+								<label for="balance" class="col-md-3 control-label">余额</label>
+								<div class="col-md-9">
+									<input type="text" id="balance" class="col-md-6 v_required v_float_3" disabled/>
+								</div>
+							</div>
+							<div class="space-4 "></div>
 
-						<div id="checkvDiv" referCheckbox="checkvCheckbox" style="display: none;">
-							<h4 class="header blue bolder smaller">
-								银行
-								<button id="paymentcheckvAdd" class="btn btn-minier btn-success pull-right inline" num="0" maxnum="0">添加</button>
-							</h4>
-							<div id="paymentcheckvDivGroup"></div>
-						</div>
-					</form>
-      			</div>
-      			
-				<div class="modal-footer ">
-					<button type="button" id="collectBtn" class="btn btn-primary">收款</button>
-		        	<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
-		      	</div>
-    		</div>
-  		</div>
-  	</div>
+							<div class="form-group" id="withdrawDiv">
+								<label for="withdraw" class="col-md-3 control-label">提现金额</label>
+								<div class="col-md-9">
+									<input type="text" id="withdraw" class="col-md-6 v_required v_float_3"/>
+								</div>
+							</div>
+							<div class="space-4 "></div>
 
-	<!-- 装修单信息 -->
-	<div class="modal fade" id="decorationInfo" tabindex="-1">
-		<div class="modal-dialog" style="margin-top: 10%;">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-					<h4 class="modal-title" id="DecorationInfoLabel">装修单信息</h4>
+							<div class="form-group" >
+								<label class="col-md-3 control-label no-padding-right" for="des" >说明</label>
+								<div class="col-md-9">
+									<textarea id="des" class="col-md-6 v_required" rows="3" data-toggle="popover" data-trigger='manual' maxlength="256"></textarea>
+								</div>
+							</div>
+
+							<div class="space-1" id="historyDiv">
+								<h4 class="header blue bolder smaller">历史收款</h4>
+								<ul id="historyData"></ul>
+							</div>
+
+							<div id="cashDiv" referCheckbox="cashCheckbox" style="display: none;">
+								<h4 class="header blue bolder smaller">现金</h4>
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right" for="cashInfo">类型</label>
+									<div class="col-sm-9">
+										<input type="text" id="cashInfo" class="col-xs-10 col-sm-5 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" />
+									</div>
+								</div>
+								<div class="space-4"></div>
+
+								<div class="form-group">
+									<label for="cash" class="col-md-3 control-label">现金金额</label>
+									<div class="col-sm-9">
+										<input type="text" id="cash" class="col-xs-10 col-sm-5 v_required v_float_3"  data-toggle="popover" data-trigger='manual'/>
+									</div>
+								</div>
+								<div class="space-4"></div>
+							</div>
+
+							<div id="posDiv" referCheckbox="bankCheckbox" style="display: none;">
+								<h4 class="header blue bolder smaller">POS</h4>
+								<div id="posGroup"></div>
+							</div>
+
+							<div id="bankDiv" referCheckbox="bankCheckbox" style="display: none;">
+								<h4 class="header blue bolder smaller">POS</h4>
+								<div id="bankGroup">
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right">开户行</label>
+										<div class="col-sm-8">
+											<input class="col-xs-10 col-sm-6" type="text" id="bankName" data-toggle="popover" data-trigger="manual" data-placement="bottom" autocomplete="off">
+											<button class="btn btn-minier btn-orange pull-right inline" id="posSend">POS推送</button>
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right">刷卡金额</label>
+										<div class="col-sm-8">
+											<input class="col-sm-6" data-toggle="popover" data-trigger="manual" type="text" id="bank">
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right">方式</label>
+										<div class="col-sm-8">
+											<select class="col-sm-6 inline" data-toggle="popover" data-trigger="manual" id="posway"></select>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div id="checkvDiv" referCheckbox="checkvCheckbox" style="display: none;">
+								<h4 class="header blue bolder smaller">
+									银行
+									<button id="checkvAdd" class="btn btn-minier btn-success pull-right inline" num="0" maxnum="0">添加</button>
+								</h4>
+								<div id="checkvGroup"></div>
+							</div>
+						</form>
+					</div>
+
+					<div class="modal-footer ">
+						<button type="button" id="collectBtn" class="btn btn-primary">收款</button>
+						<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+					</div>
 				</div>
-				<div class="modal-body">
-					<form class="form-horizontal">
-						<div class="form-group" >
-							<label class="col-sm-4 control-label no-padding-right">装修单号</label>
-							<div class="col-md-8">
-								<span id="orderId" style="line-height: 30px"></span>
-							</div>
-						</div>
+			</div>
+		</div>
 
-						<div class="form-group">
-							<label class="col-sm-4 control-label no-padding-right">楼盘地址</label>
-							<div class="col-sm-8">
-								<span id="address" style="line-height: 30px"></span>
+		<!-- 装修单信息 -->
+		<div class="modal fade" id="decorationInfo" tabindex="-1">
+			<div class="modal-dialog" style="margin-top: 10%;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+						<h4 class="modal-title" id="DecorationInfoLabel">装修单信息</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal">
+							<div class="form-group" >
+								<label class="col-sm-4 control-label no-padding-right">装修单号</label>
+								<div class="col-md-8">
+									<span id="orderId" style="line-height: 30px"></span>
+								</div>
 							</div>
-						</div>
 
-						<div class="form-group">
-							<label class="col-sm-4 control-label no-padding-right">类型</label>
-							<div class="col-sm-8">
-								<span id="type" style="line-height: 30px"></span>
+							<div class="form-group">
+								<label class="col-sm-4 control-label no-padding-right">楼盘地址</label>
+								<div class="col-sm-8">
+									<span id="address" style="line-height: 30px"></span>
+								</div>
 							</div>
-						</div>
 
-						<div class="form-group">
-							<label class="col-sm-4 control-label no-padding-right">等级</label>
-							<div class="col-sm-8">
-								<span id="grade" style="line-height: 30px"></span>
+							<div class="form-group">
+								<label class="col-sm-4 control-label no-padding-right">类型</label>
+								<div class="col-sm-8">
+									<span id="type" style="line-height: 30px"></span>
+								</div>
 							</div>
-						</div>
-					</form>
+
+							<div class="form-group">
+								<label class="col-sm-4 control-label no-padding-right">等级</label>
+								<div class="col-sm-8">
+									<span id="grade" style="line-height: 30px"></span>
+								</div>
+							</div>
+						</form>
+					</div>
+
+					<div class="modal-footer" style="text-align: center">
+						<button type="button" id="cancelDecorationInfoBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+					</div>
 				</div>
+			</div>
+		</div>
 
-				<div class="modal-footer" style="text-align: center">
-					<button type="button" id="cancelDecorationInfoBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+		<!-- 创建预付款 -->
+		<div class="modal fade" id="createPaymentModal" tabindex="-1">
+			<div class="modal-dialog" style="margin-top: 10%;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+						<h4 class="modal-title">创建预付款</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-4 control-label no-padding-right orange" for="decorationOrderId">装修单号</label>
+								<div class="col-sm-8">
+									<input type="text" id="decorationOrderId" class="col-xs-10 col-sm-7 v_required" />
+								</div>
+							</div>
+						</form>
+					</div>
+
+					<div class="modal-footer" style="text-align: center">
+						<button type="button" id="createBtn" class="btn btn-primary">确定</button>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-
-	<!-- 创建预付款 -->
-	<div class="modal fade" id="createPaymentModal" tabindex="-1">
-		<div class="modal-dialog" style="margin-top: 10%;">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-					<h4 class="modal-title">创建预付款</h4>
-				</div>
-				<div class="modal-body">
-					<form class="form-horizontal">
-						<div class="form-group">
-							<label class="col-sm-4 control-label no-padding-right orange" for="decorationOrderId">装修单号</label>
-							<div class="col-sm-8">
-								<input type="text" id="decorationOrderId" class="col-xs-10 col-sm-7 v_required" />
-							</div>
-						</div>
-					</form>
-				</div>
-
-				<div class="modal-footer" style="text-align: center">
-					<button type="button" id="createBtn" class="btn btn-primary">确定</button>
-				</div>
-			</div>
-		</div>
-	</div>
-
 </div>
 
 <script type="text/javascript">

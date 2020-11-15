@@ -61,6 +61,8 @@ public interface DecorationService {
 
 	public void createDecoration(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, String userId, int company) throws FLException;
 
+	public void createDecorationForAdvance(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, String userId, int company) throws FLException;
+
 	public void changeDecorationForAdvance(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, String userId) throws FLException;
 
 	public void changeDecorationForHouse(DecorationVO decorationVO, String userId) throws FLException;

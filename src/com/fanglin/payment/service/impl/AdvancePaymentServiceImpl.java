@@ -139,7 +139,7 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 		
 		//留下为了paymentPO中的customer赋值
 		CustomerPO customerPO = customerDao.get(paymentVO.getCustomer().getCid());
-		DecorationPO decorationPO = decorationDao.get(paymentVO.getOrderId());
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(paymentVO.getOrderId());
 		
 		if(decorationPO == null){
 			throw new FLException(140013, "订单不存在");

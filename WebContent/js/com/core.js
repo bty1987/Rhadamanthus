@@ -300,16 +300,20 @@
      * @param scopeID 页面标签/元素ID
      * @param placement 提醒显示方向
      */
-    validate: function (scopeID, placement) {
+    validate: function (container, placement) {
+        
+        if(container && typeof(container) == "object" && container.length) container = container;
+        else if(container && typeof(container) == "object") container = [container];
+        else if(container && typeof(container) == "string") container = com.focusPage(!/\W+/.test(container) ? '#' + container : container);
+        else return true;
 
-        var _scopeID = scopeID == "" || scopeID == null || scopeID == undefined ? '.flpage.tab-pane.active' : "#" + com.focusPage("#" + scopeID).attr("id");
         var _placement = placement == "" || placement == null || placement == undefined ? 'right' : placement;
 
         var _count = 0;
         
         $.each(com.validator, function (k, value) {
-
-            com.focusPage(_scopeID + " ." + value.type + ":visible").each(function (i, v) {
+            
+            com.focusPage(" ." + value.type + ":visible", container).each(function (i, v) {
 
                 var $this = $(v);
                 

@@ -13,9 +13,11 @@ package com.fanglin.payment.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
@@ -24,73 +26,73 @@ public class DecorationPaymentVO implements Serializable {
 	private static final long serialVersionUID = -6225111181876631L;
 
 	private Long dpid;
-	
+
 	private Long drId;
-	
+
 	private DecorationVO decoration;
-	
+
 	private Short oneType;
-	
+
 	private Short twoType;
-	
+
 	private String paymentType;
-	
+
 	private Short paymentStatus;
-	
-	private UserBaseVO creater; 
-	
+
+	private UserBaseVO creater;
+
 	private Timestamp createTime;
-	
-	private UserBaseVO collecter; 
-	
+
+	private UserBaseVO collecter;
+
 	private Timestamp collectTime;
-	
-	private UserBaseVO confirmer; 
-	
+
+	private UserBaseVO confirmer;
+
 	private Timestamp confirmTime;
-	
+
 	private Long referMoney;
-	
+
 	private Short sort;
-	
+
 	private Long cash;
-	
+
 	private String cashInfo;
-	
+
 	private Long bank;
-	
+
 	private String bankInfo;
-	
+
 	private Long checkv;
-	
+
 	private String checkvBank;
-	
+
 	private Long installment;
-	
+
 	private String installmentBank;
-	
+
 	private Long accounts;
-	
+
 	private String accountsBank;
-	
+
 	private Long coupon;
-	
+
 	private String couponInfo;
-	
+
 	private Long advance;
-	
+
 	private Short advanceType;
-	
+
 	private String comment;
 
 	private Long psId;
-	
+
 	private Integer company;
-	
+
 	public DecorationPaymentVO() {
 		super();
 	}
-	
+
 	public DecorationPaymentVO(DecorationVO decoration) {
 		super();
 		this.decoration = decoration;
@@ -160,7 +162,7 @@ public class DecorationPaymentVO implements Serializable {
 		this.creater = creater;
 	}
 
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -177,7 +179,7 @@ public class DecorationPaymentVO implements Serializable {
 		this.collecter = collecter;
 	}
 
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCollectTime() {
 		return collectTime;
 	}
@@ -194,7 +196,7 @@ public class DecorationPaymentVO implements Serializable {
 		this.confirmer = confirmer;
 	}
 
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getConfirmTime() {
 		return confirmTime;
 	}
@@ -354,5 +356,21 @@ public class DecorationPaymentVO implements Serializable {
 	public void setCompany(Integer company) {
 		this.company = company;
 	}
-	
+
+	public DecorationPaymentVO filter(List<Filter> filters) {
+
+		if (getPaymentStatus() != null) {
+			filters.add(new Filter("paymentStatus", String.valueOf(getPaymentStatus()), "eq"));
+		}
+
+		if (getOneType() != null) {
+			filters.add(new Filter("oneType", String.valueOf(getOneType()), "eq"));
+		}
+
+		if (getTwoType() != null) {
+			filters.add(new Filter("twoType", String.valueOf(getTwoType()), "eq"));
+		}
+
+		return this;
+	}
 }

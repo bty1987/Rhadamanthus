@@ -342,7 +342,7 @@ jQuery(function ($) {
 
     //返回
     com.focusPage("#backBtn").on("click", function () {
-        //com.switchPage(api.index.decorationIndex.url);
+        com.switchPage(api.index.decorationIndex.url);
     });
 
     //删除活动

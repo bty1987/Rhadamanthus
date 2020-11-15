@@ -1,5 +1,7 @@
 package com.fanglin.decoration.action;
 
+import java.util.List;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -36,6 +38,8 @@ public class DecorationCommonAction extends BaseListAction {
 
 	private DecorationInfoVO decorationInfo;
 
+	private List<DecorationContractVO> decorationContracts;
+
 	private DecorationContractVO decorationContract;
 
 	private short result;
@@ -44,18 +48,26 @@ public class DecorationCommonAction extends BaseListAction {
 
 	private String redirect;
 
-	@Action(value = "confirmDecorationInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String confirmDecorationInfo() throws FLException {
-
-		decorationInfoService.confirmDecorationInfo(decorationInfo, queryUserId());
-
-		return SUCCESS;
-	}
-
 	@Action(value = "queryDecorationSchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationProcess() throws FLException {
 
 		result = decorationAdditionService.queryDecorationSchedule(decoration);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationContract() throws FLException {
+
+		decorationContracts = decorationContractService.queryDecorationContractByOrderId(decorationContract);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "confirmDecorationInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String confirmDecorationInfo() throws FLException {
+
+		decorationInfoService.confirmDecorationInfo(decorationInfo, queryUserId());
 
 		return SUCCESS;
 	}
@@ -82,6 +94,14 @@ public class DecorationCommonAction extends BaseListAction {
 
 	public void setDecorationInfo(DecorationInfoVO decorationInfo) {
 		this.decorationInfo = decorationInfo;
+	}
+
+	public List<DecorationContractVO> getDecorationContracts() {
+		return decorationContracts;
+	}
+
+	public void setDecorationContracts(List<DecorationContractVO> decorationContracts) {
+		this.decorationContracts = decorationContracts;
 	}
 
 	public DecorationContractVO getDecorationContract() {

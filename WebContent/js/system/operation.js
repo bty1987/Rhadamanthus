@@ -113,8 +113,9 @@ $(function(){
 
     //保存
     function saveData() {
-        if (com.validate()) {
-            return;
+        
+        if (com.validate("operationModal")) {
+            return false;
         }
 
         var params = {

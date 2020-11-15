@@ -2,7 +2,11 @@ package com.fanglin.payment.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
+
 import org.apache.struts2.json.annotations.JSON;
+
+import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
@@ -230,6 +234,15 @@ public class ServicePaymentVO implements Serializable {
 
 	public void setCompany(Integer company) {
 		this.company = company;
+	}
+
+	public ServicePaymentVO filter(List<Filter> filters) {
+
+		if (getStatus() != null) {
+			filters.add(new Filter("status", String.valueOf(getStatus()), "eq"));
+		}
+
+		return this;
 	}
 
 }

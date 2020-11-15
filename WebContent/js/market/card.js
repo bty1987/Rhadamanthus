@@ -134,9 +134,11 @@ jQuery(function($) {
     }, "pagenation", "casePostData", null, false, null);
 
     function updateCardData(){
-        if(com.validate()){
-            return;
+        
+        if(com.validate("cardModal")){
+            return false;
         }
+        
         var options = {
             'card.caid': businessCard.items.caid,
             'card.userName': businessCard.items.userName.val(),

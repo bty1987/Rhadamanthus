@@ -102,7 +102,7 @@ $(function(){
 
     function saveData(){
         
-        if(com.validate()){
+        if(com.validate("addModal")){
             return false;
         }
 

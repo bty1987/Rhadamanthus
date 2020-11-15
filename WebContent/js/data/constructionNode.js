@@ -123,7 +123,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["construction-node-name"], "condList", api.data.pageConstructionNode, function(data){
+    searcher.init(["data-construction-node-name"], "condList", api.data.pageConstructionNode, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "constructionNodePostData",null, false, null, function(){
 
@@ -171,8 +171,8 @@ jQuery(function($) {
 
     function saveData(){
         
-        if(com.validate()){
-            return;
+        if(com.validate("addModal")){
+            return false;
         }
 
         var options = {

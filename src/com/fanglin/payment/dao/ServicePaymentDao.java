@@ -8,9 +8,7 @@ import com.fanglin.utils.Paging;
 
 public interface ServicePaymentDao extends Dao<ServicePaymentPO>{
 
-	public List<ServicePaymentPO> pageServicePaymentForCollect(Paging paging, List<Filter> filters);
-	
-	public List<ServicePaymentPO> pageServicePaymentForConfirm(Paging paging, List<Filter> filters);
+	public List<ServicePaymentPO> pageServicePayment(Paging paging, List<Filter> filters);
 	
 	public List<ServicePaymentPO> queryServicePaymentByOrderId(String orderId);
 	

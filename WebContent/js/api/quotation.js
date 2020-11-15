@@ -664,7 +664,7 @@ $.extend(api, {quotation: {
         type: "query",
         tranargs: [{
             result: "paging-data",
-            args: ["num", "initNum", "postprice", "preprice"]
+            args: ["num", "initNum", "refnum", "postprice", "preprice"]
         },{
             result: "paging-data-decoration-house",
             args: ["buildArea"]
@@ -676,7 +676,7 @@ $.extend(api, {quotation: {
         type: "query",
         tranargs: [{
             result: "paging-data",
-            args: ["num", "initNum", "postprice", "preprice"]
+            args: ["num", "initNum", "refnum", "postprice", "preprice"]
         },{
             result: "paging-data-decoration-house",
             args: ["buildArea"]
@@ -688,7 +688,7 @@ $.extend(api, {quotation: {
             type: "query",
             tranargs: [{
             result: "paging-data",
-            args: ["num", "initNum", "postprice", "preprice"]
+            args: ["num", "initNum", "refnum", "postprice", "preprice"]
         },{
             result: "paging-data-decoration-house",
             args: ["buildArea"]
@@ -700,7 +700,7 @@ $.extend(api, {quotation: {
         type: "query",
         tranargs: [{
             result: "selectionItems",
-            args: ["num", "initNum", "postprice", "preprice"]
+            args: ["num", "initNum", "refnum", "postprice", "preprice"]
         }]
     },
     querySelectionItem: {
@@ -709,7 +709,7 @@ $.extend(api, {quotation: {
         type: "query",
         tranargs: [{
             result: "selectionItems",
-            args: ["num", "initNum", "postprice", "preprice"]
+            args: ["num", "initNum", "refnum", "postprice", "preprice"]
         }]
     },
     addSelectionItem: {
@@ -731,7 +731,7 @@ $.extend(api, {quotation: {
             ],
             query: [{
                 result: "selectionItem",
-                args: ["num", "initNum", "postprice", "preprice"]
+                args: ["num", "initNum", "refnum", "postprice", "preprice"]
             }]
         }
     },

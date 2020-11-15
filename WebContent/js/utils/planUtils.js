@@ -32,7 +32,7 @@ var planUtils = {
         var Adivs = $('<div></div>').addClass('form-group').attr('id', "dateRange");
         var Alabels = $('<label>时间区间</label>').addClass('col-sm-3 control-label no-padding-right').attr('for', "id"+ida);
         var Adivn = $('<div></div>').addClass('col-sm-9');
-        var Ainputs = $('<input />').addClass('col-xs-10 col-sm-5').attr("name", "date-range-picker").attr("id","id"+ida).attr("type", "text").attr("readonly", "readonly");
+        var Ainputs = $('<input />').addClass('planitem col-xs-12 col-sm-7').attr("name", "date-range-picker").attr("id","id"+ida).attr("type", "text").attr("readonly", "readonly");
         var plugins = com.focusPage("#pluginss");
         Adivn.append(Ainputs);
         Adivs.append(Alabels).append(Adivn);
@@ -44,7 +44,7 @@ var planUtils = {
         var Bdivs = $('<div></div>').addClass('form-group').attr('id',"mothRange");
         var Blabels = $('<label>月份区间</label>').addClass('col-sm-3 control-label no-padding-right').attr('for', "id"+ida);
         var Bdivn = $('<div></div>').addClass('col-sm-9');
-        var Binputs = $('<input />').addClass('col-xs-10 col-sm-5').attr("name", "date-range-picker").attr("id", "id"+ida).attr("type", "text").attr("readonly", "readonly");
+        var Binputs = $('<input />').addClass('planitem col-xs-12 col-sm-7').attr("name", "date-range-picker").attr("id", "id"+ida).attr("type", "text").attr("readonly", "readonly");
 
         var plugins = com.focusPage("#pluginss");
         Bdivn.append(Binputs);
@@ -73,7 +73,7 @@ var planUtils = {
         var Ddivs = $('<div></div>').addClass('form-group').attr('id', "commont");
         var Dlabels = $('<label>参数</label>').addClass('col-sm-3 control-label no-padding-right').attr('for', "id"+ida);
         var Ddivn = $('<div></div>').addClass('col-sm-9');
-        var Dinputs = $('<input />').addClass('col-xs-10 col-sm-5').attr("id", "id"+ida).attr("type", "text").attr("maxlength", "60");
+        var Dinputs = $('<input />').addClass('planitem col-xs-12 col-sm-7').attr("id", "id"+ida).attr("type", "text").attr("maxlength", "60");
 
         var plugins = com.focusPage("#pluginss");
         Ddivn.append(Dinputs);

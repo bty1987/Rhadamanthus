@@ -19,49 +19,42 @@ import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Service("feedbackService")
-@Transactional(readOnly=true)
-public class FeedbackServiceImpl implements FeedbackService{
-	
+@Transactional(readOnly = true)
+public class FeedbackServiceImpl implements FeedbackService {
+
 	@Autowired
 	private FeedbackDao feedbackDao;
-	
+
 	@Override
 	public void pageFeedback(Paging paging, List<Filter> filters) {
-		
+
 		List<FeedbackPO> feedbackPOs = feedbackDao.pageFeedback(paging, filters);
-		
 		List<FeedbackVO> feedbackVOs = new ArrayList<FeedbackVO>();
-		
-		if(feedbackPOs.size() != 0 && feedbackPOs != null){
-			
-			for (FeedbackPO feedbackPO : feedbackPOs) {
-				
-				FeedbackVO feedbackVO = new FeedbackVO();
-				
-				BeanUtil.copyPropertie(feedbackPO, feedbackVO); 	
-				
-				feedbackVOs.add(feedbackVO);
-				
-			}
-			
+
+		for (FeedbackPO feedbackPO : feedbackPOs) {
+
+			FeedbackVO feedbackVO = new FeedbackVO();
+
+			BeanUtil.copyPropertie(feedbackPO, feedbackVO);
+
+			feedbackVOs.add(feedbackVO);
 		}
-		
+
 		paging.setData(feedbackVOs);
-		
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int addFeedback(FeedbackVO feedbackVO) throws FLException {
-		
+
 		FeedbackPO feedbackPO = new FeedbackPO();
-		
+
 		BeanUtil.copyPropertie(feedbackVO, feedbackPO);
 
 		feedbackPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		
+
 		feedbackDao.save(feedbackPO);
-		
+
 		return 0;
 	}
 

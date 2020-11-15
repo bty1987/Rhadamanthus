@@ -124,8 +124,8 @@ jQuery(function ($) {
     });
 
     function saveData() {
-        if (com.validate())
-            return;
+        
+        if (com.validate("reworkModal")) return false;
 
         var url;
         var options = {

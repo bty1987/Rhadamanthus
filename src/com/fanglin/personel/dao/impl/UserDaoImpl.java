@@ -9,7 +9,6 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import com.fanglin.communion.po.DutyPO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserDao;
@@ -45,22 +44,7 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	}
 
 	@Override
-	public UserPO queryUserByLoginId(String loginId) {
-		return (UserPO) createCriteria(UserPO.class).add(Restrictions.eq("loginId", loginId)).uniqueResult();
-	}
-
-	@Override
-	public UserPO queryUserByUserId(String userId) {
-		return (UserPO) session().createCriteria(UserPO.class).add(Restrictions.eq("userId", userId)).uniqueResult();
-	}
-
-	@Override
-	public UserPO queryUserByOldUserId(String oldUserId) {
-		return (UserPO) createCriteria(UserPO.class).add(Restrictions.eq("oldUserId", oldUserId)).uniqueResult();
-	}
-
-	@Override
-	public List<UserPO> pageUserForNameByPinyinName(Paging paging, String pinyinName, Short status, Integer company, Integer dtid) {
+	public List<UserPO> pageUserByPinyin(Paging paging, String pinyin, Short status, Integer company, Integer dtid) {
 
 		PagingQuery<UserPO> query = pagingQuery(paging, UserPO.class);
 
@@ -73,14 +57,14 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		query.alias("role", "role");
 		query.alias("dept", "dept");
 		query.alias("dept.type", "dept.type");
-		
-		if (StringUtils.isNotEmpty(pinyinName)) {
+
+		if (StringUtils.isNotEmpty(pinyin)) {
 
 			Disjunction pinyinDisjunction = Restrictions.disjunction();
 
-			pinyinDisjunction.add(Restrictions.like("currentName", pinyinName, MatchMode.ANYWHERE));
-			pinyinDisjunction.add(Restrictions.like("pinYin", pinyinName, MatchMode.ANYWHERE));
-			pinyinDisjunction.add(Restrictions.like("userId", pinyinName, MatchMode.ANYWHERE));
+			pinyinDisjunction.add(Restrictions.like("currentName", pinyin, MatchMode.ANYWHERE));
+			pinyinDisjunction.add(Restrictions.like("pinYin", pinyin, MatchMode.ANYWHERE));
+			pinyinDisjunction.add(Restrictions.like("userId", pinyin, MatchMode.ANYWHERE));
 
 			query.add(pinyinDisjunction);
 		}
@@ -99,22 +83,24 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public List<UserPO> queryUserByPhoneAIdent(String phone, String ident) {
-		return session().createCriteria(UserPO.class).add(Restrictions.or(Restrictions.eq("phone", phone), Restrictions.eq("identity", ident))).add(Restrictions.eq("type", UserPO.TYPE_USER_INT)).list();
+	public UserPO queryUserByLoginId(String loginId) {
+		return (UserPO) createCriteria(UserPO.class).add(Restrictions.eq("loginId", loginId)).uniqueResult();
+	}
+
+	@Override
+	public UserPO queryUserByUserId(String userId) {
+		return (UserPO) session().createCriteria(UserPO.class).add(Restrictions.eq("userId", userId)).uniqueResult();
+	}
+
+	@Override
+	public UserPO queryUserByOldUserId(String oldUserId) {
+		return (UserPO) createCriteria(UserPO.class).add(Restrictions.eq("oldUserId", oldUserId)).uniqueResult();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<UserPO> queryUserByDeptIdADuty(String deptId, String duty) {
-
-		DutyPO dutyPO = (DutyPO) session().createCriteria(DutyPO.class).add(Restrictions.eq(DutyPO.COLUMN_NAME_STR, duty)).uniqueResult();
-
-		String sql = "select * from communion.user where deptId= :deptId and did= :did and type = :type";
-
-		List<UserPO> userPOs = session().createSQLQuery(sql).addEntity(UserPO.class).setString("deptId", deptId).setLong("did", dutyPO.getDid()).setShort("type", UserPO.TYPE_USER_INT).list();
-
-		return userPOs;
+	public List<UserPO> queryUserByPhoneAIdent(String phone, String ident) {
+		return session().createCriteria(UserPO.class).add(Restrictions.or(Restrictions.eq("phone", phone), Restrictions.eq("identity", ident))).add(Restrictions.eq("type", UserPO.TYPE_USER_INT)).list();
 	}
 
 	@Override
@@ -153,6 +139,15 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 		return count.intValue();
 	}
 
+	@Override
+	public int countUserByDid(Integer deptId, Long did, Integer company) {
+
+		String sql = "select count(*) from communion.user where deptId =:deptId and did = :did and company = :company and status = 0";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("deptId", deptId).setLong("did", did).setInteger("company", company).uniqueResult();
+
+		return count.intValue();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
 		if (filters != null) {
@@ -160,12 +155,12 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 			query.alias("dept", "dept");
 			query.alias("role", "role");
 			query.alias("duty", "duty");
-			
+
 			for (Filter filter : filters) {
 
 				String field = filter.getField();
 				String data = filter.getData();
-				
+
 				if ("userId".equals(field)) {
 					query.add(query.getCriterion("userId", filter));
 				} else if ("userName".equals(field)) {
@@ -189,14 +184,6 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 				}
 			}
 		}
-	}
-
-	@Override
-	public int countUserByDid(Integer deptId, Long did, Integer company) {
-		String sql = "select count(*) from communion.user where deptId =:deptId and did = :did and company = :company and status = 0";
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("deptId", deptId).setLong("did", did).setInteger("company", company).uniqueResult();
-
-		return count.intValue();
 	}
 
 }

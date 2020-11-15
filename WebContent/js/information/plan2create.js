@@ -13,10 +13,11 @@ jQuery(function ($) {
         items: {
             dataTime : com.focusPage("#dataTime"),
             time : com.focusPage("#time"),
-            taskPlan : com.focusPage("#taskPlan"),
+            taskPlan : com.focusPage("#taskPlan")
         },
         cuItems: {
             cuTime: com.focusPage("#cuTime"),
+            orderId: com.focusPage("#orderId")
         },
         taskParam:{
             tpid : null,
@@ -29,6 +30,7 @@ jQuery(function ($) {
         cTime : null,
         args: {},
         data : {},
+        unionParams : {}
     };
 
     plan2create.btns.createPlanBtn.bindClick(cuDate);
@@ -46,17 +48,15 @@ jQuery(function ($) {
         com.cleanItems(plan2create.cuItems);
     });
 
-    com.post(api.data.queryTaskRoleRightByUserId, {"taskRoleRight.rid": params.userInfo.user.role.rid}, function (res) {
-        var task = [];
 
-        $.each(res.taskRoleRights, function(i, v){
+    com.post(api.data.queryTask, {"task.level": 1}, function (res) {
+        var task = []
 
-            task.push(v.task);
+        $.each(res.tasks, function (i, v) {
+            task.push(v)
         });
         plan2create.items.taskPlan.bindData(task, "keyWord", "name", false, null, "tid");
     }, null, false);
-
-    plan2create.tid = plan2create.items.taskPlan.find("option:selected").attr('other');
 
     com.post(api.ds.data, {}, function (res) {
         plan2create.taskParam.taskParamModule = res.taskParamModule.split("module", "name");
@@ -70,6 +70,8 @@ jQuery(function ($) {
         com.focusPage("#referfilling").empty();
         com.focusPage("#itemfield").empty();
         com.focusPage("#itemitem").empty();
+        com.focusPage("#notfield").show();
+        com.focusPage("#notitem").show();
         queryTaskParmas()
     });
     queryTaskParmas();
@@ -88,9 +90,21 @@ jQuery(function ($) {
 
         if (args.type == 1) {
             plan2create.taskParam.tpid = args.tpid;
-            plan2create.modals.referModal.modal("show");
+            if (args.name == "公司") {
+                com.focusPage("#notitem").hide();
+                plan2create.cTime = 1;
+                com.focusPage("#"+ args.tpid).click(createItem());
+            } else if (args.name == "装修单号") {
+                com.focusPage("#cuTime").hide();
+                com.focusPage("#orderId").show();
+                plan2create.modals.referModal.modal("show");
+            } else {
+                com.focusPage("#cuTime").show();
+                com.focusPage("#orderId").hide();
+                plan2create.modals.referModal.modal("show");
+            }
         } else {
-            com.focusPage("#notfield").addClass("hide");
+            com.focusPage("#notfield").hide();
             com.focusPage("#"+ args.tpid).click(createItem());
         }
     }
@@ -105,12 +119,14 @@ jQuery(function ($) {
         var type = plan2create.args.type;
         var onetype = plan2create.args.onetype;
         var union = plan2create.args.union;
+        var unionParam = plan2create.args.unionparam;
         var alias = plan2create.args.alias;
         var module = plan2create.args.module;
         var field = plan2create.args.field;
         var handle = plan2create.args.handle;
         var status = plan2create.args.status;
         var sort = plan2create.args.sort;
+        var tableSort = plan2create.args.tablesort;
         var comment = plan2create.args.comment;
         var ismain = plan2create.args.ismain;
         var data = "";
@@ -132,6 +148,7 @@ jQuery(function ($) {
             "'type'" : type,
             "'oneType'" : onetype,
             "'union'" : union,
+            "'unionParam'" : unionParam,
             "'alias'" : alias,
             "'data'" : data,
             "'module'" : module,
@@ -139,6 +156,7 @@ jQuery(function ($) {
             "'handle'" : handle,
             "'status'" : status,
             "'sort'" : sort,
+            "'tableSort'" : tableSort,
             "'comment'" : comment,
             "'ismain'" : ismain,
             "'form'" : type == 0 ? "field" : "item"
@@ -167,9 +185,12 @@ jQuery(function ($) {
             ["一类:", plan2create.taskParam.taskParamOneType[data["'oneType'"]], "red"],
             ["模块:", plan2create.taskParam.taskParamModule[data["'module'"]], "grey"],
             ["关联:", data["'union'"], "grey"],
+            ["关联字段:", plan2create.unionParams[data["'unionParam'"]], "grey"],
             ["字段:", data["'field'"], "grey"],
             ["别名:", data["'alias'"], "grey"],
             ["处理过程:", data["'handle'"], "grey"],
+            ["排序:", data["'sort'"], "grey"],
+            ["表排序:", data["'tableSort'"], "grey"],
             ["备注:", data["'comment'"], "grey"],
             ["是否主要:", plan2create.taskParam.taskParamIsmain[data["'ismain'"]], "red"]
         ];
@@ -205,9 +226,9 @@ jQuery(function ($) {
     }
 
     function cuDate(){
-        plan2create.cTime = plan2create.cuItems.cuTime.val();
+        plan2create.cTime = plan2create.cuItems.cuTime.val() == "" ? plan2create.cuItems.orderId.val() : plan2create.cuItems.cuTime.val();
         com.focusPage("#"+ plan2create.data.tpid).click(createItem());
-        com.focusPage("#notitem").addClass("hide");
+        com.focusPage("#notitem").hide();
         plan2create.modals.referModal.modal("hide");
     }
     function saveDate(){
@@ -230,7 +251,12 @@ jQuery(function ($) {
             } else {
                 conditions += "," + v.id
             }
-        })
+        });
+
+        if (fields == "" || conditions == ""){
+            com.showAlert(com.warning, "请选择字段和条件");
+            return
+        }
 
         var options = {
             "plan.task.keyWord": plan2create.items.taskPlan.val(),
@@ -252,26 +278,35 @@ jQuery(function ($) {
 
         com.post(api.information.createPlan, options, function (res) {
             plan2create.planSeacher.doSearch();
+            com.focusPage("#itemfield").empty();
+            com.focusPage("#itemitem").empty();
+            com.focusPage("#notfield").show();
+            com.focusPage("#notitem").show();
             com.showAlert(com.info, "计划创建成功!");
         });
     }
 
     function queryTaskParmas() {
 
+        plan2create.tid = plan2create.items.taskPlan.find("option:selected").attr('other');
+
         com.post(api.data.queryTaskParam, {"taskParam.tid":  plan2create.tid}, function (res) {
 
             var taskParams = res.taskParams;
 
+            plan2create.unionParams = taskParams.split("tpid", "name");
+            plan2create.unionParams[0] = "无";
+
                 $.each(taskParams, function(i, v){
+                    if (v.type == 0 || v.type == 1) {
+                        var $content = v.type == 0 ? $referquery : $referfilling;
+                        var btncolor = v.type == 0 ? "btn-primary" : "btn-warning";
 
-                    var $content = v.type == 0 ? $referquery : $referfilling;
-                    var btncolor = v.type == 0 ? "btn-primary" : "btn-warning";
-
-                    var $p = $('<p></p>').addClass("col-xs-6").appendTo($content);
-                    var $btn = $('<button></button>').addClass("btn btn-sm referItem col-xs-12").addClass(btncolor).attr({"data-id": v.tpid, "data-tid": v.tid, "data-name": v.name, "data-type": v.type, "data-alias": v.alias, "data-module": v.module, "data-field": v.field, "data-ismain": v.ismain, "data-oneType": v.oneType, "data-union": v.unionField, "data-handle": v.handle, "data-status": v.status, "data-sort": v.sort, "data-comment": v.comment}).appendTo($p);
-                    var $span = $("<span></span>").text(v.name).appendTo($btn);
+                        var $p = $('<p></p>').addClass("col-xs-6").appendTo($content);
+                        var $btn = $('<button></button>').addClass("btn btn-sm referItem col-xs-12").addClass(btncolor).attr({"data-id": v.tpid, "data-tid": v.tid, "data-name": v.name, "data-type": v.type, "data-alias": v.alias, "data-module": v.module, "data-field": v.field, "data-ismain": v.ismain, "data-oneType": v.oneType, "data-union": v.unionField, "data-unionParam": v.unionParam, "data-handle": v.handle, "data-status": v.status, "data-sort": v.sort, "data-tableSort": v.tableSort, "data-comment": v.comment}).appendTo($p);
+                        var $span = $("<span></span>").text(v.name).appendTo($btn);
+                    }
                 });
-
                 com.focusPage(".referItem").click(initItem);
             });
         };

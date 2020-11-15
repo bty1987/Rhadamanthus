@@ -148,7 +148,7 @@ $(function(){
         };
     })();
 
-    var _condArr = ['data-quotation-item-name', 'data-quotation-bigcategory', 'data-worktype'];
+    var _condArr = ['data-quotation-item-name', 'data-quotation-bigcategory', 'quotation-worktype'];
    
    var searcher = new Searcher();
    
