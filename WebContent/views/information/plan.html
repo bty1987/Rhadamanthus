@@ -14,37 +14,40 @@
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span><span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title" id="addItemDialog">计划信息</h4>
+                    <h4 class="modal-title">计划信息</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
+                    
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="task">系统时间</label>
+                            <div class="col-sm-9">
+                                <input id="current" type="text" class="planitem col-xs-12 col-sm-7" readonly="readonly"/>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right orange" for="task">任务选择</label>
                             <div class="col-sm-9">
-                                <select id="task" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'>
-                                </select>
+                                <select id="task" class="planitem col-xs-12 col-sm-7 v_required" data-toggle="popover" data-trigger='manual'></select>
                             </div>
                         </div>
 
-                        <div id="pluginss">
-                        </div>
+                        <div id="pluginss"></div>
 
                         <div class="hide" id="timediv">
                             <div class="form-group ">
                                 <label class="col-sm-3 control-label no-padding-right" for="executeDate">执行日期</label>
-                                <!--X-->
                                 <div class="col-sm-9">
-                                    <input class="date-picker-date col-xs-10 col-sm-5 v_required " id="executeDate" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
+                                    <input class="planitem date-picker-date col-xs-12 col-sm-7 v_required" id="executeDate" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right" for="executeTime">执行时间</label>
-                                <!--Y-->
                                 <div class="col-sm-9">
                                     <div class="bootstrap-timepicker">
-                                        <input id="executeTime" type="text" class="v_required col-xs-10 col-sm-5 "/>
+                                        <input id="executeTime" type="text" class="planitem v_required col-xs-12 col-sm-7"/>
                                     </div>
                                 </div>
                             </div>
@@ -54,7 +57,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="addplanBtn" class="btn btn-primary">保存</button>
-                    <button type="button" id="cancelplanBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                 </div>
             </div>
         </div>

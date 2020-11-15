@@ -127,7 +127,7 @@ jQuery(function ($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["categoryId", "brandName"], "condList", api.data.pageBrand, function (data) {
+    searcher.init(["data-brand-category", "data-brand-name"], "condList", api.data.pageBrand, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "brandPostData", null, false, null, function () {
 

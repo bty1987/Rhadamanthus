@@ -137,8 +137,9 @@
     }
     //保存
     function saveData(){
-    	if(com.validate()|| duty.repeatFlg)
-    		return;
+        
+    	if(com.validate("addItemModal")|| duty.repeatFlg) return false;
+    	
     	var url;
     	var options = {
     		"duty.name": duty.dutyItems.name.val(),

@@ -13,7 +13,6 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.common.service.TalkingService;
 import com.fanglin.data.common.vo.TalkingVO;
-import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -50,10 +49,6 @@ public class TalkingAction extends BaseListAction {
 	@Action(value = "addTalking", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addTalking() throws FLException {
 
-		if (SystemConfig.getString("communion") == null) {
-			throw new FLException(-1, "无操作权限");
-		}
-
 		talkingService.addTalking(talking, queryCompany());
 
 		return SUCCESS;
@@ -61,10 +56,6 @@ public class TalkingAction extends BaseListAction {
 
 	@Action(value = "updateTalking", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateTalking() throws FLException {
-
-		if (SystemConfig.getString("communion") == null) {
-			throw new FLException(-1, "无操作权限");
-		}
 
 		talkingService.updateTalking(talking);
 
@@ -74,10 +65,6 @@ public class TalkingAction extends BaseListAction {
 	@Action(value = "updateTalkingForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateTalkingForStatus() throws FLException {
 
-		if (SystemConfig.getString("communion") == null) {
-			throw new FLException(-1, "无操作权限");
-		}
-
 		talkingService.updateTalkingForStatus(talking);
 
 		return SUCCESS;
@@ -85,10 +72,6 @@ public class TalkingAction extends BaseListAction {
 
 	@Action(value = "deleteTalking", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteTalking() throws FLException {
-
-		if (SystemConfig.getString("communion") == null) {
-			throw new FLException(-1, "无操作权限");
-		}
 
 		talkingService.deleteTalking(talking);
 

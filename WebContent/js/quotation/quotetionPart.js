@@ -115,7 +115,7 @@ var QuotetionDetail = (function(){
             }, null, false);
             //初始化报价项选择弹层
             var extraParams  = {"quotationItem.versionId":  quo.basicParams["quotetion.version"]};
-            var _condArr = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'data-worktype'];
+            var _condArr = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'quotation-worktype'];
             var quotetionItemSeacher = new Searcher();
             // 通过报价版本编号获取分页方式获取状态为启用报价项信息
             quotetionItemSeacher.init( _condArr, "condList", api.quotation.pageQuotationItemByVersionId,  function(data){
@@ -420,9 +420,11 @@ var QuotetionDetail = (function(){
         saveDomainEdit : function(){
             var that = this;
            com.focusPage('#saveFunctionAreaBtn').on('click', function(){ // 编辑功能区页面
-                if(com.validate()){
-                    return;
+               
+                if(com.validate("functionAreaModal")){
+                    return false;
                 }
+                
                 var _dname =com.focusPage("#functionAreaName").val();
                 var _dorder =com.focusPage("#functionAreaOrder").val();
                 var _params = $.extend({}, {
@@ -472,8 +474,8 @@ var QuotetionDetail = (function(){
         },
         calculateTotal: function(){
            com.focusPage('#calculateTotalFeeBtn').on('click', function(){
-                if(com.validate()){
-                    return;
+                if(com.validate("calculateTotalFeeModal")){
+                    return false;
                 }
                 var table =com.focusPage('#calculateTotalFeeModal').find('table');
                 table.find('thead').remove();
@@ -491,9 +493,11 @@ var QuotetionDetail = (function(){
         //保存报价修改
         saveDiscountEdit : function(){
            com.focusPage('#saveDisCountBtn').on('click', function(){
-                if(com.validate()){
-                    return;
+               
+                if(com.validate("discountModal")){
+                    return false;
                 }
+                
                 var dis =com.focusPage("#discount").val();
                 var basePrice = com.focusPage('input[name="basePrice"]:checked').val();
                 var baseName = com.focusPage('input[name="basePrice"]:checked').attr('data-name');
@@ -605,8 +609,8 @@ var QuotetionDetail = (function(){
         //管理费比例弹窗保存按钮 saveMrBtn
         saveManageRate : function(){
            com.focusPage('#saveMrBtn').click(function(){
-                if(com.validate()){
-                    return;
+                if(com.validate("manageRateModal")){
+                    return false;
                 }
                 var _manageId =com.focusPage('#manageCost').attr('qfaiId');
                 var _qfaId =com.focusPage('#manageCost').find('.cell.name').attr("data-qfaId");
@@ -636,28 +640,33 @@ var QuotetionDetail = (function(){
         },
         //车运费管理保存
         saveconveyanceRate :function(){
-           com.focusPage('#saveconveyanceBtn').click(function(){
-                if(com.validate()){
-                    return;
+            com.focusPage('#saveconveyanceBtn').click(function(){
+               
+                if(com.validate("conveyanceRateModal")){
+                    return false;
                 }
+                
                 var _conveyanceId =com.focusPage('#conveyanceCost').attr('qfaiId');
                 var _qfaId =com.focusPage('#conveyanceCost').find('.cell.name').attr("data-qfaId");
-
+                
                 var _conveyanceCost = parseFloat(com.focusPage('#conveyanceRate').val());
-               com.focusPage('#conveyanceCost').find('.unitprice').text(_conveyanceCost);
-               com.focusPage('#conveyanceCost').find('.discountprice .cell-wrap').text(_conveyanceCost);
-               com.focusPage('#conveyanceCost').find('.totalprice-discount .cell-wrap').text(_conveyanceCost);
+                com.focusPage('#conveyanceCost').find('.unitprice').text(_conveyanceCost);
+                com.focusPage('#conveyanceCost').find('.discountprice .cell-wrap').text(_conveyanceCost);
+                com.focusPage('#conveyanceCost').find('.totalprice-discount .cell-wrap').text(_conveyanceCost);
+                
                 //("调用   统计车运费管理费总价折扣价")
                 quo.calculateQuoFees();
+                
                 var option=$.extend({}, {
                     "quotetionFunctionAreaItem.qfaiId": _conveyanceId,
                     "quotetionFunctionAreaItem.qfaid":_qfaId,
                     "quotetionFunctionAreaItem.unitPrice": _conveyanceCost
                 }, quo.basicParams);
-
+                
                 com.post(api.quotation.updateQuotetionFunctionAreaItemForSpec,option , function(res){
                     quo.quoModals.conveyanceRateModal.modal("hide");
                 }, null, false);
+                
                com.post(api.quotation.updateQuotetionForAdvance, quo.basicParams, function(res){}, null, false);
 
             });
@@ -917,9 +926,11 @@ var QuotetionDetail = (function(){
         //添加自定义报价项
         saveCustomQuotesAdd : function(){
            com.focusPage("#saveCustomFunctionAreaItemBtn").on('click', function(event){
+               
                 var _areaType = domain.nowEditDomain.attr('data-areaType');
-                if(com.validate()){
-                    return;
+                
+                if(com.validate("customFunctionAreaItemsModal")){
+                    return false;
                 }
                 var _index = domain.nowEditDomain.find('.fl-quo-item').length;
                 var addRow = {

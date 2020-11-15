@@ -57,7 +57,7 @@ jQuery(function($) {
 	com.focusPage("#updateDefaultFlag").switchBtn("isOrNot");
 	
 	com.focusPage('#detailBckBtn').on("click", function(){
-		//com.switchPage(api.index.decorationBelongIndex.url);
+		com.switchPage(api.index.decorationBelongIndex.url);
 	});
 	
 	com.focusPage('#saveBelongInfoBtn').on("click", saveOrderBelongInfo);
@@ -161,7 +161,7 @@ jQuery(function($) {
 		
 		com.post(api.approval.submitApprovalForDecorationBelong, options, function(res){
 			com.showAlert(com.info, "操作成功");
-			com.switchPage(api.index.decorationBelongIndex.url);
+			com.closePopover();
 		});
 		
 		com.focusPage("#approveModal").modal("hide");

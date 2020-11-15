@@ -74,8 +74,8 @@ jQuery(function ($) {
 
     var save = function save() {
 
-        if (com.validate()) {
-            return;
+        if (com.validate("acceptanceDatailPageContent")) {
+            return false;
         }
 
         for (var i = 1; i <= acceptanceDetail.ratyLength; i++) {

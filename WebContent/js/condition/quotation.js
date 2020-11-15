@@ -1,6 +1,23 @@
 
 Condition.addupRule("quotation", {
     
+    "worktype": {
+        label: "工种",
+        type: "select",
+        submitConfig: {
+            name: "quotationWorkTypeId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {//从后台取数据的各种配置
+            url: api.common.queryWorkType,
+            postData: {},
+            listPath: "workTypes",
+            keyPath: "id",
+            valuePath: "name"
+        }
+    },
+    
     "selection-orderId":{
         label:"装修单号",
         type:"text",

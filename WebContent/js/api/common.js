@@ -10,6 +10,8 @@ $.extend(api, {common: {
     createTree: {url: "createTree.do", demo: true},
     
     changeAuthCode: {url: "changeAuthCode.do", server: "communion"},
+    
+    current: {url: "current.do", intercept: true},
 
     logout: {url: "logout.do"},
 
@@ -30,8 +32,6 @@ $.extend(api, {common: {
 
     updateAuthCode:{url: "updateAuthCode.do",server:'communion'},
     
-   
-
     changeDecorationPaymentForTime: {url: "changeDecorationPaymentForTime.do"},
     changeMaterialForOrderId: {url: "changeMaterialForOrderId.do"},
     changeMaterialPaymentForTime: {url: "changeMaterialPaymentForTime.do"},

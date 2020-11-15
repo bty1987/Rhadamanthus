@@ -2,7 +2,6 @@ jQuery(function($) {
     
     var upgrade = {
         saveBtn : com.focusPage("#saveBtn").on("click", saveData),
-        cancelBtn : com.focusPage("#cancelBtn").on("click", empty),
         modal : com.focusPage("#upgradeModal"),
         items : {
             upgradeNumber : com.focusPage("#upgradeNumber"),
@@ -69,7 +68,7 @@ jQuery(function($) {
             $btnDel.click(function() {
                 com.showConfirm("是否确定删除", function() {
                     com.post(api.upgrade.deleteUpgrade, {"upgrade.ugid" : v.ugid}, function() {
-                        upgradeSeacher.doSearch();
+                        seacher.doSearch();
                     });
                 });
             });
@@ -88,11 +87,10 @@ jQuery(function($) {
         }
     })();
 
-    var _condArr = [ 'system-upgrade-version', 'system-upgrade-createTime' ];
-    var upgradeSeacher = new Searcher();
-    upgradeSeacher.init(_condArr, "condList", api.upgrade.pageUpgrade, function(list) {
+    var seacher = new Searcher();
+    
+    seacher.init([ 'system-upgrade-version', 'system-upgrade-createTime' ], "condList", api.upgrade.pageUpgrade, function(list) {
         displayFunc.init('resultList', list);
-        com.datetime(com.focusPage('[name="upgradeCreateTime"]'), "date");
     }, "pagenation", "upgradePostData", null, false, null, function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addUpgrade').css("margin", "0px 3px");
@@ -122,9 +120,11 @@ jQuery(function($) {
         }
 
         com.post(api.upgrade.addUpgrade, option, function() {
+            
             com.showAlert(com.info, '添加成功');
-            empty();
-            upgradeSeacher.doSearch();
+            com.cleanItems(upgrade.items);
+            
+            seacher.doSearch();
         });
         
         upgrade.modal.modal("hide");
@@ -134,14 +134,5 @@ jQuery(function($) {
         com.focusPage("#path").val(data.resUrl);
         com.focusPage("#fileSize").val(file.size);
     });
-
-    function empty() {
-        com.focusPage('#upgradeNumber').val("");
-        com.focusPage('#trialUpgrade').val("");
-        com.focusPage('#createTime').val("");
-        com.focusPage('#content').val("");
-        com.focusPage('#path').val("");
-        com.focusPage("#fileSize").val("");
-    }
 
 });

@@ -60,34 +60,10 @@ public class MaterialPaymentAction extends BaseListAction{
 	
 	private Timestamp dateTime;
 	
-	@Action(value="pageMaterialPaymentForInit", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialPaymentForInit() throws FLException{
+	@Action(value="pageMaterialPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String pageMaterialPayment() throws FLException{
 		
-		materialPaymentService.pageMaterialPaymentForInit(getPaging(), getFilters(), queryCompany());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="pageMaterialPaymentForNotInit", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialPaymentForNotInit() throws FLException{
-		
-		materialPaymentService.pageMaterialPaymentForNotInit(getPaging(), getFilters(), queryCompany());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="pageMaterialPaymentForCollect", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialPaymentForCollect() throws FLException{
-		
-		materialPaymentService.pageMaterialPaymentForCollect(getPaging(), getFilters(), queryCompany());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value="pageMaterialPaymentForConfirm", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String pageMaterialPaymentForConfirm() throws FLException{
-		
-		materialPaymentService.pageMaterialPaymentForConfirm(getPaging(), getFilters(), queryCompany());
+		materialPaymentService.pageMaterialPayment(getPaging(), getFilters(), materialPayment, queryCompany());
 		
 		return SUCCESS;
 	}

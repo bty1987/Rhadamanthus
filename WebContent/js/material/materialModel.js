@@ -210,27 +210,27 @@ $(function () {
 
     //保存
     function saveData() {
-        if (!com.validate() && materialModel.repeatFlg) {
-            var _params = {
-                "materialModel.mmId": materialModel.materialModelItems.mmId.val(),
-                "materialModel.materialModelNo": materialModel.materialModelItems.materialModelNo.val(),
-                "materialModel.materialModelName": materialModel.materialModelItems.materialModelName.val(),
-                //"materialModel.materialTypeName": materialModel.materialModelItems.materialBrandId.find("option:selected").text().split('-')[1],
-                "materialModel.materialBrandId": materialModel.materialModelItems.materialBrandId.val(),
-                //"materialModel.materialBrandName": materialModel.materialModelItems.materialBrandId.find("option:selected").text().split('-')[0],
-                "materialModel.measurementUnitId": materialModel.materialModelItems.measurementUnitId.val(),
-                "materialModel.measurementUnitName": materialModel.materialModelItems.measurementUnitId.find("option:selected").text(),
-                "materialModel.materialUnitPrice": materialModel.materialModelItems.materialUnitPrice.val(),
-                "materialModel.materialPurchasePrice": materialModel.materialModelItems.materialPurchasePrice.val(),
-                "materialModel.discount": materialModel.materialModelItems.discount.val(),
-            };
-            com.post(materialModel.editFlg ? api.material.updateMaterialModel : api.material.addMaterialModel, _params, function (a) {
-                materialModel.modal.modal("hide");
-                searcher.doSearch();
-            });
-        }
-
-
+        
+        if (com.validate("materialModelModal") || !materialModel.repeatFlg) return false;
+        
+        var _params = {
+            "materialModel.mmId": materialModel.materialModelItems.mmId.val(),
+            "materialModel.materialModelNo": materialModel.materialModelItems.materialModelNo.val(),
+            "materialModel.materialModelName": materialModel.materialModelItems.materialModelName.val(),
+            //"materialModel.materialTypeName": materialModel.materialModelItems.materialBrandId.find("option:selected").text().split('-')[1],
+            "materialModel.materialBrandId": materialModel.materialModelItems.materialBrandId.val(),
+            //"materialModel.materialBrandName": materialModel.materialModelItems.materialBrandId.find("option:selected").text().split('-')[0],
+            "materialModel.measurementUnitId": materialModel.materialModelItems.measurementUnitId.val(),
+            "materialModel.measurementUnitName": materialModel.materialModelItems.measurementUnitId.find("option:selected").text(),
+            "materialModel.materialUnitPrice": materialModel.materialModelItems.materialUnitPrice.val(),
+            "materialModel.materialPurchasePrice": materialModel.materialModelItems.materialPurchasePrice.val(),
+            "materialModel.discount": materialModel.materialModelItems.discount.val(),
+        };
+        
+        com.post(materialModel.editFlg ? api.material.updateMaterialModel : api.material.addMaterialModel, _params, function (a) {
+            materialModel.modal.modal("hide");
+            searcher.doSearch();
+        });
     }
 
     //删除

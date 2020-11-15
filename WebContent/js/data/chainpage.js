@@ -86,8 +86,9 @@
     });
 
     function saveData() {
-    	if(com.validate()){
-			return;
+        
+    	if(com.validate("chainPageModal")){
+			return false;
 		}
 
         com.post(api.data.addChainPage, {

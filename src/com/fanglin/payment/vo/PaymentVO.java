@@ -11,9 +11,11 @@ package com.fanglin.payment.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
 import com.fanglin.communion.vo.CustomerVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.vo.UserBaseVO;
 
 public class PaymentVO implements Serializable {
@@ -291,6 +293,19 @@ public class PaymentVO implements Serializable {
 
 	public void setArId(Long arId) {
 		this.arId = arId;
+	}
+
+	public PaymentVO filter(List<Filter> filters) {
+
+		if (getStatus() != null) {
+			filters.add(new Filter("status", String.valueOf(getStatus()), "eq"));
+		}
+		
+		if (getType() != null) {
+			filters.add(new Filter("type", String.valueOf(getType()), "eq"));
+		}
+
+		return this;
 	}
 
 }

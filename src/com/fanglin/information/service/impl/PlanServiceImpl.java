@@ -1,8 +1,6 @@
 package com.fanglin.information.service.impl;
 
-import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -100,18 +98,22 @@ public class PlanServiceImpl implements PlanService {
 	@Transactional(rollbackFor = Exception.class)
 	public int createPlan(PlanVO planVO, String userId, int company) throws FLException, ParseException {
 
+		int systemlimit = 10;
+		int userlimit = 5;
+
+		String current = DateUtil.current("yyMMddhhmm");
+
 		SystemConfigPO planlimit = systemConfigDao.querySystemConfig("planlimit");
 
-		int size = 10;
 		if (planlimit != null) {
-			size = Integer.valueOf(planlimit.getValue());
+			systemlimit = Integer.valueOf(planlimit.getValue());
 		}
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
-		int count = planDao.countPlanByCuid(userPO.getUid());
+		int count = planDao.countPlan(userPO.getUid());
 
-		if (count > 5) {
+		if (count > userlimit) {
 			throw new FLException(160030, "未执行任务达到上限");
 		}
 
@@ -121,26 +123,27 @@ public class PlanServiceImpl implements PlanService {
 			throw new FLException(160028, "计划不存在");
 		}
 
+		String executeTime = planVO.getExecuteTime();
+
+		if (executeTime == null) {
+			throw new FLException(160053, "执行时间已超时");
+		}
+
 		PlanPO planPO = new PlanPO();
 
-		if (planVO.getExecuteTime() != null) {
-
-			String executeTime = DateUtil.getDateToDateString(new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(planVO.getExecuteTime()), "yyMMddHHmm");
-
-			if (planDao.countPlanByExecuteTime(executeTime) >= size) {
-				throw new FLException(160030, "未执行任务达到上限");
-			}
-
-			if (planDao.countPlanByExecuteTimAndCuid(executeTime, userPO.getUid()) >= 1) {
-				throw new FLException(160030, "未执行任务达到上限");
-			}
-
-			planPO.setExecuteTime(executeTime);
-		} else {
-			if (planDao.countPlanRightNow() >= size) {
-				throw new FLException(160030, "未执行任务达到上限");
-			}
+		if (Integer.parseInt(executeTime) <= Integer.parseInt(current)) {
+			throw new FLException(160053, "执行时间已超时");
 		}
+
+		if (planDao.countPlan(executeTime) >= systemlimit) {
+			throw new FLException(160030, "未执行任务达到上限");
+		}
+
+		if (planDao.countPlan(executeTime, userPO.getUid()) >= 1) {
+			throw new FLException(160030, "未执行任务达到上限");
+		}
+
+		planPO.setExecuteTime(executeTime);
 
 		planPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		planPO.setTask(taskPO);
@@ -152,14 +155,14 @@ public class PlanServiceImpl implements PlanService {
 		planDao.save(planPO);
 
 		if (planVO.getParam() != null) {
-			
+
 			PlanParamVO paramVO = planVO.getParam();
 			PlanParamPO paramPO = new PlanParamPO();
 
 			BeanUtil.copyPropertie(paramVO, paramPO);
-			
+
 			paramPO.setPid(planPO.getPid());
-			
+
 			planParamDao.save(paramPO);
 		}
 
@@ -192,49 +195,36 @@ public class PlanServiceImpl implements PlanService {
 			throw new FLException(160028, "计划不存在");
 		}
 
+		int systemlimit = 10;
+
+		String current = DateUtil.current("yyMMddhhmm");
+
 		SystemConfigPO planlimit = systemConfigDao.querySystemConfig("planlimit");
 
-		int size = 10;
 		if (planlimit != null) {
-			size = Integer.valueOf(planlimit.getValue());
+			systemlimit = Integer.valueOf(planlimit.getValue());
 		}
 
-		if (planVO.getExecuteTime() != null) {
+		String executeTime = planVO.getExecuteTime();
 
-			String executeTime = DateUtil.getDateToDateString(new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(planVO.getExecuteTime()), "yyMMddHHmm");
-
-			if (executeTime != planPO.getExecuteTime()) {
-
-				if (planDao.countPlanByExecuteTime(executeTime) > size) {
-					throw new FLException(160030, "未执行任务达到上限");
-				}
-
-				planPO.setExecuteTime(executeTime);
-			}
-		} else {
-
-			if (planDao.countPlanRightNow() > size) {
-				throw new FLException(160030, "未执行任务达到上限");
-			}
-
-			planPO.setExecuteTime(planVO.getExecuteTime());
+		if (executeTime == null) {
+			throw new FLException(160053, "执行时间已超时");
 		}
+
+		if (Integer.parseInt(executeTime) <= Integer.parseInt(current)) {
+			throw new FLException(160053, "执行时间已超时");
+		}
+
+		if (planDao.countPlan(executeTime) > systemlimit) {
+			throw new FLException(160030, "未执行任务达到上限");
+		}
+
+		planPO.setExecuteTime(executeTime);
 
 		planPO.setTask(taskPO);
 		planPO.setArgs(planVO.getArgs());
 
 		planDao.update(planPO);
-
-		if (planVO.getExecuteTime() == null) {
-			try {
-				Runtime.getRuntime().exec(String.format("%s %s %s %s %s", taskPO.getType() == TaskPO.TYPE_PYTHON_INT ? "python" : "sh", taskPO.getFilepath(), planPO.getPid(), planPO.getArgs(), " &"));
-			} catch (IOException e) {
-				planPO.setStatus(PlanPO.STATUS_FAIL_INT);
-				planPO.setInfo("计划执行失败");
-
-				planDao.update(planPO);
-			}
-		}
 
 		return 0;
 	}

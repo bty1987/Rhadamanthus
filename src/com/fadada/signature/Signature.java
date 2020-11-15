@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import Decoder.BASE64Decoder;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fadada.bean.Contract;
 import com.fadada.sdk.client.FddClientBase;
@@ -120,11 +121,11 @@ public class Signature {
 		JSONObject response = JSONObject.parseObject(result);
 
 		if (response == null) {
-			throw new FLException(130027, "客户认证失败,请求错误");
+			throw new FLException(130059, "公司认证失败,请求错误");
 		}
 
 		if (response.getInteger("code") != 1) {
-			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
+			throw new FLException(130059, String.format("公司认证失败,%s", response.getString("msg")));
 		}
 
 		JSONObject data = response.getJSONObject("data");
@@ -141,25 +142,25 @@ public class Signature {
 
 		FindCertInfo personCertInfo = new FindCertInfo(APPID, APPSECRET, VERSION, HOST);
 
-		String result = personCertInfo.invokeFindPersonCert(signetPO.getSignno(), "2");
+		String result = personCertInfo.invokeFindPersonCert(signetPO.getToken(), "2");
 
 		System.out.println(result);
 
 		JSONObject response = JSONObject.parseObject(result);
 
 		if (response == null) {
-			throw new FLException(130027, "客户认证失败,请求错误");
+			throw new FLException(130059, "公司认证失败,请求错误");
 		}
 
 		if (response.getInteger("code") != 1) {
-			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
+			throw new FLException(130059, String.format("公司认证失败,%s", response.getString("msg")));
 		}
 
 		JSONObject data = response.getJSONObject("data");
-		JSONObject person = data.getJSONObject("person");
+		JSONObject company = data.getJSONObject("company");
 
-		if (!"2".equals(person.getString("status"))) {
-			throw new FLException(130027, String.format("客户认证失败,%s", person.getString("status")));
+		if (!"4".equals(company.getString("status"))) {
+			throw new FLException(130059, String.format("公司认证失败,%s", company.getString("status")));
 		}
 	}
 
@@ -321,14 +322,17 @@ public class Signature {
 		}
 	}
 
-	public static void generate(Contract contract, JSONObject params) throws FLException {
+	public static void generate(Contract contract, JSONObject params, JSONArray tables) throws FLException {
 
 		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
 
 		String font_size = "";
 		String font_type = "4";
 		String paramter = params.toJSONString();
-		String dynamic_tables = "";
+		String dynamic_tables = tables == null ? "" : tables.toJSONString();
+
+		System.out.println(paramter);
+		System.out.println(dynamic_tables);
 
 		String result = base.invokeGenerateContract(contract.templateCode(), contract.contentCode(), "", font_size, font_type, paramter, dynamic_tables);
 

@@ -47,8 +47,8 @@ jQuery(function($) {
 	
 	com.focusPage("#saveBtn").on("click",function(){
 	
-		if(com.validate()){
-			return;
+		if(com.validate("edit-basic")){
+			return false;
 		}
 		
 		parm = {

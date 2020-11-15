@@ -441,8 +441,9 @@ jQuery(function($) {
 
 	//绑定客源,创建房产单
 	function saveBuildingData(){
-		if(com.validate() || customerSource.dataFlag){
-			return;
+	    
+		if(com.validate("buildingModal") || customerSource.dataFlag){
+			return false;
 		}
 
 		var options = {

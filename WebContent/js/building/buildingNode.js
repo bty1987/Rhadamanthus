@@ -148,8 +148,9 @@ jQuery(function($) {
 	}
 
 	function saveData(){
-		if(com.validate()){
-			return;
+	    
+		if(com.validate("buildingNodeModal")){
+			return false;
 		}
 
 		var url;
@@ -168,8 +169,9 @@ jQuery(function($) {
 	}
 
 	function updateNodeName(){
-		if(com.validate()){
-			return;
+	    
+		if(com.validate("viewBuildingNodeModal")){
+			return false;
 		}
 
 		var options = {};

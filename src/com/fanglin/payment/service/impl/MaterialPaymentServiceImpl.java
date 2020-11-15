@@ -107,89 +107,17 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 	private PointofsalesService pointofsalesService;
 
 	@Override
-	public void pageMaterialPaymentForInit(Paging paging, List<Filter> filters, int company) {
-
-		if(filters.size() == 0) return;
-		
-		filters.add(new Filter("company", String.valueOf(company), "eq"));
-
-		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
-		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.pageMaterialPaymentForStatus(paging, filters, MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT, "eq");
-
-		MaterialPaymentVO materialPaymentVO;
-
-		for(MaterialPaymentPO materialPaymentPO: materialPaymentPOs){
-
-			materialPaymentVO = new MaterialPaymentVO(new MaterialVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))),new CustomerVO()),new UserBaseVO());
-
-			BeanUtil.copyProperties(materialPaymentPO, materialPaymentVO, Arrays.asList("material","creater"));
-			BeanUtil.copyProperties(materialPaymentPO.getCreater(), materialPaymentVO.getCreater(), Arrays.asList("dept","duty"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial(), materialPaymentVO.getMaterial(), Arrays.asList("house","customer","salesman","materialer","instorer","region","department","materialDepartment"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getCustomer(), materialPaymentVO.getMaterial().getCustomer());
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse(), materialPaymentVO.getMaterial().getHouse(), Arrays.asList("village"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage(), materialPaymentVO.getMaterial().getHouse().getVillage(), Arrays.asList("cityProper"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage().getCityProper(), materialPaymentVO.getMaterial().getHouse().getVillage().getCityProper(), Arrays.asList("city"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage().getCityProper().getCity(), materialPaymentVO.getMaterial().getHouse().getVillage().getCityProper().getCity(), Arrays.asList("region"));
-
-			materialPaymentVOs.add(materialPaymentVO);
-		}
-
-		paging.setData(materialPaymentVOs);
-	}
-	
-	@Override
-	public void pageMaterialPaymentForNotInit(Paging paging, List<Filter> filters, int company){
-
-		if(filters.size() == 0) return ;
-		
-		filters.add(new Filter("company", String.valueOf(company), "eq"));
-
-		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
-		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.pageMaterialPaymentForStatus(paging, filters, MaterialPaymentPO.PAYMENTSTATUS_TYPE_INIT_INT, "ne");
-
-		MaterialPaymentVO materialPaymentVO;
-
-		for(MaterialPaymentPO materialPaymentPO: materialPaymentPOs){
-
-			materialPaymentVO = new MaterialPaymentVO(new MaterialVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))),new CustomerVO()),new UserBaseVO());
-
-			BeanUtil.copyProperties(materialPaymentPO, materialPaymentVO,Arrays.asList("material","creater","collecter","confirmer"));
-
-			if(materialPaymentPO.getMaterialReceipt() != null){
-				BeanUtil.copyProperties(materialPaymentPO.getMaterialReceipt(), materialPaymentVO,Arrays.asList("material","creater","collecter","confirmer"));
-			}
-			
-			BeanUtil.copyProperties(materialPaymentPO.getCreater(), materialPaymentVO.getCreater(),Arrays.asList("duty","dept"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial(), materialPaymentVO.getMaterial(),Arrays.asList("house","customer","salesman","materialer","instorer","region","department","materialDepartment"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse(), materialPaymentVO.getMaterial().getHouse(),Arrays.asList("village"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage(), materialPaymentVO.getMaterial().getHouse().getVillage(),Arrays.asList("cityProper"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage().getCityProper(), materialPaymentVO.getMaterial().getHouse().getVillage().getCityProper(), Arrays.asList("city"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage().getCityProper().getCity(), materialPaymentVO.getMaterial().getHouse().getVillage().getCityProper().getCity(), Arrays.asList("region"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getCustomer(), materialPaymentVO.getMaterial().getCustomer());
-			
-			MaterialReceiptPO materialReceipt = materialPaymentPO.getMaterialReceipt();
-			
-			if(materialReceipt != null){
-				materialPaymentVO.setCollecter(new UserBaseVO());
-				BeanUtil.copyProperties(materialReceipt.getCollecter(), materialPaymentVO.getCollecter(), Arrays.asList("duty","dept"));
-			}
-			
-			materialPaymentVOs.add(materialPaymentVO);
-		}
-
-		paging.setData(materialPaymentVOs);
-	}
-
-	@Override
-	public void pageMaterialPaymentForCollect(Paging paging, List<Filter> filters, int company){
+	public void pageMaterialPayment(Paging paging, List<Filter> filters, MaterialPaymentVO materialPayment, int company){
 
 		if(filters.size() == 0) return;
 
 		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
 		
 		filters.add(new Filter("company", String.valueOf(company), "eq"));
+		
+		if (materialPayment != null) materialPayment.filter(filters);
 
-		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.pageMaterialPaymentForStatus(paging, filters, MaterialPaymentPO.PAYMENTSTATUS_TYPE_COLLECT_INT, "eq");
+		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.pageMaterialPayment(paging, filters);
 
 		MaterialPaymentVO materialPaymentVO;
 
@@ -216,52 +144,11 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			if(materialReceipt != null){
 				materialPaymentVO.setCollecter(new UserBaseVO());
 				BeanUtil.copyProperties(materialReceipt.getCollecter(), materialPaymentVO.getCollecter(),Arrays.asList("dept","duty"));
-			}
-			
-			materialPaymentVOs.add(materialPaymentVO);
-		}
-
-		paging.setData(materialPaymentVOs);
-	}
-
-	@Override
-	public void pageMaterialPaymentForConfirm(Paging paging, List<Filter> filters, int company){
-
-		if(filters.size() == 0) return;
-
-		List<MaterialPaymentVO> materialPaymentVOs = new ArrayList<MaterialPaymentVO>();
-		
-		filters.add(new Filter("company", String.valueOf(company), "eq"));
-
-		List<MaterialPaymentPO> materialPaymentPOs = materialPaymentDao.pageMaterialPaymentForStatus(paging, filters, MaterialPaymentPO.PAYMENTSTATUS_TYPE_CONFIRM_INT, "eq");
-
-		MaterialPaymentVO materialPaymentVO;
-
-		for(MaterialPaymentPO materialPaymentPO: materialPaymentPOs){
-
-			materialPaymentVO = new MaterialPaymentVO(new MaterialVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))),new CustomerVO()),new UserBaseVO());
-
-			BeanUtil.copyProperties(materialPaymentPO, materialPaymentVO, Arrays.asList("material","creater","collecter","confirmer"));
-
-			if(materialPaymentPO.getMaterialReceipt() != null){
-				BeanUtil.copyProperties(materialPaymentPO.getMaterialReceipt(), materialPaymentVO, Arrays.asList("material","creater","collecter","confirmer"));
-			}
-			
-			BeanUtil.copyProperties(materialPaymentPO.getCreater(), materialPaymentVO.getCreater(), Arrays.asList("dept","duty"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial(), materialPaymentVO.getMaterial(), Arrays.asList("house","customer","salesman","materialer","instorer","region","department","materialDepartment"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getCustomer(), materialPaymentVO.getMaterial().getCustomer());
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse(), materialPaymentVO.getMaterial().getHouse(), Arrays.asList("village"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage(), materialPaymentVO.getMaterial().getHouse().getVillage(), Arrays.asList("cityProper"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage().getCityProper(), materialPaymentVO.getMaterial().getHouse().getVillage().getCityProper(), Arrays.asList("city"));
-			BeanUtil.copyProperties(materialPaymentPO.getMaterial().getHouse().getVillage().getCityProper().getCity(), materialPaymentVO.getMaterial().getHouse().getVillage().getCityProper().getCity(), Arrays.asList("region"));
-			
-			MaterialReceiptPO materialReceipt = materialPaymentPO.getMaterialReceipt();
-			
-			if(materialReceipt != null){
-				materialPaymentVO.setCollecter(new UserBaseVO());
-				materialPaymentVO.setConfirmer(new UserBaseVO());
-				BeanUtil.copyProperties(materialReceipt.getCollecter(), materialPaymentVO.getCollecter(), Arrays.asList("dept","duty"));
-				BeanUtil.copyProperties(materialReceipt.getConfirmer(), materialPaymentVO.getConfirmer(), Arrays.asList("dept","duty"));
+				
+				if(materialReceipt.getConfirmer() != null){
+					materialPaymentVO.setConfirmer(new UserBaseVO());
+					BeanUtil.copyProperties(materialReceipt.getConfirmer(), materialPaymentVO.getConfirmer(), Arrays.asList("dept","duty"));
+				}
 			}
 			
 			materialPaymentVOs.add(materialPaymentVO);
@@ -588,29 +475,29 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 
 		Long advance = materialPaymentVO.getAdvance();
 
-		if(materialPaymentVO.getAdvance() != 0){
+		if(materialPaymentVO.getAdvance() != null && materialPaymentVO.getAdvance() != 0){
 			materialReceiptPO.setAdvance(materialPaymentVO.getAdvance());
 			materialReceiptPO.setAdvanceType(materialPaymentVO.getAdvanceType());
 			realMoney = Arith.add(materialPaymentVO.getAdvance(), realMoney);
 		}
 
-		if(materialPaymentVO.getCoupon() != 0){
+		if(materialPaymentVO.getCoupon() != null && materialPaymentVO.getCoupon() != 0){
 			materialReceiptPO.setCoupon(materialPaymentVO.getCoupon());
 			materialReceiptPO.setCouponInfo(materialPaymentVO.getCouponInfo());
 			realMoney = Arith.add(materialPaymentVO.getCoupon(), realMoney);
 		}
 
-		if(materialPaymentVO.getCash() != 0){
+		if(materialPaymentVO.getCash() != null && materialPaymentVO.getCash() != 0){
 			materialReceiptPO.setCash(materialPaymentVO.getCash());
 			materialReceiptPO.setCashInfo(materialPaymentVO.getCashInfo());
 			realMoney = Arith.add(materialPaymentVO.getCash(), realMoney);
 		}
-		if(materialPaymentVO.getBank() != 0){
+		if(materialPaymentVO.getBank() != null && materialPaymentVO.getBank() != 0){
 			materialReceiptPO.setBank(materialPaymentVO.getBank());
 			materialReceiptPO.setBankInfo(materialPaymentVO.getBankInfo());
 			realMoney = Arith.add(materialPaymentVO.getBank(), realMoney);
 		}
-		if(materialPaymentVO.getCheckv() != 0){
+		if(materialPaymentVO.getCheckv() != null && materialPaymentVO.getCheckv() != 0){
 			materialReceiptPO.setCheckv(materialPaymentVO.getCheckv());
 			materialReceiptPO.setCheckvBank(materialPaymentVO.getCheckvBank());
 			realMoney = Arith.add(materialPaymentVO.getCheckv(), realMoney);
@@ -654,7 +541,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		materialReceiptDao.save(materialReceiptPO);
 		materialPaymentDao.update(materialPaymentPO);
 		
-		if(materialPaymentVO.getAdvance() != 0){
+		if(materialPaymentVO.getAdvance() != null && materialPaymentVO.getAdvance() != 0){
 
 			int advanceType = materialPaymentVO.getAdvanceType();
 			long customerAdvance = 0;
@@ -1015,15 +902,6 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			materialReceiptPO.setCashInfo("");
 		}
 		
-		if(bank != null && bank != 0){
-			materialReceiptPO.setBank(bank);
-			materialReceiptPO.setBankInfo(materialReceiptVO.getBankInfo());
-			realMoney = Arith.add(bank,realMoney);
-		}else{
-			materialReceiptPO.setBank(0);
-			materialReceiptPO.setBankInfo("");
-		}
-		
 		if(checkv != null && checkv != 0){
 			materialReceiptPO.setCheckv(checkv);
 			materialReceiptPO.setCheckvBank(materialReceiptVO.getCheckvBank());
@@ -1031,6 +909,10 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		}else{
 			materialReceiptPO.setCheckv(0);
 			materialReceiptPO.setCheckvBank("");
+		}
+		
+		if(bank != null && bank != 0){
+			realMoney = Arith.add(bank,realMoney);
 		}
 		
 		if(coupon != null && coupon != 0){

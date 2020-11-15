@@ -24,9 +24,9 @@ $(function(){
     }else{
         
         config.library = 'http://192.168.5.22:5000/';
-        config.communion = 'http://192.168.5.21/';
+        config.communion = 'http://192.168.5.23/';
         config.server = 'http://192.168.5.21/';
-        config.media = 'http://192.168.5.101/';
+        config.media = 'http://192.168.5.21/Demeter/';
         config.dmedia = 'http://static.dingtalk.com/media/';
 
     }

@@ -20,6 +20,8 @@ public class TaskParamVO implements Serializable{
 	
 	private String unionField;
 	
+	private Long unionParam;
+	
 	private String field;
 	
 	private String alias;
@@ -34,7 +36,7 @@ public class TaskParamVO implements Serializable{
 	
 	private Short sort;
 	
-	private Short Tablesort;
+	private Short tableSort;
 	
 	private String comment;
 
@@ -97,6 +99,14 @@ public class TaskParamVO implements Serializable{
 	public void setUnionField(String unionField) {
 		this.unionField = unionField;
 	}
+	
+	public Long getUnionParam() {
+		return unionParam;
+	}
+
+	public void setUnionParam(Long unionParam) {
+		this.unionParam = unionParam;
+	}
 
 	public String getField() {
 		return field;
@@ -154,12 +164,12 @@ public class TaskParamVO implements Serializable{
 		this.sort = sort;
 	}
 
-	public Short getTablesort() {
-		return Tablesort;
+	public Short getTableSort() {
+		return tableSort;
 	}
 
-	public void setTablesort(Short tablesort) {
-		Tablesort = tablesort;
+	public void setTableSort(Short tableSort) {
+		this.tableSort = tableSort;
 	}
 
 	public String getComment() {

@@ -9,7 +9,6 @@
 
 package com.fanglin.communion.dao.impl;
 
-import java.util.HashSet;
 import java.util.List;
 
 import org.hibernate.SQLQuery;
@@ -32,13 +31,13 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 	}
 
 	@Override
-	public List<CustomerPO> pageCustomer(Paging paging, List<Filter> filters, HashSet<Long> cids, Integer company) {
+	public List<CustomerPO> pageCustomer(Paging paging, List<Filter> filters, List<Long> cids, Integer company) {
 
 		PagingQuery<CustomerPO> query = pagingQuery(paging, CustomerPO.class);
 
 		queryFilterExcute(query, filters);
 
-		if (cids.size() > 0) {
+		if (cids != null) {
 			query.add(Restrictions.in("cid", cids));
 		}
 

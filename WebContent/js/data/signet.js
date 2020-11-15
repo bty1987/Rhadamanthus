@@ -75,6 +75,10 @@ jQuery(function ($) {
             var $btnSign = $('<a></a>').addClass(' btn btn-minier btn-danger').html('签章');
 
             $divBtnWrap.append($btnUpdate).append($btnRegist).append($btnAuth).append($btnConfirm).append($btnSign).appendTo($h3);
+            
+            var $urldiv = $('<div style="border: 1px solid #ccc ;float :left;"></div>').css("width", "75px").css("height", "75px").css("margin-right", "10px");
+            var img = $('<img />').css("margin-right", "20px").appendTo($urldiv);
+            var url = com.showImg(img, v.path, 75, 75, '', null, 0);
 
             var propertyArr = [
                 ["编号: ", v.no, "grey"],
@@ -87,13 +91,13 @@ jQuery(function ($) {
             $.each(propertyArr, function (index, value) {
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                $('<b style="float: right"></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                 $liProperty.appendTo($ulProperty);
             });
 
             $divBtnWrap.appendTo($h3);
 
-            $liLine.append($h3).append($ulProperty);
+            $liLine.append($urldiv).append($h3).append($ulProperty);
             
             $btnUpdate.click(function(){
                 

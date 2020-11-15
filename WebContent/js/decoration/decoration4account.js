@@ -8,80 +8,80 @@ $(function () {
         orderTypeness: params.typeness,
 
         basicsItems: {
-            foldFrontTotal: com.focusPage("#foldFrontTotal"),
-            foldFrontFee: com.focusPage("#foldFrontFee"),
-            managePrice: com.focusPage("#managePrice"),
-            basdiscount: com.focusPage("#basdiscount")
+            foldFrontTotal: com.focusPage("#foldFrontTotal", "#decorationAccountContent"),
+            foldFrontFee: com.focusPage("#foldFrontFee", "#decorationAccountContent"),
+            managePrice: com.focusPage("#managePrice", "#decorationAccountContent"),
+            basdiscount: com.focusPage("#basdiscount", "#decorationAccountContent")
         },
         contractItems: {
-            signPrice: com.focusPage("#signPrice"),
-            coupon: com.focusPage("#coupon"),
-            servicePrice: com.focusPage("#servicePrice"),
-            servicePaidup: com.focusPage("#servicePaidup"),
-            signFactPrice: com.focusPage("#signFactPrice"),
-            mm: com.focusPage("#mm")
+            signPrice: com.focusPage("#signPrice", "#decorationAccountContent"),
+            coupon: com.focusPage("#coupon", "#decorationAccountContent"),
+            servicePrice: com.focusPage("#servicePrice", "#decorationAccountContent"),
+            servicePaidup: com.focusPage("#servicePaidup", "#decorationAccountContent"),
+            signFactPrice: com.focusPage("#signFactPrice", "#decorationAccountContent"),
+            mm: com.focusPage("#mm", "#decorationAccountContent")
         },
         materialItems: {
-            materialRatio: com.focusPage("#materialRatio"),
-            materialTotal: com.focusPage("#materialTotal"),
-            materialCoupon: com.focusPage("#materialCoupon"),
-            materialFactPrice: com.focusPage("#materialFactPrice")
+            materialRatio: com.focusPage("#materialRatio", "#decorationAccountContent"),
+            materialTotal: com.focusPage("#materialTotal", "#decorationAccountContent"),
+            materialCoupon: com.focusPage("#materialCoupon", "#decorationAccountContent"),
+            materialFactPrice: com.focusPage("#materialFactPrice", "#decorationAccountContent")
         },
         AddReduceItems: {
-            addFoldFrontTotal: com.focusPage("#addFoldFrontTotal"),
-            addManagePrice: com.focusPage("#addManagePrice"),
-            addMatch: com.focusPage("#addMatch"),
-            addUncalPrice: com.focusPage("#addUncalPrice"),
-            addDone: com.focusPage("#addDone"),
-            minusFoldFrontTotal: com.focusPage("#minusFoldFrontTotal"),
-            minusManagePrice: com.focusPage("#minusManagePrice"),
-            minusMatch: com.focusPage("#minusMatch"),
-            minusUncalPrice: com.focusPage("#minusUncalPrice"),
-            minusDone: com.focusPage("#minusDone")
+            addFoldFrontTotal: com.focusPage("#addFoldFrontTotal", "#decorationAccountContent"),
+            addManagePrice: com.focusPage("#addManagePrice", "#decorationAccountContent"),
+            addMatch: com.focusPage("#addMatch", "#decorationAccountContent"),
+            addUncalPrice: com.focusPage("#addUncalPrice", "#decorationAccountContent"),
+            addDone: com.focusPage("#addDone", "#decorationAccountContent"),
+            minusFoldFrontTotal: com.focusPage("#minusFoldFrontTotal", "#decorationAccountContent"),
+            minusManagePrice: com.focusPage("#minusManagePrice", "#decorationAccountContent"),
+            minusMatch: com.focusPage("#minusMatch", "#decorationAccountContent"),
+            minusUncalPrice: com.focusPage("#minusUncalPrice", "#decorationAccountContent"),
+            minusDone: com.focusPage("#minusDone", "#decorationAccountContent")
         },
         advanceItems: {
-            contractAdvance: com.focusPage("#contractAdvance"),
-            constructionAdvance: com.focusPage("#constructionAdvance"),
-            materialAdvance: com.focusPage("#materialAdvance"),
-            zhenglinAdvance: com.focusPage("#zhenglinAdvance")
+            contractAdvance: com.focusPage("#contractAdvance", "#decorationAccountContent"),
+            constructionAdvance: com.focusPage("#constructionAdvance", "#decorationAccountContent"),
+            materialAdvance: com.focusPage("#materialAdvance", "#decorationAccountContent"),
+            zhenglinAdvance: com.focusPage("#zhenglinAdvance", "#decorationAccountContent")
         },
         accountItems: {
-            direct: com.focusPage("#direct"),
-            beforeTotal: com.focusPage("#beforeTotal"),
-            management: com.focusPage("#management"),
-            flowerRatio: com.focusPage("#flowerRatio"),
-            materialAccount: com.focusPage("#materialAccount"),
-            accountForehead: com.focusPage("#accountForehead"),
-            accountServicePrice: com.focusPage("#accountServicePrice"),
-            balanceSum: com.focusPage("#balanceSum"),
-            difference: com.focusPage("#difference"),
-            superRatio: com.focusPage("#superRatio")
+            direct: com.focusPage("#direct", "#decorationAccountContent"),
+            beforeTotal: com.focusPage("#beforeTotal", "#decorationAccountContent"),
+            management: com.focusPage("#management", "#decorationAccountContent"),
+            flowerRatio: com.focusPage("#flowerRatio", "#decorationAccountContent"),
+            materialAccount: com.focusPage("#materialAccount", "#decorationAccountContent"),
+            accountForehead: com.focusPage("#accountForehead", "#decorationAccountContent"),
+            accountServicePrice: com.focusPage("#accountServicePrice", "#decorationAccountContent"),
+            balanceSum: com.focusPage("#balanceSum", "#decorationAccountContent"),
+            difference: com.focusPage("#difference", "#decorationAccountContent"),
+            superRatio: com.focusPage("#superRatio", "#decorationAccountContent")
         },
         items: {
-            discountName: com.focusPage("#discountName"),
-            decorationType: com.focusPage("#decorationType"),
-            accountType: com.focusPage("#accountType"),
-            calDiscountPrice: com.focusPage("#calDiscountPrice"),
-            preferences: com.focusPage("#preferences"),
-            internalCoupon: com.focusPage("#internalCoupon"),
-            fulldel: com.focusPage("#fulldel"),
-            cashback: com.focusPage("#cashback"),
-            matching: com.focusPage("#matching").switchBtn("isOrNotType"),
-            fueluxWizard: com.focusPage('#fuelux-wizard'),
-            materialBrand: com.focusPage("#materialBrand"),
-            tabContent: com.focusPage(".tab-content"),
-            fanglinMaterialPayment: com.focusPage("#fanglinMaterialPayment"),
-            salesMaterialPayment: com.focusPage("#salesMaterialPayment"),
-            otherPaymentType: com.focusPage("#otherPaymentType"),
+            discountName: com.focusPage("#discountName", "#decorationAccountContent"),
+            decorationType: com.focusPage("#decorationType", "#decorationAccountContent"),
+            accountType: com.focusPage("#accountType", "#decorationAccountContent"),
+            calDiscountPrice: com.focusPage("#calDiscountPrice", "#decorationAccountContent"),
+            preferences: com.focusPage("#preferences", "#decorationAccountContent"),
+            internalCoupon: com.focusPage("#internalCoupon", "#decorationAccountContent"),
+            fulldel: com.focusPage("#fulldel", "#decorationAccountContent"),
+            cashback: com.focusPage("#cashback", "#decorationAccountContent"),
+            matching: com.focusPage("#matching").switchBtn("isOrNotType", "#decorationAccountContent"),
+            fueluxWizard: com.focusPage('#fuelux-wizard', "#decorationAccountContent"),
+            materialBrand: com.focusPage("#materialBrand", "#decorationAccountContent"),
+            tabContent: com.focusPage(".tab-content", "#decorationAccountContent"),
+            fanglinMaterialPayment: com.focusPage("#fanglinMaterialPayment", "#decorationAccountContent"),
+            salesMaterialPayment: com.focusPage("#salesMaterialPayment", "#decorationAccountContent"),
+            otherPaymentType: com.focusPage("#otherPaymentType", "#decorationAccountContent"),
             
-            comment: com.focusPage("#comment")
+            comment: com.focusPage("#comment", "#decorationAccountContent")
         },
         btns: {
-            btnBack: com.focusPage('#btnBack'),
-            calculateBtn: com.focusPage("#calculateBtn"),
-            updateBtn: com.focusPage("#update_btn"),
-            submission: com.focusPage("#submission"),
-            print: com.focusPage("#print").hide()
+            btnBack: com.focusPage('#btnBack', "#decorationAccountContent"),
+            calculateBtn: com.focusPage("#calculateBtn", "#decorationAccountContent"),
+            updateBtn: com.focusPage("#updateBtn", "#decorationAccountContent"),
+            submission: com.focusPage("#submission", "#decorationAccountContent"),
+            printBtn: com.focusPage("#printBtn", "#decorationAccountContent").hide()
         }
     };
 
@@ -141,7 +141,7 @@ $(function () {
         v.type == "account" && v.opt != null && $.each(v.opt.btn, function (j, x) {
                 switch (x) {
                     case "accountPrint":
-                        decorationDetail.btns.print.show();
+                        decorationDetail.btns.printBtn.show();
                         break;
                     case "btnAccountPrint":
                         accountBasic.isPrint = true;
@@ -151,7 +151,7 @@ $(function () {
     });
 
     decorationDetail.btns.btnBack.on("click", function () {
-        //com.switchPage(params.historyPage);
+        com.switchPage(params.historyPage);
     });
     
     decorationDetail.accountItems.materialAccount.blur(function(){
@@ -416,7 +416,7 @@ $(function () {
         return false;
     });
 
-    decorationDetail.btns.print.click(function(){
+    decorationDetail.btns.printBtn.click(function(){
         
         accountBasic.preferences = decorationDetail.items.preferences.val() ? decorationDetail.items.preferences.val() : 0;
         accountBasic.internalCoupon = decorationDetail.items.internalCoupon.val() ? decorationDetail.items.internalCoupon.val() : 0;

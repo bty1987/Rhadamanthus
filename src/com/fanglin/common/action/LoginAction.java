@@ -61,6 +61,8 @@ public class LoginAction extends BaseListAction {
 
 	private UserVO user;
 
+	private String current;
+
 	private String company;
 
 	@Action(value = "doLogin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
@@ -214,6 +216,14 @@ public class LoginAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "current", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String current() throws FLException {
+
+		current = DateUtil.current(current == null ? "yyyy-MM-dd hh:mm:ss" : current);
+
+		return SUCCESS;
+	}
+
 	public String getAuthentication() {
 		return authentication;
 	}
@@ -228,6 +238,14 @@ public class LoginAction extends BaseListAction {
 
 	public void setUser(UserVO user) {
 		this.user = user;
+	}
+
+	public String getCurrent() {
+		return current;
+	}
+
+	public void setCurrent(String current) {
+		this.current = current;
 	}
 
 	public String getCompany() {

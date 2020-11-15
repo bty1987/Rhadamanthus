@@ -1,11 +1,8 @@
 package com.fanglin.balance.service.impl;
 
 import java.util.ArrayList;
-
-import java.util.Date;
-
 import java.util.Arrays;
-
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,7 +89,7 @@ public class AccountServiceImpl implements AccountService {
 
 		return accountVOs;
 	}
-	
+
 	@Override
 	public List<AccountVO> queryAccountForTeller(int company) {
 		List<AccountPO> accountPOs = accountDao.queryAccountForTeller(company);
@@ -148,50 +145,47 @@ public class AccountServiceImpl implements AccountService {
 		accountPO.setStatus(accountVO.getStatus());
 
 		accountDao.update(accountPO);
-
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void withdrawAccount(AccountVO accountVO, String userId, int company)
-			throws FLException {
+	public void withdrawAccount(AccountVO accountVO, String userId, int company) throws FLException {
 		AccountPO accountPO = accountDao.get(accountVO.getAid());
 
 		if (accountPO == null) {
 			throw new FLException(350001, "帐户不存在");
 		}
-		
-		if(accountPO.getSurplus() < accountVO.getMoney()){
-		    throw new FLException(350003, "账户金额不足");
+
+		if (accountPO.getSurplus() < accountVO.getMoney()) {
+			throw new FLException(350003, "账户金额不足");
 		}
-		
+
 		accountPO.setSurplus(Arith.sub(accountPO.getSurplus(), accountVO.getMoney()));
-	
-	    accountPO.setRealMoney(Arith.add(accountPO.getRealMoney(), accountVO.getMoney()));
-	    
-	    accountPO.setCompany(company);
-	    
+
+		accountPO.setRealMoney(Arith.add(accountPO.getRealMoney(), accountVO.getMoney()));
+
+		accountPO.setCompany(company);
+
 		accountDao.update(accountPO);
-		
+
 		BalancePO balancePO = new BalancePO();
 		CompanyPO companyPO = companyDao.get(company);
 		UserPO create = userDao.queryUserByUserId(userId);
-		
+
 		String currentDate = DateUtil.current("yyMMdd").toString();
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_SO_INT, currentDate, company);
-		String no =  companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
-		
+		String no = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
+
 		balancePO.setNo(no);
 		balancePO.setAmount(accountVO.getMoney());
 		balancePO.setSurplus(accountVO.getMoney());
 		balancePO.setBelonger(accountPO.getBelonger());
 		balancePO.setCreater(create);
-		balancePO.setType(BalancePO.STATUS_VALUE_SHORT);
+		balancePO.setType(BalancePO.TYPE_WITHDRAW_INT);
 		balancePO.setCompany(company);
 		balancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		
+
 		balanceDao.save(balancePO);
 	}
-	
 
 }

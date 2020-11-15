@@ -35,7 +35,7 @@ jQuery(function($) {
 
     com.post(api.ds.data, {}, function(res){
         category.categoryItems.type.bindData(res.categoryType, "key", "value");
-    })
+    });
 
     $.extend(com.validator, category.validator);
 
@@ -102,7 +102,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["categoryName"], "condList", api.data.pageCategory, function(data){
+    searcher.init(["data-category-name"], "condList", api.data.pageCategory, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "categoryPostData", null, false, null, function(){
 
@@ -137,8 +137,9 @@ jQuery(function($) {
     }
 
     function saveData(){
-        if(com.validate() || category.repeatFlg){
-            return;
+        
+        if(com.validate("categoryModal") || category.repeatFlg){
+            return false;
         }
 
         var url;

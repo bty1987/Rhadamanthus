@@ -129,8 +129,8 @@ jQuery(function ($) {
     }
 
     function saveData() {
-        if (com.validate())
-            return;
+        
+        if (com.validate("materialBrandRightModal")) return false;
 
         var options = {};
 

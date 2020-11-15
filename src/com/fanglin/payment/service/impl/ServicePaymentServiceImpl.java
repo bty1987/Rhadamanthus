@@ -79,51 +79,15 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 	private PointofsalesService pointofsalesService;
 	
 	@Override
-	public void pageServicePaymentForCollect(Paging paging, List<Filter> filters, Integer company) {
-
-		if(filters.size() == 0) return;
-
-		filters.add(new Filter(ServicePaymentPO.COLUMN_STATUS_STR, String.valueOf(ServicePaymentPO.COLUMN_PAIDFORSTATUS_INT), "eq"));
-		filters.add(new Filter("company", String.valueOf(company), "eq"));
-
-		List<ServicePaymentPO> servicePaymentPOs = servicePaymentDao.pageServicePaymentForCollect(paging, filters);
-		List<ServicePaymentVO> servicePaymentVOs = new ArrayList<ServicePaymentVO>();
-
-		for(ServicePaymentPO servicePaymentPO: servicePaymentPOs){
-			servicePaymentVOs.add(servicePaymentPOToVO(servicePaymentPO));
-		}
-
-		paging.setData(servicePaymentVOs);
-
-	}
-	
-	@Override
-	public void pageServicePaymentForConfirm(Paging paging, List<Filter> filters, Integer company) {
-
-		if(filters.size() == 0) return;
-
-		filters.add(new Filter(ServicePaymentPO.COLUMN_STATUS_STR, String.valueOf(ServicePaymentPO.COLUMN_CONFIRMEDSTATUS_INT), "eq"));
-		filters.add(new Filter("company", String.valueOf(company), "eq"));
-
-		List<ServicePaymentPO> servicePaymentPOs = servicePaymentDao.pageServicePaymentForCollect(paging, filters);
-		List<ServicePaymentVO> servicePaymentVOs = new ArrayList<ServicePaymentVO>();
-
-		for(ServicePaymentPO servicePaymentPO: servicePaymentPOs){
-			servicePaymentVOs.add(servicePaymentPOToVO(servicePaymentPO));
-		}
-
-		paging.setData(servicePaymentVOs);
-
-	}
-	
-	@Override
-	public void pageServicePaymentForHistory(Paging paging, List<Filter> filters, Integer company) {
+	public void pageServicePayment(Paging paging, List<Filter> filters, ServicePaymentVO servicePayment, Integer company) {
 
 		if(filters.size() == 0) return;
 		
+		if (servicePayment != null) servicePayment.filter(filters);
+
 		filters.add(new Filter("company", String.valueOf(company), "eq"));
 
-		List<ServicePaymentPO> servicePaymentPOs = servicePaymentDao.pageServicePaymentForCollect(paging, filters);
+		List<ServicePaymentPO> servicePaymentPOs = servicePaymentDao.pageServicePayment(paging, filters);
 		List<ServicePaymentVO> servicePaymentVOs = new ArrayList<ServicePaymentVO>();
 
 		for(ServicePaymentPO servicePaymentPO: servicePaymentPOs){
@@ -425,15 +389,6 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 			serviceReceiptPO.setCashInfo("");
 		}
 		
-		if (bank != null && bank != 0) {
-			serviceReceiptPO.setBank(bank);
-			serviceReceiptPO.setBankInfo(serviceReceipt.getBankInfo());
-			realMoney = Arith.add(bank, realMoney);
-		} else {
-			serviceReceiptPO.setBank(0);
-			serviceReceiptPO.setBankInfo("");
-		}
-		
 		if (checkv != null && checkv != 0) {
 			serviceReceiptPO.setCheckv(checkv);
 			serviceReceiptPO.setCheckvBank(serviceReceipt.getCheckvBank());
@@ -441,6 +396,10 @@ public class ServicePaymentServiceImpl implements ServicePaymentService{
 		} else {
 			serviceReceiptPO.setCheckv(0);
 			serviceReceiptPO.setCheckvBank("");
+		}
+		
+		if (bank != null && bank != 0) {
+			realMoney = Arith.add(bank, realMoney);
 		}
 		
 		long referMoney = Arith.add(servicePaymentPO.getAdvanceMoney(), servicePaymentPO.getServiceMoney());

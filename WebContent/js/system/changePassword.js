@@ -19,8 +19,8 @@ jQuery(function($) {
 
 	$("#saveBtn").on("click", function(e){
 
-		if(com.validate()||!password.sameFalg){
-			return;
+		if(com.validate("changePasswordContent")||!password.sameFalg){
+			return false;
 		}
 
 		var param = {

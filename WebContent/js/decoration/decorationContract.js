@@ -14,7 +14,8 @@ jQuery(function ($) {
             authentication: com.focusPage("#authentication"),
             sendAuth: com.focusPage("#sendAuth"),
             confirm: com.focusPage("#confirm"),
-            saveBtnBalance: com.focusPage("#saveBtnBalance", "#decorationContractModal"),
+            signBtn: com.focusPage("#signBtn", "#decorationContractModal"),
+            backBtn: com.focusPage("#backBtn"),
         },
         modals:{
             qrcodeModal: null,
@@ -187,6 +188,10 @@ jQuery(function ($) {
         });
     }
     
+    decorationContract.btns.backBtn.on("click", function () {
+        com.switchPage(params.historyPage);
+    });
+    
     //跳转创建合同弹窗
     decorationContract.btns.saveBtn.on("click", function () {
         
@@ -195,11 +200,7 @@ jQuery(function ($) {
             return false;
         }
         
-        com.closePopup();
-        
-        com.popup4page("#layerPopUp", "/views/decoration/decorationContract2create.html", "创建合同", null, function (e) {
-            com.popup4page("#layerPopUp", api.index.decorationContractIndex.url, "装修单合同: " + params.decorationOrderId);
-        });
+        com.popup4page("#layerPopUp", "/views/decoration/decorationContract2create.html", "创建合同");
     });
     
     //注册按钮
@@ -233,7 +234,7 @@ jQuery(function ($) {
         });
     });
     
-    decorationContract.btns.saveBtnBalance.on('click', function () {
+    decorationContract.btns.signBtn.on('click', function () {
         
         com.post(api.decoration.signDecorationContractForCompany, {"decorationContract.dcid" : decorationContract.dcid, "signet.sid" : decorationContract.items.signet.val()});
         

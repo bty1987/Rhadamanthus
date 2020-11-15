@@ -208,7 +208,8 @@ jQuery(function($) {
     }
     
     function saveData(){
-    	if(com.validate()) return;
+        
+    	if(com.validate("materialModelModal")) return false;
     	
     	var url;
     	var options = {

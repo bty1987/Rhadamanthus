@@ -381,8 +381,8 @@ $(function () {
     //修改活动
     com.focusPage("#submitMaterialActivityBtn").on("click", function () {
 
-        if (com.validate()) {
-            return;
+        if (com.validate("materialActivityModal")) {
+            return false;
         }
 
         var mid = paramsMid;

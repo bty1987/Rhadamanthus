@@ -104,7 +104,7 @@ $(function () {
                     var $btnBalance = $('<a></a>').addClass('btn btn-minier btn-inverse').html('结算');
                     var $btnPayment = $('<a></a>').addClass('btn btn-minier btn-danger').html('款项');
                     var $btnBalanceItem = $('<a></a>').addClass('btn btn-minier btn-pink').html('子项');
-                    var $btnStatus = $('<a></a>').addClass('btn btn-minier btn-purple').html('预结算状态');
+                    var $btnStatus = $('<a></a>').addClass('btn btn-minier btn-purple').html('反结算');
 
                     var coupon =  v.onetype == 1 ? 0 : v.sales.coupon;
                     var maling =  v.onetype == 1 ? 0 : v.sales.maling;
@@ -182,11 +182,10 @@ $(function () {
                     $btnDiv.appendTo($h3);
 
                     $btnVbalanceValue.click(function (e) {
-                        e.stopPropagation();
-
+                        
                         if (v.status != 0) {
                             com.showAlert(com.warning, "非预结算状态下不允许进行厂商结算");
-                            return
+                            return false;
                         }
 
                         salesBalance.items.vbalanceValue.find('input[name="total"]').val(v.total);
@@ -195,21 +194,20 @@ $(function () {
                             salesBalance.salesBalance_Manufacturer_Data = v;
                         }, function () {
                             com.clearValidator();
-                            clearinput(salesBalance.items.vbalanceValue);
+                            com.cleanItems(salesBalance.items);
                         });
                     });
 
                     $btnVbalance.click(function (e) {
-                        e.stopPropagation();
 
                         if (v.status != 0) {
                             com.showAlert(com.warning, "非预结算状态下不允许进行厂商结算");
-                            return;
+                            return false;
                         }
 
                         if(v.vbalance == 0){
-                            com.showAlert(com.warning,"厂商结算值未填写，请检查");
-                            return;
+                            com.showAlert(com.warning,"厂商结算值未填写 , 请检查");
+                            return false;
                         }
 
                         com.showConfirm('确定要将单号为 ' + v.sales.no + ' 的销售单进行厂商结算吗?', function (index, layero) {
@@ -227,11 +225,10 @@ $(function () {
                     });
 
                     $btnBalanceValue.click(function (e) {
-                        e.stopPropagation();
 
                         if (v.status != 1) {
                             com.showAlert(com.warning, "非厂商结算状态下不允许进行结算");
-                            return
+                            return false;
                         }
 
                         salesBalance.items.pbalanceValue.find('input[name="balanceValue"]').val(v.balance);
@@ -241,22 +238,20 @@ $(function () {
                             salesBalance.salesBalance_Settlement_Data = v;
                         }, function () {
                             com.clearValidator();
-                            clearinput(salesBalance.items.pbalanceValue);
+                            com.cleanItems(salesBalance.items);
                         });
                     });
 
                     $btnBalance.click(function (e) {
 
-                        e.stopPropagation();
-
                         if (v.status != 1) {
                             com.showAlert(com.warning, "非厂商结算状态下不允许进行结算");
-                            return;
+                            return false;
                         }
 
                         if(v.pbalance == 0){
-                            com.showAlert(com.warning,"结算值未填写，请检查");
-                            return;
+                            com.showAlert(com.warning,"结算值未填写 , 请检查");
+                            return false;
                         }
 
                         com.showConfirm('确定要将单号为 ' + v.sales.no + ' 的销售单进行结算吗?', function (index, layero) {
@@ -277,37 +272,15 @@ $(function () {
                     });
 
                     $btnPayment.click(function (e) {
-
-                        e.stopPropagation();
-
-                        com.popup4model("#viewPopUp", "收款", "", function () {
-                            salesBalance.items.viewPopUp.find('#resultListItem').empty();
-                            salesBalanceSearcher.doSearch();
-                        }, function () {
-                            com.post(api.payment.querySalesPaymentBySid, {
-                                "salesPayment.sales.sid": v.sales.sid
-                            }, function (res) {
-                                viewSalesPaymentLine('resultListItem', res);
-                            }, null, false);
-                        });
+                        params["sid"] = v.sales.sid;
+                        params["type"] = "balance";
+                        com.popup4page("#viewPopUp", "views/sales/sales4payment.html?type=balance", "收款");
                     });
 
                     $btnBalanceItem.click(function (e) {
-
-                        e.stopPropagation();
-
-                        com.popup4model("#viewPopUp", "子项", "", function () {
-                            salesBalance.items.viewPopUp.find('#resultListItem').empty();
-                            salesBalanceSearcher.doSearch();
-                        },function () {
-                            com.post(api.sales.querySalesBalanceItemBySbid,{
-                                "salesBalance.sbid":v.sbid
-                            },function(res){
-                                salesBalanceItemList.init('resultListItem', res.salesBalanceItems);
-                            }, null, false);
-                        });
+                        params["sbid"] = v.sbid;
+                        com.popup4page("#viewPopUp", "views/sales/salesItem4balance.html", "子项");
                     });
-
 
                     $btnStatus.click(function (e) {
                         com.post(api.sales.rpreSalesBalance,{"salesBalance.sbid":v.sbid},function(res){
@@ -315,8 +288,6 @@ $(function () {
                             salesBalanceSearcher.doSearch();
                         });
                     });
-
-
                 });
 
                 $ul.appendTo($tableWrap);
@@ -392,6 +363,7 @@ $(function () {
     }, 'resultList');
 
     salesBalance.btns.supplierSaveBtn.on('click', function () {
+        
         var _vBalance = salesBalance.items.vbalanceValue.find('input[name="vbalanceValue"]').val();
 
         if (com.validate('vbalanceValue','right')==false) {
@@ -401,157 +373,37 @@ $(function () {
                 "salesBalance.vbalance": _vBalance
             }, function (res) {
 
-                com.closePopup();
                 com.showAlert(com.info, "更新成功");
-                clearinput(salesBalance.items.vbalanceValue);
+                
+                com.closePopup();
+                com.cleanItems(salesBalance.items);
+                
                 salesBalanceSearcher.doSearch();
-
             });
-
         }
     });
 
     salesBalance.btns.balanceSaveBtn.on('click', function () {
+        
+        if (com.validate('pbalanceValue', 'right')) return false;
+        
         var _pBalance = salesBalance.items.pbalanceValue.find('input[name="pbalanceValue"]').val();
-
-        if (com.validate('pbalanceValue','right')==false) {
-
-            com.post(api.sales.updateSalesBalanceForPBalance, {
-                "salesBalance.sbid": salesBalance.salesBalance_Settlement_Data.sbid,
-                "salesBalance.pbalance": _pBalance
-            }, function (res) {
-
-                com.closePopup();
-                com.showAlert(com.info, "更新成功");
-                clearinput(salesBalance.items.pbalanceValue);
-                salesBalanceSearcher.doSearch();
-
-            });
-
+        
+        var options = {
+            "salesBalance.sbid": salesBalance.salesBalance_Settlement_Data.sbid,
+            "salesBalance.pbalance": _pBalance
         }
+
+        com.post(api.sales.updateSalesBalanceForPBalance, options, function (res) {
+            
+            com.showAlert(com.info, "更新成功");
+
+            com.closePopup();
+            com.cleanItems(salesBalance.items);
+            
+            salesBalanceSearcher.doSearch();
+        });
     });
-
-    //清空弹窗输入框的值
-    function clearinput($line) {
-        $line.find('input').val('');
-    }
-
-    //收款显示
-    function viewSalesPaymentLine(tableId, listData) {
-        var $tableWrap = com.focusPage('#' + tableId);
-        var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-        if (listData && listData.salesPayments.length) {
-            $.each(listData.salesPayments, function (i, v) {
-                var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                var $h3 = $('<h3></h3>').addClass('oid');
-                var $small = $('<small></small>').addClass('blue').html(salesBalance.salesPaymentType[v.type]);
-
-                var propertyArr = [
-                    ["销售单号:", v.sales.no, "blue"],
-                    ["品类:", v.sales.category, "grey"],
-                    ["品牌:", v.sales.brand, "grey"],
-                    ["应收额:", v.referMoney, "blue"],
-                    ["收款时间:", v.salesReceipt.collectTime, "green"],
-                    ["确认时间:", v.salesReceipt.confirmTime, "green"],
-                    ["状态:", v.status == 0 ? '初始' : v.status == 1 ? '待确认' : '已确认', "red"]
-                ];
-
-                $.each(propertyArr, function (index, value) {
-                    var $liProperty = $('<li></li>');
-                    $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                    $liProperty.appendTo($ulProperty);
-                });
-
-                var addPropertyArr = [];
-                v.salesReceipt.cash != null && v.salesReceipt.cash != "0" ? addPropertyArr.push(["现金:", v.salesReceipt.cash, "blue"]) : true;
-                v.salesReceipt.bank != null && v.salesReceipt.bank != "0" ? addPropertyArr.push(["银行信息:", (function (bank, bankInfo) {
-
-                    var info = bank + ", ";
-                    var _s = bankInfo.split('#');
-                    for (var i = 1; i < _s.length - 1; i++) {
-                        var _i = _s[i].split('|');
-                        info += salesBalance.salesPaymentForStatus.bankInfo[_i[0]] + " " + _i[1] + ", ";
-                    }
-
-                    return info;
-                })(v.salesReceipt.bank, v.salesReceipt.bankInfo), "blue"]) : true;
-                v.salesReceipt.checkv != null && v.salesReceipt.checkv != "0" ? addPropertyArr.push(["转账:", v.salesReceipt.checkv, "blue"]) : true;
-                v.salesReceipt.installment != null && v.salesReceipt.installment != "0" ? addPropertyArr.push(["分期:", v.salesReceipt.installment, "blue"]) : true;
-                v.salesReceipt.accounts != null && v.salesReceipt.accounts != "0" ? addPropertyArr.push(["对公帐户:", v.salesReceipt.accounts, "blue"]) : true;
-                v.salesReceipt.advance != null && v.salesReceipt.advance != "0" ? addPropertyArr.push(["预付款:", v.salesReceipt.advance, "blue"]) : true;
-                v.salesReceipt.coupon != null && v.salesReceipt.coupon != "0" ? addPropertyArr.push(["优惠券:", v.salesReceipt.coupon + v.salesReceipt.couponInfo.split('#').join(' '), "blue"]) : true;
-
-                $.each(addPropertyArr, function (index, value) {
-                    var $liPropertys = $('<li></li>');
-                    $('<strong></strong>').html(value[0]).appendTo($liPropertys);
-                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liPropertys);
-                    $liPropertys.appendTo($ulProperty);
-                });
-                $small.appendTo($h3);
-                $liLine.append($h3).append($ulProperty).appendTo($ul);
-            });
-
-            $ul.appendTo($tableWrap);
-        }
-
-    }
-
-    //子项显示
-    var salesBalanceItemList = (function () {
-
-        var renderList = function (tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
-
-            if (listData && listData.length) {
-                $.each(listData, function (i, v) {
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $h3 = $('<h3></h3>').addClass('oid');//.addClass('siid')
-                    var $small = $('<small></small>').addClass('blue').html(v.salesItem.goods.name);
-                    var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
-
-                    var propertyArr = [
-                        ["商品品类:", v.salesItem.goods.category, "grey", "category"],
-                        ["商品颜色:", v.salesItem.color.name, "grey", "color"],
-                        ["商品规格:", v.salesItem.format.info, "grey", "format"],
-                        ["售价:", v.salesItem.selling, "blue", "selling"],
-                        ["折扣价:", v.salesItem.disPrice, "blue", "disPrice"],
-                        ["折让价:", v.salesItem.price, "blue", "price"],
-                        ["数量:", v.num, "blue", "num"],
-                        ["总价:", v.total, "blue", "total"],
-                        ["结算方式:", v.ctype==0?"底价":"点位", "red", "ctype"],
-                        ["结算值:", v.cvalue, "blue", "cvalue"],
-                        ["备注:", v.salesItem.comment, "grey", "comment"]
-                    ];
-
-                    $.each(propertyArr, function (index, value) {
-                        var $liProperty = $('<li></li>').css({"border-bottom": "0px"});
-                        $('<strong></strong>').attr('name', value[3]).html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                        $liProperty.appendTo($ulProperty);
-                    });
-
-                    $small.appendTo($h3);
-                    $btnDiv.appendTo($h3);
-                    $liLine.appendTo($ul);
-                    $liLine.append($h3).append($ulProperty);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        return {
-            init: function (tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            }
-        };
-
-    })();
 
     function checkAll (){
         if (com.focusPage('input[type="checkbox"]').prop('checked')) {
@@ -623,7 +475,6 @@ $(function () {
                 v.status = v.status == 0 ? '预结算' : v.status == 1 ? "厂商结算" : "结算" ;
                 v.type = v.type == 0 ? "购货" : v.type == 1 ? "预结算退货" : "结算退货";
             });
-
         });
     }
 
@@ -631,162 +482,124 @@ $(function () {
     //批量厂商结算
     function vpostBalance() {
 
-        var ops = checkedInput(true);
+        var options = checkedInput(true);
+        
+        if(!options) return false;
 
-        if(ops){
-
-            com.post(api.sales.vpostSalesBalance, ops, function (res) {
-                com.showAlert(com.info, "厂商结算成功");
-                salesBalanceSearcher.doSearch();
-            });
-        }
+        com.post(api.sales.vpostSalesBalance, options, function (res) {
+            com.showAlert(com.info, "厂商结算成功");
+            salesBalanceSearcher.doSearch();
+        });
     }
 
     //批量结算
     function postBalance() {
 
-        var ops = checkedInput(false);
+        var options = checkedInput(false);
+        
+        if(!options) return false;
 
-        if(ops){
-            com.post(api.sales.postSalesBalance, ops, function (res) {
-                com.showAlert(com.info, "结算成功");
-                salesBalanceSearcher.doSearch();
-            });
-        }
-
+        com.post(api.sales.postSalesBalance, options, function (res) {
+            com.showAlert(com.info, "结算成功");
+            salesBalanceSearcher.doSearch();
+        });
     }
 
     function checkedInput(flag) {
 
-        var Identification = true;
-
         if (com.focusPage('span[name="totalRecords"]').text() == 0) {
             com.showAlert(com.warning, "请通过条件进行查询");
-            Identification = false;
             return false;
         }
 
-        var $inputs = com.focusPage('input[name="sbids"]:checked', '#resultList');
-        if(!$inputs.length) {
+        var inputs = com.focusPage('input[name="sbids"]:checked', '#resultList');
+        
+        if(!inputs.length) {
             com.showAlert(com.warning, "请选择需要进行结算的销售单");
-            Identification = false;
             return false;
         }
 
-        if(Identification){
-
-            var _option = {};
-            var statusFalg = true;
-
-            $.each($inputs, function (i, v) {
-
-                var $this = $(v);
-
-                if(flag){
-                    if ($this.attr('data-status') != 0) {
-                        com.showAlert(com.warning, "非预结算状态下不允许进行厂商结算");
-                        statusFalg = false;
-                        return;
-                    }
-
-                    if($this.attr('data-vbalance') == 0){
-                        com.showAlert(com.warning,"厂商结算值未填写，请检查");
-                        statusFalg = false;
-                        return;
-                    }
-                }
-                if(!flag){
-                    if ($this.attr('data-status') != 1) {
-                        com.showAlert(com.warning, "非厂商结算状态下不允许进行结算");
-                        statusFalg = false;
-                        return;
-                    }
-
-                    if($this.attr('data-pbalance') == 0){
-                        com.showAlert(com.warning,"结算值未填写，请检查");
-                        statusFalg = false;
-                        return;
-                    }
-                }
-
-                if(statusFalg) _option["salesBalances[" + i + "].sbid"] = $this.attr('data-sbid');
-
-            });
-
-            if(statusFalg) return _option;
-            if(!statusFalg) return null;
+        var options = {};
+        
+        for(var i=0;i<inputs.length;i++){
+            
+            var input = $(inputs[i]);
+            
+            var status = input.attr("data-status");
+            var vbalance = input.attr("data-vbalance");
+            var pbalance = input.attr("data-pbalance");
+            var sbid = input.attr("data-sbid");
+            
+            if(flag && status != 0){
+                com.showAlert(com.warning, "非预结算状态下不允许进行厂商结算");
+                return false;
+            }else if(flag && vbalance == 0){
+                com.showAlert(com.warning,"厂商结算值未填写 , 请检查");
+                return false;
+            }else if(!flag && status != 1){
+                com.showAlert(com.warning, "非厂商结算状态下不允许进行结算");
+                return false;
+            }else if(!flag && pbalance == 0){
+                com.showAlert(com.warning,"结算值未填写 , 请检查");
+                return false;
+            }
+            
+            options["salesBalances[" + i + "].sbid"] = sbid;
         }
-
+        
+        return options;
     }
 
     //结算单
     function crebalance() {
 
-        var opt = {};
-        var falg = true;
-        var supplierFalg = true;
+        var options = {};
         var index = 0;
-        var list = [];
 
         if (com.focusPage('span[name="totalRecords"]').text() == 0) {
             com.showAlert(com.warning, "请通过条件进行查询");
-            falg = false;
             return false;
         }
 
-        var $inputs = com.focusPage('input[name="sbids"]:checked', '#resultList');
+        var inputs = com.focusPage('input[name="sbids"]:checked', '#resultList');
 
-        if(!$inputs.length) {
+        if(!inputs.length) {
             com.showAlert(com.warning, "请选择结算单");
-            falg = false;
             return false;
         }
-
-        if(falg){
-
-            $.each($inputs, function (i, v) {
-
-                var $this = $(v);
-                var status = $this.attr("data-status");
-                if(status != 2){
-                    com.showAlert(com.warning, "请选择结算状态的结算单");
-                    supplierFalg = false;
-                    return false;
-                }
-                list.push($this.attr('data-supplier'));
-
-                if($this.attr('data-supplier')){
-                    opt["balanceSaless[" + index + "].salesBalance.sbid"] = $this.attr('data-sbid');
-                    index += 1;
-                }else {
-                    com.showAlert(com.warning, "厂商不一致");
-                    supplierFalg = false;
-                    return false;
-                }
-
-            });
-
-            var isAllFalg = isAllEqual(list);
-
-            if(supplierFalg && isAllFalg){
-                com.post(api.balance.submitBalanceSales, opt, function (res) {
-                    com.showAlert(com.info, "创建结算单成功");
-                    salesBalanceSearcher.doSearch();
-                });
+        
+        var belonger = null;
+        
+        for(var i=0;i<inputs.length;i++){
+            
+            var input = $(inputs[i]);
+            
+            var status = input.attr("data-status");
+            var supplier = input.attr('data-supplier');
+            var sbid = input.attr('data-sbid');
+            
+            if(status != 2){
+                com.showAlert(com.warning, "请选择结算状态的结算单");
+                return false;
             }
-
+            
+            if(belonger != null && supplier && supplier != belonger){
+                com.showAlert(com.warning, "厂商不一致");
+                return false
+            }
+            
+            belonger = supplier;
+            
+            options["balanceSaless[" + index + "].salesBalance.sbid"] = sbid;
+            index += 1;
         }
-
+        
+        options["balance.belonger.uid"] = belonger;
+        
+        com.post(api.balance.submitBalanceSales, options, function (res) {
+            com.showAlert(com.info, "创建结算单成功");
+            salesBalanceSearcher.doSearch();
+        });
     }
-
-    function isAllEqual(array){
-        if(array.length>0){
-            return !array.some(function(value,index){
-                return value != array[0];
-            });
-        }
-    }
-
-    com.focusPage('#resultListItem').css({'width': '96%', 'margin': '0 auto'});
-
+    
 });

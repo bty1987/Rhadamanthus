@@ -201,12 +201,13 @@ $(function () {
         var $show = conf.opt == null ?  [] : conf.opt.show == null ? [] : conf.opt.show;
 
         var $OriginalPicture = $show.includes("OriginalPicture") ? createDiv("col-xs-12").append(createLabel("control-label", "现场图:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createUl("OriginalPicture", "ace-thumbnails"))) : null;
-        var $designPictures = $show.includes("designPictures") ? createDiv("col-xs-12").append($confirmDesign).append(createLabel("control-label", "合同方案:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createUl("designPictures", "ace-thumbnails"))) : null;
-        var $projectPictures = $show.includes("projectPictures") ? createDiv("col-xs-12").append($confirmPricture).append(createLabel("control-label", "放线方案:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createUl("projectPictures", "ace-thumbnails"))) : null;
+        var $designPictures = $show.includes("designPictures") ? createDiv("col-xs-12").append(createLabel("control-label", "合同方案:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createUl("designPictures", "ace-thumbnails"))) : null;
+        var $projectPictures = $show.includes("projectPictures") ? createDiv("col-xs-12").append(createLabel("control-label", "放线方案:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createUl("projectPictures", "ace-thumbnails"))) : null;
         var $contractMap = $show.includes("contractMap") ? createDiv("col-xs-12").append(createLabel("control-label", "合同备档:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createUl("ContractPictures", "ace-thumbnails"))) : null;
         var $CADProjectPicture = $show.includes("CADProjectPicture") ? createDiv("col-xs-12").append(createLabel("control-label", "工程文件CAD:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createDiv("col-sm-7 infobox-container", "CADProjectPicture"))) : null;
+        var $contractFile = $show.includes("contractFiles") ? createDiv("col-xs-12").append(createLabel("control-label", "合同文件:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createDiv("infobox-container", "contractFiles"))) : null;
 
-        var row2 = createDiv("row").append($OriginalPicture).append( $designPictures).append($projectPictures).append($contractMap).append($CADProjectPicture).appendTo(stepPane);
+        var row2 = createDiv("row").append($OriginalPicture).append($designPictures).append($projectPictures).append($contractMap).append($CADProjectPicture).append($contractFile).appendTo(stepPane);
         
         var $btns = conf.opt == null ?  [] : conf.opt.btn == null ? [] : conf.opt.btn;
         
@@ -234,6 +235,12 @@ $(function () {
             decorationUtils.loadHuploadify("ContractUpload", "上传合同备档", "*.jpg;*.jpge;*.gif;*.png", true, function (data) {
                 decorationUtils.addDecorationPicture(data, 3, "ContractPictures");
             }, "btn btn-inverse");
+        }
+        if ($btns.includes("confirmDesign")) {
+            $designPictures.append($confirmDesign);
+        }
+        if ($btns.includes("confirmPicture")) {
+            $projectPictures.append($confirmPricture);
         }
         
         return [row1, row2];
@@ -280,7 +287,7 @@ $(function () {
                     createDiv("col-md-3", null, "border-left: 1px solid rgb(227, 227, 227);").append($("<h5></h5>").attr("class", "bigger-110 center").text("合同预付款"), $("<h2></h2>").attr("class", "oid bigger center").append($("<b></b>").attr("class", "blue").attr("id", "balanceAdvance").text(0))),
                     createDiv("col-md-3", null, "border-left: 1px solid rgb(227, 227, 227);").append($("<h5></h5>").attr("class", "bigger-110 center").text("工程预付款"), $("<h2></h2>").attr("class", "oid bigger center").append($("<b></b>").attr("class", "blue").attr("id", "projectAdvance").text(0))),
                     createDiv("col-md-3", null, "border-left: 1px solid rgb(227, 227, 227);").append($("<h5></h5>").attr("class", "bigger-110 center").text("主材预付款"), $("<h2></h2>").attr("class", "oid bigger center").append($("<b></b>").attr("class", "blue").attr("id", "materialAdvance").text(0))),
-                    createDiv("col-md-3", null, "border-left: 1px solid rgb(227, 227, 227);").append($("<h5></h5>").attr("class", "bigger-110 center").text("正林预付款"), $("<h2></h2>").attr("class", "oid bigger center").append($("<b></b>").attr("class", "blue").attr("id", "zaterialAdvance").text(0))),
+                    createDiv("col-md-3", null, "border-left: 1px solid rgb(227, 227, 227);").append($("<h5></h5>").attr("class", "bigger-110 center").text("正林预付款"), $("<h2></h2>").attr("class", "oid bigger center").append($("<b></b>").attr("class", "blue").attr("id", "zaterialAdvance").text(0)))
                 )))
             ))
         ).appendTo(stepPane);
@@ -307,7 +314,7 @@ $(function () {
                     createDiv("col-md-2", null, "border-left: 1px solid rgb(227, 227, 227);").append($("<h5></h5>").attr("class", "bigger-110 center").text("增项款总额"), $("<h2></h2>").attr("class", "oid bigger center").append($("<b></b>").attr("class", "blue").attr("id", "addTotal").text(0))),
                     createDiv("col-md-2", null, "border-left: 1px solid rgb(227, 227, 227);").append($("<h5></h5>").attr("class", "bigger-110 center").text("减项款总额"), $("<h2></h2>").attr("class", "oid bigger center").append($("<b></b>").attr("class", "blue").attr("id", "reduceTotal").text(0))),
                     createDiv("col-md-2", null, "border-left: 1px solid rgb(227, 227, 227);").append($("<h5></h5>").attr("class", "bigger-110 center").text("主材额"), $("<h2></h2>").attr("class", "oid bigger center").append($("<b></b>").attr("class", "blue").attr("id", "materialAmount").text(0))),
-                    createDiv("col-md-2", null, "border-left: 1px solid rgb(227, 227, 227);").append($("<h5></h5>").attr("class", "bigger-110 center").text("主基比"), $("<h2></h2>").attr("class", "oid bigger center").append($("<b></b>").attr("class", "blue").attr("id", "materialRate").text(0))),
+                    createDiv("col-md-2", null, "border-left: 1px solid rgb(227, 227, 227);").append($("<h5></h5>").attr("class", "bigger-110 center").text("主基比"), $("<h2></h2>").attr("class", "oid bigger center").append($("<b></b>").attr("class", "blue").attr("id", "materialRate").text(0)))
                 )))
             ))
         ).appendTo(stepPane);

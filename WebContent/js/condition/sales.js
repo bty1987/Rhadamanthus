@@ -75,6 +75,22 @@ Condition.addupRule("sales", {
             valuePath: "name"
         }
     },
+    "brand-all":{
+        label: "品牌",
+        type: "autofill",
+        submitConfig: {
+            name: "bid",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.data.queryBrandByPinyinForAll,
+            postData: {},
+            listPath: "brands",
+            keyPath: "bid",
+            valuePath: "name"
+        }
+    },
     "instorer" : {
         label: "驻店员",
         type: "autofill",
@@ -166,6 +182,7 @@ Condition.addupRule("sales", {
             valuePath: "name"
         }
     },
+    
     "activity" : {
         label: "活动名称", //中文名
         type: "text", // 类型
@@ -174,6 +191,24 @@ Condition.addupRule("sales", {
             op: "cn", // 查询方式
             validate: null // 校验规则
         }
+    },
+    "activity-category-name": {
+        label: "品类",
+        type: "text",
+        submitConfig: {
+            name: "sales.category",
+            op: "cn",
+            validate: null
+        },
+    },
+    "activity-brand-name" : {
+        label: "品牌",
+        type: "text",
+        submitConfig: {
+            name: "sales.brand",
+            op: "cn",
+            validate: null
+        },
     },
     
     "balance-orderId":{

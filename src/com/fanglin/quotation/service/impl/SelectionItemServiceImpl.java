@@ -382,6 +382,8 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 			throw new FLException(200039, "选材项状态不可操作");
 		}
 
+		selectionItemPO.setRefnum(selectionItemVO.getRefnum());
+
 		selectionItemPO.setFinish(finish);
 		selectionItemPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
 		selectionItemPO.setStatus(SelectionItemPO.STATUS_FINISH_SHORT);

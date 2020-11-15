@@ -180,8 +180,8 @@ jQuery(function($) {
 			}, false);
 		}
 
-		if(com.validate() || buildingRecord.dataFlag){
-			return;
+		if(com.validate("buildingRecordModal") || buildingRecord.dataFlag){
+			return false;
 		}
 
 		var options = {

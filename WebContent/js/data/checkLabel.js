@@ -77,6 +77,7 @@ jQuery(function ($) {
         $line.append($indexWrap).append($lineInfoWrap).append($optWrap);
 
         $btncheck.click(function () {
+            
             if(com.validate())
                 return;
 

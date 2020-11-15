@@ -34,6 +34,14 @@ public class TaskPO implements Serializable {
 
 	public static final Short SHOW_ABLE_INT = 0;
 
+	public static final short LEVEL_FUNCTION_INT = 0;
+
+	public static final short LEVEL_MODEL_INT = 0;
+
+	public static final short HANDLE_READ_INT = 0;
+
+	public static final short HANDLE_WRITE_INT = 0;
+
 	private long tid;
 
 	private String name;

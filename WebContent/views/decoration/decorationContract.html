@@ -78,6 +78,7 @@
     </div>
     <div class="col-md-12" id="contractFunction">
         <a class="btn btn-minier btn-success pull-left" id="saveBtn"><i class="icon-plus bigger-110"></i><span>添加合同</span></a>
+        <a class="btn btn-minier btn-info pull-right" id="backBtn"><i class="icon-mail-forward bigger-110"></i><span>返回</span></a>
     </div>
 </div>
 
@@ -107,14 +108,16 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" id="saveBtnBalance" class="btn btn-primary">提交</button>
-                <button type="button" id="cancelBtnBalance" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" id="signBtn" class="btn btn-primary">提交</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
             </div>
         </div>
     </div>
 </div>
 
-<div id="qrcodeModal" ></div>
+<div id="layerPopUp" class="portlet box page-content"></div>
+
+<div id="qrcodeModal"></div> <!-- 二维码 -->
 
 <script type="text/javascript">
     $.loadScript(['js/decoration/decorationContract.js']);

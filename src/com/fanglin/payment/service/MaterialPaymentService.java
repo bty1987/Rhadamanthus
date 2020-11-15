@@ -23,13 +23,7 @@ import com.fanglin.utils.Paging;
 
 public interface MaterialPaymentService {
 	
-	public void pageMaterialPaymentForInit(Paging paging, List<Filter> filters, int company);
-	
-	public void pageMaterialPaymentForNotInit(Paging paging, List<Filter> filters, int company);
-	
-	public void pageMaterialPaymentForCollect(Paging paging, List<Filter> filters, int company);
-	
-	public void pageMaterialPaymentForConfirm(Paging paging, List<Filter> filters, int company);
+	public void pageMaterialPayment(Paging paging, List<Filter> filters, MaterialPaymentVO materialPaymentVO, int company);
 	
 	public List<MaterialPaymentVO> queryMaterialPaymentByOrderId(MaterialPaymentVO materialPaymentVO, List<Filter> filters, int company);
 	

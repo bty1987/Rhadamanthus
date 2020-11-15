@@ -796,9 +796,20 @@ public class DecorationServiceImpl implements DecorationService {
 	@Transactional(rollbackFor = Exception.class)
 	public void createDecoration(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, String userId, int company) throws FLException {
 
-		CompanyPO companyPO = companyDao.get(company);
-
 		checkOverDecoration(decorationVO.getCustomer().getCid(), decorationVO.getHouse().getHid(), company);
+
+		makeDecoration(decorationVO, decorationInfoVO, userId, company);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void createDecorationForAdvance(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, String userId, int company) throws FLException {
+		makeDecoration(decorationVO, decorationInfoVO, userId, company);
+	}
+
+	private void makeDecoration(DecorationVO decorationVO, DecorationInfoVO decorationInfoVO, String userId, int company) throws FLException {
+
+		CompanyPO companyPO = companyDao.get(company);
 
 		DecorationPO decorationPO = new DecorationPO();
 
@@ -1016,7 +1027,6 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationBelongDao.changeDecorationBelongForOrderId(newOrderId, oldOrderId);
 		decorationPaymentDao.changeDecorationPaymentForOrderId(oldOrderId, newOrderId);
 
-		decorationPO.setOrderId(newOrderId);
 		decorationDao.changeDecorationForOrderId(newOrderId, oldOrderId);
 
 		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, String.format("订单编号修改,原订单编号:%s,修改编号为:%s.", oldOrderId, newOrderId)));
@@ -1348,13 +1358,12 @@ public class DecorationServiceImpl implements DecorationService {
 
 		checkOverDecoration(customerOriginPO.getCustomer().getCid(), customerOriginPO.getHouse().getHid(), company);
 
-		createDecoration(decorationVO, null, operater.getUserId(), company);
+		makeDecoration(decorationVO, null, operater.getUserId(), company);
 
 		customerOriginPO.setOrderId(decorationVO.getOrderId());
 		customerOriginPO.setStatus(CustomerOriginPO.STATUS_BIND_INT);
 
 		customerOriginDao.update(customerOriginPO);
-
 	}
 
 	public void checkOverDecoration(long cid, long hid, int company) throws FLException {
@@ -1371,7 +1380,6 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationPO = decorationPOs.get(0);
 			throw new FLException(140063, String.format("装修单存在,装修单号:%s,设计师:%s", decorationPO.getOrderId(), decorationPO.getDesigner().getCurrentName()));
 		}
-
 	}
 
 	private void addition(DecorationAdditionPO addition, DecorationVO decorationVO) {

@@ -13,7 +13,8 @@ jQuery(function ($) {
         btns: {
             saveBtn: com.focusPage("#saveBtn"),
             updateConstructionBtn: com.focusPage("#updateConstructionBtn"),
-            printConstructionNodeBtn : com.focusPage("#printConstructionNodeBtn")
+            printNormriceSBtn : com.focusPage("#printNormriceSBtn"),
+            printNormriceWBtn : com.focusPage("#printNormriceWBtn"),
         },
 
         items: {
@@ -40,7 +41,8 @@ jQuery(function ($) {
 
     construction.btns.saveBtn.bindClick(saveData);
     construction.btns.updateConstructionBtn.bindClick(update);
-    construction.btns.printConstructionNodeBtn.bindClick(printQuotation);
+    construction.btns.printNormriceSBtn.bindClick(printNormriceS);
+    construction.btns.printNormriceWBtn.bindClick(printNormriceW);
     construction.modals.constructionInfoModal.on("hide.bs.modal", function(){
 
         com.cleanItems(construction.items);
@@ -199,7 +201,6 @@ jQuery(function ($) {
                 params['company.name'] = v.decoration.company.name;
                 params['orderType'] = v.decoration.type;
                 params.quotationId = quotationId;
-                params.type = 5;
                 params.subtype = [1];
                 params.showType = {itemtype: 4};
                 construction.modals.printQuotationCNModal.modal("show");
@@ -347,10 +348,17 @@ jQuery(function ($) {
         });
     }
 
-    function printQuotation() {
+    function printNormriceS() {
+        params.type = 1;
         params['workType'] = construction.constructionNode.val();
-        com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, true);
+        com.popup("打印报价", "/views/quotation/normriceOutput.html", null, null, true);
         construction.modals.printQuotationCNModal.modal("hide");
-    };
+    }
+    function printNormriceW() {
+        params.type = 2;
+        params['workType'] = construction.constructionNode.val();
+        com.popup("打印报价", "/views/quotation/normriceOutput.html", null, null, true);
+        construction.modals.printQuotationCNModal.modal("hide");
+    }
 
 });

@@ -111,7 +111,7 @@ var QuotationDetail = (function(){
 			}, null, false);
 			//初始化报价项选择弹层
 			var extraParams  = {"quotationItem.versionId": quo.versionId};
-			var _condArr = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'data-worktype'];
+			var _condArr = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'quotation-worktype'];
 			var quotationItemSeacher = new Searcher();
 			quotationItemSeacher.init( _condArr, "condList", api.quotation.pageQuotationItemByVersionId,  function(data){
 				var $tableWrap = com.focusPage('#resultList').empty();
@@ -283,8 +283,8 @@ var QuotationDetail = (function(){
 			var that = this;
 			com.focusPage('#saveFunctionAreaBtn').on('click', function(){ // 编辑功能区页面
 				
-				if(com.validate()){
-					return;
+				if(com.validate("functionAreaModal")){
+					return false;
 				}
 				
 				var _dname = com.focusPage("#functionAreaName").val();
@@ -619,8 +619,8 @@ var QuotationDetail = (function(){
 		saveCustomQuotesAdd : function(){
 			com.focusPage("#saveCustomFunctionAreaItemBtn").on('click', function(event){
 				
-				if(com.validate()){
-					return;
+				if(com.validate("customFunctionAreaItemsModal")){
+					return false;
 				}
 
 				var addRow = {

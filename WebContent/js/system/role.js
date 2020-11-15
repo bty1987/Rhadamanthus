@@ -567,8 +567,8 @@ jQuery(function($) {
 
     function saveData(){
         
-        if(com.validate()){
-            return;
+        if(com.validate("roleModal")){
+            return false;
         }
         
         var url;

@@ -198,8 +198,7 @@ jQuery(function ($) {
         var materialBrandFlag = true;
         var salesmanNameFlag = false;
 
-        if (com.validate() || salesmanNameFlag)
-            return false;
+        if (com.validate("materialSaleOrderPageContent") || salesmanNameFlag) return false;
 
         var $lines = com.focusPage('li.selected', '#list');
         if (!$lines.length) {

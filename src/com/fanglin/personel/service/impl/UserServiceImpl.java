@@ -266,7 +266,7 @@ public class UserServiceImpl implements UserService {
 			dtid = departmentTypeDao.queryDepartmentTypeByName(departmentType.getName()).getDtid();
 		}
 
-		List<UserPO> userPOs = userDao.pageUserForNameByPinyinName(paging, pinyinName, userVO.getStatus(), company, dtid);
+		List<UserPO> userPOs = userDao.pageUserByPinyin(paging, pinyinName, userVO.getStatus(), company, dtid);
 
 		for (UserPO userPO : userPOs) {
 			userBaseVOs.add(convertBaseBean(userPO));
@@ -717,7 +717,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public int resetPassword(UserVO userVO, Integer company) throws FLException {
+	public void resetPassword(UserVO userVO, Integer company) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
 
@@ -766,8 +766,6 @@ public class UserServiceImpl implements UserService {
 			LogUtils.logging(logger, server, results.getString("errorMsg"), api);
 			throw new FLException(errorCode, errorMsg);
 		}
-
-		return 0;
 	}
 
 	@Override

@@ -133,8 +133,8 @@ jQuery(function($) {
 
 	function saveData(){
 		
-		if(com.validate() || region.repeatFlg){
-			return;
+		if(com.validate("regionModal") || region.repeatFlg){
+			return false;
 		}
 		
 		var url;

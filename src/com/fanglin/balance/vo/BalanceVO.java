@@ -2,33 +2,39 @@ package com.fanglin.balance.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.vo.UserBaseVO;
 
-public class BalanceVO implements Serializable{
+public class BalanceVO implements Serializable {
 
 	private static final long serialVersionUID = -8095741830980431347L;
 
 	private Long bid;
-	
+
 	private String no;
-	
+
 	private UserBaseVO belonger;
-	
+
 	private UserBaseVO creater;
-	
+
 	private Timestamp createTime;
-	
+
+	private Timestamp startTime;
+
+	private Timestamp endTime;
+
 	private Long amount;
-	
+
 	private Long surplus;
-	
+
 	private Short type;
-	
+
 	private Short status;
-	
+
 	private Integer company;
 
 	public BalanceVO() {
@@ -48,7 +54,7 @@ public class BalanceVO implements Serializable{
 	public void setBid(Long bid) {
 		this.bid = bid;
 	}
-	
+
 	public String getNo() {
 		return no;
 	}
@@ -82,6 +88,24 @@ public class BalanceVO implements Serializable{
 		this.createTime = createTime;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Timestamp startTime) {
+		this.startTime = startTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Timestamp endTime) {
+		this.endTime = endTime;
+	}
+
 	public Long getAmount() {
 		return amount;
 	}
@@ -89,7 +113,7 @@ public class BalanceVO implements Serializable{
 	public void setAmount(Long amount) {
 		this.amount = amount;
 	}
-	
+
 	public Long getSurplus() {
 		return surplus;
 	}
@@ -121,5 +145,21 @@ public class BalanceVO implements Serializable{
 	public void setCompany(Integer company) {
 		this.company = company;
 	}
-	
+
+	public BalanceVO filter(List<Filter> filters) {
+
+		if (getStatus() != null) {
+			filters.add(0, new Filter("status", String.valueOf(getStatus()), "eq"));
+		}
+
+		if (getType() != null) {
+			filters.add(0, new Filter("type", String.valueOf(getType()), "eq"));
+		}
+
+		if (getBelonger() != null) {
+			filters.add(0, new Filter("belonger", String.valueOf(getBelonger().getUid()), "eq"));
+		}
+
+		return this;
+	}
 }

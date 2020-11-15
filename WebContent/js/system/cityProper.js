@@ -169,8 +169,8 @@ jQuery(function($) {
 
 	function saveData(){
 		
-		if(com.validate()){
-			return;
+		if(com.validate("cityProperModal")){
+			return false;
 		}
 		
 		var url;

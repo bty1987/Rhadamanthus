@@ -22,8 +22,6 @@ public interface MaterialPaymentDao extends Dao<MaterialPaymentPO> {
 	
 	public List<MaterialPaymentPO> pageMaterialPayment(Paging paging, List<Filter> filters);
 	
-	public List<MaterialPaymentPO> pageMaterialPaymentForStatus(Paging paging, List<Filter> filters, Short status, String op);
-	
 	public List<MaterialPaymentPO> queryMaterialPaymentByOrderId(List<Filter> filters);
 	
 	public List<MaterialPaymentPO> queryMaterialPaymentByMid(long mid, Short paymentStatus);

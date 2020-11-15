@@ -112,7 +112,7 @@ $(function(){
     })();
 
     var searcher = new Searcher();
-    searcher.init(['cutomer-group-name', 'customer-group-orderId'], "condList" , api.customer.pageGroup, function(res){
+    searcher.init(['customer-group-name', 'customer-group-orderId'], "condList" , api.customer.pageGroup, function(res){
         displayFunc.init("resultList",res);
     },"pagenation");
 

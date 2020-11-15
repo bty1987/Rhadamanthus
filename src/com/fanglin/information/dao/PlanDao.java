@@ -11,11 +11,11 @@ public interface PlanDao extends Dao<PlanPO> {
 
 	public List<PlanPO> pagePlan(Paging paging, List<Filter> filters, int uid, int company);
 
-	public int countPlanByCuid(long cuid);
+	public int countPlan(long cuid);
 
-	public int countPlanByExecuteTime(String executeTime);
+	public int countPlan(String executeTime);
 
-	public int countPlanByExecuteTimAndCuid(String executeTime, long cuid);
+	public int countPlan(String executeTime, long cuid);
 
 	public int countPlanRightNow();
 

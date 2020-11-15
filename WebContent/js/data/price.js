@@ -38,7 +38,7 @@ $(function () {
             var $contentWrap = $('<div></div>').addClass(
                 'line-wrap  content col5');
 
-            var titleName = '价格说明,进价,售价,结算类型,结算值';
+            var titleName = '价格说明,控价,售价,结算类型,结算值';
 
             $.each(titleName.split(','), function (i, v) {
                 var $cell = $('<div></div>').addClass('cell').html(v);

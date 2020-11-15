@@ -34,170 +34,146 @@ import com.fanglin.payment.vo.DecorationReceiptVO;
 public class DecorationPaymentAction extends BaseListAction {
 
 	private static final long serialVersionUID = -1599812124963548111L;
-	
+
 	@Autowired
 	private DecorationPaymentService decorationPaymentService;
-	
+
 	@Autowired
 	private DecorationReceiptService decorationReceiptService;
 
 	private DecorationPaymentVO decorationPayment;
-	
+
 	private DecorationReceiptVO decorationReceipt;
-	
+
 	private List<DecorationPaymentVO> decorationPayments;
-	
+
 	private List<DecorationReceiptVO> decorationReceipts;
-	
+
 	private List<Long> paymentIds;
-	
+
 	private List<Long> drIds;
-	
+
 	private Timestamp dateTime;
-	
+
 	private List<Long> posids;
-	
-	@Action(value = "pageDecorationPaymentForCommit", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationPaymentForCommit() throws FLException{
-		
-		decorationPaymentService.pageDecorationPaymentForCommit(getPaging(), getFilters(), queryCompany());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "pageDecorationPaymentForHistory", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationPaymentForHistory() throws FLException{
-		
-		decorationPaymentService.pageDecorationPaymentForHistory(getPaging(), getFilters(), queryCompany());
+
+	@Action(value = "pageDecorationPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDecorationPayment() throws FLException {
+
+		decorationPaymentService.pageDecorationPayment(getPaging(), getFilters(), decorationPayment, queryCompany());
 
 		return SUCCESS;
 	}
 
-	@Action(value = "pageDecorationPaymentForCollect", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationPaymentForCollect() throws FLException{
-		
-		decorationPaymentService.pageDecorationPaymentForCollect(getPaging(), getFilters(), queryCompany());
+	@Action(value = "queryDecorationPaymentByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationPaymentByOrderId() throws FLException {
 
-		return SUCCESS;
-	}
-	
-	@Action(value = "pageDecorationPaymentForConfirm", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageDecorationPaymentForConfirm() throws FLException{
-		
-		decorationPaymentService.pageDecorationPaymentForConfirm(getPaging(), getFilters(), queryCompany());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "queryDecorationPaymentByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDecorationPaymentByOrderId() throws FLException{
-		
 		decorationPayments = decorationPaymentService.queryDecorationPaymentByOrderId(decorationPayment, getFilters(), queryCompany());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryDecorationPaymentForContractByOrderId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDecorationPaymentForContractByOrderId(){
-		
+
+	@Action(value = "queryDecorationPaymentForContractByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationPaymentForContractByOrderId() {
+
 		decorationPayments = decorationPaymentService.queryDecorationPaymentForContractByOrderId(decorationPayment);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryDecorationPaymentForNotInitByDrId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDecorationPaymentForNotInitByDrId(){
-		
+
+	@Action(value = "queryDecorationPaymentForNotInitByDrId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationPaymentForNotInitByDrId() {
+
 		decorationPayments = decorationPaymentService.queryDecorationPaymentForNotInitByDrId(decorationReceipt);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryDecoraionReceiptByDrId", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryDecoraionReceiptByDrId() throws FLException{
-		
+
+	@Action(value = "queryDecoraionReceiptByDrId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecoraionReceiptByDrId() throws FLException {
+
 		decorationReceipt = decorationReceiptService.queryDecorationReceiptByDrId(decorationReceipt);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="checkDecorationPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String checkDecorationPayment() throws FLException{
-		
+
+	@Action(value = "checkDecorationPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String checkDecorationPayment() throws FLException {
+
 		decorationPaymentService.checkDecorationPayment(decorationPayment);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="addDecorationPayment", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addDecorationPayment() throws FLException{
-		
+
+	@Action(value = "addDecorationPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addDecorationPayment() throws FLException {
+
 		decorationPaymentService.addDecorationPayment(decorationPayment, queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="changeDecorationPaymentForTime", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String changeDecorationPaymentForTime() throws FLException{
-		
+
+	@Action(value = "changeDecorationPaymentForTime", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String changeDecorationPaymentForTime() throws FLException {
+
 		decorationPaymentService.changeDecorationPaymentForTime(decorationPayment, dateTime, queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "collectDecorationPayment", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String collectDecorationPayment() throws FLException{
-		
+
+	@Action(value = "collectDecorationPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String collectDecorationPayment() throws FLException {
+
 		decorationPaymentService.collectDecorationPayment(decorationPayment, posids, queryUserId(), queryCompany());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "refundDecorationPayment", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String refundDecorationPayment() throws FLException{
-		
+
+	@Action(value = "refundDecorationPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String refundDecorationPayment() throws FLException {
+
 		decorationPaymentService.refundDecorationPayment(decorationPayment, queryUserId(), queryCompany());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "confirmDecorationPayment", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String confirmDecorationPayment() throws FLException{
-		
+
+	@Action(value = "confirmDecorationPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String confirmDecorationPayment() throws FLException {
+
 		decorationPaymentService.confirmDecorationPayment(paymentIds, queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "updateDecorationPayment", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateDecorationPayment() throws FLException{
-		
+
+	@Action(value = "updateDecorationPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateDecorationPayment() throws FLException {
+
 		decorationPaymentService.updateDecorationPayment(decorationPayment);
-		
+
 		return SUCCESS;
 	}
-	
-	public DecorationPaymentVO getDecorationPayment(){
+
+	public DecorationPaymentVO getDecorationPayment() {
 		return decorationPayment;
 	}
 
-	public void setDecorationPayment(DecorationPaymentVO decorationPayment){
+	public void setDecorationPayment(DecorationPaymentVO decorationPayment) {
 		this.decorationPayment = decorationPayment;
 	}
-	
-	public List<DecorationPaymentVO> getDecorationPayments(){
+
+	public List<DecorationPaymentVO> getDecorationPayments() {
 		return decorationPayments;
 	}
-	
-	public void setDecorationPayments(List<DecorationPaymentVO> decorationPayments){
+
+	public void setDecorationPayments(List<DecorationPaymentVO> decorationPayments) {
 		this.decorationPayments = decorationPayments;
 	}
 
-	public List<Long> getPaymentIds(){
+	public List<Long> getPaymentIds() {
 		return paymentIds;
 	}
 
-	public void setPaymentIds(List<Long> paymentIds){
+	public void setPaymentIds(List<Long> paymentIds) {
 		this.paymentIds = paymentIds;
 	}
 

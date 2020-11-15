@@ -11,25 +11,35 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "feedback", catalog = "customer")
-public class FeedbackPO implements Serializable{
+public class FeedbackPO implements Serializable {
 
 	private static final long serialVersionUID = -4913298852355057877L;
-	
+
+	public static final String COLUMN_ORDERID_STR = "orderId";
+
+	public static final String COLUMN_TYPE_STR = "type";
+
+	public static final String COLUMN_PHONE_STR = "phone";
+
 	private long fid;
-	
+
 	private String unionId;
-	
+
 	private String content;
-	
+
 	private Timestamp createTime;
-	
+
 	private short type;
-	
+
 	private String picture;
+
+	private String orderId;
+
+	private String phone;
 
 	@Id
 	@GeneratedValue
-	@Column(name="fid")
+	@Column(name = "fid")
 	public long getFid() {
 		return fid;
 	}
@@ -37,8 +47,8 @@ public class FeedbackPO implements Serializable{
 	public void setFid(long fid) {
 		this.fid = fid;
 	}
-	
-	@Column(name="unionId")
+
+	@Column(name = "unionId")
 	public String getUnionId() {
 		return unionId;
 	}
@@ -46,8 +56,8 @@ public class FeedbackPO implements Serializable{
 	public void setUnionId(String unionId) {
 		this.unionId = unionId;
 	}
-	
-	@Column(name="content")
+
+	@Column(name = "content")
 	public String getContent() {
 		return content;
 	}
@@ -55,8 +65,8 @@ public class FeedbackPO implements Serializable{
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
-	@Column(name="type")
+
+	@Column(name = "type")
 	public short getType() {
 		return type;
 	}
@@ -65,7 +75,7 @@ public class FeedbackPO implements Serializable{
 		this.type = type;
 	}
 
-	@Column(name="picture")
+	@Column(name = "picture")
 	public String getPicture() {
 		return picture;
 	}
@@ -73,8 +83,8 @@ public class FeedbackPO implements Serializable{
 	public void setPicture(String picture) {
 		this.picture = picture;
 	}
-	
-	@Column(name="createTime")
+
+	@Column(name = "createTime")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -82,5 +92,23 @@ public class FeedbackPO implements Serializable{
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
-	
+
+	@Column(name = "orderId")
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
+	@Column(name = "phone")
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
 }

@@ -637,8 +637,8 @@ jQuery(function($) {
 
         com.clearValidator("#couponType", true);
 
-		if(com.validate()){
-			return;
+		if(com.validate("rejectMaterialSubOrderModal")){
+			return false;
 		}
 
 		var refundTotal = com.focusPage("#refundTotal");

@@ -38,6 +38,20 @@
                                 </div>
                                 
                                 <div class="form-group col-sm-6">
+                                    <label for="customerId" class="col-sm-3 control-label no-padding-right orange">邮箱</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-customer-email" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="customerId" class="col-sm-3 control-label no-padding-right orange">微信</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-customer-wechat" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
                                     <label for="customerId" class="col-sm-3 control-label no-padding-right orange">工作单位</label>
                                     <div class="col-sm-9">
                                         <input id="sin-customer-group" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual">
@@ -49,21 +63,21 @@
                                 <div class="form-group col-sm-6">
                                     <label for="agentName" class="col-sm-3 control-label no-padding-right orange">甲方代理人</label>
                                     <div class="col-sm-9">
-                                        <input id="con-agent-name" type="text" class="col-sm-7 col-xs-10 conitem v_required" maxlength="32" data-toggle="popover" data-trigger='manual'>
+                                        <input id="sin-agent-name" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' maxlength="32" data-toggle="popover" data-trigger='manual'>
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-6">
                                     <label for="agentPhone" class="col-sm-3 control-label no-padding-right orange">联系电话</label>
                                     <div class="col-sm-9">
-                                        <input id="con-agent-phone" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                        <input id="sin-agent-phone" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' data-toggle="popover" data-placement="bottom" data-trigger="manual">
                                     </div>
                                 </div>
 
                                 <div class="form-group col-sm-6">
                                     <label for="agentId" class="col-sm-3 control-label no-padding-right orange">身份证号</label>
                                     <div class="col-sm-9">
-                                        <input id="con-agent-ident" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                        <input id="sin-agent-ident" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' data-toggle="popover" data-placement="bottom" data-trigger="manual">
                                     </div>
                                 </div>
                             </div>
@@ -126,11 +140,39 @@
                                         <input id="con-work-model" type="text" class="col-sm-7 col-xs-10 conitem v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual">
                                     </div>
                                 </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="contract_mode" class="col-sm-3 control-label no-padding-right orange">产权书登记</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-right-book" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="contract_mode" class="col-sm-3 control-label no-padding-right orange">产权所有人</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-right-belonger" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
 
                                 <div class="form-group col-sm-6">
                                     <label for="rental" class="col-sm-3 control-label no-padding-right orange">合同总额</label>
                                     <div class="col-sm-9">
                                         <input id="con-contract-total" type="text" class="col-sm-7 col-xs-10 conitem v_required v_float_3" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="rental" class="col-sm-3 control-label no-padding-right orange">基础工程应付额</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-contract-stotal" type="text" class="col-sm-7 col-xs-10 conitem v_required v_float_3" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="form_of_contract" class="col-sm-3 control-label no-padding-right orange">基础工程实付额</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-contract-rtotal" type="text" class="col-sm-7 col-xs-10 conitem v_required v_float_3" data-toggle="popover" data-placement="bottom" data-trigger="manual">
                                     </div>
                                 </div>
 
@@ -141,15 +183,24 @@
                                     </div>
                                 </div>
                                 
-                                <div class="form-group col-sm-6">
-                                    <label for="form_of_contract" class="col-sm-3 control-label no-padding-right orange">实付合同额</label>
-                                    <div class="col-sm-9">
-                                        <input id="con-contract-rtotal" type="text" class="col-sm-7 col-xs-10 conitem v_required v_float_3" data-toggle="popover" data-placement="bottom" data-trigger="manual">
-                                    </div>
-                                </div>
                             </div>
                             
                             <div class="col-md-12">
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="form_of_contract" class="col-sm-3 control-label no-padding-right orange">设计费</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-design-money" type="text" class="col-sm-7 col-xs-10 conitem v_required v_float_3" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6">
+                                    <label for="form_of_contract" class="col-sm-3 control-label no-padding-right">设计费备注</label>
+                                    <div class="col-sm-9">
+                                        <textarea id="con-design-money-comment" class="col-sm-7 col-xs-10 conitem" rows="3" data-toggle="popover" data-placement="bottom"  data-trigger='manual' maxlength="512"></textarea>
+                                    </div>
+                                </div>
+                                
                                 <div class="form-group col-sm-6">
                                     <label for="form_of_contract" class="col-sm-3 control-label no-padding-right orange">首付款</label>
                                     <div class="col-sm-9">
@@ -238,7 +289,13 @@
 
                                <div class="form-group">
                                     <div class="col-md-12">
-                                        <textarea id="con-markup-two" class="m-wrap col-xs-12 conitem makeup" rows="8" data-toggle="popover" data-trigger='manual' maxlength="512" placeholder="条款补充追加项 , 请手动输入内容"></textarea>
+                                        <textarea id="con-markup-two" class="m-wrap col-xs-12 conitem makeup" rows="8" data-toggle="popover" data-trigger='manual' maxlength="512" placeholder="条款补充追加项 , 请双击获取内容或手动输入"></textarea>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <textarea id="con-markup-thr" class="m-wrap col-xs-12 conitem makeup" rows="8" data-toggle="popover" data-trigger='manual' maxlength="512" placeholder="优惠活动备注 , 请双击获取内容或手动输入"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -276,6 +333,5 @@
 </div>
 
 <script type="text/javascript">
-    $.loadScript(['js/contract/decorationContractTemp1.js']);
+    $.loadScript(['js/utils/quotationUtils.js', 'js/contract/decorationContractTemp1.js']);
 </script>
-

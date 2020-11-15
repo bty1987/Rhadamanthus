@@ -179,7 +179,8 @@ $(function(){
 
     //保存
     function saveData() {
-        if (com.validate()) {
+        
+        if (com.validate("moduleModal")) {
             return false;
         }
 

@@ -98,7 +98,7 @@ var QuotationDetail = (function(){
 			}, null, false);
 			//初始化报价项选择弹层
 			var extraParams  = {"quotationItem.versionId": quo.versionId};
-			var _condArr = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'data-worktype'];
+			var _condArr = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'quotation-worktype'];
 			var quotationItemSeacher = new Searcher();
 			quotationItemSeacher.init( _condArr, "condList", api.quotation.pageQuotationItemByVersionId,  function(data){
 				var $tableWrap = com.focusPage('#resultList').empty();
@@ -274,8 +274,8 @@ var QuotationDetail = (function(){
 			var that = this;
 			com.focusPage('#saveFunctionAreaBtn').on('click', function(){ // 编辑功能区页面
 				
-				if(com.validate()){
-					return;
+				if(com.validate("functionAreaModal")){
+					return false;
 				}
 				
 				var _dname = com.focusPage("#functionAreaName").val();
@@ -331,15 +331,15 @@ var QuotationDetail = (function(){
 		},
 		calculateTotal: function(){
 			com.focusPage('#calculateTotalFeeBtn').on('click', function(){
-				if(com.validate()){
-					return;
+				if(com.validate("calculateTotalFeeModal")){
+					return false;
 				}
 				
 				var dis = com.focusPage("#calDiscount").val();
 
 				if(parseFloat(dis) <= 0 || parseFloat(dis) > 10){
 					com.showTips(com.focusPage("#calDiscount"), "折扣非法", true);
-					return;
+					return false;
 				}else{
 					com.clearValidator("#calDiscount", true);
 				}
@@ -351,7 +351,7 @@ var QuotationDetail = (function(){
 		saveDiscountEdit : function(){
 			com.focusPage('#saveDisCountBtn').on('click', function(){ //折扣保存
 				
-				if(com.validate()){
+				if(com.validate("discountModal")){
 					return false;
 				}
 
@@ -480,8 +480,8 @@ var QuotationDetail = (function(){
 		//管理费比例弹窗保存按钮 saveMrBtn
 		saveManageRate : function(){
 			com.focusPage('#saveMrBtn').click(function(){
-				if(com.validate()){
-					return;
+				if(com.validate("manageRateModal")){
+					return false;
 				}
 				
 				var _manageId = com.focusPage('#manageCost').attr('qfaiId');
@@ -703,8 +703,8 @@ var QuotationDetail = (function(){
 		saveCustomQuotesAdd : function(){
 			com.focusPage("#saveCustomFunctionAreaItemBtn").on('click', function(event){
 				
-				if(com.validate()){
-					return;
+				if(com.validate("customFunctionAreaItemsModal")){
+					return false;
 				}
 
 				var addRow = {

@@ -128,7 +128,7 @@ $(function () {
     }
 
     auditRecord.rollback && auditRecordPage.btnBack.click(function () {
-        //com.switchPage(auditRecord.rollback);
+        com.switchPage(auditRecord.rollback);
     });
 
     function initPageScale(){

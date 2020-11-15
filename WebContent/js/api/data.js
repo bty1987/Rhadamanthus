@@ -241,6 +241,7 @@ $.extend(api, {
         updateTaskForStatus: {url: "updateTaskForStatus.do"},
         updateTaskForIsShow: {url: "updateTaskForIsShow.do"},
 
+        pageTaskParam: {url: "pageTaskParam.do"},
         queryTaskParam: {url: "queryTaskParam.do"},
         addTaskParam: {url: "addTaskParam.do"},
         updateTaskParam: {url: "updateTaskParam.do"},
@@ -596,9 +597,15 @@ $.extend(api, {
         
         pageTalking:{url:"pageTalking.do"},
         queryTalking:{url:"queryTalking.do"},
-        addTalking:{url:"addTalking.do", server: "communion"},
-        updateTalking:{url:"updateTalking.do", server: "communion"},
-        updateTalkingForStatus:{url:"updateTalkingForStatus.do", server: "communion"},
-        deleteTalking:{url:"deleteTalking.do", server: "communion"},
+        addTalking:{url:"addTalking.do"},
+        updateTalking:{url:"updateTalking.do"},
+        updateTalkingForStatus:{url:"updateTalkingForStatus.do"},
+        deleteTalking:{url:"deleteTalking.do"},
+
+        pageAdditem: {url:"pageAdditem.do"},
+        queryAdditem: {url:"queryAdditem.do"},
+        addAdditem: {url:"addAdditem.do"},
+        updateAdditemForStatus: {url:"updateAdditemForStatus.do"},
+        deleteAdditem: {url:"deleteAdditem.do"},
     }
 });

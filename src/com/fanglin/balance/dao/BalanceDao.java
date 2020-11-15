@@ -7,9 +7,11 @@ import com.fanglin.core.dao.Dao;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
-public interface BalanceDao extends Dao<BalancePO>{
+public interface BalanceDao extends Dao<BalancePO> {
 
 	public List<BalancePO> pageBalance(Paging paging, List<Filter> filters, int company);
-	
-	public BalancePO queryBalance(String no); 
+
+	public List<BalancePO> queryBalance(List<Filter> filters, int company);
+
+	public BalancePO queryBalance(String no);
 }

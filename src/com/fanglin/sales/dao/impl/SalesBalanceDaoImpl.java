@@ -69,8 +69,23 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 
 	@Override
 	public List<SalesBalancePO> pageSalesBalanceForSupplier(Paging paging, List<Filter> filters, int pompany, int uid) {
-
 		PagingQuery<SalesBalancePO> query = pagingQuery(paging, SalesBalancePO.class);
+
+		query.alias("sales", "sales").alias("sales.supplier", "supplier").add(query.getCriterion(SalesPO.COLUMN_OCUID_STR, uid, "eq"));
+
+		queryFilterExcute(query, filters);
+
+		query.desc("sbid");
+
+		return query.list();
+
+	}
+
+	@Override
+	public List<SalesBalancePO> pageSalesBalanceForCheck(Paging paging, List<Filter> filters, int pompany, int uid) {
+		PagingQuery<SalesBalancePO> query = pagingQuery(paging, SalesBalancePO.class);
+
+		query.add(query.getCriterion("checkStatus", SalesBalancePO.CHECKSTATUS_INIT_INT, "eq"));
 
 		query.alias("sales", "sales").alias("sales.supplier", "supplier").add(query.getCriterion(SalesPO.COLUMN_OCUID_STR, uid, "eq"));
 

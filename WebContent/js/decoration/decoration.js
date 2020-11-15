@@ -198,8 +198,9 @@
     });
 
     com.focusPage("#customerInfoBtn").on("click", function () {
-        if (com.validate()) {
-            return;
+        
+        if (com.validate("customerInfoModal")) {
+            return false;
         }
 
         var cid = params["customer.customerId"];
@@ -611,9 +612,9 @@
             params["orderStatus"] = status;
             params["viewNode"] = Object.values(pageConfig.nodes);
             
-            //params.historyPage = api.index.decorationIndex.url;
-            //com.switchPage(api.index.decorationDetailIndex.url);
-            com.popup4page("#layerPopUp", api.index.decorationDetailIndex.url, "装修单详情: " + decorationOrderId);
+            params.historyPage = api.index.decorationIndex.url;
+            com.switchPage(api.index.decorationDetailIndex.url);
+            //com.popup4page("#layerPopUp", api.index.decorationDetailIndex.url, "装修单详情: " + decorationOrderId);
         };
 
         //报价
@@ -637,9 +638,9 @@
             
             params["decorationOrderId"] = decorationOrderId;
             
-            //params.historyPage = api.index.decorationIndex.url;
-            //com.switchPage(api.index.backVisitIndex.url);
-            com.popup4page("#layerPopUp", api.index.backVisitIndex.url, "装修单回访: " + decorationOrderId);
+            params.historyPage = api.index.decorationIndex.url;
+            com.switchPage(api.index.backVisitIndex.url);
+            //com.popup4page("#layerPopUp", api.index.backVisitIndex.url, "装修单回访: " + decorationOrderId);
         };
         //放线
         var modalDrawLineModal = function (v) {
@@ -675,9 +676,9 @@
            params.decorationOrderId = decorationOrderId;
            params.cid = cid;
            
-           //params.historyPage = api.index.decorationIndex.url;
-           //com.switchPage(api.index.decorationContractIndex.url);
-           com.popup4page("#layerPopUp", api.index.decorationContractIndex.url, "装修单合同: " + decorationOrderId);
+           params.historyPage = api.index.decorationIndex.url;
+           com.switchPage(api.index.decorationContractIndex.url);
+           //com.popup4page("#layerPopUp", api.index.decorationContractIndex.url, "装修单合同: " + decorationOrderId);
        };
         //增减项
         var viewDecorationInDecreaseIndex = function (decorationOrderId, type, typeness) {
@@ -693,18 +694,18 @@
             params.decorationOrderId = orderId;
             params.auditStatusType = 'select';
             
-            //params['historyPage'] = api.index.decorationIndex.url;
-            //com.switchPage(api.index.auditRecordIndex.url);
-            com.popup4page("#layerPopUp", api.index.auditRecordIndex.url, "装修单扣款: " + decorationOrderId);
+            params['historyPage'] = api.index.decorationIndex.url;
+            com.switchPage(api.index.auditRecordIndex.url);
+            //com.popup4page("#layerPopUp", api.index.auditRecordIndex.url, "装修单扣款: " + decorationOrderId);
         };
         //时间轴
         var viewDecorationTimelineIndex = function (decorationOrderId) {
             
             params.decorationOrderId = decorationOrderId;
             
-            //params.historyPage = api.index.decorationIndex.url;
-            //com.switchPage(api.index.decorationTimelineIndex.url);
-            com.popup4page("#layerPopUp", api.index.decorationTimelineIndex.url, "装修单进程: " + decorationOrderId);
+            params.historyPage = api.index.decorationIndex.url;
+            com.switchPage(api.index.decorationTimelineIndex.url);
+            //com.popup4page("#layerPopUp", api.index.decorationTimelineIndex.url, "装修单进程: " + decorationOrderId);
         };
         //扩展项
         var viewExtension = function (decorationOrderId) {
@@ -721,9 +722,9 @@
             params.status = status;
             params["viewNode"] = Object.values(pageConfig.nodes);
             
-            //params.historyPage = api.index.decorationIndex.url;
-            //com.switchPage(api.index.decorationFinalSettlementIndex.url);
-            com.popup4page("#layerPopUp", api.index.decorationFinalSettlementIndex.url, "装修单决算: " + decorationOrderId);
+            params.historyPage = api.index.decorationIndex.url;
+            com.switchPage(api.index.decorationFinalSettlementIndex.url);
+            //com.popup4page("#layerPopUp", api.index.decorationFinalSettlementIndex.url, "装修单决算: " + decorationOrderId);
         }
 
         //服务
@@ -731,9 +732,9 @@
             
             params.decorationOrderId = decorationOrderId;
             
-            //params.historyPage = api.index.decorationIndex.url;
-            //com.switchPage(api.index.decorationServiceIndex.url);
-            com.popup4page("#layerPopUp", api.index.decorationServiceIndex.url, "装修单服务: " + decorationOrderId);
+            params.historyPage = api.index.decorationIndex.url;
+            com.switchPage(api.index.decorationServiceIndex.url);
+            //com.popup4page("#layerPopUp", api.index.decorationServiceIndex.url, "装修单服务: " + decorationOrderId);
         }
 
         //活动物品
@@ -741,8 +742,8 @@
             
             params.decorationOrderId = decorationOrderId;
             
-            //com.switchPage(api.index.decorationActivityItemIndex.url);
-            com.popup4page("#layerPopUp", api.index.decorationActivityItemIndex.url, "装修单活动: " + decorationOrderId);
+            com.switchPage(api.index.decorationActivityItemIndex.url);
+            //com.popup4page("#layerPopUp", api.index.decorationActivityItemIndex.url, "装修单活动: " + decorationOrderId);
         }
 
         //废单

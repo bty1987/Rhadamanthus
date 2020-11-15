@@ -1,256 +1,288 @@
-<div id="decorationPaymentContent">
+<div id="decorationPayment" class="col-md-12">
 
 	<div class="row">
-		<div class="col-xs-12">
-			<div class="tabbable">
-				<ul class="nav nav-tabs" id="myTab">
-					<li class="active">
-						<a data-toggle="tab" href="#decorationPaymentList" >装修收款</a>
-					</li>
-					<li class="">
-						<a data-toggle="tab" href="#historyDecoration" id="historyReduceSalaryTab">历史收款</a>
-					</li>
-				</ul>
-				<div class="tab-content">
-					<div id="decorationPaymentList" class="tab-pane active">
-						<div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
-						<div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
-						<div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+		<div id="decorationPaymentList" class="col-xs-12">
+			<div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+			<div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+			<div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+		</div>
+			
+		<div class="modal fade" id="addReduceModal" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+						<h4 class="modal-title" id="myModalLabel">增减项明细</h4>
 					</div>
-					<div id="historyDecoration" class="tab-pane">
-						<div id="hcondList" class="fl_search clearfix"></div> <!-- 查询条件-->
-						<div id="hresultList" class="clearfix tab-pane active"></div> <!--查询结果-->
-						<div id="hpagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+					<div class="modal-body">
+						<div id="acondList" class="fl_search clearfix"></div> <!-- 查询条件-->
+						<div id="aresultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+						<div class="modal-footer ">
+							<button type="button" class="btn btn-default" data-dismiss="modal">返回</button>
+						</div>
 					</div>
 				</div>
 			</div>
-			
-			<div class="modal fade" id="addReduceDetail" tabindex="-1">
-				<div class="modal-dialog">
-					<div class="modal-content">
-		      			<div class="modal-header">
-		        			<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-		        			<h4 class="modal-title" id="myModalLabel">增减项明细</h4>
-		      			</div>
-		      			<div class="modal-body">
-							<div id="acondList" class="fl_search clearfix"></div> <!-- 查询条件-->
-							<div id="aresultList" class="clearfix tab-pane active"></div> <!--查询结果--> 
-							<div class="modal-footer ">
-					        	<button type="button" id="canceDetailBtn" class="btn btn-default" data-dismiss="modal">返回</button>
-					      	</div>
-		    			</div>
-		    		</div>
-		  		</div>
-		  	</div>
+		</div>
 
-			<div class="modal fade" id="baseItemModal" tabindex="-1">
-				<div class="modal-dialog">
-					<div class="modal-content">
-		      			<div class="modal-header">
-		        			<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-		        			<h4 class="modal-title" id="myModalPayLabel">付款信息</h4>
-		      			</div>
-		      			<div class="modal-body">
-		      				<form class="form-horizontal">
-		      					<input type="text" id="decorationPaymentId" class="hide" />
-		      					<div class="block clearfix">
-									<label class="col-md-3 control-label" >付款方式</label>
-									<label class="inline">
-										<input type="checkbox" class="ace" checked="checked" id="cashCheckbox" key="cash" select="0">
-										<span class="lbl"> 现金</span>
-									</label>
-									<label class="inline">
-										<input type="checkbox" class="ace" id="bankCheckbox" key="bank" select="1">
-										<span class="lbl"> 刷卡</span>
-									</label>
-									<label class="inline">
-										<input type="checkbox" class="ace" id="checkvCheckbox" key="checkv" select="1">
-										<span class="lbl"> 银行</span>
-									</label>
-									<label class="inline">
-										<input type="checkbox" class="ace" id="advanceCheckbox" key="advance" select="1">
-										<span class="lbl"> 预付款</span>
-									</label>
-									<label class="inline">
-										<input type="checkbox" class="ace" id="couponCheckbox" key="coupon" select="0">
-										<span class="lbl"> 代金券</span>
-									</label>
-								</div>
-		
-								<div id="infoDiv">
-									<h4 class="header blue bolder smaller">基本信息</h4>
-									<div class="form-group">
-										<label class="col-md-3 control-label" for="referMoney">应收款</label>
-										<div class="col-md-9">
-											<input type="text" id="referMoney" class="col-xs-10 col-sm-6 v_required v_float_3" readonly  data-toggle="popover" data-trigger='manual' maxlength="8"/>
-										</div>
-									</div>
-									<div class="space-4 "></div>
-									<div class="form-group" >
-										<label class="col-md-3 control-label no-padding-right" for="collectDes" >说明</label>
-										<div class="col-md-9">
-											<textarea id="collectDes" class="col-md-6 v_name v_required" rows="3" data-toggle="popover" data-trigger='manual' maxlength="40"></textarea>
-										</div>
-									</div>
-									<div class="space-1" id="historyUpdate">
-										<h4 class="header blue bolder smaller">历史收款</h4>
-										<span id="cashHistory" class="blue" style="font-size: 14px; margin-left: 20px;"></span><br/>
-										<span id="bankHistory" class="blue" style="font-size: 14px; margin-left: 20px;"></span><br/>
-										<span id="checkvHistory" class="blue" style="font-size: 14px; margin-left: 20px;"></span>
-										<span id="installmentHistory" class="blue" style="font-size: 14px; margin-left: 20px;"></span><br/>
-										<span id="accountsHistory" class="blue" style="font-size: 14px; margin-left: 20px;"></span>
-									</div>
-								</div>
-								
-			      				<div id="cashDiv" referCheckbox="cashCheckbox" style="display: none;">
-			      					<h4 class="header blue bolder smaller">现金</h4>
-			      					<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="cashInfo">类型</label>
-										<div class="col-md-9">
-											<input type="text" id="cashInfo" class="col-xs-10 col-sm-5 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" />
-										</div>
-									</div>
-									<div class="space-4"></div>
-									
-						      		<div class="form-group">
-										<label for="cash" class="col-md-3 control-label no-padding-right">现金金额</label>
-										<div class="col-md-9">
-											<input type="text" id="cash" class="col-xs-10 col-sm-5 v_required v_float_3" data-toggle="popover" data-trigger='manual' maxlength="8"/>
-										</div>
-									</div>
-									<div class="space-4 "></div>
-								</div>
+		<div class="modal fade" id="collectModal" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+						<h4 class="modal-title" id="myModalPayLabel">付款信息</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal">
+							<input type="text" id="decorationPaymentId" class="hide" />
+							<div class="block clearfix">
+								<label class="col-md-3 control-label" >付款方式</label>
+								<label class="hide cashCheckbox">
+									<input type="checkbox" class="ace" checked="checked" id="cashCheckbox" key="cash" select="0">
+									<span class="lbl"> 现金</span>
+								</label>
+								<label class="hide bankCheckbox">
+									<input type="checkbox" class="ace" id="bankCheckbox" key="bank" select="1">
+									<span class="lbl"> 刷卡</span>
+								</label>
+								<label class="hide checkvCheckbox">
+									<input type="checkbox" class="ace" id="checkvCheckbox" key="checkv" select="1">
+									<span class="lbl"> 银行</span>
+								</label>
+								<label class="hide advanceCheckbox">
+									<input type="checkbox" class="ace" id="advanceCheckbox" key="advance" select="1">
+									<span class="lbl"> 预付款</span>
+								</label>
+								<label class="hide couponCheckbox">
+									<input type="checkbox" class="ace" id="couponCheckbox" key="coupon" select="0">
+									<span class="lbl"> 代金券</span>
+								</label>
+							</div>
 
-								<div id="posDiv" referCheckbox="bankCheckbox" style="display: none;">
-									<h4 class="header blue bolder smaller">
-										POS
-									</h4>
-									<div id="posDivGroup"></div>
-								</div>
-								
-								<div id="bankDiv" referCheckbox="bankCheckbox">
-									<h4 class="header blue bolder smaller">
-										POS
-									</h4>
-									<div id="bankDivGroup"></div>
-								</div>
-
-								<div id="checkvDiv" referCheckbox="checkvCheckbox" style="display: none;">
-									<h4 class="header blue bolder smaller">
-										银行
-										<button id="checkvAdd" class="btn btn-minier btn-success pull-right inline" num="0" maxnum="0">添加</button>
-									</h4>
-									<div id="checkvDivGroup"></div>
-								</div>
-								
-								<div id="advanceDiv" referCheckbox="advanceCheckbox" style="display: none;">
-			      					<h4 class="header blue bolder smaller">预付款</h4>
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="advanceType">类型</label>
-										<div class="col-sm-7">
-											<select id="advanceType" class="col-xs-10 col-sm-5 v_required " data-toggle="popover" style="min-width: 50%; width: 170px;" data-trigger='manual'></select>
-										</div>
-									</div>
-									<div class="space-4"></div>
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="balanceAdvance" >合同余额</label>
-										<div class="col-sm-9">
-											<input type="text" id="balanceAdvance" class="col-xs-10 col-sm-5"  data-toggle="popover" data-trigger='manual' >
-										</div>
-									</div>
-
-						      		<div class="form-group">
-										<label for="advance" class="col-md-3 control-label">金额</label>
-										<div class="col-md-9 block no-padding-right  ">
-											<input type="text" id="advance" class="col-xs-10 col-sm-5 v_required v_float_3" data-toggle="popover" data-trigger='manual' maxlength="8"/>
-										</div>
-									</div>
-								</div>
-								
-								<div id="couponDiv" referCheckbox="couponCheckbox" style="display: none;">
-			      					<h4 class="header blue bolder smaller">代金券</h4>				      		
-						      		<div class="form-group">
-										<div class="col-sm-12">
-											<div class="col-sm-12">
-												<ul id="couponUl" class="item-list list-inline"></ul>
-											</div>
-
-											<div class="col-sm-12" id="couponInputs">
-												<input type="text" id="couponType" class="col-xs-10 col-sm-5 v_typeahead" data-toggle="popover" data-placement="bottom" data-trigger="manual" placeholder="请选择优惠券种类" />
-												<input type="text" id="couponVal" class="col-xs-10 col-sm-5 v_float_3 v_required" placeholder="请输入优惠券金额" style="margin: 0 10px">
-												<button type="button" id="couponAdd" class="btn btn-info btn-minier" style="width: 50px; line-height: 30px">添加</button>
-											</div>
-										</div>
-									</div>
-								</div>
-							</form>
-		      			</div>
-		      			
-						<div class="modal-footer ">
-							<button type="button" id="collectBtn" class="btn btn-primary">收款</button>
-                            <button type="button" id="saveRefundBtn" class="btn btn-primary">退款</button>
-				        	<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
-				      	</div>
-		    		</div>
-		  		</div>
-		  	</div>
-	  	
-			<div class="modal fade" id="refundDecorationPaymentModal" tabindex="-1" data-backdrop="static">
-				<div class="modal-dialog">
-					<div class="modal-content col-md-12">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal">
-								<span>&times;</span><span class="sr-only">Close</span>
-							</button>
-							<h4 class="modal-title">退款款项信息</h4>
-						</div>
-						<div class="modal-body">
-							<form class="form-horizontal">
-
-								<div id="refundApprove">
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right orange" for="changeReason">审批备注</label>
-										<div class="col-sm-9">
-                                    <textarea id="changeReason" maxlength="128" class="col-xs-10 col-sm-6 v_required"
-											  rows="3" data-toggle="popover" data-trigger='manual'></textarea>
-										</div>
-									</div>
-									<div class="space-4"></div>
-
-									<div class="form-group">
-										<label for="refundApproveManSel"
-											   class="col-sm-3 control-label no-padding-right">审批人</label>
-										<div class="col-sm-9">
-											<div id="refundApproveManSel" class="col-xs-10 col-sm-6">
-
-											</div>
-										</div>
-									</div>
-									<div class="space-4"></div>
-								</div>
+							<div id="infoDiv">
+								<h4 class="header blue bolder smaller">基本信息</h4>
 								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right orange" for="referMoney">金额</label>
-									<div class="col-sm-9">
-										<input type="text" id="autoId" class="hide"/>
-										<input type="text" id="referMoneyApproval" class="col-xs-10 col-sm-5 v_required v_float_3"
-											   data-toggle="popover" data-trigger='manual' maxlength='6' readonly="readonly"/>
+									<label class="col-md-3 control-label" for="referMoney">应收款</label>
+									<div class="col-md-9">
+										<input type="text" id="referMoney" class="col-xs-10 col-sm-6 v_required v_float_3" readonly  data-toggle="popover" data-trigger='manual' maxlength="8"/>
+									</div>
+								</div>
+								<div class="space-4 "></div>
+								<div class="form-group" >
+									<label class="col-md-3 control-label no-padding-right" for="comment" >说明</label>
+									<div class="col-md-9">
+										<textarea id="comment" class="col-md-6 v_name v_required" rows="3" data-toggle="popover" data-trigger='manual' maxlength="40"></textarea>
+									</div>
+								</div>
+								<div class="space-1" id="historyDiv">
+									<h4 class="header blue bolder smaller">历史收款</h4>
+									<ul id="historyData"></ul>
+								</div>
+							</div>
+
+							<div id="cashDiv" referCheckbox="cashCheckbox" style="display: none;">
+								<h4 class="header blue bolder smaller">现金</h4>
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right" for="cashInfo">类型</label>
+									<div class="col-md-9">
+										<input type="text" id="cashInfo" class="col-xs-10 col-sm-5 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" />
 									</div>
 								</div>
 								<div class="space-4"></div>
-							</form>
-						</div>
-						<div class="modal-footer">
-							<button type="button" id="saveRefundMoneyBtn" class="btn btn-primary">保存</button>
-							<button type="button" id="cancelBtnApproval" class="btn btn-default" data-dismiss="modal">取消</button>
-						</div>
+
+								<div class="form-group">
+									<label for="cash" class="col-md-3 control-label no-padding-right">现金金额</label>
+									<div class="col-md-9">
+										<input type="text" id="cash" class="col-xs-10 col-sm-5 v_required v_float_3" data-toggle="popover" data-trigger='manual' maxlength="8"/>
+									</div>
+								</div>
+								<div class="space-4 "></div>
+							</div>
+
+							<div id="posDiv" referCheckbox="bankCheckbox" style="display: none;">
+								<h4 class="header blue bolder smaller">POS</h4>
+								<div id="posGroup"></div>
+							</div>
+
+							<div id="bankDiv" referCheckbox="bankCheckbox">
+								<h4 class="header blue bolder smaller">POS</h4>
+								<div id="bankGroup">
+								    <div class="form-group">
+								        <label class="col-sm-3 control-label no-padding-right">开户行</label>
+								        <div class="col-sm-8">
+								            <input class="col-xs-10 col-sm-6" type="text" id="bankName" data-toggle="popover" data-trigger="manual" data-placement="bottom" autocomplete="off">
+								            <button class="btn btn-minier btn-orange pull-right inline" id="posSend">POS推送</button>
+								        </div>
+								    </div>
+								    <div class="form-group">
+								        <label class="col-sm-3 control-label no-padding-right">刷卡金额</label>
+								        <div class="col-sm-8">
+								            <input class="col-sm-6" data-toggle="popover" data-trigger="manual" type="text" id="bank">
+								        </div>
+								    </div>
+								    <div class="form-group">
+								        <label class="col-sm-3 control-label no-padding-right">方式</label>
+								        <div class="col-sm-8">
+								            <select class="col-sm-6 inline" data-toggle="popover" data-trigger="manual" id="posway"></select>
+								        </div>
+								    </div>
+								</div>
+							</div>
+
+							<div id="checkvDiv" referCheckbox="checkvCheckbox" style="display: none;">
+								<h4 class="header blue bolder smaller">
+									银行
+									<button id="checkvAdd" class="btn btn-minier btn-success pull-right inline" num="0" maxnum="0">添加</button>
+								</h4>
+								<div id="checkvGroup"></div>
+							</div>
+
+							<div id="advanceDiv" referCheckbox="advanceCheckbox" style="display: none;">
+								<h4 class="header blue bolder smaller">预付款</h4>
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right" for="advanceType">类型</label>
+									<div class="col-sm-7">
+										<select id="advanceType" class="col-xs-10 col-sm-5 v_required " data-toggle="popover" style="min-width: 50%; width: 170px;" data-trigger='manual'></select>
+									</div>
+								</div>
+								<div class="space-4"></div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right" for="recharge" >合同余额</label>
+									<div class="col-sm-9">
+										<input type="text" id="recharge" class="col-xs-10 col-sm-5"  data-toggle="popover" data-trigger='manual' >
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label for="advance" class="col-md-3 control-label">金额</label>
+									<div class="col-md-9 block no-padding-right  ">
+										<input type="text" id="advance" class="col-xs-10 col-sm-5 v_required v_float_3" data-toggle="popover" data-trigger='manual' maxlength="8"/>
+									</div>
+								</div>
+							</div>
+
+							<div id="couponDiv" referCheckbox="couponCheckbox" style="display: none;">
+								<h4 class="header blue bolder smaller">代金券</h4>
+								<div class="form-group">
+									<div class="col-sm-12">
+										<div class="col-sm-12">
+											<ul id="couponGroup" class="item-list list-inline"></ul>
+										</div>
+
+										<div class="col-sm-12" id="couponInputs">
+											<input type="text" id="couponType" class="col-xs-10 col-sm-5 v_typeahead" data-toggle="popover" data-placement="bottom" data-trigger="manual" placeholder="请选择优惠券种类" />
+											<input type="text" id="couponVal" class="col-xs-10 col-sm-5 v_float_3 v_required" placeholder="请输入优惠券金额" style="margin: 0 10px">
+											<button type="button" id="couponAdd" class="btn btn-info btn-minier" style="width: 50px; line-height: 30px">添加</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+
+					<div class="modal-footer ">
+						<button type="button" id="collectBtn" class="btn btn-primary">收款</button>
+						<button type="button" id="refundBtn" class="btn btn-danger">退款</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
 					</div>
 				</div>
 			</div>
-
 		</div>
+
+		<div class="modal fade" id="approveModal" tabindex="-1" data-backdrop="static">
+			<div class="modal-dialog">
+				<div class="modal-content col-md-12">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">
+							<span>&times;</span><span class="sr-only">Close</span>
+						</button>
+						<h4 class="modal-title">退款款项信息</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal">
+
+							<div id="refundApprove">
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right orange" for="changeReason">审批备注</label>
+									<div class="col-sm-9">
+										<textarea id="changeReason" maxlength="128" class="col-xs-10 col-sm-6 v_required" rows="3" data-toggle="popover" data-trigger='manual'></textarea>
+									</div>
+								</div>
+								<div class="space-4"></div>
+
+								<div class="form-group">
+									<label for="approver" class="col-sm-3 control-label no-padding-right">审批人</label>
+									<div class="col-sm-9">
+										<div id="approver" class="col-xs-10 col-sm-6"></div>
+									</div>
+								</div>
+								<div class="space-4"></div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right orange" for="refundMoney">金额</label>
+								<div class="col-sm-9">
+									<input type="text" id="autoId" class="hide"/>
+									<input type="text" id="refundMoney" class="col-xs-10 col-sm-5 v_required v_float_3" data-toggle="popover" data-trigger='manual' maxlength='6' readonly="readonly"/>
+								</div>
+							</div>
+							<div class="space-4"></div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" id="approveBtn" class="btn btn-primary">保存</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="withholdModal" tabindex="-1">
+			<div class="modal-dialog" style="width: 50%;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+						<h4 class="modal-title">扣款信息</h4>
+					</div>
+					<div class="modal-body">
+						<div id="withholdRecord" style="margin-bottom: 30px">
+						  <ul id="withholdGroup"></ul>
+						</div>
+
+						<form class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right" for="user">扣款人</label>
+								<div class="col-md-9">
+									<input type="text" id="user" class="col-xs-10 col-sm-6 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" />
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="money" class="col-md-3 control-label no-padding-right">扣款金额</label>
+								<div class="col-md-9">
+									<input type="text" id="money" class="col-xs-10 col-sm-6 v_required v_float_3" data-toggle="popover" data-trigger='manual' maxlength="8"/>
+								</div>
+							</div>
+
+							<div class="form-group" >
+								<label class="col-md-3 control-label no-padding-right" for="comment" >说明</label>
+								<div class="col-md-9">
+									<textarea id="remark" class="col-md-6 v_name v_required" rows="3" data-toggle="popover" data-trigger='manual' maxlength="40"></textarea>
+								</div>
+							</div>
+						</form>
+					</div>
+
+					<div class="modal-footer ">
+						<button type="button" id="withhold" class="btn btn-primary">扣款</button>
+						<button type="button" id="cancel" class="btn btn-default" data-dismiss="modal">取消</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
 	</div>
 </div>
 
 <script type="text/javascript">
-	$.loadScript(['js/utils/paymentUtils.js', 'js/payment/decorationPayment.js', 'js/utils/approvalUtils.js']);
+    $.loadScript(['js/utils/paymentUtils.js', 'js/payment/decorationPayment.js', 'js/utils/approvalUtils.js']);
 </script>

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fadada.signature.Signature;
 import com.fanglin.approval.dao.ApprovalDao;
@@ -190,7 +191,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		if (type == DecorationContractPO.TYPE_SIGNET_INT && status == DecorationContractPO.STATUS_VALID_INT) {
 			SystemConfigPO isv = systemConfigDao.querySystemConfig("isv");
-			url = String.format("%s/views/contract/signature.html?cid=%d", isv.getValue(), decorationPO.getCustomer().getCid());
+			url = String.format("%s/signature.html?cid=%d", isv.getValue(), decorationPO.getCustomer().getCid());
 		} else if (type == DecorationContractPO.TYPE_SIGN_INT && status == DecorationContractPO.STATUS_VALID_INT) {
 			url = Signature.extsign(decorationPO.getCustomer().getSignno(), decorationContractPO);
 		} else if (type == DecorationContractPO.TYPE_VIEW_INT && status == DecorationContractPO.STATUS_VALID_INT) {
@@ -206,7 +207,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addDecorationContract(DecorationContractVO decorationContract, String data, String userId) throws FLException {
+	public int addDecorationContract(DecorationContractVO decorationContract, String data, String table, String userId) throws FLException {
 
 		UserPO creater = userDao.queryUserByUserId(userId);
 
@@ -225,9 +226,48 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		JSONObject params = JSONObject.parseObject(data);
 
-		Signature.generate(decorationContractPO, params);
+		JSONArray tables = new JSONArray();
+
+		if (table != null) {
+			tables.add(JSONObject.parseObject(table));
+		}
+
+		Signature.generate(decorationContractPO, params, tables);
 
 		return 0;
+	}
+
+	public static void main(String[] args) {
+		JSONArray dynamic_tables = new JSONArray();
+		JSONObject dynamic2 = new JSONObject();
+		dynamic2.put("insertWay", 1);
+		// dynamic2.put("keyword", "");
+		dynamic2.put("pageBegin", "1");
+		dynamic2.put("cellHeight", "16.0");
+
+		dynamic2.put("colWidthPercent", new int[] { 3, 4, 4, 4 });
+		dynamic2.put("theFirstHeader", "附二");
+		dynamic2.put("cellHorizontalAlignment", "1");
+		dynamic2.put("cellVerticalAlignment", "5");
+		dynamic2.put("headers", new String[] { "序号", "借款人", "贷款人", "金额" });
+		String row1[] = new String[] { "1", "小网", "小易", "1000" };
+		String row2[] = new String[] { "2", "小云", "小音", "2000" };
+		String row3[] = new String[] { "3", "小乐", "天马", "3000" };
+		dynamic2.put("datas", new String[][] { row1, row2, row3 });
+		dynamic2.put("headersAlignment", "1");
+		dynamic2.put("tableWidthPercentage", 80);
+		dynamic_tables.add(dynamic2);
+		System.out.println(dynamic_tables.toString());
+
+		JSONArray tables = new JSONArray();
+
+		String table = "{\"insertWay\":1,\"keyword\":\"辽宁方林装饰家装项目单\",\"pageBegin\":1,\"headers\":[\"序号\",\"项目名称\",\"计量单位\",\"数量\",\"工艺做法及材料说明\"],\"datas\":[[\"序号\",\"项目名称\",\"计量单位\",\"数量\",\"工艺做法及材料说明\"],[\"序号\",\"项目名称\",\"计量单位\",\"数量\",\"工艺做法及材料说明\"],[\"序号\",\"项目名称\",\"计量单位\",\"数量\",\"工艺做法及材料说明\"],[\"序号\",\"项目名称\",\"计量单位\",\"数量\",\"工艺做法及材料说明\"]]}";
+
+		System.out.println(JSONObject.parseObject(table));
+		System.out.println(JSONObject.parseObject(table).get("insertWay"));
+
+		tables.add(JSONObject.parseObject(table));
+		System.out.println(tables.toJSONString());
 	}
 
 	@Override
@@ -354,6 +394,8 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		Short[] paymentStatus = new Short[] { DecorationPaymentPO.PAYMENTSTATUS_PAY_INT, DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_INT };
 
 		boolean resignFlag = false;
+		boolean prosignFlag = false;
+
 		String orderId = decorationContractVO.getOrderId();
 		String userId = authentication.getUserId();
 
@@ -410,6 +452,10 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			resignFlag = true;
 		}
 
+		if (DecorationPO.STATUS_PROSIGN_INT == decorationPO.getStatus()) {
+			prosignFlag = true;
+		}
+
 		UserPO operater = userDao.queryUserByUserId(userId);
 
 		decorationPO.setStatus(DecorationPO.STATUS_SIGNED_INT);
@@ -429,7 +475,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		DecorationOperatePO decorationOperatePO = new DecorationOperatePO().sign(orderId, operater, decorationPO.getOrderTotalPrice());
 
-		if (!resignFlag) {
+		if (!resignFlag && !prosignFlag) {
 
 			decorationAdditionPO.clearDesign();
 			decorationAdditionPO.clearSales();
@@ -521,6 +567,35 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		if (!status.contains(decorationPO.getStatus())) {
 			throw new FLException(140005, "订单合同不能修改");
 		}
+
+		List<DecorationBelongPO> designerOrderBelongInfoPOs = decorationBelongDao.queryDecorationBelongForCurrentByOrderIdAType(orderId, DecorationBelongPO.BELONGTYPE_DESIGN_INT);
+		List<DecorationBelongPO> salemsanOrderBelongInfoPOs = decorationBelongDao.queryDecorationBelongForCurrentByOrderIdAType(orderId, DecorationBelongPO.BELONGTYPE_SALESMAN_INT);
+
+		DecorationAdditionPO decorationAdditionPO = decorationAdditionDao.queryDecorationAdditionByOrderId(orderId);
+
+		decorationAdditionPO.clearDesign();
+		decorationAdditionPO.clearSales();
+
+		// 更新归属信息的部门和大区, 更新附加信息
+		for (DecorationBelongPO decorationBelongPO : designerOrderBelongInfoPOs) {
+			decorationBelongPO.setDepartment(decorationBelongPO.getBelonger().getDept());
+			decorationBelongPO.setRegion(decorationBelongPO.getBelonger().getDept().getFatherDept());
+
+			decorationAdditionPO.setDesign(decorationBelongPO.getBelonger().getCurrentName(), decorationBelongPO.getBelonger().getDept().getName(), decorationBelongPO.getBelonger().getDept().getFatherDept().getName());
+
+			decorationBelongDao.update(decorationBelongPO);
+		}
+
+		for (DecorationBelongPO decorationBelongPO : salemsanOrderBelongInfoPOs) {
+			decorationBelongPO.setDepartment(decorationBelongPO.getBelonger().getDept());
+			decorationBelongPO.setRegion(decorationBelongPO.getBelonger().getDept().getFatherDept());
+
+			decorationAdditionPO.setSales(decorationBelongPO.getBelonger().getCurrentName(), decorationBelongPO.getBelonger().getDept().getName(), decorationBelongPO.getBelonger().getDept().getFatherDept().getName());
+
+			decorationBelongDao.update(decorationBelongPO);
+		}
+
+		decorationAdditionDao.update(decorationAdditionPO);
 
 		decorationPO.setPrecontractPrice(decorationVO.getPrecontractPrice());
 		decorationPO.setPrecontractTime(DateUtil.getDateToTimestamp(new Date()));

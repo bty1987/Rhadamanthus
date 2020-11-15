@@ -37,6 +37,7 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 		PagingQuery<DecorationPaymentPO> query = pagingQuery(paging, DecorationPaymentPO.class);
 		
 		queryFilterExcute(query, filters);
+		query.asc("createTime");
 		
 		return query.list();
 	}
@@ -45,16 +46,6 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 	@SuppressWarnings("unchecked")
 	public List<DecorationPaymentPO> queryDecorationPaymentByDpids(List<Long> dpids) {
 		return session().createCriteria(DecorationPaymentPO.class).add(Restrictions.in("dpid", dpids)).list();
-	}
-
-	@Override
-	public List<DecorationPaymentPO> pageDecorationPaymentForCollect(Paging paging, List<Filter> filters){
-		PagingQuery<DecorationPaymentPO> query = pagingQuery(paging, DecorationPaymentPO.class);
-		
-		queryFilterExcute(query, filters);
-		query.asc("createTime");
-		
-		return query.list();
 	}
 
 	@Override
@@ -71,13 +62,13 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 
 	@Override
 	public DecorationPaymentPO queryDecorationPaymentByOrderIdAType(String orderId, String paymentType){
-		return (DecorationPaymentPO) session().createCriteria(DecorationPaymentPO.class).add(Restrictions.eq("decoration.orderId", orderId)).add(Restrictions.eq("paymentType", paymentType)).uniqueResult();
+		return (DecorationPaymentPO) session().createCriteria(DecorationPaymentPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).add(Restrictions.eq("paymentType", paymentType)).uniqueResult();
 	}
 	
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<DecorationPaymentPO> queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(String orderId, Short[] paymentStatus, short oneType, short twoType){
-		return session().createCriteria(DecorationPaymentPO.class).add(Restrictions.eq("decoration.orderId", orderId)).add(Restrictions.in("paymentStatus", paymentStatus)).add(Restrictions.eq("oneType", oneType)).add(Restrictions.eq("twoType", twoType)).list();
+		return session().createCriteria(DecorationPaymentPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).add(Restrictions.in("paymentStatus", paymentStatus)).add(Restrictions.eq("oneType", oneType)).add(Restrictions.eq("twoType", twoType)).list();
 	}
 
 	@Override
@@ -94,7 +85,7 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 	
 	@Override
 	public DecorationPaymentPO queryDecorationPaymentByOrderIdAndSort(String orderId, short sort) {
-		return (DecorationPaymentPO) session().createCriteria(DecorationPaymentPO.class).add(Restrictions.eq("decoration.orderId", orderId)).add(Restrictions.eq("sort", sort)).add(Restrictions.eq("oneType", DecorationPaymentPO.ONETYPE_ADD_INT)).add(Restrictions.eq("twoType", DecorationPaymentPO.TWOTYPE_DEAL_INT)).uniqueResult();
+		return (DecorationPaymentPO) session().createCriteria(DecorationPaymentPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).add(Restrictions.eq("sort", sort)).add(Restrictions.eq("oneType", DecorationPaymentPO.ONETYPE_ADD_INT)).add(Restrictions.eq("twoType", DecorationPaymentPO.TWOTYPE_DEAL_INT)).uniqueResult();
 	}
 
 	@Override

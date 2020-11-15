@@ -451,8 +451,8 @@ var QuotationDetail = (function(){
 			var that = this;
 			com.focusPage('#saveFunctionAreaBtn').on('click', function(){ // 编辑功能区页面
 				
-				if(com.validate()){
-					return;
+				if(com.validate("functionAreaModal")){
+					return false;
 				}
 				
 				var _dname = com.focusPage("#functionAreaName").val();
@@ -513,8 +513,8 @@ var QuotationDetail = (function(){
 		},
 		calculateTotal: function(){
 			com.focusPage('#calculateTotalFeeBtn').on('click', function(){
-				if(com.validate()){
-					return;
+				if(com.validate("calculateTotalFeeModal")){
+					return false;
 				}
 
 				var table = com.focusPage('#calculateTotalFeeModal').find('table');
@@ -560,7 +560,7 @@ var QuotationDetail = (function(){
 					
 					com.focusPage("#customerApproveModal").modal("show");
 					com.focusPage("#cApproveSaveBtn").bindClick( function(){
-						if(com.validate()){
+						if(com.validate("customerApproveModal")){
 						    return false;
 						}
 						var receiverId = com.focusPage("#approveManSel").find('input:checked').attr('userid');

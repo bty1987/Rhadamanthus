@@ -261,15 +261,15 @@ $(function () {
 
     //保存
     function saveData() {
+        
+        if(com.validate("materialModelModal") || !materialModel.editFlg) return false;
 
-        var url = "";
-
-        if (materialModel.editFlg == true && !com.validate()) {
-            url = api.material.updateMaterialModel;
-        } else if (!com.validate() && materialModel.repeatFlg && materialModel.editFlg == false) {
+        var url = api.material.updateMaterialModel;
+        
+        if(materialModel.repeatFlg){
             url = api.material.addMaterialModel;
         }
-
+        
         var params = {
             "materialModel.mmId": materialModel.materialModelItems.mmId.val(),
             "materialModel.materialModelNo": materialModel.materialModelItems.materialModelNo.val(),
@@ -284,19 +284,16 @@ $(function () {
             "materialModel.discount": materialModel.materialModelItems.discount.val()
         };
 
-        if (!com.validate()) {
-            com.post(url, params, function (a) {
-                materialModel.modal.modal("hide");
-                searcher.doSearch();
-            });
-        }
-
+        com.post(url, params, function (a) {
+            materialModel.modal.modal("hide");
+            searcher.doSearch();
+        });
 
     }
 
     function advance() {
 
-        if (com.validate()) return;
+        if (com.validate("advanceModelModal")) return false;
 
         var options = {
             "materialModel.mmId": materialModel.materialModelItems.mmIda.val(),

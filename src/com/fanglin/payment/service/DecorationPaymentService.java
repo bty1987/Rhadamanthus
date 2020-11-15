@@ -22,39 +22,33 @@ import com.fanglin.payment.vo.DecorationReceiptVO;
 import com.fanglin.utils.Paging;
 
 public interface DecorationPaymentService {
-	
-	public void pageDecorationPaymentForCommit(Paging paging, List<Filter> filters, int company);
-	
-	public void pageDecorationPaymentForHistory(Paging paging, List<Filter> filters, int company);
 
-	public void pageDecorationPaymentForCollect(Paging paging, List<Filter> filters, Integer company);
-	
-	public void pageDecorationPaymentForConfirm(Paging paging, List<Filter> filters, Integer company);
-	
+	public void pageDecorationPayment(Paging paging, List<Filter> filters, DecorationPaymentVO decorationPaymentVO, Integer company);
+
 	public DecorationPaymentVO queryDecorationPaymentById(DecorationPaymentVO decorationPaymentVO);
-	
+
 	public List<DecorationPaymentVO> queryDecorationPaymentByOrderId(DecorationPaymentVO decorationPaymentVO, List<Filter> filters, Integer company);
-	
+
 	public List<DecorationPaymentVO> queryDecorationPaymentForContractByOrderId(DecorationPaymentVO decorationPaymentVO);
-	
+
 	public List<DecorationPaymentVO> queryDecorationPaymentForNotInitByDrId(DecorationReceiptVO decorationReceiptVO);
-	
+
 	public void checkDecorationPayment(DecorationPaymentVO decorationPaymentVO) throws FLException;
-	
+
 	public int addDecorationPayment(DecorationPaymentVO decorationPaymentVO, String userId) throws FLException;
-	
+
 	public int makeDecorationPayment(DecorationPO decorationPO, long money, long psid, String createUserId) throws FLException;
-	
+
 	public int changeDecorationPaymentForTime(DecorationPaymentVO decorationPaymentVO, Timestamp dateTime, String userId) throws FLException;
-	
+
 	public int collectDecorationPayment(DecorationPaymentVO decorationPaymentVO, List<Long> posids, String userId, Integer company) throws FLException;
-	
+
 	public int refundDecorationPayment(DecorationPaymentVO decorationPaymentVO, String userId, Integer company) throws FLException;
 
 	public int confirmDecorationPayment(List<Long> paymentIds, String userId) throws FLException;
-	
+
 	public int updateDecorationPayment(DecorationPaymentVO decorationPaymentVO) throws FLException;
-	
+
 	public int deleteDecorationPaymentById(DecorationPaymentVO decorationPaymentVO);
 
 }

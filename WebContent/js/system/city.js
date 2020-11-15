@@ -149,8 +149,8 @@ jQuery(function($) {
 
 	function saveData(){
 		
-		if(com.validate() || city.repeatFlg){
-			return;
+		if(com.validate("cityModal") || city.repeatFlg){
+			return false;
 		}
 		
 		var url;

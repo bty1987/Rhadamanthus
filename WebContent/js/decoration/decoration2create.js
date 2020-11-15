@@ -2,21 +2,25 @@
 jQuery(function($) {
 
 	var orderEntry = {
-		saveBtn: null,
-		cancellBtn: null,
-		modal: null,
+	        
 		type: {},
-		backVisitItems: {},
-		orderItems: {},
 		relationshipType: ["普通客户", "企业高端客户", "企业关系客户", "领导关系客户", "员工关系"],
+		
 		repeatFlg: false,
-		repeatCustomerFlg: false,
-		editFlag: false,
-		customerRepeatFlg: false,
-		customerItems: {},
-		houseItems: {},
+		decorationFlag: false,
+		customerFlag: false,
 		houseFlag:false,
-		valiDeteResult: null
+		
+		orderItems: {},
+		customerItems: {},
+        houseItems: {},
+        
+        btns: {
+            saveBtn: null,
+            cancellBtn: null,
+        },
+		
+		maketype: params['urlLoadParams'].maketype,
 	};
 
 	orderEntry.orderItems.customerId = com.focusPage("#customerId");
@@ -44,8 +48,9 @@ jQuery(function($) {
 	orderEntry.orderItems.status = com.focusPage("#status");
 	orderEntry.orderItems.quoterId = com.focusPage("#quoterId");
 	orderEntry.orderItems.escorterId = com.focusPage("#escorterId");
-	orderEntry.saveBtn = com.focusPage("#saveBtn").on("click", createOrder);
-	orderEntry.cancelBtn = com.focusPage("#cancelBtn").on("click", initCreate);
+	
+	orderEntry.btns.saveBtn = com.focusPage("#saveBtn").on("click", createOrder);
+	orderEntry.btns.cancelBtn = com.focusPage("#cancelBtn").on("click", initCreate);
 
 	orderEntry.customerItems.customerName = com.focusPage("#customerName");
 
@@ -54,9 +59,7 @@ jQuery(function($) {
 	orderEntry.customerItems.officer = com.focusPage("#officer");
 	orderEntry.customerItems.passport = com.focusPage("#passport");
 	orderEntry.customerItems.phone = com.focusPage("#phone").on("blur", function () {
-		$this = $(this);
-
-		checkPhone($this);
+		checkPhone($(this));
 	});
 	orderEntry.customerItems.qq = com.focusPage("#qq");
 	orderEntry.customerItems.wechat = com.focusPage("#wechat");
@@ -163,19 +166,22 @@ jQuery(function($) {
 	
 	com.initTypeahead('customerId', api.data.queryCustomerForName, "pinyinName", {}, "autoFillCustomer", "key", "value", function(list, key, value){
 	    
-	    
 	    com.post(api.decoration.queryDecorationByCustomerId, {"decoration.customer.cid": key}, function (res) {
-            if (res.decorations && res.decorations.length > 0) {
+	        
+	        if(orderEntry.maketype == "advance"){
+	            com.clearValidator("#customerId", true);
+                orderEntry.decorationFlag = false;
+	        } else if (res.decorations && res.decorations.length > 0) {
 
                 var decoration = res.decorations[0];
 
                 com.showTip(com.focusPage("#customerId"), "订单已存在.订单号:" + decoration.orderId + ",订单所属设计师:" + decoration.designer.currentName, "left");
-                orderEntry.repeatCustomerFlg = true;
+                orderEntry.decorationFlag = true;
                 
                 key = "" , value = "";
             } else {
                 com.clearValidator("#customerId", true);
-                orderEntry.repeatCustomerFlg = false;
+                orderEntry.decorationFlag = false;
             }
         }, null, false);
 	    
@@ -273,7 +279,7 @@ jQuery(function($) {
 		com.focusPage("#houseModal").modal("hide");
 	});
 
-	com.focusPage("#freeArea,#innerArea,#totalArea").on("click", function () {
+	com.focusPage("#buildArea,#freeArea,#innerArea,#totalArea").on("blur", function () {
 		orderEntry.houseItems.totalArea.val(orderEntry.houseItems.buildArea.val() * 1  + orderEntry.houseItems.freeArea.val() * 1);
 	});
 
@@ -295,6 +301,12 @@ jQuery(function($) {
 	function createOrder() {
 
 		var btn = com.focusPage("#saveBtn");
+		
+		var url = api.decoration.createDecoration;
+		
+		if(orderEntry.maketype && orderEntry.maketype == "advance"){
+		    url = api.decoration.createDecorationForAdvance;
+		}
 
 		var options = {
 			"decoration.customer.cid": com.typeahead("customerId"),
@@ -320,7 +332,7 @@ jQuery(function($) {
 			"decoration.grade": orderEntry.orderItems.orderGrade.val()
 		};
 
-		if (com.validate('createOrder') || orderEntry.repeatFlg || orderEntry.repeatCustomerFlg)
+		if (com.validate('createOrder') || orderEntry.repeatFlg || orderEntry.decorationFlag)
 			return;
 
 		if (orderEntry.houseItems.hid == null) {
@@ -334,7 +346,7 @@ jQuery(function($) {
 		}
 
 		btn.button('loading');
-		com.post(api.decoration.createDecoration, options, function () {
+		com.post(url, options, function () {
 			com.showAlert(com.info, "操作成功");
 			initCreate();
 
@@ -364,7 +376,7 @@ jQuery(function($) {
 		com.clearValidator();
 
 		orderEntry.repeatFlg = false;
-		orderEntry.repeatCustomerFlg = false;
+		orderEntry.decorationFlag = false;
 	}
 
 	function saveHouse() {
@@ -437,7 +449,7 @@ jQuery(function($) {
 
 	function createCustomer() {
 
-		if (com.validate("customerModal") || orderEntry.customerRepeatFlg) {
+		if (com.validate("customerModal") || orderEntry.customerFlag) {
 			return;
 		}
 
@@ -472,16 +484,16 @@ jQuery(function($) {
 
 	function checkPhone($id) {
         if ($id.val() == "") {
-            orderEntry.customerRepeatFlg = true;
+            orderEntry.customerFlag = true;
         } else {
             com.post(api.data.checkCustomerForPhone, {
                 "customerPhone.cid": null,
                 "customerPhone.phone": $id.val(),
                 "customerPhone.status": null
             }, function (res) {
-                orderEntry.customerRepeatFlg = false;
+                orderEntry.customerFlag = false;
             }, function (res) {
-                orderEntry.customerRepeatFlg = true;
+                orderEntry.customerFlag = true;
                 com.showTip($id, "电话信息已存在", "bottom");
             }, false);
 
@@ -490,14 +502,14 @@ jQuery(function($) {
 
 	function valiDateHouse(no, houseNumber) {
 
-		orderEntry.valiDeteResult = houseUtils.anytimevalidate(orderEntry.houseItems, null, true);
+		var flag = houseUtils.anytimevalidate(orderEntry.houseItems, null, true);
 
-		if (orderEntry.valiDeteResult.prehouse != undefined) {
-			orderEntry.houseFlag = orderEntry.valiDeteResult.prehouse.Flag;
+		if (flag.prehouse != undefined) {
+			orderEntry.houseFlag = flag.prehouse.Flag;
 		}
-		orderEntry.houseItems.houseNumber = orderEntry.valiDeteResult.houseNumber;
+		
+		orderEntry.houseItems.houseNumber = flag.houseNumber;
 	}
-
 
 	function deleteVillageData(paramFlag,items) {
 		switch (paramFlag) {

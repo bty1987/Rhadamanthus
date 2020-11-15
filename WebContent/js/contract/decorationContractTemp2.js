@@ -180,18 +180,15 @@ jQuery(function($) {
             data["sin-agent-ident"] = data["con-agent-ident"];
         }
         
-        
         com.showConfirm("请仔细认真检查合同填写内容", function () {
 
             var options = {
                 "decorationContract.orderId": params.decorationOrderId,
                 "decorationContract.contract.cid": params.contractArgs.cid,
-                "data" : JSON.stringify(data)
+                "data": JSON.stringify(data)
             };
             
             console.log(options);
-            
-            return false;
             
             com.post(api.decoration.addDecorationContract, options, function (res) {
                 com.closePopup();

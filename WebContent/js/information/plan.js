@@ -2,37 +2,39 @@ $(function () {
 
     var plan = {
 
-        saveBtn: com.focusPage("#addplanBtn"),
-        cancelBtn: com.focusPage("#cancelplanBtn"),
         modals: {
             planModal: com.focusPage("#addplanModal")
         },
-        planItems: {
-                executeDate : com.focusPage("#executeDate"),
-                executeTime : com.focusPage("#executeTime"),
-                task : com.focusPage("#task")
+        items: {
+            current: com.focusPage("#current"),
+            executeDate: com.focusPage("#executeDate"),
+            executeTime: com.focusPage("#executeTime"),
+            task : com.focusPage("#task")
         },
+        
+        btns: {
+           saveBtn: com.focusPage("#addplanBtn"),
+        },
+        
         plugins: {},
         lists: {},
         status: {},
 
-        letter: null,
-        keywordName: null,
+        keyword: null,
 
-        editFlg: false,
+        current: "",
         currentTime: getNowFormatDate().substr(2, 10),
-        taskContent: {}
     };
 
-    plan.saveBtn.bindClick(saveData);
+    plan.btns.saveBtn.bindClick(saveData);
 
     plan.modals.planModal.on("hide.bs.modal", function () {
         com.clearValidator();
-        com.cleanItems(plan.planItems);
+        com.cleanItems(plan.items);
     });
 
-    com.datetime(plan.planItems.executeDate);
-    com.datetime(plan.planItems.executeTime, "time");
+    com.datetime(plan.items.executeDate);
+    com.datetime(plan.items.executeTime, "time");
 
     com.post(api.ds.information, {}, function(res) {
         plan.status = res.planStatus.split("key", "value");
@@ -50,7 +52,7 @@ $(function () {
             task.push(v.task);
         });
 
-        plan.planItems.task.bindData(task, "keyWord", "name", false);
+        plan.items.task.bindData(task, "keyWord", "name", false);
     }, null, false);
 
     planUtils.bindUploadBtn("#attachment", 1070);
@@ -58,13 +60,13 @@ $(function () {
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
+            
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+            
             if (listData && listData.length) {
                 $.each(listData, function (i, v) {
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
+                    creatLine(v).appendTo($ul);
                 });
                 $ul.appendTo($tableWrap);
             }
@@ -111,7 +113,6 @@ $(function () {
 
             $liLine.append($h3).append($ulProperty);
 
-
             $btncancel.click(function () {
                 cancel(v);
             });
@@ -139,9 +140,9 @@ $(function () {
         };
     })();
 
-    var planSeacher = new Searcher();
+    var searcher = new Searcher();
 
-    planSeacher.init(["information-plan-task", "information-plan-createTime", "information-plan-status"], "condList", api.information.pagePlan, function (data) {
+    searcher.init(["information-plan-task", "information-plan-createTime", "information-plan-status"], "condList", api.information.pagePlan, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "planPostData", null, false, null, function () {
 
@@ -153,7 +154,7 @@ $(function () {
         var $exporti = $('<i></i>').addClass('icon-plus bigger-110').appendTo($exporta);
         var $exportspan = $('<span></span>').text('创建').appendTo($exporta);
 
-        return [$adda,$exporta];
+        return [$adda, $exporta];
     });
 
     com.focusPage('#addPlan', '#pagenation').on("click", function () {
@@ -161,13 +162,17 @@ $(function () {
         com.focusPage("#timediv").addClass("hide");
 
         taskArgs();
+        
+        current();
+        
+        com.focusPage(".planitem").click(current);
+        
         plan.modals.planModal.modal("show");
-        plan.editFlg = false;
     });
 
     com.focusPage('#createPlan', '#pagenation').on("click", function () {
-        params["planSeacher"] = planSeacher;
-        com.popup4page("#stockRecordPopUp","/views/information/plan2create.html","计划创建")
+        params["searcher"] = searcher;
+        com.popup4page("#stockRecordPopUp", "/views/information/plan2create.html", "计划创建")
     });
 
     function saveData() {
@@ -176,13 +181,14 @@ $(function () {
             return false;
 
         var options = {
-            "plan.task.keyWord": plan.planItems.task.val()
+            "plan.task.keyWord": plan.items.task.val()
         };
 
-        var cuts = plan.plugins[plan.keywordName];
+        var cuts = plan.plugins[plan.keyword];
         var results = cuts.split(",");
         var args = "";
         var flag = false;
+        
         $.each(results, function (i, v) {
             if (v == "C") {
                 var filePaths = com.focusPage("#filePath");
@@ -195,26 +201,31 @@ $(function () {
                 args = args +  com.focusPage("#id" + i).val()+ ",";
             }
         });
+        
         if(flag){
             com.showAlert(com.warning, "上传文件不能为空!");
-            return
+            return false;
         }
+        
         args = args.substring(0, args.length - 1);
+        
+        var date = plan.items.executeDate.val();
+        var time = plan.items.executeTime.val();
+        
+        var executeTime = date.replace(/-/g, '').substr(2) + time.replace(/:/g, '').substr(0, 4);
+        
         options["plan.args"] = args;
-
-        var times = plan.planItems.executeDate.val() + ' ' + plan.planItems.executeTime.val();
-        var executeTime = new Date(times);
-
-        if (planUtils.TimeComparison(executeTime, 5)) {
-            options["plan.executeTime"] = times;
-        } else {
-            com.showAlert(com.warning, "执行时间请大于当前时间5分钟!");
-            return
+        options["plan.executeTime"] = executeTime;
+        
+        if(executeTime < plan.current){
+            com.showAlert(com.warning, "执行时间已超时");
+            return false;
         }
+        
         com.post(api.information.createPlan, options, function (res) {
             com.showAlert(com.info, "计划创建成功!");
             plan.modals.planModal.modal("hide");
-            planSeacher.doSearch();
+            searcher.doSearch();
         });
 
     }
@@ -222,8 +233,15 @@ $(function () {
     function cancel(v) {
         com.showConfirm('是否确认撤销计划', function () {
             com.post(api.information.cancelPlan, {"plan.pid": v.pid}, function (res) {
-                planSeacher.doSearch();
+                searcher.doSearch();
             });
+        });
+    }
+    
+    function current(){
+        com.post(api.common.current, {"current": "yyyy-MM-dd hh:mm:ss"}, function(res){
+            plan.current = res.current.replace(/[-:\s]/g, '').substr(2, 10);
+            plan.items.current.val(res.current);
         });
     }
 
@@ -245,18 +263,18 @@ $(function () {
     taskArgs();
 
     function taskArgs() {
-        plan.planItems.task.on("change", function (e) {
+        plan.items.task.on("change", function (e) {
             $this = $(this);
 
             com.focusPage("#timediv").removeClass("hide");
 
             var asd = com.focusPage("#pluginss");
+            
             asd.empty();
 
             var keyworld = $this.val();
-            plan.keywordName = keyworld;
+            plan.keyword = keyworld;
             var cut = plan.plugins[keyworld];
-            plan.letter = cut;
             if (cut != null) {
                 var result = cut.split(",");
                 $.each(result, function (i, v) {

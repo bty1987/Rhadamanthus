@@ -52,7 +52,7 @@ var ExtensionDetail = (function(){
 
             //普通报价项弹出层
             var extraParams  = {"quotationItem.versionId": extensionDetail.versionId};
-            var _condArrn = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'data-worktype'];
+            var _condArrn = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'quotation-worktype'];
             var normalItemSeacher = new Searcher();
             normalItemSeacher.init( _condArrn, "condListn", api.quotation.pageQuotationItemByVersionId,  function(data){
                 var $tableWrap = com.focusPage('#resultListn').empty();
@@ -195,7 +195,7 @@ var ExtensionDetail = (function(){
             var that = this;
             com.focusPage('#confirmItemBtn').off().on('click', function(){
                 
-                if(com.validate()) return false;
+                if(com.validate("functionAreaModal")) return false;
                 
                 var funcid = com.focusPage('#quotationFunctionAreaId').val();
                 that.functionAreaId = funcid;
@@ -415,7 +415,7 @@ var ExtensionDetail = (function(){
             
             if(e.keyCode == 13){
                 
-                if(com.validate()){
+                if(com.validate("addReduceItemDiv")){
                     return false;
                 }
 

@@ -32,6 +32,8 @@ public class TaskParamPO implements Serializable {
 	
 	private String unionField;
 	
+	private long unionParam;
+	
 	private String field;
 	
 	private String alias;
@@ -117,6 +119,15 @@ public class TaskParamPO implements Serializable {
 
 	public void setUnionField(String unionField) {
 		this.unionField = unionField;
+	}
+	
+	@Column(name = "unionParam")
+	public long getUnionParam() {
+		return unionParam;
+	}
+
+	public void setUnionParam(long unionParam) {
+		this.unionParam = unionParam;
 	}
 
 	@Column(name = "field")

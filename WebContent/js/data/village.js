@@ -232,9 +232,11 @@ $(function () {
 
     // 保存
     function saveData() {
-        if (com.validate() || village.repeatFlg) {
+        
+        if (com.validate("villageModal") || village.repeatFlg) {
             return false;
         }
+        
         var option = {
             "village.no": village.items.no.val(),
             "village.name": village.items.name.val(),

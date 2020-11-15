@@ -18,7 +18,8 @@ $(function () {
             module: com.focusPage("#module"),
             field: com.focusPage('#field'),
             ismain: com.focusPage("#ismain"),
-            union : com.focusPage("#union"),
+            unionField : com.focusPage("#unionField"),
+            unionParam : com.focusPage("#unionParam"),
             handle : com.focusPage("#handle"),
             status : com.focusPage("#status"),
             sort : com.focusPage("#sort"),
@@ -32,7 +33,9 @@ $(function () {
         taskParamIsmain: {},
         taskParamModule: {},
         taskParamOneType: {},
-        taskParamStatus : {}
+        taskParamStatus : {},
+        unionParams : {},
+        pageType: params['urlLoadParams'].type
     };
 
     taskParam.btns.editConfirmBtn.bindClick(saveData);
@@ -53,6 +56,17 @@ $(function () {
         taskParam.taskParamOneType = res.taskParamOneType.split("key", "value");
         taskParam.taskParamStatus = res.taskParamStatus.split("key", "value");
     }, null, false);
+
+    if(taskParam.pageType != "task"){
+          com.post(api.data.queryTaskParam, {"taskParam.tid": params.tid}, function (res) {
+              taskParam.unionParams = res.taskParams.split("tpid", "name");
+              taskParam.unionParams[0] = "无";
+               var tParams = [];
+               $.each(res.taskParams, function (i, v) {
+                   tParams.push(v)
+               });
+          taskParam.items.unionParam.bindData(tParams, "tpid", "name", true);
+    }, null, false)};
 
     var displayFunc = (function () {
 
@@ -92,6 +106,7 @@ $(function () {
                 ["一类:", taskParam.taskParamOneType[v.oneType], "red"],
                 ["表名:", v.tableName, "grey"],
                 ["关联:", v.unionField, "grey"],
+                ["关联字段:", taskParam.unionParams[v.unionParam], "grey"],
                 ["处理过程:", v.handle, "grey"],
                 ["状态:", taskParam.taskParamStatus[v.status], "red"],
                 ["排序:", v.sort, "grey"],
@@ -106,11 +121,15 @@ $(function () {
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                 $liProperty.appendTo($ulProperty);
             });
-
-            $invalid.append($statusSwitch).append($span);
-            $liLine.append($h3).append($ulProperty);
-            $btnDiv.append($invalid).append($btnUpdate).append($btnDelete);
-            $h3.append($title).append($btnDiv);
+            if (taskParam.pageType == "task") {
+                $liLine.append($h3).append($ulProperty);
+                $h3.append($title).append($btnDiv);
+            } else {
+                $invalid.append($statusSwitch).append($span);
+                $liLine.append($h3).append($ulProperty);
+                $btnDiv.append($invalid).append($btnUpdate).append($btnDelete);
+                $h3.append($title).append($btnDiv);
+            }
 
             !v.status && $statusSwitch.prop("checked", true);
 
@@ -125,7 +144,8 @@ $(function () {
                 taskParam.items.type.val(v.type);
                 taskParam.items.oneType.val(v.oneType);
                 taskParam.items.table.val(v.tableName);
-                taskParam.items.union.val(v.unionField);
+                taskParam.items.unionField.val(v.unionField);
+                taskParam.items.unionParam.val(v.unionParam);
                 taskParam.items.ismain.val(v.ismain);
                 taskParam.items.handle.val(v.handle);
                 taskParam.items.sort.val(v.sort);
@@ -156,7 +176,6 @@ $(function () {
                     searcher.doSearch();
                 });
             });
-
             return $liLine;
         };
 
@@ -181,7 +200,10 @@ $(function () {
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        return [$adda];
+        if (taskParam.pageType != "task") {
+            return [$adda];
+        }
+        return [];
     },'resultList');
 
     com.focusPage('#addTaskParam').click(function(){
@@ -191,20 +213,18 @@ $(function () {
 
     function saveData(){
 
-        if (com.validate('from')) {
-            return false;
-        }
-
         var url;
 
         var options = {
             "taskParam.name" : taskParam.items.name.val(),
+            "taskParam.tid" : params.tid,
             "taskParam.module" : taskParam.items.module.val(),
             "taskParam.field" : taskParam.items.field.val(),
             "taskParam.alias" : taskParam.items.alias.val(),
             "taskParam.type" : taskParam.items.type.val(),
             "taskParam.oneType" : taskParam.items.oneType.val(),
-            "taskParam.unionField" : taskParam.items.union.val(),
+            "taskParam.unionField" : taskParam.items.unionField.val(),
+            "taskParam.unionParam" : taskParam.items.unionParam.val(),
             "taskParam.tableName" : taskParam.items.table.val(),
             "taskParam.ismain" : taskParam.items.ismain.val(),
             "taskParam.handle" : taskParam.items.handle.val(),

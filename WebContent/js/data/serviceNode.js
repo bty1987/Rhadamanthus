@@ -150,8 +150,9 @@ jQuery(function($) {
 	}
 
 	function addServiceNode(){
-		if(com.validate()){
-			return;
+	    
+		if(com.validate("serviceNodeModal")){
+			return false;
 		}
 
 		var options = {};
@@ -166,8 +167,9 @@ jQuery(function($) {
 	}
 
 	function updateServiceNode(id){
-		if(com.validate()){
-			return;
+	    
+		if(com.validate("serviceNodeModal")){
+			return false;
 		}
 
 		var options = {};

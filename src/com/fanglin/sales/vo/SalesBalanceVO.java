@@ -34,6 +34,10 @@ public class SalesBalanceVO implements Serializable{
 	
 	private Timestamp venderTime;
 	
+	private UserBaseVO checker;
+	
+	private Timestamp checkTime;
+		
 	private Long allowance;
 	
 	private Long total;
@@ -52,15 +56,17 @@ public class SalesBalanceVO implements Serializable{
 	
 	private Short status;
 	
+	private short checkStatus;
+	
 	private String comment;
-
+	
 	public SalesBalanceVO() {
 		super();
 	}
 
 	public SalesBalanceVO(SalesVO sales, RefundsVO refunds, UserBaseVO creater,
 			UserBaseVO poster, UserBaseVO salesman, DepartmentVO dept,
-			DepartmentVO region) {
+			DepartmentVO region,UserBaseVO checker) {
 		super();
 		this.sales = sales;
 		this.refunds = refunds;
@@ -69,6 +75,7 @@ public class SalesBalanceVO implements Serializable{
 		this.salesman = salesman;
 		this.dept = dept;
 		this.region = region;
+		this.checker = checker;
 	}
 	
 	public Long getSbid() {
@@ -162,6 +169,22 @@ public class SalesBalanceVO implements Serializable{
 		this.venderTime = venderTime;
 	}
 	
+	public UserBaseVO getChecker() {
+		return checker;
+	}
+
+	public void setChecker(UserBaseVO checker) {
+		this.checker = checker;
+	}
+
+	public Timestamp getCheckTime() {
+		return checkTime;
+	}
+
+	public void setCheckTime(Timestamp checkTime) {
+		this.checkTime = checkTime;
+	}
+	
 	public Long getAllowance() {
 		return allowance;
 	}
@@ -234,6 +257,14 @@ public class SalesBalanceVO implements Serializable{
 		this.status = status;
 	}
 
+	public short getCheckStatus() {
+		return checkStatus;
+	}
+
+	public void setCheckStatus(short checkStatus) {
+		this.checkStatus = checkStatus;
+	}
+	
 	public String getComment() {
 		return comment;
 	}

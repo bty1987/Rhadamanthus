@@ -438,7 +438,7 @@ jQuery(function($) {
 
     function saveData(){
         
-        if(com.validate()){
+        if(com.validate("roleModal")){
             return false;
         }
         
