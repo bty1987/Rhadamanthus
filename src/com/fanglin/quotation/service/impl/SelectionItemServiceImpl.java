@@ -293,7 +293,12 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 				throw new FLException(200039, "选材项状态不可操作");
 			}
 
+			if (selectionItemVO.getNum() == null) {
+				selectionItemVO.setNum(selectionItemPO.getNum());
+			}
+
 			if (selectionItemVO.getNum() != selectionItemPO.getNum()) {
+
 				updateSelectionTotal(selectionItemPO, selectionItemVO.getNum());
 
 				selectionItemPO.setNum(selectionItemVO.getNum());

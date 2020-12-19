@@ -143,6 +143,23 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <div class="col-sm-3"></div>
+                        <div class="col-sm-9">
+                            <ul id="paper" class="item-list list-inline"></ul>
+                        </div>
+
+                        <div class="col-sm-12" id="paperInputs">
+                            <label for="activity" class="col-sm-3 control-label no-padding-right">红包</label>
+                            <div class="col-sm-9">
+                                <div id="paperDiv">
+                                    <input type="text" id="paperName" class="col-sm-5 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" placeholder="请选择红包"/>
+                                </div>
+                                <input type="text" id="paperNum" class="col-sm-4 v_float_3 v_required" placeholder="请输入数量" style="margin: 0 10px">
+                                <button type="button" id="paperAdd" class="btn btn-info btn-minier" style="width: 50px; line-height: 30px">添加</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="salesActivityItemContent"
                                class="col-sm-3 control-label no-padding-right">说明</label>
                         <div class="col-sm-9">

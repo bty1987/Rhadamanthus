@@ -80,6 +80,14 @@ public class ProcessAction extends BaseListAction {
 
 		return SUCCESS;
 	}
+
+	@Action(value = "updateProcessForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateProcessForStatus() throws FLException {
+
+		processService.updateProcessForStatus(process);
+
+		return SUCCESS;
+	}
 	
 	@Action(value = "updateProcessItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateProcessItem() {
@@ -89,8 +97,16 @@ public class ProcessAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "deleteProcess", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteProcess() throws FLException {
+		
+		processService.deleteProcess(process);
+		
+		return SUCCESS;
+	}
+	
 	@Action(value = "deleteProcessItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteProcessItem() {
+	public String deleteProcessItem() throws FLException {
 		
 		processService.deleteProcessItem(processItem);
 		

@@ -3,6 +3,7 @@ jQuery(function($) {
     var receipt = {
         paymentTypeData: {},
         advanceTypeData: {"0":"-"},
+        decorationTypeData: {},
         commonInfo: {},
         paymentItems: [],
         receiptItems: [],
@@ -44,6 +45,10 @@ jQuery(function($) {
             receipt.paymentTypeData[paymentType.key] = paymentType.value;
         }
 
+    }, null, false);
+
+    com.post(api.ds.decoration, {}, function(res){
+        receipt.decorationTypeData = res.typeness;
     }, null, false);
 
     com.post(querySalesPaymentForNotInitBySrId, {"salesReceipt.srId":params.salesReceiptSrId}, function(res){
@@ -135,6 +140,11 @@ jQuery(function($) {
 
     }, null, false);
 
+
+    com.post(api.decoration.queryDecorationByOrderId, {"decorationOrderId": receipt.commonInfo.orderId}, function(res){
+        receipt.commonInfo.decorationType =  res.decoration.typeness;
+    }, null, false);
+
     if(receipt.paymentItems.length > 0){
         createReceiptTable();
         
@@ -142,6 +152,7 @@ jQuery(function($) {
         printer.args = {
             "title" : params.company.name+"代收款收据",
             "orderId": receipt.commonInfo.orderId,
+            "decorationType": receipt.commonInfo.decorationType,
             "orderAddr": receipt.commonInfo.orderAddr,
             "collectTime": receipt.commonInfo.collectTime,
             "referMoney": utils.changeThrDecimal(receipt.commonInfo.total),
@@ -166,7 +177,8 @@ jQuery(function($) {
         var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(parent.params.company.name + "代收款收据").appendTo(headReceiptDiv);
 
         var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
-        var noReceiptTd = $('<td style="width: 25%" colspan="2"></td>').text('装修单号: ' + commonInfo["orderId"]).appendTo(orderReceiptTr);
+        var noReceiptTd = $('<td style="width: 15%"></td>').text('装修单号: ' + commonInfo["orderId"]).appendTo(orderReceiptTr);
+        var noReceiptTd = $('<td style="width: 10%"></td>').text('装修单类型: ' + receipt.decorationTypeData[commonInfo["decorationType"]].value).appendTo(orderReceiptTr);
         var addrReceiptTd = $('<td style="width: 40%" colspan="2"></td>').text('客户地址: ' + commonInfo["orderAddr"]).appendTo(orderReceiptTr);
         var timeReceiptTd = $('<td style="width: 35%" colspan="2"></td>').text('收款日期: ' + commonInfo["collectTime"]).appendTo(orderReceiptTr);
 

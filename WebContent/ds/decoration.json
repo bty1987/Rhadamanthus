@@ -98,7 +98,13 @@
         {"key":"0", "value":"初始"},
         {"key":"1", "value":"合同方案确认"},
         {"key":"2", "value":"放线方案确认"}
-    ],
+    ],"repairStatus":[
+        {"key":"0", "value":"初始"},
+        {"key":"1", "value":"终身"},
+        {"key":"2", "value":"转卖"},
+        {"key":"3", "value":"免责"},
+        {"key":"4", "value":"欠款"}
+],
     "errorCode": 0,
     "errorMsg": null
 }

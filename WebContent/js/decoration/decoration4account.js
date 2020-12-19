@@ -11,7 +11,9 @@ $(function () {
             foldFrontTotal: com.focusPage("#foldFrontTotal", "#decorationAccountContent"),
             foldFrontFee: com.focusPage("#foldFrontFee", "#decorationAccountContent"),
             managePrice: com.focusPage("#managePrice", "#decorationAccountContent"),
-            basdiscount: com.focusPage("#basdiscount", "#decorationAccountContent")
+            basdiscount: com.focusPage("#basdiscount", "#decorationAccountContent"),
+            disPrice: com.focusPage("#disPrice", "#decorationAccountContent"),
+            undisPrice: com.focusPage("#undisPrice", "#decorationAccountContent")
         },
         contractItems: {
             signPrice: com.focusPage("#signPrice", "#decorationAccountContent"),
@@ -242,6 +244,8 @@ $(function () {
         decorationDetail.basicsItems.foldFrontFee.html(accountBasic.foldFrontFee);
         decorationDetail.basicsItems.managePrice.html(Math.round(accountBasic.managePrice));
 
+        decorationDetail.basicsItems.disPrice.html(accountBasic.disPrice);
+        decorationDetail.basicsItems.undisPrice.html(accountBasic.undisPrice);
         decorationDetail.contractItems.mm.html(utils.changeThrDecimal(decorationDetail.materialItems.materialRatio.text() / decorationDetail.basicsItems.foldFrontTotal.text()));
     }, null, false);
 
@@ -522,7 +526,7 @@ $(function () {
 
             management = accountBasic.managePrice;
 
-            sub = contartval + service - accountBasic.factPrice - accountBasic.servicePaidup + accountBasic.reduceDisPrice * (accountBasic.discount / 10) + accountBasic.reduceUndisPrice + Math.round(accountBasic.reduceManagePrice) - Math.round(accountBasic.reduceTotalPrice) - decorationDetail.items.preferences.val() - decorationDetail.items.internalCoupon.val() - decorationDetail.items.fulldel.val() - decorationDetail.items.cashback.val();
+            sub = contartval + service - accountBasic.factPrice - accountBasic.servicePaidup - accountBasic.reduceDisPrice * (accountBasic.discount / 10) - accountBasic.reduceUndisPrice - Math.round(accountBasic.reduceManagePrice) + Math.round(accountBasic.reduceTotalPrice) - decorationDetail.items.preferences.val() - decorationDetail.items.internalCoupon.val() - decorationDetail.items.fulldel.val() - decorationDetail.items.cashback.val();
             
         }
 

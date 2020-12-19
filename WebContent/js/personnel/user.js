@@ -9,7 +9,7 @@
         items: {},
         editLoginId: null,
         deptList: {},
-        loginFlag: true,
+        loginFlag: false,
         simpleAddUserModal:null,
         
         modals: {},
@@ -45,7 +45,7 @@
              {"id": "identity", "name": "身份证号", "type": "text", "validator": "v_required v_identity"},
              {"id": "phone", "name": "手机号", "type": "text", "validator": "v_required v_phones"},
              
-             {"id": "loginId", "name": "用户名", "type": "text", "validator": "v_required v_phones"},
+             {"id": "loginId", "name": "用户名", "type": "text", "validator": "v_required"},
              {"id": "deptTypeSel", "name": "部门类型", "type": "select", "validator": "v_required"},
              {"id": "deptSel", "name": "部门", "type": "select", "validator": "v_required"},
              {"id": "dutySel", "name": "职位", "type": "select", "validator": "v_required"},
@@ -239,7 +239,7 @@
                                         if($.trim(data.errcode) == $.trim(0) ){
                                             com.showAlert(com.info, "更新成功");
                                         }else{
-                                            com.showAlert(com.error,"更新失败" );
+                                            com.showAlert(com.error,"更新失败");
                                         }
                                     });
                                 } else {
@@ -425,18 +425,7 @@
         user.simpleAddUserModal.modal("hide");
     });
 
-    user.items.loginId = com.focusPage("#loginId").on("blur", function() {
-        $this = $(this);
-        void 0 == $this.val() || "" == $this.val().trim() || $this.val() == user.editLoginId ? (com.showTip(com.focusPage("#loginId"), "用户名不能为空", "right"), user.repeatFlg = !1) : com.post(api.personel.queryUserByLoginId, {
-            "user.loginId": $this.val()
-        }, function(res) {
-            user.loginFlag =false;
-            com.showTip(com.focusPage("#loginId"),"用户名已存在", "right");
-        }, function(res){
-            user.loginFlag =true;
-        });
-    });
-
+    user.items.loginId = com.focusPage("#loginId");
     user.items.userName = com.focusPage("#userName");
     user.items.currentName = com.focusPage("#currentName");
     user.items.gender = com.focusPage("#gender").switchBtn("gender");
@@ -445,64 +434,78 @@
     user.items.deptSel = com.focusPage("#deptSel");
     user.items.dutySel = com.focusPage("#dutySel");
     user.items.deptTypeSel = com.focusPage("#deptTypeSel");
-    user.items.deptTypeSel.bindData(user.deptType, "dtid", "name");
+    user.items.statusSel = com.focusPage("#statusSel");
+    
     user.items.deptTypeSel.on("change", function(b, d) {
+        
         com.post(api.system.queryDutyByDtid,{"duty.departmentType.dtid" :$(this).val()},function(res){
-            user.dutyTypeMap=res.dutys;
+            user.dutyTypeMap = res.dutys;
             user.items.dutySel.bindData(user.dutyTypeMap,"did","name");
-        },null,false);
+        });
+        
         com.post(api.communion.queryDepartmentByDtid, {"dept.type.dtid": $(this).val()}, function(res) {
             user.items.deptSel.bindData(res.deptList, "did", "name");
             d && d();
-        },null,false);
+        });
+        
     }).trigger("change");
 
-    user.items.statusSel = com.focusPage("#statusSel").bindData(user.statusType,"key", "value");
+    user.items.deptTypeSel.bindData(user.deptType, "dtid", "name");
+    user.items.statusSel.bindData(user.statusType, "key", "value");
 
     function saveData() {
-        if( "" == user.items.loginId.val().trim() || user.items.loginId.val() == null) {
-            com.showTip(com.focusPage("#loginId"), "用户名不能为空", "right");
-            user.loginFlag=false
+        
+        if(com.validate("simpleAddUserModal")){
+            return false;
         }
+        
+        var loginId = user.items.loginId.val();
+        
+        com.post(api.personel.queryUserByLoginId, {"user.loginId": loginId}, function(res) {
+            user.loginFlag = false;
+            com.showTip(user.items.loginId, "用户名已存在", "right");
+        }, function(res){
+            user.loginFlag = true;
+        }, false);
+        
+        if(!user.loginFlag) return false;
 
-        if (!com.validate("simpleAddUserModal") && !user.repeatFlg && user.loginFlag) {
-            var options = {
-                "userInfo.user.userName": user.items.userName.val().trim(),
-                "userInfo.user.currentName": user.items.currentName.val(),
-                "userInfo.user.gender":  com.genderType[user.items.gender.prop("checked")],
-                "userInfo.gender": user.items.gender.prop("checked") == true ? 0 : 1,
-                "userInfo.user.identity": user.items.identity.val(),
-                "userInfo.user.phone": user.items.phone.val(),
-                "userInfo.user.loginId": user.items.loginId.val(),
-                "userInfo.user.dtid": user.items.deptTypeSel.val(),
-                "userInfo.user.dept.did": user.items.deptSel.val(),
-                "userInfo.user.duty.did": user.items.dutySel.val(),
-                "userInfo.user.status": user.items.statusSel.val(),
-                "userInfo.salary": 0,
-                "userInfo.fangliner.userId": "",
-                "userInfo.entryTime": new Date().getFullYear() + "-" + utils.accAdd(new Date().getMonth(), 1) + "-" + new Date().getDate(),
-                "userInfo.hometownAddress": "",
-                "userInfo.address": "",
-                "userInfo.bank": "",
-                "userInfo.bankCardNum": "",
-                "userInfo.isMarried": 1,
-                "userInfo.isBirth": 1,
-                "userInfo.isHouseLoan": 1,
-                "userInfo.isCarLoan": 1,
-                "userInfo.isCarID": 1,
-                "userInfo.isPassID": 1,
-                "userInfo.isHMID": 1,
-                "userInfo.isTWID": 1,
-                "userInfo.isPresentGraduate": 1,
-                "userInfo.isInsurance": 1
-            };
+        var options = {
+            "userInfo.user.userName": user.items.userName.val().trim(),
+            "userInfo.user.currentName": user.items.currentName.val(),
+            "userInfo.user.gender":  com.genderType[user.items.gender.prop("checked")],
+            "userInfo.gender": user.items.gender.prop("checked") == true ? 0 : 1,
+            "userInfo.user.identity": user.items.identity.val(),
+            "userInfo.user.phone": user.items.phone.val(),
+            "userInfo.user.loginId": user.items.loginId.val(),
+            "userInfo.user.dtid": user.items.deptTypeSel.val(),
+            "userInfo.user.dept.did": user.items.deptSel.val(),
+            "userInfo.user.duty.did": user.items.dutySel.val(),
+            "userInfo.user.status": user.items.statusSel.val(),
+            "userInfo.salary": 0,
+            "userInfo.fangliner.userId": "",
+            "userInfo.entryTime": new Date().getFullYear() + "-" + utils.accAdd(new Date().getMonth(), 1) + "-" + new Date().getDate(),
+            "userInfo.hometownAddress": "",
+            "userInfo.address": "",
+            "userInfo.bank": "",
+            "userInfo.bankCardNum": "",
+            "userInfo.isMarried": 1,
+            "userInfo.isBirth": 1,
+            "userInfo.isHouseLoan": 1,
+            "userInfo.isCarLoan": 1,
+            "userInfo.isCarID": 1,
+            "userInfo.isPassID": 1,
+            "userInfo.isHMID": 1,
+            "userInfo.isTWID": 1,
+            "userInfo.isPresentGraduate": 1,
+            "userInfo.isInsurance": 1
+        };
 
-            com.post(api.personel.addUser, options, function(res){
-            	
-                com.showAlert(com.info, "操作成功");
-                user.simpleAddUserModal.modal("hide");
-            });
-        }
+        com.post(api.personel.addUser, options, function(res){
+        	
+            com.showAlert(com.info, "操作成功");
+            user.simpleAddUserModal.modal("hide");
+        });
     }
 
 });

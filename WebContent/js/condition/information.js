@@ -190,6 +190,15 @@ Condition.addupRule("information", {
         }
     },
     
+    "awardRecord-orderId": {
+        label: "装修单号",
+        type: "text",
+        submitConfig: {
+            name: "orderId",
+            op: "eq",
+            validate: null
+        }
+    },
     "awardRecord-name":{
         label: "物品名称",
         type: "text",

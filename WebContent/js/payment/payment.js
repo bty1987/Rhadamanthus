@@ -83,8 +83,8 @@ jQuery(function($) {
 		typeData: [],
 		paymentTypeData: [],
 		statusData: [],
-		typeUpdate: ""
-
+		typeUpdate: "",
+		pageConfig: {}
 	};
 
 	//隐藏触发
@@ -187,48 +187,7 @@ jQuery(function($) {
 	});
 
 	//不同页面的不同参数
-	switch (payment.type) {
-		case "common":
-			payment.url = api.payment.pageAdvancePayment;
-			payment.conditions = ["payment-orderId", "payment-village", "payment-houseNumber", "payment-designer"];
-			payment.functions = ["createAdvance", "collect", "withdraw"];
-			payment.extraParams = {"payment.status": 0};
-
-			payment.paytypes = ["cash", "bank", "checkv"];
-			break;
-
-		case "pos":
-			payment.url = api.payment.pageAdvancePayment;
-			payment.conditions = ["payment-orderId"];
-			payment.functions = ["createAdvance", "collect"];
-			payment.extraParams = {"payment.status": 0, "payment.type": "1"};
-			payment.paytypes = ["bank"];
-			break;
-
-		case "history":
-			payment.url = api.payment.pagePayment;
-			payment.conditions = ["payment-orderId", "payment-collectTime"];
-			payment.functions = ["decorationInfo", "payway", "print", "update", "export"];
-			payment.extraParams = {};
-			payment.paytypes = ["cash", "bank", "checkv"];
-			break;
-
-		case "collect":
-			payment.url = api.payment.pagePayment;
-			payment.conditions = ["payment-orderId", "payment-collectTime"];
-			payment.functions = ["payway",  "update", "selectall", "confirms", "export"];
-			payment.extraParams = {"payment.status": 1};
-			payment.paytypes = ["cash", "bank", "checkv"];
-			break;
-
-		case "confirm":
-			payment.url = api.payment.pagePayment;
-			payment.conditions = ["payment-orderId", "payment-collectTime"];
-			payment.functions = ["payway"];
-			payment.extraParams = {"payment.status": 2};
-			payment.paytypes = ["cash", "bank", "checkv"];
-			break;
-	}
+	payment.pageConfig = paymentUtils.getConfig(payment.type, 1);
 
 	var displayFunc  = (function(){
         var renderList = function(tableId,listData){
@@ -251,7 +210,7 @@ jQuery(function($) {
 			var $label = $('<label></label>').appendTo($h3);
 
 			var $input = $('<input>').attr({"type": "checkbox", "name": "pids", "class": "ace ace-checkbox-2"});
-			if (payment.functions.contains("selectall")) $label.append($input.attr({"pid": v.pid}));
+			if (payment.pageConfig.pageBtn.contains("selectall")) $label.append($input.attr({"pid": v.pid}));
 
 			var $span = $('<span></span>').addClass('lbl blue bigger-150').html(orderId).appendTo($label);
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').attr("id",orderId+"ul");
@@ -264,42 +223,8 @@ jQuery(function($) {
 			var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-info').html('打印');
 			var $btnUpdateP = $('<a></a>').addClass('btn btn-minier btn-success').html('更新');
 
-            var propertyArr = [];
-
-			if (["common", "pos"].contains(payment.type)) {
-				propertyArr = [
-					["客户:", v.decoration.customer.name, "grey"],
-					["楼盘地址:", v.decoration.house.village.cityProper.city.name + ' ' + v.decoration.house.village.cityProper.name + ' ' + v.decoration.house.village.name + " " + v.decoration.house.houseNumber, "grey"],
-					["设计师:", v.decoration.designer.currentName, "grey"],
-					["等级:", v.decoration.grade, "red"],
-					["合同预付款:", v.balance, "blue"],
-					["工程预付款:", v.projectBalance, "blue"],
-					["主材预付款:", v.materialBalance, "blue"],
-					["正林预付款:", v.zhenglinBalance, "blue"]
-				];
-			} else {
-				propertyArr = [
-					["客户:", v.customer.name, "grey"],
-					["收款类型:", payment.typeData[v.type], "red"],
-					["预付款类型:", payment.paymentTypeData[v.paymentType], "red"],
-					["操作金额:", v.recharge, "blue"],
-					["余额:", v.balance, "blue"],
-					["收款人:", v.collectUser.userName, "grey"],
-					["收款时间:", v.collectTime, "green"],
-				];
-
-				if(v.status == 2){
-					propertyArr.push(
-						["确认人:", v.confirmUser.currentName, "grey"],
-						["确认时间:", v.confirmTime, "green"]
-					)
-				}
-
-				propertyArr.push(
-					["状态:", payment.statusData[v.status], "red"],
-					["备注:", v.comment, "grey"]
-				)
-			}
+			var project =  ["common", "pos"].contains(payment.type) ? v.decoration : v;
+            var propertyArr = paymentUtils.getPropertyArr(payment, v, project, payment.statusData);
 
             $.each(propertyArr, function (index,value) {
             	var $liProperty = $('<li></li>');
@@ -311,13 +236,13 @@ jQuery(function($) {
             $divBtnWrap.appendTo($h3);
             $liLine.append($h3).append($ulProperty);
 
-			if(payment.functions.contains("payway")) paymentUtils.drawHistoryData(payment, v, $liLine, "");
+			if(payment.pageConfig.pageBtn.contains("payway")) paymentUtils.drawHistoryData(payment, v, $liLine, "");
 
-			if (payment.functions.contains("collect")) $divBtnWrap.append($btnCollect);
-			if (payment.functions.contains("withdraw")) $divBtnWrap.append($btnCashout);
-			if (v.status != 0 && payment.functions.contains("decorationInfo")) $divBtnWrap.append($btnDecorationInfo);
-			if (v.status != 0 && payment.functions.contains("print")) $divBtnWrap.append($btnPrint);
-			if (v.status == 1 && v.type != 2 && v.transfer == 0 && payment.functions.contains("update")) $divBtnWrap.append($btnUpdateP);
+			if (payment.pageConfig.pageBtn.contains("collect")) $divBtnWrap.append($btnCollect);
+			if (payment.pageConfig.pageBtn.contains("withdraw")) $divBtnWrap.append($btnCashout);
+			if (v.status != 0 && payment.pageConfig.pageBtn.contains("decorationInfo")) $divBtnWrap.append($btnDecorationInfo);
+			if (v.status != 0 && payment.pageConfig.pageBtn.contains("print")) $divBtnWrap.append($btnPrint);
+			if (v.status == 1 && v.type != 2 && v.transfer == 0 && payment.pageConfig.pageBtn.contains("update")) $divBtnWrap.append($btnUpdateP);
 
 			//收款
             $btnCollect.click(function(){
@@ -376,9 +301,18 @@ jQuery(function($) {
 	
 	var searcher = new Searcher();
 
-	searcher.init(payment.conditions, "condList", payment.url, function(data){
+	var extraParams = {};
+	if (payment.pageConfig.statusExtraParam != null && payment.pageConfig.statusExtraParam.length > 0) {
+		extraParams["payment.status"] = payment.pageConfig.statusExtraParam[0];
+	}
+
+	if (payment.pageConfig.typeExtraParam != null && payment.pageConfig.typeExtraParam.length > 0) {
+		extraParams["payment.type"] = payment.pageConfig.typeExtraParam[0];
+	}
+
+	searcher.init(payment.pageConfig.condArr, "condList", payment.pageConfig.apiPage, function(data){
 		displayFunc.init('resultList', data);
-	}, "pagenation", "paymentPostData"+payment.type, payment.extraParams, false, null, function(){
+	}, "pagenation", "paymentPostData"+payment.type, extraParams, false, null, function(){
 
 		var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'createPayment').css("margin", "0px 3px");
 		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -398,10 +332,10 @@ jQuery(function($) {
 
 		var btnParams = [];
 
-		if(payment.functions.contains("createAdvance")) btnParams.push($adda);
-		if(payment.functions.contains("selectall")) btnParams.push($checka);
-		if(payment.functions.contains("confirms")) btnParams.push($confirma);
-		if(payment.functions.contains("export")) btnParams.push($impa);
+		if(payment.pageConfig.pageBtn.contains("createAdvance")) btnParams.push($adda);
+		if(payment.pageConfig.pageBtn.contains("selectall")) btnParams.push($checka);
+		if(payment.pageConfig.pageBtn.contains("confirms")) btnParams.push($confirma);
+		if(payment.pageConfig.pageBtn.contains("export")) btnParams.push($impa);
 
 		return btnParams;
 	});
@@ -422,9 +356,9 @@ jQuery(function($) {
 		payment.btns.collectBtn.text(decoration.paymentType);
 		//payment.paymentTypes = v.paymentType;
 
-		if(payment.paytypes.contains("cash")) paymentUtils.initCash(payment);
-		if(payment.paytypes.contains("bank")) paymentUtils.initBank(payment, payment.typeUpdate);
-		if(payment.paytypes.contains("checkv")) paymentUtils.initCheckv(payment);
+		if(payment.pageConfig.paytypes.contains("cash")) paymentUtils.initCash(payment);
+		if(payment.pageConfig.paytypes.contains("bank")) paymentUtils.initBank(payment, payment.typeUpdate);
+		if(payment.pageConfig.paytypes.contains("checkv")) paymentUtils.initCheckv(payment);
 
 		payment.modals.collectModal.attr("grade", decoration.grade);
 
@@ -463,9 +397,9 @@ jQuery(function($) {
 		payment.items.advanceType.attr("disabled", "disabled");
 		payment.items.des.val(v.comment).attr("disabled", "disabled");
 
-		if(payment.paytypes.contains("cash")) paymentUtils.initCash(payment);
-		if(payment.paytypes.contains("bank")) paymentUtils.initBank(payment, 1);
-		if(payment.paytypes.contains("checkv")) paymentUtils.initCheckv(payment);
+		if(payment.pageConfig.paytypes.contains("cash")) paymentUtils.initCash(payment);
+		if(payment.pageConfig.paytypes.contains("bank")) paymentUtils.initBank(payment, 1);
+		if(payment.pageConfig.paytypes.contains("checkv")) paymentUtils.initCheckv(payment);
 
 		getReceiptTypeForGrade(0, v.grade);
 

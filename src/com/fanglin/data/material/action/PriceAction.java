@@ -52,6 +52,12 @@ public class PriceAction extends BaseListAction{
 		return SUCCESS;
 	}
 	
+	@Action(value = "updatePriceForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updatePriceForStatus() throws FLException{
+		priceService.updatePriceForStatus(price);
+		return SUCCESS;
+	}
+	
 	public List<PriceVO> getPrices() {
 		return prices;
 	}

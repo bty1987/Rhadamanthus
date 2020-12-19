@@ -86,6 +86,9 @@ jQuery(function ($) {
                     var btnExpire = $('<a></a>').addClass('btn btn-minier btn-danger').html('失效');
                     var btnContract = $('<a></a>').addClass('btn btn-minier btn-primary').html('归档');
                     
+                    var btnShow = $('<a></a>').addClass('btn btn-minier btn-success').html('显示');
+                    var btnHide = $('<a></a>').addClass('btn btn-minier btn-danger').html('隐藏');
+                    
                     var btnGraphNotice = $('<a></a>').addClass('btn btn-minier btn-yellow').html('签名通知');
                     var btnSignNotice = $('<a></a>').addClass('btn btn-minier btn-success').html('客签通知');
                     var btnViewNotice = $('<a></a>').addClass('btn btn-minier btn-purple').html('查看通知');
@@ -98,6 +101,7 @@ jQuery(function ($) {
                     var propertyArr = [
                         ["订单编号: ", v.orderId, "grey"],
                         ["状态: ", decorationContract.status[v.status], "red"],
+                        ["是否显示: ", v.ishow == 0 ? "显示" : "隐藏", "red"],
                         ["创建人: ", v.creater.currentName, "grey"],
                         ["签署人: ", v.signner.currentName, "grey"],
                         ["归档人: ", v.filinner.currentName, "grey"],
@@ -119,6 +123,13 @@ jQuery(function ($) {
                     }
                     if(v.status == 1){
                         $divBtnWrap.append(btnView).append(btnContract);
+                    }
+                    
+                    if(v.ishow == 0) {
+                        $divBtnWrap.append(btnHide);
+                    }
+                    if(v.ishow == 1) {
+                        $divBtnWrap.append(btnShow);
                     }
 
                     $divBtnWrap.appendTo($h3);
@@ -148,6 +159,14 @@ jQuery(function ($) {
                     btnContract.click(function () {
                         filingContract(v.dcid);
                     });
+                    
+                    btnShow.click(function(){
+                        showContract(v.dcid, 0);
+                    });
+                    
+                    btnHide.click(function(){
+                        showContract(v.dcid, 1);
+                    });
 
                     btnGraphNotice.click(function () {
                         sendNotice("是否发送签章通知", v.dcid, 1);
@@ -166,15 +185,15 @@ jQuery(function ($) {
                     });
                     
                     btnViewQR.click(function(){
-                        showQRCode(config.server + "/views/contract/redirect.html?dcid=" + v.dcid + "&type=1");
+                        showQRCode("http://www.fanglinserver.com/platform/" + "/views/contract/redirect.html?dcid=" + v.dcid + "&type=1");
                     });
                     
                     btnGraphQR.click(function(){
-                        showQRCode(config.server + "/views/contract/redirect.html?dcid=" + v.dcid + "&type=1");
+                        showQRCode("http://www.fanglinserver.com/platform/" + "/views/contract/redirect.html?dcid=" + v.dcid + "&type=1");
                     });
                     
                     btnSignQR.click(function(){
-                        showQRCode(config.server + "/views/contract/redirect.html?dcid=" + v.dcid + "&type=2");
+                        showQRCode("http://www.fanglinserver.com/platform/" + "/views/contract/redirect.html?dcid=" + v.dcid + "&type=2");
                     });
 
                     $ul.appendTo(com.focusPage("#contracts"));
@@ -200,7 +219,9 @@ jQuery(function ($) {
             return false;
         }
         
-        com.popup4page("#layerPopUp", "/views/decoration/decorationContract2create.html", "创建合同");
+        com.popup4page("#layerPopUp", "/views/decoration/decorationContract2create.html", "创建合同", null, function(){
+            paintingContract();
+        });
     });
     
     //注册按钮
@@ -304,6 +325,12 @@ jQuery(function ($) {
                 paintingContract();
             });
     	});
+    }
+    
+    function showContract(dcid, ishow){
+        com.post(api.decoration.showDecorationContract , {"decorationContract.dcid" : dcid, "decorationContract.ishow": ishow}, function(){
+            paintingContract();
+        });
     }
 
     function customerItems(customer) {

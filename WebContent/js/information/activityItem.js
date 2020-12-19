@@ -65,11 +65,8 @@ jQuery(function($) {
 			widgetHeader.addClass("header-color-green");
 			widgetHeaderH5.text("物品");
 		}else if(_activityItem.type == 2){
-			widgetHeader.addClass("header-color-orange");
-			widgetHeaderH5.text("特殊劵");
-		}else if(_activityItem.type == 3){
 			widgetHeader.addClass("header-color-red");
-			widgetHeaderH5.text("特殊物品");
+			widgetHeaderH5.text("红包");
 		}
 
 		var widgetBody = $("<div></div>").addClass("widget-body").appendTo(widgetBox);
@@ -130,22 +127,21 @@ jQuery(function($) {
 	}
 
 	function changeAwardStock () {
-		if(activityItem.items.awardStockstype.val() != ""){
-			var awardStockstypes = activityItem.items.awardStockstype.val();
+	    
+		if(activityItem.items.awardStockstype.val() == "") return false;
+		    
+		var awardStockstypes = activityItem.items.awardStockstype.val();
 
-			awardStockstypes = awardStockstypes == 2 ? 0 : (awardStockstypes == 3 ? 1 : awardStockstypes);
+		var options = {
+			"awardStock.type": awardStockstypes,
+			"awardStock.storeroom": params.type
+		};
 
-			var options = {
-				"awardStock.type": awardStockstypes,
-				"awardStock.storeroom": params.type
-			};
+		com.post(api.information.queryAwardStockByType, options, function(res){
+			activityItem.items.name.bindData(res.awardStocks, "asId", "name",true);
+		});
 
-			com.post(api.information.queryAwardStockByType, options, function(res){
-				activityItem.items.name.bindData(res.awardStocks, "asId", "name",true);
-			});
-
-			activityItem.items.awardStockshide.removeClass("hide");
-		}
+		activityItem.items.awardStockshide.removeClass("hide");
 	}
 
 	function deleteActivityItem(aiId, activityItemName){

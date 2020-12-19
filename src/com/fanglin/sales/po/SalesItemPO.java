@@ -53,6 +53,8 @@ public class SalesItemPO implements Serializable {
 
 	private long num;
 
+	private long initnum;
+
 	private long punum;
 
 	private long xgnum;
@@ -193,6 +195,15 @@ public class SalesItemPO implements Serializable {
 
 	public void setNum(long num) {
 		this.num = num;
+	}
+
+	@Column(name = "initnum")
+	public long getInitnum() {
+		return initnum;
+	}
+
+	public void setInitnum(long initnum) {
+		this.initnum = initnum;
 	}
 
 	@Column(name = "punum")

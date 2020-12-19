@@ -1,20 +1,20 @@
 $(function () {
-    
+
     var salesPre = {
-        salesPre_data:{},
-        url : api.sales.pageSalesForBalance,
-        postData : "salesPreBalancePostData",
-        pageType : params['urlLoadParams'].type,
-        btns:{
-            preSaveBtn:com.focusPage("#preSaveBtn")
+        salesPre_data: {},
+        url: api.sales.pageSalesForBalance,
+        postData: "salesPreBalancePostData",
+        pageType: params['urlLoadParams'].type,
+        btns: {
+            preSaveBtn: com.focusPage("#preSaveBtn")
         }
     };
 
-    if (salesPre.pageType == "dompany") {
-        salesPre.url = api.sales.pageSalesForBalanceByDompany;
+    var pageConfig = drawNode.getConfig(params['urlLoadParams'].type);
+
+    if (salesPre.pageType == "predompany") {
         salesPre.postData = "salesPreBalanceForDompanyPostData";
-    }else if(salesPre.pageType == "pompany"){
-        salesPre.url = api.sales.pageSalesForBalanceByPompany;
+    } else if (salesPre.pageType == "prepompany") {
         salesPre.postData = "salesPreBalanceForPompanyPostData";
     }
 
@@ -37,29 +37,74 @@ $(function () {
                     var $btnWipeZero = $('<a></a>').addClass('btn btn-minier btn-warning').html('抹零');
                     var $btnPre = $('<a></a>').addClass('btn btn-minier btn-success').html('预结算');
 
-                    var propertyArr = [
-                        ["装修单号:", v.orderId, "blue"],
-                        ["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"],
-                        ["客户名:", v.customer.name, "grey"],
-                        ["渠道:", v.salesman.currentName, "grey"],
-                        ["部门:", v.dept.name, "grey"],
-                        ["分区:", v.region.name, "grey"],
-                        ["导购:", v.guider.currentName, "grey"],
-                        ["驻店:", v.instorer.currentName, "grey"],
-                        ["品牌:", v.brand, "grey"],
-                        ["定金:", v.depositpay, "blue"],
-                        ["补款:", v.fullpay, "blue"],
-                        ["等级:", v.grade, "red"],
-                        ["总额:", v.total, "grey"],
-                        ["抹零:", v.maling, "blue"],
-                        ["厂商抹零:", v.venderMaling, "blue"],
-                        ["券值:", v.coupon, "blue"],
-                        ["券信息:", v.couponInfo, "grey"],
-                        ["创建时间:", v.createTime, "green"],
-                        ["结算时间:", v.balanceTime, "green"],
-                        ["补款时间:", v.fullpayTime, "green"],
-                        ["备注:", v.comment, "grey"]
-                    ];
+                    var propertyArr = [];
+                    $.each(pageConfig.propertyArr, function (pi, pv) {
+                        switch (pv) {
+                            case "orderId":
+                                propertyArr.push(["装修单号:", v.orderId, "blue"]);
+                                break;
+                            case "address":
+                                propertyArr.push(["楼盘地址:", (v.house.village.name + " " + v.house.houseNumber), "grey"]);
+                                break;
+                            case "customer":
+                                propertyArr.push(["客户名:", v.customer.name, "grey"]);
+                                break;
+                            case "salesman":
+                                propertyArr.push(["渠道:", v.salesman.currentName, "grey"]);
+                                break;
+                            case "dept":
+                                propertyArr.push(["部门:", v.dept.name, "grey"]);
+                                break;
+                            case "region":
+                                propertyArr.push(["分区:", v.region.name, "grey"]);
+                                break;
+                            case "guider":
+                                propertyArr.push(["导购:", v.guider.currentName, "grey"]);
+                                break;
+                            case "instorer":
+                                propertyArr.push(["驻店:", v.instorer.currentName, "grey"]);
+                                break;
+                            case "brand":
+                                propertyArr.push(["品牌:", v.brand, "grey"]);
+                                break;
+                            case "depositpay":
+                                propertyArr.push(["定金:", v.depositpay, "blue"]);
+                                break;
+                            case "fullpay":
+                                propertyArr.push(["补款:", v.fullpay, "blue"]);
+                                break;
+                            case "grade":
+                                propertyArr.push(["等级:", v.grade, "red"]);
+                                break;
+                            case "total":
+                                propertyArr.push(["总额:", v.total, "blue"]);
+                                break;
+                            case "maling":
+                                propertyArr.push(["抹零:", v.maling, "blue"]);
+                                break;
+                            case "venderMaling":
+                                propertyArr.push(["厂商抹零:", v.venderMaling, "blue"]);
+                                break;
+                            case "coupon":
+                                propertyArr.push(["券值:", v.coupon, "blue"]);
+                                break;
+                            case "couponInfo":
+                                propertyArr.push(["券信息:", v.couponInfo, "grey"]);
+                                break;
+                            case "createTime":
+                                propertyArr.push(["创建时间:", v.createTime, "green"]);
+                                break;
+                            case "balanceTime":
+                                propertyArr.push(["结算时间:", v.balanceTime, "green"]);
+                                break;
+                            case "fullpayTime":
+                                propertyArr.push(["补款时间:", v.fullpayTime, "green"]);
+                                break;
+                            case "comment":
+                                propertyArr.push(["备注:", v.comment, "grey"]);
+                                break;
+                        }
+                    });
 
                     var $label = $('<label></label>').addClass('control-label').css({
                         'color': 'grey',
@@ -92,19 +137,27 @@ $(function () {
 
                     $label.appendTo($h3);
 
-                    if (salesPre.pageType == "dompany") {
-                        $btnDiv.append($btnSwitch).appendTo($h3);
-                    } else {
-                        $btnDiv.append($btnSwitch).append($btnWipeZero).append($btnPre).appendTo($h3);
-                    }
+                    $.each(pageConfig.pageBtn, function (k, b) {
+                        switch (b) {
+                            case "details":
+                                $btnDiv.append($btnSwitch);
+                                break;
+                            case "wipezero":
+                                $btnDiv.append($btnWipeZero);
+                                break;
+                            case "pre":
+                                $btnDiv.append($btnPre);
+                                break;
+                        }
+                    });
 
-
+                    $btnDiv.appendTo($h3);
                     $liLine.appendTo($ul);
                     $liLine.append($h3).append($ulProperty);
 
                     $btnSwitch.click(function () {
                         var flag = true;
-                        if (salesPre.pageType == "dompany") {
+                        if (salesPre.pageType == "predompany") {
                             flag = false;
                         }
                         com.focusPage('#viewPopUp').attr({'data-sid': v.sid, 'data-dompany': flag});
@@ -128,7 +181,7 @@ $(function () {
                     });
 
                     $btnPre.click(function () {
-                        
+
                         var _option = {};
                         _option["sid[0]"] = v.sid;
 
@@ -158,12 +211,10 @@ $(function () {
 
     })();
 
-    var _condArr = ['sales-no', 'sales-orderId', 'sales-brand', 'sales-instorer', 'sales-salesman', 'sales-dept-name', 'sales-fullpayTime'];
-
     var salesPreBalance = new Searcher();
 
-    salesPreBalance.init(_condArr, 'condList', salesPre.url, function (data) {
-        
+    salesPreBalance.init(pageConfig.condArr, 'condList', pageConfig.apiPage, function (data) {
+
         displayFunc.init('resultList', data);
 
     }, 'pagenation', salesPre.postData, null, false, null, function () {
@@ -186,11 +237,11 @@ $(function () {
             var $inputs = com.focusPage('input[name="sids"]:checked', '#resultList');
 
             if (!$inputs.length) {
-                
+
                 com.showAlert(com.warning, "请选择需要进行预结算的销售单");
-                
+
                 return;
-                
+
             }
 
             $.each($inputs, function (i, v) {
@@ -253,7 +304,7 @@ $(function () {
             });
         });
 
-        if (salesPre.pageType == "dompany") {
+        if (salesPre.pageType == "predompany") {
             return [];
         } else {
             return [$adda, $addaEnd];
@@ -264,14 +315,14 @@ $(function () {
     salesPre.btns.preSaveBtn.on('click', function () {
         if (!checkRowValue()) {return;}
 
-            com.post(api.sales.updateSalesForMaling, {
-                "sales.sid": salesPre.salesPre_data.sid,
-                "sales.maling": utils.accSub(com.focusPage('#maling').val(), com.focusPage('#editVenderMaling').val()),
-                "sales.venderMaling": com.focusPage('#editVenderMaling').val()
-            }, function () {
-                salesPreBalance.doSearch();
-                com.closePopup();
-            });
+        com.post(api.sales.updateSalesForMaling, {
+            "sales.sid": salesPre.salesPre_data.sid,
+            "sales.maling": utils.accSub(com.focusPage('#maling').val(), com.focusPage('#editVenderMaling').val()),
+            "sales.venderMaling": com.focusPage('#editVenderMaling').val()
+        }, function () {
+            salesPreBalance.doSearch();
+            com.closePopup();
+        });
     });
 
     function checkRowValue() {
@@ -281,7 +332,7 @@ $(function () {
         if (parseFloat(com.focusPage('#editVenderMaling').val()) > parseFloat(com.focusPage('#maling').val())) {
 
             com.focusPage('#editVenderMaling').focus().select();
-            com.showTip(com.focusPage('#editVenderMaling'),"修改厂商抹零数据不能超过抹零总数!","right");
+            com.showTip(com.focusPage('#editVenderMaling'), "修改厂商抹零数据不能超过抹零总数!", "right");
             flag = false;
         }
         return flag;

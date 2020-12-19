@@ -62,6 +62,11 @@ public class SalesActivityServiceImpl implements SalesActivityService {
 			BeanUtil.copyProperties(salesPO.getHouse(), salesActivityVO.getSales().getHouse(), Arrays.asList("village"));
 			BeanUtil.copyProperties(salesPO.getHouse().getVillage(), salesActivityVO.getSales().getHouse().getVillage(), Arrays.asList("cityProper"));
 			BeanUtil.copyProperties(salesPO.getCustomer(), salesActivityVO.getSales().getCustomer());
+			BeanUtil.copyProperties(salesPO.getSalesman(), salesActivityVO.getSales().getSalesman(), Arrays.asList("dept", "duty"));
+			BeanUtil.copyProperties(salesPO.getSalesman().getDept(), salesActivityVO.getSales().getSalesman().getDept(), Arrays.asList("fatherDept", "type", "manager"));
+			BeanUtil.copyProperties(salesPO.getDept(), salesActivityVO.getSales().getDept(), Arrays.asList("fatherDept", "type", "manager"));
+			BeanUtil.copyProperties(salesPO.getRegion(), salesActivityVO.getSales().getRegion(), Arrays.asList("fatherDept", "type", "manager"));
+			BeanUtil.copyProperties(salesPO.getFinisher(), salesActivityVO.getSales().getFinisher(), Arrays.asList("dept", "duty"));
 
 			BeanUtil.copyProperties(activityPO, salesActivityVO.getActivity(), Arrays.asList("creater"));
 			BeanUtil.copyProperties(activityPO.getCreater(), salesActivityVO.getActivity().getCreater(), Arrays.asList("duty", "dept"));

@@ -2,6 +2,7 @@ package com.fanglin.data.material.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -19,8 +20,15 @@ public class PriceDaoImpl extends DaoImpl<PricePO> implements PriceDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<PricePO> queryPriceByGid(long gid) {
-		return session().createCriteria(PricePO.class).add(Restrictions.eq(PricePO.COLUMN_GID_STR, gid)).list();
+	public List<PricePO> queryPriceByGid(long gid, Short status) {
+		
+		Criteria criteria = session().createCriteria(PricePO.class).add(Restrictions.eq(PricePO.COLUMN_GID_STR, gid));
+		
+		if (status != null){
+			criteria.add(Restrictions.eq(PricePO.COLUMN_STATUS_STR, status));
+		}
+		
+		return criteria.list();
 	}
 
 	@Override

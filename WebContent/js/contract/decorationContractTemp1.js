@@ -193,8 +193,16 @@ jQuery(function($) {
         contractEdit.modal.talkingModal.modal("hide");
     });
 
-    com.focusPage(".makeup.conitem").dblclick(function(){
-        talkingData($(this).attr("id"), {"types[0]": 0, "types[1]": 1});
+    com.focusPage("#con-markup-one").dblclick(function(){
+        talkingData($(this).attr("id"), {"types[0]": 0});
+    });
+    
+    com.focusPage("#con-markup-two").dblclick(function(){
+        talkingData($(this).attr("id"), {"types[0]": 1});
+    });
+    
+    com.focusPage("#con-markup-thr").dblclick(function(){
+        talkingData($(this).attr("id"), {"types[0]": 3});
     });
 
     function talkingData(content, types){

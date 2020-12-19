@@ -9,6 +9,6 @@ import com.fanglin.utils.Paging;
 
 public interface FeedbackDao extends Dao<FeedbackPO>{
 	
-	public List<FeedbackPO> pageFeedback(Paging paging, List<Filter> filters);
+	public List<FeedbackPO> pageFeedback(Paging paging, List<Filter> filters, int company);
 	
 }

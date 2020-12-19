@@ -148,7 +148,9 @@ $.extend(api, {
         queryProcessItem: {url: "queryProcessItem.do"},
         addProcess: {url: "addProcess.do"},
         updateProcess: {url: "updateProcess.do"},
+        updateProcessForStatus: {url: "updateProcessForStatus.do"},
         updateProcessItem: {url: "updateProcessItem.do"},
+        deleteProcess: {url: "deleteProcess.do"},
         deleteProcessItem: {url: "deleteProcessItem.do"},
 
         queryProcessRefer: {url: "queryProcessRefer.do"}

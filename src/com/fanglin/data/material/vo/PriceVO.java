@@ -23,6 +23,8 @@ public class PriceVO implements Serializable {
 	private Integer cvalue; // 结算值 , 点位结算对应结算值为0~1之前三位小数 , 底价结算对应结算值为浮点数
 
 	private String content;
+	
+	private Short status;  //状态, 0:启用,1:禁用
 
 	public Long getPid() {
 		return pid;
@@ -94,6 +96,14 @@ public class PriceVO implements Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
 	}
 
 }

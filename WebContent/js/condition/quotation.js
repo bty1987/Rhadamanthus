@@ -80,5 +80,59 @@ Condition.addupRule("quotation", {
             validate: null
         }
     },
+    "selection-item-createTime" : {
+        label: "创建时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "createTime",
+            op: "between",
+            validate: null
+        }
+    },
+    "selection-item-tranTime" : {
+        label: "配送时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "tranTime",
+            op: "between",
+            validate: null
+        }
+    },
+    "selection-item-checkTime" : {
+        label: "审核时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "checkTime",
+            op: "between",
+            validate: null
+        }
+    },
+    "selection-item-confirmTime" : {
+        label: "确认时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "confirmTime",
+            op: "between",
+            validate: null
+        }
+    },
+    "selection-item-finishTime" : {
+        label: "完结时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "finishTime",
+            op: "between",
+            validate: null
+        }
+    },
+    "selection-item-balanceTime" : {
+        label: "结算时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "balanceTime",
+            op: "between",
+            validate: null
+        }
+    },
     
 });

@@ -65,12 +65,12 @@ $(function(){
                 [awardRecord.type[v.type],'red'],
                 [awardRecord.subtype[v.subtype],'red'],
                 [awardRecord.onetype[v.onetype] , 'red'],
-                [v.num,'blue'],
-                [v.totalPrice,'blue'],
+                [v.num, 'blue'],
+                [v.totalPrice, 'blue'],
                 [v.unitPrice, 'blue'],
-                [v.creater.currentName,'grey'],
-                [v.operateTime,'green'],
-                [v.content,'grey']
+                [v.creater.currentName, 'grey'],
+                [v.operateTime, 'green'],
+                [v.content, 'grey']
             ];
 
             $liLine.append($indexWrap);
@@ -97,7 +97,7 @@ $(function(){
     })();
 
     var awardRecordSeacher = new Searcher();
-    awardRecordSeacher.init(["information-awardRecord-name", "information-awardRecord-type", "information-awardRecord-subtype", "information-awardRecord-onetype", "information-awardRecord-recordTime"], "condList", api.information.pageAwardRecord, function(data){
+    awardRecordSeacher.init(["information-awardRecord-orderId", "information-awardRecord-name", "information-awardRecord-type", "information-awardRecord-subtype", "information-awardRecord-onetype", "information-awardRecord-recordTime"], "condList", api.information.pageAwardRecord, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "pageAwardRecordPostData", {"awardRecord.awardStock.asid":""}, false, null, function() {
     },'resultList');

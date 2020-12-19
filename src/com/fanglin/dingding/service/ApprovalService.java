@@ -31,11 +31,11 @@ public class ApprovalService {
 	@Autowired
 	private SystemConfigDao systemConfigDao;
 
-	public String initiateApproval(String processCode, String sender, String approver, String copy, String copyPosition, JSONArray formComponentValues, int company) throws FLException {
+	public String initiateApproval(String processCode, String senderId, String approver, String copy, String copyPosition, JSONArray formComponentValues, int company) throws FLException {
 
-		User senderUser = userDDService.getUser(sender, company);
+		User sender = userDDService.getUser(senderId, company);
 
-		if (senderUser == null) {
+		if (sender == null) {
 			throw new FLException(270003, "获取人员信息失败");
 		}
 
@@ -54,8 +54,8 @@ public class ApprovalService {
 		}
 
 		params.put("process_code", processCode);
-		params.put("originator_user_id", sender);
-		params.put("dept_id", senderUser.getDepartment().get(0));
+		params.put("originator_user_id", senderId);
+		params.put("dept_id", sender.getDepartment().get(0));
 		params.put("form_component_values", formComponentValues);
 
 		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
@@ -71,7 +71,7 @@ public class ApprovalService {
 			System.out.println(url);
 			System.out.println(String.format("%d-%s", response.getInteger("errcode"), response.getString("errmsg")));
 
-			return "";
+			throw new FLException(240014, String.format("%d-%s", response.getInteger("errcode"), response.getString("errmsg")));
 		}
 	}
 

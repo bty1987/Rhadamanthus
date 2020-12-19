@@ -73,8 +73,10 @@ jQuery(function ($) {
             var $btnAuth = $('<a></a>').addClass(' btn btn-minier btn-warning').html('认证');
             var $btnConfirm = $('<a></a>').addClass(' btn btn-minier btn-inverse').html('确认');
             var $btnSign = $('<a></a>').addClass(' btn btn-minier btn-danger').html('签章');
+            var $btnAuto = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('自动授权');
+            var $btnAutoQ = $('<a></a>').addClass(' btn btn-minier btn-success').html('自动授权');
 
-            $divBtnWrap.append($btnUpdate).append($btnRegist).append($btnAuth).append($btnConfirm).append($btnSign).appendTo($h3);
+            $divBtnWrap.append($btnUpdate).append($btnRegist).append($btnAuth).append($btnConfirm).append($btnSign).append($btnAuto).append($btnAutoQ).appendTo($h3);
             
             var $urldiv = $('<div style="border: 1px solid #ccc ;float :left;"></div>').css("width", "75px").css("height", "75px").css("margin-right", "10px");
             var img = $('<img />').css("margin-right", "20px").appendTo($urldiv);
@@ -134,7 +136,22 @@ jQuery(function ($) {
             $btnSign.click(function(){
                 
                 com.post(api.data.signateSignet, {"signet.sid": v.sid, "signet.data": config.server + v.path}, function(res){
+                    com.showAlert(com.info, "操作成功");
                     searcher.doSearch();
+                });
+            });
+            
+            $btnAuto.click(function(){
+                
+                com.post(api.data.signateAuto, {"signet.sid": v.sid}, function(res){
+                    console.log(res)
+                    com.popup("自动签认证", res.signet.path);
+                });
+            });
+            
+            $btnAutoQ.click(function(){
+                com.post(api.data.signateAuto, {"signet.sid": v.sid}, function(res){
+                    showQRCode(res.signet.path);
                 });
             });
 

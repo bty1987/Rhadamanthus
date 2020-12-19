@@ -33,7 +33,9 @@ public class SalesItemVO implements Serializable {
 	private Integer price;
 
 	private Long num;
-	
+
+	private Long initnum;
+
 	private Long punum;
 	
 	private Long xgnum;
@@ -157,6 +159,14 @@ public class SalesItemVO implements Serializable {
 
 	public void setNum(Long num) {
 		this.num = num;
+	}
+
+	public Long getInitnum() {
+		return initnum;
+	}
+
+	public void setInitnum(Long initnum) {
+		this.initnum = initnum;
 	}
 
 	public Long getPunum() {

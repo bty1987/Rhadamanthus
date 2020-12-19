@@ -236,10 +236,11 @@ $(function () {
                 decorationUtils.addDecorationPicture(data, 3, "ContractPictures");
             }, "btn btn-inverse");
         }
-        if ($btns.includes("confirmDesign")) {
+        
+        if ($btns.includes("confirmDesign") && $designPictures) {
             $designPictures.append($confirmDesign);
         }
-        if ($btns.includes("confirmPicture")) {
+        if ($btns.includes("confirmPicture") && $projectPictures) {
             $projectPictures.append($confirmPricture);
         }
         

@@ -3,18 +3,23 @@
     var order = {
         saveBtn : null,
         cancellBtn: null,
+        saveBtnRepair: null,
         modal: null,
         orderItems: {},
         typeness: {},
         sourceStatus: {},
         decorationOrderStatus: {},
+        repairStatus: {},
 
         orderStatus: [],
         businessDepartments: [],
         postParam: {},
+        repairModal: null,
 
         editFlag: false,
         infoItems: {},
+        repairStatusItem: com.focusPage("#repairStatusItem"),
+
         drawContractItems: {
         	coupon : com.focusPage("#coupon"),
         	thing : com.focusPage("#thing"),
@@ -28,6 +33,7 @@
     };
 
     order.cancelBtn = com.focusPage("#cancelBtn");
+    order.saveBtnRepair = com.focusPage("#saveBtnRepair");
     order.decorationModal = com.focusPage("#decorationModal");
     order.agreementModal = com.focusPage("#agreementModal");
     order.drawLineModal = com.focusPage("#drawLineModal");
@@ -37,6 +43,7 @@
     order.prosignModal = com.focusPage("#prosignModal");
     order.contractBtn = com.focusPage("#contractBtn");
     order.dalanceModal = com.focusPage("#dalanceModal");
+    order.repairModal = com.focusPage("#repairModal");
 
     //签订合同
     order.drawContractModal.on('hide.bs.modal', function (e) {
@@ -275,6 +282,7 @@
     });
 
     com.post(api.ds.decoration, {}, function (res) {
+        order.repairStatusItem.bindData(res.repairStatus, "key", "value");
         $.each(res.decorationOrderStatus, function (i, v) {
             order.decorationOrderStatus[v.key] = v.value;
         });
@@ -286,6 +294,9 @@
         });
         $.each(res.designStatus, function (i, v) {
             order.designStatusArr[v.key] = v.value;
+        });
+        $.each(res.repairStatus, function (i, v) {
+            order.repairStatus[v.key] = v.value;
         });
 
     }, null, false);
@@ -321,13 +332,15 @@
                     var btnInfo = $('<a></a>').addClass('btn btn-minier btn-success').html('信息轴');
                     var btnCal = $('<a></a>').addClass('btn btn-minier btn-warning').html('决算');
                     var btnService = $('<a></a>').addClass('btn btn-minier btn-purple').html('服务');
-                    var btnActivity = $('<a></a>').addClass('btn btn-minier btn-inverse').html('活动物品');
+                    var btnDctivity = $('<a></a>').addClass('btn btn-minier btn-inverse').html('装修活动');
+                    var btnSctivity = $('<a></a>').addClass('btn btn-minier btn-warning').html('销售活动');
                     var btnDelete = $('<a></a>').addClass('btn btn-minier btn-danger').html('废单');
                     var btnSign = $('<a></a>').addClass('btn btn-minier btn-pink').html('签订合同');
                     var btnTerminal = $('<a></a>').addClass('btn btn-minier btn-purple').html('合同终止');
                     var btnResign = $('<a></a>').addClass('btn btn-minier btn-yellow').html('重签合同');
                     var btnProsign = $('<a></a>').addClass('btn btn-minier btn-blue').html('预签');
                     var btnBalance = $('<a></a>').addClass('btn btn-minier btn-warning').html('结算');
+                    var btnRepair = $('<a></a>').addClass('btn btn-minier btn-inverse').html('保修');
 
                     var propertyArr = [];
                     $.each(pageConfig.propertyArr, function (pi, pv) {
@@ -410,6 +423,9 @@
                             case "projectStatus":
                                 propertyArr.push(["工程状态:", order.projectStatusArr[v.projectStatus], "red"]);
                                 break;
+                            case "repairStatus":
+                                propertyArr.push(["保修状态:", order.repairStatus[v.repairStatus], "red"]);
+                                break;
                             case "designStatus":
                                 propertyArr.push(["设计状态:", order.designStatusArr[v.designStatus], "red"]);
                                 break;
@@ -482,8 +498,12 @@
                         viewDecorationService(v.orderId);
                     });
 
-                    btnActivity.click(function () {
-                        viewDecorationActivityItem(v.orderId);
+                    btnDctivity.click(function () {
+                        viewDecorationActivity(v.orderId);
+                    });
+                    
+                    btnSctivity.click(function () {
+                        viewSalesActivity(v.orderId);
                     });
 
                     btnDelete.click(function () {
@@ -510,6 +530,10 @@
 
                     btnBalance.click(function () {
                         balanceOrder(v.orderId);
+
+                    });
+                    btnRepair.click(function () {
+                        repairOrder(v.orderId);
 
                     });
                     $.each(pageConfig.pageBtn, function (k, b) {
@@ -568,7 +592,10 @@
                                 $divBtnWrap.append(btnService);
                                 break;
                             case "activity"://活动物品
-                                $divBtnWrap.append(btnActivity);
+                                $divBtnWrap.append(btnDctivity);
+                                break;
+                            case "sctivity"://活动物品
+                                $divBtnWrap.append(btnSctivity);
                                 break;
                             case "delete"://废单
                                 if (v.status != 3 && v.status != 5 && v.status != 6) {
@@ -593,6 +620,8 @@
                             case "balance"://重新签合同
                                     $divBtnWrap.append(btnBalance);
                                 break;
+                            case "repair"://保修
+                                    $divBtnWrap.append(btnRepair);
                         }
                     });
                     $divBtnWrap.appendTo($h3);
@@ -738,14 +767,20 @@
         }
 
         //活动物品
-        function viewDecorationActivityItem(decorationOrderId) {
+        function viewDecorationActivity(decorationOrderId) {
             
             params.decorationOrderId = decorationOrderId;
             
-            com.switchPage(api.index.decorationActivityItemIndex.url);
-            //com.popup4page("#layerPopUp", api.index.decorationActivityItemIndex.url, "装修单活动: " + decorationOrderId);
+//            com.switchPage(api.index.decorationActivityItemIndex.url);
+            com.popup4page("#layerPopUp", api.index.decorationActivityItemIndex.url, "装修活动");
         }
-
+        
+        function viewSalesActivity(decorationOrderId){
+            params["type"] = "advance";
+            params["orderId"] = decorationOrderId;
+            com.popup4page("#layerPopUp", "views/sales/sales4activity.html", "销售活动");
+        }
+        
         //废单
         function obsoleteOrder(orderId) {
             params["decoration.orderId"] = orderId;
@@ -918,6 +953,27 @@
                 });
             });
         }
+        function repairOrder(orderId) {
+
+            order.repairModal.modal("show");
+            com.focusPage("#saveBtnRepair").unbind('click').on("click", function () {
+                if (com.validate('repairModal')) {
+                    return false;
+                };
+
+                var options = {
+                    "decoration.orderId": orderId,
+                    "decoration.repairStatus": order.repairStatusItem.val(),
+                };
+
+                com.post(api.decoration.changeDecorationForRepairStatus, options, function (res) {
+                    com.showAlert(com.info, "操作成功");
+                    searcher.doSearch();
+                });
+                order.repairModal.modal("hide");
+            })
+        }
+
 
         return {
             init: function (tableId, listData) {

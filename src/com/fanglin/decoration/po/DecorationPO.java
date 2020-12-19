@@ -165,6 +165,8 @@ public class DecorationPO implements Serializable {
 	private short projectStatus;
 
 	private short sourceStatus;
+	
+	private short repairStatus;
 
 	private int otherStatus;
 
@@ -380,6 +382,14 @@ public class DecorationPO implements Serializable {
 
 	public void setSourceStatus(short sourceStatus) {
 		this.sourceStatus = sourceStatus;
+	}
+	
+	public short getRepairStatus() {
+		return repairStatus;
+	}
+
+	public void setRepairStatus(short repairStatus) {
+		this.repairStatus = repairStatus;
 	}
 
 	public Timestamp getContractTime() {

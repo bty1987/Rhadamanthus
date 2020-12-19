@@ -18,20 +18,22 @@ import com.fanglin.decoration.vo.DecorationActivityItemVO;
 import com.fanglin.decoration.vo.DecorationVO;
 
 public interface DecorationActivityItemService {
-	
+
 	public List<DecorationActivityItemVO> queryDecorationActivityItemByOrderId(DecorationVO decorationVO);
-	
-	public int receiveDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId, String userName) throws FLException;
-	
-	public int abateDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId, String userName) throws FLException;
-	
-	public int deliveDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId, String userName) throws FLException;
-	
-	public int unrefundDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId, String userName) throws FLException;
-	
-	public int refundDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId, String userName) throws FLException;
-	
+
+	public int addDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO) throws FLException;
+
+	public int receiveDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException;
+
+	public int abateDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException;
+
+	public int deliveDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException;
+
+	public int unrefundDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException;
+
+	public int refundDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException;
+
 	public int expendDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException;
-	
+
 	public int amountDecorationActivityItem(DecorationVO decorationVO, String userId) throws FLException;
 }

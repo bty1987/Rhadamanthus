@@ -237,39 +237,6 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		return 0;
 	}
 
-	public static void main(String[] args) {
-		JSONArray dynamic_tables = new JSONArray();
-		JSONObject dynamic2 = new JSONObject();
-		dynamic2.put("insertWay", 1);
-		// dynamic2.put("keyword", "");
-		dynamic2.put("pageBegin", "1");
-		dynamic2.put("cellHeight", "16.0");
-
-		dynamic2.put("colWidthPercent", new int[] { 3, 4, 4, 4 });
-		dynamic2.put("theFirstHeader", "附二");
-		dynamic2.put("cellHorizontalAlignment", "1");
-		dynamic2.put("cellVerticalAlignment", "5");
-		dynamic2.put("headers", new String[] { "序号", "借款人", "贷款人", "金额" });
-		String row1[] = new String[] { "1", "小网", "小易", "1000" };
-		String row2[] = new String[] { "2", "小云", "小音", "2000" };
-		String row3[] = new String[] { "3", "小乐", "天马", "3000" };
-		dynamic2.put("datas", new String[][] { row1, row2, row3 });
-		dynamic2.put("headersAlignment", "1");
-		dynamic2.put("tableWidthPercentage", 80);
-		dynamic_tables.add(dynamic2);
-		System.out.println(dynamic_tables.toString());
-
-		JSONArray tables = new JSONArray();
-
-		String table = "{\"insertWay\":1,\"keyword\":\"辽宁方林装饰家装项目单\",\"pageBegin\":1,\"headers\":[\"序号\",\"项目名称\",\"计量单位\",\"数量\",\"工艺做法及材料说明\"],\"datas\":[[\"序号\",\"项目名称\",\"计量单位\",\"数量\",\"工艺做法及材料说明\"],[\"序号\",\"项目名称\",\"计量单位\",\"数量\",\"工艺做法及材料说明\"],[\"序号\",\"项目名称\",\"计量单位\",\"数量\",\"工艺做法及材料说明\"],[\"序号\",\"项目名称\",\"计量单位\",\"数量\",\"工艺做法及材料说明\"]]}";
-
-		System.out.println(JSONObject.parseObject(table));
-		System.out.println(JSONObject.parseObject(table).get("insertWay"));
-
-		tables.add(JSONObject.parseObject(table));
-		System.out.println(tables.toJSONString());
-	}
-
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public String signDecorationContractForCompany(SignetVO signetVO, DecorationContractVO decorationContractVO) throws FLException {
@@ -380,6 +347,23 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		decorationContractPO.setFilinner(filinner);
 		decorationContractPO.setStatus(DecorationContractPO.STATUS_FILE_INT);
 		decorationContractPO.setFilingTime(DateUtil.getDateToTimestamp(new Date()));
+
+		decorationContractDao.update(decorationContractPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int showDecorationContract(DecorationContractVO decorationContractVO) throws FLException {
+
+		DecorationContractPO decorationContractPO = decorationContractDao.get(decorationContractVO.getDcid());
+
+		if (decorationContractPO == null) {
+			throw new FLException(130002, "合同信息不存在");
+		}
+
+		decorationContractPO.setIshow(decorationContractVO.getIshow());
 
 		decorationContractDao.update(decorationContractPO);
 

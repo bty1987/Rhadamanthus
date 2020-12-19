@@ -33,8 +33,12 @@ public interface ProcessService {
 
 	public void updateProcess(ProcessVO process, List<ProcessItemVO> processItems) throws FLException;
 
+	public void updateProcessForStatus(ProcessVO process) throws FLException;
+
 	public void updateProcessItem(ProcessItemVO processItem);
 
-	public void deleteProcessItem(ProcessItemVO processItem);
+	public void deleteProcess(ProcessVO process) throws FLException;
+
+	public void deleteProcessItem(ProcessItemVO processItem) throws FLException;
 
 }

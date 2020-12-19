@@ -43,12 +43,21 @@ public class ProcessDaoImpl extends DaoImpl<ProcessPO> implements ProcessDao {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<ProcessPO> queryProcess() {
-		return session().createCriteria(ProcessPO.class).list();
+		return session().createCriteria(ProcessPO.class).add(Restrictions.eq("status", ProcessPO.STATUS_ENABLED_INT)).list();
 	}
 
 	@Override
 	public ProcessPO queryProcess(String no) {
 		return (ProcessPO) session().createCriteria(ProcessPO.class).add(Restrictions.eq("no", no)).uniqueResult();
+	}
+
+	@Override
+	public int deleteProcessItem(long pid) {
+		
+		String sql = "DELETE FROM approval.processitem where pid = :pid";
+				
+	    return session().createSQLQuery(sql).setLong("pid", pid).executeUpdate();
+		
 	}
 	
 	public void queryFilterExcute(List<Filter> filters, PagingQuery<ProcessPO> query) {

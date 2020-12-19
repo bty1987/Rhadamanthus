@@ -535,4 +535,6 @@ $.extend(api, {payment: {
             args: ["cash","bank","coupon"]
         }]
     },
+
+	queryPaymentFunction: {url: "queryPaymentFunction.do"}
 }});

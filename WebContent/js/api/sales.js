@@ -331,7 +331,7 @@ $.extend(api, {
             }
             ]
         },
-		pageSalesBalanceForCheck: {
+        pageSalesBalanceForCheck: {
             url: "pageSalesBalanceForCheck.do",
             type: "query",
             tranargs: [{
@@ -361,8 +361,34 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data-sales",
-                args: ["total","fullpay","depositpay"]
+                args: ["total","fullpay","depositpay","amount","maling","coupon","venderMaling"]
             }]
         },
+        querySalesFunction: {url: "querySalesFunction.do"},
+        querySalesFunctionByName: {url: "querySalesFunctionByName.do"},
+       
+        pageSalesDeliveryItem:{
+        	url: "pageSalesDeliveryItem.do",
+        	type: "query",
+        	tranargs: [{
+                result: "paging-data-salesItem",
+                args: ["initnum","num"]
+            }]	},
+        pageSalesDeliveryItemForSupplier:{
+            url: "pageSalesDeliveryItemForSupplier.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data-salesItem",
+                args: ["initnum","num"]
+            }]	},
+        
+        tranSalesDeliveryItem:{url:"tranSalesDeliveryItem.do"},
+        checkSalesDeliveryItem:{url:"checkSalesDeliveryItem.do"},
+        confirmSalesDeliveryItem:{url:"confirmSalesDeliveryItem.do"},
+        finishSalesDeliveryItem:{url:"finishSalesDeliveryItem.do"},
+        balanceSalesDeliveryItem:{url:"balanceSalesDeliveryItem.do"},
+        
+        deliveSalesDeliveryItem:{url:"deliveSalesDeliveryItem.do",},
+        
     }
 });

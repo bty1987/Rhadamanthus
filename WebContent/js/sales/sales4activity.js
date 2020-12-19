@@ -1,15 +1,18 @@
 $(function () {
 
     var salesActivityItem = {
+        
         paramsOrderId : params.orderId,
-        ssid : params.sid,
-        salesno : params.no,
-        activityId : params.activityId,
+        pagetype: params.type,
+        
         items: {
             things : com.focusPage("#things"),
             coupons : com.focusPage("#coupons"),
+            paper : com.focusPage("#paper"),
             thingsName : com.focusPage("#thingsName"),
             thingsNum : com.focusPage("#thingsNum"),
+            paperName : com.focusPage("#paperName"),
+            paperNum : com.focusPage("#paperNum"),
             couponsName : com.focusPage("#couponsName"),
             couponsNum : com.focusPage("#couponsNum"),
             activity : com.focusPage("#activity"),
@@ -40,6 +43,7 @@ $(function () {
     salesActivityItem.salesActivityItemModal = com.focusPage("#salesActivityItemModal").on('show.bs.modal', function (e) {
         com.resetTypeahead("thingsName", []);
         com.resetTypeahead("couponsName", []);
+        com.resetTypeahead("paperName", []);
         com.clearValidator();
     });
 
@@ -59,7 +63,7 @@ $(function () {
         if(com.validate("thingsInputs","bottom")){
             return;
         }
-        createThings();
+        createOne("things");
         salesActivityItem.items.thingsName.val("");
         salesActivityItem.items.thingsNum.val("");
     });
@@ -68,17 +72,25 @@ $(function () {
         if(com.validate("couponInputs","bottom")){
             return;
         }
-        createCoupons();
+        createOne("coupons");
         salesActivityItem.items.couponsName.val("");
         salesActivityItem.items.couponsNum.val("");
     });
+    com.focusPage("#paperAdd").unbind().click(function(){
+        if(com.validate("paperInputs","bottom")){
+            return;
+        }
+        createOne("paper");
+        salesActivityItem.items.paperName.val("");
+        salesActivityItem.items.paperNum.val("");
+    });
 
-    function createThings(){
-        var $li = $("<li></li>").css({"background-color":"#91b8d0", "margin-bottom":"5px", "margin-right":"5px"}).appendTo(com.focusPage("#things"));
-        var aisd = com.focusPage("#thingsName").attr("data-typeahead-key");
-        var thingsName = com.focusPage("#thingsName").val();
-        var num = com.focusPage("#thingsNum").val();
-        var $span = $("<span></span>").css({'color': '#fff'}).attr('thingsName', thingsName).attr('num', num).attr('asid', aisd).html(thingsName).appendTo($li);
+    function createOne(oneString){
+        var $li = $("<li></li>").css({"background-color":"#91b8d0", "margin-bottom":"5px", "margin-right":"5px"}).appendTo(com.focusPage("#"+oneString));
+        var aisd = com.focusPage("#" + oneString + "Name").attr("data-typeahead-key");
+        var name = com.focusPage("#" + oneString + "Name").val();
+        var num = com.focusPage("#" + oneString + "Num").val();
+        var $span = $("<span></span>").css({'color': '#fff'}).attr(oneString+'Name', name).attr('num', num).attr('asid', aisd).html(name).appendTo($li);
         var $spanTwo = $("<span></span>").css({'font-size':'16px', 'color':'#fff', 'margin':'0 5px'}).html(" 数量:" + num).appendTo($span);
         var $a = $("<a></a>").addClass("glyphicon glyphicon-remove").css({'color': '#d15b47'}).appendTo($li);
         $a.click(function () {
@@ -86,32 +98,23 @@ $(function () {
         });
     }
 
-    function createCoupons(){
-        var $li = $("<li></li>").css({"background-color":"#91b8d0", "margin-bottom":"5px", "margin-right":"5px"}).appendTo(com.focusPage("#coupons"));
-        var couponsName = com.focusPage("#couponsName").val();
-        var aisd = com.focusPage("#couponsName").attr("data-typeahead-key");
-        var num = com.focusPage("#couponsNum").val();
-        var $span = $("<span></span>").css({'color':'#fff'}).attr('couponsName', couponsName).attr('num', num).attr('asid', aisd).html(couponsName).appendTo($li);
-        var $spanTwo = $("<span></span>").css({'font-size':'16px', 'color':'#fff', 'margin':'0 5px'}).html(" 数量:" + num).appendTo($span);
-        var $a = $("<a></a>").addClass("glyphicon glyphicon-remove").css({'color':'#d15b47'}).appendTo($li);
-        $a.click(function () {
-            $li.remove();
-        });
-    }
-
     com.selectTypeahead("thingsName", [], 'asid', 'activityItemName');
     com.selectTypeahead("couponsName", [], 'asid', 'activityItemName');
+    com.selectTypeahead("paperName", [], 'asid', 'activityItemName');
     salesActivityItem.items.activity.on("change", function () {
 
         salesActivityItem.items.thingsName.val('');
         salesActivityItem.items.thingsNum.val('');
         salesActivityItem.items.couponsName.val('');
         salesActivityItem.items.couponsNum.val('');
+        salesActivityItem.items.paperName.val('');
+        salesActivityItem.items.paperNum.val('');
 
         var $this = $(this);
 
         var _things = [];
         var _coupons = [];
+        var _paper = [];
 
         var options = {
             "activity.aid": $this.val()
@@ -135,11 +138,18 @@ $(function () {
                         asid: _activityItem.asid,
                         activityItemName: _activityItem.name + " 金额:" + _activityItem.money + " 积分:" + _activityItem.integral
                     });
+                }else if (_activityItem.type == 2) {
+                	_paper.push({
+                        asid: _activityItem.asid,
+                        activityItemName: _activityItem.name + " 金额:" + _activityItem.money + " 积分:" + _activityItem.integral
+                    });
                 }
+
             }
 
             com.resetTypeahead("thingsName", _things);
             com.resetTypeahead("couponsName", _coupons);
+            com.resetTypeahead("paperName", _paper);
         });
     });
 
@@ -148,10 +158,14 @@ $(function () {
         var $btnSub = $('<a></a>').addClass('btn btn-minier btn-success').html('领取物品');
         var $h4 = $('<h4></h4>').addClass('oid').append($('<small></small>').addClass('blue')).html("装修单号:" + salesActivityItem.paramsOrderId);
         var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+        
+        var $btnImport = $('<a></a>').addClass('btn btn-minier btn-dark').html('导出').appendTo($divBtnWrap);
 
         var $divWarp = com.focusPage("#paramsOrder").append($h4);
 
-        $divBtnWrap.append($btnSub).appendTo($h4);
+        if(salesActivityItem.pagetype == "advance"){
+            $divBtnWrap.append($btnSub).appendTo($h4);
+        }
 
         $btnSub.click(function () {
 
@@ -169,6 +183,10 @@ $(function () {
             });
 
             salesActivityItem.salesActivityItemModal.modal("show")
+        });
+        
+        $btnImport.click(function(){
+            imports();
         });
 
         return $divWarp;
@@ -377,17 +395,21 @@ $(function () {
     function uiBtnMethod(uiPgDiv, activityItem) {
         //0: 初始 , 1: 失效 , 2: 已领 , 3: 退货 , 4: 配送 , 5: 未退 , 6: 升级 , 7: 补款
         //失效
-        var abateBtn = $("<span></span>").addClass("btn btn-minier btn-yellow").html("失效").css("margin", "3px").appendTo(uiPgDiv);
+        var abateBtn = $("<span></span>").addClass("btn btn-minier btn-yellow").html("失效").css("margin", "3px");
         //领取
-        var receiveBtn = $("<span></span>").addClass("btn btn-minier btn-success").html("领取").css("margin", "3px").appendTo(uiPgDiv);
+        var receiveBtn = $("<span></span>").addClass("btn btn-minier btn-success").html("领取").css("margin", "3px");
         //退货
-        var refundBtn = $("<span></span>").addClass("btn btn-minier btn-warning").html("退货").css("margin", "3px").appendTo(uiPgDiv);
+        var refundBtn = $("<span></span>").addClass("btn btn-minier btn-warning").html("退货").css("margin", "3px");
         //配送
-        var deliveBtn = $("<span></span>").addClass("btn btn-minier btn-inverse").html("配送").css("margin", "3px").appendTo(uiPgDiv);
+        var deliveBtn = $("<span></span>").addClass("btn btn-minier btn-inverse").html("配送").css("margin", "3px");
         //未退
-        var unrefundBtn = $("<span></span>").addClass("btn btn-minier btn-danger").html("未退").css("margin", "3px").appendTo(uiPgDiv);
+        var unrefundBtn = $("<span></span>").addClass("btn btn-minier btn-danger").html("未退").css("margin", "3px");
         //补款
-        var expendBtn = $("<span></span>").addClass("btn btn-minier btn-purple").html("补款").css("margin", "3px").appendTo(uiPgDiv);
+        var expendBtn = $("<span></span>").addClass("btn btn-minier btn-purple").html("补款").css("margin", "3px");
+        
+        if(salesActivityItem.pagetype == "advance"){
+            uiPgDiv.append(abateBtn).append(receiveBtn).append(refundBtn).append(deliveBtn).append(unrefundBtn).append(expendBtn)
+        }
 
         //失效按钮
         abateBtn.on("click", function () {
@@ -443,11 +465,7 @@ $(function () {
 
         com.showConfirm("是否确认失效" + activityItemName + "活动物品?", function () {
 
-            var options = {
-                "salesActivityItem.saiid": saiid
-            };
-
-            com.post(api.sales.abateSalesActivityItem, options, function (res) {
+            com.post(api.sales.abateSalesActivityItem, {"salesActivityItem.saiid": saiid}, function (res) {
                 com.showAlert(com.info, "失效成功!");
                 querySalesActivityItem();
                 amountSalesActivityForActivity();
@@ -459,12 +477,10 @@ $(function () {
 
     //未退
     function unrefundSalesActivityItem(saiid, activityItemName) {
+        
         com.showConfirm("是否确认未退" + activityItemName + "活动物品?", function () {
 
-            var options = {
-                "salesActivityItem.saiid": saiid
-            };
-            com.post(api.sales.unrefundSalesActivityItem, options, function (res) {
+            com.post(api.sales.unrefundSalesActivityItem, {"salesActivityItem.saiid": saiid}, function (res) {
                 com.showAlert(com.info, "未退成功!");
                 querySalesActivityItem();
             });
@@ -474,26 +490,88 @@ $(function () {
 
     //消耗
     function expendSalesActivityItem(saiid, activityItemName) {
+        
         com.showConfirm("是否确认补款" + activityItemName + "活动物品?", function () {
 
-            var options = {
-                "salesActivityItem.saiid": saiid
-            };
-            com.post(api.sales.expendSalesActivityItem, options, function (res) {
+            com.post(api.sales.expendSalesActivityItem, {"salesActivityItem.saiid": saiid}, function (res) {
                 com.showAlert(com.info, "补款成功!");
                 querySalesActivityItem();
                 amountSalesActivityForActivity();
                 integral();
             });
-
         });
+    }
+    
+    function imports(){
+        
+        var awardStockType = {};
+        var awardStockSubType = {};
+        var awardRecordType = {};
+        var awardRecordSubType = {};
+        var storeroom = {};
+        
+        var decoration = {};
+        
+        com.post(api.ds.information, {}, function(res){
+
+            awardStockType = res.awardStockType.split("key" ,"value");
+            awardStockSubType = res.awardSubtype.split("key" ,"value");
+            awardRecordType = res.StockType.split("key" ,"value");
+            awardRecordSubType = res.awardRecordSubtype.split("key" ,"value");
+            storeroom = res.awardStoreRoom.split("key" ,"value");
+        }, null, false);
+        
+        com.post(api.decoration.queryDecorationByOrderId, {"decorationOrderId": salesActivityItem.paramsOrderId}, function(res){
+            decoration = res.decoration;
+        }, null, false);
+        
+        com.post(api.information.pageAwardRecord, $.extend({}, {"filters[0].data": salesActivityItem.paramsOrderId, "filters[0].field": "orderId", "filters[0].op": "eq"}, {"paging.noPage": 1, "awardRecord.awardStock.asid": ""}), function (res) {
+            
+            $.exceler({
+                column: [
+                    ['编号', 'awardStock.no'],
+                    ['装修单号', 'orderId'],
+                    ['楼盘', "decoration.house.village.name"],
+                    ['楼号', "decoration.house.houseNumber"],
+                    ['名称', 'awardStock.name'],
+                    ['规格', 'awardStock.format'],
+                    ['库房', 'awardStock.storeroom'],
+                    ['类型', 'awardStock.type'],
+                    ['子类', 'awardStock.subtype'],
+                    ["类型:", 'type'],
+                    ["子类:", 'subtype'],
+                    ["业绩标识:", 'awardStock.isPrefor'],
+                    ["单价:", 'unitPrice'],
+                    ["数量:", 'num'],
+                    ["总额:", 'totalPrice'],
+                    ["说明:", 'content'],
+                    ["设计师:", 'decoration.designer.currentName'],
+                    ["操作人:", 'creater.currentName'],
+                    ["操作时间:", 'operateTime'],
+                ],
+                list: res.paging.data
+
+            }, function(v){
+                v.awardStock.type = awardStockType[v.awardStock.type];
+                v.awardStock.subtype = awardStockSubType[v.awardStock.subtype];
+                v.type = awardRecordType[v.type];
+                v.subtype = awardRecordSubType[v.subtype];
+                v.awardStock.storeroom = storeroom[v.awardStock.storeroom];
+                
+                v.awardStock.isPrefor = v.awardStock.isPrefor == "0" ? "计算业绩" : "不计算业绩";
+                
+                v.decoration = decoration;
+            });
+            
+        });
+        
     }
 
     //领取物品
     com.focusPage("#submitSalesActivityItemBtn").on("click", function () {
 
-        if (salesActivityItem.items.things.html() == "" && salesActivityItem.items.coupons.html() == "") {
-            com.showAlert(com.warning, "活动物品或券需要选择才能提交");
+        if (salesActivityItem.items.things.html() == "" && salesActivityItem.items.coupons.html() == ""&& salesActivityItem.items.paper.html() == "") {
+            com.showAlert(com.warning, "活动物品或券或红包需要选择才能提交");
             return;
         }
 
@@ -549,6 +627,25 @@ $(function () {
             index++;
         });
 
+        com.focusPage("#paper li").each(function (i, e) {
+
+            var _paper = $(e);
+
+            options["salesActivityItems[" + index + "].aid"] = aid;
+            options["salesActivityItems[" + index + "].asid"] = _paper.children('span').attr("asid");
+            options["salesActivityItems[" + index + "].activity"] = activityName;
+            options["salesActivityItems[" + index + "].name"] = _paper.children('span').attr("paperName").split(" ")[0];
+            options["salesActivityItems[" + index + "].type"] = 2;
+            options["salesActivityItems[" + index + "].num"] = _paper.children('span').attr("num");
+            options["salesActivityItems[" + index + "].money"] = _paper.children('span').attr("paperName").split(" ")[1].split(':')[1];
+            options["salesActivityItems[" + index + "].content"] = content;
+            options["salesActivityItems[" + index + "].integral"] = _paper.children('span').attr("paperName").split(" ")[2].split(':')[1];
+
+            amount = amount + utils.accMul(parseFloat(_paper.children('span').attr("paperName").split(" ")[2].split(':')[1]), _paper.children('span').attr("num"));
+
+            index++;
+        });
+
         if (!submitFlag) {
             return;
         }
@@ -588,5 +685,5 @@ $(function () {
         com.cleanItems(salesActivityItem.items);
         com.clearValidator();
     });
-
+    
 });

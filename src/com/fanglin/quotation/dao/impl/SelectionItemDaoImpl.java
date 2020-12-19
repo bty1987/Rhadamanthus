@@ -133,9 +133,20 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 					query.add(query.getCriterion(SelectionItemPD.COLUMN_GOODS_CATEGORY_STR, data, op));
 				} else if (SelectionItemPD.COLUMN_GOODS_BRAND_STR.equals(field)) {
 					query.add(query.getCriterion(SelectionItemPD.COLUMN_GOODS_BRAND_STR, data, op));
+				} else if ("createTime".equals(field)) {
+					query.timeranges("createTime", data);
+				} else if ("tranTime".equals(field)) {
+					query.timeranges("tranTime", data);
+				} else if ("checkTime".equals(field)) {
+					query.timeranges("checkTime", data);
+				} else if ("confirmTime".equals(field)) {
+					query.timeranges("confirmTime", data);
+				} else if ("finishTime".equals(field)) {
+					query.timeranges("finishTime", data);
+				} else if ("balanceTime".equals(field)) {
+					query.timeranges("balanceTime", data);
 				}
 			}
 		}
 	}
-
 }

@@ -75,6 +75,8 @@ public class DecorationContractPO implements Serializable, Contract {
 
 	private short status;
 
+	private short ishow;
+
 	public DecorationContractPO() {
 		super();
 	}
@@ -246,6 +248,14 @@ public class DecorationContractPO implements Serializable, Contract {
 	@Override
 	public void status(short status) {
 		this.status = status;
+	}
+
+	public short getIshow() {
+		return ishow;
+	}
+
+	public void setIshow(short ishow) {
+		this.ishow = ishow;
 	}
 
 }

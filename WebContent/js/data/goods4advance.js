@@ -478,7 +478,7 @@ $(function () {
 
         if (type == "export") {
 
-            var filtersName = ["goodsNo", "goodsName", "goodsBarcode", "goodsBrand", "goodsStatus"];
+            var filtersName = ['data-goods-no', 'data-goods-name', 'data-goods-barcode', 'data-goods-brand-name', 'data-goods-status'];
 
             $.each(filtersName, function (i, v) {
                 var val = com.focusPage("[name='" + v + "']").val();
@@ -507,17 +507,22 @@ $(function () {
             return false;
         }
 
-        var times = goods.items.executeDates.val() + ' ' + goods.items.executeTimes.val();
-        var executeTime = new Date(times);
+        var date = goods.items.executeDates.val();
+        var time = goods.items.executeTimes.val();
 
-        if (!planUtils.TimeComparison(executeTime, config.planTimeLimit)) {
+        var executeTime = date.replace(/-/g, '').substr(2) + time.replace(/:/g, '').substr(0, 4);
+
+        var times = goods.items.executeDates.val() + ' ' + goods.items.executeTimes.val();
+        var checkTime = new Date(times);
+
+        if (!planUtils.TimeComparison(checkTime, config.planTimeLimit)) {
             com.showAlert(com.warning, "执行时间请大于当前时间" + config.planTimeLimit + "分钟");
             return false;
         }
 
         var options = {
             "plan.task.keyWord": goods.keyword,
-            "plan.executeTime": times,
+            "plan.executeTime": executeTime,
             "plan.args": args
         };
 

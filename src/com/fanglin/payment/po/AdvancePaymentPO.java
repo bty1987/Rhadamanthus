@@ -19,8 +19,6 @@ public class AdvancePaymentPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -3956125205251478439L;
 	
-	public static final String COLUMN_CUSTOMERID_STR = "customer.cid";
-	
 	private int apId;
 	
 	private DecorationPO decoration;

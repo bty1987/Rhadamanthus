@@ -3,18 +3,18 @@ package com.fanglin.customer.vo;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class FeedbackDrawingVO implements Serializable{
-	
+public class FeedbackDrawingVO implements Serializable {
+
 	private static final long serialVersionUID = -5839037335658757203L;
 
 	private Long fdid;
-	
+
 	private Long fid;
-	
+
 	private String path;
-	
+
 	private Timestamp createTime;
-	
+
 	private Short status;
 
 	public FeedbackDrawingVO() {
@@ -60,5 +60,5 @@ public class FeedbackDrawingVO implements Serializable{
 	public void setStatus(Short status) {
 		this.status = status;
 	}
-	
+
 }

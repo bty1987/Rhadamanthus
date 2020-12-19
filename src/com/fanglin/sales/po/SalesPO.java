@@ -97,6 +97,8 @@ public class SalesPO implements Serializable {
 	public static final String COLUMN_SALESMANID_STR = "salesman.uid";
 
 	public static final String COLUMN_GUID_STR = "guider.uid";
+	
+	public static final String COLUMN_GUIDERUSERID_STR = "guider.userId";
 
 	public static final String COLUMN_ISID_STR = "instorer.uid";
 
@@ -121,6 +123,8 @@ public class SalesPO implements Serializable {
 	public static final String COLUMN_STATUS_STR = "status";
 
 	public static final String COLUMN_OCUID_STR = "supplier.uid";
+	
+	public static final String COLUMN_CREATETIME_STR = "createTime";
 
 	private long sid;
 

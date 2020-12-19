@@ -59,8 +59,8 @@ var printAddReduceDetail = (function(){
 				$.each(addReduceItems, function (j, addReduceItem) {
 
 					if (reduceNums[addReduceItem.ariId]) {
-						addReduceItem.num = utils.changeTwoDecimal(utils.accAdd(addReduceItem.num, reduceNums[addReduceItem.ariId]));
-						addReduceItem.total = utils.changeTwoDecimal(utils.accMul(addReduceItem.num, addReduceItem.discountPrice));
+						addReduceItem.num = utils.changeThrDecimal(utils.accAdd(addReduceItem.num, reduceNums[addReduceItem.ariId]));
+						addReduceItem.total = utils.changeThrDecimal(utils.accMul(addReduceItem.num, addReduceItem.discountPrice));
 					}
 
 					html += '<tr align="center">';
@@ -73,13 +73,13 @@ var printAddReduceDetail = (function(){
 					html += '<td>' + addReduceItem.total + '</td>';
 					html += '</tr>';
 
-					addReduceTotal = utils.changeTwoDecimal(utils.accAdd(addReduceItem.total, addReduceTotal));
+					addReduceTotal = utils.changeThrDecimal(utils.accAdd(addReduceItem.total, addReduceTotal));
 				});
 
 				html += '</tbody></table>';
 				html += typeName + '金额: ' + addReduceTotal  + '元';
 				html += '<hr><p></p>';
-				addReduceTotalPrice = utils.changeTwoDecimal(utils.accAdd(addReduceType == '1' ? -addReduceTotal : addReduceTotal, addReduceTotalPrice));
+				addReduceTotalPrice = utils.changeThrDecimal(utils.accAdd(addReduceType == '1' ? -addReduceTotal : addReduceTotal, addReduceTotalPrice));
 			});
 
 			$("#labSumMoney").html("工程最终增减合计金额: " + addReduceTotalPrice + "元");
@@ -173,9 +173,9 @@ var printAddReduceDetail = (function(){
 					} else {
 						discount = ([1, 3].indexOf(addReduceItem.discount) != -1) ? quotationDiscount : 1;
 					}
-
-					var discountPrice = utils.changeThrDecimal(utils.accMul(addReduceItem.unitPrice, discount));
-
+					
+					var discountPrice = utils.accMul(addReduceItem.unitPrice, discount);
+					
 					addReduceItem.discountPrice = discountPrice;
 					addReduceItem.total = utils.changeThrDecimal(utils.accMul(addReduceItem.num ,  discountPrice));
 

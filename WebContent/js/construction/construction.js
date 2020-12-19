@@ -6,15 +6,12 @@ jQuery(function ($) {
 
         modals:{
             constructionInfoModal : com.focusPage("#constructionInfoModal"),
-            updateConstructionModal: com.focusPage("#updateConstructionModal"),
-            printQuotationCNModal: com.focusPage("#printQuotationCNModal"),
+            updateConstructionModal: com.focusPage("#updateConstructionModal")
         },
 
         btns: {
             saveBtn: com.focusPage("#saveBtn"),
-            updateConstructionBtn: com.focusPage("#updateConstructionBtn"),
-            printNormriceSBtn : com.focusPage("#printNormriceSBtn"),
-            printNormriceWBtn : com.focusPage("#printNormriceWBtn"),
+            updateConstructionBtn: com.focusPage("#updateConstructionBtn")
         },
 
         items: {
@@ -35,14 +32,11 @@ jQuery(function ($) {
         cid : null,
         isAccessory : {},
         constructionNodes: {},
-        constructionNode : com.focusPage("#constructionNode"),
         quotationDetail: {},
     };
 
     construction.btns.saveBtn.bindClick(saveData);
     construction.btns.updateConstructionBtn.bindClick(update);
-    construction.btns.printNormriceSBtn.bindClick(printNormriceS);
-    construction.btns.printNormriceWBtn.bindClick(printNormriceW);
     construction.modals.constructionInfoModal.on("hide.bs.modal", function(){
 
         com.cleanItems(construction.items);
@@ -68,8 +62,6 @@ jQuery(function ($) {
         construction.constructionNodes[0] = "初始";
         construction.constructionNodes[1] = "开工";
         construction.constructionNodes[2] = "完工";
-
-        construction.constructionNode.bindData(res.constructionNodes, "sort", "name", false);
 
     }, null, false);
 
@@ -116,8 +108,6 @@ jQuery(function ($) {
             var $btnOpen = $('<a></a>').addClass('btn btn-minier btn-danger').html('辅料开启');
             var $btnLock = $('<a></a>').addClass('btn btn-minier btn-pink').html('辅料锁定');
             var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-yellow').html("更新");
-            var $btnQuota = $('<a></a>').addClass('btn btn-minier btn-success').html("定额材料");
-            var $btnQuopt = $('<a></a>').addClass('btn btn-minier btn-warning').html('定额工费');
 
             var propertyArr = [
                 ["楼盘名:", v.decoration.house.village.name + " " + v.decoration.house.houseNumber, "grey"],
@@ -140,7 +130,7 @@ jQuery(function ($) {
                 $liProperty.appendTo($ulProperty);
             });
 
-            $divBtnWrap.append($btnInfo).append($btnView).append($btnAddReduce).append($btnRe).append($btnAcs).append($btnUpdate).append($btnQuota).append($btnQuopt).appendTo($h3);
+            $divBtnWrap.append($btnInfo).append($btnView).append($btnAddReduce).append($btnRe).append($btnAcs).append($btnUpdate).appendTo($h3);
 
             if(v.accessory == 1){
                 $divBtnWrap.append($btnOpen);
@@ -180,30 +170,6 @@ jQuery(function ($) {
 
             $btnLock.click(function () {
                 accessoryLock(v.cid);
-            });
-
-            $btnQuota.click(function () {
-                params["accessories.orderId"] = v.decoration.orderId;
-                com.popup4page("#stockRecordPopUp","/views/manifest/quotaItem.html","定额材料")
-            });
-
-            $btnQuopt.click(function () {
-                construction.quotationDetail = {};
-                com.post(api.quotation.queryQuotationForDefaultByOrderId, {
-                    "quotation.orderId": v.decoration.orderId,
-                }, function (res) {
-                    construction.quotationDetail.quotation = res.quotation;
-                }, null, false);
-
-                var quotationId = construction.quotationDetail.quotation.qid;
-
-                params['decorationOrderId'] = v.decoration.orderId;
-                params['company.name'] = v.decoration.company.name;
-                params['orderType'] = v.decoration.type;
-                params.quotationId = quotationId;
-                params.subtype = [1];
-                params.showType = {itemtype: 4};
-                construction.modals.printQuotationCNModal.modal("show");
             });
 
             $btnUpdate.click(function () {
@@ -346,19 +312,6 @@ jQuery(function ($) {
 
             construction.modals.updateConstructionModal.modal("hide");
         });
-    }
-
-    function printNormriceS() {
-        params.type = 1;
-        params['workType'] = construction.constructionNode.val();
-        com.popup("打印报价", "/views/quotation/normriceOutput.html", null, null, true);
-        construction.modals.printQuotationCNModal.modal("hide");
-    }
-    function printNormriceW() {
-        params.type = 2;
-        params['workType'] = construction.constructionNode.val();
-        com.popup("打印报价", "/views/quotation/normriceOutput.html", null, null, true);
-        construction.modals.printQuotationCNModal.modal("hide");
     }
 
 });

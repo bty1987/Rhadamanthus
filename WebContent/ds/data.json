@@ -92,9 +92,10 @@
     {"key" : "1", "value" : "禁用"}
   ],
   "talkingType":[
-    {"key" : "0", "value" : "工程合同补充条款"},
-    {"key" : "1", "value" : "降配比标写"},
-    {"key" : "2", "value" : "未含项目"}
+    {"key" : "0", "value" : "工程补充条款"},
+    {"key" : "1", "value" : "工程追加条款"},
+    {"key" : "2", "value" : "未含项目"},
+    {"key" : "3", "value" : "工程活动优惠"}
   ],
   "taskLevel": [
     {"key" : "0", "value" : "功能级"},

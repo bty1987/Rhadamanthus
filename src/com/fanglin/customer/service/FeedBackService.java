@@ -9,7 +9,7 @@ import com.fanglin.utils.Paging;
 
 public interface FeedbackService {
 	
-	public void pageFeedback(Paging paging,List<Filter> filters);
+	public void pageFeedback(Paging paging,List<Filter> filters, int company);
 
 	public int addFeedback(FeedbackVO feedbackVO) throws FLException;
 	

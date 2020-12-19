@@ -360,6 +360,7 @@ $.extend(api, {
             }
         },
         deletePrice: {url: "deletePrice.do"},
+        updatePriceForStatus: {url: "updatePriceForStatus.do"},
 
         pageAoods: {
             url: "pageAoods.do",
@@ -594,6 +595,7 @@ $.extend(api, {
         authSignet: {url:"authSignet.do"},
         confirmSignet: {url:"confirmSignet.do"},
         signateSignet: {url:"signateSignet.do"},
+        signateAuto: {url:"signateAuto.do"},
         
         pageTalking:{url:"pageTalking.do"},
         queryTalking:{url:"queryTalking.do"},

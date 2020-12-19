@@ -179,9 +179,11 @@ jQuery(function ($) {
     
     //申请活动
     decorationDetail.activity.activity = com.focusPage("#activity").on("change", function () {
+        
         var $this = $(this);
         var things = [];
         var coupons = [];
+        var papers = [];
 
         var options = {
             "activity.aid": $this.val()
@@ -193,22 +195,23 @@ jQuery(function ($) {
             for (var i = 0; i < activity.length; i++) {
 
                 var activityItem = activity[i];
+                var item = {
+                    asid: activityItem.asid,
+                    activityItemName: activityItem.name + " 金额:" + activityItem.money,
+                }
 
                 if (activityItem.type == 0) {
-                    coupons.push({
-                        asid: activityItem.asid,
-                        activityItemName: activityItem.name + " 金额:" + activityItem.money,
-                    });
+                    coupons.push(item);
                 } else if (activityItem.type == 1) {
-                    things.push({
-                        asid: activityItem.asid,
-                        activityItemName: activityItem.name + " 金额:" + activityItem.money
-                    });
+                    things.push(item);
+                } else if (activityItem.type == 2) {
+                    papers.push(item);
                 }
             }
 
             com.selectTypeahead("thingsType", things, 'asid', 'activityItemName');
             com.selectTypeahead("couponsType", coupons, 'asid', 'activityItemName');
+            com.selectTypeahead("papersType", papers, 'asid', 'activityItemName');
         });
     });
 
@@ -223,11 +226,23 @@ jQuery(function ($) {
     });
 
     com.focusPage("#couponsAdd").unbind().click(function(){
+        
         if(com.validate("couponsInputs")){
-            return;
+            return false;
         }
 
-       decorationUtils.createCounpon("coupons", "couponsType", "receiveTypes", "couponsVal");
+        decorationUtils.createCounpon("coupons", "couponsType", "receiveTypes", "couponsVal");
+
+        com.cleanItems(decorationDetail.decorationActivityItems);
+    });
+    
+    com.focusPage("#papersAdd").unbind().click(function(){
+        
+        if(com.validate("papersInputs")){
+            return false;
+        }
+
+        decorationUtils.createCounpon("papers", "papersType", "receiveTypess", "papersVal");
 
         com.cleanItems(decorationDetail.decorationActivityItems);
     });
@@ -235,14 +250,18 @@ jQuery(function ($) {
     decorationDetail.activity.activity = com.focusPage("#activity");
     decorationDetail.activity.things = com.focusPage("#things");
     decorationDetail.activity.coupons = com.focusPage("#coupons");
+    decorationDetail.activity.papers = com.focusPage("#papers");
     
     decorationDetail.decorationActivityItems.activityInfo = com.focusPage("#activityInfo");
     decorationDetail.decorationActivityItems.couponsType = com.focusPage("#couponsType");
     decorationDetail.decorationActivityItems.couponsVal = com.focusPage("#couponsVal");
-    decorationDetail.decorationActivityItems.thingsType = com.focusPage("#thingsType");
     decorationDetail.decorationActivityItems.receiveType = com.focusPage("#receiveType");
+    decorationDetail.decorationActivityItems.thingsType = com.focusPage("#thingsType");
     decorationDetail.decorationActivityItems.receiveTypes = com.focusPage("#receiveTypes");
     decorationDetail.decorationActivityItems.thingsVal = com.focusPage("#thingsVal");
+    decorationDetail.decorationActivityItems.papersType = com.focusPage("#papersType");
+    decorationDetail.decorationActivityItems.receiveTypess = com.focusPage("#receiveTypess");
+    decorationDetail.decorationActivityItems.papersVal = com.focusPage("#papersVal");
 
     decorationDetail.activity.activityItemName = com.focusPage("#activityItemName");
     decorationDetail.activity.couponInfo = com.focusPage("#couponInfo");
@@ -401,7 +420,7 @@ jQuery(function ($) {
             return;
         }
 
-        if (decorationDetail.activity.things.html() == "" && decorationDetail.activity.coupons.html() == "") {
+        if (decorationDetail.activity.things.html() == "" && decorationDetail.activity.coupons.html() == "" && decorationDetail.activity.papers.html() == "") {
             com.showAlert(com.error, "活动物品或券需要选择才能提交");
             return;
         }
@@ -454,15 +473,31 @@ jQuery(function ($) {
 
             index++;
         });
+        
+        com.focusPage("#papers li").each(function (i, e) {
+            var _ = $(e);
+
+            options["approvalDecorationActivityItems[" + index + "].orderId"] = orderId;
+            options["approvalDecorationActivityItems[" + index + "].activityName"] = activityName;
+            options["approvalDecorationActivityItems[" + index + "].activityItemName"] = _.children('span').attr("typename").split(" ")[0];
+            options["approvalDecorationActivityItems[" + index + "].type"] = 2;
+            options["approvalDecorationActivityItems[" + index + "].num"] = _.children('span').attr('num');
+            options["approvalDecorationActivityItems[" + index + "].money"] = _.children('span').attr("typename").split(" ")[1].split(':')[1];
+            options["approvalDecorationActivityItems[" + index + "].content"] = "";
+            options["approvalDecorationActivityItems[" + index + "].stateType"] = _.children('span').attr('value');
+            options["approvalDecorationActivityItems[" + index + "].asid"] = _.children('span').attr("asid");
+
+            index++;
+        });
 
         if (!submitFlag) {
-            return;
+            return false;
         }
         com.post(api.approval.submitApprovalForDecorationActivity, options, function (res) {
             com.showAlert(com.info, "提交成功");
         });
+        
         decorationDetail.applyDecorationActivityItemModal.modal("hide");
-
     });
 
     com.focusPage("#joinActivityBtn").on("click", function () {
@@ -484,11 +519,12 @@ jQuery(function ($) {
         decorationDetail.joinDecorationActivityModal.modal("show");
     });
 
-    //申领活动
+    //申领活动物品
     com.focusPage("#applyActivityItemBtn").on("click", function () {
 
         com.focusPage("#things").html("");
         com.focusPage("#coupons").html("");
+        com.focusPage("#papers").html("");
 
         var options = {
             "decorationActivity.orderId": decorationDetail.decorationOrderId
@@ -519,9 +555,11 @@ jQuery(function ($) {
 
 
         approvalUtils.initqueryApprovalUser("approveActivityItemManSel", 8);
-        //新增类型
+        
         binding("receiveType");
         binding("receiveTypes");
+        binding("receiveTypess");
+        
         decorationDetail.applyDecorationActivityItemModal.modal("show");
     });
 
@@ -564,7 +602,6 @@ jQuery(function ($) {
         clearHouse();
         decorationDetail.villageChangeModal.modal("show");
     });
-
 
     //点击生成款项按钮
     com.focusPage("#btnSetDecorationPaymentInfo").on('click', function (res) {
@@ -616,6 +653,7 @@ jQuery(function ($) {
 
                 var $span = $('<span></span>').addClass('lbl').html($('<label></label>').attr('style', 'display:inline-block;width:105px;margin-left:10px').text(v.name));
                 var $comment = $('<span></span>').addClass("lbl").text(v.comment == null ? " " : v.comment).attr("style", "margin-left:27px");
+                
                 $input.appendTo($approvaler);
                 $span.appendTo($approvaler);
                 $('<br/>').appendTo($approvaler);
@@ -628,7 +666,6 @@ jQuery(function ($) {
         });
 
         decorationDetail.quotationTotalPriceModal.modal("show");
-
     });
 
     com.focusPage("#btnOtherPayment").on('click', function (res) {

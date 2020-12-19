@@ -203,7 +203,7 @@ Condition.addupRule("customer", {
         }
     },
     "feedback-phone" : {
-        label:"装修单号",
+        label:"电话",
         type:"text",
         submitConfig : {
             name : "phone",

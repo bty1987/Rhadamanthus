@@ -35,4 +35,10 @@ $.extend(api, {right: {
     queryProductionFunctionRightByName: {url: "queryProductionFunctionRightByName.do"},
     updateProductionFunctionRight: {url: "updateProductionFunctionRight.do"},
 
+    queryPaymentFunctionRight: {url: "queryPaymentFunctionRight.do"},
+    updatePaymentFunctionRight: {url: "updatePaymentFunctionRight.do"},
+	
+	querySalesFunctionRightByName: {url: "querySalesFunctionRightByName.do"},
+    updateSalesFunctionRight: {url: "updateSalesFunctionRight.do"},
+
 }});

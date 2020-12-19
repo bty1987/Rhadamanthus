@@ -100,6 +100,7 @@ public class SalesItemServiceImpl implements SalesItemService {
 		BeanUtil.copyProperties(salesItemVO, salesItemPO, Arrays.asList("goods", "color", "format"));
 
 		salesItemPO.setSid(salesVO.getSid());
+		salesItemPO.setInitnum(salesItemVO.getNum());
 		salesItemPO.setPunum(salesItemVO.getNum());
 		salesItemPO.setXgnum(salesItemVO.getNum());
 		salesPO.setOtherStatus(salesVO.getOtherStatus());
@@ -144,6 +145,7 @@ public class SalesItemServiceImpl implements SalesItemService {
 		salesPO.setAmount(salesVO.getTotal());
 
 		salesItemPO.setNum(salesItemVO.getNum());
+		salesItemPO.setInitnum(salesItemVO.getNum());
 		salesItemPO.setPunum(salesItemVO.getNum());
 		salesItemPO.setXgnum(salesItemVO.getNum());
 		salesItemPO.setTotal(salesItemVO.getTotal());

@@ -25,4 +25,6 @@ public interface SignetService {
 
 	public int signateSignet(SignetVO signetVO) throws FLException;
 
+	public String signateAuto(SignetVO signetVO) throws FLException;
+
 }

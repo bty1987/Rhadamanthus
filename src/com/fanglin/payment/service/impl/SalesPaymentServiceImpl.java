@@ -99,11 +99,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 	@Override
 	public void pageSalesPayment(Paging paging, List<Filter> filters, SalesPaymentVO salesPayment, int company, String companyType) {
 		
-		if(filters.size() == 0) return;
+		if (filters.size() == 0) return;
 
-		if(companyType != null){
-			filters.add(new Filter(String.format("sales.%s", companyType), String.valueOf(company), "eq"));
-		}
+		if (companyType != null) filters.add(new Filter(companyType, String.valueOf(company), "eq"));
 		
 		if (salesPayment != null) salesPayment.filter(filters);
 
