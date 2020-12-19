@@ -33,6 +33,8 @@ public interface DecorationContractService {
 
 	public int filingDecorationContract(DecorationContractVO decorationContractVO, String userId) throws FLException;
 
+	public int showDecorationContract(DecorationContractVO decorationContractVO) throws FLException;
+
 	public int signDecorationContract(DecorationContractVO decorationContractVO, Authentication authentication) throws FLException;
 
 	public int resignDecorationContract(DecorationContractVO decorationContractVO, String userId) throws FLException;

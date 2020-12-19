@@ -267,6 +267,14 @@ public class DecorationAction extends BaseListAction {
 
 		return SUCCESS;
 	}
+	
+	@Action(value = "changeDecorationForRepairStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String changeDecorationForRepairStatus() throws FLException {
+
+		decorationService.changeDecorationForRepairStatus(decoration);
+
+		return SUCCESS;
+	}
 
 	public List<DecorationVO> getDecorations() {
 		return decorations;

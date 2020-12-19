@@ -387,6 +387,8 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 					query.add(query.getCriterion("projectStatus", Short.valueOf(data), op));
 				} else if ("sourceStatus".equals(field)) {
 					query.add(query.getCriterion("sourceStatus", Short.valueOf(data), op));
+				} else if ("repairStatus".equals(field)) {
+					query.add(query.getCriterion("repairStatus", Short.valueOf(data), op));
 				} else if ("signTimeDateRange".equals(field)) {
 					query.timeranges("contractTime", "contractTime", data);
 				} else if ("createTimeDateRange".equals(field)) {

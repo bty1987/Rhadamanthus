@@ -59,7 +59,7 @@ import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.dao.DecorationReceiptDao;
-import com.fanglin.payment.po.AdvancePaymentPO;
+import com.fanglin.payment.po.AdvancePaymentDO;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.payment.po.DecorationReceiptPO;
 import com.fanglin.payment.po.PaymentPO;
@@ -873,6 +873,7 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationPO.setHouse(new HousePO(decorationVO.getHouse().getHid()));
 
 		decorationDao.save(decorationPO);
+		decorationDao.flush();
 
 		DecorationInfoPO decorationInfo = new DecorationInfoPO(orderId);
 
@@ -894,7 +895,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		decorationAdditionDao.save(additionInfo); // 辅助信息
 
-		advancePaymentDao.save(new AdvancePaymentPO(decorationPO));
+		advancePaymentDao.save(new AdvancePaymentDO(orderId));
 
 		decorationOperateDao.save(new DecorationOperatePO().create(orderId, operater)); // 创建装修单操作信息
 
@@ -1392,5 +1393,19 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationVO.getDesigner().getDept().getFatherDept().setName(addition.getDesignRegion());
 			decorationVO.getSalesman().getDept().getFatherDept().setName(addition.getSalesRegion());
 		}
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void changeDecorationForRepairStatus(DecorationVO decorationVO) throws FLException {
+		
+		DecorationPO decoration = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
+		
+		if(decoration != null) {
+			
+			decoration.setRepairStatus(decorationVO.getRepairStatus());
+			decorationDao.update(decoration);
+		}
+		
 	}
 }

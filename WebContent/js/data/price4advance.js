@@ -1,9 +1,8 @@
-
 $(function () {
 
     var goods = {
         gid: params["goods.gid"],
-        items :{
+        items: {
             name: com.focusPage("#addPrice").find("#name"),
             purchase: com.focusPage("#addPrice").find("#purchase"),
             selling: com.focusPage("#addPrice").find("#selling"),
@@ -11,9 +10,9 @@ $(function () {
             cvalue: com.focusPage("#addPrice").find("#cvalue"),
             type: com.focusPage("#addPrice").find("#type")
         },
-        btns:{
-            addBtn:com.focusPage("#addBtn"),
-            cancelBtn:com.focusPage("#delBtn"),
+        btns: {
+            addBtn: com.focusPage("#addBtn"),
+            cancelBtn: com.focusPage("#delBtn"),
         }
     };
 
@@ -66,16 +65,17 @@ $(function () {
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col7');
 
             var propertyArr = [
-                [v.name,'grey'],
-                [v.purchase,'blue'],
-                [v.selling,'blue'],
-                [v.ctype == "0" ? "底价" : "点位",'red'],
-                [v.cvalue,'blue'],
-                [v.type == "0" ? "正价" : "特价",'red']
+                [v.name, 'grey'],
+                [v.purchase, 'blue'],
+                [v.selling, 'blue'],
+                [v.ctype == "0" ? "底价" : "点位", 'red'],
+                [v.cvalue, 'blue'],
+                [v.type == "0" ? "正价" : "特价", 'red'],
+//                [v.status == 0 ? "启用" : "禁用", 'red']
             ];
 
             $.each(propertyArr, function (i, v) {
-                var $cell = $('<div></div>').addClass('cell '+ v[1]).html(v[0]);
+                var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
 
@@ -87,6 +87,8 @@ $(function () {
             var $btnUl = $('<ul></ul>').addClass('dropdown-menu').addClass(lastFlag ? 'bottom-up' : '');
 
             var $btnDelete = $('<li></li>').append($('<a></a>').html('删除'));
+            var $btnStart = $('<li></li>').append($('<a></a>').html('启用'));
+            var $btnStop = $('<li></li>').append($('<a></a>').html('禁用'));
 
             $btnUl.append($btnDelete);
 
@@ -101,6 +103,26 @@ $(function () {
                 com.post(api.data.deletePrice, {"price.pid": v.pid}, function (res) {
                     doSearcher();
                 })
+            });
+
+            $btnStart.click(function () {
+
+                if (v.status == 0) {
+                    com.showAlert(com.warning, "已启用");
+                    return false;
+                }
+
+                updateStatus(v.pid, 0);
+            });
+
+            $btnStop.click(function () {
+
+                if (v.status == 1) {
+                    com.showAlert(com.warning, "已禁用");
+                    return false;
+                }
+
+                updateStatus(v.pid, 1);
             });
 
             return $liLine;
@@ -127,15 +149,15 @@ $(function () {
 
     doSearcher();
 
-    goods.btns.addBtn.click(function(){
+    goods.btns.addBtn.click(function () {
 
-        if(com.validate('addPrice', 'bottom')){
+        if (com.validate('addPrice', 'bottom')) {
             return false;
         }
 
         if (goods.items.ctype.val() == 1) {
             if (goods.items.cvalue.val() < 0 || goods.items.cvalue.val() > 1) {
-                com.showTip(com.focusPage("#cvalue"), "结算值在0-1之间",'bottom');
+                com.showTip(com.focusPage("#cvalue"), "结算值在0-1之间", 'bottom');
                 return false;
             }
         }
@@ -150,14 +172,27 @@ $(function () {
             "price.type": goods.items.type.val(),
         };
 
-        com.post(api.data.addPrice, options, function(){
+        com.post(api.data.addPrice, options, function () {
             com.cleanItems(goods.items);
             doSearcher();
         });
     });
 
-    goods.btns.cancelBtn.click(function(){
+    goods.btns.cancelBtn.click(function () {
         com.cleanItems(goods.items);
     });
+
+    function updateStatus(pid, status) {
+
+        var options = {
+            "price.pid": pid,
+            "price.status": status
+        };
+
+        com.post(api.data.updatePriceForStatus, options, function (res) {
+            com.showAlert(com.info, "操作成功");
+            doSearcher();
+        });
+    }
 
 });

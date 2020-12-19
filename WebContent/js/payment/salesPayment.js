@@ -4,8 +4,9 @@ $(function () {
         htmlName: "sales",
         depage: params['urlLoadParams'].depage,
         type: params['urlLoadParams'].paytype,
-        pageConfig: params['urlLoadParams'].depage+params['urlLoadParams'].paytype,
+        pageFlag: params['urlLoadParams'].depage+params['urlLoadParams'].paytype,
         paytypes: [],
+        paymentStatusArray: ["未付款", "已付款", "已确认"],
         payment: null,
 
         items: {
@@ -89,7 +90,8 @@ $(function () {
         spids: [],
         isCollects: false,
         salesPaymentTypeData: {},
-        decorationType: []
+        decorationType: [],
+        pageConfig: {}
     };
 
     //隐藏触发
@@ -174,43 +176,7 @@ $(function () {
     });
 
     //不同页面的不同参数
-    switch (salesPayment.type) {
-        case "common":
-            salesPayment.conditions = ["payment-orderId", "payment-sales-no", "payment-designer", "payment-village"];
-            salesPayment.functions = ["decorationInfo", "collect", "batchCollect", "count"];
-            salesPayment.extraParams = {"companyType": salesPayment.depage, "salesPayment.status": 0};
-
-            salesPayment.paytypes = ["cash", "bank", "checkv", "advance", "coupon"];
-            break;
-
-        case "pos":
-            salesPayment.conditions = ["payment-orderId", "payment-sales-no"];
-            salesPayment.functions = ["decorationInfo", "collect", "batchCollect", "count"];
-            salesPayment.extraParams = {"companyType": salesPayment.depage, "salesPayment.status": 0, "salesPayment.types": "[2, 3, 8]"};
-            salesPayment.paytypes = ["bank", "advance"];
-            break;
-
-        case "history":
-            salesPayment.conditions = ["payment-orderId", "payment-sales-no", "payment-designer", "payment-village", "payment-collectTime"];
-            salesPayment.functions = ["decorationInfo", "payway", "print", "update", "export"];
-            salesPayment.extraParams = {"companyType": salesPayment.depage};
-            salesPayment.paytypes = ["cash", "bank", "checkv", "advance", "coupon"];
-            break;
-
-        case "collect":
-            salesPayment.conditions = ["payment-orderId", "payment-sales-no", "payment-designer", "payment-village", "payment-collectTime"];
-            salesPayment.functions = ["payway", "print", "update", "selectall", "confirms", "export"];
-            salesPayment.extraParams = {"companyType": salesPayment.depage, "salesPayment.status": 1, "salesPayment.companys": params.company.cid};
-            salesPayment.paytypes = ["cash", "bank", "checkv", "advance", "coupon"];
-            break;
-
-        case "confirm":
-            salesPayment.conditions = ["payment-orderId", "payment-sales-no", "payment-designer", "payment-village", "payment-confirmTime"];
-            salesPayment.functions = ["payway", "print", "export"];
-            salesPayment.extraParams = {"companyType": salesPayment.depage, "salesPayment.status": 2, "salesPayment.companys": params.company.cid};
-            salesPayment.paytypes = ["cash", "bank", "checkv", "advance", "coupon"];
-            break;
-    }
+    salesPayment.pageConfig = paymentUtils.getConfig(salesPayment.type, 8);
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
@@ -237,38 +203,13 @@ $(function () {
             var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-info').html('打印');
             var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-success').html('更新');
 
-            var propertyArr = [
-                ["订单号:", v.sales.orderId, "blue"],
-                ["销售单号:", v.sales.no, "blue"],
-                ["销售单等级:", v.sales.grade, "blue"],
-                ["楼盘地址:", v.sales.house.village.cityProper.city.name + ' ' + v.sales.house.village.cityProper.name + ' ' + v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"],
-                ["客户:", v.sales.customer.name, "grey"],
-                ["品牌:", v.sales.brand, "grey"],
-                ["操作人:", v.creater.currentName, "grey"],
-                ["应收金额:", v.referMoney, "blue"],
-            ];
-
-            if(v.status == 2){
-                propertyArr.push(
-                    ["确认人:", v.salesReceipt.confirmer.currentName, "grey"],
-                    ["确认时间:", v.salesReceipt.confirmTime, "green"]
-                );
-            }
-
-            if(v.status != 0){
-                propertyArr.push(
-                    ["收款人:", v.salesReceipt.collecter.currentName, "grey"],
-                    ["收款时间:", v.salesReceipt.collectTime, "green"],
-                    ["状态:", v.status == 1 ? '已付款' : '已确认', "red"],
-                    ["备注:", v.salesReceipt.comment, "grey"]
-                );
-            }
+            var propertyArr = paymentUtils.getPropertyArr(salesPayment, v, v.sales, salesPayment.paymentStatusArray);
 
             var _label = $('<label></label>');
             var $input = $('<input>').attr({"type": "checkbox", "name": "spids"}).addClass('ace ace-checkbox-2');
             $input.attr({"data-sid": v.sales.sid, "data-spid": v.spid, "data-orderid": v.sales.orderId, "data-refermoney": v.referMoney, "data-type": v.type, "data-grade": v.sales.grade, "data-status": v.status});
 
-            if(salesPayment.functions.contains("batchCollect") || salesPayment.functions.contains("selectall")) $input.appendTo(_label);
+            if(salesPayment.pageConfig.pageBtn.contains("batchCollect") || salesPayment.pageConfig.pageBtn.contains("selectall")) $input.appendTo(_label);
 
             var _span = $('<span></span>').addClass('lbl blue bigger-150').html(salesPayment.salesPaymentTypeData[v.type]);
 
@@ -287,12 +228,12 @@ $(function () {
             if ([2, 3, 8].indexOf(v.type) != -1) $btnCollect.text('收款').addClass("btn-info");
             if ([4, 5, 6, 7].indexOf(v.type) != -1) $btnCollect.text('退款').addClass("btn-danger");
 
-            if(salesPayment.functions.contains("payway")) paymentUtils.drawHistoryData(salesPayment, v.salesReceipt, $liLine, "");
+            if(salesPayment.pageConfig.pageBtn.contains("payway")) paymentUtils.drawHistoryData(salesPayment, v.salesReceipt, $liLine, "");
 
-            if (salesPayment.functions.contains("decorationInfo")) $divBtnWrap.append($btnDecorationInfo);
-            if(salesPayment.functions.contains("collect")) $divBtnWrap.append($btnCollect);
-            if(v.status != 0 && salesPayment.functions.contains("print")) $divBtnWrap.append($btnPrint);
-            if(v.status == 1 && salesPayment.functions.contains("update")) $divBtnWrap.append($btnUpdate);
+            if (salesPayment.pageConfig.pageBtn.contains("decorationInfo")) $divBtnWrap.append($btnDecorationInfo);
+            if(salesPayment.pageConfig.pageBtn.contains("collect")) $divBtnWrap.append($btnCollect);
+            if(v.status != 0 && salesPayment.pageConfig.pageBtn.contains("print")) $divBtnWrap.append($btnPrint);
+            if(v.status == 1 && salesPayment.pageConfig.pageBtn.contains("update")) $divBtnWrap.append($btnUpdate);
 
             //收款弹窗
             $btnCollect.click(function () {
@@ -341,9 +282,19 @@ $(function () {
 
     var searcher = new Searcher();
 
-    searcher.init(salesPayment.conditions, 'condList', api.payment.pageSalesPayment, function (data) {
+    var extraParams = ["collect", "confirm"].contains(salesPayment.type) ? {"companyType": salesPayment.depage} : {"companyType": salesPayment.depage ? "sales."+salesPayment.depage : null};
+
+    if (salesPayment.pageConfig.statusExtraParam != null && salesPayment.pageConfig.statusExtraParam.length > 0) {
+        extraParams["salesPayment.status"] = salesPayment.pageConfig.statusExtraParam[0];
+    }
+
+    if (salesPayment.pageConfig.typeExtraParam != null && salesPayment.pageConfig.typeExtraParam.length > 0) {
+        extraParams["salesPayment.types"] = "["+salesPayment.pageConfig.typeExtraParam.toString()+"]";
+    }
+
+    searcher.init(salesPayment.pageConfig.condArr, 'condList', salesPayment.pageConfig.apiPage, function (data) {
         displayFunc.init('resultList', data);
-    }, 'pagenation', 'salesPaymentPostData'+salesPayment.pageConfig, salesPayment.extraParams, false, null, function () {
+    }, 'pagenation', 'salesPaymentPostData'+salesPayment.pageFlag, extraParams, false, null, function () {
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'collects').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-money bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('批量收款').appendTo($adda);
@@ -366,11 +317,11 @@ $(function () {
 
         var btnParams = [];
 
-        if(salesPayment.functions.contains("batchCollect")) btnParams.push($adda);
-        if(salesPayment.functions.contains("count")) btnParams.push($showa);
-        if(salesPayment.functions.contains("selectall")) btnParams.push($checka);
-        if(salesPayment.functions.contains("confirms")) btnParams.push($confirma);
-        if(salesPayment.functions.contains("export")) btnParams.push($impa);
+        if(salesPayment.pageConfig.pageBtn.contains("batchCollect")) btnParams.push($adda);
+        if(salesPayment.pageConfig.pageBtn.contains("count")) btnParams.push($showa);
+        if(salesPayment.pageConfig.pageBtn.contains("selectall")) btnParams.push($checka);
+        if(salesPayment.pageConfig.pageBtn.contains("confirms")) btnParams.push($confirma);
+        if(salesPayment.pageConfig.pageBtn.contains("export")) btnParams.push($impa);
 
         return btnParams;
 
@@ -390,11 +341,11 @@ $(function () {
 
         var type = [4, 5, 6, 7].contains(payment.type) ? 1 : 0; // 0: 收款类型 , 1: 退款类型
 
-        if(salesPayment.paytypes.contains("cash")) paymentUtils.initCash(salesPayment);
-        if(salesPayment.paytypes.contains("bank")) paymentUtils.initBank(salesPayment, type);
-        if(salesPayment.paytypes.contains("checkv")) paymentUtils.initCheckv(salesPayment);
-        if(salesPayment.paytypes.contains("advance")) paymentUtils.initAdvance(salesPayment, type, {"advancePayment.decoration.orderId": payment.sales.orderId}, "materialAdvance");
-        if(salesPayment.paytypes.contains("coupon")) paymentUtils.initCoupon(salesPayment, 0);
+        if(salesPayment.pageConfig.paytypes.contains("cash")) paymentUtils.initCash(salesPayment);
+        if(salesPayment.pageConfig.paytypes.contains("bank")) paymentUtils.initBank(salesPayment, type);
+        if(salesPayment.pageConfig.paytypes.contains("checkv")) paymentUtils.initCheckv(salesPayment);
+        if(salesPayment.pageConfig.paytypes.contains("advance")) paymentUtils.initAdvance(salesPayment, type, {"advancePayment.decoration.orderId": payment.sales.orderId}, "materialAdvance");
+        if(salesPayment.pageConfig.paytypes.contains("coupon")) paymentUtils.initCoupon(salesPayment, 0);
         if (isCollects) salesPayment.items.couponCheckbox.parent().addClass("hide");
 
         //根据装修单等级获取收据类型等级
@@ -437,11 +388,11 @@ $(function () {
         salesPayment.items.referMoney.val(payment.referMoney).attr("disabled", "disabled");
         salesPayment.items.comment.val(payment.salesReceipt.comment).attr("disabled", "disabled");
 
-        if(salesPayment.paytypes.contains("cash")) paymentUtils.initCash(salesPayment);
-        if(salesPayment.paytypes.contains("bank")) paymentUtils.initBank(salesPayment, 1);
-        if(salesPayment.paytypes.contains("checkv")) paymentUtils.initCheckv(salesPayment);
-        if(salesPayment.paytypes.contains("advance")) paymentUtils.initAdvance(salesPayment, 2, {"advancePayment.decoration.orderId": payment.sales.orderId}, "materialAdvance");
-        if(salesPayment.paytypes.contains("coupon")) paymentUtils.initCoupon(salesPayment, 1);
+        if(salesPayment.pageConfig.paytypes.contains("cash")) paymentUtils.initCash(salesPayment);
+        if(salesPayment.pageConfig.paytypes.contains("bank")) paymentUtils.initBank(salesPayment, 1);
+        if(salesPayment.pageConfig.paytypes.contains("checkv")) paymentUtils.initCheckv(salesPayment);
+        if(salesPayment.pageConfig.paytypes.contains("advance")) paymentUtils.initAdvance(salesPayment, 2, {"advancePayment.decoration.orderId": payment.sales.orderId}, "materialAdvance");
+        if(salesPayment.pageConfig.paytypes.contains("coupon")) paymentUtils.initCoupon(salesPayment, 1);
 
         var grade = payment.sales.grade == "B" ? "B" : "";
 
@@ -555,6 +506,7 @@ $(function () {
         var _grade = "";
         var sumMoney = 0;
         var flag = false;
+        salesPayment.spids = [];
 
         $.each($inputs, function (i, v) {
             var $input = $(v);
@@ -653,7 +605,7 @@ $(function () {
             return false;
         }
 
-        com.post(api.payment.pageSalesPayment,  $.extend({}, params["salesPaymentPostData"+salesPayment.pageConfig], {"paging.noPage": 1}), function (res) {
+        com.post(api.payment.pageSalesPayment,  $.extend({}, params["salesPaymentPostData"+salesPayment.pageFlag], {"paging.noPage": 1}), function (res) {
             $.exceler({
                 column: [
                     ["订单号", "sales.orderId"],

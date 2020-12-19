@@ -39,10 +39,19 @@ $.extend(api, {decoration: {
                 result: "decorationActivityItems",
                 args: ["num", "money"]
             }]},
+
         addDecorationActivity: {url: "addDecorationActivity.do"},
         deleteDecorationActivity: {url: "deleteDecorationActivity.do"},
         lockDecorationActivity: {url: "lockDecorationActivity.do"},
         unlockDecorationActivity: {url: "unlockDecorationActivity.do"},
+        
+        addDecorationActivityItem: {
+            url: "addDecorationActivityItem.do",
+            type: "update",
+            tranargs: {
+                args: ["decorationActivityItem.num", "decorationActivityItem.money"]
+            }
+        },
         abateDecorationActivityItem: {url: "abateDecorationActivityItem.do"},
         receiveDecorationActivityItem: {url: "receiveDecorationActivityItem.do"},
         deliveDecorationActivityItem: {url: "deliveDecorationActivityItem.do"},
@@ -345,6 +354,7 @@ $.extend(api, {decoration: {
         changeDecorationForTime: {url: "changeDecorationForTime.do"},
         changeDecorationForVersionId: {url: "changeDecorationForVersionId.do"},
         changeDecorationForStatus: {url: "changeDecorationForStatus.do"},
+        changeDecorationForRepairStatus : {url: "changeDecorationForRepairStatus.do"},
         changeDecorationForHouse: {url: "changeDecorationForHouse.do"},
         subDecorationForQuotationTime: {url: "subDecorationForQuotationTime.do"},
 
@@ -509,6 +519,7 @@ $.extend(api, {decoration: {
         affixDecorationContract: {url: "affixDecorationContract.do"},
         expireDecorationContract: {url: "expireDecorationContract.do"},
         filingDecorationContract : {url: "filingDecorationContract.do"},
+        showDecorationContract : {url: "showDecorationContract.do"},
         sendDecorationContract : {url: "sendDecorationContract.do"},
         redirectDecorationContract : {url: "redirectDecorationContract.do"}
 

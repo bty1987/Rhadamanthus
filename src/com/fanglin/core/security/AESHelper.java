@@ -66,6 +66,7 @@ public class AESHelper {
 
 	public static void main(String[] args) throws Exception {
 		System.out.println(AESHelper.decrypt("tTrLMQT/Z1omMHDuD4v1VQ==", "844dd1be967b6e9e", "cdb421d038104126"));
+		System.out.println(AESHelper.encrypt("fanglincommon", "844dd1be967b6e9e", "cdb421d038104126"));
 	}
 
 }

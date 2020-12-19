@@ -487,5 +487,190 @@ var paymentUtils = {
             $liProperty.appendTo($ulStyle);
         });
 
+    },
+
+    getConfig: function (page, type) {
+
+        var pageConfig = {
+            "apiPage": null,
+            "pageBtn": [],
+            "condArr": [],
+            "extraParam": [],
+            "propertyArr": []
+        };
+
+        function packageConfig(o, props, value, subtype){
+
+            var prop = props.shift();
+            if(props.length != 0){
+                if(!o[prop]) o[prop] = {};
+                packageConfig(o[prop], props, value, subtype);
+                return;
+            }
+
+            if(subtype == 0){
+                o[prop] = value;
+            } else if(subtype == 1 && !o[prop]){
+                o[prop] = [value];
+            } else if(subtype == 1 && o[prop]){
+                o[prop].push(value);
+            }
+        }
+
+        function getApi(o, props){
+
+            var prop = props.shift();
+
+            if(props.length == 0){
+                return o[prop];
+            } else if(o[prop]){
+                return getApi(o[prop], props);
+            }
+            return "";
+        }
+
+        com.post(api.right.queryPaymentFunctionRight, {"paymentFunctionRight.name": page, "paymentFunctionRight.type": type}, function (res) {
+
+            var rights = res.paymentFunctionRights.sort(function(a, b){return a.paymentFunction.sort - b.paymentFunction.sort;});
+
+            $.each(rights, function (i, v) {
+
+                var data = v.paymentFunction;
+
+                if(data.type == 1) data.value = getApi({"api": api}, data.value.split("."));
+
+                packageConfig(pageConfig, data.key.split("."), data.value, data.subtype);
+            });
+        }, null, false);
+
+        return pageConfig;
+    },
+
+    getPropertyArr: function (payment, v, decoration, statusArr) {
+        var propertyArr = [];
+        $.each(payment.pageConfig.propertyArr, function (pi, pv) {
+            switch (pv) {
+                case "mno":
+                    propertyArr.push(["会员号:", v.mno, "grey"]);
+                    break;
+                case "orderId":
+                    propertyArr.push(["订单号:", decoration.orderId, "blue"]);
+                    break;
+                case "materialNo":
+                    propertyArr.push(["主材号:", decoration.no, "blue"]);
+                    break;
+                case "salesNo":
+                    propertyArr.push(["销售单号:", decoration.no, "blue"]);
+                    break;
+                case "customerName":
+                    propertyArr.push(["客户:", decoration.customer.name, "grey"]);
+                    break;
+                case "address":
+                    propertyArr.push(["楼盘地址:", decoration.house.village.cityProper.city.name + ' ' + decoration.house.village.cityProper.name + ' ' + decoration.house.village.name + " " + decoration.house.houseNumber, "grey"]);
+                    break;
+                case "designerName":
+                    propertyArr.push(["设计师:", decoration.designer.currentName, "grey"]);
+                    break;
+                case "designDepartment":
+                    propertyArr.push(["设计部:", decoration.designer.dept.name, "grey"]);
+                    break;
+                case "grade":
+                    propertyArr.push(["等级:", decoration.grade, "red"]);
+                    break;
+                case "salesGrade":
+                    propertyArr.push(["销售单等级:", decoration.grade, "red"]);
+                    break;
+                case "creater":
+                    propertyArr.push(["创建人:", v.creater.currentName, "grey"]);
+                    break;
+                case "createTime":
+                    propertyArr.push(["创建时间:", v.createTime, "blue"]);
+                    break;
+                case "type":
+                    propertyArr.push(["类型:", payment.paymentType[v.type], "red"]);
+                    break;
+                case "category":
+                    propertyArr.push(["品类:", v.category == null || v.category == "" ? "---" : v.category, "grey"]);
+                    break;
+                case "brand":
+                    var brand = payment.htmlName == "sales" ? decoration.brand : v.brand;
+                    propertyArr.push(["品牌:", brand == null || brand == "" ? "---" : brand, "grey"]);
+                    break;
+                case "operator":
+                    propertyArr.push(["操作人:", v.creater.currentName, "grey"]);
+                    break;
+                case "referMoney":
+                    var referMoney = payment.htmlName == "activity" ? v.money : v.referMoney;
+                    propertyArr.push(["应收金额:", referMoney, "blue"]);
+                    break;
+                case "contractBalance":
+                    propertyArr.push(["合同预付款:", v.balance, "blue"]);
+                    break;
+                case "projectBalance":
+                    propertyArr.push(["工程预付款:", v.projectBalance, "blue"]);
+                    break;
+                case "materialBalance":
+                    propertyArr.push(["主材预付款:", v.materialBalance, "blue"]);
+                    break;
+                case "zhenglinBalance":
+                    propertyArr.push(["正林预付款:", v.zhenglinBalance, "blue"]);
+                    break;
+                case "collectType":
+                    propertyArr.push(["收款类型:", payment.typeData[v.type], "red"]);
+                    break;
+                case "paymentTypeData":
+                    propertyArr.push(["预付款类型:", payment.paymentTypeData[v.paymentType], "red"]);
+                    break;
+                case "recharge":
+                    propertyArr.push(["操作金额:", v.recharge, "blue"]);
+                    break;
+                case "balance":
+                    propertyArr.push(["余额:", v.balance, "blue"]);
+                    break;
+                case "materialPrice":
+                    propertyArr.push(["主材金额:", v.materialPrice, "blue"]);
+                    break;
+                case "advanceMoney":
+                    propertyArr.push(["预付款金额:", v.advanceMoney, "blue"]);
+                    break;
+                case "servicePrice":
+                    var servicePrice = ["common", "pos"].contains(payment.type) ? v.servicePrice : v.serviceMoney;
+                    propertyArr.push(["服务费:", servicePrice, "blue"]);
+                    break;
+                case "projectPrice":
+                    propertyArr.push(["工程造价:", v.projectPrice, "blue"]);
+                    break;
+                case "managePrice":
+                    propertyArr.push(["管理费:", v.managePrice, "blue"]);
+                    break;
+                case "collectUser":
+                    var obj = ["sales", "service"].contains(payment.htmlName) ? v[payment.htmlName+"Receipt"] : v;
+                    var collecter = ["payment"].contains(payment.htmlName) ? obj.collectUser : obj.collecter;
+                    propertyArr.push(["收款人:", collecter != null ? collecter.currentName : "暂无", "grey"]);
+                    break;
+                case "collectTime":
+                    var obj = ["sales", "service"].contains(payment.htmlName) ? v[payment.htmlName+"Receipt"] : v;
+                    propertyArr.push(["收款时间:",  obj.collectTime, "green"]);
+                    break;
+                case "confirmUser":
+                    var obj = ["sales", "service"].contains(payment.htmlName) ? v[payment.htmlName+"Receipt"] : v;
+                    var confirmer = ["payment"].contains(payment.htmlName) ? obj.confirmUser : obj.confirmer;
+                    propertyArr.push(["确认人:", confirmer != null && confirmer.currentName != null ? confirmer.currentName : "暂无", "grey"]);
+                    break;
+                case "confirmTime":
+                    var obj = ["sales", "service"].contains(payment.htmlName) ? v[payment.htmlName+"Receipt"] : v;
+                    propertyArr.push(["确认时间:", obj.confirmTime, "green"]);
+                    break;
+                case "status":
+                    var status = ["payment", "sales", "service", "activity"].contains(payment.htmlName) ? statusArr[v.status] : statusArr[v.paymentStatus];
+                    propertyArr.push(["状态:", status, "red"]);
+                    break;
+                case "comment":
+                    var obj = payment.htmlName == "sales" ? v.salesReceipt : v;
+                    propertyArr.push(["备注:", obj.comment, "grey"]);
+                    break;
+            }
+        });
+        return propertyArr;
     }
 };

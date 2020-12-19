@@ -23,7 +23,7 @@ public class PriceServiceImpl implements PriceService{
 	@Override
 	public List<PriceVO> queryPriceByGid(PriceVO priceVO) {
 		
-		List<PricePO> pricePOs = priceDao.queryPriceByGid(priceVO.getGid());
+		List<PricePO> pricePOs = priceDao.queryPriceByGid(priceVO.getGid(), priceVO.getStatus());
 		List<PriceVO> priceVOs = new ArrayList<PriceVO>();
 		
 		for(PricePO pricePO: pricePOs){
@@ -77,6 +77,23 @@ public class PriceServiceImpl implements PriceService{
 		}
 		
 		priceDao.delete(pricePO);
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public int updatePriceForStatus(PriceVO priceVO) throws FLException {
+
+		PricePO pricePO = priceDao.get(priceVO.getPid());
+		
+		if(pricePO == null){
+			throw new FLException(260016, "价格不存在");
+		}
+		
+		pricePO.setStatus(priceVO.getStatus());
+		
+		priceDao.update(pricePO);
 		
 		return 0;
 	}

@@ -142,6 +142,22 @@ public class ProcessServiceImpl implements ProcessService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public void updateProcessForStatus(ProcessVO process) throws FLException {
+		
+		ProcessPO processPO = processDao.get(process.getPid());
+		
+		if (processPO == null) {
+			throw new FLException(240011, "表单不存在");
+		}
+		
+		processPO.setStatus(process.getStatus());
+		
+		processDao.update(processPO);
+		
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void updateProcessItem(ProcessItemVO processItem) {
 		
 		ProcessItemPO processItemPO = processItemDao.get(processItem.getPiid());
@@ -154,12 +170,28 @@ public class ProcessServiceImpl implements ProcessService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void deleteProcessItem(ProcessItemVO processItem) {
+	public void deleteProcess(ProcessVO process) throws FLException {
+		
+		ProcessPO processPO = processDao.get(process.getPid());
+		
+		if (processPO == null) {
+			throw new FLException(240011, "表单不存在");
+		}
+		
+		processDao.deleteProcessItem(process.getPid());
+		
+		processDao.delete(processPO);
+		
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void deleteProcessItem(ProcessItemVO processItem) throws FLException {
 		
 		ProcessItemPO processItemPO = processItemDao.get(processItem.getPiid());
 		
 		if(processItemPO == null){
-			new FLException(240013, "项目不存在");
+			throw new FLException(240013, "项目不存在");
 		}
 		
 		processDao.delete(processItemPO);

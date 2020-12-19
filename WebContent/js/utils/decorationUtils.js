@@ -810,7 +810,7 @@ var decorationUtils = {
         
         com.post(api.decoration.queryDecorationContractByOrderId, {"decorationContract.orderId": orderId}, function(res){
             $.each(res.decorationContracts, function(i, v){
-                decorationUtils.addContract($agree, v);
+                if(v.ishow == 0) decorationUtils.addContract($agree, v);
             });
         });
 

@@ -70,8 +70,6 @@ public class SalesPaymentVO  implements Serializable{
 	
 	private Integer company;
 	
-	private String companys;
-	
 	private String types;
 
 	public SalesPaymentVO() {
@@ -336,14 +334,6 @@ public class SalesPaymentVO  implements Serializable{
 		this.types = types;
 	}
 
-	public String getCompanys() {
-		return companys;
-	}
-
-	public void setCompanys(String companys) {
-		this.companys = companys;
-	}
-
 	public SalesPaymentVO filter(List<Filter> filters) {
 
 		if (getStatus() != null) {
@@ -352,10 +342,6 @@ public class SalesPaymentVO  implements Serializable{
 
 		if (getTypes() != null) {
 			filters.add(new Filter("type", String.valueOf(getTypes()), "in"));
-		}
-
-		if (getCompanys() != null) {
-			filters.add(new Filter("company", getCompanys(), "eq"));
 		}
 
 		return this;

@@ -15,5 +15,7 @@ public interface ProcessDao extends Dao<ProcessPO> {
 	public List<ProcessPO> queryProcess();
 
 	public ProcessPO queryProcess(String no);
+
+	public int deleteProcessItem(long pid);
 	
 }

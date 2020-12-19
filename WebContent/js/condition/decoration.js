@@ -466,4 +466,26 @@ Condition.addupRule("decoration", {
             valuePath: "name"
         }
     },
+    "repairStatus": {
+        label: "保修状态",
+        type: "select",
+        submitConfig: {
+            name: "repairStatus",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [
+                {"key":"0", "value":"初始"},
+                {"key":"1", "value":"终身"},
+                {"key":"2", "value":"转卖"},
+                {"key":"3", "value":"免责"},
+                {"key":"4", "value":"欠款"}
+            ],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
 });

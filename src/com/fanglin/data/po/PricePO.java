@@ -19,11 +19,17 @@ public class PricePO implements Serializable {
 	public static final String COLUMN_PID_STR = "pid";
 
 	public static final String COLUMN_GID_STR = "gid";
+	
+	public static final String COLUMN_STATUS_STR = "status";
 
 	public static final short CTYPE_ENABLE_INT = 0;
 
 	public static final short CTYPE_DISABLE_INT = 1;
+	
+	public static final short STATUS_ENABLE_INT = 0;
 
+	public static final short STATUS_DISABLE_INT = 1;
+	
 	private long pid;
 
 	private long gid;
@@ -39,6 +45,8 @@ public class PricePO implements Serializable {
 	private short ctype;
 
 	private int cvalue;
+	
+	private short status;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -112,6 +120,15 @@ public class PricePO implements Serializable {
 
 	public void setCvalue(int cvalue) {
 		this.cvalue = cvalue;
+	}
+
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
 	}
 
 }

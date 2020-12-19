@@ -3,6 +3,7 @@ jQuery(function ($) {
         htmlName: "activity",
         type: params['urlLoadParams'].paytype,
         paytypes: [],
+        paymentStatusArray: ["未付款", "已付款"],
         payment: null,
 
         items: {
@@ -72,7 +73,8 @@ jQuery(function ($) {
         isCollects: false,
 
         activityCouponType: [],
-        paymentType: []
+        paymentType: [],
+        pageConfig: {}
     };
 
 
@@ -157,22 +159,7 @@ jQuery(function ($) {
     });
 
     //不同页面的不同参数
-    switch (activityPayment.type) {
-        case "common":
-            activityPayment.conditions = ["payment-activity-no", "payment-activity-category", "payment-activity-brand", "payment-activity-creater-name"];
-            activityPayment.functions = ["collect", "batchCollect", "add"];
-            activityPayment.extraParams = {"activityPayment.status": 0};
-
-            activityPayment.paytypes = ["cash", "bank", "coupon"];
-            break;
-
-        case "collect":
-            activityPayment.conditions = ["payment-activity-no", "payment-activity-category", "payment-activity-brand", "payment-activity-creater-name"];
-            activityPayment.functions = ["payway", "print"];
-            activityPayment.extraParams = {"activityPayment.status": 1};
-            activityPayment.paytypes = [];
-            break;
-    }
+    activityPayment.pageConfig = paymentUtils.getConfig(activityPayment.type, 32);
 
     var displayFunc = (function () {
 
@@ -199,30 +186,13 @@ jQuery(function ($) {
             var $btnCol = $('<a></a>').addClass('btn btn-minier btn-info').html('收款');
             var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-pink').html('打印');
 
-            var propertyArr = [
-                ["会员号:", v.mno, "grey"],
-                ["创建人:", v.creater.currentName, "grey"],
-                ["创建时间:", v.createTime, "blue"],
-                ["类型:", activityPayment.paymentType[v.type], "red"],
-                ["品类:", v.category == null || v.category == "" ? "---" : v.category, "grey"],
-                ["品牌:", v.brand == null || v.brand == "" ? "---" : v.brand, "grey"],
-                ["应收金额:", v.money, "blue"],
-                ["状态:", v.status == 1 ? "已付款" : "未付款", "red"],
-                ["备注:", v.comment, "grey"]
-            ];
-
-            if (activityPayment.functions.contains("payway")) {
-                propertyArr.push(
-                    ["收款人:", v.collecter.currentName, "grey"],
-                    ["收款时间:", v.collectTime, "blue"]
-                )
-            }
+            var propertyArr = paymentUtils.getPropertyArr(activityPayment, v, v, activityPayment.paymentStatusArray);
 
             var _label = $('<label></label>');
             var $input = $('<input>').attr({"type": "checkbox", "name": "apids"}).addClass('ace ace-checkbox-2');
             $input.attr({"data-apid": v.apid, "data-mno": v.mno, "data-orderid": v.orderId, "data-money": v.money, "data-status": v.status});
 
-            if(activityPayment.functions.contains("batchCollect")) $input.appendTo(_label);
+            if(activityPayment.pageConfig.pageBtn.contains("batchCollect")) $input.appendTo(_label);
 
             var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(activityPayment.paymentType[v.type]);
 
@@ -238,10 +208,10 @@ jQuery(function ($) {
             $divBtnWrap.appendTo($h3);
             $liLine.append($h3).append($ulProperty);
 
-            if(activityPayment.functions.contains("payway")) paymentUtils.drawHistoryData(activityPayment, v, $liLine, "");
+            if(activityPayment.pageConfig.pageBtn.contains("payway")) paymentUtils.drawHistoryData(activityPayment, v, $liLine, "");
 
-            if(v.status == 0 && activityPayment.functions.contains("collect")) $divBtnWrap.append($btnCol);
-            if(v.status != 0 && activityPayment.functions.contains("print")) $divBtnWrap.append($btnPrint);
+            if(v.status == 0 && activityPayment.pageConfig.pageBtn.contains("collect")) $divBtnWrap.append($btnCol);
+            if(v.status != 0 && activityPayment.pageConfig.pageBtn.contains("print")) $divBtnWrap.append($btnPrint);
 
             //收款
             $btnCol.click(function () {
@@ -274,9 +244,14 @@ jQuery(function ($) {
 
     var searcher = new Searcher();
 
-    searcher.init(activityPayment.conditions, "condList", api.payment.pageActivityPayment, function (data) {
+    var extraParams = {};
+    if (activityPayment.pageConfig.statusExtraParam != null && activityPayment.pageConfig.statusExtraParam.length > 0) {
+        extraParams["activityPayment.status"] = activityPayment.pageConfig.statusExtraParam[0];
+    }
+
+    searcher.init(activityPayment.pageConfig.condArr, "condList",activityPayment.pageConfig.apiPage, function (data) {
         displayFunc.init('resultList', data);
-    }, "pagenation", "activityPaymentPostData"+activityPayment.type, activityPayment.extraParams, false, null, function () {
+    }, "pagenation", "activityPaymentPostData"+activityPayment.type, extraParams, false, null, function () {
 
         var $batch = $('<a></a>').addClass('btn btn-minier pull-left btn-primary').attr('id', 'collects').css("margin", "0px 3px");
         var $batchi = $('<i></i>').addClass('icon-money bigger-110').appendTo($batch);
@@ -288,8 +263,8 @@ jQuery(function ($) {
 
         var btnParams = [];
 
-        if(activityPayment.functions.contains("batchCollect")) btnParams.push($batch);
-        if(activityPayment.functions.contains("add")) btnParams.push($adda);
+        if(activityPayment.pageConfig.pageBtn.contains("batchCollect")) btnParams.push($batch);
+        if(activityPayment.pageConfig.pageBtn.contains("add")) btnParams.push($adda);
 
         return btnParams;
 
@@ -329,9 +304,9 @@ jQuery(function ($) {
 
         activityPayment.items.referMoney.val(payment.money).attr("disabled", "disabled");
 
-        if(activityPayment.paytypes.contains("cash")) paymentUtils.initCash(activityPayment);
-        if(activityPayment.paytypes.contains("bank")) paymentUtils.initBank(activityPayment, 0);
-        if(activityPayment.paytypes.contains("coupon")) paymentUtils.initCoupon(activityPayment, 0);
+        if(activityPayment.pageConfig.paytypes.contains("cash")) paymentUtils.initCash(activityPayment);
+        if(activityPayment.pageConfig.paytypes.contains("bank")) paymentUtils.initBank(activityPayment, 0);
+        if(activityPayment.pageConfig.paytypes.contains("coupon")) paymentUtils.initCoupon(activityPayment, 0);
 
         activityPayment.modals.collectModal.modal("show");
 

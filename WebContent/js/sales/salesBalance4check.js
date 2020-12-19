@@ -22,6 +22,8 @@ $(function () {
         
     };
     
+    var pageConfig = drawNode.getConfig(params['urlLoadParams'].type);
+    
     salesBalance.btns.balanceSalesBtn.click(balanceSales);
 
     com.post(api.ds.payment, {}, function(res){
@@ -91,31 +93,106 @@ $(function () {
                     var coupon =  v.onetype == 1 ? 0 : v.sales.coupon;
                     var maling =  v.onetype == 1 ? 0 : v.sales.maling;
                     var venderMaling =  v.onetype == 1 ? 0 : v.sales.venderMaling;
-                  
-
-                    var propertyArr = [
-                        ["装修单号:", v.sales.orderId, "blue"],
-                        ["楼盘地址:", v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"],
-                        ["品牌:", v.sales.brand, "grey"],
-                        ["渠道:", v.salesman.currentName, "grey"],
-                        ["归属大区:", v.region.name, "grey"],
-                        ["归属部门:", v.dept.name, "grey"],
-                        ["定金:", v.sales.depositpay, "blue"],
-                        ["补款:", v.sales.fullpay, "blue"],
-                        ["等级:", v.sales.grade, "red"],
-                        ["券值:", coupon, "blue"],
-                        ["券信息:", v.sales.couponInfo, "grey"],
-                        ["驻店:", v.sales.instorer.currentName, "grey"],
-                        ["预结算值:", v.balance, "blue"],
-                        ["预结算人:", v.creater.currentName, "grey"],
-                        ["厂商结算:", v.vbalance, "blue"],
-                        ["结算值:", v.pbalance, "blue"],
-                        ["结算时间:", v.postTime, "green"],
-                        ["结算人:", v.poster.currentName, "grey"],
-                        ["抹零:", maling, "blue"],
-                        ["厂商抹零:", venderMaling, "blue"],
-                        ["类型:", salesBalance.balanceType[v.type], "red"]
-                    ];
+                    var propertyArr = [];
+                    var styleArr = [];
+                    var checkArr = [];
+                    var realSalesTotal = v.total - v.sales.venderMaling - v.sales.maling - v.sales.coupon;
+                    var accountPay = v.vbalance - v.sales.venderMaling;
+                    $.each(pageConfig.propertyArr, function (pi, pv) {
+                        switch (pv) {
+                            case "orderId":
+                                propertyArr.push(["装修单号:",v.sales.orderId,  "blue"]);
+                                break;
+                            case "address":
+                                propertyArr.push(["楼盘地址:", v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"]);
+                                break;                  
+                            case "salesman":
+                                propertyArr.push( ["渠道:", v.salesman.currentName, "grey"]);
+                                break;
+                            case "dept":
+                                propertyArr.push(["归属部门:", v.dept.name, "grey"]);
+                                break;
+                            case "region":
+                                propertyArr.push(["归属大区:", v.region.name, "grey"]);
+                                break;
+                            case "instorer":
+                                propertyArr.push(["驻店:", v.sales.instorer.currentName, "grey"]);
+                                break;
+                            case "brand":
+                                propertyArr.push(["品牌:", v.sales.brand, "grey"]);
+                                break;
+                            case "depositpay":
+                                propertyArr.push(["定金:", v.sales.depositpay, "blue"]);
+                                break;
+                            case "fullpay":
+                                propertyArr.push(["补款:", v.sales.fullpay, "blue"]);
+                                break;                              
+                            case "prevalue":
+                                propertyArr.push( ["预结算值:", v.balance, "blue"]);
+                                break;
+                            case "precreater":
+                                propertyArr.push(["预结算人:", v.creater.currentName, "grey"]);
+                                break;
+                            case "pbalance":
+                                propertyArr.push(["结算值:", v.pbalance, "blue"]);
+                                break;
+                            case "balanceTime":
+                                propertyArr.push(["结算时间:", v.postTime, "green"]);
+                                break;
+                            case "poster":
+                                propertyArr.push( ["结算人:", v.poster.currentName, "grey"]);
+                                break;                       
+                            case "grade":
+                                propertyArr.push(["等级:", v.sales.grade, "red"]);
+                                break;                         
+                            case "maling":
+                                propertyArr.push(["抹零:", maling, "blue"]);
+                                break;
+                            case "venderMaling":
+                                propertyArr.push(["厂商抹零:", venderMaling, "blue"]);
+                                checkArr.push(["厂商抹零:", v.sales.venderMaling, "green"]);
+                                break;
+                            case "coupon":
+                                propertyArr.push(["券值:", coupon, "blue"]);
+                                break;
+                            case "couponInfo":
+                                propertyArr.push( ["券信息:", v.sales.couponInfo, "grey"]);
+                                break;     
+                            case "type":
+                                propertyArr.push(["类型:", salesBalance.balanceType[v.type], "red"]);
+                                break;  
+                            case "allowance":
+                            	styleArr.push( ["补贴:", v.allowance, "blue"]);
+                                break;
+                            case "total":
+                            	styleArr.push(["总价:", v.total, "blue"]);
+                                break;
+                            case "preCreateTime":
+                            	styleArr.push(["预结算时间:", v.createTime, "green"]);
+                                break;
+                            case "venderTime":
+                            	styleArr.push(["厂商结算时间:", v.venderTime, "green"]);
+                                break;
+                            case "oneType":
+                            	styleArr.push(["一类:", salesBalance.oneType[v.onetype] , "red"]);
+                                break;
+                            case "status":
+                            	styleArr.push(["状态:", salesBalance.status[v.status], "red"]);
+                                break;
+                            case "realSalesTotal":
+                            	checkArr.push(["实际销售额:", realSalesTotal, "blue"]);
+                                break;
+                            case "salesvtotal":
+                            	checkArr.push(["销售收入厂商结算额:", v.total, "blue"]);
+                                break;
+                            case "salesvpay":
+                            	checkArr.push(["销售成本厂商借款额:", v.vbalance, "green"]);
+                                break;
+                            case "accountPay":
+                            	checkArr.push(["应付账款:", accountPay , "red"]);
+                                break;
+                        }
+                    });
 
                     var $label = $('<label></label>').addClass('control-label').css({'color': 'grey', 'font-size': '20px', "font-weight": "bold"});
                     var _label = $('<label></label>');
@@ -129,16 +206,7 @@ $(function () {
                         $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                         $liProperty.appendTo($ulProperty);
                     });
-
-                    var styleArr = [
-                        ["补贴:", v.allowance, "blue"],
-                        ["总价:", v.total, "blue"],
-                        ["预结算时间:", v.createTime, "green"],
-                        ["厂商结算时间:", v.venderTime, "green"],
-                        ["一类:", salesBalance.oneType[v.onetype] , "red"],
-                        ["状态:", salesBalance.status[v.status], "red"]
-                    ];
-
+                 
                     $.each(styleArr, function (index, value) {
                         var $liProperty = $('<li></li>');
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
@@ -146,17 +214,6 @@ $(function () {
                         $liProperty.appendTo($ulStyle);
                     });                                              
                     
-                    var realSalesTotal = v.total - v.sales.venderMaling - v.sales.maling - v.sales.coupon;
-                    var accountPay = v.vbalance - v.sales.venderMaling;
-                    
-                    var checkArr = [
-                        ["实际销售额:", realSalesTotal, "blue"],
-                        ["销售收入厂商结算额:", v.total, "blue"],
-                        ["销售成本厂商借款额:", v.vbalance, "green"],
-                        ["厂商抹零:", v.sales.venderMaling, "green"],
-                        ["应付账款:", accountPay , "red"]    
-                    ];
-
                     $.each(checkArr, function (index, value) {
                         var $liProperty = $('<li></li>');
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
@@ -165,8 +222,17 @@ $(function () {
                     });
 
                     $liLine.appendTo($ul);
-                    $liLine.append($h3).append($ulProperty).append($ulStyle).append($ulCheck);        
-                    $btnDiv.append($btnPayment).append($btnBalanceItem);                  
+                    $liLine.append($h3).append($ulProperty).append($ulStyle).append($ulCheck);            
+                    $.each(pageConfig.pageBtn, function (k, b) {
+                        switch (b) {
+                            case "sub":
+                            	$btnDiv.append($btnBalanceItem);
+                                break;   
+                            case "payment":
+                            	$btnDiv.append($btnPayment);
+                                break;                           
+                        }
+                    });     
                     $label.appendTo($h3);
                     $btnDiv.appendTo($h3);
 
@@ -193,12 +259,10 @@ $(function () {
             }
         };
     })();
-
-    var _condArr = ['sales-balance-orderId', 'sales-balance-no', 'sales-village', 'sales-balance-brand', 'sales-region-name', 'sales-dept-name', 'sales-balance-status', 'sales-balance-type', 'sales-balance-fullpayTime', 'sales-balance-createTime', 'sales-balance-venderTime', 'sales-balance-postTime'];
-
+  
     var searcher = new Searcher();
 
-    searcher.init(_condArr, 'condList', api.sales.pageSalesBalanceForCheck, function (data) {
+    searcher.init(pageConfig.condArr, 'condList', pageConfig.apiPage, function (data) {
 
         displayFunc.init('resultList', data);
 
@@ -376,8 +440,7 @@ $(function () {
         
         for(var i=0;i<inputs.length;i++){
             
-            var input = $(inputs[i]);
-            
+            var input = $(inputs[i]);          
             var status = input.attr("data-status");
             var supplier = input.attr('data-supplier');
             var sbid = input.attr('data-sbid');
@@ -392,8 +455,7 @@ $(function () {
                 return false
             }
             
-            belonger = supplier;
-            
+            belonger = supplier;           
             options["balanceSaless[" + index + "].salesBalance.sbid"] = sbid;
             index += 1;
         }

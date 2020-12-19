@@ -71,8 +71,6 @@ function printNormrice(schedule){
     contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
     contentHtml += '<tbody>';
     
-    var total = 0;
-    
     $.each(quotationFunctionAreas, function (i, v){
         
         var itemIndex = 0;
@@ -114,8 +112,6 @@ function printNormrice(schedule){
             contentHtml += '<td width="8%" align="left"></td>';
             contentHtml += '</tr>';
             
-            total = utils.accAdd(total, normtotal);
-            
             itemIndex++;
         });
         
@@ -134,7 +130,7 @@ function printNormrice(schedule){
     contentHtml += '<td width="9%" align="center"></td>';
     contentHtml += '<td width="9%" align="center"></td>';
     contentHtml += '<td width="9%" align="center">总额</td>';
-    contentHtml += '<td width="8%" align="center">' + total + '</td>';
+    contentHtml += '<td width="8%" align="center">' + normtotal + '</td>';
     contentHtml += '<td width="8%" align="center"></td>';
     contentHtml += '<td width="8%" align="left"></td>';
     contentHtml += '</tr>';

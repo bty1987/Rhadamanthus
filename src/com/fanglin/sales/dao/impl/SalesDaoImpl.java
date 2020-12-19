@@ -198,6 +198,7 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 
 				query.alias("instorer", "instorer");
 				query.alias("salesman", "salesman");
+				query.alias("guider", "guider");
 				query.alias("dept", "dept");
 				if (SalesPO.COLUMN_NO_STR.equals(field)) {
 					query.add(query.getCriterion(field, data, op));
@@ -207,10 +208,14 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 					query.add(query.getCriterion(SalesPO.COLUMN_BRAND_STR, data, op));
 				} else if (SalesPO.COLUMN_BID_STR.equals(field)) {
 					query.add(query.getCriterion(SalesPO.COLUMN_BID_STR, Long.valueOf(data), op));
+				} else if (SalesPO.COLUMN_STATUS_STR.equals(field)) {
+					query.add(query.getCriterion(SalesPO.COLUMN_STATUS_STR, Short.valueOf(data), op));
 				} else if ("instorer".equals(field)) {
 					query.add(query.getCriterion(SalesPO.COLUMN_INSTORERID_STR, data, op));
 				} else if ("salesman".equals(field)) {
 					query.add(query.getCriterion(SalesPO.COLUMN_SALESMANUSERID_STR, data, op));
+				}else if ("guider".equals(field)) {
+					query.add(query.getCriterion(SalesPO.COLUMN_GUIDERUSERID_STR, data, op));
 				} else if (SalesPO.COLUMN_DOMPANY_STR.equals(field)) {
 					try {
 						int cid = FormatUtil.decodeCompany(AESHelper.decrypt(filter.getData(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
@@ -245,6 +250,20 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 
 					query.add(query.getCriterion(field, stimestamp, "ge"));
 					query.add(query.getCriterion(field, etimestamp, "le"));
+				}
+				else if (SalesPO.COLUMN_CREATETIME_STR.equals(field)) {
+													
+					String sCreateTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
+					String eCreateTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
+
+					Date sCreatedate = DateUtil.parseDate(sCreateTime, "yyyy-MM-dd HH:mm:ss");
+					Date eCreatedate = DateUtil.parseDate(eCreateTime, "yyyy-MM-dd HH:mm:ss");
+
+					Timestamp sCreatetimestamp = DateUtil.getDateToTimestamp(sCreatedate);
+					Timestamp eCreatetimestamp = DateUtil.getDateToTimestamp(eCreatedate);
+
+					query.add(query.getCriterion(field, sCreatetimestamp, "ge"));
+					query.add(query.getCriterion(field, eCreatetimestamp, "le"));
 				}
 			}
 		}

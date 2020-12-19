@@ -15,4 +15,6 @@ public interface PriceService {
 	
 	public int deletePrice(PriceVO priceVO) throws FLException;
 	
+	public int updatePriceForStatus(PriceVO priceVO) throws FLException;
+	
 }

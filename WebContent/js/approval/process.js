@@ -31,12 +31,10 @@ jQuery(function($) {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-
-            $btnEdit.click(function(){
-                //显示表单
-                params.process = v;
-                com.popup4page("#layerPopUp", "views/approval/process2create.html", "审批");
-            });
+            var $btnStatus = $('<div></div>').addClass('pull-right');
+            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
+            var $span = $('<span></span>').addClass('lbl status-lbl');
+            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
 
             var propertyArr = [
                 ["名称:", v.name, "grey"],
@@ -52,8 +50,39 @@ jQuery(function($) {
                 $liProperty.appendTo($ulProperty);
             });
 
-            $divBtnWrap.append($btnEdit).appendTo($h3);
+            $btnStatus.append($statusSwitch).append($span);
+            $divBtnWrap.append($btnEdit).append($btnDel).append($btnStatus).appendTo($h3);
             $liLine.append($h3).append($ulProperty);
+
+            //编辑
+            $btnEdit.click(function(){
+                //显示表单
+                params.process = v;
+                com.popup4page("#layerPopUp", "views/approval/process2create.html", "审批");
+            });
+
+            //启禁用
+            !v.status && $statusSwitch.prop("checked", true);
+            $statusSwitch.click(function(){
+                var options = {};
+
+                options["process.pid"] = v.pid;
+                options["process.status"] = v.status == 0 ? 1 : 0 ;
+
+                com.post(api.approval.updateProcessForStatus, options, function (res) {
+                    searcher.doSearch();
+                });
+            });
+
+            //删除
+            $btnDel.click(function(){
+                com.showConfirm("确认要删除当前表单吗?", function(res) {
+                    com.post(api.approval.deleteProcess, {"process.pid": v.pid}, function(res){
+                        com.showAlert(com.info, "删除成功");
+                        searcher.doSearch();
+                    });
+                });
+            });
 
             return $liLine;
         };

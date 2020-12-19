@@ -28,7 +28,7 @@ public class PriceImportDeleteService implements com.fanglin.imports.service.Pri
 
 			Long gid = (long) Math.floor(Double.parseDouble(_salary.get(0)));
 
-			List<PricePO> pricePOs = priceDao.queryPriceByGid(gid);
+			List<PricePO> pricePOs = priceDao.queryPriceByGid(gid, null);
 
 			for (PricePO pricePO : pricePOs) {
 

@@ -27,6 +27,7 @@ import com.fadada.bean.Contract;
 import com.fadada.sdk.client.FddClientBase;
 import com.fadada.sdk.client.FddClientExtra;
 import com.fadada.sdk.client.authForfadada.ApplyCert;
+import com.fadada.sdk.client.authForfadada.AuthBeforeSign;
 import com.fadada.sdk.client.authForfadada.FindCertInfo;
 import com.fadada.sdk.client.authForfadada.GetCompanyVerifyUrl;
 import com.fadada.sdk.client.authForfadada.GetFileForUUID;
@@ -49,8 +50,8 @@ public class Signature {
 	private static String VERSION = "2.0";
 	private static String HOST = "https://testapi.fadada.com:8443/api/";
 
-	private static String NOTIFY_URL_STR = "";
-	private static String RETURN_URL_STR = ""; // http://fanglin.vip:30080/communion/signatureCallback.do
+	private static String NOTIFY_URL_STR = "http://www.fanglin.vip/";
+	private static String RETURN_URL_STR = "http://www.fanglin.vip/"; // http://fanglin.vip:30080/communion/signatureCallback.do
 
 	private static String configFilePathName = "/fadada.properties";
 
@@ -114,7 +115,7 @@ public class Signature {
 
 		AgentInfoINO agentInfo = new AgentInfoINO();
 
-		String result = comverify.invokeCompanyVerifyUrl(companyInfo, bankInfo, legalInfo, agentInfo, signno, verifyed_way, m_verified_way, page_modify, company_principal_type, RETURN_URL_STR, NOTIFY_URL_STR, result_type, cert_flag);
+		String result = comverify.invokeCompanyVerifyUrl(companyInfo, bankInfo, legalInfo, agentInfo, signno, verifyed_way, m_verified_way, page_modify, company_principal_type, RETURN_URL_STR, NOTIFY_URL_STR, result_type, cert_flag, null, null, null, null, null);
 
 		System.out.println(result);
 
@@ -164,6 +165,19 @@ public class Signature {
 		}
 	}
 
+	public static String beforeauto(SignetPO signetPO) throws FLException {
+
+		AuthBeforeSign authBeforeSign = new AuthBeforeSign(APPID, APPSECRET, VERSION, HOST);
+
+		String transactionId = String.format(signetPO.getToken());
+		String contractId = String.format("%s%s", signetPO.getNo(), signetPO.getSid());
+		String customerId = signetPO.getSignno();
+
+		String authType = "1";
+
+		return authBeforeSign.invokeAuthBeforeSign(transactionId, authType, contractId, customerId, RETURN_URL_STR, NOTIFY_URL_STR);
+	}
+
 	public static void register(CustomerPO customerPO) throws FLException {
 
 		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
@@ -199,7 +213,7 @@ public class Signature {
 		String customerName = customerPO.getName();
 		String customerIdent = customerPO.getIdentity();
 
-		String result = personverify.invokePersonVerifyUrl(signno, verifyed_way, page_modify, NOTIFY_URL_STR, RETURN_URL_STR, customerName, customer_ident_type, customerIdent, customerPhone, ident_front_path, result_type, cert_flag);
+		String result = personverify.invokePersonVerifyUrl(signno, verifyed_way, page_modify, NOTIFY_URL_STR, RETURN_URL_STR, customerName, customer_ident_type, customerIdent, customerPhone, ident_front_path, result_type, cert_flag, null, null, null, null, null);
 
 		System.out.println(result);
 
@@ -297,6 +311,14 @@ public class Signature {
 		if (response.getInteger("code") != 1) {
 			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
 		}
+
+		// JSONObject data = response.getJSONObject("data");
+		//
+		// String signatureId = decode(data.getString("signature_id"));
+		//
+		// result = ExtendService.invokedefaultSignature(base, signno, signatureId);
+		//
+		// System.out.println(result);
 	}
 
 	public static void template(String templateId, File file, String url) throws FLException {
@@ -425,7 +447,7 @@ public class Signature {
 
 	public static String getFile(String uuid) {
 		GetFileForUUID getFileForUUID = new GetFileForUUID(APPID, APPSECRET, VERSION, HOST);
-		return getFileForUUID.invokeFileForUUID(uuid);
+		return getFileForUUID.invokeFileForUUID(uuid, "pdf");
 	}
 
 	@SuppressWarnings("unused")

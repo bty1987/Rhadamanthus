@@ -12,12 +12,9 @@ import org.springframework.stereotype.Repository;
 
 import com.alibaba.fastjson.JSONArray;
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.DateUtil;
-import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
-import com.fanglin.utils.SystemConfig;
 import com.fanglin.payment.dao.SalesPaymentDao;
 import com.fanglin.payment.po.SalesPaymentPO;
 
@@ -173,10 +170,7 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 						query.add(query.getCriterion(SalesPaymentPO.COLUMN_CONFIRMTIME_STR, filter.getData(), filter.getOp()));
 					}
 				}else if("company".equals(field)){
-					try {
-						Integer cid = FormatUtil.decodeCompany(AESHelper.decrypt(data, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
-						query.add(query.getCriterion(field, cid, op));
-					} catch (Exception e) {}
+					query.add(query.getCriterion(field, Integer.valueOf(data), op));
 				}else if("sales.dompany".equals(filter.getField())){
 					query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
 				}else if("sales.company".equals(filter.getField())){

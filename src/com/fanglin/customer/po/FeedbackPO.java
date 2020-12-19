@@ -20,6 +20,8 @@ public class FeedbackPO implements Serializable {
 	public static final String COLUMN_TYPE_STR = "type";
 
 	public static final String COLUMN_PHONE_STR = "phone";
+	
+	public static final String COLUMN_COMPANY_STR = "company";
 
 	private long fid;
 
@@ -36,6 +38,8 @@ public class FeedbackPO implements Serializable {
 	private String orderId;
 
 	private String phone;
+	
+	private int company;
 
 	@Id
 	@GeneratedValue
@@ -109,6 +113,15 @@ public class FeedbackPO implements Serializable {
 
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 }

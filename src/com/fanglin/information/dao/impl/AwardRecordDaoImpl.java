@@ -1,7 +1,5 @@
 package com.fanglin.information.dao.impl;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -10,7 +8,6 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.information.dao.AwardRecordDao;
 import com.fanglin.information.po.AwardRecordPO;
-import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Repository("awardRecordDao")
@@ -20,7 +17,7 @@ public class AwardRecordDaoImpl extends DaoImpl<AwardRecordPO> implements AwardR
 	public List<AwardRecordPO> pageAwardRecord(Paging paging, List<Filter> filters, int company) {
 
 		PagingQuery<AwardRecordPO> query = pagingQuery(paging, AwardRecordPO.class);
-		
+
 		query.alias("awardStock", "awardStock");
 		query.add(query.getCriterion("awardStock.company", company, "eq"));
 		queryFilterExecute(query, filters);
@@ -31,38 +28,31 @@ public class AwardRecordDaoImpl extends DaoImpl<AwardRecordPO> implements AwardR
 
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters != null) {
+		if (filters == null)
+			return;
 
-			for (Filter filter : filters) {
+		for (Filter filter : filters) {
 
-				String field = filter.getField();
-				String data = filter.getData();
-				String op = filter.getOp();
-			
-				query.alias("awardStock", "awardStock");
-				if ("awardStock".equals(field)) {
-					query.add(query.getCriterion("awardStock.asId", Long.valueOf(data), op));
-				} else if ("awardRecordTimeDateRange".equals(field)) {
-					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
 
-					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+			query.alias("awardStock", "awardStock");
 
-					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-
-					query.add(query.getCriterion("operateTime", eTimestamp, "le"));
-					query.add(query.getCriterion("operateTime", sTimestamp, "ge"));
-				} else if ("awardStock.name".equals(field)) {
-					query.add(query.getCriterion("awardStock.name", data, op));
-				} else if ("type".equals(field)) {
-					query.add(query.getCriterion("type", Short.valueOf(data), op));
-				} else if ("onetype".equals(field)) {
-					query.add(query.getCriterion("onetype", Short.valueOf(data), op));
-				} else if ("subtype".equals(field)) {
-					query.add(query.getCriterion("subtype", Short.valueOf(data), op));
-				}
+			if ("awardStock".equals(field)) {
+				query.add(query.getCriterion("awardStock.asId", Long.valueOf(data), op));
+			} else if ("awardStock.name".equals(field)) {
+				query.add(query.getCriterion("awardStock.name", data, op));
+			} else if ("orderId".equals(field)) {
+				query.add(query.getCriterion("orderId", data, op));
+			} else if ("type".equals(field)) {
+				query.add(query.getCriterion("type", Short.valueOf(data), op));
+			} else if ("onetype".equals(field)) {
+				query.add(query.getCriterion("onetype", Short.valueOf(data), op));
+			} else if ("subtype".equals(field)) {
+				query.add(query.getCriterion("subtype", Short.valueOf(data), op));
+			} else if ("awardRecordTimeDateRange".equals(field)) {
+				query.timeranges("operateTime", data);
 			}
 		}
 	}

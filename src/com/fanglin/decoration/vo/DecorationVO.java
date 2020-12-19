@@ -85,6 +85,8 @@ public class DecorationVO implements Serializable {
 	private Short projectStatus;
 	
 	private Short sourceStatus;
+	
+	private Short repairStatus;
 
 	private Integer otherStatus;
 
@@ -317,6 +319,14 @@ public class DecorationVO implements Serializable {
 
 	public void setSourceStatus(Short sourceStatus) {
 		this.sourceStatus = sourceStatus;
+	}
+	
+	public Short getRepairStatus() {
+		return repairStatus;
+	}
+
+	public void setRepairStatus(Short repairStatus) {
+		this.repairStatus = repairStatus;
 	}
 
 	public Integer getOtherStatus() {

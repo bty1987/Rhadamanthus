@@ -42,6 +42,8 @@ public class DecorationContractVO implements Serializable {
 
 	private Short status;
 
+	private Short ishow;
+
 	private List<DecorationPaymentVO> payments;
 
 	private List<Integer> paymentRates;
@@ -172,6 +174,14 @@ public class DecorationContractVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Short getIshow() {
+		return ishow;
+	}
+
+	public void setIshow(Short ishow) {
+		this.ishow = ishow;
 	}
 
 	public List<DecorationPaymentVO> getPayments() {

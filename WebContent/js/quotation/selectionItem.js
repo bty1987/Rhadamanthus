@@ -30,7 +30,9 @@ $(function(){
         
         url: api.quotation.pageSelectionItem,
         pageType : params['urlLoadParams'].type,
-        query: ["quotation-selection-orderId", "quotation-selection-category", "quotation-selection-brand", "quotation-selection-item-name"]
+        query: ["quotation-selection-orderId", "quotation-selection-category", "quotation-selection-brand", "quotation-selection-item-name"],
+        
+        selectList: [],
     };
 
     if (selectionItem.pageType == "supplier") {
@@ -42,7 +44,7 @@ $(function(){
         selectionItem.url = api.quotation.pageSelectionItemForEscorter;
         selectionItem.postData = "selectionItemForEscorterPostData";
     } else if (selectionItem.pageType == "expert") {
-        selectionItem.query.push("quotation-selection-item-status");
+        selectionItem.query = selectionItem.query.concat(["quotation-selection-item-status", "quotation-selection-item-createTime", "quotation-selection-item-tranTime", "quotation-selection-item-checkTime", "quotation-selection-item-confirmTime", "quotation-selection-item-finishTime", "quotation-selection-item-balanceTime"])
         selectionItem.status = {"selectionItem.status": null};
         selectionItem.postData = "selectionItemForExpertPostData";
     } else if (selectionItem.pageType == "init") {
@@ -61,10 +63,11 @@ $(function(){
         selectionItem.status = {"selectionItem.status": 4};
         selectionItem.postData = "selectionItemForFinishPostData";
     } else if (selectionItem.pageType == "balance") {
+        selectionItem.query = selectionItem.query.concat(["quotation-selection-item-balanceTime"])
         selectionItem.status = {"selectionItem.status": 5};
         selectionItem.postData = "selectionItemForBalancePostData";
     }
-
+    
     com.post(api.ds.quotation, {}, function(res){
         selectionItem.statusList = res.selectionItemStatus.split("key", "value");
         selectionItem.typeList = res.selectionItemType.split("key", "value");
@@ -127,7 +130,27 @@ $(function(){
                 'type': 'checkbox',
                 'data-status': v.status,
                 'data-num': v.num,
+                'id': v.siid,
             }).val(v.siid);
+            
+            $input.click(function(){
+                
+                var $that = $(this);
+                var siid = $that.attr("id");
+                
+                if(selectionItem.selectList.length > 30){
+                    com.showAlert(com.warning, "选材项已达数量上限");
+                    return false;
+                }
+                
+                var checked = $that.prop("checked");
+                
+                if(checked) !selectionItem.selectList.contains(siid) && selectionItem.selectList.push(siid);
+                else selectionItem.selectList.contains(siid) && selectionItem.selectList.splice(selectionItem.selectList.indexOf(siid), 1);
+            });
+            
+            if(selectionItem.selectList.contains(String(v.siid))) $input.prop('checked', true).attr("checked", true);
+            
             $h3.append($label.append($input).append($span));
 
             var propertyArr = [
@@ -164,7 +187,7 @@ $(function(){
                 ["跟单员:", v.decoration.escorter.currentName != null ? v.decoration.escorter.currentName : "无", "grey"],
             ];
 
-            if (v.status <= 2) {// 显示工程量
+            if (v.status <= 1) {// 显示工程量
                 var initNumArr = ["工程量:", v.initNum, "blue"];
 
                 propertyArr.splice(7, 0, initNumArr);
@@ -251,14 +274,14 @@ $(function(){
                 }
 
                 com.post(api.quotation.checkSelectionItem, option, function(e){
-                    selectionItemSeacher.doSearch();
+                    searcher.doSearch();
                     com.showAlert(com.info, "操作成功");
                 });
             });
 
             $btnConfirm.click(function(e) {
                 com.post(api.quotation.confirmSelectionItem, {"selectionItem.siid": v.siid}, function(e) {
-                    selectionItemSeacher.doSearch();
+                    searcher.doSearch();
                     com.showAlert(com.info, "操作成功");
                 });
             });
@@ -274,14 +297,14 @@ $(function(){
 
             $btnBalance.click(function(e) {
                 com.post(api.quotation.balanceSelectionItem, {"selectionItems[0].siid": v.siid}, function(e) {
-                    selectionItemSeacher.doSearch();
+                    searcher.doSearch();
                     com.showAlert(com.info, "操作成功");
                 });
             });
             
             $btnDel.click(function(e){
                 com.post(api.quotation.cutoffSelectionItem, {"selectionItem.siid": v.siid}, function(e){
-                    selectionItemSeacher.doSearch();
+                    searcher.doSearch();
                     com.showAlert(com.info, "操作成功");
                 })
             })
@@ -309,15 +332,21 @@ $(function(){
         };
     })();
 
-    var selectionItemSeacher = new Searcher();
+    var searcher = new Searcher();
 
-    selectionItemSeacher.init(selectionItem.query, "condList", selectionItem.url, function(data) {
+    searcher.init(selectionItem.query, "condList", selectionItem.url, function(data) {
 
         displayFunc.init('resultList', data);
     }, "pagenation", selectionItem.postData, selectionItem.status, false, null, function(){
 
         var btns = [];
-
+        
+        var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'checks').css("margin", "0px 3px");
+        var $checki = $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
+        var $checkspan = $('<span></span>').text('全选').appendTo($checka);
+        
+        btns.push($checka);
+        
         if (selectionItem.pageType == "init" || selectionItem.pageType == "expert") {
             var $a = createbtn("batchDelivery", "批量配送", "btn-success");
             btns.push($a);
@@ -339,6 +368,10 @@ $(function(){
 
         return btns;
     });
+    
+    com.focusPage('#checks').click(function() {
+        checkAll();
+    });
 
     com.focusPage('#batchDelivery').click(function() {
         bulkOperation(api.quotation.tranSelectionItem, 'delivery');
@@ -349,30 +382,55 @@ $(function(){
 
     function bulkOperation(url, type) {
 
-        var $items = $('input[type=checkbox][name=selectionItem]:checked');
         var options = {};
 
-        if ($items.length == 0) {
+        if (selectionItem.selectList.length == 0) {
             com.showAlert(com.warning, "请选择项目");
             return false;
         }
 
-        $.each($items, function(i, v) {
-            options["selectionItems["+i+"].siid"] = $(this).val();
-            // 通过类型设置请求参数
-            if (type == 'delivery') {
-                options["selectionItems["+i+"].num"] = $(this).attr('data-num');
-            }
-
+        $.each(selectionItem.selectList, function(i, v) {
+            options["selectionItems["+i+"].siid"] = v;
         });
 
         com.post(url, options, function(res){
-            selectionItemSeacher.doSearch();
+            searcher.doSearch();
             com.showAlert(com.info, "操作成功");
+        });
+    }
+    
+    function checkAll (){
+        
+        if (com.focusPage('input[type="checkbox"]').prop('checked')) {
+            com.focusPage('input[type="checkbox"]').removeAttr('checked');
+            com.focusPage('input[type="checkbox"]').prop('checked', false);
+        } else {
+            
+            var length = $('input[type=checkbox]').length;
+            
+            if((selectionItem.selectList.length + length) > 30){
+                com.showAlert(com.warning, "选材项已达数量上限");
+                return false;
+            }
+            
+            com.focusPage('input[type="checkbox"]').attr('checked', true);
+            com.focusPage('input[type="checkbox"]').prop('checked', true);
+        }
+        
+        $.each(com.focusPage('input[type="checkbox"]'), function(i, e){
+            
+            var $that = $(e);
+            var siid = $that.attr("id");
+            
+            var checked = $that.prop("checked");
+            
+            if(checked) !selectionItem.selectList.contains(siid) && selectionItem.selectList.push(siid);
+            else selectionItem.selectList.contains(siid) && selectionItem.selectList.splice(selectionItem.selectList.indexOf(siid), 1);
         });
     }
 
     function updateData() {
+        
         if(com.validate('updateSelectionItemModal')) return false;
 
         var url = null, options = {};
@@ -393,7 +451,7 @@ $(function(){
         }
 
         com.post(url, options, function(res) {
-            selectionItemSeacher.doSearch();
+            searcher.doSearch();
             com.showAlert(com.info, "操作成功");
         });
 
@@ -415,7 +473,7 @@ $(function(){
         };
 
         com.post(api.quotation.finishSelectionItem, options, function(res) {
-            selectionItemSeacher.doSearch();
+            searcher.doSearch();
             com.showAlert(com.info, "操作成功");
         });
 

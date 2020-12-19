@@ -39,7 +39,7 @@ public class BasesAction extends BaseListAction{
 	@Action(value = "pageFeedback", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageFeedback() throws FLException{
 		
-		feedbackService.pageFeedback(getPaging(),getFilters());
+		feedbackService.pageFeedback(getPaging(), getFilters(), queryCompany());
 		
 		return SUCCESS;
 	}

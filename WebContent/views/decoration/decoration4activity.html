@@ -2,49 +2,43 @@
 
     <div class="row">
         <div class="col-xs-12">
-                <div class="page-header">
-                    <h1>
-                        <span id="activityName">订单活动物品</span>
-                    </h1>
-                </div>
-                <div class="col-md-12">
-                    <button id="joinActivityBtn" class="btn btn-info" type="button"><i class="icon-cog bigger-110"></i>参加活动
-                    </button>
-                    <button id="applyActivityItemBtn" class="btn btn-info" type="button"><i
-                            class="icon-cog bigger-110"></i>申领活动物品
-                    </button>
-                    <div class="col-sm-6" id="activityItems" style="padding:0px;float:right;text-align:right;">
+            <div class="page-header">
+                <h1>
+                    <span id="activityName">订单活动物品</span>
+                </h1>
+            </div>
+            <div class="col-md-12">
+                <button id="joinActivityBtn" class="btn btn-info" type="button">
+                    <i class="icon-cog bigger-110"></i>
+                    <span>参加活动</span>
+                </button>
+                <button id="applyActivityItemBtn" class="btn btn-info" type="button">
+                    <i class="icon-cog bigger-110"></i>
+                    <span>申领活动物品</span>
+                </button>
+                <button id="addActivityItemBtn" class="btn btn-info" type="button">
+                    <i class="icon-cog bigger-110"></i>
+                    <span>添加活动物品</span>
+                </button>
+                <div class="col-sm-6" id="activityItems" style="padding:0px;float:right;text-align:right;"></div>
+            </div>
+            <div class="col-md-12 hr"></div>
 
-                    </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 pricing-span-body" style="padding: 13px;">
+                    <span style="padding: 0;margin: 0 8px;font-size: 24px;color: #2679b5;">活动</span>
+                    <div id="decorationActivityItems"></div>
                 </div>
+                <hr/>
                 <div class="col-md-12 hr"></div>
 
-
-                <div class="row">
-                    <div class="col-xs-12 col-sm-12 pricing-span-body" style="padding: 13px;">
-                        <span style="padding: 0;margin: 0 8px;font-size: 24px;color: #2679b5;">活动</span>
-                        <div id="decorationActivityItems"></div>
-                    </div>
-                    <hr/>
-                    <div class="col-md-12 hr"></div>
-
-                    <div class="col-xs-12 col-sm-12 pricing-span-body" style="padding: 13px;">
-                        <span  style="padding: 0;margin: 0 8px;font-size: 24px;color: #2679b5;">奖品</span>
-                        <div id="decorationActivityItems1"></div>
-                    </div>
-                    <hr/>
-
-
+                <div class="col-xs-12 col-sm-12 pricing-span-body" style="padding: 13px;">
+                    <span  style="padding: 0;margin: 0 8px;font-size: 24px;color: #2679b5;">奖品</span>
+                    <div id="decorationActivityItems1"></div>
                 </div>
-
+                <hr/>
+            </div>
         </div>
-    </div>
-    <div class="text-right col-md-12">
-        <div class="hr"></div>
-        <button id="backBtn" type="button" class="btn btn-info">
-            <i class="icon-mail-forward bigger-110"></i>
-            返回
-        </button>
     </div>
 </div>
 
@@ -116,8 +110,6 @@
                                 <button type="button" id="thingsAdd" class="btn btn-info btn-minier" style="width: 50px; line-height: 30px">添加</button>
                             </div>
                         </div>
-
-
                     </div>
                     <div class="form-group">
                         <div class="col-sm-3"></div>
@@ -136,6 +128,22 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <div class="col-sm-3"></div>
+                        <div class="col-sm-9">
+                            <ul id="papers" class="item-list list-inline"></ul>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <label for="papers" class="col-sm-3 control-label">红包</label>
+                            <div class="col-sm-9" style="padding-left: 6px;" id="papersInputs">
+                                <input type="text" id="papersType" class="col-xs-10 col-sm-5 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" placeholder="请选择劵" />
+                                <input type="text" id="papersVal" class="col-xs-10 col-sm-4 v_float_3 v_required" placeholder="请输入劵数量" style="margin: 0 10px">
+                                 <select class='col-xs-10 col-sm-5 v_required' id='receiveTypess' data-trigger="manual" style="margin: 2px 0"></select>
+                                <button type="button" id="papersAdd" class="btn btn-info btn-minier" style="width: 50px; line-height: 30px">添加</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="approveActivityItemManSel"
                                class="col-sm-3 control-label no-padding-right">审批人</label>
                         <div class="col-sm-9">
@@ -150,6 +158,73 @@
             <div class="modal-footer">
                 <button type="button" id="submitDecorationActivityItemBtn" class="btn btn-primary">保存</button>
                 <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addDecorationActivityItemModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="agreementDialog">申领活动物品</h4>
+            </div>
+
+            <div class="modal-body">
+                <form class="form-horizontal">
+
+                    <div class="form-group">
+                        <label for="activity" class="col-sm-3 control-label no-padding-right">活动</label>
+                        <div class="col-sm-9">
+                            <select class='col-xs-10 col-sm-5 v_required' id='activities' data-toggle="popover" data-trigger='manual'></select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="activity" class="col-sm-3 control-label no-padding-right">类型</label>
+                        <div class="col-sm-9">
+                            <select class='col-xs-10 col-sm-5 v_required' id='itemType' data-toggle="popover" data-trigger='manual'>
+                                <option value=""></option>
+                                <option value="0">券</option>
+                                <option value="1">物品</option>
+                                <option value="2">红包</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="things" class="col-sm-3 control-label no-padding-right">状态类型</label>
+                        <div class="col-sm-9">
+                            <select class='col-xs-10 col-sm-5 v_required' id='receiveType1' data-trigger="manual"></select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="things" class="col-sm-3 control-label no-padding-right">物品</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="itemObj" class="col-xs-10 col-sm-5 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" placeholder="请选择劵">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="things" class="col-sm-3 control-label no-padding-right">数量</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="itemNum" class="col-xs-10 col-sm-5 v_float_3 v_required" placeholder="请输入物品数量">
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" id="addDecorationActivityItemBtn" class="btn btn-primary">保存</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
             </div>
         </div>
     </div>

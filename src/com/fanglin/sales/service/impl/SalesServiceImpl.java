@@ -378,6 +378,7 @@ public class SalesServiceImpl implements SalesService {
 
 				BeanUtil.copyProperties(salesItemVO, salesItemPO, Arrays.asList("goods", "color", "format"));
 				salesItemPO.setSid(salesPO.getSid());
+				salesItemPO.setInitnum(salesItemVO.getNum());
 				salesItemPO.setPunum(salesItemVO.getNum());
 				salesItemPO.setXgnum(salesItemVO.getNum());
 

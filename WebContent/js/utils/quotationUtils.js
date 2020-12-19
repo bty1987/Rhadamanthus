@@ -577,49 +577,51 @@ var quotationUtils = {
         $.each(quotationFunctionAreaItemCs, function (i, v) {
             var areaName = i.split('-')[1];
             $.each(v, function (j, qv) {
-                if((qv.arId && [0, 1, 2].indexOf(qv.type) != -1) || !qv.arId ) {
 
-                    if(qv["quoteItemId"]){
-                        qv["quotationItemId"] = qv["quoteItemId"];
-                        delete(qv["quoteItemId"]);
-                    }
+//              if((qv.arId && [0, 1, 2].indexOf(qv.type) != -1) || !qv.arId ) {
 
-                    if (!quotationFunctionAreaItemWs["-"+qv.workType]) {
-                        quotationFunctionAreaItemWs["-"+qv.workType] = {};
-                    }
-                    qv["areaName"] = areaName;
-                    if(dataProcessing){
-                        if (quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId] && qv.quotationItemId != 0 && qv.quotationItemId) {
-                            quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].num = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].num, qv.num));
-                            quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcp = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcp, qv.dcp));
-                            quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcpt = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcpt, qv.dcpt));
-                        }else if(qv.quotationItemId == 0 || !qv.quotationItemId){
-                            quotationFunctionAreaItemWs["-"+qv.workType]["customize"+index++] = $.extend({}, qv);
-                        }else {
-                            quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId] = $.extend({}, qv);
-                        }
+                if(qv["quoteItemId"]){
+                    qv["quotationItemId"] = qv["quoteItemId"];
+                    delete(qv["quoteItemId"]);
+                }
+
+                if (!quotationFunctionAreaItemWs["-"+qv.workType]) {
+                    quotationFunctionAreaItemWs["-"+qv.workType] = {};
+                }
+                
+                qv["areaName"] = areaName;
+                
+                if(dataProcessing){
+                    if (quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId] && qv.quotationItemId != 0 && qv.quotationItemId) {
+                        quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].num = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].num, qv.num));
+                        quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcp = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcp, qv.dcp));
+                        quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcpt = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcpt, qv.dcpt));
+                    }else if(qv.quotationItemId == 0 || !qv.quotationItemId){
+                        quotationFunctionAreaItemWs["-"+qv.workType]["customize"+index++] = $.extend({}, qv);
                     }else {
-                        /* if (quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId] && qv.quotationItemId != 0 && qv.quotationItemId) {
-                         quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].num = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].num, qv.num));
-                         quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcp = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcp, qv.dcp));
-                         quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcpt = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcpt, qv.dcpt));
-                         }else*/
-                        if (qv.quotationItemId == 0 || !qv.quotationItemId) {
-                            quotationFunctionAreaItemWs["-" + qv.workType]["customize" + index++] = $.extend({}, qv);
-                        } else {
-                            quotationFunctionAreaItemWs["-" + qv.workType][qv.quotationItemId + "-" + index++] = $.extend({}, qv);
-                        }
+                        quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId] = $.extend({}, qv);
                     }
+                }else {
+                    /* if (quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId] && qv.quotationItemId != 0 && qv.quotationItemId) {
+                     quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].num = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].num, qv.num));
+                     quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcp = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcp, qv.dcp));
+                     quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcpt = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcpt, qv.dcpt));
+                     }else*/
+                    if (qv.quotationItemId == 0 || !qv.quotationItemId) {
+                        quotationFunctionAreaItemWs["-" + qv.workType]["customize" + index++] = $.extend({}, qv);
+                    } else {
+                        quotationFunctionAreaItemWs["-" + qv.workType][qv.quotationItemId + "-" + index++] = $.extend({}, qv);
+                    }
+                }
 
-                    if (qv.ariId && reduceNums.ariId[qv.ariId]) {
-                        qv.num = utils.accAdd(qv.num, reduceNums.ariId[qv.ariId].num);
-                        qv.dcpt = utils.changeThrDecimal(utils.accMul(qv.num, qv.dcp));
-                        qv.quotationTotalPrice = utils.changeThrDecimal(utils.accMul(qv.num, qv.unitPrice));
-                    } else if (qv.eiid && reduceNums.eiId[qv.eiid]) {
-                        qv.num = utils.accAdd(qv.num, reduceNums.eiId[qv.eiid].num);
-                        qv.dcpt = utils.changeThrDecimal(utils.accMul(qv.num, qv.dcp));
-                        qv.quotationTotalPrice = utils.changeThrDecimal(utils.accMul(qv.num, qv.unitPrice));
-                    }
+                if (qv.ariId && reduceNums.ariId[qv.ariId]) {
+                    qv.num = utils.accAdd(qv.num, reduceNums.ariId[qv.ariId].num);
+                    qv.dcpt = utils.changeThrDecimal(utils.accMul(qv.num, qv.dcp));
+                    qv.quotationTotalPrice = utils.changeThrDecimal(utils.accMul(qv.num, qv.unitPrice));
+                } else if (qv.eiid && reduceNums.eiId[qv.eiid]) {
+                    qv.num = utils.accAdd(qv.num, reduceNums.eiId[qv.eiid].num);
+                    qv.dcpt = utils.changeThrDecimal(utils.accMul(qv.num, qv.dcp));
+                    qv.quotationTotalPrice = utils.changeThrDecimal(utils.accMul(qv.num, qv.unitPrice));
                 }
             });
         });

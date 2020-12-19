@@ -48,8 +48,8 @@ public class ConstructionInfoDaoImpl extends DaoImpl<ConstructionInfoPO> impleme
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 		query.alias("decoration", "decoration");
-		query.alias("decoration.designer", "decoration.designer");
-		query.alias("decoration.designer.dept", "designerDept");
+		query.alias("decoration.designer", "designer");
+		query.alias("designer.dept", "designerDept");
 		query.alias("designerDept.fatherDept", "designerRegion");
 
 		if (filters != null) {
@@ -145,6 +145,8 @@ public class ConstructionInfoDaoImpl extends DaoImpl<ConstructionInfoPO> impleme
 
 					query.add(query.getCriterion(ConstructionInfoDO.COLUMN_EDESIGNTIME_STR, sTimestamp, "ge"));
 					query.add(query.getCriterion(ConstructionInfoDO.COLUMN_EDESIGNTIME_STR, eTimestamp, "le"));
+				} else if ("designer".equals(field)) {
+					query.add(query.getCriterion("designer.userId", data, op));
 				}
 			}
 		}

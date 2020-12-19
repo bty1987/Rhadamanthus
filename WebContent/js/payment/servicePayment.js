@@ -3,6 +3,7 @@ jQuery(function($) {
 		htmlName: "service",
 		type: params['urlLoadParams'].paytype,
 		paytypes: [],
+		paymentStatusArray: ["未付款", "已付款", "已确认"],
 		payment: null,
 
 		items: {
@@ -69,8 +70,8 @@ jQuery(function($) {
 		conditions: [],
 		extraParams: {},
 		functions: [],
-		isCollect: ""
-
+		isCollect: "",
+		pageConfig: {}
 	};
 
 	//隐藏触发
@@ -124,48 +125,7 @@ jQuery(function($) {
 	});
 
 	//不同页面的不同参数
-	switch (servicePayment.type) {
-		case "common":
-			servicePayment.url = api.decoration.pageDecorationHolonomy;
-			servicePayment.conditions = ["payment-orderId", "payment-designer", "decoration-village"];
-			servicePayment.functions = ["collect", "serviceCollect", "serviceRefund"];
-			servicePayment.extraParams = {"servicePayment.status": 0};
-
-			servicePayment.paytypes = ["cash", "bank", "checkv"];
-			break;
-
-		case "pos":
-			servicePayment.url = api.decoration.pageDecorationHolonomy;
-			servicePayment.conditions = ["payment-orderId"];
-			servicePayment.functions = ["collect", "serviceCollect"];
-			servicePayment.extraParams = {"servicePayment.status": 0};
-			servicePayment.paytypes = ["bank"];
-			break;
-
-		case "history":
-			servicePayment.url = api.payment.pageServicePayment;
-			servicePayment.conditions =["payment-orderId", "payment-designer", "payment-village", "payment-collectTime"];
-			servicePayment.functions = ["payway", "print", "update", "export"];
-			servicePayment.extraParams = {};
-			servicePayment.paytypes = ["cash", "bank", "checkv"];
-			break;
-
-		case "collect":
-			servicePayment.url = api.payment.pageServicePayment;
-			servicePayment.conditions = ["payment-orderId", "payment-designer", "payment-village", "payment-collectTime"];
-			servicePayment.functions = ["payway", "update", "selectall", "confirms", "export"];
-			servicePayment.extraParams = {"servicePayment.status": 1};
-			servicePayment.paytypes = ["cash", "bank", "checkv"];
-			break;
-
-		case "confirm":
-			servicePayment.url = api.payment.pageServicePayment;
-			servicePayment.conditions = ["payment-orderId", "payment-designer", "payment-village", "payment-collectTime"];
-			servicePayment.functions = ["payway"];
-			servicePayment.extraParams = {"servicePayment.status": 2};
-			servicePayment.paytypes = ["cash", "bank", "checkv"];
-			break;
-	}
+	servicePayment.pageConfig = paymentUtils.getConfig(servicePayment.type, 16);
 
 	var displayFunc  = (function(){
 		var renderList = function(tableId,listData){
@@ -187,7 +147,7 @@ jQuery(function($) {
 			var $label = $('<label></label>').appendTo($h3);
 
 			var $input = $('<input>').attr({"type": "checkbox", "name": "spids", "class": "ace ace-checkbox-2", "spid": v.spid}).val(v.arId);
-			if (servicePayment.functions.contains("selectall")) $input.appendTo($label);
+			if (servicePayment.pageConfig.pageBtn.contains("selectall")) $input.appendTo($label);
 
 			var $span = $('<span></span>').addClass('lbl blue bigger-150').html('服务款').appendTo($label);
 			if (!(["common", "pos"].contains(servicePayment.type))) $span.html(v.type == 0 ? '收款' : '退款');
@@ -201,47 +161,7 @@ jQuery(function($) {
 			var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-primary').html("打印");
 			var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-success').html('更新');
 
-			var propertyArr = [];
-
-			if (["common", "pos"].contains(servicePayment.type)) {
-				propertyArr = [
-					["订单号:", v.decoration.orderId, "blue"],
-					["楼盘地址:", v.decoration.house.village.cityProper.city.name + ' ' + v.decoration.house.village.cityProper.name + ' ' + v.decoration.house.village.name + ' '+ v.decoration.house.houseNumber, "grey"],
-					["客户:", v.decoration.customer.name, "grey"],
-					["设计师:", v.decoration.designer.currentName, "grey"],
-					["设计部:", v.decoration.designer.dept.name, "grey"],
-					["等级:", v.decoration.grade, "red"],
-					["主材金额:", v.materialPrice, "blue"],
-					["服务费:", v.servicePrice, "blue"],
-					["工程造价:", v.projectPrice, "blue"],
-					["管理费:", v.managePrice, "blue"]
-				];
-			} else {
-				propertyArr = [
-					["订单号:", v.decoration.orderId, "blue"],
-					["楼盘地址:", v.decoration.house.village.cityProper.city.name + ' ' + v.decoration.house.village.cityProper.name + ' ' + v.decoration.house.village.name + ' ' + v.decoration.house.houseNumber, "grey"],
-					["客户:", v.decoration.customer.name, "grey"],
-					["设计师:", v.decoration.designer.currentName, "grey"],
-					["设计部:", v.decoration.designer.dept.name, "grey"],
-					["等级:", v.decoration.grade, "red"],
-					["预付款金额:", v.advanceMoney, "blue"],
-					["服务费:", v.serviceMoney, "blue"],
-					["收款人:", v.serviceReceipt.collecter.currentName, "grey"],
-					["收款时间:", v.serviceReceipt.collectTime, "green"],
-				];
-
-				if(v.status == 2){
-					propertyArr.push(
-						["确认人:", v.serviceReceipt.confirmer.currentName, "grey"],
-						["确认时间:", v.serviceReceipt.confirmTime, "green"]
-					)
-				}
-
-				propertyArr.push(
-					["状态:", v.status == "1" ? "已付款" : "已确认", "red"],
-					["备注:", v.comment, "grey"]
-				)
-			}
+			var propertyArr = paymentUtils.getPropertyArr(servicePayment, v, v.decoration, servicePayment.paymentStatusArray);
 
 			$.each(propertyArr, function (index,value) {
 				var $liProperty = $('<li></li>');
@@ -253,13 +173,13 @@ jQuery(function($) {
 			$divBtnWrap.appendTo($h3);
 			$liLine.append($h3).append($ulProperty);
 
-			if(servicePayment.functions.contains("payway")) paymentUtils.drawHistoryData(servicePayment, v.serviceReceipt, $liLine, "");
+			if(servicePayment.pageConfig.pageBtn.contains("payway")) paymentUtils.drawHistoryData(servicePayment, v.serviceReceipt, $liLine, "");
 
-			if (servicePayment.functions.contains("collect")) $divBtnWrap.append($btnCollect);
-			if (servicePayment.functions.contains("serviceCollect")) $divBtnWrap.append($btnService);
-			if (servicePayment.functions.contains("serviceRefund")) $divBtnWrap.append($btnRefunds);
-			if (v.status != 0 && servicePayment.functions.contains("print")) $divBtnWrap.append($btnPrint);
-			if (v.status == 1 && servicePayment.functions.contains("update")) $divBtnWrap.append($btnUpdate);
+			if (servicePayment.pageConfig.pageBtn.contains("collect")) $divBtnWrap.append($btnCollect);
+			if (servicePayment.pageConfig.pageBtn.contains("serviceCollect")) $divBtnWrap.append($btnService);
+			if (servicePayment.pageConfig.pageBtn.contains("serviceRefund")) $divBtnWrap.append($btnRefunds);
+			if (v.status != 0 && servicePayment.pageConfig.pageBtn.contains("print")) $divBtnWrap.append($btnPrint);
+			if (v.status == 1 && servicePayment.pageConfig.pageBtn.contains("update")) $divBtnWrap.append($btnUpdate);
 
 			//收款
 			$btnCollect.click(function(){
@@ -324,9 +244,14 @@ jQuery(function($) {
 
 	var searcher = new Searcher();
 
-	searcher.init(servicePayment.conditions, "condList", servicePayment.url, function(data){
+	var extraParams = {};
+	if (servicePayment.pageConfig.statusExtraParam != null && servicePayment.pageConfig.statusExtraParam.length > 0) {
+		extraParams["servicePayment.status"] = servicePayment.pageConfig.statusExtraParam[0];
+	}
+
+	searcher.init(servicePayment.pageConfig.condArr, "condList", servicePayment.pageConfig.apiPage, function(data){
 		displayFunc.init('resultList', data);
-	}, "pagenation", "servicePaymentPostData"+servicePayment.type, servicePayment.extraParams, false, null, function(){
+	}, "pagenation", "servicePaymentPostData"+servicePayment.type, extraParams, false, null, function(){
 
 		var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'checks').css("margin", "0px 3px");
 		var $checki = $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
@@ -342,9 +267,9 @@ jQuery(function($) {
 
 		var btnParams = [];
 
-		if(servicePayment.functions.contains("selectall")) btnParams.push($checka);
-		if(servicePayment.functions.contains("confirms")) btnParams.push($adda);
-		if(servicePayment.functions.contains("export")) btnParams.push($impa);
+		if(servicePayment.pageConfig.pageBtn.contains("selectall")) btnParams.push($checka);
+		if(servicePayment.pageConfig.pageBtn.contains("confirms")) btnParams.push($adda);
+		if(servicePayment.pageConfig.pageBtn.contains("export")) btnParams.push($impa);
 
 		return btnParams;
 
@@ -368,9 +293,9 @@ jQuery(function($) {
 
 		var type = servicePayment.isCollect == 2 ? 1 : 0; // 0: 收款类型 , 1: 退款类型
 
-		if(servicePayment.paytypes.contains("cash")) paymentUtils.initCash(servicePayment);
-		if(servicePayment.paytypes.contains("bank")) paymentUtils.initBank(servicePayment, type);
-		if(servicePayment.paytypes.contains("checkv")) paymentUtils.initCheckv(servicePayment);
+		if(servicePayment.pageConfig.paytypes.contains("cash")) paymentUtils.initCash(servicePayment);
+		if(servicePayment.pageConfig.paytypes.contains("bank")) paymentUtils.initBank(servicePayment, type);
+		if(servicePayment.pageConfig.paytypes.contains("checkv")) paymentUtils.initCheckv(servicePayment);
 
 		//根据装修单等级获取收据类型等级
 		var grade = ["A", "C"].contains(payment.decoration.grade) ? "A" : "";
@@ -397,9 +322,9 @@ jQuery(function($) {
 
 		servicePayment.payment = v;
 
-		if(servicePayment.paytypes.contains("cash")) paymentUtils.initCash(servicePayment);
-		if(servicePayment.paytypes.contains("bank")) paymentUtils.initBank(servicePayment, 1);
-		if(servicePayment.paytypes.contains("checkv")) paymentUtils.initCheckv(servicePayment);
+		if(servicePayment.pageConfig.paytypes.contains("cash")) paymentUtils.initCash(servicePayment);
+		if(servicePayment.pageConfig.paytypes.contains("bank")) paymentUtils.initBank(servicePayment, 1);
+		if(servicePayment.pageConfig.paytypes.contains("checkv")) paymentUtils.initCheckv(servicePayment);
 
 		//根据装修单等级获取收据类型等级
 		var grade = ["A", "C"].contains(v.decoration.grade) ? "A" : "";

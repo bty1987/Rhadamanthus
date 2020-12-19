@@ -77,18 +77,27 @@ Condition.addupRule("sales", {
     },
     "brand-all":{
         label: "品牌",
-        type: "autofill",
+        type: "text",
         submitConfig: {
-            name: "bid",
+            name: "brand",
+            op: "cn",        
+            validate: null
+        },
+    },
+    "status":{
+        label: "销售单状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
             op: "eq",
             validate: null
         },
-        dataSource: {
-            url: api.data.queryBrandByPinyinForAll,
+        dataSource: {//从后台取数据的各种配置
+            url: api.ds.sales,
             postData: {},
-            listPath: "brands",
-            keyPath: "bid",
-            valuePath: "name"
+            listPath: "statues",
+            keyPath: "key",
+            valuePath: "value"
         }
     },
     "instorer" : {
@@ -112,6 +121,22 @@ Condition.addupRule("sales", {
         type: "autofill",
         submitConfig: {//向后台提交的配置
             name: "salesman",//接口中的参数名
+            op: "eq",//查询方式
+            validate: null
+        },
+        dataSource: {//从后台取数据的各种配置
+            url: api.personel.queryUserByPinyin,//获取数据要调用的接口
+            postData: { "user.status":0,"departmentType.name":""},//获取数据时的请求参数
+            listPath: "autoFillKeyValue",//响应list的json路径
+            keyPath: "key",//用来向后台提交的字段的json路径
+            valuePath: "value"//用来在页面显示的字段的json路径
+        }
+    },
+    "guider": {
+        label: "导购",
+        type: "autofill",
+        submitConfig: {//向后台提交的配置
+            name: "guider",//接口中的参数名
             op: "eq",//查询方式
             validate: null
         },
@@ -331,5 +356,101 @@ Condition.addupRule("sales", {
             validate: null
         }
     },
-    
+    "sale-createTime":{
+        label: "创建时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "createTime",
+            op: "between",
+            validate: null
+        }
+    },
+    "salesDelivery-no":{
+        label: "销售单号",
+        type: "text",
+        submitConfig: {
+            name: "sales.no",
+            op: "eq",
+            validata: null
+        }
+    },
+    "salesDelivery-orderId":{
+        label: "装修单号",
+        type: "text",
+        submitConfig: {
+            name: "sales.orderId",
+            op: "eq",
+            validata: null
+        }
+    },
+    "salesDelivery-category":{
+        label: "品类",
+        type: "text",
+        submitConfig: {
+            name: "sales.category",
+            op: "cn",
+            validata: null
+        }
+    },
+    "salesDelivery-brand":{
+        label: "品牌",
+        type: "text",
+        submitConfig: {
+            name: "sales.brand",
+            op: "cn",
+            validata: null
+        }
+    },
+    "salesDelivery-goods":{
+        label: "商品名",
+        type: "text",
+        submitConfig: {
+            name: "goods.name",
+            op: "cn",
+            validata: null
+        }
+    },
+    "salesDelivery-traner":{
+        label: "配送人",
+        type: "autofill",
+        submitConfig: {
+            name: "traner",
+            op: "eq",
+            validata: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {"user.status":0,"departmentType.name":""},
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "salesActivity-no":{
+        label: "销售单号",
+        type: "text",
+        submitConfig: {
+            name: "sales.no",
+            op: "eq",
+            validata: null
+        }
+    },
+    "salesActivity-orderId":{
+        label: "装修单号",
+        type: "text",
+        submitConfig: {
+            name: "sales.orderId",
+            op: "eq",
+            validata: null
+        }
+    },
+    "salesActivity-createTime":{
+        label: "创建时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "sales.createTime",
+            op: "between",
+            validata: null
+        }
+    },
 });

@@ -18,9 +18,11 @@ public class FeedbackDaoImpl extends DaoImpl<FeedbackPO> implements FeedbackDao 
 	}
 
 	@Override
-	public List<FeedbackPO> pageFeedback(Paging paging, List<Filter> filters) {
+	public List<FeedbackPO> pageFeedback(Paging paging, List<Filter> filters, int company) {
 
 		PagingQuery<FeedbackPO> query = pagingQuery(paging, FeedbackPO.class);
+		
+		query.add(query.getCriterion(FeedbackPO.COLUMN_COMPANY_STR, company, "eq"));
 
 		queryFilterExcute(query, filters);
 

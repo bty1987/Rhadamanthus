@@ -2,7 +2,7 @@ jQuery(function($){
 
     var approvalTrack = {
         
-        type: ["劵", "物品"],
+        type: ["劵", "物品", "红包"],
         url: null,
         postData : null,
         stateType:["到店", "定金", "签单", "抽奖", "特批", "购买", "其他", "升级"],

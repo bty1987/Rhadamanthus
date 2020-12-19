@@ -1,7 +1,8 @@
 {
   "awardStockType": [
     {"key":"0","value":"劵"},
-    {"key":"1","value":"物品"}
+    {"key":"1","value":"物品"},
+    {"key":"2","value":"红包"}
   ],
   "awardSubtype": [
     {"key":"0","value":"床上用品"},
@@ -17,8 +18,7 @@
   "activityItemType": [
     {"key":"0","value":"劵"},
     {"key":"1","value":"物品"},
-    {"key":"2","value":"特殊劵"},
-    {"key":"3","value":"特殊物品"}
+    {"key":"2","value":"红包"}
   ],
   "isPreforType": [
     {"key":"0","value":"计算业绩"},

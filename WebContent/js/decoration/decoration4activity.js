@@ -14,23 +14,28 @@ jQuery(function ($) {
     var ActivityOrderId = params.decorationOrderId;
     var things = com.focusPage("#things");
     var coupons = com.focusPage("#coupons");
+    var papers = com.focusPage("#papers");
+    
     decorationActivityItem.activity = com.focusPage("#activity");
     
     decorationActivityItem.activityItems.activityInfo = com.focusPage("#activityInfo");
     decorationActivityItem.activityItems.couponsType = com.focusPage("#couponsType");
     decorationActivityItem.activityItems.couponsVal = com.focusPage("#couponsVal");
+    decorationActivityItem.activityItems.receiveType = com.focusPage("#receiveType");
     decorationActivityItem.activityItems.thingsType = com.focusPage("#thingsType");
     decorationActivityItem.activityItems.thingsVal = com.focusPage("#thingsVal");
-    decorationActivityItem.activityItems.receiveType = com.focusPage("#receiveType");
     decorationActivityItem.activityItems.receiveTypes = com.focusPage("#receiveTypes");
+    decorationActivityItem.activityItems.papersType = com.focusPage("#papersType");
+    decorationActivityItem.activityItems.papersVal = com.focusPage("#papersVal");
+    decorationActivityItem.activityItems.receiveTypess = com.focusPage("#receiveTypess");
     decorationActivityItem.activityItems.comment = com.focusPage("#comment");
     
-
     com.focusPage("#activity").on("change", function () {
 
         var $this = $(this);
         var things = [];
         var coupons = [];
+        var papers = [];
 
         var options = {
             "activity.aid": $this.val()
@@ -43,44 +48,130 @@ jQuery(function ($) {
             for (var i = 0; i < activity.length; i++) {
 
                 var activityItem = activity[i];
+                var item = {
+                    asid: activityItem.asid,
+                    activityItemName: activityItem.name + " 金额:" + activityItem.money
+                }
 
                 if (activityItem.type == 0) {
-                    coupons.push({
-                        asid: activityItem.asid,
-                        activityItemName: activityItem.name + " 金额:" + activityItem.money
-                    });
+                    coupons.push(item);
                 } else if (activityItem.type == 1) {
-                    things.push({
-                        asid: activityItem.asid,
-                        activityItemName: activityItem.name + " 金额:" + activityItem.money
-                    });
+                    things.push(item);
+                } else if (activityItem.type == 2) {
+                    papers.push(item);
                 }
-        }
+            }
 
             com.selectTypeahead("thingsType", things, 'asid', 'activityItemName');
-
-            com.focusPage("#thingsAdd").unbind().click(function(){
-                if(com.validate("thingsInputs")){
-                    return;
-                }
-
-                decorationUtils.createCounpon("things", "thingsType", "receiveType", "thingsVal");
-
-                com.cleanItems(decorationActivityItem.activityItems);
-            });
-
             com.selectTypeahead("couponsType", coupons, 'asid', 'activityItemName');
+            com.selectTypeahead("papersType", papers, 'asid', 'activityItemName');
+        });
+    });
+    
+    com.focusPage("#thingsAdd").unbind().click(function(){
+        
+        if(com.validate("thingsInputs")){
+            return false;
+        }
 
-            com.focusPage("#couponsAdd").unbind().click(function(){
-                if(com.validate("couponsInputs")){
-                    return;
-                }
+        decorationUtils.createCounpon("things", "thingsType", "receiveType", "thingsVal");
 
-                decorationUtils.createCounpon("coupons", "couponsType", "receiveTypes", "couponsVal");
+        com.cleanItems(decorationActivityItem.activityItems);
+    });
 
-                com.cleanItems(decorationActivityItem.activityItems);
-            });
+    com.focusPage("#couponsAdd").unbind().click(function(){
+        
+        if(com.validate("couponsInputs")){
+            return false;
+        }
 
+        decorationUtils.createCounpon("coupons", "couponsType", "receiveTypes", "couponsVal");
+
+        com.cleanItems(decorationActivityItem.activityItems);
+    });
+    
+    com.focusPage("#papersAdd").unbind().click(function(){
+        
+        if(com.validate("papersInputs")){
+            return false;
+        }
+
+        decorationUtils.createCounpon("papers", "papersType", "receiveTypess", "papersVal");
+
+        com.cleanItems(decorationActivityItem.activityItems);
+    });
+    
+    decorationActivityItem.activityItems.activities = com.focusPage("#activities");
+    decorationActivityItem.activityItems.itemType = com.focusPage("#itemType");
+    decorationActivityItem.activityItems.itemObj = com.focusPage("#itemObj");
+    decorationActivityItem.activityItems.itemNum = com.focusPage("#itemNum");
+    decorationActivityItem.activityItems.receiveType1 = com.focusPage("#receiveType1");
+    
+    com.selectTypeahead(decorationActivityItem.activityItems.itemObj, [], 'asid', 'name');
+    
+    decorationActivityItem.activityItems.activities.on("change", function () {
+        
+        var items = [];
+        
+        var activity = decorationActivityItem.activityItems.activities.val();
+        var type = decorationActivityItem.activityItems.itemType.val();
+        
+        if(!activity || !type) return false;
+
+        var options = {
+            "activity.aid": activity
+        };
+        
+        com.post(api.information.queryActivityItemByAid, options, function (res) {
+            
+            var activity = res.activityItems;
+
+            for (var i = 0; i < activity.length; i++) {
+
+                var activityItem = activity[i];
+                
+                if (activityItem.type != type) continue; 
+                
+                items.push({
+                    asid: activityItem.asid,
+                    name: activityItem.name + " 金额:" + activityItem.money,
+                });
+            }
+
+            com.resetTypeahead(decorationActivityItem.activityItems.itemObj, items);
+        });
+    });
+    
+    decorationActivityItem.activityItems.itemType.on("change", function () {
+        
+        var items = [];
+        
+        var activity = decorationActivityItem.activityItems.activities.val();
+        var type = decorationActivityItem.activityItems.itemType.val();
+        
+        if(!activity || !type) return false;
+
+        var options = {
+            "activity.aid": activity
+        };
+        
+        com.post(api.information.queryActivityItemByAid, options, function (res) {
+            
+            var activity = res.activityItems;
+
+            for (var i = 0; i < activity.length; i++) {
+
+                var activityItem = activity[i];
+                
+                if (activityItem.type != type) continue; 
+                
+                items.push({
+                    asid: activityItem.asid,
+                    name: activityItem.name + " 金额:" + activityItem.money,
+                });
+            }
+            
+            com.resetTypeahead(decorationActivityItem.activityItems.itemObj, items);
         });
     });
     
@@ -97,6 +188,7 @@ jQuery(function ($) {
 
     decorationActivityItem.joinDecorationActivityModal = com.focusPage("#joinDecorationActivityModal");
     decorationActivityItem.applyDecorationActivityItemModal = com.focusPage("#applyDecorationActivityItemModal");
+    decorationActivityItem.addDecorationActivityItemModal = com.focusPage("#addDecorationActivityItemModal");
     decorationActivityItem.commentActivityModal = com.focusPage("#commentActivityModal");
     
     
@@ -229,6 +321,41 @@ jQuery(function ($) {
 
         decorationActivityItem.applyDecorationActivityItemModal.modal("show");
     });
+    
+    //添加活动物品
+    com.focusPage("#addActivityItemBtn").on("click", function () {
+        
+        if(com.validate("addDecorationActivityItemModal")) return false;
+
+        var options = {
+            "decorationActivity.orderId": ActivityOrderId
+        };
+
+        com.post(api.decoration.queryDecorationActivityByOrderId, options, function (res) {
+
+            var decorationActivitys = res.decorationActivitys;
+
+            var decorationActivityData = [{aid: -1, name: ""}];
+
+            for (var i = 0; i < decorationActivitys.length; i++) {
+                var decorationActivity = decorationActivitys[i];
+
+                if(decorationActivity.status == 1){
+                    continue;
+                }
+
+                decorationActivityData.push({
+                    aid: decorationActivity.activity.aid,
+                    name: decorationActivity.activity.name,
+                    money: decorationActivity.activity.money
+                });
+            }
+
+            decorationActivityItem.activityItems.activities.bindData(decorationActivityData, "aid", "name", false);
+        }, null, false);
+
+        decorationActivityItem.addDecorationActivityItemModal.modal("show");
+    });
 
     //保存参加活动
     com.focusPage("#submitDecorationActivityBtn").on("click", function () {
@@ -257,7 +384,7 @@ jQuery(function ($) {
             return;
         }
 
-        if (things.html() == "" && coupons.html() == "") {
+        if (things.html() == "" && coupons.html() == "" && papers.html() == "") {
             com.showAlert(com.error, "活动物品或券需要选择才能提交");
             return;
         }
@@ -308,15 +435,63 @@ jQuery(function ($) {
 
             index++;
         });
+        
+        com.focusPage("#papers li").each(function (i, e) {
+            var _ = $(e);
+
+            options["approvalDecorationActivityItems[" + index + "].orderId"] = orderId;
+            options["approvalDecorationActivityItems[" + index + "].activityName"] = activityName;
+            options["approvalDecorationActivityItems[" + index + "].activityItemName"] = _.children('span').attr("typename").split(" ")[0];
+            options["approvalDecorationActivityItems[" + index + "].type"] = 2;
+            options["approvalDecorationActivityItems[" + index + "].num"] = _.children('span').attr('num');
+            options["approvalDecorationActivityItems[" + index + "].money"] = _.children('span').attr("typename").split(" ")[1].split(':')[1];
+            options["approvalDecorationActivityItems[" + index + "].content"] = "";
+            options["approvalDecorationActivityItems[" + index + "].stateType"] = _.children('span').attr('value');
+            options["approvalDecorationActivityItems[" + index + "].asid"] = _.children('span').attr("asid");
+
+            index++;
+        });
 
         if (!submitFlag) {
-            return;
+            return false;
         }
 
         com.post(api.approval.submitApprovalForDecorationActivity, options, function (res) {
             com.showAlert(com.info, "提交成功");
         });
+        
         decorationActivityItem.applyDecorationActivityItemModal.modal("hide");
+    });
+    
+    com.focusPage("#addDecorationActivityItemBtn").on("click", function () {
+        
+        var orderId = params.decorationOrderId;
+        var activityName = decorationActivityItem.activityItems.activities.find("option:selected").text();
+        var activityId = decorationActivityItem.activityItems.activities.val();
+        var itemName = decorationActivityItem.activityItems.itemObj.val();
+        
+        var options = {
+            "decorationActivityItem.orderId": orderId,
+            "decorationActivityItem.aid": activityId,
+            "decorationActivityItem.activityName": activityName,
+            
+            "decorationActivityItem.activityItemName": itemName,
+            "decorationActivityItem.type": decorationActivityItem.activityItems.itemType.val(),
+            "decorationActivityItem.num": decorationActivityItem.activityItems.itemNum.val(),
+            "decorationActivityItem.money": itemName.split(" ")[1].split(":")[1],
+            "decorationActivityItem.stateType": decorationActivityItem.activityItems.receiveType1.val(),
+            "decorationActivityItem.asid": com.typeahead(decorationActivityItem.activityItems.itemObj),
+            "decorationActivityItem.content": "",
+        }
+        
+        com.post(api.decoration.addDecorationActivityItem, options, function(res){
+            
+            com.showAlert(com.info, "提交成功");
+            
+            decorationUtils.decorationActivityInfo(decorationActivityItem.items.decorationActivityItems, activityBtnMethod, orderId);
+            
+            decorationActivityItem.addDecorationActivityItemModal.modal("hide");
+        });
     });
     
     function activityBtnMethod(uiPgDiv, decorationActivity) {
@@ -339,11 +514,6 @@ jQuery(function ($) {
         });
 
     }
-
-    //返回
-    com.focusPage("#backBtn").on("click", function () {
-        com.switchPage(api.index.decorationIndex.url);
-    });
 
     //删除活动
     function deleteDecorationActivity(daId) {
@@ -409,6 +579,8 @@ jQuery(function ($) {
     com.post(api.ds.decoration, {}, function (res) {
         com.focusPage("#receiveType").bindData(res.receiveType, "key", "value", false);
         com.focusPage("#receiveTypes").bindData(res.receiveType, "key", "value", false);
+        com.focusPage("#receiveTypess").bindData(res.receiveType, "key", "value", false);
+        com.focusPage("#receiveType1").bindData(res.receiveType, "key", "value", false);
         
         decorationActivity.stateTypes = res.receiveType.split("key", "value");
         decorationActivity.states = res.activityItemType.split("key", "value");

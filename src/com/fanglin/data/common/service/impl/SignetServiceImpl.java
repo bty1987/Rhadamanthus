@@ -180,4 +180,24 @@ public class SignetServiceImpl implements SignetService {
 		return 0;
 	}
 
+	@Override
+	public String signateAuto(SignetVO signetVO) throws FLException {
+
+		SignetPO signetPO = signetDao.get(signetVO.getSid());
+
+		if (signetPO == null) {
+			throw new FLException(130045, "签章不存在");
+		}
+
+		if (signetPO.getStatus() != SignetPO.STATUS_AUTH_INT) {
+			throw new FLException(130047, "签章状态不可操作");
+		}
+
+		String path = Signature.beforeauto(signetPO);
+
+		signetVO.setPath(path);
+
+		return path;
+	}
+
 }

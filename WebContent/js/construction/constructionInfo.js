@@ -88,7 +88,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.init(['construction-orderId',"construction-designerRegionId","construction-designerDepartmentId","construction-info-keyTime","construction-info-drawlineTime","construction-info-finishTime","construction-info-designTime","construction-info-sdesignTimeRange","construction-info-edesignTimeRange"], "condList", api.construction.pageConstructionInfo, function(data){
+    searcher.init(['construction-orderId',"construction-designerRegionId","construction-designerDepartmentId",'construction-designer',"construction-info-keyTime","construction-info-drawlineTime","construction-info-finishTime","construction-info-designTime","construction-info-sdesignTimeRange","construction-info-edesignTimeRange"], "condList", api.construction.pageConstructionInfo, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "constructionInfoPostData",null, false, null,function(){
 

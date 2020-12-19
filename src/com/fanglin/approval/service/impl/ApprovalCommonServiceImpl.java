@@ -23,12 +23,14 @@ import com.fanglin.approval.service.ApprovalCommonService;
 import com.fanglin.approval.vo.ApprovalVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.dingding.service.ApprovalService;
+
 @ParentPackage("common")
 @Service("approvalCommonService")
 public class ApprovalCommonServiceImpl implements ApprovalCommonService {
 
 	@Autowired
 	private ApprovalDao approvalDao;
+
 	@Autowired
 	private ApprovalService approvalDDService;
 
@@ -41,43 +43,46 @@ public class ApprovalCommonServiceImpl implements ApprovalCommonService {
 
 		return 0;
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int confirmApproval(ApprovalVO approvalVO) throws FLException {
+
 		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
+
 		if (approvalPO == null) {
 			throw new FLException(240009, "审批信息不存在");
 		}
-		
-		if (approvalPO.getStatus()!=ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT) {
+
+		if (approvalPO.getStatus() != ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT) {
 			throw new FLException(240009, "审批状态不可操作");
 		}
-		
-        approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_CONFIRM_INT);
-		
+
+		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_CONFIRM_INT);
+
 		approvalDao.update(approvalPO);
-		
+
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int rejectApproval(ApprovalVO approvalVO) throws FLException {
-		
+
 		ApprovalPO approvalPO = approvalDao.get(approvalVO.getAid());
+
 		if (approvalPO == null) {
 			throw new FLException(240009, "审批信息不存在");
 		}
-		
-		if (approvalPO.getStatus()!=ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT) {
+
+		if (approvalPO.getStatus() != ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT) {
 			throw new FLException(240009, "审批状态不可操作");
 		}
-		
-        approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_REJECT_INT);
-		
+
+		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_REJECT_INT);
+
 		approvalDao.update(approvalPO);
-		
+
 		return 0;
 	}
 
