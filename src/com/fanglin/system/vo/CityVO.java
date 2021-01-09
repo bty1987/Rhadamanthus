@@ -21,6 +21,8 @@ public class CityVO implements Serializable {
 	
 	private String name;
 	
+	private String province;
+	
 	private RegionVO region;
 	
 	private Double x;
@@ -58,6 +60,14 @@ public class CityVO implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getProvince() {
+		return province;
+	}
+	
+	public void setProvince(String province) {
+		this.province = province;
 	}
 
 	public RegionVO getRegion(){

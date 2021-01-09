@@ -39,7 +39,8 @@ $(function () {
             minusManagePrice: com.focusPage("#minusManagePrice", "#decorationAccountContent"),
             minusMatch: com.focusPage("#minusMatch", "#decorationAccountContent"),
             minusUncalPrice: com.focusPage("#minusUncalPrice", "#decorationAccountContent"),
-            minusDone: com.focusPage("#minusDone", "#decorationAccountContent")
+            minusDone: com.focusPage("#minusDone", "#decorationAccountContent"),
+            asDifference : com.focusPage("#asDifference", "#decorationAccountContent"),
         },
         advanceItems: {
             contractAdvance: com.focusPage("#contractAdvance", "#decorationAccountContent"),
@@ -122,6 +123,7 @@ $(function () {
         reduceTotalPrice: 0,
         reduceDisPrice : 0,
         reduceUndisPrice : 0,
+        asDifference : 0,
 
         accountForehead: 0,
         balanceSum: 0,
@@ -311,6 +313,7 @@ $(function () {
                 accountBasic.reduceTotalPrice = utils.accAdd(accountBasic.reduceTotalPrice, v.total);
                 accountBasic.reduceDisPrice = utils.accAdd(accountBasic.reduceDisPrice, v.disPrice);
                 accountBasic.reduceUndisPrice = utils.accAdd(accountBasic.reduceUndisPrice, v.undisPrice);
+                accountBasic.asDifference = accountBasic.reduceDisPrice * (accountBasic.dd/10) + accountBasic.reduceUndisPrice + Math.round(accountBasic.reduceManagePrice) - Math.round(accountBasic.reduceTotalPrice)
             }
         });
 
@@ -325,6 +328,7 @@ $(function () {
         decorationDetail.AddReduceItems.minusMatch.html(Math.round(accountBasic.reduceCalPrice));
         decorationDetail.AddReduceItems.minusUncalPrice.html(Math.round(accountBasic.reduceUncalPrice));
         decorationDetail.AddReduceItems.minusDone.html(Math.round(accountBasic.reduceTotalPrice));
+        decorationDetail.AddReduceItems.asDifference.html(Math.round(accountBasic.asDifference));
 
     }, null, false);
 
@@ -473,7 +477,7 @@ $(function () {
         if (com.validate('controls')) return false;
 
         com.showConfirm("确定锁定新决算信息吗?", function () {
-           com.post(api.decoration.makeDecorationAccount, {"decorationAccount.orderId": params.decorationOrderId}, function (res) {
+            com.post(api.decoration.makeDecorationAccount, {"decorationAccount.orderId": params.decorationOrderId}, function (res) {
                 com.showAlert(com.info, "锁定成功");
             });
         });

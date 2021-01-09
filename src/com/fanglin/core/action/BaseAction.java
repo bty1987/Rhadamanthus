@@ -42,211 +42,195 @@ import com.opensymphony.xwork2.ActionSupport;
 public class BaseAction extends ActionSupport implements ServletRequestAware, ServletResponseAware {
 
 	private static final long serialVersionUID = 1638203239536571772L;
-	
+
 	public static final String BACKVALUE_LOGIN_STR = "login";
-	
+
 	protected HttpServletRequest request;
 
 	protected HttpServletResponse response;
-	
+
 	private int errorCode = 0;
-	
+
 	private String errorMsg;
-	
+
 	Map<String, Object> logObjs = new HashMap<String, Object>();
-	
-	public String queryUserName() throws FLException{
+
+	public String queryUserName() throws FLException {
 		String userName = null;
-		
-		try{
-			String authentication = getAuthentication();
-		
-			if(authentication != null){
-				String decryptString = AESHelper.decrypt(authentication, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
-				
-				Authentication authenticationUtil = new Authentication(decryptString);
-				if(authenticationUtil.getUpdateTime() != -1){
-					userName = authenticationUtil.getUserName();
-				}
+
+		String authentication = getAuthentication();
+
+		if (authentication != null) {
+			String decryptString = AESHelper.decrypt(authentication, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
+
+			Authentication authenticationUtil = new Authentication(decryptString);
+			if (authenticationUtil.getUpdateTime() != -1) {
+				userName = authenticationUtil.getUserName();
 			}
-		}catch(Exception e){
-			throw new FLException(110005, "系统处理问题");
 		}
-		
+
 		return userName;
 	}
-	
-	public String queryUserId() throws FLException{
+
+	public String queryUserId() throws FLException {
 		String userId = null;
-		
-		try{
-			String authentication = getAuthentication();
-		
-			if(authentication != null){
-				String decryptString = AESHelper.decrypt(authentication, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
-				
-				Authentication au = new Authentication(decryptString);
-				if(au.getUpdateTime() != -1){
-					userId = au.getUserId();
-				}
+
+		String authentication = getAuthentication();
+
+		if (authentication != null) {
+			String decryptString = AESHelper.decrypt(authentication, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
+
+			Authentication au = new Authentication(decryptString);
+			if (au.getUpdateTime() != -1) {
+				userId = au.getUserId();
 			}
-		}catch(Exception e){
-			throw new FLException(110005, "系统处理问题");
 		}
-		
+
 		return userId;
 	}
-	
-	public Integer queryRoleId() throws FLException{
+
+	public Integer queryRoleId() throws FLException {
 		Integer roleId = null;
-		
-		try{
-			String authentication = getAuthentication();
-		
-			if(authentication != null){
-				String decryptString = AESHelper.decrypt(authentication, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
-				
-				Authentication au = new Authentication(decryptString);
-				if(au.getUpdateTime() != -1){
-					roleId = au.getRoleId();
-				}
+
+		String authentication = getAuthentication();
+
+		if (authentication != null) {
+			String decryptString = AESHelper.decrypt(authentication, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
+
+			Authentication au = new Authentication(decryptString);
+			if (au.getUpdateTime() != -1) {
+				roleId = au.getRoleId();
 			}
-		}catch(Exception e){
-			throw new FLException(110005, "系统处理问题");
 		}
-		
+
 		return roleId;
 	}
-	
-	public int queryCompany() throws FLException{
-		
+
+	public int queryCompany() throws FLException {
+
 		int company = 0;
-		
-		try {
-			String authentication = getAuthentication();
-			
-			if(authentication != null){
-				String encryptKey = SystemConfig.getString("encryptKey");
-				String encryptIv = SystemConfig.getString("encryptIv");
-				String decryptString = AESHelper.decrypt(authentication, encryptKey, encryptIv);
-				
-				Authentication au = new Authentication(decryptString);
-				if(au.getUpdateTime() != -1){
-					company = au.getCompany();
-				}
+
+		String authentication = getAuthentication();
+
+		if (authentication != null) {
+			String encryptKey = SystemConfig.getString("encryptKey");
+			String encryptIv = SystemConfig.getString("encryptIv");
+			String decryptString = AESHelper.decrypt(authentication, encryptKey, encryptIv);
+
+			Authentication au = new Authentication(decryptString);
+			if (au.getUpdateTime() != -1) {
+				company = au.getCompany();
 			}
-		} catch (Exception e) {
-			throw new FLException(110005, "系统处理问题");
 		}
-		
+
 		return company;
 	}
-	
-	public Authentication authentication() throws FLException{
-		
+
+	public Authentication authentication() throws FLException {
+
 		Authentication authentication = new Authentication();
-		
+
 		try {
 			String au = request.getParameter("authentication");
-			
-			if(au == null){
+
+			if (au == null) {
 				au = CookieUtil.getCookie(request, Constant.COOKIE_AUTHENTICATION);
 			}
-			
-			if(au == null){
+
+			if (au == null) {
 				throw new FLException(110005, "系统处理问题");
 			}
-			
+
 			authentication = new Authentication(AESHelper.decrypt(au, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
 		} catch (Exception e) {
 			throw new FLException(110005, "系统处理问题");
 		}
-		
+
 		return authentication;
 	}
-	
-	private String getAuthentication() throws FLException{
-		
+
+	private String getAuthentication() throws FLException {
+
 		String authentication;
-		
+
 		try {
 			authentication = request.getParameter("authentication");
-			
-			if(authentication == null){
+
+			if (authentication == null) {
 				authentication = CookieUtil.getCookie(request, Constant.COOKIE_AUTHENTICATION);
 			}
-			
+
 			return authentication;
 		} catch (UnsupportedEncodingException e) {
 			throw new FLException(110005, "系统处理问题");
 		}
 	}
-	
+
 	@Override
-	public void setServletResponse(HttpServletResponse response){
+	public void setServletResponse(HttpServletResponse response) {
 		this.response = response;
 	}
 
 	@Override
-	public void setServletRequest(HttpServletRequest request){
+	public void setServletRequest(HttpServletRequest request) {
 		this.request = request;
 	}
 
-	public int getErrorCode(){
+	public int getErrorCode() {
 		return errorCode;
 	}
 
-	public void setErrorCode(int errorCode){
+	public void setErrorCode(int errorCode) {
 		this.errorCode = errorCode;
 	}
 
-	public String getErrorMsg(){
+	public String getErrorMsg() {
 		return errorMsg;
 	}
 
-	public void setErrorMsg(String errorMsg){
+	public void setErrorMsg(String errorMsg) {
 		this.errorMsg = errorMsg;
 	}
 
 	@Override
 	@JSON(serialize = false)
-	public Collection<String> getActionErrors(){
+	public Collection<String> getActionErrors() {
 		return super.getActionErrors();
 	}
 
 	@Override
 	@JSON(serialize = false)
-	public Collection<String> getActionMessages(){
+	public Collection<String> getActionMessages() {
 		return super.getActionMessages();
 	}
 
 	@Override
 	@JSON(serialize = false)
-	public Map<String, List<String>> getFieldErrors(){
+	public Map<String, List<String>> getFieldErrors() {
 		return super.getFieldErrors();
 	}
 
 	@Override
 	@JSON(serialize = false)
-	public ResourceBundle getTexts(){
+	public ResourceBundle getTexts() {
 		return super.getTexts();
 	}
 
 	@JSON(serialize = false)
-	public Map<String, Object> getLogObjs(){
-		if(logObjs == null){
+	public Map<String, Object> getLogObjs() {
+		if (logObjs == null) {
 			logObjs = new HashMap<String, Object>();
 		}
-		
-		if(logObjs.size() == 0){
+
+		if (logObjs.size() == 0) {
 			logObjs.put("errorCode", getErrorCode());
 			logObjs.put("errorMsg", getErrorMsg());
 		}
-		
+
 		return logObjs;
 	}
 
-	public void setLogObjs(Map<String, Object> logObjs){
+	public void setLogObjs(Map<String, Object> logObjs) {
 		this.logObjs = logObjs;
 	}
 

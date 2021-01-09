@@ -34,6 +34,8 @@ public class SalesActivityDaoImpl extends DaoImpl<SalesActivityPO> implements Sa
 
 		queryFilterExcute(query, filter);
 
+		query.desc("sid");
+		
 		return query.list();
 	}
 

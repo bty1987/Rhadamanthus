@@ -25,7 +25,7 @@ $(function () {
         customerSource.status = res.customerSourceStatus.split('key', 'value');
     }, null, false);
 
-    com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", { "duty": "", "user.status": 0}, "userBases", "uid", "currentName", null);
+    com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", {"user.status": 0}, 'autoFillKeyValue', 'key', 'value', null);
 
     customerSource.items.grade.bindData(customerSource.grade, "key", "value", false);
 
@@ -120,7 +120,7 @@ $(function () {
 
         var option = {
             "customerOrigin.csid": customerSource.csid,
-            "customerOrigin.belonger.uid": com.typeahead("belonger")
+            "customerOrigin.belonger.userId": com.typeahead("belonger")
         };
 
         com.post(api.customer.updateCustomerOriginForBelonger, option, function () {

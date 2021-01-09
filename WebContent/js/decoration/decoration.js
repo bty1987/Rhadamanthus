@@ -533,7 +533,7 @@
 
                     });
                     btnRepair.click(function () {
-                        repairOrder(v.orderId);
+                        repairOrder(v.orderId,);
 
                     });
                     $.each(pageConfig.pageBtn, function (k, b) {

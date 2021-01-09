@@ -96,7 +96,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 	}
 
 	@Override
-	public void pageSalesBalance(Paging paging, List<Filter> filters, int company) {
+	public void pageSalesBalance(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		if (filters.size() == 0)
 			return;
@@ -110,7 +110,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 	}
 
 	@Override
-	public void pageSalesBalanceForDompany(Paging paging, List<Filter> filters, int dompany) {
+	public void pageSalesBalanceForDompany(Paging paging, List<Filter> filters, int dompany) throws FLException {
 
 		if (filters.size() == 0)
 			return;
@@ -124,7 +124,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 	}
 
 	@Override
-	public void pageSalesBalanceForPompany(Paging paging, List<Filter> filters, int pompany) {
+	public void pageSalesBalanceForPompany(Paging paging, List<Filter> filters, int pompany) throws FLException {
 
 		if (filters.size() == 0)
 			return;
@@ -138,7 +138,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 	}
 
 	@Override
-	public void pageSalesBalanceForSupplier(Paging paging, List<Filter> filters, String userId, int pompany) {
+	public void pageSalesBalanceForSupplier(Paging paging, List<Filter> filters, String userId, int pompany) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
@@ -157,7 +157,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 	}
 	
 	@Override
-	public void pageSalesBalanceForCheck(Paging paging, List<Filter> filters, String userId, int pompany) {
+	public void pageSalesBalanceForCheck(Paging paging, List<Filter> filters, String userId, int pompany) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 

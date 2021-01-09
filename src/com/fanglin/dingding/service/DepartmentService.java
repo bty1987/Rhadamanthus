@@ -57,12 +57,14 @@ public class DepartmentService {
 		String url = String.format(DDApi.DDAPI_LIST_DEPARTMENT_STR, oapiHost.getValue(), accessToken, companyPO.getNo());
 
 		JSONObject json = HttpHelper.httpGet(url);
-		
-		if(json == null){
+
+		if (json == null) {
 			throw new FLException(270007, "获取部门信息失败");
-		}else if(json.getInteger("errcode") != 0){
+		} else if (json.getInteger("errcode") != 0) {
 			System.out.println(url);
 			System.out.println(String.format("%d-%s", json.getInteger("errcode"), json.getString("errmsg")));
+
+			throw new FLException(240015, String.format("%d-%s", json.getInteger("errcode"), json.getString("errmsg")));
 		}
 
 		return JSON.parseArray(json.getJSONArray("department").toJSONString(), Department.class);

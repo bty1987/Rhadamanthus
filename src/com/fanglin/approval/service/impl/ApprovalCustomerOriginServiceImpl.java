@@ -91,13 +91,14 @@ public class ApprovalCustomerOriginServiceImpl implements ApprovalCustomerOrigin
 			throw new FLException(330001, "客源不存在");
 		}
 
-		CustomerOriginVO customerOriginVO = new CustomerOriginVO(new VillageVO(new CityProperVO()), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new CustomerVO(), new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())));
+		CustomerOriginVO customerOriginVO = new CustomerOriginVO(new VillageVO(new CityProperVO()), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new CustomerVO(), new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())));
 
-		BeanUtil.copyProperties(customerOriginPO, customerOriginVO, Arrays.asList("village", "creater", "belonger", "department", "region", "customer", "house", "designer"));
+		BeanUtil.copyProperties(customerOriginPO, customerOriginVO, Arrays.asList("village", "creater", "belonger", "department", "region", "customer", "house", "designer", "salesman"));
 
 		BeanUtil.copyProperties(customerOriginPO.getCustomer(), customerOriginVO.getCustomer());
 		BeanUtil.copyProperties(customerOriginPO.getHouse(), customerOriginVO.getHouse(), Arrays.asList("village"));
 		BeanUtil.copyProperties(customerOriginPO.getDesigner(), customerOriginVO.getDesigner(), Arrays.asList("dept", "duty"));
+		BeanUtil.copyProperties(customerOriginPO.getSalesman(), customerOriginVO.getSalesman(), Arrays.asList("dept", "duty"));
 
 		BeanUtil.copyProperties(customerOriginPO.getHouse().getVillage(), customerOriginVO.getHouse().getVillage(), Arrays.asList("cityProper"));
 		BeanUtil.copyProperties(customerOriginPO.getHouse().getVillage().getCityProper(), customerOriginVO.getHouse().getVillage().getCityProper(), Arrays.asList("city"));
@@ -106,6 +107,10 @@ public class ApprovalCustomerOriginServiceImpl implements ApprovalCustomerOrigin
 		if (customerOriginPO.getDesigner() != null) {
 			BeanUtil.copyProperties(customerOriginPO.getDesigner().getDept(), customerOriginVO.getDesigner().getDept(), Arrays.asList("type", "fatherDept", "manager"));
 			BeanUtil.copyProperties(customerOriginPO.getDesigner().getDept().getFatherDept(), customerOriginVO.getDesigner().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
+		}
+		if (customerOriginPO.getSalesman() != null) {
+			BeanUtil.copyProperties(customerOriginPO.getSalesman().getDept(), customerOriginVO.getSalesman().getDept(), Arrays.asList("type", "fatherDept", "manager"));
+			BeanUtil.copyProperties(customerOriginPO.getSalesman().getDept().getFatherDept(), customerOriginVO.getSalesman().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
 		}
 
 		ApprovalCustomerOriginVO approvalCustomerOriginVO = new ApprovalCustomerOriginVO();

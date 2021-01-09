@@ -11,6 +11,8 @@ public interface PlanDao extends Dao<PlanPO> {
 
 	public List<PlanPO> pagePlan(Paging paging, List<Filter> filters, int uid, int company);
 
+	public List<PlanPO> existPlan(long tid, String args, int company);
+
 	public int countPlan(long cuid);
 
 	public int countPlan(String executeTime);

@@ -32,6 +32,8 @@ public class CityPO implements Serializable {
 	
 	public static final String COLUMN_NAME_STR = "name";
 	
+	public static final String COLUMN_PROVINCE_STR = "province";
+	
 	public static final String COLUMN_RID_STR = "rid";
 	
 	public static final String COLUMN_PINYIN_STR = "pinyin";
@@ -43,6 +45,8 @@ public class CityPO implements Serializable {
 	private String no;
 
 	private String name;
+	
+	private String province;
 	
 	private String pinyin;
 
@@ -87,6 +91,15 @@ public class CityPO implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	@Column(name = "province")
+	public String getProvince() {
+		return province;
+	}
+	
+	public void setProvince(String province) {
+		this.province = province;
 	}
 
 	@Column(name = "pinyin")

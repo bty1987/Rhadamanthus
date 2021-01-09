@@ -26,6 +26,10 @@ jQuery(function($) {
         com.focusPage(".agent", "#form").hide();
     }
     
+    if(contractEdit.contractArgs.type == "0"){
+        com.focusPage("#con-payment-second", "#form").hide();
+    }
+    
     contractEdit.cover["cov-sign-year"] = com.dateFormat(new Date(), "yyyy");
     contractEdit.cover["cov-sign-month"] = com.dateFormat(new Date(), "MM");
     contractEdit.cover["cov-sign-day"] = com.dateFormat(new Date(), "dd");
@@ -80,7 +84,8 @@ jQuery(function($) {
         var house = data.house;
         var village = house.village;
         var proper = village.cityProper;
-        
+
+        com.focusPage("#con-province-name", "#form").val(proper.city.province);
         com.focusPage("#con-city-name", "#form").val(proper.city.name);
         com.focusPage("#con-proper-name", "#form").val(proper.name);
         com.focusPage("#con-village-name", "#form").val(village.name);

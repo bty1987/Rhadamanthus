@@ -157,6 +157,7 @@ $.extend(api, {
         },
 
         pagePlan: {url: "pagePlan.do"},
+        existPlan: {url: "existPlan.do"},
         createPlan: {url: "createPlan.do"},
         cancelPlan: {url: "cancelPlan.do"},
         updatePlan: {url: "updatePlan.do"},

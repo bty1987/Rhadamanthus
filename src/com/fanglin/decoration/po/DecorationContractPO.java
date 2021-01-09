@@ -23,8 +23,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fadada.bean.Contract;
 import com.fanglin.data.po.ContractPO;
+import com.fanglin.fadada.bean.Contract;
 import com.fanglin.personel.po.UserPO;
 
 @Entity

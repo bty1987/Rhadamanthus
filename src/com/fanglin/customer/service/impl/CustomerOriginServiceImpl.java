@@ -72,11 +72,15 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 	private MessageService messageService;
 
 	@Override
-	public void pageCustomerOrigin(Paging paging, List<Filter> filters, String userId) {
+	public void pageCustomerOrigin(Paging paging, List<Filter> filters, String userId, String user) {
 
-		UserPO user = userDao.queryUserByUserId(userId);
+		UserPO userPO = userDao.queryUserByUserId(userId);
 
-		filters.add(new Filter("belonger", String.valueOf(user.getUid()), "eq"));
+		if (user.equals("share")) {
+			filters.add(new Filter("belonger.uid", "", "eq"));
+		} else {
+			filters.add(new Filter(user, String.valueOf(userPO.getUid()), "eq"));
+		}
 
 		List<CustomerOriginPO> customerOriginPOs = customerOriginDao.pageCustomerOrigin(paging, filters, null);
 		List<CustomerOriginVO> customerOriginVOs = new ArrayList<CustomerOriginVO>();
@@ -86,24 +90,6 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		}
 
 		paging.setData(customerOriginVOs);
-	}
-
-	@Override
-	public void pageCustomerOriginForDesign(Paging paging, List<Filter> filters, String userId) {
-
-		UserPO user = userDao.queryUserByUserId(userId);
-
-		filters.add(new Filter("designer", String.valueOf(user.getUid()), "eq"));
-
-		List<CustomerOriginPO> customerOriginPOs = customerOriginDao.pageCustomerOrigin(paging, filters, null);
-		List<CustomerOriginVO> customerOriginVOs = new ArrayList<CustomerOriginVO>();
-
-		for (CustomerOriginPO customerOriginPO : customerOriginPOs) {
-			customerOriginVOs.add(customerOriginPOToVO(customerOriginPO));
-		}
-
-		paging.setData(customerOriginVOs);
-
 	}
 
 	@Override
@@ -137,25 +123,6 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 	}
 
 	@Override
-	public void pageCustomerOriginForCommunion(Paging paging, List<Filter> filters) {
-
-		Filter filter = new Filter();
-		filter.setData(null);
-		filter.setField("belonger.uid");
-		filter.setOp("eq");
-		filters.add(filter);
-
-		List<CustomerOriginPO> customerOriginPOs = customerOriginDao.pageCustomerOrigin(paging, filters, null);
-		List<CustomerOriginVO> customerOriginVOs = new ArrayList<CustomerOriginVO>();
-
-		for (CustomerOriginPO customerOriginPO : customerOriginPOs) {
-			customerOriginVOs.add(customerOriginPOToVO(customerOriginPO));
-		}
-
-		paging.setData(customerOriginVOs);
-	}
-
-	@Override
 	public CustomerOriginVO queryCustomerOriginByCsid(CustomerOriginVO customerOrigin) {
 
 		CustomerOriginPO customerOriginPO = customerOriginDao.get(customerOrigin.getCsid());
@@ -175,7 +142,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 		CustomerOriginPO customerOriginPO = new CustomerOriginPO();
 
-		BeanUtil.copyProperties(customerOriginVO, customerOriginPO, Arrays.asList("village", "creater", "belonger", "department", "region", "customer", "house", "designer"));
+		BeanUtil.copyProperties(customerOriginVO, customerOriginPO, Arrays.asList("village", "creater", "belonger", "department", "region", "customer", "house", "designer", "salesman"));
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
@@ -189,6 +156,10 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 		if (customerOriginVO.getDesigner() != null && customerOriginVO.getDesigner().getUserId() != null) {
 			customerOriginPO.setDesigner(userDao.queryUserByUserId(customerOriginVO.getDesigner().getUserId()));
+		}
+
+		if (customerOriginVO.getSalesman() != null && customerOriginVO.getSalesman().getUserId() != null) {
+			customerOriginPO.setSalesman(userDao.queryUserByUserId(customerOriginVO.getSalesman().getUserId()));
 		}
 
 		VillagePO villagePO = villageDao.get(customerOriginVO.getVillage().getNo());
@@ -227,7 +198,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 			customerOriginPO.setVillage(villagePO);
 		}
 
-		BeanUtil.copyPropertie(customerOriginVO, customerOriginPO, Arrays.asList("village", "creater", "belonger", "department", "region", "customer", "house", "designer"));
+		BeanUtil.copyPropertie(customerOriginVO, customerOriginPO, Arrays.asList("village", "creater", "belonger", "department", "region", "customer", "house", "designer", "salesman"));
 
 		customerOriginDao.update(customerOriginPO);
 	}
@@ -242,11 +213,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 			throw new FLException(330001, "客源不存在");
 		}
 
-		if (customerOriginPO.getStatus() != CustomerOriginPO.STATUS_INIT_INT) {
-			throw new FLException(330014, "客源状态不可操作");
-		}
-
-		UserPO belonger = userDao.get(customerOriginVO.getBelonger().getUid());
+		UserPO belonger = userDao.queryUserByUserId(customerOriginVO.getBelonger().getUserId());
 
 		String oldBelongName = "";
 		String oldBelongDept = "";
@@ -355,8 +322,10 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		customerOriginPO.setHouseNumber(housePO.getHouseNumber());
 
 		UserPO designer = userDao.queryUserByUserId(customerOriginVO.getDesigner().getUserId());
+		UserPO salesman = userDao.queryUserByUserId(customerOriginVO.getSalesman().getUserId());
 
 		customerOriginPO.setDesigner(designer);
+		customerOriginPO.setSalesman(salesman);
 
 		customerOriginDao.update(customerOriginPO);
 
@@ -441,9 +410,9 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 	public CustomerOriginVO customerOriginPOToVO(CustomerOriginPO customerOriginPO) {
 
-		CustomerOriginVO customerOriginVO = new CustomerOriginVO(new VillageVO(new CityProperVO()), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new CustomerVO(), new HouseVO(), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())));
+		CustomerOriginVO customerOriginVO = new CustomerOriginVO(new VillageVO(new CityProperVO()), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new CustomerVO(), new HouseVO(), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())));
 
-		BeanUtil.copyProperties(customerOriginPO, customerOriginVO, Arrays.asList("village", "creater", "belonger", "department", "region", "customer", "house", "designer"));
+		BeanUtil.copyProperties(customerOriginPO, customerOriginVO, Arrays.asList("village", "creater", "belonger", "department", "region", "customer", "house", "designer", "salesman"));
 
 		if (customerOriginPO.getVillage() != null) {
 			BeanUtil.copyProperties(customerOriginPO.getVillage(), customerOriginVO.getVillage(), Arrays.asList("cityProper"));
@@ -457,10 +426,16 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		BeanUtil.copyProperties(customerOriginPO.getCustomer(), customerOriginVO.getCustomer());
 		BeanUtil.copyProperties(customerOriginPO.getHouse(), customerOriginVO.getHouse(), Arrays.asList("village"));
 		BeanUtil.copyProperties(customerOriginPO.getDesigner(), customerOriginVO.getDesigner(), Arrays.asList("dept", "duty"));
+		BeanUtil.copyProperties(customerOriginPO.getSalesman(), customerOriginVO.getSalesman(), Arrays.asList("dept", "duty"));
 
 		if (customerOriginPO.getDesigner() != null) {
 			BeanUtil.copyProperties(customerOriginPO.getDesigner().getDept(), customerOriginVO.getDesigner().getDept(), Arrays.asList("type", "fatherDept", "manager"));
 			BeanUtil.copyProperties(customerOriginPO.getDesigner().getDept().getFatherDept(), customerOriginVO.getDesigner().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
+		}
+
+		if (customerOriginPO.getSalesman() != null) {
+			BeanUtil.copyProperties(customerOriginPO.getSalesman().getDept(), customerOriginVO.getSalesman().getDept(), Arrays.asList("type", "fatherDept", "manager"));
+			BeanUtil.copyProperties(customerOriginPO.getSalesman().getDept().getFatherDept(), customerOriginVO.getSalesman().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
 		}
 
 		return customerOriginVO;

@@ -9,13 +9,9 @@ import com.fanglin.utils.Paging;
 
 public interface CustomerOriginService {
 
-	public void pageCustomerOrigin(Paging paging, List<Filter> filters, String userId);
-
-	public void pageCustomerOriginForDesign(Paging paging, List<Filter> filters, String userId);
+	public void pageCustomerOrigin(Paging paging, List<Filter> filters, String userId, String user);
 
 	public void pageCustomerOriginForAdvance(Paging paging, List<Filter> filters, String userId);
-
-	public void pageCustomerOriginForCommunion(Paging paging, List<Filter> filters);
 
 	public CustomerOriginVO queryCustomerOriginByCsid(CustomerOriginVO customerOrigin);
 

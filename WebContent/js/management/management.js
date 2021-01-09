@@ -47,6 +47,9 @@ jQuery(function($) {
     management.items.quotationNames = com.focusPage("#quotationNames");
     management.items.manageRate = com.focusPage("#manageRate");
     
+    management.items.quotationOfOrderId = com.focusPage("#quotationOfOrderId");
+    management.items.quotationFunctionArea = com.focusPage("#quotationFunctionArea");
+    
     management.items.dateRange = com.focusPage("#dateRange");
     
     management.items.contractTimeRange = com.focusPage("#contractTimeRange");
@@ -150,6 +153,13 @@ jQuery(function($) {
         com.clearValidator();
     });
     
+    management.addQuotationFunctionAreaModal = com.focusPage("#addQuotationFunctionAreaModal").on('hide.bs.modal', function(e){
+        management.items.quotationFunctionArea.html("");
+
+        com.cleanItems(management.items);
+        com.clearValidator();
+    });
+    
     management.changeDecorationForGradeModal = com.focusPage("#changeDecorationForGradeModal").on('hide.bs.modal', function(e){
         com.cleanItems(management.items);
         com.clearValidator();
@@ -210,6 +220,34 @@ jQuery(function($) {
             
             management.items.csid4constructionschedule.bindData(constructionSchedules, 'csid', 'name');
         }, null, false);
+    });
+    
+    management.items.quotationOfOrderId.on("blur", function() {
+
+        var orderId = $(this).val();
+        if (orderId) {
+            com.post(api.decoration.queryDecorationByOrderId, {"decorationOrderId": orderId}, function (res){
+                var versionId = res.decoration.version.no;
+
+                com.post(api.quotation.queryFunctionAreaByVersionId, {"functionArea.versionId" : versionId}, function(data) {
+                    var functionAreas = [];
+
+                    $.each(data.functionAreas, function(i, v) {
+                        if (v.type == 1) {
+                            functionAreas.push(v);
+                        }
+                    });
+
+                    management.items.quotationFunctionArea.bindData(functionAreas, 'faId', 'functionAreaName');
+                }, null, false);
+
+            }, function (res) {
+                com.showAlert(com.error, res.errorMsg);
+                management.items.quotationFunctionArea.html("");
+            }, false);
+        }
+    }).on('focus', function(){
+        management.items.quotationFunctionArea.html("");
     });
     
     com.focusPage("#changeDecorationForOrderId").click(function(){
@@ -312,6 +350,11 @@ jQuery(function($) {
     com.focusPage("#updateQuotationForStatus").click(function(){
 
         management.updateQuotationForStatusModal.modal("show");
+    });
+    
+    com.focusPage("#addQuotationFunctionArea").click(function(){
+
+        management.addQuotationFunctionAreaModal.modal("show");
     });
     
     com.focusPage("#checkoutConstructionSchedule").click(function(){
@@ -589,6 +632,31 @@ jQuery(function($) {
 
     });
     
+    com.focusPage("#saveQuotationFunctionBtn").click(function() {
+
+        if(com.validate("addQuotationFunctionAreaModal")){
+            return false;
+        }
+
+        com.showConfirm("你确认添加此功能区么", function() {
+
+            var orderId = management.items.quotationOfOrderId.val();
+            var functionAreaIds = management.items.quotationFunctionArea.val();
+            var option = {
+                "quotation.orderId": orderId,
+                "functionAreaIds[0]": functionAreaIds
+            };
+
+            com.post(api.quotation.addQuotationFunctionArea, option, function () {
+                com.showAlert(com.info, "操作成功");
+                management.addQuotationFunctionAreaModal.modal("hide");
+            });
+        }, function() {
+            management.addQuotationFunctionAreaModal.modal("hide");
+        });
+
+    });
+    
     com.focusPage("#changeSalesGradeBtn").click(function(){
         
         if(com.validate("changeSalesNo")){
@@ -692,6 +760,13 @@ jQuery(function($) {
         
         var url = window.location.href.indexOf("192.168") != -1 ? "http://192.168.5.27/" : "http://223.100.27.233:30082/";
         
-        window.open(url+"zentao/api.php?m=user&f=apilogin&account=" + account + "&code=" + code + "&time=" + time + "&token=" + utils.md5(code+keyse+time, 32));
+        window.open(url + "zentao/api.php?m=user&f=apilogin&account=" + account + "&code=" + code + "&time=" + time + "&token=" + utils.md5(code+keyse+time, 32));
+    });
+    
+    com.focusPage("#platformdocument").bindClick(function(){
+        
+        var url = window.location.href.indexOf("192.168") != -1 ? "http://192.168.5.21/" : "http://223.100.27.233:30082/";
+        
+        window.open(url + "/sphinx/index.html");
     });
 });

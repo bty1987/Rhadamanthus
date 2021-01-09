@@ -80,6 +80,14 @@ public class SalesDeliveryAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value = "updateSalesDeliveryItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateSalesDeliveryItem() throws FLException {
+
+		salesDeliveryService.updateSalesDeliveryItem(salesDeliveryItem);
+
+		return SUCCESS;
+	}
+	
 	public SalesDeliveryItemVO getSalesDeliveryItem() {
 		return salesDeliveryItem;
 	}

@@ -58,6 +58,11 @@ jQuery(function ($) {
         stateTypes: {},
         states: {},
     };
+
+    var salesActivityItem = {
+        salesActivityItemType: {},
+        salesActivityItemState: {}
+    }
     
     drawNode.draw(params.viewNode);
 
@@ -271,6 +276,8 @@ jQuery(function ($) {
     decorationDetail.activitys = com.focusPage("#activitys");
     decorationDetail.activityItems = com.focusPage("#activityItems");
     decorationDetail.activityPriceInfo = com.focusPage("#activityPriceInfo");
+    decorationDetail.salesActivityItems = com.focusPage("#salesActivityItems")
+
 
     decorationDetail.printQuotationModal = com.focusPage("#printQuotationModal");
     decorationDetail.quotationTotalPriceModal = com.focusPage("#quotationTotalPriceModal");
@@ -348,6 +355,7 @@ jQuery(function ($) {
         decorationDetail.decorationOrderStatus = res.decorationOrderStatus.split("key", "value");
         decorationDetail.type = res.typeness.split("key", "type");
         decorationDetail.typeness = res.typeness.split("key", "value");
+
         
         decorationActivity.stateTypes = res.receiveType.split("key", "value");
         decorationActivity.states = res.activityItemType.split("key", "value");
@@ -356,6 +364,11 @@ jQuery(function ($) {
     
     com.post(api.ds.information, {}, function (res) {
         decorationActivity.types = res.activityItemType.split("key", "value");
+        salesActivityItem.salesActivityItemType = res.activityItemType.split("key", "value");
+    }, null, false);
+
+    com.post(api.ds.manifest, {}, function (res) {
+        salesActivityItem.salesActivityItemState = res.salesActivityItemType.split("key", "value");
     }, null, false);
 
     com.post(api.data.queryConstructionNode, {}, function(res){
@@ -1021,6 +1034,7 @@ jQuery(function ($) {
                     params.activity = decorationDetail.activity;
                     decorationUtils.decorationActivityInfo(decorationDetail.activitys, wizard["activityBtnMethod"], decorationDetail.decorationOrderId);
                     decorationUtils.decorationActivityItemInfo(decorationDetail.activityPriceInfo, decorationDetail.activityItems, wizard["uiBtnMethod"], decorationDetail.decorationOrderId, decorationActivity);
+                    decorationUtils.decorationSalesActivityItemInfo(decorationDetail.salesActivityItems,decorationDetail.decorationOrderId,wizard["uiBtnMethod"], salesActivityItem);
                     break;
                 case "belong":
                     decorationUtils.initDecorationBelong(decorationDetail.decorationOrderId);
@@ -1060,6 +1074,7 @@ jQuery(function ($) {
                     params.activity = decorationDetail.activity;
                     decorationUtils.decorationActivityInfo(decorationDetail.activitys, wizard["activityBtnMethod"], decorationDetail.decorationOrderId);
                     decorationUtils.decorationActivityItemInfo(decorationDetail.activityPriceInfo, decorationDetail.activityItems, wizard["uiBtnMethod"], decorationDetail.decorationOrderId, decorationActivity);
+                    decorationUtils.decorationSalesActivityItemInfo(decorationDetail.salesActivityItems,decorationDetail.decorationOrderId,wizard["uiBtnMethod"], salesActivityItem);
                     break;
                 case "belong":
                     decorationUtils.initDecorationBelong(decorationDetail.decorationOrderId);

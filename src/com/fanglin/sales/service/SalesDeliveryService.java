@@ -23,4 +23,6 @@ public interface SalesDeliveryService {
 
 	public void deliveSalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItem,String queryUserId) throws FLException;
 
+	public void updateSalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItem) throws FLException;
+
 }

@@ -11,23 +11,23 @@ import com.fanglin.utils.Paging;
 
 public interface SalesService {
 	
-	public void pageSales(Paging paging,List<Filter> filter,String userId,int company);
+	public void pageSales(Paging paging,List<Filter> filter,String userId,int company) throws FLException;
 	
 	public List<SalesVO> pageSales(List<SalesPO> salesPOs);
 	
-	public void pageSalesForAdvance(Paging paging,List<Filter> filter,String userId,int company);
+	public void pageSalesForAdvance(Paging paging,List<Filter> filter,String userId,int company) throws FLException;
 	
-	public void pageSalesForBalance(Paging paging,List<Filter> filter,String userId,int company);
+	public void pageSalesForBalance(Paging paging,List<Filter> filter,String userId,int company) throws FLException;
 	
-	public void pageSalesForDompany(Paging paging,List<Filter> filter,String userId,int dompany);
+	public void pageSalesForDompany(Paging paging,List<Filter> filter,String userId,int dompany) throws FLException;
 	
-	public void pageSalesForBalanceByDompany(Paging paging,List<Filter> filter,String userId,int dompany);
+	public void pageSalesForBalanceByDompany(Paging paging,List<Filter> filter,String userId,int dompany) throws FLException;
 	
-	public void pageSalesForPompany(Paging paging,List<Filter> filter,String userId,int pompany);
+	public void pageSalesForPompany(Paging paging,List<Filter> filter,String userId,int pompany) throws FLException;
 	
-	public void pageSalesForBalanceByPompany(Paging paging,List<Filter> filter,String userId,int pompany);
+	public void pageSalesForBalanceByPompany(Paging paging,List<Filter> filter,String userId,int pompany) throws FLException;
 	
-	public void pageSalesForSupplier(Paging paging,List<Filter> filter,String userId,int company);
+	public void pageSalesForSupplier(Paging paging,List<Filter> filter,String userId,int company) throws FLException;
 	
 	public void pageSalesByOrderId(Paging paging,List<Filter> filter,int company, String userId, String orderId);
 	

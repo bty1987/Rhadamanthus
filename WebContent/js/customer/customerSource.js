@@ -1,72 +1,75 @@
 $(function () {
     var customerSource = {
             
-        saveDesignerBtn: com.focusPage("#saveDesignerBtn"),
-        updateAndApprovalBtn: com.focusPage("#updateAndApprovalBtn"),
-        approvalBtn: com.focusPage("#approvalBtn"),
-        firstApprovalBtn: com.focusPage("#firstApprovalBtn"),
-        
+        saveDesignerBtn: com.focusPage("#saveDesignerBtn", "#customerSource"),
+        updateAndApprovalBtn: com.focusPage("#updateAndApprovalBtn", "#customerSource"),
+        approvalBtn: com.focusPage("#approvalBtn", "#customerSource"),
+        firstApprovalBtn: com.focusPage("#firstApprovalBtn", "#customerSource"),
+        belongerBtn: com.focusPage("#belongerBtn", "#customerSource"),
+
         modals: {
-            bindAllInfoModal: com.focusPage("#bindAllInfo"),
-            sustomerSourceModal: com.focusPage("#sustomersource"),
-            commitApproveModal: com.focusPage("#commitApprove"),
-            codeModal: com.focusPage("#codeModal"),
-            commitFirstApprove: com.focusPage("#commitFirstApprove")
+            bindAllInfoModal: com.focusPage("#bindAllInfo", "#customerSource"),
+            sustomerSourceModal: com.focusPage("#sustomersource", "#customerSource"),
+            commitApproveModal: com.focusPage("#commitApprove", "#customerSource"),
+            codeModal: com.focusPage("#codeModal", "#customerSource"),
+            commitFirstApprove: com.focusPage("#commitFirstApprove", "#customerSource"),
+            customersourceforbelonger: com.focusPage("#customersourceforbelonger", "#customerSource")
         },
         
         items: {
-            name: com.focusPage("#name"),
-            gender: com.focusPage("#gender"),
-            phone: com.focusPage("#phone"),
-            purpose: com.focusPage("#purpose"),
-            intention: com.focusPage("#intention"),
-            price: com.focusPage("#price"),
-            grade: com.focusPage("#grade"),
-            comment: com.focusPage("#comment"),
+            name: com.focusPage("#name", "#customerSource"),
+            gender: com.focusPage("#gender", "#customerSource"),
+            phone: com.focusPage("#phone", "#customerSource"),
+            purpose: com.focusPage("#purpose", "#customerSource"),
+            intention: com.focusPage("#intention", "#customerSource"),
+            price: com.focusPage("#price", "#customerSource"),
+            grade: com.focusPage("#grade", "#customerSource"),
+            comment: com.focusPage("#comment", "#customerSource"),
 
-            villageNo: com.focusPage("#villageNo"),
-            houseNumber: com.focusPage("#houseNumber"),
-            buildArea: com.focusPage("#buildArea"),
-            freeArea: com.focusPage("#freeArea"),
-            totalArea: com.focusPage("#totalArea"),
-            innerArea: com.focusPage("#innerArea"),
-            rule: com.focusPage("#rule"),
+            villageNo: com.focusPage("#villageNo", "#customerSource"),
+            houseNumber: com.focusPage("#houseNumber", "#customerSource"),
+            buildArea: com.focusPage("#buildArea", "#customerSource"),
+            freeArea: com.focusPage("#freeArea", "#customerSource"),
+            totalArea: com.focusPage("#totalArea", "#customerSource"),
+            innerArea: com.focusPage("#innerArea", "#customerSource"),
+            rule: com.focusPage("#rule", "#customerSource"),
 
-            designer: com.focusPage("#designer"),
-            villageNoBind: com.focusPage("#villageNoBind"),
-            houseNumberBind: com.focusPage("#houseNumberBind"),
-            nameBind: com.focusPage("#nameBind"),
-            phoneBind: com.focusPage("#phoneBind"),
-            built: com.focusPage("#built"),
-            unit: com.focusPage("#unit"),
-            floor: com.focusPage("#floor"),
-            door: com.focusPage("#door"),
-            builtrule: com.focusPage("#builtrule"),
-            unitrule: com.focusPage("#unitrule"),
-            floorrule: com.focusPage("#floorrule"),
-            doorrule: com.focusPage("#doorrule"),
-            houseTypeOne: com.focusPage("#houseTypeOne"),
-            houseTypeTwo: com.focusPage("#houseTypeTwo"),
-            houseTypeThr: com.focusPage("#houseTypeThr"),
-            houseTypeFour: com.focusPage("#houseTypeFour"),
+            designer: com.focusPage("#designer", "#customerSource"),
+            salesmanBind: com.focusPage("#salesmanBind", "#customerSource"),
+            villageNoBind: com.focusPage("#villageNoBind", "#customerSource"),
+            houseNumberBind: com.focusPage("#houseNumberBind", "#customerSource"),
+            nameBind: com.focusPage("#nameBind", "#customerSource"),
+            phoneBind: com.focusPage("#phoneBind", "#customerSource"),
+            built: com.focusPage("#built", "#customerSource"),
+            unit: com.focusPage("#unit", "#customerSource"),
+            floor: com.focusPage("#floor", "#customerSource"),
+            door: com.focusPage("#door", "#customerSource"),
+            builtrule: com.focusPage("#builtrule", "#customerSource"),
+            unitrule: com.focusPage("#unitrule", "#customerSource"),
+            floorrule: com.focusPage("#floorrule", "#customerSource"),
+            doorrule: com.focusPage("#doorrule", "#customerSource"),
+            houseTypeOne: com.focusPage("#houseTypeOne", "#customerSource"),
+            houseTypeTwo: com.focusPage("#houseTypeTwo", "#customerSource"),
+            houseTypeThr: com.focusPage("#houseTypeThr", "#customerSource"),
+            houseTypeFour: com.focusPage("#houseTypeFour", "#customerSource"),
 
-            nameApprove: com.focusPage("#nameApprove"),
-            phoneApprove: com.focusPage("#phoneApprove"),
-            villageNoDesiger: com.focusPage("#villageNoDesiger"),
-            houseNumberApprove: com.focusPage("#houseNumberApprove"),
-            salesman: com.focusPage("#salesman"),
-            salesmanType: com.focusPage("#salesmanType"),
-            houseType: com.focusPage("#houseType"),
-            houseClass: com.focusPage("#houseClass"),
-            orderType: com.focusPage("#orderType"),
-            resourceType: com.focusPage("#resourceType"),
-            approveComment: com.focusPage("#approveComment"),
+            nameApprove: com.focusPage("#nameApprove", "#customerSource"),
+            phoneApprove: com.focusPage("#phoneApprove", "#customerSource"),
+            villageNoDesiger: com.focusPage("#villageNoDesiger", "#customerSource"),
+            houseNumberApprove: com.focusPage("#houseNumberApprove", "#customerSource"),
+            salesman: com.focusPage("#salesman", "#customerSource"),
+            salesmanType: com.focusPage("#salesmanType", "#customerSource"),
+            houseType: com.focusPage("#houseType", "#customerSource"),
+            houseClass: com.focusPage("#houseClass", "#customerSource"),
+            orderType: com.focusPage("#orderType", "#customerSource"),
+            resourceType: com.focusPage("#resourceType", "#customerSource"),
+            approveComment: com.focusPage("#approveComment", "#customerSource"),
 
-            firstApproveComment: com.focusPage("#firstApproveComment")
+            firstApproveComment: com.focusPage("#firstApproveComment", "#customerSource")
         },
 
-        bindHouseDiv: com.focusPage("#bindHouseDiv"),
-        bindCustomerDiv: com.focusPage("#bindCustomerDiv"),
+        bindHouseDiv: com.focusPage("#bindHouseDiv", "#customerSource"),
+        bindCustomerDiv: com.focusPage("#bindCustomerDiv", "#customerSource"),
 
         csid: null,
         
@@ -81,6 +84,7 @@ $(function () {
     customerSource.updateAndApprovalBtn.bindClick(customerUpdate);
     customerSource.approvalBtn.bindClick(customerApproval);
     customerSource.firstApprovalBtn.bindClick(firstApproval);
+    customerSource.belongerBtn.bindClick(editBelonger);
 
     customerSource.items.gender.switchBtn("gender");
     customerSource.items.grade.bindData(customerSource.grade, "key", "value", false);
@@ -109,6 +113,8 @@ $(function () {
 
     com.initTypeahead('designer', api.personel.queryUserByPinyin, "pinyinName", {"user.status": 0}, 'autoFillKeyValue', 'key', 'value', null);
     com.initTypeahead('salesman', api.personel.queryUserByPinyin, "pinyinName", {"user.status": 0}, 'autoFillKeyValue', 'key', 'value', null);
+    com.initTypeahead('salesmanBind', api.personel.queryUserByPinyin, "pinyinName", {"user.status": 0}, 'autoFillKeyValue', 'key', 'value', null);
+    com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", {"user.status": 0}, 'autoFillKeyValue', 'key', 'value', null);
     com.initTypeahead('villageNoBind', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", function(list, k, v){
         com.post(api.data.queryVillageById, {"village.no": k}, function (res) {
             customerSource.items.rule.html("推荐楼牌号规则: " + (res.village.rule == null || res.village.rule == "" ? "暂无推荐规则" : res.village.rule));
@@ -136,6 +142,11 @@ $(function () {
         com.cleanItems(customerSource.items);
     });
 
+    customerSource.modals.customersourceforbelonger.on("hide.bs.modal", function(){
+        com.closeTip();
+        com.cleanTypeahead("belonger");
+    });
+
     customerSource.items.buildArea.on("change", function (e) {
         getTotalArea();
     });
@@ -143,6 +154,9 @@ $(function () {
     customerSource.items.freeArea.on("change", function (e) {
         getTotalArea();
     });
+
+    //不同页面的不同参数
+    customerSource.pageConfig = getConfig(params['urlLoadParams'].depage);
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
@@ -172,30 +186,10 @@ $(function () {
             var $backout = $("<a></a>").addClass("btn btn-minier btn-danger").html("撤销");
             var $confirm = $("<a></a>").addClass("btn btn-minier btn-inverse").html("确认");
             var $btnApproval = $("<a></a>").addClass("btn btn-minier btn-success").html("审批");
+            var $belonger = $("<a></a>").addClass("btn btn-minier btn-yellow").html("编辑归属人");
+            var $btnclaim = $("<a></a>").addClass("btn btn-minier btn-yellow").html("认领");
 
-            var propertyArr = [
-                ["客户电话: ", v.phone, "grey"],
-                ["性别: ", v.gender, "grey"],
-                ["目的: ", v.purpose, "grey"],
-                ["风格意向: ", v.intention, "grey"],
-                ["预计装修价格: ", v.price, "blue"],
-                ["客户等级: ", v.grade, "grey"],
-                ["创建人: ", v.creater.currentName, "grey"],
-                ["创建时间: ", v.createTime, "green"],
-                ["归属人: ", v.belonger.currentName, "grey"],
-                ["归属部门: ", v.department.name, "grey"],
-                ["归属分区: ", v.region.name, "grey"],
-                ["归属设计师: ", com.checkNull(v.designer.currentName,'无'), "grey"],
-                ["楼盘名: ",com.checkNull(v.village.name,'无'), "grey"],
-                ["楼牌号: ", v.houseNumber, "blue"],
-                ["建筑面积: ", v.buildArea, "blue"],
-                ["赠送面积: ", v.freeArea, "blue"],
-                ["总面积: ", v.totalArea, "blue"],
-                ["套内面积: ", v.innerArea, "blue"],
-                ["装修单号: ", com.checkNull(v.orderId, '无'), "blue"],
-                ["状态: ", customerSource.status[v.status], "red"],
-                ["备注: ", com.checkNull(v.comment, '无'), "grey"]
-            ];
+            var propertyArr = getPropertyArr(v);
 
             $.each(propertyArr, function (index, value) {
                 var $liProperty = $('<li></li>');
@@ -205,18 +199,25 @@ $(function () {
             });
 
             if(v.status == 0){
-                $divBtnWrap.append($btnView).append($btnBind).append($firstApprove).append($release);
+                if(customerSource.pageConfig.pageBtn.contains("edit")) $divBtnWrap.append($btnView);
+                if(customerSource.pageConfig.pageBtn.contains("bind")) $divBtnWrap.append($btnBind);
+                if(customerSource.pageConfig.pageBtn.contains("firstApprove")) $divBtnWrap.append($firstApprove);
+                if(customerSource.pageConfig.pageBtn.contains("free")) $divBtnWrap.append($release);
             }else  if(v.status == 2){
-                $divBtnWrap.append($btnCode).append($confirm);
+                if(customerSource.pageConfig.pageBtn.contains("code")) $divBtnWrap.append($btnCode);
+                if(customerSource.pageConfig.pageBtn.contains("confirm")) $divBtnWrap.append($confirm);
             }else if([3, 6].contains(v.status)){
-                $divBtnWrap.append($btnApproval)
+                if(customerSource.pageConfig.pageBtn.contains("approve")) $divBtnWrap.append($btnApproval);
             }
 
             if([2, 3, 6].contains(v.status)){
-                $divBtnWrap.append($backout);
+                if(customerSource.pageConfig.pageBtn.contains("backout")) $divBtnWrap.append($backout);
             }
 
-            $divBtnWrap.append($record);
+            if(customerSource.pageConfig.pageBtn.contains("record")) $divBtnWrap.append($record);
+            if(customerSource.pageConfig.pageBtn.contains("belonger")) $divBtnWrap.append($belonger);
+            if(customerSource.pageConfig.pageBtn.contains("btnclaim")) $divBtnWrap.append($btnclaim);
+
 
             $divBtnWrap.appendTo($h3);
 
@@ -266,6 +267,7 @@ $(function () {
             $btnBind.click(function () {
                 customerSource.currentCustomerSource = v;
                 v.designer != null ? com.updateTypeahead("designer", v.designer.userId, v.designer.currentName) : com.cleanTypeahead("designer");
+                v.salesman != null ? com.updateTypeahead("salesmanBind", v.salesman.userId, v.salesman.currentName) : com.cleanTypeahead("salesmanBind");
                 com.updateTypeahead('villageNoBind', v.village.no, v.village.name + "-" + v.village.cityProper.name);
                 customerSource.items.houseNumberBind.val(v.houseNumber);
                 customerSource.items.nameBind.val(v.name);
@@ -309,12 +311,24 @@ $(function () {
                 customerSource.items.nameApprove.attr("disabled", "disabled");
                 customerSource.items.phoneApprove.attr("disabled", "disabled");
 
-
+                v.salesman != null ? com.updateTypeahead("salesman", v.salesman.userId, v.salesman.currentName) : com.cleanTypeahead("salesman");
                 com.updateTypeahead('villageNoDesiger', v.village.no, v.village.name + "-" + v.village.cityProper.name);
                 customerSource.items.houseNumberApprove.val(v.houseNumber);
                 customerSource.items.nameApprove.val(v.name);
                 customerSource.items.phoneApprove.val(v.phone);
                 customerSource.modals.commitApproveModal.modal("show");
+            });
+
+            //编辑归属人
+            $belonger.click(function () {
+                customerSource.csid = v.csid;
+                com.updateTypeahead("belonger", v.belonger.userId, com.checkNull(v.belonger.userName, ''));
+                customerSource.modals.customersourceforbelonger.modal("show");
+            });
+
+            //认领
+            $btnclaim.click(function () {
+                btnclaim(v);
             });
 
             return $liLine;
@@ -332,9 +346,9 @@ $(function () {
 
     var searcher = new Searcher();
 
-    searcher.init(["customer-customerSource-phone"], "condList", api.customer.pageCustomerOrigin, function (data) {
+    searcher.init(customerSource.pageConfig.condArr, "condList", customerSource.pageConfig.apiPage, function (data) {
         displayFunc.init("resultList", data);
-    }, "pagenation", "customerOriginPostData", null, false, null, null);
+    }, "pagenation", customerSource.pageConfig.postDataName, {"user": params['urlLoadParams'].depage}, false, null, null);
 
     function editcustomerOrigin(d) {
         customerSource.items.name.val(d.name);
@@ -409,9 +423,10 @@ $(function () {
         var options = {
             "customerOrigin.csid": customerSource.currentCustomerSource.csid,
             "customerOrigin.designer.userId": com.typeahead("designer"),
+            "customerOrigin.salesman.userId": com.typeahead("salesmanBind"),
             "customerOrigin.house.hid": hid,
             "customerOrigin.customer.cid": cid,
-            "customerOrigin.phone": customerSource.items.phoneBind.val(), //为了避免编辑时修改电话号, 导致客源中和客户中信息对应不上情况
+            "customerOrigin.phone": customerSource.items.phoneBind.val() //为了避免编辑时修改电话号, 导致客源中和客户中信息对应不上情况
         };
 
         com.post(api.customer.bindCustomerOrigin, options, function (res) {
@@ -585,10 +600,169 @@ $(function () {
             });
         });
     }
+
+    //编辑归属人
+    function editBelonger(){
+        if (com.validate("customersourceforbelonger")) return false;
+
+        var option = {
+            "customerOrigin.csid": customerSource.csid,
+            "customerOrigin.belonger.userId": com.typeahead("belonger")
+        };
+
+        com.post(api.customer.updateCustomerOriginForBelonger, option, function () {
+            searcher.doSearch();
+            customerSource.modals.customersourceforbelonger.modal("hide");
+            com.showAlert(com.info, '修改成功');
+        });
+    }
+
+    //认领
+    function btnclaim(v) {
+        com.showConfirm("是否确定领取客源", function(){
+            com.post(api.customer.takeCustomerOrigin, {"customerOrigin.csid": v.csid}, function (res) {
+                searcher.doSearch();
+                com.showAlert(com.info, '领取成功');
+            });
+        });
+    }
     
     function getTotalArea(){
         var buildArea = parseFloat(customerSource.items.buildArea.val());
         var freeArea = parseFloat(customerSource.items.freeArea.val());
         customerSource.items.totalArea.val(utils.accAdd(buildArea, freeArea));
+    }
+
+    function getConfig(page) {
+
+        var pageConfig = {
+            "apiPage": null,
+            "pageBtn": [],
+            "postDataName": page + "PostData",
+            "condArr": [],
+            "extraParam": [],
+            "propertyArr": []
+        };
+
+        function packageConfig(o, props, value, subtype){
+
+            var prop = props.shift();
+            if(props.length != 0){
+                if(!o[prop]) o[prop] = {};
+                packageConfig(o[prop], props, value, subtype);
+                return;
+            }
+
+            if(subtype == 0){
+                o[prop] = value;
+            } else if(subtype == 1 && !o[prop]){
+                o[prop] = [value];
+            } else if(subtype == 1 && o[prop]){
+                o[prop].push(value);
+            }
+        }
+
+        function getApi(o, props){
+
+            var prop = props.shift();
+
+            if(props.length == 0){
+                return o[prop];
+            } else if(o[prop]){
+                return getApi(o[prop], props);
+            }
+            return "";
+        }
+
+        com.post(api.right.queryCustomerOriginFunctionRight, {"customerOriginFunctionRight.name": page}, function (res) {
+
+            var rights = res.customerOriginFunctionRights.sort(function(a, b){return a.customerOriginFunction.sort - b.customerOriginFunction.sort;});
+
+            $.each(rights, function (i, v) {
+
+                var data = v.customerOriginFunction;
+
+                if(data.type == 1) data.value = getApi({"api": api}, data.value.split("."));
+
+                packageConfig(pageConfig, data.key.split("."), data.value, data.subtype);
+            });
+        }, null, false);
+
+        return pageConfig;
+    }
+
+    function getPropertyArr(v) {
+        var propertyArr = [];
+        $.each(customerSource.pageConfig.propertyArr, function (pi, pv) {
+            switch (pv) {
+                case "customerPhone":
+                    propertyArr.push(["客户电话:", v.phone, "grey"]);
+                    break;
+                case "gender":
+                    propertyArr.push(["性别:", v.gender, "grey"]);
+                    break;
+                case "purpose":
+                    propertyArr.push(["目的: ", v.purpose, "grey"]);
+                    break;
+                case "intention":
+                    propertyArr.push(["风格意向: ", v.intention, "grey"]);
+                    break;
+                case "price":
+                    propertyArr.push(["预计装修价格: ", v.price, "blue"]);
+                    break;
+                case "grade":
+                    propertyArr.push(["客户等级: ", v.grade, "grey"]);
+                    break;
+                case "creater":
+                    propertyArr.push(["创建人: ", v.creater.currentName, "grey"]);
+                    break;
+                case "createTime":
+                    propertyArr.push(["创建时间: ", v.createTime, "green"]);
+                    break;
+                case "belonger":
+                    propertyArr.push(["归属人: ", v.belonger.currentName, "grey"]);
+                    break;
+                case "department":
+                    propertyArr.push(["归属部门: ", v.department.name, "grey"]);
+                    break;
+                case "region":
+                    propertyArr.push(["归属分区: ", v.region.name, "grey"]);
+                    break;
+                case "designer":
+                    propertyArr.push(["归属设计师: ", com.checkNull(v.designer.currentName, '无'), "grey"]);
+                    break;
+                case "salesman":
+                    propertyArr.push(["归属业务员: ", com.checkNull(v.salesman.currentName, '无'), "grey"]);
+                    break;
+                case "village":
+                    propertyArr.push(["楼盘名: ",com.checkNull(v.village.name,'无'), "grey"]);
+                    break;
+                case "houseNumber":
+                    propertyArr.push(["楼牌号: ", v.houseNumber, "blue"]);
+                    break;
+                case "buildArea":
+                    propertyArr.push(["建筑面积: ", v.buildArea, "blue"]);
+                    break;
+                case "freeArea":
+                    propertyArr.push(["赠送面积: ", v.freeArea, "blue"]);
+                    break;
+                case "totalArea":
+                    propertyArr.push(["总面积: ", v.totalArea, "blue"]);
+                    break;
+                case "innerArea":
+                    propertyArr.push(["套内面积: ", v.innerArea, "blue"]);
+                    break;
+                case "orderId":
+                    propertyArr.push(["装修单号: ", com.checkNull(v.orderId, '无'), "blue"]);
+                    break;
+                case "status":
+                    propertyArr.push(["状态: ", customerSource.status[v.status], "red"]);
+                    break;
+                case "comment":
+                    propertyArr.push(["备注: ", com.checkNull(v.comment, '无'), "grey"]);
+                    break;
+            }
+        });
+        return propertyArr;
     }
 });

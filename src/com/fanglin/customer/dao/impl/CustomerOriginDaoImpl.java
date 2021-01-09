@@ -35,12 +35,16 @@ public class CustomerOriginDaoImpl extends DaoImpl<CustomerOriginPO> implements 
 			for (Filter filter : filters) {
 				if ("customerSourcePhone".equals(filter.getField())) {
 					query.add(query.getCriterion("phone", filter.getData(),filter.getOp()));
+				} else if ("creater".equals(filter.getField())) {
+					query.add(Restrictions.eq(CustomerOriginPO.COLUMN_CREATER_STR, Integer.valueOf(filter.getData())));
 				} else if ("belonger".equals(filter.getField())) {
 					query.add(Restrictions.eq(CustomerOriginPO.COLUMN_BELONGER_STR , Integer.valueOf(filter.getData())));
 				} else if ("belonger.uid".equals(filter.getField())) {
 					query.add(Restrictions.sqlRestriction("buid is ? ", null, Hibernate.STRING));
 				} else if ("designer".equals(filter.getField())) {
 					query.add(Restrictions.eq(CustomerOriginPO.COLUMN_DESIGNER_STR, Integer.valueOf(filter.getData())));
+				} else if ("salesman".equals(filter.getField())) {
+					query.add(Restrictions.eq(CustomerOriginPO.COLUMN_SALESMAN_STR, Integer.valueOf(filter.getData())));
 				}else if ("status".equals(filter.getField())) {
 					query.add(query.getCriterion("status", Short.valueOf(filter.getData()),filter.getOp()));
 				}

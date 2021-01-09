@@ -22,194 +22,182 @@ import com.fanglin.utils.SystemConfig;
 
 @Service("CompanyService")
 @Transactional(readOnly = true)
-public class CompanyServiceImpl implements CompanyService{
-	
+public class CompanyServiceImpl implements CompanyService {
+
 	@Autowired
-	private CompanyDao  companyDao;
-	
+	private CompanyDao companyDao;
+
 	@Override
 	public void pageCompany(Paging paging, List<Filter> filters) throws FLException {
-		
+
 		List<CompanyPO> companyPOs = companyDao.pageCompany(paging, filters);
 		List<CompanyVO> companyVOs = new ArrayList<CompanyVO>();
-		
+
 		CompanyVO companyVO;
-		
-		for(CompanyPO companyPO: companyPOs){
-			
+
+		for (CompanyPO companyPO : companyPOs) {
+
 			companyVO = new CompanyVO();
-			
+
 			BeanUtil.copyProperties(companyPO, companyVO, Arrays.asList("cid"));
-			
-			try {
-				companyVO.setCid(AESHelper.encrypt(FormatUtil.encodeCompany(companyPO.getCid()), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
-			} catch (Exception e) {
-				throw new FLException(230017, "公司获取失败");
-			}
-			
+
+			companyVO.setCid(encode(companyPO.getCid()));
+
 			companyVOs.add(companyVO);
 		}
-		
-		paging.setData(companyVOs);	
+
+		paging.setData(companyVOs);
 	}
 
 	@Override
 	public List<CompanyVO> queryCompany() throws FLException {
-		
+
 		List<CompanyPO> companyPOs = companyDao.queryCompany();
 		List<CompanyVO> companyVOs = new ArrayList<CompanyVO>();
-		
+
 		CompanyVO companyVO;
-		
-		for(CompanyPO companyPO: companyPOs){
-			
+
+		for (CompanyPO companyPO : companyPOs) {
+
 			companyVO = new CompanyVO();
-			
+
 			BeanUtil.copyProperties(companyPO, companyVO, Arrays.asList("cid"));
-			
-			try {
-				companyVO.setCid(AESHelper.encrypt(FormatUtil.encodeCompany(companyPO.getCid()), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
-			} catch (Exception e) {
-				throw new FLException(230017, "公司获取失败");
-			}
-			
+
+			companyVO.setCid(encode(companyPO.getCid()));
+
 			companyVOs.add(companyVO);
 		}
 
 		return companyVOs;
 	}
-	
+
 	@Override
 	public CompanyVO queryCompanyByCid(CompanyVO companyVO) throws FLException {
-		
-		CompanyPO companyPO;
-		
-		try {
-			companyPO = companyDao.get(FormatUtil.decodeCompany(AESHelper.decrypt(companyVO.getCid(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"))));
-		} catch (Exception e) {
-			throw new FLException(230017, "公司获取失败");
-		}
-		
+
+		CompanyPO companyPO = companyDao.get(decode(companyVO.getCid()));
+
 		if (companyPO == null) {
-			throw new FLException(230015 , "公司不存在");
+			throw new FLException(230015, "公司不存在");
 		}
-		
+
 		BeanUtil.copyProperties(companyPO, companyVO, Arrays.asList("cid"));
-		
-		try {
-			companyVO.setCid(AESHelper.encrypt(FormatUtil.encodeCompany(companyPO.getCid()), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
-		} catch (Exception e) {
-			throw new FLException(230017, "公司获取失败");
-		}
-		
+
+		companyVO.setCid(encode(companyPO.getCid()));
+
 		return companyVO;
 	}
-	
+
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int createCompany(CompanyVO companyVO, String securityCode, String verifyCode) throws FLException {
-		
+
 		try {
 			String code = AESHelper.decrypt(securityCode, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
-			
-			if(code == null || !code.equals(verifyCode)){
+
+			if (code == null || !code.equals(verifyCode)) {
 				throw new FLException(110001, "验证码错误");
 			}
 		} catch (Exception e) {
 			throw new FLException(110001, "验证码错误");
 		}
-		
+
 		CompanyPO companyPO = companyDao.queryCompanyByName(companyVO.getName());
-		
+
 		if (companyPO != null) {
-			throw new FLException(230014 , "公司已经存在");
+			throw new FLException(230014, "公司已经存在");
 		}
-		
+
 		companyPO = new CompanyPO();
-		
-		BeanUtil.copyProperties(companyVO,companyPO);
-		
+
+		BeanUtil.copyProperties(companyVO, companyPO);
+
 		companyPO.setNo(0);
 		companyPO.setShortname("");
-		
+
 		companyDao.save(companyPO);
-		
+
 		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int addCompany(CompanyVO companyVO) throws FLException {
-		
+
 		CompanyPO companyPO = companyDao.queryCompanyByNo(companyVO.getNo());
-		
-		if(companyPO != null){
-			throw new FLException(230016 , "公司编号已存在");
-		}
-		
-		companyPO = companyDao.queryCompanyByName(companyVO.getName());
-		
+
 		if (companyPO != null) {
-			throw new FLException(230014 , "公司已经存在");
+			throw new FLException(230016, "公司编号已存在");
 		}
-	
+
+		companyPO = companyDao.queryCompanyByName(companyVO.getName());
+
+		if (companyPO != null) {
+			throw new FLException(230014, "公司已经存在");
+		}
+
 		companyPO = new CompanyPO();
-		
-		BeanUtil.copyProperties(companyVO,companyPO);
-		
+
+		BeanUtil.copyProperties(companyVO, companyPO);
+
 		companyDao.save(companyPO);
-		
+
 		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int updateCompany(CompanyVO companyVO) throws FLException {
-	
-		CompanyPO companyPO;
-		
-		try {
-			companyPO = companyDao.get(FormatUtil.decodeCompany(AESHelper.decrypt(companyVO.getCid(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"))));
-		} catch (Exception e) {
-			throw new FLException(230017, "公司获取失败");
-		}
-		
+
+		CompanyPO companyPO = companyDao.get(decode(companyVO.getCid()));
+
 		if (companyPO == null) {
-			throw new FLException(230015 , "公司不存在");
+			throw new FLException(230015, "公司不存在");
 		}
-		
+
 		companyPO.setName(companyVO.getName());
 		companyPO.setFullname(companyVO.getFullname());
 		companyPO.setAddress(companyVO.getAddress());
 		companyPO.setCorporation(companyVO.getCorporation());
 		companyPO.setPhone(companyVO.getPhone());
-		
+
 		companyDao.update(companyPO);
-		
+
 		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int updateCompanyForStatus(CompanyVO companyVO) throws FLException {
-	
-		CompanyPO companyPO;
-		
+
+		CompanyPO companyPO = companyDao.get(decode(companyVO.getCid()));
+
+		if (companyPO == null) {
+			throw new FLException(230015, "公司不存在");
+		}
+
+		companyPO.setStatus(companyVO.getStatus());
+
+		companyDao.update(companyPO);
+
+		return 0;
+	}
+
+	public static String encode(int company) throws FLException {
+
 		try {
-			companyPO = companyDao.get(FormatUtil.decodeCompany(AESHelper.decrypt(companyVO.getCid(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"))));
+			return AESHelper.encrypt(FormatUtil.encodeCompany(company), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
 		} catch (Exception e) {
 			throw new FLException(230017, "公司获取失败");
 		}
-		
-		if (companyPO == null) {
-			throw new FLException(230015 , "公司不存在");
+	}
+
+	public static int decode(String company) throws FLException {
+
+		try {
+			return FormatUtil.decodeCompany(AESHelper.decrypt(company, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
+		} catch (Exception e) {
+			throw new FLException(230017, "公司获取失败");
 		}
-		
-		companyPO.setStatus(companyVO.getStatus());
-		
-		companyDao.update(companyPO);
-		
-		return 0;
 	}
 
 }

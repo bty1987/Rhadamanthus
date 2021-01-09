@@ -10,7 +10,7 @@ public interface SalesActivityItemService {
 
 	public List<SalesActivityItemVO> querySalesActivityItem(String orderId);
 
-	public int addSalesActivityItem(SalesActivityVO salesActivityVO, List<SalesActivityItemVO> salesActivityItems) throws FLException;
+	public int addSalesActivityItem(SalesActivityVO salesActivityVO, List<SalesActivityItemVO> salesActivityItems,String userId) throws FLException;
 
 	public int abateSalesActivityItem(SalesActivityItemVO salesActivityItemVO, String userId) throws FLException;
 
@@ -20,12 +20,12 @@ public interface SalesActivityItemService {
 	public void deliveSalesActivityItem(SalesActivityItemVO salesActivityItemVO, String userId, String userName) throws FLException;
 
 	// 未退装修活动 , 已审批未退货
-	public void unrefundSalesActivityItem(SalesActivityItemVO salesActivityItemVO) throws FLException;
+	public void unrefundSalesActivityItem(SalesActivityItemVO salesActivityItemVO,String userId) throws FLException;
 
 	// 退货销售活动项
 	public void refundSalesActivityItem(SalesActivityItemVO salesActivityItemVO, String userId) throws FLException;
 
 	// 消耗销售活动项
-	public void expendSalesActivityItem(SalesActivityItemVO salesActivityItemVO) throws FLException;
+	public void expendSalesActivityItem(SalesActivityItemVO salesActivityItemVO,String userId) throws FLException;
 
 }

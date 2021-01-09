@@ -121,8 +121,6 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 		salesDeliveryItemPO.setStatus(SalesDeliveryItemPO.STATUS_CHECK_INT);
 		salesDeliveryItemPO.setCheckTime(DateUtil.getDateToTimestamp(new Date()));
 
-		salesDeliveryItemPO.setComment(salesDeliveryItem.getComment());
-
 		salesDeliveryItemDao.update(salesDeliveryItemPO);
 	}
 
@@ -208,6 +206,25 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 		
 	}
 	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateSalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItem) throws FLException {
+
+		SalesDeliveryItemPO salesDeliveryItemPO = salesDeliveryItemDao.get(salesDeliveryItem.getSdiid());
+
+		SalesPO salesPO = salesDao.get(salesDeliveryItemPO.getSales().getSid());
+
+		if (salesPO == null) {
+			throw new FLException(260021, "销售单不存在");
+		}
+
+		salesDeliveryItemPO.setProtranTime(salesDeliveryItem.getProtranTime());
+
+		salesDeliveryItemPO.setComment(salesDeliveryItem.getComment());
+
+		salesDeliveryItemDao.update(salesDeliveryItemPO);
+	}
+
 	private List<SalesDeliveryItemVO> ptv(List<SalesDeliveryItemPO> salesDeliveryItemPOs) {
 
 		List<SalesDeliveryItemVO> salesDeliveryItemVOs = new ArrayList<SalesDeliveryItemVO>();
@@ -259,4 +276,7 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 
 		return salesDeliveryItemVOs;
 	}
+
+
+
 }

@@ -30,6 +30,8 @@ public class SalesDeliveryItemVO implements Serializable {
 	private Timestamp confirmTime;
 
 	private Timestamp finishTime;
+	
+	private Timestamp protranTime;
 
 	private UserBaseVO traner;
 
@@ -46,8 +48,7 @@ public class SalesDeliveryItemVO implements Serializable {
 	public SalesDeliveryItemVO() {
 		super();
 	}
-
-	public SalesDeliveryItemVO(Long sdiid, SalesVO sales, SalesItemVO salesItem, Short status, Timestamp createTime, Timestamp tranTime, Timestamp checkTime, Timestamp confirmTime, Timestamp finishTime, UserBaseVO traner, UserBaseVO checker, UserBaseVO confirmer, UserBaseVO finisher, String comment, Integer company) {
+	public SalesDeliveryItemVO(Long sdiid, SalesVO sales, SalesItemVO salesItem, Short status, Timestamp createTime, Timestamp tranTime, Timestamp checkTime, Timestamp confirmTime, Timestamp finishTime, Timestamp protranTime, UserBaseVO traner, UserBaseVO checker, UserBaseVO confirmer, UserBaseVO finisher, String comment, Integer company) {
 		super();
 		this.sdiid = sdiid;
 		this.sales = sales;
@@ -58,6 +59,7 @@ public class SalesDeliveryItemVO implements Serializable {
 		this.checkTime = checkTime;
 		this.confirmTime = confirmTime;
 		this.finishTime = finishTime;
+		this.protranTime = protranTime;
 		this.traner = traner;
 		this.checker = checker;
 		this.confirmer = confirmer;
@@ -151,6 +153,15 @@ public class SalesDeliveryItemVO implements Serializable {
 
 	public void setFinishTime(Timestamp finishTime) {
 		this.finishTime = finishTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getProtranTime() {
+		return protranTime;
+	}
+
+	public void setProtranTime(Timestamp protranTime) {
+		this.protranTime = protranTime;
 	}
 
 	public UserBaseVO getTraner() {

@@ -96,8 +96,8 @@ $(function () {
                     var propertyArr = [];
                     var styleArr = [];
                     var checkArr = [];
-                    var realSalesTotal = v.total - v.sales.venderMaling - v.sales.maling - v.sales.coupon;
-                    var accountPay = v.vbalance - v.sales.venderMaling;
+                    var realSalesTotal = utils.changeThrDecimal(v.total - v.sales.venderMaling - v.sales.maling - v.sales.coupon);
+                    var accountPay = utils.changeThrDecimal(v.vbalance - v.sales.venderMaling);
                     $.each(pageConfig.propertyArr, function (pi, pv) {
                         switch (pv) {
                             case "orderId":
@@ -105,7 +105,7 @@ $(function () {
                                 break;
                             case "address":
                                 propertyArr.push(["楼盘地址:", v.sales.house.village.name + " " + v.sales.house.houseNumber, "grey"]);
-                                break;                  
+                                break;
                             case "salesman":
                                 propertyArr.push( ["渠道:", v.salesman.currentName, "grey"]);
                                 break;
@@ -141,16 +141,18 @@ $(function () {
                                 break;
                             case "poster":
                                 propertyArr.push( ["结算人:", v.poster.currentName, "grey"]);
-                                break;                       
+                                break;
+                            case "vbalance":
+                                propertyArr.push(["厂商结算:", v.vbalance, "blue"]);
+                                break;
                             case "grade":
                                 propertyArr.push(["等级:", v.sales.grade, "red"]);
-                                break;                         
+                                break;
                             case "maling":
                                 propertyArr.push(["抹零:", maling, "blue"]);
                                 break;
                             case "venderMaling":
-                                propertyArr.push(["厂商抹零:", venderMaling, "blue"]);
-                                checkArr.push(["厂商抹零:", v.sales.venderMaling, "green"]);
+                                checkArr.push(["厂商抹零:", venderMaling, "green"]);
                                 break;
                             case "coupon":
                                 propertyArr.push(["券值:", coupon, "blue"]);

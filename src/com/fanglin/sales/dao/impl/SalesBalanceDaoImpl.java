@@ -8,15 +8,14 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.security.AESHelper;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.sales.dao.SalesBalanceDao;
 import com.fanglin.sales.po.SalesBalancePO;
 import com.fanglin.sales.po.SalesPO;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.DateUtil;
-import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
-import com.fanglin.utils.SystemConfig;
 
 @Repository("salesBalanceDao")
 public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements SalesBalanceDao {
@@ -26,7 +25,7 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 	}
 
 	@Override
-	public List<SalesBalancePO> pageSalesBalance(Paging paging, List<Filter> filters, int company) {
+	public List<SalesBalancePO> pageSalesBalance(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		PagingQuery<SalesBalancePO> query = pagingQuery(paging, SalesBalancePO.class);
 
@@ -40,7 +39,7 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 	}
 
 	@Override
-	public List<SalesBalancePO> pageSalesBalanceForDompany(Paging paging, List<Filter> filters, int dompany) {
+	public List<SalesBalancePO> pageSalesBalanceForDompany(Paging paging, List<Filter> filters, int dompany) throws FLException {
 
 		PagingQuery<SalesBalancePO> query = pagingQuery(paging, SalesBalancePO.class);
 
@@ -54,7 +53,7 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 	}
 
 	@Override
-	public List<SalesBalancePO> pageSalesBalanceForPompany(Paging paging, List<Filter> filters, int pompany) {
+	public List<SalesBalancePO> pageSalesBalanceForPompany(Paging paging, List<Filter> filters, int pompany) throws FLException {
 
 		PagingQuery<SalesBalancePO> query = pagingQuery(paging, SalesBalancePO.class);
 
@@ -68,7 +67,7 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 	}
 
 	@Override
-	public List<SalesBalancePO> pageSalesBalanceForSupplier(Paging paging, List<Filter> filters, int pompany, int uid) {
+	public List<SalesBalancePO> pageSalesBalanceForSupplier(Paging paging, List<Filter> filters, int pompany, int uid) throws FLException {
 		PagingQuery<SalesBalancePO> query = pagingQuery(paging, SalesBalancePO.class);
 
 		query.alias("sales", "sales").alias("sales.supplier", "supplier").add(query.getCriterion(SalesPO.COLUMN_OCUID_STR, uid, "eq"));
@@ -82,7 +81,7 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 	}
 
 	@Override
-	public List<SalesBalancePO> pageSalesBalanceForCheck(Paging paging, List<Filter> filters, int pompany, int uid) {
+	public List<SalesBalancePO> pageSalesBalanceForCheck(Paging paging, List<Filter> filters, int pompany, int uid) throws FLException {
 		PagingQuery<SalesBalancePO> query = pagingQuery(paging, SalesBalancePO.class);
 
 		query.add(query.getCriterion("checkStatus", SalesBalancePO.CHECKSTATUS_INIT_INT, "eq"));
@@ -101,7 +100,7 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 		return (SalesBalancePO) session().createCriteria(SalesBalancePO.class).createAlias("sales", "sales").add(Restrictions.eq("sales.sid", sid)).add(Restrictions.eq("type", type)).add(Restrictions.eq("onetype", onetype)).uniqueResult();
 	}
 
-	private void queryFilterExcute(PagingQuery<SalesBalancePO> query, List<Filter> filters) {
+	private void queryFilterExcute(PagingQuery<SalesBalancePO> query, List<Filter> filters) throws FLException {
 
 		if (filters != null) {
 			for (Filter filter : filters) {
@@ -133,11 +132,9 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 				} else if (SalesBalancePO.COLUMN_TYPE_STR.equals(field)) {
 					query.add(query.getCriterion(SalesBalancePO.COLUMN_TYPE_STR, Short.valueOf(data), op));
 				} else if ("dompany".equals(field)) {
-					try {
-						int cid = FormatUtil.decodeCompany(AESHelper.decrypt(filter.getData(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
-						query.add(query.getCriterion("sales.dompany", cid, op));
-					} catch (Exception e) {
-					}
+					int cid = CompanyServiceImpl.decode(filter.getData());
+					query.add(query.getCriterion("sales.dompany", cid, op));
+
 				} else if (SalesBalancePO.COLUMN_SALESFULLPAYTIME_STR.equals(field)) {
 
 					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";

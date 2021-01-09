@@ -83,6 +83,13 @@ Condition.addupRule("sales", {
             op: "cn",        
             validate: null
         },
+        dataSource: {
+            url: api.data.queryBrandByPinyinForAll,
+            postData: {},
+            listPath: "brands",
+            keyPath: "bid",
+            valuePath: "name"
+        }
     },
     "status":{
         label: "销售单状态",
@@ -96,6 +103,22 @@ Condition.addupRule("sales", {
             url: api.ds.sales,
             postData: {},
             listPath: "statues",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "fullpayStatus":{
+        label: "补款状态",
+        type: "select",
+        submitConfig: {
+            name: "fullpayStatus",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {//从后台取数据的各种配置
+            url: api.ds.sales,
+            postData: {},
+            listPath: "fullpayStatus",
             keyPath: "key",
             valuePath: "value"
         }
@@ -271,7 +294,7 @@ Condition.addupRule("sales", {
             op: "cn",
             validate: null
         },
-    },
+    },    
     "balance-brand":{
         label: "品牌",//中文名
         type: "autofill",//类型
@@ -407,6 +430,51 @@ Condition.addupRule("sales", {
         submitConfig: {
             name: "goods.name",
             op: "cn",
+            validata: null
+        }
+    },
+    "salesDelivery-createTime":{
+        label: "创建时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "createTime",
+            op: "between",
+            validata: null
+        }
+    },
+    "salesDelivery-tranTime":{
+        label: "配送时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "tranTime",
+            op: "between",
+            validata: null
+        }
+    },
+    "salesDelivery-checkTime":{
+        label: "审核时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "checkTime",
+            op: "between",
+            validata: null
+        }
+    },
+    "salesDelivery-confirmTime":{
+        label: "确认时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "confirmTime",
+            op: "between",
+            validata: null
+        }
+    },
+    "salesDelivery-finishTime":{
+        label: "完结时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "finishTime",
+            op: "between",
             validata: null
         }
     },

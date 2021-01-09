@@ -71,7 +71,7 @@ public class ApprovalService {
 			System.out.println(url);
 			System.out.println(String.format("%d-%s", response.getInteger("errcode"), response.getString("errmsg")));
 
-			throw new FLException(240014, String.format("%d-%s", response.getInteger("errcode"), response.getString("errmsg")));
+			throw new FLException(270014, String.format("%d-%s", response.getInteger("errcode"), response.getString("errmsg")));
 		}
 	}
 

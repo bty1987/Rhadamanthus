@@ -36,6 +36,14 @@ public class PlanAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "existPlan", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String existPlan() throws FLException {
+
+		plans = planService.existPlan(plan, queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "createPlan", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String createPlan() throws Exception {
 

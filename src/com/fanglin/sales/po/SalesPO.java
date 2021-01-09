@@ -84,6 +84,8 @@ public class SalesPO implements Serializable {
 
 	public static final String COLUMN_BRAND_STR = "brand";
 
+	public static final String COLUMN_CATEGORY_STR = "category";
+
 	public static final String COLUMN_COMPANY_STR = "company";
 
 	public static final String COLUMN_DOMPANY_STR = "dompany";
@@ -279,6 +281,7 @@ public class SalesPO implements Serializable {
 		this.house = house;
 	}
 
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, name = "cId", referencedColumnName = "cId")
 	public CustomerPO getCustomer() {

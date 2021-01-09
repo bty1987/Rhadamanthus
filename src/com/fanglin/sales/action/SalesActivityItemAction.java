@@ -47,7 +47,7 @@ public class SalesActivityItemAction extends BaseListAction {
 	@Action(value="addSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addSalesActivityItem() throws FLException{
 		
-		salesActivityItemService.addSalesActivityItem(salesActivity, salesActivityItems);
+		salesActivityItemService.addSalesActivityItem(salesActivity, salesActivityItems,queryUserId());
 		
 		return SUCCESS;
 	}
@@ -79,7 +79,7 @@ public class SalesActivityItemAction extends BaseListAction {
 	@Action(value="unrefundSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String unrefundSalesActivityItem() throws FLException{
 		
-		salesActivityItemService.unrefundSalesActivityItem(salesActivityItem);
+		salesActivityItemService.unrefundSalesActivityItem(salesActivityItem,queryUserId());
 		
 		return SUCCESS;
 	}
@@ -95,7 +95,7 @@ public class SalesActivityItemAction extends BaseListAction {
 	@Action(value="expendSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String expendSalesActivityItem() throws FLException{
 		
-		salesActivityItemService.expendSalesActivityItem(salesActivityItem);
+		salesActivityItemService.expendSalesActivityItem(salesActivityItem,queryUserId());
 		
 		return SUCCESS;
 	}

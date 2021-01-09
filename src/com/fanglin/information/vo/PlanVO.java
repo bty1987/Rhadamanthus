@@ -2,9 +2,11 @@ package com.fanglin.information.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.vo.TaskVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
@@ -145,6 +147,19 @@ public class PlanVO implements Serializable {
 
 	public void setParam(PlanParamVO param) {
 		this.param = param;
+	}
+
+	public PlanVO filters(List<Filter> filters) {
+
+		if (getPid() != null) {
+			filters.add(new Filter("planId", String.valueOf(getPid()), "eq"));
+		}
+
+		if (getArgs() != null) {
+			filters.add(new Filter("planargs", getArgs(), "eq"));
+		}
+
+		return this;
 	}
 
 }

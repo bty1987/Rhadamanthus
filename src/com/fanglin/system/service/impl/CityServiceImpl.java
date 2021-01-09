@@ -156,6 +156,7 @@ public class CityServiceImpl implements CityService {
 
 		cityPO.setNo(no.toString());
 		cityPO.setName(cityVO.getName());
+		cityPO.setProvince(cityVO.getProvince());
 
 		cityPO.setRegion(new RegionPO(cityVO.getRegion().getRid()));
 		BeanUtil.copyProperties(cityVO.getRegion(), cityPO.getRegion());

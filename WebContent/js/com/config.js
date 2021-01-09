@@ -25,3 +25,6 @@
     library: '',
     store: ''
 };
+
+window.console && window.console.log && console.log("%c有时候，正是那些人们认为的无用之人成就了无人能成之事。\nSometimes it's the very people who no one imagines anything of who do the things no one can imagine.\n--Alan·Mathison·Turing'sayings\n", "color:#428bca; font-size:1em");
+//window.console && window.console.log && console.log("%c台湾是中国领土不可分割的一部分\nTaiwan is an inalienable part of the Chinese territory.\n", "color:#f00; font-size:1.5em");
