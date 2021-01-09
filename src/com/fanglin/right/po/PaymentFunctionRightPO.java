@@ -29,6 +29,15 @@ public class PaymentFunctionRightPO implements Serializable {
 
 	private int company;
 
+	public PaymentFunctionRightPO() {
+		super();
+	}
+
+	public PaymentFunctionRightPO(PaymentFunctionPO paymentFunction) {
+		super();
+		this.paymentFunction = paymentFunction;
+	}
+
 	@Id
 	@GeneratedValue
 	@Column(name = "pfrid")

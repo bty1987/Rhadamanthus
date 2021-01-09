@@ -1,25 +1,27 @@
 jQuery(function ($) {
     var createcustomerOrigin = {
-        saveBtn: com.focusPage("#saveBtn"),
-        cancelBtn: com.focusPage("#cancelBtn"),
+        saveBtn: com.focusPage("#saveBtn", "#addcustomersource"),
+        cancelBtn: com.focusPage("#cancelBtn", "#addcustomersource"),
 
         items: {
-            name: com.focusPage("#name"),
-            gender: com.focusPage("#gender"),
-            phone: com.focusPage("#phone"),
-            purpose: com.focusPage("#purpose"),
-            intention: com.focusPage("#intention"),
-            price: com.focusPage("#price"),
-            grade: com.focusPage("#grade"),
-            comment: com.focusPage("#comment"),
+            name: com.focusPage("#name", "#addcustomersource"),
+            gender: com.focusPage("#gender", "#addcustomersource"),
+            phone: com.focusPage("#phone", "#addcustomersource"),
+            purpose: com.focusPage("#purpose", "#addcustomersource"),
+            intention: com.focusPage("#intention", "#addcustomersource"),
+            price: com.focusPage("#price", "#addcustomersource"),
+            grade: com.focusPage("#grade", "#addcustomersource"),
+            comment: com.focusPage("#comment", "#addcustomersource"),
 
-            villageNoCreate: com.focusPage("#villageNoCreate"),
-            rule: com.focusPage("#rule"),
-            houseNumber: com.focusPage("#houseNumber"),
-            buildArea: com.focusPage("#buildArea"),
-            freeArea: com.focusPage("#freeArea"),
-            totalArea: com.focusPage("#totalArea"),
-            innerArea: com.focusPage("#innerArea")
+            villageNoCreate: com.focusPage("#villageNoCreate", "#addcustomersource"),
+            rule: com.focusPage("#rule", "#addcustomersource"),
+            houseNumber: com.focusPage("#houseNumber", "#addcustomersource"),
+            buildArea: com.focusPage("#buildArea", "#addcustomersource"),
+            freeArea: com.focusPage("#freeArea", "#addcustomersource"),
+            totalArea: com.focusPage("#totalArea", "#addcustomersource"),
+            innerArea: com.focusPage("#innerArea", "#addcustomersource"),
+            designer: com.focusPage("#designer", "#addcustomersource"),
+            salesman: com.focusPage("#salesman", "#addcustomersource")
         },
         grade: ["A", "B", "C", "D"]
     };
@@ -27,6 +29,8 @@ jQuery(function ($) {
     createcustomerOrigin.saveBtn.bindClick(addcustomerOrigin);
     createcustomerOrigin.cancelBtn.bindClick(deleteDate);
 
+    com.initTypeahead('designer', api.personel.queryUserByPinyin, "pinyinName", {"user.status": 0}, 'autoFillKeyValue', 'key', 'value', null);
+    com.initTypeahead('salesman', api.personel.queryUserByPinyin, "pinyinName", {"user.status": 0}, 'autoFillKeyValue', 'key', 'value', null);
     com.initTypeahead('villageNoCreate', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value", function(list, k, v){
         com.post(api.data.queryVillageById, {"village.no": k}, function (res) {
             createcustomerOrigin.items.rule.html("推荐楼牌号规则: " + (res.village.rule == null || res.village.rule == "" ? "暂无推荐规则" : res.village.rule));
@@ -66,7 +70,9 @@ jQuery(function ($) {
             "customerOrigin.buildArea" : createcustomerOrigin.items.buildArea.val(),
             "customerOrigin.freeArea" : createcustomerOrigin.items.freeArea.val(),
             "customerOrigin.totalArea" : createcustomerOrigin.items.totalArea.val(),
-            "customerOrigin.innerArea" : createcustomerOrigin.items.innerArea.val()
+            "customerOrigin.innerArea" : createcustomerOrigin.items.innerArea.val(),
+            "customerOrigin.designer.userId": com.typeahead("designer"),
+            "customerOrigin.salesman.userId": com.typeahead("salesman")
         };
 
         com.post(api.customer.addCustomerOrigin, options, function (res) {

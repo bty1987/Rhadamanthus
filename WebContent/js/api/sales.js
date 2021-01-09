@@ -284,7 +284,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["total","maling","coupon","depositpay","fullpay","interceptount","venderMaling"]
+                args: ["total","maling","coupon","depositpay","fullpay","interceptount","venderMaling","amount"]
             }]
         },
 
@@ -389,6 +389,12 @@ $.extend(api, {
         balanceSalesDeliveryItem:{url:"balanceSalesDeliveryItem.do"},
         
         deliveSalesDeliveryItem:{url:"deliveSalesDeliveryItem.do",},
+
+        updateSalesDeliveryItem:{url:"updateSalesDeliveryItem.do",},
+
+        addSalesPicture:{url:"addSalesPicture.do"},
+        querySalesPicutre:{url:"querySalesPicutre.do"},
+        deleteSalesPicture:{url:"deleteSalesPicture.do"},
         
     }
 });

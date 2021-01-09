@@ -66,14 +66,16 @@ public class SalesActivityItemPO implements Serializable {
 
 	private String content;
 
-	private UserPO receiveUserId;
+	private UserPO creater;
 
-	private String receiveUserName;
+	private Timestamp createTime;
 
-	private Timestamp receiveTime;
-	
+	private UserPO operater;
+
+	private Timestamp operateTime;
+
 	private int integral;
-	
+
 	public SalesActivityItemPO(){
 		super();
 	}
@@ -187,33 +189,43 @@ public class SalesActivityItemPO implements Serializable {
 	public void setContent(String content) {
 		this.content = content;
 	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cuid",referencedColumnName="uId")
+	public UserPO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
+	}
+
+	@Column(name = "createTime")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "receiveUserId",referencedColumnName="uId")
-	public UserPO getReceiveUserId() {
-		return receiveUserId;
+	@JoinColumn(name = "ouid",referencedColumnName="uId")
+	public UserPO getOperater() {
+		return operater;
 	}
 
-	public void setReceiveUserId(UserPO receiveUserId) {
-		this.receiveUserId = receiveUserId;
+	public void setOperater(UserPO operater) {
+		this.operater = operater;
 	}
 
-	@Column(name = "receiveUserName")
-	public String getReceiveUserName() {
-		return receiveUserName;
+	@Column(name = "operateTime")
+	public Timestamp getOperateTime() {
+		return operateTime;
 	}
 
-	public void setReceiveUserName(String receiveUserName) {
-		this.receiveUserName = receiveUserName;
-	}
-
-	@Column(name = "receiveTime")
-	public Timestamp getReceiveTime() {
-		return receiveTime;
-	}
-
-	public void setReceiveTime(Timestamp receiveTime) {
-		this.receiveTime = receiveTime;
+	public void setOperateTime(Timestamp operateTime) {
+		this.operateTime = operateTime;
 	}
 
 	@Column(name = "integral")

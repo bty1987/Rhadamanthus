@@ -10,17 +10,17 @@ import com.fanglin.utils.Paging;
 
 public interface SalesBalanceService {
 
-	public void pageSalesBalance(Paging paging,List<Filter> filter,int company);	
+	public void pageSalesBalance(Paging paging,List<Filter> filter,int company) throws FLException;	
 	
 	public List<SalesBalanceVO> pageSalesBalance(List<SalesBalancePO> salesBalancePOs);
 	
-	public void pageSalesBalanceForDompany(Paging paging,List<Filter> filter,int dompany);
+	public void pageSalesBalanceForDompany(Paging paging,List<Filter> filter,int dompany) throws FLException;
 	
-	public void pageSalesBalanceForPompany(Paging paging,List<Filter> filter,int pompany);
+	public void pageSalesBalanceForPompany(Paging paging,List<Filter> filter,int pompany) throws FLException;
 	
-	public void pageSalesBalanceForSupplier(Paging paging,List<Filter> filter,String userId, int pompany);
+	public void pageSalesBalanceForSupplier(Paging paging,List<Filter> filter,String userId, int pompany) throws FLException;
 	
-	public void pageSalesBalanceForCheck(Paging paging, List<Filter> filters, String userId, int pompany); 
+	public void pageSalesBalanceForCheck(Paging paging, List<Filter> filters, String userId, int pompany) throws FLException; 
 	
 	public int updateSalesBalanceForVBalance(SalesBalanceVO salesBalanceVO) throws FLException;
 	

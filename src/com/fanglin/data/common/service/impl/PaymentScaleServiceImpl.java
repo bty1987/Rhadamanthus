@@ -8,84 +8,67 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.security.AESHelper;
 import com.fanglin.data.common.dao.PaymentScaleDao;
 import com.fanglin.data.common.service.PaymentScaleService;
 import com.fanglin.data.common.vo.PaymentScaleVO;
 import com.fanglin.data.po.PaymentScalePO;
 import com.fanglin.system.dao.CompanyDao;
-import com.fanglin.utils.FormatUtil;
-import com.fanglin.utils.SystemConfig;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 
 @Service("paymentScaleService")
 @Transactional(readOnly = true)
 public class PaymentScaleServiceImpl implements PaymentScaleService {
 
-	@Autowired PaymentScaleDao PaymentScaledao;
-	
-	@Autowired CompanyDao Companydao;
+	@Autowired
+	PaymentScaleDao PaymentScaledao;
+
+	@Autowired
+	CompanyDao Companydao;
 
 	@Override
 	public List<PaymentScaleVO> queryPaymentScaleByCid(PaymentScaleVO paymentScale) throws FLException {
-		
-		String company;
-		int companys;
-		
-		try {
-			companys = FormatUtil.decodeCompany(AESHelper.decrypt(paymentScale.getCid(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
-		} catch (Exception e) {
-			throw new FLException(230015 , "公司不存在");
-		}
-		
-		List<PaymentScalePO>  paymentScalePOS =	PaymentScaledao.queryPaymentScaleByCid(companys);
+
+		int companys = CompanyServiceImpl.decode(paymentScale.getCid());
+
+		List<PaymentScalePO> paymentScalePOS = PaymentScaledao.queryPaymentScaleByCid(companys);
 		List<PaymentScaleVO> paymentScaleVOS = new ArrayList<PaymentScaleVO>();
-		
+
 		for (PaymentScalePO paymentScalePO : paymentScalePOS) {
-			
-		  	try {
-		  		company = AESHelper.encrypt(FormatUtil.encodeCompany(paymentScalePO.getCid()),SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
-		    } catch (Exception e) {
-		    	throw new FLException(230015 , "公司不存在");
-		    }
-			 PaymentScaleVO paymentScaleVO = new  PaymentScaleVO();
-			 paymentScaleVO.setCid(company);
-			 paymentScaleVO.setName(paymentScalePO.getName());
-			 paymentScaleVO.setPsid(paymentScalePO.getPsid());
-			 paymentScaleVO.setComment(paymentScalePO.getComment());
-			 
-			 paymentScaleVOS.add(paymentScaleVO);
-			
+
+			PaymentScaleVO paymentScaleVO = new PaymentScaleVO();
+			paymentScaleVO.setCid(CompanyServiceImpl.encode(paymentScalePO.getCid()));
+			paymentScaleVO.setName(paymentScalePO.getName());
+			paymentScaleVO.setPsid(paymentScalePO.getPsid());
+			paymentScaleVO.setComment(paymentScalePO.getComment());
+
+			paymentScaleVOS.add(paymentScaleVO);
+
 		}
 		return paymentScaleVOS;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public void addPaymentScale(PaymentScaleVO paymentScale) throws FLException {
-			int company;
-		
-			PaymentScalePO paymentScalePO = new  PaymentScalePO();
-		
-			 try { 
-				 	company = FormatUtil.decodeCompany(AESHelper.decrypt(paymentScale.getCid(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
-			 } catch (Exception e) {
-				 throw new FLException(230015 , "公司不存在");
-			 }
-			 
-			 paymentScalePO.setCid(company);
-			 paymentScalePO.setName(paymentScale.getName());
-			 paymentScalePO.setComment(paymentScale.getComment());
-		
-			 PaymentScaledao.save(paymentScalePO);
-		
+
+		int company = CompanyServiceImpl.decode(paymentScale.getCid());
+
+		PaymentScalePO paymentScalePO = new PaymentScalePO();
+
+		paymentScalePO.setCid(company);
+		paymentScalePO.setName(paymentScale.getName());
+		paymentScalePO.setComment(paymentScale.getComment());
+
+		PaymentScaledao.save(paymentScalePO);
+
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public void  deletePaymentScale(PaymentScaleVO paymentScale) {
-		
+	@Transactional(rollbackFor = Exception.class)
+	public void deletePaymentScale(PaymentScaleVO paymentScale) {
+
 		PaymentScalePO paymentScalePO = PaymentScaledao.get(paymentScale.getPsid());
-		
+
 		PaymentScaledao.delete(paymentScalePO);
 	}
 

@@ -22,7 +22,6 @@ import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.ColorPO;
 import com.fanglin.data.po.FormatPO;
@@ -43,11 +42,11 @@ import com.fanglin.sales.vo.SalesItemVO;
 import com.fanglin.sales.vo.SalesVO;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
-import com.fanglin.utils.SystemConfig;
 
 @Service("salesService")
 @Transactional(readOnly = true)
@@ -108,7 +107,7 @@ public class SalesServiceImpl implements SalesService {
 	}
 
 	@Override
-	public void pageSales(Paging paging, List<Filter> filter, String userId, int company) {
+	public void pageSales(Paging paging, List<Filter> filter, String userId, int company) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
@@ -126,7 +125,7 @@ public class SalesServiceImpl implements SalesService {
 	}
 
 	@Override
-	public void pageSalesForAdvance(Paging paging, List<Filter> filter, String userId, int company) {
+	public void pageSalesForAdvance(Paging paging, List<Filter> filter, String userId, int company) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
@@ -141,7 +140,7 @@ public class SalesServiceImpl implements SalesService {
 	}
 
 	@Override
-	public void pageSalesForBalance(Paging paging, List<Filter> filter, String userId, int company) {
+	public void pageSalesForBalance(Paging paging, List<Filter> filter, String userId, int company) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
@@ -156,7 +155,7 @@ public class SalesServiceImpl implements SalesService {
 	}
 
 	@Override
-	public void pageSalesForDompany(Paging paging, List<Filter> filter, String userId, int dompany) {
+	public void pageSalesForDompany(Paging paging, List<Filter> filter, String userId, int dompany) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
@@ -171,7 +170,7 @@ public class SalesServiceImpl implements SalesService {
 	}
 
 	@Override
-	public void pageSalesForBalanceByDompany(Paging paging, List<Filter> filter, String userId, int dompany) {
+	public void pageSalesForBalanceByDompany(Paging paging, List<Filter> filter, String userId, int dompany) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
@@ -185,7 +184,7 @@ public class SalesServiceImpl implements SalesService {
 	}
 
 	@Override
-	public void pageSalesForPompany(Paging paging, List<Filter> filters, String userId, int pompany) {
+	public void pageSalesForPompany(Paging paging, List<Filter> filters, String userId, int pompany) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
@@ -200,7 +199,7 @@ public class SalesServiceImpl implements SalesService {
 	}
 
 	@Override
-	public void pageSalesForBalanceByPompany(Paging paging, List<Filter> filter, String userId, int pompany) {
+	public void pageSalesForBalanceByPompany(Paging paging, List<Filter> filter, String userId, int pompany) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
@@ -215,7 +214,7 @@ public class SalesServiceImpl implements SalesService {
 	}
 
 	@Override
-	public void pageSalesForSupplier(Paging paging, List<Filter> filter, String userId, int company) {
+	public void pageSalesForSupplier(Paging paging, List<Filter> filter, String userId, int company) throws FLException {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
@@ -292,16 +291,7 @@ public class SalesServiceImpl implements SalesService {
 	public int addSales(SalesVO salesVO, List<SalesItemVO> salesItemVOs, int company) throws FLException {
 
 		int dompany;
-
-		try {
-
-			dompany = FormatUtil.decodeCompany(AESHelper.decrypt(salesVO.getDompanys(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
-
-		} catch (Exception e) {
-
-			throw new FLException(230015, "公司不存在");
-
-		}
+		dompany = CompanyServiceImpl.decode(salesVO.getDompanys());
 
 		CompanyPO companyPO = companyDao.get(company);
 

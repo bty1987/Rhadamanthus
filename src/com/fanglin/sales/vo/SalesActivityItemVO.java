@@ -35,18 +35,20 @@ public class SalesActivityItemVO implements Serializable {
 
 	private String content;
 
-	private UserBaseVO receiveUserId;
+	private UserBaseVO creater;
 
-	private String receiveUserName;
+	private Timestamp createTime;
 
-	private Timestamp receiveTime;
-	
+	private UserBaseVO operater;
+
+	private Timestamp operateTime;
+
 	private Integer integral;
 
 	public SalesActivityItemVO(){
 		super();
 	}
-	
+
 	public Long getSaiid() {
 		return saiid;
 	}
@@ -143,29 +145,38 @@ public class SalesActivityItemVO implements Serializable {
 		this.content = content;
 	}
 
-	public UserBaseVO getReceiveUserId() {
-		return receiveUserId;
+	public UserBaseVO getCreater() {
+		return creater;
 	}
 
-	public void setReceiveUserId(UserBaseVO receiveUserId) {
-		this.receiveUserId = receiveUserId;
-	}
-
-	public String getReceiveUserName() {
-		return receiveUserName;
-	}
-
-	public void setReceiveUserName(String receiveUserName) {
-		this.receiveUserName = receiveUserName;
+	public void setCreater(UserBaseVO creater) {
+		this.creater = creater;
 	}
 
 	@JSON(format="yyyy-MM-dd HH:mm:ss")
-	public Timestamp getReceiveTime() {
-		return receiveTime;
+	public Timestamp getCreateTime() {
+		return createTime;
 	}
 
-	public void setReceiveTime(Timestamp receiveTime) {
-		this.receiveTime = receiveTime;
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	public UserBaseVO getOperater() {
+		return operater;
+	}
+
+	public void setOperater(UserBaseVO operater) {
+		this.operater = operater;
+	}
+
+	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	public Timestamp getOperateTime() {
+		return operateTime;
+	}
+
+	public void setOperateTime(Timestamp operateTime) {
+		this.operateTime = operateTime;
 	}
 
 	public Integer getIntegral() {

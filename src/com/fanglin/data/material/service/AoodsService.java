@@ -9,7 +9,7 @@ import com.fanglin.utils.Paging;
 
 public interface AoodsService {
 
-	public void pageAoods(Paging paging, List<Filter> filters, int company, String companyType);
+	public void pageAoods(Paging paging, List<Filter> filters, int company, String companyType) throws FLException;
 
 	public List<AoodsVO> queryAoodsByName(AoodsVO aoodsVO, int company);
 

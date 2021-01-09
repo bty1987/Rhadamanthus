@@ -1,10 +1,10 @@
 $(function () {
 
     var salesActivityItem = {
-        
-        paramsOrderId : params.orderId,
+
+        paramsOrderId: params.orderId,
         pagetype: params.type,
-        
+
         items: {
             things : com.focusPage("#things"),
             coupons : com.focusPage("#coupons"),
@@ -16,16 +16,16 @@ $(function () {
             couponsName : com.focusPage("#couponsName"),
             couponsNum : com.focusPage("#couponsNum"),
             activity : com.focusPage("#activity"),
-            commentName:com.focusPage("#commentName"),
+            commentName : com.focusPage("#commentName"),
             salesActivityComment : com.focusPage("#salesActivityComment")
         },
-        modal:{
+        modal: {
             salesActivityCommentModal: com.focusPage("#salesActivityCommentModal"),
         },
-        btn:{
+        btn: {
             submitSalesActivityCommentBtn : com.focusPage("#submitSalesActivityCommentBtn"),
             cancelCommentBtn : com.focusPage("#cancelCommentBtn"),
-            activityTab :com.focusPage("#activityTab")
+            activityTab : com.focusPage("#activityTab")
         },
         activity: {},
         activityItemType : {},
@@ -47,20 +47,20 @@ $(function () {
         com.clearValidator();
     });
 
-    com.post(api.ds.sales, {}, function(res){
+    com.post(api.ds.sales, {}, function (res) {
         salesActivityItem.depositpayStatus = res.depositpayStatus.split("key", "value");
         salesActivityItem.fullpayStatus = res.fullpayStatus.split("key", "value");
         salesActivityItem.type = res.type.split("key", "value");
     }, null, false);
 
     com.post(api.ds.manifest, {}, function (res) {
-        $.each(res.salesActivityItemType,function(i,v){
-            salesActivityItem.activityItemType[v.key]= v.value;
+        $.each(res.salesActivityItemType, function (i, v) {
+            salesActivityItem.activityItemType[v.key] = v.value;
         })
     }, null, false);
 
-    com.focusPage("#thingsAdd").unbind().click(function(){
-        if(com.validate("thingsInputs","bottom")){
+    com.focusPage("#thingsAdd").unbind().click(function () {
+        if (com.validate("thingsInputs", "bottom")) {
             return;
         }
         createOne("things");
@@ -68,16 +68,16 @@ $(function () {
         salesActivityItem.items.thingsNum.val("");
     });
 
-    com.focusPage("#couponsAdd").unbind().click(function(){
-        if(com.validate("couponInputs","bottom")){
+    com.focusPage("#couponsAdd").unbind().click(function () {
+        if (com.validate("couponInputs", "bottom")) {
             return;
         }
         createOne("coupons");
         salesActivityItem.items.couponsName.val("");
         salesActivityItem.items.couponsNum.val("");
     });
-    com.focusPage("#paperAdd").unbind().click(function(){
-        if(com.validate("paperInputs","bottom")){
+    com.focusPage("#paperAdd").unbind().click(function () {
+        if (com.validate("paperInputs", "bottom")) {
             return;
         }
         createOne("paper");
@@ -85,13 +85,13 @@ $(function () {
         salesActivityItem.items.paperNum.val("");
     });
 
-    function createOne(oneString){
-        var $li = $("<li></li>").css({"background-color":"#91b8d0", "margin-bottom":"5px", "margin-right":"5px"}).appendTo(com.focusPage("#"+oneString));
+    function createOne(oneString) {
+        var $li = $("<li></li>").css({"background-color": "#91b8d0","margin-bottom": "5px","margin-right": "5px"}).appendTo(com.focusPage("#" + oneString));
         var aisd = com.focusPage("#" + oneString + "Name").attr("data-typeahead-key");
         var name = com.focusPage("#" + oneString + "Name").val();
         var num = com.focusPage("#" + oneString + "Num").val();
-        var $span = $("<span></span>").css({'color': '#fff'}).attr(oneString+'Name', name).attr('num', num).attr('asid', aisd).html(name).appendTo($li);
-        var $spanTwo = $("<span></span>").css({'font-size':'16px', 'color':'#fff', 'margin':'0 5px'}).html(" 数量:" + num).appendTo($span);
+        var $span = $("<span></span>").css({'color': '#fff'}).attr(oneString + 'Name', name).attr('num', num).attr('asid', aisd).html(name).appendTo($li);
+        var $spanTwo = $("<span></span>").css({'font-size': '16px','color': '#fff', 'margin': '0 5px'}).html(" 数量:" + num).appendTo($span);
         var $a = $("<a></a>").addClass("glyphicon glyphicon-remove").css({'color': '#d15b47'}).appendTo($li);
         $a.click(function () {
             $li.remove();
@@ -138,8 +138,8 @@ $(function () {
                         asid: _activityItem.asid,
                         activityItemName: _activityItem.name + " 金额:" + _activityItem.money + " 积分:" + _activityItem.integral
                     });
-                }else if (_activityItem.type == 2) {
-                	_paper.push({
+                } else if (_activityItem.type == 2) {
+                    _paper.push({
                         asid: _activityItem.asid,
                         activityItemName: _activityItem.name + " 金额:" + _activityItem.money + " 积分:" + _activityItem.integral
                     });
@@ -154,18 +154,15 @@ $(function () {
     });
 
     function orderList() {
-
         var $btnSub = $('<a></a>').addClass('btn btn-minier btn-success').html('领取物品');
         var $h4 = $('<h4></h4>').addClass('oid').append($('<small></small>').addClass('blue')).html("装修单号:" + salesActivityItem.paramsOrderId);
         var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-        
+
         var $btnImport = $('<a></a>').addClass('btn btn-minier btn-dark').html('导出').appendTo($divBtnWrap);
 
         var $divWarp = com.focusPage("#paramsOrder").append($h4);
 
-        if(salesActivityItem.pagetype == "advance"){
-            $divBtnWrap.append($btnSub).appendTo($h4);
-        }
+        $divBtnWrap.append($btnSub).appendTo($h4);
 
         $btnSub.click(function () {
 
@@ -184,8 +181,8 @@ $(function () {
 
             salesActivityItem.salesActivityItemModal.modal("show")
         });
-        
-        $btnImport.click(function(){
+
+        $btnImport.click(function () {
             imports();
         });
 
@@ -210,25 +207,25 @@ $(function () {
     }
 
     //活动积分
-    function amountSalesActivityForActivity(){
+    function amountSalesActivityForActivity() {
         com.post(api.sales.amountSalesActivityForActivity, {"salesActivity.sales.orderId" : salesActivityItem.paramsOrderId}, function (res) {
             com.focusPage("#activity_").html("使用积分: " + res.salesActivity.amount).attr("integral", res.salesActivity.amount);
         }, null, false);
     }
 
     //款项积分
-    function amountSalesActivityForPayment(){
+    function amountSalesActivityForPayment() {
         com.post(api.sales.amountSalesActivityForPayment, {"salesActivity.sales.orderId" : salesActivityItem.paramsOrderId}, function (res) {
             com.focusPage("#payment").html("总积分: " + res.salesActivity.amount).attr("integral", res.salesActivity.amount);
         }, null, false);
     }
-    
+
     function integral() {
         $('#num').html("剩余积分: " + utils.accSub(parseFloat(com.focusPage("#payment").attr("integral")), parseFloat(com.focusPage("#activity_").attr("integral"))));
     }
-    
+
     //销售实付
-    function amountSalesPayment(){
+    function amountSalesPayment() {
         com.post(api.payment.amountSalesPayment, {"salesPayment.sales.orderId" : salesActivityItem.paramsOrderId}, function (res) {
             com.focusPage("#amountSalesPayment").html("销售实付: " + res.amount).attr("amount", res.amount);
         }, null, false);
@@ -260,14 +257,14 @@ $(function () {
         }, null, false);
     }
 
-    var displayFunc  = (function(){
+    var displayFunc = (function () {
 
-        var renderList = function(tableId,listData){
+        var renderList = function (tableId, listData) {
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-            if(listData && listData.length){
-                $.each(listData,function(i, v){
+            if (listData && listData.length) {
+                $.each(listData, function (i, v) {
                     var $liLine = creatLine(v);
 
                     $liLine.appendTo($ul);
@@ -277,7 +274,7 @@ $(function () {
             }
         };
 
-        var creatLine = function(v){
+        var creatLine = function (v) {
 
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass("oid").append($('<small></small>').addClass('blue').html(v.activity.name));
@@ -309,11 +306,11 @@ $(function () {
         };
 
         return {
-            init : function(tableId,listData){
+            init : function (tableId, listData) {
                 com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
+                renderList(tableId, listData);
             },
-            drawLine : function(v){
+            drawLine : function (v) {
                 return creatLine(v);
             }
         };
@@ -321,24 +318,23 @@ $(function () {
 
     var searcher = new Searcher();
 
-    searcher.init(["sales-activity", "sales-activity-category-name", "sales-activity-brand-name"], "condLists", api.sales.pageSalesActivity, function(data){
+    searcher.init(["sales-activity", "sales-activity-category-name", "sales-activity-brand-name"], "condLists", api.sales.pageSalesActivity, function (data) {
         displayFunc.init('resultLists', data);
-    }, "pagenations", "sales4activityPostData", options, false, null, null ,"resultLists");
+    }, "pagenations", "sales4activityPostData", options, false, null, null, "resultLists");
 
     //查询活动物品
     function querySalesActivityItem() {
         com.post(api.sales.querySalesActivityItem, options, function (res) {
-
+            salesActivityItem.salesActivityItems = res.salesActivityItems;
             var salesActivityItems = res.salesActivityItems;
 
             var salesActivityContent = com.focusPage("#salesActivityItems").empty();
-            
+
             $.each(salesActivityItems, function (i, v) {
-                
-                if(v.state == 1) return true;
 
-                var pricingSpan = $("<div></div>").addClass("col-md-6").css({"margin": "5px 0px", "min-height" : "127px"}).attr("id", "pricing_" + v.saiid);
+                if (v.state == 1) return true;
 
+                var pricingSpan = $("<div></div>").addClass("col-md-6").css({"margin": "5px 0px","min-height": "127px"}).attr("id", "pricing_" + v.saiid);
                 var widgetBox = $("<div></div>").addClass("module_activity_border").appendTo(pricingSpan);
 
                 var widgetBody = $("<div></div>").appendTo(widgetBox);
@@ -406,9 +402,9 @@ $(function () {
         var unrefundBtn = $("<span></span>").addClass("btn btn-minier btn-danger").html("未退").css("margin", "3px");
         //补款
         var expendBtn = $("<span></span>").addClass("btn btn-minier btn-purple").html("补款").css("margin", "3px");
-        
-        if(salesActivityItem.pagetype == "advance"){
-            uiPgDiv.append(abateBtn).append(receiveBtn).append(refundBtn).append(deliveBtn).append(unrefundBtn).append(expendBtn)
+
+        if (salesActivityItem.pagetype == "advance") {
+            uiPgDiv.append(abateBtn).append(receiveBtn).append(refundBtn).append(deliveBtn).append(unrefundBtn).append(expendBtn);
         }
 
         //失效按钮
@@ -424,7 +420,7 @@ $(function () {
                 salesActivityItem.url = api.sales.receiveSalesActivityItem;
                 salesActivityItem.info = "领取成功!";
                 salesActivityItem.modal.salesActivityCommentModal.modal("show");
-            }else{
+            } else {
                 com.showAlert(com.warning, "订单活动奖品不可操作!!");
             }
         });
@@ -477,7 +473,7 @@ $(function () {
 
     //未退
     function unrefundSalesActivityItem(saiid, activityItemName) {
-        
+
         com.showConfirm("是否确认未退" + activityItemName + "活动物品?", function () {
 
             com.post(api.sales.unrefundSalesActivityItem, {"salesActivityItem.saiid": saiid}, function (res) {
@@ -490,7 +486,7 @@ $(function () {
 
     //消耗
     function expendSalesActivityItem(saiid, activityItemName) {
-        
+
         com.showConfirm("是否确认补款" + activityItemName + "活动物品?", function () {
 
             com.post(api.sales.expendSalesActivityItem, {"salesActivityItem.saiid": saiid}, function (res) {
@@ -501,76 +497,54 @@ $(function () {
             });
         });
     }
-    
-    function imports(){
-        
-        var awardStockType = {};
-        var awardStockSubType = {};
-        var awardRecordType = {};
-        var awardRecordSubType = {};
-        var storeroom = {};
-        
-        var decoration = {};
-        
-        com.post(api.ds.information, {}, function(res){
 
-            awardStockType = res.awardStockType.split("key" ,"value");
-            awardStockSubType = res.awardSubtype.split("key" ,"value");
-            awardRecordType = res.StockType.split("key" ,"value");
-            awardRecordSubType = res.awardRecordSubtype.split("key" ,"value");
-            storeroom = res.awardStoreRoom.split("key" ,"value");
+    function imports() {
+
+        com.post(api.ds.information, {}, function (res) {
+
+            awardStockType = res.awardStockType.split("key", "value");
+            awardStockSubType = res.awardSubtype.split("key", "value");
+            awardRecordType = res.StockType.split("key", "value");
+            awardRecordSubType = res.awardRecordSubtype.split("key", "value");
+            storeroom = res.awardStoreRoom.split("key", "value");
         }, null, false);
-        
-        com.post(api.decoration.queryDecorationByOrderId, {"decorationOrderId": salesActivityItem.paramsOrderId}, function(res){
+
+        com.post(api.decoration.queryDecorationByOrderId, {"decorationOrderId": salesActivityItem.paramsOrderId}, function (res) {
             decoration = res.decoration;
         }, null, false);
-        
-        com.post(api.information.pageAwardRecord, $.extend({}, {"filters[0].data": salesActivityItem.paramsOrderId, "filters[0].field": "orderId", "filters[0].op": "eq"}, {"paging.noPage": 1, "awardRecord.awardStock.asid": ""}), function (res) {
-            
+
+        com.post(api.sales.querySalesActivityItem, {"orderId": salesActivityItem.paramsOrderId }, function (res) {
             $.exceler({
                 column: [
-                    ['编号', 'awardStock.no'],
                     ['装修单号', 'orderId'],
-                    ['楼盘', "decoration.house.village.name"],
-                    ['楼号', "decoration.house.houseNumber"],
-                    ['名称', 'awardStock.name'],
-                    ['规格', 'awardStock.format'],
-                    ['库房', 'awardStock.storeroom'],
-                    ['类型', 'awardStock.type'],
-                    ['子类', 'awardStock.subtype'],
-                    ["类型:", 'type'],
-                    ["子类:", 'subtype'],
-                    ["业绩标识:", 'awardStock.isPrefor'],
-                    ["单价:", 'unitPrice'],
-                    ["数量:", 'num'],
-                    ["总额:", 'totalPrice'],
-                    ["说明:", 'content'],
-                    ["设计师:", 'decoration.designer.currentName'],
-                    ["操作人:", 'creater.currentName'],
-                    ["操作时间:", 'operateTime'],
+                    ['活动名称', 'activity'],
+                    ['奖品名称', 'name'],
+                    ['类型', 'type'],
+                    ['状态', 'state'],
+                    ['金额', 'money'],
+                    ['数量', 'num'],
+                    ['总额', 'sum'],
+                    ['备注', 'content'],
+                    ['操作人', 'userName'],
+                    ['操作时间', 'operateTime'],
                 ],
-                list: res.paging.data
+                list: res.salesActivityItems
 
-            }, function(v){
-                v.awardStock.type = awardStockType[v.awardStock.type];
-                v.awardStock.subtype = awardStockSubType[v.awardStock.subtype];
-                v.type = awardRecordType[v.type];
-                v.subtype = awardRecordSubType[v.subtype];
-                v.awardStock.storeroom = storeroom[v.awardStock.storeroom];
-                
-                v.awardStock.isPrefor = v.awardStock.isPrefor == "0" ? "计算业绩" : "不计算业绩";
-                
-                v.decoration = decoration;
+            }, function (v) {
+                v.userName = v.operater.currentName;
+                v.type = salesActivityItem.type[v.type];
+                v.state = salesActivityItem.activityItemType[v.state];
+                v.sum = v.money*v.num;
             });
-            
+
         });
-        
+
     }
 
     //领取物品
     com.focusPage("#submitSalesActivityItemBtn").on("click", function () {
 
-        if (salesActivityItem.items.things.html() == "" && salesActivityItem.items.coupons.html() == ""&& salesActivityItem.items.paper.html() == "") {
+        if (salesActivityItem.items.things.html() == "" && salesActivityItem.items.coupons.html() == "" && salesActivityItem.items.paper.html() == "") {
             com.showAlert(com.warning, "活动物品或券或红包需要选择才能提交");
             return;
         }
@@ -685,5 +659,5 @@ $(function () {
         com.cleanItems(salesActivityItem.items);
         com.clearValidator();
     });
-    
+
 });

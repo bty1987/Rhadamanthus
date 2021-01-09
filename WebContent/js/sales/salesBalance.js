@@ -153,6 +153,9 @@ $(function () {
                             case "poster":
                                 propertyArr.push(["结算人:", v.poster.currentName, "grey"]);
                                 break;
+							case "vbalance":
+                                propertyArr.push(["厂商结算:", v.vbalance, "blue"]);
+                                break;
                             case "grade":
                                 propertyArr.push(["等级:", v.sales.grade, "red"]);
                                 break;
@@ -494,7 +497,7 @@ $(function () {
             historicalRecord = params.salesBalancePostData;
         }
 
-        com.post(salesBalance.url, $.extend({}, historicalRecord, {"paging.noPage": 1}), function (res) {
+        com.post(pageConfig.apiPage, $.extend({}, historicalRecord, {"paging.noPage": 1}), function (res) {
             $.exceler({
                 column: [
                     ['装修单号', 'sales.orderId'],

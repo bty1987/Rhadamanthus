@@ -48,9 +48,11 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addSalesActivityItem(SalesActivityVO salesActivityVO, List<SalesActivityItemVO> salesActivityItems) throws FLException {
+	public int addSalesActivityItem(SalesActivityVO salesActivityVO, List<SalesActivityItemVO> salesActivityItems,String userId) throws FLException {
 		
 		salesActivityService.checkSalesActivity(salesActivityVO.getSales().getOrderId(), salesActivityVO.getAmount());
+		
+		UserPO user = userDao.queryUserByUserId(userId);
 				
 		for(SalesActivityItemVO salesActivityItemVO:salesActivityItems){
 			
@@ -58,9 +60,11 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 			
 			BeanUtil.copyProperties(salesActivityItemVO, salesActivityItemPO);
 			
+			salesActivityItemPO.setCreater(user);
+			
 			salesActivityItemPO.setOrderId(salesActivityVO.getSales().getOrderId());
-			salesActivityItemPO.setReceiveUserName("");
-			salesActivityItemPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
+			
+			salesActivityItemPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 			
 			salesActivityItemDao.save(salesActivityItemPO);
 		}
@@ -77,14 +81,14 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 			
 			SalesActivityItemVO salesActivityItemVO = new SalesActivityItemVO();
 			
-			BeanUtil.copyProperties(salesActivityItemPO, salesActivityItemVO, Arrays.asList("receiveUserId"));
+			BeanUtil.copyProperties(salesActivityItemPO, salesActivityItemVO, Arrays.asList("creater","operater"));
 			
 			if (salesActivityItemPO.getAsid() != 0) {
 				BeanUtil.copyProperties(salesActivityItemPO.getAsid(), salesActivityItemVO.getAsid());
 			}
 
-			salesActivityItemVO.setReceiveUserId(new UserBaseVO());
-			BeanUtil.copyProperties(salesActivityItemPO.getReceiveUserId(), salesActivityItemVO.getReceiveUserId(), Arrays.asList("dept", "duty"));
+			salesActivityItemVO.setOperater(new UserBaseVO());
+			BeanUtil.copyProperties(salesActivityItemPO.getOperater(), salesActivityItemVO.getOperater(), Arrays.asList("dept", "duty"));
 
 			salesActivityItemVOs.add(salesActivityItemVO);
 		}
@@ -105,6 +109,8 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 			throw new FLException(140057, "订单活动奖品不可操作");
 		}
 		
+		salesActivityItemPO.setOperater(userDao.queryUserByUserId(userId));
+		salesActivityItemPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_UNVALID_INT);
 		salesActivityItemPO.setIsStock(SalesActivityItemPO.STATUS_UNVALID_INT);
 		
@@ -124,9 +130,8 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 		
 		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_RECEIVE_INT);
 		salesActivityItemPO.setIsStock(SalesActivityItemPO.STATUS_VALID_INT);
-		salesActivityItemPO.setReceiveUserId(userDao.queryUserByUserId(userId));
-		salesActivityItemPO.setReceiveUserName(userName);
-		salesActivityItemPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
+		salesActivityItemPO.setOperater(userDao.queryUserByUserId(userId));
+		salesActivityItemPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		salesActivityItemDao.update(salesActivityItemPO);
 		
@@ -174,9 +179,8 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 		UserPO creater = userDao.queryUserByUserId(userId);
 		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_DELIVERY_INT);//更改为状态4--配送
 		salesActivityItemPO.setIsStock(SalesActivityItemPO.ISSTOCK_COUNTIN_INT);//计入库存
-		salesActivityItemPO.setReceiveUserId(creater);
-		salesActivityItemPO.setReceiveUserName(userName);
-		salesActivityItemPO.setReceiveTime(DateUtil.getDateToTimestamp(new Date()));
+		salesActivityItemPO.setOperater(creater);
+		salesActivityItemPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		salesActivityItemDao.update(salesActivityItemPO);
 		
 		AwardStockPO awardStockPO = awardStockDao.get(salesActivityItemPO.getAsid());
@@ -199,7 +203,7 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void unrefundSalesActivityItem(SalesActivityItemVO salesActivityItemVO) throws FLException {
+	public void unrefundSalesActivityItem(SalesActivityItemVO salesActivityItemVO,String userId) throws FLException {
 
 		SalesActivityItemPO salesActivityItemPO = salesActivityItemDao.get(salesActivityItemVO.getSaiid());
 		
@@ -210,7 +214,8 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 		if(salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_RECEIVE_INT){//已领--2
 			throw new FLException(140057, "订单活动奖品不可操作");
 		}
-		
+		salesActivityItemPO.setOperater(userDao.queryUserByUserId(userId));
+		salesActivityItemPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_UNRETURNED_INT);//更改为状态5--未退
 		
 		salesActivityItemDao.update(salesActivityItemPO);
@@ -230,7 +235,8 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 		if(salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_RECEIVE_INT && salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_UNRETURNED_INT && salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_DELIVERY_INT){//已领--2, 未退--5, 配送--4
 			throw new FLException(140057, "订单活动奖品不可操作");
 		}
-		
+		salesActivityItemPO.setOperater(userDao.queryUserByUserId(userId));
+		salesActivityItemPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_REFUND_INT);//更改为状态3--退货
 		
 		salesActivityItemDao.update(salesActivityItemPO);
@@ -253,7 +259,7 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void expendSalesActivityItem(SalesActivityItemVO salesActivityItemVO) throws FLException {
+	public void expendSalesActivityItem(SalesActivityItemVO salesActivityItemVO,String userId) throws FLException {
 		
 		SalesActivityItemPO salesActivityItemPO = salesActivityItemDao.get(salesActivityItemVO.getSaiid());
 		
@@ -264,7 +270,8 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 		if(salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_RECEIVE_INT && salesActivityItemPO.getState() != SalesActivityItemPO.STATUS_DELIVERY_INT){// 已领--2, 配送--4
 			throw new FLException(140057, "订单活动奖品不可操作");
 		}
-		
+		salesActivityItemPO.setOperater(userDao.queryUserByUserId(userId));
+		salesActivityItemPO.setOperateTime(DateUtil.getDateToTimestamp(new Date()));
 		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_CONSUME_INT);//更改为状态7--消耗
 		
 		salesActivityItemDao.update(salesActivityItemPO);

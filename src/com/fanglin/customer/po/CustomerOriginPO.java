@@ -25,9 +25,13 @@ public class CustomerOriginPO implements Serializable {
 
 	private static final long serialVersionUID = 5940806639925973280L;
 
+	public static final String COLUMN_CREATER_STR = "creater.uid";
+	
 	public static final String COLUMN_BELONGER_STR = "belonger.uid";
 
 	public static final String COLUMN_DESIGNER_STR = "designer.uid";
+	
+	public static final String COLUMN_SALESMAN_STR = "salesman.uid";
 
 	public static final short STATUS_INIT_INT = 0; // 初始
 	
@@ -91,6 +95,8 @@ public class CustomerOriginPO implements Serializable {
 
 	private UserPO designer;
 
+	private UserPO salesman;
+
 	private String orderId;
 
 	public CustomerOriginPO() {
@@ -102,7 +108,7 @@ public class CustomerOriginPO implements Serializable {
 		this.csid = csid;
 	}
 
-	public CustomerOriginPO(VillagePO village, UserPO creater, UserPO belonger, DepartmentPO department, DepartmentPO region, CustomerPO customer, HousePO house, UserPO designer) {
+	public CustomerOriginPO(VillagePO village, UserPO creater, UserPO belonger, DepartmentPO department, DepartmentPO region, CustomerPO customer, HousePO house, UserPO designer, UserPO salesman) {
 		super();
 		this.village = village;
 		this.creater = creater;
@@ -112,6 +118,7 @@ public class CustomerOriginPO implements Serializable {
 		this.customer = customer;
 		this.house = house;
 		this.designer = designer;
+		this.salesman = salesman;
 	}
 
 	@Id
@@ -338,6 +345,16 @@ public class CustomerOriginPO implements Serializable {
 
 	public void setDesigner(UserPO designer) {
 		this.designer = designer;
+	}
+
+	@ManyToOne
+	@JoinColumn(nullable = true, name = "suid", referencedColumnName = "uid")
+	public UserPO getSalesman() {
+		return salesman;
+	}
+
+	public void setSalesman(UserPO salesman) {
+		this.salesman = salesman;
 	}
 
 	@Column(name = "orderId")

@@ -104,7 +104,8 @@
         {"key":"2", "value":"转卖"},
         {"key":"3", "value":"免责"},
         {"key":"4", "value":"欠款"}
-],
+    ],
+
     "errorCode": 0,
     "errorMsg": null
 }

@@ -1,6 +1,6 @@
 $(function(){
 
-    console.log("server config");
+    window.console && window.console.log && console.log("%cServer Config Ready 服务配置就绪", "color:#0a0; font-size:1em");
     
     config.intranet = true;
     
@@ -26,7 +26,7 @@ $(function(){
         config.library = 'http://192.168.5.22:5000/';
         config.communion = 'http://192.168.5.21/';
         config.server = 'http://192.168.5.21/';
-        config.media = 'http://192.168.5.40/';
+        config.media = 'http://192.168.5.21/';
         config.dmedia = 'http://static.dingtalk.com/media/';
 
     }

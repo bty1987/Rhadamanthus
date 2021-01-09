@@ -222,12 +222,33 @@ $(function () {
             return false;
         }
         
-        com.post(api.information.createPlan, options, function (res) {
-            com.showAlert(com.info, "计划创建成功!");
-            plan.modals.planModal.modal("hide");
-            searcher.doSearch();
-        });
-
+        var plans = [];
+        
+        com.post(api.information.existPlan, options, function(res){
+            plans = res.plans;
+        }, null, false);
+        
+        if(plans && plans.length != 0){
+            com.showSelection("该计划已经成功执行, 是否直接下载", {"下载": function(){
+                window.open(config.media + plans[0].resultFilepath);
+                com.closePopup();
+                plan.modals.planModal.modal("hide");
+            }, "创建": function(){
+                com.post(api.information.createPlan, options, function (res) {
+                    com.showAlert(com.info, "计划创建成功!");
+                    plan.modals.planModal.modal("hide");
+                    searcher.doSearch();
+                });
+            }, "取消": function(){
+                com.closePopup();
+            }})
+        }else{
+            com.post(api.information.createPlan, options, function (res) {
+                com.showAlert(com.info, "计划创建成功!");
+                plan.modals.planModal.modal("hide");
+                searcher.doSearch();
+            });
+        }
     }
 
     function cancel(v) {

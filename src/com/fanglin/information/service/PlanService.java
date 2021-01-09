@@ -15,6 +15,8 @@ public interface PlanService {
 
 	public PlanVO queryPlan(PlanVO planVO) throws FLException;
 
+	public List<PlanVO> existPlan(PlanVO planVO, int company) throws FLException;
+
 	public int createPlan(PlanVO planVO, String userId, int company) throws FLException, ParseException;
 
 	public int updatePlan(PlanVO PlanVO, String userId) throws FLException, ParseException;

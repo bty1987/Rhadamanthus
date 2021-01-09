@@ -51,24 +51,8 @@ $.extend(api, {customer: {
             args: ["buildArea", "freeArea", "totalArea", "innerArea"]
         }]
     },
-    pageCustomerOriginForDesign: {
-        url: "pageCustomerOriginForDesign.do",
-        type: "query",
-        tranargs: [{
-            result: "paging-data",
-            args: ["buildArea", "freeArea", "totalArea", "innerArea"]
-        }]
-    },
     pageCustomerOriginForAdvance: {
         url: "pageCustomerOriginForAdvance.do",
-        type: "query",
-        tranargs: [{
-            result: "paging-data",
-            args: ["buildArea", "freeArea", "totalArea", "innerArea"]
-        }]
-    },
-    pageCustomerOriginForCommunion: {
-        url: "pageCustomerOriginForCommunion.do",
         type: "query",
         tranargs: [{
             result: "paging-data",
@@ -99,6 +83,8 @@ $.extend(api, {customer: {
     
     queryCustomerRecord: {url:"queryCustomerRecord.do"},
     addCustomerRecord: {url:"addCustomerRecord.do"},
+
+    queryCustomerOriginFunction: {url:"queryCustomerOriginFunction.do"},
     
     pageVustomerByUnionId : {url : "pageVustomerByUnionId.do"},
     buildVustomerNet : {url : "buildVustomerNet.do"},

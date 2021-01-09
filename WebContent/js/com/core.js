@@ -418,6 +418,26 @@
         });
     },
     /**
+     * 选择窗口
+     * @param content 确认提示内容
+     * @param events 时间列表 , 格式为[{"事件名": 处理方法}]
+     */
+    showSelection: function(content, events){
+        
+        if(!events) return false;
+        
+        var index = 1;
+        var btns = [];
+        var options = {title: false, closeBtn: false, btn: btns};
+        
+        $.each(events, function(k, v){
+            btns.push(k);
+            options["btn"+index++] = v;
+        });
+        
+        layer.confirm(content, options);
+    },
+    /**
      * 提示信息
      * @param title 表头信息
      * @param contents 提示内容

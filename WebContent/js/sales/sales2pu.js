@@ -205,57 +205,23 @@ $(function () {
                         'data-postDis': v.postDis
                     });
                     var $h3 = $('<h3></h3>').addClass('oid');
-
-                    var propertyArr = [];
-                    $.each(pageConfig.propertyArr, function (pi, pv) {
-                        switch (pv) {
-                            case "goodsCategory":
-                                propertyArr.push(["商品品类:", v.goods.category, "grey", "category"]);
-                                break;
-                            case "color":
-                                propertyArr.push(["商品颜色:", v.color.name, "grey", "color"]);
-                                break;
-                            case "formatInfo":
-                                propertyArr.push(["商品规格:", v.format.info, "grey", "format"]);
-                                break;
-                            case "selling":
-                                propertyArr.push(["售价:", v.selling, "blue", "selling"]);
-                                break;
-                            case "disPrice":
-                                propertyArr.push(["折扣价:", v.disPrice, "blue", "disPrice"]);
-                                break;
-                            case "price":
-                                propertyArr.push(["折让价:", v.price, "blue", "price"]);
-                                break;
-                            case "num":
-                                propertyArr.push(["数量:", v.num, "blue", "num"]);
-                                break;
-                            case "xgnum":
-                                propertyArr.push(["出库余数:", v.xgnum, "blue xg", "xgnum"]);
-                                break;
-                            case "punum":
-                                propertyArr.push(["采购余数:", v.punum, "blue pu", "punum"]);
-                                break;
-                            case "total":
-                                propertyArr.push(["总价:", v.total, "blue", "total"]);
-                                break;
-                            case "rawCtype":
-                                propertyArr.push(["原结算方式:", v.rawCtype == 0 ? "底价" : "点位", "red", "rawCtype"]);
-                                break;
-                            case "rawCvalue":
-                                propertyArr.push(["原结算值:", v.rawCvalue, "blue", "rawCvalue"]);
-                                break;
-                            case "ctype":
-                                propertyArr.push(["结算方式:", v.ctype == 0 ? "底价" : "点位", "red", "ctype"]);
-                                break;
-                            case "cvalue":
-                                propertyArr.push(["结算值:", v.cvalue, "blue", "cvalue"]);
-                                break;
-                            case "comment":
-                                propertyArr.push(["备注:", v.comment, "grey"]);
-                                break;
-                        }
-                    });
+                    var propertyArr = [
+                        ["商品品类:", v.goods.category, "grey", "category"],
+                        ["商品颜色:", v.color.name, "grey", "color"],
+                        ["商品规格:", v.format.info, "grey", "format"],
+                        ["售价:", v.selling, "blue", "selling"],
+                        ["折扣价:", v.disPrice, "blue", "disPrice"],
+                        ["折让价:", v.price, "blue", "price"],
+                        ["数量:", v.num, "blue", "num"],
+                        ["出库余数:", v.xgnum, "blue xg", "xgnum"],
+                        ["采购余数:", v.punum, "blue pu", "punum"],
+                        ["总价:", v.total, "blue", "total"],
+                        ["原结算方式:", v.rawCtype == 0 ? "底价" : "点位", "red", "rawCtype"],
+                        ["原结算值:", v.rawCvalue, "blue", "rawCvalue"],
+                        ["结算方式:", v.ctype == 0 ? "底价" : "点位", "red", "ctype"],
+                        ["结算值:", v.cvalue, "blue", "cvalue"],
+                        ["备注:", v.comment, "grey", "comment"]
+                    ];
                     var $label = $('<label></label>').addClass('control-label').css({
                         'color': 'grey',
                         'font-size': '20px',
@@ -463,7 +429,6 @@ $(function () {
         com.post(api.sales.querySalesItemBySid, {
             "sales.sid": sid
         }, function (res) {
-
             initList.init('resultListItem', res.salesItems);
         }, null, false);
     }
@@ -524,4 +489,3 @@ $(function () {
 
     }
 });
-

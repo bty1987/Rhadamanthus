@@ -63,13 +63,15 @@ public class CustomerOriginVO implements Serializable {
 
 	private UserBaseVO designer;
 
+	private UserBaseVO salesman;
+
 	private String orderId;
 
 	public CustomerOriginVO() {
 		super();
 	}
 
-	public CustomerOriginVO(VillageVO village, UserBaseVO creater, UserBaseVO belonger, DepartmentVO department, DepartmentVO region, CustomerVO customer, HouseVO house, UserBaseVO designer) {
+	public CustomerOriginVO(VillageVO village, UserBaseVO creater, UserBaseVO belonger, DepartmentVO department, DepartmentVO region, CustomerVO customer, HouseVO house, UserBaseVO designer, UserBaseVO salesman) {
 		super();
 		this.village = village;
 		this.creater = creater;
@@ -79,6 +81,7 @@ public class CustomerOriginVO implements Serializable {
 		this.customer = customer;
 		this.house = house;
 		this.designer = designer;
+		this.salesman = salesman;
 	}
 
 	public Long getCsid() {
@@ -272,6 +275,14 @@ public class CustomerOriginVO implements Serializable {
 
 	public void setDesigner(UserBaseVO designer) {
 		this.designer = designer;
+	}
+
+	public UserBaseVO getSalesman() {
+		return salesman;
+	}
+
+	public void setSalesman(UserBaseVO salesman) {
+		this.salesman = salesman;
 	}
 
 	public String getOrderId() {

@@ -10,6 +10,10 @@
                 <span>项目管理(禅道)</span>
             </button>
                 
+            <button id="platformdocument" class="btn btn-inverse btn-margin" style="margin: 2px;">
+                <i class="icon-edit"></i>
+                <span>方林信息平台文档</span>
+            </button>
         </div>
     </div>
 
@@ -72,6 +76,11 @@
             <button id="updateQuotationForStatus" class="btn btn-danger" style="margin: 2px;">
                 <i class="icon-edit"></i>
                 <span>报价状态修改</span>
+            </button>
+            
+            <button id="addQuotationFunctionArea" class="btn btn-danger" style="margin: 2px;">
+                <i class="icon-edit"></i>
+                <span>报价添加功能区</span>
             </button>
         </div>
     </div>
@@ -676,6 +685,41 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" id="saveQuotationStatusBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="addQuotationFunctionAreaModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content col-md-12">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                    <h4 class="modal-title">报价添加功能区</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="quotationOfOrderId">装修单号</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="quotationOfOrderId" class="col-xs-10 col-sm-5 v_required"  maxlength='15' data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+
+                        <!--<div class="modal-functionArea-body clearfix"></div>-->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="quotationFunctionArea">功能区</label>
+                            <div class="col-sm-9">
+                                <select class="col-xs-10 col-sm-5 v_required" id="quotationFunctionArea" data-toggle="popover" data-trigger='manual'></select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveQuotationFunctionBtn" class="btn btn-primary">保存</button>
                     <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
                 </div>
             </div>

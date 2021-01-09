@@ -450,6 +450,7 @@ $(function () {
                         params["orderId"] = v.orderId;
                         params["no"] = v.no;
                         params["activityId"] = v.activityId;
+                        params["type"] = sales.pageType;
                         com.popup4page("#layerPopUp", "views/sales/sales4activity.html", "活动", '', function () {
                             salesSearcher.doSearch();
                         });

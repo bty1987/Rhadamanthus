@@ -39,6 +39,16 @@ public class SalesDeliveryItemPO implements Serializable {
 	public static final String COLUMN_GOODSNAME_STR = "goods.name";
 	
 	public static final String COLUMN_TRANERID_STR = "traner.userId";
+	
+	public static final String COLUMN_CREATETIME_STR = "createTime";
+	
+	public static final String COLUMN_TRANTIME_STR = "tranTime";
+	
+	public static final String COLUMN_CHECKTIME_STR = "checkTime";
+	
+	public static final String COLUMN_CONFIRMTIME_STR = "confirmTime";
+	
+	public static final String COLUMN_FINISHTIME_STR = "finishTime";
 
 	public static final short STATUS_INIT_INT = 0;
 
@@ -67,6 +77,8 @@ public class SalesDeliveryItemPO implements Serializable {
 	private Timestamp confirmTime;
 
 	private Timestamp finishTime;
+	
+	private Timestamp protranTime;
 
 	private UserPO traner;
 
@@ -84,7 +96,7 @@ public class SalesDeliveryItemPO implements Serializable {
 		super();
 	}
 
-	public SalesDeliveryItemPO(long sdiid, SalesPO sales, SalesItemPO salesItem, short status, Timestamp createTime, Timestamp tranTime, Timestamp checkTime, Timestamp confirmTime, Timestamp finishTime, UserPO traner, UserPO checker, UserPO confirmer, UserPO finisher, String comment, int company) {
+	public SalesDeliveryItemPO(long sdiid, SalesPO sales, SalesItemPO salesItem, short status, Timestamp createTime, Timestamp tranTime, Timestamp checkTime, Timestamp confirmTime, Timestamp finishTime, Timestamp protranTime, UserPO traner, UserPO checker, UserPO confirmer, UserPO finisher, String comment, int company) {
 		super();
 		this.sdiid = sdiid;
 		this.sales = sales;
@@ -95,6 +107,7 @@ public class SalesDeliveryItemPO implements Serializable {
 		this.checkTime = checkTime;
 		this.confirmTime = confirmTime;
 		this.finishTime = finishTime;
+		this.protranTime = protranTime;
 		this.traner = traner;
 		this.checker = checker;
 		this.confirmer = confirmer;
@@ -186,6 +199,15 @@ public class SalesDeliveryItemPO implements Serializable {
 
 	public void setFinishTime(Timestamp finishTime) {
 		this.finishTime = finishTime;
+	}
+
+	@Column(name = "protranTime")
+	public Timestamp getProtranTime() {
+		return protranTime;
+	}
+
+	public void setProtranTime(Timestamp protranTime) {
+		this.protranTime = protranTime;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

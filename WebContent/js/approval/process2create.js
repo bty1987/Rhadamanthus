@@ -72,12 +72,14 @@ jQuery(function ($) {
         process.referItems.validate.html("");
         com.focusPage(".validate").prop("checked", false).trigger("change");
         com.cleanItems(process.referItems);
+        process.updateArgs = null;
         
         com.closeTip();
     });
 
     var $referquery = com.focusPage("#referquery");
     var $referfilling = com.focusPage("#referfilling");
+    var $refercondition = com.focusPage("#refercondition");
     var $referother = com.focusPage("#referother");
     
     com.post(api.approval.queryProcessRefer, {}, function(res){
@@ -86,8 +88,8 @@ jQuery(function ($) {
         
         $.each(refers, function(i, v){
             
-            var $content = v.type == "query" ? $referquery : v.type == "filling" ? $referfilling : $referother;
-            var btncolor = v.type == "query" ? "btn-success" : v.type == "filling" ? "btn-primary" : "btn-warning";
+            var $content = v.type == "query" ? $referquery : v.type == "filling" ? $referfilling : v.type == "condition" ? $refercondition : $referother;
+            var btncolor = v.type == "query" ? "btn-success" : v.type == "filling" ? "btn-primary" : v.type == "condition" ? "btn-purple" : "btn-warning";
             
             var $p = $('<p></p>').addClass("col-xs-6").appendTo($content);
             var $btn = $('<button></button>').addClass("btn btn-sm referItem col-xs-12").addClass(btncolor).attr({"data-id": v.id, "data-name": v.name, "data-type": v.type}).appendTo($p);
@@ -110,7 +112,7 @@ jQuery(function ($) {
 
         if(flag){
             //更新
-            if(process.diffTypes.contains(args.type)){
+            if(process.diffTypes.contains(args.type) || args.type == "condition"){
                 com.focusPage("#formFiled .update").css("display", "block");
             }else{
                 drawValidate(args.type, com.focusPage("#updateBtn"+process.updateArgs.piid).parents("li").find("li b").eq(2).html());
@@ -128,7 +130,7 @@ jQuery(function ($) {
 
             com.focusPage("#formFiled .noUpdate").addClass("show");
 
-            if(process.diffTypes.contains(args.type)){
+            if(process.diffTypes.contains(args.type) || args.type == "condition"){
                 com.focusPage("#formFiled .show").css("display", "block");
             }else{
                 drawValidate(args.type, null);
@@ -139,7 +141,7 @@ jQuery(function ($) {
             process.referItems.name.val(args.name);
         }
 
-        if(["query", "filling", "upload"].contains(args.type)) com.focusPage("#formFiled .validate").css("display", "none");
+        if(["query", "filling", "upload", "condition"].contains(args.type)) com.focusPage("#formFiled .validate").css("display", "none");
         if(args.type != "select") com.focusPage("#formFiled .data").css("display", "none");
 
         process.args = args;
@@ -169,8 +171,13 @@ jQuery(function ($) {
             com.showAlert(com.warning, "控件已存在");
             return false;
         }
-        
+
         if(process.diffTypes.contains(type) && form != "field"){
+            com.showAlert(com.warning, "控件类型不符");
+            return false;
+        }
+
+        if(type == "condition" && form != "condition"){
             com.showAlert(com.warning, "控件类型不符");
             return false;
         }
@@ -298,10 +305,12 @@ jQuery(function ($) {
                 com.focusPage("#itemfield").empty();
                 com.focusPage("#itemitem").empty();
                 com.focusPage("#itemcomment").empty();
+                com.focusPage("#itemcondition").empty();
 
                 com.focusPage("#notfield").css("display", "block");
                 com.focusPage("#notitem").css("display", "block");
                 com.focusPage("#notcomment").css("display", "block");
+                com.focusPage("#notcondition").css("display", "block");
 
                 process.searcher.doSearch();
                 com.showAlert(com.info, "创建成功");

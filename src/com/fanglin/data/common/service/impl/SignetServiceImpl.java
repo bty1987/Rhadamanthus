@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fadada.signature.Signature;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.SignetDao;
 import com.fanglin.data.common.service.SignetService;
 import com.fanglin.data.common.vo.SignetVO;
 import com.fanglin.data.po.SignetPO;
+import com.fanglin.fadada.signature.Signature;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 

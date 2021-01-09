@@ -10,14 +10,13 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
-import com.fanglin.core.security.AESHelper;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.sales.dao.SalesDao;
 import com.fanglin.sales.po.SalesPO;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.DateUtil;
-import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
-import com.fanglin.utils.SystemConfig;
 
 @Repository("salesDao")
 public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
@@ -27,7 +26,7 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 	}
 
 	@Override
-	public List<SalesPO> pageSales(Paging paging, List<Filter> filters, int company, int uid) {
+	public List<SalesPO> pageSales(Paging paging, List<Filter> filters, int company, int uid) throws FLException {
 		
 		PagingQuery<SalesPO> query = pagingQuery(paging, SalesPO.class);
 
@@ -43,7 +42,7 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 	}
 
 	@Override
-	public List<SalesPO> pageSalesForAdvance(Paging paging, List<Filter> filters, int company) {
+	public List<SalesPO> pageSalesForAdvance(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		PagingQuery<SalesPO> query = pagingQuery(paging, SalesPO.class);
 
@@ -57,7 +56,7 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 	}
 
 	@Override
-	public List<SalesPO> pageSalesForBalance(Paging paging, List<Filter> filters, int company) {
+	public List<SalesPO> pageSalesForBalance(Paging paging, List<Filter> filters, int company) throws FLException {
 
 		PagingQuery<SalesPO> query = pagingQuery(paging, SalesPO.class);
 
@@ -75,7 +74,7 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 	}
 
 	@Override
-	public List<SalesPO> pageSalesForDompany(Paging paging, List<Filter> filters, int dompany) {
+	public List<SalesPO> pageSalesForDompany(Paging paging, List<Filter> filters, int dompany) throws FLException {
 
 		PagingQuery<SalesPO> query = pagingQuery(paging, SalesPO.class);
 
@@ -90,7 +89,7 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 	}
 
 	@Override
-	public List<SalesPO> pageSalesForBalanceByDompany(Paging paging, List<Filter> filters, int dompany) {
+	public List<SalesPO> pageSalesForBalanceByDompany(Paging paging, List<Filter> filters, int dompany) throws FLException {
 
 		PagingQuery<SalesPO> query = pagingQuery(paging, SalesPO.class);
 
@@ -108,7 +107,7 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 	}
 
 	@Override
-	public List<SalesPO> pageSalesForPompany(Paging paging, List<Filter> filters, int pompany) {
+	public List<SalesPO> pageSalesForPompany(Paging paging, List<Filter> filters, int pompany) throws FLException {
 
 		PagingQuery<SalesPO> query = pagingQuery(paging, SalesPO.class);
 
@@ -122,7 +121,7 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 	}
 
 	@Override
-	public List<SalesPO> pageSalesForBalanceByPompany(Paging paging, List<Filter> filters, int pompany) {
+	public List<SalesPO> pageSalesForBalanceByPompany(Paging paging, List<Filter> filters, int pompany) throws FLException {
 
 		PagingQuery<SalesPO> query = pagingQuery(paging, SalesPO.class);
 
@@ -140,7 +139,7 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 	}
 
 	@Override
-	public List<SalesPO> pageSalesForSupplier(Paging paging, List<Filter> filters, int company, int uid) {
+	public List<SalesPO> pageSalesForSupplier(Paging paging, List<Filter> filters, int company, int uid) throws FLException {
 
 		PagingQuery<SalesPO> query = pagingQuery(paging, SalesPO.class);
 
@@ -188,7 +187,7 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 		return count.intValue();
 	}
 	
-	private void queryFilterExcute(PagingQuery<SalesPO> query, List<Filter> filters) {
+	private void queryFilterExcute(PagingQuery<SalesPO> query, List<Filter> filters) throws FLException {
 		if (filters != null) {
 			for (Filter filter : filters) {
 
@@ -206,10 +205,14 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 					query.add(query.getCriterion(field, data, op));
 				} else if (SalesPO.COLUMN_BRAND_STR.equals(field)) {
 					query.add(query.getCriterion(SalesPO.COLUMN_BRAND_STR, data, op));
+				}else if (SalesPO.COLUMN_CATEGORY_STR.equals(field)) {
+						query.add(query.getCriterion(SalesPO.COLUMN_CATEGORY_STR, data, op));
 				} else if (SalesPO.COLUMN_BID_STR.equals(field)) {
 					query.add(query.getCriterion(SalesPO.COLUMN_BID_STR, Long.valueOf(data), op));
 				} else if (SalesPO.COLUMN_STATUS_STR.equals(field)) {
 					query.add(query.getCriterion(SalesPO.COLUMN_STATUS_STR, Short.valueOf(data), op));
+				}else if (SalesPO.COLUMN_FULLPAYSTATUS_STR.equals(field)) {
+						query.add(query.getCriterion(SalesPO.COLUMN_FULLPAYSTATUS_STR, Short.valueOf(data), op));
 				} else if ("instorer".equals(field)) {
 					query.add(query.getCriterion(SalesPO.COLUMN_INSTORERID_STR, data, op));
 				} else if ("salesman".equals(field)) {
@@ -217,11 +220,8 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 				}else if ("guider".equals(field)) {
 					query.add(query.getCriterion(SalesPO.COLUMN_GUIDERUSERID_STR, data, op));
 				} else if (SalesPO.COLUMN_DOMPANY_STR.equals(field)) {
-					try {
-						int cid = FormatUtil.decodeCompany(AESHelper.decrypt(filter.getData(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
-						query.add(query.getCriterion(SalesPO.COLUMN_DOMPANY_STR, cid, op));
-					} catch (Exception e) {
-					}
+					int cid = CompanyServiceImpl.decode(filter.getData());
+					query.add(query.getCriterion(SalesPO.COLUMN_DOMPANY_STR, cid, op));
 				} else if (SalesPO.COLUMN_FULLPAYTIME_RANGE_STR.equals(field)) {
 
 					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";

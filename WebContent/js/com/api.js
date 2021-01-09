@@ -23,7 +23,7 @@ var Api = function(){
     return {
         init: function(path){
 
-			console.log("path:" + path);
+            window.console && window.console.log && console.log("%cAPI Config Ready API配置就绪", "color:#0a0; font-size:1em");
 
             var dtd = $.Deferred();
 

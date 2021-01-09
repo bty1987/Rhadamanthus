@@ -447,7 +447,55 @@ var decorationUtils = {
 
         }
 
-    }, initPayment: function (decorationDetail, isDesign) {
+    }, decorationSalesActivityItemInfo: function (itempack,orderId, uiBtnMethod, config) {
+
+        com.post(api.sales.querySalesActivityItem, {"orderId": orderId}, function (res) {
+
+            var salesActivityItems  = res.salesActivityItems;
+
+            itempack.html("");
+
+            for (var i = 0; i < salesActivityItems.length; i++) {
+                var item = salesActivityItems[i];
+
+                var pricingSpan = $("<div></div>").addClass("col-md-6").css("margin", "5px 0px").attr("id", "pricing_" + item.saiid).prependTo(itempack);
+                var widgetBox = $("<div></div>").appendTo(pricingSpan);
+                var total = [0, 2, 4, 5, 6].indexOf(item.state) != -1 ? utils.accMul(item.money, item.num) : 0;
+
+                var widgetBody = $("<div class='module_activity_border'></div>").attr("data-type", item.type).attr("data-total", total).appendTo(widgetBox);
+                var widgetMain = $("<div></div>").addClass("widget-main no-padding").appendTo(widgetBody);
+
+                var widgetHeader = $("<div></div>").addClass("").attr("id", "widgetHeader_" + item.saiid).appendTo(widgetMain);
+                var widgetHeaderH5 = $("<h4></h4>").addClass("bigger lighter").css("padding-left", "12px").appendTo(widgetHeader).text(item.name );
+
+                var ul = $("<ul></ul>").addClass("list-unstyled fl-inline-list clearfix").css("padding-left", "12px").appendTo(widgetMain);
+
+                var nameLi = $("<li></li>").appendTo(ul);
+                var activityLi = $("<strong></strong>").text("活动名:").appendTo(nameLi);
+                var activitySpan = $("<span></span>").attr("id", "type_" + item.saiid).text(item.activity).appendTo(nameLi);
+                var activityNameLi = $("<li></li>").appendTo(ul);
+                var typeLi = $("<strong></strong>").text("类型:").appendTo(activityNameLi);
+                var typeSpan = $("<span></span>").attr("id", "type_" + item.saiid).text(config.salesActivityItemType[item.type]).appendTo(activityNameLi);
+                var stateLi = $("<li></li>").appendTo(ul);
+                var stateState = $("<strong></strong>").text("状态:").appendTo(stateLi);
+                var stateSpan = $("<span></span>").addClass("red").attr("id", "stateType_" + item.saiid).text(config.salesActivityItemState[item.state]).appendTo(stateLi);
+                var moneyLi = $("<li></li>").appendTo(ul);
+                var moneyState = $("<strong></strong>").text("金额:").appendTo(moneyLi);
+                var moneySpan = $("<span></span>").addClass("blue").attr("id", "money_" + item.saiid).text(item.money).appendTo(moneyLi);
+                var numLi = $("<li></li>").appendTo(ul);
+                var numState = $("<strong></strong>").text("数量:").appendTo(numLi);
+                var numSpan = $("<span></span>").addClass("blue").attr("id", "money_" + item.saiid).text(item.num).appendTo(numLi);
+                var totalLi = $("<li></li>").appendTo(ul);
+                var totalState = $("<strong></strong>").text("合计:").appendTo(totalLi);
+                var totalSpan = $("<span></span>").addClass("blue").attr("id", "total_" + item.saiid).text(utils.accMul(item.money, item.num)).appendTo(totalLi);
+
+                var uiPgDiv = $("<div></div>").addClass("ui-pg-div").css("padding-left", "8px").css("padding-bottom", "10px").appendTo(widgetBody);
+
+            }
+
+        })
+
+    },initPayment: function (decorationDetail, isDesign) {
 
         var totalMoney = 0;
         var receiveMoney = 0;

@@ -4,6 +4,7 @@
             <h3 class="col-xs-12 header smaller lighter blue">控件</h3>
             <div class="btn-toolbar" id="referquery"></div>
             <div class="btn-toolbar" id="referfilling"></div>
+            <div class="btn-toolbar" id="refercondition"></div>
             <div class="btn-toolbar" id="referother"></div>
         </div>
     </div>
@@ -65,6 +66,15 @@
                 <ul class="item-list fl-table-list ui-sortable" id="itemcomment"></ul>
             </div>
         </div>
+        <div class="col-sm-12 form-horizontal">
+            <h4 class="header smaller lighter blue">条件</h4>
+            <div class="" id="notcondition">
+                <p class="alert alert-info center">无条件信息</p>
+            </div>
+            <div>
+                <ul class="item-list fl-table-list ui-sortable" id="itemcondition"></ul>
+            </div>
+        </div>
     </div>
     
     <hr class="col-xs-11" />
@@ -106,6 +116,7 @@
                                 <option value="field">项目</option>
                                 <option value="item">详细</option>
                                 <option value="comment">备注</option>
+                                <option value="condition">条件</option>
                             </select>
                         </div>
                     </div>

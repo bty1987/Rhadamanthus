@@ -3,6 +3,7 @@ package com.fanglin.information.dao.impl;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -24,8 +25,7 @@ public class PlanDaoImpl extends DaoImpl<PlanPO> implements PlanDao {
 
 		PagingQuery<PlanPO> query = pagingQuery(paging, PlanPO.class);
 
-		query.add(query.getCriterion("company", (long) company, "eq"));
-
+		query.add(query.getCriterion("company", company, "eq"));
 		query.add(Restrictions.eq("creater.uid", uid));
 
 		queryFilterExecute(query, filters);
@@ -33,6 +33,12 @@ public class PlanDaoImpl extends DaoImpl<PlanPO> implements PlanDao {
 		query.desc("pid");
 
 		return query.list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<PlanPO> existPlan(long tid, String args, int company) {
+		return session().createCriteria(PlanPO.class).createAlias("task", "task").add(Restrictions.eq("task.tid", tid)).add(Restrictions.eq("args", args)).add(Restrictions.eq("status", PlanPO.STATUS_SUCCESS_INT)).add(Restrictions.eq("company", company)).addOrder(Order.desc("pid")).setMaxResults(1).list();
 	}
 
 	@Override
@@ -82,12 +88,18 @@ public class PlanDaoImpl extends DaoImpl<PlanPO> implements PlanDao {
 			String field = filter.getField();
 			String data = filter.getData();
 
-			if ("taskName".equals(field)) {
+			if ("planId".equals(field)) {
+				query.add(Restrictions.eq("pid", Long.parseLong(data)));
+			} else if ("taskId".equals(field)) {
 				query.add(Restrictions.eq("task.tid", Long.parseLong(data)));
-			} else if ("planTimeDateRange".equals(field)) {
-				query.timeranges("createTime", "createTime", data);
+			} else if ("taskName".equals(field)) {
+				query.add(Restrictions.eq("task.tid", Long.parseLong(data)));
+			} else if ("planargs".equals(field)) {
+				query.add(Restrictions.eq("planargs", data));
 			} else if ("status".equals(field)) {
 				query.add(query.getCriterion("status", Short.valueOf(data), filter.getOp()));
+			} else if ("planTimeDateRange".equals(field)) {
+				query.timeranges("createTime", "createTime", data);
 			}
 		}
 	}

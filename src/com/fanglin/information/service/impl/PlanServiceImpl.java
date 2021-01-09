@@ -95,6 +95,32 @@ public class PlanServiceImpl implements PlanService {
 	}
 
 	@Override
+	public List<PlanVO> existPlan(PlanVO planVO, int company) throws FLException {
+
+		TaskPO taskPO = taskDao.queryTaskByKeyWord(planVO.getTask().getKeyWord());
+
+		if (taskPO == null) {
+			throw new FLException(160028, "计划不存在");
+		}
+
+		List<PlanPO> planPOs = planDao.existPlan(taskPO.getTid(), planVO.getArgs(), company);
+		List<PlanVO> planVOs = new ArrayList<PlanVO>();
+
+		for (PlanPO planPO : planPOs) {
+
+			planVO = new PlanVO(new TaskVO(), new UserBaseVO());
+
+			BeanUtil.copyPropertie(planPO, planVO, Arrays.asList("task", "creater"));
+			BeanUtil.copyPropertie(planPO.getTask(), planVO.getTask());
+			BeanUtil.copyProperties(planPO.getCreater(), planVO.getCreater(), Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
+
+			planVOs.add(planVO);
+		}
+
+		return planVOs;
+	}
+
+	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int createPlan(PlanVO planVO, String userId, int company) throws FLException, ParseException {
 

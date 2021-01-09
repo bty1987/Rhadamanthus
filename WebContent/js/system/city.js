@@ -24,9 +24,15 @@ jQuery(function($) {
 	
 	city.cityItems.no = com.focusPage("#cityId");
 	city.cityItems.name = com.focusPage("#cityName");
+	city.cityItems.province = com.focusPage("#cityProvince");
 	city.cityItems.regionSel = com.focusPage("#regionSel");
 	
 	city.modal = com.focusPage("#cityModal");
+	
+	city.modal.on("hide.bs.modal", function () {
+        com.clearValidator();
+        com.closeTip();
+    });
 	
 	$.extend(com.validator, city.validator);
 	
@@ -62,6 +68,7 @@ jQuery(function($) {
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
             
             var propertyArr = [
+               ["省份:", v.province, "grey"],
                ["编号:", v.no, "grey"],
                ["所属大区:", v.region.name, "grey"],
            ];
@@ -78,7 +85,7 @@ jQuery(function($) {
             $liLine.append($h3).append($ulProperty);
             
             $btnEdit.click(function(){
-            	editCity(v.cid, v.no, v.name, v.region.rid);
+            	editCity(v.cid, v.no, v.name, v.province, v.region.rid);
             });
             
             $btnDel.click(function(){
@@ -124,7 +131,7 @@ jQuery(function($) {
 		city.modal.modal("show");   
     });
 	
-	function editCity(cid, no, name, regionId){
+	function editCity(cid, no, name, province, regionId){
 		com.clearValidator();
 		com.clearValidator("#cityId", true);
 		
@@ -133,6 +140,7 @@ jQuery(function($) {
 		city.cityItems.cid = cid;
 		city.cityItems.no.val(no).prop("disabled", true).css("display", "block");
 		city.cityItems.name.val(name);
+		city.cityItems.province.val(province);
 		city.cityItems.regionSel.val(regionId);
 		
 		city.modal.modal("show");
@@ -148,16 +156,17 @@ jQuery(function($) {
 	}
 
 	function saveData(){
-		
+
 		if(com.validate("cityModal") || city.repeatFlg){
 			return false;
 		}
-		
+
 		var url;
 		var options = {
 			'city.cid': city.cityItems.cid,
 			'city.no': city.cityItems.no.val(),
 			'city.name': city.cityItems.name.val(),
+			'city.province': city.cityItems.province.val(),
 			'city.region.rid': city.cityItems.regionSel.val()
 		};
 		
@@ -166,8 +175,9 @@ jQuery(function($) {
 		}else{
 			url = api.system.addCity;
 		}
-		
+
 		com.post(url, options, function(res){
+
 			searcher.doSearch();
 		});
 		
