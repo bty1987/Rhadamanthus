@@ -19,6 +19,8 @@ public interface UpgradeService {
 
 	public int addUpgrade(UpgradeVO upgradeVO) throws FLException;
 
+	public int updateUpgradeForStatus(UpgradeVO upgradeVO) throws FLException;
+
 	public int deleteUpgrade(UpgradeVO upgradeVO) throws FLException;
 
 }

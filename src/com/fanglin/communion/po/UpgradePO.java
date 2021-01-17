@@ -23,6 +23,12 @@ public class UpgradePO implements Serializable {
 
 	public static final String COLUMN_CREATETIME_STR = "createTime";
 
+	public static final short STATUS_INIT_INT = 0;
+
+	public static final short STATUS_ONLINE_INT = 1;
+
+	public static final short STATUS_OFFLINE_INT = 2;
+
 	private long ugid;
 
 	private String no;
@@ -36,6 +42,8 @@ public class UpgradePO implements Serializable {
 	private String path;
 
 	private long fileSize;
+
+	private short status;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -100,6 +108,15 @@ public class UpgradePO implements Serializable {
 
 	public void setFileSize(long fileSize) {
 		this.fileSize = fileSize;
+	}
+
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
 	}
 
 }

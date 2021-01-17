@@ -118,6 +118,7 @@ $.extend(api, {upgrade: {
     queryUpgrade :{url:"queryUpgrade.do"},
     matchUpgrade:{url:"matchUpgrade.do", intercept: true},
     addUpgrade:{url:"addUpgrade.do", server: "communion"},
+    updateUpgradeForStatus:{url:"updateUpgradeForStatus.do", server: "communion"},
     deleteUpgrade:{url:"deleteUpgrade.do", server: "communion"},
     pageVersion:{url:"pageVersion.do"},
     queryVersion:{url:"queryVersion.do"},

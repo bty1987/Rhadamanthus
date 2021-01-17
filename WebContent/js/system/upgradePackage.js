@@ -44,14 +44,17 @@ jQuery(function($) {
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-yellow').html('删除');
+            var $btnOn = $('<a></a>').addClass('btn btn-minier btn-success').html('上线');
+            var $btnOff = $('<a></a>').addClass('btn btn-minier btn-yellow').html('下线');
+            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
 
             var propertyArr = [ 
                 [ "最新版本:", v.no, "grey" ],
                 [ "适用版本:", v.trialno, "grey" ],
+                [ "状态:", v.status == 0 ? "初始" : v.status == 1 ? "上线" : "下线", "red"],
                 [ "创建时间:", v.createTime, "grey" ],
                 [ "版本说明:", v.content, "grey" ], 
-                [ "路径:", v.path, "grey" ]
+                [ "路径:", v.path, "grey" ],
             ];
 
             $.each(propertyArr, function(index, value) {
@@ -61,9 +64,27 @@ jQuery(function($) {
                 $liProperty.appendTo($ulProperty);
             });
 
-            $divBtnWrap.append($btnDel).appendTo($h3);
+            $divBtnWrap.append(v.status == 1 ? $btnOff : $btnOn).append($btnDel).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
+            
+            $btnOn.click(function(){
+                
+                com.showConfirm("是否上线版本: " + v.no, function() {
+                    com.post(api.upgrade.updateUpgradeForStatus, {"upgrade.ugid" : v.ugid, "upgrade.status": 1}, function() {
+                        seacher.doSearch();
+                    });
+                });
+            });
+            
+            $btnOff.click(function(){
+                
+                com.showConfirm("是否下线版本: " + v.no, function() {
+                    com.post(api.upgrade.updateUpgradeForStatus, {"upgrade.ugid" : v.ugid, "upgrade.status": 2}, function() {
+                        seacher.doSearch();
+                    });
+                });
+            });
 
             $btnDel.click(function() {
                 com.showConfirm("是否确定删除", function() {

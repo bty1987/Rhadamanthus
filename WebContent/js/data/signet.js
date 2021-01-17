@@ -144,7 +144,6 @@ jQuery(function ($) {
             $btnAuto.click(function(){
                 
                 com.post(api.data.signateAuto, {"signet.sid": v.sid}, function(res){
-                    console.log(res)
                     com.popup("自动签认证", res.signet.path);
                 });
             });
@@ -231,7 +230,6 @@ jQuery(function ($) {
     
     function showQRCode(url){
         
-        console.log(url);
         signet.items.qrcode.html("").qrcode({
             render: "canvas",
             width: 150,

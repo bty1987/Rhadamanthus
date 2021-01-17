@@ -672,5 +672,37 @@ var paymentUtils = {
             }
         });
         return propertyArr;
+    },
+
+
+    //获取验证码
+    getCode: function ($id, wallet, phone) {
+        paymentUtils.setTime($id, wallet.countdown);
+        $.ajax({
+            url: 'https://www.fanglinserver.com/queryVode + phone=' + phone,
+            type: "POST",
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                wallet.phoneCode = data;
+            }
+        });
+    },
+
+    //倒计时
+    setTime: function ($id, countdown) {
+        if (countdown == 0) {
+            com.focusPage($id).removeAttr("disabled");
+            com.focusPage($id).html("获取验证码");
+            countdown = 60;
+        } else {
+            com.focusPage($id).attr("disabled", true);
+            com.focusPage($id).html("重新发送(" + countdown + ")");
+            countdown--;
+            setTimeout(function() {
+                paymentUtils.setTime($id, countdown)
+            }, 1000)
+        }
+
     }
 };

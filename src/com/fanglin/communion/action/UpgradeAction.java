@@ -68,6 +68,18 @@ public class UpgradeAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateUpgradeForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateUpgradeForStatus() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		upgradeService.updateUpgradeForStatus(upgrade);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "deleteUpgrade", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteUpgrade() throws FLException {
 

@@ -1,7 +1,6 @@
 package com.fanglin.log.dao.impl;
 
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -14,73 +13,63 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.log.dao.LoginLogDao;
 import com.fanglin.log.po.LoginLogPO;
-import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Repository("loginLogDao")
-public class LoginLogDaoImpl  extends DaoImpl<LoginLogPO> implements LoginLogDao  {
+public class LoginLogDaoImpl extends DaoImpl<LoginLogPO> implements LoginLogDao {
 
 	@Override
-	public List<LoginLogPO> getPageLoginLog(Paging paging, List<Filter> filters){
-		
+	public List<LoginLogPO> getPageLoginLog(Paging paging, List<Filter> filters) {
+
 		PagingQuery<LoginLogPO> query = pagingQuery(paging, LoginLogPO.class);
-		
-		if(filters != null){
-			for(Filter fv: filters){
-				if("loginTime".equals(fv.getField())){
-					if(StringUtils.isNotEmpty(fv.getData())){
-						if("between".equals(fv.getOp())){
-							
-							String sTime = fv.getData().split("-")[0].replaceAll("/", "-") + " 00:00:00";
-				            String eTime = fv.getData().split("-")[1].replaceAll("/", "-") + " 23:59:59";
 
-				            Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-				            Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
+		queryFilterExcute(query, filters);
 
-				            Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-				            Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-							query.add(query.getCriterion("loginTime", sTimestamp, "ge"));
-							query.add(query.getCriterion("loginTime", eTimestamp, "le"));
-						}
-						else{
-							query.add(query.getCriterion("loginTime", fv.getData(), fv.getOp()));
-						}
-					}
-				}else if("loginId".equals(fv.getField())){
-					if(StringUtils.isNotEmpty(fv.getData())){
-						query.add(query.getCriterion("loginId",fv.getData(), fv.getOp()));
-					}
-				}else if("sourceIp".equals(fv.getField())){
-					if(StringUtils.isNotEmpty(fv.getData())){
-						query.add(query.getCriterion("sourceIp",fv.getData(), fv.getOp()));
-					}
-				}else if("successFlag".equals(fv.getField())){
-					if(StringUtils.isNotEmpty(fv.getData())){
-						query.add(query.getCriterion("successFlag",Integer.parseInt(fv.getData()), fv.getOp()));
-					}
-				}
-				
-			}
-		}
-		return query.desc("loginTime").list();
+		query.desc("loginTime");
+
+		return query.list();
 	}
 
 	@Override
-	public void delteBeforLoginTime(Timestamp beforeTime){
+	public void delteBeforLoginTime(Timestamp beforeTime) {
 
-		 Query query = session().createQuery("delete LoginLogPO l where l.loginTime=?");
-		 query.setTimestamp(0, beforeTime);
+		Query query = session().createQuery("delete LoginLogPO l where l.loginTime=?");
+		query.setTimestamp(0, beforeTime);
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<LoginLogPO> getLoginLogByLoginIdAndStartEndTime(String loginId,Timestamp start, Timestamp end){
-		
-		return session().createCriteria(LoginLogPO.class)
-				.add(Restrictions.eq("loginId", loginId))
-				.add(Restrictions.ge("loginTime", start))
-				.add(Restrictions.le("loginTime", end))
-				.addOrder(Order.desc("loginTime")).list();
+	public List<LoginLogPO> getLoginLogByLoginIdAndStartEndTime(String loginId, Timestamp start, Timestamp end) {
+
+		return session().createCriteria(LoginLogPO.class).add(Restrictions.eq("loginId", loginId)).add(Restrictions.ge("loginTime", start)).add(Restrictions.le("loginTime", end)).addOrder(Order.desc("loginTime")).list();
 	}
-	
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters == null)
+			return;
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if (!StringUtils.isNotEmpty(data))
+				continue;
+
+			if ("loginId".equals(field)) {
+				query.add(query.getCriterion("loginId", data, op));
+			} else if ("sourceIp".equals(field)) {
+				query.add(query.getCriterion("sourceIp", data, op));
+			} else if ("successFlag".equals(field)) {
+				query.add(query.getCriterion("successFlag", Integer.parseInt(data), op));
+			} else if ("loginTime".equals(field) && "between".equals(op)) {
+				query.timeranges("loginTime", data);
+			} else if ("loginTime".equals(field)) {
+				query.add(query.getCriterion("loginTime", data, op));
+			}
+		}
+	}
+
 }

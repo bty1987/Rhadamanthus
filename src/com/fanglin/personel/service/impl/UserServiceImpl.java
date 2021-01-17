@@ -667,12 +667,7 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 
-		try {
-			userPO.setCompany(FormatUtil.decodeCompany(AESHelper.decrypt(userVO.getCompanys(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"))));
-		} catch (Exception e) {
-			if (SystemConfig.getInt("multicompany", 0) == 0)
-				throw new FLException(230017, "公司获取失败");
-		}
+		userPO.setCompany(FormatUtil.decodeCompany(AESHelper.decrypt(userVO.getCompanys(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"))));
 
 		userPO.setRole(rolePO);
 		userPO.setExtranet(userVO.getExtranet());

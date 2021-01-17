@@ -82,7 +82,6 @@ public class UpgradeServiceImpl implements UpgradeService {
 
 					return upgradeNumber2.compareTo(upgradeNumber1);
 				}
-
 			});
 
 			UpgradePO upgradePO = upgradePOs.get(0);
@@ -106,18 +105,34 @@ public class UpgradeServiceImpl implements UpgradeService {
 		for (UpgradePO upgradePO : upgradePOs) {
 
 			if (upgradePO.getNo().equals(upgradeVO.getNo()) && upgradePO.getTrialno().equals(upgradeVO.getTrialno())) {
-
 				throw new FLException(300001, "版本已存在");
-
 			}
-
 		}
 
 		UpgradePO upgradePO = new UpgradePO();
 
 		BeanUtil.copyProperties(upgradeVO, upgradePO);
 
+		upgradePO.setStatus(UpgradePO.STATUS_INIT_INT);
+
 		upgradeDao.save(upgradePO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateUpgradeForStatus(UpgradeVO upgradeVO) throws FLException {
+
+		UpgradePO upgradePO = upgradeDao.get(upgradeVO.getUgid());
+
+		if (upgradePO == null) {
+			throw new FLException(300002, "版本不存在");
+		}
+
+		upgradePO.setStatus(upgradeVO.getStatus());
+
+		upgradeDao.update(upgradePO);
 
 		return 0;
 	}

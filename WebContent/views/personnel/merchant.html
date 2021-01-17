@@ -1,0 +1,74 @@
+<div class="row">
+	<div class="col-xs-12">
+		<div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+		<div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+		<div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+	</div>
+</div>
+
+<div class="modal fade" id="merchantAdvanceModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">员工信息配置</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="isLogin">可否登陆系统</label>
+                        <div class="col-sm-9">
+                            <input type="checkbox" id="isLogin" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
+                            <span class="lbl isOrNot"></span>
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+                    
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="extranet">外网权限</label>
+                        <div class="col-sm-9">
+                            <input type="checkbox" id="extranet" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
+                            <span class="lbl isOrNot"></span>
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+                    
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="roleSel">角色</label>
+                        <div class="col-sm-9">
+                            <select class="col-sm-7 col-xs-10 v_required" id="roleSel" data-toggle="popover" data-trigger='manual'></select>
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+                    
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="oldcompany">现在公司</label>
+                        <div class="col-sm-9">
+                            <input type="text"  id="oldcompany" class="col-sm-7 col-xs-10 v_required" data-toggle="popover" readonly="readonly" data-trigger='manual'/>
+                        </div>
+                    </div>
+
+                    <div class="space-4"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="company">公司修改为</label>
+                        <div class="col-sm-9">
+                            <select class="col-sm-7 col-xs-10 v_required" id="company" data-toggle="popover" data-trigger='manual' ></select>
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="advanceSaveBtn" class="btn btn-primary">提交</button>
+                <button type="button" id="advanceCancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+	$.loadScript(['js/personnel/merchant.js']);
+</script>

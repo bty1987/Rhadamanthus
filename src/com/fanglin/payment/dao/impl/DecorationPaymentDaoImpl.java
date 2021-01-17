@@ -12,8 +12,6 @@
 package com.fanglin.payment.dao.impl;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.Restrictions;
@@ -22,7 +20,6 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
-import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Repository("decorationPaymentDao")
@@ -141,18 +138,7 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 						query.alias("decorationReceipt", "decorationReceipt");
 						
 						if("between".equals(filter.getOp())){
-							
-							String sTime = filter.getData().split("-")[0].replaceAll("/", "-") + " 00:00:00";
-							String eTime = filter.getData().split("-")[1].replaceAll("/", "-") + " 23:59:59";
-							
-							Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-							Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-							
-							Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-							Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-							
-							query.add(query.getCriterion("decorationReceipt.collectTime", eTimestamp, "le"));
-							query.add(query.getCriterion("decorationReceipt.collectTime", sTimestamp, "ge"));
+							query.timeranges("decorationReceipt.collectTime", "decorationReceipt.collectTime", filter.getData());
 						}else{
 							query.add(query.getCriterion("decorationReceipt.collectTime", filter.getData(), filter.getOp()));
 						}
@@ -160,18 +146,7 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 						query.add(query.getCriterion("paymentStatus", Short.valueOf(filter.getData()), filter.getOp()));
 					}else if("createTime".equals(filter.getField())){
 						if("between".equals(filter.getOp())){
-							
-							String sTime = filter.getData().split("-")[0].replaceAll("/", "-") + " 00:00:00";
-							String eTime = filter.getData().split("-")[1].replaceAll("/", "-") + " 23:59:59";
-							
-							Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-							Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-							
-							Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-							Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-							
-							query.add(query.getCriterion("createTime", eTimestamp, "le"));
-							query.add(query.getCriterion("createTime", sTimestamp, "ge"));
+							query.timeranges("createTime", "createTime", filter.getData());
 						}else{
 							query.add(query.getCriterion("createTime", filter.getData(), filter.getOp()));
 						}

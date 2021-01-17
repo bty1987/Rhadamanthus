@@ -170,6 +170,11 @@ jQuery(function($) {
         com.clearValidator();
     });
     
+    management.changeSalesForStatusModal = com.focusPage("#changeSalesForStatusModal").on('hide.bs.modal', function(e){
+        com.cleanItems(management.items);
+        com.clearValidator();
+    });
+    
     management.checkoutConstructionScheduleModal = com.focusPage("#checkoutConstructionScheduleModal").on('hide.bs.modal', function(e){
         com.cleanItems(management.items);
         com.clearValidator();
@@ -330,6 +335,10 @@ jQuery(function($) {
     com.focusPage("#changeSalesForGrade").click(function(){
         
         management.changeSalesForGradeModal.modal("show");
+    });
+    
+    com.focusPage("#changeSalesForStatus").click(function(){
+        management.changeSalesForStatusModal.modal("show");
     });
     
     com.focusPage("#exportMaterialPayment").click(function(){
@@ -688,6 +697,36 @@ jQuery(function($) {
         management.changeSalesForGradeModal.modal("hide");
     });
     
+    com.focusPage("#changeSalesStatusBtn").click(function(){
+
+        if(com.validate("changeSalesForStatusModal")){
+            return false;
+        }
+
+        var options = {
+            "sales.no": com.focusPage("#salesNo").val()
+        }
+
+        var sales = null;
+
+        com.post(api.sales.querySalesByNo, options, function(res){
+            sales = res.sales;
+        }, null, false);
+
+        if(sales != null){
+
+            options["sales.sid"] = sales.sid;
+
+            com.post(api.sales.updateSalesForAdvance, options, function(res){
+                com.showAlert(com.info, "操作成功");
+            }, null, false);
+        }else{
+            com.showAlert(com.warning, "销售单不存在");
+        }
+
+        management.changeSalesForStatusModal.modal("hide");
+    });
+    
     com.focusPage("#save2checkconstructionschedule").click(function(){
         
         if(com.validate("checkoutConstructionScheduleModal")){
@@ -765,8 +804,8 @@ jQuery(function($) {
     
     com.focusPage("#platformdocument").bindClick(function(){
         
-        var url = window.location.href.indexOf("192.168") != -1 ? "http://192.168.5.21/" : "http://223.100.27.233:30082/";
+        var url = window.location.href.indexOf("192.168") != -1 ? "http://192.168.5.21/" : "http://223.100.27.233:30080/";
         
-        window.open(url + "/sphinx/index.html");
+        com.popup("平台文档", url + "/sphinx/index.html", null, null, false);
     });
 });

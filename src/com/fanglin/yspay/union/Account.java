@@ -301,17 +301,12 @@ public class Account implements Serializable {
 
 	public static void main(String[] args) throws FLException {
 
-		// Account account = new Account();
-
 		// System.out.println(new Account().query("baitianyu2").getName());
 		// System.out.println(new Account().apply("baitianyu3", "白添宇", "210106198702145837"));
 
 		// System.out.println(new Account().personal().bind("baitianyu", "13840085846"));
 		// System.out.println(new Account().personal().update("baitianyu", "13840085846"));
-		// System.out.println(new Account().personal().confirm("baitianyu", "13840085846", "032417"));
-
-		// System.out.println(account.freeze("baitianyu"));
-		// System.out.println(account.unfreeze("baitianyu"));
+		System.out.println(new Account().personal().confirm("baitianyu", "13840085846", "786686"));
 
 	}
 }

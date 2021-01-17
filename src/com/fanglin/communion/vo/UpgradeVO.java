@@ -23,6 +23,8 @@ public class UpgradeVO implements Serializable {
 
 	private Long fileSize;
 
+	private Short status;
+
 	public Long getUgid() {
 		return ugid;
 	}
@@ -78,6 +80,14 @@ public class UpgradeVO implements Serializable {
 
 	public void setFileSize(Long fileSize) {
 		this.fileSize = fileSize;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
 	}
 
 }

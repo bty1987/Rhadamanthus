@@ -15,7 +15,6 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.approval.dao.ApproverDao;
-import com.fanglin.approval.po.ApprovalPO;
 import com.fanglin.approval.po.ApproverPO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
@@ -53,8 +52,8 @@ public class ApproverDaoImpl extends DaoImpl<ApproverPO> implements ApproverDao 
 	}
 
 	@Override
-	public ApprovalPO queryApprovalByType(String userId, short type, int company) {
-		return (ApprovalPO) session().createCriteria(ApproverPO.class).createAlias("user", "user").add(Restrictions.eq("user.userId", userId)).add(Restrictions.eq("type", type)).add(Restrictions.eq("company", company)).uniqueResult();
+	public ApproverPO queryApprovalByType(String userId, short type, int company) {
+		return (ApproverPO) session().createCriteria(ApproverPO.class).createAlias("user", "user").add(Restrictions.eq("user.userId", userId)).add(Restrictions.eq("type", type)).add(Restrictions.eq("company", company)).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

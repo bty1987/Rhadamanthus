@@ -474,8 +474,6 @@ $(function () {
         if(!options) return false;
         
         options["balance.bid"] = salesBalance.items.supplier.val();
-        
-        console.log(options);
 
         com.post(api.balance.submitBalanceSales, options, function (res) {
             com.showAlert(com.info, "操作成功");

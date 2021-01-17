@@ -1,9 +1,7 @@
 package com.fanglin.sales.dao.impl;
 
 import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -15,7 +13,6 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.sales.dao.SalesDao;
 import com.fanglin.sales.po.SalesPO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
-import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Repository("salesDao")
@@ -223,47 +220,14 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 					int cid = CompanyServiceImpl.decode(filter.getData());
 					query.add(query.getCriterion(SalesPO.COLUMN_DOMPANY_STR, cid, op));
 				} else if (SalesPO.COLUMN_FULLPAYTIME_RANGE_STR.equals(field)) {
-
-					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-
-					query.add(query.getCriterion(SalesPO.COLUMN_FULLPAYTIME_STR, eTimestamp, "le"));
-					query.add(query.getCriterion(SalesPO.COLUMN_FULLPAYTIME_STR, sTimestamp, "ge"));
+					query.timeranges(SalesPO.COLUMN_FULLPAYTIME_RANGE_STR, filter.getData());
 				} else if (SalesPO.COLUMN_DEPT_STR.equals(field)) {
 					query.add(query.getCriterion(field, data, op));
 				} else if (SalesPO.COLUMN_FULLPAYTIME_STR.equals(field)) {
-
-					String sTime = data + " 00:00:00";
-					String eTime = data + " 23:59:59";
-
-					Date sdate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date edate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-					Timestamp stimestamp = DateUtil.getDateToTimestamp(sdate);
-					Timestamp etimestamp = DateUtil.getDateToTimestamp(edate);
-
-					query.add(query.getCriterion(field, stimestamp, "ge"));
-					query.add(query.getCriterion(field, etimestamp, "le"));
-				}
-				else if (SalesPO.COLUMN_CREATETIME_STR.equals(field)) {
-													
-					String sCreateTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-					String eCreateTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-					Date sCreatedate = DateUtil.parseDate(sCreateTime, "yyyy-MM-dd HH:mm:ss");
-					Date eCreatedate = DateUtil.parseDate(eCreateTime, "yyyy-MM-dd HH:mm:ss");
-
-					Timestamp sCreatetimestamp = DateUtil.getDateToTimestamp(sCreatedate);
-					Timestamp eCreatetimestamp = DateUtil.getDateToTimestamp(eCreatedate);
-
-					query.add(query.getCriterion(field, sCreatetimestamp, "ge"));
-					query.add(query.getCriterion(field, eCreatetimestamp, "le"));
+					query.timeranges(SalesPO.COLUMN_FULLPAYTIME_STR, filter.getData());
+				}else if (SalesPO.COLUMN_CREATETIME_STR.equals(field)) {
+					query.timeranges(SalesPO.COLUMN_CREATETIME_STR, filter.getData());
+				
 				}
 			}
 		}

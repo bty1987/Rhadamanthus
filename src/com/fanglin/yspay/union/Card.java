@@ -205,8 +205,6 @@ public class Card implements Serializable {
 
 		SimplePropertyPreFilter filter = new SimplePropertyPreFilter(Card.class, "appUserCode", "bankAccountNo", "mobile", "flag", "validTime", "cvv");
 
-		System.out.println(JSONObject.toJSONString(this, filter));
-
 		JSONObject response = base.handle(JSONObject.toJSONString(this, filter), "userBindingCardList", "/api/userBindingCardList");
 
 		JSONArray banks = response.getJSONArray("bankCardList");
@@ -252,12 +250,7 @@ public class Card implements Serializable {
 		return JSONObject.toJavaObject(response, Card.class);
 	}
 
-	public static void main(String[] args) throws FLException {
-
-		Card card = new Card();
-
-		System.out.println(card.personal().query("baitianyu"));
-		// System.out.println(card.personal().debit().bind("baitianyu", "6217850400009118404", "13840085846", "", ""));
+	public static void main(String[] args) {
 
 	}
 

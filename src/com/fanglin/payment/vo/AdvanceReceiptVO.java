@@ -43,6 +43,10 @@ public class AdvanceReceiptVO implements java.io.Serializable {
 	
 	private String comment;
 
+	public AdvanceReceiptVO() {
+		super();
+	}
+
 	public Long getArId() {
 		return arId;
 	}

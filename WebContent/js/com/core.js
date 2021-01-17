@@ -373,7 +373,7 @@
      */
     showTip: function (obj, msg, direc) {
         direc = direc ? ["", "top", "right", "bottom", "left"].indexOf(direc) : 1
-        layer.tips(msg, obj, {tips: [direc ,'#3595CC']});
+        layer.tips(msg, obj, {tips: [direc ,'#3595CC'], scrollbar: false});
     },
     showTips: function ($obj, msg, isTip) {
         $obj = com.focusPage($obj);
@@ -410,7 +410,7 @@
      * @param cancel 取消按钮回调方法
      */
     showConfirm: function(content, success, cancel){
-        layer.confirm(content, {title: false, closeBtn: false}, function(index){
+        layer.confirm(content, {title: false, resize: false, closeBtn: false}, function(index){
             layer.close(layer.index);
             success && success();
         }, function(index){
@@ -428,7 +428,7 @@
         
         var index = 1;
         var btns = [];
-        var options = {title: false, closeBtn: false, btn: btns};
+        var options = {title: false, resize: false, closeBtn: false, btn: btns};
         
         $.each(events, function(k, v){
             btns.push(k);
@@ -845,6 +845,7 @@
             zIndex: 2500,
             maxmin: false,
             move: false,
+            resize: false,
             success: function () {
                 if (success != null && typeof(success) == 'function') success();
             },
@@ -926,6 +927,7 @@
             area: ["512px", _height + "px"],
             maxmin: false,
             move: false,
+            resize: false,
             zIndex: 3500,
             success: function (layer, index) {
                 if(success && typeof(success) == 'function') success();
@@ -955,10 +957,13 @@
         
         if(prepare && typeof(prepare) == 'function') prepare();
         
-        var _holder = com.focusPage(holder);
+        if(holder && typeof(holder) == "object" && holder.length) holder = holder;
+        else if(holder && typeof(holder) == "object") holder = [holder];
+        else if(holder && typeof(holder) == "string") holder = com.focusPage(!/\W+/.test(holder) ? '#' + holder : holder);
+        else return false;
         
-        var _width = (_holder.width() > 521 ? _holder.width() + 50 : 521);
-        var _height = _holder.height() > $(window).height() * 0.8 ? $(window).height() * 0.8 : _holder.height() + 50;
+        var _width = (holder.width() > 521 ? holder.width() + 50 : 521);
+        var _height = holder.height() > $(window).height() * 0.8 ? $(window).height() * 0.8 : holder.height() + 50;
         
         var _id = "popup-model";
         
@@ -967,10 +972,11 @@
             type: 1,
             skin: 'layui-layer-lan',
             title: title,
-            content: _holder,
+            content: holder,
             area: [_width + "px", _height + "px"],
             maxmin: false,
             move: false,
+            resize: false,
             zIndex: 3000,
             success: function (layer, index) {
                 if(success && typeof(success) == 'function') success();
@@ -1018,6 +1024,7 @@
             area: _area,
             maxmin: false,
             move: false,
+            resize: false,
             zIndex: 2500,
             success: function (layer, index) {
                 _holder.load(url);
@@ -1233,7 +1240,8 @@
         
         var format = range ? "yyyy/MM/dd" : "yyyy-MM-dd";
         
-        if(type == "month") format = "yyyy-MM";
+        if(type == "month") format = "MM";
+        else if(type == "date") format = "dd";
         else if(type == "time") format = "HH:mm:ss";
         
         $.each(container, function(i, e){

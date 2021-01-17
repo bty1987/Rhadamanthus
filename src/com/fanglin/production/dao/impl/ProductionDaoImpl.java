@@ -1,7 +1,5 @@
 package com.fanglin.production.dao.impl;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -11,7 +9,6 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.production.dao.ProductionDao;
 import com.fanglin.production.po.ProductionPO;
-import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Repository("productionDao")
@@ -35,6 +32,11 @@ public class ProductionDaoImpl extends DaoImpl<ProductionPO> implements Producti
 		return query.list();
 	}
 
+	@Override
+	public ProductionPO queryProductionByPno(String pno) {
+		return (ProductionPO) session().createCriteria(ProductionPO.class).add(Restrictions.eq("pno", pno)).uniqueResult();
+	}
+
 	private void queryFilterExcute(PagingQuery<ProductionPO> query, List<Filter> filters) {
 
 		if (filters != null) {
@@ -45,7 +47,7 @@ public class ProductionDaoImpl extends DaoImpl<ProductionPO> implements Producti
 				String data = filter.getData();
 				String op = filter.getOp();
 				query.alias("house", "house");
-				
+
 				if (field.startsWith("design")) {
 					query.alias("designer", "designer");
 
@@ -93,8 +95,8 @@ public class ProductionDaoImpl extends DaoImpl<ProductionPO> implements Producti
 						query.alias("creater.dept", "createrDept");
 						query.alias("createrDept.fatherDept", "createrRegion");
 					}
-				} 
-				
+				}
+
 				if (ProductionPO.COLUMN_ORDERID_STR.equals(field)) {
 					query.add(query.getCriterion(ProductionPO.COLUMN_ORDERID_STR, data, op));
 				} else if (ProductionPO.COLUMN_STATUS_STR.equals(field)) {
@@ -116,44 +118,24 @@ public class ProductionDaoImpl extends DaoImpl<ProductionPO> implements Producti
 				} else if ("villageId".equals(field)) {
 					query.add(query.getCriterion("village.no", data, op));
 				} else if ("createTime".equals(field)) {
-					queryFilterTimeInfo(query, data,"createTime");
+					query.timeranges("createTime", data);
 				} else if ("designTime".equals(field)) {
-					queryFilterTimeInfo(query, data,"designTime");
+					query.timeranges("designTime", data);
 				} else if ("divideTime".equals(field)) {
-					queryFilterTimeInfo(query, data,"divideTime");
+					query.timeranges("divideTime", data);
 				} else if ("storeTime".equals(field)) {
-					queryFilterTimeInfo(query, data,"storeTime");
+					query.timeranges("storeTime", data);
 				} else if ("planTime".equals(field)) {
-					queryFilterTimeInfo(query, data,"planTime");
+					query.timeranges("planTime", data);
 				} else if ("tranTime".equals(field)) {
-					queryFilterTimeInfo(query, data,"tranTime");
+					query.timeranges("tranTime", data);
 				} else if ("mountTime".equals(field)) {
-					queryFilterTimeInfo(query, data,"mountTime");
+					query.timeranges("mountTime", data);
 				} else if ("finishTime".equals(field)) {
-					queryFilterTimeInfo(query, data,"finishTime");
-				}   
+					query.timeranges("finishTime", data);
+				}
 			}
 		}
-	}
-	
-	private void queryFilterTimeInfo(PagingQuery<ProductionPO> query, String data ,String timeType) {
-
-		String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-		String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-		Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-		Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-		Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-		Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-
-		query.add(query.getCriterion(timeType, eTimestamp, "le"));
-		query.add(query.getCriterion(timeType, sTimestamp, "ge"));
-	}
-
-	@Override
-	public ProductionPO queryProductionByPno(String pno) {
-		return (ProductionPO) session().createCriteria(ProductionPO.class).add(Restrictions.eq("pno", pno)).uniqueResult();
 	}
 
 }

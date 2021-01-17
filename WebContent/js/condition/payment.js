@@ -215,5 +215,21 @@ Condition.addupRule("payment", {
             keyPath: "key",
             valuePath: "value"
         }
+    },
+    "wallet-belonger-name": {
+        label: "归属人",
+        type: "autofill",
+        submitConfig: {
+            name: "belonger",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {"user.status":"0" },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
     }
 });

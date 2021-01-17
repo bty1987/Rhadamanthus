@@ -7,8 +7,6 @@ jQuery(function ($) {
     var displayFunc  = (function(){
         var renderList = function(tableId, listData){
             
-            console.log(listData)
-            
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
             

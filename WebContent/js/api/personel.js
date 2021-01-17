@@ -82,6 +82,12 @@ $.extend(api, {personel: {
 	addDutment: {url: "addDutment.do", server: "communion"},
 	updateDutment: {url: "updateDutment.do", server: "communion"},
 	deleteDutment: {url: "deleteDutment.do", server: "communion"},
-	updateUserExperience: {url: "updateUserExperience.do", server: "communion"}
+	updateUserExperience: {url: "updateUserExperience.do", server: "communion"},
+	
+	pageAvenger: {url: "pageAvenger.do"},
+    queryAvengerByPinyin: {url: "queryAvengerByPinyin.do"},
+    
+    pageMerchant: {url: "pageMerchant.do"},
+    queryMerchantByPinyin: {url: "queryMerchantByPinyin.do"},
 
 }});

@@ -190,8 +190,6 @@ $(function(){
             options["task.tid"] =  task.taskItems.tid;
         }
         
-        console.log(options);
-
         com.post(url, options, function(){
             taskSeacher.doSearch();
             task.modals.addTaskModal.modal("hide");

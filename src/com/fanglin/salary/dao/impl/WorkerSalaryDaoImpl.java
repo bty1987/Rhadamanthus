@@ -2,7 +2,6 @@ package com.fanglin.salary.dao.impl;
 
 import java.math.BigInteger;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -12,7 +11,6 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.salary.dao.WorkerSalaryDao;
 import com.fanglin.salary.po.WorkerSalaryPO;
-import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Repository("workerSalaryDao")
@@ -104,31 +102,9 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 			} else if ("endTime".equals(filet)) {
 				query.add(Restrictions.le("createTime", Timestamp.valueOf(data)));
 			} else if ("approveTime".equals(filter.getField())) {
-
-				String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-				String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-				Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-				Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-				Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-				Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-
-				query.add(query.getCriterion(WorkerSalaryPO.COLUMN_APPROVETIME_STR, eTimestamp, "le"));
-				query.add(query.getCriterion(WorkerSalaryPO.COLUMN_APPROVETIME_STR, sTimestamp, "ge"));
+				query.timeranges(WorkerSalaryPO.COLUMN_APPROVETIME_STR, data);
 			} else if ("createTime".equals(filter.getField())) {
-
-				String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-				String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-				Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-				Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-				Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-				Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-
-				query.add(query.getCriterion(WorkerSalaryPO.COLUMN_CREATETIME_STR, eTimestamp, "le"));
-				query.add(query.getCriterion(WorkerSalaryPO.COLUMN_CREATETIME_STR, sTimestamp, "ge"));
+				query.timeranges(WorkerSalaryPO.COLUMN_CREATETIME_STR, data);
 			}
 		}
 	}

@@ -541,8 +541,6 @@ jQuery(function($) {
         
         var cpitems = role.roleItems.chainList.find('input[type="checkbox"]:checked');
         
-        console.log(cpitems);
-        
         if(cpitems.length == 0){
             options["cpids"] = [];
         }else{

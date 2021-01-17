@@ -2,8 +2,6 @@ package com.fanglin.payment.dao.impl;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import com.alibaba.fastjson.JSONArray;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.payment.dao.SalesPaymentDao;
 import com.fanglin.payment.po.SalesPaymentPO;
@@ -134,18 +131,7 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 					query.alias("salesReceipt","salesReceipt");
 					
 					if("between".equals(filter.getOp())){
-						
-						String sTime = filter.getData().split("-")[0].replaceAll("/", "-") + " 00:00:00";
-						String eTime = filter.getData().split("-")[1].replaceAll("/", "-") + " 23:59:59";
-						
-						Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-						Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-						
-						Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-						Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-						
-						query.add(query.getCriterion(SalesPaymentPO.COLUMN_COLLECTTIME_STR, eTimestamp, "le"));
-						query.add(query.getCriterion(SalesPaymentPO.COLUMN_COLLECTTIME_STR, sTimestamp, "ge"));
+						query.timeranges(SalesPaymentPO.COLUMN_COLLECTTIME_STR, SalesPaymentPO.COLUMN_COLLECTTIME_STR, filter.getData());
 					}else{
 						query.add(query.getCriterion(SalesPaymentPO.COLUMN_COLLECTTIME_STR, filter.getData(), filter.getOp()));
 					}
@@ -154,18 +140,7 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 					query.alias("salesReceipt","salesReceipt");
 					
 					if("between".equals(filter.getOp())){
-						
-						String sTime = filter.getData().split("-")[0].replaceAll("/", "-") + " 00:00:00";
-						String eTime = filter.getData().split("-")[1].replaceAll("/", "-") + " 23:59:59";
-						
-						Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-						Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-						
-						Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-						Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-						
-						query.add(query.getCriterion(SalesPaymentPO.COLUMN_CONFIRMTIME_STR, eTimestamp, "le"));
-						query.add(query.getCriterion(SalesPaymentPO.COLUMN_CONFIRMTIME_STR, sTimestamp, "ge"));
+						query.timeranges(SalesPaymentPO.COLUMN_CONFIRMTIME_STR, SalesPaymentPO.COLUMN_CONFIRMTIME_STR, filter.getData());
 					}else{
 						query.add(query.getCriterion(SalesPaymentPO.COLUMN_CONFIRMTIME_STR, filter.getData(), filter.getOp()));
 					}

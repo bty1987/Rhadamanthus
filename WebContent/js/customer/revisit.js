@@ -152,7 +152,6 @@ $(function () {
                 "revisit.gladness": revisits.items.gladness.val(),
                 "revisit.content" : revisits.items.content.val()
             }
-        	console.log(options);
             com.post(api.customer.visitRevisit ,options ,function(res){
                 com.showAlert(com.info, "操作成功");
                 seacher.doSearch();

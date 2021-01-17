@@ -393,7 +393,7 @@ $.extend(api, {
         updateSalesDeliveryItem:{url:"updateSalesDeliveryItem.do",},
 
         addSalesPicture:{url:"addSalesPicture.do"},
-        querySalesPicutre:{url:"querySalesPicutre.do"},
+        querySalesPicture:{url:"querySalesPicture.do"},
         deleteSalesPicture:{url:"deleteSalesPicture.do"},
         
     }

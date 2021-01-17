@@ -104,6 +104,10 @@ public class MaterialPaymentPO implements java.io.Serializable {
 	
 	private int company;
 	
+	public MaterialPaymentPO() {
+		super();
+	}
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "mpId")

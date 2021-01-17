@@ -536,5 +536,79 @@ $.extend(api, {payment: {
         }]
     },
 
-	queryPaymentFunction: {url: "queryPaymentFunction.do"}
+	queryPaymentFunction: {url: "queryPaymentFunction.do"},
+	
+	pageWallet: {url: "pageWallet.do",
+		type: "query",
+		tranargs: [{
+			result: "paging-data",
+			args: ["balance", "amount"]
+		}]
+	},
+	queryWallet: {url: "queryWallet.do",
+		type: "query",
+		tranargs: [{
+			result: "wallet",
+			args: ["balance", "amount"]
+		}]
+	},
+	applyWallet: {url: "applyWallet.do"},
+	bindWallet: {url: "bindWallet.do"},
+	updateWallet: {url: "updateWallet.do"},
+	confirmWallet: {url: "confirmWallet.do"},
+	freezeWallet: {url: "freezeWallet.do"},
+	unfreezeWallet: {url: "unfreezeWallet.do"},
+	consumeWallet: {url: "consumeWallet.do",
+		type: "update",
+		tranargs: {
+			args: ["wallet.amount"]
+		}
+	},
+	rechargeWallet: {url: "rechargeWallet.do",
+		type: "update",
+		tranargs: {
+			args: ["wallet.amount"]
+		}
+	},
+	withdrawWallet: {url: "withdrawWallet.do",
+		type: "update",
+		tranargs: {
+			args: ["wallet.amount"]
+		}
+	},
+	consentWallet: {url: "consentWallet.do"},
+	transferWallet: {url: "transferWallet.do",
+		type: "update",
+		tranargs: {
+			args: ["wallet.amount"]
+		}
+	},
+	approveWallet: {url: "approveWallet.do"},
+	
+	queryWalletard: {url: "queryWalletard.do"},
+	bindWalletard: {url: "bindWalletard.do"},
+	confirmWalletard: {url: "confirmWalletard.do"},
+	unbindWalletard: {url: "unbindWalletard.do"},
+	deleteWalletard: {url: "deleteWalletard.do"},
+
+	pageWalletran: {
+		url: "pageWalletran.do",
+		type: "query",
+		tranargs: [{
+			result: "paging-data",
+			args: ["amount"]
+		}]
+	},
+	queryWalletran: {url: "queryWalletran.do",
+		type: "query",
+		tranargs: [{
+			result: "walletrans",
+			args: ["amount"]
+		}]
+	},
+
+	queryWalletres: {url: "queryWalletres.do"},
+	uploadWalletres: {url: "uploadWalletres.do"},
+	deleteWalletres: {url: "deleteWalletres.do"}
+	
 }});

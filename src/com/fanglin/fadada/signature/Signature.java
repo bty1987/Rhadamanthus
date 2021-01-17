@@ -296,9 +296,6 @@ public class Signature {
 
 		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
 
-		System.out.println(signno);
-		System.out.println(path);
-
 		String result = base.invokeaddSignature(signno, FddEncryptTool.ImageToBase64ByOnline(path));
 
 		System.out.println(result);
@@ -353,9 +350,6 @@ public class Signature {
 		String font_type = "4";
 		String paramter = params.toJSONString();
 		String dynamic_tables = tables == null ? "" : tables.toJSONString();
-
-		System.out.println(paramter);
-		System.out.println(dynamic_tables);
 
 		String result = base.invokeGenerateContract(contract.templateCode(), contract.contentCode(), "", font_size, font_type, paramter, dynamic_tables);
 

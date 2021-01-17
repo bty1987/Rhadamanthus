@@ -36,6 +36,10 @@ public class PaymentFunctionPO implements Serializable {
 
 	private short sort;
 
+	public PaymentFunctionPO() {
+		super();
+	}
+
 	@Id
 	@GeneratedValue
 	@Column(name = "pfid")

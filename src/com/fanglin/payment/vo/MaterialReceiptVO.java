@@ -52,6 +52,10 @@ public class MaterialReceiptVO implements java.io.Serializable {
 	
 	private String comment;
 
+	public MaterialReceiptVO() {
+		super();
+	}
+
 	public Long getMrId() {
 		return mrId;
 	}

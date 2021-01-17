@@ -1,7 +1,5 @@
 package com.fanglin.sales.dao.impl;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -12,7 +10,6 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.sales.dao.SalesDeliveryItemDao;
 import com.fanglin.sales.po.SalesDeliveryItemPO;
 import com.fanglin.sales.po.SalesPO;
-import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Repository("salesDeliveryItemDao")
@@ -80,74 +77,16 @@ public class SalesDeliveryItemDaoImpl extends DaoImpl<SalesDeliveryItemPO> imple
 			} else if (SalesDeliveryItemPO.COLUMN_SALESCATEGROY_STR.equals(field)) {
 				query.add(query.getCriterion(SalesDeliveryItemPO.COLUMN_SALESCATEGROY_STR, data, op));
 			}else if (SalesDeliveryItemPO.COLUMN_CREATETIME_STR.equals(field)) {
-
-				String sCreateTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-				String eCreateTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-				Date sCreatedate = DateUtil.parseDate(sCreateTime, "yyyy-MM-dd HH:mm:ss");
-				Date eCreatedate = DateUtil.parseDate(eCreateTime, "yyyy-MM-dd HH:mm:ss");
-
-				Timestamp sCreatetimestamp = DateUtil.getDateToTimestamp(sCreatedate);
-				Timestamp eCreatetimestamp = DateUtil.getDateToTimestamp(eCreatedate);
-
-				query.add(query.getCriterion(field, sCreatetimestamp, "ge"));
-				query.add(query.getCriterion(field, eCreatetimestamp, "le"));
-			}
-			else if (SalesDeliveryItemPO.COLUMN_TRANTIME_STR.equals(field)) {
-
-				String sCreateTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-				String eCreateTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-				Date sCreatedate = DateUtil.parseDate(sCreateTime, "yyyy-MM-dd HH:mm:ss");
-				Date eCreatedate = DateUtil.parseDate(eCreateTime, "yyyy-MM-dd HH:mm:ss");
-
-				Timestamp sCreatetimestamp = DateUtil.getDateToTimestamp(sCreatedate);
-				Timestamp eCreatetimestamp = DateUtil.getDateToTimestamp(eCreatedate);
-
-				query.add(query.getCriterion(field, sCreatetimestamp, "ge"));
-				query.add(query.getCriterion(field, eCreatetimestamp, "le"));
-			}
-			else if (SalesDeliveryItemPO.COLUMN_CHECKTIME_STR.equals(field)) {
-
-				String sCreateTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-				String eCreateTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-				Date sCreatedate = DateUtil.parseDate(sCreateTime, "yyyy-MM-dd HH:mm:ss");
-				Date eCreatedate = DateUtil.parseDate(eCreateTime, "yyyy-MM-dd HH:mm:ss");
-
-				Timestamp sCreatetimestamp = DateUtil.getDateToTimestamp(sCreatedate);
-				Timestamp eCreatetimestamp = DateUtil.getDateToTimestamp(eCreatedate);
-
-				query.add(query.getCriterion(field, sCreatetimestamp, "ge"));
-				query.add(query.getCriterion(field, eCreatetimestamp, "le"));
+				query.timeranges(SalesDeliveryItemPO.COLUMN_CREATETIME_STR, filter.getData());
+			}else if (SalesDeliveryItemPO.COLUMN_TRANTIME_STR.equals(field)) {
+				query.timeranges(SalesDeliveryItemPO.COLUMN_TRANTIME_STR, filter.getData());
+			}else if (SalesDeliveryItemPO.COLUMN_CHECKTIME_STR.equals(field)) {
+				query.timeranges(SalesDeliveryItemPO.COLUMN_CHECKTIME_STR, filter.getData());
 			}else if (SalesDeliveryItemPO.COLUMN_CONFIRMTIME_STR.equals(field)) {
-
-				String sCreateTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-				String eCreateTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-				Date sCreatedate = DateUtil.parseDate(sCreateTime, "yyyy-MM-dd HH:mm:ss");
-				Date eCreatedate = DateUtil.parseDate(eCreateTime, "yyyy-MM-dd HH:mm:ss");
-
-				Timestamp sCreatetimestamp = DateUtil.getDateToTimestamp(sCreatedate);
-				Timestamp eCreatetimestamp = DateUtil.getDateToTimestamp(eCreatedate);
-
-				query.add(query.getCriterion(field, sCreatetimestamp, "ge"));
-				query.add(query.getCriterion(field, eCreatetimestamp, "le"));
+				query.timeranges(SalesDeliveryItemPO.COLUMN_CONFIRMTIME_STR, filter.getData());
 			}else if (SalesDeliveryItemPO.COLUMN_FINISHTIME_STR.equals(field)) {
-
-				String sCreateTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-				String eCreateTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-				Date sCreatedate = DateUtil.parseDate(sCreateTime, "yyyy-MM-dd HH:mm:ss");
-				Date eCreatedate = DateUtil.parseDate(eCreateTime, "yyyy-MM-dd HH:mm:ss");
-
-				Timestamp sCreatetimestamp = DateUtil.getDateToTimestamp(sCreatedate);
-				Timestamp eCreatetimestamp = DateUtil.getDateToTimestamp(eCreatedate);
-
-				query.add(query.getCriterion(field, sCreatetimestamp, "ge"));
-				query.add(query.getCriterion(field, eCreatetimestamp, "le"));
-			}
-			else if (SalesDeliveryItemPO.COLUMN_GOODSNAME_STR.equals(field)) {
+				query.timeranges(SalesDeliveryItemPO.COLUMN_FINISHTIME_STR, filter.getData());
+			}else if (SalesDeliveryItemPO.COLUMN_GOODSNAME_STR.equals(field)) {
 				query.alias("salesItem", "salesItem");
 				query.alias("salesItem.goods", "goods");
 				query.add(query.getCriterion(SalesDeliveryItemPO.COLUMN_GOODSNAME_STR, data, op));

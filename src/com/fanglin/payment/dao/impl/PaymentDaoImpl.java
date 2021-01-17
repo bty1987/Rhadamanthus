@@ -9,8 +9,6 @@
 
 package com.fanglin.payment.dao.impl;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -20,7 +18,6 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.dao.PaymentDao;
 import com.fanglin.payment.po.PaymentPO;
-import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Repository("paymentDao")
@@ -79,18 +76,7 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 				} else if("orderId".equals(filter.getField())){
 					query.add(query.getCriterion("orderId", filter));
 				} else if("collectTime".equals(filter.getField())){
-					
-					String sTime = filter.getData().split("-")[0].replaceAll("/", "-") + " 00:00:00";
-					String eTime = filter.getData().split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-
-					query.add(query.getCriterion("advanceReceipt.collectTime", eTimestamp, "le"));
-					query.add(query.getCriterion("advanceReceipt.collectTime", sTimestamp, "ge"));
+					query.timeranges("advanceReceipt.collectTime", "advanceReceipt.collectTime", filter.getData());
 				} else if("status".equals(filter.getField())){
 					query.add(query.getCriterion("status", Short.valueOf(filter.getData()), filter.getOp()));
 				}

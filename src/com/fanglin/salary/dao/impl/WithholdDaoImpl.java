@@ -1,7 +1,5 @@
 package com.fanglin.salary.dao.impl;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -11,7 +9,6 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.salary.dao.WithholdDao;
 import com.fanglin.salary.po.WithholdPO;
-import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Repository("WithholdDao")
@@ -34,7 +31,7 @@ public class WithholdDaoImpl extends DaoImpl<WithholdPO> implements WithholdDao 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<WithholdPO> queryWithhold(long ident, short type) {
-		return session().createCriteria(WithholdPO.class). add(Restrictions.eq("ident", ident)). add(Restrictions.eq(WithholdPO.CHECKUP_TYPE_SHORT, type)) .list();
+		return session().createCriteria(WithholdPO.class).add(Restrictions.eq("ident", ident)).add(Restrictions.eq(WithholdPO.CHECKUP_TYPE_SHORT, type)).list();
 	}
 
 	private void queryFilterExcuteForWorker(PagingQuery<?> query, List<Filter> filters) {
@@ -58,31 +55,9 @@ public class WithholdDaoImpl extends DaoImpl<WithholdPO> implements WithholdDao 
 			} else if ("status".equals(filet)) {
 				query.add(query.getCriterion(WithholdPO.COLUMN_STATUS_STR, Short.parseShort(data), op));
 			} else if ("operateTime".equals(filter.getField())) {
-
-				String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-				String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-				Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-				Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-				Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-				Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-
-				query.add(query.getCriterion(WithholdPO.COLUMN_OPERATETIME_STR, eTimestamp, "le"));
-				query.add(query.getCriterion(WithholdPO.COLUMN_OPERATETIME_STR, sTimestamp, "ge"));
+				query.timeranges(WithholdPO.COLUMN_OPERATETIME_STR, data);
 			} else if ("createTime".equals(filter.getField())) {
-
-				String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-				String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-				Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-				Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-				Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-				Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-
-				query.add(query.getCriterion(WithholdPO.COLUMN_CREATETIME_STR, eTimestamp, "le"));
-				query.add(query.getCriterion(WithholdPO.COLUMN_CREATETIME_STR, sTimestamp, "ge"));
+				query.timeranges(WithholdPO.COLUMN_CREATETIME_STR, data);
 			}
 		}
 	}

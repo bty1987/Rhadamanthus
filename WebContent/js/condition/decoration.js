@@ -475,15 +475,9 @@ Condition.addupRule("decoration", {
             validate: null
         },
         dataSource: {
-            url: null,
-            postData: null,
-            listPath: [
-                {"key":"0", "value":"初始"},
-                {"key":"1", "value":"终身"},
-                {"key":"2", "value":"转卖"},
-                {"key":"3", "value":"免责"},
-                {"key":"4", "value":"欠款"}
-            ],
+            url: api.ds.decoration,
+            postData: {"timestamp": new Date().getTime()},
+            listPath: "repairStatus",
             keyPath: "key",
             valuePath: "value"
         }

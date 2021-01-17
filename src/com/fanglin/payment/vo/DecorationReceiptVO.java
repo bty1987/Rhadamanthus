@@ -52,6 +52,10 @@ public class DecorationReceiptVO implements java.io.Serializable {
 	
 	private String comment;
 
+	public DecorationReceiptVO() {
+		super();
+	}
+
 	public Long getDrId() {
 		return drId;
 	}
