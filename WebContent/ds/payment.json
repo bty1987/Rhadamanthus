@@ -131,6 +131,39 @@
 		{"key":"3","value":"失效"},
 		{"key":"4","value":"已用"}
 	],
+	"walletType":[
+		{"key":"0","value":"公司"},
+		{"key":"1","value":"厂商"},
+		{"key":"2","value":"员工"}
+	],
+	"walletStatus":[
+		{"key":"0","value":"初始"},
+		{"key":"1","value":"绑定"},
+		{"key":"2","value":"冻结"},
+		{"key":"3","value":"注销"}
+	],
+	"walletranType":[
+		{"key":"0","value":"充值"},
+		{"key":"1","value":"提现"},
+		{"key":"2","value":"消费"},
+		{"key":"3","value":"转账"},
+		{"key":"4","value":"退款"}
+	],
+	"walletranStatus":[
+		{"key":"0","value":"初始"}
+	],
+	"walletardType":[
+		{"key":"0","value":"借记"},
+		{"key":"1","value":"贷记"}
+	],
+	"walletardStatus":[
+		{"key":"0","value":"初始"},
+		{"key":"1","value":"有效"},
+		{"key":"2","value":"失效"},
+		{"key":"3","value":"签约失败"},
+		{"key":"4","value":"已登记"},
+		{"key":"5","value":"解绑"}
+	],
     "errorCode": 0,
     "errorMsg": null
 }

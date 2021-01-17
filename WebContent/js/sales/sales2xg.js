@@ -393,7 +393,6 @@ $(function () {
 
     var salesSwitchManifestForXGSearcher = new Searcher();
 
-    console.log(pageConfig.apiPage)
     salesSwitchManifestForXGSearcher.init(pageConfig.condArr, 'condList', pageConfig.apiPage, function (data) {
         com.focusPage('input[name="fullpayTime"]').parent('.inline').addClass('m-wrap m-ctrl-medium date-picker');
         com.focusPage('input[name="fullpayTime"]').attr('readonly', true);

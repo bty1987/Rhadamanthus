@@ -13,9 +13,7 @@
 
             if(listData && listData.length){
                 $.each(listData,function(i, v){
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
+                    creatLine(v).appendTo($ul);
                 });
 
                 $ul.appendTo($tableWrap);
@@ -33,26 +31,27 @@
 			var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
 
 			var propertyArr = [
-			   	["编号:", v.no, "grey"],
-			   	["全名:", v.fullname, "grey"],
-			   	["地址:", v.address, "grey"],
-			   	["法人:", v.corporation, "grey"],
-			   	["电话:", v.phone, "grey"],
+			   	["编号: ", v.no, "grey"],
+			   	["全名: ", v.fullname, "grey"],
+			   	["地址: ", v.address, "grey"],
+			   	["法人: ", v.corporation, "grey"],
+			   	["电话: ", v.phone, "grey"],
 			 ];
 			$.each(propertyArr, function (index,value) {
-	               var $liProperty = $('<li></li>');
+	               var $liProperty = $('<li></li>').appendTo($ulProperty);
 	               $('<strong></strong>').html(value[0]).appendTo($liProperty);
 	               $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-	               $liProperty.appendTo($ulProperty);
 	           });
 			
 			//启用禁用
 			var $btnStatus = $('<div></div>').addClass('pull-right');
-			var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
-			var $span = $('<span></span>').addClass('lbl');
-
-			$btnStatus.append($statusSwitch).append($span);
-
+			var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"}).appendTo($btnStatus);
+			var $span = $('<span></span>').addClass('lbl status-lbl').appendTo($btnStatus);
+			
+			v.status == 0 && $statusSwitch.prop("checked", true);
+            $statusSwitch.switchBtn("status-lbl").on("click",function() {
+                $statusSwitch.prop("checked") ? (updateStatus(v.cid, 0, function(){$statusSwitch.removeAttr("checked")})) : (updateStatus(v.cid, 1,function(){$statusSwitch.prop("checked")}));
+            });
 
 			$divBtnWrap.append($btnEdit).append($btnEdit).append($btnStatus).appendTo($h3);
 
@@ -62,11 +61,7 @@
             $btnEdit.click(function(){
                 edit(v);
             });
-
-			v.status == 0 && $statusSwitch.prop("checked", true);
-			$statusSwitch.switchBtn("status-lbl").on("click",function() {
-				$statusSwitch.prop("checked") ? (updateStatus(v.cid, 0, function(){$statusSwitch.removeAttr("checked")})) : (updateStatus(v.cid, 1,function(){$statusSwitch.prop("checked")}));
-			});
+			
 			return $liLine;
         };
       
@@ -82,9 +77,9 @@
     })();
 
 
-   var companySeacher = new Searcher();
+   var searcher = new Searcher();
 
-	companySeacher.init( ["system-company-name"], "condList", api.system.pageCompany, function(data){
+	searcher.init( ["system-company-name"], "condList", api.system.pageCompany, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "companyPostData", null, false, null, function(){
     	
@@ -207,6 +202,6 @@
 	//刷新
     function successCallback(){
     	//$('button.btn-search','#condList').click();//调用成功后,执行查询操作  
-		companySeacher.doSearch();//调用成功后,执行com.Seacher中的doSeach方法
+		searcher.doSearch();//调用成功后,执行com.Seacher中的doSeach方法
     }
 });

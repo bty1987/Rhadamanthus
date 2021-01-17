@@ -118,41 +118,79 @@
     com.post(api.personel.queryUserCompany, {"user.uid": params.userInfo.user.uid}, function (res) {
 
         var companysel = $('#companysel').html("");
+        var moreCompany = $("#moreCompany").html("");
+        
+        var companyGroup = null;
 
-        $.each(res.userCompanys, function(i,v){
-            var $li = $('<li></li>').appendTo(companysel);
-            var $a = $('<a></a>').attr('data-cid',v.company.cid).text(v.company.name).appendTo($li);
-            $a.click(function(e){
-                params.selectCaching = {};
-
-                com.post(api.common.changeAuthCode,{"company": v.company.cid },function(res){
-
-                    for(var key in params){
-                        if(key.indexOf("PostData")!=-1){
-                            params[key] = null;
-                        }
-                    }
-                    params.authentication = res.authentication;
-                    window.authentication = res.authentication;
-
-                    com.switchPage(api.index.homeIndex.url, true);
-
-                    // 切换公司后 目录所有菜单收起
-                    foldMenu();
-
-                    companysel.parent().removeClass("open");
-
-                    com.post(api.system.queryCompanyByCid,{"company.cid": v.company.cid},function(res){
-                        params.company = res.company;
-                        $(".companyinfo .companyName").text(res.company.name)
-                    });
-
-                }, null, false);
-
-                return false;
+        $.each(res.userCompanys, function(i, v){
+            
+            var index = 5; // 显示前五个公司信息
+            
+            if(i % 3 == 0) companyGroup = $("<div></div>").addClass("form-group").appendTo(moreCompany);
+            
+            var $btn = $("<button></button>").addClass("btn btn-link col-md-4").text(v.company.name).appendTo(companyGroup);
+            
+            $btn.click(function(){
+                return changeCompany(v.company);
             });
+            
+            if(i < index){
+                
+                var $li = $('<li></li>').appendTo(companysel);
+                var $a = $('<a></a>').attr('data-cid',v.company.cid).text(v.company.name).appendTo($li);
+                
+                $a.click(function(e){
+                    return changeCompany(v.company);
+                });
+            }
+            
+            if(i == index){
+                
+                var $di = $('<li class="divider"></li>').appendTo(companysel);
+                var $li = $('<li></li>').appendTo(companysel);
+                var $a = $('<a></a>').text("更多公司").appendTo($li);
+                
+                $a.click(function(e){
+                    com.popup4model($('#layerCompany'), '切换公司');
+                });
+            }
         });
     }, null, false);
+    
+    function changeCompany(company){
+        
+        var companysel = $('#companysel');
+        
+        params.selectCaching = {};
+        
+        com.post(api.common.changeAuthCode,{"company": company.cid },function(res){
+
+            for(var key in params){
+                if(key.indexOf("PostData")!=-1){
+                    params[key] = null;
+                }
+            }
+            params.authentication = res.authentication;
+            window.authentication = res.authentication;
+
+            com.switchPage(api.index.homeIndex.url, true);
+
+            // 切换公司后 目录所有菜单收起
+            foldMenu();
+
+            companysel.parent().removeClass("open");
+
+            com.post(api.system.queryCompanyByCid,{"company.cid": company.cid},function(res){
+                params.company = res.company;
+                $(".companyinfo .companyName").text(res.company.name)
+            });
+            
+            com.closePopup();
+
+        }, null, false);
+
+        return false;
+    }
 
     $.breadcrumb('icon-home', ['首页']);
 

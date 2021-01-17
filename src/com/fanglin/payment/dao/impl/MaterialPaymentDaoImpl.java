@@ -12,8 +12,6 @@
 package com.fanglin.payment.dao.impl;
 
 import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -26,7 +24,6 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.material.po.MaterialPO;
 import com.fanglin.payment.dao.MaterialPaymentDao;
 import com.fanglin.payment.po.MaterialPaymentPO;
-import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Repository("materialPaymentDao")
@@ -188,18 +185,7 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 					query.alias("materialReceipt", "materialReceipt");
 					
 					if("between".equals(op)){
-						
-						String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-						String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-						
-						Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-						Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-						
-						Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-						Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-						
-						query.add(query.getCriterion("materialReceipt.collectTime", eTimestamp, "le"));
-						query.add(query.getCriterion("materialReceipt.collectTime", sTimestamp, "ge"));
+						query.timeranges("materialReceipt.collectTime", "materialReceipt.collectTime", data);
 					}else{
 						query.add(query.getCriterion("materialReceipt.collectTime", data, op));
 					}

@@ -1,7 +1,5 @@
 package com.fanglin.sales.dao.impl;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -14,7 +12,6 @@ import com.fanglin.sales.dao.SalesBalanceDao;
 import com.fanglin.sales.po.SalesBalancePO;
 import com.fanglin.sales.po.SalesPO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
-import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Repository("salesBalanceDao")
@@ -134,65 +131,15 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 				} else if ("dompany".equals(field)) {
 					int cid = CompanyServiceImpl.decode(filter.getData());
 					query.add(query.getCriterion("sales.dompany", cid, op));
-
 				} else if (SalesBalancePO.COLUMN_SALESFULLPAYTIME_STR.equals(field)) {
-
-					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-
-					query.add(query.getCriterion(SalesBalancePO.COLUMN_SALESFULLPAYTIME_STR, eTimestamp, "le"));
-					query.add(query.getCriterion(SalesBalancePO.COLUMN_SALESFULLPAYTIME_STR, sTimestamp, "ge"));
-
+					query.timeranges(SalesBalancePO.COLUMN_SALESFULLPAYTIME_STR, filter.getData());
 				} else if (SalesBalancePO.COLUMN_CREATETIME_STR.equals(field)) {
-
-					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-
-					query.add(query.getCriterion(SalesBalancePO.COLUMN_CREATETIME_STR, eTimestamp, "le"));
-					query.add(query.getCriterion(SalesBalancePO.COLUMN_CREATETIME_STR, sTimestamp, "ge"));
-
+					query.timeranges(SalesBalancePO.COLUMN_CREATETIME_STR, filter.getData());
 				} else if (SalesBalancePO.COLUMN_VENDERTIME_STR.equals(field)) {
-
-					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-
-					query.add(query.getCriterion(SalesBalancePO.COLUMN_VENDERTIME_STR, eTimestamp, "le"));
-					query.add(query.getCriterion(SalesBalancePO.COLUMN_VENDERTIME_STR, sTimestamp, "ge"));
-
+					query.timeranges(SalesBalancePO.COLUMN_VENDERTIME_STR, filter.getData());
 				} else if (SalesBalancePO.COLUMN_POSTTIME_STR.equals(field)) {
-
-					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-
-					query.add(query.getCriterion(SalesBalancePO.COLUMN_POSTTIME_STR, eTimestamp, "le"));
-					query.add(query.getCriterion(SalesBalancePO.COLUMN_POSTTIME_STR, sTimestamp, "ge"));
-
+					query.timeranges(SalesBalancePO.COLUMN_POSTTIME_STR, filter.getData());
 				}
-
 			}
 		}
 	}

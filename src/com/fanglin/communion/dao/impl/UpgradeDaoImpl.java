@@ -1,7 +1,5 @@
 package com.fanglin.communion.dao.impl;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.criterion.Projections;
@@ -12,7 +10,6 @@ import com.fanglin.communion.dao.UpgradeDao;
 import com.fanglin.communion.po.UpgradePO;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
-import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Repository("upgradeDao")
@@ -40,6 +37,8 @@ public class UpgradeDaoImpl extends DaoImpl<UpgradePO> implements UpgradeDao {
 
 		PagingQuery<UpgradePO> query = pagingQuery(new Paging(), UpgradePO.class);
 
+		query.add(Restrictions.eq("status", UpgradePO.STATUS_ONLINE_INT));
+
 		queryFilterExcute(query, filters);
 
 		query.notPaging();
@@ -50,16 +49,16 @@ public class UpgradeDaoImpl extends DaoImpl<UpgradePO> implements UpgradeDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<UpgradePO> matchUpgrade(String trialno) {
-
-		return session().createCriteria(UpgradePO.class).add(Restrictions.eq(UpgradePO.COLUMN_TRIALNO_STR, trialno)).list();
+		return session().createCriteria(UpgradePO.class).add(Restrictions.eq(UpgradePO.COLUMN_TRIALNO_STR, trialno)).add(Restrictions.eq("status", UpgradePO.STATUS_ONLINE_INT)).list();
 	}
 
 	@Override
 	public String maxUpgrade() {
-		return (String) session().createCriteria(UpgradePO.class).setProjection(Projections.projectionList().add(Projections.max("no"))).uniqueResult();
+		return (String) session().createCriteria(UpgradePO.class).setProjection(Projections.projectionList().add(Projections.max("no"))).add(Restrictions.eq("status", UpgradePO.STATUS_ONLINE_INT)).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
 		if (filters != null && filters.size() > 0) {
 
 			for (Filter filter : filters) {
@@ -71,21 +70,9 @@ public class UpgradeDaoImpl extends DaoImpl<UpgradePO> implements UpgradeDao {
 				if ("trialVersion".equals(field)) {
 					query.add(query.getCriterion(UpgradePO.COLUMN_TRIALNO_STR, data, op));
 				} else if ("createTime".equals(field)) {
-
-					String sTime = data + " 00:00:00";
-					String eTime = data + " 23:59:59";
-					Date sdate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date edate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-					Timestamp stimestamp = DateUtil.getDateToTimestamp(sdate);
-					Timestamp etimestamp = DateUtil.getDateToTimestamp(edate);
-
-					query.add(query.getCriterion(UpgradePO.COLUMN_CREATETIME_STR, stimestamp, "ge"));
-					query.add(query.getCriterion(UpgradePO.COLUMN_CREATETIME_STR, etimestamp, "le"));
-
+					query.timeranges(UpgradePO.COLUMN_CREATETIME_STR, UpgradePO.COLUMN_CREATETIME_STR, data);
 				}
 			}
 		}
 	}
-
 }

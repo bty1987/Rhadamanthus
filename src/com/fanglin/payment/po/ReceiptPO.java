@@ -36,6 +36,10 @@ public class ReceiptPO implements java.io.Serializable {
 	
 	private int company;
 
+	public ReceiptPO() {
+		super();
+	}
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "rid")

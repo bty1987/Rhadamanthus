@@ -316,7 +316,7 @@ $(function () {
     function managedrawing() {
         salesDelivery.drawingModal.modal("show");
         com.focusPage('#salesDrawing').html("");
-        com.post(api.sales.querySalesPicutre, {
+        com.post(api.sales.querySalesPicture, {
             "salesPicture.siid": params.siid
         }, function (data) {
 
@@ -353,7 +353,6 @@ $(function () {
     function initUploadBtn() {
         com.uploadify("#salesUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {'uploadType': 0}, 1, function (data) {
             var options = {};
-            console.log(data);
             options["salesPicture.sid"] = params.sid;
             options["salesPicture.name"] = data.strutsUploadsFileName;
             options["salesPicture.path"] = data.resUrl;

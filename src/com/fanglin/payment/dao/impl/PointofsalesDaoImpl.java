@@ -1,8 +1,6 @@
 package com.fanglin.payment.dao.impl;
 
 import java.math.BigInteger;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -13,7 +11,6 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.dao.PointofsalesDao;
 import com.fanglin.payment.po.PointofsalesPO;
-import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Repository("pointofsalesDao")
@@ -93,18 +90,7 @@ public class PointofsalesDaoImpl extends DaoImpl<PointofsalesPO> implements Poin
 				} else if("paymentType".equals(field)){
 					query.add(query.getCriterion("type", Short.valueOf(data), op));
 				} else if("createTime".equals(field)){
-					
-					String sTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-					String eTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-					Date sDate = DateUtil.parseDate(sTime, "yyyy-MM-dd HH:mm:ss");
-					Date eDate = DateUtil.parseDate(eTime, "yyyy-MM-dd HH:mm:ss");
-
-					Timestamp sTimestamp = DateUtil.getDateToTimestamp(sDate);
-					Timestamp eTimestamp = DateUtil.getDateToTimestamp(eDate);
-
-					query.add(query.getCriterion(field, eTimestamp, "le"));
-					query.add(query.getCriterion(field, sTimestamp, "ge"));
+					query.timeranges(field, field, data);
 				} else if("status".equals(field)){
 					query.add(query.getCriterion(field, Short.valueOf(data), op));
 				} else if("creater".equals(field)){

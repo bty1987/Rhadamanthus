@@ -28,6 +28,10 @@ public class ReceiptVO implements java.io.Serializable {
 	
 	private Integer company;
 
+	public ReceiptVO() {
+		super();
+	}
+
 	public Long getRid() {
 		return rid;
 	}

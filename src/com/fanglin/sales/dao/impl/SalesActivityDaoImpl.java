@@ -1,8 +1,6 @@
 package com.fanglin.sales.dao.impl;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.type.StandardBasicTypes;
@@ -13,7 +11,6 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.sales.dao.SalesActivityDao;
 import com.fanglin.sales.po.SalesActivityPO;
 import com.fanglin.utils.Arith;
-import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Repository("salesActivityDao")
@@ -90,18 +87,7 @@ public class SalesActivityDaoImpl extends DaoImpl<SalesActivityPO> implements Sa
 				} else if (SalesActivityPO.COLUMN_SALESORDERID_STR.equals(field)) {
 					query.add(query.getCriterion(SalesActivityPO.COLUMN_SALESORDERID_STR, data, op));
 				} else if (SalesActivityPO.COLUMN_SALESCREATETIME_STR.equals(field)) {
-					
-					String sCreateTime = data.split("-")[0].replaceAll("/", "-") + " 00:00:00";
-					String eCreateTime = data.split("-")[1].replaceAll("/", "-") + " 23:59:59";
-
-					Date sCreatedate = DateUtil.parseDate(sCreateTime, "yyyy-MM-dd HH:mm:ss");
-					Date eCreatedate = DateUtil.parseDate(eCreateTime, "yyyy-MM-dd HH:mm:ss");
-
-					Timestamp sCreatetimestamp = DateUtil.getDateToTimestamp(sCreatedate);
-					Timestamp eCreatetimestamp = DateUtil.getDateToTimestamp(eCreatedate);
-
-					query.add(query.getCriterion(field, sCreatetimestamp, "ge"));
-					query.add(query.getCriterion(field, eCreatetimestamp, "le"));
+					query.timeranges(SalesActivityPO.COLUMN_SALESCREATETIME_STR, filter.getData());
 				} else {
 					query.alias("activity", "activity");
 					query.add(query.getCriterion(field, data, op));

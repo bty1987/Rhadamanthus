@@ -270,7 +270,6 @@ jQuery(function ($) {
     
     function showQRCode(url){
         
-        console.log(url);
         decorationContract.items.qrcode.html("").qrcode({
             render: "canvas",
             width: 150,

@@ -69,6 +69,10 @@ public class UserPO implements Serializable {
 
 	public static final short TYPE_SUPPLIER_INT = 1;
 
+	public static final short TYPE_MERCHANT_INT = 2;
+
+	public static final short TYPE_AVENGER_INT = 3;
+
 	private int uid;
 
 	private String userId;

@@ -290,8 +290,6 @@ function createMenu(data){
 		});
 	});
 	
-	console.log(menuArr);
-
 	if(menuArr.level1.length){
 		$.each(menuArr.level1, function(i, v){
 			var $li = $('<li></li>');

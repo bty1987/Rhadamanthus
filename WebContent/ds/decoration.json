@@ -103,7 +103,8 @@
         {"key":"1", "value":"终身"},
         {"key":"2", "value":"转卖"},
         {"key":"3", "value":"免责"},
-        {"key":"4", "value":"欠款"}
+        {"key":"4", "value":"欠款"},
+        {"key":"5", "value":"过保"}
     ],
 
     "errorCode": 0,

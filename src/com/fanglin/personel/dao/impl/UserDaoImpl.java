@@ -150,38 +150,38 @@ public class UserDaoImpl extends DaoImpl<UserPO> implements UserDao {
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters != null) {
+		if (filters == null)
+			return;
 
-			query.alias("dept", "dept");
-			query.alias("role", "role");
-			query.alias("duty", "duty");
+		query.alias("dept", "dept");
+		query.alias("role", "role");
+		query.alias("duty", "duty");
 
-			for (Filter filter : filters) {
+		for (Filter filter : filters) {
 
-				String field = filter.getField();
-				String data = filter.getData();
+			String field = filter.getField();
+			String data = filter.getData();
 
-				if ("userId".equals(field)) {
-					query.add(query.getCriterion("userId", filter));
-				} else if ("userName".equals(field)) {
-					query.add(query.getCriterion("userName", filter));
-				} else if ("roleId".equals(field)) {
-					query.add(Restrictions.eq("role.rid", Integer.valueOf(data)));
-				} else if ("deptId".equals(field)) {
-					query.add(Restrictions.eq("dept.did", Integer.valueOf(data)));
-				} else if ("status".equals(field)) {
-					query.add(Restrictions.eq("status", Short.valueOf(data)));
-				} else if ("duty.name".equals(field)) {
-					query.add(query.getCriterion("duty.name", filter));
-				} else if ("identity".equals(field)) {
-					query.add(query.getCriterion("identity", filter));
-				} else if ("phone".equals(field)) {
-					query.add(query.getCriterion("phone", filter));
-				} else if ("no".equals(field)) {
-					query.add(Restrictions.eq("dept.no", data));
-				} else if ("deptType".equals(field)) {
-					query.add(Restrictions.eq("dept.type.dtid", Integer.valueOf(data)));
-				}
+			if ("userId".equals(field)) {
+				query.add(query.getCriterion("userId", filter));
+			} else if ("userName".equals(field)) {
+				query.add(query.getCriterion("userName", filter));
+			} else if ("roleId".equals(field)) {
+				query.add(Restrictions.eq("role.rid", Integer.valueOf(data)));
+			} else if ("deptId".equals(field)) {
+				query.add(Restrictions.eq("dept.did", Integer.valueOf(data)));
+			} else if ("status".equals(field)) {
+				query.add(Restrictions.eq("status", Short.valueOf(data)));
+			} else if ("duty.name".equals(field)) {
+				query.add(query.getCriterion("duty.name", filter));
+			} else if ("identity".equals(field)) {
+				query.add(query.getCriterion("identity", filter));
+			} else if ("phone".equals(field)) {
+				query.add(query.getCriterion("phone", filter));
+			} else if ("no".equals(field)) {
+				query.add(Restrictions.eq("dept.no", data));
+			} else if ("deptType".equals(field)) {
+				query.add(Restrictions.eq("dept.type.dtid", Integer.valueOf(data)));
 			}
 		}
 	}

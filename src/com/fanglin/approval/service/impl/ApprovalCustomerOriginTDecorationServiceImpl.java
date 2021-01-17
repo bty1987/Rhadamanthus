@@ -177,16 +177,14 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 		approvalCustomerOriginTDecorationDao.save(approvalCustomerOriginTDecorationPO);
 
 		customerOriginPO.setStatus(CustomerOriginPO.STATUS_APPROVE_INT);
-		
+
 		customerOriginPO.setSalesman(salesman);
 
 		customerOriginDao.update(customerOriginPO);
 
 		String contents = String.format("客源转装修单提交,客户名:%s,楼盘:%s %s,装修单号:%s,批注:%s", customerOriginPO.getName(), villagePO.getName(), housePO.getHouseNumber(), customerOriginPO.getOrderId(), approvalPO.getAnnotate());
 
-		UserPO designer = customerOriginPO.getDesigner();
-
-		messageService.sendMessage(receiver.getUserId(), null, contents, MessagePO.TYPE_SEND_APPROVAL_INT, designer.getCompany());
+		messageService.sendMessage(receiver.getUserId(), null, contents, MessagePO.TYPE_SEND_APPROVAL_INT, receiver.getCompany());
 
 		return 0;
 	}
@@ -226,8 +224,10 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 		String content = String.format("客源转装修单成功,客户名:%s,楼盘:%s %s,装修单号:%s,批注:%s", customerOriginPO.getName(), villagePO.getName(), housePO.getHouseNumber(), customerOriginPO.getOrderId(), approvalPO.getAnnotate());
 
 		UserPO designer = customerOriginPO.getDesigner();
+		UserPO salesman = customerOriginPO.getSalesman();
 
 		messageService.sendMessage(designer.getUserId(), null, content, MessagePO.TYPE_SEND_APPROVAL_INT, designer.getCompany());
+		messageService.sendMessage(salesman.getUserId(), null, content, MessagePO.TYPE_SEND_APPROVAL_INT, salesman.getCompany());
 
 		return 0;
 	}
@@ -258,8 +258,10 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 		String content = String.format("客源转装修单失败,审批拒绝,客户名:%s,楼盘:%s %s,批注:%s", customerOriginPO.getName(), villagePO.getName(), housePO.getHouseNumber(), approvalPO.getAnnotate());
 
 		UserPO designer = customerOriginPO.getDesigner();
+		UserPO salesman = customerOriginPO.getSalesman();
 
 		messageService.sendMessage(designer.getUserId(), null, content, MessagePO.TYPE_SEND_APPROVAL_INT, designer.getCompany());
+		messageService.sendMessage(salesman.getUserId(), null, content, MessagePO.TYPE_SEND_APPROVAL_INT, salesman.getCompany());
 
 		return 0;
 	}

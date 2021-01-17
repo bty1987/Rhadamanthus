@@ -1,7 +1,7 @@
 <div id="managementPageContent" class="page-content">
     <div id="fl-statement"></div>
  
-    <h4>装修</h4>
+    <h4>平台</h4>
     <hr />
     <div class="row">
         <div class="col-xs-12">
@@ -103,6 +103,11 @@
             <button id="changeSalesForGrade" class="btn btn-purple" style="margin: 2px;">
                 <i class="icon-edit"></i>
                 <span>销售单等级修改</span>
+            </button>
+            
+            <button id="changeSalesForStatus" class="btn btn-purple" style="margin: 2px;">
+                <i class="icon-edit"></i>
+                <span>销售单状态修改</span>
             </button>
         </div>
     </div>
@@ -763,6 +768,33 @@
         </div>
     </div>
     
+    <div class="modal fade" id="changeSalesForStatusModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content col-md-12">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                    <h4 class="modal-title">销售单状态修改</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">销售单号</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="salesNo" class="col-xs-10 col-sm-5 v_required"  maxlength='15' data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="changeSalesStatusBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <div class="modal fade" id="exportMaterialPaymentModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content col-md-12">
@@ -892,6 +924,5 @@
 </div>
 
 <script type="text/javascript">
-    //$.loadScript(['js/management/management.js']);
+    $.loadScript(['js/management/management.js']);
 </script>
-<script src="js/management/management.js"></script>

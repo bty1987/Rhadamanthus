@@ -26,6 +26,10 @@ public class PaymentFunctionVO implements Serializable {
 
 	private Short sort;
 
+	public PaymentFunctionVO() {
+		super();
+	}
+
 	public Long getPfid() {
 		return pfid;
 	}
