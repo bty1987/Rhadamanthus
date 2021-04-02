@@ -111,7 +111,6 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 					supervisorVO.setUserName(workerSalaryPO.getDecoration().getSupervisor().getUserName());
 					workerSalaryVO.getDecoration().setSupervisor(supervisorVO);
 				}
-
 			}
 
 			BeanUtil.copyProperties(workerSalaryPO.getApprover(), workerSalaryVO.getApprover(), Arrays.asList("dept", "role", "duty"));
@@ -217,6 +216,8 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 		workerSalaryPO.init(worker, creater, workerSalaryVO.getComment(), company);
 
+		workerSalaryPO.setCount(workerSalaryDao.countWorkerSalary(workerSalaryPO.getDecoration().getOrderId(), workerSalaryPO.getCsid()) + 1);
+
 		addSalary(workerSalaryVO, workerBalancePO, workerSalaryPO, company);
 
 		return 0;
@@ -236,9 +237,9 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 				throw new FLException(280002, "工费状态不可操作");
 			}
 
-			List<WorkerSalaryPO> workerSalary = workerSalaryDao.queryWorkerSalaryByCwsid(workerSalaryPO.getWsId());
+			List<WorkerSalaryPO> workerSalaryPOs = workerSalaryDao.queryWorkerSalaryByCwsid(workerSalaryPO.getWsId());
 
-			for (WorkerSalaryPO _workerSalary : workerSalary) {
+			for (WorkerSalaryPO _workerSalary : workerSalaryPOs) {
 
 				WorkerBalancePO workerCollect = workerBalanceDao.queryWorkerBalance(_workerSalary.getUser().getUid(), company);
 
@@ -325,8 +326,11 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			workerSalaryPO.setStatus(WorkerSalaryPO.STATUS_REJECT_INT);
 			workerSalaryPO.setApproveTime(new Timestamp(System.currentTimeMillis()));
 			workerSalaryPO.setApprover(approver);
+			workerSalaryPO.setCount(0);
 
 			workerSalaryDao.update(workerSalaryPO);
+
+			workerSalaryDao.updateWorkerSalary(workerSalaryPO.getDecoration().getOrderId(), workerSalaryPO.getCsid());
 		}
 
 		return 0;
@@ -364,6 +368,8 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			workerSalaryPO.setApprover(approver);
 
 			workerSalaryDao.update(workerSalaryPO);
+
+			workerSalaryDao.updateWorkerSalary(workerSalaryPO.getDecoration().getOrderId(), workerSalaryPO.getCsid());
 		}
 
 		return 0;
@@ -605,6 +611,57 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		workerSalaryPO.approve(creater);
 
 		workerSalaryDao.save(workerSalaryPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int sendWorkerSalary(WorkerSalaryVO workerSalaryVO) throws FLException {
+
+		WorkerSalaryPO workerSalaryPO = workerSalaryDao.get(workerSalaryVO.getWsId());
+
+		if (workerSalaryPO == null) {
+			throw new FLException(280001, "薪资信息不存在");
+		}
+
+		if (workerSalaryPO.getIsSend() != WorkerSalaryPO.ISSEND_UNSEND_INT) {
+			throw new FLException(280002, "工费状态不可操作");
+		}
+
+		workerSalaryPO.setIsSend(WorkerSalaryPO.ISSEND_SEND_INT);
+
+		workerSalaryDao.update(workerSalaryPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int cancelWorkerSalary(WorkerSalaryVO workerSalaryVO) throws FLException {
+
+		WorkerSalaryPO workerSalaryPO = workerSalaryDao.get(workerSalaryVO.getWsId());
+
+		if (workerSalaryPO == null) {
+			throw new FLException(280001, "薪资信息不存在");
+		}
+
+		if (workerSalaryPO.getIsSend() != WorkerSalaryPO.ISSEND_SEND_INT) {
+			throw new FLException(280002, "工费状态不可操作");
+		}
+
+		workerSalaryPO.setIsSend(WorkerSalaryPO.ISSEND_UNSEND_INT);
+
+		workerSalaryDao.update(workerSalaryPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int batchWorkerSalary(WorkerSalaryVO workerSalaryVO, int company) throws FLException {
+
+		workerSalaryDao.updateWorkerSalary(workerSalaryVO.getCreateTime(), workerSalaryVO.getFinishTime(), company);
 
 		return 0;
 	}

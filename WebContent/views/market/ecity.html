@@ -1,58 +1,53 @@
-    <div class="row">
-        <div class="col-md-12">
-	        <div id="condList" class="fl_search clearfix"></div>
-	        <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
-	        <div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
-	    </div>
-    </div>
 
-    <div class="modal fade" id="ecityModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content" style="width:900px;margin-left:-30%">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="myModalLabel">城市</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <form class="form-horizontal">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label class="col-sm-3 control-label no-padding-right orange" for="city">城市</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" id="city" class="col-xs-10 col-sm-6 v_required"  data-rel="popover"/>
-                                                </div>
-                                            </div>
+<div>
+    <div id="condList" class="fl_search clearfix"></div>
+    <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+    <div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+</div>
 
-                                            <div class="form-group">
-                                                <label class="col-sm-3 control-label no-padding-right orange" for="y">经度</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" id="y" class="col-xs-10 col-sm-6 v_float v_required"  data-rel="popover"/>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label class="col-sm-3 control-label no-padding-right orange" for="x">纬度</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" id="x" class="col-xs-10 col-sm-6 v_required v_float"  data-rel="popover"/>
-                                                </div>
-                                            </div>
-                                        </div>
+<div class="modal fade" id="ecityModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width:900px;margin-left:-30%">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">城市</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form class="form-horizontal">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right orange" for="city">城市</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="city" class="col-xs-10 col-sm-6 v_required"  data-rel="popover"/>
                                     </div>
                                 </div>
-                            </form>
-                        </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right orange" for="y">经度</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="y" class="col-xs-10 col-sm-6 v_float v_required"  data-rel="popover"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label no-padding-right orange" for="x">纬度</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="x" class="col-xs-10 col-sm-6 v_required v_float"  data-rel="popover"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
-                <div class="modal-footer" style="text-align: center">
-                    <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-                </div>
+            </div>
+            <div class="modal-footer" style="text-align: center">
+                <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
             </div>
         </div>
     </div>
+</div>
 
 <script type="text/javascript">
     $.loadScript(['js/market/ecity.js']);

@@ -1,4 +1,4 @@
-package com.fanglin.common.po;
+package com.fanglin.factory.po;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "logininfo", catalog = "communion")
+@Table(name = "logininfo", catalog = "factory")
 public class LoginInfoPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 7482866789664590219L;
@@ -31,20 +31,17 @@ public class LoginInfoPO implements java.io.Serializable {
 	
 	private double y;
 	
-	private int company;
-
 	public LoginInfoPO() {
 		super();
 	}
 
-	public LoginInfoPO(String loginFlag, int code, String message, String authentication, long optime, int company) {
+	public LoginInfoPO(String loginFlag, int code, String message, String authentication, long optime) {
 		super();
 		this.loginFlag = loginFlag;
 		this.code = code;
 		this.message = message;
 		this.authentication = authentication;
 		this.optime = optime;
-		this.company = company;
 	}
 
 	@Id
@@ -119,15 +116,6 @@ public class LoginInfoPO implements java.io.Serializable {
 
 	public void setY(double y) {
 		this.y = y;
-	}
-
-	@Column(name = "company")
-	public int getCompany() {
-		return company;
-	}
-
-	public void setCompany(int company) {
-		this.company = company;
 	}
 
 }

@@ -58,7 +58,6 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 		salesDeliveryItemVO.filter(filters);
 
 		List<SalesDeliveryItemPO> salesDeliveryItemPOs = salesDeliveryItemDao.pageSalesDeliveryItem(paging, filters, company);
-
 		List<SalesDeliveryItemVO> salesDeliveryItemVOs = ptv(salesDeliveryItemPOs);
 
 		paging.setData(salesDeliveryItemVOs);
@@ -72,10 +71,19 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 		if (userPO == null)
 			return;
 
-		List<SalesDeliveryItemPO> salesDeliveryItemPOs = salesDeliveryItemDao.pageSalesDeliveryItemForSupplier(paging, filters, queryCompany, userPO.getUid());
+		List<SalesDeliveryItemPO> salesDeliveryItemPOs = salesDeliveryItemDao.pageSalesDeliveryItem(paging, filters, queryCompany, userPO.getUid());
 		List<SalesDeliveryItemVO> salesDeliveryItemVOs = ptv(salesDeliveryItemPOs);
 
 		paging.setData(salesDeliveryItemVOs);
+	}
+
+	@Override
+	public List<SalesDeliveryItemVO> querySalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItemVO) {
+
+		List<SalesDeliveryItemPO> salesDeliveryItemPOs = salesDeliveryItemDao.querySalesDeliveryItem(salesDeliveryItemVO.getSales().getSid());
+		List<SalesDeliveryItemVO> salesDeliveryItemVOs = ptv(salesDeliveryItemPOs);
+
+		return salesDeliveryItemVOs;
 	}
 
 	@Override
@@ -172,40 +180,42 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void deliveSalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItem,String userId) throws FLException {
+	public void deliveSalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItem, String userId) throws FLException {
+
 		SalesPO salesPO = salesDao.get(salesDeliveryItem.getSales().getSid());
-		
-		
+
 		if (salesPO == null) {
 			throw new FLException(260021, "销售单不存在");
 		}
-		
-		if (salesPO.getFullpayStatus() != SalesPO.FULLPAYSTATUS_CONFIRM_SHORT) {
+
+		if (!Arrays.asList(SalesPO.STATUS_INIT_SHORT, SalesPO.STATUS_END_SHORT).contains(salesPO.getStatus())) {
+			throw new FLException(260022, "销售单状态不可操作");
+		}
+
+		if (!Arrays.asList(SalesPO.FULLPAYSTATUS_PAYED_SHORT, SalesPO.FULLPAYSTATUS_CONFIRM_SHORT).contains(salesPO.getFullpayStatus())) {
 			throw new FLException(260045, "销售项状态不可操作");
 		}
-		
-		
-		
+
 		List<SalesItemPO> salesItemPOs = salesItemDao.querySalesItemBySid(salesDeliveryItem.getSales().getSid());
 
 		for (SalesItemPO salesItemPO : salesItemPOs) {
 
-			if(salesDeliveryItemDao.querySalesDeliveryItemBySiid(salesItemPO.getSiid())!=null){
+			if (salesDeliveryItemDao.querySalesDeliveryItemBySiid(salesItemPO.getSiid()) != null) {
 				continue;
 			}
-			
+
 			SalesDeliveryItemPO salesDeliveryItemPO = new SalesDeliveryItemPO();
-			
+
 			salesDeliveryItemPO.setSalesItem(salesItemPO);
 			salesDeliveryItemPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-			salesDeliveryItemPO.setCompany(salesPO.getCompany());
+			salesDeliveryItemPO.setCompany(salesPO.getDompany());
 			salesDeliveryItemPO.setSales(salesPO);
 
 			salesDeliveryItemDao.save(salesDeliveryItemPO);
 		}
-		
+
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void updateSalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItem) throws FLException {
@@ -271,12 +281,11 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 			if (salesDeliveryItemPO.getSales().getSupplier() != null) {
 				BeanUtil.copyPropertie(salesDeliveryItemPO.getSales().getSupplier(), salesDeliveryItemVO.getSales().getSupplier(), Arrays.asList("dept", "duty"));
 			}
+
 			salesDeliveryItemVOs.add(salesDeliveryItemVO);
 		}
 
 		return salesDeliveryItemVOs;
 	}
-
-
 
 }

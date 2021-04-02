@@ -1,15 +1,12 @@
 $(function () {
 
     var salesBalance = {
-        salesBalance_Manufacturer_Data: {},
-        salesBalance_Settlement_Data: {},
-        balanceType: {},
-        status: {},
-        salesPaymentForStatus: {},
-        salesPaymentType: {},
-        oneType: {},
+            
+        sales: null,
+        
         postData: "salesBalancePostData",
         pageType: params['urlLoadParams'].type,
+        
         items: {
             viewPopUp: com.focusPage("#viewPopUp"),
             vbalanceValue: com.focusPage('#vbalanceValue'),
@@ -18,7 +15,18 @@ $(function () {
         btns: {
             supplierSaveBtn: com.focusPage("#supplierSaveBtn"),
             balanceSaveBtn: com.focusPage("#balanceSaveBtn")
-        }
+        },
+        
+        modals: {
+            decorationInfo: com.focusPage("#decorationInfo"),
+        },
+        
+        projectStatus: {},
+        balanceType: {},
+        status: {},
+        paymentStatus: {},
+        paymentType: {},
+        oneType: {},
 
     };
 
@@ -35,11 +43,15 @@ $(function () {
     if (salesBalance.pageType == "bpompany") {
         salesBalance.postData = "salesBalanceForPompanyPostData";
     }
+    
+    com.post(api.ds.construction, {}, function (res) {
+        salesBalance.projectStatus = res.constructionSchedule.split("key", "value");
+    });
 
     com.post(api.ds.payment, {}, function (res) {
         salesBalance.balanceType = res.balanceType.split("key", "value");
         salesBalance.status = res.balanceStatus.split("key", "value");
-        salesBalance.salesPaymentType = res.materialPaymentType.split("key", "value");
+        salesBalance.paymentType = res.materialPaymentType.split("key", "value");
     }, null, false);
 
     com.post(api.ds.sales, {}, function (res) {
@@ -47,34 +59,34 @@ $(function () {
     }, null, false);
 
     com.post(api.common.queryReceiptType, {}, function (res) {
-        salesBalance.salesPaymentForStatus.cash = [];
-        salesBalance.salesPaymentForStatus.bank = [];
-        salesBalance.salesPaymentForStatus.checkBank = [];
-        salesBalance.salesPaymentForStatus.accounts = [];
-        salesBalance.salesPaymentForStatus.couponType = [];
+        salesBalance.paymentStatus.cash = [];
+        salesBalance.paymentStatus.bank = [];
+        salesBalance.paymentStatus.checkBank = [];
+        salesBalance.paymentStatus.accounts = [];
+        salesBalance.paymentStatus.couponType = [];
 
-        salesBalance.salesPaymentForStatus.cashInfo = {};
-        salesBalance.salesPaymentForStatus.bankInfo = {};
-        salesBalance.salesPaymentForStatus.checkBankInfo = {};
-        salesBalance.salesPaymentForStatus.accountsInfo = {};
-        salesBalance.salesPaymentForStatus.couponTypeData = {};
+        salesBalance.paymentStatus.cashInfo = {};
+        salesBalance.paymentStatus.bankInfo = {};
+        salesBalance.paymentStatus.checkBankInfo = {};
+        salesBalance.paymentStatus.accountsInfo = {};
+        salesBalance.paymentStatus.couponTypeData = {};
 
         $.each(res.receiptTypes, function (i, v) {
             if (v.type == 1) {
-                salesBalance.salesPaymentForStatus.cash.push(v);
-                salesBalance.salesPaymentForStatus.cashInfo[v.no] = v.name;
+                salesBalance.paymentStatus.cash.push(v);
+                salesBalance.paymentStatus.cashInfo[v.no] = v.name;
             } else if (v.type == 2) {
-                salesBalance.salesPaymentForStatus.bank.push(v);
-                salesBalance.salesPaymentForStatus.bankInfo[v.no] = v.name;
+                salesBalance.paymentStatus.bank.push(v);
+                salesBalance.paymentStatus.bankInfo[v.no] = v.name;
             } else if (v.type == 3) {
-                salesBalance.salesPaymentForStatus.checkBank.push(v);
-                salesBalance.salesPaymentForStatus.checkBankInfo[v.no] = v.name;
+                salesBalance.paymentStatus.checkBank.push(v);
+                salesBalance.paymentStatus.checkBankInfo[v.no] = v.name;
             } else if (v.type == 4) {
-                salesBalance.salesPaymentForStatus.accounts.push(v);
-                salesBalance.salesPaymentForStatus.accountsInfo[v.no] = v.name;
+                salesBalance.paymentStatus.accounts.push(v);
+                salesBalance.paymentStatus.accountsInfo[v.no] = v.name;
             } else if (v.type == 5) {
-                salesBalance.salesPaymentForStatus.couponType.push(v);
-                salesBalance.salesPaymentForStatus.couponTypeData[v.no] = [v.no, v.name];
+                salesBalance.paymentStatus.couponType.push(v);
+                salesBalance.paymentStatus.couponTypeData[v.no] = [v.no, v.name];
             }
         });
 
@@ -96,6 +108,7 @@ $(function () {
                     var $h3 = $('<h3></h3>').addClass('oid');
                     var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
 
+                    var $btnDecoration = $('<a></a>').addClass('btn btn-minier btn-purple').html('装修单');
                     var $btnVbalanceValue = $('<a></a>').addClass('btn btn-minier btn-yellow').html('厂商结算值');
                     var $btnVbalance = $('<a></a>').addClass('btn btn-minier btn-success').html('厂商结算');
                     var $btnBalanceValue = $('<a></a>').addClass('btn btn-minier btn-warning').html('结算值');
@@ -217,8 +230,13 @@ $(function () {
 
                     $liLine.appendTo($ul);
                     $liLine.append($h3).append($ulProperty).append($ulStyle);
+                    
                     $.each(pageConfig.pageBtn, function (k, b) {
                         switch (b) {
+                        
+                            case "decoration":
+                                $btnDiv.append($btnDecoration);
+                                break;
                             case "sub":
                                 $btnDiv.append($btnBalanceItem);
                                 break;
@@ -244,6 +262,26 @@ $(function () {
                     });
                     $label.appendTo($h3);
                     $btnDiv.appendTo($h3);
+                    
+                  //装修单显示详情
+                    $btnDecoration.click(function () {
+                        
+                        com.focusPage("text").css("line-height", "27px");
+                        com.post(api.decoration.queryDecorationByOrderId, {"decorationOrderId": v.sales.orderId}, function (res) {
+                            
+                            var decorationInfo = res.decoration;
+                            
+                            com.focusPage("#orderId").html(decorationInfo.orderId); // 装修单号
+                            com.focusPage("#address").html(decorationInfo.house.village.name + '' + decorationInfo.house.houseNumber);//装修楼盘地址
+                            com.focusPage("#designer").html(decorationInfo.designer.currentName == null ? "无" : decorationInfo.designer.currentName);//装修设计师
+                            com.focusPage("#escorter").html(decorationInfo.escorter.currentName == null ? "无" : decorationInfo.escorter.currentName);//装修跟单员
+                            com.focusPage("#supervisor").html(decorationInfo.supervisor.currentName == null ? "无" : decorationInfo.supervisor.currentName);//装修监理
+                            com.focusPage("#projectStatus").html(salesBalance.projectStatus[decorationInfo.projectStatus]);
+                             
+                            salesBalance.modals.decorationInfo.modal("show");
+                        });
+
+                    });
 
                     $btnVbalanceValue.click(function (e) {
 
@@ -255,7 +293,7 @@ $(function () {
                         salesBalance.items.vbalanceValue.find('input[name="total"]').val(v.total);
 
                         com.popup4model("#vbalanceValue", "厂商结算值", function () {
-                            salesBalance.salesBalance_Manufacturer_Data = v;
+                            salesBalance.sales = v;
                         }, function () {
                             com.clearValidator();
                             com.cleanItems(salesBalance.items);
@@ -299,7 +337,7 @@ $(function () {
                         salesBalance.items.pbalanceValue.find('input[name="vbalanceValue"]').val(v.vbalance);
 
                         com.popup4model("#pbalanceValue", "结算值", function () {
-                            salesBalance.salesBalance_Settlement_Data = v;
+                            salesBalance.sales = v;
                         }, function () {
                             com.clearValidator();
                             com.cleanItems(salesBalance.items);
@@ -377,20 +415,20 @@ $(function () {
         var $checki = $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
         var $checkspan = $('<span></span>').text('全选').appendTo($checka);
 
-        var $addaExportSales = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'importSalesBalance').css('margin-top', '-2px');
-        var $addaExporti = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($addaExportSales);
+        var $addaExportSales = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'importSalesBalance').css('margin-top', '0px 3px');
+        var $addaExporti = $('<i></i>').addClass('icon-check bigger-110').appendTo($addaExportSales);
         var $addaExportspan = $('<span></span>').text('导出').appendTo($addaExportSales);
 
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'batchVendor').css("margin", "-2px 3px");
-        var $addi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($adda);
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'batchVendor').css("margin", "0px 3px");
+        var $addi = $('<i></i>').addClass('icon-check bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('批量厂商结算').appendTo($adda);
 
-        var $addaEnd = $('<a></a>').addClass('btn btn-minier btn-inverse pull-left').attr('name', 'batchSettlement').css("margin", "-2px 3px");
-        var $addiEnd = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($addaEnd);
+        var $addaEnd = $('<a></a>').addClass('btn btn-minier btn-inverse pull-left').attr('name', 'batchSettlement').css("margin", "0px 3px");
+        var $addiEnd = $('<i></i>').addClass('icon-check bigger-110').appendTo($addaEnd);
         var $addspanEnd = $('<span></span>').text('批量结算').appendTo($addaEnd);
 
-        var $balanceEnd = $('<a></a>').addClass('btn btn-minier btn-pink pull-left').attr('name', 'balanceEnd').css("margin", "-2px 3px");
-        var $balanceiEnd = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($balanceEnd);
+        var $balanceEnd = $('<a></a>').addClass('btn btn-minier btn-pink pull-left').attr('name', 'balanceEnd').css("margin", "0px 3px");
+        var $balanceiEnd = $('<i></i>').addClass('icon-check bigger-110').appendTo($balanceEnd);
         var $balancespanEnd = $('<span></span>').text('结算单').appendTo($balanceEnd);
 
         $checka.click(function () {
@@ -428,7 +466,7 @@ $(function () {
         if (com.validate('vbalanceValue', 'right') == false) {
 
             com.post(api.sales.updateSalesBalanceForVBalance, {
-                "salesBalance.sbid": salesBalance.salesBalance_Manufacturer_Data.sbid,
+                "salesBalance.sbid": salesBalance.sales.sbid,
                 "salesBalance.vbalance": _vBalance
             }, function (res) {
 
@@ -449,7 +487,7 @@ $(function () {
         var _pBalance = salesBalance.items.pbalanceValue.find('input[name="pbalanceValue"]').val();
 
         var options = {
-            "salesBalance.sbid": salesBalance.salesBalance_Settlement_Data.sbid,
+            "salesBalance.sbid": salesBalance.sales.sbid,
             "salesBalance.pbalance": _pBalance
         }
 

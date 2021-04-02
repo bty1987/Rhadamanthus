@@ -13,6 +13,7 @@ package com.fanglin.construction.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Service("constructionService")
@@ -101,11 +103,12 @@ public class ConstructionServiceImpl implements ConstructionService {
 		ConstructionVO constructionVO;
 		for (ConstructionPO constructionPO : constructionPOs) {
 			
-			constructionVO = new ConstructionVO(new DecorationVO(), new UserBaseVO());
+			constructionVO = new ConstructionVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO());
 
-			BeanUtil.copyProperties(constructionPO, constructionVO, Arrays.asList("decoration", "supervisor"));
+			BeanUtil.copyProperties(constructionPO, constructionVO, Arrays.asList("decoration", "supervisor", "locker"));
 			BeanUtil.copyProperties(decorationPOToVO(constructionPO.getDecoration()), constructionVO.getDecoration());
 			BeanUtil.copyProperties(constructionPO.getSupervisor(), constructionVO.getSupervisor(), Arrays.asList("duty", "dept"));
+			BeanUtil.copyProperties(constructionPO.getLocker(), constructionVO.getLocker(), Arrays.asList("duty", "dept"));
 			
 			constructionVOs.add(constructionVO);
 		}
@@ -139,12 +142,16 @@ public class ConstructionServiceImpl implements ConstructionService {
 			throw new FLException(120020, "工程信息不存在");
 		}
 
-		BeanUtil.copyProperties(constructionPO, constructionVO, Arrays.asList("decoration", "supervisor"));
+		BeanUtil.copyProperties(constructionPO, constructionVO, Arrays.asList("decoration", "supervisor", "locker"));
 
 		constructionVO.setSupervisor(new UserBaseVO());
 
 		if (constructionPO.getSupervisor() != null) {
 			BeanUtil.copyProperties(constructionPO.getSupervisor(), constructionVO.getSupervisor(), Arrays.asList("duty", "dept"));
+		}
+		
+		if(constructionPO.getLocker() != null) {
+			BeanUtil.copyProperties(constructionPO.getLocker(), constructionVO.getLocker(), Arrays.asList("duty", "dept"));
 		}
 
 		return constructionVO;
@@ -214,7 +221,7 @@ public class ConstructionServiceImpl implements ConstructionService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int lockAccessory(ConstructionVO constructionVO) throws FLException {
+	public int lockAccessory(ConstructionVO constructionVO, String userId) throws FLException {
 		
 		ConstructionPO constructionPO = constructionDao.get(constructionVO.getCid());
 			
@@ -222,8 +229,14 @@ public class ConstructionServiceImpl implements ConstructionService {
 			throw new FLException(120020, "工程信息不存在");
 		}	
 		
+		UserPO locker = userDao.queryUserByUserId(userId);
+		
 		constructionPO.setAccessory(ConstructionPO.ACCESSORY_LOCK_SHORT);
-			
+		
+		constructionPO.setLocker(locker);
+		
+		constructionPO.setLockTime(DateUtil.getDateToTimestamp(new Date()));
+
 		constructionDao.update(constructionPO);
 				
 		return 0;

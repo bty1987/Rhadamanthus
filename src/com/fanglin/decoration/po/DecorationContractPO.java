@@ -59,6 +59,8 @@ public class DecorationContractPO implements Serializable, Contract {
 
 	private String viewpdf;
 
+	private String path;
+
 	private UserPO creater;
 
 	private UserPO signner;
@@ -133,6 +135,15 @@ public class DecorationContractPO implements Serializable, Contract {
 
 	public void setViewpdf(String viewpdf) {
 		this.viewpdf = viewpdf;
+	}
+
+	@Column(name = "path")
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

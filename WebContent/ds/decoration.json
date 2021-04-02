@@ -105,6 +105,12 @@
         {"key":"3", "value":"免责"},
         {"key":"4", "value":"欠款"},
         {"key":"5", "value":"过保"}
+    ],"contractStatus":[
+        {"key":"0", "value":"初始"},
+        {"key":"1", "value":"已签"},
+        {"key":"2", "value":"失效"},
+        {"key":"3", "value":"归档"},
+        {"key":"4", "value":"归档"}
     ],
 
     "errorCode": 0,

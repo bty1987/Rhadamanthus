@@ -2,10 +2,17 @@ $(function () {
 
     var salesItem = {
         sbid: params['sbid'],
+        sid: params['sid'],
+        
+        deliveryStatus: {},
     };
     
     com.focusPage('#fl-statement').statement("销售单", "销售项");
-
+    
+    com.post(api.ds.sales, {}, function (res) {
+        salesItem.deliveryStatus = res.deliveryStatus.split("key", "value");
+    }, null, false);
+    
     function initList(tableId, listData) {
         var $tableWrap = com.focusPage('#' + tableId);
         var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
@@ -27,6 +34,7 @@ $(function () {
                     ["折让价:", v.salesItem.price, "blue", "price"],
                     ["数量:", v.num, "blue", "num"],
                     ["总价:", v.total, "blue", "total"],
+                    ["配送状态:", salesItem.deliveryStatus[v.salesItem.deliveryStatus], "red"],
                     ["结算方式:", v.ctype == 0 ? "底价" : "点位", "red", "ctype"],
                     ["结算值:", v.cvalue, "blue", "cvalue"],
                     ["备注:", v.salesItem.comment, "grey", "comment"]
@@ -49,16 +57,28 @@ $(function () {
         }
     };
     
+    var salesBalanceItems = [];
+    var deliveryItems = {};
+    
     com.post(api.sales.querySalesBalanceItemBySbid, {"salesBalance.sbid": salesItem.sbid}, function (res) {
-        
-        com.focusPage("#resultListItem").empty();
-        
-        if (res.salesBalanceItems.length == 0) {
-            emptyData("resultListItem");
-        } else {
-            initList("resultListItem", res.salesBalanceItems);
-        }
+        salesBalanceItems = res.salesBalanceItems;
+    }, null, false);
+    
+    com.post(api.sales.querySalesDeliveryItem, {"salesDeliveryItem.sales.sid": salesItem.sid}, function (res) {
+        $.each(res.salesDeliveryItems, function(i, v){
+            deliveryItems[v.salesItem.siid] = v.status;
+        });
+    }, null, false);
+    
+    $.each(salesBalanceItems, function(i, v){
+        if(deliveryItems.hasOwnProperty(v.salesItem.siid)) v.salesItem.deliveryStatus = deliveryItems[v.salesItem.siid];
     });
+    
+    if (salesBalanceItems.length == 0) {
+        emptyData("resultListItem");
+    } else {
+        initList("resultListItem", salesBalanceItems);
+    }
     
     function emptyData(id) {
         var $resultList = com.focusPage('#' + id).html('');

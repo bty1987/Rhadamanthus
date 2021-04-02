@@ -135,7 +135,7 @@ jQuery(function ($) {
             
             $btnSign.click(function(){
                 
-                com.post(api.data.signateSignet, {"signet.sid": v.sid, "signet.data": config.server + v.path}, function(res){
+                com.post(api.data.signateSignet, {"signet.sid": v.sid, "signet.data": config.media + v.path}, function(res){
                     com.showAlert(com.info, "操作成功");
                     searcher.doSearch();
                 });

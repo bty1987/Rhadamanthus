@@ -92,7 +92,7 @@ Condition.addupRule("sales", {
         }
     },
     "status":{
-        label: "销售单状态",
+        label: "状态",
         type: "select",
         submitConfig: {
             name: "status",

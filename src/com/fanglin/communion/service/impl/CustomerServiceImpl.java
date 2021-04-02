@@ -155,17 +155,18 @@ public class CustomerServiceImpl implements CustomerService {
 
 		List<CustomerPhonePO> customerPhonePOs = customerPhoneDao.queryCustomerPhoneByPhone(customerPhone.getPhone(), customerPhone.getStatus(), company);
 
-		if (customerPhonePOs.size() > 0) {
+		if (customerPhonePOs == null || customerPhonePOs.size() == 0) {
+			return 0;
+		}
 
-			for (CustomerPhonePO customerPhonePO : customerPhonePOs) {
+		for (CustomerPhonePO customerPhonePO : customerPhonePOs) {
 
-				if (customerPhone.getCid() != null && customerPhonePO.getCid() == customerPhone.getCid()) {
-					throw new FLException(130006, "客户电话已存在");
-				}
+			if (customerPhone.getCid() != null && customerPhonePO.getCid() == customerPhone.getCid()) {
+				throw new FLException(130006, "客户电话已存在");
+			}
 
-				if (customerPhonePO.getStatus() == CustomerPhonePO.STATUS_ENABLE_INT) {
-					throw new FLException(130006, "客户电话已存在");
-				}
+			if (customerPhonePO.getStatus() == CustomerPhonePO.STATUS_ENABLE_INT) {
+				throw new FLException(130006, "客户电话已存在");
 			}
 		}
 
@@ -263,10 +264,6 @@ public class CustomerServiceImpl implements CustomerService {
 
 		if (customerPO == null) {
 			throw new FLException(130002, "客户信息不存在");
-		}
-
-		if (customerPO.getStatus() != CustomerPO.STATUS_INIT_INT) {
-			throw new FLException(130028, "客户状态不可操作");
 		}
 
 		CustomerPhonePO customerPhonePO = new CustomerPhonePO();
@@ -417,8 +414,6 @@ public class CustomerServiceImpl implements CustomerService {
 			redirect = Signature.authenticate(customerPO);
 			customerDao.update(customerPO);
 		}
-
-		System.out.println(redirect);
 
 		return redirect;
 	}

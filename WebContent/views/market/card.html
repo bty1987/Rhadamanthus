@@ -1,149 +1,148 @@
-	<div class="row">
-        <div class="col-md-12">
-		    <div id="condList" class="fl_search clearfix"></div>
-		    <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
-		    <div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
-		</div>
-	</div>
 
-    <div class="modal fade" id="cardModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="myModalLabel">名片</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <form class="form-horizontal">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="userName" class="col-sm-3 control-label no-padding-right orange">姓名</label>
-                                                <div class="col-md-9">
-                                                    <input type="text" class="col-xs-10 col-sm-9 v_required" id="userName" maxlength="30" data-toggle="popover">
-                                                </div>
-                                            </div>
+<div>
+    <div id="condList" class="fl_search clearfix"></div>
+    <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+    <div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+</div>
 
-                                            <div class="form-group">
-                                                <label class="col-sm-3 control-label no-padding-right orange" for="phone">手机号</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" id="phone" class="col-xs-10 col-sm-9 v_required v_phone" maxlength="20" data-toggle="popover"/>
-                                                </div>
-                                            </div>
+   <div class="modal fade" id="cardModal" tabindex="-1">
+       <div class="modal-dialog">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                   <h4 class="modal-title" id="myModalLabel">名片</h4>
+               </div>
+               <div class="modal-body">
+                   <div class="row">
+                       <div class="col-xs-12">
+                           <form class="form-horizontal">
+                               <div class="row">
+                                   <div class="col-md-12">
+                                       <div class="col-md-12">
+                                           <div class="form-group">
+                                               <label for="userName" class="col-sm-3 control-label no-padding-right orange">姓名</label>
+                                               <div class="col-md-9">
+                                                   <input type="text" class="col-xs-10 col-sm-9 v_required" id="userName" maxlength="30" data-toggle="popover">
+                                               </div>
+                                           </div>
 
-                                            <div class="form-group">
-                                                <label class="col-sm-3 control-label no-padding-right orange" for="wechat">微信号</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" id="wechat" class="col-xs-10 col-sm-9" maxlength="30" data-toggle="popover"/>
-                                                </div>
-                                            </div>
+                                           <div class="form-group">
+                                               <label class="col-sm-3 control-label no-padding-right orange" for="phone">手机号</label>
+                                               <div class="col-sm-9">
+                                                   <input type="text" id="phone" class="col-xs-10 col-sm-9 v_required v_phone" maxlength="20" data-toggle="popover"/>
+                                               </div>
+                                           </div>
 
-                                            <div class="form-group">
-                                                <label class="col-sm-3 control-label no-padding-right orange" for="industry">所在行业</label>
-                                                <div class="col-sm-9">
-	                                                <select class="col-xs-10 col-sm-9" id="industry"  data-toggle="popover">
-	                                                        <option value="设计公司">设计公司</option>
-	                                                        <option value="家装公司">家装公司</option>
-	                                                        <option value="专业施工">专业施工</option>
-	                                                        <option value="软装家纺">软装家纺</option>
-	                                                        <option value="建筑工程">建筑工程</option>
-	                                                        <option value="建材厂家">建材厂家</option>
-	                                                        <option value="电子商务">电子商务</option>
-	                                                        <option value="设备五金">设备五金</option>
-	                                                        <option value="软件开发">软件开发</option>
-	                                                        <option value="建材经销商">建材经销商</option>
-	                                                        <option value="环保检测">环保检测</option>
-	                                                        <option value="家政服务">家政服务</option>
-	                                                        <option value="环保检测">环保检测</option>
-	                                                        <option value="家政服务">家政服务</option>
-	                                                        <option value="网站新媒体">网站新媒体</option>
-	                                                        <option value="第三方服务">第三方服务</option>
-                                                    </select>
-                                                </div>
-                                            </div>
+                                           <div class="form-group">
+                                               <label class="col-sm-3 control-label no-padding-right orange" for="wechat">微信号</label>
+                                               <div class="col-sm-9">
+                                                   <input type="text" id="wechat" class="col-xs-10 col-sm-9" maxlength="30" data-toggle="popover"/>
+                                               </div>
+                                           </div>
 
-                                            <div class="form-group">
-                                                <label class="col-sm-3 control-label no-padding-right orange" for="profession">职业</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" id="profession" class="col-xs-10 col-sm-9" maxlength="30" data-toggle="popover"/>
-                                                </div>
-                                            </div>
+                                           <div class="form-group">
+                                               <label class="col-sm-3 control-label no-padding-right orange" for="industry">所在行业</label>
+                                               <div class="col-sm-9">
+                                                <select class="col-xs-10 col-sm-9" id="industry"  data-toggle="popover">
+                                                        <option value="设计公司">设计公司</option>
+                                                        <option value="家装公司">家装公司</option>
+                                                        <option value="专业施工">专业施工</option>
+                                                        <option value="软装家纺">软装家纺</option>
+                                                        <option value="建筑工程">建筑工程</option>
+                                                        <option value="建材厂家">建材厂家</option>
+                                                        <option value="电子商务">电子商务</option>
+                                                        <option value="设备五金">设备五金</option>
+                                                        <option value="软件开发">软件开发</option>
+                                                        <option value="建材经销商">建材经销商</option>
+                                                        <option value="环保检测">环保检测</option>
+                                                        <option value="家政服务">家政服务</option>
+                                                        <option value="环保检测">环保检测</option>
+                                                        <option value="家政服务">家政服务</option>
+                                                        <option value="网站新媒体">网站新媒体</option>
+                                                        <option value="第三方服务">第三方服务</option>
+                                                   </select>
+                                               </div>
+                                           </div>
 
-                                            <div class="form-group">
-                                                <label class="col-sm-3 control-label no-padding-right orange" for="address">地址</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" id="address" class="col-xs-10 col-sm-9" maxlength="100" data-toggle="popover"/>
-                                                </div>
-                                            </div>
+                                           <div class="form-group">
+                                               <label class="col-sm-3 control-label no-padding-right orange" for="profession">职业</label>
+                                               <div class="col-sm-9">
+                                                   <input type="text" id="profession" class="col-xs-10 col-sm-9" maxlength="30" data-toggle="popover"/>
+                                               </div>
+                                           </div>
 
-                                            <div class="form-group">
-                                                <label class="col-sm-3 control-label no-padding-right orange" for="info">个人简介</label>
-                                                <div class="col-sm-9">
-                                                    <textarea rows="5" id="info" class="col-xs-10 col-sm-9" data-toggle="popover"></textarea>
-                                                </div>
-                                            </div>
+                                           <div class="form-group">
+                                               <label class="col-sm-3 control-label no-padding-right orange" for="address">地址</label>
+                                               <div class="col-sm-9">
+                                                   <input type="text" id="address" class="col-xs-10 col-sm-9" maxlength="100" data-toggle="popover"/>
+                                               </div>
+                                           </div>
 
-                                            <div class="form-group" style="display: none">
-                                                <label class="col-sm-3 control-label no-padding-right" for="path">图片路径</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" id="path" class="col-xs-10 col-sm-6 v_required" data-toggle="popover"/>
-                                                </div>
-                                            </div>
+                                           <div class="form-group">
+                                               <label class="col-sm-3 control-label no-padding-right orange" for="info">个人简介</label>
+                                               <div class="col-sm-9">
+                                                   <textarea rows="5" id="info" class="col-xs-10 col-sm-9" data-toggle="popover"></textarea>
+                                               </div>
+                                           </div>
 
-                                            <div class="form-group">
-                                                <label class="col-sm-3 control-label no-padding-right orange" for="userPhoto"></label>
-                                                <div class="col-sm-9 no-padding-left">
-                                                    <div id="userPhoto" class="col-xs-10 col-sm-6" data-toggle="popover"></div>
-                                                </div>
-                                            </div>
+                                           <div class="form-group" style="display: none">
+                                          <label class="col-sm-3 control-label no-padding-right" for="path">图片路径</label>
+                                          <div class="col-sm-9">
+                                              <input type="text" id="path" class="col-xs-10 col-sm-6 v_required" data-toggle="popover"/>
+                                          </div>
+                                      </div>
 
-                                            <div class="col-sm-12">
-                                                <label class="col-sm-3"></label>
-                                                <div class="col-sm-9 no-padding-left">
-                                                    <a class="form-group" id="upload"></a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer" style="text-align: center">
-                    <button type="button" id="updateBtn" class="btn btn-primary">保存</button>
-                </div>
+                                      <div class="form-group">
+                                          <label class="col-sm-3 control-label no-padding-right orange" for="userPhoto"></label>
+                                          <div class="col-sm-9 no-padding-left">
+                                              <div id="userPhoto" class="col-xs-10 col-sm-6" data-toggle="popover"></div>
+                                          </div>
+                                      </div>
+
+                                      <div class="col-sm-12">
+                                          <label class="col-sm-3"></label>
+                                          <div class="col-sm-9 no-padding-left">
+                                              <a class="form-group" id="upload"></a>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </form>
+                  </div>
+              </div>
+          </div>
+          <div class="modal-footer" style="text-align: center">
+                <button type="button" id="updateBtn" class="btn btn-primary">保存</button>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="modal fade" id="cardPhotoModal"  tabindex="-1">
-        <div class="modal-dialog" style="width: 50%;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span>&times;</span><span class="sr-only">Close</span>
-                    </button>
-                    <h4 class="modal-title">照片墙</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row" style="padding-top: 10px;">
-                        <div class="col-xs-12">
-                            <div class="row-fluid">
-                                <ul class="ace-thumbnails" id="cardPhoto">
+<div class="modal fade" id="cardPhotoModal"  tabindex="-1">
+    <div class="modal-dialog" style="width: 50%;">
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">
+                  <span>&times;</span><span class="sr-only">Close</span>
+              </button>
+              <h4 class="modal-title">照片墙</h4>
+          </div>
+          <div class="modal-body">
+              <div class="row" style="padding-top: 10px;">
+                    <div class="col-xs-12">
+                        <div class="row-fluid">
+                            <ul class="ace-thumbnails" id="cardPhoto">
 
-                                </ul>
-                            </div>
+                            </ul>
                         </div>
                     </div>
                 </div>
-
             </div>
+
         </div>
     </div>
+</div>
 
 <script type="text/javascript">
     $.loadScript(['js/market/card.js']);

@@ -12,6 +12,9 @@
 package com.fanglin.construction.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+
+import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -42,6 +45,10 @@ public class ConstructionVO implements Serializable{
 	
 	private Long salaryTotal;
 	
+	private UserBaseVO locker;
+	
+	private Timestamp lockTime;
+	
 	public ConstructionVO() {
 		super();
 	}
@@ -55,6 +62,13 @@ public class ConstructionVO implements Serializable{
 		super();
 		this.decoration = decoration;
 		this.supervisor = supervisor;
+	}
+	
+	public ConstructionVO(DecorationVO decoration,UserBaseVO supervisor, UserBaseVO locker) {
+		super();
+		this.decoration = decoration;
+		this.supervisor = supervisor;
+		this.locker = locker;
 	}
 	
 	public UserBaseVO getSupervisor() {
@@ -144,5 +158,21 @@ public class ConstructionVO implements Serializable{
 	public void setSalaryTotal(Long salaryTotal) {
 		this.salaryTotal = salaryTotal;
 	}
-	
+
+	public UserBaseVO getLocker() {
+		return locker;
+	}
+
+	public void setLocker(UserBaseVO locker) {
+		this.locker = locker;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getLockTime() {
+		return lockTime;
+	}
+
+	public void setLockTime(Timestamp lockTime) {
+		this.lockTime = lockTime;
+	}
 }

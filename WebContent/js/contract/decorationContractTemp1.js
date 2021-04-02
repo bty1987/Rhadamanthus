@@ -61,7 +61,7 @@ jQuery(function($) {
         
         com.datetime(com.focusPage("#con-work-year", "#form").val(datas.finishTime ? datas.finishTime.substr(0, 4) : ""), "year");
         com.datetime(com.focusPage("#con-work-month", "#form").val(datas.finishTime ? datas.finishTime.substr(5, 2) : ""), "month");
-        com.datetime(com.focusPage("#con-work-day", "#form").val(datas.finishTime ? datas.finishTime.substr(8, 2) : ""), "date");
+        com.datetime(com.focusPage("#con-work-day", "#form").val(datas.finishTime ? datas.finishTime.substr(8, 2) : ""), "day");
     });
 
     //通过装修单号获取装修款项信息
@@ -92,6 +92,7 @@ jQuery(function($) {
         com.focusPage("#con-village-name", "#form").val(village.name);
         com.focusPage("#con-housenumber", "#form").val(house.houseNumber);
         com.focusPage("#con-buildarea", "#form").val(house.buildArea);
+        com.focusPage("#con-housetype", "#form").val(data.houseType);
         
         com.focusPage("#con-house-type", "#form").val(contractEdit.decorationType[data.type]);
         com.focusPage("#con-work-type", "#form").val(contractEdit.decorationType[data.type]);
@@ -109,12 +110,28 @@ jQuery(function($) {
         contractEdit.cover["cov-designer-phone"] = data.designer.phone;
     });
     
-    quotationUtils.quotationDetail = {};
+    com.post(api.decoration.queryDecorationActivityByOrderId, {"decorationActivity.orderId": contractEdit.decorationOrderId}, function(res){
+        
+        var decorationActivitys = res.decorationActivitys;
+        
+        if(decorationActivitys.length != 0) com.focusPage("#con-activity-name", "#form").val(decorationActivitys[0].activity.name);
+    });
+    
+    quotationUtils.quotationDetail = {
+        quotation: {},
+        quotationFunctionAreas: {}
+    };
     params.showType = {itemtype: 7};
 
     com.post(api.quotation.queryQuotationForDefaultByOrderId, {"quotation.orderId": contractEdit.decorationOrderId}, function(res){
         quotationUtils.quotationDetail.quotation = res.quotation;
     }, null, false);
+    
+    if(!quotationUtils.quotationDetail.quotation.qid) {
+        com.showAlert(com.warning, "无报价信息");
+        com.focusPage("#contractPopUp").html("");
+        return false;
+    }
 
     com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": contractEdit.decorationOrderId}, function(res){
         quotationUtils.quotationDetail.quotation.decoration = res.decoration;
@@ -158,7 +175,7 @@ jQuery(function($) {
     
     contractEdit.table = {
         "insertWay": 1,
-        "keyword": "辽宁方林装饰家装项目单",
+        "keyword": "家装项目列表",
         "pageBegin": 1,
         "headers": ["序号", "项目名称", "单位", "数量", "工艺做法及材料说明"],
         "colWidthPercent": [1, 3, 1, 1, 5],
@@ -304,6 +321,7 @@ jQuery(function($) {
             data["con-sign-day"] = com.dateFormat(new Date(), "dd");
             
             data["con-design-money1"] = parseFloat(data["con-design-money"]);
+            data["con-activity-name1"] = parseFloat(data["con-activity-name"]);
             
             data["con-contract-total-cn"] = utils.getCNMoney(parseFloat(data["con-contract-total"]));
             data["con-contract-stotal-cn"] = utils.getCNMoney(parseFloat(data["con-contract-stotal"]));
@@ -326,8 +344,24 @@ jQuery(function($) {
             
             console.log(options);
             
+            var popup = com.focusPage("#popup-page");
+            var target = com.focusPage("#layerPopUp");
+            
+            var mask = $("<div></div>").addClass("tab-mask").appendTo(popup);
+            var maskh1 = $("<h1></h1>").css({"position": "absolute", "top": "30%", "left": "45%"}).appendTo(mask);
+            var maskicon = $("<i></i>").addClass("icon-spinner icon-spin bigger-450").appendTo(maskh1);
+            
+            mask.css("top", target.height() - mask.height() + 30);
+            popup.css("overflow", "hidden");
+            
             com.post(api.decoration.addDecorationContract, options, function (res) {
                 com.closePopup();
+            }, function(res){
+                
+                com.showAlert(com.error, res.errorMsg);
+                
+                mask.remove();
+                popup.css("overflow", "");
             });
         });
     });

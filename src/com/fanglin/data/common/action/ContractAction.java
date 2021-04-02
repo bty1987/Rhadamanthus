@@ -60,6 +60,14 @@ public class ContractAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateContractForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateContractForStatus() throws FLException {
+
+		contractService.updateContractForStatus(contract);
+
+		return SUCCESS;
+	}
+
 	public List<ContractVO> getContracts() {
 		return contracts;
 	}

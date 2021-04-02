@@ -10,10 +10,10 @@ $(function () {
         versionModal: com.focusPage("#versionModal"),
         
         items: {
-            vid: com.focusPage("#vid"),
-            no: com.focusPage("#no"),
-            createTime: com.focusPage("#createTime"),
-            comment: com.focusPage("#comment"),
+            vid: com.focusPage("#vid", "#versionModal"),
+            no: com.focusPage("#no", "#versionModal"),
+            createTime: com.focusPage("#createTime", "#versionModal"),
+            comment: com.focusPage("#comment", "#versionModal"),
         },
     };
     
@@ -78,10 +78,10 @@ $(function () {
                 
                 com.cleanItems(version.items);
                 
-                version.items.no.val(v.no),
-                version.items.createTime.val(v.createTime),
-                version.items.comment.html(v.comment)
-
+                version.items.no.val(v.no);
+                version.items.createTime.val(v.createTime);
+                version.items.comment.val(v.comment);
+                
                 version.versionModal.modal("show");
             });
 

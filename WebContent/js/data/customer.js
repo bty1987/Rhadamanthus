@@ -45,81 +45,45 @@ jQuery(function($) {
 		customer.items.relationshipType.bindData(res.relationshipType, "key", "value");
 	});
 	
-	var displayFunc  = (function(){
-
-        var renderList = function(tableId,listData){
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if(listData && listData.length){
-                $.each(listData,function(i, v){
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                    var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.name));
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-                    var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-					var $managephone = $('<a></a>').addClass('btn btn-minier btn-success').html('管理电话');
-
-                    var propertyArr = [
-                        ["姓名:", v.name, "grey"],
-                        ["性别:", v.gender, "grey"],
-						["身份证号:", v.identity, "grey"],
-						["军官证:", v.officer, "grey"],
-						["护照:", v.passport, "grey"],
-                        ["客户关系:", v.relationshipType, "grey"],
-                        ["邮箱:", v.email, "grey"],
-                        ["QQ:", v.qq, "grey"],
-                        ["微信:", v.wechat, "grey"]
-                     ];
-
-                    $.each(propertyArr, function (index,value) {
-						var $liProperty = $('<li></li>');
-						$('<strong></strong>').html(value[0]).appendTo($liProperty);
-						$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-						$liProperty.appendTo($ulProperty);
-					});
-                    
-                    $btnEdit.click(function(){
-                    	customer.cid = v.cid;
-                    	editCustomer(v);
-                    });
-
-					$managephone.click(function(){
-						customer.cid = v.cid;
-						customer.items.name = v.name;
-						managephone();
-					});
-
-                    $divBtnWrap.append($btnEdit).append($managephone).appendTo($h3);
-                    $liLine.append($h3).append($ulProperty).appendTo($ul);
-                });
-                $ul.appendTo($tableWrap);
-            }
-        };
-        
-        return {
-            init : function(tableId,listData){
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
-            }, initAddCustomer: function(){
-                
-            }
-        }
-    })();
-
 	var searcher = new Searcher();
 	
-	searcher.init([ 'customer-phone', 'customer-relationship'], "condList", api.data.pageCustomer, function(data){
-		displayFunc.init('resultList', data);
-	}, "pagenation", "customerPostData", null, false, null, function(){
-    	
-    	var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'add').css("margin", "0px 3px");
-    	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-    	var $addspan = $('<span></span>').text('添加').appendTo($adda);
-    	
-    	return [$adda];
-    });
-	
+	searcher.base("condList", "pagenation", "resultList", api.data.pageCustomer);
+    
+    searcher.condition(['customer-phone', 'customer-relationship']);
+    
+    searcher.history("customerPostData");
+    
+    searcher.button([{id: "add", name: "添加", clazz: "btn-success", icon: "icon-plus"}]);
+    
+    var lineprops = [
+        {field: "name", name: "姓名", prop: "name", clazz: "grey"},
+        {field: "gender", name: "性别", prop: "gender", clazz: "grey"},
+        {field: "identity", name: "身份证号", prop: "identity", clazz: "grey"},
+        {field: "officer", name: "军官证", prop: "officer", clazz: "grey"},
+        {field: "passport", name: "护照", prop: "passport", clazz: "grey"},
+        {field: "relationshipType", name: "客户关系", prop: "relationshipType", clazz: "red"},
+        {field: "email", name: "邮箱", prop: "email", clazz: "grey"},
+        {field: "qq", name: "QQ", prop: "qq", clazz: "grey"},
+        {field: "wechat", name: "邮箱", prop: "wechat", clazz: "grey"},
+        {field: "status", name: "状态", prop: function(v){return v.status == 0 ? "初始" : "认证"}, clazz: "red"},
+    ];
+    
+    var linebtns = [
+        {name: "编辑", clazz: "btn-yellow", handle: function(v){
+            customer.cid = v.cid;
+            editCustomer(v);
+            return false;
+        }},
+        {name: "管理电话", clazz: "btn-success", handle: function(v){
+            customer.cid = v.cid;
+            customer.items.name = v.name;
+            managephone();
+            return false;
+        }},
+    ];
+    
+    searcher.line("name", lineprops, linebtns).render();
+    
 	com.focusPage('a[name="add"]','#pagenation').click(function(){
 	    
 	    customer.cid = null;
@@ -202,7 +166,7 @@ jQuery(function($) {
 			$.each(res.customerPhones, function (i, v) {
 
 				var phonelist = $('<div></div>').prop("id", "customerPhone" + i);
-				phonelist.append(addspan('10', '客户姓名  : ', customer.items.name)).append(addspan('40', '电话号码  : ', v.phone));
+				phonelist.append(addspan('10', '客户姓名 : ', customer.items.name)).append(addspan('40', '电话号码  : ', v.phone));
 
 				var $btnStatus =$('<div style="float: right;"></div>')
 				var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"}).attr("id", v.cpid);
@@ -262,24 +226,18 @@ jQuery(function($) {
 	}
 
 	function addspan(px, name, value) {
-		var $10pxdiv = $('<div></div>').css({
+	    
+		var $pxdiv = $('<div></div>').css({
 			'display' : 'inline-block',
-			'margin-left' : '10px'
+			'margin-left' : px + 'px'
 		});
-		var $40pxdiv = $('<div></div>').css({
-			'display' : 'inline-block',
-			'margin-left' : '40px'
-		});
+		
 		var $nameSpan = $('<strong></strong>').html(name);
 		var $valueSpan = $('<b></b>').text(value);
-
-		if (px == '40') {
-			var $blueb = $valueSpan.addClass("grey")
-			return $40pxdiv.append($nameSpan).append($blueb);
-		} else if (px == '10') {
-			var $greyb = $valueSpan.addClass("grey")
-			return $10pxdiv.append($nameSpan).append($greyb);
-		}
+		
+		var $blueb = $valueSpan.addClass("grey");
+		
+        return $pxdiv.append($nameSpan).append($blueb);
 	}
 
 	function addPhone(){

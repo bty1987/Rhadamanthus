@@ -23,7 +23,7 @@ $(function(){
         
     }else{
         
-        config.library = 'http://192.168.5.22:5000/';
+        config.library = 'http://192.168.5.22/';
         config.communion = 'http://192.168.5.21/';
         config.server = 'http://192.168.5.21/';
         config.media = 'http://192.168.5.21/';

@@ -1,6 +1,7 @@
 package com.fanglin.data.common.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +83,23 @@ public class ContractServiceImpl implements ContractService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int updateContract(ContractVO contractVO) throws FLException {
+
+		ContractPO contractPO = contractDao.get(contractVO.getCid());
+
+		if (contractPO == null) {
+			throw new FLException(130044, "合同模版不存在");
+		}
+
+		BeanUtil.copyPropertie(contractVO, contractPO, Arrays.asList("cid", "status"));
+
+		contractDao.update(contractPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int updateContractForStatus(ContractVO contractVO) throws FLException {
 
 		ContractPO contractPO = contractDao.get(contractVO.getCid());
 

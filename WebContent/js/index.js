@@ -114,7 +114,7 @@
     $(".messageList").data("level", 1);
 
     params.userCompany = window.userCompany;
-
+    
     com.post(api.personel.queryUserCompany, {"user.uid": params.userInfo.user.uid}, function (res) {
 
         var companysel = $('#companysel').html("");
@@ -340,6 +340,13 @@
         $("#navbar").fadeIn();
     });
     
+//    $(".main-content").slimscroll({
+//        height: '95vh',
+//        size: '5px',
+//        opacity: 0.2,
+//        position: 'right',
+//    });
+    
     function createMenu(data){
 
         var menuArr = {
@@ -360,9 +367,10 @@
         $tree.slimscroll({
             height: '88vh',
             size: '5px',
-            opacity: 0.2
+            opacity: 0.2,
+            position: 'left',
         });
-
+        
         $main.click(function(){
             $('li',$tree).removeClass('open').removeClass('active');
             $main.addClass('active');
@@ -465,6 +473,26 @@
             e.preventDefault();
         });
     }
+    
+    $("#sidebar-collapse").click(function(){
+        
+        var sidebar = $("#sidebar");
+        var scorll = $(".slimScrollDiv");
+        var nav = $(".nav.nav-list");
+        var main = $(".main-content");
+        
+        if(sidebar.hasClass("menu-min")){
+            scorll.css("overflow", "visible");
+            nav.css("overflow", "visible");
+            
+            main.css("margin-left", "43px");
+        }else{
+            scorll.css("overflow", "hidden");
+            nav.css("overflow", "hidden");
+            
+            main.css("margin-left", "190px");
+        }
+    });
     
     function navControl($this){
         if($this.data('level') == 1){

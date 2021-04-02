@@ -86,6 +86,7 @@ public class Signature {
 		}
 
 		if (response.getInteger("code") != 1) {
+			System.out.println(result);
 			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
 		}
 
@@ -118,8 +119,6 @@ public class Signature {
 
 		String result = comverify.invokeCompanyVerifyUrl(companyInfo, bankInfo, legalInfo, agentInfo, signno, verifyed_way, m_verified_way, page_modify, company_principal_type, RETURN_URL_STR, NOTIFY_URL_STR, result_type, cert_flag, null, null, null, null, null);
 
-		System.out.println(result);
-
 		JSONObject response = JSONObject.parseObject(result);
 
 		if (response == null) {
@@ -127,6 +126,7 @@ public class Signature {
 		}
 
 		if (response.getInteger("code") != 1) {
+			System.out.println(result);
 			throw new FLException(130059, String.format("公司认证失败,%s", response.getString("msg")));
 		}
 
@@ -146,8 +146,6 @@ public class Signature {
 
 		String result = personCertInfo.invokeFindPersonCert(signetPO.getToken(), "2");
 
-		System.out.println(result);
-
 		JSONObject response = JSONObject.parseObject(result);
 
 		if (response == null) {
@@ -155,6 +153,7 @@ public class Signature {
 		}
 
 		if (response.getInteger("code") != 1) {
+			System.out.println(result);
 			throw new FLException(130059, String.format("公司认证失败,%s", response.getString("msg")));
 		}
 
@@ -192,6 +191,7 @@ public class Signature {
 		}
 
 		if (response.getInteger("code") != 1) {
+			System.out.println(result);
 			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
 		}
 
@@ -216,8 +216,6 @@ public class Signature {
 
 		String result = personverify.invokePersonVerifyUrl(signno, verifyed_way, page_modify, NOTIFY_URL_STR, RETURN_URL_STR, customerName, customer_ident_type, customerIdent, customerPhone, ident_front_path, result_type, cert_flag, null, null, null, null, null);
 
-		System.out.println(result);
-
 		JSONObject response = JSONObject.parseObject(result);
 
 		if (response == null) {
@@ -225,6 +223,7 @@ public class Signature {
 		}
 
 		if (response.getInteger("code") != 1) {
+			System.out.println(result);
 			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
 		}
 
@@ -233,7 +232,6 @@ public class Signature {
 		String authurl = decode(data.getString("url"));
 
 		customerPO.setToken(data.getString("transactionNo"));
-		customerPO.setAuthurl(authurl);
 
 		return authurl;
 	}
@@ -244,8 +242,6 @@ public class Signature {
 
 		String result = personCertInfo.invokeFindPersonCert(customerPO.getToken(), "1");
 
-		System.out.println(result);
-
 		JSONObject response = JSONObject.parseObject(result);
 
 		if (response == null) {
@@ -253,6 +249,7 @@ public class Signature {
 		}
 
 		if (response.getInteger("code") != 1) {
+			System.out.println(result);
 			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
 		}
 
@@ -260,6 +257,7 @@ public class Signature {
 		JSONObject person = data.getJSONObject("person");
 
 		if (!"2".equals(person.getString("status"))) {
+			System.out.println(result);
 			throw new FLException(130027, String.format("客户认证失败,%s", person.getString("status")));
 		}
 
@@ -288,6 +286,7 @@ public class Signature {
 		}
 
 		if (response.getInteger("code") != 1) {
+			System.out.println(result);
 			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
 		}
 	}
@@ -297,8 +296,6 @@ public class Signature {
 		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
 
 		String result = base.invokeaddSignature(signno, FddEncryptTool.ImageToBase64ByOnline(path));
-
-		System.out.println(result);
 
 		JSONObject response = JSONObject.parseObject(result);
 
@@ -329,8 +326,6 @@ public class Signature {
 
 		String result = base.invokeUploadTemplate(templateId, file, url);
 
-		System.out.println(result);
-
 		JSONObject response = JSONObject.parseObject(result);
 
 		if (response == null) {
@@ -338,6 +333,7 @@ public class Signature {
 		}
 
 		if (response.getInteger("code") != 1) {
+			System.out.println(result);
 			throw new FLException(130030, String.format("合同模版上传失败,%s", response.getString("msg")));
 		}
 	}
@@ -353,8 +349,6 @@ public class Signature {
 
 		String result = base.invokeGenerateContract(contract.templateCode(), contract.contentCode(), "", font_size, font_type, paramter, dynamic_tables);
 
-		System.out.println(result);
-
 		JSONObject response = JSONObject.parseObject(result);
 
 		if (response == null) {
@@ -362,6 +356,7 @@ public class Signature {
 		}
 
 		if (!"1000".equals(response.getString("code"))) {
+			System.out.println(result);
 			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
 		}
 
@@ -394,6 +389,7 @@ public class Signature {
 		}
 
 		if (!"1000".equals(response.getString("code"))) {
+			System.out.println(result);
 			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
 		}
 	}
@@ -434,6 +430,7 @@ public class Signature {
 		}
 
 		if ("1000".equals(response.getInteger("code"))) {
+			System.out.println(result);
 			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
 		}
 

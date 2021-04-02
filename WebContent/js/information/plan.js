@@ -38,7 +38,7 @@ $(function () {
 
     com.post(api.ds.information, {}, function(res) {
         plan.status = res.planStatus.split("key", "value");
-    });
+    }, null, false);
 
     com.post(api.data.queryTask, {"task.level": 0}, function (res) {
         plan.plugins = res.tasks.split("keyWord", "plugins");
@@ -57,105 +57,62 @@ $(function () {
 
     planUtils.bindUploadBtn("#attachment", 1070);
 
-    var displayFunc = (function () {
-
-        var renderList = function (tableId, listData) {
-            
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-            
-            if (listData && listData.length) {
-                $.each(listData, function (i, v) {
-                    creatLine(v).appendTo($ul);
-                });
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function (v) {   // 页面中的一条数据
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.task.name));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnDown = $('<a></a>').addClass('btn btn-minier btn-yellow').html('下载');
-            var errlog = $('<a></a>').addClass('btn btn-minier btn-danger').html('执行日志');
-            var $btncancel = $('<a></a>').addClass('btn btn-minier btn-warning').html('取消计划');
-            
-            var propertyArr = [
-                ["创建人:", v.creater.userName, "grey"],
-                ["创建时间:", v.createTime, "green"],
-                ["参数:", (v.args == "" || v.args == null) ? "---" : v.args, "grey"],
-                ["执行时间:", v.executeTime != null ? v.executeTime : "---", "green"],
-                ["结果文件路径:", v.resultFilepath != null ? v.resultFilepath : "---", "grey"],
-                ["信息文件路径:", v.infoFilepath != null ? v.infoFilepath : "---", "grey"],
-                ["进度:", v.schedule, "grey"],
-                ["状态:", plan.status[v.status], "red"],
-                ["结果信息:", (v.info == "" || v.info == null) ? "---" : v.info, "grey"]
-            ];
-
-            $.each(propertyArr, function (index, value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            if ((v.resultFilepath != null && v.resultFilepath.length != 0) && (v.status == 2)) {
-                $divBtnWrap.append($btnDown).appendTo($h3);
-            } else if ((v.status == 0) && (v.executeTime != null && v.executeTime.length != 0) && (Number(v.executeTime) > Number(plan.currentTime))) {
-                $divBtnWrap.append($btncancel).appendTo($h3);
-            }
-
-            if (v.infoFilepath != null && v.infoFilepath != "") {
-                $divBtnWrap.append(errlog).appendTo($h3);
-            }
-
-            $liLine.append($h3).append($ulProperty);
-
-            $btncancel.click(function () {
-                cancel(v);
-            });
-
-            $btnDown.click(function () {
-                window.open(config.media + v.resultFilepath);
-                return false;
-            });
-
-            errlog.click(function () {
-                window.open(config.media + v.infoFilepath);
-                return false;
-            });
-            return $liLine;
-        };
-
-        return {
-            init: function (tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function (v) {
-                return creatLine(v);
-            }
-        };
-    })();
-
     var searcher = new Searcher();
-
-    searcher.init(["information-plan-task", "information-plan-createTime", "information-plan-status"], "condList", api.information.pagePlan, function (data) {
-        displayFunc.init('resultList', data);
-    }, "pagenation", "planPostData", null, false, null, function () {
-
+    
+    searcher.base("condList", "pagenation", "resultList", api.information.pagePlan);
+    
+    searcher.condition(["information-plan-task", "information-plan-createTime", "information-plan-status"]);
+    
+    searcher.button(function () {
+        
         var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'addPlan').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span ></span>').text('添加').appendTo($adda);
-
-        var $exporta = $('<a></a>').addClass('btn btn-minier btn-inverse').attr('id', 'createPlan').css("margin", "0px 3px");
+        
+        var $exporta = $('<a></a>').addClass('btn btn-minier btn-inverse pull-left').attr('id', 'createPlan').css("margin", "0px 3px");
         var $exporti = $('<i></i>').addClass('icon-plus bigger-110').appendTo($exporta);
         var $exportspan = $('<span></span>').text('创建').appendTo($exporta);
-
+    
         return [$adda, $exporta];
     });
+    
+//    searcher.button([{id: "addPlan", name: "添加", clazz: "btn-yellow", icon: "icon-plus"}]);
+    
+    var lineprops = [
+        {field: "pid", name: "多选", type: "checkbox", prop: "pid"},
+        {field: "creater", name: "创建人", prop: "creater.userName", clazz: "grey"},
+        {field: "createTime", name: "创建时间", prop: "createTime", clazz: "green"},
+        {field: "args", name: "参数", prop: "args", clazz: "grey"},
+        {field: "executeTime", name: "执行时间", prop: "executeTime", clazz: "green"},
+        {field: "schedule", name: "进度", prop: "schedule", clazz: "grey"},
+        {field: "status", name: "状态", prop: "status", dataset: plan.status, clazz: "red"},
+        {field: "info", name: "结果信息", prop: "info", clazz: "grey"},
+    ];
+    
+    var linebtns = [
+        {name: "下载", clazz: "btn-yellow", handle: function(v){
+            window.open(config.media + v.resultFilepath);
+            return false;
+        }, show: function(v){
+            return (v.resultFilepath != null && v.resultFilepath.length != 0) && (v.status == 2);
+        }},
+        {name: "日志", clazz: "btn-danger", handle: function(v){
+            window.open(config.media + v.infoFilepath);
+            return false;
+        }, show: function(v){
+            return v.infoFilepath != null && v.infoFilepath != "";
+        }},
+        {name: "取消", clazz: "btn-warning", handle: function(v){
+            cancel(v);
+            return false;
+        }, show: function(v){
+            return (v.status == 0) && (v.executeTime != null && v.executeTime.length != 0) && (Number(v.executeTime) > Number(plan.currentTime));
+        }},
+    ]
+    
+    searcher.line("task.name", lineprops, linebtns);
+    
+    searcher.render();
 
     com.focusPage('#addPlan', '#pagenation').on("click", function () {
 

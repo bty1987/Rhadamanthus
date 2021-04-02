@@ -117,7 +117,7 @@ $(function () {
                 ["工种:", v.user.duty.name, "grey"],
                 ["质保金:", v.deposit, "blue"],
                 ["质保金上限:", v.toplimit, "blue"],
-                ["状态:", deposit.statusBalance[v.status], "grey"],
+                ["状态:", deposit.statusBalance[v.status], "red"],
             ];
 
             $.each(propertyArr, function (index, value) {

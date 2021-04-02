@@ -244,6 +244,10 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 			throw new FLException(330001, "客源不存在");
 		}
 
+		if (customerOriginPO.getBelonger() == null) {
+			throw new FLException(330002, "客源归属人错误");
+		}
+
 		if (customerOriginPO.getStatus() != CustomerOriginPO.STATUS_INIT_INT) {
 			throw new FLException(330014, "客源状态不可操作");
 		}
@@ -303,7 +307,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		}
 
 		CustomerPO customerPO = customerDao.get(customerOriginVO.getCustomer().getCid());
-		
+
 		if (customerPO == null) {
 			throw new FLException(130002, "客户不存在");
 		}
@@ -312,7 +316,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		customerOriginPO.setPhone(customerOriginVO.getPhone());
 
 		HousePO housePO = houseDao.get(customerOriginVO.getHouse().getHid());
-		
+
 		if (housePO == null) {
 			throw new FLException(130017, "房产不存在");
 		}

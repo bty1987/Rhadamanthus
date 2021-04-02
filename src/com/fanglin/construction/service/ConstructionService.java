@@ -38,6 +38,6 @@ public interface ConstructionService {
 	
 	public int openAccessory(ConstructionVO constructionVO) throws FLException;
 	
-	public int lockAccessory(ConstructionVO constructionVO) throws FLException;
+	public int lockAccessory(ConstructionVO constructionVO, String userId) throws FLException;
 
 }

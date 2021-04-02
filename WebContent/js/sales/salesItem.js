@@ -4,7 +4,9 @@ $(function () {
 
         sid: params.sid,
         dompany: params.dompany,
+        
         sales: null,
+        salesItem: null,
 
         items: {
             refundTotal: com.focusPage("#refundTotal"),
@@ -25,11 +27,16 @@ $(function () {
         },
 
         options: {},
-        edit_data: {},
-        approvalType: null
+        approvalType: null,
+        
+        deliveryStatus: {},
     };
 
     com.focusPage('#fl-statement').statement("销售单", "子项");
+    
+    com.post(api.ds.sales, {}, function (res) {
+        salesItem.deliveryStatus = res.deliveryStatus.split("key", "value");
+    }, null, false);
 
     com.post(api.sales.querySalesBySid, {"sales.sid": salesItem.sid}, function (res) {
         salesItem.sales = res.sales;
@@ -74,6 +81,7 @@ $(function () {
                     ["结算值:", v.cvalue, "blue"],
                     ["结算方式:", v.ctype == 0 ? "底价" : "点位", "red"],
                     ["类型:", v.priceType == "0" ? "正价" : "特价", "red"],
+                    ["配送状态:", salesItem.deliveryStatus[v.deliveryStatus], "red"],
                     ["备注:", v.comment, "grey"]
                 ];
 
@@ -126,7 +134,7 @@ $(function () {
                 });
 
                 $btnEdit.click(function () {
-                    salesItem.edit_data = v;
+                    salesItem.salesItem = v;
 
                     com.popup4mini("#miniPopUp", "#layerEdit", "编辑", function () {
                         com.focusPage("#miniPopUp").attr("li_Total", $total);
@@ -153,13 +161,29 @@ $(function () {
     querySalesItemBySid();
 
     function querySalesItemBySid() {
-        com.post(api.sales.querySalesItemBySid, {"sales.sid": salesItem.sid}, function (data) {
-            if (data.salesItems.length == 0) {
-                emptyData("list");
-            } else {
-                initList(data.salesItems);
-            }
+        
+        var salesItems = [];
+        var deliveryItems = {};
+        
+        com.post(api.sales.querySalesItemBySid, {"sales.sid": salesItem.sid}, function (res) {
+            salesItems = res.salesItems;
         }, null, false);
+        
+        com.post(api.sales.querySalesDeliveryItem, {"salesDeliveryItem.sales.sid": salesItem.sid}, function (res) {
+            $.each(res.salesDeliveryItems, function(i, v){
+                deliveryItems[v.salesItem.siid] = v.status;
+            });
+        }, null, false);
+        
+        $.each(salesItems, function(i, v){
+            if(deliveryItems.hasOwnProperty(v.siid)) v["deliveryStatus"] = deliveryItems[v.siid];
+        })
+        
+        if (salesItems.length == 0) {
+            emptyData("list");
+        } else {
+            initList(salesItems);
+        }
     }
 
     salesItem.btns.refundBtn.click(function () {
@@ -258,7 +282,7 @@ $(function () {
         priceTotalEdit = utils.changeThrDecimal(utils.accAdd(utils.accSub(priceTotalEdit, com.focusPage("#miniPopUp").attr("li_Total")), total));
 
         var editArr = {
-            "salesItem.siid": salesItem.edit_data.siid,
+            "salesItem.siid": salesItem.salesItem.siid,
             "salesItem.num": num,
             "salesItem.total": total,
             "salesItem.comment": comment,

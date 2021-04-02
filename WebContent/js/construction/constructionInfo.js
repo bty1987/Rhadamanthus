@@ -39,26 +39,28 @@ jQuery(function($) {
         };
 
         var creatLine = function(v){
+            
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid')
             var $title = $('<small></small>').addClass('blue').html(' ' + v.decoration.orderId);
             var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $invalid = $('<div></div>').addClass('pull-right');
+            
             var propertyArr = [
                 ["楼盘地址:", (v.decoration.house.village.cityProper.city.name == null ? " " : v.decoration.house.village.cityProper.city.name) + " " + (v.decoration.house.village.cityProper == null ? " " : v.decoration.house.village.cityProper.name) + " " + v.decoration.house.village.name + " " + (v.decoration.house.houseNumber == null ? " " : v.decoration.house.houseNumber), "grey"],
                 ["面积:", v.decoration.house.buildArea, "blue"],
                 ["设计分区:", v.decoration.designer.dept.fatherDept.name, "grey"],
                 ["设计部:", v.decoration.designer.dept.name, "grey"],
                 ["设计师:", v.decoration.designer.userName, "grey"],
-                ["签单时间: ", v.decoration.contractTime, "grey"],
-                ["预计交钥匙时间: ", v.keyTime, "grey"],
-                ["预计放线时间: ", v.drawlineTime, "grey"],
-                ["预计完工时间: ", v.finishTime, "grey"],
-                ["预计设计完成时间: ", v.designTime, "grey"],
-                ["合同方案确认时间: ", v.decoration.sdesignTime, "grey"],
-                ["放线方案确认时间: ", v.decoration.edesignTime, "grey"],
-                ["订单类型: ", constructionInfo.typeness[v.decoration.typeness], "red"],
+                ["签单时间: ", v.decoration.contractTime, "green"],
+                ["预计交钥匙时间: ", v.keyTime, "green"],
+                ["预计放线时间: ", v.drawlineTime, "green"],
+                ["预计完工时间: ", v.finishTime, "green"],
+                ["预计设计完成时间: ", v.designTime, "green"],
+                ["合同方案确认时间: ", v.decoration.sdesignTime, "green"],
+                ["放线方案确认时间: ", v.decoration.edesignTime, "green"],
+                ["装修单类型: ", constructionInfo.typeness[v.decoration.typeness], "red"],
                 ["工程状态: ", constructionInfo.projectStatus[v.decoration.projectStatus], "red"],
             ];
 

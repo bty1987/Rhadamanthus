@@ -1,5 +1,7 @@
 package com.fanglin.sales.action;
 
+import java.util.List;
+
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -22,6 +24,8 @@ public class SalesDeliveryAction extends BaseListAction {
 	@Autowired
 	private SalesDeliveryService salesDeliveryService;
 
+	private List<SalesDeliveryItemVO> salesDeliveryItems;
+
 	private SalesDeliveryItemVO salesDeliveryItem;
 
 	@Action(value = "pageSalesDeliveryItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
@@ -36,6 +40,14 @@ public class SalesDeliveryAction extends BaseListAction {
 	public String pageSalesDeliveryItemForSupplier() throws FLException {
 
 		salesDeliveryService.pageSalesDeliveryItemForSupplier(getPaging(), getFilters(), queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "querySalesDeliveryItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String querySalesDeliveryItem() throws FLException {
+
+		salesDeliveryItems = salesDeliveryService.querySalesDeliveryItem(salesDeliveryItem);
 
 		return SUCCESS;
 	}
@@ -79,7 +91,7 @@ public class SalesDeliveryAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateSalesDeliveryItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateSalesDeliveryItem() throws FLException {
 
@@ -87,7 +99,15 @@ public class SalesDeliveryAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
+	public List<SalesDeliveryItemVO> getSalesDeliveryItems() {
+		return salesDeliveryItems;
+	}
+
+	public void setSalesDeliveryItems(List<SalesDeliveryItemVO> salesDeliveryItems) {
+		this.salesDeliveryItems = salesDeliveryItems;
+	}
+
 	public SalesDeliveryItemVO getSalesDeliveryItem() {
 		return salesDeliveryItem;
 	}

@@ -44,7 +44,7 @@
         {"key":"1","value":"物品"},
 		{"key":"2","value":"红包"}
     ],
-	"salesDeliveryItemStatus": [
+	"deliveryStatus": [
     	{"key":"0","value":"初始"},
         {"key":"1","value":"配送"},
         {"key":"2","value":"审核"},

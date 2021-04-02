@@ -47,7 +47,7 @@ $(function () {
     }
     
     com.post(api.ds.sales, {}, function (res) {
-        salesDelivery.statusList = res.salesDeliveryItemStatus.split("key", "value");
+        salesDelivery.statusList = res.deliveryStatus.split("key", "value");
     }, null, false);
     
     com.post(api.ds.decoration, {}, function (res) {
@@ -243,10 +243,12 @@ $(function () {
             });
 
             $btnFinish.click(function (e) {
-
-                com.post(api.sales.finishSalesDeliveryItem, {"salesDeliveryItem.sdiid": v.sdiid}, function (e) {
-                    searcher.doSearch();
-                    com.showAlert(com.info, "操作成功");
+                
+                com.showConfirm('确认销售项配送完结?', function () {
+                    com.post(api.sales.finishSalesDeliveryItem, {"salesDeliveryItem.sdiid": v.sdiid}, function (e) {
+                        searcher.doSearch();
+                        com.showAlert(com.info, "操作成功");
+                    });
                 });
             });
 
