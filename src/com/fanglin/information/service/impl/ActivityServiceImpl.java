@@ -150,9 +150,9 @@ public class ActivityServiceImpl implements ActivityService {
 		if (activityPO.getStatus() == ActivityPO.STATUS_UNVALID_INT) {// ==无有效的
 			throw new FLException(160012, "活动当前状态不能修改");
 		}
-
-		activityDao.resetActivityForDefault(activityPO.getType());
-
+		
+		activityDao.resetActivityForDefault(activityPO.getType(),activityPO.getCompany());
+		
 		activityPO.setDefaults(ActivityPO.DEFAULTS_DEFAULT_INT); // 更新为0(默认)
 
 		activityDao.update(activityPO);

@@ -80,6 +80,9 @@ $.extend(api, {salary: {
     deleteWorkerSalary:{url: "deleteWorkerSalary.do"},
 	batchImportWorkerSalary:{url: "batchImportWorkerSalary.do"},
     importWorkerSalary:{url: "importWorkerSalary.do"},
+    sendWorkerSalary: {url: "sendWorkerSalary.do"},
+    cancelWorkerSalary: {url: "cancelWorkerSalary.do"},
+    batchWorkerSalary: {url: "batchWorkerSalary.do"},
     
     pageDesignerSalary:{
         url: "pageDesignerSalary.do",

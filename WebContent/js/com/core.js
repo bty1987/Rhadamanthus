@@ -373,7 +373,7 @@
      */
     showTip: function (obj, msg, direc) {
         direc = direc ? ["", "top", "right", "bottom", "left"].indexOf(direc) : 1
-        layer.tips(msg, obj, {tips: [direc ,'#3595CC'], scrollbar: false});
+        layer.tips(msg, obj, {tips: [direc ,'#3595CC']});
     },
     showTips: function ($obj, msg, isTip) {
         $obj = com.focusPage($obj);
@@ -576,13 +576,15 @@
         });
         
         tabRefresh.on("click", function(){
-            var target = $($(this).parent().attr("href"));
-            var height = parseInt(target.get(0).offsetHeight)-300;
             
-            target.append($("<div><h1 style='margin-top: "+height/2+"px'><i class='icon-spinner icon-spin bigger-450'></i></h1></div>").addClass("tab-mask"));
+            var target = $($(this).parent().attr("href"));
+            
+            var mask = $("<div></div>").addClass("tab-mask").appendTo(target);
+            var maskh1 = $("<h1></h1>").css({"position": "absolute", "top": "30%", "left": "45%"}).appendTo(mask);
+            var maskicon = $("<i></i>").addClass("icon-spinner icon-spin bigger-450").appendTo(maskh1);
+            
             setTimeout(function(){
                 tabPane.load(page);
-                target.removeClass("tab-mask");
             }, 1200);
         });
 
@@ -1235,13 +1237,14 @@
         
         $(container).attr("readonly", "readonly");
         
-        type = type && typeof(type) == "string" ? ["year", "month", "date", "time"].indexOf(type) != -1 ? type : "date" : "date";
+        type = type && typeof(type) == "string" ? ["year", "month", "day", "date", "time"].indexOf(type) != -1 ? type : "date" : "date";
         range = range ? true : false;
         
         var format = range ? "yyyy/MM/dd" : "yyyy-MM-dd";
         
-        if(type == "month") format = "MM";
-        else if(type == "date") format = "dd";
+        if(type == "year") format = "yyyy";
+        else if(type == "month") format = "MM";
+        else if(type == "day") {format = "dd"; type="date"}
         else if(type == "time") format = "HH:mm:ss";
         
         $.each(container, function(i, e){

@@ -21,12 +21,7 @@ jQuery(function ($) {
             qrcodeModal: null,
             decorationContractModal: com.focusPage("#decorationContractModal")
         },
-        status: {
-            0: '初始',
-            1: '已签',
-            2: '失效',
-            3: '归档'
-        },
+        
         customer: {
             customerName: com.focusPage("#customerName", "#customer"),
             customerGender: com.focusPage("#customerGender", "#customer"),
@@ -40,17 +35,26 @@ jQuery(function ($) {
         
         authFlag: false,
         
+        status: {},
+        
         pageType: params.urlLoadParams.depage,
     };
     
     decorationContract.modals.qrcodeModal = com.initForm("qrcodeModal", "二维码", [{"id": "qrcode", "type": "div", "clazz": "qrcode"}], []);
     decorationContract.items.qrcode = com.focusPage("#qrcode");
 
-    com.post(api.data.queryCustomerById, {"customer.cid": params.cid}, function (res) {
-        customerItems(res.customer);
+    com.post(api.decoration.queryDecorationByOrderId, {"decorationOrderId": params.decorationOrderId}, function(res){
         
-        decorationContract.authFlag = res.customer.status == 1;
+        var customer = res.decoration.customer;
+        
+        customerItems(customer);
+        
+        decorationContract.authFlag = [1, 2].indexOf(customer.status) != -1;
     });
+    
+    com.post(api.ds.decoration, {}, function (res) {
+        decorationContract.status = res.contractStatus.split("key", "value");
+    }, null, false);
     
     com.post(api.data.querySignet, {}, function (res) {
         decorationContract.items.signet.bindData(res.signets, "sid", "name", false);
@@ -85,6 +89,7 @@ jQuery(function ($) {
                     var btnSign = $('<a></a>').addClass('btn btn-minier btn-primary').html('已签');
                     var btnExpire = $('<a></a>').addClass('btn btn-minier btn-danger').html('失效');
                     var btnContract = $('<a></a>').addClass('btn btn-minier btn-primary').html('归档');
+                    var btnDown = $('<a></a>').addClass('btn btn-minier btn-inverse').html('下载');
                     
                     var btnShow = $('<a></a>').addClass('btn btn-minier btn-success').html('显示');
                     var btnHide = $('<a></a>').addClass('btn btn-minier btn-danger').html('隐藏');
@@ -99,7 +104,7 @@ jQuery(function ($) {
                     var btnSignQR = $('<a></a>').addClass('btn btn-minier btn-success').html('二维客签');
 
                     var propertyArr = [
-                        ["订单编号: ", v.orderId, "grey"],
+                        ["装修单号: ", v.orderId, "grey"],
                         ["状态: ", decorationContract.status[v.status], "red"],
                         ["是否显示: ", v.ishow == 0 ? "显示" : "隐藏", "red"],
                         ["创建人: ", v.creater.currentName, "grey"],
@@ -107,7 +112,7 @@ jQuery(function ($) {
                         ["归档人: ", v.filinner.currentName, "grey"],
                         ["创建时间: ", v.createTime, "green"],
                         ["公司签时间: ", v.comsignTime, "green"],
-                        ["签署时间: ", v.cussignTime, "green"],
+                        ["客户签时间: ", v.cussignTime, "green"],
                         ["归档时间: ", v.filingTime, "green"],
                     ];
 
@@ -121,13 +126,19 @@ jQuery(function ($) {
                     if(v.status == 0){
                         $divBtnWrap.append(btnView).append(btnCom).append(btnCus).append(btnSign).append(btnExpire).append(btnGraphNotice).append(btnSignNotice).append(btnGraphQR).append(btnSignQR);
                     }
+                    
                     if(v.status == 1){
                         $divBtnWrap.append(btnView).append(btnContract);
+                    }
+                    
+                    if([3, 4].indexOf(v.status) != -1) {
+                        $divBtnWrap.append(btnDown);
                     }
                     
                     if(v.ishow == 0) {
                         $divBtnWrap.append(btnHide);
                     }
+                    
                     if(v.ishow == 1) {
                         $divBtnWrap.append(btnShow);
                     }
@@ -158,6 +169,10 @@ jQuery(function ($) {
 
                     btnContract.click(function () {
                         filingContract(v.dcid);
+                    });
+                    
+                    btnDown.click(function () {
+                        downloadContract(v);
                     });
                     
                     btnShow.click(function(){
@@ -324,6 +339,11 @@ jQuery(function ($) {
                 paintingContract();
             });
     	});
+    }
+    
+    function downloadContract(v){
+        if(v.status == 3) window.open(v.download);
+        else com.popup("装修单: " + v.orderId + " 合同", config.media + v.path);
     }
     
     function showContract(dcid, ishow){

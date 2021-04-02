@@ -120,6 +120,8 @@ jQuery(function ($) {
                 ["工费额上限:", v.salaryLimit, "blue"],
                 ["辅料总额:", v.accessoryTotal, "blue"],
                 ["工费总额:", v.salaryTotal, "blue"],
+                ["锁定人:", v.locker ? v.locker.currentName : "", "grey"],
+                ["锁定时间:", v.lockTime, "green"],
                 ["辅料控制:", construction.isAccessory[v.accessory], "red"],
             ];
 

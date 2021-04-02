@@ -394,6 +394,7 @@ jQuery(function($) {
 
 		payment.items.balanceDiv.hide();
 		payment.items.withdrawDiv.hide();
+		payment.items.advanceType.val(v.paymentType);
 		payment.items.advanceType.attr("disabled", "disabled");
 		payment.items.des.val(v.comment).attr("disabled", "disabled");
 

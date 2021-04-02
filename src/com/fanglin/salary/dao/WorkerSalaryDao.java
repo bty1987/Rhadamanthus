@@ -1,5 +1,6 @@
 package com.fanglin.salary.dao;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
@@ -20,5 +21,11 @@ public interface WorkerSalaryDao extends Dao<WorkerSalaryPO> {
 	public List<WorkerSalaryPO> queryWorkerSalaryByCwsid(Long wsid);
 
 	public int countWorkerSalary(Long cid, Integer wuid);
+
+	public int countWorkerSalary(String orderId, Long csid);
+
+	public int updateWorkerSalary(String orderId, Long csid);
+
+	public int updateWorkerSalary(Timestamp beginTime, Timestamp finishTime, int company);
 
 }

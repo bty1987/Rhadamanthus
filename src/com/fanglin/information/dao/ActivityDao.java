@@ -24,8 +24,8 @@ public interface ActivityDao extends Dao<ActivityPO> {
 
 	public List<ActivityPO> queryActivityForValid(int company, short type);
 
-	public ActivityPO queryActivityForDefault(short type);
+	public ActivityPO queryActivityForDefault(int company, short type);
 
-	public int resetActivityForDefault(short type);
+	public int resetActivityForDefault(short type,int company);
 
 }

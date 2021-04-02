@@ -586,6 +586,8 @@ $.extend(api, {
         pageContract:{url:"pageContract.do"},
         queryContract:{url:"queryContract.do"},
         addContract:{url:"addContract.do"},
+        updateContract: {url: "updateContract.do"},
+        updateContractForStatus: {url: "updateContractForStatus.do"},
         
         pageSignet: {url:"pageSignet.do"},
         querySignet: {url:"querySignet.do"},

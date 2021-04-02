@@ -14,45 +14,51 @@ public class WorkerSalaryVO implements Serializable {
 
 	private Long wsId;
 
-	private Long cwsid;
-
 	private DecorationVO decoration;
 
 	private Long cid;
 
-	private UserBaseVO user;
-
-	private UserBaseVO creater;
-
-	private Timestamp createTime;
-
-	private UserBaseVO approver;
-
-	private Timestamp approveTime;
-
-	private Long salary;
-
-	private Short type;
-
-	private Short subtype;
-
-	private Short status;
-
-	private Timestamp balanceTime;
-
-	private String comment;
-
 	private Long csid;
+
+	private Long cwsid;
 
 	private Long money;
 
 	private Long deposit;
 
+	private Long salary;
+
+	private Short schedule;
+
+	private Short type;
+
+	private Short subtype;
+
 	private Short onetype;
 
 	private Short twotype;
 
-	private Short schedule;
+	private Integer count;
+
+	private Short isSend;
+
+	private Short status;
+
+	private UserBaseVO user;
+
+	private UserBaseVO creater;
+
+	private UserBaseVO approver;
+
+	private Timestamp createTime;
+
+	private Timestamp approveTime;
+
+	private Timestamp balanceTime;
+
+	private Timestamp finishTime;
+
+	private String comment;
 
 	public WorkerSalaryVO() {
 		super();
@@ -235,6 +241,30 @@ public class WorkerSalaryVO implements Serializable {
 
 	public void setSchedule(Short schedule) {
 		this.schedule = schedule;
+	}
+
+	public Integer getCount() {
+		return count;
+	}
+
+	public void setCount(Integer count) {
+		this.count = count;
+	}
+
+	public Short getIsSend() {
+		return isSend;
+	}
+
+	public void setIsSend(Short isSend) {
+		this.isSend = isSend;
+	}
+
+	public Timestamp getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Timestamp finishTime) {
+		this.finishTime = finishTime;
 	}
 
 }

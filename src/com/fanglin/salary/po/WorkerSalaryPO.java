@@ -43,45 +43,73 @@ public class WorkerSalaryPO implements Serializable {
 
 	public static final short STATUS_REPEAL_INT = 3; // 撤销
 
-	public static final short TYPE_ADD_INT = 0;// 加
+	public static final short TYPE_ADD_INT = 0; // 加
 
-	public static final short TYPE_SUB_INT = 1;// 减
+	public static final short TYPE_SUB_INT = 1; // 减
 
-	public static final short ONETYPE_SALARY_INT = 0;// 工费
+	public static final short ONETYPE_SALARY_INT = 0; // 工费
 
-	public static final short ONETYPE_CUT_INT = 1;// 扣/罚
+	public static final short ONETYPE_CUT_INT = 1; // 扣/罚
 
-	public static final short ONETYPE_TRAN_INT = 2;// 转额
+	public static final short ONETYPE_TRAN_INT = 2; // 转额
 
-	public static final short ONETYPE_ELSE_INT = 3;// 其他
+	public static final short ONETYPE_ELSE_INT = 3; // 其他
 
-	public static final short TWOTYPE_SALARY_INT = 1;// 工费
+	public static final short TWOTYPE_SALARY_INT = 1; // 工费
 
-	public static final short TWOTYPE_ADDITME_INT = 2;// 增项
+	public static final short TWOTYPE_ADDITME_INT = 2; // 增项
 
-	public static final short TWOTYPE_OILER_INT = 3;// 油工一级奖励
+	public static final short TWOTYPE_OILER_INT = 3; // 油工一级奖励
 
-	public static final short TWOTYPE_MAINTAIN_INT = 4;// 维修款
+	public static final short TWOTYPE_MAINTAIN_INT = 4; // 维修款
 
-	public static final short TWOTYPE_CUT_INT = 5;// 罚款
+	public static final short TWOTYPE_CUT_INT = 5; // 罚款
 
-	public static final short TWOTYPE_PROJECT_INT = 6;// 工程质保金
+	public static final short TWOTYPE_PROJECT_INT = 6; // 工程质保金
 
-	public static final short TWOTYPE_TOOL_INT = 7;// 工具押金
+	public static final short TWOTYPE_TOOL_INT = 7; // 工具押金
 
-	public static final short TWOTYPE_LEND_INT = 8;// 借款
+	public static final short TWOTYPE_LEND_INT = 8; // 借款
 
-	public static final short TWOTYPE_INSURANCE_INT = 9;// 工人家属保险
+	public static final short TWOTYPE_INSURANCE_INT = 9; // 工人家属保险
+
+	public static final short ISSEND_UNSEND_INT = 0;
+
+	public static final short ISSEND_SEND_INT = 1;
+
+	public static final short ISSEND_SENDED_INT = 2;
 
 	private long wsId;
 
-	private long cwsid;
+	private DecorationPO decoration;
 
 	private long cid;
 
 	private long csid;
 
-	private DecorationPO decoration;
+	private long cwsid;
+
+	private long money;
+
+	private long deposit;
+
+	private long salary;
+
+	private short schedule;
+
+	private short type;
+
+	private short subtype;
+
+	private short onetype;
+
+	private short twotype;
+
+	private int count;
+
+	private short isSend;
+
+	private short status;
 
 	private UserPO user;
 
@@ -94,24 +122,6 @@ public class WorkerSalaryPO implements Serializable {
 	private Timestamp approveTime;
 
 	private Timestamp balanceTime;
-
-	private long money;
-
-	private long deposit;
-
-	private long salary;
-
-	private short type;
-
-	private short subtype;
-
-	private short onetype;
-
-	private short twotype;
-
-	private short status;
-
-	private short schedule;
 
 	private String comment;
 
@@ -386,6 +396,24 @@ public class WorkerSalaryPO implements Serializable {
 
 	public void setSchedule(short schedule) {
 		this.schedule = schedule;
+	}
+
+	@Column(name = "count")
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+
+	@Column(name = "isSend")
+	public short getIsSend() {
+		return isSend;
+	}
+
+	public void setIsSend(short isSend) {
+		this.isSend = isSend;
 	}
 
 }

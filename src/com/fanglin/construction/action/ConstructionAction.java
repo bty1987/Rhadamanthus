@@ -102,7 +102,7 @@ public class ConstructionAction extends BaseListAction {
 	@Action(value = "lockAccessory", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String lockAccessory() throws FLException {
 
-		constructionService.lockAccessory(construction);
+		constructionService.lockAccessory(construction, queryUserId());
 
 		return SUCCESS;
 	}

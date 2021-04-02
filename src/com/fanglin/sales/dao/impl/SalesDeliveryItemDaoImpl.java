@@ -31,11 +31,10 @@ public class SalesDeliveryItemDaoImpl extends DaoImpl<SalesDeliveryItemPO> imple
 		query.desc("sdiid");
 
 		return query.list();
-
 	}
 
 	@Override
-	public List<SalesDeliveryItemPO> pageSalesDeliveryItemForSupplier(Paging paging, List<Filter> filters, int company, int uid) {
+	public List<SalesDeliveryItemPO> pageSalesDeliveryItem(Paging paging, List<Filter> filters, int company, int uid) {
 
 		PagingQuery<SalesDeliveryItemPO> query = pagingQuery(paging, SalesDeliveryItemPO.class);
 
@@ -49,10 +48,16 @@ public class SalesDeliveryItemDaoImpl extends DaoImpl<SalesDeliveryItemPO> imple
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
+	public List<SalesDeliveryItemPO> querySalesDeliveryItem(long sid) {
+		return session().createCriteria(SalesDeliveryItemPO.class).createAlias("sales", "sales").add(Restrictions.eq("sales.sid", sid)).list();
+	}
+
+	@Override
 	public SalesDeliveryItemPO querySalesDeliveryItemBySiid(Long siid) {
 		return (SalesDeliveryItemPO) session().createCriteria(SalesDeliveryItemPO.class).add(Restrictions.eq(SalesDeliveryItemPO.COLUMN_SIID_LONG, siid)).uniqueResult();
 	}
-	
+
 	private void queryFilterExcute(PagingQuery<SalesDeliveryItemPO> query, List<Filter> filters) {
 
 		if (filters == null)
@@ -76,17 +81,17 @@ public class SalesDeliveryItemDaoImpl extends DaoImpl<SalesDeliveryItemPO> imple
 				query.add(query.getCriterion(SalesDeliveryItemPO.COLUMN_SALESORDERID_STR, data, op));
 			} else if (SalesDeliveryItemPO.COLUMN_SALESCATEGROY_STR.equals(field)) {
 				query.add(query.getCriterion(SalesDeliveryItemPO.COLUMN_SALESCATEGROY_STR, data, op));
-			}else if (SalesDeliveryItemPO.COLUMN_CREATETIME_STR.equals(field)) {
+			} else if (SalesDeliveryItemPO.COLUMN_CREATETIME_STR.equals(field)) {
 				query.timeranges(SalesDeliveryItemPO.COLUMN_CREATETIME_STR, filter.getData());
-			}else if (SalesDeliveryItemPO.COLUMN_TRANTIME_STR.equals(field)) {
+			} else if (SalesDeliveryItemPO.COLUMN_TRANTIME_STR.equals(field)) {
 				query.timeranges(SalesDeliveryItemPO.COLUMN_TRANTIME_STR, filter.getData());
-			}else if (SalesDeliveryItemPO.COLUMN_CHECKTIME_STR.equals(field)) {
+			} else if (SalesDeliveryItemPO.COLUMN_CHECKTIME_STR.equals(field)) {
 				query.timeranges(SalesDeliveryItemPO.COLUMN_CHECKTIME_STR, filter.getData());
-			}else if (SalesDeliveryItemPO.COLUMN_CONFIRMTIME_STR.equals(field)) {
+			} else if (SalesDeliveryItemPO.COLUMN_CONFIRMTIME_STR.equals(field)) {
 				query.timeranges(SalesDeliveryItemPO.COLUMN_CONFIRMTIME_STR, filter.getData());
-			}else if (SalesDeliveryItemPO.COLUMN_FINISHTIME_STR.equals(field)) {
+			} else if (SalesDeliveryItemPO.COLUMN_FINISHTIME_STR.equals(field)) {
 				query.timeranges(SalesDeliveryItemPO.COLUMN_FINISHTIME_STR, filter.getData());
-			}else if (SalesDeliveryItemPO.COLUMN_GOODSNAME_STR.equals(field)) {
+			} else if (SalesDeliveryItemPO.COLUMN_GOODSNAME_STR.equals(field)) {
 				query.alias("salesItem", "salesItem");
 				query.alias("salesItem.goods", "goods");
 				query.add(query.getCriterion(SalesDeliveryItemPO.COLUMN_GOODSNAME_STR, data, op));

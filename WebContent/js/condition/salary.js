@@ -177,4 +177,23 @@ Condition.addupRule("salary", {
             validate: null
         }
     },
+    "worker-count": {
+        label: "计数",
+        type: "select",
+        submitConfig: {
+            name: "count",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [
+                {key: "1", value: "单条"},
+                {key: "2", value: "多条"}
+            ],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    }
 })

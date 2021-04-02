@@ -143,7 +143,7 @@ $(function () {
                     var $btnPrint = $('<a></a>').addClass(' btn btn-minier btn-pink').html('打印');
                     var $btnAct = $('<a></a>').addClass(' btn btn-minier btn-grey').html('活动');
                     var $btnActivity = $('<a></a>').addClass('btn btn-minier btn-warning').html('活动归属');
-                    var $btnSaleDelivery = $('<a></a>').addClass('btn btn-minier btn-primary').html('配送');
+                    var $btnDelivery = $('<a></a>').addClass('btn btn-minier btn-primary').html('配送');
                     var $btnDecoration = $('<a></a>').addClass('btn btn-minier btn-purple').html('装修单');
                     var $inventory = $('<a></a>').addClass('btn btn-minier btn-blue').html('仓储');
                     var $ascription = $('<a></a>').addClass('btn btn-minier btn-inverse').html('归属');
@@ -304,7 +304,7 @@ $(function () {
                                 }
                                 break;
                             case "activity":
-                                if (v.status != 4) {
+                                if ([0, 5].indexOf(v.status) != -1) {
                                     $btnDiv.append($btnActivity);
                                 }
                                 break;
@@ -319,8 +319,8 @@ $(function () {
                                 }
                                 break;
                             case "saledelivery":
-                                if (v.fullpayStatus == 2) {
-                                    $btnDiv.append($btnSaleDelivery);
+                                if ([0, 5].indexOf(v.status) !=-1 && [1, 2].indexOf(v.fullpayStatus) !=-1) {
+                                    $btnDiv.append($btnDelivery);
                                 }
                                 break;
                         }
@@ -483,10 +483,13 @@ $(function () {
                         sales.modals.salesActivitysModal.modal("show");
                     });
                     
-                    $btnSaleDelivery.click(function () {
-                        com.post(api.sales.deliveSalesDeliveryItem, {"salesDeliveryItem.sales.sid": v.sid}, function () {
-                            com.showAlert(com.info, "操作成功");
-                            salesSearcher.doSearch();
+                    $btnDelivery.click(function () {
+                        
+                        com.showConfirm('确认销售单(' + v.no + ')进行配送?', function () {
+                            com.post(api.sales.deliveSalesDeliveryItem, {"salesDeliveryItem.sales.sid": v.sid}, function () {
+                                com.showAlert(com.info, "操作成功");
+                                salesSearcher.doSearch();
+                            });
                         });
                     });
 
@@ -498,7 +501,7 @@ $(function () {
 
                     $terminal.click(function () {
 
-                        com.showConfirm('确定要将单号为 ' + v.no + ' 的销售单更新为废单吗?', function () {
+                        com.showConfirm('确认销售单(' + v.no + ')为废单?', function () {
                             com.post(api.sales.terminalSales, {"sales.sid": v.sid}, function () {
                                 com.showAlert(com.info, "更新成功");
                                 salesSearcher.doSearch();

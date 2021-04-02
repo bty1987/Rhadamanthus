@@ -8,16 +8,26 @@ var Searcher = function(){
 
     /*各种设置*/
     var basicConf = {
-        condCodeArrs : null,
-        url : null,
-        historyName : null,//保留搜索条件的参数名
+        
         $searcher : null,
+        $resulter: null, // 显示内容标签id
         $pager : null,
+        
+        url : null,
+        conditions : null,
+        buttons: [],
+        
+        historyName : parseInt(Math.random() * 1000000) + "",//保留搜索条件的参数名
+        resultName : null,
+        
+        params : {},//额外的查询参数
+        
         displayFunc : null,
-        extraParams : {},//额外的查询参数
-        noPagingFlag : false,
-        resultListName : null,
-        resultListId: null // 显示内容标签id
+        isPage : false,
+        
+        lineprop: [],
+        linevent: {},
+        
     };
 
     /*查询条件各种操作*/
@@ -25,8 +35,8 @@ var Searcher = function(){
         /**
          * 根据查询条件的编号列表初始化页面查询条件区域
          * params:
-         *      condCodeArrs:数组(查询条编号的数组)
-         *      searchId:放查询条件的div的id
+         *      conditions:数组(查询条编号的数组)
+         *      searcherId:放查询条件的div的id
          *      url:查询调用的URL
          *      displayFunc:向后台请求的回调函数
          * */
@@ -38,8 +48,8 @@ var Searcher = function(){
 
             basicConf.$searcher.empty();
 
-            basicConf.condCodeArrs && basicConf.condCodeArrs.length &&(
-                $.each(basicConf.condCodeArrs,function(i,val){
+            basicConf.conditions && basicConf.conditions.length &&(
+                $.each(basicConf.conditions,function(i,val){
                     var condRule = Condition.getRuleByCondName(val);
                     var $item = null;
                     condRule && ($item = that.createCondItem(val,condRule));
@@ -49,7 +59,7 @@ var Searcher = function(){
                     basicConf.$searcher.append($cleanBtn),
                     basicConf.$searcher.append($tendBtn),
                     $searchBtn.click(function(){
-                        if(basicConf.noPagingFlag){
+                        if(basicConf.isPage){
                             _params = getParams();
                             if(_params){
                                 queryData(_params);
@@ -124,7 +134,7 @@ var Searcher = function(){
                 );
             };
 
-            $label.text(_rlabel + ':').appendTo($item);
+            $label.html(Array(_rlabel.length >= 4 ? 0 : 4-_rlabel.length).fill("&emsp;").join("") + _rlabel + ':').appendTo($item);
 
             if(_rtype=="text"){
                 $showItem = $('<input>').attr({
@@ -277,11 +287,11 @@ var Searcher = function(){
             "paging.totalPage" : 0
         },
         nowPostParams : null,
-        /*searchId:存放查询条件的div的id*/
+        /*searcherId:存放查询条件的div的id*/
         getParams : function(){
             var _count = 0;
             var _params = {};
-            var _condArr = basicConf.condCodeArrs;
+            var _condArr = basicConf.conditions;
 
             if(this.nowPostParams){
                 return this.nowPostParams;
@@ -329,7 +339,7 @@ var Searcher = function(){
             if(_params){
                 _params["paging.page"] = this.nowPage["paging.page"];
                 _params["paging.rows"] = this.nowPage["paging.rows"];
-                _params = $.extend(true,{},_params,basicConf.extraParams);
+                _params = $.extend(true,{},_params,basicConf.params);
             }
 
             return _params;
@@ -368,7 +378,7 @@ var Searcher = function(){
             //增加分页操作元素
             basicConf.$pager.html('');
 
-            basicConf.$cusBtns && $.each(basicConf.$cusBtns, function(i, v){
+            basicConf.buttons && $.each(basicConf.buttons, function(i, v){
                 v.appendTo(basicConf.$pager);
             });
 
@@ -433,7 +443,7 @@ var Searcher = function(){
     };
 
     var emptyData = function(){
-        var $resultList = com.focusPage('#' + basicConf.resultListId).html('');
+        var $resultList = com.focusPage('#' + basicConf.$resulter).html('');
         var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
         var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
         var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
@@ -444,14 +454,14 @@ var Searcher = function(){
             //params全局变量,给全局变量赋当前查询条件的值
             params[basicConf.historyName] = _params;
 
-            (result[basicConf.resultListName] && result[basicConf.resultListName].length > 0) ? basicConf.displayFunc(result[basicConf.resultListName]) : emptyData();
+            (result[basicConf.resultName] && result[basicConf.resultName].length > 0) ? basicConf.displayFunc(result[basicConf.resultName]) : emptyData();
         }, this), null, false);
     };
 
     var getParams = function(){
         var _count = 0;
         var _params = {};
-        var _condArr = basicConf.condCodeArrs;
+        var _condArr = basicConf.conditions;
 
         _condArr && _condArr.length &&(
             $.each(_condArr,function(i,val){
@@ -494,12 +504,13 @@ var Searcher = function(){
         );
 
         if(_params){
-            _params = $.extend(true,{},_params,basicConf.extraParams);
+            _params = $.extend(true,{},_params,basicConf.params);
         }
         return _params;
     };
 
     var searchByPresentParams = function(){
+        
         var _count = 0;
         var _params = params[basicConf.historyName] ? params[basicConf.historyName] : {};
 
@@ -515,10 +526,10 @@ var Searcher = function(){
             );
         });
 
-        if(!basicConf.noPagingFlag){
+        if(!basicConf.isPage){
             jQuery.isEmptyObject(_params) && (_params["paging.page"] = paging.nowPage["paging.page"], _params["paging.rows"] = paging.nowPage["paging.rows"]);
 
-            _params = $.extend({},_params,basicConf.extraParams);
+            _params = $.extend({}, _params, basicConf.params);
             paging.nowPostParams = _params;
 
             com.focusPage('.fl-page-input').val(_params["paging.page"]);
@@ -526,45 +537,352 @@ var Searcher = function(){
 
             paging.getDataByPage(_params);
         }else{
-            _params = $.extend({},_params,basicConf.extraParams);
-            queryData(_params);
+            queryData($.extend({}, _params, basicConf.params));
         }
     };
+    
+    var getElement = function(o, props, dataset) {
+
+        var prop = props.shift();
+
+        if (props.length == 0) {
+            return !dataset ? o[prop] : dataset[o[prop]];
+        } else if (o[prop]) {
+            return getElement(o[prop], props);
+        }
+
+        return "";
+    }
 
     return{
         /**
          * 插件的初始化方法
          * params:
-         *     condCodeArrs:查询条件编号的数组
-         *     searchId:查询控件显示标签id
-         *     url:分页查询路径
-         *     displayFunc:分页查询的回调函数(画列表)
-         *     pagerId:分页控件的标签id
-         *     historyName:保存历史查询条件的查询条件名
-         *     extraParams: 分页查询的其他查询参数{key:val}形式
-         *     noPagingFlag: 不分页标识,true,标识不分页
+         *     conditions: 查询条件编号的数组
+         *     searcherId: 查询控件显示标签ID
+         *     url: 分页查询路径
+         *     displayFunc: 分页查询的回调函数(画列表)
+         *     pagerId: 分页控件的标签id
+         *     historyName: 保存历史查询条件的查询条件名
+         *     params: 分页查询的其他查询参数{key:val}形式
+         *     isPage: 不分页标识
+         *     resultName: 响应结果数据名称
+         *     buttons: 表格按钮
+         *     resulterId: 查询结果显示标签ID
+         *     
          * */
-        init : function(condCodeArrs, searchId, url, displayFunc, pagerId, historyName, extraParams, noPagingFlag, resultListName, cusBtns, resultListId){
-            /*各种设置*/
-            basicConf.condCodeArrs = condCodeArrs;
-            basicConf.$searcher = com.focusPage('#' + searchId);
+        init : function(conditions, searcherId, url, displayFunc, pagerId, historyName, params, isPage, resultName, buttons, resulterId){
+            
+            basicConf.conditions = conditions;
+            basicConf.$searcher = com.focusPage('#' + searcherId);
             basicConf.$pager = com.focusPage('#' + pagerId);
             basicConf.url = url;
             basicConf.historyName = historyName;
             basicConf.displayFunc = displayFunc;
-            extraParams && typeof extraParams == "object" && (basicConf.extraParams = extraParams);
-            noPagingFlag && (basicConf.noPagingFlag = noPagingFlag);
-            basicConf.resultListName = resultListName;
-            basicConf.resultListId = resultListId ? resultListId : "resultList";
+            
+            params && typeof params == "object" && (basicConf.params = params);
+            isPage && (basicConf.isPage = isPage);
+            
+            basicConf.resultName = resultName;
+            basicConf.$resulter = resulterId ? resulterId : "resultList";
 
-            cusBtns && (basicConf.$cusBtns = cusBtns());
+            buttons && typeof buttons == "function" && (basicConf.buttons = buttons());
 
-            //绑定上一页下一页事件
-            !noPagingFlag && paging.init();
-            //初始化查询条件
-            searchCond.renderConds();
+            !isPage && paging.init(); // 绑定上一页下一页事件
+            
+            searchCond.renderConds(); // 初始化查询条件
 
             searchByPresentParams();
+            
+            return this;
+        },
+        set: function(searcherId, pagerId, resulterId, url, params, conditions, historyName, resultName, isPage, buttons, displayFunc){
+            
+            if(typeof searcherId == 'object'){
+                basicConf = $.extend({}, basicConf, searcherId);
+                return this;
+            }
+            
+            basicConf.conditions = conditions;
+            basicConf.$searcher = com.focusPage('#' + searcherId);
+            basicConf.$pager = com.focusPage('#' + pagerId);
+            basicConf.url = url;
+            basicConf.historyName = historyName;
+            basicConf.displayFunc = displayFunc;
+            
+            params && typeof params == "object" && (basicConf.params = params);
+            isPage && (basicConf.isPage = isPage);
+            
+            basicConf.resultName = resultName;
+            basicConf.$resulter = resulterId ? resulterId : "resultList";
+
+            buttons && typeof buttons == "function" && (basicConf.buttons = buttons());
+            
+            return this;
+        },
+        base: function(searcherId, pagerId, resulterId, url){
+            
+            basicConf.$searcher = com.focusPage('#' + searcherId);
+            basicConf.$pager = com.focusPage('#' + pagerId);
+            
+            basicConf.$resulter = resulterId ? resulterId : "resultList";
+            
+            basicConf.url = url;
+            
+            return this;
+        },
+        
+        condition: function(conditions){
+            
+            basicConf.conditions = conditions;
+            
+            return this;
+        },
+        history: function(history){
+            
+            basicConf.historyName = history;
+           
+            return this;
+        },
+        param: function(params){
+            
+            basicConf.params = params;
+            
+            return this;
+        },
+        button: function(buttons){
+            
+            buttons && typeof buttons == "function" && (basicConf.buttons = buttons());
+            
+            buttons && typeof $.isArray(buttons) && (
+                $.each(buttons, function(i, b){
+                    
+                    var $adda = $('<a></a>').addClass('btn btn-minier ' + b.clazz + ' pull-left').attr('id', b.id).attr("name", b.id).css("margin", "0px 3px");
+                    var $addi = $('<i></i>').addClass('bigger-110 ' + b.icon).appendTo($adda);
+                    var $addspan = $('<span ></span>').text(b.name).appendTo($adda);
+                    
+                    basicConf.buttons.push($adda);
+                })
+            )
+            
+            return this;
+        },
+        
+        line: function(title, lineprop, linevent){
+            
+            basicConf.lineprop = lineprop;
+            basicConf.linevent = linevent;
+            
+            basicConf.displayFunc = function(data){
+                
+                var $tableWrap = com.focusPage('#' + basicConf.$resulter).html("");
+                
+                if(!data || data.length == 0){
+                    return this;
+                }
+                
+                var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($tableWrap);
+
+                $.each(data, function(i, v){
+                    
+                    var $liLine = $('<li></li>').addClass('item-orange clearfix').appendTo($ul);
+                    var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(getElement(v, title.split('.')))).appendTo($liLine);
+                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').appendTo($liLine);
+                    var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons').appendTo($h3);
+                    
+                    $.each(basicConf.lineprop, function (index, value) {
+                        
+                        if(value.type == "checkbox"){
+                            
+                            var props = {
+                                "type": "checkbox",
+                                "name": "check",
+                                "id": "check",
+                                "class": "ace ace-checkbox-2",
+                            }
+                            
+                            props[value.field] = v[value.prop];
+                            
+                            var $label = $('<label></label>').prependTo($h3);
+                            var $input = $('<input>').attr(props).appendTo($label);
+                            var $span = $('<span></span>').addClass('lbl blue bigger-150').appendTo($label);
+                            
+                            return true;
+                        }
+                        
+                        if(value.show && typeof value.show == 'function' && !value.show(v)) return true;
+                        
+                        var $liProperty = $('<li></li>').appendTo($ulProperty);
+                        
+                        var info = "";
+                        
+                        if(typeof value.prop == 'function') info = value.prop(v);
+                        else info = getElement(v, value.prop.split('.'), value.dataset);
+                        
+                        $('<strong></strong>').html(value.name + ": ").appendTo($liProperty);
+                        $('<b></b>').html(info).addClass(value.clazz).appendTo($liProperty);
+                    });
+                    
+                    $.each(basicConf.linevent, function(index, button){
+                        if(button.show && !button.show(v)) return true;
+                        $('<a></a>').addClass('btn btn-minier ' + button.clazz).html(button.name).appendTo($divBtnWrap).click(function(){
+                            button.handle(v);
+                        });
+                    });
+                });
+                
+            }
+            
+            return this;
+        },
+        
+        toble: function(lineprop, linevent){
+            
+            basicConf.lineprop = lineprop;
+            basicConf.linevent = linevent;
+            
+            basicConf.displayFunc = function(data){
+                
+                var $tableWrap = com.focusPage('#' + basicConf.$resulter).html("");
+                
+                if(!data || data.length == 0){
+                    return this;
+                }
+                
+                var $ulTitle = $('<ul></ul>').addClass('flex-table').appendTo($tableWrap);
+                var $liTitle = $('<li></li>').addClass('line table-title').appendTo($ulTitle);
+
+                var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>')).appendTo($liTitle);
+                var $contentWrap = $('<div></div>').addClass('line-wrap content col' + basicConf.lineprop.length).appendTo($liTitle);
+                
+                $.each(basicConf.lineprop, function (i, v) {
+                    $('<div></div>').addClass('cell').html(v.name).appendTo($contentWrap);
+                });
+
+                var $optionWrap = $('<div></div>').addClass('line-wrap action').html($('<div>操作</div>').addClass('cell option')).appendTo($liTitle);
+                
+                $.each(data, function(i, v){
+                    
+                    var $liLine = $('<li></li>').addClass('line').appendTo($ulTitle);
+                    var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1)).appendTo($liLine);
+                    var $contentWrap = $('<div></div>').addClass('line-wrap content col' + basicConf.lineprop.length).appendTo($liLine);
+                    
+                    $.each(basicConf.lineprop, function (index, value) {
+                        $('<div></div>').addClass('cell ' + value.clazz).html(getElement(v, value.prop.split('.'), value.dataset)).appendTo($contentWrap);
+                    });
+                    
+                    var $optionGroup = $('<div></div>').addClass('line-wrap action').appendTo($liLine);
+                    var $cellOption = $('<div></div>').addClass('cell option').appendTo($optionGroup);
+                    
+                    var $btnGroup = $('<div></div>').addClass('btn-group').appendTo($cellOption);
+                    var $btn = $('<button></button>').addClass('btn btn-primary dropdown-toggle').attr('data-toggle', 'dropdown').append('操作').append('<i class="icon-angle-down"></i>').appendTo($btnGroup);
+                    var $btnUl = $('<ul></ul>').addClass('dropdown-menu').addClass('bottom-up').appendTo($btnGroup);
+                    
+                    $.each(basicConf.linevent, function(index, button){
+                        $('<li></li>').append($('<a></a>').html(button.name)).appendTo($btnUl).click(function(){
+                            
+                            if(!button.handle) return false;
+                            
+                            button.handle(v);
+                        });
+                    });
+                });
+            }
+            
+            return this;
+        },
+        
+        table: function(lineprop, linevent){
+            
+            basicConf.lineprop = lineprop;
+            basicConf.linevent = linevent;
+            
+            basicConf.displayFunc = function(data){
+                
+                var $tableWrap = com.focusPage('#' + basicConf.$resulter).html("");
+                
+                var table = $("<table></table>").attr("lay-filter", basicConf.$resulter).appendTo($tableWrap);
+                
+                if(!data || data.length == 0){
+                    return this;
+                }
+                
+                // header handle
+                var headerThead = $("<thead></thead>");
+                var headerTr = $("<tr></tr>").appendTo(headerThead);
+                
+                $.each(basicConf.lineprop, function (i, v) {
+                    if(v.toolbar) v.toolbar = "#" + basicConf.$resulter + "tools";
+                    var headerTh = $('<th></th>').attr("lay-data", JSON.stringify(v)).appendTo(headerTr);
+                    var headerSpan = $('<span></span>').html(v.name).appendTo(headerTh);
+                });
+                
+                var dataTbody = $("<tbody></tbody>").appendTo(table);
+                
+                table.append(headerThead).append(dataTbody);
+
+                // data line handle
+                $.each(data, function(i, v){
+                    
+                    var $liLine = $('<tr></tr>').appendTo(dataTbody);
+                    
+                    $.each(basicConf.lineprop, function (i, d) {
+                        
+                        var info = "";
+                        
+                        if(typeof d.prop == 'function') info = d.prop(v);
+                        else info = getElement(v, d.prop.split('.'), d.dataset);
+                        
+                        $('<td></td>').html(info).appendTo($liLine);
+                    });
+                });
+                
+                // line buttons tools
+                var tools = $('<script type="text/html" id="' + basicConf.$resulter + 'tools">').appendTo($tableWrap);
+                
+                $.each(basicConf.linevent, function(k, v){
+                    $('<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="' + k + '"></a>').html(v.name).appendTo(tools);
+                });
+                
+                laytable.init(basicConf.$resulter, {cellMinWidth: 80, limit: 30});
+                
+                laytable.on('tool(' + basicConf.$resulter + ')', function(obj){
+                    
+                    if(!basicConf.linevent[obj.event]) return false;
+                    if(!basicConf.linevent[obj.event].handle) return false;
+                    
+                    basicConf.linevent[obj.event].handle(obj.data);
+                });
+            }
+            
+            return this;
+        },
+        
+        isPage: function(isPage){
+            
+            basicConf.isPage = isPage;
+           
+            return this;
+        },
+        
+        empty: function(){
+            
+            emptyData();
+            
+            return this;
+        },
+        
+        render: function(){
+            
+            basicConf.buttons && typeof basicConf.buttons == "function" && (basicConf.buttons = buttons());
+
+            !basicConf.isPage && paging.init(); // 绑定上一页下一页事件
+            
+            searchCond.renderConds(); // 初始化查询条件
+            
+            setTimeout(function(){ searchByPresentParams() }, 500);
+            
+            return this;
         },
         /*
          * 根据当前条件查询分页信息

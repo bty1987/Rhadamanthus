@@ -145,7 +145,7 @@ jQuery(function($) {
 		orderEntry.salesmanType = res.salesmanType;
 		orderEntry.orderItems.salesmanType.bindData(orderEntry.salesmanType, 'key', 'value');
 
-		orderEntry.orderItems.orderType.bindData(res.typeness, 'key', 'value', 'type');
+		orderEntry.orderItems.orderType.bindData(res.typeness, 'key', 'value', "请选择");
 
 		orderEntry.houseType = res.houseType;
 		orderEntry.orderItems.houseType.bindData(orderEntry.houseType, 'key', 'value');

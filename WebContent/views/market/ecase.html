@@ -1,144 +1,143 @@
-    <div class="row">
-        <div class="col-md-12">
-	        <div id="condList" class="fl_search clearfix"></div>
-	        <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
-	        <div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
-	    </div>
-    </div>
 
-    <div class="modal fade" id="caseModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="myModalLabel">案例</h4>
-                </div>
-                <div class="modal-body">
-                    <form class="form-horizontal">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="city" class="col-sm-4 control-label no-padding-right orange">城市</label>
-                                    <div class="col-md-9">
-                                        <input type="text" class="v_required" id="city" data-toggle="popover" data-placeholder="城市" />
-                                    </div>
-                                </div>
+<div>
+    <div id="condList" class="fl_search clearfix"></div>
+    <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+    <div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+</div>
 
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label no-padding-right orange" for="villageName">楼盘名称</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" id="villageName" class="v_required" data-toggle="popover"/>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="designer" class="col-sm-4 control-label no-padding-right orange">设计师</label>
-                                    <div class="col-md-9">
-                                        <input type="text" class="" id="designer" data-placeholder="设计师" data-toggle="popover" />
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="supervisor" class="col-sm-4 control-label no-padding-right orange">监理</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="" id="supervisor" data-placeholder="监理" data-toggle="popover" />
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label no-padding-right orange" for="style">风格</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" id="style" class="v_required" data-toggle="popover"/>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="type" class="col-sm-4 control-label no-padding-right orange">类型</label>
-                                    <div class="col-sm-8">
-                                        <select class="" id="type"  data-toggle="popover" data-toggle="popover">
-                                            <option value="0">效果图</option>
-                                            <option value="1">施工图</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label no-padding-right orange" for="room">户型</label>
-                                    <div class="col-sm-8">
-                                        <select class="col-md-3" id="room"  data-toggle="popover" data-toggle="popover">
-                                            <option value="">&nbsp;</option>
-                                        </select>
-                                        <select class="col-md-3" id="livingRoom"  data-toggle="popover" data-toggle="popover">
-                                            <option value="">&nbsp;</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label no-padding-right orange" for="area">面积</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" id="area" class="v_required v_number" data-toggle="popover"/>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label no-padding-right" for="cycle">周期</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" id="cycle" class="v_number" data-toggle="popover"/>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label no-padding-right orange" for="comment">说明</label>
-                                    <div class="col-sm-8">
-                                        <textarea rows="5" id="comment" class="v_required" data-toggle="popover"></textarea>
-                                    </div>
-                                </div>
-
-                                <div class="form-group" style="display: none" id="validateDiv">
-                                    <label class="col-sm-4 control-label no-padding-right" for="validateFlag"></label>
-                                    <div class="col-sm-8">
-                                        <div class="" data-toggle="popover" id="validateFlag" style="color: red;">请输入设计师或监理名称</div>
-                                    </div>
+<div class="modal fade" id="caseModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">案例</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="city" class="col-sm-4 control-label no-padding-right orange">城市</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="v_required" id="city" data-toggle="popover" data-placeholder="城市" />
                                 </div>
                             </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer" style="text-align: center">
-                    <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="modal fade" id="epicturePage"  tabindex="-1">
-        <div class="modal-dialog" style="width: 50%;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span>&times;</span><span class="sr-only">Close</span>
-                    </button>
-                    <h4 class="modal-title">图片信息</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row" style="padding-top: 10px;">
-                        <div class="col-xs-12">
-                            <div class="row-fluid">
-                                <ul class="ace-thumbnails" id="epicture">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label no-padding-right orange" for="villageName">楼盘名称</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="villageName" class="v_required" data-toggle="popover"/>
+                                </div>
+                            </div>
 
-                                </ul>
+                            <div class="form-group">
+                                <label for="designer" class="col-sm-4 control-label no-padding-right orange">设计师</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="" id="designer" data-placeholder="设计师" data-toggle="popover" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="supervisor" class="col-sm-4 control-label no-padding-right orange">监理</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="" id="supervisor" data-placeholder="监理" data-toggle="popover" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label no-padding-right orange" for="style">风格</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="style" class="v_required" data-toggle="popover"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="type" class="col-sm-4 control-label no-padding-right orange">类型</label>
+                                <div class="col-sm-8">
+                                    <select class="" id="type"  data-toggle="popover" data-toggle="popover">
+                                        <option value="0">效果图</option>
+                                        <option value="1">施工图</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label no-padding-right orange" for="room">户型</label>
+                                <div class="col-sm-8">
+                                    <select class="col-md-3" id="room"  data-toggle="popover" data-toggle="popover">
+                                        <option value="">&nbsp;</option>
+                                    </select>
+                                    <select class="col-md-3" id="livingRoom"  data-toggle="popover" data-toggle="popover">
+                                        <option value="">&nbsp;</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label no-padding-right orange" for="area">面积</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="area" class="v_required v_number" data-toggle="popover"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label no-padding-right" for="cycle">周期</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="cycle" class="v_number" data-toggle="popover"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label no-padding-right orange" for="comment">说明</label>
+                                <div class="col-sm-8">
+                                    <textarea rows="5" id="comment" class="v_required" data-toggle="popover"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="display: none" id="validateDiv">
+                                <label class="col-sm-4 control-label no-padding-right" for="validateFlag"></label>
+                                <div class="col-sm-8">
+                                    <div class="" data-toggle="popover" id="validateFlag" style="color: red;">请输入设计师或监理名称</div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="modal-footer" style="text-align: center">
-                    <a class="form-group" id = "epictureUpload"></a>
-                </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="text-align: center">
+                <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
             </div>
         </div>
     </div>
+</div>
+
+<div class="modal fade" id="epicturePage"  tabindex="-1">
+    <div class="modal-dialog" style="width: 50%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">图片信息</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row" style="padding-top: 10px;">
+                    <div class="col-xs-12">
+                        <div class="row-fluid">
+                            <ul class="ace-thumbnails" id="epicture">
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer" style="text-align: center">
+                <a class="form-group" id = "epictureUpload"></a>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
     $.loadScript(['js/market/ecase.js']);

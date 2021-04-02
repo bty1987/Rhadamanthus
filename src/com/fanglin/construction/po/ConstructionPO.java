@@ -93,6 +93,10 @@ public class ConstructionPO implements Serializable{
 	private Timestamp createTime;
 	
 	private Timestamp finishTime;
+	
+	private UserPO locker;
+	
+	private Timestamp lockTime;
 
 	public ConstructionPO() {
 		super();
@@ -102,11 +106,18 @@ public class ConstructionPO implements Serializable{
 		super();
 		this.decoration = decoration;
 	}
-
+	
 	public ConstructionPO(DecorationPO decoration, UserPO supervisor) {
 		super();
 		this.decoration = decoration;
 		this.supervisor = supervisor;
+	}
+
+	public ConstructionPO(DecorationPO decoration, UserPO supervisor, UserPO locker) {
+		super();
+		this.decoration = decoration;
+		this.supervisor = supervisor;
+		this.locker = locker;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -231,4 +242,23 @@ public class ConstructionPO implements Serializable{
 		this.finishTime = finishTime;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "luid", referencedColumnName="uid")	
+	public UserPO getLocker() {
+		return locker;
+	}
+
+	public void setLocker(UserPO locker) {
+		this.locker = locker;
+	}
+
+	@Column(name="lockTime")
+	public Timestamp getLockTime() {
+		return lockTime;
+	}
+
+	public void setLockTime(Timestamp lockTime) {
+		this.lockTime = lockTime;
+	}
+	
 }

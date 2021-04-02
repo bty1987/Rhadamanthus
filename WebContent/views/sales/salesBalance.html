@@ -7,51 +7,87 @@
         </div>
     </div>
 </div>
+
+<!-- 装修单信息 -->
+<div class="modal fade" id="decorationInfo" tabindex="-1">
+    <div class="modal-dialog" style="margin-top: 10%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="decorationInfoDialog">装修单信息</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label no-padding-right">装修单号</label>
+                        <div class="col-sm-8">
+                            <span id="orderId" style="line-height: 30px"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label no-padding-right">楼盘地址</label>
+                        <div class="col-sm-8">
+                            <span id="address" style="line-height: 30px"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label no-padding-right">设计师</label>
+                        <div class="col-sm-8">
+                            <span id="designer" style="line-height: 30px"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label no-padding-right">跟单员</label>
+                        <div class="col-sm-8">
+                            <span id="escorter" style="line-height: 30px"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label no-padding-right">监理</label>
+                        <div class="col-sm-8">
+                            <span id="supervisor" style="line-height: 30px"></span>
+                        </div>
+                    </div>
+                                            
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label no-padding-right">工程状态</label>
+                        <div class="col-sm-8">
+                            <span id="projectStatus" style="line-height: 30px"></span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" style="text-align: center">
+                <button type="button" id="cancelDecorationInfoBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--厂商结算值弹窗-->
 <div id="vbalanceValue" style="display: none">
     <div style="padding: 40px 0;">
         <div class="row-fluid">
             <form class="form-horizontal" novalidate="novalidate" id="form">
 
-                <div class="alert alert-error hide">
-
-                    <button data-dismiss="alert" class="close"></button>
-
-                    You have some form errors. Please check below.
-
-                </div>
-
-                <div class="alert alert-success hide">
-
-                    <button data-dismiss="alert" class="close"></button>
-
-                    Your form validation is successful!
-
-                </div>
-
                 <div class="form-group" style="margin-right: 0">
-
-                    <label class="col-xs-4 control-label ">厂商结算值</label>
-
+                    <label class="col-xs-4 control-label orange">厂商结算值</label>
                     <div class="col-xs-8">
-
                         <input type="text" class="v_required v_afloat_3" name="vbalanceValue">
-                        <i class="icon-asterisk"></i>
-
                     </div>
-
                 </div>
 
                 <div class="form-group" style="margin-right: 0">
-
                     <label class="col-xs-4 control-label ">总价</label>
-
                     <div class="col-xs-8">
-
                         <input type="text" name="total" readonly>
-
                     </div>
-
                 </div>
 
                 <div class="form-group col-sm-12" style="text-align: right">
@@ -70,57 +106,25 @@
         <div class="row-fluid">
             <form class="form-horizontal" novalidate="novalidate" id="form1">
 
-                <div class="alert alert-error hide">
-
-                    <button data-dismiss="alert" class="close"></button>
-
-                    You have some form errors. Please check below.
-
-                </div>
-
-                <div class="alert alert-success hide">
-
-                    <button data-dismiss="alert" class="close"></button>
-
-                    Your form validation is successful!
-
-                </div>
-
                 <div class="form-group" style="margin-right: 0">
-
-                    <label class="col-xs-4 control-label ">结算值</label>
-
+                    <label class="col-xs-4 control-label orange">结算值</label>
                     <div class="col-xs-8">
-
                         <input type="text" class="v_required v_afloat_3" name="pbalanceValue">
-                        <i class="icon-asterisk"></i>
-
                     </div>
-
                 </div>
 
                 <div class="form-group" style="margin-right: 0">
-
                     <label class="col-xs-4 control-label">预结算成本额</label>
-
                     <div class="col-xs-8">
-
                         <input type="text" name="balanceValue" readonly>
-
                     </div>
-
                 </div>
 
                 <div class="form-group" style="margin-right: 0">
-
                     <label class="col-xs-4 control-label">厂商结算额</label>
-
                     <div class="col-xs-8">
-
                         <input type="text" name="vbalanceValue" readonly>
-
                     </div>
-
                 </div>
 
                 <div class="form-group col-sm-12" style="text-align: right">

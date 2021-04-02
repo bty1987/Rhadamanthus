@@ -60,8 +60,8 @@ jQuery(function($) {
         
         var quotation = res.quotation;
         
-        com.focusPage("#con-quotation-total", "#form").val(quotation.totalPrice);
-        com.focusPage("#con-quotation-total-undis", "#form").val(utils.accAdd(quotation.undisPrice, utils.accAdd(quotation.disPrice, utils.accAdd(quotation.trafficPrice, quotation.managePrice))));
+        com.focusPage("#con-quotation-total", "#form").val(utils.accAdd(quotation.undisPrice, utils.accAdd(quotation.disPrice, utils.accAdd(quotation.trafficPrice, quotation.managePrice))));
+        com.focusPage("#con-quotation-total-undis", "#form").val(utils.accSub(quotation.totalPrice, quotation.managePrice));
         com.focusPage("#con-manage-total", "#form").val(quotation.managePrice);
         
         contractEdit.quotation = quotation;
@@ -71,10 +71,7 @@ jQuery(function($) {
         
         var holonomy = res.decorationHolonomy;
         
-        if(holonomy) holonomy.materialPrice = 0;
         if(!holonomy.servicePrice) holonomy.servicePrice = 0;
-        
-        console.log(holonomy)
         
         com.focusPage("#con-material-total", "#form").val(holonomy.materialPrice);
         com.focusPage("#con-service-total", "#form").val(holonomy.servicePrice);

@@ -330,7 +330,7 @@ public class MaterialServiceImpl implements MaterialService {
 		}
 
 		// 赋值默认活动信息
-		ActivityPO activityPO = activityDao.queryActivityForDefault(ActivityPO.TYPE_MATERIAL_INT);
+		ActivityPO activityPO = activityDao.queryActivityForDefault(company, ActivityPO.TYPE_MATERIAL_INT);
 		materialPO.setActivityId(activityPO == null ? 0 : activityPO.getAid());
 
 		materialPO.setBrand(brandPO.getName());

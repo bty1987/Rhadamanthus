@@ -62,6 +62,13 @@
         }
 
         var csses = "";
+        
+        /* altogether */
+        csses += '<link rel="stylesheet" href="assets/altogether/css/font-awesome.min.css?version=' + versionCode + '" />';
+        csses += '<link rel="stylesheet" href="assets/altogether/css/locking.css?version=' + versionCode + '" />'; /*  lockscreen */
+        csses += '<link rel="stylesheet" href="assets/altogether/css/layui.css?version=' + versionCode + '" />'; /*  lockscreen */
+        /* altogether end */
+        
         /* ace */
         csses += '<link rel="stylesheet" href="assets/ace/css/bootstrap.min.css?version=' + versionCode + '" />'; // basic styles
         csses += '<link rel="stylesheet" href="assets/ace/css/font-awesome-fa.min.css?version=' + versionCode + '" />';
@@ -69,13 +76,6 @@
         csses += '<link rel="stylesheet" href="assets/ace/css/huploadify.css?version=' + versionCode + '" />';
         csses += '<link rel="stylesheet" href="assets/ace/css/ace.css?version=' + versionCode + '" />';
         /* ace end */
-
-        /* altogether */
-        csses += '<link rel="stylesheet" href="assets/altogether/css/font-awesome.min.css?version=' + versionCode + '" />';
-        csses += '<link rel="stylesheet" href="assets/altogether/css/layer.css?version=' + versionCode + '" />';
-        csses += '<link rel="stylesheet" href="assets/altogether/css/iconfont.css?version=' + versionCode + '" />'; /*  iconfont  */
-        csses += '<link rel="stylesheet" href="assets/altogether/css/locking.css?version=' + versionCode + '" />'; /*  lockscreen */
-        /* altogether end */
 
         csses += '<link rel="stylesheet" href="' + server + 'css/main.css?version=' + versionCode + '" />';
 
@@ -119,6 +119,13 @@
     <div class="navbar navbar-default navbar-fixed-top" id="navbar" style='display:none;height: 0px;'>
 
         <div class="navbar-container" id="navbar-container">
+            <div class="navbar-header pull-left">
+                <a href="#" class="navbar-brand">
+                    <small>
+                        Fanglin IF Admin
+                    </small>
+                </a>
+            </div>
 
             <!-- 设置皮肤 隐藏-->
             <div class="navbar-header pull-right hide">
@@ -279,8 +286,7 @@
     <script src="assets/altogether/js/fullcalendar.min.js"></script> <!-- calendar --> 
     <script src="assets/altogether/js/spin.min.js"></script>
 
-    <script src="assets/altogether/js/layer.js"></script> <!-- dialog pop --> 
-    <script src="assets/altogether/laydate/laydate.js"></script> <!-- datetime tools --> 
+    <script src="assets/altogether/js/layui.js"></script> <!-- layui tools -->
 
     <script src="assets/altogether/js/typeahead-bs2.min.js"></script> <!-- auto fill --> 
     <script src="assets/altogether/js/tag.js"></script>

@@ -3014,7 +3014,7 @@ button.btn:active {
 }
 
 .btn:hover,.btn-default:hover,.open .btn.dropdown-toggle,.open .btn-default.dropdown-toggle
-    {
+{
     background-color: #8b9aa3 !important;
     border-color: #abbac3
 }

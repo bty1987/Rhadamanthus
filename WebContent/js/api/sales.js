@@ -373,14 +373,24 @@ $.extend(api, {
         	tranargs: [{
                 result: "paging-data-salesItem",
                 args: ["initnum","num"]
-            }]	},
+            }]	
+        },
         pageSalesDeliveryItemForSupplier:{
             url: "pageSalesDeliveryItemForSupplier.do",
             type: "query",
             tranargs: [{
                 result: "paging-data-salesItem",
                 args: ["initnum","num"]
-            }]	},
+            }]	
+        },
+        querySalesDeliveryItem:{
+            url: "querySalesDeliveryItem.do",
+            type: "query",
+            tranargs: [{
+                result: "salesDeliveryItems-salesItem",
+                args: ["initnum","num"]
+            }]  
+        },
         
         tranSalesDeliveryItem:{url:"tranSalesDeliveryItem.do"},
         checkSalesDeliveryItem:{url:"checkSalesDeliveryItem.do"},

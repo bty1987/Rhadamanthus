@@ -19,88 +19,43 @@ $(function(){
 
     }, null, false);
     
-    var displayFunc  = (function(){
-
-        var renderList = function(tableId,listData){
-            var $tableWrap = com.focusPage('#' + tableId);
-
-            if(listData && listData.length){
-                var $ulTitle = createTableTitle();
-                var $ulData = $('<ul></ul>').addClass('flex-table');
-                $tableWrap.append($ulTitle).append($ulData);
-
-                $.each(listData,function(i, v){
-                    var $liLine = creatLine(i, v, i == listData.length - 1);
-                    $liLine.appendTo($ulTitle);
-                });
+    var searcher = new Searcher();
+    
+    searcher.base("condList", "pagenation", "resultList", api.information.pageAwardRecord);
+    
+    searcher.param({"awardRecord.awardStock.asid":""});
+    
+    searcher.condition(["information-awardRecord-orderId", "information-awardRecord-name", "information-awardRecord-type", "information-awardRecord-subtype", "information-awardRecord-onetype", "information-awardRecord-recordTime"]);
+    
+    var lineprops = [
+        {"field": "index", "name": "", prop: "", type: "numbers", fixed: "left"},
+        {"field": "asid", "name": "ID", prop: "awardStock.asId", hide: true},
+        {"field": "name", "name": "奖品", prop: "awardStock.name", width: 200, fixed: "left"},
+        {"field": "orderId", "name": "装修单号", prop: "orderId", width: 200},
+        {"field": "type", "name": "类型", prop: "type", dataset: awardRecord.type},
+        {"field": "subtype", "name": "子类", prop: "subtype", dataset: awardRecord.subtype},
+        {"field": "onetype", "name": "一类", prop: "onetype", dataset: awardRecord.onetype},
+        {"field": "num", "name": "数量", prop: "num", style: "color: blue;"},
+        {"field": "totalPrice", "name": "总价", prop: "totalPrice", style: "color: blue;"},
+        {"field": "unitPrice", "name": "单价", prop: "unitPrice", style: "color: blue;"},
+        {"field": "creater", "name": "提交人", prop: "creater.currentName"},
+        {"field": "operateTime", "name": "时间", prop: "operateTime", width: 200, style: "color: green;"},
+        {"field": "comment", "name": "说明", prop: "content", width: 300},
+        {"field": "buttons", "name": "操作", prop: "1", width: 150, fixed: "right", toolbar: true},
+    ];
+    
+    var linebtns = {
+        "detail": {
+            "name": "查看",
+            "handle": function(data){
+                com.showAlert(com.info, data.name);
             }
-        };
-
-        var createTableTitle = function(){
-            var $ulTitle = $('<ul></ul>').addClass('flex-table');
-            var $liTitle = $('<li></li>').addClass('line table-title');
-
-            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>'));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col11');
-            var titleName ='奖品,装修单号,类型,子类,一类,数量,总价,单价,提交人,时间,说明';
-
-            $.each(titleName.split(','), function (i, v) {
-                var $cell = $('<div></div>').addClass('cell').html(v);
-                $cell.appendTo($contentWrap);
-            });
-
-            $liTitle.append($indexWrap).append($contentWrap).appendTo($ulTitle);
-
-            return $ulTitle;
-        };
-
-        var creatLine = function (i, v) {
-            var $liLine = $('<li></li>').addClass('line');
-            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
-            var $contentWrap = $('<div></div>').addClass('line-wrap content col11');
-
-            var propertyArr = [
-                [v.awardStock.name,'grey'],
-                [v.orderId, 'grey'],
-                [awardRecord.type[v.type],'red'],
-                [awardRecord.subtype[v.subtype],'red'],
-                [awardRecord.onetype[v.onetype] , 'red'],
-                [v.num, 'blue'],
-                [v.totalPrice, 'blue'],
-                [v.unitPrice, 'blue'],
-                [v.creater.currentName, 'grey'],
-                [v.operateTime, 'green'],
-                [v.content, 'grey']
-            ];
-
-            $liLine.append($indexWrap);
-
-            $.each(propertyArr, function (i, v) {
-                var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
-                $cell.appendTo($contentWrap);
-            });
-
-            $liLine.append($indexWrap).append($contentWrap);
-
-            return $liLine;
-        };
-
-        return {
-            init : function(tableId,listData){
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
-            },
-            drawLine : function(v){
-                return creatLine(v);
-            }
-        };
-    })();
-
-    var awardRecordSeacher = new Searcher();
-    awardRecordSeacher.init(["information-awardRecord-orderId", "information-awardRecord-name", "information-awardRecord-type", "information-awardRecord-subtype", "information-awardRecord-onetype", "information-awardRecord-recordTime"], "condList", api.information.pageAwardRecord, function(data){
-        displayFunc.init('resultList', data);
-    }, "pagenation", "pageAwardRecordPostData", {"awardRecord.awardStock.asid":""}, false, null, function() {
-    },'resultList');
+        }
+    }
+    
+    searcher.table(lineprops, linebtns)
+    
+    searcher.render();
 
 });
 

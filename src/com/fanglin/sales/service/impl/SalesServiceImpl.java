@@ -347,13 +347,13 @@ public class SalesServiceImpl implements SalesService {
 		salesPO.setAmount(salesVO.getTotal());
 		salesPO.setTotal(salesVO.getTotal());
 		salesPO.setSupplier(brandPO.getSupplier());
-		
+
 		salesPO.setCtype(SalesPO.CTYPE_PASS_INT);
 		salesPO.setCvalue(0);
 
 		salesPO.setGrade(decorationPO.getGrade().equals("C") ? "B" : "");
 
-		ActivityPO activityPO = activityDao.queryActivityForDefault(ActivityPO.TYPE_SALES_INT);
+		ActivityPO activityPO = activityDao.queryActivityForDefault(company, ActivityPO.TYPE_SALES_INT);
 		salesPO.setActivityId(activityPO == null ? 0 : activityPO.getAid());
 
 		salesDao.save(salesPO);
@@ -455,7 +455,7 @@ public class SalesServiceImpl implements SalesService {
 			throw new FLException(260021, "销售单不存在");
 		}
 
-		if (salesPO.getStatus() != SalesPO.STATUS_INIT_SHORT) {
+		if (!Arrays.asList(SalesPO.STATUS_INIT_SHORT, SalesPO.STATUS_END_SHORT).contains(salesPO.getStatus())) {
 			throw new FLException(260022, "销售单状态不可操作");
 		}
 
@@ -550,7 +550,7 @@ public class SalesServiceImpl implements SalesService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int finishSales(SalesVO salesVO, String userId) throws FLException {
-		
+
 		UserPO finisher = userDao.queryUserByUserId(userId);
 
 		SalesPO salesPO = salesDao.get(salesVO.getSid());

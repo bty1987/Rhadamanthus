@@ -26,6 +26,8 @@ public class DecorationContractVO implements Serializable {
 
 	private String viewpdf;
 
+	private String path;
+
 	private UserBaseVO creater;
 
 	private UserBaseVO signner;
@@ -106,6 +108,14 @@ public class DecorationContractVO implements Serializable {
 
 	public void setViewpdf(String viewpdf) {
 		this.viewpdf = viewpdf;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	public UserBaseVO getCreater() {

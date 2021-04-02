@@ -2,19 +2,27 @@ jQuery(function ($) {
 
     var salary = {
 
-        saveBtn:com.focusPage("#saveBtn"),
-        cancelBtn: com.focusPage("#cancelBtn"),
-
         modals: {
             workersalaryModal: com.focusPage("#workersalaryModal"),
-            importModal:com.focusPage("#importModal"),
+            importModal: com.focusPage("#importModal"),
+            batchSendModal: com.focusPage("#batchSendModal"),
         },
         items: {
-        	workersalary : com.focusPage("#workersalary"),
-            workersalaryuser : com.focusPage("#workersalaryuser"),
-            workersalarySubtype : com.focusPage("#workersalarySubtype"),
-            workersalarycomment : com.focusPage("#workersalarycomment"),
+        	workersalary : com.focusPage("#workersalary", "#workersalaryModal"),
+            workersalaryuser : com.focusPage("#workersalaryuser", "#workersalaryModal"),
+            workersalarySubtype : com.focusPage("#workersalarySubtype", "#workersalaryModal"),
+            workersalarycomment : com.focusPage("#workersalarycomment", "#workersalaryModal"),
+            
+            beginTime: com.focusPage("#beginTime", "#batchSendModal"),
+            finishTime: com.focusPage("#finishTime", "#batchSendModal"),
         },
+        
+        btns: {
+            saveBtn: com.focusPage("#saveBtn"),
+            
+            batchSendBtn: com.focusPage("#batchSendBtn"),
+        },
+        
         salaryStatus: {},
         type:{},
         oneType:{},
@@ -22,11 +30,15 @@ jQuery(function ($) {
         salaryType : {},
         twoType:{},
         twotype:{},
-        repeatFlg: false
 
     };
+    
+    com.datetime(salary.items.beginTime);
+    com.datetime(salary.items.finishTime);
 
-    salary.saveBtn.bindClick(saveData);
+    salary.btns.saveBtn.bindClick(saveData);
+    salary.btns.batchSendBtn.bindClick(batchSend);
+    
     salary.modals.workersalaryModal.on('hide.bs.modal', function (e) {
         com.cleanTypeahead("workersalaryuser");
         com.cleanItems(salary.items);
@@ -56,138 +68,85 @@ jQuery(function ($) {
 
     }, null, false);
 
-    var displayFunc = (function () {
-
-        var renderList = function (tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function (i, v) {
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function (v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.user.userName));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-            var $adopt = $('<a></a>').addClass('btn btn-minier btn-success').html('通过');
-            var $btnrefuse = $('<a></a>').addClass('btn btn-minier btn-danger').html('驳回');
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-yellow').html('撤销');
-
-            var propertyArr = [
-                ["创建人:", v.creater.userName, "grey"],
-                ["创建时间:", v.createTime, "green"],
-                ["工人工号:", v.user.userId, "grey"],
-                ["工程节点:", v.schedule == 0 ? "---" : salary.constructionSchedule[v.schedule], "grey"],
-                ["审批人:", v.approver.userName == null ? "无" : v.approver.userName, "grey"],
-                ["审批时间:", v.approveTime == null ? "无" : v.approveTime, "green"],
-                ["订单号:", v.decoration == null ? "无" : v.decoration.orderId, "blue"],
-                ["楼盘地址:", (v.decoration.house) == null ? "无" : (v.decoration.house.village.name + " " + v.decoration.house.houseNumber), "grey"],
-                ["监理:", v.decoration.supervisor == null ? "无" : v.decoration.supervisor.userName, "grey"],
-                ["类型：",salary.type[v.type], "red"],
-                ["一类：",salary.oneType[v.onetype], "red"],
-                ["二类：",salary.twotype[v.twotype], "red"],
-                ["操作金额:", v.type == 0 ? v.money : -v.money, "blue"],
-                ["工费:", v.type == 0 ? v.salary : -v.salary, "blue"],
-                ["质保金:", v.type == 0 ? v.deposit : -v.deposit, "blue"],
-                ["状态:", salary.salaryStatus[v.status], "red"],
-            ];
-
-            var $label = $('<label></label>');
-            var $input = $('<input>').attr({
-                "type": "checkbox",
-                "name": "check",
-                "id": "check",
-                "class": "ace ace-checkbox-2",
-                "value": v.wsId,
-                "cwsid": v.cwsid
-            });
-            var $span = $('<span></span>').addClass('lbl blue bigger-150');
-
-            $.each(propertyArr, function (index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-
-            });
-
-            $divBtnWrap.append($adopt).append($btnDel).append($btnrefuse).appendTo($h3);
-            $label.append($input).append($span).prependTo($h3);
-            $liLine.append($h3).append($ulProperty);
-
-            $btnDel.click(function () {
-                deletebystatus(v.wsId);
-            });
-
-            $adopt.click(function () {
-                adopt(v.wsId);
-            });
-
-            $btnrefuse.click(function () {
-                refuse(v.wsId);
-            });
-
-            return $liLine;
-        };
-
-        return {
-            init: function (tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function (v) {
-                return creatLine(v);
-            }
-        };
-
-    })();
-
     var searcher = new Searcher();
-
-    var _condArr = ["salary-orderId", "salary-salaryWorkduty", "salary-jober", "salary-salaryschedule", 'salary-salarystatus',"salary-createTime", 'salary-approveTime'];
-
-    searcher.init(_condArr, "condList", api.salary.pageWorkerSalary, function (data) {
-        displayFunc.init('resultList', data);
-    }, "pagenation", "workersalaryPostData", null, false, null, function () {
-
-
-        var $selecta = $('<a></a>').addClass('btn btn-minier btn-yellow').attr('name', 'select').css("margin", "0px 3px");
-        var $selecti = $('<i></i>').addClass('icon-plus bigger-110').appendTo($selecta);
-        var $selectspan = $('<span></span>').text('全选').appendTo($selecta);
-
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-success').attr('name', 'add').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('创建工费').appendTo($adda);
-
-        var $exporta = $('<a></a>').addClass('btn btn-minier btn-inverse').attr('name', 'export').css("margin", "0px 3px");
-        var $exporti = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($exporta);
-        var $exportspan = $('<span></span>').text('导出').appendTo($exporta);
-
-        var $importa = $('<a></a>').addClass('btn btn-minier btn-danger').attr('name', 'import').css("margin", "0px 3px");
-        var $importi = $('<i></i>').addClass('icon-upload bigger-110').appendTo($importa);
-        var $importspan = $('<span></span>').text('导入').appendTo($importa);
-
-        var $adopta = $('<a></a>').addClass('btn btn-minier btn-warning').attr('name', 'adopt').css("margin", "0px 3px");
-        var $adopti = $('<i></i>').addClass('icon-add bigger-110').appendTo($adopta);
-        var $adoptspan = $('<span></span>').text('批量通过').appendTo($adopta);
-
-        var $batchImporta = $('<a></a>').addClass('btn btn-minier btn-pink').attr('name', 'batchImport').css("margin", "0px 3px");
-        var $batchImporti = $('<i></i>').addClass('icon-upload bigger-110').appendTo($batchImporta);
-        var $batchImportspan = $('<span></span>').text('批量更新').appendTo($batchImporta);
-
-        return [$selecta, $adda, $adopta, $exporta, $importa];
-    });
+    
+    searcher.base("condList", "pagenation", "resultList", api.salary.pageWorkerSalary);
+    
+    searcher.condition(["salary-orderId", "salary-salaryWorkduty", "salary-jober", "salary-salaryschedule", "salary-worker-count", 'salary-salarystatus',"salary-createTime", 'salary-approveTime']);
+    
+    searcher.history("workersalaryPostData");
+    
+    searcher.button([
+        {id: "select", name: "全选", clazz: "btn-yellow", icon: ""},
+        {id: "add", name: "创建", clazz: "btn-success", icon: "icon-plus"},
+        {id: "exports", name: "导出", clazz: "btn-inverse", icon: "icon-download-alt"},
+        {id: "imports", name: "导入", clazz: "btn-danger", icon: "icon-upload"},
+        {id: "adopt", name: "批量通过", clazz: "btn-warning", icon: ""},
+        {id: "batchImport", name: "批量更新", clazz: "btn-pink", icon: ""},
+        {id: "batchSend", name: "批量通知", clazz: "btn-success", icon: ""},
+    ]);
+    
+    var lineprops = [
+        {field: "wsId", name: "多选", type: "checkbox", prop: "wsId"},
+        {field: "orderId", name: "装修单号", prop: "decoration.orderId", clazz: "grey"},
+        {field: "village", name: "楼盘", prop: "decoration.house.village.name", clazz: "grey"},
+        {field: "houseNumber", name: "楼号", prop: "decoration.house.houseNumber", clazz: "grey"},
+        {field: "supervisor", name: "监理", prop: "decoration.supervisor.userName", clazz: "grey"},
+        {field: "creater", name: "创建人", prop: "creater.userName", clazz: "grey"},
+        {field: "createTime", name: "创建时间", prop: "createTime", clazz: "green"},
+        {field: "workerId", name: "工人工号", prop: "user.userId", clazz: "grey"},
+        {field: "workerName", name: "工人姓名", prop: "user.currentName", clazz: "grey"},
+        {field: "dutyName", name: "工种", prop: "user.duty.name", clazz: "grey"},
+        {field: "schedule", name: "施工节点", prop: "schedule", dataset: salary.constructionSchedule, clazz: "red"},
+        {field: "approver", name: "审批人", prop: "approver.currentName", clazz: "grey"},
+        {field: "approveTime", name: "审批时间", prop: "approveTime", clazz: "grey"},
+        {field: "type", name: "类型", prop: "type", dataset: salary.type, clazz: "red"},
+        {field: "oneType", name: "一类", prop: "oneType", dataset: salary.oneType, clazz: "red"},
+        {field: "twotype", name: "二类", prop: "twotype", dataset: salary.twotype, clazz: "red"},
+        {field: "money", name: "操作金额", prop: function(v){return v.type == 0 ? v.money : -v.money}, clazz: "blue"},
+        {field: "salary", name: "工费", prop: function(v){return v.type == 0 ? v.salary : -v.salary}, clazz: "blue"},
+        {field: "deposit", name: "质保金", prop: function(v){return v.type == 0 ? v.deposit : -v.deposit}, clazz: "blue"},
+        {field: "count", name: "计数", prop: "count", clazz: "blue", show: function(v){return (v.status in ["0", "1"])}},
+        {field: "status", name: "状态", prop: "status", dataset: salary.salaryStatus, clazz: "red"},
+        {field: "isSend", name: "消息", prop: "isSend", dataset: {"0": "未发送", "1": "待发送", "2": "已发送"}, clazz: "red"},
+    ];
+    
+    var linebtns = [
+        {name: "通过", clazz: "btn-success", handle: function(v){
+            adopt(v);
+            return false;
+        }, show: function(v){
+            return v.status == 0;
+        }},
+        {name: "驳回", clazz: "btn-danger", handle: function(v){
+            refuse(v);
+            return false;
+        }, show: function(v){
+            return v.status == 1;
+        }},
+        {name: "撤销", clazz: "btn-yellow", handle: function(v){
+            deletebystatus(v);
+            return false;
+        }, show: function(v){
+            return v.status == 0;
+        }},
+        {name: "发送通知", clazz: "btn-success", handle: function(v){
+            send(v);
+            return false;
+        }, show: function(v){
+            return v.isSend == 0 && v.status == 1;
+        }},
+        {name: "取消通知", clazz: "btn-yellow", handle: function(v){
+            cancel(v);
+            return false;
+        }, show: function(v){
+            return v.isSend == 1;
+        }},
+    ]
+    
+    searcher.line("user.userName", lineprops, linebtns);
+    
+    searcher.render();
 
     com.focusPage('a[name="add"]', '#pagenation').click(function () {
         salary.modals.workersalaryModal.modal("show");
@@ -206,7 +165,7 @@ jQuery(function ($) {
         }
     });
 
-    com.focusPage('a[name="import"]', '#pagenation').click(function () {
+    com.focusPage('a[name="imports"]', '#pagenation').click(function () {
         salary.modals.importModal.modal("show");
     });
 
@@ -214,7 +173,7 @@ jQuery(function ($) {
        salary.modals.workersalaryModal.modal("show");
     });
 
-    com.focusPage('a[name="export"]', '#pagenation').click(function () {
+    com.focusPage('a[name="exports"]', '#pagenation').click(function () {
 
         if (com.focusPage('span[name="totalRecords"]').text() == 0) {
             com.showAlert(com.warning, "请通过条件进行查询");
@@ -230,16 +189,17 @@ jQuery(function ($) {
 
             $.exceler({
                 column: [
+                    ["装修单号", "decoration.orderId"],
+                    ['楼盘地址', "decoration.house"],
+                    ['监理', 'decoration.supervisor'],
                     ["工费Id", "wsId"],
                     ["工人姓名", "user.userName"],
                     ["工人工号", "user.userId"],
+                    ["工种", "user.duty.name"],
                     ["创建人", "creater.userName"],
                     ["创建时间", "createTime"],
                     ["审批人", 'approver.userName'],
                     ["审批时间", "approveTime"],
-                    ["订单号", "decoration.orderId"],
-                    ['楼盘地址', "decoration.house"],
-                    ['监理', 'decoration.supervisor'],
                     ['操作金额', 'money'],
                     ['工费', 'salary'],
                     ['质保金', 'deposit'],
@@ -248,6 +208,7 @@ jQuery(function ($) {
                     ['类型', 'type'],
                     ['一类', 'onetype'],
                     ['二类', 'twotype'],
+                    ['计数', 'count'],
                     ['备注', 'comment'],
                     ['状态', "status"]
                 ],
@@ -309,37 +270,39 @@ jQuery(function ($) {
         });
 
     });
+    
+    com.focusPage('a[name="batchSend"]', '#pagenation').click(function () {
+        salary.modals.batchSendModal.modal("show");
+     });
 
-    function deletebystatus(wsId) {
-        var options = {};
-        options["workerSalary.wsId"] = wsId;
-        com.post(api.salary.deleteWorkerSalary, options, function (res) {
+    function deletebystatus(v) {
+        com.post(api.salary.deleteWorkerSalary, {"workerSalary.wsId": v.wsId}, function (res) {
             searcher.doSearch();
-        }, function (e) {
-            com.showAlert(com.error, e.errorMsg);
         });
     }
 
-    function adopt(wsId) {
-        var options = {};
-        options["workerSalarys[0].wsId"] = wsId;
-        com.post(api.salary.adoptWorkerSalary, options, function () {
+    function adopt(v) {
+        com.post(api.salary.adoptWorkerSalary, {"workerSalarys[0].wsId": v.wsId}, function (res) {
             searcher.doSearch();
-        }, function (e) {
-            com.showAlert(com.error, e.errorMsg);
         });
     }
 
-    function refuse(wsId) {
-        com.showConfirm("是否将已通过的薪资驳回", function () {
-            var options = {};
-            options["workerSalary.wsId"] = wsId;
-            com.post(api.salary.rejectWorkerSalary, options, function () {
-                searcher.doSearch();
-            }, function (e) {
-                com.showAlert(com.error, e.errorMsg);
-            });
-        })
+    function refuse(v) {
+        com.post(api.salary.rejectWorkerSalary, {"workerSalary.wsId": v.wsId}, function (res) {
+            searcher.doSearch();
+        });
+    }
+    
+    function send(v) {
+        com.post(api.salary.sendWorkerSalary, {"workerSalary.wsId": v.wsId}, function (res) {
+            searcher.doSearch();
+        });
+    }
+    
+    function cancel(v) {
+        com.post(api.salary.cancelWorkerSalary, {"workerSalary.wsId": v.wsId}, function (res) {
+            searcher.doSearch();
+        });
     }
 
     function saveData(options) {
@@ -358,6 +321,23 @@ jQuery(function ($) {
             com.showAlert(com.info, "操作成功");
         });
        salary.modals.workersalaryModal.modal("hide");
+    }
+    
+    function batchSend(){
+        
+        if(com.validate("batchSendModal")) return  false;
+        
+        var options = {
+            "workerSalary.createTime": salary.items.beginTime.val() + " 00:00:00",
+            "workerSalary.finishTime": salary.items.finishTime.val() + " 23:59:59",
+        }
+        
+        com.post(api.salary.batchWorkerSalary, options, function (res) {
+            
+            searcher.doSearch();
+            
+            salary.modals.batchSendModal.modal("hide");
+        });
     }
     
     com.uploadify("#import", "上传文件", api.salary.importWorkerSalary, 'btn btn-success col-sm-12', "*.xls;*.xlsx;", {'uploadType': 4}, 1, function(data){

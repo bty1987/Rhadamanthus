@@ -299,7 +299,7 @@ Condition.addupRule("decoration", {
         }
     },
     "sdesignTime": {
-        label: "合同确认时间",
+        label: "合同确认",
         type: "dateRangePicker",
         submitConfig: {
             name: "sdesignTime",
@@ -308,7 +308,7 @@ Condition.addupRule("decoration", {
         }
     },
     "edesignTime": {
-        label: "放线确认时间",
+        label: "放线确认",
         type: "dateRangePicker",
         submitConfig: {
             name: "edesignTime",

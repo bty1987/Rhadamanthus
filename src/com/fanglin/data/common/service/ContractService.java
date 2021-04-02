@@ -17,4 +17,6 @@ public interface ContractService {
 
 	public int updateContract(ContractVO contractVO) throws FLException;
 
+	public int updateContractForStatus(ContractVO contractVO) throws FLException;
+
 }

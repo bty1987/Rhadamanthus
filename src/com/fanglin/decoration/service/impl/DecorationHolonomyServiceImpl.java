@@ -25,8 +25,6 @@ import com.fanglin.payment.service.DecorationPaymentService;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.po.QuotationPO;
-import com.fanglin.system.dao.SystemConfigDao;
-import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
@@ -45,14 +43,11 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 	private DecorationPaymentService decorationPaymentService;
 
 	@Autowired
-	private SystemConfigDao systemConfigDao;
-
-	@Autowired
 	private DecorationActivityDao decorationActivityDao;
 
 	@Autowired
 	private QuotationDao quotationDao;
-	
+
 	@Autowired
 	private ServiceRecordDao serviceRecordDao;
 
@@ -129,8 +124,8 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 		if (quotationPO.getStatus() != QuotationPO.STATUS_LOCK_INT) {
 			throw new FLException(200031, "报价未锁定");
 		}
-		
-		if (decorationActivityDao.countDecorationActivity(orderId, null) == 0){
+
+		if (decorationActivityDao.countDecorationActivity(orderId, null) == 0) {
 			throw new FLException(140033, "订单活动信息不存在");
 		}
 
@@ -140,15 +135,12 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 
 		// 获取装修单对应的半价信息
 		DecorationHolonomyPO decorationHolonomyPO = decorationHolonomyDao.queryDecorationHolonomyByOrderId(orderId);
-		
-		// 服务款比例
-		SystemConfigPO servicePaymentRatio = systemConfigDao.querySystemConfig(String.format("servicePaymentRatio%d", decorationPO.getType()), decorationPO.getCompany());
 
-		int ratio = Arith.sub(servicePaymentRatio != null ? Integer.parseInt(servicePaymentRatio.getValue()) : 1100, 1000);
-		
+		int serviceRate = decorationHolonomyVO.getServiceRate() != null ? decorationHolonomyVO.getServiceRate() : 100;
+
 		if (decorationHolonomyPO != null) {
 
-			if (decorationHolonomyPO.getStatus() != DecorationHolonomyPO.STATUS_INIT_SHORT || ! Long.valueOf(DecorationHolonomyPO.MONEY_SERVICEPAIDUP_INT).equals(decorationHolonomyPO.getServicePaidup())) {
+			if (decorationHolonomyPO.getStatus() != DecorationHolonomyPO.STATUS_INIT_SHORT || !Long.valueOf(DecorationHolonomyPO.MONEY_SERVICEPAIDUP_INT).equals(decorationHolonomyPO.getServicePaidup())) {
 				throw new FLException(140043, "订单半价/满减信息不可更新");
 			}
 
@@ -159,32 +151,32 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 		}
 
 		// 管理费比例
-		int manageRate =  Arith.add(quotationPO.getManageRate(), decorationPO.getNotSalesmanRate());
-		
+		int manageRate = Arith.add(quotationPO.getManageRate(), decorationPO.getNotSalesmanRate());
+
 		Long projectPrice = Arith.add(Arith.add(quotationPO.getDisPrice(), quotationPO.getUndisPrice()), quotationPO.getTrafficPrice());
-		
+
 		Long remainder = projectPrice % decorationHolonomyVO.getDiscountBase();
-		
-		//折后工程额 :工程总额
+
+		// 折后工程额 :工程总额
 		Long disprojectPrice = Arith.mul(Arith.div(Arith.add(Arith.div(Arith.mul(Arith.sub(projectPrice, remainder), decorationHolonomyVO.getDiscount()), 10000), remainder), 1000000), 1000000);
-		
+
 		// 管理费= 工程总额1 * 管理费比例
 		Long managePrice = Arith.mul(Arith.div(Arith.mul(projectPrice, manageRate), 1000000), 1000000);
-		
-		//工程基础额 与报价额相同
+
+		// 工程基础额 与报价额相同
 		Long projectBase = Arith.add(projectPrice, managePrice);
 
 		// 主材总额 = 工程总额 * 主材配比
 		Long materialPrice = Arith.mul(Arith.div(Arith.mul(projectBase, decorationHolonomyVO.getMaching()), 1000000), 1000000);
-		
+
 		// 服务费 = 服务费 * 服务费比例
-		Long servicePrice = Arith.mul(Arith.div(Arith.mul(materialPrice, ratio), 1000000), 1000000);
-		
+		Long servicePrice = Arith.mul(Arith.div(Arith.mul(materialPrice, serviceRate), 1000000), 1000000);
+
 		decorationHolonomyPO.setProjectPrice(disprojectPrice);
 		decorationHolonomyPO.setManagePrice(managePrice);
 		decorationHolonomyPO.setMaterialPrice(materialPrice);
 		decorationHolonomyPO.setServicePrice(servicePrice);
-		decorationHolonomyPO.setServiceRate(ratio);
+		decorationHolonomyPO.setServiceRate(serviceRate);
 		decorationHolonomyPO.setName(decorationHolonomyVO.getName());
 		decorationHolonomyPO.setDiscountBase(decorationHolonomyVO.getDiscountBase());
 		decorationHolonomyPO.setProjectBase(projectBase);
@@ -193,7 +185,7 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 		decorationHolonomyPO.setServicePaidup(DecorationHolonomyPO.MONEY_SERVICEPAIDUP_INT);
 
 		decorationHolonomyDao.saveOrUpdate(decorationHolonomyPO);
-		
+
 		// 传给款项
 		// 生成装修款信息 , 通过款项比例对应的比例项信息生成装修款信息
 		decorationPaymentService.makeDecorationPayment(decorationPO, Arith.add(disprojectPrice, managePrice), decorationHolonomyVO.getPsId(), userId);
@@ -204,26 +196,26 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 		decorationHolonomyVO.setServicePrice(servicePrice);
 		decorationHolonomyVO.setProjectBase(decorationHolonomyVO.getProjectBase());
 		decorationHolonomyVO.setProjectBase(projectBase);
-		
+
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void updateDecorationHolonomy(DecorationHolonomyVO decorationHolonomyVO, String userId) throws FLException {
-		
+
 		String orderId = decorationHolonomyVO.getDecoration().getOrderId();
 		long materialPrice = decorationHolonomyVO.getMaterialPrice();
-		
+
 		DecorationHolonomyPO decorationHolonomyPO = decorationHolonomyDao.queryDecorationHolonomyByOrderId(decorationHolonomyVO.getDecoration().getOrderId());
-		
-		if(decorationHolonomyPO == null){
+
+		if (decorationHolonomyPO == null) {
 			throw new FLException(140042, "半价/满减信息不存在");
 		}
-		
+
 		decorationHolonomyPO.setMaterialPrice(decorationHolonomyVO.getMaterialPrice());
-		
+
 		decorationHolonomyDao.update(decorationHolonomyPO);
-		
+
 		serviceRecordDao.save(new ServiceRecordPO().init(ServiceRecordPO.TYPE_CHANGE_DECORATION_INT, userId, String.format("更新满减信息,装修单:%s,主材配额:%.3f", orderId, Arith.div(materialPrice, 1000.0))));
 	}
 
