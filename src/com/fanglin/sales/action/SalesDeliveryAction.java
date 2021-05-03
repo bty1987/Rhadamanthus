@@ -28,10 +28,12 @@ public class SalesDeliveryAction extends BaseListAction {
 
 	private SalesDeliveryItemVO salesDeliveryItem;
 
+	private List<Short> statuses;
+
 	@Action(value = "pageSalesDeliveryItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSalesDeliveryItem() throws FLException {
 
-		salesDeliveryService.pageSalesDeliveryItem(getPaging(), getFilters(), queryCompany(), salesDeliveryItem);
+		salesDeliveryService.pageSalesDeliveryItem(getPaging(), getFilters(), queryCompany(), statuses);
 
 		return SUCCESS;
 	}
@@ -114,6 +116,14 @@ public class SalesDeliveryAction extends BaseListAction {
 
 	public void setSalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItem) {
 		this.salesDeliveryItem = salesDeliveryItem;
+	}
+
+	public List<Short> getStatuses() {
+		return statuses;
+	}
+
+	public void setStatuses(List<Short> statuses) {
+		this.statuses = statuses;
 	}
 
 }

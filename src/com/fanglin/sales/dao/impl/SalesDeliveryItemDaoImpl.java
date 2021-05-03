@@ -75,6 +75,8 @@ public class SalesDeliveryItemDaoImpl extends DaoImpl<SalesDeliveryItemPO> imple
 				query.add(query.getCriterion(SalesDeliveryItemPO.COLUMN_SALESNO_STR, data, op));
 			} else if ("status".equals(field)) {
 				query.add(query.getCriterion("status", Short.valueOf(data), op));
+			} else if ("statuses".equals(field)) {
+				query.add(query.getCriterion("status", filter.getRange(), "in"));
 			} else if (SalesDeliveryItemPO.COLUMN_SALESBRAND_STR.equals(field)) {
 				query.add(query.getCriterion(SalesDeliveryItemPO.COLUMN_SALESBRAND_STR, data, op));
 			} else if (SalesDeliveryItemPO.COLUMN_SALESORDERID_STR.equals(field)) {

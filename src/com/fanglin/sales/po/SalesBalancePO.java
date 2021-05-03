@@ -98,6 +98,8 @@ public class SalesBalancePO implements Serializable {
 	private DepartmentPO region;
 
 	private Timestamp postTime;
+	
+	private UserPO voster;//厂商结算人
 
 	private Timestamp venderTime;
 
@@ -150,6 +152,18 @@ public class SalesBalancePO implements Serializable {
 		this.salesman = salesman;
 		this.dept = dept;
 		this.region = region;
+	}
+	
+	public SalesBalancePO(SalesPO sales, RefundsPO refunds, UserPO creater, UserPO poster, UserPO salesman, DepartmentPO dept, DepartmentPO region, UserPO voster) {
+		super();
+		this.sales = sales;
+		this.refunds = refunds;
+		this.creater = creater;
+		this.poster = poster;
+		this.salesman = salesman;
+		this.dept = dept;
+		this.region = region;
+		this.voster = voster;
 	}
 
 	@Id
@@ -249,6 +263,16 @@ public class SalesBalancePO implements Serializable {
 
 	public void setPostTime(Timestamp postTime) {
 		this.postTime = postTime;
+	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "vuid", referencedColumnName = "uid")
+	public UserPO getVoster() {
+		return voster;
+	}
+
+	public void setVoster(UserPO voster) {
+		this.voster = voster;
 	}
 
 	@Column(name = "venderTime")

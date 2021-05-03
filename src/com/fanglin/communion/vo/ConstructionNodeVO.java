@@ -22,6 +22,12 @@ public class ConstructionNodeVO implements Serializable {
 
 	private Short checkout;
 
+	private String startalk;
+	
+	private String endtalk;
+	
+	private Integer timeLimit;
+	
 	private Short sort;
 
 	private Integer company;
@@ -88,6 +94,30 @@ public class ConstructionNodeVO implements Serializable {
 
 	public void setCheckout(Short checkout) {
 		this.checkout = checkout;
+	}
+
+	public String getStartalk() {
+		return startalk;
+	}
+
+	public void setStartalk(String startalk) {
+		this.startalk = startalk;
+	}
+
+	public String getEndtalk() {
+		return endtalk;
+	}
+
+	public void setEndtalk(String endtalk) {
+		this.endtalk = endtalk;
+	}
+
+	public Integer getTimeLimit() {
+		return timeLimit;
+	}
+
+	public void setTimeLimit(Integer timeLimit) {
+		this.timeLimit = timeLimit;
 	}
 
 	public Short getSort() {

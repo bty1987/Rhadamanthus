@@ -9,7 +9,7 @@ public interface WalletresService {
 
 	public List<WalletresVO> queryWalletres(WalletresVO walletres);
 
-	public void uploadWalletres(WalletresVO walletres) throws FLException;
+	public void addWalletres(WalletresVO walletres) throws FLException;
 
 	public void deleteWalletres(WalletresVO walletres);
 

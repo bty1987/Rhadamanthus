@@ -13,7 +13,6 @@ import com.fanglin.communion.dao.CustomerPhoneDao;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.CustomerPhonePO;
 import com.fanglin.communion.vo.DutyVO;
-import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Filter;
@@ -32,7 +31,7 @@ import com.fanglin.utils.SystemConfig;
 
 @Service("decorationServiceC")
 @Transactional(readOnly = true)
-public class DecorationServiceImpl extends DaoImpl<DecorationPO> implements DecorationService {
+public class DecorationServiceImpl implements DecorationService {
 
 	@Autowired
 	private DecorationDao decorationOrderDao;

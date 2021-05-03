@@ -26,6 +26,10 @@ public class SignetPO implements Serializable, Signet {
 
 	public static final short STATUS_AUTH_INT = 2;
 
+	public static final short STATUS_CONFIRM_INT = 3;
+
+	public static final short STATUS_CANCEL_INT = 5;
+
 	private long sid;
 
 	private String no;

@@ -161,6 +161,7 @@ public class Signature {
 		JSONObject company = data.getJSONObject("company");
 
 		if (!"4".equals(company.getString("status"))) {
+			System.out.println(result);
 			throw new FLException(130059, String.format("公司认证失败,%s", company.getString("status")));
 		}
 	}

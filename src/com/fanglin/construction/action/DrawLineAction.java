@@ -20,6 +20,7 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import com.fanglin.communion.vo.ConstructionNodeVO;
 import com.fanglin.construction.po.DrawLinePO;
 import com.fanglin.construction.service.DrawLineService;
 import com.fanglin.construction.vo.DrawLineVO;
@@ -42,6 +43,8 @@ public class DrawLineAction extends BaseListAction {
 	private List<DrawLineVO> drawLines;
 
 	private List<?> count;
+
+	private List<ConstructionNodeVO> constructionNodes;
 
 	@Action(value = "pageDrawLineForPlan", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDrawLineForPlan() throws FLException {
@@ -98,7 +101,7 @@ public class DrawLineAction extends BaseListAction {
 
 		drawLine.setStatus(DrawLinePO.STATUS_SUCCESS_INT);
 
-		drawLineService.successDrawLine(drawLine, queryUserId());
+		drawLineService.successDrawLine(drawLine, constructionNodes, queryUserId());
 
 		return SUCCESS;
 	}
@@ -135,6 +138,14 @@ public class DrawLineAction extends BaseListAction {
 
 	public void setCount(List<?> count) {
 		this.count = count;
+	}
+
+	public List<ConstructionNodeVO> getConstructionNodes() {
+		return constructionNodes;
+	}
+
+	public void setConstructionNodes(List<ConstructionNodeVO> constructionNodes) {
+		this.constructionNodes = constructionNodes;
 	}
 
 }

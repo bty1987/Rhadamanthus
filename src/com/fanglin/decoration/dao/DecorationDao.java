@@ -19,17 +19,17 @@ import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.utils.Paging;
 
 public interface DecorationDao extends Dao<DecorationPO> {
-	
+
 	public List<DecorationPO> pageDecoration(Paging paging, List<Filter> filters);
 
-	public List<DecorationPO> pageDecoration(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<Short> statuses, int company);
-	
+	public List<DecorationPO> pageDecoration(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<Short> statuses, Integer company);
+
 	public List<DecorationPO> pageDecorationForCompany(Paging paging, List<Filter> filters, int company);
-	
+
 	public List<DecorationPO> pageDecorationForGeneral(Paging paging, List<Filter> filters, int company);
 
 	public List<DecorationPO> pageDecorationForGrade(Paging paging, List<Filter> filters, int company);
-	
+
 	public List<DecorationPO> pageDecorationForDesign(Paging paging, List<Filter> filters, int company);
 
 	public List<DecorationPO> pageDecorationForSalesman(Paging paging, List<Filter> filters, int company);

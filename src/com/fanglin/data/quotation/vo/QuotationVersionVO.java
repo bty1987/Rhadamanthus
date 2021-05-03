@@ -23,10 +23,6 @@ public class QuotationVersionVO implements Serializable {
 
 	private String name;
 
-	protected String comment;
-
-	private Short defaultFlag;
-
 	private Integer trafficRate;
 
 	private Short trafficDiscount;
@@ -34,6 +30,12 @@ public class QuotationVersionVO implements Serializable {
 	private Integer manageRate;
 
 	private Short manageDiscount;
+
+	private Integer offset;
+
+	private Short defaultFlag;
+
+	private String comment;
 
 	public Long getQvId() {
 		return qvId;
@@ -57,22 +59,6 @@ public class QuotationVersionVO implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
-	public Short getDefaultFlag() {
-		return defaultFlag;
-	}
-
-	public void setDefaultFlag(Short defaultFlag) {
-		this.defaultFlag = defaultFlag;
 	}
 
 	public Integer getTrafficRate() {
@@ -105,6 +91,30 @@ public class QuotationVersionVO implements Serializable {
 
 	public void setManageDiscount(Short manageDiscount) {
 		this.manageDiscount = manageDiscount;
+	}
+
+	public Integer getOffset() {
+		return offset;
+	}
+
+	public void setOffset(Integer offset) {
+		this.offset = offset;
+	}
+
+	public Short getDefaultFlag() {
+		return defaultFlag;
+	}
+
+	public void setDefaultFlag(Short defaultFlag) {
+		this.defaultFlag = defaultFlag;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 }

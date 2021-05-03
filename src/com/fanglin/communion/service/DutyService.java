@@ -8,17 +8,19 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface DutyService {
+
 	public void pageDuty(Paging paging, List<Filter> filters);
 
 	public List<DutyVO> queryDuty();
 
-	public List<DutyVO> queryDutyByDtid(DutyVO duty);
+	public List<DutyVO> queryDutyByDtid(DutyVO dutyVO);
+
+	public List<DutyVO> queryDutyByName(String pinyin, DutyVO dutyVO);
 
 	public int addDuty(DutyVO dutyVO) throws FLException;
 
 	public int updateDuty(DutyVO dutyVO) throws FLException;
 
 	public int updateDutyForStatus(DutyVO dutyVO) throws FLException;
-	
-	public List<DutyVO> queryDutyByName(String pinYinName, DutyVO dutyVO);
+
 }

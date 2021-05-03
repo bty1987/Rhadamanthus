@@ -68,6 +68,8 @@ public class ApproverDaoImpl extends DaoImpl<ApproverPO> implements ApproverDao 
 					query.add(query.getCriterion("user.userId", filter));
 				} else if ("type".equals(filter.getField())) {
 					query.add(query.getCriterion("type", Short.valueOf(filter.getData()), filter.getOp()));
+				} else if ("approval-approvalTime".equals(filter.getField())) {
+					query.add(query.getCriterion("approval-approvalTime", filter));
 				}
 			}
 		}

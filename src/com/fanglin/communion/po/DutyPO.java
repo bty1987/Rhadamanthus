@@ -25,7 +25,7 @@ public class DutyPO implements Serializable {
 
 	public static final String COLUMN_STATUS_STR = "status";
 
-	public static final short COLUMN_STATUS_INT = 0;
+	public static final short STATUS_INIT_INT = 0;
 
 	private long did;
 
@@ -38,7 +38,7 @@ public class DutyPO implements Serializable {
 	private int type;
 
 	private short lead;
-	
+
 	private String pinYin;
 
 	public DutyPO() {
@@ -61,7 +61,7 @@ public class DutyPO implements Serializable {
 	public long getDid() {
 		return did;
 	}
-	
+
 	public void setDid(long did) {
 		this.did = did;
 	}
