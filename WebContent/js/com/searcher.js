@@ -685,8 +685,13 @@ var Searcher = function(){
 
                 $.each(data, function(i, v){
                     
+                    var _title = "";
+                    
+                    if(typeof title == "string") _title = getElement(v, title.split('.'));
+                    else if (typeof title == "function") _title = title(v);
+                    
                     var $liLine = $('<li></li>').addClass('item-orange clearfix').appendTo($ul);
-                    var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(getElement(v, title.split('.')))).appendTo($liLine);
+                    var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(_title)).appendTo($liLine);
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').appendTo($liLine);
                     var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons').appendTo($h3);
                     
@@ -724,13 +729,32 @@ var Searcher = function(){
                     });
                     
                     $.each(basicConf.linevent, function(index, button){
+                        
                         if(button.show && !button.show(v)) return true;
-                        $('<a></a>').addClass('btn btn-minier ' + button.clazz).html(button.name).appendTo($divBtnWrap).click(function(){
-                            button.handle(v);
-                        });
+                        
+                        if(button.type == "switch"){
+                            
+                            var $btn = $('<div></div>').addClass('pull-right').appendTo($divBtnWrap);
+                            var $switch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"}).appendTo($btn);
+                            var $span = $('<span></span>').addClass('lbl ' + button.clazz).appendTo($btn);
+                            
+                            var check = $switch.prop("checked");
+                            
+                            $switch.prop("checked", button.init && button.init(v));
+                            
+                            $switch.switchBtn("status-lbl").on("click", function(){
+                                var _check = $(this).prop("checked");
+                                button.handle(v, _check);
+                                (_check ? $switch.prop("checked") : $switch.removeAttr("checked"));
+                            });
+                        }else{
+                            $('<a></a>').addClass('btn btn-minier ' + button.clazz).html(button.name).appendTo($divBtnWrap).click(function(){
+                                button.handle(v);
+                            });
+                        }
+                        
                     });
                 });
-                
             }
             
             return this;

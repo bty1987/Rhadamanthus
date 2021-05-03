@@ -29,6 +29,7 @@ jQuery(function ($) {
             "2": "认证",
             "3": "确认",
             "4": "签章",
+            "5": "作废",
         }
     }
     
@@ -44,155 +45,120 @@ jQuery(function ($) {
     
     signet.btns.saveBtn.click(saveData);
     
-    var displayFunc = (function () {
-
-        var renderList = function (tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function (i, v) {
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function (v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-            
-            var $btnUpdate = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('更新');
-            var $btnRegist = $('<a></a>').addClass(' btn btn-minier btn-success').html('注册');
-            var $btnAuth = $('<a></a>').addClass(' btn btn-minier btn-warning').html('认证');
-            var $btnConfirm = $('<a></a>').addClass(' btn btn-minier btn-inverse').html('确认');
-            var $btnSign = $('<a></a>').addClass(' btn btn-minier btn-danger').html('签章');
-            var $btnAuto = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('自动授权');
-            var $btnAutoQ = $('<a></a>').addClass(' btn btn-minier btn-success').html('自动授权');
-
-            $divBtnWrap.append($btnUpdate).append($btnRegist).append($btnAuth).append($btnConfirm).append($btnSign).append($btnAuto).append($btnAutoQ).appendTo($h3);
-            
-            var $urldiv = $('<div style="border: 1px solid #ccc ;float :left;"></div>').css("width", "75px").css("height", "75px").css("margin-right", "10px");
-            var img = $('<img />').css("margin-right", "20px").appendTo($urldiv);
-            var url = com.showImg(img, v.path, 75, 75, '', null, 0);
-
-            var propertyArr = [
-                ["编号: ", v.no, "grey"],
-                ["名称: ", v.name, "grey"],
-                ["关键字: ", v.keyword  , "grey"],
-                ["标识: ", v.signno  , "grey"],
-                ["状态: ", signet.status[v.status], "red"],
-            ];
-
-            $.each(propertyArr, function (index, value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b style="float: right"></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.appendTo($h3);
-
-            $liLine.append($urldiv).append($h3).append($ulProperty);
-            
-            $btnUpdate.click(function(){
-                
-                signet.sid = v.sid;
-                
-                com.popup4model('#layerAdd', '编辑', null, function () {
-                    com.clearValidator();
-                }, function(){
-                    initUpdate(v);
-                });
-            });
-            
-            $btnRegist.click(function(){
-                
-                com.post(api.data.registSignet, {"signet.sid": v.sid}, function(res){
-                    searcher.doSearch();
-                });
-            });
-            
-            $btnAuth.click(function(){
-                
-                com.post(api.data.authSignet, {"signet.sid": v.sid}, function(res){
-                    showQRCode(res.signet.path);
-                });
-            });
-            
-            $btnConfirm.click(function(){
-                
-                com.post(api.data.confirmSignet, {"signet.sid": v.sid}, function(res){
-                    searcher.doSearch();
-                });
-            });
-            
-            $btnSign.click(function(){
-                
-                com.post(api.data.signateSignet, {"signet.sid": v.sid, "signet.data": config.media + v.path}, function(res){
-                    com.showAlert(com.info, "操作成功");
-                    searcher.doSearch();
-                });
-            });
-            
-            $btnAuto.click(function(){
-                
-                com.post(api.data.signateAuto, {"signet.sid": v.sid}, function(res){
-                    com.popup("自动签认证", res.signet.path);
-                });
-            });
-            
-            $btnAutoQ.click(function(){
-                com.post(api.data.signateAuto, {"signet.sid": v.sid}, function(res){
-                    showQRCode(res.signet.path);
-                });
-            });
-
-            return $liLine;
-        };
-
-        return {
-            init: function (tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function (v) {
-                return creatLine(v);
-            }
-        }
-    })();
-
     var searcher = new Searcher();
-
-    searcher.init(["data-signet-name"], "condList", api.data.pageSignet, function (data) {
-        displayFunc.init('resultList', data);
-    }, "pagenation", "signetPostData", null, false, null, function() {
-
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addContract').css('margin', '0px 3px');
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
-
-        $adda.click(function(){
-            
-            signet.sid = null;
-            
-            com.clearImg(signet.items.signetImg);
-            com.cleanItems(signet.items);
-            
-            com.popup4model('#layerAdd', '添加', null, function () {
-                com.clearValidator();
-            });
-        });
-        
-        return [$adda];
-    }, 'resultList');
     
+    searcher.base("condList", "pagenation", "resultList", api.data.pageSignet);
+    
+    searcher.condition(["data-signet-name"]);
+    
+    searcher.history("signetPostData");
+    
+    searcher.button([{id: "addSignet", name: "添加", clazz: "btn-yellow", icon: "icon-plus"}]);
+    
+    var lineprops = [
+        {field: "no", name: "编号", prop: "no", clazz: "grey"},
+        {field: "name", name: "名称", prop: "name", clazz: "grey"},
+        {field: "keyword", name: "关键字", prop: "keyword", clazz: "grey"},
+        {field: "signno", name: "标识", prop: "signno", clazz: "grey"},
+        {field: "status", name: "状态", prop: "status", dataset: signet.status, clazz: "red"},
+    ];
+    
+    var $btnUpdate = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('更新');
+    var $btnRegist = $('<a></a>').addClass(' btn btn-minier btn-success').html('注册');
+    var $btnAuth = $('<a></a>').addClass(' btn btn-minier btn-warning').html('认证');
+    var $btnConfirm = $('<a></a>').addClass(' btn btn-minier btn-inverse').html('确认');
+    var $btnSign = $('<a></a>').addClass(' btn btn-minier btn-danger').html('签章');
+    var $btnAuto = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('自动授权');
+    var $btnAutoQ = $('<a></a>').addClass(' btn btn-minier btn-success').html('自动授权');
+    
+    var $btnCancel = $('<a></a>').addClass(' btn btn-minier btn-danger').html('作废');
+    
+    var linebtns = [
+        {name: "更新", clazz: "btn-yellow", handle: function(v){
+            signet.sid = v.sid;
+            
+            com.popup4model('#layerAdd', '编辑', null, function () {
+                com.clearValidator();
+            }, function(){
+                initUpdate(v);
+            });
+            return false;
+        }, show: function(v){
+            return (v.status == 0);
+        }},
+        {name: "注册", clazz: "btn-success", handle: function(v){
+            com.post(api.data.registSignet, {"signet.sid": v.sid}, function(res){
+                searcher.doSearch();
+            });
+            return false;
+        }, show: function(v){
+            return (v.status == 0);
+        }},
+        {name: "认证", clazz: "btn-warning", handle: function(v){
+            com.post(api.data.authSignet, {"signet.sid": v.sid}, function(res){
+                showQRCode(res.signet.path);
+            });
+            return false;
+        }, show: function(v){
+            return (v.status == 1);
+        }},
+        {name: "确认", clazz: "btn-inverse", handle: function(v){
+            com.post(api.data.confirmSignet, {"signet.sid": v.sid}, function(res){
+                searcher.doSearch();
+            });
+            return false;
+        }, show: function(v){
+            return (v.status == 2);
+        }},
+        {name: "签章", clazz: "btn-danger", handle: function(v){
+            com.post(api.data.signateSignet, {"signet.sid": v.sid, "signet.data": config.media + v.path}, function(res){
+                searcher.doSearch();
+            });
+            return false;
+        }, show: function(v){
+            return (v.status == 3);
+        }},
+        {name: "自动授权", clazz: "btn-yellow", handle: function(v){
+            com.post(api.data.autoSignet, {"signet.sid": v.sid}, function(res){
+                com.popup("自动签认证", res.signet.path);
+            });
+            return false;
+        }, show: function(v){
+            return (v.status == 3);
+        }},
+        {name: "二维授权", clazz: "btn-success", handle: function(v){
+            com.post(api.data.autoSignet, {"signet.sid": v.sid}, function(res){
+                showQRCode(res.signet.path);
+            });
+            return false;
+        }, show: function(v){
+            return (v.status == 3);
+        }},
+        {name: "作废", clazz: "btn-danger", handle: function(v){
+            com.showConfirm("是否确认作废 " + v.name + " 签章", function(){
+                com.post(api.data.cancelSignet, {"signet.sid": v.sid}, function(res){
+                    searcher.doSearch();
+                });
+            });
+            return false;
+        }, show: function(v){
+            return v.status != 5;
+        }},
+    ]
+    
+    searcher.line("name", lineprops, linebtns).render();
+    
+    com.focusPage("#addSignet").click(function(){
+        signet.sid = null;
+        
+        com.clearImg(signet.items.signetImg);
+        com.cleanItems(signet.items);
+        
+        com.popup4model('#layerAdd', '添加', null, function () {
+            com.clearValidator();
+        });
+    });
+
     function saveData(){
         
         if(com.validate('signetModal')) return false;

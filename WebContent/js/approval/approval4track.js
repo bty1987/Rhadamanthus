@@ -2,9 +2,12 @@ jQuery(function($){
 
     var approvalTrack = {
         
-        type: ["劵", "物品", "红包"],
+        aid: null,
         url: null,
         postData : null,
+        condition: [],
+        
+        type: ["劵", "物品", "红包"],
         stateType:["到店", "定金", "签单", "抽奖", "特批", "购买", "其他", "升级"],
         
         btns: {
@@ -108,19 +111,21 @@ jQuery(function($){
         approvalTypeData:{},
         approvalStatus: {},
         typenesses: {},
-        aid: null,
         submitUrl : null,
     };
 
     if (params['urlLoadParams'].type == 'send') {
         approvalTrack.url = api.approval.pageApprovalForSend;
-        approvalTrack.postData = "approvalSenderTrackPostData"	
+        approvalTrack.postData = "approvalSenderTrackPostData";
+        approvalTrack.condition = ["approval-receiver-name", "approval-type", "approval-status", "approval-createTime", "approval-approvalTime"];
     } else if (params['urlLoadParams'].type == 'receive') {
         approvalTrack.url = api.approval.pageApprovalForReceive;
-        approvalTrack.postData = "approvalReceiveTrackPostData"
+        approvalTrack.postData = "approvalReceiveTrackPostData";
+        approvalTrack.condition = ["approval-sender-name","approval-type","approval-status","approval-approvalTime"];
     } else if (params['urlLoadParams'].type == 'dept') {
         approvalTrack.url = api.approval.pageApprovalForReceiveDept;
-        approvalTrack.postData = "approvalDeptTrackPostData"
+        approvalTrack.postData = "approvalDeptTrackPostData";
+        approvalTrack.condition = ["approval-sender-name", "approval-type", "approval-status"];
     }
     
     com.post(api.ds.approval, {}, function (res) {
@@ -139,133 +144,66 @@ jQuery(function($){
         com.cleanItems(approvalTrack.items);
     });
 
-    var displayFunc = (function () {
-
-        var renderList = function (tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass(
-                'item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function (i, v) {
-                    creatLine(v).appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function (v) {
-
-            var $liLine = $('<li></li>').addClass('item-blue clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(approvalTrack.approvalTypeData[v.type]));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-            // 查看主材退款,主材详细信息按钮
-            var $btnDetails = $('<a></a>').addClass('btn btn-minier btn-primary').html('详情');
-
-            var $btnAffirm = $('<a></a>').addClass('btn btn-minier btn-warning').html('客户确认').prepend($('<i></i>'));
-            var $btnPass = $('<a></a>').addClass('btn btn-minier btn-success').html('通过').prepend($('<i></i>'));
-            var $btnRefuse = $('<a></a>').addClass('btn btn-minier btn-danger').html('拒绝').prepend($('<i></i>'));
-            
-            
-            var propertyArr = [
-                ["申请人 : ", v.sender.currentName, "grey"],
-                ["审批人 : ", v.receiver.currentName, "grey"],
-                ["提交时间 : ", v.createTime, "grey"],
-                ["审批时间 : ", v.approvalTime, "grey"],
-                ["状态 : ", approvalTrack.approvalStatus[v.status], "red"],
-                ["说明 : ", v.contents, "grey"],
-                ["备注 : ", v.comment, "grey"],
-                ["批注 : ", v.annotate, "grey"],
-            ];
-
-            $.each(propertyArr, function (index, value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-            $divBtnWrap.appendTo($h3);
-            
-            
-            if ([0, 5, 6].indexOf(v.status) != -1 && params['urlLoadParams'].type != 'send') {
-                $divBtnWrap.append($btnPass).append($btnRefuse).appendTo($h3);
-            }
-            
-            $liLine.append($h3).append($ulProperty);
-            
-            $btnAffirm.bindClick(function(){
-                affirm(v.aid);
-            });
-            
-            $btnPass.bindClick(function () {
-                proapprove(v.aid, api.approval.approveApproval, "通过");
-            });
-
-            $btnRefuse.bindClick(function () {
-                proapprove(v.aid, api.approval.refuseApproval, "拒绝");
-            });
-
-            if ([6, 8, 10, 14, 17].indexOf(v.type) != -1) {
-            		
-                $divBtnWrap.append($btnDetails).appendTo($h3);
-
-                // 详细信息按钮
-                $btnDetails.bindClick(function () {
-                    queryInformationItem(v.aid, v.type);
-                });
-            }
-
-            return $liLine;
-        };
-
-        return {
-            init: function (tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function (v) {
-                return creatLine(v);
-            }
-        };
-    })();
-
     var searcher = new Searcher();
-
-    if (params['urlLoadParams'].type == 'send') {
-        searcher.init(["approval-receiver-name", "approval-type", "approval-status", "approval-createTime", "approval-approvalTime"], "condList", approvalTrack.url, function (data) {
-            displayFunc.init('resultList', data);
-        }, "pagenation", approvalTrack.postData);
-    } else if (params['urlLoadParams'].type == 'receive') {
-        searcher.init(["approval-sender-name", "approval-type", "approval-status"], "condList", approvalTrack.url, function (data) {
-            displayFunc.init('resultList', data);
-        },
-        "pagenation", approvalTrack.postData);
-    } else if (params['urlLoadParams'].type == 'dept') {
-        searcher.init(["approval-sender-name", "approval-type", "approval-status"], "condList", approvalTrack.url, function (data) {
-            displayFunc.init('resultList', data);
-        },
-        "pagenation", approvalTrack.postData);
-    }
     
+    searcher.base("condList", "pagenation", "resultList", approvalTrack.url);
+    
+    searcher.condition(approvalTrack.condition);
+    
+    searcher.history(approvalTrack.postData);
+    
+    var lineprops = [
+			{fieId:"sender.currentName",name: "申请人", prop: "sender.currentName",clazz:"grey"},
+			{fieId: "receiver.currentName", name: "审批人", prop: "receiver.currentName",clazz: "grey"},
+			{fieId: "createTime", name: "提交时间", prop: "createTime",clazz: "grey"},
+			{fieId: "approvalTime",name: "审批时间", prop: "approvalTime",clazz: "grey"},
+			{field: "status", name: "状态", prop: "status", clazz: "red"},
+			{field: "contents", name: "说明", prop: "contents",clazz: "grey"},
+			{field: "comment", name: "备注", prop: "comment"},
+			{field: "annotate", name: "批注", prop: "annotate"},
+     ];
+     var linebtns = [
+         {name: "详情", handle: function(v){
+          queryInformationItem(v.aid, v.type);
+             return false;
+         }, show: function(v){
+             return [6, 8, 10, 14, 17].indexOf(v.type) != -1;
+         }},
+         {name: "客户确认", clazz: "btn-warning", handle: function(v){
+             affirm(v.aid);
+             return false;
+         }, show: function(v){
+             return false;
+         }},
+         {name: "通过", clazz: "btn-success", handle: function(v){
+             proapprove(v.aid, api.approval.approveApproval, "通过");
+             return false;
+         }, show: function(v){
+             return [0, 5, 6].indexOf(v.status) != -1 && params['urlLoadParams'].type != 'send';
+         }},
+         {name: "拒绝", clazz: "btn-danger", handle: function(v){
+             proapprove(v.aid, api.approval.refuseApproval, "拒绝");
+             return false;
+         }, show: function(v){
+             return [0, 5, 6].indexOf(v.status) != -1 && params['urlLoadParams'].type != 'send';
+         }},
+     ];
+     
+    searcher.line(function(v){return approvalTrack.approvalTypeData[v.type]}, lineprops, linebtns).render();
+     
     function proapprove(aid, submitUrl, result){
-        
         approvalTrack.aid = aid;
         approvalTrack.submitUrl = submitUrl;
-        
         approvalTrack.items.annotate.val("");
         approvalTrack.items.result.text(result);
-        
         approvalTrack.modals.approveModal.modal("show");
     }
 
     function approve() {
-        
         var options = {
             "approval.aid": approvalTrack.aid,
             "approval.annotate": approvalTrack.items.annotate.val(),
-        }
+            };
         
         com.post(approvalTrack.submitUrl, options, function (res) {
             searcher.doSearch();
@@ -276,22 +214,26 @@ jQuery(function($){
             approvalTrack.modals.approveModal.modal("hide");
         });
     }
-    
+
     function affirm(aid){  
         var options = {
             "approval.aid": aid
-        }
+        };
         com.post(api.approval.affirmApproval, options, function (res) {
             searcher.doSearch();
         });
-    }
+    };
     
-    function queryInformationItem(aid, type) {
+	com.focusPage('#addappro', '#pagenation').on("click",function(){
+		approvalTrack.aid = null;
+		approvalTrack.modals.approveModal.modal("show");
+	 });
 
-        if (com.focusPage('#itemList').children()) {
+    function queryInformationItem(aid, type) {
+        if (com.focusPage('#itemList').children()){
             com.focusPage('#itemList').empty();
         }
-        
+
         com.focusPage('#totalMoney').hide();
 
         var itemInfo = approvalTrack.approvalItemInfo[type];
@@ -303,18 +245,17 @@ jQuery(function($){
 
             com.focusPage("#itemTitle").html(itemInfo.title);
             
-            var data = $.isArray(res[itemInfo.resultname]) ? res[itemInfo.resultname] : [res[itemInfo.resultname]]
+            var data = $.isArray(res[itemInfo.resultname]) ? res[itemInfo.resultname] : [res[itemInfo.resultname]];
             
             $.each(data, function (i, v) {
-        
-                $.each(itemInfo.args, function (j, e) {
+            $.each(itemInfo.args, function (j, e) {
      
                     if (e[2] == "type") infoList.append(approvalUtils.addspan(e[0], e[1], approvalTrack.type[getElement(v, e[2].split('.'))]));
                     if (e[2] == "stateType") infoList.append(approvalUtils.addspan(e[0], e[1], approvalTrack.stateType[getElement(v, e[2].split('.'))]));
                     if (e[2] == "typeness") infoList.append(approvalUtils.addspan(e[0], e[1], approvalTrack.typenesses[getElement(v, e[2].split('.'))]));
                     
-                    if(e[2] != "type" && e[2] != "stateType" && e[2] != "typeness") infoList.append(approvalUtils.addspan(e[0], e[1], getElement(v, e[2].split('.'))))
-                });
+                    if(e[2] != "type" && e[2] != "stateType" && e[2] != "typeness") infoList.append(approvalUtils.addspan(e[0], e[1], getElement(v, e[2].split('.'))));
+            });
                 
                 var caleTotal = itemInfo.caleTotal;
                 
@@ -334,15 +275,12 @@ jQuery(function($){
     }
 
     function getElement(o, props) {
-
         var prop = props.shift();
-
         if (props.length == 0) {
             return o[prop];
         } else if (o[prop]) {
             return getElement(o[prop], props);
         }
-
         return "";
     }
 });

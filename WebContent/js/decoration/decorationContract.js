@@ -1,6 +1,9 @@
 jQuery(function ($) {
     
     var decorationContract = {
+            
+        showtype: params.urlLoadParams.showtype,
+            
         items: {
             download: com.focusPage("#download"),
             viewpdf: com.focusPage("#viewpdf"),
@@ -39,6 +42,12 @@ jQuery(function ($) {
         
         pageType: params.urlLoadParams.depage,
     };
+    
+    if (decorationContract.showtype == "design"){
+        decorationContract.btns.saveBtn.addClass("hide");
+    }
+    
+    console.log(decorationContract);
     
     decorationContract.modals.qrcodeModal = com.initForm("qrcodeModal", "二维码", [{"id": "qrcode", "type": "div", "clazz": "qrcode"}], []);
     decorationContract.items.qrcode = com.focusPage("#qrcode");
@@ -122,6 +131,10 @@ jQuery(function ($) {
                         $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                         $liProperty.appendTo($ulProperty);
                     });
+                    
+                    if (decorationContract.showtype == "design"){
+                        btnCom = btnCus = btnSign = btnExpire = btnContract = btnDown = btnShow = btnHide = btnGraphNotice = btnSignNotice = btnViewNotice =  btnDownloadNotice = {click: function(){}};
+                    }
                     
                     if(v.status == 0){
                         $divBtnWrap.append(btnView).append(btnCom).append(btnCus).append(btnSign).append(btnExpire).append(btnGraphNotice).append(btnSignNotice).append(btnGraphQR).append(btnSignQR);

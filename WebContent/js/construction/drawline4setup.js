@@ -5,14 +5,16 @@ jQuery(function ($) {
         btns: {
             saveInfoBtn : com.focusPage("#saveInfoBtn"),
             saveBtn: com.focusPage("#saveBtn"),
-            deployedBtn: com.focusPage("#deployedBtn")
+            deployedBtn: com.focusPage("#deployedBtn"),
+            seveSuccessBtn: com.focusPage("#seveSuccess"),
         },
 
         modals : {
             setupModal : com.focusPage("#setupModal"),
             editModal : com.focusPage("#editModal"),
             applyModal : com.focusPage("#applyModal"),
-            constructionInfoModal : com.focusPage("#constructionInfoModal")
+            constructionInfoModal : com.focusPage("#constructionInfoModal"),
+            contructionNodeModal: com.focusPage("#contructionNodeModal"),
         },
 
         items: {
@@ -21,7 +23,7 @@ jQuery(function ($) {
             startTime: com.focusPage("#startTime"),
             endTime: com.focusPage("#endTime"),
             drawLineGroup: com.focusPage("#drawLineGroup"),
-            
+
             orderInfos: com.focusPage("#orderInfos"),
             supervisor: com.focusPage("#supervisor"),
 
@@ -33,18 +35,22 @@ jQuery(function ($) {
             drawlineTime : com.focusPage("#drawlineTime"),
             designTime : com.focusPage("#designTime"),
             isCeremony  : com.focusPage("#isCeremony"),
-            comment   : com.focusPage("#comment")
+            comment   : com.focusPage("#comment"),
+            contructionNodes: com.focusPage("#contructionNodes"),
         },
-        
+
         drawLineGroup: [],
         status: {},
-        
+        sorts: [],
+        timeLimits: [],
+
         pageType: params['urlLoadParams'].type
     };
-    
+
     drawline.btns.saveBtn.bindClick(saveData);
     drawline.btns.saveInfoBtn.bindClick(saveInfoData);
     drawline.btns.deployedBtn.bindClick(deploved);
+    drawline.btns.seveSuccessBtn.bindClick(seveSuccess);
 
     drawline.modals.setupModal.on("hide.bs.modal", function(){
 
@@ -117,22 +123,22 @@ jQuery(function ($) {
         };
 
         var creatLine = function (v) {
-            
+
             var gid = v.group.gid;
 
             var $tableWrap = com.focusPage("#group" + gid);
-            
+
             if ($tableWrap.length == 0 && v.group.gid != null) {
-                
+
                 var resultList = com.focusPage("#resultList");
-                
+
                 var groupDiv = $("<div></div>").addClass("col-xs-6 col-md-6 widget-container-span ui-sortable").appendTo(resultList);
                 var groupWidgetBox = $("<div></div>").addClass("widget-box transparent").appendTo(groupDiv);
                 var groupWidgetHeader = $("<div></div>").addClass("widget-header").appendTo(groupWidgetBox);
-                
+
                 var groupH5 = $("<h4></h4>").appendTo(groupWidgetHeader);
                 var groupStrong = $("<strong></strong>").text(v.group.name).appendTo(groupH5);
- 
+
                 var groupWidgetBody = $("<div></div>").addClass("widget-body").appendTo(groupWidgetBox);
                 var groupWidgetBodyInner = $("<div></div>").addClass("widget-body-inner").css("display", "block").appendTo(groupWidgetBody);
                 var resultList = $('<div></div>').attr("id", "group" + gid).addClass("clearfix tab-pane active").appendTo(groupWidgetBodyInner);
@@ -186,7 +192,6 @@ jQuery(function ($) {
 
             $liLine.append($h3).append($ulProperty);
 
-
             $btnInfo.click(function(){
                 viewConstructionInfo(v.decoration.orderId);
             });
@@ -236,12 +241,12 @@ jQuery(function ($) {
         drawline.items.startTime.val( v.startTime.substr(11,5));
         drawline.items.endTime.val( v.endTime.substr(11,5));
         drawline.items.drawLineGroup.val(v.group.gid);
-        
+
         drawline.modals.editModal.modal("show");
     }
 
     function showSetup(v) {
-        
+
         if (com.validate("setupModal")) {
             return false;
         }
@@ -249,9 +254,9 @@ jQuery(function ($) {
         var options = {
             "construction.orderId": v.decoration.orderId
         };
-        
+
         com.post(api.construction.queryConstructionByOrderId, options, function (res) {
-            
+
             if(res.construction.supervisor){
                 com.updateTypeahead("supervisor", res.construction.supervisor.userId, res.construction.supervisor.userName);
             }else{
@@ -260,9 +265,9 @@ jQuery(function ($) {
         });
 
         drawline.items.orderInfos.html(v.decoration.orderId + " " + v.decoration.house.village.name);
-        
+
         drawline.orderId = v.decoration.orderId;
-        
+
         drawline.modals.setupModal.modal("show");
     }
 
@@ -305,7 +310,7 @@ jQuery(function ($) {
     }
 
     function deploved() {
-        
+
         if (com.validate("setupModal")) {
             return false;
         }
@@ -318,24 +323,112 @@ jQuery(function ($) {
         com.post(api.construction.updateConstructionByOrderId, options, function (res) {
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
-            
+
             drawline.modals.setupModal.modal("hide");
         });
     }
 
     function success(v) {
 
-        var option = {"drawLine.dlid": v.dlid};
+    	//var option = {"drawLine.dlid": v.dlid};
+    	drawline.modals.contructionNodeModal.modal("show");
+    	drawline.items.contructionNodes.html("");
 
-        com.post(api.construction.successDrawLine, option, function (res) {
-            com.showAlert(com.info, "放线成功");
-            searcher.doSearch();
+        var $uli = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+        var constructionNodes = {};
+
+        com.post(api.data.queryConstructionNode, {}, function(res) {
+        	constructionNodes = res.constructionNodes.sort(function(a,b){
+            	return a.sort - b.sort;
+            });
+        }, null, false);
+
+        $.each(constructionNodes, function(index, value) {
+            var $liLi = $('<li></li>').addClass('item-blue clearfix');
+            var $ulPro = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue'));
+            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons').css('padding-top', '6px');
+
+            var propertyArr = [
+                ["工期:", null, "grey"],
+            ];
+
+            var $label = $('<label></label>').addClass('control-label').css({
+                'color': 'grey',
+                'font-size': '20px',
+                "font-weight": "bold"
+            });
+
+            var _label = $('<label></label>');
+ 
+            var $input = $('<input>').attr({
+                "type" : "checkbox",
+                "name" : "sorts",
+                "sort" : value.sort,
+                "dlid" : v.dlid,
+                "checked" : "checked"
+            }).addClass('ace ace-checkbox-2');
+
+            var $text = $('<input>').attr({
+                "type" : "text",
+                "name" : "timeLimits",
+                "text_sort" : value.sort,
+                "value" : value.timeLimit
+            }).addClass('ace ace-checkbox-2 v_required');
+
+            var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'normal').html(value.name);
+
+            _label.append($input).append(_span).appendTo($label);
+
+            $.each(propertyArr, function (index, value) {
+                var $liProperty = $('<li></li>');
+                $('<strong></strong>').attr('style', 'font-weight:normal;font-size:20px').html(value[0]).append($text).appendTo($liProperty);
+                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
+                $liProperty.appendTo($divBtnWrap);
+
+                $label.appendTo($h3);
+
+                $divBtnWrap.appendTo($h3);
+
+                $liLi.append($h3).append($ulPro);
+            });
+
+            $liLi.append($h3).append($ulPro).appendTo($uli)
         });
+
+       $uli.appendTo(drawline.items.contructionNodes);
     }
 
     drawline.modals.applyModal.on('shown.bs.modal', function (e) {
         initPlan();
     });
+
+    function seveSuccess(){
+
+    	if(com.validate("contructionNodeModal")){
+    		return;
+    	}
+    	
+		var $inputs = com.focusPage('input[name="sorts"]:checked', '#contructionNodes');
+
+    	var option = {"drawLine.dlid": $inputs.attr('dlid')};
+
+        $.each($inputs, function (i, v) {
+
+        	var $input = $(v);
+
+            option["constructionNodes[" + i + "].sort"] = $input.attr('sort');
+            option["constructionNodes[" + i + "].timeLimit"] = $("input[text_sort=" + $input.attr('sort') + "]").val();
+
+        });
+
+		com.post(api.construction.successDrawLine, option, function (res) {
+			com.showAlert(com.info, "放线成功");
+			drawline.modals.contructionNodeModal.modal("hide");
+			searcher.doSearch();
+		});
+    };
 
     function initPlan() {
 
@@ -379,7 +472,6 @@ jQuery(function ($) {
         }));
     }
 
-
     function viewConstructionInfo(orderId) {
 
         com.post(api.construction.queryConstructionInfoByOrderId, {"constructionInfo.orderId": orderId}, function (res) {
@@ -387,7 +479,7 @@ jQuery(function ($) {
             data = res.constructionInfo;
 
             drawline.items.orderId = orderId;
-            
+
             drawline.items.ishovel.val(data.ishovel);
             drawline.items.iskey.val(data.iskey);
             drawline.items.isCeremony.val(data.isCeremony);

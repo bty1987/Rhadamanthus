@@ -42,3 +42,4 @@ $.extend($,{
 var layer = layui.layer;
 var laydate = layui.laydate;
 var laytable = layui.table;
+var carousel = layui.carousel;

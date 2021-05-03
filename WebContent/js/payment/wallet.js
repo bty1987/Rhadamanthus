@@ -115,6 +115,7 @@ jQuery(function ($) {
             var $transfer = $("<a></a>").addClass("btn btn-minier btn-danger").html("转账");
             var $cards = $("<a></a>").addClass("btn btn-minier btn-purple").html("银行卡");
             var $walletran = $("<a></a>").addClass("btn btn-minier btn-inverse").html("交易记录");
+            var $walletres = $("<a></a>").addClass("btn btn-minier btn-info").html("资源");
 
             var propertyArr = [
                 ["编号:", v.no, "grey"],
@@ -132,7 +133,7 @@ jQuery(function ($) {
                 $liProperty.appendTo($ulProperty);
             });
 
-            $divBtnWrap.append($bind).append($update).append($freeze).append($unfreeze).append($withdraw).append($transfer).append($cards).append($walletran);
+            $divBtnWrap.append($bind).append($update).append($freeze).append($unfreeze).append($withdraw).append($transfer).append($cards).append($walletran).append($walletres);
             $divBtnWrap.appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
@@ -203,6 +204,12 @@ jQuery(function ($) {
             $walletran.click(function(){
                 params.wid = v.wid;
                 com.popup4page('#walletranPopup', "views/payment/walletran.html", "交易记录");
+            });
+
+            //资源
+            $walletres.click(function(){
+                params.wid = v.wid;
+                com.popup4page('#walletranPopup', "views/payment/walletres.html", "资源");
             });
 
             return $liLine;

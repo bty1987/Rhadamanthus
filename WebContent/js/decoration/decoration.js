@@ -324,6 +324,7 @@
                     var btnRevie = $('<a></a>').addClass('btn btn-minier btn-success').html('回访');
                     var btnLine = $('<a></a>').addClass('btn btn-minier btn-warning').html('放线');
                     var btnContract = $('<a></a>').addClass('btn btn-minier btn-inverse').html('合同');
+                    var btnContractc = $('<a></a>').addClass('btn btn-minier btn-inverse').html('合同');
                     var btnScal = $('<a></a>').addClass('btn btn-minier btn-danger').html('扣款');
                     var btnPrice = $('<a></a>').addClass('btn btn-minier btn-pink').html('报价');
                     var btnSelect = $('<a></a>').addClass('btn btn-minier btn-blue').html('选材');
@@ -471,7 +472,11 @@
                     });
 
                     btnContract.click(function () {
-                        modalAgreementModal(v.orderId, v.customer.cid, v);
+                        modalAgreementModal(v.orderId, v.customer.cid, v, "advance");
+                    });
+                    
+                    btnContractc.click(function () {
+                        modalAgreementModal(v.orderId, v.customer.cid, v, "design");
                     });
 
                     btnAddMinus.click(function () {
@@ -533,7 +538,7 @@
 
                     });
                     btnRepair.click(function () {
-                        repairOrder(v.orderId,);
+                        repairOrder(v.orderId);
 
                     });
                     $.each(pageConfig.pageBtn, function (k, b) {
@@ -555,6 +560,11 @@
                             case "contract"://合同
                                 if ([0, 1, 2, 3, 4, 8].indexOf(v.status) != -1) {
                                     $divBtnWrap.append(btnContract);
+                                }
+                                break;
+                            case "contractc"://合同(设计)
+                                if ([0, 1, 2, 3, 4, 8].indexOf(v.status) != -1) {
+                                    $divBtnWrap.append(btnContractc);
                                 }
                                 break;
                             case "scal"://扣款
@@ -700,10 +710,12 @@
         };
 
         //合同
-       var modalAgreementModal = function (decorationOrderId, cid , data) {
+       var modalAgreementModal = function (decorationOrderId, cid , data, pagetype) {
            
            params.decorationOrderId = decorationOrderId;
            params.cid = cid;
+           
+           params.urlLoadParams.showtype = pagetype;
            
            params.historyPage = api.index.decorationIndex.url;
            com.switchPage(api.index.decorationContractIndex.url);

@@ -124,7 +124,7 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["data-quotation-additem-name"], "condList", api.data.pageAdditem, function(data){
+    searcher.init(["data-quotation-additem-name" , "data-quotation-additem-status"], "condList", api.data.pageAdditem, function(data){
 
         displayFunc.init('resultList', data);
     }, "pagenation", "addItemPostData",null, false, null, function(){

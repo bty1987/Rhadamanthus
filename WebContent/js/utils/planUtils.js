@@ -79,5 +79,18 @@ var planUtils = {
         Ddivn.append(Dinputs);
         Ddivs.append(Dlabels).append(Ddivn);
         Ddivs.appendTo(plugins);
-    }
+    },
+    PluginsE: function (ida) {
+        var Edivs = $('<div></div>').addClass('form-group').attr('id', "TimeComparison");
+        var Elabels = $('<label>单日区间</label>').addClass('col-sm-3 control-label no-padding-right').attr('for', "id"+ida);
+        var Edivn = $('<div></div>').addClass('col-sm-9');
+        var Einputs = $('<input />').addClass('planitem col-xs-12 col-sm-7').attr("name", "date-range-picker")
+        .attr("id","id"+ida).attr("type", "text").attr("readonly", "readonly");
+        var plugins = com.focusPage("#pluginss");
+        Edivn.append(Einputs);
+        Edivs.append(Elabels).append(Edivn);
+        Edivs.appendTo(plugins);
+
+        com.datetime(Einputs, "date");
+    },
 };

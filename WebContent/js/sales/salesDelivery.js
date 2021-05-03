@@ -30,21 +30,10 @@ $(function () {
     };
 
     com.datetime(com.focusPage(".date-picker-date"));
+    
     var pageConfig = drawNode.getConfig(params['urlLoadParams'].pagetype);
 
-    if (salesDelivery.pageType == "supplier") {
-        salesDelivery.postData = "salesDeliveryForSupplierPostData";
-    } else if (salesDelivery.pageType == "init") {
-        salesDelivery.postData = "salesDeliveryForInitPostData";
-    } else if (salesDelivery.pageType == "tran") {
-        salesDelivery.postData = "salesDeliveryForTranPostData";
-    } else if (salesDelivery.pageType == "check") {
-        salesDelivery.postData = "salesDeliveryForCheckPostData";
-    } else if (salesDelivery.pageType == "confirm") {
-        salesDelivery.postData = "salesDeliveryForConfirmPostData";
-    } else if (salesDelivery.pageType == "finish") {
-        salesDelivery.postData = "salesDeliveryForFinishPostData";
-    }
+    salesDelivery.postData = "salesDeliveryFor" + salesDelivery.pageType + "PostData";
     
     com.post(api.ds.sales, {}, function (res) {
         salesDelivery.statusList = res.deliveryStatus.split("key", "value");
@@ -283,11 +272,16 @@ $(function () {
             }
         };
     })();
-
+    
+    $.each(pageConfig.extraParam, function(i, v){
+        salesDelivery.extraParams["statuses[" + i + "]"] = v;
+    });
+    
     var searcher = new Searcher();
+    
     searcher.init(pageConfig.condArr, "condList", pageConfig.apiPage, function (data) {
         displayFunc.init('resultList', data);
-    }, "pagenation", salesDelivery.postData, {"salesDeliveryItem.status": pageConfig.extraParam[0]}, false);
+    }, "pagenation", salesDelivery.postData, salesDelivery.extraParams, false);
 
     salesDelivery.btns.saveEditBtn.on('click', function () {
         if (com.validate('EditModal')) {

@@ -389,7 +389,7 @@ $(function () {
     querySalesActivityItem();
 
     function uiBtnMethod(uiPgDiv, activityItem) {
-        //0: 初始 , 1: 失效 , 2: 已领 , 3: 退货 , 4: 配送 , 5: 未退 , 6: 升级 , 7: 补款
+        
         //失效
         var abateBtn = $("<span></span>").addClass("btn btn-minier btn-yellow").html("失效").css("margin", "3px");
         //领取
@@ -403,7 +403,7 @@ $(function () {
         //补款
         var expendBtn = $("<span></span>").addClass("btn btn-minier btn-purple").html("补款").css("margin", "3px");
 
-        if (salesActivityItem.pagetype == "advance") {
+        if (salesActivityItem.pagetype == "advance" || salesActivityItem.pagetype == "activity") {
             uiPgDiv.append(abateBtn).append(receiveBtn).append(refundBtn).append(deliveBtn).append(unrefundBtn).append(expendBtn);
         }
 

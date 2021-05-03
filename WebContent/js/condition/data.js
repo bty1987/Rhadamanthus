@@ -17,6 +17,7 @@ Condition.addupRule("data", {
             valuePath: "name"
         }
     },
+   
     "unit-name": {
         label: "查询单位",
         type: "text",
@@ -97,6 +98,15 @@ Condition.addupRule("data", {
     
     "quotation-version-name": {
         label: "版本名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
+        }
+    },
+    "quotation-functionArea-name": {
+        label: "名称",
         type: "text",
         submitConfig: {
             name: "name",
@@ -201,6 +211,22 @@ Condition.addupRule("data", {
             op: "cn",
             validate: null
         }
+    },
+    "quotation-additem-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+	    dataSource : {
+	        url : api.ds.data,
+	        postData : {},
+	        listPath :"Status",
+	        keyPath:"key",
+	        valuePath:"value"
+	    }
     },
     
     "model-no": {
@@ -507,6 +533,22 @@ Condition.addupRule("data", {
             validate: null
         }
     },
+    "storehouse-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.data,
+            postData: null,
+            listPath: "status",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
     "storehouse-righter": {
         label: "姓名",
         type: "autofill",
@@ -568,6 +610,40 @@ Condition.addupRule("data", {
             name : "taskName",
             op : "eq",
             validate:null
+        }
+    },
+    
+    "task-isShow" : {
+        label:"显示",
+        type:"select",
+        submitConfig:{
+        	name: "taskIsShow",
+        	op: "eq",
+        	validate: null 
+        },
+        dataSource: {
+            url: api.ds.data,
+            postData: {},
+            listPath: "taskIsShow",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    
+    "task-status" : {
+        label:"状态",
+        type:"select",
+        submitConfig:{
+        	name: "taskStatus",
+        	op: "eq",
+        	validate: null 
+        },
+        dataSource: {
+            url: api.ds.data,
+            postData: {},
+            listPath: "taskStatus",
+            keyPath: "key",
+            valuePath: "value"
         }
     },
     

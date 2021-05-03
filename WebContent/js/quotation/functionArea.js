@@ -1,4 +1,4 @@
-$(function(){
+﻿$(function(){
 	
 	com.focusPage('#fl-statement').statement("子功能区", "报价项配置");
 	
@@ -169,7 +169,7 @@ $(function(){
         };
     })();
 
-    var _condArr = ['data-quotation-version'];
+    var _condArr = ['data-quotation-functionArea-name','data-quotation-version'];
 
     var functionAreaSeacher = new Searcher();
     functionAreaSeacher.init( _condArr, "condList", api.quotation.pageFunctionArea, function(data){

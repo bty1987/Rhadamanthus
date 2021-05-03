@@ -345,7 +345,19 @@ $(function(){
         var $checki = $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
         var $checkspan = $('<span></span>').text('全选').appendTo($checka);
         
+        var $checkaExportSelects = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'import');
+        var $checkExporti = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($checkaExportSelects);
+        var $checkExportspan = $('<span></span>').text('导出').appendTo($checkaExportSelects);
+        //导出单击事件
+        $checkaExportSelects.click(function (){
+        	pageExportStoreImport();
+        });
+        
         btns.push($checka);
+        
+        if(selectionItem.pageType == "expert") {
+        	btns.push($checkaExportSelects);
+        }
         
         if (selectionItem.pageType == "init" || selectionItem.pageType == "expert") {
             var $a = createbtn("batchDelivery", "批量配送", "btn-success");
@@ -368,6 +380,66 @@ $(function(){
 
         return btns;
     });
+    
+    function pageExportStoreImport(){
+
+        if (com.focusPage('span[name="totalRecords"]').text() == 0) {
+            com.showAlert(com.warning, "请通过条件进行查询");
+            return false;
+        }
+
+        if (com.focusPage('span[name="totalRecords"]').text() > 1000) {
+            com.showAlert(com.warning, "查询结果大于阀值 , 导出失败");
+            return false;
+        }
+
+        com.post(selectionItem.url, $.extend({}, params[selectionItem.postData], {"paging.noPage": 1}), function (res) {
+
+            $.exceler({
+                column: [
+                    ["名称",'goods.name'],
+					["品牌", 'goods.brand'],
+					["品类", 'goods.category'],
+					["商品编号", 'goods.no'],
+					["功能区名称", 'areaName'],
+					["类型", 'type'],
+					["状态", 'status'],
+					["报价项单价", 'preprice'],
+					["结算价", 'postprice'],
+					["预算金额", 'preprice'],
+					["数量", 'num'],
+					["退数量", 'refnum'],
+					["剩余数量", 'surplus'],
+					["备注", 'comment'],
+					["创建时间", 'createTime'],
+					["配送人", 'traner.currentName'],
+					["配送时间", 'tranTime'],
+					["审核人", 'checker.currentName'],
+					["审核时间", 'checkTime'],
+					["确认人", 'confirmer.currentName'],
+					["确认时间", 'confirmTime'],
+					["完结人", 'finish.currentName'],
+					["完结时间", 'finishTime'],
+					["结算人", 'balancer.currentName'],
+					["结算时间", 'balanceTime'],
+					["装修单号", 'decoration.orderId'],
+					["楼盘", 'decoration.house.village.name'],
+					["地址", 'decoration.house.houseNumber'],
+					["建筑面积", 'decoration.house.buildArea'],
+					["设计师", 'decoration.designer.currentName'],
+					["业务员", 'decoration.salesman.currentName'],
+					["监理人员姓名", 'decoration.supervisor.currentName'],
+					["监理人员电话", 'decoration.supervisor.phone'],
+					["跟单员", 'decoration.escorter.currentName'],
+					
+                ],
+                
+                list: res.paging.data
+            }, function(v){
+                v.surplus = parseFloat(v.num) - parseFloat(v.refnum);
+            });
+        });
+    }
     
     com.focusPage('#checks').click(function() {
         checkAll();
