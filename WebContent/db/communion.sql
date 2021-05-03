@@ -1,4 +1,4 @@
-CREATE DATABASE  IF NOT EXISTS `communion`;
+﻿CREATE DATABASE  IF NOT EXISTS `communion`;
 USE `communion`;
 
 DROP TABLE IF EXISTS `attendance`;
@@ -152,6 +152,9 @@ CREATE TABLE `constructionnode` (
   `postcheck` int(8) DEFAULT '0',
   `stacheck` int(8) DEFAULT '0',
   `fincheck` int(8) DEFAULT '0',
+  `startalk` varchar(128) NOT NULL COMMENT '开工话术',
+  `endtalk` varchar(128) NOT NULL COMMENT '完工话术',
+  `timeLimit` int(6) NOT NULL COMMENT '工期',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0: 启用, 1: 禁用',
   `sort` tinyint(2) NOT NULL DEFAULT '0',
   `company` int(11) NOT NULL,

@@ -321,7 +321,7 @@ jQuery(function($) {
             data["con-sign-day"] = com.dateFormat(new Date(), "dd");
             
             data["con-design-money1"] = parseFloat(data["con-design-money"]);
-            data["con-activity-name1"] = parseFloat(data["con-activity-name"]);
+            data["con-activity-name1"] = data["con-activity-name"];
             
             data["con-contract-total-cn"] = utils.getCNMoney(parseFloat(data["con-contract-total"]));
             data["con-contract-stotal-cn"] = utils.getCNMoney(parseFloat(data["con-contract-stotal"]));

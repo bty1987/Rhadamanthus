@@ -22,7 +22,10 @@ jQuery(function($) {
             precheck: com.focusPage("#precheck", "#updateModal"),
             postcheck: com.focusPage("#postcheck", "#updateModal"),
             stacheck: com.focusPage("#stacheck", "#updateModal"),
-            fincheck: com.focusPage("#fincheck", "#updateModal")
+            fincheck: com.focusPage("#fincheck", "#updateModal"),
+            startalk: com.focusPage("#startalk", "#updateModal"),
+            endtalk: com.focusPage("#endtalk", "#updateModal"),
+            timeLimit: com.focusPage("#timeLimit", "#updateModal")
         },
 
         editFlg: false,
@@ -71,6 +74,9 @@ jQuery(function($) {
                ["完工款项比: ", v.postcheck, "blue"],
                ["开工销售比例: ", v.stacheck, "blue"],
                ["完工销售比例: ", v.fincheck, "blue"],
+               ["开工话术:" ,v.startalk, "grey"],
+               ["完工话术:" ,v.endtalk, "grey"],
+               ["工期:" ,v.timeLimit, "grey"],
                ["状态: ", v.status == 0 ? "启用" : "禁用", "red"],
                ["排序: ", v.sort, "blue"],
            ];
@@ -99,6 +105,9 @@ jQuery(function($) {
                 constructionNode.items.postcheck.val(v.postcheck);
                 constructionNode.items.stacheck.val(v.stacheck);
                 constructionNode.items.fincheck.val(v.fincheck);
+                constructionNode.items.startalk.val(v.startalk);
+                constructionNode.items.endtalk.val(v.endtalk);
+                constructionNode.items.timeLimit.val(v.timeLimit);
                 
                 constructionNode.modals.updateModal.modal("show");
             });
@@ -147,10 +156,15 @@ jQuery(function($) {
             "constructionNode.precheck": constructionNode.items.precheck.val(),
             "constructionNode.postcheck": constructionNode.items.postcheck.val(),
             "constructionNode.stacheck": constructionNode.items.stacheck.val(),
-            "constructionNode.fincheck": constructionNode.items.fincheck.val()
+            "constructionNode.fincheck": constructionNode.items.fincheck.val(),
+            "constructionNode.startalk": constructionNode.items.startalk.val(),
+            "constructionNode.endtalk": constructionNode.items.endtalk.val(),
+            "constructionNode.timeLimit": constructionNode.items.timeLimit.val()
         }
         
         com.post(api.data.updateConstructionNode, options, function(res){
+            com.closePopup();
+            com.showAlert(com.info, "操作成功");
             searcher.doSearch();
         });
         
@@ -176,7 +190,7 @@ jQuery(function($) {
         }
 
         var options = {
-            'constructionNode.name': constructionNode.items.constructionNodeName.val(),
+            'constructionNode.name': constructionNode.items.constructionNodeName.val()
         };
 
         com.post(api.data.addConstructionNode, options, function(res){

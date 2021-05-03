@@ -108,7 +108,7 @@ $(function () {
         }, show: function(v){
             return (v.status == 0) && (v.executeTime != null && v.executeTime.length != 0) && (Number(v.executeTime) > Number(plan.currentTime));
         }},
-    ]
+    ];
     
     searcher.line("task.name", lineprops, linebtns);
     
@@ -147,6 +147,7 @@ $(function () {
         var flag = false;
         
         $.each(results, function (i, v) {
+        	
             if (v == "C") {
                 var filePaths = com.focusPage("#filePath");
                 if (filePaths.val() == null || filePaths.val() == "") {
@@ -154,6 +155,9 @@ $(function () {
                     return
                 }
                 args = args + filePaths.val() + ",";
+            }if(v == "E"){
+            	var _date = com.focusPage("#id" + i).val().replace(/-/g, "/");
+            	args = args + _date + "-" + _date+ ",";
             }else{
                 args = args +  com.focusPage("#id" + i).val()+ ",";
             }
@@ -181,6 +185,9 @@ $(function () {
         
         var plans = [];
         
+        console.log(options);
+        
+        
         com.post(api.information.existPlan, options, function(res){
             plans = res.plans;
         }, null, false);
@@ -198,7 +205,7 @@ $(function () {
                 });
             }, "取消": function(){
                 com.closePopup();
-            }})
+            }});
         }else{
             com.post(api.information.createPlan, options, function (res) {
                 com.showAlert(com.info, "计划创建成功!");

@@ -447,6 +447,7 @@ CREATE TABLE `quotationversion` (
   `manageRate` float NOT NULL,
   `manageDiscount` tinyint(1) NOT NULL DEFAULT '0',
   `company` int(11) NOT NULL DEFAULT '0',
+  `offset` varchar(32) DEFAULT '0',
   PRIMARY KEY (`qvId`),
   UNIQUE KEY `uniqueone` (`no`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价版本表';

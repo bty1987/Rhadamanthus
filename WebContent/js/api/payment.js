@@ -608,7 +608,7 @@ $.extend(api, {payment: {
 	},
 
 	queryWalletres: {url: "queryWalletres.do"},
-	uploadWalletres: {url: "uploadWalletres.do"},
+	addWalletres: {url: "addWalletres.do"},
 	deleteWalletres: {url: "deleteWalletres.do"}
 	
 }});

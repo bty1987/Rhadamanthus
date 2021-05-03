@@ -101,7 +101,17 @@ $(function () {
     	var advertList = com.focusPage("#advertList");
     	
     	$.each(res.adverts, function(i,v){
-    		var $div = $('<div></div>').html(v).appendTo(advertList);
+    		var $div = $('<div></div>').html(v).appendTo(advertList.find("div:first"));
+    	});
+    	
+    	carousel.render({
+    	    elem: advertList,
+    	    width: "100%",
+    	    height: "180px",
+    	    anim: "fade",
+    	    interval: 4000,
+    	    arrow: "none",
+    	    indicator: "none"
     	});
     	
     	com.focusPage("#updateBook").click(function(){

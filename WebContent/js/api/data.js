@@ -597,7 +597,8 @@ $.extend(api, {
         authSignet: {url:"authSignet.do"},
         confirmSignet: {url:"confirmSignet.do"},
         signateSignet: {url:"signateSignet.do"},
-        signateAuto: {url:"signateAuto.do"},
+        autoSignet: {url:"autoSignet.do"},
+        cancelSignet: {url:"cancelSignet.do"},
         
         pageTalking:{url:"pageTalking.do"},
         queryTalking:{url:"queryTalking.do"},

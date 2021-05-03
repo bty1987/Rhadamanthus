@@ -101,7 +101,7 @@ $(function () {
 
             if (listData && listData.length) {
                 $.each(listData, function (i, v) {
-
+                	
                     var $liLine = $('<li></li>').addClass('item-orange clearfix');
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                     var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -154,8 +154,20 @@ $(function () {
                             case "prevalue":
                                 propertyArr.push(["预结算值:", v.balance, "blue"]);
                                 break;
+                            case "preCreateTime":
+                                propertyArr.push(["预结算时间:", v.createTime, "green"]);
+                                break;
                             case "precreater":
                                 propertyArr.push(["预结算人:", v.creater.currentName, "grey"]);
+                                break;
+                            case "vbalance":
+                                propertyArr.push(["厂商结算:", v.vbalance, "blue"]);
+                                break;
+                            case "venderTime":
+                                propertyArr.push(["厂商结算时间:", v.venderTime, "green"]);
+                                break;
+                            case "venderTime":
+                                propertyArr.push(["厂商结算时间:", v.venderTime, "green"]);
                                 break;
                             case "pbalance":
                                 propertyArr.push(["结算值:", v.pbalance, "blue"]);
@@ -165,9 +177,6 @@ $(function () {
                                 break;
                             case "poster":
                                 propertyArr.push(["结算人:", v.poster.currentName, "grey"]);
-                                break;
-							case "vbalance":
-                                propertyArr.push(["厂商结算:", v.vbalance, "blue"]);
                                 break;
                             case "grade":
                                 propertyArr.push(["等级:", v.sales.grade, "red"]);
@@ -187,17 +196,14 @@ $(function () {
                             case "type":
                                 propertyArr.push(["类型:", salesBalance.balanceType[v.type], "red"]);
                                 break;
+                            case "voster":
+                                propertyArr.push(["厂商结算人:", v.voster.currentName, "red"]);
+                                break;
                             case "allowance":
                                 styleArr.push(["补贴:", v.allowance, "blue"]);
                                 break;
                             case "total":
                                 styleArr.push(["总价:", v.total, "blue"]);
-                                break;
-                            case "preCreateTime":
-                                styleArr.push(["预结算时间:", v.createTime, "green"]);
-                                break;
-                            case "venderTime":
-                                styleArr.push(["厂商结算时间:", v.venderTime, "green"]);
                                 break;
                             case "oneType":
                                 styleArr.push(["一类:", salesBalance.oneType[v.onetype], "red"]);
@@ -381,6 +387,7 @@ $(function () {
 
                     $btnBalanceItem.click(function (e) {
                         params["sbid"] = v.sbid;
+                        params["sid"] = v.sales.sid;
                         com.popup4page("#viewPopUp", "views/sales/salesItem4balance.html", "子项");
                     });
 
@@ -554,6 +561,7 @@ $(function () {
                     ["预结算时间:", 'createTime'],
                     ["预结算人:", 'creater.currentName'],
                     ["厂商结算:", 'vbalance'],
+                    ["厂商结算人:", 'voster.currentName'],
                     ["厂商结算时间:", 'venderTime'],
                     ["结算值:", 'pbalance'],
                     ["结算时间:", 'postTime'],
@@ -571,6 +579,7 @@ $(function () {
                 v.poster.currentName = v.poster.currentName == null ? '' : v.poster.currentName;
                 v.status = v.status == 0 ? '预结算' : v.status == 1 ? "厂商结算" : "结算";
                 v.type = v.type == 0 ? "购货" : v.type == 1 ? "预结算退货" : "结算退货";
+                v.voster.currentName = v.voster.currentName == null ? '' : v.voster.currentName;
             });
         });
     }
