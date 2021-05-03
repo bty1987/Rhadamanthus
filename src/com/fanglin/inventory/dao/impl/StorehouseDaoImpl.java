@@ -69,7 +69,10 @@ public class StorehouseDaoImpl extends DaoImpl<StorehousePO> implements Storehou
 					query.add(query.getCriterion(StorehousePO.COLUMN_NAME_STR, data, op));
 				} else if (StorehousePO.COLUMN_CODE_STR.equals(field)) {
 					query.add(query.getCriterion(StorehousePO.COLUMN_CODE_STR, data, op));
-				}
+				} else if(field.equals("status")){ 
+					query.add(query.getCriterion("status", Short.parseShort(data), op)); 
+				} 
+
 			}
 		}
 	}

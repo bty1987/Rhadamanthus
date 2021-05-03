@@ -46,7 +46,8 @@ public class WalletresServiceImpl implements WalletresService {
 	}
 
 	@Override
-	public void uploadWalletres(WalletresVO walletres) throws FLException {
+	@Transactional(rollbackFor = Exception.class)
+	public void addWalletres(WalletresVO walletres) throws FLException {
 		
 		WalletPO walletPO = walletDao.get(walletres.getWid());
 		
@@ -62,10 +63,13 @@ public class WalletresServiceImpl implements WalletresService {
 		walletresPO.setPicid(0);
 		
 		walletresDao.save(walletresPO);
+		
+		walletres.setWrid(walletresPO.getWrid());
 
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void deleteWalletres(WalletresVO walletres) {
 		
 		WalletresPO walletresPO = walletresDao.get(walletres.getWrid());

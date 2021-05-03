@@ -1,12 +1,3 @@
-/**
- * Title: PaymentAction
- * Description:
- * Copyright: Copyright (c) 2013 All rights reserved.
- * Company: BTY
- * @author bty1987
- *
- */
-
 package com.fanglin.payment.action;
 
 import java.util.List;
@@ -45,10 +36,10 @@ public class WalletresAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
-	@Action(value = "uploadWalletres", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String uploadWalletres() throws FLException {
+	@Action(value = "addWalletres", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addWalletres() throws FLException {
 		
-		walletresService.uploadWalletres(walletres);
+		walletresService.addWalletres(walletres);
 		
 		return SUCCESS;
 	}

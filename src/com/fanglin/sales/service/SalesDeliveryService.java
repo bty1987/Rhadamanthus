@@ -9,7 +9,7 @@ import com.fanglin.utils.Paging;
 
 public interface SalesDeliveryService {
 
-	public void pageSalesDeliveryItem(Paging paging, List<Filter> filters, int company, SalesDeliveryItemVO salesDeliveryItem);
+	public void pageSalesDeliveryItem(Paging paging, List<Filter> filters, int company, List<Short> statuses);
 
 	public void pageSalesDeliveryItemForSupplier(Paging paging, List<Filter> filters, String userId, int company);
 

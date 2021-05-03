@@ -53,9 +53,9 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 	private SalesItemDao salesItemDao;
 
 	@Override
-	public void pageSalesDeliveryItem(Paging paging, List<Filter> filters, int company, SalesDeliveryItemVO salesDeliveryItemVO) {
+	public void pageSalesDeliveryItem(Paging paging, List<Filter> filters, int company, List<Short> statuses) {
 
-		salesDeliveryItemVO.filter(filters);
+		filters.add(new Filter("statuses", statuses, "in"));
 
 		List<SalesDeliveryItemPO> salesDeliveryItemPOs = salesDeliveryItemDao.pageSalesDeliveryItem(paging, filters, company);
 		List<SalesDeliveryItemVO> salesDeliveryItemVOs = ptv(salesDeliveryItemPOs);

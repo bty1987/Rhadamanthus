@@ -32,6 +32,8 @@ public class SalesBalanceVO implements Serializable{
 	
 	private Timestamp postTime;
 	
+	private UserBaseVO voster;
+	
 	private Timestamp venderTime;
 	
 	private UserBaseVO checker;
@@ -63,7 +65,7 @@ public class SalesBalanceVO implements Serializable{
 	public SalesBalanceVO() {
 		super();
 	}
-
+	
 	public SalesBalanceVO(SalesVO sales, RefundsVO refunds, UserBaseVO creater,
 			UserBaseVO poster, UserBaseVO salesman, DepartmentVO dept,
 			DepartmentVO region,UserBaseVO checker) {
@@ -76,6 +78,21 @@ public class SalesBalanceVO implements Serializable{
 		this.dept = dept;
 		this.region = region;
 		this.checker = checker;
+	}
+	
+	public SalesBalanceVO(SalesVO sales, RefundsVO refunds, UserBaseVO creater,
+			UserBaseVO poster, UserBaseVO salesman, DepartmentVO dept,
+			DepartmentVO region,UserBaseVO checker, UserBaseVO voster) {
+		super();
+		this.sales = sales;
+		this.refunds = refunds;
+		this.creater = creater;
+		this.poster = poster;
+		this.salesman = salesman;
+		this.dept = dept;
+		this.region = region;
+		this.checker = checker;
+		this.voster = voster;
 	}
 	
 	public Long getSbid() {
@@ -158,6 +175,14 @@ public class SalesBalanceVO implements Serializable{
 
 	public void setPostTime(Timestamp postTime) {
 		this.postTime = postTime;
+	}
+
+	public UserBaseVO getVoster() {
+		return voster;
+	}
+
+	public void setVoster(UserBaseVO voster) {
+		this.voster = voster;
 	}
 
 	@JSON(format="yyyy-MM-dd")

@@ -34,7 +34,7 @@ public class SignetDaoImpl extends DaoImpl<SignetPO> implements SignetDao {
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<SignetPO> querySignet(int company) {
-		return session().createCriteria(SignetPO.class).add(Restrictions.eq(SignetPO.COLUMN_COMPANY_STR, company)).list();
+		return session().createCriteria(SignetPO.class).add(Restrictions.eq(SignetPO.COLUMN_COMPANY_STR, company)).add(Restrictions.ne("status", SignetPO.STATUS_CANCEL_INT)).list();
 	}
 
 	@Override

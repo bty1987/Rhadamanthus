@@ -22,9 +22,9 @@ public interface QuotationVersionService {
 
 	public void pageQuotationVersion(Paging paging, List<Filter> filters, int company);
 
-	public QuotationVersionVO queryQuotationVersionById(QuotationVersionVO quotationVersionVO);
-
 	public List<QuotationVersionVO> queryQuotationVersion(int company);
+
+	public QuotationVersionVO queryQuotationVersionById(QuotationVersionVO quotationVersionVO);
 
 	public void saveQuotationVersion(QuotationVersionVO quotationVersionVO, int company) throws FLException;
 

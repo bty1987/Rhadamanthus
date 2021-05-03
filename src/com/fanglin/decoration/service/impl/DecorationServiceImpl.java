@@ -282,7 +282,7 @@ public class DecorationServiceImpl implements DecorationService {
 			statuses = null;
 		}
 
-		List<DecorationPO> decorationPOs = decorationDao.pageDecoration(paging, filters, designDepartmentIds, statuses, company);
+		List<DecorationPO> decorationPOs = decorationDao.pageDecoration(paging, filters, designDepartmentIds, statuses, authentication.getCompany());
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
 
 		for (DecorationPO decorationPO : decorationPOs) {
@@ -517,11 +517,11 @@ public class DecorationServiceImpl implements DecorationService {
 		}
 
 		paging.setData(decorationVOs);
-
 	}
 
 	@Override
 	public void pageDecorationForEscorter(Paging paging, List<Filter> filters, Authentication authentication) {
+
 		String userId = authentication.getUserId();
 		int company = authentication.getCompany();
 
@@ -553,7 +553,6 @@ public class DecorationServiceImpl implements DecorationService {
 		}
 
 		paging.setData(decorationVOs);
-
 	}
 
 	@Override
@@ -1398,14 +1397,14 @@ public class DecorationServiceImpl implements DecorationService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void changeDecorationForRepairStatus(DecorationVO decorationVO) throws FLException {
-		
+
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
-		
-		if(decoration != null) {
-			
+
+		if (decoration != null) {
+
 			decoration.setRepairStatus(decorationVO.getRepairStatus());
 			decorationDao.update(decoration);
 		}
-		
+
 	}
 }

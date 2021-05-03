@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @File Name		: QuotationVersionDaoImpl.java
  * @Package   	: com.fanglin.dao.impl
  * @Version		: 1.0
@@ -26,64 +26,62 @@ import com.fanglin.utils.Paging;
 @Repository("functionAreaDao")
 public class FunctionAreaDaoImpl extends DaoImpl<FunctionAreaPO> implements FunctionAreaDao {
 
-	public FunctionAreaDaoImpl(){
+	public FunctionAreaDaoImpl() {
 		super(FunctionAreaPO.class);
 	}
 
 	@Override
-	public List<FunctionAreaPO> pageFunctionArea(Paging paging, List<Filter> filters,int company){
+	public List<FunctionAreaPO> pageFunctionArea(Paging paging, List<Filter> filters, int company) {
+
 		PagingQuery<FunctionAreaPO> query = pagingQuery(paging, FunctionAreaPO.class);
-		
-		if(filters != null){
-			for(Filter filter: filters){
-				if("versionId".equals(filter.getField())){
-					query.add(query.getCriterion("quotationVersion.no", (filter.getData()), filter.getOp()));
-				}else{
-					query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
-				}
+
+		queryFilterExcute(query, filters);
+
+		return query.alias("quotationVersion", "quotationVersion").add(Restrictions.eq("quotationVersion.company", company)).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<FunctionAreaPO> queryFunctionAreaByVersionId(String versionId) {
+		return createCriteria(FunctionAreaPO.class).add(Restrictions.eq("quotationVersion.no", versionId)).addOrder(Order.asc("functionAreaOrder")).list();
+	}
+
+	@Override
+	public FunctionAreaPO queryFunctionAreaByIdAVersionId(String functionAreaId, String versionId) {
+		return (FunctionAreaPO) session().createCriteria(FunctionAreaPO.class).add(Restrictions.eq("functionAreaId", functionAreaId)).add(Restrictions.eq("quotationVersion.no", versionId)).uniqueResult();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<FunctionAreaPO> queryFunctionAreaForCommonByVersionId(String versionId) {
+		return createCriteria(FunctionAreaPO.class).add(Restrictions.not(Restrictions.eq("functionAreaId", ""))).add(Restrictions.eq("quotationVersion.no", versionId)).add(Restrictions.eq("functionAreaType", "普通")).addOrder(Order.asc("functionAreaOrder")).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<FunctionAreaPO> queryFunctionAreaForSpecialByVersionId(String versionId) {
+		return createCriteria(FunctionAreaPO.class).add(Restrictions.not(Restrictions.eq("functionAreaId", ""))).add(Restrictions.eq("quotationVersion.no", versionId)).add(Restrictions.ne("functionAreaType", "普通")).addOrder(Order.asc("functionAreaOrder")).list();
+	}
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters == null)
+			return;
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if ("versionId".equals(field)) {
+				query.add(query.getCriterion("quotationVersion.no", (data), op));
+			} else if ("name".equals(field)) {
+				query.add(query.getCriterion("functionAreaName", data, op));
+			} else {
+				query.add(query.getCriterion(field, data, op));
 			}
 		}
-		
-		return query.alias("quotationVersion","quotationVersion").add(Restrictions.eq("quotationVersion.company",company)).list();
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<FunctionAreaPO> queryFunctionAreaByVersionId(String versionId){
-		return createCriteria(FunctionAreaPO.class)
-				.add(Restrictions.eq("quotationVersion.no", versionId))
-				.addOrder(Order.asc("functionAreaOrder"))
-				.list();
-	}
-	
-	@Override
-	public FunctionAreaPO queryFunctionAreaByIdAVersionId(String functionAreaId, String versionId){
-		return (FunctionAreaPO)session().createCriteria(FunctionAreaPO.class)
-				.add(Restrictions.eq("functionAreaId", functionAreaId))
-				.add(Restrictions.eq("quotationVersion.no", versionId))
-				.uniqueResult();
-	}
-	
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<FunctionAreaPO> queryFunctionAreaForCommonByVersionId(String versionId){
-		return createCriteria(FunctionAreaPO.class)
-				.add(Restrictions.not(Restrictions.eq("functionAreaId", "")))
-				.add(Restrictions.eq("quotationVersion.no", versionId))
-				.add(Restrictions.eq("functionAreaType",  "普通"))
-				.addOrder(Order.asc("functionAreaOrder"))
-				.list();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<FunctionAreaPO> queryFunctionAreaForSpecialByVersionId(String versionId){
-		return createCriteria(FunctionAreaPO.class)
-				.add(Restrictions.not(Restrictions.eq("functionAreaId", "")))
-				.add(Restrictions.eq("quotationVersion.no", versionId))
-				.add(Restrictions.ne("functionAreaType", "普通"))
-				.addOrder(Order.asc("functionAreaOrder"))
-				.list();
-	}
-	
 }

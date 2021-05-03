@@ -21,14 +21,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.communion.dao.ConstructionNodeDao;
-import com.fanglin.communion.po.ConstructionNodePO;
+import com.fanglin.communion.vo.ConstructionNodeVO;
 import com.fanglin.construction.dao.ConstructionAccessoryDao;
 import com.fanglin.construction.dao.ConstructionCostDao;
 import com.fanglin.construction.dao.ConstructionDao;
+import com.fanglin.construction.dao.ConstructionInfoDao;
 import com.fanglin.construction.dao.ConstructionScheduleDao;
 import com.fanglin.construction.dao.DrawLineDao;
 import com.fanglin.construction.po.ConstructionCostPO;
+import com.fanglin.construction.po.ConstructionInfoPO;
 import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.construction.po.ConstructionSchedulePO;
 import com.fanglin.construction.po.DrawLinePO;
@@ -76,20 +77,20 @@ public class DrawLineServiceImpl implements DrawLineService {
 	private ConstructionScheduleDao constructionScheduleDao;
 
 	@Autowired
-	private ConstructionNodeDao constructionNodeDao;
-
-	@Autowired
 	private ConstructionCostDao constructionCostDao;
 
 	@Autowired
 	private UserDao userDao;
-	
+
 	@Autowired
 	private SystemConfigDao systemConfigDao;
-	
+
 	@Autowired
 	private ConstructionAccessoryDao constructionAccessoryDao;
-	
+
+	@Autowired
+	private ConstructionInfoDao constructionInfoDao;
+
 	@Override
 	public List<DrawLineVO> pageDrawLine(Paging paging, List<Filter> filters, int company) {
 
@@ -150,6 +151,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 		}
 
 		drawLinePO.setApplayTime(drawLineVO.getApplayTime());
+		drawLinePO.setActualTime(Long.parseLong(DateUtil.getDateToDateString(drawLineVO.getApplayTime(), "yyyyMMdd")));
 
 		return 0;
 	}
@@ -194,34 +196,34 @@ public class DrawLineServiceImpl implements DrawLineService {
 		ConstructionCostPO constructionCostPO = constructionCostDao.queryConstructionCost(drawLinePO.getDecoration().getHouse().getBuildArea(), decorationPO.getCompany());
 		SystemConfigPO accessoryLimit = systemConfigDao.querySystemConfig("accessoryLimit", decorationPO.getCompany());
 		SystemConfigPO salaryLimit = systemConfigDao.querySystemConfig("salaryLimit", decorationPO.getCompany());
-		
+
 		long ccid = 0;
-		
-		if(constructionCostPO == null){
+
+		if (constructionCostPO == null) {
 			constructionPO.setAccessoryLimit(accessoryLimit == null ? ConstructionCostPO.ACCESSORY_DEFAULT_LONG : Long.valueOf(accessoryLimit.getValue()));
 			constructionPO.setSalaryLimit(salaryLimit == null ? ConstructionCostPO.SALARY_DEFAULT_LONG : Long.valueOf(accessoryLimit.getValue()));
-		}else {
+		} else {
 			constructionPO.setAccessoryLimit(constructionCostPO.getAccessory());
 			constructionPO.setSalaryLimit(constructionCostPO.getSalary());
 			ccid = constructionCostPO.getCcid();
 		}
 
 		constructionPO.setStartTime(drawLineVO.getApplayTime());
-		
+
 		constructionPO.setCreateTime((DateUtil.getDateToTimestamp(new Date())));
 
 		constructionDao.saveOrUpdate(constructionPO);
-		
+
 		ConstructionPO _constructionPO = constructionDao.queryConstructionByOrderId(orderId);
-		
+
 		int count = constructionAccessoryDao.countConstructionAccessory(_constructionPO.getCid());
-		
-		if(count == 0){
-			
-		    constructionAccessoryDao.makeConstructionAccessory(_constructionPO.getCid(),ccid);
-		    
+
+		if (count == 0) {
+
+			constructionAccessoryDao.makeConstructionAccessory(_constructionPO.getCid(), ccid);
+
 		}
-		
+
 		return 0;
 	}
 
@@ -254,13 +256,13 @@ public class DrawLineServiceImpl implements DrawLineService {
 		drawLinePO.setGroup(drawLineGroupPO);
 
 		drawLineDao.update(drawLinePO);
-		
+
 		return 1;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int successDrawLine(DrawLineVO drawLineVO, String userId) throws FLException {
+	public int successDrawLine(DrawLineVO drawLineVO, List<ConstructionNodeVO> constructionNodes, String userId) throws FLException {
 
 		DrawLinePO drawLinePO = drawLineDao.get(drawLineVO.getDlid());
 
@@ -284,15 +286,22 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 		long cid = constructionPO.getCid();
 
-		if (constructionScheduleDao.countConstructionSchedule(cid) == 0) {
+		ConstructionInfoPO constructionInfo = constructionInfoDao.queryConstructionInfoByOrderId(orderId);
 
-			List<ConstructionNodePO> constructionNodePOs = constructionNodeDao.queryConstructionNode(decorationPO.getCompany());
+		if(constructionInfo == null){
+			throw new FLException(120020, "工程信息不存在");
+		}
+		
+		int timelimit = 0;
 
-			Timestamp currentTime = DateUtil.getDateToTimestamp(new Date());
+		for (ConstructionNodeVO constructionNodeVO : constructionNodes) {
 
-			for (ConstructionNodePO constructionNodePO : constructionNodePOs) {
-				constructionScheduleDao.save(new ConstructionSchedulePO(cid, orderId, currentTime, currentTime, constructionNodePO.getSort()));
-			}
+			Timestamp startTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(constructionInfo.getDrawlineTime()), timelimit));
+			Timestamp endTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(constructionInfo.getDrawlineTime()), timelimit + constructionNodeVO.getTimeLimit()));
+
+			constructionScheduleDao.save(new ConstructionSchedulePO(cid, orderId, startTime, endTime, constructionNodeVO.getSort()));
+
+			timelimit = timelimit + constructionNodeVO.getTimeLimit();
 		}
 
 		drawLinePO.setStatus(DrawLinePO.STATUS_SUCCESS_INT);

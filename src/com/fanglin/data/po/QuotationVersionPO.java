@@ -36,10 +36,6 @@ public class QuotationVersionPO implements Serializable {
 
 	private String name;
 
-	private String comment;
-
-	private short defaultFlag;
-
 	private int trafficRate;
 
 	private short trafficDiscount;
@@ -47,6 +43,12 @@ public class QuotationVersionPO implements Serializable {
 	private int manageRate;
 
 	private short manageDiscount;
+
+	private int offset;
+
+	private short defaultFlag;
+
+	private String comment;
 
 	private int company;
 
@@ -86,24 +88,6 @@ public class QuotationVersionPO implements Serializable {
 		this.name = name;
 	}
 
-	@Column(name = "comment")
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
-	@Column(name = "defaultFlag")
-	public short getDefaultFlag() {
-		return defaultFlag;
-	}
-
-	public void setDefaultFlag(short defaultFlag) {
-		this.defaultFlag = defaultFlag;
-	}
-
 	@Column(name = "trafficRate")
 	public int getTrafficRate() {
 		return trafficRate;
@@ -138,6 +122,33 @@ public class QuotationVersionPO implements Serializable {
 
 	public void setManageDiscount(short manageDiscount) {
 		this.manageDiscount = manageDiscount;
+	}
+
+	@Column(name = "offset")
+	public int getOffset() {
+		return offset;
+	}
+
+	public void setOffset(int offset) {
+		this.offset = offset;
+	}
+
+	@Column(name = "defaultFlag")
+	public short getDefaultFlag() {
+		return defaultFlag;
+	}
+
+	public void setDefaultFlag(short defaultFlag) {
+		this.defaultFlag = defaultFlag;
+	}
+
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	@Column(name = "company")

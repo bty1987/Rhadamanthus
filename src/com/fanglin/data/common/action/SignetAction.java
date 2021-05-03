@@ -92,10 +92,18 @@ public class SignetAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "signateAuto", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String signateAuto() throws FLException {
+	@Action(value = "autoSignet", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String autoSignet() throws FLException {
 
-		signetService.signateAuto(signet);
+		signetService.autoSignet(signet);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "cancelSignet", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String cancelSignet() throws FLException {
+
+		signetService.cancelSignet(signet);
 
 		return SUCCESS;
 	}

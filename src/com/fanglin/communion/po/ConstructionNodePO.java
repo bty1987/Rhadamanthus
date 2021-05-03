@@ -36,6 +36,12 @@ public class ConstructionNodePO implements Serializable {
 
 	private short status;
 
+	private String startalk;
+	
+	private String endtalk;
+	
+	private int timeLimit;
+	
 	private short sort;
 
 	private int company;
@@ -103,6 +109,33 @@ public class ConstructionNodePO implements Serializable {
 		this.status = status;
 	}
 	
+	@Column(name = "startalk")
+	public String getStartalk() {
+		return startalk;
+	}
+
+	public void setStartalk(String startalk) {
+		this.startalk = startalk;
+	}
+
+	@Column(name = "endtalk")
+	public String getEndtalk() {
+		return endtalk;
+	}
+
+	public void setEndtalk(String endtalk) {
+		this.endtalk = endtalk;
+	}
+
+	@Column(name = "timeLimit")
+	public int getTimeLimit() {
+		return timeLimit;
+	}
+
+	public void setTimeLimit(int timeLimit) {
+		this.timeLimit = timeLimit;
+	}
+
 	@Column(name = "sort")
 	public short getSort() {
 		return sort;

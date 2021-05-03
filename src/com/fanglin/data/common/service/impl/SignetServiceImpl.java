@@ -134,6 +134,10 @@ public class SignetServiceImpl implements SignetService {
 
 		String path = Signature.authenticate(signetPO);
 
+		signetPO.setStatus(SignetPO.STATUS_AUTH_INT);
+
+		signetDao.update(signetPO);
+
 		signetVO.setPath(path);
 
 		return path;
@@ -149,13 +153,13 @@ public class SignetServiceImpl implements SignetService {
 			throw new FLException(130045, "签章不存在");
 		}
 
-		if (signetPO.getStatus() != SignetPO.STATUS_REGIST_INT) {
+		if (signetPO.getStatus() != SignetPO.STATUS_AUTH_INT) {
 			throw new FLException(130047, "签章状态不可操作");
 		}
 
 		Signature.company(signetPO);
 
-		signetPO.setStatus(SignetPO.STATUS_AUTH_INT);
+		signetPO.setStatus(SignetPO.STATUS_CONFIRM_INT);
 
 		signetDao.update(signetPO);
 
@@ -171,7 +175,7 @@ public class SignetServiceImpl implements SignetService {
 			throw new FLException(130045, "签章不存在");
 		}
 
-		if (signetPO.getStatus() != SignetPO.STATUS_AUTH_INT) {
+		if (signetPO.getStatus() != SignetPO.STATUS_CONFIRM_INT) {
 			throw new FLException(130047, "签章状态不可操作");
 		}
 
@@ -181,7 +185,7 @@ public class SignetServiceImpl implements SignetService {
 	}
 
 	@Override
-	public String signateAuto(SignetVO signetVO) throws FLException {
+	public String autoSignet(SignetVO signetVO) throws FLException {
 
 		SignetPO signetPO = signetDao.get(signetVO.getSid());
 
@@ -189,7 +193,7 @@ public class SignetServiceImpl implements SignetService {
 			throw new FLException(130045, "签章不存在");
 		}
 
-		if (signetPO.getStatus() != SignetPO.STATUS_AUTH_INT) {
+		if (signetPO.getStatus() != SignetPO.STATUS_CONFIRM_INT) {
 			throw new FLException(130047, "签章状态不可操作");
 		}
 
@@ -200,4 +204,20 @@ public class SignetServiceImpl implements SignetService {
 		return path;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int cancelSignet(SignetVO signetVO) throws FLException {
+
+		SignetPO signetPO = signetDao.get(signetVO.getSid());
+
+		if (signetPO == null) {
+			throw new FLException(130045, "签章不存在");
+		}
+
+		signetPO.setStatus(SignetPO.STATUS_CANCEL_INT);
+
+		signetDao.update(signetPO);
+
+		return 0;
+	}
 }

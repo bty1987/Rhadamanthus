@@ -38,7 +38,7 @@ public interface SalesBalanceService {
 	
 	public int preSalesBalance(List<Long> sid, String userId) throws FLException;
 	
-	public int vpostSalesBalance(List<SalesBalanceVO> sbid) throws FLException;
+	public int vpostSalesBalance(List<SalesBalanceVO> sbid, String userId) throws FLException;
 	
 	public int postSalesBalance(List<SalesBalanceVO> sbids,String userId) throws FLException;
 	

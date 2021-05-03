@@ -37,6 +37,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 	@Override
 	public List<DecorationPO> pageDecoration(Paging paging, List<Filter> filters) {
+
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
 
 		queryFilterExcute(query, filters);
@@ -47,10 +48,13 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 
 	@Override
-	public List<DecorationPO> pageDecoration(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<Short> statuses, int company) {
+	public List<DecorationPO> pageDecoration(Paging paging, List<Filter> filters, List<Integer> designDepartmentIds, List<Short> statuses, Integer company) {
+
 		PagingQuery<DecorationPO> query = pagingQuery(paging, DecorationPO.class);
 
-		query.add(query.getCriterion("company", company, "eq"));
+		if (company != null) {
+			query.add(query.getCriterion("company", company, "eq"));
+		}
 
 		if (designDepartmentIds != null && designDepartmentIds.size() > 0) {
 			query.alias("designer", "designer");

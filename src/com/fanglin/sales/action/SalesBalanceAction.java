@@ -120,7 +120,7 @@ public class SalesBalanceAction extends BaseListAction {
 	@Action(value = "vpostSalesBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String vpostSalesBalance() throws FLException {
 
-		salesBalanceService.vpostSalesBalance(salesBalances);
+		salesBalanceService.vpostSalesBalance(salesBalances,  queryUserId());
 
 		return SUCCESS;
 	}

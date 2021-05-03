@@ -101,12 +101,16 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		ConstructionNodePO constructionNodePO = new ConstructionNodePO();
 
 		constructionNodePO.setName(constructionNodeVO.getName());
-
+		
 		constructionNodePO.setPrecheck(0);
 		constructionNodePO.setPostcheck(0);
 		constructionNodePO.setStacheck(0);
 		constructionNodePO.setFincheck(0);
-
+		
+		constructionNodePO.setStartalk(constructionNodeVO.getStartalk());
+		constructionNodePO.setEndtalk(constructionNodeVO.getEndtalk());
+		constructionNodePO.setTimeLimit(0);
+		
 		constructionNodeDao.save(constructionNodePO);
 	}
 
@@ -124,7 +128,10 @@ public class ConstructionNodeServiceImpl implements ConstructionNodeService {
 		constructionNodePO.setPostcheck(constructionNodeVO.getPostcheck());
 		constructionNodePO.setStacheck(constructionNodeVO.getStacheck());
 		constructionNodePO.setFincheck(constructionNodeVO.getFincheck());
-
+		constructionNodePO.setStartalk(constructionNodeVO.getStartalk());
+		constructionNodePO.setEndtalk(constructionNodeVO.getEndtalk());
+		constructionNodePO.setTimeLimit(constructionNodeVO.getTimeLimit());
+		
 
 		constructionNodeDao.update(constructionNodePO);
 	}

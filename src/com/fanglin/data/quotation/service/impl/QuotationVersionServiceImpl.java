@@ -52,8 +52,12 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 		List<QuotationVersionPO> quotationVersionPOs = quotationVersionDao.pageQuotationVersion(paging, filters, company);
 		List<QuotationVersionVO> quotationVersionVOs = new ArrayList<QuotationVersionVO>();
 
+		QuotationVersionVO quotationVersionVO;
+
 		for (QuotationVersionPO quotationVersionPO : quotationVersionPOs) {
-			QuotationVersionVO quotationVersionVO = new QuotationVersionVO();
+
+			quotationVersionVO = new QuotationVersionVO();
+
 			BeanUtil.copyProperties(quotationVersionPO, quotationVersionVO);
 
 			quotationVersionVOs.add(quotationVersionVO);
@@ -78,8 +82,12 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 		List<QuotationVersionPO> quotationVersionPOs = quotationVersionDao.queryQuotationVersion(company);
 		List<QuotationVersionVO> quotationVersionVOs = new ArrayList<QuotationVersionVO>();
 
+		QuotationVersionVO quotationVersionVO;
+
 		for (QuotationVersionPO quotationVersionPO : quotationVersionPOs) {
-			QuotationVersionVO quotationVersionVO = new QuotationVersionVO();
+
+			quotationVersionVO = new QuotationVersionVO();
+
 			BeanUtil.copyProperties(quotationVersionPO, quotationVersionVO);
 
 			quotationVersionVOs.add(quotationVersionVO);

@@ -32,6 +32,7 @@ public class DutyServiceImpl implements DutyService {
 
 	@Override
 	public void pageDuty(Paging paging, List<Filter> filters) {
+
 		List<DutyPO> dutyPOs = dutyDao.pageDuty(paging, filters);
 		List<DutyVO> dutyVOs = new ArrayList<DutyVO>();
 
@@ -65,16 +66,18 @@ public class DutyServiceImpl implements DutyService {
 
 			dutyVOs.add(dutyVO);
 		}
-		return dutyVOs;
 
+		return dutyVOs;
 	}
 
 	@Override
 	public List<DutyVO> queryDutyByDtid(DutyVO duty) {
+
 		List<DutyPO> dutyPOs = dutyDao.queryDutyByDtid(duty.getDepartmentType().getDtid());
 		List<DutyVO> dutyVOs = new ArrayList<DutyVO>();
 
 		DutyVO dutyVO;
+
 		for (DutyPO dutyPO : dutyPOs) {
 			dutyVO = new DutyVO(new DepartmentTypeVO());
 
@@ -87,6 +90,7 @@ public class DutyServiceImpl implements DutyService {
 
 			dutyVOs.add(dutyVO);
 		}
+
 		return dutyVOs;
 	}
 
@@ -95,19 +99,21 @@ public class DutyServiceImpl implements DutyService {
 	public int addDuty(DutyVO dutyVO) throws FLException {
 
 		DutyPO dutyPO = dutyDao.queryDutyByName(dutyVO.getName());
+
 		if (dutyPO != null) {
 			throw new FLException(130016, "职位已存在");
 		}
 
 		dutyPO = new DutyPO(new DepartmentTypePO());
+
 		BeanUtil.copyProperties(dutyVO, dutyPO, Arrays.asList("departmentType"));
 		BeanUtil.copyProperties(dutyVO.getDepartmentType(), dutyPO.getDepartmentType());
-		
-		dutyPO.setStatus((short) 0);
+
+		dutyPO.setStatus(DutyPO.STATUS_INIT_INT);
 		dutyPO.setPinYin(PinYin4Util.getPinyin(dutyVO.getName()).get(0));
 
 		dutyDao.save(dutyPO);
-		
+
 		return 0;
 	}
 
@@ -149,15 +155,15 @@ public class DutyServiceImpl implements DutyService {
 
 	@Override
 	public List<DutyVO> queryDutyByName(String pinYinName, DutyVO dutyVO) {
-		
+
 		if (dutyVO.getStatus() == null) {
-			dutyVO.setStatus((short)0);
+			dutyVO.setStatus((short) 0);
 		}
-		
+
 		int dtid = 0;
 
-		if (dutyVO.getDepartmentType() != null && dutyVO.getDepartmentType().getDtid() != 0 ) {
-			
+		if (dutyVO.getDepartmentType() != null && dutyVO.getDepartmentType().getDtid() != 0) {
+
 			dtid = dutyVO.getDepartmentType().getDtid();
 		}
 
@@ -166,10 +172,10 @@ public class DutyServiceImpl implements DutyService {
 
 		for (DutyPO dutyPO : dutyPOs) {
 			dutyVO = new DutyVO(new DepartmentTypeVO());
-			
+
 			BeanUtil.copyProperties(dutyPO, dutyVO, Arrays.asList("departmentType"));
 			BeanUtil.copyPropertie(dutyPO.getDepartmentType(), dutyVO.getDepartmentType());
-		
+
 			dutyVOs.add(dutyVO);
 		}
 

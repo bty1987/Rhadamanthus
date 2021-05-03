@@ -35,10 +35,8 @@ public class DateUtil {
 	/**
 	 * set string to date
 	 * 
-	 * @param date
-	 *            日期串
-	 * @param format
-	 *            格式串
+	 * @param date 日期串
+	 * @param format 格式串
 	 * @return Date类型的日期
 	 */
 	public static Date parseDate(String date, String format) {
@@ -55,8 +53,7 @@ public class DateUtil {
 	/**
 	 * convert Date to Timestamp
 	 * 
-	 * @param date
-	 *            Data类型的日期
+	 * @param date Data类型的日期
 	 * @return Timestamp类型的日期
 	 */
 	public static Timestamp getDateToTimestamp(Date date) {
@@ -66,8 +63,7 @@ public class DateUtil {
 	/**
 	 * convert Timestamp to Date
 	 * 
-	 * @param date
-	 *            Timestamp类型的日期
+	 * @param date Timestamp类型的日期
 	 * @return Date类型的日期
 	 */
 	public static Date getTimestampToDate(Timestamp tamp) {
@@ -88,12 +84,9 @@ public class DateUtil {
 	/**
 	 * 将一个字符串类型的时间转换为另一种格式的字符串类型时间 Example : String formattedDate = DateUtil.format("20070906112351", "yyyyMMddHHmmss", "yyyy年MM月dd日 HH时mm分ss秒")
 	 * 
-	 * @param date
-	 *            字符串时间.例如20070906112351
-	 * @param sourceFormat
-	 *            源时间的格式,上面为yyyyMMddHHmmss
-	 * @param transFormat
-	 *            要转换的目标格式
+	 * @param date 字符串时间.例如20070906112351
+	 * @param sourceFormat 源时间的格式,上面为yyyyMMddHHmmss
+	 * @param transFormat 要转换的目标格式
 	 * @return 结果串
 	 */
 	public static String format(String date, String sourceFormat, String transFormat) {
@@ -114,10 +107,8 @@ public class DateUtil {
 	/**
 	 * 将"yyyyMMddHHmmss"格式的时间转换为目标格式的字符串类型时间 Example : String formattedDate = DateUtil.format("20070906112351", "yyyy年MM月dd日 HH时mm分ss秒")
 	 * 
-	 * @param date
-	 *            yyyyMMddHHmmss格式字符串时间.例如20070906112351
-	 * @param transFormat
-	 *            要转换的目标格式
+	 * @param date yyyyMMddHHmmss格式字符串时间.例如20070906112351
+	 * @param transFormat 要转换的目标格式
 	 * @return 结果串
 	 */
 	public static String formatMedium(String date, String transFormat) {
@@ -127,8 +118,7 @@ public class DateUtil {
 	/**
 	 * 将"yyyyMMddHHmmss"格式的时间转换为"yyyy年MM月dd日"格式的字符串类型时间 Example : String formattedDate = DateUtil.format("20070906112351")
 	 * 
-	 * @param date
-	 *            yyyyMMddHHmmss格式字符串时间.例如20070906112351
+	 * @param date yyyyMMddHHmmss格式字符串时间.例如20070906112351
 	 * @return 格式为"yyyy年MM月dd日"的结果串
 	 */
 	public static String formatShort(String date) {
@@ -138,8 +128,7 @@ public class DateUtil {
 	/**
 	 * 将"yyyyMMddHHmmss"格式的时间转换为"yyyy-MM-dd"格式的字符串类型时间 Example : String formattedDate = DateUtil.format("20070906112351")
 	 * 
-	 * @param date
-	 *            yyyyMMddHHmmss格式字符串时间.例如20070906112351
+	 * @param date yyyyMMddHHmmss格式字符串时间.例如20070906112351
 	 * @return 格式为"yyyy-MM-dd"的结果串
 	 */
 	public static String format(String date) {
@@ -158,8 +147,7 @@ public class DateUtil {
 	/**
 	 * 判断一个时间是否为上午
 	 * 
-	 * @param date
-	 *            日期
+	 * @param date 日期
 	 * @return boolean 是否为上午
 	 */
 	public static boolean isAM(Date date) {
@@ -190,6 +178,16 @@ public class DateUtil {
 	 */
 	public static boolean isAM() {
 		return isAM(new Date());
+	}
+
+	public static Date plusDay(Date date, int num) {
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+
+		cal.add(Calendar.DAY_OF_MONTH, num);
+
+		return cal.getTime();
 	}
 
 	/**
@@ -315,6 +313,8 @@ public class DateUtil {
 		System.out.println(DateUtil.getDateToTimestamp(new Date()));
 
 		System.out.println(DateUtil.getDateToDateString(new Date(), "yyyy-MM-dd"));
+
+		System.out.println(DateUtil.plusDay(new Date(), -30));
 
 	}
 }
