@@ -23,19 +23,19 @@ public class NormriceAction extends BaseListAction {
 
 	@Autowired
 	NormriceService normriceService;
-	
+
 	List<NormriceVO> normrices;
-	
+
 	NormriceVO normrice;
-	
+
 	@Action(value = "queryNormriceByQiid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryNormriceByQiid() throws FLException {
 
-		normrices = normriceService.queryNormriceByQiid(normrice.getQuotationItem().getQiId());
+		normrices = normriceService.queryNormriceByQiid(normrice.getQuotationItem().getQiid());
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addNormrice", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addNormrice() throws FLException {
 
@@ -43,7 +43,7 @@ public class NormriceAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "deleteNormrice", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteNormrice() throws FLException {
 

@@ -2,6 +2,7 @@ package com.fanglin.quotation.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
 
@@ -26,6 +27,8 @@ public class ExtensionVO implements Serializable {
 	private Timestamp createTime;
 
 	private String content;
+
+	private List<ExtensionItemVO> extensionItems;
 
 	public Long getEid() {
 		return eid;
@@ -98,6 +101,14 @@ public class ExtensionVO implements Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public List<ExtensionItemVO> getExtensionItems() {
+		return extensionItems;
+	}
+
+	public void setExtensionItems(List<ExtensionItemVO> extensionItems) {
+		this.extensionItems = extensionItems;
 	}
 
 }

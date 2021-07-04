@@ -122,7 +122,7 @@ public class DecorationMidpackServiceImpl implements DecorationMidpackService {
 		
 		decorationMidpackDao.saveOrUpdate(decorationMidpackPO);
 
-		decorationPaymentService.makeDecorationPayment(decorationPO, quotationPO.getTotalPrice(), decorationMidpackVO.getPsId(), userId);
+		decorationPaymentService.makeDecorationPayment(decorationPO, quotationPO.getTotalPrice(), quotationPO.getCostPrice(), decorationMidpackVO.getPsId(), userId);
 		
 		return 0;
 	}

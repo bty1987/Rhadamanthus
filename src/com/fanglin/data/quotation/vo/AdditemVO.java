@@ -2,7 +2,8 @@ package com.fanglin.data.quotation.vo;
 
 import java.io.Serializable;
 
-import com.fanglin.communion.vo.ConstructionNodeVO;
+import com.fanglin.data.common.vo.ConstructionNodeVO;
+
 
 public class AdditemVO implements Serializable {
 

@@ -121,6 +121,8 @@ public class DecorationPO implements Serializable {
 	private String grade;
 
 	private String salesmanType = "守园";
+	
+	private long busitype;
 
 	private String houseType;
 
@@ -442,6 +444,15 @@ public class DecorationPO implements Serializable {
 
 	public void setSalesmanType(String salesmanType) {
 		this.salesmanType = salesmanType;
+	}
+
+	@Column(name = "busitype")
+	public long getBusitype() {
+		return busitype;
+	}
+
+	public void setBusitype(long busitype) {
+		this.busitype = busitype;
 	}
 
 	public int getOtherStatus() {

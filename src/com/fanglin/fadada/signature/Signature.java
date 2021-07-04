@@ -36,11 +36,11 @@ import com.fadada.sdk.client.authForfadada.model.BankInfoINO;
 import com.fadada.sdk.client.authForfadada.model.CompanyInfoINO;
 import com.fadada.sdk.client.authForfadada.model.LegalInfoINO;
 import com.fadada.sdk.client.request.ExtsignReq;
-import com.fadada.sdk.util.crypt.FddEncryptTool;
 import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.po.SignetPO;
 import com.fanglin.fadada.bean.Contract;
+import com.fanglin.fadada.tools.FddEncryptTool;
 import com.fanglin.utils.SystemConfig;
 
 @Service("signature")
@@ -296,16 +296,25 @@ public class Signature {
 
 		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
 
-		String result = base.invokeaddSignature(signno, FddEncryptTool.ImageToBase64ByOnline(path));
+		try {
+			String result = base.invokeaddSignature(signno, FddEncryptTool.ImageToBase64(path));
 
-		JSONObject response = JSONObject.parseObject(result);
+			JSONObject response = JSONObject.parseObject(result);
 
-		if (response == null) {
-			throw new FLException(130027, "客户认证失败,请求错误");
-		}
+			if (response == null) {
+				throw new FLException(130027, "客户认证失败,请求错误");
+			}
 
-		if (response.getInteger("code") != 1) {
-			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
+			if (response.getInteger("code") != 1) {
+				System.out.println(result);
+				throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
+			}
+		} catch (Exception e) {
+
+			System.out.println(path);
+			System.out.println(e.getMessage());
+
+			throw new FLException(130027, "客户认证失败,获取签章失败");
 		}
 
 		// JSONObject data = response.getJSONObject("data");

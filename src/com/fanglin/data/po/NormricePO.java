@@ -13,15 +13,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fanglin.communion.po.ConstructionNodePO;
-
 @Entity
 @Table(name = "normrice", catalog = "data")
 public class NormricePO implements Serializable {
 
 	private static final long serialVersionUID = -7988435531109348843L;
 
-	public static final String COLUMN_QIID_STR = "quotationItem.qiId";
+	public static final String COLUMN_QIID_STR = "quotationItem.qiid";
 
 	public static final short STATUS_VALID_STR = 0;
 

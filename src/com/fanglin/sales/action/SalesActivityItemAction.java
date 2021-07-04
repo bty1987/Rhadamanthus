@@ -100,6 +100,14 @@ public class SalesActivityItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 	
+	@Action(value="discountSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
+	public String discountSalesActivityItem() throws FLException{
+		
+		salesActivityItemService.discountSalesActivityItem(salesActivityItem,queryUserId());
+		
+		return SUCCESS;
+	}
+	
 	public SalesVO getSales() {
 		return sales;
 	}

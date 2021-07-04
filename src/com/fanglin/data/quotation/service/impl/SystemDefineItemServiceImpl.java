@@ -22,6 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.communion.po.MeasurementUnitPO;
 import com.fanglin.communion.po.QuotationBigCategoryPO;
 import com.fanglin.communion.po.WorkTypePO;
+import com.fanglin.communion.vo.MeasurementUnitVO;
+import com.fanglin.communion.vo.QuotationBigCategoryVO;
+import com.fanglin.communion.vo.WorkTypeVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.SystemDefineItemPO;
@@ -45,26 +48,7 @@ public class SystemDefineItemServiceImpl implements SystemDefineItemService {
 		List<SystemDefineItemVO> systemDefineItemVOs = new ArrayList<SystemDefineItemVO>();
 
 		for (SystemDefineItemPO systemDefineItemPO : systemDefineItemPOs) {
-			SystemDefineItemVO systemDefineItemVO = new SystemDefineItemVO();
-
-			QuotationBigCategoryPO quotationBigCategoryPO = systemDefineItemPO.getQuotationBigCategory();
-			MeasurementUnitPO measurementUnitPO = systemDefineItemPO.getMeasurementUnit();
-			WorkTypePO workTypePO = systemDefineItemPO.getWorkType();
-
-			BeanUtil.copyProperties(systemDefineItemPO, systemDefineItemVO, Arrays.asList("quotationBigCategory", "measurementUnit", "workType"));
-
-			systemDefineItemVO.setQuotationBigCategoryId(quotationBigCategoryPO.getId());
-			systemDefineItemVO.setQuotationBigCategory(quotationBigCategoryPO.getName());
-
-			systemDefineItemVO.setQuotationTypeId(quotationBigCategoryPO.getQtid());
-
-			systemDefineItemVO.setMeasurementUnitId(measurementUnitPO.getId());
-			systemDefineItemVO.setMeasurementUnit(measurementUnitPO.getName());
-
-			systemDefineItemVO.setItemWorkTypeId(workTypePO.getId());
-			systemDefineItemVO.setItemWorkType(workTypePO.getName());
-
-			systemDefineItemVOs.add(systemDefineItemVO);
+			systemDefineItemVOs.add(systemDefineItemPO.ptv(new SystemDefineItemVO(new QuotationBigCategoryVO(), new MeasurementUnitVO(), new WorkTypeVO())));
 		}
 
 		paging.setData(systemDefineItemVOs);
@@ -73,48 +57,34 @@ public class SystemDefineItemServiceImpl implements SystemDefineItemService {
 	@Override
 	public SystemDefineItemVO querySystemDefineItemByItemId(SystemDefineItemVO systemDefineItemVO, int company) throws FLException {
 
-		SystemDefineItemPO systemDefineItemPO = systemDefineItemDao.querySystemDefineItemById(systemDefineItemVO.getItemId(), company);
+		SystemDefineItemPO systemDefineItemPO = systemDefineItemDao.querySystemDefineItem(systemDefineItemVO.getNo(), company);
 
 		if (systemDefineItemPO == null) {
 			throw new FLException(200015, "系统自定义报价项不存在");
 		}
 
-		QuotationBigCategoryPO quotationBigCategoryPO = systemDefineItemPO.getQuotationBigCategory();
-		MeasurementUnitPO measurementUnitPO = systemDefineItemPO.getMeasurementUnit();
-		WorkTypePO workTypePO = systemDefineItemPO.getWorkType();
-
-		BeanUtil.copyProperties(systemDefineItemPO, systemDefineItemVO, Arrays.asList("quotationBigCategory", "measurementUnit", "workType"));
-
-		systemDefineItemVO.setQuotationBigCategoryId(quotationBigCategoryPO.getId());
-		systemDefineItemVO.setQuotationBigCategory(quotationBigCategoryPO.getName());
-
-		systemDefineItemVO.setMeasurementUnitId(measurementUnitPO.getId());
-		systemDefineItemVO.setMeasurementUnit(measurementUnitPO.getName());
-
-		systemDefineItemVO.setQuotationTypeId(quotationBigCategoryPO.getQtid());
-		systemDefineItemVO.setItemWorkTypeId(workTypePO.getId());
-		systemDefineItemVO.setItemWorkType(workTypePO.getName());
-
-		return systemDefineItemVO;
+		return systemDefineItemPO.ptv(new SystemDefineItemVO(new QuotationBigCategoryVO(), new MeasurementUnitVO(), new WorkTypeVO()));
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addSystemDefineItem(SystemDefineItemVO systemDefineItemVO, int company) throws FLException {
 
-		SystemDefineItemPO systemDefineItemPO = systemDefineItemDao.querySystemDefineItemById(systemDefineItemVO.getItemId(), company);
+		SystemDefineItemPO systemDefineItemPO = systemDefineItemDao.querySystemDefineItem(systemDefineItemVO.getNo(), company);
 
 		if (systemDefineItemPO != null) {
 			throw new FLException(200009, "系统自定义报价项编号存在");
 		}
 
 		systemDefineItemPO = new SystemDefineItemPO();
-		BeanUtil.copyProperties(systemDefineItemVO, systemDefineItemPO, Arrays.asList("quotationBigCategory", "measurementUnit", "workType"));
 
-		systemDefineItemPO.setQuotationBigCategory(new QuotationBigCategoryPO(systemDefineItemVO.getQuotationBigCategoryId()));
-		systemDefineItemPO.setMeasurementUnit(new MeasurementUnitPO(systemDefineItemVO.getMeasurementUnitId()));
-		systemDefineItemPO.setWorkType(new WorkTypePO(systemDefineItemVO.getItemWorkTypeId()));
+		BeanUtil.copyProperties(systemDefineItemVO, systemDefineItemPO, Arrays.asList("bigCategory", "unit", "workType"));
+
+		systemDefineItemPO.setQuotationBigCategory(new QuotationBigCategoryPO(systemDefineItemVO.getBigCategory().getId()));
+		systemDefineItemPO.setMeasurementUnit(new MeasurementUnitPO(systemDefineItemVO.getUnit().getId()));
+		systemDefineItemPO.setWorkType(new WorkTypePO(systemDefineItemVO.getWorkType().getId()));
 		systemDefineItemPO.setCompany(company);
+
 		systemDefineItemDao.save(systemDefineItemPO);
 
 		return 0;
@@ -130,13 +100,13 @@ public class SystemDefineItemServiceImpl implements SystemDefineItemService {
 			throw new FLException(200021, "系统自定义报价项不存在");
 		}
 
-		systemDefineItemPO.setItemName(systemDefineItemVO.getItemName());
+		systemDefineItemPO.setName((systemDefineItemVO.getName()));
 		systemDefineItemPO.setUnitPrice(systemDefineItemVO.getUnitPrice());
-		systemDefineItemPO.setQuotationItemDes(systemDefineItemVO.getQuotationItemDes());
+		systemDefineItemPO.setComment(systemDefineItemVO.getComment());
 
-		systemDefineItemPO.setQuotationBigCategory(new QuotationBigCategoryPO(systemDefineItemVO.getQuotationBigCategoryId()));
-		systemDefineItemPO.setMeasurementUnit(new MeasurementUnitPO(systemDefineItemVO.getMeasurementUnitId()));
-		systemDefineItemPO.setWorkType(new WorkTypePO(systemDefineItemVO.getItemWorkTypeId()));
+		systemDefineItemPO.setQuotationBigCategory(new QuotationBigCategoryPO(systemDefineItemVO.getBigCategory().getId()));
+		systemDefineItemPO.setMeasurementUnit(new MeasurementUnitPO(systemDefineItemVO.getUnit().getId()));
+		systemDefineItemPO.setWorkType(new WorkTypePO(systemDefineItemVO.getWorkType().getId()));
 
 		systemDefineItemDao.update(systemDefineItemPO);
 
@@ -180,9 +150,9 @@ public class SystemDefineItemServiceImpl implements SystemDefineItemService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void deleteSystemDefineItem(SystemDefineItemVO systemDefineItemVO) {
-		
+
 		SystemDefineItemPO systemDefineItemPO = systemDefineItemDao.get(systemDefineItemVO.getSdiid());
-		
+
 		systemDefineItemDao.deleteById(systemDefineItemPO.getSdiid());
 	}
 

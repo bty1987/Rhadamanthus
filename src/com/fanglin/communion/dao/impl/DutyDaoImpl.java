@@ -92,7 +92,7 @@ public class DutyDaoImpl extends DaoImpl<DutyPO> implements DutyDao {
 			query.alias("departmentType", "departmentType");
 
 			if ("name".equals(field)) {
-				query.add(query.getCriterion(DutyPO.COLUMN_NAME_STR, data, op));
+				query.add(query.getCriterion(DutyPO.COLUMN_DID_STR, Long.valueOf(data), op));
 			}
 		}
 	}

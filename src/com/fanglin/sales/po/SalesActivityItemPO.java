@@ -39,6 +39,8 @@ public class SalesActivityItemPO implements Serializable {
 	public static final short STATUS_UPGRADE_INT = 6;//升级
 	
 	public static final short STATUS_CONSUME_INT = 7;//消耗
+
+	public static final short STATUS_DISCOUNT_INT = 8;//抵现
 	
 	public static final short ISSTOCK_COUNTIN_INT = 0;//计入库存
 

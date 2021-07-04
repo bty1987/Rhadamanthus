@@ -46,6 +46,8 @@ public class SalesBalancePO implements Serializable {
 	public static final String COLUMN_VENDERTIME_STR = "venderTime";
 
 	public static final String COLUMN_POSTTIME_STR = "postTime";
+	
+	public static final String COLUMN_GRADE_STR = "sales.grade";
 
 	public static final String COLUMN_SALESCOMPANY_STR = "sales.company";
 
@@ -126,7 +128,7 @@ public class SalesBalancePO implements Serializable {
 	private short status;
 
 	private short checkStatus;
-
+	
 	private String comment;
 
 	public SalesBalancePO() {

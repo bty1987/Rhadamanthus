@@ -251,12 +251,12 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int makeDecorationPayment(DecorationPO decorationPO, long money, long psid, String createUserId) throws FLException {
+	public int makeDecorationPayment(DecorationPO decorationPO, long money, long cost, long psid, String createUserId) throws FLException {
 
 		String orderId = decorationPO.getOrderId();
 		long sumMoney = Arith.mul(Arith.div(money, 1000000), 1000000);
 
-		Short[] paymentStatus = new Short[] { DecorationPaymentPO.PAYMENTSTATUS_PAY_INT, DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_INT, DecorationPaymentPO.PAYMENTSTATUS_APPLYING_INT };
+		Short[] paymentStatus = new Short[] {DecorationPaymentPO.PAYMENTSTATUS_PAY_INT, DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_INT, DecorationPaymentPO.PAYMENTSTATUS_APPLYING_INT };
 
 		int company = decorationPO.getCompany();
 
@@ -342,6 +342,25 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			decorationPayment.setReferMoney(Arith.sub(paymentMoney, totalMoney));
 			decorationPayment.setPaymentType(scaleItem.getName());
 			decorationPayment.setSort(scaleItem.getSort());
+			decorationPayment.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+
+			decorationPayment.setCreater(creater);
+			decorationPayment.setDecoration(decorationPO);
+			decorationPayment.setCompany(company);
+
+			decorationPayment.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT);
+			decorationPayment.setOneType(DecorationPaymentPO.ONETYPE_ADD_INT);
+			decorationPayment.setTwoType(DecorationPaymentPO.TWOTYPE_DEAL_INT);
+
+			decorationPaymentDao.save(decorationPayment);
+		}
+		
+		if(cost > 0){
+			DecorationPaymentPO decorationPayment = new DecorationPaymentPO();
+
+			decorationPayment.setReferMoney(cost);
+			decorationPayment.setPaymentType("超惠包");
+			decorationPayment.setSort((short) 0);
 			decorationPayment.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 			decorationPayment.setCreater(creater);

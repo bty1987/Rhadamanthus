@@ -118,7 +118,7 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 			QuotetionFunctionAreaVO quotetionFunctionAreaVO = new QuotetionFunctionAreaVO();
 
 			quotetionFunctionAreaVO.setQid(quotetionVO.getQid());
-			quotetionFunctionAreaVO.setName(functionAreaPO.getFunctionAreaName());
+			quotetionFunctionAreaVO.setName(functionAreaPO.getName());
 
 			quotetionFunctionAreaVO.setFunctionAreaOrder(functionAreaPO.getFunctionAreaOrder());
 			quotetionFunctionAreaVO.setType(functionAreaPO.getType());
@@ -148,8 +148,8 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 				}
 
 				quotetionFunctionAreaItemVO.setQfaid(quotetionFunctionAreaPO.getQfaId());
-				quotetionFunctionAreaItemVO.setQiid(quotationItemPO.getQiId());
-				quotetionFunctionAreaItemVO.setName(quotationItemPO.getItemName());
+				quotetionFunctionAreaItemVO.setQiid(quotationItemPO.getQiid());
+				quotetionFunctionAreaItemVO.setName(quotationItemPO.getName());
 				quotetionFunctionAreaItemVO.setUnitPrice(quotationItemPO.getUnitPrice());
 				quotetionFunctionAreaItemVO.setNum(0);
 				quotetionFunctionAreaItemVO.setType(itemType);
@@ -157,7 +157,7 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 				quotetionFunctionAreaItemVO.setMeasurementUnit(quotationItemPO.getMeasurementUnit().getName());
 				quotetionFunctionAreaItemVO.setWorkType(quotationItemPO.getWorkType().getName());
 				quotetionFunctionAreaItemVO.setDiscount(quotationItemPO.getDiscount());
-				quotetionFunctionAreaItemVO.setContent(quotationItemPO.getQuotationItemDes());
+				quotetionFunctionAreaItemVO.setContent(quotationItemPO.getComment());
 
 				quotetionFunctionAreaItemVOs.add(quotetionFunctionAreaItemVO);
 			}

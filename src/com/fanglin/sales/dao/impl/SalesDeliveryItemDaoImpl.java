@@ -100,6 +100,11 @@ public class SalesDeliveryItemDaoImpl extends DaoImpl<SalesDeliveryItemPO> imple
 			} else if ("traner".equals(field)) {
 				query.alias("traner", "traner");
 				query.add(query.getCriterion(SalesDeliveryItemPO.COLUMN_TRANERID_STR, data, op));
+			} else if (SalesDeliveryItemPO.COLUMN_STATUS_STR.equals(field)) {
+				query.timeranges(SalesDeliveryItemPO.COLUMN_STATUS_STR, filter.getData());
+			} else if ("creater".equals(field)) {
+				query.alias("creater", "creater");
+				query.add(query.getCriterion(SalesDeliveryItemPO.COLUMN_CREATEID_STR, data, op));
 			}
 		}
 	}

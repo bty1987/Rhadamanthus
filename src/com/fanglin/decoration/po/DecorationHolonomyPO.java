@@ -48,6 +48,8 @@ public class DecorationHolonomyPO implements java.io.Serializable {
 	private long managePrice;
 
 	private int manageRate;
+	
+	private long originMaterialPrice;
 
 	private long materialPrice;
 
@@ -143,6 +145,15 @@ public class DecorationHolonomyPO implements java.io.Serializable {
 
 	public void setManageRate(int manageRate) {
 		this.manageRate = manageRate;
+	}
+
+	@Column(name = "originMaterialPrice")
+	public long getOriginMaterialPrice() {
+		return originMaterialPrice;
+	}
+
+	public void setOriginMaterialPrice(long originMaterialPrice) {
+		this.originMaterialPrice = originMaterialPrice;
 	}
 
 	@Column(name = "materialPrice")

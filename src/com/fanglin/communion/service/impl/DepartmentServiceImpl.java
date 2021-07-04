@@ -162,11 +162,16 @@ public class DepartmentServiceImpl implements DepartmentService {
 		int dtid = 0;
 
 		if (departmentVO.getType() != null && departmentVO.getType().getDtid() != 0) {
-
 			dtid = departmentVO.getType().getDtid();
 		}
-		
-		List<DepartmentPO> departmentPOs = departmentDao.pageDepartmentByName(new Paging(0, 10), departmentVO.getName(), company, dtid);
+
+		Integer _company = company;
+
+		if (departmentVO != null && departmentVO.getCompany() != null && departmentVO.getCompany() == 0) {
+			_company = null;
+		}
+
+		List<DepartmentPO> departmentPOs = departmentDao.pageDepartmentByName(new Paging(0, 10), departmentVO.getName(), _company, dtid);
 		List<DepartmentVO> departmentVOs = new ArrayList<DepartmentVO>();
 
 		for (DepartmentPO departmentPO : departmentPOs) {

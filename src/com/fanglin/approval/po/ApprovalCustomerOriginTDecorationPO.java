@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.customer.po.CustomerOriginPO;
+import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
@@ -28,8 +29,8 @@ public class ApprovalCustomerOriginTDecorationPO implements Serializable {
 	private CustomerOriginPO customerOrigin;
 
 	private short type;
-
-	private String salesmanType;
+	
+	private DecorationBusitypePO decorationBusitype;
 
 	private String houseType;
 
@@ -40,6 +41,17 @@ public class ApprovalCustomerOriginTDecorationPO implements Serializable {
 	private UserPO salesman;
 	
 	private short typeness;
+
+	public ApprovalCustomerOriginTDecorationPO() {
+		super();
+	}
+
+	public ApprovalCustomerOriginTDecorationPO(CustomerOriginPO customerOrigin, DecorationBusitypePO decorationBusitype, UserPO salesman) {
+		super();
+		this.customerOrigin = customerOrigin;
+		this.decorationBusitype = decorationBusitype;
+		this.salesman = salesman;
+	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -80,13 +92,14 @@ public class ApprovalCustomerOriginTDecorationPO implements Serializable {
 		this.type = type;
 	}
 
-	@Column(name = "salesmanType")
-	public String getSalesmanType() {
-		return salesmanType;
+	@ManyToOne
+	@JoinColumn(nullable = true, name = "dbid", referencedColumnName = "dbid")
+	public DecorationBusitypePO getDecorationBusitype() {
+		return decorationBusitype;
 	}
 
-	public void setSalesmanType(String salesmanType) {
-		this.salesmanType = salesmanType;
+	public void setDecorationBusitype(DecorationBusitypePO decorationBusitype) {
+		this.decorationBusitype = decorationBusitype;
 	}
 
 	@Column(name = "houseType")

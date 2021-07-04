@@ -8,13 +8,13 @@ import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 
 public interface ExtensionItemDao extends Dao<ExtensionItemPO> {
 
-	public List<ExtensionItemPO> queryExtensionItemByEid(Long eId);
+	public List<ExtensionItemPO> queryExtensionItem(Long eId);
 
-	public List<ExtensionItemPO> queryExtensionItemByEids(List<Long> eids);
+	public List<ExtensionItemPO> queryExtensionItem(List<Long> eids);
 
-	public long countExtensionItemForFunctionArea(long qfaid);
+	public long countExtensionItem(long qfaid);
 
-	public long countExtensionItemForFunctionArea(List<QuotationFunctionAreaPO> quotationFunctionAreas);
+	public long countExtensionItem(List<QuotationFunctionAreaPO> quotationFunctionAreas);
 
 	public int deleteExtensionItem(long eid);
 

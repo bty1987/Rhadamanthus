@@ -18,4 +18,8 @@ public interface AoodsDao extends Dao<AoodsPO> {
 
 	public int countAoods(long gid, int bompany);
 
+	public int countAoods(int company);
+
+	public int copyAoods(int bompany, int company);
+
 }

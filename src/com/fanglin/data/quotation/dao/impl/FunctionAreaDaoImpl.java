@@ -42,25 +42,13 @@ public class FunctionAreaDaoImpl extends DaoImpl<FunctionAreaPO> implements Func
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<FunctionAreaPO> queryFunctionAreaByVersionId(String versionId) {
+	public List<FunctionAreaPO> queryFunctionArea(String versionId) {
 		return createCriteria(FunctionAreaPO.class).add(Restrictions.eq("quotationVersion.no", versionId)).addOrder(Order.asc("functionAreaOrder")).list();
 	}
 
 	@Override
-	public FunctionAreaPO queryFunctionAreaByIdAVersionId(String functionAreaId, String versionId) {
-		return (FunctionAreaPO) session().createCriteria(FunctionAreaPO.class).add(Restrictions.eq("functionAreaId", functionAreaId)).add(Restrictions.eq("quotationVersion.no", versionId)).uniqueResult();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<FunctionAreaPO> queryFunctionAreaForCommonByVersionId(String versionId) {
-		return createCriteria(FunctionAreaPO.class).add(Restrictions.not(Restrictions.eq("functionAreaId", ""))).add(Restrictions.eq("quotationVersion.no", versionId)).add(Restrictions.eq("functionAreaType", "普通")).addOrder(Order.asc("functionAreaOrder")).list();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<FunctionAreaPO> queryFunctionAreaForSpecialByVersionId(String versionId) {
-		return createCriteria(FunctionAreaPO.class).add(Restrictions.not(Restrictions.eq("functionAreaId", ""))).add(Restrictions.eq("quotationVersion.no", versionId)).add(Restrictions.ne("functionAreaType", "普通")).addOrder(Order.asc("functionAreaOrder")).list();
+	public FunctionAreaPO queryFunctionArea(String no, String versionId) {
+		return (FunctionAreaPO) session().createCriteria(FunctionAreaPO.class).add(Restrictions.eq("no", no)).add(Restrictions.eq("quotationVersion.no", versionId)).uniqueResult();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
@@ -75,9 +63,9 @@ public class FunctionAreaDaoImpl extends DaoImpl<FunctionAreaPO> implements Func
 			String op = filter.getOp();
 
 			if ("versionId".equals(field)) {
-				query.add(query.getCriterion("quotationVersion.no", (data), op));
+				query.add(query.getCriterion("quotationVersion.no", data, op));
 			} else if ("name".equals(field)) {
-				query.add(query.getCriterion("functionAreaName", data, op));
+				query.add(query.getCriterion("name", data, op));
 			} else {
 				query.add(query.getCriterion(field, data, op));
 			}

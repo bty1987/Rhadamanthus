@@ -233,8 +233,8 @@ public class QuotationServiceImpl implements QuotationService {
 
 		checkQuotationForDefaultByOrderId(quotationPO.getOrderId());
 
-		quotationPO.setDecorationStyle(quotationVO.getDecorationStyle());
-		quotationPO.setQuotationName(quotationVO.getQuotationName());
+		quotationPO.setStyle(quotationVO.getStyle());
+		quotationPO.setName(quotationVO.getName());
 		quotationPO.setContent(quotationVO.getContent());
 
 		quotationDao.update(quotationPO);
@@ -459,7 +459,7 @@ public class QuotationServiceImpl implements QuotationService {
 
 		BeanUtil.copyProperties(quotationVO, quotationPO, Arrays.asList("qid", "creater"));
 
-		quotationPO.ptp(orderId, userDao.queryUserByUserId(userId), copyQuotationPO.getQuotationName(), copyQuotationPO.getDecorationStyle());
+		quotationPO.ptp(orderId, userDao.queryUserByUserId(userId), copyQuotationPO.getName(), copyQuotationPO.getStyle());
 
 		if (orderId.equals(copyQuotationPO.getOrderId())) {
 			throw new FLException(200019, "拷贝报价不能在订单内完成");
@@ -573,6 +573,7 @@ public class QuotationServiceImpl implements QuotationService {
 		quotationPO.setTrafficRate(quotationVO.getTrafficRate());
 		quotationPO.setDisPrice(quotationVO.getDisPrice());
 		quotationPO.setBasePrice(quotationVO.getBasePrice());
+		quotationPO.setCostPrice(quotationVO.getCostPrice());
 	}
 
 	@Transactional(rollbackFor = Exception.class)
@@ -655,11 +656,11 @@ public class QuotationServiceImpl implements QuotationService {
 
 		List<QuotationFunctionAreaPO> quotationFunctionAreas = quotationFunctionAreaDao.queryQuotationFunctionAreaByQuotationId(qId);
 
-		if (extensionItemDao.countExtensionItemForFunctionArea(quotationFunctionAreas) > 0) {
+		if (extensionItemDao.countExtensionItem(quotationFunctionAreas) > 0) {
 			throw new FLException(200028, "功能区存在拓展项");
 		}
 
-		if (addReduceItemDao.countAddReduceItemForFunctionArea(quotationFunctionAreas) > 0) {
+		if (addReduceItemDao.countAddReduceItem(quotationFunctionAreas) > 0) {
 			throw new FLException(200032, "功能区存在增减项");
 		}
 

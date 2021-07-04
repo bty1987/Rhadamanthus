@@ -51,7 +51,7 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 	@Override
 	public List<ExtensionItemVO> queryExtensionItemByEid(ExtensionItemVO extensionItemVO) {
 
-		List<ExtensionItemPO> extensionItemPOs = extensionItemDao.queryExtensionItemByEid(extensionItemVO.getEid());
+		List<ExtensionItemPO> extensionItemPOs = extensionItemDao.queryExtensionItem(extensionItemVO.getEid());
 		List<ExtensionItemVO> extensionItemVOs = handleExtensionItem(extensionItemPOs);
 
 		return extensionItemVOs;
@@ -64,7 +64,7 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 			return null;
 		}
 
-		List<ExtensionItemPO> extensionItemPOs = extensionItemDao.queryExtensionItemByEids(extensionIds);
+		List<ExtensionItemPO> extensionItemPOs = extensionItemDao.queryExtensionItem(extensionIds);
 		List<ExtensionItemVO> extensionItemVOs = handleExtensionItem(extensionItemPOs);
 
 		return extensionItemVOs;
@@ -152,29 +152,31 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 
 		List<ExtensionItemVO> extensionItemVOs = new ArrayList<ExtensionItemVO>();
 
-		ExtensionItemVO extensionItemVO;
-
 		for (ExtensionItemPO extensionItemPO : extensionItemPOs) {
-
-			extensionItemVO = new ExtensionItemVO();
-
-			BeanUtil.copyProperties(extensionItemPO, extensionItemVO, Arrays.asList("quotationFunctionArea"));
-
-			extensionItemVO.setQuotationFunctionAreaId(extensionItemPO.getQuotationFunctionArea().getQfaId());
-			extensionItemVO.setQuotationFunctionAreaName(extensionItemPO.getQuotationFunctionArea().getFunctionAreaName());
-
-			if (extensionItemPO.getQuoteItemId() != 0) {
-
-				QuotationItemPO quotationItemPO = quotationItemDao.get(extensionItemPO.getQuoteItemId());
-
-				if (quotationItemPO != null) {
-					extensionItemVO.setContent(quotationItemPO.getQuotationItemDes());
-				}
-			}
-
-			extensionItemVOs.add(extensionItemVO);
+			extensionItemVOs.add(ptv(extensionItemPO));
 		}
 		return extensionItemVOs;
+	}
+
+	public ExtensionItemVO ptv(ExtensionItemPO extensionItemPO) {
+
+		ExtensionItemVO extensionItemVO = new ExtensionItemVO();
+
+		BeanUtil.copyProperties(extensionItemPO, extensionItemVO, Arrays.asList("quotationFunctionArea"));
+
+		extensionItemVO.setQuotationFunctionAreaId(extensionItemPO.getQuotationFunctionArea().getQfaId());
+		extensionItemVO.setQuotationFunctionAreaName(extensionItemPO.getQuotationFunctionArea().getFunctionAreaName());
+
+		if (extensionItemPO.getQuoteItemId() != 0) {
+
+			QuotationItemPO quotationItemPO = quotationItemDao.get(extensionItemPO.getQuoteItemId());
+
+			if (quotationItemPO != null) {
+				extensionItemVO.setContent(quotationItemPO.getComment());
+			}
+		}
+
+		return extensionItemVO;
 	}
 
 	private void checkExtension(ExtensionPO extensionPO) throws FLException {

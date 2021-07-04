@@ -13,6 +13,7 @@ package com.fanglin.quotation.vo;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
 
@@ -24,9 +25,9 @@ public class AddReduceVO implements Serializable {
 
 	private String orderId;
 
-	private Short type;
+	private Long dpId;
 
-	private Long total;
+	private Short type;
 
 	private Long undisPrice;
 
@@ -36,17 +37,21 @@ public class AddReduceVO implements Serializable {
 
 	private Long calPrice;
 
+	private Long managePrice;
+
+	private Integer manageRate;
+
+	private Long total;
+
+	private Integer discount;
+
 	private Integer status;
 
 	private Timestamp createTime;
 
 	private String content;
 
-	private Long dpId;
-
-	private Long managePrice;
-
-	private Integer manageRate;
+	private List<AddReduceItemVO> addReduceItems;
 
 	public Long getArId() {
 		return arId;
@@ -112,6 +117,14 @@ public class AddReduceVO implements Serializable {
 		this.calPrice = calPrice;
 	}
 
+	public Integer getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Integer discount) {
+		this.discount = discount;
+	}
+
 	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
@@ -159,6 +172,14 @@ public class AddReduceVO implements Serializable {
 
 	public void setManageRate(Integer manageRate) {
 		this.manageRate = manageRate;
+	}
+
+	public List<AddReduceItemVO> getAddReduceItems() {
+		return addReduceItems;
+	}
+
+	public void setAddReduceItems(List<AddReduceItemVO> addReduceItems) {
+		this.addReduceItems = addReduceItems;
 	}
 
 }

@@ -32,6 +32,8 @@ public class SalesDeliveryItemVO implements Serializable {
 	private Timestamp finishTime;
 	
 	private Timestamp protranTime;
+	
+	private UserBaseVO creater;
 
 	private UserBaseVO traner;
 
@@ -48,7 +50,7 @@ public class SalesDeliveryItemVO implements Serializable {
 	public SalesDeliveryItemVO() {
 		super();
 	}
-	public SalesDeliveryItemVO(Long sdiid, SalesVO sales, SalesItemVO salesItem, Short status, Timestamp createTime, Timestamp tranTime, Timestamp checkTime, Timestamp confirmTime, Timestamp finishTime, Timestamp protranTime, UserBaseVO traner, UserBaseVO checker, UserBaseVO confirmer, UserBaseVO finisher, String comment, Integer company) {
+	public SalesDeliveryItemVO(Long sdiid, SalesVO sales, SalesItemVO salesItem, Short status, Timestamp createTime, Timestamp tranTime, Timestamp checkTime, Timestamp confirmTime, Timestamp finishTime, Timestamp protranTime, UserBaseVO creater, UserBaseVO traner, UserBaseVO checker, UserBaseVO confirmer, UserBaseVO finisher, String comment, Integer company) {
 		super();
 		this.sdiid = sdiid;
 		this.sales = sales;
@@ -60,6 +62,7 @@ public class SalesDeliveryItemVO implements Serializable {
 		this.confirmTime = confirmTime;
 		this.finishTime = finishTime;
 		this.protranTime = protranTime;
+		this.creater = creater;
 		this.traner = traner;
 		this.checker = checker;
 		this.confirmer = confirmer;
@@ -68,10 +71,11 @@ public class SalesDeliveryItemVO implements Serializable {
 		this.company = company;
 	}
 
-	public SalesDeliveryItemVO(SalesVO sales, SalesItemVO salesItem, UserBaseVO traner, UserBaseVO checker, UserBaseVO confirmer, UserBaseVO finisher, UserBaseVO balancer) {
+	public SalesDeliveryItemVO(SalesVO sales, SalesItemVO salesItem, UserBaseVO creater, UserBaseVO traner, UserBaseVO checker, UserBaseVO confirmer, UserBaseVO finisher, UserBaseVO balancer) {
 		super();
 		this.sales = sales;
 		this.salesItem = salesItem;
+		this.creater = creater;
 		this.traner = traner;
 		this.checker = checker;
 		this.confirmer = confirmer;
@@ -164,6 +168,14 @@ public class SalesDeliveryItemVO implements Serializable {
 		this.protranTime = protranTime;
 	}
 
+	public UserBaseVO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserBaseVO creater) {
+		this.creater = creater;
+	}
+	
 	public UserBaseVO getTraner() {
 		return traner;
 	}

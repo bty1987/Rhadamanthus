@@ -145,6 +145,8 @@ public class ConstructionServiceImpl implements ConstructionService {
 		BeanUtil.copyProperties(constructionPO, constructionVO, Arrays.asList("decoration", "supervisor", "locker"));
 
 		constructionVO.setSupervisor(new UserBaseVO());
+		
+		constructionVO.setLocker(new UserBaseVO());
 
 		if (constructionPO.getSupervisor() != null) {
 			BeanUtil.copyProperties(constructionPO.getSupervisor(), constructionVO.getSupervisor(), Arrays.asList("duty", "dept"));

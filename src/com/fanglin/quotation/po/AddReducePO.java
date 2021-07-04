@@ -55,11 +55,11 @@ public class AddReducePO implements Serializable {
 
 	private long arId;
 
+	private long dpId;
+
 	private String orderId;
 
 	private short type;
-
-	private long total;
 
 	private long undisPrice;
 
@@ -69,17 +69,19 @@ public class AddReducePO implements Serializable {
 
 	private long calPrice;
 
+	private long managePrice;
+
+	private int manageRate;
+
+	private long total;
+
+	private int discount;
+
 	private int status;
 
 	private Timestamp createTime;
 
 	private String content;
-
-	private long dpId;
-
-	private long managePrice;
-
-	private int manageRate;
 
 	@Id
 	@Column(name = "arId")
@@ -152,6 +154,15 @@ public class AddReducePO implements Serializable {
 
 	public void setCalPrice(long calPrice) {
 		this.calPrice = calPrice;
+	}
+
+	@Column(name = "discount")
+	public int getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(int discount) {
+		this.discount = discount;
 	}
 
 	@Column(name = "status")

@@ -24,42 +24,49 @@ import com.fanglin.utils.Paging;
 
 @Repository("systemDefineItemDao")
 public class SystemDefineItemDaoImpl extends DaoImpl<SystemDefineItemPO> implements SystemDefineItemDao {
-	
-	public SystemDefineItemDaoImpl(){
+
+	public SystemDefineItemDaoImpl() {
 		super(SystemDefineItemPO.class);
 	}
 
 	@Override
-	public List<SystemDefineItemPO> pageSystemDefineItem(Paging paging, List<Filter> filters,int company){
-		
+	public List<SystemDefineItemPO> pageSystemDefineItem(Paging paging, List<Filter> filters, int company) {
+
 		PagingQuery<SystemDefineItemPO> query = pagingQuery(paging, SystemDefineItemPO.class);
-		
+
 		queryFilterExcute(query, filters);
-		
-		query.asc("itemId");
-		
-		return query.add(Restrictions.eq(SystemDefineItemPO.COLUMN_COMPANY_STR,company)).list();
-	}
-	
-	@Override
-	public SystemDefineItemPO querySystemDefineItemById(String itemId,int company){
-		return (SystemDefineItemPO)session().createCriteria(SystemDefineItemPO.class).add(Restrictions.and(Restrictions.eq("itemId", itemId),(Restrictions.eq(SystemDefineItemPO.COLUMN_COMPANY_STR, company)))).uniqueResult();
-		
+
+		query.asc("no");
+
+		return query.add(Restrictions.eq(SystemDefineItemPO.COLUMN_COMPANY_STR, company)).list();
 	}
 
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
-		
-		if(filters != null){
-			for(Filter filter: filters){
-				if("quotationBigCategoryId".equals(filter.getField())){
-					query.add(query.getCriterion("quotationBigCategory.id", Integer.parseInt(filter.getData()), filter.getOp()));
-				}else if("quotationWorkTypeId".equals(filter.getField())){
-					query.add(query.getCriterion("workType.id", Integer.parseInt(filter.getData()), filter.getOp()));
-				}else if("status".equals(filter.getField())){
-					query.add(query.getCriterion("status", Short.parseShort(filter.getData()), filter.getOp()));
-				}else{
-					query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
-				}
+	@Override
+	public SystemDefineItemPO querySystemDefineItem(String no, int company) {
+		return (SystemDefineItemPO) session().createCriteria(SystemDefineItemPO.class).add(Restrictions.and(Restrictions.eq("no", no), (Restrictions.eq(SystemDefineItemPO.COLUMN_COMPANY_STR, company)))).uniqueResult();
+
+	}
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters == null) {
+			return;
+		}
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if ("name".equals(field)) {
+				query.add(query.getCriterion("name", data, op));
+			} else if ("quotationBigCategoryId".equals(field)) {
+				query.add(query.getCriterion("quotationBigCategory.id", Integer.parseInt(data), op));
+			} else if ("quotationWorkTypeId".equals(field)) {
+				query.add(query.getCriterion("workType.id", Integer.parseInt(data), op));
+			} else if ("status".equals(field)) {
+				query.add(query.getCriterion("status", Short.parseShort(data), op));
 			}
 		}
 	}

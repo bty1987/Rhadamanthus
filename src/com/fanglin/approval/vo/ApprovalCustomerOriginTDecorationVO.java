@@ -3,6 +3,7 @@ package com.fanglin.approval.vo;
 import java.io.Serializable;
 
 import com.fanglin.customer.vo.CustomerOriginVO;
+import com.fanglin.data.common.vo.DecorationBusitypeVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
 public class ApprovalCustomerOriginTDecorationVO implements Serializable {
@@ -17,7 +18,7 @@ public class ApprovalCustomerOriginTDecorationVO implements Serializable {
 
 	private Short type;
 
-	private String salesmanType;
+	private DecorationBusitypeVO decorationBusitype;
 
 	private String houseType;
 
@@ -28,6 +29,17 @@ public class ApprovalCustomerOriginTDecorationVO implements Serializable {
 	private UserBaseVO salesman;
 	
 	private short typeness;
+
+	public ApprovalCustomerOriginTDecorationVO() {
+		super();
+	}
+
+	public ApprovalCustomerOriginTDecorationVO(CustomerOriginVO customerOrigin, DecorationBusitypeVO decorationBusitype, UserBaseVO salesman) {
+		super();
+		this.customerOrigin = customerOrigin;
+		this.decorationBusitype = decorationBusitype;
+		this.salesman = salesman;
+	}
 
 	public short getTypeness() {
 		return typeness;
@@ -69,12 +81,12 @@ public class ApprovalCustomerOriginTDecorationVO implements Serializable {
 		this.type = type;
 	}
 
-	public String getSalesmanType() {
-		return salesmanType;
+	public DecorationBusitypeVO getDecorationBusitype() {
+		return decorationBusitype;
 	}
 
-	public void setSalesmanType(String salesmanType) {
-		this.salesmanType = salesmanType;
+	public void setDecorationBusitype(DecorationBusitypeVO decorationBusitype) {
+		this.decorationBusitype = decorationBusitype;
 	}
 
 	public String getHouseType() {

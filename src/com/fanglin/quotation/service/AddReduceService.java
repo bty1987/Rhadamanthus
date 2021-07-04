@@ -20,11 +20,11 @@ import com.fanglin.utils.Paging;
 
 public interface AddReduceService {
 
-	public void pageAddReduceByOrderId(Paging paging, List<Filter> filters, AddReduceVO addReduceVO);
+	public void pageAddReduceByOrderId(Paging paging, List<Filter> filters, AddReduceVO addReduceVO) throws FLException;
 
-	public List<AddReduceVO> queryAddReduceByOrderId(AddReduceVO addReduceVO);
+	public List<AddReduceVO> queryAddReduceByOrderId(AddReduceVO addReduceVO) throws FLException;
 
-	public List<AddReduceVO> queryAddReduceForPayedByOrderId(AddReduceVO addReduceVO);
+	public List<AddReduceVO> queryAddReduceForPayedByOrderId(AddReduceVO addReduceVO) throws FLException;
 
 	public AddReduceVO queryAddReduceByArid(AddReduceVO addReduceVO) throws FLException;
 

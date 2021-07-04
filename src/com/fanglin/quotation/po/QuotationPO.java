@@ -45,27 +45,21 @@ public class QuotationPO implements Serializable {
 
 	private String orderId;
 
-	private String quotationName;
+	private String name;
 
-	private String decorationStyle;
+	private String style;
 
 	private Timestamp createTime;
 
 	private UserPO creater;
 
-	private String content;
+	private int discount;
 
 	private long undisPrice;
 
 	private long disPrice;
 
-	private int discount;
-
 	private long totalPrice;
-
-	private short defaults;
-
-	private short status;
 
 	private long managePrice;
 
@@ -77,17 +71,25 @@ public class QuotationPO implements Serializable {
 
 	private long basePrice;
 
+	private long costPrice;
+
+	private short defaults;
+
+	private short status;
+
+	private String content;
+
+	public QuotationPO() {
+		super();
+	}
+
 	public QuotationPO(long qid) {
 		this.qid = qid;
 	}
 
-	public QuotationPO() {
-
-	}
-
 	@Id
 	@GeneratedValue
-	@Column(name = "qId")
+	@Column(name = "qid")
 	public long getQid() {
 		return qid;
 	}
@@ -115,22 +117,22 @@ public class QuotationPO implements Serializable {
 		this.creater = creater;
 	}
 
-	@Column(name = "quotationName")
-	public String getQuotationName() {
-		return quotationName;
+	@Column(name = "name")
+	public String getName() {
+		return name;
 	}
 
-	public void setQuotationName(String quotationName) {
-		this.quotationName = quotationName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	@Column(name = "decorationStyle")
-	public String getDecorationStyle() {
-		return decorationStyle;
+	@Column(name = "style")
+	public String getStyle() {
+		return style;
 	}
 
-	public void setDecorationStyle(String decorationStyle) {
-		this.decorationStyle = decorationStyle;
+	public void setStyle(String style) {
+		this.style = style;
 	}
 
 	@Column(name = "createTime")
@@ -250,16 +252,27 @@ public class QuotationPO implements Serializable {
 		this.basePrice = basePrice;
 	}
 
+	@Column(name = "costPrice")
+	public long getCostPrice() {
+		return costPrice;
+	}
+
+	public void setCostPrice(long costPrice) {
+		this.costPrice = costPrice;
+	}
+
 	public void ptp(String orderId, UserPO userPO, String name, String style) {
 
 		this.setOrderId(orderId);
 		this.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		this.setCreater(userPO);
-		this.setQuotationName(name);
-		this.setDecorationStyle(style);
+		this.setName(name);
+		this.setStyle(style);
 		this.setDiscount(10000);
 		this.setTotalPrice(0L);
-		this.setContent("");
+
 		this.setDefaults(QuotationPO.DEFAULTS_DEFAULT_INT); // 设置复制报价为默认报价
+
+		this.setContent("");
 	}
 }

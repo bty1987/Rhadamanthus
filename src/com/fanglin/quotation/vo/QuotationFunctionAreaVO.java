@@ -7,7 +7,7 @@ public class QuotationFunctionAreaVO implements Serializable {
 
 	private static final long serialVersionUID = 793543025071046420L;
 
-	private Integer id; // 配合页面存储信息
+	private Long id; // 配合页面存储信息
 
 	private Long qfaId;
 
@@ -23,13 +23,15 @@ public class QuotationFunctionAreaVO implements Serializable {
 
 	private Long total;
 
+	private QuotationFunctionAreaParamVO quotationFunctionAreaParam;
+
 	private List<QuotationFunctionAreaItemVO> quotationFunctionAreaItems;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -73,14 +75,6 @@ public class QuotationFunctionAreaVO implements Serializable {
 		return sum;
 	}
 
-	public List<QuotationFunctionAreaItemVO> getQuotationFunctionAreaItems() {
-		return quotationFunctionAreaItems;
-	}
-
-	public void setQuotationFunctionAreaItems(List<QuotationFunctionAreaItemVO> quotationFunctionAreaItems) {
-		this.quotationFunctionAreaItems = quotationFunctionAreaItems;
-	}
-
 	public Short getType() {
 		return type;
 	}
@@ -95,6 +89,22 @@ public class QuotationFunctionAreaVO implements Serializable {
 
 	public void setTotal(Long total) {
 		this.total = total;
+	}
+
+	public QuotationFunctionAreaParamVO getQuotationFunctionAreaParam() {
+		return quotationFunctionAreaParam;
+	}
+
+	public void setQuotationFunctionAreaParam(QuotationFunctionAreaParamVO quotationFunctionAreaParam) {
+		this.quotationFunctionAreaParam = quotationFunctionAreaParam;
+	}
+
+	public List<QuotationFunctionAreaItemVO> getQuotationFunctionAreaItems() {
+		return quotationFunctionAreaItems;
+	}
+
+	public void setQuotationFunctionAreaItems(List<QuotationFunctionAreaItemVO> quotationFunctionAreaItems) {
+		this.quotationFunctionAreaItems = quotationFunctionAreaItems;
 	}
 
 }

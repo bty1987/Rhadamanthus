@@ -21,18 +21,18 @@ public class ExtensionItemDaoImpl extends DaoImpl<ExtensionItemPO> implements Ex
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ExtensionItemPO> queryExtensionItemByEid(Long eId) {
+	public List<ExtensionItemPO> queryExtensionItem(Long eId) {
 		return session().createCriteria(ExtensionItemPO.class).add(Restrictions.eq(ExtensionItemPO.COLUMN_EID_STR, eId)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ExtensionItemPO> queryExtensionItemByEids(List<Long> extensionItemIDs) {
+	public List<ExtensionItemPO> queryExtensionItem(List<Long> extensionItemIDs) {
 		return session().createCriteria(ExtensionItemPO.class).add(Restrictions.in(ExtensionItemPO.COLUMN_EID_STR, extensionItemIDs)).list();
 	}
 
 	@Override
-	public long countExtensionItemForFunctionArea(long qfaid) {
+	public long countExtensionItem(long qfaid) {
 
 		String sql = "select count(*) from quotation.extensionitem where quotationFunctionAreaId =:qfaid";
 
@@ -42,7 +42,7 @@ public class ExtensionItemDaoImpl extends DaoImpl<ExtensionItemPO> implements Ex
 	}
 
 	@Override
-	public long countExtensionItemForFunctionArea(List<QuotationFunctionAreaPO> quotationFunctionAreas) {
+	public long countExtensionItem(List<QuotationFunctionAreaPO> quotationFunctionAreas) {
 		return (Long) createCriteria(ExtensionItemPO.class).add(Restrictions.in("quotationFunctionArea", quotationFunctionAreas)).setProjection(Projections.rowCount()).uniqueResult();
 	}
 

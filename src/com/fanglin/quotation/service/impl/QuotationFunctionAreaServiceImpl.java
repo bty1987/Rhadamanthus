@@ -31,12 +31,15 @@ import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
+import com.fanglin.quotation.dao.QuotationFunctionAreaParamDao;
 import com.fanglin.quotation.dao.SelectionItemDao;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
+import com.fanglin.quotation.po.QuotationFunctionAreaParamPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.service.QuotationFunctionAreaService;
 import com.fanglin.quotation.vo.QuotationFunctionAreaItemVO;
+import com.fanglin.quotation.vo.QuotationFunctionAreaParamVO;
 import com.fanglin.quotation.vo.QuotationFunctionAreaVO;
 import com.fanglin.quotation.vo.QuotationVO;
 import com.fanglin.system.dao.SystemConfigDao;
@@ -66,6 +69,9 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 	private QuotationFunctionAreaDao quotationFunctionAreaDao;
 
 	@Autowired
+	private QuotationFunctionAreaParamDao quotationFunctionAreaParamDao;
+
+	@Autowired
 	private QuotationFunctionAreaItemDao quotationFunctionAreaItemDao;
 
 	@Autowired
@@ -87,9 +93,18 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 		List<QuotationFunctionAreaPO> quotationFunctionAreaPOs = quotationFunctionAreaDao.queryQuotationFunctionAreaByQuotationId(quotationVO.getQid());
 
 		for (QuotationFunctionAreaPO quotationFunctionAreaPO : quotationFunctionAreaPOs) {
+
 			QuotationFunctionAreaVO quotationFunctionAreaVO = new QuotationFunctionAreaVO();
 
 			BeanUtil.copyProperties(quotationFunctionAreaPO, quotationFunctionAreaVO);
+
+			QuotationFunctionAreaParamPO quotationFunctionAreaParamPO = quotationFunctionAreaParamDao.queryQuotationFunctionAreaParam(quotationFunctionAreaPO.getQfaId());
+
+			if (quotationFunctionAreaParamPO != null) {
+				quotationFunctionAreaVO.setQuotationFunctionAreaParam(new QuotationFunctionAreaParamVO());
+
+				BeanUtil.copyPropertie(quotationFunctionAreaParamPO, quotationFunctionAreaVO.getQuotationFunctionAreaParam());
+			}
 
 			List<QuotationFunctionAreaItemVO> quotationFunctionAreaItemVOs = new ArrayList<QuotationFunctionAreaItemVO>();
 
@@ -106,8 +121,8 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 
 					QuotationItemPO quotationItemPO = quotationFunctionAreaItemPO.getQuotationItem();
 
-					quotationFunctionAreaItemVO.setQuotationItemId(quotationItemPO.getQiId());
-					quotationFunctionAreaItemVO.setContent(quotationItemPO.getQuotationItemDes());
+					quotationFunctionAreaItemVO.setQuotationItemId(quotationItemPO.getQiid());
+					quotationFunctionAreaItemVO.setContent(quotationItemPO.getComment());
 				}
 
 				quotationFunctionAreaItemVOs.add(quotationFunctionAreaItemVO);
@@ -150,23 +165,22 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public List<QuotationFunctionAreaVO> addQuotationFunctionAreaByFunctionAreaIds(List<Long> functionAreaIds, QuotationVO quotationVO) throws FLException {
+	public List<QuotationFunctionAreaVO> addQuotationFunctionAreaByFunctionAreaIds(List<QuotationFunctionAreaVO> quotationFunctionAreaVOs, QuotationVO quotationVO) throws FLException {
 
 		QuotationPO quotationPO = checkQuotationForStatusByEnabled(quotationVO.getQid());
 
 		QuotationServiceImpl.convertQuotationVOToPOForAdvance(quotationVO, quotationPO);
 
-		List<QuotationFunctionAreaVO> quotationFunctionAreaVOs = new ArrayList<QuotationFunctionAreaVO>();
+		List<QuotationFunctionAreaVO> _quotationFunctionAreaVOs = new ArrayList<QuotationFunctionAreaVO>();
 
 		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig("quotationFunctionAreaIndex");
 		Short index = systemConfigPO == null ? 0 : Short.valueOf(systemConfigPO.getValue());
 
-		for (Long functionAreaId : functionAreaIds) {
-			FunctionAreaPO functionAreaPO = functionAreaDao.get(functionAreaId);
+		for (QuotationFunctionAreaVO quotationFunctionAreaVO : quotationFunctionAreaVOs) {
 
-			QuotationFunctionAreaVO quotationFunctionAreaVO = new QuotationFunctionAreaVO();
+			FunctionAreaPO functionAreaPO = functionAreaDao.get(quotationFunctionAreaVO.getId());
 
-			quotationFunctionAreaVO.setFunctionAreaName(functionAreaPO.getFunctionAreaName());
+			quotationFunctionAreaVO.setFunctionAreaName(functionAreaPO.getName());
 			quotationFunctionAreaVO.setFunctionAreaOrder(functionAreaPO.getFunctionAreaOrder());
 			quotationFunctionAreaVO.setFunctionAreaType(functionAreaPO.getFunctionAreaType());
 			quotationFunctionAreaVO.setType(functionAreaPO.getType());
@@ -180,10 +194,23 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 
 			quotationFunctionAreaDao.saveOrUpdate(quotationFunctionAreaPO);
 
-			List<FunctionAreaItemPO> functionAreaItemPOs = functionAreaItemDao.queryFunctionAreaItemByFunctionAreaId(functionAreaId);
+			if (quotationFunctionAreaVO.getQuotationFunctionAreaParam() != null) {
+				QuotationFunctionAreaParamPO quotationFunctionAreaParamPO = new QuotationFunctionAreaParamPO();
+
+				BeanUtil.copyPropertie(quotationFunctionAreaVO.getQuotationFunctionAreaParam(), quotationFunctionAreaParamPO);
+
+				quotationFunctionAreaParamPO.setQfaid(quotationFunctionAreaPO.getQfaId());
+
+				quotationFunctionAreaParamDao.save(quotationFunctionAreaParamPO);
+
+				BeanUtil.copyPropertie(quotationFunctionAreaParamPO, quotationFunctionAreaVO.getQuotationFunctionAreaParam());
+			}
+
+			List<FunctionAreaItemPO> functionAreaItemPOs = functionAreaItemDao.queryFunctionAreaItemByFunctionAreaId(quotationFunctionAreaVO.getId());
 			List<QuotationFunctionAreaItemVO> quotationFunctionAreaItemVOs = new ArrayList<QuotationFunctionAreaItemVO>();
 
 			for (FunctionAreaItemPO functionAreaItemPO : functionAreaItemPOs) {
+
 				short itemType = QuotationFunctionAreaItemPO.TYPE_QUOTATION_COMMON_SHORT;
 				QuotationFunctionAreaItemVO quotationFunctionAreaItemVO = new QuotationFunctionAreaItemVO();
 
@@ -192,10 +219,10 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 				if (functionAreaItemPO.getFunctionArea().getType() == FunctionAreaPO.TYPE_AI_INT) {
 					itemType = QuotationFunctionAreaItemPO.TYPE_QUOTATION_FIX_SHORT;
 				}
-				quotationFunctionAreaItemVO.setContent(quotationItemPO.getQuotationItemDes());
+
 				quotationFunctionAreaItemVO.setSubtype((short) functionAreaItemPO.getQuotationItem().getQuotationType().getId());
-				quotationFunctionAreaItemVO.setQuotationItemId(quotationItemPO.getQiId());
-				quotationFunctionAreaItemVO.setItemName(quotationItemPO.getItemName());
+				quotationFunctionAreaItemVO.setQuotationItemId(quotationItemPO.getQiid());
+				quotationFunctionAreaItemVO.setItemName(quotationItemPO.getName());
 				quotationFunctionAreaItemVO.setMeasurementUnit(quotationItemPO.getMeasurementUnit().getName());
 				quotationFunctionAreaItemVO.setWorkType(quotationItemPO.getWorkType().getName());
 				quotationFunctionAreaItemVO.setDiscount(quotationItemPO.getDiscount());
@@ -203,6 +230,8 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 				quotationFunctionAreaItemVO.setType(itemType);
 				quotationFunctionAreaItemVO.setQuotationFunctionAreaId(quotationFunctionAreaPO.getQfaId());
 				quotationFunctionAreaItemVO.setNum(0);
+				quotationFunctionAreaItemVO.setFormula(functionAreaItemPO.getFormula());
+				quotationFunctionAreaItemVO.setContent(quotationItemPO.getComment());
 
 				quotationFunctionAreaItemVOs.add(quotationFunctionAreaItemVO);
 			}
@@ -210,17 +239,17 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 			quotationFunctionAreaVO.setQfaId(quotationFunctionAreaPO.getQfaId());
 			quotationFunctionAreaVO.setQuotationFunctionAreaItems(quotationFunctionAreaItemVOs);
 
-			quotationFunctionAreaVOs.add(quotationFunctionAreaVO);
+			_quotationFunctionAreaVOs.add(quotationFunctionAreaVO);
 		}
 
 		quotationDao.update(quotationPO);
 
-		return quotationFunctionAreaVOs;
+		return _quotationFunctionAreaVOs;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addQuotationFunctionArea(List<Long> functionAreaIds, QuotationVO quotation) throws FLException {
+	public int addQuotationFunctionArea(QuotationFunctionAreaVO quotationFunctionAreaVO, QuotationVO quotation) throws FLException {
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(quotation.getOrderId());
 
@@ -237,21 +266,19 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 		SystemConfigPO systemConfigPO = systemConfigDao.querySystemConfig("quotationFunctionAreaIndex");
 		Short index = systemConfigPO == null ? 0 : Short.valueOf(systemConfigPO.getValue());
 
-		for (Long functionAreaId : functionAreaIds) {
-			FunctionAreaPO functionAreaPO = functionAreaDao.get(functionAreaId);
+		FunctionAreaPO functionAreaPO = functionAreaDao.get(quotationFunctionAreaVO.getId());
 
-			QuotationFunctionAreaPO quotationFunctionAreaPO = new QuotationFunctionAreaPO();
+		QuotationFunctionAreaPO quotationFunctionAreaPO = new QuotationFunctionAreaPO();
 
-			quotationFunctionAreaPO.setIndex(index);
-			quotationFunctionAreaPO.setFunctionAreaName(functionAreaPO.getFunctionAreaName());
-			quotationFunctionAreaPO.setFunctionAreaOrder(functionAreaPO.getFunctionAreaOrder());
-			quotationFunctionAreaPO.setFunctionAreaType(functionAreaPO.getFunctionAreaType());
-			quotationFunctionAreaPO.setType(functionAreaPO.getType());
-			quotationFunctionAreaPO.setTotal(functionAreaPO.getTotal());
-			quotationFunctionAreaPO.setQuotation(quotationPO);
+		quotationFunctionAreaPO.setIndex(index);
+		quotationFunctionAreaPO.setFunctionAreaName(quotationFunctionAreaVO.getFunctionAreaName());
+		quotationFunctionAreaPO.setFunctionAreaOrder(functionAreaPO.getFunctionAreaOrder());
+		quotationFunctionAreaPO.setFunctionAreaType(functionAreaPO.getFunctionAreaType());
+		quotationFunctionAreaPO.setType(functionAreaPO.getType());
+		quotationFunctionAreaPO.setTotal(functionAreaPO.getTotal());
+		quotationFunctionAreaPO.setQuotation(quotationPO);
 
-			quotationFunctionAreaDao.save(quotationFunctionAreaPO);
-		}
+		quotationFunctionAreaDao.save(quotationFunctionAreaPO);
 
 		return 0;
 	}
@@ -275,6 +302,21 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 
 		quotationFunctionAreaDao.update(quotationFunctionAreaPO);
 
+		if (quotationFunctionAreaVO.getQuotationFunctionAreaParam() != null) {
+
+			QuotationFunctionAreaParamPO quotationFunctionAreaParamPO = quotationFunctionAreaParamDao.queryQuotationFunctionAreaParam(quotationFunctionAreaPO.getQfaId());
+
+			if (quotationFunctionAreaParamPO == null) {
+				quotationFunctionAreaParamPO = new QuotationFunctionAreaParamPO();
+
+				quotationFunctionAreaParamPO.setQfaid(quotationFunctionAreaPO.getQfaId());
+			}
+
+			BeanUtil.copyPropertie(quotationFunctionAreaVO.getQuotationFunctionAreaParam(), quotationFunctionAreaParamPO);
+
+			quotationFunctionAreaParamDao.saveOrUpdate(quotationFunctionAreaParamPO);
+		}
+
 		quotationDao.update(quotationPO);
 
 		return 0;
@@ -296,11 +338,11 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 
 		short index = quotationFunctionAreaPO.getIndex();
 
-		if (extensionItemDao.countExtensionItemForFunctionArea(qfaid) > 0) {
+		if (extensionItemDao.countExtensionItem(qfaid) > 0) {
 			throw new FLException(200028, "功能区存在拓展项");
 		}
 
-		if (addReduceItemDao.countAddReduceItemForFunctionArea(qfaid) > 0) {
+		if (addReduceItemDao.countAddReduceItem(qfaid) > 0) {
 			throw new FLException(200032, "功能区存在增减项");
 		}
 

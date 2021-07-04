@@ -17,36 +17,36 @@ import com.fanglin.data.quotation.vo.NormoodVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class NormoodAction extends BaseListAction{
+public class NormoodAction extends BaseListAction {
 
 	private static final long serialVersionUID = -5568543208164206020L;
-	
+
 	@Autowired
 	NormoodService normoodService;
-	
+
 	List<NormoodVO> normoods;
-	
+
 	NormoodVO normood;
-	
+
 	@Action(value = "queryNormoodByQiid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryNormoodByQiid() throws FLException {
-		
-		normoods = normoodService.queryNormoodByQiid(normood.getQuotationItem().getQiId());
+
+		normoods = normoodService.queryNormoodByQiid(normood.getQuotationItem().getQiid());
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addNormood", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addNormood() throws FLException {
-		
+
 		normoodService.addNormood(normood);
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "deleteNormood", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteNormood() throws FLException {
-		
+
 		normoodService.deleteNormood(normood);
 
 		return SUCCESS;

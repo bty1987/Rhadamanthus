@@ -13,29 +13,28 @@ package com.fanglin.data.quotation.vo;
 
 import java.io.Serializable;
 
+import com.fanglin.communion.vo.MeasurementUnitVO;
+import com.fanglin.communion.vo.QuotationBigCategoryVO;
+import com.fanglin.communion.vo.QuotationTypeVO;
+import com.fanglin.communion.vo.WorkTypeVO;
+
 public class SystemDefineItemVO implements Serializable {
 
 	private static final long serialVersionUID = -629582034818766395L;
 
 	private Long sdiid;
 
-	private String itemId;
+	private String no;
 
-	private Integer quotationBigCategoryId;
+	private String name;
 
-	private String quotationBigCategory;
+	private QuotationTypeVO category;
 
-	private String itemName;
+	private QuotationBigCategoryVO bigCategory;
 
-	private Integer measurementUnitId;
+	private MeasurementUnitVO unit;
 
-	private String measurementUnit;
-
-	private Integer itemWorkTypeId;
-
-	private String itemWorkType;
-
-	protected String quotationItemDes;
+	private WorkTypeVO workType;
 
 	private Integer addPrice;
 
@@ -43,11 +42,22 @@ public class SystemDefineItemVO implements Serializable {
 
 	private Integer subPrice;
 
-	private Integer quotationTypeId;
-
 	private Short status;
 
 	private Short discount;
+
+	protected String comment;
+
+	public SystemDefineItemVO() {
+		super();
+	}
+
+	public SystemDefineItemVO(QuotationBigCategoryVO bigCategory, MeasurementUnitVO unit, WorkTypeVO workType) {
+		super();
+		this.bigCategory = bigCategory;
+		this.unit = unit;
+		this.workType = workType;
+	}
 
 	public Long getSdiid() {
 		return sdiid;
@@ -57,76 +67,52 @@ public class SystemDefineItemVO implements Serializable {
 		this.sdiid = sdiid;
 	}
 
-	public String getItemId() {
-		return itemId;
+	public String getNo() {
+		return no;
 	}
 
-	public void setItemId(String itemId) {
-		this.itemId = itemId;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
-	public Integer getQuotationBigCategoryId() {
-		return quotationBigCategoryId;
+	public String getName() {
+		return name;
 	}
 
-	public void setQuotationBigCategoryId(Integer quotationBigCategoryId) {
-		this.quotationBigCategoryId = quotationBigCategoryId;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getQuotationBigCategory() {
-		return quotationBigCategory;
+	public QuotationTypeVO getCategory() {
+		return category;
 	}
 
-	public void setQuotationBigCategory(String quotationBigCategory) {
-		this.quotationBigCategory = quotationBigCategory;
+	public void setCategory(QuotationTypeVO category) {
+		this.category = category;
 	}
 
-	public String getItemName() {
-		return itemName;
+	public QuotationBigCategoryVO getBigCategory() {
+		return bigCategory;
 	}
 
-	public void setItemName(String itemName) {
-		this.itemName = itemName;
+	public void setBigCategory(QuotationBigCategoryVO bigCategory) {
+		this.bigCategory = bigCategory;
 	}
 
-	public Integer getMeasurementUnitId() {
-		return measurementUnitId;
+	public MeasurementUnitVO getUnit() {
+		return unit;
 	}
 
-	public void setMeasurementUnitId(Integer measurementUnitId) {
-		this.measurementUnitId = measurementUnitId;
+	public void setUnit(MeasurementUnitVO unit) {
+		this.unit = unit;
 	}
 
-	public String getMeasurementUnit() {
-		return measurementUnit;
+	public WorkTypeVO getWorkType() {
+		return workType;
 	}
 
-	public void setMeasurementUnit(String measurementUnit) {
-		this.measurementUnit = measurementUnit;
-	}
-
-	public Integer getItemWorkTypeId() {
-		return itemWorkTypeId;
-	}
-
-	public void setItemWorkTypeId(Integer itemWorkTypeId) {
-		this.itemWorkTypeId = itemWorkTypeId;
-	}
-
-	public String getItemWorkType() {
-		return itemWorkType;
-	}
-
-	public void setItemWorkType(String itemWorkType) {
-		this.itemWorkType = itemWorkType;
-	}
-
-	public String getQuotationItemDes() {
-		return quotationItemDes;
-	}
-
-	public void setQuotationItemDes(String quotationItemDes) {
-		this.quotationItemDes = quotationItemDes;
+	public void setWorkType(WorkTypeVO workType) {
+		this.workType = workType;
 	}
 
 	public Integer getAddPrice() {
@@ -153,14 +139,6 @@ public class SystemDefineItemVO implements Serializable {
 		this.subPrice = subPrice;
 	}
 
-	public Integer getQuotationTypeId() {
-		return quotationTypeId;
-	}
-
-	public void setQuotationTypeId(Integer quotationTypeId) {
-		this.quotationTypeId = quotationTypeId;
-	}
-
 	public Short getStatus() {
 		return status;
 	}
@@ -175,6 +153,14 @@ public class SystemDefineItemVO implements Serializable {
 
 	public void setDiscount(Short discount) {
 		this.discount = discount;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 }

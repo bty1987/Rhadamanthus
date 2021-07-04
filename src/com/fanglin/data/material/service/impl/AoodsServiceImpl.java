@@ -175,4 +175,18 @@ public class AoodsServiceImpl implements AoodsService {
 		return 0;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int copyAoods(AoodsVO aoodsVO, int company) throws FLException {
+
+		int bompany = CompanyServiceImpl.decode(aoodsVO.getBompany());
+
+		if (aoodsDao.countAoods(company) > 0) {
+			throw new FLException(130029, "辅材已存在");
+		}
+
+		aoodsDao.copyAoods(bompany, company);
+
+		return 0;
+	}
 }

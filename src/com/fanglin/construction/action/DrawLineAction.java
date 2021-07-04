@@ -20,7 +20,7 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import com.fanglin.communion.vo.ConstructionNodeVO;
+import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.construction.po.DrawLinePO;
 import com.fanglin.construction.service.DrawLineService;
 import com.fanglin.construction.vo.DrawLineVO;

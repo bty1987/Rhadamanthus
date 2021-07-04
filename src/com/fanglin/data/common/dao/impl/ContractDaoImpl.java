@@ -53,6 +53,8 @@ public class ContractDaoImpl extends DaoImpl<ContractPO> implements ContractDao 
 			for (Filter filter : filters) {
 				if ("name".equals(filter.getField())) {
 					query.add(query.getCriterion("name", filter));
+				} else if ("status".equals(filter.getField())) {
+					query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
 				}
 			}
 		}

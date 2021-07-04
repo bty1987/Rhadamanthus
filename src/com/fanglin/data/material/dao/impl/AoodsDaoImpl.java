@@ -57,29 +57,47 @@ public class AoodsDaoImpl extends DaoImpl<AoodsPO> implements AoodsDao {
 		return count.intValue();
 	}
 
+	@Override
+	public int countAoods(int bompany) {
+
+		String sql = "select count(*) from `data`.aoods where bompany= :bompany";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("bompany", bompany).uniqueResult();
+
+		return count.intValue();
+	}
+
+	@Override
+	public int copyAoods(int bompany, int company) {
+
+		String sql = "INSERT INTO data.aoods (gid, atid, status, checkup, bompany, company) SELECT gid, atid, status, checkup, :sompany, company FROM data.aoods WHERE bompany = :bompany";
+		session().createSQLQuery(sql).setInteger("sompany", company).setInteger("bompany", bompany).executeUpdate();
+
+		return 0;
+	}
+
 	private void queryFilterExcute(PagingQuery<AoodsPO> query, List<Filter> filters) throws FLException {
 
-		if (filters != null) {
-			for (Filter filter : filters) {
+		if (filters == null)
+			return;
 
-				String field = filter.getField();
-				String data = filter.getData();
-				String op = filter.getOp();
+		for (Filter filter : filters) {
 
-				if (AoodsPO.COLUMN_NAME_STR.equals(field)) {
-					query.alias("goods", "goods");
-					query.add(query.getCriterion(AoodsPO.COLUMN_NAME_STR, data, op));
-				} else if (AoodsPO.COLUMN_ANAME_STR.equals(field)) {
-					query.alias("accessoriesType", "accessoriesType");
-					query.add(query.getCriterion(AoodsPO.COLUMN_ANAME_STR, data, op));
-				} else if (AoodsPO.COLUMN_STATUS_STR.equals(field)) {
-					query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
-				} else if (AoodsPO.COLUMN_BOMPANY_STR.equals(field)) {
-					query.add(Restrictions.eq("bompany", CompanyServiceImpl.decode(data)));
-				}
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if (AoodsPO.COLUMN_NAME_STR.equals(field)) {
+				query.alias("goods", "goods");
+				query.add(query.getCriterion(AoodsPO.COLUMN_NAME_STR, data, op));
+			} else if (AoodsPO.COLUMN_ANAME_STR.equals(field)) {
+				query.alias("accessoriesType", "accessoriesType");
+				query.add(query.getCriterion(AoodsPO.COLUMN_ANAME_STR, data, op));
+			} else if (AoodsPO.COLUMN_STATUS_STR.equals(field)) {
+				query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
+			} else if (AoodsPO.COLUMN_BOMPANY_STR.equals(field)) {
+				query.add(Restrictions.eq("bompany", CompanyServiceImpl.decode(data)));
 			}
 		}
-
 	}
 
 }

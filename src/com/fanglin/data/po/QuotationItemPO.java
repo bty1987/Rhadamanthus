@@ -12,6 +12,7 @@
 package com.fanglin.data.po;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -26,34 +27,28 @@ import com.fanglin.communion.po.QuotationClassificationPO;
 import com.fanglin.communion.po.QuotationSmallCategoryPO;
 import com.fanglin.communion.po.QuotationTypePO;
 import com.fanglin.communion.po.WorkTypePO;
+import com.fanglin.data.quotation.vo.QuotationItemVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "quotationItem", catalog = "quotation")
 public class QuotationItemPO implements Serializable {
 
 	private static final long serialVersionUID = -7382384455543326014L;
-	
-	public static final String[] COLUMN_ARRAYS_STR = {"quotationType", "quotationClassification","quotationBigCategory","quotationSmallCategory", "measurementUnit","workType","quotationVersion"};
 
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final String COLUMN_COMPANY_STR = "company";
 
 	public static final short STATUS_ENABLE_INT = 0;
 
 	public static final short STATUS_DISABLE_INT = 1;
 
-	private long qiId;
+	private long qiid;
 
-	private String itemId;
+	private String no;
 
-	private String itemName;
-
-	private int addPrice; // 增补价
-
-	private int unitPrice; // 单价
-
-	private int subPrice; // 退减价
+	private String name;
 
 	private QuotationTypePO quotationType;
 
@@ -69,38 +64,55 @@ public class QuotationItemPO implements Serializable {
 
 	private QuotationVersionPO quotationVersion;
 
-	private String quotationItemDes;
+	private int addPrice; // 增补价
+
+	private int unitPrice; // 单价
+
+	private int subPrice; // 退减价
+
+	private short type;
 
 	private short status;
 
 	private short discount;
 
+	private String comment;
+
 	public QuotationItemPO() {
 		super();
 	}
 
-	public QuotationItemPO(long qiId) {
-		this.qiId = qiId;
+	public QuotationItemPO(long qiid) {
+		this.qiid = qiid;
 	}
 
 	@Id
 	@GeneratedValue
-	@Column(name = "qiId")
-	public long getQiId() {
-		return qiId;
+	@Column(name = "qiid")
+	public long getQiid() {
+		return qiid;
 	}
 
-	public void setQiId(long qiId) {
-		this.qiId = qiId;
+	public void setQiid(long qiid) {
+		this.qiid = qiid;
 	}
 
-	@Column(name = "itemId")
-	public String getItemId() {
-		return itemId;
+	@Column(name = "no")
+	public String getNo() {
+		return no;
 	}
 
-	public void setItemId(String itemId) {
-		this.itemId = itemId;
+	public void setNo(String no) {
+		this.no = no;
+	}
+
+	@Column(name = "name")
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
@@ -143,15 +155,6 @@ public class QuotationItemPO implements Serializable {
 		this.quotationSmallCategory = quotationSmallCategory;
 	}
 
-	@Column(name = "itemName")
-	public String getItemName() {
-		return itemName;
-	}
-
-	public void setItemName(String itemName) {
-		this.itemName = itemName;
-	}
-
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
 	@javax.persistence.JoinColumn(nullable = false, name = "measurementUnitId")
 	public MeasurementUnitPO getMeasurementUnit() {
@@ -163,7 +166,7 @@ public class QuotationItemPO implements Serializable {
 	}
 
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
-	@javax.persistence.JoinColumn(nullable = false, name = "itemWorkTypeId")
+	@javax.persistence.JoinColumn(nullable = false, name = "workTypeId")
 	public WorkTypePO getWorkType() {
 		return workType;
 	}
@@ -172,13 +175,14 @@ public class QuotationItemPO implements Serializable {
 		this.workType = workType;
 	}
 
-	@Column(name = "quotationItemDes")
-	public String getQuotationItemDes() {
-		return quotationItemDes;
+	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
+	@javax.persistence.JoinColumn(nullable = false, name = "versionId", referencedColumnName = "no")
+	public QuotationVersionPO getQuotationVersion() {
+		return quotationVersion;
 	}
 
-	public void setQuotationItemDes(String quotationItemDes) {
-		this.quotationItemDes = quotationItemDes;
+	public void setQuotationVersion(QuotationVersionPO quotationVersion) {
+		this.quotationVersion = quotationVersion;
 	}
 
 	@Column(name = "addPrice")
@@ -208,14 +212,13 @@ public class QuotationItemPO implements Serializable {
 		this.subPrice = subPrice;
 	}
 
-	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
-	@javax.persistence.JoinColumn(nullable = false, name = "versionId", referencedColumnName = "no")
-	public QuotationVersionPO getQuotationVersion() {
-		return quotationVersion;
+	@Column(name = "type")
+	public short getType() {
+		return type;
 	}
 
-	public void setQuotationVersion(QuotationVersionPO quotationVersion) {
-		this.quotationVersion = quotationVersion;
+	public void setType(short type) {
+		this.type = type;
 	}
 
 	@Column(name = "status")
@@ -236,4 +239,40 @@ public class QuotationItemPO implements Serializable {
 		this.discount = discount;
 	}
 
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public QuotationItemVO ptv(QuotationItemVO quotationItemVO) {
+
+		BeanUtil.copyProperties(this, quotationItemVO, Arrays.asList("version", "category", "classification", "bigCategory", "smallCategory", "unit", "workType"));
+
+		if (quotationItemVO.getVersion() != null)
+			BeanUtil.copyPropertie(getQuotationVersion(), quotationItemVO.getVersion());
+
+		if (quotationItemVO.getCategory() != null)
+			BeanUtil.copyPropertie(getQuotationType(), quotationItemVO.getCategory());
+
+		if (quotationItemVO.getClassification() != null)
+			BeanUtil.copyPropertie(getQuotationClassification(), quotationItemVO.getClassification());
+
+		if (quotationItemVO.getBigCategory() != null)
+			BeanUtil.copyPropertie(getQuotationBigCategory(), quotationItemVO.getBigCategory());
+
+		if (quotationItemVO.getSmallCategory() != null)
+			BeanUtil.copyPropertie(getQuotationSmallCategory(), quotationItemVO.getSmallCategory());
+
+		if (quotationItemVO.getUnit() != null)
+			BeanUtil.copyPropertie(getMeasurementUnit(), quotationItemVO.getUnit());
+
+		if (quotationItemVO.getWorkType() != null)
+			BeanUtil.copyPropertie(getWorkType(), quotationItemVO.getWorkType());
+
+		return quotationItemVO;
+	}
 }

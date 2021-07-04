@@ -19,23 +19,19 @@ import com.fanglin.data.quotation.vo.QuotationItemVO;
 import com.fanglin.utils.Paging;
 
 public interface QuotationItemService {
-	
-	public void pageQuotationItem(Paging paging, List<Filter> filters,int company);
-	
+
+	public void pageQuotationItem(Paging paging, List<Filter> filters, int company);
+
 	public void pageQuotationItemByVersionId(Paging paging, List<Filter> filters, QuotationItemVO quotationItemVO);
 
 	public QuotationItemVO queryQuotationItemByItemIdAVersionId(QuotationItemVO quotationItemVO) throws FLException;
-	
+
 	public int addQuotationItem(QuotationItemVO quotationItemVO) throws FLException;
-	
+
 	public int updateQuotationItem(QuotationItemVO quotationItemVO) throws FLException;
-	
+
 	public int updateQuotationItemForStatus(QuotationItemVO quotationItemVO) throws FLException;
-	
+
 	public int updateQuotationItemForDiscount(QuotationItemVO quotationItemVO) throws FLException;
-	
-	public void deleteQuotationItem(QuotationItemVO quotationItemVO);
-	
-	public void deleteQuotationItemByQiId(int qiId);
 
 }

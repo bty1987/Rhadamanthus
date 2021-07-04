@@ -17,9 +17,11 @@ import com.fanglin.quotation.dao.ExtensionDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.SelectionItemDao;
+import com.fanglin.quotation.po.ExtensionItemPO;
 import com.fanglin.quotation.po.ExtensionPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.service.ExtensionService;
+import com.fanglin.quotation.vo.ExtensionItemVO;
 import com.fanglin.quotation.vo.ExtensionVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -44,13 +46,24 @@ public class ExtensionServiceImpl implements ExtensionService {
 	@Autowired
 	private SelectionItemDao selectionItemDao;
 
+	@Autowired
+	private ExtensionItemServiceImpl extensionItemService;
+
 	@Override
 	public void pageExtensionByOrderId(Paging paging, List<Filter> filters, ExtensionVO extensionVO) {
 
 		filters.add(new Filter(ExtensionPO.COLUMN_ORDERID_STR, extensionVO.getOrderId(), "eq"));
 
 		List<ExtensionPO> extensionPOs = extensionDao.pageExtensionByOrderId(paging, filters);
-		List<ExtensionVO> extensionVOs = handleExtension(extensionPOs);
+		List<ExtensionVO> extensionVOs = new ArrayList<ExtensionVO>();
+
+		for (ExtensionPO extensionPO : extensionPOs) {
+			extensionVO = new ExtensionVO();
+
+			BeanUtil.copyProperties(extensionPO, extensionVO);
+
+			extensionVOs.add(extensionVO);
+		}
 
 		paging.setData(extensionVOs);
 	}
@@ -81,6 +94,8 @@ public class ExtensionServiceImpl implements ExtensionService {
 		}
 
 		BeanUtil.copyProperties(extensionPO, extensionVO);
+
+		extensionVO.setExtensionItems(handleExtensionItem(extensionPO.getEid()));
 
 		return extensionVO;
 	}
@@ -160,9 +175,24 @@ public class ExtensionServiceImpl implements ExtensionService {
 
 			BeanUtil.copyProperties(extensionPO, extensionVO);
 
+			extensionVO.setExtensionItems(handleExtensionItem(extensionPO.getEid()));
+
 			extensionVOs.add(extensionVO);
 		}
+
 		return extensionVOs;
+	}
+
+	private List<ExtensionItemVO> handleExtensionItem(long eid) {
+
+		List<ExtensionItemPO> extensionItemPOs = extensionItemDao.queryExtensionItem(eid);
+		List<ExtensionItemVO> extensionItemVOs = new ArrayList<ExtensionItemVO>();
+
+		for (ExtensionItemPO extensionItemPO : extensionItemPOs) {
+			extensionItemVOs.add(extensionItemService.ptv(extensionItemPO));
+		}
+
+		return extensionItemVOs;
 	}
 
 	private void checkExtension(ExtensionPO extensionPO) throws FLException {

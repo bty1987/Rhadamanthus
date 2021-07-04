@@ -12,6 +12,7 @@
 package com.fanglin.data.po;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,6 +24,8 @@ import javax.persistence.Table;
 import com.fanglin.communion.po.MeasurementUnitPO;
 import com.fanglin.communion.po.QuotationBigCategoryPO;
 import com.fanglin.communion.po.WorkTypePO;
+import com.fanglin.data.quotation.vo.SystemDefineItemVO;
+import com.fanglin.utils.BeanUtil;
 
 @Entity
 @Table(name = "systemDefineitem", catalog = "quotation")
@@ -36,15 +39,9 @@ public class SystemDefineItemPO implements Serializable {
 
 	private long sdiid;
 
-	private String itemId;
+	private String no;
 
-	private String itemName;
-
-	private int addPrice; // 增补价
-
-	private int unitPrice; // 单价
-
-	private int subPrice; // 退减价
+	private String name;
 
 	private QuotationBigCategoryPO quotationBigCategory;
 
@@ -52,11 +49,17 @@ public class SystemDefineItemPO implements Serializable {
 
 	private WorkTypePO workType;
 
-	private String quotationItemDes;
+	private int addPrice; // 增补价
+
+	private int unitPrice; // 单价
+
+	private int subPrice; // 退减价
 
 	private short status;
 
 	private short discount;
+
+	private String comment;
 
 	private int company;
 
@@ -79,13 +82,22 @@ public class SystemDefineItemPO implements Serializable {
 		this.sdiid = sdiid;
 	}
 
-	@Column(name = "itemId")
-	public String getItemId() {
-		return itemId;
+	@Column(name = "no")
+	public String getNo() {
+		return no;
 	}
 
-	public void setItemId(String itemId) {
-		this.itemId = itemId;
+	public void setNo(String no) {
+		this.no = no;
+	}
+
+	@Column(name = "name")
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
@@ -96,15 +108,6 @@ public class SystemDefineItemPO implements Serializable {
 
 	public void setQuotationBigCategory(QuotationBigCategoryPO quotationBigCategory) {
 		this.quotationBigCategory = quotationBigCategory;
-	}
-
-	@Column(name = "itemName")
-	public String getItemName() {
-		return itemName;
-	}
-
-	public void setItemName(String itemName) {
-		this.itemName = itemName;
 	}
 
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
@@ -118,22 +121,13 @@ public class SystemDefineItemPO implements Serializable {
 	}
 
 	@javax.persistence.ManyToOne(fetch = FetchType.LAZY)
-	@javax.persistence.JoinColumn(name = "itemWorkTypeId")
+	@javax.persistence.JoinColumn(name = "workTypeId")
 	public WorkTypePO getWorkType() {
 		return workType;
 	}
 
 	public void setWorkType(WorkTypePO workType) {
 		this.workType = workType;
-	}
-
-	@Column(name = "quotationItemDes")
-	public String getQuotationItemDes() {
-		return quotationItemDes;
-	}
-
-	public void setQuotationItemDes(String quotationItemDes) {
-		this.quotationItemDes = quotationItemDes;
 	}
 
 	@Column(name = "addPrice")
@@ -181,6 +175,15 @@ public class SystemDefineItemPO implements Serializable {
 		this.discount = discount;
 	}
 
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
 	@Column(name = "company")
 	public int getCompany() {
 		return company;
@@ -190,4 +193,19 @@ public class SystemDefineItemPO implements Serializable {
 		this.company = company;
 	}
 
+	public SystemDefineItemVO ptv(SystemDefineItemVO systemDefineItemVO) {
+
+		BeanUtil.copyProperties(this, systemDefineItemVO, Arrays.asList("category", "bigCategory", "unit", "workType"));
+
+		if (systemDefineItemVO.getBigCategory() != null)
+			BeanUtil.copyPropertie(getQuotationBigCategory(), systemDefineItemVO.getBigCategory());
+
+		if (systemDefineItemVO.getUnit() != null)
+			BeanUtil.copyPropertie(getMeasurementUnit(), systemDefineItemVO.getUnit());
+
+		if (systemDefineItemVO.getWorkType() != null)
+			BeanUtil.copyPropertie(getWorkType(), systemDefineItemVO.getWorkType());
+
+		return systemDefineItemVO;
+	}
 }

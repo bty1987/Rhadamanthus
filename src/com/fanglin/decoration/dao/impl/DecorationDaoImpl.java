@@ -380,8 +380,8 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 					query.add(query.getCriterion("salesmanRegion.no", data, op));
 				} else if ("orderType".equals(field)) {
 					query.add(query.getCriterion("typeness", Short.valueOf(data), op));
-				} else if ("salesmanType".equals(field)) {
-					query.add(query.getCriterion("salesmanType", data, op));
+				} else if ("busitype".equals(field)) {
+					query.add(query.getCriterion("busitype", Long.valueOf(data), op));
 				} else if ("houseArea".equals(field)) {
 					int dataF = Integer.parseInt(data);
 					query.add(query.getCriterion("house.buildArea", Arith.mul(dataF, 1000000), op));

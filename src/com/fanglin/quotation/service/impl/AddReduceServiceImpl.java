@@ -39,6 +39,7 @@ import com.fanglin.quotation.po.ExtensionItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.service.AddReduceService;
+import com.fanglin.quotation.vo.AddReduceItemVO;
 import com.fanglin.quotation.vo.AddReduceVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
@@ -76,8 +77,11 @@ public class AddReduceServiceImpl implements AddReduceService {
 	@Autowired
 	private SelectionItemDao selectionItemDao;
 
+	@Autowired
+	private AddReduceItemServiceImpl addReduceItemService;
+
 	@Override
-	public void pageAddReduceByOrderId(Paging paging, List<Filter> filters, AddReduceVO addReduceVO) {
+	public void pageAddReduceByOrderId(Paging paging, List<Filter> filters, AddReduceVO addReduceVO) throws FLException {
 
 		filters.add(new Filter(AddReducePO.COLUMN_ORDERID_STR, addReduceVO.getOrderId(), "eq"));
 
@@ -88,7 +92,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 	}
 
 	@Override
-	public List<AddReduceVO> queryAddReduceByOrderId(AddReduceVO addReduceVO) {
+	public List<AddReduceVO> queryAddReduceByOrderId(AddReduceVO addReduceVO) throws FLException {
 
 		List<AddReducePO> addReducePOs = addReduceDao.queryAddReduceByOrderId(addReduceVO.getOrderId());
 		List<AddReduceVO> addReduceVOs = handleAddReduce(addReducePOs);
@@ -97,7 +101,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 	}
 
 	@Override
-	public List<AddReduceVO> queryAddReduceForPayedByOrderId(AddReduceVO addReduceVO) {
+	public List<AddReduceVO> queryAddReduceForPayedByOrderId(AddReduceVO addReduceVO) throws FLException {
 
 		List<AddReducePO> addReducePOs = addReduceDao.queryAddReduceForPayedByOrderId(addReduceVO.getOrderId());
 		List<AddReduceVO> addReduceVOs = handleAddReduce(addReducePOs);
@@ -116,6 +120,8 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 		BeanUtil.copyProperties(addReducePO, addReduceVO);
 
+		addReduceVO.setAddReduceItems(handleAddReduceItem(addReducePO.getArId()));
+
 		return addReduceVO;
 	}
 
@@ -129,6 +135,8 @@ public class AddReduceServiceImpl implements AddReduceService {
 		}
 
 		BeanUtil.copyProperties(addReducePO, addReduceVO);
+
+		addReduceVO.setAddReduceItems(handleAddReduceItem(addReducePO.getArId()));
 
 		return addReduceVO;
 	}
@@ -202,6 +210,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 		addReducePO.setDisPrice(addReduceVO.getDisPrice());
 		addReducePO.setUncalPrice(addReduceVO.getUncalPrice());
 		addReducePO.setCalPrice(addReduceVO.getCalPrice());
+		addReducePO.setDiscount(addReduceVO.getDiscount());
 
 		addReduceDao.update(addReducePO);
 
@@ -230,7 +239,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 			throw new FLException(200037, "存在关联选材项");
 		}
 
-		List<AddReduceItemPO> addReduceItemPOs = addReduceItemDao.queryAddReduceItemByAddReduceId(arId);
+		List<AddReduceItemPO> addReduceItemPOs = addReduceItemDao.queryAddReduceItem(arId);
 
 		for (AddReduceItemPO addReduceItemPO : addReduceItemPOs) {
 
@@ -357,20 +366,34 @@ public class AddReduceServiceImpl implements AddReduceService {
 		return 0;
 	}
 
-	private List<AddReduceVO> handleAddReduce(List<AddReducePO> addReducePOs) {
+	private List<AddReduceVO> handleAddReduce(List<AddReducePO> addReducePOs) throws FLException {
 
 		List<AddReduceVO> addReduceVOs = new ArrayList<AddReduceVO>();
 
 		for (AddReducePO addReducePO : addReducePOs) {
 
-			AddReduceVO _addReduceVO = new AddReduceVO();
+			AddReduceVO addReduceVO = new AddReduceVO();
 
-			BeanUtil.copyProperties(addReducePO, _addReduceVO);
+			BeanUtil.copyProperties(addReducePO, addReduceVO);
 
-			addReduceVOs.add(_addReduceVO);
+			addReduceVO.setAddReduceItems(handleAddReduceItem(addReducePO.getArId()));
+
+			addReduceVOs.add(addReduceVO);
 		}
 
 		return addReduceVOs;
+	}
+
+	private List<AddReduceItemVO> handleAddReduceItem(long arid) throws FLException {
+
+		List<AddReduceItemPO> addReduceItemPOs = addReduceItemDao.queryAddReduceItem(arid);
+		List<AddReduceItemVO> addReduceItemVOs = new ArrayList<AddReduceItemVO>();
+
+		for (AddReduceItemPO addReduceItemPO : addReduceItemPOs) {
+			addReduceItemVOs.add(addReduceItemService.ptv(addReduceItemPO));
+		}
+
+		return addReduceItemVOs;
 	}
 
 	public static void convertAddReduceVOToPOForAdvance(AddReduceVO addReduceVO, AddReducePO addReducePO) {

@@ -37,6 +37,8 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 
 	public static final short STATUS_CONSUME_INT = 7; // 消耗
 
+	public static final short STATUS_DISCOUNT_INT = 8; // 抵现
+
 	public static final short TYPE_COUPON_INT = 0; // 卷
 
 	public static final short TYPE_THING_INT = 1; // 物品

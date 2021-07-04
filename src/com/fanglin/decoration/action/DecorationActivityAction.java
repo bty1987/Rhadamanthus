@@ -144,6 +144,14 @@ public class DecorationActivityAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "discountDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String discountDecorationActivityItem() throws FLException {
+
+		decorationActivityItemService.discountDecorationActivityItem(decorationActivityItem, queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "amountDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String amountDecorationActivityItem() throws FLException {
 

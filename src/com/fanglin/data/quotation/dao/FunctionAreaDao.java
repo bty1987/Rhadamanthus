@@ -19,15 +19,11 @@ import com.fanglin.data.po.FunctionAreaPO;
 import com.fanglin.utils.Paging;
 
 public interface FunctionAreaDao extends Dao<FunctionAreaPO> {
-	
-	public List<FunctionAreaPO> pageFunctionArea(Paging paging, List<Filter> filters,int company);
-	
-	public List<FunctionAreaPO> queryFunctionAreaByVersionId(String versionId);
-	
-	public FunctionAreaPO queryFunctionAreaByIdAVersionId(String functionAreaId, String versionId);
 
-	public List<FunctionAreaPO> queryFunctionAreaForCommonByVersionId(String versionId);
+	public List<FunctionAreaPO> pageFunctionArea(Paging paging, List<Filter> filters, int company);
 
-	public List<FunctionAreaPO> queryFunctionAreaForSpecialByVersionId(String versionId);
-	
+	public List<FunctionAreaPO> queryFunctionArea(String versionId);
+
+	public FunctionAreaPO queryFunctionArea(String functionAreaId, String versionId);
+
 }

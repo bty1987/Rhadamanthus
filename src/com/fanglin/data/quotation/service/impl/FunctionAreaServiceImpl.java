@@ -29,6 +29,7 @@ import com.fanglin.data.quotation.dao.FunctionAreaDao;
 import com.fanglin.data.quotation.dao.FunctionAreaItemDao;
 import com.fanglin.data.quotation.service.FunctionAreaService;
 import com.fanglin.data.quotation.vo.FunctionAreaVO;
+import com.fanglin.data.quotation.vo.QuotationVersionVO;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.BeanUtil;
@@ -57,14 +58,16 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 		List<FunctionAreaPO> functionAreaPOs = functionAreaDao.pageFunctionArea(paging, filters, company);
 		List<FunctionAreaVO> functionAreaVOs = new ArrayList<FunctionAreaVO>();
 
+		FunctionAreaVO functionAreaVO;
+
 		for (FunctionAreaPO functionAreaPO : functionAreaPOs) {
-			FunctionAreaVO functionAreaVO = new FunctionAreaVO();
-			BeanUtil.copyProperties(functionAreaPO, functionAreaVO);
 
-			QuotationVersionPO quotationVersionPO = functionAreaPO.getQuotationVersion();
+			functionAreaVO = new FunctionAreaVO(new QuotationVersionVO());
 
-			functionAreaVO.setVersion(quotationVersionPO.getName());
-			functionAreaVO.setVersionId(quotationVersionPO.getNo());
+			BeanUtil.copyProperties(functionAreaPO, functionAreaVO, Arrays.asList("version"));
+
+			BeanUtil.copyPropertie(functionAreaPO.getQuotationVersion(), functionAreaVO.getVersion());
+
 			functionAreaVOs.add(functionAreaVO);
 		}
 
@@ -74,17 +77,17 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 	@Override
 	public FunctionAreaVO queryFunctionAreaByIdAVersionId(FunctionAreaVO functionAreaVO) throws FLException {
 
-		FunctionAreaPO functionAreaPO = functionAreaDao.queryFunctionAreaByIdAVersionId(functionAreaVO.getFunctionAreaId(), functionAreaVO.getVersionId());
+		FunctionAreaPO functionAreaPO = functionAreaDao.queryFunctionArea(functionAreaVO.getNo(), functionAreaVO.getVersion().getNo());
 
 		if (functionAreaPO == null) {
 			throw new FLException(200012, "功能区不存在");
 		}
 
-		QuotationVersionPO quotationVersionPO = functionAreaPO.getQuotationVersion();
+		functionAreaVO.setVersion(new QuotationVersionVO());
 
-		BeanUtil.copyProperties(functionAreaPO, functionAreaVO);
-		functionAreaVO.setVersion(quotationVersionPO.getName());
-		functionAreaVO.setVersionId(quotationVersionPO.getNo());
+		BeanUtil.copyProperties(functionAreaPO, functionAreaVO, Arrays.asList("version"));
+
+		BeanUtil.copyPropertie(functionAreaPO.getQuotationVersion(), functionAreaVO.getVersion());
 
 		return functionAreaVO;
 	}
@@ -92,30 +95,24 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 	@Override
 	public List<FunctionAreaVO> queryFunctionAreaByVersionId(FunctionAreaVO functionAreaVO) throws FLException {
 
-		List<FunctionAreaPO> functionAreaPOs = functionAreaDao.queryFunctionAreaByVersionId(functionAreaVO.getVersionId());
+		List<FunctionAreaPO> functionAreaPOs = functionAreaDao.queryFunctionArea(functionAreaVO.getVersion().getNo());
 
 		List<FunctionAreaVO> functionAreaVOs = new ArrayList<FunctionAreaVO>();
 
 		for (FunctionAreaPO functionAreaPO : functionAreaPOs) {
-			FunctionAreaVO _functionAreaVO = new FunctionAreaVO();
 
-			if (functionAreaPO == null) {
-				throw new FLException(200012, "功能区不存在");
-			}
+			functionAreaVO = new FunctionAreaVO(new QuotationVersionVO());
 
-			QuotationVersionPO quotationVersionPO = functionAreaPO.getQuotationVersion();
+			BeanUtil.copyProperties(functionAreaPO, functionAreaVO, Arrays.asList("version"));
 
-			BeanUtil.copyProperties(functionAreaPO, _functionAreaVO);
+			BeanUtil.copyPropertie(functionAreaPO.getQuotationVersion(), functionAreaVO.getVersion());
 
-			_functionAreaVO.setVersion(quotationVersionPO.getName());
-			_functionAreaVO.setVersionId(quotationVersionPO.getNo());
-
-			functionAreaVOs.add(_functionAreaVO);
+			functionAreaVOs.add(functionAreaVO);
 		}
 
 		return functionAreaVOs;
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addFunctionArea(FunctionAreaVO functionAreaVO, int company) throws FLException {
@@ -126,7 +123,7 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 			throw new FLException(230015, "公司不存在");
 		}
 
-		FunctionAreaPO functionAreaPO = functionAreaDao.queryFunctionAreaByIdAVersionId(functionAreaVO.getFunctionAreaId(), functionAreaVO.getVersionId());
+		FunctionAreaPO functionAreaPO = functionAreaDao.queryFunctionArea(functionAreaVO.getNo(), functionAreaVO.getVersion().getNo());
 
 		if (functionAreaPO != null) {
 			throw new FLException(200020, "功能区对应版本和编号已存在");
@@ -138,11 +135,11 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 
 		String no = String.format("%sQA_%s", companyPO.getShortname(), FormatUtil.fillZero(count, "000"));
 
-		functionAreaPO.setFunctionAreaId(no);
+		functionAreaPO.setNo(no);
 
-		BeanUtil.copyProperties(functionAreaVO, functionAreaPO, Arrays.asList(new String[] { "functionAreaId" }));
+		BeanUtil.copyProperties(functionAreaVO, functionAreaPO, Arrays.asList("no", "version"));
 
-		functionAreaPO.setQuotationVersion(new QuotationVersionPO(functionAreaVO.getVersionId()));
+		functionAreaPO.setQuotationVersion(new QuotationVersionPO(functionAreaVO.getVersion().getNo()));
 
 		functionAreaDao.saveOrUpdate(functionAreaPO);
 
@@ -153,17 +150,17 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 	@Transactional(rollbackFor = Exception.class)
 	public int updateFunctionArea(FunctionAreaVO functionAreaVO) throws FLException {
 
-		FunctionAreaPO functionAreaPO = functionAreaDao.get(functionAreaVO.getFaId());
+		FunctionAreaPO functionAreaPO = functionAreaDao.get(functionAreaVO.getFaid());
 
 		if (functionAreaPO == null) {
 			throw new FLException(200012, "功能区不存在");
 		}
 
 		if (!functionAreaPO.getFunctionAreaType().equals(functionAreaVO.getFunctionAreaType())) { // 功能区的类型改变时
-			functionAreaItemDao.deleteFunctionAreaItemByFunctionAreaId(functionAreaPO.getFaId());
+			functionAreaItemDao.deleteFunctionAreaItemByFunctionAreaId(functionAreaPO.getFaid());
 		}
 
-		BeanUtil.copyProperties(functionAreaVO, functionAreaPO, Arrays.asList(new String[] { "functionAreaId", "versionId" }));
+		BeanUtil.copyProperties(functionAreaVO, functionAreaPO, Arrays.asList("no", "version"));
 
 		functionAreaDao.saveOrUpdate(functionAreaPO);
 
@@ -174,7 +171,7 @@ public class FunctionAreaServiceImpl implements FunctionAreaService {
 	@Transactional(rollbackFor = Exception.class)
 	public int deleteFunctionArea(FunctionAreaVO functionAreaVO) {
 
-		functionAreaDao.deleteById(functionAreaVO.getFaId());
+		functionAreaDao.deleteById(functionAreaVO.getFaid());
 
 		return 0;
 	}
