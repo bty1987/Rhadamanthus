@@ -13,9 +13,9 @@
         },
         
         items: {
-            faId: com.focusPage("#faId"),
-            functionAreaId: com.focusPage("#functionAreaId"),
-            functionAreaName: com.focusPage("#functionAreaName"),
+            faid: com.focusPage("#faid"),
+            no: com.focusPage("#no"),
+            name: com.focusPage("#name"),
             versionId: com.focusPage("#versionId"),
             functionAreaType: com.focusPage("#functionAreaType"),
             functionAreaOrder: com.focusPage("#functionAreaOrder"),
@@ -30,11 +30,17 @@
         btns: {
             btnBack: com.focusPage("#btnBack"),
             btnAdd: com.focusPage('#addBtn'),
-            btnDel: com.focusPage('#delBtn')
+            btnDel: com.focusPage('#delBtn'),
+            btnUpdate: com.focusPage("#btnUpdate")
         },
 	
         modals: {
-            selectItemModal: com.focusPage("#selectItemModal")
+            selectItemModal: com.focusPage("#selectItemModal"),
+            updateModal: com.focusPage("#updateModal")
+        },
+        
+        items:{
+        	formula: com.focusPage("#formula", "#updateModal"),
         },
         
         postParam: {}
@@ -48,6 +54,8 @@
         history: [],
         postParam: {}
     };
+    
+    functionAreaItem.btns.btnUpdate.on("click", update);
     
     $.extend(com.validator, functionArea.validator);
     
@@ -114,7 +122,7 @@
 
         var creatLine = function(v){
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.functionAreaName));
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.name));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
@@ -123,9 +131,9 @@
             var $btnAssign = $('<a></a>').addClass('btn btn-minier btn-warning').html('分配报价项');
 
             var propertyArr = [
-                ["编号: ", v.functionAreaId, "grey"],
-                ["报价版本: ", v.version, "grey"],
-                ["类型: ", v.functionAreaType, "grey"],
+                ["编号: ", v.no, "grey"],
+                ["报价版本: ", v.version.no, "grey"],
+                ["类型: ", v.functionAreaType, "red"],
                 ["总价: ", v.total, "blue"],
                 ["排序: ", v.functionAreaOrder, "blue"],
             ];
@@ -148,11 +156,11 @@
             });
 
             $btnAssign.click(function(){
-                assignQuotationItemIndex(v.faId, v.versionId, v.functionAreaType);
+                assignQuotationItemIndex(v.faid, v.version.no, v.functionAreaType);
             });
 
             $btnDel.click(function(){
-                removeFunctionArea(v.faId);
+                removeFunctionArea(v.faid);
             });
 
             return $liLine;
@@ -186,9 +194,9 @@
     //功能区添加按钮
     com.focusPage('a[name="addFunctionArea"]', '#pagenation').on('click', function () {
         
-        functionArea.items.faId.val(0);
+        functionArea.items.faid.val(0);
         
-        functionArea.items.functionAreaId.css("display", "none");
+        functionArea.items.no.css("display", "none");
         functionArea.items.versionId.removeAttr("disabled");
 
         functionArea.items.total.attr("disabled", "disabled").val(0);
@@ -199,12 +207,12 @@
     //功能区编辑按钮
     function editFunctionArea(v) {
         
-        functionArea.items.faId.val(v.faId);
-        functionArea.items.functionAreaId.val(v.functionAreaId);
-        functionArea.items.functionAreaName.val(v.functionAreaName);
+        functionArea.items.faid.val(v.faid);
+        functionArea.items.no.val(v.no);
+        functionArea.items.name.val(v.name);
         functionArea.items.functionAreaOrder.val(v.functionAreaOrder);
         functionArea.items.functionAreaType.val(v.functionAreaType);
-        functionArea.items.versionId.val(v.versionId);
+        functionArea.items.versionId.val(v.version.no);
         functionArea.items.type.val(v.type);
         
         if(v.type == 2){
@@ -213,7 +221,7 @@
             functionArea.items.total.attr("disabled", "disabled").val(0);
         }
 
-        functionArea.items.functionAreaId.css("display", '').attr("disabled", "disabled");
+        functionArea.items.no.css("display", '').attr("disabled", "disabled");
         functionArea.items.versionId.attr("disabled", "disabled")
         
         functionArea.modals.functionAreaModal.modal("show");
@@ -224,23 +232,22 @@
         
         if(com.validate("functionAreaModal")) return false;
         
-        var functionAreaId = functionArea.items.functionAreaId.val();
         var versionId = functionArea.items.versionId.val();
         
         var url = api.quotation.addFunctionArea;
         var options = {
-            "functionArea.functionAreaId": functionAreaId,
-            "functionArea.functionAreaName": functionArea.items.functionAreaName.val(),
+            "functionArea.no": functionArea.items.no.val(),
+            "functionArea.name": functionArea.items.name.val(),
             "functionArea.functionAreaOrder": functionArea.items.functionAreaOrder.val(),
             "functionArea.functionAreaType": functionArea.items.functionAreaType.val(),
-            "functionArea.versionId": versionId,
+            "functionArea.version.no": versionId,
             "functionArea.type": functionArea.items.type.val(),
             "functionArea.total": functionArea.items.total.val()
         };
         
-        if(functionArea.items.faId.val() != '0'){
+        if(functionArea.items.faid.val() != '0'){
             url = api.quotation.updateFunctionArea;
-            options["functionArea.faId"] = functionArea.items.faId.val();
+            options["functionArea.faid"] = functionArea.items.faid.val();
         }
 
         com.post(url, options, function(){
@@ -251,9 +258,9 @@
     }
     
     //功能区删除事件
-    function removeFunctionArea(faId) {
+    function removeFunctionArea(faid) {
         com.showConfirm("是否确认删除", function() {
-            com.post(api.quotation.deleteFunctionArea, {"functionArea.faId": faId}, function(){
+            com.post(api.quotation.deleteFunctionArea, {"functionArea.faid": faid}, function(){
                 
                 com.showAlert(com.info, "操作成功");
                 
@@ -263,18 +270,18 @@
     }
     
     //分配报价项
-    function assignQuotationItemIndex(faId, versionId, functionAreaType) {
+    function assignQuotationItemIndex(faid, versionId, functionAreaType) {
         
-        com.focusPage("#selectFunctionAreaId").val(faId);
+        com.focusPage("#selectFunctionAreaId").val(faid);
         com.focusPage("#selectVersionId").val(versionId);
         com.focusPage("#functionAreaList").addClass("hide");
         com.focusPage("#functionAreaQuotationItemList").removeClass("hide");
         
         quotationItem.postParam["quotationItem.versionId"] = versionId;
         
-        functionAreaItem.postParam.functionAreaId = faId;
+        functionAreaItem.postParam.functionAreaId = faid;
         functionAreaItem.postParam.functionAreaType = functionAreaType;
-        functionAreaItem.postParam["functionAreaItem.functionArea.faId"] = faId;
+        functionAreaItem.postParam["functionAreaItem.functionArea.faid"] = faid;
         functionAreaItem.postParam["functionAreaItem.functionArea.functionAreaType"] = functionAreaType;
         
         initFunctionAreaItemList();
@@ -283,7 +290,7 @@
     //显示报价项信息列表
     function initFunctionAreaItemList() {
 
-        //"faId 报价项编号 分类 大类 小类 名称 单位 工种 单价" itemList
+        //"faid 报价项编号 分类 大类 小类 名称 单位 工种 单价" itemList
         com.post(api.quotation.queryFunctionAreaItemByFunctionAreaId, functionAreaItem.postParam, function(data){
 
             var $tableWrap = com.focusPage('#itemList');
@@ -302,21 +309,29 @@
                     "type" : "checkbox",
                     "name" : "areaItems",
                     "class" : "ace ace-checkbox-2",
-                }).val(v.faiId);
-                var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.quotationItem.itemName);
+                }).val(v.faiid);
+                var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.quotationItem.name);
 
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+                var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+                
+                var $btnUpdate = $('<div></div>').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-yellow btn-minier').html('更新'))
+                
+                $divBtnWrap.append($btnUpdate).appendTo($h3);
+                
+                v.formula = v.formula != null ? v.formula : ""
 
                 var propertyArr = [
-                    ["编号: ", v.quotationItem.itemId, "grey"],
-                    ["分类: ", v.quotationItem.quotationClassification, "grey"],
-                    ["大类: ", v.quotationItem.quotationBigCategory, "grey"],
-                    ["小类: ", v.quotationItem.quotationSmallCategory, "grey"],
-                    ["单位: ", v.quotationItem.measurementUnit, "grey"],
-                    ["工种: ", v.quotationItem.workType, "grey"],
+                    ["编号: ", v.quotationItem.no, "grey"],
+                    ["分类: ", v.quotationItem.classification.name, "red"],
+                    ["大类: ", v.quotationItem.bigCategory.name, "red"],
+                    ["小类: ", v.quotationItem.smallCategory.name, "red"],
+                    ["单位: ", v.quotationItem.unit.name, "red"],
+                    ["工种: ", v.quotationItem.workType.name, "red"],
                     ["单价: ", v.quotationItem.unitPrice, "blue"],
+                    ["公式: ", paramToFormula(v.formula) , "blue"]
                 ];
-
+                
                 $.each(propertyArr, function (index,value) {
                     var $liProperty = $('<li></li>');
                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
@@ -324,6 +339,14 @@
                     $liProperty.appendTo($ulProperty);
                 });
 
+                $btnUpdate.click(function(){
+                	functionAreaItem.faiid = v.faiid;
+                	
+                	functionAreaItem.items.formula.val(paramToFormula(v.formula));
+                	
+                	functionAreaItem.modals.updateModal.modal("show");
+                });
+                
                 $label.append($input).append($span).appendTo($h3);
                 $liLine.append($h3).append($ulProperty);
 
@@ -354,7 +377,7 @@
     //初始化报价项目的按条件分页查询弹层
     function initQuotationItemList() {
 
-        var extraParams = {"quotationItem.versionId": quotationItem.postParam["quotationItem.versionId"]} ;
+        var extraParams = {"quotationItem.version.no": quotationItem.postParam["quotationItem.versionId"]} ;
 
         var quoDisplayFunc = (function(){
 
@@ -389,20 +412,20 @@
                     "class" : "ace ace-checkbox-2",
                     "data-quotationClassification" : v.quotationClassification,
                     "data-itemName" : v.itemName
-                }).val(v.qiId);
-                var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.itemName);
+                }).val(v.qiid);
+                var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.name);
 
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
                 var propertyArr = [
-                    ["类型: ", v.quotationType, "grey"],
-                    ["分类: ", v.quotationClassification, "grey"],
-                    ["大类: ", v.quotationBigCategory, "grey"],
-                    ["小类: ", v.quotationSmallCategory, "grey"],
-                    ["单位: ", v.measurementUnit, "grey"],
-                    ["工种: ", v.itemWorkType, "grey"],
+                    ["类型: ", v.category.name, "red"],
+                    ["分类: ", v.classification.name, "red"],
+                    ["大类: ", v.bigCategory.name, "red"],
+                    ["小类: ", v.smallCategory.name, "red"],
+                    ["单位: ", v.unit.name, "red"],
+                    ["工种: ", v.workType.name, "red"],
                     ["单价: ", v.unitPrice, "blue"],
-                    ["版本: ", v.version, "grey"],
+                    ["版本: ", v.version.name, "grey"],
                 ];
 
                 $.each(propertyArr, function (index,value) {
@@ -451,8 +474,6 @@
     //添加按钮
     function addSelectItem() {
 
-        var _params = {};
-
         var $historys = quotationItem.history;
 
         if ($historys.length == 0) {
@@ -461,6 +482,10 @@
         }
 
         var faid = com.focusPage("#selectFunctionAreaId").val();
+        
+        var _params = {
+                "functionArea.faid": faid
+            };
 
         $.each($historys, function(i, e){
             var functionAreaType = functionAreaItem.postParam["functionAreaItem.functionArea.functionAreaType"];
@@ -468,8 +493,7 @@
             var quotationClassification = $(e).attr('data-quotationClassification');
             var qiid = $(this).val();
 
-            _params["functionAreaItems[" + i + "].functionArea.faId"] = faid,
-            _params["functionAreaItems[" + i + "].quotationItem.qiId"] = qiid,
+            _params["functionAreaItems[" + i + "].quotationItem.qiid"] = qiid,
             _params["functionAreaItems[" + i + "].quotationItem.quotationClassification"] = quotationClassification;
         });
 
@@ -479,6 +503,41 @@
             initFunctionAreaItemList();
             quotationItem.history = [];
         });
+    }
+    
+    function update() {
+    	
+    	if(com.validate("updateModal")) return false;
+    	
+    	var formula = functionAreaItem.items.formula.val();
+    	
+    	if(formula.replace(/(\u5468\u957f|\u9762\u79ef|\u4e3e\u67b6|\u6d1e\u53e3|\u95e8\u53e3)/g, "").replace(/[\+\-\*\/\(\)]/g, "") != ""){
+    		
+    		com.showAlert(com.warning, "公式存在无效参数");
+    		
+    		return false;
+    	}
+    	
+    	var options = {
+    		"functionAreaItem.faiid": functionAreaItem.faiid,
+    		"functionAreaItem.formula": formulaToParam(formula),
+    	}
+    	
+    	com.post(api.quotation.updateFunctionAreaItem, options, function(res){
+    		com.closePopup();
+    		com.showAlert(com.info, "操作成功");
+            initFunctionAreaItemList();
+        });
+    	
+    	functionAreaItem.modals.updateModal.modal("hide");
+    }
+    
+    function formulaToParam(formula){
+        return formula.replace(/\u5468\u957f/g, "{a}").replace(/\u9762\u79ef/g, "{b}").replace(/\u4e3e\u67b6/g, "{c}").replace(/\u6d1e\u53e3/g, "{d}").replace(/\u95e8\u53e3/g, "{e}");
+    }
+    
+    function paramToFormula(param){
+        return param.replace(/\{a\}/g, "\u5468\u957f").replace(/\{b\}/g, "\u9762\u79ef").replace(/\{c\}/g, "\u4e3e\u67b6").replace(/\{d\}/g, "\u6d1e\u53e3").replace(/\{e\}/g, "\u95e8\u53e3");
     }
     
 });

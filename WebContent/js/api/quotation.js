@@ -171,7 +171,7 @@ $.extend(api, {quotation: {
     },
     addFunctionAreaItem: {url: "addFunctionAreaItem.do"},
     deleteFunctionAreaItemByIds: {url: "deleteFunctionAreaItemByIds.do"},
-
+    updateFunctionAreaItem: {url: "updateFunctionAreaItem.do"},
     pageSystemDefineItem: {
         url: "pageSystemDefineItem.do",
         demo: true,
@@ -313,6 +313,9 @@ $.extend(api, {quotation: {
             result: "quotationFunctionAreas",
             args: ["total"]
         },{
+            result: "quotationFunctionAreas-quotationFunctionAreaParam",
+            args: ["girth", "area", "height", "holeLength", "holeHeight", "windowLength", "windowHeight", "beamLength", "beamHeight"]
+        },{
             result: "quotationFunctionAreas-quotationFunctionAreaItems",
             args: ["unitPrice", "initNum", "num"]
         }]
@@ -322,10 +325,16 @@ $.extend(api, {quotation: {
         url: "addQuotationFunctionAreaByFunctionAreaIds.do",
         type: "update",
         tranargs: {
-            args: ["quotation.discount", "quotation.totalPrice", "quotation.undisPrice", "quotation.disPrice", "quotation.manageRate", "quotation.managePrice", "quotation.trafficRate", "quotation.trafficPrice", "quotation.basePrice"],
+            args: [
+                "quotation.discount", "quotation.totalPrice", "quotation.undisPrice", "quotation.disPrice", "quotation.manageRate", "quotation.managePrice", "quotation.trafficRate", "quotation.trafficPrice", "quotation.basePrice", 
+                "quotationFunctionAreas.quotationFunctionAreaParam.girth", "quotationFunctionAreas.quotationFunctionAreaParam.area", "quotationFunctionAreas.quotationFunctionAreaParam.height", "quotationFunctionAreas.quotationFunctionAreaParam.holeLength", "quotationFunctionAreas.quotationFunctionAreaParam.holeHeight", "quotationFunctionAreas.quotationFunctionAreaParam.windowLength", "quotationFunctionAreas.quotationFunctionAreaParam.windowHeight", "quotationFunctionAreas.quotationFunctionAreaParam.beamLength", "quotationFunctionAreas.quotationFunctionAreaParam.beamHeight",
+            ],
             query: [{
                 result: "quotationFunctionAreas",
                 args: ["total"]
+            },{
+                result: "quotationFunctionAreas-quotationFunctionAreaParam",
+                args: ["girth", "area", "height", "holeLength", "holeHeight", "windowLength", "windowHeight", "beamLength", "beamHeight"]
             },{
                 result: "quotationFunctionAreas-quotationFunctionAreaItems",
                 args: ["unitPrice", "initNum", "num"]
@@ -336,7 +345,20 @@ $.extend(api, {quotation: {
         url: "updateQuotationFunctionArea.do",
         type: "update",
         tranargs: {
-            args: ["quotation.discount", "quotation.totalPrice", "quotation.undisPrice", "quotation.disPrice", "quotation.manageRate", "quotation.managePrice", "quotation.trafficRate", "quotation.trafficPrice", "quotation.basePrice"]
+            args: [
+                "quotation.discount", "quotation.totalPrice", "quotation.undisPrice", "quotation.disPrice", "quotation.manageRate", "quotation.managePrice", "quotation.trafficRate", "quotation.trafficPrice", "quotation.basePrice",
+                "quotationFunctionArea.quotationFunctionAreaParam.girth", "quotationFunctionArea.quotationFunctionAreaParam.area", "quotationFunctionArea.quotationFunctionAreaParam.height", "quotationFunctionArea.quotationFunctionAreaParam.holeLength", "quotationFunctionArea.quotationFunctionAreaParam.holeHeight", "quotationFunctionArea.quotationFunctionAreaParam.windowLength", "quotationFunctionArea.quotationFunctionAreaParam.windowHeight", "quotationFunctionArea.quotationFunctionAreaParam.beamLength", "quotationFunctionArea.quotationFunctionAreaParam.beamHeight",
+            ],
+            query: [{
+                result: "quotation",
+                args: ["discount", "totalPrice", "undisPrice", "disPrice", "manageRate", "managePrice", "trafficRate", "trafficPrice", "basePrice", "notSalesmanRate"]
+            }, {
+                result: "quotationFunctionArea",
+                args: ["total"]
+            },{
+                result: "quotationFunctionArea-quotationFunctionAreaParam",
+                args: ["girth", "area", "height", "holeLength", "holeHeight", "windowLength", "windowHeight", "beamLength", "beamHeight"]
+            }]
         }
     },
     deleteQuotationFunctionArea: {
@@ -346,7 +368,7 @@ $.extend(api, {quotation: {
             args: ["quotation.discount", "quotation.totalPrice", "quotation.undisPrice", "quotation.disPrice", "quotation.manageRate", "quotation.managePrice", "quotation.trafficRate", "quotation.trafficPrice", "quotation.basePrice"]
         }
     },
-
+    
     queryQuotationFunctionAreaItemByQuotationFunctionAreaId: {
         url: "queryQuotationFunctionAreaItemByQuotationFunctionAreaId.do",
         type: "query",
@@ -411,6 +433,9 @@ $.extend(api, {quotation: {
         tranargs: [{
             result: "extensions",
             args: ["undisPrice", "disPrice", "total"]
+        },{
+            result: "extensions-extensionItems",
+            args: ["addPrice", "unitPrice", "subPrice", "num"]
         }]
     },
     queryExtensionByEid: {
@@ -419,6 +444,9 @@ $.extend(api, {quotation: {
         tranargs: [{
             result: "extension",
             args: ["undisPrice", "disPrice", "total"]
+        },{
+            result: "extension-extensionItems",
+            args: ["addPrice", "unitPrice", "subPrice", "num"]
         }]
     },
     addExtension: {url: "addExtension.do"},
@@ -848,7 +876,7 @@ $.extend(api, {addReduce: {
         type: "query",
         tranargs: [{
             result: "paging-data",
-            args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice"]
+            args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "discount"]
         }]
     },
     queryAddReduceByOrderId: {
@@ -857,7 +885,10 @@ $.extend(api, {addReduce: {
         type: "query",
         tranargs: [{
             result: "addReduces",
-            args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice"]
+            args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "discount"]
+        },{
+            result: "addReduces-addReduceItems",
+            args: ["addPrice", "unitPrice", "subPrice", "num"]
         }]
     },
     queryAddReduceForPayedByOrderId: {
@@ -866,7 +897,10 @@ $.extend(api, {addReduce: {
         type: "query",
         tranargs: [{
             result: "addReduces",
-            args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice"]
+            args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "discount"]
+        },{
+            result: "addReduces-addReduceItems",
+            args: ["addPrice", "unitPrice", "subPrice", "num"]
         }]
     },
     queryAddReduceByArid: {
@@ -875,7 +909,10 @@ $.extend(api, {addReduce: {
         type: "query",
         tranargs: [{
             result: "addReduce",
-            args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice"]
+            args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "discount"]
+        },{
+            result: "addReduce-addReduceItems",
+            args: ["addPrice", "unitPrice", "subPrice", "num"]
         }]
     },
     queryAddReduceByDecorationPaymentId: {
@@ -884,7 +921,10 @@ $.extend(api, {addReduce: {
         type: "query",
         tranargs: [{
             result: "addReduce",
-            args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice"]
+            args: ["total", "manageRate", "managePrice", "undisPrice", "disPrice", "uncalPrice", "calPrice", "discount"]
+        },{
+            result: "addReduce-addReduceItems",
+            args: ["addPrice", "unitPrice", "subPrice", "num"]
         }]
     },
     addAddReduce: {url: "addAddReduce.do"},
@@ -892,7 +932,7 @@ $.extend(api, {addReduce: {
         url: "updateAddReduce.do",
         type: "update",
         tranargs: {
-            args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice"],
+            args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice", "addReduce.discount"],
         }
     },
     updateAddReduceForAdvance: {
@@ -900,7 +940,7 @@ $.extend(api, {addReduce: {
         intercept: true,
         type: "update",
         tranargs: {
-            args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice"],
+            args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice", "addReduce.discount"],
         }
     },
     submitAddReduce: {
@@ -908,7 +948,7 @@ $.extend(api, {addReduce: {
         intercept: true,
         type: "update",
         tranargs: {
-            args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice"],
+            args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice", "addReduce.discount"],
         }
     },
     deleteAddReduce: {url: "deleteAddReduce.do", intercept: true},
@@ -938,7 +978,7 @@ $.extend(api, {addReduce: {
         type: "update",
         tranargs: {
             args: [
-                "addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice",
+                "addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice", "addReduce.discount", 
                 "addReduceItem.addPrice", "addReduceItem.unitPrice", "addReduceItem.subPrice", "addReduceItem.num"
             ],
         }
@@ -948,7 +988,7 @@ $.extend(api, {addReduce: {
         intercept: true,
         type: "update",
         tranargs: {
-            args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice"],
+            args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice", "addReduce.discount"],
         }
     },
     deleteAddReduceItem: {
@@ -956,7 +996,7 @@ $.extend(api, {addReduce: {
         intercept: true,
         type: "update",
         tranargs: {
-            args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice"],
+            args: ["addReduce.total", "addReduce.manageRate", "addReduce.managePrice", "addReduce.undisPrice", "addReduce.disPrice", "addReduce.uncalPrice", "addReduce.calPrice", "addReduce.discount"],
         }
     },
     

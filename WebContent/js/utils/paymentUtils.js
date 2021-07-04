@@ -669,6 +669,9 @@ var paymentUtils = {
                     var obj = payment.htmlName == "sales" ? v.salesReceipt : v;
                     propertyArr.push(["备注:", obj.comment, "grey"]);
                     break;
+                case "salesDept":
+                    propertyArr.push(["渠道部门:", decoration.dept.name, "grey"]);
+                    break;
             }
         });
         return propertyArr;

@@ -133,16 +133,16 @@ $(function () {
         	com.showInfo('选材','正在筹建中 , 敬请期待');
         });
         
-        res.alertInfo && (layer.open({
+        res.power && (layer.open({
             type: 1,
             title: false,
             closeBtn: false,
             area: '300px',
             shade: 0.8,
             id: 'homeAlert',
-            btn: ['了解了'],
+            btn: ['祝福'],
             moveType: 1,
-            content: res.alertInfo,
+            content: res.power,
             success: function(layero){
                 layero.find('.layui-layer-btn').css('text-align', 'center');
             }

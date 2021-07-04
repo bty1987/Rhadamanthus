@@ -13,8 +13,9 @@ jQuery(function($) {
 		
 		orderItems: {},
 		customerItems: {},
-        houseItems: {},
-        
+		houseItems: {},
+		decorationBusitypes: [],
+
         btns: {
             saveBtn: null,
             cancellBtn: null,
@@ -37,7 +38,7 @@ jQuery(function($) {
 	orderEntry.orderItems.houseTotalArea = com.focusPage("#houseTotalArea");
 	orderEntry.orderItems.designerId = com.focusPage("#designerId");
 	orderEntry.orderItems.salesmanId = com.focusPage("#salesmanId");
-	orderEntry.orderItems.salesmanType = com.focusPage("#salesmanType");
+	orderEntry.orderItems.busitype = com.focusPage("#busitype");
 	orderEntry.orderItems.notSalesmanName = com.focusPage("#notSalesmanName");
 	orderEntry.orderItems.notSalesmanRate = com.focusPage("#notSalesmanRate");
 	orderEntry.orderItems.notSalesmanPhone = com.focusPage("#notSalesmanPhone");
@@ -141,9 +142,16 @@ jQuery(function($) {
 
 	$.extend(com.validator, orderEntry.validator);
 
+	com.post(api.data.queryDecorationBusitype, {}, function(res) {
+		$.each(res.decorationBusitypes,function(intex,value){
+			if (value.status == 0){
+				orderEntry.decorationBusitypes.push(value);
+			}
+		});
+		orderEntry.orderItems.busitype.bindData(orderEntry.decorationBusitypes, "dbid", "name");
+	});
+
 	com.post(api.ds.decoration, {}, function (res) {
-		orderEntry.salesmanType = res.salesmanType;
-		orderEntry.orderItems.salesmanType.bindData(orderEntry.salesmanType, 'key', 'value');
 
 		orderEntry.orderItems.orderType.bindData(res.typeness, 'key', 'value', "请选择");
 
@@ -314,7 +322,7 @@ jQuery(function($) {
 			"decoration.houseClass": orderEntry.orderItems.houseClass.val(),
 			"decoration.designer.userId": com.typeahead("designerId"),
 			"decoration.salesman.userId": com.typeahead("salesmanId"),
-			"decoration.salesmanType": orderEntry.orderItems.salesmanType.val(),
+			"decoration.busitype": orderEntry.orderItems.busitype.val(),
 			"decorationInfo.notSalesmanName": orderEntry.orderItems.notSalesmanName.val(),
 			"decoration.notSalesmanRate": orderEntry.orderItems.notSalesmanRate.val(),
 			"decorationInfo.notSalesmanPhone": orderEntry.orderItems.notSalesmanPhone.val(),

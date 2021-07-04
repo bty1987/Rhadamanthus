@@ -625,15 +625,15 @@ var decorationUtils = {
                     }
                 }
             });
-        } else {
-            var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($("#basePaymentDiv").html(''));
-            var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
-            var $span = $('<span></span>').text('无基本款项数据').appendTo($mesg);
-            
-            var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($("#otherPaymentDiv").html(''));
-            var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
-            var $span = $('<span></span>').text('无其他款项数据').appendTo($mesg);
-        }
+			} if ($baseul.html() == "") {
+				var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($("#basePaymentDiv").html(''));
+				var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
+				var $span = $('<span></span>').text('无基本款项数据').appendTo($mesg);
+			} if ($otherul.html() == "") {
+				var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($("#otherPaymentDiv").html(''));
+				var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
+				var $span = $('<span></span>').text('无其他款项数据').appendTo($mesg);
+			}
         
         if (com.focusPage('#payedMoney')) {
             com.focusPage('#payedMoney').remove();

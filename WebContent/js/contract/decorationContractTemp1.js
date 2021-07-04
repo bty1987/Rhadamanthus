@@ -12,6 +12,10 @@ jQuery(function($) {
             talkingModal : com.focusPage('#talkingModal')
         },
         
+        item: {
+        	houseType : com.focusPage("#con-housetype")
+        },
+        
         contractArgs: params.contractArgs,
         decorationOrderId : params.decorationOrderId,
         
@@ -27,7 +31,7 @@ jQuery(function($) {
     }
     
     if(contractEdit.contractArgs.type == "0"){
-        com.focusPage("#con-payment-second", "#form").hide();
+        com.focusPage(".secondPaymentGroup", "#form").hide();
     }
     
     contractEdit.cover["cov-sign-year"] = com.dateFormat(new Date(), "yyyy");
@@ -36,7 +40,8 @@ jQuery(function($) {
     
     com.post(api.ds.decoration, {}, function (res) {
         contractEdit.decorationType = res.typeness.split("key", "value");
-    }, null, false);
+        contractEdit.item.houseType.bindData(res.houseClass, 'key', 'value');
+    });
 
     com.post(api.data.queryCustomerById, {"customer.cid": params.cid}, function (res) {
 
@@ -92,7 +97,7 @@ jQuery(function($) {
         com.focusPage("#con-village-name", "#form").val(village.name);
         com.focusPage("#con-housenumber", "#form").val(house.houseNumber);
         com.focusPage("#con-buildarea", "#form").val(house.buildArea);
-        com.focusPage("#con-housetype", "#form").val(data.houseType);
+        com.focusPage("#con-housetype", "#form").val(data.houseClass);
         
         com.focusPage("#con-house-type", "#form").val(contractEdit.decorationType[data.type]);
         com.focusPage("#con-work-type", "#form").val(contractEdit.decorationType[data.type]);
@@ -141,35 +146,27 @@ jQuery(function($) {
         quotationUtils.quotationDetail.quotationFunctionAreas = res.quotationFunctionAreas;
     }, null, false);
 
-    var extensionIds = {};
-    var addReduceIds = {};
+    quotationUtils.quotationDetail.extensionItems = [];
 
     com.post(api.quotation.queryExtensionByOrderId, {"extension.orderId": contractEdit.decorationOrderId}, function (res) {
-        var extensions = res.extensions;
-        $.each(extensions, function (i, v) {
-            extensionIds["extensionIds[" + i + "]"] = v.eid;
+        $.each(res.extensions, function (i, v) {
+            quotationUtils.quotationDetail.extensionItems = quotationUtils.quotationDetail.extensionItems.concat(v.extensionItems);
         });
     }, null, false);
-
-    com.post(api.quotation.queryExtensionItemByEids, extensionIds, function (res) {
-        quotationUtils.quotationDetail.extensions = res.extensionItems;
-    }, null, false);
+    
+    quotationUtils.quotationDetail.addReduceItems = [];
 
     com.post(api.addReduce.queryAddReduceByOrderId, {'addReduce.orderId': contractEdit.decorationOrderId}, function(res){
         $.each(res.addReduces, function(i, v){
-            addReduceIds['addReduceIds[' + i + ']'] = v.arId;
+            quotationUtils.quotationDetail.addReduceItems = quotationUtils.quotationDetail.addReduceItems.concat(v.addReduceItems);
         });
     }, null, false);
 
-    com.post(api.addReduce.queryAddReduceItemByAddReduceIds, addReduceIds, function(res){
-        quotationUtils.quotationDetail.addReduceItems = res.addReduceItems;
-    }, null, false);
-    
     quotationUtils.initQuotationDetailItem(
         quotationUtils.quotationDetail.quotation,
         quotationUtils.quotationDetail.quotationFunctionAreas,
         quotationUtils.quotationDetail.addReduceItems,
-        quotationUtils.quotationDetail.extensions, params.orderType, false, params.showType);
+        quotationUtils.quotationDetail.extensionItems, params.orderType, false, params.showType);
     
     console.log(quotationUtils.quotationDetail.quotationFunctionAreaItemCs);
     

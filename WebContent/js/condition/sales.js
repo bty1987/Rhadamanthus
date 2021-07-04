@@ -379,6 +379,23 @@ Condition.addupRule("sales", {
             validate: null
         }
     },
+    "balance-grade":{
+        label: "等级",
+        type: "select",
+        submitConfig: {
+            name: "sales.grade",
+            op: "cn",
+            validate: null
+        },
+        dataSource: {//从后台取数据的各种配置
+            url: api.ds.sales,
+            postData: {},
+            listPath: "balanceGrade",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    
     "sale-createTime":{
         label: "创建时间",
         type: "dateRangePicker",
@@ -490,6 +507,38 @@ Condition.addupRule("sales", {
             url: api.personel.queryUserByPinyin,
             postData: {"user.status":0,"departmentType.name":""},
             listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "salesDelivery-creater":{
+    	label: "创建人",
+        type: "autofill",
+        submitConfig: {
+            name: "creater",
+            op: "eq",
+            validata: null
+        },
+        dataSource: {
+        	url: api.personel.queryUserByPinyin,
+            postData: {"user.status":0,"departmentType.name":""},
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "salesDelivery-status":{
+        label: "配送状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {//从后台取数据的各种配置
+            url: api.ds.sales,
+            postData: {},
+            listPath: "deliveryStatus",
             keyPath: "key",
             valuePath: "value"
         }

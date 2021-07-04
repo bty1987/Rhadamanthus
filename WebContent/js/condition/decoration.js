@@ -166,16 +166,16 @@ Condition.addupRule("decoration", {
         label: "业务类型",
         type: "select",
         submitConfig: {
-            name: "salesmanType",
+            name: "busitype",
             op: "eq",
             validate: null
         },
         dataSource: {
-            url: api.ds.decoration,
+            url: api.data.queryDecorationBusitype,
             postData: {"timestamp": new Date().getTime()},
-            listPath: "salesmanType",
-            keyPath: "key",
-            valuePath: "value"
+            listPath: "decorationBusitypes",
+            keyPath: "dbid",
+            valuePath: "name"
         }
     },
     "houseClass": {
@@ -257,6 +257,74 @@ Condition.addupRule("decoration", {
             url: api.communion.queryDepartmentByName,
             query: "dept.name",
             postData: {"dept.type.dtid": 0},
+            listPath: "deptList",
+            keyPath: "no",
+            valuePath: "name"
+        }
+    },
+    "cross-company-design-region": {
+        label: "设计中心",
+        type: "autofill",
+        submitConfig: {
+            name: "designerRegionId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.communion.queryDepartmentByName,
+            query: "dept.name",
+            postData: {"dept.type.dtid": 1, "dept.company" : 0},
+            listPath: "deptList",
+            keyPath: "no",
+            valuePath: "name"
+        }
+    },
+    "cross-company-design-dept": {
+        label: "设计部",
+        type: "autofill",
+        submitConfig: {
+            name: "designerDepartmentId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.communion.queryDepartmentByName,
+            query: "dept.name",
+            postData: {"dept.type.dtid": 2, "dept.company" : 0},
+            listPath: "deptList",
+            keyPath: "no",
+            valuePath: "name"
+        }
+    },
+    "cross-company-sales-region": {
+        label: "业务中心",
+        type: "autofill",
+        submitConfig: {
+            name: "salesmanRegionId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.communion.queryDepartmentByName,
+            query: "dept.name",
+            postData: {"dept.type.dtid": 3, "dept.company" : 0},
+            listPath: "deptList",
+            keyPath: "no",
+            valuePath: "name"
+        }
+    },
+    "cross-company-sales-dept": {
+        label: "业务部",
+        type: "autofill",
+        submitConfig: {
+            name: "salesmanDepartmentId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.communion.queryDepartmentByName,
+            query: "dept.name",
+            postData: {"dept.type.dtid": 0, "dept.company" : 0},
             listPath: "deptList",
             keyPath: "no",
             valuePath: "name"

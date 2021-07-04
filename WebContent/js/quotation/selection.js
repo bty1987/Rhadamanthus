@@ -164,7 +164,7 @@ var selectionDetail = (function(){
 
             soodsSeacher.init(["data-aoods-name"], "condList", api.data.pageSoodsByQiid, function(data) {
                 displayFunc.init("resultList", data);
-            }, "pagenation", "selectionItemSoodsPostData", {"soods.quotationItem.qiId": quotationItemId}, false, null, null);
+            }, "pagenation", "selectionItemSoodsPostData", {"soods.quotationItem.qiid": quotationItemId}, false, null, null);
 
         },
     };

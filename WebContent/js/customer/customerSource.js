@@ -88,6 +88,18 @@ $(function () {
 
     customerSource.items.gender.switchBtn("gender");
     customerSource.items.grade.bindData(customerSource.grade, "key", "value", false);
+
+    com.post(api.data.queryDecorationBusitype, {}, function(res){
+        var decorationBusitypes = [];
+
+        $.each(res.decorationBusitypes, function(intex, value){
+            if (value.status == 0){
+                decorationBusitypes.push(value);
+            }
+        });
+
+        customerSource.items.salesmanType.bindData(decorationBusitypes, 'dbid', 'name');
+    });
     
     com.post(api.ds.customer, {}, function (res) {
         customerSource.status = res.customerSourceStatus.split('key', 'value');
@@ -102,7 +114,6 @@ $(function () {
 
     com.post(api.ds.decoration, {}, function (res) {
         customerSource.items.houseClass.bindData(res.houseClass, 'key', 'value');
-        customerSource.items.salesmanType.bindData(res.salesmanType, 'key', 'value');
         customerSource.items.orderType.bindData(res.typeness, 'key', 'value');
         customerSource.items.resourceType.bindData(res.status, 'key', 'value');
 
@@ -550,7 +561,7 @@ $(function () {
                 "approvalCustomerOriginTDecoration.type": customerSource.decorationTypes[customerSource.items.orderType.val()],
                 "approvalCustomerOriginTDecoration.typeness": customerSource.items.orderType.val(),
                 "approvalCustomerOriginTDecoration.salesman.userId": com.typeahead("salesman"),
-                "approvalCustomerOriginTDecoration.salesmanType": customerSource.items.salesmanType.val(),
+                "approvalCustomerOriginTDecoration.decorationBusitype.dbid": customerSource.items.salesmanType.val(),
                 "approvalCustomerOriginTDecoration.houseType": customerSource.items.houseType.val(),
                 "approvalCustomerOriginTDecoration.houseClass": customerSource.items.houseClass.val(),
                 "approvalCustomerOriginTDecoration.resourceType": customerSource.items.resourceType.val()

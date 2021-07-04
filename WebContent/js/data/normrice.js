@@ -95,7 +95,7 @@ $(function() {
 
         return {
             init : function(){
-                com.post(api.data.queryNormriceByQiid, {"normrice.quotationItem.qiId": normrice.qiid}, function(res){
+                com.post(api.data.queryNormriceByQiid, {"normrice.quotationItem.qiid": normrice.qiid}, function(res){
                     com.focusPage('#normriceResultList').html(null);
                     renderList('normriceResultList', res.normrices);
                 });
@@ -123,7 +123,7 @@ $(function() {
             "normrice.unit": normrice.items.unit.val(),
             "normrice.trannum": normrice.items.trannum.val(),
             "normrice.salary": normrice.items.salary.val(),
-            "normrice.quotationItem.qiId": normrice.qiid
+            "normrice.quotationItem.qiid": normrice.qiid
         };
 
         com.post(api.data.addNormrice, option, function(e){

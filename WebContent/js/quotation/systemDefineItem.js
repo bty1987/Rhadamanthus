@@ -4,7 +4,7 @@ $(function(){
     var systemDefineItem = {
             
         btns: {
-            saveBtn: com.focusPage("#saveAddItemBtn")
+            saveBtn: com.focusPage("#saveBtn")
         },
 
         modals: {
@@ -13,15 +13,16 @@ $(function(){
         
         items: {
             sdiid: com.focusPage("#sdiid"),
+            no: com.focusPage("#no"),
+            name: com.focusPage("#name"),
             quotationBigCategory: com.focusPage("#quotationBigCategory"),
-            itemName: com.focusPage("#itemName"),
             measurementUnit: com.focusPage("#measurementUnit"),
-            itemWorkType: com.focusPage("#itemWorkType"),
-            quotationItemDes: com.focusPage("#quotationItemDes"),
+            workType: com.focusPage("#workType"),
             addPrice: com.focusPage("#addPrice"),
             unitPrice: com.focusPage("#unitPrice"),
             subPrice: com.focusPage("#subPrice"),
-            itemId: com.focusPage("#itemId")
+            
+            comment: com.focusPage("#comment"),
         },
         
         validator: {
@@ -44,7 +45,7 @@ $(function(){
     });
     
     com.post(api.common.queryWorkType,{},function(res){
-        com.focusPage("#itemWorkType").bindData(res.workTypes, "id", "name");
+        com.focusPage("#workType").bindData(res.workTypes, "id", "name");
     });
     
     systemDefineItem.btns.saveBtn.on("click", saveData);
@@ -71,7 +72,7 @@ $(function(){
 
         var creatLine = function(v){   //页面中的一条数据
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.itemName));
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.name));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
@@ -88,10 +89,10 @@ $(function(){
 			var $dspan = $('<span></span>').addClass('lbl discount-lbl');
 
             var propertyArr = [
-                ["编号:", v.itemId, "blue"],
-                ["大类:", v.quotationBigCategory, "red"],
-                ["单位:", v.measurementUnit, "red"],
-                ["工种:", v.itemWorkType, "red"],
+                ["编号:", v.no, "blue"],
+                ["大类:", v.bigCategory.name, "red"],
+                ["单位:", v.unit.name, "red"],
+                ["工种:", v.workType.name, "red"],
                 ["增补价:", v.addPrice, "blue"],
                 ["原单价:", v.unitPrice, "blue"],
                 ["退减价:", v.subPrice, "blue"],
@@ -168,17 +169,21 @@ $(function(){
     	//给页面标签赋值
     	
 		systemDefineItem.items.sdiid.val(row.sdiid);
-		systemDefineItem.items.itemId.val(row.itemId);
-		systemDefineItem.items.itemName.val(row.itemName);
-		systemDefineItem.items.quotationBigCategory.val(row.quotationBigCategoryId); 
-		systemDefineItem.items.itemWorkType.val(row.itemWorkTypeId); 
-		systemDefineItem.items.measurementUnit.val(row.measurementUnitId); 
+		systemDefineItem.items.no.val(row.no);
+		systemDefineItem.items.name.val(row.name);
 		
-		systemDefineItem.items.quotationItemDes.val(row.quotationItemDes);
+		systemDefineItem.items.quotationBigCategory.val(row.bigCategory.id); 
+		systemDefineItem.items.workType.val(row.workType.id); 
+		systemDefineItem.items.measurementUnit.val(row.unit.id); 
+		
+		
 		systemDefineItem.items.addPrice.val(row.addPrice);
 		systemDefineItem.items.unitPrice.val(row.unitPrice);
 		systemDefineItem.items.subPrice.val(row.subPrice);
-		systemDefineItem.items.itemId.prop("disabled", true);
+		
+		systemDefineItem.items.comment.val(row.comment);
+		
+		systemDefineItem.items.no.prop("disabled", true);
 
 		systemDefineItem.modals.addItemModal.modal("show"); //弹出弹层
     }
@@ -193,18 +198,15 @@ $(function(){
     	
     	var url = api.quotation.addSystemDefineItem;
     	var options = {
-    		"systemDefineItem.itemId": systemDefineItem.items.itemId.val(),
-    		"systemDefineItem.itemName": systemDefineItem.items.itemName.val(),
-    		"systemDefineItem.quotationBigCategoryId": systemDefineItem.items.quotationBigCategory.val(),
-    		"systemDefineItem.quotationBigCategory": "",
-    		"systemDefineItem.measurementUnitId": systemDefineItem.items.measurementUnit.val(),
-    		"systemDefineItem.measurementUnit": "",
-    		"systemDefineItem.itemWorkTypeId": systemDefineItem.items.itemWorkType.val(),
-    		"systemDefineItem.itemWorkType": "",
-    		"systemDefineItem.quotationItemDes": systemDefineItem.items.quotationItemDes.val(),
+    		"systemDefineItem.no": systemDefineItem.items.no.val(),
+    		"systemDefineItem.name": systemDefineItem.items.name.val(),
+    		"systemDefineItem.bigCategory.id": systemDefineItem.items.quotationBigCategory.val(),
+    		"systemDefineItem.unit.id": systemDefineItem.items.measurementUnit.val(),
+    		"systemDefineItem.workType.id": systemDefineItem.items.workType.val(),
     		"systemDefineItem.addPrice": systemDefineItem.items.addPrice.val(),
     		"systemDefineItem.unitPrice": systemDefineItem.items.unitPrice.val(),
     		"systemDefineItem.subPrice": systemDefineItem.items.subPrice.val(),
+    		"systemDefineItem.comment": systemDefineItem.items.comment.val(),
     	};
     	
     	if(systemDefineItem.items.sdiid.val()) {
@@ -213,6 +215,9 @@ $(function(){
     	}
     	
     	com.post(url, options, function(res){
+    	    
+    	    com.showAlert(com.info, "操作成功");
+    	    
     	    searcher.doSearch();
     	    systemDefineItem.modals.addItemModal.modal("hide");
     	});
@@ -221,7 +226,7 @@ $(function(){
     //添加
     com.focusPage('[name="addSystemDefineItem"]', '#pagenation').on("click", function(){  //选择器 [属性名="属性值"]  匿名函数
         
-		systemDefineItem.items.itemId.prop("disabled", false);
+		systemDefineItem.items.no.prop("disabled", false);
 		
 		com.cleanItems(systemDefineItem.items);
 		

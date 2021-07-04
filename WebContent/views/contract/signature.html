@@ -65,6 +65,8 @@
         signatureLine: false,//去除默认画布上那条横线
         lineWidth: '16'
     };
+    
+    var imgpath = "";
 
     $("#signature").jSignature(arguments);
 
@@ -156,7 +158,6 @@
     
     function uploadimg1(base64) {
     
-        var imgpath = null;
         var form = new FormData();
         
         form.append("strutsUploads", dataURLtoBlob(base64), "strutsUploads.png");
@@ -180,6 +181,11 @@
         
         console.log(imgpath);
         
+        setTimeout("handleImg()", 2000);
+    };
+    
+    function handleImg(){
+        
         $.ajax({
             type: "POST",
             dataType: "json",
@@ -199,7 +205,7 @@
                 }
             }
         })
-    };
+    }
     
     function dataURLtoBlob(dataurl) {
         var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],

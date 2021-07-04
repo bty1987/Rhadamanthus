@@ -1,0 +1,276 @@
+jQuery(function($) {
+
+    var contractEdit = {
+            
+        customer: null,
+        decoration: null,
+        
+        cover: {},
+            
+		modal: {
+            talkingModal : com.focusPage('#talkingModal')
+        },
+        
+        item: {
+        	houseType : com.focusPage("#con-housetype")
+        },
+        
+        contractArgs: params.contractArgs,
+        decorationOrderId : params.decorationOrderId,
+        
+        decorationType: {},
+
+        $input: null,
+	};
+    
+    console.log(contractEdit.contractArgs);
+    
+    if(contractEdit.contractArgs.agent == "1"){
+        com.focusPage(".agent", "#form").hide();
+    }
+    
+    if(contractEdit.contractArgs.type == "0"){
+        com.focusPage("#con-payment-second", "#form").hide();
+    }
+    
+    contractEdit.cover["cov-sign-year"] = com.dateFormat(new Date(), "yyyy");
+    contractEdit.cover["cov-sign-month"] = com.dateFormat(new Date(), "MM");
+    contractEdit.cover["cov-sign-day"] = com.dateFormat(new Date(), "dd");
+    
+    com.post(api.ds.decoration, {}, function (res) {
+        contractEdit.decorationType = res.typeness.split("key", "value");
+        contractEdit.item.houseType.bindData(res.houseClass, 'key', 'value');
+    });
+
+    com.post(api.data.queryCustomerById, {"customer.cid": params.cid}, function (res) {
+
+        var customer = res.customer;
+        
+        com.focusPage("#con-customer-name", "#form").val(customer.name);
+        com.focusPage("#con-customer-phone", "#form").val(customer.phone);
+        com.focusPage("#con-customer-ident", "#form").val(customer.identity);
+        
+        contractEdit.customer = customer;
+        
+        contractEdit.cover["cov-orderId"] = contractEdit.decorationOrderId;
+        contractEdit.cover["cov-customer-name"] = customer.name;
+        contractEdit.cover["cov-customer-phone"] = customer.phone;
+    });
+    
+    com.post(api.construction.queryConstructionInfoByOrderId, {"constructionInfo.orderId": contractEdit.decorationOrderId}, function (result) {
+        
+        var datas = result.constructionInfo;
+        
+        com.focusPage("#con-work-number", "#form").val(datas.timeLimit);
+        
+        com.datetime(com.focusPage("#con-work-year", "#form").val(datas.finishTime ? datas.finishTime.substr(0, 4) : ""), "year");
+        com.datetime(com.focusPage("#con-work-month", "#form").val(datas.finishTime ? datas.finishTime.substr(5, 2) : ""), "month");
+        com.datetime(com.focusPage("#con-work-day", "#form").val(datas.finishTime ? datas.finishTime.substr(8, 2) : ""), "day");
+    });
+
+    //通过装修单号获取装修款项信息
+    com.post(api.payment.queryDecorationPaymentByOrderId, {"decorationPayment.decoration.orderId": contractEdit.decorationOrderId}, function (res) {
+        
+        var payments = res.decorationPayments.split("paymentType", "referMoney");
+        
+        com.focusPage("#con-design-money", "#form").val(payments['设计费'] == null ? 0 : payments['设计费']);
+        com.focusPage("#con-payment-first", "#form").val(payments['首付款'] == null ? 0 : payments['首付款']);
+        com.focusPage("#con-payment-second", "#form").val(payments['首付二期款'] == null ? 0 : payments['首付二期款']);
+        com.focusPage("#con-payment-third", "#form").val(payments['二期款'] == null ? 0 : payments['二期款']);
+        com.focusPage("#con-payment-final", "#form").val(payments['尾款']  == null ? 0 : payments['尾款']);
+        
+        contractEdit.designPrice = payments['设计费'] == null ? 0 : payments['设计费'];
+        
+    }, null, false);
+
+    com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": contractEdit.decorationOrderId}, function (res) {
+        
+        var data = res.decoration;
+        var house = data.house;
+        var village = house.village;
+        var proper = village.cityProper;
+
+        com.focusPage("#con-province-name", "#form").val(proper.city.province);
+        com.focusPage("#con-city-name", "#form").val(proper.city.name);
+        com.focusPage("#con-proper-name", "#form").val(proper.name);
+        com.focusPage("#con-village-name", "#form").val(village.name);
+        com.focusPage("#con-housenumber", "#form").val(house.houseNumber);
+        com.focusPage("#con-buildarea", "#form").val(house.buildArea);
+        com.focusPage("#con-housetype", "#form").val(data.houseClass);
+        
+        com.focusPage("#con-house-type", "#form").val(contractEdit.decorationType[data.type]);
+        com.focusPage("#con-work-type", "#form").val(contractEdit.decorationType[data.type]);
+        com.focusPage("#con-work-model", "#form").val(contractEdit.decorationType[data.type]);
+        
+        com.focusPage("#con-contract-total", "#form").val(utils.accAdd(parseFloat(data.orderTotalPrice), parseFloat(contractEdit.designPrice)));
+        com.focusPage("#con-contract-stotal", "#form").val(data.orderTotalPrice);
+        com.focusPage("#con-contract-rtotal", "#form").val(data.factPrice);
+        
+        contractEdit.decoration = data;
+        
+        contractEdit.cover["cov-buildarea"] = data.house.buildArea;
+        contractEdit.cover["cov-address"] = data.house.village.name + " " + data.house.houseNumber;
+        contractEdit.cover["cov-designer-name"] = data.designer.currentName;
+        contractEdit.cover["cov-designer-phone"] = data.designer.phone;
+    });
+    
+    com.post(api.decoration.queryDecorationActivityByOrderId, {"decorationActivity.orderId": contractEdit.decorationOrderId}, function(res){
+        
+        var decorationActivitys = res.decorationActivitys;
+        
+        if(decorationActivitys.length != 0) com.focusPage("#con-activity-name", "#form").val(decorationActivitys[0].activity.name);
+    });
+    
+    com.focusPage('#talkingList').click(function(){
+        contractEdit.modal.talkingModal.modal("hide");
+    });
+
+    com.focusPage("#con-markup-one").dblclick(function(){
+        talkingData($(this).attr("id"), {"types[0]": 0});
+    });
+    
+    com.focusPage("#con-markup-two").dblclick(function(){
+        talkingData($(this).attr("id"), {"types[0]": 1});
+    });
+    
+    com.focusPage("#con-markup-thr").dblclick(function(){
+        talkingData($(this).attr("id"), {"types[0]": 3});
+    });
+
+    function talkingData(content, types){
+        
+        contractEdit.$input = content;
+        
+        com.post(api.data.queryTalking, types, function (res) {
+            displayFunc.init("talkingList", res.talkings);
+            contractEdit.modal.talkingModal.modal("show");
+        }, null, false);
+    };
+
+    var displayFunc = (function () {
+
+        var renderList = function (tableId, listData) {
+            var $tableWrap = com.focusPage('#' + tableId);
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        
+            if (listData && listData.length) {
+                $.each(listData, function (i, v) {
+                    creatLine(v).appendTo($ul);
+                });
+                $ul.appendTo($tableWrap);
+            }
+        };
+
+        var creatLine = function (v) {
+
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+            var propertyArr = [
+                [" ", v.content, 'grey']
+            ];
+
+            $.each(propertyArr, function (index, value) {
+                var $liProperty = $('<li></li>');
+                $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
+                $liProperty.appendTo($ulProperty);
+            });
+
+            $liLine.append($divBtnWrap).append($ulProperty);
+
+            return $liLine.click(function(){
+                var $tmp = com.focusPage("#" + contractEdit.$input);
+                var value = $tmp.val();
+                $tmp.val(value + v.content + "\n");
+            });
+        };
+
+        return {
+            init: function (tableId, listData) {
+                if(!listData.length){
+					var $resultList = com.focusPage('#' + tableId).addClass('dz-default dz-message').html('');
+					var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
+					var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
+					var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
+					return $resultList;
+				}else{
+					com.focusPage('#' + tableId).html(null);
+					renderList(tableId,listData);
+				}
+            },
+            drawLine: function (v) {
+                return creatLine(v);
+            }
+        };
+    })();
+
+    com.focusPage("#preservation").unbind().on('click', function () {
+
+        if(com.validate('form')) return false;
+
+        com.showConfirm("请仔细认真检查合同填写内容", function () {
+            
+            var conitems = com.focusPage(".conitem:visible", "#form");
+
+            var data = {};
+            
+            $.each(conitems, function(i, e){
+                var content = $(e);
+                data[content.attr("id")] = content.val();
+            });
+            
+            data = $.extend({}, data, contractEdit.cover);
+            
+            console.log(data);
+            
+            data["con-sign-year"] = com.dateFormat(new Date(), "yyyy");
+            data["con-sign-month"] = com.dateFormat(new Date(), "MM");
+            data["con-sign-day"] = com.dateFormat(new Date(), "dd");
+            
+            data["con-design-money1"] = parseFloat(data["con-design-money"]);
+            data["con-activity-name1"] = data["con-activity-name"];
+            
+            data["con-contract-total-cn"] = utils.getCNMoney(parseFloat(data["con-contract-total"]));
+            data["con-contract-stotal-cn"] = utils.getCNMoney(parseFloat(data["con-contract-stotal"]));
+            data["con-contract-rtotal-cn"] = utils.getCNMoney(parseFloat(data["con-contract-rtotal"]));
+            data["con-design-money-cn"] = utils.getCNMoney(parseFloat(data["con-design-money"]));
+            
+            data["sin-customer-name"] = data["con-customer-name"];
+            data["sin-customer-phone"] = data["con-customer-phone"];
+            data["sin-customer-ident"] = data["con-customer-ident"];
+            
+            console.log(data);
+            
+            var options = {
+                "decorationContract.orderId": params.decorationOrderId,
+                "decorationContract.contract.cid": params.contractArgs.cid,
+                "data" : JSON.stringify(data)
+            };
+            
+            console.log(options);
+            
+            var popup = com.focusPage("#popup-page");
+            var target = com.focusPage("#layerPopUp");
+            
+            var mask = $("<div></div>").addClass("tab-mask").appendTo(popup);
+            var maskh1 = $("<h1></h1>").css({"position": "absolute", "top": "30%", "left": "45%"}).appendTo(mask);
+            var maskicon = $("<i></i>").addClass("icon-spinner icon-spin bigger-450").appendTo(maskh1);
+            
+            mask.css("top", target.height() - mask.height() + 30);
+            popup.css("overflow", "hidden");
+            
+            com.post(api.decoration.addDecorationContract, options, function (res) {
+                com.closePopup();
+            }, function(res){
+                
+                com.showAlert(com.error, res.errorMsg);
+                
+                mask.remove();
+                popup.css("overflow", "");
+            });
+        });
+    });
+
+});

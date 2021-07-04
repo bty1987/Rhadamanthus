@@ -402,9 +402,11 @@ $(function () {
         var unrefundBtn = $("<span></span>").addClass("btn btn-minier btn-danger").html("未退").css("margin", "3px");
         //补款
         var expendBtn = $("<span></span>").addClass("btn btn-minier btn-purple").html("补款").css("margin", "3px");
+        //抵现
+        var discountBtn = $("<span></span").addClass("btn btn-minier btn-pink").html("抵现").css("margin","3px");
 
         if (salesActivityItem.pagetype == "advance" || salesActivityItem.pagetype == "activity") {
-            uiPgDiv.append(abateBtn).append(receiveBtn).append(refundBtn).append(deliveBtn).append(unrefundBtn).append(expendBtn);
+            uiPgDiv.append(abateBtn).append(receiveBtn).append(refundBtn).append(deliveBtn).append(unrefundBtn).append(expendBtn).append(discountBtn);
         }
 
         //失效按钮
@@ -453,9 +455,15 @@ $(function () {
             expendSalesActivityItem(activityItem.saiid, activityItem.activity);
         });
 
+        //点击抵现按钮
+        discountBtn.click(function () {
+        	discountSalesActivityItem(activityItem.saiid, activityItem.activity);
+        });
+
+        
     }
 
-    //0: 初始 , 1: 失效 , 2: 已领 , 3: 退货 , 4: 配送 , 5: 未退 , 6: 升级 , 7: 补款
+    //0: 初始 , 1: 失效 , 2: 已领 , 3: 退货 , 4: 配送 , 5: 未退 , 6: 升级 , 7: 补款 , 8: 抵现
     //失效
     function abateSalesActivityItem(saiid, activityItemName) {
 
@@ -491,6 +499,20 @@ $(function () {
 
             com.post(api.sales.expendSalesActivityItem, {"salesActivityItem.saiid": saiid}, function (res) {
                 com.showAlert(com.info, "补款成功!");
+                querySalesActivityItem();
+                amountSalesActivityForActivity();
+                integral();
+            });
+        });
+    }
+    
+    //抵现
+    function discountSalesActivityItem(saiid, activityItemName) {
+
+        com.showConfirm("是否确认抵现" + activityItemName + "活动物品?", function () {
+
+            com.post(api.sales.discountSalesActivityItem, {"salesActivityItem.saiid": saiid}, function (res) {
+                com.showAlert(com.info, "抵现成功!");
                 querySalesActivityItem();
                 amountSalesActivityForActivity();
                 integral();

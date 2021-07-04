@@ -1,32 +1,37 @@
 $(function(){
 
     var quotationItem = {
+            
         saveBtn: com.focusPage("#saveBtn"),
         cancelBtn: com.focusPage("#cancelBtn"),
+        
         modals: {
             quotationItemModal: com.focusPage("#quotationItemModal"),
         },
-        quotationItemItems: {
-            itemId: com.focusPage("#itemId").prop("placeholder", "格式: (QI_00001)"),
-            qiId: com.focusPage("#qiId"),
+        
+        items: {
+            qiid: com.focusPage("#qiid"),
+            no: com.focusPage("#no").prop("placeholder", "格式: (QI_00001)"),
+            name: com.focusPage("#name"),
+            version: com.focusPage("#version"),
             quotationType: com.focusPage("#quotationType"),
             quotationClassification: com.focusPage("#quotationClassification"),
             quotationBigCategory: com.focusPage("#quotationBigCategory"),
             quotationSmallCategory: com.focusPage("#quotationSmallCategory"),
-            itemName: com.focusPage("#itemName"),
             measurementUnit: com.focusPage("#measurementUnit"),
             workType: com.focusPage("#workType"),
-            quotationItemDes: com.focusPage("#quotationItemDes"),
+            comment: com.focusPage("#comment"),
             unitPrice: com.focusPage("#unitPrice"),
             addPrice: com.focusPage("#addPrice"),
             subPrice: com.focusPage("#subPrice"),
-            version: com.focusPage("#version"),
         },
+        
         editFlag: false,
         repeatFlg: false,
+        
         validator: {
             region: {
-                type: "v_itemId",
+                type: "v_quotation_no",
                 regex: /^QI_\d{5}$/,
                 errorMsg: "请以QI_作为前缀 , 之后以五个位数字组成(如QI_00001)."
             }
@@ -40,38 +45,45 @@ $(function(){
     $.extend(com.validator, quotationItem.validator);
 
     com.post(api.quotation.queryQuotationType, {}, function(a) {
-        quotationItem.quotationItemItems.quotationType.bindData(a.quotationTypes, "id", "name");
-        quotationItem.quotationItemItems.quotationType.prepend("<option value='0' selected='selected'>请选择</option>");
+        quotationItem.items.quotationType.bindData(a.quotationTypes, "id", "name");
+        quotationItem.items.quotationType.prepend("<option value='0' selected='selected'>请选择</option>");
     }, null, false);
+    
     com.post(api.quotation.queryQuotationClassification, {}, function(a) {
-        quotationItem.quotationItemItems.quotationClassification.bindData(a.quotationClassifications, "id", "name");
+        quotationItem.items.quotationClassification.bindData(a.quotationClassifications, "id", "name");
     });
+    
     com.post(api.common.queryMeasurementUnit, {}, function(a) {
-        quotationItem.quotationItemItems.measurementUnit.bindData(a.measurementUnits, "id", "name");
+        quotationItem.items.measurementUnit.bindData(a.measurementUnits, "id", "name");
     });
+    
     com.post(api.common.queryWorkType, {}, function(a) {
-        quotationItem.quotationItemItems.workType.bindData(a.workTypes, "id", "name");
+        quotationItem.items.workType.bindData(a.workTypes, "id", "name");
     });
+    
     com.post(api.quotation.queryQuotationVersion, {}, function(a) {
-        quotationItem.quotationItemItems.version.bindData(a.quotationVersions, "no", "name");
+        quotationItem.items.version.bindData(a.quotationVersions, "no", "name");
     });
 
-    quotationItem.quotationItemItems.itemId.on("blur", function () {
+    quotationItem.items.no.on("blur", function () {
         checkItemName();
     });
 
-    quotationItem.quotationItemItems.version.on("change", function () {
+    quotationItem.items.version.on("change", function () {
         checkItemName();
     });
 
-    quotationItem.quotationItemItems.quotationType.change(function() {
+    quotationItem.items.quotationType.change(function() {
+        
         var quotationType = $(this).val();
+        
         if (quotationType != 2) {
-            quotationItem.quotationItemItems.unitPrice.removeAttr('readonly').val('');
+            quotationItem.items.unitPrice.removeAttr('readonly').val('');
         }
+        
         if (quotationType == false) {
             openModal();
-            return;
+            return false;
         } else {
             queryQuotationBigCategory(quotationType);
             queryQuotationSmallCategory(quotationType);
@@ -81,8 +93,8 @@ $(function(){
 
     quotationItem.modals.quotationItemModal.on('hide.bs.modal', function() {
         com.clearValidator();
-        com.clearValidator("itemId", true);
-        com.cleanItems(quotationItem.quotationItemItems);
+        com.clearValidator("no", true);
+        com.cleanItems(quotationItem.items);
     });
 
     quotationItem.saveBtn.bindClick(saveData);
@@ -111,7 +123,7 @@ $(function(){
 
         var creatLine = function(v){
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.itemName));
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.name));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
@@ -124,24 +136,27 @@ $(function(){
             var $btnStatus = $('<div></div>').addClass('pull-right');
             var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
             var $span = $('<span></span>').addClass('lbl status-lbl');
+            
             //是否打折
             var $btnDiscount = $('<div></div>').addClass('pull-right');
             var $discountSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
             var $dspan = $('<span></span>').addClass('lbl discount-lbl');
-
+            
+            var no = v.version.offset == 0 ? "-" : "QI_" + (Array(5).join('0') + (v.qiid - v.version.offset)).slice(-5);
+            
             var propertyArr = [
-                ["编号:", v.itemId, "blue"],
-                ["类型:", v.quotationType, "red"],
-                ["分类:", v.quotationClassification, "red"],
-                ["大类:", v.quotationBigCategory, "red"],
-                ["小类:", v.quotationSmallCategory, "red"],
-                ["单位:", v.measurementUnit, "red"],
-                ["工种:", v.workType, "red"],
-                ["说明:", v.quotationItemDes, "grey"],
-                ["增补价:",v.addPrice,"blue"],
-                ["单价:", v.unitPrice, "blue"],
-                ["退减价:",v.subPrice,"blue"],
-                ["版本:", v.version, "blue"],
+                ["编号: ", no, "grey"],
+                ["类型: ", v.category.name, "red"],
+                ["分类: ", v.classification.name, "red"],
+                ["大类: ", v.bigCategory.name, "red"],
+                ["小类: ", v.smallCategory.name, "red"],
+                ["单位: ", v.unit.name, "red"],
+                ["工种: ", v.workType.name, "red"],
+                ["增补价 :", v.addPrice,"blue"],
+                ["单价: ", v.unitPrice, "blue"],
+                ["退减价: ", v.subPrice,"blue"],
+                ["版本: ", v.version.name, "grey"],
+                ["说明: ", v.comment, "grey"],
             ];
 
             $.each(propertyArr, function (index,value) {
@@ -174,28 +189,28 @@ $(function(){
             });
 
             $btnSelection.click(function(){
-                params["qiid"] = v.qiId;
+                params["qiid"] = v.qiid;
                 com.popup4page("#createSoodsPopUp", "/views/data/createSoods.html", "添加选材");
             });
 
             $btnNormood.click(function(){
-                params["qiid"] = v.qiId;
+                params["qiid"] = v.qiid;
                 com.popup4page("#normoodPopUp", "/views/data/normood.html", "定额材料");
             });
 
             $btnNormrice.click(function(){
-                params["qiid"] = v.qiId;
+                params["qiid"] = v.qiid;
                 com.popup4page("#normricePopUp", "/views/data/normrice.html", "定额工费");
             });
 
             !v.status && $statusSwitch.prop("checked", true);
             $statusSwitch.switchBtn("status-lbl").on("click",function() {
-                $statusSwitch.prop("checked") ? (updateStatus(v.qiId, 0, function(){$statusSwitch.removeAttr("checked");})) : (updateStatus(v.qiId, 1,function(){$statusSwitch.prop("checked");}));
+                $statusSwitch.prop("checked") ? (updateStatus(v.qiid, 0, function(){$statusSwitch.removeAttr("checked");})) : (updateStatus(v.qiid, 1,function(){$statusSwitch.prop("checked");}));
             });
 
             v.discount && $discountSwitch.prop("checked", true);
             $discountSwitch.switchBtn("discount-lbl").on("click",function() {
-                $discountSwitch.prop("checked") ? (updateDiscount(v.qiId, 1, function(){$discountSwitch.removeAttr("checked");})) : (updateDiscount(v.qiId, 0,function(){$discountSwitch.prop("checked");}));
+                $discountSwitch.prop("checked") ? (updateDiscount(v.qiid, 1, function(){$discountSwitch.removeAttr("checked");})) : (updateDiscount(v.qiid, 0,function(){$discountSwitch.prop("checked");}));
             });
 
             return $liLine;
@@ -238,8 +253,8 @@ $(function(){
     com.focusPage('a[name="add"]', '#pagenation').click(function () {
         quotationItem.editFlg = false;
 
-        quotationItem.quotationItemItems.itemId.prop("disabled", false);
-        quotationItem.quotationItemItems.version.prop("disabled", false);
+        quotationItem.items.no.prop("disabled", false);
+        quotationItem.items.version.prop("disabled", false);
 
         quotationItem.modals.quotationItemModal.modal("show");
     });
@@ -270,21 +285,21 @@ $(function(){
 
             $.exceler({
                 column : [
-                    ['编号', 'itemId'],
-                    ['名称', 'itemName'],
-                    ['类型', 'quotationType'],
-                    ['分类', 'quotationClassification'],
-                    ['大类', 'quotationBigCategory'],
-                    ['小类', 'quotationSmallCategory'],
-                    ['单位', 'measurementUnit'],
-                    ['工种', 'workType'],
-                    ['说明', 'quotationItemDes'],
+                    ['编号', 'no'],
+                    ['名称', 'name'],
+                    ['版本', 'version.name'],
+                    ['类型', 'category.name'],
+                    ['分类', 'classification.name'],
+                    ['大类', 'bigCategory.name'],
+                    ['小类', 'smallCategory.name'],
+                    ['单位', 'unit.name'],
+                    ['工种', 'workType.name'],
                     ['增补价', 'addPrice'],
                     ['单价', 'unitPrice'],
                     ['退减价', 'subPrice'],
-                    ['版本', 'version'],
                     ['是否打折', 'discount'],
                     ['启用/禁用', 'status'],
+                    ['说明', 'comment'],
                 ],
                 list: res.paging.data,
             },function(v){
@@ -296,32 +311,37 @@ $(function(){
 
     //编辑按钮
     function edit(b) {
+        
         quotationItem.editFlg = true;
-        quotationItem.quotationItemItems.qiId.val(b.qiId);
-        quotationItem.quotationItemItems.itemId.val(b.itemId);
-        quotationItem.quotationItemItems.itemName.val(b.itemName);
-        quotationItem.quotationItemItems.quotationType.val(b.quotationTypeId);
-        quotationItem.quotationItemItems.quotationClassification.val(b.quotationClassificationId);
-        quotationItem.quotationItemItems.quotationBigCategory.val(b.quotationBigCategoryId);
-        quotationItem.quotationItemItems.quotationSmallCategory.val(b.quotationSmallCategoryId);
-        quotationItem.quotationItemItems.workType.val(b.workTypeId);
-        quotationItem.quotationItemItems.measurementUnit.val(b.measurementUnitId);
-        quotationItem.quotationItemItems.quotationItemDes.val(b.quotationItemDes);
-        quotationItem.quotationItemItems.unitPrice.val(b.unitPrice);
-        quotationItem.quotationItemItems.version.val(b.versionId);
-        quotationItem.quotationItemItems.addPrice.val(b.addPrice);
-        quotationItem.quotationItemItems.subPrice.val(b.subPrice);
-        quotationItem.quotationItemItems.itemId.prop("disabled", true);
-        quotationItem.quotationItemItems.version.prop("disabled", true);
+        
+        quotationItem.items.qiid.val(b.qiid);
+        quotationItem.items.no.val(b.no);
+        quotationItem.items.name.val(b.name);
+        
+        quotationItem.items.version.val(b.version.no);
+        quotationItem.items.quotationType.val(b.category.id);
+        quotationItem.items.quotationClassification.val(b.classification.id);
+        quotationItem.items.quotationBigCategory.val(b.bigCategory.id);
+        quotationItem.items.quotationSmallCategory.val(b.smallCategory.id);
+        quotationItem.items.workType.val(b.workType.id);
+        quotationItem.items.measurementUnit.val(b.unit.id);
+        
+        quotationItem.items.unitPrice.val(b.unitPrice);
+        quotationItem.items.addPrice.val(b.addPrice);
+        quotationItem.items.subPrice.val(b.subPrice);
+        quotationItem.items.no.prop("disabled", true);
+        quotationItem.items.version.prop("disabled", true);
+        quotationItem.items.comment.val(b.comment);
+        
         quotationItem.modals.quotationItemModal.modal("show");
     }
 
     //保存
     function saveData() {
 
-        var _quotationType = quotationItem.quotationItemItems.quotationType.val() == false;
-        var _quotationBigCategory = quotationItem.quotationItemItems.quotationBigCategory.val() == false;
-        var _quotationSmallCategory = quotationItem.quotationItemItems.quotationSmallCategory.val() == false;
+        var _quotationType = quotationItem.items.quotationType.val() == false;
+        var _quotationBigCategory = quotationItem.items.quotationBigCategory.val() == false;
+        var _quotationSmallCategory = quotationItem.items.quotationSmallCategory.val() == false;
         if(_quotationType || _quotationBigCategory || _quotationSmallCategory) {
             com.showAlert(com.warning, "请选择类型以及大类小类");
             return;
@@ -329,7 +349,7 @@ $(function(){
 
         if (!com.validate("quotationItemModal") && !quotationItem.repeatFlg) {
 
-            var unitPrice = quotationItem.quotationItemItems.unitPrice.val();
+            var unitPrice = quotationItem.items.unitPrice.val();
 
             if (unitPrice.indexOf(".") != -1){
                 if (unitPrice.substring(0, unitPrice.indexOf(".")).length > 7) {
@@ -344,31 +364,29 @@ $(function(){
             }
 
             var url, option = {
-                "quotationItem.itemId": quotationItem.quotationItemItems.itemId.val(),
-                "quotationItem.versionId": quotationItem.quotationItemItems.version.val(),
-                "quotationItem.version": "",
-                "quotationItem.itemName": quotationItem.quotationItemItems.itemName.val(),
-                "quotationItem.quotationTypeId": quotationItem.quotationItemItems.quotationType.val(),
-                "quotationItem.quotationType": "",
-                "quotationItem.quotationClassificationId": quotationItem.quotationItemItems.quotationClassification.val(),
-                "quotationItem.quotationClassification": "",
-                "quotationItem.quotationBigCategoryId": quotationItem.quotationItemItems.quotationBigCategory.val(),
-                "quotationItem.quotationBigCategory": "",
-                "quotationItem.quotationSmallCategoryId": quotationItem.quotationItemItems.quotationSmallCategory.val(),
-                "quotationItem.quotationSmallCategory": "",
-                "quotationItem.measurementUnitId": quotationItem.quotationItemItems.measurementUnit.val(),
-                "quotationItem.measurementUnit": "",
-                "quotationItem.workTypeId": quotationItem.quotationItemItems.workType.val(),
-                "quotationItem.workType": "",
-                "quotationItem.quotationItemDes": quotationItem.quotationItemItems.quotationItemDes.val(),
-                "quotationItem.unitPrice": quotationItem.quotationItemItems.unitPrice.val(),
-                "quotationItem.addPrice": quotationItem.quotationItemItems.addPrice.val(),
-                "quotationItem.subPrice": quotationItem.quotationItemItems.subPrice.val()
+                "quotationItem.no": quotationItem.items.no.val(),
+                "quotationItem.name": quotationItem.items.name.val(),
+                
+                "quotationItem.version.no": quotationItem.items.version.val(),
+                
+                "quotationItem.category.id": quotationItem.items.quotationType.val(),
+                "quotationItem.classification.id": quotationItem.items.quotationClassification.val(),
+                "quotationItem.bigCategory.id": quotationItem.items.quotationBigCategory.val(),
+                "quotationItem.smallCategory.id": quotationItem.items.quotationSmallCategory.val(),
+                "quotationItem.unit.id": quotationItem.items.measurementUnit.val(),
+                "quotationItem.workType.id": quotationItem.items.workType.val(),
+                
+                "quotationItem.unitPrice": quotationItem.items.unitPrice.val(),
+                "quotationItem.addPrice": quotationItem.items.addPrice.val(),
+                "quotationItem.subPrice": quotationItem.items.subPrice.val(),
+                
+                "quotationItem.comment": quotationItem.items.comment.val(),
+
             };
 
             if (quotationItem.editFlg) {
                 url = api.quotation.updateQuotationItem;
-                option["quotationItem.qiId"] = quotationItem.quotationItemItems.qiId.val();
+                option["quotationItem.qiid"] = quotationItem.items.qiid.val();
             } else {
                 url = api.quotation.addQuotationItem;
             }
@@ -385,7 +403,7 @@ $(function(){
     function updateStatus(id, status, failcallBack) {
 
         com.post(api.quotation.updateQuotationItemForStatus, {
-            "quotationItem.qiId": id,
+            "quotationItem.qiid": id,
             "quotationItem.status": status
         });
     };
@@ -394,48 +412,49 @@ $(function(){
     function updateDiscount(id, discount, failcallBack) {
 
         com.post(api.quotation.updateQuotationItemForDiscount, {
-            "quotationItem.qiId": id,
+            "quotationItem.qiid": id,
             "quotationItem.discount": discount
         });
     };
 
     function queryQuotationBigCategory(quotationType){
         com.post(api.quotation.queryQuotationBigCategory, {"quotationBigCategory.qtid":quotationType}, function(a) {
-            quotationItem.quotationItemItems.quotationBigCategory.bindData(a.quotationBigCategorys, "id", "name");
-            quotationItem.quotationItemItems.quotationBigCategory.prepend("<option value='0' selected='selected'>请选择类型</option>");
+            quotationItem.items.quotationBigCategory.bindData(a.quotationBigCategorys, "id", "name");
+            quotationItem.items.quotationBigCategory.prepend("<option value='0' selected='selected'>请选择类型</option>");
         }, null, false);
     };
 
     function queryQuotationSmallCategory(quotationType){
         com.post(api.quotation.queryQuotationSmallCategory, {"quotationSmallCategory.qtid":quotationType}, function(a) {
-            quotationItem.quotationItemItems.quotationSmallCategory.bindData(a.quotationSmallCategorys, "id", "name");
-            quotationItem.quotationItemItems.quotationSmallCategory.prepend("<option value='0' selected='selected'>请选择类型</option>");
+            quotationItem.items.quotationSmallCategory.bindData(a.quotationSmallCategorys, "id", "name");
+            quotationItem.items.quotationSmallCategory.prepend("<option value='0' selected='selected'>请选择类型</option>");
         }, null, false);
     };
 
     function openModal(){
-        quotationItem.quotationItemItems.quotationBigCategory.html('');
-        quotationItem.quotationItemItems.quotationSmallCategory.html('');
-        quotationItem.quotationItemItems.quotationBigCategory.prepend("<option value='0' selected='selected'>请选择类型</option>");
-        quotationItem.quotationItemItems.quotationSmallCategory.prepend("<option value='0' selected='selected'>请选择类型</option>");
-        quotationItem.quotationItemItems.unitPrice.removeAttr('readonly').val('');
+        quotationItem.items.quotationBigCategory.html('');
+        quotationItem.items.quotationSmallCategory.html('');
+        quotationItem.items.quotationBigCategory.prepend("<option value='0' selected='selected'>请选择类型</option>");
+        quotationItem.items.quotationSmallCategory.prepend("<option value='0' selected='selected'>请选择类型</option>");
+        quotationItem.items.unitPrice.removeAttr('readonly').val('');
     };
 
     function checkItemName () {
-        var itemName = quotationItem.quotationItemItems.itemId.val();
-        var version = quotationItem.quotationItemItems.version.val();
+        
+        var no = quotationItem.items.no.val();
+        var version = quotationItem.items.version.val();
 
-        if (itemName != "") {
+        if (no != "") {
             var option = {
-                "quotationItem.itemId": itemName,
-                "quotationItem.versionId": version,
+                "quotationItem.no": no,
+                "quotationItem.version.id": version,
             };
             com.post(api.quotation.queryQuotationItemByItemIdAVersionId, option, function(res) {
-                if (res.quotationItem && res.quotationItem.itemId) {
-                    com.showTips(quotationItem.quotationItemItems.itemId, "该版本的项目编号已存在", true);
+                if (res.quotationItem && res.quotationItem.qiid) {
+                    com.showTips(quotationItem.items.no, "该版本的项目编号已存在", true);
                     quotationItem.repeatFlg = true;
                 } else {
-                    com.clearValidator("#itemId", true);
+                    com.clearValidator("#no", true);
                     quotationItem.repeatFlg = false;
                 }
             });

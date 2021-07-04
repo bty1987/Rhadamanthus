@@ -309,6 +309,9 @@ jQuery(function () {
             com.showAlert(com.warning, "销售项品牌与主材品牌不符,请检查");
             return false;
         }
+        
+        var popup = com.focusPage("#popup-page");
+        var mask = com.mask(popup, com.focusPage("#addSalesItem"));
 
         var price = {};
         com.post(api.data.queryPriceByPid, {"price.pid": sales.leftitems.purchase.val()}, function (data) {
@@ -326,6 +329,8 @@ jQuery(function () {
         var $remark = sales.leftitems.remark.val();
         
         var $otherStatus = ($selling != $disPrice || com.focusPage("[data-otherStatus=1]").length > 0) ? 1 : 0;
+        
+        cycTotal();
 
         var options = {};
         
@@ -362,18 +367,24 @@ jQuery(function () {
 
         options["salesItem.color.name"] = sales.leftitems.color.find("option:selected").text();
         options["salesItem.format.info"] = sales.leftitems.format.find("option:selected").text();
+        
+        setTimeout(function(){
+            com.closeMask(mask, popup);
+        }, 800);
 
         com.post(api.sales.addSalesItem, options, function (data) {
             
             com.showAlert(com.info, "操作成功");
             
             initList(data.salesItem);
+            
             cycTotal();
             
             com.cleanTypeahead("goods");
             com.focusPage('#left').find('input').val("");
             com.focusPage('#left').find('select').empty();
-        });
+        }, null, false);
+        
     });
 
     sales.leftitems.purchase.on("change", function () {

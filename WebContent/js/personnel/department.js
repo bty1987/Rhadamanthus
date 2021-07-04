@@ -32,14 +32,15 @@ jQuery(function ($) {
     });
 
     com.post(api.communion.queryDepartment, {}, function (res) {
+        
         var $arr = [];
-
+        
         $.each(res.deptList, function(i, v){
-            if(v.fatherDept.did == null){
-                $arr.push(v);
-                department.items.fatherdept.bindData($arr, "did", "name", true);
-            }
-        })
+            if(v.fatherDept.did != null && v.fatherDept.did != v.did) return true;
+            $arr.push(v);
+        });
+        
+        department.items.fatherdept.bindData($arr, "did", "name", true);
     });
 
     com.post(api.communion.queryDepartmentType, {}, function (res) {

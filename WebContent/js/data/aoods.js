@@ -1,25 +1,30 @@
 $(function () {
 
     var aoods = {
+            
         aid: null,
         gid: null,
+        
         items: {
-            name: com.focusPage("#name"),
-            accessoriesType: com.focusPage("#accessoriesType"),
-            bcompany: com.focusPage("#bcompany"),
+            name: com.focusPage("#name", "#addLayer"),
+            accessoriesType: com.focusPage("#accessoriesType", "#addLayer"),
+            bcompany: com.focusPage("#bcompany", "#addLayer"),
+            
+            editAccessoriesType: com.focusPage("#editAccessoriesType", "#editLayer"),
+            editBcompany: com.focusPage("#editBcompany", "#editLayer"),
+            old: com.focusPage("#old", "#editLayer"),
+            
+            ccompany: com.focusPage("#ccompany", "#copyLayer"),
         },
-
-        edititem: {
-            // editCheckup: com.focusPage("#editCheckup"),
-            editAccessoriesType: com.focusPage("#editAccessoriesType"),
-            editBcompany: com.focusPage("#editBcompany"),
-            old: com.focusPage("#old"),
+        
+        btns: {
+            submitBtn: com.focusPage("#submitBtn", "#addLayer"),
+            editBtn: com.focusPage("#editBtn", "#editLayer"),
+            copyBtn: com.focusPage("#copyBtn", "#copyLayer"),
         },
+        
+        status: ["启用", "禁用"],
 
-        submitBtn: com.focusPage("#submitBtn"),
-        editBtn: com.focusPage("#editBtn"),
-
-        company: [],
         pageType: params['urlLoadParams'].type,
     };
 
@@ -30,21 +35,22 @@ $(function () {
 
     com.post(api.system.queryCompany, {}, function (res) {
         aoods.items.bcompany.bindData(res.companys, 'cid', 'name', true);
+        aoods.items.ccompany.bindData(res.companys, 'cid', 'name', true);
         com.focusPage('select[name="editBcompany"]').bindData(res.companys, 'cid', 'name', false);
     });
 
-    // com.post(api.ds.construction, {}, function (res) {
-    //     aoods.edititem.editCheckup.bindData(res.isCheckup, "key", "value", false);
-    // }, null, false);
-
-    aoods.submitBtn.click(function () {
+    aoods.btns.submitBtn.click(function () {
         saveData();
     });
 
-    aoods.editBtn.click(function () {
+    aoods.btns.editBtn.click(function () {
         editAoods();
     });
 
+    aoods.btns.copyBtn.click(function () {
+    	copyAoods();
+    });
+    
     com.initTypeahead("name", api.data.queryGoodsByName, "goods.name", {}, "goodes", "gid", "name", function (list, k, v) {
         $.each(list, function (index, val) {
             if (val.gid == k) {
@@ -55,119 +61,74 @@ $(function () {
         return v;
     });
 
-    var displayFunc = (function () {
-
-        var renderList = function (tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if (listData && listData.length) {
-                $.each(listData, function (i, v) {
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function (v) {
-
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.goods.name));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-            var $btnCost = $('<a></a>').addClass('btn btn-minier btn-pink').html('成本');
-
-            var propertyArr = [
-                ["品牌: ", v.goods.brand, "grey"],
-                ["品类: ", v.goods.category, "grey"],
-                ["单位: ", v.goods.measurementUnit, "grey"],
-                ["售价: ", v.goods.selling, "blue"],
-                // ["验证标识: ", v.checkup == 0 ? "验证" : "通过", "red"],
-                ["辅类: ", v.accessoriesType.name, "grey"],
-                ["状态: ", v.status == 0 ? "启用" : "禁用", "red"],
-                ["归属公司: ", v.bompany, "grey"],
-            ];
-
-            $.each(propertyArr, function (index, value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            var $btnStatus = $('<div></div>').addClass('pull-right');
-            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type": "checkbox"});
-            var $span = $('<span></span>').addClass('lbl');
-
-            $btnStatus.append($statusSwitch).append($span);
-            $divBtnWrap.append($btnCost).append($btnEdit).append($btnStatus).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            $btnCost.click(function () {
-                params.aid = v.aid;
-                com.popup4page("#optPopUp", "views/data/aoodsCost.html", "辅材成本");
-            });
-
-            $btnEdit.click(function () {
-                com.cleanItems(aoods.edititem);
-                aoods.aid = v.aid;
-                // aoods.edititem.editCheckup.val(v.checkup);
-                aoods.edititem.editAccessoriesType.val(v.accessoriesType.atid);
-                aoods.edititem.old.val(v.bompany);
-                com.popup4model("#editLayer", "编辑")
-            });
-
-            !v.status && $statusSwitch.prop("checked", true);
-            $statusSwitch.switchBtn("status-lbl").on("click", function () {
-                $statusSwitch.prop("checked") ? (updateStatus(v.aid, 0, function () {
-                    $statusSwitch.removeAttr("checked")
-                })) : (updateStatus(v.aid, 1, function () {
-                    $statusSwitch.prop("checked")
-                }));
-            });
-
-            return $liLine;
-        };
-
-        return {
-            init: function (tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function (v) {
-                return creatLine(v);
-            }
-        }
-    })();
-
     var searcher = new Searcher();
 
-    var condCodeArrs = ["data-aoods-name", "data-aoods-type", "data-aoods-status", "data-aoods-bompany"];
+    searcher.base("condList","pagenation","resultList", api.data.pageAoods);
 
-    if (aoods.pageType == "bompany") condCodeArrs.pop();
+    searcher.condition(["data-aoods-name", "data-aoods-type", "data-aoods-status", "data-aoods-bompany"]);
+    
+    if (aoods.pageType == "bompany") {
+    	searcher.condition(["data-aoods-name", "data-aoods-type", "data-aoods-status"]);
+    }
+    
+    searcher.param({"companyType": aoods.pageType});
+    
+    searcher.button([
+        {id: "add", name: "添加", clazz: "btn-yellow", icon: "icon-plus"},
+    ]);
+    
+    if(aoods.pageType == "company"){
+    	searcher.button([{id: "copy", name: "复制", clazz: "btn-success", icon: "icon-download-alt"}])
+    }
+    
+    var lineprops = [
+        {field: "goods.brand", name: "品牌", prop: "goods.brand", clazz: "grey"},
+        {field: "goods.category", name: "品类", prop: "goods.category", clazz: "grey"},
+        {field: "goods.measurementUnit", name: "单位", prop: "goods.measurementUnit", clazz: "grey"},
+        {field: "goods.selling", name: "售价", prop: "goods.selling", clazz: "grey"},
+        {field: "accessoriesType.name", name: "辅类", prop: "accessoriesType.name", clazz: "grey"},
+        {field: "status", name: "状态 ", prop: "status", clazz: "red", dataset: aoods.status},
+        {field: "bompany", name: "归属公司", prop: "bompany", clazz: "grey"},
+    ];
 
-    searcher.init(condCodeArrs, "condList", api.data.pageAoods, function (data) {
-        displayFunc.init('resultList', data);
-    }, "pagenation", "aoodsPostData" + aoods.pageType, {"companyType": aoods.pageType}, false, null, function () {
-
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'add').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
-
-        $adda.click(function () {
-            com.cleanItems(aoods.items);
-            com.popup4model("#addLayer", "添加")
-        });
-
-        return [$adda];
+    var linebtns = [
+        {name: "编辑", clazz: "btn-yellow", handle: function(v){
+            
+        	com.cleanItems(aoods.items);
+        	
+            aoods.aid = v.aid;
+            
+            aoods.items.editAccessoriesType.val(v.accessoriesType.atid);
+            aoods.items.old.val(v.bompany);
+            
+            com.popup4model("#editLayer", "编辑")
+        }},
+        {name: "成本", clazz: "btn-pink", handle: function(v){
+        	params.aid = v.aid;
+        	com.popup4page("#optPopUp", "views/data/aoodsCost.html", "辅材成本");
+        }},
+        {name: "状态", type: "switch", clazz: "status-lbl", handle: function(v, check){
+            com.post(api.data.updateAoodsForStatus, {"aoods.aid": v.aid, "aoods.status": check ? 0 : 1});
+            return false;
+        }, init: function(v){
+            return !v.status;
+        }},
+    ]
+    
+    searcher.line("goods.name",lineprops,linebtns);
+    
+    searcher.render();
+    
+    com.focusPage('#add', '#pagenation').on("click", function () {
+        com.cleanItems(aoods.items);
+        com.popup4model("#addLayer", "添加");
     });
-
+    
+    com.focusPage('#copy', '#pagenation').on("click", function () {
+        com.cleanItems(aoods.items);
+        com.popup4model("#copyLayer","复制");
+    });
+    
     function saveData() {
 
         if (com.validate("formAoods", "right")) {
@@ -196,9 +157,9 @@ $(function () {
             return false;
         }
 
-        var atid = aoods.edititem.editAccessoriesType.val();
-        var bcid = aoods.edititem.editBcompany.val();
-        // var checkup = aoods.edititem.editCheckup.val();
+        var atid = aoods.items.editAccessoriesType.val();
+        var bcid = aoods.items.editBcompany.val();
+        // var checkup = aoods.items.editCheckup.val();
 
         var options = {
             "aoods.aid": aoods.aid,
@@ -222,6 +183,24 @@ $(function () {
             searcher.doSearch();
         }, function () {
             failcallBack && failcallBack();
+        });
+    }
+    
+    function copyAoods(){
+        
+    	if (com.validate("copyAoods","right")) {
+            return false;
+        }
+    	
+        var bcid = aoods.items.ccompany.val();
+
+        var options = {
+            "aoods.bompany": bcid,
+        };
+        
+        com.post(api.data.copyAoods, options, function (res) {
+            com.closePopup();
+            searcher.doSearch();
         });
     }
 });

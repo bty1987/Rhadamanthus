@@ -134,7 +134,7 @@ Condition.addupRule("data", {
         label: "名称",
         type: "text",
         submitConfig: {
-            name: "itemName",
+            name: "name",
             op: "cn",
             validate: null
         }
@@ -673,6 +673,22 @@ Condition.addupRule("data", {
             name: "name",
             op: "cn",
             validate: null
+        }
+    },
+    "contract-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource : {
+            url : api.ds.data,
+            postData : {},
+            listPath :"contractStatus",
+            keyPath:"key",
+            valuePath:"value"
         }
     },
     "signet-name": {

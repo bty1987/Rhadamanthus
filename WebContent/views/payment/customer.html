@@ -1,0 +1,115 @@
+<div id="paymentCustomer" class="col-md-12">
+	<div class="row">
+		<div id="paymentCustomerList">
+			<div id="condList" class="fl_search clearfix">
+				<span class="fl-filter-inline">
+					<label>装修单号:</label>
+					<input type="text" id="orderId">
+				</span>
+				<button class="btn btn-xs btn-info btn-search" id="selectBtn">查询</button>
+				<button class="btn btn-xs btn-danger btn-clean" id="resetBtn" style="margin: 0px 3px;">重置</button>
+			</div> <!-- 查询条件-->
+
+			<div id="resultList" class="clearfix tab-pane active">
+				<div id="dataDiv">
+					<div id="decoration"></div>
+					<div id="sales"></div>
+					<div id="advance"></div>
+				</div>
+
+				<div id="noDataDiv">
+					<div class="dropzone dz-clickable" style="margin: 20px; border: 0px;">
+						<div class="dz-default dz-message">
+							<span>无可用数据提供</span>
+						</div>
+					</div>
+				</div>
+			</div> <!--查询结果-->
+
+			<div id="pagenation" class="fl-page-wrap clearfix">
+				<a class="btn btn-minier btn-primary pull-left" id="collectBtn" style="margin: 0px 3px;">
+					<i class="icon-money bigger-110"></i>
+					<span>收款</span>
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="collectModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+					<h4 class="modal-title">付款信息</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<input type="text" id="customerPaymentId" class="hide" />
+						<div class="block clearfix">
+							<label class="col-md-3 control-label">付款方式</label>
+							<label class="inline">
+								<input type="checkbox" class="ace" id="bankCheckbox" key="bank" select="1">
+								<span class="lbl"> 刷卡</span>
+							</label>
+						</div>
+
+						<div id="infoDiv">
+							<h4 class="header blue bolder smaller">基本信息</h4>
+							<div class="form-group" >
+								<label class="col-md-3 control-label no-padding-right orange" for="orderNumber" >装修单号</label>
+								<div class="col-md-9">
+									<input type="text" id="orderNumber" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
+								</div>
+							</div>
+							<div class="form-group" >
+								<label class="col-md-3 control-label no-padding-right" for="collectDes" >说明</label>
+								<div class="col-md-9">
+									<textarea id="collectDes" class="col-md-6 v_name v_required" rows="3" data-toggle="popover" data-trigger='manual' maxlength="40"></textarea>
+								</div>
+							</div>
+						</div>
+
+						<div id="posDiv" referCheckbox="bankCheckbox" style="display: none;">
+							<h4 class="header blue bolder smaller">POS</h4>
+							<div id="posGroup"></div>
+						</div>
+
+						<div id="bankDiv" referCheckbox="bankCheckbox">
+							<h4 class="header blue bolder smaller">POS</h4>
+							<div id="bankGroup">
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right">开户行</label>
+									<div class="col-sm-8">
+										<input class="col-xs-10 col-sm-6" type="text" id="bankName" data-toggle="popover" data-trigger="manual" data-placement="bottom" autocomplete="off">
+										<button class="btn btn-minier btn-orange pull-right inline" id="posPush">POS推送</button>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right">刷卡金额</label>
+									<div class="col-sm-8">
+										<input class="col-sm-6" data-toggle="popover" data-trigger="manual" type="text" id="bank">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right">方式</label>
+									<div class="col-sm-8">
+										<select class="col-sm-6 inline" data-toggle="popover" data-trigger="manual" id="posway"></select>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<div class="modal-footer ">
+					<button type="button" id="collect" class="btn btn-primary">收款</button>
+					<button type="button" id="cancel" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$.loadScript(['js/utils/paymentUtils.js', 'js/payment/customer.js']);
+</script>

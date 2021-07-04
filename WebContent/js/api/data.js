@@ -404,6 +404,7 @@ $.extend(api, {
             }
         },
         updateAoodsForStatus: {url: "updateAoodsForStatus.do"},
+        copyAoods: {url: "copyAoods.do"},
 
         pageSoods: {
             url: "pageSoods.do",
@@ -540,6 +541,13 @@ $.extend(api, {
         queryChartForLogin:{url:"queryChartForLogin.do"},
         queryChartByRid:{url:"queryChartByRid.do"},
         updateRoleChartByRid:{url:"updateRoleChartByRid.do"},
+
+        //业务类型
+        pageDecorationBusitype: {url: "pageDecorationBusitype.do", demo: true},
+        queryDecorationBusitype: {url: "queryDecorationBusitype.do"},
+        addDecorationBusitype: {url: "addDecorationBusitype.do"},
+        updateDecorationBusitype: {url: "updateDecorationBusitype.do"},
+        updateDecorationBusitypeForStatus: {url: "updateDecorationBusitypeForStatus.do"},
 
         queryDecorationMatching:{
             url:"queryDecorationMatching.do",

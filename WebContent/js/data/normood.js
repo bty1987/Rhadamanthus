@@ -95,7 +95,7 @@ $(function() {
 
         return {
             init : function(){
-                com.post(api.data.queryNormoodByQiid, {"normood.quotationItem.qiId": normood.qiid}, function(res){
+                com.post(api.data.queryNormoodByQiid, {"normood.quotationItem.qiid": normood.qiid}, function(res){
                     com.focusPage('#normoodResultList').html(null);
                     renderList('normoodResultList', res.normoods);
                 });
@@ -129,7 +129,7 @@ $(function() {
             "normood.goods.gid": gid,
             "normood.unit": normood.items.unit.val(),
             "normood.num": normood.items.num.val(),
-            "normood.quotationItem.qiId": normood.qiid
+            "normood.quotationItem.qiid": normood.qiid
         };
 
         com.post(api.data.addNormood, option, function(e){
