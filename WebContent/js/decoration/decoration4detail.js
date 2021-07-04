@@ -1,43 +1,45 @@
 jQuery(function ($) {
 
     var decorationDetail = {
-        decorationOrderId: null,
-        orderStatus: 0,
-        orderType: "",
-        orderTypeness: "",
-        type: {},
-        typeness: {},
-        decoration: {},
-        customer: {},
-        village: {},
-        versionId: "",
-        notSalesmanRate: "",//非业务人员提点
-        materialPaymentListGrid: null,
-        materialPaymentGridPager: null,
+		decorationOrderId: null,
+		orderStatus: 0,
+		orderType: "",
+		orderTypeness: "",
+		type: {},
+		typeness: {},
+		decoration: {},
+		customer: {},
+		village: {},
+		versionId: "",
+		notSalesmanRate: "",//非业务人员提点
+		materialPaymentListGrid: null,
+		materialPaymentGridPager: null,
 
-        decorationOrderStatus: {},
+		decorationOrderStatus: {},
 
-        reloadFlag: 0,
+		decorationBusitypes: [],
 
-        btnSaveBasedecorationInfo: null,
+		reloadFlag: 0,
 
-        activity: {},
+		btnSaveBasedecorationInfo: null,
 
-        dsid: null,
-        decorationPaymentId: null,
-        convertActivityItemId: null,
+		activity: {},
 
-        items: {},
-        houseItems: {},
-        customerItems: {},
-        serviceItems: {},
-        decorationActivityItems: {},
-        paymentItems: {},
+		dsid: null,
+		decorationPaymentId: null,
+		convertActivityItemId: null,
 
-        vRepeatFlg: false,
-        cRepeatFlg: false,
-        accountFlg: false,
-        btnViewFlg: false
+		items: {},
+		houseItems: {},
+		customerItems: {},
+		serviceItems: {},
+		decorationActivityItems: {},
+		paymentItems: {},
+
+		vRepeatFlg: false,
+		cRepeatFlg: false,
+		accountFlg: false,
+		btnViewFlg: false
     };
 
     var decorationMachingTypes = {};
@@ -100,7 +102,7 @@ jQuery(function ($) {
     decorationDetail.items.notSalesmanRate = com.focusPage('#notSalesmanRate');
     decorationDetail.items.notSalesmanContent = com.focusPage('#notSalesmanContent');
 
-    decorationDetail.items.salesmanType = com.focusPage('#salesmanType');
+    decorationDetail.items.busitype = com.focusPage('#busitype');
 
     decorationDetail.serviceItems.comment = com.focusPage('#comment');
 
@@ -256,7 +258,7 @@ jQuery(function ($) {
     decorationDetail.activity.things = com.focusPage("#things");
     decorationDetail.activity.coupons = com.focusPage("#coupons");
     decorationDetail.activity.papers = com.focusPage("#papers");
-    
+
     decorationDetail.decorationActivityItems.activityInfo = com.focusPage("#activityInfo");
     decorationDetail.decorationActivityItems.couponsType = com.focusPage("#couponsType");
     decorationDetail.decorationActivityItems.couponsVal = com.focusPage("#couponsVal");
@@ -350,8 +352,7 @@ jQuery(function ($) {
         decorationDetail.items.houseType.bindData(res.houseType, 'key', 'value');
         decorationDetail.items.houseClass.bindData(res.houseClass, 'key', 'value');
         decorationDetail.items.grade.bindData(res.orderGrade, 'key', 'value');
-        decorationDetail.items.salesmanType.bindData(res.salesmanType, 'key', 'value');
-        
+
         decorationDetail.decorationOrderStatus = res.decorationOrderStatus.split("key", "value");
         decorationDetail.type = res.typeness.split("key", "type");
         decorationDetail.typeness = res.typeness.split("key", "value");
@@ -879,99 +880,111 @@ jQuery(function ($) {
         decorationDetail.quotationTotalPriceModal.modal("hide");
     });
 
-    com.focusPage('#btnBack').on("click", function () {
-        com.switchPage(params.historyPage);
-    });
+	com.focusPage('#btnBack').on("click", function () {
+		com.switchPage(params.historyPage);
+	});
 
-    com.focusPage("#btnPrintDefaultQuotationInfo").on('click', function (res) {
-        decorationDetail.printQuotationModal.modal("show");
-    });
-    
-    com.focusPage("#btnPrintQuotationCN").on('click', function (res) {
-        decorationDetail.printQuotationCNModal.modal("show");
-    });
+	com.focusPage("#btnPrintDefaultQuotationInfo").on('click', function (res) {
+		decorationDetail.printQuotationModal.modal("show");
+	});
 
-    initWizard(decorationDetail);
+	com.focusPage("#btnPrintQuotationCN").on('click', function (res) {
+		decorationDetail.printQuotationCNModal.modal("show");
+	});
 
-    decorationUtils.initBaseInfo(decorationDetail.decorationOrderId, api.decoration.queryDecorationForCommonByOrderId, function (decoration) {
+	initWizard(decorationDetail);
 
-        decorationDetail.items.orderId.val(decoration.orderId);
-        decorationDetail.items.customer.val(decoration.customer.name);
-        decorationDetail.items.villageName.val(decoration.house.village.name);
-        decorationDetail.items.houseNumber.val(decoration.house.houseNumber);
-        decorationDetail.items.designDepartment.val(decoration.designer.dept.name);
-        decorationDetail.items.designer.val(decoration.designer.currentName);
-        decorationDetail.items.businessDepartment.val(decoration.salesman.dept.name);
-        decorationDetail.items.salesman.val(decoration.salesman.currentName);
-        decorationDetail.items.orderType.val(decoration.typeness);
-        decorationDetail.items.houseType.val(decoration.houseType);
-        decorationDetail.items.houseClass.val(decoration.houseClass);
-        decorationDetail.items.houseTypeClass.val(decoration.house.houseType);
-        decorationDetail.items.houseArea.val(decoration.house.buildArea);
-        decorationDetail.items.freeArea.val(decoration.house.freeArea);
-        decorationDetail.items.innerArea.val(decoration.house.innerArea);
-        decorationDetail.items.totalArea.val(decoration.house.totalArea);
-        decorationDetail.items.status.val(decorationDetail.decorationOrderStatus[decoration.status]);
-        decorationDetail.items.measureTime.val(decoration.measureTime);
-        decorationDetail.items.notSalesmanRate.val(decoration.notSalesmanRate);
-        decorationDetail.notSalesmanRate = decoration.notSalesmanRate;
-        decorationDetail.items.grade.val(decoration.grade);
-        decorationDetail.items.quoterId.val(decoration.quoter.currentName);
-        decorationDetail.items.escorterId.val(decoration.escorter.currentName);
-        
-        com.focusPage("#detailOrderType").attr("orderType", decoration.typeness);
-        com.focusPage("#detailHouseType").attr("houseType", decoration.houseType);
-        com.focusPage('#designStatus').html(decoration.sourceStatus == 0 ? '未确认':'已确认');
-        com.focusPage('#prictureStatus').html(decoration.sourceStatus != 2 ? '未确认':'已确认');
+	decorationUtils.initBaseInfo(decorationDetail.decorationOrderId, api.decoration.queryDecorationForCommonByOrderId, function (decoration) {
 
-        if (decoration.status != 7) {
-            decorationDetail.accountFlg = true;
-        } else {
-            decorationDetail.accountFlg = false;
-        }
-        
-        com.post(api.decoration.queryDecorationInfoByOrderId, {"orderId": decorationDetail.decorationOrderId}, function (res) {
-            res = res.decorationInfo;
-            decorationDetail.items.backOrderName.val(res.backOrderName);
-            decorationDetail.items.backOrderPhone.val(res.backOrderPhone);
-            decorationDetail.items.backOrderContent.val(res.backOrderContent);
-            decorationDetail.items.notSalesmanPhone.val(res.notSalesmanPhone);
-            decorationDetail.items.notSalesmanName.val(res.notSalesmanName);
-            decorationDetail.items.notSalesmanContent.val(res.notSalesmanContent);
-        });
+		decorationDetail.items.orderId.val(decoration.orderId);
+		decorationDetail.items.customer.val(decoration.customer.name);
+		decorationDetail.items.villageName.val(decoration.house.village.name);
+		decorationDetail.items.houseNumber.val(decoration.house.houseNumber);
+		decorationDetail.items.designDepartment.val(decoration.designer.dept.name);
+		decorationDetail.items.designer.val(decoration.designer.currentName);
+		decorationDetail.items.businessDepartment.val(decoration.salesman.dept.name);
+		decorationDetail.items.salesman.val(decoration.salesman.currentName);
+		decorationDetail.items.orderType.val(decoration.typeness);
+		decorationDetail.items.houseType.val(decoration.houseType);
+		decorationDetail.items.houseClass.val(decoration.houseClass);
+		decorationDetail.items.houseTypeClass.val(decoration.house.houseType);
+		decorationDetail.items.houseArea.val(decoration.house.buildArea);
+		decorationDetail.items.freeArea.val(decoration.house.freeArea);
+		decorationDetail.items.innerArea.val(decoration.house.innerArea);
+		decorationDetail.items.totalArea.val(decoration.house.totalArea);
+		decorationDetail.items.status.val(decorationDetail.decorationOrderStatus[decoration.status]);
+		decorationDetail.items.measureTime.val(decoration.measureTime);
+		decorationDetail.items.notSalesmanRate.val(decoration.notSalesmanRate);
+		decorationDetail.notSalesmanRate = decoration.notSalesmanRate;
+		decorationDetail.items.grade.val(decoration.grade);
+		decorationDetail.items.quoterId.val(decoration.quoter.currentName);
+		decorationDetail.items.escorterId.val(decoration.escorter.currentName);
 
-        decorationDetail.houseItems.shid = decoration.house.hid;
+		com.post(api.data.queryDecorationBusitype, {}, function(res) {
+			$.each(res.decorationBusitypes,function(intex,value){
+				if (value.status == 0){
+					decorationDetail.decorationBusitypes.push(value);
+				} else if (value.dbid == decoration.dbid){
+					decorationDetail.decorationBusitypes.push(value);
+				}
+			});
+			decorationDetail.items.busitype.bindData(decorationDetail.decorationBusitypes, "dbid", "name");
+		}, null, false);
 
-        decorationDetail.items.salesmanType.val(decoration.salesmanType).prop("disabled", false);
-        com.updateTypeahead('quoterId', decoration.quoter == null ? "" : decoration.quoter.userId, decoration.quoter.currentName == null ? "" : decoration.quoter.currentName);
-        com.updateTypeahead('escorterId', decoration.escorter == null ? "" : decoration.escorter.userId, decoration.escorter.currentName == null ? "" : decoration.escorter.currentName);
+		decorationDetail.items.busitype.val(decoration.busitype);
 
-        decorationDetail.customer.cid = decoration.customer.cid;
-        decorationDetail.customer.phone = decoration.customer.phone;
-        decorationDetail.customer.qq = decoration.customer.qq;
-        decorationDetail.customer.wechat = decoration.customer.wechat;
-        decorationDetail.customer.email = decoration.customer.email;
-        decorationDetail.customer.relationshipType = decoration.customer.relationshipType;
+		com.focusPage("#detailOrderType").attr("orderType", decoration.typeness);
+		com.focusPage("#detailHouseType").attr("houseType", decoration.houseType);
+		com.focusPage('#designStatus').html(decoration.sourceStatus == 0 ? '未确认':'已确认');
+		com.focusPage('#prictureStatus').html(decoration.sourceStatus != 2 ? '未确认':'已确认');
 
-        decorationDetail.village.villageId = decoration.house.village.villageId;
-        decorationDetail.village.villageName = decoration.house.village.villageName;
-        decorationDetail.village.houseNumber = decoration.house.houseNumber;
+		if (decoration.status != 7) {
+			decorationDetail.accountFlg = true;
+		} else {
+			decorationDetail.accountFlg = false;
+		}
 
-        decorationDetail.decoration.type = decoration.typeness;
-        
-        if ([0, 1, 4].indexOf(decoration.status) == -1) {
-            decorationDetail.items.orderType.prop("disabled", true);
-        }
-        
-        if ([2, 3, 4, 6, 7].indexOf(decoration.status) == -1){
-            decorationDetail.items.houseNumber.val("");
-        }
-        
-        if ([3, 7].indexOf(decoration.status) != -1) {
-            decorationDetail.items.salesmanType.prop("disabled", true);
-        }
-        
-    });
+		com.post(api.decoration.queryDecorationInfoByOrderId, {"orderId": decorationDetail.decorationOrderId}, function (res) {
+			res = res.decorationInfo;
+			decorationDetail.items.backOrderName.val(res.backOrderName);
+			decorationDetail.items.backOrderPhone.val(res.backOrderPhone);
+			decorationDetail.items.backOrderContent.val(res.backOrderContent);
+			decorationDetail.items.notSalesmanPhone.val(res.notSalesmanPhone);
+			decorationDetail.items.notSalesmanName.val(res.notSalesmanName);
+			decorationDetail.items.notSalesmanContent.val(res.notSalesmanContent);
+		});
+
+		decorationDetail.houseItems.shid = decoration.house.hid;
+
+		com.updateTypeahead('quoterId', decoration.quoter == null ? "" : decoration.quoter.userId, decoration.quoter.currentName == null ? "" : decoration.quoter.currentName);
+		com.updateTypeahead('escorterId', decoration.escorter == null ? "" : decoration.escorter.userId, decoration.escorter.currentName == null ? "" : decoration.escorter.currentName);
+
+		decorationDetail.customer.cid = decoration.customer.cid;
+		decorationDetail.customer.phone = decoration.customer.phone;
+		decorationDetail.customer.qq = decoration.customer.qq;
+		decorationDetail.customer.wechat = decoration.customer.wechat;
+		decorationDetail.customer.email = decoration.customer.email;
+		decorationDetail.customer.relationshipType = decoration.customer.relationshipType;
+
+		decorationDetail.village.villageId = decoration.house.village.villageId;
+		decorationDetail.village.villageName = decoration.house.village.villageName;
+		decorationDetail.village.houseNumber = decoration.house.houseNumber;
+
+		decorationDetail.decoration.type = decoration.typeness;
+
+		if ([0, 1, 4].indexOf(decoration.status) == -1) {
+			decorationDetail.items.orderType.prop("disabled", true);
+		}
+
+		if ([2, 3, 4, 6, 7].indexOf(decoration.status) == -1){
+			decorationDetail.items.houseNumber.val("");
+		}
+
+		if ([3, 7].indexOf(decoration.status) != -1) {
+			decorationDetail.items.busitype.prop("disabled", true);
+		}
+
+	});
 
     function saveBaseDecorationInfo() {
         if (com.validate("step1")) {
@@ -992,10 +1005,11 @@ jQuery(function ($) {
                 "decorationInfo.notSalesmanName": decorationDetail.items.notSalesmanName.val(),
                 "decorationInfo.notSalesmanPhone": decorationDetail.items.notSalesmanPhone.val(),
                 "decorationInfo.notSalesmanContent": decorationDetail.items.notSalesmanContent.val(),
-                "decoration.salesmanType": decorationDetail.items.salesmanType.val(),
+                "decoration.busitype": decorationDetail.items.busitype.val(),
                 "decoration.quoter.userId": com.typeahead("quoterId"),
                 "decoration.escorter.userId": com.typeahead("escorterId"),
             };
+
             com.post(api.decoration.changeDecorationForAdvance, options, function () {
                 com.showAlert(com.info, "操作成功");
                 btn.button('reset');

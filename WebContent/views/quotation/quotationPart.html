@@ -28,6 +28,10 @@
                                         <label class=" col-md-6  no-padding-right">非打折总额</label>
                                         <label id="undisPrice" class=" col-md-4  no-padding-left">0.00</label>
                                     </div>
+                                    <div class="form-group">
+                                        <label class=" col-md-6  no-padding-right">成本总额</label>
+                                        <label id="costPrice" class=" col-md-4  no-padding-left">0.00</label>
+                                    </div>
 									<div class="form-group">
 										<label class=" col-md-6  no-padding-right">总价</label>
 										<label id="sumLabSumMoney" class=" col-md-4  no-padding-left">0.00</label>
@@ -107,7 +111,7 @@
 			</div>
 
 			<div class="modal fade" id="functionAreaTemplateModal" tabindex="-1">
-				<div class="modal-dialog">
+				<div class="modal-dialog" style="width:70%;">
 					<div class="modal-content">
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal">
@@ -153,6 +157,30 @@
 									</div>
 								</div>
 								<div class="space-4"></div>
+                                
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label no-padding-right" for="girth">周长</label>
+                                    <div class="col-md-9">
+                                        <input type="text" id="girth" data-toggle="popover" data-trigger='manual' maxlength='3' class="col-xs-10 col-md-5 v_required v_float_3" />
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+                                
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label no-padding-right" for="area">面积</label>
+                                    <div class="col-md-9">
+                                        <input type="text" id="area" data-toggle="popover" data-trigger='manual' maxlength='3' class="col-xs-10 col-md-5 v_required v_float_3" />
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
+                                
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label no-padding-right" for="height">举架</label>
+                                    <div class="col-md-9">
+                                        <input type="text" id="height" data-toggle="popover" data-trigger='manual' maxlength='3' class="col-xs-10 col-md-5 v_required v_float_3" />
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
 							</form>
 						</div>
 
@@ -228,9 +256,9 @@
 						<div class="modal-body">
 							<form class="form-horizontal">
 								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right" for="itemName">名称</label>
+									<label class="col-sm-3 control-label no-padding-right" for="name">名称</label>
 									<div class="col-sm-9">
-										<input type="text" id="itemName" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
+										<input type="text" id="name" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
 									</div>
 								</div>
 								<div class="space-4"></div>
@@ -260,9 +288,9 @@
 								<div class="space-4"></div>
 
 								<div class="form-group">
-									<label class="col-sm-3 control-label no-padding-right" for="quotationItemDes">信息</label>
+									<label class="col-sm-3 control-label no-padding-right" for="comment">信息</label>
 									<div class="col-sm-9">
-										<textarea id="quotationItemDes" class="col-xs-10 col-sm-5 v_required" rows="3" data-toggle="popover" data-trigger='manual' maxlength="500"></textarea>
+										<textarea id="comment" class="col-xs-10 col-sm-5 v_required" rows="3" data-toggle="popover" data-trigger='manual' maxlength="500"></textarea>
 									</div>
 								</div>
 								<div class="space-4"></div>
@@ -295,7 +323,7 @@
                                     <label class="col-sm-3 control-label no-padding-right" for="discountFlag">打折</label>
                                     <div class="col-sm-9">
                                         <input type="checkbox" class="ace ace-switch ace-switch-5" id="discountFlag">
-                                        <span class="lbl"></span>
+                                        <span class="lbl discount-lbl"></span>
                                     </div>
                                 </div>
 							</form>

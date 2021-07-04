@@ -213,12 +213,13 @@ jQuery(function ($) {
 
     function uiBtnMethod(uiPgDiv, activityItem) {
 
-        var btnViewBtn= $("<a></a>").addClass("btn btn-minier btn-yellow").html("失效").css("margin", "0px 3px").attr("id", "abate_" + activityItem.daiId).appendTo(uiPgDiv);
-        var receiveBtn= $("<a></a>").addClass("btn btn-minier btn-success").html("领取").css("margin", "0px 3px").attr("id", "receive_" + activityItem.daiId).appendTo(uiPgDiv);
-        var refundBtn= $("<a></a>").addClass("btn btn-minier btn-warning").html("退货").css("margin", "0px 3px").attr("id", "refund_" + activityItem.daiId).appendTo(uiPgDiv);
-        var deliveryBtn= $("<a></a>").addClass("btn btn-minier btn-inverse").html("配送").css("margin", "0px 3px").attr("id", "delivery_" + activityItem.daiId).appendTo(uiPgDiv);
-        var unrefundBtn= $("<a></a>").addClass("btn btn-minier btn-danger").html("未退").css("margin", "0px 3px").attr("id", "unrefund_" + activityItem.daiId).appendTo(uiPgDiv);
-        var expendBtn= $("<a></a>").addClass("btn btn-minier btn-purple ").html("补款").css("margin", "0px 3px").attr("id", "expend_" + activityItem.daiId).appendTo(uiPgDiv);
+		var btnViewBtn= $("<a></a>").addClass("btn btn-minier btn-yellow").html("失效").css("margin", "0px 3px").attr("id", "abate_" + activityItem.daiId).appendTo(uiPgDiv);
+		var receiveBtn= $("<a></a>").addClass("btn btn-minier btn-success").html("领取").css("margin", "0px 3px").attr("id", "receive_" + activityItem.daiId).appendTo(uiPgDiv);
+		var refundBtn= $("<a></a>").addClass("btn btn-minier btn-warning").html("退货").css("margin", "0px 3px").attr("id", "refund_" + activityItem.daiId).appendTo(uiPgDiv);
+		var deliveryBtn= $("<a></a>").addClass("btn btn-minier btn-inverse").html("配送").css("margin", "0px 3px").attr("id", "delivery_" + activityItem.daiId).appendTo(uiPgDiv);
+		var unrefundBtn= $("<a></a>").addClass("btn btn-minier btn-danger").html("未退").css("margin", "0px 3px").attr("id", "unrefund_" + activityItem.daiId).appendTo(uiPgDiv);
+		var expendBtn= $("<a></a>").addClass("btn btn-minier btn-purple ").html("补款").css("margin", "0px 3px").attr("id", "expend_" + activityItem.daiId).appendTo(uiPgDiv);
+		var discountBtn= $("<a></a>").addClass("btn btn-minier btn-pink ").html("抵现").css("margin", "0px 3px").attr("id", "expend_" + activityItem.daiId).appendTo(uiPgDiv);
 
         btnViewBtn.on("click", function () {
             abateDecorationActivityItem(activityItem.daiId, activityItem.activityItemName);
@@ -243,6 +244,9 @@ jQuery(function ($) {
         expendBtn.on("click", function () {
             expendDecorationActivityItem(activityItem.daiId, activityItem.activityItemName);
         });
+		discountBtn.on("click", function () {
+			discountDecorationActivityItem(activityItem.daiId, activityItem.activityItemName);
+		});
     }
     
     function identiData(type, aid){
@@ -680,4 +684,25 @@ jQuery(function ($) {
             });
         });
     }
+
+    //抵现装修活动项
+	function discountDecorationActivityItem(daiId, activityItemName) {
+
+		com.showConfirm("是否确认抵现" + activityItemName + "活动物品?", function () {
+
+			var options = {
+			    "decorationActivityItem.daiId": daiId,
+			};
+
+			com.post(api.decoration.discountDecorationActivityItem, options, function (res) {
+
+				com.showAlert(com.info, "物品抵现成功");
+				var daiId = res.decorationActivityItem.daiId;
+
+				decorationUtils.countTatol(daiId);
+
+				com.focusPage("#state_" + daiId).text("抵现");
+	        });
+	    });
+	}
 });

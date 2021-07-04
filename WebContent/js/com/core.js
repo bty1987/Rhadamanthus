@@ -820,6 +820,32 @@
         $e.attr('href', config.media + api.common.downloadFile.url + "?downloadFilePath=" + url + "&fileName=" + name).attr('target', '_blank');
     },
     /**
+     * 蒙板 , 显示指定范围蒙板
+     * @param popup 弹窗对象
+     * @param target 目标对象 , 通常为控制大小
+     * @returns 蒙板对象 , 可以用作删除动作
+     */
+    mask: function(popup, target){
+        
+        var mask = $("<div></div>").addClass("tab-mask").appendTo(popup);
+        var maskh1 = $("<h1></h1>").css({"position": "absolute", "top": "30%", "left": "45%"}).appendTo(mask);
+        var maskicon = $("<i></i>").addClass("icon-spinner icon-spin bigger-450").appendTo(maskh1);
+        
+        mask.css("top", target.height() - mask.height() + 30);
+        popup.css("overflow", "hidden");
+        
+        return mask;
+    },
+    /**
+     * 关闭蒙板
+     * @param mask 蒙板对象
+     * @param popup 目标对象 , 主要恢复目标对象的滚动条
+     */
+    closeMask: function(mask, popup){
+        mask.remove();
+        popup.css("overflow", "");
+    },
+    /**
      * 弹窗 , 显示指定url地址内容
      * @param title 标题
      * @param url 地址
@@ -1427,6 +1453,34 @@
         return _pack;
     };
     /**
+     * 字符串格式化
+     * @param args 格式化参数值
+     * @returns 字符串
+     */
+    String.prototype.format = function(args) {
+        
+        var result = this;
+        
+        if (arguments.length < 1) {
+            return result;
+        }
+
+        var data = arguments; // 如果模板参数是数组
+        
+        if (arguments.length == 1 && typeof (args) == "object") {
+            // 如果模板参数是对象
+            data = args;
+        }
+        
+        for(var key in data) {
+            var value = data[key];
+            if (undefined != value) {
+                result = result.replaceAll("{" + key + "}", value);
+            }
+        }
+        return result;
+    }
+    /**
      * 面包屑显示
      * @param icon 图标 , 开始位置显示
      * @param items 面包屑元素列表
@@ -1441,7 +1495,6 @@
             $('.breadcrumb').append($('<li class="nav' + (k + 1) + '"></li>').append(k == 0 ? '<i class="fa fa-fw ' + icon + '"></i>&nbsp;&nbsp;&nbsp;' + o : o, '&nbsp;&nbsp;'));
         });
     }
-    
     /**
      * 显示帮助文档
      * @param container 显示帮助按钮的块级元素 (必须传入标识符, 例如: (".breadcrumb")符号不可省略)

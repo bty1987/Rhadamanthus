@@ -59,13 +59,6 @@
                     </div>
                 </div>
 
-<!--                <div class="form-group">-->
-<!--                    <label class="col-md-3 control-label no-padding-right">验证标识</label>-->
-<!--                    <div class="col-md-9">-->
-<!--                        <select class="col-xs-10 col-sm-7" id="editCheckup" name="editCheckup" data-required="1" data-toggle="popover" data-trigger='manual'></select>-->
-<!--                    </div>-->
-<!--                </div>-->
-
                 <div class="form-group">
                     <label class="col-md-3 control-label no-padding-right">归属公司</label>
                     <div class="col-md-9">
@@ -90,6 +83,33 @@
         </form>
     </div>
 </div>
+
+<div id="copyLayer" style="display: none;">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="copyAoods">
+            <div class="widget-main">
+                <div class="row" style="margin: 0px;">
+                    <div class="col-md-11">
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label no-padding-right orange">归属公司</label>
+                            <div class="col-md-9">
+                                <select class="col-xs-10 col-sm-7 v_required" id="ccompany" name="ccompany" data-required="1" data-toggle="popover" data-trigger='manual'></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-3 col-md-9">
+                                <a class="btn btn-success btn-sm" id="copyBtn">确定</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 
 <div id="miniPopUp"></div>
 <div id="optPopUp" class="portlet box page-content"></div>

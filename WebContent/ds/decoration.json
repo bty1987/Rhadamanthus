@@ -27,7 +27,7 @@
         {"key":"资源","value":"资源"},
         {"key":"守园","value":"守园"},
         {"key":"监理","value":"监理"},
-        {"key":"400","value":"400"},
+        {"key":"400渠道客源","value":"400渠道客源"},
         {"key":"上门","value":"上门"},
         {"key":"公司","value":"公司"},
         {"key":"工人","value":"工人"},
@@ -56,7 +56,9 @@
         {"key":"0-3","value":"工程抵值款"},
         {"key":"0-3","value":"配比优惠补差"},
         {"key":"0-3","value":"砌墙包预收款"},
-        {"key":"0-3","value":"保证金"}
+        {"key":"0-3","value":"保证金"},
+        {"key":"0-0","value":"超优包"},
+        {"key":"0-3","value":"降配比抵用"}
     ], "machingType": [
         {"key":"1.5", "value":"5"}
     ], "perCharge": [
@@ -85,7 +87,8 @@
         {"key":"4", "value":"配送"},
         {"key":"5", "value":"未退"},
         {"key":"6", "value":"升级"},
-        {"key":"7", "value":"补款"}
+        {"key":"7", "value":"补款"},
+        {"key":"8", "value":"抵现"}
     ], "orderGrade":[
         {"key":"A", "value":"A"},
         {"key":"B", "value":"B"},

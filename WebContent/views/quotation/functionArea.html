@@ -36,8 +36,8 @@
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="functionAreaId">编号</label>
 							<div class="col-sm-9">
-								<input type="text" id="faId" class="col-xs-10 col-sm-5 hide" />
-								<input type="text" id="functionAreaId" class="col-xs-10 col-sm-5 v_required v_functionAreaId" data-toggle="popover" data-trigger='manual' maxlength='5'/>
+								<input type="text" id="faid" class="col-xs-10 col-sm-5 hide" />
+								<input type="text" id="no" class="col-xs-10 col-sm-5 v_required v_functionArea_no" data-toggle="popover" data-trigger='manual' maxlength='5'/>
 							</div>
 						</div>
 						<div class="space-4"></div>
@@ -51,7 +51,7 @@
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="functionAreaName">名称</label>
 							<div class="col-sm-9">
-								<input type="text" id="functionAreaName" class="col-xs-10 col-sm-5 v_required v_name" data-toggle="popover" data-trigger='manual' maxlength='10'/>
+								<input type="text" id="name" class="col-xs-10 col-sm-5 v_required v_name" data-toggle="popover" data-trigger='manual' maxlength='10'/>
 							</div>
 						</div>
 						<div class="space-4"></div>
@@ -86,7 +86,7 @@
 						<div class="space-4"></div>
 
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="functionAreaOrder">总价</label>
+							<label class="col-sm-3 control-label no-padding-right" for="total">总价</label>
 							<div class="col-sm-9">
 								<input type="text" id="total" class="col-xs-10 col-sm-5 v_number" data-toggle="popover" data-trigger='manual' maxlength='5' value='0'/>
 							</div>
@@ -126,6 +126,32 @@
 			</div>
 		</div>
 	</div>
+	<div class="modal fade" id="updateModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="functionAreaDialog">更新</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="formula">公式</label>
+							<div class="col-sm-9">
+								<textarea cols="10" maxlength="64" id="formula" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual'></textarea>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnUpdate" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script type="text/javascript">

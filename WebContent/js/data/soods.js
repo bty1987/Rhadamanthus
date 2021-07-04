@@ -47,12 +47,12 @@ $(function () {
             var propertyArr = [
                 ["品牌: ", v.goods.brand, "grey"],
                 ["品类: ", v.goods.category, "grey"],
-                ["单位: ", v.goods.measurementUnit, "grey"],
+                ["单位: ", v.goods.measurementUnit, "red"],
                 ["结算价: ", v.selling, "blue"],
                 ["数量: ", v.num, "blue"],
                 ["状态: ", v.status == 0 ? "有效" : "无效", "red"],
-                ["报价名称: ", v.quotationItem.itemName, "grey"],
-                ["报价版本: ", v.quotationItem.version, "grey"],
+                ["报价名称: ", v.quotationItem.name, "grey"],
+                ["报价版本: ", v.quotationItem.version.no, "grey"],
             ];
 
             $.each(propertyArr, function (index, value) {

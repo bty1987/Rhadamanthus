@@ -71,7 +71,7 @@ jQuery(function () {
 
                 var $supplementDiv = $("<div></div>").addClass("pull-right col-sm-2").appendTo($h3);
                 var $supplementLabel = $('<label></label>').addClass("col-sm-4").css("line-height", "28px").html("数量:").appendTo($supplementDiv);
-                var $supplementInput = $('<input/>').addClass("col-sm-6 v_float_3").css("font-size","14px").css("margin-right","5px").css("width","100px").css("height","26px").attr("name", "inputNumber").val(0).appendTo($supplementDiv);
+                var $supplementInput = $('<input type="text"/>').addClass("col-sm-6 v_float_3").css("font-size","14px").css("margin-right","5px").css("width","100px").css("height","26px").attr("name", "inputNumber").val(0).appendTo($supplementDiv);
 
                 $supplementInput.on("change", function () {
 

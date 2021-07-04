@@ -41,7 +41,7 @@ $(function() {
             "quotation.orderId": $(this).val()
         };
         com.post(api.quotation.queryQuotationByOrderId, options, function (res) {
-            quotetion.quotetionItems.quotationNames.bindData(res.quotations, 'qid', 'quotationName');
+            quotetion.quotetionItems.quotationNames.bindData(res.quotations, 'qid', 'name');
         });
     });
 
@@ -178,7 +178,7 @@ $(function() {
         var quotationName = $('<h4></h4>').attr('id', 'h4name_' + qid).text(quo.name).appendTo(quotationWidgetHeader);
         var quotationWidgetBody = $('<div></div>').addClass("widget-body").appendTo(quotationWidget);
         var quotationWidgetMain = $('<div></div>').addClass("widget-main").appendTo(quotationWidgetBody);
-        var quotationWidgetInfoDiv = $('<div></div>').addClass("col-md-12").appendTo(quotationWidgetMain);
+        var quotationWidgetInfoDiv = $('<div></div>').css("padding", "5px").appendTo(quotationWidgetMain);
 
         var quotationWidgetDivOne = $('<div></div>').appendTo(quotationWidgetInfoDiv);
         $('<label></label>').attr('for', 'form-field').text('报价版本: ' + quotetion.version[quo.version]).appendTo(quotationWidgetDivOne);
@@ -191,19 +191,12 @@ $(function() {
         var quotationWidgetDivSix = $('<div></div>').appendTo(quotationWidgetInfoDiv);
         $('<label></label>').attr('for', 'form-field').attr('id', 'content_' + qid).text('备注:  ' + quo.content).css("word-break","break-all").appendTo(quotationWidgetDivSix);
 
-        var quotationWidgetToolDiv = $('<div></div>').addClass("ui-pg-div").appendTo(quotationWidgetMain);
-        var copySpan = $('<span></span>').addClass('ui-icon icon-copy blue').attr('title', '复制').attr('id', 'copyQuotation_' + qid).attr('data-qid', qid).appendTo(quotationWidgetToolDiv).mouseenter(function(){
-            com.showTip(this, "复制", "top");
-        });
-        var editSpan = $('<span></span>').addClass('ui-icon icon-pencil blue').attr('title', '修改').attr('id', 'editQuotation_' + qid).attr('data-qid', qid).appendTo(quotationWidgetToolDiv).mouseenter(function(){
-            com.showTip(this, "修改", "top");
-        });
-        var editDetailSpan = $('<span></span>').addClass('ui-icon icon-edit blue').attr('title', '报价').attr('id', 'editQuotationDetail_' + qid).attr('data-qid', qid).appendTo(quotationWidgetToolDiv).attr('data-type', quotetion.type).mouseenter(function(){
-            com.showTip(this, "报价", "top");
-        });
-        var deleteSpan = $('<span></span>').addClass('ui-icon ui-icon-trash').attr('title', '删除').attr('id', 'deleteQuotation_' + qid).attr('data-qid', qid).attr('data-name', quo.name).appendTo(quotationWidgetToolDiv).mouseenter(function(){
-            com.showTip(this, "删除", "top");
-        });
+        var quotationWidgetToolDiv = $('<div></div>').addClass("action-buttons").appendTo(quotationWidgetMain);
+        
+        var copyBtn = $('<a></a>').addClass('btn btn-minier btn-yellow').append($('<i></i>').addClass('icon-copy')).text('复制').attr('id', 'copyQuotation_' + qid).attr('data-qid', qid).appendTo(quotationWidgetToolDiv);
+        var editBtn = $('<a></a>').addClass('btn btn-minier btn-blue').append($('<i>').addClass('icon-copy')).text('修改').attr('id', 'editQuotation_' + qid).attr('data-qid', qid).appendTo(quotationWidgetToolDiv);
+        var enterBtn = $('<a></a>').addClass('btn btn-minier btn-success').append($('<i>').addClass('icon-copy')).text('查看').attr('id', 'editQuotationDetail_' + qid).attr('data-qid', qid).attr('data-type', quotetion.type).appendTo(quotationWidgetToolDiv);
+        var deleteBtn = $('<a></a>').addClass('btn btn-minier btn-danger').append($('<i>').addClass('icon-copy')).text('删除').attr('id', 'deleteQuotation_' + qid).attr('data-qid', qid).attr('data-name', quo.name).appendTo(quotationWidgetToolDiv);
 
         //复制
         com.focusPage("#copyQuotation_" + qid).on('click', function () {

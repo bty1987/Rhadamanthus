@@ -18,11 +18,11 @@
                                         <label class=" col-md-6  no-padding-right">总价:</label>
                                         <label id="sumquoSumMoney" class=" col-md-4  no-padding-left">0.00</label>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group hide">
                                         <label class=" col-md-6  no-padding-right">折扣:</label>
                                         <label id="sumquoDiscount" class=" col-md-4  no-padding-left">10.0</label>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group hide">
                                         <label class="col-md-6 no-padding-right">折扣价:</label>
                                         <label id="sumquoDiscountMoney" class="col-md-6 no-padding-left">0.00</label>
                                     </div>
@@ -57,27 +57,27 @@
                     <div class="col-md-12 space-8"></div>
                     <div class="col-md-12">
                         <div class="ui-pg-div">
-                            <button id="functionAreaTemplateBtn" class="btn btn-minier btn-yellow col-md-3" >
+                            <button id="functionAreaTemplateBtn" class="btn btn-minier btn-yellow col-md-3">
                                 <i class="icon-pencil"></i>功能区
                             </button>
-                            <button id="discountBtn" class="btn btn-minier btn-success col-md-3" style="margin-left: 2px;">
-                                <i class="icon-pencil"></i>折扣
+                            <button id="saveQuotetionBtn" class="btn btn-minier btn-inverse col-md-3" style="margin-left: 2px;" data-loading-text="Loading...">
+                                <i class="icon-save"></i>保存
                             </button>
-                            <button id="viewStatisticalBtn" class="btn btn-minier btn-pink col-md-3" style="margin-left: 2px;">
-                                <i class="icon-bar-chart"></i>统计
+                            <button id="printFinanceBtn" class="btn btn-minier btn-primary col-md-3" style="margin-left: 2px;" target="_blank">
+                                <i class="icon-print"></i>打印
                             </button>
                         </div>
                     </div>
                     <div class="col-md-12 space-8"></div>
                     <div class="col-md-12">
                         <div class="ui-pg-div">
-                            <button id="saveQuotetionBtn" class="btn btn-minier btn-inverse col-md-3" data-loading-text="Loading...">
-                                <i class="icon-save"></i>保存
+                            <button id="discountBtn" class="btn btn-minier btn-success col-md-3 hide" style="margin-left: 2px;">
+                                <i class="icon-pencil"></i>折扣
                             </button>
-                            <a id="printFinanceBtn" class="btn btn-minier btn-primary col-md-3" style="margin-left: 2px;" target="_blank">
-                                <i class="icon-print"></i>打印
-                            </a>
-                            <button id="detailBckBtn" class="btn btn-minier btn-info col-md-3" style="margin-left: 2px;">
+                            <button id="viewStatisticalBtn" class="btn btn-minier btn-pink col-md-3 hide" style="margin-left: 2px;">
+                                <i class="icon-bar-chart"></i>统计
+                            </button>
+                            <button id="detailBckBtn" class="btn btn-minier btn-info col-md-3">
                                 <i class="icon-mail-forward"></i>返回
                             </button>
                         </div>
@@ -284,7 +284,7 @@
                                     <label class="col-sm-3 control-label no-padding-right" for="discountFlag">打折</label>
                                     <div class="col-sm-9">
                                         <input type="checkbox" class="ace ace-switch ace-switch-5" id="discountFlag">
-                                        <span class="lbl"></span>
+                                        <span class="lbl discount-lbl"></span>
                                     </div>
                                 </div>
                             </form>

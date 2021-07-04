@@ -25,6 +25,7 @@ var AddReduceDetail = (function(){
 			"addReduce.disPrice": 0,
 			"addReduce.uncalPrice": 0,
 			"addReduce.calPrice": 0,
+			"addReduce.discount": 0,
 		},
 		$modals : {},
 		$btnItems : {},
@@ -61,7 +62,11 @@ var AddReduceDetail = (function(){
 				}),
 				addAddItemModal: com.focusPage('#addAddItemModal').on("show.bs.modal", function(a) {
 					$('input[name="modalQuots"]:checked').removeAttr('checked');
-				})
+				}),
+				discountModal: com.focusPage('#discountModal').on("show.bs.modal", function(a) {
+				    com.focusPage("#originDiscount").val(addReduceDetail.discount);
+				    com.focusPage("#currentDiscount").val("");
+                }),
 			};
 
 			//系统定义弹出层
@@ -73,8 +78,10 @@ var AddReduceDetail = (function(){
 
 				if(data && data.length){
 					$.each(data,function(i, v){
-						v.workType = v.itemWorkType;
-						var $liLine = painter.createQuoteModalItem(v, "sdiid");
+					    v.measurementUnit = v.unit.name;
+                        v.workType = v.workType.name;
+                        v.quotationItemDes = v.comment;
+						var $liLine = painter.createQuoteModalItem(v, "sdiid", "name");
 						$liLine.appendTo($ul);
 					});
 					$ul.appendTo($tableWrap);
@@ -82,7 +89,7 @@ var AddReduceDetail = (function(){
 			}, "pagenation", "systemDefineItemModalPostData");
 
 			//普通报价项弹出层
-			var extraParams  = {"quotationItem.versionId": addReduceDetail.versionid};
+			var extraParams  = {"quotationItem.version.no": addReduceDetail.versionid};
 			var _condArrn = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'quotation-worktype'];
 			var normalItemSeacher = new Searcher();
 			normalItemSeacher.init( _condArrn, "condListn", api.quotation.pageQuotationItemByVersionId,  function(data){
@@ -91,7 +98,10 @@ var AddReduceDetail = (function(){
 
 				if(data && data.length){
 					$.each(data,function(i, v){
-						var $liLine = painter.createQuoteModalItem(v, "qiId");
+					    v.measurementUnit = v.unit.name;
+					    v.workType = v.workType.name;
+					    v.quotationItemDes = v.comment;
+						var $liLine = painter.createQuoteModalItem(v, "qiid", "name");
 						$liLine.appendTo($ul);
 					});
 					$ul.appendTo($tableWrap);
@@ -158,23 +168,27 @@ var AddReduceDetail = (function(){
 						com.showAlert(com.info, '提交成功');
 					}, null, false);
 				}),
+                discountBtn: com.focusPage("#discountBtn").on('click', function(){//返回
+                    that.$modals.discountModal.modal("show");
+                }),
+				detailBckBtn: com.focusPage('#detailBckBtn').on('click', function(){//返回
+					com.switchPage(api.index.addReduceIndex.url);
+				}),
+				
 				updateAddReduceBtn: com.focusPage('#updateAddReduceBtn').on('click', function(event){
 
-					var option = {
-						"addReduce.arId": addReduceDetail.basicParams["addReduce.arId"],
-						"addReduce.undisPrice": addReduceDetail.basicParams["addReduce.undisPrice"],
-						"addReduce.disPrice": addReduceDetail.basicParams["addReduce.disPrice"],
-						"addReduce.uncalPrice": addReduceDetail.basicParams["addReduce.uncalPrice"],
-						"addReduce.calPrice": addReduceDetail.basicParams["addReduce.calPrice"],
-					};
+                    var option = {
+                        "addReduce.arId": addReduceDetail.basicParams["addReduce.arId"],
+                        "addReduce.undisPrice": addReduceDetail.basicParams["addReduce.undisPrice"],
+                        "addReduce.disPrice": addReduceDetail.basicParams["addReduce.disPrice"],
+                        "addReduce.uncalPrice": addReduceDetail.basicParams["addReduce.uncalPrice"],
+                        "addReduce.calPrice": addReduceDetail.basicParams["addReduce.calPrice"],
+                    };
 
                     com.post(api.addReduce.updateAddReduce, option, function(){
                         com.showAlert(com.info, '提交成功');
                     }, null, false);
                 }),
-				detailBckBtn: com.focusPage('#detailBckBtn').on('click', function(){//返回
-					com.switchPage(api.index.addReduceIndex.url);
-				})
 			};
 		},
 		init : function(){
@@ -236,20 +250,52 @@ var AddReduceDetail = (function(){
 		    $.each($items, function(i, e){
 
 		        var $item = $(e);
+		        
+		        var _num = parseFloat($item.find('.num .cell-wrap').text());
+	            var _unitprice = parseFloat($item.find('.unitprice .cell-wrap').text());
+	            var _discountFlag = parseInt($item.attr('data-discount')); // 0: 不打折, 1: 打折, 2: 不打折(非配比), 3: 打折(非配比)
 
-		        var _sumd = $item.attr("data-totalprice");
-		        var _undisprice = $item.attr("data-undisprice");
-		        var _disprice = $item.attr("data-disprice");
-		        var _uncalprice = $item.attr("data-uncalprice");
-		        var _calprice = $item.attr("data-calprice");
-		        var _manageprice = $item.attr("data-manageprice");
+	            var _discount = null;
+	            // 报价折扣
+	            var quotationDiscount = utils.accDiv(addReduceDetail.discount, 10);
+
+	            // 根据折扣标识判断项目折扣
+	            if ([0, 2].indexOf(_discountFlag) != -1) {
+	                _discount = 1;
+	            } else if ([1, 3].indexOf(_discountFlag) != -1) {
+	                _discount = quotationDiscount;
+	            }
+
+	            var _dcp = utils.changeThrDecimal(utils.accMul(_unitprice, _discount));
+	            var _sum = utils.changeThrDecimal(utils.accMul(_unitprice, _num));
+	            var _sumd = utils.changeThrDecimal(utils.accMul(utils.accMul(_unitprice, _discount), _num));
+
+	            var _undisPrice = [0, 2].indexOf(_discountFlag) != -1 ? _sum : 0;
+	            var _disPrice = [1, 3].indexOf(_discountFlag) != -1 ? _sum : 0;
+	            var _uncalPrice = [2, 3].indexOf(_discountFlag) != -1 ? _sum : 0;
+	            var _calPrice = [0, 1].indexOf(_discountFlag) != -1 ? _sum : 0;
+	            var _managePrice = utils.changeThrDecimal(utils.accMul(_sum, addReduceDetail.manageRate));
+	            
+	            var itemInfo = {
+                    "data-totalprice": _sumd,
+                    "data-undisprice": _undisPrice,
+                    "data-disprice": _disPrice,
+                    "data-uncalprice": _uncalPrice,
+                    "data-calprice": _calPrice,
+                    "data-manageprice": _managePrice,
+                };
+
+	            $item.find('.discountprice .cell-wrap').text(_dcp);
+	            $item.find('.totalprice-discount .cell-wrap').text(_sumd);
+	            
+	            $item.attr(itemInfo);
 
 		        sumd = utils.accAdd(sumd, _sumd);
-		        undisprice = utils.accAdd(undisprice, _undisprice);
-		        disprice = utils.accAdd(disprice, _disprice);
-		        uncalprice = utils.accAdd(uncalprice, _uncalprice);
-		        calprice = utils.accAdd(calprice, _calprice);
-		        manageprice = utils.accAdd(manageprice, _manageprice);
+		        undisprice = utils.accAdd(undisprice, _undisPrice);
+		        disprice = utils.accAdd(disprice, _disPrice);
+		        uncalprice = utils.accAdd(uncalprice, _uncalPrice);
+		        calprice = utils.accAdd(calprice, _calPrice);
+		        manageprice = utils.accAdd(manageprice, _managePrice);
 		    });
 
 		    sum = utils.accAdd(undisprice, disprice);
@@ -327,7 +373,7 @@ var AddReduceDetail = (function(){
 								    v.subPrice = v.unitPrice;
 								}
 
-								var $liLine = painter.createQuoteModalItem(v, "qfaiId");
+								var $liLine = painter.createQuoteModalItem(v, "qfaiId", "itemName");
 								$liLine.appendTo($ul);
 							});
 							$ul.appendTo($tableWrap);
@@ -355,7 +401,7 @@ var AddReduceDetail = (function(){
 							$.each(res.addReduceItems, function(i, v){
 								if(v.quotationFunctionAreaId == funcid) {
 									v.quotationItemDes = v.content;
-									var $liLine = painter.createQuoteModalItem(v, "ariId");
+									var $liLine = painter.createQuoteModalItem(v, "ariId", "itemName");
 									$liLine.appendTo($ul);
 								}
 							});
@@ -382,7 +428,7 @@ var AddReduceDetail = (function(){
 								if(v.quotationFunctionAreaId == funcid) {
 									v.quotationItemDes = v.content;
 									v.discount = "0";
-									var $liLine = painter.createQuoteModalItem(v, "eiid");
+									var $liLine = painter.createQuoteModalItem(v, "eiid", "itemName");
 									$liLine.appendTo($ul);
 								}
 							});
@@ -502,6 +548,39 @@ var AddReduceDetail = (function(){
 				com.post(api.addReduce.submitAddReduce, options, function(){}, null, false);
 			});
 		},
+		changeDiscount: function(){
+		    
+		    com.focusPage("#changeDiscountBtn").on('click', function(event){
+		        
+    		    if(com.validate("discountModal")) return false;
+    		    
+    		    var originDiscount = com.focusPage("#originDiscount").val();
+    		    var currentDiscount = com.focusPage("#currentDiscount").val();
+    		    
+    		    addReduceDetail.discount = currentDiscount;
+                addReduceDetail.basicParams["addReduce.discount"] = currentDiscount;
+    		    
+    		    arCalculator.calculateFees();
+    		    
+    		    var _params = $.extend(true, {}, addReduceDetail.basicParams);
+    
+                com.post(api.addReduce.updateAddReduceForAdvance, _params, function(){
+                    com.showAlert(com.info, '提交成功');
+                    com.focusPage('#sumLabDiscount').text(addReduceDetail.discount);
+                    
+                }, function(res){
+                    
+                    com.showAlert(com.error, res.errorMsg);
+                    
+                    addReduceDetail.discount = originDiscount;
+                    addReduceDetail.basicParams["addReduce.discount"] = originDiscount;
+                    
+                    arCalculator.calculateFees();
+                }, false);
+                
+                addReduceDetail.$modals.discountModal.modal("hide");
+		    });
+		},
 		init: function(){
 			this.functionAreaModalConfirm();
 			this.addNormalItemModalConfirm();
@@ -511,6 +590,7 @@ var AddReduceDetail = (function(){
 			this.extensionItemModalConfirm();
 			this.addItemModalConfirm();
 			this.changeTotalIsCountIn();
+			this.changeDiscount();
 		}
 	};
 
@@ -774,7 +854,9 @@ var AddReduceDetail = (function(){
 			var that = this;
 			var _ariid = $quote.attr("data-ariid");
 			var quotationItemId = $quote.attr("data-quotationItemId");
-
+			
+			if($quote.find(".fl-quo-input")) $quote.find(".fl-quo-input").insertAfter(com.focusPage('.fl-quo-list')).addClass('hide');
+			
 			$quote.attr("data-del", "1")
 
 			if(!_ariid){
@@ -805,7 +887,7 @@ var AddReduceDetail = (function(){
 	var painter = {
 		//创建添加报价项弹窗中的报价项 .sdiid
 
-		createQuoteModalItem : function(v, idname){
+		createQuoteModalItem : function(v, id, name){
 
 			var $liLine = $('<li></li>').addClass('item-blue clearfix');
 			var $h3 = $('<h3></h3>').addClass('oid').css({"margin-bottom" : 0});
@@ -815,26 +897,26 @@ var AddReduceDetail = (function(){
 				"name" : "modalQuots",
 				"class" : "ace ace-checkbox-2",
 				"data-discount" : v.discount,
-				"data-quotationType" : v.quotationTypeId ? v.quotationTypeId : v.subtype,
+				"data-quotationType" : (v.category && v.category.id) ? v.category.id : v.subtype,
 				"quotationFunctionAreaType" : com.focusPage('#quotationFunctionAreaId').find('option:selected').attr("other")
 				//功能区
-			}).val(v[idname]);
+			}).val(v[id]);
 
-			var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.itemName);
+			var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v[name]);
 
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
 			var propertyArr = [
 				["编号:", v.itemId, "grey"],
-				["大类:", v.quotationBigCategory, "grey quotationBigCategory"],
-				["单位:", v.measurementUnit, "grey measurementUnit"],
-				["工种:", v.workType, "grey workType"],
-                ["增补价:", v.addPrice, "grey addPrice"],
-				["单价:", v.unitPrice, "grey unitPrice"],
-                ["退减价:", v.subPrice, "grey subPrice"],
-				["工程量:", v.num, "grey"],
+				["大类:", v.quotationBigCategory, "red quotationBigCategory"],
+				["单位:", v.measurementUnit, "red measurementUnit"],
+				["工种:", v.workType, "red workType"],
+                ["增补价:", v.addPrice, "blue addPrice"],
+				["单价:", v.unitPrice, "blue unitPrice"],
+                ["退减价:", v.subPrice, "blue subPrice"],
+				["工程量:", v.num, "blue"],
+				["是否打折:", v.discount == 1 ? '打折' : '不打折', "red"],
 				["说明:", v.quotationItemDes, "grey quotationItemDes"],
-				["是否打折:", v.discount == 1 ? '打折' : '不打折', "red"]
 			];
 
 			$.each(propertyArr, function (index,value) {
@@ -994,6 +1076,7 @@ var AddReduceDetail = (function(){
 		        addReduceDetail.total = addReduce.total;
 	            addReduceDetail.managePrice = addReduce.managePrice;
                 addReduceDetail.manageRate = addReduce.manageRate;
+                addReduceDetail.discount = addReduce.discount;
 				addReduceDetail.status = addReduce.status;
 
                 addReduceDetail.basicParams["addReduce.arId"] = addReduce.arId;
@@ -1006,7 +1089,10 @@ var AddReduceDetail = (function(){
                 addReduceDetail.basicParams["addReduce.calPrice"] = addReduce.calPrice;
 
                 addReduceDetail.orderid = addReduce.orderId;
-
+                
+                addReduceDetail.addReduce = addReduce;
+                addReduceDetail.addReduceItems = addReduce.addReduceItems;
+                
 		    }, null, false);
 
 			if(addReduceDetail.artype == "0"){
@@ -1027,8 +1113,9 @@ var AddReduceDetail = (function(){
 
 			    var quotation = res.quotation;
 
-				addReduceDetail.discount = quotation.discount;
+				addReduceDetail.discount = addReduceDetail.discount == 0 ? quotation.discount : addReduceDetail.discount;
 				com.focusPage('#sumLabDiscount').text(addReduceDetail.discount);
+				addReduceDetail.basicParams["addReduce.discount"] = addReduceDetail.discount;
 
 				addReduceDetail.qid = quotation.qid;
 				addReduceDetail.versionid = quotation.no;
@@ -1043,15 +1130,17 @@ var AddReduceDetail = (function(){
 
 			}, null, false);
 
-			com.post(api.addReduce.queryAddReduceItemByAddReduceId, {"addReduce.arId" : addReduceDetail.arid}, function(res){
 
-				var $ul = $('<ul></ul>').addClass('fl-quo-list').appendTo(com.focusPage('#addReduceItemDiv'));
-				if(res.addReduceItems && res.addReduceItems.length){
-					$.each(res.addReduceItems, function(i, v){
-						painter.createQuote(i + 1, v).appendTo($ul);
-					});
-				}
-			}, null, false);
+			var $ul = $('<ul></ul>').addClass('fl-quo-list').appendTo(com.focusPage('#addReduceItemDiv'));
+			if(addReduceDetail.addReduceItems && addReduceDetail.addReduceItems.length){
+				$.each(addReduceDetail.addReduceItems, function(i, v){
+					painter.createQuote(i + 1, v).appendTo($ul);
+				});
+			}
+			
+			if (addReduceDetail.artype == 1 && addReduceDetail.status == 0){
+			    com.focusPage("#discountBtn").removeClass("disabled");
+			}
 
 			if (addReduceDetail.status == 0) {
 

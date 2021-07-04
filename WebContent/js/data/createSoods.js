@@ -106,7 +106,7 @@ $(function(){
 
         return {
             init: function () {
-                com.post(api.data.querySoodsByQiid, {"soods.quotationItem.qiId": soods.quoteId}, function(res){
+                com.post(api.data.querySoodsByQiid, {"soods.quotationItem.qiid": soods.quoteId}, function(res){
                     com.focusPage('#soodsResultList').html(null);
                     renderList('soodsResultList', res.soodes);
                 });
@@ -139,7 +139,7 @@ $(function(){
 
         var option = {
             "soods.goods.gid": gid,
-            "soods.quotationItem.qiId": soods.quoteId,
+            "soods.quotationItem.qiid": soods.quoteId,
             "soods.num": soods.items.num.val(),
             "soods.selling": soods.items.selling.val()
         };

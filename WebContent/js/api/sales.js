@@ -279,6 +279,7 @@ $.extend(api, {
         upgradeSalesActivityItem :{url:"upgradeSalesActivityItem.do"},
         refundSalesActivityItem :{url:"refundSalesActivityItem.do"},
         expendSalesActivityItem :{url:"expendSalesActivityItem.do"},
+        discountSalesActivityItem :{url:"discountSalesActivityItem.do"},
         pageSalesForPompany: {
             url: "pageSalesForPompany.do",
             type: "query",

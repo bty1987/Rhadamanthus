@@ -114,6 +114,9 @@ $(function () {
                     case "finishTime":
                         propertyArr.push(["完结时间:", v.finishTime, "green"]);
                         break;
+                    case "creater":
+                    	propertyArr.push(["创建人:", v.creater.currentName, "grey"]);
+                    	break;
                     case "traner":
                         propertyArr.push(["配送人:", v.traner.currentName, "grey"]);
                         break;

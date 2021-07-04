@@ -118,7 +118,7 @@ $(function () {
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "设计师", "designer"), createDiv("col-sm-9").append(createInput("designer", "col-xs-10 col-sm-5", true, "text")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "业务部门", "businessDepartment"), createDiv("col-sm-9").append(createInput("businessDepartment", "col-xs-10 col-sm-5", true, "text")))
             , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "业务员", "salesman"), createDiv("col-sm-9").append(createInput("salesman", "col-xs-10 col-sm-5", true, "text")))
-            , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "业务类型", "salesmanType"), createDiv("col-sm-9").append(createSelect("salesmanType", "col-xs-10 col-sm-5", [], null, null,"popover", "manual")))
+            , createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "业务类型", "busitype"), createDiv("col-sm-9").append(createSelect("busitype", "col-xs-10 col-sm-5", [], null, null,"popover", "manual")))
         ));
         var right1 = createDiv("col-xs-12 col-sm-6").append(createDiv("control-group").append(
             createDiv("form-group").append(createLabel("col-sm-3 control-label no-padding-right", "等级", "grade"), createDiv("col-sm-9").append(createSelect("grade", "col-xs-10 col-sm-5", [], null, null, "popover", "manual")))

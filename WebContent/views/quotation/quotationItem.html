@@ -22,16 +22,16 @@
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="itemId">编号</label>
 							<div class="col-sm-9">
-								<input type="text" id="qiId" class="col-xs-10 col-sm-5 hide" />
-								<input type="text" id="itemId" class="col-xs-10 col-sm-5 v_itemId v_required" data-toggle="popover" data-trigger='manual' maxlength="8"/>
+								<input type="text" id="qiid" class="col-xs-10 col-sm-5 hide" />
+								<input type="text" id="no" class="col-xs-10 col-sm-5 v_quotation_no v_required" data-toggle="popover" data-trigger='manual' maxlength="8"/>
 							</div>
 						</div>
 						<div class="space-4"></div>
 						
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="version">版本</label>
-							<div class="col-sm-3">
-								<select class="form-control v_required" id="version" data-toggle="popover" data-trigger='manual'></select>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-5 v_required" id="version" data-toggle="popover" data-trigger='manual'></select>
 							</div>
 						</div>
 						<div class="space-4"></div>
@@ -40,7 +40,7 @@
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="itemName">名称</label>
 							<div class="col-sm-9">
-								<input type="text" id="itemName" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
+								<input type="text" id="name" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
 							</div>
 						</div>
 						<div class="space-4"></div>
@@ -63,8 +63,8 @@
 						
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="quotationBigCategory">大类</label>
-							<div class="col-sm-3">
-								<select class="form-control v_required" id="quotationBigCategory" data-toggle="popover" data-trigger='manual'>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-5 v_required" id="quotationBigCategory" data-toggle="popover" data-trigger='manual'>
 									<option>请选择类型</option>
 								</select>
 							</div>
@@ -73,8 +73,8 @@
 						
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="quotationSmallCategory">小类</label>
-							<div class="col-sm-5">
-								<select class="form-control v_required" id="quotationSmallCategory" data-toggle="popover" data-trigger='manual'>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-5 v_required" id="quotationSmallCategory" data-toggle="popover" data-trigger='manual'>
 									<option>请选择类型</option>
 								</select>
 							</div>
@@ -83,24 +83,24 @@
 						
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="measurementUnit">单位</label>
-							<div class="col-sm-3">
-								<select class="form-control v_required" id="measurementUnit" data-toggle="popover" data-trigger='manual'></select>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-5 v_required" id="measurementUnit" data-toggle="popover" data-trigger='manual'></select>
 							</div>
 						</div>
 						<div class="space-4"></div>
 						
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="workType">工种</label>
-							<div class="col-sm-3">
-								<select class="form-control v_required" id="workType" data-toggle="popover" data-trigger='manual'></select>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-5 v_required" id="workType" data-toggle="popover" data-trigger='manual'></select>
 							</div>
 						</div>
 						<div class="space-4"></div>
 						
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="quotationItemDes">信息</label>
+							<label class="col-sm-3 control-label no-padding-right" for="comment">信息</label>
 							<div class="col-sm-9">
-								<textarea id="quotationItemDes" class="col-xs-10 col-sm-5 v_required" rows="3" data-toggle="popover" data-trigger='manual' maxlength="500"></textarea>
+								<textarea id="comment" class="col-xs-10 col-sm-5 v_required" rows="3" data-toggle="popover" data-trigger='manual' maxlength="500"></textarea>
 							</div>
 						</div>
 						<div class="space-4"></div>
@@ -129,6 +129,7 @@
 							</div>
 						</div>
 						<div class="space-4"></div>
+						
 					</form>
 				</div>
 				<div class="modal-footer">

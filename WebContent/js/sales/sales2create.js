@@ -278,9 +278,12 @@ jQuery(function () {
 
     // 销售单区 提交
     sales.btns.submit.click(function () {
-
+        
         if(com.validate('searchInfo', 'bottom')) return false;
         if (submitCheck() == false) return false;
+        
+        var popup = com.focusPage("#sales2create");
+        var mask = com.mask(popup, popup);
 
         var options = {
             "sales.orderId": sales.rightitems.orderId.val(),
@@ -300,6 +303,8 @@ jQuery(function () {
         };
 
         var $lis = com.focusPage('.list-group-item');
+        
+        var total = 0;
 
         $lis && $lis.length && $.each($lis, function (i, v) {
 
@@ -323,18 +328,33 @@ jQuery(function () {
             options["salesItems[" + i + "].ctype"] = data.ctype;
             options["salesItems[" + i + "].cvalue"] = data.cvalue;
             options["salesItems[" + i + "].priceType"] = data.pricetype;
+            
+            total = utils.changeThrDecimal(utils.accAdd(total, data.total));
         });
+        
+        if(total != sales.rightitems.totals.val()){
+            com.showAlert(com.error, "销售单总额不匹配");
+            
+            return false;
+        }
 
         com.post(api.sales.addSales, options, function () {
+            
             com.showAlert(com.info, "添加成功");
+            
             com.focusPage('#salesItemList').empty();
             sales.items.left.find('select').empty();
+            
             com.cleanItems(sales.leftitems);
             com.cleanItems(sales.rightitems);
             sales.rightitems.coupon.val(0);
             sales.rightitems.maling.val(0);
             sales.rightitems.totals.val(0);
         });
+        
+        setTimeout(function(){
+            com.closeMask(mask, popup);
+        }, 800);
     });
     
     function count(flag, boolean) {

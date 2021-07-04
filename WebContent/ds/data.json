@@ -161,6 +161,10 @@
     {"key" : "0", "value" : "启用"},
     {"key" : "1", "value" : "禁用"}
   ],
+   "contractStatus": [
+    {"key" : "0", "value" : "启用"},
+    {"key" : "1", "value" : "禁用"}
+  ],
 
 
   "errorCode": 0,

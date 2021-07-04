@@ -28,7 +28,7 @@ jQuery(function ($) {
     
     searcher.base("condList", "pagenation", "resultList", api.data.pageContract);
     
-    searcher.condition(["data-contract-name"]);
+    searcher.condition(["data-contract-name","data-contract-status"]);
     
     searcher.history("contractPostData");
     

@@ -83,6 +83,7 @@ jQuery(function($){
                     ['10', '房屋类别: ', "houseType "],
                     ['10', '客户: ', "customerOrigin.customer.name"],
                     ['10', '业务员: ', "salesman.currentName"],
+                    ['10', '业务类型: ', "decorationBusitype.name"],
                     ['10', '业务部: ', "salesman.dept.name"],
                     ['10', '设计师: ', "customerOrigin.designer.currentName"],
                     ['10', '设计部: ', "customerOrigin.designer.dept.name"],
@@ -155,12 +156,12 @@ jQuery(function($){
     var lineprops = [
 			{fieId:"sender.currentName",name: "申请人", prop: "sender.currentName",clazz:"grey"},
 			{fieId: "receiver.currentName", name: "审批人", prop: "receiver.currentName",clazz: "grey"},
-			{fieId: "createTime", name: "提交时间", prop: "createTime",clazz: "grey"},
-			{fieId: "approvalTime",name: "审批时间", prop: "approvalTime",clazz: "grey"},
-			{field: "status", name: "状态", prop: "status", clazz: "red"},
-			{field: "contents", name: "说明", prop: "contents",clazz: "grey"},
-			{field: "comment", name: "备注", prop: "comment"},
-			{field: "annotate", name: "批注", prop: "annotate"},
+			{fieId: "createTime", name: "提交时间", prop: "createTime",clazz: "green"},
+			{fieId: "approvalTime",name: "审批时间", prop: "approvalTime",clazz: "green"},
+			{field: "status", name: "状态", prop: "status", dataset: approvalTrack.approvalStatus, clazz: "red"},
+			{field: "contents", name: "说明", prop: "contents",clazz: "blue "},
+			{field: "comment", name: "备注", prop: "comment",clazz: "grey"},
+			{field: "annotate", name: "批注", prop: "annotate",clazz: "grey"},
      ];
      var linebtns = [
          {name: "详情", handle: function(v){

@@ -1,15 +1,23 @@
 jQuery(function($) {
-	//searcher 第七个参数传参
+    
+    
 	var decorationOrderId = params.decorationOrderId;
 	var extraParams = {"addReduce.orderId" : decorationOrderId};
+	
 	var addReduce = {
 		decorationOrderId : params.decorationOrderId,
-		saveBtn: com.focusPage("#saveBtn").on("click", saveData),
-		cancellBtn: com.focusPage("#cancelBtn"),
-		modal: com.focusPage("#addReduceModal"),
-		addReduceItems: {
-			addReduceDes : com.focusPage("#addReduceDes"),
-			addReduceType : com.focusPage("#addReduceType")
+		
+		items: {
+		    addReduceDes : com.focusPage("#addReduceDes"),
+            addReduceType : com.focusPage("#addReduceType")
+		},
+		
+		modals: {
+		    addReduceModal: com.focusPage("#addReduceModal"),
+		},
+		
+		btns: {
+		    saveBtn: com.focusPage("#saveBtn").on("click", saveData),
 		},
 
 		editFlag: false
@@ -61,6 +69,8 @@ jQuery(function($) {
 				["管理费:", v.managePrice, "blue"],
 				["状态:", statusDict[v.status], "red"]
 			];
+			
+			if(v.discount != 0) propertyArr.push(["折扣:", v.discount, "blue"])
 
 			$.each(propertyArr, function (index,value) {
 				var $liProperty = $('<li></li>');
@@ -121,11 +131,11 @@ jQuery(function($) {
 	//添加按钮
 	com.focusPage('#add').click(function(){
 		addReduce.editFlag = false;
-		com.cleanItems(addReduce.addReduceItems);
+		com.cleanItems(addReduce.items);
 
-		addReduce.addReduceItems.addReduceType.attr('disabled', false);
+		addReduce.items.addReduceType.attr('disabled', false);
 
-		addReduce.modal.modal("show");
+		addReduce.modals.addReduceModal.modal("show");
 	});
 	//打印按钮
 	com.focusPage('#print').click(function(){
@@ -156,8 +166,8 @@ jQuery(function($) {
 
 		var url;
 		var options = {
-			"addReduce.content": addReduce.addReduceItems.addReduceDes.val(),
-			"addReduce.type": addReduce.addReduceItems.addReduceType.val(),
+			"addReduce.content": addReduce.items.addReduceDes.val(),
+			"addReduce.type": addReduce.items.addReduceType.val(),
 			"addReduce.orderId": addReduce.decorationOrderId
 		};
 
@@ -170,7 +180,7 @@ jQuery(function($) {
 			com.showAlert(com.info, "操作成功");
 			search.doSearch();
 
-			addReduce.modal.modal("hide");
+			addReduce.modals.addReduceModal.modal("hide");
 		});
 	}
 });

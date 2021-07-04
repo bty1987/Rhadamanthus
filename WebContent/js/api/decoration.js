@@ -52,13 +52,14 @@ $.extend(api, {decoration: {
                 args: ["decorationActivityItem.num", "decorationActivityItem.money"]
             }
         },
-        abateDecorationActivityItem: {url: "abateDecorationActivityItem.do"},
-        receiveDecorationActivityItem: {url: "receiveDecorationActivityItem.do"},
-        deliveDecorationActivityItem: {url: "deliveDecorationActivityItem.do"},
-        unrefundDecorationActivityItem: {url: "unrefundDecorationActivityItem.do"},
-        refundDecorationActivityItem: {url: "refundDecorationActivityItem.do"},
-        expendDecorationActivityItem: {url: "expendDecorationActivityItem.do"},
-        amountDecorationActivityItem: {url: "amountDecorationActivityItem.do"},
+		abateDecorationActivityItem: {url: "abateDecorationActivityItem.do"},
+		receiveDecorationActivityItem: {url: "receiveDecorationActivityItem.do"},
+		deliveDecorationActivityItem: {url: "deliveDecorationActivityItem.do"},
+		unrefundDecorationActivityItem: {url: "unrefundDecorationActivityItem.do"},
+		refundDecorationActivityItem: {url: "refundDecorationActivityItem.do"},
+		expendDecorationActivityItem: {url: "expendDecorationActivityItem.do"},
+		discountDecorationActivityItem: {url: "discountDecorationActivityItem.do"},
+		amountDecorationActivityItem: {url: "amountDecorationActivityItem.do"},
         
         queryDecorationContractByOrderId: {
         	url: "queryDecorationContractByOrderId.do", 

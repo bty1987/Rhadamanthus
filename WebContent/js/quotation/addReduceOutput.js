@@ -126,14 +126,11 @@ var printAddReduceDetail = (function(){
 							"type": v.type,
 						},
 					];
+					
+					disposeAddReduceItemData(v.addReduceItems);
 
 					addReduceIds["addReduceIds["+i+"]"] = v.arId;
 				});
-
-				// 获取增减项信息
-				com.post(api.addReduce.queryAddReduceItemByAddReduceIds, addReduceIds, function (res) {
-					disposeAddReduceItemData(res.addReduceItems);
-				}, null, false);
 
 			}, null, false);
 

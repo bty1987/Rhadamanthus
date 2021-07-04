@@ -49,6 +49,7 @@ jQuery(function($) {
     
     management.items.quotationOfOrderId = com.focusPage("#quotationOfOrderId");
     management.items.quotationFunctionArea = com.focusPage("#quotationFunctionArea");
+    management.items.quotationFunctionAreaName = com.focusPage("#quotationFunctionAreaName");
     
     management.items.dateRange = com.focusPage("#dateRange");
     
@@ -234,7 +235,7 @@ jQuery(function($) {
             com.post(api.decoration.queryDecorationByOrderId, {"decorationOrderId": orderId}, function (res){
                 var versionId = res.decoration.version.no;
 
-                com.post(api.quotation.queryFunctionAreaByVersionId, {"functionArea.versionId" : versionId}, function(data) {
+                com.post(api.quotation.queryFunctionAreaByVersionId, {"functionArea.version.no" : versionId}, function(data) {
                     var functionAreas = [];
 
                     $.each(data.functionAreas, function(i, v) {
@@ -243,7 +244,7 @@ jQuery(function($) {
                         }
                     });
 
-                    management.items.quotationFunctionArea.bindData(functionAreas, 'faId', 'functionAreaName');
+                    management.items.quotationFunctionArea.bindData(functionAreas, 'faid', 'name', "请选择");
                 }, null, false);
 
             }, function (res) {
@@ -253,6 +254,10 @@ jQuery(function($) {
         }
     }).on('focus', function(){
         management.items.quotationFunctionArea.html("");
+    });
+    
+    management.items.quotationFunctionArea.on("change", function(){
+        management.items.quotationFunctionAreaName.val($(this).find("option:selected").text())
     });
     
     com.focusPage("#changeDecorationForOrderId").click(function(){
@@ -650,10 +655,13 @@ jQuery(function($) {
         com.showConfirm("你确认添加此功能区么", function() {
 
             var orderId = management.items.quotationOfOrderId.val();
-            var functionAreaIds = management.items.quotationFunctionArea.val();
+            var functionAreaId = management.items.quotationFunctionArea.val();
+            var functionAreaName = management.items.quotationFunctionAreaName.val();
+            
             var option = {
                 "quotation.orderId": orderId,
-                "functionAreaIds[0]": functionAreaIds
+                "quotationFunctionArea.id": functionAreaId,
+                "quotationFunctionArea.functionAreaName": functionAreaName,
             };
 
             com.post(api.quotation.addQuotationFunctionArea, option, function () {

@@ -59,9 +59,10 @@ jQuery(function($) {
     com.post(api.quotation.queryQuotationForDefaultByOrderId, {"quotation.orderId": contractEdit.decorationOrderId}, function (res) {
         
         var quotation = res.quotation;
+        var preprice = parseInt(utils.accAdd(quotation.undisPrice, utils.accAdd(quotation.disPrice, utils.accAdd(quotation.trafficPrice, quotation.managePrice))))
         
-        com.focusPage("#con-quotation-total", "#form").val(utils.accAdd(quotation.undisPrice, utils.accAdd(quotation.disPrice, utils.accAdd(quotation.trafficPrice, quotation.managePrice))));
-        com.focusPage("#con-quotation-total-undis", "#form").val(utils.accSub(quotation.totalPrice, quotation.managePrice));
+        com.focusPage("#con-quotation-total", "#form").val(preprice);
+        com.focusPage("#con-quotation-total-undis", "#form").val(parseInt(utils.accSub(preprice, quotation.managePrice)));
         com.focusPage("#con-manage-total", "#form").val(quotation.managePrice);
         
         contractEdit.quotation = quotation;
@@ -73,7 +74,7 @@ jQuery(function($) {
         
         if(!holonomy.servicePrice) holonomy.servicePrice = 0;
         
-        com.focusPage("#con-material-total", "#form").val(holonomy.materialPrice);
+        com.focusPage("#con-material-total", "#form").val(parseInt(holonomy.materialPrice));
         com.focusPage("#con-service-total", "#form").val(holonomy.servicePrice);
         
         contractEdit.cover["con-payment-first"] = utils.accMul(holonomy.materialPrice, 0.5);

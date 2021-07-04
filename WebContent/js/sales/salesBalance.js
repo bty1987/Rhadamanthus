@@ -166,9 +166,6 @@ $(function () {
                             case "venderTime":
                                 propertyArr.push(["厂商结算时间:", v.venderTime, "green"]);
                                 break;
-                            case "venderTime":
-                                propertyArr.push(["厂商结算时间:", v.venderTime, "green"]);
-                                break;
                             case "pbalance":
                                 propertyArr.push(["结算值:", v.pbalance, "blue"]);
                                 break;
@@ -569,7 +566,8 @@ $(function () {
                     ["抹零:", 'sales.maling'],
                     ["厂商抹零:", 'sales.venderMaling'],
                     ["状态:", 'status'],
-                    ["类型:", 'type']
+                    ["类型:", 'type'],
+                    ["等级:", 'sales.grade'],
                 ],
                 list: res.paging.data
 
