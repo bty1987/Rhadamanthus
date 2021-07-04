@@ -91,66 +91,11 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 	@Override
 	public List<AddReduceItemVO> queryAddReduceItemByAddReduceId(AddReduceVO addReduceVO) throws FLException {
 
-		List<AddReduceItemPO> addReduceItemPOs = addReduceItemDao.queryAddReduceItemByAddReduceId(addReduceVO.getArId());
+		List<AddReduceItemPO> addReduceItemPOs = addReduceItemDao.queryAddReduceItem(addReduceVO.getArId());
 		List<AddReduceItemVO> addReduceItemVOs = new ArrayList<AddReduceItemVO>();
 
 		for (AddReduceItemPO addReduceItemPO : addReduceItemPOs) {
-
-			AddReduceItemVO addReduceItemVO = new AddReduceItemVO();
-
-			BeanUtil.copyProperties(addReduceItemPO, addReduceItemVO);
-
-			short addReduceItemType = addReduceItemPO.getType();
-
-			if (addReduceItemType == AddReduceItemPO.TYPE_COMMON_QUOTATION_INT) {
-				QuotationItemPO quotationItemPO = quotationItemDao.get(addReduceItemPO.getQuoteItemId());
-
-				if (quotationItemPO != null) {
-					addReduceItemVO.setContent(quotationItemPO.getQuotationItemDes());
-				}
-			} else if (addReduceItemType == AddReduceItemPO.TYPE_SYSTEM_QUOTATION_INT) {
-				SystemDefineItemPO systemDefineItemPO = systemDefineItemDao.get(addReduceItemPO.getQuoteItemId());
-
-				if (systemDefineItemPO != null) {
-					addReduceItemVO.setContent(systemDefineItemPO.getQuotationItemDes());
-				}
-			} else if (addReduceItemType == AddReduceItemPO.TYPE_QUOTATION_ITEM_INT) {
-
-				QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(addReduceItemPO.getQuotationFunctionArea().getQfaId());
-				QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex()), addReduceItemPO.getQuoteItemId());
-
-				if (quotationFunctionAreaItemPO != null) {
-					if (quotationFunctionAreaItemPO.getQuotationItem() != null) {
-						addReduceItemVO.setContent(quotationFunctionAreaItemPO.getQuotationItem().getQuotationItemDes());
-						addReduceItemVO.setQuotationItemId(quotationFunctionAreaItemPO.getQuotationItem().getQiId());
-					} else {
-						addReduceItemVO.setContent(quotationFunctionAreaItemPO.getContent());
-					}
-				} else {
-					addReduceItemVO.setContent("报价项已被删除");
-				}
-			} else if (addReduceItemType == AddReduceItemPO.TYPE_ADD_ITEM_INT) {
-
-				AddReduceItemPO _addReduceItemPO = addReduceItemDao.get(addReduceItemPO.getQuoteItemId());
-
-				if (_addReduceItemPO != null) {
-					addReduceItemVO.setQuotationItemId(_addReduceItemPO.getQuoteItemId());
-				}
-			} else if (addReduceItemType == AddReduceItemPO.TYPE_EXTENSION_ITEM_INT) {
-
-				ExtensionItemPO extensionItemPO = extensionItemDao.get(addReduceItemPO.getQuoteItemId());
-				if (extensionItemPO != null) {
-					addReduceItemVO.setContent(extensionItemPO.getContent());
-					addReduceItemVO.setQuotationItemId(extensionItemPO.getQuoteItemId());
-				}
-			}
-
-			QuotationFunctionAreaPO quotationFunctionAreaPO = addReduceItemPO.getQuotationFunctionArea();
-			addReduceItemVO.setQuotationFunctionAreaType(quotationFunctionAreaPO.getType());
-			addReduceItemVO.setQuotationFunctionAreaId(quotationFunctionAreaPO.getQfaId());
-			addReduceItemVO.setQuotationFunctionAreaName(quotationFunctionAreaPO.getFunctionAreaName());
-
-			addReduceItemVOs.add(addReduceItemVO);
+			addReduceItemVOs.add(ptv(addReduceItemPO));
 		}
 
 		return addReduceItemVOs;
@@ -162,55 +107,11 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 		List<AddReduceItemVO> addReduceItemVOs = new ArrayList<AddReduceItemVO>();
 
 		if (arids != null && arids.size() > 0) {
-			List<AddReduceItemPO> addReduceItemPOs = addReduceItemDao.queryAddReduceItemByAddReduceIds(arids);
+
+			List<AddReduceItemPO> addReduceItemPOs = addReduceItemDao.queryAddReduceItem(arids);
 
 			for (AddReduceItemPO addReduceItemPO : addReduceItemPOs) {
-
-				AddReduceItemVO addReduceItemVO = new AddReduceItemVO();
-
-				BeanUtil.copyProperties(addReduceItemPO, addReduceItemVO);
-
-				short addReduceItemType = addReduceItemPO.getType();
-
-				if (addReduceItemType == AddReduceItemPO.TYPE_COMMON_QUOTATION_INT) {
-					QuotationItemPO quotationItemPO = quotationItemDao.get(addReduceItemPO.getQuoteItemId());
-					if (quotationItemPO != null) {
-						addReduceItemVO.setContent(quotationItemPO.getQuotationItemDes());
-					}
-				} else if (addReduceItemType == AddReduceItemPO.TYPE_SYSTEM_QUOTATION_INT) {
-					SystemDefineItemPO systemDefineItemPO = systemDefineItemDao.get(addReduceItemPO.getQuoteItemId());
-
-					if (systemDefineItemPO != null) {
-						addReduceItemVO.setContent(systemDefineItemPO.getQuotationItemDes());
-					}
-				} else if (addReduceItemType == AddReduceItemPO.TYPE_QUOTATION_ITEM_INT) {
-
-					QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(addReduceItemPO.getQuotationFunctionArea().getQfaId());
-					QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex()), addReduceItemPO.getQuoteItemId());
-
-					if (quotationFunctionAreaItemPO != null) {
-						if (quotationFunctionAreaItemPO.getQuotationItem() != null) {
-							addReduceItemVO.setContent(quotationFunctionAreaItemPO.getQuotationItem().getQuotationItemDes());
-
-						} else {
-							addReduceItemVO.setContent(quotationFunctionAreaItemPO.getContent());
-						}
-					} else {
-						addReduceItemVO.setContent("报价项已被删除");
-					}
-				} else if (addReduceItemType == AddReduceItemPO.TYPE_EXTENSION_ITEM_INT) {
-					ExtensionItemPO extensionItemPO = extensionItemDao.get(addReduceItemPO.getQuoteItemId());
-					if (extensionItemPO != null) {
-						addReduceItemVO.setContent(extensionItemPO.getContent());
-					}
-				}
-
-				QuotationFunctionAreaPO quotationFunctionAreaPO = addReduceItemPO.getQuotationFunctionArea();
-				addReduceItemVO.setQuotationFunctionAreaType(quotationFunctionAreaPO.getType());
-				addReduceItemVO.setQuotationFunctionAreaId(quotationFunctionAreaPO.getQfaId());
-				addReduceItemVO.setQuotationFunctionAreaName(quotationFunctionAreaPO.getFunctionAreaName());
-
-				addReduceItemVOs.add(addReduceItemVO);
+				addReduceItemVOs.add(ptv(addReduceItemPO));
 			}
 		}
 
@@ -510,5 +411,64 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 
 			selectionDao.update(selectionPO);
 		}
+	}
+
+	public AddReduceItemVO ptv(AddReduceItemPO addReduceItemPO) throws FLException {
+
+		AddReduceItemVO addReduceItemVO = new AddReduceItemVO();
+
+		BeanUtil.copyProperties(addReduceItemPO, addReduceItemVO);
+
+		short addReduceItemType = addReduceItemPO.getType();
+
+		if (addReduceItemType == AddReduceItemPO.TYPE_COMMON_QUOTATION_INT) {
+			QuotationItemPO quotationItemPO = quotationItemDao.get(addReduceItemPO.getQuoteItemId());
+
+			if (quotationItemPO != null) {
+				addReduceItemVO.setContent(quotationItemPO.getComment());
+			}
+		} else if (addReduceItemType == AddReduceItemPO.TYPE_SYSTEM_QUOTATION_INT) {
+			SystemDefineItemPO systemDefineItemPO = systemDefineItemDao.get(addReduceItemPO.getQuoteItemId());
+
+			if (systemDefineItemPO != null) {
+				addReduceItemVO.setContent(systemDefineItemPO.getComment());
+			}
+		} else if (addReduceItemType == AddReduceItemPO.TYPE_QUOTATION_ITEM_INT) {
+
+			QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(addReduceItemPO.getQuotationFunctionArea().getQfaId());
+			QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex()), addReduceItemPO.getQuoteItemId());
+
+			if (quotationFunctionAreaItemPO != null) {
+				if (quotationFunctionAreaItemPO.getQuotationItem() != null) {
+					addReduceItemVO.setContent(quotationFunctionAreaItemPO.getQuotationItem().getComment());
+					addReduceItemVO.setQuotationItemId(quotationFunctionAreaItemPO.getQuotationItem().getQiid());
+				} else {
+					addReduceItemVO.setContent(quotationFunctionAreaItemPO.getContent());
+				}
+			} else {
+				addReduceItemVO.setContent("报价项已被删除");
+			}
+		} else if (addReduceItemType == AddReduceItemPO.TYPE_ADD_ITEM_INT) {
+
+			AddReduceItemPO _addReduceItemPO = addReduceItemDao.get(addReduceItemPO.getQuoteItemId());
+
+			if (_addReduceItemPO != null) {
+				addReduceItemVO.setQuotationItemId(_addReduceItemPO.getQuoteItemId());
+			}
+		} else if (addReduceItemType == AddReduceItemPO.TYPE_EXTENSION_ITEM_INT) {
+
+			ExtensionItemPO extensionItemPO = extensionItemDao.get(addReduceItemPO.getQuoteItemId());
+			if (extensionItemPO != null) {
+				addReduceItemVO.setContent(extensionItemPO.getContent());
+				addReduceItemVO.setQuotationItemId(extensionItemPO.getQuoteItemId());
+			}
+		}
+
+		QuotationFunctionAreaPO quotationFunctionAreaPO = addReduceItemPO.getQuotationFunctionArea();
+		addReduceItemVO.setQuotationFunctionAreaType(quotationFunctionAreaPO.getType());
+		addReduceItemVO.setQuotationFunctionAreaId(quotationFunctionAreaPO.getQfaId());
+		addReduceItemVO.setQuotationFunctionAreaName(quotationFunctionAreaPO.getFunctionAreaName());
+
+		return addReduceItemVO;
 	}
 }

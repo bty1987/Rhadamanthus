@@ -42,8 +42,6 @@ public class QuotationFunctionAreaAction extends BaseListAction {
 
 	private QuotationFunctionAreaVO quotationFunctionArea;
 
-	private List<Long> functionAreaIds;
-
 	@Action(value = "queryQuotationFunctionAreaForCommonByQuotationId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationFunctionAreaForCommonByQuotationId() throws FLException {
 
@@ -63,7 +61,7 @@ public class QuotationFunctionAreaAction extends BaseListAction {
 	@Action(value = "addQuotationFunctionAreaByFunctionAreaIds", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addQuotationFunctionAreaByFunctionAreaIds() throws FLException {
 
-		quotationFunctionAreas = quotationFunctionAreaService.addQuotationFunctionAreaByFunctionAreaIds(functionAreaIds, quotation);
+		quotationFunctionAreas = quotationFunctionAreaService.addQuotationFunctionAreaByFunctionAreaIds(quotationFunctionAreas, quotation);
 
 		return SUCCESS;
 	}
@@ -71,7 +69,7 @@ public class QuotationFunctionAreaAction extends BaseListAction {
 	@Action(value = "addQuotationFunctionArea", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addQuotationFunctionArea() throws FLException {
 
-		quotationFunctionAreaService.addQuotationFunctionArea(functionAreaIds, quotation);
+		quotationFunctionAreaService.addQuotationFunctionArea(quotationFunctionArea, quotation);
 
 		return SUCCESS;
 	}
@@ -106,14 +104,6 @@ public class QuotationFunctionAreaAction extends BaseListAction {
 
 	public void setQuotationFunctionAreas(List<QuotationFunctionAreaVO> quotationFunctionAreas) {
 		this.quotationFunctionAreas = quotationFunctionAreas;
-	}
-
-	public List<Long> getFunctionAreaIds() {
-		return functionAreaIds;
-	}
-
-	public void setFunctionAreaIds(List<Long> functionAreaIds) {
-		this.functionAreaIds = functionAreaIds;
 	}
 
 	public QuotationFunctionAreaVO getQuotationFunctionArea() {

@@ -25,7 +25,7 @@ import javax.persistence.Table;
 @Table(name = "functionArea", catalog = "quotation")
 public class FunctionAreaPO implements Serializable {
 
-	public static final long serialVersionUID = 13444646L;
+	private static final long serialVersionUID = -1311565802416130652L;
 
 	public static final String COLUMN_TYPE_STR = "type";
 
@@ -35,11 +35,11 @@ public class FunctionAreaPO implements Serializable {
 
 	public static final short TYPE_AI_INT = 3;
 
-	private long faId;
+	private long faid;
 
-	private String functionAreaId;
+	private String no;
 
-	private String functionAreaName;
+	private String name;
 
 	private QuotationVersionPO quotationVersion;
 
@@ -55,35 +55,35 @@ public class FunctionAreaPO implements Serializable {
 		super();
 	}
 
-	public FunctionAreaPO(long faId) {
+	public FunctionAreaPO(long faid) {
 		super();
-		this.faId = faId;
+		this.faid = faid;
 	}
 
 	@Id
-	@Column(name = "faId")
-	public long getFaId() {
-		return faId;
+	@Column(name = "faid")
+	public long getFaid() {
+		return faid;
 	}
 
-	public void setFaId(long faId) {
-		this.faId = faId;
+	public void setFaid(long faid) {
+		this.faid = faid;
 	}
 
-	public String getFunctionAreaId() {
-		return functionAreaId;
+	public String getNo() {
+		return no;
 	}
 
-	public void setFunctionAreaId(String functionAreaId) {
-		this.functionAreaId = functionAreaId;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
-	public String getFunctionAreaName() {
-		return functionAreaName;
+	public String getName() {
+		return name;
 	}
 
-	public void setFunctionAreaName(String functionAreaName) {
-		this.functionAreaName = functionAreaName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

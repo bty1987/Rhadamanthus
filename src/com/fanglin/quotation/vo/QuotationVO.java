@@ -28,9 +28,9 @@ public class QuotationVO implements Serializable {
 
 	private String no;
 
-	private String quotationName;
+	private String name;
 
-	private String decorationStyle;
+	private String style;
 
 	private Integer creater;
 
@@ -62,6 +62,8 @@ public class QuotationVO implements Serializable {
 
 	private Long basePrice;
 
+	private Long costPrice;
+
 	public QuotationVO() {
 		super();
 	}
@@ -87,20 +89,20 @@ public class QuotationVO implements Serializable {
 		this.orderId = orderId;
 	}
 
-	public String getQuotationName() {
-		return quotationName;
+	public String getName() {
+		return name;
 	}
 
-	public void setQuotationName(String quotationName) {
-		this.quotationName = quotationName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getDecorationStyle() {
-		return decorationStyle;
+	public String getStyle() {
+		return style;
 	}
 
-	public void setDecorationStyle(String decorationStyle) {
-		this.decorationStyle = decorationStyle;
+	public void setStyle(String style) {
+		this.style = style;
 	}
 
 	public Integer getCreater() {
@@ -238,6 +240,14 @@ public class QuotationVO implements Serializable {
 
 	public void setBasePrice(Long basePrice) {
 		this.basePrice = basePrice;
+	}
+
+	public Long getCostPrice() {
+		return costPrice;
+	}
+
+	public void setCostPrice(Long costPrice) {
+		this.costPrice = costPrice;
 	}
 
 }

@@ -35,5 +35,7 @@ public interface DecorationActivityItemService {
 
 	public int expendDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException;
 
+	public int discountDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException;
+
 	public int amountDecorationActivityItem(DecorationVO decorationVO, String userId) throws FLException;
 }

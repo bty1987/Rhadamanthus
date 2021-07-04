@@ -7,151 +7,126 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.communion.po.MeasurementUnitPO;
-import com.fanglin.communion.po.QuotationBigCategoryPO;
-import com.fanglin.communion.po.QuotationClassificationPO;
-import com.fanglin.communion.po.QuotationSmallCategoryPO;
-import com.fanglin.communion.po.QuotationTypePO;
-import com.fanglin.communion.po.WorkTypePO;
+import com.fanglin.communion.vo.MeasurementUnitVO;
+import com.fanglin.communion.vo.QuotationBigCategoryVO;
+import com.fanglin.communion.vo.QuotationClassificationVO;
+import com.fanglin.communion.vo.QuotationSmallCategoryVO;
+import com.fanglin.communion.vo.QuotationTypeVO;
+import com.fanglin.communion.vo.WorkTypeVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.po.FunctionAreaItemPO;
 import com.fanglin.data.po.FunctionAreaPO;
 import com.fanglin.data.po.QuotationItemPO;
-import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.dao.FunctionAreaDao;
 import com.fanglin.data.quotation.dao.FunctionAreaItemDao;
 import com.fanglin.data.quotation.service.FunctionAreaItemService;
 import com.fanglin.data.quotation.vo.FunctionAreaItemVO;
 import com.fanglin.data.quotation.vo.FunctionAreaVO;
 import com.fanglin.data.quotation.vo.QuotationItemVO;
+import com.fanglin.data.quotation.vo.QuotationVersionVO;
+import com.fanglin.utils.BeanUtil;
 
 @Service("functionAreaItemService")
 @Transactional(readOnly = true)
 public class FunctionAreaItemServiceImpl implements FunctionAreaItemService {
-	
+
 	@Autowired
 	private FunctionAreaItemDao functionAreaItemDao;
-	
+
 	@Autowired
 	private FunctionAreaDao functionAreaDao;
-	
+
 	@Override
-	public List<FunctionAreaItemVO> queryFunctionAreaItemByFunctionAreaId(FunctionAreaItemVO functionAreaItemVO){
-		
-		long functionAreaId = functionAreaItemVO.getFunctionArea().getFaId();
-		
+	public List<FunctionAreaItemVO> queryFunctionAreaItemByFunctionAreaId(FunctionAreaItemVO functionAreaItemVO) {
+
+		long functionAreaId = functionAreaItemVO.getFunctionArea().getFaid();
+
 		List<FunctionAreaItemPO> functionAreaItemPOs = functionAreaItemDao.queryFunctionAreaItemByFunctionAreaId(functionAreaId);
 		List<FunctionAreaItemVO> functionAreaItemVOs = new ArrayList<FunctionAreaItemVO>();
-		
-		for(FunctionAreaItemPO functionAreaItemPO: functionAreaItemPOs){
-			
-			FunctionAreaPO FunctionAreaPO = functionAreaItemPO.getFunctionArea();
+
+		for (FunctionAreaItemPO functionAreaItemPO : functionAreaItemPOs) {
+
+			FunctionAreaPO functionAreaPO = functionAreaItemPO.getFunctionArea();
 			QuotationItemPO quotationItemPO = functionAreaItemPO.getQuotationItem();
-			
-			WorkTypePO workTypePO = quotationItemPO.getWorkType();
-			MeasurementUnitPO measurementUnitPO = quotationItemPO.getMeasurementUnit();
-			QuotationBigCategoryPO quotationBigCategoryPO = quotationItemPO.getQuotationBigCategory();
-			QuotationClassificationPO quotationClassificationPO = quotationItemPO.getQuotationClassification();
-			QuotationSmallCategoryPO quotationSmallCategoryPO = quotationItemPO.getQuotationSmallCategory();
-			QuotationTypePO quotationTypePO = quotationItemPO.getQuotationType();
-			QuotationVersionPO quotationVersionPO = quotationItemPO.getQuotationVersion();
-			
-			FunctionAreaVO functionAreaVO = new FunctionAreaVO();
-			functionAreaVO.setFaId(FunctionAreaPO.getFaId());
-			functionAreaVO.setFunctionAreaId(FunctionAreaPO.getFunctionAreaId());
-			functionAreaVO.setFunctionAreaName(FunctionAreaPO.getFunctionAreaName());
-			functionAreaVO.setVersion(FunctionAreaPO.getQuotationVersion().getName());
-			
-			FunctionAreaItemVO _functionAreaItemVO = new FunctionAreaItemVO();
-			_functionAreaItemVO.setFaiId(functionAreaItemPO.getFaiId());
-			_functionAreaItemVO.setFunctionArea(functionAreaVO);
-			
-			QuotationItemVO quotationItemVO = new QuotationItemVO();
-			quotationItemVO.setQiId(quotationItemPO.getQiId());
-			quotationItemVO.setItemId(quotationItemPO.getItemId());
-			quotationItemVO.setItemName(quotationItemPO.getItemName());
-			quotationItemVO.setUnitPrice(quotationItemPO.getUnitPrice());
-			
-			quotationItemVO.setWorkType(workTypePO.getName());
-			quotationItemVO.setWorkTypeId(workTypePO.getId());
-			
-			quotationItemVO.setMeasurementUnit(measurementUnitPO.getName());
-			quotationItemVO.setMeasurementUnitId(measurementUnitPO.getId());
-			
-			quotationItemVO.setQuotationBigCategory(quotationBigCategoryPO.getName());
-			quotationItemVO.setQuotationBigCategoryId(quotationBigCategoryPO.getId());
-			
-			quotationItemVO.setQuotationClassification(quotationClassificationPO.getName());
-			quotationItemVO.setQuotationClassificationId(quotationClassificationPO.getId());
-			
-			quotationItemVO.setQuotationSmallCategory(quotationSmallCategoryPO.getName());
-			quotationItemVO.setQuotationSmallCategoryId(quotationSmallCategoryPO.getId());
-			
-			quotationItemVO.setQuotationType(quotationTypePO.getName());
-			quotationItemVO.setQuotationTypeId(quotationTypePO.getId());
-			
-			quotationItemVO.setVersion(quotationVersionPO.getName());
-			quotationItemVO.setVersionId(quotationVersionPO.getNo());
-			
-			_functionAreaItemVO.setQuotationItem(quotationItemVO);
-			
-			functionAreaItemVOs.add(_functionAreaItemVO);
+
+			FunctionAreaVO functionAreaVO = new FunctionAreaVO(new QuotationVersionVO());
+
+			functionAreaVO.setFaid(functionAreaPO.getFaid());
+			functionAreaVO.setNo(functionAreaPO.getNo());
+			functionAreaVO.setName(functionAreaPO.getName());
+
+			BeanUtil.copyPropertie(functionAreaPO.getQuotationVersion(), functionAreaVO.getVersion());
+
+			functionAreaItemVO = new FunctionAreaItemVO();
+
+			functionAreaItemVO.setFaiid(functionAreaItemPO.getFaiid());
+			functionAreaItemVO.setFormula(functionAreaItemPO.getFormula());
+			functionAreaItemVO.setFunctionArea(functionAreaVO);
+
+			functionAreaItemVO.setQuotationItem(quotationItemPO.ptv(new QuotationItemVO(new QuotationVersionVO(), new QuotationTypeVO(), new QuotationClassificationVO(), new QuotationBigCategoryVO(), new QuotationSmallCategoryVO(), new WorkTypeVO(), new MeasurementUnitVO())));
+
+			functionAreaItemVOs.add(functionAreaItemVO);
 		}
-		
+
 		return functionAreaItemVOs;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int addFunctionAreaItem(List<FunctionAreaItemVO> functionAreaItems) throws FLException{
-		
-		FunctionAreaPO functionAreaPO = null;
-		
-		if(functionAreaItems.size() > 0){
-			functionAreaPO = functionAreaDao.get(functionAreaItems.get(0).getFunctionArea().getFaId());
-		}
-		
-		if(functionAreaPO == null){
-			StringBuffer errorInfo = new StringBuffer();
-			errorInfo.append("功能区");
-			errorInfo.append(functionAreaItems.get(0).getFunctionArea().getFaId());
-			errorInfo.append("不存在");
+	@Transactional(rollbackFor = Exception.class)
+	public int addFunctionAreaItem(FunctionAreaVO functionAreaVO, List<FunctionAreaItemVO> functionAreaItems) throws FLException {
 
-			throw new FLException(200010, errorInfo.toString());
+		long faid = functionAreaVO.getFaid();
+
+		FunctionAreaPO functionAreaPO = functionAreaDao.get(faid);
+
+		if (functionAreaPO == null) {
+			throw new FLException(200010, String.format("功能区不存在"));
+		}
+
+		for (FunctionAreaItemVO functionAreaItemVO : functionAreaItems) {
+
+			long qiid = functionAreaItemVO.getQuotationItem().getQiid();
+
+			FunctionAreaItemPO functionAreaItemPO = functionAreaItemDao.queryFunctionAreaItemByIdAFunctionAreaId(faid, qiid);
+
+			if (functionAreaItemPO != null)
+				continue;
+
+			functionAreaItemPO = new FunctionAreaItemPO();
+
+			functionAreaItemPO.setFunctionArea(functionAreaPO);
+			functionAreaItemPO.setQuotationItem(new QuotationItemPO(functionAreaItemVO.getQuotationItem().getQiid()));
+
+			functionAreaItemDao.save(functionAreaItemPO);
+		}
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateFunctionAreaItem(FunctionAreaItemVO functionAreaItemVO) throws FLException {
+
+		FunctionAreaItemPO functionAreaItemPO = functionAreaItemDao.get(functionAreaItemVO.getFaiid());
+
+		if (functionAreaItemPO == null) {
+			throw new FLException(200010, "功能区不存在");
 		}
 		
-		for(FunctionAreaItemVO functionAreaItemVO: functionAreaItems){
-			
-			long functionAreaId = functionAreaItemVO.getFunctionArea().getFaId();
-			long itemId =  functionAreaItemVO.getQuotationItem().getQiId();
-			
-			FunctionAreaItemPO functionAreaItemPO = functionAreaItemDao.queryFunctionAreaItemByIdAFunctionAreaId(functionAreaId, itemId);
-			
-			if(functionAreaItemPO == null){
-				functionAreaItemPO = new FunctionAreaItemPO();
-				FunctionAreaPO _functionAreaPO = new FunctionAreaPO();
-				_functionAreaPO.setFaId(functionAreaItemVO.getFunctionArea().getFaId());
-				functionAreaItemPO.setFunctionArea(_functionAreaPO);
-				
-				QuotationItemPO quotationItemPO = new QuotationItemPO();
-				quotationItemPO.setQiId(functionAreaItemVO.getQuotationItem().getQiId());
-				functionAreaItemPO.setQuotationItem(quotationItemPO);
-				
-				functionAreaItemDao.save(functionAreaItemPO);
-			}	
-		}
-		return 0;
+		functionAreaItemPO.setFormula(functionAreaItemVO.getFormula());
+
+		functionAreaItemDao.update(functionAreaItemPO);
 	}
 	
 	@Override
-	@Transactional(rollbackFor=Exception.class)
-	public int deleteFunctionAreaItemByIds(List<Long> autoIds){
-		
-		for(Long id: autoIds){
-			functionAreaItemDao.deleteById(id);
+	@Transactional(rollbackFor = Exception.class)
+	public int deleteFunctionAreaItemByIds(List<Long> qfiids) {
+
+		for (Long qfiid : qfiids) {
+			functionAreaItemDao.deleteById(qfiid);
 		}
-		
+
 		return 0;
 	}
-	
+
 }

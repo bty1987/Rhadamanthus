@@ -171,7 +171,7 @@ public class DecorationInclusiveServiceImpl implements DecorationInclusiveServic
 
 		decorationInclusiveDao.saveOrUpdate(decorationInclusivePO);
 
-		decorationPaymentService.makeDecorationPayment(decorationPO, total, decorationInclusiveVO.getPsId(), userId);
+		decorationPaymentService.makeDecorationPayment(decorationPO, total, quotationPO.getCostPrice(), decorationInclusiveVO.getPsId(), userId);
 
 		BeanUtil.copyPropertie(decorationInclusivePO, decorationInclusiveVO, Arrays.asList("decoration"));
 

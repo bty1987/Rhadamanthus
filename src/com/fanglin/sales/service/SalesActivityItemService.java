@@ -23,5 +23,7 @@ public interface SalesActivityItemService {
 	public void refundSalesActivityItem(SalesActivityItemVO salesActivityItemVO, String userId) throws FLException;
 
 	public void expendSalesActivityItem(SalesActivityItemVO salesActivityItemVO, String userId) throws FLException;
+	
+	public void discountSalesActivityItem(SalesActivityItemVO salesActivityItemVO, String userId) throws FLException;
 
 }

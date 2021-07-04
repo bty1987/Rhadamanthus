@@ -297,4 +297,5 @@ public class SalesBalanceVO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
+
 }

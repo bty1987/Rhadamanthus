@@ -8,8 +8,8 @@ import com.fanglin.data.po.FunctionAreaItemPO;
 public interface FunctionAreaItemDao extends Dao<FunctionAreaItemPO> {
 
 	public List<FunctionAreaItemPO> queryFunctionAreaItemByFunctionAreaId(long functionAreaId);
-	
-	public FunctionAreaItemPO queryFunctionAreaItemByIdAFunctionAreaId(long functionAreaId, long itemId);
+
+	public FunctionAreaItemPO queryFunctionAreaItemByIdAFunctionAreaId(long functionAreaId, long qiid);
 
 	public int deleteFunctionAreaItemByFunctionAreaId(long functionAreaId);
 

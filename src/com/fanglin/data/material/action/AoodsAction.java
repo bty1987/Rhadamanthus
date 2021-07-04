@@ -80,6 +80,14 @@ public class AoodsAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "copyAoods", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String copyAoods() throws FLException {
+
+		aoodsService.copyAoods(aoods, queryCompany());
+
+		return SUCCESS;
+	}
+
 	public AoodsVO getAoods() {
 		return aoods;
 	}

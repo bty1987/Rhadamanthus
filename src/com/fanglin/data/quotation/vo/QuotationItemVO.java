@@ -13,41 +13,36 @@ package com.fanglin.data.quotation.vo;
 
 import java.io.Serializable;
 
+import com.fanglin.communion.vo.MeasurementUnitVO;
+import com.fanglin.communion.vo.QuotationBigCategoryVO;
+import com.fanglin.communion.vo.QuotationClassificationVO;
+import com.fanglin.communion.vo.QuotationSmallCategoryVO;
+import com.fanglin.communion.vo.QuotationTypeVO;
+import com.fanglin.communion.vo.WorkTypeVO;
+
 public class QuotationItemVO implements Serializable {
 
 	private static final long serialVersionUID = -629582034818766395L;
 
-	private Long qiId;
+	private Long qiid;
 
-	private String itemId;
+	private String no;
 
-	private Integer quotationTypeId;
+	private String name;
 
-	private String quotationType;
+	private QuotationVersionVO version;
 
-	private Integer quotationClassificationId;
+	private QuotationTypeVO category;
 
-	private String quotationClassification;
+	private QuotationClassificationVO classification;
 
-	private Integer quotationBigCategoryId;
+	private QuotationBigCategoryVO bigCategory;
 
-	private String quotationBigCategory;
+	private QuotationSmallCategoryVO smallCategory;
 
-	private Integer quotationSmallCategoryId;
+	private WorkTypeVO workType;
 
-	private String quotationSmallCategory;
-
-	private String itemName;
-
-	private Integer measurementUnitId;
-
-	private String measurementUnit;
-
-	private Integer workTypeId;
-
-	private String workType;
-
-	private String quotationItemDes;
+	private MeasurementUnitVO unit;
 
 	private Integer addPrice;
 
@@ -55,140 +50,122 @@ public class QuotationItemVO implements Serializable {
 
 	private Integer subPrice;
 
-	private String versionId;
-
-	private String version;
+	private Short type;
 
 	private Short status;
 
 	private Short discount;
 
-	public Long getQiId() {
-		return qiId;
+	private Integer offset;
+
+	private String comment;
+
+	public QuotationItemVO() {
+		super();
 	}
 
-	public void setQiId(Long qiId) {
-		this.qiId = qiId;
+	public QuotationItemVO(QuotationVersionVO version) {
+		super();
+		this.version = version;
 	}
 
-	public String getItemId() {
-		return itemId;
+	public QuotationItemVO(QuotationVersionVO version, QuotationTypeVO category, QuotationClassificationVO classification, QuotationBigCategoryVO bigCategory, QuotationSmallCategoryVO smallCategory, WorkTypeVO workType, MeasurementUnitVO unit) {
+		super();
+		this.version = version;
+		this.category = category;
+		this.classification = classification;
+		this.bigCategory = bigCategory;
+		this.smallCategory = smallCategory;
+		this.workType = workType;
+		this.unit = unit;
 	}
 
-	public void setItemId(String itemId) {
-		this.itemId = itemId;
+	public Long getQiid() {
+		return qiid;
 	}
 
-	public Integer getQuotationTypeId() {
-		return quotationTypeId;
+	public void setQiid(Long qiid) {
+		this.qiid = qiid;
 	}
 
-	public void setQuotationTypeId(Integer quotationTypeId) {
-		this.quotationTypeId = quotationTypeId;
+	public String getNo() {
+		return no;
 	}
 
-	public String getQuotationType() {
-		return quotationType;
+	public void setNo(String no) {
+		this.no = no;
 	}
 
-	public void setQuotationType(String quotationType) {
-		this.quotationType = quotationType;
+	public String getName() {
+		return name;
 	}
 
-	public Integer getQuotationClassificationId() {
-		return quotationClassificationId;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public void setQuotationClassificationId(Integer quotationClassificationId) {
-		this.quotationClassificationId = quotationClassificationId;
+	public QuotationVersionVO getVersion() {
+		return version;
 	}
 
-	public String getQuotationClassification() {
-		return quotationClassification;
+	public void setVersion(QuotationVersionVO version) {
+		this.version = version;
 	}
 
-	public void setQuotationClassification(String quotationClassification) {
-		this.quotationClassification = quotationClassification;
+	public QuotationTypeVO getCategory() {
+		return category;
 	}
 
-	public Integer getQuotationBigCategoryId() {
-		return quotationBigCategoryId;
+	public void setCategory(QuotationTypeVO category) {
+		this.category = category;
 	}
 
-	public void setQuotationBigCategoryId(Integer quotationBigCategoryId) {
-		this.quotationBigCategoryId = quotationBigCategoryId;
+	public QuotationClassificationVO getClassification() {
+		return classification;
 	}
 
-	public String getQuotationBigCategory() {
-		return quotationBigCategory;
+	public void setClassification(QuotationClassificationVO classification) {
+		this.classification = classification;
 	}
 
-	public void setQuotationBigCategory(String quotationBigCategory) {
-		this.quotationBigCategory = quotationBigCategory;
+	public QuotationBigCategoryVO getBigCategory() {
+		return bigCategory;
 	}
 
-	public Integer getQuotationSmallCategoryId() {
-		return quotationSmallCategoryId;
+	public void setBigCategory(QuotationBigCategoryVO bigCategory) {
+		this.bigCategory = bigCategory;
 	}
 
-	public void setQuotationSmallCategoryId(Integer quotationSmallCategoryId) {
-		this.quotationSmallCategoryId = quotationSmallCategoryId;
+	public QuotationSmallCategoryVO getSmallCategory() {
+		return smallCategory;
 	}
 
-	public String getQuotationSmallCategory() {
-		return quotationSmallCategory;
+	public void setSmallCategory(QuotationSmallCategoryVO smallCategory) {
+		this.smallCategory = smallCategory;
 	}
 
-	public void setQuotationSmallCategory(String quotationSmallCategory) {
-		this.quotationSmallCategory = quotationSmallCategory;
-	}
-
-	public String getItemName() {
-		return itemName;
-	}
-
-	public void setItemName(String itemName) {
-		this.itemName = itemName;
-	}
-
-	public Integer getMeasurementUnitId() {
-		return measurementUnitId;
-	}
-
-	public void setMeasurementUnitId(Integer measurementUnitId) {
-		this.measurementUnitId = measurementUnitId;
-	}
-
-	public String getMeasurementUnit() {
-		return measurementUnit;
-	}
-
-	public void setMeasurementUnit(String measurementUnit) {
-		this.measurementUnit = measurementUnit;
-	}
-
-	public Integer getWorkTypeId() {
-		return workTypeId;
-	}
-
-	public void setWorkTypeId(Integer workTypeId) {
-		this.workTypeId = workTypeId;
-	}
-
-	public String getWorkType() {
+	public WorkTypeVO getWorkType() {
 		return workType;
 	}
 
-	public void setWorkType(String workType) {
+	public void setWorkType(WorkTypeVO workType) {
 		this.workType = workType;
 	}
 
-	public String getQuotationItemDes() {
-		return quotationItemDes;
+	public MeasurementUnitVO getUnit() {
+		return unit;
 	}
 
-	public void setQuotationItemDes(String quotationItemDes) {
-		this.quotationItemDes = quotationItemDes;
+	public void setUnit(MeasurementUnitVO unit) {
+		this.unit = unit;
+	}
+
+	public Integer getAddPrice() {
+		return addPrice;
+	}
+
+	public void setAddPrice(Integer addPrice) {
+		this.addPrice = addPrice;
 	}
 
 	public Integer getUnitPrice() {
@@ -199,20 +176,20 @@ public class QuotationItemVO implements Serializable {
 		this.unitPrice = unitPrice;
 	}
 
-	public String getVersionId() {
-		return versionId;
+	public Integer getSubPrice() {
+		return subPrice;
 	}
 
-	public void setVersionId(String versionId) {
-		this.versionId = versionId;
+	public void setSubPrice(Integer subPrice) {
+		this.subPrice = subPrice;
 	}
 
-	public String getVersion() {
-		return version;
+	public Short getType() {
+		return type;
 	}
 
-	public void setVersion(String version) {
-		this.version = version;
+	public void setType(Short type) {
+		this.type = type;
 	}
 
 	public Short getStatus() {
@@ -231,20 +208,20 @@ public class QuotationItemVO implements Serializable {
 		this.discount = discount;
 	}
 
-	public Integer getAddPrice() {
-		return addPrice;
+	public Integer getOffset() {
+		return offset;
 	}
 
-	public void setAddPrice(Integer addPrice) {
-		this.addPrice = addPrice;
+	public void setOffset(Integer offset) {
+		this.offset = offset;
 	}
 
-	public Integer getSubPrice() {
-		return subPrice;
+	public String getComment() {
+		return comment;
 	}
 
-	public void setSubPrice(Integer subPrice) {
-		this.subPrice = subPrice;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 }

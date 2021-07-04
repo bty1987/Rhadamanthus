@@ -22,6 +22,7 @@ import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.service.SalesItemService;
 import com.fanglin.sales.vo.SalesItemVO;
 import com.fanglin.sales.vo.SalesVO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 
 @Service("salesItemService")
@@ -107,6 +108,10 @@ public class SalesItemServiceImpl implements SalesItemService {
 
 		salesItemDao.save(salesItemPO);
 
+		if (salesVO.getTotal() != Arith.add(salesPO.getTotal(), salesItemVO.getTotal())) {
+			throw new FLException(260059, "销售单总额不必配");
+		}
+
 		salesPO.setTotal(salesVO.getTotal());
 		salesPO.setAmount(salesVO.getTotal());
 
@@ -167,17 +172,17 @@ public class SalesItemServiceImpl implements SalesItemService {
 		if (salesItemPO == null) {
 			throw new FLException(260023, "销售项不存在");
 		}
-		
+
 		SalesPO salesPO = salesDao.get(salesItemPO.getSid());
-		
+
 		if (salesPO.getFullpayStatus() != SalesPO.FULLPAYSTATUS_CONFIRM_SHORT) {
 			throw new FLException(260045, "销售项状态不可操作");
 		}
-		
+
 		if (salesPO.getBalanceStatus() != SalesPO.BALANCESTATUS_INIT_SHORT) {
 			throw new FLException(260045, "销售项状态不可操作");
 		}
-		
+
 		salesItemPO.setCtype(salesItemVO.getCtype());
 		salesItemPO.setCvalue(salesItemVO.getCvalue());
 

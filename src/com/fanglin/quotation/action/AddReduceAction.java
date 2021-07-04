@@ -39,10 +39,8 @@ public class AddReduceAction extends BaseListAction {
 
 	private AddReduceVO addReduce;
 
-	private List<Integer> arIds;
-
 	@Action(value = "pageAddReduceByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageAddReduceByOrderId() {
+	public String pageAddReduceByOrderId() throws FLException {
 
 		addReduceService.pageAddReduceByOrderId(getPaging(), getFilters(), addReduce);
 
@@ -50,7 +48,7 @@ public class AddReduceAction extends BaseListAction {
 	}
 
 	@Action(value = "queryAddReduceByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryAddReduceByOrderId() {
+	public String queryAddReduceByOrderId() throws FLException {
 
 		addReduces = addReduceService.queryAddReduceByOrderId(addReduce);
 
@@ -58,7 +56,7 @@ public class AddReduceAction extends BaseListAction {
 	}
 
 	@Action(value = "queryAddReduceForPayedByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryAddReduceForPayedByOrderId() {
+	public String queryAddReduceForPayedByOrderId() throws FLException {
 
 		addReduces = addReduceService.queryAddReduceForPayedByOrderId(addReduce);
 
@@ -135,14 +133,6 @@ public class AddReduceAction extends BaseListAction {
 
 	public void setAddReduces(List<AddReduceVO> addReduces) {
 		this.addReduces = addReduces;
-	}
-
-	public List<Integer> getArIds() {
-		return arIds;
-	}
-
-	public void setArIds(List<Integer> arIds) {
-		this.arIds = arIds;
 	}
 
 }

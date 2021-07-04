@@ -213,7 +213,7 @@ public class QuotetionServiceImpl implements QuotetionService {
 			throw new FLException(200001, "报价已经达到数量上限");
 		}
 
-		quotetionPO.ptp(copyQuotationPO.getQuotationName(), decorationDao.queryDecorationByOrderId(copyQuotationPO.getOrderId()).getVersion().getNo(), userPO.getUid());
+		quotetionPO.ptp(copyQuotationPO.getName(), decorationDao.queryDecorationByOrderId(copyQuotationPO.getOrderId()).getVersion().getNo(), userPO.getUid());
 
 		quotetionDao.save(quotetionPO);
 
@@ -319,7 +319,7 @@ public class QuotetionServiceImpl implements QuotetionService {
 				clazz.setQfaid(_quotetionFunctionAreaPO.getQfaId());
 
 				if (quotationFunctionAreaItem.getQuotationItem() != null) {
-					clazz.setQiid(quotationFunctionAreaItem.getQuotationItem().getQiId());
+					clazz.setQiid(quotationFunctionAreaItem.getQuotationItem().getQiid());
 				}
 
 				clazz.ptp(quotationFunctionAreaItem);

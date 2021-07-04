@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.vo.MeasurementUnitVO;
+import com.fanglin.communion.vo.WorkTypeVO;
 import com.fanglin.data.material.vo.GoodsVO;
 import com.fanglin.data.po.GoodsPO;
 import com.fanglin.data.po.NormoodPO;
@@ -33,16 +35,12 @@ public class NormoodServiceImpl implements NormoodService {
 
 		for (NormoodPO normoodPO : normoodPOs) {
 
-			NormoodVO normoodVO = new NormoodVO(new GoodsVO(), new QuotationItemVO());
-
-			QuotationItemPO quotationItemPO = normoodPO.getQuotationItem();
+			NormoodVO normoodVO = new NormoodVO(new GoodsVO(), new QuotationItemVO(null, null, null, null, null, new WorkTypeVO(), new MeasurementUnitVO()));
 
 			BeanUtil.copyProperties(normoodPO, normoodVO, Arrays.asList("goods", "quotationItem"));
 			BeanUtil.copyProperties(normoodPO.getGoods(), normoodVO.getGoods(), Arrays.asList("accessoriesType"));
-			BeanUtil.copyProperties(quotationItemPO, normoodVO.getQuotationItem(), Arrays.asList(QuotationItemPO.COLUMN_ARRAYS_STR));
 
-			normoodVO.getQuotationItem().setMeasurementUnit(quotationItemPO.getMeasurementUnit().getName());
-			normoodVO.getQuotationItem().setWorkType(quotationItemPO.getWorkType().getName());
+			normoodPO.getQuotationItem().ptv(normoodVO.getQuotationItem());
 
 			normoodVOs.add(normoodVO);
 		}
@@ -58,7 +56,8 @@ public class NormoodServiceImpl implements NormoodService {
 
 		BeanUtil.copyPropertie(normoodVO, normoodPO, Arrays.asList("goods", "quotationItem"));
 		BeanUtil.copyProperties(normoodVO.getGoods(), normoodPO.getGoods(), Arrays.asList("accessoriesType"));
-		BeanUtil.copyProperties(normoodVO.getQuotationItem(), normoodPO.getQuotationItem(), Arrays.asList(QuotationItemPO.COLUMN_ARRAYS_STR));
+
+		normoodPO.setQuotationItem(new QuotationItemPO(normoodVO.getQuotationItem().getQiid()));
 
 		normoodPO.setStatus(NormoodPO.STATUS_VALID_STR);
 

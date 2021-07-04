@@ -23,9 +23,9 @@ public interface QuotationFunctionAreaService {
 
 	public List<QuotationFunctionAreaVO> queryQuotationFunctionAreaForCommonByQuotationId(QuotationVO quotationVO) throws FLException;
 
-	public List<QuotationFunctionAreaVO> addQuotationFunctionAreaByFunctionAreaIds(List<Long> functionAreaIds, QuotationVO quotationVO) throws FLException;
+	public List<QuotationFunctionAreaVO> addQuotationFunctionAreaByFunctionAreaIds(List<QuotationFunctionAreaVO> quotationFunctionAreaVOs, QuotationVO quotationVO) throws FLException;
 
-	public int addQuotationFunctionArea(List<Long> functionAreaIds, QuotationVO quotationVO) throws FLException;
+	public int addQuotationFunctionArea(QuotationFunctionAreaVO quotationFunctionAreaVO, QuotationVO quotationVO) throws FLException;
 
 	public int updateQuotationFunctionArea(QuotationFunctionAreaVO quotationFunctionAreaVO, QuotationVO quotationVO) throws FLException;
 

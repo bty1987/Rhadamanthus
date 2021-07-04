@@ -19,18 +19,18 @@ public class SoodsPO implements Serializable {
 
 	private static final long serialVersionUID = 7368457103806437597L;
 
-	public static final String COLUMN_QIID_STR = "quotationItem.qiId";
+	public static final String COLUMN_QIID_STR = "quotationItem.qiid";
 
 	public static final String COLUMN_NAME_STR = "goods.name";
-	
+
 	public static final String COLUMN_BRAND_STR = "goods.brand";
-	
+
 	public static final String COLUMN_CATEGORY_STR = "goods.category";
 
-	public static final String COLUMN_QNAME_STR = "quotationItem.itemName";
+	public static final String COLUMN_QNAME_STR = "quotationItem.name";
 
 	public static final String COLUMN_VERSION_STR = "quotationItem.quotationVersion.no";
-	
+
 	public static final String COLUMN_QUOTATIONSMALLCATEGORYID_STR = "quotationSmallCategory.id";
 
 	public static final short STATUS_VALID_INT = 0;

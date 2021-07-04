@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.communion.vo.ConstructionNodeVO;
+import com.fanglin.data.common.vo.ConstructionNodeVO;
 
 public class ConstructionScheduleVO implements Serializable {
 

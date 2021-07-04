@@ -13,7 +13,7 @@ package com.fanglin.construction.service;
 
 import java.util.List;
 
-import com.fanglin.communion.vo.ConstructionNodeVO;
+import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.construction.vo.DrawLineVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;

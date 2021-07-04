@@ -17,46 +17,61 @@ public class FunctionAreaVO implements Serializable {
 
 	private static final long serialVersionUID = -62958203481876631L;
 
-	private Long faId;
+	private Long faid;
 
-	private String functionAreaId;
+	private String no;
 
-	private String functionAreaName;
+	private String name;
 
 	private int functionAreaOrder;
 
 	private String functionAreaType;
 
-	private String versionId;
-
-	private String version;
+	private QuotationVersionVO version;
 
 	private Short type;
 
 	private Long total;
 
-	public Long getFaId() {
-		return faId;
+	public FunctionAreaVO() {
+		super();
 	}
 
-	public void setFaId(Long faId) {
-		this.faId = faId;
+	public FunctionAreaVO(QuotationVersionVO version) {
+		super();
+		this.version = version;
 	}
 
-	public String getFunctionAreaId() {
-		return functionAreaId;
+	public Long getFaid() {
+		return faid;
 	}
 
-	public void setFunctionAreaId(String functionAreaId) {
-		this.functionAreaId = functionAreaId;
+	public void setFaid(Long faid) {
+		this.faid = faid;
 	}
 
-	public String getFunctionAreaName() {
-		return functionAreaName;
+	public String getNo() {
+		return no;
 	}
 
-	public void setFunctionAreaName(String functionAreaName) {
-		this.functionAreaName = functionAreaName;
+	public void setNo(String no) {
+		this.no = no;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public QuotationVersionVO getVersion() {
+		return version;
+	}
+
+	public void setVersion(QuotationVersionVO version) {
+		this.version = version;
 	}
 
 	public int getFunctionAreaOrder() {
@@ -73,22 +88,6 @@ public class FunctionAreaVO implements Serializable {
 
 	public void setFunctionAreaType(String functionAreaType) {
 		this.functionAreaType = functionAreaType;
-	}
-
-	public String getVersionId() {
-		return versionId;
-	}
-
-	public void setVersionId(String versionId) {
-		this.versionId = versionId;
-	}
-
-	public String getVersion() {
-		return version;
-	}
-
-	public void setVersion(String version) {
-		this.version = version;
 	}
 
 	public Short getType() {

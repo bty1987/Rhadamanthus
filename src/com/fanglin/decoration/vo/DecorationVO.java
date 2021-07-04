@@ -53,6 +53,8 @@ public class DecorationVO implements Serializable {
 	private Short typeness;
 
 	private String salesmanType;
+	
+	private Long busitype;
 
 	private String houseType;
 
@@ -375,6 +377,14 @@ public class DecorationVO implements Serializable {
 
 	public void setSalesmanType(String salesmanType) {
 		this.salesmanType = salesmanType;
+	}
+
+	public Long getBusitype() {
+		return busitype;
+	}
+
+	public void setBusitype(Long busitype) {
+		this.busitype = busitype;
 	}
 
 	public String getDompany() {

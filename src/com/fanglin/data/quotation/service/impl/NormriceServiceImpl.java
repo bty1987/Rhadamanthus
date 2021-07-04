@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.communion.po.ConstructionNodePO;
-import com.fanglin.communion.vo.ConstructionNodeVO;
+import com.fanglin.communion.vo.MeasurementUnitVO;
+import com.fanglin.communion.vo.WorkTypeVO;
+import com.fanglin.data.common.vo.ConstructionNodeVO;
+import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.data.po.NormricePO;
 import com.fanglin.data.po.QuotationItemPO;
 import com.fanglin.data.quotation.dao.NormriceDao;
@@ -33,16 +35,12 @@ public class NormriceServiceImpl implements NormriceService {
 
 		for (NormricePO normricePO : normricePOs) {
 
-			NormriceVO normriceVO = new NormriceVO(new ConstructionNodeVO(), new QuotationItemVO());
-
-			QuotationItemPO quotationItemPO = normricePO.getQuotationItem();
+			NormriceVO normriceVO = new NormriceVO(new ConstructionNodeVO(), new QuotationItemVO(null, null, null, null, null, new WorkTypeVO(), new MeasurementUnitVO()));
 
 			BeanUtil.copyProperties(normricePO, normriceVO, Arrays.asList("constructionNode", "quotationItem"));
 			BeanUtil.copyProperties(normricePO.getConstructionNode(), normriceVO.getConstructionNode());
-			BeanUtil.copyProperties(normricePO.getQuotationItem(), normriceVO.getQuotationItem(), Arrays.asList(QuotationItemPO.COLUMN_ARRAYS_STR));
 
-			normriceVO.getQuotationItem().setMeasurementUnit(quotationItemPO.getMeasurementUnit().getName());
-			normriceVO.getQuotationItem().setWorkType(quotationItemPO.getWorkType().getName());
+			normricePO.getQuotationItem().ptv(normriceVO.getQuotationItem());
 
 			normriceVOs.add(normriceVO);
 		}
@@ -58,7 +56,8 @@ public class NormriceServiceImpl implements NormriceService {
 
 		BeanUtil.copyPropertie(normriceVO, normricePO, Arrays.asList("constructionNode", "quotationItem"));
 		BeanUtil.copyProperties(normriceVO.getConstructionNode(), normricePO.getConstructionNode());
-		BeanUtil.copyProperties(normriceVO.getQuotationItem(), normricePO.getQuotationItem(), Arrays.asList(QuotationItemPO.COLUMN_ARRAYS_STR));
+
+		normricePO.setQuotationItem(new QuotationItemPO(normriceVO.getQuotationItem().getQiid()));
 
 		normricePO.setStatus(NormricePO.STATUS_VALID_STR);
 

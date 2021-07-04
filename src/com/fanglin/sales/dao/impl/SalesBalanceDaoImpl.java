@@ -139,6 +139,8 @@ public class SalesBalanceDaoImpl extends DaoImpl<SalesBalancePO> implements Sale
 					query.timeranges(SalesBalancePO.COLUMN_VENDERTIME_STR, filter.getData());
 				} else if (SalesBalancePO.COLUMN_POSTTIME_STR.equals(field)) {
 					query.timeranges(SalesBalancePO.COLUMN_POSTTIME_STR, filter.getData());
+				} else if (SalesBalancePO.COLUMN_GRADE_STR.equals(field)) {
+					query.add(query.getCriterion(SalesBalancePO.COLUMN_GRADE_STR, data, op));
 				}
 			}
 		}

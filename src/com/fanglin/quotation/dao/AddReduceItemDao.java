@@ -19,12 +19,12 @@ import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 
 public interface AddReduceItemDao extends Dao<AddReduceItemPO> {
 
-	public List<AddReduceItemPO> queryAddReduceItemByAddReduceId(long arid);
+	public List<AddReduceItemPO> queryAddReduceItem(long arid);
 
-	public List<AddReduceItemPO> queryAddReduceItemByAddReduceIds(List<Long> arids);
+	public List<AddReduceItemPO> queryAddReduceItem(List<Long> arids);
 
-	public long countAddReduceItemForFunctionArea(long qfaid);
+	public long countAddReduceItem(long qfaid);
 
-	public long countAddReduceItemForFunctionArea(List<QuotationFunctionAreaPO> quotationFunctionAreas);
+	public long countAddReduceItem(List<QuotationFunctionAreaPO> quotationFunctionAreas);
 
 }

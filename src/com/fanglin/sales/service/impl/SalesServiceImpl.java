@@ -43,6 +43,7 @@ import com.fanglin.sales.vo.SalesVO;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.service.impl.CompanyServiceImpl;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.FormatUtil;
@@ -290,8 +291,7 @@ public class SalesServiceImpl implements SalesService {
 	@Transactional(rollbackFor = Exception.class)
 	public int addSales(SalesVO salesVO, List<SalesItemVO> salesItemVOs, int company) throws FLException {
 
-		int dompany;
-		dompany = CompanyServiceImpl.decode(salesVO.getDompanys());
+		int dompany = CompanyServiceImpl.decode(salesVO.getDompanys());
 
 		CompanyPO companyPO = companyDao.get(company);
 
@@ -360,6 +360,8 @@ public class SalesServiceImpl implements SalesService {
 
 		SalesItemPO salesItemPO;
 
+		long total = 0l;
+
 		if (salesItemVOs != null && salesItemVOs.size() != 0) {
 
 			for (SalesItemVO salesItemVO : salesItemVOs) {
@@ -367,6 +369,7 @@ public class SalesServiceImpl implements SalesService {
 				salesItemPO = new SalesItemPO(new GoodsPO(salesItemVO.getGoods().getGid()), new ColorPO(salesItemVO.getColor().getCid()), new FormatPO(salesItemVO.getFormat().getFid()));
 
 				BeanUtil.copyProperties(salesItemVO, salesItemPO, Arrays.asList("goods", "color", "format"));
+
 				salesItemPO.setSid(salesPO.getSid());
 				salesItemPO.setInitnum(salesItemVO.getNum());
 				salesItemPO.setPunum(salesItemVO.getNum());
@@ -374,7 +377,12 @@ public class SalesServiceImpl implements SalesService {
 
 				salesItemDao.save(salesItemPO);
 
+				total = Arith.add(total, salesItemVO.getTotal());
 			}
+		}
+
+		if (total != salesPO.getTotal()) {
+			throw new FLException(260059, "销售单总额不必配");
 		}
 
 		return 0;

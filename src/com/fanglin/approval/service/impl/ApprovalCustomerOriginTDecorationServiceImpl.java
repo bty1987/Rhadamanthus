@@ -37,6 +37,8 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.dao.CustomerOriginDao;
 import com.fanglin.customer.po.CustomerOriginPO;
 import com.fanglin.customer.vo.CustomerOriginVO;
+import com.fanglin.data.common.vo.DecorationBusitypeVO;
+import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.decoration.service.impl.DecorationServiceImpl;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.po.MessagePO;
@@ -86,8 +88,6 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 			throw new FLException(240001, "审批信息不存在");
 		}
 
-		ApprovalCustomerOriginTDecorationVO approvalCustomerOriginTDecorationVO = new ApprovalCustomerOriginTDecorationVO();
-
 		CustomerOriginVO customerOriginVO = new CustomerOriginVO(new VillageVO(new CityProperVO()), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new CustomerVO(), new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())));
 		CustomerOriginPO customerOriginPO = approvalCustomerOriginTDecorationPO.getCustomerOrigin();
 
@@ -111,17 +111,18 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 			BeanUtil.copyProperties(customerOriginPO.getSalesman().getDept().getFatherDept(), customerOriginVO.getSalesman().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
 		}
 
-		approvalCustomerOriginTDecorationVO.setSalesman(new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO())));
-		approvalCustomerOriginTDecorationVO.setCustomerOrigin(customerOriginVO);
+		UserBaseVO salesman = new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO()));
+		ApprovalCustomerOriginTDecorationVO approvalCustomerOriginTDecorationVO = new ApprovalCustomerOriginTDecorationVO(customerOriginVO, new DecorationBusitypeVO(), salesman);
 
 		BeanUtil.copyProperties(approvalCustomerOriginTDecorationPO.getSalesman(), approvalCustomerOriginTDecorationVO.getSalesman(), Arrays.asList("dept", "duty"));
+		BeanUtil.copyProperties(approvalCustomerOriginTDecorationPO.getDecorationBusitype(), approvalCustomerOriginTDecorationVO.getDecorationBusitype());
 
 		if (customerOriginPO.getDesigner() != null) {
 			BeanUtil.copyProperties(approvalCustomerOriginTDecorationPO.getSalesman().getDept(), approvalCustomerOriginTDecorationVO.getSalesman().getDept(), Arrays.asList("type", "fatherDept", "manager"));
 			BeanUtil.copyProperties(approvalCustomerOriginTDecorationPO.getSalesman().getDept().getFatherDept(), approvalCustomerOriginTDecorationVO.getSalesman().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
 		}
 
-		BeanUtil.copyPropertie(approvalCustomerOriginTDecorationPO, approvalCustomerOriginTDecorationVO, Arrays.asList("customerOrigin", "salesman"));
+		BeanUtil.copyPropertie(approvalCustomerOriginTDecorationPO, approvalCustomerOriginTDecorationVO, Arrays.asList("customerOrigin", "decorationBusitype", "salesman"));
 
 		return approvalCustomerOriginTDecorationVO;
 	}
@@ -163,16 +164,15 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 
 		approvalDao.save(approvalPO);
 
-		ApprovalCustomerOriginTDecorationPO approvalCustomerOriginTDecorationPO = new ApprovalCustomerOriginTDecorationPO();
+		UserPO salesman = userDao.queryUserByUserId(approvalCustomerOriginTDecorationVO.getSalesman().getUserId());
+		
+		long dbid = approvalCustomerOriginTDecorationVO.getDecorationBusitype().getDbid();
 
-		BeanUtil.copyPropertie(approvalCustomerOriginTDecorationVO, approvalCustomerOriginTDecorationPO, Arrays.asList("customerOrigin", "salesman"));
+		ApprovalCustomerOriginTDecorationPO approvalCustomerOriginTDecorationPO = new ApprovalCustomerOriginTDecorationPO(new CustomerOriginPO(csid), new DecorationBusitypePO(dbid), salesman);
+
+		BeanUtil.copyPropertie(approvalCustomerOriginTDecorationVO, approvalCustomerOriginTDecorationPO, Arrays.asList("customerOrigin", "decorationBusitype", "salesman"));
 
 		approvalCustomerOriginTDecorationPO.setAid(approvalPO.getAid());
-		approvalCustomerOriginTDecorationPO.setCustomerOrigin(new CustomerOriginPO(csid));
-
-		UserPO salesman = userDao.queryUserByUserId(approvalCustomerOriginTDecorationVO.getSalesman().getUserId());
-
-		approvalCustomerOriginTDecorationPO.setSalesman(salesman);
 
 		approvalCustomerOriginTDecorationDao.save(approvalCustomerOriginTDecorationPO);
 
@@ -207,7 +207,7 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 
 		DecorationVO decorationVO = new DecorationVO();
 
-		BeanUtil.copyPropertie(approvalCustomerOriginTDecorationPO, decorationVO, Arrays.asList("customerOrigin", "salesman"));
+		BeanUtil.copyPropertie(approvalCustomerOriginTDecorationPO, decorationVO, Arrays.asList("customerOrigin", "decorationBusitype", "salesman"));
 
 		decorationVO.setHouse(new HouseVO(customerOriginPO.getHouse().getHid()));
 		decorationVO.setCustomer(new CustomerVO(customerOriginPO.getCustomer().getCid()));
@@ -215,6 +215,7 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 		decorationVO.setSalesman(new UserBaseVO(approvalCustomerOriginTDecorationPO.getSalesman().getUserId()));
 		decorationVO.setGrade("A");
 		decorationVO.setNotSalesmanRate(0);
+		decorationVO.setBusitype(approvalCustomerOriginTDecorationPO.getDecorationBusitype().getDbid());
 
 		decorationService.tranDecorationFromCustomerOrigin(decorationVO, customerOriginPO.getCsid(), approvalPO.getSender().getCompany());
 

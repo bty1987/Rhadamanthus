@@ -197,6 +197,8 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 		}
 
 		List<SalesItemPO> salesItemPOs = salesItemDao.querySalesItemBySid(salesDeliveryItem.getSales().getSid());
+		
+		UserPO creater = userDao.queryUserByUserId(userId);
 
 		for (SalesItemPO salesItemPO : salesItemPOs) {
 
@@ -207,6 +209,7 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 			SalesDeliveryItemPO salesDeliveryItemPO = new SalesDeliveryItemPO();
 
 			salesDeliveryItemPO.setSalesItem(salesItemPO);
+			salesDeliveryItemPO.setCreater(creater);
 			salesDeliveryItemPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 			salesDeliveryItemPO.setCompany(salesPO.getDompany());
 			salesDeliveryItemPO.setSales(salesPO);
@@ -241,9 +244,14 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 
 		for (SalesDeliveryItemPO salesDeliveryItemPO : salesDeliveryItemPOs) {
 
-			SalesDeliveryItemVO salesDeliveryItemVO = new SalesDeliveryItemVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO()), new SalesItemVO(new GoodsVO(), new ColorVO(), new FormatVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()));
+			SalesDeliveryItemVO salesDeliveryItemVO = new SalesDeliveryItemVO(new SalesVO(new HouseVO(new VillageVO()),new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO()), new SalesItemVO(new GoodsVO(), new ColorVO(), new FormatVO()),new UserBaseVO(new DutyVO(), new DepartmentVO()),new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()));
 
-			BeanUtil.copyPropertie(salesDeliveryItemPO, salesDeliveryItemVO, Arrays.asList("sales", "salesItem", "traner", "checker", "confirmer", "finisher", "balancer"));
+			BeanUtil.copyPropertie(salesDeliveryItemPO, salesDeliveryItemVO, Arrays.asList("sales", "salesItem", "creater", "traner", "checker", "confirmer", "finisher", "balancer"));
+			if(salesDeliveryItemPO.getCreater() != null) {
+				BeanUtil.copyProperties(salesDeliveryItemPO.getCreater(), salesDeliveryItemVO.getCreater(), Arrays.asList("dept", "duty"));
+				BeanUtil.copyProperties(salesDeliveryItemPO.getCreater().getDept(), salesDeliveryItemVO.getCreater().getDept(), Arrays.asList("fatherDept", "type", "manager"));
+			}
+			
 			if (salesDeliveryItemPO.getTraner() != null) {
 				BeanUtil.copyProperties(salesDeliveryItemPO.getTraner(), salesDeliveryItemVO.getTraner(), Arrays.asList("dept", "duty"));
 				BeanUtil.copyProperties(salesDeliveryItemPO.getTraner().getDept(), salesDeliveryItemVO.getTraner().getDept(), Arrays.asList("fatherDept", "type", "manager"));

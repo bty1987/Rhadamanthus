@@ -19,7 +19,7 @@ public class NormoodPO implements Serializable {
 
 	private static final long serialVersionUID = -7965664559026894507L;
 
-	public static final String COLUMN_QIID_STR = "quotationItem.qiId";
+	public static final String COLUMN_QIID_STR = "quotationItem.qiid";
 
 	public static final short STATUS_VALID_STR = 0;
 

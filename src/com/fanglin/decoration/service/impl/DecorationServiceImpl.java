@@ -832,7 +832,7 @@ public class DecorationServiceImpl implements DecorationService {
 		decorationPO.setStatus(DecorationPO.STATUS_INIT_INT);
 		decorationPO.setResourceType(decorationVO.getResourceType());// 量房0 资源1
 		decorationPO.setOrderTotalPrice(0);
-		decorationPO.setSalesmanType(decorationVO.getSalesmanType());
+		decorationPO.setBusitype(decorationVO.getBusitype());
 		decorationPO.setCompany(company);
 		decorationPO.setPaySacle((short) 0);
 		decorationPO.setGrade(decorationVO.getGrade());
@@ -942,8 +942,8 @@ public class DecorationServiceImpl implements DecorationService {
 			decorationPO.setHouseClass(decorationVO.getHouseClass());
 		}
 
-		if (decorationVO.getSalesmanType() != null) {
-			decorationPO.setSalesmanType(decorationVO.getSalesmanType());
+		if (decorationVO.getBusitype() != null) {
+			decorationPO.setBusitype(decorationVO.getBusitype());
 		}
 
 		if (type != null) {

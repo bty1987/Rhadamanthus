@@ -38,6 +38,8 @@ public class SalesDeliveryItemPO implements Serializable {
 	
 	public static final String COLUMN_GOODSNAME_STR = "goods.name";
 	
+	public static final String COLUMN_CREATEID_STR = "creater.userId";
+	
 	public static final String COLUMN_TRANERID_STR = "traner.userId";
 	
 	public static final String COLUMN_CREATETIME_STR = "createTime";
@@ -79,6 +81,8 @@ public class SalesDeliveryItemPO implements Serializable {
 	private Timestamp finishTime;
 	
 	private Timestamp protranTime;
+	
+	private UserPO creater;
 
 	private UserPO traner;
 
@@ -96,7 +100,7 @@ public class SalesDeliveryItemPO implements Serializable {
 		super();
 	}
 
-	public SalesDeliveryItemPO(long sdiid, SalesPO sales, SalesItemPO salesItem, short status, Timestamp createTime, Timestamp tranTime, Timestamp checkTime, Timestamp confirmTime, Timestamp finishTime, Timestamp protranTime, UserPO traner, UserPO checker, UserPO confirmer, UserPO finisher, String comment, int company) {
+	public SalesDeliveryItemPO(long sdiid, SalesPO sales, SalesItemPO salesItem, short status, Timestamp createTime, Timestamp tranTime, Timestamp checkTime, Timestamp confirmTime, Timestamp finishTime, Timestamp protranTime, UserPO creater, UserPO traner, UserPO checker, UserPO confirmer, UserPO finisher, String comment, int company) {
 		super();
 		this.sdiid = sdiid;
 		this.sales = sales;
@@ -108,6 +112,7 @@ public class SalesDeliveryItemPO implements Serializable {
 		this.confirmTime = confirmTime;
 		this.finishTime = finishTime;
 		this.protranTime = protranTime;
+		this.creater = creater;
 		this.traner = traner;
 		this.checker = checker;
 		this.confirmer = confirmer;
@@ -210,6 +215,16 @@ public class SalesDeliveryItemPO implements Serializable {
 		this.protranTime = protranTime;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cruid", referencedColumnName = "uid")
+	public UserPO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
+	}
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "tuid", referencedColumnName = "uid")
 	public UserPO getTraner() {

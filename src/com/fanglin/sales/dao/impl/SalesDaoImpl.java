@@ -227,7 +227,6 @@ public class SalesDaoImpl extends DaoImpl<SalesPO> implements SalesDao {
 					query.timeranges(SalesPO.COLUMN_FULLPAYTIME_STR, filter.getData());
 				}else if (SalesPO.COLUMN_CREATETIME_STR.equals(field)) {
 					query.timeranges(SalesPO.COLUMN_CREATETIME_STR, filter.getData());
-				
 				}
 			}
 		}

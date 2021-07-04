@@ -451,7 +451,6 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		if (!resignFlag) {
 			decorationPO.setDesignStatus(DecorationPO.DESIGNSTATUS_CONDUCT_INT);
-			decorationPO.setSdesignTime(DateUtil.getDateToTimestamp(new Date()));
 			decorationPO.setContractTime(DateUtil.getDateToTimestamp(new Date()));
 		}
 

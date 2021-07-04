@@ -69,10 +69,10 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 
 				QuotationItemPO quotationItemPO = quotationFunctionAreaItemPO.getQuotationItem();
 
-				quotationFunctionAreaItemVO.setQuotationItemId(quotationItemPO.getQiId());
-				quotationFunctionAreaItemVO.setContent(quotationItemPO.getQuotationItemDes());
+				quotationFunctionAreaItemVO.setQuotationItemId(quotationItemPO.getQiid());
 				quotationFunctionAreaItemVO.setAddPrice(quotationItemPO.getAddPrice());
 				quotationFunctionAreaItemVO.setSubPrice(quotationItemPO.getSubPrice());
+				quotationFunctionAreaItemVO.setContent(quotationItemPO.getComment());
 			}
 
 			quotationFunctionAreaItemVOs.add(quotationFunctionAreaItemVO);

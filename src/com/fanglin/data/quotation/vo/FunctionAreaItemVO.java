@@ -17,18 +17,20 @@ public class FunctionAreaItemVO implements Serializable {
 
 	private static final long serialVersionUID = 134446416L;
 
-	private Long faiId;
-	
+	private Long faiid;
+
 	private FunctionAreaVO functionArea;
-	
+
 	private QuotationItemVO quotationItem;
 	
-	public Long getFaiId(){
-		return faiId;
+	private String formula;
+
+	public Long getFaiid() {
+		return faiid;
 	}
 
-	public void setFaiId(Long faiId){
-		this.faiId = faiId;
+	public void setFaiid(Long faiid) {
+		this.faiid = faiid;
 	}
 
 	public FunctionAreaVO getFunctionArea() {
@@ -46,6 +48,13 @@ public class FunctionAreaItemVO implements Serializable {
 	public void setQuotationItem(QuotationItemVO quotationItem) {
 		this.quotationItem = quotationItem;
 	}
-
 	
+	public String getFormula() {
+		return formula;
+	}
+	
+	public void setFormula(String formula) {
+		this.formula = formula;
+	}
+
 }

@@ -32,18 +32,18 @@ public class AddReduceItemDaoImpl extends DaoImpl<AddReduceItemPO> implements Ad
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<AddReduceItemPO> queryAddReduceItemByAddReduceId(long addReduceId) {
-		return session().createCriteria(AddReduceItemPO.class).add(Restrictions.eq(AddReduceItemPO.COLUMN_ARID_STR, addReduceId)).list();
+	public List<AddReduceItemPO> queryAddReduceItem(long arid) {
+		return session().createCriteria(AddReduceItemPO.class).add(Restrictions.eq(AddReduceItemPO.COLUMN_ARID_STR, arid)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<AddReduceItemPO> queryAddReduceItemByAddReduceIds(List<Long> addReduceIds) {
-		return session().createCriteria(AddReduceItemPO.class).add(Restrictions.in(AddReduceItemPO.COLUMN_ARID_STR, addReduceIds)).list();
+	public List<AddReduceItemPO> queryAddReduceItem(List<Long> arids) {
+		return session().createCriteria(AddReduceItemPO.class).add(Restrictions.in(AddReduceItemPO.COLUMN_ARID_STR, arids)).list();
 	}
 
 	@Override
-	public long countAddReduceItemForFunctionArea(long qfaid) {
+	public long countAddReduceItem(long qfaid) {
 
 		String sql = "select count(*) from quotation.addreduceitem where quotationFunctionAreaId =:qfaid";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("qfaid", qfaid).uniqueResult();
@@ -51,7 +51,7 @@ public class AddReduceItemDaoImpl extends DaoImpl<AddReduceItemPO> implements Ad
 		return count.longValue();
 	}
 
-	public long countAddReduceItemForFunctionArea(List<QuotationFunctionAreaPO> quotationFunctionAreas) {
+	public long countAddReduceItem(List<QuotationFunctionAreaPO> quotationFunctionAreas) {
 		return (Long) createCriteria(AddReduceItemPO.class).add(Restrictions.in("quotationFunctionArea", quotationFunctionAreas)).setProjection(Projections.rowCount()).uniqueResult();
 	}
 

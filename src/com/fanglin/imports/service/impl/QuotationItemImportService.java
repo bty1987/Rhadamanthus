@@ -54,21 +54,21 @@ public class QuotationItemImportService implements com.fanglin.imports.service.Q
 
 			QuotationItemPO quoItem = new QuotationItemPO();
 
-			quoItem.setItemId(itemId);
+			quoItem.setNo(itemId);
 			quoItem.setQuotationVersion(new QuotationVersionPO(versionId));
-			quoItem.setItemName(itemName);
+			quoItem.setName(itemName);
 			quoItem.setQuotationType(new QuotationTypePO(quoType));
 			quoItem.setQuotationClassification(new QuotationClassificationPO(quoClass));
 			quoItem.setQuotationBigCategory(new QuotationBigCategoryPO(bigCategory));
 			quoItem.setQuotationSmallCategory(new QuotationSmallCategoryPO(smallCategory));
 			quoItem.setMeasurementUnit(new MeasurementUnitPO(measurementUnitId));
 			quoItem.setWorkType(new WorkTypePO(workId));
-			quoItem.setQuotationItemDes(quotationItemDes);
 			quoItem.setAddPrice(addPrice);
 			quoItem.setUnitPrice(unitPrice);
 			quoItem.setSubPrice(subPrice);
 			quoItem.setStatus(status);
 			quoItem.setDiscount(discount);
+			quoItem.setComment(quotationItemDes);
 
 			quotationItemDao.save(quoItem);
 

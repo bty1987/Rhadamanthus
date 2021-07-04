@@ -322,7 +322,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(140030, "订单活动物品不存在");
 		}
 
-		List<Short> status = Arrays.asList(new Short[] { DecorationActivityItemPO.STATUS_RECEIVE_INT, DecorationActivityItemPO.STATUS_DELIVERY_INT });
+		List<Short> status = Arrays.asList(new Short[] { DecorationActivityItemPO.STATUS_RECEIVE_INT, DecorationActivityItemPO.STATUS_DELIVERY_INT ,DecorationActivityItemPO.STATUS_DISCOUNT_INT});
 
 		if (!status.contains(decorationActivityItemPO.getState())) {
 			throw new FLException(140057, "订单活动奖品不可操作");
@@ -343,6 +343,37 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		return 0;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int discountDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO, String userId) throws FLException {
+
+		DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItemVO.getDaiId());
+
+		if (decorationActivityItemPO == null) {
+			throw new FLException(140030, "订单活动物品不存在");
+		}
+
+		List<Short> status = Arrays.asList(new Short[] { DecorationActivityItemPO.STATUS_INIT_INT });
+
+		if (!status.contains(decorationActivityItemPO.getState())) {
+			throw new FLException(140057, "订单活动奖品不可操作");
+		}
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationActivityItemPO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_DISCOUNT_INT);
+
+		decorationActivityItemDao.update(decorationActivityItemPO);
+
+		subDecorationForCut(decorationPO, decorationActivityItemPO);
+
+		return 0;
+	}
+	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int amountDecorationActivityItem(DecorationVO decorationVO, String userId) throws FLException {

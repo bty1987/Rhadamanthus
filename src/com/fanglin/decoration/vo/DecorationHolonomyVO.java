@@ -22,6 +22,8 @@ public class DecorationHolonomyVO implements Serializable {
 
 	private Integer manageRate;
 
+	private Long originMaterialPrice;
+
 	private Long materialPrice;
 
 	private Long servicePrice;
@@ -112,6 +114,14 @@ public class DecorationHolonomyVO implements Serializable {
 
 	public void setManageRate(Integer manageRate) {
 		this.manageRate = manageRate;
+	}
+
+	public Long getOriginMaterialPrice() {
+		return originMaterialPrice;
+	}
+
+	public void setOriginMaterialPrice(Long originMaterialPrice) {
+		this.originMaterialPrice = originMaterialPrice;
 	}
 
 	public Long getMaterialPrice() {
