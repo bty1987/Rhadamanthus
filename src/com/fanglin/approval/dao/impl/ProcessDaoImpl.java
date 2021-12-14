@@ -74,7 +74,9 @@ public class ProcessDaoImpl extends DaoImpl<ProcessPO> implements ProcessDao {
 					query.add(query.getCriterion(field, data, op));
 				} else if ("company".equals(field)) {
 					query.add(query.getCriterion(field, Integer.valueOf(data), op));
-				}
+				}else if ("status".equals(filter.getField())) {
+			          query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
+		        }
 			}
 		}
 	}

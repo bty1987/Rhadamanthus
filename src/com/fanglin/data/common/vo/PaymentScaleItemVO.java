@@ -5,6 +5,8 @@ public class PaymentScaleItemVO {
 	private Long psiid;
 		
 	private	Long psid;
+	
+	private	Long ptid;
 		
 	private String name;
 		
@@ -30,6 +32,14 @@ public class PaymentScaleItemVO {
 
 	public void setPsid(Long psid) {
 		this.psid = psid;
+	}
+
+	public Long getPtid() {
+		return ptid;
+	}
+
+	public void setPtid(Long ptid) {
+		this.ptid = ptid;
 	}
 
 	public String getName() {

@@ -39,6 +39,22 @@ Condition.addupRule("customer", {
             valuePath: "value"
         }
     },
+    "type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.data,
+            postData: {},
+            listPath: "customerType",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
     
     "service-orderId": {
         label: "装修单号",

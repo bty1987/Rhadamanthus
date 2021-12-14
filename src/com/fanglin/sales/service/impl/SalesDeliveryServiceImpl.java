@@ -134,25 +134,26 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void confirmSalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItem, String userId) throws FLException {
+	public void confirmSalesDeliveryItem(List<SalesDeliveryItemVO> salesDeliveryItems, String userId) throws FLException {
+		
+		for (SalesDeliveryItemVO salesDeliveryItemVO : salesDeliveryItems) {
+			SalesDeliveryItemPO salesDeliveryItemPOs = salesDeliveryItemDao.get(salesDeliveryItemVO.getSdiid());
+			if (salesDeliveryItemPOs == null) {
+				continue;
+			}
 
-		SalesDeliveryItemPO salesDeliveryItemPO = salesDeliveryItemDao.get(salesDeliveryItem.getSdiid());
+			if (salesDeliveryItemPOs.getStatus() != SalesDeliveryItemPO.STATUS_CHECK_INT) {
+				continue;
+			}
+			UserPO confirmer = userDao.queryUserByUserId(userId);
 
-		if (salesDeliveryItemPO == null) {
-			throw new FLException(260065, "配送项不存在");
+			salesDeliveryItemPOs.setConfirmer(confirmer);
+			salesDeliveryItemPOs.setStatus(SalesDeliveryItemPO.STATUS_CONFIRM_INT);
+			salesDeliveryItemPOs.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
+			salesDeliveryItemDao.update(salesDeliveryItemPOs);
 		}
 
-		if (salesDeliveryItemPO.getStatus() != SalesDeliveryItemPO.STATUS_CHECK_INT) {
-			throw new FLException(260066, "配送项状态不可操作");
-		}
-
-		UserPO confirmer = userDao.queryUserByUserId(userId);
-
-		salesDeliveryItemPO.setConfirmer(confirmer);
-		salesDeliveryItemPO.setStatus(SalesDeliveryItemPO.STATUS_CONFIRM_INT);
-		salesDeliveryItemPO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
-
-		salesDeliveryItemDao.update(salesDeliveryItemPO);
+		
 	}
 
 	@Override

@@ -78,6 +78,12 @@ public class WorkerSalaryPO implements Serializable {
 	public static final short ISSEND_SEND_INT = 1;
 
 	public static final short ISSEND_SENDED_INT = 2;
+	
+	public static final short ISAPPR_UNAPPR_INT = 0; //初始
+
+	public static final short ISAPPR_APPR_INT = 1;	//代发
+
+	public static final short ISAPPR_APPRED_INT = 2; //已发
 
 	private long wsId;
 
@@ -108,6 +114,8 @@ public class WorkerSalaryPO implements Serializable {
 	private int count;
 
 	private short isSend;
+
+	private short isAppr;
 
 	private short status;
 
@@ -414,6 +422,15 @@ public class WorkerSalaryPO implements Serializable {
 
 	public void setIsSend(short isSend) {
 		this.isSend = isSend;
+	}
+	
+	@Column(name = "isAppr")
+	public short getIsAppr() {
+		return isAppr;
+	}
+
+	public void setIsAppr(short isAppr) {
+		this.isAppr = isAppr;
 	}
 
 }

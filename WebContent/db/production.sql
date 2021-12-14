@@ -3,17 +3,17 @@ USE `production`;
 
 DROP TABLE IF EXISTS `hardware`;
 CREATE TABLE `hardware` (
-  `hid` INT(11) NOT NULL AUTO_INCREMENT,
+  `hid` int(11) NOT NULL AUTO_INCREMENT,
   `no` varchar(20) NOT NULL COMMENT '编号',
-  `pid` INT(11) NOT NULL COMMENT '生产ID',
-  `cuid` INT(11) NOT NULL COMMENT '创建人ID',
+  `pid` int(11) NOT NULL COMMENT '生产ID',
+  `cuid` int(11) NOT NULL COMMENT '创建人ID',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `finishTime` timestamp COMMENT '结束时间',
-  `timeLimit` INT(8) NOT NULL COMMENT '工期',
+  `finishTime` timestamp NULL COMMENT '结束时间',
+  `timeLimit` int(8) NOT NULL COMMENT '工期',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0未到货 1已到货 2废除',
   `path` varchar(128) NOT NULL,
   `comment` varchar(128) NOT NULL DEFAULT '',
-  `company` INT(11) DEFAULT NULL,
+  `company` int(11) DEFAULT NULL,
   PRIMARY KEY (`hid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='五金单表';
 
@@ -22,11 +22,11 @@ CREATE TABLE `hardwareitem` (
   `hiid` int(11) NOT NULL AUTO_INCREMENT,
   `hid` int(11) NOT NULL,
   `name` varchar(32) NOT NULL DEFAULT '',
-  `num` INT(8) NOT NULL DEFAULT '0',
-  `unitprice` INT(8) NOT NULL DEFAULT '0',
+  `num` int(8) NOT NULL DEFAULT '0',
+  `unitprice` int(8) NOT NULL DEFAULT '0',
   `measurementunit` varchar(10) NOT NULL,
   `comment` varchar(128) NOT NULL DEFAULT '',
-  `total` BIGINT(10) NOT NULL DEFAULT '0',
+  `total` bigint(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`hiid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='五金项表';
 
@@ -38,8 +38,8 @@ CREATE TABLE `outsource` (
   `cuid` int(11) NOT NULL COMMENT '创建人ID',
   `fuid` int(11) NOT NULL COMMENT '厂商ID',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `finishTime` timestamp COMMENT '结束时间',
-  `timeLimit` INT(8) NOT NULL DEFAULT '0' COMMENT '工期',
+  `finishTime` timestamp NULL COMMENT '结束时间',
+  `timeLimit` int(8) NOT NULL DEFAULT '0' COMMENT '工期',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0未到货 1已到货 2废除',
   `path` varchar(128) NOT NULL DEFAULT '',
   `comment` varchar(128) NOT NULL DEFAULT '',
@@ -52,54 +52,38 @@ CREATE TABLE `outsourceitem` (
   `oiid` int(11) NOT NULL AUTO_INCREMENT,
   `oid` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `height` INT(8) NOT NULL DEFAULT '0',
-  `width` INT(8) NOT NULL DEFAULT '0',
-  `thick` INT(8) NOT NULL DEFAULT '0',
+  `height` int(8) NOT NULL DEFAULT '0',
+  `width` int(8) NOT NULL DEFAULT '0',
+  `thick` int(8) NOT NULL DEFAULT '0',
   `modelling` varchar(128) NOT NULL DEFAULT '' COMMENT '造型',
-  `num` INT(8) NOT NULL DEFAULT '0',
-  `unitprice` INT(8) NOT NULL DEFAULT '0',
-  `total` BIGINT(10) NOT NULL DEFAULT '0',
+  `num` int(8) NOT NULL DEFAULT '0',
+  `unitprice` int(8) NOT NULL DEFAULT '0',
+  `total` bigint(10) NOT NULL DEFAULT '0',
   `comment` varchar(128) NOT NULL DEFAULT '',
   PRIMARY KEY (`oiid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='外协项表';
-
-DROP TABLE IF EXISTS `tranpack`;
-CREATE TABLE `tranpack` (
-  `tid` int(11) NOT NULL AUTO_INCREMENT,
-  `pid` int(11) NOT NULL COMMENT '生产单ID',
-  `no` varchar(20) NOT NULL COMMENT '物流包编号',
-  `rid` int(11) NOT NULL COMMENT '关联ID',
-  `type` tinyint(1) NOT NULL COMMENT '类型',
-  `cuid` int(11) NOT NULL COMMENT '创建人ID',
-  `suid` int(11) COMMENT '送货人ID',
-  `muid` int(11) COMMENT '安装人ID',
-  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `planTime` timestamp COMMENT '物流时间',
-  `tranTime` timestamp COMMENT '送货时间',
-  `mountTime` timestamp COMMENT '安装时间',
-  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态',
-  PRIMARY KEY (`tid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='物流包表';
 
 DROP TABLE IF EXISTS `production`;
 CREATE TABLE `production` (
   `pid` int(11) NOT NULL AUTO_INCREMENT,
   `pno` varchar(20) NOT NULL COMMENT '生产单编号',
   `orderId` varchar(15) NOT NULL COMMENT '装修单号',
+  `bid` int(11) NOT NULL COMMENT '品牌ID',
   `hid` int(11) NOT NULL COMMENT '房产ID',
-  `total` BIGINT(10) NOT NULL DEFAULT '0',
+  `total` bigint(10) NOT NULL DEFAULT '0',
   `cuid` int(11) NOT NULL COMMENT '创建人ID',
+  `xuid` int(11) NOT NULL COMMENT '销售员ID',
   `duid` int(11) NOT NULL COMMENT '设计师ID',
-  `suid` int(11) NOT NULL COMMENT '拆单员ID',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0初始;1签约;2已审核;3生产;4废单;',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `designTime` timestamp COMMENT '设计时间',
-  `divideTime` timestamp COMMENT '拆单时间',
-  `storeTime` timestamp COMMENT '入库时间',
-  `planTime` timestamp COMMENT '物流时间',
-  `mountTime` timestamp COMMENT '安装时间',
-  `finishTime` timestamp COMMENT '完结时间',
-  `updateTime` timestamp NULL COMMENT '更新时间',
+  `designTime` timestamp NULL DEFAULT NULL COMMENT '设计时间',
+  `divideTime` timestamp NULL DEFAULT NULL COMMENT '拆单时间',
+  `storeTime` timestamp NULL DEFAULT NULL COMMENT '入库时间',
+  `planTime` timestamp NULL DEFAULT NULL COMMENT '物流时间',
+  `tranTime` timestamp NULL DEFAULT NULL COMMENT '运输时间',
+  `mountTime` timestamp NULL DEFAULT NULL COMMENT '安装时间',
+  `finishTime` timestamp NULL DEFAULT NULL COMMENT '完结时间',
+  `updateTime` timestamp NULL DEFAULT NULL COMMENT '更新时间',
   `timeLimit` int(8) NOT NULL DEFAULT '0' COMMENT '工期',
   `spid` varchar(20) NOT NULL DEFAULT '0' COMMENT '父级生产单ID',
   `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0生产;1售后;',
@@ -107,6 +91,19 @@ CREATE TABLE `production` (
   PRIMARY KEY (`pid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='生产单表';
 
+DROP TABLE IF EXISTS `productionfunction`;
+CREATE TABLE `productionfunction` (
+  `pfid` int(11) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `key` varchar(64) NOT NULL,
+  `value` varchar(64) NOT NULL,
+  `type` tinyint(1) NOT NULL,
+  `subtype` tinyint(1) NOT NULL,
+  `funtype` tinyint(1) NOT NULL COMMENT '0.通用 1.生产 2.五金 3.外协 4.计划 5.物流',
+  `sort` tinyint(1) NOT NULL,
+  `comment` varchar(255) DEFAULT '',
+  PRIMARY KEY (`pfid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='生产-功能配置';
 DROP TABLE IF EXISTS `productionpicture`;
 CREATE TABLE `productionpicture` (
   `ppid` int(11) NOT NULL AUTO_INCREMENT,
@@ -114,9 +111,9 @@ CREATE TABLE `productionpicture` (
   `name` varchar(32) NOT NULL,
   `cuid` int(11) NOT NULL COMMENT '创建人ID',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `path` varchar(128) NOT NULL DEFAULT '',
+  `path` varchar(256) NOT NULL DEFAULT '',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0初版;1终版;2废除',
-  `type`  tinyint(1) NOT NULL DEFAULT 0 COMMENT '0 文件, 1设计图',
+  `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0 文件, 1设计图',
   `comment` varchar(128) NOT NULL DEFAULT '',
   PRIMARY KEY (`ppid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='图纸表';
@@ -129,7 +126,7 @@ CREATE TABLE `productionplan` (
   `path` varchar(128) NOT NULL DEFAULT ' ',
   `cuid` int(11) NOT NULL COMMENT '创建人ID',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '投料时间',
-  `finishTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '出货时间',
+  `finishTime` timestamp NULL DEFAULT NULL COMMENT '出货时间',
   `timeLimit` int(8) NOT NULL DEFAULT 0 COMMENT '工期',
   `status` tinyint(1) NOT NULL DEFAULT 0 COMMENT '0 初始 1完结',
   `comment` varchar(64) COMMENT '备注',
@@ -149,7 +146,7 @@ CREATE TABLE `productionplanitem` (
   `color` varchar(32) NOT NULL DEFAULT '',
   `unitprice` int(8) NOT NULL DEFAULT '0',
   `num` int(8) NOT NULL DEFAULT '0',
-  `total` BIGINT(10) NOT NULL DEFAULT '0',
+  `total` bigint(10) NOT NULL DEFAULT '0',
   `comment` varchar(128) NOT NULL DEFAULT '',
   PRIMARY KEY (`ppiid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='计划单项表';
@@ -177,6 +174,9 @@ CREATE TABLE `productionworkflow` (
   `pwfid` int(11) NOT NULL AUTO_INCREMENT,
   `pwpid` int(11) NOT NULL,
   `wfid` int(11) NOT NULL,
+  `ouid` int(11) DEFAULT NULL COMMENT '操作人ID',
+  `operateTime` timestamp NULL DEFAULT NULL COMMENT '操作时间',
+  `status` tinyint(1) NOT NULL COMMENT '0初始;1已执行;2完成;3废除',
   PRIMARY KEY (`pwfid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='计划工序表';
 
@@ -187,6 +187,7 @@ CREATE TABLE `productionworkplan` (
   `wpid` int(11) NOT NULL,
   `cuid` int(11) NOT NULL COMMENT '创建人ID',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `finishTime` timestamp NULL DEFAULT NULL COMMENT '完结时间',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0初始;1已执行',
   PRIMARY KEY (`pwpid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='计划工序组表';
@@ -198,7 +199,7 @@ CREATE TABLE `quotation` (
   `name` varchar(32) NOT NULL,
   `cuid` int(11) NOT NULL,
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `total` BIGINT(10) NOT NULL DEFAULT '0',
+  `total` bigint(10) NOT NULL DEFAULT '0',
   `discount` int(8) NOT NULL DEFAULT '0',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1正使用;0未使用',
   `comment` varchar(128) NOT NULL DEFAULT '',
@@ -212,11 +213,11 @@ CREATE TABLE `quotationitem` (
   `name` varchar(32) NOT NULL,
   `format` varchar(32) NOT NULL DEFAULT '',
   `height` int(8) NOT NULL DEFAULT '0',
-  `width` INT(8) NOT NULL DEFAULT '0',
-  `thick` INT(8) NOT NULL DEFAULT '0',
-  `num` INT(8) NOT NULL DEFAULT '0',
-  `unitprice` INT(8) NOT NULL DEFAULT '0',
-  `total` BIGINT(10) NOT NULL DEFAULT '0',
+  `width` int(8) NOT NULL DEFAULT '0',
+  `thick` int(8) NOT NULL DEFAULT '0',
+  `num` int(8) NOT NULL DEFAULT '0',
+  `unitprice` int(8) NOT NULL DEFAULT '0',
+  `total` bigint(10) NOT NULL DEFAULT '0',
   `measurementunit` varchar(10) NOT NULL,
   `comment` varchar(128) NOT NULL DEFAULT '',
   `specil` varchar(128) NOT NULL DEFAULT '' COMMENT '特型',
@@ -231,7 +232,7 @@ CREATE TABLE `quoteitem` (
   `pinyin` varchar(128) NOT NULL,
   `format` varchar(32) NOT NULL DEFAULT '' COMMENT '型号',
   `measurementunit` varchar(10) NOT NULL,
-  `unitprice` INT(8) NOT NULL DEFAULT '0',
+  `unitprice` int(8) NOT NULL DEFAULT '0',
   `qtid` int(11) NOT NULL COMMENT '报价类型',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0启用;1禁用',
   `company` int(11),
@@ -245,6 +246,25 @@ CREATE TABLE `quotetype` (
   `status` tinyint(1) NOT NULL COMMENT '0启用;1禁用',
   PRIMARY KEY (`qtid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='报价类型表';
+
+
+DROP TABLE IF EXISTS `tranpack`;
+CREATE TABLE `tranpack` (
+  `tid` int(11) NOT NULL AUTO_INCREMENT,
+  `pid` int(11) NOT NULL COMMENT '生产单ID',
+  `no` varchar(20) NOT NULL COMMENT '物流包编号',
+  `rid` int(11) NOT NULL COMMENT '关联ID',
+  `type` tinyint(1) NOT NULL COMMENT '类型',
+  `cuid` int(11) NOT NULL COMMENT '创建人ID',
+  `suid` int(11) DEFAULT NULL COMMENT '送货人ID',
+  `muid` int(11) DEFAULT NULL COMMENT '安装人ID',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `planTime` timestamp NULL DEFAULT NULL COMMENT '物流时间',
+  `tranTime` timestamp NULL DEFAULT NULL COMMENT '送货时间',
+  `mountTime` timestamp NULL DEFAULT NULL COMMENT '安装时间',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态',
+  PRIMARY KEY (`tid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='物流包表';
 
 DROP TABLE IF EXISTS `userworkflow`;
 CREATE TABLE `userworkflow` (

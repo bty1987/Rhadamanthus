@@ -111,41 +111,53 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 		return count == null ? 0 : count.intValue();
 	}
 
+	@Override
+	public int countSelectionItem(String orderId, List<Short> statuses) {
+
+		String sql = "SELECT count(*) FROM quotation.selectionitem WHERE orderId = :orderId AND status in :statuses";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString(SelectionItemPO.COLUMN_ORDERID_STR, orderId).setParameterList("statuses", statuses).uniqueResult();
+
+		return count == null ? 0 : count.intValue();
+	}
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters != null && filters.size() > 0) {
-			for (Filter filter : filters) {
+		if (filters == null)
+			return;
 
-				String field = filter.getField();
-				String data = filter.getData();
-				String op = filter.getOp();
+		for (Filter filter : filters) {
 
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			query.alias("goods", "goods");
+
+			if (SelectionItemPD.COLUMN_ORDERID_STR.equals(field)) {
 				query.alias("decoration", "decoration");
-				query.alias("goods", "goods");
-
-				if (SelectionItemPD.COLUMN_ORDERID_STR.equals(field)) {
-					query.add(query.getCriterion(SelectionItemPD.COLUMN_DECORATION_ORDERID_STR, data, op));
-				} else if (SelectionItemPD.COLUMN_STATUS_STR.equals(field)) {
-					query.add(query.getCriterion(SelectionItemPD.COLUMN_STATUS_STR, Short.valueOf(data), op));
-				} else if (SelectionItemPD.COLUMN_GOODS_NAME_STR.equals(field)) {
-					query.add(query.getCriterion(SelectionItemPD.COLUMN_GOODS_NAME_STR, data, op));
-				} else if (SelectionItemPD.COLUMN_GOODS_CATEGORY_STR.equals(field)) {
-					query.add(query.getCriterion(SelectionItemPD.COLUMN_GOODS_CATEGORY_STR, data, op));
-				} else if (SelectionItemPD.COLUMN_GOODS_BRAND_STR.equals(field)) {
-					query.add(query.getCriterion(SelectionItemPD.COLUMN_GOODS_BRAND_STR, data, op));
-				} else if ("createTime".equals(field)) {
-					query.timeranges("createTime", data);
-				} else if ("tranTime".equals(field)) {
-					query.timeranges("tranTime", data);
-				} else if ("checkTime".equals(field)) {
-					query.timeranges("checkTime", data);
-				} else if ("confirmTime".equals(field)) {
-					query.timeranges("confirmTime", data);
-				} else if ("finishTime".equals(field)) {
-					query.timeranges("finishTime", data);
-				} else if ("balanceTime".equals(field)) {
-					query.timeranges("balanceTime", data);
-				}
+				query.add(query.getCriterion(SelectionItemPD.COLUMN_DECORATION_ORDERID_STR, data, op));
+			} else if (SelectionItemPD.COLUMN_STATUS_STR.equals(field)) {
+				query.add(query.getCriterion(SelectionItemPD.COLUMN_STATUS_STR, Short.valueOf(data), op));
+			} else if (SelectionItemPD.COLUMN_GOODS_NAME_STR.equals(field)) {
+				query.add(query.getCriterion(SelectionItemPD.COLUMN_GOODS_NAME_STR, data, op));
+			} else if (SelectionItemPD.COLUMN_GOODS_CATEGORY_STR.equals(field)) {
+				query.add(query.getCriterion(SelectionItemPD.COLUMN_GOODS_CATEGORY_STR, data, op));
+			} else if (SelectionItemPD.COLUMN_GOODS_BRAND_STR.equals(field)) {
+				query.add(query.getCriterion(SelectionItemPD.COLUMN_GOODS_BRAND_STR, data, op));
+			} else if ("createTime".equals(field)) {
+				query.timeranges("createTime", data);
+			} else if ("tranTime".equals(field)) {
+				query.timeranges("tranTime", data);
+			} else if ("checkTime".equals(field)) {
+				query.timeranges("checkTime", data);
+			} else if ("confirmTime".equals(field)) {
+				query.timeranges("confirmTime", data);
+			} else if ("finishTime".equals(field)) {
+				query.timeranges("finishTime", data);
+			} else if ("reviewTime".equals(field)) {
+				query.timeranges("reviewTime", data);
+			} else if ("balanceTime".equals(field)) {
+				query.timeranges("balanceTime", data);
 			}
 		}
 	}

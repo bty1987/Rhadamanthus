@@ -33,18 +33,20 @@ public class ExtendService {
 			String sha1 = FddEncryptTool.sha1((new StringBuilder()).append(client.getAppId()).append(FddEncryptTool.md5Digest(timeStamp)).append(FddEncryptTool.sha1((new StringBuilder()).append(client.getSecret()).append(customer_id).toString())).toString());
 			String msgDigest = new String(FddEncryptTool.Base64Encode(sha1.getBytes()));
 
-			params.add(new BasicNameValuePair("customerId", customer_id));
+			params.add(new BasicNameValuePair("customer_id", customer_id));
 			params.add(new BasicNameValuePair("app_id", client.getAppId()));
 			params.add(new BasicNameValuePair("timestamp", timeStamp));
 			params.add(new BasicNameValuePair("v", client.getVersion()));
 			params.add(new BasicNameValuePair("msg_digest", msgDigest));
 		} catch (Exception e) {
-			e.printStackTrace();
+
+			System.out.println(e.getMessage());
+
+			System.out.println((new StringBuilder()).append(client.getUrl()).append("add_signature").append(".api").toString());
+			System.out.println(params);
+
 			throw new RuntimeException(e);
 		}
-
-		System.out.println((new StringBuilder()).append(client.getUrl()).append("query_signature").append(".api").toString());
-		System.out.println(params);
 
 		return HttpsUtil.doPost((new StringBuilder()).append(client.getUrl()).append("query_signature").append(".api").toString(), params);
 	}
@@ -66,14 +68,45 @@ public class ExtendService {
 			params.add(new BasicNameValuePair("v", client.getVersion()));
 			params.add(new BasicNameValuePair("msg_digest", msgDigest));
 		} catch (Exception e) {
-			e.printStackTrace();
+
+			System.out.println(e.getMessage());
+
+			System.out.println((new StringBuilder()).append(client.getUrl()).append("add_signature").append(".api").toString());
+			System.out.println(params);
+
 			throw new RuntimeException(e);
 		}
 
-		System.out.println((new StringBuilder()).append(client.getUrl()).append("default_signature").append(".api").toString());
-		System.out.println(params);
-
 		return HttpsUtil.doPost((new StringBuilder()).append(client.getUrl()).append("default_signature").append(".api").toString(), params);
+	}
+
+	public static String invokeaddSignature(FddClient client, String customer_id, String imgbase) {
+
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+		try {
+
+			String timeStamp = HttpsUtil.getTimeStamp();
+			String sha1 = FddEncryptTool.sha1((new StringBuilder()).append(client.getAppId()).append(FddEncryptTool.md5Digest(timeStamp)).append(FddEncryptTool.sha1((new StringBuilder()).append(client.getSecret()).append(customer_id).append(imgbase).toString())).toString());
+			String msgDigest = new String(FddEncryptTool.Base64Encode(sha1.getBytes()));
+
+			params.add(new BasicNameValuePair("customer_id", customer_id));
+			params.add(new BasicNameValuePair("signature_img_base64", imgbase));
+			params.add(new BasicNameValuePair("app_id", client.getAppId()));
+			params.add(new BasicNameValuePair("timestamp", timeStamp));
+			params.add(new BasicNameValuePair("v", client.getVersion()));
+			params.add(new BasicNameValuePair("msg_digest", msgDigest));
+		} catch (Exception e) {
+
+			System.out.println(e.getMessage());
+
+			System.out.println((new StringBuilder()).append(client.getUrl()).append("add_signature").append(".api").toString());
+			System.out.println(params);
+
+			throw new RuntimeException(e);
+		}
+
+		return HttpsUtil.doPost((new StringBuilder()).append(client.getUrl()).append("add_signature").append(".api").toString(), params);
 	}
 
 	public static String invokereplaceSignature(FddClient client, String customer_id, String signature_id, String signature_img_base64) {
@@ -94,12 +127,14 @@ public class ExtendService {
 			params.add(new BasicNameValuePair("v", client.getVersion()));
 			params.add(new BasicNameValuePair("msg_digest", msgDigest));
 		} catch (Exception e) {
-			e.printStackTrace();
+
+			System.out.println(e.getMessage());
+
+			System.out.println((new StringBuilder()).append(client.getUrl()).append("add_signature").append(".api").toString());
+			System.out.println(params);
+
 			throw new RuntimeException(e);
 		}
-
-		System.out.println((new StringBuilder()).append(client.getUrl()).append("query_signature").append(".api").toString());
-		System.out.println(params);
 
 		return HttpsUtil.doPost((new StringBuilder()).append(client.getUrl()).append("replace_signature").append(".api").toString(), params);
 	}
@@ -121,14 +156,16 @@ public class ExtendService {
 			params.add(new BasicNameValuePair("v", client.getVersion()));
 			params.add(new BasicNameValuePair("msg_digest", msgDigest));
 		} catch (Exception e) {
-			e.printStackTrace();
+
+			System.out.println(e.getMessage());
+
+			System.out.println((new StringBuilder()).append(client.getUrl()).append("add_signature").append(".api").toString());
+			System.out.println(params);
+
 			throw new RuntimeException(e);
 		}
 
-		System.out.println((new StringBuilder()).append(client.getUrl()).append("query_signature").append(".api").toString());
-		System.out.println(params);
-
-		return HttpsUtil.doPost((new StringBuilder()).append(client.getUrl()).append("delete_signature").append(".api").toString(), params);
+		return HttpsUtil.doPost((new StringBuilder()).append(client.getUrl()).append("remove_signature").append(".api").toString(), params);
 	}
 
 }

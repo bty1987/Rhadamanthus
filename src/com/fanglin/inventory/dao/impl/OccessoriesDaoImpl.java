@@ -33,6 +33,20 @@ public class OccessoriesDaoImpl extends DaoImpl<OccessoriesPO> implements Occess
 		
 		return query.list();
 	}
+	
+	@Override
+	public List<OccessoriesPO> pageOccessoriesForSupplier(Paging paging, List<Filter> filters, int uid) {
+		
+		PagingQuery<OccessoriesPO> query = pagingQuery(paging, OccessoriesPO.class);
+		
+		query.alias("supplier", "supplier");
+		
+		query.add(query.getCriterion("supplier.uid", uid, "eq"));
+		
+		queryFilterExcute(query, filters);
+		
+		return query.list();
+	}
 
 	private void queryFilterExcute(PagingQuery<OccessoriesPO> query, List<Filter> filters) {
 		
@@ -68,5 +82,4 @@ public class OccessoriesDaoImpl extends DaoImpl<OccessoriesPO> implements Occess
 			}
 		}
 	}
-
 }

@@ -117,5 +117,22 @@ Condition.addupRule("approval", {
             validate: null
         }
     },
-    
+    //状态栏（是否启用）
+    "process-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        //dataSource是下拉框
+        dataSource: {
+            url: api.ds.data,
+            postData: null,
+            listPath: "status",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
 });

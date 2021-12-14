@@ -20,11 +20,13 @@ import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationAdditionService;
+import com.fanglin.kingdee.service.SalesKingdeeService;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.PointofsalesDao;
 import com.fanglin.payment.dao.SalesPaymentDao;
 import com.fanglin.payment.dao.SalesReceiptDao;
 import com.fanglin.payment.po.AdvancePaymentPO;
+import com.fanglin.payment.po.PaymentPO;
 import com.fanglin.payment.po.PointofsalesPO;
 import com.fanglin.payment.po.SalesPaymentPO;
 import com.fanglin.payment.po.SalesReceiptPO;
@@ -95,6 +97,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 	
 	@Autowired
 	private SalesActivityService salesActivityService;
+	
+	@Autowired
+	private SalesKingdeeService salesKingdeeService;
 	
 	@Override
 	public void pageSalesPayment(Paging paging, List<Filter> filters, SalesPaymentVO salesPayment, int company, String companyType) {
@@ -368,7 +373,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int collectSalesPayment(SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, List<Long> posids, String userId, Integer company) throws FLException {
+	public int collectSalesPayment(SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, List<Long> posids, String userId, Integer company) throws Exception {
 
 		SalesPaymentPO salesPayment = salesPaymentDao.get(salesPaymentVO.getSpid());
 		
@@ -488,25 +493,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		if (salesReceiptVO.getAdvanceType() != null) {
 
-			Short paymentType = 0;
-
-			if (salesReceiptVO.getAdvanceType() == SalesPaymentPO.ADVANCETYPE_CONTRACT_INT) {
-				paymentType = 0; // 合同
-			} else if (salesReceiptVO.getAdvanceType() == SalesPaymentPO.ADVANCETYPE_ENGINEERING_INT) {
-				paymentType = 1; // 工程
-			} else if (salesReceiptVO.getAdvanceType() == SalesPaymentPO.ADVANCETYPE_MATERIAL_INT) {
-				paymentType = 2; // 主材
-			} else if (salesReceiptVO.getAdvanceType() == SalesPaymentPO.ADVANCETYPE_ZHENGLIN_INT) {
-				paymentType = 3; // 正林
-			}
-
-			PaymentVO paymentVO = new PaymentVO();
-
-			paymentVO.setOrderId(sales.getOrderId());
-			paymentVO.setPaymentType(paymentType);
-			paymentVO.setComment(String.format("销售单:%d", sales.getSid()));
-			paymentVO.setTransfer(salesReceiptVO.getAdvance());
-			paymentVO.setUniqueid("SA" + salesReceiptPO.getSrId());
+			PaymentVO paymentVO = getPaymentVO(salesReceiptVO, salesReceiptPO, sales);
 
 			// 预付款付款
 			paymentService.payPayment(paymentVO, userId);
@@ -524,12 +511,17 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		
 		decorationService.sendMessage(salesPayment.getSales().getOrderId(), "主材单", String.format("主材交款金额%.3f元", Arith.div(salesPayment.getReferMoney(), 1000.0)));
 
+		//数据进入金蝶
+		List<SalesPaymentPO> salesPaymentPOs = new ArrayList<SalesPaymentPO>();
+		salesPaymentPOs.add(salesPayment);
+		salesKingdeeService.collect(sales, salesReceiptPO, salesPaymentPOs);
+		
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int collectSalesPayments(List<Long> spids, SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, List<Long> posids, String userId, Integer company) throws FLException {
+	public int collectSalesPayments(List<Long> spids, SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, List<Long> posids, String userId, Integer company) throws Exception {
 
 		SalesPO sales = salesDao.get(salesPaymentVO.getSales().getSid());
 
@@ -602,8 +594,11 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		Long referMoneyPY = 0L;
 		
+		List<SalesPaymentPO> salesPaymentPOs = new ArrayList<SalesPaymentPO>();
+		
 		for (Long spid : spids) {
 			SalesPaymentPO salesPayment = salesPaymentDao.get(spid);
+			salesPaymentPOs.add(salesPayment);
 
 			if (salesPayment.getStatus() != SalesPaymentPO.STATUS_INITIAL_INT) {
 				throw new FLException(150036, "款项状态不可操作");
@@ -663,25 +658,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		if (salesReceiptVO.getAdvanceType() != null) {
 
-			Short paymentType = 0;
-
-			if (salesReceiptVO.getAdvanceType() == SalesPaymentPO.ADVANCETYPE_CONTRACT_INT) {
-				paymentType = 0; // 合同
-			} else if (salesReceiptVO.getAdvanceType() == SalesPaymentPO.ADVANCETYPE_ENGINEERING_INT) {
-				paymentType = 1; // 工程
-			} else if (salesReceiptVO.getAdvanceType() == SalesPaymentPO.ADVANCETYPE_MATERIAL_INT) {
-				paymentType = 2; // 主材
-			} else if (salesReceiptVO.getAdvanceType() == SalesPaymentPO.ADVANCETYPE_ZHENGLIN_INT) {
-				paymentType = 3; // 正林
-			}
-
-			PaymentVO paymentVO = new PaymentVO();
-
-			paymentVO.setOrderId(sales.getOrderId());
-			paymentVO.setPaymentType(paymentType);
-			paymentVO.setComment(String.format("销售单:%d", sales.getSid()));
-			paymentVO.setTransfer(salesReceiptVO.getAdvance());
-			paymentVO.setUniqueid("SA" + salesReceiptPO.getSrId());
+			PaymentVO paymentVO = getPaymentVO(salesReceiptVO, salesReceiptPO, sales);
 
 			paymentService.payPayment(paymentVO, userId);
 
@@ -698,14 +675,17 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		decorationAdditionService.updateDecorationForSaleScale(decorationPO);
 		
 		decorationService.sendMessage(sales.getOrderId(), "主材单", String.format("主材交款金额%.3f元", Arith.div(totalMoney, 1000.0)));
-
+		
+		//数据进入金蝶
+		salesKingdeeService.collect(sales, salesReceiptPO, salesPaymentPOs);
+		
 		return 0;
 	}
 
 	//销售退款收款
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int refundSalesPayment(SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, String userId, Integer company) throws FLException {
+	public int refundSalesPayment(SalesPaymentVO salesPaymentVO, SalesReceiptVO salesReceiptVO, String userId, Integer company) throws Exception {
 
 		SalesPaymentPO salesPayment = salesPaymentDao.get(salesPaymentVO.getSpid());
 		
@@ -751,6 +731,14 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			salesReceiptPO.setCheckvBank("");
 		}
 
+		if (salesReceiptVO.getAdvance() != null) {
+			salesReceiptPO.setAdvance(salesReceiptVO.getAdvance());
+			salesReceiptPO.setAdvanceType(salesReceiptVO.getAdvanceType());
+		} else {
+			salesReceiptPO.setAdvance(SalesReceiptPO.COLUMN_MONEY_INT);
+			salesReceiptPO.setAdvanceType(SalesReceiptPO.COLUMN_ADVANCETYPE_INT);
+		}
+
 		if (salesReceiptVO.getCoupon() != null) {
 			salesReceiptPO.setCoupon(salesReceiptVO.getCoupon());
 			salesReceiptPO.setCouponInfo(salesReceiptVO.getCouponInfo());
@@ -768,7 +756,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		//type作为保留字段 目前没有什么用处 原本的意思为: 0 收款 1 退款
 		salesReceiptPO.setType(SalesReceiptPO.COLUMN_SALESRECEIPT_REFUND_TYPE_INT);
 
-		Long referMoneySR = Arith.add(Arith.add(Arith.add(salesReceiptPO.getCash(), salesReceiptPO.getBank()), salesReceiptPO.getCheckv()), salesReceiptPO.getCoupon());
+		Long referMoneySR = Arith.add(Arith.add(Arith.add(Arith.add(salesReceiptPO.getCash(), salesReceiptPO.getBank()), salesReceiptPO.getCheckv()), salesReceiptPO.getCoupon()), salesReceiptPO.getAdvance());
 		Long referMoneyDB = salesPayment.getReferMoney();
 
 		if (Arith.sub(referMoneySR, referMoneyDB) != SalesReceiptPO.COLUMN_MONEY_INT) {
@@ -782,6 +770,12 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		salesPayment.setStatus(SalesPaymentPO.STATUS_PAIDFOR_INT);
 		salesPayment.setCompany(sales.getPompany());
 		salesPaymentDao.update(salesPayment);
+		
+		//生成预付款相关数据
+		if (salesReceiptVO.getAdvance() != null && salesReceiptVO.getAdvance() > 0) {
+			PaymentVO paymentVO = getPaymentVO(salesReceiptVO, salesReceiptPO, salesPayment.getSales());
+			paymentService.returnPayment(paymentVO, userId);
+		}
 		
 		if(salesPayment.getType() == SalesPaymentPO.TYPE_DEPOSITREFUND_INT || salesPayment.getType() == SalesPaymentPO.TYPE_NOTDEPOSITREFUND_INT){
 			sales.setDepositpay(0);
@@ -802,6 +796,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		decorationAdditionService.updateDecorationForSaleScale(decorationPO);
 		
 		decorationService.sendMessage(salesPayment.getSales().getOrderId(), "主材单", String.format("主材退款金额%.3f元", Arith.div(salesPayment.getReferMoney(), 1000.0)));
+		
+		//数据进入金蝶
+		salesKingdeeService.refund(sales, salesReceiptPO, salesPayment);
 
 		return 0;
 	}
@@ -819,6 +816,17 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			
 			if(salesPayment == null){
 				throw new FLException(150003, "款项不存在");
+			}
+			
+			if(salesPayment.getStatus() != SalesPaymentPO.STATUS_PAIDFOR_INT){
+				throw new FLException(150036, "款项状态不可操作");
+			}
+			
+			//补款(3)和补款退款(5)的时候 , 补款确认时定金必须是已确认的状态
+			if(salesPayment.getType() == SalesPaymentPO.TYPE_REPLENISHMENT_INT || salesPayment.getType() == SalesPaymentPO.TYPE_MAKEAREFUND_INT){
+				if (salesPayment.getSales().getDepositpayStatus() == SalesPO.DESPOSITPAYSTATUS_PAYED_SHORT) {
+					throw new FLException(150036, "款项状态不可操作");
+				}
 			}
 			
 			//不可退定金(后增加的8)也会生成预结算信息
@@ -1111,6 +1119,20 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		}
 
 		salesReceiptDao.update(salesReceiptPO);
+		
+	}
+	
+	public PaymentVO getPaymentVO(SalesReceiptVO salesReceiptVO, SalesReceiptPO salesReceiptPO, SalesPO sales) {
+		
+		PaymentVO paymentVO = new PaymentVO();
+
+		paymentVO.setOrderId(sales.getOrderId());
+		paymentVO.setPaymentType(PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT);
+		paymentVO.setComment(String.format("销售单:%d", sales.getSid()));
+		paymentVO.setTransfer(salesReceiptVO.getAdvance());
+		paymentVO.setUniqueid("SA" + salesReceiptPO.getSrId());
+		
+		return paymentVO;
 		
 	}
 

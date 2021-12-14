@@ -162,7 +162,7 @@ public class ApprovalMaterialRefundServiceImpl implements ApprovalMaterialRefund
 		String refundType = approvalMaterialRefundVO.getType() == MaterialPO.STATUS_TYPE_FULLREFUND_INT ? "全退" : approvalMaterialRefundVO.getType() == MaterialPO.STATUS_TYPE_DAODAN_INT ? "倒单" : "退货";
 		String content = String.format("装修单号:%s,主材单号:%s,品牌:%s,退款金额:%.3f,应退金额:%s,类型:%s", materialPO.getOrderId(), materialPO.getNo(), materialPO.getBrand(), Arith.div(approvalMaterialRefundVO.getRefund(), 1000.0), Arith.div(approvalMaterialRefundVO.getReferMoney(), 1000.0), refundType);
 
-		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(mid), ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT, content, approvalVO.getComment(), company);
+		approvalPO = new ApprovalPO().init(sender, receiver, materialPO.getOrderId(), String.valueOf(mid), ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT, content, approvalVO.getComment(), company);
 
 		approvalDao.save(approvalPO);
 

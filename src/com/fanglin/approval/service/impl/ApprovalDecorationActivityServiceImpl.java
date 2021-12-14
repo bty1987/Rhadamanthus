@@ -102,7 +102,7 @@ public class ApprovalDecorationActivityServiceImpl implements ApprovalDecoration
 
 		String content = String.format("装修单号:%s,参与活动:%s", approvalDecorationActivityVO.getOrderId(), approvalDecorationActivityVO.getActivityName());
 
-		approvalPO = new ApprovalPO().init(sender, receiver, orderId, ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT, content, approvalVO.getComment(), company);
+		approvalPO = new ApprovalPO().init(sender, receiver, orderId, orderId, ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT, content, approvalVO.getComment(), company);
 
 		approvalDao.save(approvalPO);
 

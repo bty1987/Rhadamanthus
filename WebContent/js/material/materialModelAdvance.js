@@ -34,7 +34,7 @@ $(function () {
 
             var $btnStatus = $('<div></div>').addClass('pull-right');
             var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type": "checkbox"});
-            var $span = $('<span></span>').addClass('lbl');
+            var $span = $('<span></span>').addClass('lbl status-lbl');
             var propertyArr = [
                 ["编号:", v.materialModelNo, "grey"],
                 ["品类:", v.materialTypeName, "grey"],

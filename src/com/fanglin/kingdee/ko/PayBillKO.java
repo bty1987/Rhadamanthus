@@ -20,7 +20,7 @@ public class PayBillKO extends Bean implements Serializable {
 
 	private static final long serialVersionUID = 7829721958379709823L;
 
-	public static String FormId = "AP_PAYBILL";
+	public static String FormId = "AP_PAYBILL"; //付款单
 
 	private OrganizationKO FBillTypeID; //单据类型
 	

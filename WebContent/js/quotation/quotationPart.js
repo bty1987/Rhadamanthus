@@ -508,6 +508,12 @@ var QuotationDetail = (function(){
 			com.focusPage("#girth", "#functionAreaModal").val($domain.attr("data-girth"));
 			com.focusPage("#area", "#functionAreaModal").val($domain.attr("data-area"));
 			com.focusPage("#height", "#functionAreaModal").val($domain.attr("data-height"));
+			com.focusPage("#holeLength", "#functionAreaModal").val($domain.attr("data-holeLength"));
+			com.focusPage("#holeHeight", "#functionAreaModal").val($domain.attr("data-holeHeight"));
+			com.focusPage("#windowLength", "#functionAreaModal").val($domain.attr("data-windowLength"));
+			com.focusPage("#windowHeight", "#functionAreaModal").val($domain.attr("data-windowHeight"));
+			com.focusPage("#beamLength", "#functionAreaModal").val($domain.attr("data-beamLength"));
+			com.focusPage("#beamHeight", "#functionAreaModal").val($domain.attr("data-beamHeight"));
 			
 			quo.quoModals.$domainEditModal.modal("show");
 
@@ -528,6 +534,12 @@ var QuotationDetail = (function(){
 				var _girth = com.focusPage("#girth", "#functionAreaModal").val();
 				var _area = com.focusPage("#area", "#functionAreaModal").val();
 				var _height = com.focusPage("#height", "#functionAreaModal").val();
+				var _holeLength = com.focusPage("#holeLength", "#functionAreaModal").val();
+				var _holeHeight = com.focusPage("#holeHeight", "#functionAreaModal").val();
+				var _windowLength = com.focusPage("#windowLength", "#functionAreaModal").val();
+				var _windowHeight = com.focusPage("#windowHeight", "#functionAreaModal").val();
+				var _beamLength = com.focusPage("#beamLength", "#functionAreaModal").val();
+				var _beamHeight = com.focusPage("#beamHeight", "#functionAreaModal").val();
 
 				var _params = $.extend({}, {
 					"quotationFunctionArea.functionAreaName" : _dname,//功能区名
@@ -537,6 +549,12 @@ var QuotationDetail = (function(){
 					"quotationFunctionArea.quotationFunctionAreaParam.girth" : _girth,
 					"quotationFunctionArea.quotationFunctionAreaParam.area" : _area,
 					"quotationFunctionArea.quotationFunctionAreaParam.height" : _height,
+					"quotationFunctionArea.quotationFunctionAreaParam.holeLength" : _holeLength,
+					"quotationFunctionArea.quotationFunctionAreaParam.holeHeight" : _holeHeight,
+					"quotationFunctionArea.quotationFunctionAreaParam.windowLength" : _windowLength,
+					"quotationFunctionArea.quotationFunctionAreaParam.windowHeight" : _windowHeight,
+					"quotationFunctionArea.quotationFunctionAreaParam.beamLength" : _beamLength,
+					"quotationFunctionArea.quotationFunctionAreaParam.beamHeight" : _beamHeight,
 				}, quo.basicParams);
 
 				com.post(api.quotation.updateQuotationFunctionArea, _params, function(res){
@@ -701,40 +719,28 @@ var QuotationDetail = (function(){
 				$.each($darr, function(i, v){
 				    
 				    var input = $(v);
+				    var params = input.parents(".functionAreaItem").find("[name='quoteparam']");
 				    
-					_param['quotationFunctionAreas[' + i + '].id'] = input.val();
+				    _param['quotationFunctionAreas[' + i + '].id'] = input.val();
 				    
-				    var ainput = input.parent().next(".a");
-				    if(ainput.val()){
-				        _param['quotationFunctionAreas[' + i + '].quotationFunctionAreaParam.girth'] = ainput.val();
-				    }
-				    
-				    var binput = ainput.next(".b");
-                    if(binput.val()){
-                        _param['quotationFunctionAreas[' + i + '].quotationFunctionAreaParam.area'] = binput.val();
-                    }
-                    
-                    var cinput = binput.next(".c");
-                    if(cinput.val()){
-                        _param['quotationFunctionAreas[' + i + '].quotationFunctionAreaParam.height'] = cinput.val();
-                    }
-                    
-                    var dinput = cinput.next(".d");
-                    if(dinput.val()){
-                        _param['quotationFunctionAreas[' + i + '].quotationFunctionAreaParam.holeLength'] = dinput.val();
-                    }
-                    
-                    var einput = dinput.next(".e");
-                    if(einput.val()){
-                        _param['quotationFunctionAreas[' + i + '].quotationFunctionAreaParam.holeHeight'] = einput.val();
-                    }
-				    
+				    $.each(params, function(j, v){
+				        
+				        var e = com.focusPage(v);
+				        var param = e.attr("param")
+				        var parama = e.attr("parama");
+				        
+				        if(e.val() == '') return true;
+				        
+				        _param['quotationFunctionAreas[' + i + '].quotationFunctionAreaParam.' + param] = e.val();
+				    });
 				});
 				
 				com.post(api.quotation.addQuotationFunctionAreaByFunctionAreaIds, _param, function(data){
 					data.quotationFunctionAreas.length && $.each(data.quotationFunctionAreas, function(i, v){
+					    
 						var sum = 0, sumd = 0,sumdp = 0, $dmoney;
 						var $domain = painter.createdomain(v);
+						
 						that.insertDomainByOrder(v.functionAreaOrder, $domain, $aimDomains, false);
 						sum = parseFloat($domain.attr('data-undisPrice'));
 						sumdp = parseFloat($domain.attr('data-disPrice'));
@@ -1463,10 +1469,19 @@ var QuotationDetail = (function(){
 					v.areaType = dv.type;
 					
 					v.formula = v.formula ? v.formula : "0";
-					v.formula = v.formula.format({"a": param.girth, "b": param.area, "c": param.height, "d": param.holeLength, "e": param.holeHeight});
 					
-					v.formula = utils.changeThrDecimal(eval(v.formula))
-					v.num = utils.changeThrDecimal(eval(v.formula))
+					if(v.formula.indexOf("{") != -1 || v.formula.indexOf("}") != -1){
+					    v.formula = com.format(v.formula, {
+	                        "a": param.girth, "b": param.area, "c": param.height, 
+	                        "d": param.holeLength, "e": param.holeHeight, 
+	                        "f": param.windowLength, "g": param.windowHeight, 
+	                        "h": param.beamLength, "i": param.beamHeight, 
+	                    });
+	                    
+	                    v.formula = utils.changeThrDecimal(isNaN(eval(v.formula)) ? 0 : eval(v.formula))
+					}
+					
+					v.num = utils.changeThrDecimal(isNaN(eval(v.formula)) ? 0 : eval(v.formula))
 					
 					var $item = that.createQuote(i + 1, v).appendTo($list);
 					
@@ -1696,17 +1711,21 @@ var QuotationDetail = (function(){
 		//创建添加功能区中的功能区
 		createDomainTemplete : function(v){
 		    
-		    var $div = $('<div></div>').addClass('col-xs-12');
+		    var $div = $('<div></div>').addClass('col-xs-12 functionAreaItem');
 		    
 			var $label = $('<label></label>').addClass('col-xs-2').appendTo($div);
 			var $radio = $('<input>').addClass('ace').attr({"name" : "quotempl", "type" : "checkbox"}).val(v.faid).appendTo($label);
 			var $span = $('<span></span>').addClass('lbl').text(v.name).appendTo($label);
 			
-			var ainput = $('<input></input>').addClass("col-xs-1 a").attr({"type": "text", "placeholder": "周长", "name": "quoteparam"}).appendTo($div);
-			var binput = $('<input></input>').addClass("col-xs-1 b").attr({"type": "text", "placeholder": "面积", "name": "quoteparam"}).appendTo($div);
-			var cinput = $('<input></input>').addClass("col-xs-1 c").attr({"type": "text", "placeholder": "举架", "name": "quoteparam"}).appendTo($div);
-			var dinput = $('<input></input>').addClass("col-xs-1 d").attr({"type": "text", "placeholder": "洞长", "name": "quoteparam"}).appendTo($div);
-			var einput = $('<input></input>').addClass("col-xs-1 e").attr({"type": "text", "placeholder": "洞高", "name": "quoteparam"}).appendTo($div);
+			var ainput = $('<input></input>').addClass("col-xs-1 a").attr({"type": "text", "placeholder": "周长", "name": "quoteparam", "param": "girth", "parama": "a"}).appendTo($div);
+			var binput = $('<input></input>').addClass("col-xs-1 b").attr({"type": "text", "placeholder": "面积", "name": "quoteparam", "param": "area", "parama": "b"}).appendTo($div);
+			var cinput = $('<input></input>').addClass("col-xs-1 c").attr({"type": "text", "placeholder": "举架", "name": "quoteparam", "param": "height", "parama": "c"}).appendTo($div);
+			var dinput = $('<input></input>').addClass("col-xs-1 d").attr({"type": "text", "placeholder": "洞长", "name": "quoteparam", "param": "holeLength", "parama": "d"}).appendTo($div);
+			var einput = $('<input></input>').addClass("col-xs-1 e").attr({"type": "text", "placeholder": "洞高", "name": "quoteparam", "param": "holeHeight", "parama": "e"}).appendTo($div);
+			var finput = $('<input></input>').addClass("col-xs-1 f").attr({"type": "text", "placeholder": "窗高", "name": "quoteparam", "param": "windowLength", "parama": "f"}).appendTo($div);
+            var ginput = $('<input></input>').addClass("col-xs-1 g").attr({"type": "text", "placeholder": "窗长", "name": "quoteparam", "param": "windowHeight", "parama": "g"}).appendTo($div);
+            var hinput = $('<input></input>').addClass("col-xs-1 h").attr({"type": "text", "placeholder": "粱高", "name": "quoteparam", "param": "beamLength", "parama": "h"}).appendTo($div);
+            var iinput = $('<input></input>').addClass("col-xs-1 i").attr({"type": "text", "placeholder": "梁长", "name": "quoteparam", "param": "beamHeight", "parama": "i"}).appendTo($div);
 			
 			return $div;
 		},

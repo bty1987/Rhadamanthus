@@ -89,5 +89,21 @@ $.extend(api, {personel: {
     
     pageMerchant: {url: "pageMerchant.do"},
     queryMerchantByPinyin: {url: "queryMerchantByPinyin.do"},
+    
+    pageRecruitment:{url: "pageRecruitment.do"},
+    addRecruitment:{url: "addRecruitment.do"},
+    queryRecruitmentByRid: {url: "queryRecruitmentByRid.do"},
+    updateRecruitment: {url: "updateRecruitment.do"},
+
+    
+    addRecruitmentEducation:{url: "addRecruitmentEducation.do"},
+    queryRecruitmentEducation: {url: "queryRecruitmentEducation.do"},
+    updateRecruitmentEducation: {url: "updateRecruitmentEducation.do"},
+    deleteRecruitmentEducation: {url: "deleteRecruitmentEducation.do"},
+    
+    addRecruitmentOperation:{url: "addRecruitmentOperation.do"},
+    queryRecruitmentOperation: {url: "queryRecruitmentOperation.do"},
+    updateRecruitmentOperation: {url: "updateRecruitmentOperation.do"},
+    deleteRecruitmentOperation: {url: "deleteRecruitmentOperation.do"},
 
 }});

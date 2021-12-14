@@ -57,7 +57,9 @@ public class ConstructionNodeDaoImpl extends DaoImpl<ConstructionNodePO> impleme
 
 				if (field.equals("name")) {
 					query.add(query.getCriterion("name", data, op));
-				}
+				}else if ("status".equals(filter.getField())) {
+			          query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
+		        }
 			}
 		}
 	}

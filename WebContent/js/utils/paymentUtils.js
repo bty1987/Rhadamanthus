@@ -110,12 +110,7 @@ var paymentUtils = {
 
         payment.items.advanceCheckbox.parent().removeClass("hide").children(':first').removeAttr("disabled");
 
-        //款项退款时
-        if (type == 1) {
-            payment.items.advanceCheckbox.attr("disabled", "disabled");
-            return false;
-        }
-        
+        //款项历史时
         if (type == 2) {
             payment.items.advanceCheckbox.attr("disabled", "disabled");
             return false;
@@ -128,7 +123,7 @@ var paymentUtils = {
     },
     paramAdvance: function(payment, receipt, name, options, advanceType, type){
         
-        if(type == 1) return 0; // 0: 收款 , 1: 退款 , 2: 更新
+        //if(type == 1) return 0; // 0: 收款 , 1: 退款 , 2: 更新
         
         if(type == 2) {
             
@@ -145,7 +140,7 @@ var paymentUtils = {
         var advance = parseFloat(payment.items.advance.val());
         var advanceType = payment.items.advanceType.val();
         
-        if(recharge > 0 && recharge < advance) return -1;
+        if(type == 0 && recharge > 0 && recharge < advance) return -1;
         
         options[name + ".advanceType"] = advanceType;
         options[name + ".advance"] = advance;
@@ -706,6 +701,185 @@ var paymentUtils = {
                 paymentUtils.setTime($id, countdown)
             }, 1000)
         }
+    },
 
+    //收据页面生成pdf文件
+    makeContract: function(target, rtid, orderId, paymentType) {
+
+        target.style.background = "#FFFFFF";  //避免生成的PDF页面底部出现黑色背景
+        
+        var paymentContract = null;
+
+        html2canvas(target, {
+            onrendered:function(canvas) {
+                var contentWidth = canvas.width;
+                var contentHeight = canvas.height;
+
+                //一页pdf显示html页面生成的canvas高度;
+                var pageHeight = contentWidth / 841.89 * 592.28 ;
+
+                //未生成pdf的html页面高度
+                var leftHeight = contentHeight;
+                //页面偏移
+                var position = 0;
+                //a4纸的尺寸[595.28,841.89]，html页面生成的canvas在pdf中图片的宽高
+                var imgWidth = 841.89;
+                var imgHeight = 841.89/contentWidth * contentHeight;
+
+                var pageData = canvas.toDataURL('image/jpeg', 1.0);
+                //l表示横版，p：纵向 （默认纵向）
+                var pdf = new jsPDF('l', 'pt', [imgWidth, imgHeight]);
+
+                //有两个高度需要区分，一个是html页面的实际高度，和生成pdf的页面高度(841.89)
+                //当内容未超过pdf一页显示的范围，无需分页
+                if (leftHeight < pageHeight) {
+                    pdf.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight );
+                } else {
+                    while(leftHeight > 0) {
+                        pdf.addImage(pageData, 'JPEG', 0, position, imgWidth, imgHeight);
+                        leftHeight -= pageHeight;
+                        position -=  595.28;
+                        //避免添加空白页
+                        if(leftHeight > 0) {
+                            pdf.addPage();
+                        }
+                    }
+                }
+
+                var file = paymentUtils.dataURLtoFile(pdf.output("datauristring"), "1.pdf");
+
+                var formData = new FormData();
+                formData.append("strutsUploads", file);
+
+                $.ajax({
+                    url : config.communion + "uploadOther.do",
+                    type : "POST",
+                    data : formData,
+                    processData: false,
+                    contentType: false
+                }).success(function(result) {
+                    var options = {
+                        "paymentContract.rtid": rtid,
+                        "paymentContract.orderId": orderId,
+                        "paymentContract.paymentType": paymentType,
+                        "paymentContract.viewpdf": "http://www.fanglinserver.com/" + result.resUrl
+                    };
+
+                    com.post(api.payment.addPaymentContract, options, function(res){
+
+                        com.showAlert(com.info, "已完成");
+
+                        paymentContract = paymentUtils.showContractBtn(rtid, paymentType, orderId);
+                    })
+                })
+            }
+        });
+        
+        return paymentContract;
+    },
+
+    dataURLtoFile: function(dataUrl, fileName){
+        var arr = dataUrl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        while(n--){
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new File([u8arr], fileName, {type:mime});
+    },
+
+    showContractBtn: function(rtid, paymentType, orderId) {
+        
+        var options = {
+            "paymentContract.rtid": rtid,
+            "paymentContract.paymentType": paymentType
+        };
+        var paymentContract = null;
+        
+        $("#signBtns button").hide();
+
+        com.post(api.payment.queryPaymentContract, options, function(res){
+            paymentContract = res.paymentContract;
+        }, function(){}, false);
+        
+        if(!paymentContract){
+            $("#createSign").show().click(function(){
+                var target = $("#decorationPaymentReceipt")[0]; //避免生成的PDF页面底部出现黑色背景
+                paymentContract = paymentUtils.makeContract(target, params.decorationReceiptDrId, orderId, 1);
+            });
+        }else if(paymentContract && paymentContract.status == 0){
+            $("#customerSign").show().click(function(){
+                paymentUtils.customerSign(paymentContract, params.cid);
+            });
+            $("#companySign").show().click(function(){
+                $("#paymentContractModal").modal("show");
+            });
+            $("#customerSignCode").show().click(function(){
+                paymentUtils.customerSignCode(paymentContract);
+            });
+            $("#customerSignSend").show().click(function(){
+                paymentUtils.customerSignSend(paymentContract);
+            });
+            
+            $("#companySignBtn").click(function () {
+                paymentUtils.companySign(paymentContract, $("#signets").val());
+                $("#paymentContractModal").modal("hide");
+            });
+        }
+        
+        return paymentContract;
+    },
+    
+    customerSign: function(paymentContract, customerId){
+        
+        com.post(api.payment.signPaymentContractForCustomer, {"paymentContract.pcid" : paymentContract.pcid, "customer.cid": customerId}, function (res) {
+            com.closePopup();
+            com.popup4frame("客户签", res.redirect, null, function(){
+                com.popup("专用收款收据__装修单号:", api.index.decorationPaymentReceiptIndex.url, function () {
+                    parent.layer.getFrameIndex(window.name);
+                }, null, true);
+            });
+        });
+    },
+    
+    companySign: function(paymentContract, signId){
+        com.post(api.payment.signPaymentContractForCompany, {"paymentContract.pcid" : paymentContract.pcid, "signet.sid": signId});
+        $("#decorationReceiptContractModal").modal("hide");
+    },
+    
+    customerSignCode: function(paymentContract){
+        paymentUtils.showQRCode("qrcode", "http://www.fanglinserver.com/platform/" + "/views/contract/redirect.html?dcid=" + paymentContract.pcid + "&type=2&module=payment", "paymentContractQrcodeModal");
+    },
+    
+    customerSignSend: function(paymentContract){
+        com.showConfirm("是否发送签订通知", function () {
+            com.post(api.payment.sendPaymentContract, {"paymentContract.pcid": paymentContract.pcid, "paymentContract.paymentType" : 2}, function(res){
+                com.showAlert(com.info, "发送成功");
+            });
+        });
+    },
+    
+    bindSignet: function (id) {
+        com.post(api.data.querySignet, {}, function (res) {
+            var signets = res.signets;
+
+            if (signets.length == 0) return;
+
+            for (var i = 0; i < signets.length; i++) {
+                var item = signets[i];
+                $("<option value=" + item["sid"] + ">" + item["name"] + "</option>").appendTo(id);
+            }
+        });
+    },
+
+    showQRCode: function (id, url, modal){
+
+        $("#"+id).html("").qrcode({
+            render: "canvas",
+            width: 150,
+            height: 150,
+            text: url
+        });
+        $("#"+id).css({"text-align": "center", "padding-top": "10px"});
+        $("#"+modal).modal('show');
     }
 };

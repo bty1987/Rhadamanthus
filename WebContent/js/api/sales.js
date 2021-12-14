@@ -349,10 +349,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance"]
-            },{
-                result: "paging-data-sales",
-                args: ["total","maling","coupon","depositpay","fullpay","amount","venderMaling"]
+                args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
             }]
         },
         advSalesBalance: {url: "advSalesBalance.do"},
@@ -403,7 +400,7 @@ $.extend(api, {
 
         updateSalesDeliveryItem:{url:"updateSalesDeliveryItem.do",},
 
-        addSalesPicture:{url:"addSalesPicture.do"},
+        addSalesPicture:{url:"addSalesPicture.do", intercept: true},
         querySalesPicture:{url:"querySalesPicture.do"},
         deleteSalesPicture:{url:"deleteSalesPicture.do"},
         

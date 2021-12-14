@@ -26,11 +26,15 @@ import com.fanglin.data.common.vo.ContractVO;
 import com.fanglin.data.common.vo.SignetVO;
 import com.fanglin.data.po.ContractPO;
 import com.fanglin.data.po.SignetPO;
+import com.fanglin.decoration.dao.DecorationActivityDao;
+import com.fanglin.decoration.dao.DecorationActivityItemDao;
 import com.fanglin.decoration.dao.DecorationAdditionDao;
 import com.fanglin.decoration.dao.DecorationBelongDao;
 import com.fanglin.decoration.dao.DecorationContractDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.dao.DecorationOperateDao;
+import com.fanglin.decoration.po.DecorationActivityItemPO;
+import com.fanglin.decoration.po.DecorationActivityPO;
 import com.fanglin.decoration.po.DecorationAdditionPO;
 import com.fanglin.decoration.po.DecorationBelongPO;
 import com.fanglin.decoration.po.DecorationContractPO;
@@ -46,10 +50,13 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.quotation.dao.AddReduceDao;
+import com.fanglin.quotation.dao.ProtationDao;
 import com.fanglin.quotation.dao.QuotationDao;
+import com.fanglin.quotation.po.ProtationPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
@@ -104,6 +111,15 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 	@Autowired
 	private SystemConfigDao systemConfigDao;
+
+	@Autowired
+	private DecorationActivityDao decorationActivityDao;
+
+	@Autowired
+	private ProtationDao protationDao;
+
+	@Autowired
+	private DecorationActivityItemDao decorationActivityItemDao;
 
 	@Override
 	public List<DecorationContractVO> queryDecorationContractByOrderId(DecorationContractVO decorationContract) throws FLException {
@@ -253,7 +269,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(130028, "合同状态不可操作");
 		}
 
-		Signature.autosign(signetPO.getSignno(), signetPO.getKeyword(), decorationContractPO);
+		Signature.autosign(signetPO.getSignno(), signetPO.getKeyword(), decorationContractPO, signetPO.getSignid());
 
 		decorationContractPO.setComsignTime(DateUtil.getDateToTimestamp(new Date()));
 
@@ -551,6 +567,24 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 			throw new FLException(140005, "订单合同不能修改");
 		}
 
+		if (decorationActivityDao.countDecorationActivity(orderId, null) == 0) {
+			throw new FLException(140033, "订单活动信息不存在");
+		}
+
+		if (decorationActivityDao.countDecorationActivity(orderId, DecorationActivityPO.STATUS_INIT_INT) > 0) {
+			throw new FLException(140060, "活动未锁定");
+		}
+
+		ProtationPO protationPO = protationDao.queryProtationForDefaultByOrderId(orderId);
+
+		if (protationPO == null) {
+			throw new FLException(200046, "预签不存在");
+		}
+
+		if (protationPO.getStatus() != ProtationPO.STATUS_LOCK_INT) {
+			throw new FLException(200047, "预签不可操作");
+		}
+
 		List<DecorationBelongPO> designerOrderBelongInfoPOs = decorationBelongDao.queryDecorationBelongForCurrentByOrderIdAType(orderId, DecorationBelongPO.BELONGTYPE_DESIGN_INT);
 		List<DecorationBelongPO> salemsanOrderBelongInfoPOs = decorationBelongDao.queryDecorationBelongForCurrentByOrderIdAType(orderId, DecorationBelongPO.BELONGTYPE_SALESMAN_INT);
 
@@ -580,7 +614,9 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 		decorationAdditionDao.update(decorationAdditionPO);
 
-		decorationPO.setPrecontractPrice(decorationVO.getPrecontractPrice());
+		long couponCut = decorationActivityItemDao.amountDecorationActivityItemForIsPayment(orderId, DecorationActivityItemPO.ISPAYMENT_CAL_INT);
+
+		decorationPO.setPrecontractPrice(Arith.sub(protationPO.getTotalPrice(), couponCut));
 		decorationPO.setPrecontractTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationPO.setStatus(DecorationPO.STATUS_PROSIGN_INT); // 预签
 

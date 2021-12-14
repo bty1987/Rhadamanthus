@@ -88,6 +88,8 @@ public class CustomerDaoImpl extends DaoImpl<CustomerPO> implements CustomerDao 
 					query.add(query.getCriterion("customerName", filter));
 				} else if ("relationshipType".equals(filter.getField())) {
 					query.add(query.getCriterion("relationshipType", filter));
+				}else if("type".equals(filter.getField())){
+					query.add(Restrictions.eq("type", Short.valueOf(filter.getData())));
 				}
 			}
 		}

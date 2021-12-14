@@ -12,12 +12,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import javax.imageio.ImageIO;
 
 import org.apache.commons.codec.binary.Base64;
-import org.springframework.stereotype.Service;
 
 import Decoder.BASE64Decoder;
 
@@ -40,10 +41,11 @@ import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.data.po.SignetPO;
 import com.fanglin.fadada.bean.Contract;
+import com.fanglin.fadada.service.ExtendService;
 import com.fanglin.fadada.tools.FddEncryptTool;
+import com.fanglin.fadada.vo.SignatureVO;
 import com.fanglin.utils.SystemConfig;
 
-@Service("signature")
 public class Signature {
 
 	private static String APPID = "402616";
@@ -70,6 +72,117 @@ public class Signature {
 
 		} catch (Throwable e) {
 			throw new RuntimeException("config-file cannot be load: " + configFilePathName);
+		}
+	}
+
+	public static List<SignatureVO> query(SignatureVO signatureVO) throws FLException {
+
+		String customerId = signatureVO.getCustomerId();
+
+		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
+
+		String result = ExtendService.invokequerySignature(base, customerId);
+
+		JSONObject response = JSONObject.parseObject(result);
+
+		if (response == null) {
+			throw new FLException(130066, "印章信息获取失败");
+		}
+
+		if (response.getInteger("code") != 1) {
+			System.out.println(result);
+			throw new FLException(130066, String.format("印章信息获取失败, %s", response.getString("msg")));
+		}
+
+		List<SignatureVO> signatures = new ArrayList<SignatureVO>();
+
+		JSONArray data = response.getJSONArray("data");
+
+		for (int i = 0; i < data.size(); i++) {
+			JSONObject signature = data.getJSONObject(i);
+
+			signatureVO = new SignatureVO().jtv(signature);
+
+			signatureVO.setCustomerId(customerId);
+
+			signatures.add(signatureVO);
+		}
+
+		return signatures;
+	}
+
+	public static SignatureVO add(SignatureVO signatureVO) throws FLException {
+
+		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
+
+		String customerId = signatureVO.getCustomerId();
+		String path = signatureVO.getPath();
+
+		String image = null;
+
+		try {
+			image = FddEncryptTool.ImageToBase64(path);
+		} catch (Exception e) {
+
+			System.out.println(path);
+			System.out.println(e.getMessage());
+
+			throw new FLException(130074, "图片获取失败");
+		}
+
+		String result = ExtendService.invokeaddSignature(base, customerId, image);
+
+		JSONObject response = JSONObject.parseObject(result);
+
+		if (response == null) {
+			throw new FLException(130067, "印章添加失败");
+		}
+
+		if (response.getInteger("code") != 1) {
+			System.out.println(result);
+			throw new FLException(130067, String.format("印章添加失败, %s", response.getString("msg")));
+		}
+
+		JSONObject signature = response.getJSONObject("data");
+
+		signatureVO.setImage(image);
+
+		return signatureVO.jtv(signature);
+	}
+
+	public static void defaults(SignatureVO signatureVO) throws FLException {
+
+		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
+
+		String result = ExtendService.invokedefaultSignature(base, signatureVO.getCustomerId(), signatureVO.getSignatureId());
+
+		JSONObject response = JSONObject.parseObject(result);
+
+		if (response == null) {
+			throw new FLException(130068, "印章默认失败");
+		}
+
+		if (response.getInteger("code") != 1) {
+			System.out.println(result);
+			throw new FLException(130068, String.format("印章默认失败, %s", response.getString("msg")));
+		}
+	}
+
+	public static void delete(SignatureVO signatureVO) throws FLException {
+
+		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
+
+		String result = ExtendService.invokedeleteSignature(base, signatureVO.getCustomerId(), signatureVO.getSignatureId());
+
+		JSONObject response = JSONObject.parseObject(result);
+
+		if (response == null) {
+			throw new FLException(130069, "印章删除失败");
+		}
+
+		if (response.getInteger("code") != 1) {
+			System.out.println(result);
+			throw new FLException(130069, String.format("印章删除失败, %s", response.getString("msg")));
 		}
 	}
 
@@ -374,7 +487,29 @@ public class Signature {
 		contract.viewpdf(response.getString("viewpdf_url"));
 	}
 
+	public static void upload(Contract contract, String path) throws FLException {
+
+		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
+
+		String result = base.invokeUploadDocs(contract.contentCode(), "", null, path, ".pdf");
+
+		System.out.println(result);
+
+		JSONObject response = JSONObject.parseObject(result);
+
+		if (response == null) {
+			throw new FLException(130027, "客户认证失败,请求错误");
+		}
+
+		System.out.println(result);
+
+	}
+
 	public static void autosign(String signno, String keyword, Contract contract) throws FLException {
+		Signature.autosign(signno, keyword, contract, null);
+	}
+
+	public static void autosign(String signno, String keyword, Contract contract, String signatureId) throws FLException {
 
 		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
 
@@ -388,9 +523,39 @@ public class Signature {
 		req.setSign_keyword(keyword);
 
 		req.setClient_role("1"); // 客户角色 , 接入平台
+		req.setPosition_type("0");
 		req.setKeyword_strategy("0"); // 签章策略 , 0: 所有 , 1: 第一个 , 2: 最后一个
 
-		String result = base.invokeExtSignAuto(req);
+		String result = (signatureId == null || "".equals(signatureId)) ? base.invokeExtSignAuto(req) : base.invokeExtSignAuto(req, signatureId);
+
+		JSONObject response = JSONObject.parseObject(result);
+
+		if (response == null) {
+			throw new FLException(130027, "客户认证失败,请求错误");
+		}
+
+		if (!"1000".equals(response.getString("code"))) {
+			System.out.println(result);
+			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
+		}
+	}
+
+	public static void autosign(String signno, Contract contract, String signatureId, double x, double y) throws FLException {
+		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
+
+		ExtsignReq req = new ExtsignReq();
+
+		req.setCustomer_id(signno);
+		req.setContract_id(contract.contentCode());
+		req.setTransaction_id(String.format("%s%s", signno, contract.contentCode()));
+
+		req.setDoc_title(contract.title()); // 文档标题
+
+		req.setClient_role("1"); // 客户角色 , 接入平台
+		req.setPosition_type("1");
+		req.setSignature_positions(String.format("[{\"pagenum\":\"0\",\"x\":\"%.0f\",\"y\":\"%.0f\"}]", x, y));
+
+		String result = (signatureId == null || "".equals(signatureId)) ? base.invokeExtSignAuto(req) : base.invokeExtSignAuto(req, signatureId);
 
 		JSONObject response = JSONObject.parseObject(result);
 

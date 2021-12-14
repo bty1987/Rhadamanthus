@@ -46,7 +46,7 @@ public class UserCompanyServiceImpl implements UserCompanyService {
 
 			BeanUtil.copyProperties(userCompanyPO, userCompanyVO, Arrays.asList("company"));
 
-			BeanUtil.copyProperties(userCompanyPO.getCompany(), userCompanyVO.getCompany(), Arrays.asList("cid"));
+			BeanUtil.copyProperties(userCompanyPO.getCompany(), userCompanyVO.getCompany(), Arrays.asList("cid", "drganization", "srganization"));
 
 			try {
 				userCompanyVO.getCompany().setCid(AESHelper.encrypt(FormatUtil.encodeCompany(userCompanyPO.getCompany().getCid()), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));

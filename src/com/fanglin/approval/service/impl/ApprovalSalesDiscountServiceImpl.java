@@ -85,7 +85,7 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 
 		String content = String.format("装修单号:%s,销售单号:%s,应收金额:%.3f", salesPO.getOrderId(), salesPO.getNo(), Arith.div(approvalSalesDiscountVO.getReferMoney(), 1000.0));
 
-		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(sid), ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT, content, approvalVO.getComment(), company);
+		approvalPO = new ApprovalPO().init(sender, receiver, salesPO.getOrderId(), String.valueOf(sid), ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT, content, approvalVO.getComment(), company);
 
 		approvalDao.save(approvalPO);
 

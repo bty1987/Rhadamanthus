@@ -42,4 +42,6 @@ public interface DecorationPaymentDao extends Dao<DecorationPaymentPO> {
 	
 	public long amountDecorationPayment(String orderId, Short[] paymentStatus, short oneType, short twoType);
 	
+	public int countDecorationPayment(String orderId, List<Short> onetypes, List<Short> twotypes, List<Short> statuses);
+	
 }

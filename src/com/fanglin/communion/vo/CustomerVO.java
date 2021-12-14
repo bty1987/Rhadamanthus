@@ -30,6 +30,10 @@ public class CustomerVO implements Serializable {
 
 	private String relationshipType;
 
+	private Short type;
+
+	private Short status;
+
 	private String photoPath;
 
 	private String signPath;
@@ -38,19 +42,21 @@ public class CustomerVO implements Serializable {
 
 	private String identityPathB;
 
-	private Short status;
-
-	private Long balance;
-
-	private Long materialBalance;
-
-	private Long zhenglinBalance;
-
-	private Long projectBalance;
-
 	private String phone;
 
 	private Integer company;
+
+	private String companyNo;
+
+	private String companyName;
+
+	private String companyAddr;
+
+	private String companyPhone;
+
+	private String companyBank;
+
+	private String companyBankno;
 
 	public CustomerVO() {
 		super();
@@ -197,38 +203,6 @@ public class CustomerVO implements Serializable {
 		this.status = status;
 	}
 
-	public Long getBalance() {
-		return balance;
-	}
-
-	public void setBalance(Long balance) {
-		this.balance = balance;
-	}
-
-	public Long getMaterialBalance() {
-		return materialBalance;
-	}
-
-	public void setMaterialBalance(Long materialBalance) {
-		this.materialBalance = materialBalance;
-	}
-
-	public Long getZhenglinBalance() {
-		return zhenglinBalance;
-	}
-
-	public void setZhenglinBalance(Long zhenglinBalance) {
-		this.zhenglinBalance = zhenglinBalance;
-	}
-
-	public Long getProjectBalance() {
-		return projectBalance;
-	}
-
-	public void setProjectBalance(Long projectBalance) {
-		this.projectBalance = projectBalance;
-	}
-
 	public String getPhone() {
 		return phone;
 	}
@@ -239,6 +213,62 @@ public class CustomerVO implements Serializable {
 
 	public Integer getCompany() {
 		return company;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
+	}
+
+	public String getCompanyNo() {
+		return companyNo;
+	}
+
+	public void setCompanyNo(String companyNo) {
+		this.companyNo = companyNo;
+	}
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+
+	public String getCompanyAddr() {
+		return companyAddr;
+	}
+
+	public void setCompanyAddr(String companyAddr) {
+		this.companyAddr = companyAddr;
+	}
+
+	public String getCompanyPhone() {
+		return companyPhone;
+	}
+
+	public void setCompanyPhone(String companyPhone) {
+		this.companyPhone = companyPhone;
+	}
+
+	public String getCompanyBank() {
+		return companyBank;
+	}
+
+	public void setCompanyBank(String companyBank) {
+		this.companyBank = companyBank;
+	}
+
+	public String getCompanyBankno() {
+		return companyBankno;
+	}
+
+	public void setCompanyBankno(String companyBankno) {
+		this.companyBankno = companyBankno;
 	}
 
 	public void setCompany(Integer company) {

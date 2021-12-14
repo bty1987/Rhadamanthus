@@ -29,6 +29,8 @@ public class OccessoriesItemPO implements Serializable {
 	
 	private int num;
 	
+	private int refnum;
+	
 	public OccessoriesItemPO(){
 		super();
 	}
@@ -72,6 +74,15 @@ public class OccessoriesItemPO implements Serializable {
 		this.num = num;
 	}
 	
+	@Column(name = "refnum")
+	public int getRefnum() {
+		return refnum;
+	}
+
+	public void setRefnum(int refnum) {
+		this.refnum = refnum;
+	}
+	
 	public OccessoriesItemPO init(long oid, long gid, int num){
 		
 		setOid(oid);
@@ -80,5 +91,7 @@ public class OccessoriesItemPO implements Serializable {
 		
 		return this;
 	}
+
+
 	
 }

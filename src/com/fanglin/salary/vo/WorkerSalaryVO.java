@@ -41,6 +41,8 @@ public class WorkerSalaryVO implements Serializable {
 	private Integer count;
 
 	private Short isSend;
+	
+	private Short isAppr;
 
 	private Short status;
 
@@ -257,6 +259,14 @@ public class WorkerSalaryVO implements Serializable {
 
 	public void setIsSend(Short isSend) {
 		this.isSend = isSend;
+	}
+	
+	public Short getIsAppr() {
+		return isAppr;
+	}
+
+	public void setIsAppr(Short isAppr) {
+		this.isAppr = isAppr;
 	}
 
 	public Timestamp getFinishTime() {

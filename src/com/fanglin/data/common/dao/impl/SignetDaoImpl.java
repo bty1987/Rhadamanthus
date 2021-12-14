@@ -51,11 +51,16 @@ public class SignetDaoImpl extends DaoImpl<SignetPO> implements SignetDao {
 		if (filters != null) {
 
 			for (Filter filter : filters) {
+				String data = filter.getData();
 				if ("name".equals(filter.getField())) {
 					query.add(query.getCriterion("name", filter));
-				}
+				} else if ("type".equals((filter.getField()))) {
+					query.add(query.getCriterion("type", Short.valueOf(data), filter.getOp()));
+				} else if ("status".equals((filter.getField()))) {
+					query.add(query.getCriterion("status", Short.valueOf(data), filter.getOp()));
 			}
 		}
 	}
 
+	}
 }

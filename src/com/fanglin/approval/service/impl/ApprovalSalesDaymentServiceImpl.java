@@ -85,7 +85,7 @@ public class ApprovalSalesDaymentServiceImpl implements ApprovalSalesDaymentServ
 
 		String content = String.format("销售不退定金,销售单号:%s,品牌:%s", salesPO.getNo(), salesPO.getBrand());
 
-		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(sid), ApprovalPO.APPROVAL_TYPE_SALESDAYMENT_INT, content, approvalVO.getComment(), company);
+		approvalPO = new ApprovalPO().init(sender, receiver, salesPO.getOrderId(), String.valueOf(sid), ApprovalPO.APPROVAL_TYPE_SALESDAYMENT_INT, content, approvalVO.getComment(), company);
 
 		approvalDao.save(approvalPO);
 

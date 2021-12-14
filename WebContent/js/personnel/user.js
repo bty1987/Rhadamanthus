@@ -39,13 +39,13 @@
     
     user.modals.simpleAddUserModal = com.initForm("simpleAddUserModal", "添加员工", 
         [
-             {"id": "userName", "name": "姓名", "type": "text", "validator": "v_required"},
+             {"id": "userName", "name": "姓名", "type": "text", "validator": "v_required v_name_cn"},
              {"id": "currentName", "name": "现用名", "type": "text", "validator": "v_required"},
              {"id": "gender", "name": "性别", "type": "switch", "validator": "v_required", "clazz": "gender"},
              {"id": "identity", "name": "身份证号", "type": "text", "validator": "v_required v_identity"},
              {"id": "phone", "name": "手机号", "type": "text", "validator": "v_required v_phones"},
              
-             {"id": "loginId", "name": "用户名", "type": "text", "validator": "v_required"},
+             {"id": "loginId", "name": "用户名", "type": "text", "validator": "v_required v_name_en"},
              {"id": "deptTypeSel", "name": "部门类型", "type": "select", "validator": "v_required"},
              {"id": "deptSel", "name": "部门", "type": "select", "validator": "v_required"},
              {"id": "dutySel", "name": "职位", "type": "select", "validator": "v_required"},

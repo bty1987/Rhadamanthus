@@ -1,0 +1,119 @@
+<div>
+	<div class="row">
+	    <div class="col-xs-12">
+            <div class="widget-box">
+                <div class="widget-header header-color-blue"><div class="orange">*橙色名称标签为必填信息</div></div>
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <div class="row">
+                     
+                            <div class="col-md-12">
+                                
+                                 <div class="form-group col-sm-6">
+                                    <label for="rental" class="col-sm-3 control-label no-padding-right orange">主材达额总价款</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-contract-total" type="text" class="col-sm-7 col-xs-10 conitem v_required v_float_3" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+
+								<div class="form-group col-sm-6">
+                                    <label for="form_of_contract" class="col-sm-3 control-label no-padding-right orange">主材达额保证金</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-bond-price" type="text" class="col-sm-7 col-xs-10 conitem v_required v_float_3" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6 firstPaymentGroup">
+                                    <label for="form_of_contract" class="col-sm-3 control-label no-padding-right orange">主材达额首付款</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-payment-first" type="text" class="col-sm-7 col-xs-10 conitem v_required v_float_3" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6 firstPaymentGroup">
+                                    <label for="form_of_contract" class="col-sm-3 control-label no-padding-right">主材达额首付款备注</label>
+                                    <div class="col-sm-9">
+                                        <textarea id="con-payment-first-comment" class="col-sm-7 col-xs-10 conitem" rows="3" data-toggle="popover" data-placement="bottom"  data-trigger='manual' maxlength="512"></textarea>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6 thirdPaymentGroup">
+                                    <label for="form_of_contract" class="col-sm-3 control-label no-padding-right orange">主材达额二期款</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-payment-third" type="text" class="col-sm-7 col-xs-10 conitem v_required v_float_3" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6 thirdPaymentGroup">
+                                    <label for="form_of_contract" class="col-sm-3 control-label no-padding-right">主材达额二期款备注</label>
+                                    <div class="col-sm-9">
+                                        <textarea id="con-payment-third-comment" class="col-sm-7 col-xs-10 conitem" rows="3" data-toggle="popover" data-placement="bottom"  data-trigger='manual' maxlength="512"></textarea>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6 finalPaymentGroup">
+                                    <label for="form_of_contract" class="col-sm-3 control-label no-padding-right orange">主材达额尾款</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-payment-final" type="text" class="col-sm-7 col-xs-10 conitem v_required v_float_3" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group col-sm-6 finalPaymentGroup">
+                                    <label for="form_of_contract" class="col-sm-3 control-label no-padding-right">主材达额尾款备注</label>
+                                    <div class="col-sm-9">
+                                        <textarea id="con-payment-final-comment" class="col-sm-7 col-xs-10 conitem" rows="3" data-toggle="popover" data-placement="bottom"  data-trigger='manual' maxlength="512"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr>
+      
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <textarea id="con-markup-one" class="m-wrap col-xs-12 conitem makeup" rows="8" data-toggle="popover" data-trigger='manual' maxlength="512" placeholder="其他, 请双击获取内容或手动输入"></textarea>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <textarea id="con-markup-thr" class="m-wrap col-xs-12 conitem makeup" rows="8" data-toggle="popover" data-trigger='manual' maxlength="512" placeholder="优惠活动备注 , 请双击获取内容或手动输入"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="talkingModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">话术</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <div id="talkingList" name="resultList" class="clearfix tab-pane active"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/utils/quotationUtils.js', 'js/contract/C-003-D-0-0003.js']);
+</script>

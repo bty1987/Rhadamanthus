@@ -168,10 +168,10 @@ var AddReduceDetail = (function(){
 						com.showAlert(com.info, '提交成功');
 					}, null, false);
 				}),
-                discountBtn: com.focusPage("#discountBtn").on('click', function(){//返回
+                discountBtn: com.focusPage("#discountBtn").on('click', function(){ // 折扣
                     that.$modals.discountModal.modal("show");
                 }),
-				detailBckBtn: com.focusPage('#detailBckBtn').on('click', function(){//返回
+				detailBckBtn: com.focusPage('#detailBckBtn').on('click', function(){ // 返回
 					com.switchPage(api.index.addReduceIndex.url);
 				}),
 				
@@ -238,7 +238,7 @@ var AddReduceDetail = (function(){
                 "data-manageprice": _managePrice,
             };
 
-            $quote.find('.totalprice-discount .cell-wrap').text(_sumd);
+            $quote.find('.totalprice-discount .cell-wrap').text(_sum);
             $quote.attr(itemInfo);
 		},
 		calculateFees: function(){
@@ -285,8 +285,8 @@ var AddReduceDetail = (function(){
                     "data-manageprice": _managePrice,
                 };
 
-	            $item.find('.discountprice .cell-wrap').text(_dcp);
-	            $item.find('.totalprice-discount .cell-wrap').text(_sumd);
+	            $item.find('.discountprice .cell-wrap').text(_unitprice);
+	            $item.find('.totalprice-discount .cell-wrap').text(_sum);
 	            
 	            $item.attr(itemInfo);
 
@@ -355,7 +355,7 @@ var AddReduceDetail = (function(){
 				var funcid = com.focusPage('#quotationFunctionAreaId').val();
 				that.functionAreaId = funcid;
 				that.functionAreaName = com.focusPage('#quotationFunctionAreaId').find('option:selected').text();
-
+				
 				if (that.showingModalName == "quotationItemModal") {
 					var _params = {
 						"quotationFunctionAreaItem.quotationFunctionAreaId" : funcid
@@ -978,8 +978,8 @@ var AddReduceDetail = (function(){
 				["type quotationFunctionArea", qv.quotationFunctionAreaName ? qv.quotationFunctionAreaName : "---", ["data-quotationFunctionAreaId", qv.quotationFunctionAreaId]],//功能区
 				["unit", qv.measurementUnit], // 单位
 				["price unitprice", qv.unitPrice], // 单价
-				["price discountprice", _dcp], // 折后单价
-				["price totalprice-discount", _sumd, ["style", "white-space:nowrap"]], // 总价
+				["price discountprice", qv.unitPrice], // 折后单价
+				["price totalprice-discount", _sum, ["style", "white-space:nowrap"]], // 总价
 			];
 
 			var $checkCell, $checkCellWrap, $btnCell, $btnCellWrap, $input, $btnDel, $btnInfo;

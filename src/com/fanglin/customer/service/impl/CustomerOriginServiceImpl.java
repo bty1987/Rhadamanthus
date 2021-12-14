@@ -30,6 +30,9 @@ import com.fanglin.customer.po.CustomerOriginPO;
 import com.fanglin.customer.po.CustomerRecordPO;
 import com.fanglin.customer.service.CustomerOriginService;
 import com.fanglin.customer.vo.CustomerOriginVO;
+import com.fanglin.data.common.vo.DecorationBusitypeVO;
+import com.fanglin.data.po.DecorationBusitypePO;
+import com.fanglin.decoration.service.impl.DecorationServiceImpl;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
@@ -70,6 +73,9 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 	@Autowired
 	private MessageService messageService;
+	
+	@Autowired
+	private DecorationServiceImpl decorationService;
 
 	@Override
 	public void pageCustomerOrigin(Paging paging, List<Filter> filters, String userId, String user) {
@@ -142,7 +148,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 		CustomerOriginPO customerOriginPO = new CustomerOriginPO();
 
-		BeanUtil.copyProperties(customerOriginVO, customerOriginPO, Arrays.asList("village", "creater", "belonger", "department", "region", "customer", "house", "designer", "salesman"));
+		BeanUtil.copyProperties(customerOriginVO, customerOriginPO, Arrays.asList("village", "creater", "belonger", "department", "region", "customer", "house", "designer", "salesman", "decorationBusitype"));
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
@@ -165,6 +171,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		VillagePO villagePO = villageDao.get(customerOriginVO.getVillage().getNo());
 
 		customerOriginPO.setVillage(villagePO);
+		customerOriginPO.setDecorationBusitype(new DecorationBusitypePO(customerOriginVO.getDecorationBusitype().getDbid()));
 
 		customerOriginDao.save(customerOriginPO);
 
@@ -198,7 +205,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 			customerOriginPO.setVillage(villagePO);
 		}
 
-		BeanUtil.copyPropertie(customerOriginVO, customerOriginPO, Arrays.asList("village", "creater", "belonger", "department", "region", "customer", "house", "designer", "salesman"));
+		BeanUtil.copyPropertie(customerOriginVO, customerOriginPO, Arrays.asList("village", "creater", "belonger", "department", "region", "customer", "house", "designer", "salesman", "decorationBusitype"));
 
 		customerOriginDao.update(customerOriginPO);
 	}
@@ -294,7 +301,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void bindCustomerOrigin(CustomerOriginVO customerOriginVO, String userId) throws FLException {
+	public void bindCustomerOrigin(CustomerOriginVO customerOriginVO, String userId, int company) throws FLException {
 
 		CustomerOriginPO customerOriginPO = customerOriginDao.get(customerOriginVO.getCsid());
 
@@ -320,6 +327,8 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		if (housePO == null) {
 			throw new FLException(130017, "房产不存在");
 		}
+		
+		decorationService.checkOverDecoration(customerPO.getCid(), housePO.getHid(), company);
 
 		customerOriginPO.setHouse(housePO);
 		customerOriginPO.setVillage(housePO.getVillage());
@@ -330,6 +339,8 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 		customerOriginPO.setDesigner(designer);
 		customerOriginPO.setSalesman(salesman);
+		
+		customerOriginPO.setDecorationBusitype(new DecorationBusitypePO(customerOriginVO.getDecorationBusitype().getDbid()));
 
 		customerOriginDao.update(customerOriginPO);
 
@@ -414,9 +425,9 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 	public CustomerOriginVO customerOriginPOToVO(CustomerOriginPO customerOriginPO) {
 
-		CustomerOriginVO customerOriginVO = new CustomerOriginVO(new VillageVO(new CityProperVO()), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new CustomerVO(), new HouseVO(), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())));
+		CustomerOriginVO customerOriginVO = new CustomerOriginVO(new VillageVO(new CityProperVO()), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new CustomerVO(), new HouseVO(), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())), new DecorationBusitypeVO());
 
-		BeanUtil.copyProperties(customerOriginPO, customerOriginVO, Arrays.asList("village", "creater", "belonger", "department", "region", "customer", "house", "designer", "salesman"));
+		BeanUtil.copyProperties(customerOriginPO, customerOriginVO, Arrays.asList("village", "creater", "belonger", "department", "region", "customer", "house", "designer", "salesman", "decorationBusitype"));
 
 		if (customerOriginPO.getVillage() != null) {
 			BeanUtil.copyProperties(customerOriginPO.getVillage(), customerOriginVO.getVillage(), Arrays.asList("cityProper"));
@@ -440,6 +451,10 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		if (customerOriginPO.getSalesman() != null) {
 			BeanUtil.copyProperties(customerOriginPO.getSalesman().getDept(), customerOriginVO.getSalesman().getDept(), Arrays.asList("type", "fatherDept", "manager"));
 			BeanUtil.copyProperties(customerOriginPO.getSalesman().getDept().getFatherDept(), customerOriginVO.getSalesman().getDept().getFatherDept(), Arrays.asList("type", "fatherDept", "manager"));
+		}
+
+		if (customerOriginPO.getDecorationBusitype() != null) {
+			BeanUtil.copyProperties(customerOriginPO.getDecorationBusitype(), customerOriginVO.getDecorationBusitype());
 		}
 
 		return customerOriginVO;

@@ -13,7 +13,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.payment.service.ActivityPaymentService;
+import com.fanglin.payment.service.PaymentContractService;
 import com.fanglin.payment.vo.ActivityPaymentVO;
+import com.fanglin.payment.vo.PaymentContractVO;
 
 @ParentPackage("common")
 @Namespace("/")
@@ -25,7 +27,14 @@ public class PaymentCommonAction extends BaseListAction {
 	@Autowired
 	private ActivityPaymentService activityPaymentService;
 	
+	@Autowired
+	private PaymentContractService paymentContractService;
+	
+	private PaymentContractVO paymentContract;
+	
 	private ActivityPaymentVO activityPayment;
+	
+	private String redirect;
 
 	@Action(value = "divisionCallback", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String divisionCallback() throws FLException {
@@ -67,6 +76,14 @@ public class PaymentCommonAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "redirectPaymentContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String redirectPaymentContract() throws FLException {
+
+		redirect = paymentContractService.redirectPaymentContract(paymentContract);
+
+		return SUCCESS;
+	}
+	
 	public ActivityPaymentVO getActivityPayment() {
 		return activityPayment;
 	}
@@ -74,4 +91,22 @@ public class PaymentCommonAction extends BaseListAction {
 	public void setActivityPayment(ActivityPaymentVO activityPayment) {
 		this.activityPayment = activityPayment;
 	}
+
+	public PaymentContractVO getPaymentContract() {
+		return paymentContract;
+	}
+
+	public void setPaymentContract(PaymentContractVO paymentContract) {
+		this.paymentContract = paymentContract;
+	}
+
+	public String getRedirect() {
+		return redirect;
+	}
+
+	public void setRedirect(String redirect) {
+		this.redirect = redirect;
+	}
+	
+	
 }

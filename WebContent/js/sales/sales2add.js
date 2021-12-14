@@ -330,6 +330,16 @@ jQuery(function () {
         
         var $otherStatus = ($selling != $disPrice || com.focusPage("[data-otherStatus=1]").length > 0) ? 1 : 0;
         
+        if(price.ctype == 0 && $disPrice < price.purchase) {
+            
+            setTimeout(function(){
+                com.closeMask(mask, popup);
+            }, 800);
+            
+            com.showAlert(com.warning, "折扣价低于控价");
+            return false;
+        }
+        
         cycTotal();
 
         var options = {};

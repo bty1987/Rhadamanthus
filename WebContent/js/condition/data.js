@@ -458,7 +458,7 @@ Condition.addupRule("data", {
         label: "报价名称",
         type: "text",
         submitConfig: {
-            name: "quotationItem.itemName",
+            name: "quotationItem.name",
             op: "cn",
             validate: null
         }
@@ -513,7 +513,23 @@ Condition.addupRule("data", {
             valuePath: "name"
         }
     },
-    
+    "soods-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.data,
+            postData: {},
+            listPath: "status",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
     "storehouse-no": {
         label: "库房编号",
         type: "text",
@@ -593,6 +609,22 @@ Condition.addupRule("data", {
             validate: null
         }
     },
+    "construction-node-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.data,
+            postData: null,
+            listPath: "status",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
     "construction-cost-name": {
         label: "名称",
         type: "text",
@@ -642,6 +674,23 @@ Condition.addupRule("data", {
             url: api.ds.data,
             postData: {},
             listPath: "taskStatus",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    
+    "task-level" : {
+        label:"等级",
+        type:"select",
+        submitConfig:{
+        	name: "taskLevel",
+        	op: "eq",
+        	validate: null 
+        },
+        dataSource: {
+            url: api.ds.data,
+            postData: {},
+            listPath: "taskLevel",
             keyPath: "key",
             valuePath: "value"
         }
@@ -698,6 +747,38 @@ Condition.addupRule("data", {
             name: "name",
             op: "cn",
             validate: null
+        }
+    },
+    "signet-status":{
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.data,
+            postData: {},
+            listPath: "signetStatus",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "signet-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {//从后台取数据的各种配置
+            url: api.ds.data,
+            postData: {},
+            listPath: "signetType",
+            keyPath: "key",
+            valuePath: "value"
         }
     },
     "talking-name": {
@@ -763,5 +844,53 @@ Condition.addupRule("data", {
             valuePath: "value"
         }
     },
+    "paymentType-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.data,
+            postData: null,
+            listPath: "paymentType",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "paymentType-paytype": {
+        label: "付款类型",
+        type: "select",
+        submitConfig: {
+            name: "paytype",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.data,
+            postData: null,
+            listPath: "paytype",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "paymentType-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.data,
+            postData: null,
+            listPath: "paymentTypeStatus",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    }
     
 });

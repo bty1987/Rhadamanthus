@@ -20,6 +20,14 @@ public interface QuotationNormoodDao extends Dao<QuotationFunctionAreaItemAO> {
 
 	public List<?> queryQuotationFunctionAreaItem(short index, long functionAreaId);
 
+	public List<?> queryExtensionItem(long eid);
+
+	public List<?> queryAddReduceItem(long arid);
+
 	public List<?> amountQuotationNormood(short index, long functionAreaId);
+
+	public List<?> amountExtensionNormood(long eid);
+
+	public List<?> amountAddReduceNormood(long arid);
 
 }

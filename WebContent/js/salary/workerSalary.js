@@ -99,7 +99,7 @@ jQuery(function ($) {
         {field: "dutyName", name: "工种", prop: "user.duty.name", clazz: "grey"},
         {field: "schedule", name: "施工节点", prop: "schedule", dataset: salary.constructionSchedule, clazz: "red"},
         {field: "approver", name: "审批人", prop: "approver.currentName", clazz: "grey"},
-        {field: "approveTime", name: "审批时间", prop: "approveTime", clazz: "grey"},
+        {field: "approveTime", name: "审批时间", prop: "approveTime", clazz: "green"},
         {field: "type", name: "类型", prop: "type", dataset: salary.type, clazz: "red"},
         {field: "oneType", name: "一类", prop: "oneType", dataset: salary.oneType, clazz: "red"},
         {field: "twotype", name: "二类", prop: "twotype", dataset: salary.twotype, clazz: "red"},
@@ -191,6 +191,8 @@ jQuery(function ($) {
                 column: [
                     ["装修单号", "decoration.orderId"],
                     ['楼盘地址', "decoration.house"],
+                    ["等级", "decoration.grade"],
+                    ['监理编号', 'decoration.supervisorId'],
                     ['监理', 'decoration.supervisor'],
                     ["工费Id", "wsId"],
                     ["工人姓名", "user.userName"],
@@ -219,6 +221,7 @@ jQuery(function ($) {
                 v.approver.userName = v.approver.userName == null ? "" : v.approver.userName;
                 v.comment = v.comment == null ? "" : v.comment;
                 v.approveTime = v.approveTime == null ? "" : v.approveTime;
+                v.decoration.supervisorId = (v.decoration.supervisor == null ? "" : v.decoration.supervisor.userId);
                 v.decoration.supervisor = (v.decoration.supervisor == null ? "" : v.decoration.supervisor.userName);
                 v.decoration.orderId = (v.decoration.orderId == null ? "" : v.decoration.orderId);
 
@@ -235,38 +238,38 @@ jQuery(function ($) {
     });
 
     com.focusPage('a[name="adopt"]', '#pagenation').click(function (v) {
+        
+        var checkbox = com.focusPage('input[name="check"]:checked');
 
         var options = {};
-        var groupCheckbox = com.focusPage('input[name="check"]:checked');
-        var cwsIdArr = [];
-        var cwsId = [];
-
-        $.each(groupCheckbox, function (i, v) {
-            var $v = $(v);
-            cwsIdArr.push($v.attr('cwsid'));
-            options["workerSalarys[" + i + "].wsId"] = $v.attr('value');
-        });
-
-        $.each(cwsIdArr, function (i, v) {
-            if ($.inArray(v, cwsId) == -1) {
-                cwsId.push(v);
-            }
-        });
-
-        if (!groupCheckbox.length) {
+        var cwsids = [];
+        
+        if (!checkbox.length) {
             com.showAlert(com.warning, "请选择工人工费信息");
             return false;
         }
 
-        if (cwsId.length != 1) {
+        $.each(checkbox, function (i, v) {
+            
+            var $v = $(v);
+            
+            if($v.attr('cwsid')) cwsids.push($v.attr('cwsid'));
+            
+            options["workerSalarys[" + i + "].wsId"] = $v.attr('wsid');
+        });
+        
+        if (cwsids.length > 0) {
             com.showAlert(com.error, "转款不允许批量通过");
+            return false;
+        }
+
+        if (!options) {
+            com.showAlert(com.warning, "请选择工人工费信息");
             return false;
         }
 
         com.post(api.salary.adoptWorkerSalary, options, function () {
             searcher.doSearch();
-        }, function () {
-            com.showAlert(com.error, "工费状态不可操作");
         });
 
     });

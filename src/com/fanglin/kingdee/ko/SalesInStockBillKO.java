@@ -20,7 +20,7 @@ public class SalesInStockBillKO extends Bean implements Serializable {
 
 	private static final long serialVersionUID = 8868230442705055693L;
 
-	public static String FormId = "STK_InStock";
+	public static String FormId = "STK_InStock"; //采购入库单
 
 	private OrganizationKO FStockOrgId; //收料组织
 

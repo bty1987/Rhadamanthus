@@ -7,18 +7,24 @@ public class CompanyVO implements Serializable {
 	private static final long serialVersionUID = 1384863319040968146L;
 
 	private String cid;
-	
+
 	private Integer no;
 
+	private String code;
+
 	private String name;
-	
+
 	private String fullname;
-	
+
 	private String address;
-	
+
 	private String corporation;
-	
+
 	private String phone;
+	
+	private OrganizationVO drganization;
+	
+	private OrganizationVO srganization;
 
 	private Short status;
 
@@ -29,6 +35,12 @@ public class CompanyVO implements Serializable {
 	public CompanyVO(String cid) {
 		super();
 		this.cid = cid;
+	}
+
+	public CompanyVO(OrganizationVO drganization, OrganizationVO srganization) {
+		super();
+		this.drganization = drganization;
+		this.srganization = srganization;
 	}
 
 	public String getCid() {
@@ -45,6 +57,14 @@ public class CompanyVO implements Serializable {
 
 	public void setNo(Integer no) {
 		this.no = no;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 	public String getName() {
@@ -85,6 +105,22 @@ public class CompanyVO implements Serializable {
 
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+
+	public OrganizationVO getDrganization() {
+		return drganization;
+	}
+
+	public void setDrganization(OrganizationVO drganization) {
+		this.drganization = drganization;
+	}
+
+	public OrganizationVO getSrganization() {
+		return srganization;
+	}
+
+	public void setSrganization(OrganizationVO srganization) {
+		this.srganization = srganization;
 	}
 
 	public Short getStatus() {

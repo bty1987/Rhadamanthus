@@ -17,8 +17,11 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -27,33 +30,39 @@ public class CompanyPO implements Serializable {
 
 	private static final long serialVersionUID = -5885986511194210020L;
 
-	public static final int TYPE_HEADQUARTER_INT = 0;//总部
+	public static final int TYPE_HEADQUARTER_INT = 0;// 总部
 
 	public static final String COLUMN_CID_STR = "cid";
-	
+
 	public static final String COLUMN_NAME_STR = "name";
-	
+
 	public static final String COLUMN_NO_STR = "no";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final short STATUS_ENABLE_INT = 0;
-	
+
 	private int cid;
-	
+
 	private int no;
 
+	private String code;
+
 	private String name;
-	
+
 	private String fullname;
-	
+
 	private String shortname;
-	
+
 	private String address;
-	
+
 	private String corporation;
 	
 	private String phone;
+	
+	private OrganizationPO drganization;
+	
+	private OrganizationPO srganization;
 
 	private short status;
 
@@ -66,6 +75,12 @@ public class CompanyPO implements Serializable {
 		this.cid = cid;
 	}
 
+	public CompanyPO(OrganizationPO drganization, OrganizationPO srganization) {
+		super();
+		this.drganization = drganization;
+		this.srganization = srganization;
+	}
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "cid")
@@ -76,7 +91,7 @@ public class CompanyPO implements Serializable {
 	public void setCid(int cid) {
 		this.cid = cid;
 	}
-	
+
 	@Column(name = "no")
 	public int getNo() {
 		return no;
@@ -85,7 +100,15 @@ public class CompanyPO implements Serializable {
 	public void setNo(int no) {
 		this.no = no;
 	}
-	
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
 	@Column(name = "name")
 	public String getName() {
 		return name;
@@ -94,7 +117,7 @@ public class CompanyPO implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@Column(name = "shortname")
 	public String getShortname() {
 		return shortname;
@@ -140,6 +163,26 @@ public class CompanyPO implements Serializable {
 		this.phone = phone;
 	}
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "doid", referencedColumnName = "oid")
+	public OrganizationPO getDrganization() {
+		return drganization;
+	}
+
+	public void setDrganization(OrganizationPO drganization) {
+		this.drganization = drganization;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "soid", referencedColumnName = "oid")
+	public OrganizationPO getSrganization() {
+		return srganization;
+	}
+
+	public void setSrganization(OrganizationPO srganization) {
+		this.srganization = srganization;
+	}
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
@@ -148,5 +191,5 @@ public class CompanyPO implements Serializable {
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
+
 }

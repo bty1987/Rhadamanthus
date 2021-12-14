@@ -107,8 +107,13 @@ $.extend(api, {system: {
     updateCompany: {url: "updateCompany.do", server: "communion"},
     updateCompanyForStatus: {url: "updateCompanyForStatus.do", server: "communion"},
 
-    queryServer:{url:"queryServer.do",server:"communion"}
+    queryServer:{url:"queryServer.do", server:"communion"},
 
+    pageOrganization:{url:"pageOrganization.do", server:"communion"},
+    updateOrganization: { url: "updateOrganization.do", server:"communion"},
+    updateOrganizationForStatus:{url:"updateOrganizationForStatus.do", server:"communion"},
+    queryOrganization: {url: "queryOrganization.do"},
+	addOrganization: {url: "addOrganization.do", server:"communion"}
 }});
 
 

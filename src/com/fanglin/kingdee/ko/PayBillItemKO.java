@@ -2,8 +2,6 @@ package com.fanglin.kingdee.ko;
 
 import java.io.Serializable;
 
-import com.fanglin.utils.Arith;
-
 public class PayBillItemKO implements Serializable {
 
 	private static final long serialVersionUID = -4700851126742220555L;
@@ -56,7 +54,7 @@ public class PayBillItemKO implements Serializable {
 		
 		this.FPURPOSEID = new OrganizationKO(purpose);
 		this.FSETTLETYPEID = new OrganizationKO(payWay);
-		this.FPAYTOTALAMOUNTFOR = (long) Arith.div(money, 1000.0);
+		this.FPAYTOTALAMOUNTFOR = money;
 		
 		if (bankInfo != null) {
 			this.FACCOUNTID = new OrganizationKO(bankInfo);

@@ -14,10 +14,11 @@ package com.fanglin.kingdee.service;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.kingdee.ko.SalesInStockBillItemKO;
 
 public interface SalesInStockBillService extends Serializable {
 
-	public void save(String inCompany, String collectTime, String purchaseCompany, String supplier, List<SalesInStockBillItemKO> item) throws Exception;
+	public void save(String inCompany, String collectTime, String purchaseCompany, String supplier, List<SalesInStockBillItemKO> item) throws FLException;
 
 }

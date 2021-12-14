@@ -17,21 +17,23 @@ import com.fanglin.payment.vo.PaymentVO;
 import com.fanglin.utils.Paging;
 
 public interface PaymentService {
-	
+
 	public void pagePayment(Paging paging, List<Filter> filters, PaymentVO payment, int company);
-	
+
 	public List<PaymentVO> queryPaymentByOrderId(PaymentVO paymentVO);
-	
+
 	public PaymentVO queryPaymentByPaymentId(PaymentVO paymentVO) throws FLException;
-	
+
 	public int collectPayment(PaymentVO paymentVO, String userId, List<Long> posids) throws FLException;
 
-	public int confirmPayment(List<Long> pids, String userId)  throws FLException;
-	
+	public int confirmPayment(List<Long> pids, String userId) throws FLException;
+
 	public int withdrawPayment(PaymentVO paymentVO, String userId) throws FLException;
-	
+
 	public int payPayment(PaymentVO paymentVO, String userId) throws FLException;
 	
+	public int returnPayment(PaymentVO paymentVO, String userId) throws FLException;
+
 	public int updatePayment(PaymentVO paymentVO) throws FLException;
 
 }

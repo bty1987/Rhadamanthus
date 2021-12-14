@@ -51,9 +51,13 @@ public class SelectionItemVO implements Serializable {
 
 	private Timestamp confirmTime;// 确认时间
 
+	private Timestamp finishTime;// 完结时间
+
+	private Timestamp reviewTime; // 核对时间
+
 	private Timestamp balanceTime;// 结算时间
 
-	private Timestamp finishTime;// 完结时间
+	private UserBaseVO creater; // 创建人
 
 	private UserBaseVO traner;// 配送人
 
@@ -61,9 +65,11 @@ public class SelectionItemVO implements Serializable {
 
 	private UserBaseVO confirmer;// 确认人
 
-	private UserBaseVO balancer;// 结算人
-
 	private UserBaseVO finish;// 完结人
+
+	private UserBaseVO reviewer; // 核对人
+
+	private UserBaseVO balancer;// 结算人
 
 	private String comment;// 注释
 
@@ -78,14 +84,16 @@ public class SelectionItemVO implements Serializable {
 		this.goods = goods;
 	}
 
-	public SelectionItemVO(GoodsVO goods, DecorationVO decoration, UserBaseVO traner, UserBaseVO checker, UserBaseVO confirmer, UserBaseVO finish, UserBaseVO balancer) {
+	public SelectionItemVO(GoodsVO goods, DecorationVO decoration, UserBaseVO creater, UserBaseVO traner, UserBaseVO checker, UserBaseVO confirmer, UserBaseVO finish, UserBaseVO reviewer, UserBaseVO balancer) {
 		super();
 		this.goods = goods;
 		this.decoration = decoration;
+		this.creater = creater;
 		this.traner = traner;
 		this.checker = checker;
 		this.confirmer = confirmer;
 		this.finish = finish;
+		this.reviewer = reviewer;
 		this.balancer = balancer;
 	}
 
@@ -255,6 +263,23 @@ public class SelectionItemVO implements Serializable {
 		this.finishTime = finishTime;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getReviewTime() {
+		return reviewTime;
+	}
+
+	public void setReviewTime(Timestamp reviewTime) {
+		this.reviewTime = reviewTime;
+	}
+
+	public UserBaseVO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserBaseVO creater) {
+		this.creater = creater;
+	}
+
 	public UserBaseVO getTraner() {
 		return traner;
 	}
@@ -277,6 +302,14 @@ public class SelectionItemVO implements Serializable {
 
 	public void setConfirmer(UserBaseVO confirmer) {
 		this.confirmer = confirmer;
+	}
+
+	public UserBaseVO getReviewer() {
+		return reviewer;
+	}
+
+	public void setReviewer(UserBaseVO reviewer) {
+		this.reviewer = reviewer;
 	}
 
 	public UserBaseVO getBalancer() {

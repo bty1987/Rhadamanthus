@@ -71,10 +71,18 @@ public class SelectionItemAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "collateSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String collateSelectionItem() throws FLException {
+
+		selectionItemService.collateSelectionItem(selection);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addSelectionItem() throws FLException {
 
-		selectionItemService.addSelectionItem(selection, selectionItem, queryCompany());
+		selectionItemService.addSelectionItem(selection, selectionItem, queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -115,6 +123,14 @@ public class SelectionItemAction extends BaseListAction {
 	public String finishSelectionItem() throws FLException {
 
 		selectionItemService.finishSelectionItem(selectionItem, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "reviewSelectionItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String reviewSelectionItem() throws FLException {
+
+		selectionItemService.reviewSelectionItem(selectionItems, queryUserId());
 
 		return SUCCESS;
 	}

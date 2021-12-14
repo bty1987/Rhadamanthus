@@ -177,6 +177,7 @@ public class SupplierServiceImpl implements SupplierService {
 		
 		supplierPO.setUserName(supplier.getUserName());
 		supplierPO.setPhone(supplier.getPhone());
+		supplierPO.setOldUserId(supplier.getOldUserId());
 		
 		supplierDao.update(supplierPO);
 		

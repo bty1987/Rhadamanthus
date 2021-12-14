@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.personel.vo.UserVO;
 
 
 public class OccessoriesVO implements Serializable {
@@ -22,20 +23,28 @@ public class OccessoriesVO implements Serializable {
 	
 	private UserBaseVO supervisor;
 	
+	private UserVO supplier;
+	
 	private Timestamp createTime;
 	
 	private Short status;
 	
 	private Integer company;
 	
+	private UserBaseVO confirmer;// 确认人
+
+	private UserBaseVO balancer;// 结算人
+	
 	public OccessoriesVO(){
 		super();
 	}
 
-	public OccessoriesVO(UserBaseVO creater, UserBaseVO supervisor) {
+	public OccessoriesVO(UserBaseVO creater, UserBaseVO supervisor, UserBaseVO confirmer, UserBaseVO balancer) {
 		super();
 		this.creater = creater;
 		this.supervisor = supervisor;
+		this.confirmer = confirmer;
+		this.balancer = balancer;
 	}
 
 	public Long getOid() {
@@ -102,4 +111,30 @@ public class OccessoriesVO implements Serializable {
 	public void setCompany(Integer company) {
 		this.company = company;
 	}
+
+	
+	public UserVO getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(UserVO supplier) {
+		this.supplier = supplier;
+	}
+	
+	public UserBaseVO getConfirmer() {
+		return confirmer;
+	}
+
+	public void setConfirmer(UserBaseVO confirmer) {
+		this.confirmer = confirmer;
+	}
+
+	public UserBaseVO getBalancer() {
+		return balancer;
+	}
+
+	public void setBalancer(UserBaseVO balancer) {
+		this.balancer = balancer;
+	}
+
 }

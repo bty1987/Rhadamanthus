@@ -24,6 +24,7 @@ jQuery(function ($) {
             id: com.focusPage("#ID"),
             name: com.focusPage("#name",  "#referModal"),
             form: com.focusPage("#form"),
+            args: com.focusPage("#args"),
             data: com.focusPage("#data"),
             comment: com.focusPage("#comment"),
             
@@ -101,7 +102,7 @@ jQuery(function ($) {
 
     //点击标签
     function initItem($div, data, flag){
-
+        
         var $btn = $(this);
 
         var args = $btn.data();
@@ -112,26 +113,36 @@ jQuery(function ($) {
 
         if(flag){
             //更新
-            if(process.diffTypes.contains(args.type) || args.type == "condition"){
+            if(process.diffTypes.contains(args.type)){
                 com.focusPage("#formFiled .update").css("display", "block");
+            }else if(args.type == "condition"){
+                com.focusPage("#formFiled .update").css("display", "block");
+                com.focusPage("#formFiled .condition").css("display", "block");
+                
+                process.referItems.args.val(args.data);
             }else{
-                drawValidate(args.type, com.focusPage("#updateBtn"+process.updateArgs.piid).parents("li").find("li b").eq(2).html());
-                var reg = new RegExp("/","g");
-                process.referItems.data.val(com.focusPage("#updateBtn"+process.updateArgs.piid).parents("li").find("li b").eq(3).html().replace(reg, '\n'));
-                process.referItems.comment.val(com.focusPage("#updateBtn"+process.updateArgs.piid).parents("li").find("li b").eq(4).html());
+                
                 com.focusPage("#formFiled .form-group").css("display", "block");
+                
+                process.referItems.data.val(args.data.replace(new RegExp("/","g"), '\n'));
+                process.referItems.comment.val(args.comment);
+                
+                drawValidate(args.type, args.validate);
             }
 
-            process.referItems.id.val(com.focusPage("#updateBtn"+process.updateArgs.piid).parents("li").find("li b").eq(0).html());
-            process.referItems.name.val(com.focusPage("#updateBtn"+process.updateArgs.piid).parents("li").find("h3 small").html());
+            process.referItems.id.val(args.id);
+            process.referItems.name.val(args.name);
+            
             com.focusPage("#formFiled .noUpdate").removeClass("show").css("display", "none");
-
         }else{
 
             com.focusPage("#formFiled .noUpdate").addClass("show");
 
-            if(process.diffTypes.contains(args.type) || args.type == "condition"){
+            if(process.diffTypes.contains(args.type)){
                 com.focusPage("#formFiled .show").css("display", "block");
+            }else if(args.type == "condition"){
+                com.focusPage("#formFiled .show").css("display", "block");
+                com.focusPage("#formFiled .condition").css("display", "block");
             }else{
                 drawValidate(args.type, null);
                 com.focusPage("#formFiled .form-group").css("display", "block");
@@ -184,6 +195,7 @@ jQuery(function ($) {
 
         var reg = new RegExp("\n","g");
         if(type == 'select') data = process.referItems.data.val().replace(reg,"/");
+        if(type == 'condition') data = process.referItems.args.val();
 
         var validate = getValidateVal();
 
@@ -366,6 +378,8 @@ jQuery(function ($) {
 
         var data = "";
         if(process.updateArgs.type == 'select') data = process.referItems.data.val().replace(reg, '/');
+        if(process.updateArgs.type == 'condition') data = process.referItems.args.val();
+        
         var comment = process.referItems.comment.val();
 
         if(id != process.updateArgs.id && com.focusPage(".refer-item#" + id).length != 0){

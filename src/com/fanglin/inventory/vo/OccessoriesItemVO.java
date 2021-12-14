@@ -16,6 +16,8 @@ public class OccessoriesItemVO implements Serializable {
 	
 	private Integer num;
 	
+	private Integer refnum;
+	
 	public OccessoriesItemVO(){
 		super();
 	}
@@ -55,5 +57,13 @@ public class OccessoriesItemVO implements Serializable {
 
 	public void setNum(Integer num) {
 		this.num = num;
+	}
+
+	public Integer getRefnum() {
+		return refnum;
+	}
+
+	public void setRefnum(Integer refnum) {
+		this.refnum = refnum;
 	}
 }

@@ -22,6 +22,14 @@ public interface QuotationNormriceDao extends Dao<QuotationFunctionAreaItemMO> {
 
 	public List<T> queryQuotationFunctionAreaItem(short index, long functionAreaId, Short schedule);
 
+	public List<T> queryExtensionItem(long eid, Short schedule);
+
+	public List<T> queryAddReduceItem(long arid, Short schedule);
+
 	public List<T> amountQuotationNormrice(short index, long functionAreaId);
+
+	public List<T> amountExtensionNormrice(long eid);
+
+	public List<T> amountAddReduceNormrice(long arid);
 
 }

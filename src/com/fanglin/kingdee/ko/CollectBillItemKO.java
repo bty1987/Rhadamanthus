@@ -13,8 +13,6 @@ package com.fanglin.kingdee.ko;
 
 import java.io.Serializable;
 
-import com.fanglin.utils.Arith;
-
 public class CollectBillItemKO implements Serializable {
 
 	private static final long serialVersionUID = -6740226334629139538L;
@@ -70,7 +68,7 @@ public class CollectBillItemKO implements Serializable {
 		}
 		
 		this.FSETTLETYPEID = new OrganizationKO(receiptType);
-		this.FRECTOTALAMOUNTFOR = (long) Arith.div(money, 1000.0);
+		this.FRECTOTALAMOUNTFOR = money;
 		
 		if (bankNumber != null) {
 			this.FACCOUNTID = new OrganizationKO(bankNumber);

@@ -145,10 +145,10 @@ $(function () {
             });
 
             $btnQuopt.click(function () {
+                
                 constructionNodes.quotationDetail = {};
-                com.post(api.quotation.queryQuotationForDefaultByOrderId, {
-                    "quotation.orderId": v.orderId,
-                }, function (res) {
+                
+                com.post(api.quotation.queryQuotationForDefaultByOrderId, {"quotation.orderId": v.orderId}, function (res) {
                     constructionNodes.quotationDetail.quotation = res.quotation;
                 }, null, false);
 
@@ -160,6 +160,7 @@ $(function () {
                 params.quotationId = quotationId;
                 params.subtype = [1];
                 params.showType = {itemtype: 4};
+                
                 constructionNodes.modals.printQuotationCNModal.modal("show");
             });
 
@@ -257,17 +258,40 @@ $(function () {
             constructionNodes.modals.constructionInfoModal.modal("hide");
         });
     }
-
+    
     function printNormriceS() {
+        
         params.type = 1;
+        params.subtype = 0;
         params['workType'] = constructionNodes.constructionNode.val();
+        
+        var $subtypes = com.focusPage('input[name="type"]:checked', '#subtype');
+
+        $.each($subtypes, function (i, v){
+            console.log($(v));
+            params.subtype = parseInt(params.subtype) + parseInt($(v).attr('value'));
+        });
+        
         com.popup("打印报价", "/views/quotation/normriceOutput.html", null, null, true);
+        
         constructionNodes.modals.printQuotationCNModal.modal("hide");
     }
+    
     function printNormriceW() {
+        
         params.type = 2;
+        params.subtype = 0;
         params['workType'] = constructionNodes.constructionNode.val();
+        
+        var $subtypes = com.focusPage('input[name="type"]:checked', '#subtype');
+
+        $.each($subtypes, function (i, v){
+            console.log($(v));
+            params.subtype = parseInt(params.subtype) + parseInt($(v).attr('value'));
+        });
+        
         com.popup("打印报价", "/views/quotation/normriceOutput.html", null, null, true);
+        
         constructionNodes.modals.printQuotationCNModal.modal("hide");
     }
 

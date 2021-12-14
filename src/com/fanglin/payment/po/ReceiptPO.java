@@ -20,13 +20,19 @@ public class ReceiptPO implements java.io.Serializable {
 	
 	private long prid;
 	
+	private long rtid;
+	
 	private String no;
 	
 	private String name;
 	
+	private String orderId;
+	
 	private short type;
 	
 	private short paymentType;
+	
+	private String paymentName;
 	
 	private short receiptType;
 	
@@ -60,6 +66,15 @@ public class ReceiptPO implements java.io.Serializable {
 		this.prid = prid;
 	}
 
+	@Column(name = "rtid")
+	public long getRtid() {
+		return rtid;
+	}
+
+	public void setRtid(long rtid) {
+		this.rtid = rtid;
+	}
+
 	@Column(name = "no")
 	public String getNo() {
 		return no;
@@ -78,6 +93,15 @@ public class ReceiptPO implements java.io.Serializable {
 		this.name = name;
 	}
 
+	@Column(name = "orderId")
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
 	@Column(name = "type")
 	public short getType() {
 		return type;
@@ -94,6 +118,15 @@ public class ReceiptPO implements java.io.Serializable {
 
 	public void setPaymentType(short paymentType) {
 		this.paymentType = paymentType;
+	}
+
+	@Column(name = "paymentName")
+	public String getPaymentName() {
+		return paymentName;
+	}
+
+	public void setPaymentName(String paymentName) {
+		this.paymentName = paymentName;
 	}
 
 	@Column(name = "receiptType")

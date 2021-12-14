@@ -298,6 +298,8 @@ jQuery(function($) {
 				params.decorationOrderOrderId = v.decoration.orderId;
 				params.decorationPaymentOrderId = v.decoration.orderId;
 				params.decorationReceiptDrId = v.drId;
+				params.cid = v.decoration.customer.cid;
+
 				com.popup("专用收款收据__装修单号:" + v.decoration.orderId  ,api.index.decorationPaymentReceiptIndex.url,function () {
 					parent.layer.getFrameIndex(window.name);
 				},null,true);

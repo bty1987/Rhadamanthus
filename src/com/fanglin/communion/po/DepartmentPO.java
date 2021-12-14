@@ -35,6 +35,8 @@ public class DepartmentPO implements Serializable {
 	public static final String COLUMN_PINYIN_STR = "pinyin";
 
 	public static final String COLUMN_STATUS_STR = "status";
+	
+	public static final String COLUMN_ISDET_STR = "isdet"; //
 
 	public static final String COLUMN_COMPANY_STR = "company";
 
@@ -45,6 +47,8 @@ public class DepartmentPO implements Serializable {
 	public static final short STATUS_ENABLE_INT = 1;
 
 	public static final short IDENT_NUM_INT = 15;
+
+	public static final short ISDET_DETMENT_INT = 1;
 
 	private int did;
 
@@ -60,17 +64,19 @@ public class DepartmentPO implements Serializable {
 
 	private String createTime;
 
-	private String comment;
-
-	private int company;
-
 	private short status;
+
+	private short isdet;
 
 	private String kino;
 
 	private String kiname;
 
 	private UserPO manager;
+
+	private String comment;
+
+	private int company;
 
 	public DepartmentPO() {
 		super();
@@ -166,24 +172,6 @@ public class DepartmentPO implements Serializable {
 		this.createTime = createTime;
 	}
 
-	@Column(name = "comment")
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
-	@Column(name = "company")
-	public int getCompany() {
-		return company;
-	}
-
-	public void setCompany(int company) {
-		this.company = company;
-	}
-
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
@@ -191,6 +179,15 @@ public class DepartmentPO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "isdet")
+	public short getIsdet() {
+		return isdet;
+	}
+
+	public void setIsdet(short isdet) {
+		this.isdet = isdet;
 	}
 
 	@Column(name = "kino")
@@ -219,6 +216,24 @@ public class DepartmentPO implements Serializable {
 
 	public void setManager(UserPO manager) {
 		this.manager = manager;
+	}
+
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 }

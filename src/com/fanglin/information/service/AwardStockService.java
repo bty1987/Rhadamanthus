@@ -27,4 +27,6 @@ public interface AwardStockService {
 
 	public void checkAwardStock(AwardStockVO awardStockVO, String userId) throws FLException;
 
+	public List<AwardStockVO> queryAwardStockByName(AwardStockVO awardStock, int company);
+
 }

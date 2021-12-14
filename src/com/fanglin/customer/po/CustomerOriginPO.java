@@ -17,6 +17,7 @@ import com.fanglin.communion.po.CustomerPO;
 import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.po.HousePO;
 import com.fanglin.communion.po.VillagePO;
+import com.fanglin.data.po.DecorationBusitypePO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
@@ -97,6 +98,8 @@ public class CustomerOriginPO implements Serializable {
 
 	private UserPO salesman;
 
+	private DecorationBusitypePO decorationBusitype;
+
 	private String orderId;
 
 	public CustomerOriginPO() {
@@ -108,7 +111,7 @@ public class CustomerOriginPO implements Serializable {
 		this.csid = csid;
 	}
 
-	public CustomerOriginPO(VillagePO village, UserPO creater, UserPO belonger, DepartmentPO department, DepartmentPO region, CustomerPO customer, HousePO house, UserPO designer, UserPO salesman) {
+	public CustomerOriginPO(VillagePO village, UserPO creater, UserPO belonger, DepartmentPO department, DepartmentPO region, CustomerPO customer, HousePO house, UserPO designer, UserPO salesman, DecorationBusitypePO decorationBusitype) {
 		super();
 		this.village = village;
 		this.creater = creater;
@@ -119,6 +122,7 @@ public class CustomerOriginPO implements Serializable {
 		this.house = house;
 		this.designer = designer;
 		this.salesman = salesman;
+		this.decorationBusitype = decorationBusitype;
 	}
 
 	@Id
@@ -355,6 +359,16 @@ public class CustomerOriginPO implements Serializable {
 
 	public void setSalesman(UserPO salesman) {
 		this.salesman = salesman;
+	}
+
+	@ManyToOne
+	@JoinColumn(nullable = true, name = "dbid", referencedColumnName = "dbid")
+	public DecorationBusitypePO getDecorationBusitype() {
+		return decorationBusitype;
+	}
+
+	public void setDecorationBusitype(DecorationBusitypePO decorationBusitype) {
+		this.decorationBusitype = decorationBusitype;
 	}
 
 	@Column(name = "orderId")

@@ -342,6 +342,7 @@
                     var btnProsign = $('<a></a>').addClass('btn btn-minier btn-blue').html('预签');
                     var btnBalance = $('<a></a>').addClass('btn btn-minier btn-warning').html('结算');
                     var btnRepair = $('<a></a>').addClass('btn btn-minier btn-inverse').html('保修');
+                    var btnPcontract = $('<a></a>').addClass('btn btn-minier btn-danger').html('预签合同');
 
                     var propertyArr = [];
                     $.each(pageConfig.propertyArr, function (pi, pv) {
@@ -530,7 +531,17 @@
 
                     //预签
                     btnProsign.click(function () {
-                        prosignOrder(v.orderId, v.precontractPrice);
+                        params.decorationOrderId = v.orderId;
+                        com.switchPage("views/quotation/protationIndex.html");
+                    });
+                    btnPcontract.click(function () {
+                        com.showConfirm("确定进行预签", function(){
+                            var options = {"decoration.orderId": v.orderId};
+
+                            com.post(api.decoration.presignDecorationContract, options, function () {
+                                com.switchPage("/views/decoration/decoration.html");
+                            }, null, false);
+                        });
                     });
 
                     btnBalance.click(function () {
@@ -539,7 +550,6 @@
                     });
                     btnRepair.click(function () {
                         repairOrder(v.orderId);
-
                     });
                     $.each(pageConfig.pageBtn, function (k, b) {
                         switch (b) {
@@ -547,8 +557,13 @@
                                 $divBtnWrap.append(btnView);
                                 break;
                             case "prosign"://预签
-                                if ([0, 1, 2].indexOf(v.status) != -1) {
+                                if ([0, 1].indexOf(v.status) != -1) {
                                     $divBtnWrap.append(btnProsign);
+                                }
+                                break;
+                            case "pcontract"://预签合同
+                                if ([0, 1].indexOf(v.status) != -1) {
+                                    $divBtnWrap.append(btnPcontract);
                                 }
                                 break;
                             case "revie"://回访
@@ -670,7 +685,7 @@
             params["decorationOrderId"] = decorationOrderId;
             params.historyPage = api.index.decorationIndex.url;
             com.switchPage(api.index.selectionIndex.url);
-        }
+        };
 
         //回访
         var viewDecorationBackVisitIndex = function (decorationOrderId) {
@@ -983,9 +998,8 @@
                     searcher.doSearch();
                 });
                 order.repairModal.modal("hide");
-            })
+            });
         }
-
 
         return {
             init: function (tableId, listData) {
@@ -1000,7 +1014,7 @@
 
     pageConfig.extraParam != null && $.each(pageConfig.extraParam, function (i, v) {
         extraParam["statusas["+ i +"]"] = v;
-    })
+    });
 
     var searcher = new Searcher();
 
@@ -1044,16 +1058,20 @@
                     ['业务员编号', 'salesman.userId'],
                     ['业务员', 'salesman.currentName'],
                     ['面积', 'house.buildArea'],
+                    ['实收额', 'factPrice'],
+                    ['预签额', 'precontractPrice'],
                     ['合同报价', 'orderTotalPrice'],
                     ['量房时间', 'measureTime'],
                     ['签单时间', 'contractTime'],
                     ['状态', 'status'],
-                    ['工程状态', 'projectStatus']
+                    ['工程状态', 'projectStatus'],
+                    ['订单类型', 'typeness']
                 ],
                 list: res.paging.data
             }, function (v) {
                 v.status = order.decorationOrderStatus[v.status];
                 v.projectStatus = order.projectStatusArr[v.projectStatus];
+                v.typeness = order.typeness[v.typeness];
                 if([2, 3, 4, 6, 7].indexOf(v.status) == -1) v.house.houseNumber = '';
             });
 

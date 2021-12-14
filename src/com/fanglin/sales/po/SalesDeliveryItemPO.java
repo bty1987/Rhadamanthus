@@ -27,27 +27,33 @@ public class SalesDeliveryItemPO implements Serializable {
 	public static final String COLUMN_SDIID_STR = "sdiid";
 
 	public static final String COLUMN_SALESNO_STR = "sales.no";
-	
+
 	public static final String COLUMN_SALESORDERID_STR = "sales.orderId";
-	
+
 	public static final String COLUMN_SALESBRAND_STR = "sales.brand";
-	
+
 	public static final String COLUMN_SALESCATEGROY_STR = "sales.category";
-	
+
 	public static final String COLUMN_SIID_LONG = "salesItem.siid";
-	
+
 	public static final String COLUMN_GOODSNAME_STR = "goods.name";
-	
+
 	public static final String COLUMN_CREATEID_STR = "creater.userId";
-	
+
 	public static final String COLUMN_TRANERID_STR = "traner.userId";
-	
+
+	public static final String COLUMN_CHECKER_STR = "checker.userId";
+
+	public static final String COLUMN_CONFIRMER_STR = "confirmer.userId";
+
+	public static final String COLUMN_FINISHER_STR = "finisher.userId";
+
 	public static final String COLUMN_CREATETIME_STR = "createTime";
-	
+
 	public static final String COLUMN_TRANTIME_STR = "tranTime";
-	
+
 	public static final String COLUMN_CHECKTIME_STR = "checkTime";
-	
+
 	public static final String COLUMN_CONFIRMTIME_STR = "confirmTime";
 	
 	public static final String COLUMN_FINISHTIME_STR = "finishTime";
@@ -79,9 +85,9 @@ public class SalesDeliveryItemPO implements Serializable {
 	private Timestamp confirmTime;
 
 	private Timestamp finishTime;
-	
+
 	private Timestamp protranTime;
-	
+
 	private UserPO creater;
 
 	private UserPO traner;

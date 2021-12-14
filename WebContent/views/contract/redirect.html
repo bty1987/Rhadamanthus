@@ -24,16 +24,34 @@
         var r = window.location.search.substr(1).match(reg);
         if (r != null) return unescape(r[2]); return null;
     }
+    
+    var url = "../../redirectDecorationContract.do";
+    var dcid = getQueryString('dcid');
+    var type = getQueryString('type');
+    var module = getQueryString('module');
+    
+    var args = {
+        "decorationContract.dcid": dcid,
+        "decorationContract.type": type,
+        "authentication": "eX3o2SZdrpVOV9HC4UYTRA=="
+    }
+    
+    if(module && module == "payment"){
+    
+        url = "../../rediretPaymentContract.do";
+        
+        args = {
+            "paymentContract.pcid": dcid,
+            "paymentContract.type": type,
+            "authentication": "eX3o2SZdrpVOV9HC4UYTRA=="
+        }
+    }
 
     $.ajax({
         type: "POST",
         dataType: "json",
-        url: "../../redirectDecorationContract.do",
-        data: {
-            "decorationContract.dcid": getQueryString('dcid'),
-            "decorationContract.type": getQueryString('type'),
-            "authentication": "eX3o2SZdrpVOV9HC4UYTRA=="
-        },
+        url: url,
+        data: args,
         cache: false,
         success: function (msg) {
             if (msg.errorCode == 0) {

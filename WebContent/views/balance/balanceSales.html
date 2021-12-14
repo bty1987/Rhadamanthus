@@ -1,14 +1,97 @@
-<div id="fl-statement"><div class="page-header"><h1>结算单<small><i class="icon-double-angle-right"></i>销售单</small></h1></div></div>
+<div id="balanceSales">
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+			<div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+			<div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+		</div>
+	</div>
 
-<div class="row">
-    <div class="col-xs-12">
-        <div class="row" style="margin-left:10px;margin-right:10px">
-            <div id="list"></div>
+	<div class="modal fade" id="createBalanceSalesModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="addItemDialog">结算销售</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="taskName">名称</label>
+							<div class="col-sm-9">
+								<input type="text" id="BalanceSalesName" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="taskName">品牌</label>
+							<div class="col-sm-9">
+								<input type="text" id="brand" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="no" class="col-sm-3 control-label no-padding-right orange">等级</label>
+							<div class="col-md-9">
+                            
+								<label class="inline">
+									<input type="radio" class="ace" value="A" name="grade" checked>
+									<span class="lbl">A</span>&nbsp;
+								</label>
+                            
+								<label class="inline">
+									<input type="radio" class="ace" value="B" name="grade">
+									<span class="lbl">B</span>&nbsp;
+								</label>
+
+								<label class="inline">
+									<input type="radio" class="ace" value="C" name="grade">
+									<span class="lbl">C</span>
+								</label>
+
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="createBalanceSalesBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelcreateBalanceSalesBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	 <div class="modal fade" id="renewal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabe2">更新</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-3 control-label no-padding-right orange" for="taskName">名称</label>
+								<div class="col-sm-9">
+									<input type="text" id="updata" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
+								</div>
+							</div>
+                        <div class="space-4"></div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="withdrawBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+	
 
-<div id="layerPopUp" class="portlet box"></div>
+</div>
+<div id="stockRecordPopUp" class="portlet box page-content"></div>
 <script type="text/javascript">
-    $.loadScript(['js/balance/balanceSales.js']);
+	$.loadScript(['js/balance/balanceSales.js']);
 </script>

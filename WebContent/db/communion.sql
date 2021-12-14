@@ -110,10 +110,12 @@ CREATE TABLE `city` (
   `no` varchar(10) NOT NULL,
   `name` varchar(64) NOT NULL,
   `pinyin` varchar(128) NOT NULL,
+  `province` varchar(10) NOT NULL DEFAULT '',
   `x` double NOT NULL DEFAULT '0',
   `y` double NOT NULL DEFAULT '0',
   PRIMARY KEY (`cid`),
-  UNIQUE KEY `uniqueone` (`no`)
+  UNIQUE KEY `uniqueone` (`no`),
+  KEY `indexone` (`rid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='城市表';
 
 DROP TABLE IF EXISTS `cityproper`;
@@ -127,22 +129,43 @@ CREATE TABLE `cityproper` (
   `y` double NOT NULL DEFAULT '0',
   PRIMARY KEY (`cpid`),
   UNIQUE KEY `uniqueone` (`no`),
-  KEY `indexone` (`no`)
+  KEY `indexone` (`cid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='城市表';
 
 DROP TABLE IF EXISTS `company`;
 CREATE TABLE `company` (
   `cid` int(11) NOT NULL AUTO_INCREMENT,
   `no` int(11) NOT NULL,
+  `code` varchar(10) NOT NULL DEFAULT '',
   `name` varchar(16) NOT NULL,
   `fullname` varchar(32) DEFAULT '',
+  `shortname` varchar(8) NOT NULL DEFAULT '',
   `address` varchar(64) DEFAULT '',
   `corporation` varchar(8) DEFAULT '',
   `phone` varchar(16) DEFAULT '',
+  `doid` int(11) DEFAULT NULL,
+  `soid` int(11) DEFAULT NULL,
   `status` tinyint(1) NOT NULL DEFAULT '0',
-  `shortname` varchar(8) NOT NULL DEFAULT '',
   PRIMARY KEY (`cid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='公司表';
+
+DROP TABLE IF EXISTS `constructionnode`;
+CREATE TABLE `constructionnode` (
+  `cnid` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) NOT NULL,
+  `precheck` int(8) DEFAULT '0',
+  `postcheck` int(8) DEFAULT '0',
+  `stacheck` int(8) DEFAULT '0',
+  `fincheck` int(8) DEFAULT '0',
+  `startalk` varchar(256) NOT NULL,
+  `endtalk` varchar(256) NOT NULL,
+  `timeLimit` int(6) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0: 启用, 1: 禁用',
+  `sort` tinyint(2) NOT NULL DEFAULT '0',
+  `company` int(11) NOT NULL,
+  PRIMARY KEY (`cnid`),
+  KEY `indexone` (`sort`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='工程节点表';
 
 DROP TABLE IF EXISTS `contract`;
 CREATE TABLE `contract` (
@@ -150,6 +173,7 @@ CREATE TABLE `contract` (
   `no` varchar(255) NOT NULL COMMENT '编号',
   `name` varchar(32) NOT NULL COMMENT '名称',
   `title` varchar(32) NOT NULL COMMENT '标题',
+  `path` varchar(128) NOT NULL DEFAULT '',
   `status` tinyint(1) NOT NULL COMMENT '状态',
   `company` int(11) NOT NULL,
   PRIMARY KEY (`cid`)
@@ -187,9 +211,17 @@ CREATE TABLE `customer` (
   `signno` varchar(64) DEFAULT NULL COMMENT '签章编号',
   `status` tinyint(1) DEFAULT '0' COMMENT '状态',
   `photoPath` varchar(256) DEFAULT NULL COMMENT '图片路径',
+  `signPath` varchar(256) DEFAULT '',
   `identityPathF` varchar(256) DEFAULT NULL COMMENT '证件照片',
   `identityPathB` varchar(256) DEFAULT NULL COMMENT '证件照片',
   `authurl` varchar(512) DEFAULT NULL,
+  `type` int(11) DEFAULT '0' COMMENT '类型 , 0: 个人 , 1: 公司',
+  `companyNo` varchar(256) DEFAULT '' COMMENT ' 编号 , 统一社会信用代码',
+  `companyName` varchar(256) DEFAULT '' COMMENT '公司名',
+  `companyAddr` varchar(128) DEFAULT '' COMMENT '公司地址',
+  `companyPhone` varchar(32) DEFAULT '' COMMENT '公司电话',
+  `companyBank` varchar(256) DEFAULT '' COMMENT '开户行',
+  `companyBankno` varchar(256) DEFAULT '' COMMENT '开户账号',
   PRIMARY KEY (`cid`),
   UNIQUE KEY `uniqueone` (`no`),
   KEY `indexone` (`name`),
@@ -232,6 +264,7 @@ CREATE TABLE `department` (
   `no` varchar(10) NOT NULL COMMENT '部门ID',
   `fdid` varchar(10) DEFAULT NULL COMMENT '上级部门ID',
   `muid` int(11) DEFAULT NULL,
+  `isdet` tinyint(1) NOT NULL DEFAULT '0',
   `name` varchar(32) NOT NULL COMMENT '部门名称',
   `pinyin` varchar(128) NOT NULL,
   `type` varchar(10) NOT NULL COMMENT '部门类型',
@@ -307,6 +340,28 @@ CREATE TABLE `house` (
   KEY `indexone` (`vid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='房产';
 
+DROP TABLE IF EXISTS `houselayout`;
+CREATE TABLE `houselayout` (
+  `hlid` int(11) NOT NULL AUTO_INCREMENT,
+  `vid` int(11) NOT NULL,
+  `name` varchar(32) DEFAULT '',
+  `area` int(11) DEFAULT '0',
+  `comment` varchar(256) DEFAULT '' COMMENT '说明',
+  PRIMARY KEY (`hlid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='户型表';
+
+DROP TABLE IF EXISTS `keyvalue`;
+CREATE TABLE `keyvalue` (
+  `kvid` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) NOT NULL,
+  `module` varchar(32) NOT NULL,
+  `type` varchar(32) NOT NULL,
+  `key` varchar(32) NOT NULL,
+  `value` varchar(32) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`kvid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='字典表';
+
 DROP TABLE IF EXISTS `label`;
 CREATE TABLE `label` (
   `lid` int(11) NOT NULL AUTO_INCREMENT COMMENT '标签id',
@@ -365,6 +420,34 @@ CREATE TABLE `operation` (
   PRIMARY KEY (`oid`),
   KEY `indexone` (`operation`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='操作';
+
+DROP TABLE IF EXISTS `organization`;
+CREATE TABLE `organization` (
+  `oid` int(11) NOT NULL AUTO_INCREMENT,
+  `no` varchar(32) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `pinyin` varchar(128) NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `company` int(11) NOT NULL,
+  PRIMARY KEY (`oid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='组织';
+
+DROP TABLE IF EXISTS `paymenttype`;
+CREATE TABLE `paymenttype` (
+  `ptid` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(36) NOT NULL,
+  `type` tinyint(1) NOT NULL,
+  `paytype` tinyint(1) NOT NULL,
+  `bustype` tinyint(1) NOT NULL,
+  `atttype` tinyint(1) NOT NULL,
+  `code` tinyint(1) NOT NULL DEFAULT '0',
+  `taxrate` tinyint(1) DEFAULT NULL,
+  `kino` varchar(64) DEFAULT NULL,
+  `kiname` varchar(64) DEFAULT NULL,
+  `kibalance` varchar(64) DEFAULT NULL,
+  `status` tinyint(1) NOT NULL,
+  PRIMARY KEY (`ptid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='款项类型';
 
 DROP TABLE IF EXISTS `performance`;
 CREATE TABLE `performance` (
@@ -426,7 +509,9 @@ CREATE TABLE `receipttype` (
   `company` int(11) NOT NULL,
   `kino` varchar(16) DEFAULT '' COMMENT '金蝶编号',
   `kiname` varchar(32) DEFAULT '' COMMENT '金蝶名称',
-  `assistant` varchar(128) DEFAULT '' COMMENT '辅助核算项目',
+  `kibalance` varchar(36) DEFAULT NULL,
+  `bankno` varchar(36) DEFAULT NULL,
+  `assistant` varchar(256) DEFAULT '' COMMENT '辅助核算项目',
   `value` varchar(36) DEFAULT NULL COMMENT '硬件值, 例如POS',
   PRIMARY KEY (`rtid`),
   KEY `uniqueone` (`no`,`company`)
@@ -457,6 +542,15 @@ CREATE TABLE `role` (
   UNIQUE KEY `uniqueone` (`no`),
   KEY `indexone` (`no`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='角色表';
+
+DROP TABLE IF EXISTS `roleaction`;
+CREATE TABLE `roleaction` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `roleId` varchar(10) NOT NULL,
+  `actionId` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index` (`roleId`,`actionId`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 DROP TABLE IF EXISTS `rolechart`;
 CREATE TABLE `rolechart` (
@@ -502,6 +596,7 @@ CREATE TABLE `signet` (
   `no` varchar(125) NOT NULL COMMENT '编号',
   `name` varchar(32) NOT NULL COMMENT '名称',
   `keyword` varchar(64) NOT NULL COMMENT '关键字',
+  `path` varchar(128) NOT NULL DEFAULT '',
   `status` tinyint(1) NOT NULL COMMENT '状态',
   `company` int(11) NOT NULL,
   PRIMARY KEY (`sid`)
@@ -559,7 +654,8 @@ CREATE TABLE `upgrade` (
   `createtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `content` varchar(255) NOT NULL,
   `path` varchar(255) NOT NULL,
-  `filesize` int(11) NOT NULL,
+  `filesize` bigint(64) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`ugid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='升级表';
 

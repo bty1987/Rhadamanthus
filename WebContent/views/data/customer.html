@@ -7,7 +7,7 @@
 			<div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
 		</div>
 	</div>
-	
+
 	<div class="modal fade" id="customerModal" tabindex="-1">
 		<div class="modal-dialog"  >
 			<div class="modal-content">
@@ -22,88 +22,138 @@
 						<div class="col-xs-12">
 							<form class="form-horizontal">
 								<div class="col-md-12">
-										<div class="form-group">
-											<label class="col-sm-3 control-label no-padding-right orange" for="customerName">姓名</label>
-											<div class="col-sm-9">
-												<input type="text" id="customerName" maxlength="32" class="col-xs-10 col-sm-6 v_required v_name" data-toggle="popover" data-trigger='manual'/>
-											</div>
-										</div>
 
-										<div class="form-group">
-											<label class="col-sm-3 control-label no-padding-right" for="gender">性别</label>
-											<div class="col-sm-9">
-												<input type="checkbox" id="gender" class="ace ace-switch ace-switch-5"/>
-												<span class="lbl gender"></span>
-											</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right orange" for="customerName">姓名</label>
+										<div class="col-sm-9">
+											<input type="text" id="customerName" maxlength="32" class="col-xs-10 col-sm-6 v_required v_name" data-toggle="popover" data-trigger='manual'/>
 										</div>
+									</div>
 
-										<div class="form-group">
-											<label class="col-sm-3 control-label no-padding-right" for="identity">身份证号</label>
-											<div class="col-sm-9">
-												<input type="text" maxlength="21" id="identity" class="col-xs-10 col-sm-6 v_identity" data-toggle="popover" data-trigger='manual'/>
-											</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="gender">性别</label>
+										<div class="col-sm-9">
+											<input type="checkbox" id="gender" class="ace ace-switch ace-switch-5"/>
+											<span class="lbl gender"></span>
 										</div>
+									</div>
 
-										<div class="form-group">
-											<label class="col-sm-3 control-label no-padding-right" for="officer">军官证</label>
-											<div class="col-sm-9">
-												<input type="text" maxlength="21" id="officer" class="col-xs-10 col-sm-6  v_officer" data-toggle="popover" data-trigger='manual'/>
-											</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="identity">身份证号</label>
+										<div class="col-sm-9">
+											<input type="text" maxlength="21" id="identity" class="col-xs-10 col-sm-6 v_identity" data-toggle="popover" data-trigger='manual'/>
 										</div>
+									</div>
 
-										<div class="form-group">
-											<label class="col-sm-3 control-label no-padding-right" for="passport">护照</label>
-											<div class="col-sm-9">
-												<input type="text" maxlength="21" id="passport" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual'/>
-											</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="officer">军官证</label>
+										<div class="col-sm-9">
+											<input type="text" maxlength="21" id="officer" class="col-xs-10 col-sm-6  v_officer" data-toggle="popover" data-trigger='manual'/>
 										</div>
+									</div>
 
-										<div class="form-group" id="phonehide">
-											<label class="col-sm-3 control-label no-padding-right orange" for="phone">联系方式</label>
-											<div class="col-sm-9">
-												<input type="text" id="phone" maxlength="64" class="col-xs-10 col-sm-6 v_phone" data-toggle="popover" data-trigger='manual'/>
-											</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="passport">护照</label>
+										<div class="col-sm-9">
+											<input type="text" maxlength="21" id="passport" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual'/>
 										</div>
+									</div>
 
-										<div class="form-group">
-											<label class="col-sm-3 control-label no-padding-right" for="qq">QQ</label>
-											<div class="col-sm-9">
-												<input type="text" id="qq" maxlength="15" class="col-xs-10 col-sm-6 v_number" data-toggle="popover" data-trigger='manual'/>
-											</div>
+									<div class="form-group" id="phonehide">
+										<label class="col-sm-3 control-label no-padding-right orange" for="phone">联系方式</label>
+										<div class="col-sm-9">
+											<input type="text" id="phone" maxlength="64" class="col-xs-10 col-sm-6 v_phone" data-toggle="popover" data-trigger='manual'/>
 										</div>
+									</div>
 
-										<div class="form-group">
-											<label class="col-sm-3 control-label no-padding-right" for="wechat">微信</label>
-											<div class="col-sm-9">
-												<input type="text" id="wechat" maxlength="15" class="col-xs-10 col-sm-6 v_name_en" data-toggle="popover" data-trigger='manual'/>
-											</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="qq">QQ</label>
+										<div class="col-sm-9">
+											<input type="text" id="qq" maxlength="15" class="col-xs-10 col-sm-6 v_number" data-toggle="popover" data-trigger='manual'/>
 										</div>
+									</div>
 
-										<div class="form-group">
-											<label class="col-sm-3 control-label no-padding-right" for="email">邮箱</label>
-											<div class="col-sm-9">
-												<input type="text" id="email" maxlength="32" class="col-xs-10 col-sm-6 v_email" data-toggle="popover" data-trigger='manual'/>
-											</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="wechat">微信</label>
+										<div class="col-sm-9">
+											<input type="text" id="wechat" maxlength="15" class="col-xs-10 col-sm-6 v_name_en" data-toggle="popover" data-trigger='manual'/>
 										</div>
+									</div>
 
-										<div class="form-group">
-											<label class="col-sm-3 control-label no-padding-right" for="relationshipType">客户类型</label>
-											<div class="col-sm-9">
-												<select class="col-xs-10 col-sm-6 v_required" id="relationshipType"></select>
-											</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="email">邮箱</label>
+										<div class="col-sm-9">
+											<input type="text" id="email" maxlength="32" class="col-xs-10 col-sm-6 v_email" data-toggle="popover" data-trigger='manual'/>
 										</div>
+									</div>
 
-										<div class="form-group">
-											<label class="col-sm-3 control-label no-padding-right" for="address">通讯地址</label>
-											<div class="col-sm-9">
-												<textarea id="address" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
-											</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="relationshipType">客户类型</label>
+										<div class="col-sm-9">
+											<select class="col-xs-10 col-sm-6 v_required" id="relationshipType"></select>
 										</div>
+									</div>
+                                    
+									<div class="form-group">
+										<label class="col-sm-3 control-label no-padding-right" for="address">通讯地址</label>
+										<div class="col-sm-9">
+											<textarea id="address" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
+										</div>
+									</div>
+                                    
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right orange" for="type">客户类型</label>
+                                        <div class="col-sm-9">
+											<select class="col-xs-10 col-sm-6 v_required" id="type"></select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group companyitem" id="comNo">
+                                        <label class="col-sm-3 control-label no-padding-right orange" for="companyNo">公司编号</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="companyNo" maxlength="32" class="col-xs-10 v_required col-sm-6" data-toggle="popover" data-trigger='manual'>
+                                        </div>
+                                    </div>
 
-								  </div>
-								</form>
-							</div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right orange" for="companyName" id="comName">个人姓名</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="companyName" maxlength="32" class="col-xs-10 v_required col-sm-6" data-toggle="popover" data-trigger='manual'>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group companyitem" id="companyAd">
+                                        <label class="col-sm-3 control-label no-padding-right orange" for="companyAddr">公司地址</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="companyAddr" maxlength="32" class="col-xs-10 v_required col-sm-6" data-toggle="popover" data-trigger='manual'>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right " for="companyPhone" id="comPhone">个人电话</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="companyPhone" maxlength="32" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual'>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right orange" for="companyBank">开户行</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="companyBank" maxlength="32" class="col-xs-10 v_required col-sm-6" data-toggle="popover" data-trigger='manual'>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right orange" for="companyBankno">开户账号</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" id="companyBankno" maxlength="32" class="col-xs-10 v_required col-sm-6" data-toggle="popover" data-trigger='manual'>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+							</form>
 						</div>
+					</div>
 
 				</div>
 

@@ -1,4 +1,33 @@
 
+/**
+        合同html/js文件命名说明:
+        C-<company>-<module>-<type>-<index>.html
+        C-<公司/模式>-<业务类型>-<合同类型>-<序号>.html
+        
+        公司/模式:
+        001 (方林/半包)
+        002 (1918/大宅)
+        003 (宜家/半包/整装)
+        004 (爱林/整装)
+        005 (恩林/局改/二改)
+        
+        业务类型:
+        D (装修)
+        M (主材)
+        
+        合同类型:
+        0 (工程)
+        1 (设计费)
+        2 (主材代购)
+        3 (服务费)
+        
+        举例:
+        C-001-D-3-0001.html 方林装修服务费相关合同
+        C-005-D-0-0001.html 恩林装修工程相关合同
+        
+        此文件为: 方林装修服务费合同
+ */
+
 jQuery(function($) {
 
     var contractEdit = {
@@ -20,11 +49,17 @@ jQuery(function($) {
         decorationOrderId : params.decorationOrderId,
 
         $input: null,
+        
+        current: new Date(),
 	};
     
     if(contractEdit.contractArgs.agent == "1"){
         com.focusPage(".agent", "#form").hide();
     }
+    
+    com.post(api.common.current, {}, function(res){
+        contractEdit.current = new Date(res.current);
+    }, null, false);
     
     com.post(api.data.queryCustomerById, {"customer.cid": params.cid}, function (res) {
 
@@ -35,7 +70,6 @@ jQuery(function($) {
         com.focusPage("#sin-customer-ident", "#form").val(customer.identity);
         
         contractEdit.customer = customer;
-        
     });
 
     com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": contractEdit.decorationOrderId}, function (res) {
@@ -46,7 +80,6 @@ jQuery(function($) {
         var proper = village.cityProper;
         
         contractEdit.decoration = data;
-        
     });
     
     com.post(api.decoration.queryDecorationHolonomy, {"decorationHolonomy.decoration.orderId": contractEdit.decorationOrderId}, function (res) {
@@ -80,9 +113,9 @@ jQuery(function($) {
         
         data["con-service-total-cn"] = utils.getCNMoney(parseFloat(data["con-service-total"]));
         
-        data["con-sign-year"] = com.dateFormat(new Date(), "yyyy");
-        data["con-sign-month"] = com.dateFormat(new Date(), "MM");
-        data["con-sign-day"] = com.dateFormat(new Date(), "dd");
+        data["con-sign-year"] = com.dateFormat(contractEdit.current, "yyyy");
+        data["con-sign-month"] = com.dateFormat(contractEdit.current, "MM");
+        data["con-sign-day"] = com.dateFormat(contractEdit.current, "dd");
         
         data["sin-customer-name"] = data["con-customer-name"];
         

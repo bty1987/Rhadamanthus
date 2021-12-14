@@ -902,16 +902,16 @@
                     btn1.click(function(){
                         var body = layer.getChildFrame('body', index);
                         var iframeWin = window[layero.find('iframe')[0]['name']];
-                        if(typeof (isPrint) === "function")isPrint(layero);
+                        if(typeof (isPrint) === "function") isPrint(layero);
                         iframeWin.print();
                         return false;
-                    })
+                    });
                     
                     btn2.click(function(){
                         printer.handle();
-                        if(typeof (isPrint) === "function")isPrint(layero);
+                        if(typeof (isPrint) === "function") isPrint(layero);
                         return false;
-                    })
+                    });
                     
                     if (success != null && typeof(success) == 'function') {
                         success();
@@ -1343,6 +1343,44 @@
         });
     },
     /**
+     * 上传文件/图片
+     * @param content 文件内容
+     * @param name 名称
+     * @param fileargs 文件请求参数名
+     * @param args 请求参数
+     * @param success 成功回调
+     * @param fail 失败回调
+     * @param complete 完成回调
+     */
+    upload: function(content, name, fileargs, args, success, fail, complete){
+        
+        var url = config.media + (uapi ? uapi.url : exts.indexOf('jpg') == -1 ? api.common.uploadOther.url : api.common.uploadImg.url);
+        
+        var arr = content.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        while(n--){
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        var file = new File([u8arr], name, {type:mime});
+        
+        var formData = new FormData();
+        formData.append(fileargs, file);
+
+        $.ajax({
+            url : url,
+            type : "POST",
+            data : formData,
+            processData: false,
+            contentType: false,
+        }).success(function(result) {
+            if(success && typeof success == 'function') success(result);
+        }).error(function(error){
+            if(fail && typeof fail == 'function') fail(error);
+        }).complete(function(info){
+            if(complete && typeof complete == 'function') complete(info);
+        });
+    },
+    /**
      * 获取对象中属性
      * @param o 对象
      * @param props 属性 , 可以为字符串或数组
@@ -1366,6 +1404,26 @@
         } else {
             com.getProp(o[prop], props, flag, callback);
         }
+    },
+    
+    /**
+     * 字符串格式化
+     * @param content
+     * @param args
+     * @returns 
+     */
+     format: function(content, args) {
+
+        var result = content;
+
+        for(var key in args) {
+            var value = args[key];
+            if (undefined != value) {
+                result = result.replace(new RegExp("{" + key + "}", "g"), value);
+            }
+        }
+
+        return result;
     },
     
     initForm: function(container, title, forms, btns, prop, show, post, hide){
@@ -1475,7 +1533,7 @@
         for(var key in data) {
             var value = data[key];
             if (undefined != value) {
-                result = result.replaceAll("{" + key + "}", value);
+                result = result.replace("{" + key + "}", value);
             }
         }
         return result;

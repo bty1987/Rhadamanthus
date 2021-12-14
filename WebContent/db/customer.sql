@@ -117,6 +117,34 @@ CREATE TABLE `consultion` (
   PRIMARY KEY (`cid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='咨询单';
 
+DROP TABLE IF EXISTS `cppoint`;
+CREATE TABLE `cppoint` (
+  `cpid` int(11) NOT NULL AUTO_INCREMENT COMMENT '积分ID',
+  `cid` int(11) NOT NULL COMMENT '客户ID',
+  `dpoint` bigint(10) NOT NULL DEFAULT '0' COMMENT '装修积分',
+  `spoint` bigint(10) NOT NULL DEFAULT '0' COMMENT '销售积分',
+  `company` int(11) NOT NULL COMMENT '公司',
+  PRIMARY KEY (`cpid`),
+  UNIQUE KEY `uniqueone` (`cid`,`company`),
+  KEY `indexone` (`cid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客户积分表';
+
+DROP TABLE IF EXISTS `cppointrecord`;
+CREATE TABLE `cppointrecord` (
+  `cprid` int(11) NOT NULL AUTO_INCREMENT COMMENT '记录ID',
+  `cid` int(11) NOT NULL COMMENT '客户ID',
+  `cpid` int(11) NOT NULL COMMENT '积分ID',
+  `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '类型, 0: 累计, 1: 消耗',
+  `pointType` tinyint(1) NOT NULL DEFAULT '0' COMMENT '积分类型, 0: 装修, 1: 销售',
+  `balance` bigint(10) NOT NULL DEFAULT '0' COMMENT '剩余积分',
+  `point` bigint(10) NOT NULL DEFAULT '0' COMMENT '积分',
+  `cuid` int(11) NOT NULL COMMENT '操作人',
+  `operateTime` timestamp NULL DEFAULT NULL COMMENT '操作时间',
+  PRIMARY KEY (`cprid`),
+  KEY `indexone` (`cid`),
+  KEY `indextwo` (`cpid`)
+) ENGINE=InnoDB DEFAULT AUTO_INCREMENT=1 CHARSET=utf8 COMMENT='客户积分记录表';
+
 DROP TABLE IF EXISTS `customerorigin`;
 CREATE TABLE `customerorigin` (
   `coid` int(11) NOT NULL AUTO_INCREMENT COMMENT '客源ID',
@@ -141,11 +169,27 @@ CREATE TABLE `customerorigin` (
   `cid` int(11) DEFAULT NULL COMMENT '客户ID',
   `hid` int(11) DEFAULT NULL COMMENT '绑定房产ID',
   `duid` int(11) DEFAULT NULL COMMENT '设计师',
+  `suid` int(11) DEFAULT NULL,
+  `dbid` int(11) DEFAULT NULL,
   `orderId` varchar(15) DEFAULT NULL COMMENT '生成装修单',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态 , 0(初始) , 1(审批) , 2(绑定装修单) , 3(失效)',
   `comment` varchar(128) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`coid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客源表';
+
+DROP TABLE IF EXISTS `customeroriginfunction`;
+CREATE TABLE `customeroriginfunction` (
+  `cfid` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) NOT NULL,
+  `key` varchar(64) NOT NULL,
+  `value` varchar(64) NOT NULL,
+  `type` tinyint(1) NOT NULL,
+  `subtype` tinyint(1) NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `sort` int(4) NOT NULL,
+  `comment` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`cfid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客源功能配置表';
 
 DROP TABLE IF EXISTS `customerrecord`;
 CREATE TABLE `customerrecord` (
@@ -160,7 +204,7 @@ CREATE TABLE `customerrecord` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客源记录';
 
 DROP TABLE IF EXISTS `decoration`;
-CREATE TABLE `decoration`  (
+CREATE TABLE `decoration` (
   `doId` int(11) NOT NULL AUTO_INCREMENT,
   `unionId` varchar(32) NOT NULL,
   `orderId` varchar(15) NOT NULL,
@@ -172,7 +216,7 @@ CREATE TABLE `decoration`  (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户订单信息';
 
 DROP TABLE IF EXISTS `emember`;
-CREATE TABLE `emember`  (
+CREATE TABLE `emember` (
   `emid` int(11) NOT NULL AUTO_INCREMENT,
   `no` varchar(15) NOT NULL,
   `name` varchar(64) NOT NULL,
@@ -182,22 +226,37 @@ CREATE TABLE `emember`  (
   `ticket` varchar(32) DEFAULT NULL,
   `status` tinyint(1) DEFAULT '0',
   `activity` int(11) DEFAULT '1',
+  `registerTime` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`emid`),
-  UNIQUE KEY `uniqueone` (`unionId`,`ticket`,`activity`),
+  UNIQUE KEY `uniqueone` (`no`,`activity`),
   KEY `indexone` (`unionId`),
   KEY `indextwo` (`no`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='电子会员';
 
 DROP TABLE IF EXISTS `feedback`;
-CREATE TABLE `feedback`  (
+CREATE TABLE `feedback` (
   `fid` int(11) NOT NULL AUTO_INCREMENT,
   `unionId` varchar(32) NOT NULL,
   `content` varchar(512) NOT NULL DEFAULT '',
   `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '类型 , 0:微信',
   `picture` varchar(255) NOT NULL DEFAULT '',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `orderId` varchar(32) DEFAULT '',
+  `phone` varchar(16) DEFAULT '',
+  `company` int(11) DEFAULT '0' COMMENT '公司',
   PRIMARY KEY (`fid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='反馈信息表';
+
+DROP TABLE IF EXISTS `feedbackdrawing`;
+CREATE TABLE `feedbackdrawing` (
+  `fdid` int(11) NOT NULL AUTO_INCREMENT COMMENT '图片ID',
+  `fid` int(11) NOT NULL COMMENT '反馈ID',
+  `path` varchar(256) NOT NULL COMMENT '图片路径',
+  `createTime` timestamp NULL DEFAULT NULL COMMENT '创建时间',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态',
+  PRIMARY KEY (`fdid`),
+  KEY `indexone` (`fid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='反馈图片表';
 
 DROP TABLE IF EXISTS `group`;
 CREATE TABLE `group`  (

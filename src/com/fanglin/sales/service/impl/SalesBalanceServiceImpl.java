@@ -66,7 +66,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 
 		for (SalesBalancePO salesBalancePO : salesBalancePOs) {
 
-			SalesBalanceVO salesBalanceVO = new SalesBalanceVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new RefundsVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(),new UserBaseVO());
+			SalesBalanceVO salesBalanceVO = new SalesBalanceVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO()), new RefundsVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new UserBaseVO());
 
 			BeanUtil.copyPropertie(salesBalancePO, salesBalanceVO, Arrays.asList("sales", "refunds", "creater", "poster", "salesman", "dept", "region", "checker", "voster"));
 			BeanUtil.copyPropertie(salesBalancePO.getSales(), salesBalanceVO.getSales(), Arrays.asList("salesman", "dept", "region", "guider", "instorer", "guideDept", "house", "customer", "supplier", "finisher"));
@@ -402,6 +402,8 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 			reveBalancePO.setVbalance(-vbalance);
 			reveBalancePO.setTotal(-salesBalancePO.getTotal());
 
+			reveBalancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+
 			salesBalanceDao.save(reveBalancePO);
 		}
 
@@ -510,7 +512,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int vpostSalesBalance(List<SalesBalanceVO> sbids , String userId) throws FLException {
+	public int vpostSalesBalance(List<SalesBalanceVO> sbids, String userId) throws FLException {
 
 		for (SalesBalanceVO salesBalanceVO : sbids) {
 
@@ -530,7 +532,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 				throw new FLException(260021, "销售单不存在");
 			}
 			UserPO voster = userDao.queryUserByUserId(userId);
-			
+
 			salesBalancePO.setStatus(SalesBalancePO.STATUS_VENDORBALANCE_INT);
 			salesBalancePO.setVoster(voster);
 			salesBalancePO.setVenderTime(DateUtil.getDateToTimestamp(new Date()));

@@ -10,11 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.balance.service.BalanceSalesService;
+import com.fanglin.balance.vo.BalanceSalesBalanceVO;
 import com.fanglin.balance.vo.BalanceSalesVO;
-import com.fanglin.balance.vo.BalanceVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.sales.vo.SalesBalanceVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -26,47 +25,89 @@ public class BalanceSalesAction extends BaseListAction {
 	@Autowired
 	private BalanceSalesService balanceSalesService;
 
-	private BalanceVO balance;
-
 	private BalanceSalesVO balanceSales;
 
-	private List<BalanceVO> balances;
+	private List<BalanceSalesVO> balanceSaleses;
 
-	private List<BalanceSalesVO> balanceSaless;
+	private List<BalanceSalesBalanceVO> balanceSalesBalances;
 
-	private List<SalesBalanceVO> salesBalances;
+	@Action(value = "pageBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageBalanceSales() throws FLException {
 
-	private SalesBalanceVO salesBalance;
-
-	@Action(value = "queryBalanceSalesForSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryBalanceSalesForSales() {
-
-		salesBalances = balanceSalesService.queryBalanceSalesForSales(balanceSales);
+		balanceSalesService.pageBalanceSales(getPaging(), getFilters(), queryCompany());
 
 		return SUCCESS;
 	}
 
-	@Action(value = "queryBalanceSalesForBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryBalanceSalesForBalance() {
+	@Action(value = "createBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String createBalanceSales() throws FLException {
 
-		balances = balanceSalesService.queryBalanceSalesForBalance(balanceSales);
+		balanceSalesService.createBalanceSales(balanceSales, queryUserId(), queryCompany());
 
+		return SUCCESS;
+	}
+
+	@Action(value = "queryBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryBalanceSales() throws FLException {
+
+		balanceSaleses = balanceSalesService.queryBalanceSales(balanceSales, queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryBalanceSalesByBsid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryBalanceSalesByBsid() throws FLException {
+
+		balanceSales = balanceSalesService.queryBalanceSalesByBsid(balanceSales);
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "updateBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateBalanceSales() throws FLException {
+
+		balanceSalesService.updateBalanceSales(balanceSales);
 		return SUCCESS;
 	}
 
 	@Action(value = "submitBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String submitBalanceSales() throws FLException {
 
-		balanceSalesService.submitBalanceSales(balance, balanceSaless, queryUserId(), queryCompany());
+		balanceSalesService.submitBalanceSales(balanceSales, balanceSalesBalances, queryUserId(), queryCompany());
+
 		return SUCCESS;
 	}
 
-	public BalanceVO getBalance() {
-		return balance;
-	}
+	@Action(value = "unbindBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String unbindBalanceSales() throws FLException {
 
-	public void setBalance(BalanceVO balance) {
-		this.balance = balance;
+		balanceSalesService.unbindBalanceSales(balanceSales, balanceSalesBalances, queryUserId(), queryCompany());
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "balanceBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String balanceBalanceSales() throws FLException {
+
+		balanceSalesService.balanceBalanceSales(balanceSales);
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "lockBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String lockBalanceSales() throws FLException {
+
+		balanceSalesService.lockBalanceSales(balanceSales);
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "unlockBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String unlockBalanceSales() throws FLException {
+
+		balanceSalesService.unlockBalanceSales(balanceSales);
+
+		return SUCCESS;
 	}
 
 	public BalanceSalesVO getBalanceSales() {
@@ -77,36 +118,20 @@ public class BalanceSalesAction extends BaseListAction {
 		this.balanceSales = balanceSales;
 	}
 
-	public List<BalanceSalesVO> getBalanceSaless() {
-		return balanceSaless;
+	public List<BalanceSalesBalanceVO> getBalanceSalesBalances() {
+		return balanceSalesBalances;
 	}
 
-	public void setBalanceSaless(List<BalanceSalesVO> balanceSaless) {
-		this.balanceSaless = balanceSaless;
+	public void setBalanceSalesBalances(List<BalanceSalesBalanceVO> balanceSalesBalances) {
+		this.balanceSalesBalances = balanceSalesBalances;
 	}
 
-	public List<SalesBalanceVO> getSalesBalances() {
-		return salesBalances;
+	public List<BalanceSalesVO> getBalanceSaleses() {
+		return balanceSaleses;
 	}
 
-	public void setSalesBalances(List<SalesBalanceVO> salesBalances) {
-		this.salesBalances = salesBalances;
-	}
-
-	public SalesBalanceVO getSalesBalance() {
-		return salesBalance;
-	}
-
-	public void setSalesBalance(SalesBalanceVO salesBalance) {
-		this.salesBalance = salesBalance;
-	}
-
-	public List<BalanceVO> getBalances() {
-		return balances;
-	}
-
-	public void setBalances(List<BalanceVO> balances) {
-		this.balances = balances;
+	public void setBalanceSaless(List<BalanceSalesVO> balanceSaleses) {
+		this.balanceSaleses = balanceSaleses;
 	}
 
 }

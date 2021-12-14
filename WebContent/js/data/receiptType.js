@@ -8,7 +8,8 @@ $(function ($) {
         items: {},
         editFlg: false,
         cleanItemsitems:{},
-        typeArray: ["现金", "刷卡", "银行", "对公账户", "券"]
+        typeArray: ["现金", "刷卡", "银行", "对公账户", "券"],
+        funds: {}
     };
 
     $.extend(com.validate(),receiptType.validator);
@@ -18,15 +19,35 @@ $(function ($) {
     receiptType.items.rtId = com.focusPage("#rtId");
     receiptType.items.name = com.focusPage("#name");
     receiptType.items.type = com.focusPage("#type");
+    receiptType.items.fund = com.focusPage("#fund");
     receiptType.items.grade = com.focusPage("#grade");
     receiptType.items.kino = com.focusPage("#kino");
     receiptType.items.kiname = com.focusPage("#kiname");
+    receiptType.items.kibalance = com.focusPage("#kibalance");
+    receiptType.items.bankno = com.focusPage("#bankno");
     receiptType.items.assistant = com.focusPage("#assistant");
     receiptType.items.value = com.focusPage("#value");
 
     com.post(api.ds.data, {}, function(res){
         receiptType.items.grade.bindData(res.grade, "key", "value");
+        receiptType.items.fund.bindData(res.receiptTypeFund, "key", "value");
+
+        $.each(res.receiptTypeFund, function (i,v) {
+            receiptType.funds[v.key] = v.value;
+        });
     }, null, false);
+
+    receiptType.modal.on('hide.bs.modal', function (e) {
+        com.clearValidator();
+        com.cleanItems(receiptType.items);
+        com.focusPage("#banknoDiv").css("display", "none");
+    });
+
+    receiptType.items.type.on("change", function(){
+        var typeVal =  receiptType.items.type.val();
+
+        (['2', '3'].contains(typeVal)) ? com.focusPage("#banknoDiv").css("display", "block") : com.focusPage("#banknoDiv").css("display", "none");
+    });
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
@@ -59,10 +80,13 @@ $(function ($) {
             var propertyArr = [
                 ["键值:", v.no, "grey"],
                 ["类型:", v.type, "red"],
+                ["资金类型:", receiptType.funds[v.fund], "red"],
                 ["状态:", v.status == 1 ? "启用" : "禁用", "red"],
                 ["等级:", com.checkNull(v.grade, "无"), "red"],
                 ["金蝶编号:", com.checkNull(v.kino, "无"), "grey"],
                 ["金蝶名称:", com.checkNull(v.kiname, "无"), "grey"],
+                ["结算方式:", com.checkNull(v.kibalance, "无"), "grey"],
+                ["银行账号:", com.checkNull(v.bankno, "无"), "blue"],
                 ["辅核项:", com.checkNull(v.assistant, "无"), "grey"],
                 ["POS值:", com.checkNull(v.value, "无"), "grey"]
             ];
@@ -76,7 +100,7 @@ $(function ($) {
 
             var $btnStatus = $('<div></div>').addClass('pull-right');
             var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
-            var $span = $('<span></span>').addClass('lbl');
+            var $span = $('<span></span>').addClass('lbl status-lbl');
 
             $btnStatus.append($statusSwitch).append($span);
 
@@ -93,12 +117,20 @@ $(function ($) {
                 receiptType.items.rtId.val(v.rtId);
                 receiptType.items.name.val(v.name);
                 receiptType.items.type.val(utils.accAdd($.inArray(v.type, receiptType.typeArray), 1));
+                receiptType.items.fund.val(v.fund);
                 receiptType.items.grade.val(v.grade);
                 receiptType.items.kino.val(v.kino);
                 receiptType.items.kiname.val(v.kiname);
+                receiptType.items.kibalance.val(v.kibalance);
+                receiptType.items.bankno.val(v.bankno);
                 receiptType.items.assistant.val(v.assistant);
                 receiptType.items.value.val(v.value);
                 editFlg = false;
+
+                if(['2', '3'].contains(receiptType.items.type.val())){
+                    com.focusPage("#banknoDiv").css("display", "block");
+                }
+
                 receiptType.modal.modal("show")
             });
 
@@ -128,7 +160,6 @@ $(function ($) {
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         $adda.click(function () {
-            com.cleanItems(receiptType.items);
             editFlg = true;
             receiptType.modal.modal("show")
         });
@@ -139,9 +170,12 @@ $(function ($) {
         var options = {
             "receiptType.name" : receiptType.items.name.val(),
             "receiptType.type" : receiptType.items.type.val(),
+            "receiptType.fund" : receiptType.items.fund.val(),
             "receiptType.grade" : receiptType.items.grade.val(),
             "receiptType.kino" : receiptType.items.kino.val(),
             "receiptType.kiname" : receiptType.items.kiname.val(),
+            "receiptType.kibalance" : receiptType.items.kibalance.val(),
+            "receiptType.bankno" : receiptType.items.bankno.val(),
             "receiptType.assistant" : receiptType.items.assistant.val(),
             "receiptType.value" : receiptType.items.value.val()
         };
@@ -150,14 +184,14 @@ $(function ($) {
             return;
         }
         if(editFlg){
-            com.post(api.common.addReceiptType,options,function () {
+            com.post(api.common.addReceiptType, options, function () {
                 searcher.doSearch();
                 com.showAlert(com.info, "添加成功");
                 receiptType.modal.modal("hide")
             })
         }else{
-            options["receiptType.rtId"]=receiptType.items.rtId.val();
-            com.post(api.common.updateReceiptType,options,function () {
+            options["receiptType.rtId"] = receiptType.items.rtId.val();
+            com.post(api.common.updateReceiptType, options, function () {
                 searcher.doSearch();
                 com.showAlert(com.info, "修改成功");
                 receiptType.modal.modal("hide")

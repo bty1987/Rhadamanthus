@@ -7,6 +7,7 @@ $(function(){
         
         modals: {
             quotationItemModal: com.focusPage("#quotationItemModal"),
+            selectItemModal: com.focusPage("#selectItemModal"),
         },
         
         items: {
@@ -28,6 +29,10 @@ $(function(){
         
         editFlag: false,
         repeatFlg: false,
+        
+        args: {
+            qiid: null,
+        },
         
         validator: {
             region: {
@@ -128,6 +133,7 @@ $(function(){
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
+            var $btnCopySoods = $('<a></a>').addClass('btn btn-minier btn-pink').html('选材复制');
             var $btnSelection = $('<a></a>').addClass('btn btn-minier btn-success').html('选材');
             var $btnNormood = $('<a></a>').addClass('btn btn-minier btn-warning').html('定额材料');
             var $btnNormrice = $('<a></a>').addClass('btn btn-minier btn-inverse').html('定额工费');
@@ -171,7 +177,7 @@ $(function(){
 
             switch (quotation.pageType) {
                 case "selection":
-                    $divBtnWrap.append($btnSelection).appendTo($h3);
+                    $divBtnWrap.append($btnSelection).append($btnCopySoods).appendTo($h3);
                     break;
                 case "norm":
                     $divBtnWrap.append($btnNormrice).append($btnNormood).appendTo($h3);
@@ -187,10 +193,18 @@ $(function(){
                 queryQuotationSmallCategory(v.qtid);
                 edit(v);
             });
+            
+            $btnCopySoods.click(function(){
+                quotationItem.modals.selectItemModal.modal("show");
+                initQuotationItemList(v.version.no);
+                
+                quotationItem.args.qiid = v.qiid;
+            });
 
             $btnSelection.click(function(){
                 params["qiid"] = v.qiid;
-                com.popup4page("#createSoodsPopUp", "/views/data/createSoods.html", "添加选材");
+                params["quotationItem"] = v;
+                com.popup4page("#createSoodsPopUp", "/views/data/soods2create.html", "添加选材");
             });
 
             $btnNormood.click(function(){
@@ -460,4 +474,95 @@ $(function(){
             });
         }
     };
+    
+    function initQuotationItemList(versionId) {
+
+        var extraParams = {"quotationItem.version.no": versionId} ;
+
+        var quoDisplayFunc = (function(){
+
+            var renderList = function(tableId,listData){
+                var $tableWrap = com.focusPage('#' + tableId);
+                var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+
+                if(listData && listData.length){
+                    $.each(listData,function(i, v){
+                        creatLine(v).appendTo($ul);
+                    });
+
+                    $ul.appendTo($tableWrap);
+                }
+            };
+
+            var creatLine = function(v){
+                var $liLine = $('<li></li>').addClass('item-blue clearfix');
+                var $h3 = $('<h3></h3>').addClass('oid').css({"margin-bottom" : 0});
+
+                var $label = $('<label></label>');
+                var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.name);
+
+                var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+                var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+                
+                var $btnCopy = $('<a></a>').addClass('btn btn-minier btn-yellow').html('复制');
+
+                var propertyArr = [
+                    ["类型: ", v.category.name, "red"],
+                    ["分类: ", v.classification.name, "red"],
+                    ["大类: ", v.bigCategory.name, "red"],
+                    ["小类: ", v.smallCategory.name, "red"],
+                    ["单位: ", v.unit.name, "red"],
+                    ["工种: ", v.workType.name, "red"],
+                    ["单价: ", v.unitPrice, "blue"],
+                    ["版本: ", v.version.name, "grey"],
+                ];
+
+                $.each(propertyArr, function (index,value) {
+                    var $liProperty = $('<li></li>');
+                    $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                    $liProperty.appendTo($ulProperty);
+                });
+                
+                $divBtnWrap.append($btnCopy).appendTo($h3);
+
+                $label.append($span).appendTo($h3);
+                $liLine.append($h3).append($ulProperty);
+                
+                $btnCopy.click(function(){
+                    
+                    var options = {
+                        "soods.quotationItem.qiid": quotationItem.args.qiid,
+                        "soods.qiid": v.qiid
+                    }
+                    
+                    com.post(api.data.copySoods, options, function(res){
+                        quotationItem.modals.selectItemModal.modal("hide");
+                    });
+                });
+
+                return $liLine;
+            };
+
+            return {
+                init: function(tableId,listData){
+                    com.focusPage('#' + tableId).html(null);
+                    renderList(tableId,listData);
+                },
+                drawLine: function(v){
+                    return creatLine(v);
+                }
+            };
+        })();
+
+        var condArr = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'quotation-worktype'];
+
+        var quotationSeacher = new Searcher();
+
+        quotationSeacher.init(condArr, "quoCondList", api.quotation.pageQuotationItemByVersionId, function(data){
+            quoDisplayFunc.init('quoResultList', data);
+        }, "quoPagenation", "quotationFuncAreaPostData", extraParams);
+        
+        quotationSeacher.base("quoCondList", "quoPagenation", "quoResultList", api.quotation.pageQuotationItemByVersionId)
+    }
 });

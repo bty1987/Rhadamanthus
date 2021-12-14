@@ -12,6 +12,8 @@ public class ApprovalVO implements java.io.Serializable {
 
 	private Long aid;
 
+	private String orderId;
+
 	private UserBaseVO receiver;
 
 	private UserBaseVO sender;
@@ -48,6 +50,14 @@ public class ApprovalVO implements java.io.Serializable {
 
 	public void setAid(Long aid) {
 		this.aid = aid;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 	public UserBaseVO getReceiver() {

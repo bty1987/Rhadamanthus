@@ -88,7 +88,7 @@ jQuery(function ($) {
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            var propertyArr = paymentUtils.getPropertyArr(payment, v, tableId == "advance" ? v.decoration : v[tableId], []);
+            var propertyArr = paymentUtils.getPropertyArr(customerPayment, v, tableId == "advance" ? v.decoration : v[tableId], []);
 
             $.each(propertyArr, function (index, value) {
                 var $liProperty = $('<li></li>');

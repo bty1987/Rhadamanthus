@@ -57,13 +57,14 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 	public void pageOccessories(Paging paging, List<Filter> filters, int company) {
 		
 		List<OccessoriesPO> occessoriesPOs = occessoriesDao.pageOccessories(paging, filters, company);
+		
 		List<OccessoriesVO> occessoriesVOs = new ArrayList<OccessoriesVO>();
 		
 		for(OccessoriesPO occessoriesPO : occessoriesPOs){
 			
-			OccessoriesVO occessoriesVO = new OccessoriesVO(new UserBaseVO(), new UserBaseVO());
+			OccessoriesVO occessoriesVO = new OccessoriesVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 			
-			BeanUtil.copyProperties(occessoriesPO, occessoriesVO, Arrays.asList("creater", "supervisor"));
+			BeanUtil.copyProperties(occessoriesPO, occessoriesVO, Arrays.asList("creater", "supervisor","supplier","confirmer","balancer"));
 			
 			occessoriesVO.getCreater().setBaseInfo(occessoriesPO.getCreater());
 			occessoriesVO.getSupervisor().setBaseInfo(occessoriesPO.getSupervisor());
@@ -72,6 +73,32 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 		}
 		
 		paging.setData(occessoriesVOs);
+	}
+
+	@Override
+	public void pageOccessoriesForSupplier(Paging paging, List<Filter> filters, String userId) {
+		
+		UserPO user = userDao.queryUserByUserId(userId);
+		
+		List<OccessoriesPO> occessoriesPOs = occessoriesDao.pageOccessoriesForSupplier(paging, filters, user.getUid());
+		
+		List<OccessoriesVO> occessoriesVOs = new ArrayList<OccessoriesVO>();
+		
+		for(OccessoriesPO occessoriesPO : occessoriesPOs){
+			
+			OccessoriesVO occessoriesVO = new OccessoriesVO(new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+			
+			BeanUtil.copyProperties(occessoriesPO, occessoriesVO, Arrays.asList("creater", "supervisor","supplier","confirmer","balancer"));
+			
+			occessoriesVO.getCreater().setBaseInfo(occessoriesPO.getCreater());
+			
+			occessoriesVO.getSupervisor().setBaseInfo(occessoriesPO.getSupervisor());
+			
+			occessoriesVOs.add(occessoriesVO);
+		}
+		
+		paging.setData(occessoriesVOs);
+		
 	}
 
 	@Override
@@ -133,6 +160,72 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 		occessoriesDao.update(occessoriesPO);
 		
 		return 0;
+	}
+	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int bindOccessories(OccessoriesVO occessoriesVO) throws FLException {
+		
+		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesVO.getOid());
+
+		if (occessoriesPO == null) {
+			throw new FLException(260023, "辅料单不存在");
+		}
+		
+		occessoriesPO.setSupplier(userDao.get(occessoriesVO.getSupplier().getUid()));
+		
+		occessoriesDao.update(occessoriesPO);
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int confirmOccessories(OccessoriesVO occessoriesVO, String userId) throws FLException {
+		
+		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesVO.getOid());
+		
+		UserPO user = userDao.queryUserByUserId(userId);
+		
+		if (occessoriesPO == null) {
+			throw new FLException(260023, "辅料单不存在");
+		}
+		
+		if(occessoriesPO.getStatus() != 0){
+			throw new FLException(260024, "辅料单状态不可操作");
+		}
+		
+		occessoriesPO.setStatus(occessoriesVO.getStatus());
+		occessoriesPO.setConfirmer(user);
+		
+		occessoriesDao.update(occessoriesPO);
+		
+		return 0;
+		
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int balanceOccessories(OccessoriesVO occessoriesVO, String userId) throws FLException {
+	
+		OccessoriesPO occessoriesPO = occessoriesDao.get(occessoriesVO.getOid());
+		
+		UserPO user = userDao.queryUserByUserId(userId);
+		
+		if (occessoriesPO == null) {
+			throw new FLException(260023, "辅料单不存在");
+		}
+		
+		if(occessoriesPO.getStatus() != 1){
+			throw new FLException(260024, "辅料单状态不可操作");
+		}
+		occessoriesPO.setStatus(occessoriesVO.getStatus());
+		occessoriesPO.setBalancer(user);
+		
+		occessoriesDao.update(occessoriesPO);
+		
+		return 0;
+		
 	}
 
 }

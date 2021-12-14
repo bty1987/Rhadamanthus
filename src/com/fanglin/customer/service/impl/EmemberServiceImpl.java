@@ -126,4 +126,18 @@ public class EmemberServiceImpl implements EmemberService {
 
 		return 0;
 	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void deleteEmember(EmemberVO emember) throws FLException {
+		// TODO Auto-generated method stub
+		EmemberPO ememberPO = ememberDao.get(emember.getEmid());
+		System.out.println(emember.getEmid());
+		
+		if(ememberPO == null){
+			throw new FLException(210011, "表单不存在");
+		}
+		
+		ememberDao.delete(ememberPO);
+	}
 }

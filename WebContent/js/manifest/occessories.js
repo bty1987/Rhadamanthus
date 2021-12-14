@@ -1,11 +1,32 @@
 $(function () {
     var occessories={
+        saveBtn: com.focusPage("#saveBtn"),
+        cancelBtn: null,
         status: {},
+        modals: {
+        },
+        addBindOccessories: com.focusPage("#addBindOccessories"),
+        oid : null,
+        pageType: params['urlLoadParams'].type,
     };
 
     com.post(api.ds.manifest, {}, function(res){
         occessories.status = res.occessoriesStatus.split("key", "value");
     }, null, false);
+
+    occessories.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+
+    occessories.cancelBtn = com.focusPage("#cancelBtn");
+
+    occessories.addBindOccessories.on("hide.bs.modal", function (e) {
+        com.focusPage("supplier");
+        com.cleanTypeahead("oid");
+        com.cleanItems(occessories.items);
+    });
+
+    com.initTypeahead('supplier', api.personel.querySupplierByPinyin, "supplier.pinYin", {"user.status": 0}, "suppliers", "uid", "userName", null);
+
+    occessories.oid = com.focusPage("#oid");
 
     var displayFunc = (function () {
 
@@ -86,23 +107,37 @@ $(function () {
             var $btnComfirm = $('<li></li>').append($('<a></a>').html('确认'));
             var $btnEdit = $('<li></li>').append($('<a></a>').html('编辑'));
             var $btnAccount = $('<li></li>').append($('<a></a>').html('结算'));
+            var $btnBinding = $('<li></li>').append($('<a></a>').html('绑定'));
 
             // v.status != 2 && ($btnUl.append($btnEdit));
-            v.status == 0 && ($btnUl.append($btnEdit).append($btnComfirm));
-            v.status == 1 && ($btnUl.append($btnView).append($btnAccount));
-            v.status == 2 && ($btnUl.append($btnView));
+            if (occessories.pageType=="supplier") {
+                v.status == 0 &&  $btnUl.append($btnComfirm);
+                v.status == 1 && ($btnUl.append($btnView));
+                v.status == 2 && ($btnUl.append($btnView));
+            }else {
+                v.status == 0 && ($btnUl.append($btnEdit).append($btnComfirm).append($btnBinding));
+
+                v.status == 1 && ($btnUl.append($btnView).append($btnAccount));
+                v.status == 2 && ($btnUl.append($btnView));
+            }
 
             $btnGroup.append($btn).append($btnUl).appendTo($cellOption);
 
             $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
+            $btnBinding.click(function(){
+                occessories.oid = v.oid;
+                occessories.addBindOccessories.modal("show");
+
+            });
             $btnView.click(function(){
+
 
                 if(v.status == 0){
                     com.showAlert(com.warning, "外辅单状态不可操作");
                     return false;
                 }
-
+                params["occessories.status"]= v.status;
                 params["occessoriesItem.oid"] = v.oid;
 
                 com.popup4page('#layerPopUp', "views/manifest/occessories4view.html", "外辅单 : " + v.no);
@@ -134,7 +169,7 @@ $(function () {
                 };
 
                 com.showConfirm('是否确认外辅单?', function(indexo){
-                    com.post(api.inventory.updateOccessoriesForStatus, option, function(res){
+                    com.post(api.inventory.confirmOccessories, option, function(res){
                         occessoriesSeacher.doSearch();
                     });
                 });
@@ -154,7 +189,7 @@ $(function () {
                 };
 
                 com.showConfirm('确认结算外辅单?', function(indexo){
-                    com.post(api.inventory.updateOccessoriesForStatus, options, function(res){
+                    com.post(api.inventory.balanceOccessories, options, function(res){
                         occessoriesSeacher.doSearch();
                     });
                 });
@@ -176,12 +211,32 @@ $(function () {
     })();
 
     var occessoriesSeacher = new Searcher();
+
+    if (occessories.pageType=="supplier") {
+        var url = api.inventory.pageOccessoriesForSupplier;
+    }else {
+        var url = api.inventory.pageOccessories;
+    }
+
     var _Array = ['inventory-accessories-orderId', 'inventory-occessories-no', 'inventory-accessories-createrName', 'inventory-accessories-createTime', 'inventory-occessories-status'];
 
-    occessoriesSeacher.init(_Array, "condList", api.inventory.pageOccessories, function (data) {
+    occessoriesSeacher.init(_Array, "condList", url, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "accessoriesPostData", null, false, null, function () {
         return [];
     }, 'resultList');
 
+    function saveData() {
+        if (com.validate('addBindOccessories'))
+            return false;
+        var options = {
+            'occessories.oid' : occessories.oid,
+            'occessories.supplier.uid': com.typeahead("supplier"),
+        };
+        com.post(api.inventory.bindOccessories, options, function (res) {
+            displayFunc.init();
+            com.showAlert(com.info, "操作成功");
+            occessories.addBindOccessories.modal("hide");
+        });
+    }
 });

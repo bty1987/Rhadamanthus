@@ -1,3 +1,33 @@
+
+/**
+        合同html/js文件命名说明:
+        C-<company>-<module>-<type>-<index>.html
+        C-<公司/模式>-<业务类型>-<合同类型>-<序号>.html
+        
+        公司/模式:
+        001 (方林/半包)
+        002 (1918/大宅)
+        003 (宜家/半包/整装)
+        004 (爱林/整装)
+        005 (恩林/局改/二改)
+        
+        业务类型:
+        D (装修)
+        M (主材)
+        
+        合同类型:
+        0 (工程)
+        1 (设计费)
+        2 (主材代购)
+        3 (服务费)
+        
+        举例:
+        C-001-D-3-0001.html 方林装修服务费相关合同
+        C-005-D-0-0001.html 恩林装修工程相关合同
+        
+        此文件为: 1918装修工程合同
+ */
+
 jQuery(function($) {
 
     var contractEdit = {
@@ -21,6 +51,8 @@ jQuery(function($) {
         decorationType: {},
 
         $input: null,
+        
+        current: new Date(),
 	};
     
     console.log(contractEdit.contractArgs);
@@ -33,9 +65,13 @@ jQuery(function($) {
         com.focusPage("#con-payment-second", "#form").hide();
     }
     
-    contractEdit.cover["cov-sign-year"] = com.dateFormat(new Date(), "yyyy");
-    contractEdit.cover["cov-sign-month"] = com.dateFormat(new Date(), "MM");
-    contractEdit.cover["cov-sign-day"] = com.dateFormat(new Date(), "dd");
+    com.post(api.common.current, {}, function(res){
+        contractEdit.current = new Date(res.current);
+    }, null, false);
+    
+    contractEdit.cover["cov-sign-year"] = com.dateFormat(contractEdit.current, "yyyy");
+    contractEdit.cover["cov-sign-month"] = com.dateFormat(contractEdit.current, "MM");
+    contractEdit.cover["cov-sign-day"] = com.dateFormat(contractEdit.current, "dd");
     
     com.post(api.ds.decoration, {}, function (res) {
         contractEdit.decorationType = res.typeness.split("key", "value");
@@ -49,6 +85,10 @@ jQuery(function($) {
         com.focusPage("#con-customer-name", "#form").val(customer.name);
         com.focusPage("#con-customer-phone", "#form").val(customer.phone);
         com.focusPage("#con-customer-ident", "#form").val(customer.identity);
+        com.focusPage("#con-bank-man", "#form").val(customer.name);
+        com.focusPage("#con-bank-no", "#form").val(customer.companyBankno);
+        com.focusPage("#con-bank-name", "#form").val(customer.companyBank);
+        com.focusPage("#con-bank-phone", "#form").val(customer.phone);
         
         contractEdit.customer = customer;
         
@@ -225,9 +265,9 @@ jQuery(function($) {
             
             console.log(data);
             
-            data["con-sign-year"] = com.dateFormat(new Date(), "yyyy");
-            data["con-sign-month"] = com.dateFormat(new Date(), "MM");
-            data["con-sign-day"] = com.dateFormat(new Date(), "dd");
+            data["con-sign-year"] = com.dateFormat(contractEdit.current, "yyyy");
+            data["con-sign-month"] = com.dateFormat(contractEdit.current, "MM");
+            data["con-sign-day"] = com.dateFormat(contractEdit.current, "dd");
             
             data["con-design-money1"] = parseFloat(data["con-design-money"]);
             data["con-activity-name1"] = data["con-activity-name"];

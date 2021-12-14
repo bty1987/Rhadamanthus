@@ -69,6 +69,15 @@ Condition.addupRule("personel", {
             valuePath:"value"
         }
     },
+    name: {
+        label: "姓名",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
+        }
+    },
     identity: {
         label: "身份证号",
         type: "text",
@@ -138,7 +147,7 @@ Condition.addupRule("personel", {
     
     "dept-type": {
         label: "部门类型",
-        type: "select",
+        type: "select",	
         submitConfig: {
             name: "deptType",
             op: "eq",
@@ -149,10 +158,27 @@ Condition.addupRule("personel", {
             postData: {},
             listPath: "departmentTypes",
             keyPath: "dtid",
-            valuePath: "name"
+            valuePath: "name" 	
         }
     },
     
+    "dept-isdet" :{
+        label: "是否定岗",
+        type: "select",
+        submitConfig: {
+            name: "isdet",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {//从后台取数据的各种配置
+            url: api.ds.department,
+            postData: {},
+            listPath: "deptIsdet",
+            keyPath: "key",
+            valuePath:"value"
+        }
+    }, 	
+   
     "dept-status" :{
         label: "状态",
         type: "select",

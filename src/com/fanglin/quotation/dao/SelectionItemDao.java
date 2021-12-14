@@ -28,4 +28,6 @@ public interface SelectionItemDao extends Dao<SelectionItemPO> {
 
 	public int countSelectionItem(String orderId, long areaId, long quoteId);
 
+	public int countSelectionItem(String orderId, List<Short> statuses);
+
 }

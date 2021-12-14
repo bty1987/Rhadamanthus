@@ -21,6 +21,8 @@ public class TaskPO implements Serializable {
 	public static final String COLUMN_STATUS_STR = "status";
 
 	public static final String COLUMN_SHOW_STR = "isShow";
+	
+	public static final String COLUMN_LEVEL_STR = "level";
 
 	public static final String COLUMN_KEYWORD_STR = "keyWord";
 
@@ -61,6 +63,7 @@ public class TaskPO implements Serializable {
 	private short status;
 
 	private short isShow;
+	
 
 	public TaskPO() {
 		super();

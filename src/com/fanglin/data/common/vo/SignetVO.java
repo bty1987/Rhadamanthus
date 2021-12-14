@@ -20,6 +20,12 @@ public class SignetVO implements Serializable {
 
 	private String data;
 
+	private String signid;
+
+	private String signno;
+
+	private short type;
+	
 	private int company;
 
 	public SignetVO() {
@@ -82,6 +88,22 @@ public class SignetVO implements Serializable {
 		this.data = data;
 	}
 
+	public String getSignid() {
+		return signid;
+	}
+
+	public void setSignid(String signid) {
+		this.signid = signid;
+	}
+
+	public String getSignno() {
+		return signno;
+	}
+
+	public void setSignno(String signno) {
+		this.signno = signno;
+	}
+
 	public int getCompany() {
 		return company;
 	}
@@ -89,4 +111,13 @@ public class SignetVO implements Serializable {
 	public void setCompany(int company) {
 		this.company = company;
 	}
+
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
+	}
+	
 }

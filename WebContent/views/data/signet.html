@@ -27,6 +27,13 @@
             </div>
             
             <div class="form-group">
+				 <label class="col-sm-3 control-label no-padding-right orange" for="relationshipType">类型</label>
+				 <div class="col-sm-9">
+					  <select class="col-xs-10 col-sm-6 v_required" id="type"></select>
+				 </div>
+			</div>
+            
+            <div class="form-group">
                  <label for="name" class="col-sm-3 control-label no-padding-right orange">关键字</label>
                  <div class="col-sm-8">
                      <input type="text" class="col-xs-8 m-wrap v_required" maxlength="64" id="keyword">
@@ -63,7 +70,34 @@
     </div>
 </div>
 
+<div id="copySignet" class="page-content"  style="display: none;">
+    <div class="row-fluid">
+        <form class="form-horizontal" novalidate="novalidate" id="copySignetModal">
+        
+            <div class="form-group">
+                 <label for="name" class="col-sm-3 control-label no-padding-right orange">编号</label>
+                 <div class="col-sm-8">
+                     <input type="text" class="col-xs-8 m-wrap v_required" maxlength="32" id="no">
+                 </div>
+            </div>
+            
+            <div class="form-group">
+                 <label for="name" class="col-sm-3 control-label no-padding-right orange">名称</label>
+                 <div class="col-sm-8">
+                     <input type="text" class="col-xs-8 m-wrap v_required" maxlength="32" id="name">
+                 </div>
+            </div>
+            
+            <div class="form-group col-xs-12">
+                <button type="button" id="copyBtn" class="btn btn-primary pull-right">确定</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div id="qrcodeModal" ></div>
+
+<div id="layerPopUp" class="portlet box"></div>
 
 <script type="text/javascript">
     $.loadScript(['js/data/signet.js']);

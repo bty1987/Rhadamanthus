@@ -16,13 +16,6 @@ public class OtherReceivableBillItemKO implements Serializable {
 		super();
 	}
 
-	public OtherReceivableBillItemKO(OrganizationKO fCOSTDEPARTMENTID, long fNOTAXAMOUNTFOR, long fTAXAMOUNTFOR) {
-		super();
-		FCOSTDEPARTMENTID = fCOSTDEPARTMENTID;
-		FNOTAXAMOUNTFOR = fNOTAXAMOUNTFOR;
-		FTAXAMOUNTFOR = fTAXAMOUNTFOR;
-	}
-
 	public OrganizationKO getFCOSTDEPARTMENTID() {
 		return FCOSTDEPARTMENTID;
 	}
@@ -45,6 +38,14 @@ public class OtherReceivableBillItemKO implements Serializable {
 
 	public void setFTAXAMOUNTFOR(long fTAXAMOUNTFOR) {
 		FTAXAMOUNTFOR = fTAXAMOUNTFOR;
+	}
+
+	public OtherReceivableBillItemKO ptk(String partment, long notaxAmount, long taxAmount) {
+		this.FCOSTDEPARTMENTID = new OrganizationKO(partment);
+		this.FNOTAXAMOUNTFOR = notaxAmount;
+		this.FTAXAMOUNTFOR = taxAmount;
+		
+		return this;
 	}
 
 }

@@ -14,35 +14,51 @@ package com.fanglin.kingdee.ko;
 import java.io.Serializable;
 import java.util.List;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fanglin.kingdee.handle.Bean;
 
 public class OtherReceivableBillKO extends Bean implements Serializable {
 
 	private static final long serialVersionUID = -9109650512478719938L;
 
-	public static String FormId = "AR_OtherRecAble";
+	public static String FormId = "AR_OtherRecAble"; //其他应收单
 	
+	@JSONField(ordinal=1)
 	private String FDATE; //业务日期&收款日期
 	
+	@JSONField(ordinal=2)
 	private String FCONTACTUNITTYPE; //往来单位类型
 	
+	@JSONField(ordinal=3)
 	private OrganizationKO FCONTACTUNIT; //往来单位&单号
 	
+	@JSONField(ordinal=4)
 	private OrganizationKO F_ORA_BASE; //客户
 	
+	@JSONField(ordinal=5)
 	private OrganizationKO FSETTLEORGID; //结算组织
 	
+	@JSONField(ordinal=6)
 	private OrganizationKO F_ORA_BASE3; //核算类别&等级
 	
-	private OrganizationKO F_ORA_ASSISTANT1; //工程款项类型
+	@JSONField(ordinal=7)
+	private OrganizationKO F_SFKD_BASE5; //工程款项类型
 	
+	@JSONField(ordinal=8)
 	private OrganizationKO F_ORA_BASE2; //主材款项类型
 	
+	@JSONField(ordinal=9)
 	private List<OtherReceivableBillItemKO> FENTITY; //明细
 	
 	public OtherReceivableBillKO() {
 		super();
 		super.setFormId(FormId);
+	}
+
+	public OtherReceivableBillKO(OrganizationKO f_ORA_BASE) {
+		super();
+		super.setFormId(FormId);
+		F_ORA_BASE = f_ORA_BASE;
 	}
 
 	public String getFDATE() {
@@ -93,12 +109,12 @@ public class OtherReceivableBillKO extends Bean implements Serializable {
 		F_ORA_BASE3 = f_ORA_BASE3;
 	}
 
-	public OrganizationKO getF_ORA_ASSISTANT1() {
-		return F_ORA_ASSISTANT1;
+	public OrganizationKO getF_SFKD_BASE5() {
+		return F_SFKD_BASE5;
 	}
 
-	public void setF_ORA_ASSISTANT1(OrganizationKO f_ORA_ASSISTANT1) {
-		F_ORA_ASSISTANT1 = f_ORA_ASSISTANT1;
+	public void setF_SFKD_BASE5(OrganizationKO f_SFKD_BASE5) {
+		F_SFKD_BASE5 = f_SFKD_BASE5;
 	}
 
 	public OrganizationKO getF_ORA_BASE2() {
@@ -130,7 +146,7 @@ public class OtherReceivableBillKO extends Bean implements Serializable {
 		this.F_ORA_BASE3 = new OrganizationKO(grade);
 		
 		if (decorationType != null) {
-			this.F_ORA_ASSISTANT1 = new OrganizationKO(decorationType);;
+			this.F_SFKD_BASE5 = new OrganizationKO(decorationType);;
 		}
 		
 		if (salesType != null) {

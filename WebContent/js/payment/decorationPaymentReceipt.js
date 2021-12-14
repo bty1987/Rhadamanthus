@@ -19,6 +19,15 @@ jQuery(function ($) {
 
     params = parent.params;
 
+    com.initForm($("#paymentContractModal"), "印章", [{"id": "signets", "type": "select", "clazz": "", "name": "选择印章:", "validator": "v_required"}], [{"id": "companySignBtn", "clazz": "btn btn-primary", "name": "提交"}]);
+    com.initForm($("#paymentContractQrcodeModal"), "二维码", [{"id": "qrcode", "type": "div", "clazz": "qrcode"}], []);
+    
+    paymentUtils.bindSignet($("#signets"));
+    
+    var paymentContract = paymentUtils.showContractBtn(params.decorationReceiptDrId, 1, params.decorationOrderOrderId);
+    
+    var customerSign = paymentUtils.customerSign;
+    
     com.post(api.common.queryReceiptType, {}, function (res) {
         $.each(res.receiptTypes, function (i, v) {
             if (v.type == 2) {
@@ -29,15 +38,11 @@ jQuery(function ($) {
         });
     }, null, false);
 
-    var queryDecorationForCommonByOrderId = api.decoration.queryDecorationForCommonByOrderId;
-    com.post(queryDecorationForCommonByOrderId, {"decoration.orderId": params.decorationOrderOrderId}, function (res) {
+    com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": params.decorationOrderOrderId}, function (res) {
         receipt.order = res.decoration;
-        //装修单信息
     }, null, false);
 
-    var queryDecorationPaymentForNotInitByDrId = api.payment.queryDecorationPaymentForNotInitByDrId;
-
-    com.post(queryDecorationPaymentForNotInitByDrId, {"decorationReceipt.drId": params.decorationReceiptDrId}, function (res) {
+    com.post(api.payment.queryDecorationPaymentForNotInitByDrId, {"decorationReceipt.drId": params.decorationReceiptDrId}, function (res) {
         var payments = res.decorationPayments;
 
         for (var i = 0; i < payments.length; i++) {
@@ -45,12 +50,9 @@ jQuery(function ($) {
 
             receipt.payments.push({"paymentType": payment.paymentType, "money": payment.referMoney});
         }
-
     }, null, false);
 
-    var queryDecoraionReceiptByDrId = api.payment.queryDecoraionReceiptByDrId;
-
-    com.post(queryDecoraionReceiptByDrId, {"decorationReceipt.drId": params.decorationReceiptDrId}, function (res) {
+    com.post(api.payment.queryDecoraionReceiptByDrId, {"decorationReceipt.drId": params.decorationReceiptDrId}, function (res) {
 
         var decorationReceiptDes = "";
 
@@ -105,7 +107,7 @@ jQuery(function ($) {
 
         printer.name = "payment";
         printer.args = {
-            "title": params.company.name +"专用收据",
+            "title": params.company.drganization.name +"收款收据",
             "orderId": receipt.order.orderId,
             "orderAddr": receipt.order.house.village.cityProper.city.name + ' ' + receipt.order.house.village.cityProper.name + ' ' + receipt.order.house.village.name + receipt.order.house.houseNumber,
             "collectTime": receipt.decorationReceipt.collectTime,
@@ -143,9 +145,9 @@ jQuery(function ($) {
 
             var center = $("<center></center>").appendTo(decorationPaymentReceipt);
             var headReceiptDiv = $('<div style="text-align: center; background-color:#ffffff"></div>').appendTo(center);
-            var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(parent.params.company.name + "专用收据").appendTo(headReceiptDiv);
+            var headReceiptH2 = $('<h3 style="font-weight: bold;"></h3>').text(parent.params.company.drganization.name + "收款收据").appendTo(headReceiptDiv);
 
-            var receiptTable = $('<table border="1" style="width: 100%; border-collapse:collapse;" cellpadding="0" cellspacing="0">').appendTo(center);
+            var receiptTable = $('<table border="1" style="width: 100%; height: 200px; border-collapse:collapse;" cellpadding="0" cellspacing="0">').appendTo(center);
 
             var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
             var noReceiptTd = $('<td style="width: 25%"></td>').text('装修单号: ' + receipt.order.orderId).appendTo(orderReceiptTr);

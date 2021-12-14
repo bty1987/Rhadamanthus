@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.kingdee.handle.Dao;
 import com.fanglin.kingdee.ko.CustomerKO;
@@ -30,10 +31,27 @@ public class CustomerServiceImpl implements CustomerService {
 	private Dao dao;
 
 	@Override
-	public void save(DecorationPO decorationPO) throws Exception {
+	public void save(DecorationPO decorationPO) throws FLException {
 
 		CustomerKO customerKO = new CustomerKO().ptk(decorationPO);
 
 		dao.save(customerKO);
+	}
+
+	@Override
+	public void audit(DecorationPO decorationPO) throws FLException {
+		
+		CustomerKO customerKO = new CustomerKO().ptk(decorationPO);
+		
+		dao.audit(customerKO, decorationPO.getOrderId());
+		
+	}
+
+	@Override
+	public void audit(String no, String address) throws FLException {
+
+		CustomerKO customerKO = new CustomerKO().ptk(no, address);
+
+		dao.saveAudit(customerKO);
 	}
 }

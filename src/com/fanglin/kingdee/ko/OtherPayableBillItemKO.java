@@ -2,8 +2,6 @@ package com.fanglin.kingdee.ko;
 
 import java.io.Serializable;
 
-import com.fanglin.utils.Arith;
-
 public class OtherPayableBillItemKO  implements Serializable {
 
 	private static final long serialVersionUID = 8318941395547064719L;
@@ -61,11 +59,11 @@ public class OtherPayableBillItemKO  implements Serializable {
 		this.FCOSTDEPARTMENTID = new OrganizationKO(costDept);
 		
 		if (notTaxMoney > 0) {
-			this.FNOTAXAMOUNTFOR = (long) Arith.div(notTaxMoney, 1000.0);
+			this.FNOTAXAMOUNTFOR = notTaxMoney;
 		}
 		
 		if (taxMoney > 0) {
-			this.FTAXAMOUNTFOR = (long) Arith.div(taxMoney, 1000.0);
+			this.FTAXAMOUNTFOR = taxMoney;
 		}
 		
 		return this;

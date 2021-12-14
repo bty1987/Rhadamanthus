@@ -57,6 +57,8 @@ public class AddReduceItemPO implements java.io.Serializable {
 
 	private long quoteItemId;
 
+	private long qiid;
+
 	private String content;
 
 	@Id
@@ -177,6 +179,15 @@ public class AddReduceItemPO implements java.io.Serializable {
 
 	public void setQuoteItemId(long quoteItemId) {
 		this.quoteItemId = quoteItemId;
+	}
+
+	@Column(name = "qiid")
+	public long getQiid() {
+		return qiid;
+	}
+
+	public void setQiid(long qiid) {
+		this.qiid = qiid;
 	}
 
 	@Column(name = "discount")

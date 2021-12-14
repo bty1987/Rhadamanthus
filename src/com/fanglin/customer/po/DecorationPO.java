@@ -101,7 +101,7 @@ public class DecorationPO implements Serializable{
 		decorationVO.setType(decorationPO.getTypeness());
 		decorationVO.setCustomerId(decorationPO.getCustomer().getCid());
 		decorationVO.setContractTime(decorationPO.getContractTime());
-		decorationVO.setAddress(this.getAddress());
+		decorationVO.setAddress(decorationPO.getHouse().getVillage().getName() + " " + decorationPO.getHouse().getHouseNumber());
 		decorationVO.setCreateTime(decorationPO.getCreateTime());
 		decorationVO.setDefaultFlag(this.getDefaultFlag());
 		decorationVO.setDepositTime(decorationPO.getDepositTime());

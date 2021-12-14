@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.po.CustomerPO;
-import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationDao;
@@ -213,21 +212,6 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 		paymentVO.setPid(paymentPO.getPid());
 		
 		return 0;
-	}
-	
-	public static void setCustomerBalance(AdvancePaymentPO advancePaymentPO, CustomerVO customerVO){
-		
-		if(advancePaymentPO == null){
-			customerVO.setBalance(0L);
-			customerVO.setMaterialBalance(0L);
-			customerVO.setProjectBalance(0L);
-			customerVO.setZhenglinBalance(0L);
-		}else{
-			customerVO.setBalance(advancePaymentPO.getBalance());
-			customerVO.setMaterialBalance(advancePaymentPO.getMaterialBalance());
-			customerVO.setProjectBalance(advancePaymentPO.getProjectBalance());
-			customerVO.setZhenglinBalance(advancePaymentPO.getZhenglinBalance());
-		}
 	}
 
 	//计算当前款项类型的预付款的余额

@@ -23,7 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.common.dao.ServiceRecordDao;
 import com.fanglin.common.po.ServiceRecordPO;
+import com.fanglin.communion.dao.PaymentTypeDao;
 import com.fanglin.communion.po.CustomerPO;
+import com.fanglin.communion.po.PaymentTypePO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
@@ -37,6 +39,7 @@ import com.fanglin.decoration.service.DecorationAdditionService;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
+import com.fanglin.kingdee.service.DecorationKingdeeService;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.dao.DecorationReceiptDao;
@@ -47,6 +50,7 @@ import com.fanglin.payment.po.PaymentPO;
 import com.fanglin.payment.po.PointofsalesPO;
 import com.fanglin.payment.service.AdvancePaymentService;
 import com.fanglin.payment.service.DecorationPaymentService;
+import com.fanglin.payment.service.PaymentService;
 import com.fanglin.payment.service.PointofsalesService;
 import com.fanglin.payment.vo.DecorationPaymentVO;
 import com.fanglin.payment.vo.DecorationReceiptVO;
@@ -106,6 +110,15 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 	@Autowired
 	private DecorationAdditionService decorationAdditionService;
+	
+	@Autowired
+	private DecorationKingdeeService decorationKingdeeService;
+	
+	@Autowired
+	private PaymentService paymentService;
+	
+	@Autowired
+	private PaymentTypeDao paymentTypeDao;
 
 	@Override
 	public void pageDecorationPayment(Paging paging, List<Filter> filters, DecorationPaymentVO decorationPaymentVO, Integer company) {
@@ -227,19 +240,26 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		List<String> status = Arrays.asList(DecorationPaymentPO.PAYMENTTYPE_ADD_STR, DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR, DecorationPaymentPO.PAYMENTTYPE_ADVANCE_STR, DecorationPaymentPO.PAYMENTTYPE_CONTRACT_REFUND_STR, DecorationPaymentPO.PAYMENTTYPE_PENALTY_STR);
 
-		if (status.contains(decorationPaymentVO.getPaymentType())) {
+		PaymentTypePO paymentTypePO = paymentTypeDao.get(decorationPaymentVO.getPtid());
+		
+		if (paymentTypePO == null) {
+			throw new FLException(130091, "款项类型不存在");
+		}
+		
+		if (status.contains(paymentTypePO.getName())) {
 			throw new FLException(150034, "款项类型不可用");
 		}
 
 		DecorationPaymentPO decorationPaymentPO = new DecorationPaymentPO();
-
-		decorationPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		UserPO user = userDao.queryUserByUserId(userId);
+		
 		decorationPaymentPO.setCreater(user);
+		decorationPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationPaymentPO.setReferMoney(decorationPaymentVO.getReferMoney());
-		decorationPaymentPO.setPaymentType(decorationPaymentVO.getPaymentType());
-		decorationPaymentPO.setOneType(decorationPaymentVO.getOneType());
-		decorationPaymentPO.setTwoType(decorationPaymentVO.getTwoType());
+		decorationPaymentPO.setPtid(decorationPaymentVO.getPtid());
+		decorationPaymentPO.setPaymentType(paymentTypePO.getName());
+		decorationPaymentPO.setOneType(paymentTypePO.getPaytype());
+		decorationPaymentPO.setTwoType(paymentTypePO.getAtttype());
 		decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT);
 		decorationPaymentPO.setDecoration(decorationPO);
 		decorationPaymentPO.setCompany(decorationPO.getCompany());
@@ -291,6 +311,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			int all = scaleItem.getScale();
 
 			decorationPayment.setReferMoney(Arith.div(Arith.mul(paymentMoney, all), 100000));
+			decorationPayment.setPtid(paymentScaleItems.get(0).getPtid());
 			decorationPayment.setPaymentType(paymentScaleItems.get(0).getName());
 			decorationPayment.setSort(scaleItem.getSort());
 			decorationPayment.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
@@ -318,6 +339,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 				long referMoney = Arith.mul(Arith.div(Arith.div(Arith.mul(paymentMoney, all), 100000), 100000000, Arith.ROUND_CEILING), 100000000);
 
 				decorationPayment.setReferMoney(referMoney);
+				decorationPayment.setPtid(scaleItem.getPtid());
 				decorationPayment.setPaymentType(scaleItem.getName());
 				decorationPayment.setSort(scaleItem.getSort());
 				decorationPayment.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
@@ -340,27 +362,9 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			DecorationPaymentPO decorationPayment = new DecorationPaymentPO();
 
 			decorationPayment.setReferMoney(Arith.sub(paymentMoney, totalMoney));
+			decorationPayment.setPtid(scaleItem.getPtid());
 			decorationPayment.setPaymentType(scaleItem.getName());
 			decorationPayment.setSort(scaleItem.getSort());
-			decorationPayment.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-
-			decorationPayment.setCreater(creater);
-			decorationPayment.setDecoration(decorationPO);
-			decorationPayment.setCompany(company);
-
-			decorationPayment.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT);
-			decorationPayment.setOneType(DecorationPaymentPO.ONETYPE_ADD_INT);
-			decorationPayment.setTwoType(DecorationPaymentPO.TWOTYPE_DEAL_INT);
-
-			decorationPaymentDao.save(decorationPayment);
-		}
-		
-		if(cost > 0){
-			DecorationPaymentPO decorationPayment = new DecorationPaymentPO();
-
-			decorationPayment.setReferMoney(cost);
-			decorationPayment.setPaymentType("超惠包");
-			decorationPayment.setSort((short) 0);
 			decorationPayment.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 			decorationPayment.setCreater(creater);
@@ -433,7 +437,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int collectDecorationPayment(DecorationPaymentVO decorationPaymentVO, List<Long> posids, String userId, Integer company) throws FLException {
+	public int collectDecorationPayment(DecorationPaymentVO decorationPaymentVO, List<Long> posids, String userId, Integer company) throws Exception {
 
 		// 这里的realMoney保留是想用作之后的判断
 		long realMoney = 0;
@@ -597,12 +601,15 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		decorationService.sendMessage(decorationPaymentPO.getDecoration().getOrderId(), "装修单", String.format("装修交款金额%.3f元", Arith.div(decorationPaymentPO.getReferMoney(), 1000.0)));
 
+		//数据存入金蝶中
+		decorationKingdeeService.collect(decorationReceiptPO, decorationPaymentPO);
+		
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int refundDecorationPayment(DecorationPaymentVO decorationPaymentVO, String userId, Integer company) throws FLException {
+	public int refundDecorationPayment(DecorationPaymentVO decorationPaymentVO, String userId, Integer company) throws Exception {
 
 		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.get(decorationPaymentVO.getDpid());
 
@@ -621,6 +628,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		Long cash = decorationPaymentVO.getCash();
 		Long bank = decorationPaymentVO.getBank();
 		Long checkv = decorationPaymentVO.getCheckv();
+		Long advance = decorationPaymentVO.getAdvance();
 		Long coupon = decorationPaymentVO.getCoupon();
 
 		if (cash != null && cash != 0) {
@@ -637,6 +645,11 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			decorationReceiptPO.setCheckv(checkv);
 			decorationReceiptPO.setCheckvBank(decorationPaymentVO.getCheckvBank());
 			real = Arith.add(real, checkv);
+		}
+		if (advance != null && advance != 0) {
+			decorationReceiptPO.setAdvance(advance);
+			decorationReceiptPO.setAdvanceType(decorationPaymentVO.getAdvanceType());
+			real = Arith.add(real, advance);
 		}
 		if (coupon != null && coupon != 0) {
 			decorationReceiptPO.setCoupon(coupon);
@@ -662,6 +675,12 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		decorationReceiptDao.save(decorationReceiptPO);
 		decorationPaymentDao.update(decorationPaymentPO);
+		
+		//生成预付款数据
+		if (advance != null && advance != 0) {
+			PaymentVO paymentVO = getPaymentVO(decorationPaymentPO, decorationReceiptPO);
+			paymentService.returnPayment(paymentVO, userId);
+		}
 
 		if (DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR.equals(decorationPaymentPO.getPaymentType())) {
 			AddReducePO addReducePO = addReduceDao.queryAddReduceByDecorationPaymentId(decorationPaymentPO.getDpid());
@@ -677,12 +696,15 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		decorationService.sendMessage(decorationPaymentPO.getDecoration().getOrderId(), "装修单", String.format("装修退款金额%.3f元", Arith.div(decorationPaymentPO.getReferMoney(), 1000.0)));
 
+		//数据存入到金蝶
+		decorationKingdeeService.refund(decorationReceiptPO, decorationPaymentPO);
+		
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int confirmDecorationPayment(List<Long> ids, String confirmUserId) throws FLException {
+	public int confirmDecorationPayment(List<Long> ids, String confirmUserId) throws Exception {
 
 		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByDpids(ids);
 
@@ -703,6 +725,12 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 				decorationReceiptDao.update(decorationReceiptPO);
 				decorationPaymentDao.update(decorationPaymentPO);
+				
+				//违约金进入金蝶数据--因为违约金是直接生成的数据, 不需要收款所以在确认的时候保存到金蝶
+				if (decorationPaymentPO.getPaymentType().equals("违约金")) {
+					decorationKingdeeService.confirm(decorationReceiptPO, decorationPaymentPO);
+				}
+				
 			}
 		}
 
@@ -814,6 +842,21 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		}
 
 		paging.setData(decorationPaymentVOs);
+	}
+	
+	public PaymentVO getPaymentVO(DecorationPaymentPO decorationPaymentPO, DecorationReceiptPO decorationReceiptPO) {
+
+		PaymentVO paymentVO = new PaymentVO();
+
+		String orderId = decorationPaymentPO.getDecoration().getOrderId();
+		paymentVO.setOrderId(orderId);
+		paymentVO.setPaymentType(PaymentPO.PAYMENT_PAYMENTTYPE_BALANCE_INT);
+		paymentVO.setComment(String.format("装修订单号:%s,付款类型:合同预付款", orderId));
+		paymentVO.setTransfer(decorationReceiptPO.getAdvance());
+		paymentVO.setUniqueid("D" + decorationReceiptPO.getDrId());
+		
+		return paymentVO;
+		
 	}
 
 }

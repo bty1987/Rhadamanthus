@@ -20,7 +20,9 @@ public interface SelectionItemService {
 
 	public List<SelectionItemVO> querySelectionItemByOrderId(SelectionItemVO selectionItemVO) throws FLException;
 
-	public int addSelectionItem(SelectionVO selectionVO, SelectionItemVO selectionItemVO, Integer company) throws FLException;
+	public int collateSelectionItem(SelectionVO selectionVO) throws FLException;
+
+	public int addSelectionItem(SelectionVO selectionVO, SelectionItemVO selectionItemVO, String userId, Integer company) throws FLException;
 
 	public int updateSelectionItem(SelectionItemVO selectionItemVO) throws FLException;
 
@@ -35,6 +37,8 @@ public interface SelectionItemService {
 	public int confirmSelectionItem(SelectionItemVO selectionItemVO, String userId) throws FLException;
 
 	public int finishSelectionItem(SelectionItemVO selectionItemVO, String userId) throws FLException;
+
+	public int reviewSelectionItem(List<SelectionItemVO> selectionItemVOs, String userId) throws FLException;
 
 	public int balanceSelectionItem(List<SelectionItemVO> selectionItemVOs, String userId) throws FLException;
 

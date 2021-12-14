@@ -21,7 +21,7 @@ public class MaterialTransferBillKO extends Bean implements Serializable {
 
 	private static final long serialVersionUID = 2244498780036057976L;
 
-	public static String FormId = "SFKD_ZhuCaiZhuanKuanBill";
+	public static String FormId = "SFKD_ZhuCaiZhuanKuanBill"; //主材转款单
 
 	private String FBillNo; //单据编号
 	
@@ -39,7 +39,7 @@ public class MaterialTransferBillKO extends Bean implements Serializable {
 	
 	private OrganizationKO F_ora_Base; //客户
 	
-	private OrganizationKO F_ora_Base1; //款项类型
+	private long F_SFKD_ShiShouAmount; //实收金额
 	
 	private List<MaterialTransferBillItemKO> FEntity; //单据体明细
 
@@ -112,12 +112,12 @@ public class MaterialTransferBillKO extends Bean implements Serializable {
 		F_ora_Base = f_ora_Base;
 	}
 
-	public OrganizationKO getF_ora_Base1() {
-		return F_ora_Base1;
+	public long getF_SFKD_ShiShouAmount() {
+		return F_SFKD_ShiShouAmount;
 	}
 
-	public void setF_ora_Base1(OrganizationKO f_ora_Base1) {
-		F_ora_Base1 = f_ora_Base1;
+	public void setF_SFKD_ShiShouAmount(long f_SFKD_ShiShouAmount) {
+		F_SFKD_ShiShouAmount = f_SFKD_ShiShouAmount;
 	}
 
 	public List<MaterialTransferBillItemKO> getFEntity() {
@@ -128,17 +128,17 @@ public class MaterialTransferBillKO extends Bean implements Serializable {
 		FEntity = fEntity;
 	}
 
-	public MaterialTransferBillKO ptk(String collectTime, String grade, String orderId, String paymentType, List<MaterialTransferBillItemKO> item) {
+	public MaterialTransferBillKO ptk(String collectTime, String grade, String pcompany, String scompany, String orderId, long realMoney, List<MaterialTransferBillItemKO> item) {
 
 		this.FBillNo = String.valueOf(new Random().nextInt(999999999));
 		this.F_SFKD_Date = collectTime;
 		this.F_SFKD_WangLaiUnitType = "BD_Customer";
 		this.F_SFKD_PayUnitType = "BD_Customer";
 		this.F_SFKD_ABC = new OrganizationKO(grade);
-		this.F_SFKD_RecOrgId = new OrganizationKO("100.01");
-		this.F_SFKD_SaleOrgId = new OrganizationKO("100.01");
+		this.F_SFKD_RecOrgId = new OrganizationKO(pcompany);
+		this.F_SFKD_SaleOrgId = new OrganizationKO(scompany);
 		this.F_ora_Base = new OrganizationKO(orderId);
-		this.F_ora_Base1 = new OrganizationKO(paymentType);
+		this.F_SFKD_ShiShouAmount = realMoney;
 		this.FEntity = item;
 
 		return this;

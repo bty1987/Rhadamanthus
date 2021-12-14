@@ -127,17 +127,17 @@ var printAddReduceDetail = (function(){
 						},
 					];
 					
-					disposeAddReduceItemData(v.addReduceItems);
+					disposeAddReduceItemData(v.addReduceItems, v.discount);
 
 					addReduceIds["addReduceIds["+i+"]"] = v.arId;
 				});
 
 			}, null, false);
 
-			function disposeAddReduceItemData(addReduceItems) {
+			function disposeAddReduceItemData(addReduceItems, discount) {
 
 				// 报价折扣
-				var quotationDiscount = utils.accDiv(addReduceDetail.quotation.discount, 10);
+				var quotationDiscount = utils.accDiv(discount == 0 ? addReduceDetail.quotation.discount : discount, 10);
 				var decorationType = addReduceDetail.decoration.type;
 				// 用于处理数据顺序为题
 				addReduceItems = addReduceItems.reverse();

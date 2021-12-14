@@ -4,12 +4,14 @@ var decorationUtils = {
     	var dataPage = params.urlLoadParams.depage;
         var $fanglinMaterial = com.focusPage('#fanglinMaterialPayments' + dataPage).html("");
         var $salesMaterialPayment = com.focusPage('#salesMaterialPayments' + dataPage).html("");
+        var $salesResult = com.focusPage('#salesResultList' + dataPage).html("");
         var $brand = com.focusPage('#materialPaymentBrands' + dataPage).html("");
         var $purCategory = com.focusPage('#materialPurchasedCategory' + dataPage).html("");
         var $unpCategory = com.focusPage('#materialUnpurchasedCategory' + dataPage).html("");
-        
+
         var $ulfanglin = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($fanglinMaterial);
         var $ulsales = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($salesMaterialPayment);
+        var $ulsalesResult = null;
         var $ulbrand = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($brand);
         var $purchasedCategory = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($purCategory);
         var $unpurchasedCategory = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($unpCategory);
@@ -19,8 +21,124 @@ var decorationUtils = {
         var $totalSalesAndMaterial = 0;
         var $totalDeposit = 0;
 
+        var $statues = {};
+        var $balanceStatuses = {};
+        var $depositpayStatus = {};
+        var $fullpayStatus = {};
+
         var materialPayments = null;
         var salesPayments = null;
+
+        com.post(api.ds.sales, {}, function (res) {
+            $statues = res.statues.split("key", "value");
+            $balanceStatuses = res.balanceStatuses.split("key", "value");
+            $depositpayStatus = res.depositpayStatus.split("key", "value");
+            $fullpayStatus = res.fullpayStatus.split("key", "value");
+        }, null, false);
+
+        com.focusPage("a[name='consumptionDetailsPrint']").click(function(){
+            params.decorationOrderId = decorationDetail.decorationOrderId;
+            com.popup("主材消费明细表", api.index.decorationSales2print.url, null, null, true);
+        });
+
+        var displayFunc = (function () {
+
+            var renderList = function (tableId, listData) {
+
+                var $tableWrap = com.focusPage('#' + tableId).empty();
+                $ulsalesResult = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($salesResult);
+
+                if (listData && listData.length) {
+                    $.each(listData, function (i, v) {
+                        var $liLine = creatLine(v);
+
+                        $liLine.appendTo($ulsalesResult);
+                    });
+
+                    $ulsalesResult.appendTo($tableWrap);
+                }
+            };
+
+            var creatLine = function (v) {
+
+                var $liLine = $('<li></li>').addClass('item-orange clearfix');
+                var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.no));
+                var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+                var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+                var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
+
+                var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+                var $btnSub = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('子项');
+
+                var propertyArr = [
+                    ["品类:", v.category, "grey"],
+                    ["品牌:", v.brand, "grey"],
+                    ["定金:", v.depositpay, "blue"],
+                    ["补款:", v.fullpay, "blue"],
+                    ["总额:", v.total, "blue"],
+                    ["当前总额:", v.amount, "blue"],
+                    ["定金状态:", $depositpayStatus[v.depositpayStatus], "red"],
+                    ["补款状态:", $fullpayStatus[v.fullpayStatus], "red"],
+                    ["状态:", $statues[v.status], "red"],
+                    ["结算状态:", $balanceStatuses[v.balanceStatus], "red"],
+                    ["创建时间:", v.createTime, "green "],
+                    ["补款时间:", v.fullpayTime, "green "],
+                    ["结算时间:", v.balanceTime, "green "],
+                    ["完结时间:", v.finishTime, "green "],
+                    ["完结人:", v.finisher.currentName, "blue"]
+                ];
+
+                $.each(propertyArr, function (index, value) {
+                    var $liProperty = $('<li></li>');
+                    $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                    $liProperty.appendTo($ulProperty);
+                });
+
+                $divBtnWrap.append($btnSub).appendTo($h4);
+                $liLine.append($h4).append($ulProperty).append($ulStyle).append($divBtnBlock);
+
+                $btnSub.click(function () {
+                    params["sid"] = v.sid;
+                    params["dompany"] = "dompany";
+                    com.popup4page("#layerPopUp", "/views/sales/salesItem.html", "子项", '', function () {
+                    	seacher.doSearch();
+                    });
+                });
+
+                return $liLine;
+            };
+
+            return {
+                init: function (tableId, listData) {
+                    com.focusPage('#' + tableId).html(null);
+                    renderList(tableId, listData);
+                },
+                drawLine: function (v) {
+                    return creatLine(v);
+                }
+            };
+
+        })();
+
+        var seacher = new Searcher();
+
+        seacher.init( null, "condList", api.sales.pageSalesByOrderId, function(data){
+            displayFunc.init('salesResultList'+dataPage+'', data);
+            //分页显示/隐藏
+            $("#pagenation").removeClass("hidden");
+            $("a[href=#salesResultList"+dataPage+"]").click(function(){
+                if (data != null){
+                    $("#pagenation").removeClass("hidden");
+                }
+            });
+            $("a[href=#fanglinMaterialPayments"+dataPage+"]").click(function(){
+                $("#pagenation").addClass("hidden");
+            });
+            $("a[href=#salesMaterialPayments"+dataPage+"]").click(function(){
+                $("#pagenation").addClass("hidden");
+            });
+        }, "pagenation", null, {"sales.orderId": decorationDetail.decorationOrderId});
 
         com.post(api.payment.queryMaterialPaymentByOrderId, {"materialPayment.material.orderId": decorationDetail.decorationOrderId}, function (res) {
             materialPayments = res.materialPayments;
@@ -170,9 +288,9 @@ var decorationUtils = {
                 var propertyArr = [
                     ["品类:", v.sales.category, "grey"],
                     ["品牌:", v.sales.brand, "grey"],
-                    ["应收额:", v.referMoney, "grey"],
-                    ["实收额:", v.referMoney, "grey"],
-                    ["收款时间:", salesReceipt.collectTime, "grey"],
+                    ["应收额:", v.referMoney, "blue"],
+                    ["实收额:", v.referMoney, "blue"],
+                    ["收款时间:", salesReceipt.collectTime, "green "],
                     ["状态:", materialUtils.paymentStatusInit(v.status), "red"]
                 ];
 
@@ -215,11 +333,11 @@ var decorationUtils = {
 
                 if (![2, 7].contains(v.type) && v.status == 2) {
                     var $totalSales = [4,5,6].contains(v.type) ? -v.referMoney : v.referMoney;
-                    $totalSalesAndMaterial = utils.changeThrDecimal($totalSalesAndMaterial + $totalSales)
+                    $totalSalesAndMaterial = utils.changeThrDecimal($totalSalesAndMaterial + $totalSales);
                 }
 
                 if (v.type == 2) {
-                    $totalDeposit = utils.changeThrDecimal($totalDeposit + v.referMoney)
+                    $totalDeposit = utils.changeThrDecimal($totalDeposit + v.referMoney);
                 }
 
                 if ($salesBrands.length > 0) {
@@ -238,6 +356,7 @@ var decorationUtils = {
                     $total = utils.changeThrDecimal($total + _refer);
                     $coupon = utils.changeThrDecimal($coupon + _coupon);
                 } else {
+
                     var $liLine = $('<li></li>').addClass('item-orange clearfix').attr("name", v.sales.brand);
                     var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.sales.brand));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -262,14 +381,19 @@ var decorationUtils = {
 
         var material = {"total": $total, "coupon": $coupon};
 
-        if ($ulfanglin.children("li").length == 0 && $ulsales.children("li").length == 0) {
+        if ($ulfanglin.children("li").length == 0 && $ulsales.children("li").length == 0 && $ulsalesResult == null) {
             noData("fanglinMaterialPayments" + dataPage);
             noData("salesMaterialPayments" + dataPage);
+            noData("salesResultList" + dataPage);
             noData("materialPaymentBrands" + dataPage);
-        } else if ($ulfanglin.children("li").length != 0 && $ulsales.children("li").length == 0) {
+        } else if ($ulfanglin.children("li").length != 0 && $ulsales.children("li").length == 0 && $ulsalesResult != null) {
             noData("salesMaterialPayments" + dataPage);
             totalData();
-        } else if ($ulfanglin.children("li").length == 0 && $ulsales.children("li").length != 0) {
+        } else if ($ulfanglin.children("li").length != 0 && $ulsales.children("li").length == 0 && $ulsalesResult == null) {
+            noData("salesMaterialPayments" + dataPage);
+            noData("salesResultList" + dataPage);
+            totalData();
+        } else if ($ulfanglin.children("li").length == 0 && $ulsales.children("li").length != 0 && $ulsalesResult != null) {
             noData("fanglinMaterialPayments" + dataPage);
             totalData();
         } else {
@@ -446,6 +570,111 @@ var decorationUtils = {
             }
 
         }
+
+    }, initPresignDetail: function (orderId) {//预签信息
+        var presignItemListDiv = $("#presignItemListDiv").html("");
+        var protation = null;
+
+        com.post(api.quotation.queryProtationForDefaultByOrderId, {"protation.orderId": orderId}, function (res) {
+            protation = res.protation;
+        }, null, false);
+
+        if (protation.pid == null) return false;
+
+        params.protationId = protation.pid;
+
+        var protationFunctionAreas = [{
+            "pfaid": 1, "name": "基础", "functionAreaOrder": 1, "functionAreaType": 0, "type": 0, total: 0, index: 1,
+            "protationFunctionAreaItems":[],
+        }, {
+            "pfaid": 2, "name": "标配", "functionAreaOrder": 2, "functionAreaType": 0, "type": 1, total: 0, index: 2,
+            "protationFunctionAreaItems":[],
+        }, {
+            "pfaid": 3, "name": "个性", "functionAreaOrder": 3, "functionAreaType": 0, "type": 2, total: 0, index: 3,
+            "protationFunctionAreaItems":[],
+        }, {
+            "pfaid": 4, "name": "减项", "functionAreaOrder": 4, "functionAreaType": 0, "type": 3, total: 0, index: 4,
+            "protationFunctionAreaItems":[],
+        }];
+
+        com.post(api.quotation.queryProtationItemByPid, {"protationItem.pid": protation.pid}, function(res){
+            $.each(res.protationItems, function(i, v){
+                var type = (v.type + v.type % 2) / 2;
+                protationFunctionAreas[type].protationFunctionAreaItems.push(v);
+            });
+        }, null, false);
+
+        $.each(protationFunctionAreas, function (i, v) {
+
+            var $dcpts = 0.0;
+
+            var $domain, $dhead, $dname, $btns, $dbody, $dbodyInner, $list;
+
+            $domain = $('<div></div>').addClass('widget-box transparent').css({"margin-bottom": "20px"});
+            $dhead = $('<div></div>').addClass('widget-header');
+            $dname = $('<h4></h4>').append($('<strong></strong>').html(v.name));
+
+            $dbody = $('<div></div>').addClass('widget-body');
+            $dbodyInner = $('<div></div>').addClass('widget-body-inner');
+            $list = $('<ul></ul>').addClass('fl-quo-list');
+
+            $dhead.append($dname);
+            $dbodyInner.append($list).appendTo($dbody);
+            $domain.append($dhead).append($dbody);
+
+            $.each(v.protationFunctionAreaItems, function (j, qv) {
+
+                var $item = $('<li></li>').addClass('fl-quo-item').prop('title', qv.content);
+                var _num = qv.num;
+                var _unitPrice = qv.price;
+                var _type = qv.type;
+                var _total = 0;
+
+                var _typeName = "-";
+                $dcpts = utils.accAdd($dcpts, qv.quotationTotalPrice);
+
+                if(qv.type == 0){
+                    _typeName = "信息";
+                    _total = utils.changeThrDecimal(utils.accMul(_unitPrice, utils.accSub(_num, qv.basicNum)));
+                }
+                if(_type == 1 || qv.type == 2){ // 基础工程
+                    _typeName = "基础";
+                }
+                if(qv.type == 3 || qv.type == 4){ // 个性
+                    _typeName = "个性";
+                    _total = utils.changeThrDecimal(utils.accMul(_unitPrice, _num));
+                }
+                if(qv.type == 5 || qv.type == 6){ // 增主材
+                    _typeName = "减项";
+                    _total = utils.changeThrDecimal(utils.accMul(_unitPrice, _num));
+                }
+
+                var _lineSet = [
+                    ["line", j+1, ["data-areaType",qv.areaType]], // 编号
+                    ["formula",qv.num ? qv.num : "0"], // 公式
+                    ["num", qv.num, ["data-subtype",qv.subtype]], // 数量
+                    ["name", qv.name, ["data-piid",qv.piid]], // 预签名称
+                    ["type", _typeName , ["data-type", qv.type]],
+                    ["unit", qv.basicNum], // 单位
+                    ["worktype", qv.workType], // 工种
+                    ["price unitprice", _unitPrice], // 单价
+                    ["price discountprice", _unitPrice, ["data-discount", 0]], // 折扣后的价格   将折扣存入
+                    ["price totalprice-discount", _total], // 根据类型计算(数量*折扣)
+                ];
+
+                $.each(_lineSet, function (i, v) {
+                    var $cell = $('<div></div>').addClass('cell ' + v[0]);
+                    var $cellWrap = $('<div></div>').addClass('cell-wrap').html(v[1]);
+                    if (v[2]) {
+                        $cell.attr(v[2][0], v[2][1]);
+                    }
+                    $cell.append($cellWrap).appendTo($item);
+                });
+                $item.appendTo($list);
+            });
+
+            $domain.appendTo(presignItemListDiv);
+        });
 
     }, decorationSalesActivityItemInfo: function (itempack,orderId, uiBtnMethod, config) {
 
@@ -691,7 +920,7 @@ var decorationUtils = {
         com.post(api.decoration.queryDecorationMidpack, {"decorationMidpack.decoration.orderId": orederId}, function (res) {
 
             res = res.decorationMidpack;
-            
+
             com.focusPage('#materialPrice ').html(com.checkNull(res.materialPrice , 0));
             com.focusPage('#materialPaidup ').html(com.checkNull(res.materialPaidup , 0));
             com.focusPage('#servicePrice').html(com.checkNull(res.servicePrice, 0));

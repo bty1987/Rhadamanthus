@@ -18,7 +18,7 @@ $(function () {
         };
         var creatLine=function (v) {
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue'));
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.name));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
@@ -28,6 +28,8 @@ $(function () {
                 "font-weight": "bold"
             });
 
+            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
+            
             var _label = $('<label></label>');
 
             var propertyArr = [
@@ -51,12 +53,22 @@ $(function () {
 
             _label.append(_span).appendTo($label);
 
-            $divBtnWrap.appendTo($h3);
+            $divBtnWrap.append($btnDel).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
+            $btnDel.click(function(){
+            	com.showConfirm("确认要删除当前表单吗?", function(res) {
+                    com.post(api.customer.deleteEmember, {"emember.emid": v.emid}, function(res){
+                    	seacher.doSearch();
+                    });
+                });
+            });
+            
             return $liLine;
         };
+        
+        
 
         return {
             init : function(tableId,listData){

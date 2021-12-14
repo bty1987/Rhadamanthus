@@ -218,8 +218,9 @@ jQuery(function ($) {
 		var refundBtn= $("<a></a>").addClass("btn btn-minier btn-warning").html("退货").css("margin", "0px 3px").attr("id", "refund_" + activityItem.daiId).appendTo(uiPgDiv);
 		var deliveryBtn= $("<a></a>").addClass("btn btn-minier btn-inverse").html("配送").css("margin", "0px 3px").attr("id", "delivery_" + activityItem.daiId).appendTo(uiPgDiv);
 		var unrefundBtn= $("<a></a>").addClass("btn btn-minier btn-danger").html("未退").css("margin", "0px 3px").attr("id", "unrefund_" + activityItem.daiId).appendTo(uiPgDiv);
-		var expendBtn= $("<a></a>").addClass("btn btn-minier btn-purple ").html("补款").css("margin", "0px 3px").attr("id", "expend_" + activityItem.daiId).appendTo(uiPgDiv);
-		var discountBtn= $("<a></a>").addClass("btn btn-minier btn-pink ").html("抵现").css("margin", "0px 3px").attr("id", "expend_" + activityItem.daiId).appendTo(uiPgDiv);
+		var expendBtn= $("<a></a>").addClass("btn btn-minier btn-pink ").html("补款").css("margin", "0px 3px").attr("id", "expend_" + activityItem.daiId).appendTo(uiPgDiv);
+		var discountBtn= $("<a></a>").addClass("btn btn-minier btn-purple ").html("抵现").css("margin", "0px 3px").attr("id", "discount_" + activityItem.daiId).appendTo(uiPgDiv);
+		var purchaseBtn= $("<a></a>").addClass("btn btn-minier btn-yellow ").html("采购").css("margin", "0px 3px").attr("id", "purchase_" + activityItem.daiId).appendTo(uiPgDiv);
 
         btnViewBtn.on("click", function () {
             abateDecorationActivityItem(activityItem.daiId, activityItem.activityItemName);
@@ -246,6 +247,9 @@ jQuery(function ($) {
         });
 		discountBtn.on("click", function () {
 			discountDecorationActivityItem(activityItem.daiId, activityItem.activityItemName);
+		});
+		purchaseBtn.on("click", function () {
+			purchaseDecorationActivityItem(activityItem.asid, activityItem.num, activityItem.activityItemName);
 		});
     }
     
@@ -325,10 +329,10 @@ jQuery(function ($) {
 
         decorationActivityItem.applyDecorationActivityItemModal.modal("show");
     });
-    
+
     //添加活动物品
     com.focusPage("#addActivityItemBtn").on("click", function () {
-        
+
         if(com.validate("addDecorationActivityItemModal")) return false;
 
         var options = {
@@ -439,7 +443,7 @@ jQuery(function ($) {
 
             index++;
         });
-        
+
         com.focusPage("#papers li").each(function (i, e) {
             var _ = $(e);
 
@@ -463,22 +467,22 @@ jQuery(function ($) {
         com.post(api.approval.submitApprovalForDecorationActivity, options, function (res) {
             com.showAlert(com.info, "提交成功");
         });
-        
+
         decorationActivityItem.applyDecorationActivityItemModal.modal("hide");
     });
-    
+
     com.focusPage("#addDecorationActivityItemBtn").on("click", function () {
-        
+
         var orderId = params.decorationOrderId;
         var activityName = decorationActivityItem.activityItems.activities.find("option:selected").text();
         var activityId = decorationActivityItem.activityItems.activities.val();
         var itemName = decorationActivityItem.activityItems.itemObj.val();
-        
+
         var options = {
             "decorationActivityItem.orderId": orderId,
             "decorationActivityItem.aid": activityId,
             "decorationActivityItem.activityName": activityName,
-            
+
             "decorationActivityItem.activityItemName": itemName,
             "decorationActivityItem.type": decorationActivityItem.activityItems.itemType.val(),
             "decorationActivityItem.num": decorationActivityItem.activityItems.itemNum.val(),
@@ -487,17 +491,17 @@ jQuery(function ($) {
             "decorationActivityItem.asid": com.typeahead(decorationActivityItem.activityItems.itemObj),
             "decorationActivityItem.content": "",
         }
-        
+
         com.post(api.decoration.addDecorationActivityItem, options, function(res){
-            
+
             com.showAlert(com.info, "提交成功");
-            
+
             decorationUtils.decorationActivityInfo(decorationActivityItem.items.decorationActivityItems, activityBtnMethod, orderId);
-            
+
             decorationActivityItem.addDecorationActivityItemModal.modal("hide");
         });
     });
-    
+
     function activityBtnMethod(uiPgDiv, decorationActivity) {
 
         var deleteBtn = $("<a></a>").addClass("btn btn-minier btn-yellow").html("删除").css("margin", "0px 3px").attr("id", "delete_" + decorationActivity.daId).appendTo(uiPgDiv);
@@ -585,18 +589,18 @@ jQuery(function ($) {
         com.focusPage("#receiveTypes").bindData(res.receiveType, "key", "value", false);
         com.focusPage("#receiveTypess").bindData(res.receiveType, "key", "value", false);
         com.focusPage("#receiveType1").bindData(res.receiveType, "key", "value", false);
-        
+
         decorationActivity.stateTypes = res.receiveType.split("key", "value");
         decorationActivity.states = res.activityItemType.split("key", "value");
     }, null, false);
-    
+
     com.post(api.ds.information, {}, function (res) {
         decorationActivity.types = res.activityItemType.split("key", "value");
     }, null, false);
 
     //领取活动物品
     function receiveDecorationActivityItem(daiId) {
-    	
+
         var options = {
             "decorationActivityItem.daiId": daiId,
             "decorationActivityItem.content": decorationActivityItem.activityItems.comment.val(),
@@ -604,8 +608,8 @@ jQuery(function ($) {
 
         com.post(api.decoration.receiveDecorationActivityItem, options, function (res) {
 
-        	com.showAlert(com.info, "物品领取成功");
-        	
+            com.showAlert(com.info, "物品领取成功");
+
             com.focusPage("#state_" + res.decorationActivityItem.daiId).text("领取");
         });
     }
@@ -619,8 +623,8 @@ jQuery(function ($) {
         };
 
         com.post(api.decoration.refundDecorationActivityItem, options, function (res) {
-        	
-        	com.showAlert(com.info, "物品退货成功");
+
+            com.showAlert(com.info, "物品退货成功");
             var daiId = res.decorationActivityItem.daiId;
 
             decorationUtils.countTatol(daiId);
@@ -639,8 +643,8 @@ jQuery(function ($) {
 
         com.post(api.decoration.deliveDecorationActivityItem, options, function (res) {
 
-        	com.showAlert(com.info, "物品配送成功");
-        	
+            com.showAlert(com.info, "物品配送成功");
+
             com.focusPage("#state_" + res.decorationActivityItem.daiId).text("配送");
         });
     }
@@ -655,8 +659,8 @@ jQuery(function ($) {
             };
 
             com.post(api.decoration.unrefundDecorationActivityItem, options, function (res) {
-            	
-            	com.showAlert(com.info, "物品未退成功");
+
+                com.showAlert(com.info, "物品未退成功");
 
                 var daiId = res.decorationActivityItem.daiId;
                 com.focusPage("#state_" + daiId).text("未退");
@@ -675,7 +679,7 @@ jQuery(function ($) {
 
             com.post(api.decoration.expendDecorationActivityItem, options, function (res) {
 
-            	com.showAlert(com.info, "物品补款成功");
+                com.showAlert(com.info, "物品补款成功");
                 var daiId = res.decorationActivityItem.daiId;
 
                 decorationUtils.countTatol(daiId);
@@ -685,13 +689,13 @@ jQuery(function ($) {
         });
     }
 
-    //抵现装修活动项
+	//抵现装修活动项
 	function discountDecorationActivityItem(daiId, activityItemName) {
 
 		com.showConfirm("是否确认抵现" + activityItemName + "活动物品?", function () {
 
 			var options = {
-			    "decorationActivityItem.daiId": daiId,
+				"decorationActivityItem.daiId": daiId,
 			};
 
 			com.post(api.decoration.discountDecorationActivityItem, options, function (res) {
@@ -702,7 +706,23 @@ jQuery(function ($) {
 				decorationUtils.countTatol(daiId);
 
 				com.focusPage("#state_" + daiId).text("抵现");
-	        });
-	    });
+			});
+		});
+	}
+
+	//采购装修活动项
+	function purchaseDecorationActivityItem(asid, num, activityItemName) {
+
+		com.showConfirm("是否确认采购" + activityItemName + "活动物品?", function () {
+
+			var options = {
+					"awardPurchase.awardStock.asId": asid,
+					"awardPurchase.num": num,
+			};
+
+			com.post(api.information.addAwardPurchase, options, function (res) {
+				com.showAlert(com.info, "物品提交采购成功");
+			});
+		});
 	}
 });

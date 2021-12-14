@@ -97,7 +97,7 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 
 		String content = String.format("装修单号:%s,退款类型:%s,金额:%.3f", decorationPaymentPO.getDecoration().getOrderId(), decorationPaymentPO.getPaymentType(), Arith.div(decorationPaymentPO.getReferMoney(), 1000.0));
 
-		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(paymentId), ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT, content, approvalVO.getComment(), company);
+		approvalPO = new ApprovalPO().init(sender, receiver, decorationPO.getOrderId(), String.valueOf(paymentId), ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT, content, approvalVO.getComment(), company);
 
 		approvalDao.save(approvalPO);
 

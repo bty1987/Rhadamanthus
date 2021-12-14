@@ -231,5 +231,17 @@ Condition.addupRule("payment", {
             keyPath: "key",
             valuePath: "value"
         }
+    },
+    "kingdee-orderId": {
+        label: "单号",
+        type: "text",
+        submitConfig: {
+            name: "orderId",
+            op: "eq",
+            validate: {
+                "reg": /^[A-Z0-9]*$/,
+                "msg": "格式不正确A-Z,0-9"
+            }
+        }
     }
 });

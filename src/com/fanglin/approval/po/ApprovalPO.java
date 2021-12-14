@@ -54,7 +54,7 @@ public class ApprovalPO implements java.io.Serializable {
 	public static final short APPROVAL_TYPE_DECORATION_HOLONOMY_INT = 16;
 
 	public static final short APPROVAL_TYPE_CUSTOMER_ORIGIN_INT = 17;
-	
+
 	public static final short APPROVAL_TYPE_SALESDAYMENT_INT = 18;
 
 	public static final short APPROVAL_STATUS_INIT_INT = 0;
@@ -66,10 +66,10 @@ public class ApprovalPO implements java.io.Serializable {
 	public static final short APPROVAL_STATUS_APPROVE_INT = 3;
 
 	public static final short APPROVAL_STATUS_CONFIRM_INT = 5;
-	
+
 	public static final short APPROVAL_STATUS_CONFIRMED_INT = 6;
-	
-	public static final short APPROVAL_STATUS_REJECT_INT = 7;  //客户拒绝
+
+	public static final short APPROVAL_STATUS_REJECT_INT = 7; // 客户拒绝
 
 	public static final String COLUMN_TYPE_STR = "type";
 
@@ -86,6 +86,8 @@ public class ApprovalPO implements java.io.Serializable {
 	public static final String COLUMN_PROCESSINSTANCEID_STR = "processinstanceid";
 
 	private long aid;
+
+	private String orderId;
 
 	private UserPO receiver;
 
@@ -120,6 +122,15 @@ public class ApprovalPO implements java.io.Serializable {
 
 	public void setAid(long aid) {
 		this.aid = aid;
+	}
+
+	@Column(name = "orderId")
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -232,11 +243,12 @@ public class ApprovalPO implements java.io.Serializable {
 		this.piid = piid;
 	}
 
-	public ApprovalPO init(UserPO sender, UserPO receiver, String ident, short type, String content, String comment, int company) {
+	public ApprovalPO init(UserPO sender, UserPO receiver, String orderId, String ident, short type, String content, String comment, int company) {
 
 		setSender(sender);
 		setReceiver(receiver);
 
+		setOrderId(orderId);
 		setIdent(ident);
 		setType(type);
 

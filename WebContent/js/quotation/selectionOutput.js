@@ -11,6 +11,8 @@ var printselectionDetail = (function() {
         decoration: {},
         selectionItem: {},
         orderId: null,
+        
+        types: {},
     };
 
     var printer = {
@@ -47,9 +49,6 @@ var printselectionDetail = (function() {
             headHtml += '<td colspan="1" width="10%">主材员电话: ' + escorterPhone + '</td>';
             headHtml += '</tr>';
             headHtml += '<tr bgcolor="#FFFFFF">';
-            headHtml += '<td colspan="5" width="100%">放线日期: ' + " " + '</td>';
-            headHtml += '</tr>';
-            headHtml += '<tr bgcolor="#FFFFFF">';
             headHtml += '<td colspan="8" height="10"></td>';
             headHtml += '</tr>';
             headHtml += '</tbody></table>';
@@ -57,72 +56,105 @@ var printselectionDetail = (function() {
             return headHtml;
         },
 
-        printBody: function(selectionItems) {
+        printBody: function(selectionItems, quotationFunctionAreaItems, extensionItems, addReduceItems) {
+            
+            var index = 1;
             var contentHtml = '';
-
+			var selections= {};
+			
             contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
             contentHtml += '<tbody><tr bgcolor="#FFFFFF">';
-            contentHtml += '<td width="5%" align="center">序号</td>';
-            contentHtml += '<td width="8%" align="center">功能区</td>';
-            contentHtml += '<td width="12%" align="center">品牌</td>';
-            contentHtml += '<td width="5%" align="center">品类</td>';
-            contentHtml += '<td width="5%" align="center">商品编号</td>';
+            contentHtml += '<td width="4%" align="center">序号</td>';
+            contentHtml += '<td width="7%" align="center">报价项</td>';
+            contentHtml += '<td width="4%" align="center">品牌</td>';
+            contentHtml += '<td width="4%" align="center">类型</td>';
             contentHtml += '<td width="10%" align="center">型号</td>';
-            contentHtml += '<td width="5%" align="center">规格</td>';
-            contentHtml += '<td width="5%" align="center">单位</td>';
-            contentHtml += '<td width="5%" align="center">数量</td>';
+            contentHtml += '<td width="4%" align="center">单位</td>';
+            contentHtml += '<td width="4%" align="center">数量</td>';
+            contentHtml += '<td width="15%" align="center">备注</td>';
             contentHtml += '</tr>';
             contentHtml += '</tbody></table>';
 
             contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
             contentHtml += '<tbody>';
-
+			
             $.each(selectionItems, function (i, selectionItem){
-
-                if (params.supplierPage == true && params.userInfo.user.uid != selectionItem.suid) return true;
-
-                var info = "无";
-
-                com.post(api.data.queryFormatByGid, {"format.gid": selectionItem.goods.gid}, function(res) {
-                    res.formats.length && $.each(res.formats, function(i, v) {
-                        if (v.status == 0) {
-                            info = v.info;
-                            return false;
-                        }
-                    });
-                }, null, false);
-
-                var num = [2, 4].indexOf(selectionItem.type) != -1 ? -selectionItem.num : selectionItem.num;
-
-                contentHtml += '<tr bgcolor="#FFFFFF">';
-                contentHtml += '<td width="5%" align="center">' + (i + 1) + '</td>';
-                contentHtml += '<td width="8%" align="center">' + selectionItem.areaName + '</td>';
-                contentHtml += '<td width="12%" align="center">' + selectionItem.goods.brand + '</td>';
-                contentHtml += '<td width="5%" align="center">' + selectionItem.goods.category + '</td>';
-                contentHtml += '<td width="5%" align="center">' + selectionItem.goods.no + '</td>';
-                contentHtml += '<td width="10%" align="center">' + selectionItem.goods.name + '</td>';
-                contentHtml += '<td width="5%" align="center">' + info + '</td>';
-                contentHtml += '<td width="5%" align="center">' + selectionItem.goods.measurementUnit + '</td>';
-                contentHtml += '<td width="5%" align="center">' + num + '</td>';
-                contentHtml += '</tr>';
-
+                
+				if(selections[selectionItem.areaName]){
+					selections[selectionItem.areaName].push(selectionItem);
+				}else{
+					selections[selectionItem.areaName] = [selectionItem];
+				}
             });
-
+            
+			$.each(selections, function(i, items){
+			    
+				contentHtml += '<tr bgcolor="#CCCCCC">';
+				contentHtml += '<td colspan="1">';
+				contentHtml += '<div align="center">' + utils.getBigNumber(index++) + '</div></td>';
+				contentHtml += '<td colspan="10">';
+				contentHtml += '<div align="left">' + i + '';
+				contentHtml += '</div>';
+				contentHtml += '</td>';
+				contentHtml += '</tr>';
+				
+				$.each(items, function(j, v){
+				    
+					if (params.supplierPage == true && params.userInfo.user.uid != v.suid) return true;
+						
+					var num = [2, 4].indexOf(v.type) != -1 ? -v.num : v.num;
+					
+					var item = {"name": ""};
+					
+					if([0].indexOf(v.type) != -1 && quotationFunctionAreaItems[v.quoteId]) item = {"name": quotationFunctionAreaItems[v.quoteId].itemName}
+					if([1, 2].indexOf(v.type) != -1 && extensionItems[v.quoteId]) item = {"name": extensionItems[v.quoteId].itemName}
+					if([3, 4].indexOf(v.type) != -1 && addReduceItems[v.quoteId]) item = {"name": addReduceItems[v.quoteId].itemName}
+					
+					contentHtml += '<tr bgcolor="#FFFFFF">';
+					contentHtml += '<td width="4%" align="center">' + (j + 1) + '</td>';
+					contentHtml += '<td width="7%" align="center">' + item.name + '</td>';
+					contentHtml += '<td width="4%" align="center">' + v.goods.brand + '</td>';
+					contentHtml += '<td width="4%" align="center">' + selectionDetail.types[v.type] + '</td>';
+					contentHtml += '<td width="10%" align="center">' + v.goods.name + '</td>';
+					contentHtml += '<td width="4%" align="center">' + v.goods.measurementUnit + '</td>';
+					contentHtml += '<td width="4%" align="center">' + num + '</td>';
+					contentHtml += '<td width="15%" align="center">' + (v.comment ? v.comment : "") + '</td>';
+					contentHtml += '</tr>';
+				});
+			});
+			
             contentHtml += '</tbody>';
             contentHtml += '</table>';
 
-            contentHtml += '<table style="font-size: 12px" width="100%" border="0" cellpadding="1" cellspacing="0">';
+            return contentHtml;
+        },
+        
+        printFooter: function(){
+            
+            var contentHtml = "";
+            
+            contentHtml += '<table style="font-size: 15px" width="100%;" border="0" cellpadding="1" cellspacing="0">';
             contentHtml += '<tbody>';
             contentHtml += '<tr>';
             contentHtml += '<td height="10"></td>';
             contentHtml += '</tr>';
             contentHtml += '<tr>';
-            contentHtml += '<td><b>通知量尺时间:________________</b></td>';
-            contentHtml += '<td><b>备货时间:________________</b></td>';
-            contentHtml += '<td><b>下料时间:________________</b></td>';
-            contentHtml += '</tr><tr>';
-            contentHtml += '</tr></tbody></table>';
-
+            contentHtml += '<td width="10%"><b>客户签字:______________</b></td>';
+            contentHtml += '<td width="10%"><b>时间:______________</b></td>';
+            contentHtml += '<td width="10%"><b>设计师签字:______________</b></td>';
+            contentHtml += '<td width="10%"><b>时间:______________</b></td>';
+            contentHtml += '<td width="10%"><b>预算员签字:______________</b></td>';
+            contentHtml += '<td width="10%"><b>时间:______________</b></td>';
+            contentHtml += '<td width="10%"><b>主材管家签字:______________</b></td>';
+            contentHtml += '<td width="10%"><b>时间:______________</b></td>';
+            contentHtml += '</tr>';
+            contentHtml += '<tr>';
+            contentHtml += '<td height="10"></td>';
+            contentHtml += '</tr>';
+            contentHtml += '<td colspan="8" width="100%" style="font-size: 15px"><b>注: 选材单一经确认签字, 开工前可对所选产品进行一次变更, 且最多变更两个品类. </b></td>';
+            contentHtml += '</tr>';
+            contentHtml += '<tr></tr></tbody></table>';
+            
             return contentHtml;
         }
     };
@@ -131,20 +163,71 @@ var printselectionDetail = (function() {
         init: function () {
 
             selectionDetail.orderId = params.selectionOrderId;
+            
+            com.post(api.ds.quotation, {}, function(res){
+                selectionDetail.types = res.selectionItemType.split("key", "value");
+            }, null, false);
 
             com.post(api.decoration.queryDecorationForCommonByOrderId,  {"decoration.orderId": selectionDetail.orderId},  function(res){
                 selectionDetail.decoration = res.decoration;
             }, null, false);
-
+            
+            var selectionItems = [];
+            
             com.post(api.quotation.querySelectionItemByOrderId, {"selectionItem.decoration.orderId": selectionDetail.orderId}, function(res){
-                selectionDetail.selectionItem = res.selectionItems;
+                selectionItems = res.selectionItems;
+            }, null, false);
+            
+            var quotation = {};
+            
+            com.post(api.quotation.queryQuotationForDefaultByOrderId, {"quotation.orderId": selectionDetail.orderId}, function(res){
+                quotation = res.quotation;
+            }, null, false);
+            
+            var quotationFunctionAreaItems = {};
+            
+            com.post(api.quotation.queryQuotationFunctionAreaByQuotationId, {"quotation.qid": quotation.qid}, function(res){
+                
+                $.each(res.quotationFunctionAreas, function(i, v){
+                    
+                    $.each(v.quotationFunctionAreaItems, function(vi, vv){
+                        quotationFunctionAreaItems[vv.qfaiId] = vv;
+                    });
+                });
+            }, null, false);
+            
+            var extensionItems = {};
+            
+            com.post(api.quotation.queryExtensionByOrderId, {"extension.orderId": selectionDetail.orderId}, function(res){
+                
+                $.each(res.extensions, function(i, v){
+                    
+                    $.each(v.extensionItems, function(vi, vv){
+                        extensionItems[vv.eiid] = vv;
+                    });
+                });
+                
+            }, null, false);
+            
+            var addReduceItems = {};
+            
+            com.post(api.addReduce.queryAddReduceByOrderId, {"addReduce.orderId": selectionDetail.orderId}, function(res){
+                
+                $.each(res.addReduces, function(i, v){
+                    
+                    $.each(v.addReduceItems, function(vi, vv){
+                        addReduceItems[vv.ariId] = vv;
+                    });
+                });
+                
             }, null, false);
 
             var html = "";
 
             html += printer.printHead(selectionDetail.orderId, selectionDetail.decoration);
-            html += printer.printBody(selectionDetail.selectionItem);
-
+            html += printer.printBody(selectionItems, quotationFunctionAreaItems, extensionItems, addReduceItems);
+            html += printer.printFooter();
+            
             $('#selectionList').html(html);
         }
     }

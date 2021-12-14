@@ -138,7 +138,7 @@ jQuery(function($) {
 
 		printer.name = "payment";
 		printer.args = {
-			"title": params.company.name +"专用收据",
+			"title": params.company.srganization.name +"专用收据",
 			"orderId": receipt.commonInfo["orderId"],
 			"orderAddr": receipt.commonInfo["orderAddr"],
 			"collectTime": receipt.commonInfo["collectTime"],
@@ -160,7 +160,7 @@ jQuery(function($) {
 		var noTr = $('<tr></tr>').appendTo(noTable);
 		var noTd = $('<td colspan="5"></td>').appendTo(noTr);
 		var headReceiptDiv = $('<div style="text-align: center; background-color:#ffffff"></div>').appendTo(center);
-		var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(parent.params.company.name + "代收款收据").appendTo(headReceiptDiv);
+		var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(parent.params.company.srganization.name + "代收款收据").appendTo(headReceiptDiv);
 
 		var receiptTable = $('<table border="1" style="width: 100%; border-collapse:collapse;" cellpadding="0" cellspacing="0">').appendTo(center);
 

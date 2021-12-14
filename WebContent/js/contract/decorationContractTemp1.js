@@ -22,6 +22,8 @@ jQuery(function($) {
         decorationType: {},
 
         $input: null,
+        
+        current: new Date(),
 	};
     
     console.log(contractEdit.contractArgs);
@@ -34,9 +36,13 @@ jQuery(function($) {
         com.focusPage(".secondPaymentGroup", "#form").hide();
     }
     
-    contractEdit.cover["cov-sign-year"] = com.dateFormat(new Date(), "yyyy");
-    contractEdit.cover["cov-sign-month"] = com.dateFormat(new Date(), "MM");
-    contractEdit.cover["cov-sign-day"] = com.dateFormat(new Date(), "dd");
+    com.post(api.common.current, {}, function(res){
+        contractEdit.current = new Date(res.current);
+    }, null, false);
+    
+    contractEdit.cover["cov-sign-year"] = com.dateFormat(contractEdit.current, "yyyy");
+    contractEdit.cover["cov-sign-month"] = com.dateFormat(contractEdit.current, "MM");
+    contractEdit.cover["cov-sign-day"] = com.dateFormat(contractEdit.current, "dd");
     
     com.post(api.ds.decoration, {}, function (res) {
         contractEdit.decorationType = res.typeness.split("key", "value");
@@ -46,10 +52,13 @@ jQuery(function($) {
     com.post(api.data.queryCustomerById, {"customer.cid": params.cid}, function (res) {
 
         var customer = res.customer;
-        
         com.focusPage("#con-customer-name", "#form").val(customer.name);
         com.focusPage("#con-customer-phone", "#form").val(customer.phone);
         com.focusPage("#con-customer-ident", "#form").val(customer.identity);
+        com.focusPage("#con-bank-man", "#form").val(customer.name);
+        com.focusPage("#con-bank-no", "#form").val(customer.companyBankno);
+        com.focusPage("#con-bank-name", "#form").val(customer.companyBank);
+        com.focusPage("#con-bank-phone", "#form").val(customer.phone);
         
         contractEdit.customer = customer;
         
@@ -146,27 +155,23 @@ jQuery(function($) {
         quotationUtils.quotationDetail.quotationFunctionAreas = res.quotationFunctionAreas;
     }, null, false);
 
-    quotationUtils.quotationDetail.extensionItems = [];
+    quotationUtils.quotationDetail.extensions = [];
 
     com.post(api.quotation.queryExtensionByOrderId, {"extension.orderId": contractEdit.decorationOrderId}, function (res) {
-        $.each(res.extensions, function (i, v) {
-            quotationUtils.quotationDetail.extensionItems = quotationUtils.quotationDetail.extensionItems.concat(v.extensionItems);
-        });
+        quotationUtils.quotationDetail.extensions = res.extensions;
     }, null, false);
     
-    quotationUtils.quotationDetail.addReduceItems = [];
+    quotationUtils.quotationDetail.addReduces = [];
 
     com.post(api.addReduce.queryAddReduceByOrderId, {'addReduce.orderId': contractEdit.decorationOrderId}, function(res){
-        $.each(res.addReduces, function(i, v){
-            quotationUtils.quotationDetail.addReduceItems = quotationUtils.quotationDetail.addReduceItems.concat(v.addReduceItems);
-        });
+        quotationUtils.quotationDetail.addReduces = res.addReduces;
     }, null, false);
 
     quotationUtils.initQuotationDetailItem(
         quotationUtils.quotationDetail.quotation,
         quotationUtils.quotationDetail.quotationFunctionAreas,
-        quotationUtils.quotationDetail.addReduceItems,
-        quotationUtils.quotationDetail.extensionItems, params.orderType, false, params.showType);
+        quotationUtils.quotationDetail.addReduces,
+        quotationUtils.quotationDetail.extensions, params.orderType, false, params.showType);
     
     console.log(quotationUtils.quotationDetail.quotationFunctionAreaItemCs);
     
@@ -313,9 +318,9 @@ jQuery(function($) {
             
             console.log(data);
             
-            data["con-sign-year"] = com.dateFormat(new Date(), "yyyy");
-            data["con-sign-month"] = com.dateFormat(new Date(), "MM");
-            data["con-sign-day"] = com.dateFormat(new Date(), "dd");
+            data["con-sign-year"] = com.dateFormat(contractEdit.current, "yyyy");
+            data["con-sign-month"] = com.dateFormat(contractEdit.current, "MM");
+            data["con-sign-day"] = com.dateFormat(contractEdit.current, "dd");
             
             data["con-design-money1"] = parseFloat(data["con-design-money"]);
             data["con-activity-name1"] = data["con-activity-name"];

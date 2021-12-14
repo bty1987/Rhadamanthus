@@ -24,6 +24,10 @@ $.extend(api.index, {
 
     selectionIndex:{url: "/views/quotation/selection.html"},
     selectionOutputIndex:{url: "/views/quotation/selectionOutput.html"},
+    
+    protationIndex: {url: "/views/quotation/protationIndex.html"},
+    protationPart: {url: "/views/quotation/protationPart.html"},
+	protationOutputIndex: {url: "/views/quotation/protationOutput.html"}
 });
 
 $.extend(api, {quotation: {
@@ -220,7 +224,157 @@ $.extend(api, {quotation: {
     pageQuotationType: {url: "pageQuotationType.do"},
     pageQuotationSmallCategory: {url: "pageQuotationSmallCategory.do"},
     pageQuotationClassification: {url: "pageQuotationClassification.do"},
-
+    
+    pagePresignProduce: {
+        url: "pagePresignProduce.do",
+        type: "query",
+        tranargs: [{
+            result: "paging-data",
+            args: ["quotePrice", "quoteArea", "unitPrice", "costPrice", "profitRate", "preferPrice"]
+        }]
+    },
+    queryPresignProduce: {
+        url: "queryPresignProduce.do",
+        type: "query",
+        tranargs: [{
+            result: "presignProduces",
+            args: ["quotePrice", "quoteArea", "unitPrice", "costPrice", "profitRate", "preferPrice"]
+        }]
+    },
+    addPresignProduce: {
+        url: "addPresignProduce.do",
+        type: "update",
+        tranargs: {
+            args: ["presignProduce.quotePrice", "presignProduce.quoteArea", "presignProduce.unitPrice", "presignProduce.costPrice", "presignProduce.profitRate", "presignProduce.preferPrice"]
+        }
+    },
+    updatePresignProduce: {
+        url: "updatePresignProduce.do",
+        type: "update",
+        tranargs: {
+            args: ["presignProduce.quotePrice", "presignProduce.quoteArea", "presignProduce.unitPrice", "presignProduce.costPrice", "presignProduce.profitRate", "presignProduce.preferPrice"]
+        }
+    },
+    updatePresignProduceForStatus: {url: "updatePresignProduceForStatus.do"},
+    
+    pagePresignItem: {
+        url: "pagePresignItem.do",
+        type: "query",
+        tranargs: [{
+            result: "paging-data",
+            args: ["basicNum", "price"]
+        }]
+    },
+    queryPresignItemByPiid: {
+        url: "queryPresignItemByPiid.do",
+        type: "query",
+        tranargs: [{
+            result: "presignItem",
+            args: ["basicNum", "price"]
+        }]
+    },
+    addPresignItem: {
+        url: "addPresignItem.do",
+        type: "update",
+        tranargs: {
+            args: ["presignItem.basicNum", "presignItem.price"]
+        }
+    },
+    updatePresignItem: {
+        url: "updatePresignItem.do",
+        type: "update",
+        tranargs: {
+            args: ["presignItem.basicNum", "presignItem.price"]
+        }
+    },
+    updatePresignItemForStatus: {url: "updatePresignItemForStatus.do"},
+    deletePresignItem: {url: "deletePresignItem.do"},
+    
+    queryProtationByOrderId: {
+        url: "queryProtationByOrderId.do",
+        demo: true,
+        type: "query",
+        tranargs: [{
+            result: "protations",
+            args: ["quotePrice", "quoteArea", "unitPrice", "costPrice", "profitRate", "basicPrice", "comdPrice", "commPrice", "adddPrice", "addmPrice", "subdPrice", "submPrice", "totalPrice"]
+        }]
+    },
+    queryProtationForDefaultByOrderId: {
+        url: "queryProtationForDefaultByOrderId.do",
+        demo: true,
+        type: "query",
+        tranargs: [{
+            result: "protation",
+            args: ["quotePrice", "quoteArea", "unitPrice", "costPrice", "profitRate", "basicPrice", "comdPrice", "commPrice", "adddPrice", "addmPrice", "subdPrice", "submPrice", "totalPrice"]
+        }]
+    },
+    queryProtationByPid: {
+        url: "queryProtationByPid.do",
+        demo: true,
+        type: "query",
+        tranargs: [{
+            result: "protation",
+            args: ["quotePrice", "quoteArea", "unitPrice", "costPrice", "profitRate", "basicPrice", "comdPrice", "commPrice", "adddPrice", "addmPrice", "subdPrice", "submPrice", "totalPrice", "preferPrice"]
+        }]
+    },
+    addProtation: {
+        url: "addProtation.do",
+        type: "update",
+        tranargs: {
+            args: ["protation.quotePrice", "protation.quoteArea", "protation.unitPrice", "protation.costPrice", "protation.profitRate", "protation.basicPrice", "protation.comdPrice", "protation.commPrice", "protation.adddPrice", "protation.addmPrice", "protation.subdPrice", "protation.submPrice", "protation.totalPrice", "protation.preferPrice", "protation.unitPrice"]
+        }
+    },
+    updateProtation: {
+		url: "updateProtation.do",
+		type: "update",
+		tranargs: {
+		    args: ["protation.preferPrice"]
+		}
+	},
+    updateProtationForAdvance: {
+        url: "updateProtationForAdvance.do",
+        type: "update",
+        tranargs: {
+            args: ["protation.quotePrice", "protation.quoteArea", "protation.unitPrice", "protation.costPrice", "protation.profitRate", "protation.basicPrice", "protation.comdPrice", "protation.commPrice", "protation.adddPrice", "protation.addmPrice", "protation.subdPrice", "protation.submPrice", "protation.totalPrice", "protation.preferPrice"]
+        }
+    },
+    updateProtationForStatus: {url: "updateProtationForStatus.do"},
+    changeProtationForDefault: {url: "changeProtationForDefault.do"},
+    deleteProtation: {url: "deleteProtation.do"},
+    
+    queryProtationItemByPid: {
+        url: "queryProtationItemByPid.do",
+        demo: true,
+        type: "query",
+        tranargs: [{
+            result: "protationItems",
+            args: ["basicNum", "price", "num"]
+        }]
+    },
+    updateProtationItem: {
+        url: "updateProtationItem.do",
+        type: "update",
+        intercept: true,
+        tranargs: {
+            args: [
+                "protation.quotePrice", "protation.quoteArea", "protation.costPrice", "protation.profitRate", "protation.basicPrice", "protation.comdPrice", "protation.commPrice", "protation.adddPrice", "protation.addmPrice", "protation.subdPrice", "protation.submPrice", "protation.totalPrice", 
+                "protationItem.basicNum", "protationItem.price", "protationItem.num",
+            ]
+        }
+    },
+    deleteProtationItem: {
+        url: "deleteProtationItem.do",
+        type: "update",
+        intercept: true,
+        tranargs: {
+            args: [
+                "protation.quotePrice", "protation.quoteArea", "protation.costPrice", "protation.profitRate", "protation.basicPrice", "protation.comdPrice", "protation.commPrice", "protation.adddPrice", "protation.addmPrice", "protation.subdPrice", "protation.submPrice", "protation.totalPrice", 
+            ]
+        }
+    },
+	lockProtation: {url: "lockProtation.do"},
+	unlockProtation : {url: "unlockProtation.do"},
+	
     queryQuotationByOrderId: {
         url: "queryQuotationByOrderId.do",
         demo: true,
@@ -740,6 +894,10 @@ $.extend(api, {quotation: {
             args: ["num", "initNum", "refnum", "postprice", "preprice"]
         }]
     },
+    collateSelectionItem: {
+        url: "collateSelectionItem.do",
+        type: "query"
+    },
     addSelectionItem: {
         url: "addSelectionItem.do",
         intercept: true,
@@ -797,6 +955,7 @@ $.extend(api, {quotation: {
             args: ["selectionItem.refnum"]
         }
     },
+    reviewSelectionItem: {url: "reviewSelectionItem.do"},
     balanceSelectionItem: {url: "balanceSelectionItem.do"},
     deleteSelectionItem: {
         url: "deleteSelectionItem.do",
@@ -830,6 +989,34 @@ $.extend(api, {quotation: {
             args: ["purchase", "selling", "pieceNum"]
         }]
     },
+    queryExtensionNormood: {
+        url: "queryExtensionNormood.do",
+        type: "query",
+        tranargs: [{
+            result: "extensions-extensionItems",
+            args: ["addPrice", "unitPrice", "subPrice", "num"]
+        },{
+            result: "extensions-extensionItems-normood",
+            args: ["num"]
+        },{
+            result: "extensions-extensionItems-normood-goods",
+            args: ["purchase", "selling", "pieceNum"]
+        }]
+    },
+    queryAddReduceNormood: {
+        url: "queryAddReduceNormood.do",
+        type: "query",
+        tranargs: [{
+            result: "addReduces-addReduceItems",
+            args: ["unitPrice", "initNum", "num"]
+        },{
+            result: "addReduces-addReduceItems-normood",
+            args: ["num"]
+        },{
+            result: "addReduces-addReduceItems-normood-goods",
+            args: ["purchase", "selling", "pieceNum"]
+        }]
+    },
     queryQuotationNormrice: {
         url: "queryQuotationNormrice.do",
         type: "query",
@@ -844,6 +1031,34 @@ $.extend(api, {quotation: {
             args: ["precheck", "postcheck", "stacheck", "fincheck"]
         }]
     },
+    queryExtensionNormrice: {
+        url: "queryExtensionNormrice.do",
+        type: "query",
+        tranargs: [{
+            result: "extensions-extensionItems",
+            args: ["unitPrice", "initNum", "num"]
+        },{
+            result: "extensions-extensionItems-normrice",
+            args: ["trannum", "salary"]
+        },{
+            result: "extensions-extensionItems-normrice-constructionNode",
+            args: ["precheck", "postcheck", "stacheck", "fincheck"]
+        }]
+    },
+    queryAddReduceNormrice: {
+        url: "queryAddReduceNormrice.do",
+        type: "query",
+        tranargs: [{
+            result: "addReduces-addReduceItems",
+            args: ["unitPrice", "initNum", "num"]
+        },{
+            result: "addReduces-addReduceItems-normrice",
+            args: ["trannum", "salary"]
+        },{
+            result: "addReduces-addReduceItems-normrice-constructionNode",
+            args: ["precheck", "postcheck", "stacheck", "fincheck"]
+        }]
+    },
     amountQuotationNormood: {
         url: "amountQuotationNormood.do",
         type: "query",
@@ -855,8 +1070,52 @@ $.extend(api, {quotation: {
             args: ["purchase", "selling", "pieceNum"]
         }]
     },
+    amountExtensionNormood: {
+        url: "amountExtensionNormood.do",
+        type: "query",
+        tranargs: [{
+            result: "normoods",
+            args: ["num", "amount"]
+        },{
+            result: "normoods-goods",
+            args: ["purchase", "selling", "pieceNum"]
+        }]
+    },
+    amountAddReduceNormood: {
+        url: "amountAddReduceNormood.do",
+        type: "query",
+        tranargs: [{
+            result: "normoods",
+            args: ["num", "amount"]
+        },{
+            result: "normoods-goods",
+            args: ["purchase", "selling", "pieceNum"]
+        }]
+    },
     amountQuotationNormrice: {
         url: "amountQuotationNormrice.do",
+        type: "query",
+        tranargs: [{
+            result: "normrices",
+            args: ["trannum", "salary", "amount"]
+        },{
+            result: "normrices-constructionNode",
+            args: ["precheck", "postcheck", "stacheck", "fincheck"]
+        }]
+    },
+    amountExtensionNormrice: {
+        url: "amountExtensionNormrice.do",
+        type: "query",
+        tranargs: [{
+            result: "normrices",
+            args: ["trannum", "salary", "amount"]
+        },{
+            result: "normrices-constructionNode",
+            args: ["precheck", "postcheck", "stacheck", "fincheck"]
+        }]
+    },
+    amountAddReduceNormrice: {
+        url: "amountAddReduceNormrice.do",
         type: "query",
         tranargs: [{
             result: "normrices",

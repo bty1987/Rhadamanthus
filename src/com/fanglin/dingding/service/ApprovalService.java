@@ -68,6 +68,7 @@ public class ApprovalService {
 		if (response != null && response.getInteger("errcode") == 0) {
 			return response.getString("process_instance_id");
 		} else {
+			System.out.println(senderId);
 			System.out.println(url);
 			System.out.println(String.format("%d-%s", response.getInteger("errcode"), response.getString("errmsg")));
 
@@ -100,7 +101,6 @@ public class ApprovalService {
 			jsonObject.put("value", map.getValue());
 
 			forms.add(jsonObject);
-
 		}
 
 		return forms;

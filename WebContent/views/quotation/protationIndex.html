@@ -1,0 +1,101 @@
+
+<div id="protationIndexPageContent" class="page-content">
+	<div id="fl-statement"></div>
+
+	<div class="clearfix">
+		<div class="col-xs-12">
+			<a href="#" id="createProtation" class="btn btn-default btn-app btn-sm radius-4" style="padding: 5px 0;">
+				<i class="icon-plus-sign bigger-230"></i>
+				<span>创建</span>
+			</a>
+
+			<a href="#" id="btnBack" class="btn btn-info btn-app btn-sm radius-4" style="padding: 5px 0;">
+				<i class="icon-mail-forward bigger-230"></i>
+				<span>返回</span>
+			</a>
+		</div>
+	</div>
+	
+	<div class="hr hr32 hr-dotted" ></div>
+
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="" id="protationList"></div>
+		</div>
+	</div>
+
+	<div class="hr hr32"></div>
+
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="" id="protationList2"></div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="protationModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="protationDialog">报价</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="name">名称</label>
+							<div class="col-sm-9">
+								<input type="text" id="name" class="col-xs-10 col-sm-5 v_required v_name"  maxlength='15'/>
+								<input type="text" id="pid" class="col-xs-10 col-sm-5 hide"/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="produce">产品</label>
+							<div class="col-sm-9">
+								<select class="col-xs-10 col-sm-5 v_required" id="produce" data-toggle="popover" data-trigger='manual'></select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="preferPrice">优惠价</label>
+							<div class="col-sm-9">
+								<input type="text" id="preferPrice" class="col-xs-10 col-sm-5 v_required v_preferPrice"  maxlength='15'/>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="managePrice">管理费</label>
+							<div class="col-sm-9">
+								<input type="text" id="managePrice" class="col-xs-10 col-sm-5 v_required managePrice"  maxlength='15'/>
+							</div>
+						</div>
+						
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="content">备注</label>
+							<div class="col-sm-9">
+								<textarea id="content" class="col-xs-10 col-sm-5 v_name" rows="3" data-toggle="popover" data-trigger='manual'  maxlength='25'></textarea>
+							</div>
+						</div>
+						<div class="space-4"></div>
+					</form>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<script type="text/javascript">
+	$.loadScript(['js/quotation/protationIndex.js?version=' + versionCode]);
+</script>

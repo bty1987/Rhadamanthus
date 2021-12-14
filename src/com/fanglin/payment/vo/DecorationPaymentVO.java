@@ -34,6 +34,8 @@ public class DecorationPaymentVO implements Serializable {
 	private Short oneType;
 
 	private Short twoType;
+	
+	private Long ptid;
 
 	private String paymentType;
 
@@ -136,6 +138,14 @@ public class DecorationPaymentVO implements Serializable {
 
 	public void setTwoType(Short twoType) {
 		this.twoType = twoType;
+	}
+
+	public Long getPtid() {
+		return ptid;
+	}
+
+	public void setPtid(Long ptid) {
+		this.ptid = ptid;
 	}
 
 	public String getPaymentType() {

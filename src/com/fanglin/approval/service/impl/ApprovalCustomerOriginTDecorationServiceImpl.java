@@ -88,10 +88,10 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 			throw new FLException(240001, "审批信息不存在");
 		}
 
-		CustomerOriginVO customerOriginVO = new CustomerOriginVO(new VillageVO(new CityProperVO()), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new CustomerVO(), new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())));
+		CustomerOriginVO customerOriginVO = new CustomerOriginVO(new VillageVO(new CityProperVO()), new UserBaseVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new CustomerVO(), new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())), new UserBaseVO(new DutyVO(), new DepartmentVO(new DepartmentTypeVO(), new DepartmentVO(), new UserVO())), new DecorationBusitypeVO());
 		CustomerOriginPO customerOriginPO = approvalCustomerOriginTDecorationPO.getCustomerOrigin();
 
-		BeanUtil.copyProperties(customerOriginPO, customerOriginVO, Arrays.asList("village", "creater", "belonger", "department", "region", "customer", "house", "designer", "salesman"));
+		BeanUtil.copyProperties(customerOriginPO, customerOriginVO, Arrays.asList("village", "creater", "belonger", "department", "region", "customer", "house", "designer", "salesman", "decorationBusitype"));
 
 		BeanUtil.copyProperties(customerOriginPO.getCustomer(), customerOriginVO.getCustomer());
 		BeanUtil.copyProperties(customerOriginPO.getHouse(), customerOriginVO.getHouse(), Arrays.asList("village"));
@@ -160,12 +160,12 @@ public class ApprovalCustomerOriginTDecorationServiceImpl implements ApprovalCus
 
 		String content = String.format("客源转装修单,客户名:%s,楼盘:%s %s %s %s", customerOriginPO.getName(), villagePO.getCityProper().getCity().getName(), villagePO.getCityProper().getName(), villagePO.getName(), housePO.getHouseNumber());
 
-		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(csid), ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT, content, approvalVO.getComment(), company);
+		approvalPO = new ApprovalPO().init(sender, receiver, "", String.valueOf(csid), ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT, content, approvalVO.getComment(), company);
 
 		approvalDao.save(approvalPO);
 
 		UserPO salesman = userDao.queryUserByUserId(approvalCustomerOriginTDecorationVO.getSalesman().getUserId());
-		
+
 		long dbid = approvalCustomerOriginTDecorationVO.getDecorationBusitype().getDbid();
 
 		ApprovalCustomerOriginTDecorationPO approvalCustomerOriginTDecorationPO = new ApprovalCustomerOriginTDecorationPO(new CustomerOriginPO(csid), new DecorationBusitypePO(dbid), salesman);

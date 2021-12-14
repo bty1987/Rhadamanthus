@@ -54,6 +54,11 @@ var Validator = function(){
             regex: /^[\w\u4e00-\u9fa5-.@&!, \/()%\[\]（）*，;。；！、：:?？><]*$/,
             errorMsg: "内容可以由汉字, 字母, 数字,基本标点符号,'-','>','<','_', '.', '@'组成."
         },
+        namecn: {
+            type: "v_name_cn",
+            regex: /^[\u4e00-\u9fa5]*$/,
+            errorMsg: "内容可以由汉字, 字母, 数字,基本标点符号,'-','>','<','_', '.', '@'组成."
+        },
         nameen: {
             type: "v_name_en",
             regex: /^[\w-_]*$/,

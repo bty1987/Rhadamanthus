@@ -85,7 +85,7 @@ public class CustomerOriginAction extends BaseListAction {
 	@Action(value = "bindCustomerOrigin", results = { @Result ( name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String bindCustomerOrigin() throws FLException{
 		
-		customerOriginService.bindCustomerOrigin(customerOrigin, queryUserId());
+		customerOriginService.bindCustomerOrigin(customerOrigin, queryUserId(), queryCompany());
 		
 		return SUCCESS;
 	}

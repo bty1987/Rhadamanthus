@@ -101,8 +101,8 @@ Condition.addupRule("system", {
         submitConfig: {
             name: "key",
             op: "cn",
-            validate: null,
-        },
+            validate: null
+        }
     },
     "upgrade-version": {
         label: "适用版本",
@@ -122,5 +122,14 @@ Condition.addupRule("system", {
             validate: null
         }
     },
+    "organization-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
+        }
+    }
 
 });

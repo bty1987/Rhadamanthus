@@ -90,6 +90,8 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 
 			BeanUtil.copyProperties(extensionItemVO, extensionItemPO, Arrays.asList("quotationFunctionArea"));
 
+			extensionItemPO.setQiid(extensionItemVO.getQuoteItemId());
+
 			extensionItemPO.setQuotationFunctionArea(new QuotationFunctionAreaPO(extensionItemVO.getQuotationFunctionAreaId()));
 		} else {
 

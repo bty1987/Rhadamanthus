@@ -100,6 +100,15 @@ public class AwardStockAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryAwardStockByName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryAwardStockByName() throws FLException {
+
+		awardStocks = awardStockService.queryAwardStockByName(awardStock, queryCompany());
+		
+		return SUCCESS;
+		  
+	}
+	
 	public AwardStockVO getAwardStock() {
 		return awardStock;
 	}

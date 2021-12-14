@@ -13,10 +13,15 @@ package com.fanglin.kingdee.service;
 
 import java.io.Serializable;
 
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.po.DecorationPO;
 
 public interface CustomerService extends Serializable {
 
-	public void save(DecorationPO decorationPO) throws Exception;
+	public void save(DecorationPO decorationPO) throws FLException;
+
+	public void audit(DecorationPO decorationPO) throws FLException;
+
+	public void audit(String no, String address) throws FLException;
 
 }

@@ -22,6 +22,7 @@
             deptSel: com.focusPage("#deptSel", "#addSupplierModal"),
             dutySel: com.focusPage("#dutySel", "#addSupplierModal"),
             statusSel: com.focusPage("#statusSel", "#addSupplierModal"),
+            oldUserId: com.focusPage("#oldUserId", "#addSupplierModal"),
             
             isLogin: com.focusPage("#isLogin", "#supplierAdvanceModal"),
             extranet: com.focusPage("#extranet", "#supplierAdvanceModal"),
@@ -145,6 +146,7 @@
                         com.focusPage(".show").removeClass("hide");
                         supplier.items.userName.val(v.userName);
                         supplier.items.phone.val(v.phone);
+                        supplier.items.oldUserId.val(v.oldUserId);
                         supplier.supplierUid = v.uid;
                         supplier.modals.addSupplierModal.modal("show");
                     });
@@ -200,6 +202,7 @@
         if(com.validate("addSupplierModal")) return false;
 
         var options = {
+            "supplier.oldUserId": supplier.items.oldUserId.val(),
             "supplier.loginId": supplier.items.loginId.val(),
             "supplier.userName": supplier.items.userName.val().trim(),
             "supplier.currentName": supplier.items.userName.val().trim(),

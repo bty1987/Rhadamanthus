@@ -52,7 +52,9 @@ jQuery(function ($) {
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.type == 0 ? "收款" : "退款"));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var propertyArr = [
+                ["装修单号:", v.orderId, "blue"],
                 ["款项类型:", receipt.paymentTypes[v.paymentType], "red"],
+                ["款项名称:", v.paymentName, "red"],
                 ["收据类型:", receipt.receiptTypes[v.receiptType], "red"],
                 ["名称:", v.name == "" ? "无" : v.name, "grey"],
                 ["金额:", v.money, "blue"],

@@ -55,6 +55,8 @@ public class ReceiptTypePO implements java.io.Serializable {
 	private short direction;
 
 	private short type;
+	
+	private short fund;
 
 	private short status;
 
@@ -65,6 +67,10 @@ public class ReceiptTypePO implements java.io.Serializable {
 	private String kino;
 
 	private String kiname;
+	
+	private String kibalance;
+	
+	private String bankno;
 
 	private String assistant;
 	
@@ -153,6 +159,15 @@ public class ReceiptTypePO implements java.io.Serializable {
 		this.type = type;
 	}
 
+	@Column(name = "fund")
+	public short getFund() {
+		return fund;
+	}
+
+	public void setFund(short fund) {
+		this.fund = fund;
+	}
+
 	@Column(name = "status")
 	public short getStatus() {
 		return this.status;
@@ -196,6 +211,24 @@ public class ReceiptTypePO implements java.io.Serializable {
 
 	public void setKiname(String kiname) {
 		this.kiname = kiname;
+	}
+
+	@Column(name = "kibalance")
+	public String getKibalance() {
+		return kibalance;
+	}
+
+	public void setKibalance(String kibalance) {
+		this.kibalance = kibalance;
+	}
+
+	@Column(name = "bankno")
+	public String getBankno() {
+		return bankno;
+	}
+
+	public void setBankno(String bankno) {
+		this.bankno = bankno;
 	}
 
 	@Column(name = "assistant")

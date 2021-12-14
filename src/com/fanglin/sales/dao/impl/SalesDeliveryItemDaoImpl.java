@@ -105,6 +105,15 @@ public class SalesDeliveryItemDaoImpl extends DaoImpl<SalesDeliveryItemPO> imple
 			} else if ("creater".equals(field)) {
 				query.alias("creater", "creater");
 				query.add(query.getCriterion(SalesDeliveryItemPO.COLUMN_CREATEID_STR, data, op));
+			} else if ("checker".equals(field)) {
+				query.alias("checker", "checker");
+				query.add(query.getCriterion(SalesDeliveryItemPO.COLUMN_CHECKER_STR, data, op));
+			} else if ("confirmer".equals(field)) {
+				query.alias("confirmer", "confirmer");
+				query.add(query.getCriterion(SalesDeliveryItemPO.COLUMN_CONFIRMER_STR, data, op));
+			} else if ("finisher".equals(field)) {
+				query.alias("finisher", "finisher");
+				query.add(query.getCriterion(SalesDeliveryItemPO.COLUMN_FINISHER_STR, data, op));
 			}
 		}
 	}

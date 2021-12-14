@@ -353,7 +353,7 @@ Condition.addupRule("sales", {
         }
     },
     "balance-createTime":{
-        label: "预结算时间",
+        label: "预结时间",
         type: "dateRangePicker",
         submitConfig: {
             name: "createTime",
@@ -362,7 +362,7 @@ Condition.addupRule("sales", {
         }
     },
     "balance-venderTime":{
-        label: "厂商结算时间",
+        label: "厂结时间",
         type: "dateRangePicker",
         submitConfig: {
             name: "venderTime",
@@ -512,7 +512,7 @@ Condition.addupRule("sales", {
         }
     },
     "salesDelivery-creater":{
-    	label: "创建人",
+        label: "创建人",
         type: "autofill",
         submitConfig: {
             name: "creater",
@@ -520,7 +520,55 @@ Condition.addupRule("sales", {
             validata: null
         },
         dataSource: {
-        	url: api.personel.queryUserByPinyin,
+            url: api.personel.queryUserByPinyin,
+            postData: {"user.status":0,"departmentType.name":""},
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "salesDelivery-checker":{
+        label: "审核人",
+        type: "autofill",
+        submitConfig: {
+            name: "checker",
+            op: "eq",
+            validata: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {"user.status":0,"departmentType.name":""},
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "salesDelivery-confirmer":{
+        label: "确认人",
+        type: "autofill",
+        submitConfig: {
+            name: "confirmer",
+            op: "eq",
+            validata: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {"user.status":0,"departmentType.name":""},
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "salesDelivery-finisher":{
+        label: "完结人",
+        type: "autofill",
+        submitConfig: {
+            name: "finisher",
+            op: "eq",
+            validata: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
             postData: {"user.status":0,"departmentType.name":""},
             listPath: "autoFillKeyValue",
             keyPath: "key",

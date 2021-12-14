@@ -26,8 +26,6 @@ public class CustomerKO extends Bean implements Serializable {
 
 	public static String FormId = "BD_Customer";
 
-	private OrganizationKO FUseOrgId;
-
 	private String FNumber;
 
 	private String FName;
@@ -37,16 +35,9 @@ public class CustomerKO extends Bean implements Serializable {
 		super.setFormId(FormId);
 	}
 
-	public CustomerKO(OrganizationKO fUseOrgId) {
-		super();
-		super.setFormId(FormId);
-		FUseOrgId = fUseOrgId;
-	}
-
-	public CustomerKO(OrganizationKO fUseOrgId, String fNumber, String fName) {
+	public CustomerKO(String fNumber, String fName) {
 		super();
 		FNumber = fNumber;
-		FUseOrgId = fUseOrgId;
 		FName = fName;
 	}
 
@@ -56,14 +47,6 @@ public class CustomerKO extends Bean implements Serializable {
 
 	public void setFNumber(String fNumber) {
 		FNumber = fNumber;
-	}
-
-	public OrganizationKO getFUseOrgId() {
-		return FUseOrgId;
-	}
-
-	public void setFUseOrgId(OrganizationKO fUseOrgId) {
-		FUseOrgId = fUseOrgId;
 	}
 
 	public String getFName() {
@@ -84,7 +67,13 @@ public class CustomerKO extends Bean implements Serializable {
 		this.FNumber = decorationPO.getOrderId();
 		this.FName = String.format("%s %s %s %s", cityPO.getName(), cityProperPO.getName(), villagePO.getName(), housePO.getHouseNumber());
 
-		this.FUseOrgId = new OrganizationKO("100.01");
+		return this;
+	}
+
+	public CustomerKO ptk(String no, String address) {
+
+		this.FNumber = no;
+		this.FName = address;
 
 		return this;
 	}

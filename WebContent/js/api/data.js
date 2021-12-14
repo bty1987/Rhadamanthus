@@ -158,7 +158,6 @@ $.extend(api, {
         },
         addConstructionNode: {
             url:"addConstructionNode.do",
-            server: "communion",
             type: "update",
             tranargs: {
                 args: ["constructionNode.precheck", "constructionNode.postcheck", "constructionNode.stacheck", "constructionNode.fincheck"]
@@ -166,13 +165,12 @@ $.extend(api, {
         },
         updateConstructionNode: {
             url: "updateConstructionNode.do",
-            server: "communion",
             type: "update",
             tranargs: {
                 args: ["constructionNode.precheck", "constructionNode.postcheck", "constructionNode.stacheck", "constructionNode.fincheck"]
             }
         },
-        updateConstructionNodeForStatus: {url:"updateConstructionNodeForStatus.do", server: "communion"},
+        updateConstructionNodeForStatus: {url:"updateConstructionNodeForStatus.do"},
 
         queryPaymentScaleByCid: {url:"queryPaymentScaleByCid.do"},
         addPaymentScale: {url:"addPaymentScale.do",},
@@ -198,7 +196,7 @@ $.extend(api, {
         queryChainPageForSelf: {url:"queryChainPageForSelf.do"},
         addChainPage: {url:"addChainPage.do"},
         deleteChainPage: {url:"deleteChainPage.do"},
-        
+
         querySalesMatching: {url:"querySalesMatching.do"},
         addSalesMatching: {url:"addSalesMatching.do"},
         updateSalesMatching: {url:"updateSalesMatching.do"},
@@ -247,12 +245,12 @@ $.extend(api, {
         updateTaskParam: {url: "updateTaskParam.do"},
         updateTaskParamForStatus: {url: "updateTaskParamForStatus.do"},
         deleteTaskParam:{url: "deleteTaskParam.do"},
-        
+
         pageAccessoriesType: {url: "pageAccessoriesType.do"},
         queryAccessoriesType: {url: "queryAccessoriesType.do"},
         queryAccessoriesTypeByWtid: {url: "queryAccessoriesTypeByWtid.do"},
         updateAccessoriesTypeForStatus: {url:
-            "updateAccessoriesTypeForStatus.do"},
+                "updateAccessoriesTypeForStatus.do"},
         addAccessoriesType: {url: "addAccessoriesType.do"},
         updateAccessoriesType: {url: "updateAccessoriesType.do"},
 
@@ -425,9 +423,36 @@ $.extend(api, {
                 args: ["num", "selling"]
             },{
                 result:"paging-data-goods",
-                args:["purchase", "selling", "pieceNum"]
+                args: ["addPrice", "unitPrice", "subPrice"]
             }]
         },
+        pageSoodsBySid: {
+            url: "pageSoodsBySid.do",
+            type:"query",
+            tranargs:[
+                {
+                    result:"paging-data",
+                    args: ["num", "selling"]
+                },{
+                    result:"paging-data-goods",
+                    args:["purchase", "selling", "pieceNum"]
+                },{
+                    result:"paging-data-quotationItem",
+                    args: ["pieceNum","purchase","selling"]
+                }
+            ]
+
+        },
+
+        querySoodsByName: {
+            url: "querySoodsByName.do",
+            type:"query",
+            tranargs:[{
+                result:"soodes",
+                args: ["purchase","selling","pieceNum"]
+            }]
+        },
+
         querySoodsByQiid: {
             url: "querySoodsByQiid.do",
             type:"query",
@@ -438,8 +463,32 @@ $.extend(api, {
                 },{
                     result:"soodes-goods",
                     args: ["pieceNum","purchase","selling"]
-                }]
+                },
+            ]
         },
+
+        querySoodsBySid: {
+            url: "querySoodsBySid.do",
+            type:"query",
+            tranargs:[
+                {
+                    result:"soodes",
+                    args: ["num", "selling"]
+                },{
+                    result:"soodes-goods",
+                    args: ["pieceNum","purchase","selling"]
+                },
+            ]
+        },
+
+        addSoodsItem: {
+            url: "addSoodsItem.do",
+            type: "update",
+            tranargs: {
+                args: ["soods.quotationItem.unitPrice"]
+            }
+        },
+
         addSoods: {
             url: "addSoods.do",
             type: "update",
@@ -447,6 +496,7 @@ $.extend(api, {
                 args: ["soods.num", "soods.selling"]
             }
         },
+
         updateSoods: {
             url: "updateSoods.do",
             type: "update",
@@ -454,7 +504,11 @@ $.extend(api, {
                 args: ["soods.selling"]
             }
         },
+        updateSoodsForStatus:{url:"updateSoodsForStatus.do"},
+        copySoods: {url: "copySoods.do"},
         deleteSoods: {url: "deleteSoods.do"},
+
+        deleteSoodsItem: {url: "deleteSoodsItem.do"},
 
         pageAoodsCost: {
             url: "pageAoodsCost.do",
@@ -515,7 +569,7 @@ $.extend(api, {
         },
         deleteNormrice: {url: "deleteNormrice.do"},
 
-        
+
         queryNormoodByQiid: {
             url: "queryNormoodByQiid.do",
             type: "query",
@@ -535,7 +589,7 @@ $.extend(api, {
             }
         },
         deleteNormood: {url: "deleteNormood.do"},
-        
+
         pageChart:{url:"pageChart.do"},
         queryChart:{url:"queryChart.do"},
         queryChartForLogin:{url:"queryChartForLogin.do"},
@@ -590,13 +644,13 @@ $.extend(api, {
             }
         },
         deleteBrandBalance :{url:"deleteBrandBalance.do"},
-        
+
         pageContract:{url:"pageContract.do"},
         queryContract:{url:"queryContract.do"},
         addContract:{url:"addContract.do"},
         updateContract: {url: "updateContract.do"},
         updateContractForStatus: {url: "updateContractForStatus.do"},
-        
+
         pageSignet: {url:"pageSignet.do"},
         querySignet: {url:"querySignet.do"},
         addSignet: {url:"addSignet.do"},
@@ -607,7 +661,14 @@ $.extend(api, {
         signateSignet: {url:"signateSignet.do"},
         autoSignet: {url:"autoSignet.do"},
         cancelSignet: {url:"cancelSignet.do"},
-        
+        copySignet: {url:"copySignet.do"},
+        selectSignet: {url:"selectSignet.do"},
+
+        pollingSignature: {url:"pollingSignature.do"},
+        defaultSignature: {url:"defaultSignature.do"},
+        addSignature: {url:"addSignature.do"},
+        deleteSignature: {url:"deleteSignature.do"},
+
         pageTalking:{url:"pageTalking.do"},
         queryTalking:{url:"queryTalking.do"},
         addTalking:{url:"addTalking.do"},
@@ -620,5 +681,47 @@ $.extend(api, {
         addAdditem: {url:"addAdditem.do"},
         updateAdditemForStatus: {url:"updateAdditemForStatus.do"},
         deleteAdditem: {url:"deleteAdditem.do"},
+
+        pagePaymentType: {
+            url: "pagePaymentType.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["taxrate"]
+            }]
+        },
+        queryPaymentType :{
+            url:"queryPaymentType.do",
+            type: "query",
+            tranargs: [{
+                result: "paymentType",
+                args: ["taxrate"]
+            }]
+        },
+        queryPaymentTypeByPtid :{
+            url:"queryPaymentTypeByPtid.do",
+            type: "query",
+            tranargs: [{
+                result: "paymentType",
+                args: ["taxrate"]
+            }]
+        },
+        addPaymentType :{
+            url:"addPaymentType.do",
+            server: "communion",
+            type: "update",
+            tranargs: {
+                args: ["paymentType.taxrate"]
+            }
+        },
+        updatePaymentType :{
+            url:"updatePaymentType.do",
+            server: "communion",
+            type: "update",
+            tranargs: {
+                args: ["paymentType.taxrate"]
+            }
+        },
+        updatePaymentTypeForStatus: {url:"updatePaymentTypeForStatus.do", server:'communion'}
     }
 });

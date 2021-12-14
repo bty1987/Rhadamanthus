@@ -1,8 +1,8 @@
 package com.fanglin.data.material.dao.impl;
 
-import java.math.BigInteger;
 import java.util.List;
 
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -23,6 +23,7 @@ public class SoodsDaoImpl extends DaoImpl<SoodsPO> implements SoodsDao {
 	public List<SoodsPO> pageSoods(Paging paging, List<Filter> filters, int company) {
 
 		PagingQuery<SoodsPO> query = pagingQuery(paging, SoodsPO.class);
+
 		query.add(query.getCriterion("company", company, "eq"));
 
 		queryFilterExcute(query, filters);
@@ -30,66 +31,49 @@ public class SoodsDaoImpl extends DaoImpl<SoodsPO> implements SoodsDao {
 		return query.list();
 	}
 
+	
 	@Override
-	public List<SoodsPO> pageSoodsByQiid(Paging paging, List<Filter> filters, long qiid) {
-
-		PagingQuery<SoodsPO> query = pagingQuery(paging, SoodsPO.class);
-
-		query.alias("quotationItem", "quotationItem");
-
-		query.add(query.getCriterion("quotationItem.qiid", qiid, "eq"));
-
-		queryFilterExcute(query, filters);
-
-		return query.list();
-	}
-
 	@SuppressWarnings("unchecked")
-	@Override
-	public List<SoodsPO> querySoodsByQiid(long qiid) {
-		return session().createCriteria(SoodsPO.class).createAlias("quotationItem", "quotationItem").add(Restrictions.eq(SoodsPO.COLUMN_QIID_STR, qiid)).list();
+	public List<SoodsPO> querySoodsByName(String name, int limit, int company) {
+	
+	return session().createCriteria(SoodsPO.class).createAlias("goods", "goods").add(Restrictions.eq("company", company)).add(Restrictions.eq("status", SoodsPO.STATUS_VALID_INT)).add(Restrictions.or(Restrictions.ilike(SoodsPO.COLUMN_NAME_STR, name, MatchMode.ANYWHERE),Restrictions.ilike(SoodsPO.COLUMN_BRAND_STR, name, MatchMode.ANYWHERE))).setMaxResults(limit).list();
+  	
 	}
-
+	
 	@Override
-	public int countSoods(long gid, long qiid) {
+	public int deleteSoods(long sid) {
+		
+		String sql = "delete `data`.soods,`data`.soodsitem from `data`.soods left join `data`.soodsitem on `data`.soods.sid=`data`.soodsitem.sid where `data`.soods.sid= :sid";
+		session().createSQLQuery(sql).setLong("sid", sid).executeUpdate();
 
-		String sql = "SELECT COUNT(*) FROM `data`.soods WHERE gid= :gid AND qiid= :qiid";
-		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("gid", gid).setLong("qiid", qiid).uniqueResult();
-
-		return count.intValue();
+		return 0;
 	}
-
+	
 	private void queryFilterExcute(PagingQuery<SoodsPO> query, List<Filter> filters) {
 
-		if (filters != null) {
-			for (Filter filter : filters) {
+		if (filters == null)
+			return;
 
-				String field = filter.getField();
-				String data = filter.getData();
-				String op = filter.getOp();
+		for (Filter filter : filters) {
 
-				if (SoodsPO.COLUMN_NAME_STR.equals(field)) {
-					query.alias("goods", "goods");
-					query.add(query.getCriterion(SoodsPO.COLUMN_NAME_STR, data, op));
-				} else if (SoodsPO.COLUMN_BRAND_STR.equals(field)) {
-					query.alias("goods", "goods");
-					query.add(query.getCriterion(SoodsPO.COLUMN_BRAND_STR, data, op));
-				} else if (SoodsPO.COLUMN_CATEGORY_STR.equals(field)) {
-					query.alias("goods", "goods");
-					query.add(query.getCriterion(SoodsPO.COLUMN_CATEGORY_STR, data, op));
-				} else if (SoodsPO.COLUMN_VERSION_STR.equals(field)) {
-					query.alias("quotationItem", "quotationItem");
-					query.add(query.getCriterion(SoodsPO.COLUMN_VERSION_STR, data, op));
-				} else if (SoodsPO.COLUMN_QNAME_STR.equals(field)) {
-					query.alias("quotationItem", "quotationItem");
-					query.add(query.getCriterion(SoodsPO.COLUMN_QNAME_STR, data, op));
-				} else if (SoodsPO.COLUMN_QUOTATIONSMALLCATEGORYID_STR.equals(field)) {
-					query.alias("quotationItem", "quotationItem");
-					query.alias("quotationItem.quotationSmallCategory", "quotationSmallCategory");
-					query.add(query.getCriterion(SoodsPO.COLUMN_QUOTATIONSMALLCATEGORYID_STR, Integer.valueOf(data), op));
-				}
-			}
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if (SoodsPO.COLUMN_NAME_STR.equals(field)) {
+				query.alias("goods", "goods");
+				query.add(query.getCriterion(SoodsPO.COLUMN_NAME_STR, data, op));
+			} else if (SoodsPO.COLUMN_BRAND_STR.equals(field)) {
+				query.alias("goods", "goods");
+				query.add(query.getCriterion(SoodsPO.COLUMN_BRAND_STR, data, op));
+			} else if (SoodsPO.COLUMN_CATEGORY_STR.equals(field)) {
+				query.alias("goods", "goods");
+				query.add(query.getCriterion(SoodsPO.COLUMN_CATEGORY_STR, data, op));
+			} else if ("status".equals(filter.getField())) {
+		          query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
+	        }
 		}
 	}
+
 
 }

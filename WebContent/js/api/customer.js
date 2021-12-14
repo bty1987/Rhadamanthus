@@ -83,6 +83,8 @@ $.extend(api, {customer: {
     
     queryCustomerRecord: {url:"queryCustomerRecord.do"},
     addCustomerRecord: {url:"addCustomerRecord.do"},
+    //删除会员
+    deleteEmember: {url:"deleteEmember.do"},
 
     queryCustomerOriginFunction: {url:"queryCustomerOriginFunction.do"},
     

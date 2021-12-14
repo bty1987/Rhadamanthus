@@ -25,7 +25,7 @@ public interface CustomerOriginService {
 
 	public void takeCustomerOrigin(CustomerOriginVO customerOriginVO, String userId) throws FLException;
 
-	public void bindCustomerOrigin(CustomerOriginVO customerOrigin, String userId) throws FLException;
+	public void bindCustomerOrigin(CustomerOriginVO customerOrigin, String userId, int company) throws FLException;
 
 	public void commitCustomerOrigin(CustomerOriginVO customerOrigin) throws FLException;
 

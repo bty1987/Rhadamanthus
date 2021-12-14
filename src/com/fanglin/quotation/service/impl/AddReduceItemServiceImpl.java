@@ -158,13 +158,17 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 
 			BeanUtil.copyProperties(addReduceItemVO, addReduceItemPO);
 
+			if (addReduceItemVO.getQuoteItemId() != null)
+				addReduceItemPO.setQiid(addReduceItemVO.getQuoteItemId());
+
 			addReduceItemPO.setQuotationFunctionArea(quotationFunctionAreaPO);
+
 			if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_QUOTATION_ITEM_INT) {
-				areaId = handleQuotationItem(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex(), addReduceItemPO.getQuoteItemId(), addReduceItemVO.getNum(), 0);
+				areaId = handleQuotationItem(addReduceItemPO, quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex(), addReduceItemPO.getQuoteItemId(), addReduceItemVO.getNum(), 0);
 			} else if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_ADD_ITEM_INT) {
-				areaId = handleAddReduceItem(addReduceItemPO.getQuoteItemId(), addReduceItemVO.getNum(), 0);
+				areaId = handleAddReduceItem(addReduceItemPO, addReduceItemPO.getQuoteItemId(), addReduceItemVO.getNum(), 0);
 			} else if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_EXTENSION_ITEM_INT) {
-				areaId = handleExtensionItem(addReduceItemPO.getQuoteItemId(), addReduceItemVO.getNum(), 0);
+				areaId = handleExtensionItem(addReduceItemPO, addReduceItemPO.getQuoteItemId(), addReduceItemVO.getNum(), 0);
 			}
 
 		} else {
@@ -179,11 +183,11 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 			}
 
 			if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_QUOTATION_ITEM_INT) {
-				areaId = handleQuotationItem(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex(), addReduceItemPO.getQuoteItemId(), addReduceItemVO.getNum(), addReduceItemPO.getNum());
+				areaId = handleQuotationItem(addReduceItemPO, quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex(), addReduceItemPO.getQuoteItemId(), addReduceItemVO.getNum(), addReduceItemPO.getNum());
 			} else if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_ADD_ITEM_INT) {
-				areaId = handleAddReduceItem(addReduceItemPO.getQuoteItemId(), addReduceItemVO.getNum(), addReduceItemPO.getNum());
+				areaId = handleAddReduceItem(addReduceItemPO, addReduceItemPO.getQuoteItemId(), addReduceItemVO.getNum(), addReduceItemPO.getNum());
 			} else if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_EXTENSION_ITEM_INT) {
-				areaId = handleExtensionItem(addReduceItemPO.getQuoteItemId(), addReduceItemVO.getNum(), addReduceItemPO.getNum());
+				areaId = handleExtensionItem(addReduceItemPO, addReduceItemPO.getQuoteItemId(), addReduceItemVO.getNum(), addReduceItemPO.getNum());
 			}
 
 			addReduceItemPO.setNum(addReduceItemVO.getNum());
@@ -192,7 +196,9 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 		handleDecorationPayment(addReducePO);
 
 		addReduceItemDao.saveOrUpdate(addReduceItemPO);
+
 		addSelectionItem(addReducePO, addReduceItemPO, areaId);
+
 		addReduceDao.update(addReducePO);
 
 		addReduceItemVO.setAriId(addReduceItemPO.getAriId());
@@ -256,11 +262,11 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 		QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(addReduceItemPO.getQuotationFunctionArea().getQfaId());
 
 		if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_QUOTATION_ITEM_INT) {
-			handleQuotationItem(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex(), addReduceItemPO.getQuoteItemId(), 0, addReduceItemPO.getNum());
+			handleQuotationItem(addReduceItemPO, quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex(), addReduceItemPO.getQuoteItemId(), 0, addReduceItemPO.getNum());
 		} else if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_ADD_ITEM_INT) {
-			handleAddReduceItem(addReduceItemPO.getQuoteItemId(), 0, addReduceItemPO.getNum());
+			handleAddReduceItem(addReduceItemPO, addReduceItemPO.getQuoteItemId(), 0, addReduceItemPO.getNum());
 		} else if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_EXTENSION_ITEM_INT) {
-			handleExtensionItem(addReduceItemPO.getQuoteItemId(), 0, addReduceItemPO.getNum());
+			handleExtensionItem(addReduceItemPO, addReduceItemPO.getQuoteItemId(), 0, addReduceItemPO.getNum());
 		}
 
 		AddReduceServiceImpl.convertAddReduceVOToPOForAdvance(addReduceVO, addReducePO);
@@ -273,7 +279,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 		return 0;
 	}
 
-	private Long handleQuotationItem(long quotationFunctionAreaId, short index, long quotationItemId, int vonum, int ponum) throws FLException {
+	private Long handleQuotationItem(AddReduceItemPO addReduceItemPO, long quotationFunctionAreaId, short index, long quotationItemId, int vonum, int ponum) throws FLException {
 
 		QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaId, index), quotationItemId);
 
@@ -292,10 +298,12 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 
 		quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
 
+		addReduceItemPO.setQiid(quotationFunctionAreaItemPO.getQuotationItem().getQiid());
+
 		return quotationFunctionAreaId;
 	}
 
-	private Long handleAddReduceItem(long quotationItemId, int vonum, int ponum) throws FLException {
+	private Long handleAddReduceItem(AddReduceItemPO addReduceItemPO, long quotationItemId, int vonum, int ponum) throws FLException {
 
 		AddReduceItemPO _addReduceItemPO = addReduceItemDao.get(quotationItemId);
 
@@ -314,10 +322,12 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 
 		addReduceItemDao.update(_addReduceItemPO);
 
+		addReduceItemPO.setQiid(_addReduceItemPO.getQiid());
+
 		return _addReduceItemPO.getArId();
 	}
 
-	private Long handleExtensionItem(long quotationItemId, int vonum, int ponum) throws FLException {
+	private Long handleExtensionItem(AddReduceItemPO addReduceItemPO, long quotationItemId, int vonum, int ponum) throws FLException {
 
 		ExtensionItemPO _extensionItemPO = extensionItemDao.get(quotationItemId);
 
@@ -335,6 +345,8 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 		_extensionItemPO.setNum(Arith.add(_extensionItemNum, Arith.sub(ponum, vonum)));
 
 		extensionItemDao.update(_extensionItemPO);
+
+		addReduceItemPO.setQiid(_extensionItemPO.getQiid());
 
 		return _extensionItemPO.getEid();
 	}
@@ -458,6 +470,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 		} else if (addReduceItemType == AddReduceItemPO.TYPE_EXTENSION_ITEM_INT) {
 
 			ExtensionItemPO extensionItemPO = extensionItemDao.get(addReduceItemPO.getQuoteItemId());
+
 			if (extensionItemPO != null) {
 				addReduceItemVO.setContent(extensionItemPO.getContent());
 				addReduceItemVO.setQuotationItemId(extensionItemPO.getQuoteItemId());
@@ -465,6 +478,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 		}
 
 		QuotationFunctionAreaPO quotationFunctionAreaPO = addReduceItemPO.getQuotationFunctionArea();
+
 		addReduceItemVO.setQuotationFunctionAreaType(quotationFunctionAreaPO.getType());
 		addReduceItemVO.setQuotationFunctionAreaId(quotationFunctionAreaPO.getQfaId());
 		addReduceItemVO.setQuotationFunctionAreaName(quotationFunctionAreaPO.getFunctionAreaName());
