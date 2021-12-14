@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.dao.PaymentTypeDao;
+import com.fanglin.communion.po.PaymentTypePO;
 import com.fanglin.data.common.dao.PaymentScaleItemDao;
 import com.fanglin.data.common.service.PaymentScaleItemService;
 import com.fanglin.data.common.vo.PaymentScaleItemVO;
@@ -17,7 +19,11 @@ import com.fanglin.utils.BeanUtil;
 @Transactional(readOnly = true)
 public class PaymentScaleItemServiceImpl implements PaymentScaleItemService {
 
-	@Autowired PaymentScaleItemDao  paymentScaleItemDao;
+	@Autowired 
+	private PaymentScaleItemDao paymentScaleItemDao;
+	
+	@Autowired 
+	private PaymentTypeDao paymentTypeDao;
 	
 	@Override
 	public List<PaymentScaleItemVO> queryPaymentScaleItemByPsid(PaymentScaleItemVO paymentScaleitem) {
@@ -42,10 +48,11 @@ public class PaymentScaleItemServiceImpl implements PaymentScaleItemService {
 	public void addPaymentScaleItem(PaymentScaleItemVO paymentScaleitem) {
 		
 		PaymentScaleItemPO paymentScaleItemPO = new  PaymentScaleItemPO();
-		paymentScaleItemPO.setName(paymentScaleitem.getName());
-		paymentScaleItemPO.setPsid(paymentScaleitem.getPsid());
-		paymentScaleItemPO.setScale(paymentScaleitem.getScale());
-		paymentScaleItemPO.setSort(paymentScaleitem.getSort());
+		
+		PaymentTypePO paymentTypePO = paymentTypeDao.get(paymentScaleitem.getPtid());
+		
+		BeanUtil.copyProperties(paymentScaleitem, paymentScaleItemPO);
+		paymentScaleItemPO.setName(paymentTypePO.getName());
 		
 		paymentScaleItemDao.save(paymentScaleItemPO);
 		
@@ -55,7 +62,7 @@ public class PaymentScaleItemServiceImpl implements PaymentScaleItemService {
 	@Transactional(rollbackFor=Exception.class)
 	public void deletePaymentScaleItem(PaymentScaleItemVO paymentScaleitem) {
 		
-		PaymentScaleItemPO  paymentScaleItemPO = paymentScaleItemDao.get(paymentScaleitem.getPsiid());
+		PaymentScaleItemPO paymentScaleItemPO = paymentScaleItemDao.get(paymentScaleitem.getPsiid());
 		
 		paymentScaleItemDao.delete(paymentScaleItemPO);
 		

@@ -1,5 +1,8 @@
 package com.fanglin.quotation.vo;
 
+import com.fanglin.data.quotation.vo.NormoodVO;
+import com.fanglin.data.quotation.vo.NormriceVO;
+
 public class AddReduceItemVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -8622530142993960730L;
@@ -34,11 +37,31 @@ public class AddReduceItemVO implements java.io.Serializable {
 
 	private Long quoteItemId;
 
+	private Long qiid;
+
 	private String content;
 
 	private Short discount;
 
 	private Long quotationItemId;
+
+	private NormoodVO normood;
+
+	private NormriceVO normrice;
+
+	public AddReduceItemVO() {
+		super();
+	}
+
+	public AddReduceItemVO(NormoodVO normood) {
+		super();
+		this.normood = normood;
+	}
+
+	public AddReduceItemVO(NormriceVO normrice) {
+		super();
+		this.normrice = normrice;
+	}
 
 	public Long getAriId() {
 		return ariId;
@@ -160,6 +183,14 @@ public class AddReduceItemVO implements java.io.Serializable {
 		this.quoteItemId = quoteItemId;
 	}
 
+	public Long getQiid() {
+		return qiid;
+	}
+
+	public void setQiid(Long qiid) {
+		this.qiid = qiid;
+	}
+
 	public String getContent() {
 		return content;
 	}
@@ -182,6 +213,22 @@ public class AddReduceItemVO implements java.io.Serializable {
 
 	public void setQuotationItemId(Long quotationItemId) {
 		this.quotationItemId = quotationItemId;
+	}
+
+	public NormoodVO getNormood() {
+		return normood;
+	}
+
+	public void setNormood(NormoodVO normood) {
+		this.normood = normood;
+	}
+
+	public NormriceVO getNormrice() {
+		return normrice;
+	}
+
+	public void setNormrice(NormriceVO normrice) {
+		this.normrice = normrice;
 	}
 
 }

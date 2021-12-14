@@ -129,7 +129,9 @@ $(function () {
 
     com.focusPage('#createPlan', '#pagenation').on("click", function () {
         params["searcher"] = searcher;
-        com.popup4page("#stockRecordPopUp", "/views/information/plan2create.html", "计划创建")
+        com.popup4page("#stockRecordPopUp", "/views/information/plan2create.html", "计划创建", null, function(){
+            searcher.doSearch();
+        })
     });
 
     function saveData() {
@@ -147,7 +149,7 @@ $(function () {
         var flag = false;
         
         $.each(results, function (i, v) {
-        	
+
             if (v == "C") {
                 var filePaths = com.focusPage("#filePath");
                 if (filePaths.val() == null || filePaths.val() == "") {
@@ -155,14 +157,14 @@ $(function () {
                     return
                 }
                 args = args + filePaths.val() + ",";
-            }if(v == "E"){
-            	var _date = com.focusPage("#id" + i).val().replace(/-/g, "/");
-            	args = args + _date + "-" + _date+ ",";
+            }else if(v == "E"){
+                var _date = com.focusPage("#id" + i).val().replace(/-/g, "/");
+                args = args + _date + "-" + _date+ ",";
             }else{
                 args = args +  com.focusPage("#id" + i).val()+ ",";
             }
         });
-        
+
         if(flag){
             com.showAlert(com.warning, "上传文件不能为空!");
             return false;
@@ -186,7 +188,6 @@ $(function () {
         var plans = [];
         
         console.log(options);
-        
         
         com.post(api.information.existPlan, options, function(res){
             plans = res.plans;

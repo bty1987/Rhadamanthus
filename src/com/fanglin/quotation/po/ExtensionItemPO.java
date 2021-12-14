@@ -45,6 +45,8 @@ public class ExtensionItemPO implements Serializable {
 
 	private long quoteItemId;
 
+	private long qiid;
+
 	private String content;
 
 	private short discount;
@@ -167,6 +169,15 @@ public class ExtensionItemPO implements Serializable {
 
 	public void setQuoteItemId(long quoteItemId) {
 		this.quoteItemId = quoteItemId;
+	}
+
+	@Column(name = "qiid")
+	public long getQiid() {
+		return qiid;
+	}
+
+	public void setQiid(long qiid) {
+		this.qiid = qiid;
 	}
 
 	@Column(name = "content")

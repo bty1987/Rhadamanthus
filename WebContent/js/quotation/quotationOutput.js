@@ -30,10 +30,12 @@ function printHeader(headStr){
 	return headHtml;
 }
 
-function printProjectTable(subtype) {
+function printProjectTable(subtype, showType) {
 
 	var index = 0;
 	var contentHtml = '';
+	
+    var preDiscountPrice = 0.0;
 
 	contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
 	contentHtml += '<tbody><tr bgcolor="#FFFFFF">';
@@ -70,7 +72,7 @@ function printProjectTable(subtype) {
 
 			if(subtype.indexOf(qv.subtype) == -1) return true;
 			
-			var no = offset == 0 || qv.type != 0 ? "-" : "QI_" + (Array(5).join('0') + (qv.quotationItemId - offset)).slice(-5);
+			var no = offset == 0 || [0, 4, 5].indexOf(qv.type) == -1 ? "-" : "QI_" + (Array(5).join('0') + (qv.quotationItemId - offset)).slice(-5);
 
 			contentHtml += '<tr bgcolor="#FFFFFF">';
 			contentHtml += '<td width="4%" align="center">' + (j+1) + '</td>';
@@ -79,15 +81,24 @@ function printProjectTable(subtype) {
 			contentHtml += '<td width="5%" align="center">' + qv.measurementUnit + '</td>';
 			contentHtml += '<td width="5%" align="center">' + qv.num + '</td>';
 			contentHtml += '<td width="5%" align="center">' + qv.unitPrice + '</td>';
-			contentHtml += '<td width="5%" align="center"> ' + (utils.accMul(qv.unitPrice, qv.num)) + '</td>';
+			contentHtml += '<td width="5%" align="center"> ' + qv.total + '</td>';
 			contentHtml += '<td width="45%" align="left">' + (qv.content ? qv.content : '-') + '</td>';
 			contentHtml += '</tr>';
+			
+			preDiscountPrice = preDiscountPrice + qv.total;
 		});
+		
 		index++;
 	});
+	
+	if (showType.showStandardPrice) {
+        preDiscountPrice = quotationUtils.quotationDetail.TotalPrice;
+    } else{
+        preDiscountPrice = utils.changeThrDecimal(preDiscountPrice);
+    }
 
 	contentHtml += '<tr bgcolor="#FFFFFF">';
-	contentHtml += '<td colspan="12" align="left">工程总价:' + quotationUtils.quotationDetail.UndisPrice + '元</td>';
+	contentHtml += '<td colspan="12" align="left">工程总价:' + preDiscountPrice + '元</td>';
 	contentHtml += '</tr>';
 
 	contentHtml += '</tbody>';
@@ -154,17 +165,17 @@ function printFinanceTable(subtype, showType){
 				contentHtml += '<td>' + qv.measurementUnit + '</td>';
 				contentHtml += '<td>' + qv.num + '</td>';
 				contentHtml += '<td>' + qv.unitPrice + '</td>';
-				contentHtml += '<td>' + qv.quotationTotalPrice + '</td>';
+				contentHtml += '<td>' + qv.unitPrice + '</td>';
 				contentHtml += '<td>' + qv._discountNum + '</td>';
 				contentHtml += '<td>' + qv.unitPrice + '</td>';
-				contentHtml += '<td>' + qv.quotationTotalPrice + '</td>';
+				contentHtml += '<td>' + qv.total + '</td>';
 				contentHtml += '</tr>';
 
-				sum = sum + qv.quotationTotalPrice;
-				preSum = preSum + qv.quotationTotalPrice;
+				sum = sum + qv.total;
+				preSum = preSum + qv.total;
 
-				discountPrice = discountPrice + qv.quotationTotalPrice;
-				preDiscountPrice = preDiscountPrice + qv.quotationTotalPrice;
+				discountPrice = discountPrice + qv.total;
+				preDiscountPrice = preDiscountPrice + qv.total;
 			}
 
 		});
@@ -183,10 +194,13 @@ function printFinanceTable(subtype, showType){
 		contentHtml += '';
 		index++;
 	});
-
+	
 	if (showType.showStandardPrice) {
 		discountPrice = quotationUtils.quotationDetail.UndisPrice;
 		preDiscountPrice = quotationUtils.quotationDetail.TotalPrice;
+	} else{
+	    discountPrice = utils.changeThrDecimal(discountPrice);
+        preDiscountPrice = utils.changeThrDecimal(preDiscountPrice);
 	}
 
 	contentHtml += '<tr bgcolor="#FFFFFF">';
@@ -276,6 +290,9 @@ function printCostTable(subtype, showType){
     if (showType.showStandardPrice) {
         discountPrice = quotationUtils.quotationDetail.UndisPrice;
         preDiscountPrice = quotationUtils.quotationDetail.TotalPrice;
+    } else{
+        discountPrice = utils.changeThrDecimal(discountPrice);
+        preDiscountPrice = utils.changeThrDecimal(preDiscountPrice);
     }
 
     contentHtml += '<tr bgcolor="#FFFFFF">';
@@ -632,7 +649,7 @@ jQuery(function($) {
 	
 	console.log(printConf)
 	
-	printConf.showType = {"itemtype": printConf.type};
+	printConf.showType = {"itemtype": printConf.type, "showStandardPrice": printConf.calType == 0};
 	
 	quotationUtils.quotationDetail = {};
 	var url = api.quotation.queryQuotationById;
@@ -649,20 +666,16 @@ jQuery(function($) {
 		quotationUtils.quotationDetail.quotationFunctionAreas = res.quotationFunctionAreas;
 	}, null, false);
 
-	quotationUtils.quotationDetail.extensionItems = [];
+	quotationUtils.quotationDetail.extensions = [];
 
 	com.post(api.quotation.queryExtensionByOrderId, {"extension.orderId": params.decorationOrderId}, function (res) {
-		$.each(res.extensions, function (i, v) {
-		    quotationUtils.quotationDetail.extensionItems = quotationUtils.quotationDetail.extensionItems.concat(v.extensionItems);
-		});
+	    quotationUtils.quotationDetail.extensions = res.extensions;
 	}, null, false);
 	
-	quotationUtils.quotationDetail.addReduceItems = [];
+	quotationUtils.quotationDetail.addReduces = [];
 
 	com.post(api.addReduce.queryAddReduceByOrderId, {'addReduce.orderId': params.decorationOrderId}, function(res){
-		$.each(res.addReduces, function(i, v){
-			quotationUtils.quotationDetail.addReduceItems = quotationUtils.quotationDetail.addReduceItems.concat(v.addReduceItems);
-		});
+	    quotationUtils.quotationDetail.addReduces = res.addReduces;
 	}, null, false);
 
 	com.post(api.quotation.queryQuotationNormrice, {"quotation.qid": printConf.quotationId}, function(res){
@@ -671,14 +684,14 @@ jQuery(function($) {
 
 	quotationUtils.statisticalQuotationItem(
 		quotationUtils.quotationDetail.quotationFunctionAreas,
-		quotationUtils.quotationDetail.addReduceItems,
-		quotationUtils.quotationDetail.extensionItems);
+		quotationUtils.quotationDetail.addReduces,
+		quotationUtils.quotationDetail.extensions);
 
 	quotationUtils.initQuotationDetailItem(
 		quotationUtils.quotationDetail.quotation,
 		quotationUtils.quotationDetail.quotationFunctionAreas,
-		quotationUtils.quotationDetail.addReduceItems,
-		quotationUtils.quotationDetail.extensionItems, params.orderType, false, printConf.showType);
+		quotationUtils.quotationDetail.addReduces,
+		quotationUtils.quotationDetail.extensions, params.orderType, false, printConf.showType);
 
 	quotationUtils.quotationDetail.UndisPrice = quotationUtils.quotationCalculator(
 		quotationUtils.quotationDetail.quotation.discount,
@@ -686,7 +699,7 @@ jQuery(function($) {
 
 	quotationUtils.quotationDetail.TotalPrice = quotationUtils.quotationTotal();
 	
-	generatePrintPage(printConf.layout, printConf.itemtype, printConf.workType, params.company.name, params.orderType, printConf.showType);
+	generatePrintPage(printConf.layout, printConf.itemtype, printConf.workType, params.company.drganization.name, params.orderType, printConf.showType);
 
 });
 
@@ -695,7 +708,7 @@ function generatePrintPage(type, subtype, workType, company, orderType, showType
 
 	if (type == '1') {
 		html += printHeader(company + "家装预算(工程)");
-		html += printProjectTable(subtype);
+		html += printProjectTable(subtype, showType);
 	} else if(type == '2') {
 		html += printHeader(company + "家装预算(财务)");
 		html += printFinanceTable(subtype, showType);

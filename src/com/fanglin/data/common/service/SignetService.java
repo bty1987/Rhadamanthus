@@ -27,6 +27,10 @@ public interface SignetService {
 
 	public String autoSignet(SignetVO signetVO) throws FLException;
 
+	public int selectSignet(SignetVO signetVO) throws FLException;
+
 	public int cancelSignet(SignetVO signetVO) throws FLException;
+
+	public int copySignet(SignetVO signetVO) throws FLException;
 
 }

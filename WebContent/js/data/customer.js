@@ -1,60 +1,88 @@
 
 jQuery(function($) {
 
-	var customer = {
-		
-		btns: {
-		    addPhoneBtn: com.focusPage("#addPhoneBtn"),
-		    saveBtn: com.focusPage("#saveBtn"),
-		},
-		
-		modals: {
-		    customerModal: com.focusPage("#customerModal"),
-		    
-		},
-		
-		items: {
-		    customerName: com.focusPage("#customerName"),
-		    identity: com.focusPage("#identity"),
-		    officer: com.focusPage("#officer"),
-		    passport: com.focusPage("#passport"),
-		    gender: com.focusPage("#gender"),
-		    phone: com.focusPage("#phone"),
-		    qq: com.focusPage("#qq"),
-		    wechat: com.focusPage("#wechat"),
-		    wechat: com.focusPage("#wechat"),
-		    email: com.focusPage("#email"),
-		    address: com.focusPage("#address"),
-		    relationshipType: com.focusPage("#relationshipType"),
-		    
-		    addphone: com.focusPage("#addphone"),
-		},
-		
-		cid: null,
-	};
-	
-	customer.btns.saveBtn.on("click", saveData);
-	customer.btns.addPhoneBtn.on("click", addPhone);
-	
-	customer.modal = com.focusPage("#customerModal").on('hide.bs.modal', function(e){
-		com.clearValidator();
-		com.cleanItems(customer.items);
-	});
+    var customer = {
 
-	com.post(api.ds.data, {}, function(res){
-		customer.items.relationshipType.bindData(res.relationshipType, "key", "value");
-	});
-	
-	var searcher = new Searcher();
-	
-	searcher.base("condList", "pagenation", "resultList", api.data.pageCustomer);
-    
-    searcher.condition(['customer-phone', 'customer-relationship']);
-    
+        btns: {
+            addPhoneBtn: com.focusPage("#addPhoneBtn"),
+            saveBtn: com.focusPage("#saveBtn"),
+        },
+
+        modals: {
+            customerModal: com.focusPage("#customerModal"),
+
+        },
+
+        items: {
+            customerName: com.focusPage("#customerName", "#customerModal"),
+            identity: com.focusPage("#identity", "#customerModal"),
+            officer: com.focusPage("#officer", "#customerModal"),
+            passport: com.focusPage("#passport", "#customerModal"),
+            gender: com.focusPage("#gender", "#customerModal"),
+            phone: com.focusPage("#phone", "#customerModal"),
+            qq: com.focusPage("#qq", "#customerModal"),
+            wechat: com.focusPage("#wechat", "#customerModal"),
+            email: com.focusPage("#email", "#customerModal"),
+            address: com.focusPage("#address", "#customerModal"),
+            relationshipType: com.focusPage("#relationshipType", "#customerModal"),
+
+            type: com.focusPage("#type", "#customerModal"),
+
+            addphone: com.focusPage("#addphone", "#customerModal"),
+            companyNo: com.focusPage("#companyNo", "#customerModal"),
+            companyName: com.focusPage("#companyName", "#customerModal"),
+            companyAddr: com.focusPage("#companyAddr", "#customerModal"),
+            companyPhone: com.focusPage("#companyPhone", "#customerModal"),
+            companyBank: com.focusPage("#companyBank", "#customerModal"),
+            companyBankno: com.focusPage("#companyBankno", "#customerModal"),
+        },
+
+        cid: null,
+        customerTypes : {}
+    };
+    com.focusPage("#companyAd").hide();
+    com.focusPage("#comNo").hide();
+
+    customer.btns.saveBtn.on("click", saveData);
+    customer.btns.addPhoneBtn.on("click", addPhone);
+
+    customer.items.type.change(function(){
+
+        var type = $(this).val();
+
+        com.focusPage("#comName").text(customer.customerTypes[type]+"名称");
+        com.focusPage("#comPhone").text(customer.customerTypes[type]+"电话");
+        if(type == 1) com.focusPage(".companyitem", "#customerModal").show();
+        else com.focusPage(".companyitem", "#customerModal").hide();
+
+    });
+    customer.modal = com.focusPage("#customerModal").on('hide.bs.modal', function(e){
+        com.clearValidator();
+        com.cleanItems(customer.items);
+
+        com.focusPage(".companyitem", "#customerModal").hide();
+    });
+
+    com.post(api.ds.data, {}, function(res){
+        customer.items.relationshipType.bindData(res.relationshipType, "key", "value");
+        customer.items.type.bindData(res.customerType, "key", "value");
+        $.each(res.customerType, function (i,v) {
+            customer.customerTypes[v.key] = v.value;
+        })
+
+    });
+
+
+    var searcher = new Searcher();
+
+    searcher.base("condList", "pagenation", "resultList", api.data.pageCustomer);
+
+    searcher.condition(['customer-phone', 'customer-relationship', 'customer-type']);
+
     searcher.history("customerPostData");
-    
+
     searcher.button([{id: "add", name: "添加", clazz: "btn-success", icon: "icon-plus"}]);
-    
+
     var lineprops = [
         {field: "name", name: "姓名", prop: "name", clazz: "grey"},
         {field: "gender", name: "性别", prop: "gender", clazz: "grey"},
@@ -66,37 +94,44 @@ jQuery(function($) {
         {field: "qq", name: "QQ", prop: "qq", clazz: "grey"},
         {field: "wechat", name: "邮箱", prop: "wechat", clazz: "grey"},
         {field: "status", name: "状态", prop: function(v){return v.status == 0 ? "初始" : "认证"}, clazz: "red"},
+        {field: "type", name: "类型", prop: "type", clazz: "red", dataset: customer.customerTypes, clazz: "red"},
+        {field: "companyNo", name: "公司编号", prop: "companyNo", show: function(v){return v.type == 1;}, clazz: "grey"},
+        {field: "companyName", name: "名称", prop: "companyName", clazz: "grey"},
+        {field: "companyAddr", name: "公司地址", prop: "companyAddr", show: function(v){return v.type == 1;}, clazz: "grey"},
+        {field: "companyPhone", name: "联系方式", prop: "companyPhone", clazz: "grey"},
+        {field: "companyBank", name: "开户行", prop: "companyBank", clazz: "grey"},
+        {field: "companyBankno", name: "开户账号", prop: "companyBankno", clazz: "grey"},
     ];
-    
+
     var linebtns = [
         {name: "编辑", clazz: "btn-yellow", handle: function(v){
-            customer.cid = v.cid;
-            editCustomer(v);
-            return false;
-        }},
+                customer.cid = v.cid;
+                editCustomer(v);
+                return false;
+            }},
         {name: "管理电话", clazz: "btn-success", handle: function(v){
-            customer.cid = v.cid;
-            customer.items.name = v.name;
-            managephone();
-            return false;
-        }},
+                customer.cid = v.cid;
+                customer.items.name = v.name;
+                managephone();
+                return false;
+            }},
     ];
-    
+
     searcher.line("name", lineprops, linebtns).render();
-    
-	com.focusPage('a[name="add"]','#pagenation').click(function(){
-	    
-	    customer.cid = null;
-	    
+
+    com.focusPage('a[name="add"]','#pagenation').click(function(){
+
+        customer.cid = null;
+
         com.focusPage("#phonehide").css({"display":"block"});
-        
+
         customer.modals.customerModal.modal("show");
     });
-	
-	function editCustomer(v){
-        
+
+    function editCustomer(v){
+
         com.focusPage("#phonehide").css({"display":"none"});
-        
+
         customer.items.customerName.val(v.name);
         customer.items.identity.val(v.identity);
         customer.items.officer.val(v.officer);
@@ -106,187 +141,206 @@ jQuery(function($) {
         customer.items.email.val(v.email);
         customer.items.address.val(v.address);
         customer.items.relationshipType.val(v.relationshipType);
-        customer.items.gender.prop('checked', com.genderType[v.gender]);
-        
-        customer.modals.customerModal.modal("show");
-    };
 
-	function saveData(){
-	    
-	    com.clearValidator();
-	    
-	    if(com.validate("customerModal")){
+        customer.items.gender.prop('checked', com.genderType[v.gender]);
+
+        customer.items.type.val(v.type);
+
+        customer.items.companyNo.val(v.companyNo);
+        customer.items.companyName.val(v.companyName);
+        customer.items.companyAddr.val(v.companyAddr);
+        customer.items.companyPhone.val(v.companyPhone);
+        customer.items.companyBank.val(v.companyBank);
+        customer.items.companyBankno.val(v.companyBankno);
+
+        if(v.type == 1) com.focusPage(".companyitem", "#customerModal").show();
+
+        customer.modals.customerModal.modal("show");
+    }
+
+    function saveData(){
+
+        com.clearValidator();
+
+        if(com.validate("customerModal")){
             return false;
         }
-		
-		var url;
-		var options = {
-			"customer.name": customer.items.customerName.val(),
-			"customer.gender": com.genderType[customer.items.gender.prop("checked")],
-			"customer.phone": customer.items.phone.val(),
-			"customer.identity":customer.items.identity.val(),
-			"customer.officer":customer.items.officer.val(),
-			"customer.passport":customer.items.passport.val() ,
-			"customer.qq": customer.items.qq.val(),
-			"customer.wechat": customer.items.wechat.val(),
-			"customer.email": customer.items.email.val(),
-			"customer.relationshipType": customer.items.relationshipType.val(),
-			"customer.address": customer.items.address.val()
-		};
-		
-		if(customer.cid){
-			url = api.data.updateCustomer;
-			options['customer.cid'] = customer.cid;
-		}else {
-			url = api.data.addCustomer;
-			
-			if(checkPhone(null, com.focusPage("#phone"), 1)){
-	            return false;
-	        }
-		}
-		
-		com.post(url, options, function(res){
-			searcher.doSearch();
-		});
-		
-		customer.modal.modal("hide");
-	}
 
-	//画电话的弹窗
-	function managephone() {
-	    
+        var url;
+        var options = {
+            "customer.type": customer.items.type.val(),
+            "customer.name": customer.items.customerName.val(),
+            "customer.gender": com.genderType[customer.items.gender.prop("checked")],
+            "customer.phone": customer.items.phone.val(),
+            "customer.identity":customer.items.identity.val(),
+            "customer.officer":customer.items.officer.val(),
+            "customer.passport":customer.items.passport.val(),
+            "customer.qq": customer.items.qq.val(),
+            "customer.wechat": customer.items.wechat.val(),
+            "customer.email": customer.items.email.val(),
+            "customer.relationshipType": customer.items.relationshipType.val(),
+            "customer.address": customer.items.address.val(),
+            "customer.companyNo": customer.items.companyNo.val(),
+            "customer.companyName": customer.items.companyName.val(),
+            "customer.companyAddr": customer.items.companyAddr.val(),
+            "customer.companyPhone": customer.items.companyPhone.val(),
+            "customer.companyBank": customer.items.companyBank.val(),
+            "customer.companyBankno": customer.items.companyBankno.val(),
+        };
+
+        if(customer.cid){
+            url = api.data.updateCustomer;
+            options['customer.cid'] = customer.cid;
+        }else {
+            url = api.data.addCustomer;
+
+            if(checkPhone(null, com.focusPage("#phone"), 1)){
+                return false;
+            }
+        }
+
+        com.post(url, options, function(res){
+            searcher.doSearch();
+        });
+
+        customer.modal.modal("hide");
+    }
+
+    //画电话的弹窗
+    function managephone() {
+
         com.focusPage('#customerphoneList').empty();
-        
-		customer.items.addphone.css("border", "1px solid #d5d5d5").popover("destroy").val("");
-		
-		com.post(api.data.queryCustomerPhoneByCid, {"customerPhone.cid": customer.cid}, function (res) {
-		    
+
+        customer.items.addphone.css("border", "1px solid #d5d5d5").popover("destroy").val("");
+
+        com.post(api.data.queryCustomerPhoneByCid, {"customerPhone.cid": customer.cid}, function (res) {
+
             com.focusPage('#customerphoneModal').modal('show');
-            
-			$.each(res.customerPhones, function (i, v) {
 
-				var phonelist = $('<div></div>').prop("id", "customerPhone" + i);
-				phonelist.append(addspan('10', '客户姓名 : ', customer.items.name)).append(addspan('40', '电话号码  : ', v.phone));
+            $.each(res.customerPhones, function (i, v) {
 
-				var $btnStatus =$('<div style="float: right;"></div>')
-				var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"}).attr("id", v.cpid);
-				var $span = $('<span></span>').addClass('lbl status-lbl');
+                var phonelist = $('<div></div>').prop("id", "customerPhone" + i);
+                phonelist.append(addspan('10', '客户姓名 : ', customer.items.name)).append(addspan('40', '电话号码  : ', v.phone));
 
-				var $btnDefault =$('<div style="float: right;"></div>')
-				var $defaultSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"}).attr("id", v.cpid);
-				var $dspan = $('<span></span>').addClass('lbl default-lbl');
+                var $btnStatus =$('<div style="float: right;"></div>');
+                var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"}).attr("id", v.cpid);
+                var $span = $('<span></span>').addClass('lbl status-lbl');
 
-				var $hr= $('<hr/>');
+                var $btnDefault =$('<div style="float: right;"></div>');
+                var $defaultSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"}).attr("id", v.cpid);
+                var $dspan = $('<span></span>').addClass('lbl default-lbl');
 
-				!v.status && $statusSwitch.prop("checked", true);
-				
-				$statusSwitch.on("click",function() {
-					if($statusSwitch.prop("checked")){
-						var option={
-							"customerPhone.phone":v.phone,
-							"customerPhone.status":0,
-						}
-						//先查询该电话是否被被人启用
-                         com.post(api.data.checkCustomerForPhone,option,function(res){
-							 updateStatus(v.cpid, 0, function(){$statusSwitch.prop("checked", false);})
-						 },function(res){
-							 com.showAlert(com.warning, "该电话已经被其他客户启用");
-							 $statusSwitch.prop("checked", false);
-						 },false);
-					}else{
-						 if(v.defaults == 1){
-							 com.showAlert(com.warning, "默认电话不能禁用");
-							 $statusSwitch.prop("checked", true);
-						 }else{
-							 updateStatus(v.cpid, 1,function(){ $statusSwitch.prop("checked", true);})
-						 }
-						}
-				})
+                var $hr= $('<hr/>');
 
-				v.defaults && $defaultSwitch.prop("checked", true);
-				$defaultSwitch.on("click",function() {
-					if($defaultSwitch.prop("checked")){
-						if(v.status == 1){
-							$defaultSwitch.prop("checked", false);
-							com.showAlert(com.warning, "禁用电话不能选为默认电话");
-						}else{
-							updateDefault(v.cpid, 1,function(){$this.prop("checked")})
-						 }
-					}else{
-						$defaultSwitch.prop("checked", true);
-					}
-				});
+                !v.status && $statusSwitch.prop("checked", true);
 
-				$btnDefault.append($defaultSwitch).append($dspan);
-				$btnStatus.append($statusSwitch).append($span);
-				phonelist.append($btnDefault).append($btnStatus).append($hr).appendTo(com.focusPage("#customerphoneList"))
-			});
+                $statusSwitch.on("click",function() {
+                    if($statusSwitch.prop("checked")){
+                        var option={
+                            "customerPhone.phone":v.phone,
+                            "customerPhone.status":0,
+                        };
+                        //先查询该电话是否被被人启用
+                        com.post(api.data.checkCustomerForPhone,option,function(res){
+                            updateStatus(v.cpid, 0, function(){$statusSwitch.prop("checked", false);})
+                        },function(res){
+                            com.showAlert(com.warning, "该电话已经被其他客户启用");
+                            $statusSwitch.prop("checked", false);
+                        },false);
+                    }else{
+                        if(v.defaults == 1){
+                            com.showAlert(com.warning, "默认电话不能禁用");
+                            $statusSwitch.prop("checked", true);
+                        }else{
+                            updateStatus(v.cpid, 1,function(){ $statusSwitch.prop("checked", true);})
+                        }
+                    }
+                });
 
-		}, null, false)
-	}
+                v.defaults && $defaultSwitch.prop("checked", true);
+                $defaultSwitch.on("click",function() {
+                    if($defaultSwitch.prop("checked")){
+                        if(v.status == 1){
+                            $defaultSwitch.prop("checked", false);
+                            com.showAlert(com.warning, "禁用电话不能选为默认电话");
+                        }else{
+                            updateDefault(v.cpid, 1,function(){$this.prop("checked")})
+                        }
+                    }else{
+                        $defaultSwitch.prop("checked", true);
+                    }
+                });
 
-	function addspan(px, name, value) {
-	    
-		var $pxdiv = $('<div></div>').css({
-			'display' : 'inline-block',
-			'margin-left' : px + 'px'
-		});
-		
-		var $nameSpan = $('<strong></strong>').html(name);
-		var $valueSpan = $('<b></b>').text(value);
-		
-		var $blueb = $valueSpan.addClass("grey");
-		
+                $btnDefault.append($defaultSwitch).append($dspan);
+                $btnStatus.append($statusSwitch).append($span);
+                phonelist.append($btnDefault).append($btnStatus).append($hr).appendTo(com.focusPage("#customerphoneList"))
+            });
+
+        }, null, false)
+    }
+
+    function addspan(px, name, value) {
+
+        var $pxdiv = $('<div></div>').css({
+            'display' : 'inline-block',
+            'margin-left' : px + 'px'
+        });
+
+        var $nameSpan = $('<strong></strong>').html(name);
+        var $valueSpan = $('<b></b>').text(value);
+
+        var $blueb = $valueSpan.addClass("grey");
+
         return $pxdiv.append($nameSpan).append($blueb);
-	}
+    }
 
-	function addPhone(){
-		
-		if(checkPhone(customer.cid, customer.items.addphone)){
-		    return false;
-		};
-		
-		var param={
-			"customerPhone.phone": customer.items.addphone.val(),
-			"customerPhone.cid": customer.cid,
-		}
-		
-		com.post(api.data.addCustomerPhone, param,function(res){
-			managephone();
-		});
-	}
+    function addPhone(){
 
-	// 启用禁用功能
-	function updateStatus(cpid, status, failcallBack){
-		com.post(api.data.updateCustomerPhoneForStatus, {"customerPhone.cpid":cpid,"customerPhone.status" : status}, function(res){
-			managephone();
-		}, function(res){
-			failcallBack && failcallBack();
-		});
-	}
-	
-	// 客户电话是否是默认的
-	function updateDefault(cpid, defaults, failcallBack){
-		com.post(api.data.updateCustomerPhoneForDefault, {"customerPhone.cpid":cpid,"customerPhone.defaults" : defaults}, function(){
-			managephone();
-		},function(res){
-			failcallBack && failcallBack();
-		});
-	}
-	
-	function checkPhone(cid, ele) {
-	    
-	    var flag = false;
-	    
-	    com.post(api.data.checkCustomerForPhone,{"customerPhone.cid" :cid, "customerPhone.phone": ele.val(), "customerPhone.status": null}, function(res) {
-	        ele.css("border", "1px solid #d5d5d5").popover("destroy");
+        if(checkPhone(customer.cid, customer.items.addphone)){
+            return false;
+        }
+
+        var param={
+            "customerPhone.phone": customer.items.addphone.val(),
+            "customerPhone.cid": customer.cid,
+        };
+
+        com.post(api.data.addCustomerPhone, param,function(res){
+            managephone();
+        });
+    }
+
+    // 启用禁用功能
+    function updateStatus(cpid, status, failcallBack){
+        com.post(api.data.updateCustomerPhoneForStatus, {"customerPhone.cpid":cpid,"customerPhone.status" : status}, function(res){
+            managephone();
+        }, function(res){
+            failcallBack && failcallBack();
+        });
+    }
+
+    // 客户电话是否是默认的
+    function updateDefault(cpid, defaults, failcallBack){
+        com.post(api.data.updateCustomerPhoneForDefault, {"customerPhone.cpid":cpid,"customerPhone.defaults" : defaults}, function(){
+            managephone();
+        },function(res){
+            failcallBack && failcallBack();
+        });
+    }
+
+    function checkPhone(cid, ele) {
+
+        var flag = false;
+
+        com.post(api.data.checkCustomerForPhone,{"customerPhone.cid" :cid, "customerPhone.phone": ele.val(), "customerPhone.status": null}, function(res) {
+            ele.css("border", "1px solid #d5d5d5").popover("destroy");
         }, function(res){
             flag = true;
             com.showPopover(ele, {errorMsg: "电话信息已存在"}, "right");
         }, false);
-	    
-	    return flag;
-	}
+
+        return flag;
+    }
 
 });
 

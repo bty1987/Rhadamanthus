@@ -1,3 +1,31 @@
+/**
+        合同html/js文件命名说明:
+        C-<company>-<module>-<type>-<index>.html
+        C-<公司/模式>-<业务类型>-<合同类型>-<序号>.html
+        
+        公司/模式:
+        001 (方林/半包)
+        002 (1918/大宅)
+        003 (宜家/半包/整装)
+        004 (爱林/整装)
+        005 (恩林/局改/二改)
+        
+        业务类型:
+        D (装修)
+        M (主材)
+        
+        合同类型:
+        0 (工程)
+        1 (设计费)
+        2 (主材代购)
+        3 (服务费)
+        
+        举例:
+        C-001-D-3-0001.html 方林装修服务费相关合同
+        C-005-D-0-0001.html 恩林装修工程相关合同
+        
+        此文件为: 方林装修设计费合同
+ */
 
 jQuery(function($) {
 
@@ -16,15 +44,21 @@ jQuery(function($) {
         decorationOrderId : params.decorationOrderId,
 
         $input: null,
+        
+        current: new Date(),
 	};
     
     if(contractEdit.contractArgs.agent == "1"){
         com.focusPage(".agent", "#form").hide();
     }
     
-    contractEdit.cover["cov-sign-year"] = com.dateFormat(new Date(), "yyyy");
-    contractEdit.cover["cov-sign-month"] = com.dateFormat(new Date(), "MM");
-    contractEdit.cover["cov-sign-day"] = com.dateFormat(new Date(), "dd");
+    com.post(api.common.current, {}, function(res){
+        contractEdit.current = new Date(res.current);
+    }, null, false);
+    
+    contractEdit.cover["cov-sign-year"] = com.dateFormat(contractEdit.current, "yyyy");
+    contractEdit.cover["cov-sign-month"] = com.dateFormat(contractEdit.current, "MM");
+    contractEdit.cover["cov-sign-day"] = com.dateFormat(contractEdit.current, "dd");
     
     com.post(api.data.queryCustomerById, {"customer.cid": params.cid}, function (res) {
 
@@ -65,6 +99,16 @@ jQuery(function($) {
         contractEdit.cover["cov-designer-name"] = data.designer.currentName;
         contractEdit.cover["cov-designer-phone"] = data.designer.phone;
     });
+    
+  //通过装修单号获取装修款项信息
+    com.post(api.payment.queryDecorationPaymentByOrderId, {"decorationPayment.decoration.orderId": contractEdit.decorationOrderId}, function (res) {
+        
+        var payments = res.decorationPayments.split("paymentType", "referMoney");
+        
+        com.focusPage("#con-design-money", "#form").val(payments['设计费'] == null ? 0 : payments['设计费']);
+        com.focusPage("#con-design-rmoney", "#form").val(payments['设计费'] == null ? 0 : payments['设计费']);
+        
+    }, null, false);
 
     com.focusPage('#talkingList').click(function(){
         contractEdit.modal.talkingModal.modal("hide");
@@ -167,9 +211,9 @@ jQuery(function($) {
         data["con-design-money-cn"] = utils.getCNMoney(parseFloat(data["con-design-money"]));
         data["con-design-rmoney-cn"] = utils.getCNMoney(parseFloat(data["con-design-rmoney"]));
         
-        data["con-sign-year"] = com.dateFormat(new Date(), "yyyy");
-        data["con-sign-month"] = com.dateFormat(new Date(), "MM");
-        data["con-sign-day"] = com.dateFormat(new Date(), "dd");
+        data["con-sign-year"] = com.dateFormat(contractEdit.current, "yyyy");
+        data["con-sign-month"] = com.dateFormat(contractEdit.current, "MM");
+        data["con-sign-day"] = com.dateFormat(contractEdit.current, "dd");
         
         data["sin-customer-name"] = data["con-customer-name"];
         data["sin-customer-phone"] = data["con-customer-phone"];

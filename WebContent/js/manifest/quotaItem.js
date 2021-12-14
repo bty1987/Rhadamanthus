@@ -3,8 +3,27 @@ $(function () {
     var normood = {
         orderId: params["accessories.orderId"],
         normoods: com.focusPage('#normoods'),
-        printBtn:com.focusPage('#printBtn')
+        printBtn:com.focusPage('#printBtn'),
+        
+        items: {
+            
+        },
+        
+        btns: {
+            printBtn: com.focusPage('#printBtn'),
+            printNormoodBtn: com.focusPage('#printNormoodBtn'),
+        },
+        
+        modals: {
+            printNormoodModal: com.focusPage("#printNormoodModal"),
+        }
     };
+    
+    normood.btns.printBtn.click(function(){
+        normood.modals.printNormoodModal.modal("show");
+    });
+    
+    normood.btns.printNormoodBtn.click(printNormood);
 
     var paint = {
 
@@ -90,12 +109,13 @@ $(function () {
             if (v.status != 2) return true;
             options["aids[" + index++ + "]"] = v.aid;
         });
-        if (res.accessoriess.length != 0) {
-            com.post(api.inventory.queryAccessoriesItemByAids, options, function (res) {
-                handleLeft(res.accessoriesItems);
-            }, null, false);
-        }
     }, null, false);
+    
+    if (!$.isEmptyObject(options)) {
+        com.post(api.inventory.queryAccessoriesItemByAids, options, function (res) {
+            handleLeft(res.accessoriesItems);
+        }, null, false);
+    }
 
     options = {
         "quotation.orderId": normood.orderId,
@@ -104,13 +124,23 @@ $(function () {
 
     com.post(api.quotation.queryQuotationForDefaultByOrderId, options, function (res) {
         quotation = res.quotation;
-        if (quotation.qid != null) {
-            com.post(api.quotation.amountQuotationNormood, {"quotation.qid": quotation.qid}, function (res) {
-                handleRight(res.normoods);
-            }, null, false);
-        }
     }, null, false);
-
+    
+    if(quotation && quotation.qid != null){
+        
+        com.post(api.quotation.amountQuotationNormood, {"quotation.qid": quotation.qid}, function (res) {
+            handleRight(res.normoods);
+        }, null, false);
+        
+        com.post(api.quotation.amountExtensionNormood, {"extension.orderId": quotation.orderId}, function (res) {
+            handleRight(res.normoods);
+        }, null, false);
+        
+        com.post(api.quotation.amountAddReduceNormood, {"addReduce.orderId": quotation.orderId}, function (res) {
+            handleRight(res.normoods);
+        }, null, false);
+    }
+    
     function handleLeft(data) {
 
         $.each(data, function (i, v) {
@@ -148,12 +178,23 @@ $(function () {
             }
         });
     }
-
-    normood.printBtn.click(function () {
+    
+    function printNormood() {
+        
         params.quotationId = quotation.qid;
         params['decorationOrderId'] = normood.orderId;
+        params.subtype = 0;
+        
+        var $subtypes = com.focusPage('input[name="type"]:checked', '#printNormoodModal #subtype');
+
+        $.each($subtypes, function (i, v){
+            console.log($(v));
+            params.subtype = parseInt(params.subtype) + parseInt($(v).attr('value'));
+        });
 
         com.popup("打印定额", "/views/quotation/normoodOutput.html", null, null, true);
-    })
+        
+        normood.modals.printNormoodModal.modal("hide");
+    }
 
 });

@@ -13,8 +13,10 @@ import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
+import com.fanglin.system.po.OrganizationPO;
 import com.fanglin.system.service.CompanyService;
 import com.fanglin.system.vo.CompanyVO;
+import com.fanglin.system.vo.OrganizationVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.FormatUtil;
 import com.fanglin.utils.Paging;
@@ -37,9 +39,11 @@ public class CompanyServiceImpl implements CompanyService {
 
 		for (CompanyPO companyPO : companyPOs) {
 
-			companyVO = new CompanyVO();
+			companyVO = new CompanyVO(new OrganizationVO(), new OrganizationVO());
 
-			BeanUtil.copyProperties(companyPO, companyVO, Arrays.asList("cid"));
+			BeanUtil.copyProperties(companyPO, companyVO, Arrays.asList("cid", "drganization", "srganization"));
+			BeanUtil.copyProperties(companyPO.getDrganization(), companyVO.getDrganization());
+			BeanUtil.copyProperties(companyPO.getSrganization(), companyVO.getSrganization());
 
 			companyVO.setCid(encode(companyPO.getCid()));
 
@@ -61,7 +65,7 @@ public class CompanyServiceImpl implements CompanyService {
 
 			companyVO = new CompanyVO();
 
-			BeanUtil.copyProperties(companyPO, companyVO, Arrays.asList("cid"));
+			BeanUtil.copyProperties(companyPO, companyVO, Arrays.asList("cid", "drganization", "srganization"));
 
 			companyVO.setCid(encode(companyPO.getCid()));
 
@@ -80,7 +84,12 @@ public class CompanyServiceImpl implements CompanyService {
 			throw new FLException(230015, "公司不存在");
 		}
 
-		BeanUtil.copyProperties(companyPO, companyVO, Arrays.asList("cid"));
+		companyVO = new CompanyVO(new OrganizationVO(), new OrganizationVO());
+
+		BeanUtil.copyProperties(companyPO, companyVO, Arrays.asList("cid", "drganization", "srganization"));
+
+		BeanUtil.copyProperties(companyPO.getDrganization(), companyVO.getDrganization());
+		BeanUtil.copyProperties(companyPO.getSrganization(), companyVO.getSrganization());
 
 		companyVO.setCid(encode(companyPO.getCid()));
 
@@ -109,7 +118,7 @@ public class CompanyServiceImpl implements CompanyService {
 
 		companyPO = new CompanyPO();
 
-		BeanUtil.copyProperties(companyVO, companyPO);
+		BeanUtil.copyProperties(companyVO, companyPO, Arrays.asList("drganization", "srganization"));
 
 		companyPO.setNo(0);
 		companyPO.setShortname("");
@@ -137,7 +146,15 @@ public class CompanyServiceImpl implements CompanyService {
 
 		companyPO = new CompanyPO();
 
-		BeanUtil.copyProperties(companyVO, companyPO);
+		BeanUtil.copyProperties(companyVO, companyPO, Arrays.asList("drganization", "srganization"));
+
+		if (companyVO.getDrganization() != null) {
+			companyPO.setDrganization(new OrganizationPO(companyVO.getDrganization().getOid()));
+		}
+
+		if (companyVO.getSrganization() != null) {
+			companyPO.setSrganization(new OrganizationPO(companyVO.getSrganization().getOid()));
+		}
 
 		companyDao.save(companyPO);
 
@@ -159,6 +176,14 @@ public class CompanyServiceImpl implements CompanyService {
 		companyPO.setAddress(companyVO.getAddress());
 		companyPO.setCorporation(companyVO.getCorporation());
 		companyPO.setPhone(companyVO.getPhone());
+
+		if (companyVO.getDrganization() != null) {
+			companyPO.setDrganization(new OrganizationPO(companyVO.getDrganization().getOid()));
+		}
+
+		if (companyVO.getSrganization() != null) {
+			companyPO.setSrganization(new OrganizationPO(companyVO.getSrganization().getOid()));
+		}
 
 		companyDao.update(companyPO);
 

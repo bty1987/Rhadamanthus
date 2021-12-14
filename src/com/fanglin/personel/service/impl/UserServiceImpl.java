@@ -348,6 +348,10 @@ public class UserServiceImpl implements UserService {
 
 		DutmentPO dutmentPO = dutmentDao.queryDutmentByDids(userInfoVO.getUser().getDept().getDid(), userInfoVO.getUser().getDuty().getDid());
 
+		if (departmentPO.getIsdet() == DepartmentPO.ISDET_DETMENT_INT && dutmentPO == null) {
+			throw new FLException(130050, "定岗信息不存在");
+		}
+
 		if (dutmentPO != null) {
 
 			if (dutmentPO.getNum() >= dutmentPO.getLimit()) {

@@ -268,21 +268,22 @@ jQuery(function ($) {
 
         var times = plan2create.items.dataTime.val() + ' ' + plan2create.items.time.val();
         var executeTime = new Date(times);
-
+        
         if (planUtils.TimeComparison(executeTime, 5)) {
-            options["plan.executeTime"] = times;
+            options["plan.executeTime"] = plan2create.items.dataTime.val().replace(/-/g, '').substr(2) + plan2create.items.time.val().replace(/:/g, '').substr(0, 4);
         } else {
             com.showAlert(com.warning, "执行时间请大于当前时间5分钟!");
             return
         }
 
         com.post(api.information.createPlan, options, function (res) {
-            plan2create.planSeacher.doSearch();
+            
             com.focusPage("#itemfield").empty();
             com.focusPage("#itemitem").empty();
             com.focusPage("#notfield").show();
             com.focusPage("#notitem").show();
-            com.showAlert(com.info, "计划创建成功!");
+            
+            com.closePopup();
         });
     }
 

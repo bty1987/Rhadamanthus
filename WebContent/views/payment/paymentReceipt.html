@@ -9,6 +9,8 @@
 	<script src="../../assets/ace/js/jquery.gritter.min.js"></script>
 	<script src="../../assets/ace/js/ace-elements.js"></script>
 	<script src="../../assets/ace/js/ace.js"></script>
+    <script src="../../assets/altogether/js/html2canvas.js"></script>
+    <script src="../../assets/altogether/js/jspdf.min.js"></script>
 <style type="text/css">
 	.PageNext{page-break-after: always;}
 </style>
@@ -18,7 +20,9 @@
 	<div id="paymentReceipt"></div>
 
 	<script>
-		parent.$.loadScript(['js/payment/paymentReceipt.js'], "../../", window.frameElement, $);
+		parent.$.loadScript(['js/payment/paymentReceipt.js', 'js/utils/paymentUtils.js'], "../../", window.frameElement, $);
 	</script>
+
+	<button id="paymentPdfBtn" style="margin-top: 5px; display: none;">生成电子收据</button>
 </body>
 </html>

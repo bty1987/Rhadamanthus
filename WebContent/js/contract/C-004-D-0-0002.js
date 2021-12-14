@@ -1,3 +1,33 @@
+
+/**
+        合同html/js文件命名说明:
+        C-<company>-<module>-<type>-<index>.html
+        C-<公司/模式>-<业务类型>-<合同类型>-<序号>.html
+        
+        公司/模式:
+        001 (方林/半包)
+        002 (1918/大宅)
+        003 (宜家/半包/整装)
+        004 (爱林/整装)
+        005 (恩林/局改/二改)
+        
+        业务类型:
+        D (装修)
+        M (主材)
+        
+        合同类型:
+        0 (工程)
+        1 (设计费)
+        2 (主材代购)
+        3 (服务费)
+        
+        举例:
+        C-001-D-3-0001.html 方林装修服务费相关合同
+        C-005-D-0-0001.html 恩林装修工程相关合同
+        
+        此文件为: 爱林装修工程补充协议
+ */
+
 jQuery(function($) {
 
     var contractEdit = {
@@ -22,6 +52,8 @@ jQuery(function($) {
         decorationType: {},
 
         $input: null,
+        
+        current: new Date(),
 	};
      
     console.log(contractEdit.contractArgs);
@@ -34,9 +66,13 @@ jQuery(function($) {
         com.focusPage("#con-payment-second", "#form").hide();
     }
     
-    contractEdit.cover["cov-sign-year"] = com.dateFormat(new Date(), "yyyy");
-    contractEdit.cover["cov-sign-month"] = com.dateFormat(new Date(), "MM");
-    contractEdit.cover["cov-sign-day"] = com.dateFormat(new Date(), "dd");
+    com.post(api.common.current, {}, function(res){
+        contractEdit.current = new Date(res.current);
+    }, null, false);
+    
+    contractEdit.cover["cov-sign-year"] = com.dateFormat(contractEdit.current, "yyyy");
+    contractEdit.cover["cov-sign-month"] = com.dateFormat(contractEdit.current, "MM");
+    contractEdit.cover["cov-sign-day"] = com.dateFormat(contractEdit.current, "dd");
     
     com.post(api.ds.decoration, {}, function (res) {
         contractEdit.decorationType = res.typeness.split("key", "value");
@@ -50,6 +86,10 @@ jQuery(function($) {
         com.focusPage("#con-customer-name", "#form").val(customer.name);
         com.focusPage("#con-customer-phone", "#form").val(customer.phone);
         com.focusPage("#con-customer-ident", "#form").val(customer.identity);
+        com.focusPage("#con-bank-man", "#form").val(customer.name);
+        com.focusPage("#con-bank-no", "#form").val(customer.companyBankno);
+        com.focusPage("#con-bank-name", "#form").val(customer.companyBank);
+        com.focusPage("#con-bank-phone", "#form").val(customer.phone);
         
         contractEdit.customer = customer;
         
@@ -82,7 +122,6 @@ jQuery(function($) {
         
         contractEdit.designPrice = payments['设计费'] == null ? 0 : payments['设计费'];
          
-        
     }, null, false);
 
     com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": contractEdit.decorationOrderId}, function (res) {
@@ -99,7 +138,7 @@ jQuery(function($) {
         com.focusPage("#con-proper-name", "#form").val(proper.name);
         com.focusPage("#con-village-name", "#form").val(village.name);
         com.focusPage("#con-housenumber", "#form").val(house.houseNumber);
-        com.focusPage("#con-buildarea", "#form").val(house.buildArea);
+//        com.focusPage("#cov-buildarea", "#form").val(house.buildArea);
         com.focusPage("#con-housetype", "#form").val(data.houseClass);
         
         com.focusPage("#con-house-type", "#form").val(contractEdit.decorationType[data.type]);
@@ -110,15 +149,11 @@ jQuery(function($) {
         com.focusPage("#con-precontract-total", "#form").val(data.precontractPrice);
         com.focusPage("#con-quotation-total", "#form").val(data.quotationPrice);
         
-        
         com.focusPage("#con-contract-total", "#form").val(utils.accAdd(parseFloat(data.orderTotalPrice), parseFloat(contractEdit.designPrice)));
         com.focusPage("#con-contract-stotal", "#form").val(data.orderTotalPrice);
         com.focusPage("#con-contract-rtotal", "#form").val(data.factPrice);
         com.focusPage("#cov-orderId", "#form").val(data.orderId);
         
-        contractEdit.cover["cov-innerarea"] = data.house.innerArea;
-        contractEdit.cover["cov-buildarea"] = data.house.buildArea;
-        contractEdit.cover["cov-address"] = data.house.village.name + " " + data.house.houseNumber;
         contractEdit.cover["cov-designer-name"] = data.designer.currentName;
         contractEdit.cover["cov-designer-phone"] = data.designer.phone;
     });
@@ -321,23 +356,25 @@ jQuery(function($) {
             
             console.log(data);
             
-            data["con-sign-year"] = com.dateFormat(new Date(), "yyyy");
-            data["con-sign-month"] = com.dateFormat(new Date(), "MM");
-            data["con-sign-day"] = com.dateFormat(new Date(), "dd");
+            data["cov-innerarea"] = data["con-innerarea"];
+            data["cov-address"] = data["con-village-name"] + " " + data["con-housenumber"];
             
-            data["con-design-money1"] = parseFloat(data["con-design-money"]);
+            data["con-sign-year"] = com.dateFormat(contractEdit.current, "yyyy");
+            data["con-sign-month"] = com.dateFormat(contractEdit.current, "MM");
+            data["con-sign-day"] = com.dateFormat(contractEdit.current, "dd");
+            
+//            data["con-design-money1"] = parseFloat(data["con-design-money"]);
             data["con-activity-name1"] = data["con-activity-name"];
             
             data["con-contract-total-cn"] = utils.getCNMoney(parseFloat(data["con-contract-total"]));
-            data["con-contract-stotal-cn"] = utils.getCNMoney(parseFloat(data["con-contract-stotal"]));
-            data["con-contract-rtotal-cn"] = utils.getCNMoney(parseFloat(data["con-contract-rtotal"]));
-            data["con-design-money-cn"] = utils.getCNMoney(parseFloat(data["con-design-money"]));
+//            data["con-contract-stotal-cn"] = utils.getCNMoney(parseFloat(data["con-contract-stotal"]));
+//            data["con-contract-rtotal-cn"] = utils.getCNMoney(parseFloat(data["con-contract-rtotal"]));
             
             data["con-precontract-total-cn"] = utils.getCNMoney(parseFloat(data["con-precontract-total"]));
             data["con-quotation-total-cn"] = utils.getCNMoney(parseFloat(data["con-quotation-total"]));
             
             data["sin-customer-name"] = data["con-customer-name"];
-            data["sin-customer-phone"] = data["con-customer-phone"];
+//            data["sin-customer-phone"] = data["con-customer-phone"];
             data["sin-customer-ident"] = data["con-customer-ident"];
             
             var options = {
@@ -349,8 +386,6 @@ jQuery(function($) {
             
             console.log(data);
             console.log(options);
-            
-            return false;
             
             var popup = com.focusPage("#popup-page");
             var target = com.focusPage("#layerPopUp");

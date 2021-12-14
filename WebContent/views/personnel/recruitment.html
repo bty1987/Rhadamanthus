@@ -1,0 +1,80 @@
+<div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+            <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+            <div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="recruitmentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="addItemDialog">人员招聘信息</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="name" class="col-sm-3 control-label no-padding-right">姓名</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="name" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="identity" class="col-sm-3 control-label no-padding-right">身份证号</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="identity" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="place" class="col-sm-3 control-label no-padding-right">地址</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="place" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone" class="col-sm-3 control-label no-padding-right">电话</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="phone" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'/>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="employWay">应聘方式:</label>
+                        <div class="col-sm-9">
+                            <select id="employWay" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' style="width: 200px"></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="education">学历:</label>
+                        <div class="col-sm-9">
+                            <select id="education" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' style="width: 200px"></select>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="layerPopUp" class="portlet box page-content"></div> <!-- 弹窗 -->
+
+<div id="simpleAddUserModal"></div> <!-- 添加 -->
+
+<script type="text/javascript">
+    $.loadScript(['js/personnel/recruitment.js']);
+</script>

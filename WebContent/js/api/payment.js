@@ -148,7 +148,7 @@ $.extend(api, {payment: {
 		url: "refundDecorationPayment.do",
 		type: "update",
 		tranargs: {
-			args: ["decorationPayment.cash", "decorationPayment.bank", "decorationPayment.checkv", "decorationPayment.coupon"]
+			args: ["decorationPayment.cash", "decorationPayment.bank", "decorationPayment.checkv", "decorationPayment.advance", "decorationPayment.coupon"]
 		}
 	},
 	confirmDecorationPayment: {url: "confirmDecorationPayment.do"},
@@ -367,7 +367,7 @@ $.extend(api, {payment: {
 		url: "refundSalesPayment.do",
 		type: "update",
 		tranargs: {
-			args: ["salesReceipt.cash", "salesReceipt.bank", "salesReceipt.checkv", "salesReceipt.coupon"]
+			args: ["salesReceipt.cash", "salesReceipt.bank", "salesReceipt.checkv", "salesReceipt.advance", "salesReceipt.coupon"]
 		}
 	},
 	refundSalesPaymentForDeposit : {url : "refundSalesPaymentForDeposit.do"}, //这里不需要传值
@@ -459,7 +459,7 @@ $.extend(api, {payment: {
 		type: "query",
 		tranargs: [{
 			result: "paging-data",
-			args: ["money"]
+			args: []
 		}]
 	},
 
@@ -493,34 +493,39 @@ $.extend(api, {payment: {
 	checkPointofsales: {url : "checkPointofsales.do"}, //无需要更改数值
 	cancelPointofsales: {url : "cancelPointofsales.do"},
 	
-	pageActivityPayment: {url: "pageActivityPayment.do",
+	pageActivityPayment: {
+		url: "pageActivityPayment.do",
         type: "query",
         tranargs: [{
             result: "paging-data",
             args: ["money","cash","bank","coupon"]
         }]
     },
-    queryActivityPaymentByNo: {url: "queryActivityPaymentByNo.do",
+    queryActivityPaymentByNo: {
+		url: "queryActivityPaymentByNo.do",
         type: "query",
         tranargs: [{
             result: "activityPayments",
             args: ["money"]
         }]
     },
-    queryActivityPaymentByArid: {url: "queryActivityPaymentByArid.do",
+    queryActivityPaymentByArid: {
+		url: "queryActivityPaymentByArid.do",
         type: "query",
         tranargs: [{
             result: "activityPayments",
             args: ["money"]
         }]
     },
-    createActivityPayment: {url: "createActivityPayment.do",
+    createActivityPayment: {
+		url: "createActivityPayment.do",
         type: "update",
         tranargs: {
             args: ["activityPayment.money"]
         }
     },
-    collectActivityPayment: {url: "collectActivityPayment.do",
+    collectActivityPayment: {
+		url: "collectActivityPayment.do",
         type: "update",
         tranargs: {
             args: ["activityReceipt.cash","activityReceipt.bank", "activityReceipt.coupon"]
@@ -528,7 +533,8 @@ $.extend(api, {payment: {
     },
 //    deleteActivityPaymentId: {url: "deleteActivityPaymentId.do"},
     countActivityPayment: {url: "countActivityPayment.do"},
-    queryActivityReceiptByArid: {url: "queryActivityReceiptByArid.do",
+    queryActivityReceiptByArid: {
+		url: "queryActivityReceiptByArid.do",
         type: "query",
         tranargs: [{
             result: "activityReceipt",
@@ -538,14 +544,16 @@ $.extend(api, {payment: {
 
 	queryPaymentFunction: {url: "queryPaymentFunction.do"},
 	
-	pageWallet: {url: "pageWallet.do",
+	pageWallet: {
+		url: "pageWallet.do",
 		type: "query",
 		tranargs: [{
 			result: "paging-data",
 			args: ["balance", "amount"]
 		}]
 	},
-	queryWallet: {url: "queryWallet.do",
+	queryWallet: {
+		url: "queryWallet.do",
 		type: "query",
 		tranargs: [{
 			result: "wallet",
@@ -558,26 +566,30 @@ $.extend(api, {payment: {
 	confirmWallet: {url: "confirmWallet.do"},
 	freezeWallet: {url: "freezeWallet.do"},
 	unfreezeWallet: {url: "unfreezeWallet.do"},
-	consumeWallet: {url: "consumeWallet.do",
+	consumeWallet: {
+		url: "consumeWallet.do",
 		type: "update",
 		tranargs: {
 			args: ["wallet.amount"]
 		}
 	},
-	rechargeWallet: {url: "rechargeWallet.do",
+	rechargeWallet: {
+		url: "rechargeWallet.do",
 		type: "update",
 		tranargs: {
 			args: ["wallet.amount"]
 		}
 	},
-	withdrawWallet: {url: "withdrawWallet.do",
+	withdrawWallet: {
+		url: "withdrawWallet.do",
 		type: "update",
 		tranargs: {
 			args: ["wallet.amount"]
 		}
 	},
 	consentWallet: {url: "consentWallet.do"},
-	transferWallet: {url: "transferWallet.do",
+	transferWallet: {
+		url: "transferWallet.do",
 		type: "update",
 		tranargs: {
 			args: ["wallet.amount"]
@@ -599,7 +611,8 @@ $.extend(api, {payment: {
 			args: ["amount"]
 		}]
 	},
-	queryWalletran: {url: "queryWalletran.do",
+	queryWalletran: {
+		url: "queryWalletran.do",
 		type: "query",
 		tranargs: [{
 			result: "walletrans",
@@ -609,6 +622,22 @@ $.extend(api, {payment: {
 
 	queryWalletres: {url: "queryWalletres.do"},
 	addWalletres: {url: "addWalletres.do"},
-	deleteWalletres: {url: "deleteWalletres.do"}
+	deleteWalletres: {url: "deleteWalletres.do"},
+
+	pagePaymentContract: {url:"pagePaymentContract.do"},
+	queryPaymentContract: {url: "queryPaymentContract.do"},
+	sendPaymentContractForAuth: {url: "sendPaymentContractForAuth.do"},
+	sendPaymentContract: {url: "sendPaymentContract.do"},
+	redirectPaymentContract: {url: "redirectPaymentContract.do"},
+	viewPaymentContract: {url: "viewPaymentContract.do"},
+	signPaymentContractForCompany: {url: "signPaymentContractForCompany.do"},
+	signPaymentContractForCustomer: {url: "signPaymentContractForCustomer.do"},
+	addPaymentContract: {url: "addPaymentContract.do"},
+	affixPaymentContract: {url: "affixPaymentContract.do"},
+	expirePaymentContract: {url: "expirePaymentContract.do"},
+	filingPaymentContract: {url: "filingPaymentContract.do"},
 	
+	pageKingdeeRecord: {url: "pageKingdeeRecord.do"},
+	addKingdeeRecord: {url: "addKingdeeRecord.do"}
+
 }});

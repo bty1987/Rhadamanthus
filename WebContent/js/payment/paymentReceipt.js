@@ -2,7 +2,8 @@ jQuery(function ($) {
     var receipt = {
         bankInfo: {},
         checkBankInfo: {},
-        receiptsNum: 0
+        receiptsNum: 0,
+        organizationName: ""
     };
     api = parent.api;
     config = parent.config;
@@ -10,6 +11,11 @@ jQuery(function ($) {
     utils = parent.utils;
     com = parent.com;
     printer = parent.printer;
+
+    $("#paymentPdfBtn").click(function(){
+        var target = $("#paymentReceipt")[0]; //避免生成的PDF页面底部出现黑色背景
+        paymentUtils.makeContract(target, arid, params.paymentOrderId, 0);
+    });
 
     com.post(api.common.queryReceiptType, {}, function (res) {
         $.each(res.receiptTypes, function (i, v) {
@@ -31,12 +37,20 @@ jQuery(function ($) {
     var paymentInfo = [];
     var orderIds = "";
     var addrs = "";
+    var arid = "";
 
     com.post(queryPaymentByPaymentId, {"payment.pid": params.paymentPaymentId}, function (res) {
         var payment = res.payment;
+        arid = payment.arId;
 
         if (!payment.pid) {
             return;
+        }
+
+        if (payment.paymentType == 0) {
+            receipt.organizationName = parent.params.company.drganization.name + "收款收据";
+        } else if (payment.paymentType == 2) {
+            receipt.organizationName = parent.params.company.srganization.name + "代收款收据";
         }
 
         commonInfo["customerName"] = payment.customer.name;
@@ -101,7 +115,7 @@ jQuery(function ($) {
 
             printer.name = "payment";
             printer.args = {
-                "title": params.company.name +"专用收据",
+                "title": receipt.organizationName,
                 "orderId": orderIds,
                 "orderAddr": addrs,
                 "collectTime": commonInfo["collectTime"],
@@ -128,7 +142,7 @@ jQuery(function ($) {
             var noTr = $('<tr></tr>').appendTo(noTable);
             var noTd = $('<td colspan="3"></td>').appendTo(noTr);
             var headReceiptDiv = $('<div style="text-align: center; background-color:#ffffff"></div>').appendTo(center);
-            var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(parent.params.company.name + "专用收据").appendTo(headReceiptDiv);
+            var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(receipt.organizationName).appendTo(headReceiptDiv);
 
             var receiptTable = $('<table border="1" style="width: 100%; border-collapse:collapse;" cellpadding="0" cellspacing="0">').appendTo(center);
 

@@ -1,98 +1,168 @@
-$(function (){
+jQuery(function ($) {
 
-    var balanceSales={
+	var balanceSales = {
 
-        bid : params.bid,
+		bsid: null,
+		btns: {
+			createBalanceSalesBtn: com.focusPage("#createBalanceSalesBtn").on("click", saveData),
+			withdrawBtn: com.focusPage("#withdrawBtn").on("click", saveDate),
+		},
 
-        types : {},
-        onetypes : {},
-        statues : {}
+		modals: {
+			createBalanceSalesModal: com.focusPage("#createBalanceSalesModal"),
+			renewal: com.focusPage("#renewal"),
+			
+		},
 
-    };
+		items: {
+			name: com.focusPage("#BalanceSalesName"),
+			brand: com.focusPage("#brand"),
+			updateName: com.focusPage("#updata"),
+		},
 
-    com.post(api.ds.balance, {}, function(res){
+		status: {},
+	};
+	
 
-        balanceSales.types = res.isBalanceSalesType.split("key", "value");
-        balanceSales.onetypes = res.isBalanceSalesNoeType.split("key", "value");
-        balanceSales.statues = res.isBalanceSalesStatus.split("key", "value");
 
-    });
+	com.post(api.ds.balance, {}, function (res) {
+		balanceSales.status = res.balanceSalesStatus.split("key", "value");
+	}, null, false);
 
-    var initList = function (v) {
+	com.initTypeahead("brand", api.data.queryBrandByPinyin, "pinyinName", {}, "brands", "bid", "name", null);
 
-        var $tableWrap = com.focusPage('#list').empty();
-        var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list').appendTo($tableWrap);
+	var seacher = new Searcher();
 
-        if(!v.length){
-            var $resultList = com.focusPage("#list").addClass('dz-default dz-message').html('');
-            var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
-            var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
-            var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
-            return $resultList;
+	seacher.base("condList","pagenation", "resultList",api.balance.pageBalanceSales);
 
-        }else if (v) {
+	seacher.condition(["balance-balanceSelse-name", "balance-balanceSelse-status", "balance-balanceSelse-brand", "balance-balanceSelse-grade",  "balance-balanceSelse-createTime", "balance-balanceSelse-creater"]);
 
-            $.each(v,function (i, v) {
+	seacher.button([{ id: "createBalanceSales", name: "创建", clazz: "btn-yellow", icon: "icon-plus" }]);
 
-                var $liLine = $('<li></li>').addClass('item-orange clearfix').appendTo($ul);
-                
-                var $h3 = $('<h3></h3>').addClass('oid').appendTo($liLine);
-                var $title = $('<small></small>').addClass('blue').html(' ' + v.sales.no).appendTo($h3);
-                var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').appendTo($liLine);
+	seacher.history("balanceSalesPostData");
 
-                var propertyArr = [
-                    ["装修单号:", v.sales.orderId, "blue"],
-                    ["楼盘地址:", v.sales.house.village.name + " " + v.sales.house.houseNumber,"grey"],
-                    ["品类:",v.sales.category, "grey" ],
-                    ["品牌:",v.sales.brand, "grey" ],
-                    ["类型:", balanceSales.types[v.type], "red"],
-                    ["结算值:", v.pbalance, "blue"],
-                    ["一类:", balanceSales.onetypes[v.onetype], "red"],
-                    ["状态:", balanceSales.statues[v.status], "red"],
-                ];
+	var lineprops = [
+		{ fieId: "brand.name", name: "品牌名", prop: "brand.name", clazz: "grey" },
+		{ fieId: "status", name: "状态", prop: "status", clazz: "red", dataset: balanceSales.status },
+		{ fieId: "grade", name: "等级", prop: "grade", clazz: "red" },
+		{ fieId: "income", name: "收入", prop: "income", clazz: "blue" },
+		{ fieId: "cost", name: "成本", prop: "cost", clazz: "blue" },
+		{ fieId: "payment", name: "应付", prop: "payment", clazz: "blue" },
+		{ fieId: "profit", name: "利润", prop: "profit", clazz: "blue" },
+		{ field: "creater", name: "创建人", prop: "creater.userName", clazz: "grey"},
+		{ field: "createTime", name: "创建时间", prop: "createTime", clazz: "green"},
+		
+	];
 
-                $.each(propertyArr, function (index, value) {
-                    var $liProperty = $('<li></li>');
-                    $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                    $liProperty.appendTo($ulProperty);
-                });
-                
-                var $ulDetail = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').appendTo($liLine);
-                
-                var detailArr = [
-                   ["销售收入: ", v.total - v.sales.venderMaling - v.sales.maling - v.sales.coupon, "blue"],
-                   ["供应商减免金额: ", v.sales.venderMaling, "blue"],
-                   ["折扣/抹零金额: ",v.allowance, "blue" ],
-                   ["销售金额: ",v.total + v.sales.venderMaling + v.allowance, "blue" ],
-                   ["销售成本: ", v.total + v.sales.venderMaling + v.allowance - v.balance, "blue"],
-                   ["销售成本比例: ", (v.total + v.sales.venderMaling + v.allowance - v.balance) / (v.total + v.sales.venderMaling + v.allowance), "blue"],
-                   ["应付账款: ", v.total + v.allowance - v.balance, "blue"],
-                   ["结算利润: ", v.balance, "blue"],
-                   ["公司利润: ", v.balance - v.allowance, "blue"],
-               ];
-                
-                $.each(detailArr, function (index, value) {
-                    var $liProperty = $('<li></li>').appendTo($ulDetail);
-                    $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                });
+	var linebtus = [
+		{
+			name: "明细", clazz: "btn-yellow", handle: function (v) {
+				params['bsid'] = v.bsid;
+				com.popup4page("#stockRecordPopUp", "/views/balance/balanceSalesBalance.html", "销售单");
+				return false;
+			}
+		},
+		{
+			name: "更新", clazz: "btn-info", handle: function(v){
+				balanceSales.bsid=v.bsid;
+				balanceSales.items.name.val(v.name);
+				balanceSales.modals.renewal.modal("show");
+				return false;
+			},show: function(v){
+				return (v.status == 0);
+			}
+		},
+		{
+			name: "结算", clazz: "btn-danger", handle: function(v){
+				com.post(api.balance.balanceBalanceSales, {"balanceSales.bsid": v.bsid}, function(){
+					com.showAlert(com.info, "结算成功");
+					seacher.doSearch();
+			});
+			return false;
+			}, show: function(v){
+				return (v.status == 1);
+			}
+		},
+		{
+			name: "锁定", clazz: "btn-success", handle: function(v){
+				com.post(api.balance.lockBalanceSales, {"balanceSales.bsid": v.bsid}, function(){
+					com.showAlert(com.info, "锁定成功");
+					seacher.doSearch();
+				});
+				return false;
+			},show: function(v){
+				return (v.status == 0);
+			}
+		},
+		{
+			name: "解锁", clazz: "btn-inverse", handle: function(v){
+				com.post(api.balance.unlockBalanceSales, {"balanceSales.bsid": v.bsid}, function(){
+					com.showAlert(com.info, "解锁成功");
+					seacher.doSearch();
+				});
+				return false;
+			},show:function(v){
+				return(v.status == 1);
+			}
+		},
+		{
+			name: "明细打印", clazz: "btn-yellow", handle: function(v){
+				params.balanceSalesBsid = v.bsid;
+				params.type = 1;
+				com.popup("明细表", api.index.balanceSales2print.url, null, null, true);
+				return false;
+			}, show: function(v){
+				return(v.status != 0);
+			}
+		},
+		{
+			name: "利润打印", clazz: "btn-success", handle: function(v){
+				params.balanceSalesBsid = v.bsid;
+				params.type = 2;
+				com.popup("利润表", api.index.balanceSales2print.url, null, null, true);
+				return false;
+			}, show: function(v){
+				return(v.status != 0);
+			}
+		},
+	];
 
-            })
-        }
-    };
+	seacher.line("name", lineprops, linebtus).render();
 
-    queryBalanceSalesForSales(balanceSales.bid);
+	com.focusPage('#createBalanceSales', '#pagenation').on("click", function () {
 
-    function queryBalanceSalesForSales(bid) {
+		balanceSales.modals.createBalanceSalesModal.modal("show");
+	});
 
-        com.post(api.balance.queryBalanceSalesForSales, {"balanceSales.balance.bid": bid}, function (data) {
+	function saveData() {
 
-            initList(data.salesBalances);
+		if (com.validate('createBalanceSalesModal')) return false;
 
-        }, function (e) {
-            com.showAlert(com.error, e.errorMsg);
-        }, false);
-    };
+		var options = {
+			"balanceSales.name": balanceSales.items.name.val(),
+			"balanceSales.brand.bid": com.typeahead("brand"),
+			"balanceSales.grade": $('input[name="grade"]:checked').val(),
+		};
+
+		com.post(api.balance.createBalanceSales, options, function () {
+			com.showAlert(com.info, "操作成功");
+			seacher.doSearch();
+		});
+		balanceSales.modals.createBalanceSalesModal.modal("hide");
+	}
+
+	function saveDate() {
+		if (com.validate('renewal')) return false;
+		var  options = {
+			"balanceSales.bsid": balanceSales.bsid,
+			"balanceSales.name" : balanceSales.items.updateName.val(),
+		};
+		com.post(api.balance.updateBalanceSales, options, function () {
+			com.showAlert(com.info, "操作成功");
+			seacher.doSearch();
+		});
+		balanceSales.modals.renewal.modal("hide");
+	}
+
 
 });

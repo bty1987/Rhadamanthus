@@ -37,6 +37,8 @@ public class OccessoriesPO implements Serializable {
 	public static final String COLUMN_NO_STR = "no";
 	
 	public static final short STATUS_INIT_INT = 0;
+	
+	public static final short STATUS_INIT_END = 2;
 
 	private long oid;
 	
@@ -53,6 +55,12 @@ public class OccessoriesPO implements Serializable {
 	private short status;
 	
 	private int company;
+	
+	private UserPO supplier;
+	
+	private UserPO confirmer;// 确认人
+
+	private UserPO balancer;// 结算人
 
 	public OccessoriesPO(){
 		super();
@@ -98,7 +106,7 @@ public class OccessoriesPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "suid", referencedColumnName = "uid")
+	@JoinColumn(name = "svuid", referencedColumnName = "uid")
 	public UserPO getSupervisor() {
 		return supervisor;
 	}
@@ -134,6 +142,37 @@ public class OccessoriesPO implements Serializable {
 		this.company = company;
 	}
 
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "spuid", referencedColumnName = "uid")
+	public UserPO getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(UserPO supplier) {
+		this.supplier = supplier;
+	}
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(nullable = true, name = "couid", referencedColumnName = "uid")
+	public UserPO getConfirmer() {
+		return confirmer;
+	}
+
+	public void setConfirmer(UserPO confirmer) {
+		this.confirmer = confirmer;
+	}
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(nullable = true, name = "buid", referencedColumnName = "uid")
+	public UserPO getBalancer() {
+		return balancer;
+	}
+	
+	public void setBalancer(UserPO balancer) {
+		this.balancer = balancer;
+	}
+	
 	public OccessoriesPO init(String no, String orderId, UserPO creater, int company){
 		
 		setNo(no);
@@ -145,5 +184,9 @@ public class OccessoriesPO implements Serializable {
 		
 		return this;
 	}
+
+	
+
+
 
 }

@@ -16,6 +16,7 @@ import com.fanglin.construction.po.ConstructionPO;
 import com.fanglin.construction.po.ConstructionSchedulePO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.dao.UserDao;
@@ -44,6 +45,9 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	private UserDao userDao;
 
 	@Autowired
+	private DecorationDao decorationDao;
+
+	@Autowired
 	private ConstructionDao constructionDao;
 
 	@Autowired
@@ -69,14 +73,9 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			if (workerSalaryPO.getDecoration() != null) {
 
 				workerSalaryVO.setDecoration(new DecorationVO());
+				workerSalaryVO.getDecoration().setSupervisor(new UserBaseVO());
+
 				workerSalaryPO.getDecoration().ptvcascade(workerSalaryVO.getDecoration());
-
-				if (workerSalaryPO.getDecoration().getSupervisor() != null) {
-
-					UserBaseVO supervisorVO = new UserBaseVO();
-					supervisorVO.setUserName(workerSalaryPO.getDecoration().getSupervisor().getUserName());
-					workerSalaryVO.getDecoration().setSupervisor(supervisorVO);
-				}
 			}
 
 			BeanUtil.copyProperties(workerSalaryPO.getApprover(), workerSalaryVO.getApprover(), Arrays.asList("dept", "role", "duty"));
@@ -103,14 +102,9 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			if (workerSalaryPO.getDecoration() != null) {
 
 				workerSalaryVO.setDecoration(new DecorationVO());
+				workerSalaryVO.getDecoration().setSupervisor(new UserBaseVO());
+
 				workerSalaryPO.getDecoration().ptvcascade(workerSalaryVO.getDecoration());
-
-				if (workerSalaryPO.getDecoration().getSupervisor() != null) {
-
-					UserBaseVO supervisorVO = new UserBaseVO();
-					supervisorVO.setUserName(workerSalaryPO.getDecoration().getSupervisor().getUserName());
-					workerSalaryVO.getDecoration().setSupervisor(supervisorVO);
-				}
 			}
 
 			BeanUtil.copyProperties(workerSalaryPO.getApprover(), workerSalaryVO.getApprover(), Arrays.asList("dept", "role", "duty"));
@@ -140,6 +134,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 			BeanUtil.copyProperties(workerSalaryPO, workerSalaryvo, Arrays.asList("user", "decoration", "creater", "approver"));
 			BeanUtil.copyProperties(workerSalaryPO.getUser(), workerSalaryvo.getUser(), Arrays.asList("dept", "role", "duty"));
+
 			workerSalarys.add(workerSalaryvo);
 		}
 
@@ -155,6 +150,19 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		UserPO creater = userDao.queryUserByUserId(userId);
 
 		WorkerSalaryPO workerSalaryPO = new WorkerSalaryPO();
+
+		DecorationPO decorationPO = null;
+
+		if (workerSalaryVO.getDecoration() != null) {
+			decorationPO = decorationDao.queryDecorationByOrderId(workerSalaryVO.getDecoration().getOrderId());
+
+			workerSalaryPO.setDecoration(decorationPO);
+
+			company = decorationPO.getCompany();
+		}
+
+		workerSalaryPO.setCid(0);
+		workerSalaryPO.setCsid(0);
 
 		if (workerSalaryVO.getCsid() != null && workerSalaryVO.getCsid() != 0) {
 
@@ -182,7 +190,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 			constructionDao.update(constructionPO);
 
-			DecorationPO decorationPO = constructionPO.getDecoration();
+			decorationPO = constructionPO.getDecoration();
 
 			company = decorationPO.getCompany();
 
@@ -191,9 +199,8 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 			workerSalaryPO.setSchedule(constructionSchedulePO.getSchedule());
 			workerSalaryPO.setCsid(workerSalaryVO.getCsid());
-		} else {
-			workerSalaryPO.setCid(0);
-			workerSalaryPO.setCsid(0);
+
+			workerSalaryPO.setCount(workerSalaryDao.countWorkerSalary(decorationPO.getOrderId(), workerSalaryPO.getCsid()) + 1);
 		}
 
 		WorkerBalancePO workerBalancePO = workerBalanceDao.queryWorkerBalance(worker.getUid(), company);
@@ -216,8 +223,6 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 		workerSalaryPO.init(worker, creater, workerSalaryVO.getComment(), company);
 
-		workerSalaryPO.setCount(workerSalaryDao.countWorkerSalary(workerSalaryPO.getDecoration().getOrderId(), workerSalaryPO.getCsid()) + 1);
-
 		addSalary(workerSalaryVO, workerBalancePO, workerSalaryPO, company);
 
 		return 0;
@@ -233,53 +238,64 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 			WorkerSalaryPO workerSalaryPO = workerSalaryDao.get(workerSalaryVO.getWsId());
 
-			if (workerSalaryPO.getStatus() != WorkerSalaryPO.STATUS_INIT_INT) {
-				throw new FLException(280002, "工费状态不可操作");
-			}
-
-			List<WorkerSalaryPO> workerSalaryPOs = workerSalaryDao.queryWorkerSalaryByCwsid(workerSalaryPO.getWsId());
-
-			for (WorkerSalaryPO _workerSalary : workerSalaryPOs) {
-
-				WorkerBalancePO workerCollect = workerBalanceDao.queryWorkerBalance(_workerSalary.getUser().getUid(), company);
-
-				if (workerCollect == null) {
-					throw new FLException(280004, "工人帐户不存在");
-				}
-
-				if (_workerSalary.getType() == WorkerSalaryPO.TYPE_ADD_INT) {
-
-					if (Arith.sub(workerCollect.getDeposit(), workerCollect.getToplimit()) < 0) {
-
-						if (Arith.sub(Arith.add(workerCollect.getDeposit(), _workerSalary.getMoney()), workerCollect.getToplimit()) > 0) { // 超过质保金上限
-
-							_workerSalary.setSalary(Arith.sub(Arith.add(workerCollect.getDeposit(), _workerSalary.getMoney()), workerCollect.getToplimit()));
-							_workerSalary.setDeposit(Arith.sub(workerCollect.getToplimit(), workerCollect.getDeposit()));
-							workerCollect.setSalary(Arith.add(workerCollect.getSalary(), Arith.sub(Arith.add(workerCollect.getDeposit(), _workerSalary.getMoney()), workerCollect.getToplimit())));
-							workerCollect.setDeposit(workerCollect.getToplimit());
-
-						} else {
-							_workerSalary.setDeposit(_workerSalary.getMoney());
-							workerCollect.setDeposit(Arith.add(workerCollect.getDeposit(), _workerSalary.getMoney()));
-						}
-					} else {
-						_workerSalary.setSalary(_workerSalary.getMoney());
-						_workerSalary.setDeposit(0);
-						workerCollect.setSalary(Arith.add(workerCollect.getSalary(), _workerSalary.getMoney()));
-					}
-				}
-
-				workerBalanceDao.update(workerCollect);
-
-				_workerSalary.setApproveTime(new Timestamp(System.currentTimeMillis()));
-				_workerSalary.setStatus(WorkerSalaryPO.STATUS_PASS_INT);
-				_workerSalary.setApprover(approval);
-
-				workerSalaryDao.update(_workerSalary);
-			}
+			adoptWorkerSalary(workerSalaryPO, approval, company);
 		}
 
 		return 0;
+	}
+
+	public void adoptWorkerSalary(WorkerSalaryPO workerSalaryPO, UserPO approval, int company) throws FLException {
+
+		if (workerSalaryPO.getStatus() != WorkerSalaryPO.STATUS_INIT_INT) {
+			throw new FLException(280002, "工费状态不可操作");
+		}
+
+		List<WorkerSalaryPO> workerSalaryPOs = workerSalaryDao.queryWorkerSalaryByCwsid(workerSalaryPO.getWsId());
+
+		for (WorkerSalaryPO workerSalary : workerSalaryPOs) {
+
+			WorkerBalancePO workerBalancePO = workerBalanceDao.queryWorkerBalance(workerSalary.getUser().getUid(), company);
+
+			if (workerBalancePO == null) {
+				throw new FLException(280004, "工人帐户不存在");
+			}
+
+			long deposit = workerBalancePO.getDeposit();
+			long toplimit = workerBalancePO.getToplimit();
+			long salary = workerBalancePO.getSalary();
+
+			long money = workerSalary.getMoney();
+
+			if (workerSalary.getType() == WorkerSalaryPO.TYPE_ADD_INT) {
+
+				if (Arith.sub(deposit, toplimit) < 0) {
+
+					if (Arith.sub(Arith.add(deposit, money), toplimit) > 0) { // 超过质保金上限
+
+						workerSalary.setSalary(Arith.sub(Arith.add(deposit, money), toplimit));
+						workerSalary.setDeposit(Arith.sub(toplimit, deposit));
+
+						workerBalancePO.setSalary(Arith.add(salary, Arith.sub(Arith.add(deposit, money), toplimit)));
+						workerBalancePO.setDeposit(toplimit);
+					} else {
+						workerSalary.setDeposit(money);
+						workerBalancePO.setDeposit(Arith.add(deposit, money));
+					}
+				} else {
+					workerSalary.setSalary(money);
+					workerSalary.setDeposit(0);
+					workerBalancePO.setSalary(Arith.add(salary, money));
+				}
+			}
+
+			workerBalanceDao.update(workerBalancePO);
+			workerSalary.setIsAppr(WorkerSalaryPO.ISAPPR_APPR_INT);
+			workerSalary.setApproveTime(new Timestamp(System.currentTimeMillis()));
+			workerSalary.setStatus(WorkerSalaryPO.STATUS_PASS_INT);
+			workerSalary.setApprover(approval);
+
+			workerSalaryDao.update(workerSalary);
+		}
 	}
 
 	@Override
@@ -302,22 +318,28 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 				throw new FLException(280004, "工人帐户不存在");
 			}
 
+			long deposit = workerBalancePO.getDeposit();
+			long toplimit = workerBalancePO.getToplimit();
+			long salary = workerBalancePO.getSalary();
+
+			long money = workerSalaryPO.getMoney();
+
 			if (workerSalaryPO.getType() == WorkerSalaryPO.TYPE_ADD_INT) {// 类型加 , 减操作
-				if (Arith.sub(workerBalancePO.getSalary(), workerSalaryPO.getMoney()) < 0) {
-					workerBalancePO.setDeposit(Arith.sub(workerBalancePO.getDeposit(), Arith.sub(workerSalaryPO.getMoney(), workerBalancePO.getSalary())));
+				if (Arith.sub(salary, money) < 0) {
+					workerBalancePO.setDeposit(Arith.sub(deposit, Arith.sub(money, salary)));
 					workerBalancePO.setSalary(0);
 				} else {
-					workerBalancePO.setSalary(Arith.sub(workerBalancePO.getSalary(), workerSalaryPO.getMoney()));
-					workerBalancePO.setDeposit(workerBalancePO.getDeposit());
+					workerBalancePO.setSalary(Arith.sub(salary, money));
+					workerBalancePO.setDeposit(deposit);
 				}
 			}
 
 			if (workerSalaryPO.getType() == WorkerSalaryPO.TYPE_SUB_INT) {// 类型减 , 加操作
-				if (Arith.sub(Arith.add(workerBalancePO.getDeposit(), workerSalaryPO.getMoney()), workerBalancePO.getToplimit()) > 0) {
-					workerBalancePO.setSalary(Arith.add(workerBalancePO.getSalary(), Arith.sub(Arith.add(workerBalancePO.getDeposit(), workerSalaryPO.getMoney()), workerBalancePO.getToplimit())));
-					workerBalancePO.setDeposit(workerBalancePO.getToplimit());
+				if (Arith.sub(Arith.add(deposit, money), toplimit) > 0) {
+					workerBalancePO.setSalary(Arith.add(salary, Arith.sub(Arith.add(deposit, money), toplimit)));
+					workerBalancePO.setDeposit(toplimit);
 				} else {
-					workerBalancePO.setDeposit(Arith.add(workerBalancePO.getDeposit(), workerSalaryPO.getMoney()));
+					workerBalancePO.setDeposit(Arith.add(deposit, money));
 				}
 			}
 
@@ -327,7 +349,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			workerSalaryPO.setApproveTime(new Timestamp(System.currentTimeMillis()));
 			workerSalaryPO.setApprover(approver);
 			workerSalaryPO.setCount(0);
-
+			workerSalaryPO.setIsAppr(WorkerSalaryPO.ISAPPR_APPR_INT);
 			workerSalaryDao.update(workerSalaryPO);
 
 			workerSalaryDao.updateWorkerSalary(workerSalaryPO.getDecoration().getOrderId(), workerSalaryPO.getCsid());
@@ -681,12 +703,9 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			salary = workerSalary;
 			workerBalancePO.setSalary(0);
 			workerBalancePO.setDeposit(Arith.sub(workerBalance, difference));
-
 		} else {
-
 			salary = money;
 			workerBalancePO.setSalary(Arith.sub(workerSalary, money));
-
 		}
 
 		workerBalanceDao.update(workerBalancePO);
@@ -745,7 +764,6 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		workerSalaryVO.setTwotype(workerSalaryPO.getTwotype());
 		workerSalaryVO.setWsId(workerSalaryPO.getWsId());
 		workerSalaryVO.setType(workerSalaryPO.getType());
-
 	}
 
 }

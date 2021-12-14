@@ -11,10 +11,8 @@ public interface SoodsDao extends Dao<SoodsPO> {
 
 	public List<SoodsPO> pageSoods(Paging paging, List<Filter> filters, int company);
 	
-	public List<SoodsPO> pageSoodsByQiid(Paging paging, List<Filter> filters, long qiid);
+	public List<SoodsPO> querySoodsByName(String name, int limit, int company);
 	
-	public List<SoodsPO> querySoodsByQiid(long qiid);
-	
-	public int countSoods(long gid, long qiid);
-	
+	public int deleteSoods(long sid);
+
 }

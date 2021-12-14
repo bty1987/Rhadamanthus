@@ -1,31 +1,26 @@
 {
   "isType" :[
-      {"key":"0", "value":"支出" },
+      {"key":"0", "value":"支出"},
       {"key":"1", "value":"收款"},
       {"key":"2", "value":"提款"}
   ],  "isStatus" :[
-      {"key":"0", "value":"初始" },
+      {"key":"0", "value":"初始"},
       {"key":"1", "value":"完结"}
   ],  "isAccountType" :[
-      {"key":"0", "value":"结算" },
+      {"key":"0", "value":"结算"},
       {"key":"1", "value":"出纳"}
-  ],  "isAccountStatus" :[
-      {"key":"0", "value":"有效" },
+  ], "isAccountStatus" :[
+      {"key":"0", "value":"有效"},
       {"key":"1", "value":"无效"}
-  ],  "isBalanceSalesType" :[
-      {"key":"0", "value":"购货" },
-      {"key":"1", "value":"预结算退货"},
-      {"key":"2", "value":"结算退货"}
-  ],  "isBalanceSalesNoeType" :[
-      {"key":"0", "value":"购货" },
-      {"key":"1", "value":"退货"},
-      {"key":"2", "value":"全退"},
-      {"key":"3", "value":"倒单"}
-  ],  "isBalanceSalesStatus" :[
-      {"key":"0", "value":"预结算" },
-      {"key":"1", "value":"厂商结算"},
-      {"key":"2", "value":"结算"}
-],
+  ], "balanceSalesStatus" :[
+      {"key":"0", "value":"初始"},
+      {"key":"1", "value":"锁定"},
+      {"key":"2", "value":"结算"},
+      {"key":"3", "value":"完结"}
+  ],  "balanceSalesGrade" :[
+      {"key":"A", "value":"A"},
+      {"key":"B", "value":"B"}
+  ],
   "errorCode": 0,
   "errorMsg": null
 }

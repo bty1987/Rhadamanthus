@@ -21,6 +21,8 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.data.po.GoodsPO;
 import com.fanglin.data.po.NormoodPO;
 import com.fanglin.quotation.dao.QuotationNormoodDao;
+import com.fanglin.quotation.po.AddReduceItemPO;
+import com.fanglin.quotation.po.ExtensionItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemAO;
 
 @Repository("quotationNormoodDao")
@@ -34,17 +36,49 @@ public class QuotationNormoodDaoImpl extends DaoImpl<QuotationFunctionAreaItemAO
 	@SuppressWarnings("unchecked")
 	public List<T> queryQuotationFunctionAreaItem(short index, long functionAreaId) {
 
-		String sql = String.format("select i.*, a.*, g.* from quotation.quotationfunctionareaitem%d i, data.normood a, inventory.goods g where i.quotationFunctionAreaId = :functionAreaId and i.quotationItemId = a.qiid and a.gid = g.gid", index);
+		String sql = String.format("select {quoteitem.*}, {mood.*}, {good.*} from quotation.quotationfunctionareaitem%d quoteitem, data.normood mood, inventory.goods good where quoteitem.quotationFunctionAreaId = :functionAreaId and quoteitem.quotationItemId = mood.qiid and mood.gid = good.gid", index);
 
-		return session().createSQLQuery(sql).addEntity(QuotationFunctionAreaItemAO.class).addEntity(NormoodPO.class).addEntity(GoodsPO.class).setLong("functionAreaId", functionAreaId).list();
+		return session().createSQLQuery(sql).addEntity("quoteitem", QuotationFunctionAreaItemAO.class).addEntity("mood", NormoodPO.class).addEntity("good", GoodsPO.class).setLong("functionAreaId", functionAreaId).list();
+	}
+
+	@Override
+	public List<?> queryAddReduceItem(long arid) {
+
+		String sql = "select {aritem.*}, {mood.*}, {good.*} from quotation.addreduceitem aritem, data.normood mood, inventory.goods good where aritem.arid = :arid and aritem.qiid = mood.qiid and mood.gid = good.gid";
+
+		return session().createSQLQuery(sql).addEntity("aritem", AddReduceItemPO.class).addEntity("mood", NormoodPO.class).addEntity("good", GoodsPO.class).setLong("arid", arid).list();
+	}
+
+	@Override
+	public List<?> queryExtensionItem(long eid) {
+
+		String sql = "select {exitem.*}, {mood.*}, {good.*} from quotation.extensionitem exitem, data.normood mood, inventory.goods good where exitem.eid = :eid and exitem.qiid = mood.qiid and mood.gid = good.gid";
+
+		return session().createSQLQuery(sql).addEntity("exitem", ExtensionItemPO.class).addEntity("mood", NormoodPO.class).addEntity("good", GoodsPO.class).setLong("eid", eid).list();
 	}
 
 	@Override
 	public List<?> amountQuotationNormood(short index, long functionAreaId) {
 
-		String sql = String.format("select a.*, g.*, sum(a.num) as amount from quotation.quotationfunctionareaitem%d i, data.normood a, inventory.goods g where i.quotationFunctionAreaId = :functionAreaId and i.quotationItemId = a.qiid and a.gid = g.gid group by g.gid", index);
+		String sql = String.format("select {mood.*}, {good.*}, sum(mood.num) as amount from quotation.quotationfunctionareaitem%d quoteitem, data.normood mood, inventory.goods good where quoteitem.quotationFunctionAreaId = :functionAreaId and quoteitem.quotationItemId = mood.qiid and mood.gid = good.gid group by good.gid", index);
 
-		return session().createSQLQuery(sql).addEntity(NormoodPO.class).addEntity(GoodsPO.class).addScalar("amount", StandardBasicTypes.LONG).setLong("functionAreaId", functionAreaId).list();
+		return session().createSQLQuery(sql).addEntity("mood", NormoodPO.class).addEntity("good", GoodsPO.class).addScalar("amount", StandardBasicTypes.LONG).setLong("functionAreaId", functionAreaId).list();
+	}
+
+	@Override
+	public List<?> amountExtensionNormood(long eid) {
+
+		String sql = "select {mood.*}, {good.*}, sum(mood.num) as amount from quotation.extensionitem ei, data.normood mood, inventory.goods good where ei.eid = :eid and ei.qiid = mood.qiid and mood.gid = good.gid group by good.gid";
+
+		return session().createSQLQuery(sql).addEntity("mood", NormoodPO.class).addEntity("good", GoodsPO.class).addScalar("amount", StandardBasicTypes.LONG).setLong("eid", eid).list();
+	}
+
+	@Override
+	public List<?> amountAddReduceNormood(long arid) {
+
+		String sql = "select {mood.*}, {good.*}, sum(mood.num) as amount from quotation.addreduceitem ari, data.normood mood, inventory.goods good where ari.arid = :arid and ari.qiid = mood.qiid and mood.gid = good.gid group by good.gid";
+
+		return session().createSQLQuery(sql).addEntity("mood", NormoodPO.class).addEntity("good", GoodsPO.class).addScalar("amount", StandardBasicTypes.LONG).setLong("arid", arid).list();
 	}
 
 }

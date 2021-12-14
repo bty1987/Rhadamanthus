@@ -31,6 +31,40 @@ CREATE TABLE `ddepartmentcountdetail` (
   KEY `indextwo` (`sdId`,`createDate`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='尺源部门统计详细';
 
+DROP TABLE IF EXISTS `decoration4construction`;
+CREATE TABLE `decoration4construction` (
+  `dcid` int(11) NOT NULL AUTO_INCREMENT,
+  `cdid` int(11) NOT NULL,
+  `cs0` int(8) NOT NULL DEFAULT '0' COMMENT '未开工',
+  `cs1` int(8) NOT NULL DEFAULT '0' COMMENT '已开工',
+  `cs2` int(8) NOT NULL DEFAULT '0' COMMENT '已完工',
+  `cs3` int(8) NOT NULL DEFAULT '0' COMMENT '铲大白',
+  `cs4` int(8) NOT NULL DEFAULT '0' COMMENT '放线',
+  `cs5` int(8) NOT NULL DEFAULT '0' COMMENT '水暖',
+  `cs6` int(8) NOT NULL DEFAULT '0' COMMENT '力工',
+  `cs7` int(8) NOT NULL DEFAULT '0' COMMENT '电工',
+  `cs8` int(8) NOT NULL DEFAULT '0' COMMENT '瓦工',
+  `cs9` int(8) NOT NULL DEFAULT '0' COMMENT '地面找平',
+  `cs10` int(8) NOT NULL DEFAULT '0' COMMENT '木工',
+  `cs11` int(8) NOT NULL DEFAULT '0' COMMENT '油工',
+  `cs12` int(8) NOT NULL DEFAULT '0' COMMENT '水电验收',
+  `cs13` int(8) NOT NULL DEFAULT '0' COMMENT '保洁',
+  `cs14` int(8) NOT NULL,
+  `cs15` int(8) NOT NULL,
+  `cs16` int(8) NOT NULL,
+  `cs17` int(8) NOT NULL,
+  `cs18` int(8) NOT NULL,
+  `cs19` int(8) NOT NULL,
+  `cs20` int(8) NOT NULL,
+  `cs21` int(8) NOT NULL,
+  `cs22` int(8) NOT NULL,
+  `cs23` int(8) NOT NULL,
+  `cs24` int(8) NOT NULL,
+  `cs25` int(8) NOT NULL,
+  `cs26` int(8) NOT NULL,
+  PRIMARY KEY (`dcid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='装修进度统计表';
+
 DROP TABLE IF EXISTS `decorationdesignerdepartmentrank`;
 CREATE TABLE `decorationdesignerdepartmentrank` (
   `dddrId` int(11) NOT NULL AUTO_INCREMENT,

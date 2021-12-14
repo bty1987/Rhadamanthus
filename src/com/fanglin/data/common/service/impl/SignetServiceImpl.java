@@ -206,6 +206,27 @@ public class SignetServiceImpl implements SignetService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int selectSignet(SignetVO signetVO) throws FLException {
+
+		SignetPO signetPO = signetDao.get(signetVO.getSid());
+
+		if (signetPO == null) {
+			throw new FLException(130045, "签章不存在");
+		}
+
+		if (signetPO.getStatus() != SignetPO.STATUS_CONFIRM_INT) {
+			throw new FLException(130047, "签章状态不可操作");
+		}
+
+		signetPO.setSignid(signetVO.getSignid());
+
+		signetDao.update(signetPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int cancelSignet(SignetVO signetVO) throws FLException {
 
 		SignetPO signetPO = signetDao.get(signetVO.getSid());
@@ -220,4 +241,32 @@ public class SignetServiceImpl implements SignetService {
 
 		return 0;
 	}
+	
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int copySignet(SignetVO signetVO) throws FLException {
+
+		SignetPO signetPO = signetDao.get(signetVO.getSid());
+
+		if (signetDao.countSignet(signetVO.getNo()) > 0) {
+			throw new FLException(130046, "签章已存在");
+		}
+		SignetPO signetPO2 = new SignetPO();
+		signetPO2.setNo(signetVO.getNo());
+		signetPO2.setName(signetVO.getName());
+		signetPO2.setKeyword(signetPO.getKeyword());
+		signetPO2.setType(signetPO.getType());
+		signetPO2.setPath(signetPO.getPath());
+		signetPO2.setAuthurl(signetPO.getAuthurl());
+		signetPO2.setSignno(signetPO.getSignno());
+		signetPO2.setToken(signetPO.getToken());
+		signetPO2.setCompany(signetPO.getCompany());
+		signetPO2.setSignid(signetPO.getSignid());
+		signetPO2.setStatus(signetPO.getStatus());
+		
+		signetDao.save(signetPO2);
+		
+		return 0;
+	}
+	
 }

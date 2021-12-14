@@ -13,14 +13,44 @@ package com.fanglin.kingdee.handle;
 
 import org.springframework.stereotype.Repository;
 
+import com.fanglin.core.interceptor.FLException;
+
 @Repository("kandleDao")
 public class Dao {
 
-	public void save(Bean bean) throws Exception {
+	public String save(Bean bean) throws FLException {
+
+		if (!Kandle.Login())
+			return "";
+
+		return Kandle.Save(bean.getFormId(), bean.param());
+	}
+
+	public void audit(Bean bean, String no) throws FLException {
 
 		if (!Kandle.Login())
 			return;
 
-		Kandle.Save(bean.getFormId(), bean.param());
+		String sContent = "{\"Numbers\":[\"" + no + "\"]}";
+
+		Kandle.Submit(bean.getFormId(), sContent);
+
+		Kandle.Audit(bean.getFormId(), sContent);
+
+	}
+
+	public void saveAudit(Bean bean) throws FLException {
+
+		if (!Kandle.Login())
+			return;
+
+		String no = Kandle.Save(bean.getFormId(), bean.param());
+
+		String sContent = "{\"Numbers\":[\"" + no + "\"]}";
+
+		Kandle.Submit(bean.getFormId(), sContent);
+
+		Kandle.Audit(bean.getFormId(), sContent);
+
 	}
 }

@@ -14,25 +14,44 @@ package com.fanglin.kingdee.ko;
 import java.io.Serializable;
 import java.util.List;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fanglin.kingdee.handle.Bean;
 
 public class OtherPayableBillKO extends Bean implements Serializable {
 
 	private static final long serialVersionUID = -3484866888399559931L;
 
-	public static String FormId = "AP_OtherPayable";
+	public static String FormId = "AP_OtherPayable"; //其他应付单
 	
+	@JSONField(ordinal=1)
 	private String FDATE; //业务日期&收款日期
 	
+	@JSONField(ordinal=2)
+	private OrganizationKO FBillTypeID; //单据类型
+	
+	@JSONField(ordinal=3)
 	private String FCONTACTUNITTYPE; //往来单位类型
 	
+	@JSONField(ordinal=4)
 	private OrganizationKO FCONTACTUNIT; //往来单位&单号
 	
-	private OrganizationKO F_ora_Base; //客户
+	@JSONField(ordinal=5)
+	private OrganizationKO FSETTLEORGID; //结算组织
 	
-	private OrganizationKO F_SFKD_Hslb; //核算类别&等级
+	@JSONField(ordinal=6)
+	private OrganizationKO FPAYORGID; //付款组织
 	
-	private List<OtherPayableBillItemKO> FEntity; //明细
+	@JSONField(ordinal=7)
+	private OrganizationKO F_ORA_BASE; //客户
+	
+	@JSONField(ordinal=8)
+	private OrganizationKO F_ORA_BASE1; //核算类别&等级
+	
+	@JSONField(ordinal=9)
+	private OrganizationKO F_SFKD_BASE5; //工程款项类型
+	
+	@JSONField(ordinal=10)
+	private List<OtherPayableBillItemKO> FENTITY; //明细
 	
 	public OtherPayableBillKO() {
 		super();
@@ -45,6 +64,14 @@ public class OtherPayableBillKO extends Bean implements Serializable {
 
 	public void setFDATE(String fDATE) {
 		FDATE = fDATE;
+	}
+
+	public OrganizationKO getFBillTypeID() {
+		return FBillTypeID;
+	}
+
+	public void setFBillTypeID(OrganizationKO fBillTypeID) {
+		FBillTypeID = fBillTypeID;
 	}
 
 	public String getFCONTACTUNITTYPE() {
@@ -63,38 +90,70 @@ public class OtherPayableBillKO extends Bean implements Serializable {
 		FCONTACTUNIT = fCONTACTUNIT;
 	}
 
-	public OrganizationKO getF_ora_Base() {
-		return F_ora_Base;
+	public OrganizationKO getFSETTLEORGID() {
+		return FSETTLEORGID;
 	}
 
-	public void setF_ora_Base(OrganizationKO f_ora_Base) {
-		F_ora_Base = f_ora_Base;
+	public void setFSETTLEORGID(OrganizationKO fSETTLEORGID) {
+		FSETTLEORGID = fSETTLEORGID;
 	}
 
-	public OrganizationKO getF_SFKD_Hslb() {
-		return F_SFKD_Hslb;
+	public OrganizationKO getFPAYORGID() {
+		return FPAYORGID;
 	}
 
-	public void setF_SFKD_Hslb(OrganizationKO f_SFKD_Hslb) {
-		F_SFKD_Hslb = f_SFKD_Hslb;
+	public void setFPAYORGID(OrganizationKO fPAYORGID) {
+		FPAYORGID = fPAYORGID;
 	}
 
-	public List<OtherPayableBillItemKO> getFEntity() {
-		return FEntity;
+	public OrganizationKO getF_ORA_BASE() {
+		return F_ORA_BASE;
 	}
 
-	public void setFEntity(List<OtherPayableBillItemKO> fEntity) {
-		FEntity = fEntity;
+	public void setF_ORA_BASE(OrganizationKO f_ORA_BASE) {
+		F_ORA_BASE = f_ORA_BASE;
 	}
 
-	public OtherPayableBillKO ptk(String collectTime, String orderId, String grade, List<OtherPayableBillItemKO> items) {
+	public OrganizationKO getF_ORA_BASE1() {
+		return F_ORA_BASE1;
+	}
+
+	public void setF_ORA_BASE1(OrganizationKO f_ORA_BASE1) {
+		F_ORA_BASE1 = f_ORA_BASE1;
+	}
+
+	public OrganizationKO getF_SFKD_BASE5() {
+		return F_SFKD_BASE5;
+	}
+
+	public void setF_SFKD_BASE5(OrganizationKO f_SFKD_BASE5) {
+		F_SFKD_BASE5 = f_SFKD_BASE5;
+	}
+
+	public List<OtherPayableBillItemKO> getFENTITY() {
+		return FENTITY;
+	}
+
+	public void setFENTITY(List<OtherPayableBillItemKO> fENTITY) {
+		FENTITY = fENTITY;
+	}
+
+	public OtherPayableBillKO ptk(String collectTime, String billType, String orderId, String settleCompany, String payCompany,String grade, String paymentType, List<OtherPayableBillItemKO> items) {
 
 		this.FDATE = collectTime;
+		this.FBillTypeID = new OrganizationKO(billType);
 		this.FCONTACTUNITTYPE = "BD_Customer";
 		this.FCONTACTUNIT = new OrganizationKO(orderId);
-		this.F_ora_Base = new OrganizationKO(orderId);
-		this.F_SFKD_Hslb = new OrganizationKO(grade);
-		this.FEntity = items;
+		this.FSETTLEORGID = new OrganizationKO(settleCompany);
+		this.FPAYORGID = new OrganizationKO(payCompany);
+		this.F_ORA_BASE = new OrganizationKO(orderId);
+		this.F_ORA_BASE1 = new OrganizationKO(grade);
+		
+		if (paymentType != null) {
+			this.F_SFKD_BASE5 = new OrganizationKO(paymentType);
+		}
+		
+		this.FENTITY = items;
 
 		return this;
 	}

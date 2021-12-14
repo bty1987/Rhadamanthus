@@ -12,13 +12,19 @@ public class ReceiptVO implements java.io.Serializable {
 	
 	private Long prid;
 	
+	private Long rtid;
+	
 	private String no;
 	
 	private String name;
 	
+	private String orderId;
+	
 	private Short type;
 	
 	private Short paymentType;
+	
+	private String paymentName;
 	
 	private Short receiptType;
 	
@@ -48,6 +54,14 @@ public class ReceiptVO implements java.io.Serializable {
 		this.prid = prid;
 	}
 
+	public Long getRtid() {
+		return rtid;
+	}
+
+	public void setRtid(Long rtid) {
+		this.rtid = rtid;
+	}
+
 	public String getNo() {
 		return no;
 	}
@@ -64,6 +78,14 @@ public class ReceiptVO implements java.io.Serializable {
 		this.name = name;
 	}
 
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
 	public Short getType() {
 		return type;
 	}
@@ -78,6 +100,14 @@ public class ReceiptVO implements java.io.Serializable {
 
 	public void setPaymentType(Short paymentType) {
 		this.paymentType = paymentType;
+	}
+
+	public String getPaymentName() {
+		return paymentName;
+	}
+
+	public void setPaymentName(String paymentName) {
+		this.paymentName = paymentName;
 	}
 
 	public Short getReceiptType() {

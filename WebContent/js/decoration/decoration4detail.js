@@ -35,6 +35,9 @@ jQuery(function ($) {
 		serviceItems: {},
 		decorationActivityItems: {},
 		paymentItems: {},
+		paymentTypes: [],
+
+		customerTypes : {},
 
 		vRepeatFlg: false,
 		cRepeatFlg: false,
@@ -126,6 +129,14 @@ jQuery(function ($) {
     decorationDetail.customerItems.address = com.focusPage("#address", "#customerChangeModal");
     decorationDetail.customerItems.relationshipType = com.focusPage("#relationshipType", "#customerChangeModal");
     decorationDetail.customerItems.addphone = com.focusPage("#addphone", "#customerChangeModal");
+    decorationDetail.customerItems.type = com.focusPage("#type", "#customerChangeModal");
+    decorationDetail.customerItems.companyNo = com.focusPage("#companyNo", "#customerChangeModal");
+    decorationDetail.customerItems.companyName = com.focusPage("#companyName", "#customerChangeModal");
+    decorationDetail.customerItems.companyAddr = com.focusPage("#companyAddr", "#customerChangeModal");
+    decorationDetail.customerItems.companyPhone = com.focusPage("#companyPhone", "#customerChangeModal");
+    decorationDetail.customerItems.companyBank = com.focusPage("#companyBank", "#customerChangeModal");
+    decorationDetail.customerItems.companyBankno = com.focusPage("#companyBankno", "#customerChangeModal");
+
     decorationDetail.customerItems.savePhoneBtn = com.focusPage("#savePhoneBtn", "#customerChangeModal");
 
     decorationDetail.btnViewFlg = params.btnViewFlg == false ? true : false;
@@ -136,6 +147,10 @@ jQuery(function ($) {
         $.each(res.relationshipType, function (i, k) {
             decorationDetail.relationshipTypes.push(k.key);
         });
+        $.each(res.customerType, function (i,v) {
+            decorationDetail.customerTypes[v.key] = v.value;
+        });
+        decorationDetail.customerItems.type.bindData(res.customerType, "key", "value", false);
         decorationDetail.customerItems.relationshipType.bindData(decorationDetail.relationshipTypes, "key", "value", false);
 
     }, null, false);
@@ -577,7 +592,34 @@ jQuery(function ($) {
         decorationDetail.applyDecorationActivityItemModal.modal("show");
     });
 
+    com.focusPage("#companyAd").hide();
+    com.focusPage("#comNo").hide();
+
+    decorationDetail.customerItems.type.change(function(){
+
+        var type = $(this).val();
+
+        com.focusPage("#comName").text(decorationDetail.customerTypes[type]+"名称");
+        com.focusPage("#comPhone").text(decorationDetail.customerTypes[type]+"电话");
+        if(type == 1){
+            $("#phoneList").parent().attr("style", "height: 815px;");
+            com.focusPage(".companyitem", "#customerChangeModal").show();
+        } else {
+            $("#phoneList").parent().attr("style", "height: 715px;");
+            com.focusPage(".companyitem", "#customerChangeModal").hide();
+        }
+
+    });
+
+    decorationDetail.modal = com.focusPage("#customerChangeModal").on('hide.bs.modal', function(e){
+        com.clearValidator();
+        com.cleanItems(decorationDetail.customerItems);
+
+        com.focusPage(".companyitem", "#customerChangeModal").hide();
+    });
+
     com.focusPage('#customerChangeBtn').on("click", function () {
+
         com.clearValidator();
         com.post(api.data.queryCustomerById, {"customer.cid": decorationDetail.customer.cid}, function (res) {
             res = res.customer;
@@ -592,6 +634,22 @@ jQuery(function ($) {
             decorationDetail.customerItems.address.val(res.address);
             decorationDetail.customerItems.relationshipType.val(res.relationshipType);
             decorationDetail.customerItems.gender.prop('checked', com.genderType[res.gender]);
+            decorationDetail.customerItems.type.val(res.type);
+            decorationDetail.customerItems.companyNo.val(res.companyNo);
+            decorationDetail.customerItems.companyName.val(res.companyName);
+            decorationDetail.customerItems.companyAddr.val(res.companyAddr);
+            decorationDetail.customerItems.companyPhone.val(res.companyPhone);
+            decorationDetail.customerItems.companyBank.val(res.companyBank);
+            decorationDetail.customerItems.companyBankno.val(res.companyBankno);
+
+            com.focusPage("#comName").text(decorationDetail.customerTypes[res.type]+"名称");
+            com.focusPage("#comPhone").text(decorationDetail.customerTypes[res.type]+"电话");
+            if(res.type == 1) {
+                $("#phoneList").parent().attr("style", "height: 815px;");
+                com.focusPage(".companyitem", "#customerChangeModal").show();
+            } else {
+                $("#phoneList").parent().attr("style", "height: 715px;");
+            }
         });
         com.post(api.data.queryCustomerPhoneByCid, {"customerPhone.cid": decorationDetail.customer.cid}, function (res) {
             showPhone('phoneList', res.customerPhones);
@@ -684,9 +742,10 @@ jQuery(function ($) {
 
     com.focusPage("#btnOtherPayment").on('click', function (res) {
 
-        com.post(api.ds.decoration, {}, function (res) {
-        	decorationDetail.paymentItems.otherPaymentType.bindData(res.paymentType, "key", "value", true);
-        });
+        queryPaymentType({"paymentType.type": 1, "paymentType.atttype": 0});
+        queryPaymentType({"paymentType.type": 1, "paymentType.atttype": 3});
+
+        decorationDetail.paymentItems.otherPaymentType.bindData(decorationDetail.paymentTypes, "ptid", "name");
 
         decorationDetail.otherPaymentModal.modal("show");
     });
@@ -747,13 +806,10 @@ jQuery(function ($) {
             return;
         }
 
-        var type = decorationDetail.paymentItems.otherPaymentType.val().split('-');
-
         var options = {
             "decorationPayment.decoration.orderId": decorationDetail.decorationOrderId,
             "decorationPayment.paymentType": decorationDetail.paymentItems.otherPaymentType.find("option:selected").text(),
-            "decorationPayment.oneType": type[0],
-            "decorationPayment.twoType": type[1],
+            "decorationPayment.ptid": decorationDetail.paymentItems.otherPaymentType.val(),
             "decorationPayment.referMoney": decorationDetail.paymentItems.otherPayment.val()
         };
 
@@ -892,6 +948,10 @@ jQuery(function ($) {
 		decorationDetail.printQuotationCNModal.modal("show");
 	});
 
+    com.focusPage("#btnPrintPresignInfo").on('click', function (res) {
+        com.popup("打印预签", api.index.protationOutputIndex.url, null, null, true);
+    });
+
 	initWizard(decorationDetail);
 
 	decorationUtils.initBaseInfo(decorationDetail.decorationOrderId, api.decoration.queryDecorationForCommonByOrderId, function (decoration) {
@@ -924,7 +984,7 @@ jQuery(function ($) {
 			$.each(res.decorationBusitypes,function(intex,value){
 				if (value.status == 0){
 					decorationDetail.decorationBusitypes.push(value);
-				} else if (value.dbid == decoration.dbid){
+				} else if (value.dbid == decoration.busitype){
 					decorationDetail.decorationBusitypes.push(value);
 				}
 			});
@@ -1036,6 +1096,9 @@ jQuery(function ($) {
                 case "quotation":
                     quotationUtils.loadQuotationDetail();
                     break;
+                case "presign"://预签信息
+                    decorationUtils.initPresignDetail(decorationDetail.decorationOrderId);
+                    break;
                 case "picture":
                     decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", "contractFiles", decorationDetail.decorationOrderId);
                     break;
@@ -1075,6 +1138,9 @@ jQuery(function ($) {
 
                 case "quotation":
                     quotationUtils.loadQuotationDetail();
+                    break;
+                case "presign"://预签信息
+                    decorationUtils.initPresignDetail(decorationDetail.decorationOrderId);
                     break;
                 case "picture":
                     decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", "contractFiles", decorationDetail.decorationOrderId);
@@ -1297,10 +1363,11 @@ jQuery(function ($) {
             return;
         }
         
-        var url;
+        var url = api.data.updateCustomer;;
         var options = {
             "customer.cid": decorationDetail.customer.cid,
             "customer.name": decorationDetail.customerItems.customerName.val(),
+            "customer.address": decorationDetail.customerItems.address.val(),
             "customer.gender": com.genderType[decorationDetail.customerItems.gender.prop("checked")],
             "customer.identity": decorationDetail.customerItems.identity.val(),
             "customer.officer": decorationDetail.customerItems.officer.val(),
@@ -1309,10 +1376,14 @@ jQuery(function ($) {
             "customer.wechat": decorationDetail.customerItems.wechat.val(),
             "customer.email": decorationDetail.customerItems.email.val(),
             "customer.relationshipType": decorationDetail.customerItems.relationshipType.val(),
-            "customer.address": decorationDetail.customerItems.address.val()
+            "customer.type": decorationDetail.customerItems.type.val(),
+            "customer.companyNo": decorationDetail.customerItems.companyNo.val(),
+            "customer.companyName": decorationDetail.customerItems.companyName.val(),
+            "customer.companyAddr": decorationDetail.customerItems.companyAddr.val(),
+            "customer.companyPhone": decorationDetail.customerItems.companyPhone.val(),
+            "customer.companyBank": decorationDetail.customerItems.companyBank.val(),
+            "customer.companyBankno": decorationDetail.customerItems.companyBankno.val(),
         };
-
-        url = api.data.updateCustomer;
 
         com.post(url, options, function (res) {
             com.showAlert(com.info, "操作成功");
@@ -1361,4 +1432,13 @@ jQuery(function ($) {
             com.focusPage("#" + idName).bindData(res.receiveType, "key", "value", false);
         });
     }
+
+    function queryPaymentType(options){
+        com.post(api.data.queryPaymentType, options, function (res) {
+            $.each(res.paymentTypes, function (i, v) {
+                decorationDetail.paymentTypes.push(v);
+            });
+        }, null, false);
+    }
+
 });

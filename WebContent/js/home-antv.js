@@ -416,12 +416,29 @@ $(function () {
         com._post_(api.home.library,{
             "redis": 0,
             "api": "system.login.weather",
-            "loginTime": window.loginTime
+            "loginTime": window.loginTime,
+            "code": params.company.code,
         }, function(res){
             
             if(typeof res == 'string') var data = JSON.parse(res)
             else if(typeof res == 'object') var data = res
+            
+            var v = data;
+            
+            console.log(v)
+            
+            var $item = $('<div></div>').addClass('col-sm-12 message-bar weather item center').appendTo($weatherList);
+            var $title = $('<span></span>').addClass('blue bigger-200 weather title').text(v.name).appendTo($item);
+            $('<div class="hr hr5 hr-dotted"></div>').appendTo($item);
+            var $content = $('<span></span>').addClass('grey bigger-120').html(v.weather.text).appendTo($item);
+            $('<br></br>').appendTo($item);
+            var $content = $('<span></span>').addClass('grey bigger-120').html('温度: ' + v.weather.temp + '°C' + '&nbsp;&nbsp;').appendTo($item);
+            var $content = $('<span></span>').addClass('grey bigger-120').html('湿度: ' + v.weather.rh + "%" + '&nbsp;&nbsp;').appendTo($item);
+            $('<br></br>').appendTo($item);
+            var $content = $('<span></span>').addClass('grey bigger-120').html(v.weather.wind_dir + v.weather.wind_class).appendTo($item);
 
+            return false;
+            
             $.each(data, function(i, v){
                 var $item = $('<div></div>').addClass('col-sm-12 message-bar weather item').appendTo($weatherList);
                 var $title = $('<span></span>').addClass('blue bigger-160 weather title').text(v.name).appendTo($item);

@@ -42,12 +42,16 @@ public class SignetPO implements Serializable, Signet {
 
 	private short status;
 
+	private String signid;
+
 	private String signno;
 
 	private String token;
 
 	private String authurl;
 
+	private short type;
+	
 	private int company;
 
 	public SignetPO() {
@@ -119,6 +123,16 @@ public class SignetPO implements Serializable, Signet {
 		this.company = company;
 	}
 
+	@Column(name = "signid")
+	public String getSignid() {
+		return signid;
+	}
+
+	public void setSignid(String signid) {
+		this.signid = signid;
+	}
+
+	@Column(name = "signno")
 	public String getSignno() {
 		return signno;
 	}
@@ -127,6 +141,7 @@ public class SignetPO implements Serializable, Signet {
 		this.signno = signno;
 	}
 
+	@Column(name = "token")
 	public String getToken() {
 		return token;
 	}
@@ -135,12 +150,22 @@ public class SignetPO implements Serializable, Signet {
 		this.token = token;
 	}
 
+	@Column(name = "authurl")
 	public String getAuthurl() {
 		return authurl;
 	}
 
 	public void setAuthurl(String authurl) {
 		this.authurl = authurl;
+	}
+
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
 	}
 
 	@Override

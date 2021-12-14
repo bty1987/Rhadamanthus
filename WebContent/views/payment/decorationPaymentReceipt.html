@@ -2,23 +2,46 @@
 <html>
 <head>
     <title>收据</title>
+    
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    
+    <link rel="stylesheet" href="../../assets/ace/css/bootstrap.min.css" />
+    
     <script src="../../assets/altogether/js/jquery-2.0.3.min.js"></script>
     <script src="../../assets/ace/js/jquery.mobile.custom.min.js"></script>
     <script src="../../assets/ace/js/bootstrap.min.js"></script>
     <script src="../../assets/ace/js/jquery.gritter.min.js"></script>
     <script src="../../assets/ace/js/ace-elements.js"></script>
     <script src="../../assets/ace/js/ace.js"></script>
+    
+    <script src="../../assets/altogether/js/html2canvas.js"></script>
+    <script src="../../assets/altogether/js/jspdf.min.js"></script>
+    <script src="../../assets/altogether/js/jquery.qrcode.min.js"></script>
 
     <style type="text/css">
         .PageNext{page-break-after: always;}
     </style>
 
 </head>
-<body style="background-color: #ffffff">
+<body class="col-md-12" style="background-color: #ffffff; font-size: 16px;">
+
     <div id="decorationPaymentReceipt"></div>
+
+    <div id="signBtns" style="margin-top: 5px;">
+        <button class="btn-primary" id="createSign">生成电子收据</button>
+        <button class="btn-warning" id="customerSign">客户签</button>
+        <button class="btn-success" id="companySign">公司签</button>
+        <button class="btn-info" id="customerSignCode">二维客签</button>
+        <button class="btn-danger" id="customerSignSend">客签通知</button>
+    </div>
+    
+    <div class="modal fade" id="paymentContractModal" tabindex="-1"></div>
+
+    <div id="paymentContractQrcodeModal"></div>
+    
     <script>
-        parent.$.loadScript(['js/payment/decorationPaymentReceipt.js'], "../../", window.frameElement, $);
+        parent.$.loadScript(['js/utils/paymentUtils.js', 'js/payment/decorationPaymentReceipt.js'], "../../", window.frameElement, $);
     </script>
+    
 </body>
 </html>

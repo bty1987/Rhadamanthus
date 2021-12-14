@@ -107,6 +107,8 @@ public class DepartmentDaoImpl extends DaoImpl<DepartmentPO> implements Departme
 					query.add(query.getCriterion("company", Integer.valueOf(filter.getData()), filter.getOp()));
 				} else if("status".equals(filter.getField())) {
 					query.add(query.getCriterion("status", Short.valueOf(filter.getData()), filter.getOp()));
+				}else if("isdet".equals(filter.getField())) {
+					query.add(query.getCriterion("isdet", Short.valueOf(filter.getData()), filter.getOp()));
 				}
 			}
 		}

@@ -307,12 +307,13 @@ $.extend(api, {
         queryPurchaseBySid: {url: "queryPurchaseBySid.do"},
         
         pageOccessories: {url: "pageOccessories.do"},
+        pageOccessoriesForSupplier: {url: "pageOccessoriesForSupplier.do"},
         queryOccessoriesItemByAid: {
             url: "queryOccessoriesItemByAid.do",
             type:"query",
             tranargs:[{
                 result:"occessoriesItems",
-                args:["num"]
+                args:["num","refnum"]
             },{
                 result:"occessoriesItems-goods",
                 args:["purchase", "selling", "pieceNum"]
@@ -332,7 +333,17 @@ $.extend(api, {
                 args: ["occessoriesItem.num"]
             }
         },
+        bindOccessories: {
+            url: "bindOccessories.do",
+            type: "update",
+            tranargs: {
+                args: ["occessories.num"]
+            }
+        },
+
         updateOccessoriesForStatus: {url: "updateOccessoriesForStatus.do"},
+        confirmOccessories: {url: "confirmOccessories.do"},
+        balanceOccessories: {url: "balanceOccessories.do"},
         updateOccessoriesItem: {
             url: "updateOccessoriesItem.do",
             type: "update",
@@ -340,6 +351,15 @@ $.extend(api, {
                 args: ["occessoriesItem.num"]
             }
         },
+
+        refundOccessoriesItem: {
+            url: "refundOccessoriesItem.do",
+            type: "update",
+            tranargs: {
+                args: ["occessoriesItem.num","occessoriesItem.refnum"]
+            }
+        },
+
         deleteOccessoriesItem: {url: "deleteOccessoriesItem.do"},
     }
 });

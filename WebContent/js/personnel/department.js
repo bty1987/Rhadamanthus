@@ -1,4 +1,4 @@
-jQuery(function ($) {
+﻿jQuery(function ($) {
 
     var department = {
 
@@ -11,6 +11,8 @@ jQuery(function ($) {
             kiname : com.focusPage("#kiname"),
             manager : com.focusPage("#manager"),
             comment : com.focusPage("#des"),
+            isdet : com.focusPage("#isdet"),//是否定岗
+            
         },
         modals : {
             modal : com.focusPage("#deptModal")
@@ -75,7 +77,6 @@ jQuery(function ($) {
             var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
             var $span = $('<span></span>').addClass('lbl isOrNot');
             var $btnDutment = $('<a></a>').addClass('btn btn-minier btn-blue').html('定岗信息');
-            
             var propertyArr = [
                 ["编号:", v.no, "grey"],
                 ["所属分区:", v.fatherDept.name ==null?'无':v.fatherDept.name, "grey"],
@@ -83,6 +84,7 @@ jQuery(function ($) {
                 ["金蝶编号:", com.checkNull(v.kino, "无"), "grey"],
                 ["金蝶名称:", com.checkNull(v.kiname, "无"), "grey"],
                 ["管理人员:", com.checkNull(v.manager.userName, "无"), "grey"],
+                ["是否定岗:", com.checkNull(v.isdet == 1?"定岗":"开放"), "grey"],
                 ["描述:", v.comment  == ""?'无': v.comment , "grey"]
             ];
 
@@ -135,7 +137,7 @@ jQuery(function ($) {
     })();
 
     var searcher = new Searcher();
-    var _condArr = ['personel-dept-name', 'personel-dept-status', 'personel-dept-type'];
+    var _condArr = ['personel-dept-name', 'personel-dept-status', 'personel-dept-type', 'personel-dept-isdet'];
     
     var postData = type == 'dept' ? 'designDeptPostData' : 'dutmentDeptPostData';
     
@@ -175,6 +177,7 @@ jQuery(function ($) {
         department.items.kino.val(dept.kino);
         department.items.kiname.val(dept.kiname);
         department.items.comment .val(dept.comment);
+        department.items.isdet.val(dept.isdet);
         if(dept.manager) com.updateTypeahead("manager", dept.manager.userId, dept.manager.currentName);
 
         department.modals.modal.modal("show");
@@ -193,7 +196,6 @@ jQuery(function ($) {
     }
 
     function saveData() {
-
         if (com.validate("deptModal")) {
             return false;
         }
@@ -206,15 +208,17 @@ jQuery(function ($) {
             'dept.kino': department.items.kino.val(),
             'dept.kiname': department.items.kiname.val(),
             'dept.manager.userId': com.typeahead("manager"),
-            'dept.comment': department.items.comment.val()
+            'dept.comment': department.items.comment.val(),
+            'dept.isdet': department.items.isdet.val()
         };
 
         department.editFlg ? (url=api.communion.updateDepartment,options['dept.did'] = department.items.did) : (url = api.communion.addDepartment);
-
+        console.log(options)
         com.post(url, options, function (res) {
             department.modals.modal.modal("hide");
             searcher.doSearch();
         });
     }
+    
 
 });

@@ -6,7 +6,8 @@ var selectionDetail = (function(){
             saveSelectionBtn: com.focusPage('#saveSelectionBtn'),
             returnBtn: com.focusPage('#returnBtn'),
             addSelectionItemBtn: com.focusPage('#addSelectionItemBtn'),
-            addSelectionItemCancelBtn: com.focusPage('#addSelectionItemCancelBtn')
+            addSelectionItemCancelBtn: com.focusPage('#addSelectionItemCancelBtn'),
+			printFinanceBtn: com.focusPage('#printFinanceBtn')
         },
         modals: {
             quotationItemSoodsModal: com.focusPage('#quotationItemSoodsModal')
@@ -24,6 +25,13 @@ var selectionDetail = (function(){
             addReduceMinusTotal: com.focusPage('#addReduceMinusTotal')
         },
         initSettingBtns: function() {
+			selection.btns.printFinanceBtn.click(function() {
+				com.post(api.quotation.querySelectionByOrderId, {"selection.orderId": params.decorationOrderId}, function(res) {
+				    params.supplierPage = selectionItem.pageType == "supplier" ? true : false;
+				    params.selectionOrderId = res.selection.orderId;
+				    com.popup("打印选材", api.index.selectionOutputIndex.url, null, null, true);
+				}, null, false);
+			}),
             selection.btns.saveSelectionBtn.bindClick(function() {
                 selection.calculateAllDomainTotal();
                 com.post(api.quotation.updateSelectionForAdvance, selection.basicParams, function(a){
@@ -162,7 +170,7 @@ var selectionDetail = (function(){
 
             var soodsSeacher = new Searcher();
 
-            soodsSeacher.init(["data-aoods-name"], "condList", api.data.pageSoodsByQiid, function(data) {
+            soodsSeacher.init(["data-soods-name"], "condList", api.data.pageSoodsByQiid, function(data) {
                 displayFunc.init("resultList", data);
             }, "pagenation", "selectionItemSoodsPostData", {"soods.quotationItem.qiid": quotationItemId}, false, null, null);
 
@@ -177,12 +185,17 @@ var selectionDetail = (function(){
             var num = selection.nowEditQuote.find('.num').text();
             var price = selection.nowEditQuote.next().attr('data-price');
             var total = selection.nowEditQuote.parents('.widget-box').attr('data-total');
-
+            
             if (num === '0') {
                 com.showAlert(com.warning, '工程量为空');
                 return false;
             }
-
+            
+            if(selling > selection.quotationItem.preprice){
+//                com.showAlert(com.warning, "选材结算价高于项目单价");
+//                return false;
+            }
+            
             selection.calculatePrice(selling, num);
             selection.calculateAllDomainTotal();
 
@@ -301,6 +314,7 @@ var selectionDetail = (function(){
 
             $btnSelection.click(function (e) {
                 selection.nowEditQuote = $quoteItemLi;
+                selection.quotationItem = data;
                 goods.GoodsPage(data.quotationItemId);
                 selection.modals.quotationItemSoodsModal.modal("show");
             });

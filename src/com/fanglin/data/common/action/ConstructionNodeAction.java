@@ -9,11 +9,10 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import com.fanglin.data.common.service.ConstructionNodeService;
-import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.utils.SystemConfig;
+import com.fanglin.data.common.service.ConstructionNodeService;
+import com.fanglin.data.common.vo.ConstructionNodeVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -58,10 +57,6 @@ public class ConstructionNodeAction extends BaseListAction {
 	@Action(value = "addConstructionNode", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addConstructionNode() throws FLException {
 
-		if (SystemConfig.getString("communion") == null) {
-			throw new FLException(-1, "无操作权限");
-		}
-
 		constructionNodeService.addConstructionNode(constructionNode);
 
 		return SUCCESS;
@@ -70,10 +65,6 @@ public class ConstructionNodeAction extends BaseListAction {
 	@Action(value = "updateConstructionNode", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateConstructionNode() throws FLException {
 
-		if (SystemConfig.getString("communion") == null) {
-			throw new FLException(-1, "无操作权限");
-		}
-
 		constructionNodeService.updateConstructionNode(constructionNode);
 
 		return SUCCESS;
@@ -81,10 +72,6 @@ public class ConstructionNodeAction extends BaseListAction {
 
 	@Action(value = "updateConstructionNodeForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateConstructionNodeForStatus() throws FLException {
-
-		if (SystemConfig.getString("communion") == null) {
-			throw new FLException(-1, "无操作权限");
-		}
 
 		constructionNodeService.updateConstructionNodeForStatus(constructionNode);
 

@@ -15,4 +15,5 @@ public interface EmemberService {
 
 	public int addEmember(EmemberVO ememberVO, String securityCode, String verifyCode) throws FLException;
 
+	public void deleteEmember(EmemberVO emember) throws FLException;
 }

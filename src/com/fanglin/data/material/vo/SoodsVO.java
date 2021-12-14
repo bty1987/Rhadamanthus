@@ -7,22 +7,24 @@ import com.fanglin.data.quotation.vo.QuotationItemVO;
 public class SoodsVO implements Serializable {
 
 	private static final long serialVersionUID = 7947027665683137145L;
-	
+
 	private Long sid;
-	
+
 	private GoodsVO goods;
-	
+
+	private Long qiid;
+
 	private QuotationItemVO quotationItem;
-	
+
 	private Integer num;
-	
+
 	private Short status;
-	
+
 	private Integer company;
-	
+
 	private Integer selling;
-	
-	public SoodsVO(){
+
+	public SoodsVO() {
 		super();
 	}
 
@@ -46,6 +48,14 @@ public class SoodsVO implements Serializable {
 
 	public void setGoods(GoodsVO goods) {
 		this.goods = goods;
+	}
+
+	public Long getQiid() {
+		return qiid;
+	}
+
+	public void setQiid(Long qiid) {
+		this.qiid = qiid;
 	}
 
 	public QuotationItemVO getQuotationItem() {

@@ -23,9 +23,7 @@ $(function(){
 
 			if(listData && listData.length){
 				$.each(listData,function(i, v){
-					var $liLine = creatLine(v);
-
-					$liLine.appendTo($ul);
+					creatLine(v).appendTo($ul);
 				});
 
 				$ul.appendTo($tableWrap);
@@ -45,15 +43,15 @@ $(function(){
 			var end = new Date(v.endTime);
 
 			var propertyArr = [
-				["类型:", moreNotices.noticeType[v.type], "grey"],
-				["优先级:", moreNotices.noticePriority[v.priority], "green"],
-				["发布人:", v.creater.currentName, "grey"],
-				["开始时间:", v.startTime, "grey"],
-				["结束时间:", v.endTime, "grey"],
-				["公开:", moreNotices.noticeIsPublic[v.isPublic], "blue"],
+                ["发布人:", v.creater.currentName, "grey"],
+				["类型:", moreNotices.noticeType[v.type], "red"],
+				["公开:", moreNotices.noticeIsPublic[v.isPublic], "red"],
+				["优先级:", moreNotices.noticePriority[v.priority], "red"],
+				["状态:", starts <= myDate && end >= myDate ? "有效":"无效", "red"],
+				["开始时间:", v.startTime, "green"],
+				["结束时间:", v.endTime, "green"],
 				["内容:", v.contents, "grey"],
-				["状态:", starts <= myDate && end >= myDate ? "有效":"无效", "blue"],
-				["文件名:", v.fileName == "" || v.fileName == null ? "无" : v.fileName, "red"]
+				["文件名:", v.fileName == "" || v.fileName == null ? "无" : v.fileName, "grey"]
 			];
 
 			$.each(propertyArr, function (index,value) {
@@ -96,9 +94,9 @@ $(function(){
 		};
 	})();
 
-	var _condArr = ['information-notice-theme', 'information-notice-dateTime'];
 	var searcher = new Searcher();
-	searcher.init( _condArr, "condList", api.information.pageNoticeForSeenByType, function(list){
+	
+	searcher.init( ['information-notice-theme', 'information-notice-dateTime'], "condList", api.information.pageNoticeForSeenByType, function(list){
 		displayFunc.init('resultList', list);
 	}, "pagenation", "moreNoticesPostData", {"notice.type" : params["notice.type"]}, false);
 

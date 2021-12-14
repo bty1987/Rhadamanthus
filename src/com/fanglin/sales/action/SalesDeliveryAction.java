@@ -73,7 +73,7 @@ public class SalesDeliveryAction extends BaseListAction {
 	@Action(value = "confirmSalesDeliveryItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String confirmSalesDeliveryItem() throws FLException {
 
-		salesDeliveryService.confirmSalesDeliveryItem(salesDeliveryItem, queryUserId());
+		salesDeliveryService.confirmSalesDeliveryItem(salesDeliveryItems, queryUserId());
 
 		return SUCCESS;
 	}

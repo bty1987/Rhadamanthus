@@ -11,6 +11,8 @@ public class ReceiptTypeVO implements java.io.Serializable {
 	private String no;
 
 	private Short type;
+	
+	private Short fund;
 
 	private Short status;
 
@@ -19,6 +21,10 @@ public class ReceiptTypeVO implements java.io.Serializable {
 	private String kino;
 
 	private String kiname;
+	
+	private String kibalance;
+	
+	private String bankno;
 
 	private String assistant;
 	
@@ -56,6 +62,14 @@ public class ReceiptTypeVO implements java.io.Serializable {
 		this.type = type;
 	}
 
+	public Short getFund() {
+		return fund;
+	}
+
+	public void setFund(Short fund) {
+		this.fund = fund;
+	}
+
 	public Short getStatus() {
 		return this.status;
 	}
@@ -86,6 +100,22 @@ public class ReceiptTypeVO implements java.io.Serializable {
 
 	public void setKiname(String kiname) {
 		this.kiname = kiname;
+	}
+
+	public String getKibalance() {
+		return kibalance;
+	}
+
+	public void setKibalance(String kibalance) {
+		this.kibalance = kibalance;
+	}
+
+	public String getBankno() {
+		return bankno;
+	}
+
+	public void setBankno(String bankno) {
+		this.bankno = bankno;
 	}
 
 	public String getAssistant() {

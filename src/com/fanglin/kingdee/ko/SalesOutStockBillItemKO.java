@@ -10,9 +10,7 @@ public class SalesOutStockBillItemKO implements Serializable {
 	
 	private OrganizationKO FMaterialID; //物料编码
 	
-	private OrganizationKO FUnitID; //库存单位
-	
-	private int FRealQty; //实发数量
+	private float FRealQty; //实发数量
 	
 	private OrganizationKO FStockID; //仓库
 
@@ -28,19 +26,11 @@ public class SalesOutStockBillItemKO implements Serializable {
 		FMaterialID = fMaterialID;
 	}
 
-	public OrganizationKO getFUnitID() {
-		return FUnitID;
-	}
-
-	public void setFUnitID(OrganizationKO fUnitID) {
-		FUnitID = fUnitID;
-	}
-
-	public int getFRealQty() {
+	public float getFRealQty() {
 		return FRealQty;
 	}
 
-	public void setFRealQty(int fRealQty) {
+	public void setFRealQty(float fRealQty) {
 		FRealQty = fRealQty;
 	}
 
@@ -52,12 +42,14 @@ public class SalesOutStockBillItemKO implements Serializable {
 		FStockID = fStockID;
 	}
 
-	public SalesOutStockBillItemKO ptk(String MaterialNo, String unitNo, int num, String stockNo) {
+	public SalesOutStockBillItemKO ptk(String MaterialNo, float num, String stockNo) {
 		
 		this.FMaterialID = new OrganizationKO(MaterialNo);
-		this.FUnitID = new OrganizationKO(unitNo);
-		this.FRealQty = (int) Arith.div(num, 1000.0);
-		this.FStockID = new OrganizationKO(stockNo);
+		this.FRealQty = (float) Arith.div(num, 1000.0);
+		
+		if (stockNo != null) {
+			this.FStockID = new OrganizationKO(stockNo);
+		}
 		
 		return this;
 		

@@ -191,7 +191,7 @@ jQuery(function($) {
         }
         
         com.post(api.quotation.queryQuotationByOrderId, options, function(res){
-            com.focusPage("#quotationNames").bindData(res.quotations, 'qid', 'quotationName');
+            com.focusPage("#quotationNames").bindData(res.quotations, 'qid', 'name');
         });
     });
 
@@ -202,7 +202,7 @@ jQuery(function($) {
         }
 
         com.post(api.quotation.queryQuotationByOrderId, options, function(res){
-            com.focusPage("#quotationData").bindData(res.quotations, 'qid', 'quotationName');
+            com.focusPage("#quotationData").bindData(res.quotations, 'qid', 'name');
         });
     });
     

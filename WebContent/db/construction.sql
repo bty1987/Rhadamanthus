@@ -64,12 +64,14 @@ CREATE TABLE `construction` (
   `cid` int(11) NOT NULL AUTO_INCREMENT,
   `orderId` varchar(15) DEFAULT '',
   `suid` int(11) DEFAULT NULL,
+  `luid` int(11) DEFAULT NULL,
   `schedule` tinyint(1) DEFAULT '0',
   `createTime` timestamp NULL DEFAULT NULL,
   `finishTime` timestamp NULL DEFAULT NULL,
   `startTime` timestamp NULL DEFAULT NULL,
   `endTime` timestamp NULL DEFAULT NULL,
   `accessory` tinyint(1) DEFAULT '0',
+  `lockTime` timestamp NULL DEFAULT NULL,
   `accessoryLimit` bigint(10) NOT NULL DEFAULT '0' COMMENT '辅料上限',
   `salaryLimit` bigint(10) NOT NULL DEFAULT '0' COMMENT '工费上限',
   `accessoryTotal` bigint(10) NOT NULL DEFAULT '0' COMMENT '辅料总额',
@@ -221,7 +223,7 @@ CREATE TABLE `drawline` (
   PRIMARY KEY (`dlId`),
   KEY `indexone` (`orderId`),
   KEY `indexthr` (`status`,`startTime`,`endTime`),
-  KEY `indextwo` (`status`,`applayTime`)
+  KEY `indextwo` (`applayTime`,`status`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='放线表';
 
 DROP TABLE IF EXISTS `inspectiondeduction`;

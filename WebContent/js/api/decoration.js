@@ -23,6 +23,8 @@ $.extend(api.index, {
     decorationFinalSettlementIndex: {url: "/views/decoration/decoration4account.html"},
 
     decorationContractIndex: {url: "/views/decoration/decorationContract.html"},
+
+    decorationSales2print: {url: "/views/decoration/decorationSales2print.html"},
 });
 
 $.extend(api, {decoration: {

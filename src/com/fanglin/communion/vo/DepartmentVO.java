@@ -30,9 +30,7 @@ public class DepartmentVO implements Serializable {
 
 	private String createTime;
 
-	private String comment;
-
-	private Integer company;
+	private Short isdet;
 
 	private Short status;
 
@@ -41,6 +39,10 @@ public class DepartmentVO implements Serializable {
 	private String kiname;
 
 	private UserVO manager;
+
+	private String comment;
+
+	private Integer company;
 
 	public DepartmentVO() {
 		super();
@@ -155,7 +157,16 @@ public class DepartmentVO implements Serializable {
 		this.manager = manager;
 	}
 
+	public Short getIsdet() {
+		return isdet;
+	}
+
+	public void setIsdet(Short isdet) {
+		this.isdet = isdet;
+	}
+
 	public DepartmentVO setBaseInfo(DepartmentPO departmentPO) {
+
 		this.did = departmentPO.getDid();
 		this.no = departmentPO.getNo();
 		this.name = departmentPO.getNo();

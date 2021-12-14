@@ -216,6 +216,34 @@ $.extend(api, {
         pageWorksheet: {url: "pageWorksheet.do", demo: true},
         addWorksheet: {url: "addWorksheet.do", demo: true},
         cancelWorksheet: {url: "cancelWorksheet.do", demo: true},
-        handleWorksheet: {url: "handleWorksheet.do", demo: true}
+        handleWorksheet: {url: "handleWorksheet.do", demo: true},
+
+        pageAwardPurchase: {url: "pageAwardPurchase.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["inprice","baprice","num"]
+            }]
+        },
+        addAwardPurchase:{url:"addAwardPurchase.do",
+            type: "update",
+            tranargs: {
+                args: ["awardPurchase.num"]
+            }
+        },
+        purchaseAwardPurchase:{url:"purchaseAwardPurchase.do",
+            type: "update",
+            tranargs: {
+                args: ["awardPurchase.inprice"]
+            }
+        },
+        balanceAwardPurchase:{url:"balanceAwardPurchase.do",
+            type: "update",
+            tranargs: {
+                args: ["awardPurchase.baprice"]
+            }
+        },
+        instoreAwardPurchase: {url: "instoreAwardPurchase.do", demo: true},
+        queryAwardStockByName: {url: "queryAwardStockByName.do"},
     }
 });

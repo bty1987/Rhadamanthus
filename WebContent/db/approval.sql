@@ -48,8 +48,9 @@ CREATE TABLE `approvalcustomerorigintdecoration` (
   `aid` int(11) NOT NULL COMMENT '审批id',
   `csid` int(11) NOT NULL COMMENT '客源id',
   `type` tinyint(1) NOT NULL COMMENT '类型 0:半包,1:套餐,2:半价,3:满减',
+  `dbid` int(11) NOT NULL,
   `typeness` tinyint(1) NOT NULL,
-  `salesmanType` varchar(32) NOT NULL COMMENT '房屋类别 0:期房,1:现房',
+  `salesmanType` varchar(32) NOT NULL DEFAULT '' COMMENT '房屋类别 0:期房,1:现房',
   `houseType` varchar(32) NOT NULL COMMENT '房屋类别 0:期房,1:现房',
   `houseClass` varchar(32) NOT NULL,
   `resourceType` tinyint(1) NOT NULL COMMENT '资源类型 0:咨询,1:量房',
@@ -264,4 +265,40 @@ CREATE TABLE `approver` (
   `comment` varchar(64) DEFAULT '',
   `company` int(11) NOT NULL,
   PRIMARY KEY (`aid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='审批人';
+
+DROP TABLE IF EXISTS `process`;
+CREATE TABLE `process` (
+  `pid` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) NOT NULL,
+  `no` varchar(4) NOT NULL,
+  `code` varchar(64) NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `company` int(11) NOT NULL,
+  PRIMARY KEY (`pid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='钉钉审批表';
+
+DROP TABLE IF EXISTS `processitem`;
+CREATE TABLE `processitem` (
+  `piid` int(11) NOT NULL AUTO_INCREMENT,
+  `pid` int(11) NOT NULL,
+  `id` varchar(32) NOT NULL,
+  `name` varchar(32) NOT NULL,
+  `form` varchar(16) NOT NULL,
+  `type` varchar(16) NOT NULL,
+  `validate` varchar(64) NOT NULL DEFAULT '',
+  `data` varchar(1024) NOT NULL DEFAULT '',
+  `comment` varchar(512) NOT NULL DEFAULT '',
+  `sort` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`piid`),
+  KEY `indexone` (`pid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='钉钉审批项表';
+
+DROP TABLE IF EXISTS `processrefer`;
+CREATE TABLE `processrefer` (
+  `prid` int(11) NOT NULL AUTO_INCREMENT,
+  `id` varchar(32) DEFAULT NULL,
+  `name` varchar(32) NOT NULL,
+  `type` varchar(16) NOT NULL,
+  PRIMARY KEY (`prid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='钉钉审批控件表';

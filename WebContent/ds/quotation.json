@@ -61,7 +61,8 @@
 		{"key":"2", "value":"审核下单"},
 		{"key":"3", "value":"厂商接单"},
 		{"key":"4", "value":"退补完毕"},
-		{"key":"5", "value":"财务结算"}
+		{"key":"5", "value":"厂商确认"},
+		{"key":"6", "value":"财务结算"}
 	], "selectionItemType": [
 		{"key":"0", "value":"报价项"},
 		{"key":"1", "value":"拓展增"},
@@ -69,12 +70,24 @@
 		{"key":"3", "value":"增减增"},
 		{"key":"4", "value":"增减减"}
 	],
-
 	"isCountManageRule": [
 		{"company":"1", "value": true},
 		{"company":"2", "value": false},
 		{"company":"3", "value": true}
 	],
+	"presignProduceStatus": [
+        {"key":"0", "value":"启用"},
+        {"key":"1", "value":"禁用"}
+    ],
+    "presignItemStatus": [
+        {"key":"0", "value":"启用"},
+        {"key":"1", "value":"禁用"}
+    ],
+    "presignItemType": [
+        {"key":"0", "value":"基础"},
+        {"key":"1", "value":"工程"},
+        {"key":"2", "value":"主材"}
+    ],
     "errorCode": 0,
     "errorMsg": null
 }

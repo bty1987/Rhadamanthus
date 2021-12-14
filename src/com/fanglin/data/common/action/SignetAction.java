@@ -100,6 +100,14 @@ public class SignetAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "selectSignet", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String selectSignet() throws FLException {
+
+		signetService.selectSignet(signet);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "cancelSignet", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String cancelSignet() throws FLException {
 
@@ -108,6 +116,14 @@ public class SignetAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "copySignet", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String copySignet() throws FLException {
+
+		signetService.copySignet(signet);
+
+		return SUCCESS;
+	}
+	
 	public List<SignetVO> getSignets() {
 		return signets;
 	}

@@ -35,7 +35,7 @@
         "7": "倒单",
         "8": "废单",
         "9": "完结"
-    },"balanceType": [
+    }, "balanceType": [
         {"key":"0", "value":"购货"},
         {"key":"1", "value":"预结算退货"},
         {"key":"2", "value":"结算退货"},
@@ -79,92 +79,81 @@
     ], "type": [
 		{"key":"0", "value":"提现"},
 		{"key":"1", "value":"收款"},
-		{"key":"2", "value":"付款"}
+		{"key":"2", "value":"付款"},
+		{"key":"3", "value":"退款"}
 	], "paymentType": [
 		{"key":"0", "value":"合同预付款"},
 		{"key":"1", "value":"工程预付款"},
 		{"key":"2", "value":"主材预付款"},
 		{"key":"3", "value":"正林预付款"}
-	],"status": [
+	], "status": [
 		{"key":"0", "value":"初始"},
 		{"key":"1", "value":"已付款"},
 		{"key":"2", "value":"已确认"},
 		{"key":"3", "value":"已撤销"}
-	],"receiptPaymentType": [
+	], "receiptPaymentType": [
 		{"key":"0", "value":"预付款"},
 		{"key":"1", "value":"装修款"},
 		{"key":"2", "value":"主材款"},
 		{"key":"3", "value":"销售款"},
 		{"key":"4", "value":"服务款"},
 		{"key":"5", "value":"活动款"}
-	],"receiptType": [
+	], "receiptType": [
 		{"key":"0", "value":"现金"},
 		{"key":"1", "value":"银行"},
 		{"key":"2", "value":"转账"},
 		{"key":"3", "value":"对公"},
 		{"key":"4", "value":"分期"},
 		{"key":"5", "value":"优惠"}
-	],
-	"activityPayment":[
+	], "activityPayment":[
 		{"key":"0","value":"装修款"},
 		{"key":"1","value":"装修定金"},
 		{"key":"2","value":"主材款"},
 		{"key":"3","value":"主材定金"}
-	],
-	"ways":[
+	], "ways":[
 		{"key":"0","value":"现金"}
-	],
-	"posway": [
+	], "posway": [
 		{"key": "acquire", "value": "刷卡"},
 		{"key": "wxpay", "value": "微信"},
 		{"key": "alipay", "value": "支付宝"}
-	],
-	"activityCouponType": [
+	], "activityCouponType": [
 		{"key":"2019主材劵","value":"2019主材劵"},
 		{"key":"随付贷劵","value":"随付贷劵"},
 		{"key":"内部转账","value":"内部转账"}
-	],
-	"pointStatus":[
+	], "pointStatus":[
 		{"key":"0","value":"初始"},
 		{"key":"1","value":"成功"},
 		{"key":"2","value":"失败"},
 		{"key":"3","value":"失效"},
 		{"key":"4","value":"已用"}
-	],
-	"walletType":[
+	], "walletType":[
 		{"key":"0","value":"公司"},
 		{"key":"1","value":"厂商"},
 		{"key":"2","value":"员工"}
-	],
-	"walletStatus":[
+	], "walletStatus":[
 		{"key":"0","value":"初始"},
 		{"key":"1","value":"绑定"},
 		{"key":"2","value":"冻结"},
 		{"key":"3","value":"注销"}
-	],
-	"walletranType":[
+	], "walletranType":[
 		{"key":"0","value":"充值"},
 		{"key":"1","value":"提现"},
 		{"key":"2","value":"消费"},
 		{"key":"3","value":"转账"},
 		{"key":"4","value":"退款"}
-	],
-	"walletranStatus":[
+	], "walletranStatus":[
 		{"key":"0","value":"初始"}
-	],
-	"walletardType":[
+	], "walletardType":[
 		{"key":"0","value":"借记"},
 		{"key":"1","value":"贷记"}
-	],
-	"walletardStatus":[
+	], "walletardStatus":[
 		{"key":"0","value":"初始"},
 		{"key":"1","value":"有效"},
 		{"key":"2","value":"失效"},
 		{"key":"3","value":"签约失败"},
 		{"key":"4","value":"已登记"},
 		{"key":"5","value":"解绑"}
-	],
-	"walletresType":[
+	], "walletresType":[
 		{"key":"00","value":"公民身份证正面"},
 		{"key":"19","value":"营业执照"},
 		{"key":"20","value":"税务登记证"},

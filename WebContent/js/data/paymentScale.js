@@ -4,22 +4,23 @@ $(function () {
             
         btns: {
             addBtn: com.focusPage("#addBtn"),
-            saveBtn: com.focusPage("#savePaymenScaleBtn"),
+            saveBtn: com.focusPage("#savePaymenScaleBtn")
         },
-        
         modals: {
             itemModal: com.focusPage("#itemModal"),
-            paymentScaleModal: com.focusPage("#paymentScaleModal"),
+            paymentScaleModal: com.focusPage("#paymentScaleModal")
         },
-        
         items: {
             names: com.focusPage("#names"),
             comment: com.focusPage("#comment")
         },
-            
+        scaleItems: {
+            paymentType: com.focusPage("#paymentType"),
+            scale: com.focusPage("#scale"),
+            sort: com.focusPage("#sort")
+        },
         saveBtn: null,
         cancelBtn: null,
-        items: {},
         list: [],
         psid: null,
         validator: {
@@ -36,6 +37,12 @@ $(function () {
     paymentScale.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
     paymentScale.items.names = com.focusPage("#names");
     paymentScale.items.comment = com.focusPage("#comment");
+
+    paymentScale.modals.itemModal.on('hide.bs.modal', function (e) {
+        com.closeTip();
+        com.clearValidator();
+        com.cleanItems(paymentScale.scaleItems);
+    });
 
     var displayFunc = (function () {
         
@@ -88,6 +95,7 @@ $(function () {
     })();
     
     reloadPaymentScale();
+    queryPaymnetType();
     
     function reloadPaymentScale(){
         
@@ -122,7 +130,7 @@ $(function () {
             
             $.each(data.paymentScaleItems, function (i, v) {
 
-                var $diva = $('<div></div>').addClass("col-sm-12 ").attr("name", v.psiid).css({
+                var $diva = $('<div></div>').addClass("col-sm-12").attr("name", v.psiid).css({
                     "margin-bottom": "8px",
                     "padding": '0px 50px'
                 });
@@ -148,45 +156,25 @@ $(function () {
 
                 $diva.append($div).append($namediv).append($sacldiv).append($sortdiv).append($delete).appendTo(paymentList);
             });
-
-            var scalenameDiv = $('<div></div>').addClass("form-group").css({
-                "padding-left": "35px",
-                "margin-top": "20px"
-            }).appendTo(paymentList);
-
-            var vLabelT = $('<label><b>款项名</b></label>').addClass('col-sm-1 control-label no-padding-right').appendTo(scalenameDiv);
-            var divinput = $('<div></div>').addClass("col-sm-9").appendTo(scalenameDiv);
-            var scaleInput = $('<input/>').addClass("col-sm-5 v_required").attr("type", "text").attr("id", "scalname").appendTo(divinput);
-
-            var scalDiv = $('<div></div>').addClass("form-group").appendTo("#itemlist").css({"padding-left": "35px"});
-            var dvT = $('<label><b>比例</b></label>').addClass("col-sm-1 control-label no-padding-right").appendTo(scalDiv);
-            var dvinput = $('<div></div>').addClass("col-sm-9").appendTo(scalDiv);
-            var scaleinput = $('<input/>').addClass("col-sm-5 v_required v_number").attr("id", "sscal").attr("type", "text").appendTo(dvinput);
-
-            var sortDiv = $('<div></div>').addClass("form-group").appendTo("#itemlist").css({"padding-left": "35px"});
-            var sortLabel = $('<label><b>排序</b></label>').addClass("col-sm-1 control-label no-padding-right").appendTo(sortDiv);
-            var slDiv = $('<div></div>').addClass("col-sm-9").appendTo(sortDiv);
-            var slInput = $('<input/>').addClass("col-sm-5 v_required v_newNum").attr("id", "sort").attr("maxlength", "2").attr("type", "text").appendTo(slDiv);
-
         });
         
-        com.focusPage("#itemModal").modal("show");
+        paymentScale.modals.itemModal.modal("show");
     }
 
     paymentScale.btns.saveBtn.on("click", function () {
         
-        if (com.validate("form3")) return false;
+        if (com.validate("itemModal")) return false;
         
         var options = {
-            "paymentScaleItem.name": com.focusPage("#scalname").val(),
+            "paymentScaleItem.ptid": paymentScale.scaleItems.paymentType.val(),
             "paymentScaleItem.psid": paymentScale.psid,
-            "paymentScaleItem.scale": com.focusPage("#sscal").val(),
-            "paymentScaleItem.sort": com.focusPage("#sort").val()
-        }
+            "paymentScaleItem.scale": paymentScale.scaleItems.scale.val(),
+            "paymentScaleItem.sort": paymentScale.scaleItems.sort.val()
+        };
 
         com.post(api.data.addPaymentScaleItem, options, function () {
             reloadPaymentScale();
-            com.focusPage("#itemModal").modal("hide");
+            paymentScale.modals.itemModal.modal("hide");
         });
     });
 
@@ -198,12 +186,25 @@ $(function () {
             "paymentScale.cid": params.company.cid,
             "paymentScale.name": paymentScale.items.names.val(),
             "paymentScale.comment": paymentScale.items.comment.val()
-        }
+        };
         
         com.post(api.data.addPaymentScale, options, function () {
             reloadPaymentScale();
             paymentScale.modals.paymentScaleModal.modal("hide");
         });
+    }
+
+    function queryPaymnetType(){
+        var options = {
+            "paymentType.type": 1,
+            "paymentType.paytype": 0,
+            "paymentType.bustype": 0,
+            "paymentType.atttype": 1
+        };
+
+        com.post(api.data.queryPaymentType, options, function(res){
+            paymentScale.scaleItems.paymentType.bindData(res.paymentTypes, "ptid", "name");
+        })
     }
 
 });

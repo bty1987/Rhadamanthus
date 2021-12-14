@@ -6,6 +6,10 @@
 		{"key":"0", "value":"禁用"},
 		{"key":"1", "value":"启用"}
 	],
+	"deptIsdet": [
+		{"key":"0", "value":"开放"},
+		{"key":"1", "value":"定岗"}
+	],
 	"errorCode": 0,
     "errorMsg": null
 }

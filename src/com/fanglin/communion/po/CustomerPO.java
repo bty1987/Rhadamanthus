@@ -56,6 +56,8 @@ public class CustomerPO implements Serializable {
 
 	private String relationshipType;
 
+	private short type;
+
 	private String photoPath;
 
 	private String signPath;
@@ -69,6 +71,18 @@ public class CustomerPO implements Serializable {
 	private String token;
 
 	private String authurl;
+
+	private String companyNo;
+
+	private String companyName;
+
+	private String companyAddr;
+
+	private String companyPhone;
+
+	private String companyBank;
+
+	private String companyBankno;
 
 	private short status;
 
@@ -118,7 +132,7 @@ public class CustomerPO implements Serializable {
 	}
 
 	public void setPinyinAll(String pinyinAll) {
-		this.pinyinAll = pinyinAll;
+		this.pinyinAll = pinyinAll.substring(0, pinyinAll.length() >= 50 ? 50 : pinyinAll.length());
 	}
 
 	@Column(name = "pinyinAB")
@@ -297,5 +311,68 @@ public class CustomerPO implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
+	}
+
+	@Column(name = "companyNo")
+	public String getCompanyNo() {
+		return companyNo;
+	}
+
+	public void setCompanyNo(String companyNo) {
+		this.companyNo = companyNo;
+	}
+
+	@Column(name = "companyName")
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+
+	@Column(name = "companyAddr")
+	public String getCompanyAddr() {
+		return companyAddr;
+	}
+
+	public void setCompanyAddr(String companyAddr) {
+		this.companyAddr = companyAddr;
+	}
+
+	@Column(name = "companyPhone")
+	public String getCompanyPhone() {
+		return companyPhone;
+	}
+
+	public void setCompanyPhone(String companyPhone) {
+		this.companyPhone = companyPhone;
+	}
+
+	@Column(name = "companyBank")
+	public String getCompanyBank() {
+		return companyBank;
+	}
+
+	public void setCompanyBank(String companyBank) {
+		this.companyBank = companyBank;
+	}
+
+	@Column(name = "companyBankno")
+	public String getCompanyBankno() {
+		return companyBankno;
+	}
+
+	public void setCompanyBankno(String companyBankno) {
+		this.companyBankno = companyBankno;
 	}
 }

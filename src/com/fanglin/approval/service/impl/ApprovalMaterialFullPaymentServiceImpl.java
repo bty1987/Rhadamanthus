@@ -88,7 +88,7 @@ public class ApprovalMaterialFullPaymentServiceImpl implements ApprovalMaterialF
 
 		String content = String.format("装修单号:%s,主材单号:%s,金额:%.3f,补款审批", materialPO.getOrderId(), materialPO.getNo(), Arith.div(approvalMaterialFullPaymentVO.getReferMoney(), 1000.0));
 
-		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(mid), ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT, content, approvalVO.getComment(), company);
+		approvalPO = new ApprovalPO().init(sender, receiver, materialPO.getOrderId(), String.valueOf(mid), ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT, content, approvalVO.getComment(), company);
 
 		approvalDao.save(approvalPO);
 

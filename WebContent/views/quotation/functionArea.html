@@ -8,20 +8,6 @@
 		</div>
 	</div>
 
-	<div id="functionAreaQuotationItemList" class="row hide">
-	   <div id="fl-statement"></div>
-		<div  class="col-xs-12">
-			<input type="text" id="selectFunctionAreaId" class="hide">
-            <input type="text" id="selectVersionId" class="hide">
-            <div id="itemList"></div>
-            <h3 id="itemBtns">
-                <a id="addBtn" class="btn btn-minier btn-success"><i class="icon-plus bigger-110"></i>添加</a>
-                <a id="delBtn" class="btn btn-minier btn-danger"><i class="icon-trash bigger-110"></i>删除</a>
-                <a id="btnBack" class="btn btn-minier btn-primary"><i class="icon-mail-forward bigger-110"></i>返回</a>
-            </h3>
-		</div>
-	</div>
-
 	<div class="modal fade" id="functionAreaModal" tabindex="-1">
 		<div class="modal-dialog">
 			<div class="modal-content col-md-12">
@@ -103,56 +89,9 @@
 		</div>
 	</div>
 	
-	<div class="modal fade" id="selectItemModal" tabindex="-1">
-		<div class="modal-dialog" style="width:900px;">
-			<div class="modal-content col-md-12">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">
-						<span>&times;</span><span class="sr-only">Close</span>
-					</button>
-					<h4 class="modal-title" id="selectItemDialog">选择报价项目</h4>
-				</div>
-				<div class="modal-body">
-					<div class="row">
-						<div id="quoCondList" class="fl_search clearfix"></div> <!-- 查询条件-->
-						<div id="quoResultList" class="clearfix tab-pane active"></div> <!--查询结果-->
-						<div id="quoPagenation" class="fl-page-wrap clearfix" style="text-align: center;max-width: 680px;"></div> <!--分页-->
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" id="saveSelectItemBtn" class="btn btn-primary">保存</button>
-					<button type="button" id="cancelSelectItemBtn" class="btn btn-default" data-dismiss="modal">取消</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="modal fade" id="updateModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="functionAreaDialog">更新</h4>
-                </div>
-                <div class="modal-body">
-                    <form class="form-horizontal">
-						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right orange" for="formula">公式</label>
-							<div class="col-sm-9">
-								<textarea cols="10" maxlength="64" id="formula" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual'></textarea>
-							</div>
-						</div>
-						<div class="space-4"></div>
-
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="btnUpdate" class="btn btn-primary">保存</button>
-                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
+
+<div id="functionAreaItemPopUp" class="portlet box"></div>
 
 <script type="text/javascript">
 	$.loadScript(['js/quotation/functionArea.js']);

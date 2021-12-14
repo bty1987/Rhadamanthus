@@ -2,18 +2,22 @@ package com.fanglin.kingdee.handle;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.UUID;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.fanglin.core.interceptor.FLException;
+import com.fanglin.utils.SystemConfig;
 
 public class Kandle {
 
@@ -23,12 +27,30 @@ public class Kandle {
 	// Cookie值
 	private static String CookieVal = null;
 
-//	private static String dbid = "6088d6ad3b5728";
 	private static String dbid = "60cfff860168cd";
 	private static String uid = "姚晨浩";
-//	private static String pwd = "1008611";
 	private static String pwd = "888888";
 	private static int lang = 2052;
+
+	private static Properties prop;
+
+	private static String configFilePathName = "/kingdee.properties";
+
+	static {
+		try {
+			prop = new Properties();
+			prop.load(SystemConfig.class.getResourceAsStream(configFilePathName));
+
+			K3CLOUD_URL_STR = prop.getProperty("K3CLOUD_URL_STR");
+			dbid = prop.getProperty("KINGDEE.DBID");
+			uid = prop.getProperty("KINGDEE.UID");
+			pwd = prop.getProperty("KINGDEE.PWD");
+			lang = Integer.valueOf(prop.getProperty("KINGDEE.LANG"));
+
+		} catch (Throwable e) {
+			throw new RuntimeException("config-file cannot be load: " + configFilePathName);
+		}
+	}
 
 	private static Map<String, String> map = new HashMap<String, String>();
 
@@ -84,7 +106,11 @@ public class Kandle {
 	}
 
 	// Login
-	public static boolean Login() throws Exception {
+	public static boolean Login() throws FLException {
+
+		if (prop == null || prop.getProperty("ENABLE").equals("false")) {
+			return false;
+		}
 
 		boolean bResult = false;
 
@@ -99,7 +125,13 @@ public class Kandle {
 
 		System.out.println(jParas);
 
-		HttpURLConnection connection = initUrlConn(sUrl, jParas);
+		HttpURLConnection connection;
+
+		try {
+			connection = initUrlConn(sUrl, jParas);
+		} catch (Exception e) {
+			throw new FLException(360001, "金蝶请求异常");
+		}
 
 		// 获取Cookie
 		String key = null;
@@ -113,61 +145,47 @@ public class Kandle {
 			}
 		}
 
-		BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		BufferedReader reader;
+		try {
+			reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+		} catch (IOException e) {
+			throw new FLException(360001, "金蝶请求异常");
+		}
+
 		String line;
 
 		System.out.println(" ============================= ");
 		System.out.println(" Contents of post request ");
 		System.out.println(" ============================= ");
 
-		while ((line = reader.readLine()) != null) {
-			String sResult = new String(line.getBytes(), "utf-8");
-			System.out.println(sResult);
-			bResult = line.contains("\"LoginResultType\":1");
+		try {
+			while ((line = reader.readLine()) != null) {
+				String sResult = new String(line.getBytes(), "utf-8");
+				System.out.println(sResult);
+				bResult = line.contains("\"LoginResultType\":1");
+			}
+		} catch (Exception e) {
+			throw new FLException(360002, "金蝶响应异常");
 		}
 
 		System.out.println(" ============================= ");
 		System.out.println(" Contents of post request ends ");
 		System.out.println(" ============================= ");
 
-		reader.close();
+		try {
+			reader.close();
+		} catch (IOException e) {
+			throw new FLException(360003, "金蝶资源异常");
+		}
 
 		connection.disconnect();
 
 		return bResult;
 	}
 
-	// Save
-	public static void Save(String formId, String content) throws Exception {
-		Invoke("Save", formId, content);
-	}
+	private static String Invoke(String deal, String formId, String content) throws FLException {
 
-	// View
-	public static void View(String formId, String content) throws Exception {
-		Invoke("View", formId, content);
-	}
-
-	// Submit
-	public static void Submit(String formId, String content) throws Exception {
-		Invoke("Submit", formId, content);
-	}
-
-	// Audit
-	public static void Audit(String formId, String content) throws Exception {
-		Invoke("Audit", formId, content);
-	}
-
-	// UnAudit
-	public static void UnAudit(String formId, String content) throws Exception {
-		Invoke("UnAudit", formId, content);
-	}
-
-	// StatusConvert
-	public static void StatusConvert(String formId, String content) throws Exception {
-		Invoke("StatusConvert", formId, content);
-	}
-
-	private static void Invoke(String deal, String formId, String content) throws Exception {
+		String number = "";
 
 		String sUrl = map.get(deal).toString();
 
@@ -176,9 +194,21 @@ public class Kandle {
 		jParas.add(formId);
 		jParas.add(content);
 
-		HttpURLConnection connectionInvoke = initUrlConn(sUrl, jParas);
+		HttpURLConnection connectionInvoke;
 
-		BufferedReader reader = new BufferedReader(new InputStreamReader(connectionInvoke.getInputStream()));
+		try {
+			connectionInvoke = initUrlConn(sUrl, jParas);
+		} catch (Exception e) {
+			throw new FLException(360001, "金蝶请求异常");
+		}
+
+		BufferedReader reader;
+
+		try {
+			reader = new BufferedReader(new InputStreamReader(connectionInvoke.getInputStream()));
+		} catch (IOException e) {
+			throw new FLException(360001, "金蝶请求异常");
+		}
 
 		String line;
 
@@ -186,18 +216,67 @@ public class Kandle {
 		System.out.println(" Contents of post request ");
 		System.out.println(" ============================= ");
 
-		while ((line = reader.readLine()) != null) {
-			String sResult = new String(line.getBytes(), "utf-8");
-			System.out.println(sResult);
+		try {
+			while ((line = reader.readLine()) != null) {
+				String sResult = new String(line.getBytes(), "utf-8");
+
+				JSONObject result = JSONObject.parseObject(sResult).getJSONObject("Result");
+				JSONObject responseStatus = result.getJSONObject("ResponseStatus");
+				String status = responseStatus.getString("IsSuccess");
+
+				if (status.equals("true")) {
+					number = responseStatus.getJSONArray("SuccessEntitys").getJSONObject(0).getString("Number");
+				}
+
+				System.out.println(sResult);
+			}
+		} catch (Exception e1) {
+			throw new FLException(360002, "金蝶响应异常");
 		}
 
 		System.out.println(" ============================= ");
 		System.out.println(" Contents of post request ends ");
 		System.out.println(" ============================= ");
 
-		reader.close();
+		try {
+			reader.close();
+		} catch (IOException e) {
+			throw new FLException(360003, "金蝶资源异常");
+		}
 
 		connectionInvoke.disconnect();
+
+		return number;
+	}
+
+	// Save 创建
+	public static String Save(String formId, String content) throws FLException {
+		return Invoke("Save", formId, content);
+	}
+
+	// View 查看
+	public static void View(String formId, String content) throws FLException {
+		Invoke("View", formId, content);
+	}
+
+	// Submit 提交
+	public static void Submit(String formId, String content) throws FLException {
+		Invoke("Submit", formId, content);
+	}
+
+	// Audit 审核
+	public static void Audit(String formId, String content) throws FLException {
+		Invoke("Audit", formId, content);
+	}
+
+	// UnAudit 反审核
+	public static void UnAudit(String formId, String content) throws FLException {
+		Invoke("UnAudit", formId, content);
+	}
+
+	// StatusConvert
+	public static void StatusConvert(String formId, String content) throws FLException {
+		Invoke("StatusConvert", formId, content);
 	}
 
 	/**
@@ -228,9 +307,11 @@ public class Kandle {
 		String sFormId = "BD_Customer";
 
 		String sContent = "{\"Model\":" +
-				"{\"FNumber\":\"2105190009\"," +
-				"\"FUseOrgId\":{\"FNumber\":\"100.01\"}," +
-				"\"FName\":\"沈阳 浑南 万达公馆 12#2-2-2\"}}";
+				"{\"FNumber\":\"2105190099\"," +
+				"\"FName\":\"沈阳 浑南 万达公馆 12#2-3-3\"}}";
+		
+		//提交或审核
+		//String sContent = "{\"Numbers\":[\"2105190009\"]}";
 		
 		//"{\"FCreateOrgId\":{\"FNumber\":\"100.01\"}," +
 		
@@ -247,16 +328,18 @@ public class Kandle {
 		String sFormId = "AR_RECEIVEBILL";
 		String sContent = "{\"Model\":" +
 				"{\"FDATE\":\"2021-06-28 10:50:34.987\"," +
-				"\"FCONTACTUNIT\":{\"FNumber\":\"2105190009\"}," +
+				"\"FBillTypeID\":{\"FNumber\":\"SKDLX01_SYS\"}," +
+				"\"FCONTACTUNIT\":{\"FNumber\":\"2107260003\"}," +
 				"\"FPAYORGID\":{\"FNumber\":\"100.01\"}," +
+				"\"FSETTLEORGID\":{\"FNumber\":\"100.01\"}," +
 				"\"F_SFKD_Hslb\": {\"FNumber\":\"A\"}," +
-				"\"F_SFKD_Kxlx\":{\"FNumber\":\"KXLX001\"}," +
+				"\"F_SFKD_Base\":{\"FNumber\":\"设计费\"}," +
+				"\"F_SFKD_Skfs\":{\"FNumber\":\"收款\"}," +
+				"\"FREMARK\":\"备注信息\"," +
 				"\"FRECEIVEBILLENTRY\":[" +
-					"{\"FSETTLETYPEID\":{\"FNumber\":\"JSFS01_SYS\"}," +
+					"{\"FPURPOSEID\":{\"FNumber\":\"SFKYT01_SYS\"}," +
+					"\"FSETTLETYPEID\":{\"FNumber\":\"JSFS04_SYS\"}," +
 					"\"FRECTOTALAMOUNTFOR\": 1111 ," +
-					"\"FACCOUNTID\":{\"FNumber\":\"\"}}," +
-					"{\"FSETTLETYPEID\":{\"FNumber\":\"JSFS04_SYS\"}," +
-					"\"FRECTOTALAMOUNTFOR\": 2222 ," +
 					"\"FACCOUNTID\":{\"FNumber\":\"422050100100208856\"}}" +
 					"]}}";
 		
@@ -276,6 +359,7 @@ public class Kandle {
 		String sFormId = "AR_receivable";
 		
 		String sContent = "{\"Model\":{\"FDATE\":\"2021-06-23 00:00:00\"," +
+				"\"FBillTypeID\":{\"FNumber\":\"YSD01_SYS\"}," +
 				"\"FCUSTOMERID\":{\"FNumber\":\"2105190009\"}," +
 				"\"FSETTLEORGID\":{\"FNumber\":\"100.01\"}," +
 				"\"FPAYORGID\":{\"FNumber\":\"100.01\"}," +
@@ -283,9 +367,10 @@ public class Kandle {
 				"\"F_ora_Assistant\":{\"FNumber\":\"KXLX001\"}," +
 				"\"FEntityDetail\":[" +
 				"{\"FMATERIALID\":{\"FNumber\":\"CH4440\"}," +
-				"\"FPriceQty\":1," +
+				"\"FPriceQty\":-1," +
 				"\"FTaxPrice\":1000," +
-				"\"FEntryTaxRate\":3}]}}";
+				"\"FEntryTaxRate\":3," +
+				"\"FCostId\":{\"FNumber\":\"CI010\"}}]}}";
 		
 		//"\"F_SFKD_RECTYPE\":{\"FNumber\":\"收款\"}," + 收款类型
 		//"{\"FPRICEUNITID\":{\"FNumber\":\"笔\"}," + 计价单位
@@ -310,12 +395,13 @@ public class Kandle {
 				"\"FCONTACTUNITTYPE\":\"BD_Customer\"," +
 				"\"FCONTACTUNIT\":{\"FNumber\":\"2105190009\"}," +
 				"\"F_ora_Base\":{\"FNumber\":\"2105190009\"}," +
+				"\"FSETTLEORGID\":{\"FNumber\":\"100.01\"}," +
 				"\"F_ora_Base3\":{\"FNumber\":\"A\"}," +
-				"\"F_ora_Assistant1\":{\"FNumber\":\"KXLX001\"}," +
+				"\"F_SFKD_BASE5\":{\"FNumber\":\"设计费\"}," +
 				"\"FEntity\":[" +
 				"{\"FCOSTDEPARTMENTID\":{\"FNumber\":\"BM000023\"}," +
-				"\"FNOTAXAMOUNTFOR\":1000," +
-				"\"FTAXAMOUNTFOR\":90}]}}";
+				"\"FNOTAXAMOUNTFOR\":1000}]}}";
+//				"\"FTAXAMOUNTFOR\":90}]}}";
 		
 		//其他应收单有两种情况： 1、合同预付款转工程款 2、工程款转合同预付款   *区别是金额1正2负*
 		//"\"FSETTLEORGID\":{\"FNumber\":\"100.01\"}," + 结算组织
@@ -334,16 +420,58 @@ public class Kandle {
 		String sFormId = "AP_OtherPayable";
 		
 		String sContent = "{\"Model\":{\"FDATE\":\"2021-06-24 00:00:00\"," +
+				"\"FBillTypeID\":{\"FNumber\":\"QTYFD01_SYS\"}," +
 				"\"FCONTACTUNITTYPE\":\"BD_Customer\"," +
 				"\"FCONTACTUNIT\":{\"FNumber\":\"2105190009\"}," +
 				"\"F_ora_Base\":{\"FNumber\":\"2105190009\"}," +
 				"\"F_ora_Base1\":{\"FNumber\":\"A\"}," +
+				"\"F_SFKD_Base5\":{\"FNumber\":\"设计费\"}," +
 				"\"FEntity\":[" +
 				"{\"FCOSTID\":{\"FNumber\":\"CI010\"}," +
 				"\"FCOSTDEPARTMENTID\":{\"FNumber\":\"BM000023\"}," +
 				"\"FNOTAXAMOUNTFOR\":990}]}}";
 //				"\"FTAXAMOUNTFOR\":90}]}}";
 		
+		List<String> paramsList = Arrays.asList(sFormId, sContent);
+		
+		return paramsList;
+		
+	
+	}
+	
+	//收款退款单
+	public static List<String> refundBill(){
+		
+		String sFormId = "AR_REFUNDBILL";
+		
+		String sContent = "{\"Model\":{\"FDATE\":\"2021-07-24 00:00:00\"," +
+				"\"FBILLTYPEID\":{\"FNumber\":\"SKTKDLX01_SYS\"}," +
+				"\"FSETTLEORGID\":{\"FNumber\":\"100.01\"}," +
+				"\"FRECTUNITTYPE\":\"BD_Customer\"," +
+				"\"FCONTACTUNIT\":{\"FNumber\":\"2105190009\"}," +
+				"\"FCONTACTUNITTYPE\":\"BD_Customer\"," +
+				"\"FRECTUNIT\":{\"FNumber\":\"2105190009\"}," +
+				"\"FPAYORGID\":{\"FNumber\":\"100.01\"}," +
+				"\"F_ORA_BASE\":{\"FNumber\":\"A\"}," +
+				"\"F_SFKD_GCKXLX\":{\"FNumber\":\"设计费\"}," +
+				"\"FREFUNDBILLENTRY\":[" +
+				"{\"FSETTLETYPEID\":{\"FNumber\":\"JSFS04_SYS\"}," +
+				"\"FPURPOSEID\":{\"FNumber\":\"SFKYT02_SYS\"}," +
+				"\"FREFUNDAMOUNTFOR\":4," +
+				"\"FNOTE\":\"这里是备注信息~\"}]}}";
+		
+//		"\"FPOSTDATE\":\"2021-07-20\"," +
+//		"\"FRUZHANGTYPE\":\"2021-07-21\"," +
+		
+//		"\"FREFUNDTOTALAMOUNTFOR\":1," +
+//		"\"FREALREFUNDAMOUNTFOR\":2," +
+//		"\"FREFUNDAMOUNTFOR_H \":5," +
+		
+//		"\"FREALREFUNDAMOUNTFOR_D\":4," +
+//		"\"FREFUNDAMOUNTFOR_E\":6," +
+		
+//		"\"FRECTYPE\":\"不知道\"," +
+//		"\"FPAYTYPE\":\"不知道\"," +
 		List<String> paramsList = Arrays.asList(sFormId, sContent);
 		
 		return paramsList;
@@ -358,25 +486,26 @@ public class Kandle {
 		
 		String sFormId = "SFKD_BankTransBill";
 		String sContent = "{\"Model\":" +
-				"{\"FBillNo\":\"NO004\"," +
-				"\"F_SFKD_Date\":\"2021-06-28 10:50:34.987\"," +
+				"{\"FBillNo\":\"NO008\"," +
+				"\"F_SFKD_Date\":\"2021-08-07 10:50:34.987\"," +
 				"\"F_SFKD_WangLaiOrgType\":\"BD_Customer\"," +
 				"\"F_SFKD_RecOrgType\":\"BD_Customer\"," +
 				"\"F_SFKD_RecOrg\":{\"FNumber\":\"100.01\"}," +
 				"\"F_SFKD_SaleOrg\":{\"FNumber\":\"100.01\"}," +
 				"\"F_ora_Base3\":{\"FNumber\":\"A\"}," +
 				"\"F_ora_Base2\":{\"FNumber\":\"2105190009\"}," +
-				"\"F_ora_Base\":{\"FNumber\":\"007\"}," +
-				"\"F_SFKD_Brand\":{\"FNumber\":\"001\"}," +
-				"\"F_SFKD_RealAmount\":\"900\"," +
+				"\"F_SFKD_RealAmount\":12345," +
 				"\"FEntity\":[" +
-					"{\"F_SFKD_ShiShouAmount\":-100," +
-					"\"F_ora_Base4\":{\"FNumber\":\"001\"}}," +
-					"{\"F_SFKD_ShiShouAmount\":1000," +
-					"\"F_ora_Base4\":{\"FNumber\":\"002\"}}" +
+					"{\"F_SFKD_BankNo\":{\"FNumber\":\"422050100100208856\"}," +
+					"\"F_SFKD_ShiShouAmount\":1000," +
+					"\"F_ora_Base4\":{\"FNumber\":\"002\"}," +
+					"\"F_ora_Base5\":{\"FNumber\":\"VEN00014\"}," +
+					"\"F_ora_Base6\":{\"FNumber\":\"补款\"}}" +
 					"]}}";
 		
-
+//		"\"F_ora_Base\":{\"FNumber\":\"007\"}," +
+//		"\"F_SFKD_Brand\":{\"FNumber\":\"001\"}," +
+//		"\"F_SFKD_RealAmount\":\"900\"," +
 //		"\"F_ora_BaseProperty\":{\"FNumber\":\"2105190009\"}," + 这个不用给 根据客户自己带出来
 		
 		List<String> paramsList = Arrays.asList(sFormId, sContent);
@@ -391,7 +520,7 @@ public class Kandle {
 		
 		String sFormId = "SFKD_ZhuCaiZhuanKuanBill";
 		String sContent = "{\"Model\":" +
-				"{\"FBillNo\":\"NO003\"," +
+				"{\"FBillNo\":\"NO004\"," +
 				"\"F_SFKD_Date\":\"2021-06-26 10:50:34.987\"," +
 				"\"F_SFKD_WangLaiUnitType\":\"BD_Customer\"," +
 				"\"F_SFKD_PayUnitType\":\"BD_Customer\"," +
@@ -399,13 +528,15 @@ public class Kandle {
 				"\"F_SFKD_RecOrgId\":{\"FNumber\":\"100.01\"}," +
 				"\"F_SFKD_SaleOrgId\":{\"FNumber\":\"100.01\"}," +
 				"\"F_ora_Base\":{\"FNumber\":\"2105190009\"}," +
-				"\"F_ora_Base1\":{\"FNumber\":\"009\"}," +
+				"\"F_SFKD_ShiShouAmount\":300," +
 				"\"FEntity\":[" +
-					"{\"F_SFKD_RealAmount\":300," +
+					"{\"F_SFKD_BankNo\":{\"FNumber\":\"422050100100208856\"}," +
+					"\"F_SFKD_RealAmount\":300," +
 					"\"F_ora_Base3\":{\"FNumber\":\"002\"}," +
 					"\"F_ora_Base4\":{\"FNumber\":\"VEN00061\"}," +
-					"\"F_ora_Text \":\"123123\"}" +
-					"]}}";
+					"\"F_ora_Text\":\"123123\"," +
+					"\"F_SFKD_Base\":{\"FNumber\":\"补款\"}," +
+					"}]}}";
 		
 		List<String> paramsList = Arrays.asList(sFormId, sContent);
 		
@@ -448,7 +579,7 @@ public class Kandle {
 		
 		String sFormId = "SFKD_JieSuanBill";
 		String sContent = "{\"Model\":" +
-				"{\"FBillNo\":\"NO001\"," +
+				"{\"FBillNo\":\"NO002\"," +
 				"\"F_SFKD_Date\":\"2021-06-26 10:50:34.987\"," +
 				"\"F_SFKD_ABC\":{\"FNumber\":\"A\"}," +
 				"\"F_SFKD_OrgId\":{\"FNumber\":\"100.01\"}," +
@@ -481,7 +612,6 @@ public class Kandle {
 				"\"FCustomerID\":{\"FNumber\":\"2105190009\"}," +
 				"\"FEntity\":[" +
 					"{\"FMaterialID\":{\"FNumber\":\"01.01.0001\"}," +
-					"\"FUnitID\":{\"FNumber\":\"dai\"}," +
 					"\"FRealQty\":12," +
 					"\"FStockID\":{\"FNumber\":\"CK003\"}}," +
 					"]}}";
@@ -493,7 +623,7 @@ public class Kandle {
 	}
 	
 	//采购入库单
-	public static List<String> salesInStock(){
+	public static List<String> purchaseInStock(){
 		
 		String sFormId = "STK_InStock";
 		String sContent = "{\"Model\":" +
@@ -518,9 +648,9 @@ public class Kandle {
 		
 	
 	//采购退料单
-	public static List<String> salesReturnMaterial(){
+	public static List<String> purchaseReturnMaterial(){
 		
-		//FSupplierID这个参数要放在最后!
+		//FSupplierID这个参数要放在最后! FPRICEUNITID FUnitID FCarryUnitId调整之后要放在前面
 		String sFormId = "PUR_MRB";
 		String sContent = "{\"Model\":" +
 				"{\"FStockOrgId\":{\"FNumber\":\"100.01\"}," +
@@ -530,17 +660,82 @@ public class Kandle {
 				"\"FRequireOrgId\":{\"FNumber\":\"100.01\"}," +
 				"\"FSupplierID\":{\"FNumber\":\"VEN00013\"}," +
 				"\"FPURMRBENTRY\":[" +
-					"{\"FMaterialID\":{\"FNumber\":\"01.01.0001\"}," +
-					"\"FSTOCKID\":{\"FNumber\":\"CK003\"}," +
-					"\"FRMREALQTY\":12," +
-					"\"FPRICEUNITID\":{\"FNumber\":\"UOM009\"}," +
+					"{\"FPRICEUNITID\":{\"FNumber\":\"UOM009\"}," +
 					"\"FUnitID\":{\"FNumber\":\"UOM009\"}," +
-					"\"FCarryUnitId\":{\"FNumber\":\"UOM009\"}}" +
+					"\"FCarryUnitId\":{\"FNumber\":\"UOM009\"}," +
+					"\"FMaterialID\":{\"FNumber\":\"01.01.0001\"}," +
+					"\"FSTOCKID\":{\"FNumber\":\"CK003\"}," +
+					"\"FRMREALQTY\":12}" +
 					"]}}";
 		
 
-//		"\"FMRTYPE\":{\"FNumber\":\"2105190009\"}," + 退料类型
-//		"\"FMRMODE\":{\"FNumber\":\"2105190009\"}," + 退料方式
+		// "\"FMRTYPE\":{\"FNumber\":\"2105190009\"}," + 退料类型
+		// "\"FMRMODE\":{\"FNumber\":\"2105190009\"}," + 退料方式
+
+		List<String> paramsList = Arrays.asList(sFormId, sContent);
+
+		return paramsList;
+
+	}
+	
+	//销售退货单
+	public static List<String> salesReturnMaterial(){
+		
+		String sFormId = "SAL_RETURNSTOCK";
+		String sContent = "{\"Model\":" +
+				"{\"FDate\":\"2021-08-21 10:50:34.987\"," +
+				"\"FBillTypeID\":{\"FNumber\":\"XSTHD01_SYS\"}," +
+				"\"FSaleOrgId\":{\"FNumber\":\"100.01\"}," +
+				"\"FStockOrgId\":{\"FNumber\":\"100.01\"}," +
+				"\"FRetcustId\":{\"FNumber\":\"2105190009\"}," +
+				"\"FEntity\":[" +
+					"{\"FMaterialId\":{\"FNumber\":\".0009\"}," +
+					"\"FRealQty\":23," +
+					"\"FStockId\":{\"FNumber\":\"CK003\"}}" +
+					"]}}";
+		
+
+		List<String> paramsList = Arrays.asList(sFormId, sContent);
+
+		return paramsList;
+
+	}
+	
+	//其他出库单
+	public static List<String> otherOutStock(){
+		
+		String sFormId = "STK_MisDelivery";
+		String sContent = "{\"Model\":" +
+				"{\"FDate\":\"2021-08-21 10:50:34.987\"," +
+				"\"FStockOrgId\":{\"FNumber\":\"100.01\"}," +
+				"\"FBillTypeID\":{\"FNumber\":\"QTCKD01_SYS\"}," +
+				"\"FCustId\":{\"FNumber\":\"2105190009\"}," +
+				"\"FEntity\":[" +
+					"{\"FMaterialId\":{\"FNumber\":\".0009\"}," +
+					"\"FQty\":46," +
+					"\"FStockId\":{\"FNumber\":\"CK003\"}}" +
+					"]}}";
+		
+
+		List<String> paramsList = Arrays.asList(sFormId, sContent);
+
+		return paramsList;
+
+	}
+	
+	
+	//费用核销单
+	public static List<String> costMotch(){
+		
+		String sFormId = "ER_MatchBill";
+		String sContent = "{\"Model\":{" +
+				"\"fDate\":\"2021-08-18 09:35:45.352\"," +
+				"\"fDOCUMENTSTATUS\":\"1\"," +
+				"\"fSETTLEORGID\":{\"FNumber\":\"100.01\"}," +
+				"\"fBillTypeID\":{\"fNumber\":\"FYHXD\"}," +
+				"\"fEntity\":[{" +
+					"\"fMatchAMOUNTFOR\":1.0" +
+					"}]}}";
 		
 		List<String> paramsList = Arrays.asList(sFormId, sContent);
 		
@@ -554,55 +749,72 @@ public class Kandle {
 			return;
 
 		System.out.println(Kandle.CookieVal);
+
+		// 客户
+		// List<String> customerParams = Kandle.customer();
+		// Kandle.Save(customerParams.get(0), customerParams.get(1));
+		// Kandle.Submit(customerParams.get(0), customerParams.get(1));
+
+		// 收款单
+		// List<String> collectionParams = Kandle.collection();
+		// Kandle.Save(collectionParams.get(0), collectionParams.get(1));
+
+		// 应收单
+		// List<String> receivableParams = Kandle.receivable();
+		// Kandle.Save(receivableParams.get(0), receivableParams.get(1));
+
+		// 其它应收单
+		// List<String> othereceivableParams = Kandle.otherReceivable();
+		// Kandle.Save(othereceivableParams.get(0), othereceivableParams.get(1));
+
+		// 收款退款单
+		// List<String> refundBillParams = Kandle.refundBill();
+		// Kandle.Save(refundBillParams.get(0), refundBillParams.get(1));
+
+		// 其它应付单
+		// List<String> otherPayableParams = Kandle.otherPayable();
+		// Kandle.Save(otherPayableParams.get(0), otherPayableParams.get(1));
+
+		// 银行过渡单
+		// List<String> bankTransBillParams = Kandle.bankTransBill();
+		// Kandle.Save(bankTransBillParams.get(0), bankTransBillParams.get(1));
+
+		// 主材转款单
+		// List<String> materialTransferBillParams = Kandle.materialTransferBill();
+		// Kandle.Save(materialTransferBillParams.get(0), materialTransferBillParams.get(1));
+
+		// 付款单
+		// List<String> payBillParams = Kandle.payBill();
+		// Kandle.Save(payBillParams.get(0), payBillParams.get(1));
+
+		// 结算单
+		// List<String> balanceBillParams = Kandle.balanceBill();
+		// Kandle.Save(balanceBillParams.get(0), balanceBillParams.get(1));
+
+		// 销售出库单
+		// List<String> salesOutStockParams = Kandle.salesOutStock();
+		// Kandle.Save(salesOutStockParams.get(0), salesOutStockParams.get(1));
+
+		// 采购入库单
+		// List<String> purchaseInStockParams = Kandle.purchaseInStock();
+		// Kandle.Save(purchaseInStockParams.get(0), purchaseInStockParams.get(1));
+
+		// 采购退料单
+		// List<String> purchaseReturnMaterialParams = Kandle.purchaseReturnMaterial();
+		// Kandle.Save(purchaseReturnMaterialParams.get(0), purchaseReturnMaterialParams.get(1));
 		
-		//客户
-//		List<String> customerParams = Kandle.customer();
-//		Kandle.Save(customerParams.get(0), customerParams.get(1));
+		// 销售退货单
+		// List<String> salesReturnMaterialParams = Kandle.salesReturnMaterial();
+		// Kandle.Save(salesReturnMaterialParams.get(0), salesReturnMaterialParams.get(1));
 		
-		//收款单
-//		List<String> collectionParams = Kandle.collection();
-//		Kandle.Save(collectionParams.get(0), collectionParams.get(1));
+		// 其他出库单
+		// List<String> otherOutStockParams = Kandle.otherOutStock();
+		// Kandle.Save(otherOutStockParams.get(0), otherOutStockParams.get(1));
 		
-		//应收单
-//		List<String> receivableParams = Kandle.receivable();
-//		Kandle.Save(receivableParams.get(0), receivableParams.get(1));
-		
-		//其它应收单
-//		List<String> othereceivableParams = Kandle.otherReceivable();
-//		Kandle.Save(othereceivableParams.get(0), othereceivableParams.get(1));
-		
-		//其它应付单
-//		List<String> otherPayableParams = Kandle.otherPayable();
-//		Kandle.Save(otherPayableParams.get(0), otherPayableParams.get(1));
-		
-		//银行过渡单
-//		List<String> bankTransBillParams = Kandle.bankTransBill();
-//		Kandle.Save(bankTransBillParams.get(0), bankTransBillParams.get(1));
-		
-		//主材转款单
-		List<String> materialTransferBillParams = Kandle.materialTransferBill();
-		Kandle.Save(materialTransferBillParams.get(0), materialTransferBillParams.get(1));
-		
-		//付款单
-//		List<String> payBillParams = Kandle.payBill();
-//		Kandle.Save(payBillParams.get(0), payBillParams.get(1));
-		
-		//结算单
-//		List<String> balanceBillParams = Kandle.balanceBill();
-//		Kandle.Save(balanceBillParams.get(0), balanceBillParams.get(1));
-		
-		//销售出库单
-//		List<String> salesOutStockParams = Kandle.salesOutStock();
-//		Kandle.Save(salesOutStockParams.get(0), salesOutStockParams.get(1));
-		
-		//采购入库单
-//		List<String> salesInStockParams = Kandle.salesInStock();
-//		Kandle.Save(salesInStockParams.get(0), salesInStockParams.get(1));
-		
-		//采购退料单
-//		List<String> salesReturnMaterialParams = Kandle.salesReturnMaterial();
-//		Kandle.Save(salesReturnMaterialParams.get(0), salesReturnMaterialParams.get(1));
-		
+		// 费用核销单
+		// List<String> salesReturnMaterialParams = Kandle.costMotch();
+		// Kandle.Save(salesReturnMaterialParams.get(0), salesReturnMaterialParams.get(1));
+
 		System.out.println("hola success");
 
 	}

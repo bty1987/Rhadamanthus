@@ -443,5 +443,82 @@ Condition.addupRule("information", {
             valuePath: "currentName"
         }
     },
-    
+    "award-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.information,
+            postData: {},
+            listPath: "awardPurchaseStatus",
+            keyPath: "key",
+            valuePath:"value"
+        }
+    },
+    "awardPurchase-createTime": {
+        label: "创建时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "createTimeAwardPurchase",
+            op: "cn",
+            validate: null
+        }
+    },
+    "awardPurchase-purchaseTime": {
+        label: "采购时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "purchaseTimeAwardPurchase",
+            op: "cn",
+            validate: null
+        }
+    },
+    "awardPurchase-instoreTime": {
+        label: "入库时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "instoreTimeAwardPurchase",
+            op: "cn",
+            validate: null
+        }
+    },
+    "awardPurchase-name":{
+        label: "物品名称",
+        type: "text",
+        submitConfig: {
+            name: "awardStock.name",
+            op: "cn",
+            validate: null
+        }
+    },
+    "awardPurchase-no": {
+        label: "物品编号",
+        type: "text",
+        submitConfig: {
+            name: "awardStock.no",
+            op: "eq",
+            validate:null
+        }
+    },
+    "awardPurchase-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "awardStock.type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {//从后台取数据的各种配置
+            url: api.ds.information,
+            postData: {},
+            listPath: "awardStockType",
+            keyPath: "key",
+            valuePath:"value"
+        }
+    },
+
 });

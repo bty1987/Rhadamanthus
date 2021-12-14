@@ -27,13 +27,21 @@
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right orange" for="type">类型</label>
 							<div class="col-sm-9">
-								<select  maxlength="64" id="type" class="col-xs-10 col-sm-6  v_required" data-toggle="popover" data-trigger='manual'>
+								<select id="type" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'>
 									<option value="1">现金</option>
 									<option value="2">刷卡</option>
 									<option value="3">银行</option>
 									<option value="4">对公账户</option>
 									<option value="5">券</option>
 								</select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="fund">资金类型</label>
+							<div class="col-sm-9">
+								<select id="fund" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'></select>
 							</div>
 						</div>
 						<div class="space-4"></div>
@@ -58,6 +66,22 @@
 							<label class="col-sm-3 control-label no-padding-right" for="kiname">金蝶名称</label>
 							<div class="col-sm-9">
 								<input type="text" id="kiname" class="col-xs-10 col-sm-6" data-toggle="popover" data-trigger='manual' />
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="kibalance">结算方式</label>
+							<div class="col-sm-9">
+								<input type="text" id="kibalance" class="col-xs-10 col-sm-6" maxlength="36" data-toggle="popover" data-trigger='manual' />
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group" id="banknoDiv" style="display: none;">
+							<label class="col-sm-3 control-label no-padding-right" for="bankno">我方银行账号</label>
+							<div class="col-sm-9">
+								<input type="text" id="bankno" class="col-xs-10 col-sm-6 v_number" maxlength="36" data-toggle="popover" data-trigger='manual' />
 							</div>
 						</div>
 						<div class="space-4"></div>

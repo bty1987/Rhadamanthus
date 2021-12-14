@@ -19,6 +19,8 @@ public class PaymentScaleItemPO implements Serializable {
 	
 	private	long psid;
 	
+	private	long ptid;
+	
 	private String name;
 	
 	private int scale;
@@ -39,6 +41,7 @@ public class PaymentScaleItemPO implements Serializable {
 	public void setPsiid(long psiid) {
 		this.psiid = psiid;
 	}
+	
 	@Column(name="psid")
 	public long getPsid() {
 		return psid;
@@ -48,6 +51,15 @@ public class PaymentScaleItemPO implements Serializable {
 		this.psid = psid;
 	}
 	
+	@Column(name="ptid")
+	public long getPtid() {
+		return ptid;
+	}
+
+	public void setPtid(long ptid) {
+		this.ptid = ptid;
+	}
+
 	@Column(name="name")
 	public String getName() {
 		return name;

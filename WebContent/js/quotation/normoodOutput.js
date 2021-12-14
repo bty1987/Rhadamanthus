@@ -111,10 +111,32 @@ jQuery(function($) {
 	com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": params.decorationOrderId}, function(res){
 		quotationUtils.quotationDetail.quotation.decoration = res.decoration;
 	}, null, false);
-
-	com.post(api.quotation.queryQuotationNormood, {"quotation.qid": params.quotationId}, function(res){
-	    quotationUtils.quotationNormoodProcessing(res.quotationFunctionAreas);
-	}, null, false);
+	
+	var quotationFunctionAreas = [];
+	
+	if((params.subtype & 1) == 1){
+	    com.post(api.quotation.queryQuotationNormood, {"quotation.qid": params.quotationId}, function(res){
+	        quotationFunctionAreas = res.quotationFunctionAreas;
+	    }, null, false);
+	}
+	
+	var extensions = [];
+	
+	if((params.subtype & 2) == 2){
+	    com.post(api.quotation.queryExtensionNormood, {"extension.orderId": params.decorationOrderId}, function(res){
+	        extensions = res.extensions;
+	    }, null, false);
+	}
+	
+	var addreduces = [];
+	
+	if((params.subtype & 4) == 4){
+	    com.post(api.quotation.queryAddReduceNormood, {"addReduce.orderId": params.decorationOrderId}, function(res){
+	        addreduces = res.addReduces;
+	    }, null, false);
+	}
+	
+	quotationUtils.quotationNormoodProcessing(quotationFunctionAreas, extensions, addreduces);
 
 	generatePrintPage(params.type, params.subtype, params.workType, params.company.name, params.orderType, params.showType);
 

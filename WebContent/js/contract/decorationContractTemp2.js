@@ -16,15 +16,21 @@ jQuery(function($) {
         decorationOrderId : params.decorationOrderId,
 
         $input: null,
+        
+        current: new Date(),
 	};
     
     if(contractEdit.contractArgs.agent == "1"){
         com.focusPage(".agent", "#form").hide();
     }
     
-    contractEdit.cover["cov-sign-year"] = com.dateFormat(new Date(), "yyyy");
-    contractEdit.cover["cov-sign-month"] = com.dateFormat(new Date(), "MM");
-    contractEdit.cover["cov-sign-day"] = com.dateFormat(new Date(), "dd");
+    com.post(api.common.current, {}, function(res){
+        contractEdit.current = new Date(res.current);
+    }, null, false);
+    
+    contractEdit.cover["cov-sign-year"] = com.dateFormat(contractEdit.current, "yyyy");
+    contractEdit.cover["cov-sign-month"] = com.dateFormat(contractEdit.current, "MM");
+    contractEdit.cover["cov-sign-day"] = com.dateFormat(contractEdit.current, "dd");
     
     com.post(api.data.queryCustomerById, {"customer.cid": params.cid}, function (res) {
 
@@ -167,9 +173,9 @@ jQuery(function($) {
         data["con-design-money-cn"] = utils.getCNMoney(parseFloat(data["con-design-money"]));
         data["con-design-rmoney-cn"] = utils.getCNMoney(parseFloat(data["con-design-rmoney"]));
         
-        data["con-sign-year"] = com.dateFormat(new Date(), "yyyy");
-        data["con-sign-month"] = com.dateFormat(new Date(), "MM");
-        data["con-sign-day"] = com.dateFormat(new Date(), "dd");
+        data["con-sign-year"] = com.dateFormat(contractEdit.current, "yyyy");
+        data["con-sign-month"] = com.dateFormat(contractEdit.current, "MM");
+        data["con-sign-day"] = com.dateFormat(contractEdit.current, "dd");
         
         data["sin-customer-name"] = data["con-customer-name"];
         data["sin-customer-phone"] = data["con-customer-phone"];

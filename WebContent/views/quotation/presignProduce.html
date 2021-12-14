@@ -1,0 +1,91 @@
+<div id="presignProduce">
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+			<div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+			<div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+		</div>
+	</div>
+
+	<div class="modal fade" id="createPresignProduceModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="addItemDialog">预签产品</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="name">名称</label>
+							<div class="col-sm-9">
+								<input type="text" id="name" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="quotePrice">起报价</label>
+							<div class="col-sm-9">
+								<input type="text" id="quotePrice" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="quoteArea">起报面积</label>
+							<div class="col-sm-9">
+								<input type="text" id="quoteArea" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="unitPrice">计价单价</label>
+							<div class="col-sm-9">
+								<input type="text" id="unitPrice" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
+							</div>
+						</div>
+		
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="costPrice">成本单价</label>
+							<div class="col-sm-9">
+								<input type="text" id="costPrice" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="preferPrice">优惠价</label>
+							<div class="col-sm-9">
+								<input type="text" id="preferPrice" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="profitRate">利润率</label>
+							<div class="col-sm-9">
+								<input type="text" id="profitRate" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="offset">偏移量</label>
+							<div class="col-sm-9">
+								<input type="text" id="offset" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="32"/>
+							</div>
+						</div>
+
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="savePresignProduceBtn" class="btn btn-primary">保存</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="presignItemPopUp" class="portlet box"></div>
+
+<script type="text/javascript">
+    $.loadScript(['js/quotation/presignProduce.js']);
+</script>

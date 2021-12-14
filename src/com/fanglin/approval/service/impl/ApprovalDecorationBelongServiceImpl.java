@@ -162,7 +162,7 @@ public class ApprovalDecorationBelongServiceImpl implements ApprovalDecorationBe
 
 		String content = String.format("装修单号:%s,类型:%s,现归属:%s比例:%s修改为归属:%s比例:%s", orderId, (approvalDecorationBelongVO.getBelongType() == 0 ? "设计" : "业务"), oldBelongUserName.toString(), oldBelongRate.toString(), newBelongUserName.toString(), newBelongRate.toString());
 
-		approvalPO = new ApprovalPO().init(sender, receiver, orderId, ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT, content, approvalVO.getComment(), company);
+		approvalPO = new ApprovalPO().init(sender, receiver, orderId, orderId, ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT, content, approvalVO.getComment(), company);
 
 		approvalDao.save(approvalPO);
 

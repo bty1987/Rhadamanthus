@@ -20,7 +20,7 @@ public class SalesReturnMaterialBillKO extends Bean implements Serializable {
 
 	private static final long serialVersionUID = 1908026682100179769L;
 
-	public static String FormId = "PUR_MRB";
+	public static String FormId = "PUR_MRB"; //采购退料单
 
 	private OrganizationKO FStockOrgId; //退料组织
 

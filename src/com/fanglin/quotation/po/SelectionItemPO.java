@@ -57,7 +57,9 @@ public class SelectionItemPO implements Serializable {
 
 	public static final short STATUS_FINISH_SHORT = 4;// 状态, 完结
 
-	public static final short STATUS_BALANCE_SHORT = 5;// 状态, 结算
+	public static final short STATUS_REVIEW_SHORT = 5; // 核对
+
+	public static final short STATUS_BALANCE_SHORT = 6;// 状态, 结算
 
 	private long siid;// 选材项ID
 
@@ -99,7 +101,11 @@ public class SelectionItemPO implements Serializable {
 
 	private Timestamp balanceTime;// 结算时间
 
+	private Timestamp reviewTime; // 核对时间
+
 	private Timestamp finishTime;// 完结时间
+
+	private UserPO creater; // 创建人
 
 	private UserPO traner;// 配送人
 
@@ -107,9 +113,11 @@ public class SelectionItemPO implements Serializable {
 
 	private UserPO confirmer;// 确认人
 
-	private UserPO balancer;// 结算人
-
 	private UserPO finish;// 完结人
+
+	private UserPO reviewer; // 核对人
+
+	private UserPO balancer;// 结算人
 
 	private String comment;// 注释
 
@@ -289,6 +297,15 @@ public class SelectionItemPO implements Serializable {
 		this.confirmTime = confirmTime;
 	}
 
+	@Column(name = "reviewTime")
+	public Timestamp getReviewTime() {
+		return reviewTime;
+	}
+
+	public void setReviewTime(Timestamp reviewTime) {
+		this.reviewTime = reviewTime;
+	}
+
 	@Column(name = "balanceTime")
 	public Timestamp getBalanceTime() {
 		return balanceTime;
@@ -305,6 +322,16 @@ public class SelectionItemPO implements Serializable {
 
 	public void setFinishTime(Timestamp finishTime) {
 		this.finishTime = finishTime;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "cuid", referencedColumnName = "uid")
+	public UserPO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -338,12 +365,6 @@ public class SelectionItemPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = true, name = "buid", referencedColumnName = "uid")
-	public UserPO getBalancer() {
-		return balancer;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = true, name = "fuid", referencedColumnName = "uid")
 	public UserPO getFinish() {
 		return finish;
@@ -351,6 +372,22 @@ public class SelectionItemPO implements Serializable {
 
 	public void setFinish(UserPO finish) {
 		this.finish = finish;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "ruid", referencedColumnName = "uid")
+	public UserPO getReviewer() {
+		return reviewer;
+	}
+
+	public void setReviewer(UserPO reviewer) {
+		this.reviewer = reviewer;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "buid", referencedColumnName = "uid")
+	public UserPO getBalancer() {
+		return balancer;
 	}
 
 	public void setBalancer(UserPO balancer) {

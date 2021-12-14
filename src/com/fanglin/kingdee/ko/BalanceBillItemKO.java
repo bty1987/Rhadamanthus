@@ -2,8 +2,6 @@ package com.fanglin.kingdee.ko;
 
 import java.io.Serializable;
 
-import com.fanglin.utils.Arith;
-
 public class BalanceBillItemKO implements Serializable {
 
 	private static final long serialVersionUID = 3061409294842242084L;
@@ -44,8 +42,8 @@ public class BalanceBillItemKO implements Serializable {
 
 	public BalanceBillItemKO ptk(long balanceMoney, long realMoney, String orderId) {
 		
-		this.F_SFKD_JieSuanAmount = (long) Arith.div(balanceMoney, 1000.0);
-		this.F_SFKD_ShiShouAmount = (long) Arith.div(realMoney, 1000.0);
+		this.F_SFKD_JieSuanAmount = balanceMoney;
+		this.F_SFKD_ShiShouAmount = realMoney;
 		this.F_ora_Base = new OrganizationKO(orderId);
 		
 		return this;

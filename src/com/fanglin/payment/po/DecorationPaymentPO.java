@@ -90,6 +90,8 @@ public class DecorationPaymentPO implements Serializable {
 	
 	private short twoType;
 	
+	private long ptid;
+	
 	private String paymentType;
 	
 	private short paymentStatus;
@@ -155,6 +157,15 @@ public class DecorationPaymentPO implements Serializable {
 
 	public void setTwoType(short twoType) {
 		this.twoType = twoType;
+	}
+	
+	@Column(name = "ptid")
+	public long getPtid() {
+		return ptid;
+	}
+
+	public void setPtid(long ptid) {
+		this.ptid = ptid;
 	}
 
 	@Column(name = "paymentType")

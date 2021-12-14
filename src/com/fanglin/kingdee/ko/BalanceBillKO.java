@@ -21,7 +21,7 @@ public class BalanceBillKO extends Bean implements Serializable {
 
 	private static final long serialVersionUID = -2682372836546070818L;
 
-	public static String FormId = "SFKD_JieSuanBill";
+	public static String FormId = "SFKD_JieSuanBill"; //结算单
 
 	private String FBillNo; //单据编号
 	

@@ -12,8 +12,10 @@
 package com.fanglin.payment.dao.impl;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -109,6 +111,40 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).setParameterList("paymentStatus", paymentStatus).setShort("oneType", oneType).setShort("twoType", twoType).uniqueResult();
 		
 		return sqlQuery == null ? 0 : sqlQuery.longValue();
+	}
+
+	@Override
+	public int countDecorationPayment(String orderId, List<Short> onetypes, List<Short> twotypes, List<Short> statuses) {
+		
+		String sql = "SELECT count(*) from payment.decorationpayment dp where dp.orderId = :orderId ";
+		
+		if (onetypes.size() > 0) {
+			sql = sql.concat(" AND dp.onetype IN :onetypes ");
+		}
+		
+		if (twotypes.size() > 0) {
+			sql = sql.concat(" AND dp.twotype IN :twotypes ");
+		}
+		
+		if (statuses.size() > 0) {
+			sql = sql.concat(" AND dp.paymentStatus IN :statuses ");
+		}
+		
+		Query query = session().createSQLQuery(sql).setString("orderId", orderId);
+		
+		if (onetypes.size() > 0) {
+			query.setParameterList("onetypes", onetypes);
+		}
+		
+		if (twotypes.size() > 0) {
+			query.setParameterList("twotypes", twotypes);
+		}
+		
+		if (statuses.size() > 0) {
+			query.setParameterList("statuses", statuses);
+		}
+		
+		return ((BigInteger) query.uniqueResult()).intValue();
 	}
 
 	private void queryFilterExcute(PagingQuery<DecorationPaymentPO> query,List<Filter> filters){

@@ -9,6 +9,7 @@ CREATE TABLE `activity` (
   `status` tinyint(1) NOT NULL,
   `type` tinyint(1) NOT NULL COMMENT '类型, 0:券, 1:物品, 2: 特殊券, 3: 特殊物品',
   `defaults` tinyint(1) NOT NULL DEFAULT '1' COMMENT '默认标识, 0:默认, 1:普通',
+  `multiple` int(4) NOT NULL DEFAULT '0' COMMENT '倍数',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `startTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `endTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -25,8 +26,10 @@ CREATE TABLE `activityitem` (
   `activity` varchar(32) NOT NULL,
   `name` varchar(32) NOT NULL,
   `type` tinyint(4) NOT NULL,
-  `money` decimal(10,3) NOT NULL DEFAULT '0.000',
-  PRIMARY KEY (`aiid`)
+  `money` int(8) NOT NULL DEFAULT '0',
+  `integral` int(11) NOT NULL DEFAULT '0' COMMENT '积分',
+  PRIMARY KEY (`aiid`),
+  KEY `indexone` (`aid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='活动物品表';
 
 DROP TABLE IF EXISTS `assassin`;
@@ -50,10 +53,10 @@ CREATE TABLE `awardrecord` (
   `type` tinyint(1) NOT NULL COMMENT '类型,0:入库,1:出库,2:盘盈,3:盘亏',
   `subtype` tinyint(1) DEFAULT '0',
   `isStock` tinyint(1) NOT NULL DEFAULT '0',
+  `num` int(8) NOT NULL DEFAULT '0' COMMENT '数量',
+  `totalPrice` bigint(10) NOT NULL DEFAULT '0' COMMENT '总价',
+  `unitPrice` int(8) NOT NULL DEFAULT '0' COMMENT '单价',
   `onetype` tinyint(1) NOT NULL,
-  `num` decimal(10,3) NOT NULL COMMENT '数量',
-  `totalPrice` decimal(10,3) NOT NULL COMMENT '总价',
-  `unitPrice` decimal(10,3) NOT NULL COMMENT '单价',
   `ouid` int(11) NOT NULL COMMENT '操作人',
   `operateTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
   `content` varchar(64) DEFAULT NULL COMMENT '备注',
@@ -68,8 +71,10 @@ CREATE TABLE `awardstock` (
   `asid` int(11) NOT NULL AUTO_INCREMENT,
   `no` varchar(64) NOT NULL COMMENT '编号',
   `name` varchar(32) NOT NULL COMMENT '名称',
+  `purchase` int(8) NOT NULL DEFAULT '0' COMMENT '进价',
+  `selling` int(8) NOT NULL DEFAULT '0' COMMENT '售价',
+  `num` int(8) NOT NULL DEFAULT '0' COMMENT '数量',
   `format` varchar(32) NOT NULL,
-  `num` decimal(10,3) NOT NULL COMMENT '数量',
   `status` tinyint(1) NOT NULL COMMENT '状态, 0:有效,1:无效',
   `type` tinyint(1) NOT NULL COMMENT '类型, 0:券,1:物品',
   `subtype` tinyint(1) NOT NULL,
@@ -104,6 +109,8 @@ CREATE TABLE `message` (
   `ruid` int(11) NOT NULL COMMENT '接收人ID',
   `suid` int(11) DEFAULT NULL COMMENT '发送人ID',
   `type` tinyint(1) NOT NULL COMMENT '类别',
+  `subtype` tinyint(1) NOT NULL,
+  `ident` int(11) NOT NULL,
   `contents` varchar(256) NOT NULL,
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status` tinyint(1) NOT NULL COMMENT '未读,已读',
@@ -128,6 +135,8 @@ CREATE TABLE `notice` (
   `contents` varchar(256) NOT NULL,
   `filePath` varchar(128) DEFAULT NULL,
   `company` int(11) NOT NULL,
+  `depts` varchar(255) DEFAULT NULL COMMENT '部门范围',
+  `fileName` varchar(255) DEFAULT NULL COMMENT '文件名称',
   PRIMARY KEY (`nid`),
   KEY `indexone` (`type`,`isPublic`,`startTime`,`endTime`,`publishTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='公告';
@@ -181,20 +190,32 @@ CREATE TABLE `plan` (
   `company` int(11) NOT NULL,
   PRIMARY KEY (`pid`),
   KEY `indexone` (`cuid`),
-  KEY `indextwo` (`executetime`)
+  KEY `indextwo` (`executetime`),
+  KEY `indexthr` (`tid`,`args`,`company`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='计划表';
+
+DROP TABLE IF EXISTS `planparam`;
+CREATE TABLE `planparam` (
+  `ppid` int(11) NOT NULL AUTO_INCREMENT,
+  `pid` int(11) NOT NULL,
+  `fields` varchar(255) NOT NULL,
+  `conditions` varchar(255) NOT NULL,
+  PRIMARY KEY (`ppid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='计划字段表';
+
 DROP TABLE IF EXISTS `task`;
 
 CREATE TABLE `task` (
   `tid` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(32) CHARACTER SET utf8 NOT NULL,
   `filepath` varchar(128) CHARACTER SET utf8 NOT NULL,
-  `type` tinyint(1) NOT NULL COMMENT '命令类型 , 0: PYTHON, 1: SHELL',
-  `status` tinyint(1) NOT NULL COMMENT '状态 , 0: 启用, 1: 禁用',
+  `level` tinyint(1) NOT NULL DEFAULT '0',
+  `type` tinyint(1) NOT NULL,
+  `plugins` varchar(16) DEFAULT '' COMMENT 'A: 日期范围, B: 日期, C: 上传附件, D: 参数',
+  `status` tinyint(1) NOT NULL,
   `isShow` tinyint(1) NOT NULL,
-  `keyword` varchar(32) COMMENT '任务关键字',
+  `keyword` varchar(64) COMMENT '任务关键字',
   `handle` tinyint(1) NOT NULL,
-  `plugins` varchar(16) DEFAULT '' COMMENT '插件信息,A: 日期, B: 日期范围, C: 上传控件, D: 参数',
   PRIMARY KEY (`tid`),
   UNIQUE KEY `uniqueone` (`keyWord`)
 )  ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='任务表';
@@ -225,8 +246,9 @@ CREATE TABLE `vaward` (
   `vpid` int(11) NOT NULL,
   `no` varchar(15) NOT NULL,
   `name` varchar(32) NOT NULL,
-  `price` decimal(10,3) DEFAULT '0.000',
-  `num` decimal(10,3) DEFAULT '0.000',
+  `price` int(8) NOT NULL DEFAULT '0',
+  `num` int(8) NOT NULL DEFAULT '0',
+  `unit` varchar(8) NOT NULL,
   `status` tinyint(1) NOT NULL,
   PRIMARY KEY (`vaid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='活动奖品';
@@ -235,16 +257,18 @@ CREATE TABLE `vaward` (
 DROP TABLE IF EXISTS `vpayment`;
 CREATE TABLE `vpayment` (
   `vpid` int(11) NOT NULL AUTO_INCREMENT,
-  `vrid` int(11),
+  `vrid` int(11) DEFAULT NULL,
   `mno` varchar(15) NOT NULL,
-  `orderId` varchar(32),
+  `orderId` varchar(32) DEFAULT NULL,
   `createrId` int(11) NOT NULL,
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `type` tinyint(1) NOT NULL,
-  `brand` varchar(32),
-  `money` decimal(10,3) NOT NULL,
+  `category` varchar(32) DEFAULT '',
+  `brand` varchar(32) DEFAULT NULL,
+  `money` bigint(10) NOT NULL DEFAULT '0',
   `status` tinyint(2) NOT NULL,
   `expire` tinyint(1) DEFAULT '0' COMMENT '到期标识 , 0: 有效 , 1: 到期',
+  `vaid` int(11) DEFAULT '0' COMMENT '活动ID',
   `comment` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`vpid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='活动款';
@@ -254,23 +278,26 @@ CREATE TABLE `vprize` (
   `vpid` int(11) NOT NULL AUTO_INCREMENT,
   `vaid` int(11) NOT NULL,
   `name` varchar(32) NOT NULL,
-  `price` decimal(10,3) DEFAULT '0.000',
+  `price` int(8) NOT NULL DEFAULT '0',
+  `unit` varchar(8) NOT NULL,
   `status` tinyint(1) NOT NULL,
   PRIMARY KEY (`vpid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='奖品';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='奖品表';
+
 DROP TABLE IF EXISTS `vreceipt`;
 CREATE TABLE `vreceipt` (
   `vrid` int(11) NOT NULL AUTO_INCREMENT COMMENT '活动收据ID',
   `cluid` int(11) NOT NULL COMMENT '收款人ID',
   `collectTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '收款时间',
-  `cash` decimal(11,3) NOT NULL COMMENT '现金',
-  `bank` decimal(11,3) NOT NULL COMMENT '刷卡',
+  `cash` bigint(10) NOT NULL DEFAULT '0' COMMENT '现金',
+  `bank` bigint(10) NOT NULL DEFAULT '0' COMMENT '刷卡',
   `bankInfo` varchar(255) NOT NULL COMMENT '刷卡信息',
-  `coupon` decimal(10,2) NOT NULL COMMENT '券值',
+  `coupon` bigint(10) NOT NULL DEFAULT '0' COMMENT '券值',
   `couponInfo` varchar(255) NOT NULL COMMENT '券信息',
   `comment` varchar(255) DEFAULT NULL COMMENT '说明',
   PRIMARY KEY (`vrid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='活动收据';
+
 DROP TABLE IF EXISTS `vticket`;
 CREATE TABLE `vticket` (
   `vtid` int(11) NOT NULL AUTO_INCREMENT COMMENT '活动票ID',

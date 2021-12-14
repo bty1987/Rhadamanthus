@@ -84,6 +84,7 @@ $(function () {
                 'name': 'salesDelivery',
                 'type': 'checkbox',
                 'data-status': v.status,
+                'data-sdiid': v.sdiid,
                 'data-num': v.num,
             }).val(v.sdiid);
             
@@ -204,6 +205,7 @@ $(function () {
                     com.focusPage("#designer").html(decorationInfo.designer.currentName == null ? "无" : decorationInfo.designer.currentName);//装修设计师
                     com.focusPage("#escorter").html(decorationInfo.escorter.currentName == null ? "无" : decorationInfo.escorter.currentName);//装修跟单员
                     com.focusPage("#supervisor").html(decorationInfo.supervisor.currentName == null ? "无" : decorationInfo.supervisor.currentName);//装修监理
+                    com.focusPage("#typeness").html(salesDelivery.typenessList [decorationInfo.typeness]);
                     com.focusPage("#projectStatus").html(salesDelivery.projectStatus[decorationInfo.projectStatus]);
                     
                     salesDelivery.modals.decorationInfo.modal("show");
@@ -227,8 +229,9 @@ $(function () {
             });
 
             $btnConfirm.click(function (e) {
-
-                com.post(api.sales.confirmSalesDeliveryItem, {"salesDeliveryItem.sdiid": v.sdiid}, function (e) {
+                var option = {};
+                option["salesDeliveryItems[0].sdiid"] = v.sdiid;
+                com.post(api.sales.confirmSalesDeliveryItem, option, function (e) {
                     searcher.doSearch();
                     com.showAlert(com.info, "操作成功");
                 });
@@ -284,7 +287,57 @@ $(function () {
     
     searcher.init(pageConfig.condArr, "condList", pageConfig.apiPage, function (data) {
         displayFunc.init('resultList', data);
-    }, "pagenation", salesDelivery.postData, salesDelivery.extraParams, false);
+    }, "pagenation", salesDelivery.postData, salesDelivery.extraParams, false,null, function () {
+
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'collects').css("margin", "0px 3px");
+        var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
+        var $addspan = $('<span></span>').text('确认').appendTo($adda);
+
+
+        $adda.click(function (e) {
+
+            e.stopPropagation();
+
+            var option = {};
+
+            var $inputs = com.focusPage('input[name="salesDelivery"]:checked', '#resultList');
+
+            if (!$inputs.length) {
+
+                com.showAlert(com.warning, "请选择需要进行确认的配送项");
+
+                return;
+
+            }
+
+            $.each($inputs, function (i, v) {
+                var $this = $(v);
+
+                option["salesDeliveryItems[" + i + "].sdiid"] = $this.attr('data-sdiid');
+            });
+
+            com.showConfirm('确定要将选中的配送项进行确认吗?', function (index, layero) {
+                com.post(api.sales.confirmSalesDeliveryItem, option, function (res) {
+
+                    com.showAlert(com.info, "操作成功");
+                    searcher.doSearch();
+
+                });
+
+            }, function () {
+
+                searcher.doSearch();
+            });
+        });
+
+        if (salesDelivery.pageType == "check") {
+            return [$adda];
+        } else {
+            return [];
+        }
+
+    }, 'resultList');
+
 
     salesDelivery.btns.saveEditBtn.on('click', function () {
         if (com.validate('EditModal')) {
@@ -331,13 +384,12 @@ $(function () {
             }
         }, null, false);
     }
-
     function appendGalleryElement(galleryId, value) {
         var gallery = com.focusPage("#" + galleryId);
         var imgLi = $("<li></li>").attr("id", "gallery_li" + value.spid).addClass("text-center col-sm-4").css("border", "0px").css("border-color", "white").css("padding", "0px").css("height", "150px").css("width", "150px").appendTo(gallery);
         var img = $('<img/>');
-		var $imgA = $('<a></a>').attr('data-rel', 'colorbox').addClass('cboxElement').attr('href', com.showImg(img, value.path, 200, 200, '200x200')).attr('target', '_blank').append(img).appendTo(imgLi);
-		var imgA = $("<a></a>").addClass('cboxElement').attr("target", "_blank").css("height", "150px").append(img).appendTo(imgLi);
+        var $imgA = $('<a></a>').attr('data-rel', 'colorbox').addClass('cboxElement').attr('href', com.showImg(img, value.path, 200, 200, '200x200')).attr('target', '_blank').append(img).appendTo(imgLi);
+        var imgA = $("<a></a>").addClass('cboxElement').attr("target", "_blank").css("height", "150px").append(img).appendTo(imgLi);
         com.showImg(img, value.path, 150, 150, value.name, null, value.type);
         var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
         var toolsA = $("<a></a>").attr("href", "#").on("click", function () {
@@ -346,11 +398,14 @@ $(function () {
             });
         }).appendTo(toolsDiv);
         $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
+
     }
+
+
 
     // 上传图片
     function initUploadBtn() {
-        com.uploadify("#salesUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {'uploadType': 0}, 1, function (data) {
+        com.uploadify("#salesUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {'uploadType': 0}, 5, function (data) {
             var options = {};
             options["salesPicture.sid"] = params.sid;
             options["salesPicture.name"] = data.strutsUploadsFileName;
@@ -363,6 +418,7 @@ $(function () {
                 var salesPicture = res.salesPicture;
 
                 appendGalleryElement("salesDrawing", salesPicture);
+
                 com.popup4photos("#salesDrawing");
 
             });

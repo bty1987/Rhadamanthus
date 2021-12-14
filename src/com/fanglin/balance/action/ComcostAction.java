@@ -33,12 +33,12 @@ public class ComcostAction extends BaseListAction {
 	
 	@Action(value = "pageComcost", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageComcost() throws FLException {
-		
+
 		comcostService.pageComcost(getPaging(), getFilters(), queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addComcost", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addComcost() throws FLException {
 

@@ -21,6 +21,11 @@ jQuery(function($) {
 
     params = parent.params;
 
+    $("#salesPdfBtn").click(function(){
+        var target = $("#salesPaymentReceipt")[0]; //避免生成的PDF页面底部出现黑色背景
+        paymentUtils.makeContract(target, params.salesReceiptSrId, receipt.commonInfo.orderId, 3);
+    });
+
     com.post(api.common.queryReceiptType, {}, function (res) {
         $.each(res.receiptTypes, function (i, v) {
             if (v.type == 2) {
@@ -150,7 +155,7 @@ jQuery(function($) {
         
         printer.name = "salesPayment";
         printer.args = {
-            "title" : params.company.name+"代收款收据",
+            "title" : params.company.srganization.name+"代收款收据",
             "orderId": receipt.commonInfo.orderId,
             "decorationType": receipt.commonInfo.decorationType,
             "orderAddr": receipt.commonInfo.orderAddr,
@@ -174,7 +179,7 @@ jQuery(function($) {
         var headReceiptTr = $('<tr style="border:1px solid #fff; background:white; border-bottom-color:#000;"></tr>').appendTo(receiptTable);
         var headReceiptTd = $('<td colspan="5"></td>').appendTo(headReceiptTr);
         var headReceiptDiv = $('<div style="text-align: center;"></div>').appendTo(headReceiptTd);
-        var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(parent.params.company.name + "代收款收据").appendTo(headReceiptDiv);
+        var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(parent.params.company.srganization.name + "代收款收据").appendTo(headReceiptDiv);
 
         var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
         var noReceiptTd = $('<td style="width: 15%"></td>').text('装修单号: ' + commonInfo["orderId"]).appendTo(orderReceiptTr);

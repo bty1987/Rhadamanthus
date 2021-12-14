@@ -38,7 +38,7 @@ $(function(){
     
     taskSeacher.base("condList", "pagenation", "resultList", api.data.pageTask);
     
-    taskSeacher.condition(["data-task-name" , "data-task-isShow" , "data-task-status"]);
+    taskSeacher.condition(["data-task-name" , "data-task-isShow" , "data-task-status" , "data-task-level"]);
     
     taskSeacher.button([{id: "addTask", name: "添加", clazz: "btn-yellow", icon: "icon-plus"}]);
     

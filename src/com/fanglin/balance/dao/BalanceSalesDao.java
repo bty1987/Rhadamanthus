@@ -4,11 +4,15 @@ import java.util.List;
 
 import com.fanglin.balance.po.BalanceSalesPO;
 import com.fanglin.core.dao.Dao;
+import com.fanglin.core.vo.Filter;
+import com.fanglin.utils.Paging;
 
 public interface BalanceSalesDao extends Dao<BalanceSalesPO> {
-	
-	public List<BalanceSalesPO> queryBalanceSalesForSales(long bid);
-	
-	public List<BalanceSalesPO> queryBalanceSalesForBalance(long bsid);
-	
+
+	public List<BalanceSalesPO> pageBalanceSales(Paging paging, List<Filter> filters, int company);
+
+	public List<BalanceSalesPO> queryBalanceSales(String name, int company);
+
+
+
 }

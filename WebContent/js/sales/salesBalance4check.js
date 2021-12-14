@@ -7,9 +7,10 @@ $(function () {
         salesPaymentForStatus:{},
         salesPaymentType : {},
         oneType:{},
-        
+        balanceSaleses:{},
+
         items: {
-            supplier : com.focusPage("#supplier", "#balanceSalesModal"),
+            balanceSales : com.focusPage("#balanceSales"),
         },
         
         modals: {
@@ -23,7 +24,7 @@ $(function () {
     };
     
     var pageConfig = drawNode.getConfig(params['urlLoadParams'].type);
-    
+
     salesBalance.btns.balanceSalesBtn.click(balanceSales);
 
     com.post(api.ds.payment, {}, function(res){
@@ -198,7 +199,23 @@ $(function () {
 
                     var $label = $('<label></label>').addClass('control-label').css({'color': 'grey', 'font-size': '20px', "font-weight": "bold"});
                     var _label = $('<label></label>');
-                    var $input = $('<input>').attr({"type": "checkbox", "name": "sbids", "class": "", "data-sbid": v.sbid, "data-status":v.status, "data-vbalance":v.vbalance, "data-pbalance":v.pbalance, "data-supplier":v.sales.supplier.uid}).addClass('ace ace-checkbox-2');
+                    var $input = $('<input>').attr({
+                            "type": "checkbox",
+                            "name": "sbids",
+                            "class": "",
+                            "data-sbid": v.sbid,
+                            "data-status": v.status,
+                            "data-vbalance": v.vbalance,
+                            "data-pbalance": v.pbalance,
+                            "data-bid": v.sales.bid,
+                            "data-onetype": v.onetype,
+                            "data-type": v.type,
+                            "data-depositpay": v.sales.depositpay,
+                            "data-fullpay": v.sales.fullpay,
+                            "data-total": v.total,
+                            "data-allowance": v.allowance,
+                            "data-venderMaling": v.sales.venderMaling
+                        }).addClass('ace ace-checkbox-2');
                     var _span = $('<span></span>').addClass('lbl blue bigger-150').html(v.sales.no);
                     _label.append($input).append(_span).appendTo($label);
 
@@ -208,14 +225,14 @@ $(function () {
                         $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                         $liProperty.appendTo($ulProperty);
                     });
-                 
+
                     $.each(styleArr, function (index, value) {
                         var $liProperty = $('<li></li>');
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
                         $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                         $liProperty.appendTo($ulStyle);
                     });                                              
-                    
+
                     $.each(checkArr, function (index, value) {
                         var $liProperty = $('<li></li>');
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
@@ -234,7 +251,7 @@ $(function () {
                             	$btnDiv.append($btnPayment);
                                 break;                           
                         }
-                    });     
+                    });
                     $label.appendTo($h3);
                     $btnDiv.appendTo($h3);
 
@@ -283,21 +300,14 @@ $(function () {
         });
 
         $balanceEnd.click(function(){
-            
-            var options = checkBalance()
-            
-            if(!options) return false;
-
-            com.post(api.balance.queryBalance, options, function (res) {
-                salesBalance.items.supplier.bindData(res.balances, "bid", "no");
-                
-                salesBalance.modals.balanceSalesModal.modal("show");
-            });
+            salesBalance.modals.balanceSalesModal.modal("show");
         });
         
         return [$checka, $balanceEnd];
 
     }, 'resultList');
+
+	com.initTypeahead("balanceSales", api.balance.queryBalanceSales, "balanceSales.name", {}, "balanceSaleses", "bsid", function(v){return v["name"] + " " + v["grade"]});
 
     //收款显示
     function viewSalesPaymentLine(tableId, listData) {
@@ -425,55 +435,103 @@ $(function () {
         }
     }
     
-    function checkBalance(){
-    	
+    function balanceSales() {
+
         var options = {};
+        var balanceSales = {};
         var index = 0;
 
+        var income = 0;
+        var cost = 0;
+        var payment = 0;
+        var profit = 0;
+
         var inputs = com.focusPage('input[name="sbids"]:checked', '#resultList');
-        
+        var bsid = com.typeahead("balanceSales");
 
         if(!inputs.length) {
             com.showAlert(com.warning, "请选择结算单");
             return false;
         }
-        
-        var belonger = null;
-        
-        for(var i=0;i<inputs.length;i++){
-            
-            var input = $(inputs[i]);          
+        com.post(api.balance.countBalanceSalesBalance, {"balanceSales.bsid": bsid}, function (res) {
+            bsidCount = res.bsidCount;
+        }, null, false);
+
+        if(bsidCount + inputs.length > 500){
+            com.showAlert(com.warning, "数据量过大");
+            return false;
+        }
+
+        com.post(api.balance.queryBalanceSalesByBsid, {"balanceSales.bsid": bsid}, function (res) {
+            balanceSales = res.balanceSales;
+        }, null, false);
+
+        var brand = balanceSales.brand;
+
+        for(var i=0; i<inputs.length; i++){
+
+            var input = $(inputs[i]);
             var status = input.attr("data-status");
-            var supplier = input.attr('data-supplier');
+            var bid = input.attr('data-bid');
             var sbid = input.attr('data-sbid');
-            
+            var pbalance = input.attr('data-pbalance');
+            var oneType = input.attr('data-onetype');
+            var type = input.attr('data-type');
+            var venderMaling = Math.round(input.attr('data-venderMaling'));
+            var depositpay = input.attr('data-depositpay');
+            var fullpay = input.attr('data-fullpay');
+            var total = input.attr('data-total');
+            var _income = 0;
+            var _payment = 0;
+
+            if(oneType == 0){
+                if (type == 3){
+                    venderMaling = 0;
+                    _income = depositpay;
+                    _payment = utils.accSub(pbalance, venderMaling);
+                } else {
+                    _income = utils.accAdd(depositpay, fullpay);
+                    _payment = utils.accSub(pbalance, venderMaling);
+                }
+            }
+            if(oneType == 1){
+                _income = total;
+                _payment = pbalance;
+            }
+            if(oneType == 2 || oneType == 3){
+                _income = total;
+                _payment = utils.accAdd(pbalance, venderMaling);
+            }
+
+            var _profit = utils.accSub(_income, _payment);
+
+            income = utils.accAdd(income, _income);
+            cost = utils.accAdd(cost, pbalance);
+            payment = utils.accAdd(payment, _payment);
+            profit = utils.accAdd(profit, _profit);
+
             if(status != 2){
                 com.showAlert(com.warning, "请选择结算状态的结算单");
                 return false;
             }
-            
-            if(belonger != null && supplier && supplier != belonger){
-                com.showAlert(com.warning, "厂商不一致");
-                return false
+
+            if(brand.bid != null && bid && bid != brand.bid){
+                com.showAlert(com.warning, "品牌不一致");
+                return false;
             }
-            
-            belonger = supplier;           
-            options["balanceSaless[" + index + "].salesBalance.sbid"] = sbid;
+
+            options["balanceSalesBalances[" + index + "].salesBalance.sbid"] = sbid;
             index += 1;
-        }
-        
-        options["balance.belonger.uid"] = belonger;
-        
-        return options;
-    }
-    
-    function balanceSales() {
-        
-        var options = checkBalance();
-        
+        };
+
         if(!options) return false;
-        
-        options["balance.bid"] = salesBalance.items.supplier.val();
+
+        options["balanceSales.bsid"] = bsid;
+
+        options["balanceSales.income"] = utils.accAdd(income, balanceSales.income);
+        options["balanceSales.cost"] = utils.accAdd(cost, balanceSales.cost);
+        options["balanceSales.payment"] = utils.accAdd(payment, balanceSales.payment);
+        options["balanceSales.profit"] = utils.accAdd(profit, balanceSales.profit);
 
         com.post(api.balance.submitBalanceSales, options, function (res) {
             com.showAlert(com.info, "操作成功");

@@ -190,6 +190,32 @@
 ], "form": [
   {"key":"0","value":"产值"},
   {"key":"1","value":"非产值"}
+],"recruitmentEmployWay":[
+  {"key":"0","value":"校园招聘"},
+  {"key":"1","value":"网络招聘"},
+  {"key":"2","value":"内部推荐"},
+  {"key":"3","value":"主动应聘"},
+  {"key":"4","value":"猎头"}
+],"education":[
+  {"key":"0","value":"小学及以下"},
+  {"key":"1","value":"初中"},
+  {"key":"2","value":"中专"},
+  {"key":"3","value":"高中"},
+  {"key":"4","value":"大专"},
+  {"key":"5","value":"本科"},
+  {"key":"6","value":"研究生及以上"}
+],"political":[
+  {"key":"0","value":"群众"},
+  {"key":"1","value":"团员"},
+  {"key":"2","value":"党员"}
+],"education": [
+  {"key":"0","value":"小学及以下"},
+  {"key":"1","value":"初中"},
+  {"key":"2","value":"中专"},
+  {"key":"3","value":"高中"},
+  {"key":"4","value":"大专"},
+  {"key":"5","value":"本科"},
+  {"key":"6","value":"研究生及以上"}
 ],
   "errorCode": 0,
   "errorMsg": null

@@ -36,7 +36,7 @@ $(function(){
     };
 
     if (selectionItem.pageType == "supplier") {
-        selectionItem.query.push("quotation-selection-item-status");
+        selectionItem.query = selectionItem.query.concat(["quotation-selection-item-status", "quotation-selection-item-createTime", "quotation-selection-item-tranTime", "quotation-selection-item-checkTime", "quotation-selection-item-confirmTime", "quotation-selection-item-finishTime", "quotation-selection-item-balanceTime"])
         selectionItem.url = api.quotation.pageSelectionItemForSupplier;
         selectionItem.postData = "selectionItemForSupplierPostData";
     } else if (selectionItem.pageType == "escorter") {
@@ -62,10 +62,17 @@ $(function(){
     } else if (selectionItem.pageType == "finish") {
         selectionItem.status = {"selectionItem.status": 4};
         selectionItem.postData = "selectionItemForFinishPostData";
+    } else if (selectionItem.pageType == "review") {
+        selectionItem.status = {"selectionItem.status": 5};
+        selectionItem.postData = "selectionItemForReviewPostData";
     } else if (selectionItem.pageType == "balance") {
         selectionItem.query = selectionItem.query.concat(["quotation-selection-item-balanceTime"])
-        selectionItem.status = {"selectionItem.status": 5};
+        selectionItem.status = {"selectionItem.status": 6};
         selectionItem.postData = "selectionItemForBalancePostData";
+    } else if (selectionItem.pageType == "material") {
+        selectionItem.query = selectionItem.query.concat(["quotation-selection-item-status", "quotation-selection-item-createTime", "quotation-selection-item-tranTime", "quotation-selection-item-checkTime", "quotation-selection-item-confirmTime", "quotation-selection-item-finishTime", "quotation-selection-item-balanceTime"])
+        selectionItem.status = {"selectionItem.status": null};
+        selectionItem.postData = "selectionItemForMaterialPostData";
     }
     
     com.post(api.ds.quotation, {}, function(res){
@@ -96,9 +103,7 @@ $(function(){
 
             if(listData && listData.length){
                 $.each(listData,function(i, v){
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
+                    creatLine(v).appendTo($ul);
                 });
 
                 $ul.appendTo($tableWrap);
@@ -118,6 +123,7 @@ $(function(){
             var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-warning').html('审核');
             var $btnConfirm = $('<a></a>').addClass('btn btn-minier btn-inverse').html('确认');
             var $btnFinish = $('<a></a>').addClass('btn btn-minier btn-danger').html('完结');
+            var $btnReview = $('<a></a>').addClass('btn btn-minier btn-inverse').html('核对');
             var $btnBalance = $('<a></a>').addClass('btn btn-minier btn-info').html('结算');
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-pink').html('删除');
             var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-purple').html('打印');
@@ -157,11 +163,11 @@ $(function(){
                 ["品牌:", v.goods.brand, "grey"],
                 ["品类:", v.goods.category, "grey"],
                 ["商品编号:", v.goods.no, "blue" ],
-                ["功能区名称:", v.areaName, "grey"],
+                ["功能区:", v.areaName, "grey"],
                 ["类型:", selectionItem.typeList[v.type], "red"],
                 ["状态:", selectionItem.statusList[v.status], "red"],
                 ["数量:", [2, 4].indexOf(v.type) != -1 ? -v.num : v.num, "blue"],
-                ["备注:", v.comment, "grey"],
+                ["创建人:", v.creater.currentName, "grey"],
                 ["创建时间:", v.createTime, "green"],
                 ["配送人:", v.traner.currentName, "grey"],
                 ["配送时间:", v.tranTime, "green"],
@@ -171,8 +177,11 @@ $(function(){
                 ["确认时间:", v.confirmTime, "green"],
                 ["完结人:", v.finish.currentName, "grey"],
                 ["完结时间:", v.finishTime, "green"],
+                ["核对人:", v.reviewer.currentName, "grey"],
+                ["核对时间:", v.reviewTime, "green"],
                 ["结算人:", v.balancer.currentName, "grey"],
                 ["结算时间:", v.balanceTime, "green"],
+                ["备注:", v.comment, "grey"],
             ];
 
             var _propertyArr = [
@@ -182,22 +191,22 @@ $(function(){
                 ["建筑面积:", v.decoration.house.buildArea, "blue" ],
                 ["设计师:", v.decoration.designer.currentName, "grey"],
                 ["业务员:", v.decoration.salesman.currentName, "grey" ],
-                ["监理人员姓名:", v.decoration.supervisor.currentName != null ? v.decoration.supervisor.currentName : "无", "grey"],
-                ["监理人员电话:", v.decoration.supervisor.phone != null ? v.decoration.supervisor.phone : "无", "grey"],
+                ["监理:", v.decoration.supervisor.currentName != null ? v.decoration.supervisor.currentName : "无", "grey"],
+                ["监理电话:", v.decoration.supervisor.phone != null ? v.decoration.supervisor.phone : "无", "grey"],
                 ["跟单员:", v.decoration.escorter.currentName != null ? v.decoration.escorter.currentName : "无", "grey"],
             ];
 
-            if (v.status <= 1) {// 显示工程量
+            if (v.status <= 1 && selectionItem.pageType != "supplier") {// 显示工程量
                 var initNumArr = ["工程量:", v.initNum, "blue"];
 
                 propertyArr.splice(7, 0, initNumArr);
             }
             
             if(v.status >= 4) {
-                propertyArr.splice(7, 0, ["退数量:", v.refnum, "blue"], ["剩余数量:", parseFloat(v.num) - parseFloat(v.refnum), "blue"]);
+                propertyArr.splice(7, 0, ["退数量:", v.refnum, "blue"], ["剩余数量:", utils.changeThrDecimal(utils.accSub(parseFloat(v.num), parseFloat(v.refnum))), "blue"]);
             }
             
-            if (selectionItem.pageType == "supplier" || v.status >= 4) {// 显示结算价
+            if (selectionItem.pageType == "supplier" || (v.status >= 4 && selectionItem.pageType != "material")) {// 显示结算价
                 var postpriceArr = ["结算价:", v.postprice, "blue"];
                 var prepriceArr = ["预算金额:", v.preprice, "blue"];
 
@@ -225,6 +234,7 @@ $(function(){
 
             if (selectionItem.pageType == "supplier") {
                 v.status == 2 ? $divBtnWrap.append($btnConfirm) : null;
+                v.status == 4 ? $divBtnWrap.append($btnReview) : null;
             } else {
                 switch (v.status) {
                     case 0 : $divBtnWrap.append($btnCompile).append($btnRran).append($btnDel);
@@ -235,7 +245,9 @@ $(function(){
                         break;
                     case 3 : $divBtnWrap.append($btnFinish).append($btnDel);
                         break;
-                    case 4 : $divBtnWrap.append($btnBalance).append($btnDel);
+                    case 4 : $divBtnWrap.append($btnReview).append($btnDel);
+                        break;
+                    case 5 : $divBtnWrap.append($btnBalance).append($btnDel);
                         break;
                 }
             }
@@ -293,6 +305,13 @@ $(function(){
                 selectionItem.items.refnum.val(0);
 
                 selectionItem.modals.finishSelectionItemModal.modal('show');
+            });
+            
+            $btnReview.click(function(e) {
+                com.post(api.quotation.reviewSelectionItem, {"selectionItems[0].siid": v.siid}, function(e) {
+                    searcher.doSearch();
+                    com.showAlert(com.info, "操作成功");
+                });
             });
 
             $btnBalance.click(function(e) {
@@ -355,7 +374,7 @@ $(function(){
         
         btns.push($checka);
         
-        if(selectionItem.pageType == "expert") {
+        if(selectionItem.pageType == "expert" || selectionItem.pageType == "supplier") {
         	btns.push($checkaExportSelects);
         }
         
@@ -363,9 +382,9 @@ $(function(){
             var $a = createbtn("batchDelivery", "批量配送", "btn-success");
             btns.push($a);
         }
-
-        if (selectionItem.pageType == "finish" || selectionItem.pageType == "expert") {
-            var $a = createbtn("batchBalance", "批量结算", "btn-pink");
+        
+        if (selectionItem.pageType == "review" || selectionItem.pageType == "expert") {
+            var $a = createbtn("batchBalance", "批量结算", "btn-info");
             btns.push($a);
         }
 
@@ -436,7 +455,10 @@ $(function(){
                 
                 list: res.paging.data
             }, function(v){
-                v.surplus = parseFloat(v.num) - parseFloat(v.refnum);
+                v.num = [2, 4].indexOf(v.type) != -1 ? -v.num : v.num;
+                v.status = selectionItem.statusList[v.status];
+                v.type = selectionItem.typeList[v.type];
+                v.surplus = utils.changeThrDecimal(utils.accSub(parseFloat(v.num), parseFloat(v.refnum)));
             });
         });
     }

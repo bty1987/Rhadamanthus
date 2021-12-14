@@ -6,7 +6,6 @@
      * result.list 列表的json数组
      * */
     var displayFunc  = (function(){
-
         var renderList = function(tableId,listData){
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
@@ -21,7 +20,6 @@
         };
 
         var creatLine = function(v){   //页面中的一条数据
-
 			var $liLine = $('<li></li>').addClass('item-orange clearfix');
 			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.no + " "+ v.name));
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -29,6 +27,7 @@
 
 			var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
 			var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
+			var $btnOrganization = $('<a></a>').addClass('btn btn-minier btn-success').html('组织');
 
 			var propertyArr = [
 			   	["编号: ", v.no, "grey"],
@@ -36,6 +35,8 @@
 			   	["地址: ", v.address, "grey"],
 			   	["法人: ", v.corporation, "grey"],
 			   	["电话: ", v.phone, "grey"],
+				["装修组织: ", com.checkNull(v.drganization.name, "无"), "grey"],
+				["销售组织: ", com.checkNull(v.srganization.name, "无"), "grey"]
 			 ];
 			$.each(propertyArr, function (index,value) {
 	               var $liProperty = $('<li></li>').appendTo($ulProperty);
@@ -54,12 +55,20 @@
             });
 
 			$divBtnWrap.append($btnEdit).append($btnEdit).append($btnStatus).appendTo($h3);
+			$divBtnWrap.append($btnOrganization).append($btnOrganization).append($btnStatus).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
            //编辑按钮的点击事件
             $btnEdit.click(function(){
                 edit(v);
+            });
+            
+            //组织按钮的点击事件
+            $btnOrganization.click(function(){
+            	company.currentCompany = v;
+            	organization(v);
+            	
             });
 			
 			return $liLine;
@@ -76,6 +85,8 @@
         };
     })();
 
+   com.initTypeahead('drganization', api.system.queryOrganization, "name", {}, 'organizations', 'oid', 'name' ,null);
+   com.initTypeahead('srganization', api.system.queryOrganization, "name", {}, 'organizations', 'oid', 'name' ,null);
 
    var searcher = new Searcher();
 
@@ -92,11 +103,13 @@
     
     //定义全局变量  json
     var company = {
-    		
 		saveBtn: com.focusPage("#saveAddItemBtn").on("click", saveData),//绑定事件
+		OrganBtn: com.focusPage("#OrganizationBtn").on("click", saveDatas),//绑定事件
 		cancelBtn: null,
 		modal: null,
+		modals: null,
 		companyItems: {},
+		currentCompany: {},
 		validator: {
 			company: {
 				type: "v_company",
@@ -111,13 +124,17 @@
    //给全局变量赋值(主要操作是制定页面标签)
 //	company.saveBtn = com.focusPage("#saveAddItemBtn").on("click", saveData);
     company.cancelBtn = com.focusPage("#cancelBtn");
+	company.OrganizationBtn = com.focusPage("#OrganizationBtn");
 	company.modal = com.focusPage("#addItemModal");
+	company.modals = com.focusPage("#updateOrganizationModal");
 	company.companyItems.cid = com.focusPage("#cid");
 	company.companyItems.fullname = com.focusPage("#fullname");
 	company.companyItems.address = com.focusPage("#address");
 	company.companyItems.corporation = com.focusPage("#corporation");
 	company.companyItems.phone = com.focusPage("#phone");
 	company.companyItems.name = com.focusPage("#_name");
+	company.companyItems.drganization = com.focusPage("#drganization");
+	company.companyItems.srganization = com.focusPage("#srganization");
 
 	company.companyItems.no = com.focusPage("#no").on("blur",function(){
 		$this = $(this);
@@ -132,10 +149,10 @@
 	});
 	$.extend(com.validator, company.validator); //将多个对象合并成一个对象
 
+
     //编辑
     function edit(row){
     	//给页面标签赋值
-
 		company.editFlg=true;
 		company.repeatFlg=false;
 
@@ -145,27 +162,37 @@
 		company.companyItems.fullname.val(row.fullname);
 		company.companyItems.address.val(row.address);
 		company.companyItems.corporation.val(row.corporation);
-		company.companyItems.phone.val(row.phone);
 		
 		company.companyItems.no.prop("disabled", true);
 
 		company.modal.modal("show"); //弹出弹层
     }
+
+	//组织
+	function organization(row){
+		//给页面标签赋值
+		company.editFlg=true;
+		company.repeatFlg=false;
+		
+		company.companyItems.drganization.val(row.drganization.name);
+		company.companyItems.srganization.val(row.srganization.name);
+				
+		company.modals.modal("show"); //弹出弹层
+	}
+
     //保存
     function saveData(){
-        
-    	if(com.validate("addItemModal")|| company.repeatFlg)
-    		return false;
+    	if(com.validate("addItemModal")|| company.repeatFlg) return false;
     	
     	var url;
     	var options = {
-			
     		"company.no":company.companyItems.no.val(),
     		"company.name": com.focusPage('#_name').val(),
     		"company.fullname": com.focusPage('#fullname').val(),
     		"company.address": com.focusPage('#address').val(),
     		"company.corporation": com.focusPage('#corporation').val(),
     		"company.phone": com.focusPage('#phone').val(),
+
     	};
 
     	if(company.editFlg) {
@@ -179,6 +206,31 @@
 		company.modal.modal("hide");
     }
     
+	//组织保存
+	function saveDatas(){
+		
+		if(com.validate("updateOrganizationModal")) return false;
+		
+		var options = {
+			"company.cid": company.currentCompany.cid,
+			"company.no": company.currentCompany.no,
+			"company.name": company.currentCompany.name,
+			"company.fullname": company.currentCompany.fullname,
+			"company.address": company.currentCompany.address,
+			"company.corporation": company.currentCompany.corporation,
+			"company.phone": company.currentCompany.phone,
+			"company.drganization.oid": com.typeahead(company.companyItems.drganization),
+			"company.srganization.oid": com.typeahead(company.companyItems.srganization)
+			
+		};
+		
+		var url = api.system.updateCompany;
+		
+		com.post(url, options, successCallback);
+		
+		company.modals.modal("hide");
+	}
+
     //添加
     com.focusPage('[name="addCompany"]', com.focusPage('#pagenation')).on("click",function(){  //选择器 [属性名="属性值"]  匿名函数
 		company.editFlg = false;
@@ -189,7 +241,6 @@
 
 	//启用禁用功能
 	function updateStatus(id, status, failcallBack) {
-
 		com.post(api.system.updateCompanyForStatus, {
 			"company.cid": id,
 			"company.status": status

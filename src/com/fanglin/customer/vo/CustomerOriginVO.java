@@ -9,6 +9,7 @@ import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
+import com.fanglin.data.common.vo.DecorationBusitypeVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
 public class CustomerOriginVO implements Serializable {
@@ -64,6 +65,8 @@ public class CustomerOriginVO implements Serializable {
 	private UserBaseVO designer;
 
 	private UserBaseVO salesman;
+	
+	private DecorationBusitypeVO decorationBusitype;
 
 	private String orderId;
 
@@ -71,7 +74,7 @@ public class CustomerOriginVO implements Serializable {
 		super();
 	}
 
-	public CustomerOriginVO(VillageVO village, UserBaseVO creater, UserBaseVO belonger, DepartmentVO department, DepartmentVO region, CustomerVO customer, HouseVO house, UserBaseVO designer, UserBaseVO salesman) {
+	public CustomerOriginVO(VillageVO village, UserBaseVO creater, UserBaseVO belonger, DepartmentVO department, DepartmentVO region, CustomerVO customer, HouseVO house, UserBaseVO designer, UserBaseVO salesman, DecorationBusitypeVO decorationBusitype) {
 		super();
 		this.village = village;
 		this.creater = creater;
@@ -82,6 +85,7 @@ public class CustomerOriginVO implements Serializable {
 		this.house = house;
 		this.designer = designer;
 		this.salesman = salesman;
+		this.decorationBusitype = decorationBusitype;
 	}
 
 	public Long getCsid() {
@@ -283,6 +287,14 @@ public class CustomerOriginVO implements Serializable {
 
 	public void setSalesman(UserBaseVO salesman) {
 		this.salesman = salesman;
+	}
+
+	public DecorationBusitypeVO getDecorationBusitype() {
+		return decorationBusitype;
+	}
+
+	public void setDecorationBusitype(DecorationBusitypeVO decorationBusitype) {
+		this.decorationBusitype = decorationBusitype;
 	}
 
 	public String getOrderId() {

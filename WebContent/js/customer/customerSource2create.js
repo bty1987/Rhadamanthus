@@ -21,10 +21,24 @@ jQuery(function ($) {
             totalArea: com.focusPage("#totalArea", "#addcustomersource"),
             innerArea: com.focusPage("#innerArea", "#addcustomersource"),
             designer: com.focusPage("#designer", "#addcustomersource"),
-            salesman: com.focusPage("#salesman", "#addcustomersource")
+            salesman: com.focusPage("#salesman", "#addcustomersource"),
+            decorationBusitype: com.focusPage("#decorationBusitype", "#addcustomersource")
         },
-        grade: ["A", "B", "C", "D"]
+        grade: ["A", "B", "C", "D"],
+        decorationBusitypes: []
     };
+
+    com.post(api.data.queryDecorationBusitype, {}, function(res){
+        var decorationBusitypes = [];
+
+        $.each(res.decorationBusitypes, function(intex, value){
+            if (value.status == 0){
+                decorationBusitypes.push(value);
+            }
+        });
+
+        createcustomerOrigin.items.decorationBusitype.bindData(decorationBusitypes, 'dbid', 'name');
+    });
 
     createcustomerOrigin.saveBtn.bindClick(addcustomerOrigin);
     createcustomerOrigin.cancelBtn.bindClick(deleteDate);
@@ -72,7 +86,8 @@ jQuery(function ($) {
             "customerOrigin.totalArea" : createcustomerOrigin.items.totalArea.val(),
             "customerOrigin.innerArea" : createcustomerOrigin.items.innerArea.val(),
             "customerOrigin.designer.userId": com.typeahead("designer"),
-            "customerOrigin.salesman.userId": com.typeahead("salesman")
+            "customerOrigin.salesman.userId": com.typeahead("salesman"),
+            "customerOrigin.decorationBusitype.dbid": createcustomerOrigin.items.decorationBusitype.val()
         };
 
         com.post(api.customer.addCustomerOrigin, options, function (res) {

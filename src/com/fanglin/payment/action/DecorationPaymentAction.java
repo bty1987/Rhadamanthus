@@ -122,7 +122,7 @@ public class DecorationPaymentAction extends BaseListAction {
 	}
 
 	@Action(value = "collectDecorationPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String collectDecorationPayment() throws FLException {
+	public String collectDecorationPayment() throws FLException, Exception {
 
 		decorationPaymentService.collectDecorationPayment(decorationPayment, posids, queryUserId(), queryCompany());
 
@@ -130,7 +130,7 @@ public class DecorationPaymentAction extends BaseListAction {
 	}
 
 	@Action(value = "refundDecorationPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String refundDecorationPayment() throws FLException {
+	public String refundDecorationPayment() throws FLException, Exception {
 
 		decorationPaymentService.refundDecorationPayment(decorationPayment, queryUserId(), queryCompany());
 
@@ -138,7 +138,7 @@ public class DecorationPaymentAction extends BaseListAction {
 	}
 
 	@Action(value = "confirmDecorationPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String confirmDecorationPayment() throws FLException {
+	public String confirmDecorationPayment() throws FLException, Exception {
 
 		decorationPaymentService.confirmDecorationPayment(paymentIds, queryUserId());
 

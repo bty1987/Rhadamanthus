@@ -21,6 +21,7 @@ $(function () {
             decorationInfo: com.focusPage("#decorationInfo"),
         },
         
+        typeness: {},
         projectStatus: {},
         balanceType: {},
         status: {},
@@ -43,6 +44,10 @@ $(function () {
     if (salesBalance.pageType == "bpompany") {
         salesBalance.postData = "salesBalanceForPompanyPostData";
     }
+    
+    com.post(api.ds.decoration, {}, function (res) {
+        salesBalance.typeness = res.typeness.split("key", "value");
+    });
     
     com.post(api.ds.construction, {}, function (res) {
         salesBalance.projectStatus = res.constructionSchedule.split("key", "value");
@@ -109,13 +114,13 @@ $(function () {
                     var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
 
                     var $btnDecoration = $('<a></a>').addClass('btn btn-minier btn-purple').html('装修单');
-                    var $btnVbalanceValue = $('<a></a>').addClass('btn btn-minier btn-yellow').html('厂商结算值');
-                    var $btnVbalance = $('<a></a>').addClass('btn btn-minier btn-success').html('厂商结算');
+                    var $btnVbalanceValue = $('<a></a>').addClass('btn btn-minier btn-yellow').html('厂结值');
+                    var $btnVbalance = $('<a></a>').addClass('btn btn-minier btn-success').html('厂结');
                     var $btnBalanceValue = $('<a></a>').addClass('btn btn-minier btn-warning').html('结算值');
                     var $btnBalance = $('<a></a>').addClass('btn btn-minier btn-inverse').html('结算');
                     var $btnPayment = $('<a></a>').addClass('btn btn-minier btn-danger').html('款项');
                     var $btnBalanceItem = $('<a></a>').addClass('btn btn-minier btn-pink').html('子项');
-                    var $btnStatus = $('<a></a>').addClass('btn btn-minier btn-purple').html('反结算');
+                    var $btnStatus = $('<a></a>').addClass('btn btn-minier btn-purple').html('反结');
 
                     var coupon = v.onetype == 1 ? 0 : v.sales.coupon;
                     var maling = v.onetype == 1 ? 0 : v.sales.maling;
@@ -152,19 +157,19 @@ $(function () {
                                 propertyArr.push(["补款:", v.sales.fullpay, "blue"]);
                                 break;
                             case "prevalue":
-                                propertyArr.push(["预结算值:", v.balance, "blue"]);
+                                propertyArr.push(["预结值:", v.balance, "blue"]);
                                 break;
                             case "preCreateTime":
-                                propertyArr.push(["预结算时间:", v.createTime, "green"]);
+                                propertyArr.push(["预结时间:", v.createTime, "green"]);
                                 break;
                             case "precreater":
-                                propertyArr.push(["预结算人:", v.creater.currentName, "grey"]);
+                                propertyArr.push(["预结人:", v.creater.currentName, "grey"]);
                                 break;
                             case "vbalance":
-                                propertyArr.push(["厂商结算:", v.vbalance, "blue"]);
+                                propertyArr.push(["厂结值:", v.vbalance, "blue"]);
                                 break;
                             case "venderTime":
-                                propertyArr.push(["厂商结算时间:", v.venderTime, "green"]);
+                                propertyArr.push(["厂结时间:", v.venderTime, "green"]);
                                 break;
                             case "pbalance":
                                 propertyArr.push(["结算值:", v.pbalance, "blue"]);
@@ -194,7 +199,7 @@ $(function () {
                                 propertyArr.push(["类型:", salesBalance.balanceType[v.type], "red"]);
                                 break;
                             case "voster":
-                                propertyArr.push(["厂商结算人:", v.voster.currentName, "red"]);
+                                propertyArr.push(["厂结人:", v.voster.currentName, "red"]);
                                 break;
                             case "allowance":
                                 styleArr.push(["补贴:", v.allowance, "blue"]);
@@ -279,6 +284,7 @@ $(function () {
                             com.focusPage("#designer").html(decorationInfo.designer.currentName == null ? "无" : decorationInfo.designer.currentName);//装修设计师
                             com.focusPage("#escorter").html(decorationInfo.escorter.currentName == null ? "无" : decorationInfo.escorter.currentName);//装修跟单员
                             com.focusPage("#supervisor").html(decorationInfo.supervisor.currentName == null ? "无" : decorationInfo.supervisor.currentName);//装修监理
+                            com.focusPage("#typeness").html(salesBalance.typeness[decorationInfo.typeness]);
                             com.focusPage("#projectStatus").html(salesBalance.projectStatus[decorationInfo.projectStatus]);
                              
                             salesBalance.modals.decorationInfo.modal("show");

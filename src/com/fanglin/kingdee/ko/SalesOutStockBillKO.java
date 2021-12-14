@@ -14,20 +14,25 @@ package com.fanglin.kingdee.ko;
 import java.io.Serializable;
 import java.util.List;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fanglin.kingdee.handle.Bean;
 
 public class SalesOutStockBillKO extends Bean implements Serializable {
 
 	private static final long serialVersionUID = 3735803271873916787L;
 
-	public static String FormId = "SAL_OUTSTOCK";
+	public static String FormId = "SAL_OUTSTOCK"; //销售出库单
 
+	@JSONField(ordinal=1)
 	private String FDate; //日期&辅料审批时间
 
+	@JSONField(ordinal=2)
 	private OrganizationKO FSaleOrgId; //销售组织
 
+	@JSONField(ordinal=3)
 	private OrganizationKO FCustomerID; //单号&货单编号
 	
+	@JSONField(ordinal=4)
 	private List<SalesOutStockBillItemKO> FEntity; //单据体明细
 
 	public SalesOutStockBillKO() {
@@ -67,9 +72,9 @@ public class SalesOutStockBillKO extends Bean implements Serializable {
 		FEntity = fEntity;
 	}
 
-	public SalesOutStockBillKO ptk(String collectTime, String salesCompany, String salesNo, List<SalesOutStockBillItemKO> item) {
+	public SalesOutStockBillKO ptk(String outTime, String salesCompany, String salesNo, List<SalesOutStockBillItemKO> item) {
 
-		this.FDate = collectTime;
+		this.FDate = outTime;
 
 		this.FSaleOrgId = new OrganizationKO(salesCompany);
 		this.FCustomerID = new OrganizationKO(salesNo);

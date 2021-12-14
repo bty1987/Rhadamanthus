@@ -134,5 +134,71 @@ Condition.addupRule("quotation", {
             validate: null
         }
     },
+    "presignProduce-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "eq",
+            validate: null
+        }
+    },
+    "presignProduce-status": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{key: "0", value: "初始"}, {key: "1", value: "发布"}],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "presignItem-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "eq",
+            validate: null
+        }
+    },
+    "presignItem-status": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{key: "0", value: "启用"}, {key: "1", value: "禁用"}],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "presignItem-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{key: "0", value: "基础"}, {key: "1", value: "工程"}, {key: "2", value: "主材"}],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
     
 });

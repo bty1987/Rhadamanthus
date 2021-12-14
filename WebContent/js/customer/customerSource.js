@@ -36,6 +36,7 @@ $(function () {
 
             designer: com.focusPage("#designer", "#customerSource"),
             salesmanBind: com.focusPage("#salesmanBind", "#customerSource"),
+            decorationBusitype: com.focusPage("#decorationBusitype", "#customerSource"),
             villageNoBind: com.focusPage("#villageNoBind", "#customerSource"),
             houseNumberBind: com.focusPage("#houseNumberBind", "#customerSource"),
             nameBind: com.focusPage("#nameBind", "#customerSource"),
@@ -77,7 +78,8 @@ $(function () {
 
         grade: ["A", "B", "C", "D"],
         currentCustomerSource: {},
-        decorationTypes: []
+        decorationTypes: [],
+        decorationBusitypeList: {}
     };
 
     customerSource.saveDesignerBtn.bindClick(bindAllInfo);
@@ -92,14 +94,16 @@ $(function () {
     com.post(api.data.queryDecorationBusitype, {}, function(res){
         var decorationBusitypes = [];
 
-        $.each(res.decorationBusitypes, function(intex, value){
+        $.each(res.decorationBusitypes, function(index, value){
             if (value.status == 0){
                 decorationBusitypes.push(value);
             }
+            customerSource.decorationBusitypeList[value.dbid] = value.name;
         });
 
         customerSource.items.salesmanType.bindData(decorationBusitypes, 'dbid', 'name');
-    });
+        customerSource.items.decorationBusitype.bindData(decorationBusitypes, 'dbid', 'name');
+    }, null, false);
     
     com.post(api.ds.customer, {}, function (res) {
         customerSource.status = res.customerSourceStatus.split('key', 'value');
@@ -279,6 +283,7 @@ $(function () {
                 customerSource.currentCustomerSource = v;
                 v.designer != null ? com.updateTypeahead("designer", v.designer.userId, v.designer.currentName) : com.cleanTypeahead("designer");
                 v.salesman != null ? com.updateTypeahead("salesmanBind", v.salesman.userId, v.salesman.currentName) : com.cleanTypeahead("salesmanBind");
+                v.decorationBusitype != null ? customerSource.items.decorationBusitype.val(v.decorationBusitype.dbid) : "";
                 com.updateTypeahead('villageNoBind', v.village.no, v.village.name + "-" + v.village.cityProper.name);
                 customerSource.items.houseNumberBind.val(v.houseNumber);
                 customerSource.items.nameBind.val(v.name);
@@ -323,6 +328,7 @@ $(function () {
                 customerSource.items.phoneApprove.attr("disabled", "disabled");
 
                 v.salesman != null ? com.updateTypeahead("salesman", v.salesman.userId, v.salesman.currentName) : com.cleanTypeahead("salesman");
+                v.decorationBusitype != null ? customerSource.items.salesmanType.val(v.decorationBusitype.dbid) : "";
                 com.updateTypeahead('villageNoDesiger', v.village.no, v.village.name + "-" + v.village.cityProper.name);
                 customerSource.items.houseNumberApprove.val(v.houseNumber);
                 customerSource.items.nameApprove.val(v.name);
@@ -435,6 +441,7 @@ $(function () {
             "customerOrigin.csid": customerSource.currentCustomerSource.csid,
             "customerOrigin.designer.userId": com.typeahead("designer"),
             "customerOrigin.salesman.userId": com.typeahead("salesmanBind"),
+            "customerOrigin.decorationBusitype.dbid": customerSource.items.decorationBusitype.val(),
             "customerOrigin.house.hid": hid,
             "customerOrigin.customer.cid": cid,
             "customerOrigin.phone": customerSource.items.phoneBind.val() //为了避免编辑时修改电话号, 导致客源中和客户中信息对应不上情况
@@ -744,6 +751,9 @@ $(function () {
                     break;
                 case "salesman":
                     propertyArr.push(["归属业务员: ", com.checkNull(v.salesman.currentName, '无'), "grey"]);
+                    break;
+                case "decorationBusitype":
+                    propertyArr.push(["业务类型: ", com.checkNull(customerSource.decorationBusitypeList[v.decorationBusitype.dbid], '无'), "grey"]);
                     break;
                 case "village":
                     propertyArr.push(["楼盘名: ",com.checkNull(v.village.name,'无'), "grey"]);

@@ -64,7 +64,7 @@ public class ApprovalDecorationHolonomyServiceImpl implements ApprovalDecoration
 
 		String content = String.format("装修单号:%s,主材配比额:%.3f,修改为主材配比额:%.3f", orderId, Arith.div(decorationHolonomyPO.getMaterialPrice(), 1000.0), Arith.div(approvalDecorationHolonomyVO.getMaterialPrice(), 1000.0));
 
-		approvalPO = new ApprovalPO().init(sender, receiver, orderId, ApprovalPO.APPROVAL_TYPE_DECORATION_HOLONOMY_INT, content, approvalVO.getComment(), company);
+		approvalPO = new ApprovalPO().init(sender, receiver, orderId, orderId, ApprovalPO.APPROVAL_TYPE_DECORATION_HOLONOMY_INT, content, approvalVO.getComment(), company);
 
 		approvalDao.save(approvalPO);
 

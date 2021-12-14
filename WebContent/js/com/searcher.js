@@ -715,6 +715,28 @@ var Searcher = function(){
                             return true;
                         }
                         
+                        if(value.type == "img"){
+                            var $urldiv = $('<div style="border: 1px solid #ccc; float :left;"></div>').css({"width": "75px", "height": "75px", "margin-right": "10px"}).prependTo($liLine);
+                            var img = $('<img />').css("margin-right", "20px").appendTo($urldiv);
+                            var url = com.showImg(img, getElement(v, value.prop.split('.')), 75, 75, '', null, 0);
+                            
+                            return true;
+                        }
+                        
+                        if(value.type == "qrcode"){
+                            var $imgDiv = $('<div style="border: 1px solid rgb(204, 204, 204); float: left; width: 75px; height: 75px; margin-right: 10px;"></div>');
+                            $imgDiv.qrcode({
+                                render: "canvas",
+                                width: 75,
+                                height: 75,
+                                text: value.prop(v)
+                            });
+                            
+                            $liLine.prepend($imgDiv);
+                            
+                            return true;
+                        }
+                        
                         if(value.show && typeof value.show == 'function' && !value.show(v)) return true;
                         
                         var $liProperty = $('<li></li>').appendTo($ulProperty);

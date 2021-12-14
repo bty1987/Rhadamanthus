@@ -44,6 +44,8 @@ public class PaymentPO implements Serializable {
 	
 	public static final short PAYMENT_TYPE_PAYMENT_INT = 2; //减
 	
+	public static final short PAYMENT_TYPE_RETURN_INT = 3; //退回
+	
 	public static final short PAYMENT_STATUS_PAID_INT = 1;
 	
 	public static final short PAYMENT_STATUS_CONFIRMED_INT = 2;

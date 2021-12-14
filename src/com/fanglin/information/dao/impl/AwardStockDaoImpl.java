@@ -35,6 +35,14 @@ public class AwardStockDaoImpl extends DaoImpl<AwardStockPO> implements AwardSto
 	public List<AwardStockPO> queryAwardStock(short type, short storeroom,int company) {		
 		return session().createCriteria(AwardStockPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("storeroom", storeroom)).add(Restrictions.eq(AwardStockPO.COLUMN_STATUS_STR, AwardStockPO.STATUS_ABLE_SHORT)).add(Restrictions.eq(AwardStockPO.STATUS_TYPE_STR, type)).list();
 	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<AwardStockPO> queryAwardStockByName(String name, int limit, int company) {
+		
+		return session().createCriteria(AwardStockPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(AwardStockPO.COLUMN_STATUS_STR, AwardStockPO.STATUS_ABLE_SHORT)).add(Restrictions.eq(AwardStockPO.COLUMN_NAME_STR, name)).setMaxResults(limit).list();
+		
+	}
 
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {
 

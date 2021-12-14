@@ -2,11 +2,9 @@ package com.fanglin.kingdee.ko;
 
 import java.io.Serializable;
 
-import com.fanglin.utils.Arith;
-
 public class MaterialTransferBillItemKO implements Serializable {
 
-	private static final long serialVersionUID = -6031169022422873171L;
+	private static final long serialVersionUID = -6031169022422873171L; //主材转款单单据体
 	
 	private long F_SFKD_RealAmount; //实收金额
 	
@@ -15,6 +13,8 @@ public class MaterialTransferBillItemKO implements Serializable {
 	private OrganizationKO F_ora_Base4; //供应商
 	
 	private String F_ora_Text; //销售单号
+	
+	private OrganizationKO F_SFKD_Base; //款项类型
 
 	public MaterialTransferBillItemKO() {
 		super();
@@ -52,9 +52,17 @@ public class MaterialTransferBillItemKO implements Serializable {
 		F_ora_Text = f_ora_Text;
 	}
 	
-	public MaterialTransferBillItemKO ptk(long realMoney, String brand, String supplier, String salesOrderId) {
+	public OrganizationKO getF_SFKD_Base() {
+		return F_SFKD_Base;
+	}
 
-		this.F_SFKD_RealAmount = (long) Arith.div(realMoney, 1000.0);
+	public void setF_SFKD_Base(OrganizationKO f_SFKD_Base) {
+		F_SFKD_Base = f_SFKD_Base;
+	}
+
+	public MaterialTransferBillItemKO ptk(long realMoney, String brand, String supplier, String salesOrderId, String paymentType) {
+
+		this.F_SFKD_RealAmount = realMoney;
 		
 		if (brand != null) {
 			this.F_ora_Base3 = new OrganizationKO(brand);
@@ -67,6 +75,8 @@ public class MaterialTransferBillItemKO implements Serializable {
 		if (salesOrderId != null) {
 			this.F_ora_Text = salesOrderId;
 		}
+		
+		this.F_SFKD_Base = new OrganizationKO(paymentType);
 		
 		return this;
 	}

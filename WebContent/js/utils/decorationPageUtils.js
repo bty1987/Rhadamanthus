@@ -164,12 +164,27 @@ $(function () {
                 $obj.removeAttr("readonly");
             }
         });
-        
+
         return [row1, $('<hr>'), row2];
     }
 
+    function drawPresign(conf) {
+
+        var row = createDiv("row").append(
+                createDiv("col-md-4 text-right").append(
+                    createDiv("form-group").append(
+                        createDiv("col-md-2").append($("<p></p>").append(
+                                createButton(conf, "btnPrintPresignInfo", "btn btn-primary", "打印预签", null, '<i class="icon-print bigger-120"></i>')
+                        ))
+                    )
+                )
+                , createDiv("col-md-12", "presignItemListDiv"));
+
+        return [row];
+    }
+
     function drawQuotaion(conf) {
-        
+
         var row = createDiv("row").append(
             createDiv("col-md-8").append(
                 createDiv("form-group").append(createLabel("col-md-2 control-label no-padding-right", "显示方式", "showWay")
@@ -208,9 +223,9 @@ $(function () {
         var $contractFile = $show.includes("contractFiles") ? createDiv("col-xs-12").append(createLabel("control-label", "合同文件:").attr("style", "margin-left: 20px;margin-top: 20px;"), createDiv("col-md-12 hr"), createDiv("row-fluid").append(createDiv("infobox-container", "contractFiles"))) : null;
 
         var row2 = createDiv("row").append($OriginalPicture).append($designPictures).append($projectPictures).append($contractMap).append($CADProjectPicture).append($contractFile).appendTo(stepPane);
-        
+
         var $btns = conf.opt == null ?  [] : conf.opt.btn == null ? [] : conf.opt.btn;
-        
+
         if ($btns.includes("designPictureUpload")) {
             decorationUtils.loadHuploadify("designPictureUpload", "上传合同方案", "*.jpg;*.jpge;*.gif;*.png", true, function (data) {
                 decorationUtils.addDecorationPicture(data, 1, "designPictures");
@@ -236,14 +251,14 @@ $(function () {
                 decorationUtils.addDecorationPicture(data, 3, "ContractPictures");
             }, "btn btn-inverse");
         }
-        
+
         if ($btns.includes("confirmDesign") && $designPictures) {
             $designPictures.append($confirmDesign);
         }
         if ($btns.includes("confirmPicture") && $projectPictures) {
             $projectPictures.append($confirmPricture);
         }
-        
+
         return [row1, row2];
     }
 
@@ -252,21 +267,29 @@ $(function () {
         var row = createDiv("row");
         var left = createDiv("col-xs-6 col-md-6 widget-container-span ui-sortable ").append(createDiv("tabbable").append(
             createUl("myTab", "nav nav-tabs", "margin-top: 7px;").append(
-                createLi("active").append($("<a></a>").attr("data-toggle", "tab").attr("href", "#fanglinMaterialPayments" + conf).css("color", "#4383b4").append($("<strong></strong>").text("主材款项")))
+                createLi("active").append($("<a></a>").attr("data-toggle", "tab").attr("href", "#salesResultList" + conf).css("color", "#4383b4").append($("<strong></strong>").text("销售单")))
                 , createLi().append($("<a></a>").attr("data-toggle", "tab").attr("href", "#salesMaterialPayments" + conf).css("color", "#4383b4").append($("<strong></strong>").text("销售款项")))
+                , createLi().append($("<a></a>").attr("data-toggle", "tab").attr("href", "#fanglinMaterialPayments" + conf).css("color", "#4383b4").append($("<strong></strong>").text("主材款项")))
+                , createDiv("pull-right action-buttons").append($("<a></a>").attr("class", "btn btn-minier btn-info").attr("name", "consumptionDetailsPrint").text("消费明细打印"))
             )
-            , createDiv("tab-content").append(createDiv("tab-pane in active", "fanglinMaterialPayments" + conf, "margin-left: -12px;"), createDiv("tab-pane", "salesMaterialPayments" + conf, "margin-left: -12px;"))
-        ));
+
+            , createDiv("tab-content").append(
+                createDiv("tab-pane in active", "salesResultList" + conf, "margin-left: -12px;")
+                , createDiv("tab-pane", "salesMaterialPayments" + conf, "margin-left: -12px;")
+                , createDiv("tab-pane", "fanglinMaterialPayments" + conf, "margin-left: -12px;")).append(createDiv("fl-page-wrap clearfix hidden", "pagenation"))));
+
         var right = createDiv("col-xs-6 col-md-6 widget-container-span ui-sortable ").append(createDiv("tabbable").append(
-            createUl("myTab", "nav nav-tabs", "margin-top: 7px;").append(
-            createLi("active").append($("<a></a>").attr("data-toggle", "tab").attr("href", "#materialPaymentBrands" + conf).css("color", "#4383b4").append($("<strong></strong>").text("品牌汇总")))
-             , createLi().append($("<a></a>").attr("data-toggle", "tab").attr("href", "#materialPurchasedCategory" + conf).css("color", "#4383b4").append($("<strong></strong>").text("已购品类")))
-                 , createLi().append($("<a></a>").attr("data-toggle", "tab").attr("href", "#materialUnpurchasedCategory" + conf).css("color", "#4383b4").append($("<strong></strong>").text("未购品类")))
+            createUl("myTab", "nav nav-tabs", "margin-top: 7px;").append( 
+                createLi("active").append($("<a></a>").attr("data-toggle", "tab").attr("href", "#materialPaymentBrands" + conf).css("color", "#4383b4").append($("<strong></strong>").text("品牌汇总")))
+                , createLi().append($("<a></a>").attr("data-toggle", "tab").attr("href", "#materialPurchasedCategory" + conf).css("color", "#4383b4").append($("<strong></strong>").text("已购品类")))
+                , createLi().append($("<a></a>").attr("data-toggle", "tab").attr("href", "#materialUnpurchasedCategory" + conf).css("color", "#4383b4").append($("<strong></strong>").text("未购品类")))
         )
         , createDiv("tab-content").append(createDiv("tab-pane in active", "materialPaymentBrands" + conf, "margin-left: -12px;"), createDiv("tab-pane", "materialPurchasedCategory" + conf, "margin-left: -12px;"),
              createDiv("tab-pane", "materialUnpurchasedCategory" + conf, "margin-left: -12px;"))
         ));
-        row.append(left, right);
+
+        var layerPopUp = createDiv("portlet box page-content").attr("id", "layerPopUp");
+        row.append(left, right, layerPopUp);
         return [row];
     }
 
@@ -365,6 +388,7 @@ $(function () {
 
             var title = {
                 "basic": "基本信息",
+                "presign": "预签信息",
                 "quotation": "报价信息",
                 "picture": "图纸信息",
                 "material": "主材信息",
@@ -385,6 +409,9 @@ $(function () {
                 switch (v.type) {
                     case "basic":
                         drawBasic(v, stepPane);
+                        break;
+                    case "presign":
+                        rows = drawPresign(v);
                         break;
                     case "quotation":
                         rows = drawQuotaion(v);

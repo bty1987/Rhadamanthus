@@ -6,6 +6,10 @@
     {"key":"领导关系客户","value":"领导关系客户"},
     {"key":"员工关系","value":"员工关系"}
   ],
+  "customerType": [
+    {"key":"0","value":"个人"},
+    {"key":"1","value":"公司"}
+  ],
   "houseType" :[
     {"key":"0", "value":"住宅"},
     {"key":"1", "value":"半越住宅"},
@@ -86,6 +90,10 @@
     {"key" : "B", "value" : "B"},
     {"key" : "C", "value" : "C"}
   ],
+  "receiptTypeFund":[
+    {"key" : "0", "value" : "普通"},
+    {"key" : "1", "value" : "资金"}
+  ],
   "costStatus": [
     {"key" : "0", "value" : "启用"},
     {"key" : "1", "value" : "禁用"}
@@ -94,7 +102,9 @@
     {"key" : "0", "value" : "工程补充条款"},
     {"key" : "1", "value" : "工程追加条款"},
     {"key" : "2", "value" : "未含项目"},
-    {"key" : "3", "value" : "工程活动优惠"}
+    {"key" : "3", "value" : "工程活动优惠"},
+    {"key" : "4", "value" : "主材活动优惠"},
+    {"key" : "5", "value" : "其他"}
   ],
   "taskLevel": [
     {"key" : "0", "value" : "功能级"},
@@ -157,15 +167,78 @@
     {"key" : "0", "value" : "启用"},
     {"key" : "1", "value" : "禁用"}
   ],
-    "status": [
+  "status": [
     {"key" : "0", "value" : "启用"},
     {"key" : "1", "value" : "禁用"}
   ],
-   "contractStatus": [
+  "contractStatus": [
     {"key" : "0", "value" : "启用"},
     {"key" : "1", "value" : "禁用"}
   ],
-
+  "signetStatus": [
+    {"key" : "0", "value" : "初始"},
+    {"key" : "1", "value" : "注册"},
+    {"key" : "2", "value" : "认证"},
+    {"key" : "3", "value" : "确认"},
+    {"key" : "4", "value" : "签章"},
+    {"key" : "5", "value" : "作废"}
+  ],
+  "paymentType": [
+    {"key" : "0", "value" : "预付款"},
+    {"key" : "1", "value" : "装修款"},
+    {"key" : "2", "value" : "主材款"},
+    {"key" : "3", "value" : "销售款"},
+    {"key" : "4", "value" : "服务款"}
+  ],
+  "paytype": [
+    {"key" : "0", "value" : "收款"},
+    {"key" : "1", "value" : "出款"}
+  ],
+  "bustype": [
+    {"key" : "0", "value" : "装修"},
+    {"key" : "1", "value" : "主材"}
+  ],
+  "atttype_advance": [
+    {"key" : "0", "value" : "基础"},
+	{"key" : "1", "value" : "其他"}
+  ],
+  "atttype_decoration": [
+    {"key" : "0", "value" : "基础"},
+    {"key" : "1", "value" : "合同"},
+    {"key" : "2", "value" : "增减"},
+    {"key" : "3", "value" : "其他"}
+  ],
+  "atttype_material": [
+    {"key" : "0", "value" : "基础"}
+  ],
+  "atttype_sales": [
+    {"key" : "0", "value" : "基础"},
+    {"key" : "1", "value" : "退款"},
+    {"key" : "2", "value" : "其他"}
+  ],
+  "code_material": [
+    {"key" : "2", "value" : "定金"},
+    {"key" : "3", "value" : "补款"}
+  ],
+  "code_sales": [
+    {"key" : "-1", "value" : "定金出"},
+    {"key" : "-2", "value" : "定金转全款"},
+    {"key" : "2", "value" : "定金"},
+    {"key" : "3", "value" : "补款"},
+    {"key" : "4", "value" : "退款"},
+    {"key" : "5", "value" : "补款退款"},
+    {"key" : "6", "value" : "券退款"},
+    {"key" : "7", "value" : "定金退款"},
+    {"key" : "8", "value" : "不可退定金"}
+  ],
+  "paymentTypeStatus": [
+    {"key" : "0", "value" : "启用"},
+    {"key" : "1", "value" : "禁用"}
+  ],
+  "signetType": [
+    {"key" : "0", "value" : "合同"},
+    {"key" : "1", "value" : "款项"}
+  ],
 
   "errorCode": 0,
   "errorMsg": null

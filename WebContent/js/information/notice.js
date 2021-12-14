@@ -34,11 +34,8 @@ $(function(){
     notice.items.isPublic.switchBtn("isOrNot");
 
     if(notice.pageType == "notice"){
-
         notice.type = 1;
-
     }else if(notice.pageType == "expert"){
-
         notice.type = 2;
     }
 
@@ -68,9 +65,7 @@ $(function(){
 
             if(listData && listData.length){
                 $.each(listData,function(i, v){
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
+                    creatLine(v).appendTo($ul);
                 });
 
                 $ul.appendTo($tableWrap);
@@ -94,15 +89,15 @@ $(function(){
             var end = new Date(v.endTime);
 
             var propertyArr = [
-                ["类型:", notice.noticeType[v.type], "grey"],
-                ["优先级:", notice.noticePriority[v.priority], "green"],
                 ["发布人:", v.creater.currentName, "grey"],
-                ["开始时间:", v.startTime, "grey"],
-                ["结束时间:", v.endTime, "grey"],
-                ["公开:", notice.noticeIsPublic[v.isPublic], "blue"],
+                ["类型:", notice.noticeType[v.type], "red"],
+                ["优先级:", notice.noticePriority[v.priority], "red"],
+                ["公开:", notice.noticeIsPublic[v.isPublic], "red"],
+                ["状态:", starts <= myDate && end >= myDate ? "有效":"无效", "red"],
+                ["开始时间:", v.startTime, "green"],
+                ["结束时间:", v.endTime, "green"],
                 ["内容:", v.contents, "grey"],
-                ["状态:", starts <= myDate && end >= myDate ? "有效":"无效", "blue"],
-                ["文件名:", v.fileName == "" || v.fileName == null ? "无" : v.fileName, "red"]
+                ["文件名:", v.fileName == "" || v.fileName == null ? "无" : v.fileName, "grey"]
             ];
 
             //循环出li中的属性
@@ -113,7 +108,6 @@ $(function(){
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
 
                 $liProperty.appendTo($ulProperty);
-
             });
 
             if(v.filePath != undefined && v.filePath != null && v.filePath != ""){
@@ -121,21 +115,20 @@ $(function(){
                 $divBtnWrap.append($btnDown);
             }
 
-            if(v.creater.uid == params.userInfo.user.uid){
+            if(v.creater.uid == params.userInfo.user.uid){}
 
-                if(v.isPublic == 1) {
-                    $divBtnWrap.append($management).appendTo($h3);
+            if(v.isPublic == 1) {
+                $divBtnWrap.append($management).appendTo($h3);
 
-                    var $liDepts = $('<li></li>');
-                    $('<strong></strong>').html('部门范围:').appendTo($liDepts);
-                    $('<b></b>').html(v.depts == null ? "无" : v.depts).addClass("red").appendTo($liDepts);
+                var $liDepts = $('<li></li>');
+                $('<strong></strong>').html('部门范围:').appendTo($liDepts);
+                $('<b></b>').html(v.depts == null ? "无" : v.depts).addClass("grey").appendTo($liDepts);
 
-                    $liDepts.appendTo($ulDept);
-                }
-
-                $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
-                $liLine.append($h3).append($ulProperty).append($ulDept);
+                $liDepts.appendTo($ulDept);
             }
+
+            $divBtnWrap.append($btnEdit).append($btnDel).appendTo($h3);
+            $liLine.append($h3).append($ulProperty).append($ulDept);
 
             if(starts <= myDate && end >=myDate){
                 if(v.isPublic == 1) {
@@ -146,11 +139,9 @@ $(function(){
             }else{
                 $liLine.append($h3).append($ulProperty).append($ulDept);
             }
+            
             $btnDown.click(function(){
-                var url = config.media + v.filePath;
-
-                com.popup('公告', url);
-
+                com.popup('公告', config.media + v.filePath);
                 return false;
             });
 
@@ -216,10 +207,10 @@ $(function(){
                             if($v == -1 || $v == '全部')
                                 return false;
                         }),
-                            com.post(api.information.updateNoticeDepartment, params,function(res){
-                                notice.modals.managementsModal.modal("hide");
-                                NoticeMngSeacher.doSearch();
-                            }, null, false)
+                        com.post(api.information.updateNoticeDepartment, params,function(res){
+                            notice.modals.managementsModal.modal("hide");
+                            searcher.doSearch();
+                        }, null, false)
                     );
                 });
             });
@@ -244,8 +235,8 @@ $(function(){
         };
     })();
 
-    var NoticeMngSeacher = new Searcher();
-    NoticeMngSeacher.init(['information-notice-theme', 'information-notice-creater-name', 'information-notice-dateTime'], "condList", api.information.pageNotice, function(list){
+    var searcher = new Searcher();
+    searcher.init(['information-notice-theme', 'information-notice-creater-name', 'information-notice-dateTime'], "condList", api.information.pageNotice, function(list){
         displayFunc.init('resultList', list);
     }, "pagenation", "noticeMngSeacherPostData", null, false, null, function(){
 
@@ -289,7 +280,7 @@ $(function(){
 
         com.post(url, options, function successCallback() {
             com.showAlert(com.info, "操作成功");
-            NoticeMngSeacher.doSearch();
+            searcher.doSearch();
         });
         notice.modals.noticeModal.modal("hide");
     }
@@ -297,7 +288,7 @@ $(function(){
     function removeRow(id) {
         com.post(api.information.deleteNotice, {"notice.nid" : id}, function successCallback() {
             com.showAlert(com.info, "操作成功");
-            NoticeMngSeacher.doSearch();
+            searcher.doSearch();
         });
     }
 

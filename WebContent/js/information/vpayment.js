@@ -347,7 +347,7 @@ jQuery(function ($) {
     })();
 
     var hsearcher = new Searcher();
-    hsearcher.init(["vp_mno", "vp_brand", "v_createrName"], "hcondList", api.information.pageVpayment, function (data) {
+    hsearcher.init(["information-v-payment-no", "information-v-payment-brand", "information-v-payment-creater-name"], "hcondList", api.information.pageVpayment, function (data) {
         hdisplayFunc.init('hresultList', data);
     }, "hpagenation", "hvpaymentPostData", {"vpayment.status": 1}, false, null, function () {
     }, 'hresultList');

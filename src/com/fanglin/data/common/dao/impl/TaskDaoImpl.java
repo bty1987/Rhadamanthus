@@ -63,6 +63,8 @@ public class TaskDaoImpl extends DaoImpl<TaskPO> implements TaskDao {
 				}
 				else if("taskStatus".equals(field)){
 					query.add(query.getCriterion(TaskPO.COLUMN_STATUS_STR, Short.valueOf(data), op));
+				}else if("taskLevel".equals(field)){
+					query.add(query.getCriterion(TaskPO.COLUMN_LEVEL_STR, Short.valueOf(data), op));
 				}
 			}
 		}

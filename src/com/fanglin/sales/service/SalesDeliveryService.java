@@ -19,12 +19,13 @@ public interface SalesDeliveryService {
 
 	public void checkSalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItem, String userId) throws FLException;
 
-	public void confirmSalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItem, String userId) throws FLException;
+	public void confirmSalesDeliveryItem(List<SalesDeliveryItemVO> salesDeliveryItems, String userId) throws FLException;
 
 	public void finishSalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItem, String userId) throws FLException;
 
 	public void deliveSalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItem, String queryUserId) throws FLException;
 
 	public void updateSalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItem) throws FLException;
+
 
 }

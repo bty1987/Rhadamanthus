@@ -17,7 +17,7 @@ Condition.addupRule("material", {
         label: "楼盘",
         type: "autofill",
         submitConfig: {
-            name: "village",
+            name: "villageId",
             op: "eq",
             validate: null
         },
@@ -116,7 +116,7 @@ Condition.addupRule("material", {
         label: "业务员",
         type: "autofill",
         submitConfig: {//向后台提交的配置
-            name: "salesman",//接口中的参数名
+            name: "salesmanId",//接口中的参数名
             op: "eq",//查询方式
             validate: null
         },

@@ -7,8 +7,7 @@
 				<div id="list" style="margin-left:10px"></div>
 
 				<h3 class="clearfix">
-					<a class="btn btn-minier btn-success" id="addBtn"><i
-					class="icon-plus"></i>添加</a>
+					<a class="btn btn-minier btn-success" id="addBtn"><i class="icon-plus"></i>添加</a>
 				</h3>
 			</div>
 		</div>
@@ -20,7 +19,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
-				<h4 class="modal-title" id="myModalLabel">添加款项比例</h4>
+				<h4 class="modal-title" id="myModalLabel">添加款项</h4>
 			</div>
 			<div class="modal-body">
 				<form class="form-horizontal" id="form1">
@@ -66,10 +65,34 @@
 				<h4 class="modal-title" >添加款项比例</h4>
 			</div>
 			<div class="modal-body">
-				<form class="form-horizontal" id="form3">
+				<form class="form-horizontal">
+					<div class="form-group" id="itemlist"></div>
 
-					<div class="form-group" id="itemlist" style="padding-left: 80px;padding-right: 50px"></div>
-					<div class="space-4"></div>
+					<div class="form-group" id="inputInfo">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="paymentType">款项类型</label>
+							<div class="col-sm-9">
+								<select id="paymentType" class="col-xs-10 col-sm-5 v_required"></select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="scale">比例</label>
+							<div class="col-sm-9">
+								<input type="text" class="col-xs-10  col-sm-5 v_required v_number" id="scale" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="sort">排序</label>
+							<div class="col-sm-9">
+								<input type="text" id="sort" class="col-xs-10 col-sm-5 v_required v_newNum" maxlength="2" data-toggle="popover" data-trigger='manual'>
+							</div>
+						</div>
+						<div class="space-4"></div>
+					</div>
 				</form>
 			</div>
 			<div class="modal-footer">

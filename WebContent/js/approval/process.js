@@ -101,7 +101,7 @@ jQuery(function($) {
     var searcher = new Searcher();
     params.searcher = searcher;
 
-    searcher.init(["approval-process-no", "approval-process-name"], "condList", api.approval.pageProcess, function(data){
+    searcher.init(["approval-process-no", "approval-process-name","approval-process-status"], "condList", api.approval.pageProcess, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation", "processPostData",null, false, null, function(){
 

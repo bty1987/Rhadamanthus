@@ -97,7 +97,7 @@ public class ApprovalQuotationDiscountServiceImpl implements ApprovalQuotationDi
 
 		String content = String.format("装修单号:%s,报价ID:%s,折扣:%.3f,修改为折扣:%s", orderId, String.valueOf(qid), Arith.div(quotationPO.getDiscount(), 1000.0), Arith.div(approvalQuotationDiscountVO.getNewDiscount(), 1000.0));
 
-		approvalPO = new ApprovalPO().init(sender, receiver, String.valueOf(qid), ApprovalPO.APPROVAL_TYPE_QUOTATION_DISCOUNT_INT, content, approvalVO.getComment(), company);
+		approvalPO = new ApprovalPO().init(sender, receiver, quotationPO.getOrderId(), String.valueOf(qid), ApprovalPO.APPROVAL_TYPE_QUOTATION_DISCOUNT_INT, content, approvalVO.getComment(), company);
 
 		approvalDao.save(approvalPO);
 

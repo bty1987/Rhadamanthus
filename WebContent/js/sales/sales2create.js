@@ -156,6 +156,11 @@ jQuery(function () {
         var $total = sales.leftitems.total.val();
 
         var $otherStatus = $selling != $disPrice ? 1 : 0;
+        
+        if(price.ctype == 0 && $disPrice < price.purchase) {
+            com.showAlert(com.warning, "折扣价低于控价");
+            return false;
+        }
 
         var $liList = $('<li></li>').addClass('list-group-item').attr({
             'data-discount': $discount,
@@ -280,7 +285,7 @@ jQuery(function () {
     sales.btns.submit.click(function () {
         
         if(com.validate('searchInfo', 'bottom')) return false;
-        if (submitCheck() == false) return false;
+        if (checkBrand() == false) return false;
         
         var popup = com.focusPage("#sales2create");
         var mask = com.mask(popup, popup);
@@ -385,7 +390,7 @@ jQuery(function () {
     }
 
     //判断品牌差异
-    function submitCheck() {
+    function checkBrand() {
         
         var $list = com.focusPage('.list-group-item');
         
