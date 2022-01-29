@@ -19,6 +19,7 @@ import com.fanglin.core.vo.Authentication;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.vo.DecorationInfoVO;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.payment.vo.DecorationPaymentVO;
 import com.fanglin.utils.Paging;
 
 public interface DecorationService {
@@ -79,7 +80,7 @@ public interface DecorationService {
 
 	public void obsoleteDecoration(DecorationVO decorationVO, String userName) throws FLException;
 
-	public void terminalDecoration(DecorationVO decorationVO, long backup, Authentication authentication) throws FLException;
+	public void terminalDecoration(DecorationVO decorationVO, List<DecorationPaymentVO> decorationPaymentVOs, Authentication authentication) throws FLException;
 
 	public void subDecorationForQuotationTime(DecorationVO decorationVO, String userId) throws FLException;
 

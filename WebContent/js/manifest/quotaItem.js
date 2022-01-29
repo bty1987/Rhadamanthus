@@ -33,16 +33,29 @@ $(function () {
                 'border': 'none',
                 'border-bottom': '1px solid #dce8f1'
             });
+            
+            var propertyArr = [
+               ["商品", "cell col-md-3"],
+               ["领取数量", "cell col-md-1"],
+               ["辅材单位", "cell col-md-1"],
+               ["价格", "cell col-md-1"],
+           ];
 
-            $.each('商品,领取数量,辅材单位'.split(','), function (i, v) {
-                var $cell = $('<div></div>').addClass('cell col-md-2').css('border', 'none');
-                var $cellWrap = $('<div></div>').addClass('cell-wrap').html(v);
+            $.each(propertyArr, function (i, v) {
+                var $cell = $('<div></div>').addClass('cell ' + v[1]).css('border', 'none');
+                var $cellWrap = $('<div></div>').addClass('cell-wrap').html(v[0]);
                 $cell.append($cellWrap).appendTo($quoteItemLi);
             });
+            
+            var propertyArr = [
+               ["商品", "cell col-md-2"],
+               ["定额上限", "cell col-md-2"],
+               ["定额单位", "cell col-md-2"],
+           ];
 
-            $.each('商品,定额上限,定额单位'.split(','), function (i, v) {
-                var $cell = $('<div></div>').addClass('cell col-md-2').css('border', 'none');
-                var $cellWrap = $('<div></div>').addClass('cell-wrap').html(v);
+            $.each(propertyArr, function (i, v) {
+                var $cell = $('<div></div>').addClass('cell ' + v[1]).css('border', 'none');
+                var $cellWrap = $('<div></div>').addClass('cell-wrap').html(v[0]);
                 $cell.append($cellWrap).appendTo($quoteItemLi);
             });
 
@@ -65,25 +78,26 @@ $(function () {
             });
 
             var propertyArr = [
-                [v ? v.goods.name : '', 'grey', "oname"],
-                [v ? v.num : '', 'blue', 'onum'],
-                [v ? v.goods.measurementUnit : '', 'blue', "ounit"],
+                [v ? v.goods.name : '', 'grey col-md-3', "oname"],
+                [v ? v.num : '', 'blue col-md-1', 'onum'],
+                [v ? v.goods.measurementUnit : '', 'blue col-md-1', "ounit"],
+                [v ? v.goods.selling : '', 'blue col-md-1', "ounit"],
             ];
 
             $.each(propertyArr, function (i, v) {
-                var $cell = $('<div></div>').addClass('cell col-md-2 ' + v[1]).css('border', 'none');
+                var $cell = $('<div></div>').addClass('cell ' + v[1]).css('border', 'none');
                 var $cellWrap = $('<div></div>').addClass('cell-wrap ' + v[2] ? v[2] : '').html(v[0]);
                 $cell.append($cellWrap).appendTo($quoteItemLi);
             });
 
             var propertyArr = [
-                [d ? d.goods.name : '', 'green', "tname"],
-                [d ? d.num : '', 'blue', 'tnum'],
-                [d ? d.unit : '', 'blue', "tunit"],
+                [d ? d.goods.name : '', 'green col-md-2', "tname"],
+                [d ? d.num : '', 'blue col-md-2', 'tnum'],
+                [d ? d.unit : '', 'blue col-md-2', "tunit"],
             ];
 
             $.each(propertyArr, function (i, v) {
-                var $cell = $('<div></div>').addClass('cell col-md-2 ' + v[1]).css('border', 'none');
+                var $cell = $('<div></div>').addClass('cell ' + v[1]).css('border', 'none');
                 var $cellWrap = $('<div></div>').addClass('cell-wrap ' + v[2] ? v[2] : '').html(v[0]);
                 $cell.append($cellWrap).appendTo($quoteItemLi);
             });

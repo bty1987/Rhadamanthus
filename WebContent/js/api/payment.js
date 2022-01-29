@@ -249,7 +249,7 @@ $.extend(api, {payment: {
 		url: "refundMaterialPayment.do",
 		type: "update",
 		tranargs: {
-			args: ["materialPayment.cash", "materialPayment.bank", "materialPayment.checkv", "materialPayment.coupon"]
+			args: ["materialPayment.cash", "materialPayment.bank", "materialPayment.checkv", "materialPayment.advance", "materialPayment.coupon"]
 		}
 	},
 	refundMaterialPaymentForDeposit: {url: "refundMaterialPaymentForDeposit.do"}, //前台不需要传参
@@ -390,14 +390,14 @@ $.extend(api, {payment: {
 		url: "collectServicePayment.do",
 		type: "update",
 		tranargs: {
-			args: ["servicePayment.referMoney", "serviceReceipt.cash", "serviceReceipt.bank", "serviceReceipt.checkv"]
+			args: ["servicePayment.referMoney", "serviceReceipt.cash", "serviceReceipt.bank", "serviceReceipt.checkv", "serviceReceipt.advance"]
 		}
 	},
 	collectServicePaymentForService: {
 		url: "collectServicePaymentForService.do",
 		type: "update",
 		tranargs: {
-			args: ["servicePayment.referMoney", "serviceReceipt.cash", "serviceReceipt.bank", "serviceReceipt.checkv"]
+			args: ["servicePayment.referMoney", "serviceReceipt.cash", "serviceReceipt.bank", "serviceReceipt.checkv", "serviceReceipt.advance"]
 		}
 	},
 	pageServicePayment: {
@@ -408,7 +408,7 @@ $.extend(api, {payment: {
 			args: ["advanceMoney", "serviceMoney"]
 		},{
 			result: "paging-data-serviceReceipt",
-			args: ["cash", "bank", "checkv", "installment", "accounts"]
+			args: ["cash", "bank", "checkv", "installment", "accounts", "advance"]
 		}]
 	},
 	confirmServicePayment: {url: "confirmServicePayment.do"},
@@ -416,7 +416,7 @@ $.extend(api, {payment: {
 		url: "refundServicePaymentForService.do",
 		type: "update",
 		tranargs: {
-			args: ["servicePayment.referMoney", "serviceReceipt.cash", "serviceReceipt.bank", "serviceReceipt.checkv"]
+			args: ["servicePayment.referMoney", "serviceReceipt.cash", "serviceReceipt.bank", "serviceReceipt.checkv", "serviceReceipt.advance"]
 		}
 	},
 	queryServiceReceiptBySrId: {
@@ -424,7 +424,7 @@ $.extend(api, {payment: {
 		type: "query",
 		tranargs: [{
 			result: "serviceReceipt",
-			args: ["cash", "bank", "checkv", "installment", "accounts"]
+			args: ["cash", "bank", "checkv", "installment", "accounts", "advance"]
 		}]
 	},
 	queryServicePaymentForNotInitBySrId: {
@@ -443,14 +443,14 @@ $.extend(api, {payment: {
 			args: ["advanceMoney", "serviceMoney", "referMoney"]
 		}, {
 			result: "servicePayments-serviceReceipt",
-			args: ["cash", "bank", "checkv", "installment", "accounts"]
+			args: ["cash", "bank", "checkv", "installment", "accounts", "advance"]
 		}]
 	},
 	updateServicePayment: {
 		url: "updateServicePayment.do",
 		type: "update",
 		tranargs: {
-			args: ["servicePayment.referMoney", "serviceReceipt.cash", "serviceReceipt.bank", "serviceReceipt.checkv"]
+			args: ["servicePayment.referMoney", "serviceReceipt.cash", "serviceReceipt.bank", "serviceReceipt.checkv", "serviceReceipt.advance"]
 		}
 	},
 	
@@ -625,6 +625,7 @@ $.extend(api, {payment: {
 	deleteWalletres: {url: "deleteWalletres.do"},
 
 	pagePaymentContract: {url:"pagePaymentContract.do"},
+	pollingPaymentContract: {url:"pollingPaymentContract.do"},
 	queryPaymentContract: {url: "queryPaymentContract.do"},
 	sendPaymentContractForAuth: {url: "sendPaymentContractForAuth.do"},
 	sendPaymentContract: {url: "sendPaymentContract.do"},

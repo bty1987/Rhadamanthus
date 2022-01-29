@@ -36,48 +36,22 @@ public class SoodsAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "pageSoodsByQiid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageSoodsByQiid() throws FLException {
-
-		soodsService.pageSoodsByQiid(getPaging(), getFilters(), soods);
-
-		return SUCCESS;
-	}
-	
-	@Action(value = "pageSoodsBySid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageSoodsBySid() throws FLException {
-
-		soodsService.pageSoodsBySid(getPaging(), getFilters(), soods);
-
-		return SUCCESS;
-	}
-
-	@Action(value = "querySoodsByQiid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String querySoodsByQiid() throws FLException {
-
-		soodes = soodsService.querySoodsByQiid(soods);
-
-		return SUCCESS;
-	}
-	
-	@Action(value = "querySoodsBySid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String querySoodsBySid() throws FLException {
-
-		soodes = soodsService.querySoodsBySid(soods);
-
-		return SUCCESS;
-	}
-
-	
 	@Action(value = "querySoodsByName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySoodsByName() throws FLException {
 
-		soodes = soodsService.querySoodsByName(soods,queryCompany());
+		soodes = soodsService.querySoodsByName(soods, queryCompany());
 
 		return SUCCESS;
 	}
 
-	
+	@Action(value = "querySoods", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String querySoods() throws FLException {
+
+		soods = soodsService.querySoods(soods);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "addSoods", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addSoods() throws FLException {
 
@@ -85,16 +59,6 @@ public class SoodsAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
-	@Action(value = "addSoodsItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addSoodsItem() throws FLException {
-
-		soodsService.addSoodsItem(soods, queryCompany());
-
-		return SUCCESS;
-	}
-	
-	
 
 	@Action(value = "updateSoods", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateSoods() throws FLException {
@@ -111,7 +75,7 @@ public class SoodsAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "copySoods", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String copySoods() throws FLException {
 
@@ -124,14 +88,6 @@ public class SoodsAction extends BaseListAction {
 	public String deleteSoods() throws FLException {
 
 		soodsService.deleteSoods(soods);
-
-		return SUCCESS;
-	}
-	
-	@Action(value = "deleteSoodsItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteSoodsItem() throws FLException {
-
-		soodsService.deleteSoodsItem(soods);
 
 		return SUCCESS;
 	}

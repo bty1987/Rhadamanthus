@@ -19,6 +19,26 @@ public class AdditemVO implements Serializable {
 	
 	private Integer company;
 	
+	private String unit;//单位
+	
+	private short price;//单价
+	
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
+	public short getPrice() {
+		return price;
+	}
+
+	public void setPrice(short price) {
+		this.price = price;
+	}
+
 	public AdditemVO() {
 		super();
 	}

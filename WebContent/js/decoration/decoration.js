@@ -20,6 +20,9 @@
         infoItems: {},
         repairStatusItem: com.focusPage("#repairStatusItem"),
 
+        paymentTypes: {},
+        violation: com.focusPage("#violation"),
+
         drawContractItems: {
         	coupon : com.focusPage("#coupon"),
         	thing : com.focusPage("#thing"),
@@ -42,7 +45,6 @@
     order.drawContractModal = com.focusPage("#drawContractModal");
     order.prosignModal = com.focusPage("#prosignModal");
     order.contractBtn = com.focusPage("#contractBtn");
-    order.dalanceModal = com.focusPage("#dalanceModal");
     order.repairModal = com.focusPage("#repairModal");
 
     //签订合同
@@ -75,13 +77,8 @@
         com.closeTip();
     });
 
-    //结算
-    order.dalanceModal.on('hide.bs.modal', function (e) {
-    	com.cleanItems(order.infoItems);
-    	com.closeTip();
-    });
-
     order.infoItems.timeLimit = com.focusPage("#timeLimit");
+    order.infoItems.quoteArea = com.focusPage("#quoteArea");
     order.infoItems.ishovel = com.focusPage("#ishovel");
     order.infoItems.iskey  = com.focusPage("#iskey");
     order.infoItems.isCeremony  = com.focusPage("#isCeremony");
@@ -185,15 +182,19 @@
         }
         var backup = order.infoItems.backup.val();
 
-        var options = {
-            "decoration.orderId": params["decoration.orderId"],
-            "backup": backup
-        };
+        var options = { "decoration.orderId": params["decoration.orderId"] };
 
         if (backup > order.paymentValue) {
             com.showAlert(com.error, "违约金金额大于已付款金额,操作失败");
             return;
         }
+        var index = 0;
+
+        $.each(order.paymentTypes, function (i, v) {
+            options["decorationPayments[" + index + "].paymentType"] = v;
+            options["decorationPayments[" + index + "].referMoney"] = $("#backup_" + i).val();
+            index++;
+        });
 
         com.post(api.decoration.terminalDecoration, options, function (res) {
             com.showAlert(com.info, "申请成功");
@@ -254,6 +255,7 @@
 
         var options = {
             "constructionInfo.orderId" : contract.decorationOrderId,
+            "constructionInfo.decoration.house.quoteArea" : order.infoItems.quoteArea.val(),
             "constructionInfo.timeLimit" : order.infoItems.timeLimit.val(),
             "constructionInfo.ishovel": order.infoItems.ishovel.val(),
             "constructionInfo.iskey": order.infoItems.iskey.val(),
@@ -299,6 +301,18 @@
             order.repairStatus[v.key] = v.value;
         });
 
+    }, null, false);
+
+    com.post(api.data.queryPaymentType, {"paymentType.type": 1, "paymentType.atttype": 4}, function (res) {
+
+        $.each(res.paymentTypes, function (i, v) {
+            var $div = $('<div class="form-group"></div>');
+            $('<label for="refundValue" class="col-sm-3 control-label no-padding-right"></label>').html(v.name).appendTo($div);
+            $('<div class="col-sm-9"></div>').append($('<input id="backup_'+v.ptid+'" class="col-xs-10 col-sm-5 v_required v_float_3" type="text" data-toggle="popover" data-trigger="manual"/>')).appendTo($div);
+
+            order.violation.append($div);
+            order.paymentTypes[v.ptid] = v.name;
+        });
     }, null, false);
 
     /**
@@ -475,7 +489,7 @@
                     btnContract.click(function () {
                         modalAgreementModal(v.orderId, v.customer.cid, v, "advance");
                     });
-                    
+
                     btnContractc.click(function () {
                         modalAgreementModal(v.orderId, v.customer.cid, v, "design");
                     });
@@ -546,7 +560,6 @@
 
                     btnBalance.click(function () {
                         balanceOrder(v.orderId);
-
                     });
                     btnRepair.click(function () {
                         repairOrder(v.orderId);
@@ -591,9 +604,7 @@
                                 }
                                 break;
                             case "selection":// 选材
-                                if ([3, 8].indexOf(v.status) != -1) {
-                                    $divBtnWrap.append(btnSelect);
-                                }
+                                $divBtnWrap.append(btnSelect);
                                 break;
                             case "addminus"://增减项
                                 if ([3, 8].indexOf(v.status) != -1) {
@@ -702,6 +713,10 @@
 
             com.focusPage("#customerCurrentName").html(v.customer.name == null ? "暂无" : v.customer.name);
             com.focusPage("#identity").html(v.customer.identity == null ? "暂无" : v.customer.identity);
+
+            com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": v.orderId}, function (res) {
+                order.infoItems.quoteArea.val(res.decoration.house.quoteArea);
+            });
 
             com.post(api.construction.queryConstructionInfoByOrderId, {"constructionInfo.orderId": v.orderId}, function (result) {
                 var datas = result.constructionInfo;
@@ -958,25 +973,14 @@
         }
 
         function balanceOrder(orderId) {
-            com.post(api.decoration.queryDecorationBalance, {"decoration.orderId" : orderId}, function (data) {
-                var balance = data.decorationBalance.balance;
-                order.dalanceModal.modal("show");
-                order.infoItems.deocBalance.val(balance == null ? " " : balance);
+            com.showConfirm("确认要结算吗?", function () {
+                var options = {
+                    "decorationBalance.decoration.orderId" : orderId,
+                    "decorationBalance.balance" : 0
+                };
 
-                com.focusPage("#saveBtnBalance").on("click", function () {
-
-                    if(com.validate("dalanceModal"))
-                        return;
-
-                    var options = {
-                        "decorationBalance.decoration.orderId" : orderId,
-                        "decorationBalance.balance" : order.infoItems.balance.val()
-                    };
-
-                    com.post(api.decoration.makeDecorationBalance, options, function () {
-                        com.showAlert(com.info, "编辑成功");
-                    });
-                    order.dalanceModal.modal("hide");
+                com.post(api.decoration.makeDecorationBalance, options, function () {
+                    com.showAlert(com.info, "结算成功");
                 });
             });
         }

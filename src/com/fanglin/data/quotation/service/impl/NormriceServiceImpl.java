@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.vo.MeasurementUnitVO;
 import com.fanglin.communion.vo.WorkTypeVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.data.po.ConstructionNodePO;
 import com.fanglin.data.po.NormricePO;
@@ -19,13 +20,35 @@ import com.fanglin.data.quotation.service.NormriceService;
 import com.fanglin.data.quotation.vo.NormriceVO;
 import com.fanglin.data.quotation.vo.QuotationItemVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.Paging;
 
 @Service("normriceService")
 @Transactional(readOnly = true)
 public class NormriceServiceImpl implements NormriceService {
 
 	@Autowired
-	NormriceDao normriceDao;
+	public NormriceDao normriceDao;
+	
+	@Override
+	public void pageNormrice(Paging paging, List<Filter> filters) {
+
+		List<NormricePO> normricePOs = normriceDao.pageNormrice(paging, filters);
+		List<NormriceVO> normriceVOs = new ArrayList<NormriceVO>();
+
+		for (NormricePO normricePO : normricePOs) {
+
+			NormriceVO normriceVO = new NormriceVO(new ConstructionNodeVO(), new QuotationItemVO(null, null, null, null, null, new WorkTypeVO(), new MeasurementUnitVO()));
+
+			BeanUtil.copyProperties(normricePO, normriceVO, Arrays.asList("constructionNode", "quotationItem"));
+			BeanUtil.copyProperties(normricePO.getConstructionNode(), normriceVO.getConstructionNode());
+
+			normricePO.getQuotationItem().ptv(normriceVO.getQuotationItem());
+
+			normriceVOs.add(normriceVO);
+		}
+
+		paging.setData(normriceVOs);
+	}
 
 	@Override
 	public List<NormriceVO> queryNormriceByQiid(Long qiid) {

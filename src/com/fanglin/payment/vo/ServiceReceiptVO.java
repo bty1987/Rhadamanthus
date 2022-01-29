@@ -40,6 +40,10 @@ public class ServiceReceiptVO implements Serializable {
 	private Long accounts;
 
 	private String accountsBank;
+	
+	private Long advance;
+	
+	private Short advanceType;
 
 	private String comment;
 
@@ -178,6 +182,22 @@ public class ServiceReceiptVO implements Serializable {
 
 	public void setAccountsBank(String accountsBank) {
 		this.accountsBank = accountsBank;
+	}
+
+	public Long getAdvance() {
+		return advance;
+	}
+
+	public void setAdvance(Long advance) {
+		this.advance = advance;
+	}
+
+	public Short getAdvanceType() {
+		return advanceType;
+	}
+
+	public void setAdvanceType(Short advanceType) {
+		this.advanceType = advanceType;
 	}
 
 	public String getComment() {

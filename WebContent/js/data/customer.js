@@ -27,14 +27,15 @@ jQuery(function($) {
             relationshipType: com.focusPage("#relationshipType", "#customerModal"),
 
             type: com.focusPage("#type", "#customerModal"),
-
-            addphone: com.focusPage("#addphone", "#customerModal"),
+            
             companyNo: com.focusPage("#companyNo", "#customerModal"),
             companyName: com.focusPage("#companyName", "#customerModal"),
             companyAddr: com.focusPage("#companyAddr", "#customerModal"),
             companyPhone: com.focusPage("#companyPhone", "#customerModal"),
             companyBank: com.focusPage("#companyBank", "#customerModal"),
             companyBankno: com.focusPage("#companyBankno", "#customerModal"),
+            
+            addphone: com.focusPage("#addphone", "#customerphoneModal"),
         },
 
         cid: null,
@@ -69,7 +70,6 @@ jQuery(function($) {
         $.each(res.customerType, function (i,v) {
             customer.customerTypes[v.key] = v.value;
         })
-
     });
 
 
@@ -105,16 +105,16 @@ jQuery(function($) {
 
     var linebtns = [
         {name: "编辑", clazz: "btn-yellow", handle: function(v){
-                customer.cid = v.cid;
-                editCustomer(v);
-                return false;
-            }},
+            customer.cid = v.cid;
+            editCustomer(v);
+            return false;
+        }},
         {name: "管理电话", clazz: "btn-success", handle: function(v){
-                customer.cid = v.cid;
-                customer.items.name = v.name;
-                managephone();
-                return false;
-            }},
+            customer.cid = v.cid;
+            customer.items.name = v.name;
+            managephone();
+            return false;
+        }},
     ];
 
     searcher.line("name", lineprops, linebtns).render();

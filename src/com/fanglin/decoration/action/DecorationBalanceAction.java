@@ -26,7 +26,15 @@ public class DecorationBalanceAction extends BaseListAction {
 	private DecorationVO decoration;
 	
 	private DecorationBalanceVO decorationBalance;
-	
+
+	@Action(value = "pageDecorationBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageDecorationBalance() throws FLException {
+
+		decorationBalanceService.pageDecorationBalance(getPaging(), getFilters());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryDecorationBalance", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecorationBalance() throws FLException{
 		

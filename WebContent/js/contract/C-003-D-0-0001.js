@@ -25,7 +25,7 @@
         C-001-D-3-0001.html 方林装修服务费相关合同
         C-005-D-0-0001.html 恩林装修工程相关合同
         
-        此文件为: 爱林装修工程预签合同
+        此文件为: 宜家装修工程预签合同
  */
 
 jQuery(function($) {
@@ -66,6 +66,14 @@ jQuery(function($) {
         com.focusPage("#con-payment-second", "#form").hide();
     }
     
+    if(contractEdit.contractArgs.company != "1"){
+        com.focusPage(".company", "#form").hide();
+    }
+	
+	if(contractEdit.contractArgs.company == "1"){
+	    com.focusPage(".customer", "#form").hide();
+	}
+    
     com.post(api.common.current, {}, function(res){
         contractEdit.current = new Date(res.current);
     }, null, false);
@@ -96,7 +104,26 @@ jQuery(function($) {
         contractEdit.cover["cov-orderId"] = contractEdit.decorationOrderId;
         contractEdit.cover["cov-customer-name"] = customer.name;
         contractEdit.cover["cov-customer-phone"] = customer.phone;
-    });
+        contractEdit.cover["sin-customer-name"] = customer.name;
+        contractEdit.cover["sin-customer-ident"] = customer.identity;
+        
+        com.focusPage("#con-company-no", "#form").val(customer.companyNo);
+        com.focusPage("#con-company-name", "#form").val(customer.companyName);
+        com.focusPage("#con-company-name1", "#form").val(customer.companyName);
+        com.focusPage("#con-company-phone", "#form").val(customer.companyPhone);
+        com.focusPage("#con-company-addr", "#form").val(customer.companyAddr);
+        com.focusPage("#con-company-bank", "#form").val(customer.companyBank);
+        com.focusPage("#con-company-bankno", "#form").val(customer.companyBankno);
+    }, null, false);
+    
+    if(contractEdit.contractArgs.company == "1" && contractEdit.customer.type == 0){
+        
+        com.showAlert(com.warning, "客户类型为个人");
+        
+        com.focusPage("#contractPopUp").empty();
+        
+        return false;
+    }
     
     com.post(api.construction.queryConstructionInfoByOrderId, {"constructionInfo.orderId": contractEdit.decorationOrderId}, function (result) {
         
@@ -124,6 +151,16 @@ jQuery(function($) {
         
     }, null, false);
 
+    //获取预签报价总额
+    com.post(api.quotation.queryProtationForDefaultByOrderId, {"protation.orderId": contractEdit.decorationOrderId}, function(res){
+    	contractEdit.totalPrice = res.protation.totalPrice;
+    }, null, false); 
+    
+    //获取计入款项的券总额
+    com.post(api.decoration.amountDecorationActivity, {"decorationActivity.orderId": contractEdit.decorationOrderId, "decorationActivityItem.isPayment": 0, "decorationActivityItem.type": 0}, function(res){
+    	contractEdit.amount = res.decorationActivity.amount;
+    }, null, false);
+    
     com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": contractEdit.decorationOrderId}, function (res) {
         
         var data = res.decoration;
@@ -149,8 +186,8 @@ jQuery(function($) {
         com.focusPage("#con-contract-rtotal", "#form").val(data.factPrice);
         
         com.focusPage("#con-innerarea", "#form").val(data.house.innerArea);
-        com.focusPage("#con-precontract-total", "#form").val(data.precontractPrice);
-        com.focusPage("#con-precontract-total-30", "#form").val(Math.round(utils.accMul(data.precontractPrice, 0.3)));
+        com.focusPage("#con-precontract-total", "#form").val(Math.round(utils.accSub(contractEdit.totalPrice,contractEdit.amount)));
+        com.focusPage("#con-precontract-total-30", "#form").val(Math.round(utils.accMul(utils.accSub(contractEdit.totalPrice,contractEdit.amount), 0.3)));
         
         contractEdit.decoration = data;
 
@@ -276,9 +313,6 @@ jQuery(function($) {
             data["con-sign-month"] = com.dateFormat(contractEdit.current, "MM");
             data["con-sign-day"] = com.dateFormat(contractEdit.current, "dd");
             
-//            data["con-contract-total-cn"] = utils.getCNMoney(parseFloat(data["con-contract-total"]));
-//            data["con-contract-stotal-cn"] = utils.getCNMoney(parseFloat(data["con-contract-stotal"]));
-//            data["con-contract-rtotal-cn"] = utils.getCNMoney(parseFloat(data["con-contract-rtotal"]));
             data["con-design-money-cn"] = utils.getCNMoney(parseFloat(data["con-design-money"]));
             
             data["con-precontract-total-cn"] = utils.getCNMoney(parseFloat(data["con-precontract-total"]));
@@ -287,11 +321,19 @@ jQuery(function($) {
             
             data["con-invoice-type1"] = data["con-invoice-type"];
             
-            data["sin-customer-name"] = data["con-customer-name"];
-//            data["sin-customer-phone"] = data["con-customer-phone"];
             data["sin-customer-ident"] = data["con-customer-ident"];
             
             data["con-precontract-total"] = data["con-precontract-total"];
+            
+            if(contractEdit.contractArgs.company == "1"){
+            	delete data["con-customer-name"];
+                delete data["con-customer-ident"];
+                delete data["cov-customer-name"];
+                
+                data["cov-company-name"] = data["con-company-name"];
+                data["sin-company-name"] = data["con-company-name"];
+                data["sin-company-phone"] = data["con-company-phone"];
+            }
             
             console.log(data);
             

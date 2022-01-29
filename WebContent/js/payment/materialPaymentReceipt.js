@@ -20,7 +20,6 @@ jQuery(function($) {
 
 	params = parent.params;
 
-
 	com.post(api.common.queryReceiptType, {}, function (res) {
 		$.each(res.receiptTypes, function (i, v) {
 			if (v.type == 2) {
@@ -160,6 +159,8 @@ jQuery(function($) {
 		var noTr = $('<tr></tr>').appendTo(noTable);
 		var noTd = $('<td colspan="5"></td>').appendTo(noTr);
 		var headReceiptDiv = $('<div style="text-align: center; background-color:#ffffff"></div>').appendTo(center);
+		var no = (Array(10).join(0)+params.mrId).slice(-10);
+		var spanNo = $('<span style="float: left;"></span>').html("编号:"+no).appendTo(headReceiptDiv);
 		var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(parent.params.company.srganization.name + "代收款收据").appendTo(headReceiptDiv);
 
 		var receiptTable = $('<table border="1" style="width: 100%; border-collapse:collapse;" cellpadding="0" cellspacing="0">').appendTo(center);

@@ -39,6 +39,14 @@ public class AddReduceAction extends BaseListAction {
 
 	private AddReduceVO addReduce;
 
+	@Action(value = "pageAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageAddReduce() throws FLException {
+
+		addReduceService.pageAddReduce(getPaging(), getFilters(), addReduce);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "pageAddReduceByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageAddReduceByOrderId() throws FLException {
 
@@ -103,18 +111,34 @@ public class AddReduceAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "deleteAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteAddReduce() throws FLException {
-
-		addReduceService.deleteAddReduceByArId(addReduce);
-
-		return SUCCESS;
-	}
-
 	@Action(value = "submitAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String submitAddReduce() throws FLException {
 
 		addReduceService.submitAddReduce(addReduce, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "unpayAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String unpayAddReduce() throws FLException {
+
+		addReduceService.unpayAddReduce(addReduce);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "confirmAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String confirmAddReduce() throws FLException {
+
+		addReduceService.confirmAddReduce(addReduce);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "deleteAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteAddReduce() throws FLException {
+
+		addReduceService.deleteAddReduceByArId(addReduce);
 
 		return SUCCESS;
 	}

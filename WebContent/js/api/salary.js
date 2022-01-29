@@ -179,5 +179,11 @@ $.extend(api, {salary: {
          tranargs: {
              args: ["withhold.money"]
          }},
-     updateWithholdForStatus: {url: "updateWithholdForStatus.do"}
+    updateWithholdForStatus: {url: "updateWithholdForStatus.do"},
+
+    querySalaryDrawing: {url: "querySalaryDrawing.do"},
+
+    addSalaryDrawing:{url:"addSalaryDrawing.do",server: "salary", intercept: true},
+
+    deleteSalaryDrawing:{url:"deleteSalaryDrawing.do",server: "salary"},
 }});

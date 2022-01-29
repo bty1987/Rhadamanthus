@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.construction.dao.ConstructionAccessoryDao;
 import com.fanglin.construction.dao.ConstructionCostDao;
 import com.fanglin.construction.dao.ConstructionDao;
@@ -38,6 +37,7 @@ import com.fanglin.construction.vo.DrawLineVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.DrawLineGroupDao;
+import com.fanglin.data.common.vo.ConstructionNodeVO;
 import com.fanglin.data.common.vo.DrawLineGroupVO;
 import com.fanglin.data.po.DrawLineGroupPO;
 import com.fanglin.decoration.dao.DecorationDao;
@@ -219,9 +219,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 		int count = constructionAccessoryDao.countConstructionAccessory(_constructionPO.getCid());
 
 		if (count == 0) {
-
 			constructionAccessoryDao.makeConstructionAccessory(_constructionPO.getCid(), ccid);
-
 		}
 
 		return 0;
@@ -288,10 +286,10 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 		ConstructionInfoPO constructionInfo = constructionInfoDao.queryConstructionInfoByOrderId(orderId);
 
-		if(constructionInfo == null){
+		if (constructionInfo == null) {
 			throw new FLException(120020, "工程信息不存在");
 		}
-		
+
 		int timelimit = 0;
 
 		for (ConstructionNodeVO constructionNodeVO : constructionNodes) {

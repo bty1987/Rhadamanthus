@@ -8,15 +8,15 @@ import com.fanglin.system.vo.SystemConfigVO;
 import com.fanglin.utils.Paging;
 
 public interface SystemConfigService {
-	
-	public List<SystemConfigVO> pageSystemConfig(Paging paging,List<Filter> filters);
-	
+
+	public List<SystemConfigVO> pageSystemConfig(Paging paging, List<Filter> filters) throws FLException;
+
 	public int updateSystemConfig(SystemConfigVO systemConfigVO) throws FLException;
-	
+
 	public List<SystemConfigVO> querySystemConfigByCid(Integer company);
-	
-	public void addSystemConfig(SystemConfigVO systemConfigVO,String userId) throws FLException;
-	
+
+	public void addSystemConfig(SystemConfigVO systemConfigVO, String userId) throws FLException;
+
 	public void deleteSystemConfig(SystemConfigVO systemConfigVO) throws FLException;
-	
+
 }

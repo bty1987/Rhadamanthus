@@ -34,8 +34,30 @@ public class AdditemPO implements Serializable{
 	private ConstructionNodePO  constructionNode;
 
 	private short status;
-	
+		
 	private int company;
+	
+	private String unit;//单位
+	
+	private short price;//单价
+	
+	@Column(name = "unit")
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
+	@Column(name = "price")
+	public short getPrice() {
+		return price;
+	}
+
+	public void setPrice(short price) {
+		this.price = price;
+	}
 
 	public AdditemPO() {
 		super();

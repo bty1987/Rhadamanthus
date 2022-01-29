@@ -49,7 +49,9 @@ public class RecruitmentDaoImpl extends DaoImpl<RecruitmentPO> implements Recrui
 				query.add(query.getCriterion("phone", filter));
 			} else if ("employWay".equals(field)) {
 				query.add(Restrictions.eq("employWay", Short.valueOf(data)));
-			}
+			}else if ("status".equals(field)) {
+				query.add(Restrictions.eq("status", Short.valueOf(data)));
+			}	
 		}
 		
 	}

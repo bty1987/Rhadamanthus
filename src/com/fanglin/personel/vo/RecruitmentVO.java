@@ -82,6 +82,8 @@ public class RecruitmentVO implements Serializable{
 	private Short isCriminal;
 	 
 	private Short isDisease;
+	
+	private Short status;
 
 	public Long getRid() {
 		return rid;
@@ -385,6 +387,13 @@ public class RecruitmentVO implements Serializable{
 
 	public void setIsDisease(Short isDisease) {
 		this.isDisease = isDisease;
-	}	
-	
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
+	}
 }

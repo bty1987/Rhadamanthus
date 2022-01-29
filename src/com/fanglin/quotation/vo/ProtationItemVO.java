@@ -25,6 +25,8 @@ public class ProtationItemVO implements Serializable {
 
 	private Integer basicNum;
 
+	private Long cost;
+
 	private Long price;
 
 	private Integer num;
@@ -61,6 +63,14 @@ public class ProtationItemVO implements Serializable {
 
 	public void setBasicNum(Integer basicNum) {
 		this.basicNum = basicNum;
+	}
+
+	public Long getCost() {
+		return cost;
+	}
+
+	public void setCost(Long cost) {
+		this.cost = cost;
 	}
 
 	public Long getPrice() {

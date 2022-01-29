@@ -36,9 +36,9 @@ jQuery(function ($) {
 
     var searcher = new Searcher();
 
-    searcher.base("quotationItemCondList", "quotationItemPagenation", "quotationItemResultList", api.data.pageSoodsBySid);
+    searcher.base("quotationItemCondList", "quotationItemPagenation", "quotationItemResultList", api.data.pageSoodsItemBySid);
 
-    searcher.param({"soods.sid": params.sid});
+    searcher.param({"soodsItem.sid": params.sid});
 
     var lineprops = [
         {fieId: "quotationItem.no", name: "编号", prop:"quotationItem.no", clazz: "grey"},
@@ -49,17 +49,17 @@ jQuery(function ($) {
         {fieId: "goods.brand", name: "商品品牌", prop: "goods.brand", clazz: "grey"},
         {fieId: "accessoriesType", name: "商品辅类", prop: "goods.accessoriesType", clazz: "grey"},
     ];
+    
     var linebtns = [
         {name: "删除", clazz: "btn-success", handle: function(v){
-                var options = {
-                    "soods.sid": v.sid,
-                    "soods.quotationItem.qiid": v.quotationItem.qiid,
-                };
-                com.post(api.data.deleteSoodsItem,options, function(e) {
-                    com.showAlert(com.info, "操作成功");
-                    searcher.doSearch();
-                });
-            }}
+            var options = {
+                "soodsItem.siid": v.siid
+            };
+            com.post(api.data.deleteSoodsItem,options, function(e) {
+                com.showAlert(com.info, "操作成功");
+                searcher.doSearch();
+            });
+        }}
     ];
 
     searcher.line("goods.name", lineprops, linebtns).render();

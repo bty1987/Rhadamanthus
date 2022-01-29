@@ -38,6 +38,12 @@ public class PresignProducePO implements Serializable {
 	
 	private long preferPrice;
 
+	private long mostPrice;
+	
+	private int costRate;
+	
+	private int mostRate;
+	
 	public PresignProducePO() {
 		super();
 	}
@@ -142,5 +148,34 @@ public class PresignProducePO implements Serializable {
 	public void setPreferPrice(long preferPrice) {
 		this.preferPrice = preferPrice;
 	}
+
+	@Column(name = "mostPrice")
+	public long getMostPrice() {
+		return mostPrice;
+	}
+
+	public void setMostPrice(long mostPrice) {
+		this.mostPrice = mostPrice;
+	}
+
+	@Column(name = "costRate")
+	public int getCostRate() {
+		return costRate;
+	}
+
+	public void setCostRate(int costRate) {
+		this.costRate = costRate;
+	}
+
+	@Column(name = "mostRate")
+	public int getMostRate() {
+		return mostRate;
+	}
+
+	public void setMostRate(int mostRate) {
+		this.mostRate = mostRate;
+	}
+	
+	
 
 }

@@ -1,6 +1,6 @@
 
 Condition.addupRule("data", {
-    
+
     "worktype": {
         label: "工种",
         type: "select",
@@ -17,7 +17,7 @@ Condition.addupRule("data", {
             valuePath: "name"
         }
     },
-   
+
     "unit-name": {
         label: "查询单位",
         type: "text",
@@ -43,7 +43,7 @@ Condition.addupRule("data", {
             valuePath: "value"
         }
     },
-    
+
     "village-name": {
         label: "楼盘名称",
         type:  "text",
@@ -53,7 +53,7 @@ Condition.addupRule("data", {
             validate: null
         }
     },
-    
+
     "receiptType-name": {
         label: "名称",
         type: "text",
@@ -95,7 +95,7 @@ Condition.addupRule("data", {
             valuePath: "value"
         }
     },
-    
+
     "quotation-version-name": {
         label: "版本名称",
         type: "text",
@@ -220,15 +220,41 @@ Condition.addupRule("data", {
             op: "eq",
             validate: null
         },
-	    dataSource : {
-	        url : api.ds.data,
-	        postData : {},
-	        listPath :"Status",
-	        keyPath:"key",
-	        valuePath:"value"
-	    }
+        dataSource : {
+            url : api.ds.data,
+            postData : {},
+            listPath :"Status",
+            keyPath:"key",
+            valuePath:"value"
+        }
     },
-    
+
+    "quotation-packitem-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
+        }
+    },
+    "quotation-packitem-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource : {
+            url : api.ds.data,
+            postData : {},
+            listPath :"Status",
+            keyPath:"key",
+            valuePath:"value"
+        }
+    },
+
     "model-no": {
         label: "型号",
         type: "text",
@@ -294,7 +320,7 @@ Condition.addupRule("data", {
             valuePath: "value"
         }
     },
-    
+
     "goods-no": {
         label: "商品编号",
         type: "text",
@@ -390,7 +416,7 @@ Condition.addupRule("data", {
             validate: null
         }
     },
-    
+
     "aoods-name" :{
         label: "商品名",
         type: "text",
@@ -444,7 +470,7 @@ Condition.addupRule("data", {
             valuePath: "name"
         }
     },
-    
+
     "soods-name" :{
         label: "商品名",
         type: "text",
@@ -590,7 +616,7 @@ Condition.addupRule("data", {
             validate: null
         }
     },
-    
+
     "drawline-group-name": {
         label: "放线小组",
         type: "text",
@@ -634,7 +660,7 @@ Condition.addupRule("data", {
             validate: null
         }
     },
-    
+
     "task-name" : {
         label:"任务名称",
         type:"text",
@@ -644,14 +670,14 @@ Condition.addupRule("data", {
             validate:null
         }
     },
-    
+
     "task-isShow" : {
         label:"显示",
         type:"select",
         submitConfig:{
-        	name: "taskIsShow",
-        	op: "eq",
-        	validate: null 
+            name: "taskIsShow",
+            op: "eq",
+            validate: null
         },
         dataSource: {
             url: api.ds.data,
@@ -661,14 +687,14 @@ Condition.addupRule("data", {
             valuePath: "value"
         }
     },
-    
+
     "task-status" : {
         label:"状态",
         type:"select",
         submitConfig:{
-        	name: "taskStatus",
-        	op: "eq",
-        	validate: null 
+            name: "taskStatus",
+            op: "eq",
+            validate: null
         },
         dataSource: {
             url: api.ds.data,
@@ -678,14 +704,14 @@ Condition.addupRule("data", {
             valuePath: "value"
         }
     },
-    
+
     "task-level" : {
         label:"等级",
         type:"select",
         submitConfig:{
-        	name: "taskLevel",
-        	op: "eq",
-        	validate: null 
+            name: "taskLevel",
+            op: "eq",
+            validate: null
         },
         dataSource: {
             url: api.ds.data,
@@ -695,7 +721,7 @@ Condition.addupRule("data", {
             valuePath: "value"
         }
     },
-    
+
     "chart-no": {
         label: "编号",
         type: "text",
@@ -714,7 +740,7 @@ Condition.addupRule("data", {
             validate: null
         }
     },
-    
+
     "contract-name": {
         label: "名称",
         type: "text",
@@ -892,5 +918,5 @@ Condition.addupRule("data", {
             valuePath: "value"
         }
     }
-    
+
 });

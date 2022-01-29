@@ -9,6 +9,7 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 
 import com.fanglin.core.dao.Dao;
+import com.fanglin.core.vo.Filter;
 
 public class DaoImpl<T> extends GenericDaoImpl implements Dao<T> {
 
@@ -49,6 +50,10 @@ public class DaoImpl<T> extends GenericDaoImpl implements Dao<T> {
 
 	protected Criteria createCriteria() {
 		return createCriteria(entityClass);
+	}
+
+	public Criterion getCriterion(Filter filter) {
+		return getCriterion(filter.getField(), filter.getData(), filter.getOp());
 	}
 
 	public Criterion getCriterion(String propertyName, Object value, String op) {

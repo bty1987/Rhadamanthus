@@ -10,11 +10,13 @@ jQuery(function($) {
 			cashCheckbox: com.focusPage("#cashCheckbox", "#servicePayment"),
 			bankCheckbox: com.focusPage("#bankCheckbox", "#servicePayment"),
 			checkvCheckbox: com.focusPage("#checkvCheckbox", "#servicePayment"),
+			advanceCheckbox: com.focusPage("#advanceCheckbox", "#servicePayment"),
 
 			historyDiv: com.focusPage("#historyDiv", "#servicePayment"),
 			historyData: com.focusPage("#historyData", "#servicePayment"),
 			cashDiv: com.focusPage("#cashDiv", "#servicePayment"),
 			checkvDiv: com.focusPage("#checkvDiv", "#servicePayment"),
+			advanceDiv: com.focusPage("#advanceDiv", "#servicePayment"),
 
 			cash: com.focusPage("#cash", "#servicePayment"),
 			cashInfo: com.focusPage("#cashInfo", "#servicePayment"),
@@ -28,6 +30,10 @@ jQuery(function($) {
 			bankDiv: com.focusPage("#bankDiv", "#servicePayment"),
 			bankGroup: com.focusPage("#bankGroup", "#servicePayment"),
 			checkvGroup: com.focusPage("#checkvGroup", "#servicePayment"),
+
+			recharge: com.focusPage("#recharge", "#servicePayment"),
+			advance: com.focusPage("#advance", "#servicePayment"),
+			advanceType: com.focusPage("#advanceType", "#servicePayment"),
 
 			comment: com.focusPage("#comment", "#servicePayment"),
 			referMoney: com.focusPage("#referMoney", "#servicePayment"),
@@ -117,6 +123,8 @@ jQuery(function($) {
 		return false;
 	});
 
+	servicePayment.items.advanceType.bindData([{"key":"1", "value":"合同"}], 'key', 'value');
+
 	servicePayment.btns.collectBtn.bindClick(collect);
 
 	servicePayment.btns.posPush.unbind().click(function(){
@@ -154,7 +162,6 @@ jQuery(function($) {
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-			var $btnCollect = $('<a></a>').addClass('btn btn-minier btn-primary').html("收款");
 			var $btnService = $('<a></a>').addClass('btn btn-minier btn-success').html("服务费");
             var $btnRefunds = $('<a></a>').addClass('btn btn-minier btn-warning').html("服务费退款");
 
@@ -175,18 +182,10 @@ jQuery(function($) {
 
 			if(servicePayment.pageConfig.pageBtn.contains("payway")) paymentUtils.drawHistoryData(servicePayment, v.serviceReceipt, $liLine, "");
 
-			if (servicePayment.pageConfig.pageBtn.contains("collect")) $divBtnWrap.append($btnCollect);
 			if (servicePayment.pageConfig.pageBtn.contains("serviceCollect")) $divBtnWrap.append($btnService);
 			if (servicePayment.pageConfig.pageBtn.contains("serviceRefund")) $divBtnWrap.append($btnRefunds);
 			if (v.status != 0 && servicePayment.pageConfig.pageBtn.contains("print")) $divBtnWrap.append($btnPrint);
 			if (v.status == 1 && servicePayment.pageConfig.pageBtn.contains("update")) $divBtnWrap.append($btnUpdate);
-
-			//收款
-			$btnCollect.click(function(){
-				servicePayment.isCollect = 0;
-				paymentUtils.showPos(servicePayment, {"pointofsales.pid": v.decoration.orderId}, [0, 1]);
-				initCollect(v);
-			});
 
 			//服务费收款
 			$btnService.click(function(){
@@ -287,15 +286,16 @@ jQuery(function($) {
 
 		servicePayment.isCollect == 2 ? servicePayment.items.myModalLabel.html("退款信息") : servicePayment.items.myModalLabel.html("付款信息");
 		servicePayment.isCollect == 2 ? servicePayment.btns.collectBtn.html("退款") : servicePayment.btns.collectBtn.html("收款");
-		servicePayment.isCollect == 2 ? servicePayment.items.referMoney.val(payment.servicePaidup).attr("readonly","readonly") : servicePayment.items.referMoney.html("");
+		servicePayment.isCollect == 2 ? servicePayment.items.referMoney.val(payment.servicePaidup).attr("readonly","readonly") : servicePayment.items.referMoney.html("").removeAttr("readonly");
 		servicePayment.isCollect == 1 ? servicePayment.items.serviceMoneyDiv.show() : servicePayment.items.serviceMoneyDiv.hide();
 		servicePayment.isCollect == 1 ? servicePayment.items.serviceMoney.val(utils.accSub(payment.servicePrice, payment.servicePaidup)).attr("readonly","readonly") : "";
 
-		var type = servicePayment.isCollect == 2 ? 1 : 0; // 0: 收款类型 , 1: 退款类型
+		var type = servicePayment.isCollect == 3 ? 2 : servicePayment.isCollect == 2 ?  1 : 0; // 0: 收款类型 , 1: 退款类型
 
 		if(servicePayment.pageConfig.paytypes.contains("cash")) paymentUtils.initCash(servicePayment);
 		if(servicePayment.pageConfig.paytypes.contains("bank")) paymentUtils.initBank(servicePayment, type);
 		if(servicePayment.pageConfig.paytypes.contains("checkv")) paymentUtils.initCheckv(servicePayment);
+		if(servicePayment.pageConfig.paytypes.contains("advance")) paymentUtils.initAdvance(servicePayment, type, {"advancePayment.decoration.orderId": payment.decoration.orderId}, "balanceAdvance");
 
 		//根据装修单等级获取收据类型等级
 		var grade = ["A", "C"].contains(payment.decoration.grade) ? "A" : "";
@@ -358,10 +358,7 @@ jQuery(function($) {
 			"serviceReceipt.comment" : comment
 		};
 
-		if(servicePayment.isCollect == 0){
-			url = api.payment.collectServicePayment;
-			type = 0;
-		}else if(servicePayment.isCollect == 1){
+		if(servicePayment.isCollect == 1){
 			url = api.payment.collectServicePaymentForService;
 			type = 0;
 		}else if(servicePayment.isCollect == 2){
@@ -391,6 +388,15 @@ jQuery(function($) {
 		var checkv = paymentUtils.paramCheckv(servicePayment, "serviceReceipt", options);
 
 		realPayment = utils.accAdd(realPayment, parseFloat(checkv));
+
+		var advance = paymentUtils.paramAdvance(servicePayment, servicePayment.payment.serviceReceipt, "serviceReceipt", options, "advance", type);
+
+		if(advance < 0){
+			com.showAlert(com.warning, "预付款金额大于当前客户预付款余额!");
+			return false;
+		}
+
+		realPayment = utils.accAdd(realPayment, parseFloat(advance));
 
 		if (referMoney != realPayment) {
 			com.showAlert(com.warning, "当前实收款项总数与应收款项不等,请核实再进行提交!");
@@ -471,7 +477,8 @@ jQuery(function($) {
 					['刷卡', ['serviceReceipt.bank', 'serviceReceipt.bankInfo']],
 					['银行', ['serviceReceipt.checkv', 'serviceReceipt.checkvBank']],
 					['分期', ['serviceReceipt.installment', 'serviceReceipt.installBank']],
-					['对公', ['serviceReceipt.accounts', 'serviceReceipt.accountsBank']]
+					['对公', ['serviceReceipt.accounts', 'serviceReceipt.accountsBank']],
+					['预付款', 'serviceReceipt.advance']
 				],
 				list: res.paging.data
 			}, function(v){

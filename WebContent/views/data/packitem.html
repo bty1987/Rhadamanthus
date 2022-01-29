@@ -1,0 +1,70 @@
+
+<div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+            <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+            <div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+        </div>
+    </div>
+
+    <div class="modal fade" id="addModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabe2">添加</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="name">名称</label>
+                            <div class="col-sm-9">
+                                <input type="text" maxlength="64" id="name" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="constructionNode" orange>工程节点</label>
+                            <div class="col-md-9">
+                                <select id="constructionNode" class='col-xs-10 col-sm-6'></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="ounit" orange>单位</label>
+                            <div class="col-md-9">
+                                <select id="ounit" class='col-xs-10 col-sm-6 v_required'></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="tunit" orange>转换单位</label>
+                            <div class="col-md-9">
+                                <select id="tunit" class='col-xs-10 col-sm-6 v_required'></select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right orange" for="trannum">转换量</label>
+                            <div class="col-sm-9">
+                                <input type="text" maxlength="64" id="trannum" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/data/packitem.js']);
+</script>

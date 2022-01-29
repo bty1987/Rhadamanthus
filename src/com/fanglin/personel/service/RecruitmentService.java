@@ -18,6 +18,10 @@ public interface RecruitmentService {
 	public RecruitmentVO queryRecruitmentByRid(RecruitmentVO recruitmentVO) throws FLException;
 
 	public void updateRecruitment(RecruitmentVO recruitmentVO) throws FLException;
+	
+	public int entryRecruitment(RecruitmentVO recruitmentVO) throws FLException;
+	
+	public int cancelRecruitment(RecruitmentVO recruitmentVO) throws FLException;
 
 	
 }

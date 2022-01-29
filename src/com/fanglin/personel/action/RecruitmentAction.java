@@ -15,9 +15,8 @@ import com.fanglin.personel.service.RecruitmentService;
 import com.fanglin.personel.vo.RecruitmentEducationVO;
 import com.fanglin.personel.vo.RecruitmentOperationVO;
 import com.fanglin.personel.vo.RecruitmentVO;
-import com.fanglin.utils.SystemConfig;
 
-@ParentPackage("base")
+@ParentPackage("common")
 @Namespace("/")
 @Controller
 public class RecruitmentAction extends BaseListAction{
@@ -53,10 +52,6 @@ public class RecruitmentAction extends BaseListAction{
 	@Action(value = "addRecruitment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addRecruitment() throws FLException {
 
-		if (SystemConfig.getString("communion") == null) {
-			throw new FLException(-1, "无操作权限");
-		}
-
 		recruitmentService.addRecruitment(recruitment, recruitmentEducations,recruitmentOperations);
 
 		return SUCCESS;
@@ -65,11 +60,23 @@ public class RecruitmentAction extends BaseListAction{
 	@Action(value = "updateRecruitment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateRecruitment() throws FLException {
 
-		if (SystemConfig.getString("communion") == null) {
-			throw new FLException(-1, "无操作权限");
-		}
-
 		recruitmentService.updateRecruitment(recruitment);
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "entryRecruitment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String entryRecruitment() throws FLException {
+
+		recruitmentService.entryRecruitment(recruitment);
+
+		return SUCCESS;
+	}
+	
+	@Action(value = "cancelRecruitment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String cancelRecruitment() throws FLException {
+
+		recruitmentService.cancelRecruitment(recruitment);
 
 		return SUCCESS;
 	}

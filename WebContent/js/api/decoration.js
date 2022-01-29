@@ -33,6 +33,15 @@ $.extend(api, {decoration: {
         addBackVisit: {url: "addBackVisit.do"},
         
         queryDecorationActivityByOrderId: {url: "queryDecorationActivityByOrderId.do", demo: true},
+        amountDecorationActivity: {
+            url: "amountDecorationActivity.do", 
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "decorationActivity",
+                args: ["amount"]
+            }]},
+
         queryDecorationActivityItem: {
         	url: "queryDecorationActivityItem.do",
             demo: true,
@@ -61,7 +70,14 @@ $.extend(api, {decoration: {
 		refundDecorationActivityItem: {url: "refundDecorationActivityItem.do"},
 		expendDecorationActivityItem: {url: "expendDecorationActivityItem.do"},
 		discountDecorationActivityItem: {url: "discountDecorationActivityItem.do"},
-		amountDecorationActivityItem: {url: "amountDecorationActivityItem.do"},
+		amountDecorationActivityItem: {
+		    url: "amountDecorationActivityItem.do",
+		    type: "query",
+		    tranargs: [{
+                result: "decorationActivity",
+                args: ["amount"]
+            }]
+		},
         
         queryDecorationContractByOrderId: {
         	url: "queryDecorationContractByOrderId.do", 
@@ -292,7 +308,7 @@ $.extend(api, {decoration: {
         	url: "terminalDecoration.do",
         	type: "update",
             tranargs: {
-                args: ["backup"]
+                args: ["decorationPayments.referMoney"]
             }
         },
 
@@ -524,7 +540,19 @@ $.extend(api, {decoration: {
         filingDecorationContract : {url: "filingDecorationContract.do"},
         showDecorationContract : {url: "showDecorationContract.do"},
         sendDecorationContract : {url: "sendDecorationContract.do"},
-        redirectDecorationContract : {url: "redirectDecorationContract.do"}
+        redirectDecorationContract : {url: "redirectDecorationContract.do"},
+
+        pageDecorationBalance: {
+            url: "pageDecorationBalance.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["orderTotalPrice", "quotationPrice", "couponCut", "thingCut", "factPrice", "precontractPrice", "notSalesmanRate", "discount"]
+            }, {
+                result: "paging-data-house",
+                args: ["buildArea","freeArea","innerArea","totalArea"]
+            }]},
 
 }
 });

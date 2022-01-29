@@ -771,7 +771,7 @@ $(function () {
                     propertyArr.push(["总面积: ", v.totalArea, "blue"]);
                     break;
                 case "innerArea":
-                    propertyArr.push(["套内面积: ", v.innerArea, "blue"]);
+                    propertyArr.push(["计价面积: ", v.innerArea, "blue"]);
                     break;
                 case "orderId":
                     propertyArr.push(["装修单号: ", com.checkNull(v.orderId, '无'), "blue"]);

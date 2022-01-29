@@ -76,6 +76,8 @@ public class AdditemServiceImpl implements AdditemService{
 		AdditemPO additemPO = new AdditemPO(new ConstructionNodePO());
 		
 		additemPO.setName(additemVO.getName());
+		additemPO.setUnit(additemVO.getUnit());
+		additemPO.setPrice(additemVO.getPrice());
 		additemPO.getConstructionNode().setCnid(additemVO.getConstructionNode().getCnid());
 		additemPO.setCompany(company);
 

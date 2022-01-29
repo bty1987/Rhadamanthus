@@ -22,6 +22,9 @@ jQuery(function ($) {
 			profitRate: com.focusPage("#profitRate", "#createPresignProduceModal"),
 			offset: com.focusPage("#offset", "#createPresignProduceModal"),
 			statues:com.focusPage("#status", "#createPresignProduceModal"),
+			mostPrice: com.focusPage("#mostPrice", "#createPresignProduceModal"),
+			costRate: com.focusPage("#costRate", "#createPresignProduceModal"),
+			mostRate: com.focusPage("#mostRate", "#createPresignProduceModal")
 		},
 
 		status: {},
@@ -51,8 +54,11 @@ jQuery(function ($) {
 		{ fieId: "quoteArea", name: "起报面积", prop: "quoteArea", clazz: "blue" },
 		{ fieId: "unitPrice", name: "计价单价", prop: "unitPrice", clazz: "blue" },
 		{ fieId: "costPrice", name: "成本单价", prop: "costPrice", clazz: "blue" },
+		{ fieId: "mostPrice", name: "主材成本", prop: "mostPrice", clazz: "blue" },
 		{ fieId: "preferPrice", name: "优惠价", prop: "preferPrice", clazz: "blue"},
 		{ fieId: "profitRate", name: "利润率", prop: "profitRate", clazz: "blue" },
+		{ fieId: "costRate", name: "工程增项成本比例", prop: "costRate", clazz: "blue" },
+		{ fieId: "mostRate", name: "主材增项成本比例", prop: "mostRate", clazz: "blue" },
 		{ fieId: "status", name: "状态", prop: "status", clazz: "red", dataset: presignProduce.status },
 	];
 	var linebtns = [
@@ -68,6 +74,9 @@ jQuery(function ($) {
 			presignProduce.items.preferPrice.val(v.preferPrice);
 			presignProduce.items.profitRate.val(v.profitRate);
 			presignProduce.items.offset.val(v.offset);
+			presignProduce.items.mostPrice.val(v.mostPrice);
+			presignProduce.items.costRate.val(v.costRate);
+			presignProduce.items.mostRate.val(v.mostRate);
 			
 			presignProduce.modals.createPresignProduceModal.modal("show");
 			
@@ -76,9 +85,12 @@ jQuery(function ($) {
 		{name: "预签项", clazz: "btn-info", handle: function(v){
 		    
             params["presignProduce"] = v;
-            
             com.popup4page("#presignItemPopUp", "/views/quotation/presignItem.html", "预签项");
-		    
+		    return false;
+		}},
+		{name: "预签成本", clazz: "btn-success", handle: function(v){
+			params.ppid = v.ppid;
+		    com.popup4page("#presignItemPopUp", "/views/quotation/presignCost.html", "预签成本");
 		    return false;
 		}},
 		{name: "状态", type: "switch", clazz: "status-lbl", handle: function(v, check){
@@ -106,7 +118,7 @@ jQuery(function ($) {
 		    return false;
 
 		var url = api.quotation.addPresignProduce;
-		
+
 		var options = {
 			"presignProduce.name": presignProduce.items.name.val(),
 			"presignProduce.quotePrice": presignProduce.items.quotePrice.val(),
@@ -115,7 +127,10 @@ jQuery(function ($) {
 			"presignProduce.costPrice": presignProduce.items.costPrice.val(),
 			"presignProduce.preferPrice": presignProduce.items.preferPrice.val(),
 			"presignProduce.profitRate": presignProduce.items.profitRate.val(),
-			"presignProduce.offset": presignProduce.items.offset.val()
+			"presignProduce.offset": presignProduce.items.offset.val(),
+			"presignProduce.mostPrice": presignProduce.items.mostPrice.val(),
+			"presignProduce.costRate": presignProduce.items.costRate.val(),
+			"presignProduce.mostRate": presignProduce.items.mostRate.val()
 		};
 		
 		if(presignProduce.ppid){

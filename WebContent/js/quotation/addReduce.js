@@ -5,23 +5,41 @@ jQuery(function($) {
 	var extraParams = {"addReduce.orderId" : decorationOrderId};
 	
 	var addReduce = {
+	        
 		decorationOrderId : params.decorationOrderId,
+		
+		arid: null,
 		
 		items: {
 		    addReduceDes : com.focusPage("#addReduceDes"),
-            addReduceType : com.focusPage("#addReduceType")
+            addReduceType : com.focusPage("#addReduceType"),
+            paytype: com.focusPage("#paytype"),
 		},
 		
 		modals: {
 		    addReduceModal: com.focusPage("#addReduceModal"),
+		    payAddReduceModal: com.focusPage("#payAddReduceModal"),
 		},
 		
 		btns: {
 		    saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+		    payBtn: com.focusPage("#payBtn").on("click", unpay),
 		},
 
-		editFlag: false
+		editFlag: false,
+		
+		types: {},
+		paytypes: {},
+		statuses: {}
 	};
+	
+	com.post(api.ds.quotation, {}, function(res){
+	    
+	    addReduce.types = res.addReduceType.split("key", "value");
+	    addReduce.paytypes = res.addReducePaytype.split("key", "value");
+	    addReduce.statuses = res.addReduceStatus.split("key", "value");
+	    
+	}, null, false)
 
 	var displayFunc  = (function(){
 
@@ -34,9 +52,7 @@ jQuery(function($) {
 
 			if(listData && listData.length){
 				$.each(listData,function(i, v){
-					var $liLine = creatLine(v);
-
-					$liLine.appendTo($ul);
+				    creatLine(v).appendTo($ul);
 				});
 
 				$ul.appendTo($tableWrap);
@@ -51,6 +67,8 @@ jQuery(function($) {
 
 			var $btnLook = $('<a></a>').addClass('btn btn-minier btn-yellow').html('查看');
 			var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
+			var $btnConf = $('<a></a>').addClass('btn btn-minier btn-info').html('确认');
+			var $btnUnpay = $('<a></a>').addClass('btn btn-minier btn-success').html('下拨');
 
 			var $label = $('<label></label>');
 			var $input = $('<input>').attr({
@@ -58,16 +76,18 @@ jQuery(function($) {
 				"name": "arids",
 				"class": "ace ace-checkbox-2"
 			}).val(v.arId);
+			
 			var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.content);
 			
 			var propertyArr = [
-				["类别:", typeDict[v.type + ''], "grey"],
+				["类别:", typeDict[v.type + ''], "red"],
 				["创建时间:", v.createTime, "green"],
 				["非打折总额:", v.undisPrice, "blue"],
 				["打折总额:", v.disPrice, "blue"],
 				["总价:", v.total, "blue"],
 				["管理费:", v.managePrice, "blue"],
-				["状态:", statusDict[v.status], "red"]
+				["状态:", statusDict[v.status], "red"],
+				["付款类型:", addReduce.paytypes[v.paytype], "red"],
 			];
 			
 			if(v.discount != 0) propertyArr.push(["折扣:", v.discount, "blue"])
@@ -79,8 +99,20 @@ jQuery(function($) {
 				$liProperty.appendTo($ulProperty);
 			});
 			$label.append($input).append($span).appendTo($h3);
-			$divBtnWrap.append($btnLook).append($btnDel).appendTo($h3);
+			$divBtnWrap.append($btnLook).appendTo($h3);
 			$liLine.append($h3).append($ulProperty);
+			
+			if(v.status == 0 || v.status == 1){
+			    $divBtnWrap.append($btnDel);
+			}
+			
+			if(v.type == 0 && (v.status == 0 || v.status == 1) && v.paytype == 0){
+			    $divBtnWrap.append($btnUnpay);
+			}
+			
+			if((v.status == 0 || v.status == 1) && (v.paytype == 1 || v.paytype == 2)){
+                $divBtnWrap.append($btnConf);
+            }
 			
 			//查看按钮点击事件
 			$btnLook.click(function(){
@@ -94,6 +126,21 @@ jQuery(function($) {
                     removeRow(v.arId);
                 });
 			});
+			
+			$btnUnpay.click(function(){
+			    
+			    addReduce.arid = v.arId,
+			    
+			    com.cleanItems(addReduce.items);
+
+		        addReduce.modals.payAddReduceModal.modal("show");
+            });
+			
+			$btnConf.click(function(){
+                com.showConfirm("是否确认增减单", function() {
+                    confirm(v.arId);
+                });
+            });
 
 			return $liLine;
 		};
@@ -119,13 +166,6 @@ jQuery(function($) {
 	function viewDetailAddReduce(addReduceId){
 		params["addReduceId"] = addReduceId;
 		com.switchPage(api.index.addReduceDetailIndex.url);
-	}
-	//删除按钮方法
-	function removeRow(arid){
-		com.post(api.addReduce.deleteAddReduce, {"addReduce.arId" : arid}, function(res){
-			com.showAlert(com.info, "操作成功");
-			search.doSearch();
-		});
 	}
 
 	//添加按钮
@@ -183,4 +223,40 @@ jQuery(function($) {
 			addReduce.modals.addReduceModal.modal("hide");
 		});
 	}
+	
+	function unpay(){
+	    
+        var options = {
+            "addReduce.arId": addReduce.arid,
+            "addReduce.paytype": addReduce.items.paytype.val(),
+        };
+
+        com.post(api.addReduce.unpayAddReduce, options, function(res){
+            com.showAlert(com.info, "操作成功");
+            search.doSearch();
+
+            addReduce.modals.payAddReduceModal.modal("hide");
+        });
+	}
+	
+	function confirm(arid){
+	    
+	    var options = {
+            "addReduce.arId": arid
+        };
+
+        com.post(api.addReduce.confirmAddReduce, options, function(res){
+            com.showAlert(com.info, "操作成功");
+            search.doSearch();
+        });
+	}
+	
+	//删除按钮方法
+    function removeRow(arid){
+        com.post(api.addReduce.deleteAddReduce, {"addReduce.arId" : arid}, function(res){
+            com.showAlert(com.info, "操作成功");
+            search.doSearch();
+        });
+    }
+	
 });

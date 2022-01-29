@@ -15,6 +15,7 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.decoration.service.DecorationService;
 import com.fanglin.decoration.vo.DecorationInfoVO;
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.payment.vo.DecorationPaymentVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -35,6 +36,8 @@ public class DecorationAction extends BaseListAction {
 	private String decorationOrderId;
 
 	private long backup = 0;
+
+	private List<DecorationPaymentVO> decorationPayments;
 
 	private short timeType;
 
@@ -247,7 +250,7 @@ public class DecorationAction extends BaseListAction {
 	@Action(value = "terminalDecoration", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String terminalDecoration() throws FLException {
 
-		decorationService.terminalDecoration(decoration, backup, authentication());
+		decorationService.terminalDecoration(decoration, decorationPayments, authentication());
 
 		return SUCCESS;
 	}
@@ -346,6 +349,14 @@ public class DecorationAction extends BaseListAction {
 
 	public void setCustomerPhone(String customerPhone) {
 		this.customerPhone = customerPhone;
+	}
+
+	public List<DecorationPaymentVO> getDecorationPayments() {
+		return decorationPayments;
+	}
+
+	public void setDecorationPayments(List<DecorationPaymentVO> decorationPayments) {
+		this.decorationPayments = decorationPayments;
 	}
 
 }

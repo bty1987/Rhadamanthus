@@ -1,5 +1,6 @@
 package com.fanglin.payment.action;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -23,17 +24,19 @@ import com.fanglin.payment.vo.PaymentContractVO;
 public class PaymentCommonAction extends BaseListAction {
 
 	private static final long serialVersionUID = -2007495587213689831L;
-	
+
 	@Autowired
 	private ActivityPaymentService activityPaymentService;
-	
+
 	@Autowired
 	private PaymentContractService paymentContractService;
-	
+
+	private List<PaymentContractVO> paymentContracts;
+
 	private PaymentContractVO paymentContract;
-	
+
 	private ActivityPaymentVO activityPayment;
-	
+
 	private String redirect;
 
 	@Action(value = "divisionCallback", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
@@ -67,11 +70,19 @@ public class PaymentCommonAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryActivityPaymentByNo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryActivityPaymentByNo() throws FLException {
 
 		activityPaymentService.queryActivityPaymentByNo(activityPayment);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "pollingPaymentContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pollingPaymentContract() throws FLException {
+
+		paymentContractService.pagePaymentContract(getPaging(), getFilters());
 
 		return SUCCESS;
 	}
@@ -83,13 +94,21 @@ public class PaymentCommonAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	public ActivityPaymentVO getActivityPayment() {
 		return activityPayment;
 	}
 
 	public void setActivityPayment(ActivityPaymentVO activityPayment) {
 		this.activityPayment = activityPayment;
+	}
+
+	public List<PaymentContractVO> getPaymentContracts() {
+		return paymentContracts;
+	}
+
+	public void setPaymentContracts(List<PaymentContractVO> paymentContracts) {
+		this.paymentContracts = paymentContracts;
 	}
 
 	public PaymentContractVO getPaymentContract() {
@@ -107,6 +126,5 @@ public class PaymentCommonAction extends BaseListAction {
 	public void setRedirect(String redirect) {
 		this.redirect = redirect;
 	}
-	
-	
+
 }

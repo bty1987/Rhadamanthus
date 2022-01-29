@@ -12,8 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.information.dao.AwardPurchaseDao;
+import com.fanglin.information.dao.AwardRecordDao;
 import com.fanglin.information.dao.AwardStockDao;
 import com.fanglin.information.po.AwardPurchasePO;
+import com.fanglin.information.po.AwardRecordPO;
 import com.fanglin.information.po.AwardStockPO;
 import com.fanglin.information.service.AwardPurchaseService;
 import com.fanglin.information.vo.AwardPurchaseVO;
@@ -21,6 +23,7 @@ import com.fanglin.information.vo.AwardStockVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -37,6 +40,9 @@ public class AwardPurchaseServiceImpl implements AwardPurchaseService {
 	
 	@Autowired
 	private AwardStockDao awardStockDao;
+	
+	@Autowired
+	private AwardRecordDao awardRecordDao;
 
 	@Override
 	public void pageAwardPurchase(Paging paging, List<Filter> filters, AwardPurchaseVO awardPurchase, int company) {
@@ -116,9 +122,21 @@ public class AwardPurchaseServiceImpl implements AwardPurchaseService {
 		if (awardPurchasePO.getStatus() != AwardPurchasePO.STATUS_PROC_INT) { 
 			throw new FLException(160058, "奖品采购不可操作");
 		}
+
+		AwardStockPO awardStockPO = awardStockDao.get(awardPurchasePO.getAwardStock().getAsId());
 		
 		UserPO instorer  = userdDao.queryUserByUserId(userId);
+		
+		if(awardStockPO.getIsStock() == AwardStockPO.ISSTOCK_CAL_INT){
+			awardStockPO.setNum(Arith.add(awardPurchasePO.getAwardStock().getNum(), awardPurchasePO.getNum()));
+			awardStockDao.update(awardStockPO);
 
+			AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, instorer, null, AwardRecordPO.TYPE_CG_INT, awardStockPO.getSubtype(), awardStockPO.getStoreroom(), AwardStockPO.ISSTOCK_CAL_INT, ((int)awardPurchasePO.getInprice()), awardPurchasePO.getNum(), null);
+
+			awardRecordDao.save(awardRecordPO);
+			
+		}
+		
 		awardPurchasePO.setInstorer(instorer);
 		awardPurchasePO.setStatus(AwardPurchasePO.STATUS_WARE_INT);
 		awardPurchasePO.setInstoreTime(DateUtil.getDateToTimestamp(new Date()));

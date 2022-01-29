@@ -99,6 +99,22 @@ Condition.addupRule("personel", {
             }
         }
     },
+    status :{
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {//从后台取数据的各种配置
+            url: api.ds.personel,
+            postData: {},
+            listPath: "status",
+            keyPath: "key",
+            valuePath:"value"
+        }
+    },
     
     "duty-name": {
         label: "职位名称",

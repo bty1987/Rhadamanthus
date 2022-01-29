@@ -2,15 +2,16 @@ package com.fanglin.system.dao.impl;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.Paging;
 
 @Repository("systemConfigDao")
@@ -21,7 +22,7 @@ public class SystemConfigDaoImpl extends DaoImpl<SystemConfigPO> implements Syst
 	}
 
 	@Override
-	public List<SystemConfigPO> pageSystemConfig(Paging paging, List<Filter> filters) {
+	public List<SystemConfigPO> pageSystemConfig(Paging paging, List<Filter> filters) throws FLException {
 
 		PagingQuery<SystemConfigPO> query = pagingQuery(paging, SystemConfigPO.class);
 
@@ -57,18 +58,24 @@ public class SystemConfigDaoImpl extends DaoImpl<SystemConfigPO> implements Syst
 		return (SystemConfigPO) createCriteria(SystemConfigPO.class).add(Restrictions.eq(SystemConfigPO.COLUMN_SCID_STR, scid)).uniqueResult();
 	}
 
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) throws FLException {
 
-		if (filters != null) {
-			for (Filter filter : filters) {
-				if (StringUtils.isNotEmpty(filter.getData())) {
-					if ("key".equals(filter.getField())) {
-						query.add(Restrictions.like("key", (filter.getData()), MatchMode.ANYWHERE));
-					}
-				}
+		if (filters == null) {
+			return;
+		}
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if ("key".equals(field)) {
+				query.add(Restrictions.like("key", data, MatchMode.ANYWHERE));
+			} else if ("company".equals(field)) {
+				query.getCriterion(field, CompanyServiceImpl.decode(filter.getData()), op);
 			}
 		}
 
 	}
-
 }

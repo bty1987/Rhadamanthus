@@ -44,7 +44,7 @@ public class DecorationActivityItemDaoImpl extends DaoImpl<DecorationActivityIte
 				.add(Restrictions.eq(DecorationActivityItemPO.COLUMN_STATUS_STR, status))
 				.list();
 	}
-	
+
 	@Override
 	public long amountDecorationActivityItemForIsPayment(String orderId, short isPayment) {
 		String sql = "select COALESCE(SUM(money*num), 0) as priceSum from decoration.decorationActivityitem where orderId =:orderId and type = 0 and isPayment =:isPayment and state = 0";

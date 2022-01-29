@@ -164,7 +164,7 @@ public class ApprovalDecorationRefundServiceImpl implements ApprovalDecorationRe
 			decorationPaymentDao.save(initialDecorationPaymentPO);
 
 			if (decorationPaymentPO.getTwoType() == DecorationPaymentPO.TWOTYPE_ADD_REDUCE_INT) {
-				AddReducePO addReducePO = addReduceDao.queryAddReduceByDecorationPaymentId(approvalDecorationRefundPO.getPaymentId());
+				AddReducePO addReducePO = addReduceDao.queryAddReduce(approvalDecorationRefundPO.getPaymentId());
 				addReducePO.setDpId(initialDecorationPaymentPO.getDpid());
 				addReduceDao.update(addReducePO);
 			}

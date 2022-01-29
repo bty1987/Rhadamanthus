@@ -96,12 +96,28 @@ Condition.addupRule("system", {
         }
     },
     "config": {
-        label: "关键字查询",
+        label: "关键字",
         type: "text",
         submitConfig: {
             name: "key",
             op: "cn",
             validate: null
+        }
+    },
+    "company": {
+        label: "公司",
+        type: "select",
+        submitConfig: {
+            name: "company",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.system.queryCompany,
+            postData: {},
+            listPath: "companys",
+            keyPath: "cid",
+            valuePath: "name"
         }
     },
     "upgrade-version": {

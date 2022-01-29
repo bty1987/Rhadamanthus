@@ -113,7 +113,13 @@
                         
                         <hr>
                         <h4 class="oid">工程信息</h4>
-                        
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">预算面积</label>
+                            <div class="col-sm-9">
+                                <input type="text" id='quoteArea' class='col-xs-10 col-sm-6'></input>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right">工期</label>
                             <div class="col-sm-9">
@@ -263,7 +269,7 @@
                 </div>
 
                 <div class="modal-body">
-                    <form class="form-horizontal">
+                    <form class="form-horizontal" id = "violation">
 
                         <div class="form-group">
                             <label for="decorationStatus" class="col-sm-3 control-label no-padding-right">订单状态</label>
@@ -287,12 +293,6 @@
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="refundValue" class="col-sm-3 control-label no-padding-right">违约金额</label>
-                            <div class="col-sm-9">
-                                <input id="backup" class="col-xs-10 col-sm-5 v_required v_float_3" type="text" data-toggle="popover" data-trigger='manual'/>
-                            </div>
-                        </div>
                     </form>
                 </div>
 
@@ -375,43 +375,6 @@
         </div>
     </div>
 
-
-    <div class="modal fade" id="dalanceModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span>&times;</span>
-                        <span class="sr-only">Close</span>
-                    </button>
-                    <h4 class="modal-title">结算</h4>
-                </div>
-
-                <div class="modal-body">
-                    <form class="form-horizontal">
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right">结算值</label>
-                            <div class="col-sm-9">
-                                <input id="balance" class="m-wrap col-xs-8 v_required v_float_3" maxlength="7" type="text"/>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right">原结算值</label>
-                            <div class="col-sm-9">
-                                <input id="deocBalance" class="m-wrap col-xs-8" type="text" readonly/>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" id="saveBtnBalance" class="btn btn-primary">提交</button>
-                    <button type="button" id="cancelBtnBalance" class="btn btn-default" data-dismiss="modal">取消</button>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="modal fade" id="repairModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">

@@ -17,11 +17,11 @@ import com.fanglin.core.dao.Dao;
 import com.fanglin.decoration.po.DecorationActivityItemPO;
 
 public interface DecorationActivityItemDao extends Dao<DecorationActivityItemPO> {
-	
+
 	public List<DecorationActivityItemPO> queryDecorationActivityItemByOrderId(String orderId);
-	
+
 	public List<DecorationActivityItemPO> queryDecorationActivityItemByOrderId(String orderId, short type, short status);
-	
+
 	public long amountDecorationActivityItemForIsPayment(String orderId, short isPayment);
-	
+
 }

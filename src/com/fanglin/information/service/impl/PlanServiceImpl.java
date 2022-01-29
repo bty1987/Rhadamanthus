@@ -157,7 +157,7 @@ public class PlanServiceImpl implements PlanService {
 
 		PlanPO planPO = new PlanPO();
 
-		if (Integer.parseInt(executeTime) <= Integer.parseInt(current)) {
+		if (Long.parseLong(executeTime) <= Long.parseLong(current)) {
 			throw new FLException(160053, "执行时间已超时");
 		}
 

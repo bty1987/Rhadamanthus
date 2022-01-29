@@ -27,6 +27,14 @@ public class NormoodAction extends BaseListAction {
 	List<NormoodVO> normoods;
 
 	NormoodVO normood;
+	
+	@Action(value = "pageNormood", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageNormood() throws FLException {
+
+		normoodService.pageNormood(getPaging(), getFilters());
+
+		return SUCCESS;
+	}
 
 	@Action(value = "queryNormoodByQiid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryNormoodByQiid() throws FLException {

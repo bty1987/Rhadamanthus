@@ -116,4 +116,46 @@ public class RecruitmentServiceImpl implements RecruitmentService{
 		recruitmentDao.update(recruitmentPO);
 
 	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int entryRecruitment(RecruitmentVO recruitmentVO) throws FLException {
+		
+		RecruitmentPO recruitmentPO = recruitmentDao.get(recruitmentVO.getRid());
+		
+		if(recruitmentPO ==null){
+			throw new FLException(190005 , "人员不存在");
+		}
+		
+		
+		if (recruitmentPO.getStatus() != RecruitmentPO.STATUS_INIT_INT) {
+			throw new FLException(190010, "人员不可操作");
+		}
+		
+		recruitmentPO.setStatus(RecruitmentPO.STATUS_ENTRY_INT);
+		
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int cancelRecruitment(RecruitmentVO recruitmentVO)throws FLException {
+		
+		RecruitmentPO recruitmentPO = recruitmentDao.get(recruitmentVO.getRid());
+		
+		if(recruitmentPO ==null){
+			throw new FLException(190005 , "人员不存在");
+		}
+		
+		
+		
+		if (recruitmentPO.getStatus() != RecruitmentPO.STATUS_INIT_INT) {
+			throw new FLException(190010, "人员不可操作");
+		}
+		
+		recruitmentPO.setStatus(RecruitmentPO.STATUS_CANCEL_INT);
+		
+		
+		return 0;
+	}
 }

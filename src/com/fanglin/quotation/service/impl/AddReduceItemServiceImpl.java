@@ -122,7 +122,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 	@Transactional(rollbackFor = Exception.class)
 	public int updateAddReduceItem(AddReduceVO addReduceVO, AddReduceItemVO addReduceItemVO) throws FLException {
 
-		List<Integer> statuses = Arrays.asList(AddReducePO.STATUS_UNSUBMIT_INT, AddReducePO.STATUS_SUBMIT_INT);
+		List<Short> statuses = Arrays.asList(AddReducePO.STATUS_UNSUBMIT_INT, AddReducePO.STATUS_SUBMIT_INT);
 
 		AddReducePO addReducePO = addReduceDao.get(addReduceVO.getArId());
 
@@ -237,7 +237,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 	@Transactional(rollbackFor = Exception.class)
 	public int deleteAddReduceItem(AddReduceVO addReduceVO, AddReduceItemVO addReduceItemVO) throws FLException {
 
-		List<Integer> statuses = Arrays.asList(AddReducePO.STATUS_UNSUBMIT_INT, AddReducePO.STATUS_SUBMIT_INT);
+		List<Short> statuses = Arrays.asList(AddReducePO.STATUS_UNSUBMIT_INT, AddReducePO.STATUS_SUBMIT_INT);
 
 		AddReducePO addReducePO = addReduceDao.get(addReduceVO.getArId());
 
@@ -298,7 +298,9 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 
 		quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
 
-		addReduceItemPO.setQiid(quotationFunctionAreaItemPO.getQuotationItem().getQiid());
+		if (quotationFunctionAreaItemPO.getQuotationItem() != null) {
+			addReduceItemPO.setQiid(quotationFunctionAreaItemPO.getQuotationItem().getQiid());
+		}
 
 		return quotationFunctionAreaId;
 	}

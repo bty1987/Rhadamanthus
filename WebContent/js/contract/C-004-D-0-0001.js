@@ -36,6 +36,7 @@ jQuery(function($) {
         decoration: null,
         
         cover: {},
+        table: {},
             
 		modal: {
             talkingModal : com.focusPage('#talkingModal')
@@ -66,6 +67,14 @@ jQuery(function($) {
         com.focusPage("#con-payment-second", "#form").hide();
     }
     
+    if(contractEdit.contractArgs.company != "1"){
+        com.focusPage(".company", "#form").hide();
+    }
+	
+	if(contractEdit.contractArgs.company == "1"){
+	    com.focusPage(".customer", "#form").hide();
+	}
+    
     com.post(api.common.current, {}, function(res){
         contractEdit.current = new Date(res.current);
     }, null, false);
@@ -86,13 +95,36 @@ jQuery(function($) {
         com.focusPage("#con-customer-name", "#form").val(customer.name);
         com.focusPage("#con-customer-phone", "#form").val(customer.phone);
         com.focusPage("#con-customer-ident", "#form").val(customer.identity);
+        com.focusPage("#con-bank-man", "#form").val(customer.name);
+        com.focusPage("#con-bank-no", "#form").val(customer.companyBankno);
+        com.focusPage("#con-bank-name", "#form").val(customer.companyBank);
+        com.focusPage("#con-bank-phone", "#form").val(customer.phone);
         
         contractEdit.customer = customer;
         
         contractEdit.cover["cov-orderId"] = contractEdit.decorationOrderId;
         contractEdit.cover["cov-customer-name"] = customer.name;
         contractEdit.cover["cov-customer-phone"] = customer.phone;
-    });
+        contractEdit.cover["sin-customer-name"] = customer.name;
+        contractEdit.cover["sin-customer-ident"] = customer.identity;
+        
+        com.focusPage("#con-company-no", "#form").val(customer.companyNo);
+        com.focusPage("#con-company-name", "#form").val(customer.companyName);
+        com.focusPage("#con-company-name1", "#form").val(customer.companyName);
+        com.focusPage("#con-company-phone", "#form").val(customer.companyPhone);
+        com.focusPage("#con-company-addr", "#form").val(customer.companyAddr);
+        com.focusPage("#con-company-bank", "#form").val(customer.companyBank);
+        com.focusPage("#con-company-bankno", "#form").val(customer.companyBankno);
+    }, null, false);
+    
+    if(contractEdit.contractArgs.company == "1" && contractEdit.customer.type == 0){
+        
+        com.showAlert(com.warning, "客户类型为个人");
+        
+        com.focusPage("#contractPopUp").empty();
+        
+        return false;
+    }
     
     com.post(api.construction.queryConstructionInfoByOrderId, {"constructionInfo.orderId": contractEdit.decorationOrderId}, function (result) {
         
@@ -120,6 +152,22 @@ jQuery(function($) {
         
     }, null, false);
 
+    quotationUtils.quotationDetail = {
+    		protation: {},
+    		protationItems: {}
+    };
+    params.showType = {itemtype: 10};
+    
+    com.post(api.quotation.queryProtationForDefaultByOrderId, {"protation.orderId": contractEdit.decorationOrderId}, function(res){
+        quotationUtils.quotationDetail.protation = res.protation;
+        contractEdit.totalPrice = res.protation.totalPrice;
+    }, null, false);
+
+    //获取计入款项的券总额
+    com.post(api.decoration.amountDecorationActivity, {"decorationActivity.orderId": contractEdit.decorationOrderId, "decorationActivityItem.isPayment": 0, "decorationActivityItem.type": 0}, function(res){
+    	contractEdit.amount = res.decorationActivity.amount;
+    }, null, false);
+    
     com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": contractEdit.decorationOrderId}, function (res) {
         
         var data = res.decoration;
@@ -132,7 +180,6 @@ jQuery(function($) {
         com.focusPage("#con-proper-name", "#form").val(proper.name);
         com.focusPage("#con-village-name", "#form").val(village.name);
         com.focusPage("#con-housenumber", "#form").val(house.houseNumber);
-//        com.focusPage("#cov-buildarea", "#form").val(house.buildArea);
         com.focusPage("#con-housetype", "#form").val(data.houseClass);
         com.focusPage("#con-invoice-type", "#form").val(data.invoiceClass);
         
@@ -145,8 +192,8 @@ jQuery(function($) {
         com.focusPage("#con-contract-rtotal", "#form").val(data.factPrice);
         
         com.focusPage("#con-innerarea", "#form").val(data.house.innerArea);
-        com.focusPage("#con-precontract-total", "#form").val(data.precontractPrice);
-        com.focusPage("#con-precontract-total-30", "#form").val(Math.round(utils.accMul(data.precontractPrice, 0.3)));
+        com.focusPage("#con-precontract-total", "#form").val(Math.round(utils.accSub(contractEdit.totalPrice,contractEdit.amount)));
+        com.focusPage("#con-precontract-total-30", "#form").val(Math.round(utils.accMul(utils.accSub(contractEdit.totalPrice,contractEdit.amount), 0.3)));
         
         contractEdit.decoration = data;
 
@@ -160,7 +207,43 @@ jQuery(function($) {
         
         if(decorationActivitys.length != 0) com.focusPage("#con-activity-name", "#form").val(decorationActivitys[0].activity.name);
     });
+    
+    if(!quotationUtils.quotationDetail.protation.pid) {
+        com.showAlert(com.warning, "无预签信息");
+        com.focusPage("#contractPopUp").html("");
+        return false;
+    }
+    
+    com.post(api.quotation.queryProtationItemByPid, {"protationItem.pid": quotationUtils.quotationDetail.protation.pid}, function(res){
+        quotationUtils.quotationDetail.protationItems = res.protationItems;
+        console.log(res);
+    }, null, false);
+    
+    contractEdit.table = {
+            "insertWay": 1,
+            "keyword": "家装项目列表",
+            "pageBegin": 1,
+            "headers": ["序号", "名称"],
+            "colWidthPercent": [1, 3],
+            "headersAlignment": 1,
+            "cellHorizontalAlignment": 1,
+            "cellVerticalAlignment": 5,
+            "datas": []
+    };
+    
+    var index = 0;
+    
+    $.each(quotationUtils.quotationDetail.protationItems, function (i, v){
 
+        var subtype = [-2];
+
+        if (subtype.indexOf(-2) != -1 || subtype.indexOf(v.subtype) != -1) {
+
+            contractEdit.table.datas.push([(i+1), v.name])
+        }
+
+    });
+    
     com.focusPage('#talkingList').click(function(){
         contractEdit.modal.talkingModal.modal("hide");
     });
@@ -272,9 +355,6 @@ jQuery(function($) {
             data["con-sign-month"] = com.dateFormat(contractEdit.current, "MM");
             data["con-sign-day"] = com.dateFormat(contractEdit.current, "dd");
             
-//            data["con-contract-total-cn"] = utils.getCNMoney(parseFloat(data["con-contract-total"]));
-//            data["con-contract-stotal-cn"] = utils.getCNMoney(parseFloat(data["con-contract-stotal"]));
-//            data["con-contract-rtotal-cn"] = utils.getCNMoney(parseFloat(data["con-contract-rtotal"]));
             data["con-design-money-cn"] = utils.getCNMoney(parseFloat(data["con-design-money"]));
             
             data["con-precontract-total-cn"] = utils.getCNMoney(parseFloat(data["con-precontract-total"]));
@@ -283,18 +363,28 @@ jQuery(function($) {
             
             data["con-invoice-type1"] = data["con-invoice-type"];
             
-            data["sin-customer-name"] = data["con-customer-name"];
-//            data["sin-customer-phone"] = data["con-customer-phone"];
             data["sin-customer-ident"] = data["con-customer-ident"];
             
             data["con-precontract-total"] = data["con-precontract-total"];
             
+            if(contractEdit.contractArgs.company == "1"){
+            	delete data["con-customer-name"];
+                delete data["con-customer-ident"];
+                delete data["cov-customer-name"];
+                
+                data["cov-company-name"] = data["con-company-name"];
+                data["sin-company-name"] = data["con-company-name"];
+                data["sin-company-phone"] = data["con-company-phone"];
+            }
+            
             console.log(data);
+            console.log(contractEdit.table);
             
             var options = {
                 "decorationContract.orderId": params.decorationOrderId,
                 "decorationContract.contract.cid": params.contractArgs.cid,
                 "data" : JSON.stringify(data),
+                "table": JSON.stringify(contractEdit.table)
             };
             
             console.log(options);

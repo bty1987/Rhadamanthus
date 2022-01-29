@@ -1,7 +1,9 @@
 package com.fanglin.decoration.service.impl;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import com.fanglin.communion.vo.DutyVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.communion.vo.VillageVO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationBalanceDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationBalancePO;
@@ -23,6 +26,7 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.Paging;
 
 @Service("decorationBalanceService")
 @Transactional(readOnly = true)
@@ -36,6 +40,30 @@ public class DecorationBalanceServiceImpl implements DecorationBalanceService {
 	
 	@Autowired
 	private UserDao userDao;
+
+	@Override
+	public void pageDecorationBalance(Paging paging, List<Filter> filters) {
+
+		if (filters.size() == 0)
+			return;
+
+		List<DecorationBalancePO> decorationBalancePOs = decorationBalanceDao.pageDecorationBalance(paging, filters);
+		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
+
+		for (DecorationBalancePO decorationBalancePO : decorationBalancePOs) {
+			DecorationVO decorationVO = new DecorationVO();
+
+			decorationVO.setSupervisor(new UserBaseVO());
+			decorationVO.setEscorter(new UserBaseVO());
+			decorationVO.setQuoter(new UserBaseVO());
+
+			decorationBalancePO.getDecoration().ptvcascade(decorationVO);
+
+			decorationVOs.add(decorationVO);
+		}
+
+		paging.setData(decorationVOs);
+	}
 
 	@Override
 	public DecorationBalanceVO queryDecorationBalance(DecorationVO decorationVO) {

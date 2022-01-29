@@ -1,0 +1,58 @@
+<div id="presignCost" class="page-content">
+	<div class="row">
+	    <div id="presignList">
+	        <div id="presignCostList" class="clearfix col-xs-12"></div>
+	        <div id="btnList" class="fl-page-wrap clearfix">
+	            <a class="btn btn-minier btn-primary pull-left" id="addPresignCost" style="margin: 0px 3px;">
+	            	<i class="icon-plus bigger-110"></i>
+	            	<span>添加</span>
+	            </a>
+	        </div>
+	    </div>
+		
+		<div class="modal fade" id="createPresignCostModal" tabindex="-1">
+			<div class="modal-dialog" style="margin-top: 10%;">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">添加</h4>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal">
+							<div class="form-group">
+								<label class="col-sm-4 control-label no-padding-right orange" for="toplimit">上限面积</label>
+								<div class="col-sm-8">
+									<input type="text" id="toplimit" class="col-xs-10 col-sm-7 v_required"/>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="col-sm-4 control-label no-padding-right orange" for="lowlimit">下限面积</label>
+								<div class="col-sm-8">
+									<input type="text" id="lowlimit" class="col-xs-10 col-sm-7 v_required"/>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="col-sm-4 control-label no-padding-right orange" for="costPrice">成本单价</label>
+								<div class="col-sm-8">
+									<input type="text" id="costPrice" class="col-xs-10 col-sm-7 v_required"/>
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" id="savePresignCostBtn" class="btn btn-primary">保存</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	//  src="js/quotation/presignCost.js"
+    $.loadScript(['js/quotation/presignCost.js']);
+</script>
+

@@ -178,6 +178,12 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 						}else{
 							query.add(query.getCriterion("decorationReceipt.collectTime", filter.getData(), filter.getOp()));
 						}
+					}else if("confirmTime".equals(filter.getField())){
+						
+						query.alias("decorationReceipt", "decorationReceipt");
+						
+						query.timeranges("decorationReceipt.confirmTime", "decorationReceipt.confirmTime", filter.getData());
+						
 					}else if("paymentStatus".equals(filter.getField())){
 						query.add(query.getCriterion("paymentStatus", Short.valueOf(filter.getData()), filter.getOp()));
 					}else if("createTime".equals(filter.getField())){

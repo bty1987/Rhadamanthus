@@ -27,6 +27,14 @@ public class NormriceAction extends BaseListAction {
 	List<NormriceVO> normrices;
 
 	NormriceVO normrice;
+	
+	@Action(value = "pageNormrice", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageNormrice() throws FLException {
+
+		normriceService.pageNormrice(getPaging(), getFilters());
+
+		return SUCCESS;
+	}
 
 	@Action(value = "queryNormriceByQiid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryNormriceByQiid() throws FLException {

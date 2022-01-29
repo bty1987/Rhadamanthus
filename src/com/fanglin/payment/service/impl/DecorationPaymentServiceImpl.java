@@ -39,7 +39,6 @@ import com.fanglin.decoration.service.DecorationAdditionService;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.information.po.MessagePO;
 import com.fanglin.information.service.MessageService;
-import com.fanglin.kingdee.service.DecorationKingdeeService;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.dao.DecorationReceiptDao;
@@ -110,9 +109,6 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 	@Autowired
 	private DecorationAdditionService decorationAdditionService;
-	
-	@Autowired
-	private DecorationKingdeeService decorationKingdeeService;
 	
 	@Autowired
 	private PaymentService paymentService;
@@ -582,7 +578,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		}
 
 		if (DecorationPaymentPO.PAYMENTTYPE_ADD_STR.equals(paymentType)) {
-			AddReducePO addReducePO = addReduceDao.queryAddReduceByDecorationPaymentId(decorationPaymentPO.getDpid());
+			AddReducePO addReducePO = addReduceDao.queryAddReduce(decorationPaymentPO.getDpid());
 			addReducePO.setStatus(AddReducePO.STATUS_PAYED_INT);
 
 			addReduceDao.update(addReducePO);
@@ -601,9 +597,6 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		decorationService.sendMessage(decorationPaymentPO.getDecoration().getOrderId(), "装修单", String.format("装修交款金额%.3f元", Arith.div(decorationPaymentPO.getReferMoney(), 1000.0)));
 
-		//数据存入金蝶中
-		decorationKingdeeService.collect(decorationReceiptPO, decorationPaymentPO);
-		
 		return 0;
 	}
 
@@ -683,7 +676,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		}
 
 		if (DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR.equals(decorationPaymentPO.getPaymentType())) {
-			AddReducePO addReducePO = addReduceDao.queryAddReduceByDecorationPaymentId(decorationPaymentPO.getDpid());
+			AddReducePO addReducePO = addReduceDao.queryAddReduce(decorationPaymentPO.getDpid());
 			addReducePO.setStatus(AddReducePO.STATUS_PAYED_INT);
 
 			addReduceDao.update(addReducePO);
@@ -696,9 +689,6 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		decorationService.sendMessage(decorationPaymentPO.getDecoration().getOrderId(), "装修单", String.format("装修退款金额%.3f元", Arith.div(decorationPaymentPO.getReferMoney(), 1000.0)));
 
-		//数据存入到金蝶
-		decorationKingdeeService.refund(decorationReceiptPO, decorationPaymentPO);
-		
 		return 0;
 	}
 
@@ -725,12 +715,6 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 				decorationReceiptDao.update(decorationReceiptPO);
 				decorationPaymentDao.update(decorationPaymentPO);
-				
-				//违约金进入金蝶数据--因为违约金是直接生成的数据, 不需要收款所以在确认的时候保存到金蝶
-				if (decorationPaymentPO.getPaymentType().equals("违约金")) {
-					decorationKingdeeService.confirm(decorationReceiptPO, decorationPaymentPO);
-				}
-				
 			}
 		}
 

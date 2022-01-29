@@ -31,6 +31,8 @@ public class AddReducePO implements Serializable {
 
 	public static final String COLUMN_TYPE_STR = "type";
 
+	public static final String COLUMN_PAYTYPE_STR = "paytype";
+
 	public static final String COLUMN_TOTAL_STR = "total";
 
 	public static final String COLUMN_STATUS_STR = "status";
@@ -45,13 +47,19 @@ public class AddReducePO implements Serializable {
 
 	public static final int TYPE_LEAKAGE_INT = 2;
 
-	public static final int STATUS_UNSUBMIT_INT = 0;
+	public static final short PAYTYPE_PAY_INT = 0;
 
-	public static final int STATUS_SUBMIT_INT = 1;
+	public static final short PAYTYPE_COM_INT = 1;
 
-	public static final int STATUS_PAYED_INT = 2;
+	public static final short PAYTYPE_ARO_INT = 2;
 
-	public static final int STATUS_CONFIRMED_INT = 3;
+	public static final short STATUS_UNSUBMIT_INT = 0;
+
+	public static final short STATUS_SUBMIT_INT = 1;
+
+	public static final short STATUS_PAYED_INT = 2;
+
+	public static final short STATUS_CONFIRMED_INT = 3;
 
 	private long arId;
 
@@ -60,6 +68,8 @@ public class AddReducePO implements Serializable {
 	private String orderId;
 
 	private short type;
+
+	private short paytype;
 
 	private long undisPrice;
 
@@ -77,7 +87,7 @@ public class AddReducePO implements Serializable {
 
 	private int discount;
 
-	private int status;
+	private short status;
 
 	private Timestamp createTime;
 
@@ -109,6 +119,15 @@ public class AddReducePO implements Serializable {
 
 	public void setType(short type) {
 		this.type = type;
+	}
+
+	@Column(name = "paytype")
+	public short getPaytype() {
+		return paytype;
+	}
+
+	public void setPaytype(short paytype) {
+		this.paytype = paytype;
 	}
 
 	@Column(name = "total")
@@ -166,11 +185,11 @@ public class AddReducePO implements Serializable {
 	}
 
 	@Column(name = "status")
-	public int getStatus() {
+	public short getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(short status) {
 		this.status = status;
 	}
 

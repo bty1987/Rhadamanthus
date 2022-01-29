@@ -66,6 +66,14 @@ jQuery(function($) {
         com.focusPage("#con-payment-second", "#form").hide();
     }
     
+    if(contractEdit.contractArgs.company != "1"){
+        com.focusPage(".company", "#form").hide();
+    }
+	
+	if(contractEdit.contractArgs.company == "1"){
+	    com.focusPage(".customer", "#form").hide();
+	}
+	
     com.post(api.common.current, {}, function(res){
         contractEdit.current = new Date(res.current);
     }, null, false);
@@ -96,7 +104,26 @@ jQuery(function($) {
         contractEdit.cover["cov-orderId"] = contractEdit.decorationOrderId;
         contractEdit.cover["cov-customer-name"] = customer.name;
         contractEdit.cover["cov-customer-phone"] = customer.phone;
-    });
+        contractEdit.cover["sin-customer-name"] = customer.name;
+        contractEdit.cover["sin-customer-ident"] = customer.identity;
+        
+        com.focusPage("#con-company-no", "#form").val(customer.companyNo);
+        com.focusPage("#con-company-name", "#form").val(customer.companyName);
+        com.focusPage("#con-company-name1", "#form").val(customer.companyName);
+        com.focusPage("#con-company-phone", "#form").val(customer.companyPhone);
+        com.focusPage("#con-company-addr", "#form").val(customer.companyAddr);
+        com.focusPage("#con-company-bank", "#form").val(customer.companyBank);
+        com.focusPage("#con-company-bankno", "#form").val(customer.companyBankno);
+    }, null, false);
+    
+    if(contractEdit.contractArgs.company == "1" && contractEdit.customer.type == 0){
+        
+        com.showAlert(com.warning, "客户类型为个人");
+        
+        com.focusPage("#contractPopUp").empty();
+        
+        return false;
+    }
     
     com.post(api.construction.queryConstructionInfoByOrderId, {"constructionInfo.orderId": contractEdit.decorationOrderId}, function (result) {
         
@@ -138,7 +165,6 @@ jQuery(function($) {
         com.focusPage("#con-proper-name", "#form").val(proper.name);
         com.focusPage("#con-village-name", "#form").val(village.name);
         com.focusPage("#con-housenumber", "#form").val(house.houseNumber);
-//        com.focusPage("#cov-buildarea", "#form").val(house.buildArea);
         com.focusPage("#con-housetype", "#form").val(data.houseClass);
         
         com.focusPage("#con-house-type", "#form").val(contractEdit.decorationType[data.type]);
@@ -363,19 +389,24 @@ jQuery(function($) {
             data["con-sign-month"] = com.dateFormat(contractEdit.current, "MM");
             data["con-sign-day"] = com.dateFormat(contractEdit.current, "dd");
             
-//            data["con-design-money1"] = parseFloat(data["con-design-money"]);
             data["con-activity-name1"] = data["con-activity-name"];
             
             data["con-contract-total-cn"] = utils.getCNMoney(parseFloat(data["con-contract-total"]));
-//            data["con-contract-stotal-cn"] = utils.getCNMoney(parseFloat(data["con-contract-stotal"]));
-//            data["con-contract-rtotal-cn"] = utils.getCNMoney(parseFloat(data["con-contract-rtotal"]));
             
             data["con-precontract-total-cn"] = utils.getCNMoney(parseFloat(data["con-precontract-total"]));
             data["con-quotation-total-cn"] = utils.getCNMoney(parseFloat(data["con-quotation-total"]));
             
-            data["sin-customer-name"] = data["con-customer-name"];
-//            data["sin-customer-phone"] = data["con-customer-phone"];
             data["sin-customer-ident"] = data["con-customer-ident"];
+            
+            if(contractEdit.contractArgs.company == "1"){
+            	delete data["con-customer-name"];
+                delete data["con-customer-ident"];
+                delete data["cov-customer-name"];
+                
+                data["cov-company-name"] = data["con-company-name"];
+                data["sin-company-name"] = data["con-company-name"];
+                data["sin-company-phone"] = data["con-company-phone"];
+            }
             
             var options = {
                 "decorationContract.orderId": params.decorationOrderId,
