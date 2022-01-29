@@ -13,6 +13,8 @@ jQuery(function ($) {
         status : {},
         onetype :{},
         towtype :{},
+        
+        twotypes: [],
 
         wizardSept: {
             "1": false,
@@ -39,6 +41,8 @@ jQuery(function ($) {
         supervisionDetail.status = res.status.split("key", "value");
         supervisionDetail.onetype = res.SalaryTwoType.split("key", "oneType");
         supervisionDetail.towtype = res.SalaryTwoType.split("key", "name");
+        
+        supervisionDetail.twotypes = res.SalaryTwoType;
     }, null, false);
 
     $.extend(com.validator, supervisionDetail.validator);
@@ -273,8 +277,9 @@ jQuery(function ($) {
             var salaryType = $('<label><b>类型</b></label>').addClass('col-sm-3 control-label no-padding-left').attr("for", "form-field-1").attr("for", "salaryType").appendTo(salaryDivTh);
             var $item = $('<span></span>').addClass('inline').appendTo(salaryDivTh);
             var salaryTypeS = $('<select></select>').attr("id", "salaryType").css("width", "320px").css("height", "30px").appendTo($item);
-            $.each(supervisionDetail.towtype, function (i, v) {
-                $('<option></option>').attr("value", i).html(v).appendTo(salaryTypeS);
+            $.each(supervisionDetail.twotypes, function (i, v) {
+                if(v.status != 0) return true;
+                $('<option></option>').attr("value", v.key).html(v.name).appendTo(salaryTypeS);
             });
 
             var salaryDiv4 = $('<div></div>').addClass("form-group").css("height", "80px").css("margin", "0px 0px 15px 0px");

@@ -15,6 +15,14 @@ import javax.persistence.Table;
 public class RecruitmentPO implements Serializable {
 
 	private  static final long serialVersionUID = 1L;
+	
+	public static final String COLUMN_STATUS_STR = "status";
+	
+	public static final short STATUS_INIT_INT = 0;//初始
+	
+	public static final short STATUS_ENTRY_INT = 1;//入职
+	
+	public static final short STATUS_CANCEL_INT = 2;//作废
 
 	private  long rid;
 	 
@@ -91,6 +99,8 @@ public class RecruitmentPO implements Serializable {
 	private short isCriminal;
 	 
 	private short isDisease;
+	
+	private short status;
 
 	public RecruitmentPO(){
 		super();
@@ -439,6 +449,13 @@ public class RecruitmentPO implements Serializable {
 	public void setIsDisease(short isDisease) {
 		this.isDisease = isDisease;
 	}
-	
 
+	@Column(name= "status")
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
+	}
 }

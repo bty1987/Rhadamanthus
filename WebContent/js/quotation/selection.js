@@ -7,7 +7,7 @@ var selectionDetail = (function(){
             returnBtn: com.focusPage('#returnBtn'),
             addSelectionItemBtn: com.focusPage('#addSelectionItemBtn'),
             addSelectionItemCancelBtn: com.focusPage('#addSelectionItemCancelBtn'),
-			printFinanceBtn: com.focusPage('#printFinanceBtn')
+            printFinanceBtn: com.focusPage('#printFinanceBtn')
         },
         modals: {
             quotationItemSoodsModal: com.focusPage('#quotationItemSoodsModal')
@@ -25,19 +25,19 @@ var selectionDetail = (function(){
             addReduceMinusTotal: com.focusPage('#addReduceMinusTotal')
         },
         initSettingBtns: function() {
-			selection.btns.printFinanceBtn.click(function() {
-				com.post(api.quotation.querySelectionByOrderId, {"selection.orderId": params.decorationOrderId}, function(res) {
-				    params.supplierPage = selectionItem.pageType == "supplier" ? true : false;
-				    params.selectionOrderId = res.selection.orderId;
-				    com.popup("打印选材", api.index.selectionOutputIndex.url, null, null, true);
-				}, null, false);
-			}),
-            selection.btns.saveSelectionBtn.bindClick(function() {
-                selection.calculateAllDomainTotal();
-                com.post(api.quotation.updateSelectionForAdvance, selection.basicParams, function(a){
-                    com.showAlert(com.info, '操作成功');
-                });
-            },2000);
+            selection.btns.printFinanceBtn.click(function() {
+                com.post(api.quotation.querySelectionByOrderId, {"selection.orderId": params.decorationOrderId}, function(res) {
+                    params.supplierPage = selectionItem.pageType == "supplier" ? true : false;
+                    params.selectionOrderId = res.selection.orderId;
+                    com.popup("打印选材", api.index.selectionOutputIndex.url, null, null, true);
+                }, null, false);
+            }),
+                selection.btns.saveSelectionBtn.bindClick(function() {
+                    selection.calculateAllDomainTotal();
+                    com.post(api.quotation.updateSelectionForAdvance, selection.basicParams, function(a){
+                        com.showAlert(com.info, '操作成功');
+                    });
+                },2000);
 
             selection.btns.returnBtn.click(function() {
                 com.showConfirm('当前页面存在重要数据,是否进行当前操作', function(a) {
@@ -135,8 +135,8 @@ var selectionDetail = (function(){
                         ["单位: ", v.goods.measurementUnit, "grey"],
                         ["数量: ", v.num, "blue"],
                         ["状态: ", v.status == 0 ? "有效" : "无效", "red"],
-                        ["报价名称: ", v.quotationItem.itemName, "grey"],
-                        ["报价版本: ", v.quotationItem.version, "grey"],
+                        ["报价名称: ", v.quotationItem.name, "grey"],
+                        ["报价版本: ", v.quotationItem.version.name, "grey"],
                     ];
 
                     $.each(propertyArr, function (index, value) {
@@ -170,9 +170,9 @@ var selectionDetail = (function(){
 
             var soodsSeacher = new Searcher();
 
-            soodsSeacher.init(["data-soods-name"], "condList", api.data.pageSoodsByQiid, function(data) {
+            soodsSeacher.init(["data-soods-name"], "condList", api.data.pageSoodsItemByQiid, function(data) {
                 displayFunc.init("resultList", data);
-            }, "pagenation", "selectionItemSoodsPostData", {"soods.quotationItem.qiid": quotationItemId}, false, null, null);
+            }, "pagenation", "selectionItemSoodsPostData", {"soodsItem.quotationItem.qiid": quotationItemId}, false, null, null);
 
         },
     };
@@ -185,17 +185,17 @@ var selectionDetail = (function(){
             var num = selection.nowEditQuote.find('.num').text();
             var price = selection.nowEditQuote.next().attr('data-price');
             var total = selection.nowEditQuote.parents('.widget-box').attr('data-total');
-            
+
             if (num === '0') {
                 com.showAlert(com.warning, '工程量为空');
                 return false;
             }
-            
+
             if(selling > selection.quotationItem.preprice){
 //                com.showAlert(com.warning, "选材结算价高于项目单价");
 //                return false;
             }
-            
+
             selection.calculatePrice(selling, num);
             selection.calculateAllDomainTotal();
 

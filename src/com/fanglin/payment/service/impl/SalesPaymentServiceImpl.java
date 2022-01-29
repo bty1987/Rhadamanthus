@@ -20,7 +20,6 @@ import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationAdditionService;
-import com.fanglin.kingdee.service.SalesKingdeeService;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.PointofsalesDao;
 import com.fanglin.payment.dao.SalesPaymentDao;
@@ -97,9 +96,6 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 	
 	@Autowired
 	private SalesActivityService salesActivityService;
-	
-	@Autowired
-	private SalesKingdeeService salesKingdeeService;
 	
 	@Override
 	public void pageSalesPayment(Paging paging, List<Filter> filters, SalesPaymentVO salesPayment, int company, String companyType) {
@@ -511,11 +507,6 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		
 		decorationService.sendMessage(salesPayment.getSales().getOrderId(), "主材单", String.format("主材交款金额%.3f元", Arith.div(salesPayment.getReferMoney(), 1000.0)));
 
-		//数据进入金蝶
-		List<SalesPaymentPO> salesPaymentPOs = new ArrayList<SalesPaymentPO>();
-		salesPaymentPOs.add(salesPayment);
-		salesKingdeeService.collect(sales, salesReceiptPO, salesPaymentPOs);
-		
 		return 0;
 	}
 
@@ -676,9 +667,6 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		
 		decorationService.sendMessage(sales.getOrderId(), "主材单", String.format("主材交款金额%.3f元", Arith.div(totalMoney, 1000.0)));
 		
-		//数据进入金蝶
-		salesKingdeeService.collect(sales, salesReceiptPO, salesPaymentPOs);
-		
 		return 0;
 	}
 
@@ -797,9 +785,6 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		
 		decorationService.sendMessage(salesPayment.getSales().getOrderId(), "主材单", String.format("主材退款金额%.3f元", Arith.div(salesPayment.getReferMoney(), 1000.0)));
 		
-		//数据进入金蝶
-		salesKingdeeService.refund(sales, salesReceiptPO, salesPayment);
-
 		return 0;
 	}
 
@@ -1128,7 +1113,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 		paymentVO.setOrderId(sales.getOrderId());
 		paymentVO.setPaymentType(PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT);
-		paymentVO.setComment(String.format("销售单:%d", sales.getSid()));
+		paymentVO.setComment(String.format("销售单:%s", sales.getNo()));
 		paymentVO.setTransfer(salesReceiptVO.getAdvance());
 		paymentVO.setUniqueid("SA" + salesReceiptPO.getSrId());
 		

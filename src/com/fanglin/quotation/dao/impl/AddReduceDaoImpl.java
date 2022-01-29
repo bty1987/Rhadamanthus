@@ -12,15 +12,16 @@
 package com.fanglin.quotation.dao.impl;
 
 import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.quotation.dao.AddReduceDao;
+import com.fanglin.quotation.po.AddReduceDO;
 import com.fanglin.quotation.po.AddReducePO;
 import com.fanglin.utils.Paging;
 
@@ -32,17 +33,19 @@ public class AddReduceDaoImpl extends DaoImpl<AddReducePO> implements AddReduceD
 	}
 
 	@Override
-	public List<AddReducePO> pageAddReduce(Paging paging, List<Filter> filters) {
+	public List<AddReduceDO> pageAddReduce(Paging paging, List<Filter> filters) {
 
-		PagingQuery<AddReducePO> query = pagingQuery(paging, AddReducePO.class);
+		PagingQuery<AddReduceDO> query = pagingQuery(paging, AddReduceDO.class);
 
 		queryFilterExcute(query, filters);
+
+		query.desc("createTime");
 
 		return query.list();
 	}
 
 	@Override
-	public List<AddReducePO> pageAddReduceByOrderId(Paging paging, List<Filter> filters, String orderId) {
+	public List<AddReducePO> pageAddReduce(Paging paging, List<Filter> filters, String orderId) {
 
 		PagingQuery<AddReducePO> query = pagingQuery(paging, AddReducePO.class);
 
@@ -56,29 +59,25 @@ public class AddReduceDaoImpl extends DaoImpl<AddReducePO> implements AddReduceD
 	}
 
 	@Override
-	public AddReducePO queryAddReduceByDecorationPaymentId(Long decorationPaymentId) {
-		return (AddReducePO) createCriteria(AddReducePO.class).add(Restrictions.eq(AddReducePO.COLUMN_DPID_STR, decorationPaymentId)).uniqueResult();
+	@SuppressWarnings("unchecked")
+	public List<AddReducePO> queryAddReduce(String orderId, List<Short> statuses) {
+
+		Criteria query = session().createCriteria(AddReducePO.class).add(Restrictions.eq(AddReducePO.COLUMN_ORDERID_STR, orderId));
+
+		if (statuses != null && statuses.size() != 0) {
+			query.add(Restrictions.in(AddReducePO.COLUMN_STATUS_STR, statuses));
+		}
+
+		return query.list();
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<AddReducePO> queryAddReduceForNLeakageByOrderId(String orderId) {
-		return (List<AddReducePO>) createCriteria(AddReducePO.class).add(Restrictions.eq(AddReducePO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.ne(AddReducePO.COLUMN_TYPE_STR, 2)).list();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
 	public List<AddReducePO> queryAddReduceByOrderId(String orderId) {
-		return session().createCriteria(AddReducePO.class).add(Restrictions.eq(AddReducePO.COLUMN_ORDERID_STR, orderId)).list();
+		return queryAddReduce(orderId, null);
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public List<AddReducePO> queryAddReduceForPayedByOrderId(String orderId) {
-
-		List<Integer> statuses = Arrays.asList(AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT);
-
-		return session().createCriteria(AddReducePO.class).add(Restrictions.eq(AddReducePO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.in(AddReducePO.COLUMN_STATUS_STR, statuses)).list();
+	public AddReducePO queryAddReduce(Long decorationPaymentId) {
+		return (AddReducePO) createCriteria(AddReducePO.class).add(Restrictions.eq(AddReducePO.COLUMN_DPID_STR, decorationPaymentId)).uniqueResult();
 	}
 
 	@Override
@@ -92,17 +91,24 @@ public class AddReduceDaoImpl extends DaoImpl<AddReducePO> implements AddReduceD
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
+		if (filters == null || filters.size() == 0)
+			return;
+
 		for (Filter filter : filters) {
-			if (AddReducePO.COLUMN_ORDERID_STR.equals(filter.getField())) {
-				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
-			} else if (AddReducePO.COLUMN_STATUS_STR.equals(filter.getField())) {
-				query.add(query.getCriterion(filter.getField(), Integer.parseInt(filter.getData()), filter.getOp()));
-			} else if (AddReducePO.COLUMN_TYPE_STR.equals(filter.getField())) {
-				query.add(query.getCriterion(filter.getField(), Integer.parseInt(filter.getData()), filter.getOp()));
-			} else {
-				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if (AddReducePO.COLUMN_ORDERID_STR.equals(field)) {
+				query.add(query.getCriterion(field, data, op));
+			} else if (AddReducePO.COLUMN_STATUS_STR.equals(field)) {
+				query.add(query.getCriterion(field, Short.parseShort(data), op));
+			} else if (AddReducePO.COLUMN_TYPE_STR.equals(field)) {
+				query.add(query.getCriterion(field, Short.parseShort(data), op));
+			} else if (AddReducePO.COLUMN_PAYTYPE_STR.equals(field)) {
+				query.add(query.getCriterion(field, Short.parseShort(data), op));
 			}
 		}
 	}
-
 }

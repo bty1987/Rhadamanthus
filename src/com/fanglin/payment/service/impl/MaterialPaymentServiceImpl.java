@@ -49,6 +49,7 @@ import com.fanglin.payment.po.PaymentPO;
 import com.fanglin.payment.po.PointofsalesPO;
 import com.fanglin.payment.service.AdvancePaymentService;
 import com.fanglin.payment.service.MaterialPaymentService;
+import com.fanglin.payment.service.PaymentService;
 import com.fanglin.payment.service.PointofsalesService;
 import com.fanglin.payment.vo.MaterialPaymentVO;
 import com.fanglin.payment.vo.MaterialReceiptVO;
@@ -105,6 +106,9 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 	
 	@Autowired
 	private PointofsalesService pointofsalesService;
+	
+	@Autowired
+	private PaymentService paymentService;
 
 	@Override
 	public void pageMaterialPayment(Paging paging, List<Filter> filters, MaterialPaymentVO materialPayment, int company){
@@ -796,6 +800,7 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		Long cash = materialPaymentVO.getCash();
 		Long bank = materialPaymentVO.getBank();
 		Long checkv = materialPaymentVO.getCheckv();
+		Long advance = materialPaymentVO.getAdvance();
 		Long coupon = materialPaymentVO.getCoupon();
 
 		int paymentType = materialPaymentPO.getPaymentType() ;
@@ -816,6 +821,12 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 			materialReceiptPO.setCheckv(materialPaymentVO.getCheckv());
 			materialReceiptPO.setCheckvBank(materialPaymentVO.getCheckvBank());
 			real = Arith.add(real, checkv);
+		}
+		
+		if(advance != null && advance != 0f){
+			materialReceiptPO.setAdvance(materialPaymentVO.getAdvance());
+			materialReceiptPO.setAdvanceType(materialPaymentVO.getAdvanceType());
+			real = Arith.add(real, advance);
 		}
 		
 		if(coupon != null && coupon != 0f){
@@ -860,6 +871,12 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		materialPaymentDao.update(materialPaymentPO);
 
 		materialPaymentVO.setMrId(materialReceiptPO.getMrId());
+		
+		//生成预付款相关数据
+		if (materialPaymentVO.getAdvance() != null && materialPaymentVO.getAdvance() > 0) {
+			PaymentVO paymentVO = getPaymentVO(materialPaymentPO, materialReceiptPO);
+			paymentService.returnPayment(paymentVO, userId);
+		}
 
 		decorationService.sendMessage(materialPaymentPO.getMaterial().getOrderId(), "主材单", String.format("主材退款金额%.3f元", Arith.div(materialPaymentPO.getReferMoney(), 1000.0)));
 
@@ -1182,6 +1199,21 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		}
 
 		return 0;
+	}
+	
+	public PaymentVO getPaymentVO(MaterialPaymentPO materialPaymentPO, MaterialReceiptPO materialReceiptPO) {
+		
+		PaymentVO paymentVO = new PaymentVO();
+
+		MaterialPO materialPO = materialPaymentPO.getMaterial();
+		paymentVO.setOrderId(materialPO.getOrderId());
+		paymentVO.setPaymentType(PaymentPO.PAYMENT_PAYMENTTYPE_MATERIAL_INT);
+		paymentVO.setComment(String.format("主材单:%s", materialPO.getNo()));
+		paymentVO.setTransfer(materialReceiptPO.getAdvance());
+		paymentVO.setUniqueid("M" + materialReceiptPO.getMrId());
+		
+		return paymentVO;
+		
 	}
 
 }

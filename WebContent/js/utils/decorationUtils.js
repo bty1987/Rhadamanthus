@@ -505,7 +505,7 @@ var decorationUtils = {
             }
             
             infopack.html("");
-            
+
             var couponCutSpan = $("<div></div>").attr("id", "_couponCut").addClass("col-sm-4").append($("<h4></h4>").html("券优惠:").append($('<strong></strong>').addClass("red").html(couponCut))).appendTo(infopack);
             var thingCutSpan = $("<div></div>").attr("id", "_thingCut").addClass("col-sm-4").append($("<h4></h4>").html("物品优惠:").append($('<strong></strong>').addClass("red").html(thingCut))).appendTo(infopack);
             var detailSpan = $("<div></div>").attr("id", "_detail").addClass("col-sm-4").append($("<h4></h4>").html("优惠总额:").append($('<strong></strong>').addClass("red").html(utils.accAdd(couponCut, thingCut)))).appendTo(infopack);
@@ -606,9 +606,7 @@ var decorationUtils = {
 
         $.each(protationFunctionAreas, function (i, v) {
 
-            var $dcpts = 0.0;
-
-            var $domain, $dhead, $dname, $btns, $dbody, $dbodyInner, $list;
+            var $domain, $dhead, $dname, $dbody, $dbodyInner, $list;
 
             $domain = $('<div></div>').addClass('widget-box transparent').css({"margin-bottom": "20px"});
             $dhead = $('<div></div>').addClass('widget-header');
@@ -627,17 +625,15 @@ var decorationUtils = {
                 var $item = $('<li></li>').addClass('fl-quo-item').prop('title', qv.content);
                 var _num = qv.num;
                 var _unitPrice = qv.price;
-                var _type = qv.type;
                 var _total = 0;
 
                 var _typeName = "-";
-                $dcpts = utils.accAdd($dcpts, qv.quotationTotalPrice);
 
                 if(qv.type == 0){
                     _typeName = "信息";
                     _total = utils.changeThrDecimal(utils.accMul(_unitPrice, utils.accSub(_num, qv.basicNum)));
                 }
-                if(_type == 1 || qv.type == 2){ // 基础工程
+                if(qv.type == 1 || qv.type == 2){ // 基础工程
                     _typeName = "基础";
                 }
                 if(qv.type == 3 || qv.type == 4){ // 个性
@@ -663,11 +659,14 @@ var decorationUtils = {
                 ];
 
                 $.each(_lineSet, function (i, v) {
+
                     var $cell = $('<div></div>').addClass('cell ' + v[0]);
                     var $cellWrap = $('<div></div>').addClass('cell-wrap').html(v[1]);
+
                     if (v[2]) {
                         $cell.attr(v[2][0], v[2][1]);
                     }
+
                     $cell.append($cellWrap).appendTo($item);
                 });
                 $item.appendTo($list);
@@ -675,6 +674,22 @@ var decorationUtils = {
 
             $domain.appendTo(presignItemListDiv);
         });
+
+        var $show = params.viewNode[1].opt == null ?  [] : params.viewNode[1].opt.show == null ? [] : params.viewNode[1].opt.show;
+
+        if ($show.includes("totalPrice")) {
+            var amount = 0;
+
+            com.post(api.decoration.amountDecorationActivity, {"decorationActivity.orderId": orderId, "decorationActivityItem.daiid": 0}, function(res){
+                amount = res.decorationActivity.amount;
+            }, null, false);
+
+            var profit = utils.changeThrDecimal(utils.accSub(1.0, utils.accDiv(protation.totalCost, utils.accSub(protation.totalPrice, amount))));
+
+            $domain = $('<div></div>').addClass('widget-box transparent').css({"margin-bottom": "20px"}).appendTo(presignItemListDiv);
+            $dhead = $('<div></div>').addClass('widget-header').appendTo($domain);
+            $dname = $('<h4></h4>').append($('<strong></strong>').css('color', '#E2737D').html("总额: " + protation.totalPrice + " 成本: " + protation.totalCost +" 利润: " + profit)).appendTo($dhead);
+        }
 
     }, decorationSalesActivityItemInfo: function (itempack,orderId, uiBtnMethod, config) {
 
@@ -722,7 +737,7 @@ var decorationUtils = {
 
             }
 
-        })
+        });
 
     },initPayment: function (decorationDetail, isDesign) {
 

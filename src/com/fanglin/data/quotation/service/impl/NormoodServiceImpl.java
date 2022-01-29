@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.communion.vo.MeasurementUnitVO;
 import com.fanglin.communion.vo.WorkTypeVO;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.material.vo.GoodsVO;
 import com.fanglin.data.po.GoodsPO;
 import com.fanglin.data.po.NormoodPO;
@@ -19,6 +20,7 @@ import com.fanglin.data.quotation.service.NormoodService;
 import com.fanglin.data.quotation.vo.NormoodVO;
 import com.fanglin.data.quotation.vo.QuotationItemVO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.Paging;
 
 @Service("normoodService")
 @Transactional(readOnly = true)
@@ -26,6 +28,27 @@ public class NormoodServiceImpl implements NormoodService {
 
 	@Autowired
 	NormoodDao normoodDao;
+	
+	@Override
+	public void pageNormood(Paging paging, List<Filter> filters) {
+
+		List<NormoodPO> normoodPOs = normoodDao.pageNormood(paging, filters);
+		List<NormoodVO> normoodVOs = new ArrayList<NormoodVO>();
+		
+		for (NormoodPO normoodPO : normoodPOs) {
+
+			NormoodVO normoodVO = new NormoodVO(new GoodsVO(), new QuotationItemVO(null, null, null, null, null, new WorkTypeVO(), new MeasurementUnitVO()));
+
+			BeanUtil.copyProperties(normoodPO, normoodVO, Arrays.asList("goods", "quotationItem"));
+			BeanUtil.copyProperties(normoodPO.getGoods(), normoodVO.getGoods(), Arrays.asList("accessoriesType"));
+
+			normoodPO.getQuotationItem().ptv(normoodVO.getQuotationItem());
+
+			normoodVOs.add(normoodVO);
+		}
+
+		paging.setData(normoodVOs);
+	}
 
 	@Override
 	public List<NormoodVO> queryNormoodByQiid(Long qiid) {

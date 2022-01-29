@@ -25,10 +25,14 @@ import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.quotation.dao.AddReduceItemDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
+import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
+import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
 import com.fanglin.quotation.dao.SelectionDao;
 import com.fanglin.quotation.dao.SelectionItemDao;
 import com.fanglin.quotation.po.AddReduceItemPO;
 import com.fanglin.quotation.po.ExtensionItemPO;
+import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
+import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.po.SelectionItemPD;
 import com.fanglin.quotation.po.SelectionItemPO;
@@ -56,6 +60,12 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 	@Autowired
 	private QuotationItemDao quotationItemDao;
+
+	@Autowired
+	private QuotationFunctionAreaDao quotationFunctionAreaDao;
+
+	@Autowired
+	private QuotationFunctionAreaItemDao quotationFunctionAreaItemDao;
 
 	@Autowired
 	private ExtensionItemDao extensionItemDao;
@@ -192,7 +202,11 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 			if (type == SelectionItemPO.TYPE_QUOTATION_SHORT) {
 
-				quotationItemPO = quotationItemDao.get(selectionItemVO.getQuoteId());
+				QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(selectionItemVO.getAreaId());
+				QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex()), selectionItemVO.getQuoteId());
+
+				if (quotationFunctionAreaItemPO != null)
+					quotationItemPO = quotationFunctionAreaItemPO.getQuotationItem();
 
 			} else if (type == SelectionItemPO.TYPE_EXTENSIONADD_SHORT || type == SelectionItemPO.TYPE_EXTENSIONMINUS_SHORT) {
 

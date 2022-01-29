@@ -91,7 +91,8 @@ $(function(){
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-
+            var $btnExpD = $('<a></a>').addClass('btn btn-minier btn-danger').html("导出定额材料");
+            var $btnExpG = $('<a></a>').addClass('btn btn-minier btn-danger').html("导出定额工费");
 
             var propertyArr = [
                 ["编号:", v.no, "blue"],
@@ -111,12 +112,20 @@ $(function(){
                 $liProperty.appendTo($ulProperty);
             });
 
-            $divBtnWrap.append($btnEdit).appendTo($h3);
+            $divBtnWrap.append($btnEdit).append($btnExpD).append($btnExpG).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
             $btnEdit.click(function(){
                 editLine(v);
+            });
+
+            $btnExpD.click(function(){
+                expdecl(v);
+            });
+
+            $btnExpG.click(function(){
+                expdegf(v);
             });
 
             return $liLine;
@@ -208,6 +217,80 @@ $(function(){
             quotationVersion.modal.modal("hide");
         });
         
+    }
+
+    // 导出功能
+    function expdecl(v){
+
+        if(com.focusPage('span[name="totalRecords"]').text() == 0){
+            com.showAlert(com.warning, "请通过条件进行查询");
+            return false;
+        }
+        if(com.focusPage('span[name="totalRecords"]').text() > 2000){
+            com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
+            return false;
+        }
+        var quotationVersionPostData=params.quotationVersionPostData;
+
+        com.post(api.data.pageNormood, $.extend({},quotationVersionPostData,{"paging.noPage": 1,
+            "filters[0].field": "versionId",
+            "filters[0].data": v.no,
+            "filters[0].op": "eq"}), function (res){
+            $.exceler({
+                column:[
+                    ["材料名称","goods.name"],
+                    ["报价项编号","quotationItem.no"],
+                    ["报价项名称","quotationItem.name"],
+                    ["报价项单位","quotationItem.unit.name"],
+                    ["报价项工种","quotationItem.workType.name"],
+                    ["报价项单价","quotationItem.unitPrice"],
+                    ["品牌","goods.brand"],
+                    ["品类","goods.category"],
+                    ["商品单位","goods.measurementUnit"],
+                    ["单位","unit"],
+                    ["定额量","num"],
+                    ["状态", "status"],
+                ],
+                list: res.paging.data,
+            }, function(v){
+                v.status = v.status== 0 ? '有效': v.status== 1 ? '无效' : '---';
+            });
+        });
+    }
+
+    function expdegf(v){
+
+        if(com.focusPage('span[name="totalRecords"]').text() == 0){
+            com.showAlert(com.warning, "请通过条件进行查询");
+            return false;
+        }
+        if(com.focusPage('span[name="totalRecords"]').text() > 2000){
+            com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
+            return false;
+        }
+        var quotationVersionPostData=params.quotationVersionPostData;
+        com.post(api.data.pageNormrice, $.extend({},quotationVersionPostData,{"paging.noPage": 1,
+            "filters[0].field": "versionId",
+            "filters[0].data": v.no,
+            "filters[0].op": "eq"}), function (res){
+            $.exceler({
+                column:[
+                    ["工费名称","constructionNode.name"],
+                    ["报价项编号","quotationItem.no"],
+                    ["报价项名称","quotationItem.name"],
+                    ["报价项单位","quotationItem.unit.name"],
+                    ["报价项工种","quotationItem.workType.name"],
+                    ["报价项单价","quotationItem.unitPrice"],
+                    ["定额单位","unit"],
+                    ["转换量","trannum"],
+                    ["工费","salary"],
+                    ["状态", "status"],
+                ],
+                list: res.paging.data,
+            }, function(v){
+                v.status = v.status== 0 ? '有效': v.status== 1 ? '无效' : '---';
+              });
+        });
     }
 
 });

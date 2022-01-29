@@ -415,35 +415,6 @@ $.extend(api, {
                 args:["purchase", "selling", "pieceNum"]
             }]
         },
-        pageSoodsByQiid: {
-            url: "pageSoodsByQiid.do",
-            type: "query",
-            tranargs: [{
-                result: "paging-data",
-                args: ["num", "selling"]
-            },{
-                result:"paging-data-goods",
-                args: ["addPrice", "unitPrice", "subPrice"]
-            }]
-        },
-        pageSoodsBySid: {
-            url: "pageSoodsBySid.do",
-            type:"query",
-            tranargs:[
-                {
-                    result:"paging-data",
-                    args: ["num", "selling"]
-                },{
-                    result:"paging-data-goods",
-                    args:["purchase", "selling", "pieceNum"]
-                },{
-                    result:"paging-data-quotationItem",
-                    args: ["pieceNum","purchase","selling"]
-                }
-            ]
-
-        },
-
         querySoodsByName: {
             url: "querySoodsByName.do",
             type:"query",
@@ -453,42 +424,14 @@ $.extend(api, {
             }]
         },
 
-        querySoodsByQiid: {
-            url: "querySoodsByQiid.do",
+        querySoods: {
+            url: "querySoods.do",
             type:"query",
-            tranargs:[
-                {
-                    result:"soodes",
-                    args: ["num", "selling"]
-                },{
-                    result:"soodes-goods",
-                    args: ["pieceNum","purchase","selling"]
-                },
-            ]
+            tranargs:[{
+                result:"soodes",
+                args: ["purchase","selling","pieceNum"]
+            }]
         },
-
-        querySoodsBySid: {
-            url: "querySoodsBySid.do",
-            type:"query",
-            tranargs:[
-                {
-                    result:"soodes",
-                    args: ["num", "selling"]
-                },{
-                    result:"soodes-goods",
-                    args: ["pieceNum","purchase","selling"]
-                },
-            ]
-        },
-
-        addSoodsItem: {
-            url: "addSoodsItem.do",
-            type: "update",
-            tranargs: {
-                args: ["soods.quotationItem.unitPrice"]
-            }
-        },
-
         addSoods: {
             url: "addSoods.do",
             type: "update",
@@ -508,6 +451,75 @@ $.extend(api, {
         copySoods: {url: "copySoods.do"},
         deleteSoods: {url: "deleteSoods.do"},
 
+        pageSoodsItemByQiid: {
+            url: "pageSoodsItemByQiid.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["num", "selling"]
+            },{
+                result:"paging-data-goods",
+                args: ["addPrice", "unitPrice", "subPrice"]
+            },{
+                result:"paging-data-quotationItem",
+                args: ["pieceNum","purchase","selling"]
+            }]
+        },
+        pageSoodsItemBySid: {
+            url: "pageSoodsItemBySid.do",
+            type:"query",
+            tranargs:[
+                {
+                    result:"paging-data",
+                    args: ["num", "selling"]
+                },{
+                    result:"paging-data-goods",
+                    args:["purchase", "selling", "pieceNum"]
+                },{
+                    result:"paging-data-quotationItem",
+                    args: ["pieceNum","purchase","selling"]
+                }
+            ]
+        },
+        querySoodsItemByQiid: {
+            url: "querySoodsItemByQiid.do",
+            type:"query",
+            tranargs:[
+                {
+                    result:"soodsItems",
+                    args: ["num", "selling"]
+                },{
+                    result:"soodsItems-goods",
+                    args: ["pieceNum","purchase","selling"]
+                },{
+                    result:"soodsItems-quotationItem",
+                    args: ["pieceNum","purchase","selling"]
+                },
+            ]
+        },
+        querySoodsItemBySid: {
+            url: "querySoodsItemBySid.do",
+            type:"query",
+            tranargs:[
+                {
+                    result:"soodsItems",
+                    args: ["num", "selling"]
+                },{
+                    result:"soodsItems-goods",
+                    args: ["pieceNum","purchase","selling"]
+                },{
+                    result:"soodsItems-quotationItem",
+                    args: ["pieceNum","purchase","selling"]
+                },
+            ]
+        },
+        addSoodsItem: {
+            url: "addSoodsItem.do",
+            type: "update",
+            tranargs: {
+                args: ["soodsItem.quotationItem.unitPrice"]
+            }
+        },
         deleteSoodsItem: {url: "deleteSoodsItem.do"},
 
         pageAoodsCost: {
@@ -549,6 +561,17 @@ $.extend(api, {
         deleteHouseLayout:{url:"deleteHouseLayout.do", server: "communion"},
 
         // 定额
+        pageNormrice: {
+            url: "pageNormrice.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["trannum", "salary"]
+            },{
+                result: "paging-data-quotationItem",
+                args: ["unitPrice"]
+            }]
+        },
         queryNormriceByQiid: {
             url: "queryNormriceByQiid.do",
             type: "query",
@@ -568,8 +591,17 @@ $.extend(api, {
             }
         },
         deleteNormrice: {url: "deleteNormrice.do"},
-
-
+        pageNormood: {
+            url: "pageNormood.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["num"]
+            },{
+                result: "paging-data-quotationItem",
+                args: ["unitPrice"]
+            }]
+        },
         queryNormoodByQiid: {
             url: "queryNormoodByQiid.do",
             type: "query",
@@ -676,11 +708,28 @@ $.extend(api, {
         updateTalkingForStatus:{url:"updateTalkingForStatus.do"},
         deleteTalking:{url:"deleteTalking.do"},
 
+
         pageAdditem: {url:"pageAdditem.do"},
         queryAdditem: {url:"queryAdditem.do"},
-        addAdditem: {url:"addAdditem.do"},
+        addAdditem: {
+            url:"addAdditem.do",
+            tranargs: {
+                args: ["additem.price"]
+            }
+        },
         updateAdditemForStatus: {url:"updateAdditemForStatus.do"},
         deleteAdditem: {url:"deleteAdditem.do"},
+
+        pagePackitem: {url:"pagePackitem.do"},
+        queryPackitem: {url:"queryPackitem.do"},
+        addPackitem: {
+            url:"addPackitem.do",
+            tranargs: {
+                args: ["packitem.trannum"]
+            }
+        },
+        updatePackitemForStatus: {url:"updatePackitemForStatus.do"},
+        deletePackitem: {url:"deletePackitem.do"},
 
         pagePaymentType: {
             url: "pagePaymentType.do",
@@ -723,5 +772,6 @@ $.extend(api, {
             }
         },
         updatePaymentTypeForStatus: {url:"updatePaymentTypeForStatus.do", server:'communion'}
+
     }
 });

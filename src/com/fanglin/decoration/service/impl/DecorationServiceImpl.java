@@ -64,6 +64,7 @@ import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.payment.po.DecorationReceiptPO;
 import com.fanglin.payment.po.PaymentPO;
 import com.fanglin.payment.service.AdvancePaymentService;
+import com.fanglin.payment.vo.DecorationPaymentVO;
 import com.fanglin.payment.vo.PaymentVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
@@ -1197,8 +1198,9 @@ public class DecorationServiceImpl implements DecorationService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void terminalDecoration(DecorationVO decorationVO, long backup, Authentication authentication) throws FLException {
+	public void terminalDecoration(DecorationVO decorationVO, List<DecorationPaymentVO> decorationPaymentVOs, Authentication authentication) throws FLException {
 
+		long backup = 0;
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
 
 		String userId = authentication.getUserId();
@@ -1209,6 +1211,10 @@ public class DecorationServiceImpl implements DecorationService {
 		}
 
 		UserPO operater = userDao.queryUserByUserId(userId);
+
+		for (DecorationPaymentVO decorationPaymentVO : decorationPaymentVOs) {
+			backup = Arith.add(backup, decorationPaymentVO.getReferMoney());
+		}
 
 		if (DecorationPO.STATUS_PROSIGN_INT == decorationPO.getStatus()) {
 
@@ -1228,20 +1234,27 @@ public class DecorationServiceImpl implements DecorationService {
 
 				decorationReceiptDao.save(decorationReceiptPO);
 
-				DecorationPaymentPO backupPaymentPO = new DecorationPaymentPO();
+				for (DecorationPaymentVO decorationPaymentVO : decorationPaymentVOs) {
 
-				backupPaymentPO.setCreater(operater);
-				backupPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-				backupPaymentPO.setPaymentType(DecorationPaymentPO.PAYMENTTYPE_PENALTY_STR);
-				backupPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_PAY_INT);
-				backupPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
-				backupPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_DEAL_INT);
-				backupPaymentPO.setReferMoney(backup);
-				backupPaymentPO.setDecoration(decorationPO);
-				backupPaymentPO.setDecorationReceipt(decorationReceiptPO);
-				backupPaymentPO.setCompany(company);
+					if (decorationPaymentVO.getReferMoney() == 0 ) {
+						continue;
+					}
 
-				decorationPaymentDao.save(backupPaymentPO);
+					DecorationPaymentPO backupPaymentPO = new DecorationPaymentPO();
+
+					backupPaymentPO.setCreater(operater);
+					backupPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+					backupPaymentPO.setPaymentType(decorationPaymentVO.getPaymentType());
+					backupPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_PAY_INT);
+					backupPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
+					backupPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_DEAL_INT);
+					backupPaymentPO.setReferMoney(decorationPaymentVO.getReferMoney());
+					backupPaymentPO.setDecoration(decorationPO);
+					backupPaymentPO.setDecorationReceipt(decorationReceiptPO);
+					backupPaymentPO.setCompany(company);
+
+					decorationPaymentDao.save(backupPaymentPO);
+				}
 
 				PaymentVO paymentVO = new PaymentVO();
 
@@ -1278,20 +1291,28 @@ public class DecorationServiceImpl implements DecorationService {
 
 				decorationReceiptDao.save(decorationReceiptPO);
 
-				DecorationPaymentPO backupPaymentPO = new DecorationPaymentPO();
+				for (DecorationPaymentVO decorationPaymentVO : decorationPaymentVOs) {
 
-				backupPaymentPO.setCreater(operater);
-				backupPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-				backupPaymentPO.setPaymentType(DecorationPaymentPO.PAYMENTTYPE_PENALTY_STR);
-				backupPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_PAY_INT);
-				backupPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
-				backupPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_DEAL_INT);
-				backupPaymentPO.setReferMoney(backup);
-				backupPaymentPO.setDecoration(decorationPO);
-				backupPaymentPO.setDecorationReceipt(decorationReceiptPO);
-				backupPaymentPO.setCompany(company);
+					if (decorationPaymentVO.getReferMoney() == 0 ) {
+						continue;
+					}
 
-				decorationPaymentDao.save(backupPaymentPO);
+					DecorationPaymentPO backupPaymentPO = new DecorationPaymentPO();
+
+					backupPaymentPO.setCreater(operater);
+					backupPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+					backupPaymentPO.setPaymentType(decorationPaymentVO.getPaymentType());
+					backupPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_PAY_INT);
+					backupPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
+					backupPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_DEAL_INT);
+					backupPaymentPO.setReferMoney(decorationPaymentVO.getReferMoney());
+					backupPaymentPO.setDecoration(decorationPO);
+					backupPaymentPO.setDecorationReceipt(decorationReceiptPO);
+					backupPaymentPO.setCompany(company);
+
+					decorationPaymentDao.save(backupPaymentPO);
+				}
+
 			}
 
 			DecorationPaymentPO refundPaymentPO = new DecorationPaymentPO();

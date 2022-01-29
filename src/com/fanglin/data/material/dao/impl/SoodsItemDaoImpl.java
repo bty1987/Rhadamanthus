@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.data.material.dao.SoodsItemDao;
@@ -43,34 +44,34 @@ public class SoodsItemDaoImpl extends DaoImpl<SoodsItemPO> implements SoodsItemD
 
 	@Override
 	public List<SoodsItemPO> pageSoodsItemBySid(Paging paging, List<Filter> filters, long sid) {
-		
+
 		PagingQuery<SoodsItemPO> query = pagingQuery(paging, SoodsItemPO.class);
-		
+
 		query.alias("soods", "soods");
 		query.add(query.getCriterion("soods.sid", sid, "eq"));
-		
+
 		queryFilterExcute(query, filters);
-		
+
 		return query.list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<SoodsItemPO> querySoodsItemByQiid(long qiid) {
-		return session().createCriteria(SoodsItemPO.class).createAlias("quotationItem", "quotationItem").createAlias("soods", "soods").add(Restrictions.eq(SoodsItemPO.COLUMN_QIID_STR, qiid)).add(Restrictions.eq("soods.status", SoodsItemPO.STATUS_INIT_INT)).list();		
+		return session().createCriteria(SoodsItemPO.class).createAlias("quotationItem", "quotationItem").createAlias("soods", "soods").add(Restrictions.eq(SoodsItemPO.COLUMN_QIID_STR, qiid)).add(Restrictions.eq("soods.status", SoodsItemPO.STATUS_INIT_INT)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<SoodsItemPO> querySoodsItemBySid(long sid) {
-		return session().createCriteria(SoodsItemPO.class).createAlias("soods", "soods").createAlias("quotationItem", "quotationItem").add(Restrictions.eq(SoodsItemPO.COLUMN_SID_STR, sid)).add(Restrictions.eq("soods.status", SoodsItemPO.STATUS_INIT_INT)).list();		
-	
+		return session().createCriteria(SoodsItemPO.class).createAlias("soods", "soods").createAlias("quotationItem", "quotationItem").add(Restrictions.eq(SoodsItemPO.COLUMN_SID_STR, sid)).add(Restrictions.eq("soods.status", SoodsItemPO.STATUS_INIT_INT)).list();
+
 	}
-	
+
 	@Override
 	public int countSoodsItem(long gid, long qiid) {
 
-		String sql = "SELECT COUNT(*) FROM `data`.soods,`data`.soodsitem  WHERE soods.sid=soodsitem.sid AND soods.gid = :gid AND soodsitem.qiid = :qiid";	
+		String sql = "SELECT COUNT(*) FROM `data`.soods,`data`.soodsitem  WHERE soods.sid=soodsitem.sid AND soods.gid = :gid AND soodsitem.qiid = :qiid";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("gid", gid).setLong("qiid", qiid).uniqueResult();
 
 		return count.intValue();
@@ -87,10 +88,19 @@ public class SoodsItemDaoImpl extends DaoImpl<SoodsItemPO> implements SoodsItemD
 	}
 
 	@Override
-	public int deleteSoodsItem(long sid,long qiid) {
+	public int deleteSoodsItem(long sid, long qiid) {
 
 		String sql = "delete from data.soodsitem where sid = :sid AND qiid = :qiid";
 		session().createSQLQuery(sql).setLong("sid", sid).setLong("qiid", qiid).executeUpdate();
+
+		return 0;
+	}
+
+	@Override
+	public int deleteSoodsItem(long sid) {
+
+		String sql = "delete from data.soodsitem where sid = :sid";
+		session().createSQLQuery(sql).setLong("sid", sid).executeUpdate();
 
 		return 0;
 	}

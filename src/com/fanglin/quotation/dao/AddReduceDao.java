@@ -15,22 +15,21 @@ import java.util.List;
 
 import com.fanglin.core.dao.Dao;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.quotation.po.AddReduceDO;
 import com.fanglin.quotation.po.AddReducePO;
 import com.fanglin.utils.Paging;
 
 public interface AddReduceDao extends Dao<AddReducePO> {
 
-	public List<AddReducePO> pageAddReduce(Paging paging, List<Filter> filters);
+	public List<AddReduceDO> pageAddReduce(Paging paging, List<Filter> filters);
 
-	public List<AddReducePO> pageAddReduceByOrderId(Paging paging, List<Filter> filters, String orderId);
+	public List<AddReducePO> pageAddReduce(Paging paging, List<Filter> filters, String orderId);
 
-	public AddReducePO queryAddReduceByDecorationPaymentId(Long orderPaymentId);
-
-	public List<AddReducePO> queryAddReduceForNLeakageByOrderId(String orderId);
+	public List<AddReducePO> queryAddReduce(String orderId, List<Short> statuses);
 
 	public List<AddReducePO> queryAddReduceByOrderId(String orderId);
 
-	public List<AddReducePO> queryAddReduceForPayedByOrderId(String orderId);
+	public AddReducePO queryAddReduce(Long dpid);
 
 	public int countAddReduceByOrderId(String orderId);
 

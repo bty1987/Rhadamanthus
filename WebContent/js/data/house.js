@@ -124,7 +124,7 @@ $(function () {
         {fieId: "type", name: "房产类型", prop: "type", clazz: "red", dataset: house.type},
         {fieId: "buildArea", name: "建筑面积", prop: "buildArea", clazz: "blue"},
         {fieId: "freeArea", name: "赠送面积", prop: "freeArea", clazz: "blue"},
-        {fieId: "innerArea", name: "套内面积", prop: "innerArea", clazz: "blue"},
+        {fieId: "innerArea", name: "计价面积", prop: "innerArea", clazz: "blue"},
         {field: "totalArea", name: "总面积", prop: "totalArea", clazz: "blue"},
         {fieId: "maxFloor", name: "最高楼层", prop: "maxFloor", clazz: "blue"},
         {fieId: "through", name: "是否越层", prop: "through", clazz: "grey", dataset: house.through},

@@ -26,6 +26,7 @@ import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationActivityPO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationActivityService;
+import com.fanglin.decoration.vo.DecorationActivityItemVO;
 import com.fanglin.decoration.vo.DecorationActivityVO;
 import com.fanglin.information.dao.ActivityDao;
 import com.fanglin.information.po.ActivityPO;
@@ -64,6 +65,19 @@ public class DecorationActivityServiceImpl implements DecorationActivityService 
 		}
 		
 		return decorationActivityVOs;
+	}
+
+	@Override
+	public DecorationActivityVO amountDecorationActivity(DecorationActivityVO decorationActivityVO, DecorationActivityItemVO decorationActivityItemVO) throws FLException {
+
+		long amount = decorationActivityDao.amountDecorationActivity(decorationActivityVO.getOrderId(), decorationActivityItemVO.getType(), decorationActivityItemVO.getIsPrefor(), decorationActivityItemVO.getIsPayment());
+
+		DecorationActivityVO decorationActivity = new DecorationActivityVO();
+
+		decorationActivity.setOrderId(decorationActivityVO.getOrderId());
+		decorationActivity.setAmount(amount);
+
+		return decorationActivity;
 	}
 
 	@Override

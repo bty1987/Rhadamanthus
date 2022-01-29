@@ -14,18 +14,20 @@ package com.fanglin.decoration.service;
 import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.decoration.vo.DecorationActivityItemVO;
 import com.fanglin.decoration.vo.DecorationActivityVO;
 
 public interface DecorationActivityService {
-	
-	public List<DecorationActivityVO> queryDecorationActivityByOrderId(DecorationActivityVO decorationActivityVO);
-	
-	public int addDecorationActivity(DecorationActivityVO decorationActivityVO) throws FLException;
-	
-	public int deleteDecorationActivity(DecorationActivityVO decorationActivityVO) throws FLException;
-	
-	public int lockDecorationActivity(DecorationActivityVO decorationActivityVO) throws FLException;
-	
-	public int unlockDecorationActivity(DecorationActivityVO decorationActivityVO) throws FLException;
 
+	public List<DecorationActivityVO> queryDecorationActivityByOrderId(DecorationActivityVO decorationActivityVO);
+
+	public DecorationActivityVO amountDecorationActivity(DecorationActivityVO decorationActivityVO, DecorationActivityItemVO decorationActivityItemVO) throws FLException;
+
+	public int addDecorationActivity(DecorationActivityVO decorationActivityVO) throws FLException;
+
+	public int deleteDecorationActivity(DecorationActivityVO decorationActivityVO) throws FLException;
+
+	public int lockDecorationActivity(DecorationActivityVO decorationActivityVO) throws FLException;
+
+	public int unlockDecorationActivity(DecorationActivityVO decorationActivityVO) throws FLException;
 }

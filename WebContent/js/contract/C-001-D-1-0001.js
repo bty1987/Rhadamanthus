@@ -52,6 +52,14 @@ jQuery(function($) {
         com.focusPage(".agent", "#form").hide();
     }
     
+    if(contractEdit.contractArgs.company != "1"){
+        com.focusPage(".company", "#form").hide();
+    }
+	
+	if(contractEdit.contractArgs.company == "1"){
+	    com.focusPage(".customer", "#form").hide();
+	}
+    
     com.post(api.common.current, {}, function(res){
         contractEdit.current = new Date(res.current);
     }, null, false);
@@ -67,14 +75,36 @@ jQuery(function($) {
         com.focusPage("#con-customer-name", "#form").val(customer.name);
         com.focusPage("#con-customer-phone", "#form").val(customer.phone);
         com.focusPage("#con-customer-ident", "#form").val(customer.identity);
+        com.focusPage("#con-bank-man", "#form").val(customer.name);
+        com.focusPage("#con-bank-no", "#form").val(customer.companyBankno);
+        com.focusPage("#con-bank-name", "#form").val(customer.companyBank);
         
         contractEdit.customer = customer;
         
         contractEdit.cover["cov-orderId"] = contractEdit.decorationOrderId;
         contractEdit.cover["cov-customer-name"] = customer.name;
         contractEdit.cover["cov-customer-phone"] = customer.phone  == "" ? "" : customer.phone;
-    });
-
+        contractEdit.cover["sin-customer-name"] = customer.name;
+        contractEdit.cover["sin-customer-ident"] = customer.identity;
+        
+        com.focusPage("#con-company-no", "#form").val(customer.companyNo);
+        com.focusPage("#con-company-name", "#form").val(customer.companyName);
+        com.focusPage("#con-company-name1", "#form").val(customer.companyName);
+        com.focusPage("#con-company-phone", "#form").val(customer.companyPhone);
+        com.focusPage("#con-company-addr", "#form").val(customer.companyAddr);
+        com.focusPage("#con-company-bank", "#form").val(customer.companyBank);
+        com.focusPage("#con-company-bankno", "#form").val(customer.companyBankno);
+    }, null, false);
+    
+    if(contractEdit.contractArgs.company == "1" && contractEdit.customer.type == 0){
+        
+        com.showAlert(com.warning, "客户类型为个人");
+        
+        com.focusPage("#contractPopUp").empty();
+        
+        return false;
+    }
+    
     com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": contractEdit.decorationOrderId}, function (res) {
         
         var data = res.decoration;
@@ -215,7 +245,6 @@ jQuery(function($) {
         data["con-sign-month"] = com.dateFormat(contractEdit.current, "MM");
         data["con-sign-day"] = com.dateFormat(contractEdit.current, "dd");
         
-        data["sin-customer-name"] = data["con-customer-name"];
         data["sin-customer-phone"] = data["con-customer-phone"];
         data["sin-customer-ident"] = data["con-customer-ident"];
         
@@ -224,6 +253,18 @@ jQuery(function($) {
             data["sin-agent-phone"] = data["con-agent-phone"];
             data["sin-agent-ident"] = data["con-agent-ident"];
         }
+        
+        if(contractEdit.contractArgs.company == "1"){
+        	delete data["con-customer-name"];
+            delete data["con-customer-ident"];
+            delete data["cov-customer-name"];
+            
+            data["cov-company-name"] = data["con-company-name"];
+            data["sin-company-name"] = data["con-company-name"];
+            data["sin-company-phone"] = data["con-company-phone"];
+        }
+        
+        console.log(data);
         
         com.showConfirm("请仔细认真检查合同填写内容", function () {
 

@@ -24,6 +24,14 @@ jQuery(function($) {
         current: new Date(),
 	};
     
+    if(contractEdit.contractArgs.company != "1"){
+        com.focusPage(".company", "#form").hide();
+    }
+    
+    if(contractEdit.contractArgs.company == "1"){
+	    com.focusPage(".customer", "#form").hide();
+	}
+    
     com.post(api.common.current, {}, function(res){
         contractEdit.current = new Date(res.current);
     }, null, false);
@@ -45,6 +53,13 @@ jQuery(function($) {
         contractEdit.cover["cov-orderId"] = contractEdit.decorationOrderId;
         contractEdit.cover["cov-customer-name"] = customer.name;
         contractEdit.cover["cov-customer-phone"] = customer.phone;
+        contractEdit.cover["sin-customer-name"] = customer.name;
+        
+        com.focusPage("#con-company-name", "#form").val(customer.companyName);
+        com.focusPage("#con-company-phone", "#form").val(customer.companyPhone);
+        
+        contractEdit.cover["sin-company-phone"] = customer.companyPhone;
+        
     });
 
     com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": contractEdit.decorationOrderId}, function (res) {
@@ -113,9 +128,20 @@ jQuery(function($) {
         
         data["con-sign-year"] = com.dateFormat(contractEdit.current, "yyyy");
         data["con-sign-month"] = com.dateFormat(contractEdit.current, "MM");
-        data["con-sign-day"] = com.dateFormat(contractEdit.current, "dd");
+        data["con-sign-day"] = com.dateFormat(contractEdit.current, "dd");        
         
-        data["sin-customer-name"] = data["con-customer-name"];
+        if(contractEdit.contractArgs.company == "1"){
+            delete data["con-customer-ident"];
+            delete data["cov-customer-name"];
+            delete data["con-company-phone"];
+            
+            data["cov-company-name"] = data["con-company-name"];
+            data["sin-company-name"] = data["con-company-name"];
+        }
+        
+        if(contractEdit.contractArgs.company != "1"){
+            delete data["sin-company-phone"];
+        }
         
         console.log(data);
         

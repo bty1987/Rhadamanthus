@@ -11,19 +11,11 @@ public interface SoodsService {
 
 	public void pageSoods(Paging paging, List<Filter> filters, int company);
 
-	public void pageSoodsByQiid(Paging paging, List<Filter> filters, SoodsVO soodsVO);
-	
-	public void pageSoodsBySid(Paging paging, List<Filter> filters, SoodsVO soodsVO);
+	public List<SoodsVO> querySoodsByName(SoodsVO soodsVO, int company);
 
-	public List<SoodsVO> querySoodsByQiid(SoodsVO soodsVO) throws FLException;
-	
-	public List<SoodsVO> querySoodsBySid(SoodsVO soodsVO) throws FLException;
-	
-	public List<SoodsVO> querySoodsByName(SoodsVO soodsVO,int company);
-	
+	public SoodsVO querySoods(SoodsVO soodsVO);
+
 	public int addSoods(SoodsVO soodsVO, int company) throws FLException;
-	
-	public int addSoodsItem(SoodsVO soodsVO, long company) throws FLException;
 
 	public int updateSoods(SoodsVO soodsVO) throws FLException;
 
@@ -32,7 +24,5 @@ public interface SoodsService {
 	public int copySoods(SoodsVO soodsVO) throws FLException;
 
 	public int deleteSoods(SoodsVO soodsVO) throws FLException;
-	
-	public int deleteSoodsItem(SoodsVO soodsVO) throws FLException;
 
 }

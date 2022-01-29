@@ -20,6 +20,8 @@ import com.fanglin.utils.Paging;
 
 public interface AddReduceService {
 
+	public void pageAddReduce(Paging paging, List<Filter> filters, AddReduceVO addReduceVO) throws FLException;
+
 	public void pageAddReduceByOrderId(Paging paging, List<Filter> filters, AddReduceVO addReduceVO) throws FLException;
 
 	public List<AddReduceVO> queryAddReduceByOrderId(AddReduceVO addReduceVO) throws FLException;
@@ -36,8 +38,12 @@ public interface AddReduceService {
 
 	public int updateAddReduceForAdvance(AddReduceVO addReduceVO) throws FLException;
 
-	public int deleteAddReduceByArId(AddReduceVO addReduceVO) throws FLException;
-
 	public int submitAddReduce(AddReduceVO addReduceVO, String userId) throws FLException;
+
+	public int unpayAddReduce(AddReduceVO addReduceVO) throws FLException;
+
+	public int confirmAddReduce(AddReduceVO addReduceVO) throws FLException;
+
+	public int deleteAddReduceByArId(AddReduceVO addReduceVO) throws FLException;
 
 }

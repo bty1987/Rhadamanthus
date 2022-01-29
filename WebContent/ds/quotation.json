@@ -75,6 +75,21 @@
 		{"company":"2", "value": false},
 		{"company":"3", "value": true}
 	],
+	"addReduceType": [
+        {"key":"0", "value":"增项"},
+        {"key":"1", "value":"减项"}
+    ],
+	"addReducePaytype": [
+	    {"key":"0", "value":"付款"},
+        {"key":"1", "value":"正常下拨"},
+        {"key":"2", "value":"增减下拨"}
+	],
+	"addReduceStatus": [
+        {"key":"0", "value":"初始"},
+        {"key":"1", "value":"提交"},
+        {"key":"2", "value":"已付"},
+        {"key":"3", "value":"确认"}
+    ],
 	"presignProduceStatus": [
         {"key":"0", "value":"启用"},
         {"key":"1", "value":"禁用"}

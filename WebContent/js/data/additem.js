@@ -16,9 +16,12 @@ jQuery(function($) {
         items:{
             name: com.focusPage("#name"),
             node : com.focusPage("#node"),
+            unit : com.focusPage("#unit"),
+            price : com.focusPage("#price"),
         },
         status : {},
-        node:{}
+        node:{},
+        unit : {},
     };
 
     additem.btns.saveBtn.bindClick(saveData);
@@ -32,6 +35,10 @@ jQuery(function($) {
     com.post(api.ds.data, {}, function(res){
         additem.status = res.costStatus.split("key", "value");
     },null ,false);
+
+    com.post(api.common.queryMeasurementUnit, {}, function (res) {
+        additem.items.unit.bindData(res.measurementUnits, "name", "name");
+    });
 
     com.post(api.data.queryConstructionNode,{}, function(res){
         additem.items.node.bindData(res.constructionNodes, "cnid", "name", false);
@@ -56,7 +63,7 @@ jQuery(function($) {
 
         var creatLine = function(v){
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid')
+            var $h3 = $('<h3></h3>').addClass('oid');
             var $title = $('<small></small>').addClass('blue').html(' ' + v.name);
             var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -69,6 +76,8 @@ jQuery(function($) {
             var propertyArr = [
                 ["工程节点: ", v.constructionNode.name, "grey"],
                 ["状态: ", additem.status[v.status], "red"],
+                ["单位: ", v.unit, "grey"],
+                ["单价: ", v.price, "grey"],
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -149,6 +158,9 @@ jQuery(function($) {
         var options = {
             'additem.name': additem.items.name.val(),
             "additem.constructionNode.cnid": additem.items.node.val(),
+            'additem.unit': additem.items.unit.val(),
+            'additem.price': additem.items.price.val(),
+
         };
 
         com.post(api.data.addAdditem, options, function(res){

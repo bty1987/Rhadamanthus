@@ -420,6 +420,15 @@ Condition.addupRule("decoration", {
             validate: null
         }
     },
+    "balanceTime": {
+        label: "结算时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "balanceTime",
+            op: "cn",
+            validate: null
+        }
+    },
     "status": {
         label: "订单状态",
         type: "select",

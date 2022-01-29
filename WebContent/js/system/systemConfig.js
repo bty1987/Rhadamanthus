@@ -1,20 +1,24 @@
 ﻿$(function(){
 
     var system = {
-        saveBtn: null,
-        cancellBtn: null,
-        modal: null,
-        config:{},
+            
+        items: {
+            key: com.focusPage("#key"),
+            value: com.focusPage("#value"),
+            comment: com.focusPage("#comment"),
+        },
         
+        btns: {
+            saveBtn: com.focusPage('#saveBtn').on("click",saveData),
+            cancellBtn: com.focusPage("#cancelBtn"),
+        },
+        
+        modals: {
+            modal: com.focusPage("#system")
+        },
+            
         scid: null,
     };
-
-    system.saveBtn = com.focusPage('#saveBtn').on("click",saveData);
-    system.cancellBtn = com.focusPage("#cancelBtn");
-    system.modal = com.focusPage("#system");
-    system.config.key = com.focusPage("#key");
-    system.config.value = com.focusPage("#value");
-    system.config.comment = com.focusPage("#comment");
 
     var displayFunc  = (function(){
 
@@ -79,9 +83,10 @@
             }
         }
     })();
+    
     var searcher = new Searcher();
 
-    searcher.init(['system-config'], "condList",api.system.pageSystemConfig, function(data){
+    searcher.init(['system-config', 'system-company'], "condList", api.system.pageSystemConfig, function(data){
         displayFunc.init('resultList', data);
     }, "pagenation");
 
@@ -91,16 +96,16 @@
     	
     	system.scid = row.scid;
     	
-        system.config.key.val(row.key);
-		system.config.value.val(row.value);
-		system.config.comment.val(row.comment);
+        system.items.key.val(row.key);
+		system.items.value.val(row.value);
+		system.items.comment.val(row.comment);
 
-		system.modal.modal("show"); //弹出弹层
+		system.modals.modal.modal("show"); //弹出弹层
     }
 
     com.focusPage('[name="systemConfig"]', com.focusPage('#pagenation')).on("click",function(){
         com.cleanItems(system.config);
-        system.modal.modal('show');
+        system.modals.modal.modal('show');
     });
 
     function saveData(){
@@ -109,14 +114,14 @@
             return false;
         }
 
-        var key = system.config.key.val();
-        var value = system.config.value.val();
+        var key = system.items.key.val();
+        var value = system.items.value.val();
         
         var options = {
         	"systemConfig.scid": system.scid,
-            "systemConfig.key" : system.config.key.val(),
-            "systemConfig.value": system.config.value.val(),
-            "systemConfig.comment": system.config.comment.val(),
+            "systemConfig.key" : system.items.key.val(),
+            "systemConfig.value": system.items.value.val(),
+            "systemConfig.comment": system.items.comment.val(),
         };
 
         com.post(api.system.updateSystemConfig, options, function (res) {
@@ -124,7 +129,7 @@
             searcher.doSearch();
         });
         
-        system.modal.modal('hide');
+        system.modals.modal.modal('hide');
     }
 
 })

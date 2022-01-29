@@ -88,6 +88,16 @@ public class ProtationPO implements Serializable {
 
 	private short defaults;
 	
+	private long mostPrice;
+
+	private int costRate;
+	
+	private int mostRate;
+	
+	private long totalCost;
+	
+	private long totalProfit;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "pid")
@@ -297,5 +307,52 @@ public class ProtationPO implements Serializable {
 	public void setDefaults(short defaults) {
 		this.defaults = defaults;
 	}
+
+	@Column(name = "mostPrice")
+	public long getMostPrice() {
+		return mostPrice;
+	}
+
+	public void setMostPrice(long mostPrice) {
+		this.mostPrice = mostPrice;
+	}
+
+	@Column(name = "costRate")
+	public int getCostRate() {
+		return costRate;
+	}
+
+	public void setCostRate(int costRate) {
+		this.costRate = costRate;
+	}
+
+	@Column(name = "mostRate")
+	public int getMostRate() {
+		return mostRate;
+	}
+
+	public void setMostRate(int mostRate) {
+		this.mostRate = mostRate;
+	}
+
+	@Column(name = "totalCost")
+	public long getTotalCost() {
+		return totalCost;
+	}
+
+	public void setTotalCost(long totalCost) {
+		this.totalCost = totalCost;
+	}
+
+	@Column(name = "totalProfit")
+	public long getTotalProfit() {
+		return totalProfit;
+	}
+
+	public void setTotalProfit(long totalProfit) {
+		this.totalProfit = totalProfit;
+	}
+	
+	
 
 }

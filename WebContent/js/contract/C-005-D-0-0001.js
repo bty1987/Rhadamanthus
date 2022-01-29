@@ -63,12 +63,12 @@ jQuery(function($) {
     }
     
     if(contractEdit.contractArgs.type == "0"){
-        com.focusPage(".secondPaymentGroup", "#form").hide();
+        com.focusPage(".thirdPaymentGroup", "#form").hide();
     }
     
     if(contractEdit.contractArgs.type == "2"){
         com.focusPage(".secondPaymentGroup", "#form").hide();
-        com.focusPage(".finalPaymentGroup", "#form").hide();
+        com.focusPage(".thirdPaymentGroup", "#form").hide();
     }
     
     if(contractEdit.contractArgs.type == "3"){
@@ -76,6 +76,14 @@ jQuery(function($) {
     	com.focusPage(".thirdPaymentGroup", "#form").hide();
         com.focusPage(".finalPaymentGroup", "#form").hide();
     }
+    
+    if(contractEdit.contractArgs.company != "1"){
+        com.focusPage(".company", "#form").hide();
+    }
+	
+	if(contractEdit.contractArgs.company == "1"){
+	    com.focusPage(".customer", "#form").hide();
+	}
     
     com.post(api.common.current, {}, function(res){
         contractEdit.current = new Date(res.current);
@@ -100,14 +108,32 @@ jQuery(function($) {
         com.focusPage("#con-bank-man", "#form").val(customer.name);
         com.focusPage("#con-bank-no", "#form").val(customer.companyBankno);
         com.focusPage("#con-bank-name", "#form").val(customer.companyBank);
-        com.focusPage("#con-bank-phone", "#form").val(customer.phone);
         
         contractEdit.customer = customer;
         
         contractEdit.cover["cov-orderId"] = contractEdit.decorationOrderId;
         contractEdit.cover["cov-customer-name"] = customer.name;
         contractEdit.cover["cov-customer-phone"] = customer.phone;
-    });
+        contractEdit.cover["sin-customer-name"] = customer.name;
+        contractEdit.cover["sin-customer-ident"] = customer.identity;
+        
+        com.focusPage("#con-company-no", "#form").val(customer.companyNo);
+        com.focusPage("#con-company-name", "#form").val(customer.companyName);
+        com.focusPage("#con-company-name1", "#form").val(customer.companyName);
+        com.focusPage("#con-company-phone", "#form").val(customer.companyPhone);
+        com.focusPage("#con-company-addr", "#form").val(customer.companyAddr);
+        com.focusPage("#con-company-bank", "#form").val(customer.companyBank);
+        com.focusPage("#con-company-bankno", "#form").val(customer.companyBankno);
+    }, null, false);
+    
+    if(contractEdit.contractArgs.company == "1" && contractEdit.customer.type == 0){
+        
+        com.showAlert(com.warning, "客户类型为个人");
+        
+        com.focusPage("#contractPopUp").empty();
+        
+        return false;
+    }
     
     com.post(api.construction.queryConstructionInfoByOrderId, {"constructionInfo.orderId": contractEdit.decorationOrderId}, function (result) {
         
@@ -370,11 +396,17 @@ jQuery(function($) {
             data["con-contract-total-cn"] = utils.getCNMoney(parseFloat(data["con-contract-total"]));
             data["con-contract-stotal-cn"] = utils.getCNMoney(parseFloat(data["con-contract-stotal"]));
             data["con-contract-rtotal-cn"] = utils.getCNMoney(parseFloat(data["con-contract-rtotal"]));
-            data["con-design-money-cn"] = utils.getCNMoney(parseFloat(data["con-design-money"]));
+            data["con-design-money-cn"] = utils.getCNMoney(parseFloat(data["con-design-money"]));           
             
-            data["sin-customer-name"] = data["con-customer-name"];
-            data["sin-customer-phone"] = data["con-customer-phone"];
-            data["sin-customer-ident"] = data["con-customer-ident"];
+            if(contractEdit.contractArgs.company == "1"){
+            	delete data["con-customer-name"];
+                delete data["con-customer-ident"];
+                delete data["cov-customer-name"];
+                
+                data["cov-company-name"] = data["con-company-name"];
+                data["sin-company-name"] = data["con-company-name"];
+                data["sin-company-phone"] = data["con-company-phone"];
+            }
             
             console.log(data);
             console.log(contractEdit.table);

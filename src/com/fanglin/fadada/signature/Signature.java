@@ -501,8 +501,13 @@ public class Signature {
 			throw new FLException(130027, "客户认证失败,请求错误");
 		}
 
-		System.out.println(result);
+		if (!"1000".equals(response.getString("code"))) {
+			System.out.println(result);
+			throw new FLException(130027, String.format("客户认证失败,%s", response.getString("msg")));
+		}
 
+		contract.download(download(contract));
+		contract.viewpdf(view(contract));
 	}
 
 	public static void autosign(String signno, String keyword, Contract contract) throws FLException {
@@ -590,6 +595,13 @@ public class Signature {
 		FddClientExtra extra = new FddClientExtra(APPID, APPSECRET, VERSION, HOST);
 
 		return extra.invokeViewPdfURL(contract.contentCode());
+	}
+
+	public static String download(Contract contract) {
+
+		FddClientExtra extra = new FddClientExtra(APPID, APPSECRET, VERSION, HOST);
+
+		return extra.invokeDownloadPdf(contract.contentCode());
 	}
 
 	public static void filing(Contract contract) throws FLException {

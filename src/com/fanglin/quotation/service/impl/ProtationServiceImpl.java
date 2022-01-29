@@ -21,15 +21,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.po.PresignCostPO;
 import com.fanglin.data.po.PresignItemPO;
 import com.fanglin.data.po.PresignProducePO;
+import com.fanglin.data.quotation.dao.PresignCostDao;
 import com.fanglin.data.quotation.dao.PresignItemDao;
 import com.fanglin.data.quotation.dao.PresignProduceDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.dao.UserDao;
+import com.fanglin.quotation.dao.ProtationCostDao;
 import com.fanglin.quotation.dao.ProtationDao;
 import com.fanglin.quotation.dao.ProtationItemDao;
+import com.fanglin.quotation.po.ProtationCostPO;
 import com.fanglin.quotation.po.ProtationItemPO;
 import com.fanglin.quotation.po.ProtationPO;
 import com.fanglin.quotation.service.ProtationService;
@@ -50,7 +54,13 @@ public class ProtationServiceImpl implements ProtationService {
 	private ProtationItemDao protationItemDao;
 
 	@Autowired
+	private ProtationCostDao protationCostDao;
+
+	@Autowired
 	private PresignProduceDao presignProduceDao;
+
+	@Autowired
+	private PresignCostDao presignCostDao;
 
 	@Autowired
 	private PresignItemDao presignItemDao;
@@ -143,6 +153,9 @@ public class ProtationServiceImpl implements ProtationService {
 		protationPO.setProfitRate(presignProducePO.getProfitRate());
 		protationPO.setPreferPrice(protationVO.getPreferPrice());
 		protationPO.setUnitPrice(presignProducePO.getUnitPrice());
+		protationPO.setMostPrice(presignProducePO.getMostPrice());
+		protationPO.setCostRate(presignProducePO.getCostRate());
+		protationPO.setMostRate(presignProducePO.getMostRate());
 
 		ProtationPO defaultProtationPO = protationDao.queryProtationForDefaultByOrderId(orderId);
 
@@ -169,11 +182,27 @@ public class ProtationServiceImpl implements ProtationService {
 			protationItemPO.setPid(pid);
 			protationItemPO.setBasicNum(presignItemPO.getBasicNum());
 			protationItemPO.setName(presignItemPO.getName());
+			protationItemPO.setCost(presignItemPO.getCost());
 			protationItemPO.setPrice(presignItemPO.getPrice());
 			protationItemPO.setType(presignItemPO.getType());
 			protationItemPO.setNum(presignItemPO.getBasicNum());
 
 			protationItemDao.save(protationItemPO);
+		}
+
+		List<PresignCostPO> presignCostPOs = presignCostDao.queryPresignCost(ppid);
+
+		for (PresignCostPO presignCostPO : presignCostPOs) {
+
+			ProtationCostPO protationCostPO = new ProtationCostPO();
+
+			protationCostPO.setPid(pid);
+			protationCostPO.setToplimit(presignCostPO.getToplimit());
+			protationCostPO.setLowlimit(presignCostPO.getLowlimit());
+			protationCostPO.setCostPrice(presignCostPO.getCostPrice());
+
+			protationCostDao.save(protationCostPO);
+
 		}
 
 		BeanUtil.copyPropertie(protationPO, protationVO, Arrays.asList("creater"));
@@ -212,6 +241,9 @@ public class ProtationServiceImpl implements ProtationService {
 		}
 
 		DecorationPO decorationPO = checkProtationForDefaultByOrderId(protationPO.getOrderId());
+
+		protationPO.setTotalCost(protationVO.getTotalCost());
+		protationPO.setTotalProfit(protationVO.getTotalProfit());
 
 		convertProtationVOToPOForAdvance(protationVO, protationPO);
 
@@ -335,6 +367,7 @@ public class ProtationServiceImpl implements ProtationService {
 		protationPO.setSubdPrice(protationVO.getSubdPrice());
 		protationPO.setSubmPrice(protationVO.getSubmPrice());
 		protationPO.setTotalPrice(protationVO.getTotalPrice());
+		protationPO.setTotalCost(protationVO.getTotalCost());
 	}
 
 	public DecorationPO checkProtationForDefaultByOrderId(String orderId) throws FLException {

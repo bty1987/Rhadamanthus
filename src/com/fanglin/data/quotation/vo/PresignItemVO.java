@@ -14,14 +14,16 @@ public class PresignItemVO implements Serializable {
 
 	private Integer basicNum;
 
+	private Long cost;
+
 	private Long price;
 
 	private Short type;
-	
+
 	private Short onetype;
 
 	private Short status;
-	
+
 	public PresignItemVO() {
 		super();
 	}
@@ -56,6 +58,14 @@ public class PresignItemVO implements Serializable {
 
 	public void setBasicNum(Integer basicNum) {
 		this.basicNum = basicNum;
+	}
+
+	public Long getCost() {
+		return cost;
+	}
+
+	public void setCost(Long cost) {
+		this.cost = cost;
 	}
 
 	public Long getPrice() {

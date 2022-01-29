@@ -15,6 +15,7 @@ jQuery(function ($) {
 		items: {
 			name: com.focusPage("#name", "#createPresignItemModal"),
 			basicNum: com.focusPage("#basicNum", "#createPresignItemModal"),
+			cost: com.focusPage("#cost", "#createPresignItemModal"),
 			price: com.focusPage("#price", "#createPresignItemModal"),
 			type: com.focusPage("#type", "#createPresignItemModal"),
 			onetype: com.focusPage("#onetype", "#createPresignItemModal"),
@@ -55,6 +56,7 @@ jQuery(function ($) {
 	var lineprops = [
 		{ fieId: "name", name: "名称", prop: "name", clazz: "grey"},
 		{ fieId: "status", name: "状态", prop: "status", clazz: "red", dataset: presignItem.status},
+		{ fieId: "cost", name: "成本", prop: "cost", clazz: "blue"},
 		{ fieId: "price", name: "价格", prop: "price", clazz: "blue"},
 		{ fieId: "basicNum", name: "基础量", prop: "basicNum", clazz: "blue"},
 		{ fieId: "type", name: "类型", prop: "type", clazz: "red", dataset: presignItem.type},
@@ -68,6 +70,7 @@ jQuery(function ($) {
             
             presignItem.items.name.val(v.name);
             presignItem.items.basicNum.val(v.basicNum);
+            presignItem.items.cost.val(v.cost);
             presignItem.items.price.val(v.price);
             presignItem.items.type.val(v.type);
 			presignItem.items.onetype.val(v.onetype);
@@ -111,6 +114,7 @@ jQuery(function ($) {
 		    "presignItem.ppid": presignItem.presignProduce.ppid,
 			"presignItem.name": presignItem.items.name.val(),
 			"presignItem.basicNum": presignItem.items.basicNum.val(),
+			"presignItem.cost": presignItem.items.cost.val(),
 			"presignItem.price": presignItem.items.price.val(),
 			"presignItem.type": presignItem.items.type.val(),
 			"presignItem.onetype": presignItem.items.onetype.val(),

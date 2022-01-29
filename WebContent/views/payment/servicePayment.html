@@ -30,6 +30,10 @@
 									<input type="checkbox" class="ace" id="checkvCheckbox" key="checkv" select="1">
 									<span class="lbl"> 银行</span>
 								</label>
+								<label class="hide advanceCheckbox">
+									<input type="checkbox" class="ace" id="advanceCheckbox" key="advance" select="1">
+									<span class="lbl"> 预付款</span>
+								</label>
 							</div>
 
 							<div id="infoDiv">
@@ -118,16 +122,40 @@
 								<div id="checkvGroup"></div>
 							</div>
 
-							</form>
-		      			</div>
+							<div id="advanceDiv" style="display: none;" referCheckbox="advanceCheckbox">
+								<h4 class="header blue bolder smaller">预付款</h4>
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right" for="advanceType">类型</label>
+									<div class="col-sm-7">
+										<select id="advanceType" class="col-xs-10 col-sm-5 v_required " data-toggle="popover" style="min-width: 50%; width: 170px;" data-trigger='manual'></select>
+									</div>
+								</div>
+								<div class="space-4"></div>
+								<div class="form-group">
+									<label class="col-sm-3 control-label no-padding-right" for="recharge" >合同余额</label>
+									<div class="col-sm-9">
+										<input type="text" id="recharge" class="col-xs-10 col-sm-5" data-toggle="popover" data-trigger='manual' >
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label for="advance" class="col-md-3 control-label">金额</label>
+									<div class="col-md-9 block no-padding-right  ">
+										<input type="text" id="advance" class="col-xs-10 col-sm-5 v_required v_float_3" data-toggle="popover" data-trigger='manual' maxlength="8"/>
+									</div>
+								</div>
+							</div>
+
+						</form>
+					</div>
 		      			
-						<div class="modal-footer ">
-							<button type="button" id="collectBtn" class="btn btn-primary">收款</button>
-				        	<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
-				      	</div>
-		    		</div>
-		  		</div>
-		  	</div>
+					<div class="modal-footer ">
+						<button type="button" id="collectBtn" class="btn btn-primary">收款</button>
+						<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 

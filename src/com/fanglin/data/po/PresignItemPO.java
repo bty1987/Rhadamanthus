@@ -32,6 +32,8 @@ public class PresignItemPO implements Serializable {
 
 	private int basicNum;
 
+	private long cost;
+
 	private long price;
 
 	private short type;
@@ -85,6 +87,15 @@ public class PresignItemPO implements Serializable {
 
 	public void setBasicNum(int basicNum) {
 		this.basicNum = basicNum;
+	}
+
+	@Column(name = "cost")
+	public long getCost() {
+		return cost;
+	}
+
+	public void setCost(long cost) {
+		this.cost = cost;
 	}
 
 	@Column(name = "price")

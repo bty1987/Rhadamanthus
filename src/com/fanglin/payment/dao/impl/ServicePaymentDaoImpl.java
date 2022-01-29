@@ -70,6 +70,8 @@ public class ServicePaymentDaoImpl  extends DaoImpl<ServicePaymentPO> implements
 					}else{
 						query.add(query.getCriterion("servicereceipt.collectTime", filter.getData(), filter.getOp()));
 					}
+				}else if("confirmTime".equals(filter.getField())){
+					query.timeranges("servicereceipt.confirmTime", "servicereceipt.confirmTime", filter.getData());
 				}else if("company".equals(filter.getField())){
 					query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
 				}

@@ -24,15 +24,18 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.payment.dao.DecorationPaymentDao;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.dao.AddReduceItemDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
 import com.fanglin.quotation.dao.SelectionItemDao;
+import com.fanglin.quotation.po.AddReduceDO;
 import com.fanglin.quotation.po.AddReduceItemPO;
 import com.fanglin.quotation.po.AddReducePO;
 import com.fanglin.quotation.po.ExtensionItemPO;
@@ -81,11 +84,49 @@ public class AddReduceServiceImpl implements AddReduceService {
 	private AddReduceItemServiceImpl addReduceItemService;
 
 	@Override
+	public void pageAddReduce(Paging paging, List<Filter> filters, AddReduceVO addReduceVO) throws FLException {
+
+		if (addReduceVO != null && addReduceVO.getOrderId() != null) {
+			filters.add(new Filter(AddReducePO.COLUMN_ORDERID_STR, addReduceVO.getOrderId(), "eq"));
+		}
+
+		if (addReduceVO != null && addReduceVO.getStatus() != null) {
+			filters.add(new Filter(AddReducePO.COLUMN_STATUS_STR, String.valueOf(addReduceVO.getStatus()), "eq"));
+		}
+
+		if (addReduceVO != null && addReduceVO.getType() != null) {
+			filters.add(new Filter(AddReducePO.COLUMN_TYPE_STR, String.valueOf(addReduceVO.getType()), "eq"));
+		}
+
+		if (addReduceVO != null && addReduceVO.getPaytype() != null) {
+			filters.add(new Filter(AddReducePO.COLUMN_PAYTYPE_STR, String.valueOf(addReduceVO.getPaytype()), "eq"));
+		}
+
+		List<AddReduceDO> addReduceDOs = addReduceDao.pageAddReduce(paging, filters);
+		List<AddReduceVO> addReduceVOs = new ArrayList<AddReduceVO>();
+
+		for (AddReduceDO addReduceDO : addReduceDOs) {
+
+			addReduceVO = new AddReduceVO(new DecorationVO());
+
+			addReduceVO.getDecoration().setSupervisor(new UserBaseVO());
+
+			BeanUtil.copyPropertie(addReduceDO, addReduceVO, Arrays.asList("decoration"));
+
+			addReduceDO.getDecoration().ptvcascade(addReduceVO.getDecoration());
+
+			addReduceVOs.add(addReduceVO);
+		}
+
+		paging.setData(addReduceVOs);
+	}
+
+	@Override
 	public void pageAddReduceByOrderId(Paging paging, List<Filter> filters, AddReduceVO addReduceVO) throws FLException {
 
 		filters.add(new Filter(AddReducePO.COLUMN_ORDERID_STR, addReduceVO.getOrderId(), "eq"));
 
-		List<AddReducePO> addReducePOs = addReduceDao.pageAddReduceByOrderId(paging, filters, addReduceVO.getOrderId());
+		List<AddReducePO> addReducePOs = addReduceDao.pageAddReduce(paging, filters, addReduceVO.getOrderId());
 		List<AddReduceVO> addReduceVOs = handleAddReduce(addReducePOs);
 
 		paging.setData(addReduceVOs);
@@ -94,7 +135,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 	@Override
 	public List<AddReduceVO> queryAddReduceByOrderId(AddReduceVO addReduceVO) throws FLException {
 
-		List<AddReducePO> addReducePOs = addReduceDao.queryAddReduceByOrderId(addReduceVO.getOrderId());
+		List<AddReducePO> addReducePOs = addReduceDao.queryAddReduce(addReduceVO.getOrderId(), null);
 		List<AddReduceVO> addReduceVOs = handleAddReduce(addReducePOs);
 
 		return addReduceVOs;
@@ -103,7 +144,9 @@ public class AddReduceServiceImpl implements AddReduceService {
 	@Override
 	public List<AddReduceVO> queryAddReduceForPayedByOrderId(AddReduceVO addReduceVO) throws FLException {
 
-		List<AddReducePO> addReducePOs = addReduceDao.queryAddReduceForPayedByOrderId(addReduceVO.getOrderId());
+		List<Short> statuses = Arrays.asList(AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT);
+
+		List<AddReducePO> addReducePOs = addReduceDao.queryAddReduce(addReduceVO.getOrderId(), statuses);
 		List<AddReduceVO> addReduceVOs = handleAddReduce(addReducePOs);
 
 		return addReduceVOs;
@@ -115,7 +158,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 		AddReducePO addReducePO = addReduceDao.get(addReduceVO.getArId());
 
 		if (addReducePO == null) {
-			throw new FLException(140018, "增减项不存在");
+			throw new FLException(200060, "增减单不存在");
 		}
 
 		BeanUtil.copyProperties(addReducePO, addReduceVO);
@@ -128,10 +171,10 @@ public class AddReduceServiceImpl implements AddReduceService {
 	@Override
 	public AddReduceVO queryAddReduceByDecorationPaymentId(AddReduceVO addReduceVO) throws FLException {
 
-		AddReducePO addReducePO = addReduceDao.queryAddReduceByDecorationPaymentId(addReduceVO.getDpId());
+		AddReducePO addReducePO = addReduceDao.queryAddReduce(addReduceVO.getDpId());
 
 		if (addReducePO == null) {
-			throw new FLException(140018, "增减项不存在");
+			throw new FLException(200060, "增减单不存在");
 		}
 
 		BeanUtil.copyProperties(addReducePO, addReduceVO);
@@ -174,7 +217,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 		AddReducePO addReducePO = addReduceDao.get(addReduceVO.getArId());
 
 		if (addReducePO == null) {
-			throw new FLException(140018, "增减项不存在");
+			throw new FLException(200060, "增减单不存在");
 		}
 
 		addReducePO.setUndisPrice(addReduceVO.getUndisPrice());
@@ -191,16 +234,16 @@ public class AddReduceServiceImpl implements AddReduceService {
 	@Transactional(rollbackFor = Exception.class)
 	public int updateAddReduceForAdvance(AddReduceVO addReduceVO) throws FLException {
 
-		List<Integer> status = Arrays.asList(new Integer[] { AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT });
+		List<Short> status = Arrays.asList(AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT);
 
 		AddReducePO addReducePO = addReduceDao.get(addReduceVO.getArId());
 
 		if (addReducePO == null) {
-			throw new FLException(140018, "增减项不存在");
+			throw new FLException(200060, "增减单不存在");
 		}
 
 		if (status.contains(addReducePO.getStatus())) {
-			throw new FLException(140035, "当前增减项款项状态不可操作");
+			throw new FLException(200061, "增减单状态不可操作");
 		}
 
 		addReducePO.setTotal(addReduceVO.getTotal());
@@ -219,20 +262,155 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int deleteAddReduceByArId(AddReduceVO addReduceVO) throws FLException {
+	public int submitAddReduce(AddReduceVO addReduceVO, String userId) throws FLException {
 
-		List<Integer> status = Arrays.asList(new Integer[] { AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT });
+		List<Short> paymentStatus = Arrays.asList(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT);
+		List<Short> status = Arrays.asList(AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT);
+
+		AddReducePO addReducePO = addReduceDao.get(addReduceVO.getArId());
+
+		if (addReducePO == null) {
+			throw new FLException(200060, "增减单不存在");
+		}
+
+		if (status.contains(addReducePO.getStatus())) {
+			throw new FLException(200061, "增减单状态不可操作");
+		}
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(addReducePO.getOrderId());
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		DecorationPaymentPO decorationPaymentPO = null;
+
+		if (addReducePO.getDpId() != 0) {
+			decorationPaymentPO = decorationPaymentDao.get(addReducePO.getDpId());
+
+			if (decorationPaymentPO != null && !paymentStatus.contains(decorationPaymentPO.getPaymentStatus())) {
+				throw new FLException(140002, "已付款或已确认,不可修改");
+			}
+		} else {
+			decorationPaymentPO = new DecorationPaymentPO();
+		}
+
+		if (addReducePO.getStatus() == AddReducePO.STATUS_UNSUBMIT_INT) { // 初始
+
+			decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT);
+			decorationPaymentPO.setReferMoney(Arith.mul(Arith.div(addReduceVO.getTotal(), 1000000), 1000000));
+
+			if (addReducePO.getType() == AddReducePO.TYPE_ADD_INT || addReducePO.getType() == AddReducePO.TYPE_LEAKAGE_INT) {
+				decorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_ADD_INT);
+				decorationPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_ADD_REDUCE_INT);
+			} else {
+				decorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
+				decorationPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_ADD_REDUCE_INT);
+			}
+
+			decorationPaymentPO.setDecoration(decorationPO);
+			decorationPaymentPO.setCreater(userDao.queryUserByUserId(userId));
+			decorationPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
+
+			decorationPaymentPO.setPaymentType(addReducePO.getType() == 0 ? DecorationPaymentPO.PAYMENTTYPE_ADD_STR : DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR);
+			decorationPaymentPO.setCompany(decorationPO.getCompany());
+
+		} else if (addReducePO.getStatus() == AddReducePO.STATUS_SUBMIT_INT) { // 提交
+			decorationPaymentPO.setReferMoney(Arith.mul(Arith.div(addReduceVO.getTotal(), 1000000), 1000000));
+		}
+
+		decorationPaymentDao.saveOrUpdate(decorationPaymentPO);
+
+		addReducePO.setStatus(AddReducePO.STATUS_SUBMIT_INT);
+		addReducePO.setDpId(decorationPaymentPO.getDpid());
+
+		convertAddReduceVOToPOForAdvance(addReduceVO, addReducePO);
+
+		addReduceDao.update(addReducePO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int unpayAddReduce(AddReduceVO addReduceVO) throws FLException {
+
+		List<Short> status = Arrays.asList(AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT);
 
 		long arId = addReduceVO.getArId();
 
 		AddReducePO addReducePO = addReduceDao.get(arId);
 
 		if (addReducePO == null) {
-			throw new FLException(140018, "增减项不存在");
+			throw new FLException(200060, "增减单不存在");
 		}
 
 		if (status.contains(addReducePO.getStatus())) {
-			throw new FLException(140035, "当前增减项款项状态不可操作");
+			throw new FLException(200061, "增减单状态不可操作");
+		}
+
+		if (AddReducePO.TYPE_ADD_INT != addReducePO.getType()) {
+			throw new FLException(200062, "增减单类型不可操作");
+		}
+
+		if (AddReducePO.PAYTYPE_PAY_INT != addReducePO.getPaytype()) {
+			throw new FLException(200062, "增减单类型不可操作");
+		}
+
+		decorationPaymentDao.deleteById(addReducePO.getDpId());
+
+		addReducePO.setPaytype(addReduceVO.getPaytype());
+
+		addReduceDao.update(addReducePO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int confirmAddReduce(AddReduceVO addReduceVO) throws FLException {
+
+		List<Short> status = Arrays.asList(AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT);
+
+		long arId = addReduceVO.getArId();
+
+		AddReducePO addReducePO = addReduceDao.get(arId);
+
+		if (addReducePO == null) {
+			throw new FLException(200060, "增减单不存在");
+		}
+
+		if (status.contains(addReducePO.getStatus())) {
+			throw new FLException(200061, "增减单状态不可操作");
+		}
+
+		if (AddReducePO.PAYTYPE_PAY_INT == addReducePO.getPaytype()) {
+			throw new FLException(200062, "增减单类型不可操作");
+		}
+
+		addReducePO.setStatus(AddReducePO.STATUS_CONFIRMED_INT);
+
+		addReduceDao.update(addReducePO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int deleteAddReduceByArId(AddReduceVO addReduceVO) throws FLException {
+
+		List<Short> status = Arrays.asList(AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT);
+
+		long arId = addReduceVO.getArId();
+
+		AddReducePO addReducePO = addReduceDao.get(arId);
+
+		if (addReducePO == null) {
+			throw new FLException(200060, "增减单不存在");
+		}
+
+		if (status.contains(addReducePO.getStatus())) {
+			throw new FLException(200061, "增减单状态不可操作");
 		}
 
 		if (selectionItemDao.countSelectionItem(addReducePO.getOrderId(), addReducePO.getArId()) > 0) {
@@ -291,77 +469,6 @@ public class AddReduceServiceImpl implements AddReduceService {
 		decorationPaymentDao.deleteById(addReducePO.getDpId());
 
 		addReduceDao.delete(addReducePO);
-
-		return 0;
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public int submitAddReduce(AddReduceVO addReduceVO, String userId) throws FLException {
-
-		List<Short> paymentStatus = Arrays.asList(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT);
-		List<Integer> status = Arrays.asList(new Integer[] { AddReducePO.STATUS_PAYED_INT, AddReducePO.STATUS_CONFIRMED_INT });
-
-		AddReducePO addReducePO = addReduceDao.get(addReduceVO.getArId());
-
-		if (addReducePO == null) {
-			throw new FLException(140018, "增减项不存在");
-		}
-
-		if (status.contains(addReducePO.getStatus())) {
-			throw new FLException(140035, "当前增减项款项状态不可操作");
-		}
-
-		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(addReducePO.getOrderId());
-
-		if (decorationPO == null) {
-			throw new FLException(140013, "订单不存在");
-		}
-
-		DecorationPaymentPO decorationPaymentPO = null;
-
-		if (addReducePO.getDpId() != 0) {
-			decorationPaymentPO = decorationPaymentDao.get(addReducePO.getDpId());
-
-			if (decorationPaymentPO != null && !paymentStatus.contains(decorationPaymentPO.getPaymentStatus())) {
-				throw new FLException(140002, "已付款或已确认,不可修改");
-			}
-		} else {
-			decorationPaymentPO = new DecorationPaymentPO();
-		}
-
-		if (addReducePO.getStatus() == AddReducePO.STATUS_UNSUBMIT_INT) { // 初始
-
-			decorationPaymentPO.setPaymentStatus(DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT);
-			decorationPaymentPO.setReferMoney(Arith.mul(Arith.div(addReduceVO.getTotal(), 1000000), 1000000));
-
-			if (addReducePO.getType() == AddReducePO.TYPE_ADD_INT || addReducePO.getType() == AddReducePO.TYPE_LEAKAGE_INT) {
-				decorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_ADD_INT);
-				decorationPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_ADD_REDUCE_INT);
-			} else {
-				decorationPaymentPO.setOneType(DecorationPaymentPO.ONETYPE_REFUND_INT);
-				decorationPaymentPO.setTwoType(DecorationPaymentPO.TWOTYPE_ADD_REDUCE_INT);
-			}
-
-			decorationPaymentPO.setDecoration(decorationPO);
-			decorationPaymentPO.setCreater(userDao.queryUserByUserId(userId));
-			decorationPaymentPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-
-			decorationPaymentPO.setPaymentType(addReducePO.getType() == 0 ? DecorationPaymentPO.PAYMENTTYPE_ADD_STR : DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR);
-			decorationPaymentPO.setCompany(decorationPO.getCompany());
-
-		} else if (addReducePO.getStatus() == AddReducePO.STATUS_SUBMIT_INT) { // 提交
-			decorationPaymentPO.setReferMoney(Arith.mul(Arith.div(addReduceVO.getTotal(), 1000000), 1000000));
-		}
-
-		decorationPaymentDao.saveOrUpdate(decorationPaymentPO);
-
-		addReducePO.setStatus(AddReducePO.STATUS_SUBMIT_INT);
-		addReducePO.setDpId(decorationPaymentPO.getDpid());
-
-		convertAddReduceVOToPOForAdvance(addReduceVO, addReducePO);
-
-		addReduceDao.update(addReducePO);
 
 		return 0;
 	}

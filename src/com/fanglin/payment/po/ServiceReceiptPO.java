@@ -27,6 +27,8 @@ public class ServiceReceiptPO  implements Serializable{
 	
 	public static final short COLUMN_ADVANCETYPE_INT = 0;
 	
+	public static final short COLUMN_ADVANCETYPE_BALANCE_INT = 1; //合同预付款
+	
 	private long srId;
 	
 	private short type;
@@ -62,6 +64,10 @@ public class ServiceReceiptPO  implements Serializable{
 	private long accounts;
 	
 	private String accountsBank;
+	
+	private long advance;
+	
+	private short advanceType;
 	
 	private String comment;
 	
@@ -243,6 +249,24 @@ public class ServiceReceiptPO  implements Serializable{
 
 	public void setAccountsBank(String accountsBank) {
 		this.accountsBank = accountsBank;
+	}
+
+	@Column(name = "advance")
+	public long getAdvance() {
+		return advance;
+	}
+
+	public void setAdvance(long advance) {
+		this.advance = advance;
+	}
+
+	@Column(name = "advanceType")
+	public short getAdvanceType() {
+		return advanceType;
+	}
+
+	public void setAdvanceType(short advanceType) {
+		this.advanceType = advanceType;
 	}
 
 	@Column(name = "comment")

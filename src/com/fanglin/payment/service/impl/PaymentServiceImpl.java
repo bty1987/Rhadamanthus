@@ -26,7 +26,6 @@ import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.service.DecorationAdditionService;
-import com.fanglin.kingdee.service.AdvanceKingdeeService;
 import com.fanglin.payment.dao.AdvancePaymentDao;
 import com.fanglin.payment.dao.AdvanceReceiptDao;
 import com.fanglin.payment.dao.PaymentDao;
@@ -75,9 +74,6 @@ public class PaymentServiceImpl implements PaymentService {
 
 	@Autowired
 	private DecorationAdditionService decorationAdditionService;
-
-	@Autowired
-	private AdvanceKingdeeService advanceKingdeeService;
 
 	@Override
 	public void pagePayment(Paging paging, List<Filter> filters, PaymentVO payment, int company) {
@@ -237,9 +233,6 @@ public class PaymentServiceImpl implements PaymentService {
 			pointofsalesService.updatePointofsales(posids, advanceReceiptPO.getArId(), PointofsalesPO.STATUS_USED_INT, PointofsalesPO.TYPE_ADVANCE_INT);
 		}
 
-		// 数据进入金蝶
-		advanceKingdeeService.collect(advanceReceiptPO, paymentPO, decorationPO);
-
 		return 0;
 	}
 
@@ -354,9 +347,6 @@ public class PaymentServiceImpl implements PaymentService {
 		}
 
 		decorationService.sendMessage(paymentPO.getOrderId(), name, String.format("%s退款金额%.3f元", name, Arith.div(paymentPO.getRecharge(), 1000.0)));
-
-		// 数据进入金蝶
-		advanceKingdeeService.refund(advanceReceiptPO, paymentPO, decorationPO);
 
 		return 0;
 	}

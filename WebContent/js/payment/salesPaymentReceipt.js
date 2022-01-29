@@ -179,6 +179,8 @@ jQuery(function($) {
         var headReceiptTr = $('<tr style="border:1px solid #fff; background:white; border-bottom-color:#000;"></tr>').appendTo(receiptTable);
         var headReceiptTd = $('<td colspan="5"></td>').appendTo(headReceiptTr);
         var headReceiptDiv = $('<div style="text-align: center;"></div>').appendTo(headReceiptTd);
+        var no = (Array(10).join(0)+params.salesReceiptSrId).slice(-10);
+        var spanNo = $('<span style="float: left;"></span>').html("编号:"+no).appendTo(headReceiptDiv);
         var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(parent.params.company.srganization.name + "代收款收据").appendTo(headReceiptDiv);
 
         var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);

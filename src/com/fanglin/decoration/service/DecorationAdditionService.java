@@ -15,7 +15,7 @@ public interface DecorationAdditionService {
 	public Map<String, Object> queryDecorationConfig(List<Short> typeness, int company);
 
 	public short queryDecorationSchedule(DecorationVO decorationVO) throws FLException;
-	
+
 	public void updateDecorationForPayScale(DecorationPO decorationPO) throws FLException;
 
 	public void updateDecorationForSaleScale(DecorationPO decorationPO) throws FLException;

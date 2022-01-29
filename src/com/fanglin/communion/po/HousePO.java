@@ -51,6 +51,8 @@ public class HousePO implements Serializable {
 	
 	private int innerArea;
 	
+	private int quoteArea;
+	
 	private int totalArea;
 
 	private short maxFloor;
@@ -187,6 +189,15 @@ public class HousePO implements Serializable {
 
 	public void setInnerArea(int innerArea) {
 		this.innerArea = innerArea;
+	}
+	
+	@Column(name = "quoteArea")
+	public int getQuoteArea() {
+		return quoteArea;
+	}
+
+	public void setQuoteArea(int quoteArea) {
+		this.quoteArea = quoteArea;
 	}
 
 	@Column(name = "totalArea")

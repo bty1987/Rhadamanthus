@@ -28,6 +28,8 @@ public class HouseVO implements Serializable {
 	
 	private Integer innerArea;
 	
+	private Integer quoteArea;
+	
 	private Integer totalArea;
 
 	private Short maxFloor;
@@ -150,6 +152,14 @@ public class HouseVO implements Serializable {
 
 	public void setInnerArea(Integer innerArea) {
 		this.innerArea = innerArea;
+	}
+	
+	public Integer getQuoteArea() {
+		return quoteArea;
+	}
+
+	public void setQuoteArea(Integer quoteArea) {
+		this.quoteArea = quoteArea;
 	}
 
 	public Integer getTotalArea() {

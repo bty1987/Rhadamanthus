@@ -801,7 +801,7 @@ var quotationUtils = {
                 
                 var normrice = qv.normrice;
                 
-                qv.initNum = [0, 1, 2].indexOf(qv.type) != -1 ? qv.num : -qv.num;
+                qv.initNum = [0, 1].indexOf(qv.type) != -1 ? qv.num : -qv.num;
                 
                 if (!quotationFunctionAreaItemMs[normrice.constructionNode.sort + "-" + normrice.constructionNode.name]) {
                     quotationFunctionAreaItemMs[normrice.constructionNode.sort + "-" + normrice.constructionNode.name] = [qv];

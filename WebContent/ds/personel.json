@@ -208,14 +208,10 @@
   {"key":"0","value":"群众"},
   {"key":"1","value":"团员"},
   {"key":"2","value":"党员"}
-],"education": [
-  {"key":"0","value":"小学及以下"},
-  {"key":"1","value":"初中"},
-  {"key":"2","value":"中专"},
-  {"key":"3","value":"高中"},
-  {"key":"4","value":"大专"},
-  {"key":"5","value":"本科"},
-  {"key":"6","value":"研究生及以上"}
+],"status": [
+  {"key":"0","value":"初始"},
+  {"key":"1","value":"入职"},
+  {"key":"2","value":"作废"}
 ],
   "errorCode": 0,
   "errorMsg": null

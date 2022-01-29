@@ -8,6 +8,7 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.FeedbackDao;
 import com.fanglin.customer.po.FeedbackPO;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.Paging;
 
 @Repository("feedbackDao")
@@ -22,7 +23,9 @@ public class FeedbackDaoImpl extends DaoImpl<FeedbackPO> implements FeedbackDao 
 
 		PagingQuery<FeedbackPO> query = pagingQuery(paging, FeedbackPO.class);
 
-		query.add(query.getCriterion(FeedbackPO.COLUMN_COMPANY_STR, company, "eq"));
+		if (company != CompanyPO.TYPE_HEADQUARTER_INT) {
+			query.add(query.getCriterion(FeedbackPO.COLUMN_COMPANY_STR, company, "eq"));
+		}
 
 		queryFilterExcute(query, filters);
 

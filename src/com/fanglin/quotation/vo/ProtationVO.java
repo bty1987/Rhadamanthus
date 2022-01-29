@@ -67,7 +67,17 @@ public class ProtationVO implements Serializable {
 	private Short status;
 
 	private Short defaults;
-
+	
+	private Long mostPrice;
+	
+	private Integer costRate;
+	
+	private Integer mostRate;
+	
+	private Long totalCost;
+	
+	private Long totalProfit;
+	
 	public Long getPid() {
 		return pid;
 	}
@@ -253,4 +263,45 @@ public class ProtationVO implements Serializable {
 		this.defaults = defaults;
 	}
 
+	public Long getMostPrice() {
+		return mostPrice;
+	}
+
+	public void setMostPrice(Long mostPrice) {
+		this.mostPrice = mostPrice;
+	}
+
+	public Integer getCostRate() {
+		return costRate;
+	}
+
+	public void setCostRate(Integer costRate) {
+		this.costRate = costRate;
+	}
+
+	public Integer getMostRate() {
+		return mostRate;
+	}
+
+	public void setMostRate(Integer mostRate) {
+		this.mostRate = mostRate;
+	}
+
+	public Long getTotalCost() {
+		return totalCost;
+	}
+
+	public void setTotalCost(Long totalCost) {
+		this.totalCost = totalCost;
+	}
+
+	public Long getTotalProfit() {
+		return totalProfit;
+	}
+
+	public void setTotalProfit(Long totalProfit) {
+		this.totalProfit = totalProfit;
+	}
+
+	
 }

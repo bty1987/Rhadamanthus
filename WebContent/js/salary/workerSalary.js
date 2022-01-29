@@ -8,21 +8,25 @@ jQuery(function ($) {
             batchSendModal: com.focusPage("#batchSendModal"),
         },
         items: {
-        	workersalary : com.focusPage("#workersalary", "#workersalaryModal"),
+            workersalary : com.focusPage("#workersalary", "#workersalaryModal"),
             workersalaryuser : com.focusPage("#workersalaryuser", "#workersalaryModal"),
             workersalarySubtype : com.focusPage("#workersalarySubtype", "#workersalaryModal"),
             workersalarycomment : com.focusPage("#workersalarycomment", "#workersalaryModal"),
-            
+
             beginTime: com.focusPage("#beginTime", "#batchSendModal"),
             finishTime: com.focusPage("#finishTime", "#batchSendModal"),
         },
-        
+
+        drawingModal: com.focusPage('#drawingModal').on("show.bs.modal", function (a) {
+            com.clearValidator();
+        }),
+
         btns: {
             saveBtn: com.focusPage("#saveBtn"),
-            
+
             batchSendBtn: com.focusPage("#batchSendBtn"),
         },
-        
+
         salaryStatus: {},
         type:{},
         oneType:{},
@@ -32,13 +36,14 @@ jQuery(function ($) {
         twotype:{},
 
     };
-    
+    initUploadBtn();
+
     com.datetime(salary.items.beginTime);
     com.datetime(salary.items.finishTime);
 
     salary.btns.saveBtn.bindClick(saveData);
     salary.btns.batchSendBtn.bindClick(batchSend);
-    
+
     salary.modals.workersalaryModal.on('hide.bs.modal', function (e) {
         com.cleanTypeahead("workersalaryuser");
         com.cleanItems(salary.items);
@@ -49,12 +54,19 @@ jQuery(function ($) {
 
     com.post(api.ds.salary, {}, function (data) {
 
+        var twotypes = [];
+
+        $.each(data.SalaryTwoType, function(i, v){
+            if(v.status != 0) return true;
+            twotypes.push(v);
+        });
+
         salary.salaryStatus=data.status.split("key", "value");
         salary.type=data.type.split("id", "name");
         salary.oneType=data.oneType.split("id", "name");
         salary.twoType=data.SalaryTwoType.split("key", "oneType");
         salary.twotype=data.SalaryTwoType.split("key", "name");
-        salary.items.workersalarySubtype.bindData(data.SalaryTwoType,"key","name");
+        salary.items.workersalarySubtype.bindData(twotypes,"key","name");
 
     }, null, false);
 
@@ -69,13 +81,13 @@ jQuery(function ($) {
     }, null, false);
 
     var searcher = new Searcher();
-    
+
     searcher.base("condList", "pagenation", "resultList", api.salary.pageWorkerSalary);
-    
+
     searcher.condition(["salary-orderId", "salary-salaryWorkduty", "salary-jober", "salary-salaryschedule", "salary-worker-count", 'salary-salarystatus',"salary-createTime", 'salary-approveTime']);
-    
+
     searcher.history("workersalaryPostData");
-    
+
     searcher.button([
         {id: "select", name: "全选", clazz: "btn-yellow", icon: ""},
         {id: "add", name: "创建", clazz: "btn-success", icon: "icon-plus"},
@@ -85,7 +97,7 @@ jQuery(function ($) {
         {id: "batchImport", name: "批量更新", clazz: "btn-pink", icon: ""},
         {id: "batchSend", name: "批量通知", clazz: "btn-success", icon: ""},
     ]);
-    
+
     var lineprops = [
         {field: "wsId", name: "多选", type: "checkbox", prop: "wsId"},
         {field: "orderId", name: "装修单号", prop: "decoration.orderId", clazz: "grey"},
@@ -142,7 +154,12 @@ jQuery(function ($) {
         }, show: function(v){
             return v.isSend == 1;
         }},
-    ]
+        {name: "图片", clazz: "btn-yellow", handle: function(v){
+            params.wsId = v.wsId;
+
+            managedrawing(v.wsId);
+        }},
+    ];
     
     searcher.line("user.userName", lineprops, linebtns);
     
@@ -170,7 +187,7 @@ jQuery(function ($) {
     });
 
     com.focusPage('a[name="batchImport"]', '#pagenation').click(function () {
-       salary.modals.workersalaryModal.modal("show");
+        salary.modals.workersalaryModal.modal("show");
     });
 
     com.focusPage('a[name="exports"]', '#pagenation').click(function () {
@@ -238,26 +255,26 @@ jQuery(function ($) {
     });
 
     com.focusPage('a[name="adopt"]', '#pagenation').click(function (v) {
-        
+
         var checkbox = com.focusPage('input[name="check"]:checked');
 
         var options = {};
         var cwsids = [];
-        
+
         if (!checkbox.length) {
             com.showAlert(com.warning, "请选择工人工费信息");
             return false;
         }
 
         $.each(checkbox, function (i, v) {
-            
+
             var $v = $(v);
-            
+
             if($v.attr('cwsid')) cwsids.push($v.attr('cwsid'));
-            
+
             options["workerSalarys[" + i + "].wsId"] = $v.attr('wsid');
         });
-        
+
         if (cwsids.length > 0) {
             com.showAlert(com.error, "转款不允许批量通过");
             return false;
@@ -273,10 +290,10 @@ jQuery(function ($) {
         });
 
     });
-    
+
     com.focusPage('a[name="batchSend"]', '#pagenation').click(function () {
         salary.modals.batchSendModal.modal("show");
-     });
+    });
 
     function deletebystatus(v) {
         com.post(api.salary.deleteWorkerSalary, {"workerSalary.wsId": v.wsId}, function (res) {
@@ -295,13 +312,13 @@ jQuery(function ($) {
             searcher.doSearch();
         });
     }
-    
+
     function send(v) {
         com.post(api.salary.sendWorkerSalary, {"workerSalary.wsId": v.wsId}, function (res) {
             searcher.doSearch();
         });
     }
-    
+
     function cancel(v) {
         com.post(api.salary.cancelWorkerSalary, {"workerSalary.wsId": v.wsId}, function (res) {
             searcher.doSearch();
@@ -323,28 +340,81 @@ jQuery(function ($) {
             searcher.doSearch();
             com.showAlert(com.info, "操作成功");
         });
-       salary.modals.workersalaryModal.modal("hide");
+        salary.modals.workersalaryModal.modal("hide");
     }
-    
+
     function batchSend(){
-        
+
         if(com.validate("batchSendModal")) return  false;
-        
+
         var options = {
             "workerSalary.createTime": salary.items.beginTime.val() + " 00:00:00",
             "workerSalary.finishTime": salary.items.finishTime.val() + " 23:59:59",
         }
-        
+
         com.post(api.salary.batchWorkerSalary, options, function (res) {
-            
+
             searcher.doSearch();
-            
+
             salary.modals.batchSendModal.modal("hide");
         });
     }
-    
+
     com.uploadify("#import", "上传文件", api.salary.importWorkerSalary, 'btn btn-success col-sm-12', "*.xls;*.xlsx;", {'uploadType': 4}, 1, function(data){
         searcher.doSearch();
     });
+
+    // 显示图片
+    function managedrawing(wsId) {
+        salary.drawingModal.modal("show");
+        com.focusPage('#workerDrawing').html("");
+        com.post(api.salary.querySalaryDrawing, {"salaryDrawing.sid": wsId, "salaryDrawing.type": 0}, function (data) {
+            var workerSourcePics = data.salaryDrawings;
+            if (workerSourcePics && workerSourcePics.length) {
+                $.each(workerSourcePics, function (i, value) {
+                    appendGalleryElement("workerDrawing", value);
+                });
+                com.popup4photos("#workerDrawing");
+            }
+        }, null, false);
+    }
+
+    // 上传图片
+    function initUploadBtn() {
+
+        com.uploadify("#workerUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {'uploadType': 0}, 1, function(data){
+            var options = {};
+
+            options["salaryDrawing.sid"] = params.wsId;
+            options["salaryDrawing.name"] = data.strutsUploadsFileName;
+            options["salaryDrawing.drawingUrl"] = data.resUrl;
+            options["salaryDrawing.drawingType"] = 0;
+            options["salaryDrawing.type"] = 0;
+
+            com.post(api.salary.addSalaryDrawing, options, function (res) {
+                var drawing = res.salaryDrawing;
+
+                appendGalleryElement("workerDrawing", drawing);
+                com.popup4photos("#workerDrawing");
+            });
+
+            searcher.doSearch();
+        });
+    }
+
+    function appendGalleryElement(galleryId, value) {
+        var gallery = com.focusPage("#" + galleryId);
+        var imgLi = $("<li></li>").attr("id", "gallery_li" + value.sdid).addClass("text-center col-sm-4").css("border", "0px").css("border-color", "white").css("padding", "0px").css("height", "150px").css("width", "150px").appendTo(gallery);
+        var img = $('<img/>');
+        var imgA = $("<a></a>").addClass('cboxElement').attr("target", "_blank").css("height", "150px").append(img).appendTo(imgLi);
+        com.showImg(img, value.drawingUrl, 150, 150, '150x150', null, value.drawingType);
+        var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
+        var toolsA = $("<a></a>").attr("href", "#").on("click", function () {
+            com.post(api.salary.deleteSalaryDrawing, {"salaryDrawing.sdid": value.sdid}, function (res) {
+                com.focusPage("#gallery_li" + value.sdid).remove();
+            });
+        }).appendTo(toolsDiv);
+        $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
+    }
 
 });

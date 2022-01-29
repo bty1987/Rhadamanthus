@@ -31,24 +31,21 @@ public class SoodsDaoImpl extends DaoImpl<SoodsPO> implements SoodsDao {
 		return query.list();
 	}
 
-	
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<SoodsPO> querySoodsByName(String name, int limit, int company) {
-	
-	return session().createCriteria(SoodsPO.class).createAlias("goods", "goods").add(Restrictions.eq("company", company)).add(Restrictions.eq("status", SoodsPO.STATUS_VALID_INT)).add(Restrictions.or(Restrictions.ilike(SoodsPO.COLUMN_NAME_STR, name, MatchMode.ANYWHERE),Restrictions.ilike(SoodsPO.COLUMN_BRAND_STR, name, MatchMode.ANYWHERE))).setMaxResults(limit).list();
-  	
+		return session().createCriteria(SoodsPO.class).createAlias("goods", "goods").add(Restrictions.eq("company", company)).add(Restrictions.eq("status", SoodsPO.STATUS_VALID_INT)).add(Restrictions.or(Restrictions.ilike(SoodsPO.COLUMN_NAME_STR, name, MatchMode.ANYWHERE), Restrictions.ilike(SoodsPO.COLUMN_BRAND_STR, name, MatchMode.ANYWHERE))).setMaxResults(limit).list();
 	}
-	
+
 	@Override
 	public int deleteSoods(long sid) {
-		
+
 		String sql = "delete `data`.soods,`data`.soodsitem from `data`.soods left join `data`.soodsitem on `data`.soods.sid=`data`.soodsitem.sid where `data`.soods.sid= :sid";
 		session().createSQLQuery(sql).setLong("sid", sid).executeUpdate();
 
 		return 0;
 	}
-	
+
 	private void queryFilterExcute(PagingQuery<SoodsPO> query, List<Filter> filters) {
 
 		if (filters == null)
@@ -70,10 +67,9 @@ public class SoodsDaoImpl extends DaoImpl<SoodsPO> implements SoodsDao {
 				query.alias("goods", "goods");
 				query.add(query.getCriterion(SoodsPO.COLUMN_CATEGORY_STR, data, op));
 			} else if ("status".equals(filter.getField())) {
-		          query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
-	        }
+				query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
+			}
 		}
 	}
-
 
 }

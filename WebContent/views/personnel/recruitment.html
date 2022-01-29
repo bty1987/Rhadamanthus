@@ -73,8 +73,53 @@
 
 <div id="layerPopUp" class="portlet box page-content"></div> <!-- 弹窗 -->
 
-<div id="simpleAddUserModal"></div> <!-- 添加 -->
+<div class="modal fade" id="enterModal" tabindex="-1">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="addItemDialog">入职信息</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="userName" class="col-sm-3 control-label no-padding-right">用户名</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="userName" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'/>
+                        </div>
+                    </div>
 
-<script type="text/javascript">
-    $.loadScript(['js/personnel/recruitment.js']);
-</script>
+                    <div class="form-group">
+                        <label for="deptType" class="col-sm-3 control-label no-padding-right">部门类型</label>
+                        <div class="col-sm-9">
+                            <select id="deptType" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' style="width: 200px"></select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dept" class="col-sm-3 control-label no-padding-right">部门</label>
+                        <div class="col-sm-9">
+                            <select id="dept" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' style="width: 200px"></select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="duty" class="col-sm-3 control-label no-padding-right">职位</label>
+                        <div class="col-sm-9">
+                            <select id="duty" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' style="width: 200px"></select>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="save" class="btn btn-primary">保存</button>
+                <button type="button" id="cancel" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="js/personnel/recruitment.js"></script>

@@ -206,7 +206,8 @@
     {"key" : "0", "value" : "基础"},
     {"key" : "1", "value" : "合同"},
     {"key" : "2", "value" : "增减"},
-    {"key" : "3", "value" : "其他"}
+    {"key" : "3", "value" : "其他"},
+    {"key" : "4", "value" : "终止"}
   ],
   "atttype_material": [
     {"key" : "0", "value" : "基础"}

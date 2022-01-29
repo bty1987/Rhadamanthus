@@ -17,6 +17,8 @@ import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.decoration.vo.DecorationVO;
+
 public class AddReduceVO implements Serializable {
 
 	private static final long serialVersionUID = -882438841944489334L;
@@ -25,9 +27,13 @@ public class AddReduceVO implements Serializable {
 
 	private String orderId;
 
+	private DecorationVO decoration;
+
 	private Long dpId;
 
 	private Short type;
+
+	private Short paytype;
 
 	private Long undisPrice;
 
@@ -45,13 +51,22 @@ public class AddReduceVO implements Serializable {
 
 	private Integer discount;
 
-	private Integer status;
+	private Short status;
 
 	private Timestamp createTime;
 
 	private String content;
 
 	private List<AddReduceItemVO> addReduceItems;
+
+	public AddReduceVO() {
+		super();
+	}
+
+	public AddReduceVO(DecorationVO decoration) {
+		super();
+		this.decoration = decoration;
+	}
 
 	public Long getArId() {
 		return arId;
@@ -69,12 +84,28 @@ public class AddReduceVO implements Serializable {
 		this.orderId = orderId;
 	}
 
+	public DecorationVO getDecoration() {
+		return decoration;
+	}
+
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
+	}
+
 	public Short getType() {
 		return type;
 	}
 
 	public void setType(Short type) {
 		this.type = type;
+	}
+
+	public Short getPaytype() {
+		return paytype;
+	}
+
+	public void setPaytype(Short paytype) {
+		this.paytype = paytype;
 	}
 
 	public Long getTotal() {
@@ -134,11 +165,11 @@ public class AddReduceVO implements Serializable {
 		this.createTime = createTime;
 	}
 
-	public Integer getStatus() {
+	public Short getStatus() {
 		return status;
 	}
 
-	public void setStatus(Integer status) {
+	public void setStatus(Short status) {
 		this.status = status;
 	}
 

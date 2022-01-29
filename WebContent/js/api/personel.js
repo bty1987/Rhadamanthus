@@ -94,6 +94,8 @@ $.extend(api, {personel: {
     addRecruitment:{url: "addRecruitment.do"},
     queryRecruitmentByRid: {url: "queryRecruitmentByRid.do"},
     updateRecruitment: {url: "updateRecruitment.do"},
+    entryRecruitment: {url: "entryRecruitment.do"},
+    cancelRecruitment: {url: "cancelRecruitment.do"},
 
     
     addRecruitmentEducation:{url: "addRecruitmentEducation.do"},
