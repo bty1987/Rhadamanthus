@@ -13,18 +13,18 @@ import javax.persistence.Table;
 public class VustomerNetPO implements Serializable {
 
 	private static final long serialVersionUID = 4043258313450694562L;
-	
+
 	public static final String COLUMN_UNIONID_STR = "unionId";
-	
+
 	public static final String COLUMN_NETUNIONID_STR = "netunionId";
-	
+
 	private long vnid;
-	
+
 	private String unionId;
-	
+
 	private String netunionId;
-	
-	public VustomerNetPO(){
+
+	public VustomerNetPO() {
 		super();
 	}
 
@@ -38,7 +38,7 @@ public class VustomerNetPO implements Serializable {
 	public void setVnid(long vnid) {
 		this.vnid = vnid;
 	}
-	
+
 	@Column(name = "unionId")
 	public String getUnionId() {
 		return unionId;

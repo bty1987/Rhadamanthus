@@ -20,48 +20,47 @@ import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("customerRecordService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class CustomerRecordServiceImpl implements CustomerRecordService {
 
 	@Autowired
 	private CustomerRecordDao customerRecordDao;
-	
+
 	@Autowired
 	public UserDao userDao;
-	
+
 	@Override
 	public List<CustomerRecordVO> queryCustomerRecord(CustomerRecordVO customerRecord) {
-		
+
 		List<CustomerRecordPO> customerRecordPOs = customerRecordDao.queryCustomerRecord(customerRecord.getCsid());
 		List<CustomerRecordVO> customerRecordVOs = new ArrayList<CustomerRecordVO>();
-		
-		for(CustomerRecordPO customerRecordPO : customerRecordPOs){
-			
+
+		for (CustomerRecordPO customerRecordPO : customerRecordPOs) {
+
 			CustomerRecordVO customerRecordVO = new CustomerRecordVO(new UserBaseVO(new DutyVO(), new DepartmentVO()));
-			
+
 			BeanUtil.copyPropertie(customerRecordPO, customerRecordVO, Arrays.asList("operater"));
-			BeanUtil.copyPropertie(customerRecordPO.getOperater(), customerRecordVO.getOperater(), Arrays.asList("role", "dept","duty", "password", "identity", "company"));
-			
+			BeanUtil.copyPropertie(customerRecordPO.getOperater(), customerRecordVO.getOperater(), Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
+
 			customerRecordVOs.add(customerRecordVO);
 		}
-		
+
 		return customerRecordVOs;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public void addCustomerRecord(CustomerRecordVO customerRecord, String userId) {
-		
+
 		CustomerRecordPO customerRecordPOs = new CustomerRecordPO();
-		
+
 		BeanUtil.copyPropertie(customerRecord, customerRecordPOs, Arrays.asList("operater", "operatTime"));
-		
+
 		customerRecordPOs.setOperater(userDao.queryUserByUserId(userId));
-		customerRecordPOs.setType((short)0);
+		customerRecordPOs.setType((short) 0);
 		customerRecordPOs.setOperatTime(new Timestamp(System.currentTimeMillis()));
-		
+
 		customerRecordDao.save(customerRecordPOs);
-		
 	}
 
 }

@@ -137,26 +137,27 @@ public class CirclePO implements Serializable {
 
 		CircleVO circleVO = new CircleVO(new UserBaseVO(new DutyVO()));
 
-		BeanUtil.copyPropertie(this, circleVO,Arrays.asList("creater", "drawings"));
-		BeanUtil.copyPropertie(this.getCreater(), circleVO.getCreater(),Arrays.asList("dept", "duty"));
+		BeanUtil.copyPropertie(this, circleVO, Arrays.asList("creater", "drawings"));
+		BeanUtil.copyPropertie(this.getCreater(), circleVO.getCreater(), Arrays.asList("dept", "duty"));
 		BeanUtil.copyPropertie(this.getCreater().getDuty(), circleVO.getCreater().getDuty(), Arrays.asList("departmentType"));
 
-		if(circleFlag){
-			
-		List<CircleDrawingVO> circleDrawingVOs = new ArrayList<CircleDrawingVO>();
+		if (circleFlag) {
 
-		for (CircleDrawingPO circleDrawingPO : drawings) {
+			List<CircleDrawingVO> circleDrawingVOs = new ArrayList<CircleDrawingVO>();
 
-			CircleDrawingVO circleDrawingVO = new CircleDrawingVO();
+			for (CircleDrawingPO circleDrawingPO : drawings) {
 
-			BeanUtil.copyProperties(circleDrawingPO, circleDrawingVO,Arrays.asList("circle"));
+				CircleDrawingVO circleDrawingVO = new CircleDrawingVO();
 
-			circleDrawingVOs.add(circleDrawingVO);
+				BeanUtil.copyProperties(circleDrawingPO, circleDrawingVO, Arrays.asList("circle"));
 
-		}
-		circleVO.setDrawings(circleDrawingVOs);
+				circleDrawingVOs.add(circleDrawingVO);
+
+			}
+			circleVO.setDrawings(circleDrawingVOs);
 		}
 
 		return circleVO;
 	}
+
 }

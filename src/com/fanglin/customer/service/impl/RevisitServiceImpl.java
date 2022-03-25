@@ -77,7 +77,6 @@ public class RevisitServiceImpl implements RevisitService {
 		}
 
 		return revisitVOs;
-
 	}
 
 	@Override

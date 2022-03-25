@@ -11,6 +11,6 @@ public interface ServicePaymentDao extends Dao<ServicePaymentPO> {
 
 	public List<ServicePaymentPO> queryCusServicePayment(Paging paging, List<Filter> filters, String orderId);
 
-	public long countCusServicePaymentForAmount(String orderId);
+	public long amountCusServicePayment(String orderId);
 
 }

@@ -1,4 +1,16 @@
 var params = {
-    selectCaching : {},
-    apiHistory: {}
+    selectCaching: {},
+    apiHistory: {},
+
+    approval: {},
+    construction: {},
+    decoration: {},
+    infomation: {},
+    inventory: {},
+    material: {},
+    payment: {},
+    quotation: {},
+    sales: {},
+    salary: {},
+
 };

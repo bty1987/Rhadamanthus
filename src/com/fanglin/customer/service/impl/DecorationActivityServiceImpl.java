@@ -12,28 +12,28 @@ import com.fanglin.decoration.dao.DecorationActivityDao;
 import com.fanglin.decoration.po.DecorationActivityPO;
 
 @Service("decorationActivityOrderService")
-@Transactional(readOnly=true)
-public class DecorationActivityServiceImpl implements DecorationActivityService{
-	
+@Transactional(readOnly = true)
+public class DecorationActivityServiceImpl implements DecorationActivityService {
+
 	@Autowired
 	private DecorationActivityDao decorationActivityDao;
 
 	@Override
 	public DecorationActivityVO queryCusDecorationActivity(DecorationActivityVO decorationActivityVO) {
-		
+
 		List<DecorationActivityPO> decorationActivityPOs = decorationActivityDao.queryDecorationActivityByOrderId(decorationActivityVO.getOrderId());
 		decorationActivityVO = new DecorationActivityVO();
-		
+
 		StringBuffer activity = new StringBuffer();
-		
-		for(DecorationActivityPO decorationActivityPO : decorationActivityPOs){
-			
+
+		for (DecorationActivityPO decorationActivityPO : decorationActivityPOs) {
+
 			activity.append(decorationActivityPO.getActivity().getName());
 			activity.append(" ");
-			
 		}
+
 		decorationActivityVO.setDecorationActivitys(activity.toString());
-		
+
 		return decorationActivityVO;
 	}
 

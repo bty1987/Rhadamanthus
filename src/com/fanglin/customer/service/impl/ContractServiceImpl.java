@@ -28,6 +28,7 @@ public class ContractServiceImpl implements ContractService {
 		List<ContractVO> contractVOs = new ArrayList<ContractVO>();
 
 		for (DecorationContractPO decorationContractPO : decorationContractPOs) {
+
 			contractVO = new ContractVO(new ContractVO());
 
 			BeanUtil.copyProperties(decorationContractPO, contractVO, Arrays.asList("contract", "creater", "signner", "filinner"));

@@ -10,19 +10,20 @@ import com.fanglin.utils.Paging;
 
 public interface OccessoriesService {
 
-	public void pageOccessories(Paging paging, List<Filter> filters,int company);
-	
-	public void pageOccessoriesForSupplier(Paging paging, List<Filter> filters, String userId);
-	
-	public int addOccessories(OccessoriesVO occessoriesVO,List<OccessoriesItemVO> OccessoriesItemVOs, String userId) throws FLException;
-	
-	public int updateOccessoriesForStatus(OccessoriesVO occessoriesVO) throws FLException;
-	
+	public void pageOccessories(Paging paging, List<Filter> filters, int company, OccessoriesVO occessoriesVO);
+
+	public void pageOccessoriesForSupplier(Paging paging, List<Filter> filters, String userId, OccessoriesVO occessoriesVO);
+
+	public int addOccessories(OccessoriesVO occessoriesVO, List<OccessoriesItemVO> OccessoriesItemVOs, String userId) throws FLException;
+
 	public int bindOccessories(OccessoriesVO occessoriesVO) throws FLException;
 
-	public int confirmOccessories(OccessoriesVO occessoriesVO, String userId) throws FLException;
+	public int deliveOccessories(OccessoriesVO occessoriesVO, List<OccessoriesItemVO> OccessoriesItemVOs) throws FLException;
 
-	public int balanceOccessories(OccessoriesVO occessoriesVO, String userId) throws FLException;
-	
-	
+	public int receiveOccessories(OccessoriesVO occessoriesVO, List<OccessoriesItemVO> OccessoriesItemVOs) throws FLException;
+
+	public int balanceOccessories(OccessoriesVO occessoriesVO, List<OccessoriesItemVO> OccessoriesItemVOs, String userId) throws FLException;
+
+	public int deleteOccessories(OccessoriesVO occessoriesVO) throws FLException;
+
 }

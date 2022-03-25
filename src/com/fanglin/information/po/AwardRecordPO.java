@@ -42,6 +42,8 @@ public class AwardRecordPO implements java.io.Serializable {
 
 	public static final short ONETYPE_SALES_INT = 3;// 销售
 
+	public static final short SUBTYPE_INWARE_INT = 0; // 入库
+
 	public static final short SUBTYPE_RECEIVE_INT = 5;// 领取
 
 	public static final short SUBTYPE_REFUND_INT = 6;// 退货

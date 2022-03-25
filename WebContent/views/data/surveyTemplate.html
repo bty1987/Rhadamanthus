@@ -1,0 +1,54 @@
+<div id="surveyTemplate">
+	<div class="row">
+		<div class="col-xs-12">
+			<div id="condList" class="fl_search clearfix"></div>
+			<!-- 查询条件-->
+			<div id="resultList" class="clearfix tab-pane active"></div>
+			<!--查询结果-->
+			<div id="pagenation" class="fl-page-wrap clearfix"></div>
+			<!--分页-->
+		</div>
+	</div>
+
+	<div class="modal fade" id="surveyTemplateModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title">调研模板</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="col-md-3 control-label no-padding-right" for="name">模板名称</label>
+							<div class="col-sm-8">
+								<input type="text" class="col-xs-8 m-wrap v_required"
+									maxlength="32" id="name">
+							</div>
+						</div>
+						<hr>
+						<div class="form-horizontal" id="itemlist"></div>
+
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="textBtn"
+						class="btn btn-primary btn-success">文本</button>
+					<button type="button" id="radioBtn"
+						class="btn btn-primary btn-warning">单选</button>
+					<button type="button" id="checkBtn"
+						class="btn btn-primary btn-inverse">多选</button>
+					<button type="button" id="inputBtn"
+						class="btn btn-primary btn-pink">输入框</button>
+					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+        $.loadScript(['js/data/surveyTemplate.js']);
+    </script>
+</div>

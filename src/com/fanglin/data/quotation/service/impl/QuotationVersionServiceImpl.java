@@ -107,12 +107,12 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 		}
 
 		if (quotationVersionVO.getDefaultFlag() == QuotationVersionPO.DEFAULTFLAG_DEFAULT_INT) {
-			quotationVersionDao.updateQuotationVersionForDefault(company, QuotationVersionPO.DEFAULTFLAG_INIT_INT);
+			quotationVersionDao.updateQuotationVersionForDefault(company, QuotationVersionPO.DEFAULTFLAG_INIT_INT, quotationVersionVO.getType());
 		}
 
 		QuotationVersionPO quotationVersionPO = new QuotationVersionPO();
 
-		BeanUtil.copyProperties(quotationVersionVO, quotationVersionPO, Arrays.asList(new String[] { "versionId" }));
+		BeanUtil.copyProperties(quotationVersionVO, quotationVersionPO, Arrays.asList("versionId"));
 
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_QUOTATION_VERSION_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
 
@@ -136,7 +136,7 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 		}
 
 		if (quotationVersionVO.getDefaultFlag() == QuotationVersionPO.DEFAULTFLAG_DEFAULT_INT) {
-			quotationVersionDao.updateQuotationVersionForDefault(quotationVersionPO.getCompany(), QuotationVersionPO.DEFAULTFLAG_INIT_INT);
+			quotationVersionDao.updateQuotationVersionForDefault(quotationVersionPO.getCompany(), QuotationVersionPO.DEFAULTFLAG_INIT_INT, quotationVersionPO.getType());
 		}
 
 		BeanUtil.copyProperties(quotationVersionVO, quotationVersionPO, Arrays.asList("qvId"));

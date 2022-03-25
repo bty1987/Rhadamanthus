@@ -10,6 +10,6 @@ public interface ServicePaymentService {
 
 	public void queryCusServicePayment(Paging paging, List<Filter> filters, ServicePaymentVO servicePaymentVO);
 
-	public long countCusServicePaymentForAmount(ServicePaymentVO servicePaymentVO);
+	public long amountCusServicePayment(ServicePaymentVO servicePaymentVO);
 
 }

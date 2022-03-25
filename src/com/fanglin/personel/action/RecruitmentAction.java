@@ -19,28 +19,27 @@ import com.fanglin.personel.vo.RecruitmentVO;
 @ParentPackage("common")
 @Namespace("/")
 @Controller
-public class RecruitmentAction extends BaseListAction{
-	
-	
+public class RecruitmentAction extends BaseListAction {
+
 	private static final long serialVersionUID = 1L;
 
 	private RecruitmentVO recruitment;
-	
+
 	private List<RecruitmentEducationVO> recruitmentEducations;
-	
+
 	private List<RecruitmentOperationVO> recruitmentOperations;
-	
+
 	@Autowired
 	private RecruitmentService recruitmentService;
-	
+
 	@Action(value = "pageRecruitment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageRecruitment() throws FLException{
-		
+	public String pageRecruitment() throws FLException {
+
 		recruitmentService.pageRecruitment(getPaging(), getFilters());
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryRecruitmentByRid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryRecruitmentByRid() throws FLException {
 
@@ -48,15 +47,23 @@ public class RecruitmentAction extends BaseListAction{
 
 		return SUCCESS;
 	}
-		
-	@Action(value = "addRecruitment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addRecruitment() throws FLException {
 
-		recruitmentService.addRecruitment(recruitment, recruitmentEducations,recruitmentOperations);
+	@Action(value = "checkRecruitment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String checkRecruitment() throws FLException {
+
+		recruitment = recruitmentService.checkRecruitment(recruitment);
 
 		return SUCCESS;
 	}
-	
+
+	@Action(value = "addRecruitment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addRecruitment() throws FLException {
+
+		recruitmentService.addRecruitment(recruitment, recruitmentEducations, recruitmentOperations);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "updateRecruitment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateRecruitment() throws FLException {
 
@@ -64,7 +71,15 @@ public class RecruitmentAction extends BaseListAction{
 
 		return SUCCESS;
 	}
-	
+
+	@Action(value = "updateRecruitmentForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateRecruitmentForAdvance() throws FLException {
+
+		recruitmentService.updateRecruitmentForAdvance(recruitment);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "entryRecruitment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String entryRecruitment() throws FLException {
 
@@ -72,7 +87,7 @@ public class RecruitmentAction extends BaseListAction{
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "cancelRecruitment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String cancelRecruitment() throws FLException {
 
@@ -80,7 +95,7 @@ public class RecruitmentAction extends BaseListAction{
 
 		return SUCCESS;
 	}
-	
+
 	public RecruitmentVO getRecruitment() {
 		return recruitment;
 	}

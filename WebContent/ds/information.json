@@ -204,7 +204,8 @@
     {"key": "0","value": "初始"},
     {"key": "1","value": "采购"},
     {"key": "2","value": "入库"},
-    {"key": "3","value": "结算"}
+    {"key": "3","value": "结算"},
+    {"key": "4","value": "撤销"}
   ],
   "errorCode": 0,
   "errorMsg": null

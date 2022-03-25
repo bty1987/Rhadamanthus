@@ -461,7 +461,7 @@ jQuery(function($) {
 		com.post(api.payment.pageServicePayment, $.extend({}, params["servicePaymentPostData"+servicePayment.type], {"paging.noPage": 1}), function(res){
 			$.exceler({
 				column : [
-					["订单号","decoration.orderId"],
+					["装修单号","decoration.orderId"],
 					['楼盘地址',['decoration.house.village.cityProper.city.name', 'decoration.house.village.cityProper.name', 'decoration.house.village.name', 'decoration.house.houseNumber']],
 					['客户','decoration.customer.name'],
 					['设计师','decoration.designer.currentName'],

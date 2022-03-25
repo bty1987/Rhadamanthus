@@ -86,6 +86,14 @@ jQuery(function ($) {
             receipt.receiptsNum = checkvParams;
             receipt.total += parseFloat(serviceReceipt.checkv);
         }
+        if (parseFloat(serviceReceipt.advance) != 0) {
+            var tem = {
+                "money": parseFloat(serviceReceipt.advance),
+                "paymentWay": "预付款"
+            };
+            receipt.receiptsNum  =  receipt.receiptsNum +1;
+            receipt.receipts.push(tem);
+        }
 
         if (serviceReceipt.des && serviceReceipt.des != "") {
             serviceReceiptDes += serviceReceipt.des + " ";

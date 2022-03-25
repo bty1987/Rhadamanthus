@@ -9,22 +9,22 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="background",catalog="customer")
-public class BackgroundPO implements Serializable{
+@Table(name = "background", catalog = "customer")
+public class BackgroundPO implements Serializable {
 
 	private static final long serialVersionUID = 1220920179779677394L;
-	
+
 	public static final String COLUMN_UNIONID_STR = "unionId";
-	
+
 	private long bid;
-	
+
 	private String unionId;
-	
+
 	private String path;
 
 	@Id
 	@GeneratedValue
-	@Column(name="bid")
+	@Column(name = "bid")
 	public long getBid() {
 		return bid;
 	}
@@ -33,7 +33,7 @@ public class BackgroundPO implements Serializable{
 		this.bid = bid;
 	}
 
-	@Column(name="unionId")
+	@Column(name = "unionId")
 	public String getUnionId() {
 		return unionId;
 	}
@@ -42,7 +42,7 @@ public class BackgroundPO implements Serializable{
 		this.unionId = unionId;
 	}
 
-	@Column(name="path")
+	@Column(name = "path")
 	public String getPath() {
 		return path;
 	}
@@ -50,5 +50,5 @@ public class BackgroundPO implements Serializable{
 	public void setPath(String path) {
 		this.path = path;
 	}
-	
+
 }

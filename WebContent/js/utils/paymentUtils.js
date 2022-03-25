@@ -549,7 +549,7 @@ var paymentUtils = {
                     propertyArr.push(["会员号:", v.mno, "grey"]);
                     break;
                 case "orderId":
-                    propertyArr.push(["订单号:", decoration.orderId, "blue"]);
+                    propertyArr.push(["装修单号:", decoration.orderId, "blue"]);
                     break;
                 case "materialNo":
                     propertyArr.push(["主材号:", decoration.no, "blue"]);

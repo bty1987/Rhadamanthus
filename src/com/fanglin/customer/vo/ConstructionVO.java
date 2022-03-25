@@ -4,16 +4,16 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 public class ConstructionVO implements Serializable {
-	
+
 	private static final long serialVersionUID = 833120058577492198L;
-	
+
 	private Long cid;
-	
+
 	private Timestamp createTime;
-	
+
 	private String orderId;
-	
-	public ConstructionVO(){
+
+	public ConstructionVO() {
 		super();
 	}
 

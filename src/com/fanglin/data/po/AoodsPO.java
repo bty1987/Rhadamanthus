@@ -35,6 +35,8 @@ public class AoodsPO implements Serializable {
 	
 	public static final String COLUMN_STATUS_STR = "status";
 	
+	public static final String COLUMN_STATUS_ATTTYPE = "atttype";
+	
 	public static final short STATUS_ENABLE_INT = 0;
 	
 	public static final short CHECKUP_CHECK_INT = 0;
@@ -53,6 +55,10 @@ public class AoodsPO implements Serializable {
 	
 	private int bompany;
 	
+	private int balance;
+	
+	private short atttype;
+
 	public AoodsPO(){
 		super();
 	}
@@ -133,6 +139,22 @@ public class AoodsPO implements Serializable {
 
 	public void setBompany(int bompany) {
 		this.bompany = bompany;
+	}
+	@Column(name = "balance")
+	public int getBalance() {
+		return balance;
+	}
+
+	public void setBalance(int balance) {
+		this.balance = balance;
+	}
+	@Column(name = "atttype")
+	public short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(short atttype) {
+		this.atttype = atttype;
 	}
 
 }

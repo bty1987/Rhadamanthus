@@ -34,7 +34,7 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 	}
 
 	@Override
-	public long countCusSalesPaymentForAmount(String orderId) {
+	public long amountCusSalesPayment(String orderId) {
 
 		String sql = "select sum(IF(payment.salespayment.type in (4,5,6,7),-payment.salespayment.referMoney,payment.salespayment.referMoney)) money from payment.salespayment,sales.sales where sales.sales.sid = payment.salespayment.sid and payment.salespayment.`status` in (1,2) and sales.sales.orderId = :orderId";
 
@@ -42,4 +42,5 @@ public class SalesPaymentDaoImpl extends DaoImpl<SalesPaymentPO> implements Sale
 
 		return total == null ? 0 : total.longValue();
 	}
+
 }

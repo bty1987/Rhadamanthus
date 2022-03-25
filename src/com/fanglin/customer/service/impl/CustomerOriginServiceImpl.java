@@ -73,7 +73,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 	@Autowired
 	private MessageService messageService;
-	
+
 	@Autowired
 	private DecorationServiceImpl decorationService;
 
@@ -139,7 +139,6 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		}
 
 		return customerOriginVO;
-
 	}
 
 	@Override
@@ -327,7 +326,7 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		if (housePO == null) {
 			throw new FLException(130017, "房产不存在");
 		}
-		
+
 		decorationService.checkOverDecoration(customerPO.getCid(), housePO.getHid(), company);
 
 		customerOriginPO.setHouse(housePO);
@@ -339,11 +338,10 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 
 		customerOriginPO.setDesigner(designer);
 		customerOriginPO.setSalesman(salesman);
-		
+
 		customerOriginPO.setDecorationBusitype(new DecorationBusitypePO(customerOriginVO.getDecorationBusitype().getDbid()));
 
 		customerOriginDao.update(customerOriginPO);
-
 	}
 
 	@Override
@@ -367,7 +365,6 @@ public class CustomerOriginServiceImpl implements CustomerOriginService {
 		customerOriginPO.setStatus(CustomerOriginPO.STATUS_COMMIT_INT);
 
 		customerOriginDao.update(customerOriginPO);
-
 	}
 
 	@Override

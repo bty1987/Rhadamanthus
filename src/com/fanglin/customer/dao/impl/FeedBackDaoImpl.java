@@ -2,6 +2,7 @@ package com.fanglin.customer.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
@@ -24,7 +25,7 @@ public class FeedbackDaoImpl extends DaoImpl<FeedbackPO> implements FeedbackDao 
 		PagingQuery<FeedbackPO> query = pagingQuery(paging, FeedbackPO.class);
 
 		if (company != CompanyPO.TYPE_HEADQUARTER_INT) {
-			query.add(query.getCriterion(FeedbackPO.COLUMN_COMPANY_STR, company, "eq"));
+			query.alias("company", "company").add(Restrictions.eq("company.cid", company));
 		}
 
 		queryFilterExcute(query, filters);
@@ -57,4 +58,5 @@ public class FeedbackDaoImpl extends DaoImpl<FeedbackPO> implements FeedbackDao 
 			}
 		}
 	}
+
 }

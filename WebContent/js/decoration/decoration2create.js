@@ -183,7 +183,7 @@ jQuery(function($) {
 
                 var decoration = res.decorations[0];
 
-                com.showTip(com.focusPage("#customerId"), "订单已存在.订单号:" + decoration.orderId + ",订单所属设计师:" + decoration.designer.currentName, "left");
+                com.showTip(com.focusPage("#customerId"), "装修单已存在.装修单号:" + decoration.orderId + ",所属设计师:" + decoration.designer.currentName, "left");
                 orderEntry.decorationFlag = true;
                 
                 key = "" , value = "";
@@ -220,10 +220,10 @@ jQuery(function($) {
 		com.post(api.data.queryHouseByNoAHnum, housePostData, function (res) {
 			com.post(api.decoration.checkDecoration, {"decoration.house.hid": res.house.hid}, function (des) {
 				if (des.decoration && des.decoration.orderId) {
-					com.showTip(orderEntry.orderItems.houseNumber, "订单已存在：订单号：" + des.decoration.orderId + " 订单所属设计师:" + des.decoration.designer.currentName, "right");
+					com.showTip(orderEntry.orderItems.houseNumber, "装修单已存在.装修单号:" + des.decoration.orderId + " 所属设计师:" + des.decoration.designer.currentName, "right");
 					orderEntry.repeatFlg = true;
 				} else {
-                    com.showConfirm("已有该房产信息，是否绑定?", function () {
+                    com.showConfirm("已有该房产信息,是否绑定?", function () {
 						orderEntry.houseItems.hid = res.house.hid;
 						orderEntry.repeatFlg = false;
 						orderEntry.orderItems.houseArea.val(res.house.buildArea);

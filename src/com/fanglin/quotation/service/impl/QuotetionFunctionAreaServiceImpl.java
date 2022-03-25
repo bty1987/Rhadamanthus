@@ -136,15 +136,22 @@ public class QuotetionFunctionAreaServiceImpl implements QuotetionFunctionAreaSe
 
 			for (FunctionAreaItemPO functionAreaItemPO : functionAreaItemPOs) {
 
-				short itemType = QuotationFunctionAreaItemPO.TYPE_QUOTATION_COMMON_SHORT;
+				short itemType = QuotationFunctionAreaItemPO.TYPE_COMMON_INT;
 
 				QuotetionFunctionAreaItemVO quotetionFunctionAreaItemVO = new QuotetionFunctionAreaItemVO();
 
 				QuotationItemPO quotationItemPO = functionAreaItemPO.getQuotationItem();
 
-				if (functionAreaItemPO.getFunctionArea().getType() == FunctionAreaPO.TYPE_AI_INT) {
+				if (functionAreaItemPO.getFunctionArea().getType() == FunctionAreaPO.TYPE_IGNORE_INT) {
+					itemType = QuotationFunctionAreaItemPO.TYPE_IGNORE_INT;
+				}
 
-					itemType = QuotetionFunctionAreaItemPO.TYPE_QUOTATION_FIX_SHORT;
+				if (functionAreaItemPO.getFunctionArea().getType() == FunctionAreaPO.TYPE_COST_INT) {
+					itemType = QuotationFunctionAreaItemPO.TYPE_COST_INT;
+				}
+
+				if (quotationItemPO.getType() == QuotationItemPO.TYPE_COST_INT) {
+					itemType = QuotationFunctionAreaItemPO.TYPE_COST_INT;
 				}
 
 				quotetionFunctionAreaItemVO.setQfaid(quotetionFunctionAreaPO.getQfaId());

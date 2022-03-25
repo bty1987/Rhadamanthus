@@ -20,31 +20,31 @@ public class PictureAction extends BaseListAction {
 
 	@Autowired
 	private DecorationPictureService decorationPictureService;
-	
+
 	@Autowired
 	private ConstructionDrawingService constructionDrawingService;
-	
+
 	private String orderId;
-	
+
 	private String unionId;
-	
+
 	private Long cid;
-	
+
 	private Short schedule;
-	
-	@Action(value = "queryCusDecorationPicture", results = {@Result (name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
+
+	@Action(value = "queryCusDecorationPicture", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCusDecorationPicture() {
-		
+
 		decorationPictureService.queryCusDecorationPicture(getPaging(), getFilters(), orderId);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "queryCusConstructionDrawing", results = {@Result (name = "success", type = "json", params = {"ignoreHierarchy", "false"})}, params = {"contentType", "text/html"})
+
+	@Action(value = "queryCusConstructionDrawing", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCusConstructionDrawing() {
-		
+
 		constructionDrawingService.queryCusConstructionDrawing(getPaging(), getFilters(), cid, schedule);
-		
+
 		return SUCCESS;
 	}
 
@@ -79,5 +79,5 @@ public class PictureAction extends BaseListAction {
 	public void setUnionId(String unionId) {
 		this.unionId = unionId;
 	}
-	
+
 }

@@ -48,13 +48,12 @@ public class MaterialPaymentServiceImpl implements MaterialPaymentService {
 		}
 
 		paging.setData(materialPaymentVOs);
-
 	}
 
 	@Override
 	public long countCusMaterialPaymentForAmount(MaterialPaymentVO materialPaymentVO) {
 
-		long total = materialPaymentDao.countCusMaterialPaymentForAmount(materialPaymentVO.getOrderId());
+		long total = materialPaymentDao.amountCusMaterialPayment(materialPaymentVO.getOrderId());
 
 		return total;
 	}

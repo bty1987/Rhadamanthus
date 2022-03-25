@@ -46,6 +46,8 @@ public class QuotationVersionPO implements Serializable {
 
 	private int offset;
 
+	private short type;
+
 	private short defaultFlag;
 
 	private String comment;
@@ -131,6 +133,15 @@ public class QuotationVersionPO implements Serializable {
 
 	public void setOffset(int offset) {
 		this.offset = offset;
+	}
+
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
 	}
 
 	@Column(name = "defaultFlag")

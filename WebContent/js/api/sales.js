@@ -1,14 +1,34 @@
 $.extend(api.index, {
-    querySalesIndex: {url: "views/sales/sales.html"},
-    salesItemDetialIndex: {url: "views/sales/salesItem.html"},
-    addSalesItemsIndex: {url: "views/sales/sales2add.html"},
-    refundsItemDetialIndex: {url: "views/sales/refundsItem.html"},
-    salesCollectionIndex: {url: "views/sales/sales4payment.html"},
-    salesPaymentReceiptIndex: {url: "/views/payment/salesPaymentReceipt.html"},
-    salesPrintIndex: {url: "/views/sales/sales2print.html"},
-    salesRefundsPrintIndex: {url: "/views/sales/refunds2print.html"},
-    salesActivityIndex:{url:"/views/sales/sales4activity.html"},
-    salesSupplement: {url: "views/sales/sales2supple.html"}
+    querySalesIndex: {
+        url: "views/sales/sales.html"
+    },
+    salesItemDetialIndex: {
+        url: "views/sales/salesItem.html"
+    },
+    addSalesItemsIndex: {
+        url: "views/sales/sales2add.html"
+    },
+    refundsItemDetialIndex: {
+        url: "views/sales/refundsItem.html"
+    },
+    salesCollectionIndex: {
+        url: "views/sales/sales4payment.html"
+    },
+    salesPaymentReceiptIndex: {
+        url: "/views/payment/salesPaymentReceipt.html"
+    },
+    salesPrintIndex: {
+        url: "/views/sales/sales2print.html"
+    },
+    salesRefundsPrintIndex: {
+        url: "/views/sales/refunds2print.html"
+    },
+    salesActivityIndex: {
+        url: "/views/sales/sales4activity.html"
+    },
+    salesSupplement: {
+        url: "views/sales/sales2supple.html"
+    }
 });
 
 $.extend(api, {
@@ -17,8 +37,7 @@ $.extend(api, {
             url: "addSales.do",
             type: "update",
             tranargs: {
-                args: ["sales.total","sales.maling","sales.coupon","salesItems.purchase","salesItems.selling","salesItems.discount","salesItems.disPrice",
-                    "salesItems.postDis","salesItems.price","salesItems.num","salesItems.total","salesItems.rawCvalue","salesItems.cvalue"]
+                args: ["sales.total", "sales.maling", "sales.coupon", "salesItems.purchase", "salesItems.selling", "salesItems.discount", "salesItems.disPrice", "salesItems.postDis", "salesItems.price", "salesItems.num", "salesItems.total", "salesItems.rawCvalue", "salesItems.cvalue"]
             }
         },
         pageSales: {
@@ -26,7 +45,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["total","maling","coupon","depositpay","fullpay","amount","venderMaling"]
+                args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
             }]
         },
         pageSalesForAdvance: {
@@ -34,7 +53,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["total","maling","coupon","depositpay","fullpay","amount","venderMaling"]
+                args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
             }]
         },
         pageSalesForBalance: {
@@ -42,7 +61,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["total","coupon","depositpay","fullpay","amount","venderMaling"]
+                args: ["total", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
             }]
         },
         pageSalesForDompany: {
@@ -50,7 +69,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["total","maling","coupon","depositpay","fullpay","amount","venderMaling"]
+                args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
             }]
         },
 
@@ -59,7 +78,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["total","coupon","depositpay","fullpay","amount","venderMaling"]
+                args: ["total", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
             }]
         },
 
@@ -68,12 +87,18 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "sales",
-                args: ["depositpay","fullpay","total","amount","maling","venderMaling","coupon"]
+                args: ["depositpay", "fullpay", "total", "amount", "maling", "venderMaling", "coupon"]
             }]
         },
-        querySalesByNo: {url: "querySalesByNo.do"},
-        updateSales: {url: "updateSales.do"},
-        updateSalesForBelong: {url: "updateSalesForBelong.do"},
+        querySalesByNo: {
+            url: "querySalesByNo.do"
+        },
+        updateSales: {
+            url: "updateSales.do"
+        },
+        updateSalesForBelong: {
+            url: "updateSalesForBelong.do"
+        },
         updateSalesForCoupon: {
             url: "updateSalesForCoupon.do",
             type: "update",
@@ -88,17 +113,25 @@ $.extend(api, {
                 args: ["sales.venderMaling"]
             }
         },
-        querySalesForGrade:{url: "querySalesForGrade.do"},
-        updateSalesForAdvance: {url:"updateSalesForAdvance.do"},
-        terminalSales:{url: "terminalSales.do"},
-        finishSales:{url: "finishSales.do"},
+        querySalesForGrade: {
+            url: "querySalesForGrade.do"
+        },
+        updateSalesForAdvance: {
+            url: "updateSalesForAdvance.do"
+        },
+        terminalSales: {
+            url: "terminalSales.do"
+        },
+        finishSales: {
+            url: "finishSales.do"
+        },
 
         querySalesItemBySid: {
             url: "querySalesItemBySid.do",
             type: "query",
             tranargs: [{
                 result: "salesItems",
-                args: ["purchase", "selling", "discount", "disPrice", "postDis", "price", "num","total", "rawCvalue", "cvalue", "punum", "xgnum"]
+                args: ["purchase", "selling", "discount", "disPrice", "postDis", "price", "num", "total", "rawCvalue", "cvalue", "punum", "xgnum"]
             }]
         },
         querySalesItemBySids: {
@@ -106,7 +139,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "salesItems",
-                args: ["purchase", "selling", "discount", "disPrice", "postDis", "price", "num","total", "rawCvalue", "cvalue", "punum", "xgnum"]
+                args: ["purchase", "selling", "discount", "disPrice", "postDis", "price", "num", "total", "rawCvalue", "cvalue", "punum", "xgnum"]
             }]
         },
         addSalesItem: {
@@ -114,10 +147,10 @@ $.extend(api, {
             intercept: true,
             type: "update",
             tranargs: {
-                args: ["sales.total","salesItem.purchase", "salesItem.selling", "salesItem.discount", "salesItem.disPrice", "salesItem.postDis", "salesItem.price", "salesItem.num","salesItem.total", "salesItem.rawCvalue", "salesItem.cvalue"],
-                query:[{
+                args: ["sales.total", "salesItem.purchase", "salesItem.selling", "salesItem.discount", "salesItem.disPrice", "salesItem.postDis", "salesItem.price", "salesItem.num", "salesItem.total", "salesItem.rawCvalue", "salesItem.cvalue"],
+                query: [{
                     result: "salesItem",
-                    args: ["disPrice","discount","num","postDis","price","purchase","rawCvalue","selling","total","cvalue"]
+                    args: ["disPrice", "discount", "num", "postDis", "price", "purchase", "rawCvalue", "selling", "total", "cvalue"]
                 }]
             }
         },
@@ -126,7 +159,7 @@ $.extend(api, {
             intercept: true,
             type: "update",
             tranargs: {
-                args: ["salesItem.num","salesItem.total", "sales.total"],
+                args: ["salesItem.num", "salesItem.total", "sales.total"],
                 query: [{
                     result: "salesItem",
                     args: ["num", "total"]
@@ -146,11 +179,11 @@ $.extend(api, {
             intercept: true,
             type: "update",
             tranargs: {
-                args: ["sales.total","salesItem.purchase", "salesItem.selling", "salesItem.discount", "salesItem.disPrice", "salesItem.postDis", "salesItem.price", "salesItem.num","salesItem.total", "salesItem.rawCvalue", "salesItem.cvalue"]
+                args: ["sales.total", "salesItem.purchase", "salesItem.selling", "salesItem.discount", "salesItem.disPrice", "salesItem.postDis", "salesItem.price", "salesItem.num", "salesItem.total", "salesItem.rawCvalue", "salesItem.cvalue"]
             }
         },
 
-        queryRefundsBySid:{
+        queryRefundsBySid: {
             url: "queryRefundsBySid.do",
             type: "query",
             tranargs: [{
@@ -165,23 +198,59 @@ $.extend(api, {
             tranargs: [{
                 result: "refundsItems",
                 args: ["num", "total"]
-            },{
+            }, {
                 result: "refundsItems-salesItem",
                 args: ["purchase", "selling", "discount", "disPrice", "postDis", "price", "num", "total", "rawCvalue", "cvalue"]
             }]
         },
-        
+        pageOales: {
+            url: "pageOales.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["total", "award", "profit"]
+            }]
+        },
+        queryOalesByOrderId: {
+            url: "queryOalesByOrderId.do",
+            type: "query",
+            tranargs: [{
+                result: "oaleses",
+                args: ["total", "award", "profit"]
+            }]
+        },
+        addOales: {
+            url: "addOales.do",
+            type: "update",
+            tranargs: {
+                args: ["oales.total"]
+            }
+        },
+        awardOales: {
+            url: "awardOales.do",
+            type: "update",
+            tranargs: {
+                args: ["oales.award"]
+            }
+        },
+        profitOales: {
+            url: "profitOales.do",
+            type: "update",
+            tranargs: {
+                args: ["oales.profit"]
+            }
+        },
+
         pageSalesBalance: {
             url: "pageSalesBalance.do",
             type: "query",
             tranargs: [{
                 result: "paging-data",
                 args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance"]
-            },{
+            }, {
                 result: "paging-data-sales",
-                args: ["total","maling","coupon","depositpay","fullpay","amount","venderMaling"]
-            }
-            ]
+                args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
+            }]
         },
 
         pageSalesBalanceForDompany: {
@@ -190,11 +259,10 @@ $.extend(api, {
             tranargs: [{
                 result: "paging-data",
                 args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance"]
-            },{
+            }, {
                 result: "paging-data-sales",
-                args: ["total","maling","coupon","depositpay","fullpay","amount","venderMaling"]
-            }
-            ]
+                args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
+            }]
         },
 
         updateSalesBalanceForVBalance: {
@@ -215,19 +283,29 @@ $.extend(api, {
             }
         },
 
-        rpreSalesBalance: {url: "rpreSalesBalance.do"},
+        rpreSalesBalance: {
+            url: "rpreSalesBalance.do"
+        },
 
-        passSalesBalance: {url: "passSalesBalance.do"},
-        preSalesBalance: {url: "preSalesBalance.do"},
-        vpostSalesBalance: {url: "vpostSalesBalance.do"},
-        postSalesBalance: {url: "postSalesBalance.do"},
+        passSalesBalance: {
+            url: "passSalesBalance.do"
+        },
+        preSalesBalance: {
+            url: "preSalesBalance.do"
+        },
+        vpostSalesBalance: {
+            url: "vpostSalesBalance.do"
+        },
+        postSalesBalance: {
+            url: "postSalesBalance.do"
+        },
         querySalesBalanceItemBySbid: {
             url: "querySalesBalanceItemBySbid.do",
             type: "query",
             tranargs: [{
                 result: "salesBalanceItems",
                 args: ["cvalue", "num", "rawCvalue", "total"]
-            },{
+            }, {
                 result: "salesBalanceItems-salesItem",
                 args: ["cvalue", "disPrice", "discount", "num", "postDis", "price", "purchase", "rawCvalue", "selling", "total"]
             }]
@@ -237,7 +315,7 @@ $.extend(api, {
             url: "addSalesActivityItem.do",
             type: "update",
             tranargs: {
-                args: ["salesActivityItems.money","salesActivityItems.num", "salesActivityItems.integral", "salesActivity.amount"]
+                args: ["salesActivityItems.money", "salesActivityItems.num", "salesActivityItems.integral", "salesActivity.amount"]
             }
         },
 
@@ -246,13 +324,13 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "salesActivityItems",
-                args: ["money","num", "integral"]
+                args: ["money", "num", "integral"]
             }]
         },
-        amountSalesActivity : {
+        amountSalesActivity: {
             url: "amountSalesActivity.do"
         },
-        amountSalesActivityForActivity : {
+        amountSalesActivityForActivity: {
             url: "amountSalesActivityForActivity.do",
             type: "query",
             tranargs: [{
@@ -260,7 +338,7 @@ $.extend(api, {
                 args: ["amount"]
             }]
         },
-        amountSalesActivityForPayment : {
+        amountSalesActivityForPayment: {
             url: "amountSalesActivityForPayment.do",
             type: "query",
             tranargs: [{
@@ -269,23 +347,41 @@ $.extend(api, {
             }]
         },
 
-        updateSalesForActivity :{url:"updateSalesForActivity.do"},
+        updateSalesForActivity: {
+            url: "updateSalesForActivity.do"
+        },
 
-        abateSalesActivityItem :{url:"abateSalesActivityItem.do"},
-        receiveSalesActivityItem :{url:"receiveSalesActivityItem.do"},
+        abateSalesActivityItem: {
+            url: "abateSalesActivityItem.do"
+        },
+        receiveSalesActivityItem: {
+            url: "receiveSalesActivityItem.do"
+        },
 
-        deliveSalesActivityItem :{url:"deliveSalesActivityItem.do"},
-        unrefundSalesActivityItem :{url:"unrefundSalesActivityItem.do"},
-        upgradeSalesActivityItem :{url:"upgradeSalesActivityItem.do"},
-        refundSalesActivityItem :{url:"refundSalesActivityItem.do"},
-        expendSalesActivityItem :{url:"expendSalesActivityItem.do"},
-        discountSalesActivityItem :{url:"discountSalesActivityItem.do"},
+        deliveSalesActivityItem: {
+            url: "deliveSalesActivityItem.do"
+        },
+        unrefundSalesActivityItem: {
+            url: "unrefundSalesActivityItem.do"
+        },
+        upgradeSalesActivityItem: {
+            url: "upgradeSalesActivityItem.do"
+        },
+        refundSalesActivityItem: {
+            url: "refundSalesActivityItem.do"
+        },
+        expendSalesActivityItem: {
+            url: "expendSalesActivityItem.do"
+        },
+        discountSalesActivityItem: {
+            url: "discountSalesActivityItem.do"
+        },
         pageSalesForPompany: {
             url: "pageSalesForPompany.do",
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["total","maling","coupon","depositpay","fullpay","interceptount","venderMaling","amount"]
+                args: ["total", "maling", "coupon", "depositpay", "fullpay", "interceptount", "venderMaling", "amount"]
             }]
         },
 
@@ -294,7 +390,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["total","coupon","depositpay","fullpay","amount","venderMaling"]
+                args: ["total", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
             }]
         },
 
@@ -304,11 +400,10 @@ $.extend(api, {
             tranargs: [{
                 result: "paging-data",
                 args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance"]
-            },{
+            }, {
                 result: "paging-data-sales",
-                args: ["total","maling","coupon","depositpay","fullpay","amount","venderMaling"]
-            }
-            ]
+                args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
+            }]
         },
 
         pageSalesForSupplier: {
@@ -316,7 +411,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["total","maling","coupon","depositpay","fullpay","amount","venderMaling"]
+                args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
             }]
         },
 
@@ -326,11 +421,10 @@ $.extend(api, {
             tranargs: [{
                 result: "paging-data",
                 args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance"]
-            },{
+            }, {
                 result: "paging-data-sales",
-                args: ["total","maling","coupon","depositpay","fullpay","amount","venderMaling"]
-            }
-            ]
+                args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
+            }]
         },
         pageSalesBalanceForCheck: {
             url: "pageSalesBalanceForCheck.do",
@@ -338,11 +432,10 @@ $.extend(api, {
             tranargs: [{
                 result: "paging-data",
                 args: ["balance", "difference", "total", "allowance", "vbalance", "pbalance"]
-            },{
+            }, {
                 result: "paging-data-sales",
-                args: ["total","maling","coupon","depositpay","fullpay","amount","venderMaling"]
-            }
-            ]
+                args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
+            }]
         },
         pageSalesByOrderId: {
             url: "pageSalesByOrderId.do",
@@ -352,57 +445,86 @@ $.extend(api, {
                 args: ["total", "maling", "coupon", "depositpay", "fullpay", "amount", "venderMaling"]
             }]
         },
-        advSalesBalance: {url: "advSalesBalance.do"},
-        revSalesBalance: {url: "revSalesBalance.do"},
-        pageSalesActivity : {
+        advSalesBalance: {
+            url: "advSalesBalance.do"
+        },
+        revSalesBalance: {
+            url: "revSalesBalance.do"
+        },
+        pageSalesActivity: {
             url: "pageSalesActivity.do",
             type: "query",
             tranargs: [{
                 result: "paging-data-sales",
-                args: ["total","fullpay","depositpay","amount","maling","coupon","venderMaling"]
+                args: ["total", "fullpay", "depositpay", "amount", "maling", "coupon", "venderMaling"]
             }]
         },
-        querySalesFunction: {url: "querySalesFunction.do"},
-        querySalesFunctionByName: {url: "querySalesFunctionByName.do"},
-       
-        pageSalesDeliveryItem:{
-        	url: "pageSalesDeliveryItem.do",
-        	type: "query",
-        	tranargs: [{
-                result: "paging-data-salesItem",
-                args: ["initnum","num"]
-            }]	
+        querySalesFunction: {
+            url: "querySalesFunction.do"
         },
-        pageSalesDeliveryItemForSupplier:{
+        querySalesFunctionByName: {
+            url: "querySalesFunctionByName.do"
+        },
+
+        pageSalesDeliveryItem: {
+            url: "pageSalesDeliveryItem.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data-salesItem",
+                args: ["initnum", "num"]
+            }]
+        },
+        pageSalesDeliveryItemForSupplier: {
             url: "pageSalesDeliveryItemForSupplier.do",
             type: "query",
             tranargs: [{
                 result: "paging-data-salesItem",
-                args: ["initnum","num"]
-            }]	
+                args: ["initnum", "num"]
+            }]
         },
-        querySalesDeliveryItem:{
+        querySalesDeliveryItem: {
             url: "querySalesDeliveryItem.do",
             type: "query",
             tranargs: [{
                 result: "salesDeliveryItems-salesItem",
-                args: ["initnum","num"]
-            }]  
+                args: ["initnum", "num"]
+            }]
         },
-        
-        tranSalesDeliveryItem:{url:"tranSalesDeliveryItem.do"},
-        checkSalesDeliveryItem:{url:"checkSalesDeliveryItem.do"},
-        confirmSalesDeliveryItem:{url:"confirmSalesDeliveryItem.do"},
-        finishSalesDeliveryItem:{url:"finishSalesDeliveryItem.do"},
-        balanceSalesDeliveryItem:{url:"balanceSalesDeliveryItem.do"},
-        
-        deliveSalesDeliveryItem:{url:"deliveSalesDeliveryItem.do",},
 
-        updateSalesDeliveryItem:{url:"updateSalesDeliveryItem.do",},
+        tranSalesDeliveryItem: {
+            url: "tranSalesDeliveryItem.do"
+        },
+        checkSalesDeliveryItem: {
+            url: "checkSalesDeliveryItem.do"
+        },
+        confirmSalesDeliveryItem: {
+            url: "confirmSalesDeliveryItem.do"
+        },
+        finishSalesDeliveryItem: {
+            url: "finishSalesDeliveryItem.do"
+        },
+        balanceSalesDeliveryItem: {
+            url: "balanceSalesDeliveryItem.do"
+        },
 
-        addSalesPicture:{url:"addSalesPicture.do", intercept: true},
-        querySalesPicture:{url:"querySalesPicture.do"},
-        deleteSalesPicture:{url:"deleteSalesPicture.do"},
-        
+        deliveSalesDeliveryItem: {
+            url: "deliveSalesDeliveryItem.do",
+        },
+
+        updateSalesDeliveryItem: {
+            url: "updateSalesDeliveryItem.do",
+        },
+
+        addSalesPicture: {
+            url: "addSalesPicture.do",
+            intercept: true
+        },
+        querySalesPicture: {
+            url: "querySalesPicture.do"
+        },
+        deleteSalesPicture: {
+            url: "deleteSalesPicture.do"
+        },
+
     }
 });

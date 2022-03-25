@@ -1,6 +1,5 @@
 package com.fanglin.customer.action;
 
-
 import java.util.List;
 
 import org.apache.struts2.convention.annotation.Action;
@@ -24,11 +23,11 @@ public class RepairpayAction extends BaseListAction {
 
 	@Autowired
 	private RepairpayService repairpayService;
-	
+
 	private List<RepairpayVO> repairpays;
-	
+
 	private RepairpayVO repairpay;
-	
+
 	@Action(value = "queryRepairpay", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryRepairpay() throws FLException {
 
@@ -36,7 +35,7 @@ public class RepairpayAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addRepairpay", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addRepairpay() throws FLException {
 
@@ -44,7 +43,7 @@ public class RepairpayAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "deleteRepairpay", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteRepairpay() throws FLException {
 
@@ -68,4 +67,5 @@ public class RepairpayAction extends BaseListAction {
 	public void setRepairpay(RepairpayVO repairpay) {
 		this.repairpay = repairpay;
 	}
+
 }

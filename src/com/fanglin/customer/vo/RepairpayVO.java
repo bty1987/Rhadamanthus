@@ -10,28 +10,28 @@ import com.fanglin.personel.vo.UserBaseVO;
 public class RepairpayVO implements Serializable {
 
 	private static final long serialVersionUID = 4284891954704137097L;
-	
+
 	private Long rpid;
-	
+
 	private Long aid;
-	
+
 	private Short type;
-	
+
 	private Long ident;
-	
+
 	private Long money;
-	
+
 	private UserBaseVO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private Short status;
-	
-	public RepairpayVO(){
+
+	public RepairpayVO() {
 		super();
 	}
-	
-	public RepairpayVO(UserBaseVO creater){
+
+	public RepairpayVO(UserBaseVO creater) {
 		super();
 		this.creater = creater;
 	}

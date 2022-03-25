@@ -1,12 +1,19 @@
-<div id="addReducePageContent" class="page-content">
+﻿<div id="addReducePageContent" class="page-content">
+
+    <div id="fl-statement" style="display: none;"></div>
+    
+    <div class="clearfix row" id="decorationInfo"></div>
+
 	<div class="row">
 		<div class="col-xs-12">
-			<div id="condList" class="fl_search clearfix"></div>
+			<div id="condList" class="fl_search clearfix"></div> <!-- 查询条件 -->
 			<div id="resultList" class="clearfix tab-pane active"></div>
+			<div id="pagenation" class="fl-page-wrap clearfix"></div> <!-- 分页 -->
 			<div>
 				<h3 class="clearfix">
 					<a id="add" class="btn btn-minier btn-success pull-left" style="margin-top: 7px;margin-right:10px;"><i class="icon-plus bigger-110"></i>添加</a>
 					<a id="print" class="btn btn-minier btn-purple pull-left" style="margin-top: 7px;margin-right:10px;"><i class="icon-plus bigger-110"></i>打印</a>
+					<a id="btnNotice" class="btn btn-minier btn-inverse pull-left" style="margin-top: 7px;margin-right:10px;"><i class="icon-mail-forward bigger-110"></i>发送</a>
 					<a id="updated" class="btn btn-minier btn-warning pull-left" style="margin-top: 7px;margin-right:10px;"><i class="icon-coffee icon-mail-forward bigger-110"></i>刷新</a>
 					<a id="btnBack" class="btn btn-minier btn-primary pull-left" style="margin-top: 7px;margin-right:10px;"><i class="icon-mail-forward bigger-110"></i>返回</a>
 				</h3>
@@ -54,39 +61,6 @@
 			</div>
 		</div>
 	</div>
-    
-    <div class="modal fade" id="payAddReduceModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span>&times;</span><span class="sr-only">Close</span>
-                    </button>
-                    <h4 class="modal-title" id="addReduceDialog">增减单</h4>
-                </div>
-    
-                <div class="modal-body">
-                    <form class="form-horizontal">
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right" for="addReduceType">下拨类型</label>
-                            <div class="col-sm-9">
-                                <select id="paytype" class="col-xs-10 col-sm-5 v_required">
-                                    <option value="1">正常</option>
-                                    <option value="2">增减</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="space-4"></div>
-                    </form>
-                </div>
-    
-                <div class="modal-footer">
-                    <button type="button" id="payBtn" class="btn btn-primary">保存</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <script type="text/javascript">

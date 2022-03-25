@@ -117,7 +117,7 @@ public class ModuleServiceImpl implements ModuleService {
 			throw new FLException(230010, "角色不存在");
 		}
 
-		if ("1".equals(rolePO.getNo())) {
+		if (RolePO.SUPER_NO_STR.equals(rolePO.getNo())) {
 			List<ModulePO> modulePOs = moduleDao.queryModuleBySystem(moduleVO.getSystem());
 			List<ModuleVO> moduleVOs = new ArrayList<ModuleVO>();
 
@@ -173,7 +173,7 @@ public class ModuleServiceImpl implements ModuleService {
 			throw new FLException(220005, "员工不存在");
 		}
 
-		if ("1".equals(userPO.getUserId())) {
+		if (UserPO.SUPER_USERID_STR.equals(userPO.getUserId())) {
 			List<ModulePO> modulePOs = moduleDao.queryModuleBySystem(moduleVO.getSystem());
 			List<ModuleVO> moduleVOs = new ArrayList<ModuleVO>();
 
@@ -197,6 +197,38 @@ public class ModuleServiceImpl implements ModuleService {
 
 			return new ArrayList<ModuleVO>(modules.values());
 		}
+	}
+
+	@Override
+	public ModuleVO checkModule(ModuleVO moduleVO, String userId) throws FLException {
+
+		UserPO userPO = userDao.queryUserByUserId(userId);
+
+		if (userPO == null) {
+			throw new FLException(220005, "员工不存在");
+		}
+
+		ModulePO modulePO = moduleDao.get(moduleVO.getMid());
+
+		if (modulePO == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		RolePO rolePO = userPO.getRole();
+
+		if (rolePO == null) {
+			throw new FLException(230010, "角色不存在");
+		}
+
+		RoleModulePO roleModulePO = roleModuleDao.queryRoleModule(rolePO.getRid(), modulePO.getMid());
+
+		if (roleModulePO == null && !RolePO.SUPER_NO_STR.equals(rolePO.getNo())) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		convertModule(modulePO, moduleVO);
+
+		return moduleVO;
 	}
 
 	@Override

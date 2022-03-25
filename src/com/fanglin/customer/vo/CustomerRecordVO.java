@@ -10,23 +10,23 @@ import com.fanglin.personel.vo.UserBaseVO;
 public class CustomerRecordVO implements Serializable {
 
 	private static final long serialVersionUID = 2398972944028317523L;
-	
-	private Long crid;                	          
-	
-	private Long csid;								
-	
-	private String comment;							
-	
-	private Short type;								
-	
-	private UserBaseVO operater;						
-	
-	private Timestamp operatTime;			
-	
-	public CustomerRecordVO(){
+
+	private Long crid;
+
+	private Long csid;
+
+	private String comment;
+
+	private Short type;
+
+	private UserBaseVO operater;
+
+	private Timestamp operatTime;
+
+	public CustomerRecordVO() {
 		super();
 	}
-	
+
 	public CustomerRecordVO(UserBaseVO operater) {
 		super();
 		this.operater = operater;
@@ -71,6 +71,7 @@ public class CustomerRecordVO implements Serializable {
 	public void setOperater(UserBaseVO operater) {
 		this.operater = operater;
 	}
+
 	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getOperatTime() {
 		return operatTime;
@@ -79,5 +80,5 @@ public class CustomerRecordVO implements Serializable {
 	public void setOperatTime(Timestamp operatTime) {
 		this.operatTime = operatTime;
 	}
-	
+
 }

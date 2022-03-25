@@ -6,9 +6,9 @@ import com.fanglin.customer.vo.FeedbackDrawingVO;
 import com.fanglin.customer.vo.FeedbackVO;
 
 public interface FeedbackDrawingService {
-	
-	public List<FeedbackDrawingVO> queryFeedbackDrawing(FeedbackVO feedback);
-	
-	public void addFeedbackDrawing(FeedbackDrawingVO feedbackDrawing);
+
+	public List<FeedbackDrawingVO> queryFeedbackDrawing(FeedbackVO feedbackVO);
+
+	public void addFeedbackDrawing(FeedbackDrawingVO feedbackDrawingVO);
 
 }

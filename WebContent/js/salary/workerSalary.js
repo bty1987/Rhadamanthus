@@ -36,6 +36,7 @@ jQuery(function ($) {
         twotype:{},
 
     };
+    
     initUploadBtn();
 
     com.datetime(salary.items.beginTime);
@@ -99,7 +100,7 @@ jQuery(function ($) {
     ]);
 
     var lineprops = [
-        {field: "wsId", name: "多选", type: "checkbox", prop: "wsId"},
+        {field: "wsid", name: "多选", type: "checkbox", prop: "wsid"},
         {field: "orderId", name: "装修单号", prop: "decoration.orderId", clazz: "grey"},
         {field: "village", name: "楼盘", prop: "decoration.house.village.name", clazz: "grey"},
         {field: "houseNumber", name: "楼号", prop: "decoration.house.houseNumber", clazz: "grey"},
@@ -155,9 +156,9 @@ jQuery(function ($) {
             return v.isSend == 1;
         }},
         {name: "图片", clazz: "btn-yellow", handle: function(v){
-            params.wsId = v.wsId;
+            params.wsid = v.wsid;
 
-            managedrawing(v.wsId);
+            managedrawing(v.wsid);
         }},
     ];
     
@@ -211,7 +212,7 @@ jQuery(function ($) {
                     ["等级", "decoration.grade"],
                     ['监理编号', 'decoration.supervisorId'],
                     ['监理', 'decoration.supervisor'],
-                    ["工费Id", "wsId"],
+                    ["工费Id", "wsid"],
                     ["工人姓名", "user.userName"],
                     ["工人工号", "user.userId"],
                     ["工种", "user.duty.name"],
@@ -251,7 +252,6 @@ jQuery(function ($) {
 
             });
         });
-
     });
 
     com.focusPage('a[name="adopt"]', '#pagenation').click(function (v) {
@@ -272,7 +272,7 @@ jQuery(function ($) {
 
             if($v.attr('cwsid')) cwsids.push($v.attr('cwsid'));
 
-            options["workerSalarys[" + i + "].wsId"] = $v.attr('wsid');
+            options["workerSalarys[" + i + "].wsid"] = $v.attr('wsid');
         });
 
         if (cwsids.length > 0) {
@@ -296,31 +296,31 @@ jQuery(function ($) {
     });
 
     function deletebystatus(v) {
-        com.post(api.salary.deleteWorkerSalary, {"workerSalary.wsId": v.wsId}, function (res) {
+        com.post(api.salary.deleteWorkerSalary, {"workerSalary.wsid": v.wsid}, function (res) {
             searcher.doSearch();
         });
     }
 
     function adopt(v) {
-        com.post(api.salary.adoptWorkerSalary, {"workerSalarys[0].wsId": v.wsId}, function (res) {
+        com.post(api.salary.adoptWorkerSalary, {"workerSalarys[0].wsid": v.wsid}, function (res) {
             searcher.doSearch();
         });
     }
 
     function refuse(v) {
-        com.post(api.salary.rejectWorkerSalary, {"workerSalary.wsId": v.wsId}, function (res) {
+        com.post(api.salary.rejectWorkerSalary, {"workerSalary.wsid": v.wsid}, function (res) {
             searcher.doSearch();
         });
     }
 
     function send(v) {
-        com.post(api.salary.sendWorkerSalary, {"workerSalary.wsId": v.wsId}, function (res) {
+        com.post(api.salary.sendWorkerSalary, {"workerSalary.wsid": v.wsid}, function (res) {
             searcher.doSearch();
         });
     }
 
     function cancel(v) {
-        com.post(api.salary.cancelWorkerSalary, {"workerSalary.wsId": v.wsId}, function (res) {
+        com.post(api.salary.cancelWorkerSalary, {"workerSalary.wsid": v.wsid}, function (res) {
             searcher.doSearch();
         });
     }
@@ -365,15 +365,22 @@ jQuery(function ($) {
     });
 
     // 显示图片
-    function managedrawing(wsId) {
+    function managedrawing(wsid) {
+        
         salary.drawingModal.modal("show");
+        
         com.focusPage('#workerDrawing').html("");
-        com.post(api.salary.querySalaryDrawing, {"salaryDrawing.sid": wsId, "salaryDrawing.type": 0}, function (data) {
+        
+        com.post(api.salary.querySalaryDrawing, {"salaryDrawing.sid": wsid, "salaryDrawing.type": 0}, function (data) {
+            
             var workerSourcePics = data.salaryDrawings;
+            
             if (workerSourcePics && workerSourcePics.length) {
+                
                 $.each(workerSourcePics, function (i, value) {
-                    appendGalleryElement("workerDrawing", value);
+                    appendGalleryElement("workerDrawing", value, value.drawingType);
                 });
+                
                 com.popup4photos("#workerDrawing");
             }
         }, null, false);
@@ -385,7 +392,7 @@ jQuery(function ($) {
         com.uploadify("#workerUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {'uploadType': 0}, 1, function(data){
             var options = {};
 
-            options["salaryDrawing.sid"] = params.wsId;
+            options["salaryDrawing.sid"] = params.wsid;
             options["salaryDrawing.name"] = data.strutsUploadsFileName;
             options["salaryDrawing.drawingUrl"] = data.resUrl;
             options["salaryDrawing.drawingType"] = 0;
@@ -394,7 +401,7 @@ jQuery(function ($) {
             com.post(api.salary.addSalaryDrawing, options, function (res) {
                 var drawing = res.salaryDrawing;
 
-                appendGalleryElement("workerDrawing", drawing);
+                appendGalleryElement("workerDrawing", drawing, 0);
                 com.popup4photos("#workerDrawing");
             });
 
@@ -402,18 +409,23 @@ jQuery(function ($) {
         });
     }
 
-    function appendGalleryElement(galleryId, value) {
+    function appendGalleryElement(galleryId, value, type) {
+        
         var gallery = com.focusPage("#" + galleryId);
+        
         var imgLi = $("<li></li>").attr("id", "gallery_li" + value.sdid).addClass("text-center col-sm-4").css("border", "0px").css("border-color", "white").css("padding", "0px").css("height", "150px").css("width", "150px").appendTo(gallery);
         var img = $('<img/>');
         var imgA = $("<a></a>").addClass('cboxElement').attr("target", "_blank").css("height", "150px").append(img).appendTo(imgLi);
-        com.showImg(img, value.drawingUrl, 150, 150, '150x150', null, value.drawingType);
+        
+        com.showImg(img, value.drawingUrl, 150, 150, '150x150', null, type);
+        
         var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
         var toolsA = $("<a></a>").attr("href", "#").on("click", function () {
             com.post(api.salary.deleteSalaryDrawing, {"salaryDrawing.sdid": value.sdid}, function (res) {
                 com.focusPage("#gallery_li" + value.sdid).remove();
             });
         }).appendTo(toolsDiv);
+        
         $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
     }
 

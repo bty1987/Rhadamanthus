@@ -1217,7 +1217,7 @@ jQuery(function ($) {
             com.post(api.decoration.checkDecoration, {"decoration.house.hid": res.house.hid}, function (des) {
 
                 if (des.decoration && des.decoration.orderId) {
-                    com.showTips($("#door"), "订单已存在:订单号:" + des.decoration.orderId + " 订单所属设计师:" + des.decoration.designer.currentName, true);
+                    com.showTips($("#door"), "装修单已存在:装修单号:" + des.decoration.orderId + " 所属设计师:" + des.decoration.designer.currentName, true);
                     decorationDetail.repeatFlg = true;
 
                 } else {

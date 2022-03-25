@@ -172,18 +172,15 @@ public class DecorationServiceImpl implements DecorationService {
 	@Override
 	public void pageDecoration(Paging paging, List<Filter> filters, Authentication authentication, List<Short> statuses) {
 
-		if (filters.size() == 0)
-			return;
+		if (filters.size() == 0) return;
 
-		if (statuses == null || statuses.size() == 0)
-			return;
+		if (statuses == null || statuses.size() == 0) return;
 
 		String userId = authentication.getUserId();
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
-		if (userPO == null)
-			return;
+		if (userPO == null) return;
 
 		filters.add(new Filter("statuses", statuses, "in"));
 
@@ -210,13 +207,11 @@ public class DecorationServiceImpl implements DecorationService {
 	@Override
 	public void pageDecorationForGeneral(Paging paging, List<Filter> filters, Authentication authentication) {
 
-		if (filters.size() == 0)
-			return;
+		if (filters.size() == 0) return;
 
 		UserPO userPO = userDao.queryUserByUserId(authentication.getUserId());
 
-		if (userPO == null)
-			return;
+		if (userPO == null) return;
 
 		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForGeneral(paging, filters, authentication.getCompany());
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
@@ -241,16 +236,14 @@ public class DecorationServiceImpl implements DecorationService {
 	@Override
 	public void pageDecorationForCommon(Paging paging, List<Filter> filters, Authentication authentication) {
 
-		if (filters.size() == 0)
-			return;
+		if (filters.size() == 0) return;
 
 		String userId = authentication.getUserId();
 		int company = authentication.getCompany();
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
-		if (userPO == null)
-			return;
+		if (userPO == null) return;
 
 		List<Integer> designDepartmentIds = null;
 		List<Short> statuses = null;
@@ -305,11 +298,9 @@ public class DecorationServiceImpl implements DecorationService {
 	@Override
 	public void pageDecorationForCompany(Paging paging, List<Filter> filters, int company, List<Short> statuses) {
 
-		if (filters.size() == 0)
-			return;
+		if (filters.size() == 0) return;
 
-		if (statuses == null || statuses.size() == 0)
-			return;
+		if (statuses == null || statuses.size() == 0) return;
 
 		filters.add(new Filter("statuses", statuses, "in"));
 
@@ -335,8 +326,7 @@ public class DecorationServiceImpl implements DecorationService {
 	@Override
 	public void pageDecorationForGrade(Paging paging, List<Filter> filters, int company) {
 
-		if (filters.size() == 0)
-			return;
+		if (filters.size() == 0) return;
 
 		List<DecorationPO> decorationPOs = decorationDao.pageDecorationForGrade(paging, filters, company);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
@@ -395,8 +385,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
-		if (userPO == null)
-			return;
+		if (userPO == null) return;
 
 		filters.add(new Filter("designerId", userPO.getUserId(), "eq"));
 
@@ -427,8 +416,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
-		if (userPO == null)
-			return;
+		if (userPO == null) return;
 
 		filters.add(new Filter("salesmanId", userPO.getUserId(), "eq"));
 
@@ -454,13 +442,11 @@ public class DecorationServiceImpl implements DecorationService {
 	@Override
 	public void pageDecorationForBelong(Paging paging, List<Filter> filters, Authentication authentication) {
 
-		if (filters.size() == 0)
-			return;
+		if (filters.size() == 0) return;
 
 		UserPO userPO = userDao.queryUserByUserId(authentication.getUserId());
 
-		if (userPO == null)
-			return;
+		if (userPO == null) return;
 
 		List<Short> statuses = Arrays.asList(DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT);
 
@@ -488,8 +474,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
-		if (userPO == null)
-			return;
+		if (userPO == null) return;
 
 		filters.add(new Filter("quoterId", userPO.getUserId(), "eq"));
 
@@ -528,8 +513,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
-		if (userPO == null)
-			return;
+		if (userPO == null) return;
 
 		filters.add(new Filter("escorterId", userPO.getUserId(), "eq"));
 
@@ -563,11 +547,9 @@ public class DecorationServiceImpl implements DecorationService {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
-		if (userPO == null)
-			return;
+		if (userPO == null) return;
 
-		if (filters.size() == 0)
-			return;
+		if (filters.size() == 0) return;
 
 		List<Integer> designDepartmentIds = null;
 		List<Short> statuses = null;
@@ -623,24 +605,21 @@ public class DecorationServiceImpl implements DecorationService {
 
 	@Override
 	public void pageDecorationForSalesmanManager(Paging paging, List<Filter> filters, Authentication authentication) {
-		if (filters.size() == 0)
-			return;
+		if (filters.size() == 0) return;
 
 		String userId = authentication.getUserId();
 		int company = authentication.getCompany();
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
-		if (userPO == null)
-			return;
+		if (userPO == null) return;
 
 		List<Integer> salesmanDepartmentIds = null;
 		List<Short> statuses = null;
 
 		List<DecorationSalesmanDepartmentRightPO> decoratoinOrderSalesmanDepartmentRightPOs = decorationSalesmanDepartmentRightDao.queryDecorationSalesmanDepartmentRightByUId(userPO.getUid(), company);
 
-		if (decoratoinOrderSalesmanDepartmentRightPOs.isEmpty())
-			return;
+		if (decoratoinOrderSalesmanDepartmentRightPOs.isEmpty()) return;
 
 		salesmanDepartmentIds = new ArrayList<Integer>();
 
@@ -774,8 +753,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByHid(hid, company);
 
-		if (decorationPO == null)
-			return new DecorationVO();
+		if (decorationPO == null) return new DecorationVO();
 
 		decorationPO.ptvcascade(decorationVO);
 
@@ -813,7 +791,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		DecorationPO decorationPO = new DecorationPO();
 
-		QuotationVersionPO quotationVersionPO = quotationVersionDao.queryQuotationVersionForDefault(company);
+		QuotationVersionPO quotationVersionPO = quotationVersionDao.queryQuotationVersionForDefault(company, decorationVO.getType());
 
 		if (quotationVersionPO == null) {
 			throw new FLException(200022, "报价版本不存在");
@@ -877,8 +855,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		DecorationInfoPO decorationInfo = new DecorationInfoPO(orderId);
 
-		if (decorationInfoVO != null)
-			BeanUtil.copyPropertie(decorationInfoVO, decorationInfo);
+		if (decorationInfoVO != null) BeanUtil.copyPropertie(decorationInfoVO, decorationInfo);
 
 		decorationInfoDao.save(decorationInfo);
 
@@ -1048,18 +1025,18 @@ public class DecorationServiceImpl implements DecorationService {
 		}
 
 		switch (timeType) {
-		case 1:
-			oldTime = decorationPO.getMeasureTime();
-			decorationPO.setMeasureTime(dateTime);
-			break;
-		case 2:
-			oldTime = decorationPO.getContractTime();
-			decorationPO.setContractTime(dateTime);
-			break;
-		case 3:
-			oldTime = decorationPO.getPrecontractTime();
-			decorationPO.setPrecontractTime(dateTime);
-			break;
+			case 1:
+				oldTime = decorationPO.getMeasureTime();
+				decorationPO.setMeasureTime(dateTime);
+				break;
+			case 2:
+				oldTime = decorationPO.getContractTime();
+				decorationPO.setContractTime(dateTime);
+				break;
+			case 3:
+				oldTime = decorationPO.getPrecontractTime();
+				decorationPO.setPrecontractTime(dateTime);
+				break;
 
 		}
 
@@ -1236,7 +1213,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 				for (DecorationPaymentVO decorationPaymentVO : decorationPaymentVOs) {
 
-					if (decorationPaymentVO.getReferMoney() == 0 ) {
+					if (decorationPaymentVO.getReferMoney() == 0) {
 						continue;
 					}
 
@@ -1293,7 +1270,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 				for (DecorationPaymentVO decorationPaymentVO : decorationPaymentVOs) {
 
-					if (decorationPaymentVO.getReferMoney() == 0 ) {
+					if (decorationPaymentVO.getReferMoney() == 0) {
 						continue;
 					}
 

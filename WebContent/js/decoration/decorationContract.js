@@ -1,14 +1,14 @@
-jQuery(function ($) {
-    
+jQuery(function($) {
+
     var decorationContract = {
-            
+
         showtype: params.urlLoadParams.showtype,
-            
+
         items: {
             download: com.focusPage("#download"),
             viewpdf: com.focusPage("#viewpdf"),
             signet: com.focusPage("#signet"),
-            
+
             qrcode: null,
         },
         btns: {
@@ -20,359 +20,550 @@ jQuery(function ($) {
             signBtn: com.focusPage("#signBtn", "#decorationContractModal"),
             backBtn: com.focusPage("#backBtn"),
         },
-        modals:{
+        modals: {
             qrcodeModal: null,
             decorationContractModal: com.focusPage("#decorationContractModal")
         },
-        
-        customer: {
-            customerName: com.focusPage("#customerName", "#customer"),
-            customerGender: com.focusPage("#customerGender", "#customer"),
-            customerPhone: com.focusPage("#customerPhone", "#customer"),
-            customerAddress: com.focusPage("#customerAddress", "#customer"),
-            customerRelationshipType: com.focusPage("#customerRelationshipType", "#customer"),
-            customerIdentity: com.focusPage("#customerIdentity", "#customer")
-        },
-        
+
+        decorationInfo: com.focusPage("#decorationInfo"),
+        customerInfo: com.focusPage("#customerInfo"),
+
         dcid: null,
-        
+
         authFlag: false,
-        
+
         status: {},
-        
+
         pageType: params.urlLoadParams.depage,
     };
-    
-    if (decorationContract.showtype == "design"){
+
+    com.focusPage('#fl-statement').statement("装修单", "合同");
+
+    com.focusPage('#fl-statement2').statement("合同", "列表");
+
+    if (decorationContract.showtype == "design") {
         decorationContract.btns.saveBtn.addClass("hide");
     }
-    
-    console.log(decorationContract);
-    
-    decorationContract.modals.qrcodeModal = com.initForm("qrcodeModal", "二维码", [{"id": "qrcode", "type": "div", "clazz": "qrcode"}], []);
+
+    decorationContract.modals.qrcodeModal = com.initForm("qrcodeModal", "二维码", [{
+        "id": "qrcode",
+        "type": "div",
+        "clazz": "qrcode"
+    }], []);
     decorationContract.items.qrcode = com.focusPage("#qrcode");
 
-    com.post(api.decoration.queryDecorationByOrderId, {"decorationOrderId": params.decorationOrderId}, function(res){
-        
-        var customer = res.decoration.customer;
-        
-        customerItems(customer);
-        
-        decorationContract.authFlag = [1, 2].indexOf(customer.status) != -1;
+    com.post(api.decoration.queryDecorationByOrderId, {
+        "decorationOrderId": params.decorationOrderId
+    }, function(res) {
+
+        var decoration = res.decoration;
+        customerItems(decoration);
+        decorationContract.authFlag = [1, 2].indexOf(decoration.customer.status) != -1;
     });
-    
-    com.post(api.ds.decoration, {}, function (res) {
+
+    com.post(api.ds.decoration, {}, function(res) {
+
         decorationContract.status = res.contractStatus.split("key", "value");
     }, null, false);
-    
-    com.post(api.data.querySignet, {}, function (res) {
+
+    com.post(api.data.querySignet, {}, function(res) {
+
         decorationContract.items.signet.bindData(res.signets, "sid", "name", false);
     });
-    
-    if(decorationContract.pageType == "finance"){
-        //com.focusPage("#customerInfo").hide();
-        com.focusPage("#customerFunction").hide();
-        com.focusPage("#contractFunction").hide();
+
+    if (decorationContract.pageType == "finance") {
+
+        decorationContract.decorationInfo.hide();
+        decorationContract.customerInfo.hide();
     }
 
-    paintingContract();
+    function customerItems(decoration) {
 
-    function paintingContract(){
+        var $widget = $('<div></div>').addClass("").prependTo(decorationContract.customerInfo);
+        var $box = $('<div></div>').addClass("widget-box").appendTo($widget);
+        var $header = $('<div></div>').addClass("widget-header header-color-green").appendTo($box);
 
-        com.post(api.decoration.queryDecorationContractByOrderId, {"decorationContract.orderId": params.decorationOrderId}, function (res) {
-            
-            com.focusPage("#contracts").empty();
-            var decorationContracts = res.decorationContracts;
-            
-            if (decorationContracts.length > 0) {
-                $.each(decorationContracts, function (i, v) {
-                    var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-                    var $liLine = $('<li></li>').addClass('item-orange clearfix');
-                    var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.contract.name));
-                    var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-                    var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+        var name = $('<h4></h4>').attr('id', 'h4name_').text("客户").appendTo($header);
+        var $body = $('<div></div>').addClass("widget-body").appendTo($box);
+        var $main = $('<div></div>').addClass("widget-main").appendTo($body);
+        var $info = $('<div></div>').css("padding", "5px").appendTo($main);
 
-                    var btnView = $('<a></a>').addClass('btn btn-minier btn-purple').html('查看');
-                    var btnCom = $('<a></a>').addClass('btn btn-minier btn-info').html('公司签');
-                    var btnCus = $('<a></a>').addClass('btn btn-minier btn-warning').html('客户签');
-                    var btnSign = $('<a></a>').addClass('btn btn-minier btn-primary').html('已签');
-                    var btnExpire = $('<a></a>').addClass('btn btn-minier btn-danger').html('失效');
-                    var btnContract = $('<a></a>').addClass('btn btn-minier btn-primary').html('归档');
-                    var btnDown = $('<a></a>').addClass('btn btn-minier btn-inverse').html('下载');
-                    
-                    var btnShow = $('<a></a>').addClass('btn btn-minier btn-success').html('显示');
-                    var btnHide = $('<a></a>').addClass('btn btn-minier btn-danger').html('隐藏');
-                    
-                    var btnGraphNotice = $('<a></a>').addClass('btn btn-minier btn-yellow').html('签名通知');
-                    var btnSignNotice = $('<a></a>').addClass('btn btn-minier btn-success').html('客签通知');
-                    var btnViewNotice = $('<a></a>').addClass('btn btn-minier btn-purple').html('查看通知');
-                    var btnDownloadNotice = $('<a></a>').addClass('btn btn-minier btn-inverse').html('下载通知');
-                    
-                    var btnViewQR = $('<a></a>').addClass('btn btn-minier btn-purple').html('二维查看');
-                    var btnGraphQR = $('<a></a>').addClass('btn btn-minier btn-yellow').html('二维签名');
-                    var btnSignQR = $('<a></a>').addClass('btn btn-minier btn-success').html('二维客签');
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('姓名: ' + decoration.customer.name)).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('电话: ' + (decoration.customer.phone == "" ? "暂无" : decoration.customer.phone))).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('地址: ' + (decoration.customer.address == "" ? "暂无" : decoration.customer.address))).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('客户关系: ' + decoration.customer.relationshipType)).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('身份证: ' + (decoration.customer.identity == "" ? "暂无" : decoration.customer.identity))).appendTo($info);
 
-                    var propertyArr = [
-                        ["装修单号: ", v.orderId, "grey"],
-                        ["状态: ", decorationContract.status[v.status], "red"],
-                        ["是否显示: ", v.ishow == 0 ? "显示" : "隐藏", "red"],
-                        ["创建人: ", v.creater.currentName, "grey"],
-                        ["签署人: ", v.signner.currentName, "grey"],
-                        ["归档人: ", v.filinner.currentName, "grey"],
-                        ["创建时间: ", v.createTime, "green"],
-                        ["公司签时间: ", v.comsignTime, "green"],
-                        ["客户签时间: ", v.cussignTime, "green"],
-                        ["归档时间: ", v.filingTime, "green"],
-                    ];
+        var $widget2 = $('<div></div>').addClass("").prependTo(decorationContract.decorationInfo);
+        var $box2 = $('<div></div>').addClass("widget-box").appendTo($widget2);
+        var $header2 = $('<div></div>').addClass("widget-header header-color-orange").appendTo($box2);
 
-                    $.each(propertyArr, function (index, value) {
-                        var $liProperty = $('<li></li>');
-                        $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                        $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                        $liProperty.appendTo($ulProperty);
-                    });
-                    
-                    if (decorationContract.showtype == "design"){
-                        btnCom = btnCus = btnSign = btnExpire = btnContract = btnDown = btnShow = btnHide = btnGraphNotice = btnSignNotice = btnViewNotice =  btnDownloadNotice = {click: function(){}};
-                    }
-                    
-                    if(v.status == 0){
-                        $divBtnWrap.append(btnView).append(btnCom).append(btnCus).append(btnSign).append(btnExpire).append(btnGraphNotice).append(btnSignNotice).append(btnGraphQR).append(btnSignQR);
-                    }
-                    
-                    if(v.status == 1){
-                        $divBtnWrap.append(btnView).append(btnContract);
-                    }
-                    
-                    if([3, 4].indexOf(v.status) != -1) {
-                        $divBtnWrap.append(btnDown);
-                    }
-                    
-                    if(v.ishow == 0) {
-                        $divBtnWrap.append(btnHide);
-                    }
-                    
-                    if(v.ishow == 1) {
-                        $divBtnWrap.append(btnShow);
-                    }
+        var name2 = $('<h4></h4>').attr('id', 'h4name_').text("装修单").appendTo($header2);
 
-                    $divBtnWrap.appendTo($h3);
+        var $body2 = $('<div></div>').addClass("widget-body").appendTo($box2);
+        var $main2 = $('<div></div>').addClass("widget-main").appendTo($body2);
+        var $info2 = $('<div></div>').css("padding", "5px").appendTo($main2);
 
-                    $liLine.append($h3).append($ulProperty).appendTo($ul);
-                    
-                    btnView.click(function () {
-                        viewContract(v.dcid);
-                    });
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('装修单号: ' + decoration.orderId)).appendTo($info2);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('楼盘地址: ' + decoration.house.village.name + " " + decoration.house.houseNumber)).appendTo($info2);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('报价版本: ' + decoration.version.name)).appendTo($info2);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('设计师: ' + decoration.designer.currentName)).appendTo($info2);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('业务员: ' + decoration.salesman.currentName)).appendTo($info2);
 
-                    btnCom.click(function () {
-                        companySign(v.dcid);
-                    });
-
-                    btnCus.click(function () {
-                        customerSign(v.dcid);
-                    });
-
-                    btnSign.click(function () {
-                        signContract(v.dcid);
-                    });
-                    
-                    btnExpire.click(function () {
-                        expireContract(v.dcid);
-                    });
-
-                    btnContract.click(function () {
-                        filingContract(v.dcid);
-                    });
-                    
-                    btnDown.click(function () {
-                        downloadContract(v);
-                    });
-                    
-                    btnShow.click(function(){
-                        showContract(v.dcid, 0);
-                    });
-                    
-                    btnHide.click(function(){
-                        showContract(v.dcid, 1);
-                    });
-
-                    btnGraphNotice.click(function () {
-                        sendNotice("是否发送签章通知", v.dcid, 1);
-                    });
-
-                    btnSignNotice.click(function () {
-                        sendNotice("是否发送签订通知", v.dcid, 2);
-                    });
-
-                    btnViewNotice.click(function () {
-                        sendNotice("是否发送查看通知", v.dcid, 3);
-                    });
-
-                    btnDownloadNotice.click(function () {
-                        sendNotice("是否发送下载通知", v.dcid, 4);
-                    });
-                    
-                    btnViewQR.click(function(){
-                        showQRCode("http://www.fanglinserver.com/platform/" + "/views/contract/redirect.html?dcid=" + v.dcid + "&type=1");
-                    });
-                    
-                    btnGraphQR.click(function(){
-                        showQRCode("http://www.fanglinserver.com/platform/" + "/views/contract/redirect.html?dcid=" + v.dcid + "&type=1");
-                    });
-                    
-                    btnSignQR.click(function(){
-                        showQRCode("http://www.fanglinserver.com/platform/" + "/views/contract/redirect.html?dcid=" + v.dcid + "&type=2");
-                    });
-
-                    $ul.appendTo(com.focusPage("#contracts"));
-                });
-            } else {
-                var $resultList = com.focusPage("#contracts");
-                var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
-                var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
-                var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
-            }
-        });
     }
-    
-    decorationContract.btns.backBtn.on("click", function () {
+    var searcher = new Searcher();
+
+    searcher.set("pageltList", "pageltList", "contracts", api.decoration.queryDecorationContractByOrderId, {
+        "decorationContract.orderId": params.decorationOrderId
+    }, null, null, "decorationContracts", true);
+
+    var lineprops = [{
+        fieId: "orderId",
+        name: "装修单号",
+        prop: "orderId",
+        clazz: "blue",
+    }, {
+        fieId: "name",
+        name: "状态",
+        prop: "status",
+        clazz: "red",
+        dataset: decorationContract.status
+    }, {
+        fieId: "ishow",
+        name: "是否显示",
+        prop: "ishow",
+        clazz: "red",
+        dataset: {
+            0: "显示",
+            1: "隐藏"
+        }
+    }, {
+        fieId: "creater.currentName",
+        name: "创建人",
+        prop: "creater.currentName",
+        clazz: "grey",
+    }, {
+        fieId: "signner.currentName",
+        name: "签署人",
+        prop: "signner.currentName",
+        clazz: "grey",
+        show: function(v) {
+
+            return v.signner.currentName = v.signner.currentName ? v.signner.currentName : "无";
+        }
+    }, {
+        fieId: "filinner.currentName",
+        name: "归档人",
+        prop: "filinner.currentName",
+        clazz: "grey",
+        show: function(v) {
+
+            return v.filinner.currentName = v.filinner.currentName ? v.filinner.currentName : "无";
+        }
+    }, {
+        fieId: "createTime",
+        name: "创建时间",
+        prop: "createTime",
+        clazz: "green ",
+    }, {
+        fieId: "cussignTime",
+        name: "公司签时间",
+        prop: "comsignTime",
+        clazz: "green ",
+        show: function(v) {
+
+            return v.comsignTime = v.comsignTime ? v.comsignTime : "无";
+        }
+    }, {
+        fieId: "brand",
+        name: "客户签时间",
+        prop: "cussignTime",
+        clazz: "green ",
+        show: function(v) {
+
+            return v.cussignTime = v.cussignTime ? v.cussignTime : "无";
+        }
+    }, {
+        fieId: "filingTime",
+        name: "归档时间",
+        prop: "filingTime",
+        clazz: "green ",
+        show: function(v) {
+
+            return v.filingTime = v.filingTime ? v.filingTime : "无";
+        }
+    }, ];
+
+    var cardbtns = [{
+        name: "查看",
+        clazz: "btn-yellow",
+        handle: function(v) {
+
+            viewContract(v.dcid);
+        },
+        show: function(v) {
+
+            return v.status == 0;
+        }
+    }, {
+        name: "归档",
+        clazz: "btn-success",
+        handle: function(v) {
+
+            filingContract(v.dcid);
+        },
+        show: function(v) {
+
+            return v.status == 1;
+        }
+    }, {
+        name: "下载",
+        clazz: "btn-warning",
+        handle: function(v) {
+
+            downloadContract(v);
+        },
+        show: function(v) {
+
+            return [3, 4].indexOf(v.status) != -1;
+
+        }
+    }, {
+        name: "隐藏",
+        clazz: "btn-danger",
+        handle: function(v) {
+
+            showContract(v.dcid, 1);
+        },
+        show: function(v) {
+
+            return v.ishow == 0;
+        }
+    }, {
+        name: "显示",
+        clazz: "btn-inverse",
+        handle: function(v) {
+
+            showContract(v.dcid, 0);
+        },
+        show: function(v) {
+
+            return v.ishow == 1;
+        }
+    }, {
+        name: "已签",
+        clazz: "btn-danger",
+        handle: function(v) {
+
+            signContract(v.dcid);
+        },
+        show: function(v) {
+
+            return v.status == 0;
+        }
+    }, {
+        name: "失效",
+        clazz: "btn-pink",
+        handle: function(v) {
+
+            expireContract(v.dcid);
+        },
+        show: function(v) {
+
+            return v.status == 0;
+        }
+    }, {
+        name: "公司签",
+        clazz: "btn-purple",
+        handle: function(v) {
+
+            companySign(v.dcid);
+        },
+        show: function(v) {
+
+            return v.status == 0;
+        }
+    }, {
+        name: "客户签",
+        clazz: "btn-yellow",
+        handle: function(v) {
+
+            customerSign(v.dcid);
+        },
+        show: function(v) {
+
+            return v.status == 0;
+        }
+    }, {
+        type: "newline"
+    }, {
+        name: "签名通知",
+        clazz: "btn-success",
+        handle: function(v) {
+
+            sendNotice("是否发送签章通知", v.dcid, 1);
+        },
+        show: function(v) {
+
+            return v.status == 0;
+        }
+    }, {
+        name: "客签通知",
+        clazz: "btn-warning",
+        handle: function(v) {
+
+            sendNotice("是否发送签订通知", v.dcid, 2);
+        },
+        show: function(v) {
+
+            return v.status == 0;
+        }
+    }, {
+        name: "二维签名",
+        clazz: "btn-inverse",
+        handle: function(v) {
+
+            showQRCode("http://www.fanglinserver.com/platform/" + "/views/contract/redirect.html?dcid=" + v.dcid + "&type=1");
+        },
+        show: function(v) {
+
+            return v.status == 0;
+        }
+    }, {
+        name: "二维客签",
+        clazz: "btn-danger",
+        handle: function(v) {
+
+            showQRCode("http://www.fanglinserver.com/platform/" + "/views/contract/redirect.html?dcid=" + v.dcid + "&type=2");
+        },
+        show: function(v) {
+
+            return v.status == 0;
+        }
+    }, {
+        name: "查看通知",
+        clazz: "btn-pink",
+        handle: function(v) {
+
+            showContract(v.dcid, 1);
+        },
+        show: function() {
+
+            return false;
+        }
+    }, {
+        name: "下载通知",
+        clazz: "btn-purple",
+        handle: function(v) {
+
+            sendNotice("是否发送下载通知", v.dcid, 4);
+        },
+        show: function() {
+
+            return false;
+        }
+    }, {
+        name: "二维查看",
+        clazz: "btn-yellow",
+        handle: function(v) {
+
+            showQRCode("http://www.fanglinserver.com/platform/" + "/views/contract/redirect.html?dcid=" + v.dcid + "&type=1");
+        },
+        show: function() {
+
+            return false;
+        }
+    }, ];
+
+    searcher.card("contract.name", lineprops, cardbtns).render();
+
+    decorationContract.btns.backBtn.on("click", function() {
+
         com.switchPage(params.historyPage);
     });
-    
-    //跳转创建合同弹窗
-    decorationContract.btns.saveBtn.on("click", function () {
-        
-        if(!decorationContract.authFlag){
+
+    // 跳转创建合同弹窗
+    decorationContract.btns.saveBtn.on("click", function() {
+
+        if (!decorationContract.authFlag) {
             com.showAlert(com.warning, "客户未认证");
             return false;
         }
-        
-        com.popup4page("#layerPopUp", "/views/decoration/decorationContract2create.html", "创建合同", null, function(){
-            paintingContract();
+
+        com.popup4page("#layerPopUp", "/views/decoration/decorationContract2create.html", "创建合同", null, function() {
+
+            searcher.doSearch();
         });
     });
-    
-    //注册按钮
-    decorationContract.btns.register.on("click", function () {
-        com.showConfirm("确定要注册吗?", function () {
-            com.post(api.data.registCustomer, {"customer.cid": params.cid}, function (res) {
+
+    // 注册按钮
+    decorationContract.btns.register.on("click", function() {
+
+        com.showConfirm("确定要注册吗?", function() {
+
+            com.post(api.data.registCustomer, {
+                "customer.cid": params.cid
+            }, function(res) {
+
                 com.showAlert(com.info, "注册成功");
             });
         });
     });
-    
-    //认证按钮
-    decorationContract.btns.authentication.on("click", function () {
-        com.post(api.data.authCustomer, {"customer.cid" : params.cid}, function (res) {
-            //com.popup4frame("认证", res.redirect);
+
+    // 认证按钮
+    decorationContract.btns.authentication.on("click", function() {
+
+        com.post(api.data.authCustomer, {
+            "customer.cid": params.cid
+        }, function(res) {
+
+            // com.popup4frame("认证", res.redirect);
             showQRCode(res.redirect);
         });
     });
-    
-    //认证通知
-    decorationContract.btns.sendAuth.on("click", function () {
-        com.post(api.decoration.sendDecorationContractForAuth, {"decorationContract.orderId" : params.decorationOrderId}, function (res) {
+
+    // 认证通知
+    decorationContract.btns.sendAuth.on("click", function() {
+
+        com.post(api.decoration.sendDecorationContractForAuth, {
+            "decorationContract.orderId": params.decorationOrderId
+        }, function(res) {
+
             com.popup4frame("认证", res.redirect);
         });
     });
-    
-    //确认按钮
-    decorationContract.btns.confirm.on("click", function () {
-        com.post(api.data.confirmCustomer, {"customer.cid": params.cid}, function (res) {
-            customerItems(res.customer);
+
+    // 确认按钮
+    decorationContract.btns.confirm.on("click", function() {
+
+        com.post(api.data.confirmCustomer, {
+            "customer.cid": params.cid
+        }, function(res) {
+
+            searcher.doSearch();
         });
     });
-    
-    decorationContract.btns.signBtn.on('click', function () {
-        
-        com.post(api.decoration.signDecorationContractForCompany, {"decorationContract.dcid" : decorationContract.dcid, "signet.sid" : decorationContract.items.signet.val()});
-        
+
+    decorationContract.btns.signBtn.on('click', function() {
+
+        com.post(api.decoration.signDecorationContractForCompany, {
+            "decorationContract.dcid": decorationContract.dcid,
+            "signet.sid": decorationContract.items.signet.val()
+        });
+
         decorationContract.modals.decorationContractModal.modal("hide");
     });
-    
-    function sendNotice(title, dcid, type){
-        com.showConfirm(title, function () {
-            com.post(api.decoration.sendDecorationContract, {"decorationContract.dcid" : dcid,"decorationContract.type" : type});
+
+    function sendNotice(title, dcid, type) {
+
+        com.showConfirm(title, function() {
+
+            com.post(api.decoration.sendDecorationContract, {
+                "decorationContract.dcid": dcid,
+                "decorationContract.type": type
+            });
         });
     }
-    
-    function showQRCode(url){
-        
+
+    function showQRCode(url) {
+
         decorationContract.items.qrcode.html("").qrcode({
             render: "canvas",
             width: 150,
             height: 150,
             text: url
         });
-        
+
         decorationContract.modals.qrcodeModal.modal('show');
     }
 
-    //公司签按钮
+    // 公司签按钮
     function companySign(dcid) {
+
         decorationContract.dcid = dcid;
         decorationContract.modals.decorationContractModal.modal("show");
     }
 
-    //客户签按钮
-    function customerSign(dcid){
-        com.post(api.decoration.signDecorationContractForCustomer, {"decorationContract.dcid" : dcid, "customer.cid" : params.cid}, function (res) {
-        	 com.popup4frame("客户签", res.redirect);
+    // 客户签按钮
+    function customerSign(dcid) {
+
+        com.post(api.decoration.signDecorationContractForCustomer, {
+            "decorationContract.dcid": dcid,
+            "customer.cid": params.cid
+        }, function(res) {
+
+            com.popup4frame("客户签", res.redirect);
         });
     }
-    
-    //合同查看按钮
+
+    // 合同查看按钮
     function viewContract(dcid) {
-        com.post(api.decoration.viewDecorationContract , {"decorationContract.dcid" : dcid}, function (res) {
-        	com.popup4frame("合同查看", res.redirect);
+
+        com.post(api.decoration.viewDecorationContract, {
+            "decorationContract.dcid": dcid
+        }, function(res) {
+
+            com.popup4frame("合同查看", res.redirect);
         });
     }
-    //合同已签按钮
+    // 合同已签按钮
     function signContract(dcid) {
-        com.showConfirm("是否已签合同?", function () {
-            com.post(api.decoration.affixDecorationContract , {"decorationContract.dcid" : dcid}, function(){
-                paintingContract();
+
+        com.showConfirm("是否已签合同?", function() {
+
+            com.post(api.decoration.affixDecorationContract, {
+                "decorationContract.dcid": dcid
+            }, function() {
+
+                searcher.doSearch();
             });
         });
     }
-    
+
     // 合同失效按钮
     function expireContract(dcid) {
-        com.showConfirm("是否失效合同?", function () {
-            com.post(api.decoration.expireDecorationContract , {"decorationContract.dcid" : dcid}, function(){
-                paintingContract();
+
+        com.showConfirm("是否失效合同?", function() {
+
+            com.post(api.decoration.expireDecorationContract, {
+                "decorationContract.dcid": dcid
+            }, function() {
+
+                searcher.doSearch();
             });
         });
     }
-    
-    //合同归档按钮
+
+    // 合同归档按钮
     function filingContract(dcid) {
-    	com.showConfirm("是否归档?", function () {
-            com.post(api.decoration.filingDecorationContract , {"decorationContract.dcid" : dcid}, function(){
-                paintingContract();
+
+        com.showConfirm("是否归档?", function() {
+
+            com.post(api.decoration.filingDecorationContract, {
+                "decorationContract.dcid": dcid
+            }, function() {
+
+                searcher.doSearch();
             });
-    	});
-    }
-    
-    function downloadContract(v){
-        if(v.status == 3) window.open(v.download);
-        else com.popup("装修单: " + v.orderId + " 合同", config.media + v.path);
-    }
-    
-    function showContract(dcid, ishow){
-        com.post(api.decoration.showDecorationContract , {"decorationContract.dcid" : dcid, "decorationContract.ishow": ishow}, function(){
-            paintingContract();
         });
     }
 
-    function customerItems(customer) {
-        
-        decorationContract.customer.customerName.text(customer.name);
-        decorationContract.customer.customerGender.html(customer.gender);
-        decorationContract.customer.customerPhone.html(customer.phone  == "" ? "暂无" : customer.phone);
-        decorationContract.customer.customerAddress.html(customer.address == "" ? "暂无" : customer.address);
-        decorationContract.customer.customerRelationshipType.html(customer.relationshipType);
-        decorationContract.customer.customerIdentity.html(customer.identity == "" ? "暂无" : customer.identity);
+    function downloadContract(v) {
+
+        if (v.status == 3)
+            window.open(v.download);
+        else
+            com.popup("装修单: " + v.orderId + " 合同", config.media + v.path);
     }
 
+    function showContract(dcid, ishow) {
+
+        com.post(api.decoration.showDecorationContract, {
+            "decorationContract.dcid": dcid,
+            "decorationContract.ishow": ishow
+        }, function() {
+
+            searcher.doSearch();
+        });
+    }
 });

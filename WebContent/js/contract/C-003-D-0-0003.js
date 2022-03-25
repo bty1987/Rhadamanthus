@@ -78,6 +78,11 @@ jQuery(function($) {
         com.focusPage(".finalPaymentGroup", "#form").hide();
     }
     
+    if(contractEdit.contractArgs.company != "1"){
+        com.focusPage(".company", "#form").hide();
+        com.focusPage(".customer", "#form").hide();
+    }
+    
     com.post(api.common.current, {}, function(res){
         contractEdit.current = new Date(res.current);
     }, null, false);
@@ -99,8 +104,22 @@ jQuery(function($) {
         
         contractEdit.cover["cov-orderId"] = contractEdit.decorationOrderId;
         contractEdit.cover["sin-customer-ident"] = customer.identity;
+        contractEdit.cover["sin-customer-name"] = customer.name;
+        
+        com.focusPage("#con-company-name", "#form").val(customer.companyName);
+        
+        contractEdit.cover["cov-company-name"] = customer.companyName;
 
-    });
+    }, null, false);
+    
+    if(contractEdit.contractArgs.company == "1" && contractEdit.customer.type == 0){
+        
+        com.showAlert(com.warning, "客户类型为个人");
+        
+        com.focusPage("#contractPopUp").empty();
+        
+        return false;
+    }
 
     //通过装修单号获取装修款项信息
     com.post(api.payment.queryDecorationPaymentByOrderId, {"decorationPayment.decoration.orderId": contractEdit.decorationOrderId}, function (res) {
@@ -240,8 +259,17 @@ jQuery(function($) {
             
             data["con-contract-total-cn"] = utils.getCNMoney(parseFloat(data["con-contract-total"]));
             
+            if(contractEdit.contractArgs.company == "1"){
+            	delete data["con-company-name"];
+                delete data["con-customer-name"];
+            }
+            
+            if(contractEdit.contractArgs.company != "1"){
+            	delete data["cov-company-name"];
+            	delete data["sin-customer-name"];
+            }
+            
             console.log(data);
-            console.log(contractEdit.table);
             
             var options = {
                 "decorationContract.orderId": params.decorationOrderId,

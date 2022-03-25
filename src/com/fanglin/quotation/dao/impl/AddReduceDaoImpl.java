@@ -23,6 +23,7 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.po.AddReduceDO;
 import com.fanglin.quotation.po.AddReducePO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.Paging;
 
 @Repository("addReduceDao")
@@ -33,9 +34,11 @@ public class AddReduceDaoImpl extends DaoImpl<AddReducePO> implements AddReduceD
 	}
 
 	@Override
-	public List<AddReduceDO> pageAddReduce(Paging paging, List<Filter> filters) {
+	public List<AddReduceDO> pageAddReduce(Paging paging, List<Filter> filters, Integer company) {
 
 		PagingQuery<AddReduceDO> query = pagingQuery(paging, AddReduceDO.class);
+
+		query.add(query.getCriterion("decoration.company", company, "eq"));
 
 		queryFilterExcute(query, filters);
 
@@ -91,8 +94,8 @@ public class AddReduceDaoImpl extends DaoImpl<AddReducePO> implements AddReduceD
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters == null || filters.size() == 0)
-			return;
+		query.alias("decoration", "decoration");
+		if (filters == null || filters.size() == 0) return;
 
 		for (Filter filter : filters) {
 
@@ -100,14 +103,32 @@ public class AddReduceDaoImpl extends DaoImpl<AddReducePO> implements AddReduceD
 			String data = filter.getData();
 			String op = filter.getOp();
 
+			if (field.startsWith("village")) {
+				query.alias("decoration.house", "house");
+				query.alias("house.village", "village");
+			}
+
 			if (AddReducePO.COLUMN_ORDERID_STR.equals(field)) {
-				query.add(query.getCriterion(field, data, op));
+				query.alias("decoration", "decoration");
+				query.add(query.getCriterion("decoration.orderId", data, op));
 			} else if (AddReducePO.COLUMN_STATUS_STR.equals(field)) {
 				query.add(query.getCriterion(field, Short.parseShort(data), op));
 			} else if (AddReducePO.COLUMN_TYPE_STR.equals(field)) {
 				query.add(query.getCriterion(field, Short.parseShort(data), op));
 			} else if (AddReducePO.COLUMN_PAYTYPE_STR.equals(field)) {
 				query.add(query.getCriterion(field, Short.parseShort(data), op));
+			} else if ("designerId".equals(field)) {
+				query.alias("decoration.designer", "designer");
+				query.add(query.getCriterion("designer.userId", data, op));
+			} else if ("buildArea".equals(field)) {
+				int dataF = Integer.parseInt(data);
+				query.alias("decoration.house", "house");
+				query.add(query.getCriterion("house.buildArea", Arith.mul(dataF, 1000000), op));
+			} else if ("houseNumber".equals(field)) {
+				query.alias("decoration.house", "house");
+				query.add(query.getCriterion("house.houseNumber", data, op));
+			} else if ("villageId".equals(field)) {
+				query.add(query.getCriterion("village.no", data, op));
 			}
 		}
 	}

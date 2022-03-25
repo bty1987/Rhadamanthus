@@ -24,31 +24,31 @@ import com.fanglin.utils.DateUtil;
 public class AepairPO implements Serializable {
 
 	private static final long serialVersionUID = 630431659771884928L;
-	
+
 	public static final String COLUMN_ORDERID_STR = "decoration.orderId";
-	
+
 	public static final String COLUMN_CREATER_USERID_STR = "creater.userId";
 
 	public static final String COLUMN_UPDATE_USERID_STR = "updater.userId";
-	
-	public static final short STATUS_INIT_INT = 0;  //初始
-	
-	public static final short STATUS_REPAIR_INT = 1;  //维修
-	
-	public static final short STATUS_FINISH_INT = 2;  //完工
-	
-	public static final short STATUS_CLOSE_INT = 3;  //关闭
-	
-	public static final short ONESTATE_SHUI_INT = 1;  //水
-	
-	public static final short TWOSTATE_DIAN_INT = 2;  //电
-	
-	public static final short THRSTATE_WA_INT = 3;  //瓦
-	
-	public static final short FORSTATE_MU_INT = 4;  //木
-	
-	public static final short FIVSTATE_YOU_INT = 5;  //油
-	
+
+	public static final short STATUS_INIT_INT = 0; // 初始
+
+	public static final short STATUS_REPAIR_INT = 1; // 维修
+
+	public static final short STATUS_FINISH_INT = 2; // 完工
+
+	public static final short STATUS_CLOSE_INT = 3; // 关闭
+
+	public static final short ONESTATE_SHUI_INT = 1; // 水
+
+	public static final short TWOSTATE_DIAN_INT = 2; // 电
+
+	public static final short THRSTATE_WA_INT = 3; // 瓦
+
+	public static final short FORSTATE_MU_INT = 4; // 木
+
+	public static final short FIVSTATE_YOU_INT = 5; // 油
+
 	public static final String COLUMN_STATUS_STR = "status";
 
 	private long aid;
@@ -90,7 +90,7 @@ public class AepairPO implements Serializable {
 	private short gladness;
 
 	private int company;
-	
+
 	private String comment;
 
 	public AepairPO() {
@@ -282,7 +282,7 @@ public class AepairPO implements Serializable {
 	public void setCompany(int company) {
 		this.company = company;
 	}
-	
+
 	@Column(name = "comment")
 	public String getComment() {
 		return comment;
@@ -292,8 +292,8 @@ public class AepairPO implements Serializable {
 		this.comment = comment;
 	}
 
-	public AepairPO init(long csid, DecorationPO decoration, UserPO creater, Timestamp targetTime, int company, String comment){
-		
+	public AepairPO init(long csid, DecorationPO decoration, UserPO creater, Timestamp targetTime, int company, String comment) {
+
 		this.setCsid(csid);
 		this.setDecoration(decoration);
 		this.setTargetTime(targetTime);
@@ -304,7 +304,7 @@ public class AepairPO implements Serializable {
 		this.setStatus(STATUS_INIT_INT);
 		this.setCompany(company);
 		this.setComment(comment);
-		
+
 		return this;
 	}
 

@@ -33,6 +33,8 @@ public class QuotationVersionVO implements Serializable {
 
 	private Integer offset;
 
+	private Short type;
+
 	private Short defaultFlag;
 
 	private String comment;
@@ -99,6 +101,14 @@ public class QuotationVersionVO implements Serializable {
 
 	public void setOffset(Integer offset) {
 		this.offset = offset;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
 	}
 
 	public Short getDefaultFlag() {

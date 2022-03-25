@@ -24,7 +24,7 @@ public class EmemberVO implements Serializable {
 	private String ticket;
 
 	private Short status;
-	
+
 	private Timestamp registerTime;
 
 	public Long getEmid() {
@@ -91,7 +91,7 @@ public class EmemberVO implements Serializable {
 		this.status = status;
 	}
 
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getRegisterTime() {
 		return registerTime;
 	}

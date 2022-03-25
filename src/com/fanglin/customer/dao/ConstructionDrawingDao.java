@@ -8,7 +8,7 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.utils.Paging;
 
 public interface ConstructionDrawingDao extends Dao<ConstructionDrawingPO> {
-	
-	public List<ConstructionDrawingPO> queryCusConstructionDrawing(Paging paging,List<Filter> filters, long cid,short schedule);
-	
+
+	public List<ConstructionDrawingPO> queryCusConstructionDrawing(Paging paging, List<Filter> filters, long cid, short schedule);
+
 }

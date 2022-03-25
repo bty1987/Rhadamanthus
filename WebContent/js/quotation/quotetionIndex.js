@@ -21,7 +21,7 @@ $(function() {
         rightflg: false,
         replicaType: [
             {"key": "0", "value": "唯一编号"},
-            {"key": "1", "value": "订单号"},
+            {"key": "1", "value": "装修单号"},
         ],
     };
 

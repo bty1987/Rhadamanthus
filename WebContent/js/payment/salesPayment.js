@@ -608,7 +608,7 @@ $(function () {
         com.post(api.payment.pageSalesPayment,  $.extend({}, params["salesPaymentPostData"+salesPayment.pageFlag], {"paging.noPage": 1}), function (res) {
             $.exceler({
                 column: [
-                    ["订单号", "sales.orderId"],
+                    ["装修单号", "sales.orderId"],
                     ["销售单号", "sales.no"],
                     ['楼盘地址', ['sales.house.village.cityProper.city.name', 'sales.house.village.cityProper.name', 'sales.house.village.name', 'sales.house.houseNumber']],
                     ['品牌', 'sales.brand'],

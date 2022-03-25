@@ -10,18 +10,21 @@ import com.fanglin.personel.vo.RecruitmentVO;
 import com.fanglin.utils.Paging;
 
 public interface RecruitmentService {
-	
+
 	public void pageRecruitment(Paging paging, List<Filter> filters);
-	
-	public void addRecruitment(RecruitmentVO recruitmentVO, List<RecruitmentEducationVO> recruitmentEducationVOs, List<RecruitmentOperationVO> recruitmentOperationVOs)throws FLException;
+
+	public void addRecruitment(RecruitmentVO recruitmentVO, List<RecruitmentEducationVO> recruitmentEducationVOs, List<RecruitmentOperationVO> recruitmentOperationVOs) throws FLException;
 
 	public RecruitmentVO queryRecruitmentByRid(RecruitmentVO recruitmentVO) throws FLException;
 
+	public RecruitmentVO checkRecruitment(RecruitmentVO recruitmentVO) throws FLException;
+
 	public void updateRecruitment(RecruitmentVO recruitmentVO) throws FLException;
-	
+
+	public void updateRecruitmentForAdvance(RecruitmentVO recruitmentVO) throws FLException;
+
 	public int entryRecruitment(RecruitmentVO recruitmentVO) throws FLException;
-	
+
 	public int cancelRecruitment(RecruitmentVO recruitmentVO) throws FLException;
 
-	
 }

@@ -84,6 +84,12 @@ public class RecruitmentVO implements Serializable{
 	private Short isDisease;
 	
 	private Short status;
+	
+	private String photoPath;
+	 
+	private String identityPathF;
+	
+	private String identityPathB;
 
 	public Long getRid() {
 		return rid;
@@ -395,5 +401,29 @@ public class RecruitmentVO implements Serializable{
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public String getPhotoPath() {
+		return photoPath;
+	}
+
+	public void setPhotoPath(String photoPath) {
+		this.photoPath = photoPath;
+	}
+
+	public String getIdentityPathF() {
+		return identityPathF;
+	}
+
+	public void setIdentityPathF(String identityPathF) {
+		this.identityPathF = identityPathF;
+	}
+
+	public String getIdentityPathB() {
+		return identityPathB;
+	}
+
+	public void setIdentityPathB(String identityPathB) {
+		this.identityPathB = identityPathB;
 	}
 }

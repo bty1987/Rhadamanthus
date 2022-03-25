@@ -569,7 +569,7 @@ jQuery(function($) {
 		com.post(api.payment.pagePayment, $.extend({}, params["paymentPostData"+payment.type], {"paging.noPage": 1}), function(res){
 			$.exceler({
 				column : [
-					["订单号","orderId"],
+					["装修单号","orderId"],
 					['收款类型','type'],
 					['预付款类型','paymentType'],
 					['操作金额','recharge'],

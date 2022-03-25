@@ -316,5 +316,8 @@ public class DateUtil {
 
 		System.out.println(DateUtil.plusDay(new Date(), -30));
 
+		System.out.println(DateUtil.getDateToDateString(DateUtil.getFirstDay(parseDate("2022-02", "yyyy-MM")), "yyyy-MM-dd"));
+		System.out.println(DateUtil.getDateToDateString(DateUtil.getLastDay(parseDate("2022-02", "yyyy-MM")), "yyyy-MM-dd"));
+
 	}
 }

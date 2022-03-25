@@ -14,40 +14,40 @@ import javax.persistence.Table;
 public class RolePO implements Serializable {
 
 	private static final long serialVersionUID = 8111974803190366547L;
-	
-	public static final String SUPER_NO_STR = "1";
-	
+
+	public static final String SUPER_NO_STR = "root";
+
 	private int rid;
 
 	private String no;
 
 	private String name;
-	
+
 	private short level;
 
 	private String content;
-	
+
 	private int company;
-	
+
 	private String pinyin;
-	
-	public RolePO(){
+
+	public RolePO() {
 		super();
 	}
-	
+
 	public RolePO(int rid) {
 		super();
 		this.rid = rid;
 	}
 
-	public RolePO(String no){
+	public RolePO(String no) {
 		super();
 		this.no = no;
 	}
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "rid") 
+	@Column(name = "rid")
 	public int getRid() {
 		return rid;
 	}
@@ -100,7 +100,7 @@ public class RolePO implements Serializable {
 	public void setCompany(int company) {
 		this.company = company;
 	}
-	
+
 	@Column(name = "pinyin")
 	public String getPinyin() {
 		return pinyin;
@@ -110,5 +110,4 @@ public class RolePO implements Serializable {
 		this.pinyin = pinyin;
 	}
 
-	
 }

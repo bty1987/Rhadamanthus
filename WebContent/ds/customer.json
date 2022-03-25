@@ -81,6 +81,21 @@
     {"key":"4","value":"木"},
     {"key":"5","value":"油"}
   ],
+  "surveyStatus": [
+    {"key":"0","value":"初始"},
+    {"key":"1","value":"处理"},
+    {"key":"2","value":"完成"}
+  ],
+  "surveyItemType": [
+    {"key":"0","value":"文本"},
+    {"key":"1","value":"输入框"},
+    {"key":"2","value":"单选"},
+    {"key":"3","value":"多选"}
+  ],
+  "surveyOptionChecked": [
+    {"key":"0","value":"已选"},
+    {"key":"1","value":"未选"}
+  ],
   "errorCode": 0,
   "errorMsg": ""
 }

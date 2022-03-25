@@ -20,14 +20,14 @@ import com.fanglin.customer.vo.RepairVO;
 public class RepairAction extends BaseListAction {
 
 	private static final long serialVersionUID = 8337226898830528233L;
-	
+
 	@Autowired
 	private RepairService repairService;
-	
+
 	private RepairVO repair;
-	
+
 	private List<RepairVO> repairs;
-	
+
 	@Action(value = "queryRepair", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryRepair() throws FLException {
 
@@ -35,7 +35,7 @@ public class RepairAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addRepair", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addRepair() throws FLException {
 
@@ -43,7 +43,7 @@ public class RepairAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "keepRepair", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String keepRepair() throws FLException {
 
@@ -51,7 +51,7 @@ public class RepairAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "finishRepair", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String finishRepair() throws FLException {
 

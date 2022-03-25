@@ -1578,7 +1578,7 @@ var QuotetionDetail = (function(){
                 ["工种:", v.workType.name, "red"],
                 ["单价:", v.unitPrice, "blue"],
                 ["打折:", v.discount == 0 ? '否' : '是', "red"],
-                ["版本:", v.version.no, "grey"],
+                ["版本:", v.version.name, "grey"],
             ];
 
             $.each(propertyArr, function (index,value) {

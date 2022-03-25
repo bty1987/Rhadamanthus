@@ -33,25 +33,40 @@
             <div class="modal-body">
                 <form class="form-horizontal">
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right orange" for="goodsName">商品</label>
-                        <div class="col-sm-9">
-                            <input type="text" id="goodsName" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="15"/>
+                        <label class="col-md-3 control-label no-padding-right orange" for="goodsName">商品</label>
+                        <div class="col-md-9">
+                            <input type="text" id="goodsName" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual' maxlength="15"/>
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right orange" for="unit">定额单位</label>
+                        <label class="col-sm-3 control-label no-padding-right orange" for="normunit">定额单位</label>
                         <div class="col-sm-9">
-                            <select  id="unit" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' maxlength="15"></select>
+                            <select  id="normunit" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual' maxlength="15"></select>
                         </div>
                     </div>
-
+      
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right orange" for="num">使用数量</label>
+                    	<label class="col-md-3 control-label no-padding-right orange">定额数量</label>
+                    	<div class="col-md-9">
+                        	<input type="text" class="col-xs-10 col-sm-6 v_float_3" id="normnum" name="normnum" data-required="1" data-toggle="popover" data-trigger='manual'>
+                    	</div>
+                	</div>
+                    
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right orange" for="storeunit">库房单位</label>
                         <div class="col-sm-9">
-                            <input type="text" id="num" class="col-xs-10 col-sm-5 v_required v_float_3" data-toggle="popover" data-trigger='manual' maxlength="5"/>
+                            <select  id="storeunit" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual' maxlength="15"></select>
                         </div>
                     </div>
+         
+                    <div class="form-group">
+                    	<label class="col-md-3 control-label no-padding-right orange">库房数量</label>
+                    	<div class="col-md-9">
+                        	<input type="text" class="col-xs-10 col-sm-6 v_float_3" id="storenum" name="storenum" data-required="1" data-toggle="popover" data-trigger='manual'>
+                    	</div>
+                	</div>
+                    
                 </form>
 
             </div>
