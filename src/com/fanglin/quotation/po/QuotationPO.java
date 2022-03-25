@@ -24,6 +24,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.DateUtil;
 
@@ -78,6 +79,10 @@ public class QuotationPO implements Serializable {
 	private short status;
 
 	private String content;
+
+	private QuotationVersionPO version;
+
+	private short atttype;
 
 	public QuotationPO() {
 		super();
@@ -259,6 +264,25 @@ public class QuotationPO implements Serializable {
 
 	public void setCostPrice(long costPrice) {
 		this.costPrice = costPrice;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "qvId", referencedColumnName = "qvId")
+	public QuotationVersionPO getVersion() {
+		return version;
+	}
+
+	public void setVersion(QuotationVersionPO version) {
+		this.version = version;
+	}
+
+	@Column(name = "atttype")
+	public short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(short atttype) {
+		this.atttype = atttype;
 	}
 
 	public void ptp(String orderId, UserPO userPO, String name, String style) {

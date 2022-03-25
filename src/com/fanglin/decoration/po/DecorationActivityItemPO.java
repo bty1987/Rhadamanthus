@@ -67,6 +67,8 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 
 	public static final String COLUMN_TYPE_STR = "type";
 
+	public final short ISAFFIRM_CONFIRMED_INT = 1;
+
 	private long daiId;
 
 	private long aid;
@@ -102,6 +104,8 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 	private short isPrefor; // 业绩标识
 
 	private short isPayment; // 金额标识
+
+	private short isAffirm; // 是否确认
 
 	public DecorationActivityItemPO() {
 		super();
@@ -270,6 +274,15 @@ public class DecorationActivityItemPO implements java.io.Serializable {
 
 	public void setIsPayment(short isPayment) {
 		this.isPayment = isPayment;
+	}
+
+	@Column(name = "isAffirm")
+	public short getIsAffirm() {
+		return isAffirm;
+	}
+
+	public void setIsAffirm(short isAffirm) {
+		this.isAffirm = isAffirm;
 	}
 
 }

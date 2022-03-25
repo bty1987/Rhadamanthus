@@ -37,9 +37,9 @@ public class ProtationPO implements Serializable {
 	public static final short DEFAULT_DEFAULT_INT = 1;
 
 	public static final short STATUS_INIT_INT = 0;
-	
+
 	public static final short STATUS_UNLOCK_INT = 0;
-	
+
 	public static final short STATUS_LOCK_INT = 2;
 
 	private long pid;
@@ -57,7 +57,7 @@ public class ProtationPO implements Serializable {
 	private long quotePrice;
 
 	private int quoteArea;
-	
+
 	private long unitPrice;
 
 	private long costPrice;
@@ -77,9 +77,9 @@ public class ProtationPO implements Serializable {
 	private long subdPrice;
 
 	private long submPrice;
-	
+
 	private long preferPrice;
-	
+
 	private long managePrice;
 
 	private long totalPrice;
@@ -87,17 +87,17 @@ public class ProtationPO implements Serializable {
 	private short status;
 
 	private short defaults;
-	
+
 	private long mostPrice;
 
 	private int costRate;
-	
+
 	private int mostRate;
-	
+
 	private long totalCost;
-	
+
 	private long totalProfit;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "pid")
@@ -172,7 +172,7 @@ public class ProtationPO implements Serializable {
 	public void setQuoteArea(int quoteArea) {
 		this.quoteArea = quoteArea;
 	}
-	
+
 	@Column(name = "unitPrice")
 	public long getUnitPrice() {
 		return unitPrice;
@@ -262,7 +262,7 @@ public class ProtationPO implements Serializable {
 	public void setSubmPrice(long submPrice) {
 		this.submPrice = submPrice;
 	}
-	
+
 	@Column(name = "preferPrice")
 	public long getPreferPrice() {
 		return preferPrice;
@@ -280,7 +280,7 @@ public class ProtationPO implements Serializable {
 	public void setManagePrice(long managePrice) {
 		this.managePrice = managePrice;
 	}
-	
+
 	@Column(name = "totalPrice")
 	public long getTotalPrice() {
 		return totalPrice;
@@ -352,7 +352,5 @@ public class ProtationPO implements Serializable {
 	public void setTotalProfit(long totalProfit) {
 		this.totalProfit = totalProfit;
 	}
-	
-	
 
 }

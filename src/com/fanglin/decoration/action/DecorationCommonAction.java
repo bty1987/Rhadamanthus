@@ -11,9 +11,11 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.decoration.service.DecorationActivityItemService;
 import com.fanglin.decoration.service.DecorationAdditionService;
 import com.fanglin.decoration.service.DecorationContractService;
 import com.fanglin.decoration.service.DecorationInfoService;
+import com.fanglin.decoration.vo.DecorationActivityItemVO;
 import com.fanglin.decoration.vo.DecorationContractVO;
 import com.fanglin.decoration.vo.DecorationInfoVO;
 import com.fanglin.decoration.vo.DecorationVO;
@@ -34,6 +36,9 @@ public class DecorationCommonAction extends BaseListAction {
 	@Autowired
 	private DecorationContractService decorationContractService;
 
+	@Autowired
+	private DecorationActivityItemService decorationActivityItemService;
+
 	private DecorationVO decoration;
 
 	private DecorationInfoVO decorationInfo;
@@ -42,13 +47,17 @@ public class DecorationCommonAction extends BaseListAction {
 
 	private DecorationContractVO decorationContract;
 
+	private DecorationActivityItemVO decorationActivityItem;
+
+	private List<DecorationActivityItemVO> decorationActivityItems;
+
 	private short result;
 
 	private String orderId;
 
 	private String redirect;
 
-	@Action(value = "queryDecorationSchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	@Action(value = "queryDecorationSchedule", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String queryDecorationProcess() throws FLException {
 
 		result = decorationAdditionService.queryDecorationSchedule(decoration);
@@ -56,7 +65,7 @@ public class DecorationCommonAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "queryDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	@Action(value = "queryDecorationContract", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String queryDecorationContract() throws FLException {
 
 		decorationContracts = decorationContractService.queryDecorationContractByOrderId(decorationContract);
@@ -64,7 +73,7 @@ public class DecorationCommonAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "confirmDecorationInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	@Action(value = "confirmDecorationInfo", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String confirmDecorationInfo() throws FLException {
 
 		decorationInfoService.confirmDecorationInfo(decorationInfo, queryUserId());
@@ -72,10 +81,26 @@ public class DecorationCommonAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "redirectDecorationContract", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	@Action(value = "redirectDecorationContract", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String redirectDecorationContract() throws FLException {
 
 		redirect = decorationContractService.redirectDecorationContract(decorationContract);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "affirmDecorationActivityItem", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	public String affirmAddReduce() throws FLException {
+
+		decorationActivityItemService.affirmDecorationActivityItem(decorationActivityItems);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "sendDecorationActivityItem", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	public String sendAddReduce() throws FLException {
+
+		decorationActivityItemService.sendDecorationActivityItem(decorationActivityItem);
 
 		return SUCCESS;
 	}
@@ -134,6 +159,22 @@ public class DecorationCommonAction extends BaseListAction {
 
 	public void setRedirect(String redirect) {
 		this.redirect = redirect;
+	}
+
+	public DecorationActivityItemVO getDecorationActivityItem() {
+		return decorationActivityItem;
+	}
+
+	public void setDecorationActivityItem(DecorationActivityItemVO decorationActivityItem) {
+		this.decorationActivityItem = decorationActivityItem;
+	}
+
+	public List<DecorationActivityItemVO> getDecorationActivityItems() {
+		return decorationActivityItems;
+	}
+
+	public void setDecorationActivityItems(List<DecorationActivityItemVO> decorationActivityItems) {
+		this.decorationActivityItems = decorationActivityItems;
 	}
 
 }

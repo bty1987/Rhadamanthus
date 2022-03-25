@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.common.dao.ServiceRecordDao;
 import com.fanglin.common.po.ServiceRecordPO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationActivityItemDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationActivityItemPO;
@@ -62,6 +63,9 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 	@Autowired
 	private ServiceRecordDao serviceRecordDao;
+	
+	@Autowired
+	private DecorationService decorationService;
 
 	@Override
 	public List<DecorationActivityItemVO> queryDecorationActivityItemByOrderId(DecorationVO decorationVO) {
@@ -433,6 +437,35 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		decorationPO.setFactPrice(Arith.sub(decorationPO.getOrderTotalPrice(), couponCut));
 
 		decorationDao.update(decorationPO);
+	}
+
+	@Override
+	public void sendDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO)throws FLException {
+		
+		String orderId = decorationActivityItemVO.getOrderId();
+
+		System.out.println(String.format("pages/decorationActivityItemDetail/decorationActivityItemDetail?orderId=%s&daiIds=%s", orderId, decorationActivityItemVO.getContent()));
+
+		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 您的增减项明细已完成,若无疑义请您确认,代表您对增减项明细认可,若有问题,请及时联系监理进行调整,感谢您的配合,祝您生活愉快.", orderId), String.format("pages/decorationActivityItemDetail/decorationActivityItemDetail?orderId=%s&daiIds=%s", orderId, decorationActivityItemVO.getContent()));
+		
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int affirmDecorationActivityItem(List<DecorationActivityItemVO> decorationActivityItems)throws FLException {
+		
+		for (DecorationActivityItemVO decorationActivityItem : decorationActivityItems) {
+
+			DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItem.getDaiId());
+
+			if (decorationActivityItemPO == null) continue;
+
+			decorationActivityItemPO.setIsAffirm(decorationActivityItemPO.ISAFFIRM_CONFIRMED_INT);
+
+			decorationActivityItemDao.update(decorationActivityItemPO);
+		}
+
+		return 0;
 	}
 
 }

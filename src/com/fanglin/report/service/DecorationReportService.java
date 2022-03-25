@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.report.vo.DecorationAchievementVO;
 import com.fanglin.utils.Paging;
 
 public interface DecorationReportService {
@@ -13,5 +14,7 @@ public interface DecorationReportService {
 	public void queryDecoration7Achievement(Paging paging, List<Filter> list, int company) throws FLException;
 
 	public void updataDecoration7Construction() throws Exception;
+
+	public void updataDecoration7Achievement(DecorationAchievementVO decorationAchievement, int company) throws Exception;
 
 }

@@ -16,6 +16,8 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.data.quotation.vo.QuotationVersionVO;
+
 public class QuotationVO implements Serializable {
 
 	private static final long serialVersionUID = -62258203481876631L;
@@ -63,6 +65,10 @@ public class QuotationVO implements Serializable {
 	private Long basePrice;
 
 	private Long costPrice;
+
+	private QuotationVersionVO version;
+
+	private Short atttype;
 
 	public QuotationVO() {
 		super();
@@ -248,6 +254,22 @@ public class QuotationVO implements Serializable {
 
 	public void setCostPrice(Long costPrice) {
 		this.costPrice = costPrice;
+	}
+
+	public QuotationVersionVO getVersion() {
+		return version;
+	}
+
+	public void setVersion(QuotationVersionVO version) {
+		this.version = version;
+	}
+
+	public Short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(Short atttype) {
+		this.atttype = atttype;
 	}
 
 }

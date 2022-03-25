@@ -2,10 +2,14 @@ package com.fanglin.communion.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -55,7 +59,7 @@ public class ReceiptTypePO implements java.io.Serializable {
 	private short direction;
 
 	private short type;
-	
+
 	private short fund;
 
 	private short status;
@@ -67,14 +71,16 @@ public class ReceiptTypePO implements java.io.Serializable {
 	private String kino;
 
 	private String kiname;
-	
+
 	private String kibalance;
-	
+
 	private String bankno;
 
 	private String assistant;
-	
+
 	private String value;
+
+	private List<ReceiptTypeItemPO> receiptTypeItems;
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -247,6 +253,15 @@ public class ReceiptTypePO implements java.io.Serializable {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	@OneToMany(mappedBy = "rtid", fetch = FetchType.LAZY)
+	public List<ReceiptTypeItemPO> getReceiptTypeItems() {
+		return receiptTypeItems;
+	}
+
+	public void setReceiptTypeItems(List<ReceiptTypeItemPO> receiptTypeItems) {
+		this.receiptTypeItems = receiptTypeItems;
 	}
 
 }

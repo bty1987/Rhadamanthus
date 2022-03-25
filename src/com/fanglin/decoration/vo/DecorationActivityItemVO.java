@@ -46,6 +46,8 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 
 	private Short isPayment; // 金额标识
 
+	private Short isAffirm; // 是否确认
+
 	public DecorationActivityItemVO() {
 		super();
 	}
@@ -193,6 +195,14 @@ public class DecorationActivityItemVO implements java.io.Serializable {
 
 	public void setIsPayment(Short isPayment) {
 		this.isPayment = isPayment;
+	}
+
+	public Short getIsAffirm() {
+		return isAffirm;
+	}
+
+	public void setIsAffirm(Short isAffirm) {
+		this.isAffirm = isAffirm;
 	}
 
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.report.service.DecorationReportService;
+import com.fanglin.report.vo.DecorationAchievementVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -20,6 +21,8 @@ public class DecorationReportAction extends BaseListAction {
 
 	@Autowired
 	private DecorationReportService decorationReportService;
+
+	private DecorationAchievementVO decorationAchievement;
 
 	@Action(value = "queryDecoration7Construction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryDecoration7Construction() throws FLException {
@@ -43,6 +46,22 @@ public class DecorationReportAction extends BaseListAction {
 		decorationReportService.updataDecoration7Construction();
 
 		return SUCCESS;
+	}
+
+	@Action(value = "updataDecoration7Achievement", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updataDecoration7Achievement() throws Exception {
+
+		decorationReportService.updataDecoration7Achievement(decorationAchievement, queryCompany());
+
+		return SUCCESS;
+	}
+
+	public DecorationAchievementVO getDecorationAchievement() {
+		return decorationAchievement;
+	}
+
+	public void setDecorationAchievement(DecorationAchievementVO decorationAchievement) {
+		this.decorationAchievement = decorationAchievement;
 	}
 
 }

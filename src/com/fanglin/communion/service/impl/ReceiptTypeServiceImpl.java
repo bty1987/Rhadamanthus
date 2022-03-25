@@ -1,7 +1,9 @@
 package com.fanglin.communion.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,8 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
 import com.fanglin.communion.dao.ReceiptTypeDao;
+import com.fanglin.communion.po.ReceiptTypeItemPO;
 import com.fanglin.communion.po.ReceiptTypePO;
 import com.fanglin.communion.service.ReceiptTypeService;
+import com.fanglin.communion.vo.ReceiptTypeItemVO;
 import com.fanglin.communion.vo.ReceiptTypeVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
@@ -34,11 +38,29 @@ public class ReceiptTypeServiceImpl implements ReceiptTypeService {
 		List<ReceiptTypeVO> receiptTypeVOs = new ArrayList<ReceiptTypeVO>();
 
 		for (ReceiptTypePO receiptTypePO : receiptTypePOs) {
+
 			ReceiptTypeVO receiptTypeVO = new ReceiptTypeVO();
 
-			BeanUtil.copyProperties(receiptTypePO, receiptTypeVO);
+			BeanUtil.copyProperties(receiptTypePO, receiptTypeVO, Arrays.asList("receiptTypeItems"));
+
+			if (receiptTypePO.getReceiptTypeItems().size() > 0) {
+
+				receiptTypeVO.setReceiptTypeItems(new ArrayList<ReceiptTypeItemVO>());
+				ReceiptTypeItemVO receiptItemVO = null;
+
+				for (ReceiptTypeItemPO receiptItemPO : receiptTypePO.getReceiptTypeItems()) {
+
+					receiptItemVO = new ReceiptTypeItemVO();
+
+					BeanUtil.copyPropertie(receiptItemPO, receiptItemVO);
+
+					receiptTypeVO.getReceiptTypeItems().add(receiptItemVO);
+
+				}
+			}
 
 			receiptTypeVOs.add(receiptTypeVO);
+
 		}
 
 		paging.setData(receiptTypeVOs);
@@ -53,7 +75,7 @@ public class ReceiptTypeServiceImpl implements ReceiptTypeService {
 		for (ReceiptTypePO receiptTypePO : receiptTypePOs) {
 			ReceiptTypeVO receiptTypeVO = new ReceiptTypeVO();
 
-			BeanUtil.copyProperties(receiptTypePO, receiptTypeVO);
+			BeanUtil.copyProperties(receiptTypePO, receiptTypeVO, Arrays.asList("receiptTypeItems"));
 
 			receiptTypeVOs.add(receiptTypeVO);
 		}
@@ -70,7 +92,7 @@ public class ReceiptTypeServiceImpl implements ReceiptTypeService {
 		for (ReceiptTypePO receiptTypePO : receiptTypePOs) {
 			ReceiptTypeVO _receiptTypeVO = new ReceiptTypeVO();
 
-			BeanUtil.copyProperties(receiptTypePO, _receiptTypeVO);
+			BeanUtil.copyProperties(receiptTypePO, _receiptTypeVO, Arrays.asList("receiptTypeItems"));
 
 			receiptTypeVOs.add(_receiptTypeVO);
 		}
@@ -83,16 +105,16 @@ public class ReceiptTypeServiceImpl implements ReceiptTypeService {
 	public int addReceiptType(ReceiptTypeVO receiptTypeVO, int company) throws FLException {
 
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_RECEIPT_TYPE_INT, CountingPO.COUNTING_DATE_SILNLE_STR, company);
-		
+
 		ReceiptTypePO receiptTypePO = receiptTypeDao.queryReceiptTypeByNo(String.valueOf(count), company);
 
 		if (receiptTypePO != null) {
 			throw new FLException(130004, "收据类型键值已存在");
 		}
-		
+
 		receiptTypePO = new ReceiptTypePO();
 
-		BeanUtil.copyProperties(receiptTypeVO, receiptTypePO);
+		BeanUtil.copyProperties(receiptTypeVO, receiptTypePO, Arrays.asList("receiptTypeItems"));
 
 		receiptTypePO.setNo(String.valueOf(count));
 		receiptTypePO.setCompany(company);
