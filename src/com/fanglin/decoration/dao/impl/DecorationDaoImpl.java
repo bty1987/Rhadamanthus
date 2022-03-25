@@ -393,6 +393,8 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 					query.add(query.getCriterion("sourceStatus", Short.valueOf(data), op));
 				} else if ("repairStatus".equals(field)) {
 					query.add(query.getCriterion("repairStatus", Short.valueOf(data), op));
+				} else if ("balanceStatus".equals(field)) {
+					query.add(query.getCriterion("balanceStatus", Short.valueOf(data), op));
 				} else if ("signTimeDateRange".equals(field)) {
 					query.timeranges("contractTime", "contractTime", data);
 				} else if ("createTimeDateRange".equals(field)) {
@@ -411,6 +413,8 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 					query.timeranges("sdesignTime", "sdesignTime", data);
 				} else if ("edesignTime".equals(field)) {
 					query.timeranges("edesignTime", "edesignTime", data);
+				} else if ("balanceTime".equals(field)) {
+					query.timeranges("balanceTime", "balanceTime", data);
 				}
 			}
 		}

@@ -52,9 +52,9 @@ public class ServicePaymentServiceImpl implements ServicePaymentService {
 	}
 
 	@Override
-	public long countCusServicePaymentForAmount(ServicePaymentVO servicePaymentVO) {
+	public long amountCusServicePayment(ServicePaymentVO servicePaymentVO) {
 
-		long _realMoney = servicePaymentDao.countCusServicePaymentForAmount(servicePaymentVO.getOrderId());
+		long _realMoney = servicePaymentDao.amountCusServicePayment(servicePaymentVO.getOrderId());
 
 		return _realMoney;
 	}

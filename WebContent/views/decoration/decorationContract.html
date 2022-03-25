@@ -1,85 +1,53 @@
-<div class="row">
-    <div class="widget-container-span col-md-6" id="customerInfo">
-        <div class="widget-box transparent">
-            <div class="widget-header">
-                <h3><strong>客户信息</strong></h3>
-            </div>
-            <div id="customer">
-                <div class="col-md-1"></div>
-                <div class="col-md-10">
-                    <div class="profile-user-info">
-                        <div class="profile-info-row">
-                            <div class="profile-info-name">客户姓名</div>
-                            <div class="profile-info-value">
-                                <span id="customerName"></span>
-                            </div>
-                        </div>
+<div id="customerContent" class="widget-container-span col-md-12">
+    <div id="fl-statement" class=""></div>
 
-                        <div class="profile-info-row">
-                            <div class="profile-info-name">客户性别</div>
-                            <div class="profile-info-value">
-                                <span id="customerGender"></span>
-                            </div>
-                        </div>
+    <div class="widget-container-span col-xs-6 col-md-3" id="decorationInfo"></div>
 
-                        <div class="profile-info-row">
-                            <div class="profile-info-name">客户电话</div>
-                            <div class="profile-info-value">
-                                <span id="customerPhone"></span>
-                            </div>
-                        </div>
+    <div class="widget-container-span col-xs-6 col-md-3" id="customerInfo"></div>
 
-                        <div class="profile-info-row">
-                            <div class="profile-info-name">客户地址</div>
-                            <div class="profile-info-value">
-                                <span id="customerAddress"></span>
-                            </div>
-                        </div>
+    <div id="function" class="widget-container-span col-xs-6 col-md-3">
+        <a href="#" id="register" class="btn btn-default btn-app btn-sm radius-4" style="padding: 5px 0;">
+            <i class="icon-plus-sign bigger-230"></i>
+            <span>注册</span>
+        </a>
 
-                        <div class="profile-info-row">
-                            <div class="profile-info-name">客户关系</div>
-                            <div class="profile-info-value">
-                                <span id="customerRelationshipType"></span>
-                            </div>
-                        </div>
+        <a href="#" id="authentication" class="btn btn-success btn-app btn-sm radius-4" style="padding: 5px 0;">
+            <i class="icon-hdd bigger-230"></i>
+            <span>认证</span>
+        </a>
 
-                        <div class="profile-info-row">
-                            <div class="profile-info-name">客户身份证</div>
-                            <div class="profile-info-value">
-                                <span id="customerIdentity"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-1"></div>
-            </div>
-        </div>
+        <a href="#" id="sendAuth" class="btn  btn-success btn-app btn-sm radius-4" style="padding: 5px 0;">
+            <i class="icon-hdd bigger-230"></i>
+            <span>认证通知</span>
+        </a>
+
+        <a href="#" id="confirm" class="btn btn-yellow btn-app btn-sm radius-4" style="padding: 5px 0;">
+            <i class="icon-binoculars bigger-230"></i>
+            <span>确认</span>
+        </a>
     </div>
-    <div class="widget-container-span col-md-6" id="customerFunction">
-        <div class="widget-box transparent">
-            <div class="widget-header">
-                <h3><strong>功能</strong></h3>
-            </div>
-            <div id="function">
-                <span class="btn btn-app btn-sm btn-yellow no-hover" id="register">注册</span>
-                <span class="btn btn-app btn-sm btn-success no-hover" id="authentication">认证</span>
-                <span class="btn btn-app btn-sm btn-success no-hover" id="sendAuth">认证通知</span>
-                <span class="btn btn-app btn-sm btn-warning no-hover" id="confirm">确认</span>
-            </div>
-        </div>
+
+    <div id="add" class="widget-container-span col-xs-6 col-md-3">
+
+        <a href="#" id="saveBtn" class="btn btn-default btn-app btn-sm radius-4" style="padding: 5px 0;">
+            <i class="icon-plus-sign bigger-230"></i>
+            <span>添加合同</span>
+        </a>
+
+        <a href="#" id="backBtn" class="btn btn-info btn-app btn-sm radius-4" style="padding: 5px 0;">
+            <i class="icon-mail-forward bigger-230"></i>
+            <span>返回</span>
+        </a>
+
     </div>
-    <div class="widget-container-span col-md-12">
-        <div class="widget-box transparent">
-            <div class="widget-header">
-                <h3><strong>合同信息</strong></h3>
-            </div>
-            <div id="contracts"></div>
-        </div>
+</div>
+
+<div class="widget-container-span col-md-12">
+    <div class="widget-box transparent">
+        <div id="fl-statement2" class=""></div>
     </div>
-    <div class="col-md-12" id="contractFunction">
-        <a class="btn btn-minier btn-success pull-left" id="saveBtn"><i class="icon-plus bigger-110"></i><span>添加合同</span></a>
-        <a class="btn btn-minier btn-info pull-right" id="backBtn"><i class="icon-mail-forward bigger-110"></i><span>返回</span></a>
-    </div>
+
+    <div class="" id="contracts"></div>
 </div>
 
 <div id="decorationContractPopUp" class="portlet box page-content"></div>
@@ -117,7 +85,7 @@
 
 <div id="layerPopUp" class="portlet box page-content"></div>
 
-<div id="qrcodeModal"></div> <!-- 二维码 -->
+<div id="qrcodeModal"></div>
 
 <script type="text/javascript">
     $.loadScript(['js/decoration/decorationContract.js']);

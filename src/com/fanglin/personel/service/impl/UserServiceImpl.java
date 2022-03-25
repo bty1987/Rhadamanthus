@@ -140,6 +140,34 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public void pageUserInfo(Paging paging, List<Filter> filters, Integer company) throws FLException {
+
+		if (filters.size() == 0) return;
+
+		List<UserInfoPO> userInfoPOs = userInfoDao.pageUserInfo(paging, filters, company);
+		List<UserInfoVO> userInfoVOs = new ArrayList<UserInfoVO>();
+
+		for (UserInfoPO userInfoPO : userInfoPOs) {
+
+			UserInfoVO userInfoVO = new UserInfoVO();
+
+			BeanUtil.copyProperties(userInfoPO, userInfoVO, Arrays.asList("user", "fangliner"));
+
+			UserVO userVO = convertBean(userInfoPO.getUser());
+			userVO.setIdentity(userInfoPO.getUser().getIdentity());
+			userInfoVO.setUser(userVO);
+
+			if (userInfoPO.getFangliner() != null) {
+				userInfoVO.setFangliner(convertBean(userInfoPO.getFangliner()));
+			}
+
+			userInfoVOs.add(userInfoVO);
+		}
+
+		paging.setData(userInfoVOs);
+	}
+
+	@Override
 	public UserVO queryUserByLoginId(UserVO userVO) throws FLException {
 
 		UserPO userPO = userDao.queryUserByLoginId(userVO.getLoginId());
@@ -281,14 +309,11 @@ public class UserServiceImpl implements UserService {
 		UserPO userPO = userDao.queryUserByLoginId(loginId);
 		UserVO userVO = null;
 
-		if (userPO == null)
-			return userVO;
+		if (userPO == null) return userVO;
 
-		if (userPO.getStatus() != UserPO.STATUS_ONJOB_INT)
-			return userVO;
+		if (userPO.getStatus() != UserPO.STATUS_ONJOB_INT) return userVO;
 
-		if (!userPO.getPassword().equals(MD5Helper.MD5(password)))
-			return userVO;
+		if (!userPO.getPassword().equals(MD5Helper.MD5(password))) return userVO;
 
 		userVO = new UserVO(new RoleVO(), new DepartmentVO(), new DutyVO());
 
@@ -385,7 +410,8 @@ public class UserServiceImpl implements UserService {
 
 		userPO.setRole(new RolePO(Integer.valueOf(visitor.getValue())));
 
-		userPO.setIsLogin(UserPO.ISLOGIN_FIP_INT);
+		userPO.setIsLogin(UserPO.ISLOGIN_NOT_INT);
+		userPO.setExtranet(UserPO.EXTRANET_QCODE_INT);
 		userPO.setType(UserPO.TYPE_USER_INT);
 		userPO.setCompany(company);
 
@@ -648,7 +674,7 @@ public class UserServiceImpl implements UserService {
 			throw new FLException(230010, "角色不存在");
 		}
 
-		if (roleCO.getLevel() < rolePO.getLevel()) {
+		if (roleCO.getLevel() <= rolePO.getLevel()) {
 			throw new FLException(-1, "无操作权限");
 		}
 

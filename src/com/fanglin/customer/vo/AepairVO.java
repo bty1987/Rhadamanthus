@@ -51,14 +51,14 @@ public class AepairVO implements Serializable {
 	private Short gladness;
 
 	private Integer company;
-	
+
 	private String comment;
-	
-	public AepairVO(){
+
+	public AepairVO() {
 		super();
 	}
-	
-	public AepairVO(DecorationVO decoration, UserBaseVO creater, UserBaseVO updater, UserBaseVO repaier){
+
+	public AepairVO(DecorationVO decoration, UserBaseVO creater, UserBaseVO updater, UserBaseVO repaier) {
 		super();
 		this.decoration = decoration;
 		this.creater = creater;

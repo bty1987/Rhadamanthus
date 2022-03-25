@@ -15,20 +15,20 @@ import com.fanglin.customer.vo.FeedbackVO;
 @ParentPackage("common")
 @Namespace("/")
 @Controller
-public class FeedbackAction extends BaseListAction{
+public class FeedbackAction extends BaseListAction {
 
 	private static final long serialVersionUID = 136311071541312065L;
-	
+
 	@Autowired
 	private FeedbackService feedbackService;
-	
+
 	private FeedbackVO feedback;
-	
+
 	@Action(value = "addFeedback", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addFeedback() throws FLException{
-		
+	public String addFeedback() throws FLException {
+
 		feedbackService.addFeedback(feedback);
-		
+
 		return SUCCESS;
 	}
 

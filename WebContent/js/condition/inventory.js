@@ -114,6 +114,38 @@ Condition.addupRule("inventory", {
             valuePath: "value"
         }
     },
+    "occessories-isEnter": {
+        label: "可进园区",
+        type: "select",
+        submitConfig: {
+            name: "isEnter",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.manifest,
+            postData: {},
+            listPath: "occessoriesisEnter",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "occessories-isLift": {
+        label: "有无电梯",
+        type: "select",
+        submitConfig: {
+            name: "isLift",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.manifest,
+            postData: {},
+            listPath: "occessoriesisLift",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
 
     /* ---------采购单-------- */
     "purchase-no": {

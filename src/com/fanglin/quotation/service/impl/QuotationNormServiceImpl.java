@@ -48,6 +48,7 @@ import com.fanglin.quotation.vo.ExtensionVO;
 import com.fanglin.quotation.vo.QuotationFunctionAreaItemVO;
 import com.fanglin.quotation.vo.QuotationFunctionAreaVO;
 import com.fanglin.quotation.vo.QuotationVO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 
 @Service("quotationNormService")
@@ -348,14 +349,19 @@ public class QuotationNormServiceImpl implements QuotationNormService {
 
 				NormoodPO normoodPO = (NormoodPO) data[0];
 				GoodsPO goodsPO = (GoodsPO) data[1];
-				Long amount = (Long) data[2];
+
+				Integer normnum = (Integer) data[2];
+				Integer storenum = (Integer) data[3];
+
+				Integer initnum = (Integer) data[4];
 
 				NormoodVO normoodVO = new NormoodVO(new GoodsVO(), null);
 
-				BeanUtil.copyProperties(normoodPO, normoodVO, Arrays.asList("goods", "quotationItem"));
+				BeanUtil.copyProperties(normoodPO, normoodVO, Arrays.asList("goods", "quotationItem", "normnum", "storenum"));
 				BeanUtil.copyProperties(goodsPO, normoodVO.getGoods(), Arrays.asList("accessoriesType"));
 
-				normoodVO.setAmount(amount);
+				normoodVO.setNormnum(Arith.mul(normnum, initnum));
+				normoodVO.setStorenum(Arith.mul(storenum, initnum));
 
 				normoodVOs.add(normoodVO);
 			}
@@ -381,14 +387,19 @@ public class QuotationNormServiceImpl implements QuotationNormService {
 
 				NormoodPO normoodPO = (NormoodPO) data[0];
 				GoodsPO goodsPO = (GoodsPO) data[1];
-				Long amount = (Long) data[2];
+
+				Integer normnum = (Integer) data[2];
+				Integer storenum = (Integer) data[3];
+
+				Integer num = (Integer) data[4];
 
 				NormoodVO normoodVO = new NormoodVO(new GoodsVO(), null);
 
-				BeanUtil.copyProperties(normoodPO, normoodVO, Arrays.asList("goods", "quotationItem"));
+				BeanUtil.copyProperties(normoodPO, normoodVO, Arrays.asList("goods", "quotationItem", "normnum", "storenum"));
 				BeanUtil.copyProperties(goodsPO, normoodVO.getGoods(), Arrays.asList("accessoriesType"));
 
-				normoodVO.setAmount(amount);
+				normoodVO.setNormnum(Arith.mul(normnum, num));
+				normoodVO.setStorenum(Arith.mul(storenum, num));
 
 				normoodVOs.add(normoodVO);
 			}
@@ -414,14 +425,19 @@ public class QuotationNormServiceImpl implements QuotationNormService {
 
 				NormoodPO normoodPO = (NormoodPO) data[0];
 				GoodsPO goodsPO = (GoodsPO) data[1];
-				Long amount = (Long) data[2];
+
+				Integer normnum = (Integer) data[2];
+				Integer storenum = (Integer) data[3];
+
+				Integer num = (Integer) data[4];
 
 				NormoodVO normoodVO = new NormoodVO(new GoodsVO(), null);
 
-				BeanUtil.copyProperties(normoodPO, normoodVO, Arrays.asList("goods", "quotationItem"));
+				BeanUtil.copyProperties(normoodPO, normoodVO, Arrays.asList("goods", "quotationItem", "normnum", "storenum"));
 				BeanUtil.copyProperties(goodsPO, normoodVO.getGoods(), Arrays.asList("accessoriesType"));
 
-				normoodVO.setAmount(amount);
+				normoodVO.setNormnum(Arith.mul(normnum, num));
+				normoodVO.setStorenum(Arith.mul(storenum, num));
 
 				normoodVOs.add(normoodVO);
 			}

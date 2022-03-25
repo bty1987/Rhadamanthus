@@ -12,7 +12,7 @@ public class WorkerSalaryVO implements Serializable {
 
 	private static final long serialVersionUID = -1896969348501581246L;
 
-	private Long wsId;
+	private Long wsid;
 
 	private DecorationVO decoration;
 
@@ -41,7 +41,7 @@ public class WorkerSalaryVO implements Serializable {
 	private Integer count;
 
 	private Short isSend;
-	
+
 	private Short isAppr;
 
 	private Short status;
@@ -74,12 +74,12 @@ public class WorkerSalaryVO implements Serializable {
 		this.approver = approver;
 	}
 
-	public Long getWsId() {
-		return wsId;
+	public Long getWsid() {
+		return wsid;
 	}
 
-	public void setWsId(Long wsId) {
-		this.wsId = wsId;
+	public void setWsid(Long wsid) {
+		this.wsid = wsid;
 	}
 
 	public Long getCwsid() {
@@ -260,7 +260,7 @@ public class WorkerSalaryVO implements Serializable {
 	public void setIsSend(Short isSend) {
 		this.isSend = isSend;
 	}
-	
+
 	public Short getIsAppr() {
 		return isAppr;
 	}

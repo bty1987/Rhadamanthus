@@ -49,11 +49,11 @@ public class DecorationVO implements Serializable {
 	private UserBaseVO escorter;
 
 	private Short type;
-	
+
 	private Short typeness;
 
 	private String salesmanType;
-	
+
 	private Long busitype;
 
 	private String houseType;
@@ -72,29 +72,33 @@ public class DecorationVO implements Serializable {
 
 	private Timestamp createTime;
 
+	private Timestamp balanceTime;
+
 	private Timestamp accountTime;
 
 	private Timestamp sdesignTime;
-	
-	private Timestamp edesignTime ;
-	
+
+	private Timestamp edesignTime;
+
 	private Timestamp precontractTime;
 
 	private Short status;
 
 	private Short designStatus;
-	
+
 	private Short projectStatus;
-	
+
 	private Short sourceStatus;
-	
+
 	private Short repairStatus;
+
+	private Short balanceStatus;
 
 	private Integer otherStatus;
 
 	private QuotationVersionVO version;
 
-	private Long orderTotalPrice;	
+	private Long orderTotalPrice;
 
 	private Long quotationPrice;
 
@@ -111,21 +115,21 @@ public class DecorationVO implements Serializable {
 	private String dompany;
 
 	private Short paySacle;
-	
+
 	private Short saleScale;
 
 	private String scale;
-	
+
 	private String grade;
-	
+
 	private Long factPrice;
-	
+
 	private Integer company;
-	
-	public DecorationVO(){
+
+	public DecorationVO() {
 		super();
 	}
-	
+
 	public DecorationVO(CustomerVO customer, HouseVO house) {
 		super();
 		this.customer = customer;
@@ -203,7 +207,7 @@ public class DecorationVO implements Serializable {
 	public void setSupervisor(UserBaseVO supervisor) {
 		this.supervisor = supervisor;
 	}
-	
+
 	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getContractTime() {
 		return contractTime;
@@ -247,7 +251,16 @@ public class DecorationVO implements Serializable {
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
-	
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getBalanceTime() {
+		return balanceTime;
+	}
+
+	public void setBalanceTime(Timestamp balanceTime) {
+		this.balanceTime = balanceTime;
+	}
+
 	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getSdesignTime() {
 		return sdesignTime;
@@ -290,11 +303,11 @@ public class DecorationVO implements Serializable {
 	public void setType(Short type) {
 		this.type = type;
 	}
-	
+
 	public Short getTypeness() {
 		return typeness;
 	}
-	
+
 	public void setTypeness(Short typeness) {
 		this.typeness = typeness;
 	}
@@ -322,13 +335,21 @@ public class DecorationVO implements Serializable {
 	public void setSourceStatus(Short sourceStatus) {
 		this.sourceStatus = sourceStatus;
 	}
-	
+
 	public Short getRepairStatus() {
 		return repairStatus;
 	}
 
 	public void setRepairStatus(Short repairStatus) {
 		this.repairStatus = repairStatus;
+	}
+
+	public Short getBalanceStatus() {
+		return balanceStatus;
+	}
+
+	public void setBalanceStatus(Short balanceStatus) {
+		this.balanceStatus = balanceStatus;
 	}
 
 	public Integer getOtherStatus() {

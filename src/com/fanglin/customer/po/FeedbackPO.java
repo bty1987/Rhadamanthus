@@ -5,9 +5,14 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.system.po.CompanyPO;
 
 @Entity
 @Table(name = "feedback", catalog = "customer")
@@ -20,7 +25,7 @@ public class FeedbackPO implements Serializable {
 	public static final String COLUMN_TYPE_STR = "type";
 
 	public static final String COLUMN_PHONE_STR = "phone";
-	
+
 	public static final String COLUMN_COMPANY_STR = "company";
 
 	private long fid;
@@ -38,8 +43,8 @@ public class FeedbackPO implements Serializable {
 	private String orderId;
 
 	private String phone;
-	
-	private int company;
+
+	private CompanyPO company;
 
 	@Id
 	@GeneratedValue
@@ -115,12 +120,13 @@ public class FeedbackPO implements Serializable {
 		this.phone = phone;
 	}
 
-	@Column(name = "company")
-	public int getCompany() {
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "company", referencedColumnName = "cid")
+	public CompanyPO getCompany() {
 		return company;
 	}
 
-	public void setCompany(int company) {
+	public void setCompany(CompanyPO company) {
 		this.company = company;
 	}
 

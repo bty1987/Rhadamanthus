@@ -27,40 +27,39 @@ public class AwardPurchaseDaoImpl extends DaoImpl<AwardPurchasePO> implements Aw
 
 		queryFilterExecute(query, filters);
 
-		query.desc("apId");
+		query.desc("apid");
 
 		return query.list();
 	}
 
-	
-	
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters != null) {
-			for (Filter filter : filters) {
-				String field = filter.getField();
-				String data = filter.getData();
-				String op = filter.getOp();
-				
-				query.alias("awardStock", "awardStock");
-				
-				if ("status".equals(field)) {
-					query.add(query.getCriterion("status", Short.valueOf(data), op));
-				}else if ("createTimeAwardPurchase".equals(field)) {
-					query.timeranges("createTime", data);
-				}else if ("purchaseTimeAwardPurchase".equals(field)) {
-					query.timeranges("purchaseTime", data);
-				}else if ("instoreTimeAwardPurchase".equals(field)) {
-					query.timeranges("instoreTime", data);
-				}else if ("awardStock.name".equals(field)) {
-					query.add(query.getCriterion("awardStock.name", data, op));
-				}else if ("awardStock.type".equals(field)) {
-					query.add(query.getCriterion("awardStock.type", Short.valueOf(data), op));
-				}else if ("awardStock.no".equals(field)) {
-					query.add(query.getCriterion("awardStock.no", Short.valueOf(data), op));
-				} 
-				
+		if (filters == null)
+			return;
+
+		for (Filter filter : filters) {
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			query.alias("awardStock", "awardStock");
+
+			if ("status".equals(field)) {
+				query.add(query.getCriterion("status", Short.valueOf(data), op));
+			} else if ("createTimeAwardPurchase".equals(field)) {
+				query.timeranges("createTime", data);
+			} else if ("purchaseTimeAwardPurchase".equals(field)) {
+				query.timeranges("purchaseTime", data);
+			} else if ("instoreTimeAwardPurchase".equals(field)) {
+				query.timeranges("instoreTime", data);
+			} else if ("awardStock.name".equals(field)) {
+				query.add(query.getCriterion("awardStock.name", data, op));
+			} else if ("awardStock.type".equals(field)) {
+				query.add(query.getCriterion("awardStock.type", Short.valueOf(data), op));
+			} else if ("awardStock.no".equals(field)) {
+				query.add(query.getCriterion("awardStock.no", Short.valueOf(data), op));
 			}
+
 		}
 	}
 

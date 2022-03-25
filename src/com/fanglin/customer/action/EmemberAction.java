@@ -43,6 +43,7 @@ public class EmemberAction extends BaseListAction {
 
 		return SUCCESS;
 	}
+
 	@Action(value = "deleteEmember", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteEmember() throws FLException {
 

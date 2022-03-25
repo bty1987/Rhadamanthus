@@ -101,6 +101,12 @@ public class RecruitmentPO implements Serializable {
 	private short isDisease;
 	
 	private short status;
+	
+	private String photoPath;
+	 
+	private String identityPathF;
+	
+	private String identityPathB;
 
 	public RecruitmentPO(){
 		super();
@@ -457,5 +463,32 @@ public class RecruitmentPO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name= "photoPath")
+	public String getPhotoPath() {
+		return photoPath;
+	}
+
+	public void setPhotoPath(String photoPath) {
+		this.photoPath = photoPath;
+	}
+	
+	@Column(name= "identityPathF")
+	public String getIdentityPathF() {
+		return identityPathF;
+	}
+
+	public void setIdentityPathF(String identityPathF) {
+		this.identityPathF = identityPathF;
+	}
+
+	@Column(name= "identityPathB")
+	public String getIdentityPathB() {
+		return identityPathB;
+	}
+
+	public void setIdentityPathB(String identityPathB) {
+		this.identityPathB = identityPathB;
 	}
 }

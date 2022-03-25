@@ -19,61 +19,60 @@ import com.fanglin.personel.po.UserPO;
 @Entity
 @Table(name = "complaint", catalog = "customer")
 public class ComplaintPO implements Serializable {
-	
+
 	private static final long serialVersionUID = 6339034334932620347L;
-	
+
 	public static final short TYPE_DESIGN_SHORT = 0;
-	
+
 	public static final short TYPE_BUSINESS_SHORT = 1;
-	
+
 	public static final short TYPE_CONSTRUCTION_SHORT = 2;
-	
+
 	public static final short TYPE_SALES_SHORT = 3;
-	
+
 	public static final short TYPE_UNREASONBLE_SHORT = 4;
-	
+
 	public static final short STATUS_INIT_SHORT = 0;
-	
+
 	public static final short STATUS_DISPOSE_SHORT = 1;
-	
+
 	public static final short STATUS_END_SHORT = 2;
-	
+
 	public static final short STATUS_CLOSE_SHORT = 3;
-	
+
 	public static final String COLUMN_CID_STR = "cid";
 
 	private long ctid;
-	
+
 	private long cid;
-		
+
 	private short type;
-	
+
 	private DepartmentPO dept;
-	
+
 	private UserPO staff;
-	
+
 	private BrandPO brand;
-	
+
 	private String content;
-	
+
 	private UserPO creater;
-	
+
 	private UserPO updater;
-	
+
 	private Timestamp createTime;
-	
+
 	private Timestamp updateTime;
-	
+
 	private Timestamp finishTime;
-	
+
 	private short status;
 
 	public ComplaintPO() {
 		super();
 	}
 
-	public ComplaintPO(DepartmentPO dept, UserPO staff, BrandPO brand,
-			UserPO creater, UserPO updater) {
+	public ComplaintPO(DepartmentPO dept, UserPO staff, BrandPO brand, UserPO creater, UserPO updater) {
 		super();
 		this.dept = dept;
 		this.staff = staff;
@@ -205,5 +204,5 @@ public class ComplaintPO implements Serializable {
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
+
 }

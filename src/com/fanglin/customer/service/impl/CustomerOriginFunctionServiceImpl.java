@@ -16,25 +16,25 @@ import com.fanglin.utils.BeanUtil;
 @Service("customerOriginFunctionService")
 @Transactional(readOnly = true)
 public class CustomerOriginFunctionServiceImpl implements CustomerOriginFunctionService {
-	
+
 	@Autowired
 	private CustomerOriginFunctionDao customerOriginFunctionDao;
 
 	@Override
 	public List<CustomerOriginFunctionVO> queryCustomerOriginFunction(CustomerOriginFunctionVO customerOriginFunctionVO) {
-		
+
 		List<CustomerOriginFunctionPO> customerOriginFunctionPOs = customerOriginFunctionDao.queryCustomerOriginFunction(customerOriginFunctionVO.getType());
 		List<CustomerOriginFunctionVO> customerOriginFunctionVOs = new ArrayList<CustomerOriginFunctionVO>();
-		
-		for(CustomerOriginFunctionPO customerOriginFunctionPO : customerOriginFunctionPOs){
-			
+
+		for (CustomerOriginFunctionPO customerOriginFunctionPO : customerOriginFunctionPOs) {
+
 			customerOriginFunctionVO = new CustomerOriginFunctionVO();
 			BeanUtil.copyPropertie(customerOriginFunctionPO, customerOriginFunctionVO);
-			
+
 			customerOriginFunctionVOs.add(customerOriginFunctionVO);
-			
+
 		}
-		
+
 		return customerOriginFunctionVOs;
 	}
 

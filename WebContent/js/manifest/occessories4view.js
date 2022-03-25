@@ -1,126 +1,160 @@
-$(function () {
+jQuery(function($) {
+    var occessories = {
+        oid: params["occessoriesItem.oid"],
+        orderId: params["occessories.orderId"],
+        pageType: params['urlLoadParams'].type,
+        oiid: [],
+        sennum: [],
+        vbalance: [],
+    };
 
-    var oid = params["occessoriesItem.oid"];
-    var status = params["occessories.status"];
+    com.post(api.inventory.queryOccessoriesItemByAid, {
+        "occessoriesItem.oid": occessories.oid
+    }, function(res) {
+        var $list = com.focusPage('#list');
+        var $lines = $list.find('.line');
 
-    Refresh();
-
-    withdrawBtn = com.focusPage("#withdrawBtn").on("click", saveDate);
-    
-
-    var renderList = function (tableId, listData) {
-
-        // var $div = $('<div></div>').addClass('fl_search clearfix').css('font-size', '16px').html("单号：" + v.code + " 辅料单");
-        var $tableWrap = com.focusPage('#' + tableId);
-        $tableWrap.html("");
-
-        if (listData && listData.length) {
-
-            var $ulTitle = createTableTitle();
-            var $ulData = $('<ul></ul>').addClass('flex-table');
-            $tableWrap.append($ulTitle).append($ulData);
-
-            $.each(listData, function (i, v) {
-                var $liLine = creatLine(i, v, i == listData.length - 1);
-                $liLine.appendTo($ulTitle);
-
-                return $liLine;
+        $.each(res.occessoriesItems, function(i, v) {
+            occessories.oiid[i] = v.oiid;
+            var $line = addline(1 + $lines.length).attr({
+                'data-oiid': v.oiid,
+                'data-selling': v.sennum,
             });
-        }
-    };
 
+            $line.find('div.no').text(v.goods.no);
+            $line.find('div.name').text(v.goods.name);
+            $line.find('div.category').text(v.goods.category);
+            $line.find('div.brand').text(v.goods.brand);
+            $line.find('div.measurementUnit').text(v.goods.measurementUnit);
+            $line.find('div.number').text(v.num);
+            $line.find('div.pieceNum').text(v.goods.pieceNum);
 
-    var createTableTitle = function () {
-
-        var $ulTitle = $('<ul></ul>').addClass('flex-table');
-        var $liTitle = $('<li></li>').addClass('line table-title');
-
-        var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>'));
-        var $contentWrap = $('<div></div>').addClass('line-wrap  content col8');
-
-        var titleName = '商品编号,名称,品类,品牌,单位,件数,数量,退货数量';
-
-        $.each(titleName.split(','), function (i, v) {
-            var $cell = $('<div></div>').addClass('cell').html(v);
-            $cell.appendTo($contentWrap);
+            if (occessories.pageType == "bind" || occessories.pageType == "supplier") {
+                $line.find('div.sennum input').val(v.num);
+                $line.find('div.rbalance').text(v.rbalance);
+                $line.find('div.vbalance').text(v.vbalance);
+            } else if (occessories.pageType == "receive") {
+                $line.find('div.sennum').text(v.sennum);
+                $line.find('div.rbalance').text(v.rbalance);
+                $line.find('div.vbalance input').val(v.rbalance);
+            } else if (occessories.pageType != "bind" && occessories.pageType != "receive" && occessories.pageType != "supplier") {
+                $line.find('div.sennum').text(v.sennum);
+                $line.find('div.rbalance').text(v.rbalance);
+                $line.find('div.vbalance').text(v.vbalance);
+            }
         });
-    if (status != 0){
-        var $optionWrap = $('<div></div>').addClass('line-wrap action').html($('<div>退货</div>').addClass('cell option'));
-
-        $liTitle.append($indexWrap).append($contentWrap).append($optionWrap).appendTo($ulTitle);
-    };
-        return $ulTitle;
-    };
-
-    var creatLine = function (i, v, lastFlag) {
-
-        var $liLine = $('<li></li>').addClass('line');
-
-        var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
-        var $contentWrap = $('<div></div>').addClass('line-wrap  content col8');
-
-        var propertyArr = [
-            [v.goods.no, 'blue'],
-            [v.goods.name, 'grey'],
-            [v.goods.category, 'grey'],
-            [v.goods.brand, 'grey'],
-            [v.goods.measurementUnit, 'grey'],
-            [v.goods.pieceNum, 'blue'],
-            [v.num, 'blue'],
-            [v.refnum,'blue']
-        ];
-
-        $.each(propertyArr, function (i, v) {
-            var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
-            $cell.appendTo($contentWrap);
-        });
-    if (status !=0){
-
-        var $optionWrap = $('<div></div>').addClass('line-wrap action');
-        var $cellOption = $('<div></div>').addClass('cell option').appendTo($optionWrap);
-        var $btnGroup = $('<div></div>').addClass('btn-group');
-        var $btn = $('<button></button>').addClass('btn btn-info').append('退货');
-
-        $btnGroup.append($btn).appendTo($cellOption);
-        $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
-    }else {
-        $liLine.append($indexWrap).append($contentWrap);
-    }
-
-    if (status!=0) {
-        $btn.click(function () {
-            params["occessoriesItem.oiid"] = v.oiid;
-            com.focusPage("#renewal").modal("show")
-
-        });
-    }
-
-        return $liLine;
-    };
-
-    com.focusPage("#cancelBtn").click(function () {
-        com.closePopup();
     });
 
-    function saveDate() {
-        if (com.validate('renewal')) return false;
-        var  options = {
-            "occessoriesItem.oiid": params["occessoriesItem.oiid"],
-            "occessoriesItem.refnum" : com.focusPage("#updata").val(),
-            "occessoriesItem.oid": oid,
+    com.focusPage("#occessoriesCancelBtn").click(function() {
+        layer.closeAll();
+    });
 
+    com.focusPage("#submitBtn").click(function() {
+        if (occessories.pageType == "bind" || occessories.pageType == "supplier") {
+            var b = com.focusPage(".editable");
+            $.each(b, function(i, v) {
+                occessories.sennum[i] = $(v).val();
+            });
+        } else if (occessories.pageType == "receive") {
+            var a = com.focusPage(".editable");
+            $.each(a, function(i, v) {
+                occessories.vbalance[i] = $(v).val();
+            });
+        } else if (occessories.pageType != "bind" && occessories.pageType != "receive" && occessories.pageType != "supplier") {
+            layer.closeAll();
+        }
+
+        var options = {
+            "occessories.oid": occessories.oid,
         };
-        com.post(api.inventory.refundOccessoriesItem, options, function () {
-            com.showAlert(com.info, "操作成功");
-            com.focusPage("#renewal").modal("hide");
-            Refresh();
+
+        if (occessories.pageType == "bind" || occessories.pageType == "supplier") {
+            occessories.oiid && occessories.oiid.length && $.each(occessories.oiid, function(i, v) {
+                options["occessoriesItems[" + i + "].oiid"] = v;
+                options["occessoriesItems[" + i + "].sennum"] = occessories.sennum[i];
+            });
+
+            com.post(api.inventory.deliveOccessories, options, function(data) {
+                com.showAlert(com.info, "操作成功");
+                layer.closeAll();
+            })
+        } else if (occessories.pageType == "receive") {
+            occessories.oiid && occessories.oiid.length && $.each(occessories.oiid, function(i, v) {
+                options["occessoriesItems[" + i + "].oiid"] = v;
+                options["occessoriesItems[" + i + "].vbalance"] = occessories.vbalance[i];
+            });
+            com.post(api.inventory.balanceOccessories, options, function(data) {
+                com.showAlert(com.info, "操作成功");
+                layer.closeAll();
+            })
+        }
+    });
+
+    function addline(lineindex) {
+
+        var $line = $('<li></li>').addClass('line').appendTo(com.focusPage('#list'));
+        var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').text(lineindex));
+        var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col10');
+        var $optWrap = $('<div></div>').addClass('line-wrap action');
+
+        var _lineInfoSet = [{
+            cellClass: "no blue"
+        }, // 编号
+        {
+            cellClass: "name grey",
+        }, // 名称
+        {
+            cellClass: "category grey"
+        }, // 品类
+        {
+            cellClass: "brand grey"
+        }, // 品牌
+        {
+            cellClass: "measurementUnit grey"
+        }, // 单位
+        {
+            cellClass: "number grey"
+        }, // 数量
+        {
+            cellClass: "pieceNum blue"
+        }, // 件数
+        {
+            cellClass: "sennum blue",
+            hasInput: true,
+            validate: "v_required"
+        }, // 到货数量
+        {
+            cellClass: "rbalance blue"
+        }, // 原结算价
+        {
+            cellClass: "vbalance",
+            hasInput: true,
+            validate: "v_required"
+        },// 结算值
+        ];
+
+        var $btncheck = $('<a class="green" style="font-size: 18px"><i class="icon-ok"></i></a>');
+        var $btndel = $('<a class="red" style="font-size: 18px"><i class=" icon-remove"></i></a>');
+
+        $.each(_lineInfoSet, function(i, v) {
+
+            var $cell = $('<div></div>').addClass('cell ' + v.cellClass);
+
+            if (v.hasInput) {
+                $('<input>').prop({
+                    'type': 'text',
+                    'autocomplete': 'off'
+                }).addClass('editable').addClass(v.validate ? v.validate : '').appendTo($cell)
+            }
+
+            $cell.appendTo($lineInfoWrap);
         });
-        
-    }
-    function Refresh() {
-        com.post(api.inventory.queryOccessoriesItemByAid, {"occessoriesItem.oid": oid}, function (res) {
-            renderList('resultList1', res.occessoriesItems);
-        });
+        $line.append($indexWrap).append($lineInfoWrap);
+
+        var options = {
+            "orderId": occessories.orderId
+        };
+        return $line;
     }
 
 });

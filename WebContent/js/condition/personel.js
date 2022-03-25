@@ -115,6 +115,23 @@ Condition.addupRule("personel", {
             valuePath:"value"
         }
     },
+
+    "info-level" :{
+        label: "职级",
+            type: "select",
+            submitConfig: {
+            name: "level",
+                op: "eq",
+                validate: null
+        },
+        dataSource: {
+            url: api.ds.personel,
+                postData: {},
+            listPath: "userLevel",
+                keyPath: "key",
+                valuePath:"value"
+        }
+    },
     
     "duty-name": {
         label: "职位名称",
@@ -255,6 +272,6 @@ Condition.addupRule("personel", {
             op : "eq",
             validate:null
         }
-    },
+    }
     
 });

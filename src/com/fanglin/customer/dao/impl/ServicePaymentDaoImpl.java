@@ -30,7 +30,7 @@ public class ServicePaymentDaoImpl extends DaoImpl<ServicePaymentPO> implements 
 	}
 
 	@Override
-	public long countCusServicePaymentForAmount(String orderId) {
+	public long amountCusServicePayment(String orderId) {
 
 		String sql = "select sum(IF(payment.servicepayment.type = 1,-payment.servicepayment.serviceMoney ,payment.servicepayment.serviceMoney)) from payment.servicepayment where payment.servicepayment.`status` in (1,2) and payment.servicepayment.orderId = :orderId";
 

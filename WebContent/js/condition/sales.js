@@ -618,4 +618,59 @@ Condition.addupRule("sales", {
             validata: null
         }
     },
+    "oales-orderId": {
+        label: "装修单号",
+        type: "text",
+        submitConfig: {
+            name: "orderId",
+            op: "eq",
+            validate: {
+                "reg": /^[A-Z0-9]*$/,
+                "msg": "格式不正确A-Z,0-9"
+            }
+        }
+    },
+    "oales-createTime":{
+        label: "创建时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "createTimeOales",
+            op: "cn",
+            validata: null
+        }
+    },
+    "oales-status":{
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.sales,
+            postData: {},
+            listPath: "oalesStatus",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "oales-brand":{
+        label: "品牌",
+        type: "text",
+        submitConfig: {
+            name: "oalesBrand",
+            op: "eq",
+            validata: null
+        }
+    },
+    "oales-category":{
+        label: "品类",
+        type: "text",
+        submitConfig: {
+            name: "oalesCategory",
+            op: "eq",
+            validata: null
+        }
+    },
 });

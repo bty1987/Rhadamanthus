@@ -40,9 +40,9 @@ public class EmemberPO implements Serializable {
 	private String ticket;
 
 	private short status;
-	
+
 	private long activity;
-	
+
 	private Timestamp registerTime;
 
 	@Id

@@ -20,14 +20,14 @@ import com.fanglin.customer.vo.ComplackVO;
 public class ComplackAction extends BaseListAction {
 
 	private static final long serialVersionUID = 3141946183128408686L;
-	
+
 	@Autowired
 	private ComplackService complackService;
-	
+
 	private List<ComplackVO> complacks;
-	
+
 	private ComplackVO complack;
-	
+
 	@Action(value = "queryComplack", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryComplack() throws FLException {
 
@@ -35,7 +35,7 @@ public class ComplackAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "trackComplack", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String trackComplack() throws FLException {
 
@@ -59,5 +59,5 @@ public class ComplackAction extends BaseListAction {
 	public void setComplack(ComplackVO complack) {
 		this.complack = complack;
 	}
-	
+
 }

@@ -8,4 +8,5 @@ import com.fanglin.customer.po.RepairPO;
 public interface RepairDao extends Dao<RepairPO> {
 
 	public List<RepairPO> queryRepair(long aid);
+
 }

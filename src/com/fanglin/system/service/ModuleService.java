@@ -21,23 +21,25 @@ import com.fanglin.system.vo.RoleVO;
 import com.fanglin.utils.Paging;
 
 public interface ModuleService {
-	
+
 	public void pageModule(Paging paging, List<Filter> filters);
-	
+
 	public List<ModuleVO> queryModule();
-	
+
 	public List<ModuleVO> queryModuleBySystem(ModuleVO moduleVO);
-	
+
 	public List<ModuleVO> queryModuleByRid(ModuleVO moduleVO, RoleVO roleVO) throws FLException;
-	
+
 	public List<ModuleVO> queryModuleForLinkByRid(ModuleVO moduleVO, RoleVO roleVO) throws FLException;
-	
+
 	public int updateRoleModuleByRid(ModuleVO moduleVO, RoleVO roleVO, List<ModuleVO> moduleVOs, int rid) throws FLException;
-	
+
 	public List<ModuleVO> queryModuleByUserId(ModuleVO moduleVO, UserVO userVO) throws FLException;
-	
+
+	public ModuleVO checkModule(ModuleVO moduleVO, String userId) throws FLException;
+
 	public int addModule(ModuleVO moduleVO) throws FLException;
-	
+
 	public int deleteModule(ModuleVO moduleVO) throws FLException;
-	
+
 }

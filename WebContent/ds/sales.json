@@ -56,6 +56,13 @@
         {"key":"3","value":"确认"},
         {"key":"4","value":"完结"}
     ],
+    "oalesStatus": [
+        {"key":"0","value":"初始"},
+        {"key":"2","value":"全退"},
+        {"key":"3","value":"倒单"},
+        {"key":"4","value":"废单"},
+        {"key":"5","value":"完结"}
+    ],
     "paymentTypes": [],
     "errorCode": 0,
     "errorMsg": null

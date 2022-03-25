@@ -8,4 +8,5 @@ import com.fanglin.inventory.po.OccessoriesItemPO;
 public interface OccessoriesItemDao extends Dao<OccessoriesItemPO> {
 
 	public List<OccessoriesItemPO> queryOccessoriesItemByOid(long oid);
+
 }

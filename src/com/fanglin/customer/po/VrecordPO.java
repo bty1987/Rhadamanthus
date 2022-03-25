@@ -16,20 +16,20 @@ import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "vrecord", catalog = "customer")
-public class VrecordPO implements Serializable{
+public class VrecordPO implements Serializable {
 
 	private static final long serialVersionUID = -5274737264832258573L;
-	
+
 	public static final String COLUMN_VID_STRING = "vid";
-	
+
 	private long vrid;
-	
+
 	private long vid;
-	
+
 	private UserPO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private String comment;
 
 	public VrecordPO() {
@@ -43,7 +43,7 @@ public class VrecordPO implements Serializable{
 
 	@Id
 	@GeneratedValue
-	@Column(name="vrid")
+	@Column(name = "vrid")
 	public long getVrid() {
 		return vrid;
 	}
@@ -52,7 +52,7 @@ public class VrecordPO implements Serializable{
 		this.vrid = vrid;
 	}
 
-	@Column(name="vid")
+	@Column(name = "vid")
 	public long getVid() {
 		return vid;
 	}
@@ -62,7 +62,7 @@ public class VrecordPO implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "cuid", referencedColumnName="uid")
+	@JoinColumn(nullable = false, name = "cuid", referencedColumnName = "uid")
 	public UserPO getCreater() {
 		return creater;
 	}
@@ -71,7 +71,7 @@ public class VrecordPO implements Serializable{
 		this.creater = creater;
 	}
 
-	@Column(name="createTime")
+	@Column(name = "createTime")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -80,7 +80,7 @@ public class VrecordPO implements Serializable{
 		this.createTime = createTime;
 	}
 
-	@Column(name="comment")
+	@Column(name = "comment")
 	public String getComment() {
 		return comment;
 	}
@@ -88,5 +88,5 @@ public class VrecordPO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 }

@@ -8,7 +8,7 @@ import com.fanglin.payment.po.PaymentPO;
 import com.fanglin.utils.Paging;
 
 public interface PaymentDao extends Dao<PaymentPO> {
-	
-	public List<PaymentPO> queryCusPayment(Paging paging,List<Filter> filters,String orderId);
-	
+
+	public List<PaymentPO> queryCusPayment(Paging paging, List<Filter> filters, String orderId);
+
 }

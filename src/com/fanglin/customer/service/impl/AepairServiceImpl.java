@@ -159,7 +159,6 @@ public class AepairServiceImpl implements AepairService {
 			AepairPO aepairPO = new AepairPO().init(consultionVO.getCid(), consultionPO.getDecoration(), creater, aepairVO.getTargetTime(), company, aepairVO.getComment());
 
 			aepairDao.save(aepairPO);
-
 		}
 
 		return 0;
@@ -351,15 +350,16 @@ public class AepairServiceImpl implements AepairService {
 		AepairVO aepairVO = new AepairVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
 		BeanUtil.copyProperties(aepairPO, aepairVO, Arrays.asList("decoration", "creater", "updater", "repaier"));
+
 		if (aepairPO.getDecoration() != null) {
 			aepairPO.getDecoration().ptvcascade(aepairVO.getDecoration());
 		}
+
 		aepairVO.getCreater().setBaseInfo(aepairPO.getCreater());
 		aepairVO.getUpdater().setBaseInfo(aepairPO.getUpdater());
 		aepairVO.getRepaier().setBaseInfo(aepairPO.getRepaier());
 
 		return aepairVO;
-
 	}
 
 	@Override

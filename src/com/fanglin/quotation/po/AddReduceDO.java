@@ -88,6 +88,8 @@ public class AddReduceDO implements Serializable {
 
 	private short status;
 
+	private short isAffirm;
+
 	private Timestamp createTime;
 
 	private String content;
@@ -191,6 +193,15 @@ public class AddReduceDO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "isAffirm")
+	public short getIsAffirm() {
+		return isAffirm;
+	}
+
+	public void setIsAffirm(short isAffirm) {
+		this.isAffirm = isAffirm;
 	}
 
 	@Column(name = "createTime")

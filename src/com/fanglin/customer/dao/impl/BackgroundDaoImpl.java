@@ -8,9 +8,9 @@ import com.fanglin.customer.dao.BackgroundDao;
 import com.fanglin.customer.po.BackgroundPO;
 
 @Repository("backgroundDao")
-public class BackgroundDaoImpl extends DaoImpl<BackgroundPO> implements BackgroundDao{
+public class BackgroundDaoImpl extends DaoImpl<BackgroundPO> implements BackgroundDao {
 
-	public BackgroundDaoImpl(){
+	public BackgroundDaoImpl() {
 		super(BackgroundPO.class);
 	}
 
@@ -18,5 +18,5 @@ public class BackgroundDaoImpl extends DaoImpl<BackgroundPO> implements Backgrou
 	public BackgroundPO queryBackgroundByUnionId(String unionId) {
 		return (BackgroundPO) createCriteria(BackgroundPO.class).add(Restrictions.eq(BackgroundPO.COLUMN_UNIONID_STR, unionId)).uniqueResult();
 	}
-	
+
 }

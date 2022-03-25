@@ -7,7 +7,7 @@
 		</div>
 	</div>
 
-	<div class="modal fade" id="qtModal" tabindex="-1">
+	<div class="modal fade" id=updateQuotationVersionModal tabindex="-1">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -18,13 +18,6 @@
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal">
-						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="no">编号</label>
-							<div class="col-sm-9">
-								<input type="text" id="no" class="col-xs-10 col-sm-5 v_required v_versionId" data-toggle="popover" data-trigger='manual' maxlength="6"/>
-							</div>
-						</div>
-						<div class="space-4"></div>
 
 						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right " for="name">名称</label>
@@ -46,7 +39,7 @@
                             <label class="col-sm-3 control-label no-padding-right" for="trafficDiscount">车运费折扣</label>
                             <div class="col-sm-9">
                                 <input type="checkbox" id="trafficDiscount" class="ace"/>
-                                <span class="lbl"></span>
+                                <span class="lbl discount-lbl"></span>
                             </div>
                         </div>
                         <div class="space-4"></div>
@@ -63,24 +56,24 @@
                             <label class="col-sm-3 control-label no-padding-right" for="manageDiscount">管理费折扣</label>
                             <div class="col-sm-9">
                                 <input type="checkbox" id="manageDiscount" class="ace"/>
-                                <span class="lbl"></span>
+                                <span class="lbl discount-lbl"></span>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                        
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="type">类型</label>
+                            <div class="col-sm-9">
+                                <select id="type" class="col-xs-10 col-sm-5 v_required ace"></select>
                             </div>
                         </div>
                         <div class="space-4"></div>
 
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right " for="comment">信息</label>
-							<div class="col-sm-9">
-								<textarea id="comment" class="col-xs-10 col-sm-5 v_name" rows="3" data-toggle="popover" data-trigger='manual' maxlength="50"></textarea>
-							</div>
-						</div>
-						<div class="space-4"></div>
-
-						<div class="form-group">
 							<label class="col-sm-3 control-label no-padding-right" for="defaultFlag">默认</label>
 							<div class="col-sm-9">
 								<input type="checkbox" id="defaultFlag" class="ace"/>
-								<span class="lbl"></span>
+								<span class="lbl default-lbl"></span>
 							</div>
 						</div>
 						<div class="space-4"></div>
@@ -92,86 +85,26 @@
 							</div>
 						</div>
 						<div class="space-4"></div>	
+                        
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right " for="comment">备注</label>
+                            <div class="col-sm-9">
+                                <textarea id="comment" class="col-xs-10 col-sm-5 v_name" rows="3" data-toggle="popover" data-trigger='manual' maxlength="50"></textarea>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
 					</form>
 				</div>
 				<div class="modal-footer">
 					<button type="button" id="saveBtn" class="btn btn-primary">保存</button>
-					<button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<div class="modal fade" id="copyVersionModal" tabindex="-1">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">
-						<span>&times;</span><span class="sr-only">Close</span>
-					</button>
-					<h4 class="modal-title" id="copyVersionDialog">报价版本</h4>
-				</div>
-				<div class="modal-body">
-					<form class="form-horizontal">
-						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="copyNo">编号</label>
-							<div class="col-sm-9">
-								<input type="text" id="copySourceNo" class="hide">
-								<input type="text" id="copyNo" class="col-xs-10 col-sm-5 v_required v_versionId" data-toggle="popover" data-trigger='manual' maxlength="6"/>
-							</div>
-						</div>
-						<div class="space-4"></div>
-
-						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right " for="copyName">名称</label>
-							<div class="col-sm-9">
-								<input type="text" id="copyName" class="col-xs-10 col-sm-5 v_name v_required" data-toggle="popover" data-trigger='manual' maxlength="30"/>
-							</div>
-						</div>
-						<div class="space-4"></div>
-
-						<div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right " for="copyTrafficRate">车运费比例</label>
-                            <div class="col-sm-9">
-                                <input type="text" id="copyTrafficRate" class="col-xs-10 col-sm-5 v_float v_required" data-toggle="popover" data-trigger='manual'/>
-                            </div>
-                        </div>
-                        <div class="space-4"></div>
-
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right " for="copyManageRate">管理费比例</label>
-                            <div class="col-sm-9">
-                                <input type="text" id="copyManageRate" class="col-xs-10 col-sm-5 v_float v_required" data-toggle="popover" data-trigger='manual'/>
-                            </div>
-                        </div>
-                        <div class="space-4"></div>
-
-						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right " for="copyComment">信息</label>
-							<div class="col-sm-9">
-								<textarea id="copyComment" class="col-xs-10 col-sm-5 v_name" rows="3" data-toggle="popover" data-trigger='manual' maxlength="50"></textarea>
-							</div>
-						</div>
-						<div class="space-4"></div>
-						
-						<div class="form-group">
-                            <label class="col-sm-3 control-label no-padding-right " for="copyOffset">偏移量</label>
-                            <div class="col-sm-9">
-                                <input type="text" id="copyOffset" class="col-xs-10 col-sm-5 v_float v_required" data-toggle="popover" data-trigger='manual'/>
-                            </div>
-                        </div>
-                        <div class="space-4"></div>
-					</form>
-				</div>
-				<div class="modal-footer">
-					<button type="button" id="saveCopyVersionBtn" class="btn btn-primary">保存</button>
-					<button type="button" id="cancelCopyVersionBtn" class="btn btn-default" data-dismiss="modal">取消</button>
-				</div>
-			</div>
-		</div>
-	</div>
 </div>
 
-<script type="text/javascript">
-	$.loadScript(['js/quotation/quotationVersion.js?version=' + versionCode]);
+<script type="text/javascript" src="js/quotation/quotationVersion.js">
+	//$.loadScript(['js/quotation/quotationVersion.js']);
 </script>

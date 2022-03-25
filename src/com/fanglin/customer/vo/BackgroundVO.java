@@ -6,17 +6,17 @@ public class BackgroundVO implements Serializable {
 
 	private static final long serialVersionUID = -1854424833115689869L;
 
-	private long bid;
+	private Long bid;
 
 	private String unionId;
 
 	private String path;
 
-	public long getBid() {
+	public Long getBid() {
 		return bid;
 	}
 
-	public void setBid(long bid) {
+	public void setBid(Long bid) {
 		this.bid = bid;
 	}
 

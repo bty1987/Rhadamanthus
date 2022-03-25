@@ -18,16 +18,16 @@ import com.fanglin.customer.vo.ComplaintVO;
 @Namespace("/")
 @Controller
 public class ComplaintAction extends BaseListAction {
-	
+
 	private static final long serialVersionUID = 4764256911526157079L;
-	
+
 	@Autowired
 	private ComplaintService complaintService;
-	
+
 	private List<ComplaintVO> complaints;
-	
+
 	private ComplaintVO complaint;
-	
+
 	@Action(value = "queryComplaint", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryComplaint() throws FLException {
 
@@ -35,7 +35,7 @@ public class ComplaintAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addComplaint", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addComplaint() throws FLException {
 
@@ -43,7 +43,7 @@ public class ComplaintAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "finishComplaint", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String finishComplaint() throws FLException {
 
@@ -51,7 +51,7 @@ public class ComplaintAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "closeComplaint", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String closeComplaint() throws FLException {
 

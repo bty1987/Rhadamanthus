@@ -221,7 +221,7 @@ jQuery(function ($) {
                     ["创建时间", "createTime"],
                     ["审批人", 'approver.userName'],
                     ["审批时间", "approveTime"],
-                    ["订单号", "decorationOrder.orderId"],
+                    ["装修单号", "decorationOrder.orderId"],
                     ['楼盘地址', ['decorationOrder.village', 'decorationOrder.houseNumber']],
                     ['监理', 'decorationOrder.supervisor'],
                     ['金额', 'salary'],

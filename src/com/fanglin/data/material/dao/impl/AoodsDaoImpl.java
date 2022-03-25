@@ -3,6 +3,7 @@ package com.fanglin.data.material.dao.impl;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -35,15 +36,33 @@ public class AoodsDaoImpl extends DaoImpl<AoodsPO> implements AoodsDao {
 
 		return query.list();
 	}
+	
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@SuppressWarnings("unchecked")
+	public List<AoodsPO> queryAoods(long atid, Short atttype, int bompany) {
+		
+		Criteria query = session().createCriteria(AoodsPO.class);
+		
+		query.add(Restrictions.eq("accessoriesType.atid", atid)).add(Restrictions.eq(AoodsPO.COLUMN_STATUS_STR, AoodsPO.STATUS_ENABLE_INT)).add(Restrictions.eq("bompany", bompany));
+	
+		if(atttype!=null){
+			
+			query.add(Restrictions.eq("atttype", atttype));
+		}
+		
+		return query.list();
+	
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
 	public List<AoodsPO> queryAoodsByName(String name, int limit, int company) {
 		return session().createCriteria(AoodsPO.class).createAlias("goods", "goods").add(Restrictions.eq(AoodsPO.COLUMN_BOMPANY_STR, company)).add(Restrictions.eq(AoodsPO.COLUMN_STATUS_STR, AoodsPO.STATUS_ENABLE_INT)).add(Restrictions.or(Restrictions.or(Restrictions.ilike(AoodsPO.COLUMN_NAME_STR, name, MatchMode.ANYWHERE), Restrictions.ilike(AoodsPO.COLUMN_NO_STR, name, MatchMode.ANYWHERE)), Restrictions.ilike(AoodsPO.COLUMN_PINYIN_STR, name, MatchMode.ANYWHERE))).setMaxResults(limit).list();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<AoodsPO> queryAoodsByAtid(long atid, int company) {
 		return session().createCriteria(AoodsPO.class).add(Restrictions.eq("accessoriesType.atid", atid)).add(Restrictions.eq(AoodsPO.COLUMN_STATUS_STR, AoodsPO.STATUS_ENABLE_INT)).add(Restrictions.eq("bompany", company)).list();
 	}
@@ -96,8 +115,11 @@ public class AoodsDaoImpl extends DaoImpl<AoodsPO> implements AoodsDao {
 				query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
 			} else if (AoodsPO.COLUMN_BOMPANY_STR.equals(field)) {
 				query.add(Restrictions.eq("bompany", CompanyServiceImpl.decode(data)));
+			} else if (AoodsPO.COLUMN_STATUS_ATTTYPE.equals(field)){
+				query.add(Restrictions.eq("atttype",Short.valueOf(filter.getData())));
 			}
 		}
 	}
+
 
 }

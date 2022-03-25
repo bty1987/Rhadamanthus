@@ -8,5 +8,5 @@ import com.fanglin.customer.po.CustomerOriginFunctionPO;
 public interface CustomerOriginFunctionDao extends Dao<CustomerOriginFunctionPO> {
 
 	public List<CustomerOriginFunctionPO> queryCustomerOriginFunction(Short type);
-	
+
 }

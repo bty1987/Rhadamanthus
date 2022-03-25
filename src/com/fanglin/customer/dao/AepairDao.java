@@ -9,9 +9,10 @@ import com.fanglin.utils.Paging;
 
 public interface AepairDao extends Dao<AepairPO> {
 
-	public List<AepairPO> pageAepair(Paging paging,List<Filter> filters, int company);
-	
+	public List<AepairPO> pageAepair(Paging paging, List<Filter> filters, int company);
+
 	public List<AepairPO> queryAepair(long csid);
-	
+
 	public List<AepairPO> queryAepairByOrderId(String orderId);
+
 }

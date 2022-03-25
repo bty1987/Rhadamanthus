@@ -19,4 +19,6 @@ public interface AwardPurchaseService {
 
 	public void balanceAwardPurchase(AwardPurchaseVO awardPurchase, String userId) throws FLException;
 
+	public void cancelAwardPurchase(AwardPurchaseVO awardPurchase) throws FLException;
+
 }

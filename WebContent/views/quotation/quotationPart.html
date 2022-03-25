@@ -13,32 +13,47 @@
 					<div class="widget-body">
 						<div class="widget-main">
 							<div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class=" col-md-4 no-padding-right">装修单号</label>
+                                        <label id=orderId class="col-md-8 no-padding-left">0.00</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class=" col-md-4 no-padding-right">楼盘地址</label>
+                                        <label id="address" class="col-md-8 no-padding-left">0.00</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class=" col-md-4 no-padding-right">报价版本</label>
+                                        <label id="version" class="col-md-8 no-padding-left">0.00</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 hr hr-14"></div>
 								<div id="functionAreaSumList" class="col-md-12"></div>
 								<div class="col-md-12 hr hr-14"></div>
 								<div class="col-md-12">
 								    <div class="form-group">
-                                        <label class=" col-md-6  no-padding-right">基数</label>
-                                        <label id="basePrice" class=" col-md-4  no-padding-left">0.00</label>
+                                        <label class=" col-md-6 no-padding-right">基数</label>
+                                        <label id="basePrice" class="col-md-6 no-padding-left">0.00</label>
                                     </div>
                                     <div class="form-group">
-                                        <label class=" col-md-6  no-padding-right">打折总额</label>
-                                        <label id="disPrice" class=" col-md-4  no-padding-left">0.00</label>
+                                        <label class=" col-md-6 no-padding-right">打折总额</label>
+                                        <label id="disPrice" class="col-md-6 no-padding-left">0.00</label>
                                     </div>
                                     <div class="form-group">
-                                        <label class=" col-md-6  no-padding-right">非打折总额</label>
-                                        <label id="undisPrice" class=" col-md-4  no-padding-left">0.00</label>
+                                        <label class=" col-md-6 no-padding-right">非打折总额</label>
+                                        <label id="undisPrice" class="col-md-6 no-padding-left">0.00</label>
                                     </div>
                                     <div class="form-group">
-                                        <label class=" col-md-6  no-padding-right">成本总额</label>
-                                        <label id="costPrice" class=" col-md-4  no-padding-left">0.00</label>
+                                        <label class=" col-md-6 no-padding-right">成本总额</label>
+                                        <label id="costPrice" class="col-md-6 no-padding-left">0.00</label>
                                     </div>
 									<div class="form-group">
-										<label class=" col-md-6  no-padding-right">总价</label>
-										<label id="sumLabSumMoney" class=" col-md-4  no-padding-left">0.00</label>
+										<label class=" col-md-6 no-padding-right">总价</label>
+										<label id="sumLabSumMoney" class="col-md-6 no-padding-left">0.00</label>
 									</div>
 									<div class="form-group">
-										<label class=" col-md-6  no-padding-right">折扣</label>
-										<label id="sumLabDiscount" class=" col-md-4  no-padding-left">10.0</label>
+										<label class=" col-md-6 no-padding-right">折扣</label>
+										<label id="sumLabDiscount" class="col-md-6 no-padding-left">10.0</label>
 									</div>
 									<div class="form-group">
 										<label class="col-md-6 no-padding-right">折扣价</label>
@@ -547,7 +562,6 @@
 	</div>
 </div>
 
-<script type="text/javascript" src="js/utils/approvalUtils.js">
-	//$.loadScript(['js/utils/approvalUtils.js','js/quotation/quotationPart.js']);
+<script type="text/javascript">
+	$.loadScript(['js/utils/approvalUtils.js','js/quotation/quotationPart.js']);
 </script>
-<script src="js/quotation/quotationPart.js"></script>

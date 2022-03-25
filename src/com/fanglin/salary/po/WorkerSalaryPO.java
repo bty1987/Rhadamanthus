@@ -78,14 +78,14 @@ public class WorkerSalaryPO implements Serializable {
 	public static final short ISSEND_SEND_INT = 1;
 
 	public static final short ISSEND_SENDED_INT = 2;
-	
-	public static final short ISAPPR_UNAPPR_INT = 0; //初始
 
-	public static final short ISAPPR_APPR_INT = 1;	//代发
+	public static final short ISAPPR_UNAPPR_INT = 0; // 初始
 
-	public static final short ISAPPR_APPRED_INT = 2; //已发
+	public static final short ISAPPR_APPR_INT = 1; // 代发
 
-	private long wsId;
+	public static final short ISAPPR_APPRED_INT = 2; // 已发
+
+	private long wsid;
 
 	private DecorationPO decoration;
 
@@ -205,12 +205,12 @@ public class WorkerSalaryPO implements Serializable {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "wsid")
-	public long getWsId() {
-		return wsId;
+	public long getWsid() {
+		return wsid;
 	}
 
-	public void setWsId(long wsId) {
-		this.wsId = wsId;
+	public void setWsid(long wsid) {
+		this.wsid = wsid;
 	}
 
 	@Column(name = "cwsid")
@@ -423,7 +423,7 @@ public class WorkerSalaryPO implements Serializable {
 	public void setIsSend(short isSend) {
 		this.isSend = isSend;
 	}
-	
+
 	@Column(name = "isAppr")
 	public short getIsAppr() {
 		return isAppr;

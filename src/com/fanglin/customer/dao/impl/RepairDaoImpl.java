@@ -11,13 +11,13 @@ import com.fanglin.customer.po.RepairPO;
 
 @Repository("repairDao")
 public class RepairDaoImpl extends DaoImpl<RepairPO> implements RepairDao {
-	
-	public RepairDaoImpl(){
+
+	public RepairDaoImpl() {
 		super(RepairPO.class);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<RepairPO> queryRepair(long aid) {
 		return session().createCriteria(RepairPO.class).add(Restrictions.eq("aid", aid)).list();
 	}

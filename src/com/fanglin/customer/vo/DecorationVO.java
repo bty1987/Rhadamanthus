@@ -42,7 +42,7 @@ public class DecorationVO implements Serializable {
 	private Timestamp measureTime;
 
 	private Short defaultFlag;
-	
+
 	private Long factPrice;
 
 	public DecorationVO() {

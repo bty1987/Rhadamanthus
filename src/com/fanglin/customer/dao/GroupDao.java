@@ -7,10 +7,10 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.po.GroupPO;
 import com.fanglin.utils.Paging;
 
-public interface GroupDao extends Dao<GroupPO>{
-	
-	public List<GroupPO> pageGroup(Paging paging,List<Filter> filters);
-	
+public interface GroupDao extends Dao<GroupPO> {
+
+	public List<GroupPO> pageGroup(Paging paging, List<Filter> filters);
+
 	public GroupPO queryGroup(String opengid);
 
 }

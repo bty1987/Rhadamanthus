@@ -1,0 +1,53 @@
+<div>
+    <div class="flex-wrap" id="form">
+        <div class="stay-bottom">
+            <button class="btn btn-yellow" id="addCostBtn">添加外辅费用</button>
+        </div>
+    </div>
+    <div class="fl_search clearfix" id="costList"></div>
+
+</div>
+
+<div id="addOccessoriesCost" style="display: none" class="page-content">
+    <div class="row">
+        <form class="form-horizontal">
+            <div class="form-group" style="margin-right: 0">
+                <label class="col-xs-3 control-label " for="price">费用</label>
+                <div class="col-xs-9">
+                    <input type="text" id="price" class="col-xs-6 v_required v_float_3"/>
+                </div>
+            </div>
+            <div class="space5"></div>
+
+            <div class="form-group" style="margin-right: 0">
+                <label class="col-xs-3 control-label " for="cost">成本</label>
+                <div class="col-xs-9">
+                    <input type="text" id="cost" class="col-xs-6 v_required v_float_3"/>
+                </div>
+            </div>
+            <div class="space5"></div>
+
+            <div class="form-group" style="margin-right: 0">
+                <label class="col-xs-3 control-label " for="type">类型</label>
+                <div class="col-xs-9">
+                    <select id="type" name="type" class="col-xs-6 v_required v_float_3"data-required="1" data-toggle="popover" data-trigger='manual'></select>
+                </div>
+            </div>
+            <div class="space5"></div>
+
+            <div class="form-group" style="margin-right: 0">
+                <div style="text-align: right">
+                    <button type="button" id="saveBtn" class="btn btn-success">确定</button>
+                </div>
+            </div>
+            <div class="space5"></div>
+
+        </form>
+    </div>
+</div>
+
+<div id="layerPopUp" class="portlet box page-content"></div>
+
+<script>
+    $.loadScript(['js/manifest/occessoriesCost.js']);
+</script>

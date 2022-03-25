@@ -14,14 +14,18 @@ public class NormoodVO implements Serializable {
 
 	private QuotationItemVO quotationItem;// 报价id
 
-	private String unit;
+	private String normunit;// 定额单位
 
-	private Integer num;// 数量
+	private Integer normnum;// 定额数量
+	
+	private String storeunit;// 库房单位
 
+	private Integer storenum;// 库房数量
+	
 	private Short status;
 
 	private Long amount;
-
+	
 	public NormoodVO() {
 		super();
 	}
@@ -55,21 +59,37 @@ public class NormoodVO implements Serializable {
 	public void setQuotationItem(QuotationItemVO quotationItem) {
 		this.quotationItem = quotationItem;
 	}
-
-	public String getUnit() {
-		return unit;
+	
+	public String getNormunit() {
+		return normunit;
 	}
 
-	public void setUnit(String unit) {
-		this.unit = unit;
+	public void setNormunit(String normunit) {
+		this.normunit = normunit;
 	}
 
-	public Integer getNum() {
-		return num;
+	public Integer getNormnum() {
+		return normnum;
 	}
 
-	public void setNum(Integer num) {
-		this.num = num;
+	public void setNormnum(Integer normnum) {
+		this.normnum = normnum;
+	}
+
+	public String getStoreunit() {
+		return storeunit;
+	}
+
+	public void setStoreunit(String storeunit) {
+		this.storeunit = storeunit;
+	}
+
+	public Integer getStorenum() {
+		return storenum;
+	}
+
+	public void setStorenum(Integer storenum) {
+		this.storenum = storenum;
 	}
 
 	public Short getStatus() {
@@ -87,5 +107,5 @@ public class NormoodVO implements Serializable {
 	public void setAmount(Long amount) {
 		this.amount = amount;
 	}
-
+	
 }

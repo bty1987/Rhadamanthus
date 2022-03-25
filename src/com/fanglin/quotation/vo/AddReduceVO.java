@@ -53,6 +53,8 @@ public class AddReduceVO implements Serializable {
 
 	private Short status;
 
+	private Short isAffirm;
+
 	private Timestamp createTime;
 
 	private String content;
@@ -211,6 +213,14 @@ public class AddReduceVO implements Serializable {
 
 	public void setAddReduceItems(List<AddReduceItemVO> addReduceItems) {
 		this.addReduceItems = addReduceItems;
+	}
+
+	public Short getIsAffirm() {
+		return isAffirm;
+	}
+
+	public void setIsAffirm(Short isAffirm) {
+		this.isAffirm = isAffirm;
 	}
 
 }

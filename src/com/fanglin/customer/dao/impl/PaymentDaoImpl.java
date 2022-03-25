@@ -18,15 +18,15 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 	}
 
 	@Override
-	public List<PaymentPO> queryCusPayment(Paging paging, List<Filter> filters,String orderId) {
-		
-		PagingQuery<PaymentPO> query = pagingQuery(paging,PaymentPO.class);
+	public List<PaymentPO> queryCusPayment(Paging paging, List<Filter> filters, String orderId) {
+
+		PagingQuery<PaymentPO> query = pagingQuery(paging, PaymentPO.class);
 
 		query.add(query.getCriterion("orderId", orderId, "eq"));
-		
+
 		query.desc("createTime");
 
 		return query.list();
 	}
-	
+
 }

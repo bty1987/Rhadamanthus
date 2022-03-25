@@ -28,6 +28,8 @@ public class FeedbackVO implements Serializable {
 
 	private List<String> drawings;
 
+	private String company;
+
 	public Long getFid() {
 		return fid;
 	}
@@ -99,6 +101,14 @@ public class FeedbackVO implements Serializable {
 
 	public void setDrawings(List<String> drawings) {
 		this.drawings = drawings;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
 	}
 
 }

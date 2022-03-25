@@ -2,18 +2,18 @@ package com.fanglin.customer.vo;
 
 import java.io.Serializable;
 
-public class GroupVO implements Serializable{
+public class GroupVO implements Serializable {
 
 	private static final long serialVersionUID = -4891279810933343691L;
-	
+
 	private Long gid;
-	
+
 	private String opengid;
-	
+
 	private String orderId;
-	
+
 	private String name;
-	
+
 	private String content;
 
 	public Long getGid() {
@@ -55,5 +55,5 @@ public class GroupVO implements Serializable{
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
+
 }

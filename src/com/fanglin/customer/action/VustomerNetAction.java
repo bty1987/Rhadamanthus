@@ -14,34 +14,33 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.customer.service.VustomerNetService;
 import com.fanglin.customer.vo.VustomerNetVO;
 
-
 @ParentPackage("common")
 @Namespace("/")
 @Controller
 public class VustomerNetAction extends BaseListAction {
-	
+
 	private static final long serialVersionUID = 4798537623864098770L;
-	
+
 	@Autowired
 	private VustomerNetService vustomerNetService;
-	
+
 	private VustomerNetVO vustomerNet;
-	
+
 	private List<?> counts;
-	
-	@Action(value="countVustomerNetByUnionId", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String countVustomerNetByUnionId() throws FLException{
-		
+
+	@Action(value = "countVustomerNetByUnionId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String countVustomerNetByUnionId() throws FLException {
+
 		counts = vustomerNetService.countVustomerNetByUnionId(vustomerNet);
-		
+
 		return SUCCESS;
 	}
-	
-	@Action(value="buildVustomerNet", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String buildVustomerNet() throws FLException{
-		
+
+	@Action(value = "buildVustomerNet", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String buildVustomerNet() throws FLException {
+
 		vustomerNetService.buildVustomerNet(vustomerNet);
-		
+
 		return SUCCESS;
 	}
 

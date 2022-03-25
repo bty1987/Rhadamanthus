@@ -12,22 +12,22 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="circledrawing",catalog="customer")
-public class CircleDrawingPO implements Serializable{
+@Table(name = "circledrawing", catalog = "customer")
+public class CircleDrawingPO implements Serializable {
 
 	private static final long serialVersionUID = -3915880561720496271L;
-	
+
 	public static final String COLUMN_DCID_STR = "cid";
-	
+
 	private long cdid;
-	
+
 	private CirclePO circle;
-	
+
 	private String path;
 
 	@Id
 	@GeneratedValue
-	@Column(name="cdid")
+	@Column(name = "cdid")
 	public long getCdid() {
 		return cdid;
 	}
@@ -46,7 +46,7 @@ public class CircleDrawingPO implements Serializable{
 		this.circle = circle;
 	}
 
-	@Column(name="path")
+	@Column(name = "path")
 	public String getPath() {
 		return path;
 	}
@@ -54,5 +54,5 @@ public class CircleDrawingPO implements Serializable{
 	public void setPath(String path) {
 		this.path = path;
 	}
-	
+
 }

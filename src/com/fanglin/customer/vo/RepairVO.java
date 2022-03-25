@@ -34,7 +34,7 @@ public class RepairVO implements Serializable {
 	private Short status;
 
 	private String content;
-	
+
 	private Short schedule;
 
 	public RepairVO() {

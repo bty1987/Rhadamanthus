@@ -9,18 +9,16 @@ import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.customer.dao.CustomerRecordDao;
 import com.fanglin.customer.po.CustomerRecordPO;
 
-
 @Repository("customerRecordDao")
 public class CustomerRecordDaoImpl extends DaoImpl<CustomerRecordPO> implements CustomerRecordDao {
 
-	public CustomerRecordDaoImpl(){
+	public CustomerRecordDaoImpl() {
 		super(CustomerRecordPO.class);
 	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<CustomerRecordPO> queryCustomerRecord(long csid) {
 
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<CustomerRecordPO> queryCustomerRecord(long csid) {
 		return session().createCriteria(CustomerRecordPO.class).add(Restrictions.eq("csid", csid)).list();
 	}
 

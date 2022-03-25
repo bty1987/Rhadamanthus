@@ -632,7 +632,7 @@ jQuery(function($) {
 		com.post(api.payment.pageMaterialPayment, $.extend({}, params["materialPaymentPostData"+materialPayment.type], {"paging.noPage": 1}), function(res){
 			$.exceler({
 				column : [
-					["订单号","material.orderId"],
+					["装修单号","material.orderId"],
 					["主材号","material.no"],
 					['楼盘地址',['material.house.village.cityProper.city.name', 'material.house.village.cityProper.name', 'material.house.village.name', 'material.house.houseNumber']],
 					['品牌','brand'],

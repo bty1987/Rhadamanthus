@@ -82,6 +82,14 @@ public class UserAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "pageUserInfo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageUserInfo() throws FLException {
+
+		userService.pageUserInfo(getPaging(), getFilters(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryUserByLoginId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryUserByLoginId() throws FLException {
 

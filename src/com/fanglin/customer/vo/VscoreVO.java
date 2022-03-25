@@ -7,12 +7,12 @@ public class VscoreVO implements Serializable {
 	private static final long serialVersionUID = 5450420287962263536L;
 
 	private Long vsid;
-	
+
 	private String unionId;
-	
+
 	private Integer score;
-	
-	public VscoreVO(){
+
+	public VscoreVO() {
 		super();
 	}
 
@@ -39,5 +39,5 @@ public class VscoreVO implements Serializable {
 	public void setScore(Integer score) {
 		this.score = score;
 	}
-	
+
 }

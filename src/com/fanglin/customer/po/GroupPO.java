@@ -10,25 +10,25 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "group", catalog = "customer")
-public class GroupPO implements Serializable{
+public class GroupPO implements Serializable {
 
 	private static final long serialVersionUID = -8021596170317836022L;
-	
+
 	public static final String COLUMN_OPENGID_STR = "opengid";
-	
+
 	private long gid;
-	
+
 	private String opengid;
-	
+
 	private String orderId;
-	
+
 	private String name;
-	
+
 	private String content;
 
 	@Id
 	@GeneratedValue
-	@Column(name="gid")
+	@Column(name = "gid")
 	public long getGid() {
 		return gid;
 	}
@@ -36,8 +36,8 @@ public class GroupPO implements Serializable{
 	public void setGid(long gid) {
 		this.gid = gid;
 	}
-	
-	@Column(name="opengid")
+
+	@Column(name = "opengid")
 	public String getOpengid() {
 		return opengid;
 	}
@@ -45,8 +45,8 @@ public class GroupPO implements Serializable{
 	public void setOpengid(String opengid) {
 		this.opengid = opengid;
 	}
-	
-	@Column(name="orderId")
+
+	@Column(name = "orderId")
 	public String getOrderId() {
 		return orderId;
 	}
@@ -54,8 +54,8 @@ public class GroupPO implements Serializable{
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
-	
-	@Column(name="name")
+
+	@Column(name = "name")
 	public String getName() {
 		return name;
 	}
@@ -64,7 +64,7 @@ public class GroupPO implements Serializable{
 		this.name = name;
 	}
 
-	@Column(name="content")
+	@Column(name = "content")
 	public String getContent() {
 		return content;
 	}
@@ -72,5 +72,5 @@ public class GroupPO implements Serializable{
 	public void setContent(String content) {
 		this.content = content;
 	}
-	
+
 }

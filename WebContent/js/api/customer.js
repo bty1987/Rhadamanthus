@@ -131,7 +131,14 @@ $.extend(api, {customer: {
     bindingCusDecoration : {url : "bindingCusDecoration.do"},
     queryCusDecorationForDefault : {url : "queryCusDecorationForDefault.do"},
     updateCusDecorationForDefault : {url : "updateCusDecorationForDefault.do"},
-    
+
+    pageSurvey : {url : "pageSurvey.do"},
+    querySurveyByOrderId : {url : "querySurveyByOrderId.do"},
+    querySurveyBySid : {url : "querySurveyBySid.do"},
+    makeSurvey : {url : "makeSurvey.do"},
+    handleSurvey : {url : "handleSurvey.do"},
+    sendSurvey : {url : "sendSurvey.do"},
+
     pageEmember : {url : "pageEmember.do"},
     queryEmember : {url : "queryEmember.do"},
     addEmember : {url : "addEmember.do"},

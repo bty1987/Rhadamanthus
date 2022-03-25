@@ -85,6 +85,7 @@
 					var $btnlookEducation= $('<a></a>').addClass('btn btn-minier btn-yellow').html('教育信息');
 					var $btnlookOperation= $('<a></a>').addClass('btn btn-minier btn-blue').html('工作信息');
 					var $btnDetail= $('<a></a>').addClass('btn btn-minier btn-success').html('简单查看');
+					var $btnPrint= $('<a></a>').addClass('btn btn-minier btn-warning').html('打印');
 
                     var propertyArr = [
                         ["员工编号:", v.userId, "grey"],
@@ -299,28 +300,28 @@
                               }, null, false);
                         });
                     });
-                    
+
 					$btnlookContract.click(function(){
 						params.uid = v.uid;
 						com.popup4page("#layerPopUp", "views/personnel/userContract.html", "合同信息", null, function () {
                             userSeacher.doSearch();
                         });
 					});
-					
+
 					$btnlookEducation.click(function(){
 						params.uid = v.uid;
 						com.popup4page("#layerPopUp", "views/personnel/userEducation.html", "教育信息", null, function () {
                             userSeacher.doSearch();
                         });
 					});
-					
+
 					$btnlookOperation.click(function(){
 						params.uid = v.uid;
 						com.popup4page("#layerPopUp", "views/personnel/userOperation.html", "工作信息", null, function () {
                             userSeacher.doSearch();
                         });
 					});
-					
+
 					$btnDetail.click(function(){
 						params.tempUserId = v.userId;
 						params.uid = v.uid;
@@ -329,7 +330,13 @@
                             userSeacher.doSearch();
                         });
 					});
-                    
+
+					$btnPrint.click(function(){
+						params.tempUserId = v.userId;
+						params.uid = v.uid;
+						com.popup("方林装饰应聘登记表", api.index.userPrint.url, null, null, true);
+					});
+
                     //删除点击事件
                     $deleteDD.click(function(){
                         var btn = $(this);
@@ -362,7 +369,7 @@
                         });
                     });
                     
-                    $divBtnWrap.append($qrcode).append($btnCheck).append($btnEdit).append($addDD).append($updateDD).append($deleteDD).append($userexception).append($btnlookContract).append($btnlookEducation).append($btnlookOperation).append($btnDetail).appendTo($h3);
+                    $divBtnWrap.append($qrcode).append($btnCheck).append($btnEdit).append($addDD).append($updateDD).append($deleteDD).append($userexception).append($btnlookContract).append($btnlookEducation).append($btnlookOperation).append($btnDetail).append($btnPrint).appendTo($h3);
 
                     $liLine.append($h3).append($ulProperty).appendTo($ul);
                 });
@@ -396,7 +403,14 @@
         var $importi = $('<i></i>').addClass('icon-upload bigger-110').appendTo($importa);
         var $importspan = $('<span></span>').text('上传').appendTo($importa);
 
-        return [$addaS, $adda, $importa];
+        var $exporta = $('<a></a>').addClass('btn btn-minier btn-warning pull-left').attr('name', 'export').css("margin", "0px 3px");
+        var $exporti = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($exporta);
+        var $exportspan = $('<span></span>').text('导出').appendTo($exporta);
+
+        var btns =  [$addaS, $adda, $importa];
+        user.isExpert ? btns.push($exporta) : btns; //是否为员工-高级页面
+
+        return btns;
     });
 
     com.focusPage('a[name="addUser"]','#pagenation').click(function(){
@@ -419,6 +433,12 @@
     
     com.uploadify(user.items.import, "上传文件", api.salary.importUserSalary, 'btn btn-success col-sm-12', '*.xls;*.xlsx', {'uploadType': 4}, 1);
 
+	com.focusPage('a[name="export"]','#pagenation').click(function(){
+        com.popup4page("#layerPopUp", api.index.userOutputIndex.url, "导出人员信息", null, function () {
+            userSeacher.doSearch();
+        });
+    });
+	
     //添加人员(简化版)
     user.saveBtn = com.focusPage("#saveUserBtn").on("click", saveData);
     user.cancelBtn = com.focusPage("#cancelUserBtn").on("click",function() {

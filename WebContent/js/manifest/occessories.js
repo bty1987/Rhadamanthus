@@ -1,242 +1,313 @@
-$(function () {
-    var occessories={
-        saveBtn: com.focusPage("#saveBtn"),
-        cancelBtn: null,
-        status: {},
-        modals: {
+$(function() {
+
+    var occessories = {
+        oid: null,
+        number: null,
+
+        btns: {
+            saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+            cancelBtn: com.focusPage("#cancelBtn"),
         },
-        addBindOccessories: com.focusPage("#addBindOccessories"),
-        oid : null,
+
+        items: {
+            supplier: com.focusPage("#supplier", "#bindOccessoriesModal"),
+        },
+
+        modals: {
+            bindOccessoriesModal: com.focusPage("#bindOccessoriesModal"),
+        },
+
+        status: {},
+        isEnter: {},
+        isLift: {},
+
         pageType: params['urlLoadParams'].type,
     };
 
-    com.post(api.ds.manifest, {}, function(res){
+    var url = api.inventory.pageOccessories;
+    var conditions = ['inventory-accessories-orderId', 'inventory-occessories-no', 'inventory-accessories-createrName', 'inventory-accessories-createTime', 'inventory-occessories-status', 'inventory-occessories-isEnter', 'inventory-occessories-isLift'];
+    var options = {};
+
+    if (occessories.pageType == "supplier") {
+        url = api.inventory.pageOccessoriesForSupplier;
+        options = $.extend({}, options, {
+            "occessories.status": 1
+        });
+    } else if (occessories.pageType == "delive") {
+        options = $.extend({}, options, {
+            "occessories.status": 2
+        });
+    } else if (occessories.pageType == "receive") {
+        options = $.extend({}, options, {
+            "occessories.status": 3
+        });
+    } else if (occessories.pageType == "balance") {
+        options = $.extend({}, options, {
+            "occessories.status": 4
+        });
+    } else if (occessories.pageType == "bind") {
+        options = $.extend({}, options, {
+            "occessories.status": 1
+        });
+    } else {
+        options = $.extend({}, options, {
+            "occessories.status": 0
+        });
+    }
+
+    com.post(api.ds.manifest, {}, function(res) {
+
         occessories.status = res.occessoriesStatus.split("key", "value");
+        occessories.isEnter = res.occessoriesisEnter.split("key", "value");
+        occessories.isLift = res.occessoriesisLift.split("key", "value");
     }, null, false);
 
-    occessories.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
+    occessories.modals.bindOccessoriesModal.on("hide.bs.modal", function(e) {
 
-    occessories.cancelBtn = com.focusPage("#cancelBtn");
-
-    occessories.addBindOccessories.on("hide.bs.modal", function (e) {
-        com.focusPage("supplier");
-        com.cleanTypeahead("oid");
         com.cleanItems(occessories.items);
     });
 
-    com.initTypeahead('supplier', api.personel.querySupplierByPinyin, "supplier.pinYin", {"user.status": 0}, "suppliers", "uid", "userName", null);
+    com.initTypeahead('supplier', api.personel.querySupplierByPinyin, "supplier.pinYin", {
+        "user.status": 0
+    }, "suppliers", "uid", "userName", null);
 
-    occessories.oid = com.focusPage("#oid");
+    var searcher = new Searcher();
 
-    var displayFunc = (function () {
+    searcher.base("condList", "pagenation", "resultList", url);
 
-        var renderList = function (tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId);
+    searcher.condition(conditions);
+    searcher.history("accessoriesPostData");
+    searcher.param(options);
 
-            if (listData && listData.length) {
+    var lineprops = [{
+        fieId: "no",
+        name: "外辅单号",
+        prop: "no",
+        clazz: "blue"
+    }, {
+        fieId: "orderId",
+        name: "装修单号",
+        prop: "decoration.orderId",
+        clazz: "blue"
+    }, {
+        field: "village",
+        name: "楼盘",
+        prop: "decoration.house.village.name",
+        clazz: "grey"
+    }, {
+        field: "houseNumber",
+        name: "楼号",
+        prop: "decoration.house.houseNumber",
+        clazz: "grey"
+    }, {
+        field: "creater",
+        name: "创建人",
+        prop: "creater.currentName",
+        clazz: "grey"
+    }, {
+        field: "supervisor",
+        name: "监理",
+        prop: "supervisor.currentName",
+        clazz: "grey"
+    }, {
+        field: "createTime",
+        name: "创建时间",
+        prop: "createTime",
+        clazz: "green"
+    }, {
+        field: "status",
+        name: "状态",
+        prop: "status",
+        clazz: "red",
+        dataset: occessories.status
+    }, {
+        field: "isEnter",
+        name: "可进园区",
+        prop: "isEnter",
+        clazz: "red",
+        dataset: occessories.isEnter
+    }, {
+        field: "isLift",
+        name: "有无电梯",
+        prop: "isLift",
+        clazz: "red",
+        dataset: occessories.isEnter
+    }, {
+        field: "isExceed",
+        name: "有无超阶",
+        prop: "isExceed",
+        clazz: "red",
+        dataset: occessories.isEnter
+    }, {
+        field: "isAttic",
+        name: "有无超阶",
+        prop: "isAttic",
+        clazz: "red",
+        dataset: occessories.isEnter
+    }, ];
 
-                var $ulTitle = createTableTitle();
-                var $ulData = $('<ul></ul>').addClass('flex-table');
+    var linebtns = [{
+        name: "到货",
+        clazz: "btn-info",
+        handle: function(v) {
 
-                $tableWrap.append($ulTitle).append($ulData);
-
-                $.each(listData, function (i, v) {
-                    creatLine(i, v, i == listData.length - 1).appendTo($ulTitle);
-                });
-            }
-        };
-
-        var createTableTitle = function () {
-
-            var $ulTitle = $('<ul></ul>').addClass('flex-table');
-            var $liTitle = $('<li></li>').addClass('line table-title');
-
-            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>'));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col7');
-
-            var titleName = '外辅单号,装修单号,创建人,创建时间,监理,状态';
-
-            $.each(titleName.split(','), function (i, v) {
-                var $cell = $('<div></div>').addClass('cell').html(v);
-                $cell.appendTo($contentWrap);
-            });
-
-            var $optionWrap = $('<div></div>').addClass('line-wrap action').html($('<div>操作</div>').addClass('cell option'));
-
-            $liTitle.append($indexWrap).append($contentWrap).append($optionWrap).appendTo($ulTitle);
-
-            return $ulTitle;
-        };
-
-        var creatLine = function (i, v, lastFlag) {
-
-            var $liLine = $('<li></li>').addClass('line');
-            // var _label = $('<label></label>');
-            // var $input = $('<input>').attr({"type": "checkbox"}).addClass('ace ace-checkbox-2 hide').attr('data-oid', v.oid).attr({
-            //     "data-status": v.status
-            // });
-            // var _span = $('<span></span>').addClass('lbl grey bigger-150').css('font-weight','bold');
-            // _label.append($input).append(_span);
-            // var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(_label));
-
-            var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
-            var $contentWrap = $('<div></div>').addClass('line-wrap  content col7');
-
-            var propertyArr = [
-                [v.no, 'blue'],
-                [v.orderId, 'blue'],
-                [v.creater.currentName, 'grey'],
-                [v.createTime, 'green'],
-                [v.supervisor.currentName, 'grey'],
-                [occessories.status[v.status], 'red'],
-            ];
-
-            $.each(propertyArr, function (i, v) {
-                var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
-                $cell.appendTo($contentWrap);
-            });
-
-            var $optionWrap = $('<div></div>').addClass('line-wrap action');
-            var $cellOption = $('<div></div>').addClass('cell option').appendTo($optionWrap);
-
-            var $btnGroup = $('<div></div>').addClass('btn-group');
-            var $btn = $('<button></button>').addClass('btn btn-info dropdown-toggle').attr('data-toggle', 'dropdown').append('操作').append('<i class="icon-angle-down"></i>');
-            var $btnUl = $('<ul></ul>').addClass('dropdown-menu').addClass(lastFlag ? 'bottom-up' : '');
-
-            var $btnView = $('<li></li>').append($('<a></a>').html('查看'));
-            var $btnComfirm = $('<li></li>').append($('<a></a>').html('确认'));
-            var $btnEdit = $('<li></li>').append($('<a></a>').html('编辑'));
-            var $btnAccount = $('<li></li>').append($('<a></a>').html('结算'));
-            var $btnBinding = $('<li></li>').append($('<a></a>').html('绑定'));
-
-            // v.status != 2 && ($btnUl.append($btnEdit));
-            if (occessories.pageType=="supplier") {
-                v.status == 0 &&  $btnUl.append($btnComfirm);
-                v.status == 1 && ($btnUl.append($btnView));
-                v.status == 2 && ($btnUl.append($btnView));
-            }else {
-                v.status == 0 && ($btnUl.append($btnEdit).append($btnComfirm).append($btnBinding));
-
-                v.status == 1 && ($btnUl.append($btnView).append($btnAccount));
-                v.status == 2 && ($btnUl.append($btnView));
+            if (v.status != 2) {
+                com.showAlert(com.warning, "外辅单状态不可操作");
+                return false;
             }
 
-            $btnGroup.append($btn).append($btnUl).appendTo($cellOption);
+            var options = {
+                "occessories.oid": v.oid,
+                "occessoriesItems[0].oiid": 1,
+                "occessoriesItems[0].recnum": 0
+            };
 
-            $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
+            com.post(api.inventory.receiveOccessories, options, function(data) {
 
-            $btnBinding.click(function(){
-                occessories.oid = v.oid;
-                occessories.addBindOccessories.modal("show");
-
-            });
-            $btnView.click(function(){
-
-
-                if(v.status == 0){
-                    com.showAlert(com.warning, "外辅单状态不可操作");
-                    return false;
-                }
-                params["occessories.status"]= v.status;
-                params["occessoriesItem.oid"] = v.oid;
-
-                com.popup4page('#layerPopUp', "views/manifest/occessories4view.html", "外辅单 : " + v.no);
+                com.showAlert(com.info, "操作成功");
+                searcher.doSearch();
             });
 
-            $btnEdit.click(function () {
+            return false;
+        },
+        show: function(v) {
+            return occessories.pageType == "delive" && v.status == 2;
+        }
+    }, {
+        name: "送货",
+        clazz: "btn-info",
+        handle: function(v) {
 
-                if(v.status != 0){
-                    com.showAlert(com.warning, "外辅单状态不可操作");
-                    return false;
-                }
+            params["occessories.status"] = v.status;
+            params["occessoriesItem.oid"] = v.oid;
 
-                params["occessoriesItem.oid"] = v.oid;
-                params["occessories.orderId"] = v.orderId;
+            com.popup4page('#layerPopUp', "views/manifest/occessories4view.html", "外辅单 : " + v.no, null, function() {
 
-                com.popup4page('#layerPopUp', "views/manifest/occessories2edit.html", "外辅单 : " + v.no);
+                searcher.doSearch();
             });
+            return false;
+        },
+        show: function(v) {
+            return v.status == 1;
+        }
+    }, {
+        name: "编辑",
+        clazz: "btn-yellow",
+        handle: function(v) {
 
-            $btnComfirm.click(function(e){
-
-                if(v.status == 1){
-                    com.showAlert(com.warning, "外辅单已确认");
-                    return false;
-                }
-
-                var option = {
-                    "occessories.oid": v.oid,
-                    "occessories.status": 1
-                };
-
-                com.showConfirm('是否确认外辅单?', function(indexo){
-                    com.post(api.inventory.confirmOccessories, option, function(res){
-                        occessoriesSeacher.doSearch();
-                    });
-                });
-
-            });
-
-            $btnAccount.click(function(e){
-
-                if(v.status == 2){
-                    com.showAlert(com.warning, "外辅单已结算");
-                    return false;
-                }
-
-                var options = {
-                    "occessories.oid": v.oid,
-                    "occessories.status": 2
-                };
-
-                com.showConfirm('确认结算外辅单?', function(indexo){
-                    com.post(api.inventory.balanceOccessories, options, function(res){
-                        occessoriesSeacher.doSearch();
-                    });
-                });
-
-            });
-
-            return $liLine;
-        };
-
-        return {
-            init: function (tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function (v) {
-                return creatLine(v);
+            if (v.status != 0) {
+                com.showAlert(com.warning, "外辅单状态不可操作");
+                return false;
             }
-        };
-    })();
 
-    var occessoriesSeacher = new Searcher();
+            params["occessoriesItem.oid"] = v.oid;
+            params["occessories.orderId"] = v.orderId;
 
-    if (occessories.pageType=="supplier") {
-        var url = api.inventory.pageOccessoriesForSupplier;
-    }else {
-        var url = api.inventory.pageOccessories;
-    }
+            com.popup4page('#layerPopUp', "views/manifest/occessories2edit.html", "外辅单 : " + v.no);
+            return false;
+        },
+        show: function(v) {
+            return v.status == 0;
+        }
+    }, {
+        name: "结算",
+        clazz: "btn-danger",
+        handle: function(v) {
 
-    var _Array = ['inventory-accessories-orderId', 'inventory-occessories-no', 'inventory-accessories-createrName', 'inventory-accessories-createTime', 'inventory-occessories-status'];
+            if (v.status != 3) {
+                com.showAlert(com.warning, "外辅单状态不可操作");
+                return false;
+            }
 
-    occessoriesSeacher.init(_Array, "condList", url, function (data) {
-        displayFunc.init('resultList', data);
-    }, "pagenation", "accessoriesPostData", null, false, null, function () {
-        return [];
-    }, 'resultList');
+            params["occessoriesItem.oid"] = v.oid;
+
+            com.popup4page('#layerPopUp', "views/manifest/occessories4view.html", "外辅单 : " + v.no, null, function() {
+
+                searcher.doSearch();
+            });
+            return false;
+        },
+        show: function(v) {
+            return occessories.pageType == "receive" && v.status == 3;
+        }
+    }, {
+        name: "分配",
+        clazz: "btn-success",
+        handle: function(v) {
+
+            occessories.oid = v.oid;
+            occessories.modals.bindOccessoriesModal.modal("show");
+
+            return false;
+        },
+        show: function(v) {
+            return v.status == 0;
+        }
+    }, {
+        name: "查看",
+        clazz: "btn-info",
+        handle: function(v) {
+
+            params["occessoriesItem.oid"] = v.oid;
+            com.popup4page('#layerPopUp', "views/manifest/occessories4view.html", "外辅单 : " + v.no);
+
+            return false;
+        },
+        show: function(v) {
+            return true;
+        }
+    }, {
+        name: "费用",
+        clazz: "btn-primary",
+        handle: function(v) {
+
+            params["occessoriesItem.oid"] = v.oid;
+
+            com.popup4page('#layerPopUp', "views/manifest/occessoriesCost.html", "费用 : " + v.no);
+
+            return false;
+        },
+        show: function(v) {
+            return true;
+        }
+    }, {
+        name: "删除",
+        clazz: "btn-danger",
+        handle: function(v) {
+
+            var options = {
+                "occessories.oid": v.oid,
+            };
+
+            com.post(api.inventory.deleteOccessories, options, function(data) {
+                com.showAlert(com.info, "操作成功");
+                searcher.doSearch();
+            });
+
+            return false;
+        },
+        show: function(v) {
+            return v.status == 0;
+        }
+    }, ];
+
+    searcher.toble(lineprops, linebtns).render();
 
     function saveData() {
-        if (com.validate('addBindOccessories'))
+
+        if (com.validate('bindOccessoriesModal'))
             return false;
+
         var options = {
-            'occessories.oid' : occessories.oid,
-            'occessories.supplier.uid': com.typeahead("supplier"),
+            'occessories.oid': occessories.oid,
+            'occessories.supplier.uid': com.typeahead(occessories.items.supplier),
         };
-        com.post(api.inventory.bindOccessories, options, function (res) {
-            displayFunc.init();
+
+        com.post(api.inventory.bindOccessories, options, function(res) {
+
             com.showAlert(com.info, "操作成功");
-            occessories.addBindOccessories.modal("hide");
+            occessories.modals.bindOccessoriesModal.modal("hide");
+            searcher.doSearch();
         });
     }
 });

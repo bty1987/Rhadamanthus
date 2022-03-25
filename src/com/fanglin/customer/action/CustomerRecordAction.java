@@ -20,31 +20,30 @@ import com.fanglin.customer.vo.CustomerRecordVO;
 public class CustomerRecordAction extends BaseListAction {
 
 	private static final long serialVersionUID = -2724557151372646063L;
-	
+
 	private List<CustomerRecordVO> customerRecords;
 
 	private CustomerRecordVO customerRecord;
-	
+
 	@Autowired
 	private CustomerRecordService customerRecordService;
-	
-	@Action(value="queryCustomerRecord", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryCustomerRecord() throws FLException{
-		
+
+	@Action(value = "queryCustomerRecord", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCustomerRecord() throws FLException {
+
 		customerRecords = customerRecordService.queryCustomerRecord(customerRecord);
-		
+
 		return SUCCESS;
 	}
 
-	@Action(value="addCustomerRecord", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String addCustomerRecord() throws FLException{
-												
+	@Action(value = "addCustomerRecord", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addCustomerRecord() throws FLException {
+
 		customerRecordService.addCustomerRecord(customerRecord, queryUserId());
-		
+
 		return SUCCESS;
 	}
-	
-	
+
 	public List<CustomerRecordVO> getCustomerRecords() {
 		return customerRecords;
 	}

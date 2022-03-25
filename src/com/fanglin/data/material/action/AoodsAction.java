@@ -40,6 +40,15 @@ public class AoodsAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryAoods", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryAoods() throws FLException {
+
+	
+		aoodes = aoodsService.queryAoods(aoods,orderId);
+
+		return SUCCESS;
+	}
+	
 	@Action(value = "queryAoodsByAtid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryAoodsByAtid() throws FLException {
 

@@ -29,25 +29,24 @@ public class VustomerNetServiceImpl implements VustomerNetService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int buildVustomerNet(VustomerNetVO vustomerNetVO){
+	public int buildVustomerNet(VustomerNetVO vustomerNetVO) {
 
 		if (vustomerNetVO.getUnionId() != null && vustomerNetVO.getNetunionId() != null && !vustomerNetVO.getUnionId().equals(vustomerNetVO.getNetunionId())) {
 
-			VustomerNetPO unionId = vustomerNetDao.queryVustomerNet(vustomerNetVO.getUnionId(),vustomerNetVO.getNetunionId());
+			VustomerNetPO unionId = vustomerNetDao.queryVustomerNet(vustomerNetVO.getUnionId(), vustomerNetVO.getNetunionId());
 			VustomerNetPO netUnionId = vustomerNetDao.queryVustomerNet(vustomerNetVO.getNetunionId(), vustomerNetVO.getUnionId());
 
-			if(unionId == null && netUnionId == null){
-				
+			if (unionId == null && netUnionId == null) {
+
 				VustomerNetPO vustomerNetPO = new VustomerNetPO();
-				
+
 				BeanUtil.copyProperties(vustomerNetVO, vustomerNetPO);
-				
+
 				vustomerNetDao.save(vustomerNetPO);
 			}
-			
 		}
-		return 0;
 
+		return 0;
 	}
 
 }

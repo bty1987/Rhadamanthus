@@ -46,7 +46,7 @@ public class RepairpayServiceImpl implements RepairpayService {
 			repairpayVO = new RepairpayVO(new UserBaseVO());
 
 			BeanUtil.copyProperties(repairpayPO, repairpayVO, Arrays.asList("creater"));
-			
+
 			repairpayVO.getCreater().setBaseInfo(repairpayPO.getCreater());
 
 			repairpayVOs.add(repairpayVO);

@@ -49,8 +49,10 @@ $(function () {
             
             var propertyArr = [
                ["商品", "cell col-md-2"],
-               ["定额上限", "cell col-md-2"],
-               ["定额单位", "cell col-md-2"],
+               ["定额数量", "cell col-md-1"],
+               ["定额单位", "cell col-md-1"],
+               ["库房数量", "cell col-md-1"],
+               ["库房单位", "cell col-md-1"],
            ];
 
             $.each(propertyArr, function (i, v) {
@@ -66,15 +68,17 @@ $(function () {
 
             var gid = v ? v.goods.gid : (d ? d.goods.gid : 0);
             var onum = v ? v.num : 0;
-            var tnum = d ? d.num : 0;
-
+            var tnnum = d ? d.normnum : 0;
+            var tsnum = d ? d.storenum : 0;
+            
             var $quoteItemLi = $('<li></li>').addClass('fl-quo-item').css({
                 'border': 'none',
                 'border-bottom': '1px solid #dce8f1'
             }).attr({
                 "id": "gid" + gid,
                 "data-onum": onum,
-                "data-tnum": tnum,
+                "data-tnnum": tnnum,
+                "data-tsnum": tsnum,
             });
 
             var propertyArr = [
@@ -92,8 +96,10 @@ $(function () {
 
             var propertyArr = [
                 [d ? d.goods.name : '', 'green col-md-2', "tname"],
-                [d ? d.num : '', 'blue col-md-2', 'tnum'],
-                [d ? d.unit : '', 'blue col-md-2', "tunit"],
+                [d ? d.normnum : '', 'blue col-md-1', 'tnnum'],
+                [d ? d.normunit : '', 'blue col-md-1', "tnunit"],
+                [d ? d.storenum : '', 'blue col-md-1', 'tsnum'],
+                [d ? d.storeunit : '', 'blue col-md-1', "tsunit"],
             ];
 
             $.each(propertyArr, function (i, v) {
@@ -153,6 +159,10 @@ $(function () {
         com.post(api.quotation.amountAddReduceNormood, {"addReduce.orderId": quotation.orderId}, function (res) {
             handleRight(res.normoods);
         }, null, false);
+        
+        com.post(api.quotation.queryQuotationNormoodItem, {"quotationNormoodItem.qid": quotation.qid}, function (res) {
+            handleRight(res.quotationNormoodItems);
+        }, null, false);
     }
     
     function handleLeft(data) {
@@ -180,13 +190,18 @@ $(function () {
             var itemli = com.focusPage("#gid" + gid);
 
             if (itemli && itemli.length != 0) {
-                var num = parseFloat(itemli.attr("data-tnum")) + parseFloat(v.num);
+                
+                var normnum = parseFloat(itemli.attr("data-tnnum")) + parseFloat(v.normnum);
+                var storenum = parseFloat(itemli.attr("data-tsnum")) + parseFloat(v.storenum);
 
-                itemli.attr("data-tnum", num);
+                itemli.attr("data-tnnum", normnum);
+                itemli.attr("data-tsnum", storenum);
 
                 itemli.find(".tname").text(v.goods.name);
-                itemli.find(".tnum").text(num);
-                itemli.find(".tunit").text(v.unit);
+                itemli.find(".tnnum").text(normnum);
+                itemli.find(".tnunit").text(v.normunit);
+                itemli.find(".tsnum").text(storenum);
+                itemli.find(".tsunit").text(v.storeunit);
             } else {
                 paint.createItem(null, v, $div);
             }
@@ -202,7 +217,6 @@ $(function () {
         var $subtypes = com.focusPage('input[name="type"]:checked', '#printNormoodModal #subtype');
 
         $.each($subtypes, function (i, v){
-            console.log($(v));
             params.subtype = parseInt(params.subtype) + parseInt($(v).attr('value'));
         });
 
