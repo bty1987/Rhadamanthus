@@ -37,11 +37,11 @@ public class CustomerOriginVO implements Serializable {
 	private String houseNumber;
 
 	private Integer buildArea;
-	
+
 	private Integer freeArea;
-	
+
 	private Integer totalArea;
-	
+
 	private Integer innerArea;
 
 	private UserBaseVO creater;
@@ -65,7 +65,7 @@ public class CustomerOriginVO implements Serializable {
 	private UserBaseVO designer;
 
 	private UserBaseVO salesman;
-	
+
 	private DecorationBusitypeVO decorationBusitype;
 
 	private String orderId;

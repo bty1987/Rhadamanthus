@@ -15,7 +15,7 @@ public class ApprovalVO implements java.io.Serializable {
 	private Short status;
 
 	private Timestamp createTime;
-	
+
 	private Timestamp approvalTime;
 
 	private String contents;

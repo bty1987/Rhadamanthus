@@ -56,7 +56,7 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<WorkerSalaryPO> queryWorkerSalaryByCwsid(Long wsid) {
-		return session().createCriteria(WorkerSalaryPO.class).add(Restrictions.or(Restrictions.eq("wsId", wsid), Restrictions.eq("cwsid", wsid))).list();
+		return session().createCriteria(WorkerSalaryPO.class).add(Restrictions.or(Restrictions.eq("wsid", wsid), Restrictions.eq("cwsid", wsid))).list();
 	}
 
 	@Override

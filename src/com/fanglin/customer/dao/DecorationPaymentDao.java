@@ -7,11 +7,10 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.utils.Paging;
 
-
 public interface DecorationPaymentDao extends Dao<DecorationPaymentPO> {
 
-	public List<DecorationPaymentPO> queryCusDecorationPayment(Paging paging, List<Filter> filters,  String orderId);
-	
+	public List<DecorationPaymentPO> queryCusDecorationPayment(Paging paging, List<Filter> filters, String orderId);
+
 	public List<DecorationPaymentPO> queryCusDecorationPaymentForContract(String orderId);
-	
+
 }

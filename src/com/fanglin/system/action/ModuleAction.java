@@ -45,7 +45,7 @@ public class ModuleAction extends BaseListAction {
 	private UserVO user;
 
 	private List<ModuleVO> modules;
-	
+
 	@Action(value = "pageModule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageModule() {
 
@@ -69,7 +69,7 @@ public class ModuleAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryModuleForLink", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryModuleForLink() throws FLException {
 
@@ -90,6 +90,14 @@ public class ModuleAction extends BaseListAction {
 	public String queryModuleByRid() throws FLException {
 
 		modules = moduleService.queryModuleByRid(module, role);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "checkModule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String checkModule() throws FLException {
+
+		moduleService.checkModule(module, queryUserId());
 
 		return SUCCESS;
 	}

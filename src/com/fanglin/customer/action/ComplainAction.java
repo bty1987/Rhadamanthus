@@ -22,18 +22,18 @@ import com.fanglin.customer.vo.ConsultionVO;
 public class ComplainAction extends BaseListAction {
 
 	private static final long serialVersionUID = 2488719896867884913L;
-	
+
 	@Autowired
 	private ComplainService complainService;
-	
+
 	private ConsultionVO consultion;
-	
+
 	private List<ComplainVO> complains;
-	
+
 	private List<ComplaintVO> complaints;
-	
+
 	private ComplainVO complain;
-	
+
 	@Action(value = "pageComplain", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageComplain() throws FLException {
 
@@ -41,7 +41,7 @@ public class ComplainAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryComplain", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryComplain() throws FLException {
 
@@ -49,7 +49,7 @@ public class ComplainAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryComplainByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryComplainByOrderId() throws FLException {
 
@@ -57,15 +57,15 @@ public class ComplainAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addComplain", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addComplain() throws FLException {
-		
+
 		complainService.addComplain(consultion, complain, complaints, queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "finishComplain", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String finishComplain() throws FLException {
 
@@ -73,7 +73,7 @@ public class ComplainAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "closeComplain", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String closeComplain() throws FLException {
 

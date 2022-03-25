@@ -27,65 +27,68 @@ import com.fanglin.utils.DateUtil;
 @Service("complackService")
 @Transactional(readOnly = true)
 public class ComplackServiceImpl implements ComplackService {
-	
+
 	@Autowired
 	private ComplackDao complackDao;
-	
+
 	@Autowired
 	private ComplaintDao complaintDao;
-	
+
 	@Autowired
 	private ComplainDao complainDao;
-	
+
 	@Autowired
 	private UserDao userDao;
 
 	@Override
 	public List<ComplackVO> queryComplack(ComplackVO complack) {
-		
+
 		List<ComplackPO> complackPOs = complackDao.queryComplack(complack.getCtid());
-		
+
 		List<ComplackVO> complackVOs = new ArrayList<ComplackVO>();
-		
+
 		ComplackVO complackVO;
-		
+
 		for (ComplackPO complackPO : complackPOs) {
-			
+
 			complackVO = new ComplackVO(new UserBaseVO());
-			
+
 			BeanUtil.copyProperties(complackPO, complackVO, Arrays.asList("operater"));
 			BeanUtil.copyProperties(complackPO.getOperater(), complackVO.getOperater(), Arrays.asList("duty", "dept"));
-			
+
 			complackVOs.add(complackVO);
 		}
-		
+
 		return complackVOs;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int trackComplack(ComplackVO Complack, String userId) throws FLException {
-		
+
 		ComplaintPO complaint = complaintDao.get(Complack.getCtid());
 		ComplainPO complain = complainDao.get(Complack.getCid());
+
 		UserPO user = userDao.queryUserByUserId(userId);
-		
-		if(complaint == null) {
+
+		if (complaint == null) {
 			throw new FLException(330042, "投诉内容不存在");
 		}
-		
+
 		complain.setUpdater(user);
 		complain.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
 		complain.setStatus(ComplainPO.STATUS_DISPOSE_SHORT);
+
 		complainDao.update(complain);
-		
+
 		complaint.setUpdater(user);
 		complaint.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
 		complaint.setStatus(ComplaintPO.STATUS_DISPOSE_SHORT);
+
 		complaintDao.update(complaint);
-		
+
 		ComplackPO complackPO = new ComplackPO();
-		
+
 		complackPO.setCid(Complack.getCid());
 		complackPO.setCtid(Complack.getCtid());
 		complackPO.setOperater(user);
@@ -94,7 +97,7 @@ public class ComplackServiceImpl implements ComplackService {
 		complackPO.setComment(Complack.getComment());
 
 		complackDao.save(complackPO);
-		
+
 		return 0;
 	}
 

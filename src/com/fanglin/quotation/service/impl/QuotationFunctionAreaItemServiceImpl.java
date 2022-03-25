@@ -145,7 +145,7 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 
 		QuotationPO quotationPO = checkQuotationForStatusByEnabled(quotationVO.getQid(), null);
 
-		List<Short> types = Arrays.asList(QuotationFunctionAreaItemPO.TYPE_QUOTATION_COMMON_SHORT, QuotationFunctionAreaItemPO.TYPE_QUOTATION_CUSTOMER_SHORT, QuotationFunctionAreaItemPO.TYPE_QUOTATION_FIX_SHORT);
+		List<Short> types = Arrays.asList(QuotationFunctionAreaItemPO.TYPE_COMMON_INT, QuotationFunctionAreaItemPO.TYPE_CUSTOM_INT, QuotationFunctionAreaItemPO.TYPE_IGNORE_INT);
 
 		QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(quotationFunctionAreaItemVO.getQuotationFunctionAreaId());
 
@@ -177,7 +177,7 @@ public class QuotationFunctionAreaItemServiceImpl implements QuotationFunctionAr
 	@Transactional(rollbackFor = Exception.class)
 	public int updateQuotationFunctionAreaItemByQuotationIdAType(QuotationVO quotationVO, QuotationFunctionAreaItemVO quotationFunctionAreaItemVO) throws FLException {
 
-		List<Short> types = Arrays.asList(QuotationFunctionAreaItemPO.TYPE_QUOTATION_COMMON_SHORT, QuotationFunctionAreaItemPO.TYPE_QUOTATION_CUSTOMER_SHORT, QuotationFunctionAreaItemPO.TYPE_QUOTATION_FIX_SHORT);
+		List<Short> types = Arrays.asList(QuotationFunctionAreaItemPO.TYPE_COMMON_INT, QuotationFunctionAreaItemPO.TYPE_CUSTOM_INT, QuotationFunctionAreaItemPO.TYPE_IGNORE_INT);
 
 		QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.queryQuotationFunctionAreaForTypeByQuotationId(quotationVO.getQid(), QuotationFunctionAreaPO.TYPE_MANAGEMENT_INT);
 

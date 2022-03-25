@@ -51,9 +51,9 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 	}
 
 	@Override
-	public Long countCusSalesPaymentForAmount(SalesPaymentVO salesPaymentVO) {
+	public Long amountCusSalesPayment(SalesPaymentVO salesPaymentVO) {
 
-		long total = salesPaymentDao.countCusSalesPaymentForAmount(salesPaymentVO.getOrderId());
+		long total = salesPaymentDao.amountCusSalesPayment(salesPaymentVO.getOrderId());
 
 		return total;
 	}

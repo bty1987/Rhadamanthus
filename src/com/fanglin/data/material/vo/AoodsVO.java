@@ -24,6 +24,10 @@ public class AoodsVO implements Serializable {
 	
 	private String name;
 	
+	private int balance;
+	
+	private short atttype;
+	
 	public AoodsVO(){
 		super();
 	}
@@ -104,6 +108,22 @@ public class AoodsVO implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public int getBalance() {
+		return balance;
+	}
+
+	public void setBalance(int balance) {
+		this.balance = balance;
+	}
+
+	public short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(short atttype) {
+		this.atttype = atttype;
 	}
 
 }

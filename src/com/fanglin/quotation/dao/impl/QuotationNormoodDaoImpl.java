@@ -60,25 +60,25 @@ public class QuotationNormoodDaoImpl extends DaoImpl<QuotationFunctionAreaItemAO
 	@Override
 	public List<?> amountQuotationNormood(short index, long functionAreaId) {
 
-		String sql = String.format("select {mood.*}, {good.*}, sum(mood.num) as amount from quotation.quotationfunctionareaitem%d quoteitem, data.normood mood, inventory.goods good where quoteitem.quotationFunctionAreaId = :functionAreaId and quoteitem.quotationItemId = mood.qiid and mood.gid = good.gid group by good.gid", index);
+		String sql = String.format("select {mood.*}, {good.*}, sum(mood.normnum) as normnum, sum(mood.storenum) as storenum, quoteitem.initnum as initnum from quotation.quotationfunctionareaitem%d quoteitem, data.normood mood, inventory.goods good where quoteitem.quotationFunctionAreaId = :functionAreaId and quoteitem.quotationItemId = mood.qiid and mood.gid = good.gid group by good.gid", index);
 
-		return session().createSQLQuery(sql).addEntity("mood", NormoodPO.class).addEntity("good", GoodsPO.class).addScalar("amount", StandardBasicTypes.LONG).setLong("functionAreaId", functionAreaId).list();
+		return session().createSQLQuery(sql).addEntity("mood", NormoodPO.class).addEntity("good", GoodsPO.class).addScalar("normnum", StandardBasicTypes.INTEGER).addScalar("storenum", StandardBasicTypes.INTEGER).addScalar("initnum", StandardBasicTypes.INTEGER).setLong("functionAreaId", functionAreaId).list();
 	}
 
 	@Override
 	public List<?> amountExtensionNormood(long eid) {
 
-		String sql = "select {mood.*}, {good.*}, sum(mood.num) as amount from quotation.extensionitem ei, data.normood mood, inventory.goods good where ei.eid = :eid and ei.qiid = mood.qiid and mood.gid = good.gid group by good.gid";
+		String sql = "select {mood.*}, {good.*}, sum(mood.normnum) as normnum, sum(mood.storenum) as storenum, ei.num as num from quotation.extensionitem ei, data.normood mood, inventory.goods good where ei.eid = :eid and ei.qiid = mood.qiid and mood.gid = good.gid group by good.gid";
 
-		return session().createSQLQuery(sql).addEntity("mood", NormoodPO.class).addEntity("good", GoodsPO.class).addScalar("amount", StandardBasicTypes.LONG).setLong("eid", eid).list();
+		return session().createSQLQuery(sql).addEntity("mood", NormoodPO.class).addEntity("good", GoodsPO.class).addScalar("normnum", StandardBasicTypes.INTEGER).addScalar("storenum", StandardBasicTypes.INTEGER).addScalar("num", StandardBasicTypes.INTEGER).setLong("eid", eid).list();
 	}
 
 	@Override
 	public List<?> amountAddReduceNormood(long arid) {
 
-		String sql = "select {mood.*}, {good.*}, sum(mood.num) as amount from quotation.addreduceitem ari, data.normood mood, inventory.goods good where ari.arid = :arid and ari.qiid = mood.qiid and mood.gid = good.gid group by good.gid";
+		String sql = "select {mood.*}, {good.*}, sum(mood.normnum) as normnum, sum(mood.storenum) as storenum, ari.num as num from quotation.addreduceitem ari, data.normood mood, inventory.goods good where ari.arid = :arid and ari.qiid = mood.qiid and mood.gid = good.gid group by good.gid";
 
-		return session().createSQLQuery(sql).addEntity("mood", NormoodPO.class).addEntity("good", GoodsPO.class).addScalar("amount", StandardBasicTypes.LONG).setLong("arid", arid).list();
+		return session().createSQLQuery(sql).addEntity("mood", NormoodPO.class).addEntity("good", GoodsPO.class).addScalar("normnum", StandardBasicTypes.INTEGER).addScalar("storenum", StandardBasicTypes.INTEGER).addScalar("num", StandardBasicTypes.INTEGER).setLong("arid", arid).list();
 	}
 
 }

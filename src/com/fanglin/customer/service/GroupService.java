@@ -8,15 +8,15 @@ import com.fanglin.customer.vo.GroupVO;
 import com.fanglin.utils.Paging;
 
 public interface GroupService {
-	
-	public void pageGroup(Paging paging ,List<Filter> filters);
-	
+
+	public void pageGroup(Paging paging, List<Filter> filters);
+
 	public GroupVO queryGroup(GroupVO groupVO);
-	
+
 	public int updateGroup(GroupVO groupVO) throws FLException;
-	
+
 	public int bindGroup(GroupVO groupVO) throws FLException;
-	
+
 	public int unbindGroup(GroupVO groupVO) throws FLException;
 
 }

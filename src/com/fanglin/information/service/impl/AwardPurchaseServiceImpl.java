@@ -37,10 +37,10 @@ public class AwardPurchaseServiceImpl implements AwardPurchaseService {
 
 	@Autowired
 	private UserDao userdDao;
-	
+
 	@Autowired
 	private AwardStockDao awardStockDao;
-	
+
 	@Autowired
 	private AwardRecordDao awardRecordDao;
 
@@ -53,8 +53,8 @@ public class AwardPurchaseServiceImpl implements AwardPurchaseService {
 		for (AwardPurchasePO awardPurchasePO : awardPurchasePOs) {
 
 			AwardPurchaseVO awardPurchaseVO = new AwardPurchaseVO(new AwardStockVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
-			
-			BeanUtil.copyProperties(awardPurchasePO, awardPurchaseVO, Arrays.asList( "awardStock","creater", "purchaser", "instorer"));
+
+			BeanUtil.copyProperties(awardPurchasePO, awardPurchaseVO, Arrays.asList("awardStock", "creater", "purchaser", "instorer"));
 			BeanUtil.copyPropertie(awardPurchasePO.getAwardStock(), awardPurchaseVO.getAwardStock());
 			BeanUtil.copyProperties(awardPurchasePO.getCreater(), awardPurchaseVO.getCreater(), Arrays.asList("dept", "role", "duty"));
 			BeanUtil.copyProperties(awardPurchasePO.getPurchaser(), awardPurchaseVO.getPurchaser(), Arrays.asList("dept", "role", "duty"));
@@ -68,28 +68,28 @@ public class AwardPurchaseServiceImpl implements AwardPurchaseService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void addAwardPurchase(AwardPurchaseVO awardPurchaseVO, String userId, int company) throws FLException {
-		
+
 		UserPO creater = userdDao.queryUserByUserId(userId);
-		
+
 		AwardStockPO awardStock = awardStockDao.get(awardPurchaseVO.getAwardStock().getAsId());
-		
+
 		AwardPurchasePO awardPurchasePO = new AwardPurchasePO(null, creater, null, null);
-		
-		BeanUtil.copyProperties(awardPurchaseVO, awardPurchasePO, Arrays.asList( "awardStock","creater", "purchaser", "instorer"));
-		
-		
+
+		BeanUtil.copyProperties(awardPurchaseVO, awardPurchasePO, Arrays.asList("awardStock", "creater", "purchaser", "instorer"));
+
 		awardPurchasePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		awardPurchasePO.setStatus(AwardPurchasePO.STATUS_INIT_INT);
 		awardPurchasePO.setCompany(company);
 		awardPurchasePO.setAwardStock(awardStock);
+
 		awardPurchaseDao.save(awardPurchasePO);
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void purchaseAwardPurchase(AwardPurchaseVO awardPurchase, String userId) throws FLException {
-		
-		AwardPurchasePO awardPurchasePO = awardPurchaseDao.get(awardPurchase.getApId());
+	public void purchaseAwardPurchase(AwardPurchaseVO awardPurchaseVO, String userId) throws FLException {
+
+		AwardPurchasePO awardPurchasePO = awardPurchaseDao.get(awardPurchaseVO.getApid());
 
 		if (awardPurchasePO == null) {
 			throw new FLException(160057, "奖品采购不存在");
@@ -98,72 +98,92 @@ public class AwardPurchaseServiceImpl implements AwardPurchaseService {
 		if (awardPurchasePO.getStatus() != AwardPurchasePO.STATUS_INIT_INT) {
 			throw new FLException(160058, "奖品采购不可操作");
 		}
-		
-		UserPO purchaser  = userdDao.queryUserByUserId(userId);
+
+		UserPO purchaser = userdDao.queryUserByUserId(userId);
 
 		awardPurchasePO.setPurchaser(purchaser);
-		awardPurchasePO.setInprice(awardPurchase.getInprice());
+
 		awardPurchasePO.setStatus(AwardPurchasePO.STATUS_PROC_INT);
 		awardPurchasePO.setPurchaseTime(DateUtil.getDateToTimestamp(new Date()));
 
 		awardPurchaseDao.update(awardPurchasePO);
-		
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void instoreAwardPurchase(AwardPurchaseVO awardPurchase, String userId) throws FLException {
-		AwardPurchasePO awardPurchasePO = awardPurchaseDao.get(awardPurchase.getApId());
+	public void instoreAwardPurchase(AwardPurchaseVO awardPurchaseVO, String userId) throws FLException {
+
+		AwardPurchasePO awardPurchasePO = awardPurchaseDao.get(awardPurchaseVO.getApid());
 
 		if (awardPurchasePO == null) {
 			throw new FLException(160057, "奖品采购不存在");
 		}
 
-		if (awardPurchasePO.getStatus() != AwardPurchasePO.STATUS_PROC_INT) { 
+		if (awardPurchasePO.getStatus() != AwardPurchasePO.STATUS_PROC_INT) {
 			throw new FLException(160058, "奖品采购不可操作");
 		}
 
 		AwardStockPO awardStockPO = awardStockDao.get(awardPurchasePO.getAwardStock().getAsId());
-		
-		UserPO instorer  = userdDao.queryUserByUserId(userId);
-		
-		if(awardStockPO.getIsStock() == AwardStockPO.ISSTOCK_CAL_INT){
-			awardStockPO.setNum(Arith.add(awardPurchasePO.getAwardStock().getNum(), awardPurchasePO.getNum()));
-			awardStockDao.update(awardStockPO);
 
-			AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, instorer, null, AwardRecordPO.TYPE_CG_INT, awardStockPO.getSubtype(), awardStockPO.getStoreroom(), AwardStockPO.ISSTOCK_CAL_INT, ((int)awardPurchasePO.getInprice()), awardPurchasePO.getNum(), null);
+		UserPO instorer = userdDao.queryUserByUserId(userId);
 
-			awardRecordDao.save(awardRecordPO);
-			
-		}
-		
 		awardPurchasePO.setInstorer(instorer);
+		awardPurchasePO.setInprice(awardPurchaseVO.getInprice());
 		awardPurchasePO.setStatus(AwardPurchasePO.STATUS_WARE_INT);
 		awardPurchasePO.setInstoreTime(DateUtil.getDateToTimestamp(new Date()));
 
+		if (awardStockPO.getIsStock() == AwardStockPO.ISSTOCK_CAL_INT) {
+
+			awardStockPO.setNum(Arith.add(awardPurchasePO.getAwardStock().getNum(), awardPurchasePO.getNum()));
+
+			awardStockDao.update(awardStockPO);
+
+			AwardRecordPO awardRecordPO = new AwardRecordPO().init(awardStockPO, instorer, null, AwardRecordPO.TYPE_CG_INT, AwardRecordPO.SUBTYPE_INWARE_INT, awardStockPO.getStoreroom(), AwardStockPO.ISSTOCK_CAL_INT, awardPurchasePO.getInprice(), awardPurchasePO.getNum(), null);
+
+			awardRecordDao.save(awardRecordPO);
+		}
+
 		awardPurchaseDao.update(awardPurchasePO);
-		
-	} 
+	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void balanceAwardPurchase(AwardPurchaseVO awardPurchase, String userId) throws FLException {
-		AwardPurchasePO awardPurchasePO = awardPurchaseDao.get(awardPurchase.getApId());
+	public void balanceAwardPurchase(AwardPurchaseVO awardPurchaseVO, String userId) throws FLException {
+
+		AwardPurchasePO awardPurchasePO = awardPurchaseDao.get(awardPurchaseVO.getApid());
 
 		if (awardPurchasePO == null) {
 			throw new FLException(160057, "奖品采购不存在");
 		}
 
-		if (awardPurchasePO.getStatus() != AwardPurchasePO.STATUS_WARE_INT) { 
+		if (awardPurchasePO.getStatus() != AwardPurchasePO.STATUS_WARE_INT) {
 			throw new FLException(160058, "奖品采购不可操作");
 		}
-		
-		awardPurchasePO.setBaprice(awardPurchase.getBaprice());
+
+		awardPurchasePO.setBaprice(awardPurchaseVO.getBaprice());
 		awardPurchasePO.setStatus(AwardPurchasePO.STATUS_CLOSE_INT);
 		awardPurchasePO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
 
 		awardPurchaseDao.update(awardPurchasePO);
-		
 	}
-	
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void cancelAwardPurchase(AwardPurchaseVO awardPurchase) throws FLException {
+
+		AwardPurchasePO awardPurchasePO = awardPurchaseDao.get(awardPurchase.getApid());
+
+		if (awardPurchasePO == null) {
+			throw new FLException(160057, "奖品采购不存在");
+		}
+
+		if (awardPurchasePO.getStatus() != AwardPurchasePO.STATUS_INIT_INT) {
+			throw new FLException(160058, "奖品采购不可操作");
+		}
+
+		awardPurchasePO.setStatus(AwardPurchasePO.STATUS_DISABLE_INT);
+
+		awardPurchaseDao.update(awardPurchasePO);
+	}
+
 }

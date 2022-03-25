@@ -7,7 +7,7 @@ import com.fanglin.customer.vo.PaymentVO;
 import com.fanglin.utils.Paging;
 
 public interface PaymentService {
-	
+
 	public void queryCusPayment(Paging paging, List<Filter> filters, PaymentVO paymentVO);
-	
+
 }

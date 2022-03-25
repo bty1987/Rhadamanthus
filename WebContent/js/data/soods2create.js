@@ -144,6 +144,11 @@ $(function(){
         }
 
         var sid = com.typeahead("soodsItemName");
+        
+        if (!sid) {
+            com.showPopover(com.focusPage("#soodsItemName"), {errorMsg: "选材项未填"}, "right");
+            return;
+        }
 
         var option = {
             "soodsItem.sid" : sid,

@@ -14,17 +14,17 @@ import com.fanglin.utils.Paging;
 @Repository("constructionDrawingOrderDao")
 public class ConstructionDrawingDaoImpl extends DaoImpl<ConstructionDrawingPO> implements ConstructionDrawingDao {
 
-	public ConstructionDrawingDaoImpl(){
+	public ConstructionDrawingDaoImpl() {
 		super(ConstructionDrawingPO.class);
 	}
-	
+
 	@Override
-	public List<ConstructionDrawingPO> queryCusConstructionDrawing(Paging paging,List<Filter> filters, long cid, short schedule) {
-		
+	public List<ConstructionDrawingPO> queryCusConstructionDrawing(Paging paging, List<Filter> filters, long cid, short schedule) {
+
 		PagingQuery<ConstructionDrawingPO> query = pagingQuery(paging, ConstructionDrawingPO.class);
 
 		query.add(Restrictions.eq("cid", cid)).add(Restrictions.eq("schedule", schedule));
-		
+
 		return query.list();
 	}
 

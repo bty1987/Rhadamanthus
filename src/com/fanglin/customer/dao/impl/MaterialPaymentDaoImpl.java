@@ -34,7 +34,7 @@ public class MaterialPaymentDaoImpl extends DaoImpl<MaterialPaymentPO> implement
 	}
 
 	@Override
-	public long countCusMaterialPaymentForAmount(String orderId) {
+	public long amountCusMaterialPayment(String orderId) {
 
 		String sql = "select sum(IF(payment.materialpayment.paymentType in (4,5,6,7),-payment.materialpayment.referMoney,payment.materialpayment.referMoney)) money from payment.materialpayment,material.material where material.material.mid = payment.materialpayment.mid and payment.materialpayment.paymentStatus in (1,2) and material.material.orderId = :orderId";
 		BigDecimal total = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).setString("orderId", orderId).uniqueResult();

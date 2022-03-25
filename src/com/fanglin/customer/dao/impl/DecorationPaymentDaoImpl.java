@@ -15,30 +15,28 @@ import com.fanglin.utils.Paging;
 @Repository("decorationPaymentOrderDao")
 public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> implements DecorationPaymentDao {
 
-	public DecorationPaymentDaoImpl(){
+	public DecorationPaymentDaoImpl() {
 		super(DecorationPaymentPO.class);
 	}
-	
+
 	@Override
-	public List<DecorationPaymentPO> queryCusDecorationPayment(Paging paging, List<Filter> filters,  String orderId) {
-		
+	public List<DecorationPaymentPO> queryCusDecorationPayment(Paging paging, List<Filter> filters, String orderId) {
+
 		PagingQuery<DecorationPaymentPO> query = pagingQuery(paging, DecorationPaymentPO.class);
 
 		query.alias("decoration", "decoration");
-		
+
 		query.add(query.getCriterion("decoration.orderId", orderId, "eq"));
-		
+
 		query.desc("createTime");
-		
+
 		return query.list();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<DecorationPaymentPO> queryCusDecorationPaymentForContract(String orderId) {
-		
 		return session().createCriteria(DecorationPaymentPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).add(Restrictions.eq("oneType", DecorationPaymentPO.ONETYPE_ADD_INT)).add(Restrictions.eq("twoType", DecorationPaymentPO.TWOTYPE_DEAL_INT)).addOrder(Order.asc("sort")).list();
 	}
-
 
 }

@@ -20,52 +20,51 @@ import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 
 @Service("vrecordService")
-@Transactional(readOnly=true)
-public class VrecordServiceImpl implements VrecordService{
-	
+@Transactional(readOnly = true)
+public class VrecordServiceImpl implements VrecordService {
+
 	@Autowired
 	private VrecordDao vrecordDao;
-	
+
 	@Autowired
 	private UserDao userDao;
-	
+
 	@Override
 	public List<VrecordVO> queryVrecordByVid(VrecordVO vrecord) {
-		
+
 		List<VrecordPO> vrecordPOs = vrecordDao.queryVrecordByVid(vrecord.getVid());
 		List<VrecordVO> vrecordVOs = new ArrayList<VrecordVO>();
-		
-		if(vrecordPOs.size() != 0 && vrecordPOs != null){
-			
-			for(VrecordPO vrecordPO : vrecordPOs){
-				
+
+		if (vrecordPOs.size() != 0 && vrecordPOs != null) {
+
+			for (VrecordPO vrecordPO : vrecordPOs) {
+
 				VrecordVO vrecordVO = new VrecordVO(new UserBaseVO());
-				
+
 				BeanUtil.copyProperties(vrecordPO, vrecordVO, Arrays.asList("creater"));
-				BeanUtil.copyProperties(vrecordPO.getCreater(), vrecordVO.getCreater(), Arrays.asList("dept","duty"));
-				
+				BeanUtil.copyProperties(vrecordPO.getCreater(), vrecordVO.getCreater(), Arrays.asList("dept", "duty"));
+
 				vrecordVOs.add(vrecordVO);
 			}
-			
+
 		}
-		
+
 		return vrecordVOs;
-		
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public void addVrecord(VrecordVO vrecordVO, String userId) {
-		
+
 		UserPO creater = userDao.queryUserByUserId(userId);
-		
+
 		VrecordPO vrecordPO = new VrecordPO(creater);
-		
+
 		BeanUtil.copyProperties(vrecordVO, vrecordPO, Arrays.asList("creater"));
+
 		vrecordPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		
+
 		vrecordDao.save(vrecordPO);
-		
 	}
-	
+
 }

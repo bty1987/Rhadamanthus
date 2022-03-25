@@ -859,8 +859,15 @@ var ProtationDetail = (function(){
     return {
         
         init: function(){
+			quo.orderid = params.orderId;
             quo.protationId = params.protationId;
             
+			com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": quo.orderid}, function(res){
+			    com.focusPage('#orderId').text(res.decoration.orderId)
+			    com.focusPage('#address').text(res.decoration.house.village.name + " " + res.decoration.house.houseNumber);
+			    com.focusPage('#version').text(res.decoration.version.name);
+			});
+			
             com.post(api.quotation.queryProtationByPid, {"protation.pid" : quo.protationId}, function(data){
               //左上角显示预签名称
                 com.focusPage('#protationName').text(data.protation.name);

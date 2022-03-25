@@ -24,9 +24,9 @@
     {"key":"10", "value":"车库"},
     {"key":"11", "value":"其它"}
   ],"through":[
-    {"key":"0", "value":"否"},
-    {"key":"1", "value":"是"}
-  ],
+  {"key":"0", "value":"否"},
+  {"key":"1", "value":"是"}
+],
   "orientation": [
     {"key":"0", "value":"南北"},
     {"key":"1", "value":"东西"},
@@ -40,35 +40,35 @@
     {"key":"9", "value":"西北"},
     {"key":"10", "value":"其它"}
   ],"roomNum": [
-    {"key":"1", "value":"一室"},
-    {"key":"2", "value":"二室"},
-    {"key":"3", "value":"三室"},
-    {"key":"4", "value":"四室"},
-    {"key":"5", "value":"五室"}
-  ],"waterVapour": [
-    {"key":"0", "value":"两水一气"},
-    {"key":"1", "value":"两水两气"},
-    {"key":"2", "value":"三水两气"}
-  ],"parlourType": [
-    {"key":"0", "value":"明厅"},
-    {"key":"1", "value":"暗厅"}
-  ],"heatingType": [
-    {"key":"0", "value":"热网"},
-    {"key":"1", "value":"锅炉房"},
-    {"key":"2", "value":"燃气"}
-  ],"status":[
-    {"key":"0", "value":"初始"},
-    {"key":"1", "value":"签约"},
-    {"key":"2", "value":"失效"}
-  ],"labeltype":[
-    {"key" : "0", "value" : "设计师风格"},
-    {"key" : "1", "value" : "擅长面积"},
-    {"key" : "2", "value" : "小区"}
-  ],"serviceNodeType":[
-    {"key" : "0", "value" : "装修"},
-    {"key" : "1", "value" : "主材"},
-    {"key" : "2", "value" : "工程"}
-  ],
+  {"key":"1", "value":"一室"},
+  {"key":"2", "value":"二室"},
+  {"key":"3", "value":"三室"},
+  {"key":"4", "value":"四室"},
+  {"key":"5", "value":"五室"}
+],"waterVapour": [
+  {"key":"0", "value":"两水一气"},
+  {"key":"1", "value":"两水两气"},
+  {"key":"2", "value":"三水两气"}
+],"parlourType": [
+  {"key":"0", "value":"明厅"},
+  {"key":"1", "value":"暗厅"}
+],"heatingType": [
+  {"key":"0", "value":"热网"},
+  {"key":"1", "value":"锅炉房"},
+  {"key":"2", "value":"燃气"}
+],"status":[
+  {"key":"0", "value":"初始"},
+  {"key":"1", "value":"签约"},
+  {"key":"2", "value":"失效"}
+],"labeltype":[
+  {"key" : "0", "value" : "设计师风格"},
+  {"key" : "1", "value" : "擅长面积"},
+  {"key" : "2", "value" : "小区"}
+],"serviceNodeType":[
+  {"key" : "0", "value" : "装修"},
+  {"key" : "1", "value" : "主材"},
+  {"key" : "2", "value" : "工程"}
+],
   "vscoreRecordtype":[
     {"key" : "0", "value" : "新增"},
     {"key" : "1", "value" : "提取"}
@@ -200,7 +200,7 @@
   ],
   "atttype_advance": [
     {"key" : "0", "value" : "基础"},
-	{"key" : "1", "value" : "其他"}
+    {"key" : "1", "value" : "其他"}
   ],
   "atttype_decoration": [
     {"key" : "0", "value" : "基础"},
@@ -240,7 +240,14 @@
     {"key" : "0", "value" : "合同"},
     {"key" : "1", "value" : "款项"}
   ],
-
+  "aoodsAtttype": [
+    {"key" : "0", "value" : "普通"},
+    {"key" : "1", "value" : "外辅"}
+],
+  "surveyTemplateStatus": [
+    {"key" : "0", "value" : "启用"},
+    {"key" : "1", "value" : "禁用"}
+  ],
   "errorCode": 0,
   "errorMsg": null
 }

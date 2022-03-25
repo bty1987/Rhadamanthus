@@ -122,4 +122,106 @@
     </div>
 </div>
 
-<script type="text/javascript" src="js/personnel/recruitment.js"></script>
+<div class="modal fade" id="pictureModal" tabindex="-1">
+	<div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="addItemDialog">上传图片</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+
+                    <div class="form-group">
+						<div class="block clearfix form-group">
+							<label class="col-md-3 control-label no-padding-right " for="picture">头像</label>
+							<div class="col-md-5 block no-padding-right">
+								<div class="col-md-12 row-fluid">
+									<ul class="ace-thumbnails">
+										<li>
+											<a id="photoPath" class="col-md-12" data-rel="colorbox" href="javascript:void(0)" class="cboxElement" target="_blank">
+												<img id="showImg" src="#" alt="150x150" width='150' height='150' >
+											</a>
+
+											<div class="tools tools-top">
+												<a id="removePicture" href="#"><i class="icon-remove red"></i></a>
+											</div>
+										</li>
+									</ul>
+								</div>
+								<div class="col-md-12">
+									<div id="pictureUpload"></div>
+									<input type="text" class="hidden" id="picture"/>
+								</div>
+							</div>
+						</div>
+                    </div>
+
+                    <div class="form-group">
+						<div class="block clearfix form-group">
+							<label class="col-md-3 control-label no-padding-right " for="picture">身份证正面图片</label>
+							<div class="col-md-5 block no-padding-right">
+								<div class="col-md-12 row-fluid">
+									<ul class="ace-thumbnails">
+										<li>
+											<a id="identityPathF" class="col-md-12" data-rel="colorbox" href="javascript:void(0)" class="cboxElement" target="_blank">
+												<img id="showImg1" src="#" alt="150x150" width='150' height='150' >
+											</a>
+
+											<div class="tools tools-top">
+												<a id="removePicture1" href="#"><i class="icon-remove red"></i></a>
+											</div>
+										</li>
+									</ul>
+								</div>
+								<div class="col-md-12">
+									<div id="pictureUpload1"></div>
+									<input type="text" class="hidden" id="picture1"/>
+								</div>
+							</div>
+						</div>
+                    </div>
+
+                    
+                    <div class="form-group">
+						<div class="block clearfix form-group">
+							<label class="col-md-3 control-label no-padding-right " for="picture">身份证背面图片</label>
+							<div class="col-md-5 block no-padding-right">
+								<div class="col-md-12 row-fluid">
+									<ul class="ace-thumbnails">
+										<li>
+											<a id="identityPathB" class="col-md-12" data-rel="colorbox" href="javascript:void(0)" class="cboxElement" target="_blank">
+												<img id="showImg2" src="#" alt="150x150" width='150' height='150' >
+											</a>
+
+											<div class="tools tools-top">
+												<a id="removePicture2" href="#"><i class="icon-remove red"></i></a>
+											</div>
+
+										</li>
+									</ul>
+								</div>
+								<div class="col-md-12">
+									<div id="pictureUpload2"></div>
+									<input type="text" class="hidden" id="picture2"/>
+								</div>
+							</div>
+						</div>
+                    </div>
+
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" id="saveBtns" class="btn btn-primary">保存</button>
+                <button type="button" id="cancel" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+	$.loadScript(['js/personnel/recruitment.js']);
+</script>

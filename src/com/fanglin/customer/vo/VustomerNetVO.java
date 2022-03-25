@@ -5,17 +5,17 @@ import java.io.Serializable;
 public class VustomerNetVO implements Serializable {
 
 	private static final long serialVersionUID = 486904451379656651L;
-	
+
 	private Long vnid;
-	
+
 	private String unionId;
-	
+
 	private String netunionId;
 
-	public VustomerNetVO(){
+	public VustomerNetVO() {
 		super();
 	}
-	
+
 	public Long getVnid() {
 		return vnid;
 	}
@@ -39,5 +39,5 @@ public class VustomerNetVO implements Serializable {
 	public void setNetunionId(String netunionId) {
 		this.netunionId = netunionId;
 	}
-	
+
 }

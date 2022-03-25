@@ -18,19 +18,19 @@ import com.fanglin.customer.vo.FeedbackVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class FeedbackDrawingAction extends BaseListAction{
-	
+public class FeedbackDrawingAction extends BaseListAction {
+
 	private static final long serialVersionUID = -8998946693646885201L;
 
 	@Autowired
 	private FeedbackDrawingService feedbackDrawingService;
-	
+
 	private FeedbackVO feedback;
-	
+
 	private List<FeedbackDrawingVO> feedbackDrawings;
-	
+
 	private FeedbackDrawingVO feedbackDrawing;
-	
+
 	@Action(value = "queryFeedbackDrawing", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryFeedbackDrawing() throws FLException {
 
@@ -70,5 +70,5 @@ public class FeedbackDrawingAction extends BaseListAction{
 	public void setFeedbackDrawing(FeedbackDrawingVO feedbackDrawing) {
 		this.feedbackDrawing = feedbackDrawing;
 	}
-	
+
 }

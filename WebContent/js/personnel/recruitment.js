@@ -7,19 +7,23 @@ jQuery(function($) {
         deptList: {},
         dutyTypeMap: {},
         loginFlag: true,
+        photoPath:"",
+        identityPathF:"",
+        identityPathB:"",
 
         btns: {
             saveBtn: com.focusPage("#saveBtn").on("click", AddsaveData),
             cancelBtn: com.focusPage("#cancelBtn"),
             save: com.focusPage("#save").on("click",save),
             cancel: com.focusPage("#cancel"),
+            saveBtns: com.focusPage("#saveBtns").on("click",saveBtns),
         },
 
         modals: {
             recruitmentModal: com.focusPage("#recruitmentModal"),
             enterModal: com.focusPage("#enterModal"),
+            pictureModal: com.focusPage("#pictureModal"),
         },
-
 
         items:{
             name : com.focusPage("#name", "#recruitmentModal"),
@@ -28,6 +32,10 @@ jQuery(function($) {
             phone : com.focusPage("#phone", "#recruitmentModal"),
             employWay : com.focusPage("#employWay", "#recruitmentModal"),
             education : com.focusPage("#education", "#recruitmentModal"),
+            
+            photoPath :  com.focusPage("#photoPath", "#pictureModal"),
+            identityPathF :  com.focusPage("#identityPathF", "#pictureModal"),
+            identityPathB : com.focusPage("#identityPathB", "#pictureModal"),
 
             userName: com.focusPage("#userName", "#enterModal"),
             deptType: com.focusPage("#deptType", "#enterModal"),
@@ -36,6 +44,16 @@ jQuery(function($) {
         },
 
     };
+
+    function initUser(v){
+
+        com.focusPage("#picture").val(v.photoPath);
+        com.focusPage("#photoPath").attr("href", com.showImg(com.focusPage("#showImg"), v.photoPath, 150, 150, '', null));
+        com.focusPage("#picture1").val(v.identityPathF);
+        com.focusPage("#identityPathF").attr("href", com.showImg(com.focusPage("#showImg1"), v.identityPathF, 360, 260, '', null));
+        com.focusPage("#picture2").val(v.identityPathB);
+        com.focusPage("#identityPathB").attr("href", com.showImg(com.focusPage("#showImg2"), v.identityPathB, 360, 260, '', null));
+    }
 
     com.post(api.ds.personel, {}, function(res) {
         com.focusPage("#employWay").bindData(res.employWay, "key", "value");
@@ -57,6 +75,11 @@ jQuery(function($) {
     });
 
     recruitment.modals.enterModal.on('show.bs.modal',function(e){
+        com.cleanItems(recruitment.items);
+        com.clearValidator();
+    });
+    
+    recruitment.modals.pictureModal.on('show.bs.modal',function(e){
         com.cleanItems(recruitment.items);
         com.clearValidator();
     });
@@ -100,6 +123,7 @@ jQuery(function($) {
     searcher.button([{id: "addRecruitment", name: "添加", clazz: "btn-primary", icon: "icon-plus"}]);
 
     var lineprops = [
+        {field: "photoPath", type: "img", name: "头像", prop: "photoPath", clazz: "grey"},
         {field: "name", name: "姓名", prop: "name", clazz: "grey"},
         {field: "identity", name: "身份证号", prop: "identity", clazz: "grey"},
         {field: "place", name: "地址", prop: "place", clazz: "grey"},
@@ -163,6 +187,15 @@ jQuery(function($) {
                 return(v.status == 0);
             }
         },
+        {name: "图片", clazz: "btn-purple", handle: function(v){
+            recruitment.modals.pictureModal.modal("show");
+            recruitment.rid=v.rid;
+            initUser(v);
+            return false;
+            },show: function(v){
+            	 return(v.status == 0);
+            }
+        },
     ];
 
     searcher.line("name", lineprops, linebtns).render();
@@ -172,8 +205,9 @@ jQuery(function($) {
         recruitment.rid = null;
 
         recruitment.modals.recruitmentModal.modal("show");
-        
+
     });
+    
     //添加
     function AddsaveData(){
 
@@ -195,15 +229,14 @@ jQuery(function($) {
             recruitment.modals.recruitmentModal.modal("hide");
         });
     }
-    
+
     //弹窗
-    function save(){
+     function save(){
+         com.post(api.personel.queryRecruitmentByRid, {"recruitment.rid": recruitment.rid}, function(v){
+             saveData(v);
+         });
 
-        com.post(api.personel.queryRecruitmentByRid, {"recruitment.rid": recruitment.rid}, function(v){
-            saveData(v);
-        });  
-
-    }
+     }
 
     //入职
     function saveData(v) {
@@ -238,7 +271,7 @@ jQuery(function($) {
             "userInfo.email" : v.recruitment.email,
             "userInfo.employWay" : v.recruitment.employWay,
             "userInfo.political" : v.recruitment.political,
-            "userInfo.householdType" : v.recruitment.householdType, 
+            "userInfo.householdType" : v.recruitment.householdType,
             "userInfo.education" : v.recruitment.education,
             "userInfo.address" : v.recruitment.address,
             "userInfo.hometownAddress" : v.recruitment.place,
@@ -270,7 +303,7 @@ jQuery(function($) {
     }, null, false);
 
     com.post(api.personel.queryRecruitmentOperation, {"recruitmentOperation.rid": recruitment.rid}, function(v){
-    	
+
          $.each(v.recruitmentOperations, function (i,v) {
               options['userOperations['+i+'].company'] = v.company;
               options['userOperations['+i+'].trade'] = v.trade;
@@ -281,7 +314,7 @@ jQuery(function($) {
               options['userOperations['+i+'].specialty'] = v.specialty;
               options['userOperations['+i+'].salary'] = v.salary;
               options['userOperations['+i+'].comment'] = v.comment;
-          });  
+          });
     }, null, false);
 
         com.post(api.personel.addUser, options, function(res){
@@ -294,5 +327,58 @@ jQuery(function($) {
             });
         });
     }
+
+	function saveBtns(){
+
+        parm = {
+            "recruitment.rid": recruitment.rid,
+            "recruitment.photoPath":com.focusPage("#picture").val(),
+            "recruitment.identityPathF":com.focusPage("#picture1").val(),
+            "recruitment.identityPathB":com.focusPage("#picture2").val()
+    };
+
+        com.post(api.personel.updateRecruitmentForAdvance, parm, function(res){
+            recruitment.photoPath = com.focusPage("#picture").val();
+            recruitment.identityPathF = com.focusPage("#picture1").val();
+            recruitment.identityPathB = com.focusPage("#picture2").val();
+            com.showAlert(com.info, "操作成功");
+            recruitment.modals.pictureModal.modal("hide");
+            searcher.doSearch();
+        });
+	};
+
+	function removePicture(){
+		com.focusPage("#showImg").attr("src","#");
+		com.focusPage("#picture").val("");
+		com.focusPage("#photoPath").attr("href","javascript:void(0)");
+	}
+
+	com.uploadify("#pictureUpload", "上传图片", api.common.uploadImg, 'btn btn-success blue col-md-12', '*.jpg;*.jpge;*.gif;*.png', {'uploadType': 0}, 1, function(data){
+		com.focusPage("#picture").val(data.resUrl);
+		com.focusPage("#photoPath").attr("href", com.showImg(com.focusPage("#showImg"), data.resUrl, 150, 150, ''));
+	});
+
+	function removePicture1(){
+		com.focusPage("#showImg1").attr("src","#");
+		com.focusPage("#picture1").val("");
+		com.focusPage("#identityPathF").attr("href","javascript:void(0)");
+	}
+
+	com.uploadify("#pictureUpload1", "上传图片", api.common.uploadImg, 'btn btn-success blue col-md-12', '*.jpg;*.jpge;*.gif;*.png', {'uploadType': 0}, 1, function(data){
+		com.focusPage("#picture1").val(data.resUrl);
+		com.focusPage("#identityPathF").attr("href", com.showImg(com.focusPage("#showImg1"), data.resUrl, 360, 260, ''));
+	});
+
+	function removePicture2(){
+		com.focusPage("#showImg2").attr("src","#");
+		com.focusPage("#picture2").val("");
+		com.focusPage("#identityPathB").attr("href","javascript:void(0)");
+	}
+
+	com.uploadify("#pictureUpload2", "上传图片", api.common.uploadImg, 'btn btn-success blue col-md-12', '*.jpg;*.jpge;*.gif;*.png', {'uploadType': 0}, 1, function(data){
+		com.focusPage("#picture2").val(data.resUrl);
+		com.focusPage("#identityPathB").attr("href", com.showImg(com.focusPage("#showImg2"), data.resUrl, 360, 260, ''));
+	});
+
 });
 

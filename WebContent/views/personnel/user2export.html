@@ -1,0 +1,57 @@
+<div class="col-md-12" id="userOutput">
+    <div class="col-md-12">
+        <h3 class="col-md-12 smaller lighter header blue">条件</h3>
+        <div class="col-md-12 fl_search clearfix" id="conditions"></div>
+    </div>
+
+    <div class="col-md-12">
+        <h3 class="col-md-12 smaller lighter header blue">字段</h3>
+        <div class="col-md-12" id="fields">
+            <div class="col-md-12">
+                <label class="col-md-1 pull-left" style="line-height: 50px;">基本:</label>
+                <div class="col-md-11 hr4" id="basic"></div>
+            </div>
+
+            <div class="col-md-12">
+                <label class="col-md-1 pull-left" style="line-height: 50px;">工作:</label>
+                <div class="col-md-11 hr4" id="job"></div>
+            </div>
+
+            <div class="col-md-12">
+                <label class="col-md-1 pull-left" style="line-height: 50px;">归属:</label>
+                <div class="col-md-11 hr4" id="belong"></div>
+            </div>
+
+            <div class="col-md-12">
+                <label class="col-md-1 pull-left" style="line-height: 50px;">户籍:</label>
+                <div class="col-md-11 hr4" id="account"></div>
+            </div>
+
+            <div class="col-md-12">
+                <label class="col-md-1 pull-left" style="line-height: 50px;">招聘:</label>
+                <div class="col-md-11 hr4" id="recruit"></div>
+            </div>
+
+            <div class="col-md-12">
+                <label class="col-md-1 pull-left" style="line-height: 50px;">其他:</label>
+                <div class="col-md-11 hr4" id="other"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <h3 class="col-md-12 smaller lighter header blue">已选字段</h3>
+        <div class="col-md-12 fl_search clearfix" id="checkedFields"></div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="header blue"></div>
+        <a class="btn btn-success" id="outputBtn">导出人员信息</a>
+    </div>
+
+    <div class="col-md-12" id="blankNoDelete"></div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/personnel/user2export.js']);
+</script>

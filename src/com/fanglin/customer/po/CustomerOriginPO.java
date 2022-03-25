@@ -27,15 +27,15 @@ public class CustomerOriginPO implements Serializable {
 	private static final long serialVersionUID = 5940806639925973280L;
 
 	public static final String COLUMN_CREATER_STR = "creater.uid";
-	
+
 	public static final String COLUMN_BELONGER_STR = "belonger.uid";
 
 	public static final String COLUMN_DESIGNER_STR = "designer.uid";
-	
+
 	public static final String COLUMN_SALESMAN_STR = "salesman.uid";
 
 	public static final short STATUS_INIT_INT = 0; // 初始
-	
+
 	public static final short STATUS_FIRSTAPPROVAL_INT = 1; // 初审
 
 	public static final short STATUS_COMMIT_INT = 2; // 提交
@@ -69,11 +69,11 @@ public class CustomerOriginPO implements Serializable {
 	private String houseNumber;
 
 	private int buildArea;
-	
+
 	private int freeArea;
-	
+
 	private int totalArea;
-	
+
 	private int innerArea;
 
 	private UserPO creater;

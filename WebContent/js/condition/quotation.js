@@ -1,6 +1,5 @@
-
 Condition.addupRule("quotation", {
-    
+
     "worktype": {
         label: "工种",
         type: "select",
@@ -9,7 +8,7 @@ Condition.addupRule("quotation", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
+        dataSource: {// 从后台取数据的各种配置
             url: api.common.queryWorkType,
             postData: {},
             listPath: "workTypes",
@@ -17,16 +16,16 @@ Condition.addupRule("quotation", {
             valuePath: "name"
         }
     },
-    
-    "selection-orderId":{
-        label:"装修单号",
-        type:"text",
-        submitConfig : {
-            name : "orderId",
-            op : "eq",
-            validate:{
-                "reg" : /^[A-Z0-9]*$/,
-                "msg" : "格式不正确A-Z,0-9"
+
+    "selection-orderId": {
+        label: "装修单号",
+        type: "text",
+        submitConfig: {
+            name: "orderId",
+            op: "eq",
+            validate: {
+                "reg": /^[A-Z0-9]*$/,
+                "msg": "格式不正确A-Z,0-9"
             }
         }
     },
@@ -41,19 +40,30 @@ Condition.addupRule("quotation", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [
-                {key: "0", value: "初始"},
-                {key: "1", value: "配送"},
-                {key: "2", value: "审核"},
-                {key: "3", value: "确认"},
-                {key: "4", value: "完结"},
-                {key: "5", value: "结算"},
-            ],
+            listPath: [{
+                key: "0",
+                value: "初始"
+            }, {
+                key: "1",
+                value: "配送"
+            }, {
+                key: "2",
+                value: "审核"
+            }, {
+                key: "3",
+                value: "确认"
+            }, {
+                key: "4",
+                value: "完结"
+            }, {
+                key: "5",
+                value: "结算"
+            }, ],
             keyPath: "key",
             valuePath: "value"
         }
     },
-    "selection-category" : {
+    "selection-category": {
         label: "品类",
         type: "text",
         submitConfig: {
@@ -62,7 +72,7 @@ Condition.addupRule("quotation", {
             validate: null
         },
     },
-    "selection-brand" : {
+    "selection-brand": {
         label: "品牌",
         type: "text",
         submitConfig: {
@@ -71,7 +81,7 @@ Condition.addupRule("quotation", {
             validate: null
         },
     },
-    "selection-item-name" : {
+    "selection-item-name": {
         label: "商品名",
         type: "text",
         submitConfig: {
@@ -80,7 +90,7 @@ Condition.addupRule("quotation", {
             validate: null
         }
     },
-    "selection-item-createTime" : {
+    "selection-item-createTime": {
         label: "创建时间",
         type: "dateRangePicker",
         submitConfig: {
@@ -89,7 +99,7 @@ Condition.addupRule("quotation", {
             validate: null
         }
     },
-    "selection-item-tranTime" : {
+    "selection-item-tranTime": {
         label: "配送时间",
         type: "dateRangePicker",
         submitConfig: {
@@ -98,7 +108,7 @@ Condition.addupRule("quotation", {
             validate: null
         }
     },
-    "selection-item-checkTime" : {
+    "selection-item-checkTime": {
         label: "审核时间",
         type: "dateRangePicker",
         submitConfig: {
@@ -107,7 +117,7 @@ Condition.addupRule("quotation", {
             validate: null
         }
     },
-    "selection-item-confirmTime" : {
+    "selection-item-confirmTime": {
         label: "确认时间",
         type: "dateRangePicker",
         submitConfig: {
@@ -116,7 +126,7 @@ Condition.addupRule("quotation", {
             validate: null
         }
     },
-    "selection-item-finishTime" : {
+    "selection-item-finishTime": {
         label: "完结时间",
         type: "dateRangePicker",
         submitConfig: {
@@ -125,7 +135,7 @@ Condition.addupRule("quotation", {
             validate: null
         }
     },
-    "selection-item-balanceTime" : {
+    "selection-item-balanceTime": {
         label: "结算时间",
         type: "dateRangePicker",
         submitConfig: {
@@ -154,7 +164,13 @@ Condition.addupRule("quotation", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{key: "0", value: "初始"}, {key: "1", value: "发布"}],
+            listPath: [{
+                key: "0",
+                value: "初始"
+            }, {
+                key: "1",
+                value: "发布"
+            }],
             keyPath: "key",
             valuePath: "value"
         }
@@ -179,7 +195,13 @@ Condition.addupRule("quotation", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{key: "0", value: "启用"}, {key: "1", value: "禁用"}],
+            listPath: [{
+                key: "0",
+                value: "启用"
+            }, {
+                key: "1",
+                value: "禁用"
+            }],
             keyPath: "key",
             valuePath: "value"
         }
@@ -195,10 +217,87 @@ Condition.addupRule("quotation", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{key: "0", value: "基础"}, {key: "1", value: "工程"}, {key: "2", value: "主材"}],
+            listPath: [{
+                key: "0",
+                value: "基础"
+            }, {
+                key: "1",
+                value: "工程"
+            }, {
+                key: "2",
+                value: "主材"
+            }],
             keyPath: "key",
             valuePath: "value"
         }
     },
-    
+
+    "addreduce-orderId": {
+        label: "装修单号",
+        type: "text",
+        submitConfig: {
+            name: "orderId",
+            op: "eq",
+            validate: {
+                "reg": /^[A-Z0-9]*$/,
+                "msg": "格式不正确A-Z,0-9"
+            }
+        }
+    },
+    "addreduce-designer": {
+        label: "设计师",
+        type: "autofill",
+        submitConfig: {
+            name: "designerId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": 3,
+                "departmentType.name": ""
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "addreduce-village": {
+        label: "楼盘",
+        type: "autofill",
+        submitConfig: {
+            name: "villageId",
+            op: "eq ",
+            validate: null
+        },
+        dataSource: {
+            url: api.data.queryVillageForNameByPinyin,
+            postData: {},
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "addreduce-houseNumber": {
+        label: "楼号",
+        type: "text",
+        submitConfig: {
+            name: "houseNumber",
+            op: "cn",
+            validate: null
+        }
+    },
+    "addreduce-houseArea": {
+        label: "面积",
+        type: "text",
+        submitConfig: {
+            name: "buildArea",
+            op: "eq",
+            validate: {
+                "reg": /^[A-Z0-9]*$/,
+                "msg": "格式不正确A-Z,0-9"
+            }
+        }
+    },
 });

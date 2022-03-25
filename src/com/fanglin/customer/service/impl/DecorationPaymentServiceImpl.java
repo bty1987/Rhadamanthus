@@ -15,64 +15,64 @@ import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.utils.Paging;
 
 @Service("decorationPaymentOrderService")
-@Transactional(readOnly=true)
+@Transactional(readOnly = true)
 public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 	@Autowired
 	private DecorationPaymentDao decorationPaymentDao;
-	
-	@Override
-	public void queryCusDecorationPayment(Paging paging, List<Filter> filters, DecorationPaymentVO decorationPaymentVO) {
-			
-			List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryCusDecorationPayment(paging, filters, decorationPaymentVO.getOrderId());
-			List<DecorationPaymentVO> decorationPaymentVOs = new ArrayList<DecorationPaymentVO>();
-			
-			if(decorationPaymentPOs.size()!=0 && decorationPaymentPOs !=null){
-				
-				for(DecorationPaymentPO decorationPaymentPO : decorationPaymentPOs){
-					
-					decorationPaymentVO = new DecorationPaymentVO();
-					
-					decorationPaymentVO.setOrderId(decorationPaymentVO.getOrderId());
-					decorationPaymentVO.setReferMoney(decorationPaymentPO.getReferMoney());
-					decorationPaymentVO.setPaymentStatus(decorationPaymentPO.getPaymentStatus());
-					decorationPaymentVO.setPaymentType(decorationPaymentPO.getPaymentType());
-					
-					if(decorationPaymentPO.getDecorationReceipt() != null){
-						decorationPaymentVO.setCollectTime(decorationPaymentPO.getDecorationReceipt().getCollectTime());
-					}
-					
-					decorationPaymentVOs.add(decorationPaymentVO);
-					
-				}
-			}
-	
-			paging.setData(decorationPaymentVOs);
-	}
 
 	@Override
-	public List<DecorationPaymentVO> queryCusDecorationPaymentForContract(DecorationPaymentVO decorationPaymentVO) {
-		
-		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryCusDecorationPaymentForContract(decorationPaymentVO.getOrderId());
+	public void queryCusDecorationPayment(Paging paging, List<Filter> filters, DecorationPaymentVO decorationPaymentVO) {
+
+		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryCusDecorationPayment(paging, filters, decorationPaymentVO.getOrderId());
 		List<DecorationPaymentVO> decorationPaymentVOs = new ArrayList<DecorationPaymentVO>();
-		
-		if(decorationPaymentPOs != null && decorationPaymentPOs.size() != 0){
-			
-			for(DecorationPaymentPO decorationPaymentPO : decorationPaymentPOs){
-				
+
+		if (decorationPaymentPOs.size() != 0 && decorationPaymentPOs != null) {
+
+			for (DecorationPaymentPO decorationPaymentPO : decorationPaymentPOs) {
+
 				decorationPaymentVO = new DecorationPaymentVO();
-				
+
 				decorationPaymentVO.setOrderId(decorationPaymentVO.getOrderId());
 				decorationPaymentVO.setReferMoney(decorationPaymentPO.getReferMoney());
 				decorationPaymentVO.setPaymentStatus(decorationPaymentPO.getPaymentStatus());
 				decorationPaymentVO.setPaymentType(decorationPaymentPO.getPaymentType());
-				
+
+				if (decorationPaymentPO.getDecorationReceipt() != null) {
+					decorationPaymentVO.setCollectTime(decorationPaymentPO.getDecorationReceipt().getCollectTime());
+				}
+
+				decorationPaymentVOs.add(decorationPaymentVO);
+
+			}
+		}
+
+		paging.setData(decorationPaymentVOs);
+	}
+
+	@Override
+	public List<DecorationPaymentVO> queryCusDecorationPaymentForContract(DecorationPaymentVO decorationPaymentVO) {
+
+		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryCusDecorationPaymentForContract(decorationPaymentVO.getOrderId());
+		List<DecorationPaymentVO> decorationPaymentVOs = new ArrayList<DecorationPaymentVO>();
+
+		if (decorationPaymentPOs != null && decorationPaymentPOs.size() != 0) {
+
+			for (DecorationPaymentPO decorationPaymentPO : decorationPaymentPOs) {
+
+				decorationPaymentVO = new DecorationPaymentVO();
+
+				decorationPaymentVO.setOrderId(decorationPaymentVO.getOrderId());
+				decorationPaymentVO.setReferMoney(decorationPaymentPO.getReferMoney());
+				decorationPaymentVO.setPaymentStatus(decorationPaymentPO.getPaymentStatus());
+				decorationPaymentVO.setPaymentType(decorationPaymentPO.getPaymentType());
+
 				decorationPaymentVOs.add(decorationPaymentVO);
 			}
-			
+
 		}
-		
+
 		return decorationPaymentVOs;
 	}
-	
+
 }

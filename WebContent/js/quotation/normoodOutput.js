@@ -41,10 +41,12 @@ function printNormood(){
     contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
     contentHtml += '<tbody><tr bgcolor="#FFFFFF">';
     contentHtml += '<td width="8%" align="center">序号</td>';
-    contentHtml += '<td width="22%" align="center">商品编号</td>';
-    contentHtml += '<td width="30%" align="center">商品名称</td>';
-    contentHtml += '<td width="25%" align="center">定额上限</td>';
-    contentHtml += '<td width="15%" align="center">定额单位</td>';
+    contentHtml += '<td width="17%" align="center">商品编号</td>';
+    contentHtml += '<td width="25%" align="center">商品名称</td>';
+    contentHtml += '<td width="15%" align="center">定额上限</td>';
+    contentHtml += '<td width="10%" align="center">定额单位</td>';
+    contentHtml += '<td width="15%" align="center">库房上限</td>';
+    contentHtml += '<td width="10%" align="center">库房单位</td>';
     contentHtml += '</tr>';
     contentHtml += '</tbody></table>';
 
@@ -55,21 +57,21 @@ function printNormood(){
 
     $.each(normoods, function (j, v){
         
-        var limit = utils.accMul(v.usenum, v.num);
-        
         contentHtml += '<tr bgcolor="#FFFFFF">';
         contentHtml += '<td width="8%" align="center">' + (index+1) + '</td>';
-        contentHtml += '<td width="22%" align="center">' + v.goods.no + '</td>';
-        contentHtml += '<td width="30%" align="center">' + v.goods.name + '</td>';
-        contentHtml += '<td width="25%" align="center">' + limit + '</td>';
-        contentHtml += '<td width="15%" align="center">' + v.unit + '</td>';
+        contentHtml += '<td width="17%" align="center">' + v.goods.no + '</td>';
+        contentHtml += '<td width="25%" align="center">' + v.goods.name + '</td>';
+        contentHtml += '<td width="15%" align="center">' + v.normnum + '</td>';
+        contentHtml += '<td width="10%" align="center">' + v.normunit + '</td>';
+        contentHtml += '<td width="15%" align="center">' + v.storenum + '</td>';
+        contentHtml += '<td width="10%" align="center">' + v.storeunit + '</td>';
         contentHtml += '</tr>';
             
         index++;
     });
     
     contentHtml += '<tr bgcolor="#FFFFFF">';
-    contentHtml += '<td height="12" colspan="10" width="8%" align="center"></td>';
+    contentHtml += '<td height="12" colspan="12" width="8%" align="center"></td>';
     contentHtml += '</tr>';
             
     contentHtml += '</tbody>';
@@ -136,7 +138,16 @@ jQuery(function($) {
 	    }, null, false);
 	}
 	
-	quotationUtils.quotationNormoodProcessing(quotationFunctionAreas, extensions, addreduces);
+	var normoods = [];
+	
+	if((params.subtype & 8) == 8){
+        
+        com.post(api.quotation.queryQuotationNormoodItem, {"quotationNormoodItem.qid": params.quotationId}, function (res) {
+            normoods = res.quotationNormoodItems;
+        }, null, false);
+    }
+	
+	quotationUtils.quotationNormoodProcessing(quotationFunctionAreas, extensions, addreduces, normoods);
 
 	generatePrintPage(params.type, params.subtype, params.workType, params.company.name, params.orderType, params.showType);
 

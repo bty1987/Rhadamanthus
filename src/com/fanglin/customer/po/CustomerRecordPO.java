@@ -15,30 +15,30 @@ import javax.persistence.Table;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name="customerrecord",catalog="customer")
+@Table(name = "customerrecord", catalog = "customer")
 public class CustomerRecordPO implements Serializable {
 
 	private static final long serialVersionUID = 6333097863766164838L;
-	
-	private long crid;                	          
-	
-	private long csid;								
-	
-	private String comment;							
-	
-	private short type;								
-	
-	private UserPO operater;						
-	
-	private Timestamp operatTime;			
 
-	public CustomerRecordPO(){
+	private long crid;
+
+	private long csid;
+
+	private String comment;
+
+	private short type;
+
+	private UserPO operater;
+
+	private Timestamp operatTime;
+
+	public CustomerRecordPO() {
 		super();
 	}
-	
+
 	@Id
 	@GeneratedValue
-	@Column(name="crid")
+	@Column(name = "crid")
 	public long getCrid() {
 		return crid;
 	}
@@ -46,8 +46,8 @@ public class CustomerRecordPO implements Serializable {
 	public void setCrid(long crid) {
 		this.crid = crid;
 	}
-	
-	@Column(name="coid")
+
+	@Column(name = "coid")
 	public long getCsid() {
 		return csid;
 	}
@@ -56,7 +56,7 @@ public class CustomerRecordPO implements Serializable {
 		this.csid = csid;
 	}
 
-	@Column(name="comment")
+	@Column(name = "comment")
 	public String getComment() {
 		return comment;
 	}
@@ -64,8 +64,8 @@ public class CustomerRecordPO implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
-	@Column(name="type")
+
+	@Column(name = "type")
 	public short getType() {
 		return type;
 	}
@@ -74,8 +74,8 @@ public class CustomerRecordPO implements Serializable {
 		this.type = type;
 	}
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="ouid",referencedColumnName="uid")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ouid", referencedColumnName = "uid")
 	public UserPO getOperater() {
 		return operater;
 	}
@@ -83,10 +83,9 @@ public class CustomerRecordPO implements Serializable {
 	public void setOperater(UserPO operater) {
 		this.operater = operater;
 	}
-	
-	@Column(name="operatTime")
+
+	@Column(name = "operatTime")
 	public Timestamp getOperatTime() {
-		
 		return operatTime;
 	}
 

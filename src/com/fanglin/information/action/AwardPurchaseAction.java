@@ -35,7 +35,7 @@ public class AwardPurchaseAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addAwardPurchase", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addAwardPurchase() throws FLException {
 
@@ -43,15 +43,15 @@ public class AwardPurchaseAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "purchaseAwardPurchase", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String purchaseAwardPurchase() throws FLException {
 
-		awardPurchaseService.purchaseAwardPurchase( awardPurchase, queryUserId());
+		awardPurchaseService.purchaseAwardPurchase(awardPurchase, queryUserId());
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "instoreAwardPurchase", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String instoreAwardPurchase() throws FLException {
 
@@ -59,11 +59,19 @@ public class AwardPurchaseAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "balanceAwardPurchase", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String balanceAwardPurchase() throws FLException {
 
 		awardPurchaseService.balanceAwardPurchase(awardPurchase, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "cancelAwardPurchase", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String cancelAwardPurchase() throws FLException {
+
+		awardPurchaseService.cancelAwardPurchase(awardPurchase);
 
 		return SUCCESS;
 	}

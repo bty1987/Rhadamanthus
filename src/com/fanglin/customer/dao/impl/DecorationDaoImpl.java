@@ -10,9 +10,9 @@ import com.fanglin.customer.dao.DecorationDao;
 import com.fanglin.customer.po.DecorationPO;
 
 @Repository("decorationOrderDao")
-public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements DecorationDao{
-	
-	public DecorationDaoImpl(){
+public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements DecorationDao {
+
+	public DecorationDaoImpl() {
 		super(DecorationPO.class);
 	}
 
@@ -29,7 +29,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	}
 
 	@Override
-	public DecorationPO queryCusDecorationByOrderId(String orderId,String unionId) {
+	public DecorationPO queryCusDecorationByOrderId(String orderId, String unionId) {
 		return (DecorationPO) createCriteria(DecorationPO.class).add(Restrictions.eq(DecorationPO.COLUMN_ORDERID_STR, orderId)).add(Restrictions.eq(DecorationPO.COLUMN_UNIONID_STR, unionId)).uniqueResult();
 	}
 
@@ -40,9 +40,9 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 
 	@Override
 	public void deleteCusDecorationByUnionId(String unionId) {
-		
+
 		String sql = "delete from customer.decoration where unionId = :unionId";
-		
+
 		session().createSQLQuery(sql).setString(DecorationPO.COLUMN_UNIONID_STR, unionId).executeUpdate();
 	}
 

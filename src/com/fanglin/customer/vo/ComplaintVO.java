@@ -10,41 +10,40 @@ import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
 public class ComplaintVO implements Serializable {
-	
+
 	private static final long serialVersionUID = -3608490930141996506L;
 
 	private Long ctid;
-	
+
 	private Long cid;
-		
+
 	private Short type;
-	
+
 	private DepartmentVO dept;
-	
+
 	private UserBaseVO staff;
-	
+
 	private BrandVO brand;
-	
+
 	private String content;
-	
+
 	private UserBaseVO creater;
-	
+
 	private UserBaseVO updater;
-	
+
 	private Timestamp createTime;
-	
+
 	private Timestamp updateTime;
-	
+
 	private Timestamp finishTime;
-	
+
 	private Short status;
 
 	public ComplaintVO() {
 		super();
 	}
 
-	public ComplaintVO(DepartmentVO dept, UserBaseVO staff, BrandVO brand,
-			UserBaseVO creater, UserBaseVO updater) {
+	public ComplaintVO(DepartmentVO dept, UserBaseVO staff, BrandVO brand, UserBaseVO creater, UserBaseVO updater) {
 		super();
 		this.dept = dept;
 		this.staff = staff;

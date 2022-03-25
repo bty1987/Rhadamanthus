@@ -65,29 +65,18 @@ $(function(){
             //var $btnSub = $('<a></a>').addClass('btn btn-minier btn-success').html('子项');
             var lable = v.type == 0 ? '收款' : '退款';
             var $btnCharge = $('<a></a>').addClass('btn btn-minier btn-danger').html(lable);
-            //侯骅峰于4.7日增加楼盘地址、业务员、品牌、总价、券值、券信息显示字段
             var propertyArr = [
-                //增加订单号
                 ["装修单号：",v.material.orderId,"blue"],
-                //增加楼盘地址
                 ["楼盘地址：",v.material.house.village.name + " " + v.material.house.houseNumber,"grey"],
-                //创建品牌字段
                 ["品牌: ",v.material.brand,"grey"],
-                //增加业务员字段
                 ["业务员：",v.material.salesman.currentName ? v.material.salesman.currentName : '---',"grey"],
-                //新增业务部门和业务大区
                 ["归属大区: ",v.material.region.name ? v.material.region.name : '---',"grey"],
                 ["归属部门：",v.material.department.name ? v.material.department.name :'---',"grey"],
-                //增加总价字段
                 ["总价：",v.total,"blue"],
-                //过度数据
                 ["子订单总价：",v.material.total,"blue"],
-                //增加券值
                 ["券值：",v.material.coupon,"blue"],
-                //增加券信息
                 ["券信息：",v.material.couponInfo ? v.material.couponInfo : '---',"grey"],
                 ["主材驻店:", v.instorer.currentName ?  v.instorer.currentName : '---' , "grey"],
-                //预结算值
                 ["预结算值：",v.balance,"blue"],
                 ["预结算时间 :", v.balanceTime , "green"],
                 ["预结算人:", v.creater.currentName , "grey"],
@@ -96,7 +85,6 @@ $(function(){
                 ["结算值：",v.post,"blue"],
                 ["结算时间：",v.postTime ? v.postTime : '---',"green"],
                 ["结算人  :", v.poster.currentName ? v.poster.currentName : '---' , "grey"],
-                //新增抹零和厂商抹零
                 ["抹零：",v.material.maling,"blue"],
                 ["厂商抹零：",v.material.venderMaling,"blue"],
                 ["状态:", v.status == 0 ? '预结算': v.status== 1 ? '厂商结算' : v.status== 2 ? '结算' : '---' , "red"],

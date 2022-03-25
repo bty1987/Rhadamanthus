@@ -7,21 +7,21 @@ public class CustomerOriginFunctionVO implements Serializable {
 	private static final long serialVersionUID = 2527558478141212348L;
 
 	private Long cfid;
-	
+
 	private String name;
-	
+
 	private String key;
-	
+
 	private String value;
-	
+
 	private Short group;
-	
+
 	private Short type;
-	
+
 	private Short subtype;
-	
+
 	private String comment;
-	
+
 	private Short status;
 
 	private Short sort;
@@ -56,7 +56,7 @@ public class CustomerOriginFunctionVO implements Serializable {
 
 	public void setValue(String value) {
 		this.value = value;
-	} 
+	}
 
 	public Short getGroup() {
 		return group;
@@ -105,5 +105,5 @@ public class CustomerOriginFunctionVO implements Serializable {
 	public void setSort(Short sort) {
 		this.sort = sort;
 	}
-	
+
 }

@@ -60,7 +60,6 @@ jQuery(function($) {
       
     var lineprops = [
         {field: "paymentType", name: "款项类型", prop: "paymentType", clazz: "red", dataset: paymentContract.paymentTypes},
-        {field: "download", name: "下载地址", prop: "download", clazz: "grey"},
         {field: "creater", name: "创建人", prop: "creater.currentName", clazz: "grey"},
         {field: "signner", name: "签署人", prop: "signner.currentName", clazz: "grey"},
         {field: "createTime", name: "创建时间", prop: "createTime", clazz: "green"},

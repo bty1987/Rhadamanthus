@@ -21,26 +21,26 @@ import com.fanglin.personel.po.UserPO;
 public class RepairpayPO implements Serializable {
 
 	private static final long serialVersionUID = -3827026233276301733L;
-	
-	public static final short STATUS_INIT_INT = 0;  //初始
+
+	public static final short STATUS_INIT_INT = 0; // 初始
 
 	private long rpid;
-	
+
 	private long aid;
-	
+
 	private short type;
-	
+
 	private long ident;
-	
+
 	private long money;
-	
+
 	private UserPO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private short status;
-	
-	public RepairpayPO(){
+
+	public RepairpayPO() {
 		super();
 	}
 

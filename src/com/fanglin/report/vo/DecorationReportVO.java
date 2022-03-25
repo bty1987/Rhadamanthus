@@ -1,68 +1,67 @@
 package com.fanglin.report.vo;
 
-
-public class DecorationReportVO implements java.io.Serializable{
+public class DecorationReportVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -422576880725194412L;
 
 	private Long dcid;
-	
+
 	private String company;
-	
+
 	private Integer cs0;
-	
-	private Integer cs1; 
-	
+
+	private Integer cs1;
+
 	private Integer cs2;
-	
+
 	private Integer cs3;
-	
+
 	private Integer cs4;
-	
+
 	private Integer cs5;
-	
+
 	private Integer cs6;
-	
+
 	private Integer cs7;
-	
+
 	private Integer cs8;
-	
+
 	private Integer cs9;
-	
+
 	private Integer cs10;
-	
+
 	private Integer cs11;
-	
+
 	private Integer cs12;
-	
+
 	private Integer cs13;
-	
+
 	private Integer cs14;
-	
+
 	private Integer cs15;
-	
+
 	private Integer cs16;
-	
+
 	private Integer cs17;
-	
+
 	private Integer cs18;
-	
-    private Integer cs19;
-	
+
+	private Integer cs19;
+
 	private Integer cs20;
-	
+
 	private Integer cs21;
-	
+
 	private Integer cs22;
-	
+
 	private Integer cs23;
-	
+
 	private Integer cs24;
-	
+
 	private Integer cs25;
-	
+
 	private Integer cs26;
-	
+
 	public DecorationReportVO() {
 		super();
 	}
@@ -298,5 +297,5 @@ public class DecorationReportVO implements java.io.Serializable{
 	public void setCs26(Integer cs26) {
 		this.cs26 = cs26;
 	}
-	
+
 }

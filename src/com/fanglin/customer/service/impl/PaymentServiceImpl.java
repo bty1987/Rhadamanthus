@@ -17,35 +17,33 @@ import com.fanglin.utils.Paging;
 @Service("paymentOrderService")
 @Transactional(readOnly = true)
 public class PaymentServiceImpl implements PaymentService {
-	
+
 	@Autowired
 	private PaymentDao paymentDao;
 
 	@Override
 	public void queryCusPayment(Paging paging, List<Filter> filters, PaymentVO paymentVO) {
-			
-			List<PaymentPO> paymentPOs = paymentDao.queryCusPayment(paging, filters, paymentVO.getOrderId());
-			List<PaymentVO> paymentVOs = new ArrayList<PaymentVO>();
-			
-			if(paymentPOs.size() != 0 && paymentPOs != null){
-				
-				for (PaymentPO paymentPO : paymentPOs) {
 
-					paymentVO = new PaymentVO();
+		List<PaymentPO> paymentPOs = paymentDao.queryCusPayment(paging, filters, paymentVO.getOrderId());
+		List<PaymentVO> paymentVOs = new ArrayList<PaymentVO>();
 
-					paymentVO.setOrderId(paymentPO.getOrderId());
-					paymentVO.setPaymentType(paymentPO.getPaymentType());
-					paymentVO.setMoney(paymentPO.getRecharge());
-					paymentVO.setType(paymentPO.getType());
-					paymentVO.setCollectTime(paymentPO.getCreateTime());
+		if (paymentPOs.size() != 0 && paymentPOs != null) {
 
-					paymentVOs.add(paymentVO);
+			for (PaymentPO paymentPO : paymentPOs) {
 
-				}
-				
+				paymentVO = new PaymentVO();
+
+				paymentVO.setOrderId(paymentPO.getOrderId());
+				paymentVO.setPaymentType(paymentPO.getPaymentType());
+				paymentVO.setMoney(paymentPO.getRecharge());
+				paymentVO.setType(paymentPO.getType());
+				paymentVO.setCollectTime(paymentPO.getCreateTime());
+
+				paymentVOs.add(paymentVO);
 			}
-			
-			paging.setData(paymentVOs);
+		}
+
+		paging.setData(paymentVOs);
 	}
 
 }

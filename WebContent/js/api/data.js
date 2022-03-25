@@ -212,6 +212,13 @@ $.extend(api, {
         addUserLabel : {url : "addUserLabel.do"},
         deleteUserLabel : {url : "deleteUserLabel.do"},
 
+        pageSurveyTemplate : {url : "pageSurveyTemplate.do"},
+        querySurveyTemplate : {url : "querySurveyTemplate.do"},
+        querySurveyTemplateByStid : {url : "querySurveyTemplateByStid.do"},
+        addSurveyTemplate : {url : "addSurveyTemplate.do"},
+        updateSurveyTemplate : {url : "updateSurveyTemplate.do"},
+        deleteSurveyTemplate : {url : "deleteSurveyTemplate.do"},
+
         pageConstructionCost: {
             url:"pageConstructionCost.do",
             type: "query",
@@ -371,6 +378,16 @@ $.extend(api, {
                 args:["purchase", "selling", "pieceNum"]
             }]
         },
+
+        queryAoods:{
+            url: "queryAoods.do",
+            type:"query",
+            tranargs:[{
+                result:"aoodes-goods",
+                args: ["purchase","selling","pieceNum"]
+            }]
+        },
+
         queryAoodsByName:{
             url: "queryAoodsByName.do",
             type:"query",
@@ -596,7 +613,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["num"]
+                args: ["normnum","storenum"]
             },{
                 result: "paging-data-quotationItem",
                 args: ["unitPrice"]
@@ -607,7 +624,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "normoods",
-                args: ["num"]
+                args: ["normnum","storenum"]
             }, {
                 result: "normoods-goods",
                 args: ["purchase", "selling", "pieceNum"]
@@ -617,7 +634,7 @@ $.extend(api, {
             url: "addNormood.do",
             type: "update",
             tranargs: {
-                args: ["normood.num"]
+                args: ["normood.normnum", "normood.storenum"]
             }
         },
         deleteNormood: {url: "deleteNormood.do"},
@@ -709,27 +726,44 @@ $.extend(api, {
         deleteTalking:{url:"deleteTalking.do"},
 
 
-        pageAdditem: {url:"pageAdditem.do"},
-        queryAdditem: {url:"queryAdditem.do"},
-        addAdditem: {
-            url:"addAdditem.do",
+        pageNormadd: {url:"pageNormadd.do"},
+        queryNormadd: {url:"queryNormadd.do"},
+        addNormadd: {
+            url:"addNormadd.do",
             tranargs: {
-                args: ["additem.price"]
+                args: ["normadd.price"]
             }
         },
-        updateAdditemForStatus: {url:"updateAdditemForStatus.do"},
-        deleteAdditem: {url:"deleteAdditem.do"},
+        updateNormaddForStatus: {url:"updateNormaddForStatus.do"},
+        deleteNormadd: {url:"deleteNormadd.do"},
 
-        pagePackitem: {url:"pagePackitem.do"},
-        queryPackitem: {url:"queryPackitem.do"},
-        addPackitem: {
-            url:"addPackitem.do",
+        pageNormpack: {url:"pageNormpack.do"},
+        queryNormpack: {url:"queryNormpack.do"},
+        addNormpack: {
+            url:"addNormpack.do",
             tranargs: {
-                args: ["packitem.trannum"]
+                args: ["normpack.trannum"]
             }
         },
-        updatePackitemForStatus: {url:"updatePackitemForStatus.do"},
-        deletePackitem: {url:"deletePackitem.do"},
+        updateNormpackForStatus: {url:"updateNormpackForStatus.do"},
+        deleteNormpack: {url:"deleteNormpack.do"},
+
+        queryNormpackItem: {
+            url:"queryNormpackItem.do",
+            type: "query",
+            tranargs: [{
+                result: "normpackItems",
+                args: ["normnum","storenum"]
+            }]
+        },
+        addNormpackItem: {
+            url:"addNormpackItem.do",
+            type: "update",
+            tranargs: {
+                args: ["normpackItem.normnum", "normpackItem.storenum"]
+            }
+        },
+        deleteNormpackItem: {url:"deleteNormpackItem.do"},
 
         pagePaymentType: {
             url: "pagePaymentType.do",

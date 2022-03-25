@@ -263,6 +263,7 @@ $(function () {
 
                     $btnBalanceItem.click(function (e) {
                         params["sbid"] = v.sbid;
+                        params["sid"] = v.sales.sid;
                         com.popup4page("#viewPopUp", "views/sales/salesItem4balance.html", "子项");
                     });
 

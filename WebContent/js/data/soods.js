@@ -63,9 +63,10 @@ $(function () {
         var creatLine = function (v) {
 
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $contentWrap = $('<div style="border: 1px solid #ccc ;float :left;"></div>').css("width", "75px").css("height", "75px").css("margin-right", "10px");
-            var $imgDiv = $('<div></div>').addClass('cell').css("margin-right", "20px").appendTo($contentWrap);
+            var $contentWrap = $('<div style="float: left;"></div>').css("text-align", "center").css("width", "75px").css("margin-right", "10px");
+            var $imgDiv = $('<div></div>').addClass('cell').appendTo($contentWrap);
             $imgDiv.qrcode({render: "canvas", width: 75, height: 75, text: "" + v.sid});
+            $('<span></span>').css("font-size", "1px").html(v.goods.name).appendTo($contentWrap);
 
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue'));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');

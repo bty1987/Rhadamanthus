@@ -90,6 +90,8 @@ public class DecorationPO implements Serializable {
 
 	public static final short TYPE_HOLONOMY_INT = 2;
 
+	public static final short BALANCESTATUS_CONDUCT_INT = 1;// 结算
+
 	public static final String CONFIG_KEY_HOLONOMY_STR = "fullsub%s";
 
 	private long doid;
@@ -121,7 +123,7 @@ public class DecorationPO implements Serializable {
 	private String grade;
 
 	private String salesmanType = "守园";
-	
+
 	private long busitype;
 
 	private String houseType;
@@ -152,6 +154,8 @@ public class DecorationPO implements Serializable {
 
 	private Timestamp createTime;
 
+	private Timestamp balanceTime;
+
 	private Timestamp accountTime;
 
 	private Timestamp sdesignTime;
@@ -167,8 +171,10 @@ public class DecorationPO implements Serializable {
 	private short projectStatus;
 
 	private short sourceStatus;
-	
+
 	private short repairStatus;
+
+	private short balanceStatus;
 
 	private int otherStatus;
 
@@ -314,6 +320,14 @@ public class DecorationPO implements Serializable {
 		this.createTime = createTime;
 	}
 
+	public Timestamp getBalanceTime() {
+		return balanceTime;
+	}
+
+	public void setBalanceTime(Timestamp balanceTime) {
+		this.balanceTime = balanceTime;
+	}
+
 	public Timestamp getSdesignTime() {
 		return sdesignTime;
 	}
@@ -385,13 +399,21 @@ public class DecorationPO implements Serializable {
 	public void setSourceStatus(short sourceStatus) {
 		this.sourceStatus = sourceStatus;
 	}
-	
+
 	public short getRepairStatus() {
 		return repairStatus;
 	}
 
 	public void setRepairStatus(short repairStatus) {
 		this.repairStatus = repairStatus;
+	}
+
+	public short getBalanceStatus() {
+		return balanceStatus;
+	}
+
+	public void setBalanceStatus(short balanceStatus) {
+		this.balanceStatus = balanceStatus;
 	}
 
 	public Timestamp getContractTime() {

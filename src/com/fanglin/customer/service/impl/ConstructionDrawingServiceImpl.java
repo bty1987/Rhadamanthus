@@ -20,27 +20,27 @@ public class ConstructionDrawingServiceImpl implements ConstructionDrawingServic
 
 	@Autowired
 	private ConstructionDrawingDao constructionDrawingDao;
-	
+
 	@Override
-	public void queryCusConstructionDrawing(Paging paging, List<Filter> filters,Long cid, Short schedule) {
-		
+	public void queryCusConstructionDrawing(Paging paging, List<Filter> filters, Long cid, Short schedule) {
+
 		List<ConstructionDrawingPO> constructionDrawingPOs = constructionDrawingDao.queryCusConstructionDrawing(paging, filters, cid, schedule);
 		List<ConstructionDrawingVO> constructionDrawingVOs = new ArrayList<ConstructionDrawingVO>();
-		
-		if(constructionDrawingPOs.size() != 0 && constructionDrawingPOs != null){
-			
-			for(ConstructionDrawingPO constructionDrawingPO: constructionDrawingPOs){
-				
-				ConstructionDrawingVO constructionDrawingVO=new ConstructionDrawingVO();
-				
+
+		if (constructionDrawingPOs.size() != 0 && constructionDrawingPOs != null) {
+
+			for (ConstructionDrawingPO constructionDrawingPO : constructionDrawingPOs) {
+
+				ConstructionDrawingVO constructionDrawingVO = new ConstructionDrawingVO();
+
 				constructionDrawingVO.setDrawingUrl(constructionDrawingPO.getDrawingUrl());
 				constructionDrawingVO.setType(constructionDrawingPO.getType());
-				
+
 				constructionDrawingVOs.add(constructionDrawingVO);
-				
+
 			}
 		}
-		
+
 		paging.setData(constructionDrawingVOs);
 	}
 

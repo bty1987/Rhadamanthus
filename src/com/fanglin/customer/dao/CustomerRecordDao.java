@@ -8,5 +8,5 @@ import com.fanglin.customer.po.CustomerRecordPO;
 public interface CustomerRecordDao extends Dao<CustomerRecordPO> {
 
 	public List<CustomerRecordPO> queryCustomerRecord(long csid);
-	
+
 }

@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
@@ -83,8 +84,11 @@ public class AddReduceServiceImpl implements AddReduceService {
 	@Autowired
 	private AddReduceItemServiceImpl addReduceItemService;
 
+	@Autowired
+	private DecorationService decorationService;
+
 	@Override
-	public void pageAddReduce(Paging paging, List<Filter> filters, AddReduceVO addReduceVO) throws FLException {
+	public void pageAddReduce(Paging paging, List<Filter> filters, AddReduceVO addReduceVO, Integer company) throws FLException {
 
 		if (addReduceVO != null && addReduceVO.getOrderId() != null) {
 			filters.add(new Filter(AddReducePO.COLUMN_ORDERID_STR, addReduceVO.getOrderId(), "eq"));
@@ -102,7 +106,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 			filters.add(new Filter(AddReducePO.COLUMN_PAYTYPE_STR, String.valueOf(addReduceVO.getPaytype()), "eq"));
 		}
 
-		List<AddReduceDO> addReduceDOs = addReduceDao.pageAddReduce(paging, filters);
+		List<AddReduceDO> addReduceDOs = addReduceDao.pageAddReduce(paging, filters, company);
 		List<AddReduceVO> addReduceVOs = new ArrayList<AddReduceVO>();
 
 		for (AddReduceDO addReduceDO : addReduceDOs) {
@@ -182,6 +186,16 @@ public class AddReduceServiceImpl implements AddReduceService {
 		addReduceVO.setAddReduceItems(handleAddReduceItem(addReducePO.getArId()));
 
 		return addReduceVO;
+	}
+
+	@Override
+	public void sendAddReduce(AddReduceVO addReduceVO) throws FLException {
+
+		String orderId = addReduceVO.getOrderId();
+
+		System.out.println(String.format("pages/addReduceDetail/addReduceDetail?orderId=%s&arids=%s", orderId, addReduceVO.getContent()));
+
+		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 您的增减项明细已完成,若无疑义请您确认,代表您对增减项明细认可,若有问题,请及时联系监理进行调整,感谢您的配合,祝您生活愉快.", orderId), String.format("pages/addReduceDetail/addReduceDetail?orderId=%s&arids=%s", orderId, addReduceVO.getContent()));
 	}
 
 	@Override
@@ -349,12 +363,14 @@ public class AddReduceServiceImpl implements AddReduceService {
 			throw new FLException(200061, "增减单状态不可操作");
 		}
 
-		if (AddReducePO.TYPE_ADD_INT != addReducePO.getType()) {
+		if (AddReducePO.PAYTYPE_PAY_INT != addReducePO.getPaytype()) {
 			throw new FLException(200062, "增减单类型不可操作");
 		}
 
-		if (AddReducePO.PAYTYPE_PAY_INT != addReducePO.getPaytype()) {
-			throw new FLException(200062, "增减单类型不可操作");
+		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.get(addReducePO.getDpId());
+
+		if (decorationPaymentPO != null && decorationPaymentPO.getPaymentStatus() != DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT) {
+			throw new FLException(200061, "增减单状态不可操作");
 		}
 
 		decorationPaymentDao.deleteById(addReducePO.getDpId());
@@ -362,6 +378,24 @@ public class AddReduceServiceImpl implements AddReduceService {
 		addReducePO.setPaytype(addReduceVO.getPaytype());
 
 		addReduceDao.update(addReducePO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int affirmAddReduce(List<AddReduceVO> addReduceVOs) throws FLException {
+
+		for (AddReduceVO addReduce : addReduceVOs) {
+
+			AddReducePO addReducePO = addReduceDao.get(addReduce.getArId());
+
+			if (addReducePO == null) continue;
+
+			addReducePO.setIsAffirm(addReducePO.ISAFFIRM_CONFIRMED_INT);
+
+			addReduceDao.update(addReducePO);
+		}
 
 		return 0;
 	}

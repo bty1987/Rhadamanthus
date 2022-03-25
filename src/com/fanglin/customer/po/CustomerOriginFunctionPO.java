@@ -11,25 +11,25 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "customerOriginfunction", catalog = "customer")
 public class CustomerOriginFunctionPO implements Serializable {
-	
+
 	private static final long serialVersionUID = -6902241747925298925L;
 
 	public static final short STATUS_ENABLE_INT = 0;
-	
+
 	private long cfid;
-	
+
 	private String name;
-	
+
 	private String key;
-	
+
 	private String value;
-	
+
 	private short type;
-	
+
 	private short subtype;
-	
+
 	private String comment;
-	
+
 	private short status;
 
 	private short sort;
@@ -116,5 +116,5 @@ public class CustomerOriginFunctionPO implements Serializable {
 	public void setSort(short sort) {
 		this.sort = sort;
 	}
-	
+
 }

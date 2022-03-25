@@ -1,4 +1,5 @@
 package com.fanglin.information.po;
+
 import static javax.persistence.GenerationType.IDENTITY;
 
 import java.sql.Timestamp;
@@ -17,49 +18,51 @@ import com.fanglin.personel.po.UserPO;
 @Entity
 @Table(name = "awardpurchase", catalog = "information")
 public class AwardPurchasePO implements java.io.Serializable {
-	
-	private static final long serialVersionUID = -5796261556954912446L;
-	
-	public static final short STATUS_INIT_INT = 0; // 初始
-	
-	public static final short STATUS_PROC_INT = 1;// 采购
-	
-	public static final short STATUS_WARE_INT = 2;// 入库
-	
-	public static final short STATUS_CLOSE_INT = 3;// 结算
 
-	private long apId;
-	
+	private static final long serialVersionUID = -5796261556954912446L;
+
+	public static final short STATUS_INIT_INT = 0; // 初始
+
+	public static final short STATUS_PROC_INT = 1; // 采购
+
+	public static final short STATUS_WARE_INT = 2; // 入库
+
+	public static final short STATUS_CLOSE_INT = 3; // 结算
+
+	public static final short STATUS_DISABLE_INT = 4; // 失效
+
+	private long apid;
+
 	private AwardStockPO awardStock;
-	
-	private long inprice; //采购价
-	
-	private long baprice; //结算价
+
+	private int inprice; // 采购价
+
+	private int baprice; // 结算价
 
 	private int num;
-	
-	private UserPO creater; //创建人
-	
-	private UserPO purchaser; //采购员
-	
-	private UserPO instorer; //入库员
-	
-	private Timestamp createTime; //创建时间
-	
-	private Timestamp purchaseTime; //采购时间
-	
-	private Timestamp instoreTime; //入库时间
-	
-	private Timestamp balanceTime; //仓储时间
-	
+
+	private UserPO creater; // 创建人
+
+	private UserPO purchaser; // 采购员
+
+	private UserPO instorer; // 入库员
+
+	private Timestamp createTime; // 创建时间
+
+	private Timestamp purchaseTime; // 采购时间
+
+	private Timestamp instoreTime; // 入库时间
+
+	private Timestamp balanceTime; // 仓储时间
+
 	private short status;
-	
+
 	private int company;
 
 	public AwardPurchasePO() {
 		super();
 	}
-	
+
 	public AwardPurchasePO(AwardStockPO awardStock, UserPO creater, UserPO purchaser, UserPO instorer) {
 		super();
 		this.awardStock = awardStock;
@@ -67,18 +70,18 @@ public class AwardPurchasePO implements java.io.Serializable {
 		this.purchaser = purchaser;
 		this.instorer = instorer;
 	}
-	
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name = "apId")
-	public long getApId() {
-		return apId;
+	@Column(name = "apid")
+	public long getApid() {
+		return apid;
 	}
 
-	public void setApId(long apId) {
-		this.apId = apId;
+	public void setApid(long apid) {
+		this.apid = apid;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "asid", referencedColumnName = "asid")
 	public AwardStockPO getAwardStock() {
@@ -90,20 +93,20 @@ public class AwardPurchasePO implements java.io.Serializable {
 	}
 
 	@Column(name = "inprice")
-	public long getInprice() {
+	public int getInprice() {
 		return inprice;
 	}
 
-	public void setInprice(long inprice) {
+	public void setInprice(int inprice) {
 		this.inprice = inprice;
 	}
 
 	@Column(name = "baprice")
-	public long getBaprice() {
+	public int getBaprice() {
 		return baprice;
 	}
 
-	public void setBaprice(long baprice) {
+	public void setBaprice(int baprice) {
 		this.baprice = baprice;
 	}
 
@@ -199,7 +202,7 @@ public class AwardPurchasePO implements java.io.Serializable {
 	public void setCompany(int company) {
 		this.company = company;
 	}
-	
+
 	public AwardPurchasePO init(AwardStockPO awardStock, UserPO creater, UserPO purchaser, UserPO instorer, short status, Integer company, Integer num) {
 
 		setAwardStock(awardStock);
@@ -209,8 +212,8 @@ public class AwardPurchasePO implements java.io.Serializable {
 		setStatus(status);
 		setCompany(company);
 		setNum(num);
+
 		return this;
 	}
-	
-	
+
 }
