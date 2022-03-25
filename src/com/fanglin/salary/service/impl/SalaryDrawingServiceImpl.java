@@ -2,6 +2,7 @@ package com.fanglin.salary.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import com.fanglin.salary.vo.SalaryDrawingVO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 
 @Service("salaryDrawingService")
 @Transactional(readOnly = true)
@@ -68,7 +70,7 @@ public class SalaryDrawingServiceImpl implements SalaryDrawingService {
 		BeanUtil.copyProperties(salaryDrawingVO, salaryDrawingPO, Arrays.asList("creater"));
 
 		salaryDrawingPO.setCreater(userDao.queryUserByUserId(userId));
-
+		salaryDrawingPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		salaryDrawingPO.setStatus(DataDrawingPO.STATUS_INIT_INT);
 
 		salaryDrawingDao.save(salaryDrawingPO);

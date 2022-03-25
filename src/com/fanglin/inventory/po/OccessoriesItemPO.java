@@ -29,8 +29,32 @@ public class OccessoriesItemPO implements Serializable {
 	
 	private int num;
 	
-	private int refnum;
+	private int sennum; //送货数量
 	
+	private int recnum; //到货数量
+
+	private int rbalance;//原结算价
+	
+	private int vbalance;//结算价
+	
+	@Column(name = "rbalance")
+	public int getRbalance() {
+		return rbalance;
+	}
+
+	public void setRbalance(int rbalance) {
+		this.rbalance = rbalance;
+	}
+
+	@Column(name = "vbalance")
+	public int getVbalance() {
+		return vbalance;
+	}
+
+	public void setVbalance(int vbalance) {
+		this.vbalance = vbalance;
+	}
+
 	public OccessoriesItemPO(){
 		super();
 	}
@@ -74,13 +98,22 @@ public class OccessoriesItemPO implements Serializable {
 		this.num = num;
 	}
 	
-	@Column(name = "refnum")
-	public int getRefnum() {
-		return refnum;
+	@Column(name = "sennum")
+	public int getSennum() {
+		return sennum;
 	}
 
-	public void setRefnum(int refnum) {
-		this.refnum = refnum;
+	public void setSennum(Integer sennum) {
+		this.sennum = sennum;
+	}
+	
+	@Column(name = "recnum")
+	public int getRecnum() {
+		return recnum;
+	}
+
+	public void setRecnum(int recnum) {
+		this.recnum = recnum;
 	}
 	
 	public OccessoriesItemPO init(long oid, long gid, int num){

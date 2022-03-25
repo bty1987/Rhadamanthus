@@ -1,6 +1,7 @@
 package com.fanglin.customer.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import com.fanglin.customer.service.FeedbackService;
 import com.fanglin.customer.vo.FeedbackVO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -31,10 +33,10 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 	@Autowired
 	private FeedbackDrawingDao feedbackDrawingDao;
-	
+
 	@Autowired
 	private DecorationDao decorationDao;
-	
+
 	@Override
 	public void pageFeedback(Paging paging, List<Filter> filters, int company) {
 
@@ -45,7 +47,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 			FeedbackVO feedbackVO = new FeedbackVO();
 
-			BeanUtil.copyPropertie(feedbackPO, feedbackVO);
+			BeanUtil.copyPropertie(feedbackPO, feedbackVO, Arrays.asList("company"));
+
+			feedbackVO.setCompany(feedbackPO.getCompany().getName());
 
 			feedbackVOs.add(feedbackVO);
 		}
@@ -59,15 +63,16 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 		FeedbackPO feedbackPO = new FeedbackPO();
 
-		BeanUtil.copyPropertie(feedbackVO, feedbackPO);
+		BeanUtil.copyPropertie(feedbackVO, feedbackPO, Arrays.asList("company"));
 
 		feedbackPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		
+		feedbackPO.setCompany(new CompanyPO(CompanyPO.TYPE_HEADQUARTER_INT));
+
 		if (feedbackVO.getOrderId() != null) {
-			
+
 			DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(feedbackVO.getOrderId());
-			
-			feedbackPO.setCompany(decorationPO.getCompany());
+
+			feedbackPO.setCompany(new CompanyPO(decorationPO.getCompany()));
 		}
 
 		feedbackDao.save(feedbackPO);
@@ -81,4 +86,5 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 		return 0;
 	}
+
 }

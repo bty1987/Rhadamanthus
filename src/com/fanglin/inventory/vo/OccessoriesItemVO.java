@@ -16,8 +16,30 @@ public class OccessoriesItemVO implements Serializable {
 	
 	private Integer num;
 	
-	private Integer refnum;
+	private Integer sennum; //送货数量
 	
+	private Integer recnum; //到货数量
+	
+	private Integer rbalance;//原结算价
+	
+	private Integer vbalance;//结算价
+	
+	public Integer getRbalance() {
+		return rbalance;
+	}
+
+	public void setRbalance(Integer rbalance) {
+		this.rbalance = rbalance;
+	}
+
+	public Integer getVbalance() {
+		return vbalance;
+	}
+
+	public void setVbalance(Integer vbalance) {
+		this.vbalance = vbalance;
+	}
+
 	public OccessoriesItemVO(){
 		super();
 	}
@@ -59,11 +81,19 @@ public class OccessoriesItemVO implements Serializable {
 		this.num = num;
 	}
 
-	public Integer getRefnum() {
-		return refnum;
+	public Integer getSennum() {
+		return sennum;
 	}
 
-	public void setRefnum(Integer refnum) {
-		this.refnum = refnum;
+	public void setSennum(Integer sennum) {
+		this.sennum = sennum;
+	}
+
+	public Integer getRecnum() {
+		return recnum;
+	}
+
+	public void setRecnum(Integer recnum) {
+		this.recnum = recnum;
 	}
 }

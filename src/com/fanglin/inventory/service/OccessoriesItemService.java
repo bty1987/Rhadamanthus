@@ -9,13 +9,11 @@ import com.fanglin.inventory.vo.OccessoriesVO;
 public interface OccessoriesItemService {
 
 	public List<OccessoriesItemVO> queryOccessoriesItemByAid(OccessoriesItemVO occessoriesItemVO);
-	
-	public int addOccessoriesItem(OccessoriesVO occessoriesVO,OccessoriesItemVO occessoriesItemVO) throws FLException;
-	
-	public int updateOccessoriesItem(OccessoriesItemVO occessoriesItemVO) throws FLException;
-	
-	public int deleteOccessoriesItem(OccessoriesItemVO occessoriesItemVO) throws FLException;
 
-	public int refundOccessoriesItem(OccessoriesItemVO occessoriesItemVO) throws FLException;
+	public int addOccessoriesItem(OccessoriesVO occessoriesVO, OccessoriesItemVO occessoriesItemVO) throws FLException;
+
+	public int updateOccessoriesItem(OccessoriesItemVO occessoriesItemVO) throws FLException;
+
+	public int deleteOccessoriesItem(OccessoriesItemVO occessoriesItemVO) throws FLException;
 
 }

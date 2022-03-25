@@ -4,8 +4,10 @@ $(function() {
         qiid : params.qiid,
         items: {
             goodsName: com.focusPage('#goodsName', "#addNormoodModal"),
-            unit: com.focusPage('#unit', "#addNormoodModal"),
-            num: com.focusPage('#num', "#addNormoodModal")
+            normunit: com.focusPage('#normunit', "#addNormoodModal"),
+            normnum: com.focusPage('#normnum', "#addNormoodModal"),
+            storeunit: com.focusPage('#storeunit', "#addNormoodModal"),
+            storenum: com.focusPage('#storenum', "#addNormoodModal")
         },
         modals: {
             addNormoodModal: com.focusPage('#addNormoodModal')
@@ -32,7 +34,11 @@ $(function() {
     com.initTypeahead('goodsName', api.data.queryAoodsByName, "aoods.goods.name", {}, "aoodes", "gid", "name", null);
     
     com.post(api.common.queryMeasurementUnit, {}, function (res) {
-        normood.items.unit.bindData(res.measurementUnits, "name", "name");
+        normood.items.normunit.bindData(res.measurementUnits, "name", "name");
+    });
+    
+    com.post(api.common.queryMeasurementUnit, {}, function (res) {
+        normood.items.storeunit.bindData(res.measurementUnits, "name", "name");
     });
     
     var displayFunc  = (function(){
@@ -67,8 +73,10 @@ $(function() {
                 ["品类: ", v.goods.category, "gray"],
                 ["商品单位: ", v.goods.measurementUnit, "gray"],
                 ["报价单位: ", v.quotationItem.measurementUnit, "gray"],
-                ["定额单位: ", v.unit, "gray"],
-                ["定额量: ", v.num, "blue"],
+                ["定额单位: ", v.normunit, "gray"],
+                ["定额数量: ", v.normnum, "blue"],
+                ["库房单位: ", v.storeunit, "gray"],
+                ["库房数量: ", v.storenum, "blue"],
                 ["状态: ", v.status == 0 ? "有效":"无效", "red"]
             ];
 
@@ -127,8 +135,10 @@ $(function() {
 
         var option = {
             "normood.goods.gid": gid,
-            "normood.unit": normood.items.unit.val(),
-            "normood.num": normood.items.num.val(),
+            "normood.normunit": normood.items.normunit.val(),
+            "normood.normnum": normood.items.normnum.val(),
+            "normood.storeunit": normood.items.storeunit.val(),
+            "normood.storenum": normood.items.storenum.val(),
             "normood.quotationItem.qiid": normood.qiid
         };
 

@@ -21,7 +21,7 @@ import com.fanglin.utils.Paging;
 
 public interface AddReduceDao extends Dao<AddReducePO> {
 
-	public List<AddReduceDO> pageAddReduce(Paging paging, List<Filter> filters);
+	public List<AddReduceDO> pageAddReduce(Paging paging, List<Filter> filters, Integer company);
 
 	public List<AddReducePO> pageAddReduce(Paging paging, List<Filter> filters, String orderId);
 

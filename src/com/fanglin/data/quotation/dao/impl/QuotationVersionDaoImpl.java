@@ -54,27 +54,40 @@ public class QuotationVersionDaoImpl extends DaoImpl<QuotationVersionPO> impleme
 	}
 
 	@Override
-	public QuotationVersionPO queryQuotationVersionForDefault(int company) {
-		return (QuotationVersionPO) createCriteria(QuotationVersionPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("defaultFlag", QuotationVersionPO.DEFAULTFLAG_DEFAULT_INT)).setMaxResults(1).uniqueResult();
+	public QuotationVersionPO queryQuotationVersionForDefault(int company, short type) {
+		return (QuotationVersionPO) createCriteria(QuotationVersionPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("type", type)).add(Restrictions.eq("defaultFlag", QuotationVersionPO.DEFAULTFLAG_DEFAULT_INT)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
-	public int updateQuotationVersionForDefault(int company, short defaultFlag) {
+	public int updateQuotationVersionForDefault(int company, short defaultFlag, short type) {
 
-		String sql = "update quotation.quotationversion set defaultFlag = :defaultFlag where company = :company";
+		String sql = "update quotation.quotationversion set defaultFlag = :defaultFlag where company = :company and type = :type";
 
-		session().createSQLQuery(sql).setInteger("company", company).setShort("defaultFlag", defaultFlag).executeUpdate();
+		session().createSQLQuery(sql).setInteger("company", company).setShort("defaultFlag", defaultFlag).setShort("type", type).executeUpdate();
 
 		return 0;
 	}
 
 	private void queryFliterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters != null) {
-			for (Filter filter : filters) {
-				query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
+		if (filters == null) return;
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if ("name".equals(field)) {
+				query.add(query.getCriterion("name", data, op));
+			} else if ("no".equals(field)) {
+				query.add(query.getCriterion("no", data, op));
+			} else if ("type".equals(field)) {
+				query.add(query.getCriterion("type", Short.valueOf(data), "eq"));
+			} else if ("defaultFlag".equals(field)) {
+				query.add(query.getCriterion("defaultFlag", Short.valueOf(data), "eq"));
 			}
+
 		}
 	}
-
 }

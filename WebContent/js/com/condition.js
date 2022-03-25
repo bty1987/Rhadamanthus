@@ -2,25 +2,29 @@
  * 存放查询条件的js,定义全项目的查询条件
  */
 
-var Condition = function (api) {
+var Condition = function(api) {
 
     var _condRules = {
 
         // autofill
         "demo-designer": {
-            label: "设计师",//中文名
-            type: "autofill",//类型
-            submitConfig: {//向后台提交的配置
-                name: "designerId",//接口中的参数名
-                op: "eq",//查询方式
-                validate: null//校验规则
+            label: "设计师",// 中文名
+            type: "autofill",// 类型
+            submitConfig: {// 向后台提交的配置
+                name: "designerId",// 接口中的参数名
+                op: "eq",// 查询方式
+                validate: null
+            // 校验规则
             },
-            dataSource: {//从后台取数据的各种配置
-                url: api.personel.queryUserByPinyin,//获取数据要调用的接口
-                postData: {"user.status":3,"departmentType.name":""},//获取数据时的请求参数
-                listPath: "autoFillKeyValue",//响应list的json路径
-                keyPath: "key",//用来向后台提交的字段的json路径
-                valuePath: "value"//用来在页面显示的字段的json路径
+            dataSource: {// 从后台取数据的各种配置
+                url: api.personel.queryUserByPinyin,// 获取数据要调用的接口
+                postData: {
+                    "user.status": 3,
+                    "departmentType.name": ""
+                },// 获取数据时的请求参数
+                listPath: "autoFillKeyValue",// 响应list的json路径
+                keyPath: "key",// 用来向后台提交的字段的json路径
+                valuePath: "value"// 用来在页面显示的字段的json路径
             }
         },
         // text
@@ -45,9 +49,11 @@ var Condition = function (api) {
                 op: "eq",
                 validate: null
             },
-            dataSource: {//从后台取数据的各种配置
+            dataSource: {// 从后台取数据的各种配置
                 url: api.communion.queryDepartment,
-                postData: {"dept.type.name": "设计大区"},
+                postData: {
+                    "dept.type.name": "设计大区"
+                },
                 listPath: "deptList",
                 keyPath: "no",
                 valuePath: "name"
@@ -75,8 +81,9 @@ var Condition = function (api) {
         },
 
     };
-    
+
     var fillCondition = function(url) {
+
         if (parent.window.isPC && parent.window.isEncryption) {
             url = url.substring(0, url.lastIndexOf('.')) + '.bin';
             require('nw.gui').Window.get().evalNWBin(null, url);
@@ -90,14 +97,14 @@ var Condition = function (api) {
             });
         }
     };
-    
+
     return {
-        init: function(path){
-            
+        init: function(path) {
+
             window.console && window.console.log && console.log("%cCondition Config Ready 条件配置就绪", "color:#0a0; font-size:1em");
-            
+
             var dtd = $.Deferred();
-            
+
             fillCondition(path + 'approval.js');
             fillCondition(path + 'balance.js');
             fillCondition(path + 'building.js');
@@ -114,6 +121,7 @@ var Condition = function (api) {
             fillCondition(path + 'personel.js');
             fillCondition(path + 'production.js');
             fillCondition(path + 'quotation.js');
+            fillCondition(path + 'report.js');
             fillCondition(path + 'salary.js');
             fillCondition(path + 'sales.js');
             fillCondition(path + 'store.js');
@@ -121,19 +129,21 @@ var Condition = function (api) {
 
             return dtd.promise();
         },
-        getRuleByCondName: function (condName) {
+        getRuleByCondName: function(condName) {
+
             return _condRules[condName];
         },
-        addupRule: function (module, conditions){
-            
-            $.each(conditions, function(k, v){
-                
+        addupRule: function(module, conditions) {
+
+            $.each(conditions, function(k, v) {
+
                 var _key = module + "-" + k;
-                
-                if(_condRules[_key]) return true;
-                
+
+                if (_condRules[_key])
+                    return true;
+
                 _condRules[_key] = v;
             });
         }
-    }
+    };
 };

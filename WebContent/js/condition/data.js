@@ -1,4 +1,3 @@
-
 Condition.addupRule("data", {
 
     "worktype": {
@@ -27,7 +26,7 @@ Condition.addupRule("data", {
             validate: null
         }
     },
-    "serviceNode-type" : {
+    "serviceNode-type": {
         label: "节点类型",
         type: "select",
         submitConfig: {
@@ -46,7 +45,7 @@ Condition.addupRule("data", {
 
     "village-name": {
         label: "楼盘名称",
-        type:  "text",
+        type: "text",
         submitConfig: {
             name: "villageName",
             op: "cn",
@@ -71,7 +70,7 @@ Condition.addupRule("data", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
+        dataSource: {// 从后台取数据的各种配置
             url: api.ds.data,
             postData: {},
             listPath: "receiptType",
@@ -87,7 +86,7 @@ Condition.addupRule("data", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
+        dataSource: {// 从后台取数据的各种配置
             url: api.ds.data,
             postData: {},
             listPath: "receiptTypeStatus",
@@ -96,6 +95,15 @@ Condition.addupRule("data", {
         }
     },
 
+    "quotation-version-no": {
+        label: "版本编号",
+        type: "text",
+        submitConfig: {
+            name: "no",
+            op: "eq",
+            validate: null
+        }
+    },
     "quotation-version-name": {
         label: "版本名称",
         type: "text",
@@ -103,6 +111,22 @@ Condition.addupRule("data", {
             name: "name",
             op: "cn",
             validate: null
+        }
+    },
+    "quotation-version-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {// 从后台取数据的各种配置
+            url: api.ds.quotation,
+            postData: {},
+            listPath: "quotationVersionType",
+            keyPath: "key",
+            valuePath: "value"
         }
     },
     "quotation-functionArea-name": {
@@ -203,7 +227,7 @@ Condition.addupRule("data", {
             valuePath: "name"
         }
     },
-    "quotation-additem-name": {
+    "quotation-normadd-name": {
         label: "名称",
         type: "text",
         submitConfig: {
@@ -212,7 +236,7 @@ Condition.addupRule("data", {
             validate: null
         }
     },
-    "quotation-additem-status": {
+    "quotation-normadd-status": {
         label: "状态",
         type: "select",
         submitConfig: {
@@ -220,16 +244,16 @@ Condition.addupRule("data", {
             op: "eq",
             validate: null
         },
-        dataSource : {
-            url : api.ds.data,
-            postData : {},
-            listPath :"Status",
-            keyPath:"key",
-            valuePath:"value"
+        dataSource: {
+            url: api.ds.data,
+            postData: {},
+            listPath: "Status",
+            keyPath: "key",
+            valuePath: "value"
         }
     },
 
-    "quotation-packitem-name": {
+    "quotation-normpack-name": {
         label: "名称",
         type: "text",
         submitConfig: {
@@ -238,7 +262,7 @@ Condition.addupRule("data", {
             validate: null
         }
     },
-    "quotation-packitem-status": {
+    "quotation-normpack-status": {
         label: "状态",
         type: "select",
         submitConfig: {
@@ -246,12 +270,12 @@ Condition.addupRule("data", {
             op: "eq",
             validate: null
         },
-        dataSource : {
-            url : api.ds.data,
-            postData : {},
-            listPath :"Status",
-            keyPath:"key",
-            valuePath:"value"
+        dataSource: {
+            url: api.ds.data,
+            postData: {},
+            listPath: "Status",
+            keyPath: "key",
+            valuePath: "value"
         }
     },
 
@@ -290,19 +314,20 @@ Condition.addupRule("data", {
         }
     },
     "model-brand": {
-        label: "品牌",//中文名
-        type: "autofill",//类型
-        submitConfig: {//向后台提交的配置
-            name: "materialBrandName",//接口中的参数名
-            op: "eq",//查询方式
-            validate: null//校验规则
+        label: "品牌",// 中文名
+        type: "autofill",// 类型
+        submitConfig: {// 向后台提交的配置
+            name: "materialBrandName",// 接口中的参数名
+            op: "eq",// 查询方式
+            validate: null
+        // 校验规则
         },
-        dataSource: {//从后台取数据的各种配置
-            url: api.data.queryBrandByPinyin,//获取数据要调用的接口
-            postData: {},//获取数据时的请求参数
-            listPath: "autoFillKeyValue",//响应list的json路径
-            keyPath: "value",//用来向后台提交的字段的json路径
-            valuePath: "value"//用来在页面显示的字段的json路径
+        dataSource: {// 从后台取数据的各种配置
+            url: api.data.queryBrandByPinyin,// 获取数据要调用的接口
+            postData: {},// 获取数据时的请求参数
+            listPath: "autoFillKeyValue",// 响应list的json路径
+            keyPath: "value",// 用来向后台提交的字段的json路径
+            valuePath: "value"// 用来在页面显示的字段的json路径
         }
     },
     "model-righter": {
@@ -312,9 +337,13 @@ Condition.addupRule("data", {
             name: "userId",
             op: "eq",
             validate: null
-        }, dataSource: {
+        },
+        dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status":0,"departmentType.name":"主材部"},
+            postData: {
+                "user.status": 0,
+                "departmentType.name": "主材部"
+            },
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
@@ -365,12 +394,12 @@ Condition.addupRule("data", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
+        dataSource: {// 从后台取数据的各种配置
             url: api.ds.manifest,
             postData: {},
             listPath: "statusType",
             keyPath: "key",
-            valuePath:"value"
+            valuePath: "value"
         }
     },
     "brand-name": {
@@ -390,7 +419,7 @@ Condition.addupRule("data", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
+        dataSource: {// 从后台取数据的各种配置
             url: api.data.queryCategory,
             postData: {},
             listPath: "categorys",
@@ -417,7 +446,7 @@ Condition.addupRule("data", {
         }
     },
 
-    "aoods-name" :{
+    "aoods-name": {
         label: "商品名",
         type: "text",
         submitConfig: {
@@ -446,10 +475,13 @@ Condition.addupRule("data", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [
-                {key: "0", value: "启用"},
-                {key: "1", value: "禁用"}
-            ],
+            listPath: [{
+                key: "0",
+                value: "启用"
+            }, {
+                key: "1",
+                value: "禁用"
+            }],
             keyPath: "key",
             valuePath: "value"
         }
@@ -471,7 +503,30 @@ Condition.addupRule("data", {
         }
     },
 
-    "soods-name" :{
+    "aoods-atttype": {
+        label: "归属类型",
+        type: "select",
+        submitConfig: {
+            name: "atttype",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                key: "0",
+                value: "普通"
+            }, {
+                key: "1",
+                value: "外辅"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    "soods-name": {
         label: "商品名",
         type: "text",
         submitConfig: {
@@ -480,7 +535,7 @@ Condition.addupRule("data", {
             validate: null
         }
     },
-    "soods-quotation-item-name" :{
+    "soods-quotation-item-name": {
         label: "报价名称",
         type: "text",
         submitConfig: {
@@ -489,7 +544,7 @@ Condition.addupRule("data", {
             validate: null
         }
     },
-    "soods-quotation-version" :{
+    "soods-quotation-version": {
         label: "报价版本",
         type: "select",
         submitConfig: {
@@ -505,7 +560,7 @@ Condition.addupRule("data", {
             valuePath: "name"
         }
     },
-    "soods-category" : {
+    "soods-category": {
         label: "品类",
         type: "text",
         submitConfig: {
@@ -514,7 +569,7 @@ Condition.addupRule("data", {
             validate: null
         },
     },
-    "soods-brand" : {
+    "soods-brand": {
         label: "品牌",
         type: "text",
         submitConfig: {
@@ -601,7 +656,9 @@ Condition.addupRule("data", {
         },
         dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status":"" },
+            postData: {
+                "user.status": ""
+            },
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
@@ -661,20 +718,20 @@ Condition.addupRule("data", {
         }
     },
 
-    "task-name" : {
-        label:"任务名称",
-        type:"text",
-        submitConfig : {
-            name : "taskName",
-            op : "eq",
-            validate:null
+    "task-name": {
+        label: "任务名称",
+        type: "text",
+        submitConfig: {
+            name: "taskName",
+            op: "eq",
+            validate: null
         }
     },
 
-    "task-isShow" : {
-        label:"显示",
-        type:"select",
-        submitConfig:{
+    "task-isShow": {
+        label: "显示",
+        type: "select",
+        submitConfig: {
             name: "taskIsShow",
             op: "eq",
             validate: null
@@ -688,10 +745,10 @@ Condition.addupRule("data", {
         }
     },
 
-    "task-status" : {
-        label:"状态",
-        type:"select",
-        submitConfig:{
+    "task-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
             name: "taskStatus",
             op: "eq",
             validate: null
@@ -705,10 +762,10 @@ Condition.addupRule("data", {
         }
     },
 
-    "task-level" : {
-        label:"等级",
-        type:"select",
-        submitConfig:{
+    "task-level": {
+        label: "等级",
+        type: "select",
+        submitConfig: {
             name: "taskLevel",
             op: "eq",
             validate: null
@@ -758,12 +815,12 @@ Condition.addupRule("data", {
             op: "eq",
             validate: null
         },
-        dataSource : {
-            url : api.ds.data,
-            postData : {},
-            listPath :"contractStatus",
-            keyPath:"key",
-            valuePath:"value"
+        dataSource: {
+            url: api.ds.data,
+            postData: {},
+            listPath: "contractStatus",
+            keyPath: "key",
+            valuePath: "value"
         }
     },
     "signet-name": {
@@ -775,7 +832,7 @@ Condition.addupRule("data", {
             validate: null
         }
     },
-    "signet-status":{
+    "signet-status": {
         label: "状态",
         type: "select",
         submitConfig: {
@@ -799,7 +856,7 @@ Condition.addupRule("data", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
+        dataSource: {// 从后台取数据的各种配置
             url: api.ds.data,
             postData: {},
             listPath: "signetType",
@@ -824,12 +881,12 @@ Condition.addupRule("data", {
             op: "eq",
             validate: null
         },
-        dataSource : {
-            url : api.ds.data,
-            postData : {},
-            listPath :"talkingType",
-            keyPath:"key",
-            valuePath:"value"
+        dataSource: {
+            url: api.ds.data,
+            postData: {},
+            listPath: "talkingType",
+            keyPath: "key",
+            valuePath: "value"
         }
     },
     "talking-status": {
@@ -840,12 +897,12 @@ Condition.addupRule("data", {
             op: "eq",
             validate: null
         },
-        dataSource : {
-            url : api.ds.data,
-            postData : {},
-            listPath :"talkingStatus",
-            keyPath:"key",
-            valuePath:"value"
+        dataSource: {
+            url: api.ds.data,
+            postData: {},
+            listPath: "talkingStatus",
+            keyPath: "key",
+            valuePath: "value"
         }
     },
     "taskParam-module": {
@@ -856,16 +913,25 @@ Condition.addupRule("data", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
+        dataSource: {// 从后台取数据的各种配置
             url: null,
             postData: null,
-            listPath: [
-                {key: "decoration", value: "装修"},
-                {key: "payment", value: "款项"},
-                {key: "sales", value: "销售"},
-                {key: "inventory", value: "仓储"},
-                {key: "construction", value: "工程"}
-            ],
+            listPath: [{
+                key: "decoration",
+                value: "装修"
+            }, {
+                key: "payment",
+                value: "款项"
+            }, {
+                key: "sales",
+                value: "销售"
+            }, {
+                key: "inventory",
+                value: "仓储"
+            }, {
+                key: "construction",
+                value: "工程"
+            }],
             keyPath: "key",
             valuePath: "value"
         }

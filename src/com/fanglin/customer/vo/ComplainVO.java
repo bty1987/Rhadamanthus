@@ -13,37 +13,36 @@ public class ComplainVO implements Serializable {
 	private static final long serialVersionUID = 7978798712131121093L;
 
 	private Long cid;
-	
+
 	private Long csid;
-		
+
 	private Short type;
-	
+
 	private DecorationVO decoration;
-	
+
 	private UserBaseVO creater;
-	
+
 	private UserBaseVO updater;
-	
+
 	private Timestamp createTime;
-	
+
 	private Timestamp updateTime;
-	
+
 	private Timestamp finishTime;
-	
+
 	private Short level;
-	
+
 	private Short status;
-	
+
 	private Short gladness;
-	
+
 	private Integer company;
 
 	public ComplainVO() {
 		super();
 	}
 
-	public ComplainVO(DecorationVO decoration,
-			UserBaseVO creater, UserBaseVO updater) {
+	public ComplainVO(DecorationVO decoration, UserBaseVO creater, UserBaseVO updater) {
 		super();
 		this.decoration = decoration;
 		this.creater = creater;

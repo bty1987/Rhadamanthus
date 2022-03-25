@@ -1,0 +1,85 @@
+<div >
+
+    <div class="row">
+			
+		<div class="col-md-12">
+			<div id="list"></div>
+			<div style="margin-top: 10px">
+                <div>
+                    <a id="addBtn" class="btn btn-minier btn-primary pull-left" style="margin-right: 10px">
+                        <i class="icon-plus bigger-110"></i>
+                        <span>添加</span>
+                    </a>
+                </div>
+            </div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="addNormpackItemModal" tabindex="-1">
+	        <div class="modal-dialog">
+	            <div class="modal-content">
+	                <div class="modal-header">
+	                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+	                    <h4 class="modal-title" id="aid">打包项</h4>
+	                </div>
+	                <div class="modal-body">
+	                    <div class="row">
+	                        <div class="col-xs-12">
+	                            <form class="form-horizontal">
+	                                <div class="row">
+	                                    <div class="col-md-12">
+	
+	                                        <div class="form-group">
+	                                            <label for="goodsName" class="col-md-3 control-label no-padding-right">商品</label>
+	                                            <div class="col-md-9">
+	                                                <input type="text" id="goodsName" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'/>
+	                                            </div>
+	                                        </div>
+	
+	                                        <div class="form-group">
+						                        <label class="col-sm-3 control-label no-padding-right orange" for="normunit">定额单位</label>
+						                        <div class="col-sm-9">
+						                            <select  id="normunit" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual' maxlength="15"></select>
+						                        </div>
+						                    </div>
+						      
+						                    <div class="form-group">
+						                    	<label class="col-md-3 control-label no-padding-right orange">定额数量</label>
+						                    	<div class="col-md-9">
+						                        	<input type="text" class="col-xs-10 col-sm-6 v_float_3" id="normnum" name="normnum" data-required="1" data-toggle="popover" data-trigger='manual'>
+						                    	</div>
+						                	</div>
+						                    
+						                    <div class="form-group">
+						                        <label class="col-sm-3 control-label no-padding-right orange" for="storeunit">库房单位</label>
+						                        <div class="col-sm-9">
+						                            <select  id="storeunit" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual' maxlength="15"></select>
+						                        </div>
+						                    </div>
+						         
+						                    <div class="form-group">
+						                    	<label class="col-md-3 control-label no-padding-right orange">库房数量</label>
+						                    	<div class="col-md-9">
+						                        	<input type="text" class="col-xs-10 col-sm-6 v_float_3" id="storenum" name="storenum" data-required="1" data-toggle="popover" data-trigger='manual'>
+						                    	</div>
+						                	</div>
+	
+	                                    </div>
+	                                </div>
+	                            </form>
+	                        </div>
+	                    </div>
+	                </div>
+	            <div class="modal-footer" style="text-align: center">
+	                <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+	                 <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/data/normpackItem.js']);
+</script>

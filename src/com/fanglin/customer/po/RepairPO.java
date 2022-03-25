@@ -23,42 +23,42 @@ import com.fanglin.utils.DateUtil;
 public class RepairPO implements Serializable {
 
 	private static final long serialVersionUID = 5691962581493699899L;
-	
-	public static final short STATUS_INIT_INT = 0;  //初始
-	
-	public static final short STATUS_REPAIR_INT = 1;  //维修
-	
-	public static final short STATUS_FINISH_INT = 2;  //维修
-	
+
+	public static final short STATUS_INIT_INT = 0; // 初始
+
+	public static final short STATUS_REPAIR_INT = 1; // 维修
+
+	public static final short STATUS_FINISH_INT = 2; // 维修
+
 	private long rid;
-	
+
 	private long aid;
-	
+
 	private long cnid;
-	
+
 	private UserPO creater;
-	
+
 	private UserPO updater;
-	
+
 	private Timestamp createTime;
-	
+
 	private Timestamp updateTime;
-	
+
 	private Timestamp finishTime;
-	
+
 	private UserPO deliver;
-	
+
 	private UserPO repaier;
-	
+
 	private short status;
-	
+
 	private String content;
-	
-	public RepairPO(){
+
+	public RepairPO() {
 		super();
 	}
-	
-	public RepairPO(UserPO deliver){
+
+	public RepairPO(UserPO deliver) {
 		super();
 		this.deliver = deliver;
 	}
@@ -178,7 +178,7 @@ public class RepairPO implements Serializable {
 	}
 
 	public RepairPO init(long aid, UserPO creater, UserPO repaier, String content) {
-		
+
 		this.setAid(aid);
 		this.setCreater(creater);
 		this.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
@@ -187,12 +187,12 @@ public class RepairPO implements Serializable {
 		this.setRepaier(repaier);
 		this.setStatus(STATUS_INIT_INT);
 		this.setContent(content);
-		
+
 		return this;
 	}
-	
+
 	public RepairPO save(long aid, UserPO creater) {
-		
+
 		this.setAid(aid);
 		this.setCreater(creater);
 		this.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
@@ -200,7 +200,7 @@ public class RepairPO implements Serializable {
 		this.setUpdateTime(DateUtil.getDateToTimestamp(new Date()));
 		this.setRepaier(creater);
 		this.setStatus(STATUS_INIT_INT);
-		
+
 		return this;
 	}
 

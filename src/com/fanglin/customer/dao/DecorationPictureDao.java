@@ -9,6 +9,6 @@ import com.fanglin.utils.Paging;
 
 public interface DecorationPictureDao extends Dao<DecorationPicturePO> {
 
-	public List<DecorationPicturePO> queryCusDecorationPicture(Paging paging,List<Filter> filters, String orderId);
+	public List<DecorationPicturePO> queryCusDecorationPicture(Paging paging, List<Filter> filters, String orderId);
 
 }

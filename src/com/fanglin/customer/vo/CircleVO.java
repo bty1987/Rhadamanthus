@@ -8,26 +8,26 @@ import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.personel.vo.UserBaseVO;
 
-public class CircleVO implements Serializable{
+public class CircleVO implements Serializable {
 
 	private static final long serialVersionUID = 1025890988179442605L;
-	
+
 	private Long cid;
-	
+
 	private String orderId;
-	
+
 	private String address;
-	
+
 	private UserBaseVO creater;
-	
+
 	private String content;
-	
+
 	private Timestamp createTime;
-	
+
 	private Integer praise;
-	
+
 	private List<CircleDrawingVO> drawings;
-	
+
 	public CircleVO() {
 		super();
 	}
@@ -101,5 +101,5 @@ public class CircleVO implements Serializable{
 	public void setDrawings(List<CircleDrawingVO> drawings) {
 		this.drawings = drawings;
 	}
-	
+
 }

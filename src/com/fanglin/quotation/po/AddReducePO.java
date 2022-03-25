@@ -37,6 +37,8 @@ public class AddReducePO implements Serializable {
 
 	public static final String COLUMN_STATUS_STR = "status";
 
+	public static final String COLUMN_ISAFFIRM_STR = "isAffirm";
+
 	public static final String COLUMN_CONTENT_STR = "content";
 
 	public static final String COLUMN_DPID_STR = "dpId";
@@ -60,6 +62,10 @@ public class AddReducePO implements Serializable {
 	public static final short STATUS_PAYED_INT = 2;
 
 	public static final short STATUS_CONFIRMED_INT = 3;
+
+	public static final short ISAFFIRM_UNSUBMIT_INT = 0;
+
+	public final short ISAFFIRM_CONFIRMED_INT = 1;
 
 	private long arId;
 
@@ -88,6 +94,8 @@ public class AddReducePO implements Serializable {
 	private int discount;
 
 	private short status;
+
+	private short isAffirm;
 
 	private Timestamp createTime;
 
@@ -236,6 +244,15 @@ public class AddReducePO implements Serializable {
 
 	public void setManageRate(int manageRate) {
 		this.manageRate = manageRate;
+	}
+
+	@Column(name = "isAffirm")
+	public short getIsAffirm() {
+		return isAffirm;
+	}
+
+	public void setIsAffirm(short isAffirm) {
+		this.isAffirm = isAffirm;
 	}
 
 }

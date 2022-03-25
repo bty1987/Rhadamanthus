@@ -51,7 +51,7 @@ jQuery(function ($) {
                 var item = {
                     asid: activityItem.asid,
                     activityItemName: activityItem.name + " 金额:" + activityItem.money
-                }
+                };
 
                 if (activityItem.type == 0) {
                     coupons.push(item);
@@ -592,6 +592,7 @@ jQuery(function ($) {
 
         decorationActivity.stateTypes = res.receiveType.split("key", "value");
         decorationActivity.states = res.activityItemType.split("key", "value");
+        decorationActivity.isStatus = res.isStatus.split("key", "value");
     }, null, false);
 
     com.post(api.ds.information, {}, function (res) {

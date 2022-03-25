@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.utils.DateUtil;
 
@@ -23,11 +24,11 @@ import com.fanglin.utils.DateUtil;
 public class OccessoriesPO implements Serializable {
 
 	private static final long serialVersionUID = 7990398717523266950L;
-	
+
 	public static final String COLUMN_COMPANY_STR = "company";
-	
+
 	public static final String COLUMN_CREATER_USERID_STR = "creater.userId";
-	
+
 	public static final String COLUMN_CREATETIME_STR = "createTime";
 
 	public static final String COLUMN_ORDERID_STR = "orderId";
@@ -35,37 +36,55 @@ public class OccessoriesPO implements Serializable {
 	public static final String COLUMN_STATUS_STR = "status";
 
 	public static final String COLUMN_NO_STR = "no";
-	
+
 	public static final short STATUS_INIT_INT = 0;
-	
-	public static final short STATUS_INIT_END = 2;
+
+	public static final short STATUS_BIND_INT = 1;
+
+	public static final short STATUS_DELIVE_INT = 2;
+
+	public static final short STATUS_RECEIVE_INT = 3;
+
+	public static final short STATUS_BALANCE_INT = 4;
 
 	private long oid;
-	
+
 	private String no;
-	
-	private String orderId;
-	
+
+	private DecorationPO decoration;
+
 	private UserPO creater;
-	
+
 	private UserPO supervisor;
-	
-	private Timestamp createTime;
-	
-	private short status;
-	
-	private int company;
-	
-	private UserPO supplier;
-	
-	private UserPO confirmer;// 确认人
+
+	private UserPO supplier; // 厂商
 
 	private UserPO balancer;// 结算人
 
-	public OccessoriesPO(){
+	private Timestamp createTime; // 创建时间
+
+	private Timestamp deliveTime; // 配送时间
+
+	private Timestamp receiveTime; // 接收时间
+
+	private Timestamp balanceTime;// 结算时间
+
+	private short isEnter;// 是否可进园区
+
+	private short isLift;// 是否有电梯
+
+	private short isExceed;// 是否超阶
+
+	private short isAttic;// 是否有阁楼
+
+	private short status;
+
+	private int company; // 公司
+
+	public OccessoriesPO() {
 		super();
 	}
-	
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "oid")
@@ -76,7 +95,7 @@ public class OccessoriesPO implements Serializable {
 	public void setOid(long oid) {
 		this.oid = oid;
 	}
-	
+
 	@Column(name = "no")
 	public String getNo() {
 		return no;
@@ -86,13 +105,14 @@ public class OccessoriesPO implements Serializable {
 		this.no = no;
 	}
 
-	@Column(name = "orderId")
-	public String getOrderId() {
-		return orderId;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "orderId", referencedColumnName = "orderId")
+	public DecorationPO getDecoration() {
+		return decoration;
 	}
 
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
+	public void setDecoration(DecorationPO decoration) {
+		this.decoration = decoration;
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -132,7 +152,7 @@ public class OccessoriesPO implements Serializable {
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
+
 	@Column(name = "company")
 	public int getCompany() {
 		return company;
@@ -142,7 +162,6 @@ public class OccessoriesPO implements Serializable {
 		this.company = company;
 	}
 
-	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "spuid", referencedColumnName = "uid")
 	public UserPO getSupplier() {
@@ -152,15 +171,32 @@ public class OccessoriesPO implements Serializable {
 	public void setSupplier(UserPO supplier) {
 		this.supplier = supplier;
 	}
-	
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(nullable = true, name = "couid", referencedColumnName = "uid")
-	public UserPO getConfirmer() {
-		return confirmer;
+
+	@Column(name = "deliveTime")
+	public Timestamp getDeliveTime() {
+		return deliveTime;
 	}
 
-	public void setConfirmer(UserPO confirmer) {
-		this.confirmer = confirmer;
+	public void setDeliveTime(Timestamp deliveTime) {
+		this.deliveTime = deliveTime;
+	}
+
+	@Column(name = "receiveTime")
+	public Timestamp getReceiveTime() {
+		return receiveTime;
+	}
+
+	public void setReceiveTime(Timestamp receiveTime) {
+		this.receiveTime = receiveTime;
+	}
+
+	@Column(name = "balanceTime")
+	public Timestamp getBalanceTime() {
+		return balanceTime;
+	}
+
+	public void setBalanceTime(Timestamp balanceTime) {
+		this.balanceTime = balanceTime;
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -168,25 +204,60 @@ public class OccessoriesPO implements Serializable {
 	public UserPO getBalancer() {
 		return balancer;
 	}
-	
+
 	public void setBalancer(UserPO balancer) {
 		this.balancer = balancer;
 	}
-	
-	public OccessoriesPO init(String no, String orderId, UserPO creater, int company){
-		
+
+	@Column(name = "isEnter")
+	public short getIsEnter() {
+		return isEnter;
+	}
+
+	public void setIsEnter(short isEnter) {
+		this.isEnter = isEnter;
+	}
+
+	@Column(name = "isLift")
+	public short getIsLift() {
+		return isLift;
+	}
+
+	public void setIsLift(short isLift) {
+		this.isLift = isLift;
+	}
+
+	@Column(name = "isExceed")
+	public short getIsExceed() {
+		return isExceed;
+	}
+
+	public void setIsExceed(short isExceed) {
+		this.isExceed = isExceed;
+	}
+
+	@Column(name = "isAttic")
+	public short getIsAttic() {
+		return isAttic;
+	}
+
+	public void setIsAttic(short isAttic) {
+		this.isAttic = isAttic;
+	}
+
+	public OccessoriesPO init(String no, String orderId, UserPO creater, int company, short isEnter, short isLift, short isExceed, short isAttic) {
+
 		setNo(no);
-		setOrderId(orderId);
 		setCreater(creater);
 		setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		setStatus(OccessoriesPO.STATUS_INIT_INT);
 		setCompany(company);
-		
+		setIsEnter(isEnter);
+		setIsLift(isLift);
+		setIsExceed(isExceed);
+		setIsAttic(isAttic);
+
 		return this;
 	}
-
-	
-
-
 
 }

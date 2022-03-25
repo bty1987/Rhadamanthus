@@ -109,22 +109,6 @@ public class PaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "countCusServicePaymentForAmount", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String countCusServicePaymentForAmount() {
-
-		realMoney = servicePaymentOrderService.countCusServicePaymentForAmount(servicePayment);
-
-		return SUCCESS;
-	}
-
-	@Action(value = "countCusSalesPaymentForAmount", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String countCusSalesPaymentForAmount() {
-
-		realMoney = salesPaymentService.countCusSalesPaymentForAmount(salesPayment);
-
-		return SUCCESS;
-	}
-
 	@Action(value = "queryCusAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryCusAdvance() throws FLException {
 
@@ -145,6 +129,22 @@ public class PaymentAction extends BaseListAction {
 	public String queryCusPayment() throws FLException {
 
 		paymentService.queryCusPayment(getPaging(), getFilters(), payment);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "countCusServicePaymentForAmount", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String countCusServicePaymentForAmount() {
+
+		realMoney = servicePaymentOrderService.amountCusServicePayment(servicePayment);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "countCusSalesPaymentForAmount", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String countCusSalesPaymentForAmount() {
+
+		realMoney = salesPaymentService.amountCusSalesPayment(salesPayment);
 
 		return SUCCESS;
 	}

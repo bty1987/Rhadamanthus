@@ -6,19 +6,19 @@ import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
 public class ConsultionVO implements Serializable {
-	
+
 	private static final long serialVersionUID = -3281908738783279576L;
-	
+
 	private Long cid;
-	
+
 	private String no;
-	
+
 	private DecorationVO decoration;
-	
+
 	private UserBaseVO creater;
-	
+
 	private String comment;
-	
+
 	private Integer company;
 
 	public ConsultionVO() {

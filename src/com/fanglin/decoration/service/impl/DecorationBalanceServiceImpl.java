@@ -31,21 +31,20 @@ import com.fanglin.utils.Paging;
 @Service("decorationBalanceService")
 @Transactional(readOnly = true)
 public class DecorationBalanceServiceImpl implements DecorationBalanceService {
-	
+
 	@Autowired
 	private DecorationBalanceDao decorationBalanceDao;
-	
+
 	@Autowired
 	private DecorationDao decorationDao;
-	
+
 	@Autowired
 	private UserDao userDao;
 
 	@Override
 	public void pageDecorationBalance(Paging paging, List<Filter> filters) {
 
-		if (filters.size() == 0)
-			return;
+		if (filters.size() == 0) return;
 
 		List<DecorationBalancePO> decorationBalancePOs = decorationBalanceDao.pageDecorationBalance(paging, filters);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
@@ -67,16 +66,16 @@ public class DecorationBalanceServiceImpl implements DecorationBalanceService {
 
 	@Override
 	public DecorationBalanceVO queryDecorationBalance(DecorationVO decorationVO) {
-		
+
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
-		
+
 		DecorationBalancePO decorationBalancePO = decorationBalanceDao.queryDecorationBalance(decorationPO.getDoid());
-		
+
 		DecorationBalanceVO decirationBalanceVO = new DecorationBalanceVO(new DecorationVO(new CustomerVO(), new HouseVO(new VillageVO())), new UserBaseVO(new DutyVO()));
-		
+
 		BeanUtil.copyPropertie(decorationBalancePO, decirationBalanceVO, Arrays.asList("decoration", "user"));
-		
-		if(decorationBalancePO != null){
+
+		if (decorationBalancePO != null) {
 			BeanUtil.copyPropertie(decorationBalancePO.getUser(), decirationBalanceVO.getUser(), Arrays.asList("duty", "dept"));
 			BeanUtil.copyPropertie(decorationBalancePO.getUser().getDuty(), decirationBalanceVO.getUser().getDuty(), Arrays.asList("departmentType"));
 			BeanUtil.copyPropertie(decorationBalancePO.getDecoration(), decirationBalanceVO.getDecoration(), Arrays.asList("customer", "house", "designer", "salesman", "supervisor", "creater", "quoter", "escorter", "contractUserId", "version"));
@@ -84,44 +83,51 @@ public class DecorationBalanceServiceImpl implements DecorationBalanceService {
 			BeanUtil.copyPropertie(decorationBalancePO.getDecoration().getHouse(), decirationBalanceVO.getDecoration().getHouse(), Arrays.asList("village"));
 			BeanUtil.copyPropertie(decorationBalancePO.getDecoration().getHouse().getVillage(), decirationBalanceVO.getDecoration().getHouse().getVillage(), Arrays.asList("cityProper", "x", "y"));
 		}
-		
+
 		return decirationBalanceVO;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int makeDecorationBalance(DecorationBalanceVO decorationBalanceVO, String userId) throws FLException {
-		
+
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationBalanceVO.getDecoration().getOrderId());
-		
+
 		UserPO userPO = userDao.queryUserByUserId(userId);
-		
-		if(decorationPO == null){
+
+		if (decorationPO == null) {
 			throw new FLException(140013, "订单不存在");
 		}
-		
+
 		DecorationBalancePO decirationBalancePO = decorationBalanceDao.queryDecorationBalance(decorationPO.getDoid());
-		
-		if(decirationBalancePO != null){
-			
+
+		if (decirationBalancePO != null) {
+
 			decirationBalancePO.setBalance(decorationBalanceVO.getBalance());
 			decirationBalancePO.setUser(userPO);
-			
+
+			decorationPO.setBalanceStatus(DecorationPO.BALANCESTATUS_CONDUCT_INT);
+
 			decorationBalanceDao.update(decirationBalancePO);
-			
-		}else{
+			decorationDao.update(decorationPO);
+
+		} else {
 			DecorationBalancePO decorationBalance = new DecorationBalancePO();
-			
+
 			decorationBalance.setBalance(decorationBalanceVO.getBalance());
 			decorationBalance.setBalanceTime(new Timestamp(System.currentTimeMillis()));
 			decorationBalance.setDecoration(decorationPO);
 			decorationBalance.setUser(userPO);
-			
+
+			decorationPO.setBalanceTime(decorationBalance.getBalanceTime());
+			decorationPO.setBalanceStatus(DecorationPO.BALANCESTATUS_CONDUCT_INT);
+
 			decorationBalanceDao.save(decorationBalance);
+			decorationDao.update(decorationPO);
 		}
-		
+
 		return 0;
-		
+
 	}
 
 }

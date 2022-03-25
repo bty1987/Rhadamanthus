@@ -1,0 +1,131 @@
+package com.fanglin.customer.po;
+
+import static javax.persistence.GenerationType.IDENTITY;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import com.fanglin.personel.po.UserPO;
+
+@Entity
+@Table(name = "survey", catalog = "customer")
+public class SurveyPO implements Serializable {
+
+	private static final long serialVersionUID = -509684922460893371L;
+
+	public static final String COLUMN_ORDERID_STR = "orderId";
+
+	public static final short STATUS_HANDLE_INT = 1;
+
+	private long sid;
+
+	private long stid;
+
+	private String orderId;
+
+	private String name;
+
+	private UserPO creater;
+
+	private Timestamp createTime;
+
+	private short status;
+
+	private List<SurveyItemPO> items;
+
+	public SurveyPO() {
+		super();
+	}
+
+	public SurveyPO(UserPO creater) {
+		super();
+		this.creater = creater;
+	}
+
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "sid")
+	public long getSid() {
+		return sid;
+	}
+
+	public void setSid(long sid) {
+		this.sid = sid;
+	}
+
+	@Column(name = "stid")
+	public long getStid() {
+		return stid;
+	}
+
+	public void setStid(long stid) {
+		this.stid = stid;
+	}
+
+	@Column(name = "orderId")
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
+	@Column(name = "name")
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "cuid", referencedColumnName = "uid")
+	public UserPO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
+	}
+
+	@Column(name = "createTime")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	@Column(name = "status")
+	public short getStatus() {
+		return status;
+	}
+
+	public void setStatus(short status) {
+		this.status = status;
+	}
+
+	@OneToMany(mappedBy = "sid", fetch = FetchType.LAZY)
+	public List<SurveyItemPO> getItems() {
+		return items;
+	}
+
+	public void setItems(List<SurveyItemPO> items) {
+		this.items = items;
+	}
+
+}

@@ -20,7 +20,6 @@ public class CustomerOriginDaoImpl extends DaoImpl<CustomerOriginPO> implements 
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public List<CustomerOriginPO> pageCustomerOrigin(Paging paging, List<Filter> filters, List<Integer> dids) {
 
 		PagingQuery<CustomerOriginPO> query = pagingQuery(paging, CustomerOriginPO.class);
@@ -28,32 +27,42 @@ public class CustomerOriginDaoImpl extends DaoImpl<CustomerOriginPO> implements 
 		if (dids != null && dids.size() > 0) {
 			query.alias("department", "department");
 			query.add(query.getCriterion("department.did", dids, "in"));
-
 		}
 
-		if (filters != null) {
-			for (Filter filter : filters) {
-				if ("customerSourcePhone".equals(filter.getField())) {
-					query.add(query.getCriterion("phone", filter.getData(),filter.getOp()));
-				} else if ("creater".equals(filter.getField())) {
-					query.add(Restrictions.eq(CustomerOriginPO.COLUMN_CREATER_STR, Integer.valueOf(filter.getData())));
-				} else if ("belonger".equals(filter.getField())) {
-					query.add(Restrictions.eq(CustomerOriginPO.COLUMN_BELONGER_STR , Integer.valueOf(filter.getData())));
-				} else if ("belonger.uid".equals(filter.getField())) {
-					query.add(Restrictions.sqlRestriction("buid is ? ", null, Hibernate.STRING));
-				} else if ("designer".equals(filter.getField())) {
-					query.add(Restrictions.eq(CustomerOriginPO.COLUMN_DESIGNER_STR, Integer.valueOf(filter.getData())));
-				} else if ("salesman".equals(filter.getField())) {
-					query.add(Restrictions.eq(CustomerOriginPO.COLUMN_SALESMAN_STR, Integer.valueOf(filter.getData())));
-				}else if ("status".equals(filter.getField())) {
-					query.add(query.getCriterion("status", Short.valueOf(filter.getData()),filter.getOp()));
-				}
-			}
-		}
+		queryFilterExcute(query, filters);
 
 		query.desc("csid");
 
 		return query.list();
+	}
+
+	@SuppressWarnings("deprecation")
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
+		if (filters == null) return;
+
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if ("customerSourcePhone".equals(field)) {
+				query.add(query.getCriterion("phone", data, op));
+			} else if ("creater".equals(field)) {
+				query.add(Restrictions.eq(CustomerOriginPO.COLUMN_CREATER_STR, Integer.valueOf(data)));
+			} else if ("belonger".equals(field)) {
+				query.add(Restrictions.eq(CustomerOriginPO.COLUMN_BELONGER_STR, Integer.valueOf(data)));
+			} else if ("belonger.uid".equals(field)) {
+				query.add(Restrictions.sqlRestriction("buid is ? ", null, Hibernate.STRING));
+			} else if ("designer".equals(field)) {
+				query.add(Restrictions.eq(CustomerOriginPO.COLUMN_DESIGNER_STR, Integer.valueOf(data)));
+			} else if ("salesman".equals(field)) {
+				query.add(Restrictions.eq(CustomerOriginPO.COLUMN_SALESMAN_STR, Integer.valueOf(data)));
+			} else if ("status".equals(field)) {
+				query.add(query.getCriterion("status", Short.valueOf(data), op));
+			}
+		}
 	}
 
 }

@@ -13,20 +13,20 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "vscore", catalog = "customer")
 public class VscorePO implements Serializable {
-	
+
 	private static final long serialVersionUID = -3719118450308572107L;
-	
+
 	public static final String COLUMN_UNIONID_STR = "unionId";
-	
-	public static final int COLUMN_SCORE_INT = 0;     //初始积分
-	
+
+	public static final int COLUMN_SCORE_INT = 0; // 初始积分
+
 	private long vsid;
-	
+
 	private String unionId;
-	
+
 	private int score;
-	
-	public VscorePO(){
+
+	public VscorePO() {
 		super();
 	}
 
@@ -58,5 +58,5 @@ public class VscorePO implements Serializable {
 	public void setScore(int score) {
 		this.score = score;
 	}
-	
+
 }

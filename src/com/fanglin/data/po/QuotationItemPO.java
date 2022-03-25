@@ -44,6 +44,14 @@ public class QuotationItemPO implements Serializable {
 
 	public static final short STATUS_DISABLE_INT = 1;
 
+	public static final short TYPE_COMMON_INT = 0;
+
+	public static final short TYPE_COST_INT = 1;
+
+	public static final short TYPE_CUSTOM_INT = 2;
+
+	public static final short TYPE_IGNORE_INT = 3;
+
 	private long qiid;
 
 	private String no;

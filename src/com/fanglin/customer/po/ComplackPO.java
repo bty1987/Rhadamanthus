@@ -17,29 +17,29 @@ import com.fanglin.personel.po.UserPO;
 @Entity
 @Table(name = "complack", catalog = "customer")
 public class ComplackPO implements Serializable {
-	
+
 	private static final long serialVersionUID = 7298290762938281881L;
-	
+
 	public static final String COLUMN_CTID_STR = "ctid";
 
 	private long ckid;
-	
+
 	private long cid;
-	
+
 	private long ctid;
-	
+
 	private Timestamp createTime;
-	
+
 	private Timestamp operateTime;
-	
+
 	private UserPO operater;
-	
+
 	private String comment;
-	
+
 	public ComplackPO() {
 		super();
 	}
-	
+
 	public ComplackPO(UserPO operater) {
 		super();
 		this.operater = operater;

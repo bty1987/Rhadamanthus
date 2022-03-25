@@ -92,7 +92,6 @@ public class VscoreServiceImpl implements VscoreService {
 
 			vscoreRecord(vscorePOs.getUnionId(), vscoreVO.getScore(), userDao.queryUserByUserId(userId), VscoreRecordPO.TYPE_ADDED_INT, VscoreRecordPO.STATUS_INITIAL_INT);
 		}
-
 	}
 
 	@Override
@@ -114,7 +113,6 @@ public class VscoreServiceImpl implements VscoreService {
 		vscorePO.setScore(Arith.sub(vscorePO.getScore(), vscoreVO.getScore()));
 
 		vscoreDao.update(vscorePO);
-
 	}
 
 	@Override
@@ -130,19 +128,14 @@ public class VscoreServiceImpl implements VscoreService {
 		VscorePO vscorePO = vscoreDao.queryVscoreByUnionId(vscoreRecordPO.getUnionId());
 
 		if (vscoreRecordPO.getType() == VscoreRecordPO.TYPE_EXTRACT_INT && vscoreRecordPO.getStatus() == VscoreRecordPO.STATUS_DOWN_INT) {
-
 			vscorePO.setScore(Arith.add(vscorePO.getScore(), vscoreRecordPO.getScore()));
-
 		}
 
 		if (vscoreRecordPO.getType() == VscoreRecordPO.TYPE_ADDED_INT && vscoreRecordPO.getStatus() == VscoreRecordPO.STATUS_PASS_INT) {
-
 			vscorePO.setScore(Arith.add(vscorePO.getScore(), vscoreRecordPO.getScore()));
-
 		}
 
 		vscoreDao.update(vscorePO);
-
 	}
 
 	public void vscoreRecord(String unionId, Integer score, UserPO operater, Short type, Short status) {

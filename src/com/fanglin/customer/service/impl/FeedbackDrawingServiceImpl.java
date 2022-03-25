@@ -17,43 +17,42 @@ import com.fanglin.utils.BeanUtil;
 
 @Service("feedbackDrawingService")
 @Transactional(readOnly = true)
-public class FeedbackDrawingServiceImpl implements FeedbackDrawingService{
-	
+public class FeedbackDrawingServiceImpl implements FeedbackDrawingService {
+
 	@Autowired
 	private FeedbackDrawingDao feedbackDrawingDao;
 
 	@Override
 	public List<FeedbackDrawingVO> queryFeedbackDrawing(FeedbackVO feedback) {
-		
-		List<FeedbackDrawingPO> feedbackDrawingPO = feedbackDrawingDao.queryFeedbackDrawing(feedback.getFid());
-		List<FeedbackDrawingVO> feedbackDrawings = new ArrayList<FeedbackDrawingVO>();
-		
+
+		List<FeedbackDrawingPO> feedbackDrawingPOs = feedbackDrawingDao.queryFeedbackDrawing(feedback.getFid());
+		List<FeedbackDrawingVO> feedbackDrawingVOs = new ArrayList<FeedbackDrawingVO>();
+
 		FeedbackDrawingVO feedbackDrawing;
-		
-        for (FeedbackDrawingPO feedbackDrawingPo : feedbackDrawingPO) {
-        	
-        	feedbackDrawing = new FeedbackDrawingVO();
-	
-        	BeanUtil.copyProperties(feedbackDrawingPo, feedbackDrawing);
-        	
-        	feedbackDrawings.add(feedbackDrawing);
-        }
-			
-		return feedbackDrawings;
+
+		for (FeedbackDrawingPO feedbackDrawingPO : feedbackDrawingPOs) {
+
+			feedbackDrawing = new FeedbackDrawingVO();
+
+			BeanUtil.copyProperties(feedbackDrawingPO, feedbackDrawing);
+
+			feedbackDrawingVOs.add(feedbackDrawing);
+		}
+
+		return feedbackDrawingVOs;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void addFeedbackDrawing(FeedbackDrawingVO feedbackDrawing) {
-		
+
 		FeedbackDrawingPO feedbackDrawingPO = new FeedbackDrawingPO();
-		
+
 		BeanUtil.copyProperties(feedbackDrawing, feedbackDrawingPO);
-		
+
 		feedbackDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
-		
+
 		feedbackDrawingDao.save(feedbackDrawingPO);
-		
 	}
-	
+
 }

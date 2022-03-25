@@ -306,5 +306,13 @@ Condition.addupRule("customer", {
             validate:null
         }
     },
-    
+    "survey-orderId" : {
+        label:"装修单号",
+        type:"text",
+        submitConfig : {
+            name : "orderId",
+            op : "eq",
+            validate:null
+        }
+    },
 });

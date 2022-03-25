@@ -11,6 +11,8 @@ import com.fanglin.utils.Paging;
 public interface AoodsDao extends Dao<AoodsPO> {
 
 	public List<AoodsPO> pageAoods(Paging paging, List<Filter> filters, int company, String companyType) throws FLException;
+	
+	public List<AoodsPO> queryAoods(long atid, Short atttype, int bompany);
 
 	public List<AoodsPO> queryAoodsByAtid(long atid, int company);
 

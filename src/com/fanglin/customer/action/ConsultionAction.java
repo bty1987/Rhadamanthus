@@ -11,8 +11,8 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.customer.vo.ConsultionVO;
 import com.fanglin.customer.service.ConsultionService;
+import com.fanglin.customer.vo.ConsultionVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -23,7 +23,7 @@ public class ConsultionAction extends BaseListAction {
 
 	@Autowired
 	private ConsultionService consultionService;
-	
+
 	private List<ConsultionVO> consultions;
 
 	private ConsultionVO consultion;

@@ -11,10 +11,16 @@
 
 package com.fanglin.personel.dao;
 
+import java.util.List;
+
 import com.fanglin.core.dao.Dao;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.po.UserInfoPO;
+import com.fanglin.utils.Paging;
 
 public interface UserInfoDao extends Dao<UserInfoPO> {
+
+	public List<UserInfoPO> pageUserInfo(Paging paging, List<Filter> filters, Integer company);
 	
 	public UserInfoPO queryUserInfoByUserId(String userId);
 

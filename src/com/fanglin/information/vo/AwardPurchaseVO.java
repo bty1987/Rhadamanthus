@@ -7,37 +7,37 @@ import org.apache.struts2.json.annotations.JSON;
 import com.fanglin.personel.vo.UserBaseVO;
 
 public class AwardPurchaseVO implements java.io.Serializable {
-	
+
 	private static final long serialVersionUID = -9114054458621965002L;
 
-	private Long apId;
-	
+	private Long apid;
+
 	private AwardStockVO awardStock;
-	
-	private Long inprice;
-	
-	private Long baprice;
-	
+
+	private Integer inprice;
+
+	private Integer baprice;
+
 	private Integer num;
-	
+
 	private UserBaseVO creater;
-	
+
 	private UserBaseVO purchaser;
-	
+
 	private UserBaseVO instorer;
-	
+
 	private Timestamp createTime;
-	
+
 	private Timestamp purchaseTime;
-	
+
 	private Timestamp instoreTime;
-	
+
 	private Timestamp balanceTime;
-	
+
 	private Short status;
-	
+
 	private Integer company;
-	
+
 	public AwardPurchaseVO() {
 		super();
 	}
@@ -49,14 +49,13 @@ public class AwardPurchaseVO implements java.io.Serializable {
 		this.purchaser = purchaser;
 		this.instorer = instorer;
 	}
-	
-	
-	public Long getApId() {
-		return apId;
+
+	public Long getApid() {
+		return apid;
 	}
 
-	public void setApId(Long apId) {
-		this.apId = apId;
+	public void setApid(Long apid) {
+		this.apid = apid;
 	}
 
 	public AwardStockVO getAwardStock() {
@@ -67,19 +66,19 @@ public class AwardPurchaseVO implements java.io.Serializable {
 		this.awardStock = awardStock;
 	}
 
-	public Long getInprice() {
+	public Integer getInprice() {
 		return inprice;
 	}
 
-	public void setInprice(Long inprice) {
+	public void setInprice(Integer inprice) {
 		this.inprice = inprice;
 	}
 
-	public Long getBaprice() {
+	public Integer getBaprice() {
 		return baprice;
 	}
 
-	public void setBaprice(Long baprice) {
+	public void setBaprice(Integer baprice) {
 		this.baprice = baprice;
 	}
 
@@ -114,43 +113,43 @@ public class AwardPurchaseVO implements java.io.Serializable {
 	public void setInstorer(UserBaseVO instorer) {
 		this.instorer = instorer;
 	}
-	
-	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
 
-	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd")
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
 
-	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getPurchaseTime() {
 		return purchaseTime;
 	}
 
-	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd")
 	public void setPurchaseTime(Timestamp purchaseTime) {
 		this.purchaseTime = purchaseTime;
 	}
 
-	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getInstoreTime() {
 		return instoreTime;
 	}
 
-	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd")
 	public void setInstoreTime(Timestamp instoreTime) {
 		this.instoreTime = instoreTime;
 	}
 
-	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getBalanceTime() {
 		return balanceTime;
 	}
 
-	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd")
 	public void setBalanceTime(Timestamp balanceTime) {
 		this.balanceTime = balanceTime;
 	}
@@ -170,5 +169,5 @@ public class AwardPurchaseVO implements java.io.Serializable {
 	public void setCompany(Integer company) {
 		this.company = company;
 	}
-	
+
 }

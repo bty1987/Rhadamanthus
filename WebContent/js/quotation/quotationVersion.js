@@ -1,295 +1,258 @@
-$(function(){
-    
-    var quotationVersion = {
-        saveBtn: com.focusPage("#saveBtn").on("click", saveData),
-        cancellBtn: com.focusPage("#cancelBtn"),
-        modal: com.focusPage("#qtModal").on("show.bs.modal", function(a) {
-            com.clearValidator();
-            com.clearValidator("#no", true);
-        }),
+$(function() {
 
-        cancelCopyVersionBtn : com.focusPage("#cancelCopyVersionBtn"),
-        modalCopyVersion : com.focusPage("#copyVersionModal").on("show.bs.modal", function(a) {
-            com.clearValidator();
-            com.clearValidator("#copyNo", true);
-        }),
-        quotationVersionItems: {
-            copyNo: com.focusPage("#copyNo").on("blur", function () {
-                $this = com.focusPage(this);
-                var b = {
-                    "quotationVersion.no": $this.val()
-                };
-                com.post(api.quotation.queryQuotationVersionByVersionId, b, function (a) {
-                    a.quotationVersion && a.quotationVersion.qvId ? (com.showTips($this, "该版本编号已存在", true), quotationVersion.repeatFlg = true) : (com.clearValidator("#copyNo", true), quotationVersion.repeatFlg = false);
-                });
+    var quotationVersion = {
+
+        modals: {
+            updateQuotationVersionModal: com.focusPage("#updateQuotationVersionModal").on("show.bs.modal", function(a) {
+                com.clearValidator();
             }),
-            copyName: com.focusPage("#copyName"),
-            copyTrafficRate: com.focusPage("#copyTrafficRate"),
-            copyManageRate: com.focusPage("#copyManageRate"),
-            copyComment: com.focusPage("#copyComment"),
-            no: com.focusPage("#no").on("blur", function () {
-                $this = $(this);
-                var b = {
-                    "quotationVersion.no": $this.val()
-                };
-                com.post(api.quotation.queryQuotationVersionByVersionId, b, function (a) {
-                    a.quotationVersion && a.quotationVersion.qvId ? (com.showTips($this, "该版本编号已存在", true), quotationVersion.repeatFlg = true) : (com.clearValidator("#no", true), quotationVersion.repeatFlg = false);
-                });
-            }),
-            name: com.focusPage("#name"),
-            trafficRate: com.focusPage("#trafficRate"),
-            trafficDiscount : com.focusPage("#trafficDiscount").switchBtn("discount-lbl").on("click", function(a) {
-                quotationVersion.quotationVersionItems.trafficDiscount.value = 0 == quotationVersion.quotationVersionItems.trafficDiscount.value ? 1 : 0;
-            }),
-            manageRate: com.focusPage("#manageRate"),
-            manageDiscount : com.focusPage("#manageDiscount").switchBtn("discount-lbl").on("click", function(a) {
-                quotationVersion.quotationVersionItems.manageDiscount.value = 0 == quotationVersion.quotationVersionItems.manageDiscount.value ? 1 : 0;
-            }),
-            comment: com.focusPage("#comment"),
-            defaultFlag : com.focusPage("#defaultFlag").switchBtn().on("click", function(a) {
-                quotationVersion.quotationVersionItems.defaultFlag.value = 0 == quotationVersion.quotationVersionItems.defaultFlag.value ? 1 : 0;
-            }),
-            offset: com.focusPage("#offset")
         },
-        validator: {
-            roleId: {
-                type: "v_versionId",
-                regex: /^QV_\d{3}$/,
-                errorMsg: "\u8bf7\u8f93\u5165QV_\u6570\u5b57,\u5982QV_001."
-            }
+
+        items: {
+            name: com.focusPage("#name", "#updateQuotationVersionModal"),
+            trafficRate: com.focusPage("#trafficRate", "#updateQuotationVersionModal"),
+            trafficDiscount: com.focusPage("#trafficDiscount", "#updateQuotationVersionModal").switchBtn(),
+            manageRate: com.focusPage("#manageRate", "#updateQuotationVersionModal"),
+            manageDiscount: com.focusPage("#manageDiscount", "#updateQuotationVersionModal").switchBtn(),
+
+            defaultFlag: com.focusPage("#defaultFlag", "#updateQuotationVersionModal").switchBtn(),
+            type: com.focusPage("#type", "#updateQuotationVersionModal"),
+            offset: com.focusPage("#offset", "#updateQuotationVersionModal"),
+            comment: com.focusPage("#comment", "#updateQuotationVersionModal"),
         },
-        repeatFlg: false,
-        editFlag: false
+
+        btns: {
+            saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+        },
+
+        qvid: null,
+        no: null,
+
+        types: [],
     };
 
-    /**
-     * 回调函数必须提供 init(tableId, result.list)方法
-     * tableId ,用来显示的div的id
-     * result.list 列表的json数组
-     * */
-    var displayFunc  = (function(){
+    com.post(api.ds.quotation, {}, function(res) {
+        quotationVersion.types = res.quotationVersionType.split("key", "value");
 
-        var renderList = function(tableId,listData){
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-
-            if(listData && listData.length){
-                $.each(listData,function(i, v){
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
-                });
-
-                $ul.appendTo($tableWrap);
-            }
-        };
-
-        var creatLine = function(v){
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.name));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
-
-            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-            var $btnExpD = $('<a></a>').addClass('btn btn-minier btn-danger').html("导出定额材料");
-            var $btnExpG = $('<a></a>').addClass('btn btn-minier btn-danger').html("导出定额工费");
-
-            var propertyArr = [
-                ["编号:", v.no, "blue"],
-                ["车运费比例:", v.trafficRate, "blue"],
-                ["车运费折扣:", v.trafficDiscount == 0 ? '不打折' : v.trafficDiscount == 1 ?  '打折' : '-', "red"],
-                ["管理费比例:", v.manageRate, "blue"],
-                ["管理费比例:", v.manageDiscount == 0 ? '不打折' : v.manageDiscount == 1 ?  '打折' : '-', "red"],
-                ["信息:", v.comment ? v.comment : '-', "grey"],
-                ["默认版本:", v.defaultFlag == 0 ? '否' : v.defaultFlag == 1 ?  '是' : '-', "red"],
-                ["偏移量:", v.offset, "red"],
-            ];
-
-            $.each(propertyArr, function (index,value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.append($btnEdit).append($btnExpD).append($btnExpG).appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            $btnEdit.click(function(){
-                editLine(v);
-            });
-
-            $btnExpD.click(function(){
-                expdecl(v);
-            });
-
-            $btnExpG.click(function(){
-                expdegf(v);
-            });
-
-            return $liLine;
-        };
-
-        return {
-            init : function(tableId,listData){
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
-            },
-            drawLine : function(v){
-                return creatLine(v);
-            }
-        };
-    })();
-
-    var _condArr = ['data-quotation-version-name'];
+        quotationVersion.items.type.bindData(res.quotationVersionType, "key", "value");
+    }, null, false);
 
     var searcher = new Searcher();
-    searcher.init( _condArr, "condList", api.quotation.pageQuotationVersion, function(data){
-        displayFunc.init('resultList', data);
-    }, "pagenation", "quotationVersionPostData", null, false, null, function(){
-    	
-    	var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addQuotationVersion').css("margin", "0px 3px");
-    	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-    	var $addspan = $('<span></span>').text('添加').appendTo($adda);
-    	
-    	return [$adda];
+
+    searcher.base("condList", "pagenation", "resultList", api.quotation.pageQuotationVersion);
+    searcher.condition(['data-quotation-version-no', 'data-quotation-version-name', 'data-quotation-version-type']);
+    searcher.history("quotationVersionPostData");
+
+    searcher.button(function() {
+
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addQuotationVersion').css("margin", "0px 3px");
+        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+
+        return [$adda];
     });
+
+    var lineprops = [{
+        field: "no",
+        name: "编号",
+        prop: "no",
+        clazz: "blue"
+    }, {
+        field: "trafficRate",
+        name: "车运费比例",
+        prop: "trafficRate",
+        clazz: "blue"
+    }, {
+        field: "trafficDiscount",
+        name: "车运费折扣",
+        prop: function(v) {
+            return v.trafficDiscount == 0 ? '不打折' : v.trafficDiscount == 1 ? '打折' : '-';
+        },
+        clazz: "red"
+    }, {
+        field: "manageRate",
+        name: "管理费比例",
+        prop: "manageRate",
+        clazz: "blue"
+    }, {
+        field: "manageDiscount",
+        name: "管理费折扣",
+        prop: function(v) {
+            return v.manageDiscount == 0 ? '不打折' : v.manageDiscount == 1 ? '打折' : '-';
+        },
+        clazz: "red"
+    }, {
+        field: "type",
+        name: "类型",
+        prop: "type",
+        dataset: quotationVersion.types,
+        clazz: "red"
+    }, {
+        field: "defaultFlag",
+        name: "默认",
+        prop: function(v) {
+            return v.defaultFlag == 0 ? '否' : v.defaultFlag == 1 ? '是' : '-';
+        },
+        clazz: "red"
+    }, {
+        field: "offset",
+        name: "偏移量",
+        prop: "offset",
+        clazz: "blue"
+    }, {
+        field: "comment",
+        name: "备注",
+        prop: "comment",
+        clazz: "grey"
+    }, ];
+
+    var linebtns = [{
+        name: "编辑",
+        clazz: "btn-yellow",
+        handle: function(v) {
+            quotationVersion.qvid = v.qvId;
+            quotationVersion.no = v.no;
+
+            editLine(v);
+            return false;
+        }
+    }, {
+        name: "导出定额材料",
+        clazz: "btn-info",
+        handle: function(v) {
+            expdecl(v);
+            return false;
+        }
+    }, {
+        name: "导出定额工费",
+        clazz: "btn-success",
+        handle: function(v) {
+            expdegf(v);
+            return false;
+        }
+    }, ];
+
+    searcher.line("name", lineprops, linebtns);
+
+    searcher.render();
 
     $.extend(com.validator, quotationVersion.validator);
 
-    com.focusPage('a[name="addQuotationVersion"]','#pagenation').click(function(){
-        quotationVersion.quotationVersionItems.no.css("display", "none");
-        quotationVersion.editFlag = false;
-        com.cleanItems(quotationVersion.quotationVersionItems);
-        quotationVersion.quotationVersionItems.no.prop("disabled", false);
-        quotationVersion.modal.modal("show");
+    com.focusPage('a[name="addQuotationVersion"]', '#pagenation').click(function() {
+
+        quotationVersion.qvid = null;
+        quotationVersion.no = null;
+        com.cleanItems(quotationVersion.items);
+
+        quotationVersion.modals.updateQuotationVersionModal.modal("show");
     });
 
-    function editLine(b){
+    function editLine(b) {
 
-        quotationVersion.editFlag = true;
-        quotationVersion.quotationVersionItems.no.val(b.no);
-        quotationVersion.quotationVersionItems.trafficRate.val(b.trafficRate);
-        quotationVersion.quotationVersionItems.manageRate.val(b.manageRate);
-        quotationVersion.quotationVersionItems.name.val(b.name);
-        quotationVersion.quotationVersionItems.comment.val(b.comment);
-        quotationVersion.quotationVersionItems.no.prop("disabled", true).css("display", "block");
-        quotationVersion.quotationVersionItems.offset.val(b.offset);
-        
-        void 0 == quotationVersion.quotationVersionItems.trafficDiscount.value ? 1 == b.trafficDiscount && quotationVersion.quotationVersionItems.trafficDiscount.click() : quotationVersion.quotationVersionItems.trafficDiscount.value != b.trafficDiscount && quotationVersion.quotationVersionItems.trafficDiscount.click();
-        quotationVersion.quotationVersionItems.trafficDiscount.value = b.trafficDiscount;
-        
-        void 0 == quotationVersion.quotationVersionItems.manageDiscount.value ? 1 == b.manageDiscount && quotationVersion.quotationVersionItems.manageDiscount.click() : quotationVersion.quotationVersionItems.manageDiscount.value != b.manageDiscount && quotationVersion.quotationVersionItems.manageDiscount.click();
-        quotationVersion.quotationVersionItems.manageDiscount.value = b.manageDiscount;
-        
-        void 0 == quotationVersion.quotationVersionItems.defaultFlag.value ? 1 == b.defaultFlag && quotationVersion.quotationVersionItems.defaultFlag.click() : quotationVersion.quotationVersionItems.defaultFlag.value != b.defaultFlag && quotationVersion.quotationVersionItems.defaultFlag.click();
-        quotationVersion.quotationVersionItems.defaultFlag.value = b.defaultFlag;
-        
-        quotationVersion.modal.modal("show");
+        quotationVersion.qvid = b.qvId;
+
+        quotationVersion.items.name.val(b.name);
+        quotationVersion.items.trafficRate.val(b.trafficRate);
+        quotationVersion.items.manageRate.val(b.manageRate);
+        quotationVersion.items.type.val(b.type);
+        quotationVersion.items.offset.val(b.offset);
+
+        quotationVersion.items.comment.val(b.comment);
+
+        quotationVersion.items.trafficDiscount.prop("checked", b.trafficDiscount == 1);
+        quotationVersion.items.manageDiscount.prop("checked", b.manageDiscount == 1);
+        quotationVersion.items.defaultFlag.prop("checked", b.defaultFlag == 1);
+
+        quotationVersion.modals.updateQuotationVersionModal.modal("show");
     }
 
     function saveData() {
-        
+
         com.clearValidator();
-        com.clearValidator("#no", true);
-        
-        if (com.validate("qtModal") || quotationVersion.repeatFlg) {
+
+        if (com.validate("updateQuotationVersionModal"))
             return false;
-        }
-        
+
+        var url = api.quotation.addQuotationVersion;
         var options = {
-            "quotationVersion.no": quotationVersion.quotationVersionItems.no.val(),
-            "quotationVersion.name": quotationVersion.quotationVersionItems.name.val(),
-            "quotationVersion.trafficRate": quotationVersion.quotationVersionItems.trafficRate.val(),
-            "quotationVersion.trafficDiscount": quotationVersion.quotationVersionItems.trafficDiscount.prop("checked") ? 1 : 0,
-            "quotationVersion.manageRate": quotationVersion.quotationVersionItems.manageRate.val(),
-            "quotationVersion.manageDiscount": quotationVersion.quotationVersionItems.manageDiscount.prop("checked") ? 1 : 0,
-            "quotationVersion.defaultFlag": quotationVersion.quotationVersionItems.defaultFlag.prop("checked") ? 1 : 0,
-            "quotationVersion.comment": quotationVersion.quotationVersionItems.comment.val(),
-            "quotationVersion.offset": quotationVersion.quotationVersionItems.offset.val()
+            "quotationVersion.name": quotationVersion.items.name.val(),
+            "quotationVersion.trafficRate": quotationVersion.items.trafficRate.val(),
+            "quotationVersion.trafficDiscount": quotationVersion.items.trafficDiscount.prop("checked") ? 1 : 0,
+            "quotationVersion.manageRate": quotationVersion.items.manageRate.val(),
+            "quotationVersion.manageDiscount": quotationVersion.items.manageDiscount.prop("checked") ? 1 : 0,
+            "quotationVersion.type": quotationVersion.items.type.val(),
+            "quotationVersion.defaultFlag": quotationVersion.items.defaultFlag.prop("checked") ? 1 : 0,
+            "quotationVersion.offset": quotationVersion.items.offset.val(),
+            "quotationVersion.comment": quotationVersion.items.comment.val(),
         };
-        
-        com.post(quotationVersion.editFlag ? api.quotation.updateQuotationVersion: api.quotation.addQuotationVersion, options, function(res){
+
+        if (quotationVersion.no) {
+            url = api.quotation.updateQuotationVersion;
+            options["quotationVersion.no"] = quotationVersion.no;
+        }
+
+        com.post(url, options, function(res) {
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
-            
-            quotationVersion.modal.modal("hide");
+
+            quotationVersion.modals.updateQuotationVersionModal.modal("hide");
         });
-        
+
     }
 
-    // 导出功能
-    function expdecl(v){
+    function expdecl(v) {
 
-        if(com.focusPage('span[name="totalRecords"]').text() == 0){
+        if (com.focusPage('span[name="totalRecords"]').text() == 0) {
             com.showAlert(com.warning, "请通过条件进行查询");
             return false;
         }
-        if(com.focusPage('span[name="totalRecords"]').text() > 2000){
+        if (com.focusPage('span[name="totalRecords"]').text() > 2000) {
             com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
             return false;
         }
-        var quotationVersionPostData=params.quotationVersionPostData;
+        var quotationVersionPostData = params.quotationVersionPostData;
 
-        com.post(api.data.pageNormood, $.extend({},quotationVersionPostData,{"paging.noPage": 1,
+        com.post(api.data.pageNormood, $.extend({}, quotationVersionPostData, {
+            "paging.noPage": 1,
             "filters[0].field": "versionId",
             "filters[0].data": v.no,
-            "filters[0].op": "eq"}), function (res){
+            "filters[0].op": "eq"
+        }), function(res) {
             $.exceler({
-                column:[
-                    ["材料名称","goods.name"],
-                    ["报价项编号","quotationItem.no"],
-                    ["报价项名称","quotationItem.name"],
-                    ["报价项单位","quotationItem.unit.name"],
-                    ["报价项工种","quotationItem.workType.name"],
-                    ["报价项单价","quotationItem.unitPrice"],
-                    ["品牌","goods.brand"],
-                    ["品类","goods.category"],
-                    ["商品单位","goods.measurementUnit"],
-                    ["单位","unit"],
-                    ["定额量","num"],
-                    ["状态", "status"],
-                ],
+                column: [["材料名称", "goods.name"], ["报价项编号", "quotationItem.no"], ["报价项名称", "quotationItem.name"], ["报价项单位", "quotationItem.unit.name"], ["报价项工种", "quotationItem.workType.name"], ["报价项单价", "quotationItem.unitPrice"], ["品牌", "goods.brand"], ["品类", "goods.category"], ["商品单位", "goods.measurementUnit"], ["单位", "unit"], ["定额量", "num"], ["状态", "status"], ],
                 list: res.paging.data,
-            }, function(v){
-                v.status = v.status== 0 ? '有效': v.status== 1 ? '无效' : '---';
+            }, function(v) {
+                v.status = v.status == 0 ? '有效' : v.status == 1 ? '无效' : '---';
             });
         });
     }
 
-    function expdegf(v){
+    function expdegf(v) {
 
-        if(com.focusPage('span[name="totalRecords"]').text() == 0){
+        if (com.focusPage('span[name="totalRecords"]').text() == 0) {
             com.showAlert(com.warning, "请通过条件进行查询");
             return false;
         }
-        if(com.focusPage('span[name="totalRecords"]').text() > 2000){
+
+        if (com.focusPage('span[name="totalRecords"]').text() > 2000) {
             com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
             return false;
         }
-        var quotationVersionPostData=params.quotationVersionPostData;
-        com.post(api.data.pageNormrice, $.extend({},quotationVersionPostData,{"paging.noPage": 1,
+
+        var quotationVersionPostData = params.quotationVersionPostData;
+
+        com.post(api.data.pageNormrice, $.extend({}, quotationVersionPostData, {
+            "paging.noPage": 1,
             "filters[0].field": "versionId",
             "filters[0].data": v.no,
-            "filters[0].op": "eq"}), function (res){
+            "filters[0].op": "eq"
+        }), function(res) {
             $.exceler({
-                column:[
-                    ["工费名称","constructionNode.name"],
-                    ["报价项编号","quotationItem.no"],
-                    ["报价项名称","quotationItem.name"],
-                    ["报价项单位","quotationItem.unit.name"],
-                    ["报价项工种","quotationItem.workType.name"],
-                    ["报价项单价","quotationItem.unitPrice"],
-                    ["定额单位","unit"],
-                    ["转换量","trannum"],
-                    ["工费","salary"],
-                    ["状态", "status"],
-                ],
+                column: [["工费名称", "constructionNode.name"], ["报价项编号", "quotationItem.no"], ["报价项名称", "quotationItem.name"], ["报价项单位", "quotationItem.unit.name"], ["报价项工种", "quotationItem.workType.name"], ["报价项单价", "quotationItem.unitPrice"], ["定额单位", "unit"], ["转换量", "trannum"], ["工费", "salary"], ["状态", "status"], ],
                 list: res.paging.data,
-            }, function(v){
-                v.status = v.status== 0 ? '有效': v.status== 1 ? '无效' : '---';
-              });
+            }, function(v) {
+                v.status = v.status == 0 ? '有效' : v.status == 1 ? '无效' : '---';
+            });
         });
     }
 

@@ -12,19 +12,19 @@ public class ComplackVO implements Serializable {
 	private static final long serialVersionUID = 7216296775550452522L;
 
 	private Long ckid;
-	
+
 	private Long cid;
-	
+
 	private Long ctid;
-	
+
 	private Timestamp createTime;
-	
+
 	private Timestamp operateTime;
-	
+
 	private UserBaseVO operater;
-	
+
 	private String comment;
-	
+
 	public ComplackVO() {
 		super();
 	}
@@ -91,5 +91,5 @@ public class ComplackVO implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 }

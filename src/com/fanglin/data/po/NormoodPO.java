@@ -31,10 +31,14 @@ public class NormoodPO implements Serializable {
 
 	private GoodsPO goods;// 商品
 
-	private String unit;
+	private String normunit;// 定额单位
 
-	private int num;// 数量
+	private int normnum;// 定额数量
 
+	private String storeunit;// 库房单位
+	
+	private int storenum;// 库房数量
+	
 	private short status;// 状态
 
 	public NormoodPO() {
@@ -77,23 +81,41 @@ public class NormoodPO implements Serializable {
 	public void setGoods(GoodsPO goods) {
 		this.goods = goods;
 	}
-
-	@Column(name = "unit")
-	public String getUnit() {
-		return unit;
+	
+	@Column(name = "normunit")
+	public String getNormunit() {
+		return normunit;
 	}
 
-	public void setUnit(String unit) {
-		this.unit = unit;
+	public void setNormunit(String normunit) {
+		this.normunit = normunit;
 	}
 
-	@Column(name = "num")
-	public int getNum() {
-		return num;
+	@Column(name = "normnum")
+	public int getNormnum() {
+		return normnum;
 	}
 
-	public void setNum(int num) {
-		this.num = num;
+	public void setNormnum(int normnum) {
+		this.normnum = normnum;
+	}
+
+	@Column(name = "storeunit")
+	public String getStoreunit() {
+		return storeunit;
+	}
+
+	public void setStoreunit(String storeunit) {
+		this.storeunit = storeunit;
+	}
+
+	@Column(name = "storenum")
+	public int getStorenum() {
+		return storenum;
+	}
+
+	public void setStorenum(int storenum) {
+		this.storenum = storenum;
 	}
 
 	@Column(name = "status")

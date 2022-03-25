@@ -52,7 +52,6 @@ public class VustomerServiceImpl implements VustomerService {
 		}
 
 		paging.setData(vustomerVOs);
-
 	}
 
 	@Override
@@ -98,7 +97,6 @@ public class VustomerServiceImpl implements VustomerService {
 		}
 
 		return vustomerVOs;
-
 	}
 
 	@Override
@@ -149,15 +147,13 @@ public class VustomerServiceImpl implements VustomerService {
 			throw new FLException(140013, "订单不存在");
 		}
 
-		if (decorationPO.getOrderTotalPrice() == 0 && decorationPO.getStatus() != DecorationPO.STATUS_SIGNED_INT)
-			throw new FLException(330006, "装修单未签约");
+		if (decorationPO.getOrderTotalPrice() == 0 && decorationPO.getStatus() != DecorationPO.STATUS_SIGNED_INT) throw new FLException(330006, "装修单未签约");
 
 		vustomerPO.setOrderId(orderId);
 
 		vustomerPO.setContractPrice(decorationPO.getOrderTotalPrice());
 
 		vustomerDao.update(vustomerPO);
-
 	}
 
 	@Override
@@ -169,7 +165,6 @@ public class VustomerServiceImpl implements VustomerService {
 		vustomerPO.setStatus(VustomerPO.STATUS_DISABLE_INT);
 
 		vustomerDao.update(vustomerPO);
-
 	}
 
 	@Override
@@ -191,12 +186,10 @@ public class VustomerServiceImpl implements VustomerService {
 		List<VustomerVO> vustomerVOs = new ArrayList<VustomerVO>();
 
 		for (VustomerPO vustomerPO : vustomerPOs) {
-
 			vustomerVOs.add(vustomerVOToPO(vustomerPO));
 		}
 
 		paging.setData(vustomerVOs);
-
 	}
 
 	@Override
@@ -208,13 +201,14 @@ public class VustomerServiceImpl implements VustomerService {
 		if (vustomerPO == null) {
 			throw new FLException(330003, "客户信息不存在");
 		}
+
 		if (vustomerPO.getOrderId() != null) {
 			throw new FLException(330004, "客户已绑装修单");
 		}
+
 		vustomerPO.setBelonger(null);
 
 		vustomerDao.update(vustomerPO);
-
 	}
 
 	@Override
@@ -226,9 +220,11 @@ public class VustomerServiceImpl implements VustomerService {
 		if (vustomerPO == null) {
 			throw new FLException(330003, "客户信息不存在");
 		}
+
 		if (vustomerPO.getOrderId() != null) {
 			throw new FLException(330004, "客户已绑装修单");
 		}
+
 		if (vustomerPO.getBelonger() != null) {
 			throw new FLException(330007, "客户存在归属");
 		}
@@ -249,6 +245,7 @@ public class VustomerServiceImpl implements VustomerService {
 		if (vustomerPO == null) {
 			throw new FLException(330003, "客户信息不存在");
 		}
+
 		if (vustomerPO.getOrderId() != null) {
 			throw new FLException(330004, "客户已绑装修单");
 		}
@@ -268,7 +265,6 @@ public class VustomerServiceImpl implements VustomerService {
 		BeanUtil.copyProperties(vustomerPO.getBelonger(), vustomerVO.getBelonger(), Arrays.asList("dept", "duty", "role"));
 
 		return vustomerVO;
-
 	}
 
 }

@@ -1,6 +1,5 @@
-
 Condition.addupRule("decoration", {
-    
+
     "orderId": {
         label: "装修单号",
         type: "text",
@@ -60,7 +59,10 @@ Condition.addupRule("decoration", {
         },
         dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status":3,"departmentType.name":""},
+            postData: {
+                "user.status": 3,
+                "departmentType.name": ""
+            },
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
@@ -76,7 +78,10 @@ Condition.addupRule("decoration", {
         },
         dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status":3,"departmentType.name":""},
+            postData: {
+                "user.status": 3,
+                "departmentType.name": ""
+            },
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
@@ -92,7 +97,10 @@ Condition.addupRule("decoration", {
         },
         dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status":3,"departmentType.name":""},
+            postData: {
+                "user.status": 3,
+                "departmentType.name": ""
+            },
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
@@ -108,7 +116,10 @@ Condition.addupRule("decoration", {
         },
         dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status":3,"departmentType.name":""},
+            postData: {
+                "user.status": 3,
+                "departmentType.name": ""
+            },
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
@@ -124,7 +135,10 @@ Condition.addupRule("decoration", {
         },
         dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status":3,"departmentType.name":"工程部"},
+            postData: {
+                "user.status": 3,
+                "departmentType.name": "工程部"
+            },
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
@@ -140,7 +154,10 @@ Condition.addupRule("decoration", {
         },
         dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status":3,"departmentType.name":"职能部"},
+            postData: {
+                "user.status": 3,
+                "departmentType.name": "职能部"
+            },
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
@@ -156,7 +173,9 @@ Condition.addupRule("decoration", {
         },
         dataSource: {
             url: api.ds.decoration,
-            postData: {"timestamp": new Date().getTime()},
+            postData: {
+                "timestamp": new Date().getTime()
+            },
             listPath: "typeness",
             keyPath: "key",
             valuePath: "value"
@@ -172,7 +191,9 @@ Condition.addupRule("decoration", {
         },
         dataSource: {
             url: api.data.queryDecorationBusitype,
-            postData: {"timestamp": new Date().getTime()},
+            postData: {
+                "timestamp": new Date().getTime()
+            },
             listPath: "decorationBusitypes",
             keyPath: "dbid",
             valuePath: "name"
@@ -188,7 +209,9 @@ Condition.addupRule("decoration", {
         },
         dataSource: {
             url: api.ds.decoration,
-            postData: {"timestamp": new Date().getTime()},
+            postData: {
+                "timestamp": new Date().getTime()
+            },
             listPath: "houseClass",
             keyPath: "key",
             valuePath: "value"
@@ -205,7 +228,9 @@ Condition.addupRule("decoration", {
         dataSource: {
             url: api.communion.queryDepartmentByName,
             query: "dept.name",
-            postData: {"dept.type.dtid": 1},
+            postData: {
+                "dept.type.dtid": 1
+            },
             listPath: "deptList",
             keyPath: "no",
             valuePath: "name"
@@ -222,7 +247,9 @@ Condition.addupRule("decoration", {
         dataSource: {
             url: api.communion.queryDepartmentByName,
             query: "dept.name",
-            postData: {"dept.type.dtid": 2},
+            postData: {
+                "dept.type.dtid": 2
+            },
             listPath: "deptList",
             keyPath: "no",
             valuePath: "name"
@@ -239,7 +266,9 @@ Condition.addupRule("decoration", {
         dataSource: {
             url: api.communion.queryDepartmentByName,
             query: "dept.name",
-            postData: {"dept.type.dtid": 3},
+            postData: {
+                "dept.type.dtid": 3
+            },
             listPath: "deptList",
             keyPath: "no",
             valuePath: "name"
@@ -256,7 +285,9 @@ Condition.addupRule("decoration", {
         dataSource: {
             url: api.communion.queryDepartmentByName,
             query: "dept.name",
-            postData: {"dept.type.dtid": 0},
+            postData: {
+                "dept.type.dtid": 0
+            },
             listPath: "deptList",
             keyPath: "no",
             valuePath: "name"
@@ -273,7 +304,10 @@ Condition.addupRule("decoration", {
         dataSource: {
             url: api.communion.queryDepartmentByName,
             query: "dept.name",
-            postData: {"dept.type.dtid": 1, "dept.company" : 0},
+            postData: {
+                "dept.type.dtid": 1,
+                "dept.company": 0
+            },
             listPath: "deptList",
             keyPath: "no",
             valuePath: "name"
@@ -290,7 +324,10 @@ Condition.addupRule("decoration", {
         dataSource: {
             url: api.communion.queryDepartmentByName,
             query: "dept.name",
-            postData: {"dept.type.dtid": 2, "dept.company" : 0},
+            postData: {
+                "dept.type.dtid": 2,
+                "dept.company": 0
+            },
             listPath: "deptList",
             keyPath: "no",
             valuePath: "name"
@@ -307,7 +344,10 @@ Condition.addupRule("decoration", {
         dataSource: {
             url: api.communion.queryDepartmentByName,
             query: "dept.name",
-            postData: {"dept.type.dtid": 3, "dept.company" : 0},
+            postData: {
+                "dept.type.dtid": 3,
+                "dept.company": 0
+            },
             listPath: "deptList",
             keyPath: "no",
             valuePath: "name"
@@ -324,7 +364,10 @@ Condition.addupRule("decoration", {
         dataSource: {
             url: api.communion.queryDepartmentByName,
             query: "dept.name",
-            postData: {"dept.type.dtid": 0, "dept.company" : 0},
+            postData: {
+                "dept.type.dtid": 0,
+                "dept.company": 0
+            },
             listPath: "deptList",
             keyPath: "no",
             valuePath: "name"
@@ -348,22 +391,22 @@ Condition.addupRule("decoration", {
             validate: null
         }
     },
-    "depositTime" : {
-        label:"定金时间",
-        type:"dateRangePicker",
-        submitConfig : {
-            name : "depositTimeDateRange",
-            op : "cn",
-            validate:null
+    "depositTime": {
+        label: "定金时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "depositTimeDateRange",
+            op: "cn",
+            validate: null
         }
     },
-    "precontractTime" : {
-        label:"预签时间",
-        type:"dateRangePicker",
-        submitConfig : {
-            name : "precontractTime",
-            op : "cn",
-            validate:null
+    "precontractTime": {
+        label: "预签时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "precontractTime",
+            op: "cn",
+            validate: null
         }
     },
     "sdesignTime": {
@@ -421,12 +464,30 @@ Condition.addupRule("decoration", {
         }
     },
     "balanceTime": {
-        label: "结算时间",
+        label: "内决时间",
         type: "dateRangePicker",
         submitConfig: {
             name: "balanceTime",
             op: "cn",
             validate: null
+        }
+    },
+    "balanceStatus": {
+        label: "内决状态",
+        type: "select",
+        submitConfig: {
+            name: "balanceStatus",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.decoration,
+            postData: {
+                "timestamp": new Date().getTime()
+            },
+            listPath: "balanceStatus",
+            keyPath: "key",
+            valuePath: "value"
         }
     },
     "status": {
@@ -439,7 +500,9 @@ Condition.addupRule("decoration", {
         },
         dataSource: {
             url: api.ds.decoration,
-            postData: {"timestamp": new Date().getTime()},
+            postData: {
+                "timestamp": new Date().getTime()
+            },
             listPath: "decorationOrderStatus",
             keyPath: "key",
             valuePath: "value"
@@ -455,7 +518,9 @@ Condition.addupRule("decoration", {
         },
         dataSource: {
             url: api.ds.decoration,
-            postData: {"timestamp": new Date().getTime()},
+            postData: {
+                "timestamp": new Date().getTime()
+            },
             listPath: "designStatus",
             keyPath: "key",
             valuePath: "value"
@@ -471,7 +536,9 @@ Condition.addupRule("decoration", {
         },
         dataSource: {
             url: api.ds.decoration,
-            postData: {"timestamp": new Date().getTime()},
+            postData: {
+                "timestamp": new Date().getTime()
+            },
             listPath: "sourceStatus",
             keyPath: "key",
             valuePath: "value"
@@ -491,11 +558,16 @@ Condition.addupRule("decoration", {
             listPath: "constructionNodes",
             keyPath: "sort",
             valuePath: "name",
-            appresult: [
-                {"sort": 0, "name": "初始"},
-                {"sort": 1, "name": "开工"},
-                {"sort": 2, "name": "完工"}
-            ]
+            appresult: [{
+                "sort": 0,
+                "name": "初始"
+            }, {
+                "sort": 1,
+                "name": "开工"
+            }, {
+                "sort": 2,
+                "name": "完工"
+            }]
         }
     },
     "auditStatus": {
@@ -508,7 +580,9 @@ Condition.addupRule("decoration", {
         },
         dataSource: {
             url: api.ds.decoration,
-            postData: {"timestamp": new Date().getTime()},
+            postData: {
+                "timestamp": new Date().getTime()
+            },
             listPath: "auditStatus",
             keyPath: "key",
             valuePath: "value"
@@ -553,7 +627,9 @@ Condition.addupRule("decoration", {
         },
         dataSource: {
             url: api.ds.decoration,
-            postData: {"timestamp": new Date().getTime()},
+            postData: {
+                "timestamp": new Date().getTime()
+            },
             listPath: "repairStatus",
             keyPath: "key",
             valuePath: "value"

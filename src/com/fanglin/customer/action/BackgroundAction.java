@@ -18,12 +18,12 @@ import com.fanglin.customer.vo.BackgroundVO;
 public class BackgroundAction extends BaseListAction {
 
 	private static final long serialVersionUID = -8255431605759864886L;
-	
+
 	@Autowired
 	private BackgroundService backgroundService;
-	
+
 	private BackgroundVO background;
-	
+
 	@Action(value = "queryBackground", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryBackground() throws FLException {
 
@@ -31,7 +31,7 @@ public class BackgroundAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateBackground", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateBackground() throws FLException {
 

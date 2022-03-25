@@ -2,7 +2,6 @@ package com.fanglin.customer.dao.impl;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -49,8 +48,9 @@ public class RevisitDaoImpl extends DaoImpl<RevisitPO> implements RevisitDao {
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters == null)
-			return;
+		if (filters == null) return;
+
+		query.alias("decoration", "decoration");
 
 		for (Filter filter : filters) {
 
@@ -58,15 +58,12 @@ public class RevisitDaoImpl extends DaoImpl<RevisitPO> implements RevisitDao {
 			String data = filter.getData();
 			String op = filter.getOp();
 
-			query.alias("decoration", "decoration");
-
-			if (StringUtils.isNotEmpty(data)) {
-				if ("orderId".equals(field)) {
-					query.add(query.getCriterion("decoration.orderId", data, op));
-				} else if ("type".equals(field)) {
-					query.add(query.getCriterion("type", Short.valueOf(data), op));
-				}
+			if ("orderId".equals(field)) {
+				query.add(query.getCriterion("decoration.orderId", data, op));
+			} else if ("type".equals(field)) {
+				query.add(query.getCriterion("type", Short.valueOf(data), op));
 			}
 		}
 	}
+
 }

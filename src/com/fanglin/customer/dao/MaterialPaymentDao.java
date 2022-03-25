@@ -11,6 +11,6 @@ public interface MaterialPaymentDao extends Dao<MaterialPaymentPO> {
 
 	public List<MaterialPaymentPO> queryCusMaterialByOrderId(Paging paging, List<Filter> filters, String orderId);
 
-	public long countCusMaterialPaymentForAmount(String orderId);
+	public long amountCusMaterialPayment(String orderId);
 
 }

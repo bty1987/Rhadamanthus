@@ -121,8 +121,8 @@ $(function(){
         com.focusPage("#signNumCheck").html(com.checkNull($userInfo.signNum, "无"));
         com.focusPage("#serviceYearsCheck").html(getDateYearSub($userInfo.entryTime));
         com.focusPage("#isContractCheck").html(com.checkNull($userInfo.isContract == 0 ? "是" : "否", "无"));
-        com.focusPage("#insuranceTypeCheck").html(com.checkNull($userInfo.insuranceTypeCheck == 0 ? "是" : "否", "无"))
-        com.focusPage("#isInsuranceCheck").html(com.checkNull(userView.insuranceType[$userInfo.insuranceType].value, "无"));
+        com.focusPage("#isInsuranceCheck").html(com.checkNull($userInfo.isInsurance == 0 ? "是" : "否", "无"));
+        com.focusPage("#insuranceTypeCheck").html($userInfo.isInsurance == 0 ? userView.insuranceType[$userInfo.insuranceType].value : "无");
         com.focusPage("#insuranceTimeCheck").html(com.checkNull($userInfo.insuranceTime, "无"));
         com.focusPage("#pensionNumCheck").html(com.checkNull($userInfo.pensionNum, "无"));
         com.focusPage("#medicalNumCheck").html(com.checkNull($userInfo.medicalNum, "无"));

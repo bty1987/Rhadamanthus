@@ -19,7 +19,7 @@ public class ComplaintDaoImpl extends DaoImpl<ComplaintPO> implements ComplaintD
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<ComplaintPO> queryComplaint(long cid) {
-		
 		return createCriteria(ComplaintPO.class).add(Restrictions.eq(ComplaintPO.COLUMN_CID_STR, cid)).list();
 	}
+
 }

@@ -7,18 +7,18 @@ import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.personel.vo.UserBaseVO;
 
-public class VrecordVO implements Serializable{
+public class VrecordVO implements Serializable {
 
 	private static final long serialVersionUID = -7517270342066899566L;
-	
+
 	private Long vrid;
-	
+
 	private Long vid;
-	
+
 	private UserBaseVO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private String comment;
 
 	public VrecordVO() {
@@ -54,7 +54,7 @@ public class VrecordVO implements Serializable{
 		this.creater = creater;
 	}
 
-	@JSON(format="yyyy-MM-dd HH:mm:ss")
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -70,5 +70,5 @@ public class VrecordVO implements Serializable{
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 }

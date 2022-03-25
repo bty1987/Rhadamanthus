@@ -63,6 +63,30 @@ public class AoodsServiceImpl implements AoodsService {
 
 		paging.setData(AoodsVOs);
 	}
+	
+	@Override
+	public List<AoodsVO> queryAoods(AoodsVO aoodsVO,  String orderId){
+		
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		List<AoodsPO> aoodsPOs = aoodsDao.queryAoods(aoodsVO.getAccessoriesType().getAtid(),aoodsVO.getAtttype(),decorationPO.getCompany());
+		List<AoodsVO> AoodsVOs = new ArrayList<AoodsVO>();
+
+		for (AoodsPO aoodsPO : aoodsPOs) {
+
+			aoodsVO = new AoodsVO(new GoodsVO(), new AccessoriesTypeVO());
+
+			BeanUtil.copyProperties(aoodsPO, aoodsVO, Arrays.asList("goods", "accessoriesType", "bompany"));
+			aoodsVO.setGid(aoodsPO.getGoods().getGid());
+			aoodsVO.setName(aoodsPO.getGoods().getName());
+			BeanUtil.copyProperties(aoodsPO.getGoods(), aoodsVO.getGoods(), Arrays.asList("accessoriesType"));
+			BeanUtil.copyProperties(aoodsPO.getAccessoriesType(), aoodsVO.getAccessoriesType(), Arrays.asList("workType"));
+
+			AoodsVOs.add(aoodsVO);
+		}
+
+		return AoodsVOs;
+	}
 
 	@Override
 	public List<AoodsVO> queryAoodsByAtid(AoodsVO aoodsVO, String orderId) {
@@ -128,6 +152,8 @@ public class AoodsServiceImpl implements AoodsService {
 		aoodsPO.setCheckup(AoodsPO.CHECKUP_CHECK_INT);
 		aoodsPO.setCompany(company);
 		aoodsPO.setBompany(cid);
+		aoodsPO.setAtttype(aoodsVO.getAtttype());
+		aoodsPO.setBalance(aoodsVO.getBalance());
 
 		aoodsDao.save(aoodsPO);
 
@@ -152,7 +178,9 @@ public class AoodsServiceImpl implements AoodsService {
 
 		aoodsPO.setAccessoriesType(new AccessoriesTypePO(aoodsVO.getAccessoriesType().getAtid()));
 		aoodsPO.setBompany(cid);
-
+		aoodsPO.setAtttype(aoodsVO.getAtttype());
+		aoodsPO.setBalance(aoodsVO.getBalance());
+		
 		aoodsDao.update(aoodsPO);
 
 		return 0;
@@ -189,4 +217,5 @@ public class AoodsServiceImpl implements AoodsService {
 
 		return 0;
 	}
+
 }

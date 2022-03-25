@@ -13,20 +13,20 @@ import com.fanglin.customer.po.CustomerOriginFunctionPO;
 @Repository("customerOriginFunctionDao")
 public class CustomerOriginFunctionDaoImpl extends DaoImpl<CustomerOriginFunctionPO> implements CustomerOriginFunctionDao {
 
-	public CustomerOriginFunctionDaoImpl(){
+	public CustomerOriginFunctionDaoImpl() {
 		super(CustomerOriginFunctionPO.class);
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<CustomerOriginFunctionPO> queryCustomerOriginFunction(Short type) {
-		
+
 		Criteria criteria = session().createCriteria(CustomerOriginFunctionPO.class).add(Restrictions.eq("status", CustomerOriginFunctionPO.STATUS_ENABLE_INT));
-		
-		if(type != null){
+
+		if (type != null) {
 			criteria.add(Restrictions.eq("type", type));
 		}
-		
+
 		return criteria.list();
 	}
 

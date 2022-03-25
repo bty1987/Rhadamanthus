@@ -29,11 +29,15 @@ public class FunctionAreaPO implements Serializable {
 
 	public static final String COLUMN_TYPE_STR = "type";
 
-	public static final short TYPE_PART_INT = 0;
+	public static final short TYPE_MANAGE_INT = 0;
 
-	public static final short TYPE_WHOLE_INT = 1;
+	public static final short TYPE_COMMON_INT = 0;
 
-	public static final short TYPE_AI_INT = 3;
+	public static final short TYPE_TOTAL_INT = 2;
+
+	public static final short TYPE_IGNORE_INT = 3;
+
+	public static final short TYPE_COST_INT = 4;
 
 	private long faid;
 

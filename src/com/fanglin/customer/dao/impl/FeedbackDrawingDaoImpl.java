@@ -11,11 +11,11 @@ import com.fanglin.customer.po.FeedbackDrawingPO;
 
 @Repository("feedbackDrawingDao")
 public class FeedbackDrawingDaoImpl extends DaoImpl<FeedbackDrawingPO> implements FeedbackDrawingDao {
-	
+
 	public FeedbackDrawingDaoImpl() {
 		super(FeedbackDrawingPO.class);
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<FeedbackDrawingPO> queryFeedbackDrawing(long fid) {

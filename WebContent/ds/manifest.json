@@ -65,8 +65,23 @@
     ],
     "occessoriesStatus": [
         {"key":"0","value":"初始"},
-        {"key":"1","value":"确认"},
-        {"key":"2","value":"结算"}
+        {"key":"1","value":"分配"},
+        {"key":"2","value":"送货"},
+        {"key":"3","value":"到货"},
+        {"key":"4","value":"结算"}
+    ],
+    "occessoriesisEnter": [
+        {"key":"0","value":"是"},
+        {"key":"1","value":"否"}
+    ],
+    "occessoriesisLift": [
+        {"key":"0","value":"是"},
+        {"key":"1","value":"否"}
+    ],
+    "occessoriesisCostType": [
+        {"key": "0", "value": "车运费"},
+        {"key": "1", "value": "搬运费"},
+        {"key": "2", "value": "上楼费"}
     ],
     "errorCode": 0,
     "errorMsg": null

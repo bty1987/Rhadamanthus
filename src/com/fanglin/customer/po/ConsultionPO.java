@@ -15,25 +15,25 @@ import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name="consultion",catalog="customer")
-public class ConsultionPO implements Serializable{
-	
+@Table(name = "consultion", catalog = "customer")
+public class ConsultionPO implements Serializable {
+
 	private static final long serialVersionUID = -7442063179740263209L;
-	
+
 	public static final String COLUMN_DECORATION_ORDERID_STR = "decoration.orderId";
-	
+
 	public static final String COLUMN_CREATER_UID_STR = "creater.uid";
 
 	private long cid;
-	
+
 	private String no;
-	
+
 	private DecorationPO decoration;
-	
+
 	private UserPO creater;
-	
+
 	private String comment;
-	
+
 	private int company;
 
 	public ConsultionPO() {
@@ -48,7 +48,7 @@ public class ConsultionPO implements Serializable{
 
 	@Id
 	@GeneratedValue
-	@Column(name="cid")
+	@Column(name = "cid")
 	public long getCid() {
 		return cid;
 	}
@@ -57,7 +57,7 @@ public class ConsultionPO implements Serializable{
 		this.cid = cid;
 	}
 
-	@Column(name="no")
+	@Column(name = "no")
 	public String getNo() {
 		return no;
 	}
@@ -86,7 +86,7 @@ public class ConsultionPO implements Serializable{
 		this.creater = creater;
 	}
 
-	@Column(name="comment")
+	@Column(name = "comment")
 	public String getComment() {
 		return comment;
 	}
@@ -95,7 +95,7 @@ public class ConsultionPO implements Serializable{
 		this.comment = comment;
 	}
 
-	@Column(name="company")
+	@Column(name = "company")
 	public int getCompany() {
 		return company;
 	}
@@ -103,5 +103,5 @@ public class ConsultionPO implements Serializable{
 	public void setCompany(int company) {
 		this.company = company;
 	}
-	
+
 }

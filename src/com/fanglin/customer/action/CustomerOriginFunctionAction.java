@@ -23,16 +23,16 @@ public class CustomerOriginFunctionAction extends BaseListAction {
 
 	@Autowired
 	private CustomerOriginFunctionService customerOriginFunctionService;
-	
+
 	private List<CustomerOriginFunctionVO> customerOriginFunctions;
-	
+
 	private CustomerOriginFunctionVO customerOriginFunction;
-	
-	@Action(value = "queryCustomerOriginFunction", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryCustomerOriginFunction() throws FLException{
-		
+
+	@Action(value = "queryCustomerOriginFunction", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryCustomerOriginFunction() throws FLException {
+
 		customerOriginFunctions = customerOriginFunctionService.queryCustomerOriginFunction(customerOriginFunction);
-		
+
 		return SUCCESS;
 	}
 
@@ -40,8 +40,7 @@ public class CustomerOriginFunctionAction extends BaseListAction {
 		return customerOriginFunctions;
 	}
 
-	public void setCustomerOriginFunctions(
-			List<CustomerOriginFunctionVO> customerOriginFunctions) {
+	public void setCustomerOriginFunctions(List<CustomerOriginFunctionVO> customerOriginFunctions) {
 		this.customerOriginFunctions = customerOriginFunctions;
 	}
 
@@ -49,9 +48,8 @@ public class CustomerOriginFunctionAction extends BaseListAction {
 		return customerOriginFunction;
 	}
 
-	public void setCustomerOriginFunction(
-			CustomerOriginFunctionVO customerOriginFunction) {
+	public void setCustomerOriginFunction(CustomerOriginFunctionVO customerOriginFunction) {
 		this.customerOriginFunction = customerOriginFunction;
 	}
-	
+
 }

@@ -53,7 +53,6 @@ public class CircleServiceImpl implements CircleService {
 				CircleVO circleVO = circlePO.ptv(true);
 
 				circleVOs.add(circleVO);
-
 			}
 		}
 
@@ -77,7 +76,6 @@ public class CircleServiceImpl implements CircleService {
 			List<CirclePO> circlePOs = circleDao.queryDecorationCircleByOrderIds(paging, filters, orderIds);
 
 			circleVOs = queryDecorationCircle(circleVOs, circlePOs);
-
 		}
 
 		paging.setData(circleVOs);
@@ -124,13 +122,10 @@ public class CircleServiceImpl implements CircleService {
 				circleDrawingPO.setPath(circleDrawingVO.getPath());
 
 				circleDrawingDao.save(circleDrawingPO);
-
 			}
-
 		}
 
 		return 0;
-
 	}
 
 	@Override

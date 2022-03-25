@@ -6,25 +6,25 @@ public class CircleDrawingVO implements Serializable {
 
 	private static final long serialVersionUID = 714358820557223232L;
 
-	private long cdid;
+	private Long cdid;
 
-	private long cid;
+	private Long cid;
 
 	private String path;
 
-	public long getCdid() {
+	public Long getCdid() {
 		return cdid;
 	}
 
-	public void setCdid(long cdid) {
+	public void setCdid(Long cdid) {
 		this.cdid = cdid;
 	}
 
-	public long getCid() {
+	public Long getCid() {
 		return cid;
 	}
 
-	public void setCid(long cid) {
+	public void setCid(Long cid) {
 		this.cid = cid;
 	}
 

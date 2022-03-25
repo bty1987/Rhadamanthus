@@ -7,11 +7,12 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.po.RecruitmentPO;
 import com.fanglin.utils.Paging;
 
+public interface RecruitmentDao extends Dao<RecruitmentPO> {
 
-public interface RecruitmentDao extends Dao<RecruitmentPO>{
-	
-	public List<RecruitmentPO>pageRecruitment(Paging paging, List<Filter> filters);
-	
+	public List<RecruitmentPO> pageRecruitment(Paging paging, List<Filter> filters);
+
 	public RecruitmentPO queryRecruitmentByRid(long rid);
-	
+
+	public RecruitmentPO checkRecruitment(String identity, String phone);
+
 }

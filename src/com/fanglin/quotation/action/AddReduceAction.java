@@ -42,7 +42,7 @@ public class AddReduceAction extends BaseListAction {
 	@Action(value = "pageAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageAddReduce() throws FLException {
 
-		addReduceService.pageAddReduce(getPaging(), getFilters(), addReduce);
+		addReduceService.pageAddReduce(getPaging(), getFilters(), addReduce, queryCompany());
 
 		return SUCCESS;
 	}
@@ -51,14 +51,6 @@ public class AddReduceAction extends BaseListAction {
 	public String pageAddReduceByOrderId() throws FLException {
 
 		addReduceService.pageAddReduceByOrderId(getPaging(), getFilters(), addReduce);
-
-		return SUCCESS;
-	}
-
-	@Action(value = "queryAddReduceByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryAddReduceByOrderId() throws FLException {
-
-		addReduces = addReduceService.queryAddReduceByOrderId(addReduce);
 
 		return SUCCESS;
 	}

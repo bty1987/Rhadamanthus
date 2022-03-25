@@ -114,6 +114,12 @@
         {"key":"2", "value":"失效"},
         {"key":"3", "value":"归档"},
         {"key":"4", "value":"归档"}
+    ],"isStatus":[
+        {"key":"0", "value":"不计入"},
+        {"key":"1", "value":"计入"}
+    ],"balanceStatus":[
+        {"key":"0", "value":"初始"},
+        {"key":"1", "value":"结算"}
     ],
 
     "errorCode": 0,

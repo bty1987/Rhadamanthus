@@ -39,19 +39,19 @@ public class EmemberDaoImpl extends DaoImpl<EmemberPO> implements EmemberDao {
 	}
 
 	private void queryFilterExcute(PagingQuery<EmemberPO> query, List<Filter> filters) {
-		
-		if (filters != null && filters.size() > 0) {
-			for (Filter filter : filters) {
 
-				String field = filter.getField();
-				String data = filter.getData();
-				String op = filter.getOp();
+		if (filters == null) return;
 
-				if (EmemberPO.COLUMN_NO_STR.equals(field)) {
-					query.add(query.getCriterion(EmemberPO.COLUMN_NO_STR, data, op));
-				} else if (EmemberPO.COLUMN_PHONE_STR.equals(field)) {
-					query.add(query.getCriterion(EmemberPO.COLUMN_PHONE_STR, data, op));
-				}
+		for (Filter filter : filters) {
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if (EmemberPO.COLUMN_NO_STR.equals(field)) {
+				query.add(query.getCriterion(EmemberPO.COLUMN_NO_STR, data, op));
+			} else if (EmemberPO.COLUMN_PHONE_STR.equals(field)) {
+				query.add(query.getCriterion(EmemberPO.COLUMN_PHONE_STR, data, op));
 			}
 		}
 	}

@@ -1,11 +1,9 @@
 package com.fanglin.personel.service.impl;
 
-
 import java.util.ArrayList;
 import java.util.Date;
-
-
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,56 +22,54 @@ import com.fanglin.personel.vo.RecruitmentOperationVO;
 import com.fanglin.personel.vo.RecruitmentVO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
-
-
 import com.fanglin.utils.Paging;
 
 @Service("RecruitmentService")
 @Transactional(readOnly = true)
-public class RecruitmentServiceImpl implements RecruitmentService{
-	
+public class RecruitmentServiceImpl implements RecruitmentService {
+
 	@Autowired
 	private RecruitmentDao recruitmentDao;
-	
+
 	@Autowired
 	private RecruitmentEducationDao recruitmentEducationDao;
-	
+
 	@Autowired
 	private RecruitmentOperationDao recruitmentOperationDao;
 
 	@Override
 	public void pageRecruitment(Paging paging, List<Filter> filters) {
-		
+
 		List<RecruitmentPO> RecruitmentPOs = recruitmentDao.pageRecruitment(paging, filters);
 		List<RecruitmentVO> RecruitmentVOs = new ArrayList<RecruitmentVO>();
 		for (RecruitmentPO recruitmentPO : RecruitmentPOs) {
-			
+
 			RecruitmentVO recruitmentVO = new RecruitmentVO();
-			
+
 			BeanUtil.copyPropertie(recruitmentPO, recruitmentVO);
-			
+
 			RecruitmentVOs.add(recruitmentVO);
 		}
-		
+
 		paging.setData(RecruitmentVOs);
-	
+
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void addRecruitment(RecruitmentVO recruitmentVO,List<RecruitmentEducationVO> recruitmentEducationVOs, List<RecruitmentOperationVO> recruitmentOperationVOs)throws FLException{
-		
+	public void addRecruitment(RecruitmentVO recruitmentVO, List<RecruitmentEducationVO> recruitmentEducationVOs, List<RecruitmentOperationVO> recruitmentOperationVOs) throws FLException {
+
 		RecruitmentPO recruitmentPO = new RecruitmentPO();
-		
+
 		BeanUtil.copyPropertie(recruitmentVO, recruitmentPO);
-		
+
 		recruitmentDao.save(recruitmentPO);
-		
+
 		if (recruitmentEducationVOs != null && recruitmentEducationVOs.size() != 0) {
 			for (RecruitmentEducationVO recruitmentEducationVO : recruitmentEducationVOs) {
-				
+
 				RecruitmentEducationPO recruitmentEducationPO = new RecruitmentEducationPO();
-				
+
 				BeanUtil.copyPropertie(recruitmentEducationVO, recruitmentEducationPO);
 				recruitmentEducationPO.setRid(recruitmentPO.getRid());
 				recruitmentEducationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
@@ -83,7 +79,7 @@ public class RecruitmentServiceImpl implements RecruitmentService{
 
 		if (recruitmentOperationVOs != null && recruitmentOperationVOs.size() != 0) {
 			for (RecruitmentOperationVO recruitmentOperationVO : recruitmentOperationVOs) {
-				
+
 				RecruitmentOperationPO recruitmentOperationPO = new RecruitmentOperationPO();
 
 				BeanUtil.copyPropertie(recruitmentOperationVO, recruitmentOperationPO);
@@ -92,13 +88,27 @@ public class RecruitmentServiceImpl implements RecruitmentService{
 				recruitmentOperationDao.save(recruitmentOperationPO);
 			}
 		}
-		
+
 	}
 
 	@Override
 	public RecruitmentVO queryRecruitmentByRid(RecruitmentVO recruitmentVO) throws FLException {
-		
+
 		RecruitmentPO recruitmentPO = recruitmentDao.queryRecruitmentByRid(recruitmentVO.getRid());
+
+		BeanUtil.copyProperties(recruitmentPO, recruitmentVO);
+
+		return recruitmentVO;
+	}
+
+	@Override
+	public RecruitmentVO checkRecruitment(RecruitmentVO recruitmentVO) throws FLException {
+
+		RecruitmentPO recruitmentPO = recruitmentDao.checkRecruitment(recruitmentVO.getIdentity(), recruitmentVO.getPhone());
+
+		if (recruitmentPO == null) {
+			throw new FLException(190020, "招聘信息不存在");
+		}
 
 		BeanUtil.copyProperties(recruitmentPO, recruitmentVO);
 
@@ -108,11 +118,23 @@ public class RecruitmentServiceImpl implements RecruitmentService{
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void updateRecruitment(RecruitmentVO recruitmentVO) throws FLException {
-		
+
 		RecruitmentPO recruitmentPO = recruitmentDao.get(recruitmentVO.getRid());
-		
+
 		BeanUtil.copyPropertie(recruitmentVO, recruitmentPO);
-		
+
+		recruitmentDao.update(recruitmentPO);
+
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateRecruitmentForAdvance(RecruitmentVO recruitmentVO) throws FLException {
+
+		RecruitmentPO recruitmentPO = recruitmentDao.get(recruitmentVO.getRid());
+
+		BeanUtil.copyPropertie(recruitmentVO, recruitmentPO);
+
 		recruitmentDao.update(recruitmentPO);
 
 	}
@@ -120,42 +142,38 @@ public class RecruitmentServiceImpl implements RecruitmentService{
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int entryRecruitment(RecruitmentVO recruitmentVO) throws FLException {
-		
+
 		RecruitmentPO recruitmentPO = recruitmentDao.get(recruitmentVO.getRid());
-		
-		if(recruitmentPO ==null){
-			throw new FLException(190005 , "人员不存在");
+
+		if (recruitmentPO == null) {
+			throw new FLException(190021, "招聘信息不存在");
 		}
-		
-		
+
 		if (recruitmentPO.getStatus() != RecruitmentPO.STATUS_INIT_INT) {
-			throw new FLException(190010, "人员不可操作");
+			throw new FLException(190022, "招聘信息状态不可操作");
 		}
-		
+
 		recruitmentPO.setStatus(RecruitmentPO.STATUS_ENTRY_INT);
-		
+
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int cancelRecruitment(RecruitmentVO recruitmentVO)throws FLException {
-		
+	public int cancelRecruitment(RecruitmentVO recruitmentVO) throws FLException {
+
 		RecruitmentPO recruitmentPO = recruitmentDao.get(recruitmentVO.getRid());
-		
-		if(recruitmentPO ==null){
-			throw new FLException(190005 , "人员不存在");
+
+		if (recruitmentPO == null) {
+			throw new FLException(190021, "招聘信息不存在");
 		}
-		
-		
-		
+
 		if (recruitmentPO.getStatus() != RecruitmentPO.STATUS_INIT_INT) {
-			throw new FLException(190010, "人员不可操作");
+			throw new FLException(190022, "招聘信息状态不可操作");
 		}
-		
+
 		recruitmentPO.setStatus(RecruitmentPO.STATUS_CANCEL_INT);
-		
-		
+
 		return 0;
 	}
 }

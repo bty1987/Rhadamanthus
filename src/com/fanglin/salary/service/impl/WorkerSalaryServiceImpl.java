@@ -236,7 +236,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 		for (WorkerSalaryVO workerSalaryVO : workerSalaryVOs) {
 
-			WorkerSalaryPO workerSalaryPO = workerSalaryDao.get(workerSalaryVO.getWsId());
+			WorkerSalaryPO workerSalaryPO = workerSalaryDao.get(workerSalaryVO.getWsid());
 
 			adoptWorkerSalary(workerSalaryPO, approval, company);
 		}
@@ -250,7 +250,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			throw new FLException(280002, "工费状态不可操作");
 		}
 
-		List<WorkerSalaryPO> workerSalaryPOs = workerSalaryDao.queryWorkerSalaryByCwsid(workerSalaryPO.getWsId());
+		List<WorkerSalaryPO> workerSalaryPOs = workerSalaryDao.queryWorkerSalaryByCwsid(workerSalaryPO.getWsid());
 
 		for (WorkerSalaryPO workerSalary : workerSalaryPOs) {
 
@@ -304,7 +304,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 		UserPO approver = userDao.queryUserByUserId(userId);
 
-		List<WorkerSalaryPO> workerSalaryPOs = workerSalaryDao.queryWorkerSalaryByCwsid(workerSalaryVO.getWsId());
+		List<WorkerSalaryPO> workerSalaryPOs = workerSalaryDao.queryWorkerSalaryByCwsid(workerSalaryVO.getWsid());
 
 		for (WorkerSalaryPO workerSalaryPO : workerSalaryPOs) {
 
@@ -364,7 +364,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 		UserPO approver = userDao.queryUserByUserId(userId);
 
-		List<WorkerSalaryPO> workerSalaryPOs = workerSalaryDao.queryWorkerSalaryByCwsid(workerSalaryVO.getWsId());
+		List<WorkerSalaryPO> workerSalaryPOs = workerSalaryDao.queryWorkerSalaryByCwsid(workerSalaryVO.getWsid());
 
 		for (WorkerSalaryPO workerSalaryPO : workerSalaryPOs) {
 
@@ -534,7 +534,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		workerSalaryVO.setCreateTime(workerSalaryPO.getCreateTime());
 		workerSalaryVO.setStatus(workerSalaryPO.getStatus());
 		workerSalaryVO.setTwotype(workerSalaryPO.getTwotype());
-		workerSalaryVO.setWsId(workerSalaryPO.getWsId());
+		workerSalaryVO.setWsid(workerSalaryPO.getWsid());
 
 		return 0;
 	}
@@ -596,11 +596,11 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		workerSalaryTarget.init(target, creater, workerSalaryVO.getComment(), company);
 		workerSalaryTarget.init(money, 0, 0);
 		workerSalaryTarget.init(WorkerSalaryPO.TYPE_ADD_INT, WorkerSalaryPO.ONETYPE_TRAN_INT, WorkerSalaryPO.TWOTYPE_MAINTAIN_INT, WorkerSalaryPO.STATUS_INIT_INT);
-		workerSalaryTarget.setCwsid(workerSalarySource.getWsId());
+		workerSalaryTarget.setCwsid(workerSalarySource.getWsid());
 
 		workerSalaryDao.save(workerSalaryTarget);
 
-		workerSalarySource.setCwsid(workerSalaryTarget.getWsId());
+		workerSalarySource.setCwsid(workerSalaryTarget.getWsid());
 
 		workerSalaryDao.update(workerSalarySource);
 
@@ -641,7 +641,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	@Transactional(rollbackFor = Exception.class)
 	public int sendWorkerSalary(WorkerSalaryVO workerSalaryVO) throws FLException {
 
-		WorkerSalaryPO workerSalaryPO = workerSalaryDao.get(workerSalaryVO.getWsId());
+		WorkerSalaryPO workerSalaryPO = workerSalaryDao.get(workerSalaryVO.getWsid());
 
 		if (workerSalaryPO == null) {
 			throw new FLException(280001, "薪资信息不存在");
@@ -662,7 +662,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 	@Transactional(rollbackFor = Exception.class)
 	public int cancelWorkerSalary(WorkerSalaryVO workerSalaryVO) throws FLException {
 
-		WorkerSalaryPO workerSalaryPO = workerSalaryDao.get(workerSalaryVO.getWsId());
+		WorkerSalaryPO workerSalaryPO = workerSalaryDao.get(workerSalaryVO.getWsid());
 
 		if (workerSalaryPO == null) {
 			throw new FLException(280001, "薪资信息不存在");
@@ -762,7 +762,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 		workerSalaryVO.setCreateTime(workerSalaryPO.getCreateTime());
 		workerSalaryVO.setStatus(workerSalaryPO.getStatus());
 		workerSalaryVO.setTwotype(workerSalaryPO.getTwotype());
-		workerSalaryVO.setWsId(workerSalaryPO.getWsId());
+		workerSalaryVO.setWsid(workerSalaryPO.getWsid());
 		workerSalaryVO.setType(workerSalaryPO.getType());
 	}
 

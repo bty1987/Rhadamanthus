@@ -13,59 +13,58 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.communion.po.BrandPO;
-import com.fanglin.personel.po.UserPO;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "complain", catalog = "customer")
 public class ComplainPO implements Serializable {
-	
+
 	private static final long serialVersionUID = 8819120114431102636L;
-	
+
 	public static final short STATUS_DISPOSE_SHORT = 1;
-	
+
 	public static final short STATUS_END_SHORT = 2;
-	
+
 	public static final short STATUS_CLOSE_SHORT = 3;
-	
+
 	public static final String COLUMN_COMPANY_STR = "company";
-	
+
 	public static final String COLUMN_CSID_STR = "csid";
-	
+
 	public static final String COLUMN_ORDERID_STR = "decoration.orderId";
 
 	private long cid;
-	
+
 	private long csid;
-		
+
 	private short type;
-	
+
 	private DecorationPO decoration;
-	
+
 	private UserPO creater;
-	
+
 	private UserPO updater;
-	
+
 	private Timestamp createTime;
-	
+
 	private Timestamp updateTime;
-	
+
 	private Timestamp finishTime;
-	
+
 	private short level;
-	
+
 	private short status;
-	
+
 	private short gladness;
-	
+
 	private int company;
-	
+
 	public ComplainPO() {
 		super();
 	}
 
-	public ComplainPO(DecorationPO decoration, BrandPO brand,
-			UserPO creater, UserPO updater) {
+	public ComplainPO(DecorationPO decoration, BrandPO brand, UserPO creater, UserPO updater) {
 		super();
 		this.decoration = decoration;
 		this.creater = creater;

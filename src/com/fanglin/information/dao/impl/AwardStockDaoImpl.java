@@ -2,6 +2,7 @@ package com.fanglin.information.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -40,8 +41,9 @@ public class AwardStockDaoImpl extends DaoImpl<AwardStockPO> implements AwardSto
 	@SuppressWarnings("unchecked")
 	public List<AwardStockPO> queryAwardStockByName(String name, int limit, int company) {
 		
-		return session().createCriteria(AwardStockPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(AwardStockPO.COLUMN_STATUS_STR, AwardStockPO.STATUS_ABLE_SHORT)).add(Restrictions.eq(AwardStockPO.COLUMN_NAME_STR, name)).setMaxResults(limit).list();
-		
+	
+		return session().createCriteria(AwardStockPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq(AwardStockPO.COLUMN_STATUS_STR, AwardStockPO.STATUS_ABLE_SHORT)).add(Restrictions.ilike(AwardStockPO.COLUMN_NAME_STR, name, MatchMode.ANYWHERE)).setMaxResults(limit).list();
+				
 	}
 
 	private void queryFilterExecute(PagingQuery<?> query, List<Filter> filters) {
