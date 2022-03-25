@@ -12,7 +12,7 @@ public interface DecorationReportDao extends Dao<DecorationReportPO> {
 
 	public List<DecorationReportPO> queryDecoration7Construction(Paging paging, List<Filter> list);
 
-	public List<DecorationAchievementPO> queryDecoration7Achievement(Paging paging, List<Filter> list, Integer company);
+	public List<DecorationAchievementPO> queryDecoration7Achievement(Paging paging, List<Filter> list, int company);
 
 	public List<Object[]> countDecorationForConstruction();
 
@@ -25,5 +25,17 @@ public interface DecorationReportDao extends Dao<DecorationReportPO> {
 	public List<Object[]> countDecorationForDeposit(short deposit);
 
 	public void truncateDecoration7Construction();
+
+	public List<Object[]> countDecorationForAchievement1(String startTime, String endTime, int company);
+
+	public List<Object[]> countDecorationForAchievement2(String startTime, String endTime, int company);
+
+	public List<Object[]> countDecorationForAchievement3(String startTime, String endTime, int company);
+
+	public List<Object[]> countDecorationForAchievement4(String startTime, String endTime, int company);
+
+	public List<Object[]> countDecorationForAchievement5(String startTime, String endTime, int company);
+
+	public List<Object[]> countDecorationForAchievement6(String startTime, String endTime, int company);
 
 }

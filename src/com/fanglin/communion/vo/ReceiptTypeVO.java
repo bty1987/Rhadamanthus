@@ -1,5 +1,7 @@
 package com.fanglin.communion.vo;
 
+import java.util.List;
+
 public class ReceiptTypeVO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 186150588872194351L;
@@ -11,7 +13,7 @@ public class ReceiptTypeVO implements java.io.Serializable {
 	private String no;
 
 	private Short type;
-	
+
 	private Short fund;
 
 	private Short status;
@@ -21,14 +23,16 @@ public class ReceiptTypeVO implements java.io.Serializable {
 	private String kino;
 
 	private String kiname;
-	
+
 	private String kibalance;
-	
+
 	private String bankno;
 
 	private String assistant;
-	
+
 	private String value;
+
+	private List<ReceiptTypeItemVO> receiptTypeItems;
 
 	public Integer getRtId() {
 		return this.rtId;
@@ -132,6 +136,14 @@ public class ReceiptTypeVO implements java.io.Serializable {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	public List<ReceiptTypeItemVO> getReceiptTypeItems() {
+		return receiptTypeItems;
+	}
+
+	public void setReceiptTypeItems(List<ReceiptTypeItemVO> receiptTypeItems) {
+		this.receiptTypeItems = receiptTypeItems;
 	}
 
 }

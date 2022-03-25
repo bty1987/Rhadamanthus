@@ -31,13 +31,11 @@ public class DecorationReportDaoImpl extends DaoImpl<DecorationReportPO> impleme
 	}
 
 	@Override
-	public List<DecorationAchievementPO> queryDecoration7Achievement(Paging paging, List<Filter> filters, Integer company) {
+	public List<DecorationAchievementPO> queryDecoration7Achievement(Paging paging, List<Filter> filters, int company) {
 
 		PagingQuery<DecorationAchievementPO> query = pagingQuery(new Paging(), DecorationAchievementPO.class);
 
-		if (company != null) {
-			query.add(query.getCriterion("company", company, "eq"));
-		}
+		query.add(query.getCriterion("company", company, "eq"));
 
 		queryFilterExcute(query, filters);
 
@@ -108,6 +106,72 @@ public class DecorationReportDaoImpl extends DaoImpl<DecorationReportPO> impleme
 		String sql = " TRUNCATE TABLE report.decoration4construction";
 		SQLQuery query = session().createSQLQuery(sql);
 		query.executeUpdate();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Object[]> countDecorationForAchievement1(String startTime, String endTime, int company) {
+		String sql = "select dr.did AS did, count(*) AS cs0, sum(d.orderTotalPrice) AS cs2, sum(orderTotalPrice - (q.managePrice / (q.manageRate + d.notSalesmanRate) * d.notSalesmanRate) - couponCut - thingCut) AS cs3 from decoration.decoration d, quotation.quotation q, communion.user du, communion.department dd, communion.department dr where d.contractTime > :startTime and d.contractTime < :endTime and d.company = :company and d.orderId = q.orderId and q.defaults = 1 and d.dsuid = du.uid and du.deptid = dd.did and dd.fdid = dr.did group by dr.did;";
+
+		SQLQuery query = (SQLQuery) session().createSQLQuery(sql.toString()).setString("startTime", startTime).setString("endTime", endTime).setInteger("company", company);
+		query.addScalar("did", StandardBasicTypes.INTEGER).addScalar("cs0", StandardBasicTypes.INTEGER).addScalar("cs2", StandardBasicTypes.LONG).addScalar("cs3", StandardBasicTypes.LONG);
+
+		return query.list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Object[]> countDecorationForAchievement2(String startTime, String endTime, int company) {
+		String sql = "select dr.did AS did, count(*) AS cs1, sum(dp.refermoney) AS cs4 from payment.decorationpayment dp, payment.decorationreceipt dr, decoration.decoration d, communion.user du, communion.department dd, communion.department dr where dp.drid = dr.drid and dr.collectTime > :startTime and dr.collectTime < :endTime and dp.company = :company and dp.orderId = d.orderId and d.dsuid = du.uid and du.deptid = dd.did and dd.fdid = dr.did group by dr.did;";
+
+		SQLQuery query = (SQLQuery) session().createSQLQuery(sql.toString()).setString("startTime", startTime).setString("endTime", endTime).setInteger("company", company);
+		query.addScalar("did", StandardBasicTypes.INTEGER).addScalar("cs1", StandardBasicTypes.INTEGER).addScalar("cs4", StandardBasicTypes.LONG);
+
+		return query.list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Object[]> countDecorationForAchievement3(String startTime, String endTime, int company) {
+		String sql = "select dr.did AS did, sum(sp.serviceMoney) AS cs5 from payment.servicepayment sp, payment.servicereceipt sr, decoration.decoration d, communion.user du, communion.department dd, communion.department dr where sp.srid = sr.srid and sr.collectTime > :startTime and sr.collectTime < :endTime and sp.company = :company and sp.orderId = d.orderId and d.dsuid = du.uid and du.deptid = dd.did and dd.fdid = dr.did group by dr.did;";
+
+		SQLQuery query = (SQLQuery) session().createSQLQuery(sql.toString()).setString("startTime", startTime).setString("endTime", endTime).setInteger("company", company);
+		query.addScalar("did", StandardBasicTypes.INTEGER).addScalar("cs5", StandardBasicTypes.LONG);
+
+		return query.list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Object[]> countDecorationForAchievement4(String startTime, String endTime, int company) {
+		String sql = "select sr.did AS did, count(*) AS cs0, sum(d.orderTotalPrice) AS cs2, sum(orderTotalPrice - (q.managePrice / (q.manageRate + d.notSalesmanRate) * d.notSalesmanRate) - couponCut - thingCut) AS cs3 from decoration.decoration d, quotation.quotation q, communion.user su, communion.department sd, communion.department sr where d.contractTime > :startTime and d.contractTime < :endTime and d.company = :company and d.orderId = q.orderId and q.defaults = 1 and d.smuid = su.uid and su.deptid = sd.did and sd.fdid = sr.did group by sr.did;";
+
+		SQLQuery query = (SQLQuery) session().createSQLQuery(sql.toString()).setString("startTime", startTime).setString("endTime", endTime).setInteger("company", company);
+		query.addScalar("did", StandardBasicTypes.INTEGER).addScalar("cs0", StandardBasicTypes.INTEGER).addScalar("cs2", StandardBasicTypes.LONG).addScalar("cs3", StandardBasicTypes.LONG);
+
+		return query.list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Object[]> countDecorationForAchievement5(String startTime, String endTime, int company) {
+		String sql = "select sr.did AS did, count(*) cs1, sum(dp.refermoney) AS cs4 from payment.decorationpayment dp, payment.decorationreceipt dr, decoration.decoration d, communion.user su, communion.department sd, communion.department sr where dp.drid = dr.drid and dr.collectTime > :startTime and dr.collectTime < :endTime and dp.company = :company and dp.orderId = d.orderId and d.smuid = su.uid and su.deptid = sd.did and sd.fdid = sr.did group by sr.did;";
+
+		SQLQuery query = (SQLQuery) session().createSQLQuery(sql.toString()).setString("startTime", startTime).setString("endTime", endTime).setInteger("company", company);
+		query.addScalar("did", StandardBasicTypes.INTEGER).addScalar("cs1", StandardBasicTypes.INTEGER).addScalar("cs4", StandardBasicTypes.LONG);
+
+		return query.list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<Object[]> countDecorationForAchievement6(String startTime, String endTime, int company) {
+		String sql = "select sr.did AS did, sum(sp.serviceMoney) AS cs5 from payment.servicepayment sp, payment.servicereceipt sr, decoration.decoration d, communion.user su, communion.department sd, communion.department sr where sp.srid = sr.srid and sr.collectTime > :startTime and sr.collectTime < :endTime and sp.company = :company and sp.orderId = d.orderId and d.smuid = su.uid and su.deptid = sd.did and sd.fdid = sr.did group by sr.did;";
+
+		SQLQuery query = (SQLQuery) session().createSQLQuery(sql.toString()).setString("startTime", startTime).setString("endTime", endTime).setInteger("company", company);
+		query.addScalar("did", StandardBasicTypes.INTEGER).addScalar("cs5", StandardBasicTypes.LONG);
+
+		return query.list();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.communion.po.DepartmentPO;
 import com.fanglin.communion.vo.DepartmentVO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
@@ -23,6 +24,7 @@ import com.fanglin.report.vo.DecorationAchievementVO;
 import com.fanglin.report.vo.DecorationReportVO;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
 
 @Service("DecorationReportService")
@@ -113,4 +115,123 @@ public class DecorationReportServiceImpl implements DecorationReportService {
 		}
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updataDecoration7Achievement(DecorationAchievementVO decorationAchievement, int company) throws Exception {
+
+		String time = String.valueOf(decorationAchievement.getYear()) + "-" + String.valueOf(decorationAchievement.getMonth());
+		String startTime = DateUtil.getDateToDateString(DateUtil.getFirstDay(DateUtil.parseDate(time, "yyyy-MM")), "yyyy-MM-dd") + " 00:00:00";
+		String endTime = DateUtil.getDateToDateString(DateUtil.getLastDay(DateUtil.parseDate(time, "yyyy-MM")), "yyyy-MM-dd") + " 23:59:59";
+
+		Map<Integer, List<Object[]>> decorationAchievementMap1 = new HashMap<Integer, List<Object[]>>();
+		decorationAchievementMap1.put(0, decorationReportDao.countDecorationForAchievement1(startTime, endTime, company));
+		decorationAchievementMap1.put(1, decorationReportDao.countDecorationForAchievement2(startTime, endTime, company));
+		decorationAchievementMap1.put(2, decorationReportDao.countDecorationForAchievement3(startTime, endTime, company));
+
+		Map<Integer, DecorationAchievementPO> decorationAchievementPOs1 = new HashMap<Integer, DecorationAchievementPO>();
+
+		for (Map.Entry<Integer, List<Object[]>> entry : decorationAchievementMap1.entrySet()) {
+			if (entry.getKey() == 0) {
+
+				for (int i = 0; i < entry.getValue().size(); i++) {
+
+					Integer did = (Integer) entry.getValue().get(i)[0];
+
+					decorationAchievementPOs1.put(did, new DecorationAchievementPO(new DepartmentPO()));
+
+					DecorationAchievementPO decorationAchievementPO = decorationAchievementPOs1.get(did);
+
+					decorationAchievementPO.setDepartment(new DepartmentPO(did));
+					decorationAchievementPO.setCs0((Integer) entry.getValue().get(i)[1]);// 签单数
+					decorationAchievementPO.setCs2((Long) entry.getValue().get(i)[2]);// 签单额
+					decorationAchievementPO.setCs3((Long) entry.getValue().get(i)[3]);// 净业绩
+
+				}
+			} else if (entry.getKey() == 1) {
+				for (int i = 0; i < entry.getValue().size(); i++) {
+
+					Integer did = (Integer) entry.getValue().get(i)[0];
+
+					if (!decorationAchievementPOs1.containsKey(did)) {
+						decorationAchievementPOs1.put(did, new DecorationAchievementPO(new DepartmentPO()));
+					}
+					DecorationAchievementPO decorationAchievementPO = decorationAchievementPOs1.get(did);
+
+					decorationAchievementPO.setCs1((Integer) entry.getValue().get(i)[1]);// 设计数
+					decorationAchievementPO.setCs4((Long) entry.getValue().get(i)[2]);// 设计额
+
+				}
+
+			} else if (entry.getKey() == 2) {
+				for (int i = 0; i < entry.getValue().size(); i++) {
+
+					Integer did = (Integer) entry.getValue().get(i)[0];
+
+					if (!decorationAchievementPOs1.containsKey(did)) {
+						decorationAchievementPOs1.put(did, new DecorationAchievementPO(new DepartmentPO()));
+					}
+					DecorationAchievementPO decorationAchievementPO = decorationAchievementPOs1.get(did);
+
+					decorationAchievementPO.setCs5((Long) entry.getValue().get(i)[1]);// 服务费
+
+				}
+			}
+		}
+
+		Map<Integer, List<Object[]>> decorationAchievementMap2 = new HashMap<Integer, List<Object[]>>();
+		decorationAchievementMap2.put(0, decorationReportDao.countDecorationForAchievement4(startTime, endTime, company));
+		decorationAchievementMap2.put(1, decorationReportDao.countDecorationForAchievement5(startTime, endTime, company));
+		decorationAchievementMap2.put(2, decorationReportDao.countDecorationForAchievement6(startTime, endTime, company));
+
+		Map<Integer, DecorationAchievementPO> decorationAchievementPOs2 = new HashMap<Integer, DecorationAchievementPO>();
+
+		for (Map.Entry<Integer, List<Object[]>> entry : decorationAchievementMap2.entrySet()) {
+			if (entry.getKey() == 0) {
+
+				for (int i = 0; i < entry.getValue().size(); i++) {
+
+					Integer did = (Integer) entry.getValue().get(i)[0];
+
+					decorationAchievementPOs2.put(did, new DecorationAchievementPO(new DepartmentPO()));
+
+					DecorationAchievementPO decorationAchievementPO = decorationAchievementPOs2.get(did);
+
+					decorationAchievementPO.setDepartment(new DepartmentPO(did));
+					decorationAchievementPO.setCs0((Integer) entry.getValue().get(i)[1]);// 签单数
+					decorationAchievementPO.setCs2((Long) entry.getValue().get(i)[2]);// 签单额
+					decorationAchievementPO.setCs3((Long) entry.getValue().get(i)[3]);// 净业绩
+
+				}
+			} else if (entry.getKey() == 1) {
+				for (int i = 0; i < entry.getValue().size(); i++) {
+
+					Integer did = (Integer) entry.getValue().get(i)[0];
+
+					if (!decorationAchievementPOs2.containsKey(did)) {
+						decorationAchievementPOs2.put(did, new DecorationAchievementPO(new DepartmentPO()));
+					}
+					DecorationAchievementPO decorationAchievementPO = decorationAchievementPOs2.get(did);
+
+					decorationAchievementPO.setCs1((Integer) entry.getValue().get(i)[1]);// 设计数
+					decorationAchievementPO.setCs4((Long) entry.getValue().get(i)[2]);// 设计额
+
+				}
+
+			} else if (entry.getKey() == 2) {
+				for (int i = 0; i < entry.getValue().size(); i++) {
+
+					Integer did = (Integer) entry.getValue().get(i)[0];
+
+					if (!decorationAchievementPOs2.containsKey(did)) {
+						decorationAchievementPOs2.put(did, new DecorationAchievementPO(new DepartmentPO()));
+					}
+					DecorationAchievementPO decorationAchievementPO = decorationAchievementPOs2.get(did);
+
+					decorationAchievementPO.setCs5((Long) entry.getValue().get(i)[1]);// 服务费
+
+				}
+			}
+		}
+
+	}
 }
