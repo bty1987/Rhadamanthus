@@ -55,6 +55,8 @@ $.extend(api, {decoration: {
         deleteDecorationActivity: {url: "deleteDecorationActivity.do"},
         lockDecorationActivity: {url: "lockDecorationActivity.do"},
         unlockDecorationActivity: {url: "unlockDecorationActivity.do"},
+        sendDecorationActivityItem: {url: "sendDecorationActivityItem.do"},
+        affirmDecorationActivityItem: {url: "affirmDecorationActivityItem.do"},
         
         addDecorationActivityItem: {
             url: "addDecorationActivityItem.do",

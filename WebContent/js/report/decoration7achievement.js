@@ -1,5 +1,25 @@
 $(function() {
 
+    var decoration7Achievement = {
+
+        daid: null,
+        btns: {
+            createBalanceSalesBtn: com.focusPage("#updateDataBtn").on("click", saveData),
+        },
+
+        modals: {
+            updateDataModal: com.focusPage("#updateDataModal"),
+
+        },
+
+        items: {
+            year: com.focusPage("#yearDate"),
+            month: com.focusPage("#monthDate"),
+        },
+
+        current: "",
+    };
+
     var searcher = new Searcher();
 
     searcher.base("condList", "decoration7Achievement", "resultList", api.report.queryDecoration7Achievement);
@@ -74,7 +94,7 @@ $(function() {
         name: "工程总净业绩",
         prop: function(v) {
 
-            return (v.cs2 + v.cs3 + v.cs4 + v.cs5);
+            return (v.cs3 + v.cs4 + v.cs5);
         },
         clazz: "grey"
     }, ];
@@ -86,7 +106,33 @@ $(function() {
     searcher.render();
 
     com.datetime(com.focusPage("[name='report-year']"), "year");
-
     com.datetime(com.focusPage("[name='report-month']"), "month");
+    com.datetime(com.focusPage("#yearDate"), "year");
+    com.datetime(com.focusPage("#monthDate"), "month");
+
+    com.focusPage("#updateData").click(function() {
+
+        com.focusPage("#yearDate").val();
+        com.focusPage("#monthDate").val();
+        decoration7Achievement.modals.updateDataModal.modal("show");
+    });
+
+    function saveData() {
+
+        if (com.validate('updateDataModal'))
+            return false;
+
+        var options = {
+            "decorationAchievement.year": decoration7Achievement.items.year.val(),
+            "decorationAchievement.month": decoration7Achievement.items.month.val(),
+        };
+
+        com.post(api.report.updataDecoration7Achievement, options, function() {
+
+            searcher.doSearch();
+            com.showAlert(com.info, "更新成功");
+        });
+        decoration7Achievement.modals.updateDataModal.modal("hide");
+    }
 
 });

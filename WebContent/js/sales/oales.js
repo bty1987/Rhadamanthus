@@ -186,7 +186,7 @@ jQuery(function($) {
         }
     }, ];
 
-    searcher.toble(lineprops, linebtns).render();
+    searcher.line("no", lineprops, linebtns).render();
 
     com.focusPage('#addOales', '#pagenation').on("click", function() {
 

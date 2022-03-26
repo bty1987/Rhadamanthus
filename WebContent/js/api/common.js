@@ -29,6 +29,10 @@ $.extend(api, {common: {
     addReceiptType: {url: "addReceiptType.do",server:'communion'},
     updateReceiptType: {url: "updateReceiptType.do",server:'communion'},
     updateReceiptTypeForStatus: {url: "updateReceiptTypeForStatus.do",server:'communion'},
+	
+	queryReceiptTypeItem: {url: "queryReceiptTypeItem.do"},
+	addReceiptTypeItem: {url: "addReceiptTypeItem.do", server: 'communion'},
+	deleteReceiptTypeItem: {url: "deleteReceiptTypeItem.do", server: 'communion'},
 
     updateAuthCode:{url: "updateAuthCode.do",server:'communion'},
     
