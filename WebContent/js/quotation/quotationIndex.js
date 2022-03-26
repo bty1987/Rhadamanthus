@@ -93,6 +93,7 @@ $(function() {
                 "quotation.name": decorationQuotation.quotationItems.name.val(),
                 "quotation.style": decorationQuotation.quotationItems.style.val(),
                 "quotation.content": decorationQuotation.quotationItems.content.val(),
+				"quotation.atttype": decorationQuotation.quotationItems.type.val()
             };
 
             com.post(api.quotation.addQuotation, options, function(res) {

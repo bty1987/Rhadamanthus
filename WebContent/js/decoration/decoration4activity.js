@@ -593,6 +593,8 @@ jQuery(function ($) {
         decorationActivity.stateTypes = res.receiveType.split("key", "value");
         decorationActivity.states = res.activityItemType.split("key", "value");
         decorationActivity.isStatus = res.isStatus.split("key", "value");
+        decorationActivity.isAffirms = res.isAffirms.split("key", "value");
+
     }, null, false);
 
     com.post(api.ds.information, {}, function (res) {
@@ -726,4 +728,32 @@ jQuery(function ($) {
 			});
 		});
 	}
+	
+	// 发送按钮
+	com.focusPage('#btnNotice').click(function() {
+
+		var $inputs = com.focusPage('input[name="daiIds"]:checked');
+		var daiId = $inputs.val();
+		$.each($inputs, function(i, v) {
+			var $v = $(v);
+			if ($v.val()) {
+				if ($inputs.val() != $v.val()) {
+					daiId += "," + $v.val();
+				}
+			}
+		});
+
+		var options = {
+			"decorationActivityItem.content" : daiId,
+			"decorationActivityItem.orderId": ActivityOrderId
+		};
+
+		com.showConfirm("是否发送查看通知", function() {
+			com.post(api.decoration.sendDecorationActivityItem, options, function(res) {
+				com.showAlert(com.info, "操作成功");
+			});
+
+		});
+
+	});
 });

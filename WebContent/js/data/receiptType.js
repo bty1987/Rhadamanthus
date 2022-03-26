@@ -1,52 +1,76 @@
 $(function ($) {
 
     var receiptType = {
-
-        saveBtn: null,
-        cancelBtn: null,
-        modal: null,
-        items: {},
+        modal: {
+            receiptTypeModal: com.focusPage("#receiptTypeModal"),
+            receiptTypeItemModal: com.focusPage("#receiptTypeItemModal")
+        },
+        items: {
+            rtId: com.focusPage("#rtId"),
+            name: com.focusPage("#name"),
+            type: com.focusPage("#type"),
+            fund: com.focusPage("#fund"),
+            grade: com.focusPage("#grade"),
+            kino: com.focusPage("#kino"),
+            kiname: com.focusPage("#kiname"),
+            kibalance: com.focusPage("#kibalance"),
+            bankno: com.focusPage("#bankno"),
+            assistant: com.focusPage("#assistant"),
+            value: com.focusPage("#value")
+        },
+        receiptTypeItems: {
+            itemtype: com.focusPage("#itemtype", "#receiptTypeItemModal"),
+            paytype: com.focusPage("#paytype", "#receiptTypeItemModal"),
+            itemName: com.focusPage("#itemName", "#receiptTypeItemModal")
+        },
+        btns: {
+            saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+            save: com.focusPage("#save").on("click", saveReceiptTypeItem)
+        },
         editFlg: false,
         cleanItemsitems:{},
         typeArray: ["现金", "刷卡", "银行", "对公账户", "券"],
-        funds: {}
+        funds: {},
+        currentRtid: null,
+        currentNo: null,
+        paymentTypes: {},
+        paytypes: {}
     };
-
-    $.extend(com.validate(),receiptType.validator);
-
-    receiptType.modal = com.focusPage("#receiptTypeModal");
-    receiptType.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
-    receiptType.items.rtId = com.focusPage("#rtId");
-    receiptType.items.name = com.focusPage("#name");
-    receiptType.items.type = com.focusPage("#type");
-    receiptType.items.fund = com.focusPage("#fund");
-    receiptType.items.grade = com.focusPage("#grade");
-    receiptType.items.kino = com.focusPage("#kino");
-    receiptType.items.kiname = com.focusPage("#kiname");
-    receiptType.items.kibalance = com.focusPage("#kibalance");
-    receiptType.items.bankno = com.focusPage("#bankno");
-    receiptType.items.assistant = com.focusPage("#assistant");
-    receiptType.items.value = com.focusPage("#value");
 
     com.post(api.ds.data, {}, function(res){
         receiptType.items.grade.bindData(res.grade, "key", "value");
         receiptType.items.fund.bindData(res.receiptTypeFund, "key", "value");
+        receiptType.receiptTypeItems.itemtype.bindData(res.paymentType, "key", "value");
+        receiptType.receiptTypeItems.paytype.bindData(res.paytype, "key", "value");
 
-        $.each(res.receiptTypeFund, function (i,v) {
-            receiptType.funds[v.key] = v.value;
-        });
+        receiptType.funds = res.receiptTypeFund.split('key', 'value');
+        receiptType.paymentTypes = res.paymentType.split('key', 'value');
+        receiptType.paytypes = res.paytype.split('key', 'value');
     }, null, false);
 
-    receiptType.modal.on('hide.bs.modal', function (e) {
+    receiptType.modal.receiptTypeModal.on('hide.bs.modal', function (e) {
         com.clearValidator();
         com.cleanItems(receiptType.items);
         com.focusPage("#banknoDiv").css("display", "none");
+    });
+
+    receiptType.modal.receiptTypeItemModal.on('hide.bs.modal', function (e) {
+        com.clearValidator();
+        com.cleanItems(receiptType.receiptTypeItems);
+        receiptType.currentRtid = null;
+        receiptType.currentNo = null;
+        com.focusPage("#itemtypeDiv").css("display", "block");
     });
 
     receiptType.items.type.on("change", function(){
         var typeVal =  receiptType.items.type.val();
 
         (['2', '3'].contains(typeVal)) ? com.focusPage("#banknoDiv").css("display", "block") : com.focusPage("#banknoDiv").css("display", "none");
+    });
+
+    receiptType.receiptTypeItems.paytype.on("change", function(){
+        var paytype = receiptType.receiptTypeItems.paytype.val();
+        paytype == 0 ? com.focusPage("#itemtypeDiv").css("display", "block") : com.focusPage("#itemtypeDiv").css("display", "none");
     });
 
     var displayFunc = (function () {
@@ -69,6 +93,7 @@ $(function ($) {
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
             var $btnuptl = $('<a></a>').addClass('btn btn-minier btn-yellow').html('修改');
+            var $btnAdd = $('<a></a>').addClass('btn btn-minier btn-success').html('项目');
 
             switch (v.type){
                 case 1: v.type = "现金"; break;
@@ -91,6 +116,12 @@ $(function ($) {
                 ["POS值:", com.checkNull(v.value, "无"), "grey"]
             ];
 
+            if (v.receiptTypeItems != null && v.receiptTypeItems.length > 0) {
+                $.each(v.receiptTypeItems, function (i, v) {
+                    propertyArr.push([(!v.paytype ? receiptType.paymentTypes[v.type] : "") + receiptType.paytypes[v.paytype] + ":", v.name, "grey"])
+                });
+            }
+
             $.each(propertyArr, function (index, value) {
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
@@ -104,7 +135,7 @@ $(function ($) {
 
             $btnStatus.append($statusSwitch).append($span);
 
-            $divBtnWrap.append($btnuptl).append($btnStatus).appendTo($h3);
+            $divBtnWrap.append($btnuptl).append($btnAdd).append($btnStatus).appendTo($h3);
             $liLine.append($h3).append($ulProperty);
 
 
@@ -131,7 +162,13 @@ $(function ($) {
                     com.focusPage("#banknoDiv").css("display", "block");
                 }
 
-                receiptType.modal.modal("show")
+                receiptType.modal.receiptTypeModal.modal("show");
+            });
+
+            $btnAdd.click(function () {
+                receiptType.currentRtid = v.rtId;
+                receiptType.currentNo = v.no;
+                receiptType.modal.receiptTypeItemModal.modal("show");
             });
 
             return $liLine;
@@ -161,7 +198,7 @@ $(function ($) {
 
         $adda.click(function () {
             editFlg = true;
-            receiptType.modal.modal("show")
+            receiptType.modal.receiptTypeModal.modal("show")
         });
         return [$adda];
     });
@@ -187,14 +224,14 @@ $(function ($) {
             com.post(api.common.addReceiptType, options, function () {
                 searcher.doSearch();
                 com.showAlert(com.info, "添加成功");
-                receiptType.modal.modal("hide")
+                receiptType.modal.receiptTypeModal.modal("hide")
             })
         }else{
             options["receiptType.rtId"] = receiptType.items.rtId.val();
             com.post(api.common.updateReceiptType, options, function () {
                 searcher.doSearch();
                 com.showAlert(com.info, "修改成功");
-                receiptType.modal.modal("hide")
+                receiptType.modal.receiptTypeModal.modal("hide")
             })
         }
     }
@@ -208,6 +245,27 @@ $(function ($) {
         }, function () {
             failcallBack && failcallBack();
         });
+    }
+
+    function saveReceiptTypeItem () {
+        var type = receiptType.receiptTypeItems.paytype.val() == 0 ? receiptType.receiptTypeItems.itemtype.val() : "-1";
+
+        var options = {
+            "receiptTypeItem.rtid": receiptType.currentRtid,
+            "receiptTypeItem.no": receiptType.currentNo,
+            "receiptTypeItem.name": receiptType.receiptTypeItems.itemName.val().replace(/\s+/g, ""),
+            "receiptTypeItem.type": type,
+            "receiptTypeItem.paytype": receiptType.receiptTypeItems.paytype.val()
+        };
+
+        com.post(api.common.addReceiptTypeItem, options, function(res){
+            if (res.errorMsg != null) {
+                com.showAlert(com.warning, res.errorMsg);
+                return;
+            }
+            searcher.doSearch();
+            receiptType.modal.receiptTypeItemModal.modal("hide");
+        })
     }
 
 });

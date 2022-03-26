@@ -141,6 +141,10 @@ $.extend(api, {
         updataDecoration7Construction: {
             url: "updataDecoration7Construction.do",
             demo: true
+        },
+        updataDecoration7Achievement: {
+            url: "updataDecoration7Achievement.do",
+            demo: true
         }
 
     }

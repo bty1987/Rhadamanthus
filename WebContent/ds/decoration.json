@@ -120,6 +120,9 @@
     ],"balanceStatus":[
         {"key":"0", "value":"初始"},
         {"key":"1", "value":"结算"}
+    ],"isAffirms":[
+        {"key":"0", "value":"未确认"},
+        {"key":"1", "value":"客户确认"}
     ],
 
     "errorCode": 0,
