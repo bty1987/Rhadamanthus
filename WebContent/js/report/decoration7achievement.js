@@ -20,11 +20,20 @@ $(function() {
         current: "",
     };
 
+    // 清空弹窗显示
+    decoration7Achievement.modals.updateDataModal.on("hide.bs.modal", function() {
+
+        com.clearValidator();
+        com.cleanItems(decoration7Achievement.items);
+    });
+
     var searcher = new Searcher();
 
     searcher.base("condList", "decoration7Achievement", "resultList", api.report.queryDecoration7Achievement);
 
     searcher.condition(["report-year", "report-month"]);
+
+    searcher.history("decoration7AchievementPostData");
 
     searcher.button([{
         id: "updateData",

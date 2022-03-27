@@ -7,6 +7,8 @@ var QuotationDetail = (function(){
 		
 		normnumtotal : 0,
 		storenumtotal : 0,
+		trannum: 0,
+		sayary: 0,
 		
 		quoModals : {},
 		settingBtns : {},
@@ -31,6 +33,10 @@ var QuotationDetail = (function(){
 				$btnNormpack: com.focusPage('#packageitem').on('click', function(){
 					that.quoModals.$domainTempletModal.modal("show");
 				}),
+				//附加项
+				$btnAddtionitem: com.focusPage('#addtionitem').on('click', function(){
+					that.quoNormrices.$domainNormriceModal.modal("show");
+				}),
 				//展开
 				$btnSpread :com.focusPage('#openFunctionAreasBtn').click(function(){
 				    com.focusPage('.icon-chevron-down').parent().trigger('click');
@@ -52,6 +58,12 @@ var QuotationDetail = (function(){
 					com.focusPage('input[name="quotempl"]:checked').removeAttr('checked');
 				})
 			},
+			that.quoNormrices = {
+				$domainNormriceModal :  com.focusPage("#quotationNormoodItemModal").on("show.bs.modal", function(a) {
+					com.focusPage('input[name="quoteparam"]').val('');
+					com.focusPage('input[name="quotempl"]:checked').removeAttr('checked');
+				})
+			},
 			//初始化功能区添加
 			com.post(api.data.queryNormpack,{} , function(data){
 				data.normpacks.length && $.each(data.normpacks, function(i, v){
@@ -61,10 +73,31 @@ var QuotationDetail = (function(){
 					}
 				});
 			});
+			
+			// com.post(api.data.queryNormadd,{} , function(data){
+			// 	// data.normpacks.length && $.each(data.normpacks, function(i, v){
+			// 	// 	if(v.type != 0) {
+			// 	// 		var $dtempl = painter.createDomainTemplete(v);
+			// 	// 		that.quoModals.$domainNormriceModal.find('.modal-body').append($dtempl);
+			// 	// 	}
+			// 	// });
+			// });
 		},
 		calculateQuoFees: function(func){
 			var normnumtotal = 0, storenumtotal = 0;
 			com.post(api.quotation.queryQuotationNormoodItem, {"quotationNormoodItem.qid" : quo.quotationId}, function(res){
+				$.each(res.quotationNormoodItems, function(i, v){
+					normnumtotal = utils.accAdd(normnumtotal, v.normnum);
+					storenumtotal = utils.accAdd(storenumtotal,v.storenum);
+				})
+			}, null, false);
+			com.focusPage('#normnumtotal').text(normnumtotal);
+			com.focusPage('#storenumtotal').text(storenumtotal);
+		},
+		
+		normriceQuoFees: function(func){
+			var normnumtotal = 0, storenumtotal = 0;
+			com.post(api.quotation.queryQuotationNormriceItem, {"quotationNormriceItem.qid" : quo.quotationId}, function(res){
 				$.each(res.quotationNormoodItems, function(i, v){
 					normnumtotal = utils.accAdd(normnumtotal, v.normnum);
 					storenumtotal = utils.accAdd(storenumtotal,v.storenum);
@@ -128,6 +161,55 @@ var QuotationDetail = (function(){
             
 			return $domain;
 		},
+		
+		//创建附加项
+		nomricedomain: function(dv){
+
+			var that = this;
+			var $domain,
+			    $dhead, $dname, $dtoolbar, $btns = {},
+			    $dbody, $dbodyInner, $list, $input;
+			
+			var _btnSet = {
+			    "$btnFold": ["折叠", '<i class="bigger-125 icon-chevron-up" functionindexdata="1" id="oneChevron_1"></i>', true]
+			};
+			
+			$domain = $('<div></div>').addClass('widget-box transparent').css({"margin-bottom" : "20px"});
+			
+			$dhead = $('<div></div>').addClass('widget-header');
+			$dname = $('<h5></h5>').append($('<em></em>').text(dv.type == 0 ? '' : dv.functionAreaOrder)).append('  ').append($('<strong></strong>').html(dv.name));
+			$dtoolbar = $('<div></div>').addClass('widget-toolbar no-border');
+			
+			$.each(_btnSet, function(k, v){
+			    $btns[k] = $('<a></a>').attr({"href" : "javascript:void(0)",}).css({"padding-left": "5px"}).append(v[1]).appendTo($dtoolbar).mouseenter(function(){
+			        com.showTip(this, v[0], "top");
+			    });
+			});
+			
+			$btns["$btnFold"].attr({"data-action" : "collapse"});
+			
+			$dbody = $('<div></div>').addClass('widget-body');
+			$dbodyInner = $('<div></div>').addClass('widget-body-inner');
+			$list = $('<ul></ul>').addClass('fl-quo-list').attr("id", "quotationNormoodItem" + dv.type);
+			$input = $('<div></div>').addClass('fl-quo-input hide').append($('<input type="text">').addClass('v_required v_float').attr('maxlength','16'));
+			
+			$dhead.append($dname).append($dtoolbar);
+			
+			$dbodyInner.append($input).append($list).appendTo($dbody);
+			
+			$domain.append($dhead).append($dbody);
+
+			if(dv.quotationFunctionAreaItems1.length) {
+			    
+			    var _items = dv.quotationFunctionAreaItems1;
+			
+			    $.each(_items, function (i, v) {
+			        var $item = that.normriceQuote(i + 1, v).appendTo($list);
+			    });
+			}
+			
+			return $domain;
+		},
 		//创建添加功能区
 		createDomainTemplete : function(v){
 			var $div = $('<div></div>').addClass('col-xs-12');
@@ -137,6 +219,7 @@ var QuotationDetail = (function(){
 			return $div;
 		},
 		
+		//打包项
 		createQuote : function(linenum, qv){
 
             var $item = $('<li></li>').addClass('fl-quo-item').prop('title', qv.content);
@@ -184,7 +267,6 @@ var QuotationDetail = (function(){
 			$btnDel = $('<a></a>').attr({"href" : "javascript:void(0)","type" : "checkbox", "role" : "checkbox", "name" : "deleteItems", "data-qngiid" : qv.qngiid ? qv.qngiid : ""}).val(qv.qngiid).css({"padding-left": "5px"}).append('<i class="bigger-125 icon-remove pink"></i>');
 			
 			$btnCellWrap.append($inputLable).append($btnDel);
-			
             //删除预签项
             $btnDel.click(function(e){
                 quote.deleteQuote($item);
@@ -192,7 +274,64 @@ var QuotationDetail = (function(){
             });
             return $item;
         },
-	}
+		
+		//附加项
+		normriceQuote : function(linenum, qv){
+			var $item = $('<li></li>').addClass('fl-quo-item').prop('title', qv.qnpiid);
+			
+			var _typeName = "-";
+			
+			if(qv.normtype == 0){
+			    _typeName = "材料";
+			}
+			
+			if(qv.normtype == 1){ // 工费
+			    _typeName = "打包"
+			}
+			
+			var _lineSet = [
+			    ["line", linenum,["data-areaType",qv.areaType]], // 编号
+				["qnpiid", qv.qnpiid,["data-qnpiid",qv.qnpiid]], // id
+				// ["formula",qv.normnum ? qv.normnum : "0"], // 公式
+				// ["num", qv.storenum,["data-subtype",qv.subtype]], // 数量
+				["name", qv.constructionNode.name,["data-name",qv.constructionNode.name]], // 施工节点
+				// ["type", _typeName , ["data-type", qv.type]],
+				// ["unit", qv.normunit], // 单位
+				// ["worktype", qv.storeunit], // 工种
+			];
+			
+			var $btnCell, $btnCellWrap, $inputLable, $input, $ispan, $btnDel;
+			
+			$.each(_lineSet, function(i, v){
+			    var $cell = $('<div></div>').addClass('cell ' + v[0]);
+			    var $cellWrap = $('<div></div>').addClass('cell-wrap').html(v[1]);
+			    if(v[2]){
+			        $cell.attr(v[2][0], v[2][1]);
+			    }
+			    $cell.append($cellWrap).appendTo($item);
+			});
+			
+			$btnCell = $('<div></div>').addClass('cell btns');
+			$btnCellWrap = $('<div></div>').addClass('cell-wrap');
+			$inputLable = $('<label></label>');
+			$ispan = $('<span></span>').addClass('lbl align-top');
+			
+			$inputLable.append($ispan);
+			$btnCellWrap.appendTo($btnCell);
+			$item.append($btnCell);
+			
+			$btnDel = $('<a></a>').attr({"href" : "javascript:void(0)","type" : "checkbox", "role" : "checkbox", "name" : "deleteItems", "data-qnpiid" : qv.qnpiid ? qv.qnpiid : ""}).val(qv.qnpiid).css({"padding-left": "5px"}).append('<i class="bigger-125 icon-remove pink"></i>');
+			
+			$btnCellWrap.append($inputLable).append($btnDel);
+			
+			//删除附加项
+			$btnDel.click(function(e){
+			    quote.deleteNormriceQuote($item);
+			    return false;
+			});
+			return $item;
+		}
+	};
 	
 	var domain = {
 		noewEditDomain : null,
@@ -215,6 +354,7 @@ var QuotationDetail = (function(){
 	var quote = {
 		
 		quoteRecord : [],
+		//增加方法
 		addquotationNormood : function(){
 		    
 			var npids = com.focusPage("[name='quotempl']:checked");
@@ -253,7 +393,6 @@ var QuotationDetail = (function(){
 		    
 		    domain.nowEditDomain = $quote.parents('.widget-box');
 		    domain.nowEditDomain.find('.fl-quo-input').insertAfter(domain.nowEditDomain.find('.fl-quo-list')).addClass('hide');
-		    
 		    if(!_qngiid){
 				$quote.remove();
 		    }else{
@@ -264,6 +403,27 @@ var QuotationDetail = (function(){
 		        }, null, false);
 				quo.calculateQuoFees();
 		    }
+		},
+		//删除附加项
+		deleteNormriceQuote : function($quote){
+
+			var that = this;
+			var _qnpiid = $quote.find('a[type="checkbox"]').val();
+			var _params = {};
+			
+			domain.nowEditDomain = $quote.parents('.widget-box');
+			domain.nowEditDomain.find('.fl-quo-input').insertAfter(domain.nowEditDomain.find('.fl-quo-list')).addClass('hide');
+
+			if(!_qnpiid){
+				$quote.remove();
+			}else{
+				$quote.remove();
+				_params = $.extend({"quotationNormriceItem.qnpiid": _qnpiid}, quo.basicParams);
+			    com.post(api.quotation.deleteQuotationNormriceItem, _params, function(res){
+					
+			    }, null, false);
+				quo.normriceQuoFees();
+			}
 		},
 		init : function(){
 			
@@ -292,9 +452,10 @@ var QuotationDetail = (function(){
 			var quotationFunctionAreas = [{
 				"pfaid": 1, "name": "材料", "functionAreaOrder": 1, "functionAreaType": 0, "type": 0, total: 0, index: 1,
 				"quotationFunctionAreaItems":[],
-			}, {
-				"pfaid": 2, "name": "工费", "functionAreaOrder": 2, "functionAreaType": 0, "type": 1, total: 0, index: 2,
-				"quotationFunctionAreaItems":[],
+			}];
+			var quotationFunctionAreasa = [{
+				"pfaid": 2, "name": "工费", "functionAreaOrder": 1, "functionAreaType": 0, "type": 0, total: 0, index: 1,
+				"quotationFunctionAreaItems1":[],
 			}];
 			
 			com.post(api.quotation.queryQuotationNormoodItem, {"quotationNormoodItem.qid" : quo.quotationId}, function(res){
@@ -304,15 +465,26 @@ var QuotationDetail = (function(){
 					quotationFunctionAreas[0].quotationFunctionAreaItems.push(v);
 				})
 			}, null, false);
-			
+			com.post(api.quotation.queryQuotationNormriceItem, {"quotationNormriceItem.qid" : quo.quotationId}, function(res){
+				$.each(res.quotationNormriceItems, function(i, v){
+					// quo.trannum = utils.accAdd(quo.trannum, v.trannum);
+					// quo.salary = utils.accAdd(quo.salary,v.salary);
+					quotationFunctionAreasa[0].quotationFunctionAreaItems1.push(v);
+				})
+			}, null, false);
+
 			$.each(quotationFunctionAreas, function(i, v){
-				
-                var $domain = painter.createdomain(v).appendTo(com.focusPage('#functionAreaDetailList'));
-				
+                $domain = painter.createdomain(v).appendTo(com.focusPage('#functionAreaDetailList'));
             });
-			
+			$.each(quotationFunctionAreasa, function(i, v){
+			    $domain = painter.nomricedomain(v).appendTo(com.focusPage('#functionAreaDetailList'));
+			});
+
 			com.focusPage('#normnumtotal').text(quo.normnumtotal);
 			com.focusPage('#storenumtotal').text(quo.storenumtotal);
+			
+			// com.focusPage('#trannumtotal').text(quo.trannum);
+			// com.focusPage('#salarytotal').text(quo.salary);
 			
 			quo.init();
 			domain.init();
