@@ -6,7 +6,7 @@ import com.fanglin.data.common.vo.ConstructionNodeVO;
 
 public class QuotationNormriceItemVO implements Serializable {
 
-	private static final long serialVersionUID = 4349751566782112040L;
+	private static final long serialVersionUID = 6448253042894853011L;
 
 	private Long qnpiid;
 
@@ -14,9 +14,9 @@ public class QuotationNormriceItemVO implements Serializable {
 
 	private Long sid;
 
-	private Long areaId;
+	private Long areald;
 
-	private Long quoteId;
+	private Long quoteld;
 
 	private Long qiid;
 
@@ -28,11 +28,20 @@ public class QuotationNormriceItemVO implements Serializable {
 
 	private ConstructionNodeVO constructionNode;
 
-	private String nuit;
+	private String unit;
 
 	private Integer trannum;
 
 	private Integer salary;
+
+	public QuotationNormriceItemVO() {
+		super();
+	}
+
+	public QuotationNormriceItemVO(ConstructionNodeVO constructionNode) {
+		super();
+		this.constructionNode = constructionNode;
+	}
 
 	public Long getQnpiid() {
 		return qnpiid;
@@ -58,20 +67,20 @@ public class QuotationNormriceItemVO implements Serializable {
 		this.sid = sid;
 	}
 
-	public Long getAreaId() {
-		return areaId;
+	public Long getAreald() {
+		return areald;
 	}
 
-	public void setAreaId(Long areaId) {
-		this.areaId = areaId;
+	public void setAreald(Long areald) {
+		this.areald = areald;
 	}
 
-	public Long getQuoteId() {
-		return quoteId;
+	public Long getQuoteld() {
+		return quoteld;
 	}
 
-	public void setQuoteId(Long quoteId) {
-		this.quoteId = quoteId;
+	public void setQuoteld(Long quoteld) {
+		this.quoteld = quoteld;
 	}
 
 	public Long getQiid() {
@@ -114,12 +123,12 @@ public class QuotationNormriceItemVO implements Serializable {
 		this.constructionNode = constructionNode;
 	}
 
-	public String getNuit() {
-		return nuit;
+	public String getUnit() {
+		return unit;
 	}
 
-	public void setNuit(String nuit) {
-		this.nuit = nuit;
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 
 	public Integer getTrannum() {
@@ -137,4 +146,5 @@ public class QuotationNormriceItemVO implements Serializable {
 	public void setSalary(Integer salary) {
 		this.salary = salary;
 	}
+
 }

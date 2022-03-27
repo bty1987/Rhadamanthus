@@ -73,6 +73,14 @@ public class DecorationCommonAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryDecorationActivityItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryDecorationActivityItem() {
+
+		decorationActivityItems = decorationActivityItemService.queryDecorationActivityItemByOrderId(decoration);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "confirmDecorationInfo", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
 	public String confirmDecorationInfo() throws FLException {
 
