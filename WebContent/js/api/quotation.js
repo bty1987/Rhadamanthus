@@ -1116,6 +1116,20 @@ $.extend(api, {
             url: "deleteQuotationNormoodItem.do",
             intercept: true
         },
+		
+		queryQuotationNormriceItem: {
+            url: "queryQuotationNormriceItem.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "quotationNormriceItems",
+                args: ["trannum", "salary"]
+            }]
+        },
+		deleteQuotationNormriceItem:{
+			url: "deleteQuotationNormriceItem.do",
+			intercept: true
+		},
 
         queryExtensionNormood: {
             url: "queryExtensionNormood.do",

@@ -548,9 +548,17 @@ var decorationUtils = {
         var widgetMain = $("<div></div>").addClass("widget-main no-padding").appendTo(widgetBody);
 
         var widgetHeader = $("<div></div>").addClass("").attr("id", "widgetHeader_" + _activityItem.daiId).appendTo(widgetMain);
-        var widgetHeaderH5 = $("<h4></h4>").addClass("bigger lighter").css("padding-left", "12px").appendTo(widgetHeader).text(_activityItem.activityItemName);
 
         var ul = $("<ul></ul>").addClass("list-unstyled fl-inline-list clearfix").css("padding-left", "12px").appendTo(widgetMain);
+
+        var $span = $('<span></span>').addClass('lbl blue bigger-150').text(_activityItem.activityItemName);
+        var $label = $('<label></label>');
+        var $input = $('<input></input>').attr({
+        	"type" : "checkbox",
+			"name" : "daiIds",
+			"class" : "ace ace-checkbox-2"
+        }).val(_activityItem.daiId);
+        widgetHeader.append($label.append($input).append($span));
 
         var nameLi = $("<li></li>").appendTo(ul);
         var typeLi = $("<strong></strong>").text("类型:").appendTo(nameLi);
@@ -581,6 +589,12 @@ var decorationUtils = {
             var isPaymentLi = $("<li></li>").appendTo(ul);
             var isPaymentState = $("<strong></strong>").text("是否计入金额:").appendTo(isPaymentLi);
             var isPaymentSpan = $("<span></span>").addClass("red").attr("id", "isPayment_" + _activityItem.daiId).text(config.isStatus[_activityItem.isPayment]).appendTo(isPaymentLi);
+        }
+
+        if (config.isAffirms != null) {
+        	var isAffirmLi = $("<li></li>").appendTo(ul);
+            var isAffirmState = $("<strong></strong>").text("是否确认:").appendTo(isAffirmLi);
+            var isAffirmSpan = $("<span></span>").addClass("red").attr("id", "isAffirm" + _activityItem.daiId).text(config.isAffirms[_activityItem.isAffirm]).appendTo(isAffirmLi);
         }
 
         var uiPgDiv = $("<div></div>").addClass("ui-pg-div").css("padding-left", "8px").css("padding-bottom", "10px").appendTo(widgetBody);
