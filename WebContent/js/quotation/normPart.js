@@ -59,7 +59,7 @@ var QuotationDetail = (function(){
 				})
 			},
 			that.quoNormrices = {
-				$domainNormriceModal :  com.focusPage("#quotationNormoodItemModal").on("show.bs.modal", function(a) {
+				$domainNormriceModal :  com.focusPage("#quotationNormriceItemModal").on("show.bs.modal", function(a) {
 					com.focusPage('input[name="quoteparam"]').val('');
 					com.focusPage('input[name="quotempl"]:checked').removeAttr('checked');
 				})
@@ -74,14 +74,14 @@ var QuotationDetail = (function(){
 				});
 			});
 			
-			// com.post(api.data.queryNormadd,{} , function(data){
-			// 	// data.normpacks.length && $.each(data.normpacks, function(i, v){
-			// 	// 	if(v.type != 0) {
-			// 	// 		var $dtempl = painter.createDomainTemplete(v);
-			// 	// 		that.quoModals.$domainNormriceModal.find('.modal-body').append($dtempl);
-			// 	// 	}
-			// 	// });
-			// });
+			com.post(api.data.queryNormadd,{} , function(data){
+				data.normadds.length && $.each(data.normadds, function(i, v){
+					if(v.type != 0) {
+						var $dtempl = painter.createNormriceTemplete(v);
+						that.quoModals.$domainNormriceModal.find('.modal-body').append($dtempl);
+					}
+				});
+			});
 		},
 		calculateQuoFees: function(func){
 			var normnumtotal = 0, storenumtotal = 0;
@@ -98,7 +98,7 @@ var QuotationDetail = (function(){
 		normriceQuoFees: function(func){
 			var normnumtotal = 0, storenumtotal = 0;
 			com.post(api.quotation.queryQuotationNormriceItem, {"quotationNormriceItem.qid" : quo.quotationId}, function(res){
-				$.each(res.quotationNormoodItems, function(i, v){
+				$.each(res.quotationNormriceItems, function(i, v){
 					normnumtotal = utils.accAdd(normnumtotal, v.normnum);
 					storenumtotal = utils.accAdd(storenumtotal,v.storenum);
 				})
@@ -210,8 +210,17 @@ var QuotationDetail = (function(){
 			
 			return $domain;
 		},
-		//创建添加功能区
+		//创建添加功能区--打包项
 		createDomainTemplete : function(v){
+			var $div = $('<div></div>').addClass('col-xs-12');
+			var $label = $('<label></label>').addClass('col-xs-12').appendTo($div);
+			var $radio = $('<input>').addClass('ace').attr({"name" : "quotempl", "type" : "checkbox"}).val(v.npid).appendTo($label);
+			var $span = $('<span></span>').addClass('lbl').text(v.name).appendTo($label);
+			return $div;
+		},
+		
+		//创建添加功能区--附加项
+		createNormriceTemplete : function(v){
 			var $div = $('<div></div>').addClass('col-xs-12');
 			var $label = $('<label></label>').addClass('col-xs-12').appendTo($div);
 			var $radio = $('<input>').addClass('ace').attr({"name" : "quotempl", "type" : "checkbox"}).val(v.npid).appendTo($label);
@@ -345,16 +354,27 @@ var QuotationDetail = (function(){
 				quo.quoModals.$domainTempletModal.modal("hide")
 		    });
 		},
+		saveNormriceDoamin : function(){
+			
+			var that = this;
+			
+			com.focusPage('#addQuotationNormriceItem').click(function(){
+				quote.addquotationnormrice();
+				quo.quoModals.$domainNormriceModal.modal("hide")
+			})
+		},
+		
 		
 		init: function(){
 			this.saveQuotesToDomain();
+			this.saveNormriceDoamin();
 		}
 	}
 	
 	var quote = {
 		
 		quoteRecord : [],
-		//增加方法
+		//增加方法--打包项
 		addquotationNormood : function(){
 		    
 			var npids = com.focusPage("[name='quotempl']:checked");
@@ -383,6 +403,36 @@ var QuotationDetail = (function(){
 				});
 			}, null, false)
 			quo.calculateQuoFees();
+		},
+		
+		//增加方法--附加项
+		addquotationnormrice : function(){
+			var npids = com.focusPage("[name='quotempl']:checked");
+			
+			var _param = $.extend({"quotation.qid": quo.quotationId}, quo.basicParams)
+			
+			var $aimDomains = com.focusPage('.widget-box', '#functionAreaDetailList');
+			
+			if(!npids.length){
+				return;
+			}
+			
+			$.each(npids, function(i, v){
+				
+				var input = $(v)
+				var params = input.parents(".functionAreaItem").find("[name='quoteparam']");
+				_param['quotationNormriceItems[' + i + '].sid'] = input.val();
+			});
+			
+			com.post(api.quotation.addQuotationnormriceItem, _param, function(data){
+				
+				var _items = data.quotationNormriceItems;
+				
+				$.each(_items, function (i, v) {
+				    painter.createQuote(i + 1, v).appendTo(com.focusPage("#quotationNormoodItem0"));
+				});
+			}, null, false)
+			quo.normriceQuoFees();
 		},
 		//删除预签项
 		deleteQuote : function($quote){

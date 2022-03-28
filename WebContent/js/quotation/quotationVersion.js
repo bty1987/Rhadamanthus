@@ -219,7 +219,7 @@ $(function() {
             "filters[0].op": "eq"
         }), function(res) {
             $.exceler({
-                column: [["材料名称", "goods.name"], ["报价项编号", "quotationItem.no"], ["报价项名称", "quotationItem.name"], ["报价项单位", "quotationItem.unit.name"], ["报价项工种", "quotationItem.workType.name"], ["报价项单价", "quotationItem.unitPrice"], ["品牌", "goods.brand"], ["品类", "goods.category"], ["商品单位", "goods.measurementUnit"], ["单位", "unit"], ["定额量", "num"], ["状态", "status"], ],
+                column: [["材料名称", "goods.name"], ["报价项编号", "quotationItem.no"], ["报价项名称", "quotationItem.name"], ["报价项单位", "quotationItem.unit.name"], ["报价项工种", "quotationItem.workType.name"], ["报价项单价", "quotationItem.unitPrice"], ["品牌", "goods.brand"], ["品类", "goods.category"], ["商品单位", "goods.measurementUnit"], ["定额单位", "normunit"], ["定额数量", "normnum"], ["库房单位", "storeunit"], ["库房数量", "storenum"], ["状态", "status"], ],
                 list: res.paging.data,
             }, function(v) {
                 v.status = v.status == 0 ? '有效' : v.status == 1 ? '无效' : '---';
