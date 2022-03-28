@@ -19,11 +19,14 @@ jQuery(function($) {
             total: com.focusPage("#total", "#oalesModal"),
             comment: com.focusPage("#comment", "#oalesModal"),
             brandName: com.focusPage('#brandName', "#oalesModal"),
+            service: com.focusPage('#service', "#oalesModal"),
+            atttype: com.focusPage("#atttype", "#oalesModal"),
 
             awardType: com.focusPage('#awardType', "#awardModal"),
             award: com.focusPage('#award', "#awardModal"),
 
             profit: com.focusPage('#profit', "#profitModal"),
+
         },
 
         oid: null,
@@ -53,8 +56,12 @@ jQuery(function($) {
         });
         return v;
     });
+    com.initTypeahead('service', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value',null);
+
 
     com.post(api.ds.sales, {}, function(res) {
+
+        oales.items.atttype.bindData(res.atttype, "key", "value");
 
         oales.status = res.oalesStatus.split("key", "value");
         oales.atttypes = res.oalesAtttype.split("key", "value");
@@ -207,6 +214,8 @@ jQuery(function($) {
             "oales.bid": oales.bid,
             "oales.total": oales.items.total.val(),
             "oales.comment": oales.items.comment.val(),
+            "oales.atttype": oales.items.atttype.val(),
+            "oales.servicer.userId": com.typeahead("service"),
         };
         com.post(url, options, function(res) {
 
