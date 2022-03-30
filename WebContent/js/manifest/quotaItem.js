@@ -84,7 +84,7 @@ $(function() {
                 $cell.append($cellWrap).appendTo($quoteItemLi);
             });
 
-            var propertyArr = [[d ? d.goods.name : '', 'green col-md-2', "tname"], [d ? d.normnum : '', 'blue col-md-1', 'tnnum'], [d ? d.normunit : '', 'blue col-md-1', "tnunit"], [d ? d.storenum : '', 'blue col-md-1', 'tsnum'], [d ? d.storeunit : '', 'blue col-md-1', "tsunit"], [d ? d.goods.selling : '', 'blue col-md-1', "tntotal"], ];
+            var propertyArr = [[d ? d.goods.name : '', 'green col-md-2', "tname"], [d ? d.normnum : '', 'blue col-md-1', 'tnnum'], [d ? d.normunit : '', 'blue col-md-1', "tnunit"], [d ? d.storenum : '', 'blue col-md-1', 'tsnum'], [d ? d.storeunit : '', 'blue col-md-1', "tsunit"], [d ? tntotal : '', 'blue col-md-1', "tntotal"], ];
 
             $.each(propertyArr, function(i, v) {
                 var $cell = $('<div></div>').addClass('cell ' + v[1]).css('border', 'none');

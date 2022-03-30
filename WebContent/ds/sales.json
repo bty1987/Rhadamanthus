@@ -57,11 +57,16 @@
         {"key":"4","value":"完结"}
     ],
     "oalesStatus": [
-        {"key":"0","value":"初始"},
-        {"key":"2","value":"全退"},
-        {"key":"3","value":"倒单"},
-        {"key":"4","value":"废单"},
-        {"key":"5","value":"完结"}
+        {"key":"0","value":"初始"}
+    ],
+    "oalesAtttype": [
+        {"key":"1","value":"内购"},
+        {"key":"2","value":"外购"}
+    ],
+    "oalesAwardType": [
+        {"key":"1","value":"设计部"},
+        {"key":"2","value":"服务部"},
+        {"key":"3","value":"工程部"}
     ],
     "paymentTypes": [],
     "errorCode": 0,

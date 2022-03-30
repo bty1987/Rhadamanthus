@@ -33,12 +33,8 @@
 					        <div class="row">
 					            <div id="functionAreaSumList" class="col-md-12">
 									<div class="form-group">
-									    <label class=" col-md-6  no-padding-right">转换量:</label>
-									    <label id="normnumtotal" class=" col-md-6  no-padding-left">0.00</label>
-									</div>
-									<div class="form-group">
-									    <label class=" col-md-6  no-padding-right">薪资:</label>
-									    <label id="storenumtotal" class=" col-md-6  no-padding-left">0.00</label>
+									    <label class=" col-md-6  no-padding-right">工费定额总额:</label>
+									    <label id="normricetotal" class=" col-md-6  no-padding-left">0.00</label>
 									</div>
 								</div>
 					            <div class="col-md-12 hr hr-14"></div>
@@ -103,14 +99,34 @@
 			                <button type="button" class="close" data-dismiss="modal">
 			                    <span>&times;</span><span class="sr-only">Close</span>
 			                </button>
-			                <h4 class="modal-title" id="functionAreaTemplateDialog">功能区模版</h4>
+			                <h4 class="modal-title" id="functionAreaTemplateDialog">打包项</h4>
 			            </div>
 			
 			            <div class="modal-body clearfix"></div>
 			
 			            <div class="modal-footer">
 			                <button type="button" id="addQuotationNormoodItem" class="btn btn-primary">保存</button>
-			                <button type="button" id="cancelAddFunctionAreasBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+			                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+			
+			<div class="modal fade" id="quotationNormriceItemModal" tabindex="-1" data-backdrop="static">
+			    <div class="modal-dialog">
+			        <div class="modal-content">
+			            <div class="modal-header">
+			                <button type="button" class="close" data-dismiss="modal">
+			                    <span>&times;</span><span class="sr-only">Close</span>
+			                </button>
+			                <h4 class="modal-title" id="functionAreaTemplateDialog">附加项</h4>
+			            </div>
+			
+			            <div class="modal-body clearfix"></div>
+			
+			            <div class="modal-footer">
+			                <button type="button" id="addQuotationNormriceItem" class="btn btn-primary">保存</button>
+			                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
 			            </div>
 			        </div>
 			    </div>

@@ -37,9 +37,6 @@ $.extend(api.index, {
     addReduceOutputIndex: {
         url: "/views/quotation/addReduceOutput.html"
     },
-	addReducesIndex: {
-		url: "/views/quotation/addReduces.html"
-	},
 
     extensionIndex: {
         url: "/views/quotation/extension.html"
@@ -1116,8 +1113,8 @@ $.extend(api, {
             url: "deleteQuotationNormoodItem.do",
             intercept: true
         },
-		
-		queryQuotationNormriceItem: {
+
+        queryQuotationNormriceItem: {
             url: "queryQuotationNormriceItem.do",
             demo: true,
             type: "query",
@@ -1126,10 +1123,21 @@ $.extend(api, {
                 args: ["trannum", "salary"]
             }]
         },
-		deleteQuotationNormriceItem:{
-			url: "deleteQuotationNormriceItem.do",
-			intercept: true
-		},
+        deleteQuotationNormriceItem: {
+            url: "deleteQuotationNormriceItem.do",
+            intercept: true
+        },
+        addQuotationNormriceItem: {
+            url: "addQuotationNormriceItem.do",
+            type: "update",
+            tranargs: {
+                args: ["quotationNormriceItem.trannum", "quotationNormoodItem.salary"],
+                query: [{
+                    result: "quotationNormriceItems",
+                    args: ["trannum", "salary"]
+                }]
+            }
+        },
 
         queryExtensionNormood: {
             url: "queryExtensionNormood.do",

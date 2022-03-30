@@ -48,9 +48,7 @@ $(function() {
 
     com.focusPage('#saveBtn').bindClick(function() {
 
-        if (com.validate("protationModal")) {
-            return;
-        }
+        if (com.validate("protationModal")) return false;
 
         if (protation.editFlg == 0) {
             var options = {
@@ -185,7 +183,7 @@ $(function() {
         clazz: "btn-success",
         handle: function(v) {
 
-            params["orderId"] = v.decorationOrderId;
+            params["decorationOrderId"] = v.orderId;
             params["protationId"] = v.pid;
             com.switchPage("views/quotation/protationPart.html");
         }

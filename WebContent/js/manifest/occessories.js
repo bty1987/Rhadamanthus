@@ -25,13 +25,12 @@ $(function() {
     };
 
     var url = api.inventory.pageOccessories;
-    var conditions = ['inventory-accessories-orderId', 'inventory-occessories-no', 'inventory-accessories-createrName', 'inventory-accessories-createTime', 'inventory-occessories-isEnter', 'inventory-occessories-isLift'];
+    var conditions = ['inventory-accessories-orderId', 'inventory-occessories-no', 'inventory-accessories-createrName', 'inventory-accessories-createTime', 'inventory-occessories-status', 'inventory-occessories-isEnter', 'inventory-occessories-isLift'];
     var options = {};
 
     if (occessories.pageType == "supplier") {
         url = api.inventory.pageOccessoriesForSupplier;
         options = $.extend({}, options, {
-            "occessories.status": 1
         });
     } else if (occessories.pageType == "delive") {
         options = $.extend({}, options, {
