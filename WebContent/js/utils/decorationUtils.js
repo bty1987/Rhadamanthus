@@ -543,22 +543,25 @@ var decorationUtils = {
         var pricingSpan = $("<div></div>").addClass("col-md-6").css("margin", "5px 0px").attr("id", "pricing_" + _activityItem.daiId).prependTo(itempack);
         var widgetBox = $("<div></div>").appendTo(pricingSpan);
         var total = [0, 2, 4, 5, 6].indexOf(_activityItem.state) != -1 ? utils.accMul(_activityItem.money, _activityItem.num) : 0;
-
-        var widgetBody = $("<div class='module_activity_border'></div>").attr("data-type", _activityItem.type).attr("data-total", total).appendTo(widgetBox);
-        var widgetMain = $("<div></div>").addClass("widget-main no-padding").appendTo(widgetBody);
-
-        var widgetHeader = $("<div></div>").addClass("").attr("id", "widgetHeader_" + _activityItem.daiId).appendTo(widgetMain);
-
-        var ul = $("<ul></ul>").addClass("list-unstyled fl-inline-list clearfix").css("padding-left", "12px").appendTo(widgetMain);
-
-        var $span = $('<span></span>').addClass('lbl blue bigger-150').text(_activityItem.activityItemName);
+        
+        var widgetBody = $("<ul class='item-list fl-table-list ui-sortable'></ul>").attr("data-type", _activityItem.type).attr("data-total", total).appendTo(widgetBox);
+        var widgetMain = $('<li class="item-orange clearfix"></li>').appendTo(widgetBody);
+        
+        var widgetHeader = $("<h3 class='oid'></h3>").attr("id", "widgetHeader_" + _activityItem.daiId).appendTo(widgetMain);
+        
+        var title = $('<small class="blue"></small>').text(_activityItem.activityItemName);
+        
+        var $span = $('<span></span>').addClass('lbl blue bigger-150');
         var $label = $('<label></label>');
         var $input = $('<input></input>').attr({
-        	"type" : "checkbox",
-			"name" : "daiIds",
-			"class" : "ace ace-checkbox-2"
+            "type" : "checkbox",
+            "name" : "daiIds",
+            "class" : "ace ace-checkbox-2"
         }).val(_activityItem.daiId);
-        widgetHeader.append($label.append($input).append($span));
+        
+        widgetHeader.append($label.append($input).append($span)).append(title);
+
+        var ul = $("<ul></ul>").addClass("list-unstyled fl-inline-list clearfix").css("padding-left", "12px").appendTo(widgetMain);
 
         var nameLi = $("<li></li>").appendTo(ul);
         var typeLi = $("<strong></strong>").text("类型:").appendTo(nameLi);
@@ -597,7 +600,7 @@ var decorationUtils = {
             var isAffirmSpan = $("<span></span>").addClass("red").attr("id", "isAffirm" + _activityItem.daiId).text(config.isAffirms[_activityItem.isAffirm]).appendTo(isAffirmLi);
         }
 
-        var uiPgDiv = $("<div></div>").addClass("ui-pg-div").css("padding-left", "8px").css("padding-bottom", "10px").appendTo(widgetBody);
+        var uiPgDiv = $("<div></div>").addClass("ui-pg-div").css("padding-left", "8px").css("padding-bottom", "10px").appendTo(widgetMain);
 
         if (uiBtnMethod != null) {
             if (uiBtnMethod == "uiBtnMethod") {
@@ -621,9 +624,7 @@ var decorationUtils = {
             } else {
                 uiBtnMethod(uiPgDiv, _activityItem);
             }
-
         }
-
     },
     initPresignDetail: function(orderId) {// 预签信息
         var presignItemListDiv = $("#presignItemListDiv").html("");

@@ -1,5 +1,6 @@
 ﻿{
     "quotationVersionType": [
+        {"key":"-1", "value":"通用"},
         {"key":"0", "value":"半包"},
         {"key":"1", "value":"整装"},
         {"key":"2", "value":"满减"}
