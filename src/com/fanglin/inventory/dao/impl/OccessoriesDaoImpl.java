@@ -37,17 +37,13 @@ public class OccessoriesDaoImpl extends DaoImpl<OccessoriesPO> implements Occess
 	}
 
 	@Override
-	public List<OccessoriesPO> pageOccessoriesForSupplier(Paging paging, List<Filter> filters, Short status, int uid) {
+	public List<OccessoriesPO> pageOccessoriesForSupplier(Paging paging, List<Filter> filters, int uid) {
 
 		PagingQuery<OccessoriesPO> query = pagingQuery(paging, OccessoriesPO.class);
 
 		query.alias("supplier", "supplier");
 
 		query.add(query.getCriterion("supplier.uid", uid, "eq"));
-
-		if (status != null) {
-			query.add(Restrictions.eq("status", status));
-		}
 
 		queryFilterExcute(query, filters);
 

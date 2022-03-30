@@ -106,8 +106,12 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 			throw new FLException(230015, "公司不存在");
 		}
 
+		if (quotationVersionDao.countQuotationVersion(company, quotationVersionVO.getType(), QuotationVersionPO.DEFAULTFLAG_DEFAULT_INT) > 1) {
+			throw new FLException(200040, "默认报价数量已达上限");
+		}
+
 		if (quotationVersionVO.getDefaultFlag() == QuotationVersionPO.DEFAULTFLAG_DEFAULT_INT) {
-			quotationVersionDao.updateQuotationVersionForDefault(company, QuotationVersionPO.DEFAULTFLAG_INIT_INT, quotationVersionVO.getType());
+			quotationVersionDao.updateQuotationVersionForDefault(company, quotationVersionVO.getType(), QuotationVersionPO.DEFAULTFLAG_INIT_INT);
 		}
 
 		QuotationVersionPO quotationVersionPO = new QuotationVersionPO();
@@ -135,8 +139,12 @@ public class QuotationVersionServiceImpl implements QuotationVersionService {
 			throw new FLException(200022, "报价版本不存在");
 		}
 
+		if (quotationVersionDao.countQuotationVersion(quotationVersionPO.getCompany(), quotationVersionPO.getType(), QuotationVersionPO.DEFAULTFLAG_DEFAULT_INT) > 1) {
+			throw new FLException(200040, "默认报价数量已达上限");
+		}
+
 		if (quotationVersionVO.getDefaultFlag() == QuotationVersionPO.DEFAULTFLAG_DEFAULT_INT) {
-			quotationVersionDao.updateQuotationVersionForDefault(quotationVersionPO.getCompany(), QuotationVersionPO.DEFAULTFLAG_INIT_INT, quotationVersionPO.getType());
+			quotationVersionDao.updateQuotationVersionForDefault(quotationVersionPO.getCompany(), quotationVersionPO.getType(), QuotationVersionPO.DEFAULTFLAG_INIT_INT);
 		}
 
 		BeanUtil.copyProperties(quotationVersionVO, quotationVersionPO, Arrays.asList("qvId"));

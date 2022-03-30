@@ -62,12 +62,13 @@ public class OalesServiceImpl implements OalesService {
 
 		for (OalesPO oalesPO : oalesPOs) {
 
-			OalesVO oalesVO = new OalesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO());
+			OalesVO oalesVO = new OalesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
-			BeanUtil.copyProperties(oalesPO, oalesVO, Arrays.asList("decoration", "house", "customer", "supplier", "creater"));
+			BeanUtil.copyProperties(oalesPO, oalesVO, Arrays.asList("decoration", "house", "customer", "supplier", "creater", "servicer"));
 
-			BeanUtil.copyProperties(oalesPO.getCreater(), oalesVO.getCreater(), Arrays.asList("dept", "role", "duty"));
-			BeanUtil.copyProperties(oalesPO.getSupplier(), oalesVO.getSupplier(), Arrays.asList("dept", "role", "duty"));
+			BeanUtil.copyProperties(oalesPO.getCreater(), oalesVO.getCreater(), Arrays.asList("dept", "duty"));
+			BeanUtil.copyProperties(oalesPO.getSupplier(), oalesVO.getSupplier(), Arrays.asList("dept", "duty"));
+			BeanUtil.copyProperties(oalesPO.getServicer(), oalesVO.getServicer(), Arrays.asList("dept", "duty"));
 
 			oalesPO.getDecoration().ptvcascade(oalesVO.getDecoration());
 
@@ -85,12 +86,13 @@ public class OalesServiceImpl implements OalesService {
 
 		for (OalesPO oalesPO : oalesPOs) {
 
-			oalesVO = new OalesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO());
+			oalesVO = new OalesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
-			BeanUtil.copyProperties(oalesPO, oalesVO, Arrays.asList("decoration", "house", "customer", "supplier", "creater"));
+			BeanUtil.copyProperties(oalesPO, oalesVO, Arrays.asList("decoration", "house", "customer", "supplier", "creater", "servicer"));
 
 			BeanUtil.copyProperties(oalesPO.getCreater(), oalesVO.getCreater(), Arrays.asList("dept", "role", "duty"));
 			BeanUtil.copyProperties(oalesPO.getSupplier(), oalesVO.getSupplier(), Arrays.asList("dept", "role", "duty"));
+			BeanUtil.copyProperties(oalesPO.getServicer(), oalesVO.getServicer(), Arrays.asList("dept", "role", "duty"));
 
 			oalesVOs.add(oalesVO);
 		}
@@ -121,7 +123,7 @@ public class OalesServiceImpl implements OalesService {
 
 		OalesPO oalesPO = new OalesPO();
 
-		BeanUtil.copyProperties(oalesVO, oalesPO, Arrays.asList("decoration", "house", "customer", "supplier", "creater"));
+		BeanUtil.copyProperties(oalesVO, oalesPO, Arrays.asList("decoration", "house", "customer", "supplier", "creater", "servicer"));
 
 		oalesPO.setNo(no);
 		oalesPO.setCompany(company);
@@ -135,6 +137,7 @@ public class OalesServiceImpl implements OalesService {
 		oalesPO.setCategory(brandPO.getCategory().getName());
 		oalesPO.setBrand(brandPO.getName());
 
+		oalesPO.setDecoration(decorationPO);
 		oalesPO.setCustomer(decorationPO.getCustomer());
 		oalesPO.setHouse(decorationPO.getHouse());
 

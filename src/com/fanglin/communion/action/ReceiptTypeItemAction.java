@@ -14,6 +14,7 @@ import com.fanglin.communion.vo.ReceiptTypeItemVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.payment.vo.ReceiptVO;
+import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -42,6 +43,10 @@ public class ReceiptTypeItemAction extends BaseListAction {
 	@Action(value = "addReceiptTypeItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addReceiptTypeItem() throws FLException {
 
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
 		receiptTypeItemService.addReceiptTypeItem(receiptTypeItem);
 
 		return SUCCESS;
@@ -49,6 +54,10 @@ public class ReceiptTypeItemAction extends BaseListAction {
 
 	@Action(value = "deleteReceiptTypeItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteReceiptTypeItem() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
 
 		receiptTypeItemService.deleteReceiptTypeItem(receiptTypeItem);
 

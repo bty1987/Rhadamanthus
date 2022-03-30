@@ -11,6 +11,7 @@
 
 package com.fanglin.data.quotation.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.hibernate.criterion.Order;
@@ -54,12 +55,22 @@ public class QuotationVersionDaoImpl extends DaoImpl<QuotationVersionPO> impleme
 	}
 
 	@Override
-	public QuotationVersionPO queryQuotationVersionForDefault(int company, short type) {
-		return (QuotationVersionPO) createCriteria(QuotationVersionPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("type", type)).add(Restrictions.eq("defaultFlag", QuotationVersionPO.DEFAULTFLAG_DEFAULT_INT)).setMaxResults(1).uniqueResult();
+	public QuotationVersionPO queryQuotationVersionForDefault(int company, short type, short defaultFlag) {
+		return (QuotationVersionPO) createCriteria(QuotationVersionPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("type", type)).add(Restrictions.eq("defaultFlag", defaultFlag)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
-	public int updateQuotationVersionForDefault(int company, short defaultFlag, short type) {
+	public int countQuotationVersion(int company, short type, short defaultFlag) {
+
+		String sql = "SELECT count(*) FROM quotation.quotationversion where company = :company and type = :type and defaultFlag = :defaultFlag";
+
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("company", company).setShort("type", type).setShort("defaultFlag", defaultFlag).uniqueResult();
+
+		return count.intValue();
+	}
+
+	@Override
+	public int updateQuotationVersionForDefault(int company, short type, short defaultFlag) {
 
 		String sql = "update quotation.quotationversion set defaultFlag = :defaultFlag where company = :company and type = :type";
 

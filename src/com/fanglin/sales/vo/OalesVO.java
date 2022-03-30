@@ -8,7 +8,6 @@ import org.apache.struts2.json.annotations.JSON;
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.communion.vo.HouseVO;
 import com.fanglin.decoration.vo.DecorationVO;
-import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 
 public class OalesVO implements Serializable {
@@ -39,7 +38,7 @@ public class OalesVO implements Serializable {
 
 	private UserBaseVO creater;
 
-	private UserPO servicer;
+	private UserBaseVO servicer;
 
 	private Timestamp createTime;
 
@@ -59,13 +58,14 @@ public class OalesVO implements Serializable {
 		super();
 	}
 
-	public OalesVO(DecorationVO decoration, UserBaseVO creater, UserBaseVO supplier) {
+	public OalesVO(DecorationVO decoration, UserBaseVO creater, UserBaseVO supplier, UserBaseVO servicer) {
 
 		super();
 
 		this.decoration = decoration;
 		this.creater = creater;
 		this.supplier = supplier;
+		this.servicer = servicer;
 	}
 
 	public Long getOid() {
@@ -172,11 +172,11 @@ public class OalesVO implements Serializable {
 		this.creater = creater;
 	}
 
-	public UserPO getServicer() {
+	public UserBaseVO getServicer() {
 		return servicer;
 	}
 
-	public void setServicer(UserPO servicer) {
+	public void setServicer(UserBaseVO servicer) {
 		this.servicer = servicer;
 	}
 

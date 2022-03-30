@@ -30,8 +30,11 @@ public class ReceiptTypeItemServiceImpl implements ReceiptTypeItemService {
 		ReceiptTypeItemVO receiptTypeItemVO = null;
 
 		for (ReceiptTypeItemPO receiptTypeItemPO : receiptTypeItemPOs) {
+
 			receiptTypeItemVO = new ReceiptTypeItemVO();
+
 			BeanUtil.copyProperties(receiptTypeItemPO, receiptTypeItemVO);
+
 			receiptTypeItemVOs.add(receiptTypeItemVO);
 		}
 
@@ -49,10 +52,10 @@ public class ReceiptTypeItemServiceImpl implements ReceiptTypeItemService {
 		}
 
 		receiptTypeItemPO = new ReceiptTypeItemPO();
+
 		BeanUtil.copyProperties(receiptTypeItem, receiptTypeItemPO);
 
 		receiptTypeItemDao.save(receiptTypeItemPO);
-
 	}
 
 	@Override
@@ -62,7 +65,6 @@ public class ReceiptTypeItemServiceImpl implements ReceiptTypeItemService {
 		ReceiptTypeItemPO receiptTypeItemPO = receiptTypeItemDao.get(receiptTypeItem.getRtiid());
 
 		receiptTypeItemDao.delete(receiptTypeItemPO);
-
 	}
 
 }

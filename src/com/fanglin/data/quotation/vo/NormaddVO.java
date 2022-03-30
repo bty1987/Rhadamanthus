@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import com.fanglin.data.common.vo.ConstructionNodeVO;
 
-
 public class NormaddVO implements Serializable {
 
 	private static final long serialVersionUID = 1892909861596612250L;
@@ -13,36 +12,20 @@ public class NormaddVO implements Serializable {
 
 	private String name;
 
-	private ConstructionNodeVO  constructionNode;
+	private ConstructionNodeVO constructionNode;
+
+	private String unit;// 单位
+
+	private Integer price;// 单价
 
 	private Short status;
-	
+
 	private Integer company;
-	
-	private String unit;//单位
-	
-	private short price;//单价
-	
-	public String getUnit() {
-		return unit;
-	}
-
-	public void setUnit(String unit) {
-		this.unit = unit;
-	}
-
-	public short getPrice() {
-		return price;
-	}
-
-	public void setPrice(short price) {
-		this.price = price;
-	}
 
 	public NormaddVO() {
 		super();
 	}
-	
+
 	public NormaddVO(ConstructionNodeVO constructionNode) {
 		super();
 		this.constructionNode = constructionNode;
@@ -72,6 +55,22 @@ public class NormaddVO implements Serializable {
 		this.constructionNode = constructionNode;
 	}
 
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
+	public Integer getPrice() {
+		return price;
+	}
+
+	public void setPrice(Integer price) {
+		this.price = price;
+	}
+
 	public Short getStatus() {
 		return status;
 	}
@@ -87,5 +86,5 @@ public class NormaddVO implements Serializable {
 	public void setCompany(Integer company) {
 		this.company = company;
 	}
-	
+
 }

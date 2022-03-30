@@ -84,7 +84,7 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 		UserPO user = userDao.queryUserByUserId(userId);
 
-		List<OccessoriesPO> occessoriesPOs = occessoriesDao.pageOccessoriesForSupplier(paging, filters, occessories.getStatus(), user.getUid());
+		List<OccessoriesPO> occessoriesPOs = occessoriesDao.pageOccessoriesForSupplier(paging, filters, user.getUid());
 
 		List<OccessoriesVO> occessoriesVOs = new ArrayList<OccessoriesVO>();
 

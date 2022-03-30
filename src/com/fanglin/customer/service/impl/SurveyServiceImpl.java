@@ -70,7 +70,6 @@ public class SurveyServiceImpl implements SurveyService {
 		}
 
 		paging.setData(surveyVOs);
-
 	}
 
 	@Override
@@ -87,8 +86,8 @@ public class SurveyServiceImpl implements SurveyService {
 			BeanUtil.copyProperties(surveyPO.getCreater(), surveyVO.getCreater(), Arrays.asList("dept", "role", "duty"));
 
 			surveyVOs.add(surveyVO);
-
 		}
+		
 		return surveyVOs;
 	}
 
@@ -164,16 +163,14 @@ public class SurveyServiceImpl implements SurveyService {
 			SurveyItemPO surveyItemPO = new SurveyItemPO();
 
 			surveyItemPO.setName(surveyTemplateItemPO.getName());
-
 			surveyItemPO.setContent(surveyTemplateItemPO.getContent());
-
 			surveyItemPO.setType(surveyTemplateItemPO.getType());
 
 			surveyItemPO.setSid(surveyPO.getSid());
 
 			surveyItemDao.save(surveyItemPO);
 
-			if (surveyTemplateItemPO.getType() == SurveyTemplateItemPO.TYPE_TEXT_INT || surveyTemplateItemPO.getType() == SurveyTemplateItemPO.TYPE_INPUT_INT) continue;
+			if (Arrays.asList(SurveyTemplateItemPO.TYPE_TEXT_INT, SurveyTemplateItemPO.TYPE_INPUT_INT).contains(surveyTemplateItemPO.getType())) continue;
 
 			List<SurveyTemplateOptionPO> surveyTemplateOptionPOs = surveyTemplateItemPO.getOptions();
 
@@ -212,7 +209,7 @@ public class SurveyServiceImpl implements SurveyService {
 
 			SurveyItemPO itemPO = surveyItemDao.get(itemVO.getSiid());
 
-			if (itemPO.getType() == SurveyItemPO.TYPE_TEXT_INT) {
+			if (Arrays.asList(SurveyTemplateItemPO.TYPE_TEXT_INT, SurveyTemplateItemPO.TYPE_INPUT_INT).contains(itemPO.getType())) {
 				itemPO.setContent(itemVO.getContent());
 			}
 
@@ -227,6 +224,8 @@ public class SurveyServiceImpl implements SurveyService {
 				if (optionVO == null) continue;
 
 				SurveyOptionPO optionPO = surveyOptionDao.get(optionVO.getSoid());
+
+				if (optionPO == null) continue;
 
 				optionPO.setChecked(optionVO.getChecked());
 

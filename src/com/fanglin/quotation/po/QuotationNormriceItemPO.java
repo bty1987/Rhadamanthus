@@ -20,6 +20,12 @@ public class QuotationNormriceItemPO implements Serializable {
 
 	private static final long serialVersionUID = 1650807063740164250L;
 
+	public static final short TYPE_OFFER_INT = 0;
+
+	public static final short NORMTYPE_ADD_INT = 1;
+
+	public static final short ATTTYPE_COLLECTION_INT = 0;
+
 	private long qnpiid;
 
 	private long qid;

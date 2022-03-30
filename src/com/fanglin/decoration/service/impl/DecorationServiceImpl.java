@@ -791,7 +791,11 @@ public class DecorationServiceImpl implements DecorationService {
 
 		DecorationPO decorationPO = new DecorationPO();
 
-		QuotationVersionPO quotationVersionPO = quotationVersionDao.queryQuotationVersionForDefault(company, decorationVO.getType());
+		QuotationVersionPO quotationVersionPO = quotationVersionDao.queryQuotationVersionForDefault(company, decorationVO.getType(), QuotationVersionPO.DEFAULTFLAG_DEFAULT_INT);
+
+		if (quotationVersionPO == null) {
+			quotationVersionPO = quotationVersionDao.queryQuotationVersionForDefault(company, QuotationVersionPO.TYPE_COMMON_INT, QuotationVersionPO.DEFAULTFLAG_DEFAULT_INT);
+		}
 
 		if (quotationVersionPO == null) {
 			throw new FLException(200022, "报价版本不存在");
