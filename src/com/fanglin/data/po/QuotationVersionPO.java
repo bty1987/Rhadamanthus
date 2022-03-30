@@ -30,6 +30,8 @@ public class QuotationVersionPO implements Serializable {
 
 	public static final short DEFAULTFLAG_INIT_INT = 0;
 
+	public static final short TYPE_COMMON_INT = -1;
+
 	private long qvId;
 
 	private String no;

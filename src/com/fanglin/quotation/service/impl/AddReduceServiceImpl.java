@@ -195,7 +195,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 		System.out.println(String.format("pages/addReduceDetail/addReduceDetail?orderId=%s&arids=%s", orderId, addReduceVO.getContent()));
 
-		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 您的增减项明细已完成,若无疑义请您确认,代表您对增减项明细认可,若有问题,请及时联系监理进行调整,感谢您的配合,祝您生活愉快.", orderId), String.format("pages/addReduceDetail/addReduceDetail?orderId=%s&arids=%s", orderId, addReduceVO.getContent()));
+		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 请您点【详情】查看与监理核对后的增减项明细，并正式给予点【确认】，温馨提示如已付款我们将办理落款项，如未付款请您及时联系监理付款。", orderId), String.format("pages/addReduceDetail/addReduceDetail?orderId=%s&arids=%s", orderId, addReduceVO.getContent()));
 	}
 
 	@Override

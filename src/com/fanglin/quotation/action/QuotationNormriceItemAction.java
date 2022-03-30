@@ -13,6 +13,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.quotation.service.QuotationNormriceItemService;
 import com.fanglin.quotation.vo.QuotationNormriceItemVO;
+import com.fanglin.quotation.vo.QuotationVO;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -26,12 +27,22 @@ public class QuotationNormriceItemAction extends BaseListAction {
 
 	private QuotationNormriceItemVO quotationNormriceItem;
 
+	private QuotationVO quotation;
+
 	private List<QuotationNormriceItemVO> quotationNormriceItems;
 
 	@Action(value = "queryQuotationNormriceItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryQuotationNormoodItem() {
+	public String queryQuotationNormriceItem() {
 
 		quotationNormriceItems = quotationNormriceItemService.queryQuotationNormrice(quotationNormriceItem);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "addQuotationNormriceItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String addQuotationNormriceItem() throws FLException {
+
+		quotationNormriceItems = quotationNormriceItemService.addQuotationNormriceItem(quotation, quotationNormriceItems);
 
 		return SUCCESS;
 	}
@@ -42,6 +53,14 @@ public class QuotationNormriceItemAction extends BaseListAction {
 		quotationNormriceItemService.deleteQuotationNormriceItem(quotationNormriceItem);
 
 		return SUCCESS;
+	}
+
+	public QuotationVO getQuotation() {
+		return quotation;
+	}
+
+	public void setQuotation(QuotationVO quotation) {
+		this.quotation = quotation;
 	}
 
 	public QuotationNormriceItemVO getQuotationNormriceItem() {

@@ -2,6 +2,7 @@ package com.fanglin.data.quotation.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -32,14 +33,20 @@ public class NormaddDaoImpl extends DaoImpl<NormaddPO> implements NormaddDao {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<NormaddPO> queryNormadd(short sort, int company) {
-		return session().createCriteria(NormaddPO.class).createAlias("constructionNode", "constructionNode").add(Restrictions.eq("constructionNode.sort", sort)).add(Restrictions.eq("company", company)).list();
+	public List<NormaddPO> queryNormadd(Short sort, int company) {
+
+		Criteria query = session().createCriteria(NormaddPO.class).add(Restrictions.eq("company", company));
+
+		if (sort != null) {
+			query.createAlias("constructionNode", "constructionNode").add(Restrictions.eq("constructionNode.sort", sort));
+		}
+
+		return query.list();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters == null)
-			return;
+		if (filters == null) return;
 
 		for (Filter filter : filters) {
 

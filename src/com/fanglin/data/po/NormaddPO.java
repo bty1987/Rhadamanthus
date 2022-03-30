@@ -15,46 +15,33 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "normadd", catalog = "data")
-public class NormaddPO implements Serializable{
+public class NormaddPO implements Serializable {
 
 	private static final long serialVersionUID = -1109476732868699253L;
-	
+
 	public static final String COLUMN_CNID_STR = "constructionNode.cnid";
-	
+
 	public static final short STATUS_START_SHORT = 0;
-	
+
 	public static final short STATUS_STOP_SHORT = 1;
 
 	private long naid;
 
 	private String name;
 
-	private ConstructionNodePO  constructionNode;
+	private ConstructionNodePO constructionNode;
+
+	private String unit;// 单位
+
+	private int price;// 单价
 
 	private short status;
-		
+
 	private int company;
-	
-	private String unit;//单位
-	
-	private short price;//单价
-	
+
 	@Column(name = "unit")
 	public String getUnit() {
 		return unit;
-	}
-
-	public void setUnit(String unit) {
-		this.unit = unit;
-	}
-
-	@Column(name = "price")
-	public short getPrice() {
-		return price;
-	}
-
-	public void setPrice(short price) {
-		this.price = price;
 	}
 
 	public NormaddPO() {
@@ -85,15 +72,28 @@ public class NormaddPO implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cnid", referencedColumnName="cnid")	
+	@JoinColumn(name = "cnid", referencedColumnName = "cnid")
 	public ConstructionNodePO getConstructionNode() {
 		return constructionNode;
 	}
 
 	public void setConstructionNode(ConstructionNodePO constructionNode) {
 		this.constructionNode = constructionNode;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
+	@Column(name = "price")
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
 	}
 
 	@Column(name = "status")
