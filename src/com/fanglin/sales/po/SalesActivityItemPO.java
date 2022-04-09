@@ -23,7 +23,9 @@ public class SalesActivityItemPO implements Serializable {
 	private static final long serialVersionUID = 3148602067058233456L;
 	
 	public static final String COLUMN_ORDERID_STR = "orderId";
-	
+
+	public static final String COLUMN_ISAFFIRM_STR = "isAffirm";
+
 	public static final short STATUS_VALID_INT = 0;//初始
 
 	public static final short STATUS_UNVALID_INT = 1;//失效
@@ -44,6 +46,10 @@ public class SalesActivityItemPO implements Serializable {
 	
 	public static final short ISSTOCK_COUNTIN_INT = 0;//计入库存
 
+	public static final short ISAFFIRM_UNSUBMIT_INT = 0;
+
+	public final short ISAFFIRM_CONFIRMED_INT = 1;
+
 	private long saiid;
 
 	private long aid;
@@ -61,6 +67,8 @@ public class SalesActivityItemPO implements Serializable {
 	private int money;
 
 	private short state;
+
+	private short isAffirm;
 
 	private short isStock;
 
@@ -237,6 +245,15 @@ public class SalesActivityItemPO implements Serializable {
 
 	public void setIntegral(int integral) {
 		this.integral = integral;
+	}
+
+	@Column(name = "isAffirm")
+	public short getIsAffirm() {
+		return isAffirm;
+	}
+
+	public void setIsAffirm(short isAffirm) {
+		this.isAffirm = isAffirm;
 	}
 	
 }

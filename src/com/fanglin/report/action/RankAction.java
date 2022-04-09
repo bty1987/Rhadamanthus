@@ -20,36 +20,37 @@ import com.fanglin.report.service.MaterialRankService;
 public class RankAction extends BaseListAction {
 
 	private static final long serialVersionUID = -4004574085957114814L;
-	
+
 	@Autowired
 	private DecorationRankService decorationRankService;
-	
+
 	@Autowired
 	private MaterialRankService materialRankService;
-	
+
 	private String decorationRank;
-	
+
 	private String decorationPlace;
-	
+
 	private String materialRank;
-	
+
 	private String materialPlace;
-	
-	@Action(value="queryRankForPlace", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String queryRankForPlace() throws FLException{
-		
+
+	@Action(value = "queryRankForPlace", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryRankForPlace() throws FLException {
+
 		String userId = queryUserId();
-		
-		List<String> decoration = decorationRankService.queryDecorationDesignerForPlaceByUserId(userId,queryCompany());
-		List<String> material = materialRankService.queryMaterialDesignerRankForPlaceByUserId(userId,queryCompany());
-		
+
+		List<String> decoration = decorationRankService.queryDecorationDesignerForPlaceByUserId(userId, queryCompany());
+		List<String> material = materialRankService.queryMaterialDesignerRankForPlaceByUserId(userId, queryCompany());
+
 		decorationRank = decoration.get(0);
 		decorationPlace = decoration.get(1);
-		
+
 		materialRank = material.get(0);
 		materialPlace = material.get(1);
-		
+
 		return SUCCESS;
+
 	}
 
 	public String getDecorationRank() {

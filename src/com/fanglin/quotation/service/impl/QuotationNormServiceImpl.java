@@ -31,6 +31,7 @@ import com.fanglin.data.quotation.vo.NormriceVO;
 import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.dao.ExtensionDao;
 import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
+import com.fanglin.quotation.dao.QuotationNormDao;
 import com.fanglin.quotation.dao.QuotationNormoodDao;
 import com.fanglin.quotation.dao.QuotationNormriceDao;
 import com.fanglin.quotation.po.AddReduceItemPO;
@@ -40,6 +41,7 @@ import com.fanglin.quotation.po.ExtensionPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemAO;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemMO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
+import com.fanglin.quotation.po.QuotationNormPO;
 import com.fanglin.quotation.service.QuotationNormService;
 import com.fanglin.quotation.vo.AddReduceItemVO;
 import com.fanglin.quotation.vo.AddReduceVO;
@@ -47,6 +49,7 @@ import com.fanglin.quotation.vo.ExtensionItemVO;
 import com.fanglin.quotation.vo.ExtensionVO;
 import com.fanglin.quotation.vo.QuotationFunctionAreaItemVO;
 import com.fanglin.quotation.vo.QuotationFunctionAreaVO;
+import com.fanglin.quotation.vo.QuotationNormVO;
 import com.fanglin.quotation.vo.QuotationVO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
@@ -69,6 +72,9 @@ public class QuotationNormServiceImpl implements QuotationNormService {
 
 	@Autowired
 	private AddReduceDao addReduceDao;
+
+	@Autowired
+	private QuotationNormDao quotationNormDao;
 
 	@Override
 	public List<QuotationFunctionAreaVO> queryQuotationNormood(QuotationVO quotationVO) throws FLException {
@@ -543,5 +549,50 @@ public class QuotationNormServiceImpl implements QuotationNormService {
 		}
 
 		return normriceVOs;
+	}
+
+	@Override
+	public QuotationNormVO queryQuotationNorm(QuotationNormVO quotationNormVO) throws FLException {
+
+		QuotationNormPO quotationNormPO = quotationNormDao.queryQuotationNorm(quotationNormVO.getQid());
+
+		if (quotationNormPO == null) {
+			throw new FLException(200071, "报价定额不存在");
+		}
+		BeanUtil.copyPropertie(quotationNormPO, quotationNormVO);
+
+		return quotationNormVO;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int printQuotationNorm(QuotationNormVO quotaionNormVO) throws FLException {
+		QuotationNormPO quotationNormPO = quotationNormDao.get(quotaionNormVO.getQid());
+
+		if (quotationNormPO == null) {
+			quotationNormPO = quotationNormDao.queryQuotationNorm(quotaionNormVO.getQid());
+		}
+
+		if (quotationNormPO == null) {
+			throw new FLException(200071, "报价定额不存在");
+		}
+
+		quotationNormPO.setMoodPrintNum(quotaionNormVO.getMoodPrintNum() + 1);
+		quotationNormPO.setMricePriceNum(quotaionNormVO.getMricePriceNum() + 1);
+
+		quotationNormDao.update(quotationNormPO);
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int addQuotationNorm(QuotationNormVO quotationNormVO) throws FLException {
+
+		QuotationNormPO quotationNormPO = new QuotationNormPO();
+
+		BeanUtil.copyProperties(quotationNormVO, quotationNormPO);
+
+		quotationNormDao.save(quotationNormPO);
+		return 0;
 	}
 }

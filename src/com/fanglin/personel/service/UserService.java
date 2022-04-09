@@ -25,7 +25,7 @@ import com.fanglin.utils.Paging;
 public interface UserService {
 
 	public void pageUser(Paging paging, List<Filter> filters, UserVO userVO, Integer company) throws FLException;
-	
+
 	public void pageUserInfo(Paging paging, List<Filter> filters, Integer company) throws FLException;
 
 	public List<UserBaseVO> queryUserByPinyin(String pinyinName, UserVO userVO, DepartmentTypeVO departmentType, int company) throws FLException;
@@ -49,6 +49,8 @@ public interface UserService {
 	public void addUser(UserInfoVO userInfoVO, List<UserContractVO> userContractVOs, List<UserEducationVO> userEducationVOs, List<UserOperationVO> userOperationVOs, int company) throws FLException;
 
 	public void updateUser(UserInfoVO userInfoVO, int company) throws FLException;
+
+	public void updateUserForPhoto(UserVO userVO) throws FLException;
 
 	public void updateUserForBaseInfo(UserInfoVO userInfoVO) throws FLException;
 

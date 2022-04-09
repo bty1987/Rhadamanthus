@@ -13,7 +13,6 @@ import com.fanglin.communion.service.ReceiptTypeItemService;
 import com.fanglin.communion.vo.ReceiptTypeItemVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.payment.vo.ReceiptVO;
 import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
@@ -27,8 +26,6 @@ public class ReceiptTypeItemAction extends BaseListAction {
 	private ReceiptTypeItemService receiptTypeItemService;
 
 	private ReceiptTypeItemVO receiptTypeItem;
-
-	private ReceiptVO receipt;
 
 	private List<ReceiptTypeItemVO> receiptTypeItems;
 
@@ -70,14 +67,6 @@ public class ReceiptTypeItemAction extends BaseListAction {
 
 	public void setReceiptTypeItem(ReceiptTypeItemVO receiptTypeItem) {
 		this.receiptTypeItem = receiptTypeItem;
-	}
-
-	public ReceiptVO getReceipt() {
-		return receipt;
-	}
-
-	public void setReceipt(ReceiptVO receipt) {
-		this.receipt = receipt;
 	}
 
 	public List<ReceiptTypeItemVO> getReceiptTypeItems() {

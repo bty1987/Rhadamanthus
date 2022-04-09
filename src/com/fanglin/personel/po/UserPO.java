@@ -117,6 +117,10 @@ public class UserPO implements Serializable {
 
 	private short isUpdate;
 
+	private String identityPathF;
+
+	private String identityPathB;
+
 	public UserPO() {
 		super();
 	}
@@ -336,6 +340,24 @@ public class UserPO implements Serializable {
 
 	public void setIsUpdate(short isUpdate) {
 		this.isUpdate = isUpdate;
+	}
+
+	@Column(name = "identityPathF")
+	public String getIdentityPathF() {
+		return identityPathF;
+	}
+
+	public void setIdentityPathF(String identityPathF) {
+		this.identityPathF = identityPathF;
+	}
+
+	@Column(name = "identityPathB")
+	public String getIdentityPathB() {
+		return identityPathB;
+	}
+
+	public void setIdentityPathB(String identityPathB) {
+		this.identityPathB = identityPathB;
 	}
 
 }

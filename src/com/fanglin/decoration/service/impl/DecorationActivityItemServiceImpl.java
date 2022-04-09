@@ -444,9 +444,9 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		
 		String orderId = decorationActivityItemVO.getOrderId();
 
-		System.out.println(String.format("pages/decorationActivityItemDetail/decorationActivityItemDetail?orderId=%s&daiIds=%s", orderId, decorationActivityItemVO.getContent()));
+		System.out.println(String.format("pages/activityItemDetail/activityItemDetail?orderId=%s&daiIds=%s", orderId, decorationActivityItemVO.getContent()));
 
-		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 您的增减项明细已完成,若无疑义请您确认,代表您对增减项明细认可,若有问题,请及时联系监理进行调整,感谢您的配合,祝您生活愉快.", orderId), String.format("pages/decorationActivityItemDetail/decorationActivityItemDetail?orderId=%s&daiIds=%s", orderId, decorationActivityItemVO.getContent()));
+		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 您的增减项明细已完成,若无疑义请您确认,代表您对增减项明细认可,若有问题,请及时联系监理进行调整,感谢您的配合,祝您生活愉快.", orderId), String.format("pages/activityItemDetail/activityItemDetail?orderId=%s&daiIds=%s", orderId, decorationActivityItemVO.getContent()));
 		
 	}
 

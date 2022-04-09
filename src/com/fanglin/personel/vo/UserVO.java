@@ -61,8 +61,12 @@ public class UserVO implements Serializable {
 	private Short freedom;
 
 	private String dutyName;
-	
+
 	private Short isUpdate;
+
+	private String identityPathF;
+
+	private String identityPathB;
 
 	public UserVO() {
 		super();
@@ -260,13 +264,29 @@ public class UserVO implements Serializable {
 	public void setDutyName(String dutyName) {
 		this.dutyName = dutyName;
 	}
-	
+
 	public Short getIsUpdate() {
 		return isUpdate;
 	}
 
 	public void setIsUpdate(Short isUpdate) {
 		this.isUpdate = isUpdate;
+	}
+
+	public String getIdentityPathF() {
+		return identityPathF;
+	}
+
+	public void setIdentityPathF(String identityPathF) {
+		this.identityPathF = identityPathF;
+	}
+
+	public String getIdentityPathB() {
+		return identityPathB;
+	}
+
+	public void setIdentityPathB(String identityPathB) {
+		this.identityPathB = identityPathB;
 	}
 
 	public UserVO setBaseInfo(UserPO userPO) {

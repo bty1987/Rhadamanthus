@@ -10,7 +10,7 @@ public interface QuotationNormriceItemService {
 
 	public List<QuotationNormriceItemVO> queryQuotationNormrice(QuotationNormriceItemVO quotationNormriceItem);
 
-	public List<QuotationNormriceItemVO> addQuotationNormriceItem(QuotationVO quotationVO, List<QuotationNormriceItemVO> quotationNormriceItemVOs) throws FLException;
+	public int addQuotationNormriceItem(QuotationVO quotationVO, QuotationNormriceItemVO quotationNormriceItemVO) throws FLException;
 
 	public int deleteQuotationNormriceItem(QuotationNormriceItemVO quotationNormriceItemVO) throws FLException;
 }

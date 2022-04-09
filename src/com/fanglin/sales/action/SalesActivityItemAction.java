@@ -35,15 +35,7 @@ public class SalesActivityItemAction extends BaseListAction {
 	private SalesActivityVO salesActivity;
 	
 	private String orderId;
-	
-	@Action(value="querySalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
-	public String querySalesActivityItem() throws FLException{
-		
-		salesActivityItems = salesActivityItemService.querySalesActivityItem(orderId);
-		
-		return SUCCESS;
-	}
-	
+
 	@Action(value="addSalesActivityItem", results={@Result(name="success", type="json", params={"ignoreHierarchy", "false"})}, params={"contentType", "text/html"})
 	public String addSalesActivityItem() throws FLException{
 		

@@ -28,6 +28,7 @@ import com.fanglin.quotation.service.QuotationNormService;
 import com.fanglin.quotation.vo.AddReduceVO;
 import com.fanglin.quotation.vo.ExtensionVO;
 import com.fanglin.quotation.vo.QuotationFunctionAreaVO;
+import com.fanglin.quotation.vo.QuotationNormVO;
 import com.fanglin.quotation.vo.QuotationVO;
 
 @ParentPackage("base")
@@ -55,6 +56,8 @@ public class QuotationNormAction extends BaseListAction {
 	private List<NormoodVO> normoods;
 
 	private List<NormriceVO> normrices;
+
+	private QuotationNormVO quotationNorm;
 
 	private Short schedule;
 
@@ -150,6 +153,22 @@ public class QuotationNormAction extends BaseListAction {
 	public String amountAddReduceNormrice() throws FLException {
 
 		normrices = quotationNormService.amountAddReduceNormrice(addReduce);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryQuotationNorm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryQuotationNorm() throws FLException {
+
+		quotationNorm = quotationNormService.queryQuotationNorm(quotationNorm);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "printQuotationNorm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String printQuotationNorm() throws FLException {
+
+		quotationNormService.printQuotationNorm(quotationNorm);
 
 		return SUCCESS;
 	}

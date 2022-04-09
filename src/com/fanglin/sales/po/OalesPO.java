@@ -65,6 +65,14 @@ public class OalesPO implements Serializable {
 
 	private int company;
 
+	private UserPO checker;
+
+	private Timestamp confirmTime;
+
+	private Timestamp checkTime;
+
+	private Timestamp finishTime;
+
 	public OalesPO() {
 		super();
 	}
@@ -262,6 +270,43 @@ public class OalesPO implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "chuid", referencedColumnName = "uid")
+	public UserPO getChecker() {
+		return checker;
+	}
+
+	public void setChecker(UserPO checker) {
+		this.checker = checker;
+	}
+
+	@Column(name = "confirmTime")
+	public Timestamp getConfirmTime() {
+		return confirmTime;
+	}
+
+	public void setConfirmTime(Timestamp confirmTime) {
+		this.confirmTime = confirmTime;
+	}
+
+	@Column(name = "checkTime")
+	public Timestamp getCheckTime() {
+		return checkTime;
+	}
+
+	public void setCheckTime(Timestamp checkTime) {
+		this.checkTime = checkTime;
+	}
+
+	@Column(name = "finishTime")
+	public Timestamp getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Timestamp finishTime) {
+		this.finishTime = finishTime;
 	}
 
 }

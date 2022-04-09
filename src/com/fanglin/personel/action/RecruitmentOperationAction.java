@@ -24,7 +24,7 @@ import com.fanglin.personel.service.RecruitmentOperationService;
 import com.fanglin.personel.vo.RecruitmentOperationVO;
 import com.fanglin.utils.SystemConfig;
 
-@ParentPackage("base")
+@ParentPackage("common")
 @Namespace("/")
 @Controller
 public class RecruitmentOperationAction extends BaseListAction {
@@ -33,52 +33,52 @@ public class RecruitmentOperationAction extends BaseListAction {
 
 	@Autowired
 	private RecruitmentOperationService recruitmentOperationService;
-	
+
 	private List<RecruitmentOperationVO> recruitmentOperations;
-	
+
 	private RecruitmentOperationVO recruitmentOperation;
 
 	@Action(value = "queryRecruitmentOperation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryRecruitmentOperation(){
-		
+	public String queryRecruitmentOperation() {
+
 		recruitmentOperations = recruitmentOperationService.queryRecruitmentOperation(recruitmentOperation);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addRecruitmentOperation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addRecruitmentOperation() throws FLException{
-		
+	public String addRecruitmentOperation() throws FLException {
+
 		if (SystemConfig.getString("communion") == null) {
 			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		recruitmentOperationService.addRecruitmentOperation(recruitmentOperation);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateRecruitmentOperation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateRecruitmentOperation() throws FLException{
-		
+	public String updateRecruitmentOperation() throws FLException {
+
 		if (SystemConfig.getString("communion") == null) {
 			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		recruitmentOperationService.updateRecruitmentOperation(recruitmentOperation);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "deleteRecruitmentOperation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteRecruitmentOperation() throws FLException{
-		
+	public String deleteRecruitmentOperation() throws FLException {
+
 		if (SystemConfig.getString("communion") == null) {
 			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		recruitmentOperationService.deleteRecruitmentOperation(recruitmentOperation);
-		
+
 		return SUCCESS;
 	}
 
@@ -86,8 +86,7 @@ public class RecruitmentOperationAction extends BaseListAction {
 		return recruitmentOperations;
 	}
 
-	public void setRecruitmentOperations(
-			List<RecruitmentOperationVO> recruitmentOperations) {
+	public void setRecruitmentOperations(List<RecruitmentOperationVO> recruitmentOperations) {
 		this.recruitmentOperations = recruitmentOperations;
 	}
 

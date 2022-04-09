@@ -1,23 +1,23 @@
 package com.fanglin.communion.vo;
 
 public class PaymentTypeVO implements java.io.Serializable {
-	
+
 	private static final long serialVersionUID = 7028737027192217079L;
 
 	private Long ptid;
 
 	private String name;
-	
+
 	private Short type;
-	
+
 	private Short paytype;
-	
+
 	private Short bustype;
-	
+
 	private Short atttype;
-	
+
 	private Integer code;
-	
+
 	private Short taxrate;
 
 	private String kino;
@@ -25,7 +25,9 @@ public class PaymentTypeVO implements java.io.Serializable {
 	private String kiname;
 
 	private String kibalance;
-	
+
+	private String billType;
+
 	private Short status;
 
 	public PaymentTypeVO() {
@@ -131,6 +133,14 @@ public class PaymentTypeVO implements java.io.Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public String getBillType() {
+		return billType;
+	}
+
+	public void setBillType(String billType) {
+		this.billType = billType;
 	}
 
 }

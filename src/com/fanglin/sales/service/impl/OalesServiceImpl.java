@@ -62,7 +62,7 @@ public class OalesServiceImpl implements OalesService {
 
 		for (OalesPO oalesPO : oalesPOs) {
 
-			OalesVO oalesVO = new OalesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+			OalesVO oalesVO = new OalesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
 			BeanUtil.copyProperties(oalesPO, oalesVO, Arrays.asList("decoration", "house", "customer", "supplier", "creater", "servicer"));
 
@@ -86,7 +86,7 @@ public class OalesServiceImpl implements OalesService {
 
 		for (OalesPO oalesPO : oalesPOs) {
 
-			oalesVO = new OalesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+			oalesVO = new OalesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
 			BeanUtil.copyProperties(oalesPO, oalesVO, Arrays.asList("decoration", "house", "customer", "supplier", "creater", "servicer"));
 
@@ -146,7 +146,38 @@ public class OalesServiceImpl implements OalesService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void awardOales(OalesVO oalesVO) throws FLException {
+	public void updateOales(OalesVO oalesVO) throws FLException {
+
+		OalesPO oalesPO = oalesDao.get(oalesVO.getOid());
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(oalesVO.getDecoration().getOrderId());
+		UserPO servicer = userDao.queryUserByUserId(oalesVO.getServicer().getUserId());
+
+		if (oalesPO == null) {
+			throw new FLException(370021, "外销单不存在");
+		}
+
+		oalesPO.setTotal(oalesVO.getTotal());
+		oalesPO.setAward(oalesVO.getAward());
+		oalesPO.setAwardType(oalesVO.getAwardType());
+		oalesPO.setProfit(oalesVO.getProfit());
+		oalesPO.setCustomer(decorationPO.getCustomer());
+		oalesPO.setServicer(servicer);
+
+		oalesDao.update(oalesPO);
+
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void deleteOales(OalesVO oalesVO) throws FLException {
+
+		OalesPO oalesPO = oalesDao.get(oalesVO.getOid());
+
+		oalesDao.delete(oalesPO);
+	}
+
+	@Override
+	public void confirmOales(OalesVO oalesVO) throws FLException {
 
 		OalesPO oalesPO = oalesDao.get(oalesVO.getOid());
 
@@ -154,15 +185,44 @@ public class OalesServiceImpl implements OalesService {
 			throw new FLException(370021, "外销单不存在");
 		}
 
-		oalesPO.setAward(oalesVO.getAward());
-		oalesPO.setAwardType(oalesVO.getAwardType());
+		oalesPO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
+
+		oalesDao.update(oalesPO);
+
+	}
+
+	@Override
+	public void rejectOales(OalesVO oalesVO) throws FLException {
+
+		OalesPO oalesPO = oalesDao.get(oalesVO.getOid());
+		UserPO checker = userDao.queryUserByUserId(oalesVO.getChecker().getUserId());
+
+		if (oalesPO == null) {
+			throw new FLException(370021, "外销单不存在");
+		}
+
+		oalesPO.setChecker(checker);
+
+		oalesDao.update(oalesPO);
+
+	}
+
+	@Override
+	public void checkOales(OalesVO oalesVO) throws FLException {
+
+		OalesPO oalesPO = oalesDao.get(oalesVO.getOid());
+
+		if (oalesPO == null) {
+			throw new FLException(370021, "外销单不存在");
+		}
+
+		oalesPO.setCheckTime(DateUtil.getDateToTimestamp(new Date()));
 
 		oalesDao.update(oalesPO);
 	}
 
 	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void profitOales(OalesVO oalesVO) throws FLException {
+	public void finishOales(OalesVO oalesVO) throws FLException {
 
 		OalesPO oalesPO = oalesDao.get(oalesVO.getOid());
 
@@ -170,9 +230,10 @@ public class OalesServiceImpl implements OalesService {
 			throw new FLException(370021, "外销单不存在");
 		}
 
-		oalesPO.setProfit(oalesVO.getProfit());
+		oalesPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
 
 		oalesDao.update(oalesPO);
+
 	}
 
 }

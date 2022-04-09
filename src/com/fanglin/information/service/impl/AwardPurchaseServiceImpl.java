@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.dingding.service.MessageService;
 import com.fanglin.information.dao.AwardPurchaseDao;
 import com.fanglin.information.dao.AwardRecordDao;
 import com.fanglin.information.dao.AwardStockDao;
@@ -23,6 +24,10 @@ import com.fanglin.information.vo.AwardStockVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.system.dao.CompanyDao;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.CompanyPO;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -39,10 +44,19 @@ public class AwardPurchaseServiceImpl implements AwardPurchaseService {
 	private UserDao userdDao;
 
 	@Autowired
+	private CompanyDao companyDao;
+
+	@Autowired
 	private AwardStockDao awardStockDao;
 
 	@Autowired
 	private AwardRecordDao awardRecordDao;
+
+	@Autowired
+	private SystemConfigDao systemConfigDao;
+
+	@Autowired
+	private MessageService messageDDService;
 
 	@Override
 	public void pageAwardPurchase(Paging paging, List<Filter> filters, AwardPurchaseVO awardPurchase, int company) {
@@ -83,6 +97,14 @@ public class AwardPurchaseServiceImpl implements AwardPurchaseService {
 		awardPurchasePO.setAwardStock(awardStock);
 
 		awardPurchaseDao.save(awardPurchasePO);
+
+		SystemConfigPO key = systemConfigDao.querySystemConfig("MESSAGE_DING_GROUP_AWARD_PURCHASE");
+
+		CompanyPO companyPO = companyDao.get(company);
+
+		if (key != null) {
+			messageDDService.sendMessage(key.getValue(), String.format("公司名: %s, 礼品名称: %s, 收到一条采购申请, 请及时查收.", companyPO.getName(), awardPurchasePO.getAwardStock().getName()));
+		}
 	}
 
 	@Override

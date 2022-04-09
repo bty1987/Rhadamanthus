@@ -13,19 +13,19 @@ import javax.persistence.Table;
 public class PaymentTypePO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1075827583513157078L;
-	
+
 	public static final String COLUMN_PTID_INT = "ptid";
-	
+
 	public static final String COLUMN_TYPE_INT = "type";
-	
+
 	public static final String COLUMN_PAYTYPE_INT = "paytype";
-	
+
 	public static final String COLUMN_BUSTYPE_INT = "bustype";
-	
+
 	public static final String COLUMN_ATTTYPE_INT = "atttype";
-	
+
 	public static final String COLUMN_STATUS_INT = "status";
-	
+
 	public static final short STATUS_ENABLE_INT = 0;
 
 	public static final short STATUS_DISABLE_INT = 1;
@@ -33,17 +33,17 @@ public class PaymentTypePO implements java.io.Serializable {
 	private long ptid;
 
 	private String name;
-	
+
 	private short type;
-	
+
 	private short paytype;
-	
+
 	private short bustype;
-	
+
 	private short atttype;
-	
+
 	private int code;
-	
+
 	private short taxrate;
 
 	private String kino;
@@ -51,7 +51,9 @@ public class PaymentTypePO implements java.io.Serializable {
 	private String kiname;
 
 	private String kibalance;
-	
+
+	private String billType;
+
 	private short status;
 
 	public PaymentTypePO() {
@@ -62,7 +64,6 @@ public class PaymentTypePO implements java.io.Serializable {
 		super();
 		this.ptid = ptid;
 	}
-
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
@@ -163,6 +164,15 @@ public class PaymentTypePO implements java.io.Serializable {
 
 	public void setKibalance(String kibalance) {
 		this.kibalance = kibalance;
+	}
+
+	@Column(name = "billType")
+	public String getBillType() {
+		return billType;
+	}
+
+	public void setBillType(String billType) {
+		this.billType = billType;
 	}
 
 	@Column(name = "status")
