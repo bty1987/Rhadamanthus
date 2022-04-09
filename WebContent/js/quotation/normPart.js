@@ -640,7 +640,7 @@ var QuotationDetail = (function() {
                 "decoration.orderId": quo.orderid
             }, function(res) {
 
-                com.focusPage('#orderId').text(res.decoration.orderId)
+                com.focusPage('#orderId').text(res.decoration.orderId);
                 com.focusPage('#address').text(res.decoration.house.village.name + " " + res.decoration.house.houseNumber);
                 com.focusPage('#version').text(res.decoration.version.name);
             });

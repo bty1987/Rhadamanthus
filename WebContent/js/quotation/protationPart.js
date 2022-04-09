@@ -164,8 +164,8 @@ var ProtationDetail = (function() {
 
             cost = utils.accAdd(utils.accAdd(utils.accMul(quo.basicParams["protation.addmPrice"], quo.basicParams["protation.mostRate"]), utils.accMul(quo.basicParams["protation.adddPrice"], quo.basicParams["protation.costRate"])), utils.accAdd(quo.basicParams["protation.mostCost"], utils.accAdd(utils.accMul(quo.basicParams["protation.cacelArea"], quo.basicParams["protation.costPrice"]), cost)));
 
-            quo.basicParams["protation.basicCost"] = utils.accMul(quo.basicParams["protation.cacelArea"], quo.basicParams["protation.costPrice"])
-            quo.basicParams["protation.addCost"] = utils.accAdd(utils.accMul(quo.basicParams["protation.adddPrice"], quo.basicParams["protation.costRate"]), utils.accMul(quo.basicParams["protation.addmPrice"], quo.basicParams["protation.mostRate"]))
+            quo.basicParams["protation.basicCost"] = utils.accMul(quo.basicParams["protation.cacelArea"], quo.basicParams["protation.costPrice"]);
+            quo.basicParams["protation.addCost"] = utils.accAdd(utils.accMul(quo.basicParams["protation.adddPrice"], quo.basicParams["protation.costRate"]), utils.accMul(quo.basicParams["protation.addmPrice"], quo.basicParams["protation.mostRate"]));
 
             quo.basicParams["protation.totalCost"] = cost;
 
@@ -671,7 +671,7 @@ var ProtationDetail = (function() {
                 "data-action": "collapse"
             });
 
-            var _lineSet = [["line", "0"], ["formula", "数量"], ["num", "数量"], ["name", "名称"], ["type", "类型"], ["unit", "起报价"], ["worktype", ""], ["price", "单价"], ["price", "折后价"], ["price", "总价"], ["btns", "功能"]]
+            var _lineSet = [["line", "0"], ["formula", "数量"], ["num", "数量"], ["name", "名称"], ["type", "类型"], ["unit", "起报价"], ["worktype", ""], ["price", "单价"], ["price", "折后价"], ["price", "总价"], ["btns", "功能"]];
 
             var $ul = $('<ul></ul>').addClass('fl-quo-list');
             var $li = $('<li></li>').addClass('fl-quo-item').appendTo($ul);
@@ -770,7 +770,7 @@ var ProtationDetail = (function() {
             }
 
             if (_type == 1 || qv.type == 2) { // 基础工程
-                _typeName = "基础"
+                _typeName = "基础";
             }
 
             if (qv.type == 3 || qv.type == 4) { // 个性
@@ -993,8 +993,6 @@ var ProtationDetail = (function() {
                 quo.protation = data.protation;
             }, null, false);
 
-            console.log(quo)
-
             com.post(api.decoration.queryDecorationForCommonByOrderId, {
                 "decoration.orderId": quo.decorationOrderId
             }, function(res) {
@@ -1002,7 +1000,7 @@ var ProtationDetail = (function() {
                 quo.decoration = res.decoration;
                 quo.basicParams["protation.cacelArea"] = res.decoration.house.innerArea;
 
-                com.focusPage('#orderId').text(res.decoration.orderId)
+                com.focusPage('#orderId').text(res.decoration.orderId);
                 com.focusPage('#address').text(res.decoration.house.village.name + " " + res.decoration.house.houseNumber);
                 com.focusPage('#version').text(res.decoration.version.name);
             }, null, false);
@@ -1135,9 +1133,9 @@ var ProtationDetail = (function() {
 
             com.focusPage('#sumquoSumMoney').text(total);
 
-            quo.basicParams["protation.basicCost"] = utils.accMul(quo.basicParams["protation.cacelArea"], quo.basicParams["protation.costPrice"])
-            quo.basicParams["protation.materialCost"] = quo.basicParams["protation.materialCost"]
-            quo.basicParams["protation.addCost"] = utils.accAdd(utils.accMul(quo.basicParams["protation.adddPrice"], quo.basicParams["protation.costRate"]), utils.accMul(quo.basicParams["protation.addmPrice"], quo.basicParams["protation.mostRate"]))
+            quo.basicParams["protation.basicCost"] = utils.accMul(quo.basicParams["protation.cacelArea"], quo.basicParams["protation.costPrice"]);
+            quo.basicParams["protation.materialCost"] = quo.basicParams["protation.materialCost"];
+            quo.basicParams["protation.addCost"] = utils.accAdd(utils.accMul(quo.basicParams["protation.adddPrice"], quo.basicParams["protation.costRate"]), utils.accMul(quo.basicParams["protation.addmPrice"], quo.basicParams["protation.mostRate"]));
 
             com.focusPage('#basicCost').text(quo.basicParams["protation.basicCost"]);
             com.focusPage('#materialCost').text(quo.basicParams["protation.mostCost"]);
