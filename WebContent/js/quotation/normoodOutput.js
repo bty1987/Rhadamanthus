@@ -1,5 +1,4 @@
-
-function printHeader(headStr){
+function printHeader(headStr) {
 
     var quotation = quotationUtils.quotationDetail.quotation;
     var decoration = quotation.decoration;
@@ -31,11 +30,11 @@ function printHeader(headStr){
     return headHtml;
 }
 
-function printNormood(){
-    
+function printNormood() {
+
     var index = 0;
     var contentHtml = '';
-    
+
     var normtotal = 0;
 
     contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
@@ -51,14 +50,14 @@ function printNormood(){
     contentHtml += '</tbody></table>';
 
     var normoods = quotationUtils.quotationDetail.quotationFunctionAreaItemAs;
-    
+
     contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
     contentHtml += '<tbody>';
 
-    $.each(normoods, function (j, v){
-        
+    $.each(normoods, function(j, v) {
+
         contentHtml += '<tr bgcolor="#FFFFFF">';
-        contentHtml += '<td width="8%" align="center">' + (index+1) + '</td>';
+        contentHtml += '<td width="8%" align="center">' + (index + 1) + '</td>';
         contentHtml += '<td width="17%" align="center">' + v.goods.no + '</td>';
         contentHtml += '<td width="25%" align="center">' + v.goods.name + '</td>';
         contentHtml += '<td width="15%" align="center">' + v.normnum + '</td>';
@@ -66,14 +65,14 @@ function printNormood(){
         contentHtml += '<td width="15%" align="center">' + v.storenum + '</td>';
         contentHtml += '<td width="10%" align="center">' + v.storeunit + '</td>';
         contentHtml += '</tr>';
-            
+
         index++;
     });
-    
+
     contentHtml += '<tr bgcolor="#FFFFFF">';
     contentHtml += '<td height="12" colspan="12" width="8%" align="center"></td>';
     contentHtml += '</tr>';
-            
+
     contentHtml += '</tbody>';
     contentHtml += '</table>';
 
@@ -95,72 +94,99 @@ function printNormood(){
 
 jQuery(function($) {
 
-	api = parent.api;
-	config = parent.config ;
-	server = parent.server;
-	utils = parent.utils;
-	com = parent.com;
-	company = parent.company;
-	params = parent.params;
+    api = parent.api;
+    config = parent.config;
+    server = parent.server;
+    utils = parent.utils;
+    com = parent.com;
+    company = parent.company;
+    params = parent.params;
 
-	quotationUtils.quotationDetail = {};
-	var url = api.quotation.queryQuotationById;
+    quotationUtils.quotationDetail = {};
+    var url = api.quotation.queryQuotationById;
 
-	com.post(url, {"quotation.qid": params.quotationId}, function(res){
-		quotationUtils.quotationDetail.quotation = res.quotation;
-	}, null, false);
+    com.post(url, {
+        "quotation.qid": params.quotationId
+    }, function(res) {
 
-	com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": params.decorationOrderId}, function(res){
-		quotationUtils.quotationDetail.quotation.decoration = res.decoration;
-	}, null, false);
-	
-	var quotationFunctionAreas = [];
-	
-	if((params.subtype & 1) == 1){
-	    com.post(api.quotation.queryQuotationNormood, {"quotation.qid": params.quotationId}, function(res){
-	        quotationFunctionAreas = res.quotationFunctionAreas;
-	    }, null, false);
-	}
-	
-	var extensions = [];
-	
-	if((params.subtype & 2) == 2){
-	    com.post(api.quotation.queryExtensionNormood, {"extension.orderId": params.decorationOrderId}, function(res){
-	        extensions = res.extensions;
-	    }, null, false);
-	}
-	
-	var addreduces = [];
-	
-	if((params.subtype & 4) == 4){
-	    com.post(api.quotation.queryAddReduceNormood, {"addReduce.orderId": params.decorationOrderId}, function(res){
-	        addreduces = res.addReduces;
-	    }, null, false);
-	}
-	
-	var normoods = [];
-	
-	if((params.subtype & 8) == 8){
-        
-        com.post(api.quotation.queryQuotationNormoodItem, {"quotationNormoodItem.qid": params.quotationId}, function (res) {
+        quotationUtils.quotationDetail.quotation = res.quotation;
+    }, null, false);
+
+    if (quotationUtils.quotationDetail.quotation.status != 1) {
+
+        com.showAlert(com.warning, "报价未锁定");
+        setTimeout(function() {
+
+            com.closePopup();
+        }, 3000);
+
+        return false;
+    }
+
+    com.post(api.decoration.queryDecorationForCommonByOrderId, {
+        "decoration.orderId": params.decorationOrderId
+    }, function(res) {
+
+        quotationUtils.quotationDetail.quotation.decoration = res.decoration;
+    }, null, false);
+
+    var quotationFunctionAreas = [];
+
+    if ((params.subtype & 1) == 1) {
+        com.post(api.quotation.queryQuotationNormood, {
+            "quotation.qid": params.quotationId
+        }, function(res) {
+
+            quotationFunctionAreas = res.quotationFunctionAreas;
+        }, null, false);
+    }
+
+    var extensions = [];
+
+    if ((params.subtype & 2) == 2) {
+        com.post(api.quotation.queryExtensionNormood, {
+            "extension.orderId": params.decorationOrderId
+        }, function(res) {
+
+            extensions = res.extensions;
+        }, null, false);
+    }
+
+    var addreduces = [];
+
+    if ((params.subtype & 4) == 4) {
+        com.post(api.quotation.queryAddReduceNormood, {
+            "addReduce.orderId": params.decorationOrderId
+        }, function(res) {
+
+            addreduces = res.addReduces;
+        }, null, false);
+    }
+
+    var normoods = [];
+
+    if ((params.subtype & 8) == 8) {
+
+        com.post(api.quotation.queryQuotationNormoodItem, {
+            "quotationNormoodItem.qid": params.quotationId
+        }, function(res) {
+
             normoods = res.quotationNormoodItems;
         }, null, false);
     }
-	
-	quotationUtils.quotationNormoodProcessing(quotationFunctionAreas, extensions, addreduces, normoods);
 
-	generatePrintPage(params.type, params.subtype, params.workType, params.company.name, params.orderType, params.showType);
+    quotationUtils.quotationNormoodProcessing(quotationFunctionAreas, extensions, addreduces, normoods);
+
+    generatePrintPage(params.type, params.subtype, params.workType, params.company.name, params.orderType, params.showType);
 
 });
 
-function generatePrintPage(type, subtype, workType, company, orderType, showType){
-    
+function generatePrintPage(type, subtype, workType, company, orderType, showType) {
+
     var html = "";
 
     html += printHeader(company + "定额工费项目单");
     html += printNormood();
 
-	$("#quotationList").html(html);
+    $("#quotationList").html(html);
 }
-
-

@@ -226,19 +226,32 @@ $.extend(api, {
                 args: ["oales.total"]
             }
         },
-        awardOales: {
-            url: "awardOales.do",
+        updateOales: {
+            url: "updateOales.do",
             type: "update",
             tranargs: {
-                args: ["oales.award"]
+                args: ["oales.total", "oales.award", "oales.profit"]
             }
         },
-        profitOales: {
-            url: "profitOales.do",
-            type: "update",
-            tranargs: {
-                args: ["oales.profit"]
-            }
+
+        deleteOales: {
+            url: "deleteOales.do"
+        },
+
+        confirmOales: {
+            url: "confirmOales.do"
+        },
+
+        rejectOales: {
+            url: "rejectOales.do"
+        },
+
+        checkOales: {
+            url: "checkOales.do"
+        },
+
+        finishOales: {
+            url: "finishOales.do"
         },
 
         pageSalesBalance: {
@@ -375,6 +388,12 @@ $.extend(api, {
         },
         discountSalesActivityItem: {
             url: "discountSalesActivityItem.do"
+        },
+        sendSalesActivityItem: {
+            url: "sendSalesActivityItem.do"
+        },
+        affirmSalesActivityItem: {
+            url: "affirmSalesActivityItem.do"
         },
         pageSalesForPompany: {
             url: "pageSalesForPompany.do",

@@ -68,6 +68,10 @@
         {"key":"2","value":"服务部"},
         {"key":"3","value":"工程部"}
     ],
+    "isAffirm": [
+	    {"key":"0","value":"初始"},
+	    {"key":"1","value":"客户确认"},
+    ],
     "paymentTypes": [],
     "errorCode": 0,
     "errorMsg": null

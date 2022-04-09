@@ -1,19 +1,23 @@
 var AddReduceDetail = (function() {
 
     var addReduceDetail = {
+
         addReduce: null,
         artype: null,// 增减项类型 , "0":"增项", "1":"减项", "2":"漏项"
         orderid: null,// 装修单号
         versionid: null,// 报价版本
         ordertype: null,// 订单类型
+        atttype: null, // 业务类型 , 0: 工程 , 1: 主材
         discount: null,
         qid: null,// 订单的默认报价编号
         arid: null,// 增减项编号
         managePrice: 0,
         manageRate: 0,
         isCountIn: false,
+
         isCountManage: com.focusPage("#isCountManage"),
         $isCountManageLabel: com.focusPage('#isCountManageLabel'),
+
         basicParams: {
             "addReduce.arId": null,
             "addReduceItem.arId": null,
@@ -28,8 +32,12 @@ var AddReduceDetail = (function() {
         },
         $modals: {},
         $btnItems: {},
+
+        quotationTypes: [],
+
         quoManagePrice: 0,
         quoManageRate: 0,
+
         initModals: function() {
 
             var that = this;
@@ -76,6 +84,32 @@ var AddReduceDetail = (function() {
                 }),
             };
 
+            // 初始化自定义报价中的类型
+            com.post(api.quotation.queryQuotationType, {}, function(res) {
+
+                addReduceDetail.quotationTypes = res.quotationTypes.split("id", "name");
+                com.focusPage("#quotationType").bindData(res.quotationTypes, "id", "name");
+            }, null, false);
+            // 单位
+            com.post(api.common.queryMeasurementUnit, {}, function(res) {
+
+                com.focusPage("#measurementUnit").bindData(res.measurementUnits, "name", "name");
+            });
+            // 工种
+            com.post(api.common.queryWorkType, {}, function(res) {
+
+                com.focusPage("#workType").bindData(res.workTypes, "name", "name");
+            });
+
+            // 功能区选择弹出层 todo
+            com.post(api.quotation.queryQuotationFunctionAreaForCommonByQuotationId, {
+                "quotation.qid": addReduceDetail.qid
+            }, function(res) {
+
+                com.focusPage("#addQuotationFunctionAreaId").bindData(res.quotationFunctionAreas, "qfaId", "functionAreaName");
+                com.focusPage("#quotationFunctionAreaId").bindData(res.quotationFunctionAreas, "qfaId", "functionAreaName", false, null, "type");
+            });
+
             // 系统定义弹出层
             var _condArr = ['data-quotation-item-name', 'data-quotation-item-bigcategory', 'quotation-worktype'];
             var addReduceDetailSeacher = new Searcher();
@@ -120,31 +154,6 @@ var AddReduceDetail = (function() {
                     $ul.appendTo($tableWrap);
                 }
             }, "pagenationn", "addNormalItemModalPostDatan", extraParams);
-            // 初始化自定义报价中的类型
-            com.post(api.quotation.queryQuotationType, {}, function(res) {
-
-                com.focusPage("#quotationType").bindData(res.quotationTypes, "id", "name");
-            });
-            // 新增报价项select初始化
-            // 单位
-            com.post(api.common.queryMeasurementUnit, {}, function(res) {
-
-                com.focusPage("#measurementUnit").bindData(res.measurementUnits, "name", "name");
-            });
-            // 工种
-            com.post(api.common.queryWorkType, {}, function(res) {
-
-                com.focusPage("#workType").bindData(res.workTypes, "name", "name");
-            });
-
-            // 功能区选择弹出层 todo
-            com.post(api.quotation.queryQuotationFunctionAreaForCommonByQuotationId, {
-                "quotation.qid": addReduceDetail.qid
-            }, function(res) {
-
-                com.focusPage("#addQuotationFunctionAreaId").bindData(res.quotationFunctionAreas, "qfaId", "functionAreaName");
-                com.focusPage("#quotationFunctionAreaId").bindData(res.quotationFunctionAreas, "qfaId", "functionAreaName", false, null, "type");
-            });
         },
         initBtnItems: function() {
 
@@ -202,7 +211,7 @@ var AddReduceDetail = (function() {
                 }),
                 detailBckBtn: com.focusPage('#detailBckBtn').on('click', function() { // 返回
 
-                    com.switchPage(addReduceDetail.historyPage)
+                    com.switchPage(addReduceDetail.historyPage);
                     com.closePopover();
                 }),
 
@@ -713,6 +722,14 @@ var AddReduceDetail = (function() {
                     return false;
                 }
 
+                var subtype = $this.attr("data-quotationSubType");
+
+                if (addReduceDetail.atttype == 1 && subtype != 1)
+                    return true;
+
+                if (addReduceDetail.atttype == 2 && subtype == 1)
+                    return true;
+
                 var addPrice = parseFloat($li.find("li .addPrice").text() ? $li.find("li .addPrice").text() : 0);
                 var unitPrice = parseFloat($li.find("li .unitPrice").text() ? $li.find("li .unitPrice").text() : 0);
                 var subPrice = parseFloat($li.find("li .subPrice").text() ? $li.find("li .subPrice").text() : 0);
@@ -982,6 +999,7 @@ var AddReduceDetail = (function() {
                 "margin-bottom": 0
             });
             var $label = $('<label></label>');
+
             var $input = $('<input>').attr({
                 "type": "checkbox",
                 "name": "modalQuots",
@@ -989,15 +1007,22 @@ var AddReduceDetail = (function() {
                 "data-discount": v.discount,
                 "data-quotationType": v.type,
                 "data-quotationSubType": (v.category && v.category.id) ? v.category.id : v.subtype,
-                "quotationFunctionAreaType": com.focusPage('#quotationFunctionAreaId').find('option:selected').attr("other")
-            // 功能区
+                "quotationFunctionAreaType": com.focusPage('#quotationFunctionAreaId').find('option:selected').attr("other"),
             }).val(v[id]);
+
+            var subtype = (v.category && v.category.id) ? v.category.id : v.subtype;
+
+            if (addReduceDetail.atttype == 1 && subtype != 1)
+                $input.attr("disabled", "disabled");
+
+            if (addReduceDetail.atttype == 2 && subtype == 1)
+                $input.attr("disabled", "disabled");
 
             var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v[name]);
 
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
-            var propertyArr = [["编号:", v.itemId, "grey"], ["大类:", v.quotationBigCategory, "red quotationBigCategory"], ["单位:", v.measurementUnit, "red measurementUnit"], ["工种:", v.workType, "red workType"], ["增补价:", v.addPrice, "blue addPrice"], ["单价:", v.unitPrice, "blue unitPrice"], ["退减价:", v.subPrice, "blue subPrice"], ["工程量:", v.num, "blue"], ["是否打折:", v.discount == 1 ? '打折' : '不打折', "red"], ["说明:", v.quotationItemDes, "grey quotationItemDes"], ];
+            var propertyArr = [["编号:", v.itemId, "grey"], ["大类:", addReduceDetail.quotationTypes[(v.category && v.category.id) ? v.category.id : v.subtype], "red quotationBigCategory"], ["单位:", v.measurementUnit, "red measurementUnit"], ["工种:", v.workType, "red workType"], ["增补价:", v.addPrice, "blue addPrice"], ["单价:", v.unitPrice, "blue unitPrice"], ["退减价:", v.subPrice, "blue subPrice"], ["工程量:", v.num, "blue"], ["是否打折:", v.discount == 1 ? '打折' : '不打折', "red"], ["说明:", v.quotationItemDes, "grey quotationItemDes"], ];
 
             $.each(propertyArr, function(index, value) {
 
@@ -1171,9 +1196,12 @@ var AddReduceDetail = (function() {
         init: function() {
 
             addReduceDetail.arid = params.addReduceId;
+            addReduceDetail.atttype = params["addReduce.atttype"];
             addReduceDetail.ordertype = params.decorationType;
 
             addReduceDetail.historyPage = params.historyPage;
+
+            com.focusPage('#atttype').text(addReduceDetail.atttype == 1 ? "工程" : addReduceDetail.atttype == 2 ? "主材" : "工程/主材");
 
             com.post(api.addReduce.queryAddReduceByArid, {
                 "addReduce.arId": addReduceDetail.arid

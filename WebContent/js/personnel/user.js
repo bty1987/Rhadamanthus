@@ -11,12 +11,36 @@
         deptList: {},
         loginFlag: false,
         simpleAddUserModal:null,
+        userPhoto:"",
+        identityPathF:"",
+        identityPathB:"",
         
-        modals: {},
-        items: {},
+        btn:{
+            saveBtns: com.focusPage("#saveBtns").on("click",saveBtns),
+        },
+        
+        modals: {
+            pictureModal: com.focusPage("#pictureModal"),
+        },
+        items: {
+            userPhoto : com.focusPage("#userPhoto", "#pictureModal"),
+            identityPathF :  com.focusPage("#identityPathF", "#pictureModal"),
+            identityPathB : com.focusPage("#identityPathB", "#pictureModal"),
+
+        },
         postData: null,
         isExpert: true
     };
+    
+    function initUser(v){
+
+        com.focusPage("#picture").val(v.userPhoto);
+        com.focusPage("#userPhoto").attr("href", com.showImg(com.focusPage("#showImg"), v.userPhoto, 150, 150, '', null));
+        com.focusPage("#picture1").val(v.identityPathF);
+        com.focusPage("#identityPathF").attr("href", com.showImg(com.focusPage("#showImg1"), v.identityPathF, 360, 260, '', null));
+        com.focusPage("#picture2").val(v.identityPathB);
+        com.focusPage("#identityPathB").attr("href", com.showImg(com.focusPage("#showImg2"), v.identityPathB, 360, 260, '', null));
+    }
     
     var type = params['urlLoadParams'].type
     
@@ -26,6 +50,11 @@
     user.simpleAddUserModal.on('hide.bs.modal',function(e){
         com.cleanItems(user.items);
         com.closeTip();
+    });
+    
+    user.modals.pictureModal.on('show.bs.modal',function(e){
+        com.cleanItems(user.items);
+        com.clearValidator();
     });
     
     user.modals.qrcodeModal = com.initForm("qrcodeModal", "二维码", [{"id": "Qrcode", "type": "div", "clazz": "qrcode"}], []);
@@ -58,7 +87,7 @@
         user.statusType = a.statusType;
     }, null, false);
 
-    //获取部门类型
+    // 获取部门类型
     com.post(api.communion.queryDepartmentType, {}, function(res){
         user.deptType = res.departmentTypes;
     }, null, false);
@@ -86,6 +115,7 @@
 					var $btnlookOperation= $('<a></a>').addClass('btn btn-minier btn-blue').html('工作信息');
 					var $btnDetail= $('<a></a>').addClass('btn btn-minier btn-success').html('简单查看');
 					var $btnPrint= $('<a></a>').addClass('btn btn-minier btn-warning').html('打印');
+					var $btnPicture= $('<a></a>').addClass('btn btn-minier btn-purple').html('图片');
 
                     var propertyArr = [
                         ["员工编号:", v.userId, "grey"],
@@ -106,7 +136,7 @@
                     $qrcode.click(function(){
 
                         user.items.Qrcode.html("").qrcode({
-                            render: "canvas", //也可以替换为table
+                            render: "canvas", // 也可以替换为table
                             width: 150,
                             height: 150,
                             text: "fanglinserver:" + v.userId
@@ -115,7 +145,7 @@
                         user.modals.qrcodeModal.modal('show');
                     });
 
-                    //查看
+                    // 查看
                     $btnCheck.click(function(){
                         params.tempUserId = v.userId;
                         params.isExpert = user.isExpert;
@@ -134,7 +164,7 @@
                         });
                     });
 
-                    //添加点击事件
+                    // 添加点击事件
                     $addDD.unbind().bind('click',function(){
                         com.focusPage('#ddModal').modal('show');
 
@@ -159,7 +189,7 @@
                             }
                         },
                         didList = [];
-                        //获取所有叶子节点
+                        // 获取所有叶子节点
                         $.each(deptList, function(i, v){
                             didList.push(v.id);
                         });
@@ -169,14 +199,14 @@
                                 didList.splice(didList.indexOf(v.parentid),1);
                             }
                         });
-                        //splice为删除了父类的id,余下的在didlist中的id为子节点的id
+                        // splice为删除了父类的id,余下的在didlist中的id为子节点的id
 
                         com.focusPage('#tree3').ace_tree({
                             dataSource: {
                                 data : function(options, callback) {
                                     var $data = null;
                                     if( !("type" in options)){
-                                        $data = deptObj;//the root tree
+                                        $data = deptObj;// the root tree
                                         callback({ data: $data });
                                         return;
                                     }else if("type" in options && options.type == "folder") {
@@ -195,8 +225,8 @@
                             loadingHTML:'<div class="tree-loading"><i class="icon-refresh icon-spin blue"></i></div>',
                             'open-icon' : 'icon-minus',
                             'close-icon' : 'icon-plus',
-                            'selectable' : true,//可选
-                            'multiSelect' : true, //多选
+                            'selectable' : true,// 可选
+                            'multiSelect' : true, // 多选
                             'selected-icon' : null,
                             'unselected-icon' : null,
                             folderSelect : true,
@@ -254,7 +284,7 @@
                                 }
                             }, null, false);
                         });
-                        //removeData() 方法删除之前通过 data() 方法设置的数据  $(selector).removeData(name)
+                        // removeData() 方法删除之前通过 data() 方法设置的数据 $(selector).removeData(name)
                         com.focusPage('#cancel').click(function(){
                             com.focusPage("#tree3").removeData("tree");
                         });
@@ -263,7 +293,7 @@
                     com.focusPage('#closeM').click(function(){
                         com.focusPage("#tree3").removeData("tree");
                     });
-                    //同步钉钉信息
+                    // 同步钉钉信息
                     $updateDD.click(function(){
                         var btn = $(this);
                         var span = btn.find('span');
@@ -336,8 +366,16 @@
 						params.uid = v.uid;
 						com.popup("方林装饰应聘登记表", api.index.userPrint.url, null, null, true);
 					});
+					
+					$btnPicture.click(function(){
+			            user.modals.pictureModal.modal("show");
+			            params.tempUserId = v.userId;
+			            params.uid = v.uid;
+                        initUser(v);
 
-                    //删除点击事件
+                    });
+
+                    // 删除点击事件
                     $deleteDD.click(function(){
                         var btn = $(this);
                         var span = btn.find('span');
@@ -369,7 +407,7 @@
                         });
                     });
                     
-                    $divBtnWrap.append($qrcode).append($btnCheck).append($btnEdit).append($addDD).append($updateDD).append($deleteDD).append($userexception).append($btnlookContract).append($btnlookEducation).append($btnlookOperation).append($btnDetail).append($btnPrint).appendTo($h3);
+                    $divBtnWrap.append($qrcode).append($btnCheck).append($btnEdit).append($addDD).append($updateDD).append($deleteDD).append($userexception).append($btnlookContract).append($btnlookEducation).append($btnlookOperation).append($btnDetail).append($btnPrint).append($btnPicture).appendTo($h3);
 
                     $liLine.append($h3).append($ulProperty).appendTo($ul);
                 });
@@ -408,7 +446,7 @@
         var $exportspan = $('<span></span>').text('导出').appendTo($exporta);
 
         var btns =  [$addaS, $adda, $importa];
-        user.isExpert ? btns.push($exporta) : btns; //是否为员工-高级页面
+        user.isExpert ? btns.push($exporta) : btns; // 是否为员工-高级页面
 
         return btns;
     });
@@ -439,7 +477,7 @@
         });
     });
 	
-    //添加人员(简化版)
+    // 添加人员(简化版)
     user.saveBtn = com.focusPage("#saveUserBtn").on("click", saveData);
     user.cancelBtn = com.focusPage("#cancelUserBtn").on("click",function() {
         user.simpleAddUserModal.modal("hide");
@@ -527,5 +565,59 @@
             user.simpleAddUserModal.modal("hide");
         });
     }
+    
+    function saveBtns(){
+        
+        parm = {
+            "user.userId": params.tempUserId,
+            "user.userPhoto":com.focusPage("#picture").val(),
+            "user.identityPathF":com.focusPage("#picture1").val(),
+            "user.identityPathB":com.focusPage("#picture2").val()
+        };
+
+        com.post(api.personel.updateUserForPhoto, parm, function(res){
+            user.userPhoto = com.focusPage("#picture").val();
+            user.identityPathF = com.focusPage("#picture1").val();
+            user.identityPathB = com.focusPage("#picture2").val();
+            com.showAlert(com.info, "操作成功");
+            user.modals.pictureModal.modal("hide");
+            userSeacher.doSearch();
+        });
+  
+    };
+
+    function removePicture(){
+        com.focusPage("#showImg").attr("src","#");
+        com.focusPage("#picture").val("");
+        com.focusPage("#userPhoto").attr("href","javascript:void(0)");
+    }
+
+    com.uploadify("#pictureUpload", "上传图片", api.common.uploadImg, 'btn btn-success blue col-md-12', '*.jpg;*.jpge;*.gif;*.png', {'uploadType': 0}, 1, function(data){
+        com.focusPage("#picture").val(data.resUrl);
+        com.focusPage("#userPhoto").attr("href", com.showImg(com.focusPage("#showImg"), data.resUrl, 150, 150, ''));
+    });
+
+    function removePicture1(){
+        com.focusPage("#showImg1").attr("src","#");
+        com.focusPage("#picture1").val("");
+        com.focusPage("#identityPathF").attr("href","javascript:void(0)");
+    }
+
+    com.uploadify("#pictureUpload1", "上传图片", api.common.uploadImg, 'btn btn-success blue col-md-12', '*.jpg;*.jpge;*.gif;*.png', {'uploadType': 0}, 1, function(data){
+        com.focusPage("#picture1").val(data.resUrl);
+        com.focusPage("#identityPathF").attr("href", com.showImg(com.focusPage("#showImg1"), data.resUrl, 360, 260, ''));
+    });
+
+    function removePicture2(){
+        com.focusPage("#showImg2").attr("src","#");
+        com.focusPage("#picture2").val("");
+        com.focusPage("#identityPathB").attr("href","javascript:void(0)");
+    }
+
+    com.uploadify("#pictureUpload2", "上传图片", api.common.uploadImg, 'btn btn-success blue col-md-12', '*.jpg;*.jpge;*.gif;*.png', {'uploadType': 0}, 1, function(data){
+        com.focusPage("#picture2").val(data.resUrl);
+        com.focusPage("#identityPathB").attr("href", com.showImg(com.focusPage("#showImg2"), data.resUrl, 360, 260, ''));
+    });
+
 
 });

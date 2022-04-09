@@ -59,18 +59,12 @@ $(function ($) {
         com.cleanItems(receiptType.receiptTypeItems);
         receiptType.currentRtid = null;
         receiptType.currentNo = null;
-        com.focusPage("#itemtypeDiv").css("display", "block");
     });
 
     receiptType.items.type.on("change", function(){
         var typeVal =  receiptType.items.type.val();
 
         (['2', '3'].contains(typeVal)) ? com.focusPage("#banknoDiv").css("display", "block") : com.focusPage("#banknoDiv").css("display", "none");
-    });
-
-    receiptType.receiptTypeItems.paytype.on("change", function(){
-        var paytype = receiptType.receiptTypeItems.paytype.val();
-        paytype == 0 ? com.focusPage("#itemtypeDiv").css("display", "block") : com.focusPage("#itemtypeDiv").css("display", "none");
     });
 
     var displayFunc = (function () {
@@ -93,7 +87,7 @@ $(function ($) {
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
             var $btnuptl = $('<a></a>').addClass('btn btn-minier btn-yellow').html('修改');
-            var $btnAdd = $('<a></a>').addClass('btn btn-minier btn-success').html('项目');
+            var $btnAdd = $('<a></a>').addClass('btn btn-minier btn-success').html('单据');
 
             switch (v.type){
                 case 1: v.type = "现金"; break;
@@ -118,7 +112,7 @@ $(function ($) {
 
             if (v.receiptTypeItems != null && v.receiptTypeItems.length > 0) {
                 $.each(v.receiptTypeItems, function (i, v) {
-                    propertyArr.push([(!v.paytype ? receiptType.paymentTypes[v.type] : "") + receiptType.paytypes[v.paytype] + ":", v.name, "grey"])
+                    propertyArr.push([receiptType.paymentTypes[v.type] + receiptType.paytypes[v.paytype] + ":", v.name, "grey"])
                 });
             }
 
@@ -248,13 +242,13 @@ $(function ($) {
     }
 
     function saveReceiptTypeItem () {
-        var type = receiptType.receiptTypeItems.paytype.val() == 0 ? receiptType.receiptTypeItems.itemtype.val() : "-1";
+        if(com.validate("receiptTypeItemModal")) return;
 
         var options = {
             "receiptTypeItem.rtid": receiptType.currentRtid,
             "receiptTypeItem.no": receiptType.currentNo,
             "receiptTypeItem.name": receiptType.receiptTypeItems.itemName.val().replace(/\s+/g, ""),
-            "receiptTypeItem.type": type,
+            "receiptTypeItem.type": receiptType.receiptTypeItems.itemtype.val(),
             "receiptTypeItem.paytype": receiptType.receiptTypeItems.paytype.val()
         };
 

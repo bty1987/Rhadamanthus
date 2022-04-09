@@ -315,12 +315,25 @@ jQuery(function($) {
     com.post(url, {
         "quotation.qid": params.quotationId
     }, function(res) {
+
         quotationUtils.quotationDetail.quotation = res.quotation;
     }, null, false);
+
+    if (quotationUtils.quotationDetail.quotation.status != 1) {
+
+        com.showAlert(com.warning, "报价未锁定");
+        setTimeout(function() {
+
+            com.closePopup();
+        }, 3000);
+
+        return false;
+    }
 
     com.post(api.decoration.queryDecorationForCommonByOrderId, {
         "decoration.orderId": params.decorationOrderId
     }, function(res) {
+
         quotationUtils.quotationDetail.quotation.decoration = res.decoration;
     }, null, false);
 
@@ -330,6 +343,7 @@ jQuery(function($) {
         com.post(api.quotation.queryQuotationNormrice, {
             "quotation.qid": params.quotationId
         }, function(res) {
+
             quotationFunctionAreas = res.quotationFunctionAreas;
         }, null, false);
     }
@@ -340,6 +354,7 @@ jQuery(function($) {
         com.post(api.quotation.queryExtensionNormrice, {
             "extension.orderId": params.decorationOrderId
         }, function(res) {
+
             extensions = res.extensions;
         }, null, false);
     }
@@ -350,6 +365,7 @@ jQuery(function($) {
         com.post(api.quotation.queryAddReduceNormrice, {
             "addReduce.orderId": params.decorationOrderId
         }, function(res) {
+
             addreduces = res.addReduces;
         }, null, false);
     }
@@ -367,8 +383,7 @@ function generatePrintPage(type, subtype, workType, company, orderType, showType
     if (type == 1) {
         html += printHeader(company + "定额工费项目单");
         html += printNormrice(workType);
-    }
-    else if (type == 2) {
+    } else if (type == 2) {
         html += printHeader(company + "定额工费项目单");
         html += printNormriceForWorker(workType);
     }

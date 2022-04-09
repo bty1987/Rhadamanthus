@@ -38,9 +38,6 @@ jQuery(function (a) {
     if (parent.window.isPC) {
         pcBody();
     } else if (!location.hostname.startsWith('192.168')){
-        $("#unamePwdContainer").remove();
-        $("#QRLogin").remove();
-        $("#WXLogin").remove();
     }
 
     config.demo && (config.server = 'result/', config.communion = 'result/', config.media = 'result/', QRCode = '/QRCode.json', queryVode = '/queryVode.json');
@@ -51,7 +48,7 @@ jQuery(function (a) {
         $.ajax(config.communion + QRCode + "?timestamp=" + new Date().getTime() + "&prefix=" + config.prefix).done(function (data) {
             $('#qrcode img').prop('src', data.QRCode).removeClass("hide");
         }).fail(function () {
-            //alert("获取二维码失败!");
+            // alert("获取二维码失败!");
             $('#qrcode img').remove();
         }).done(function (data) {
             var _flag = data.loginInfo.loginFlag;
@@ -63,7 +60,7 @@ jQuery(function (a) {
         $.ajax(config.communion + QRCode + "?timestamp=" + new Date().getTime() + "&prefix=" + config.prefix + "&type=1").done(function (data) {
             $('#wxcode img').prop('src', data.QRCode).removeClass("hide");
         }).fail(function () {
-            //alert("获取二维码失败!");
+            // alert("获取二维码失败!");
             $('#wxcode img').remove();
         }).done(function (data) {
             var _flag = data.loginInfo.loginFlag;
@@ -170,9 +167,9 @@ jQuery(function (a) {
     }
 
 
-    //$("#backgroundImage > img").attr('src', config.backgroundImg);
-    //$("#backgroundImage").fullscreenBackground();
-    //$("#backgroundImage").css("position", "");
+    // $("#backgroundImage > img").attr('src', config.backgroundImg);
+    // $("#backgroundImage").fullscreenBackground();
+    // $("#backgroundImage").css("position", "");
 
     function verifyCode() {
 

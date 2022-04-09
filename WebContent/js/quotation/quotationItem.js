@@ -298,7 +298,7 @@ $(function() {
             return false;
         }
 
-        if (com.focusPage('span[name="totalRecords"]').text() > 500) {
+        if (com.focusPage('span[name="totalRecords"]').text() > 2000) {
             com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
             return false;
         }

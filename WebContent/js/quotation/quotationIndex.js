@@ -46,15 +46,18 @@ $(function() {
         };
 
         com.post(api.quotation.queryQuotationByOrderId, options, function(res) {
+
             decorationQuotation.quotationItems.quotations.bindData(res.quotations, 'qid', 'name');
         });
     });
 
     com.focusPage('#btnBack').on('click', function() {
+
         com.switchPage("/views/decoration/decoration.html");
     });
 
     com.focusPage('#createQuotation').on('click', function() {
+
         decorationQuotation.editFlg = 0;
         com.clearValidator();
         com.cleanItems(decorationQuotation.quotationItems);
@@ -63,9 +66,11 @@ $(function() {
     });
 
     com.focusPage('#replicaQuotation').on('click', function() {
+
         com.clearValidator();
         com.cleanItems(decorationQuotation.quotationItems);
         decorationQuotation.quotationItems.replicaType.on("change", function(e) {
+
             $this = $(this);
             if ($this.val() == 0) {
                 com.focusPage("#Bquoteno").removeClass("hide");
@@ -84,7 +89,8 @@ $(function() {
 
     com.focusPage('#saveBtn').bindClick(function() {
 
-        if (com.validate("quotationModal")) return;
+        if (com.validate("quotationModal"))
+            return;
 
         if (decorationQuotation.editFlg == 0) {
 
@@ -93,10 +99,10 @@ $(function() {
                 "quotation.name": decorationQuotation.quotationItems.name.val(),
                 "quotation.style": decorationQuotation.quotationItems.style.val(),
                 "quotation.content": decorationQuotation.quotationItems.content.val(),
-				"quotation.atttype": decorationQuotation.quotationItems.type.val()
             };
 
             com.post(api.quotation.addQuotation, options, function(res) {
+
                 searcher.doSearch();
                 decorationQuotation.quotationModal.modal("hide");
             }, null, false);
@@ -139,6 +145,7 @@ $(function() {
             };
 
             com.post(api.quotation.copyQuotation, options, function(res) {
+
                 searcher.doSearch();
                 decorationQuotation.quotationModal.modal("hide");
             }, null, false);
@@ -147,7 +154,8 @@ $(function() {
 
     com.focusPage("#replicaBtn").bindClick(function() {
 
-        if (com.validate("replicaQuotationModal")) return;
+        if (com.validate("replicaQuotationModal"))
+            return;
 
         var options = {};
 
@@ -191,12 +199,29 @@ $(function() {
         com.post(api.decoration.queryDecorationForCommonByOrderId, {
             "decoration.orderId": decorationQuotation.decorationOrderId
         }, function(res) {
+
             drawdecoration(res.decoration);
         }, null, false);
 
     }
 
     function drawdecoration(decoration) {
+
+        var $widget1 = $('<div></div>').addClass("col-xs-6 col-md-3").prependTo(decorationInfo);
+        var $box1 = $('<div></div>').addClass("widget-box").appendTo($widget1);
+        var $header1 = $('<div></div>').addClass("widget-header header-color-green").appendTo($box1);
+
+        var name1 = $('<h4></h4>').attr('id', 'h4name_').text("客户").appendTo($header1);
+
+        var $body1 = $('<div></div>').addClass("widget-body").appendTo($box1);
+        var $main1 = $('<div></div>').addClass("widget-main").appendTo($body1);
+        var $info1 = $('<div></div>').css("padding", "5px").appendTo($main1);
+
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('姓名: ' + decoration.customer.name)).appendTo($info1);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('电话: ' + (decoration.customer.phone == "" ? "暂无" : decoration.customer.phone))).appendTo($info1);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('地址: ' + (decoration.customer.address == "" ? "暂无" : decoration.customer.address))).appendTo($info1);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('客户关系: ' + decoration.customer.relationshipType)).appendTo($info1);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('身份证: ' + (decoration.customer.identity == "" ? "暂无" : decoration.customer.identity))).appendTo($info1);
 
         var $widget = $('<div></div>').addClass("col-xs-6 col-md-3").prependTo(decorationInfo);
         var $box = $('<div></div>').addClass("widget-box").appendTo($widget);
@@ -211,7 +236,8 @@ $(function() {
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('装修单号: ' + decoration.orderId)).appendTo($info);
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('楼盘地址: ' + decoration.house.village.name + " " + decoration.house.houseNumber)).appendTo($info);
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('报价版本: ' + decoration.version.name)).appendTo($info);
-
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('设计师: ' + decoration.designer.currentName)).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('业务员: ' + decoration.salesman.currentName)).appendTo($info);
     }
 
     var searcher = new Searcher();
