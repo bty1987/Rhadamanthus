@@ -444,15 +444,15 @@ var ProtationDetail = (function() {
         deleteQuoteInBatches: function($domain) {
 
             $domain.find('.fl-quo-input').insertAfter($domain.find('.fl-quo-list.items')).addClass('hide');
+
             var that = this;
-            // , 参数 : qfaiIds[n] , 预签项Id列表 ;
             var $quos = com.focusPage('[name="deleteItems"]:checked', $domain);
             var $q1 = [], $q2 = [];
             var _params = {};
+
             if (!$quos.length) {
-                return;
+                return false;
             }
-            ;
 
             $quos.length && $.each($quos, function(i, v) {
 
@@ -517,6 +517,7 @@ var ProtationDetail = (function() {
         recordQuots: function($input, ischecked) {
 
             var that = this;
+
             if (ischecked) {
                 that.quotesRecord[that.quotesRecord.length] = $input;// 据说这样比push快
             } else {
@@ -525,7 +526,6 @@ var ProtationDetail = (function() {
                     return v.val() != $input.val() ? v : null;
                 });
             }
-            ;
         },
         // 点击页面其他位置时清除表格行的选中样式
         clearQuoteSelected: function() {
