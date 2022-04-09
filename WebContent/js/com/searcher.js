@@ -82,13 +82,17 @@ var Searcher = function() {
             });
 
             $cleanBtn.click(function() {
+
                 basicConf.$searcher.find('.fl-filter-inline').each(function(i, v) {
+
                     $($(v).children()[1]) && $($(v).children()[1]).removeAttr('data-typeahead-key').val('');
                 });
             });
 
             $tendBtn.click(function() {
+
                 basicConf.$searcher.find('.fl-filter-inline').each(function(i, v) {
+
                     if (i > 3) {
                         $(v).toggle();
                     }
@@ -128,7 +132,9 @@ var Searcher = function() {
             }
 
             var setOption = function(data) {
+
                 data && data.length && ($.each(data, function(i, v) {
+
                     if ("object" !== typeof v) {
                         $('<option></option>').attr("value", v).html(v).appendTo($showItem);
                     } else {
@@ -204,6 +210,7 @@ var Searcher = function() {
                         if (_rquery != undefined) {
                             if (typeof _rquery == "object") {
                                 $.each(_rquery, function(i, v) {
+
                                     _option[v] = query;
                                 })
                             } else if (typeof _rquery == "string") {
@@ -216,14 +223,17 @@ var Searcher = function() {
                         com.post(this.options.url, options, $.proxy(this.options.callback, this));
                     },
                     matcher: function(item) {
+
                         return true;
                     },
                     callback: function(data) {
+
                         this.options.list = _rappr.concat(data[_rresult]);
                         this.flprocess(this.options.list, [_rkey], [_rvalue]);
                     },
                     isResultTypeMap: true, // 必填值为true,获取key,value的标识,
                     flupdater: function(k, v) {// 下拉列表选中时的一些处理,必填对选中项的key和value做处理
+
                         if (v.indexOf('-') != -1) {
                             v = v.split('-')[0]
                         }
@@ -243,12 +253,14 @@ var Searcher = function() {
 
                 if (_rurl) {
                     com.post(_rurl, _rpostParam, function(result) {
+
                         var data = _rappr.concat(result[_rresult]);
                         setOption(data);
                     }, null, false);
 
                 } else {
                     $.each(_rresult, function(i, v) {
+
                         if ("object" !== typeof v) {
                             $('<option></option>').attr("value", v).html(v).appendTo($showItem);
                         } else {
@@ -273,6 +285,7 @@ var Searcher = function() {
                         data = params.selectCaching[condCode];
                     } else {
                         com.post(_rurl, _rpostParam, function(result) {
+
                             data = _rappr.concat(result[_rresult]);
                             params.selectCaching[condCode] = data;
                         }, null, false);
@@ -403,12 +416,14 @@ var Searcher = function() {
          * @returns
          */
         init: function() {
+
             var _pagenation = this;
 
             // 增加分页操作元素
             basicConf.$pager.html('');
 
             basicConf.buttons && $.each(basicConf.buttons, function(i, v) {
+
                 v.appendTo(basicConf.$pager);
             });
 
@@ -508,6 +523,7 @@ var Searcher = function() {
     };
 
     var emptyData = function() {
+
         var $resultList = com.focusPage('#' + basicConf.$resulter).html('');
         var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
         var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
@@ -515,6 +531,7 @@ var Searcher = function() {
     };
 
     var queryData = function(_params) {
+
         com.post(basicConf.url, _params, $.proxy(function(result) {
 
             // params全局变量,给全局变量赋当前查询条件的值
@@ -529,6 +546,7 @@ var Searcher = function() {
      * 
      */
     var getParams = function() {
+
         var _count = 0;
         var _params = {};
         var _condArr = basicConf.conditions;
@@ -630,7 +648,9 @@ var Searcher = function() {
 
         if (props.length == 0) {
             return !dataset ? o[prop] : dataset[o[prop]];
-        } else if (o[prop]) { return getElement(o[prop], props); }
+        } else if (o[prop]) {
+            return getElement(o[prop], props);
+        }
 
         return "";
     }
@@ -735,6 +755,7 @@ var Searcher = function() {
             return this;
         },
         result: function(resultName) {
+
             if (resultName)
                 basicConf.resultName = resultName;
 
@@ -765,7 +786,9 @@ var Searcher = function() {
 
                 var $tableWrap = com.focusPage('#' + basicConf.$resulter).html("");
 
-                if (!data || data.length == 0) { return this; }
+                if (!data || data.length == 0) {
+                    return this;
+                }
 
                 var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($tableWrap);
 
@@ -794,7 +817,7 @@ var Searcher = function() {
 
                             var props = {
                                 "type": "checkbox",
-                                "name": "check",
+                                "name": value.field,
                                 "id": "check",
                                 "class": "ace ace-checkbox-2",
                             }
@@ -802,7 +825,7 @@ var Searcher = function() {
                             props[value.field] = v[value.prop];
 
                             var $label = $('<label></label>').prependTo($h3);
-                            var $input = $('<input>').attr(props).appendTo($label);
+                            var $input = $('<input>').attr(props).val(v[value.prop]).appendTo($label);
                             var $span = $('<span></span>').addClass('lbl blue bigger-150').appendTo($label);
 
                             return true;
@@ -868,12 +891,14 @@ var Searcher = function() {
                             $switch.prop("checked", button.init && button.init(v));
 
                             $switch.switchBtn("status-lbl").on("click", function() {
+
                                 var _check = $(this).prop("checked");
                                 button.handle(v, _check);
                                 (_check ? $switch.prop("checked") : $switch.removeAttr("checked"));
                             });
                         } else {
                             $('<a></a>').addClass('btn btn-minier ' + button.clazz).html(button.name).appendTo($divBtnWrap).click(function() {
+
                                 button.handle(v);
                             });
                         }
@@ -894,7 +919,9 @@ var Searcher = function() {
 
                 var $tableWrap = com.focusPage('#' + basicConf.$resulter).html("");
 
-                if (!data || data.length == 0) { return this; }
+                if (!data || data.length == 0) {
+                    return this;
+                }
 
                 var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($tableWrap);
 
@@ -973,6 +1000,7 @@ var Searcher = function() {
                             $switch.prop("checked", button.init && button.init(v));
 
                             $switch.switchBtn("status-lbl").on("click", function() {
+
                                 var _check = $(this).prop("checked");
                                 button.handle(v, _check);
                                 (_check ? $switch.prop("checked") : $switch.removeAttr("checked"));
@@ -981,6 +1009,7 @@ var Searcher = function() {
                             $btntools = $('<div></div>').addClass("action-buttons").css("padding", "1px 0").appendTo($main);
                         } else {
                             $('<a></a>').addClass('btn btn-minier ' + button.clazz).html(button.name).appendTo($btntools).click(function() {
+
                                 button.handle(v);
                             });
                         }
@@ -1000,7 +1029,9 @@ var Searcher = function() {
 
                 var $tableWrap = com.focusPage('#' + basicConf.$resulter).html("");
 
-                if (!data || data.length == 0) { return this; }
+                if (!data || data.length == 0) {
+                    return this;
+                }
 
                 var $ulTitle = $('<ul></ul>').addClass('flex-table').appendTo($tableWrap);
                 var $liTitle = $('<li></li>').addClass('line table-title').appendTo($ulTitle);
@@ -1009,6 +1040,7 @@ var Searcher = function() {
                 var $contentWrap = $('<div></div>').addClass('line-wrap content col' + basicConf.lineprop.length).appendTo($liTitle);
 
                 $.each(basicConf.lineprop, function(i, v) {
+
                     $('<div></div>').addClass('cell').html(v.name).appendTo($contentWrap);
                 });
 
@@ -1021,6 +1053,7 @@ var Searcher = function() {
                     var $contentWrap = $('<div></div>').addClass('line-wrap content col' + basicConf.lineprop.length).appendTo($liLine);
 
                     $.each(basicConf.lineprop, function(index, value) {
+
                         $('<div></div>').addClass('cell ' + value.clazz).html(getElement(v, value.prop.split('.'), value.dataset)).appendTo($contentWrap);
                     });
 
@@ -1061,13 +1094,16 @@ var Searcher = function() {
 
                 var table = $("<table></table>").attr("lay-filter", basicConf.$resulter).appendTo($tableWrap);
 
-                if (!data || data.length == 0) { return this; }
+                if (!data || data.length == 0) {
+                    return this;
+                }
 
                 // header handle
                 var headerThead = $("<thead></thead>");
                 var headerTr = $("<tr></tr>").appendTo(headerThead);
 
                 $.each(basicConf.lineprop, function(i, v) {
+
                     if (v.toolbar)
                         v.toolbar = "#" + basicConf.$resulter + "tools";
                     var headerTh = $('<th></th>').attr("lay-data", JSON.stringify(v)).appendTo(headerTr);
@@ -1100,6 +1136,7 @@ var Searcher = function() {
                 var tools = $('<script type="text/html" id="' + basicConf.$resulter + 'tools">').appendTo($tableWrap);
 
                 $.each(basicConf.linevent, function(k, v) {
+
                     $('<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="' + k + '"></a>').html(v.name).appendTo(tools);
                 });
 
@@ -1145,6 +1182,7 @@ var Searcher = function() {
             searchCond.renderConds(); // 初始化查询条件
 
             setTimeout(function() {
+
                 searchByPresentParams()
             }, 500);
 
@@ -1154,7 +1192,9 @@ var Searcher = function() {
          * 根据当前条件查询分页信息
          */
         doSearch: function() {
+
             setTimeout(function() {
+
                 searchByPresentParams()
             }, 500);
         }

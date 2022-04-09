@@ -386,7 +386,9 @@
                     var btnPrice = $('<a></a>').addClass('btn btn-minier btn-pink').html('报价');
                     var btnNormood = $('<a></a>').addClass('btn btn-minier btn-blue').html('定额');
                     var btnSelect = $('<a></a>').addClass('btn btn-minier btn-blue').html('选材');
-                    var btnAddMinus = $('<a></a>').addClass('btn btn-minier btn-purple').html('增减项');
+                    var btnAddReduce = $('<a></a>').addClass('btn btn-minier btn-purple').html('增减项');
+                    var btnAddReduceD = $('<a></a>').addClass('btn btn-minier btn-purple').html('增减项');
+                    var btnAddReduceM = $('<a></a>').addClass('btn btn-minier btn-purple').html('增减项');
                     var btnExtension = $('<a></a>').addClass('btn btn-minier btn-yellow').html('扩展项');
                     var btnInfo = $('<a></a>').addClass('btn btn-minier btn-success').html('信息轴');
                     var btnCal = $('<a></a>').addClass('btn btn-minier btn-warning').html('决算');
@@ -559,9 +561,19 @@
                         modalAgreementModal(v.orderId, v.customer.cid, v, "design");
                     });
 
-                    btnAddMinus.click(function() {
+                    btnAddReduce.click(function() {
 
-                        viewDecorationInDecreaseIndex(v.orderId, v.type, v.typeness);
+                        viewDecorationInDecreaseIndex(v.orderId, v.type, v.typeness, null);
+                    });
+
+                    btnAddReduceD.click(function() {
+
+                        viewDecorationInDecreaseIndex(v.orderId, v.type, v.typeness, 1);
+                    });
+
+                    btnAddReduceM.click(function() {
+
+                        viewDecorationInDecreaseIndex(v.orderId, v.type, v.typeness, 2);
                     });
 
                     btnInfo.click(function() {
@@ -695,9 +707,19 @@
                             case "selection":// 选材
                                 $divBtnWrap.append(btnSelect);
                                 break;
-                            case "addminus":// 增减项
+                            case "btnAddReduce":// 增减项
                                 if ([3, 8].indexOf(v.status) != -1) {
-                                    $divBtnWrap.append(btnAddMinus);
+                                    $divBtnWrap.append(btnAddReduce);
+                                }
+                                break;
+                            case "btnAddReduceD":// 增减项
+                                if ([3, 8].indexOf(v.status) != -1) {
+                                    $divBtnWrap.append(btnAddReduceD);
+                                }
+                                break;
+                            case "btnAddReduceM":// 增减项
+                                if ([3, 8].indexOf(v.status) != -1) {
+                                    $divBtnWrap.append(btnAddReduceM);
                                 }
                                 break;
                             case "extension":// 扩展项
@@ -860,12 +882,14 @@
             // com.popup4page("#layerPopUp", api.index.decorationContractIndex.url, "装修单合同: " + decorationOrderId);
         };
         // 增减项
-        var viewDecorationInDecreaseIndex = function(decorationOrderId, type, typeness) {
+        var viewDecorationInDecreaseIndex = function(decorationOrderId, type, typeness, atttype) {
 
             params.decorationOrderId = decorationOrderId;
             params.decorationType = type;
             params.decorationTypeness = typeness;
             params.historyPage = api.index.decorationIndex.url;
+            params["addReduce.atttype"] = atttype;
+
             com.switchPage(api.index.addReduceIndex.url);
         };
         // 扣款

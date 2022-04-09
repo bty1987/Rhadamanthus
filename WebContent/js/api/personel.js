@@ -79,6 +79,10 @@ $.extend(api, {
             url: "updateUserForAdvance.do",
             server: "communion"
         },
+        updateUserForPhoto: {
+            url: "updateUserForPhoto.do",
+            server: "communion"
+        },
         resetPassword: {
             url: "resetPassword.do",
             server: "communion"

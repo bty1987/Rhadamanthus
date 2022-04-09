@@ -1,21 +1,27 @@
 var decorationUtils = {
 
     initMaterial: function(decorationDetail) {
+
         var dataPage = params.urlLoadParams.depage;
         var $fanglinMaterial = com.focusPage('#fanglinMaterialPayments' + dataPage).html("");
         var $salesMaterialPayment = com.focusPage('#salesMaterialPayments' + dataPage).html("");
         var $salesResult = com.focusPage('#salesResultList' + dataPage).html("");
+        var $oalesResult = com.focusPage('#oalesResultList' + dataPage).html("");
         var $brand = com.focusPage('#materialPaymentBrands' + dataPage).html("");
+        var $oalesBrand = com.focusPage('#oalesPaymentBrands' + dataPage).html("");
         var $purCategory = com.focusPage('#materialPurchasedCategory' + dataPage).html("");
         var $unpCategory = com.focusPage('#materialUnpurchasedCategory' + dataPage).html("");
 
         var $ulfanglin = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($fanglinMaterial);
         var $ulsales = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($salesMaterialPayment);
+        var $uloales = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($oalesResult);
         var $ulsalesResult = null;
         var $ulbrand = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($brand);
+        var $uloalesBrand = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($oalesBrand);
         var $purchasedCategory = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($purCategory);
         var $unpurchasedCategory = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($unpCategory);
 
+        var $oalesTotal = 0;
         var $total = 0;
         var $coupon = 0;
         var $totalSalesAndMaterial = 0;
@@ -28,8 +34,13 @@ var decorationUtils = {
 
         var materialPayments = null;
         var salesPayments = null;
+        var oaleses = null;
+
+        var purCategory = [];
+        var unpCategory = [];
 
         com.post(api.ds.sales, {}, function(res) {
+
             $statues = res.statues.split("key", "value");
             $balanceStatuses = res.balanceStatuses.split("key", "value");
             $depositpayStatus = res.depositpayStatus.split("key", "value");
@@ -37,6 +48,7 @@ var decorationUtils = {
         }, null, false);
 
         com.focusPage("a[name='consumptionDetailsPrint']").click(function() {
+
             params.decorationOrderId = decorationDetail.decorationOrderId;
             com.popup("主材消费明细表", api.index.decorationSales2print.url, null, null, true);
         });
@@ -50,6 +62,7 @@ var decorationUtils = {
 
                 if (listData && listData.length) {
                     $.each(listData, function(i, v) {
+
                         var $liLine = creatLine(v);
 
                         $liLine.appendTo($ulsalesResult);
@@ -73,6 +86,7 @@ var decorationUtils = {
                 var propertyArr = [["品类:", v.category, "grey"], ["品牌:", v.brand, "grey"], ["定金:", v.depositpay, "blue"], ["补款:", v.fullpay, "blue"], ["总额:", v.total, "blue"], ["当前总额:", v.amount, "blue"], ["定金状态:", $depositpayStatus[v.depositpayStatus], "red"], ["补款状态:", $fullpayStatus[v.fullpayStatus], "red"], ["状态:", $statues[v.status], "red"], ["结算状态:", $balanceStatuses[v.balanceStatus], "red"], ["创建时间:", v.createTime, "green "], ["补款时间:", v.fullpayTime, "green "], ["结算时间:", v.balanceTime, "green "], ["完结时间:", v.finishTime, "green "], ["完结人:", v.finisher.currentName, "blue"]];
 
                 $.each(propertyArr, function(index, value) {
+
                     var $liProperty = $('<li></li>');
                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -83,9 +97,11 @@ var decorationUtils = {
                 $liLine.append($h4).append($ulProperty).append($ulStyle).append($divBtnBlock);
 
                 $btnSub.click(function() {
+
                     params["sid"] = v.sid;
                     params["dompany"] = "dompany";
                     com.popup4page("#layerPopUp", "/views/sales/salesItem.html", "子项", '', function() {
+
                         seacher.doSearch();
                     });
                 });
@@ -95,10 +111,12 @@ var decorationUtils = {
 
             return {
                 init: function(tableId, listData) {
+
                     com.focusPage('#' + tableId).html(null);
                     renderList(tableId, listData);
                 },
                 drawLine: function(v) {
+
                     return creatLine(v);
                 }
             };
@@ -108,59 +126,102 @@ var decorationUtils = {
         var seacher = new Searcher();
 
         seacher.init(null, "condList", api.sales.pageSalesByOrderId, function(data) {
+
             displayFunc.init('salesResultList' + dataPage + '', data);
             // 分页显示/隐藏
             $("#pagenation").removeClass("hidden");
             $("a[href=#salesResultList" + dataPage + "]").click(function() {
+
                 if (data != null) {
                     $("#pagenation").removeClass("hidden");
                 }
             });
             $("a[href=#fanglinMaterialPayments" + dataPage + "]").click(function() {
+
                 $("#pagenation").addClass("hidden");
             });
             $("a[href=#salesMaterialPayments" + dataPage + "]").click(function() {
+
+                $("#pagenation").addClass("hidden");
+            });
+            $("a[href=#oalesResultList" + dataPage + "]").click(function() {
+
                 $("#pagenation").addClass("hidden");
             });
         }, "pagenation", 'salesResultList' + dataPage + 'PostData', {
             "sales.orderId": decorationDetail.decorationOrderId
         });
 
-        var oearcher = new Searcher();
-
-        oearcher.base(null, null, 'oalesResultList' + dataPage + '', api.sales.queryOalesByOrderId);
-        oearcher.param({
+        com.post(api.sales.queryOalesByOrderId, {
             "oales.decoration.orderId": decorationDetail.decorationOrderId
-        });
-        oearcher.result("oaleses").isPage(true);
+        }, function(res) {
 
-        var lineprops = [{
-            field: "brand",
-            name: "品牌",
-            prop: "brand",
-            clazz: "grey"
-        }, {
-            field: "category",
-            name: "品类",
-            prop: "category",
-            clazz: "grey"
-        }, {
-            field: "total",
-            name: "总额",
-            prop: "total",
-            clazz: "blue"
-        }, {
-            field: "comment",
-            name: "备注",
-            prop: "comment",
-            clazz: "grey"
-        }];
+            oaleses = res.oaleses;
+        }, null, false);
 
-        oearcher.line("no", lineprops, []).render();
+        if (oaleses && oaleses.length) {
+            $.each(oaleses, function(i, v) {
+
+                var $liLine = $('<li></li>').addClass('item-orange clearfix');
+                var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.no));
+                var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+                var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+                var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
+                var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+
+                var propertyArr = [["品类:", v.category, "grey"], ["品牌:", v.brand, "grey"], ["总额:", v.total, "blue"], ["备注:", v.comment, "grey"]];
+
+                $.each(propertyArr, function(index, value) {
+
+                    var $liProperty = $('<li></li>');
+                    $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                    $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                    $liProperty.appendTo($ulProperty);
+                });
+
+                // 已购品牌汇总
+                if (purCategory.indexOf(v.category) == -1) {
+                    purCategory.push(v.category);
+                }
+
+                $liLine.append($h4).append($ulProperty).append($ulStyle).append($divBtnBlock).appendTo($uloales);
+
+                var $materialBrands = com.focusPage("[name='" + v.brand + "']");
+
+                if ($materialBrands.length > 0) {
+
+                    $oalesTotal = utils.changeThrDecimal($oalesTotal + v.total);
+
+                } else {
+                    var $liLine_1 = $('<li></li>').addClass('item-orange clearfix').attr("name", v.brand);
+                    var $h4_1 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.brand));
+                    var $ulProperty_1 = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+
+                    $('<b></b>').html(v.category).addClass("grey").appendTo($('<strong></strong>').html("品类:").appendTo($('<li></li>').appendTo($ulProperty_1)));
+                    $('<b></b>').html(v.brand).addClass("grey").appendTo($('<strong></strong>').html("品牌:").appendTo($('<li></li>').appendTo($ulProperty_1)));
+                    $('<b></b>').attr("name", "total").attr("value", v.total).html(v.total).addClass("blue").appendTo($('<strong></strong>').html("金额:").appendTo($('<li></li>').appendTo($ulProperty_1)));
+
+                    $liLine_1.append($h4_1).append($ulProperty_1).appendTo($ulbrand);
+
+                    var $liLine_2 = $('<li></li>').addClass('item-orange clearfix').attr("name", v.brand);
+                    var $h4_2 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.brand));
+                    var $ulProperty_2 = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+
+                    $('<b></b>').html(v.category).addClass("grey").appendTo($('<strong></strong>').html("品类:").appendTo($('<li></li>').appendTo($ulProperty_2)));
+                    $('<b></b>').html(v.brand).addClass("grey").appendTo($('<strong></strong>').html("品牌:").appendTo($('<li></li>').appendTo($ulProperty_2)));
+                    $('<b></b>').attr("name", "total").attr("value", v.total).html(v.total).addClass("blue").appendTo($('<strong></strong>').html("金额:").appendTo($('<li></li>').appendTo($ulProperty_2)));
+
+                    $liLine_2.append($h4_2).append($ulProperty_2).appendTo($uloalesBrand);
+
+                    $oalesTotal = utils.changeThrDecimal($oalesTotal + v.total);
+                }
+            });
+        }
 
         com.post(api.payment.queryMaterialPaymentByOrderId, {
             "materialPayment.material.orderId": decorationDetail.decorationOrderId
         }, function(res) {
+
             materialPayments = res.materialPayments;
         }, null, false);
 
@@ -177,9 +238,10 @@ var decorationUtils = {
                 var $divBtnBlock = $('<div></div>').addClass('clearfix col-sm-12');
                 var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-                var propertyArr = [["品类:", v.category, "grey"], ["品牌:", v.brand, "grey"], ["应收额:", v.referMoney, "grey"], ["实收额:", v.referMoney, "grey"], ["收款时间:", v.collectTime, "grey"], ["状态:", materialUtils.paymentStatusInit(v.paymentStatus), "red"]];
+                var propertyArr = [["品类:", v.category, "grey"], ["品牌:", v.brand, "grey"], ["应收额:", v.referMoney, "blue"], ["实收额:", v.referMoney, "blue"], ["收款时间:", v.collectTime, "green"], ["状态:", materialUtils.paymentStatusInit(v.paymentStatus), "red"]];
 
                 $.each(propertyArr, function(index, value) {
+
                     var $liProperty = $('<li></li>');
                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -190,6 +252,7 @@ var decorationUtils = {
 
                 v.cash != null && v.cash != "0" ? styleArr.push(["现金:", v.cash, "grey"]) : true;
                 v.bank != null && v.bank != "0" ? styleArr.push(["银行:", (function(bank, bankInfo) {
+
                     var info = bank + ", ";
                     var _s = bankInfo.split('#');
                     for ( var i = 1; i < _s.length - 1; i++) {
@@ -206,6 +269,7 @@ var decorationUtils = {
                 v.coupon != null && v.coupon != "0" ? styleArr.push(["优惠券:", v.coupon + v.couponInfo.split('#').join(' '), "grey"]) : true;
 
                 $.each(styleArr, function(index, value) {
+
                     var $liProperty = $('<li></li>');
                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -251,7 +315,7 @@ var decorationUtils = {
 
                     $('<b></b>').html(v.category).addClass("grey").appendTo($('<strong></strong>').html("品类:").appendTo($('<li></li>').appendTo($ulProperty)));
                     $('<b></b>').html(v.brand).addClass("grey").appendTo($('<strong></strong>').html("品牌:").appendTo($('<li></li>').appendTo($ulProperty)));
-                    $('<b></b>').attr("name", "total").attr("value", _refer).html(_refer).addClass("grey").appendTo($('<strong></strong>').html("金额:").appendTo($('<li></li>').appendTo($ulProperty)));
+                    $('<b></b>').attr("name", "total").attr("value", _refer).html(_refer).addClass("blue").appendTo($('<strong></strong>').html("金额:").appendTo($('<li></li>').appendTo($ulProperty)));
 
                     $liLine.append($h4).append($ulProperty).appendTo($ulbrand);
 
@@ -261,16 +325,15 @@ var decorationUtils = {
             });
         }
 
-        var purCategory = [];
-        var unpCategory = [];
-
         com.post(api.payment.querySalesPaymentByOrderId, {
             "salesPayment.sales.orderId": decorationDetail.decorationOrderId
         }, function(res) {
+
             salesPayments = res.salesPayments;
         }, null, false);
 
         com.post(api.data.queryCategory, {}, function(res) {
+
             $.each(res.categorys, function(index, value) {
 
                 if (value.type == 0)
@@ -285,6 +348,7 @@ var decorationUtils = {
         if (salesPayments && salesPayments.length) {
 
             $.each(salesPayments, function(i, v) {
+
                 var salesReceipt = v.salesReceipt;
 
                 if (v.status == 0)
@@ -292,7 +356,8 @@ var decorationUtils = {
 
                 if (purCategory.indexOf(v.sales.category) == -1) {
                     purCategory.push(v.sales.category);
-                };
+                }
+                ;
 
                 if (unpCategory.indexOf(v.sales.category) != -1 && unpCategory.splice(unpCategory.indexOf(v.sales.category), 1))
                     ;
@@ -307,6 +372,7 @@ var decorationUtils = {
                 var propertyArr = [["品类:", v.sales.category, "grey"], ["品牌:", v.sales.brand, "grey"], ["应收额:", v.referMoney, "blue"], ["实收额:", v.referMoney, "blue"], ["收款时间:", salesReceipt.collectTime, "green "], ["状态:", materialUtils.paymentStatusInit(v.status), "red"]];
 
                 $.each(propertyArr, function(index, value) {
+
                     var $liProperty = $('<li></li>');
                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -315,8 +381,9 @@ var decorationUtils = {
 
                 var styleArr = [];
 
-                salesReceipt.cash != null && salesReceipt.cash != "0" ? styleArr.push(["现金:", salesReceipt.cash, "grey"]) : true;
+                salesReceipt.cash != null && salesReceipt.cash != "0" ? styleArr.push(["现金:", salesReceipt.cash, "blue"]) : true;
                 salesReceipt.bank != null && salesReceipt.bank != "0" ? styleArr.push(["银行:", (function(bank, bankInfo) {
+
                     var info = bank + ", ";
                     var _s = bankInfo.split('#');
                     for ( var i = 1; i < _s.length - 1; i++) {
@@ -333,6 +400,7 @@ var decorationUtils = {
                 salesReceipt.coupon != null && salesReceipt.coupon != "0" ? styleArr.push(["优惠券:", salesReceipt.coupon + salesReceipt.couponInfo.split('#').join(' '), "grey"]) : true;
 
                 $.each(styleArr, function(index, value) {
+
                     var $liProperty = $('<li></li>');
                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -378,7 +446,7 @@ var decorationUtils = {
 
                     $('<b></b>').html(v.sales.category).addClass("grey").appendTo($('<strong></strong>').html("品类:").appendTo($('<li></li>').appendTo($ulProperty)));
                     $('<b></b>').html(v.sales.brand).addClass("grey").appendTo($('<strong></strong>').html("品牌:").appendTo($('<li></li>').appendTo($ulProperty)));
-                    $('<b></b>').attr("name", "total").attr("value", _refer).html(_refer).addClass("grey").appendTo($('<strong></strong>').html("金额:").appendTo($('<li></li>').appendTo($ulProperty)));
+                    $('<b></b>').attr("name", "total").attr("value", _refer).html(_refer).addClass("blue").appendTo($('<strong></strong>').html("金额:").appendTo($('<li></li>').appendTo($ulProperty)));
 
                     $liLine.append($h4).append($ulProperty).appendTo($ulbrand);
 
@@ -400,7 +468,6 @@ var decorationUtils = {
             noData("fanglinMaterialPayments" + dataPage);
             noData("salesMaterialPayments" + dataPage);
             noData("salesResultList" + dataPage);
-            noData("oalesResultList" + dataPage);
             noData("materialPaymentBrands" + dataPage);
         } else if ($ulfanglin.children("li").length != 0 && $ulsales.children("li").length == 0 && $ulsalesResult != null) {
             noData("salesMaterialPayments" + dataPage);
@@ -416,9 +483,17 @@ var decorationUtils = {
             totalData();
         }
 
+        if ($uloales.children("li").length == 0) {
+            noData("oalesResultList" + dataPage);
+            noData("oalesPaymentBrands" + dataPage);
+        } else {
+            oalesTotalData();
+        }
+
         decorationDetail.materialTotal = $total;
 
         function noData(div) {
+
             var $resultList = com.focusPage('#' + div).html('');
             var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
             var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
@@ -426,24 +501,37 @@ var decorationUtils = {
         }
 
         function totalData() {
+
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
+
             var $h4 = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("总金额:" + $total));
             var $couponPrice = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("优惠券:" + $coupon));
             var $TotalPrice = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("实收额:" + ($total - $coupon)));
-            var $TotalNetReceiptsTotalPrice = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("实收全款额:" + $totalSalesAndMaterial));
+            var $TotalNetReceiptsTotalPrice = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("实收总额:" + $totalSalesAndMaterial));
             var $TotalDepositPrice = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("定金总额:" + ($totalDeposit)));
+            var $oalesH4 = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("外销总额:" + $oalesTotal));
 
-            $liLine.append($h4).append($couponPrice).append($TotalPrice).append($TotalNetReceiptsTotalPrice).append($TotalDepositPrice).appendTo($ulbrand);
+            $liLine.append($h4).append($couponPrice).append($TotalPrice).append($TotalNetReceiptsTotalPrice).append($TotalDepositPrice).append($oalesH4).appendTo($ulbrand);
+        }
+
+        function oalesTotalData() {
+
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
+            var $oalesH4 = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("外销总金额:" + $oalesTotal));
+
+            $liLine.append($oalesH4).appendTo($uloalesBrand);
         }
 
         function drawLineCategory(list, div) {
+
             $.each(list, function(index, value) {
+
                 var $liLine = $('<li></li>').addClass('item-orange clearfix col-md-4');
                 var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>')).html(value);
                 $liLine.append($h4).appendTo(div);
             });
         }
-        return material
+        return material;
     },
     addDecorationActivityForDiv: function(_activitys, _decorationActivity, uiBtnMethod, couponCut, thingCut) {
 
@@ -470,10 +558,12 @@ var decorationUtils = {
                 var deleteBtn = $("<a></a>").addClass("btn btn-minier btn-yellow").html("删除").css("margin", "0px 3px").attr("id", "delete_" + _decorationActivity.daId).appendTo(uiPgDiv);
 
                 deleteBtn.on("click", function() {
+
                     if (com.focusPage("#dactivity_" + _decorationActivity.daId).attr("status") == 0) {
                         com.post(api.decoration.deleteDecorationActivity, {
                             "decorationActivity.daId": _decorationActivity.daId
                         }, function(res) {
+
                             com.focusPage("#dactivity_" + res.decorationActivity.daId).remove();
                         });
                     }
@@ -494,6 +584,7 @@ var decorationUtils = {
         activitys.html('');
 
         com.post(api.decoration.queryDecorationActivityByOrderId, options, function(res) {
+
             var decorationActivitys = res.decorationActivitys;
             for ( var i = 0; i < decorationActivitys.length; i++) {
                 decorationUtils.addDecorationActivityForDiv(activitys, decorationActivitys[i], uiBtnMethod);
@@ -543,22 +634,22 @@ var decorationUtils = {
         var pricingSpan = $("<div></div>").addClass("col-md-6").css("margin", "5px 0px").attr("id", "pricing_" + _activityItem.daiId).prependTo(itempack);
         var widgetBox = $("<div></div>").appendTo(pricingSpan);
         var total = [0, 2, 4, 5, 6].indexOf(_activityItem.state) != -1 ? utils.accMul(_activityItem.money, _activityItem.num) : 0;
-        
+
         var widgetBody = $("<ul class='item-list fl-table-list ui-sortable'></ul>").attr("data-type", _activityItem.type).attr("data-total", total).appendTo(widgetBox);
         var widgetMain = $('<li class="item-orange clearfix"></li>').appendTo(widgetBody);
-        
+
         var widgetHeader = $("<h3 class='oid'></h3>").attr("id", "widgetHeader_" + _activityItem.daiId).appendTo(widgetMain);
-        
+
         var title = $('<small class="blue"></small>').text(_activityItem.activityItemName);
-        
+
         var $span = $('<span></span>').addClass('lbl blue bigger-150');
         var $label = $('<label></label>');
         var $input = $('<input></input>').attr({
-            "type" : "checkbox",
-            "name" : "daiIds",
-            "class" : "ace ace-checkbox-2"
+            "type": "checkbox",
+            "name": "daiIds",
+            "class": "ace ace-checkbox-2"
         }).val(_activityItem.daiId);
-        
+
         widgetHeader.append($label.append($input).append($span)).append(title);
 
         var ul = $("<ul></ul>").addClass("list-unstyled fl-inline-list clearfix").css("padding-left", "12px").appendTo(widgetMain);
@@ -595,7 +686,7 @@ var decorationUtils = {
         }
 
         if (config.isAffirms != null) {
-        	var isAffirmLi = $("<li></li>").appendTo(ul);
+            var isAffirmLi = $("<li></li>").appendTo(ul);
             var isAffirmState = $("<strong></strong>").text("是否确认:").appendTo(isAffirmLi);
             var isAffirmSpan = $("<span></span>").addClass("red").attr("id", "isAffirm" + _activityItem.daiId).text(config.isAffirms[_activityItem.isAffirm]).appendTo(isAffirmLi);
         }
@@ -613,6 +704,7 @@ var decorationUtils = {
                         com.post(api.decoration.abateDecorationActivityItem, {
                             "decorationActivityItem.daiId": _activityItem.daiId
                         }, function(res) {
+
                             com.showAlert(com.info, "操作成功");
 
                             decorationUtils.countTatol(res.decorationActivityItem.daiId);
@@ -627,12 +719,14 @@ var decorationUtils = {
         }
     },
     initPresignDetail: function(orderId) {// 预签信息
+
         var presignItemListDiv = $("#presignItemListDiv").html("");
         var protation = null;
 
         com.post(api.quotation.queryProtationForDefaultByOrderId, {
             "protation.orderId": orderId
         }, function(res) {
+
             protation = res.protation;
         }, null, false);
 
@@ -682,7 +776,9 @@ var decorationUtils = {
         com.post(api.quotation.queryProtationItemByPid, {
             "protationItem.pid": protation.pid
         }, function(res) {
+
             $.each(res.protationItems, function(i, v) {
+
                 var type = (v.type + v.type % 2) / 2;
                 protationFunctionAreas[type].protationFunctionAreaItems.push(v);
             });
@@ -768,6 +864,7 @@ var decorationUtils = {
                 "decorationActivity.orderId": orderId,
                 "decorationActivityItem.daiid": 0
             }, function(res) {
+
                 amount = res.decorationActivity.amount;
             }, null, false);
 
@@ -851,6 +948,7 @@ var decorationUtils = {
         com.post(api.payment.queryAdvancePaymentByOrderId, {
             "advancePayment.decoration.orderId": decorationDetail.decorationOrderId
         }, function(res) {
+
             com.focusPage("#balanceAdvance").text(res.balanceAdvance);
             com.focusPage("#projectAdvance").text(res.projectAdvance);
             com.focusPage("#materialAdvance").text(res.materialAdvance);
@@ -864,16 +962,19 @@ var decorationUtils = {
         com.post(api.payment.queryDecorationPaymentByOrderId, {
             "decorationPayment.decoration.orderId": decorationDetail.decorationOrderId
         }, function(res) {
+
             decorationPayments = res.decorationPayments;
         }, null, false);
 
         if (decorationPayments && decorationPayments.length) {
 
             var sortPayments = decorationPayments.sort(function(a, b) {
+
                 return a.sort - b.sort;
             });
 
             $.each(sortPayments, function(i, v) {
+
                 var $liLine = $('<li></li>').addClass('item-orange clearfix');
                 var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.paymentType));
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -884,6 +985,7 @@ var decorationUtils = {
                 var propertyArr = [["应收额:", v.referMoney, "grey"], ["收款时间:", v.collectTime, "grey"], ["状态:", paymentStatusArray[v.paymentStatus], "red"]];
 
                 $.each(propertyArr, function(index, value) {
+
                     var $liProperty = $('<li></li>');
                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -894,6 +996,7 @@ var decorationUtils = {
 
                 v.cash != null && v.cash != "0" ? styleArr.push(["现金:", v.cash, "grey"]) : true;
                 v.bank != null && v.bank != "0" ? styleArr.push(["银行:", (function(bank, bankInfo) {
+
                     var info = bank + ", ";
                     var _s = bankInfo.split('#');
                     for ( var i = 1; i < _s.length - 1; i++) {
@@ -910,6 +1013,7 @@ var decorationUtils = {
                 v.coupon != null && v.coupon != "0" ? styleArr.push(["优惠券:", v.coupon + v.couponInfo.split('#').join(' '), "grey"]) : true;
 
                 $.each(styleArr, function(index, value) {
+
                     var $liProperty = $('<li></li>');
                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -922,6 +1026,7 @@ var decorationUtils = {
                 var $refundBtn = $('<a></a>').addClass('btn btn-minier btn-danger').html('退款');
 
                 $refundBtn.click(function() {
+
                     approvalUtils.initqueryApprovalUser("refundApproveManSel", 5);
                     com.focusPage('#autoId').val(v.dpid);
                     com.focusPage('#referMoney').val(v.referMoney);
@@ -987,6 +1092,7 @@ var decorationUtils = {
         com.post(api.quotation.queryQuotationForDefaultByOrderId, {
             "quotation.orderId": decorationDetail.decorationOrderId
         }, function(res) {
+
             if (res.quotation.qid) {
                 var quotation = res.quotation;
                 predisPrice = utils.accAdd(predisPrice, utils.accAdd(quotation.undisPrice, utils.accAdd(quotation.disPrice, utils.accAdd(quotation.trafficPrice, quotation.managePrice))));
@@ -997,6 +1103,7 @@ var decorationUtils = {
         com.post(api.payment.amountSalesPayment, {
             "salesPayment.sales.orderId": decorationDetail.decorationOrderId
         }, function(res) {
+
             materialAmount = res.amount;
         }, null, false);
 
@@ -1005,6 +1112,7 @@ var decorationUtils = {
 
     },
     initDecorationMidpack: function(orederId) {
+
         var mainDiv = com.focusPage('#preparePayment').parent();
         com.focusPage('#preparePayment').remove();
 
@@ -1052,6 +1160,7 @@ var decorationUtils = {
 
     },
     initDecorationInclusive: function(orederId) {
+
         var mainDiv = com.focusPage('#preparePayment').parent();
         com.focusPage('#preparePayment').remove();
 
@@ -1115,11 +1224,13 @@ var decorationUtils = {
         com.post(api.decoration.queryDecorationBelongByOrderId, {
             "decorationBelong.orderId": orderId
         }, function(res) {
+
             decorationBelongs = res.decorationBelongs;
         }, null, false);
 
         if (decorationBelongs && decorationBelongs.length) {
             $.each(decorationBelongs, function(i, v) {
+
                 var $liLine = $('<li></li>').addClass('item-orange clearfix');
                 var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').html(v.belonger.currentName));
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -1130,6 +1241,7 @@ var decorationUtils = {
                 var propertyArr = [["员工号:", v.belonger.userId, "grey"], ["所属部门:", v.department.name, "grey"], ["所属大区:", v.region.name, "grey"], ["分配比例:", v.rate, "grey"], ["默认:", v.defaultFlag == 1 ? '是' : '否', "grey"]];
 
                 $.each(propertyArr, function(index, value) {
+
                     var $liProperty = $('<li></li>');
                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -1147,6 +1259,7 @@ var decorationUtils = {
         com.uploadify("#" + eId, ename, api.common.uploadImg, ('btn ' + btnstyle ? btnstyle : "btn-success"), fileType, {
             'uploadType': 2
         }, 5, function(data) {
+
             callback(data);
         });
 
@@ -1164,6 +1277,7 @@ var decorationUtils = {
             };
 
             com.post(api.decoration.addDecorationPicture, options, function(res) {
+
                 if (type == 0) {
                     decorationUtils.addCAD(com.focusPage("#" + eId), res.decorationPicture);
                 } else if (type == 1) {
@@ -1223,29 +1337,37 @@ var decorationUtils = {
         com.post(api.decoration.queryDecorationContractByOrderId, {
             "decorationContract.orderId": orderId
         }, function(res) {
+
             $.each(res.decorationContracts, function(i, v) {
+
                 if (v.ishow == 0)
                     decorationUtils.addContract($agree, v);
             });
         });
 
         com.focusPage("#confirmDesign").on('click', function() {
+
             com.showConfirm("是否发送客户确认合同方案", function() {
+
                 com.post(api.decoration.sendDecorationInfoForConfirm, {
                     "decorationInfo.orderId": orderId,
                     "decorationInfo.sourceStatus": 1
                 }, function() {
+
                     com.showAlert(com.info, "发送成功");
                 });
             });
         });
 
         com.focusPage("#confirmPricture").on('click', function() {
+
             com.showConfirm("是否发送客户确认放线方案", function() {
+
                 com.post(api.decoration.sendDecorationInfoForConfirm, {
                     "decorationInfo.orderId": orderId,
                     "decorationInfo.sourceStatus": 2
                 }, function() {
+
                     com.showAlert(com.info, "发送成功");
                 });
             });
@@ -1253,6 +1375,7 @@ var decorationUtils = {
 
     },
     addPicture: function(e, i) {
+
         var $li = $('<li></li>').attr("id", "imgLi_" + i.dpId).appendTo(e);
         var $img = $('<img></img>').attr('width', 200).attr('height', 200);
         var $imgA = $('<a></a>').addClass('cboxElement').attr('target', '_blank').append($img).appendTo($li);
@@ -1272,9 +1395,11 @@ var decorationUtils = {
         var $delA = $('<a></a>').addClass("icon-remove").appendTo($tools);
 
         $delA.click(function() {
+
             com.post(api.decoration.deleteDecorationPicture, {
                 "decorationPicture.dpId": i.dpId
             }, function(res) {
+
                 com.focusPage("#imgLi_" + res.decorationPicture.dpId).remove();
             });
         });
@@ -1310,9 +1435,11 @@ var decorationUtils = {
         }).appendTo($infoboxData);
 
         $delA.click(function() {
+
             com.post(api.decoration.deleteDecorationPicture, {
                 "decorationPicture.dpId": i.dpId
             }, function(res) {
+
                 com.focusPage("#cad_" + res.decorationPicture.dpId).remove();
             });
         });
@@ -1333,6 +1460,7 @@ var decorationUtils = {
             com.post(api.decoration.viewDecorationContract, {
                 "decorationContract.dcid": i.dcid
             }, function(res) {
+
                 com.popup4frame("合同查看", res.redirect);
             });
         });
@@ -1344,6 +1472,7 @@ var decorationUtils = {
         options["constructionSchedule.orderId"] = params.decorationOrderId;
 
         com.post(api.construction.queryConstructionScheduleForWorkerNameByOrderId, options, function(res) {
+
             for ( var qualityName in decorationUtils.qualityIds) {
                 com.focusPage("#" + qualityName + "QualityId").val(res.constructionSchedule[qualityName + "QualityName"]);
             }
@@ -1356,11 +1485,13 @@ var decorationUtils = {
         com.post($api, {
             "decoration.orderId": orderId
         }, function(res) {
+
             callback(res.decoration);
         }, null, false);
 
     },
     initDecorationHolonomy: function(orederId) {
+
         var mainDiv = com.focusPage('#preparePayment').parent();
         com.focusPage('#preparePayment').remove();
 
@@ -1433,13 +1564,16 @@ var decorationUtils = {
         com.post(api.payment.queryServicePaymentByOrderId, {
             "servicePayment.decoration.orderId": orederId
         }, function(res) {
+
             drawList(res.servicePayments);
         });
 
         function drawList(data) {
+
             var $tableWrap = com.focusPage('#hoServiceMoney');
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
             $.each(data, function(i, v) {
+
                 var serviceReceipt = v.serviceReceipt;
 
                 var $liLine = $('<li></li>').addClass('item-orange clearfix');
@@ -1450,6 +1584,7 @@ var decorationUtils = {
                 var propertyArr = [["预付款金额:", v.advanceMoney, "grey"], ["服务费:", v.serviceMoney, "grey"], ["收款时间:", v.createTime, "grey"], ["状态:", v.status == 0 ? "初始" : (v.status == 1 ? "已收款" : "已确认"), "red"]];
 
                 $.each(propertyArr, function(index, value) {
+
                     var $liProperty = $('<li></li>');
                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -1460,6 +1595,7 @@ var decorationUtils = {
 
                 serviceReceipt.cash != null && serviceReceipt.cash != "0" ? styleArr.push(["现金:", serviceReceipt.cash, "grey"]) : true;
                 serviceReceipt.bank != null && serviceReceipt.bank != "0" ? styleArr.push(["银行:", (function(bank, bankInfo) {
+
                     var info = bank + ", ";
                     var _s = bankInfo.split('#');
                     for ( var i = 1; i < _s.length - 1; i++) {
@@ -1476,6 +1612,7 @@ var decorationUtils = {
                 serviceReceipt.coupon != null && serviceReceipt.coupon != "0" ? styleArr.push(["优惠券:", serviceReceipt.coupon + serviceReceipt.couponInfo.split('#').join(' '), "grey"]) : true;
 
                 $.each(styleArr, function(index, value) {
+
                     var $liProperty = $('<li></li>');
                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -1507,6 +1644,7 @@ var decorationUtils = {
             } else {
 
                 function createDivForAccount(inclass, string, id, isleft) {
+
                     return $("<div></div>").addClass(inclass).css(isleft ? {
                         "border-left": "solid 1px #e3e3e3",
                         "margin-top": "15px"
@@ -1518,6 +1656,7 @@ var decorationUtils = {
                 }
 
                 function deployAccount(id, title, content) {
+
                     var accountDiv = $("<div id=" + id + "></div>").addClass('row');
                     var accountHeader = $("<div></div>").addClass('widget-header').append($("<h4></h4>").append($('<strong></strong>').html(title)));
                     var accountBody = $("<div></div>").addClass('widget-body');
@@ -1528,6 +1667,7 @@ var decorationUtils = {
                     accountBody.append($("<div></div>").addClass('widget-body-inner').append(accountTable));
 
                     $.each(content, function(i, v) {
+
                         createDivForAccount(v[0], v[1], v[2], v[3]).appendTo(accountTable);
                     });
 
@@ -1565,11 +1705,13 @@ var decorationUtils = {
         com.post(api.decoration.queryDecorationServiceByOrderId, {
             "decorationService.orderId": orderId
         }, function(res) {
+
             decorationServices = res.decorationServices;
         }, null, false);
 
         if (decorationServices && decorationServices.length) {
             $.each(decorationServices, function(i, v) {
+
                 var $liLine = $('<li></li>').addClass('item-orange clearfix');
                 var $h4 = $('<h4></h4>').addClass('oid').append($('<b></b>').addClass('blue').html(v.name));
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -1581,12 +1723,14 @@ var decorationUtils = {
                 var propertyArr = [["装修单号:", v.orderId, "grey"], ["详述:", v.detail, "grey"], ["操作人:", v.operater.currentName, "grey"], ["操作时间:", v.operateTime, "green"], ["状态:", v.status == 0 ? '初始' : '完成', "red"], ["备注:", v.comment, "grey"]];
 
                 $updateBtn.click(function() {
+
                     decorationDetail.dsid = v.dsid;
                     com.cleanItems(decorationDetail.serviceItems);
                     decorationDetail.serviceModal.modal("show");
                 });
 
                 $.each(propertyArr, function(index, value) {
+
                     var $liProperty = $('<li></li>');
                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -1624,10 +1768,12 @@ var decorationUtils = {
         com.post(api.addReduce.queryAddReduceByOrderId, {
             'addReduce.orderId': orderId
         }, function(data) {
+
             com.post(api.quotation.queryQuotationForDefaultByOrderId, {
                 "quotation.orderId": orderId,
                 "quotation.type": type
             }, function(res) {
+
                 discount = res.quotation.discount;
                 qid = res.quotation.qid;
                 versionid = res.quotation.versionId;
@@ -1635,6 +1781,7 @@ var decorationUtils = {
 
             if (data.addReduces && data.addReduces.length) {
                 $.each(data.addReduces, function(i, v) {
+
                     var typeDict = {
                         "0": "增项",
                         "1": "减项",
@@ -1675,6 +1822,7 @@ var decorationUtils = {
                     var propertyArr = [["总价:", v.total, "red"], ["类别:", typeDict[v.type + ''], "red"], ["状态:", statusDict[v.status], "red"], ["添加时间:", v.createTime, "red"], ["折扣:", discount, "red"], ];
 
                     $.each(propertyArr, function(index, value) {
+
                         var $liProperty = $('<li></li>');
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
                         $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -1694,6 +1842,7 @@ var decorationUtils = {
 
                         if (ress.addReduceItems && ress.addReduceItems.length) {
                             $.each(ress.addReduceItems, function(j, r) {
+
                                 var index = j + 1;
                                 var $tr = $('<tr><th scope="row">' + index + '</th><th>' + r.num + '</th><th>' + r.itemName + '</th><th>' + (type[r.type]) + '</th>' + '<th>' + r.workType + '</th><th>' + (r.quotationFunctionAreaName ? r.quotationFunctionAreaName : "---") + '</th>' + '<th>' + r.measurementUnit + '</th><th>' + r.unitPrice + '</th><th>' + (r.unitPrice + '</th><th>' + r.discount == 0 ? "不打折(配比)" : r.discount == 1 ? "打折(配比)" : r.discount == 2 ? "不打折(非配比)" : "打折(非配比)") + '</th><th>' + (Math.round((r.unitPrice) * (r.num))) + '</th></tr>');
 
@@ -1710,12 +1859,14 @@ var decorationUtils = {
 
                 // 打印按钮
                 com.focusPage('#print').click(function() {
+
                     var $inputs = com.focusPage('input[name="arids"]:checked');
                     var url = api.index.addReduceOutputIndex.url;
                     var _addReduceIds = [];
                     if (!$inputs.length)
                         return;
                     $.each($inputs, function(i, v) {
+
                         _addReduceIds.push(parseInt($(v).val()));
                     });
                     params.addReduceIds = _addReduceIds;
@@ -1731,6 +1882,7 @@ var decorationUtils = {
         });
     },
     createDivForHolonomy: function(inclass, string, id, isleft) {
+
         return $("<div></div>").addClass(inclass).css(isleft ? {
             "border-left": "solid 1px #e3e3e3",
         } : {
@@ -1760,6 +1912,7 @@ var decorationUtils = {
             decorationUtils.accountsInfo = {};
 
             $.each(res.receiptTypes, function(i, v) {
+
                 if (v.type == 1) {
                     decorationUtils.cashInfo[v.no] = v.name;
                 } else if (v.type == 2) {
@@ -1773,6 +1926,7 @@ var decorationUtils = {
         }, null, false);
     },
     createCounpon: function(ulId, typeId, stateTypeId, valId) {
+
         var $li = $("<li></li>").css({
             "background-color": "#91b8d0",
             "margin-bottom": "5px",
@@ -1798,6 +1952,7 @@ var decorationUtils = {
             'color': '#d15b47'
         }).appendTo($li);
         $a.click(function() {
+
             $li.remove();
         });
     },
@@ -1808,6 +1963,7 @@ var decorationUtils = {
         var thing = 0;
 
         $.each(com.focusPage(".module_activity_border"), function(i, e) {
+
             var _ = $(e);
             if (_.data().type == 0) {
                 coupon += _.data().total;

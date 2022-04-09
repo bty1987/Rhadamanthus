@@ -17,7 +17,8 @@ jQuery(function ($) {
             taxrate: com.focusPage("#taxrate"),
             kino: com.focusPage("#kino"),
             kiname: com.focusPage("#kiname"),
-            kibalance: com.focusPage("#kibalance")
+            kibalance: com.focusPage("#kibalance"),
+            billType: com.focusPage("#billType")
         },
         taxrate: [3, 6, 9],
         atttype_advance: {},
@@ -171,6 +172,9 @@ jQuery(function ($) {
         {fieId:"kino", name: "金蝶编号", prop: "kino", clazz: "blue"},
         {fieId:"kiname", name: "金蝶名称", prop: "kiname", clazz: "grey"},
         {fieId:"kibalance", name: "费用项目编码", prop: "kibalance", clazz: "blue"},
+        {fieId:"billType", name: "单据名称", prop: "billType", clazz: "grey", show: function(v){
+            return v.billType = com.checkNull(v.billType, "无");
+        }},
         {fieId:"status", name: "状态", prop: "status", dataset: paymentType.status, clazz: "red"}
     ];
     var linebtns = [
@@ -180,6 +184,7 @@ jQuery(function ($) {
             paymentType.items.kino.val(v.kino);
             paymentType.items.kiname.val(v.kiname);
             paymentType.items.kibalance.val(v.kibalance);
+            paymentType.items.billType.val(v.billType == "无" ? "" : v.billType);
             com.focusPage("#saveInfo").css("display", "none");
             paymentType.editFlg = false;
             paymentType.modals.paymentTypeModal.modal("show");
@@ -214,7 +219,8 @@ jQuery(function ($) {
             "paymentType.taxrate": paymentType.items.taxrate.val() == "" ? 0 : paymentType.items.taxrate.val(),
             "paymentType.kino": paymentType.items.kino.val(),
             "paymentType.kiname": paymentType.items.kiname.val(),
-            "paymentType.kibalance": paymentType.items.kibalance.val()
+            "paymentType.kibalance": paymentType.items.kibalance.val(),
+            "paymentType.billType": paymentType.items.billType.val().replace(/\s+/g, "")
         };
 
         if (paymentType.editFlg) {

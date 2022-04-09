@@ -32,6 +32,7 @@ $(function () {
         depositpayStatus : {},
         fullpayStatus : {},
         type : {},
+        isAffirm : {},
         saiid : null,
         url : null,
         info : null
@@ -51,10 +52,11 @@ $(function () {
         salesActivityItem.depositpayStatus = res.depositpayStatus.split("key", "value");
         salesActivityItem.fullpayStatus = res.fullpayStatus.split("key", "value");
         salesActivityItem.type = res.type.split("key", "value");
+        salesActivityItem.isAffirm = res.isAffirm.split("key", "value");
     }, null, false);
 
     com.post(api.ds.manifest, {}, function (res) {
-        $.each(res.salesActivityItemType, function (i, v) {
+    	$.each(res.salesActivityItemType, function (i, v) {
             salesActivityItem.activityItemType[v.key] = v.value;
         })
     }, null, false);
@@ -341,7 +343,15 @@ $(function () {
                 var widgetMain = $("<div></div>").addClass("widget-main no-padding").appendTo(widgetBody);
 
                 var widgetHeader = $("<div></div>").attr("id", "widgetHeader_" + v.saiid).appendTo(widgetMain);
-                var widgetHeaderH5 = $("<h4></h4>").addClass("bigger lighter").css("padding-left", "12px").appendTo(widgetHeader).text(v.name);
+
+                var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.name);
+                var $label = $('<label></label>');
+                var $input = $('<input></input>').attr({
+                	"type" : "checkbox",
+        			"name" : "saiids",
+        			"class" : "ace ace-checkbox-2"
+                }).val(v.saiid);
+                widgetHeader.append($label.append($input).append($span));
 
                 var ul = $("<ul></ul>").addClass("list-unstyled fl-inline-list clearfix").css("padding-left", "12px").appendTo(widgetMain);
                 var nameLi = $("<li></li>").appendTo(ul);
@@ -371,6 +381,10 @@ $(function () {
                 var totalLi = $("<li></li>").appendTo(ul);
                 var totalStr = $("<strong></strong>").text("合计:").appendTo(totalLi);
                 var totalSpan = $("<span></span>").addClass("blue").attr("id", "money_" + v.saiid).text(utils.accMul(v.money, v.num)).appendTo(totalLi);
+
+                var isAffirmLi = $("<li></li>").appendTo(ul);
+                var isAffirmState = $("<strong></strong>").text("是否确认:").appendTo(isAffirmLi);
+                var isAffirmSpan = $("<span></span>").addClass("red").attr("id", "money_" + v.saiid).text(salesActivityItem.isAffirm[v.isAffirm]).appendTo(isAffirmLi);
 
                 var uiPgDiv = $("<div></div>").addClass("ui-pg-div").css({"padding-left" : "12px", "margin-bottom" : "5px"}).appendTo(widgetBody);
                 if (uiBtnMethod != null) {
@@ -547,6 +561,7 @@ $(function () {
                     ['数量', 'num'],
                     ['总额', 'sum'],
                     ['备注', 'content'],
+                    ['是否确认', 'isAffirm'],
                     ['操作人', 'userName'],
                     ['操作时间', 'operateTime'],
                 ],
@@ -556,6 +571,7 @@ $(function () {
                 v.userName = v.operater.currentName;
                 v.type = salesActivityItem.type[v.type];
                 v.state = salesActivityItem.activityItemType[v.state];
+                v.isAffirm = salesActivityItem.isAffirm[v.isAffirm];
                 v.sum = v.money*v.num;
             });
 
@@ -563,6 +579,35 @@ $(function () {
 
     }
 
+    // 发送按钮
+    com.focusPage('#btnNotice').click(function() {
+
+		var $inputs = com.focusPage('input[name="saiids"]:checked');
+		var saiid = $inputs.val();
+		$.each($inputs, function(i, v) {
+			var $v = $(v);
+			if ($v.val()) {
+				if ($inputs.val() != $v.val()) {
+					saiid += "," + $v.val();
+				}
+			}
+		});
+
+		var options = {
+			"salesActivityItem.content" : saiid,
+			"orderId": salesActivityItem.paramsOrderId
+		};
+
+		com.showConfirm("是否发送查看通知", function() {
+			com.post(api.sales.sendSalesActivityItem, options, function(res) {
+				com.showAlert(com.info, "操作成功");
+				searcher.doSearch();
+			});
+
+		});
+
+	});
+ 
     //领取物品
     com.focusPage("#submitSalesActivityItemBtn").on("click", function () {
 

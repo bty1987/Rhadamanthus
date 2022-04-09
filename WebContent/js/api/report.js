@@ -145,7 +145,15 @@ $.extend(api, {
         updataDecoration7Achievement: {
             url: "updataDecoration7Achievement.do",
             demo: true
-        }
+        },
+        rankAddReduce: {
+            url: "rankAddReduce.do",
+            type: "query",
+            tranargs:[{
+                result:"addReduceRankVOs",
+                args: ["total"]
+            }]
+        },
 
     }
 });

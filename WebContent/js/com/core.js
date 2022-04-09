@@ -111,7 +111,9 @@
      */
     post: function(api, options, callback, failCallback, asyncFlag) {
 
-        if (api == null) { return false; }
+        if (api == null) {
+            return false;
+        }
 
         var method = api.url;
         var target = method.substring(0, method.indexOf('.'));
@@ -184,6 +186,7 @@
 
         if (api.type == 'update' && api.tranargs) {
             $.each(opts, function(k, v) {
+
                 if (api.tranargs.args.indexOf(k.replace(/\[\d+\]/, '')) != -1) {
                     utils.accExtend(opts, k);
                 }
@@ -197,7 +200,10 @@
             dataType: "json",
             async: optAsync, // 设为false就是同步请求
             success: function(res) {
-                if (res == null) { return false; }
+
+                if (res == null) {
+                    return false;
+                }
 
                 if (res.errorCode == 0) {
 
@@ -208,8 +214,10 @@
                         $.each(tranargs, function(i, v) {
 
                             com.getProp(res, v.result, '-', function(o) {
+
                                 if ($.isArray(o)) {
                                     $.each(o, function(i, vv) {
+
                                         utils.accReduce(vv, v.args);
                                     });
                                 } else if ($.isPlainObject(o)) {
@@ -245,6 +253,7 @@
                 }
             },
             error: function(msg) {
+
                 console.error(msg);
                 com.showAlert(com.error, "功能问题,请稍后再试");
                 if (failCallback) {
@@ -284,6 +293,7 @@
             dataType: "json",
             async: async, // 设为false就是同步请求
             success: function(res) {
+
                 if (callback) {
                     callback(res);
                 } else {
@@ -291,6 +301,7 @@
                 }
             },
             error: function(res) {
+
                 if (failcallback) {
                     failcallback(res);
                 } else {
@@ -305,6 +316,7 @@
      * @param items 元素列表
      */
     cleanItems: function(items) {
+
         for ( var i in items) {
 
             var item = items[i]
@@ -384,6 +396,7 @@
      * @param _isTip 是否为Tip样式显示
      */
     clearValidator: function(id, _isTip) {
+
         isTip = _isTip || false;
 
         if (id != undefined && id != "") {
@@ -396,7 +409,9 @@
 
         $.each(com.focusPage(id + popover), function(k, v) {
 
-            if ($(this).data("tip") && !isTip) { return true; }
+            if ($(this).data("tip") && !isTip) {
+                return true;
+            }
             if ($(this).data("addBorderWidth")) {
                 $(this).css("border-width", "0px");
             }
@@ -416,12 +431,14 @@
      * @param contents 显示内容
      */
     showTip: function(obj, msg, direc) {
+
         direc = direc ? ["", "top", "right", "bottom", "left"].indexOf(direc) : 1
         layer.tips(msg, obj, {
             tips: [direc, '#3595CC']
         });
     },
     showTips: function($obj, msg, isTip) {
+
         $obj = com.focusPage($obj);
         if ($obj.css("border-width") == "0px") {
             $obj.css("border-width", "1px");
@@ -451,6 +468,7 @@
      * @param contents 显示内容
      */
     showAlert: function(type, contents) {
+
         if (!type)
             type = com.info;
         layer.msg(contents, {
@@ -466,14 +484,17 @@
      * @param cancel 取消按钮回调方法
      */
     showConfirm: function(content, success, cancel) {
+
         layer.confirm(content, {
             title: false,
             resize: false,
             closeBtn: false
         }, function(index) {
+
             layer.close(layer.index);
             success && success();
         }, function(index) {
+
             cancel && cancel();
         });
     },
@@ -498,6 +519,7 @@
         };
 
         $.each(events, function(k, v) {
+
             btns.push(k);
             options["btn" + index++] = v;
         });
@@ -511,6 +533,7 @@
      * @param contents 提示内容
      */
     showInfo: function(title, contents) {
+
         layer.alert(contents, {
             skin: 'layui-layer-lan',
             title: title,
@@ -542,12 +565,14 @@
      * 关闭提示
      */
     closePopover: function() {
+
         layer.closeAll('tips');
     },
     /**
      * 关闭提示
      */
     closeTip: function() {
+
         layer.closeAll("tips");
     },
     /**
@@ -559,11 +584,13 @@
      * @param callback 成功回调
      */
     switchPage: function(url, notTab, data, callback) {
+
         var container = $(".flpage.tab-pane.active").attr("id");
         if (notTab) {
             container = "fl-container";
         }
         $("#" + container).load(url, data, function(response, status, xhr) {
+
             callback && callback(response, status, xhr);
         });
         layer.closeAll("tips");
@@ -575,6 +602,7 @@
      * @param features 显示内容
      */
     loadPage: function(page, $features) {
+
         if (!page)
             return false;
         if ($('.flpage.nav-tab').length > 10) {
@@ -585,6 +613,7 @@
         var menuId = $features.attr("mid");
 
         var breadcrumb = function(tabPane) {
+
             var temp = [];
             if (tabPane.attr('parentText'))
                 temp.push(tabPane.attr('parentText'));
@@ -651,6 +680,7 @@
         });
 
         taba.on("click", function() {
+
             tabClose.removeClass('show');
             params['urlLoadParams'] = com.splitUrl(page);
             breadcrumb(tabPane);
@@ -671,6 +701,7 @@
             var maskicon = $("<i></i>").addClass("icon-spinner icon-spin bigger-450").appendTo(maskh1);
 
             setTimeout(function() {
+
                 tabPane.load(page);
             }, 1200);
         });
@@ -685,6 +716,7 @@
      * @return 元素对象
      */
     focusPage: function(selecter, contianer) {
+
         if (!contianer) {
             return $('.flpage.tab-pane.active').find(selecter);
         } else {
@@ -744,6 +776,7 @@
             list: [],
             postData: args,
             source: function(query, process) {
+
                 if (query.length < 2)
                     return false;
                 var options = {};
@@ -751,14 +784,17 @@
                 com.post(this.options.url, $.extend(options, this.options.postData), $.proxy(this.options.callback, this));
             },
             matcher: function(item) {
+
                 return true;
             },
             callback: function(data) {
+
                 this.options.list = data[result];
                 this.flprocess(this.options.list, key, value);
             },
             isResultTypeMap: true,
             flupdater: function(k, v) {
+
                 if (callback)
                     return callback(this.options.list, k, v);
                 else
@@ -797,6 +833,7 @@
                     res = data.slice(0, 5);
                 } else {
                     $.each(data, function(i, v) {
+
                         if (v[value].indexOf(query) != -1)
                             res.push(v);
                     });
@@ -804,13 +841,16 @@
                 $.proxy(this.options.callback, this)(res)
             },
             matcher: function(item) {
+
                 return true;
             },
             callback: function(list) {
+
                 this.flprocess(list, key, value);
             },
             isResultTypeMap: true,
             flupdater: function(k, v) {
+
                 if (callback)
                     return callback(this.options.list, k, v);
                 else
@@ -830,6 +870,7 @@
      * @param callback 回调方法 , 选中元素之后执行
      */
     autoTypeahead: function(container, url, name, args, result, key, value, callback) {
+
         com.initTypeahead(container, url, name, args, result, key, value, callback);
     },
     /**
@@ -923,6 +964,7 @@
         }
 
         $e.attr("src", imgUrl).attr("layer-src", sourceUrl).attr("alt", alt).error(function() {
+
             $(this).hide();
         });
 
@@ -934,6 +976,7 @@
      * @param $e 图片元素对象
      */
     clearImg: function($e) {
+
         return $e.removeAttr("src").removeAttr("layer-src").removeAttr("alt");
     },
     showOss: function($e, url, width, height, alt, defaultUrl, type) {
@@ -941,6 +984,7 @@
         var imgUrl = url + '?x-oss-process=image/resize,m_fill,h_' + height + ',w_' + width;
 
         $e.attr("src", imgUrl).attr("alt", alt).error(function() {
+
             $(this).hide();
         });
 
@@ -951,12 +995,14 @@
         var imgUrl = url + '?x-image-process=image/resize,m_fill,h_' + height + ',w_' + width;
 
         $e.attr("src", imgUrl).attr("alt", alt).error(function() {
+
             $(this).hide();
         });
 
         return url;
     },
     downloadFile: function($e, url, name) {
+
         $e.attr('href', config.media + api.common.downloadFile.url + "?downloadFilePath=" + url + "&fileName=" + name).attr('target', '_blank');
     },
     /**
@@ -988,6 +1034,7 @@
      * @param popup 目标对象 , 主要恢复目标对象的滚动条
      */
     closeMask: function(mask, popup) {
+
         mask.remove();
         popup.css("overflow", "");
     },
@@ -1022,14 +1069,17 @@
             move: false,
             resize: false,
             success: function() {
+
                 if (success != null && typeof (success) == 'function')
                     success();
             },
             cancel: function() {
+
                 if (cancel != null && typeof (cancel) == 'function')
                     cancel();
             },
             end: function() {
+
                 if (cancel != null && typeof (cancel) == 'function')
                     cancel();
             },
@@ -1040,6 +1090,7 @@
             var printConf = {
                 skin: "layui-layer-hong",
                 success: function(layero, index) {
+
                     var $title = $(layero).find('.layui-layer-title').text("");
 
                     var divM = $("<div></div>").appendTo($title);
@@ -1054,6 +1105,7 @@
                     var btn2 = $('<a class="layui-layer-btn0">热敏打印</a>').appendTo(btns);
 
                     btn1.click(function() {
+
                         var body = layer.getChildFrame('body', index);
                         var iframeWin = window[layero.find('iframe')[0]['name']];
                         if (typeof (isPrint) === "function")
@@ -1063,6 +1115,7 @@
                     });
 
                     btn2.click(function() {
+
                         printer.handle();
                         if (typeof (isPrint) === "function")
                             isPrint(layero);
@@ -1079,6 +1132,7 @@
         }
 
         return setTimeout(function() {
+
             layer.open(options)
         }, 200);
     },
@@ -1118,14 +1172,17 @@
             resize: false,
             zIndex: 3500,
             success: function(layer, index) {
+
                 if (success && typeof (success) == 'function')
                     success();
             },
             cancel: function() {
+
                 if (cancel && typeof (cancel) == 'function')
                     cancel();
             },
             end: function() {
+
                 layer.closeAll("tips");
                 if (cancel && typeof (cancel) == 'function')
                     cancel();
@@ -1134,6 +1191,7 @@
         }
 
         return setTimeout(function() {
+
             layer.open(options)
         }, 200);
     },
@@ -1178,14 +1236,17 @@
             resize: false,
             zIndex: 3000,
             success: function(layer, index) {
+
                 if (success && typeof (success) == 'function')
                     success();
             },
             cancel: function() {
+
                 if (cancel && typeof (cancel) == 'function')
                     cancel();
             },
             end: function() {
+
                 layer.closeAll("tips");
                 if (cancel && typeof (cancel) == 'function')
                     cancel();
@@ -1193,6 +1254,7 @@
         }
 
         return setTimeout(function() {
+
             layer.open(options)
         }, 200);
     },
@@ -1233,15 +1295,18 @@
             resize: false,
             zIndex: 2500,
             success: function(layer, index) {
+
                 _holder.load(url);
                 if (success && typeof (success) == 'function')
                     success();
             },
             cancel: function() {
+
                 if (cancel && typeof (cancel) == 'function')
                     cancel();
             },
             end: function() {
+
                 layer.closeAll("tips");
                 if (cancel && typeof (cancel) == 'function')
                     cancel();
@@ -1250,6 +1315,7 @@
         }
 
         return setTimeout(function() {
+
             layer.open(options)
         }, 200);
     },
@@ -1264,6 +1330,7 @@
      * @returns 弹窗索引
      */
     popup4frame: function(title, url, success, cancel, isPrint) {
+
         com.popup(title, url, success, cancel, isPrint);
     },
     /**
@@ -1273,6 +1340,7 @@
      * @returns 弹窗索引
      */
     popup4photos: function(holder) {
+
         com.focusPage(holder).unbind();
         return layer.photos({
             "photos": holder,
@@ -1285,6 +1353,7 @@
      * @param type 类型为字符串(tips/page) , 类型为对象 , 关闭对象所属的弹窗
      */
     closePopup: function(index) {
+
         if (index && typeof (index) == "object") {
             layer.close(index.parents(".layui-layer").attr("times"));
         } else if (index && typeof (index) == "string") {
@@ -1299,6 +1368,7 @@
      * @param content 内容
      */
     debug: function(content) {
+
         (config.logflag && config.logflag > 1) && console.info(content);
     },
     /**
@@ -1307,6 +1377,7 @@
      * @param content 内容
      */
     wrong: function(content) {
+
         (config.logflag && config.logflag > 0) && console.error(content);
     },
     /**
@@ -1337,6 +1408,7 @@
      * @param rep 替换对象
      */
     checkNull: function(obj, rep) {
+
         return obj == null || obj == undefined || obj == "" ? rep : obj;
     },
     /**
@@ -1346,6 +1418,7 @@
      * @return cookie值
      */
     getCookie: function(name) {
+
         var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
         if (arr = document.cookie.match(reg)) {
             return unescape(arr[2]);
@@ -1361,6 +1434,7 @@
      * @param minutes 有效时间 , 分钟为单位
      */
     setCookie: function(name, value, minutes) {
+
         var expires = "";
         if (minutes) {
             var d = new Date();
@@ -1375,6 +1449,7 @@
      * @param name 名称
      */
     deleteCookie: function(name) {
+
         var exp = new Date();
         exp.setTime(exp.getTime() - 1);
         var cval = com.getCookie(name);
@@ -1411,6 +1486,7 @@
      * @param name 名称
      */
     currentTime: function() {
+
         return com.dateFormat();
     },
     /**
@@ -1445,6 +1521,7 @@
         $chart.showLoading();
 
         com.post(url, args, function(res) {
+
             $chart.hideLoading();
             if (excuter && typeof (excuter) == 'function')
                 excuter(res);
@@ -1481,7 +1558,7 @@
         if (type == "year")
             format = "yyyy";
         else if (type == "month")
-            format = "yyyy-MM";
+            format = "MM";
         else if (type == "day") {
             format = "dd";
             type = "date"
@@ -1489,6 +1566,7 @@
             format = "HH:mm:ss";
 
         $.each(container, function(i, e) {
+
             laydate.render({
                 elem: e,
                 type: type,
@@ -1548,6 +1626,7 @@
             'fileSizeLimit': '5MB', // 上传文件的大小限制
             'queueSizeLimit': limit, // 上传数量
             'onUploadSuccess': function(file, data, response) { // 上传到服务器,服务器返回相应信息到data里
+
                 var datas = eval("(" + data + ")");
                 if (datas.errorCode == 0 && typeof (success) == "function") {
                     success(datas, file);
@@ -1559,6 +1638,7 @@
                 }
             },
             'onQueueComplete': function() {
+
                 if (typeof (complete) == "function")
                     complete();
             }
@@ -1597,12 +1677,15 @@
             processData: false,
             contentType: false,
         }).success(function(result) {
+
             if (success && typeof success == 'function')
                 success(result);
         }).error(function(error) {
+
             if (fail && typeof fail == 'function')
                 fail(error);
         }).complete(function(info) {
+
             if (complete && typeof complete == 'function')
                 complete(info);
         });
@@ -1629,6 +1712,7 @@
             callback(o[prop]);
         } else if ($.isArray(o[prop])) {
             $.each(o[prop], function(i, v) {
+
                 com.getProp(v, $.extend([], props), flag, callback);
             });
         } else {
@@ -1714,6 +1798,7 @@
         var footer = $("<div>").addClass("modal-footer").appendTo(content);
 
         $.each(btns, function(i, v) {
+
             $("<button>").addClass("btn btn-default").addClass(v.clazz).attr("id", v.id).text(v.name).appendTo(footer);
         });
 
@@ -1737,6 +1822,7 @@
      * @return 如果存在返回判断元素 , 否则返回默认值
      */
     Array.prototype.contains = function(value, defaults) {
+
         return $.inArray(value, this) != -1 ? value : defaults;
     };
     /**
@@ -1747,8 +1833,10 @@
      * @returns 对象结构
      */
     Array.prototype.split = function(key, value) {
+
         var _pack = {};
         $.each(this, function(i, v) {
+
             _pack[v[key]] = v[value];
         });
         return _pack;
@@ -1763,7 +1851,9 @@
 
         var result = this;
 
-        if (arguments.length < 1) { return result; }
+        if (arguments.length < 1) {
+            return result;
+        }
 
         var data = arguments; // 如果模板参数是数组
 
@@ -1794,6 +1884,7 @@
             return false;
 
         $.each(items, function(k, o) {
+
             $('.breadcrumb').append($('<li class="nav' + (k + 1) + '"></li>').append(k == 0 ? '<i class="fa fa-fw ' + icon + '"></i>&nbsp;&nbsp;&nbsp;' + o : o, '&nbsp;&nbsp;'));
         });
     }
@@ -1806,7 +1897,9 @@
     $.showHelp = function(container, key) {
 
         var addHelpBtn = function(v) {
+
             $(container).append($('<span class="badge badge-purple">帮助</span>').on("click", function() {
+
                 layer.open({
                     type: 1,
                     title: v.title,
@@ -1821,11 +1914,14 @@
                 "line-height": "18px"
             }));
             var showHelpInfo = function(content) {
+
                 var container = $('<div></div>');
                 if ($.isArray(content)) {
                     $.each(content, function(i, o) {
+
                         if ($.isPlainObject(o)) {
                             $.each(o, function(k, e) {
+
                                 if (k == 'title')
                                     container.append($('<h3>' + e + '</h3>'));
                                 if (k == 'content')
@@ -1835,6 +1931,7 @@
                                 if (k == 'p') {
                                     if ($.isArray(e)) {
                                         $.each(e, function(pi, p) {
+
                                             container.append($('<p>' + p + '</p>'));
                                         });
                                     } else {
@@ -1868,6 +1965,7 @@
         };
 
         com.post(api.ds.help, {}, function(res) {
+
             getHelpInfo(res);
         });
     }
@@ -1879,6 +1977,7 @@
      * @parma detail 详细信息
      */
     $.fn.statement = function(title, detail) {
+
         return $(this).prepend("<div class='page-header'><h1>" + title + "<small><i class='icon-double-angle-right'></i> " + detail + "</small></h1></div>");
     }
 
@@ -1963,6 +2062,7 @@
             callback();
 
             setTimeout(function() {
+
                 that.button('reset')
             }, typeof (delayTime) == "number" ? delayTime : 1000);
         });

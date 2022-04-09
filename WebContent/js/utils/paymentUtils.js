@@ -703,89 +703,6 @@ var paymentUtils = {
         }
     },
 
-    //收据页面生成pdf文件
-    makeContract: function(target, rtid, orderId, paymentType, direction) {
-
-        target.style.background = "#FFFFFF";  //避免生成的PDF页面底部出现黑色背景
-        
-        var paymentContract = null;
-
-        html2canvas(target, {
-            onrendered:function(canvas) {
-                var contentWidth = canvas.width;
-                var contentHeight = canvas.height;
-
-                //一页pdf显示html页面生成的canvas高度;
-                var pageHeight = contentWidth / 595.28 * 841.89 ;
-
-                //未生成pdf的html页面高度
-                var leftHeight = contentHeight;
-                //页面偏移
-                var position = 0;
-                //a4纸的尺寸[595.28,841.89]，html页面生成的canvas在pdf中图片的宽高
-                var imgWidth = 595.28;
-                var imgHeight = 595.28/contentWidth * contentHeight;
-
-                var pageData = canvas.toDataURL('image/jpeg', 1.0);
-                //l表示横版，p：纵向 （默认纵向）
-                if (direction != undefined) {
-                    direction = 'l';
-                    pageHeight = contentWidth / 841.89 * 595.28 ;
-                }
-                var pdf = new jsPDF(direction, 'pt', [imgWidth, imgHeight]);
-
-                //有两个高度需要区分，一个是html页面的实际高度，和生成pdf的页面高度(841.89)
-                //当内容未超过pdf一页显示的范围，无需分页
-                if (leftHeight < pageHeight) {
-                    pdf.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight);
-                } else {
-                    while(leftHeight > 0) {
-                        pdf.addImage(pageData, 'JPEG', 0, position, imgWidth, imgHeight);
-                        leftHeight -= pageHeight;
-                        position = direction == 'l' ? position-595.28 : position-841.89;
-                        //避免添加空白页
-                        if(leftHeight > 0) {
-                            pdf.addPage();
-                        }
-                    }
-                }
-
-                var file = paymentUtils.dataURLtoFile(pdf.output("datauristring"), "1.pdf");
-
-                var formData = new FormData();
-                formData.append("strutsUploads", file);
-
-                $.ajax({
-                    url : config.communion + "uploadOther.do",
-                    type : "POST",
-                    data : formData,
-                    processData: false,
-                    contentType: false
-                }).success(function(result) {
-                    var options = {
-                        "paymentContract.rtid": rtid,
-                        "paymentContract.orderId": orderId,
-                        "paymentContract.paymentType": paymentType,
-                        "paymentContract.viewpdf": "http://www.fanglinserver.com/" + result.resUrl
-                    };
-
-                    com.post(api.payment.addPaymentContract, options, function(res){
-
-                        com.showAlert(com.info, "已完成");
-
-                        paymentContract = paymentUtils.showContractBtn(rtid, paymentType, orderId);
-
-                        $("#decorationPaymentReceipt center").removeAttr("style");
-                        $("#decorationPaymentReceipt center div").first().removeAttr("style");
-                        $("#decorationPaymentReceipt tr").removeAttr("style");
-                    })
-                });
-            }
-        });
-        
-        return paymentContract;
-    },
-
     dataURLtoFile: function(dataUrl, fileName){
         var arr = dataUrl.split(','), mime = arr[0].match(/:(.*?);/)[1],
             bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
@@ -795,7 +712,7 @@ var paymentUtils = {
         return new File([u8arr], fileName, {type:mime});
     },
 
-    showContractBtn: function(rtid, paymentType, orderId) {
+    showContractBtn: function(rtid, paymentType, pdfoptions, customerName, receiptNo) {
         
         var options = {
             "paymentContract.rtid": rtid,
@@ -811,11 +728,7 @@ var paymentUtils = {
         
         if(!paymentContract){
             $("#createSign").show().click(function(){
-                var target = $("#decorationPaymentReceipt center")[0]; //避免生成的PDF页面底部出现黑色背景
-                $("#decorationPaymentReceipt center div").first().css({"padding-top": "30px", "padding-bottom": "30px"});
-                $("#decorationPaymentReceipt center").css({"width": "30%", "margin": "0 auto"});
-                $("#decorationPaymentReceipt tr").css({"height": "60px"});
-                paymentContract = paymentUtils.makeContract(target, params.decorationReceiptDrId, orderId, 1);
+                paymentUtils.makeContract(params.decorationReceiptDrId, 1, pdfoptions, customerName, receiptNo);
             });
         }else if(paymentContract && paymentContract.status == 0){
             $("#customerSign").show().click(function(){
@@ -836,8 +749,6 @@ var paymentUtils = {
                 $("#paymentContractModal").modal("hide");
             });
         }
-        
-        return paymentContract;
     },
     
     customerSign: function(paymentContract, customerId){
@@ -919,5 +830,23 @@ var paymentUtils = {
         }
 
         return bankRowspan;
+    },
+
+    makeContract: function (rtid, paymentType, options, customerName, receiptNo) {
+        options["customerName"] = customerName;
+        options["receiptNo"] = receiptNo;
+        options["rtid"] = rtid;
+        options["paymentType"] = paymentType;
+
+        var data = JSON.stringify(options);
+
+        com._post_(api.home.library, {"api": "contract.contract.receipt", "receipt":data, "redis":0}, function(res){
+            paymentUtils.showContractBtn(rtid, paymentType, options["orderId"]);
+
+            $("#decorationPaymentReceipt center").removeAttr("style");
+            $("#decorationPaymentReceipt center div").first().removeAttr("style");
+            $("#decorationPaymentReceipt tr").removeAttr("style");
+            com.showAlert(com.info, "操作成功")
+        });
     }
 };

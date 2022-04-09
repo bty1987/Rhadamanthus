@@ -69,8 +69,7 @@ var QuotationDetail = (function() {
 
                 $domainNormriceModal: com.focusPage("#quotationNormriceItemModal").on("show.bs.modal", function(a) {
 
-                    com.focusPage('input[name="quoteparam"]').val('');
-                    com.focusPage('input[name="quotempl"]:checked').removeAttr('checked');
+                    com.focusPage('input[name="num"]').val('');
                 })
             },
             // 初始化功能区添加
@@ -89,11 +88,8 @@ var QuotationDetail = (function() {
                 "normadd.constructionNode.cnid": 0
             }, function(data) {
 
-                data.normadds.length && $.each(data.normadds, function(i, v) {
-
-                    var $dtempl = painter.createNormriceTemplete(v);
-                    that.quoModals.$domainNormriceModal.find('.modal-body').append($dtempl);
-                });
+                var $dtempl = painter.createNormriceTemplete(data.normadds);
+                that.quoModals.$domainNormriceModal.find('.modal-body').append($dtempl);
             });
         },
         calculateQuoFees: function(func) {
@@ -181,6 +177,17 @@ var QuotationDetail = (function() {
                 "data-action": "collapse"
             });
 
+            var $ul, $li, $div, $span;
+            var _lineSet = [["line", "0"], ["formula", "定额数量"], ["num", "库房数量"], ["name", "名称"], ["type", "类型"], ["unit", "单位"], ["worktype", "单位"], ["btns", "功能"]];
+
+            $ul = $('<ul></ul>').addClass('fl-quo-list');
+            $li = $('<li></li>').addClass('fl-quo-item').appendTo($ul);
+            $.each(_lineSet, function(i, v) {
+
+                $div = $('<div></div>').addClass('cell ' + v[0]).appendTo($li);
+                $span = $('<span></span').addClass('cell-wrap').text(v[1]).appendTo($div);
+            });
+
             $dbody = $('<div></div>').addClass('widget-body');
             $dbodyInner = $('<div></div>').addClass('widget-body-inner');
             $list = $('<ul></ul>').addClass('fl-quo-list').attr("id", "quotationNormoodItem" + dv.type);
@@ -190,7 +197,7 @@ var QuotationDetail = (function() {
 
             $dbodyInner.append($input).append($list).appendTo($dbody);
 
-            $domain.append($dhead).append($dbody);
+            $domain.append($dhead).append($ul).append($dbody);
 
             if (dv.quotationFunctionAreaItems.length) {
 
@@ -239,6 +246,17 @@ var QuotationDetail = (function() {
                 "data-action": "collapse"
             });
 
+            var $span, $ul, $li, $div;
+            var _lineSet = [["line", "0"], ["formula", "数量"], ["num", "工费"], ["name", "单位"], ["type", "类型"], ["btns", "功能"]];
+
+            $ul = $('<ul></ul>').addClass('fl-quo-list');
+            $li = $('<li></li>').addClass('fl-quo-item').appendTo($ul);
+            $.each(_lineSet, function(i, v) {
+
+                $div = $('<div></div>').addClass('cell ' + v[0]).appendTo($li);
+                $span = $('<span></span').addClass('cell-wrap').text(v[1]).appendTo($div);
+            });
+
             $dbody = $('<div></div>').addClass('widget-body');
             $dbodyInner = $('<div></div>').addClass('widget-body-inner');
             $list = $('<ul></ul>').addClass('fl-quo-list').attr("id", "quotationNormoodItem" + dv.type);
@@ -248,7 +266,7 @@ var QuotationDetail = (function() {
 
             $dbodyInner.append($input).append($list).appendTo($dbody);
 
-            $domain.append($dhead).append($dbody);
+            $domain.append($dhead).append($ul).append($dbody);
 
             if (dv.quotationFunctionAreaItems1.length) {
 
@@ -278,14 +296,29 @@ var QuotationDetail = (function() {
         // 创建添加功能区--附加项
         createNormriceTemplete: function(v) {
 
-            var $div = $('<div></div>').addClass('col-xs-12');
-            var $label = $('<label></label>').addClass('col-xs-12').appendTo($div);
-            var $radio = $('<input>').addClass('ace').attr({
-                "name": "quotempl",
-                "type": "checkbox"
-            }).val(v.naid).appendTo($label);
-            var $span = $('<span></span>').addClass('lbl').text(v.name).appendTo($label);
-            return $div;
+            var $form = $("<form></form>").addClass("form-horizontal");
+
+            var $group = $("<div></div>").addClass("form-group").appendTo($form);
+            var $label = $("<label></label>").addClass("col-sm-3 control-label no-padding-right").text("附加项").appendTo($group);
+            var $div = $("<div></div>").addClass("col-sm-9").appendTo($group);
+            var $select = $('<select></select>').attr({
+                "name": "quotempla"
+            }).addClass('col-xs-10 col-sm-5 v_float v_required').appendTo($div);
+
+            var $group = $("<div></div>").addClass("form-group").appendTo($form);
+            var $label = $("<label></label>").addClass("col-sm-3 control-label no-padding-right").text("数量").appendTo($group);
+            var $div = $("<div></div>").addClass("col-sm-9").appendTo($group);
+            var $num = $('<input>').addClass('col-xs-10 col-sm-5 v_float v_required').attr({
+                "type": "text",
+                "name": "num"
+            }).appendTo($div);
+
+            $.each(v, function(i, j) {
+
+                $select.append("<option value='" + j.naid + "'>" + j.name + "</option>");
+            });
+
+            return $form;
         },
 
         // 打包项
@@ -373,10 +406,10 @@ var QuotationDetail = (function() {
             }
 
             var _lineSet = [["line", linenum, ["data-areaType", qv.areaType]], // 编号
-            ["num", qv.salary ? qv.salary : "0"], // 公式
+            ["formula", qv.num ? qv.num : "0"], // 公式
             ["num", qv.salary], // 数量
-            ["name", qv.constructionNode.name, ["data-name", qv.constructionNode.name]], // 施工节点
-            ["type", _typeName, ["data-type", qv.type]], ["unit", qv.normunit], // 单位
+            ["name", qv.constructionNode.name], // 施工节点
+            ["type", _typeName, ["data-type", qv.type]], // 单位
             ];
 
             var $btnCell, $btnCellWrap, $inputLable, $input, $ispan, $btnDel;
@@ -441,7 +474,11 @@ var QuotationDetail = (function() {
 
             com.focusPage('#addQuotationNormriceItem').click(function() {
 
+                if (com.validate("quotationNormriceItemModal"))
+                    return false;
+
                 quote.addQuotationNormrice();
+
                 quo.quoModals.$domainNormriceModal.modal("hide");
             });
         },
@@ -489,29 +526,19 @@ var QuotationDetail = (function() {
         // 增加方法--附加项
         addQuotationNormrice: function() {
 
-            var npids = com.focusPage("[name='quotempl']:checked");
+            var npid = com.focusPage("[name='quotempla']").val();
+            var num = com.focusPage("[name='num']").val();
 
-            if (!npids.length) {
-                return false;
-            }
+            var options = {
+                "quotation.qid": quo.quotationId,
+                "quotationNormriceItem.sid": npid,
+                "quotationNormriceItem.num": num
+            };
+            com.post(api.quotation.addQuotationNormriceItem, options, function(data) {
 
-            var _param = $.extend({
-                "quotation.qid": quo.quotationId
-            }, quo.basicParams);
+                var _items = data.quotationNormriceItem;
 
-            $.each(npids, function(i, v) {
-
-                _param['quotationNormriceItems[' + i + '].sid'] = $(v).val();
-            });
-
-            com.post(api.quotation.addQuotationNormriceItem, _param, function(data) {
-
-                var _items = data.quotationNormriceItems;
-
-                $.each(_items, function(i, v) {
-
-                    painter.normriceQuote(i + 1, v).appendTo(com.focusPage("#quotationNormoodItem1"));
-                });
+                painter.normriceQuote(1, _items).appendTo(com.focusPage("#quotationNormoodItem1"));
             }, null, false);
             quo.normriceQuoFees();
         },
@@ -571,6 +598,7 @@ var QuotationDetail = (function() {
             quo.historyPage = params.historyPage;
 
             quo.quotationId = params.quotationId;
+            quo.orderid = params.decorationOrderId;
 
             var orderId = params.decorationOrderId;
             var editFlg = params.editFlg;
@@ -609,6 +637,15 @@ var QuotationDetail = (function() {
                 "index": 2,
                 "quotationFunctionAreaItems1": [],
             }];
+
+            com.post(api.decoration.queryDecorationForCommonByOrderId, {
+                "decoration.orderId": quo.orderid
+            }, function(res) {
+
+                com.focusPage('#orderId').text(res.decoration.orderId)
+                com.focusPage('#address').text(res.decoration.house.village.name + " " + res.decoration.house.houseNumber);
+                com.focusPage('#version').text(res.decoration.version.name);
+            });
 
             com.post(api.quotation.queryQuotationNormoodItem, {
                 "quotationNormoodItem.qid": quo.quotationId

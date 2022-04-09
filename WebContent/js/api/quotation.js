@@ -1123,20 +1123,20 @@ $.extend(api, {
                 args: ["trannum", "salary"]
             }]
         },
-        deleteQuotationNormriceItem: {
-            url: "deleteQuotationNormriceItem.do",
-            intercept: true
-        },
         addQuotationNormriceItem: {
             url: "addQuotationNormriceItem.do",
             type: "update",
             tranargs: {
-                args: ["quotationNormriceItem.trannum", "quotationNormoodItem.salary"],
+                args: ["quotationNormriceItem.trannum", "quotationNormriceItem.salary", "quotationNormriceItem.num"],
                 query: [{
-                    result: "quotationNormriceItems",
-                    args: ["trannum", "salary"]
+                    result: "quotationNormriceItem",
+                    args: ["trannum", "salary", "num"]
                 }]
-            }
+            },
+        },
+        deleteQuotationNormriceItem: {
+            url: "deleteQuotationNormriceItem.do",
+            intercept: true
         },
 
         queryExtensionNormood: {

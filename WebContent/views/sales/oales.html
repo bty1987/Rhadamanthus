@@ -68,7 +68,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="awardModal" tabindex="-1">
+
+    <div class="modal fade" id="totalModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -80,7 +81,14 @@
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
-                    
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label no-padding-right orange" for="updateService">服务管家</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="col-xs-8 m-wrap v_required" id="updateService">
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label class="col-md-3 control-label no-padding-right orange" for="brandName">奖励类型</label>
                             <div class="col-sm-8">
@@ -89,33 +97,18 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="award" class="col-md-3 control-label no-padding-right orange">奖励金额</label>
+                            <label for="newTotal" class="col-md-3 control-label no-padding-right orange">总额</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="col-xs-8 m-wrap v_required v_float_3" id="newTotal">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="award" class="col-md-3 control-label no-padding-right orange">奖励</label>
                             <div class="col-sm-8">
                                 <input type="text" class="col-xs-8 m-wrap v_required v_float_3 " id="award">
                             </div>
                         </div>
-
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="awardBtn" class="btn btn-primary">保存</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="profitModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span>&times;</span>
-                        <span class="sr-only">Close</span>
-                    </button>
-                    <h4 class="modal-title">外销单</h4>
-                </div>
-                <div class="modal-body">
-                    <form class="form-horizontal">
 
                         <div class="form-group">
                             <label for="profit" class="col-md-3 control-label no-padding-right orange">利润</label>
@@ -124,10 +117,17 @@
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <label class="col-md-3 control-label no-padding-right" for="updateComment">备注</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="col-xs-8 m-wrap" id="updateComment">
+                            </div>
+                        </div>
+
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="profitBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="totalBtn" class="btn btn-primary">保存</button>
                 </div>
             </div>
         </div>

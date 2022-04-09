@@ -29,6 +29,7 @@ jQuery(function($) {
         isAffirms: {},
 
         pageType: params['urlLoadParams'].type,
+        atttype: null,
     };
 
     function initDecorationInfo() {
@@ -38,12 +39,29 @@ jQuery(function($) {
         com.post(api.decoration.queryDecorationForCommonByOrderId, {
             "decoration.orderId": addReduce.decorationOrderId
         }, function(res) {
+
             drawdecoration(res.decoration);
         }, null, false);
 
     }
 
     function drawdecoration(decoration) {
+
+        var $widget1 = $('<div></div>').addClass("col-xs-6 col-md-3").prependTo(decorationInfo);
+        var $box1 = $('<div></div>').addClass("widget-box").appendTo($widget1);
+        var $header1 = $('<div></div>').addClass("widget-header header-color-green").appendTo($box1);
+
+        var name1 = $('<h4></h4>').attr('id', 'h4name_').text("客户").appendTo($header1);
+
+        var $body1 = $('<div></div>').addClass("widget-body").appendTo($box1);
+        var $main1 = $('<div></div>').addClass("widget-main").appendTo($body1);
+        var $info1 = $('<div></div>').css("padding", "5px").appendTo($main1);
+
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('姓名: ' + decoration.customer.name)).appendTo($info1);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('电话: ' + (decoration.customer.phone == "" ? "暂无" : decoration.customer.phone))).appendTo($info1);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('地址: ' + (decoration.customer.address == "" ? "暂无" : decoration.customer.address))).appendTo($info1);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('客户关系: ' + decoration.customer.relationshipType)).appendTo($info1);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('身份证: ' + (decoration.customer.identity == "" ? "暂无" : decoration.customer.identity))).appendTo($info1);
 
         var $widget = $('<div></div>').addClass("col-xs-6 col-md-3").prependTo(decorationInfo);
         var $box = $('<div></div>').addClass("widget-box").appendTo($widget);
@@ -58,6 +76,8 @@ jQuery(function($) {
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('装修单号: ' + decoration.orderId)).appendTo($info);
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('楼盘地址: ' + decoration.house.village.name + " " + decoration.house.houseNumber)).appendTo($info);
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('报价版本: ' + decoration.version.name)).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('设计师: ' + decoration.designer.currentName)).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('业务员: ' + decoration.salesman.currentName)).appendTo($info);
     }
 
     com.post(api.ds.quotation, {}, function(res) {
@@ -111,6 +131,7 @@ jQuery(function($) {
             unpay(v.arId, 3);
         },
         show: function(v) {
+
             return ((v.status == 0 || v.status == 1) && v.paytype == 0 && v.type == 1);
         }
     }, {
@@ -156,7 +177,7 @@ jQuery(function($) {
         }, true, "addReduces");
 
         var lineprops = [{
-            field: "arId",
+            field: "arids",
             name: "多选",
             type: "checkbox",
             prop: "arId"
@@ -215,6 +236,8 @@ jQuery(function($) {
     }
 
     if (addReduce.pageType == "page") {
+
+        params["addReduce.atttype"] = params['urlLoadParams'].atttype;
 
         com.focusPage('#add').addClass("hide");
         com.focusPage('#btnNotice').addClass("hide");
@@ -314,11 +337,14 @@ jQuery(function($) {
         }];
         search.line("decoration.orderId", lineprops, linebtns);
     }
+
     search.render();
+
     // 查看按钮方法
     function viewDetailAddReduce(addReduceId) {
 
         params["addReduceId"] = addReduceId;
+
         com.switchPage(api.index.addReduceDetailIndex.url);
     }
 
