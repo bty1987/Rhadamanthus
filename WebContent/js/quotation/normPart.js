@@ -177,15 +177,14 @@ var QuotationDetail = (function() {
                 "data-action": "collapse"
             });
 
-            var $ul, $li, $div, $span;
             var _lineSet = [["line", "0"], ["formula", "定额数量"], ["num", "库房数量"], ["name", "名称"], ["type", "类型"], ["unit", "单位"], ["worktype", "单位"], ["btns", "功能"]];
 
-            $ul = $('<ul></ul>').addClass('fl-quo-list');
-            $li = $('<li></li>').addClass('fl-quo-item').appendTo($ul);
+            var $ul = $('<ul></ul>').addClass('fl-quo-list');
+            var $li = $('<li></li>').addClass('fl-quo-item').appendTo($ul);
             $.each(_lineSet, function(i, v) {
 
-                $div = $('<div></div>').addClass('cell ' + v[0]).appendTo($li);
-                $span = $('<span></span').addClass('cell-wrap').text(v[1]).appendTo($div);
+                var $div = $('<div></div>').addClass('cell ' + v[0]).appendTo($li);
+                var $span = $('<span></span').addClass('cell-wrap').text(v[1]).appendTo($div);
             });
 
             $dbody = $('<div></div>').addClass('widget-body');
@@ -246,15 +245,14 @@ var QuotationDetail = (function() {
                 "data-action": "collapse"
             });
 
-            var $span, $ul, $li, $div;
             var _lineSet = [["line", "0"], ["formula", "数量"], ["num", "工费"], ["name", "单位"], ["type", "类型"], ["btns", "功能"]];
 
-            $ul = $('<ul></ul>').addClass('fl-quo-list');
-            $li = $('<li></li>').addClass('fl-quo-item').appendTo($ul);
+            var $ul = $('<ul></ul>').addClass('fl-quo-list');
+            var $li = $('<li></li>').addClass('fl-quo-item').appendTo($ul);
             $.each(_lineSet, function(i, v) {
 
-                $div = $('<div></div>').addClass('cell ' + v[0]).appendTo($li);
-                $span = $('<span></span').addClass('cell-wrap').text(v[1]).appendTo($div);
+                var $div = $('<div></div>').addClass('cell ' + v[0]).appendTo($li);
+                var $span = $('<span></span').addClass('cell-wrap').text(v[1]).appendTo($div);
             });
 
             $dbody = $('<div></div>').addClass('widget-body');
