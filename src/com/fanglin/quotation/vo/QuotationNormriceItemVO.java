@@ -34,6 +34,8 @@ public class QuotationNormriceItemVO implements Serializable {
 
 	private Integer salary;
 
+	private Integer num;
+
 	public QuotationNormriceItemVO() {
 		super();
 	}
@@ -145,6 +147,14 @@ public class QuotationNormriceItemVO implements Serializable {
 
 	public void setSalary(Integer salary) {
 		this.salary = salary;
+	}
+
+	public Integer getNum() {
+		return num;
+	}
+
+	public void setNum(Integer num) {
+		this.num = num;
 	}
 
 }

@@ -54,11 +54,19 @@ public class OalesVO implements Serializable {
 
 	private Integer company;
 
+	private UserBaseVO checker;
+
+	private Timestamp confirmTime;
+
+	private Timestamp checkTime;
+
+	private Timestamp finishTime;
+
 	public OalesVO() {
 		super();
 	}
 
-	public OalesVO(DecorationVO decoration, UserBaseVO creater, UserBaseVO supplier, UserBaseVO servicer) {
+	public OalesVO(DecorationVO decoration, UserBaseVO creater, UserBaseVO supplier, UserBaseVO servicer, UserBaseVO checker) {
 
 		super();
 
@@ -66,6 +74,39 @@ public class OalesVO implements Serializable {
 		this.creater = creater;
 		this.supplier = supplier;
 		this.servicer = servicer;
+		this.checker = checker;
+	}
+
+	public UserBaseVO getChecker() {
+		return checker;
+	}
+
+	public void setChecker(UserBaseVO checker) {
+		this.checker = checker;
+	}
+
+	public Timestamp getConfirmTime() {
+		return confirmTime;
+	}
+
+	public void setConfirmTime(Timestamp confirmTime) {
+		this.confirmTime = confirmTime;
+	}
+
+	public Timestamp getCheckTime() {
+		return checkTime;
+	}
+
+	public void setCheckTime(Timestamp checkTime) {
+		this.checkTime = checkTime;
+	}
+
+	public Timestamp getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Timestamp finishTime) {
+		this.finishTime = finishTime;
 	}
 
 	public Long getOid() {

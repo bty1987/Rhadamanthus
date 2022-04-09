@@ -15,8 +15,16 @@ public interface OalesService {
 
 	public void addOales(OalesVO oalesVO, String userId, int company) throws FLException;
 
-	public void awardOales(OalesVO oalesVO) throws FLException;
+	public void updateOales(OalesVO oalesVO) throws FLException;
 
-	public void profitOales(OalesVO oalesVO) throws FLException;
+	public void deleteOales(OalesVO oalesVO) throws FLException;
+
+	public void confirmOales(OalesVO oalesVO) throws FLException;
+
+	public void rejectOales(OalesVO oalesVO) throws FLException;
+
+	public void checkOales(OalesVO oalesVO) throws FLException;
+
+	public void finishOales(OalesVO oalesVO) throws FLException;
 
 }

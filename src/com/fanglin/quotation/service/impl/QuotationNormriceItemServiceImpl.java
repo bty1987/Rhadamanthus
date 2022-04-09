@@ -54,41 +54,36 @@ public class QuotationNormriceItemServiceImpl implements QuotationNormriceItemSe
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public List<QuotationNormriceItemVO> addQuotationNormriceItem(QuotationVO quotationVO, List<QuotationNormriceItemVO> quotationNormriceItemVOs) throws FLException {
+	public int addQuotationNormriceItem(QuotationVO quotationVO, QuotationNormriceItemVO quotationNormriceItemVO) throws FLException {
 
 		QuotationPO quotationPO = checkQuotationForStatusByEnabled(quotationVO.getQid());
 
-		for (QuotationNormriceItemVO quotationNormriceItemVO : quotationNormriceItemVOs) {
+		NormaddPO normaddPO = normaddDaoImpl.get(quotationNormriceItemVO.getSid());
 
-			NormaddPO normaddPO = normaddDaoImpl.get(quotationNormriceItemVO.getSid());
+		QuotationNormriceItemPO quotationNormriceItemPO = new QuotationNormriceItemPO();
 
-			if (normaddPO == null) continue;
+		quotationNormriceItemPO.setQid(quotationPO.getQid());
+		quotationNormriceItemPO.setSid(quotationPO.getQid());
 
-			QuotationNormriceItemPO quotationNormriceItemPO = new QuotationNormriceItemPO();
+		quotationNormriceItemPO.setType(QuotationNormriceItemPO.TYPE_OFFER_INT);
+		quotationNormriceItemPO.setNormtype(QuotationNormriceItemPO.NORMTYPE_ADD_INT);
+		quotationNormriceItemPO.setAtttype(QuotationNormriceItemPO.ATTTYPE_COLLECTION_INT);
+		quotationNormriceItemPO.setNum(quotationNormriceItemVO.getNum());
 
-			quotationNormriceItemPO.setQid(quotationPO.getQid());
-			quotationNormriceItemPO.setSid(quotationPO.getQid());
+		quotationNormriceItemPO.setConstructionNode(normaddPO.getConstructionNode());
 
-			quotationNormriceItemPO.setType(QuotationNormriceItemPO.TYPE_OFFER_INT);
-			quotationNormriceItemPO.setNormtype(QuotationNormriceItemPO.NORMTYPE_ADD_INT);
-			quotationNormriceItemPO.setAtttype(QuotationNormriceItemPO.ATTTYPE_COLLECTION_INT);
+		quotationNormriceItemPO.setUnit(normaddPO.getUnit());
+		quotationNormriceItemPO.setTrannum(0);
+		quotationNormriceItemPO.setSalary(normaddPO.getPrice());
 
-			quotationNormriceItemPO.setConstructionNode(normaddPO.getConstructionNode());
+		quotationNormriceItemDao.save(quotationNormriceItemPO);
 
-			quotationNormriceItemPO.setUnit(normaddPO.getUnit());
-			quotationNormriceItemPO.setTrannum(0);
-			quotationNormriceItemPO.setSalary(normaddPO.getPrice());
+		quotationNormriceItemVO.setConstructionNode(new ConstructionNodeVO());
 
-			quotationNormriceItemDao.save(quotationNormriceItemPO);
+		BeanUtil.copyProperties(quotationNormriceItemPO, quotationNormriceItemVO, Arrays.asList("constructionNode"));
+		BeanUtil.copyPropertie(quotationNormriceItemPO.getConstructionNode(), quotationNormriceItemVO.getConstructionNode());
 
-			quotationNormriceItemVO.setConstructionNode(new ConstructionNodeVO());
-
-			BeanUtil.copyProperties(quotationNormriceItemPO, quotationNormriceItemVO, Arrays.asList("constructionNode"));
-			BeanUtil.copyPropertie(quotationNormriceItemPO.getConstructionNode(), quotationNormriceItemVO.getConstructionNode());
-
-		}
-
-		return quotationNormriceItemVOs;
+		return 0;
 	}
 
 	@Override

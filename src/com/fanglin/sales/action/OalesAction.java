@@ -52,18 +52,50 @@ public class OalesAction extends BaseListAction {
 		return SUCCESS;
 	}
 
-	@Action(value = "awardOales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String awardOales() throws FLException {
+	@Action(value = "updateOales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateOales() throws FLException {
 
-		oalesService.awardOales(oales);
+		oalesService.updateOales(oales);
 
 		return SUCCESS;
 	}
 
-	@Action(value = "profitOales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String profitOales() throws FLException {
+	@Action(value = "deleteOales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deleteOales() throws FLException {
 
-		oalesService.profitOales(oales);
+		oalesService.deleteOales(oales);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "confirmOales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String confirmOales() throws FLException {
+
+		oalesService.confirmOales(oales);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "rejectOales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String rejectOales() throws FLException {
+
+		oalesService.rejectOales(oales);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "checkOales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String checkOales() throws FLException {
+
+		oalesService.checkOales(oales);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "finishOales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String finishOales() throws FLException {
+
+		oalesService.finishOales(oales);
 
 		return SUCCESS;
 	}

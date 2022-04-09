@@ -19,6 +19,7 @@ import com.fanglin.data.quotation.vo.NormriceVO;
 import com.fanglin.quotation.vo.AddReduceVO;
 import com.fanglin.quotation.vo.ExtensionVO;
 import com.fanglin.quotation.vo.QuotationFunctionAreaVO;
+import com.fanglin.quotation.vo.QuotationNormVO;
 import com.fanglin.quotation.vo.QuotationVO;
 
 public interface QuotationNormService {
@@ -47,4 +48,9 @@ public interface QuotationNormService {
 
 	public List<NormriceVO> amountAddReduceNormrice(AddReduceVO addReduceVO) throws FLException;
 
+	public QuotationNormVO queryQuotationNorm(QuotationNormVO quotationNormVO) throws FLException;
+
+	public int printQuotationNorm(QuotationNormVO quotaionNormVO) throws FLException;
+
+	public int addQuotationNorm(QuotationNormVO quotaioNormVO) throws FLException;
 }

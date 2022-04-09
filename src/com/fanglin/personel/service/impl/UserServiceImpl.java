@@ -597,6 +597,24 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public void updateUserForPhoto(UserVO userVO) throws FLException {
+
+		UserPO userPO = userDao.queryUserByUserId(userVO.getUserId());
+
+		if (userPO == null) {
+			throw new FLException(190005, "人员不存在");
+		}
+
+		userPO.setUserPhoto(userVO.getUserPhoto());
+		userPO.setIdentityPathF(userVO.getIdentityPathF());
+		userPO.setIdentityPathB(userVO.getIdentityPathB());
+
+		userDao.update(userPO);
+
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void updateUserForBaseInfo(UserInfoVO userInfoVO) throws FLException {
 
 		UserVO userVO = userInfoVO.getUser();
@@ -617,6 +635,7 @@ public class UserServiceImpl implements UserService {
 
 		userPO.setPhone(userVO.getPhone());
 		userPO.setUserPhoto(userVO.getUserPhoto());
+		userPO.setIdentityPathF(userVO.getIdentityPathF());
 
 		userDao.update(userPO);
 	}

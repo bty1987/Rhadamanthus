@@ -29,6 +29,8 @@ public class SalesActivityItemVO implements Serializable {
 
 	private Short state;
 
+	private Short isAffirm;
+
 	private Short isStock;
 
 	private Short type;
@@ -185,6 +187,14 @@ public class SalesActivityItemVO implements Serializable {
 
 	public void setIntegral(Integer integral) {
 		this.integral = integral;
+	}
+
+	public Short getIsAffirm() {
+		return isAffirm;
+	}
+
+	public void setIsAffirm(Short isAffirm) {
+		this.isAffirm = isAffirm;
 	}
 	
 }

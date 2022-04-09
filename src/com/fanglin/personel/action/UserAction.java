@@ -203,6 +203,18 @@ public class UserAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateUserForPhoto", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateUserForPhoto() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		userService.updateUserForPhoto(user);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "defaultPassword", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String defaultPassword() throws FLException {
 

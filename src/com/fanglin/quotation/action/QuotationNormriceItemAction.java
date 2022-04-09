@@ -42,8 +42,7 @@ public class QuotationNormriceItemAction extends BaseListAction {
 	@Action(value = "addQuotationNormriceItem", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addQuotationNormriceItem() throws FLException {
 
-		quotationNormriceItems = quotationNormriceItemService.addQuotationNormriceItem(quotation, quotationNormriceItems);
-
+		quotationNormriceItemService.addQuotationNormriceItem(quotation, quotationNormriceItem);
 		return SUCCESS;
 	}
 

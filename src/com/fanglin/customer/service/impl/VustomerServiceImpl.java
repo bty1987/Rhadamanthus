@@ -20,6 +20,8 @@ import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -35,6 +37,9 @@ public class VustomerServiceImpl implements VustomerService {
 
 	@Autowired
 	private DecorationDao decorationDao;
+
+	@Autowired
+	private SystemConfigDao systemConfigDao;
 
 	@Autowired
 	private com.fanglin.dingding.service.MessageService messageDDService;
@@ -111,7 +116,11 @@ public class VustomerServiceImpl implements VustomerService {
 
 		vustomerDao.save(vustomerPO);
 
-		messageDDService.sendMessage("71449a2f7b476bf25fde8e568253c80d093ea7142e3e3731b926bc545c3ef4c3", String.format("姓名: %s,地址: %s.", vustomerPO.getName(), vustomerPO.getAddress()));
+		SystemConfigPO key = systemConfigDao.querySystemConfig("MESSAGE_DING_GROUP_VUSTOMER");
+
+		if (key != null) {
+			messageDDService.sendMessage(key.getValue(), String.format("姓名: %s,地址: %s.", vustomerPO.getName(), vustomerPO.getAddress())); // "71449a2f7b476bf25fde8e568253c80d093ea7142e3e3731b926bc545c3ef4c3"
+		}
 	}
 
 	@Override

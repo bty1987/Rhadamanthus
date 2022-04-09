@@ -16,6 +16,8 @@ import com.fanglin.market.dao.EcustomerDao;
 import com.fanglin.market.po.EcustomerPO;
 import com.fanglin.market.service.EcustomerService;
 import com.fanglin.market.vo.EcustomerVO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 import com.fanglin.utils.SystemConfig;
@@ -26,36 +28,38 @@ public class EcustomerServiceImpl implements EcustomerService {
 
 	@Autowired
 	private EcustomerDao ecustomerDao;
-	
+
 	@Autowired
 	private MessageService messageDDService;
-	
+
+	@Autowired
+	private SystemConfigDao systemConfigDao;
+
 	@Override
 	public void pageEcustomer(Paging paging, List<Filter> filters) {
-		
+
 		List<EcustomerPO> ecustomerPOs = ecustomerDao.pageEcustomer(paging, filters);
-	    List<EcustomerVO> ecustomerVOs = new ArrayList<EcustomerVO>();
+		List<EcustomerVO> ecustomerVOs = new ArrayList<EcustomerVO>();
 
-	    for (EcustomerPO ecustomerPO : ecustomerPOs) {
-	    	
-	    	EcustomerVO ecustomerVO = new EcustomerVO();
-	    	
-	    	BeanUtil.copyPropertie(ecustomerPO, ecustomerVO);
-	    	
-	    	ecustomerVOs.add(ecustomerVO);
-	    }
+		for (EcustomerPO ecustomerPO : ecustomerPOs) {
 
-	    paging.setData(ecustomerVOs);
+			EcustomerVO ecustomerVO = new EcustomerVO();
 
+			BeanUtil.copyPropertie(ecustomerPO, ecustomerVO);
+
+			ecustomerVOs.add(ecustomerVO);
+		}
+
+		paging.setData(ecustomerVOs);
 	}
-	
+
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public void addEcustomer(EcustomerVO ecustomerVO, String securityCode, String verifyCode) throws FLException {
-		
+
 		EcustomerPO ecustomerPO = new EcustomerPO();
-		
-		if ((securityCode != null || "".equals(securityCode)) && (verifyCode != null || "".equals(verifyCode))) {		
+
+		if ((securityCode != null || "".equals(securityCode)) && (verifyCode != null || "".equals(verifyCode))) {
 			try {
 				if (!verifyCode.equals(AESHelper.decrypt(securityCode, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")))) {
 					throw new FLException(330010, "报名失败,验证码错误");
@@ -64,11 +68,11 @@ public class EcustomerServiceImpl implements EcustomerService {
 				throw new FLException(330010, "报名失败,验证码错误");
 			}
 		}
-		
+
 		BeanUtil.copyProperties(ecustomerVO, ecustomerPO);
-		
+
 		List<String> message = new ArrayList<String>();
-		
+
 		if (ecustomerPO.getName() != null && !"".equals(ecustomerPO.getName())) {
 			message.add(String.format("姓名: %s", ecustomerPO.getName()));
 		}
@@ -78,10 +82,14 @@ public class EcustomerServiceImpl implements EcustomerService {
 		if (ecustomerPO.getVillageName() != null && !" ".equals(ecustomerPO.getVillageName())) {
 			message.add(String.format("楼盘: %s", ecustomerPO.getVillageName()));
 		}
-		
-		messageDDService.sendMessage("71449a2f7b476bf25fde8e568253c80d093ea7142e3e3731b926bc545c3ef4c3", StringUtils.join(message, ","));
-		
+
 		ecustomerDao.save(ecustomerPO);
+
+		SystemConfigPO key = systemConfigDao.querySystemConfig("MESSAGE_DING_GROUP_ECUSTOMER");
+
+		if (key != null) {
+			messageDDService.sendMessage(key.getValue(), StringUtils.join(message, ",")); // "71449a2f7b476bf25fde8e568253c80d093ea7142e3e3731b926bc545c3ef4c3"
+		}
 	}
 
 }

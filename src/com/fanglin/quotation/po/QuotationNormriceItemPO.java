@@ -15,7 +15,7 @@ import javax.persistence.Table;
 import com.fanglin.data.po.ConstructionNodePO;
 
 @Entity
-@Table(name = "quotationnormpiceitem", catalog = "quotation")
+@Table(name = "quotationnormriceitem", catalog = "quotation")
 public class QuotationNormriceItemPO implements Serializable {
 
 	private static final long serialVersionUID = 1650807063740164250L;
@@ -51,6 +51,8 @@ public class QuotationNormriceItemPO implements Serializable {
 	private int trannum;
 
 	private int salary;
+
+	private int num;
 
 	public QuotationNormriceItemPO() {
 		super();
@@ -181,4 +183,12 @@ public class QuotationNormriceItemPO implements Serializable {
 		this.salary = salary;
 	}
 
+	@Column(name = "num")
+	public int getNum() {
+		return num;
+	}
+
+	public void setNum(int num) {
+		this.num = num;
+	}
 }

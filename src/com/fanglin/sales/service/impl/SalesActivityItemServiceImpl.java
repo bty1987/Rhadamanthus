@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.customer.service.DecorationService;
 import com.fanglin.information.dao.AwardRecordDao;
 import com.fanglin.information.dao.AwardStockDao;
 import com.fanglin.information.po.AwardRecordPO;
@@ -45,6 +46,9 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 
 	@Autowired
 	private SalesActivityService salesActivityService;
+
+	@Autowired
+	private DecorationService decorationService;
 
 	@Override
 	public List<SalesActivityItemVO> querySalesActivityItem(String orderId) {
@@ -281,7 +285,7 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void discountSalesActivityItem(SalesActivityItemVO salesActivityItemVO, String userId) throws FLException {
-		
+
 		SalesActivityItemPO salesActivityItemPO = salesActivityItemDao.get(salesActivityItemVO.getSaiid());
 
 		if (salesActivityItemPO == null) {
@@ -297,6 +301,35 @@ public class SalesActivityItemServiceImpl implements SalesActivityItemService {
 		salesActivityItemPO.setState(SalesActivityItemPO.STATUS_DISCOUNT_INT);// 更改为状态8--抵现
 
 		salesActivityItemDao.update(salesActivityItemPO);
+	}
+
+	@Override
+	public void sendSalesActivityItem(SalesActivityItemVO salesActivityItemVO) throws FLException {
+
+		String orderId = salesActivityItemVO.getOrderId();
+
+		System.out.println(String.format("pages/activityItemDetail/activityItemDetail?orderId=%s&saiids=%s", orderId, salesActivityItemVO.getContent()));
+
+		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 您的增减项明细已完成,若无疑义请您确认,代表您对增减项明细认可,若有问题,请及时联系监理进行调整,感谢您的配合,祝您生活愉快.", orderId), String.format("pages/activityItemDetail/activityItemDetail?orderId=%s&saiids=%s", orderId, salesActivityItemVO.getContent()));
+
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int affirmSalesActivityItem(List<SalesActivityItemVO> salesActivityItems) throws FLException {
+
+		for (SalesActivityItemVO salesActivityItem : salesActivityItems) {
+
+			SalesActivityItemPO salesActivityItemPO = salesActivityItemDao.get(salesActivityItem.getSaiid());
+
+			if (salesActivityItemPO == null) continue;
+
+			salesActivityItemPO.setIsAffirm(salesActivityItemPO.ISAFFIRM_CONFIRMED_INT);
+
+			salesActivityItemDao.update(salesActivityItemPO);
+		}
+
+		return 0;
 	}
 
 }
