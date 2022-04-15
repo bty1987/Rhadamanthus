@@ -9,7 +9,8 @@ jQuery(function ($) {
         receiptsNum: 0,
         total: 0.0,
         cash: 0,
-        checkBankInfoNum: 0
+        checkBankInfoNum: 0,
+        receiptNo: ""
     };
 
     api = parent.api;
@@ -20,11 +21,6 @@ jQuery(function ($) {
     printer = parent.printer;
 
     params = parent.params;
-
-    $("#servicePdfBtn").click(function(){
-        var target = $("#servicePaymentReceipt")[0]; //避免生成的PDF页面底部出现黑色背景
-        paymentUtils.makeContract(target, params.serviceReceiptSrId, receipt.order.orderId, 4);
-    });
 
     com.post(api.common.queryReceiptType, {}, function (res) {
         $.each(res.receiptTypes, function (i, v) {
@@ -120,6 +116,8 @@ jQuery(function ($) {
         };
     }
 
+    paymentUtils.showContractBtn(params.serviceReceiptSrId, 4, printer.args, receipt.order.customer.name, receipt.receiptNo, "service");
+
     function generateOneReceipt() {
         var num = receipt.receipts.length;
         var count = 0;
@@ -150,8 +148,8 @@ jQuery(function ($) {
 
             var center = $("<center></center>").appendTo(servicePaymentReceipt);
             var headReceiptDiv = $('<div style="text-align: center; background-color:#ffffff"></div>').appendTo(center);
-            var no = (Array(10).join(0)+params.serviceReceiptSrId).slice(-10);
-            var spanNo = $('<span style="float: left;"></span>').html("编号:"+no).appendTo(headReceiptDiv);
+            receipt.receiptNo = (Array(10).join(0)+params.serviceReceiptSrId).slice(-10);
+            var spanNo = $('<span style="float: left;"></span>').html("编号:"+receipt.receiptNo).appendTo(headReceiptDiv);
             var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(parent.params.company.drganization.name + "收款收据").appendTo(headReceiptDiv);
 
             var receiptTable = $('<table border="1" style="width: 100%; border-collapse:collapse;" cellpadding="0" cellspacing="0">').appendTo(center);

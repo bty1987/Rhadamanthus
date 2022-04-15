@@ -712,41 +712,41 @@ var paymentUtils = {
         return new File([u8arr], fileName, {type:mime});
     },
 
-    showContractBtn: function(rtid, paymentType, pdfoptions, customerName, receiptNo) {
+    showContractBtn: function(rtid, paymentType, pdfoptions, customerName, receiptNo, htmlFlag) {
         
         var options = {
             "paymentContract.rtid": rtid,
             "paymentContract.paymentType": paymentType
         };
         var paymentContract = null;
-        
-        $("#signBtns button").hide();
+
+        $("#"+htmlFlag+"signBtns button").hide();
 
         com.post(api.payment.queryPaymentContract, options, function(res){
             paymentContract = res.paymentContract;
         }, function(){}, false);
         
         if(!paymentContract){
-            $("#createSign").show().click(function(){
-                paymentUtils.makeContract(params.decorationReceiptDrId, 1, pdfoptions, customerName, receiptNo);
+            $("#"+htmlFlag+"createSign").show().unbind("click").click(function(){
+                paymentUtils.makeContract(rtid, paymentType, pdfoptions, customerName, receiptNo, htmlFlag);
             });
         }else if(paymentContract && paymentContract.status == 0){
-            $("#customerSign").show().click(function(){
+            $("#"+htmlFlag+"customerSign").show().unbind("click").click(function(){
                 paymentUtils.customerSign(paymentContract, params.cid);
             });
-            $("#companySign").show().click(function(){
-                $("#paymentContractModal").modal("show");
+            $("#"+htmlFlag+"companySign").show().unbind("click").click(function(){
+                $("#"+htmlFlag+"paymentContractModal").modal("show");
             });
-            $("#customerSignCode").show().click(function(){
+            $("#"+htmlFlag+"customerSignCode").show().unbind("click").click(function(){
                 paymentUtils.customerSignCode(paymentContract);
             });
-            $("#customerSignSend").show().click(function(){
+            $("#"+htmlFlag+"customerSignSend").show().unbind("click").click(function(){
                 paymentUtils.customerSignSend(paymentContract);
             });
             
-            $("#companySignBtn").click(function () {
-                paymentUtils.companySign(paymentContract, $("#signets").val());
-                $("#paymentContractModal").modal("hide");
+            $("#"+htmlFlag+"companySignBtn").unbind("click").click(function () {
+                paymentUtils.companySign(paymentContract, $("#"+htmlFlag+"signets").val());
+                $("#"+htmlFlag+"paymentContractModal").modal("hide");
             });
         }
     },
@@ -765,7 +765,6 @@ var paymentUtils = {
     
     companySign: function(paymentContract, signId){
         com.post(api.payment.signPaymentContractForCompany, {"paymentContract.pcid" : paymentContract.pcid, "signet.sid": signId});
-        $("#decorationReceiptContractModal").modal("hide");
     },
     
     customerSignCode: function(paymentContract){
@@ -832,21 +831,30 @@ var paymentUtils = {
         return bankRowspan;
     },
 
-    makeContract: function (rtid, paymentType, options, customerName, receiptNo) {
+    makeContract: function (rtid, paymentType, options, customerName, receiptNo, htmlFlag) {
         options["customerName"] = customerName;
         options["receiptNo"] = receiptNo;
-        options["rtid"] = rtid;
-        options["paymentType"] = paymentType;
+        options["path"] = "/views/contract/receipTemplate.html";
 
         var data = JSON.stringify(options);
 
         com._post_(api.home.library, {"api": "contract.contract.receipt", "receipt":data, "redis":0}, function(res){
-            paymentUtils.showContractBtn(rtid, paymentType, options["orderId"]);
+            if (res.code == 0) {
 
-            $("#decorationPaymentReceipt center").removeAttr("style");
-            $("#decorationPaymentReceipt center div").first().removeAttr("style");
-            $("#decorationPaymentReceipt tr").removeAttr("style");
-            com.showAlert(com.info, "操作成功")
+                var contractOptions = {
+                    "paymentContract.rtid": rtid,
+                    "paymentContract.orderId": options["orderId"],
+                    "paymentContract.paymentType": paymentType,
+                    "paymentContract.viewpdf": "http://www.fanglinserver.com/" + res.resUrl
+                };
+
+                com.post(api.payment.addPaymentContract, contractOptions, function(data){
+                    paymentUtils.showContractBtn(rtid, paymentType, options, customerName, receiptNo, htmlFlag);
+                    com.showAlert(com.info, "操作成功")
+                })
+            } else {
+                com.showAlert(com.error, res.msg);
+            }
         });
     }
 };

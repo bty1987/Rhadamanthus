@@ -392,15 +392,18 @@ public class QuotetionServiceImpl implements QuotetionService {
 	}
 
 	public static void convertQuotetionVOToPOForAdvance(QuotetionVO quotetionVO, QuotetionPO quotetionPO) {
+
 		quotetionPO.setDiscount(quotetionVO.getDiscount());
+		quotetionPO.setBasePrice(quotetionVO.getBasePrice());
+		quotetionPO.setTotalPrice(quotetionVO.getTotalPrice());
 		quotetionPO.setUndisPrice(quotetionVO.getUndisPrice());
 		quotetionPO.setDisPrice(quotetionVO.getDisPrice());
-		quotetionPO.setTotalPrice(quotetionVO.getTotalPrice());
 		quotetionPO.setManagePrice(quotetionVO.getManagePrice());
 		quotetionPO.setManageRate(quotetionVO.getManageRate());
 		quotetionPO.setTrafficPrice(quotetionVO.getTrafficPrice());
 		quotetionPO.setTrafficRate(quotetionVO.getTrafficRate());
-		quotetionPO.setBasePrice(quotetionVO.getBasePrice());
+		quotetionPO.setCostPrice(quotetionVO.getCostPrice());
+
 	}
 
 	private void convertQuotetionPOForAdvance(QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO, String name, String measurementUnit, String workType, int unitPrice, String formula, int num, short type, short discount, QuotetionFunctionAreaPO quotetionFunctionArea, String content, short subtype) {

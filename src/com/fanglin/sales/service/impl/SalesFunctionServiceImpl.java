@@ -15,43 +15,44 @@ import com.fanglin.utils.BeanUtil;
 
 @Service("salesFunctionService")
 @Transactional(readOnly = true)
-public class SalesFunctionServiceImpl implements SalesFunctionService{
+public class SalesFunctionServiceImpl implements SalesFunctionService {
 
 	@Autowired
 	private SalesFunctionDao salesFunctionDao;
-	
+
 	@Override
 	public List<SalesFunctionVO> querySalesFunction(SalesFunctionVO salesFunctionVO) {
 		List<SalesFunctionPO> salesFunctionPOs = salesFunctionDao.querySalesFunction(salesFunctionVO.getType());
 		List<SalesFunctionVO> salesFunctionVOs = new ArrayList<SalesFunctionVO>();
-		
-		for(SalesFunctionPO salesFunctionPO : salesFunctionPOs){
-			
+
+		for (SalesFunctionPO salesFunctionPO : salesFunctionPOs) {
+
 			salesFunctionVO = new SalesFunctionVO();
+
 			BeanUtil.copyPropertie(salesFunctionPO, salesFunctionVO);
-			
+
 			salesFunctionVOs.add(salesFunctionVO);
-			
 		}
-		
+
 		return salesFunctionVOs;
 	}
 
 	@Override
 	public List<SalesFunctionVO> querySalesFunctionByName(SalesFunctionVO salesFunctionVO) {
-		
+
 		List<SalesFunctionPO> salesFunctionPOs = salesFunctionDao.querySalesFunctionByName(salesFunctionVO.getName());
 		List<SalesFunctionVO> salesFunctionVOs = new ArrayList<SalesFunctionVO>();
-		
-		for(SalesFunctionPO salesFunctionPO : salesFunctionPOs){
-			
+
+		for (SalesFunctionPO salesFunctionPO : salesFunctionPOs) {
+
 			salesFunctionVO = new SalesFunctionVO();
+
 			BeanUtil.copyPropertie(salesFunctionPO, salesFunctionVO);
-			
+
 			salesFunctionVOs.add(salesFunctionVO);
-			
+
 		}
-		
+
 		return salesFunctionVOs;
 	}
 

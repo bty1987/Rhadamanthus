@@ -27,11 +27,11 @@
                     <label class="col-xs-3 control-label " for="depositPayment">定金</label>
                     <div class="col-xs-9">
                         <input type="text" id="depositPayment" class="v_float_3" readonly="readonly"/>
-                        <button id="depositPaymentBtn" class="btn small">交款</button>
-                        <button id="repositPaymentBtn" class="btn small">不退</button>
-                        <button id="depositCancelBtn" class="btn small">撤消</button>
-                        <button id="depositRefundBtn" class="btn small" >退款</button>
-                        <button id="depositPrintBtn" class="btn small">打印</button>
+                        <button id="depositPaymentBtn" class="btn btn-minier btn-info">交款</button>
+                        <button id="repositPaymentBtn" class="btn btn-minier btn-danger">不退</button>
+                        <button id="depositCancelBtn" class="btn btn-minier btn-danger">撤消</button>
+                        <button id="depositRefundBtn" class="btn btn-minier btn-danger" >退款</button>
+                        <button id="depositPrintBtn" class="btn btn-minier btn-grey">打印</button>
                     </div>
                 </div>
                 <div class="space5"></div>
@@ -49,9 +49,9 @@
                     <label class="col-xs-3 control-label " for="fullPayment">补款</label>
                     <div class="col-xs-9">
                         <input type="text" id="fullPayment" readonly="readonly"/>
-                        <button id="fullPaymentBtn" class="btn small">交款</button>
-                        <button id="fullPaymentRefundBtn" class="btn small">退款</button>
-                        <button id="fullCancelBtn" class="btn small ">撤消</button>
+                        <button id="fullPaymentBtn" class="btn btn-minier btn-info">交款</button>
+                        <button id="fullPaymentRefundBtn" class="btn btn-minier btn-danger">退款</button>
+                        <button id="fullCancelBtn" class="btn btn-minier btn-danger">撤消</button>
                     </div>
                 </div>
                 <div class="space5"></div>
@@ -69,15 +69,15 @@
                     <label class="col-xs-3 control-label" for="coupon">券信息</label>
                     <div class="col-xs-9">
                         <input type="text" id="couponInf" readonly="readonly"/>
-                        <button id="couponBtn" class="btn small">修改</button>
-                        <button id="couponRefundBtn" class="btn small ">退券</button>
+                        <button id="couponBtn" class="btn btn-minier btn-yellow">修改</button>
+                        <button id="couponRefundBtn" class="btn btn-minier btn-danger">退券</button>
                     </div>
                     <label class="col-xs-3"></label>
                     <div class="col-xs-9" id="couponInfo" style="display: none; margin-top: 5px;">
                         <select id="couponType" class="col-xs-4" data-toggle="popover" data-trigger='manual'></select>
                         <input id="couponValue" type="text" class="col-xs-2 v_float_3" value="0" data-toggle="popover" data-trigger='manual'/>
-                        <button id="couponCommitBtn" class="btn small">提交</button>
-                        <button id="couponCancelBtn" class="btn small">取消</button>
+                        <button id="couponCommitBtn" class="btn btn-minier btn-success">提交</button>
+                        <button id="couponCancelBtn" class="btn btn-minier btn-danger">取消</button>
                     </div>
                 </div>
                 <div class="space5"></div>
@@ -99,8 +99,8 @@
                     <label class="col-xs-3"></label>
                     <div id="malingInfo" class="col-xs-9" style="display: none; margin-top: 5px;">
                         <input id="malingValue" type="text" class="col-xs-3 v_float_3" value="0" data-toggle="popover" data-trigger='manual'/>
-                        <button id="malingCommitBtn" class="btn small">提交</button>
-                        <button id="malingCancelBtn" class="btn small">取消</button>
+                        <button id="malingCommitBtn" class="btn btn-minier btn-success">提交</button>
+                        <button id="malingCancelBtn" class="btn btn-minier btn-danger">取消</button>
                     </div>
                 </div>
 
@@ -321,11 +321,11 @@
             </div>
         </div>
     </div>
-
-
 </div>
+
 <div id="miniPopUp"></div>
 <div id="layerPopUp" class="portlet box"></div>
+
 <script type="text/javascript">
     $.loadScript(['js/utils/salesPageUtils.js','js/sales/sales.js','js/utils/approvalUtils.js']);
 </script>

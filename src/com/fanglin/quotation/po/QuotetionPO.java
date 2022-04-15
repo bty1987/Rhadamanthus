@@ -31,15 +31,15 @@ public class QuotetionPO implements Serializable {
 
 	private Timestamp createTime;
 
+	private int discount;
+
+	private long basePrice;
+
 	private long undisPrice;
 
 	private long disPrice;
 
-	private int discount;
-
 	private long totalPrice;
-
-	private String content;
 
 	private long managePrice;
 
@@ -49,7 +49,9 @@ public class QuotetionPO implements Serializable {
 
 	private int trafficRate;
 
-	private long basePrice;
+	private long costPrice;
+
+	private String content;
 
 	public QuotetionPO() {
 		super();
@@ -204,6 +206,15 @@ public class QuotetionPO implements Serializable {
 
 	public void setBasePrice(long basePrice) {
 		this.basePrice = basePrice;
+	}
+
+	@Column(name = "costPrice")
+	public long getCostPrice() {
+		return costPrice;
+	}
+
+	public void setCostPrice(long costPrice) {
+		this.costPrice = costPrice;
 	}
 
 	public void ptp(String name, String version, long cuid) {

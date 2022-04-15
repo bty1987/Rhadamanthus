@@ -304,8 +304,26 @@ var selectionDetail = (function() {
             var $dhead = $('<div></div>').addClass('widget-header');
             var $hname = $('<h5></h5>').append($('<strong></strong>').html(selectionItem.type[type] + "-" + name));
 
+            var _lineSet = [["name", "报价名称"], ["num", "数量"], ["btns", "功能"]];
+            var lineSet = [["name", "商品名称"], ["num", "数量"], ["btns", "功能"]];
+
+            var $ul = $('<ul></ul>').addClass('fl-quo-list col-xs-12');
+            var $li = $('<li></li>').addClass('fl-quo-item col-xs-6').appendTo($ul);
+            $.each(_lineSet, function(i, v) {
+
+                var $div = $('<div></div>').addClass('cell ' + v[0]).appendTo($li);
+                var $span = $('<span></span').addClass('cell-wrap').text(v[1]).appendTo($div);
+            });
+            var $li = $('<li></li>').addClass('fl-quo-item col-xs-6').appendTo($ul);
+            $.each(lineSet, function(i, v) {
+
+                var $div = $('<div></div>').addClass('cell ' + v[0]).appendTo($li);
+                var $span = $('<span></span').addClass('cell-wrap').text(v[1]).appendTo($div);
+
+            });
+
             $dhead.append($hname);
-            $domain.append($dhead);
+            $domain.append($dhead).append($ul);
 
             return $domain;
         },

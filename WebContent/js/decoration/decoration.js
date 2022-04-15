@@ -788,6 +788,8 @@
             params["notSalesmanRate"] = notSalesmanRate;
             params["orderStatus"] = status;
             params["viewNode"] = Object.values(pageConfig.nodes);
+            params["decorationActivityViewNode"] = pageConfig.nodes.activity.wizard.btnSend;
+            params["decorationActivityViewNodeContent"] = pageConfig.nodes.activity.wizard.content;
 
             params.historyPage = api.index.decorationIndex.url;
             com.switchPage(api.index.decorationDetailIndex.url);
@@ -837,6 +839,11 @@
 
             com.focusPage("#customerCurrentName").html(v.customer.name == null ? "暂无" : v.customer.name);
             com.focusPage("#identity").html(v.customer.identity == null ? "暂无" : v.customer.identity);
+
+            com.focusPage("#orderId").html(v.orderId == null ? "暂无" : v.orderId);
+            com.focusPage("#address").html((v.house.village.cityProper.city.name == null ? " " : v.house.village.cityProper.city.name) + " " + (v.house.village.cityProper == null ? " " : v.house.village.cityProper.name) + " " + v.house.village.name + " " + (v.house.houseNumber == null ? " " : v.house.houseNumber) == null ? "暂无" : (v.house.village.cityProper.city.name == null ? " " : v.house.village.cityProper.city.name) + " " + (v.house.village.cityProper == null ? " " : v.house.village.cityProper.name) + " " + v.house.village.name + " " + (v.house.houseNumber == null ? " " : v.house.houseNumber));
+            com.focusPage("#designerName").html(v.designer.currentName == null ? "暂无" : v.designer.currentName);
+            com.focusPage("#salesmanName").html(v.salesman.currentName == null ? "暂无" : v.salesman.currentName);
 
             com.post(api.decoration.queryDecorationForCommonByOrderId, {
                 "decoration.orderId": v.orderId
@@ -946,8 +953,9 @@
         function viewDecorationActivity(decorationOrderId) {
 
             params.decorationOrderId = decorationOrderId;
+            params["decorationActivityViewNode"] = pageConfig.nodes.activity.wizard.btnSendD;
+            params["decorationActivityViewNodeContent"] = pageConfig.nodes.activity.wizard.content;
 
-            // com.switchPage(api.index.decorationActivityItemIndex.url);
             com.popup4page("#layerPopUp", api.index.decorationActivityItemIndex.url, "装修活动");
         }
 

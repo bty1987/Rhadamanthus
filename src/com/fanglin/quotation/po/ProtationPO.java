@@ -98,6 +98,8 @@ public class ProtationPO implements Serializable {
 
 	private long totalProfit;
 
+	private String comment;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "pid")
@@ -351,6 +353,15 @@ public class ProtationPO implements Serializable {
 
 	public void setTotalProfit(long totalProfit) {
 		this.totalProfit = totalProfit;
+	}
+
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 }

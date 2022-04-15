@@ -68,8 +68,7 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
-		if (userPO == null)
-			return;
+		if (userPO == null) return;
 
 		List<SalesDeliveryItemPO> salesDeliveryItemPOs = salesDeliveryItemDao.pageSalesDeliveryItem(paging, filters, queryCompany, userPO.getUid());
 		List<SalesDeliveryItemVO> salesDeliveryItemVOs = ptv(salesDeliveryItemPOs);
@@ -135,9 +134,11 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void confirmSalesDeliveryItem(List<SalesDeliveryItemVO> salesDeliveryItems, String userId) throws FLException {
-		
+
 		for (SalesDeliveryItemVO salesDeliveryItemVO : salesDeliveryItems) {
+
 			SalesDeliveryItemPO salesDeliveryItemPOs = salesDeliveryItemDao.get(salesDeliveryItemVO.getSdiid());
+
 			if (salesDeliveryItemPOs == null) {
 				continue;
 			}
@@ -145,15 +146,15 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 			if (salesDeliveryItemPOs.getStatus() != SalesDeliveryItemPO.STATUS_CHECK_INT) {
 				continue;
 			}
+
 			UserPO confirmer = userDao.queryUserByUserId(userId);
 
 			salesDeliveryItemPOs.setConfirmer(confirmer);
 			salesDeliveryItemPOs.setStatus(SalesDeliveryItemPO.STATUS_CONFIRM_INT);
 			salesDeliveryItemPOs.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
+
 			salesDeliveryItemDao.update(salesDeliveryItemPOs);
 		}
-
-		
 	}
 
 	@Override
@@ -198,7 +199,7 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 		}
 
 		List<SalesItemPO> salesItemPOs = salesItemDao.querySalesItemBySid(salesDeliveryItem.getSales().getSid());
-		
+
 		UserPO creater = userDao.queryUserByUserId(userId);
 
 		for (SalesItemPO salesItemPO : salesItemPOs) {
@@ -217,7 +218,6 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 
 			salesDeliveryItemDao.save(salesDeliveryItemPO);
 		}
-
 	}
 
 	@Override
@@ -245,14 +245,14 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 
 		for (SalesDeliveryItemPO salesDeliveryItemPO : salesDeliveryItemPOs) {
 
-			SalesDeliveryItemVO salesDeliveryItemVO = new SalesDeliveryItemVO(new SalesVO(new HouseVO(new VillageVO()),new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO()), new SalesItemVO(new GoodsVO(), new ColorVO(), new FormatVO()),new UserBaseVO(new DutyVO(), new DepartmentVO()),new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()));
+			SalesDeliveryItemVO salesDeliveryItemVO = new SalesDeliveryItemVO(new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO()), new SalesItemVO(new GoodsVO(), new ColorVO(), new FormatVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(new DutyVO(), new DepartmentVO()));
 
 			BeanUtil.copyPropertie(salesDeliveryItemPO, salesDeliveryItemVO, Arrays.asList("sales", "salesItem", "creater", "traner", "checker", "confirmer", "finisher", "balancer"));
-			if(salesDeliveryItemPO.getCreater() != null) {
+			if (salesDeliveryItemPO.getCreater() != null) {
 				BeanUtil.copyProperties(salesDeliveryItemPO.getCreater(), salesDeliveryItemVO.getCreater(), Arrays.asList("dept", "duty"));
 				BeanUtil.copyProperties(salesDeliveryItemPO.getCreater().getDept(), salesDeliveryItemVO.getCreater().getDept(), Arrays.asList("fatherDept", "type", "manager"));
 			}
-			
+
 			if (salesDeliveryItemPO.getTraner() != null) {
 				BeanUtil.copyProperties(salesDeliveryItemPO.getTraner(), salesDeliveryItemVO.getTraner(), Arrays.asList("dept", "duty"));
 				BeanUtil.copyProperties(salesDeliveryItemPO.getTraner().getDept(), salesDeliveryItemVO.getTraner().getDept(), Arrays.asList("fatherDept", "type", "manager"));

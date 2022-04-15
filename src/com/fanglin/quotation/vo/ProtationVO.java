@@ -37,7 +37,7 @@ public class ProtationVO implements Serializable {
 	private Long quotePrice;
 
 	private Integer quoteArea;
-	
+
 	private Long unitPrice;
 
 	private Long costPrice;
@@ -57,9 +57,9 @@ public class ProtationVO implements Serializable {
 	private Long subdPrice;
 
 	private Long submPrice;
-	
+
 	private Long preferPrice;
-	
+
 	private Long managePrice;
 
 	private Long totalPrice;
@@ -67,17 +67,19 @@ public class ProtationVO implements Serializable {
 	private Short status;
 
 	private Short defaults;
-	
+
 	private Long mostPrice;
-	
+
 	private Integer costRate;
-	
+
 	private Integer mostRate;
-	
+
 	private Long totalCost;
-	
+
 	private Long totalProfit;
-	
+
+	private String comment;
+
 	public Long getPid() {
 		return pid;
 	}
@@ -222,7 +224,7 @@ public class ProtationVO implements Serializable {
 	public void setSubmPrice(Long submPrice) {
 		this.submPrice = submPrice;
 	}
-	
+
 	public Long getPreferPrice() {
 		return preferPrice;
 	}
@@ -230,7 +232,7 @@ public class ProtationVO implements Serializable {
 	public void setPreferPrice(Long preferPrice) {
 		this.preferPrice = preferPrice;
 	}
-	
+
 	public Long getManagePrice() {
 		return managePrice;
 	}
@@ -238,7 +240,7 @@ public class ProtationVO implements Serializable {
 	public void setManagePrice(Long managePrice) {
 		this.managePrice = managePrice;
 	}
-	
+
 	public Long getTotalPrice() {
 		return totalPrice;
 	}
@@ -303,5 +305,12 @@ public class ProtationVO implements Serializable {
 		this.totalProfit = totalProfit;
 	}
 
-	
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
 }

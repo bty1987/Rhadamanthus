@@ -47,17 +47,21 @@
     "type": [
         {"key":"0","value":"劵"},
         {"key":"1","value":"物品"},
-		{"key":"2","value":"红包"}
+        {"key":"2","value":"红包"}
     ],
-	"deliveryStatus": [
-    	{"key":"0","value":"初始"},
+    "deliveryStatus": [
+        {"key":"0","value":"初始"},
         {"key":"1","value":"配送"},
         {"key":"2","value":"审核"},
         {"key":"3","value":"确认"},
         {"key":"4","value":"完结"}
     ],
     "oalesStatus": [
-        {"key":"0","value":"初始"}
+        {"key":"0","value":"初始"},
+        {"key":"1","value":"确认"},
+        {"key":"2","value":"驳回"},
+        {"key":"3","value":"复核"},
+        {"key":"4","value":"完结"}
     ],
     "oalesAtttype": [
         {"key":"1","value":"内购"},
@@ -69,10 +73,11 @@
         {"key":"3","value":"工程部"}
     ],
     "isAffirm": [
-	    {"key":"0","value":"初始"},
-	    {"key":"1","value":"客户确认"},
+        {"key":"0","value":"初始"},
+        {"key":"1","value":"客户确认"}
     ],
     "paymentTypes": [],
     "errorCode": 0,
     "errorMsg": null
 }
+

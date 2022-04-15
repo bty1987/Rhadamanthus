@@ -55,6 +55,8 @@ public class QuotationPO implements Serializable {
 
 	private int discount;
 
+	private long basePrice;
+
 	private long undisPrice;
 
 	private long disPrice;
@@ -68,8 +70,6 @@ public class QuotationPO implements Serializable {
 	private long trafficPrice;
 
 	private int trafficRate;
-
-	private long basePrice;
 
 	private long costPrice;
 

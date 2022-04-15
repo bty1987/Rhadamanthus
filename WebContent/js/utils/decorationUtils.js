@@ -517,7 +517,7 @@ var decorationUtils = {
         function oalesTotalData() {
 
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $oalesH4 = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("外销总金额:" + $oalesTotal));
+            var $oalesH4 = $('<h4></h4>').addClass('oid blue').append($('<b></b>').html("外销总额:" + $oalesTotal));
 
             $liLine.append($oalesH4).appendTo($uloalesBrand);
         }
@@ -592,7 +592,7 @@ var decorationUtils = {
         });
 
     },
-    decorationActivityItemInfo: function(infopack, itempack, uiBtnMethod, orderId, config) {
+    decorationActivityItemInfo: function(infopack, itempack, btnItempack, uiBtnMethod, orderId, config) {
 
         com.post(api.decoration.queryDecorationActivityItem, {
             "decoration.orderId": orderId
@@ -604,6 +604,14 @@ var decorationUtils = {
             var thingCut = 0;
 
             itempack.html("");
+            btnItempack.html("");
+
+            var node = params.decorationActivityViewNode;
+            var nodeContent = params.decorationActivityViewNodeContent;
+
+            if (node == "btnSend") {
+                var btnNotice = $("<a></a>").addClass("btn btn-minier btn-inverse pull-left").attr("id", "btnNotice").html("<i class='icon-mail-forward bigger-110'></i>发送</a>").prependTo(btnItempack);
+            }
 
             for ( var i = 0; i < decorationActivityItems.length; i++) { // 0: 初始 , 1: 失效 , 2: 已领 , 3: 退货 , 4: 配送 , 5: 未退 , 6: 升级 , 7: 补款
 
@@ -615,7 +623,7 @@ var decorationUtils = {
                     thingCut = utils.accAdd(thingCut, utils.accMul(item.money, item.num));
                 }
 
-                decorationUtils.addActivityItemForDiv(itempack, item, uiBtnMethod, config);
+                decorationUtils.addActivityItemForDiv(itempack, item, uiBtnMethod, config, nodeContent);
             }
 
             infopack.html("");
@@ -626,7 +634,7 @@ var decorationUtils = {
 
         });
     },
-    addActivityItemForDiv: function(itempack, _activityItem, uiBtnMethod, config) {
+    addActivityItemForDiv: function(itempack, _activityItem, uiBtnMethod, config, node) {
 
         if (_activityItem.state == 1)
             return false;
@@ -673,7 +681,7 @@ var decorationUtils = {
         var totalState = $("<strong></strong>").text("合计:").appendTo(totalLi);
         var totalSpan = $("<span></span>").addClass("blue").attr("id", "total_" + _activityItem.daiId).text(utils.accMul(_activityItem.money, _activityItem.num)).appendTo(totalLi);
 
-        if (config.isStatus != null) {
+        if (node == "content") {
             var isStockLi = $("<li></li>").appendTo(ul);
             var isStockState = $("<strong></strong>").text("是否计入库存:").appendTo(isStockLi);
             var isStockSpan = $("<span></span>").addClass("red").attr("id", "isStock_" + _activityItem.daiId).text(config.isStatus[_activityItem.isStock]).appendTo(isStockLi);
@@ -683,12 +691,10 @@ var decorationUtils = {
             var isPaymentLi = $("<li></li>").appendTo(ul);
             var isPaymentState = $("<strong></strong>").text("是否计入金额:").appendTo(isPaymentLi);
             var isPaymentSpan = $("<span></span>").addClass("red").attr("id", "isPayment_" + _activityItem.daiId).text(config.isStatus[_activityItem.isPayment]).appendTo(isPaymentLi);
-        }
-
-        if (config.isAffirms != null) {
             var isAffirmLi = $("<li></li>").appendTo(ul);
             var isAffirmState = $("<strong></strong>").text("是否确认:").appendTo(isAffirmLi);
             var isAffirmSpan = $("<span></span>").addClass("red").attr("id", "isAffirm" + _activityItem.daiId).text(config.isAffirms[_activityItem.isAffirm]).appendTo(isAffirmLi);
+
         }
 
         var uiPgDiv = $("<div></div>").addClass("ui-pg-div").css("padding-left", "8px").css("padding-bottom", "10px").appendTo(widgetMain);

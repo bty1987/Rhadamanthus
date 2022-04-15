@@ -25,6 +25,16 @@ public class OalesPO implements Serializable {
 
 	public static final String COLUMN_ORDERID_STR = "orderId";
 
+	public static final short STATUS_INIT_INT = 0;// 初始
+
+	public static final short STATUS_CONFIRM_INI = 1;// 确认
+
+	public static final short STATUS_REJECT_INT = 2;// 驳回
+
+	public static final short STATUS_CHECK_INT = 3;// 复核
+
+	public static final short STATUS_FINISH_INI = 4;// 完结
+
 	private long oid;
 
 	private String no;
@@ -65,13 +75,19 @@ public class OalesPO implements Serializable {
 
 	private int company;
 
-	private UserPO checker;
-
 	private Timestamp confirmTime;
 
 	private Timestamp checkTime;
 
 	private Timestamp finishTime;
+
+	private UserPO checker;
+
+	private UserPO materialer;
+
+	private int cost;
+
+	private int threshold;
 
 	public OalesPO() {
 		super();
@@ -272,16 +288,6 @@ public class OalesPO implements Serializable {
 		this.company = company;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "chuid", referencedColumnName = "uid")
-	public UserPO getChecker() {
-		return checker;
-	}
-
-	public void setChecker(UserPO checker) {
-		this.checker = checker;
-	}
-
 	@Column(name = "confirmTime")
 	public Timestamp getConfirmTime() {
 		return confirmTime;
@@ -307,6 +313,44 @@ public class OalesPO implements Serializable {
 
 	public void setFinishTime(Timestamp finishTime) {
 		this.finishTime = finishTime;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "chuid", referencedColumnName = "uid")
+	public UserPO getChecker() {
+		return checker;
+	}
+
+	public void setChecker(UserPO checker) {
+		this.checker = checker;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "mauid", referencedColumnName = "uid")
+	public UserPO getMaterialer() {
+		return materialer;
+	}
+
+	public void setMaterialer(UserPO materialer) {
+		this.materialer = materialer;
+	}
+
+	@Column(name = "cost")
+	public int getCost() {
+		return cost;
+	}
+
+	public void setCost(int cost) {
+		this.cost = cost;
+	}
+
+	@Column(name = "threshold")
+	public int getThreshold() {
+		return threshold;
+	}
+
+	public void setThreshold(int threshold) {
+		this.threshold = threshold;
 	}
 
 }

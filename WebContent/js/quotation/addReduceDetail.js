@@ -940,13 +940,13 @@ var AddReduceDetail = (function() {
             var args = {
                 "addReduceItem.ariId": _ariid,
                 "addReduceItem.discount": _discount,
-            };
+            }
 
             var _params = $.extend(true, {}, args, addReduceDetail.basicParams);
 
             com.post(api.addReduce.updateAddReduceItemForAdvance, _params, function(res) {
 
-                $quote.attr("data-discount", _discount);
+                $quote.attr("data-discount", _discount)
             }, null, false);
         },
         // 删除报价项
@@ -959,7 +959,7 @@ var AddReduceDetail = (function() {
             if ($quote.find(".fl-quo-input"))
                 $quote.find(".fl-quo-input").insertAfter(com.focusPage('.fl-quo-list')).addClass('hide');
 
-            $quote.attr("data-del", "1");
+            $quote.attr("data-del", "1")
 
             if (!_ariid) {
                 $quote.remove();
@@ -1184,7 +1184,7 @@ var AddReduceDetail = (function() {
                 "data-subPrice": qv.subPrice,
                 "data-discount": qv.discount,
                 "data-quotationItemId": qv.quotationItemId
-            };
+            }
 
             $item.attr(itemInfo);
 
@@ -1269,6 +1269,15 @@ var AddReduceDetail = (function() {
                 addReduceDetail.basicParams["addReduce.manageRate"] = res.quotation.manageRate;
 
             }, null, false);
+
+            com.post(api.decoration.queryDecorationForCommonByOrderId, {
+                "decoration.orderId": addReduceDetail.orderid
+            }, function(res) {
+
+                com.focusPage('#orderId').text(res.decoration.orderId)
+                com.focusPage('#address').text(res.decoration.house.village.name + " " + res.decoration.house.houseNumber);
+                com.focusPage('#version').text(res.decoration.version.name);
+            });
 
             var $ul = $('<ul></ul>').addClass('fl-quo-list').appendTo(com.focusPage('#addReduceItemDiv'));
             if (addReduceDetail.addReduceItems && addReduceDetail.addReduceItems.length) {

@@ -1,7 +1,7 @@
-jQuery(function () {
+jQuery(function() {
 
     var sales = {
-        queryDecorationByOrderIdUrl: api.decoration.queryDecorationForCommonByOrderId,
+
         typeahead: {
             goodes: "goodes",
             goods: "goods",
@@ -10,45 +10,63 @@ jQuery(function () {
             colorgid: "color.gid",
             formatgid: "format.gid"
         },
-        items : {
-            SupplementCouponInfo : com.focusPage("#SupplementCouponInfo"),
-            totals : com.focusPage("#totals"),
-            salesItemList : com.focusPage('#salesItemList'),
-            brands : com.focusPage('#brands'),
-            SupplementOrderId : com.focusPage('#SupplementOrderId'),
-            SupplementCoupon : com.focusPage('#SupplementCoupon'),
-            comment : com.focusPage('#comment'),
-            SupplementMaling : com.focusPage('#SupplementMaling'),
-            customerName : com.focusPage('#customerName'),
-            orderAddr : com.focusPage('#orderAddr')
+
+        items: {
+            SupplementCouponInfo: com.focusPage("#SupplementCouponInfo"),
+            totals: com.focusPage("#totals"),
+            salesItemList: com.focusPage('#salesItemList'),
+            brands: com.focusPage('#brands'),
+            SupplementOrderId: com.focusPage('#SupplementOrderId'),
+            SupplementCoupon: com.focusPage('#SupplementCoupon'),
+            comment: com.focusPage('#comment'),
+            SupplementMaling: com.focusPage('#SupplementMaling'),
+            customerName: com.focusPage('#customerName'),
+            orderAddr: com.focusPage('#orderAddr')
         },
-        btns : {
-            submit : com.focusPage('#submit')
+
+        btns: {
+            submit: com.focusPage('#submit')
         },
-        sid : params.sid,
-        bid : params.bid,
+
+        sid: params.sales.sales.sid,
+        bid: params.sales.sales.bid,
         cid: null,
         flag: true,
         otherStatus: null,
+
         salePostData: {},
         priceArray: []
     };
 
-    com.initTypeahead('salesmanName', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value', null);
-    com.initTypeahead('instorer', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value', null);
-    com.initTypeahead('guider', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value', null);
+    com.initTypeahead('salesmanName', api.personel.queryUserByPinyin, "pinyinName", {
+        "user.status": 0,
+        "departmentType.name": ""
+    }, 'autoFillKeyValue', 'key', 'value', null);
 
-    //绑定券信息
-    com.post(api.ds.payment, {}, function (res) {
+    com.initTypeahead('instorer', api.personel.queryUserByPinyin, "pinyinName", {
+        "user.status": 0,
+        "departmentType.name": ""
+    }, 'autoFillKeyValue', 'key', 'value', null);
+
+    com.initTypeahead('guider', api.personel.queryUserByPinyin, "pinyinName", {
+        "user.status": 0,
+        "departmentType.name": ""
+    }, 'autoFillKeyValue', 'key', 'value', null);
+
+    // 绑定券信息
+    com.post(api.ds.payment, {}, function(res) {
+
         sales.items.SupplementCouponInfo.bindData(res.materialCouponTypes, 'key', 'value', false);
     }, null, false);
 
-    var initList = function (listData) {
+    var initList = function(listData) {
+
         var $tableWrap = sales.items.salesItemList;
         var $div = $('<div></div>').addClass('item-list ui-sortable  fl-table-list');
 
         if (listData && listData.length) {
-            $.each(listData, function (i, v) {
+            $.each(listData, function(i, v) {
+
                 var $liLine = $('<li></li>').addClass('item-orange clearfix');
 
                 $liLine.attr("data-gid", v.goods.gid);
@@ -71,40 +89,31 @@ jQuery(function () {
 
                 var $supplementDiv = $("<div></div>").addClass("pull-right col-sm-2").appendTo($h3);
                 var $supplementLabel = $('<label></label>').addClass("col-sm-4").css("line-height", "28px").html("数量:").appendTo($supplementDiv);
-                var $supplementInput = $('<input type="text"/>').addClass("col-sm-6 v_float_3").css("font-size","14px").css("margin-right","5px").css("width","100px").css("height","26px").attr("name", "inputNumber").val(0).appendTo($supplementDiv);
+                var $supplementInput = $('<input type="text"/>').addClass("col-sm-6 v_float_3").css("font-size", "14px").css("margin-right", "5px").css("width", "100px").css("height", "26px").attr("name", "inputNumber").val(0).appendTo($supplementDiv);
 
-                $supplementInput.on("change", function () {
+                $supplementInput.on("change", function() {
 
-                    if(com.validate("salesItemList" , "bottom")) {
+                    if (com.validate("salesItemList", "bottom")) {
                         return;
                     }
 
                     var inputs = com.focusPage("input[name='inputNumber']");
                     var allInputVal = 0;
-                    $.each(inputs, function (i, j) {
+                    $.each(inputs, function(i, j) {
+
                         var $j = $(j);
                         var inputVal = $j.val();
-                        if(inputVal != ""){
+                        if (inputVal != "") {
                             allInputVal = utils.accAdd(allInputVal, utils.accMul(inputVal, sales.priceArray[i]));
                         }
                     });
                     sales.items.totals.val(allInputVal);
                 });
 
-                var propertyArr = [
-                    ["商品品类:", v.goods.category, "grey"],
-                    ["商品颜色:", v.color.name, "grey"],
-                    ["商品规格:", v.format.info, "grey"],
-                    ["售价:", v.selling, "blue"],
-                    ["折扣价:", v.disPrice, "blue"],
-                    ["折让价:", v.price, "blue"],
-                    ["数量:", v.num, "blue"],
-                    ["总价:", v.total, "blue"],
-                    ["类型:", v.priceType == "0" ? "正价" : "特价", "red"],
-                    ["备注:", v.comment, "grey"]
-                ];
+                var propertyArr = [["商品品类:", v.goods.category, "grey"], ["商品颜色:", v.color.name, "grey"], ["商品规格:", v.format.info, "grey"], ["售价:", v.selling, "blue"], ["折扣价:", v.disPrice, "blue"], ["折让价:", v.price, "blue"], ["数量:", v.num, "blue"], ["总价:", v.total, "blue"], ["类型:", v.priceType == "0" ? "正价" : "特价", "red"], ["备注:", v.comment, "grey"]];
 
-                $.each(propertyArr, function (index, value) {
+                $.each(propertyArr, function(index, value) {
+
                     var $liProperty = $('<li></li>');
                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -113,7 +122,7 @@ jQuery(function () {
 
                 $liLine.appendTo($div);
                 $liLine.append($h3).append($ulProperty);
-                
+
                 $small.appendTo($h3);
 
                 sales.priceArray.push(v.price);
@@ -126,22 +135,29 @@ jQuery(function () {
     querySalesItemBySid(sales.sid);
 
     function querySalesItemBySid(sid) {
-        com.post(api.sales.querySalesItemBySid, {"sales.sid": sid}, function (data) {
+
+        com.post(api.sales.querySalesItemBySid, {
+            "sales.sid": sid
+        }, function(data) {
+
             initList(data.salesItems);
-        }, function (e) {
+        }, function(e) {
+
             com.showAlert(com.error, e.errorMsg);
         }, false);
     }
 
-    sales.btns.submit.click(function () {
+    sales.btns.submit.click(function() {
 
         var flgs = false;
         var _option = {};
 
         if (com.validate('searchInfo', 'bottom') == false) {
 
-            if (submitCheck() == false) return;
-            if(com.validate("salesItemList" , "bottom")) return;
+            if (submitCheck() == false)
+                return;
+            if (com.validate("salesItemList", "bottom"))
+                return;
 
             _option = {
                 "sales.orderId": sales.items.SupplementOrderId.val(),
@@ -153,10 +169,10 @@ jQuery(function () {
                 "sales.coupon": sales.items.SupplementCoupon.val() != "" ? utils.changeThrDecimal(parseFloat(sales.items.SupplementCoupon.val())) : 0,
                 "sales.comment": sales.items.comment.val(),
                 "sales.maling": sales.items.SupplementMaling.val() != "" ? utils.changeThrDecimal(parseFloat(sales.items.SupplementMaling.val())) : 0,
-                "sales.total":  isNaN(parseFloat(sales.items.totals.val())) ? 0 : utils.changeThrDecimal(parseFloat(sales.items.totals.val())),
+                "sales.total": isNaN(parseFloat(sales.items.totals.val())) ? 0 : utils.changeThrDecimal(parseFloat(sales.items.totals.val())),
                 "sales.house.hid": sales.salePostData["sales.house.hid"],
                 "sales.dompanys": sales.salePostData["sales.dompanys"],
-                "sales.otherStatus":sales.otherStatus
+                "sales.otherStatus": sales.otherStatus
             };
 
             if (sales.items.SupplementCoupon.val() == "" || sales.items.SupplementCoupon.val() == 0) {
@@ -168,12 +184,13 @@ jQuery(function () {
             var $lis = com.focusPage('.item-orange', "#salesItemList");
 
             var index = 0;
-            $lis && $lis.length && $.each($lis, function (i, v) {
+            $lis && $lis.length && $.each($lis, function(i, v) {
+
                 var $v = $(v);
 
                 var numberParam = $v.find("input[name='inputNumber']").val();
 
-                if(numberParam != "" && numberParam != 0){
+                if (numberParam != "" && numberParam != 0) {
                     flgs = true;
                     _option["salesItems[" + index + "].goods.gid"] = $v.attr("data-gid");
                     _option["salesItems[" + index + "].color.cid"] = $v.attr("data-cid");
@@ -192,31 +209,31 @@ jQuery(function () {
                     _option["salesItems[" + index + "].ctype"] = $v.attr("data-rawCtype");
                     _option["salesItems[" + index + "].cvalue"] = $v.attr("data-rawCvalue");
                     _option["salesItems[" + index + "].priceType"] = $v.attr("data-priceType");
-                    index+=1;
+                    index += 1;
                 }
 
             });
-            if(flgs){
-                com.post(api.sales.addSales, _option, function (data) {
+            if (flgs) {
+                com.post(api.sales.addSales, _option, function(data) {
 
                     com.showAlert(com.info, "补单成功");
 
                     com.focusPage('.order_inputinfo').val(null);
                     sales.items.salesItemList.find("input[name='inputNumber']").val(0);
-                    
+
                     com.cleanTypeahead("salesmanName");
                     com.cleanTypeahead("instorer");
                     com.cleanTypeahead("guider");
 
                     sales.items.brands.removeAttr('data-brand');
                 });
-            }else {
+            } else {
                 com.showAlert(com.warning, "请填写正确的补单数量")
             }
         }
     });
 
-    //检查主材品牌 订单号 主材导购 主材驻店
+    // 检查主材品牌 订单号 主材导购 主材驻店
     function submitCheck() {
 
         var flag = true;
@@ -226,12 +243,13 @@ jQuery(function () {
         var _brand = "";
         if ($_brand.attr('data-brand')) {
             _brand = $_brand.attr('data-brand').split('-')[0];
-            _brand = _brand.trim();//金意陶
+            _brand = _brand.trim();// 金意陶
         }
 
-        //判断品牌差异
+        // 判断品牌差异
         var $_lis = com.focusPage('.list-group-item');
-        $.each($_lis, function (i, v) {
+        $.each($_lis, function(i, v) {
+
             var $v = $(v);
             if (_brand != $v.find('.b_brand').text().trim()) {
                 $v.css("border", "solid red 2px");
@@ -245,24 +263,28 @@ jQuery(function () {
 
     com.post(api.sales.querySalesBySid, {
         "sales.sid": sales.sid
-    }, function (res) {
+    }, function(res) {
+
         sales.otherStatus = res.sales.otherStatus;
         sales.items.SupplementOrderId.val(res.sales.orderId);
         sales.items.customerName.val(res.sales.customer.name);
-        sales.items.brands.attr({'data-brand': res.sales.brand,'data-category':res.sales.category}).val(res.sales.brand+'-'+res.sales.category);
+        sales.items.brands.attr({
+            'data-brand': res.sales.brand,
+            'data-category': res.sales.category
+        }).val(res.sales.brand + '-' + res.sales.category);
         sales.items.orderAddr.val(res.sales.house.village.name + " " + res.sales.house.houseNumber);
     }, null, false);
 
     var option = {};
     option["decoration.orderId"] = sales.items.SupplementOrderId.val();
 
-    com.post(sales.queryDecorationByOrderIdUrl, {"decoration.orderId":sales.items.SupplementOrderId.val()}, function (data) {
-        //公司
-        sales.salePostData["sales.dompanys"] = data.decoration.dompany;
-        //客户Id
-        sales.cid = data.decoration.customer.cid;
-        //楼盘id
-        sales.salePostData["sales.house.hid"] = data.decoration.house.hid;
-    },null, false);
+    com.post(api.decoration.queryDecorationForCommonByOrderId, {
+        "decoration.orderId": sales.items.SupplementOrderId.val()
+    }, function(data) {
+
+        sales.salePostData["sales.dompanys"] = data.decoration.dompany; // 公司
+        sales.cid = data.decoration.customer.cid; // 客户Id
+        sales.salePostData["sales.house.hid"] = data.decoration.house.hid; // 楼盘id
+    }, null, false);
 
 });

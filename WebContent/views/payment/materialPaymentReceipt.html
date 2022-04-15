@@ -3,6 +3,7 @@
 <head>
 	<title>收据</title>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="../../assets/ace/css/bootstrap.min.css" />
 	<script src="../../assets/altogether/js/jquery-2.0.3.min.js"></script>
 	<script src="../../assets/ace/js/jquery.mobile.custom.min.js"></script>
 	<script src="../../assets/ace/js/bootstrap.min.js"></script>
@@ -18,8 +19,16 @@
 <body style="background-color: #ffffff">
 	<div id="materialPaymentReceipt"></div>
 
+	<div id="materialsignBtns" style="margin-top: 5px;">
+		<button class="btn-primary" id="materialcreateSign">生成电子收据</button>
+		<button class="btn-warning" id="materialcustomerSign">客户签</button>
+		<button class="btn-success" id="materialcompanySign">公司签</button>
+		<button class="btn-info" id="materialcustomerSignCode">二维客签</button>
+		<button class="btn-danger" id="materialcustomerSignSend">客签通知</button>
+	</div>
+
 	<script>
-		parent.$.loadScript(['js/payment/materialPaymentReceipt.js'], "../../", window.frameElement, $);
+		parent.$.loadScript(['js/utils/paymentUtils.js', 'js/payment/materialPaymentReceipt.js'], "../../", window.frameElement, $);
 	</script>
 </body>
 </html>

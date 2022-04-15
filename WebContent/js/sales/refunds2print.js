@@ -1,6 +1,5 @@
+$(function() {
 
-$(function () {
-    
     api = parent.api;
     com = parent.com;
     utils = parent.utils;
@@ -8,26 +7,32 @@ $(function () {
     printer = parent.printer;
 
     var options = {
-        amountInTotal:0,
-        numberOfCases:0,
-        designer:null,//设计师
-        supervisor:null//监理
+        amountInTotal: 0,
+        numberOfCases: 0,
+        designer: null,// 设计师
+        supervisor: null
     };
-    var data = params.data;
-    
+
+    var data = params.sales.sales;
+    var refunds = params.sales.refunds;
+
     var trList = $("#refundsReslist");
     var querySalesItemBySid = api.sales.queryRefundsItemBySid;
 
-    //初始化状态/结算状态
-    com.post(api.ds.sales, {}, function(res){
+    // 初始化状态/结算状态
+    com.post(api.ds.sales, {}, function(res) {
+
         options.statues = res.statues.split("key", "value");
     }, null, false);
 
-    com.post(api.decoration.queryDecorationByOrderId, {"decorationOrderId": data.orderId}, function(res){
+    com.post(api.decoration.queryDecorationByOrderId, {
+        "decorationOrderId": data.orderId
+    }, function(res) {
+
         var decorationInfo = res.decoration;
         options.designer = decorationInfo.designer.currentName == null ? "" : decorationInfo.designer.currentName;
         options.supervisor = decorationInfo.supervisor.currentName == null ? "" : decorationInfo.supervisor.currentName;
-    },null, false);
+    }, null, false);
 
     printer.name = "salesPaymentForRefund";
     printer.args = {
@@ -38,17 +43,21 @@ $(function () {
         "salesNo": data.no,
         "brand": data.brand,
         "createTime": data.createTime,
-        "referMoney": utils.changeThrDecimal(params.total),
-        "capitalize": utils.getCNMoney(params.total),
+        "referMoney": utils.changeThrDecimal(refunds.total),
+        "capitalize": utils.getCNMoney(refunds.total),
         "salesItems": [],
-        "title" : params.company.fullname + "主材代购退货单"
+        "title": params.company.fullname + "主材代购退货单"
     };
 
-    com.post(querySalesItemBySid, {'refunds.sid':data.sid}, function (data) {
+    com.post(querySalesItemBySid, {
+        'refunds.sid': data.sid
+    }, function(data) {
+
         createList(data.refundsItems).appendTo(trList);
-    },null, false);
+    }, null, false);
 
     function createList(items) {
+
         var div = $('<div align="center" class="col-xs-12"></div>');
         var table = $('<table border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse;table-layout:fixed;width:100%;">').appendTo(div);
         var caption = $('<caption style="line-height: 65px;font-size:25px;">主材代购退货单</caption>').appendTo(table);
@@ -73,9 +82,9 @@ $(function () {
 
         var tr4 = $('<tr style="border: 1px solid;height: 25px;text-align: center;"></tr>').appendTo(table);
         var td13 = $('<td style="border: 1px solid;"></td>').text("退货日期").appendTo(tr4);
-        var td14 = $('<td colspan="2" style="border: 1px solid;"></td>').text(params.createTime).appendTo(tr4);
+        var td14 = $('<td colspan="2" style="border: 1px solid;"></td>').text(refunds.createTime).appendTo(tr4);
         var td15 = $('<td style="border: 1px solid;"></td>').text("类型").appendTo(tr4);
-        var td16 = $('<td style="border: 1px solid;"></td>').text(params.type).appendTo(tr4);
+        var td16 = $('<td style="border: 1px solid;"></td>').text(refunds.type).appendTo(tr4);
 
         var tr6 = $('<tr style="border: 1px solid;height: 25px;text-align: center;"></tr>').appendTo(table);
         var td17 = $('<td style="border: 1px solid;"></td>').text("商品名称").appendTo(tr6);
@@ -86,33 +95,30 @@ $(function () {
 
         var propertyArr = [];
         var total = 0;
-        $.each(items, function (i, v) {
+        $.each(items, function(i, v) {
 
-            if(v.rid != params.rid) return true;
+            if (v.rid != refunds.rid)
+                return true;
 
-            propertyArr.push([
-                v.salesItem.goods.name,
-                v.salesItem.format.info,
-                v.num,
-                v.salesItem.price,
-                v.total
-            ]);
+            propertyArr.push([v.salesItem.goods.name, v.salesItem.format.info, v.num, v.salesItem.price, v.total]);
 
             total = utils.accAdd(total, v.total);
             printer.args.salesItems.push({
-                "name":v.salesItem.goods.name,
-                "num":v.num,
-                "unit" : v.salesItem.goods.measurementUnit,
-                "price":v.salesItem.price,
-                "total":v.total,
-                "comment" : v.salesItem.comment
+                "name": v.salesItem.goods.name,
+                "num": v.num,
+                "unit": v.salesItem.goods.measurementUnit,
+                "price": v.salesItem.price,
+                "total": v.total,
+                "comment": v.salesItem.comment
             });
 
         });
 
-        $.each(propertyArr, function (index, value) {
+        $.each(propertyArr, function(index, value) {
+
             var tr = $('<tr style="border: 1px solid;height: 25px;text-align: center;"></tr>');
-            $.each(value, function (j, k) {
+            $.each(value, function(j, k) {
+
                 var $td = $('<td style="border: 1px solid;"></td>').html(k);
                 $td.appendTo(tr);
             });

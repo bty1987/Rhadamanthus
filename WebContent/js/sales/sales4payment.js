@@ -1,43 +1,44 @@
-jQuery(function () {
+jQuery(function() {
 
     var salesPaymentForStatus = {
-        cash : [],
-        bank : [],
-        checkBank : [],
-        accounts : [],
-        couponType : [],
-        cashInfo : {},
-        bankInfo : {},
-        checkBankInfo : {},
-        accountsInfo : {},
-        couponTypeData : {},
-        salesCollectionPostData:{}
+        cash: [],
+        bank: [],
+        checkBank: [],
+        accounts: [],
+        couponType: [],
+        cashInfo: {},
+        bankInfo: {},
+        checkBankInfo: {},
+        accountsInfo: {},
+        couponTypeData: {},
+        salesCollectionPostData: {}
     };
 
     var salesPayment = {
-        items : {
-            returnTotal : com.focusPage("#returnTotal"),
-            approver : com.focusPage("#salesItemDetialapprover"),
-            comment : com.focusPage("#comment")
+        items: {
+            returnTotal: com.focusPage("#returnTotal"),
+            approver: com.focusPage("#salesItemDetialapprover"),
+            comment: com.focusPage("#comment")
         },
-        btns : {
-            approverSaveBtn : com.focusPage("#approverSaveBtn"),
-            approverCancelBtn : com.focusPage("#approverCancelBtn")
+        btns: {
+            approverSaveBtn: com.focusPage("#approverSaveBtn"),
+            approverCancelBtn: com.focusPage("#approverCancelBtn")
         },
         options: {},
-        
-        sid : params["sid"],
-        
-        type: params["type"],
-    }
+
+        sid: params.sales.sales.sid,
+
+        type: params.sales.type,
+    };
 
     com.focusPage('#fl-statement').statement("销售单", "收款");
 
-    salesPaymentForStatus.salesCollectionPostData["salesPayment.sales.sid"] = params.sid;
+    salesPaymentForStatus.salesCollectionPostData["salesPayment.sales.sid"] = params.sales.sales.sid;
 
-    com.post(api.common.queryReceiptType, {}, function (res) {
+    com.post(api.common.queryReceiptType, {}, function(res) {
 
-        $.each(res.receiptTypes, function (i, v) {
+        $.each(res.receiptTypes, function(i, v) {
+
             if (v.type == 1) {
                 salesPaymentForStatus.cash.push(v);
                 salesPaymentForStatus.cashInfo[v.no] = v.name;
@@ -56,47 +57,44 @@ jQuery(function () {
             }
         });
 
-    },null,false);
+    }, null, false);
 
-    com.post(api.ds.payment, {}, function(res){
+    com.post(api.ds.payment, {}, function(res) {
+
         salesPaymentForStatus.salesPaymentType = res.materialPaymentType.split("key", "value");
     }, null, false);
 
-    com.post(api.payment.querySalesPaymentBySid,{"salesPayment.sales.sid": salesPayment.sid}, function (listData) {
-        if(listData.salesPayments.length == 0){
+    com.post(api.payment.querySalesPaymentBySid, {
+        "salesPayment.sales.sid": salesPayment.sid
+    }, function(listData) {
+
+        if (listData.salesPayments.length == 0) {
             emptyData("resultLists");
-        }else{
+        } else {
             createLine('resultLists', listData);
         }
     });
 
     function createLine(tableId, listData) {
-        
+
         var $tableWrap = com.focusPage('#' + tableId);
         var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-        
+
         if (listData && listData.salesPayments.length) {
-            $.each(listData.salesPayments, function (i, v) {
-                
+            $.each(listData.salesPayments, function(i, v) {
+
                 var $liLine = $('<li></li>').addClass('item-orange  clearfix');
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                 var $h3 = $('<h3></h3>').addClass('oid');
                 var $small = $('<small></small>').addClass('blue').html(salesPaymentForStatus.salesPaymentType[v.type]);
                 var $btnDiv = $('<div></div>').addClass('pull-right action-buttons');
-                
+
                 var $btnRetrun = $('<a></a>').addClass('btn btn-minier btn-danger').html('退款');
 
-                var propertyArr = [
-                    ["销售单号: ", v.sales.no, "blue"],
-                    ["品类: ", v.sales.category, "grey"],
-                    ["品牌: ", v.sales.brand, "grey"],
-                    ["应收额: ", v.referMoney, "blue"],
-                    ["收款时间: ", v.salesReceipt.collectTime, "grey"],
-                    ["确认时间: ", v.salesReceipt.confirmTime, "grey"],
-                    ["状态: ", v.status == 0 ? '初始' : v.status == 1 ? '待确认' : '已确认', "red"]
-                ];
+                var propertyArr = [["销售单号: ", v.sales.no, "blue"], ["品类: ", v.sales.category, "grey"], ["品牌: ", v.sales.brand, "grey"], ["应收额: ", v.referMoney, "blue"], ["收款时间: ", v.salesReceipt.collectTime, "grey"], ["确认时间: ", v.salesReceipt.confirmTime, "grey"], ["状态: ", v.status == 0 ? '初始' : v.status == 1 ? '待确认' : '已确认', "red"]];
 
-                $.each(propertyArr, function (index, value) {
+                $.each(propertyArr, function(index, value) {
+
                     var $liProperty = $('<li></li>');
                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -105,11 +103,11 @@ jQuery(function () {
 
                 var addPropertyArr = [];
                 v.salesReceipt.cash != null && v.salesReceipt.cash != "0" ? addPropertyArr.push(["现金:", v.salesReceipt.cash, "blue"]) : true;
-                v.salesReceipt.bank != null && v.salesReceipt.bank != "0" ? addPropertyArr.push(["银行信息: ", (function (bank, bankInfo) {
+                v.salesReceipt.bank != null && v.salesReceipt.bank != "0" ? addPropertyArr.push(["银行信息: ", (function(bank, bankInfo) {
 
                     var info = bank + ", ";
                     var _s = bankInfo.split('#');
-                    for (var i = 1; i < _s.length - 1; i++) {
+                    for ( var i = 1; i < _s.length - 1; i++) {
                         var _i = _s[i].split('|');
                         info += salesPaymentForStatus.bankInfo[_i[0]] + " " + _i[1] + ", ";
                     }
@@ -121,15 +119,16 @@ jQuery(function () {
                 v.salesReceipt.advance != null && v.salesReceipt.advance != "0" ? addPropertyArr.push(["预付款:", v.salesReceipt.advance, "blue"]) : true;
                 v.salesReceipt.coupon != null && v.salesReceipt.coupon != "0" ? addPropertyArr.push(["优惠券:", v.salesReceipt.coupon + v.salesReceipt.couponInfo.split('#').join(' '), "blue"]) : true;
 
-                $.each(addPropertyArr, function (index, value) {
+                $.each(addPropertyArr, function(index, value) {
+
                     var $liPropertys = $('<li></li>');
                     $('<strong></strong>').html(value[0]).appendTo($liPropertys);
                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liPropertys);
                     $liPropertys.appendTo($ulProperty);
                 });
-                
+
                 $btnDiv.append($btnRetrun);
-                
+
                 if (v.type == 8 && salesPayment.type != "balance") {
                     $h3.append($small).append($btnDiv);
                 } else {
@@ -138,15 +137,17 @@ jQuery(function () {
 
                 $liLine.append($h3).append($ulProperty).appendTo($ul);
 
-                $btnRetrun.click(function () {
+                $btnRetrun.click(function() {
 
                     salesPayment.sid = v.sales.sid;
 
-                    com.popup4mini("#miniPopUp", "#layerReturn", "退款信息", "", function () {
+                    com.popup4mini("#miniPopUp", "#layerReturn", "退款信息", "", function() {
+
                         com.clearValidator();
                         closeReturnlayer();
                         salesPayment.items.approver.empty();
-                    }, function () {
+                    }, function() {
+
                         salesPayment.items.returnTotal.val(v.referMoney);
                         approvalUtils.initqueryApprovalUser("salesItemDetialapprover", 18);
                     });
@@ -158,7 +159,7 @@ jQuery(function () {
         }
     }
 
-    salesPayment.btns.approverSaveBtn.click(function () {
+    salesPayment.btns.approverSaveBtn.click(function() {
 
         if (com.validate('miniPopUp', 'right')) {
             return false;
@@ -177,7 +178,8 @@ jQuery(function () {
             "approvalSalesDayment.sid": salesPayment.sid
         };
 
-        com.post(api.approval.submitApprovalForSalesDayment, $.extend(options, salesPayment.options), function () {
+        com.post(api.approval.submitApprovalForSalesDayment, $.extend(options, salesPayment.options), function() {
+
             returnlayer();
             salesPayment.items.approver.empty();
             com.showAlert(com.info, "操作成功");
@@ -185,7 +187,8 @@ jQuery(function () {
         });
     });
 
-    salesPayment.btns.approverCancelBtn.click(function () {
+    salesPayment.btns.approverCancelBtn.click(function() {
+
         com.clearValidator();
         closeReturnlayer();
         com.closePopup(com.focusPage("#approverCancelBtn"));
@@ -193,16 +196,19 @@ jQuery(function () {
     });
 
     function returnlayer() {
+
         salesPayment.items.comment.val("");
         salesPayment.items.approver.val("");
     }
 
     function closeReturnlayer() {
+
         salesPayment.items.returnTotal.val("");
         salesPayment.items.comment.val("");
     }
 
     function emptyData(id) {
+
         var $resultList = com.focusPage('#' + id).html('');
         var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
         var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);

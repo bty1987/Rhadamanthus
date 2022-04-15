@@ -95,7 +95,7 @@ var QuotationDetail = (function() {
         calculateQuoFees: function(func) {
 
             var normnumtotal = 0, storenumtotal = 0;
-            var $domains = com.focusPage('#quotationNormoodItem0 .fl-quo-item');
+            var $domains = com.focusPage('#quotationNormoodItem0 .fl-quo-item.item');
 
             if (!$domains.length) {
                 return false;
@@ -119,7 +119,7 @@ var QuotationDetail = (function() {
 
             var normricetotal = 0;
 
-            var $domains = com.focusPage('#quotationNormoodItem1 .fl-quo-item');
+            var $domains = com.focusPage('#quotationNormoodItem1 .fl-quo-item.item');
 
             if (!$domains.length) {
                 return false;
@@ -128,7 +128,9 @@ var QuotationDetail = (function() {
             $domains.each(function(i, v) {
 
                 var $this = $(this);
-                var _normricetotal = parseFloat($this.attr('data-salary'));
+                var _datasalary = parseFloat($this.attr('data-salary'));
+                var _datanum = parseFloat($this.attr('data-num'));
+                var _normricetotal = utils.changeThrDecimal(utils.accMul(_datasalary, _datanum));
 
                 normricetotal = utils.changeThrDecimal(utils.accAdd(normricetotal, _normricetotal));
             });
@@ -185,11 +187,11 @@ var QuotationDetail = (function() {
 
                 var $div = $('<div></div>').addClass('cell ' + v[0]).appendTo($li);
                 var $span = $('<span></span').addClass('cell-wrap').text(v[1]).appendTo($div);
-            });
 
+            });
             $dbody = $('<div></div>').addClass('widget-body');
             $dbodyInner = $('<div></div>').addClass('widget-body-inner');
-            $list = $('<ul></ul>').addClass('fl-quo-list').attr("id", "quotationNormoodItem" + dv.type);
+            $list = $('<ul></ul>').addClass('fl-quo-list items').attr("id", "quotationNormoodItem" + dv.type);
             $input = $('<div></div>').addClass('fl-quo-input hide').append($('<input type="text">').addClass('v_required v_float').attr('maxlength', '16'));
 
             $dhead.append($dname).append($dtoolbar);
@@ -244,8 +246,7 @@ var QuotationDetail = (function() {
             $btns["$btnFold"].attr({
                 "data-action": "collapse"
             });
-
-            var _lineSet = [["line", "0"], ["formula", "数量"], ["num", "工费"], ["name", "单位"], ["type", "类型"], ["btns", "功能"]];
+            var _lineSet = [["line", "0"], ["formula", "数量"], ["num", "工费"], ["name", "单位"], ["type", "类型"], ["num totalPrice", "总额"], ["btns", "功能"]];
 
             var $ul = $('<ul></ul>').addClass('fl-quo-list');
             var $li = $('<li></li>').addClass('fl-quo-item').appendTo($ul);
@@ -253,11 +254,12 @@ var QuotationDetail = (function() {
 
                 var $div = $('<div></div>').addClass('cell ' + v[0]).appendTo($li);
                 var $span = $('<span></span').addClass('cell-wrap').text(v[1]).appendTo($div);
+
             });
 
             $dbody = $('<div></div>').addClass('widget-body');
             $dbodyInner = $('<div></div>').addClass('widget-body-inner');
-            $list = $('<ul></ul>').addClass('fl-quo-list').attr("id", "quotationNormoodItem" + dv.type);
+            $list = $('<ul></ul>').addClass('fl-quo-list items').attr("id", "quotationNormoodItem" + dv.type);
             $input = $('<div></div>').addClass('fl-quo-input hide').append($('<input type="text">').addClass('v_required v_float').attr('maxlength', '16'));
 
             $dhead.append($dname).append($dtoolbar);
@@ -322,7 +324,7 @@ var QuotationDetail = (function() {
         // 打包项
         createQuote: function(linenum, qv) {
 
-            var $item = $('<li></li>').addClass('fl-quo-item').prop('title', qv.content).attr({
+            var $item = $('<li></li>').addClass('fl-quo-item item').prop('title', qv.content).attr({
                 "data-normnum": qv.normnum,
                 "data-storenum": qv.storenum
             });
@@ -389,9 +391,12 @@ var QuotationDetail = (function() {
         // 附加项
         normriceQuote: function(linenum, qv) {
 
-            var $item = $('<li></li>').addClass('fl-quo-item').prop('title', qv.qnpiid).attr({
+            var $item = $('<li></li>').addClass('fl-quo-item item').prop('title', qv.qnpiid).attr({
                 "data-salary": qv.salary,
+                "data-num": qv.num
             });
+
+            var _total = 0;
 
             var _typeName = "-";
 
@@ -401,6 +406,7 @@ var QuotationDetail = (function() {
 
             if (qv.normtype == 1) { // 工费
                 _typeName = "附加";
+                _total = utils.changeThrDecimal(utils.accMul(qv.num, qv.salary));
             }
 
             var _lineSet = [["line", linenum, ["data-areaType", qv.areaType]], // 编号
@@ -408,6 +414,7 @@ var QuotationDetail = (function() {
             ["num", qv.salary], // 数量
             ["name", qv.constructionNode.name], // 施工节点
             ["type", _typeName, ["data-type", qv.type]], // 单位
+            ["num totalPrice", _total] // 总价
             ];
 
             var $btnCell, $btnCellWrap, $inputLable, $input, $ispan, $btnDel;
@@ -532,6 +539,7 @@ var QuotationDetail = (function() {
                 "quotationNormriceItem.sid": npid,
                 "quotationNormriceItem.num": num
             };
+            console.log(options)
             com.post(api.quotation.addQuotationNormriceItem, options, function(data) {
 
                 var _items = data.quotationNormriceItem;
@@ -548,7 +556,7 @@ var QuotationDetail = (function() {
             var _params = {};
 
             domain.nowEditDomain = $quote.parents('.widget-box');
-            domain.nowEditDomain.find('.fl-quo-input').insertAfter(domain.nowEditDomain.find('.fl-quo-list')).addClass('hide');
+            domain.nowEditDomain.find('.fl-quo-input').insertAfter(domain.nowEditDomain.find('.fl-quo-list.items')).addClass('hide');
             if (!_qngiid) {
                 $quote.remove();
             } else {
@@ -570,7 +578,7 @@ var QuotationDetail = (function() {
             var _params = {};
 
             domain.nowEditDomain = $quote.parents('.widget-box');
-            domain.nowEditDomain.find('.fl-quo-input').insertAfter(domain.nowEditDomain.find('.fl-quo-list')).addClass('hide');
+            domain.nowEditDomain.find('.fl-quo-input').insertAfter(domain.nowEditDomain.find('.fl-quo-list.items')).addClass('hide');
 
             if (!_qnpiid) {
                 $quote.remove();
@@ -640,7 +648,7 @@ var QuotationDetail = (function() {
                 "decoration.orderId": quo.orderid
             }, function(res) {
 
-                com.focusPage('#orderId').text(res.decoration.orderId);
+                com.focusPage('#orderId').text(res.decoration.orderId)
                 com.focusPage('#address').text(res.decoration.house.village.name + " " + res.decoration.house.houseNumber);
                 com.focusPage('#version').text(res.decoration.version.name);
             });
@@ -663,9 +671,8 @@ var QuotationDetail = (function() {
 
                 $.each(res.quotationNormriceItems, function(i, v) {
 
-                    // quo.trannum = utils.accAdd(quo.trannum, v.trannum);
-                    // quo.salary = utils.accAdd(quo.salary,v.salary);
-                    quo.normricetotal = utils.accAdd(quo.normricetotal, v.salary);
+                    var _total = utils.changeThrDecimal(utils.accMul(v.num, v.salary));
+                    quo.normricetotal = utils.accAdd(quo.normricetotal, _total);
                     quotationFunctionAreasa[0].quotationFunctionAreaItems1.push(v);
                 });
             }, null, false);
@@ -683,9 +690,6 @@ var QuotationDetail = (function() {
             com.focusPage('#storenumtotal').text(quo.storenumtotal);
 
             com.focusPage('#normricetotal').text(quo.normricetotal);
-
-            // com.focusPage('#trannumtotal').text(quo.trannum);
-            // com.focusPage('#salarytotal').text(quo.salary);
 
             quo.init();
             domain.init();

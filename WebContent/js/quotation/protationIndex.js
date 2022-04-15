@@ -13,7 +13,7 @@ $(function() {
             pid: com.focusPage("#pid", "#protationModal"),
             name: com.focusPage("#name", "#protationModal"),
             produce: com.focusPage("#produce", "#protationModal"),
-            content: com.focusPage("#content", "#protationModal"),
+            comment: com.focusPage("#comment", "#protationModal"),
             preferPrice: com.focusPage("#preferPrice", "#protationModal"),
             managePrice: com.focusPage("#managePrice", "#protationModal")
         },
@@ -48,14 +48,15 @@ $(function() {
 
     com.focusPage('#saveBtn').bindClick(function() {
 
-        if (com.validate("protationModal")) return false;
+        if (com.validate("protationModal"))
+            return false;
 
         if (protation.editFlg == 0) {
             var options = {
                 "protation.ppid": protation.items.produce.val(),
                 "protation.orderId": protation.decorationOrderId,
                 "protation.name": protation.items.name.val(),
-                "protation.content": protation.items.content.val(),
+                "protation.comment": protation.items.comment.val(),
                 "protation.preferPrice": protation.items.preferPrice.val(),
                 "protation.managePrice": protation.items.managePrice.val()
             };
@@ -69,7 +70,7 @@ $(function() {
                 "protation.orderId": protation.decorationOrderId,
                 "protation.pid": protation.items.pid.val(),
                 "protation.name": protation.items.name.val(),
-                "protation.content": protation.items.content.val(),
+                "protation.comment": protation.items.comment.val(),
                 "protation.preferPrice": protation.items.preferPrice.val(),
                 "protation.managePrice": protation.items.managePrice.val()
             };
@@ -78,13 +79,13 @@ $(function() {
 
                 var _pid = protation.items.pid.val();
                 var name = protation.items.name.val();
-                var content = protation.items.content.val();
+                var comment = protation.items.comment.val();
                 var preferPrice = protation.items.preferPrice.val();
                 var managePrice = protation.items.managePrice.val();
 
                 com.focusPage("#h4name_" + _pid).text(name);
                 com.focusPage("#name_" + _pid).text('名称:' + name);
-                com.focusPage("#content_" + _pid).text('备注:' + content);
+                com.focusPage("#comment" + _pid).text('备注:' + comment);
                 com.focusPage('#preferPrice' + _pid).text('优惠价:' + preferPrice);
                 com.focusPage('#managePrice' + _pid).text('管理费:' + managePrice);
 
@@ -151,9 +152,9 @@ $(function() {
         name: "总价",
         prop: "totalPrice"
     }, {
-        field: "content",
+        field: "comment",
         name: "备注",
-        prop: "content"
+        prop: "comment"
     }];
 
     var cardbtns = [{
@@ -171,7 +172,7 @@ $(function() {
 
                 protation.items.pid.val(res.protation.pid);
                 protation.items.name.val(res.protation.name);
-                protation.items.content.val(res.protation.content);
+                protation.items.comment.val(res.protation.comment);
                 protation.items.preferPrice.val(res.protation.preferPrice);
                 protation.items.managePrice.val(res.protation.managePrice);
 

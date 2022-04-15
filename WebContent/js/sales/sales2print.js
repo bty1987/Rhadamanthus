@@ -1,29 +1,34 @@
-$(function () {
-    
+$(function() {
+
     api = parent.api;
     com = parent.com;
     utils = parent.utils;
     params = parent.params;
     printer = parent.printer;
-    
+
     var options = {
         amountInTotal: 0,
         numberOfCases: 0,
         designer: null, // 设计师
-        supervisor: null // 监理
+        supervisor: null
+    // 监理
     };
-    var data = params.data;
-    
+
+    var data = params.sales.sales;
+
     var trList = $("#reslist");
-    
+
     var querySalesItemBySid = api.sales.querySalesItemBySid;
 
-    com.post(api.decoration.queryDecorationByOrderId, {"decorationOrderId" : data.orderId}, function(res){
+    com.post(api.decoration.queryDecorationByOrderId, {
+        "decorationOrderId": data.orderId
+    }, function(res) {
+
         var decorationInfo = res.decoration;
         options.designer = decorationInfo.designer.currentName == null ? "" : decorationInfo.designer.currentName;
         options.supervisor = decorationInfo.supervisor.currentName == null ? "" : decorationInfo.supervisor.currentName;
-    },null, false);
-    
+    }, null, false);
+
     printer.name = "salesPaymentForDeposit";
     printer.args = {
         "orderId": data.orderId,
@@ -36,10 +41,13 @@ $(function () {
         "referMoney": utils.changeThrDecimal(data.depositpay),
         "capitalize": utils.getCNMoney(utils.changeThrDecimal(data.depositpay)),
         "salesItems": [],
-        "title" : params.company.fullname + "主材代购确认单-定金"
+        "title": params.company.fullname + "主材代购确认单-定金"
     };
-    
-    com.post(querySalesItemBySid, {'sales.sid':params.salesSid}, function (data) {
+
+    com.post(querySalesItemBySid, {
+        'sales.sid': params.sales.sales.sid
+    }, function(data) {
+
         createList(data.salesItems).appendTo(trList);
     }, null, false);
 
@@ -74,7 +82,7 @@ $(function () {
         var td13 = $('<td style="border: 1px solid;"></td>').text("开票日期").appendTo(tr4);
         var td14 = $('<td colspan="4" style="border: 1px solid;"></td>').text(data.createTime).appendTo(tr4);
 
-        if(params.flag == "fullPay"){
+        if (params.sales.flag == "fullPay") {
 
             printer.args.title = params.company.fullname + "主材代购确认单";
 
@@ -88,22 +96,17 @@ $(function () {
             var td20 = $('<td style="border: 1px solid;"></td>').text("总价").appendTo(tr5);
 
             var propertyArr = [];
-            $.each(items, function (i, v) {
-                propertyArr.push([
-                    v.goods.name,
-                    v.format.info,
-                    v.num,
-                    v.price,
-                    v.total
-                ]);
+            $.each(items, function(i, v) {
+
+                propertyArr.push([v.goods.name, v.format.info, v.num, v.price, v.total]);
 
                 printer.args.salesItems.push({
-                    "name":v.goods.name,
-                    "num":v.num,
-                    "price":v.price,
-                    "unit" :  v.goods.measurementUnit,
-                    "total":v.total,
-                    "comment" : v.comment
+                    "name": v.goods.name,
+                    "num": v.num,
+                    "price": v.price,
+                    "unit": v.goods.measurementUnit,
+                    "total": v.total,
+                    "comment": v.comment
                 });
             });
 
@@ -111,9 +114,11 @@ $(function () {
             printer.args.referMoney = utils.changeThrDecimal(data.fullpay);
             printer.args.capitalize = utils.getCNMoney(utils.changeThrDecimal(data.fullpay));
 
-            $.each(propertyArr, function (index, value) {
+            $.each(propertyArr, function(index, value) {
+
                 var tr = $('<tr style="border: 1px solid;height: 25px;text-align: center;"></tr>').appendTo(table);
-                $.each(value, function (j, k) {
+                $.each(value, function(j, k) {
+
                     $('<td style="border: 1px solid;"></td>').html(k).appendTo(tr);
                 });
             });
@@ -146,4 +151,3 @@ $(function () {
         return div;
     }
 });
-

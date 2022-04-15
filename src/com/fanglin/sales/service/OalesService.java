@@ -17,14 +17,14 @@ public interface OalesService {
 
 	public void updateOales(OalesVO oalesVO) throws FLException;
 
-	public void deleteOales(OalesVO oalesVO) throws FLException;
-
 	public void confirmOales(OalesVO oalesVO) throws FLException;
 
-	public void rejectOales(OalesVO oalesVO) throws FLException;
+	public void rejectOales(OalesVO oalesVO, String userId) throws FLException;
 
 	public void checkOales(OalesVO oalesVO) throws FLException;
 
 	public void finishOales(OalesVO oalesVO) throws FLException;
+
+	public void deleteOales(OalesVO oalesVO) throws FLException;
 
 }

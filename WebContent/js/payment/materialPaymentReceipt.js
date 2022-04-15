@@ -8,7 +8,8 @@ jQuery(function($) {
 		receiptItems: [],
 		bankInfo: {},
 		checkBankInfo: {},
-		receiptsNum:0
+		receiptsNum:0,
+		receiptNo: ""
 	};
 
 	api = parent.api;
@@ -75,7 +76,7 @@ jQuery(function($) {
 			receipt.commonInfo["collectUserName"] = materialPayment.collecter.currentName;
 			receipt.commonInfo["collectTime"] = materialPayment.collectTime;
 			
-			receipt.paymentItems.push({"paymentType": receipt.paymentTypeData[materialPayment.paymentType], "money": materialPayment.referMoney, "materialBrand": materialBrand});
+			receipt.paymentItems.push({"paymentType": receipt.paymentTypeData[materialPayment.paymentType], "money": materialPayment.referMoney, "materialBrand": materialBrand, "salesBrand": materialBrand});
 		}
 
 		if(materialPayment.comment && materialPayment.comment != ""){
@@ -149,6 +150,8 @@ jQuery(function($) {
 		};
 	}
 
+	paymentUtils.showContractBtn(params.mrId, 2, printer.args, receipt.commonInfo.customerName, receipt.receiptNo, "material");
+
 	function createReceiptTable(){
 		var commonInfo = receipt.commonInfo;
 		var paymentItems = receipt.paymentItems;
@@ -159,8 +162,8 @@ jQuery(function($) {
 		var noTr = $('<tr></tr>').appendTo(noTable);
 		var noTd = $('<td colspan="5"></td>').appendTo(noTr);
 		var headReceiptDiv = $('<div style="text-align: center; background-color:#ffffff"></div>').appendTo(center);
-		var no = (Array(10).join(0)+params.mrId).slice(-10);
-		var spanNo = $('<span style="float: left;"></span>').html("编号:"+no).appendTo(headReceiptDiv);
+		receipt.receiptNo = (Array(10).join(0)+params.mrId).slice(-10);
+		var spanNo = $('<span style="float: left;"></span>').html("编号:"+receipt.receiptNo).appendTo(headReceiptDiv);
 		var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(parent.params.company.srganization.name + "代收款收据").appendTo(headReceiptDiv);
 
 		var receiptTable = $('<table border="1" style="width: 100%; border-collapse:collapse;" cellpadding="0" cellspacing="0">').appendTo(center);

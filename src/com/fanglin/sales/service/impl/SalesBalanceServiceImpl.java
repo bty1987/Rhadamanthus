@@ -99,8 +99,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 	@Override
 	public void pageSalesBalance(Paging paging, List<Filter> filters, int company) throws FLException {
 
-		if (filters.size() == 0)
-			return;
+		if (filters.size() == 0) return;
 
 		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalance(paging, filters, company);
 
@@ -112,8 +111,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 	@Override
 	public void pageSalesBalanceForDompany(Paging paging, List<Filter> filters, int dompany) throws FLException {
 
-		if (filters.size() == 0)
-			return;
+		if (filters.size() == 0) return;
 
 		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalanceForDompany(paging, filters, dompany);
 
@@ -125,8 +123,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 	@Override
 	public void pageSalesBalanceForPompany(Paging paging, List<Filter> filters, int pompany) throws FLException {
 
-		if (filters.size() == 0)
-			return;
+		if (filters.size() == 0) return;
 
 		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalanceForPompany(paging, filters, pompany);
 
@@ -141,11 +138,9 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
-		if (filters.size() == 0)
-			return;
+		if (filters.size() == 0) return;
 
-		if (userPO == null)
-			return;
+		if (userPO == null) return;
 
 		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalanceForSupplier(paging, filters, pompany, userPO.getUid());
 
@@ -159,11 +154,9 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
-		if (filters.size() == 0)
-			return;
+		if (filters.size() == 0) return;
 
-		if (userPO == null)
-			return;
+		if (userPO == null) return;
 
 		List<SalesBalancePO> salesBalancePOs = salesBalanceDao.pageSalesBalanceForCheck(paging, filters, pompany, userPO.getUid());
 
@@ -239,10 +232,10 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 			salesPO.setBalanceStatus(SalesPO.BALANCESTATUS_PRESETTLEMENT_SHORT);
 
 			salesDao.update(salesPO);
-
 		}
 
 		salesBalancePO.setStatus(SalesBalancePO.STATUS_PREBALANCE_INT);
+
 		salesBalanceDao.update(salesBalancePO);
 
 		return 0;
@@ -531,6 +524,7 @@ public class SalesBalanceServiceImpl implements SalesBalanceService {
 			if (salesPO == null) {
 				throw new FLException(260021, "销售单不存在");
 			}
+
 			UserPO voster = userDao.queryUserByUserId(userId);
 
 			salesBalancePO.setStatus(SalesBalancePO.STATUS_VENDORBALANCE_INT);
