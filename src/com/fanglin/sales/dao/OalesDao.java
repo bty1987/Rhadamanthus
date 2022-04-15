@@ -11,6 +11,6 @@ public interface OalesDao extends Dao<OalesPO> {
 
 	public List<OalesPO> pageOales(Paging paging, List<Filter> filters);
 
-	public List<OalesPO> querySurveyByOrderId(String orderId);
+	public List<OalesPO> queryOalesByOrderId(String orderId);
 
 }

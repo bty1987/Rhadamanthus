@@ -20,34 +20,33 @@ import com.fanglin.sales.vo.SalesItemVO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("salesBalanceItemService")
-@Transactional(readOnly=true)
-public class SalesBalanceItemServiceImpl implements SalesBalanceItemService{
-	
+@Transactional(readOnly = true)
+public class SalesBalanceItemServiceImpl implements SalesBalanceItemService {
+
 	@Autowired
 	private SalesBalanceItemDao salesBalanceItemDao;
 
 	@Override
 	public List<SalesBalanceItemVO> querySalesBalanceItemBySbid(SalesBalanceVO salesBalanceVO) {
-		
+
 		List<SalesBalanceItemPO> salesBalanceItemPOs = salesBalanceItemDao.querySalesBalanceItemBySbid(salesBalanceVO.getSbid());
 		List<SalesBalanceItemVO> salesBalanceItemVOs = new ArrayList<SalesBalanceItemVO>();
-		
-		for(SalesBalanceItemPO salesBalanceItemPO : salesBalanceItemPOs){
-			
-			SalesBalanceItemVO salesBalanceItemVO = new SalesBalanceItemVO(new SalesItemVO(new GoodsVO(),new ColorVO(),new FormatVO()));
-			
+
+		for (SalesBalanceItemPO salesBalanceItemPO : salesBalanceItemPOs) {
+
+			SalesBalanceItemVO salesBalanceItemVO = new SalesBalanceItemVO(new SalesItemVO(new GoodsVO(), new ColorVO(), new FormatVO()));
+
 			BeanUtil.copyPropertie(salesBalanceItemPO, salesBalanceItemVO, Arrays.asList("salesItem"));
-			BeanUtil.copyPropertie(salesBalanceItemPO.getSalesItem(), salesBalanceItemVO.getSalesItem(), Arrays.asList("goods","color","format"));
-			BeanUtil.copyPropertie(salesBalanceItemPO.getSalesItem().getGoods(), salesBalanceItemVO.getSalesItem().getGoods(),Arrays.asList("accessoriesType"));
+			BeanUtil.copyPropertie(salesBalanceItemPO.getSalesItem(), salesBalanceItemVO.getSalesItem(), Arrays.asList("goods", "color", "format"));
+			BeanUtil.copyPropertie(salesBalanceItemPO.getSalesItem().getGoods(), salesBalanceItemVO.getSalesItem().getGoods(), Arrays.asList("accessoriesType"));
 			BeanUtil.copyPropertie(salesBalanceItemPO.getSalesItem().getColor(), salesBalanceItemVO.getSalesItem().getColor());
 			BeanUtil.copyPropertie(salesBalanceItemPO.getSalesItem().getFormat(), salesBalanceItemVO.getSalesItem().getFormat());
-			
+
 			salesBalanceItemVOs.add(salesBalanceItemVO);
-			
+
 		}
-		
+
 		return salesBalanceItemVOs;
-		
 	}
 
 }

@@ -223,14 +223,14 @@ $.extend(api, {
             url: "addOales.do",
             type: "update",
             tranargs: {
-                args: ["oales.total"]
+                args: ["oales.total", "oales.cost", "oales.threshold"]
             }
         },
         updateOales: {
             url: "updateOales.do",
             type: "update",
             tranargs: {
-                args: ["oales.total", "oales.award", "oales.profit"]
+                args: ["oales.total", "oales.award", "oales.profit", "oales.cost", "oales.threshold"]
             }
         },
 

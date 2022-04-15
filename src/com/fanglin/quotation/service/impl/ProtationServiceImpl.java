@@ -225,6 +225,7 @@ public class ProtationServiceImpl implements ProtationService {
 		protationPO.setName(protationVO.getName());
 		protationPO.setPreferPrice(protationVO.getPreferPrice());
 		protationPO.setManagePrice(protationVO.getManagePrice());
+		protationPO.setComment(protationVO.getComment());
 		protationDao.update(protationPO);
 
 		return 0;

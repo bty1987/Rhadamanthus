@@ -6,7 +6,8 @@ jQuery(function ($) {
         receiptsNum: 0,
         organizationName: "",
         cash: 0,
-        checkBankInfoNum: 0
+        checkBankInfoNum: 0,
+        receiptNo: ""
     };
     api = parent.api;
     config = parent.config;
@@ -14,11 +15,6 @@ jQuery(function ($) {
     utils = parent.utils;
     com = parent.com;
     printer = parent.printer;
-
-    $("#paymentPdfBtn").click(function(){
-        var target = $("#paymentReceipt")[0]; //避免生成的PDF页面底部出现黑色背景
-        paymentUtils.makeContract(target, arid, params.paymentOrderId, 0);
-    });
 
     com.post(api.common.queryReceiptType, {}, function (res) {
         $.each(res.receiptTypes, function (i, v) {
@@ -119,6 +115,8 @@ jQuery(function ($) {
         }, null, false);
     }, null, false);
 
+    paymentUtils.showContractBtn(arid, 0, printer.args, commonInfo.customerName, receipt.receiptNo, "advance");
+
     function createReceiptTable(commonInfo, paymentInfo, orderInfo, currentPaymentType) {
         var num = paymentInfo.length;
         var bankRowspan = 1;
@@ -142,8 +140,8 @@ jQuery(function ($) {
             var noTr = $('<tr></tr>').appendTo(noTable);
             var noTd = $('<td colspan="3"></td>').appendTo(noTr);
             var headReceiptDiv = $('<div style="text-align: center; background-color:#ffffff"></div>').appendTo(center);
-            var no = (Array(10).join(0)+arid).slice(-10);
-            var spanNo = $('<span style="float: left;"></span>').html("编号:"+no).appendTo(headReceiptDiv);
+            receipt.receiptNo = (Array(10).join(0)+arid).slice(-10);
+            var spanNo = $('<span style="float: left;"></span>').html("编号:"+receipt.receiptNo).appendTo(headReceiptDiv);
             var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(receipt.organizationName).appendTo(headReceiptDiv);
 
             var receiptTable = $('<table border="1" style="width: 100%; border-collapse:collapse;" cellpadding="0" cellspacing="0">').appendTo(center);
@@ -161,8 +159,13 @@ jQuery(function ($) {
                 var timeReceiptTd = $('<td colspan="3" style="width: 33%"></td>').text('楼盘: ' + addr).appendTo(orderReceiptTr);
                 var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
 
-                orderIds =  orderIds + $order.orderId + "/";
-                addrs = addrs + addr + "/";
+                orderIds =  orderIds + $order.orderId ;
+                addrs = addrs + addr;
+
+                if (k != orderInfo.length-1) {
+                    orderIds = orderIds + "/";
+                    addrs = addrs + "/";
+                }
             }
 
             var receReceiptTr = $('<tr></tr>').appendTo(receiptTable);

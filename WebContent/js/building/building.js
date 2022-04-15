@@ -1,5 +1,6 @@
 
 jQuery(function($) {
+    
 	var buildingPayType;
 	var building = {
 		
@@ -139,7 +140,7 @@ jQuery(function($) {
 		}, false);
 	});
 
-	//检查电话号是否已存在
+	// 检查电话号是否已存在
 	building.customerItems.phone = com.focusPage("#phone").on("blur", function(){
 		$this = $(this);
 		void 0 == $this.val() || "" == $this.val().trim() ? (com.showTip(com.focusPage("#phone"), "电话号码不能为空", "right"), building.repeatFlg = false) : com.post(api.data.checkCustomerForPhone, {
@@ -209,24 +210,24 @@ jQuery(function($) {
 			$liLine.append($h3).append($ulProperty);
 
 			$btnView.click(function(){
-				buildingDetail(v.bid, v.payType);
+				buildingDetail(v);
 			});
 
-			//更改支付方式
+			// 更改支付方式
 			$btnType.unbind("click");
 			$btnType.click(function(){
-				//这里目前关于支付方式更改是涉及到的贷款服务费没有处理,页面用该有一个生成款项的入口
+				// 这里目前关于支付方式更改是涉及到的贷款服务费没有处理,页面用该有一个生成款项的入口
 				updatePayType(v.bid);
 			});
 
-			//生成款项
+			// 生成款项
 			$btnMoney.click(function(){
-				//还没写
+				// 还没写
 			});
 
-			//合同终止
+			// 合同终止
 			$btnEnd.click(function(){
-				//这里应该弹出退款框,合同终止的情况下将中介费,贷款服务费退还
+				// 这里应该弹出退款框,合同终止的情况下将中介费,贷款服务费退还
 				buildingEnd(v.bid);
 			});
 
@@ -261,43 +262,46 @@ jQuery(function($) {
 		return [$adda, $addb];
 	});
 
-	//添加
+	// 添加
 	com.focusPage('a[name="addBuilding"]', '#pagenation').click(function(){
 		deleteData();
 		building.modals.buildingModal.modal("show");
 	});
 
-	//创建代理人
+	// 创建代理人
 	com.focusPage('a[name="createAuser"]', '#pagenation').click(function(){
 		com.cleanItems(building.customerItems);
 		building.modals.customerModal.modal("show");
 	});
 
-	function buildingDetail(buildingId, type){
-		params.bid = buildingId;
-		params.type = type;
+	function buildingDetail(v){
+		
+		params.building.building = v;
+		
 		com.popup4page("#stockRecordPopUp","/views/building/buildingSchedule.html","查看");
 	}
 
 	function updatePayType(bid){
-		//这里目前有一个问题,就是款项,如果是全款转贷款,或者贷款转全款的时候,涉及到的贷款服务费的问题
+	    
 		building.bid = bid;
+		
 		com.post(api.building.queryBuildingByBid, {"building.bid" : bid}, function(res){
 			buildingPayType = res.building.payType;
 			building.items.payTypes.val(res.building.payType);
 		}, null, false);
+		
 		com.focusPage("#buildingPayTypeModal").modal("show");
 	}
 
-	//没想到合适的地方  所以在页面上没有体现
+	// 没想到合适的地方 所以在页面上没有体现
 	function updateBuilding(buildingId, cvalue){
+	    
 		var options = {};
+		
 		options["building.bid"] = buildingId;
 		options["building.balanceStatus"] = cvalue;
 
-		com.post(api.building.updateBuildingForBalanceStatus(), options, function(res){
-
-		});
+		com.post(api.building.updateBuildingForBalanceStatus(), options);
 	}
 
 	function saveData(){
@@ -328,11 +332,12 @@ jQuery(function($) {
 		building.modals.buildingModal.modal("show");
 	}
 
-	//更改支付方式
+	// 更改支付方式
 	function updatePayTypeFun(){
+	    
 		if(buildingPayType == com.focusPage("#payTypes").val()){
 			com.showAlert(com.warning, "两次支付方式不能相同");
-			return;
+			return false;
 		}
 
 		var options = {
@@ -347,12 +352,12 @@ jQuery(function($) {
 		com.focusPage("#buildingPayTypeModal").modal("hide");
 	}
 
-	//合同终止
+	// 合同终止
 	function buildingEnd(bid){
-		//因为涉及到款项(中介费和贷款服务费),所以还没有写
+		// 因为涉及到款项(中介费和贷款服务费),所以还没有写
 	}
 
-	//创建客户
+	// 创建客户
 	function createCustomer(){
 
 		if(building.customerItems.cardType.val() == "身份证"){
@@ -362,10 +367,12 @@ jQuery(function($) {
 		}
 
 		if(com.validate("customerModal") || building.customerRepeatFlg || building.cardFlag){
+		    
 			if(building.customerRepeatFlg){
 				com.showTip(com.focusPage("#phone"), "电话号码已存在", "right");
 			}
-			return;
+			
+			return false;
 		}
 
 		var customerOptions = {};
@@ -387,7 +394,7 @@ jQuery(function($) {
 		}, false);
 	}
 
-	//验证证件号
+	// 验证证件号
 	function regCard(cardParam, reg){
 		if( cardParam.val() != "" ){
 			if(reg.test(cardParam.val()) == false){

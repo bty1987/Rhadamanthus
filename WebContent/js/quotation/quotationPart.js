@@ -1,21 +1,22 @@
 var QuotationDetail = (function(){
 	var quo = {
-		// 装修单号
-		orderid : null,
-		// 报价ID
-		quotationid : null,
-		// 报价版本
-		versionId : null,
-		// 非业务人员提点
-		notSalesmanRate : null,
+	    
+		orderid : null, // 装修单号
+		quotationid : null, // 报价ID
+		versionId : null, // 报价版本
+		notSalesmanRate : null, // 非业务人员提点
 		basicParams : null,
+		
 		quoModals : {},
 		settingBtns : {},
 		quoteCalculation : {},
 		machingType : {},
 		typeness: {},
+		
 		initSettingBtns : function(){
+		    
 			var that = this;
+			
 			that.settingBtns = {
 				// 功能区
 				$btnAddDomain : com.focusPage('#functionAreaTemplateBtn').click(function(){
@@ -331,10 +332,10 @@ var QuotationDetail = (function(){
                 _domanFees = 0;
 			}
 			
-			$domain.attr('data-undisPrice', sum);// 总价格存入
-			$domain.attr('data-desTotalprice', sumd);// 折扣后的总价格
-			$domain.attr('data-disPrice', sumdp);// 折扣项总价
-			$domain.attr('data-costPrice', cost);// 折扣项总价
+			$domain.attr('data-undisPrice', sum); // 总价格存入
+			$domain.attr('data-desTotalprice', sumd); // 折扣后的总价格
+			$domain.attr('data-disPrice', sumdp); // 折扣项总价
+			$domain.attr('data-costPrice', cost); // 成本总额
 
 			return _domanFees;
 		},
@@ -351,21 +352,23 @@ var QuotationDetail = (function(){
 			
 			$quote.find('.discountprice .cell-wrap').text(_discountprice);
 			$quote.find('.totalprice-discount .cell-wrap').text(_totalpriced);
+			
 			$quote.attr('data-totalprice', _totalprice);
 			$quote.attr('data-costPrice', _totalprice);
 		},
 		// 计算报价总金额
 		calculateTotalFee: function(discount){
-			var  _manageDiscount, _transDiscount, _totalfee = 0, _dtotalfee = 0, _transfee = 0, _managefee = 0, _manageRate = 0, _total = 0,cdiscount=0,ndiscount = 0;
+			var  _manageDiscount, _transDiscount, _totalfee = 0, _dtotalfee = 0, _transfee = 0, _managefee = 0, _manageRate = 0, _total = 0,cdiscount=0, ndiscount = 0;
 
 			var _undisPrice = quo.basicParams["quotation.undisPrice"];
 			var _disPrice = quo.basicParams["quotation.disPrice"];
 			var _dtransfee = quo.basicParams["quotation.trafficPrice"];
 			var _dmanagefee = quo.basicParams["quotation.managePrice"];
+			var _costfee = quo.basicParams["quotation.costPrice"];
 
-			drawTable(_undisPrice, _disPrice, _dtransfee, _dmanagefee, discount);
+			drawTable(_undisPrice, _disPrice, _dtransfee, _dmanagefee, _costfee, discount);
 			// 报价计算器
-			function drawTable(undisPrice, disPrice, transfee, managefee, discount) {
+			function drawTable(undisPrice, disPrice, transfee, managefee, costfee, discount) {
 
 			    var _discount = utils.accDiv(discount, 10);
 			    
@@ -376,18 +379,18 @@ var QuotationDetail = (function(){
 
 				var divItem1 = $('<div></div>').addClass('fl-quo-cal-item');
 
-				divItem1.append(createCalItem("基础",'normal border-right alert-info')).append(createCalItem("",'normal border-left-right alert-info')).append(createCalItem("",'normal border-left-right alert-info')).append(createCalItem("",'normal border-left-right alert-info')).append(createCalItem("",'normal border-left alert-info'))
+				divItem1.append(createCalItem("基础",'normal border-right alert-info')).append(createCalItem("",'normal border-left-right alert-info')).append(createCalItem("",'normal border-left-right alert-info')).append(createCalItem("",'normal border-left-right alert-info')).append(createCalItem("",'normal border-left alert-info')).append(createCalItem("",'normal border-left alert-info'))
 					.append(createCalItem("装修",' small border-left-right alert-success')).append(createCalItem("",'normal border-left alert-success'))
 					.append(createCalItem("主材",'small border-left-right alert-danger')).append(createCalItem("",'normal border-left-right alert-danger'))
 					.append(createCalItem("综合",'normal border-left-right alert-warning')).append(createCalItem("",'normal border-left-right alert-warning'));
 				divItem1.appendTo(table);
 
 				var divItem2 = $('<div></div>').addClass('fl-quo-cal-item');
-				divItem2.append(createCalItem("版本",'normal')).append(createCalItem("折前总价",'normal')).append(createCalItem("打折项总额",'normal')).append(createCalItem("非打折项总额",'normal')).append(createCalItem("管理费",'normal')).append(createCalItem("折扣",'small')).append(createCalItem("折后总价",'normal')).append(createCalItem("配比",'small')).append(createCalItem("主材额",'normal')).append(createCalItem("服务费",'normal')).append(createCalItem("实花总额",' normal alert-warning'));
+				divItem2.append(createCalItem("版本",'normal')).append(createCalItem("折前总价",'normal')).append(createCalItem("打折项总额",'normal')).append(createCalItem("非打折项总额",'normal')).append(createCalItem("成本",'normal')).append(createCalItem("管理费",'normal')).append(createCalItem("折扣",'small')).append(createCalItem("折后总价",'normal')).append(createCalItem("配比",'small')).append(createCalItem("主材额",'normal')).append(createCalItem("服务费",'normal')).append(createCalItem("实花总额",' normal alert-warning'));
 				divItem2.appendTo(table);
 
 				var halfPacksDiv = $('<div></div>').addClass('fl-quo-cal-item');
-				halfPacksDiv.append(createCalItem("半包",'normal')).append(createCalItem(total,'normal')).append(createCalItem(disPrice,'normal')).append(createCalItem(utils.changeTwoDecimal(utils.accAdd(undisPrice,transfee)),'normal')).append(createCalItem(managefee,'normal')).append(createCalItem(discount,'small')).append(createCalItem(dtotal,'normal')).append(createCalItem("-",'small')).append(createCalItem("-",'normal')).append(createCalItem("-",'normal')).append(createCalItem(dtotal,'normal alert-warning'));
+				halfPacksDiv.append(createCalItem("半包",'normal')).append(createCalItem(total,'normal')).append(createCalItem(disPrice,'normal')).append(createCalItem(utils.changeTwoDecimal(utils.accAdd(undisPrice,transfee)),'normal')).append(createCalItem(costfee,'normal')).append(createCalItem(managefee,'normal')).append(createCalItem(discount,'small')).append(createCalItem(dtotal,'normal')).append(createCalItem("-",'small')).append(createCalItem("-",'normal')).append(createCalItem("-",'normal')).append(createCalItem(dtotal,'normal alert-warning'));
 				halfPacksDiv.appendTo(table);
 
                 $.each(quo.machingType, function (i, v) {
@@ -399,27 +402,37 @@ var QuotationDetail = (function(){
                     var _totalProject = utils.accAdd(utils.accAdd(undisPrice, disPrice), transfee); // 工程总额
                     var _balance = _totalProject % v.base; // 余数 = 工程总额%基数
                     // 满减折后总额 //折后工程总额=(工程总额-余数)*折扣 + (余数) + 管理费
-                    var _projectPrice = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accMul(utils.accSub(_totalProject, _balance), utils.accDiv(v.discount, 10)), _balance), managefee))
+                    var _projectPrice = utils.changeThrDecimal(utils.accAdd(utils.accAdd(utils.accMul(utils.accSub(_totalProject, _balance), utils.accDiv(v.discount, 10)), _balance), managefee));
                     var $_total = utils.changeThrDecimal(utils.accAdd(_projectPrice, utils.accAdd(materialPrice, servicePrice)));
 
                     var halfPriceDiv = $('<div></div>').addClass('fl-quo-cal-item');
 
 					if (i == Math.ceil(quo.machingType.length / 2) - 1) {
-						halfPriceDiv.append(createCalItem(v.name, 'normal border-top'),
-							createCalItem(total, 'normal border-top'),
-							createCalItem(utils.accAdd(utils.accAdd(cdiscount, ndiscount), transfee), 'normal border-top'),
-							createCalItem("-", 'normal border-top'), createCalItem(managefee, 'normal border-top'),
-							createCalItem(v.discount, 'small'), createCalItem(_projectPrice, 'normal'),
+						halfPriceDiv.append(createCalItem(v.name, 'normal'),
+							createCalItem(total, 'normal'),
+							createCalItem(utils.accAdd(utils.accAdd(cdiscount, ndiscount), transfee), 'normal'),
+							createCalItem("-", 'normal'),
+							createCalItem(costfee, 'normal'),
+							createCalItem(managefee, 'normal'),
+							createCalItem(v.discount, 'small'), 
+							createCalItem(_projectPrice, 'normal'),
 							createCalItem(utils.accMul(v.material, 100) + "%", 'small'),
-							createCalItem(materialPrice, 'normal'), createCalItem(servicePrice, 'normal'), createCalItem($_total, 'normal alert-warning'));
+							createCalItem(materialPrice, 'normal'), 
+							createCalItem(servicePrice, 'normal'), 
+							createCalItem($_total, 'normal alert-warning'));
 					} else {
 						halfPriceDiv.append(createCalItem(v.name, 'normal'),
 							createCalItem(total, 'normal'),
 							createCalItem(utils.accAdd(utils.accAdd(cdiscount, ndiscount), transfee), 'normal'),
-							createCalItem("-", 'normal'), createCalItem(managefee, 'normal'),
-							createCalItem(v.discount, 'small'), createCalItem(_projectPrice, 'normal'),
+							createCalItem("-", 'normal'),
+							createCalItem(costfee, 'normal'),
+							createCalItem(managefee, 'normal'),
+							createCalItem(v.discount, 'small'), 
+							createCalItem(_projectPrice, 'normal'),
 							createCalItem(utils.accMul(v.material, 100) + "%", 'small'),
-							createCalItem(materialPrice, 'normal'), createCalItem(servicePrice, 'normal'), createCalItem($_total, 'normal alert-warning'));
+							createCalItem(materialPrice, 'normal'), 
+							createCalItem(servicePrice, 'normal'), 
+							createCalItem($_total, 'normal alert-warning'));
 					}
 
                     halfPriceDiv.appendTo(table);
@@ -726,7 +739,7 @@ var QuotationDetail = (function(){
 				    $.each(params, function(j, v){
 				        
 				        var e = com.focusPage(v);
-				        var param = e.attr("param")
+				        var param = e.attr("param");
 				        var parama = e.attr("parama");
 				        
 				        if(e.val() == '') return true;
@@ -823,7 +836,7 @@ var QuotationDetail = (function(){
 			        "quotationFunctionAreaItem.qfaiId": _manageId,
                     "quotationFunctionAreaItem.quotationFunctionAreaId": _qfaId,
                     "quotationFunctionAreaItem.unitPrice": _manageRate
-				}
+				};
 				
 				var _params = $.extend(true, {}, args, quo.basicParams);
 
@@ -1305,11 +1318,11 @@ var QuotationDetail = (function(){
 				}
 				
 				if(areaType == 4){ // 成本
-				    type = "5"
+				    type = "5";
 				}
 				
 				if(areaType == 1 && $this.attr('data-type') == 1){ // 工程量 && 成本
-				    type = "5"
+				    type = "5";
 				}
 				
 				var _quotval = {
@@ -1369,7 +1382,7 @@ var QuotationDetail = (function(){
 
 			var _quotationFunctionArea = {"quotationFunctionArea.qfaId":$quote.parents('div.widget-box.transparent').attr('data-qfaid')};
 			
-			var _params = $.extend({},_data,_quotationFunctionArea)
+			var _params = $.extend({},_data,_quotationFunctionArea);
 
 			com.post(api.quotation.updateQuotationFunctionAreaItemForIndex, _params);
 		},
@@ -1431,6 +1444,17 @@ var QuotationDetail = (function(){
 			});
 
 			$btns["$btnFold"].attr({"data-action" : "collapse"});
+			
+			var _lineSet = [["line", "0"], ["formula", "数量"], ["num", "数量"], ["name", "名称"], ["type", "类型"], ["unit", "单位"], ["worktype", "工种"], ["cell price unitprice", "价格"], ["cell price discountprice", "价格"], ["cell price totalprice-discount", "价格"], ["btns", "功能", {"width": "100px"}]];
+
+            var $ul = $('<ul></ul>').addClass('fl-quo-list');
+            var $li = $('<li></li>').addClass('fl-quo-item').appendTo($ul);
+            $.each(_lineSet, function(i, v) {
+
+                var $div = $('<div></div>').addClass('cell ' + v[0]).css(v.length == 3 ? v[2] : {}).appendTo($li);
+                var $span = $('<span></span').addClass('cell-wrap').text(v[1]).appendTo($div);
+                
+            });
 
 			$dbody = $('<div></div>').addClass('widget-body');
 			$dbodyInner = $('<div></div>').addClass('widget-body-inner');
@@ -1441,19 +1465,21 @@ var QuotationDetail = (function(){
 
 			$dbodyInner.append($input).append($list).appendTo($dbody);
 
-			$domain.append($dhead).append($dbody);
+			$domain.append($dhead).append(dv.type == 0 ? null : $ul).append($dbody);
 			
 			var param = dv.quotationFunctionAreaParam ? dv.quotationFunctionAreaParam : {"girth": 0, "area": 0, "height": 0, "holeLength": 0, "holeHeight": 0};
 
 			if(dv.quotationFunctionAreaItems.length) {
+			    
 				// 功能区中的报价项
 				var _items = dv.quotationFunctionAreaItems;
+				
 				// 按照报价项主键顺序排序
 				_items = _items.sort(function (a, b) {
-					if (a.index == null || b.index == null) { // 降序排列
-						return b.index - a.index;
-					} else { // 升序
-						return a.index - b.index;
+					if (a.index == null || b.index == null) {
+						return b.index - a.index; // 降序排列
+					} else {
+						return a.index - b.index; // 升序
 					}
 				});
 				
@@ -1471,10 +1497,10 @@ var QuotationDetail = (function(){
 	                        "h": param.beamLength, "i": param.beamHeight, 
 	                    });
 	                    
-	                    v.formula = utils.changeThrDecimal(isNaN(eval(v.formula)) ? 0 : eval(v.formula))
+	                    v.formula = utils.changeThrDecimal(isNaN(eval(v.formula)) ? 0 : eval(v.formula));
 					}
 					
-					v.num = utils.changeThrDecimal(isNaN(eval(v.formula)) ? 0 : eval(v.formula))
+					v.num = utils.changeThrDecimal(isNaN(eval(v.formula)) ? 0 : eval(v.formula));
 					
 					var $item = that.createQuote(i + 1, v).appendTo($list);
 					
@@ -1538,10 +1564,10 @@ var QuotationDetail = (function(){
 		},
 		// 创建报价项
 		createQuote : function(linenum, qv){
-			// 将说明写入到提示框中
+			
 			var $item = $('<li></li>').addClass('fl-quo-item').prop('title', qv.content);
 			
-			var discount = utils.accDiv(quo.basicParams['quotation.discount'], 10)
+			var discount = utils.accDiv(quo.basicParams['quotation.discount'], 10);
 			
 			var _dcp = 0;
 			var _num = qv.num;
@@ -1553,8 +1579,6 @@ var QuotationDetail = (function(){
 			
 			var _typeName = "-";
 			
-			
-			
 			if(qv.type == 0){
 			    _typeName = "普通";
 			    _dcp =  _unitPrice;
@@ -1562,7 +1586,7 @@ var QuotationDetail = (function(){
 			
 			if(_type == 1){ // 自定义
 			    _dcp =  _unitPrice;
-			    _typeName = "自定义"
+			    _typeName = "自定义";
 			}
 			
 			if(qv.type == 2){ // 车运费
@@ -1643,6 +1667,7 @@ var QuotationDetail = (function(){
 				
 				$btnCellWrap.append($btnDel).append($btnInfo).append($up).append($down);
 				qv.qfaiId ? ($up.find("i").addClass("green"),$down.find("i").addClass("red")) :($up.find("i").addClass("grey") ,$down.find("i").addClass("grey"));
+				
 				// 各种绑定事件
 				$item.click(function(){// 编辑数量
 					quote.getNumCellFocus($item);
@@ -1725,6 +1750,7 @@ var QuotationDetail = (function(){
 		// 创建添加报价项天窗中的报价项
 
 		createQuoteModalItem : function (v) {
+		    
 			var $liLine = $('<li></li>').addClass('item-blue clearfix');
 			var $h3 = $('<h3></h3>').addClass('oid').css({"margin-bottom" : 0});
 
@@ -1733,16 +1759,16 @@ var QuotationDetail = (function(){
 				"type": "checkbox",
 				"name": "modalQuots",
 				"class": "ace ace-checkbox-2",
-				"data-quotationClassification": v.classification.name,
 				"data-name": v.name,
 				"data-itemPrice": v.unitPrice,
 				"data-itemUnite": v.unit.name,
-				"data-des": v.comment,
-				"data-workType": v.workType ? v.workType.name : "-",
 				"data-discount": v.discount,
+				"data-type": v.type,
 				"data-quotationType" : v.category.name,
 				"data-quotationTypeId" : v.category.id,
-				"data-type": v.type,
+				"data-quotationClassification": v.classification.name,
+				"data-workType": v.workType ? v.workType.name : "-",
+				"data-des": v.comment,
 			}).val(v.qiid);
 			
 			var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.name);
@@ -1799,7 +1825,7 @@ var QuotationDetail = (function(){
 			quo.decorationType = params.orderType;
 			
 			com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": quo.orderid}, function(res){
-			    com.focusPage('#orderId').text(res.decoration.orderId)
+			    com.focusPage('#orderId').text(res.decoration.orderId);
 			    com.focusPage('#address').text(res.decoration.house.village.name + " " + res.decoration.house.houseNumber);
 			    com.focusPage('#version').text(res.decoration.version.name);
 			});

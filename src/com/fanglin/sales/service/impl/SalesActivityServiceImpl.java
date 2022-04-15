@@ -76,7 +76,6 @@ public class SalesActivityServiceImpl implements SalesActivityService {
 		}
 
 		paging.setData(salesActivityVOs);
-
 	}
 
 	@Override

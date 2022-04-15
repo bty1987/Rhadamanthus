@@ -21,15 +21,15 @@ public class QuotetionVO implements Serializable {
 
 	private Timestamp createTime;
 
+	private Integer discount;
+
+	private Long basePrice;
+
 	private Long undisPrice;
 
 	private Long disPrice;
 
-	private Integer discount;
-
 	private Long totalPrice;
-
-	private String content;
 
 	private Long managePrice;
 
@@ -39,7 +39,9 @@ public class QuotetionVO implements Serializable {
 
 	private Integer trafficRate;
 
-	private Long basePrice;
+	private Integer costPrice;
+
+	private String content;
 
 	public Long getQid() {
 		return qid;
@@ -169,4 +171,13 @@ public class QuotetionVO implements Serializable {
 	public void setBasePrice(Long basePrice) {
 		this.basePrice = basePrice;
 	}
+
+	public Integer getCostPrice() {
+		return costPrice;
+	}
+
+	public void setCostPrice(Integer costPrice) {
+		this.costPrice = costPrice;
+	}
+
 }

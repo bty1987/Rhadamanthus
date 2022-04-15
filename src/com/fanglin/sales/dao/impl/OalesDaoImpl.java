@@ -32,7 +32,7 @@ public class OalesDaoImpl extends DaoImpl<OalesPO> implements OalesDao {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<OalesPO> querySurveyByOrderId(String orderId) {
+	public List<OalesPO> queryOalesByOrderId(String orderId) {
 		return session().createCriteria(OalesPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).list();
 	}
 

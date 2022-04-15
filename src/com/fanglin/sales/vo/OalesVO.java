@@ -62,6 +62,12 @@ public class OalesVO implements Serializable {
 
 	private Timestamp finishTime;
 
+	private UserBaseVO materialer;
+
+	private Integer cost;
+
+	private Integer threshold;
+
 	public OalesVO() {
 		super();
 	}
@@ -85,6 +91,7 @@ public class OalesVO implements Serializable {
 		this.checker = checker;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getConfirmTime() {
 		return confirmTime;
 	}
@@ -93,6 +100,7 @@ public class OalesVO implements Serializable {
 		this.confirmTime = confirmTime;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getCheckTime() {
 		return checkTime;
 	}
@@ -101,6 +109,7 @@ public class OalesVO implements Serializable {
 		this.checkTime = checkTime;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getFinishTime() {
 		return finishTime;
 	}
@@ -268,6 +277,30 @@ public class OalesVO implements Serializable {
 
 	public void setCompany(Integer company) {
 		this.company = company;
+	}
+
+	public UserBaseVO getMaterialer() {
+		return materialer;
+	}
+
+	public void setMaterialer(UserBaseVO materialer) {
+		this.materialer = materialer;
+	}
+
+	public Integer getCost() {
+		return cost;
+	}
+
+	public void setCost(Integer cost) {
+		this.cost = cost;
+	}
+
+	public Integer getThreshold() {
+		return threshold;
+	}
+
+	public void setThreshold(Integer threshold) {
+		this.threshold = threshold;
 	}
 
 }

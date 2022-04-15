@@ -1,204 +1,222 @@
-
 jQuery(function($) {
-	var buildingRecord = {
 
-		btns: {
-			saveBtn: com.focusPage("#saveBtn")
-		},
-		modals: {
-			buildingRecordModal: com.focusPage("#buildingRecordModal")
-		},
-		items: {
-			hsNo: com.focusPage("#hsNo"),
-			csNo: com.focusPage("#csNo"),
-			brType: com.focusPage("#brType"),
-			pattern: com.focusPage("#pattern"),
-			comment: com.focusPage("#comment")
-		},
+    var buildingRecord = {
 
-		recordType: [],
-		pattern: [],
-		hsid: null,
-		csid: null,
-		dataFlag: false,
-		currenFlag: params.flag,
-		buildingRecordHsno: params.hsNo,
-		buildingRecordCsno: params.csNo,
-		buildingRecordHsid: params.hsid,
-		buildingRecordCsid: params.csid,
-		currentPage: params.page
-	};
+        btns: {
+            saveBtn: com.focusPage("#saveBtn")
+        },
+        modals: {
+            buildingRecordModal: com.focusPage("#buildingRecordModal")
+        },
+        items: {
+            hsNo: com.focusPage("#hsNo"),
+            csNo: com.focusPage("#csNo"),
+            brType: com.focusPage("#brType"),
+            pattern: com.focusPage("#pattern"),
+            comment: com.focusPage("#comment")
+        },
 
-	buildingRecord.btns.saveBtn.on("click", saveData);
+        recordType: [],
+        pattern: [],
 
-	buildingRecord.modals.buildingRecordModal.on("hide.bs.modal", function(){
+        hsid: null,
+        csid: null,
+        dataFlag: false,
 
-		com.cleanItems(buildingRecord.items);
-		com.closeTip();
-	});
+        currenFlag: params.building.flag,
+        currentPage: params.building.page,
 
-	com.post(api.ds.building, {}, function(res){
-		buildingRecord.items.brType.bindData(res.recordType, "key", "value");
-		buildingRecord.items.pattern.bindData(res.pattern, "key", "value");
+        buildingRecordHsno: params.houseSource.no,
+        buildingRecordCsno: params.customerSource.no,
+        buildingRecordHsid: params.building.houseSource.hsid,
+        buildingRecordCsid: params.building.customerSource.csid,
+    };
 
-		$.each(res.recordType, function(i, v){
-			buildingRecord.recordType[i] = v.value;
-		});
-		$.each(res.pattern, function(i, d){
-			buildingRecord.pattern[i] = d.value;
-		});
-	}, null, false);
+    buildingRecord.btns.saveBtn.on("click", saveData);
 
-	var displayFunc  = (function(){
+    buildingRecord.modals.buildingRecordModal.on("hide.bs.modal", function() {
 
-		var renderList = function(tableId,listData){
-			var $tableWrap = com.focusPage('#' + tableId).empty();
-			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        com.cleanItems(buildingRecord.items);
+        com.closeTip();
+    });
 
-			if(listData && listData.length){
-				$.each(listData,function(i, v){
-					var $liLine = creatLine(v);
+    com.post(api.ds.building, {}, function(res) {
 
-					$liLine.appendTo($ul);
-				});
+        buildingRecord.items.brType.bindData(res.recordType, "key", "value");
+        buildingRecord.items.pattern.bindData(res.pattern, "key", "value");
 
-				$ul.appendTo($tableWrap);
-			}
-		};
+        $.each(res.recordType, function(i, v) {
 
-		var creatLine = function(v){
-			var that = this;
-			var $liLine = $('<li></li>').addClass('item-orange clearfix');
-			var noVal;
-			buildingRecord.currenFlag == true ? noVal = v.houseSource.no :  noVal = v.customerSource.no;
-			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(noVal));
-			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-			//var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+            buildingRecord.recordType[i] = v.value;
+        });
+        $.each(res.pattern, function(i, d) {
 
-			//var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html("无效记录");
+            buildingRecord.pattern[i] = d.value;
+        });
+    }, null, false);
 
-			var v_name;
-			var h_number;
-			v.houseSource.house.village.name == null ? v_name = "" : v_name = v.houseSource.house.village.name;
-			v.houseSource.house.houseNumber == null ? h_number = "" : h_number = v.houseSource.house.houseNumber;
+    var displayFunc = (function() {
 
-			var propertyArr = [
-				["记录类型:", buildingRecord.recordType[v.type], "red"],
-				["楼盘名:", v_name + " " + h_number, "grey"],
-				["客户名:", v.customerSource.customer.name, "grey"],
-				["联系方式:", buildingRecord.pattern[v.pattern], "grey"],
-				["记录时间:", v.operatTime, "green"],
-				["记录信息:", v.comment, "grey"],
-				["操作人:", v.operater.userName, "grey"]
-			];
+        var renderList = function(tableId, listData) {
 
-			$.each(propertyArr, function (index,value) {
-				var $liProperty = $('<li></li>');
-				$('<strong></strong>').html(value[0]).appendTo($liProperty);
-				$('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
-				$liProperty.appendTo($ulProperty);
-			});
+            var $tableWrap = com.focusPage('#' + tableId).empty();
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-			//$divBtnWrap.append($btnView);
+            if (listData && listData.length) {
+                $.each(listData, function(i, v) {
 
-			$liLine.append($h3).append($ulProperty);
+                    var $liLine = creatLine(v);
 
-			//$btnView.click(function(){
-			//	//暂时没写
-			//	//viewAcceptanceDetailIndex(v.orderId);
-			//});
+                    $liLine.appendTo($ul);
+                });
 
-			return $liLine;
-		};
+                $ul.appendTo($tableWrap);
+            }
+        };
 
-		return {
-			init : function(tableId,listData){
-				com.focusPage('#' + tableId).html(null);
-				renderList(tableId,listData);
-			},
-			drawLine : function(v){
-				return creatLine(v);
-			}
-		}
-	})();
+        var creatLine = function(v) {
 
-	var brField;
-	var brOptionId;
-	
-	if(buildingRecord.currenFlag){
-		//房源
-		brOptionId = buildingRecord.buildingRecordHsid;
-		brOptionNo = buildingRecord.buildingRecordHsno;
-		brField = "hsid";
-		com.focusPage('#fl-statement').statement("房源", "跟进记录");
-	}else{
-		brOptionId = buildingRecord.buildingRecordCsid;
-		brOptionNo = buildingRecord.buildingRecordCsno;
-		brField = "csid";
-		com.focusPage('#fl-statement').statement("客源", "跟进记录");
-	}
+            var that = this;
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
+            var noVal;
+            buildingRecord.currenFlag == true ? noVal = v.houseSource.no : noVal = v.customerSource.no;
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(noVal));
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            // var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-	var searcher = new Searcher();
-	searcher.init([], "condList", api.building.queryBuildingRecord, function(data){
-		displayFunc.init('resultList', data);
-	}, "pagenation", "buildingRecordPostData",{"filters[0].data":brOptionId, "filters[0].field":brField}, true, "buildingRecords", null);
+            // var $btnView = $('<a></a>').addClass('btn btn-minier btn-yellow').html("无效记录");
 
-	//添加
-	com.focusPage("#addBuildingRecord").click(function(){
-		com.cleanItems(buildingRecord.items);
+            var v_name;
+            var h_number;
+            v.houseSource.house.village.name == null ? v_name = "" : v_name = v.houseSource.house.village.name;
+            v.houseSource.house.houseNumber == null ? h_number = "" : h_number = v.houseSource.house.houseNumber;
 
-		if(buildingRecord.currenFlag){
-			buildingRecord.items.hsNo.prop("disabled", true);
-			buildingRecord.items.hsNo.val(buildingRecord.buildingRecordHsno);
-		}else{
-			buildingRecord.items.csNo.prop("disabled", true);
-			buildingRecord.items.csNo.val(buildingRecord.buildingRecordCsno);
-		}
+            var propertyArr = [["记录类型:", buildingRecord.recordType[v.type], "red"], ["楼盘名:", v_name + " " + h_number, "grey"], ["客户名:", v.customerSource.customer.name, "grey"], ["联系方式:", buildingRecord.pattern[v.pattern], "grey"], ["记录时间:", v.operatTime, "green"], ["记录信息:", v.comment, "grey"], ["操作人:", v.operater.userName, "grey"]];
 
-		buildingRecord.modals.buildingRecordModal.modal("show");
-	});
+            $.each(propertyArr, function(index, value) {
 
-	function saveData(){
+                var $liProperty = $('<li></li>');
+                $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
+                $liProperty.appendTo($ulProperty);
+            });
 
-		if(buildingRecord.items.hsNo.val() != ""){
-			com.post(api.building.queryHouseSourceByNo, {"houseSource.no" : buildingRecord.items.hsNo.val()}, function(res){
-				buildingRecord.hsid = res.houseSource.hsid;
-				buildingRecord.dataFlag = false;
-			}, function(data){
-				buildingRecord.dataFlag = true;
-				com.showAlert(com.warning, "请正确输入房源编号");
-			}, false);
-		}
+            // $divBtnWrap.append($btnView);
 
-		if(buildingRecord.items.csNo.val() != ""){
-			com.post(api.building.queryCustomerSourceByNo, {"customerSource.no" : buildingRecord.items.csNo.val()}, function(res){
-				buildingRecord.csid = res.customerSource.csid;
-				buildingRecord.dataFlag = false;
-			}, function(data){
-				buildingRecord.dataFlag = true;
-				com.showAlert(com.warning, "请正确输入客源编号");
-			}, false);
-		}
+            $liLine.append($h3).append($ulProperty);
 
-		if(com.validate("buildingRecordModal") || buildingRecord.dataFlag){
-			return false;
-		}
+            // $btnView.click(function(){
+            // //暂时没写
+            // //viewAcceptanceDetailIndex(v.orderId);
+            // });
 
-		var options = {
-			"buildingRecord.houseSource.hsid" : buildingRecord.hsid,
-			"buildingRecord.customerSource.csid" : buildingRecord.csid,
-			"buildingRecord.comment" : buildingRecord.items.comment.val(),
-			"buildingRecord.type" : buildingRecord.items.brType.val(),
-			"buildingRecord.pattern" : buildingRecord.items.pattern.val()
-		};
+            return $liLine;
+        };
 
-		com.post(api.building.addBuildingRecord, options, function(){
-			com.showAlert(com.info, "添加成功");
-			buildingRecord.hsid = null;
-			buildingRecord.csid = null;
-			searcher.doSearch();
-		});
+        return {
+            init: function(tableId, listData) {
 
-		buildingRecord.modals.buildingRecordModal.modal("hide");
-	}
+                com.focusPage('#' + tableId).html(null);
+                renderList(tableId, listData);
+            },
+            drawLine: function(v) {
+
+                return creatLine(v);
+            }
+        }
+    })();
+
+    var brField;
+    var brOptionId;
+
+    if (buildingRecord.currenFlag) {
+        // 房源
+        brOptionId = buildingRecord.buildingRecordHsid;
+        brOptionNo = buildingRecord.buildingRecordHsno;
+        brField = "hsid";
+        com.focusPage('#fl-statement').statement("房源", "跟进记录");
+    } else {
+        brOptionId = buildingRecord.buildingRecordCsid;
+        brOptionNo = buildingRecord.buildingRecordCsno;
+        brField = "csid";
+        com.focusPage('#fl-statement').statement("客源", "跟进记录");
+    }
+
+    var searcher = new Searcher();
+    searcher.init([], "condList", api.building.queryBuildingRecord, function(data) {
+
+        displayFunc.init('resultList', data);
+    }, "pagenation", "buildingRecordPostData", {
+        "filters[0].data": brOptionId,
+        "filters[0].field": brField
+    }, true, "buildingRecords", null);
+
+    // 添加
+    com.focusPage("#addBuildingRecord").click(function() {
+
+        com.cleanItems(buildingRecord.items);
+
+        if (buildingRecord.currenFlag) {
+            buildingRecord.items.hsNo.prop("disabled", true);
+            buildingRecord.items.hsNo.val(buildingRecord.buildingRecordHsno);
+        } else {
+            buildingRecord.items.csNo.prop("disabled", true);
+            buildingRecord.items.csNo.val(buildingRecord.buildingRecordCsno);
+        }
+
+        buildingRecord.modals.buildingRecordModal.modal("show");
+    });
+
+    function saveData() {
+
+        if (buildingRecord.items.hsNo.val() != "") {
+            com.post(api.building.queryHouseSourceByNo, {
+                "houseSource.no": buildingRecord.items.hsNo.val()
+            }, function(res) {
+
+                buildingRecord.hsid = res.houseSource.hsid;
+                buildingRecord.dataFlag = false;
+            }, function(data) {
+
+                buildingRecord.dataFlag = true;
+                com.showAlert(com.warning, "请正确输入房源编号");
+            }, false);
+        }
+
+        if (buildingRecord.items.csNo.val() != "") {
+            com.post(api.building.queryCustomerSourceByNo, {
+                "customerSource.no": buildingRecord.items.csNo.val()
+            }, function(res) {
+
+                buildingRecord.csid = res.customerSource.csid;
+                buildingRecord.dataFlag = false;
+            }, function(data) {
+
+                buildingRecord.dataFlag = true;
+                com.showAlert(com.warning, "请正确输入客源编号");
+            }, false);
+        }
+
+        if (com.validate("buildingRecordModal") || buildingRecord.dataFlag) {
+            return false;
+        }
+
+        var options = {
+            "buildingRecord.houseSource.hsid": buildingRecord.hsid,
+            "buildingRecord.customerSource.csid": buildingRecord.csid,
+            "buildingRecord.comment": buildingRecord.items.comment.val(),
+            "buildingRecord.type": buildingRecord.items.brType.val(),
+            "buildingRecord.pattern": buildingRecord.items.pattern.val()
+        };
+
+        com.post(api.building.addBuildingRecord, options, function() {
+
+            com.showAlert(com.info, "添加成功");
+            buildingRecord.hsid = null;
+            buildingRecord.csid = null;
+            searcher.doSearch();
+        });
+
+        buildingRecord.modals.buildingRecordModal.modal("hide");
+    }
 });

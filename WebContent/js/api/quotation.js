@@ -475,7 +475,7 @@ $.extend(api, {
             type: "update",
             intercept: true,
             tranargs: {
-                args: ["protation.quotePrice", "protation.quoteArea", "protation.costPrice", "protation.costRate", "protation.mostRate", "protation.profitRate", "protation.basicPrice", "protation.comdPrice", "protation.commPrice", "protation.adddPrice", "protation.addmPrice", "protation.subdPrice", "protation.submPrice", "protation.totalPrice", "protationItem.basicNum", "protationItem.price", "protationItem.num", "protationItem.cost", "protation.totalCost", "protation.totalProfit", "protation.costRate", "protation.mostRate", "protation.mostPrice", ]
+                args: ["protation.quotePrice", "protation.quoteArea", "protation.costPrice", "protation.costRate", "protation.mostRate", "protation.profitRate", "protation.basicPrice", "protation.comdPrice", "protation.commPrice", "protation.adddPrice", "protation.addmPrice", "protation.subdPrice", "protation.submPrice", "protation.totalPrice", "protationItem.basicNum", "protationItem.price", "protationItem.num", "protationItem.cost", "protation.totalCost", "protation.totalProfit", "protation.costRate", "protation.mostRate", "protation.mostPrice"]
             }
         },
         deleteProtationItem: {
@@ -483,7 +483,7 @@ $.extend(api, {
             type: "update",
             intercept: true,
             tranargs: {
-                args: ["protation.quotePrice", "protation.quoteArea", "protation.costPrice", "protation.profitRate", "protation.basicPrice", "protation.comdPrice", "protation.commPrice", "protation.adddPrice", "protation.addmPrice", "protation.subdPrice", "protation.submPrice", "protation.totalPrice", ]
+                args: ["protation.quotePrice", "protation.quoteArea", "protation.costPrice", "protation.costRate", "protation.mostRate", "protation.profitRate", "protation.basicPrice", "protation.comdPrice", "protation.commPrice", "protation.adddPrice", "protation.addmPrice", "protation.subdPrice", "protation.submPrice", "protation.totalPrice", "protationItem.basicNum", "protationItem.price", "protationItem.num", "protationItem.cost", "protation.totalCost", "protation.totalProfit", "protation.costRate", "protation.mostRate", "protation.mostPrice"]
             }
         },
         lockProtation: {
@@ -1120,7 +1120,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "quotationNormriceItems",
-                args: ["trannum", "salary"]
+                args: ["trannum", "salary", "num"]
             }]
         },
         addQuotationNormriceItem: {

@@ -1,4 +1,4 @@
-jQuery(function($) {
+jQuery(function ($) {
 
     var oales = {
 
@@ -19,9 +19,13 @@ jQuery(function($) {
             brandName: com.focusPage('#brandName', "#oalesModal"),
             service: com.focusPage('#service', "#oalesModal"),
             atttype: com.focusPage("#atttype", "#oalesModal"),
+            cost: com.focusPage('#cost', "#oalesModal"),
+            threshold: com.focusPage("#threshold", "#oalesModal"),
+
+            upcost: com.focusPage('#upcost', "#totalModal"),
+            upthreshold: com.focusPage('#upthreshold', "#totalModal"),
             awardType: com.focusPage('#awardType', "#totalModal"),
             award: com.focusPage('#award', "#totalModal"),
-
             profit: com.focusPage('#profit', "#totalModal"),
             newTotal: com.focusPage('#newTotal', "#totalModal"),
             updateService: com.focusPage('#updateService', "#totalModal"),
@@ -37,16 +41,16 @@ jQuery(function($) {
         awardTypes: {},
     };
 
-    oales.modals.oalesModal.on('hide.bs.modal', function(e) {
+    oales.modals.oalesModal.on('hide.bs.modal', function (e) {
 
         com.cleanTypeahead("brandName");
         com.cleanItems(oales.items);
         com.closeTip();
     });
 
-    com.initTypeahead("brandName", api.data.queryBrandByPinyin, "pinyinName", {}, 'brands', 'bid', 'alias', function(list, k, v) {
+    com.initTypeahead("brandName", api.data.queryBrandByPinyin, "pinyinName", {}, 'brands', 'bid', 'alias', function (list, k, v) {
 
-        $.each(list, function(index, val) {
+        $.each(list, function (index, val) {
 
             if (val.bid == k) {
                 oales.bid = val.bid;
@@ -64,8 +68,16 @@ jQuery(function($) {
         "user.status": 0,
         "departmentType.name": ""
     }, 'autoFillKeyValue', 'key', 'value', null);
+    com.initTypeahead('materialer', api.personel.queryUserByPinyin, "pinyinName", {
+        "user.status": 0,
+        "departmentType.name": ""
+    }, 'autoFillKeyValue', 'key', 'value', null);
+    com.initTypeahead('upmaterialer', api.personel.queryUserByPinyin, "pinyinName", {
+        "user.status": 0,
+        "departmentType.name": ""
+    }, 'autoFillKeyValue', 'key', 'value', null);
 
-    com.post(api.ds.sales, {}, function(res) {
+    com.post(api.ds.sales, {}, function (res) {
 
         oales.status = res.oalesStatus.split("key", "value");
         oales.atttypes = res.oalesAtttype.split("key", "value");
@@ -176,27 +188,73 @@ jQuery(function($) {
     var linebtns = [{
         name: "编辑",
         clazz: "btn-success",
-        handle: function(v) {
-
-            oales.oid = v.oid;
-
+        handle: function (v) {
+            oales.oid= v.oid;
+            oales.items.updateService.val(v.servicer.currentName);
+            oales.items.brandName.val(v.awardType);
+            oales.items.newTotal.val(v.total);
+            oales.items.award.val(v.award);
+            oales.items.profit.val(v.profit);
+            oales.items.updateComment.val(v.comment);
             oales.modals.totalModal.modal("show");
-
             return false;
         },
         show: function(v) {
-            return true;
+
+            return v.status == 0;
         }
-    },{
+    }, {
         name: "删除",
         clazz: "btn-warning",
-        handle: function(v) {
+        handle: function (v) {
 
             remove(v.oid);
 
         },
-        show: function(v) {
-            return true;
+        show: function (v) {
+            return  v.status == 0;
+        }
+    },{
+        name: "完结",
+        clazz: "btn-inverse",
+        handle: function (v) {
+
+            finishOales(v.oid);
+
+        },
+        show: function (v) {
+            return  v.status == 3;
+        }
+    },{
+        name: "确认",
+        clazz: "btn-danger",
+        handle: function (v) {
+            confirmOales(v.oid);
+        },
+        show: function (v) {
+            return  v.status == 0;
+        }
+    },{
+        name: "复核",
+        clazz: "btn-pink",
+        handle: function (v) {
+
+            checkOales(v.oid);
+
+        },
+        show: function (v) {
+            return  v.status == 1;
+        }
+    },{
+        name: "驳回",
+        clazz: "btn-purple",
+        handle: function (v) {
+
+            rejectOales(v.oid);
+
+        },
+        show: function (v) {
+            return  v.status == 1;
         }
     },
 
@@ -204,7 +262,7 @@ jQuery(function($) {
 
     searcher.line("no", lineprops, linebtns).render();
 
-    com.focusPage('#addOales', '#pagenation').on("click", function() {
+    com.focusPage('#addOales', '#pagenation').on("click", function () {
 
         oales.modals.oalesModal.modal("show");
     });
@@ -224,9 +282,12 @@ jQuery(function($) {
             "oales.total": oales.items.total.val(),
             "oales.comment": oales.items.comment.val(),
             "oales.atttype": oales.items.atttype.val(),
+            "oales.cost": oales.items.cost.val(),
+            "oales.threshold": oales.items.threshold.val(),
+            "oales.materialer.userId": com.typeahead("materialer"),
             "oales.servicer.userId": com.typeahead("service"),
         };
-        com.post(url, options, function(res) {
+        com.post(url, options, function (res) {
 
             searcher.doSearch();
         });
@@ -246,21 +307,73 @@ jQuery(function($) {
             "oales.total": oales.items.newTotal.val(),
             "oales.profit": oales.items.profit.val(),
             "oales.servicer.userId": com.typeahead("updateService"),
+            "oales.cost": oales.items.upcost.val(),
+            "oales.threshold": oales.items.upthreshold.val(),
+            "oales.materialer.userId": com.typeahead("upmaterialer"),
             "oales.comment": oales.items.updateComment.val(),
         };
 
-        com.post(api.sales.updateOales, options, function(res) {
+        com.post(api.sales.updateOales, options, function (res) {
             searcher.doSearch();
         });
 
         oales.modals.totalModal.modal("hide");
     }
+
     function remove(oid) {
 
         var options = {
             "oales.oid": oid,
         };
-        com.post(api.sales.deleteOales, options, function(res) {
+        com.post(api.sales.deleteOales, options, function (res) {
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
+        });
+
+    }
+
+    function finishOales(oid) {
+
+        var options = {
+            "oales.oid": oid,
+        };
+        com.post(api.sales.finishOales, options, function (res) {
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
+        });
+
+    }
+
+    function checkOales(oid) {
+
+        var options = {
+            "oales.oid": oid,
+        };
+        com.post(api.sales.checkOales, options, function (res) {
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
+        });
+
+    }
+
+    function rejectOales(oid) {
+
+        var options = {
+            "oales.oid": oid,
+        };
+        com.post(api.sales.rejectOales, options, function (res) {
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
+        });
+
+    }
+
+    function confirmOales(oid) {
+
+        var options = {
+            "oales.oid": oid,
+        };
+        com.post(api.sales.confirmOales, options, function (res) {
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
         });

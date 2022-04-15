@@ -119,7 +119,7 @@ jQuery(function ($) {
         };
     }
 
-    paymentUtils.showContractBtn(params.decorationReceiptDrId, 1, params.decorationOrderOrderId, printer.args, receipt.order.customer.name, receipt.receiptNo);
+    paymentUtils.showContractBtn(params.decorationReceiptDrId, 1, printer.args, receipt.order.customer.name, receipt.receiptNo, "");
 
     function generateOneReceipt() {
         var num = receipt.receipts.length;

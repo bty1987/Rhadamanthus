@@ -18,30 +18,34 @@ import com.fanglin.sales.vo.RefundsVO;
 @Namespace("/")
 @Controller
 public class RefundsAction extends BaseListAction {
-	
+
 	private static final long serialVersionUID = 3474050727800940828L;
-	
+
 	@Autowired
 	private RefundsItemService refundsItemService;
-	
+
 	private RefundsVO refunds;
-	
-	private List<RefundsVO>  refundVOs;
-	
-	private List<RefundsItemVO>  refundsItems;
-	
+
+	private List<RefundsVO> refundses;
+
+	private List<RefundsItemVO> refundsItems;
+
 	@Action(value = "queryRefundsBySid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryRefundsBySid(){
-		refundVOs = refundsItemService.queryRefundsBySid(refunds);
+	public String queryRefundsBySid() {
+
+		refundses = refundsItemService.queryRefundsBySid(refunds);
+
 		return SUCCESS;
-}
-	
-	@Action(value = "queryRefundsItemBySid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-		public String queryRefundsItemBySid(){
-			refundsItems = refundsItemService.queryRefundsItemBySid(refunds);
-			return SUCCESS;
 	}
-	
+
+	@Action(value = "queryRefundsItemBySid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryRefundsItemBySid() {
+
+		refundsItems = refundsItemService.queryRefundsItemBySid(refunds);
+
+		return SUCCESS;
+	}
+
 	public RefundsVO getRefunds() {
 		return refunds;
 	}
@@ -50,12 +54,12 @@ public class RefundsAction extends BaseListAction {
 		this.refunds = refunds;
 	}
 
-	public List<RefundsVO> getRefundVOs() {
-		return refundVOs;
+	public List<RefundsVO> getRefundses() {
+		return refundses;
 	}
 
-	public void setRefundVOs(List<RefundsVO> refundVOs) {
-		this.refundVOs = refundVOs;
+	public void setRefundses(List<RefundsVO> refundses) {
+		this.refundses = refundses;
 	}
 
 	public List<RefundsItemVO> getRefundsItems() {

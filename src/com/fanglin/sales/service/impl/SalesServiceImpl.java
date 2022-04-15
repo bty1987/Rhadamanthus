@@ -85,6 +85,7 @@ public class SalesServiceImpl implements SalesService {
 		for (SalesPO salesPO : salesPOs) {
 
 			SalesVO _salesVO = new SalesVO(new HouseVO(new VillageVO()), new CustomerVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new DepartmentVO(), new UserBaseVO(new DutyVO(), new DepartmentVO()), new UserBaseVO(), new UserBaseVO());
+
 			BeanUtil.copyProperties(salesPO, _salesVO, Arrays.asList("salesman", "dept", "region", "guider", "instorer", "guideDept", "house", "customer", "supplier", "finisher"));
 			BeanUtil.copyProperties(salesPO.getSupplier(), _salesVO.getSupplier(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyProperties(salesPO.getSalesman(), _salesVO.getSalesman(), Arrays.asList("dept", "duty"));
@@ -112,17 +113,14 @@ public class SalesServiceImpl implements SalesService {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
-		if (userPO == null)
-			return;
+		if (userPO == null) return;
 
 		Integer id = userPO.getUid();
 
 		List<SalesPO> salesPOs = salesDao.pageSales(paging, filter, company, id);
-
 		List<SalesVO> salesVOs = pageSales(salesPOs);
 
 		paging.setData(salesVOs);
-
 	}
 
 	@Override
@@ -130,14 +128,12 @@ public class SalesServiceImpl implements SalesService {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
-		if (userPO == null)
-			return;
+		if (userPO == null) return;
 
 		List<SalesPO> salesPOs = salesDao.pageSalesForAdvance(paging, filter, company);
 		List<SalesVO> salesVOs = pageSales(salesPOs);
 
 		paging.setData(salesVOs);
-
 	}
 
 	@Override
@@ -145,14 +141,12 @@ public class SalesServiceImpl implements SalesService {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
-		if (userPO == null)
-			return;
+		if (userPO == null) return;
 
 		List<SalesPO> salesPOs = salesDao.pageSalesForBalance(paging, filter, company);
 		List<SalesVO> salesVOs = pageSales(salesPOs);
 
 		paging.setData(salesVOs);
-
 	}
 
 	@Override
@@ -160,14 +154,12 @@ public class SalesServiceImpl implements SalesService {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
-		if (userPO == null)
-			return;
+		if (userPO == null) return;
 
 		List<SalesPO> salesPOs = salesDao.pageSalesForDompany(paging, filter, dompany);
 		List<SalesVO> salesVOs = pageSales(salesPOs);
 
 		paging.setData(salesVOs);
-
 	}
 
 	@Override
@@ -175,8 +167,7 @@ public class SalesServiceImpl implements SalesService {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
-		if (userPO == null)
-			return;
+		if (userPO == null) return;
 
 		List<SalesPO> salesPOs = salesDao.pageSalesForBalanceByDompany(paging, filter, dompany);
 		List<SalesVO> salesVOs = pageSales(salesPOs);
@@ -189,14 +180,12 @@ public class SalesServiceImpl implements SalesService {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
-		if (userPO == null)
-			return;
+		if (userPO == null) return;
 
 		List<SalesPO> salesPOs = salesDao.pageSalesForPompany(paging, filters, pompany);
 		List<SalesVO> salesVOs = pageSales(salesPOs);
 
 		paging.setData(salesVOs);
-
 	}
 
 	@Override
@@ -204,14 +193,12 @@ public class SalesServiceImpl implements SalesService {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
-		if (userPO == null)
-			return;
+		if (userPO == null) return;
 
 		List<SalesPO> salesPOs = salesDao.pageSalesForBalanceByPompany(paging, filter, pompany);
 		List<SalesVO> salesVOs = pageSales(salesPOs);
 
 		paging.setData(salesVOs);
-
 	}
 
 	@Override
@@ -219,14 +206,12 @@ public class SalesServiceImpl implements SalesService {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
-		if (userPO == null)
-			return;
+		if (userPO == null) return;
 
 		List<SalesPO> salesPOs = salesDao.pageSalesForSupplier(paging, filter, company, userPO.getUid());
 		List<SalesVO> salesVOs = pageSales(salesPOs);
 
 		paging.setData(salesVOs);
-
 	}
 
 	@Override
@@ -234,8 +219,7 @@ public class SalesServiceImpl implements SalesService {
 
 		UserPO userPO = userDao.queryUserByUserId(userId);
 
-		if (userPO == null)
-			return;
+		if (userPO == null) return;
 
 		List<SalesPO> salesPOs = salesDao.pageSalesByOrderId(paging, filter, company, orderId);
 		List<SalesVO> salesVOs = pageSales(salesPOs);

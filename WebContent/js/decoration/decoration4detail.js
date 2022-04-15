@@ -11,7 +11,7 @@ jQuery(function ($) {
 		customer: {},
 		village: {},
 		versionId: "",
-		notSalesmanRate: "",//非业务人员提点
+		notSalesmanRate: "",// 非业务人员提点
 		materialPaymentListGrid: null,
 		materialPaymentGridPager: null,
 
@@ -67,7 +67,7 @@ jQuery(function ($) {
     var salesActivityItem = {
         salesActivityItemType: {},
         salesActivityItemState: {}
-    }
+    };
     
     drawNode.draw(params.viewNode);
 
@@ -181,7 +181,7 @@ jQuery(function ($) {
         deleteVillageData("floor", decorationDetail.houseItems);
     });
     decorationDetail.houseItems.door = com.focusPage("#door").on("blur", function (e) {
-        //验证房产是否存在
+        // 验证房产是否存在
         valiDateHouse(com.typeahead("no"), houseUtils.anytimevalidate(decorationDetail.houseItems, 0, false));
     });
     decorationDetail.houseItems.builtrule = com.focusPage("#builtrule");
@@ -199,7 +199,7 @@ jQuery(function ($) {
     decorationDetail.printQuotationModal = com.focusPage("#printQuotationModal");
     decorationDetail.printQuotationCNModal = com.focusPage("#printQuotationCNModal");
     
-    //申请活动
+    // 申请活动
     decorationDetail.activity.activity = com.focusPage("#activity").on("change", function () {
         
         var $this = $(this);
@@ -292,6 +292,7 @@ jQuery(function ($) {
 
     decorationDetail.activitys = com.focusPage("#activitys");
     decorationDetail.activityItems = com.focusPage("#activityItems");
+    decorationDetail.activityItemsBtn = com.focusPage("#activityItemsBtn");
     decorationDetail.activityPriceInfo = com.focusPage("#activityPriceInfo");
     decorationDetail.salesActivityItems = com.focusPage("#salesActivityItems")
 
@@ -308,43 +309,43 @@ jQuery(function ($) {
     decorationDetail.customerChangeModal = com.focusPage("#customerChangeModal");
     decorationDetail.villageChangeModal = com.focusPage("#villageChangeModal");
 
-    //参加活动
+    // 参加活动
     decorationDetail.joinDecorationActivityModal.on('hide.bs.modal', function (e) {
     	com.cleanItems(decorationDetail.decorationActivityItems);
     	com.closeTip();
     });
     
-    //申领活动物品
+    // 申领活动物品
     decorationDetail.applyDecorationActivityItemModal.on('hide.bs.modal', function (e) {
     	com.cleanItems(decorationDetail.decorationActivityItems);
     	com.closeTip();
     });
     
-    //退款款项信息
+    // 退款款项信息
     decorationDetail.refundDecorationPaymentModal.on('hide.bs.modal', function (e) {
     	com.cleanItems(decorationDetail.paymentItems);
     	com.closeTip();
     });
     
-    //款项信息
+    // 款项信息
     decorationDetail.otherPaymentModal.on('hide.bs.modal', function (e) {
     	com.cleanItems(decorationDetail.paymentItems);
     	com.closeTip();
     });
     
-    //客户信息修改
+    // 客户信息修改
     decorationDetail.customerChangeModal.on('hide.bs.modal', function (e) {
     	com.cleanItems(decorationDetail.customerItems);
     	com.closeTip();
     });
     
-    //完成装修服务
+    // 完成装修服务
     decorationDetail.serviceModal.on('hide.bs.modal', function (e) {
     	com.cleanItems(decorationDetail.serviceItems);
     	com.closeTip();
     });
     
-    //房产信息修改
+    // 房产信息修改
     decorationDetail.villageChangeModal.on('hide.bs.modal', function (e) {
     	com.cleanItems(decorationDetail.houseItems);
     	com.closeTip();
@@ -375,6 +376,8 @@ jQuery(function ($) {
         
         decorationActivity.stateTypes = res.receiveType.split("key", "value");
         decorationActivity.states = res.activityItemType.split("key", "value");
+        decorationActivity.isStatus = res.isStatus.split("key", "value");
+        decorationActivity.isAffirms = res.isAffirms.split("key", "value");
         
     }, null, false);
     
@@ -417,7 +420,7 @@ jQuery(function ($) {
 
         return false;
     });
-    //参加活动 保存按钮
+    // 参加活动 保存按钮
     com.focusPage("#submitDecorationActivityBtn").on("click", function () {
 
         if (com.validate("joinDecorationActivityModal")) {
@@ -548,7 +551,7 @@ jQuery(function ($) {
         decorationDetail.joinDecorationActivityModal.modal("show");
     });
 
-    //申领活动物品
+    // 申领活动物品
     com.focusPage("#applyActivityItemBtn").on("click", function () {
 
         com.focusPage("#things").html("");
@@ -675,7 +678,7 @@ jQuery(function ($) {
         decorationDetail.villageChangeModal.modal("show");
     });
 
-    //点击生成款项按钮
+    // 点击生成款项按钮
     com.focusPage("#btnSetDecorationPaymentInfo").on('click', function (res) {
         com.clearValidator();
 
@@ -821,7 +824,7 @@ jQuery(function ($) {
         });
     });
 
-    //生成三笔款/四笔款
+    // 生成三笔款/四笔款
     com.focusPage("#saveGenerateDecorationPaymentBtn").bindClick(function (res) {
 
         if (com.validate("quotationTotalPriceModal")) {
@@ -845,13 +848,13 @@ jQuery(function ($) {
         if (decorationDetail.orderType == 2) { // 半价/满减/捡捡
 
             var manageRate = 0;
-            //通过订单编号获取默认报价信息
+            // 通过订单编号获取默认报价信息
             com.post(api.quotation.queryQuotationForDefaultByOrderId, {"quotation.orderId": decorationDetail.decorationOrderId}, function (res) {
 
                 if (res.quotation.manageRate != null && res.quotation.manageRate != 0) {
                     manageRate = res.quotation.manageRate;
                 } else {
-                    //通过报价版本编号查询版本信息
+                    // 通过报价版本编号查询版本信息
                     com.post(api.quotation.queryQuotationVersionByVersionId, {"quotationVersion.versionId": decorationDetail.versionId}, function (data) {
                         manageRate = data.quotationVersion.manageRate;
                     }, null, false);
@@ -864,8 +867,8 @@ jQuery(function ($) {
             var id = decorationDetail.items.decorationDiscount.val();
             var decorationMaching = decorationMachingTypes[id];
 
-            var serviceRate = decorationMaching.service;//服务费配比
-            var discountBase = decorationMaching.base;//基数
+            var serviceRate = decorationMaching.service;// 服务费配比
+            var discountBase = decorationMaching.base;// 基数
             var maching = decorationMaching.material;
             var discount = decorationMaching.discount;
             var names = decorationMaching.name;
@@ -873,8 +876,8 @@ jQuery(function ($) {
             options = {
                 "decorationHolonomy.decoration.orderId": decorationDetail.decorationOrderId,
                 "decorationHolonomy.maching": maching,  // 主材配比
-                "decorationHolonomy.discount": discount,//折扣
-                "decorationHolonomy.manageRate": parseFloat(manageRate) + parseFloat(decorationDetail.notSalesmanRate),//管理费比例   非提比例
+                "decorationHolonomy.discount": discount,// 折扣
+                "decorationHolonomy.manageRate": parseFloat(manageRate) + parseFloat(decorationDetail.notSalesmanRate),// 管理费比例 非提比例
                 "decorationHolonomy.serviceRate": serviceRate,// 服务费配比
                 "decorationHolonomy.status": 0,
                 "decorationHolonomy.psId": psId,
@@ -953,6 +956,41 @@ jQuery(function ($) {
     });
 
 	initWizard(decorationDetail);
+
+    // 发送按钮
+    com.focusPage("#activityItemsBtn").on("click", "#btnNotice", function() {
+
+        var $inputs = com.focusPage('input[name="daiIds"]:checked');
+        var daiId = $inputs.val();
+        $.each($inputs, function(i, v) {
+
+            var $v = $(v);
+            if ($v.val()) {
+                if ($inputs.val() != $v.val()) {
+                    daiId += "," + $v.val();
+                }
+            }
+        });
+
+        if (daiId == null) {
+            com.showAlert(com.info, "无选中奖品");
+            return;
+        }
+
+        var options = {
+            "decorationActivityItem.content": daiId,
+            "decorationActivityItem.orderId": decorationDetail.decorationOrderId
+        };
+
+        com.showConfirm("是否发送查看通知", function() {
+            com.post(api.decoration.sendDecorationActivityItem, options, function(res) {
+            
+                com.showAlert(com.info, "操作成功");
+            });
+        
+        });
+
+    });
 
 	decorationUtils.initBaseInfo(decorationDetail.decorationOrderId, api.decoration.queryDecorationForCommonByOrderId, function (decoration) {
 
@@ -1096,7 +1134,7 @@ jQuery(function ($) {
                 case "quotation":
                     quotationUtils.loadQuotationDetail();
                     break;
-                case "presign"://预签信息
+                case "presign":// 预签信息
                     decorationUtils.initPresignDetail(decorationDetail.decorationOrderId);
                     break;
                 case "picture":
@@ -1110,7 +1148,7 @@ jQuery(function ($) {
                     params.convertActivityItemId = decorationDetail.convertActivityItemId;
                     params.activity = decorationDetail.activity;
                     decorationUtils.decorationActivityInfo(decorationDetail.activitys, wizard["activityBtnMethod"], decorationDetail.decorationOrderId);
-                    decorationUtils.decorationActivityItemInfo(decorationDetail.activityPriceInfo, decorationDetail.activityItems, wizard["uiBtnMethod"], decorationDetail.decorationOrderId, decorationActivity);
+                    decorationUtils.decorationActivityItemInfo(decorationDetail.activityPriceInfo, decorationDetail.activityItems, decorationDetail.activityItemsBtn, wizard["uiBtnMethod"], decorationDetail.decorationOrderId, decorationActivity);
                     decorationUtils.decorationSalesActivityItemInfo(decorationDetail.salesActivityItems,decorationDetail.decorationOrderId,wizard["uiBtnMethod"], salesActivityItem);
                     break;
                 case "belong":
@@ -1139,7 +1177,7 @@ jQuery(function ($) {
                 case "quotation":
                     quotationUtils.loadQuotationDetail();
                     break;
-                case "presign"://预签信息
+                case "presign":// 预签信息
                     decorationUtils.initPresignDetail(decorationDetail.decorationOrderId);
                     break;
                 case "picture":
@@ -1153,7 +1191,7 @@ jQuery(function ($) {
                     params.convertActivityItemId = decorationDetail.convertActivityItemId;
                     params.activity = decorationDetail.activity;
                     decorationUtils.decorationActivityInfo(decorationDetail.activitys, wizard["activityBtnMethod"], decorationDetail.decorationOrderId);
-                    decorationUtils.decorationActivityItemInfo(decorationDetail.activityPriceInfo, decorationDetail.activityItems, wizard["uiBtnMethod"], decorationDetail.decorationOrderId, decorationActivity);
+                    decorationUtils.decorationActivityItemInfo(decorationDetail.activityPriceInfo, decorationDetail.activityItems, decorationDetail.activityItemsBtn, wizard["uiBtnMethod"], decorationDetail.decorationOrderId, decorationActivity);
                     decorationUtils.decorationSalesActivityItemInfo(decorationDetail.salesActivityItems,decorationDetail.decorationOrderId,wizard["uiBtnMethod"], salesActivityItem);
                     break;
                 case "belong":
@@ -1284,7 +1322,7 @@ jQuery(function ($) {
                     "customerPhone.cid": v.cid,
                     "customerPhone.cpid": v.cpid
                 };
-                //先查询该电话是否被被人启用
+                // 先查询该电话是否被被人启用
                 com.post(api.data.checkCustomerForPhone, option, function (res) {
                     updateCustomerPhoneForStatus(v.cpid, 0, function () {
                         $this.removeAttr("checked");
