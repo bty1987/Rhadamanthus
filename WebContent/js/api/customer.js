@@ -3,7 +3,12 @@
 	vrecord: {url: "/views/customer/vrecord.html"},
 	vscoreRecord: {url: "/views/customer/vscoreRecord.html"},
 	vustomerAdvance : {url : "/views/customer/vustomerAdvance.html"},
-    crowd : {url : "/views/customer/crowd.html"}
+    crowd : {url : "/views/customer/crowd.html"},
+    repair: {url: "/views/customer/repair.html"},
+    repairPay: {url: "/views/customer/repairPay.html"},
+    complaint: {url: "/views/customer/complaint.html"},
+    crowdUser: {url: "/views/customer/crowdUser.html"},
+    customerRecord: {url: "/views/customer/customerRecord.html"}
 });
 
 $.extend(api, {customer: {

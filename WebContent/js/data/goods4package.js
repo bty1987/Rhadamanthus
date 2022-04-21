@@ -1,10 +1,10 @@
-$(function () {
+$(function() {
 
     var goodsSuit = {
         'flag': true,
     };
 
-    var _goodsPackage = params['goods'];
+    var _goodsPackage = params.data.goods;
 
     var $btnConfirm = $('<a></a>').addClass('btn btn-info').attr({
         'name': 'subbtn',
@@ -27,23 +27,44 @@ $(function () {
             'data-fid': fid,
             'data-num': num
         });
-        var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index'));//.text('')
+        var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index'));// .text('')
         var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col10');
         var $optWrap = $('<div></div>').addClass('line-wrap action');
-        var _lineInfoSet = [
-            {cellClass: "no blue", value: data.no},//编号
-            {cellClass: "name grey", value: data.name},//名称
-            {cellClass: "barcode grey", value: data.barcode},//条形码
-            {cellClass: "category grey", value: data.category},//品类
-            {cellClass: "brand grey", value: data.brand},//品牌
-            {cellClass: "color grey", value: colorName},//颜色
-            {cellClass: "format grey", value: formatInfo},//规格
-            {cellClass: "measurementUnit grey", value: data.measurementUnit},//单位
-            {cellClass: "number blue", value: num},//数量
-            {cellClass: "status red", value: data.status == 0 ? '启用' : '禁用'}//状态
-        ];
+        var _lineInfoSet = [{
+            cellClass: "no blue",
+            value: data.no
+        }, {
+            cellClass: "name grey",
+            value: data.name
+        }, {
+            cellClass: "barcode grey",
+            value: data.barcode
+        }, {
+            cellClass: "category grey",
+            value: data.category
+        }, {
+            cellClass: "brand grey",
+            value: data.brand
+        }, {
+            cellClass: "color grey",
+            value: colorName
+        }, {
+            cellClass: "format grey",
+            value: formatInfo
+        }, {
+            cellClass: "measurementUnit grey",
+            value: data.measurementUnit
+        }, {
+            cellClass: "number blue",
+            value: num
+        }, {
+            cellClass: "status red",
+            value: data.status == 0 ? '启用' : '禁用'
+        }];
+
         var $btndel = $('<a class="color-red red" style="font-size: 18px"><i class=" icon-remove"></i></a>');
-        $.each(_lineInfoSet, function (i, v) {
+
+        $.each(_lineInfoSet, function(i, v) {
 
             var $cell = $('<div></div>').addClass('cell ' + v.cellClass).text(v.value);
 
@@ -55,7 +76,7 @@ $(function () {
 
         $line.append($indexWrap).append($lineInfoWrap).append($optWrap);
 
-        $btndel.click(function (e) {
+        $btndel.click(function(e) {
             $(this).parents('.line.current').remove();
         });
 
@@ -69,28 +90,47 @@ $(function () {
         var $indexWrap = $('<div></div>').addClass('line-wrap order').append($('<div></div>').addClass('cell index').text(lineindex));
         var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col11');
         var $optWrap = $('<div></div>').addClass('line-wrap action');
-        var _lineInfoSet = [
-            {cellClass: "no"},//编号
-            {cellClass: "name", hasInput: !0},//名称
-            {cellClass: "barcode"},//条形码
-            {cellClass: "category"},//品类
-            {cellClass: "brand"},//品牌
-            {cellClass: "color", hasSelectColor: !0},//颜色
-            {cellClass: "format", hasSelectFormat: !0},//规格
-            {cellClass: "measurementUnit"},//单位
-            {cellClass: "accessoriesTypeName"},//辅类
-            {cellClass: "number", hasInput: !0},//数量
-            {cellClass: "status"}//状态
-        ];
+        var _lineInfoSet = [{
+            cellClass: "no"
+        }, {
+            cellClass: "name",
+            hasInput: !0
+        }, {
+            cellClass: "barcode"
+        }, {
+            cellClass: "category"
+        }, {
+            cellClass: "brand"
+        }, {
+            cellClass: "color",
+            hasSelectColor: !0
+        }, {
+            cellClass: "format",
+            hasSelectFormat: !0
+        }, {
+            cellClass: "measurementUnit"
+        }, {
+            cellClass: "accessoriesTypeName"
+        }, {
+            cellClass: "number",
+            hasInput: !0
+        }, {
+            cellClass: "status"
+        }];
+
         var $btncheck = $('<a class="color-green green" style="font-size: 18px"><i class="icon-ok"></i></a>');
         var $btndel = $('<a class="color-red red" style="font-size: 18px"><i class=" icon-remove"></i></a>');
-        $.each(_lineInfoSet, function (i, v) {
+
+        $.each(_lineInfoSet, function(i, v) {
             var $input;
             var $select;
             var $cell = $('<div></div>').addClass('cell ' + v.cellClass);
 
             if (v.hasInput) {
-                $input = $('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable v_required');
+                $input = $('<input>').prop({
+                    'type': 'text',
+                    'autocomplete': 'off'
+                }).addClass('editable v_required');
                 if (v.cellClass == "name") {
                     $input.addClass('v_required');
                 }
@@ -116,8 +156,8 @@ $(function () {
 
         $line.append($indexWrap).append($lineInfoWrap).append($optWrap);
 
-        com.initTypeahead(".name input", api.data.queryGoodsByName, "goods.name", {}, "goodes", "gid", "name", function (list, k, v) {
-            $.each(list, function (index, val) {
+        com.initTypeahead(".name input", api.data.queryGoodsByName, "goods.name", {}, "goodes", "gid", "name", function(list, k, v) {
+            $.each(list, function(index, val) {
                 if (val.gid == k) {
                     $lineInfoWrap.find('.no').text(val.no);
                     $lineInfoWrap.find('.barcode').text(val.barcode);
@@ -126,10 +166,13 @@ $(function () {
                     $lineInfoWrap.find('.measurementUnit').text(val.measurementUnit);
                     $lineInfoWrap.find('.accessoriesTypeName').text(val.accessoriesType.name == null ? "" : val.accessoriesType.name);
                     $lineInfoWrap.find('.status').text(val.status == "0" ? "启用" : "禁用");
-                    $line.attr({'data-gid': val.gid, 'data-type': val.type});
+                    $line.attr({
+                        'data-gid': val.gid,
+                        'data-type': val.type
+                    });
                     com.post(api.data.queryColorForEnableByGid, {
                         "color.gid": val.gid
-                    }, function (res) {
+                    }, function(res) {
                         if (res.colors.length != 0) {
                             goodsSuit.flag = true;
                             com.focusPage('li[data-gid="' + val.gid + '"] .color select').bindData(res.colors, "cid", "name");
@@ -138,13 +181,13 @@ $(function () {
                             com.showAlert(com.warning, '该商品暂无颜色信息,请录入')
                         }
 
-                    }, function (e) {
+                    }, function(e) {
                         com.showAlert(com.error, e.errorMsg);
                     });
 
                     com.post(api.data.queryFormatForEnableByGid, {
                         "format.gid": val.gid
-                    }, function (res) {
+                    }, function(res) {
                         if (res.formats.length != 0) {
                             goodsSuit.flag = true;
                             com.focusPage('li[data-gid="' + val.gid + '"] .format select').bindData(res.formats, "fid", "info");
@@ -153,7 +196,7 @@ $(function () {
                             com.showAlert(com.warning, '该商品暂无规格信息,请录入')
                         }
 
-                    }, function (e) {
+                    }, function(e) {
                         com.showAlert(com.error, e.errorMsg);
                     })
                 }
@@ -162,11 +205,9 @@ $(function () {
             return v;
         });
 
-        $btncheck.click(function (e) {
+        $btncheck.click(function(e) {
             e.stopPropagation();
-            if (com.validate('addGoodsPackage', 'bottom')) {
-                return;
-            }
+            if (com.validate('addGoodsPackage', 'bottom')) { return; }
             var gid = $(this).parents('li.line.current').attr('data-gid');
             var cid = $(this).parents('li.line.current').find('.color select').val();
             var colorName = $(this).parents('li.line.current').find('.color select option:selected').text();
@@ -176,27 +217,25 @@ $(function () {
             if (checkRowValue($line)) {
                 com.post(api.data.queryGoodsByGId, {
                     'goods.gid': gid
-                }, function (data) {
+                }, function(data) {
                     com.focusPage('#list').empty();
                     addline(1).addClass('current');
                     addlinePackge(data.goods, cid, colorName, fid, formatInfo, num).addClass('current').appendTo('#showList');
-                }, function (e) {
+                }, function(e) {
                     com.showAlert(com.error, e.errorMsg);
                 })
             }
 
         });
 
-        $btndel.click(function (e) {
+        $btndel.click(function(e) {
 
             com.focusPage('#list').empty();
 
             addline(1).addClass('current');
-
         });
 
         return $line;
-
     }
 
     addline(1).addClass('current');
@@ -222,14 +261,13 @@ $(function () {
         return flag;
     }
 
-    $btnConfirm.click(function (e) {
-        e.stopPropagation();
+    $btnConfirm.click(function(e) {
         var _option = {};
 
         $.extend(_option, params.goods);
 
         var packageList = com.focusPage('#showList', '#goodsSuitPopUp').find('li');
-        $.each(packageList, function (i, v) {
+        $.each(packageList, function(i, v) {
             var _this = $(v);
             _option["goodsPackages[" + i + "].goods.gid"] = _this.attr('data-gid');
             _option["goodsPackages[" + i + "].color.cid"] = _this.attr('data-cid');
@@ -242,16 +280,18 @@ $(function () {
             return false;
         }
 
-        com.post(api.data.addPackage, _option, function () {
+        com.post(api.data.addPackage, _option, function() {
 
             com.showAlert(com.info, "操作成功");
 
             com.focusPage('#showList').empty();
             com.focusPage('#list').empty();
         });
+
+        return false;
     });
 
-    $btnCancel.click(function () {
+    $btnCancel.click(function() {
         com.closePopup();
     });
 

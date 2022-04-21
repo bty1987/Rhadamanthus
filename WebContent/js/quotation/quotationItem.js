@@ -47,7 +47,7 @@ $(function() {
     };
 
     var quotation = {
-        pageType: params['urlLoadParams'].type
+        pageType: params.urlLoadParams.type
     };
 
     $.extend(com.validator, quotationItem.validator);
@@ -199,18 +199,23 @@ $(function() {
             });
 
             $btnSelection.click(function() {
-                params["qiid"] = v.qiid;
-                params["quotationItem"] = v;
+
+                params.data.quotationItem = v;
+
                 com.popup4page("#createSoodsPopUp", "/views/data/soods2create.html", "添加选材");
             });
 
             $btnNormood.click(function() {
-                params["qiid"] = v.qiid;
+
+                params.data.quotationItem = v;
+
                 com.popup4page("#normoodPopUp", "/views/data/normood.html", "定额材料");
             });
 
             $btnNormrice.click(function() {
-                params["qiid"] = v.qiid;
+
+                params.data.quotationItem = v;
+
                 com.popup4page("#normricePopUp", "/views/data/normrice.html", "定额工费");
             });
 
@@ -408,8 +413,7 @@ $(function() {
                 quotationItem.modals.quotationItemModal.modal("hide");
             }, null, false);
         }
-    }
-    ;
+    };
 
     // 启用禁用功能
     function updateStatus(id, status, failcallBack) {
@@ -418,8 +422,7 @@ $(function() {
             "quotationItem.qiid": id,
             "quotationItem.status": status
         });
-    }
-    ;
+    };
 
     // 是否打折设置
     function updateDiscount(id, discount, failcallBack) {
@@ -428,8 +431,7 @@ $(function() {
             "quotationItem.qiid": id,
             "quotationItem.discount": discount
         });
-    }
-    ;
+    };
 
     function queryQuotationBigCategory(quotationType) {
         com.post(api.quotation.queryQuotationBigCategory, {
@@ -438,8 +440,7 @@ $(function() {
             quotationItem.items.quotationBigCategory.bindData(a.quotationBigCategorys, "id", "name");
             quotationItem.items.quotationBigCategory.prepend("<option value='0' selected='selected'>请选择类型</option>");
         }, null, false);
-    }
-    ;
+    };
 
     function queryQuotationSmallCategory(quotationType) {
         com.post(api.quotation.queryQuotationSmallCategory, {
@@ -448,8 +449,7 @@ $(function() {
             quotationItem.items.quotationSmallCategory.bindData(a.quotationSmallCategorys, "id", "name");
             quotationItem.items.quotationSmallCategory.prepend("<option value='0' selected='selected'>请选择类型</option>");
         }, null, false);
-    }
-    ;
+    };
 
     function openModal() {
         quotationItem.items.quotationBigCategory.html('');
@@ -457,8 +457,7 @@ $(function() {
         quotationItem.items.quotationBigCategory.prepend("<option value='0' selected='selected'>请选择类型</option>");
         quotationItem.items.quotationSmallCategory.prepend("<option value='0' selected='selected'>请选择类型</option>");
         quotationItem.items.unitPrice.removeAttr('readonly').val('');
-    }
-    ;
+    };
 
     function checkItemName() {
 
@@ -480,8 +479,7 @@ $(function() {
                 }
             });
         }
-    }
-    ;
+    };
 
     function initQuotationItemList(versionId) {
 

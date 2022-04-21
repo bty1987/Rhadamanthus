@@ -110,10 +110,10 @@ $(function() {
                 flag = true;
                 if (id == "houseType") {
                     var statuses = ["初始", "定金"];
-                    if (statuses.indexOf(params.orederStatus)) {
+                    if (statuses.indexOf(params.decoration.orederStatus)) {
                         button.prop("disabled", false);
                     } else {
-                        params.orederStatus == "已签约" ? button.prop("disabled", true) : button.prop("disabled", false);
+                        params.decoration.orederStatus == "已签约" ? button.prop("disabled", true) : button.prop("disabled", false);
                     }
                 }
             }
@@ -252,7 +252,8 @@ $(function() {
 
         , createDiv("tab-content").append(createDiv("tab-pane in active", "salesResultList" + conf, "margin-left: -12px;"), createDiv("tab-pane", "oalesResultList" + conf, "margin-left: -12px;"), createDiv("tab-pane", "salesMaterialPayments" + conf, "margin-left: -12px;"), createDiv("tab-pane", "fanglinMaterialPayments" + conf, "margin-left: -12px;")).append(createDiv("fl-page-wrap clearfix hidden", "pagenation"))));
 
-        var right = createDiv("col-xs-6 col-md-6 widget-container-span ui-sortable ").append(createDiv("tabbable").append(createUl("myTab", "nav nav-tabs", "margin-top: 7px;").append(createLi("active").append($("<a></a>").attr("data-toggle", "tab").attr("href", "#materialPaymentBrands" + conf).css("color", "#4383b4").append($("<strong></strong>").text("品牌汇总"))),createLi().append($("<a></a>").attr("data-toggle", "tab").attr("href", "#oalesPaymentBrands" + conf).css("color", "#4383b4").append($("<strong></strong>").text("外销品牌"))), createLi().append($("<a></a>").attr("data-toggle", "tab").attr("href", "#materialPurchasedCategory" + conf).css("color", "#4383b4").append($("<strong></strong>").text("已购品类"))), createLi().append($("<a></a>").attr("data-toggle", "tab").attr("href", "#materialUnpurchasedCategory" + conf).css("color", "#4383b4").append($("<strong></strong>").text("未购品类")))), createDiv("tab-content").append(createDiv("tab-pane in active", "materialPaymentBrands" + conf, "margin-left: -12px;"), createDiv("tab-pane", "oalesPaymentBrands" + conf, "margin-left: -12px;"),  createDiv("tab-pane", "materialPurchasedCategory" + conf, "margin-left: -12px;"), createDiv("tab-pane", "materialUnpurchasedCategory" + conf, "margin-left: -12px;"))));
+        var right = createDiv("col-xs-6 col-md-6 widget-container-span ui-sortable ").append(createDiv("tabbable").append(createUl("myTab", "nav nav-tabs", "margin-top: 7px;").append(createLi("active").append($("<a></a>").attr("data-toggle", "tab").attr("href", "#materialPaymentBrands" + conf).css("color", "#4383b4").append($("<strong></strong>").text("品牌汇总"))), createLi().append($("<a></a>").attr("data-toggle", "tab").attr("href", "#oalesPaymentBrands" + conf).css("color", "#4383b4").append($("<strong></strong>").text("外销品牌"))), createLi().append($("<a></a>").attr("data-toggle", "tab").attr("href", "#materialPurchasedCategory" + conf).css("color", "#4383b4").append($("<strong></strong>").text("已购品类"))), createLi().append($("<a></a>").attr("data-toggle", "tab").attr("href", "#materialUnpurchasedCategory" + conf).css("color", "#4383b4").append($("<strong></strong>").text("未购品类")))), createDiv("tab-content")
+            .append(createDiv("tab-pane in active", "materialPaymentBrands" + conf, "margin-left: -12px;"), createDiv("tab-pane", "oalesPaymentBrands" + conf, "margin-left: -12px;"), createDiv("tab-pane", "materialPurchasedCategory" + conf, "margin-left: -12px;"), createDiv("tab-pane", "materialUnpurchasedCategory" + conf, "margin-left: -12px;"))));
 
         var layerPopUp = createDiv("portlet box page-content").attr("id", "layerPopUp");
         row.append(left, right, layerPopUp);
@@ -260,7 +261,7 @@ $(function() {
     }
 
     function drawActivity(conf) {
-        var row = createDiv("row").append(createDiv("col-md-12").append(createButton(conf, "joinActivityBtn", "btn btn-info", "参加活动", "button", '<i class="icon-cog bigger-110"></i>'), createButton(conf, "applyActivityItemBtn", "btn btn-info", "申领活动物品", "button", '<i class="icon-cog bigger-110"></i>').attr("style", "margin: 0 6px"), createDiv("col-sm-6", "activityPriceInfo").attr("style", "padding:0px;float:right;text-align:right;")), createDiv("col-md-12 hr"), createDiv("col-md-12", null, "padding: 0;margin: 0 8px;font-size: 24px;color: #2679b5;").html("装修活动"), createDiv("col-md-12", "activitys"), createDiv("col-md-12 hr"), createDiv("col-md-12", null, "padding: 0;margin: 0 8px;font-size: 24px;color: #2679b5;").html("装修活动物品"), createDiv("col-md-12", "activityItems"), createDiv("col-md-12", "activityItemsBtn") , createDiv("col-md-12 hr"), createDiv("col-md-12", null, "padding: 0;margin: 0 8px;font-size: 24px;color: #2679b5;").html("销售活动物品"), createDiv("col-md-12", "salesActivityItems"));
+        var row = createDiv("row").append(createDiv("col-md-12").append(createButton(conf, "joinActivityBtn", "btn btn-info", "参加活动", "button", '<i class="icon-cog bigger-110"></i>'), createButton(conf, "applyActivityItemBtn", "btn btn-info", "申领活动物品", "button", '<i class="icon-cog bigger-110"></i>').attr("style", "margin: 0 6px"), createDiv("col-sm-6", "activityPriceInfo").attr("style", "padding:0px;float:right;text-align:right;")), createDiv("col-md-12 hr"), createDiv("col-md-12", null, "padding: 0;margin: 0 8px;font-size: 24px;color: #2679b5;").html("装修活动"), createDiv("col-md-12", "activitys"), createDiv("col-md-12 hr"), createDiv("col-md-12", null, "padding: 0;margin: 0 8px;font-size: 24px;color: #2679b5;").html("装修活动物品"), createDiv("col-md-12", "activityItems"), createDiv("col-md-12", "activityItemsBtn"), createDiv("col-md-12 hr"), createDiv("col-md-12", null, "padding: 0;margin: 0 8px;font-size: 24px;color: #2679b5;").html("销售活动物品"), createDiv("col-md-12", "salesActivityItems"));
 
         return [row];
     }

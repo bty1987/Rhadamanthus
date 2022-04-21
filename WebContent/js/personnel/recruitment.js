@@ -133,11 +133,11 @@ jQuery(function($) {
         {field: "status", name: "状态", prop: "status", clazz: "red", dataset: recruitment.status},
     ];
 
-    //字段上的功能按钮
+    // 字段上的功能按钮
     var linebtns = [
         {name: "查看", clazz: "btn-blue", handle: function (v) {
                 params['rid'] = v.rid;
-                com.popup4page("#layerPopUp", "/views/personnel/selectRecruitment.html", "查看 ");
+                com.popup4page("#layerPopUp", api.index.selectRecruitment.url, "查看 ");
                 return false;
             },show: function(v){
                 return (v.status !=2);
@@ -153,7 +153,7 @@ jQuery(function($) {
         },
         {name: "编辑", clazz: "btn-success", handle: function (v) {
                 params['rid'] = v.rid;
-                com.popup4page("#layerPopUp", "/views/personnel/updateRecruitment.html", "编辑",  null,function (){
+                com.popup4page("#layerPopUp", api.index.updateRecruitment.url, "编辑",  null,function (){
                     searcher.doSearch();
                 });
                 return false;
@@ -163,7 +163,7 @@ jQuery(function($) {
         },
         {name: "教育信息", clazz: "btn-yellow", handle: function (v) {
                 params['rid'] = v.rid;
-                com.popup4page("#layerPopUp", "/views/personnel/recruitmentEducation.html", "教育信息");
+                com.popup4page("#layerPopUp", api.index.recruitmentEducation.url, "教育信息");
                 return false;
             },show: function(v){
                 return (v.status == 0);
@@ -171,7 +171,7 @@ jQuery(function($) {
         },
         {name: "工作信息", clazz: "btn-pink", handle: function (v) {
                 params['rid'] = v.rid;
-                com.popup4page("#layerPopUp", "/views/personnel/recruitmentOperation.html", "工作信息");
+                com.popup4page("#layerPopUp", api.index.recruitmentOperation.url, "工作信息");
                 return false;
             },show: function(v){
                 return (v.status == 0);
@@ -193,7 +193,7 @@ jQuery(function($) {
             initUser(v);
             return false;
             },show: function(v){
-            	 return(v.status == 0);
+                 return(v.status == 0);
             }
         },
     ];
@@ -208,7 +208,7 @@ jQuery(function($) {
 
     });
     
-    //添加
+    // 添加
     function AddsaveData(){
 
         if(com.validate('addRecruitment'))  return false;
@@ -230,7 +230,7 @@ jQuery(function($) {
         });
     }
 
-    //弹窗
+    // 弹窗
      function save(){
          com.post(api.personel.queryRecruitmentByRid, {"recruitment.rid": recruitment.rid}, function(v){
              saveData(v);
@@ -238,7 +238,7 @@ jQuery(function($) {
 
      }
 
-    //入职
+    // 入职
     function saveData(v) {
 
         if(com.validate("enterModal") || !recruitment.loginFlag){
@@ -328,7 +328,7 @@ jQuery(function($) {
         });
     }
 
-	function saveBtns(){
+    function saveBtns(){
 
         parm = {
             "recruitment.rid": recruitment.rid,
@@ -345,40 +345,40 @@ jQuery(function($) {
             recruitment.modals.pictureModal.modal("hide");
             searcher.doSearch();
         });
-	};
+    };
 
-	function removePicture(){
-		com.focusPage("#showImg").attr("src","#");
-		com.focusPage("#picture").val("");
-		com.focusPage("#photoPath").attr("href","javascript:void(0)");
-	}
+    function removePicture(){
+        com.focusPage("#showImg").attr("src","#");
+        com.focusPage("#picture").val("");
+        com.focusPage("#photoPath").attr("href","javascript:void(0)");
+    }
 
-	com.uploadify("#pictureUpload", "上传图片", api.common.uploadImg, 'btn btn-success blue col-md-12', '*.jpg;*.jpge;*.gif;*.png', {'uploadType': 0}, 1, function(data){
-		com.focusPage("#picture").val(data.resUrl);
-		com.focusPage("#photoPath").attr("href", com.showImg(com.focusPage("#showImg"), data.resUrl, 150, 150, ''));
-	});
+    com.uploadify("#pictureUpload", "上传图片", api.common.uploadImg, 'btn btn-success blue col-md-12', '*.jpg;*.jpge;*.gif;*.png', {'uploadType': 0}, 1, function(data){
+        com.focusPage("#picture").val(data.resUrl);
+        com.focusPage("#photoPath").attr("href", com.showImg(com.focusPage("#showImg"), data.resUrl, 150, 150, ''));
+    });
 
-	function removePicture1(){
-		com.focusPage("#showImg1").attr("src","#");
-		com.focusPage("#picture1").val("");
-		com.focusPage("#identityPathF").attr("href","javascript:void(0)");
-	}
+    function removePicture1(){
+        com.focusPage("#showImg1").attr("src","#");
+        com.focusPage("#picture1").val("");
+        com.focusPage("#identityPathF").attr("href","javascript:void(0)");
+    }
 
-	com.uploadify("#pictureUpload1", "上传图片", api.common.uploadImg, 'btn btn-success blue col-md-12', '*.jpg;*.jpge;*.gif;*.png', {'uploadType': 0}, 1, function(data){
-		com.focusPage("#picture1").val(data.resUrl);
-		com.focusPage("#identityPathF").attr("href", com.showImg(com.focusPage("#showImg1"), data.resUrl, 360, 260, ''));
-	});
+    com.uploadify("#pictureUpload1", "上传图片", api.common.uploadImg, 'btn btn-success blue col-md-12', '*.jpg;*.jpge;*.gif;*.png', {'uploadType': 0}, 1, function(data){
+        com.focusPage("#picture1").val(data.resUrl);
+        com.focusPage("#identityPathF").attr("href", com.showImg(com.focusPage("#showImg1"), data.resUrl, 360, 260, ''));
+    });
 
-	function removePicture2(){
-		com.focusPage("#showImg2").attr("src","#");
-		com.focusPage("#picture2").val("");
-		com.focusPage("#identityPathB").attr("href","javascript:void(0)");
-	}
+    function removePicture2(){
+        com.focusPage("#showImg2").attr("src","#");
+        com.focusPage("#picture2").val("");
+        com.focusPage("#identityPathB").attr("href","javascript:void(0)");
+    }
 
-	com.uploadify("#pictureUpload2", "上传图片", api.common.uploadImg, 'btn btn-success blue col-md-12', '*.jpg;*.jpge;*.gif;*.png', {'uploadType': 0}, 1, function(data){
-		com.focusPage("#picture2").val(data.resUrl);
-		com.focusPage("#identityPathB").attr("href", com.showImg(com.focusPage("#showImg2"), data.resUrl, 360, 260, ''));
-	});
+    com.uploadify("#pictureUpload2", "上传图片", api.common.uploadImg, 'btn btn-success blue col-md-12', '*.jpg;*.jpge;*.gif;*.png', {'uploadType': 0}, 1, function(data){
+        com.focusPage("#picture2").val(data.resUrl);
+        com.focusPage("#identityPathB").attr("href", com.showImg(com.focusPage("#showImg2"), data.resUrl, 360, 260, ''));
+    });
 
 });
 

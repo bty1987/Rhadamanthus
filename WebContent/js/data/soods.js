@@ -1,4 +1,4 @@
-$(function () {
+$(function() {
 
     var soods = {
         gid: null,
@@ -14,7 +14,7 @@ $(function () {
             uSelling: com.focusPage("#uSelling")
         },
 
-        drawingModal: com.focusPage('#drawingModal').on("show.bs.modal", function (a) {
+        drawingModal: com.focusPage('#drawingModal').on("show.bs.modal", function(a) {
             com.clearValidator();
         }),
 
@@ -24,13 +24,13 @@ $(function () {
         updateSoodsItemBtn: com.focusPage("#updateSoodsItemBtn"),
         submitBtn: com.focusPage("#submitBtn"),
         withdrawBtn: com.focusPage("#withdrawBtn"),
-        pageType: params['urlLoadParams'].type,
+        pageType: params.urlLoadParams.type,
     };
 
     soods.withdrawBtn.bindClick(saveData);
     soods.updateSoodsItemBtn.bindClick(updateData);
 
-    soods.addSoodsModal.on("hide.bs.modal", function (e) {
+    soods.addSoodsModal.on("hide.bs.modal", function(e) {
         com.clearValidator();
         com.cleanTypeahead("goodsName");
         com.cleanItems(soods.items);
@@ -45,14 +45,14 @@ $(function () {
 
     com.initTypeahead('goodsName', api.data.queryGoodsByName, "goods.name", {}, "goodes", "gid", "name", null);
 
-    var displayFunc = (function () {
+    var displayFunc = (function() {
 
-        var renderList = function (tableId, listData) {
+        var renderList = function(tableId, listData) {
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
-                $.each(listData, function (i, v) {
+                $.each(listData, function(i, v) {
                     creatLine(v).appendTo($ul);
                 });
 
@@ -60,12 +60,17 @@ $(function () {
             }
         };
 
-        var creatLine = function (v) {
+        var creatLine = function(v) {
 
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $contentWrap = $('<div style="float: left;"></div>').css("text-align", "center").css("width", "75px").css("margin-right", "10px");
             var $imgDiv = $('<div></div>').addClass('cell').appendTo($contentWrap);
-            $imgDiv.qrcode({render: "canvas", width: 75, height: 75, text: "" + v.sid});
+            $imgDiv.qrcode({
+                render: "canvas",
+                width: 75,
+                height: 75,
+                text: "" + v.sid
+            });
             $('<span></span>').css("font-size", "1px").html(v.goods.name).appendTo($contentWrap);
 
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue'));
@@ -77,23 +82,17 @@ $(function () {
             var $btnProject = $('<a></a>').addClass('btn btn-minier btn-warning').html('项目');
             var $drawingedit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('图片');
 
-
             var $invalid = $('<div></div>').addClass('pull-right');
-            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type": "checkbox"});
+            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({
+                "type": "checkbox"
+            });
             var $span = $('<span></span>').addClass('lbl status-lbl');
 
             if (soods.pageType != "basic") {
                 $invalid.append($statusSwitch).append($span);
                 $divBtnWrap.append($invalid).appendTo($h3);
             }
-            var propertyArr = [
-                ["品牌: ", v.goods.brand, "grey"],
-                ["品类: ", v.goods.category, "grey"],
-                ["单位: ", v.goods.measurementUnit, "red"],
-                ["结算价: ", v.selling, "blue"],
-                ["数量: ", v.num, "blue"],
-                ["状态: ", v.status == 0 ? "有效" : "无效", "red"],
-            ];
+            var propertyArr = [["品牌: ", v.goods.brand, "grey"], ["品类: ", v.goods.category, "grey"], ["单位: ", v.goods.measurementUnit, "red"], ["结算价: ", v.selling, "blue"], ["数量: ", v.num, "blue"], ["状态: ", v.status == 0 ? "有效" : "无效", "red"], ];
             var $label = $('<label></label>');
             var $input = $('<input>').attr({
                 "type": "checkbox",
@@ -109,7 +108,7 @@ $(function () {
                 var $span = $('<span></span>').addClass('lbl blue bigger-150').html(v.goods.name);
             }
 
-            $.each(propertyArr, function (index, value) {
+            $.each(propertyArr, function(index, value) {
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -117,10 +116,9 @@ $(function () {
             });
             if (soods.pageType == "basic") {
                 $divBtnWrap.append($btnDelete).append($btnProject).append($drawingedit).appendTo($h3);
-            }else {
+            } else {
                 $divBtnWrap.append($btnProject).append($btnCompile).appendTo($h3);
             }
-
 
             $label.append($input).append($span).appendTo($h3);
 
@@ -130,10 +128,10 @@ $(function () {
 
             !v.status && $statusSwitch.prop("checked", true);
 
-            $btnProject.click(function () {
-                params["soods"] = v;
-                params["goods"] = v.goods;
-                params["sid"] = v.sid;
+            $btnProject.click(function() {
+
+                params.data.soods = v;
+
                 com.popup4page("#quotationItemPopUp", "/views/data/soodsItem.html", "项目");
             });
 
@@ -142,8 +140,8 @@ $(function () {
                 soods.updateSoodsModal.modal("show");
             });
 
-            $btnDelete.click(function () {
-                com.showConfirm("是否确认删除", function () {
+            $btnDelete.click(function() {
+                com.showConfirm("是否确认删除", function() {
                     var options = {
                         "soods.sid": v.sid,
                         "soods.status": v.status,
@@ -152,19 +150,19 @@ $(function () {
                 });
             });
 
-            $drawingedit.click(function () {
+            $drawingedit.click(function() {
                 params.sid = v.sid;
                 soods.vid = v.sid;
                 managedrawing(v.sid);
             });
 
-            $statusSwitch.click(function () {
+            $statusSwitch.click(function() {
 
                 var options = {};
                 options["soodes[" + [0] + "].sid"] = v.sid;
                 options["soodes[" + [0] + "].status"] = $statusSwitch.prop("checked") ? 0 : 1;
 
-                com.post(api.data.updateSoodsForStatus, options, function () {
+                com.post(api.data.updateSoodsForStatus, options, function() {
                     searcher.doSearch();
                 });
             });
@@ -173,22 +171,22 @@ $(function () {
         };
 
         return {
-            init: function (tableId, listData) {
-                 com.focusPage('#' + tableId).html(null);
+            init: function(tableId, listData) {
+                com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
-            drawLine: function (v) {
+            drawLine: function(v) {
                 return creatLine(v);
             }
         }
     })();
 
     var searcher = new Searcher();
-    var condCodeArrs = ["data-soods-name", "data-soods-category", "data-soods-brand","data-soods-status"];
+    var condCodeArrs = ["data-soods-name", "data-soods-category", "data-soods-brand", "data-soods-status"];
 
-    searcher.init(condCodeArrs, "condList", api.data.pageSoods, function (data) {
+    searcher.init(condCodeArrs, "condList", api.data.pageSoods, function(data) {
         displayFunc.init('resultList', data);
-    }, "pagenation", "soodsPostData", null, false, null, function () {
+    }, "pagenation", "soodsPostData", null, false, null, function() {
 
         var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import');
         var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
@@ -202,23 +200,25 @@ $(function () {
         var $stopi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($stopa);
         var $stopspan = $('<span></span>').text('禁用').appendTo($stopa);
 
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addSoodsModal').css({'margin-left': '4px'});
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addSoodsModal').css({
+            'margin-left': '4px'
+        });
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        $adda.click(function (e) {
+        $adda.click(function(e) {
             soods.addSoodsModal.modal("show");
         });
 
-        $impa.click(function () {
+        $impa.click(function() {
             exportPurchase();
         });
 
-        $starta.click(function () {
+        $starta.click(function() {
             batchUpdateStatus(0);
         });
 
-        $stopa.click(function () {
+        $stopa.click(function() {
             batchUpdateStatus(1);
         });
         if (soods.pageType == "basic") {
@@ -234,7 +234,7 @@ $(function () {
 
         var options = {};
 
-        $.each(checkbox, function (i, v) {
+        $.each(checkbox, function(i, v) {
             var $v = $(v);
             if ($v.val()) {
                 options["soodes[" + i + "].sid"] = $v.val();
@@ -242,13 +242,13 @@ $(function () {
             }
         });
 
-        com.post(api.data.updateSoodsForStatus, options, function (res) {
+        com.post(api.data.updateSoodsForStatus, options, function(res) {
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
         });
     }
 
-    //导出excel
+    // 导出excel
     function exportPurchase() {
 
         if (com.focusPage('span[name="totalRecords"]').text() == 0) {
@@ -261,25 +261,19 @@ $(function () {
             return false;
         }
 
-        com.post(api.data.pageSoods, $.extend({}, params.soodsPostData, {"paging.noPage": 1}), function (res) {
+        com.post(api.data.pageSoods, $.extend({}, params.soodsPostData, {
+            "paging.noPage": 1
+        }), function(res) {
 
             $.exceler({
-                column: [
-                    ["名称: ", 'goods.name'],
-                    ["品牌: ", 'goods.brand'],
-                    ["品类: ", 'goods.category'],
-                    ["单位: ", 'goods.measurementUnit'],
-                    ["结算价: ", 'selling'],
-                    ["数量: ", 'num'],
-                    ["状态: ", 'status == 0 ? "有效" : "无效"']
-                ],
+                column: [["名称: ", 'goods.name'], ["品牌: ", 'goods.brand'], ["品类: ", 'goods.category'], ["单位: ", 'goods.measurementUnit'], ["结算价: ", 'selling'], ["数量: ", 'num'], ["状态: ", 'status == 0 ? "有效" : "无效"']],
                 list: res.paging.data
             });
         });
     }
 
     function deleteSoods(options) {
-        com.post(api.data.deleteSoods, options, function (res) {
+        com.post(api.data.deleteSoods, options, function(res) {
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
         }, null, false);
@@ -287,16 +281,14 @@ $(function () {
     };
 
     function updateData() {
-        if (com.validate('updateSoodsModal')) {
-            return false;
-        }
+        if (com.validate('updateSoodsModal')) { return false; }
 
         var option = {
             "soods.sid": soods.sid,
             "soods.selling": soods.uitems.uSelling.val()
         };
 
-        com.post(api.data.updateSoods, option, function(e){
+        com.post(api.data.updateSoods, option, function(e) {
             displayFunc.init();
             com.showAlert(com.info, "操作成功");
             soods.updateSoodsModal.modal("hide");
@@ -307,9 +299,7 @@ $(function () {
 
     function saveData() {
 
-        if (com.validate('addSoodsModal')) {
-            return false;
-        }
+        if (com.validate('addSoodsModal')) { return false; }
 
         var gid = com.typeahead("goodsName");
 
@@ -325,7 +315,7 @@ $(function () {
             "soods.selling": soods.items.selling.val(),
         };
 
-        com.post(api.data.addSoods, option, function (e) {
+        com.post(api.data.addSoods, option, function(e) {
             displayFunc.init();
             com.showAlert(com.info, "操作成功");
             soods.addSoodsModal.modal("hide");
@@ -335,10 +325,13 @@ $(function () {
     function managedrawing(sid) {
         soods.drawingModal.modal("show");
         com.focusPage('#soodsDrawing').html("");
-        com.post(api.communion.queryDataDrawing, {"dataDrawing.sid": sid, "dataDrawing.type": 4}, function (data) {
+        com.post(api.communion.queryDataDrawing, {
+            "dataDrawing.sid": sid,
+            "dataDrawing.type": 4
+        }, function(data) {
             var soodsSourcePics = data.dataDrawings;
             if (soodsSourcePics && soodsSourcePics.length) {
-                $.each(soodsSourcePics, function (i, value) {
+                $.each(soodsSourcePics, function(i, value) {
                     appendGalleryElement("soodsDrawing", value);
                 });
                 com.popup4photos("#soodsDrawing");
@@ -349,7 +342,9 @@ $(function () {
     // 上传图片
     function initUploadBtn() {
 
-        com.uploadify("#soodsUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {'uploadType': 0}, 1, function(data){
+        com.uploadify("#soodsUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {
+            'uploadType': 0
+        }, 1, function(data) {
             var options = {};
 
             options["dataDrawing.sid"] = params.sid;
@@ -358,7 +353,7 @@ $(function () {
             options["dataDrawing.drawingType"] = 0;
             options["dataDrawing.type"] = 4;
 
-            com.post(api.communion.addDataDrawing, options, function (res) {
+            com.post(api.communion.addDataDrawing, options, function(res) {
                 var drawing = res.dataDrawing;
 
                 appendGalleryElement("soodsDrawing", drawing);
@@ -376,13 +371,14 @@ $(function () {
         var imgA = $("<a></a>").addClass('cboxElement').attr("target", "_blank").css("height", "150px").append(img).appendTo(imgLi);
         com.showImg(img, value.drawingUrl, 150, 150, value.name, null, value.drawingType);
         var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
-        var toolsA = $("<a></a>").attr("href", "#").on("click", function () {
-            com.post(api.communion.deleteDataDrawing, {"dataDrawing.ddid": value.ddid}, function (res) {
+        var toolsA = $("<a></a>").attr("href", "#").on("click", function() {
+            com.post(api.communion.deleteDataDrawing, {
+                "dataDrawing.ddid": value.ddid
+            }, function(res) {
                 com.focusPage("#gallery_li" + value.ddid).remove();
             });
         }).appendTo(toolsDiv);
         $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
     }
-
 
 });

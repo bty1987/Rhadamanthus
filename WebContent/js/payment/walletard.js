@@ -1,9 +1,10 @@
-$(function () {
+$(function() {
+
     var walletard = {
         items: {
             bankNo: com.focusPage("#bankNo", "#walletard"),
             bankName: com.focusPage("#bankName", "#walletard"),
-            validTime : com.focusPage("#validTime ", "#walletard"),
+            validTime: com.focusPage("#validTime ", "#walletard"),
             cvv: com.focusPage("#cvv", "#walletard"),
             type: com.focusPage("#type", "#walletard"),
             mobile: com.focusPage("#mobile", "#walletard"),
@@ -22,24 +23,28 @@ $(function () {
         countdown: 60
     };
 
-    //绑定银行卡
+    // 绑定银行卡
     walletard.btns.bindCardBtn.click(bindCard);
-    walletard.btns.bindCardgetCode.click(function(){
-        paymentUtils.getCode(this, walletard, params.phone);
+    walletard.btns.bindCardgetCode.click(function() {
+        paymentUtils.getCode(this, walletard, params.payment.phone);
     });
 
-    walletard.modals.bindCardModal.on('hide.bs.modal', function () {
+    walletard.modals.bindCardModal.on('hide.bs.modal', function() {
+
         com.closeTip();
         com.cleanItems(walletard.items);
         walletard.phoneCode = null;
     });
 
-    com.post(api.ds.payment, {}, function(res){
-        $.each(res.walletardStatus, function(i, v){
+    com.post(api.ds.payment, {}, function(res) {
+
+        $.each(res.walletardStatus, function(i, v) {
+
             walletard.status[v.key] = v.value;
         });
 
-        $.each(res.walletardType, function(i, v){
+        $.each(res.walletardType, function(i, v) {
+
             walletard.types[v.key] = v.value;
         });
 
@@ -50,13 +55,15 @@ $(function () {
 
     initRecord();
 
-    var displayFunc = (function () {
+    var displayFunc = (function() {
 
-        var renderList = function (tableId, listData) {
+        var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
             if (listData && listData.length) {
-                $.each(listData, function (i, v) {
+                $.each(listData, function(i, v) {
+
                     var $liLine = creatLine(v);
                     $liLine.appendTo($ul);
                 });
@@ -64,7 +71,8 @@ $(function () {
             }
         };
 
-        var creatLine = function (v) {
+        var creatLine = function(v) {
+
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.bankName));
@@ -82,27 +90,34 @@ $(function () {
                 ["绑定时间:", v.bindTime, "green"],
                 ["备注:", v.comment, "grey"]
             ];
-            $.each(customersArr, function (index, value) {
+            $.each(customersArr, function(index, value) {
+
                 var $Lics = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($Lics);
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($Lics);
                 $Lics.appendTo($ulProperty);
             });
 
-            //解绑
-            $unbind.click(function(){
+            // 解绑
+            $unbind.click(function() {
+
                 com.showConfirm("确认要解绑当前银行卡吗?", function(res) {
-                    com.post(api.payment.unbindWalletard, {"walletard.wcid": v.wcid}, function(res){
+
+                    com.post(api.payment.unbindWalletard, {"walletard.wcid": v.wcid}, function(res) {
+
                         com.showAlert(com.info, "解绑成功");
                         initRecord();
                     });
                 });
             });
 
-            //删除
-            $delete.click(function(){
+            // 删除
+            $delete.click(function() {
+
                 com.showConfirm("确认要删除当前银行卡吗?", function(res) {
-                    com.post(api.payment.deleteWalletard, {"walletard.wcid": v.wcid}, function(res){
+
+                    com.post(api.payment.deleteWalletard, {"walletard.wcid": v.wcid}, function(res) {
+
                         com.showAlert(com.info, "删除成功");
                         initRecord();
                     });
@@ -118,39 +133,46 @@ $(function () {
             return $liLine;
         };
         return {
-            init: function (tableId, listData) {
+            init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
-            drawLine: function (v) {
+            drawLine: function(v) {
+
                 return creatLine(v);
             }
         };
     })();
 
-    function initRecord(){
-        com.post(api.payment.queryWalletard, {"walletard.wid": params.wid}, function (res) {
+    function initRecord() {
+
+        com.post(api.payment.queryWalletard, {"walletard.wid": params.payment.wid}, function(res) {
+
             displayFunc.init('walletardResultList', res.walletards);
         });
     }
 
-    //银行卡弹窗
-    com.focusPage("#bindCard").click(function(){
+    // 银行卡弹窗
+    com.focusPage("#bindCard").click(function() {
+
         walletard.modals.bindCardModal.modal("show");
     });
 
-    //绑定银行卡
-    function bindCard(){
-        if (com.validate("bindCardModal")) return;
+    // 绑定银行卡
+    function bindCard() {
 
-        //验证二维码
-        if(walletard.items.bindCardcode.val() != walletard.phoneCode){
+        if (com.validate("bindCardModal"))
+            return;
+
+        // 验证二维码
+        if (walletard.items.bindCardcode.val() != walletard.phoneCode) {
             com.showAlert(com.error, "验证码错误");
             return false;
         }
 
         var options = {
-            "walletard.wid": params.wid,
+            "walletard.wid": params.payment.wid,
             "walletard.bankNo": walletard.items.bankNo.val(),
             "walletard.bankName": walletard.items.bankName.val(),
             "walletard.validTime": walletard.items.validTime.val(),
@@ -159,7 +181,8 @@ $(function () {
             "walletard.mobile": walletard.items.mobile.val()
         };
 
-        com.post(api.payment.bindWalletard, options, function(res){
+        com.post(api.payment.bindWalletard, options, function(res) {
+
             initRecord();
             com.showAlert(com.info, "绑定成功");
             walletard.modals.bindCardModal.modal("hide");

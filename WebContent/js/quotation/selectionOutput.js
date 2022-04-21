@@ -96,7 +96,7 @@ var printselectionDetail = (function() {
 
                 $.each(items, function(j, v) {
 
-                    if (params.supplierPage == true && params.userInfo.user.uid != v.suid)
+                    if (params.quotation.supplierPage == true && params.userInfo.user.uid != v.suid)
                         return true;
 
                     var num = [2, 4].indexOf(v.type) != -1 ? -v.num : v.num;
@@ -170,7 +170,7 @@ var printselectionDetail = (function() {
     return {
         init: function() {
 
-            selectionDetail.orderId = params.selectionOrderId;
+            selectionDetail.orderId = params.quotation.orderId;
 
             com.post(api.ds.quotation, {}, function(res) {
                 selectionDetail.types = res.selectionItemType.split("key", "value");

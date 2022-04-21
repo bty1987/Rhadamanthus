@@ -2,13 +2,14 @@ jQuery(function($) {
 
     var addReduce = {
 
-        decorationOrderId: params.decorationOrderId,
+        orderId: params.quotation.orderId,
 
         arid: null,
 
         items: {
             addReduceDes: com.focusPage("#addReduceDes"),
             addReduceType: com.focusPage("#addReduceType"),
+            atttype: com.focusPage("#addReduceAtttype"),
             paytype: com.focusPage("#paytype"),
         },
 
@@ -24,11 +25,12 @@ jQuery(function($) {
         editFlag: false,
 
         types: {},
+        atttypes: {},
         paytypes: {},
         statuses: {},
         isAffirms: {},
 
-        pageType: params['urlLoadParams'].type,
+        pageType: params.urlLoadParams.type,
         atttype: null,
     };
 
@@ -37,7 +39,7 @@ jQuery(function($) {
         var quotationList = com.focusPage("#quotationList").html("");
 
         com.post(api.decoration.queryDecorationForCommonByOrderId, {
-            "decoration.orderId": addReduce.decorationOrderId
+            "decoration.orderId": addReduce.orderId
         }, function(res) {
 
             drawdecoration(res.decoration);
@@ -85,6 +87,7 @@ jQuery(function($) {
         addReduce.types = res.addReduceType.split("key", "value");
         addReduce.paytypes = res.addReducePaytype.split("key", "value");
         addReduce.statuses = res.addReduceStatus.split("key", "value");
+        addReduce.atttypes = res.addReduceAtttype.split("key", "value");
         addReduce.isAffirms = res.addReduceisAffirmDict.split("key", "value");
 
     }, null, false);
@@ -97,9 +100,10 @@ jQuery(function($) {
         handle: function(v) {
 
             params.historyPage = api.index.addReduceIndex.url;
-            params["addReduce.type"] = v.type;
-            params["addReduce"] = v;
-            viewDetailAddReduce(v.arId);
+
+            params.quotation.addReduce = v;
+
+            viewDetailAddReduce(v);
         }
     }, {
         name: "下拨",
@@ -173,7 +177,7 @@ jQuery(function($) {
         search.init("", "condList", api.addReduce.queryAddReduceByOrderId, function(data) {
 
         }, null, "addReducePostData", {
-            "addReduce.orderId": addReduce.decorationOrderId
+            "addReduce.orderId": addReduce.orderId
         }, true, "addReduces");
 
         var lineprops = [{
@@ -187,6 +191,12 @@ jQuery(function($) {
             prop: "type",
             clazz: "red",
             dataset: addReduce.types
+        }, {
+            field: "atttype",
+            name: "类型",
+            prop: "atttype",
+            clazz: "red",
+            dataset: addReduce.atttypes
         }, {
             field: "createTime",
             name: "创建时间",
@@ -203,14 +213,19 @@ jQuery(function($) {
             prop: "disPrice",
             clazz: "blue"
         }, {
+            field: "managePrice",
+            name: "管理费",
+            prop: "managePrice",
+            clazz: "blue"
+        }, {
+            field: "consPrice",
+            name: "工程总额",
+            prop: "consPrice",
+            clazz: "blue"
+        }, {
             field: "houseNumber",
             name: "总价",
             prop: "total",
-            clazz: "blue"
-        }, {
-            field: "currentName",
-            name: "管理费",
-            prop: "managePrice",
             clazz: "blue"
         }, {
             field: "status",
@@ -237,7 +252,7 @@ jQuery(function($) {
 
     if (addReduce.pageType == "page") {
 
-        params["addReduce.atttype"] = params['urlLoadParams'].atttype;
+        params.quotation.atttype = params['urlLoadParams'].atttype;
 
         com.focusPage('#add').addClass("hide");
         com.focusPage('#btnNotice').addClass("hide");
@@ -292,6 +307,12 @@ jQuery(function($) {
             clazz: "red",
             dataset: addReduce.types
         }, {
+            field: "atttype",
+            name: "类型",
+            prop: "atttype",
+            clazz: "red",
+            dataset: addReduce.atttypes
+        }, {
             field: "createTime",
             name: "创建时间",
             prop: "createTime",
@@ -307,14 +328,19 @@ jQuery(function($) {
             prop: "disPrice",
             clazz: "blue"
         }, {
-            field: "houseNumber",
-            name: "总价",
-            prop: "total",
+            field: "consPrice",
+            name: "工程总额",
+            prop: "consPrice",
             clazz: "blue"
         }, {
-            field: "currentName",
+            field: "managePrice",
             name: "管理费",
             prop: "managePrice",
+            clazz: "blue"
+        }, {
+            field: "total",
+            name: "总价",
+            prop: "total",
             clazz: "blue"
         }, {
             field: "status",
@@ -341,9 +367,9 @@ jQuery(function($) {
     search.render();
 
     // 查看按钮方法
-    function viewDetailAddReduce(addReduceId) {
+    function viewDetailAddReduce(v) {
 
-        params["addReduceId"] = addReduceId;
+        params.quotation.addReduce = v;
 
         com.switchPage(api.index.addReduceDetailIndex.url);
     }
@@ -362,17 +388,20 @@ jQuery(function($) {
     com.focusPage('#print').click(function() {
 
         var $inputs = com.focusPage('input[name="arids"]:checked');
-        var url = api.index.addReduceOutputIndex.url;
-        var _addReduceIds = [];
+
         if (!$inputs.length)
-            return;
+            return false;
+
+        var _addReduceIds = [];
+
         $.each($inputs, function(i, v) {
 
             _addReduceIds.push(parseInt($(v).val()));
         });
-        params.addReduceIds = _addReduceIds;
 
-        com.popup("增减项打印", url, null, null, true);
+        params.quotation.arids = _addReduceIds;
+
+        com.popup("增减项打印", api.index.addReduceOutputIndex.url, null, null, true);
     });
 
     // 发送按钮
@@ -380,9 +409,11 @@ jQuery(function($) {
 
         var $inputs = com.focusPage('input[name="arids"]:checked');
         var arid = $inputs.val();
+
         $.each($inputs, function(i, v) {
 
             var $v = $(v);
+
             if ($v.val()) {
                 if ($inputs.val() != $v.val()) {
                     arid += "," + $v.val();
@@ -392,7 +423,7 @@ jQuery(function($) {
 
         var options = {
             "addReduce.content": arid,
-            "addReduce.orderId": addReduce.decorationOrderId
+            "addReduce.orderId": addReduce.orderId
         };
 
         com.showConfirm("是否发送查看通知", function() {
@@ -402,7 +433,6 @@ jQuery(function($) {
                 com.showAlert(com.info, "操作成功");
                 search.doSearch();
             });
-
         });
 
     });
@@ -410,8 +440,9 @@ jQuery(function($) {
     // 返回按钮
     com.focusPage('#btnBack').click(function() {
 
-        com.switchPage("/views/decoration/decoration.html");
+        com.switchPage(params.historyPage);
     });
+
     // 刷新按钮
     com.focusPage('#updated').click(function() {
 
@@ -427,7 +458,8 @@ jQuery(function($) {
         var options = {
             "addReduce.content": addReduce.items.addReduceDes.val(),
             "addReduce.type": addReduce.items.addReduceType.val(),
-            "addReduce.orderId": addReduce.decorationOrderId
+            "addReduce.atttype": addReduce.items.atttype.val(),
+            "addReduce.orderId": addReduce.orderId
         };
 
         url = api.addReduce.addAddReduce;

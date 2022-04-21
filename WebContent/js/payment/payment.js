@@ -279,9 +279,10 @@ jQuery(function($) {
 
 			//打印
 			$btnPrint.click(function(){
-				params.paymentPaymentId = v.pid;
-				params.paymentOrderId = v.orderId;
-				com.popup("专用收款收据__装修单号:" + v.orderId  ,api.index.paymentReceiptIndex.url ,function () {
+				params.payment.pid = v.pid;
+				params.payment.orderId = v.orderId;
+				params.payment.cid = v.customer.cid;
+				com.popup("专用收款收据__装修单号:" + v.orderId, api.index.paymentReceiptIndex.url, function () {
 					parent.layer.getFrameIndex(window.name);
 				},null,true)
 			});
@@ -510,8 +511,9 @@ jQuery(function($) {
 
 			if (decorationOrPayment.paymentType && decorationOrPayment.paymentType == "收款") {
 				com.showConfirm("是否需要打印当前收款对应的收据信息?", function (result) {
-					params.paymentPaymentId = res.payment.pid;
-					params.paymentOrderId = res.payment.orderId;
+					params.payment.pid = res.payment.pid;
+					params.payment.orderId = res.payment.orderId;
+					params.payment.cid = res.payment.customer.cid;
 					com.popup("专用收款收据__装修单号:" + res.payment.orderId, api.index.paymentReceiptIndex.url, function () {
 						parent.layer.getFrameIndex(window.name);
 					}, null, true)

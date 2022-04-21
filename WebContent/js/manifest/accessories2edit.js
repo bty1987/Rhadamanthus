@@ -1,8 +1,8 @@
 jQuery(function ($) {
 
     var accessories = {
-        aid: params["accessories.aid"],
-        orderId: params["accessories.orderId"],
+        aid: params.manifest.aid,
+        orderId: params.manifest.orderId,
         items: {},
         record: {},
     };

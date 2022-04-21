@@ -1,6 +1,13 @@
 $.extend(api.index, {
-    approvalTrackIndex: {url: "/views/approval/approval4track.html"},
-    userApproveIndex: {url: "/views/approval/approval4user.html"}
+    approvalTrackIndex: {
+    	url: "/views/approval/approval4track.html"
+    },
+    userApproveIndex: {
+    	url: "/views/approval/approval4user.html"
+    },
+    createProcessIndex: {
+    	url: "views/approval/process2create.html"
+    }
 });
 
 $.extend(api, {

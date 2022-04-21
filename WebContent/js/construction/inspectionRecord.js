@@ -101,7 +101,7 @@ jQuery(function ($) {
     searcher.init([], "condList", api.construction.pageInspectionRecordByOrderId, function (list) {
         displayFunc.init('resultList', list);
     }, "pagenation", "inspectionRecordPostData", {
-        "inspectionRecord.orderId": params.orderId
+        "inspectionRecord.orderId": params.construction.orderId
     }, false, null, function () {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'add').css("margin", "0px 3px");
@@ -120,8 +120,8 @@ jQuery(function ($) {
 
         com.cleanItems(record.items);
 
-        record.items.orderId.val(params.orderId);
-        record.items.orderAddr.val(params.orderAddr);
+        record.items.orderId.val(params.construction.orderId);
+        record.items.orderAddr.val(params.construction.orderAddr);
 
         record.items.orderId.attr('disabled', true);
         record.items.orderAddr.attr('disabled', true);

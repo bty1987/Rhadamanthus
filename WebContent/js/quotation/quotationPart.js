@@ -54,10 +54,12 @@ var QuotationDetail = (function(){
 				// 打印
 				// $btnPrint : com.focusPage('#printFinanceBtn').attr('href', api.index.quotationOutputIndex.url + "?quotation.qid=" + quo.quotationid + "&orderType="+ quo.decorationType + "&type=2&time=" + params.loginTime),
 				$btnPrint : com.focusPage('#printFinanceBtn').click(function () {
-					params.quotationId = quo.quotationid;
-					params.type = 2;
-					params.subtype = [-2];
-					params.showType = {itemtype: 7};
+				    
+					params.quotation.quotationId = quo.quotationid;
+					params.quotation.type = 2;
+					params.quotation.subtype = [-2];
+					params.quotation.showType = {itemtype: 7};
+					
 					com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, true);
 				}),
 				// 返回
@@ -141,8 +143,7 @@ var QuotationDetail = (function(){
 
 				if(data && data.length){
 					$.each(data,function(i, v){
-						var $liLine = painter.createQuoteModalItem(v);
-						$liLine.appendTo($ul);
+						painter.createQuoteModalItem(v).appendTo($ul);
 					});
 					$ul.appendTo($tableWrap);
 
@@ -282,7 +283,7 @@ var QuotationDetail = (function(){
 			
 			if(_areaType == 1){ // 工程量
 			    
-			    var $arr = com.focusPage('.fl-quo-item:not([data-del-sign="1"])', $domain);
+			    var $arr = com.focusPage('.fl-quo-item.item:not([data-del-sign="1"])', $domain);
 			    
 			    if($arr.length){
 	                $arr.each(function(){
@@ -718,7 +719,20 @@ var QuotationDetail = (function(){
 		},
 		// 保存功能区修改
 		saveDomainTemplete : function(){
+		    
 			var that = this;
+			
+			com.focusPage("#paramFunctionAreasBtn").click(function(){
+			    
+			    if(quo.quoModals.$domainTempletModal.hasClass("params")){
+			        quo.quoModals.$domainTempletModal.find(".params").hide();
+			        quo.quoModals.$domainTempletModal.removeClass("params");
+			    }else{
+			        quo.quoModals.$domainTempletModal.find(".params").show();
+                    quo.quoModals.$domainTempletModal.addClass("params");
+			    }
+			});
+			
 			com.focusPage('#addFunctionAreasBtn').click(function(){
 				
 				var $darr = com.focusPage('input[name="quotempl"]:checked');
@@ -892,7 +906,7 @@ var QuotationDetail = (function(){
 		$nowEditInput : null,
 		// 排序报价项
 		sortQuote : function($domain){
-			var $arr = $domain.find('.fl-quo-item');
+			var $arr = $domain.find('.fl-quo-item.item');
 			if(!$arr){
 				return
 			}
@@ -951,7 +965,7 @@ var QuotationDetail = (function(){
 				// 赋值给外部显示DIV 显示数量
 				that.$nowLine.find('.cell.num .cell-wrap').text(num);
 				// 获取下一个报价项的整体元素标签
-				$line = that.$nowLine.next('.fl-quo-item');
+				$line = that.$nowLine.next('.fl-quo-item.item');
 
 				var _type = that.$nowLine.find('.type').attr('data-type');
 				var _areaType = that.$nowLine.find('.line').attr('data-areaType');
@@ -1012,7 +1026,7 @@ var QuotationDetail = (function(){
 			}
 			// 如果按键为上 调整焦点到功能区内上一个报价项
 			if(e.keyCode == 38){
-				$line = that.$nowLine.prev('.fl-quo-item');
+				$line = that.$nowLine.prev('.fl-quo-item.item');
 				if($line.length){
 					that.getNumCellFocus($line);
 				}else{
@@ -1022,7 +1036,7 @@ var QuotationDetail = (function(){
 			}
 			// 如果按键为下 调整焦点到功能区内的下一个报价项
 			if(e.keyCode == 40 ){
-				$line = that.$nowLine.next('.fl-quo-item');
+				$line = that.$nowLine.next('.fl-quo-item.item');
 				if($line.length){
 					that.getNumCellFocus($line);
 				}else{
@@ -1040,7 +1054,7 @@ var QuotationDetail = (function(){
 		},
 		// 批量删除报价项
 		deleteQuoteInBatches : function($domain){
-			$domain.find('.fl-quo-input').insertAfter($domain.find('.fl-quo-list')).addClass('hide');
+			$domain.find('.fl-quo-input').insertAfter($domain.find('.fl-quo-list.list')).addClass('hide');
 			var that = this;
 			// , 参数 : qfaiIds[n] , 报价项Id列表 ;
 			var $quos = com.focusPage('[name="deleteItems"]:checked', $domain);
@@ -1060,12 +1074,12 @@ var QuotationDetail = (function(){
 			});
 
 			$q2.length && $.each($q2, function(i, v){
-				$(v).parents('li.fl-quo-item').remove();
+				$(v).parents('li.fl-quo-item.item').remove();
 			});
 
 			if($q1.length){
 				$.each($q1, function(i, v){
-					$(v).parents('li.fl-quo-item').attr("data-del-sign", 1);
+					$(v).parents('li.fl-quo-item.item').attr("data-del-sign", 1);
 				});
 
 				var _fee = quo.calculateDomainFees(domain.nowEditDomain);
@@ -1074,7 +1088,7 @@ var QuotationDetail = (function(){
 				_params = $.extend({},_params, quo.basicParams, {"quotationFunctionArea.qfaId": domain.nowEditDomain.attr('data-qfaid')});
 				com.post(api.quotation.deleteQuotationFunctionAreaItem, _params, function(res){
 					$.each($q1, function(i, v){
-						$(v).parents('li.fl-quo-item').remove();
+						$(v).parents('li.fl-quo-item.item').remove();
 					});
 
 					com.focusPage('[data-qfaid="'+ domain.nowEditDomain.attr('data-qfaid') +'"]', '#functionAreaSumList').find('label.no-padding-left').text(_fee);
@@ -1082,7 +1096,7 @@ var QuotationDetail = (function(){
 					com.showAlert(com.error, res.errorMsg);
 
 					$.each($q1, function(i, v){
-						$(v).parents('li.fl-quo-item').removeAttr("data-del-sign");
+						$(v).parents('li.fl-quo-item.item').removeAttr("data-del-sign");
 					});
 
 					quo.calculateDomainFees(domain.nowEditDomain);
@@ -1097,7 +1111,7 @@ var QuotationDetail = (function(){
 			var _qid = $quote.find('input[type="checkbox"]').val();
 			var _params = {};
 			domain.nowEditDomain = $quote.parents('.widget-box');
-			domain.nowEditDomain.find('.fl-quo-input').insertAfter(domain.nowEditDomain.find('.fl-quo-list')).addClass('hide');
+			domain.nowEditDomain.find('.fl-quo-input').insertAfter(domain.nowEditDomain.find('.fl-quo-list.list')).addClass('hide');
 
 			if(!_qid){
 				$quote.remove();
@@ -1131,7 +1145,7 @@ var QuotationDetail = (function(){
 					return;
 				}
 
-				var _index = domain.nowEditDomain.find('.fl-quo-item').length;
+				var _index = domain.nowEditDomain.find('.fl-quo-item.item').length;
 
 				var addRow = {
 					discount : com.focusPage("#discountFlag").prop("checked") ? 1 : 0,
@@ -1168,7 +1182,7 @@ var QuotationDetail = (function(){
 
 				$item = painter.createQuote(_index + 1, addRow);
 				$item.find(".icon-arrow-up").removeClass("grey").addClass("green"),$item.find(".icon-arrow-down").removeClass("grey").addClass("red");
-				$item.appendTo(domain.nowEditDomain.find('.fl-quo-list'));
+				$item.appendTo(domain.nowEditDomain.find('.fl-quo-list.list'));
 				$historyItem = painter.createQuoteModalItem({
 					"name" : addRow.name,
 					"unitPrice" : addRow.unitPrice,
@@ -1241,7 +1255,7 @@ var QuotationDetail = (function(){
 		},
 		// 删除上一个选中的报价项选中样式 并添加当前报价项选中样式
 		checkedStyle : function($item){
-			com.focusPage('.fl-quo-item.current').removeClass('current');
+			com.focusPage('.fl-quo-item.item.current').removeClass('current');
 			$item.addClass('current');
 		},
 		calculationNum : function(){
@@ -1292,12 +1306,17 @@ var QuotationDetail = (function(){
 			addflag && $historyQuo.appendTo('#historyQuotationItemDiv > ul.fl-table-list');
 		},
 		addDefaultQuotes : function(){
+		    
 			var _arrs = quote.quotesRecord;
-			var _index = domain.nowEditDomain.find('.fl-quo-item').length;
+			var _index = domain.nowEditDomain.find('.fl-quo-item.item').length;
+			
 			if(!_arrs.length){
-				return;
+				return false;
 			}
-
+			
+			var quolist = domain.nowEditDomain.find('.fl-quo-list.list');
+			var areaType = domain.nowEditDomain.attr('data-areaType');
+			
 			$.each(_arrs, function(i, v){
 			    
 				var $this = $(v);
@@ -1307,7 +1326,6 @@ var QuotationDetail = (function(){
 				}
 				
 				var type = "0";
-				var areaType = domain.nowEditDomain.attr('data-areaType');
 				
 				if($this.attr('data-type') == 2){
 				    type = "1";
@@ -1341,14 +1359,14 @@ var QuotationDetail = (function(){
 					"workType" : $this.attr('data-workType'),
 					"quotationType": $this.attr('data-quotationType'),
 					"quotationTypeId" : $this.attr('data-quotationTypeId'),
-					"areaType" : domain.nowEditDomain.attr('data-areaType'),
+					"areaType" : areaType,
 				};
 				
-				var $item = painter.createQuote( _index + i + 1, _quotval);
-				$item.appendTo(domain.nowEditDomain.find('.fl-quo-list'));
-				var $historyItem = $this.parents('li.item-blue').clone(true);
-				quote.recordHistoryQuotes($historyItem);
+				var $item = painter.createQuote( _index + i + 1, _quotval).appendTo(quolist);
+				
+				quote.recordHistoryQuotes($this.parents('li.item-blue').clone(true));
 			});
+			
 			quote.quotesRecord = [];
 		},
 		moveAreaItem : function($quote,$movequote,$direction){
@@ -1458,7 +1476,7 @@ var QuotationDetail = (function(){
 
 			$dbody = $('<div></div>').addClass('widget-body');
 			$dbodyInner = $('<div></div>').addClass('widget-body-inner');
-			$list = $('<ul></ul>').addClass('fl-quo-list');
+			$list = $('<ul></ul>').addClass('fl-quo-list list');
 			$input = $('<div></div>').addClass('fl-quo-input hide').append($('<input type="text">').addClass('v_required v_float').attr('maxlength','16'));
 
 			$dhead.append($dname).append($dtoolbar);
@@ -1565,7 +1583,7 @@ var QuotationDetail = (function(){
 		// 创建报价项
 		createQuote : function(linenum, qv){
 			
-			var $item = $('<li></li>').addClass('fl-quo-item').prop('title', qv.content);
+			var $item = $('<li></li>').addClass('fl-quo-item item').prop('title', qv.content);
 			
 			var discount = utils.accDiv(quo.basicParams['quotation.discount'], 10);
 			
@@ -1729,21 +1747,25 @@ var QuotationDetail = (function(){
 		// 创建添加功能区中的功能区
 		createDomainTemplete : function(v){
 		    
-		    var $div = $('<div></div>').addClass('col-xs-12 functionAreaItem');
+		    var $div = $('<div></div>').addClass('functionAreaItem');
 		    
-			var $label = $('<label></label>').addClass('col-xs-2').appendTo($div);
+		    var $item = $('<div></div>').addClass('col-xs-2').appendTo($div);
+		    
+			var $label = $('<label></label>').appendTo($item);
 			var $radio = $('<input>').addClass('ace').attr({"name" : "quotempl", "type" : "checkbox"}).val(v.faid).appendTo($label);
 			var $span = $('<span></span>').addClass('lbl').text(v.name).appendTo($label);
 			
-			var ainput = $('<input></input>').addClass("col-xs-1 a").attr({"type": "text", "placeholder": "周长", "name": "quoteparam", "param": "girth", "parama": "a"}).appendTo($div);
-			var binput = $('<input></input>').addClass("col-xs-1 b").attr({"type": "text", "placeholder": "面积", "name": "quoteparam", "param": "area", "parama": "b"}).appendTo($div);
-			var cinput = $('<input></input>').addClass("col-xs-1 c").attr({"type": "text", "placeholder": "举架", "name": "quoteparam", "param": "height", "parama": "c"}).appendTo($div);
-			var dinput = $('<input></input>').addClass("col-xs-1 d").attr({"type": "text", "placeholder": "洞长", "name": "quoteparam", "param": "holeLength", "parama": "d"}).appendTo($div);
-			var einput = $('<input></input>').addClass("col-xs-1 e").attr({"type": "text", "placeholder": "洞高", "name": "quoteparam", "param": "holeHeight", "parama": "e"}).appendTo($div);
-			var finput = $('<input></input>').addClass("col-xs-1 f").attr({"type": "text", "placeholder": "窗高", "name": "quoteparam", "param": "windowLength", "parama": "f"}).appendTo($div);
-            var ginput = $('<input></input>').addClass("col-xs-1 g").attr({"type": "text", "placeholder": "窗长", "name": "quoteparam", "param": "windowHeight", "parama": "g"}).appendTo($div);
-            var hinput = $('<input></input>').addClass("col-xs-1 h").attr({"type": "text", "placeholder": "粱高", "name": "quoteparam", "param": "beamLength", "parama": "h"}).appendTo($div);
-            var iinput = $('<input></input>').addClass("col-xs-1 i").attr({"type": "text", "placeholder": "梁长", "name": "quoteparam", "param": "beamHeight", "parama": "i"}).appendTo($div);
+			var $params = $('<div></div>').addClass('col-xs-10 params').css("display", "none").appendTo($div);
+			
+			var ainput = $('<input></input>').addClass("col-xs-1 a").attr({"type": "text", "placeholder": "周长", "name": "quoteparam", "param": "girth", "parama": "a"}).appendTo($params);
+			var binput = $('<input></input>').addClass("col-xs-1 b").attr({"type": "text", "placeholder": "面积", "name": "quoteparam", "param": "area", "parama": "b"}).appendTo($params);
+			var cinput = $('<input></input>').addClass("col-xs-1 c").attr({"type": "text", "placeholder": "举架", "name": "quoteparam", "param": "height", "parama": "c"}).appendTo($params);
+			var dinput = $('<input></input>').addClass("col-xs-1 d").attr({"type": "text", "placeholder": "洞长", "name": "quoteparam", "param": "holeLength", "parama": "d"}).appendTo($params);
+			var einput = $('<input></input>').addClass("col-xs-1 e").attr({"type": "text", "placeholder": "洞高", "name": "quoteparam", "param": "holeHeight", "parama": "e"}).appendTo($params);
+			var finput = $('<input></input>').addClass("col-xs-1 f").attr({"type": "text", "placeholder": "窗高", "name": "quoteparam", "param": "windowLength", "parama": "f"}).appendTo($params);
+            var ginput = $('<input></input>').addClass("col-xs-1 g").attr({"type": "text", "placeholder": "窗长", "name": "quoteparam", "param": "windowHeight", "parama": "g"}).appendTo($params);
+            var hinput = $('<input></input>').addClass("col-xs-1 h").attr({"type": "text", "placeholder": "粱高", "name": "quoteparam", "param": "beamLength", "parama": "h"}).appendTo($params);
+            var iinput = $('<input></input>').addClass("col-xs-1 i").attr({"type": "text", "placeholder": "梁长", "name": "quoteparam", "param": "beamHeight", "parama": "i"}).appendTo($params);
 			
 			return $div;
 		},
@@ -1820,14 +1842,16 @@ var QuotationDetail = (function(){
 
 	return {
 		init : function(){
-			quo.orderid = params.orderId;
-			quo.quotationid = params.quotationId;
-			quo.decorationType = params.orderType;
+		    
+			quo.orderid = params.quotation.orderId;
+			quo.quotationid = params.quotation.quotation.qid;
 			
 			com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": quo.orderid}, function(res){
 			    com.focusPage('#orderId').text(res.decoration.orderId);
 			    com.focusPage('#address').text(res.decoration.house.village.name + " " + res.decoration.house.houseNumber);
 			    com.focusPage('#version').text(res.decoration.version.name);
+			    
+			    quo.decorationType = res.decoration.type;
 			});
 			
 			// 管理费选择弹层初始化

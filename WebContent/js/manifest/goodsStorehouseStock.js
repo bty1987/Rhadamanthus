@@ -149,7 +149,7 @@ $(function () {
 
             //拆分按钮点击事件
             $btnSplit.click(function () {
-                params['goodsStorehouseStock'] = v;
+                params.manifest.goodsStorehouseStock = v;
                 com.focusPage('#splitAndMergePopUp').attr('data-title', $btnSplit.text());
                 com.popup4page('#splitAndMergePopUp', "views/manifest/goods2ms.html", "拆分", function () {
                     goodsStorehouseSeacher.doSearch();
@@ -158,7 +158,7 @@ $(function () {
 
             //合并按钮点击事件
             $btnMerge.click(function () {
-                params['goodsStorehouseStock'] = v;
+                params.manifest.goodsStorehouseStock = v;
                 com.focusPage('#splitAndMergePopUp').attr('data-title', $btnMerge.text());
                 com.popup4page('#splitAndMergePopUp', "views/manifest/goods2ms.html", "合并", function () {
                     goodsStorehouseSeacher.doSearch();

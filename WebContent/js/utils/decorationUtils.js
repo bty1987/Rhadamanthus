@@ -49,7 +49,7 @@ var decorationUtils = {
 
         com.focusPage("a[name='consumptionDetailsPrint']").click(function() {
 
-            params.decorationOrderId = decorationDetail.decorationOrderId;
+            params.decoration.orderId = decorationDetail.orderId;
             com.popup("主材消费明细表", api.index.decorationSales2print.url, null, null, true);
         });
 
@@ -62,10 +62,7 @@ var decorationUtils = {
 
                 if (listData && listData.length) {
                     $.each(listData, function(i, v) {
-
-                        var $liLine = creatLine(v);
-
-                        $liLine.appendTo($ulsalesResult);
+                        creatLine(v).appendTo($ulsalesResult);
                     });
 
                     $ulsalesResult.appendTo($tableWrap);
@@ -98,8 +95,9 @@ var decorationUtils = {
 
                 $btnSub.click(function() {
 
-                    params["sid"] = v.sid;
-                    params["dompany"] = "dompany";
+                    params.sales.sales = v;
+                    params.sales.dompany = "dompany";
+
                     com.popup4page("#layerPopUp", "/views/sales/salesItem.html", "子项", '', function() {
 
                         seacher.doSearch();
@@ -149,11 +147,11 @@ var decorationUtils = {
                 $("#pagenation").addClass("hidden");
             });
         }, "pagenation", 'salesResultList' + dataPage + 'PostData', {
-            "sales.orderId": decorationDetail.decorationOrderId
+            "sales.orderId": decorationDetail.orderId
         });
 
         com.post(api.sales.queryOalesByOrderId, {
-            "oales.decoration.orderId": decorationDetail.decorationOrderId
+            "oales.decoration.orderId": decorationDetail.orderId
         }, function(res) {
 
             oaleses = res.oaleses;
@@ -219,7 +217,7 @@ var decorationUtils = {
         }
 
         com.post(api.payment.queryMaterialPaymentByOrderId, {
-            "materialPayment.material.orderId": decorationDetail.decorationOrderId
+            "materialPayment.material.orderId": decorationDetail.orderId
         }, function(res) {
 
             materialPayments = res.materialPayments;
@@ -326,7 +324,7 @@ var decorationUtils = {
         }
 
         com.post(api.payment.querySalesPaymentByOrderId, {
-            "salesPayment.sales.orderId": decorationDetail.decorationOrderId
+            "salesPayment.sales.orderId": decorationDetail.orderId
         }, function(res) {
 
             salesPayments = res.salesPayments;
@@ -356,8 +354,7 @@ var decorationUtils = {
 
                 if (purCategory.indexOf(v.sales.category) == -1) {
                     purCategory.push(v.sales.category);
-                }
-                ;
+                };
 
                 if (unpCategory.indexOf(v.sales.category) != -1 && unpCategory.splice(unpCategory.indexOf(v.sales.category), 1))
                     ;
@@ -606,8 +603,8 @@ var decorationUtils = {
             itempack.html("");
             btnItempack.html("");
 
-            var node = params.decorationActivityViewNode;
-            var nodeContent = params.decorationActivityViewNodeContent;
+            var node = params.decoration.decorationActivityViewNode;
+            var nodeContent = params.decoration.decorationActivityViewNodeContent;
 
             if (node == "btnSend") {
                 var btnNotice = $("<a></a>").addClass("btn btn-minier btn-inverse pull-left").attr("id", "btnNotice").html("<i class='icon-mail-forward bigger-110'></i>发送</a>").prependTo(btnItempack);
@@ -726,7 +723,7 @@ var decorationUtils = {
     },
     initPresignDetail: function(orderId) {// 预签信息
 
-        var presignItemListDiv = $("#presignItemListDiv").html("");
+        var presignItemListDiv = com.focusPage("#presignItemListDiv").html("");
         var protation = null;
 
         com.post(api.quotation.queryProtationForDefaultByOrderId, {
@@ -739,7 +736,7 @@ var decorationUtils = {
         if (protation.pid == null)
             return false;
 
-        params.protationId = protation.pid;
+        params.quotation.protation = protation;
 
         var protationFunctionAreas = [{
             "pfaid": 1,
@@ -807,61 +804,62 @@ var decorationUtils = {
             $dhead.append($dname);
             $dbodyInner.append($list).appendTo($dbody);
             $domain.append($dhead).append($dbody);
+            if (v.protationFunctionAreaItems.length) {
+                $.each(v.protationFunctionAreaItems, function(j, qv) {
 
-            $.each(v.protationFunctionAreaItems, function(j, qv) {
+                    var $item = $('<li></li>').addClass('fl-quo-item').prop('title', qv.content);
+                    var _num = qv.num;
+                    var _unitPrice = qv.price;
+                    var _total = 0;
 
-                var $item = $('<li></li>').addClass('fl-quo-item').prop('title', qv.content);
-                var _num = qv.num;
-                var _unitPrice = qv.price;
-                var _total = 0;
+                    var _typeName = "-";
 
-                var _typeName = "-";
-
-                if (qv.type == 0) {
-                    _typeName = "信息";
-                    _total = utils.changeThrDecimal(utils.accMul(_unitPrice, utils.accSub(_num, qv.basicNum)));
-                }
-                if (qv.type == 1 || qv.type == 2) { // 基础工程
-                    _typeName = "基础";
-                }
-                if (qv.type == 3 || qv.type == 4) { // 个性
-                    _typeName = "个性";
-                    _total = utils.changeThrDecimal(utils.accMul(_unitPrice, _num));
-                }
-                if (qv.type == 5 || qv.type == 6) { // 增主材
-                    _typeName = "减项";
-                    _total = utils.changeThrDecimal(utils.accMul(_unitPrice, _num));
-                }
-
-                var _lineSet = [["line", j + 1, ["data-areaType", qv.areaType]], // 编号
-                ["formula", qv.num ? qv.num : "0"], // 公式
-                ["num", qv.num, ["data-subtype", qv.subtype]], // 数量
-                ["name", qv.name, ["data-piid", qv.piid]], // 预签名称
-                ["type", _typeName, ["data-type", qv.type]], ["unit", qv.basicNum], // 单位
-                ["worktype", qv.workType], // 工种
-                ["price unitprice", _unitPrice], // 单价
-                ["price discountprice", _unitPrice, ["data-discount", 0]], // 折扣后的价格 将折扣存入
-                ["price totalprice-discount", _total], // 根据类型计算(数量*折扣)
-                ];
-
-                $.each(_lineSet, function(i, v) {
-
-                    var $cell = $('<div></div>').addClass('cell ' + v[0]);
-                    var $cellWrap = $('<div></div>').addClass('cell-wrap').html(v[1]);
-
-                    if (v[2]) {
-                        $cell.attr(v[2][0], v[2][1]);
+                    if (qv.type == 0) {
+                        _typeName = "信息";
+                        _total = utils.changeThrDecimal(utils.accMul(_unitPrice, utils.accSub(_num, qv.basicNum)));
+                    }
+                    if (qv.type == 1 || qv.type == 2) { // 基础工程
+                        _typeName = "基础";
+                    }
+                    if (qv.type == 3 || qv.type == 4) { // 个性
+                        _typeName = "个性";
+                        _total = utils.changeThrDecimal(utils.accMul(_unitPrice, _num));
+                    }
+                    if (qv.type == 5 || qv.type == 6) { // 增主材
+                        _typeName = "减项";
+                        _total = utils.changeThrDecimal(utils.accMul(_unitPrice, _num));
                     }
 
-                    $cell.append($cellWrap).appendTo($item);
+                    var _lineSet = [["line", j + 1, ["data-areaType", qv.areaType]], // 编号
+                    ["formula", qv.num ? qv.num : "0"], // 公式
+                    ["num", qv.num, ["data-subtype", qv.subtype]], // 数量
+                    ["name", qv.name, ["data-piid", qv.piid]], // 预签名称
+                    ["type", _typeName, ["data-type", qv.type]], ["unit", qv.basicNum], // 单位
+                    ["worktype", qv.workType], // 工种
+                    ["price unitprice", _unitPrice], // 单价
+                    ["price discountprice", _unitPrice, ["data-discount", 0]], // 折扣后的价格 将折扣存入
+                    ["price totalprice-discount", _total], // 根据类型计算(数量*折扣)
+                    ];
+
+                    $.each(_lineSet, function(i, v) {
+
+                        var $cell = $('<div></div>').addClass('cell ' + v[0]);
+                        var $cellWrap = $('<div></div>').addClass('cell-wrap').html(v[1]);
+
+                        if (v[2]) {
+                            $cell.attr(v[2][0], v[2][1]);
+                        }
+
+                        $cell.append($cellWrap).appendTo($item);
+                    });
+                    $item.appendTo($list);
                 });
-                $item.appendTo($list);
-            });
+            }
 
             $domain.appendTo(presignItemListDiv);
         });
 
-        var $show = params.viewNode[1].opt == null ? [] : params.viewNode[1].opt.show == null ? [] : params.viewNode[1].opt.show;
+        var $show = params.decoration.viewNode[1].opt == null ? [] : params.decoration.viewNode[1].opt.show == null ? [] : params.decoration.viewNode[1].opt.show;
 
         if ($show.includes("totalPrice")) {
             var amount = 0;
@@ -875,7 +873,6 @@ var decorationUtils = {
             }, null, false);
 
             var profit = utils.changeThrDecimal(utils.accSub(1.0, utils.accDiv(protation.totalCost, utils.accSub(protation.totalPrice, amount))));
-
             $domain = $('<div></div>').addClass('widget-box transparent').css({
                 "margin-bottom": "20px"
             }).appendTo(presignItemListDiv);
@@ -952,7 +949,7 @@ var decorationUtils = {
         var materialAdvance = 0;
         // 通过装修单号获取预付款金额
         com.post(api.payment.queryAdvancePaymentByOrderId, {
-            "advancePayment.decoration.orderId": decorationDetail.decorationOrderId
+            "advancePayment.decoration.orderId": decorationDetail.orderId
         }, function(res) {
 
             com.focusPage("#balanceAdvance").text(res.balanceAdvance);
@@ -966,7 +963,7 @@ var decorationUtils = {
         var decorationPayments = [];
         // 通过装修单号获取装修款项信息
         com.post(api.payment.queryDecorationPaymentByOrderId, {
-            "decorationPayment.decoration.orderId": decorationDetail.decorationOrderId
+            "decorationPayment.decoration.orderId": decorationDetail.orderId
         }, function(res) {
 
             decorationPayments = res.decorationPayments;
@@ -1096,7 +1093,7 @@ var decorationUtils = {
 
         var predisPrice = 0;
         com.post(api.quotation.queryQuotationForDefaultByOrderId, {
-            "quotation.orderId": decorationDetail.decorationOrderId
+            "quotation.orderId": decorationDetail.orderId
         }, function(res) {
 
             if (res.quotation.qid) {
@@ -1107,7 +1104,7 @@ var decorationUtils = {
 
         var materialAmount = 0;
         com.post(api.payment.amountSalesPayment, {
-            "salesPayment.sales.orderId": decorationDetail.decorationOrderId
+            "salesPayment.sales.orderId": decorationDetail.orderId
         }, function(res) {
 
             materialAmount = res.amount;
@@ -1278,7 +1275,7 @@ var decorationUtils = {
                 "decorationPicture.path": data.resUrl,
                 "decorationPicture.name": data.strutsUploadsFileName,
                 "decorationPicture.content": "",
-                "decorationPicture.orderId": params.decorationOrderId,
+                "decorationPicture.orderId": params.decoration.orderId,
                 "decorationPicture.type": type
             };
 
@@ -1475,7 +1472,8 @@ var decorationUtils = {
     initConstructionScheduleInfo: function() {
 
         var options = {};
-        options["constructionSchedule.orderId"] = params.decorationOrderId;
+
+        options["constructionSchedule.orderId"] = orderId.decoration.orderId;
 
         com.post(api.construction.queryConstructionScheduleForWorkerNameByOrderId, options, function(res) {
 
@@ -1867,22 +1865,29 @@ var decorationUtils = {
                 com.focusPage('#print').click(function() {
 
                     var $inputs = com.focusPage('input[name="arids"]:checked');
-                    var url = api.index.addReduceOutputIndex.url;
+
                     var _addReduceIds = [];
+
                     if (!$inputs.length)
-                        return;
+                        return false;
+
                     $.each($inputs, function(i, v) {
 
                         _addReduceIds.push(parseInt($(v).val()));
                     });
-                    params.addReduceIds = _addReduceIds;
-                    com.popup("增减项打印", url, null, null, true);
+
+                    params.quotation.arids = _addReduceIds;
+
+                    com.popup("增减项打印", api.index.addReduceOutputIndex.url, null, null, true);
                 });
 
             } else {
+
                 $resList.html('');
+
                 var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resList);
                 var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
+
                 $mesg.append($('<span></span>').text('无可用数据提供'));
             }
         });

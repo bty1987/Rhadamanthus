@@ -1,39 +1,43 @@
-$(function(){
-    
+$(function() {
+
     var mformat = {
-            
-        gid: params.goods.gid,
-        
+
+        gid: params.store.goods.gid,
+
         items: {
             format: com.focusPage(".cell.format input"),
         },
-        
+
         btns: {
             submitBtn: com.focusPage(".color-green.green"),
             clearBtn: com.focusPage(".color-red.red")
         },
     }
-    
+
     mformat.btns.submitBtn.click(createFormat);
     mformat.btns.clearBtn.click(clearFormat);
-    
-    var displayFunc  = (function(){
-        var renderList = function(tableId,listData){
+
+    var displayFunc = (function() {
+
+        var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
 
-            if(listData && listData.length){
+            if (listData && listData.length) {
                 var $ulTitle = createTableTitle();
                 var $ulData = $('<ul></ul>').addClass('flex-table');
                 $tableWrap.append($ulTitle).append($ulData);
 
-                $.each(listData,function(i, v){
+                $.each(listData, function(i, v) {
+
                     creatLine(i, v, i == listData.length - 1).appendTo($ulTitle);
                 });
             }
         };
 
-        /*表格头*/
-        var createTableTitle = function(){
+        /* 表格头 */
+        var createTableTitle = function() {
+
             var $ulTitle = $('<ul></ul>').addClass('flex-table');
             var $liTitle = $('<li></li>').addClass('line table-title');
 
@@ -42,7 +46,8 @@ $(function(){
 
             var titleName = '规格,状态';
 
-            $.each(titleName.split(','), function (i, v) {
+            $.each(titleName.split(','), function(i, v) {
+
                 $('<div></div>').addClass('cell').html(v).appendTo($contentWrap);
             });
 
@@ -53,18 +58,17 @@ $(function(){
             return $ulTitle;
         };
 
-        /*表格体*/
-        var creatLine = function (i, v, lastFlag) {
+        /* 表格体 */
+        var creatLine = function(i, v, lastFlag) {
+
             var $liLine = $('<li></li>').addClass('line');
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col2');
 
-            var propertyArr = [
-                [v.format,'grey'],
-                [v.status =="0" ? "启用" : "禁用",'red']
-            ];
+            var propertyArr = [[v.format, 'grey'], [v.status == "0" ? "启用" : "禁用", 'red']];
 
-            $.each(propertyArr, function (i, v) {
+            $.each(propertyArr, function(i, v) {
+
                 var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
@@ -86,11 +90,13 @@ $(function(){
 
             $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
-            $btnStart.click(function(){
+            $btnStart.click(function() {
+
                 updateStatus(v.fid, 0);
             });
-            
-            $btnBan.click(function(){
+
+            $btnBan.click(function() {
+
                 updateStatus(v.fid, 1);
             });
 
@@ -98,58 +104,64 @@ $(function(){
         };
 
         return {
-            init : function(tableId,listData){
+            init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
+                renderList(tableId, listData);
             },
-            drawLine : function(v){
+            drawLine: function(v) {
+
                 return creatLine(v);
             }
         }
     })();
-    
-    function doSearcher(){
-        
+
+    function doSearcher() {
+
         var options = {
             "mformat.gid": mformat.gid
         }
-        
-        com.post(api.store.queryMformatByGid, options, function(res){
+
+        com.post(api.store.queryMformatByGid, options, function(res) {
+
             displayFunc.init('resultListFormat', res.mformats);
         });
     }
-    
+
     doSearcher();
 
-    function createFormat(){
-        
-        if(com.validate('addFormat', 'bottom')){
+    function createFormat() {
+
+        if (com.validate('addFormat', 'bottom')) {
             return false;
         }
-        
+
         var options = {
             "mformat.gid": mformat.gid,
             "mformat.format": mformat.items.format.val()
         };
 
-        com.post(api.store.addMformat, options, function(){
+        com.post(api.store.addMformat, options, function() {
+
             com.cleanItems(mformat.items);
             doSearcher();
         });
     }
-    
-    function clearFormat(){
+
+    function clearFormat() {
+
         com.cleanItems(mformat.items);
     }
-    
-    function updateStatus(fid, status){
-        
+
+    function updateStatus(fid, status) {
+
         var options = {
             "mformat.fid": fid,
             "mformat.status": status
         }
-        
-        com.post(api.store.updateMformatForStatus, options, function(res){
+
+        com.post(api.store.updateMformatForStatus, options, function(res) {
+
             doSearcher();
         });
     }

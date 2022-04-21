@@ -1,8 +1,8 @@
 jQuery(function($) {
     var occessories = {
-        oid: params["occessoriesItem.oid"],
-        orderId: params["occessories.orderId"],
-        pageType: params['urlLoadParams'].type,
+        oid: params.manifest.oid,
+        orderId: params.manifest.orderId,
+        pageType: params.urlLoadParams.type,
         oiid: [],
         sennum: [],
         vbalance: [],

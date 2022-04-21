@@ -262,7 +262,7 @@ jQuery(function($) {
                 params.building.houseSource = v;
                 params.building.page = "advance";
 
-                com.popup4page("#stockRecordPopUp", "/views/building/houseSourceDetail.html", "查看");
+                com.popup4page("#stockRecordPopUp", api.index.houseSourceDetail.url, "查看");
             });
 
             // 转移房源
@@ -346,9 +346,7 @@ jQuery(function($) {
             // 收钥匙人
             $btnKey.click(function() {
 
-                if (v.status == 1 || v.status == 2) {
-                    return false;
-                }
+                if (v.status == 1 || v.status == 2) { return false; }
 
                 if (v.keyer.userId != null) {
                     com.updateTypeahead("keyer", v.keyer.userId, v.keyer.userName);
@@ -448,9 +446,7 @@ jQuery(function($) {
     // 绑定客源,创建房产单
     function saveBuildingData() {
 
-        if (com.validate("buildingModal") || houseSource.repeatFlg) {
-            return false;
-        }
+        if (com.validate("buildingModal") || houseSource.repeatFlg) { return false; }
 
         var options = {
             'building.houseSource.hsid': houseSource.hsid,

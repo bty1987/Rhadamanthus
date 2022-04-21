@@ -1,13 +1,13 @@
 $(function() {
 
-    var decorationQuotation = {
+    var quotation = {
 
         decorationInfo: com.focusPage("#decorationInfo"),
         quotationList: com.focusPage("#quotationList"),
         quotationModal: com.focusPage('#quotationModal'),
         replicaQuotationModal: com.focusPage('#replicaQuotationModal'),
 
-        quotationItems: {
+        items: {
             qid: com.focusPage("#qid"),
             replicaOrderId: com.focusPage('#replicaOrderId'),
             replicaType: com.focusPage("#replicaType"),
@@ -18,7 +18,7 @@ $(function() {
             quotetionNo: com.focusPage("#quotetionNo"),
         },
 
-        decorationOrderId: params.decorationOrderId,
+        orderId: params.quotation.orderId,
 
         type: params.orderType,
 
@@ -38,8 +38,8 @@ $(function() {
 
     com.focusPage('#fl-statement').statement("装修单", "报价");
 
-    decorationQuotation.quotationItems.replicaType.bindData(decorationQuotation.compareType, 'key', 'value');
-    decorationQuotation.quotationItems.replicaOrderId.on("blur", function() {
+    quotation.items.replicaType.bindData(quotation.compareType, 'key', 'value');
+    quotation.items.replicaOrderId.on("blur", function() {
 
         var options = {
             "quotation.orderId": $(this).val(),
@@ -47,7 +47,7 @@ $(function() {
 
         com.post(api.quotation.queryQuotationByOrderId, options, function(res) {
 
-            decorationQuotation.quotationItems.quotations.bindData(res.quotations, 'qid', 'name');
+            quotation.items.quotations.bindData(res.quotations, 'qid', 'name');
         });
     });
 
@@ -58,18 +58,18 @@ $(function() {
 
     com.focusPage('#createQuotation').on('click', function() {
 
-        decorationQuotation.editFlg = 0;
+        quotation.editFlg = 0;
         com.clearValidator();
-        com.cleanItems(decorationQuotation.quotationItems);
-        decorationQuotation.quotationItems.style.get(0).selectedIndex = 0;
-        decorationQuotation.quotationModal.modal("show");
+        com.cleanItems(quotation.items);
+        quotation.items.style.get(0).selectedIndex = 0;
+        quotation.quotationModal.modal("show");
     });
 
     com.focusPage('#replicaQuotation').on('click', function() {
 
         com.clearValidator();
-        com.cleanItems(decorationQuotation.quotationItems);
-        decorationQuotation.quotationItems.replicaType.on("change", function(e) {
+        com.cleanItems(quotation.items);
+        quotation.items.replicaType.on("change", function(e) {
 
             $this = $(this);
             if ($this.val() == 0) {
@@ -80,11 +80,11 @@ $(function() {
                 com.focusPage("#Bquoteno").addClass("hide");
                 com.focusPage("#bOrderId").removeClass("hide");
             }
-            decorationQuotation.quotationItems.replicaOrderId.val("");
-            decorationQuotation.quotationItems.quotetionNo.val("");
-            decorationQuotation.quotationItems.quotations.bindData([], 'qid', 'name');
+            quotation.items.replicaOrderId.val("");
+            quotation.items.quotetionNo.val("");
+            quotation.items.quotations.bindData([], 'qid', 'name');
         }).trigger("change");
-        decorationQuotation.replicaQuotationModal.modal("show");
+        quotation.replicaQuotationModal.modal("show");
     });
 
     com.focusPage('#saveBtn').bindClick(function() {
@@ -92,37 +92,37 @@ $(function() {
         if (com.validate("quotationModal"))
             return;
 
-        if (decorationQuotation.editFlg == 0) {
+        if (quotation.editFlg == 0) {
 
             var options = {
-                "quotation.orderId": decorationQuotation.decorationOrderId,
-                "quotation.name": decorationQuotation.quotationItems.name.val(),
-                "quotation.style": decorationQuotation.quotationItems.style.val(),
-                "quotation.content": decorationQuotation.quotationItems.content.val(),
+                "quotation.orderId": quotation.orderId,
+                "quotation.name": quotation.items.name.val(),
+                "quotation.style": quotation.items.style.val(),
+                "quotation.content": quotation.items.content.val(),
             };
 
             com.post(api.quotation.addQuotation, options, function(res) {
 
                 searcher.doSearch();
-                decorationQuotation.quotationModal.modal("hide");
+                quotation.quotationModal.modal("hide");
             }, null, false);
 
-        } else if (decorationQuotation.editFlg == 1) {
+        } else if (quotation.editFlg == 1) {
 
             var options = {
-                "quotation.orderId": decorationQuotation.decorationOrderId,
-                "quotation.qid": decorationQuotation.quotationItems.qid.val(),
-                "quotation.name": decorationQuotation.quotationItems.name.val(),
-                "quotation.style": decorationQuotation.quotationItems.style.val(),
-                "quotation.content": decorationQuotation.quotationItems.content.val(),
+                "quotation.orderId": quotation.orderId,
+                "quotation.qid": quotation.items.qid.val(),
+                "quotation.name": quotation.items.name.val(),
+                "quotation.style": quotation.items.style.val(),
+                "quotation.content": quotation.items.content.val(),
             };
 
             com.post(api.quotation.updateQuotation, options, function(res) {
 
-                var _qid = decorationQuotation.quotationItems.qid.val();
-                var name = decorationQuotation.quotationItems.name.val();
-                var style = decorationQuotation.quotationItems.style.val();
-                var content = decorationQuotation.quotationItems.content.val();
+                var _qid = quotation.items.qid.val();
+                var name = quotation.items.name.val();
+                var style = quotation.items.style.val();
+                var content = quotation.items.content.val();
 
                 com.focusPage("#h4name_" + _qid).text(name);
                 com.focusPage("#name_" + _qid).text('名称:' + name);
@@ -131,23 +131,23 @@ $(function() {
 
                 com.showAlert(com.info, "操作成功");
                 searcher.doSearch();
-                decorationQuotation.quotationModal.modal("hide");
+                quotation.quotationModal.modal("hide");
             }, null, false);
 
         } else {
 
             var options = {
-                "quotation.qid": decorationQuotation.quotationItems.qid.val(),
-                "quotation.orderId": decorationQuotation.decorationOrderId,
-                "quotation.name": decorationQuotation.quotationItems.name.val(),
-                "quotation.style": decorationQuotation.quotationItems.style.val(),
-                "quotation.content": decorationQuotation.quotationItems.content.val(),
+                "quotation.qid": quotation.items.qid.val(),
+                "quotation.orderId": quotation.orderId,
+                "quotation.name": quotation.items.name.val(),
+                "quotation.style": quotation.items.style.val(),
+                "quotation.content": quotation.items.content.val(),
             };
 
             com.post(api.quotation.copyQuotation, options, function(res) {
 
                 searcher.doSearch();
-                decorationQuotation.quotationModal.modal("hide");
+                quotation.quotationModal.modal("hide");
             }, null, false);
         }
     });
@@ -159,32 +159,32 @@ $(function() {
 
         var options = {};
 
-        if (decorationQuotation.quotationItems.replicaType.val() == 0) {
+        if (quotation.items.replicaType.val() == 0) {
 
             options = {
-                "no": decorationQuotation.quotationItems.quotetionNo.val(),
-                "quotation.orderId": decorationQuotation.decorationOrderId,
+                "no": quotation.items.quotetionNo.val(),
+                "quotation.orderId": quotation.orderId,
             };
 
             com.post(api.quotation.cloneQuotation, options, function(res) {
 
                 searcher.doSearch();
 
-                decorationQuotation.replicaQuotationModal.modal("hide");
+                quotation.replicaQuotationModal.modal("hide");
             }, null, false);
         } else {
 
             options = {
-                "quotation.qid": decorationQuotation.quotationItems.quotations.val(),
-                "quotation.orderId": decorationQuotation.decorationOrderId,
+                "quotation.qid": quotation.items.quotations.val(),
+                "quotation.orderId": quotation.orderId,
             };
 
             com.post(api.quotation.replicaQuotation, options, function(res) {
 
-                decorationQuotation.defaultsQid = res.quotation.qid;
+                quotation.defaultsQid = res.quotation.qid;
 
                 searcher.doSearch();
-                decorationQuotation.replicaQuotationModal.modal("hide");
+                quotation.replicaQuotationModal.modal("hide");
             }, null, false);
         }
 
@@ -197,7 +197,7 @@ $(function() {
         var quotationList = com.focusPage("#quotationList").html("");
 
         com.post(api.decoration.queryDecorationForCommonByOrderId, {
-            "decoration.orderId": decorationQuotation.decorationOrderId
+            "decoration.orderId": quotation.orderId
         }, function(res) {
 
             drawdecoration(res.decoration);
@@ -243,7 +243,7 @@ $(function() {
     var searcher = new Searcher();
 
     searcher.set("pageltList", "pageltList", "quotationList", api.quotation.queryQuotationByOrderId, {
-        "quotation.orderId": decorationQuotation.decorationOrderId
+        "quotation.orderId": quotation.orderId
     }, null, null, "quotations", true);
 
     var cardprops = [{
@@ -273,18 +273,18 @@ $(function() {
         clazz: "btn-yellow",
         handle: function(v) {
 
-            decorationQuotation.editFlg = 2;
+            quotation.editFlg = 2;
 
             com.clearValidator();
-            com.cleanItems(decorationQuotation.quotationItems);
+            com.cleanItems(quotation.items);
 
-            decorationQuotation.quotationItems.qid.val(v.qid);
-            decorationQuotation.quotationItems.style.get(0).selectedIndex = 0;
+            quotation.items.qid.val(v.qid);
+            quotation.items.style.get(0).selectedIndex = 0;
             com.post(api.quotation.queryQuotationById, {
                 "quotation.qid": v.qid
             }, function(res) {
 
-                decorationQuotation.quotationModal.modal("show");
+                quotation.quotationModal.modal("show");
             });
         }
     }, {
@@ -292,7 +292,7 @@ $(function() {
         clazz: "btn-blue",
         handle: function(v) {
 
-            decorationQuotation.editFlg = 1;
+            quotation.editFlg = 1;
 
             com.clearValidator();
 
@@ -300,12 +300,12 @@ $(function() {
                 "quotation.qid": v.qid
             }, function(res) {
 
-                decorationQuotation.quotationItems.qid.val(res.quotation.qid);
-                decorationQuotation.quotationItems.name.val(res.quotation.name);
-                decorationQuotation.quotationItems.style.val(res.quotation.style);
-                decorationQuotation.quotationItems.content.val(res.quotation.content);
+                quotation.items.qid.val(res.quotation.qid);
+                quotation.items.name.val(res.quotation.name);
+                quotation.items.style.val(res.quotation.style);
+                quotation.items.content.val(res.quotation.content);
 
-                decorationQuotation.quotationModal.modal("show");
+                quotation.quotationModal.modal("show");
             });
         }
     }, {
@@ -313,8 +313,9 @@ $(function() {
         clazz: "btn-success",
         handle: function(v) {
 
-            params["orderId"] = v.orderId;
-            params["quotationId"] = v.qid;
+            params.quotation.orderId = v.orderId;
+            params.quotation.quotation = v;
+
             com.switchPage(api.index.quotationPartIndex.url);
         }
     }, {
@@ -333,7 +334,7 @@ $(function() {
 
                 com.post(api.quotation.deleteQuotationById, {
                     "quotation.qid": v.qid,
-                    "quotation.orderId": decorationQuotation.decorationOrderId
+                    "quotation.orderId": quotation.orderId
                 }, function(res) {
 
                     searcher.doSearch();
@@ -346,15 +347,15 @@ $(function() {
         handle: function(v) {
 
             if (v.defaults == 0) {
-                decorationQuotation.defaultsQid = v.qid;
+                quotation.defaultsQid = v.qid;
                 var that = $(this);
                 var options = {
                     "quotation.qid": v.qid,
-                    "quotation.orderId": decorationQuotation.decorationOrderId
+                    "quotation.orderId": quotation.orderId
                 };
                 com.post(api.quotation.changeQuotationForDefault, options, function(res) {
 
-                    decorationQuotation.defaultsQid = res.quotation.qid;
+                    quotation.defaultsQid = res.quotation.qid;
                     $(".btn-default").each(function(i, e) {
 
                         $(e).removeClass("hide");
@@ -419,10 +420,12 @@ $(function() {
         clazz: "btn-purple",
         handle: function(v) {
 
-            params["editFlg"] = true;
+            params.quotation.editFlg = true;
+            params.quotation.orderId = quotation.orderId;
+            params.quotation.quotation = v;
+
             params.historyPage = api.index.quotationIndex.url;
-            params["decorationOrderId"] = decorationQuotation.decorationOrderId;
-            params["quotationId"] = v.qid;
+
             com.switchPage(api.index.selectionIndex.url);
         }
     }, {
@@ -430,10 +433,12 @@ $(function() {
         clazz: "btn-warning",
         handle: function(v) {
 
-            params["editFlg"] = true;
+            params.quotation.editFlg = true;
+            params.quotation.orderId = quotation.orderId;
+            params.quotation.quotation = v;
+
             params.historyPage = api.index.quotationIndex.url;
-            params["decorationOrderId"] = decorationQuotation.decorationOrderId;
-            params["quotationId"] = v.qid;
+
             com.switchPage(api.index.normPart.url);
         }
     }, ];

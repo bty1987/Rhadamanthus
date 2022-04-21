@@ -43,7 +43,7 @@ $(function(){
 				updateUserQiTaBtn: com.focusPage('#updateUserQiTaBtn', '#updateUserQiTaModal')
 			},
 			getProp: {"0": true, "1": false, "true": 0, "false": 1},
-			isExpert: params.isExpert
+			isExpert: params.personel.isExpert
 	};
 	
 	if (userDetail.isExpert == false) {
@@ -53,7 +53,7 @@ $(function(){
 		com.focusPage('#userBankCardNum').parents('div.profile-info-row').css('display','none');
 	}
 	
-	//有关合同控件绑定
+	// 有关合同控件绑定
 	userDetail.items.name = com.focusPage("#name", "#addContractModal");
 	userDetail.items.signTime = com.focusPage("#signTime", "#addContractModal");
 	userDetail.items.startTime = com.focusPage("#startTime", "#addContractModal");
@@ -64,7 +64,7 @@ $(function(){
     com.datetime(com.focusPage("#startTime", "#addContractModal"));
     com.datetime(com.focusPage("#endTime", "#addContractModal"));
     
-    //有关教育控件绑定
+    // 有关教育控件绑定
     userDetail.items.organ = com.focusPage('#organ', '#addEducationModal');
     userDetail.items.certificate = com.focusPage('#certificate', '#addEducationModal');
     userDetail.items.beginTime = com.focusPage('#beginTime', '#addEducationModal');
@@ -74,7 +74,7 @@ $(function(){
     com.datetime(com.focusPage("#beginTime", "#addEducationModal"));
     com.datetime(com.focusPage("#educationEndTime", "#addEducationModal"));
     
-    //有关工作控件绑定
+    // 有关工作控件绑定
     userDetail.items.company = com.focusPage('#company', '#addOperationModal');
     userDetail.items.trade = com.focusPage('#trade', '#addOperationModal');
     userDetail.items.duty = com.focusPage('#duty', '#addOperationModal');
@@ -85,7 +85,7 @@ $(function(){
     com.datetime(com.focusPage("#opeBeginTime", "#addOperationModal"));
     com.datetime(com.focusPage("#opeEndTime", "#addOperationModal"));
     
-    //人员基本信息
+    // 人员基本信息
     userDetail.items.genders = com.focusPage('#genders', '#updateUserBasicModal');
     userDetail.items.heights = com.focusPage('#heights', '#updateUserBasicModal');
     userDetail.items.weights = com.focusPage('#weights', '#updateUserBasicModal');
@@ -96,7 +96,7 @@ $(function(){
     userDetail.items.emails = com.focusPage('#emails', '#updateUserBasicModal');
     userDetail.items.hobbys = com.focusPage('#hobbys', '#updateUserBasicModal');
     
-    //人员户籍信息
+    // 人员户籍信息
     userDetail.items.isMarrieds = com.focusPage('#isMarrieds', '#updateUserHouseholdModal');
     userDetail.items.isBirths = com.focusPage('#isBirths', '#updateUserHouseholdModal');
     userDetail.items.isHouseLoans = com.focusPage('#isHouseLoans', '#updateUserHouseholdModal');
@@ -116,7 +116,7 @@ $(function(){
     userDetail.items.fangliners = com.focusPage('#fangliners', '#updateUserHouseholdModal');
     userDetail.items.hometownPlace = com.focusPage('#hometownPlace', '#updateUserHouseholdModal');
     
-    //人员工作信息
+    // 人员工作信息
     userDetail.items.isContracts = com.focusPage('#isContracts', '#updateUserWorkModal');
     userDetail.items.signTimes = com.focusPage('#signTimes', '#updateUserWorkModal');
     userDetail.items.eignTimes = com.focusPage('#eignTimes', '#updateUserWorkModal');
@@ -135,7 +135,7 @@ $(function(){
     com.datetime(com.focusPage("#formTimes", "#updateUserWorkModal"));
     com.datetime(com.focusPage("#insuranceTimes", "#updateUserWorkModal"));
     
-    //人员招聘信息
+    // 人员招聘信息
     userDetail.items.firstTimes = com.focusPage('#firstTimes', '#updateUserEmployModal');
     userDetail.items.entryTimes = com.focusPage('#entryTimes', '#updateUserEmployModal');
     userDetail.items.employWays = com.focusPage('#employWays', '#updateUserEmployModal');
@@ -153,7 +153,7 @@ $(function(){
     com.datetime(com.focusPage("#employTimes", "#updateUserEmployModal"));
     com.datetime(com.focusPage("#graduateTimes", "#updateUserEmployModal"));
     
-    //人员归属信息
+    // 人员归属信息
     userDetail.items.userIds = com.focusPage('#userIds', '#updateUserBelongModal');
     userDetail.items.oldUserIds = com.focusPage('#oldUserIds', '#updateUserBelongModal');
     userDetail.items.userNames = com.focusPage('#userNames', '#updateUserBelongModal');
@@ -187,7 +187,7 @@ $(function(){
         },null,false);
     }).trigger("change");
     
-    //人员其他信息
+    // 人员其他信息
     userDetail.items.palarys = com.focusPage('#palarys', '#updateUserQiTaModal');
     userDetail.items.salarys = com.focusPage('#salarys', '#updateUserQiTaModal');
     userDetail.items.banks = com.focusPage('#banks', '#updateUserQiTaModal');
@@ -254,7 +254,7 @@ $(function(){
 
 	function queryUserInfo(){
 		
-    	com.post(api.personel.queryUserInfoByUserId, {"userInfo.user.userId": params.tempUserId}, function(res){
+    	com.post(api.personel.queryUserInfoByUserId, {"userInfo.user.userId": params.personel.userId}, function(res){
         	
             var $userInfo = res.userInfo;
 
@@ -340,7 +340,7 @@ $(function(){
             com.focusPage('#rank').html(com.checkNull($userInfo.rank, "无"));
             com.focusPage('#form').html($userInfo.form == 0 ? "产值" : "非产值");
             
-          //修改人员基本信息弹窗
+          // 修改人员基本信息弹窗
             com.focusPage('#updateUsersBasic').bindClick(function(){
             	updateUsersBasic($userInfo);
             	userDetail.modals.updateUserBasicModal.modal('show');
@@ -486,10 +486,10 @@ $(function(){
 
 	function update(){
 
-        com.post(api.personel.queryUserInfoByUserId, {"userInfo.user.userId": params.tempUserId}, function(res){
+        com.post(api.personel.queryUserInfoByUserId, {"userInfo.user.userId": params.personel.userId}, function(res){
         	var $userInfo = res.userInfo;
         	
-        //修改人员基本信息更新按钮点击事件
+        // 修改人员基本信息更新按钮点击事件
         userDetail.btns.updateUserBasicBtn.bindClick(function(){
         	
     		 if(com.validate("updateUserBasicModal")){
@@ -525,7 +525,7 @@ $(function(){
         
         com.initTypeahead('fangliners', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name" : "", "user.status" : 0}, "autoFillKeyValue", "key", "value", null);
         
-        //修改人员户籍信息更新按钮点击
+        // 修改人员户籍信息更新按钮点击
         userDetail.btns.updateUserHouseholdBtn.bindClick(function(){
        		 if(com.validate("updateUserHouseholdModal")){
     		     return false;
@@ -823,7 +823,7 @@ $(function(){
     	com.focusPage('.operations').empty();
     	com.focusPage('.userExperience').empty();
     	
-    	com.post(api.personel.queryUserContract, {"userContract.uid": params.uid}, function (data) {
+    	com.post(api.personel.queryUserContract, {"userContract.uid": params.personel.uid}, function (data) {
         	if(data.userContracts.length == 0){
         		emptyData('contract');
         	}else{
@@ -853,7 +853,7 @@ $(function(){
         	}
         }, null, false);
         
-        com.post(api.personel.queryUserEducation, {"userEducation.uid": params.uid}, function (data) {
+        com.post(api.personel.queryUserEducation, {"userEducation.uid": params.personel.uid}, function (data) {
         	if(data.userEducations.length == 0){
         		emptyData('educations');
         	}else{
@@ -883,7 +883,7 @@ $(function(){
         	}
         }, null, false);
         
-        com.post(api.personel.queryUserOperation, {"userOperation.uid": params.uid}, function (data) {
+        com.post(api.personel.queryUserOperation, {"userOperation.uid": params.personel.uid}, function (data) {
         	if(data.userOperations.length == 0){
         		emptyData('operations');
         	}else{
@@ -913,7 +913,7 @@ $(function(){
         	}
         }, null, false);
         
-        com.post(api.personel.queryUserExperienceByUid, {"userExperience.uid": params.uid}, function (data) {
+        com.post(api.personel.queryUserExperienceByUid, {"userExperience.uid": params.personel.uid}, function (data) {
         	if(data.userExperiences.length == 0){
         		emptyData('userExperience');
         	}else{
@@ -948,19 +948,19 @@ $(function(){
         var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
     }
     
-    //合同添加弹窗
+    // 合同添加弹窗
     com.focusPage('#addContractBtn').bindClick(function(){
     	userDetail.flag = true;
     	userDetail.modals.addContractModal.modal('show');
     });
     
-    //教育添加弹窗
+    // 教育添加弹窗
     com.focusPage('#addEducationsBtn').bindClick(function(){
     	userDetail.flag = true;
     	userDetail.modals.addEducationModal.modal('show');
     });
     
-    //工作弹窗
+    // 工作弹窗
     com.focusPage('#addOperationsBtn').bindClick(function(){
     	userDetail.flag = true;
     	userDetail.modals.addOperationModal.modal('show');
@@ -985,7 +985,7 @@ $(function(){
     	}, null, false);
     });
     
-    //添加教育保存按钮点击事件
+    // 添加教育保存按钮点击事件
     userDetail.btns.saveEducationBtn.bindClick(function(){
 
         if(com.validate("addEducationModal")){
@@ -993,7 +993,7 @@ $(function(){
         }
     	
     	var options = {
-    		"userEducation.uid": params.uid,
+    		"userEducation.uid": params.personel.uid,
     		"userEducation.organ": userDetail.items.organ.val(),
     		"userEducation.certificate": userDetail.items.certificate.val(),
     		"userEducation.beginTime": userDetail.items.beginTime.val(),
@@ -1013,7 +1013,7 @@ $(function(){
     	}, null, false);
     });
     
-    //添加合同保存按钮点击事件
+    // 添加合同保存按钮点击事件
     userDetail.btns.saveContractBtn.bindClick(function(){
     	
     	if(com.validate("addContractModal")){
@@ -1021,7 +1021,7 @@ $(function(){
         }
     	
     	var options = {
-        		"userContract.uid": params.uid,
+        		"userContract.uid": params.personel.uid,
         		"userContract.name": userDetail.items.name.val(),
         		"userContract.signTime": userDetail.items.signTime.val(),
         		"userContract.startTime": userDetail.items.startTime.val(),
@@ -1047,7 +1047,7 @@ $(function(){
         }
     	
     	var options = {
-    		"userOperation.uid": params.uid,
+    		"userOperation.uid": params.personel.uid,
     		"userOperation.company": userDetail.items.company.val(),
     		"userOperation.trade": userDetail.items.trade.val(),
     		"userOperation.duty": userDetail.items.duty.val(),

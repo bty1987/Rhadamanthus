@@ -243,7 +243,7 @@ jQuery(function($) {
                 params.building.houseSource = v;
                 params.building.page = "houseSource";
 
-                com.popup4page("#stockRecordPopUp", "/views/building/houseSourceDetail.html", "查看");
+                com.popup4page("#stockRecordPopUp", api.index.houseSourceDetail.url, "查看");
             });
 
             // 绑定客源
@@ -269,7 +269,7 @@ jQuery(function($) {
                 params.building.houseSource = v;
                 params.building.flag = true;
 
-                com.popup4page("#stockRecordPopUp", "/views/building/buildingRecord.html", "跟进记录");
+                com.popup4page("#stockRecordPopUp", api.index.buildingRecord.url, "跟进记录");
             });
 
             // 启用禁用
@@ -331,9 +331,7 @@ jQuery(function($) {
     // 绑定客源,创建房产单
     function saveBuildingData() {
 
-        if (com.validate("buildingModal") || houseSource.repeatFlg) {
-            return false;
-        }
+        if (com.validate("buildingModal") || houseSource.repeatFlg) { return false; }
 
         var options = {
             'building.houseSource.hsid': houseSource.hsid,

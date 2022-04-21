@@ -76,7 +76,7 @@ $(function () {
             $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
             $btnstorehouse.click(function () {
-                params["promissionUser"] = v;
+                params.manifest.promissionUser = v;
                 com.focusPage("#optPopUp").attr('data-userId', v.userId);
                 com.popup4page("#optPopUp", "views/manifest/storehouse4rightitem.html", '仓库权限配置');
             });

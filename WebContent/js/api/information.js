@@ -19,7 +19,23 @@ $.extend(api.index, {
     },
     vpaymentReceiptIndex: {
         url: "/views/information/vpaymentReceipt.html"
-    }
+    },
+    activityItem: {
+        url: "/views/information/activityItem.html"
+    },
+    stockRecord: {
+        url: "/views/information/stockRecord.html"
+    },
+    vaward: {
+        url: "/views/information/vaward.html"
+    },
+    vaward2print: {
+        url: "/views/information/vaward2print.html"
+    },
+    plan2create: {
+        url: "/views/information/plan2create.html"
+    },
+
 });
 
 $.extend(api, {

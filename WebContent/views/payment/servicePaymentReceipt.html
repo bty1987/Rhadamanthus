@@ -11,7 +11,7 @@
 	<script src="../../assets/ace/js/ace-elements.js"></script>
 	<script src="../../assets/ace/js/ace.js"></script>
 	<script src="../../assets/altogether/js/html2canvas.js"></script>
-	<script src="../../assets/altogether/js/jspdf.min.js"></script>
+	<script src="../../assets/altogether/js/jquery.qrcode.min.js"></script>
 <style type="text/css">
 	.PageNext{page-break-after: always;}
 </style>
@@ -27,6 +27,10 @@
 		<button class="btn-info" id="servicecustomerSignCode">二维客签</button>
 		<button class="btn-danger" id="servicecustomerSignSend">客签通知</button>
 	</div>
+
+	<div class="modal fade" id="servicepaymentContractModal" tabindex="-1"></div>
+
+	<div id="servicepaymentContractQrcodeModal"></div>
 
 	<script>
 		parent.$.loadScript(['js/utils/paymentUtils.js', 'js/payment/servicePaymentReceipt.js'], "../../", window.frameElement, $);

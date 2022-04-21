@@ -18,7 +18,7 @@ $(function() {
             managePrice: com.focusPage("#managePrice", "#protationModal")
         },
 
-        decorationOrderId: params.decorationOrderId,
+        orderId: params.quotation.orderId,
 
         editFlg: 0,
         leftflg: false,
@@ -54,7 +54,7 @@ $(function() {
         if (protation.editFlg == 0) {
             var options = {
                 "protation.ppid": protation.items.produce.val(),
-                "protation.orderId": protation.decorationOrderId,
+                "protation.orderId": protation.orderId,
                 "protation.name": protation.items.name.val(),
                 "protation.comment": protation.items.comment.val(),
                 "protation.preferPrice": protation.items.preferPrice.val(),
@@ -67,7 +67,7 @@ $(function() {
             }, null, false);
         } else if (protation.editFlg == 1) {
             var options = {
-                "protation.orderId": protation.decorationOrderId,
+                "protation.orderId": protation.orderId,
                 "protation.pid": protation.items.pid.val(),
                 "protation.name": protation.items.name.val(),
                 "protation.comment": protation.items.comment.val(),
@@ -104,7 +104,7 @@ $(function() {
         var protationList = com.focusPage("#protationList").html("");
 
         com.post(api.decoration.queryDecorationForCommonByOrderId, {
-            "decoration.orderId": protation.decorationOrderId
+            "decoration.orderId": protation.orderId
         }, function(res) {
 
             drawdecoration(res.decoration);
@@ -136,7 +136,7 @@ $(function() {
     var searcher = new Searcher();
 
     searcher.set("pageltList", "pageltList", "protationList", api.quotation.queryProtationByOrderId, {
-        "protation.orderId": protation.decorationOrderId,
+        "protation.orderId": protation.orderId,
     }, null, null, "protations", true);
 
     var cardprops = [{
@@ -184,8 +184,9 @@ $(function() {
         clazz: "btn-success",
         handle: function(v) {
 
-            params["decorationOrderId"] = v.orderId;
-            params["protationId"] = v.pid;
+            params.quotation.orderId = v.orderId;
+            params.quotation.protation = v;
+
             com.switchPage("views/quotation/protationPart.html");
         }
     }, {
@@ -204,7 +205,7 @@ $(function() {
 
                 com.post(api.quotation.deleteProtation, {
                     "protation.pid": v.pid,
-                    "protation.orderId": protation.decorationOrderId
+                    "protation.orderId": protation.orderId
                 }, function(res) {
 
                     searcher.doSearch();
@@ -220,7 +221,7 @@ $(function() {
                 var that = $(this)
                 var options = {
                     "protation.pid": v.pid,
-                    "protation.orderId": protation.decorationOrderId,
+                    "protation.orderId": protation.orderId,
                 }
 
                 com.post(api.quotation.changeProtationForDefault, options, function(res) {

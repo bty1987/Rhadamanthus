@@ -1,4 +1,4 @@
-jQuery(function ($) {
+jQuery(function($) {
 
     api = parent.api;
     config = parent.config;
@@ -9,39 +9,45 @@ jQuery(function ($) {
 
     var commonInfo = {};
 
-    commonInfo["aid"] = _params["accessories.aid"];
-    commonInfo["no"] = _params["accessories.no"];
-    commonInfo["orderId"] = _params["accessories.orderId"];
-    commonInfo["createTime"] = _params["accessories.createTime"];
-    commonInfo["creater"] = _params["accessories.creater"];
-    commonInfo["manifestTime"] = _params["accessories.manifestTime"];
-    commonInfo["printnum"] = _params["accessories.printnum"];
+    commonInfo["aid"] = _params.manifest.accessories.aid;
+    commonInfo["no"] = _params.manifest.accessories.no
+    commonInfo["orderId"] = _params.manifest.accessories.orderId
+    commonInfo["createTime"] = _params.manifest.accessories.createTime
+    commonInfo["creater"] = _params.manifest.accessories.creater
+    commonInfo["manifestTime"] = _params.manifest.accessories.manifestTime
+    commonInfo["printnum"] = _params.manifest.accessories.printnum
 
-    com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": commonInfo["orderId"]}, function (data) {
+    com.post(api.decoration.queryDecorationForCommonByOrderId, {
+        "decoration.orderId": commonInfo["orderId"]
+    }, function(data) {
         commonInfo["address"] = data.decoration.house.village.name + " " + data.decoration.house.houseNumber;
         commonInfo["supervisor"] = data.decoration.supervisor.userName == null ? "---" : data.decoration.supervisor.userName;
         commonInfo["dept"] = data.decoration.supervisor.dept.name == null ? "---" : data.decoration.supervisor.dept.name;
         commonInfo["phone"] = data.decoration.supervisor.phone == null ? "---" : data.decoration.supervisor.phone;
     }, null, false);
 
-    if (_params["accessories.status"] == 1) {
-        com.post(api.inventory.queryAccessoriesItemByAid, {"accessoriesItem.aid": _params["accessories.aid"]}, function (res) {
+    if (_params.manifest.accessories.status == 1) {
+        com.post(api.inventory.queryAccessoriesItemByAid, {
+            "accessoriesItem.aid": _params.manifest.accessories.aid
+        }, function(res) {
             createReceiptTable(commonInfo, res.accessoriesItems)
         });
     } else {
 
         var options = {
-            "accessoriesManifest.accessories.aid": _params["accessories.aid"],
+            "accessoriesManifest.accessories.aid": _params.manifest.accessories.aid,
             "accessoriesManifest.manifest.type": 7
         };
 
-        com.post(api.inventory.queryManifestByAid, options, function (res) {
+        com.post(api.inventory.queryManifestByAid, options, function(res) {
 
             var manifest = res.manifests;
 
-            $.each(manifest, function (i, v) {
+            $.each(manifest, function(i, v) {
                 commonInfo["mno"] = v.code;
-                com.post(api.inventory.queryManifestItemByMid, {"manifest.mid": v.mid}, function (res) {
+                com.post(api.inventory.queryManifestItemByMid, {
+                    "manifest.mid": v.mid
+                }, function(res) {
                     createReceiptTable(commonInfo, res.manifestItems);
                 }, null, false);
             });
@@ -49,7 +55,6 @@ jQuery(function ($) {
     }
 
     function createReceiptTable(commonInfo, itemInfo) {
-
 
         var center = $("<center></center>").appendTo($("#accessoriesPrint"));
 
@@ -83,7 +88,7 @@ jQuery(function ($) {
         var designerReceiptTd = $('<td colspan="12" style="padding-left: 10px;"></td>').text('创  建  人: ' + commonInfo["creater"]);
         var createTd = $('<td colspan="4" style="padding-left: 10px;"></td>').text('创  建  人: ' + commonInfo["creater"]);
 
-        if (_params["accessories.status"] == 1) {
+        if (_params.manifest.accessories.status == 1) {
             orderReceiptTr.append(anoTd).append(createrTd).append(totalTd);
             presonReceiptTr.append(statusTd).append(deptTd).append(phoneTd);
             msgReceiptTr.append(createTd).append(createTimeTd2);
@@ -101,11 +106,11 @@ jQuery(function ($) {
         var outstorehouseNameTd = $('<td style="text-align: center;" colspan="2"></td>').html('<strong>单位</strong>').appendTo(receReceiptTr);
         var numTd = $('<td style="text-align: center;" colspan="2"></td>').html('<strong>数量</strong>').appendTo(receReceiptTr);
 
-        $.each(itemInfo, function (i, v) {
+        $.each(itemInfo, function(i, v) {
 
             var outstorehouseName;
 
-            if (_params["accessories.status"] == 1) {
+            if (_params.manifest.accessories.status == 1) {
                 outstorehouseName = "---";
             } else {
                 outstorehouseName = v.outstorehouse.name == null ? "---" : v.outstorehouse.name;

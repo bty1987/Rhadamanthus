@@ -53,7 +53,7 @@ jQuery(function($) {
     decorationContract.items.qrcode = com.focusPage("#qrcode");
 
     com.post(api.decoration.queryDecorationByOrderId, {
-        "decorationOrderId": params.decorationOrderId
+        "decorationOrderId": params.decoration.orderId
     }, function(res) {
 
         var decoration = res.decoration;
@@ -114,7 +114,7 @@ jQuery(function($) {
     var searcher = new Searcher();
 
     searcher.set("pageltList", "pageltList", "contracts", api.decoration.queryDecorationContractByOrderId, {
-        "decorationContract.orderId": params.decorationOrderId
+        "decorationContract.orderId": params.decoration.orderId
     }, null, null, "decorationContracts", true);
 
     var lineprops = [{
@@ -402,7 +402,7 @@ jQuery(function($) {
         com.showConfirm("确定要注册吗?", function() {
 
             com.post(api.data.registCustomer, {
-                "customer.cid": params.cid
+                "customer.cid": params.decoration.cid
             }, function(res) {
 
                 com.showAlert(com.info, "注册成功");
@@ -414,7 +414,7 @@ jQuery(function($) {
     decorationContract.btns.authentication.on("click", function() {
 
         com.post(api.data.authCustomer, {
-            "customer.cid": params.cid
+            "customer.cid": params.decoration.cid
         }, function(res) {
 
             // com.popup4frame("认证", res.redirect);
@@ -426,7 +426,7 @@ jQuery(function($) {
     decorationContract.btns.sendAuth.on("click", function() {
 
         com.post(api.decoration.sendDecorationContractForAuth, {
-            "decorationContract.orderId": params.decorationOrderId
+            "decorationContract.orderId": params.decoration.orderId
         }, function(res) {
 
             com.popup4frame("认证", res.redirect);
@@ -437,7 +437,7 @@ jQuery(function($) {
     decorationContract.btns.confirm.on("click", function() {
 
         com.post(api.data.confirmCustomer, {
-            "customer.cid": params.cid
+            "customer.cid": params.decoration.cid
         }, function(res) {
 
             searcher.doSearch();
@@ -489,7 +489,7 @@ jQuery(function($) {
 
         com.post(api.decoration.signDecorationContractForCustomer, {
             "decorationContract.dcid": dcid,
-            "customer.cid": params.cid
+            "customer.cid": params.decoration.cid
         }, function(res) {
 
             com.popup4frame("客户签", res.redirect);

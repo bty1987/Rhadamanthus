@@ -1,4 +1,4 @@
-$(function () {
+$(function() {
 
     api = parent.api;
     com = parent.com;
@@ -16,7 +16,9 @@ $(function () {
     var trList = $("#reslist");
     var tabody = $('<tbody> </tbody>');
 
-    com.post(api.ds.personel, {timestamp: (new Date).getTime()},function(a) {
+    com.post(api.ds.personel, {
+        timestamp: (new Date).getTime()
+    }, function(a) {
 
         politicalType = a.politicalType;
         householdType = a.householdType;
@@ -25,26 +27,37 @@ $(function () {
 
     }, null, false);
 
-    com.post(api.personel.queryUserInfoByUserId, {"userInfo.user.userId": params.tempUserId}, function(res){
+    com.post(api.personel.queryUserInfoByUserId, {
+        "userInfo.user.userId": params.personel.userId
+    }, function(res) {
+
         userInfo = res.userInfo;
         user = userInfo.user;
     }, null, false);
 
-    //教育经历
-    com.post(api.personel.queryUserEducation, {"userEducation.uid": params.uid}, function (data) {
+    // 教育经历
+    com.post(api.personel.queryUserEducation, {
+        "userEducation.uid": params.personel.uid
+    }, function(data) {
+
         if (data.userEducations.length != 0) {
             createPreLineEd(data.userEducations);
         }
-    }, function (e) {
+    }, function(e) {
+
         com.showAlert(com.error, e.errorMsg);
     }, false);
-    
-    //工作经历
-    com.post(api.personel.queryUserOperation,{"userOperation.uid": params.uid}, function (data) {
+
+    // 工作经历
+    com.post(api.personel.queryUserOperation, {
+        "userOperation.uid": params.personel.uid
+    }, function(data) {
+
         if (data.userOperations.length != 0) {
             createPreLineOp(data.userOperations);
         }
-    }, function (e) {
+    }, function(e) {
+
         com.showAlert(com.error, e.errorMsg);
     }, false);
 
@@ -53,7 +66,7 @@ $(function () {
     tabody.appendTo(table);
     createPreFooter();
 
-    function createPreHeader(){
+    function createPreHeader() {
 
         var div = $('<div align="center" class="col-xs-12"></div>');
         var table = $('<table border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse;table-layout:fixed;width:100%;">').appendTo(div);
@@ -63,16 +76,13 @@ $(function () {
         var td1 = $('<td colspan="12" style="border: 1px none;border-right:1px solid;border-left:1px solid;"></td>').text("承诺书").appendTo(tr1);
 
         var tr2 = $('<tr style="border: 1px none;height: 25px;text-align: center;"></tr>').appendTo(table);
-        var td2 = $('<td colspan="12" align="left" style="border: 1px none;border-right:1px solid;border-left:1px solid;"></td>').text("1、我在本应聘申请表内所填写的各项内容均属事实，" +
-                "保证没有与事实不符的欺骗行为。如因上述行为所造成的一切法律责任和经济损失均由我本人承担。如有不一致的情况，视为不符合本单位的录用条件，本单位予以解除劳动关系。").appendTo(tr2);
+        var td2 = $('<td colspan="12" align="left" style="border: 1px none;border-right:1px solid;border-left:1px solid;"></td>').text("1、我在本应聘申请表内所填写的各项内容均属事实，" + "保证没有与事实不符的欺骗行为。如因上述行为所造成的一切法律责任和经济损失均由我本人承担。如有不一致的情况，视为不符合本单位的录用条件，本单位予以解除劳动关系。").appendTo(tr2);
 
         var tr3 = $('<tr style="border: 1px none;height: 25px;text-align: center;"></tr>').appendTo(table);
-        var td3 = $('<td colspan="12" align="left" style="border: 1px none;border-right:1px solid;border-left:1px solid;"></td>').text("2、承诺主动协助公司办理保险关系新建或转移等相关" +
-                "入职所需手续并提供所需材料。如非公司原因导致保险关系无法正常办理所产生的后果由本人承担，与公司无关。").appendTo(tr3);
+        var td3 = $('<td colspan="12" align="left" style="border: 1px none;border-right:1px solid;border-left:1px solid;"></td>').text("2、承诺主动协助公司办理保险关系新建或转移等相关" + "入职所需手续并提供所需材料。如非公司原因导致保险关系无法正常办理所产生的后果由本人承担，与公司无关。").appendTo(tr3);
 
         var tr4 = $('<tr style="border: 1px none;height: 25px;text-align: center;"></tr>').appendTo(table);
-        var td4 = $('<td colspan="9" align="left" style="border: 1px solid;border-top:1px none;border-right:1px none;"></td>').text("3、我同意接受公司对我所填写的各项经历进行背景调" +
-                "查。").appendTo(tr4);
+        var td4 = $('<td colspan="9" align="left" style="border: 1px solid;border-top:1px none;border-right:1px none;"></td>').text("3、我同意接受公司对我所填写的各项经历进行背景调" + "查。").appendTo(tr4);
         var td5 = $('<td colspan="3" align="left" style="border: 1px solid;border-top:1px none;border-left:1px none;"></td>').text("承诺人签字：").appendTo(tr4);
 
         var tr5 = $('<tr style="border: 1px none;height: 25px;text-align: center;"></tr>').appendTo(table);
@@ -90,7 +100,7 @@ $(function () {
         var td15 = $('<td colspan="2" style="border: 1px solid;"></td>').text("现用名").appendTo(tr6);
         var td16 = $('<td style="border: 1px solid;"></td>').text(com.checkNull(userInfo.user.currentName, "无")).appendTo(tr6);
         var td17 = $('<td style="border: 1px solid;"></td>').text("民族").appendTo(tr6);
-        
+
         var td18 = $('<td style="border: 1px solid;"></td>').text(com.checkNull(userInfo.nation, "无")).appendTo(tr6);
         var td19 = $('<td colspan="2" style="border: 1px solid;"></td>').text("最高学历").appendTo(tr6);
         var td20 = $('<td style="border: 1px solid;"></td>').text(com.checkNull(educationType[userInfo.education].value, "无")).appendTo(tr6);
@@ -144,7 +154,7 @@ $(function () {
         return table;
     }
 
-    function createPreLineEd(items){
+    function createPreLineEd(items) {
 
         var tr13 = $('<tr style="border: 1px none;height: 25px;text-align: center;"></tr>').appendTo(tabody);
         var td54 = $('<td colspan="12" bgcolor="#D9D9D9" style="border: 1px solid;border-top:1px none;"></td>').text("教育背景").appendTo(tr13);
@@ -156,7 +166,7 @@ $(function () {
         var td58 = $('<td colspan="2" style="border: 1px solid;border-top:1px none;"></td>').text("专业").appendTo(tr14);
         var td59 = $('<td colspan="2" style="border: 1px solid;border-top:1px none;"></td>').text("取得证书").appendTo(tr14);
 
-        $.each(items, function (i, v) {
+        $.each(items, function(i, v) {
 
             var tr15 = $('<tr style="border: 1px none;height: 25px;text-align: center;"></tr>').appendTo(tabody);
             var td60 = $('<td colspan="2" style="border: 1px solid;border-top:1px none;"></td>').text(v.beginTime + "-" + v.endTime).appendTo(tr15);
@@ -168,7 +178,7 @@ $(function () {
         });
     }
 
-    function createPreLineOp(items){
+    function createPreLineOp(items) {
 
         var tr16 = $('<tr style="border: 1px none;height: 25px;text-align: center;"></tr>').appendTo(tabody);
         var td65 = $('<td colspan="12" bgcolor="#D9D9D9" style="border: 1px solid;border-top:1px none;"></td>').text("工作经历（所有工作经历必须填写完整）").appendTo(tr16);
@@ -181,7 +191,7 @@ $(function () {
         var td70 = $('<td style="border: 1px solid;border-top:1px none;"></td>').text("薪金").appendTo(tr17);
         var td71 = $('<td colspan="4" style="border: 1px solid;border-top:1px none;"></td>').text("离职原因").appendTo(tr17);
 
-        $.each(items, function (i, v) {
+        $.each(items, function(i, v) {
 
             var tr18 = $('<tr style="border: 1px none;height: 25px;text-align: center;"></tr>').appendTo(tabody);
             var td72 = $('<td colspan="2" style="border: 1px solid;border-top:1px none;"></td>').text(v.beginTime + "-" + v.endTime).appendTo(tr18);
@@ -194,7 +204,7 @@ $(function () {
         });
     }
 
-    function createPreFooter(){
+    function createPreFooter() {
 
         var tr19 = $('<tr style="border: 1px none;height: 25px;text-align: center;"></tr>').appendTo(tabody);
         var td78 = $('<td colspan="3" style="border: 1px solid;border-top:1px none;"></td>').text("是否有驾照").appendTo(tr19);
@@ -225,7 +235,7 @@ $(function () {
         var td95 = $('<td colspan="3" style="border: 1px solid;border-top:1px none;"></td>').text(com.checkNull(userInfo.isHMID == 0 ? "有" : "无", "无")).appendTo(tr23);
         var td96 = $('<td colspan="3" style="border: 1px solid;border-top:1px none;"></td>').text("是否有台湾通行证").appendTo(tr23);
         var td97 = $('<td colspan="3" style="border: 1px solid;border-top:1px none;"></td>').text(com.checkNull(userInfo.isTWID == 0 ? "有" : "无", "无")).appendTo(tr23);
-        
+
         var tr24 = $('<tr style="border: 1px none;height: 25px;text-align: center;"></tr>').appendTo(tabody);
         var td98 = $('<td colspan="3" style="border: 1px solid;border-top:1px none;"></td>').text("是否有独立住房").appendTo(tr24);
         var td99 = $('<td colspan="3" style="border: 1px solid;border-top:1px none;"></td>').text("").appendTo(tr24);
@@ -237,33 +247,34 @@ $(function () {
         var td103 = $('<td colspan="3" style="border: 1px solid;border-top:1px none;"></td>').text("").appendTo(tr25);
         var td104 = $('<td colspan="3" style="border: 1px solid;border-top:1px none;"></td>').text("公司提供培训机会时，是否同意并签订协议").appendTo(tr25);
         var td105 = $('<td colspan="3" style="border: 1px solid;border-top:1px none;"></td>').text("").appendTo(tr25);
-        
+
         var tr26 = $('<tr style="border: 1px none;height: 25px;text-align: center;"></tr>').appendTo(tabody);
         var td106 = $('<td colspan="3" style="border: 1px solid;border-top:1px none;"></td>').text("是否曾有前科劣迹、行政/邢事拘留等经历").appendTo(tr26);
         var td107 = $('<td colspan="3" style="border: 1px solid;border-top:1px none;"></td>').text("").appendTo(tr26);
         var td108 = $('<td colspan="3" style="border: 1px solid;border-top:1px none;"></td>').text("是否患有精神系统疾病、传染性疾病、家族遗传病史、既往重病史").appendTo(tr26);
         var td109 = $('<td colspan="3" style="border: 1px solid;border-top:1px none;"></td>').text("").appendTo(tr26);
-        
+
         var tr27 = $('<tr style="border: 1px none;height: 25px;text-align: center;"></tr>').appendTo(tabody);
         var td110 = $('<td colspan="12" style="border: 1px solid;border-top:1px none;"></td>').text("以上内容在办理入职时填写完整").appendTo(tr27);
 
     }
 
     function getBirthday(idCard) {
+
         var birthday = "";
-        if(idCard != null && idCard != ""){
-            birthday = idCard.substr(6,8);
+        if (idCard != null && idCard != "") {
+            birthday = idCard.substr(6, 8);
             birthday = birthday.replace(/(.{4})(.{2})/, "$1-$2-");
         }
         return birthday;
     }
 
-    function calaAge(birth){
-        var birthday = new Date(birth.replace(/-/g, "\/")); 
-        var d = new Date(); 
-        var age = d.getFullYear() - birthday.getFullYear() - ((d.getMonth() < birthday.getMonth() || d.getMonth( )== birthday.getMonth() && d.getDate() < birthday.getDate()) ? 1 : 0);
+    function calaAge(birth) {
+
+        var birthday = new Date(birth.replace(/-/g, "\/"));
+        var d = new Date();
+        var age = d.getFullYear() - birthday.getFullYear() - ((d.getMonth() < birthday.getMonth() || d.getMonth() == birthday.getMonth() && d.getDate() < birthday.getDate()) ? 1 : 0);
         return age;
     }
 
 });
-

@@ -45,8 +45,8 @@ jQuery(function($) {
         	houseType : com.focusPage("#con-housetype")
         },
         
-        contractArgs: params.contractArgs,
-        decorationOrderId : params.decorationOrderId,
+        contractArgs: params.decoration.contractargs,
+        decorationOrderId : params.decoration.orderId,
         
         decorationType: {},
 
@@ -284,8 +284,8 @@ jQuery(function($) {
             console.log(data);
             
             var options = {
-                "decorationContract.orderId": params.decorationOrderId,
-                "decorationContract.contract.cid": params.contractArgs.cid,
+                "decorationContract.orderId": params.decoration.orderId,
+                "decorationContract.contract.cid": params.decoration.contractargs.cid,
                 "data" : JSON.stringify(data)
             };
             

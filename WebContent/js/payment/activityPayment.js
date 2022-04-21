@@ -221,7 +221,7 @@ jQuery(function ($) {
 
             //打印
             $btnPrint.click(function () {
-                params.activityPayment = v;
+                params.payment.activityPayment = v;
                 com.popup("专用收款收据__会员编号:" + v.mno, api.index.activityPaymentReceiptIndex.url, function () {
                     parent.layer.getFrameIndex(window.name);
                 }, null, true);

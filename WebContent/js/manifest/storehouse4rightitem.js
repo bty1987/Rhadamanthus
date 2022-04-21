@@ -32,7 +32,7 @@ var storehouseRight = (function(){
 
         renderByUserInfo : function(_list){
 
-            var _user = params["promissionUser"];
+            var _user = params.manifest.promissionUser;
             
             var $wrapper = this.settings.wrapper;
             
@@ -59,7 +59,7 @@ var storehouseRight = (function(){
         saveOptionChange : function(){
 
             var _params = {
-                "user.userId" : params["promissionUser"]["userId"]
+                "user.userId" : params.manifest.promissionUser.userId
             };
             var $menus = $('input[type="checkbox"]:checked', option.settings.wrapper);
             $menus.length && $menus.each(function(i){

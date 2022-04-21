@@ -25,7 +25,7 @@ jQuery(function ($) {
         options: {}
     };
 
-    com.post(api.construction.queryAcceptance, {"acceptance.orderId": params.orderId}, function (res) {
+    com.post(api.construction.queryAcceptance, {"acceptance.orderId": params.construction.orderId}, function (res) {
         var acceptanceInfo = res.acceptance;
         acceptanceDetail.options["acceptance.actId"] = acceptanceInfo.actId;
 
@@ -51,7 +51,7 @@ jQuery(function ($) {
     });
 
     
-    com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": params.orderId}, function (res) {
+    com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": params.construction.orderId}, function (res) {
         var constructionSchedule = res.constructionSchedules;
 
         $.each(constructionSchedule, function (i, v) {
@@ -60,7 +60,7 @@ jQuery(function ($) {
         });
     }, null, false);
 
-    com.post(api.construction.queryConstructerByOrderId, {"constructer.orderId": params.orderId}, function (res) {
+    com.post(api.construction.queryConstructerByOrderId, {"constructer.orderId": params.construction.orderId}, function (res) {
         constructers = res.constructers;
 
         if (constructers && constructers.length > 0) {
@@ -91,7 +91,7 @@ jQuery(function ($) {
             }
         }
 
-        acceptanceDetail.options["acceptance.orderId"] = params.orderId;
+        acceptanceDetail.options["acceptance.orderId"] = params.construction.orderId;
 
         com.post(api.construction.updateAcceptance, acceptanceDetail.options, function (res) {
             com.showAlert(com.info, "提交成功!");

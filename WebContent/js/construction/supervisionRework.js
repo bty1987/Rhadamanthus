@@ -1,10 +1,10 @@
-jQuery(function ($) {
+jQuery(function($) {
 
     var rework = {
         saveBtn: com.focusPage("#SaveBtn"),
         cancellBtn: com.focusPage("#cancelBtn"),
 
-        modals:{
+        modals: {
             modal: com.focusPage("#reworkModal")
         },
 
@@ -19,7 +19,7 @@ jQuery(function ($) {
 
     rework.saveBtn.bindClick(saveData);
 
-    rework.modals.modal.on("hide.bs.modal", function(){
+    rework.modals.modal.on("hide.bs.modal", function() {
 
         com.cleanItems(rework.items);
         com.closeTip();
@@ -29,14 +29,14 @@ jQuery(function ($) {
 
     com.datetime(rework.items.createTime);
 
-    var displayFunc = (function () {
+    var displayFunc = (function() {
 
-        var renderList = function (tableId, listData) {
+        var renderList = function(tableId, listData) {
             var $tableWrap = com.focusPage('#' + tableId).empty();
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
-                $.each(listData, function (i, v) {
+                $.each(listData, function(i, v) {
                     var $liLine = creatLine(v);
 
                     $liLine.appendTo($ul);
@@ -46,7 +46,7 @@ jQuery(function ($) {
             }
         };
 
-        var creatLine = function (v) {
+        var creatLine = function(v) {
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons').css('padding-top', '2px');
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix col-xs-6').css('padding-top', '2px');
@@ -55,13 +55,9 @@ jQuery(function ($) {
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-primary').html("编辑");
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html("删除");
 
-            var propertyArr = [
-                ["创建人:", v.createrName, "grey"],
-                ["返工时间:", v.createTime, "green "],
-                ["返工说明:", v.reworkDes, "grey"]
-            ];
+            var propertyArr = [["创建人:", v.createrName, "grey"], ["返工时间:", v.createTime, "green "], ["返工说明:", v.reworkDes, "grey"]];
 
-            $.each(propertyArr, function (index, value) {
+            $.each(propertyArr, function(index, value) {
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
@@ -71,11 +67,11 @@ jQuery(function ($) {
             $liLine.append($ulProperty);
             $divBtnWrap.append($btnView).append($btnEdit).append($btnDel).appendTo($liLine);
 
-            $btnView.click(function () {
+            $btnView.click(function() {
                 viewSupervisionReworkDrawingIndex(v.rwId);
             });
-            
-            $btnEdit.click(function () {
+
+            $btnEdit.click(function() {
                 rework.editFlag = true;
                 rework.items.createTime.val(v.createTime);
                 rework.items.reworkDes.val(v.reworkDes);
@@ -84,8 +80,8 @@ jQuery(function ($) {
 
                 rework.modals.modal.modal("show");
             });
-            
-            $btnDel.click(function () {
+
+            $btnDel.click(function() {
                 removeRow(v.rwId);
             });
 
@@ -93,22 +89,22 @@ jQuery(function ($) {
         };
 
         return {
-            init: function (tableId, listData) {
+            init: function(tableId, listData) {
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
-            drawLine: function (v) {
+            drawLine: function(v) {
                 return creatLine(v);
             }
         }
     })();
 
     var searcher = new Searcher();
-    searcher.init([], "condList", api.construction.pageReworkByOrderId, function (list) {
+    searcher.init([], "condList", api.construction.pageReworkByOrderId, function(list) {
         displayFunc.init('resultList', list);
     }, "pagenation", "supervisionReworkPostData", {
-        "rework.orderId": params.orderId
-    }, false, null, function () {
+        "rework.orderId": params.construction.orderId
+    }, false, null, function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('id', 'add').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -117,21 +113,22 @@ jQuery(function ($) {
         return [$adda];
     });
 
-    com.focusPage('#add', '#pagenation').click(function () {
+    com.focusPage('#add', '#pagenation').click(function() {
         rework.editFlag = false;
 
         rework.modals.modal.modal("show");
     });
 
     function saveData() {
-        
-        if (com.validate("reworkModal")) return false;
+
+        if (com.validate("reworkModal"))
+            return false;
 
         var url;
         var options = {
             "rework.createTime": rework.items.createTime.val(),
             "rework.reworkDes": rework.items.reworkDes.val(),
-            "rework.orderId": params.orderId
+            "rework.orderId": params.construction.orderId
         };
 
         if (rework.editFlag) {
@@ -141,7 +138,7 @@ jQuery(function ($) {
             url = api.construction.addRework;
         }
 
-        com.post(url, options, function (res) {
+        com.post(url, options, function(res) {
             searcher.doSearch();
         });
 
@@ -149,8 +146,10 @@ jQuery(function ($) {
     }
 
     function removeRow(id) {
-        com.showConfirm("确认删除返工信息吗?", function () {
-            com.post(api.construction.deleteRework, {"rwIds[0]": id}, function (res) {
+        com.showConfirm("确认删除返工信息吗?", function() {
+            com.post(api.construction.deleteRework, {
+                "rwIds[0]": id
+            }, function(res) {
                 searcher.doSearch();
             });
 
@@ -158,7 +157,9 @@ jQuery(function ($) {
     }
 
     function viewSupervisionReworkDrawingIndex(rwId) {
-        params.rwId = rwId;
+
+        params.construction.rwId = rwId;
+
         com.closePopup();
         com.popup4page("#stockRecordPopUp", "/views/construction/supervisionReworkDrawing.html", "返工图纸");
     }

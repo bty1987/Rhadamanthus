@@ -1,6 +1,7 @@
 
 jQuery(function($) {
 	var receipt = {
+		htmlName: "material",
 		paymentTypeData: {},
 		advanceTypeData: {"0":"-"},
 		commonInfo: {},
@@ -9,7 +10,9 @@ jQuery(function($) {
 		bankInfo: {},
 		checkBankInfo: {},
 		receiptsNum:0,
-		receiptNo: ""
+		receiptNo: "",
+		organization: parent.params.company.srganization.name,
+		url: parent.api.index.materialPaymentReceiptIndex.url
 	};
 
 	api = parent.api;
@@ -46,7 +49,7 @@ jQuery(function($) {
 		}
 	}, null, false);
 	
-	com.post(queryDecorationForCommonByOrderId, {"decoration.orderId":params.decorationOrderMOrderId}, function(res){
+	com.post(queryDecorationForCommonByOrderId, {"decoration.orderId":params.payment.orderId}, function(res){
 		var decorationOrder = res.decoration;
 		var commonInfo = {};
 		
@@ -64,7 +67,7 @@ jQuery(function($) {
 
 	}, null, false);
 	
-	com.post(queryMaterialPaymentForNotInitByMrId, {"materialReceipt.mrId":params.mrId}, function(res){
+	com.post(queryMaterialPaymentForNotInitByMrId, {"materialReceipt.mrId":params.payment.mrId}, function(res){
 		var materialPayments = res.materialPayments;
 		var materialBrand = "";
 		var materialPaymentDes = "";
@@ -89,7 +92,7 @@ jQuery(function($) {
 	
 	var queryMaterialReceiptByMrId = api.payment.queryMaterialReceiptByMrId;
 
-	com.post(queryMaterialReceiptByMrId, {"materialReceipt.mrId":params.mrId}, function(res){
+	com.post(queryMaterialReceiptByMrId, {"materialReceipt.mrId":params.payment.mrId}, function(res){
 		var materialReceipt = res.materialReceipt;
 		if(parseFloat(materialReceipt.cash) != 0){
 			var tem = {
@@ -150,7 +153,10 @@ jQuery(function($) {
 		};
 	}
 
-	paymentUtils.showContractBtn(params.mrId, 2, printer.args, receipt.commonInfo.customerName, receipt.receiptNo, "material");
+	paymentUtils.initSignet(receipt.htmlName);
+	paymentUtils.initQrcode(receipt.htmlName);
+	paymentUtils.bindSignet($("#" + receipt.htmlName + "signets"));
+	paymentUtils.showContractBtn(params.payment.mrId, 2, printer.args, receipt.commonInfo.customerName, receipt);
 
 	function createReceiptTable(){
 		var commonInfo = receipt.commonInfo;
@@ -162,7 +168,7 @@ jQuery(function($) {
 		var noTr = $('<tr></tr>').appendTo(noTable);
 		var noTd = $('<td colspan="5"></td>').appendTo(noTr);
 		var headReceiptDiv = $('<div style="text-align: center; background-color:#ffffff"></div>').appendTo(center);
-		receipt.receiptNo = (Array(10).join(0)+params.mrId).slice(-10);
+		receipt.receiptNo = (Array(10).join(0)+params.payment.mrId).slice(-10);
 		var spanNo = $('<span style="float: left;"></span>').html("编号:"+receipt.receiptNo).appendTo(headReceiptDiv);
 		var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(parent.params.company.srganization.name + "代收款收据").appendTo(headReceiptDiv);
 

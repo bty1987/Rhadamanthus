@@ -1,52 +1,56 @@
+$(function() {
 
-$(function(){
-    
     var muser = {
-        items:{
+        items: {
             name: com.focusPage("#name"),
             phone: com.focusPage("#phone"),
             unionvid: com.focusPage("#unionvid"),
             gender: com.focusPage("#gender"),
             birthday: com.focusPage("#birthday"),
         },
-        
+
         btns: {
             saveBtn: com.focusPage("#saveBtn")
         }
     };
-    
+
     com.datetime(com.focusPage(".date-picker"), "date");
-    
+
     muser.btns.saveBtn.click(updateData);
 
-    var displayFunc  = (function(){
-        /*表格样式*/
-        var renderList = function(tableId,listData){
+    var displayFunc = (function() {
+
+        /* 表格样式 */
+        var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
 
-            if(listData && listData.length){
-                
+            if (listData && listData.length) {
+
                 var $ulTitle = createTableTitle();
                 var $ulData = $('<ul></ul>').addClass('flex-table');
-                
+
                 $tableWrap.append($ulTitle).append($ulData);
 
-                $.each(listData,function(i, v){
+                $.each(listData, function(i, v) {
+
                     creatLine(i, v, i == listData.length - 1).appendTo($ulTitle);
                 });
             }
         };
 
-        /*表格头*/
-        var createTableTitle = function(){
+        /* 表格头 */
+        var createTableTitle = function() {
+
             var $ulTitle = $('<ul></ul>').addClass('flex-table');
             var $liTitle = $('<li></li>').addClass('line table-title');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>'));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col5');
-            var titleName ='姓名,电话,性别,生日';
+            var titleName = '姓名,电话,性别,生日';
 
-            $.each(titleName.split(','), function (i, v) {
+            $.each(titleName.split(','), function(i, v) {
+
                 var $cell = $('<div></div>').addClass('cell').html(v);
                 $cell.appendTo($contentWrap);
             });
@@ -57,21 +61,18 @@ $(function(){
 
             return $ulTitle;
         };
-        /*表格体*/
-        var creatLine = function (i, v, lastFlag) {
+        /* 表格体 */
+        var creatLine = function(i, v, lastFlag) {
+
             var $liLine = $('<li></li>').addClass('line');
             var id = i + 1;
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(id));
             var $contentWrap = $('<div></div>').addClass('line-wrap content col5');
 
-            var propertyArr = [
-                [v.name,'grey'],
-                [v.phone == null ? "无": v.phone ,'grey'],
-                [v.gender =="0" ? "男" : "女",'red'],
-                [v.birthday == null ? "无" : v.birthday ,'red']
-            ];
+            var propertyArr = [[v.name, 'grey'], [v.phone == null ? "无" : v.phone, 'grey'], [v.gender == "0" ? "男" : "女", 'red'], [v.birthday == null ? "无" : v.birthday, 'red']];
 
-            $.each(propertyArr, function (i, v) {
+            $.each(propertyArr, function(i, v) {
+
                 var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
@@ -94,38 +95,42 @@ $(function(){
 
             $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
-            //地址点击事件
-            $address.click(function () {
-                
-                params.muser = v;
-                
-                com.popup4page("#userAddressPopUp", 'views/store/address.html', "地址", function(){
+            // 地址点击事件
+            $address.click(function() {
+
+                params.store.muser = v;
+
+                com.popup4page("#userAddressPopUp", 'views/store/address.html', "地址", function() {
+
                     searcher.doSearch();
                 });
             });
 
-            //编辑
-            $update.click(function(){
-                
+            // 编辑
+            $update.click(function() {
+
                 com.cleanItems(muser.items);
-                
+
                 initUpdate(v);
-                
-                com.popup4model('#layerAdd', '编辑', null, function () {
+
+                com.popup4model('#layerAdd', '编辑', null, function() {
+
                     com.clearValidator();
                     searcher.doSearch();
                 });
             });
-            
+
             return $liLine;
         };
 
         return {
-            init : function(tableId,listData){
+            init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
+                renderList(tableId, listData);
             },
-            drawLine : function(v){
+            drawLine: function(v) {
+
                 return creatLine(v);
             }
         };
@@ -133,24 +138,26 @@ $(function(){
 
     var searcher = new Searcher();
 
-    searcher.init( ["store-muser-name"], "condList", api.store.pageMuser, function(data){
-        displayFunc.init('resultList', data);
-    }, "pagenation", "muserPostData", null, false, null, null,'resultList');
+    searcher.init(["store-muser-name"], "condList", api.store.pageMuser, function(data) {
 
-    function initUpdate(v){
-        
+        displayFunc.init('resultList', data);
+    }, "pagenation", "muserPostData", null, false, null, null, 'resultList');
+
+    function initUpdate(v) {
+
         muser.unionId = v.unionId;
-        
+
         muser.items.name.val(v.name);
         muser.items.phone.val(v.phone);
         muser.items.gender.val(v.gender);
         muser.items.birthday.val(v.birthday);
     }
 
-    function updateData(){
-        
-        if(com.validate('form1')) return false;
-        
+    function updateData() {
+
+        if (com.validate('form1'))
+            return false;
+
         var url = api.store.updateMuser;
         var options = {
             "muser.unionId": muser.unionId,
@@ -159,11 +166,11 @@ $(function(){
             "muser.gender": muser.items.gender.val(),
             "muser.birthday": muser.items.birthday.val()
         }
-        
-        com.post(url, options, function(res){
+
+        com.post(url, options, function(res) {
+
             com.closePopup();
             searcher.doSearch();
         });
     }
 });
-

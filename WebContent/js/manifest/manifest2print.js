@@ -1,24 +1,26 @@
 jQuery(function($) {
 
     api = parent.api;
-    config = parent.config ;
+    config = parent.config;
     server = parent.server;
     utils = parent.utils;
     com = parent.com;
     params = parent.params;
 
-    var mid = params["manifest.mid"];
-    
+    var mid = params.manifest.manifest.mid;
+
     var manifestTypes = [''];
     var commonInfo = {};
-    
-    com.post(api.ds.manifest, {}, function(res){
-        $.each(res.manifestType, function(i, e){
-        	manifestTypes.push(e.value);
+
+    com.post(api.ds.manifest, {}, function(res) {
+        $.each(res.manifestType, function(i, e) {
+            manifestTypes.push(e.value);
         });
     }, null, false);
 
-    com.post(api.inventory.queryManifestByMid, {"manifest.mid": mid}, function(res){
+    com.post(api.inventory.queryManifestByMid, {
+        "manifest.mid": mid
+    }, function(res) {
         var manifest = res.manifest;
 
         commonInfo["mid"] = manifest.mid;
@@ -31,12 +33,14 @@ jQuery(function($) {
         commonInfo["type"] = manifest.type;
 
     }, null, false);
-    
-    com.post(api.inventory.queryManifestItemByMid, {"manifest.mid": mid}, function(res){
+
+    com.post(api.inventory.queryManifestItemByMid, {
+        "manifest.mid": mid
+    }, function(res) {
         createReceiptTable(commonInfo, res.manifestItems);
     }, null, false);
 
-    function createReceiptTable(commonInfo, itemInfo, type){
+    function createReceiptTable(commonInfo, itemInfo, type) {
 
         var total = 0;
         var refundTotal = 0;
@@ -86,7 +90,7 @@ jQuery(function($) {
         var outpriceTd = $('<td style="text-align: center;"></td>').html('<strong>出库价</strong>').appendTo(receReceiptTr);
         var numTd = $('<td style="text-align: center;"></td>').html('<strong>数量</strong>').appendTo(receReceiptTr);
 
-        $.each(itemInfo,function(i,v){
+        $.each(itemInfo, function(i, v) {
             var instorehouseName = v.instorehouse.name == null ? "---" : v.instorehouse.name;
             var outstorehouseName = v.outstorehouse.name == null ? "---" : v.outstorehouse.name;
 

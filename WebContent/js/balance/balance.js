@@ -10,7 +10,7 @@ jQuery(function($) {
         },
 
         items: {
-            type : com.focusPage("#type"),
+            type: com.focusPage("#type"),
             belongerName: com.focusPage("#belongerName"),
             amount: com.focusPage("#amount"),
         },
@@ -21,29 +21,31 @@ jQuery(function($) {
 
     balance.btns.addConfirmBtn.bindClick(addBalance);
 
-    balance.modals.addModal.on("hide.bs.modal", function () {
+    balance.modals.addModal.on("hide.bs.modal", function() {
         com.cleanItems(balance.items);
         com.clearValidator();
         com.closeTip();
     });
 
-    com.post(api.ds.balance, {}, function (res) {
+    com.post(api.ds.balance, {}, function(res) {
         balance.items.type.bindData(res.isType, "key", "value");
         balance.isType = res.isType.split("key", "value");
         balance.isStatus = res.isStatus.split("key", "value");
     }, null, false);
 
-    com.initTypeahead('belongerName', api.personel.queryUserByPinyin, "pinyinName", {"user.status" : 0}, "autoFillKeyValue", "key", "value", null);
+    com.initTypeahead('belongerName', api.personel.queryUserByPinyin, "pinyinName", {
+        "user.status": 0
+    }, "autoFillKeyValue", "key", "value", null);
 
-    var displayFunc = (function () {
+    var displayFunc = (function() {
 
-        var renderList = function (tableId, listData) {
+        var renderList = function(tableId, listData) {
 
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
-                $.each(listData, function (i, v) {
+                $.each(listData, function(i, v) {
                     var $liLine = creatLine(v);
 
                     $liLine.appendTo($ul);
@@ -53,7 +55,7 @@ jQuery(function($) {
             }
         };
 
-        var creatLine = function (v) {
+        var creatLine = function(v) {
 
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid')
@@ -67,17 +69,9 @@ jQuery(function($) {
             var $btnApportDetail = $("<a></a>").addClass("btn btn-minier btn-warning").html("分摊明细");
             var $btnBalanceSales = $("<a></a>").addClass("btn btn-minier btn-inverse").html("结算销售");
 
-            var propertyArr = [
-                ["归属人: ", v.belonger.userName, "grey"],
-                ["创建人: ", v.creater.userName, "grey"],
-                ["创建时间: ", v.createTime, "grey"],
-                ["金额: ", v.amount, "blue"],
-                ["余额: ", v.surplus, "blue"],
-                ["类型: ", balance.isType[v.type], "red"],
-                ["状态: ", balance.isStatus[v.status], "red"],
-            ];
+            var propertyArr = [["归属人: ", v.belonger.userName, "grey"], ["创建人: ", v.creater.userName, "grey"], ["创建时间: ", v.createTime, "grey"], ["金额: ", v.amount, "blue"], ["余额: ", v.surplus, "blue"], ["类型: ", balance.isType[v.type], "red"], ["状态: ", balance.isStatus[v.status], "red"], ];
 
-            $.each(propertyArr, function (index, value) {
+            $.each(propertyArr, function(index, value) {
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -88,48 +82,58 @@ jQuery(function($) {
             $btnDiv.append($btnBalance).append($btnPayBalance).append($btnBalanceDetail).append($btnApportDetail).append($btnBalanceSales);
             $h3.append($title).append($btnDiv);
 
-            $btnBalance.click(function () {
-                params['uid'] = v.belonger.uid;
-                params['bid'] = v.bid;
-                params['surplus'] = v.surplus;
-                com.popup4page("#stockRecordPopUp","/views/balance/balanceBalance.html","结算", "", function () {
+            $btnBalance.click(function() {
+
+            	params.balance.bid = v.bid;
+                params.balance.uid = v.belonger.uid;
+                params.balance.surplus = v.surplus;
+
+                com.popup4page("#stockRecordPopUp", api.index.balanceBalanceIndex.url, "结算", "", function() {
                     balanceSearcher.doSearch();
                 });
             });
 
-            $btnPayBalance.click(function () {
-                params['uid'] = v.belonger.uid;
-                params['bid'] = v.bid;
-                params['surplus'] = v.surplus;
-                com.popup4page("#stockRecordPopUp","/views/balance/payBalance.html","出纳", "", function () {
+            $btnPayBalance.click(function() {
+
+            	params.balance.bid = v.bid;
+                params.balance.uid = v.belonger.uid;
+                params.balance.surplus = v.surplus;
+
+                com.popup4page("#stockRecordPopUp", api.index.payBalanceIndex.url, "出纳", "", function() {
                     balanceSearcher.doSearch();
                 });
             });
 
-            $btnBalanceDetail.click(function () {
-                params['bid'] = v.bid;
-                com.popup4page("#stockRecordPopUp","/views/balance/balanceDetail.html","结算明细");
+            $btnBalanceDetail.click(function() {
+
+            	params.balance.bid = v.bid;
+
+                com.popup4page("#stockRecordPopUp", api.index.balanceDetailIndex.url, "结算明细");
             });
 
-            $btnApportDetail.click(function () {
-                params['bid'] = v.bid;
-                com.popup4page("#stockRecordPopUp","/views/balance/apportDetail.html","分摊明细");
+            $btnApportDetail.click(function() {
+
+            	params.balance.bid = v.bid;
+
+                com.popup4page("#stockRecordPopUp", api.index.apportDetailIndex.url, "分摊明细");
             });
 
-            $btnBalanceSales.click(function () {
-                params['bid'] = v.bid;
-                com.popup4page("#stockRecordPopUp","/views/balance/balanceSales.html","销售单");
+            $btnBalanceSales.click(function() {
+
+            	params.balance.bid = v.bid;
+
+                com.popup4page("#stockRecordPopUp", api.index.balanceSalesIndex.url, "销售单");
             });
 
             return $liLine;
         };
 
         return {
-            init: function (tableId, listData) {
+            init: function(tableId, listData) {
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
-            drawLine: function (v) {
+            drawLine: function(v) {
                 return creatLine(v);
             }
         }
@@ -137,16 +141,16 @@ jQuery(function($) {
 
     var balanceSearcher = new Searcher();
 
-    balanceSearcher.init( ["balance-balance-no", "balance-balance-type", "balance-balance-status"], "condList", api.balance.pageBalance, function(data){
-        displayFunc.init('resultList' ,data);
-    }, "pagenation", "balancePostData", null, false, null,function(){
+    balanceSearcher.init(["balance-balance-no", "balance-balance-type", "balance-balance-status"], "condList", api.balance.pageBalance, function(data) {
+        displayFunc.init('resultList', data);
+    }, "pagenation", "balancePostData", null, false, null, function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addBalance').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    },'resultList');
+    }, 'resultList');
 
     com.focusPage("#addBalance").click(function() {
         balance.modals.addModal.modal("show");
@@ -154,17 +158,15 @@ jQuery(function($) {
 
     function addBalance() {
 
-        if (com.validate('addModal')) {
-            return false;
-        };
+        if (com.validate('addModal')) { return false; };
 
         var options = {
-            "balance.belonger.userId":com.typeahead("belongerName"),
+            "balance.belonger.userId": com.typeahead("belongerName"),
             "balance.amount": balance.items.amount.val(),
-            "balance.type" : balance.items.type.val()
+            "balance.type": balance.items.type.val()
         }
 
-        com.post(api.balance.addBalance ,options ,function(res){
+        com.post(api.balance.addBalance, options, function(res) {
             com.showAlert(com.info, "操作成功");
             balanceSearcher.doSearch();
         });

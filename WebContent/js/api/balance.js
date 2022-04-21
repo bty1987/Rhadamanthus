@@ -1,17 +1,36 @@
 $.extend(api.index, {
-    balanceDetailIndex: { url: "/views/balance/balanceDetail.html" },
-    apportDetailIndex: { url: "/views/balance/apportDetail.html" },
-    balanceBalanceIndex: { url: "/views/balance/balanceBalance.html" },
-    balanceSalesBalanceIndex: { url: "/views/balance/balanceSalesBalance.html" },
-    payBalanceIndex: { url: "/views/balance/payBalance.html" },
-    balanceSalesBalancePrint: { url: "/views/balance/balanceSalesBalancePrint.html" },
-    balanceSales2print: { url: "/views/balance/balanceSales2print.html" },
+    balanceDetailIndex: {
+        url: "/views/balance/balanceDetail.html"
+    },
+    apportDetailIndex: {
+        url: "/views/balance/apportDetail.html"
+    },
+    balanceBalanceIndex: {
+        url: "/views/balance/balanceBalance.html"
+    },
+    payBalanceIndex: {
+        url: "/views/balance/payBalance.html"
+    },
+    balanceSalesIndex: {
+        url: "/views/balance/balanceSales.html"
+    },
+    balanceSalesBalanceIndex: {
+        url: "/views/balance/balanceSalesBalance.html"
+    },
+    balanceSalesBalancePrint: {
+        url: "/views/balance/balanceSalesBalancePrint.html"
+    },
+    balanceSales2print: {
+        url: "/views/balance/balanceSales2print.html"
+    },
+
 });
 
 $.extend(api, {
     balance: {
         pageBalance: {
-            url: "pageBalance.do", demo: true,
+            url: "pageBalance.do",
+            demo: true,
             type: "query",
             tranargs: [{
                 result: "paging-data",
@@ -49,7 +68,8 @@ $.extend(api, {
         },
 
         pageAccount: {
-            url: "pageAccount.do", demo: true,
+            url: "pageAccount.do",
+            demo: true,
             type: "query",
             tranargs: [{
                 result: "paging-data",
@@ -57,7 +77,8 @@ $.extend(api, {
             }]
         },
         queryAccount: {
-            url: "queryAccount.do", demo: true,
+            url: "queryAccount.do",
+            demo: true,
             type: "query",
             tranargs: [{
                 result: "accountes",
@@ -65,18 +86,26 @@ $.extend(api, {
             }]
         },
         queryAccountForTeller: {
-            url: "queryAccountForTeller.do", demo: true,
+            url: "queryAccountForTeller.do",
+            demo: true,
             type: "query",
             tranargs: [{
                 result: "accountes",
                 args: ["realMoney", "referMoney", "surplus"]
             }]
         },
-        addAccount: { url: "addAccount.do", demo: true },
-        updateAccountForStatus: { url: "updateAccountForStatus.do", demo: true },
+        addAccount: {
+            url: "addAccount.do",
+            demo: true
+        },
+        updateAccountForStatus: {
+            url: "updateAccountForStatus.do",
+            demo: true
+        },
 
         withdrawAccount: {
-            url: "withdrawAccount.do", demo: true,
+            url: "withdrawAccount.do",
+            demo: true,
             type: "update",
             tranargs: {
                 args: ["account.money"]
@@ -84,7 +113,8 @@ $.extend(api, {
         },
 
         queryBalanceDetailForBalance: {
-            url: "queryBalanceDetailForBalance.do", demo: true,
+            url: "queryBalanceDetailForBalance.do",
+            demo: true,
             type: "query",
             tranargs: [{
                 result: "balanceDetails",
@@ -131,7 +161,8 @@ $.extend(api, {
             }]
         },
         queryComcost: {
-            url: "queryComcost.do", type: "query",
+            url: "queryComcost.do",
+            type: "query",
             tranargs: [{
                 result: "comcosts",
                 args: ["money"]
@@ -144,11 +175,18 @@ $.extend(api, {
                 args: ["comcost.money"]
             }
         },
-        updateComcostForStatus: { url: "updateComcostForStatus.do", demo: true },
+        updateComcostForStatus: {
+            url: "updateComcostForStatus.do",
+            demo: true
+        },
 
-        queryBalanceSales: { url: "queryBalanceSales.do", demo: true },
+        queryBalanceSales: {
+            url: "queryBalanceSales.do",
+            demo: true
+        },
         pageBalanceSales: {
-            url: "pageBalanceSales.do", demo: true,
+            url: "pageBalanceSales.do",
+            demo: true,
             type: "query",
             tranargs: [{
                 result: "paging-data",
@@ -163,7 +201,8 @@ $.extend(api, {
             }
         },
         queryBalanceSalesByBsid: {
-            url: "queryBalanceSalesByBsid.do", demo: true,
+            url: "queryBalanceSalesByBsid.do",
+            demo: true,
             type: "query",
             tranargs: [{
                 result: "balanceSales",
@@ -178,7 +217,8 @@ $.extend(api, {
             }
         },
         pageBalanceSalesBalance: {
-            url: "pageBalanceSalesBalance.do", demo: true,
+            url: "pageBalanceSalesBalance.do",
+            demo: true,
             type: "query",
             tranargs: [{
                 result: "paging-data-salesBalance",
@@ -207,15 +247,30 @@ $.extend(api, {
                 args: ["balanceSales.income", "balanceSales.cost", "balanceSales.payment", "balanceSales.profit"]
             }
         },
-        countBalanceSalesBalance: { url: "countBalanceSalesBalance.do", demo: true },
+        countBalanceSalesBalance: {
+            url: "countBalanceSalesBalance.do",
+            demo: true
+        },
 
-        updateBalanceSales: { url: "updateBalanceSales.do", demo: true },
-        
-        balanceBalanceSales: { url: "balanceBalanceSales.do", demo: true },
-        
-        lockBalanceSales: { url: "lockBalanceSales.do", demo: true },
-        
-        unlockBalanceSales: { url: "unlockBalanceSales.do", demo: true },
+        updateBalanceSales: {
+            url: "updateBalanceSales.do",
+            demo: true
+        },
+
+        balanceBalanceSales: {
+            url: "balanceBalanceSales.do",
+            demo: true
+        },
+
+        lockBalanceSales: {
+            url: "lockBalanceSales.do",
+            demo: true
+        },
+
+        unlockBalanceSales: {
+            url: "unlockBalanceSales.do",
+            demo: true
+        },
 
     }
 });

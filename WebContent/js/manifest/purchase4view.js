@@ -83,7 +83,7 @@ $(function(){
         }
     })();
     
-    var pid = params["purchase.pid"];
+    var pid = params.manifest.pid;
     
     com.post(api.inventory.queryPurchaseItemByPid, {"purchase.pid": pid}, function(res){
         displayFunc.init('resultList1', res.purchaseItems);

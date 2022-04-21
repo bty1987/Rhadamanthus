@@ -8,7 +8,7 @@ jQuery(function($) {
 		items: {
 			comment: com.focusPage("#comment")
 		},
-		vid: params.vid
+		vid: params.customer.vid
 	};
 
 	vrecord.modals.vrecordModal.on("hide.bs.modal", function () {

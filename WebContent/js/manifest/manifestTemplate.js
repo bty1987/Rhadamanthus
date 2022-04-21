@@ -139,7 +139,7 @@ $(function () {
 
             /*绑定*/
             $btnBinbing.click(function () {
-                params["manifestTemplate.mtid"] = v.mtid;
+                params.manifest.manifestTemplate.mtid = v.mtid;
                 com.switchPage('views/manifest/manifestTemplateItem.html');
             });
 

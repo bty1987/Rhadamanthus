@@ -1,7 +1,7 @@
 jQuery(function($) {
 
     var userEducation = {
-        uid: params.uid,
+        uid: params.personel.uid,
         ueid: null,
         modals: {
         	addEducationModal: com.focusPage("#addEducationModal")

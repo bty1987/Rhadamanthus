@@ -195,21 +195,21 @@ jQuery(function ($) {
 
             //银行卡
             $cards.click(function(){
-                params.wid = v.wid;
-                params.phone = v.phone;
-                com.popup4page('#walletardPopup', "views/payment/walletard.html", "银行卡");
+                params.payment.wid = v.wid;
+                params.payment.phone = v.phone;
+                com.popup4page('#walletardPopup', api.index.walletardIndex.url, "银行卡");
             });
 
             //交易记录
             $walletran.click(function(){
-                params.wid = v.wid;
-                com.popup4page('#walletranPopup', "views/payment/walletran.html", "交易记录");
+                params.payment.wid = v.wid;
+                com.popup4page('#walletranPopup', api.index.walletranIndex.url, "交易记录");
             });
 
             //资源
             $walletres.click(function(){
-                params.wid = v.wid;
-                com.popup4page('#walletranPopup', "views/payment/walletres.html", "资源");
+                params.payment.wid = v.wid;
+                com.popup4page('#walletranPopup', api.index.walletresIndex.url, "资源");
             });
 
             return $liLine;

@@ -1,36 +1,38 @@
+$(function() {
 
-$(function(){
-	
-	var goods = {
-        gid: params["goods.gid"],
-        items:{
+    var goods = {
+
+        gid: params.data.goods.gid,
+
+        items: {
             colorName: com.focusPage("#colorName")
         },
+
         btns: {
             addBtn: com.focusPage("#addBtn"),
             delBtn: com.focusPage("#delBtn")
         }
     };
 
-    var displayFunc  = (function(){
+    var displayFunc = (function() {
 
-        var renderList = function(tableId,listData){
+        var renderList = function(tableId, listData) {
             var $tableWrap = com.focusPage('#' + tableId);
 
-            if(listData && listData.length){
+            if (listData && listData.length) {
 
                 var $ulTitle = createTableTitle();
                 var $ulData = $('<ul></ul>').addClass('flex-table');
                 $tableWrap.append($ulTitle).append($ulData);
 
-                $.each(listData,function(i, v){
+                $.each(listData, function(i, v) {
                     var $liLine = creatLine(i, v, i == listData.length - 1);
                     $liLine.appendTo($ulTitle);
                 });
             }
         };
 
-        var createTableTitle = function(){
+        var createTableTitle = function() {
 
             var $ulTitle = $('<ul></ul>').addClass('flex-table');
             var $liTitle = $('<li></li>').addClass('line table-title');
@@ -40,7 +42,7 @@ $(function(){
 
             var titleName = '颜色,状态';
 
-            $.each(titleName.split(','), function (i, v) {
+            $.each(titleName.split(','), function(i, v) {
                 var $cell = $('<div></div>').addClass('cell').html(v);
                 $cell.appendTo($contentWrap);
             });
@@ -52,18 +54,15 @@ $(function(){
             return $ulTitle;
         };
 
-        var creatLine = function (i, v, lastFlag) {
+        var creatLine = function(i, v, lastFlag) {
 
             var $liLine = $('<li></li>').addClass('line');
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col2');
 
-            var propertyArr = [
-                [v.name,'grey'],
-                [v.status =="0" ? "启用" : "禁用",'red']
-            ];
+            var propertyArr = [[v.name, 'grey'], [v.status == "0" ? "启用" : "禁用", 'red']];
 
-            $.each(propertyArr, function (i, v) {
+            $.each(propertyArr, function(i, v) {
                 var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
@@ -85,78 +84,78 @@ $(function(){
 
             $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
-            $btnStart.click(function(){
-            	
-            	if(v.status == 0){
-            		com.showAlert(com.warning, "已启动");
-            		return false;
-            	}
-            	
-            	updateStatus(v.cid, 0);
+            $btnStart.click(function() {
+
+                if (v.status == 0) {
+                    com.showAlert(com.warning, "已启动");
+                    return false;
+                }
+
+                updateStatus(v.cid, 0);
             });
-            
-            $btnBan.click(function(){
-            	
-            	if(v.status == 1){
-            		com.showAlert(com.warning, "已禁用");
-            		return false;
-            	}
-            	
-            	updateStatus(v.cid, 1);
+
+            $btnBan.click(function() {
+
+                if (v.status == 1) {
+                    com.showAlert(com.warning, "已禁用");
+                    return false;
+                }
+
+                updateStatus(v.cid, 1);
             });
 
             return $liLine;
         };
 
         return {
-            init : function(tableId,listData){
+            init: function(tableId, listData) {
                 com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
+                renderList(tableId, listData);
             },
-            drawLine : function(v){
+            drawLine: function(v) {
                 return creatLine(v);
             }
         }
     })();
-    
-    function doSearcher(){
-    	com.post(api.data.queryColorByGid, {"color.gid": goods.gid}, function(res){
-            displayFunc.init('resultListColor',res.colors)
+
+    function doSearcher() {
+        com.post(api.data.queryColorByGid, {
+            "color.gid": goods.gid
+        }, function(res) {
+            displayFunc.init('resultListColor', res.colors)
         });
     }
-    
+
     doSearcher();
 
-    function updateStatus(cid, status){
-    	
-    	var options = {
-			"color.cid": cid,
+    function updateStatus(cid, status) {
+
+        var options = {
+            "color.cid": cid,
             "color.status": status
-    	};
-    	
-    	com.post(api.data.updateColorForStatus, options, function (res) {
+        };
+
+        com.post(api.data.updateColorForStatus, options, function(res) {
             doSearcher();
         });
     }
 
-    goods.btns.addBtn.click(function(){
-    	
-    	if(com.validate('addColor', 'bottom')){
-            return false;
-        }
-        
+    goods.btns.addBtn.click(function() {
+
+        if (com.validate('addColor', 'bottom')) { return false; }
+
         var options = {
             "color.gid": goods.gid,
             "color.name": goods.items.colorName.val()
         };
 
-        com.post(api.data.addColor, options, function(){
+        com.post(api.data.addColor, options, function() {
             com.cleanItems(goods.items);
-        	doSearcher();
+            doSearcher();
         });
     });
 
-    goods.btns.delBtn.click(function(){
+    goods.btns.delBtn.click(function() {
         com.cleanItems(goods.items)
     });
 

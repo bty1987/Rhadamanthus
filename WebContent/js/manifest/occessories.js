@@ -21,7 +21,7 @@ $(function() {
         isEnter: {},
         isLift: {},
 
-        pageType: params['urlLoadParams'].type,
+        pageType: params.urlLoadParams.type,
     };
 
     var url = api.inventory.pageOccessories;
@@ -30,8 +30,7 @@ $(function() {
 
     if (occessories.pageType == "supplier") {
         url = api.inventory.pageOccessoriesForSupplier;
-        options = $.extend({}, options, {
-        });
+        options = $.extend({}, options, {});
     } else if (occessories.pageType == "delive") {
         options = $.extend({}, options, {
             "occessories.status": 2
@@ -53,7 +52,6 @@ $(function() {
             "occessories.status": 0
         });
     }
-
     com.post(api.ds.manifest, {}, function(res) {
 
         occessories.status = res.occessoriesStatus.split("key", "value");
@@ -170,6 +168,7 @@ $(function() {
             return false;
         },
         show: function(v) {
+
             return occessories.pageType == "delive" && v.status == 2;
         }
     }, {
@@ -177,8 +176,8 @@ $(function() {
         clazz: "btn-info",
         handle: function(v) {
 
-            params["occessories.status"] = v.status;
-            params["occessoriesItem.oid"] = v.oid;
+            params.manifest.status = v.status;
+            params.manifest.oid = v.oid;
 
             com.popup4page('#layerPopUp', "views/manifest/occessories4view.html", "外辅单 : " + v.no, null, function() {
 
@@ -187,6 +186,7 @@ $(function() {
             return false;
         },
         show: function(v) {
+
             return v.status == 1;
         }
     }, {
@@ -199,13 +199,14 @@ $(function() {
                 return false;
             }
 
-            params["occessoriesItem.oid"] = v.oid;
-            params["occessories.orderId"] = v.orderId;
+            params.manifest.oid = v.oid;
+            params.manifest.orderId = v.orderId;
 
             com.popup4page('#layerPopUp', "views/manifest/occessories2edit.html", "外辅单 : " + v.no);
             return false;
         },
         show: function(v) {
+
             return v.status == 0;
         }
     }, {
@@ -218,7 +219,7 @@ $(function() {
                 return false;
             }
 
-            params["occessoriesItem.oid"] = v.oid;
+            params.manifest.oid = v.oid;
 
             com.popup4page('#layerPopUp', "views/manifest/occessories4view.html", "外辅单 : " + v.no, null, function() {
 
@@ -227,6 +228,7 @@ $(function() {
             return false;
         },
         show: function(v) {
+
             return occessories.pageType == "receive" && v.status == 3;
         }
     }, {
@@ -240,6 +242,7 @@ $(function() {
             return false;
         },
         show: function(v) {
+
             return v.status == 0;
         }
     }, {
@@ -247,12 +250,13 @@ $(function() {
         clazz: "btn-info",
         handle: function(v) {
 
-            params["occessoriesItem.oid"] = v.oid;
+            params.manifest.oid = v.oid;
             com.popup4page('#layerPopUp', "views/manifest/occessories4view.html", "外辅单 : " + v.no);
 
             return false;
         },
         show: function(v) {
+
             return true;
         }
     }, {
@@ -260,13 +264,14 @@ $(function() {
         clazz: "btn-primary",
         handle: function(v) {
 
-            params["occessoriesItem.oid"] = v.oid;
+            params.manifest.oid = v.oid;
 
             com.popup4page('#layerPopUp', "views/manifest/occessoriesCost.html", "费用 : " + v.no);
 
             return false;
         },
         show: function(v) {
+
             return true;
         }
     }, {
@@ -279,6 +284,7 @@ $(function() {
             };
 
             com.post(api.inventory.deleteOccessories, options, function(data) {
+
                 com.showAlert(com.info, "操作成功");
                 searcher.doSearch();
             });
@@ -286,6 +292,7 @@ $(function() {
             return false;
         },
         show: function(v) {
+
             return v.status == 0;
         }
     }, ];

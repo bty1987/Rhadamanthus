@@ -41,9 +41,11 @@ var QuotetionDetail = (function(){
                 },2000),
                 // 打印
                 // $btnPrint :com.focusPage('#printFinanceBtn').click(function () {
-                // params.quotetionId = quo.quotetionid;
-                // params.type = 2;
-                // params.subtype = -1;
+                //
+                // params.quotation.quotetionId = quo.quotetionid;
+                // params.quotation.type = 2;
+                // params.quotation.subtype = -1;
+                //
                 // com.popup("打印报价",api.index.quotetionOutputIndex.url,null,null,true);
                 // }),
                 // 返回
@@ -259,7 +261,7 @@ var QuotetionDetail = (function(){
             
             if(_areaType == 1){
                 
-                var $arr = com.focusPage('.fl-quo-item', $domain);
+                var $arr = com.focusPage('.fl-quo-item.item', $domain);
                 
                 if($arr.length){
                     $arr.each(function(){
@@ -340,7 +342,7 @@ var QuotetionDetail = (function(){
 
             var  _manageDiscount, _transDiscount, _totalfee = 0, _dtotalfee = 0, _transfee = 0, _managefee = 0, _manageRate = 0, _total = 0, cdiscount=0, ndiscount = 0;
             
-            var $arr = com.focusPage('.fl-quo-item');
+            var $arr = com.focusPage('.fl-quo-item.item');
             var _discount = utils.accDiv(discount, 10);
             
             $arr.length && $arr.each(function(i, v){
@@ -791,7 +793,7 @@ var QuotetionDetail = (function(){
         $nowEditInput : null,
         // 排序报价项
         sortQuote : function($domain){
-            var $arr = $domain.find('.fl-quo-item');
+            var $arr = $domain.find('.fl-quo-item.item');
             if(!$arr){
                 return
             }
@@ -848,7 +850,7 @@ var QuotetionDetail = (function(){
                 // 赋值给外部显示DIV 显示数量
                 that.$nowLine.find('.cell.num .cell-wrap').text(num);
                 // 获取下一个报价项的整体元素标签
-                $line = that.$nowLine.next('.fl-quo-item');
+                $line = that.$nowLine.next('.fl-quo-item.item');
                 
                 // 获取报价项的类型
                 var _type = that.$nowLine.find('.type').attr('data-type');
@@ -911,7 +913,7 @@ var QuotetionDetail = (function(){
             }
             // 如果按键为上 调整焦点到功能区内上一个报价项
             if(e.keyCode == 38){
-                $line = that.$nowLine.prev('.fl-quo-item');
+                $line = that.$nowLine.prev('.fl-quo-item.item');
                 if($line.length){
                     that.getNumCellFocus($line);
                 }else{
@@ -921,7 +923,7 @@ var QuotetionDetail = (function(){
             }
             // 如果按键为下 调整焦点到功能区内的下一个报价项
             if(e.keyCode == 40 ){
-                $line = that.$nowLine.next('.fl-quo-item');
+                $line = that.$nowLine.next('.fl-quo-item.item');
                 if($line.length){
                     that.getNumCellFocus($line);
                 }else{
@@ -939,7 +941,7 @@ var QuotetionDetail = (function(){
         },
         // 批量删除报价项
         deleteQuoteInBatches : function($domain){
-            $domain.find('.fl-quo-input').insertAfter($domain.find('.fl-quo-list')).addClass('hide');
+            $domain.find('.fl-quo-input').insertAfter($domain.find('.fl-quo-list.list')).addClass('hide');
             var that = this;
             // , 参数 : qfaiIds[n] , 报价项Id列表 ;
             var $quos = com.focusPage('[name="deleteItems"]:checked', $domain);
@@ -959,12 +961,12 @@ var QuotetionDetail = (function(){
             });
 
             $q2.length && $.each($q2, function(i, v){
-                $(v).parents('li.fl-quo-item').remove();
+                $(v).parents('li.fl-quo-item.item').remove();
             });
 
             if($q1.length){
                 $.each($q1, function(i, v){
-                    $(v).parents('li.fl-quo-item').remove();
+                    $(v).parents('li.fl-quo-item.item').remove();
                 });
                 var _fee = quo.calculateDomainFees(domain.nowEditDomain);
                 com.focusPage('[data-qfaid="'+ domain.nowEditDomain.attr('data-qfaid') +'"]', '#functionAreaSumList').find('label.no-padding-left').text(_fee);
@@ -980,7 +982,7 @@ var QuotetionDetail = (function(){
             var _qid = $quote.find('input[type="checkbox"]').val();
             var _params = {};
             domain.nowEditDomain = $quote.parents('.widget-box');
-            domain.nowEditDomain.find('.fl-quo-input').insertAfter(domain.nowEditDomain.find('.fl-quo-list')).addClass('hide');
+            domain.nowEditDomain.find('.fl-quo-input').insertAfter(domain.nowEditDomain.find('.fl-quo-list.list')).addClass('hide');
             if(!_qid){
                 $quote.remove();
             }else{
@@ -1006,7 +1008,7 @@ var QuotetionDetail = (function(){
                 if(com.validate("customFunctionAreaItemsModal")){
                     return false;
                 }
-                var _index = domain.nowEditDomain.find('.fl-quo-item').length;
+                var _index = domain.nowEditDomain.find('.fl-quo-item.item').length;
                 var addRow = {
                     discount :com.focusPage("#discountFlag").prop("checked") ? 1 : 0,
                     formula:com.focusPage("#formula").val(),
@@ -1027,7 +1029,7 @@ var QuotetionDetail = (function(){
                 
                 $item = painter.createQuote(_index + 1, addRow);
                 $item.find(".icon-arrow-up").removeClass("grey").addClass("green"),$item.find(".icon-arrow-down").removeClass("grey").addClass("red");
-                $item.appendTo(domain.nowEditDomain.find('.fl-quo-list'));
+                $item.appendTo(domain.nowEditDomain.find('.fl-quo-list.list'));
                 
                 $historyItem = painter.createQuoteModalItem({
                     "name" : addRow.name,
@@ -1117,7 +1119,7 @@ var QuotetionDetail = (function(){
         },
         // 删除上一个选中的报价项选中样式 并添加当前报价项选中样式
         checkedStyle : function($item){
-            com.focusPage('.fl-quo-item.current').removeClass('current');
+            com.focusPage('.fl-quo-item.item.current').removeClass('current');
             $item.addClass('current');
         },
         calculationNum : function(){
@@ -1171,7 +1173,7 @@ var QuotetionDetail = (function(){
             // ("添加工程项 与 历史报价项 的保存按钮调用的保存方法")
             
             var _arrs = quote.quotesRecord;
-            var _index = domain.nowEditDomain.find('.fl-quo-item').length;
+            var _index = domain.nowEditDomain.find('.fl-quo-item.item').length;
             
             if(!_arrs.length){
                 return;
@@ -1224,7 +1226,7 @@ var QuotetionDetail = (function(){
                 };
                 
                 var $item = painter.createQuote( _index + i + 1, _quotval);
-                $item.appendTo(domain.nowEditDomain.find('.fl-quo-list'));
+                $item.appendTo(domain.nowEditDomain.find('.fl-quo-list.list'));
                 var $historyItem = $this.parents('li.item-blue').clone(true);
                 
                 quote.recordHistoryQuotes($historyItem);
@@ -1333,7 +1335,7 @@ var QuotetionDetail = (function(){
 
             $dbody = $('<div></div>').addClass('widget-body');
             $dbodyInner = $('<div></div>').addClass('widget-body-inner');
-            $list = $('<ul></ul>').addClass('fl-quo-list');
+            $list = $('<ul></ul>').addClass('fl-quo-list list');
             $input = $('<div></div>').addClass('fl-quo-input hide').append($('<input type="text">').addClass('v_required v_float').attr('maxlength','16'));
 
             $dhead.append($dname).append($dtoolbar);
@@ -1424,7 +1426,7 @@ var QuotetionDetail = (function(){
         // 创建报价项
         createQuote : function(linenum, qv){
 
-            var $item = $('<li></li>').addClass('fl-quo-item').prop('title',qv.content);
+            var $item = $('<li></li>').addClass('fl-quo-item item').prop('title',qv.content);
             
             var _dcp = 0;
             var _num = qv.num;
@@ -1671,7 +1673,7 @@ var QuotetionDetail = (function(){
         init : function(){
 
             // 报价ID
-            quo.quotetionId = params.quotetionId;
+            quo.quotetionId = params.quotation.quotetionId;
 
             // 根据报价ID 获取报价信息(同步ajax)
             com.post(api.quotation.queryQuotetionByQid, {"quotetion.qid" : quo.quotetionId}, function(data){

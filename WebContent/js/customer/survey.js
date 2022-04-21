@@ -23,7 +23,7 @@ jQuery(function($) {
         stid: null,
         status: {},
         type: {},
-        checked: {},
+        checked: {}
     };
 
     com.post(api.ds.customer, {}, function(res) {
@@ -51,7 +51,7 @@ jQuery(function($) {
 
     searcher.base("condList", "pagenation", "resultList", api.customer.pageSurvey);
 
-    searcher.condition(['customer-survey-orderId']);
+    searcher.condition(['customer-survey-orderId', 'customer-survey-createTime', 'customer-survey-sendTime']);
 
     searcher.button([{
         id: "makeSurvey",
@@ -79,6 +79,11 @@ jQuery(function($) {
         field: "createTime",
         name: "创建时间",
         prop: "createTime",
+        clazz: "green"
+    }, {
+        fieId: "sendTime",
+        name: "推送时间",
+        prop: "sendTime",
         clazz: "green"
     }, {
         fieId: "status",

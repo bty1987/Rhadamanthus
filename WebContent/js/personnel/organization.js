@@ -1,58 +1,67 @@
-$(function(){
+$(function() {
+
     var deptList = null;
-    com.post(api.communion.queryDepartment, {}, function(res){
+    com.post(api.communion.queryDepartment, {}, function(res) {
+
         deptList = res.deptList;
     }, null, false);
 
-    if(!deptList.length) return;
+    if (!deptList.length)
+        return;
 
     var deptObj = {}, didList = [];
 
-    //获取所有叶子节点
-    $.each(deptList, function(i, v){
+    // 获取所有叶子节点
+    $.each(deptList, function(i, v) {
+
         didList.push(v.did);
     });
 
-    $.each(deptList, function(i, v){
-        if(v.fatherDept && didList.indexOf(v.fatherDept.did) != -1){
+    $.each(deptList, function(i, v) {
+
+        if (v.fatherDept && didList.indexOf(v.fatherDept.did) != -1) {
             didList.splice(didList.indexOf(v.fatherDept.did), 1);
         }
     });
 
-    //获取根节点
-    $.each(deptList, function(i, v){
-        if(v.fatherDept != null && v.fatherDept.did != null && v.fatherDept.did != 0){
+    // 获取根节点
+    $.each(deptList, function(i, v) {
+
+        if (v.fatherDept != null && v.fatherDept.did != null && v.fatherDept.did != 0) {
             return true;
         }
 
-        if(!deptObj[v.company]){
+        if (!deptObj[v.company]) {
             deptObj[v.company] = {
-                name:params.company.name,
-                type : 'folder',
-                children : {}
+                name: params.company.name,
+                type: 'folder',
+                children: {}
             }
         }
 
         deptObj[v.company]['children'][v.did] = {
             name: v.name,
-            type : didList.indexOf(v.did) == -1 ? 'folder' : 'item',
-            did : v.did,
-            no : v.no
+            type: didList.indexOf(v.did) == -1 ? 'folder' : 'item',
+            did: v.did,
+            no: v.no
         };
     });
 
-    var getDeptByDid = function(did){
+    var getDeptByDid = function(did) {
+
         var depts = {};
 
-        $.each(deptList, function(i, v){
-            if(!v.fatherDept) return true;
+        $.each(deptList, function(i, v) {
 
-            if(v.fatherDept.did == did){
+            if (!v.fatherDept)
+                return true;
+
+            if (v.fatherDept.did == did) {
                 depts[v.did] = {
                     name: v.name,
-                    type : didList.indexOf(v.did) == -1 ? 'folder' : 'item',
-                    did : v.did,
-                    no : v.no
+                    type: didList.indexOf(v.did) == -1 ? 'folder' : 'item',
+                    did: v.did,
+                    no: v.no
                 }
             }
         });
@@ -60,28 +69,25 @@ $(function(){
         return depts;
     };
 
-    var displayFunc  = (function(){
-        var renderList = function(tableId, listData){
+    var displayFunc = (function() {
+
+        var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-            if(listData && listData.length){
+            if (listData && listData.length) {
 
-                $.each(listData, function(i, v){
+                $.each(listData, function(i, v) {
+
                     var $liLine = $('<li></li>').addClass('item-orange clearfix');
                     var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.userName));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
-                    var propertyArr = [
-                        ["员工编号:", v.userId, "grey"],
-                        ["用户名:", v.loginId, "grey"],
-                        ["部门:", v.dept.name, "grey"],
-                        ["职位:", v.duty.name, "grey"],
-                        ["角色:", v.role.name, "grey"],
-                        ["联系方式:", v.phone, "grey"]
-                    ];
+                    var propertyArr = [["员工编号:", v.userId, "grey"], ["用户名:", v.loginId, "grey"], ["部门:", v.dept.name, "grey"], ["职位:", v.duty.name, "grey"], ["角色:", v.role.name, "grey"], ["联系方式:", v.phone, "grey"]];
 
-                    $.each(propertyArr, function (index,value) {
+                    $.each(propertyArr, function(index, value) {
+
                         var $liProperty = $('<li></li>');
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
                         $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -94,23 +100,29 @@ $(function(){
                 $ul.appendTo($tableWrap);
             }
         };
-        //查看
-        var viewUser = function (userId){
-            params.tempUserId = userId;
-            com.switchPage("/views/personnel/userEdit.html");
+        // 查看
+        var viewUser = function(userId) {
+
+            params.personel.userId = userId;
+            com.switchPage(api.index.userEdit.url);
         };
-        //添加
-        var addUser = function(){
-            params.tempUserId = null;
-            com.switchPage("/views/personnel/userEdit.html");
+        // 添加
+        var addUser = function() {
+
+            params.personel.userId = null;
+            com.switchPage(api.index.userEdit.url);
         };
 
         return {
-            init : function(tableId,listData){
+            init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
-            }, initAddUser: function(){
-                com.focusPage('a[name="addUser"]','#pagenation').click(function(){
+                renderList(tableId, listData);
+            },
+            initAddUser: function() {
+
+                com.focusPage('a[name="addUser"]', '#pagenation').click(function() {
+
                     addUser();
                 });
             }
@@ -122,40 +134,50 @@ $(function(){
 
     com.focusPage('#tree3').ace_tree({
         dataSource: {
-            data : function(options, callback) {
+            data: function(options, callback) {
+
                 var $data = null;
 
-                if(!("name" in options) && !("type" in options)){
-                    $data = deptObj;//the root tree
-                    callback({ data: $data });
+                if (!("name" in options) && !("type" in options)) {
+                    $data = deptObj;// the root tree
+                    callback({
+                        data: $data
+                    });
                     return;
-                }else if("type" in options && options.type == "folder") {
-                    if("children" in options)
+                } else if ("type" in options && options.type == "folder") {
+                    if ("children" in options)
                         $data = options.children;
                     else {
                         $data = getDeptByDid(options.did);
                     }
                 }
 
-                if($data != null){
-                    setTimeout(function(){callback({ data: $data });} , parseInt(Math.random() * 500) + 200);
+                if ($data != null) {
+                    setTimeout(function() {
+
+                        callback({
+                            data: $data
+                        });
+                    }, parseInt(Math.random() * 500) + 200);
                 }
             }
         },
-        loadingHTML:'<div class="tree-loading"><i class="icon-refresh icon-spin blue"></i></div>',
-        'open-icon' : 'icon-minus',
-        'close-icon' : 'icon-plus',
-        'selectable' : true,
-        'selected-icon' : null,
-        'unselected-icon' : null
+        loadingHTML: '<div class="tree-loading"><i class="icon-refresh icon-spin blue"></i></div>',
+        'open-icon': 'icon-minus',
+        'close-icon': 'icon-plus',
+        'selectable': true,
+        'selected-icon': null,
+        'unselected-icon': null
 
-    }).on('selected', function (evt, opt) {
-        userSeacher.init( _condArr, "condList", api.personel.pageUser, function(data){
+    }).on('selected', function(evt, opt) {
+
+        userSeacher.init(_condArr, "condList", api.personel.pageUser, function(data) {
+
             displayFunc.init('resultList', data);
         }, "pagenation", "menuPostData", {
-            'filters[0].data' : opt.info[0].no,
-            'filters[0].field' : 'no',
-            'filters[0].op' : 'eq'
+            'filters[0].data': opt.info[0].no,
+            'filters[0].field': 'no',
+            'filters[0].op': 'eq'
         });
     });
 });

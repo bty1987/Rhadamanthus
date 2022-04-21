@@ -1,11 +1,11 @@
-$(function () {
+$(function() {
 
     api = parent.api;
     com = parent.com;
     utils = parent.utils;
     params = parent.params;
     printer = parent.printer;
-    
+
     var options = {
         totalIncome: 0,
         totalRelief: 0,
@@ -16,13 +16,13 @@ $(function () {
         totalSettlementProfit: 0,
         totalCompanyProfit: 0
     };
-    
+
     var balanceSales = {};
     var brand = {};
     var creater = {};
     var trList = $("#reslist");
-    
-    com.post(api.balance.queryBalanceSalesByBsid, {"balanceSales.bsid": params.balanceSalesBsid}, function (res) {
+
+    com.post(api.balance.queryBalanceSalesByBsid, {"balanceSales.bsid": params.balance.bsid}, function(res) {
         balanceSales = res.balanceSales;
         brand = balanceSales.brand;
         creater = balanceSales.creater;
@@ -30,41 +30,40 @@ $(function () {
 
     var table;
     var tabody = $('<tbody> </tbody>');
-    
-    setTimeout(function(){
+
+    setTimeout(function() {
         pageList(1, 50);
         table = createHeader().appendTo(trList);
         tabody.appendTo(table);
      }, 500);
-
 
     var index = 0;
     function pageList(page, rows) {
         var option = {
             "paging.page": page,
             "paging.rows": rows,
-            "balanceSales.bsid": params.balanceSalesBsid
+            "balanceSales.bsid": params.balance.bsid
         };
 
-        com.post(api.balance.pageBalanceSalesBalance, option, function (res) {
+        com.post(api.balance.pageBalanceSalesBalance, option, function(res) {
 
             createLine(res.paging.data);
-            if(page < res.paging.totalPage) setTimeout(function(){pageList(page+1, rows);}, 500);
+            if (page < res.paging.totalPage) setTimeout(function() {pageList(page+1, rows);}, 500);
             else createFooter();
 
         }, null, false);
     };
-    
-    if (params.type == 1){
+
+    if (params.balance.type == 1) {
         createHeader = createComHeader;
         createLine = createComLine;
         createFooter = createComFooter;
-    }else{
+    } else {
         createHeader = createPreHeader;
         createLine = createPreLine;
         createFooter = createPreFooter;
     }
-    
+
     function createComHeader() {
         var div = $('<div align="center" class="col-xs-12"></div>');
         var table = $('<table border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;">').appendTo(div);
@@ -97,7 +96,7 @@ $(function () {
     }
 
     function createComLine(items) {
-        $.each(items, function (i, v) {
+        $.each(items, function(i, v) {
             var oneType = v.salesBalance.onetype;
             var Type = v.salesBalance.type;
             var salesRevenue = null;
@@ -146,13 +145,12 @@ $(function () {
             var td24 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(accountsPayable)).appendTo(tr4);
             var td25 = $('<td style="border: 1px solid;"></td>').text(v.salesBalance.comment).appendTo(tr4);
 
-
-            options.totalIncome = utils.accAdd(options.totalIncome, salesRevenue);//合计销售收入
-            options.totalSalesAmount = utils.accAdd(options.totalSalesAmount, salesAmount);//合计销售金额
-            options.totalCost = utils.accAdd(options.totalCost, v.salesBalance.pbalance);//合计销售成本金额
-            options.totalDiscount = utils.accAdd(options.totalDiscount, allowance);//合计折扣/抹零金额
-            options.totalPayable = utils.accAdd(options.totalPayable, accountsPayable);//合计应付账款
-            options.totalRelief = utils.accAdd(options.totalRelief, venderMaling);//合计供应商减免金额
+            options.totalIncome = utils.accAdd(options.totalIncome, salesRevenue);// 合计销售收入
+            options.totalSalesAmount = utils.accAdd(options.totalSalesAmount, salesAmount);// 合计销售金额
+            options.totalCost = utils.accAdd(options.totalCost, v.salesBalance.pbalance);// 合计销售成本金额
+            options.totalDiscount = utils.accAdd(options.totalDiscount, allowance);// 合计折扣/抹零金额
+            options.totalPayable = utils.accAdd(options.totalPayable, accountsPayable);// 合计应付账款
+            options.totalRelief = utils.accAdd(options.totalRelief, venderMaling);// 合计供应商减免金额
         });
     }
 
@@ -170,8 +168,8 @@ $(function () {
         var td35 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(options.totalPayable)).appendTo(tr5);
         var td36 = $('<td style="border: 1px solid;"></td>').text("").appendTo(tr5);
     }
-    
-    function createPreHeader(){
+
+    function createPreHeader() {
         var div = $('<div align="center" class="col-xs-12"></div>');
         var table = $('<table border="0" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;">').appendTo(div);
         var caption = $('<caption style="line-height: 65px;font-size:20px;">'+params.company.name+'主材销售分析明细表</caption>').appendTo(table);
@@ -207,10 +205,10 @@ $(function () {
 
         return table;
     }
-    
-    function createPreLine(items){
 
-        $.each(items, function (i, v) {
+    function createPreLine(items) {
+
+        $.each(items, function(i, v) {
 
             var oneType = v.salesBalance.onetype;
             var Type = v.salesBalance.type;
@@ -221,7 +219,7 @@ $(function () {
             var allowance = Math.round(v.salesBalance.allowance);
 
             if (oneType == 0) {
-                if (Type == 3){
+                if (Type == 3) {
                     venderMaling = 0;
                     allowance = 0;
                     salesRevenue = v.salesBalance.sales.depositpay;
@@ -266,18 +264,18 @@ $(function () {
             var td39 = $('<td style="border: 1px solid;"></td>').text(salesAmount == 0 ? 0 : utils.accMul(utils.changeTwoDecimal(utils.accDiv(utils.accSub(salesRevenue, accountsPayable), utils.accAdd(salesRevenue, venderMaling))), 100) + "%").appendTo(tr4);
             var td40 = $('<td style="border: 1px solid;"></td>').text(v.salesBalance.comment).appendTo(tr4);
 
-            options.totalIncome = utils.accAdd(options.totalIncome, salesRevenue);//合计销售收入
-            options.totalRelief = utils.accAdd(options.totalRelief, venderMaling);//合计供应商减免金额
-            options.totalDiscount = utils.accAdd(options.totalDiscount, allowance);//合计折扣/抹零金额
-            options.totalSalesAmount = utils.accAdd(options.totalSalesAmount, salesAmount);//合计销售金额
-            options.totalCost = utils.accAdd(options.totalCost, v.salesBalance.pbalance);//合计销售成本金额
-            options.totalPayable = utils.accAdd(options.totalPayable, accountsPayable);//合计应付账款
+            options.totalIncome = utils.accAdd(options.totalIncome, salesRevenue);// 合计销售收入
+            options.totalRelief = utils.accAdd(options.totalRelief, venderMaling);// 合计供应商减免金额
+            options.totalDiscount = utils.accAdd(options.totalDiscount, allowance);// 合计折扣/抹零金额
+            options.totalSalesAmount = utils.accAdd(options.totalSalesAmount, salesAmount);// 合计销售金额
+            options.totalCost = utils.accAdd(options.totalCost, v.salesBalance.pbalance);// 合计销售成本金额
+            options.totalPayable = utils.accAdd(options.totalPayable, accountsPayable);// 合计应付账款
             options.totalSettlementProfit = utils.accAdd(options.totalSettlementProfit, utils.accSub(salesAmount, v.salesBalance.pbalance));//合计结算利润
             options.totalCompanyProfit = utils.accAdd(options.totalCompanyProfit, utils.accSub(salesRevenue, accountsPayable));//合计公司利润
         });
     }
 
-    function createPreFooter(){
+    function createPreFooter() {
         var tr5 = $('<tr style="border: 1px solid;height: 25px;text-align: center;font-size: 6px;"></tr>').appendTo(tabody);
         var td41 = $('<td style="border: 1px solid;"></td>').text("").appendTo(tr5);
         var td42 = $('<td style="border: 1px solid;"></td>').text("合计").appendTo(tr5);
@@ -298,7 +296,6 @@ $(function () {
         var td57 = $('<td style="border: 1px solid;"></td>').text("").appendTo(tr5);
 
     }
-
 
 });
 

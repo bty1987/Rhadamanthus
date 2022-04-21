@@ -28,6 +28,7 @@ var AddReduceDetail = (function() {
             "addReduce.disPrice": 0,
             "addReduce.uncalPrice": 0,
             "addReduce.calPrice": 0,
+            "addReduce.consPrice": 0,
             "addReduce.discount": 0,
         },
         $modals: {},
@@ -211,8 +212,9 @@ var AddReduceDetail = (function() {
                 }),
                 detailBckBtn: com.focusPage('#detailBckBtn').on('click', function() { // 返回
 
-                    com.switchPage(addReduceDetail.historyPage);
                     com.closePopover();
+
+                    com.switchPage(api.index.addReduceIndex.url);
                 }),
 
                 updateAddReduceBtn: com.focusPage('#updateAddReduceBtn').on('click', function(event) {
@@ -223,6 +225,7 @@ var AddReduceDetail = (function() {
                         "addReduce.disPrice": addReduceDetail.basicParams["addReduce.disPrice"],
                         "addReduce.uncalPrice": addReduceDetail.basicParams["addReduce.uncalPrice"],
                         "addReduce.calPrice": addReduceDetail.basicParams["addReduce.calPrice"],
+                        "addReduce.consPrice": addReduceDetail.basicParams["addReduce.consPrice"],
                     };
 
                     com.post(api.addReduce.updateAddReduce, option, function() {
@@ -245,6 +248,7 @@ var AddReduceDetail = (function() {
         calculateQuoteFee: function($quote) {
 
             var _type = parseFloat($quote.find('.typedict').attr("data-type"));
+            var _subtype = parseInt($quote.find('.subtypedict').attr('data-subtype'));
             var _num = parseFloat($quote.find('.num .cell-wrap').text());
             var _unitprice = parseFloat($quote.find('.unitprice .cell-wrap').text());
             var _discountFlag = parseInt($quote.attr('data-discount')); // 0: 不打折, 1: 打折, 2: 不打折(非配比), 3: 打折(非配比)
@@ -268,8 +272,8 @@ var AddReduceDetail = (function() {
             var _disPrice = [1, 3].indexOf(_discountFlag) != -1 ? _sum : 0;
             var _uncalPrice = [2, 3].indexOf(_discountFlag) != -1 ? _sum : 0;
             var _calPrice = [0, 1].indexOf(_discountFlag) != -1 ? _sum : 0;
-            // 获取到管理费
-            var _managePrice = utils.changeThrDecimal(utils.accMul(_sum, addReduceDetail.manageRate));
+            var _consPrice = _subtype == 1 ? _sum : 0;
+            var _managePrice = utils.changeThrDecimal(utils.accMul(_sum, addReduceDetail.manageRate)); // 获取到管理费
 
             var itemInfo = {
                 "data-totalprice": _sumd,
@@ -277,6 +281,7 @@ var AddReduceDetail = (function() {
                 "data-disprice": _disPrice,
                 "data-uncalprice": _uncalPrice,
                 "data-calprice": _calPrice,
+                "data-consprice": _consPrice,
                 "data-manageprice": _managePrice,
             };
 
@@ -285,7 +290,7 @@ var AddReduceDetail = (function() {
         },
         calculateFees: function() {
 
-            var sum = 0, sumd = 0, undisprice = 0, disprice = 0, uncalprice = 0, calprice = 0, manageprice = 0;
+            var sum = 0, sumd = 0, undisprice = 0, disprice = 0, uncalprice = 0, calprice = 0, consprice = 0, manageprice = 0;
 
             var $items = com.focusPage('.fl-quo-item:not([data-del="1"])', '#addReduceItemDiv');
 
@@ -293,6 +298,7 @@ var AddReduceDetail = (function() {
 
                 var $item = $(e);
 
+                var _subtype = parseInt($item.find('.subtypedict').attr('data-subtype'));
                 var _num = parseFloat($item.find('.num .cell-wrap').text());
                 var _unitprice = parseFloat($item.find('.unitprice .cell-wrap').text());
                 var _discountFlag = parseInt($item.attr('data-discount')); // 0: 不打折, 1: 打折, 2: 不打折(非配比), 3: 打折(非配比)
@@ -316,6 +322,7 @@ var AddReduceDetail = (function() {
                 var _disPrice = [1, 3].indexOf(_discountFlag) != -1 ? _sum : 0;
                 var _uncalPrice = [2, 3].indexOf(_discountFlag) != -1 ? _sum : 0;
                 var _calPrice = [0, 1].indexOf(_discountFlag) != -1 ? _sum : 0;
+                var _consPrice = _subtype == 1 ? _sum : 0;
                 var _managePrice = utils.changeThrDecimal(utils.accMul(_sum, addReduceDetail.manageRate));
 
                 var itemInfo = {
@@ -324,6 +331,7 @@ var AddReduceDetail = (function() {
                     "data-disprice": _disPrice,
                     "data-uncalprice": _uncalPrice,
                     "data-calprice": _calPrice,
+                    "data-consprice": _consPrice,
                     "data-manageprice": _managePrice,
                 };
 
@@ -337,6 +345,7 @@ var AddReduceDetail = (function() {
                 disprice = utils.accAdd(disprice, _disPrice);
                 uncalprice = utils.accAdd(uncalprice, _uncalPrice);
                 calprice = utils.accAdd(calprice, _calPrice);
+                consprice = utils.accAdd(consprice, _consPrice);
                 manageprice = utils.accAdd(manageprice, _managePrice);
             });
 
@@ -346,6 +355,7 @@ var AddReduceDetail = (function() {
             disprice = utils.changeTwoDecimal(disprice);
             uncalprice = utils.changeTwoDecimal(uncalprice);
             calprice = utils.changeTwoDecimal(calprice);
+            consprice = utils.changeTwoDecimal(consprice);
             manageprice = utils.changeTwoDecimal(manageprice);
 
             com.focusPage("#managePrice").text(manageprice);
@@ -372,6 +382,7 @@ var AddReduceDetail = (function() {
             com.focusPage("#disprice").text(disprice);
             com.focusPage("#uncalprice").text(uncalprice);
             com.focusPage("#calprice").text(calprice);
+            com.focusPage("#consprice").text(consprice);
 
             addReduceDetail.basicParams["addReduce.total"] = sumd;
             addReduceDetail.basicParams["addReduce.managePrice"] = manageprice;
@@ -379,6 +390,7 @@ var AddReduceDetail = (function() {
             addReduceDetail.basicParams["addReduce.disPrice"] = disprice;
             addReduceDetail.basicParams["addReduce.uncalPrice"] = uncalprice;
             addReduceDetail.basicParams["addReduce.calPrice"] = calprice;
+            addReduceDetail.basicParams["addReduce.consPrice"] = consprice;
 
         }
     };
@@ -1078,6 +1090,7 @@ var AddReduceDetail = (function() {
             var _disPrice = [1, 3].indexOf(qv.discount) != -1 ? _sum : 0;
             var _uncalPrice = [2, 3].indexOf(qv.discount) != -1 ? _sum : 0;
             var _calPrice = [0, 1].indexOf(qv.discount) != -1 ? _sum : 0;
+            var _consPrice = qv.subtype == 1 ? _sum : 0;
 
             var _managePrice = utils.changeThrDecimal(utils.accMul(_sum, addReduceDetail.manageRate));
 
@@ -1178,6 +1191,7 @@ var AddReduceDetail = (function() {
                 "data-disprice": _disPrice,
                 "data-uncalprice": _uncalPrice,
                 "data-calprice": _calPrice,
+                "data-consprice": _consPrice,
                 "data-manageprice": _managePrice,
                 "data-addPrice": qv.addPrice,
                 "data-unitPrice": qv.unitPrice,
@@ -1195,13 +1209,10 @@ var AddReduceDetail = (function() {
     return {
         init: function() {
 
-            addReduceDetail.arid = params.addReduceId;
-            addReduceDetail.atttype = params["addReduce.atttype"];
-            addReduceDetail.ordertype = params.decorationType;
+            addReduceDetail.arid = params.quotation.addReduce.arId;
+            addReduceDetail.atttype = params.quotation.atttype;
 
             addReduceDetail.historyPage = params.historyPage;
-
-            com.focusPage('#atttype').text(addReduceDetail.atttype == 1 ? "工程" : addReduceDetail.atttype == 2 ? "主材" : "工程/主材");
 
             com.post(api.addReduce.queryAddReduceByArid, {
                 "addReduce.arId": addReduceDetail.arid
@@ -1225,11 +1236,15 @@ var AddReduceDetail = (function() {
                 addReduceDetail.basicParams["addReduce.disPrice"] = addReduce.disPrice;
                 addReduceDetail.basicParams["addReduce.uncalPrice"] = addReduce.uncalPrice;
                 addReduceDetail.basicParams["addReduce.calPrice"] = addReduce.calPrice;
+                addReduceDetail.basicParams["addReduce.consPrice"] = addReduce.consPrice;
 
                 addReduceDetail.orderid = addReduce.orderId;
 
                 addReduceDetail.addReduce = addReduce;
                 addReduceDetail.addReduceItems = addReduce.addReduceItems;
+
+                com.focusPage('#atttypeR').text(addReduce.atttype == 0 ? "工程" : addReduce.atttype == 1 ? "主材" : "");
+                com.focusPage('#atttypeV').text(addReduceDetail.atttype == 1 ? "工程" : addReduceDetail.atttype == 2 ? "主材" : "工程/主材");
 
             }, null, false);
 
@@ -1277,6 +1292,8 @@ var AddReduceDetail = (function() {
                 com.focusPage('#orderId').text(res.decoration.orderId)
                 com.focusPage('#address').text(res.decoration.house.village.name + " " + res.decoration.house.houseNumber);
                 com.focusPage('#version').text(res.decoration.version.name);
+
+                addReduceDetail.ordertype = res.decoration.type;
             });
 
             var $ul = $('<ul></ul>').addClass('fl-quo-list').appendTo(com.focusPage('#addReduceItemDiv'));

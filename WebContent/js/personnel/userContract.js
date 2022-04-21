@@ -1,7 +1,7 @@
 jQuery(function($) {
 
     var userContract = {
-            uid: params.uid,
+            uid: params.personel.uid,
             ucid: null,
             modals: {
             	addContractModal: com.focusPage("#addContractModal")

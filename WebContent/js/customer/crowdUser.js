@@ -12,9 +12,9 @@ jQuery(function ($) {
             comment: com.focusPage("#comment")
         },
 
-        gorderId: params.gorderId,
+        gorderId: params.customer.orderId,
         editFlg: false,
-        postParam: {},
+        postParam: {}
     };
 
     approve.saveBtn.bindClick(saveData);

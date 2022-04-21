@@ -53,17 +53,17 @@ $(function(){
         };
         return {
             init : function(){
-                basicConf.postParams = {"backVisit.orderId" : params.decorationOrderId};
+                basicConf.postParams = {"backVisit.orderId" : params.decoration.orderId};
                 basicConf.historyPage = params.historyPage;
                 
                 getList();
 
-                //动态key val
+                // 动态key val
                 var tagInput = com.focusPage('#form-field-tags');
 
                 tagInput.tag({
                     placeholder:tagInput.attr('placeholder'),
-                    //enable typeahead by specifying the source array
+                    // enable typeahead by specifying the source array
                     isStaticResource : false,
                     flsource: {
                         url : api.personel.queryUserByPinyin,
@@ -71,7 +71,7 @@ $(function(){
                         resultList : "autoFillKeyValue",
                         keyPath : "key",
                         valuePath : "value",
-                        isResultTypeMap : true, //是否是key - value 形式的列表
+                        isResultTypeMap : true, // 是否是key - value 形式的列表
                     },
                 });
             },
@@ -104,7 +104,7 @@ $(function(){
     function saveData() {
         if (!com.validate('backVisitModal')) {
             var a = {
-                "backVisit.orderId" : params.decorationOrderId,
+                "backVisit.orderId" : params.orderId,
                 "backVisit.content": backVisit.backVisitItems.backVisitContent.val()
             };
             var people = backVisit.backVisitItems.backVisitNoticePeople.val().split(',');

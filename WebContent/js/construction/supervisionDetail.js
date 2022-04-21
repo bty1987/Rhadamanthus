@@ -46,7 +46,7 @@ jQuery(function ($) {
     }, null, false);
 
     $.extend(com.validator, supervisionDetail.validator);
-    com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": params.orderId}, function (res) {
+    com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": params.construction.orderId}, function (res) {
 
         var newSchedules = res.constructionSchedules.sort(function(a, b){
             return a.schedule - b.schedule;
@@ -60,7 +60,7 @@ jQuery(function ($) {
             constructionNodes[v.node.sort] = v.node.name;
             constructionNode("#stepId", v.schedule);
             constructionPane("#step-container", v.schedule, v.schedule);
-            params.cid = v.cid;
+            params.construction.cid = v.cid;
         });
 
         var stepnum = constructionSchedule[0].schedule;
@@ -86,7 +86,7 @@ jQuery(function ($) {
         addActive(schedule);
 
         var elementPostData = {
-            "constructionSchedule.orderId": params.orderId,
+            "constructionSchedule.orderId": params.construction.orderId,
             "constructionSchedule.schedule": schedule
         };
         
@@ -109,7 +109,7 @@ jQuery(function ($) {
                 updatastatusDiv(otherStatus, otherename);
                 
                 var options = {
-                    "constructer.orderId": params.orderId,
+                    "constructer.orderId": params.construction.orderId,
                     "constructer.schedule": schedule
                 };
 
@@ -120,7 +120,7 @@ jQuery(function ($) {
             }
 
             var options = {
-                "constructionDrawing.cid": params.cid,
+                "constructionDrawing.cid": params.construction.cid,
                 "constructionDrawing.schedule": schedule
             };
 

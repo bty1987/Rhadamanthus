@@ -1,4 +1,4 @@
-jQuery(function ($) {
+jQuery(function($) {
 
     var balanceBalance = {
 
@@ -8,13 +8,15 @@ jQuery(function ($) {
         items: {
             list: com.focusPage('#list'),
         },
-        surplus : params.surplus,
+        surplus: params.balance.surplus,
     };
 
     function queryAccountes() {
 
-        com.post(api.balance.queryAccount, {"account.belonger.uid": params['uid']}, function (res) {
-            $.each(res.accountes, function (i, v) {
+        com.post(api.balance.queryAccount, {
+            "account.belonger.uid": params.balance.uid
+        }, function(res) {
+            $.each(res.accountes, function(i, v) {
                 resultList(i, v);
             });
         }, null, false);
@@ -22,11 +24,9 @@ jQuery(function ($) {
 
     queryAccountes();
 
-    balanceBalance.refundBtn.click(function () {
+    balanceBalance.refundBtn.click(function() {
 
-        if (com.validate('list', 'bottom')) {
-            return false;
-        }
+        if (com.validate('list', 'bottom')) { return false; }
 
         var $checks = com.focusPage('input[type="checkbox"]:checked', '#list');
 
@@ -35,29 +35,27 @@ jQuery(function ($) {
             return false;
         }
         var options = {
-            "balance.bid": params.bid,
+            "balance.bid": params.balance.bid,
         };
         var total = 0;
 
-        for (var i = 0; i < $checks.length; i++) {
+        for ( var i = 0; i < $checks.length; i++) {
             var $check = $($checks[i]);
             var $line = $check.parents('li.line');
             var crnumInput = $line.find(".money input").addClass('v_afloat_3');
-            if (com.validate($line.attr("id"), "left")) {
-                return false;
-            }
+//            if (com.validate($line.attr("id"), "left")) { return false; }
 
             var crnum = crnumInput.val();
 
             total += Number(crnumInput.val());
 
-            if(!crnum){
+            if (!crnum) {
                 com.showAlert(com.warning, "请输入操作额");
                 crnumInput.select();
                 return false;
             }
 
-            if(isNaN(total)){
+            if (isNaN(total)) {
                 com.showAlert(com.warning, "请输入正确操作额");
                 crnumInput.select();
                 return false;
@@ -66,24 +64,24 @@ jQuery(function ($) {
             options["accountes[" + i + "].money"] = crnum;
             options["accountes[" + i + "].aid"] = $line.attr("data-miid");
 
-            if(balanceBalance.surplus > 0){
-                if(total > balanceBalance.surplus){
+            if (balanceBalance.surplus > 0) {
+                if (total > balanceBalance.surplus) {
                     com.showAlert(com.warning, "余额不足");
                     return false;
                 }
-            }else if(balanceBalance.surplus < 0){
-                if(total < balanceBalance.surplus){
+            } else if (balanceBalance.surplus < 0) {
+                if (total < balanceBalance.surplus) {
                     com.showAlert(com.warning, "余额不足");
                     return false;
                 }
-            }else{
+            } else {
                 com.showAlert(com.warning, "余额不足");
                 return false;
             }
 
         }
 
-        com.post(api.balance.balanceBalance, options ,function () {
+        com.post(api.balance.balanceBalance, options, function() {
             com.focusPage('#list').empty();
             queryAccountes();
             com.showAlert(com.info, "操作成功");
@@ -91,30 +89,32 @@ jQuery(function ($) {
 
     });
 
-    balanceBalance.cancellBtn.click(function () {
+    balanceBalance.cancellBtn.click(function() {
         com.closePopup();
     });
 
     function resultList(i, v) {
-            var $line = addline(i + 1).appendTo(balanceBalance.items.list).attr({
-                "data-miid": v.aid,
-            });
-            $line.find('div.name').text(v.name);
-            $line.find('div.belonger').text(v.belonger.currentName);
-            $line.find('div.creater').text(v.creater.currentName);
-            $line.find('div.createTime').text(v.createTime);
-            $line.find('div.referMoney').text(v.referMoney);
-            $line.find('div.realMoney').text(v.realMoney);
-            $line.find('div.surplus').text(v.surplus);
+        var $line = addline(i + 1).appendTo(balanceBalance.items.list).attr({
+            "data-miid": v.aid,
+        });
+        $line.find('div.name').text(v.name);
+        $line.find('div.belonger').text(v.belonger.currentName);
+        $line.find('div.creater').text(v.creater.currentName);
+        $line.find('div.createTime').text(v.createTime);
+        $line.find('div.referMoney').text(v.referMoney);
+        $line.find('div.realMoney').text(v.realMoney);
+        $line.find('div.surplus').text(v.surplus);
 
     }
 
-    //添加一个空行
+    // 添加一个空行
     function addline(lineindex) {
 
         var $line = $('<li></li>').addClass('line');
         var _label = $('<label></label>');
-        var $input = $('<input>').attr({"type": "checkbox"}).addClass('ace ace-checkbox-2 hide');
+        var $input = $('<input>').attr({
+            "type": "checkbox"
+        }).addClass('ace ace-checkbox-2 hide');
         var _span = $('<span></span>').addClass('lbl grey bigger-150').css('font-weight', 'bold');
 
         _label.append($input).append(_span);
@@ -122,22 +122,33 @@ jQuery(function ($) {
         var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(_label));
         var $lineInfoWrap = $('<div></div>').addClass('line-wrap content col8');
 
-        var _lineInfoSet = [
-            {cellClass: "name grey"},
-            {cellClass: "belonger grey"},
-            {cellClass: "creater grey"},
-            {cellClass: "createTime grey"},
-            {cellClass: "referMoney blue"},
-            {cellClass: "realMoney blue"},
-            {cellClass: "surplus blue"},
-            {cellClass: "money ", hasInput: true},
-        ];
+        var _lineInfoSet = [{
+            cellClass: "name grey"
+        }, {
+            cellClass: "belonger grey"
+        }, {
+            cellClass: "creater grey"
+        }, {
+            cellClass: "createTime grey"
+        }, {
+            cellClass: "referMoney blue"
+        }, {
+            cellClass: "realMoney blue"
+        }, {
+            cellClass: "surplus blue"
+        }, {
+            cellClass: "money ",
+            hasInput: true
+        }, ];
 
-        $.each(_lineInfoSet, function (i, v) {
+        $.each(_lineInfoSet, function(i, v) {
             var $cell = $('<div></div>').addClass('cell ' + v.cellClass);
 
             if (v.hasInput) {
-                $cell.append($('<input>').prop({'type': 'text', 'autocomplete': 'off'}).addClass('editable'));
+                $cell.append($('<input>').prop({
+                    'type': 'text',
+                    'autocomplete': 'off'
+                }).addClass('editable'));
             }
 
             $cell.appendTo($lineInfoWrap);

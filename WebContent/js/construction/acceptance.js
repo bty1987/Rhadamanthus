@@ -80,7 +80,7 @@ jQuery(function ($) {
     }, "pagenation", "acceptanceSeacherSeacherPostData");
 
     function viewAcceptanceDetailIndex(orderId) {
-        params.orderId = orderId;
+        params.construction.orderId = orderId;
         com.popup4page("#stockRecordPopUp","/views/construction/acceptanceDetail.html","查看");
     }
 

@@ -1,7 +1,7 @@
 jQuery(function ($) {
 
     var purchase = {
-        pid: params["purchase.pid"],
+        pid: params.manifest.pid,
         items: {
         	list: com.focusPage("#list"),
             createTime: com.focusPage("#createTime")

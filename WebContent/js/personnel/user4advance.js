@@ -337,7 +337,7 @@
 					
 					$btnMacontrol.click(function(){
 					    params["user.uid"] = v.uid;
-					    com.popup4page("#layerPopUp", "/views/personnel/macontrol.html", "权限");
+					    com.popup4page("#layerPopUp", api.index.macontrol.url, "权限");
 					});
 
 					$btnRight.click(function(){
@@ -392,7 +392,7 @@
 				path : null,
 				name : null
 			},
-			//设计权限配置
+			// 设计权限配置
 			openDesignDialog : function(userId){
 				var $dialog = this.$dialog;
 				showDepaermentModal("设计部");
@@ -408,7 +408,7 @@
 				this.postConf.name = "dids";
 				this.postConf["user.userId"] = userId;
 			},
-			//业务权限配置
+			// 业务权限配置
 			openSalesDialog : function(userId) {
 				var $dialog = this.$dialog;
 				showDepaermentModal("");
@@ -424,7 +424,7 @@
 				this.postConf.name = "dids";
 				this.postConf["user.userId"] = userId;
 			},
-			//订单权限配置
+			// 订单权限配置
 			openOrderDialog : function(userId){
 				var $dialog = this.$dialog;
 				var list=[{key: "-1", value: "全部"}], userList;
@@ -461,7 +461,7 @@
 
 			},
 
-			//房源权配
+			// 房源权配
 			openHouseDialog : function(userId) {
 				var $dialog = this.$dialog;
 				showDepaermentModal("置业房产");
@@ -478,7 +478,7 @@
 				this.postConf["user.userId"] = userId;
 			},
 
-			//客源权配
+			// 客源权配
 			openCustomerDialog : function(userId) {
 				var $dialog = this.$dialog;
 				showDepaermentModal("");
@@ -494,7 +494,7 @@
 				this.postConf.name = "dids";
 				this.postConf["user.userId"] = userId;
 			},
-			//登出
+			// 登出
 			openlogoutDialog : function(userId) {
 				com._post_(api.home.library, {"api": "system.login.logout", "userId":userId,"redis":0}, function(res){
 					com.showAlert(com.info, "操作成功");

@@ -3,7 +3,7 @@ $(function() {
     var feedback = {
 
         modals: {
-            feedbackDrawingModal: com.focusPage("#feedbackDrawingModal"),
+            feedbackDrawingModal: com.focusPage("#feedbackDrawingModal")
         }
 
     };
@@ -102,7 +102,7 @@ $(function() {
     function addPicture(i, v) {
 
         var $li = $('<li></li>').attr("id", "imgLi_" + v.ddid).appendTo(i);
-        var $img = $('<img></img>').attr('width', 200).attr('height', 200);
+        var $img = $('<img/>').attr('width', 200).attr('height', 200);
         var $imgA = $('<a></a>').addClass('cboxElement').attr('target', '_blank').append($img).appendTo($li);
 
         com.showImg($img, v.path, 200, 200, "", null);

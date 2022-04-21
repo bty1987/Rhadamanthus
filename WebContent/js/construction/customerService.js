@@ -1,8 +1,8 @@
-jQuery(function ($) {
+jQuery(function($) {
 
     var constructionNodes = {};
 
-    com.post(api.data.queryConstructionNode,{}, function(res){
+    com.post(api.data.queryConstructionNode, {}, function(res) {
         constructionNodes = res.constructionNodes.split("sort", "name");
 
         constructionNodes[0] = "初始";
@@ -10,24 +10,23 @@ jQuery(function ($) {
         constructionNodes[2] = "完工";
     }, null, false);
 
-    var displayFunc = (function () {
+    var displayFunc = (function() {
 
-        var renderList = function (tableId, listData) {
+        var renderList = function(tableId, listData) {
             var $tableWrap = com.focusPage('#' + tableId).empty();
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
-                $.each(listData, function (i, v) {
-                    var $liLine = creatLine(v);
-
-                    $liLine.appendTo($ul);
+                $.each(listData, function(i, v) {
+                    creatLine(v).appendTo($ul);
                 });
 
                 $ul.appendTo($tableWrap);
             }
         };
 
-        var creatLine = function (v) {
+        var creatLine = function(v) {
+
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -38,17 +37,9 @@ jQuery(function ($) {
             var $btnRepair = $('<a></a>').addClass('btn btn-minier btn-warning').html("保修");
             var $btnRevisit = $('<a></a>').addClass('btn btn-minier btn-inverse').html("回访");
 
-            var propertyArr = [
-                ["楼盘名:", v.house.village.name, "grey"],
-                ["设计部门:", v.designer.dept.name, "grey"],
-                ["设计师:", v.designer.userName, "grey"],
-                ["监理:", v.supervisor ? v.supervisor.userName : "", "grey"],
-                ["总价:", v.orderTotalPrice, "blue"],
-                ["面积:", v.house.buildArea, "blue"],
-                ["进度:", constructionNodes[v.projectStatus], "red"]
-            ];
+            var propertyArr = [["楼盘名:", v.house.village.name, "grey"], ["设计部门:", v.designer.dept.name, "grey"], ["设计师:", v.designer.userName, "grey"], ["监理:", v.supervisor ? v.supervisor.userName : "", "grey"], ["总价:", v.orderTotalPrice, "blue"], ["面积:", v.house.buildArea, "blue"], ["进度:", constructionNodes[v.projectStatus], "red"]];
 
-            $.each(propertyArr, function (index, value) {
+            $.each(propertyArr, function(index, value) {
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
@@ -59,16 +50,19 @@ jQuery(function ($) {
 
             $liLine.append($h3).append($ulProperty);
 
-            $btnView.click(function () {
+            $btnView.click(function() {
                 viewCustomerServiceDetailIndex(v.orderId)
             });
-            $btnComplain.click(function () {
+
+            $btnComplain.click(function() {
                 viewCustomerServiceComplaintIndex(v.orderId, v.customer.name);
             });
-            $btnRepair.click(function () {
+
+            $btnRepair.click(function() {
                 viewCustomerServiceGuaranteeIndex(v.orderId, v.customer.name);
             });
-            $btnRevisit.click(function () {
+
+            $btnRevisit.click(function() {
                 viewCustomerServiceBackVisitIndex(v.orderId, v.house.village.name, v.customer.name);
             });
 
@@ -76,44 +70,51 @@ jQuery(function ($) {
         };
 
         return {
-            init: function (tableId, listData) {
+            init: function(tableId, listData) {
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
-            drawLine: function (v) {
+            drawLine: function(v) {
                 return creatLine(v);
             }
         }
     })();
 
     var searcher = new Searcher();
-    searcher.init(['construction-orderId', 'construction-village-name', 'construction-houseNumber-name', 'construction-designer', 'construction-schedule'], "customerServiceCondList", api.construction.pageConstruction, function (list) {
+    searcher.init(['construction-orderId', 'construction-village-name', 'construction-houseNumber-name', 'construction-designer', 'construction-schedule'], "customerServiceCondList", api.construction.pageConstruction, function(list) {
         displayFunc.init('customerServiceResultList', list);
-    }, "customerServicePagenation", "customerServiceSeacherPostData", null, false, null, null,"customerServiceResultList");
+    }, "customerServicePagenation", "customerServiceSeacherPostData", null, false, null, null, "customerServiceResultList");
 
     function viewCustomerServiceDetailIndex(orderId) {
-        params.orderId = orderId;
-        com.popup4page("#stockRecordPopUp","/views/construction/customerServiceDetail.html","查看");
+
+        params.construction.orderId = orderId;
+
+        com.popup4page("#stockRecordPopUp", "/views/construction/customerServiceDetail.html", "查看");
     }
 
     function viewCustomerServiceComplaintIndex(orderId, customerName) {
-        params.orderId = orderId;
-        params.customerName = customerName;
-        com.popup4page("#stockRecordPopUp","/views/construction/customerServiceComplaint.html","投诉");
+
+        params.construction.orderId = orderId;
+        params.construction.customerName = customerName;
+
+        com.popup4page("#stockRecordPopUp", "/views/construction/customerServiceComplaint.html", "投诉");
     }
 
     function viewCustomerServiceGuaranteeIndex(orderId, customerName) {
-        params.orderId = orderId;
-        params.customerName = customerName;
-        com.popup4page("#stockRecordPopUp","/views/construction/customerServiceGuarantee.html","保修");
+
+        params.construction.orderId = orderId;
+        params.construction.customerName = customerName;
+
+        com.popup4page("#stockRecordPopUp", "/views/construction/customerServiceGuarantee.html", "保修");
     }
 
     function viewCustomerServiceBackVisitIndex(orderId, orderAddr, customerName) {
-        params.orderId = orderId;
-        params.orderAddr = orderAddr;
-        params.customerName = customerName;
-        com.popup4page("#stockRecordPopUp","/views/construction/customerServiceBackVisit.html","回访");
+
+        params.construction.orderId = orderId;
+        params.construction.orderAddr = orderAddr;
+        params.construction.customerName = customerName;
+
+        com.popup4page("#stockRecordPopUp", "/views/construction/customerServiceBackVisit.html", "回访");
     }
 
 });
-

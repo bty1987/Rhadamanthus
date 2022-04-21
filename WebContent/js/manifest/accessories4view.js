@@ -93,7 +93,7 @@ $(function () {
     };
 
     var options = {
-        "accessoriesManifest.accessories.aid": params["accessories.aid"],
+        "accessoriesManifest.accessories.aid": params.manifest.aid,
         "accessoriesManifest.manifest.type": null
     };
 

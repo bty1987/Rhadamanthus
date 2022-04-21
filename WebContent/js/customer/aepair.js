@@ -7,11 +7,11 @@ $(function () {
         },
         modals: {
             updateAepairModal: com.focusPage("#updateAepairModal"),
-            tranAepairModal: com.focusPage("#tranAepairModal"),
+            tranAepairModal: com.focusPage("#tranAepairModal")
         },
         updateSaveBtn: com.focusPage("#updateSaveBtn"),
         saveBtn: com.focusPage("#saveBtn"),
-        type: null,
+        type: null
     };
 
     aepair.updateSaveBtn.bindClick(updateFunction);
@@ -115,13 +115,13 @@ $(function () {
             });
 
             $btnView.click(function () {
-                params.aid = v.aid;
-                com.popup4page('#repairPopUp', 'views/customer/repair.html', '维修单');
+                params.customer.aid = v.aid;
+                com.popup4page('#repairPopUp', api.index.repair.url, '维修单');
             });
 
             $btnPay.click(function () {
-                params.aid = v.aid;
-                com.popup4page('#repairPayPopUp', 'views/customer/repairPay.html', '维修款');
+                params.customer.aid = v.aid;
+                com.popup4page('#repairPayPopUp', api.index.repairPay.url, '维修款');
             });
 
             $btnUpdate.click(function () {

@@ -76,7 +76,7 @@ $(function () {
         return [$adda, $exporta];
     });
     
-//    searcher.button([{id: "addPlan", name: "添加", clazz: "btn-yellow", icon: "icon-plus"}]);
+// searcher.button([{id: "addPlan", name: "添加", clazz: "btn-yellow", icon: "icon-plus"}]);
     
     var lineprops = [
         {field: "pid", name: "多选", type: "checkbox", prop: "pid"},
@@ -128,8 +128,7 @@ $(function () {
     });
 
     com.focusPage('#createPlan', '#pagenation').on("click", function () {
-        params["searcher"] = searcher;
-        com.popup4page("#stockRecordPopUp", "/views/information/plan2create.html", "计划创建", null, function(){
+        com.popup4page("#stockRecordPopUp", api.index.plan2create.url, "计划创建", null, function(){
             searcher.doSearch();
         })
     });

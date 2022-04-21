@@ -117,7 +117,7 @@ $(function(){
     function saveOptionChange(){
     	
         var _params = {
-            "manifestTemplate.mtid" : params["manifestTemplate.mtid"]
+            "manifestTemplate.mtid" : params.manifest.manifestTemplate.mtid
         };
         
         var $menus = com.focusPage('input[type="checkbox"]:checked', '.line');

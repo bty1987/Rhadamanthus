@@ -348,7 +348,7 @@ jQuery(function($) {
                 params.building.customerSource = v;
                 params.building.flag = false;
 
-                com.popup4page("#stockRecordPopUp", "/views/building/buildingRecord.html", "跟进记录");
+                com.popup4page("#stockRecordPopUp", api.index.buildingRecord.url, "跟进记录");
             });
 
             return $liLine;
@@ -404,9 +404,7 @@ jQuery(function($) {
             customerSource.areaFlg = false;
         }
 
-        if (com.validate("buildingModal") || customerSource.priceFlg || customerSource.areaFlg) {
-            return false;
-        }
+        if (com.validate("buildingModal") || customerSource.priceFlg || customerSource.areaFlg) { return false; }
 
         var options = {};
         options["customerSource.purpose"] = customerSource.items.purpose.val();
@@ -465,9 +463,7 @@ jQuery(function($) {
     // 绑定客源,创建房产单
     function saveBuildingData() {
 
-        if (com.validate("buildingModal") || customerSource.dataFlag) {
-            return false;
-        }
+        if (com.validate("buildingModal") || customerSource.dataFlag) { return false; }
 
         var options = {
             'building.houseSource.hsid': customerSource.hsid,

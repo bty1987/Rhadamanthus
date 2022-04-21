@@ -2,7 +2,6 @@ jQuery(function ($) {
 
     var plan2create = {
 
-        planSeacher : params.planSeacher,
         btns: {
             createPlanBtn : com.focusPage("#createPlanBtn"),
             submitBtn : com.focusPage("#submitBtn"),
@@ -75,7 +74,7 @@ jQuery(function ($) {
         queryTaskParmas()
     });
     queryTaskParmas();
-    //点击标签
+    // 点击标签
     function initItem($div, data, flag){
 
         var $btn = $(this);

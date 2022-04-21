@@ -1,4 +1,4 @@
-jQuery(function ($) {
+jQuery(function($) {
 
     var payBalance = {
 
@@ -13,7 +13,7 @@ jQuery(function ($) {
     function queryAccountes() {
 
         com.post(api.balance.queryAccountForTeller, {}, function (res) {
-            $.each(res.accountes, function (i, v) {
+            $.each(res.accountes, function(i, v) {
                 resultList(i, v);
             });
         }, null, false);
@@ -21,7 +21,7 @@ jQuery(function ($) {
 
     queryAccountes();
 
-    payBalance.refundBtn.click(function () {
+    payBalance.refundBtn.click(function() {
 
         if (com.validate('list', 'bottom')) {
             return false;
@@ -34,31 +34,31 @@ jQuery(function ($) {
         }
 
         var options = {
-            "balance.bid": params.bid,
+            "balance.bid": params.balance.bid,
         };
 
         for (var i = 0; i < $checks.length; i++) {
             var $check = $($checks[i]);
             var $line = $check.parents('li.line');
             var crnumInput = $line.find(".money input").addClass('v_float_3');
-            if (com.validate($line.attr("id"), "left")) {
-                return false;
-            }
+//            if (com.validate($line.attr("id"), "left")) {
+//                return false;
+//            }
 
             var crnum = crnumInput.val();
 
-            if(!crnum){
+            if (!crnum) {
                 com.showAlert(com.warning, "请输入操作额");
                 crnumInput.select();
                 return false;
             }
-            if(crnum < 0){
+            if (crnum < 0) {
                 com.showAlert(com.warning, "操作额不能为负数");
                 crnumInput.select();
                 return false;
             }
 
-            if(params.surplus < crnum){
+            if (params.balance.surplus < crnum) {
                 com.showAlert(com.warning, "余额不足");
                 crnumInput.select();
                 return false;
@@ -69,7 +69,7 @@ jQuery(function ($) {
 
         }
 
-        com.post(api.balance.payBalance, options ,function () {
+        com.post(api.balance.payBalance, options ,function() {
             com.focusPage('#list').empty();
             queryAccountes();
             com.showAlert(com.info, "操作成功");
@@ -77,7 +77,7 @@ jQuery(function ($) {
 
     });
 
-    payBalance.cancellBtn.click(function () {
+    payBalance.cancellBtn.click(function() {
         com.closePopup();
     });
 
@@ -95,7 +95,7 @@ jQuery(function ($) {
 
     }
 
-    //添加一个空行
+    // 添加一个空行
     function addline(lineindex) {
 
         var $line = $('<li></li>').addClass('line');
@@ -119,7 +119,7 @@ jQuery(function ($) {
             {cellClass: "money ", hasInput: true},
         ];
 
-        $.each(_lineInfoSet, function (i, v) {
+        $.each(_lineInfoSet, function(i, v) {
             var $cell = $('<div></div>').addClass('cell ' + v.cellClass);
 
             if (v.hasInput) {

@@ -691,7 +691,7 @@ var ExtensionDetail = (function(){
     return {
         init : function(){
             
-            com.post(api.quotation.queryExtensionByEid, {"extension.eid": params.extensionId}, function(res){
+            com.post(api.quotation.queryExtensionByEid, {"extension.eid": params.quotation.extensionId}, function(res){
                 var extension = res.extension;
                 
                 extensionDetail.basicParams["extension.eid"] = extension.eid;

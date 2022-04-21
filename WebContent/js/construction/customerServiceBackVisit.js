@@ -90,9 +90,9 @@ jQuery(function ($) {
                 backVisit.editFlag = true;
                 var row = v;
 
-                backVisit.items.orderId.val(params.orderId);
-                backVisit.items.orderAddr.val(params.orderAddr);
-                backVisit.items.customerName.val(params.customerName);
+                backVisit.items.orderId.val(params.construction.orderId);
+                backVisit.items.orderAddr.val(params.construction.orderAddr);
+                backVisit.items.customerName.val(params.construction.customerName);
                 backVisit.items.backVisitTime.val(row.backVisitTime);
                 backVisit.items.backVisitType.val(row.backVisitType);
                 backVisit.items.backVisitDes.val(row.backVisitDes);
@@ -128,7 +128,7 @@ jQuery(function ($) {
     searcher.init([], "condList", api.construction.pageCustomerServiceBackVisit, function (list) {
         displayFunc.init('resultList', list);
     }, "pagenation", "customerServiceBackVisitPostData", {
-        "customerServiceBackVisit.orderId": params.orderId
+        "customerServiceBackVisit.orderId": params.construction.orderId
     }, false, null, function () {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('id', 'Add').css("margin", "0px 3px");
@@ -141,9 +141,9 @@ jQuery(function ($) {
     com.focusPage('#Add', '#pagenation').click(function () {
         backVisit.editFlag = false;
 
-        backVisit.items.orderId.val(params.orderId);
-        backVisit.items.orderAddr.val(params.orderAddr);
-        backVisit.items.customerName.val(params.customerName);
+        backVisit.items.orderId.val(params.construction.orderId);
+        backVisit.items.orderAddr.val(params.construction.orderAddr);
+        backVisit.items.customerName.val(params.construction.customerName);
 
         backVisit.items.orderId.attr("disabled", true);
         backVisit.items.orderAddr.attr("disabled", true);

@@ -31,7 +31,7 @@ jQuery(function($) {
 
     }, null, false);
 
-    com.post(queryActivityPaymentByArid, {"activityPayment.activityReceipt.arid":params.activityPayment.arid}, function(res){
+    com.post(queryActivityPaymentByArid, {"activityPayment.activityReceipt.arid":params.payment.activityPayment.arid}, function(res){
 
         var activityPayments = res.activityPayments;
 
@@ -67,7 +67,7 @@ jQuery(function($) {
 
     var queryactivityReceiptByArid = api.payment.queryActivityReceiptByArid;
 
-    com.post(queryactivityReceiptByArid, {"activityReceipt.arid":params.activityPayment.arid}, function(res){
+    com.post(queryactivityReceiptByArid, {"activityReceipt.arid":params.payment.activityPayment.arid}, function(res){
 
         var activityReceipt = res.activityReceipt;
 
@@ -109,7 +109,7 @@ jQuery(function($) {
         var paymentItems = receipt.paymentItems;
         var receiptItems = receipt.receiptItems;
 
-        var srId = parent.params.activityPayment.arid;
+        var srId = parent.params.payment.activityPayment.arid;
         var noInit = "000000000000"+srId;
 
         var no = noInit.substring(srId.length, noInit.length);
