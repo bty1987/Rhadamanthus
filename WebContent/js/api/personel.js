@@ -19,7 +19,44 @@ $.extend(api.index, {
     },
     userOutputIndex: {
         url: "/views/personnel/user2export.html"
-    }
+    },
+    dutment: {
+        url: "/views/personnel/dutment.html"
+    },
+    userEdit: {
+        url: "/views/personnel/userEdit.html"
+    },
+    selectRecruitment: {
+        url: "/views/personnel/selectRecruitment.html"
+    },
+    updateRecruitment: {
+        url: "/views/personnel/updateRecruitment.html"
+    },
+    recruitmentEducation: {
+        url: "/views/personnel/recruitmentEducation.html"
+    },
+    recruitmentOperation: {
+        url: "/views/personnel/recruitmentOperation.html"
+    },
+    userContract: {
+        url: "/views/personnel/userContract.html"
+    },
+    userEducation: {
+        url: "/views/personnel/userEducation.html"
+    },
+    userOperation: {
+        url: "/views/personnel/userOperation.html"
+    },
+    userDetail: {
+        url: "/views/personnel/userDetail.html"
+    },
+    userExperience: {
+        url: "/views/personnel/userExperience.html"
+    },
+    macontrol: {
+        url: "/views/personnel/macontrol.html"
+    },
+
 });
 
 $.extend(api, {

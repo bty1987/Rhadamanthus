@@ -16,7 +16,7 @@ jQuery(function ($) {
         purchase.storehouses = res.storehouses;
     }, null, false);
     
-    com.post(api.inventory.queryPurchaseItemByPids, {"pids": params["purchase.pids"]}, function (res) {
+    com.post(api.inventory.queryPurchaseItemByPids, {"pids": params.manifest.pids}, function (res) {
     	
     	$.each(res.purchaseItems.lenght, function(i, v){
     		var $line = addline(1 + index).appendTo(purchase.items.list).attr({

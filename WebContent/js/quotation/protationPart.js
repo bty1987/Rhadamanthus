@@ -116,9 +116,7 @@ var ProtationDetail = (function() {
 
             // 左上角展示区
             var $domains = com.focusPage('#functionAreaDetailList .widget-box');
-            if (!$domains.length) {
-                return;
-            }
+            if (!$domains.length) { return; }
 
             $domains.each(function() {
 
@@ -434,9 +432,7 @@ var ProtationDetail = (function() {
         },
         hideInputWrap: function() {
 
-            if (!this.$nowEditInput) {
-                return;
-            }// $nowEditInput?
+            if (!this.$nowEditInput) { return; }// $nowEditInput?
             this.$nowEditInput.addClass('hide');
             // this.$nowEditInput = null;
         },
@@ -450,9 +446,7 @@ var ProtationDetail = (function() {
             var $q1 = [], $q2 = [];
             var _params = {};
 
-            if (!$quos.length) {
-                return false;
-            }
+            if (!$quos.length) { return false; }
 
             $quos.length && $.each($quos, function(i, v) {
 
@@ -577,17 +571,13 @@ var ProtationDetail = (function() {
             var _index = domain.nowEditDomain.find('.fl-quo-item.item').length;
 
             var _areaType = domain.nowEditDomain.attr("data-areatype");
-            if (!_arrs.length) {
-                return;
-            }
+            if (!_arrs.length) { return; }
 
             $.each(_arrs, function(i, v) {
 
                 var $this = com.focusPage(v);
 
-                if ($this.val() && com.focusPage('input[data-qiid="' + $this.val() + '"]', domain.nowEditDomain).length) {
-                    return false;
-                }
+                if ($this.val() && com.focusPage('input[data-qiid="' + $this.val() + '"]', domain.nowEditDomain).length) { return false; }
 
                 var type = parseInt($this.attr("data-type"));
 
@@ -956,8 +946,8 @@ var ProtationDetail = (function() {
 
         init: function() {
 
-            quo.decorationOrderId = params.decorationOrderId;
-            quo.protationId = params.protationId;
+            quo.decorationOrderId = params.quotation.protation.orderId;
+            quo.protationId = params.quotation.protation.pid;
 
             com.post(api.quotation.queryProtationByPid, {
                 "protation.pid": quo.protationId

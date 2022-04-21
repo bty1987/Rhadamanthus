@@ -61,7 +61,7 @@ $(function () {
         vid: null,
         no: null,
         postData : '',
-        pageType : params['urlLoadParams'].type,
+        pageType : params.urlLoadParams.type,
     };
 
     if(village.pageType == "village"){
@@ -160,15 +160,19 @@ $(function () {
             });
 
             $drawingedit.click(function () {
-                params.vid = v.vid;
+                
                 village.vid = v.vid;
                 village.url = v.url;
                 village.no = v.no;
+                
                 managedrawing(v.vid);
             });
 
             $houseLayout.click(function(){
                 params.vid = v.vid;
+                
+                params.data.village = v;
+                
                 com.popup4page("#villagePopUp","/views/data/houseLayout.html","户型");
             })
 
@@ -301,7 +305,7 @@ $(function () {
         com.uploadify("#villageUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {'uploadType': 0}, 1, function(data){
             var options = {};
             
-            options["dataDrawing.sid"] = params.vid;
+            options["dataDrawing.sid"] = village.vid;
             options["dataDrawing.name"] = data.strutsUploadsFileName;
             options["dataDrawing.drawingUrl"] = data.resUrl;
             options["dataDrawing.drawingType"] = 0;
@@ -354,7 +358,7 @@ $(function () {
     }
 
     // 初始化地图 创建地图函数
-    //var mp = createMap();
+    // var mp = createMap();
 
     function createMap(lng, lat) {
         var mp = new BMap.Map("mapContainer", {enableMapClick: false, minZoom: 11, maxZoom: 20}); // 在百度地图容器中创建一个地图
@@ -422,8 +426,8 @@ $(function () {
         span.innerHTML = this._text;
         var that = this;
         /*
-		 * div.onclick = function(){ window.open('html/1.html'); //跳转定向 };
-		 */
+         * div.onclick = function(){ window.open('html/1.html'); //跳转定向 };
+         */
 
         // 箭头边框
         var arrowBorder = this._arrow = document.createElement("div");
@@ -459,7 +463,7 @@ $(function () {
         drawMap();
     });
 
-    //确认位置
+    // 确认位置
     com.focusPage("#placeBtn").click(function(){
         getPlace(com.focusPage("#city").val(), com.focusPage("#name").val());
     });
@@ -530,7 +534,7 @@ $(function () {
             }) : b.bindData([], "", "", d)
     }
 
-    //webapi
+    // webapi
     function getPlace(city, villageName){
         $.ajax({
             url: "http://api.map.baidu.com/place/v2/search?query=" + villageName + "&region=" + city + "&output=json&ak=LRGsFoxg2Z21c9on5s5YhBQ9zeewZGw8",

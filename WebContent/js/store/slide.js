@@ -1,55 +1,60 @@
-$(function () {
-    
+$(function() {
+
     var slide = {
-            
+
         sid: null,
         gid: null,
-            
+
         items: {
-            
+
             mgoods: com.focusPage("#mgoods"),
             url: com.focusPage("#url"),
             path: com.focusPage("#path"),
             img: com.focusPage("#slideImg")
         },
-        
+
         btns: {
             saveBtn: com.focusPage("#saveBtn"),
         }
     };
-    
+
     com.initTypeahead("mgoods", api.store.queryMgoodsByPinyin, "mgoods.pinyin", {}, "mgoods", "gid", "name");
-    
-    com.uploadify("#pictureUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpge;*.gif;*.png', {'uploadType': 2}, 10, function(data){
-        
+
+    com.uploadify("#pictureUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpge;*.gif;*.png', {
+        'uploadType': 2
+    }, 10, function(data) {
+
         slide.items.path.val(data.resUrl);
-        
+
         com.showImg(slide.items.img, data.resUrl, 150, 150, '', null, 0);
     });
-    
+
     slide.btns.saveBtn.click(saveData);
 
-    var displayFunc = (function () {
-        /*表格样式*/
-        var renderList = function (tableId, listData) {
-            
+    var displayFunc = (function() {
+
+        /* 表格样式 */
+        var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
-            
+
             if (listData && listData.length) {
-                
+
                 var $ulTitle = createTableTitle();
                 var $ulData = $('<ul></ul>').addClass('flex-table');
-                
+
                 $tableWrap.append($ulTitle).append($ulData);
-                
-                $.each(listData, function (i, v) {
+
+                $.each(listData, function(i, v) {
+
                     creatLine(i, v, i == listData.length - 1).appendTo($ulTitle);
                 });
             }
         };
 
-        /*表格头*/
-        var createTableTitle = function () {
+        /* 表格头 */
+        var createTableTitle = function() {
+
             var $ulTitle = $('<ul></ul>').addClass('flex-table');
             var $liTitle = $('<li></li>').addClass('line table-title');
 
@@ -57,7 +62,8 @@ $(function () {
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col2');
             var titleName = '图片,状态';
 
-            $.each(titleName.split(','), function (i, v) {
+            $.each(titleName.split(','), function(i, v) {
+
                 var $cell = $('<div></div>').addClass('cell').html(v);
                 $cell.appendTo($contentWrap);
             });
@@ -68,9 +74,10 @@ $(function () {
 
             return $ulTitle;
         };
-        
-        /*表格体*/
-        var creatLine = function (i, v, lastFlag) {
+
+        /* 表格体 */
+        var creatLine = function(i, v, lastFlag) {
+
             var $liLine = $('<li></li>').addClass('line');
             var id = i + 1;
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(id));
@@ -82,11 +89,11 @@ $(function () {
             img.appendTo($imgDiv);
 
             var propertyArr = [
-                //[v.icon, 'black'],
-                [v.status == "0" ? "启用" : "禁用", 'red']
-            ];
+            // [v.icon, 'black'],
+            [v.status == "0" ? "启用" : "禁用", 'red']];
 
-            $.each(propertyArr, function (i, v) {
+            $.each(propertyArr, function(i, v) {
+
                 var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
@@ -109,26 +116,29 @@ $(function () {
 
             $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
-            //编辑
-            $update.click(function () {
-                
+            // 编辑
+            $update.click(function() {
+
                 slide.sid = v.sid;
                 slide.gid = v.gid;
-                
+
                 com.focusPage("#mgoodsname").hide();
-                
+
                 initUpdate(v);
-                
-                com.popup4model('#layerAdd', '编辑', null, function () {
+
+                com.popup4model('#layerAdd', '编辑', null, function() {
+
                     com.clearValidator();
                 });
             });
 
-            $btnBan.click(function () {
+            $btnBan.click(function() {
+
                 updateStatus(v.sid, 1);
             });
 
-            $btnStart.click(function () {
+            $btnStart.click(function() {
+
                 updateStatus(v.sid, 0);
             });
 
@@ -136,56 +146,63 @@ $(function () {
         };
 
         return {
-            init: function (tableId, listData) {
+            init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
-            drawLine: function (v) {
+            drawLine: function(v) {
+
                 return creatLine(v);
             }
         };
     })();
 
-    //查询
+    // 查询
     function doSearcher() {
-        com.post(api.store.querySlide, {}, function (res) {
+
+        com.post(api.store.querySlide, {}, function(res) {
+
             displayFunc.init('resultList', res.slides);
         });
     }
 
     doSearcher();
-    
-    function updateStatus(sid, status){
-        
+
+    function updateStatus(sid, status) {
+
         var options = {
             "slide.sid": sid,
             "slide.status": status
         }
-        
-        com.post(api.store.updateSlideForStatus, options, function (res) {
+
+        com.post(api.store.updateSlideForStatus, options, function(res) {
+
             doSearcher();
         });
     }
 
-    /*添加信息*/
-    function saveData(){
-        
-        if(com.validate('form1')) return false;
-        
+    /* 添加信息 */
+    function saveData() {
+
+        if (com.validate('form1'))
+            return false;
+
         var url = api.store.addSlide;
         var options = {
             "slide.gid": com.typeahead(slide.items.mgoods),
             "slide.url": slide.items.url.val(),
             "slide.img": slide.items.path.val()
         }
-        
-        if(slide.sid){
+
+        if (slide.sid) {
             url = api.store.updateSlide;
             options["slide.sid"] = slide.sid;
             options["slide.gid"] = slide.gid;
         }
-        
-        com.post(url, options, function(res){
+
+        com.post(url, options, function(res) {
+
             doSearcher();
             com.clearValidator();
             com.closePopup();
@@ -193,23 +210,24 @@ $(function () {
     }
 
     function initUpdate(v) {
-        
+
         slide.items.url.val(v.url);
         slide.items.path.val(v.img);
-        
+
         com.showImg(slide.items.img, v.img, 150, 150, '', null, 0);
     }
 
-    com.focusPage("#adda").click(function () {
-        
+    com.focusPage("#adda").click(function() {
+
         com.focusPage("#mgoodsname").show();
         com.cleanItems(slide.items);
-        
+
         com.clearImg(slide.items.img);
-        
-        com.popup4model('#layerAdd', '添加', null, function () {
+
+        com.popup4model('#layerAdd', '添加', null, function() {
+
             com.clearValidator();
         });
     });
-    
+
 });

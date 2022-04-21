@@ -1,7 +1,7 @@
 
 $(function(){
 	
-    var mid =  params["manifest.mid"];
+    var mid =  params.manifest.mid;
     
     com.post(api.inventory.queryManifestItemByMid, {"manifest.mid": mid}, function(res){
         displayFunc.init('resultList1',res.manifestItems);

@@ -313,7 +313,7 @@ jQuery(function($) {
     var url = api.quotation.queryQuotationById;
 
     com.post(url, {
-        "quotation.qid": params.quotationId
+        "quotation.qid": params.quotation.quotationId
     }, function(res) {
 
         quotationUtils.quotationDetail.quotation = res.quotation;
@@ -331,7 +331,7 @@ jQuery(function($) {
     }
 
     com.post(api.decoration.queryDecorationForCommonByOrderId, {
-        "decoration.orderId": params.decorationOrderId
+        "decoration.orderId": params.quotation.orderId
     }, function(res) {
 
         quotationUtils.quotationDetail.quotation.decoration = res.decoration;
@@ -339,9 +339,9 @@ jQuery(function($) {
 
     var quotationFunctionAreas = [];
 
-    if ((params.subtype & 1) == 1) {
+    if ((params.quotation.subtype & 1) == 1) {
         com.post(api.quotation.queryQuotationNormrice, {
-            "quotation.qid": params.quotationId
+            "quotation.qid": params.quotation.quotationId
         }, function(res) {
 
             quotationFunctionAreas = res.quotationFunctionAreas;
@@ -350,9 +350,9 @@ jQuery(function($) {
 
     var extensions = [];
 
-    if ((params.subtype & 2) == 2) {
+    if ((params.quotation.subtype & 2) == 2) {
         com.post(api.quotation.queryExtensionNormrice, {
-            "extension.orderId": params.decorationOrderId
+            "extension.orderId": params.quotation.orderId
         }, function(res) {
 
             extensions = res.extensions;
@@ -361,9 +361,9 @@ jQuery(function($) {
 
     var addreduces = [];
 
-    if ((params.subtype & 4) == 4) {
+    if ((params.quotation.subtype & 4) == 4) {
         com.post(api.quotation.queryAddReduceNormrice, {
-            "addReduce.orderId": params.decorationOrderId
+            "addReduce.orderId": params.quotation.orderId
         }, function(res) {
 
             addreduces = res.addReduces;
@@ -372,7 +372,7 @@ jQuery(function($) {
 
     quotationUtils.quotationNormriceProcessing(quotationFunctionAreas, extensions, addreduces);
 
-    generatePrintPage(params.type, params.subtype, params.workType, params.company.name, params.orderType, params.showType);
+    generatePrintPage(params.quotation.type, params.quotation.subtype, params.quotation.workType, params.company.name, params.quotation.orderType, params.quotation.showType);
 
 });
 

@@ -1,9 +1,9 @@
-$(function () {
+$(function() {
 
     var goods = {
         gid: null,
         keyword: null,
-        items:{
+        items: {
             no: com.focusPage("#no"),
             type: com.focusPage("#type"),
             name: com.focusPage("#name"),
@@ -21,7 +21,7 @@ $(function () {
 
             filePath: com.focusPage("#filePath"),
         },
-        btns:{
+        btns: {
             submitBtn: com.focusPage("#submitBtn"),
             importBtn: com.focusPage("#importBtn"),
             exportBtn: com.focusPage("#exportBtn")
@@ -29,43 +29,51 @@ $(function () {
         pageType: params['urlLoadParams'].type,
     };
 
-    com.datetime(goods.items.executeDates,"date",false);
-    com.datetime(goods.items.executeTimes,"time",false);
+    com.datetime(goods.items.executeDates, "date", false);
+    com.datetime(goods.items.executeTimes, "time", false);
 
-    goods.items.type.bindData([{gid: 0, goods: "商品"}, {gid: 1, goods: "套餐"}], "gid", "goods");
+    goods.items.type.bindData([{
+        gid: 0,
+        goods: "商品"
+    }, {
+        gid: 1,
+        goods: "套餐"
+    }], "gid", "goods");
 
-    com.post(api.data.queryCategory, {}, function (res) {
+    com.post(api.data.queryCategory, {}, function(res) {
         goods.items.category.bindData(res.categorys, "categoryName", "categoryName");
     });
 
-    com.post(api.common.queryMeasurementUnit, {}, function (res) {
+    com.post(api.common.queryMeasurementUnit, {}, function(res) {
         goods.items.measurementUnit.bindData(res.measurementUnits, "name", "name");
     });
 
-    com.post(api.data.queryAccessoriesType, {}, function (res) {
+    com.post(api.data.queryAccessoriesType, {}, function(res) {
         goods.items.accessoriesType.bindData(res.accessoriesTypes, 'atid', 'name', true);
     });
 
-    goods.btns.submitBtn.click(function () {
+    goods.btns.submitBtn.click(function() {
         saveData();
     });
 
-    goods.btns.importBtn.click(function () {
+    goods.btns.importBtn.click(function() {
         planMission("import");
     });
 
-    goods.btns.exportBtn.click(function () {
+    goods.btns.exportBtn.click(function() {
         planMission("export");
     });
 
-    com.initTypeahead("brand", api.data.queryBrandByPinyin, "pinyinName", {}, "brands", "bid", "name", function (list, k, v) {
-        $.each(list, function (index, val) {
+    com.initTypeahead("brand", api.data.queryBrandByPinyin, "pinyinName", {}, "brands", "bid", "name", function(list, k, v) {
+        $.each(list, function(index, val) {
 
             if (val.bid == k) {
 
                 goods.bid = k;
 
-                com.post(api.data.queryBrandByBid, {"brand.bid": k}, function (res) {
+                com.post(api.data.queryBrandByBid, {
+                    "brand.bid": k
+                }, function(res) {
                     goods.items.category.val(res.brand.categoryName);
                 });
             }
@@ -74,9 +82,9 @@ $(function () {
         return v;
     });
 
-    var displayFunc = (function () {
+    var displayFunc = (function() {
 
-        var renderList = function (tableId, listData) {
+        var renderList = function(tableId, listData) {
             var $tableWrap = com.focusPage('#' + tableId);
 
             if (listData && listData.length) {
@@ -85,7 +93,7 @@ $(function () {
                 var $ulData = $('<ul></ul>').addClass('flex-table');
                 $tableWrap.append($ulTitle).append($ulData);
 
-                $.each(listData, function (i, v) {
+                $.each(listData, function(i, v) {
                     var $liLine = creatLine(i, v, i == listData.length - 1);
 
                     $liLine.appendTo($ulTitle);
@@ -93,8 +101,8 @@ $(function () {
             }
         };
 
-        //绘制表格头
-        var createTableTitle = function () {
+        // 绘制表格头
+        var createTableTitle = function() {
 
             var $ulTitle = $('<ul></ul>').addClass('flex-table');
             var $liTitle = $('<li></li>').addClass('line table-title');
@@ -104,7 +112,7 @@ $(function () {
 
             var titleName = '编号,商品,条形码,品类,品牌,单位,控价,售价,件数,辅类,类型,状态';
 
-            $.each(titleName.split(','), function (i, v) {
+            $.each(titleName.split(','), function(i, v) {
                 var $cell = $('<div></div>').addClass('cell').html(v);
                 $cell.appendTo($contentWrap);
             });
@@ -115,31 +123,19 @@ $(function () {
 
             return $ulTitle;
         };
-        //绘制表格体
-        var creatLine = function (i, v, lastFlag) {
+        // 绘制表格体
+        var creatLine = function(i, v, lastFlag) {
 
             var $liLine = $('<li></li>').addClass('line');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col12');
-            //显示字段
+            // 显示字段
             var propertyArr = [
-                //v.gid,
-                [v.no, 'blue'],
-                [v.name, 'grey'],
-                [v.barcode, 'blue'],
-                [v.category, 'grey'],
-                [v.brand, 'grey'],
-                [v.measurementUnit, 'grey'],
-                [v.purchase, 'blue'],
-                [v.selling, 'blue'],
-                [v.pieceNum, 'blue'],
-                [v.accessoriesType.name, 'grey'],
-                [v.type == "0" ? "商品" : "套餐", 'red'],
-                [v.status == "0" ? "启用" : "禁用", 'red']
-            ];
+            // v.gid,
+            [v.no, 'blue'], [v.name, 'grey'], [v.barcode, 'blue'], [v.category, 'grey'], [v.brand, 'grey'], [v.measurementUnit, 'grey'], [v.purchase, 'blue'], [v.selling, 'blue'], [v.pieceNum, 'blue'], [v.accessoriesType.name, 'grey'], [v.type == "0" ? "商品" : "套餐", 'red'], [v.status == "0" ? "启用" : "禁用", 'red']];
 
-            $.each(propertyArr, function (i, v) {
+            $.each(propertyArr, function(i, v) {
                 var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
@@ -155,7 +151,7 @@ $(function () {
             var $btnColor = $('<li></li>').append($('<a></a>').html('颜色'));
             var $btnFormat = $('<li></li>').append($('<a></a>').html('规格'));
             var $btnPrice = $('<li></li>').append($('<a></a>').html('价格'));
-            //var $btnSuit = $('<li></li>').append($('<a></a>').html('查看'));
+            var $btnSuit = $('<li></li>').append($('<a></a>').html('查看'));
             var $btnStart = $('<li></li>').append($('<a></a>').html('启用'));
             var $btnStop = $('<li></li>').append($('<a></a>').html('禁用'));
 
@@ -170,11 +166,11 @@ $(function () {
 
             $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
-            $btnEdit.click(function () {
+            $btnEdit.click(function() {
 
                 readonly("disabled");
 
-           	// com.updateTypeahead('brand', v.bid, v.brand);
+                // com.updateTypeahead('brand', v.bid, v.brand);
 
                 goods.gid = v.gid;
                 goods.bid = v.bid;
@@ -193,30 +189,38 @@ $(function () {
                 goods.items.accessoriesType.val(v.accessoriesType.atid);
 
                 // showLayer("编辑", "#addLayer");
-                com.popup4model("#addLayer","编辑")
+                com.popup4model("#addLayer", "编辑")
             });
 
-            $btnColor.click(function () {
-                params["goods.gid"] = v.gid;
-                com.popup4page('#layerPopUp','views/data/color.html','颜色');
+            $btnColor.click(function() {
+
+                params.data.goods = v;
+
+                com.popup4page('#layerPopUp', 'views/data/color.html', '颜色');
             });
 
-            $btnFormat.click(function () {
-                params["goods.gid"] = v.gid;
-                com.popup4page('#layerPopUp','views/data/format.html','规格');
+            $btnFormat.click(function() {
+
+                params.data.goods = v;
+
+                com.popup4page('#layerPopUp', 'views/data/format.html', '规格');
             });
 
-            $btnPrice.click(function () {
-                params["goods.gid"] = v.gid;
-                com.popup4page('#layerPopUp','views/data/price4advance.html','价格');
+            $btnPrice.click(function() {
+
+                params.data.goods = v;
+
+                com.popup4page('#layerPopUp', 'views/data/price4advance.html', '价格');
             });
 
-            /* $btnSuit.click(function () {
-				 params["goods.gid"] = v.gid;
-                 com.popup4page('#layerPopUp','views/data/goods4package.html','套餐');
-             });*/
+            $btnSuit.click(function() {
 
-            $btnStart.click(function () {
+                params.data.goods = v;
+
+                com.popup4page('#layerPopUp', 'views/data/goods4package.html', '套餐');
+            });
+
+            $btnStart.click(function() {
 
                 if (v.status == 0) {
                     com.showAlert(com.warning, "已启用");
@@ -226,7 +230,7 @@ $(function () {
                 updateStatus(v.gid, 0);
             });
 
-            $btnStop.click(function () {
+            $btnStop.click(function() {
 
                 if (v.status == 1) {
                     com.showAlert(com.warning, "已禁用");
@@ -240,11 +244,11 @@ $(function () {
         };
 
         return {
-            init: function (tableId, listData) {
+            init: function(tableId, listData) {
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
-            drawLine: function (v) {
+            drawLine: function(v) {
                 return creatLine(v);
             }
         };
@@ -252,31 +256,43 @@ $(function () {
 
     var goodsSeacher = new Searcher();
 
-    goodsSeacher.init(['data-goods-no', 'data-goods-name', 'data-goods-barcode', 'data-goods-brand-name', 'data-goods-status'], "condList", api.data.pageGoodsForAdvance, function (data) {
+    goodsSeacher.init(['data-goods-no', 'data-goods-name', 'data-goods-barcode', 'data-goods-brand-name', 'data-goods-status'], "condList", api.data.pageGoodsForAdvance, function(data) {
         displayFunc.init('resultList', data);
-    }, "pagenation", "goodsAdvancePostData", null, false, null, function () {
+    }, "pagenation", "goodsAdvancePostData", null, false, null, function() {
 
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addQuotationVersion').css({'margin-left': '4px'});
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addQuotationVersion').css({
+            'margin-left': '4px'
+        });
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        var $addaImportGood = $('<a></a>').addClass('btn btn-minier btn-warning pull-left').attr('name', 'importGoods').css({'margin-left': '4px'});
+        var $addaImportGood = $('<a></a>').addClass('btn btn-minier btn-warning pull-left').attr('name', 'importGoods').css({
+            'margin-left': '4px'
+        });
         var $addaGoodi = $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($addaImportGood);
         var $addaGoodspan = $('<span></span>').text('导入商品').appendTo($addaImportGood);
 
-        var $addaImportColor = $('<a></a>').addClass('btn btn-minier btn-danger pull-left').attr('name', 'importGoods').css({'margin-left': '4px'});
+        var $addaImportColor = $('<a></a>').addClass('btn btn-minier btn-danger pull-left').attr('name', 'importGoods').css({
+            'margin-left': '4px'
+        });
         var $addaColori = $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($addaImportColor);
         var $addaColorspan = $('<span></span>').text('导入颜色').appendTo($addaImportColor);
 
-        var $addaImportFormat = $('<a></a>').addClass('btn btn-minier btn-purple pull-left').attr('name', 'importGoods').css({'margin-left': '4px'});
+        var $addaImportFormat = $('<a></a>').addClass('btn btn-minier btn-purple pull-left').attr('name', 'importGoods').css({
+            'margin-left': '4px'
+        });
         var $addaFormati = $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($addaImportFormat);
         var $addaFormatspan = $('<span></span>').text('导入规格').appendTo($addaImportFormat);
 
-        var $addaImportPrice = $('<a></a>').addClass('btn btn-minier btn-pink pull-left').attr('name', 'importGoods').css({'margin-left': '4px'});
+        var $addaImportPrice = $('<a></a>').addClass('btn btn-minier btn-pink pull-left').attr('name', 'importGoods').css({
+            'margin-left': '4px'
+        });
         var $addaPricei = $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($addaImportPrice);
         var $addaPricespan = $('<span></span>').text('导入价格').appendTo($addaImportPrice);
 
-        var $deleteImportPrice = $('<a></a>').addClass('btn btn-minier btn-inverse pull-left').attr('name', 'importGoods').css({'margin-left': '4px'});
+        var $deleteImportPrice = $('<a></a>').addClass('btn btn-minier btn-inverse pull-left').attr('name', 'importGoods').css({
+            'margin-left': '4px'
+        });
         var $deletePricei = $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($deleteImportPrice);
         var $deletePricespan = $('<span></span>').text('删除价格').appendTo($deleteImportPrice);
 
@@ -284,7 +300,7 @@ $(function () {
         var $addaExporti = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($addaExportGoods);
         var $addaExportspan = $('<span></span>').text('商品导出').appendTo($addaExportGoods);
 
-        $adda.click(function () {
+        $adda.click(function() {
 
             com.cleanItems(goods.items);
 
@@ -293,10 +309,10 @@ $(function () {
             goods.gid = null;
             goods.bid = null;
 
-            com.popup4model("#addLayer","添加")
+            com.popup4model("#addLayer", "添加")
         });
 
-        $addaImportGood.click(function () {
+        $addaImportGood.click(function() {
 
             goods.keyword = "import_goods";
 
@@ -308,10 +324,10 @@ $(function () {
             goods.btns.importBtn.removeClass("hide");
             goods.btns.exportBtn.addClass("hide");
 
-            com.popup4model("#importGoods","导入商品")
+            com.popup4model("#importGoods", "导入商品")
         });
 
-        $addaImportColor.click(function () {
+        $addaImportColor.click(function() {
 
             goods.keyword = "import_color";
 
@@ -323,10 +339,10 @@ $(function () {
             goods.btns.importBtn.removeClass("hide");
             goods.btns.exportBtn.addClass("hide");
 
-            com.popup4model("#importColor","导入颜色")
+            com.popup4model("#importColor", "导入颜色")
         });
 
-        $addaImportFormat.click(function () {
+        $addaImportFormat.click(function() {
 
             goods.keyword = "import_format";
 
@@ -338,10 +354,10 @@ $(function () {
             goods.btns.importBtn.removeClass("hide");
             goods.btns.exportBtn.addClass("hide");
 
-            com.popup4model("#importFormat","导入规格")
+            com.popup4model("#importFormat", "导入规格")
         });
 
-        $addaImportPrice.click(function () {
+        $addaImportPrice.click(function() {
 
             goods.keyword = "import_price";
 
@@ -353,10 +369,10 @@ $(function () {
             goods.btns.importBtn.removeClass("hide");
             goods.btns.exportBtn.addClass("hide");
 
-            com.popup4model("#importPrice","导入价格")
+            com.popup4model("#importPrice", "导入价格")
         });
 
-        $deleteImportPrice.click(function () {
+        $deleteImportPrice.click(function() {
 
             goods.keyword = "delete_price";
 
@@ -368,10 +384,10 @@ $(function () {
             goods.btns.importBtn.removeClass("hide");
             goods.btns.exportBtn.addClass("hide");
 
-            com.popup4model("#deletePrice","删除价格")
+            com.popup4model("#deletePrice", "删除价格")
         });
 
-        $addaExportGoods.click(function () {
+        $addaExportGoods.click(function() {
 
             var total = com.focusPage('span[name="totalRecords"]').text();
 
@@ -395,7 +411,7 @@ $(function () {
             goods.btns.importBtn.addClass("hide");
             goods.btns.exportBtn.removeClass("hide");
 
-            com.popup4model("#exportGoods","导出商品")
+            com.popup4model("#exportGoods", "导出商品")
         });
 
         if (goods.pageType == "basic") {
@@ -413,7 +429,7 @@ $(function () {
             "goods.status": status
         };
 
-        com.post(api.data.updateGoodsForStatus, options, function (res) {
+        com.post(api.data.updateGoodsForStatus, options, function(res) {
             com.showAlert(com.info, "操作成功");
             goodsSeacher.doSearch();
         });
@@ -421,9 +437,7 @@ $(function () {
 
     function saveData() {
 
-        if (com.validate("formAdvance", "right")) {
-            return false;
-        }
+        if (com.validate("formAdvance", "right")) { return false; }
 
         var gid = goods.gid;
         var atid = goods.items.accessoriesType.val();
@@ -449,7 +463,7 @@ $(function () {
             options["goods.gid"] = goods.gid;
         }
 
-        com.post(url, options, function (res) {
+        com.post(url, options, function(res) {
             com.closePopup();
             goodsSeacher.doSearch();
         });
@@ -467,12 +481,10 @@ $(function () {
         goods.items.pieceNum.attr("disabled", disabled);
     }
 
-    //导入创建计划
+    // 导入创建计划
     function planMission(type) {
 
-        if (com.validate("uploaddiv")) {
-            return false;
-        }
+        if (com.validate("uploaddiv")) { return false; }
 
         var args = "";
 
@@ -480,7 +492,7 @@ $(function () {
 
             var filtersName = ['data-goods-no', 'data-goods-name', 'data-goods-barcode', 'data-goods-brand-name', 'data-goods-status'];
 
-            $.each(filtersName, function (i, v) {
+            $.each(filtersName, function(i, v) {
                 var val = com.focusPage("[name='" + v + "']").val();
                 var columnName = $("[name='" + v + "']").attr("data-rqs");
                 if (val != "undefined" && val != null && val != "") {
@@ -526,13 +538,15 @@ $(function () {
             "plan.args": args
         };
 
-        com.post(api.information.createPlan, options, function (res) {
+        com.post(api.information.createPlan, options, function(res) {
             com.showAlert(com.info, "计划创建成功");
             com.closePopup();
         });
     }
-    
-    com.uploadify("#attachment", "上传文件", api.common.uploadOther, 'btn btn-sm btn-primary lineheight0', "*.xls;*.xlsx", {'uploadType': 3}, 1, function(data){
+
+    com.uploadify("#attachment", "上传文件", api.common.uploadOther, 'btn btn-sm btn-primary lineheight0', "*.xls;*.xlsx", {
+        'uploadType': 3
+    }, 1, function(data) {
         0 == data.errorCode ? com.focusPage("#filePath").val(data.resUrl) : alert(data.errorMsg);
     });
 

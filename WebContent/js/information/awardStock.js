@@ -1,5 +1,4 @@
-
-$(function(){
+$(function() {
 
     var awardStock = {
 
@@ -13,46 +12,46 @@ $(function(){
         subType: com.focusPage("#subType"),
         moneys: com.focusPage("#moneys"),
 
-        items : {
-            no : com.focusPage("#no"),
-            name : com.focusPage("#name"),
-            num : com.focusPage("#num"),
-            type : com.focusPage("#type"),
-            storeroom : com.focusPage("#storeroom"),
-            subtype : com.focusPage("#subtype"),
-            price : com.focusPage("#price"),
-            content : com.focusPage("#content"),
-            format : com.focusPage("#format"),
-            warehousing : com.focusPage("#warehousing"),
-            warehousend : com.focusPage("#warehousend"),
-            
+        items: {
+            no: com.focusPage("#no"),
+            name: com.focusPage("#name"),
+            num: com.focusPage("#num"),
+            type: com.focusPage("#type"),
+            storeroom: com.focusPage("#storeroom"),
+            subtype: com.focusPage("#subtype"),
+            price: com.focusPage("#price"),
+            content: com.focusPage("#content"),
+            format: com.focusPage("#format"),
+            warehousing: com.focusPage("#warehousing"),
+            warehousend: com.focusPage("#warehousend"),
+
             comment: com.focusPage("#comment"),
-            
-            no2 : com.focusPage("#no2"),
-            name2 : com.focusPage("#name2"),
-            nownum : com.focusPage("#nownum"),
-            isPrefor  : com.focusPage("#isPrefor"),
-            isStock :  com.focusPage("#isStock"),
-            isPayment :  com.focusPage("#isPayment"),
-            price2 :  com.focusPage("#price2"),
+
+            no2: com.focusPage("#no2"),
+            name2: com.focusPage("#name2"),
+            nownum: com.focusPage("#nownum"),
+            isPrefor: com.focusPage("#isPrefor"),
+            isStock: com.focusPage("#isStock"),
+            isPayment: com.focusPage("#isPayment"),
+            price2: com.focusPage("#price2"),
             awardRecordSubtype: com.focusPage("#awardRecordSubtype"),
         },
 
         asid: null,
         num: null,
 
-        storeroom : {},
+        storeroom: {},
         subtype: {},
-        subtypeOfWarehousing : [],
+        subtypeOfWarehousing: [],
         subtypeOfWarehousend: [],
-        type : {},
+        type: {},
         flag: 0
     };
 
     awardStock.saveBtn.bindClick(saveData);
     awardStock.updateBtn.bindClick(updateData);
 
-    com.post(api.ds.information, {}, function (res) {
+    com.post(api.ds.information, {}, function(res) {
         awardStock.items.storeroom.bindData(res.awardStoreRoom, "key", "value", false);
         awardStock.items.subtype.bindData(res.awardSubtype, "key", "value", false);
         awardStock.items.type.bindData(res.awardStockType, "key", "value", false);
@@ -60,26 +59,26 @@ $(function(){
         awardStock.items.isStock.bindData(res.isStockType, "key", "value", false);
         awardStock.items.isPayment.bindData(res.isPaymentType, "key", "value", false);
 
-        $.each(res.awardRecordSubtype, function(i,v) {
-            if(v.key!=1 && v.key%2==0) {
+        $.each(res.awardRecordSubtype, function(i, v) {
+            if (v.key != 1 && v.key % 2 == 0) {
                 awardStock.subtypeOfWarehousing.push(v);
-            }else{
+            } else {
                 awardStock.subtypeOfWarehousend.push(v);
             }
         });
-        
+
         awardStock.storeroom = res.awardStoreRoom.split("key", "value");
         awardStock.subtype = res.awardSubtype.split("key", "value");
         awardStock.type = res.awardStockType.split("key", "value");
-        
+
     }, null, false);
 
     var searcher = new Searcher();
-    
+
     searcher.base("condList", "pagenation", "resultList", api.information.pageAwardStock);
-    
+
     searcher.condition(['information-award-no', 'information-award-name', 'information-awardStock-type', 'information-awardStock-subtype', 'information-awardStock-room']);
-    
+
     searcher.button(function() {
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addAwardStock').css('margin', '0px 3px');
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -87,49 +86,120 @@ $(function(){
 
         return [$adda];
     })
-    
-    var lineprops = [
-         {"field": "no", "name": "编号", prop: "no", clazz: "grey"},
-         {"field": "name", "name": "名称", prop: "name", clazz: "grey"},
-         {"field": "num", "name": "数量", prop: "num", clazz: "blue"},
-         {"field": "type", "name": "类型", prop: "type", dataset: awardStock.type, clazz: "grey"},
-         {"field": "subtype", "name": "子类", prop: "subtype", dataset: awardStock.subtype, clazz: "grey"},
-         {"field": "storeroom", "name": "库房", prop: "storeroom", dataset: awardStock.storeroom, clazz: "grey"},
-         {"field": "format", "name": "规格", prop: "format", clazz: "grey"},
-         {"field": "status", "name": "状态", prop: "status", dataset: {0: "启用", 1: "禁用"}, clazz: "grey"},
-         {"field": "isStock", "name": "库存标识", prop: "isStock", dataset: {0: "加入库存", 1: "不加入库存"}, clazz: "red"},
-         {"field": "isPrefor", "name": "业绩标识", prop: "isPrefor", dataset: {0: "计算业绩", 1: "不计算业绩"}, clazz: "red"},
-         {"field": "isPayment", "name": "金额标识", prop: "isPayment", dataset: {0: "计入金额", 1: "不计入金额"}, clazz: "red"},
-         {"field": "content", "name": "备注", prop: "content", clazz: "grey"},
-     ];
-    
-    var linebtns = [
-        {name: "启用", handle: function(v){
-            if(v.status == 0){
+
+    var lineprops = [{
+        "field": "no",
+        "name": "编号",
+        prop: "no",
+        clazz: "grey"
+    }, {
+        "field": "name",
+        "name": "名称",
+        prop: "name",
+        clazz: "grey"
+    }, {
+        "field": "num",
+        "name": "数量",
+        prop: "num",
+        clazz: "blue"
+    }, {
+        "field": "type",
+        "name": "类型",
+        prop: "type",
+        dataset: awardStock.type,
+        clazz: "grey"
+    }, {
+        "field": "subtype",
+        "name": "子类",
+        prop: "subtype",
+        dataset: awardStock.subtype,
+        clazz: "grey"
+    }, {
+        "field": "storeroom",
+        "name": "库房",
+        prop: "storeroom",
+        dataset: awardStock.storeroom,
+        clazz: "grey"
+    }, {
+        "field": "format",
+        "name": "规格",
+        prop: "format",
+        clazz: "grey"
+    }, {
+        "field": "status",
+        "name": "状态",
+        prop: "status",
+        dataset: {
+            0: "启用",
+            1: "禁用"
+        },
+        clazz: "grey"
+    }, {
+        "field": "isStock",
+        "name": "库存标识",
+        prop: "isStock",
+        dataset: {
+            0: "加入库存",
+            1: "不加入库存"
+        },
+        clazz: "red"
+    }, {
+        "field": "isPrefor",
+        "name": "业绩标识",
+        prop: "isPrefor",
+        dataset: {
+            0: "计算业绩",
+            1: "不计算业绩"
+        },
+        clazz: "red"
+    }, {
+        "field": "isPayment",
+        "name": "金额标识",
+        prop: "isPayment",
+        dataset: {
+            0: "计入金额",
+            1: "不计入金额"
+        },
+        clazz: "red"
+    }, {
+        "field": "content",
+        "name": "备注",
+        prop: "content",
+        clazz: "grey"
+    }, ];
+
+    var linebtns = [{
+        name: "启用",
+        handle: function(v) {
+            if (v.status == 0) {
                 com.showAlert(com.warning, '已启用');
                 return false;
             }
 
             changeStatus(v.asId, 0);
-        }},
-        {name: "禁用", handle: function(v){
-            if(v.status == 1){
+        }
+    }, {
+        name: "禁用",
+        handle: function(v) {
+            if (v.status == 1) {
                 com.showAlert(com.warning, '已禁用');
                 return false;
             }
 
             changeStatus(v.asId, 1);
-        }},
-        {name: "入库", handle: function(v){
-            if(v.isStock == 1){
+        }
+    }, {
+        name: "入库",
+        handle: function(v) {
+            if (v.isStock == 1) {
                 com.showAlert(com.warning, "此商品禁止入库!");
                 return false;
             }
 
-            com.popup4model('#layerAdd2', '奖品入库', function(){
+            com.popup4model('#layerAdd2', '奖品入库', function() {
                 awardStock.asid = v.asId;
                 awardStock.flag = 3;
-            }, null, function(){
+            }, null, function() {
                 com.cleanItems(awardStock.items);
 
                 awardStock.items.no2.val(v.no).attr('disabled', 'disabled');
@@ -144,14 +214,16 @@ $(function(){
                 awardStock.stock.hide();
                 awardStock.subType.show();
             });
-        }},
-        {name: "出库", handle: function(v){
-            if(v.isStock == 1){
+        }
+    }, {
+        name: "出库",
+        handle: function(v) {
+            if (v.isStock == 1) {
                 com.showAlert(com.warning, "此商品禁止出库!");
                 return false;
             }
 
-            com.popup4model('#layerAdd2', '奖品出库' ,function(){
+            com.popup4model('#layerAdd2', '奖品出库', function() {
                 com.cleanItems(awardStock.items);
 
                 awardStock.items.no2.val(v.no).attr('disabled', 'disabled');
@@ -169,18 +241,20 @@ $(function(){
                 awardStock.asid = v.asId;
                 awardStock.flag = 2;
             });
-        }},
-        {name: "盘点", handle: function(v){
-            if(v.isStock == 1){
+        }
+    }, {
+        name: "盘点",
+        handle: function(v) {
+            if (v.isStock == 1) {
                 com.showAlert(com.warning, "此商品禁止盘点!");
                 return false;
             }
 
-            com.popup4model('#layerAdd2', '盘点', function () {
+            com.popup4model('#layerAdd2', '盘点', function() {
                 awardStock.asid = v.asId;
                 awardStock.num = v.num;
                 awardStock.flag = 1;
-            }, null, function(){
+            }, null, function() {
                 com.cleanItems(awardStock.items);
 
                 awardStock.items.no2.val(v.no).attr('disabled', 'disabled');
@@ -193,12 +267,14 @@ $(function(){
                 awardStock.stock.show();
                 awardStock.subType.hide();
             });
-        }},
-        {name: "编辑", handle: function(v){
-            com.popup4model('#layerAdd1', '奖品更新', function () {
+        }
+    }, {
+        name: "编辑",
+        handle: function(v) {
+            com.popup4model('#layerAdd1', '奖品更新', function() {
                 awardStock.asid = v.asId;
                 awardStock.flag = 4;
-            }, null, function(){
+            }, null, function() {
                 com.cleanItems(awardStock.items);
 
                 awardStock.items.no.val(v.no).attr('disabled', 'disabled');
@@ -215,20 +291,20 @@ $(function(){
 
                 awardStock.moneys.hide();
             });
-        }},
-        {name: "记录", handle: function(v){
-            params["asid"] = v.asId;
-            com.popup4page('#stockRecordPopUp', "views/information/stockRecord.html", "奖品纪录");
-        }},
-        
-    ]
-    
+        }
+    }, {
+        name: "记录",
+        handle: function(v) {
+            params.infomation.asid = v.asId;
+            com.popup4page('#stockRecordPopUp', api.index.stockRecord.url, "奖品纪录");
+        }
+    }]
+
     searcher.toble(lineprops, linebtns).render();
-    
-    com.focusPage("#addAwardStock").click(function(){
 
+    com.focusPage("#addAwardStock").click(function() {
 
-        com.popup4model('#layerAdd1', '添加奖品', function(){
+        com.popup4model('#layerAdd1', '添加奖品', function() {
             com.cleanItems(awardStock.items);
 
             awardStock.moneys.show();
@@ -244,24 +320,24 @@ $(function(){
         });
     });
 
-    function changeStatus(asid, status){
-        
+    function changeStatus(asid, status) {
+
         com.post(api.information.updateAwardStockForStatus, {
             "awardStock.asId": asid,
             "awardStock.status": status
-        }, function(){
-            
+        }, function() {
+
             com.showAlert(com.info, "操作成功");
             com.closePopup();
             searcher.doSearch();
         });
     }
 
-    function saveData(){
+    function saveData() {
 
-        if(com.validate('redact')) {
+        if (com.validate('redact'))
             return false;
-        }
+
         var url = null;
         var options = {
             "awardStock.content": awardStock.items.content.val(),
@@ -272,6 +348,7 @@ $(function(){
             "awardStock.subtype": awardStock.items.subtype.val(),
             "awardStock.format": awardStock.items.format.val()
         };
+
         switch (awardStock.flag) {
             case 0:
                 url = api.information.addAwardStock;
@@ -287,18 +364,16 @@ $(function(){
                 break;
         }
 
-        com.post(url, options, function(){
+        com.post(url, options, function() {
             com.closePopup();
             searcher.doSearch();
         })
 
     }
 
-    function updateData(){
+    function updateData() {
 
-        if(com.validate('checkstorer')) {
-            return false;
-        }
+        if (com.validate('checkstorer')) { return false; }
 
         var url = null;
         var options = {
@@ -325,7 +400,7 @@ $(function(){
                 break;
         }
 
-        com.post(url, options, function(){
+        com.post(url, options, function() {
             com.closePopup();
             searcher.doSearch();
         })

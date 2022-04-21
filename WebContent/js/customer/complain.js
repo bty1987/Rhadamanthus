@@ -6,7 +6,7 @@ jQuery(function($) {
         complainLevel:{},
         complainStatus:{},
         complainGladness :{},
-        editFlg: false,
+        editFlg: false
     };
 
     com.post(api.ds.customer, {}, function(res){
@@ -34,7 +34,7 @@ jQuery(function($) {
 
         var creatLine = function(v){
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid')
+            var $h3 = $('<h3></h3>').addClass('oid');
             var $title = $('<small></small>').addClass('blue').html(' ' + v.decoration.orderId);
             var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -72,8 +72,8 @@ jQuery(function($) {
 
             $btnComplaint.click(function () {
 
-                params.cid = v.cid;
-                com.popup4page("#stockRecordPopUp","/views/customer/complaint.html","投诉内容");
+                params.customer.aid = v.cid;
+                com.popup4page("#stockRecordPopUp", api.index.complaint.url, "投诉内容");
             });
 
             $btnFinish.click(function () {

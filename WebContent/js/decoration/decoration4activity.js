@@ -11,7 +11,6 @@ jQuery(function($) {
         states: {},
     };
 
-    var ActivityOrderId = params.decorationOrderId;
     var things = com.focusPage("#things");
     var coupons = com.focusPage("#coupons");
     var papers = com.focusPage("#papers");
@@ -70,9 +69,7 @@ jQuery(function($) {
 
     com.focusPage("#thingsAdd").unbind().click(function() {
 
-        if (com.validate("thingsInputs")) {
-            return false;
-        }
+        if (com.validate("thingsInputs")) { return false; }
 
         decorationUtils.createCounpon("things", "thingsType", "receiveType", "thingsVal");
 
@@ -81,9 +78,7 @@ jQuery(function($) {
 
     com.focusPage("#couponsAdd").unbind().click(function() {
 
-        if (com.validate("couponsInputs")) {
-            return false;
-        }
+        if (com.validate("couponsInputs")) { return false; }
 
         decorationUtils.createCounpon("coupons", "couponsType", "receiveTypes", "couponsVal");
 
@@ -92,9 +87,7 @@ jQuery(function($) {
 
     com.focusPage("#papersAdd").unbind().click(function() {
 
-        if (com.validate("papersInputs")) {
-            return false;
-        }
+        if (com.validate("papersInputs")) { return false; }
 
         decorationUtils.createCounpon("papers", "papersType", "receiveTypess", "papersVal");
 
@@ -208,7 +201,7 @@ jQuery(function($) {
         com.closeTip();
     });
 
-    initDraw(ActivityOrderId);
+    initDraw(params.decoration.orderId);
 
     // 初始化
     function initDraw(orderId) {
@@ -324,7 +317,7 @@ jQuery(function($) {
         com.focusPage("#coupons").html("");
 
         var options = {
-            "decorationActivity.orderId": ActivityOrderId
+            "decorationActivity.orderId": params.decoration.orderId
         };
 
         com.post(api.decoration.queryDecorationActivityByOrderId, options, function(res) {
@@ -365,7 +358,7 @@ jQuery(function($) {
             return false;
 
         var options = {
-            "decorationActivity.orderId": ActivityOrderId
+            "decorationActivity.orderId": params.decoration.orderId
         };
 
         com.post(api.decoration.queryDecorationActivityByOrderId, options, function(res) {
@@ -400,11 +393,9 @@ jQuery(function($) {
     // 保存参加活动
     com.focusPage("#submitDecorationActivityBtn").on("click", function() {
 
-        if (com.validate("joinDecorationActivityModal")) {
-            return;
-        }
+        if (com.validate("joinDecorationActivityModal")) { return; }
         var options = {
-            "decorationActivity.orderId": ActivityOrderId,
+            "decorationActivity.orderId": params.decoration.orderId,
             "decorationActivity.activity.aid": decorationActivityItem.activityItems.activityInfo.val()
         };
         com.post(api.decoration.addDecorationActivity, options, function(res) {
@@ -432,7 +423,7 @@ jQuery(function($) {
 
         var submitFlag = true;
 
-        var orderId = ActivityOrderId;
+        var orderId = params.decoration.orderId;
         var activityName = decorationActivityItem.activity.activity.find("option:selected").text();
         var activityId = com.focusPage("#activity").val();
 
@@ -495,9 +486,7 @@ jQuery(function($) {
             index++;
         });
 
-        if (!submitFlag) {
-            return false;
-        }
+        if (!submitFlag) { return false; }
 
         com.post(api.approval.submitApprovalForDecorationActivity, options, function(res) {
 
@@ -509,7 +498,7 @@ jQuery(function($) {
 
     com.focusPage("#addDecorationActivityItemBtn").on("click", function() {
 
-        var orderId = params.decorationOrderId;
+        var orderId = params.decoration.orderId;
         var activityName = decorationActivityItem.activityItems.activities.find("option:selected").text();
         var activityId = decorationActivityItem.activityItems.activities.val();
         var itemName = decorationActivityItem.activityItems.itemObj.val();
@@ -797,7 +786,7 @@ jQuery(function($) {
 
         var options = {
             "decorationActivityItem.content": daiId,
-            "decorationActivityItem.orderId": ActivityOrderId
+            "decorationActivityItem.orderId": params.decoration.orderId
         };
 
         com.showConfirm("是否发送查看通知", function() {

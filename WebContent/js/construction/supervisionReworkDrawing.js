@@ -24,7 +24,7 @@ jQuery(function ($) {
     });
 
     com.post(api.construction.queryReworkDrawingByReworkId, {
-        "reworkDrawing.rwId": params.rwId
+        "reworkDrawing.rwId": params.construction.rwId
     }, function (res) {
         var reworkDrawings = res.reworkDrawings;
         for (var i = 0; i < reworkDrawings.length; i++) {
@@ -38,7 +38,7 @@ jQuery(function ($) {
     com.uploadify("#pictureUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpge;*.gif;*.png', {'uploadType': 0}, 1, function(data){
         
         var options = {
-            "reworkDrawing.rwId": params.rwId,
+            "reworkDrawing.rwId": params.construction.rwId,
             "reworkDrawing.rwdName": "",
             "reworkDrawing.rwdUrl": data.resUrl,
             "reworkDrawing.rwdAddUrl": ""
@@ -64,7 +64,7 @@ jQuery(function ($) {
         var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
         var toolsA = $("<a></a>").attr("href", "#").on("click", function () {
             var options = {
-                "reworkDrawing.rwId": params.rwId,
+                "reworkDrawing.rwId": params.construction.rwId,
                 "reworkDrawing.rwdId": imgId
             };
             com.post(api.construction.deleteReworkDrawingById, options, function (res) {

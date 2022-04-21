@@ -31,7 +31,7 @@ jQuery(function(a) {
         	addOperationModal: com.focusPage('#addOperationModal')
         },
         cItems: {},
-        isExpert: params.isExpert
+        isExpert: params.personel.isExpert
     };
     
     if(params.type == 1){
@@ -230,8 +230,8 @@ jQuery(function(a) {
     user.items.height = com.focusPage("#height");
     user.items.weight = com.focusPage("#weight");
     user.items.nation = com.focusPage("#nation");
-    user.items.gender = com.focusPage("#gendera").prop("checked");//性别
-    user.items.politicalSel = com.focusPage("#politicalSel").bindData(user.politicalType,"key","value");//政治面貌
+    user.items.gender = com.focusPage("#gendera").prop("checked");// 性别
+    user.items.politicalSel = com.focusPage("#politicalSel").bindData(user.politicalType,"key","value");// 政治面貌
     
     user.items.jobYears = com.focusPage("#jobYears");
     user.items.identity = com.focusPage("#identity","#userinfo");
@@ -247,17 +247,17 @@ jQuery(function(a) {
     user.items.fangliner = com.focusPage("#fangliner");
     user.items.claner = com.focusPage("#claner");
     user.items.clanerCom = com.focusPage("#clanerCom");
-    user.items.isPresentGraduate = com.focusPage("#isPresentGraduate");//是否应届生
+    user.items.isPresentGraduate = com.focusPage("#isPresentGraduate");// 是否应届生
     user.items.graduateTime = com.focusPage("#graduateTime","#userinfo");
     user.items.school = com.focusPage("#school");
     user.items.educationSel = com.focusPage("#educationSel").bindData(user.educationType,"key","value");
     user.items.specialty = com.focusPage("#specialty");
-    user.items.isMarried = com.focusPage("#isMarried");//是否结婚
-    user.items.isBirth = com.focusPage("#isBirth");//是否生育
-    user.items.isHouseLoan = com.focusPage("#isHouseLoan");//是否房贷
-    user.items.isCarLoan = com.focusPage("#isCarLoan");//是否车贷
-    user.items.isCarID = com.focusPage("#isCarID");//驾照
-    user.items.isPassID = com.focusPage("#isPassID");//护照
+    user.items.isMarried = com.focusPage("#isMarried");// 是否结婚
+    user.items.isBirth = com.focusPage("#isBirth");// 是否生育
+    user.items.isHouseLoan = com.focusPage("#isHouseLoan");// 是否房贷
+    user.items.isCarLoan = com.focusPage("#isCarLoan");// 是否车贷
+    user.items.isCarID = com.focusPage("#isCarID");// 驾照
+    user.items.isPassID = com.focusPage("#isPassID");// 护照
     user.items.isHMID = com.focusPage("#isHMID");
     user.items.isTWID = com.focusPage("#isTWID");
     user.items.firstTime = com.focusPage("#firstTime");
@@ -280,7 +280,7 @@ jQuery(function(a) {
     
     user.items.insuranceTypeSel = com.focusPage("#insuranceTypeSel").bindData(user.insuranceType, "key", "value");
 
-    //获取部门类型
+    // 获取部门类型
     com.post(api.communion.queryDepartmentType, {}, function(a){
         user.deptType = a.departmentTypes;
     },null, false);
@@ -312,8 +312,8 @@ jQuery(function(a) {
     user.items.formTime = com.focusPage("#formTime");
     user.items.employTime = com.focusPage("#employTime");
 
-    user.items.isContract = com.focusPage("#isContract");//是否签劳动合同
-    user.items.isInsurance = com.focusPage("#isInsurance");//是否上保险
+    user.items.isContract = com.focusPage("#isContract");// 是否签劳动合同
+    user.items.isInsurance = com.focusPage("#isInsurance");// 是否上保险
     user.items.insuranceTime = com.focusPage("#insuranceTime");
     user.items.pensionNum = com.focusPage("#pensionNum");
     user.items.medicalNum = com.focusPage("#medicalNum");
@@ -321,14 +321,14 @@ jQuery(function(a) {
     user.items.bank = com.focusPage("#bank");
     user.items.bankCardNum = com.focusPage("#bankCardNum");
 
-    //编辑用户, 获取用户信息
-    if(params.tempUserId){
+    // 编辑用户, 获取用户信息
+    if(params.personel.userId){
     	
         user.editFlg = !0;
         user.items.userId.prop("disabled", "true");
         user.items.userId.css("display", "block");
         user.currentCompany=null;
-        com.post(api.personel.queryUserInfoByUserId, {"userInfo.user.userId": params.tempUserId}, function(data){
+        com.post(api.personel.queryUserInfoByUserId, {"userInfo.user.userId": params.personel.userId}, function(data){
 
             var $userInfo = data.userInfo;
             var $user = $userInfo.user;
@@ -401,13 +401,13 @@ jQuery(function(a) {
                 user.items.employTypeSel.val($userInfo.employType),
                 user.items.recommendMan.val($userInfo.recommendMan),
                 
-                user.items.entryTime.val($userInfo.entryTime),//入职时间
-                user.items.employTime.val($userInfo.employTime),//招聘时间
-                user.items.firstTime.val($userInfo.firstTime),//进入公司时间
-                user.items.formTime.val($userInfo.formTime),//转正时间
-                user.items.signTime.val($userInfo.signTime),//合同起始时间
-                user.items.fignTime.val($userInfo.fignTime),//首次合同时间
-                user.items.eignTime.val($userInfo.eignTime),//合同结束时间
+                user.items.entryTime.val($userInfo.entryTime),// 入职时间
+                user.items.employTime.val($userInfo.employTime),// 招聘时间
+                user.items.firstTime.val($userInfo.firstTime),// 进入公司时间
+                user.items.formTime.val($userInfo.formTime),// 转正时间
+                user.items.signTime.val($userInfo.signTime),// 合同起始时间
+                user.items.fignTime.val($userInfo.fignTime),// 首次合同时间
+                user.items.eignTime.val($userInfo.eignTime),// 合同结束时间
                 user.items.insuranceTypeSel.val($userInfo.insuranceType),
                 user.items.preformNum.val($userInfo.preformNum),
                 user.items.palary.val($userInfo.palary),
@@ -456,23 +456,23 @@ jQuery(function(a) {
         if (!com.validate("userinfo") && !user.repeatFlg && user.loginFlag && user.eEditFlg) {
             var a, b = {
             	
-                "userInfo.user.userId": user.items.userId.val(),//工号
-                "userInfo.user.oldUserId": user.items.oldUserId.val(),//旧员工编号
-                "userInfo.user.userName": user.items.userName.val().trim(),//姓名
-                "userInfo.user.currentName": user.items.currentName.val(),//现用名
-                "userInfo.height": user.items.height.val(),//身高
-                "userInfo.weight": user.items.weight.val().trim(),//体重
-                "userInfo.nation": user.items.nation.val(),//民族
-                "userInfo.gender": user.getProp[com.focusPage("#gendera").prop("checked")],//性别
-                "userInfo.political": user.items.politicalSel.val(),//政治面貌
-                "userInfo.jobYears": user.items.jobYears.val(),//工作年限
-                "userInfo.user.identity": user.items.identity.val(),//身份证号
-                "userInfo.user.phone": user.items.phone.val(),//手机号
-                "userInfo.address": user.items.address.val(),//现住址
-                "userInfo.hometownAddress": user.items.hometownAddress.val(),//户籍地址
-                "userInfo.householdType": user.items.householdSel.val(),//户籍类型
-                "userInfo.emergencyMan": user.items.emergencyMan.val(),//紧急联系人
-                "userInfo.emergencyPhone": user.items.emergencyPhone.val(),//紧急联系人电话
+                "userInfo.user.userId": user.items.userId.val(),// 工号
+                "userInfo.user.oldUserId": user.items.oldUserId.val(),// 旧员工编号
+                "userInfo.user.userName": user.items.userName.val().trim(),// 姓名
+                "userInfo.user.currentName": user.items.currentName.val(),// 现用名
+                "userInfo.height": user.items.height.val(),// 身高
+                "userInfo.weight": user.items.weight.val().trim(),// 体重
+                "userInfo.nation": user.items.nation.val(),// 民族
+                "userInfo.gender": user.getProp[com.focusPage("#gendera").prop("checked")],// 性别
+                "userInfo.political": user.items.politicalSel.val(),// 政治面貌
+                "userInfo.jobYears": user.items.jobYears.val(),// 工作年限
+                "userInfo.user.identity": user.items.identity.val(),// 身份证号
+                "userInfo.user.phone": user.items.phone.val(),// 手机号
+                "userInfo.address": user.items.address.val(),// 现住址
+                "userInfo.hometownAddress": user.items.hometownAddress.val(),// 户籍地址
+                "userInfo.householdType": user.items.householdSel.val(),// 户籍类型
+                "userInfo.emergencyMan": user.items.emergencyMan.val(),// 紧急联系人
+                "userInfo.emergencyPhone": user.items.emergencyPhone.val(),// 紧急联系人电话
                 "userInfo.qq": user.items.qq.val(),
                 "userInfo.wechat": user.items.weChat.val(),
                 "userInfo.email": user.items.email.val(),
@@ -483,31 +483,31 @@ jQuery(function(a) {
                 "userInfo.isPassID": user.getProp[user.items.isPassID.prop("checked")],
                 "userInfo.isHMID": user.getProp[user.items.isHMID.prop("checked")],
                 "userInfo.isTWID": user.getProp[user.items.isTWID.prop("checked")],
-                "userInfo.isPresentGraduate": user.getProp[user.items.isPresentGraduate.prop("checked")],//是否应届
-                "userInfo.graduateTime": "" == user.items.graduateTime.val() ? void 0 : user.items.graduateTime.val(),//毕业时间
-                "userInfo.school": user.items.school.val(),//毕业学校
-                "userInfo.education": user.items.educationSel.val(),//学历
-                "userInfo.specialty": user.items.specialty.val(),//专业
-                "userInfo.isMarried": user.getProp[user.items.isMarried.prop("checked")],//婚姻状况
-                "userInfo.isBirth": user.getProp[user.items.isBirth.prop("checked")],//生育状况
-                "userInfo.isHouseLoan": user.getProp[user.items.isHouseLoan.prop("checked")],//是否有房贷
-                "userInfo.isCarLoan": user.getProp[user.items.isCarLoan.prop("checked")],//是否车贷
-                "userInfo.lover": user.items.lover.val(),//爱人
+                "userInfo.isPresentGraduate": user.getProp[user.items.isPresentGraduate.prop("checked")],// 是否应届
+                "userInfo.graduateTime": "" == user.items.graduateTime.val() ? void 0 : user.items.graduateTime.val(),// 毕业时间
+                "userInfo.school": user.items.school.val(),// 毕业学校
+                "userInfo.education": user.items.educationSel.val(),// 学历
+                "userInfo.specialty": user.items.specialty.val(),// 专业
+                "userInfo.isMarried": user.getProp[user.items.isMarried.prop("checked")],// 婚姻状况
+                "userInfo.isBirth": user.getProp[user.items.isBirth.prop("checked")],// 生育状况
+                "userInfo.isHouseLoan": user.getProp[user.items.isHouseLoan.prop("checked")],// 是否有房贷
+                "userInfo.isCarLoan": user.getProp[user.items.isCarLoan.prop("checked")],// 是否车贷
+                "userInfo.lover": user.items.lover.val(),// 爱人
                 "userInfo.hobby": user.items.hobby.val(),
                 "userInfo.comment": user.items.comment.val(),
                 
-                "userInfo.user.loginId": user.items.loginId.val(),//用户名
-                "userInfo.user.dept.did": user.items.deptSel.val(),//部门ID
-                "userInfo.user.duty.did": user.items.dutySel.val(),//职位ID
+                "userInfo.user.loginId": user.items.loginId.val(),// 用户名
+                "userInfo.user.dept.did": user.items.deptSel.val(),// 部门ID
+                "userInfo.user.duty.did": user.items.dutySel.val(),// 职位ID
                 "userInfo.level": user.items.levelSel.val(),
-                "userInfo.user.status": user.items.statusSel.val(),//状态
-                "userInfo.employWay": user.items.employWaySel.val(),//招聘渠道
-                "userInfo.employType": user.items.employTypeSel.val(),//录用类型
-                "userInfo.recommendMan": user.items.recommendMan.val(),//推荐人
+                "userInfo.user.status": user.items.statusSel.val(),// 状态
+                "userInfo.employWay": user.items.employWaySel.val(),// 招聘渠道
+                "userInfo.employType": user.items.employTypeSel.val(),// 录用类型
+                "userInfo.recommendMan": user.items.recommendMan.val(),// 推荐人
                 "userInfo.firstTime": "" == user.items.firstTime.val() ? void 0 : user.items.firstTime.val(),
                 "userInfo.formTime": "" == user.items.formTime.val() ? void 0 : user.items.formTime.val(),
-                "userInfo.entryTime": "" == user.items.entryTime.val() ? void 0 : user.items.entryTime.val(),//入职时间
-                "userInfo.employTime": "" == user.items.employTime.val() ? void 0 : user.items.employTime.val(),//转正时间
+                "userInfo.entryTime": "" == user.items.entryTime.val() ? void 0 : user.items.entryTime.val(),// 入职时间
+                "userInfo.employTime": "" == user.items.employTime.val() ? void 0 : user.items.employTime.val(),// 转正时间
                 "userInfo.insuranceType": user.items.insuranceTypeSel.val(),
                 "userInfo.preformNum": user.items.preformNum.val(),
                 
@@ -516,12 +516,12 @@ jQuery(function(a) {
                 "userInfo.eignTime": "" == user.items.eignTime.val() ? void 0 : user.items.eignTime.val(),
                 "userInfo.fignTime": "" == user.items.fignTime.val() ? void 0 : user.items.fignTime.val(),
                 		
-                "userInfo.isContract": user.getProp[user.items.isContract.prop("checked")],//是否签劳动合同
-                "userInfo.isInsurance": user.getProp[user.items.isInsurance.prop("checked")],//是否上保险
+                "userInfo.isContract": user.getProp[user.items.isContract.prop("checked")],// 是否签劳动合同
+                "userInfo.isInsurance": user.getProp[user.items.isInsurance.prop("checked")],// 是否上保险
                 "userInfo.insuranceType": user.items.insuranceTypeSel.val(),
-                "userInfo.insuranceTime": "" == user.items.insuranceTime.val() ? void 0 : user.items.insuranceTime.val(),//参保时间
-                "userInfo.pensionNum": user.items.pensionNum.val(),//养老编号
-                "userInfo.medicalNum": user.items.medicalNum.val(),//医疗编号
+                "userInfo.insuranceTime": "" == user.items.insuranceTime.val() ? void 0 : user.items.insuranceTime.val(),// 参保时间
+                "userInfo.pensionNum": user.items.pensionNum.val(),// 养老编号
+                "userInfo.medicalNum": user.items.medicalNum.val(),// 医疗编号
                 
                 "userInfo.publicNum": user.items.publicNum.val(),
                 "userInfo.hometownPlace": user.items.hometownPlace.val(),
@@ -529,9 +529,9 @@ jQuery(function(a) {
                 "userInfo.form": user.items.form.val(),
                 
                 "userInfo.palary": user.items.palary.val(),
-                "userInfo.salary": user.items.salary.val(),//工资
-                "userInfo.bank": user.items.bank.val(),//开户行
-                "userInfo.bankCardNum": user.items.bankCardNum.val(),//银行卡号
+                "userInfo.salary": user.items.salary.val(),// 工资
+                "userInfo.bank": user.items.bank.val(),// 开户行
+                "userInfo.bankCardNum": user.items.bankCardNum.val(),// 银行卡号
                 
             };
 

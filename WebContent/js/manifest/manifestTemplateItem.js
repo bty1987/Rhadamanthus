@@ -1,7 +1,7 @@
 
 $(function(){
 
-	var mtid = params["manifestTemplate.mtid"];
+	var mtid = params.manifest.manifestTemplate.mtid;
 
 	com.post(api.inventory.queryManifestTemplateItemByMtid, {"manifestTemplate.mtid": mtid}, function (res) {
         displayFunc.init('resultList', res.manifestTemplateItems);
@@ -114,7 +114,7 @@ $(function(){
     })();
 
     com.focusPage("#addBtn").click(function(){
-        params["manifestTemplate.mtid"]=mtid;
+        params.manifest.manifestTemplate.mtid=mtid;
         com.focusPage("#optPopUp").attr('data-mtid', mtid);
         com.popup4page("#optPopUp","views/manifest/manifestTemplateItem2add.html","添加");
     });

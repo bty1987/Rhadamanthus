@@ -106,7 +106,7 @@ jQuery(function($) {
                 params.building.manageFlag = false;
                 params.build.page = "query";
 
-                com.popup4page("#stockRecordPopUp", "/views/building/houseSourceDetail.html", "查看");
+                com.popup4page("#stockRecordPopUp", api.index.houseSourceDetail.url, "查看");
             });
 
             return $liLine;

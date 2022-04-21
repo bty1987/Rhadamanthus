@@ -22,7 +22,7 @@
         user.statusType = a.statusType;
     }, null, false);
 
-    //获取部门类型
+    // 获取部门类型
     com.post(api.communion.queryDepartmentType, {}, function(res){
         user.deptType = res.departmentTypes;
     }, null, false);
@@ -58,7 +58,7 @@
                         $liProperty.appendTo($ulProperty);
                     });
 
-                    //查看
+                    // 查看
                     $btnCheck.click(function(){
                         com.focusPage("text").css("line-height", "27px");
                         com.post(api.personel.queryUserInfoByUserId, {"userInfo.user.userId": v.userId}, function(res){
@@ -68,7 +68,7 @@
                     });
 
                     $btnEdit.click(function(){
-                        params.tempUserId = v.userId;
+                        params.personel.userId = v.userId;
                         com.popup4page("#layerPopUp", api.index.userEditIndex.url, "编辑", null, function () {
                             userSeacher.doSearch();
                         });
@@ -153,7 +153,7 @@
     });
 
     com.focusPage('a[name="addUser"]','#pagenation').click(function(){
-        params.tempUserId = null;
+        params.personel.userId = null;
         com.popup4page("#layerPopUp", api.index.userEditIndex.url, "添加", null, function () {
             com.closePopup();
             userSeacher.doSearch();
@@ -170,7 +170,7 @@
     
     com.uploadify("#import", "上传文件", api.salary.importUserSalary, 'btn btn-success col-sm-12', '*.xls;*.xlsx', {'uploadType': 4}, 1);
 
-    //添加人员(简化版)
+    // 添加人员(简化版)
     user.saveBtn = com.focusPage("#saveUserBtn").on("click", saveData);
     user.cancelBtn = com.focusPage("#cancelUserBtn").on("click",function() {
         user.simpleAddUserModal.modal("hide");
@@ -255,7 +255,7 @@
         }
     }
 
-    //查看页面绑定人员信息
+    // 查看页面绑定人员信息
     function bindUserInfo($userInfo){
         com.focusPage("#userIdCheck").html(com.checkNull($userInfo.user.userId, "无"));
         com.focusPage("#oldUserIdCheck").html(com.checkNull($userInfo.user.oldUserId, "无"));

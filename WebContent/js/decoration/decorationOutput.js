@@ -1,23 +1,30 @@
 jQuery(function($) {
 
-    var decoration = parent.params.decoration;
     api = parent.api;
     com = parent.com;
     params = parent.params;
+
+    var decoration = params.decoration.decoration;
+
     var decorationActivity = {};
-    com.post(api.decoration.queryDecorationActivityByOrderId, {"decorationActivity.orderId" : params.decorationOrderId}, function (res) {
+
+    com.post(api.decoration.queryDecorationActivityByOrderId, {
+        "decorationActivity.orderId": params.decoration.orderId
+    }, function(res) {
         var decorationActivityData = res.decorationActivitys;
 
-        $.each(decorationActivityData, function (i, v) {
+        $.each(decorationActivityData, function(i, v) {
             decorationActivity['name'] = v.activity.name
         });
 
     }, null, false);
 
-    com.post(api.construction.queryAcceptance, {"acceptance.orderId": params.decorationOrderId}, function (res) {
+    com.post(api.construction.queryAcceptance, {
+        "acceptance.orderId": params.decoration.orderId
+    }, function(res) {
         createTable(decorationActivity.name, res.acceptance.acceptanceTime)
     }, null, false);
-    
+
     function createTable(activityName, drawTime) {
         var center = $("<center></center>").appendTo($("#manifestPrint"));
 
@@ -60,12 +67,12 @@ jQuery(function($) {
 
         var ReceiptTr = $('<tr></tr>').appendTo(receiptTable);
         var accountForehead = $('<td colspan="1" style="height: 30px;padding-left: 10px;"></td>').text('决算合同额');
-        var accountForeheadText = $('<td colspan="10" style="height: 30px;padding-left: 10px;"></td>').text(params.accountForehead);
+        var accountForeheadText = $('<td colspan="10" style="height: 30px;padding-left: 10px;"></td>').text(params.decoration.accountForehead);
         ReceiptTr.append(accountForehead).append(accountForeheadText);
 
         var sub = $('<tr></tr>').appendTo(receiptTable);
         var balanceSum = $('<td colspan="1" style="height: 30px;padding-left: 10px;"></td>').text('决算差额');
-        var balanceSumText = $('<td colspan="10" style="height: 30px;padding-left: 10px;"></td>').text(params.balanceSum);
+        var balanceSumText = $('<td colspan="10" style="height: 30px;padding-left: 10px;"></td>').text(params.decoration.balanceSum);
         sub.append(balanceSum).append(balanceSumText);
 
         var remarks = $('<tr></tr>').appendTo(receiptTable);
@@ -74,6 +81,5 @@ jQuery(function($) {
         var explainTwo = $('<span></span>').text('2.若决算差额低于10元，则以0元进行处理');
         remarks.append(text).append(explainOne.append($('<hr/>')).append(explainTwo));
     }
-
 
 });

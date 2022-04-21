@@ -1,10 +1,10 @@
-$(function(){
-    
+$(function() {
+
     var address = {
-        uid: params.muser.uid,
-        unionId: params.muser.unionId,
-            
-        items:{
+        uid: params.store.muser.uid,
+        unionId: params.store.muser.unionId,
+
+        items: {
             name: com.focusPage("#name1"),
             phone: com.focusPage("#phone1"),
             province: com.focusPage("#province"),
@@ -12,34 +12,38 @@ $(function(){
             proper: com.focusPage("#proper"),
             address: com.focusPage("#address"),
         },
-        
+
         btns: {
             updateAddressBtn: com.focusPage("#updateAddressBtn"),
         }
     };
-    
+
     address.btns.updateAddressBtn.click(updateData);
-    
-    var displayFunc  = (function(){
-        /*表格样式*/
-        var renderList = function(tableId,listData){
+
+    var displayFunc = (function() {
+
+        /* 表格样式 */
+        var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
 
-            if(listData && listData.length){
-                
+            if (listData && listData.length) {
+
                 var $ulTitle = createTableTitle();
                 var $ulData = $('<ul></ul>').addClass('flex-table');
-                
+
                 $tableWrap.append($ulTitle).append($ulData);
 
-                $.each(listData,function(i, v){
+                $.each(listData, function(i, v) {
+
                     creatLine(i, v, i == listData.length - 1).appendTo($ulTitle);
                 });
             }
         };
 
-        /*表格头*/
-        var createTableTitle = function(){
+        /* 表格头 */
+        var createTableTitle = function() {
+
             var $ulTitle = $('<ul></ul>').addClass('flex-table');
             var $liTitle = $('<li></li>').addClass('line table-title');
 
@@ -48,7 +52,8 @@ $(function(){
 
             var titleName = '姓名,电话,地址';
 
-            $.each(titleName.split(','), function (i, v) {
+            $.each(titleName.split(','), function(i, v) {
+
                 var $cell = $('<div></div>').addClass('cell').html(v);
                 $cell.appendTo($contentWrap);
             });
@@ -59,20 +64,19 @@ $(function(){
             return $ulTitle;
         };
 
-        /*表格体*/
-        var creatLine = function (i, v, lastFlag) {
+        /* 表格体 */
+        var creatLine = function(i, v, lastFlag) {
+
             var $liLine = $('<li></li>').addClass('line');
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col3');
 
-            var propertyArr = [
-                [v.name,'grey'],
-                [v.phone,'grey'],
-                // [v.status =="0" ? "启用" : "禁用",'red'],
-                [v.province+v.city+v.proper+v.address,'grey']
-            ];
+            var propertyArr = [[v.name, 'grey'], [v.phone, 'grey'],
+            // [v.status =="0" ? "启用" : "禁用",'red'],
+            [v.province + v.city + v.proper + v.address, 'grey']];
 
-            $.each(propertyArr, function (i, v) {
+            $.each(propertyArr, function(i, v) {
+
                 var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
@@ -93,15 +97,16 @@ $(function(){
 
             $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
-            $update.click(function(){
-                
+            $update.click(function() {
+
                 address.aid = v.aid;
-                
+
                 com.cleanItems(address.items);
-                
+
                 initUpdate(v);
-                
-                com.popup4model('#layerAdd2', '编辑', null, function () {
+
+                com.popup4model('#layerAdd2', '编辑', null, function() {
+
                     com.clearValidator();
                 });
             });
@@ -110,11 +115,13 @@ $(function(){
         };
 
         return {
-            init : function(tableId,listData){
+            init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
+                renderList(tableId, listData);
             },
-            drawLine : function(v){
+            drawLine: function(v) {
+
                 return creatLine(v);
             }
         }
@@ -123,12 +130,17 @@ $(function(){
     doSearcher();
 
     function doSearcher() {
-        com.post(api.store.queryAddressByUid, {"address.uid": address.uid}, function (res) {
+
+        com.post(api.store.queryAddressByUid, {
+            "address.uid": address.uid
+        }, function(res) {
+
             displayFunc.init('resultListAddress', res.addresses);
         });
     }
 
-    function initUpdate(v){
+    function initUpdate(v) {
+
         address.items.name.val(v.name);
         address.items.phone.val(v.phone);
         address.items.province.val(v.province);
@@ -137,10 +149,11 @@ $(function(){
         address.items.address.val(v.address);
     }
 
-    function updateData(){
-        
-        if(com.validate('form2')) return false;
-        
+    function updateData() {
+
+        if (com.validate('form2'))
+            return false;
+
         var url = api.store.updateAddress
         var options = {
             "muser.unionId": address.unionId,
@@ -151,8 +164,9 @@ $(function(){
             "address.proper": address.items.proper.val(),
             "address.address": address.items.address.val()
         }
-        
-        com.post(url, options, function(res){
+
+        com.post(url, options, function(res) {
+
             com.closePopup();
             doSearcher();
         });

@@ -1,7 +1,7 @@
 jQuery(function ($) {
 
     var accessories = {
-        aid: params["accessories.aid"],
+        aid: params.manifest.aid,
 
         refundBtn: com.focusPage("#refundBtn"),
         cancellBtn: com.focusPage("#cancelBtn"),
@@ -132,7 +132,7 @@ jQuery(function ($) {
     function accessoriesAdd() {
 
         var options = {
-            "accessoriesManifest.accessories.aid": params["accessories.aid"],
+            "accessoriesManifest.accessories.aid": params.manifest.accessories.aid,
             "accessoriesManifest.manifest.type": 7
         };
 

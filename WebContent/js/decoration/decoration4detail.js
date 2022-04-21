@@ -1,7 +1,7 @@
 jQuery(function ($) {
 
     var decorationDetail = {
-		decorationOrderId: null,
+		orderId: null,
 		orderStatus: 0,
 		orderType: "",
 		orderTypeness: "",
@@ -69,7 +69,7 @@ jQuery(function ($) {
         salesActivityItemState: {}
     };
     
-    drawNode.draw(params.viewNode);
+    drawNode.draw(params.decoration.viewNode);
 
     decorationDetail.items.orderId = com.focusPage("#orderId");
     decorationDetail.items.customer = com.focusPage("#customer");
@@ -139,7 +139,7 @@ jQuery(function ($) {
 
     decorationDetail.customerItems.savePhoneBtn = com.focusPage("#savePhoneBtn", "#customerChangeModal");
 
-    decorationDetail.btnViewFlg = params.btnViewFlg == false ? true : false;
+    decorationDetail.btnViewFlg = params.decoration.btnViewFlg == false ? true : false;
     decorationDetail.btnViewFlg == false ? com.focusPage('#btnDisplay').removeAttr("style", "display: none;") : com.focusPage('#btnDisplay').attr("style", "display: none;");
 
     com.post(api.ds.data, {}, function (res) {
@@ -353,14 +353,14 @@ jQuery(function ($) {
     
     decorationUtils.init();
 
-    decorationDetail.decorationOrderId = params.decorationOrderId;
-    decorationDetail.orderStatus = params.orderStatus;
-    decorationDetail.orderType = params.orderType;
-    decorationDetail.orderTypeness = params.orderTypeness;
-    decorationDetail.versionId = params.versionId;
+    decorationDetail.orderId = params.decoration.orderId;
+    decorationDetail.orderStatus = params.decoration.orderStatus;
+    decorationDetail.orderType = params.decoration.orderType;
+    decorationDetail.orderTypeness = params.decoration.orderTypeness;
+    decorationDetail.versionId = params.decoration.versionId;
 
-    decorationPayment.postParam.decorationOrderId = decorationDetail.decorationOrderId;
-    decorationPayment.postParam["decorationPayment.decoration.orderId"] = decorationDetail.decorationOrderId;
+    decorationPayment.postParam.orderId = decorationDetail.orderId;
+    decorationPayment.postParam["decorationPayment.decoration.orderId"] = decorationDetail.orderId;
 
     com.post(api.ds.decoration, {}, function (res) {
         
@@ -405,11 +405,11 @@ jQuery(function ($) {
     com.initTypeahead('no', api.data.queryVillageForNameByPinyin, "pinyinName", {}, "autoFillKeyValue", "key", "value");
     
     if (decorationDetail.orderType == 0){
-        decorationUtils.initDecorationMidpack(decorationDetail.decorationOrderId);
+        decorationUtils.initDecorationMidpack(decorationDetail.orderId);
     }else if (decorationDetail.orderType == 1) {
-        decorationUtils.initDecorationInclusive(decorationDetail.decorationOrderId);
+        decorationUtils.initDecorationInclusive(decorationDetail.orderId);
     }else if (decorationDetail.orderType == 2) {
-        decorationUtils.initDecorationHolonomy(decorationDetail.decorationOrderId);
+        decorationUtils.initDecorationHolonomy(decorationDetail.orderId);
     }
 
     com.focusPage('#customerInfosBtn').on("click", function () {
@@ -428,7 +428,7 @@ jQuery(function ($) {
         }
 
         var options = {
-            "decorationActivity.orderId": decorationDetail.decorationOrderId,
+            "decorationActivity.orderId": decorationDetail.orderId,
             "decorationActivity.activity.aid": decorationDetail.decorationActivityItems.activityInfo.val(),
         };
 
@@ -459,7 +459,7 @@ jQuery(function ($) {
 
         var submitFlag = true;
 
-        var orderId = params.decorationOrderId;
+        var orderId = params.decoration.orderId;
         var activityName = decorationDetail.activity.activity.find("option:selected").text();
         var activityId = com.focusPage("#activity").val();
 
@@ -559,7 +559,7 @@ jQuery(function ($) {
         com.focusPage("#papers").html("");
 
         var options = {
-            "decorationActivity.orderId": decorationDetail.decorationOrderId
+            "decorationActivity.orderId": decorationDetail.orderId
         };
 
         com.post(api.decoration.queryDecorationActivityByOrderId, options, function (res) {
@@ -764,7 +764,7 @@ jQuery(function ($) {
         options["decorationService.comment"] = decorationDetail.serviceItems.comment.val();
 
         com.post(api.decoration.completeDecorationService, options, function (res) {
-            decorationUtils.initService(decorationDetail, decorationDetail.decorationOrderId);
+            decorationUtils.initService(decorationDetail, decorationDetail.orderId);
             decorationDetail.serviceModal.modal("hide");
         });
 
@@ -810,7 +810,7 @@ jQuery(function ($) {
         }
 
         var options = {
-            "decorationPayment.decoration.orderId": decorationDetail.decorationOrderId,
+            "decorationPayment.decoration.orderId": decorationDetail.orderId,
             "decorationPayment.paymentType": decorationDetail.paymentItems.otherPaymentType.find("option:selected").text(),
             "decorationPayment.ptid": decorationDetail.paymentItems.otherPaymentType.val(),
             "decorationPayment.referMoney": decorationDetail.paymentItems.otherPayment.val()
@@ -839,7 +839,7 @@ jQuery(function ($) {
         }
 
         var options = {
-            "decorationMidpack.decoration.orderId": decorationDetail.decorationOrderId,
+            "decorationMidpack.decoration.orderId": decorationDetail.orderId,
             "decorationMidpack.psId": psId,
             "decorationMidpack.materialPrice": decorationDetail.paymentItems.materialPrice.val()
         };
@@ -849,7 +849,7 @@ jQuery(function ($) {
 
             var manageRate = 0;
             // 通过订单编号获取默认报价信息
-            com.post(api.quotation.queryQuotationForDefaultByOrderId, {"quotation.orderId": decorationDetail.decorationOrderId}, function (res) {
+            com.post(api.quotation.queryQuotationForDefaultByOrderId, {"quotation.orderId": decorationDetail.orderId}, function (res) {
 
                 if (res.quotation.manageRate != null && res.quotation.manageRate != 0) {
                     manageRate = res.quotation.manageRate;
@@ -874,7 +874,7 @@ jQuery(function ($) {
             var names = decorationMaching.name;
 
             options = {
-                "decorationHolonomy.decoration.orderId": decorationDetail.decorationOrderId,
+                "decorationHolonomy.decoration.orderId": decorationDetail.orderId,
                 "decorationHolonomy.maching": maching,  // 主材配比
                 "decorationHolonomy.discount": discount,// 折扣
                 "decorationHolonomy.manageRate": parseFloat(manageRate) + parseFloat(decorationDetail.notSalesmanRate),// 管理费比例 非提比例
@@ -908,7 +908,7 @@ jQuery(function ($) {
         } else if (decorationDetail.orderType == 1) {
 
             options = {
-                "decorationInclusive.decoration.orderId": decorationDetail.decorationOrderId,
+                "decorationInclusive.decoration.orderId": decorationDetail.orderId,
                 "decorationInclusive.psId": psId,
             };
 
@@ -979,7 +979,7 @@ jQuery(function ($) {
 
         var options = {
             "decorationActivityItem.content": daiId,
-            "decorationActivityItem.orderId": decorationDetail.decorationOrderId
+            "decorationActivityItem.orderId": decorationDetail.orderId
         };
 
         com.showConfirm("是否发送查看通知", function() {
@@ -992,7 +992,7 @@ jQuery(function ($) {
 
     });
 
-	decorationUtils.initBaseInfo(decorationDetail.decorationOrderId, api.decoration.queryDecorationForCommonByOrderId, function (decoration) {
+	decorationUtils.initBaseInfo(decorationDetail.orderId, api.decoration.queryDecorationForCommonByOrderId, function (decoration) {
 
 		decorationDetail.items.orderId.val(decoration.orderId);
 		decorationDetail.items.customer.val(decoration.customer.name);
@@ -1042,7 +1042,7 @@ jQuery(function ($) {
 			decorationDetail.accountFlg = false;
 		}
 
-		com.post(api.decoration.queryDecorationInfoByOrderId, {"orderId": decorationDetail.decorationOrderId}, function (res) {
+		com.post(api.decoration.queryDecorationInfoByOrderId, {"orderId": decorationDetail.orderId}, function (res) {
 			res = res.decorationInfo;
 			decorationDetail.items.backOrderName.val(res.backOrderName);
 			decorationDetail.items.backOrderPhone.val(res.backOrderPhone);
@@ -1094,7 +1094,7 @@ jQuery(function ($) {
         com.showConfirm("确定要保存基本信息吗?", function () {
 
             var options = {
-                "decoration.orderId": decorationDetail.decorationOrderId,
+                "decoration.orderId": decorationDetail.orderId,
                 "decoration.type": decorationDetail.type[decorationDetail.items.orderType.val()],
                 "decoration.typeness": decorationDetail.items.orderType.val(),
                 "decoration.houseType": decorationDetail.items.houseType.val(),
@@ -1120,14 +1120,14 @@ jQuery(function ($) {
     function initWizard(decorationDetail) {
         var wizard = {"activityBtnMethod": null, "uiBtnMethod": null, "isDesign": false};
 
-        decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", "contractFiles", decorationDetail.decorationOrderId);
+        decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", "contractFiles", decorationDetail.orderId);
 
         com.focusPage('#fuelux-wizard').ace_wizard({"status": true}).on('change', function (e, info) {
             var curstep = 0;
 
             info.direction === "previous" ? curstep = info.step - 1 : curstep = info.step;
 
-            var node = params.viewNode[curstep];
+            var node = params.decoration.viewNode[curstep];
 
             switch (node.type) {
 
@@ -1135,42 +1135,42 @@ jQuery(function ($) {
                     quotationUtils.loadQuotationDetail();
                     break;
                 case "presign":// 预签信息
-                    decorationUtils.initPresignDetail(decorationDetail.decorationOrderId);
+                    decorationUtils.initPresignDetail(decorationDetail.orderId);
                     break;
                 case "picture":
-                    decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", "contractFiles", decorationDetail.decorationOrderId);
+                    decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", "contractFiles", decorationDetail.orderId);
                     break;
                 case "material":
                     decorationUtils.initMaterial(decorationDetail);
                     break;
                 case "activity":
                     if (!$.isEmptyObject(node.wizard)) $.extend(true, wizard, node.wizard);
-                    params.convertActivityItemId = decorationDetail.convertActivityItemId;
-                    params.activity = decorationDetail.activity;
-                    decorationUtils.decorationActivityInfo(decorationDetail.activitys, wizard["activityBtnMethod"], decorationDetail.decorationOrderId);
-                    decorationUtils.decorationActivityItemInfo(decorationDetail.activityPriceInfo, decorationDetail.activityItems, decorationDetail.activityItemsBtn, wizard["uiBtnMethod"], decorationDetail.decorationOrderId, decorationActivity);
-                    decorationUtils.decorationSalesActivityItemInfo(decorationDetail.salesActivityItems,decorationDetail.decorationOrderId,wizard["uiBtnMethod"], salesActivityItem);
+                    params.decoration.convertActivityItemId = decorationDetail.convertActivityItemId;// 全局变量活动
+                    params.decoration.activity = decorationDetail.activity;
+                    decorationUtils.decorationActivityInfo(decorationDetail.activitys, wizard["activityBtnMethod"], decorationDetail.orderId);
+                    decorationUtils.decorationActivityItemInfo(decorationDetail.activityPriceInfo, decorationDetail.activityItems, decorationDetail.activityItemsBtn, wizard["uiBtnMethod"], decorationDetail.orderId, decorationActivity);
+                    decorationUtils.decorationSalesActivityItemInfo(decorationDetail.salesActivityItems,decorationDetail.orderId,wizard["uiBtnMethod"], salesActivityItem);
                     break;
                 case "belong":
-                    decorationUtils.initDecorationBelong(decorationDetail.decorationOrderId);
+                    decorationUtils.initDecorationBelong(decorationDetail.orderId);
                     break;
                 case "payment":
                     if (!$.isEmptyObject(node.wizard)) $.extend(true, wizard, node.wizard);
                     decorationUtils.initPayment(decorationDetail, wizard["isDesign"]);
                     break;
                 case "addreduce":
-                    decorationUtils.initAddreduce(decorationDetail.decorationOrderId, decorationDetail.orderType);
+                    decorationUtils.initAddreduce(decorationDetail.orderId, decorationDetail.orderType);
                     break;
                 case "account":
-                    decorationUtils.initAccount(decorationDetail.decorationOrderId, decorationDetail.accountFlg);
+                    decorationUtils.initAccount(decorationDetail.orderId, decorationDetail.accountFlg);
                     break;
                 case "service":
-                    decorationUtils.initService(decorationDetail, decorationDetail.decorationOrderId);
+                    decorationUtils.initService(decorationDetail, decorationDetail.orderId);
                     break;
             }
         }).on('stepclick', function (e, info) {
 
-            var node = params.viewNode[info.step - 1];
+            var node = params.decoration.viewNode[info.step - 1];
             
             switch (node.type) {
 
@@ -1178,37 +1178,37 @@ jQuery(function ($) {
                     quotationUtils.loadQuotationDetail();
                     break;
                 case "presign":// 预签信息
-                    decorationUtils.initPresignDetail(decorationDetail.decorationOrderId);
+                    decorationUtils.initPresignDetail(decorationDetail.orderId);
                     break;
                 case "picture":
-                    decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", "contractFiles", decorationDetail.decorationOrderId);
+                    decorationUtils.initDecorationPicture("designPictures", "projectPictures", "CADProjectPicture", "ContractPictures", "OriginalPicture", "contractFiles", decorationDetail.orderId);
                     break;
                 case "material":
                     decorationUtils.initMaterial(decorationDetail);
                     break;
                 case "activity":
                     if (!$.isEmptyObject(node.wizard)) $.extend(true, wizard, node.wizard);
-                    params.convertActivityItemId = decorationDetail.convertActivityItemId;
-                    params.activity = decorationDetail.activity;
-                    decorationUtils.decorationActivityInfo(decorationDetail.activitys, wizard["activityBtnMethod"], decorationDetail.decorationOrderId);
-                    decorationUtils.decorationActivityItemInfo(decorationDetail.activityPriceInfo, decorationDetail.activityItems, decorationDetail.activityItemsBtn, wizard["uiBtnMethod"], decorationDetail.decorationOrderId, decorationActivity);
-                    decorationUtils.decorationSalesActivityItemInfo(decorationDetail.salesActivityItems,decorationDetail.decorationOrderId,wizard["uiBtnMethod"], salesActivityItem);
+                    params.decoration.convertActivityItemId = decorationDetail.convertActivityItemId;
+                    params.decoration.activity = decorationDetail.activity;
+                    decorationUtils.decorationActivityInfo(decorationDetail.activitys, wizard["activityBtnMethod"], decorationDetail.orderId);
+                    decorationUtils.decorationActivityItemInfo(decorationDetail.activityPriceInfo, decorationDetail.activityItems, decorationDetail.activityItemsBtn, wizard["uiBtnMethod"], decorationDetail.orderId, decorationActivity);
+                    decorationUtils.decorationSalesActivityItemInfo(decorationDetail.salesActivityItems,decorationDetail.orderId,wizard["uiBtnMethod"], salesActivityItem);
                     break;
                 case "belong":
-                    decorationUtils.initDecorationBelong(decorationDetail.decorationOrderId);
+                    decorationUtils.initDecorationBelong(decorationDetail.orderId);
                     break;
                 case "payment":
                     if (!$.isEmptyObject(node.wizard)) $.extend(true, wizard, node.wizard);
                     decorationUtils.initPayment(decorationDetail, wizard["isDesign"]);
                     break;
                 case "addreduce":
-                    decorationUtils.initAddreduce(decorationDetail.decorationOrderId, decorationDetail.orderType);
+                    decorationUtils.initAddreduce(decorationDetail.orderId, decorationDetail.orderType);
                     break;
                 case "account":
-                    decorationUtils.initAccount(decorationDetail.decorationOrderId, decorationDetail.accountFlg);
+                    decorationUtils.initAccount(decorationDetail.orderId, decorationDetail.accountFlg);
                     break;
                 case "service":
-                    decorationUtils.initService(decorationDetail, decorationDetail.decorationOrderId);
+                    decorationUtils.initService(decorationDetail, decorationDetail.orderId);
                     break;
             }
         }).on('previous', function (e, info) {
@@ -1266,7 +1266,7 @@ jQuery(function ($) {
                         decorationDetail.repeatFlg = false;
 
                         com.post(api.decoration.changeDecorationForHouse, {
-                            "decoration.orderId": decorationDetail.decorationOrderId,
+                            "decoration.orderId": decorationDetail.orderId,
                             "decoration.house.hid": decorationDetail.houseItems.thid
                         }, function (res) {
                             com.showAlert(com.info, "操作成功");

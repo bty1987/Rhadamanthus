@@ -3,7 +3,7 @@ $(function () {
     var splitAndMergePopUp = com.focusPage('#splitAndMergePopUp');
     splitAndMergePopUp.attr('data-title') == "拆分" ? com.focusPage('#split').removeClass('hide') : com.focusPage('#merge').removeClass('hide');
 
-    var _goodsStorehouseStock = params['goodsStorehouseStock'];
+    var _goodsStorehouseStock =  params.manifest.goodsStorehouseStock;
     var $list = splitAndMergePopUp.attr('data-title') == "拆分" ? com.focusPage('#splitList') : com.focusPage('#mergeList');
 
     var $btnConfirm = $('<a></a>').addClass('btn btn-primary mgr-10').attr({

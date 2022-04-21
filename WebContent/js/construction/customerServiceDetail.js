@@ -17,7 +17,7 @@ jQuery(function ($) {
 
     };
 
-    com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": params.orderId}, function (res) {
+    com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": params.construction.orderId}, function (res) {
 
         var newSchedules = res.constructionSchedules.sort(function(a, b){
             return a.schedule - b.schedule;
@@ -55,7 +55,7 @@ jQuery(function ($) {
         addActive(schedule);
 
         var elementPostData = {};
-        elementPostData["constructer.orderId"] = params.orderId;
+        elementPostData["constructer.orderId"] = params.construction.orderId;
         elementPostData["constructer.schedule"] = schedule;
 
     

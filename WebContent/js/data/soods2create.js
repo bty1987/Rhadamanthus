@@ -1,4 +1,4 @@
-$(function(){
+$(function() {
 
     var soods = {
         btns: {
@@ -19,12 +19,14 @@ $(function(){
         },
         sid: null,
         gid: null,
-        quotationItem: params["quotationItem"],
-        quoteId: params["qiid"]
+
+        quotationItem: params.data.quotationItem,
+        quoteId: params.data.quotationItem.qiid,
     };
 
     soods.btns.addSoodsItemBtn.bindClick(saveData);
     soods.btns.updateSoodsItemBtn.bindClick(updateData);
+
     soods.modals.addSoodsItemModal.on("hide.bs.modal", function(e) {
         com.clearValidator();
         com.cleanTypeahead("soodsItemName");
@@ -34,18 +36,18 @@ $(function(){
         com.clearValidator();
         com.cleanItems(soods.uitems);
     });
-    com.initTypeahead('soodsItemName', api.data.querySoodsByName, "soods.goods.name", {}, "soodes", "sid", function (res) {
-        soods.gid=res.goods.gid;
+    com.initTypeahead('soodsItemName', api.data.querySoodsByName, "soods.goods.name", {}, "soodes", "sid", function(res) {
+        soods.gid = res.goods.gid;
         return res["goods"]["name"];
     });
 
-    var displayFunc = (function () {
-        var renderList = function (tableId, listData) {
+    var displayFunc = (function() {
+        var renderList = function(tableId, listData) {
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
-                $.each(listData, function (i, v) {
+                $.each(listData, function(i, v) {
                     creatLine(v).appendTo($ul);
                 });
 
@@ -53,7 +55,7 @@ $(function(){
             }
         };
 
-        var creatLine = function (v) {
+        var creatLine = function(v) {
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.goods.name));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -61,14 +63,10 @@ $(function(){
 
             var $btnCompile = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
-            var propertyArr = [
-                ["商品品牌: ", v.goods.brand, "blue"],
-                ["商品品类: ", v.goods.category, "blue"],
-                ["状态: ", v.status == 0 ? "有效":"无效", "red"],
-                ["数量: ", v.num, "blue"],
+            var propertyArr = [["商品品牌: ", v.goods.brand, "blue"], ["商品品类: ", v.goods.category, "blue"], ["状态: ", v.status == 0 ? "有效" : "无效", "red"], ["数量: ", v.num, "blue"],
 
             ];
-            $.each(propertyArr, function (index, value) {
+            $.each(propertyArr, function(index, value) {
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -84,50 +82,52 @@ $(function(){
             });
 
             $btnDel.click(function() {
-                
+
                 var options = {
                     "soodsItem.siid": v.siid
                 };
-                
-                com.post(api.data.deleteSoodsItem,options, function(e) {
+
+                com.post(api.data.deleteSoodsItem, options, function(e) {
                     com.showAlert(com.info, "操作成功");
                     $liLine.remove();
                 });
             });
 
-
             return $liLine;
         };
         return {
-            init: function () {
-                com.post(api.data.querySoodsItemByQiid, {"soodsItem.quotationItem.qiid": soods.quoteId}, function(res){
+            init: function() {
+                com.post(api.data.querySoodsItemByQiid, {
+                    "soodsItem.quotationItem.qiid": soods.quoteId
+                }, function(res) {
 
                     com.focusPage('#soodsResultList').html(null);
 
                     renderList('soodsResultList', res.soodsItems);
                 });
             },
-            drawLine: function (v) {
+            drawLine: function(v) {
                 return creatLine(v);
             }
         };
 
         return {
-            init: function () {
-                com.post(api.data.querySoodsByName, {"soods.sid": soods.sid}, function(res){
+            init: function() {
+                com.post(api.data.querySoodsByName, {
+                    "soods.sid": soods.sid
+                }, function(res) {
                     com.focusPage('#soodsResultList').html(null);
                     renderList('soodsResultList', res.soodes);
                 });
             },
-            drawLine: function (v) {
+            drawLine: function(v) {
                 return creatLine(v);
             }
         }
 
     })();
 
-    soods.btns.addSoodsBtn.click(function(e){
-        params["qiid"] = soods.quotationItem.qiid;
+    soods.btns.addSoodsBtn.click(function(e) {
         soods.modals.addSoodsItemModal.modal("show");
     });
 
@@ -135,28 +135,30 @@ $(function(){
 
     var searcher = new Searcher();
 
-    searcher.param({"soods.quotationItem.qiid": params.quotationItem.qiid});
+    searcher.param({
+        "soods.quotationItem.qiid": params.quotationItem.qiid
+    });
 
     function saveData() {
 
-        if (com.validate('addSoodsItemModal')) {
-            return false;
-        }
+        if (com.validate('addSoodsItemModal')) { return false; }
 
         var sid = com.typeahead("soodsItemName");
-        
+
         if (!sid) {
-            com.showPopover(com.focusPage("#soodsItemName"), {errorMsg: "选材项未填"}, "right");
+            com.showPopover(com.focusPage("#soodsItemName"), {
+                errorMsg: "选材项未填"
+            }, "right");
             return;
         }
 
         var option = {
-            "soodsItem.sid" : sid,
-            "soodsItem.quotationItem.qiid" : params.quotationItem.qiid,
-            "soodsItem.quotationItem.unitPrice" : soods.quotationItem.unitPrice,
-            "soodsItem.goods.gid" :soods.gid,
+            "soodsItem.sid": sid,
+            "soodsItem.quotationItem.qiid": params.quotationItem.qiid,
+            "soodsItem.quotationItem.unitPrice": soods.quotationItem.unitPrice,
+            "soodsItem.goods.gid": soods.gid,
         };
-        com.post(api.data.addSoodsItem,option, function(e){
+        com.post(api.data.addSoodsItem, option, function(e) {
             displayFunc.init();
             com.showAlert(com.info, "操作成功");
 
@@ -166,16 +168,14 @@ $(function(){
     }
 
     function updateData() {
-        if (com.validate('updateSoodsModal')) {
-            return false;
-        }
+        if (com.validate('updateSoodsModal')) { return false; }
 
         var option = {
             "soods.sid": soods.sid,
             "soods.selling": soods.uitems.uSelling.val()
         };
 
-        com.post(api.data.updateSoods, option, function(e){
+        com.post(api.data.updateSoods, option, function(e) {
             displayFunc.init();
             com.showAlert(com.info, "操作成功");
 

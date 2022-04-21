@@ -16,7 +16,7 @@ $(function () {
         }
     };
 
-    com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": params.orderId}, function (res) {
+    com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": params.construction.orderId}, function (res) {
 
         var newSchedules = res.constructionSchedules.sort(function(a, b){
             return a.schedule - b.schedule;
@@ -53,7 +53,7 @@ $(function () {
         addActive(schedule);
 
         var elementPostData = {
-            "constructionSchedule.orderId": params.orderId,
+            "constructionSchedule.orderId": params.construction.orderId,
             "constructionSchedule.schedule": schedule
         };
 
@@ -138,7 +138,7 @@ $(function () {
             });
 
             var options = {};
-            options["constructer.orderId"] = params.orderId;
+            options["constructer.orderId"] = params.construction.orderId;
             options["constructer.schedule"] = schedule;
 
             com.post(api.construction.queryConstructerByOrderId, options, function (res) {

@@ -41,7 +41,7 @@
         com.focusPage("#picture2").val(v.identityPathB);
         com.focusPage("#identityPathB").attr("href", com.showImg(com.focusPage("#showImg2"), v.identityPathB, 360, 260, '', null));
     }
-    
+
     var type = params['urlLoadParams'].type
     
     type == 'expert' ? (user.postData = 'userExpertPostData', user.isExpert = true) : (user.postData = 'userPostData', user.isExpert = false);
@@ -151,8 +151,8 @@
 
                     // 查看
                     $btnCheck.click(function(){
-                        params.tempUserId = v.userId;
-                        params.isExpert = user.isExpert;
+                        params.personel.userId = v.userId;
+                        params.personel.isExpert = user.isExpert;
                         com.popup4page("#layerPopUp", api.index.userViewIndex.url, "查看", null, function () {
                             userSeacher.doSearch();
                         });
@@ -160,9 +160,9 @@
                     });
 
                     $btnEdit.click(function(){
-                        params.tempUserId = v.userId;
+                        params.personel.userId = v.userId;
                         params.type = 1;
-                        params.isExpert = user.isExpert;
+                        params.personel.isExpert = user.isExpert;
                         com.popup4page("#layerPopUp", api.index.userEditIndex.url, "编辑", null, function () {
                             userSeacher.doSearch();
                         });
@@ -336,45 +336,45 @@
                     });
 
 					$btnlookContract.click(function(){
-						params.uid = v.uid;
-						com.popup4page("#layerPopUp", "views/personnel/userContract.html", "合同信息", null, function () {
+						params.personel.uid = v.uid;
+						com.popup4page("#layerPopUp", api.index.userContract.url, "合同信息", null, function () {
                             userSeacher.doSearch();
                         });
 					});
 
 					$btnlookEducation.click(function(){
-						params.uid = v.uid;
-						com.popup4page("#layerPopUp", "views/personnel/userEducation.html", "教育信息", null, function () {
+						params.personel.uid = v.uid;
+						com.popup4page("#layerPopUp", api.index.userEducation.url, "教育信息", null, function () {
                             userSeacher.doSearch();
                         });
 					});
 
 					$btnlookOperation.click(function(){
-						params.uid = v.uid;
-						com.popup4page("#layerPopUp", "views/personnel/userOperation.html", "工作信息", null, function () {
+						params.personel.uid = v.uid;
+						com.popup4page("#layerPopUp", api.index.userOperation.url, "工作信息", null, function () {
                             userSeacher.doSearch();
                         });
 					});
 
 					$btnDetail.click(function(){
-						params.tempUserId = v.userId;
-						params.uid = v.uid;
-						params.isExpert = user.isExpert;
-						com.popup4page("#layerPopUp", "views/personnel/userDetail.html", "人员信息", null, function () {
+					    params.personel.userId = v.userId;
+						params.personel.uid = v.uid;
+						params.personel.isExpert = user.isExpert;
+						com.popup4page("#layerPopUp", api.index.userDetail.url, "人员信息", null, function () {
                             userSeacher.doSearch();
                         });
 					});
 
 					$btnPrint.click(function(){
-						params.tempUserId = v.userId;
-						params.uid = v.uid;
+					    params.personel.userId = v.userId;
+						params.personel.uid = v.uid;
 						com.popup("方林装饰应聘登记表", api.index.userPrint.url, null, null, true);
 					});
 					
 					$btnPicture.click(function(){
 			            user.modals.pictureModal.modal("show");
-			            params.tempUserId = v.userId;
-			            params.uid = v.uid;
+			            params.personel.userId = v.userId;
+			            params.personel.uid = v.uid;
                         initUser(v);
 
                     });
@@ -405,8 +405,8 @@
                     });
 
                     $userexception.unbind().bind('click',function(){
-                    	params.uid = v.uid;
-						com.popup4page("#layerPopUp", "views/personnel/userExperience.html", "工作经历", null, function () {
+                    	params.personel.uid = v.uid;
+						com.popup4page("#layerPopUp", api.index.userExperience.url, "工作经历", null, function () {
                             userSeacher.doSearch();
                         });
                     });
@@ -456,9 +456,9 @@
     });
 
     com.focusPage('a[name="addUser"]','#pagenation').click(function(){
-        params.tempUserId = null;
+        params.personel.userId = null;
         delete params.type;
-        params.isExpert = user.isExpert;
+        params.personel.isExpert = user.isExpert;
         com.popup4page("#layerPopUp", api.index.userEditIndex.url, "添加", null, function () {
             com.closePopup();
             userSeacher.doSearch();
@@ -573,7 +573,7 @@
     function saveBtns(){
         
         parm = {
-            "user.userId": params.tempUserId,
+            "user.userId": params.personel.userId,
             "user.userPhoto":com.focusPage("#picture").val(),
             "user.identityPathF":com.focusPage("#picture1").val(),
             "user.identityPathB":com.focusPage("#picture2").val()

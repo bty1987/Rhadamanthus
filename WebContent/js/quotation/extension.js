@@ -1,19 +1,23 @@
 jQuery(function($) {
 
     var extension = {
-        decorationOrderId: params.decorationOrderId,
+
+        orderId: params.quotation.orderId,
+
         saveBtn: com.focusPage("#saveBtn").on("click", saveData),
         cancellBtn: com.focusPage("#cancelBtn"),
         modal: com.focusPage("#extensionModal"),
-        extensionItems: {
+
+        items: {
             addExtensionDes: com.focusPage("#extensionDes"),
             addExtensionType: com.focusPage("#extensionType")
         }
     };
 
     var extraParams = {
-        "extension.orderId": extension.decorationOrderId
+        "extension.orderId": extension.orderId
     };
+
     var typeDict = {
         "0": "增项",
         "1": "减项"
@@ -104,7 +108,7 @@ jQuery(function($) {
     function initQuotationList() {
 
         com.post(api.decoration.queryDecorationForCommonByOrderId, {
-            "decoration.orderId": extension.decorationOrderId
+            "decoration.orderId": extension.orderId
         }, function(res) {
 
             drawdecoration(res.decoration);
@@ -163,17 +167,18 @@ jQuery(function($) {
     // 添加按钮
     com.focusPage('#add').click(function() {
 
-        com.cleanItems(extension.extensionItems);
+        com.cleanItems(extension.items);
 
-        extension.extensionItems.addExtensionType.attr('disabled', false);
+        extension.items.addExtensionType.attr('disabled', false);
 
         extension.modal.modal("show");
     });
 
     function viewDetailExtension(extensionId, type) {
 
-        params["extensionId"] = extensionId;
-        params["extensionType"] = type;
+        params.quotation.extensionId = extensionId;
+        params.quotation.extensionType = type;
+
         com.switchPage(api.index.extensionDetailIndex.url);
     }
 
@@ -195,9 +200,9 @@ jQuery(function($) {
 
         var url;
         var options = {
-            "extension.content": extension.extensionItems.addExtensionDes.val(),
-            "extension.type": extension.extensionItems.addExtensionType.val(),
-            "extension.orderId": extension.decorationOrderId
+            "extension.content": extension.items.addExtensionDes.val(),
+            "extension.type": extension.items.addExtensionType.val(),
+            "extension.orderId": extension.orderId
         };
 
         url = api.quotation.addExtension;

@@ -1,7 +1,8 @@
 $(function() {
 
     var normood = {
-        orderId: params["accessories.orderId"],
+        orderId: params.quotation.orderId,
+
         normoods: com.focusPage('#normoods'),
         printBtn: com.focusPage('#printBtn'),
 
@@ -256,15 +257,15 @@ $(function() {
 
     function printNormood() {
 
-        params.quotationId = quotation.qid;
-        params['decorationOrderId'] = normood.orderId;
-        params.subtype = 0;
+        params.quotation.quotationId = quotation.qid;
+        params.quotation.orderId = normood.orderId;
+        params.quotation.subtype = 0;
 
         var $subtypes = com.focusPage('input[name="type"]:checked', '#printNormoodModal #subtype');
 
         $.each($subtypes, function(i, v) {
 
-            params.subtype = parseInt(params.subtype) + parseInt($(v).attr('value'));
+            params.quotation.subtype = parseInt(params.quotation.subtype) + parseInt($(v).attr('value'));
         });
 
         com.popup("打印定额", "/views/quotation/normoodOutput.html", null, null, true);

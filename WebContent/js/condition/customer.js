@@ -315,4 +315,23 @@ Condition.addupRule("customer", {
             validate:null
         }
     },
+    "survey-createTime": {
+        label: "创建时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "createTime",
+            op: "cn",
+            validate: null
+        }
+    },
+    "survey-sendTime": {
+        label: "推送时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "sendTime",
+            op: "cn",
+            validate: null
+        }
+    },
+
 });

@@ -1,4 +1,4 @@
-$(function () {
+$(function() {
 
     var manifest = {
         items: {},
@@ -6,19 +6,19 @@ $(function () {
         status: {}
     };
 
-    com.post(api.ds.manifest, {}, function (res) {
-        $.each(res.manifestType, function (i, v) {
+    com.post(api.ds.manifest, {}, function(res) {
+        $.each(res.manifestType, function(i, v) {
             manifest.manifestType.push(v.value);
         });
 
-        $.each(res.manifestStatus, function (i, v) {
+        $.each(res.manifestStatus, function(i, v) {
             manifest.status[v.key] = v.value;
         });
     }, null, false);
 
-    var displayFunc = (function () {
+    var displayFunc = (function() {
 
-        var renderList = function (tableId, listData) {
+        var renderList = function(tableId, listData) {
             var $tableWrap = com.focusPage('#' + tableId);
 
             if (listData && listData.length) {
@@ -27,7 +27,7 @@ $(function () {
                 var $ulData = $('<ul></ul>').addClass('flex-table');
                 $tableWrap.append($ulTitle).append($ulData);
 
-                $.each(listData, function (i, v) {
+                $.each(listData, function(i, v) {
                     var $liLine = creatLine(i, v, i == listData.length - 1);
 
                     $liLine.appendTo($ulTitle);
@@ -35,7 +35,7 @@ $(function () {
             }
         };
 
-        var createTableTitle = function () {
+        var createTableTitle = function() {
 
             var $ulTitle = $('<ul></ul>').addClass('flex-table');
             var $liTitle = $('<li></li>').addClass('line table-title');
@@ -45,7 +45,7 @@ $(function () {
 
             var titleName = "编号,创建人,创建时间,货单时间,状态,类型,备注";
 
-            $.each(titleName.split(','), function (i, v) {
+            $.each(titleName.split(','), function(i, v) {
                 var $cell = $('<div></div>').addClass('cell').html(v);
                 $cell.appendTo($contentWrap);
             });
@@ -57,24 +57,16 @@ $(function () {
             return $ulTitle;
         };
 
-        var creatLine = function (i, v, lastFlag) {
+        var creatLine = function(i, v, lastFlag) {
 
             var $liLine = $('<li></li>').addClass('line');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
             var $contentWrap = $('<div></div>').addClass('line-wrap content col7');
 
-            var propertyArr = [
-                [v.code, 'blue'],
-                [v.creater.currentName ? v.creater.currentName : '---', 'grey'],
-                [v.createTime, 'green'],
-                [v.manifestTime, 'green'],
-                [manifest.status[v.status], 'red'],
-                [manifest.manifestType[parseInt(v.type) - 1] ? manifest.manifestType[parseInt(v.type) - 1] : '---', 'red'],
-                [v.comment == null ? "" : v.comment, 'grey']
-            ];
+            var propertyArr = [[v.code, 'blue'], [v.creater.currentName ? v.creater.currentName : '---', 'grey'], [v.createTime, 'green'], [v.manifestTime, 'green'], [manifest.status[v.status], 'red'], [manifest.manifestType[parseInt(v.type) - 1] ? manifest.manifestType[parseInt(v.type) - 1] : '---', 'red'], [v.comment == null ? "" : v.comment, 'grey']];
 
-            $.each(propertyArr, function (index, v) {
+            $.each(propertyArr, function(index, v) {
                 var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
@@ -91,7 +83,7 @@ $(function () {
             var $btnConfirm = $('<li></li>').append($('<a></a>').html('确认'));
             var $btnCR = $('<li></li>').append($('<a></a>').html('进退'));
             var $btnXB = $('<li></li>').append($('<a></a>').html('出返'));
-            //var $btnCA = $('<li></li>').append($('<a></a>').html('冲销'));
+            // var $btnCA = $('<li></li>').append($('<a></a>').html('冲销'));
             var $btnImport = $('<li></li>').append($('<a></a>').html('导出'));
             var $btnPrint = $('<li></li>').append($('<a></a>').html('打印'));
 
@@ -107,84 +99,77 @@ $(function () {
             $cellOption.appendTo($optionWrap);
             $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
-            $btnView.click(function () {
-                params["manifest.mid"] = v.mid;
+            $btnView.click(function() {
+                params.manifest.mid = v.mid;
                 com.popup4page("#layerPopUp", "views/manifest/manifest4view.html", "查看__货单号" + v.code)
             });
 
-            $btnEdit.click(function () {
+            $btnEdit.click(function() {
 
                 if (v.status != 0) {
                     com.showAlert(com.warning, "货单状态不可操作");
                     return false;
                 }
 
-                params["manifest.mid"] = v.mid;
+                params.manifest.mid = v.mid;
                 com.popup4page("#layerPopUp", "views/manifest/manifest2edit.html", "编辑__货单号" + v.code)
             });
 
-            $btnConfirm.click(function () {
+            $btnConfirm.click(function() {
 
                 if (v.status != 0) {
                     com.showAlert(com.warning, "货单状态不可操作");
                     return false;
                 }
 
-                com.showConfirm('是否确认订单?', function (result) {
-                    com.post(api.inventory.confirmManifest, {"manifest.mid": v.mid}, function (res) {
+                com.showConfirm('是否确认订单?', function(result) {
+                    com.post(api.inventory.confirmManifest, {
+                        "manifest.mid": v.mid
+                    }, function(res) {
                         com.showAlert(com.info, "操作成功");
                         seacher.doSearch();
                     });
                 })
             });
 
-            $btnCR.click(function () {
+            $btnCR.click(function() {
 
                 if (v.status != 1) {
                     com.showAlert(com.warning, "货单状态不可操作");
                     return false;
                 }
 
-//                advanceRetreatManifest(v.mid, v.status);
+                // advanceRetreatManifest(v.mid, v.status);
 
-                params["manifest.mid"] = v.mid;
+                params.manifest.mid = v.mid;
                 com.popup4page("#layerPopUp", "views/manifest/manifest2cr.html", "进退__货单号" + v.code)
             });
 
-            $btnXB.click(function () {
+            $btnXB.click(function() {
 
                 if (v.status != 1) {
                     com.showAlert(com.warning, "货单状态不可操作");
                     return false;
                 }
 
-//                sendReturnManifest(v.mid, v.status, v.sid);
+                // sendReturnManifest(v.mid, v.status, v.sid);
 
-                params["manifest.mid"] = v.mid;
+                params.manifest.mid = v.mid;
                 com.popup4page("#layerPopUp", "views/manifest/manifest2xb.html", "出返__货单号" + v.code)
             });
 
-            $btnImport.click(function () {
+            $btnImport.click(function() {
                 exportManifest(v.mid);
             });
 
-            //打印按钮
-            $btnPrint.click(function () {
+            // 打印按钮
+            $btnPrint.click(function() {
 
-                params["code"] = v.code;
-                params["createTime"] = v.createTime;
-                params["creater.userName"] = v.creater.userName;
-                params["manifestTime"] = v.manifestTime;
-                params["mid"] = v.mid;
-                params["status"] = v.status;
-                params["total"] = v.total;
-                params["type"] = v.type;
+                params.manifest.manifest = v;
 
-//                printManifest(v.mid,v.code);
+                // printManifest(v.mid,v.code);
 
-                params["manifest.mid"] = v.mid;
-
-                com.popup("货单号 : " + v.code, api.index.manifestPrintIndex.url, function () {
+                com.popup("货单号 : " + v.code, api.index.manifestPrintIndex.url, function() {
                     parent.layer.getFrameIndex(window.name);
                 }, null, true);
             });
@@ -193,45 +178,33 @@ $(function () {
         };
 
         return {
-            init: function (tableId, listData) {
+            init: function(tableId, listData) {
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
-            drawLine: function (v) {
+            drawLine: function(v) {
                 return creatLine(v);
             }
         };
     })();
 
-
     var _condArr = ["inventory-manifest-code", "inventory-accessories-createrName", "inventory-manifest-createTime", "inventory-manifest-manifestTime", "inventory-manifest-manifestType", "inventory-manifest-manifestStatus"];
 
     var seacher = new Searcher();
 
-    seacher.init(_condArr, "condList", api.inventory.pageManifest, function (data) {
+    seacher.init(_condArr, "condList", api.inventory.pageManifest, function(data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "manifestPostData", null, false, null, null, 'resultList');
 
     function exportManifest(mid) {
-        com.post(api.inventory.queryManifestItemByMid, {"manifest.mid": mid}, function (res) {
+        com.post(api.inventory.queryManifestItemByMid, {
+            "manifest.mid": mid
+        }, function(res) {
 
             $.exceler({
-                column: [
-                    ['商品编号', 'goods.no'],
-                    ['商品名', 'goods.name'],
-                    ['单位', 'goods.measurementUnit'],
-                    ['颜色', 'color.name'],
-                    ['规格', 'format.info'],
-                    ['进货仓库', 'instorehouse.name'],
-                    ['出货仓库', 'outstorehouse.name'],
-                    ['入库价', 'inprice'],
-                    ['出库价', 'outprice'],
-                    ['数量', 'num'],
-                    ['件数', 'goods.pieceNum'],
-                    ['备注', 'comment']
-                ],
+                column: [['商品编号', 'goods.no'], ['商品名', 'goods.name'], ['单位', 'goods.measurementUnit'], ['颜色', 'color.name'], ['规格', 'format.info'], ['进货仓库', 'instorehouse.name'], ['出货仓库', 'outstorehouse.name'], ['入库价', 'inprice'], ['出库价', 'outprice'], ['数量', 'num'], ['件数', 'goods.pieceNum'], ['备注', 'comment']],
                 list: res.manifestItems
-            }, function (v) {
+            }, function(v) {
                 v.instorehouse.name = v.instorehouse.name == null ? "---" : v.instorehouse.name;
                 v.outstorehouse.name = v.outstorehouse.name == null ? "---" : v.outstorehouse.name;
             });
@@ -239,4 +212,3 @@ $(function () {
     }
 
 });
-

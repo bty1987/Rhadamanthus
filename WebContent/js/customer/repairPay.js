@@ -1,7 +1,7 @@
 jQuery(function ($) {
 
     var repairPay = {
-        aid: params.aid,
+        aid: params.customer.aid,
         repairPayData: com.focusPage("#repairPayData"),
         addRepairPay: com.focusPage("#addRepairPay"),
         items: {

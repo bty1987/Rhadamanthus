@@ -871,6 +871,13 @@ var Searcher = function() {
 
                         $('<strong></strong>').html(value.name + ": ").appendTo($liProperty);
                         $('<b></b>').html(info).addClass(value.clazz).appendTo($liProperty);
+
+                        if (value.click && typeof value.click == "function") {
+                            $liProperty.click(function() {
+
+                                value.click(v);
+                            }).css("cursor", "pointer");
+                        }
                     });
 
                     $.each(basicConf.linevent, function(index, button) {

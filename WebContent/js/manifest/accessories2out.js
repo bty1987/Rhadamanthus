@@ -2,8 +2,8 @@
 jQuery(function ($) {
 
     var accessories = {
-        orderId: params["accessories.orderId"],
-        aid: params["accessories.aid"],
+        orderId: params.manifest.orderId,
+        aid: params.manifest.aid,
         items: {
             customerName: com.focusPage("#customer"),
             des: com.focusPage("#comment")

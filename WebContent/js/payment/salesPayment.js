@@ -252,7 +252,7 @@ $(function () {
 
             //打印
             $btnPrint.click(function () {
-                printPayment(v.sales.orderId, v.salesReceipt.srId, v);
+                printPayment(v);
             });
 
             //更新
@@ -666,9 +666,10 @@ $(function () {
     });
 
     //打印
-    function printPayment(orderId, srId) {
-    	params.salesReceiptSrId = srId;
-        com.popup("专用收款收据__装修单号: " + orderId, api.index.salesPaymentReceiptIndex.url, function () {
+    function printPayment(salesPayment) {
+    	params.payment.srId = salesPayment.salesReceipt.srId;
+        params.payment.cid = salesPayment.sales.customer.cid;
+        com.popup("专用收款收据__装修单号: " + salesPayment.sales.orderId, api.index.salesPaymentReceiptIndex.url, function () {
             parent.layer.getFrameIndex(window.name);
         }, null, true);
     }

@@ -27,7 +27,7 @@ $(function (){
             comment: com.focusPage("#comment")
         },
 
-        cid : params.cid,
+        cid : params.customer.aid,
         ctid : null,
         complaintType : {},
         complaintStatus : {},
@@ -144,7 +144,7 @@ $(function (){
 
                 $btnComplaink.click(function (e) {
 
-                    com.popup4mini("#miniPopUp", "#layerSubmits","跟踪内容", function () {
+                    com.popup4mini("#miniPopUp", "#layerSubmits", "跟踪内容", function () {
                         queryComplack(v.ctid);
                     },  function () {
                         com.focusPage('#complaintList').empty();

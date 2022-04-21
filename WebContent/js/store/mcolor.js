@@ -1,33 +1,35 @@
-$(function(){
-    
+$(function() {
+
     var mcolor = {
-        gid: params.goods.gid,
-        
+        gid: params.store.goods.gid,
+
         items: {
             name: com.focusPage(".cell.name input"),
         },
-        
+
         btns: {
             submitBtn: com.focusPage(".color-green.green"),
             clearBtn: com.focusPage(".color-red.red")
         }
     }
-    
+
     mcolor.btns.submitBtn.click(createColor);
     mcolor.btns.clearBtn.click(clearColor);
-    
-    var displayFunc  = (function(){
 
-        /*表格样式*/
-        var renderList = function(tableId,listData){
-            var $tableWrap = com.focusPage('#'+ tableId);
+    var displayFunc = (function() {
 
-            if(listData && listData.length){
+        /* 表格样式 */
+        var renderList = function(tableId, listData) {
+
+            var $tableWrap = com.focusPage('#' + tableId);
+
+            if (listData && listData.length) {
                 var $ulTitle = createTableTitle();
                 var $ulData = $('<ul></ul>').addClass('flex-table');
                 $tableWrap.append($ulTitle).append($ulData);
 
-                $.each(listData,function(i, v){
+                $.each(listData, function(i, v) {
+
                     var $liLine = creatLine(i, v, i == listData.length - 1);
                     $liLine.appendTo($ulTitle);
                 });
@@ -35,8 +37,9 @@ $(function(){
             }
         };
 
-        /*表格头*/
-        var createTableTitle = function(){
+        /* 表格头 */
+        var createTableTitle = function() {
+
             var $ulTitle = $('<ul></ul>').addClass('flex-table');
             var $liTitle = $('<li></li>').addClass('line table-title');
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index'));
@@ -44,7 +47,8 @@ $(function(){
 
             var titleName = '颜色,状态';
 
-            $.each(titleName.split(','), function (i, v) {
+            $.each(titleName.split(','), function(i, v) {
+
                 $('<div></div>').addClass('cell').html(v).appendTo($contentWrap);
             });
 
@@ -55,18 +59,17 @@ $(function(){
             return $ulTitle;
         };
 
-        /*表格体*/
-        var creatLine = function (i, v, lastFlag) {
+        /* 表格体 */
+        var creatLine = function(i, v, lastFlag) {
+
             var $liLine = $('<li></li>').addClass('line');
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col2');
 
-            var propertyArr = [
-                [v.color,'grey'],
-                [v.status =="0" ? "启用" : "禁用",'red']
-            ];
+            var propertyArr = [[v.color, 'grey'], [v.status == "0" ? "启用" : "禁用", 'red']];
 
-            $.each(propertyArr, function (i, v) {
+            $.each(propertyArr, function(i, v) {
+
                 var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
@@ -88,13 +91,15 @@ $(function(){
 
             $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
-            /*状态启用*/
-            $btnStart.click(function(){
+            /* 状态启用 */
+            $btnStart.click(function() {
+
                 updateStatus(v.cid, 0);
             });
-            
-            /*状态禁用*/
-            $btnBan.click(function(){
+
+            /* 状态禁用 */
+            $btnBan.click(function() {
+
                 updateStatus(v.cid, 1);
             });
 
@@ -102,61 +107,67 @@ $(function(){
         };
 
         return {
-            init : function(tableId,listData){
+            init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
+                renderList(tableId, listData);
 
             },
-            drawLine : function(v){
+            drawLine: function(v) {
+
                 return creatLine(v);
             }
         }
     })();
-    
-    /*分页*/
-    function doSearcher(){
-        
+
+    /* 分页 */
+    function doSearcher() {
+
         var options = {
             "mcolor.gid": mcolor.gid
         }
-        
-        com.post(api.store.queryMcolorByGid, options, function(res){
+
+        com.post(api.store.queryMcolorByGid, options, function(res) {
+
             displayFunc.init('resultListColor', res.mcolors);
         })
     }
-    
+
     doSearcher();
-    
-    function updateStatus(cid, status){
-        
+
+    function updateStatus(cid, status) {
+
         var options = {
-            "mcolor.cid" : cid,
-            "mcolor.status" : status
+            "mcolor.cid": cid,
+            "mcolor.status": status
         }
-        
-        com.post(api.store.updateMcolorForStatus, options, function(res){
+
+        com.post(api.store.updateMcolorForStatus, options, function(res) {
+
             doSearcher();
         });
     }
-    
-    function createColor(){
-        
-        if(com.validate('addColor', 'bottom')){
+
+    function createColor() {
+
+        if (com.validate('addColor', 'bottom')) {
             return false;
         }
-        
+
         var options = {
             "mcolor.gid": mcolor.gid,
             "mcolor.color": mcolor.items.name.val()
         };
 
-        com.post(api.store.addMcolor,options,function(){
+        com.post(api.store.addMcolor, options, function() {
+
             com.cleanItems(mcolor.items);
             doSearcher();
         })
     }
-    
-    function clearColor(){
+
+    function clearColor() {
+
         com.cleanItems(mcolor.items);
     }
 

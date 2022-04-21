@@ -30,11 +30,12 @@ var selectionDetail = (function() {
             selection.btns.printFinanceBtn.click(function() {
 
                 com.post(api.quotation.querySelectionByOrderId, {
-                    "selection.orderId": params.decorationOrderId
+                    "selection.orderId": params.quotation.orderId
                 }, function(res) {
 
-                    params.supplierPage = selectionItem.pageType == "supplier" ? true : false;
-                    params.selectionOrderId = res.selection.orderId;
+                    params.quotation.supplierPage = selectionItem.pageType == "supplier" ? true : false;
+                    params.quotation.orderId = res.selection.orderId;
+
                     com.popup("打印选材", api.index.selectionOutputIndex.url, null, null, true);
                 }, null, false);
             }), selection.btns.saveSelectionBtn.bindClick(function() {
@@ -304,22 +305,29 @@ var selectionDetail = (function() {
             var $dhead = $('<div></div>').addClass('widget-header');
             var $hname = $('<h5></h5>').append($('<strong></strong>').html(selectionItem.type[type] + "-" + name));
 
-            var _lineSet = [["name", "报价名称"], ["num", "数量"], ["btns", "功能"]];
-            var lineSet = [["name", "商品名称"], ["num", "数量"], ["btns", "功能"]];
+            var $ul = $('<ul></ul>').addClass('fl-quo-list');
+            var $row = $("<div></div>").addClass('row').css({
+                'border-bottom': '1px solid #dce8f1',
+                'margin': '0 2px 0 2px'
+            }).appendTo($ul);
 
-            var $ul = $('<ul></ul>').addClass('fl-quo-list col-xs-12');
-            var $li = $('<li></li>').addClass('fl-quo-item col-xs-6').appendTo($ul);
-            $.each(_lineSet, function(i, v) {
+            var $li = $('<li></li>').css({
+                'border': 'none',
+                'border-right': '1px solid #dce8f1'
+            }).addClass('fl-quo-item col-xs-6').appendTo($row);
 
-                var $div = $('<div></div>').addClass('cell ' + v[0]).appendTo($li);
+            $.each([["name", "报价项"], ["num", "数量"], ["btns", "功能"]], function(i, v) {
+
+                var $div = $('<div></div>').addClass('cell ' + v[0]).css('border', 'none').appendTo($li);
                 var $span = $('<span></span').addClass('cell-wrap').text(v[1]).appendTo($div);
             });
-            var $li = $('<li></li>').addClass('fl-quo-item col-xs-6').appendTo($ul);
-            $.each(lineSet, function(i, v) {
 
-                var $div = $('<div></div>').addClass('cell ' + v[0]).appendTo($li);
+            var $li = $('<li></li>').addClass('fl-quo-item col-xs-6').appendTo($row);
+
+            $.each([["name", "商品"], ["num", "数量"], ["btns", "功能"]], function(i, v) {
+
+                var $div = $('<div></div>').addClass('cell ' + v[0]).css('border', 'none').appendTo($li);
                 var $span = $('<span></span').addClass('cell-wrap').text(v[1]).appendTo($div);
-
             });
 
             $dhead.append($hname);
@@ -428,21 +436,13 @@ var selectionDetail = (function() {
 
             selection.historyPage = params.historyPage;
 
-            var orderId = params.decorationOrderId;
-            var editFlg = params.editFlg;
-            var quotationId = null;
+            var orderId = params.quotation.orderId;
+            var editFlg = params.quotation.editFlg;
+
+            var quotationId = params.quotation.quotation ? params.quotation.quotation.qid : null;
             var selectionItemType = 0;
 
-            com.post(api.decoration.queryDecorationForCommonByOrderId, {
-                "decoration.orderId": orderId
-            }, function(res) {
-
-                com.focusPage('#orderId').text(res.decoration.orderId)
-                com.focusPage('#address').text(res.decoration.house.village.name + " " + res.decoration.house.houseNumber);
-                com.focusPage('#version').text(res.decoration.version.name);
-            });
-
-            editFlg ? quotationId = params.quotationId : com.post(api.quotation.queryQuotationForDefaultByOrderId, {
+            editFlg ? quotationId = params.quotation.quotation.qid : com.post(api.quotation.queryQuotationForDefaultByOrderId, {
                 'quotation.orderId': orderId
             }, function(e) {
 
@@ -456,6 +456,15 @@ var selectionDetail = (function() {
                 com.switchPage(selection.historyPage);
                 return false;
             }
+
+            com.post(api.decoration.queryDecorationForCommonByOrderId, {
+                "decoration.orderId": orderId
+            }, function(res) {
+
+                com.focusPage('#orderId').text(res.decoration.orderId)
+                com.focusPage('#address').text(res.decoration.house.village.name + " " + res.decoration.house.houseNumber);
+                com.focusPage('#version').text(res.decoration.version.name);
+            });
 
             com.post(api.quotation.querySelectionByQid, {
                 'selection.qid': quotationId

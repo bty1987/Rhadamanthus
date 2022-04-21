@@ -132,7 +132,7 @@ $(function () {
     }, "pagenation", "workerAllocationSeacherPostData");
 
     function viewworkerAllocationDetail(orderId) {
-        params.orderId = orderId;
+        params.construction.orderId = orderId;
         com.popup4page("#stockRecordPopUp","/views/construction/workerAllocationDetail.html","查看")
     }
 

@@ -64,7 +64,7 @@ $(function () {
         if(com.validate('form')) return false;
 
         var options = {
-            'customerRecord.csid': params.csid,
+            'customerRecord.csid': params.customer.csid,
             'customerRecord.comment': createCustomerSource.items.comments.val()
         };
 
@@ -76,7 +76,7 @@ $(function () {
     }
 
     function initRecord(){
-        com.post(api.customer.queryCustomerRecord, {"customerRecord.csid": params.csid}, function (res) {
+        com.post(api.customer.queryCustomerRecord, {"customerRecord.csid": params.customer.csid}, function (res) {
             displayFunc.init('resultList1', res.customerRecords);
         });
     }

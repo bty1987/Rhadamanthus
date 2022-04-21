@@ -1,6 +1,13 @@
 jQuery(function($) {
 
     var constructionAccessory = {
+
+        cid: params.construction.cid,
+        orderId: params.construction.orderId,
+
+        aid: null,
+        caid: null,
+
         btns: {
             addConfirmBtn: com.focusPage("#addConfirmBtn"),
             updateBtn: com.focusPage("#updateBtn")
@@ -17,48 +24,47 @@ jQuery(function($) {
         },
         addItems: {
             goodsName: com.focusPage("#goodsName"),
-            goodsNo : com.focusPage("#goodsNo"),
+            goodsNo: com.focusPage("#goodsNo"),
             category: com.focusPage('#category'),
             brand: com.focusPage('#brand'),
             measurementUnit: com.focusPage('#measurementUnit'),
-            addCheckup:com.focusPage("#addCheckup"),
+            addCheckup: com.focusPage("#addCheckup"),
             addNumLimit: com.focusPage("#addNumLimit")
         },
-        aid: null,
-        caid: null,
-        isCheckup : {},
-        cid: params.cid,
-        orderId: params.orderId
+
+        isCheckup: {},
+
     };
 
     constructionAccessory.btns.addConfirmBtn.bindClick(addAccessory);
     constructionAccessory.btns.updateBtn.bindClick(update);
 
-    constructionAccessory.modals.addModal.on("hide.bs.modal", function () {
+    constructionAccessory.modals.addModal.on("hide.bs.modal", function() {
         com.cleanItems(constructionAccessory.addItems);
         com.clearValidator();
         com.closeTip();
     });
 
-    constructionAccessory.modals.updateModal.on("hide.bs.modal", function () {
+    constructionAccessory.modals.updateModal.on("hide.bs.modal", function() {
         com.clearValidator();
         com.closeTip();
     });
 
-    com.post(api.ds.construction, {}, function (res) {
+    com.post(api.ds.construction, {}, function(res) {
         constructionAccessory.items.checkup.bindData(res.isCheckup, "key", "value");
         constructionAccessory.addItems.addCheckup.bindData(res.isCheckup, "key", "value");
         constructionAccessory.isCheckup = res.isCheckup.split("key", "value");
     }, null, false);
 
+    com.initTypeahead("goodsName", api.data.queryAoodsByName, "aoods.goods.name", {
+        "orderId": constructionAccessory.orderId
+    }, "aoodes", "gid", "name", function(list, k, v) {
 
-    com.initTypeahead("goodsName", api.data.queryAoodsByName, "aoods.goods.name", {"orderId" : constructionAccessory.orderId}, "aoodes", "gid", "name", function(list, k, v){
-
-        $.each(list, function (index, val) {
+        $.each(list, function(index, val) {
 
             if (val.goods.gid == k) {
 
-                constructionAccessory.aid =  val.aid;
+                constructionAccessory.aid = val.aid;
 
                 constructionAccessory.checkup = val.checkup;
 
@@ -72,14 +78,14 @@ jQuery(function($) {
         return v;
     });
 
-    var displayFunc = (function () {
+    var displayFunc = (function() {
 
-        var renderList = function (tableId, listData) {
+        var renderList = function(tableId, listData) {
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
-                $.each(listData, function (i, v) {
+                $.each(listData, function(i, v) {
                     var $liLine = creatLine(v);
 
                     $liLine.appendTo($ul);
@@ -89,7 +95,7 @@ jQuery(function($) {
             }
         };
 
-        var creatLine = function (v) {
+        var creatLine = function(v) {
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid')
             var $title = $('<small></small>').addClass('blue').html(' ' + v.aoods.goods.name);
@@ -98,19 +104,9 @@ jQuery(function($) {
 
             var $btnUpdate = $("<a></a>").addClass("btn btn-minier btn-yellow").html("更新");
 
-            var propertyArr = [
-                ["商品编号: ", v.aoods.goods.no, "grey"],
-                ["品类: ", v.aoods.goods.category, "grey"],
-                ["品牌: ", v.aoods.goods.brand, "grey"],
-                ["单位: ", v.aoods.goods.measurementUnit, "red"],
-                ["辅类名称: ", v.aoods.accessoriesType.name, "grey"],
-                ["数量限制: ", v.numLimit, "blue"],
-                ["数量: ", v.num, "blue"],
-                ["总额: ", v.total, "blue"],
-                ["验证标识: ",constructionAccessory.isCheckup[v.checkup], "red"],
-            ];
+            var propertyArr = [["商品编号: ", v.aoods.goods.no, "grey"], ["品类: ", v.aoods.goods.category, "grey"], ["品牌: ", v.aoods.goods.brand, "grey"], ["单位: ", v.aoods.goods.measurementUnit, "red"], ["辅类名称: ", v.aoods.accessoriesType.name, "grey"], ["数量限制: ", v.numLimit, "blue"], ["数量: ", v.num, "blue"], ["总额: ", v.total, "blue"], ["验证标识: ", constructionAccessory.isCheckup[v.checkup], "red"], ];
 
-            $.each(propertyArr, function (index, value) {
+            $.each(propertyArr, function(index, value) {
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -121,7 +117,7 @@ jQuery(function($) {
             $btnDiv.append($btnUpdate);
             $h3.append($title).append($btnDiv);
 
-            $btnUpdate.click(function () {
+            $btnUpdate.click(function() {
 
                 constructionAccessory.caid = v.caid;
 
@@ -133,11 +129,11 @@ jQuery(function($) {
         };
 
         return {
-            init: function (tableId, listData) {
+            init: function(tableId, listData) {
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
-            drawLine: function (v) {
+            drawLine: function(v) {
                 return creatLine(v);
             }
         }
@@ -145,34 +141,34 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.init([], "condList", api.construction.pageConstructionAccessory, function (data) {
+    searcher.init([], "condList", api.construction.pageConstructionAccessory, function(data) {
         displayFunc.init('resultList', data);
-    }, "pagenation", "constructionAccessoryPostDate", {"constructionAccessory.cid": constructionAccessory.cid}, false, null,function(){
+    }, "pagenation", "constructionAccessoryPostDate", {
+        "constructionAccessory.cid": constructionAccessory.cid
+    }, false, null, function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addConstructionAccessory').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         return [$adda];
-    },'resultList');
+    }, 'resultList');
 
     com.focusPage("#addConstructionAccessory").click(function() {
         constructionAccessory.modals.addModal.modal("show");
     });
 
     function addAccessory() {
-        if (com.validate('addModal')) {
-            return false;
-        };
+        if (com.validate('addModal')) { return false; };
 
         var options = {
             "constructionAccessory.cid": constructionAccessory.cid,
             "constructionAccessory.aoods.aid": constructionAccessory.aid,
             "constructionAccessory.checkup": constructionAccessory.addItems.addCheckup.val(),
-            "constructionAccessory.numLimit":constructionAccessory.addItems.addNumLimit.val(),
+            "constructionAccessory.numLimit": constructionAccessory.addItems.addNumLimit.val(),
         };
 
-        com.post(api.construction.addConstructionAccessory, options, function (res) {
+        com.post(api.construction.addConstructionAccessory, options, function(res) {
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
         });
@@ -180,9 +176,7 @@ jQuery(function($) {
     };
 
     function update() {
-        if (com.validate('updateModal')) {
-            return false;
-        };
+        if (com.validate('updateModal')) { return false; };
 
         var options = {
             "constructionAccessory.caid": constructionAccessory.caid,
@@ -190,7 +184,7 @@ jQuery(function($) {
             "constructionAccessory.numLimit": constructionAccessory.items.numLimit.val()
         };
 
-        com.post(api.construction.updateConstructionAccessory, options, function (res) {
+        com.post(api.construction.updateConstructionAccessory, options, function(res) {
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
         });

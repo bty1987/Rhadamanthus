@@ -97,9 +97,7 @@ var QuotationDetail = (function() {
             var normnumtotal = 0, storenumtotal = 0;
             var $domains = com.focusPage('#quotationNormoodItem0 .fl-quo-item.item');
 
-            if (!$domains.length) {
-                return false;
-            }
+            if (!$domains.length) { return false; }
 
             $domains.each(function(i, v) {
 
@@ -121,9 +119,7 @@ var QuotationDetail = (function() {
 
             var $domains = com.focusPage('#quotationNormoodItem1 .fl-quo-item.item');
 
-            if (!$domains.length) {
-                return false;
-            }
+            if (!$domains.length) { return false; }
 
             $domains.each(function(i, v) {
 
@@ -507,9 +503,7 @@ var QuotationDetail = (function() {
                 "quotation.qid": quo.quotationId
             }, quo.basicParams);
 
-            if (!npids.length) {
-                return;
-            }
+            if (!npids.length) { return; }
 
             $.each(npids, function(i, v) {
 
@@ -603,16 +597,17 @@ var QuotationDetail = (function() {
 
             quo.historyPage = params.historyPage;
 
-            quo.quotationId = params.quotationId;
-            quo.orderid = params.decorationOrderId;
+            quo.quotationId = params.quotation.quotation ? params.quotation.quotation.qid : null;
+            quo.orderid = params.quotation.orderId;
 
-            var orderId = params.decorationOrderId;
-            var editFlg = params.editFlg;
-            editFlg ? quotationId = params.quotationId : com.post(api.quotation.queryQuotationForDefaultByOrderId, {
+            var orderId = params.quotation.orderId;
+            var editFlg = params.quotation.editFlg;
+
+            editFlg ? quotationId = quo.quotationId : com.post(api.quotation.queryQuotationForDefaultByOrderId, {
                 'quotation.orderId': orderId
-            }, function(e) {
+            }, function(res) {
 
-                quo.quotationId = e.quotation.qid;
+                quo.quotationId = res.quotation.qid;
             }, null, false);
 
             if (!quo.quotationId) {

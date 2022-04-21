@@ -219,10 +219,10 @@ jQuery(function($) {
 
 			//打印
 			$btnPrint.click(function(){
-				params.decorationOrderSOrderId = v.decoration.orderId;
-				params.servicePaymentSOrderId = v.decoration.orderId;
-				params.serviceReceiptSrId = v.serviceReceipt.srId;
-				com.popup("专用收款收据__装修单号:" + v.decoration.orderId, api.index.servicePaymentReceiptIndex.url ,function () {
+				params.payment.orderId = v.decoration.orderId;
+				params.payment.serId = v.serviceReceipt.srId;
+				params.payment.cid = v.decoration.customer.cid;
+				com.popup("专用收款收据__装修单号:" + v.decoration.orderId, api.index.servicePaymentReceiptIndex.url, function () {
 					parent.layer.getFrameIndex(window.name);
 				},null,true)
 			});
@@ -470,8 +470,8 @@ jQuery(function($) {
 					['服务费', 'serviceMoney'],
 					['收款人', 'serviceReceipt.collecter.currentName'],
 					['收款时间', 'serviceReceipt.collectTime'],
-					['类型', 'type == "0" ? "收款" : "退款"'],
-					['状态', 'status == "1" ? "已付款" : "已确认"'],
+					['类型', 'type'],
+					['状态', 'status'],
 					['备注', 'comment'],
 					['现金', 'serviceReceipt.cash'],
 					['刷卡', ['serviceReceipt.bank', 'serviceReceipt.bankInfo']],
@@ -512,6 +512,8 @@ jQuery(function($) {
 
 				v.serviceReceipt.installBank = v.serviceReceipt.installment != null && v.serviceReceipt.installment != "0" ? servicePayment.bankInfo[v.serviceReceipt.installBank] : '';
 				v.serviceReceipt.accountsBank = v.serviceReceipt.accounts != null && v.serviceReceipt.accounts != "0" ? servicePayment.accountsInfo[v.serviceReceipt.accountsBank] : '';
+				v.type = v.type == "0" ? "收款" : "退款";
+				v.status = v.status == "1" ? "已付款" : "已确认";
 			});
 		});
 	});

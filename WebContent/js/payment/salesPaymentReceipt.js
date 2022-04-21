@@ -1,20 +1,23 @@
-
 jQuery(function($) {
+
     var receipt = {
+        htmlName: "sales",
         paymentTypeData: {},
-        advanceTypeData: {"0":"-"},
+        advanceTypeData: {"0": "-"},
         decorationTypeData: {},
         commonInfo: {},
         paymentItems: [],
         receiptItems: [],
         bankInfo: {},
         checkBankInfo: {},
-        receiptsNum:0,
-        receiptNo: ""
+        receiptsNum: 0,
+        receiptNo: "",
+        organization: parent.params.company.srganization.name,
+        url: parent.api.index.salesPaymentReceiptIndex.url
     };
 
     api = parent.api;
-    config = parent.config ;
+    config = parent.config;
     server = parent.server;
     utils = parent.utils;
     com = parent.com;
@@ -22,8 +25,10 @@ jQuery(function($) {
 
     params = parent.params;
 
-    com.post(api.common.queryReceiptType, {}, function (res) {
-        $.each(res.receiptTypes, function (i, v) {
+    com.post(api.common.queryReceiptType, {}, function(res) {
+
+        $.each(res.receiptTypes, function(i, v) {
+
             if (v.type == 2) {
                 receipt.bankInfo[v.no] = v.name;
             } else if (v.type == 3) {
@@ -35,31 +40,34 @@ jQuery(function($) {
 
     var querySalesPaymentForNotInitBySrId = api.payment.querySalesPaymentForNotInitBySrid;
 
-    com.post(api.ds.payment, {}, function(res){
-        for(var i=0;i<res.advanceTypeForSalesMaterial.length;i++){
+    com.post(api.ds.payment, {}, function(res) {
+
+        for ( var i = 0; i < res.advanceTypeForSalesMaterial.length; i++) {
             var type = res.advanceTypeForSalesMaterial[i];
             receipt.advanceTypeData[type.key] = type.value;
         }
 
-        for(var i=0;i<res.materialPaymentType.length;i++){
+        for ( var i = 0; i < res.materialPaymentType.length; i++) {
             var paymentType = res.materialPaymentType[i];
             receipt.paymentTypeData[paymentType.key] = paymentType.value;
         }
 
     }, null, false);
 
-    com.post(api.ds.decoration, {}, function(res){
+    com.post(api.ds.decoration, {}, function(res) {
+
         receipt.decorationTypeData = res.typeness;
     }, null, false);
 
-    com.post(querySalesPaymentForNotInitBySrId, {"salesReceipt.srId":params.salesReceiptSrId}, function(res){
+    com.post(querySalesPaymentForNotInitBySrId, {"salesReceipt.srId": params.payment.srId}, function(res) {
+
         var salesPayments = res.salesPayments;
         var commonInfo = {};
         var paymentItems = [];
         var salesBrand = "";
         var salesPaymentDes = "";
 
-        for(var i=0;i<salesPayments.length;i++){
+        for ( var i = 0; i < salesPayments.length; i++) {
             var salesPayment = salesPayments[i];
             salesBrand = salesPayment.sales.brand;
 
@@ -73,12 +81,16 @@ jQuery(function($) {
             commonInfo["collectUserName"] = salesPayment.salesReceipt.collecterName;
             commonInfo["collectTime"] = salesPayment.salesReceipt.collectTime;
 
-            receipt.paymentItems.push({"paymentType": receipt.paymentTypeData[salesPayment.type], "money": salesPayment.referMoney, "salesBrand": salesBrand});
-            
+            receipt.paymentItems.push({
+                "paymentType": receipt.paymentTypeData[salesPayment.type],
+                "money": salesPayment.referMoney,
+                "salesBrand": salesBrand
+            });
+
             commonInfo["total"] = 0.0;
         }
 
-        if(salesPayment.salesReceipt.comment && salesPayment.salesReceipt.comment != ""){
+        if (salesPayment.salesReceipt.comment && salesPayment.salesReceipt.comment != "") {
             salesPaymentDes = salesPayment.salesReceipt.comment
         }
 
@@ -86,72 +98,72 @@ jQuery(function($) {
 
         receipt.commonInfo = commonInfo;
 
-    }, null ,false);
+    }, null, false);
 
     var querysalesReceiptBySrId = api.payment.querySalesReceiptBySrId;
-    
 
-    com.post(querysalesReceiptBySrId, {"salesReceipt.srId":params.salesReceiptSrId}, function(res){
+    com.post(querysalesReceiptBySrId, {"salesReceipt.srId": params.payment.srId}, function(res) {
+
         var salesReceipt = res.salesReceipt;
 
         receipt.salesReceipt = res.salesReceipt;
 
-        if(parseFloat(salesReceipt.cash) != 0){
+        if (parseFloat(salesReceipt.cash) != 0) {
             var tem = {
-                "money":parseFloat(salesReceipt.cash),
-                "paymentWay":"现金"
+                "money": parseFloat(salesReceipt.cash),
+                "paymentWay": "现金"
             };
             receipt.receiptItems.push(tem);
-            receipt.receiptsNum  =  receipt.receiptsNum +1;
-            
+            receipt.receiptsNum = receipt.receiptsNum + 1;
+
             receipt.commonInfo.total += parseFloat(salesReceipt.cash);
         }
-        
-        if(parseFloat(salesReceipt.bank) != 0){
+
+        if (parseFloat(salesReceipt.bank) != 0) {
             var bankParams = getBankInfo(salesReceipt.bankInfo, 0, null, receipt.receiptsNum, receipt.bankInfo, null, receipt.receiptItems);
-            receipt.receiptsNum  =  bankParams;
-            
+            receipt.receiptsNum = bankParams;
+
             receipt.commonInfo.total += parseFloat(salesReceipt.bank);
         }
-        
-        if(parseFloat(salesReceipt.checkv) != 0){
+
+        if (parseFloat(salesReceipt.checkv) != 0) {
             var checkvParams = getBankInfo(salesReceipt.checkvBank, 1, parseFloat(salesReceipt.checkv), receipt.receiptsNum, null, receipt.checkBankInfo, receipt.receiptItems);
-            receipt.receiptsNum  =  checkvParams;
-            
+            receipt.receiptsNum = checkvParams;
+
             receipt.commonInfo.total += parseFloat(salesReceipt.checkv);
         }
-        
-        if(parseFloat(salesReceipt.coupon) != 0){
+
+        if (parseFloat(salesReceipt.coupon) != 0) {
             var tem = {
-                "money":parseFloat(salesReceipt.coupon),
-                "paymentWay":"优惠券"
+                "money": parseFloat(salesReceipt.coupon),
+                "paymentWay": "优惠券"
             };
-            receipt.receiptsNum  =  receipt.receiptsNum +1;
+            receipt.receiptsNum = receipt.receiptsNum + 1;
             receipt.receiptItems.push(tem);
         }
 
-        if(parseFloat(salesReceipt.advance) != 0){
+        if (parseFloat(salesReceipt.advance) != 0) {
             var tem = {
-                "money":parseFloat(salesReceipt.advance),
-                "paymentWay":receipt.advanceTypeData[salesReceipt.advanceType] + " 预付款"
+                "money": parseFloat(salesReceipt.advance),
+                "paymentWay": receipt.advanceTypeData[salesReceipt.advanceType] + " 预付款"
             };
             receipt.receiptItems.push(tem);
-            receipt.receiptsNum  =  receipt.receiptsNum +1;
+            receipt.receiptsNum = receipt.receiptsNum + 1;
         }
 
     }, null, false);
 
+    com.post(api.decoration.queryDecorationByOrderId, {"decorationOrderId": receipt.commonInfo.orderId}, function(res) {
 
-    com.post(api.decoration.queryDecorationByOrderId, {"decorationOrderId": receipt.commonInfo.orderId}, function(res){
-        receipt.commonInfo.decorationType =  res.decoration.typeness;
+        receipt.commonInfo.decorationType = res.decoration.typeness;
     }, null, false);
 
-    if(receipt.paymentItems.length > 0){
+    if (receipt.paymentItems.length > 0) {
         createReceiptTable();
-        
+
         printer.name = "salesPayment";
         printer.args = {
-            "title" : params.company.srganization.name+"代收款收据",
+            "title": params.company.srganization.name + "代收款收据",
             "orderId": receipt.commonInfo.orderId,
             "decorationType": receipt.commonInfo.decorationType,
             "orderAddr": receipt.commonInfo.orderAddr,
@@ -164,9 +176,13 @@ jQuery(function($) {
         };
     }
 
-    paymentUtils.showContractBtn(params.salesReceiptSrId, 3, printer.args, receipt.commonInfo.customerName, receipt.receiptNo, "sales");
+    paymentUtils.initSignet(receipt.htmlName);
+    paymentUtils.initQrcode(receipt.htmlName);
+    paymentUtils.bindSignet($("#" + receipt.htmlName + "signets"));
+    paymentUtils.showContractBtn(params.payment.srId, 3, printer.args, receipt.commonInfo.customerName, receipt);
 
-    function createReceiptTable(){
+    function createReceiptTable() {
+
         var commonInfo = receipt.commonInfo;
         var paymentItems = receipt.paymentItems;
         var receiptItems = receipt.receiptItems;
@@ -177,8 +193,8 @@ jQuery(function($) {
         var headReceiptTr = $('<tr style="border:1px solid #fff; background:white; border-bottom-color:#000;"></tr>').appendTo(receiptTable);
         var headReceiptTd = $('<td colspan="5"></td>').appendTo(headReceiptTr);
         var headReceiptDiv = $('<div style="text-align: center;"></div>').appendTo(headReceiptTd);
-        receipt.receiptNo = (Array(10).join(0)+params.salesReceiptSrId).slice(-10);
-        var spanNo = $('<span style="float: left;"></span>').html("编号:"+receipt.receiptNo).appendTo(headReceiptDiv);
+        receipt.receiptNo = (Array(10).join(0) + params.payment.srId).slice(-10);
+        var spanNo = $('<span style="float: left;"></span>').html("编号:" + receipt.receiptNo).appendTo(headReceiptDiv);
         var headReceiptH2 = $('<h2 style="margin: 1px"></h2>').text(parent.params.company.srganization.name + "代收款收据").appendTo(headReceiptDiv);
 
         var orderReceiptTr = $('<tr></tr>').appendTo(receiptTable);
@@ -189,12 +205,12 @@ jQuery(function($) {
 
         var recePaymentTr = $('<tr></tr>').appendTo(receiptTable);
 
-        var balancePaymentTd = $('<td style="width: 10%; text-align: center;" rowspan=' + (paymentItems.length+1) + '></td>').html('<strong>收款信息</strong>').appendTo(recePaymentTr);
+        var balancePaymentTd = $('<td style="width: 10%; text-align: center;" rowspan=' + (paymentItems.length + 1) + '></td>').html('<strong>收款信息</strong>').appendTo(recePaymentTr);
         var typePaymentTd = $('<td style="width: 15%; text-align: center;"></td>').html('<strong>品牌</strong>').appendTo(recePaymentTr);
         var typePaymentTd = $('<td style="width: 40%; text-align: center;" colspan="2"></td>').html('<strong>收款类型</strong>').appendTo(recePaymentTr);
         var amountPaymentTd = $('<td style="width: 35%; text-align: center;"></td>').html('<strong>收款金额(元)</strong>').appendTo(recePaymentTr);
 
-        for(var j=0;j<paymentItems.length;j++){
+        for ( var j = 0; j < paymentItems.length; j++) {
             var paymentItem = paymentItems[j];
 
             var receInfoPaymentTr = $('<tr></tr>').appendTo(receiptTable);
@@ -205,26 +221,26 @@ jQuery(function($) {
 
         var receReceiptTr = $('<tr></tr>').appendTo(receiptTable);
 
-        var balanceReceiptTd = $('<td style="width: 25%; text-align: center;" rowspan=' + (receipt.receiptsNum  + 1) + ' colspan=2></td>').html('<strong>收据信息</strong>').appendTo(receReceiptTr);
+        var balanceReceiptTd = $('<td style="width: 25%; text-align: center;" rowspan=' + (receipt.receiptsNum + 1) + ' colspan=2></td>').html('<strong>收据信息</strong>').appendTo(receReceiptTr);
         var typeReceiptTd = $('<td style="width: 40%; text-align: center;"  colspan=2></td>').html('<strong>结算方式</strong>').appendTo(receReceiptTr);
         var amountReceiptTd = $('<td style="width: 35%; text-align: center;"></td>').html('<strong>收款金额(元)</strong>').appendTo(receReceiptTr);
 
         var drawpaymentWay = "";
-        for(var i=0;i<receiptItems.length;i++){
+        for ( var i = 0; i < receiptItems.length; i++) {
             var receiptItem = receiptItems[i];
 
-            if (receiptItems[i].paymentWay == "刷卡"|| receiptItems[i].paymentWay == "银行" ) {
+            if (receiptItems[i].paymentWay == "刷卡" || receiptItems[i].paymentWay == "银行") {
                 var receInfoReceiptTr = $('<tr></tr>').appendTo(receiptTable);
                 var bankInfoReceiptTd = $('<td style="width: 12%; text-align: center;" rowspan="' + (receiptItems[i].bankInfoNum) + '"></td>').text(receiptItems[i].paymentWay);
 
-                if(drawpaymentWay != receiptItems[i].paymentWay){
+                if (drawpaymentWay != receiptItems[i].paymentWay) {
                     bankInfoReceiptTd.appendTo(receInfoReceiptTr);
                     drawpaymentWay = receiptItems[i].paymentWay;
                 }
 
                 var balanceInfoReceiptTd = $('<td style="width: 28%; text-align: center;"></td>').text(receiptItems[i].bankInfo).appendTo(receInfoReceiptTr);
                 var amountInfoReceiptTd = $('<td style="width: 35%; text-align: center;"></td>').text(receiptItems[i].money).appendTo(receInfoReceiptTr);
-            }else{
+            } else {
                 var receInfoReceiptTr = $('<tr></tr>').appendTo(receiptTable);
                 var typeInfoPaymentTd = $('<td style="width: 40%; text-align: center;" colspan="2"></td>').text(receiptItem["paymentWay"]).appendTo(receInfoReceiptTr);
                 var amountInfoPaymentTd = $('<td style="width: 35%; text-align: center;"></td>').text(receiptItem["money"]).appendTo(receInfoReceiptTr);
@@ -240,16 +256,17 @@ jQuery(function($) {
         var summaryReceiptTd = $('<td colspan="5"></td>').appendTo(summaryReceiptTr);
         var summaryReceiptDiv = $('<div style="text-align: right; padding-right: 150px;"></div>').appendTo(summaryReceiptTd);
         var receReceiptSpan = $('<span></span>').text('收款人:' + receipt.salesReceipt.collecter.currentName).appendTo(summaryReceiptDiv);
-        var cashierReceiptSpan = $('<span></span>').text( '    交款人:').appendTo(summaryReceiptDiv);
+        var cashierReceiptSpan = $('<span></span>').text('    交款人:').appendTo(summaryReceiptDiv);
     }
 
     function getBankInfo(bankInfoString, type, money, receiptsNumParams, bankInfo, checkBankInfo, receipts) {
+
         var receiptsNum = receiptsNumParams;
 
-        if(bankInfoString.indexOf("#") != -1){
+        if (bankInfoString.indexOf("#") != -1) {
             var stringSrray = bankInfoString.split('#');
 
-            for (var i = 1; i < stringSrray.length - 1; i++) {
+            for ( var i = 1; i < stringSrray.length - 1; i++) {
                 var bankinfo = {};
                 if (stringSrray[i].length != 0) {
                     var _i = stringSrray[i].split('|');
@@ -259,22 +276,22 @@ jQuery(function($) {
                             "money": parseFloat(_i[1]),
                             "bankInfo": bankInfo[_i[0]],
                             "paymentWay": "刷卡",
-                            "bankInfoNum": stringSrray.length-2
+                            "bankInfoNum": stringSrray.length - 2
                         };
                     } else if (type == 1) {
                         bankinfo = {
                             "money": parseFloat(_i[1]),
                             "bankInfo": checkBankInfo[_i[0]],
                             "paymentWay": "银行",
-                            "bankInfoNum": stringSrray.length-2
+                            "bankInfoNum": stringSrray.length - 2
                         };
                     }
                     receiptsNum = receiptsNum + 1;
                     receipts.push(bankinfo);
                 }
             }
-        }else{
-            if(bankInfoString != "" && type == 1){
+        } else {
+            if (bankInfoString != "" && type == 1) {
                 var bankinfo = {
                     "money": parseFloat(money),
                     "bankInfo": checkBankInfo[bankInfoString],

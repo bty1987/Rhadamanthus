@@ -1,6 +1,7 @@
 $(function () {
     
     var village = {
+        
         saveBtn: com.focusPage("#saveBtn").on("click", saveData),
         cancellBtn: com.focusPage("#cancelBtn"),
         modal: com.focusPage("#villageModal").on("show.bs.modal", function (a) {
@@ -36,6 +37,7 @@ $(function () {
             deliveryTime: com.focusPage("#deliveryTime"),
             content: com.focusPage("#content")
         },
+        
         editFlag: !1,
         repeatFlg: !1,
         cityList: {},
@@ -127,10 +129,11 @@ $(function () {
             });
 
             $drawingedit.click(function () {
-                params.vid = v.vid;
+                
                 village.vid = v.vid;
                 village.url = v.url;
                 village.no = v.no;
+                
                 managedrawing(v.vid);
             });
 
@@ -256,7 +259,7 @@ $(function () {
         com.uploadify("#villageUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {'uploadType': 0}, 10, function(data){
             var options = {};
             
-            options["dataDrawing.sid"] = params.vid;
+            options["dataDrawing.sid"] = village.vid;
             options["dataDrawing.name"] = data.strutsUploadsFileName;
             options["dataDrawing.drawingUrl"] = data.resUrl;
             options["dataDrawing.drawingType"] = 0;

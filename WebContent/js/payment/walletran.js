@@ -69,7 +69,7 @@ $(function () {
     })();
 
     function initRecord(){
-        com.post(api.payment.queryWalletran, {"walletran.wallet.wid": params.wid}, function (res) {
+        com.post(api.payment.queryWalletran, {"walletran.wallet.wid": params.payment.wid}, function (res) {
             displayFunc.init('walletranResultList', res.walletrans);
         });
     }

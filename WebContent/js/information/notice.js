@@ -26,7 +26,7 @@ $(function(){
 
         editFlg: false,
         postParam: {},
-        pageType : params['urlLoadParams'].type,
+        pageType : params.urlLoadParams.type,
         type : null
     };
 
@@ -100,7 +100,7 @@ $(function(){
                 ["文件名:", v.fileName == "" || v.fileName == null ? "无" : v.fileName, "grey"]
             ];
 
-            //循环出li中的属性
+            // 循环出li中的属性
             $.each(propertyArr, function (index,value) {
 
                 var $liProperty = $('<li></li>');
@@ -111,7 +111,7 @@ $(function(){
             });
 
             if(v.filePath != undefined && v.filePath != null && v.filePath != ""){
-                //插入btnDown
+                // 插入btnDown
                 $divBtnWrap.append($btnDown);
             }
 
@@ -179,10 +179,10 @@ $(function(){
                     var list = com.focusPage('input[name="module"]:checked', com.focusPage('#managements'));
                     var params = {"notice.nid": v.nid};
 
-                    //if(list.length > 3){
-                    //    com.showAlert(com.warning, "部门数量最多3个");
-                    //    return false;
-                    //}
+                    // if(list.length > 3){
+                    // com.showAlert(com.warning, "部门数量最多3个");
+                    // return false;
+                    // }
 
                     var checkedDepts = com.focusPage('input[name="module"]:checked').parents('.dd-handle');
 

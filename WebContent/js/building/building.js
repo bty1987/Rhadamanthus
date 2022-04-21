@@ -278,7 +278,7 @@ jQuery(function($) {
 		
 		params.building.building = v;
 		
-		com.popup4page("#stockRecordPopUp","/views/building/buildingSchedule.html","查看");
+		com.popup4page("#stockRecordPopUp", api.index.buildingSchedule.url,"查看");
 	}
 
 	function updatePayType(bid){

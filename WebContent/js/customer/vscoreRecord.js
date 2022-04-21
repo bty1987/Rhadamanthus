@@ -6,8 +6,8 @@ jQuery(function($){
         items:{
             vscore: com.focusPage("#vscore")
         },
-        id : params.id,
-        unionId: params.unionId
+        id : params.customer.id,
+        unionId: params.customer.unionId
 
     };
 

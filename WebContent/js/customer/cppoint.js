@@ -20,9 +20,9 @@ jQuery(function($) {
             pointType: com.focusPage("#pointType"),
             point: com.focusPage("#point"),
             
-            cppointRecords: com.focusPage("#cppointRecords"),
+            cppointRecords: com.focusPage("#cppointRecords")
         },
-        cid : null,
+        cid : null
     };
     
     

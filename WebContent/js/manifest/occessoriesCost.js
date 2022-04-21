@@ -2,7 +2,7 @@ jQuery(function($) {
 
     var occessories = {
 
-        oid: params["occessoriesItem.oid"],
+        oid: params.manifest.oid,
         ocid: null,
 
         items: {

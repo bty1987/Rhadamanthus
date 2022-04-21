@@ -82,11 +82,8 @@ $(function () {
 
             var $btnGroup = $('<div></div>').addClass('btn-group');
             var $btnUl = $('<ul></ul>').addClass('dropdown-menu').addClass(lastFlag ? 'bottom-up' : '');
-            $btnGroup
-                .append($btnUl)
-                .appendTo($cellOption);
-            $liLine.append($indexWrap)
-                .append($contentWrap);
+            $btnGroup.append($btnUl).appendTo($cellOption);
+            $liLine.append($indexWrap).append($contentWrap);
             return $liLine;
         };
         return {
@@ -103,7 +100,8 @@ $(function () {
     var stockRecordSeacher = new Searcher();
     stockRecordSeacher.init([], null, api.information.pageAwardRecord, function (data) {
         displayFunc.init('resultListas', data);
-    }, "pagenationas", "pageStockRecordPostData", {"awardRecord.awardStock.asId": params.asid}, false, null);
+    }, "pagenationas", "pageStockRecordPostData", {"awardRecord.awardStock.asId": params.infomation.asid}, false, null);
+
     //弹出内容许些样式
     com.focusPage('#resultListas').css({'width': '96%', 'margin': '0 auto'});
 

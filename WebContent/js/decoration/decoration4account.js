@@ -1,11 +1,12 @@
-$(function () {
-    
+$(function() {
+
     var decorationDetail = {
-        decorationOrderId: null,
+        orderId: null,
 
         orderType: {},
         typeness: {},
-        orderTypeness: params.typeness,
+
+        orderTypeness: params.decoration.typeness,
 
         basicsItems: {
             foldFrontTotal: com.focusPage("#foldFrontTotal", "#decorationAccountContent"),
@@ -40,7 +41,7 @@ $(function () {
             minusMatch: com.focusPage("#minusMatch", "#decorationAccountContent"),
             minusUncalPrice: com.focusPage("#minusUncalPrice", "#decorationAccountContent"),
             minusDone: com.focusPage("#minusDone", "#decorationAccountContent"),
-            asDifference : com.focusPage("#asDifference", "#decorationAccountContent"),
+            asDifference: com.focusPage("#asDifference", "#decorationAccountContent"),
         },
         advanceItems: {
             contractAdvance: com.focusPage("#contractAdvance", "#decorationAccountContent"),
@@ -76,7 +77,7 @@ $(function () {
             fanglinMaterialPayment: com.focusPage("#fanglinMaterialPayment", "#decorationAccountContent"),
             salesMaterialPayment: com.focusPage("#salesMaterialPayment", "#decorationAccountContent"),
             otherPaymentType: com.focusPage("#otherPaymentType", "#decorationAccountContent"),
-            
+
             comment: com.focusPage("#comment", "#decorationAccountContent")
         },
         btns: {
@@ -90,14 +91,14 @@ $(function () {
 
     var decoration;
 
-    decorationDetail.decorationOrderId = params.decorationOrderId;
+    decorationDetail.orderId = params.decoration.orderId;
 
     var accountBasic = {
-            
+
         machingType: [],
-            
+
         dd: 0,
-            
+
         undisPrice: 0,
         disPrice: 0,
         trafficPrice: 0,
@@ -109,21 +110,21 @@ $(function () {
         couponCut: 0,
         factPrice: 0,
         servicePrice: 0,
-        
+
         addPredisPrice: 0,
         addManagePrice: 0,
         addCalPrice: 0,
         addUncalPrice: 0,
         addTotalPrice: 0,
-        
+
         reducePredisPrice: 0,
         reduceManagePrice: 0,
         reduceCalPrice: 0,
         reduceUncalPrice: 0,
         reduceTotalPrice: 0,
-        reduceDisPrice : 0,
-        reduceUndisPrice : 0,
-        asDifference : 0,
+        reduceDisPrice: 0,
+        reduceUndisPrice: 0,
+        asDifference: 0,
 
         accountForehead: 0,
         balanceSum: 0,
@@ -135,30 +136,34 @@ $(function () {
         base: 0,
         material: 0,
         service: 0,
-        
+
         cal: false,
-        
+
         isPrint: false
     };
 
-    $.each(params.viewNode, function (i, v) {
-        v.type == "account" && v.opt != null && $.each(v.opt.btn, function (j, x) {
-                switch (x) {
-                    case "accountPrint":
-                        decorationDetail.btns.printBtn.show();
-                        break;
-                    case "btnAccountPrint":
-                        accountBasic.isPrint = true;
-                        break;
-                }
+    $.each(params.decoration.viewNode, function(i, v) {
+
+        v.type == "account" && v.opt != null && $.each(v.opt.btn, function(j, x) {
+
+            switch (x) {
+                case "accountPrint":
+                    decorationDetail.btns.printBtn.show();
+                    break;
+                case "btnAccountPrint":
+                    accountBasic.isPrint = true;
+                    break;
+            }
         });
     });
 
-    decorationDetail.btns.btnBack.on("click", function () {
+    decorationDetail.btns.btnBack.on("click", function() {
+
         com.switchPage(params.historyPage);
     });
-    
-    decorationDetail.accountItems.materialAccount.blur(function(){
+
+    decorationDetail.accountItems.materialAccount.blur(function() {
+
         accountBasic.materialAccount = $(this).val();
     });
 
@@ -167,15 +172,18 @@ $(function () {
     var material = decorationUtils.initMaterial(decorationDetail);
 
     initWizard(decorationDetail.discount, decorationDetail);
-    
-    
-    setTimeout(function () {
+
+    setTimeout(function() {
+
         quotationUtils.loadQuotationDetail();
     }, 500);
 
-    //初始向导
+    // 初始向导
     function initWizard(discount, decorationDetail) {
-        decorationDetail.items.fueluxWizard.ace_wizard({"status": true}).on('change', function (e, info) {
+
+        decorationDetail.items.fueluxWizard.ace_wizard({
+            "status": true
+        }).on('change', function(e, info) {
 
             var curstep = 0;
 
@@ -183,23 +191,27 @@ $(function () {
             if (curstep == 1) {
                 decorationUtils.initMaterial(decorationDetail);
             } else if (curstep == 2) {
-                
+
             }
-        }).on('finished', function (e) {
+        }).on('finished', function(e) {
+
             com.switchPage(params.historyPage);
-        }).on('stepclick', function (e, info) {
+        }).on('stepclick', function(e, info) {
 
             if (info.step == 1) {
                 decorationUtils.initMaterial(decorationDetail);
             } else if (info.step == 2) {
 
             }
-        }).on('next', function (e, info) {
-        }).on('previous', function (e, info) {
+        }).on('next', function(e, info) {
+
+        }).on('previous', function(e, info) {
+
         });
     }
 
-    function initTab(){
+    function initTab() {
+
         var dataPage = params.urlLoadParams.depage;
         var fanglinMaterial = $('<div></div>').addClass('tab-pane in active').attr('id', 'fanglinMaterialPayments' + dataPage).attr('style', 'margin-left: -12px;');
         var salesMaterial = $('<div></div>').addClass('tab-pane').attr('id', 'salesMaterialPayments' + dataPage).attr('style', 'margin-left: -12px;');
@@ -211,7 +223,7 @@ $(function () {
         decorationDetail.items.fanglinMaterialPayment.attr("href", "#fanglinMaterialPayments" + dataPage);
         decorationDetail.items.salesMaterialPayment.attr("href", "#salesMaterialPayments" + dataPage);
     }
-    
+
     accountBasic.materialTotal = material.total;
     accountBasic.materialCoupon = material.coupon;
     accountBasic.materialFactPrice = utils.accSub(material.total, material.coupon);
@@ -220,25 +232,30 @@ $(function () {
     decorationDetail.materialItems.materialCoupon.html(accountBasic.materialCoupon);
     decorationDetail.materialItems.materialFactPrice.html(accountBasic.materialFactPrice);
 
-    com.post(api.payment.queryAdvancePaymentByOrderId, {"advancePayment.decoration.orderId": decorationDetail.decorationOrderId}, function (res) {
-        
+    com.post(api.payment.queryAdvancePaymentByOrderId, {
+        "advancePayment.decoration.orderId": decorationDetail.orderId
+    }, function(res) {
+
         accountBasic.contractAdvance = res.balanceAdvance;
         accountBasic.materialAdvance = res.materialAdvance;
-        
+
         decorationDetail.advanceItems.contractAdvance.text(res.balanceAdvance);
         decorationDetail.advanceItems.constructionAdvance.text(res.projectAdvance);
         decorationDetail.advanceItems.materialAdvance.text(res.materialAdvance);
         decorationDetail.advanceItems.zhenglinAdvance.text(res.zaterialAdvance);
     });
-    
-    com.post(api.quotation.queryQuotationForDefaultByOrderId, {"quotation.orderId": decorationDetail.decorationOrderId}, function(res){
+
+    com.post(api.quotation.queryQuotationForDefaultByOrderId, {
+        "quotation.orderId": decorationDetail.orderId
+    }, function(res) {
+
         var quotation = res.quotation;
-        
+
         accountBasic.undisPrice = quotation.undisPrice;
         accountBasic.disPrice = quotation.disPrice;
         accountBasic.trafficPrice = quotation.trafficPrice;
         accountBasic.managePrice = quotation.managePrice;
-        
+
         accountBasic.foldFrontTotal = Math.round(accountBasic.undisPrice + accountBasic.disPrice + accountBasic.trafficPrice + accountBasic.managePrice);
         accountBasic.foldFrontFee = Math.round(accountBasic.undisPrice + accountBasic.disPrice + accountBasic.trafficPrice);
 
@@ -251,15 +268,17 @@ $(function () {
         decorationDetail.contractItems.mm.html(utils.changeThrDecimal(decorationDetail.materialItems.materialRatio.text() / decorationDetail.basicsItems.foldFrontTotal.text()));
     }, null, false);
 
-    com.post(api.decoration.queryDecorationForCommonByOrderId, {"decoration.orderId": decorationDetail.decorationOrderId}, function (res) {
-         
+    com.post(api.decoration.queryDecorationForCommonByOrderId, {
+        "decoration.orderId": decorationDetail.orderId
+    }, function(res) {
+
         decoration = res.decoration;
-        
+
         accountBasic.dd = decoration.discount;
         accountBasic.contracePrice = decoration.orderTotalPrice;
         accountBasic.couponCut = decoration.couponCut;
         accountBasic.factPrice = decoration.factPrice;
-        
+
         accountBasic.signPrice = com.checkNull(Math.round(accountBasic.contracePrice), 0);
         accountBasic.coupon = com.checkNull(Math.round(accountBasic.couponCut), 0);
         accountBasic.signFactPrice = com.checkNull(Math.round(accountBasic.factPrice), 0);
@@ -269,17 +288,19 @@ $(function () {
         decorationDetail.contractItems.coupon.html(accountBasic.coupon);
         decorationDetail.contractItems.signFactPrice.html(accountBasic.signFactPrice);
         decorationDetail.basicsItems.basdiscount.html(accountBasic.basdiscount);
-        
+
     }, null, false);
-    
-    com.post(api.decoration.queryDecorationHolonomy, {"decorationHolonomy.decoration.orderId": decorationDetail.decorationOrderId}, function (res) {
+
+    com.post(api.decoration.queryDecorationHolonomy, {
+        "decorationHolonomy.decoration.orderId": decorationDetail.orderId
+    }, function(res) {
 
         var decorationHolonomy = res.decorationHolonomy;
 
         accountBasic.servicePrice = decorationHolonomy.servicePrice;
         accountBasic.materialRatio = decorationHolonomy.materialPrice;
         accountBasic.servicePaidup = decorationHolonomy.servicePaidup;
-        
+
         accountBasic.servicePrice = com.checkNull(Math.round(accountBasic.servicePrice), 0);
         accountBasic.materialRatio = com.checkNull(Math.round(accountBasic.materialRatio), 0);
         accountBasic.servicePaidup = com.checkNull(Math.round(accountBasic.servicePaidup), 0);
@@ -290,22 +311,26 @@ $(function () {
 
     }, null, false);
 
-    com.post(api.addReduce.queryAddReduceByOrderId, {"addReduce.orderId": params.decorationOrderId}, function (res) {
+    com.post(api.addReduce.queryAddReduceByOrderId, {
+        "addReduce.orderId": decorationDetail.orderId
+    }, function(res) {
+
         var addReduces = res.addReduces;
 
-        $.each(addReduces,function (i, v) {
-            
-            if([2, 3].indexOf(v.status) == -1) return true;
+        $.each(addReduces, function(i, v) {
 
-            if(v.type == 0){                        //0增项 1减项
+            if ([2, 3].indexOf(v.status) == -1)
+                return true;
+
+            if (v.type == 0) { // 0增项 1减项
 
                 accountBasic.addPredisPrice = utils.accAdd(accountBasic.addPredisPrice, utils.accAdd(v.undisPrice, v.disPrice));
                 accountBasic.addManagePrice = utils.accAdd(accountBasic.addManagePrice, v.managePrice);
                 accountBasic.addCalPrice = utils.accAdd(accountBasic.addCalPrice, v.calPrice);
                 accountBasic.addUncalPrice = utils.accAdd(accountBasic.addUncalPrice, v.uncalPrice);
                 accountBasic.addTotalPrice = utils.accAdd(accountBasic.addTotalPrice, v.total);
-            }else{
-                
+            } else {
+
                 accountBasic.reducePredisPrice = utils.accAdd(accountBasic.reducePredisPrice, utils.accAdd(v.undisPrice, v.disPrice));
                 accountBasic.reduceManagePrice = utils.accAdd(accountBasic.reduceManagePrice, v.managePrice);
                 accountBasic.reduceCalPrice = utils.accAdd(accountBasic.reduceCalPrice, v.calPrice);
@@ -313,7 +338,7 @@ $(function () {
                 accountBasic.reduceTotalPrice = utils.accAdd(accountBasic.reduceTotalPrice, v.total);
                 accountBasic.reduceDisPrice = utils.accAdd(accountBasic.reduceDisPrice, v.disPrice);
                 accountBasic.reduceUndisPrice = utils.accAdd(accountBasic.reduceUndisPrice, v.undisPrice);
-                accountBasic.asDifference = accountBasic.reduceDisPrice * (accountBasic.dd/10) + accountBasic.reduceUndisPrice + Math.round(accountBasic.reduceManagePrice) - Math.round(accountBasic.reduceTotalPrice)
+                accountBasic.asDifference = accountBasic.reduceDisPrice * (accountBasic.dd / 10) + accountBasic.reduceUndisPrice + Math.round(accountBasic.reduceManagePrice) - Math.round(accountBasic.reduceTotalPrice)
             }
         });
 
@@ -332,18 +357,21 @@ $(function () {
 
     }, null, false);
 
-    com.post(api.ds.decoration, {}, function (res) {
-        $.each(res.typeness, function(i, v){
+    com.post(api.ds.decoration, {}, function(res) {
+
+        $.each(res.typeness, function(i, v) {
+
             decorationDetail.orderType[v.key] = v.value;
             decorationDetail.typeness["typeness[" + i + "]"] = v.key;
         });
     });
 
-    com.post(api.data.queryDecorationMatching, decorationDetail.typeness, function (res) {
+    com.post(api.data.queryDecorationMatching, decorationDetail.typeness, function(res) {
 
-        $.each(res.decorationMatchings, function(i, v){
+        $.each(res.decorationMatchings, function(i, v) {
 
-            if ((v['vision'] & 8) != 8) return;
+            if ((v['vision'] & 8) != 8)
+                return;
 
             accountBasic.machingType.push(v);
         });
@@ -351,13 +379,16 @@ $(function () {
         decorationDetail.items.otherPaymentType.bindData(accountBasic.machingType, "dmid", "name", true);
 
     }, null, false);
-    
-    com.post(api.decoration.queryDecorationAccount, {"decorationAccount.orderId": decorationDetail.decorationOrderId}, function(res){
-        
+
+    com.post(api.decoration.queryDecorationAccount, {
+        "decorationAccount.orderId": decorationDetail.orderId
+    }, function(res) {
+
         var decorationAccount = res.decorationAccount;
-        
-        if(!decorationAccount.daid) return false;
-        
+
+        if (!decorationAccount.daid)
+            return false;
+
         accountBasic.dd = decorationAccount.discount;
 
         accountBasic.type = decorationAccount.type;
@@ -366,7 +397,7 @@ $(function () {
         accountBasic.discount = decorationAccount.discount;
         accountBasic.material = decorationAccount.matching;
         accountBasic.service = decorationAccount.serviceRate;
-        
+
         accountBasic.cal = (decorationAccount.arcal == 0);
 
         decorationDetail.items.discountName.val(decorationAccount.name);
@@ -376,43 +407,47 @@ $(function () {
         decorationDetail.items.internalCoupon.val(decorationAccount.internal);
         decorationDetail.items.fulldel.val(decorationAccount.fulldel);
         decorationDetail.items.cashback.val(decorationAccount.cashback);
-        
+
         decorationDetail.items.comment.val(decorationAccount.comment);
-        
+
         accountSuper();
-        
+
         decorationDetail.accountItems.materialAccount.val(decorationAccount.materialPrice);
-        
+
     }, null, false);
 
-    decorationDetail.btns.calculateBtn.click(function () {
+    decorationDetail.btns.calculateBtn.click(function() {
 
-        if (com.validate('controls')) return false;
+        if (com.validate('controls'))
+            return false;
 
         decorationDetail.btns.updateBtn.removeAttr("disabled");
         decorationDetail.btns.submission.removeAttr("disabled");
 
         accountBasic.dd = decorationDetail.items.calDiscountPrice.val();
         accountBasic.discount = decorationDetail.items.calDiscountPrice.val();
-        
-        if(!decorationDetail.items.calDiscountPrice.val()) return false;
+
+        if (!decorationDetail.items.calDiscountPrice.val())
+            return false;
 
         accountSuper();
     });
 
-    decorationDetail.items.matching.click(function () {
+    decorationDetail.items.matching.click(function() {
 
         accountBasic.cal = decorationDetail.items.matching.prop("checked");
     });
 
-    decorationDetail.items.otherPaymentType.on("change", function () {
+    decorationDetail.items.otherPaymentType.on("change", function() {
 
         var that = $(this);
-        
+
         var config = {};
 
-        $.each(accountBasic.machingType, function (i, v) {
-            if(that.val() == v.dmid) config = v;
+        $.each(accountBasic.machingType, function(i, v) {
+
+            if (that.val() == v.dmid)
+                config = v;
         });
 
         accountBasic.cal = decorationDetail.items.matching.prop("checked");
@@ -424,30 +459,30 @@ $(function () {
         return false;
     });
 
-    decorationDetail.btns.printBtn.click(function(){
-        
+    decorationDetail.btns.printBtn.click(function() {
+
         accountBasic.preferences = decorationDetail.items.preferences.val() ? decorationDetail.items.preferences.val() : 0;
         accountBasic.internalCoupon = decorationDetail.items.internalCoupon.val() ? decorationDetail.items.internalCoupon.val() : 0;
         accountBasic.fulldel = decorationDetail.items.fulldel.val() ? decorationDetail.items.fulldel.val() : 0;
         accountBasic.cashback = decorationDetail.items.cashback.val() ? decorationDetail.items.cashback.val() : 0;
 
-        params["decoration"] = decoration;
-        params["accountBasic"] = accountBasic;
-        params["orderTypeness"] = decorationDetail.orderType;
+        params.decoration.decoration = decoration;
+        params.decoration.accountBasic = accountBasic;
+        params.decoration.orderTypeness = decorationDetail.orderType;
 
         com.popup("打印决算信息", api.index.decorationAccountOutputIndex.url, null, null, accountBasic.isPrint);
     });
 
-    decorationDetail.btns.updateBtn.click(function () {
+    decorationDetail.btns.updateBtn.click(function() {
 
-        com.showConfirm("确定要更新决算信息吗?", function () {
+        com.showConfirm("确定要更新决算信息吗?", function() {
 
             var option = {
-                "decorationAccount.orderId": params.decorationOrderId,
+                "decorationAccount.orderId": decorationDetail.orderId,
                 "decorationAccount.name": accountBasic.name,
                 "decorationAccount.type": accountBasic.type,
                 "decorationAccount.typeness": accountBasic.typeness,
-                "decorationAccount.arcal": accountBasic.cal ? 0: 1,
+                "decorationAccount.arcal": accountBasic.cal ? 0 : 1,
                 "decorationAccount.matching": accountBasic.material,
                 "decorationAccount.discount": accountBasic.discount,
                 "decorationAccount.discountBase": accountBasic.base,
@@ -459,31 +494,37 @@ $(function () {
                 "decorationAccount.internal": accountBasic.internalCoupon,
                 "decorationAccount.fulldel": accountBasic.fulldel,
                 "decorationAccount.cashback": accountBasic.cashback,
-                
+
                 "decorationAccount.comment": decorationDetail.items.comment.val()
             };
 
-            com.post(api.decoration.updateDecorationAccount, option, function (res) {
+            com.post(api.decoration.updateDecorationAccount, option, function(res) {
+
                 com.showAlert(com.info, "更新保存成功");
-               
+
                 accountBasic.isPrint = true;
             });
 
         });
     });
 
-    decorationDetail.btns.submission.click(function () {
+    decorationDetail.btns.submission.click(function() {
 
-        if (com.validate('controls')) return false;
+        if (com.validate('controls'))
+            return false;
 
-        com.showConfirm("确定锁定新决算信息吗?", function () {
-            com.post(api.decoration.makeDecorationAccount, {"decorationAccount.orderId": params.decorationOrderId}, function (res) {
+        com.showConfirm("确定锁定新决算信息吗?", function() {
+
+            com.post(api.decoration.makeDecorationAccount, {
+                "decorationAccount.orderId": decorationDetail.orderId
+            }, function(res) {
+
                 com.showAlert(com.info, "锁定成功");
             });
         });
     });
-    
-    function accountSuper(){
+
+    function accountSuper() {
 
         // 决算直接费(算配比) = 打折总额 + 不打折总额 + 车运费 + 管理费 + 增项配比总额 - 减项配比总额 + 增项管理费 - 减项管理费
         //
@@ -498,7 +539,6 @@ $(function () {
         // 决算管理费(非配比) = 管理费
         //
         // 决算主材额 = 决算折前总额 * 主材配比
-
 
         // 决算合同额(算配比) = (折前直接费 + 增项配比总额 - 减项配比总额 - (折前直接费 + 增项配比总额 - 减项配比总额) % 基数) * 折扣 + (折前直接费 + 增项配比总额 - 减项配比总额) % 基数 + 管理费 + 增项管理费 - 减项管理费
         //
@@ -515,12 +555,12 @@ $(function () {
         // 金额差 = 实收额 - 决算主材额
         //
         // 超配比 = (实收额 - 决算主材额) / 决算主材额
-        
+
         var contartval = 0, _ = 0, service = 0, sub = 0, direct = 0, beforeTotal = 0, management = 0, materialAccount = 0;
 
         var flag = accountBasic.cal && accountBasic.type == 2 ? 1 : 0;
 
-        if([0, 1].indexOf(accountBasic.type) != -1){
+        if ([0, 1].indexOf(accountBasic.type) != -1) {
 
             contartval = accountBasic.disPrice * accountBasic.dd / 10 + accountBasic.undisPrice + accountBasic.trafficPrice + accountBasic.managePrice;
 
@@ -531,7 +571,7 @@ $(function () {
             management = accountBasic.managePrice;
 
             sub = contartval + service - accountBasic.factPrice - accountBasic.servicePaidup - accountBasic.reduceDisPrice * (accountBasic.discount / 10) - accountBasic.reduceUndisPrice - Math.round(accountBasic.reduceManagePrice) + Math.round(accountBasic.reduceTotalPrice) - decorationDetail.items.preferences.val() - decorationDetail.items.internalCoupon.val() - decorationDetail.items.fulldel.val() - decorationDetail.items.cashback.val();
-            
+
         }
 
         if (accountBasic.type == 2) {
@@ -540,24 +580,24 @@ $(function () {
 
             contartval = (_ - (_) % accountBasic.base) * (accountBasic.discount / 10) + (_) % accountBasic.base + accountBasic.managePrice + accountBasic.addManagePrice * flag - accountBasic.reduceManagePrice * flag;
 
-            service = (_  + accountBasic.managePrice + accountBasic.addManagePrice * flag - accountBasic.reduceManagePrice * flag) * accountBasic.material * accountBasic.service;
+            service = (_ + accountBasic.managePrice + accountBasic.addManagePrice * flag - accountBasic.reduceManagePrice * flag) * accountBasic.material * accountBasic.service;
 
             direct = accountBasic.disPrice + accountBasic.undisPrice + accountBasic.trafficPrice + accountBasic.managePrice + accountBasic.addCalPrice * flag - accountBasic.reduceCalPrice * flag + accountBasic.addManagePrice * flag - accountBasic.reduceManagePrice * flag;
 
             beforeTotal = accountBasic.disPrice + accountBasic.undisPrice + accountBasic.trafficPrice + accountBasic.addCalPrice * flag - accountBasic.reduceCalPrice * flag;
 
             management = accountBasic.managePrice + accountBasic.addManagePrice * flag - accountBasic.reduceManagePrice * flag;
-            
-            sub = contartval + service - accountBasic.factPrice - accountBasic.servicePaidup - accountBasic.addTotalPrice * flag + accountBasic.reduceTotalPrice * flag + accountBasic.addUncalPrice * flag  - decorationDetail.items.preferences.val() - decorationDetail.items.internalCoupon.val() - decorationDetail.items.fulldel.val() - decorationDetail.items.cashback.val();
+
+            sub = contartval + service - accountBasic.factPrice - accountBasic.servicePaidup - accountBasic.addTotalPrice * flag + accountBasic.reduceTotalPrice * flag + accountBasic.addUncalPrice * flag - decorationDetail.items.preferences.val() - decorationDetail.items.internalCoupon.val() - decorationDetail.items.fulldel.val() - decorationDetail.items.cashback.val();
         }
-        
+
         materialAccount = direct * accountBasic.material;
-        
+
         accountBasic.direct = Math.round(direct);
         accountBasic.beforeTotal = Math.round(beforeTotal);
         accountBasic.management = Math.round(management);
         accountBasic.flowerRatio = utils.changeThrDecimal(accountBasic.materialTotal / accountBasic.direct);
-        
+
         accountBasic.materialAccount = Math.round(materialAccount);
 
         accountBasic.accountForehead = Math.round(contartval);
@@ -566,7 +606,7 @@ $(function () {
 
         accountBasic.difference = Math.round(accountBasic.materialFactPrice - accountBasic.materialAccount);
         accountBasic.superRatio = accountBasic.materialAccount == null || accountBasic.materialAccount == 0 ? 0 : utils.changeThrDecimal(accountBasic.difference / accountBasic.materialAccount);
-        
+
         accountBasic.preferences = decorationDetail.items.preferences.val() ? decorationDetail.items.preferences.val() : 0;
         accountBasic.internalCoupon = decorationDetail.items.internalCoupon.val() ? decorationDetail.items.internalCoupon.val() : 0;
         accountBasic.fulldel = decorationDetail.items.fulldel.val() ? decorationDetail.items.fulldel.val() : 0;
@@ -580,7 +620,7 @@ $(function () {
         decorationDetail.accountItems.beforeTotal.html(accountBasic.beforeTotal);
         decorationDetail.accountItems.management.html(accountBasic.management);
         decorationDetail.accountItems.materialAccount.val(accountBasic.materialAccount);
-        
+
         decorationDetail.accountItems.flowerRatio.html(accountBasic.flowerRatio);
         decorationDetail.accountItems.difference.html(accountBasic.difference);
         decorationDetail.accountItems.superRatio.html(accountBasic.superRatio);

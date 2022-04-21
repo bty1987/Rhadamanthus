@@ -1,7 +1,7 @@
 jQuery(function($) {
 
     var userOperation = {
-            uid: params.uid,
+            uid: params.personel.uid,
             uoid: null,
             modals: {
             	addOperationModal: com.focusPage("#addOperationModal")

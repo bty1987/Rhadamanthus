@@ -16,7 +16,11 @@ $.extend(api.index, {
 	paymentReceiptIndex: {url: "/views/payment/paymentReceipt.html"},
 
 	servicePaymentReceiptIndex: {url: "/views/payment/servicePaymentReceipt.html"},
-		
+
+	walletardIndex: {url: "/views/payment/walletard.html"},
+	walletranIndex: {url: "/views/payment/walletran.html"},
+	walletresIndex: {url: "/views/payment/walletres.html"}
+
 });
 
 $.extend(api, {payment: {

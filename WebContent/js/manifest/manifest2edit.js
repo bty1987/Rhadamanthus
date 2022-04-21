@@ -1,7 +1,7 @@
 jQuery(function ($) {
 
     var manifest = {
-        mid: params["manifest.mid"],
+        mid: params.manifest.mid,
         manifestType: params["manifest.type"],
         items: {
             list: com.focusPage('#list'),

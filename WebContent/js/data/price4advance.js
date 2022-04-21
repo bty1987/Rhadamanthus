@@ -1,7 +1,7 @@
-$(function () {
+$(function() {
 
     var goods = {
-        gid: params["goods.gid"],
+        gid: params.data.goods.gid,
         items: {
             name: com.focusPage("#addPrice").find("#name"),
             purchase: com.focusPage("#addPrice").find("#purchase"),
@@ -16,9 +16,9 @@ $(function () {
         }
     };
 
-    var displayFunc = (function () {
+    var displayFunc = (function() {
 
-        var renderList = function (tableId, listData) {
+        var renderList = function(tableId, listData) {
             var $tableWrap = com.focusPage('#' + tableId);
 
             if (listData && listData.length) {
@@ -27,7 +27,7 @@ $(function () {
                 var $ulData = $('<ul></ul>').addClass('flex-table');
                 $tableWrap.append($ulTitle).append($ulData);
 
-                $.each(listData, function (i, v) {
+                $.each(listData, function(i, v) {
                     var $liLine = creatLine(i, v, i == listData.length - 1);
 
                     $liLine.appendTo($ulTitle);
@@ -35,7 +35,7 @@ $(function () {
             }
         };
 
-        var createTableTitle = function () {
+        var createTableTitle = function() {
 
             var $ulTitle = $('<ul></ul>').addClass('flex-table');
             var $liTitle = $('<li></li>').addClass('line table-title');
@@ -45,7 +45,7 @@ $(function () {
 
             var titleName = '价格说明,控价,售价,结算类型,结算值,类型';
 
-            $.each(titleName.split(','), function (i, v) {
+            $.each(titleName.split(','), function(i, v) {
                 var $cell = $('<div></div>').addClass('cell').html(v);
                 $cell.appendTo($contentWrap);
             });
@@ -57,24 +57,18 @@ $(function () {
             return $ulTitle;
         };
 
-        var creatLine = function (i, v, lastFlag) {
+        var creatLine = function(i, v, lastFlag) {
 
             var $liLine = $('<li></li>').addClass('line');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col7');
 
-            var propertyArr = [
-                [v.name, 'grey'],
-                [v.purchase, 'blue'],
-                [v.selling, 'blue'],
-                [v.ctype == "0" ? "底价" : "点位", 'red'],
-                [v.cvalue, 'blue'],
-                [v.type == "0" ? "正价" : "特价", 'red'],
-//                [v.status == 0 ? "启用" : "禁用", 'red']
+            var propertyArr = [[v.name, 'grey'], [v.purchase, 'blue'], [v.selling, 'blue'], [v.ctype == "0" ? "底价" : "点位", 'red'], [v.cvalue, 'blue'], [v.type == "0" ? "正价" : "特价", 'red'],
+            // [v.status == 0 ? "启用" : "禁用", 'red']
             ];
 
-            $.each(propertyArr, function (i, v) {
+            $.each(propertyArr, function(i, v) {
                 var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
@@ -98,14 +92,16 @@ $(function () {
 
             $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
-            $btnDelete.click(function () {
+            $btnDelete.click(function() {
 
-                com.post(api.data.deletePrice, {"price.pid": v.pid}, function (res) {
+                com.post(api.data.deletePrice, {
+                    "price.pid": v.pid
+                }, function(res) {
                     doSearcher();
                 })
             });
 
-            $btnStart.click(function () {
+            $btnStart.click(function() {
 
                 if (v.status == 0) {
                     com.showAlert(com.warning, "已启用");
@@ -115,7 +111,7 @@ $(function () {
                 updateStatus(v.pid, 0);
             });
 
-            $btnStop.click(function () {
+            $btnStop.click(function() {
 
                 if (v.status == 1) {
                     com.showAlert(com.warning, "已禁用");
@@ -130,30 +126,30 @@ $(function () {
         };
 
         return {
-            init: function (tableId, listData) {
+            init: function(tableId, listData) {
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
 
             },
-            drawLine: function (v) {
+            drawLine: function(v) {
                 return creatLine(v);
             }
         }
     })();
 
     function doSearcher() {
-        com.post(api.data.queryPriceByGid, {"price.gid": goods.gid}, function (res) {
+        com.post(api.data.queryPriceByGid, {
+            "price.gid": goods.gid
+        }, function(res) {
             displayFunc.init('resultListPrice', res.prices);
         });
     }
 
     doSearcher();
 
-    goods.btns.addBtn.click(function () {
+    goods.btns.addBtn.click(function() {
 
-        if (com.validate('addPrice', 'bottom')) {
-            return false;
-        }
+        if (com.validate('addPrice', 'bottom')) { return false; }
 
         if (goods.items.ctype.val() == 1) {
             if (goods.items.cvalue.val() < 0 || goods.items.cvalue.val() > 1) {
@@ -172,13 +168,13 @@ $(function () {
             "price.type": goods.items.type.val(),
         };
 
-        com.post(api.data.addPrice, options, function () {
+        com.post(api.data.addPrice, options, function() {
             com.cleanItems(goods.items);
             doSearcher();
         });
     });
 
-    goods.btns.cancelBtn.click(function () {
+    goods.btns.cancelBtn.click(function() {
         com.cleanItems(goods.items);
     });
 
@@ -189,7 +185,7 @@ $(function () {
             "price.status": status
         };
 
-        com.post(api.data.updatePriceForStatus, options, function (res) {
+        com.post(api.data.updatePriceForStatus, options, function(res) {
             com.showAlert(com.info, "操作成功");
             doSearcher();
         });

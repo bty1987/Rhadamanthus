@@ -3,8 +3,7 @@ var quotationUtils = {
         _items = _items.sort(function(a, b) {
             if (a.index == null || b.index == null) {// 降序排列
                 return b.index - a.index;
-            }
-            else {// 升序
+            } else {// 升序
                 return a.index - b.index;
             }
         });
@@ -15,7 +14,7 @@ var quotationUtils = {
         quotationUtils.quotationDetail = {};
 
         com.post(api.quotation.queryQuotationForDefaultByOrderId, {
-            "quotation.orderId": params.decorationOrderId,
+            "quotation.orderId": params.quotation.orderId,
         }, function(res) {
             quotationUtils.quotationDetail.quotation = res.quotation;
         }, null, false);
@@ -25,117 +24,117 @@ var quotationUtils = {
 
         if (quotationId) {
             $("#printProjectBtn").click(function() {
-                params.quotationId = quotationId;
-                params.type = 1;
-                params.subtype = [-2];
-                params.showType = {
+                params.quotation.quotationId = quotationId;
+                params.quotation.type = 1;
+                params.quotation.subtype = [-2];
+                params.quotation.showType = {
                     itemtype: 7
                 };
                 com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
             });
             $("#printFinanceBtn").click(function() {
-                params.quotationId = quotationId;
-                params.type = 2;
-                params.subtype = [-2];
-                params.showType = {
+                params.quotation.quotationId = quotationId;
+                params.quotation.type = 2;
+                params.quotation.subtype = [-2];
+                params.quotation.showType = {
                     itemtype: 7,
                     "showStandardPrice": true
                 };
                 com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
             });
             $("#printCostBtn").click(function() {
-                params.quotationId = quotationId;
-                params.type = 6;
-                params.subtype = [-2];
-                params.showType = {
+                params.quotation.quotationId = quotationId;
+                params.quotation.type = 6;
+                params.quotation.subtype = [-2];
+                params.quotation.showType = {
                     itemtype: 8,
                     notManagementArea: "生成项目"
                 };
                 com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
             });
             $("#printCustomerBtn").click(function() {
-                params.quotationId = quotationId;
-                params.type = 3;
-                params.subtype = [-2];
-                params.showType = {
+                params.quotation.quotationId = quotationId;
+                params.quotation.type = 3;
+                params.quotation.subtype = [-2];
+                params.quotation.showType = {
                     itemtype: 7
                 };
                 com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
             });
             $("#printEngineeringBtn").click(function() {
-                params.quotationId = quotationId;
-                params.type = 3;
-                params.subtype = [1];
-                params.showType = {
+                params.quotation.quotationId = quotationId;
+                params.quotation.type = 3;
+                params.quotation.subtype = [1];
+                params.quotation.showType = {
                     itemtype: 7
                 };
                 com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
             });
             $("#printMaterialBtn").click(function() {
-                params.quotationId = quotationId;
-                params.type = 3;
-                params.subtype = [2];
-                params.showType = {
+                params.quotation.quotationId = quotationId;
+                params.quotation.type = 3;
+                params.quotation.subtype = [2];
+                params.quotation.showType = {
                     itemtype: 7
                 };
                 com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
             });
             $("#printWorkBtn").click(function() {
-                params.quotationId = quotationId;
-                params.type = 4;
-                params.subtype = [-2];
-                params.showType = {
+                params.quotation.quotationId = quotationId;
+                params.quotation.type = 4;
+                params.quotation.subtype = [-2];
+                params.quotation.showType = {
                     itemtype: 7
                 };
                 com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
             });
             $("#printQuoteItemBtn").click(function() {
-                params.quotationId = quotationId;
-                params.type = 2;
-                params.subtype = [1];
-                params.showType = {
+                params.quotation.quotationId = quotationId;
+                params.quotation.type = 2;
+                params.quotation.subtype = [1];
+                params.quotation.showType = {
                     itemtype: 1,
                     notManagementArea: "生成项目"
                 };
                 com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
             });
             $("#printExtensionItemBtn").click(function() {
-                params.quotationId = quotationId;
-                params.type = 2;
-                params.subtype = [1];
-                params.showType = {
+                params.quotation.quotationId = quotationId;
+                params.quotation.type = 2;
+                params.quotation.subtype = [1];
+                params.quotation.showType = {
                     itemtype: 2
                 };
                 com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
             });
             $("#printAddReduceItemBtn").click(function() {
-                params.quotationId = quotationId;
-                params.type = 2;
-                params.subtype = [1];
-                params.showType = {
+                params.quotation.quotationId = quotationId;
+                params.quotation.type = 2;
+                params.quotation.subtype = [1];
+                params.quotation.showType = {
                     itemtype: 4
                 };
                 com.popup("打印报价", api.index.quotationOutputIndex.url, null, null, !!status);
             });
 
             $("#printNormriceSBtn").click(function() {
-                params.quotationId = quotationId;
-                params.type = 1;
-                params.subtype = [1];
-                params.showType = {
+                params.quotation.quotationId = quotationId;
+                params.quotation.type = 1;
+                params.quotation.subtype = [1];
+                params.quotation.showType = {
                     itemtype: 4
                 };
-                params.workType = com.focusPage("#quotationCNSelect", "#printQuotationCNModal").val();
+                params.quotation.workType = com.focusPage("#quotationCNSelect", "#printQuotationCNModal").val();
                 com.popup("打印报价", "/views/quotation/normriceOutput.html", null, null, !!status);
             });
             $("#printNormriceWBtn").click(function() {
-                params.quotationId = quotationId;
-                params.type = 2;
-                params.subtype = [1];
-                params.showType = {
+                params.quotation.quotationId = quotationId;
+                params.quotation.type = 2;
+                params.quotation.subtype = [1];
+                params.quotation.showType = {
                     itemtype: 4
                 };
-                params.workType = com.focusPage("#quotationCNSelect", "#printQuotationCNModal").val();
+                params.quotation.workType = com.focusPage("#quotationCNSelect", "#printQuotationCNModal").val();
                 com.popup("打印报价", "/views/quotation/normriceOutput.html", null, null, !!status);
             });
 
@@ -161,7 +160,7 @@ var quotationUtils = {
                     printConf["itemtype"].push(parseInt($(v).attr('value')));
                 });
 
-                params.quotation = {
+                params.quotation.quotation = {
                     "printConf": printConf
                 };
 
@@ -177,7 +176,7 @@ var quotationUtils = {
             quotationUtils.quotationDetail.addReduces = [];
 
             com.post(api.addReduce.queryAddReduceByOrderId, {
-                "addReduce.orderId": params.decorationOrderId
+                "addReduce.orderId": params.quotation.orderId
             }, function(res) {
                 quotationUtils.quotationDetail.addReduces = res.addReduces;
             }, null, false);
@@ -185,7 +184,7 @@ var quotationUtils = {
             quotationUtils.quotationDetail.extensions = [];
 
             com.post(api.quotation.queryExtensionByOrderId, {
-                "extension.orderId": params.decorationOrderId
+                "extension.orderId": params.quotation.orderId
             }, function(res) {
                 quotationUtils.quotationDetail.extensions = res.extensions;
             }, null, false);
@@ -196,15 +195,14 @@ var quotationUtils = {
                 itemtype: 31
             };
 
-            quotationUtils.initQuotationDetailItem(quotationUtils.quotationDetail.quotation, quotationUtils.quotationDetail.quotationFunctionAreas, quotationUtils.quotationDetail.addReduces, quotationUtils.quotationDetail.extensions, params.orderType, true, showType);
+            quotationUtils.initQuotationDetailItem(quotationUtils.quotationDetail.quotation, quotationUtils.quotationDetail.quotationFunctionAreas, quotationUtils.quotationDetail.addReduces, quotationUtils.quotationDetail.extensions, params.quotation.orderType, true, showType);
 
             quotationUtils.initQuotationDetail();
 
             $("#showWay").on("change", function() {
                 quotationUtils.initQuotationDetail();
             });
-        }
-        else {
+        } else {
             $("#btnPrintDefaultQuotationInfo").attr("disabled", "disabled");
         }
     },
@@ -246,8 +244,7 @@ var quotationUtils = {
                 if (quotationFunctionAreaItem.type == 0 || quotationFunctionAreaItem.type == 1) {
                     if (quotationFunctionAreaItem.discount == 0) {
                         _disPrice = utils.accAdd(_disPrice, utils.accMul(quotationFunctionAreaItem.unitPrice, quotationFunctionAreaItem.initNum));
-                    }
-                    else if (quotationFunctionAreaItem.discount == 1) {
+                    } else if (quotationFunctionAreaItem.discount == 1) {
                         _undisPrice = utils.accAdd(_undisPrice, utils.accMul(quotationFunctionAreaItem.unitPrice, quotationFunctionAreaItem.initNum));
                     }
                 }
@@ -261,11 +258,9 @@ var quotationUtils = {
                 $quotationUndisPrice = utils.accAdd($quotationUndisPrice, _undisPrice);
                 $quotationTotalPrice = utils.accAdd($quotationTotalPrice, _disPrice);
                 $quotationCostPrice = utils.accAdd($quotationCostPrice, _costPrice);
-            }
-            else if (quotationFunctionArea.type == 2) {
+            } else if (quotationFunctionArea.type == 2) {
                 $quotationUndisPrice = utils.accAdd($quotationUndisPrice, quotationFunctionArea.total);
-            }
-            else if (quotationFunctionArea.type == 4) {
+            } else if (quotationFunctionArea.type == 4) {
                 $quotationUndisPrice = utils.accAdd($quotationUndisPrice, quotationFunctionArea.total);
                 $quotationCostPrice = utils.accAdd($quotationCostPrice, quotationFunctionArea.total);
             }
@@ -293,8 +288,7 @@ var quotationUtils = {
                         _dcpt = utils.changeThrDecimal(utils.accMul(extensionItem.num, _dcp));
 
                         $addExtensionItemTotalPrice = utils.accAdd($addExtensionItemTotalPrice, _dcpt);
-                    }
-                    else if ([2, 3, 4].indexOf(extensionItem.type) != -1) {
+                    } else if ([2, 3, 4].indexOf(extensionItem.type) != -1) {
 
                         _dcp = utils.changeThrDecimal(utils.accMul(extensionItem.unitPrice, utils.accDiv(quotationUtils.quotationDetail.quotation.discount, 10)));
                         _dcpt = utils.changeThrDecimal(utils.accMul(extensionItem.num, _dcp));
@@ -323,8 +317,7 @@ var quotationUtils = {
 
                     if ([0, 2].indexOf(addReduceItem.type) != -1) {// 统计增项总额
                         $addReduceTotal = utils.accAdd($addReduceTotal, utils.changeThrDecimal(utils.accMul(addReduceItem.num, addReduceItem.unitPrice)));
-                    }
-                    else {
+                    } else {
                         var addReduceItemNum = -addReduceItem.num;
 
                         var price = utils.changeThrDecimal(utils.accMul(addReduceItemNum, addReduceItem.unitPrice));
@@ -332,24 +325,20 @@ var quotationUtils = {
 
                             if (addReduceItem.type == 4) {// 统计减项中增项总额
                                 $minusAddReduceTotal = utils.accAdd($minusAddReduceTotal, price);
-                            }
-                            else {// 统计减项中拓展项总额
+                            } else {// 统计减项中拓展项总额
                                 $minusExtensionTotalPrice = utils.accAdd($minusExtensionTotalPrice, price);
                             }
 
                             // 统计减项中的报价项非折扣总额 , 增项中数量已经为0 , 不重复处理
                             // $minusQuoTotalPrice = utils.accAdd($minusQuoTotalPrice, price);
 
-                        }
-                        else if (params.orderType == 2) {
+                        } else if (params.quotation.orderType == 2) {
                             // 统计减项中的报价折扣总额
                             $minusQuoUndisPrice = utils.accAdd($minusQuoUndisPrice, price);
-                        }
-                        else {
+                        } else {
                             if ([0, 2].indexOf(addReduceItem.discount) != -1) {// 统计减项中的报价项非折扣总额
                                 $minusQuoTotalPrice = utils.accAdd($minusQuoTotalPrice, price);
-                            }
-                            else {// 统计减项中的报价折扣总额
+                            } else {// 统计减项中的报价折扣总额
                                 $minusQuoUndisPrice = utils.accAdd($minusQuoUndisPrice, price);
                             }
                         }
@@ -511,8 +500,7 @@ var quotationUtils = {
                     quotationFunctionAreaItem.measurementUnit = "车运费";
                     quotationFunctionAreaItem.quotationTotalPrice = quotation.trafficPrice;
                     quotationFunctionAreaItem.total = quotation.trafficPrice;
-                }
-                else if (quotationFunctionAreaItem.type == 3) {
+                } else if (quotationFunctionAreaItem.type == 3) {
                     quotationUtils.quotationDetail.manageDiscount = quotationFunctionAreaItem.discount;
                     quotationFunctionAreaItem.num = quotation.managePrice;
                     quotationFunctionAreaItem.measurementUnit = "管理费";
@@ -550,8 +538,7 @@ var quotationUtils = {
 
                         _dcp = extensionItem.unitPrice;
                         _dcpt = utils.changeThrDecimal(utils.accMul(_dcp, extensionItem.num));
-                    }
-                    else if ([2, 3, 4].indexOf(extensionItem.type) != -1) {
+                    } else if ([2, 3, 4].indexOf(extensionItem.type) != -1) {
 
                         extensionItem.unitPrice = -extensionItem.unitPrice;
                         extensionItem._discountNum = discount;
@@ -595,32 +582,26 @@ var quotationUtils = {
 
                     if ([0, 2].indexOf(addReduceItem.type) != -1) {
                         addReduceItem.typestr = "增项 " + addReduceItemtypeDict[addReduceItem.type];
-                    }
-                    else {
+                    } else {
                         if ([4].indexOf(addReduceItem.type) != -1) {
                             if (reduceNums.ariId[addReduceItem.quoteItemId]) {
                                 reduceNums.ariId[addReduceItem.quoteItemId].num = utils.accAdd(reduceNums.ariId[addReduceItem.quoteItemId].num, addReduceItem.num);
-                            }
-                            else {
+                            } else {
                                 reduceNums.ariId[addReduceItem.quoteItemId] = {};
                                 reduceNums.ariId[addReduceItem.quoteItemId].num = addReduceItem.num;
                                 reduceNums.ariId[addReduceItem.quoteItemId].quotationFunctionType = addReduceItem.quotationFunctionAreaType;
                             }
-                        }
-                        else if ([5].indexOf(addReduceItem.type) != -1) {
+                        } else if ([5].indexOf(addReduceItem.type) != -1) {
                             if (reduceNums.eiId[addReduceItem.quoteItemId]) {
                                 reduceNums.eiId[addReduceItem.quoteItemId].num = utils.accAdd(reduceNums.eiId[addReduceItem.quoteItemId].num, addReduceItem.num);
-                            }
-                            else {
+                            } else {
                                 reduceNums.eiId[addReduceItem.quoteItemId] = {};
                                 reduceNums.eiId[addReduceItem.quoteItemId].num = addReduceItem.num;
                                 reduceNums.eiId[addReduceItem.quoteItemId].quotationFunctionType = addReduceItem.quotationFunctionAreaType;
                             }
-                        }
-                        else if ([1].indexOf(addReduceItem.type) != -1) {
+                        } else if ([1].indexOf(addReduceItem.type) != -1) {
 
-                        }
-                        else if ([3].indexOf(addReduceItem.type) != -1) {
+                        } else if ([3].indexOf(addReduceItem.type) != -1) {
 
                         }
 
@@ -632,19 +613,16 @@ var quotationUtils = {
 
                     if ([0, 2].indexOf(addReduceItem.type) != -1) {
 
-                    }
-                    else {
+                    } else {
 
                         addReduceItem.num = -addReduceItem.num;
 
                         if (addReduceItem.type == 4 || addReduceItem.type == 5) {
 
-                        }
-                        else if ($decorationtype == 2) {
+                        } else if ($decorationtype == 2) {
                             _discountNum = discount;
                             _dcp = utils.changeThrDecimal(utils.accMul(addReduceItem.unitPrice, utils.accDiv(discount, 10)));
-                        }
-                        else {
+                        } else {
                             if ([1, 3].indexOf(addReduceItem.discount)) {
                                 _discountNum = discount;
                                 _dcp = utils.changeThrDecimal(utils.accMul(addReduceItem.unitPrice, utils.accDiv(discount, 10)));
@@ -681,8 +659,7 @@ var quotationUtils = {
         var db = 1, _data = null;
         if ($("#showWay").val() == 0) {
             _data = quotationUtils.quotationDetail.quotationFunctionAreaItemCs;
-        }
-        else {
+        } else {
             _data = quotationUtils.quotationDetail.quotationFunctionAreaItemWs;
         }
 
@@ -741,7 +718,7 @@ var quotationUtils = {
 
                 $printWork.click(function() {
 
-                    params.quotationId = quotationUtils.quotationDetail.quotation.qid;
+                    params.quotation.quotationId = quotationUtils.quotationDetail.quotation.qid;
 
                     var printConf = {
                         "quotationId": quotationUtils.quotationDetail.quotation.qid,
@@ -751,7 +728,7 @@ var quotationUtils = {
                         "workType": i.split('-')[1],
                     };
 
-                    params.quotation = {
+                    params.quotation.quotation = {
                         "printConf": printConf
                     };
 
@@ -765,7 +742,7 @@ var quotationUtils = {
         });
 
         com.post(api.decoration.queryDecorationHolonomy, {
-            "decorationHolonomy.decoration.orderId": params.decorationOrderId
+            "decorationHolonomy.decoration.orderId": params.quotation.orderId
         }, function(res) {
             db = res.decorationHolonomy.discountBase == null || res.decorationHolonomy.discountBase == "" || res.decorationHolonomy.discountBase == undefined ? 1 : res.decorationHolonomy.discountBase;
         }, null, false);
@@ -805,22 +782,18 @@ var quotationUtils = {
                         quotationFunctionAreaItemWs["-" + qv.workType][qv.quotationItemId].dcpt = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-" + qv.workType][qv.quotationItemId].dcpt, qv.dcpt));
                         quotationFunctionAreaItemWs["-" + qv.workType][qv.quotationItemId].quotationTotalPrice = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-" + qv.workType][qv.quotationItemId].quotationTotalPrice, qv.quotationTotalPrice));
                         quotationFunctionAreaItemWs["-" + qv.workType][qv.quotationItemId].total = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-" + qv.workType][qv.quotationItemId].total, qv.total));
-                    }
-                    else if (qv.quotationItemId == 0 || !qv.quotationItemId) {
+                    } else if (qv.quotationItemId == 0 || !qv.quotationItemId) {
                         quotationFunctionAreaItemWs["-" + qv.workType]["customize" + index++] = $.extend({}, qv);
-                    }
-                    else {
+                    } else {
                         quotationFunctionAreaItemWs["-" + qv.workType][qv.quotationItemId] = $.extend({}, qv);
                     }
-                }
-                else {
+                } else {
                     /*
                      * if (quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId] && qv.quotationItemId != 0 && qv.quotationItemId) { quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].num = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].num, qv.num)); quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcp = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcp, qv.dcp)); quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcpt = utils.changeThrDecimal(utils.accAdd(quotationFunctionAreaItemWs["-"+qv.workType][qv.quotationItemId].dcpt, qv.dcpt)); }else
                      */
                     if (qv.quotationItemId == 0 || !qv.quotationItemId) {
                         quotationFunctionAreaItemWs["-" + qv.workType]["customize" + index++] = $.extend({}, qv);
-                    }
-                    else {
+                    } else {
                         quotationFunctionAreaItemWs["-" + qv.workType][qv.quotationItemId + "-" + index++] = $.extend({}, qv);
                     }
                 }
@@ -829,8 +802,7 @@ var quotationUtils = {
                     qv.num = utils.accAdd(qv.num, reduceNums.ariId[qv.ariId].num);
                     qv.dcpt = utils.changeThrDecimal(utils.accMul(qv.num, qv.dcp));
                     qv.quotationTotalPrice = utils.changeThrDecimal(utils.accMul(qv.num, qv.unitPrice));
-                }
-                else if (qv.eiid && reduceNums.eiId[qv.eiid]) {
+                } else if (qv.eiid && reduceNums.eiId[qv.eiid]) {
                     qv.num = utils.accAdd(qv.num, reduceNums.eiId[qv.eiid].num);
                     qv.dcpt = utils.changeThrDecimal(utils.accMul(qv.num, qv.dcp));
                     qv.quotationTotalPrice = utils.changeThrDecimal(utils.accMul(qv.num, qv.unitPrice));
@@ -860,8 +832,7 @@ var quotationUtils = {
 
                 if (!quotationFunctionAreaItemMs[normrice.constructionNode.sort + "-" + normrice.constructionNode.name + "-1"]) {
                     quotationFunctionAreaItemMs[normrice.constructionNode.sort + "-" + normrice.constructionNode.name + "-1"] = [qv];
-                }
-                else {
+                } else {
                     quotationFunctionAreaItemMs[normrice.constructionNode.sort + "-" + normrice.constructionNode.name + "-1"].push(qv);
                 }
             });
@@ -877,8 +848,7 @@ var quotationUtils = {
 
                 if (!quotationFunctionAreaItemMs[normrice.constructionNode.sort + "-" + normrice.constructionNode.name + "-2"]) {
                     quotationFunctionAreaItemMs[normrice.constructionNode.sort + "-" + normrice.constructionNode.name + "-2"] = [qv];
-                }
-                else {
+                } else {
                     quotationFunctionAreaItemMs[normrice.constructionNode.sort + "-" + normrice.constructionNode.name + "-2"].push(qv);
                 }
             });
@@ -894,8 +864,7 @@ var quotationUtils = {
 
                 if (!quotationFunctionAreaItemMs[normrice.constructionNode.sort + "-" + normrice.constructionNode.name + "-3"]) {
                     quotationFunctionAreaItemMs[normrice.constructionNode.sort + "-" + normrice.constructionNode.name + "-3"] = [qv];
-                }
-                else {
+                } else {
                     quotationFunctionAreaItemMs[normrice.constructionNode.sort + "-" + normrice.constructionNode.name + "-3"].push(qv);
                 }
             });
@@ -922,8 +891,7 @@ var quotationUtils = {
 
                 if (!quotationFunctionAreaItemAs[normood.goods.gid + "-"]) {
                     quotationFunctionAreaItemAs[normood.goods.gid + "-"] = normood;
-                }
-                else {
+                } else {
 
                     var item = quotationFunctionAreaItemAs[normood.goods.gid + "-"];
 
@@ -951,8 +919,7 @@ var quotationUtils = {
 
                 if (!quotationFunctionAreaItemAs[normood.goods.gid + "-"]) {
                     quotationFunctionAreaItemAs[normood.goods.gid + "-"] = normood;
-                }
-                else {
+                } else {
 
                     var item = quotationFunctionAreaItemAs[normood.goods.gid + "-"];
 
@@ -978,8 +945,7 @@ var quotationUtils = {
 
                 if (!quotationFunctionAreaItemAs[normood.goods.gid + "-"]) {
                     quotationFunctionAreaItemAs[normood.goods.gid + "-"] = normood;
-                }
-                else {
+                } else {
 
                     var item = quotationFunctionAreaItemAs[normood.goods.gid + "-"];
 
@@ -995,8 +961,7 @@ var quotationUtils = {
 
             if (!quotationFunctionAreaItemAs[normood.goods.gid + "-"]) {
                 quotationFunctionAreaItemAs[normood.goods.gid + "-"] = normood;
-            }
-            else {
+            } else {
 
                 var item = quotationFunctionAreaItemAs[normood.goods.gid + "-"];
 
@@ -1057,8 +1022,7 @@ var quotationUtils = {
 
             // $Total = utils.changeThrDecimal(utils.accAdd(utils.accAdd(_dicProjectPrice, addTotal), reduceTotal));
             $Total = utils.accAdd(_dicProjectPrice, $addReduceTotalPrice);
-        }
-        else {
+        } else {
 
             // 报价项打折价 * 折扣 + 报价项非打折价 + 增项 + 减项打折项 * 折扣 + 减项不打折项 + 拓展项总额 + 车运费 + 管理费
             var quotationTotal = utils.accAdd(utils.accMul($quotationUndisPrice, utils.accDiv($discount, 10)), $quotationTotalPrice);

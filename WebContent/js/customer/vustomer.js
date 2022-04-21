@@ -28,8 +28,8 @@ jQuery(function($) {
 
 			$btnDel.click(function(){
 
-				params.unionId = v.unionId;
-				params.id = 2;
+				params.customer.unionId = v.unionId;
+				params.customer.id = 2;
 				com.popup4page("#vscoreRecordPopUp", api.index.vscoreRecord.url, "积分");
 
 			});

@@ -112,7 +112,7 @@ jQuery(function ($) {
     searcher.init([], "condList", api.construction.pageCustomerServiceGuarantee, function (list) {
         displayFunc.init('resultList', list);
     }, "pagenation", "searcherPostData", {
-        "customerServiceGuarantee.orderId": params.orderId
+        "customerServiceGuarantee.orderId": params.construction.orderId
     }, false, null, function () {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('id', 'add').css("margin", "0px 3px");
@@ -125,8 +125,8 @@ jQuery(function ($) {
     com.focusPage('#add', '#pagenation').click(function () {
         guarantee.editFlag = false;
 
-        guarantee.items.orderId.val(params.orderId);
-        guarantee.items.customerName.val(params.customerName);
+        guarantee.items.orderId.val(params.construction.orderId);
+        guarantee.items.customerName.val(params.construction.customerName);
 
         guarantee.items.orderId.attr("disabled", true);
         guarantee.items.customerName.attr("disabled", true);

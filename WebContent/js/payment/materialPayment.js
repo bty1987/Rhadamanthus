@@ -94,7 +94,7 @@ jQuery(function($) {
 		pageConfig: {}
 	};
 
-	//隐藏触发
+	// 隐藏触发
 	materialPayment.modals.collectModal.on('hide.bs.modal', function () {
 
 		materialPayment.bankGrade = [];
@@ -132,7 +132,7 @@ jQuery(function($) {
 		materialPayment.decorationType = res.typeness;
 	}, null, false);
 
-	//checkbox选中时联动
+	// checkbox选中时联动
 	com.focusPage("#collectModal :checkbox", "#materialPayment").on("change", function(){
 		var that = $(this);
 		var checked = that.prop("checked");
@@ -147,13 +147,13 @@ jQuery(function($) {
 
 	com.selectTypeahead("cashInfo", materialPayment.cashUtil, "key", "value", null);
 
-	//转账方式(银行)
+	// 转账方式(银行)
 	materialPayment.btns.checkvAdd.click(function(){
 		paymentUtils.addBank(materialPayment);
 		return false;
 	});
 
-	//优惠券
+	// 优惠券
 	com.selectTypeahead("couponType", materialPayment.couponType, 'no', 'name');
 
 	materialPayment.btns.collectBtn.bindClick(collect);
@@ -172,7 +172,7 @@ jQuery(function($) {
 		paymentUtils.addCounpon();
 	});
 
-	//不同页面的不同参数
+	// 不同页面的不同参数
 	materialPayment.pageConfig = paymentUtils.getConfig(materialPayment.type, 4);
 
 	var displayFunc  = (function(){
@@ -233,7 +233,7 @@ jQuery(function($) {
 			if(v.paymentStatus != 0 && materialPayment.pageConfig.pageBtn.contains("print")) $divBtnWrap.append($btnPrint);
 			if(v.paymentStatus == 1 && materialPayment.pageConfig.pageBtn.contains("update")) $divBtnWrap.append($btnUpdate);
 
-			//收款
+			// 收款
             $btnCollect.click(function(){
 
 				if([2, 3].contains(v.paymentType)) paymentUtils.showPos(materialPayment, {"pointofsales.pid": v.material.orderId}, [0, 1]);
@@ -242,25 +242,25 @@ jQuery(function($) {
 
             });
 
-			//显示装修单信息
+			// 显示装修单信息
 			$btnDecoration.click(function(){
 				paymentUtils.decorationInfoShow(v.material.orderId, materialPayment.decorationType);
 			});
 
-			//打印
+			// 打印
 			$btnPrint.click(function(){
-				params.mrId = v.mrId;
-				params.decorationOrderMOrderId = v.material.orderId;
-				params.decorationReceiptDrId = v.drId;
+				params.payment.mrId = v.mrId;
+				params.payment.orderId = v.material.orderId;
+				params.payment.cid = v.material.customer.cid;
 				com.popup("专用收款收据__装修单号: " + v.material.orderId  ,api.index.materialPaymentReceiptIndex.url ,function () {
 					parent.layer.getFrameIndex(window.name);
 				},null,true)
 			});
 
-			//更新
+			// 更新
 			$btnUpdate.click(function(){
 
-				//应对批量收款的情况
+				// 应对批量收款的情况
 				var referMoney = utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(v.cash, v.bank), v.checkv), v.coupon), v.advance);
 				v.referMoney = referMoney;
 
@@ -328,7 +328,7 @@ jQuery(function($) {
 
 	}, 'resultList');
 
-	//初始化模态框
+	// 初始化模态框
 	function initCollect(payment, isCollects){
 
 		com.cleanItems(materialPayment.items);
@@ -349,7 +349,7 @@ jQuery(function($) {
 		if(materialPayment.pageConfig.paytypes.contains("coupon")) paymentUtils.initCoupon(materialPayment, 0);
 		if (isCollects) materialPayment.items.couponCheckbox.parent().addClass("hide");
 
-		//根据装修单等级获取收据类型等级
+		// 根据装修单等级获取收据类型等级
 		var grade = payment.material.grade == "B" ? "B" : "";
 
 
@@ -372,11 +372,11 @@ jQuery(function($) {
 
 		materialPayment.modals.collectModal.modal("show");
 
-		//是批量收款
+		// 是批量收款
 		materialPayment.isCollects = isCollects;
 	}
 
-	//更新
+	// 更新
 	function initUpdate(payment){
 
 		com.cleanItems(materialPayment.items);
@@ -400,7 +400,7 @@ jQuery(function($) {
 
 		paymentUtils.initBankGrade(materialPayment, grade);
 
-		//历史收款信息
+		// 历史收款信息
 		paymentUtils.drawHistoryData(materialPayment, payment, materialPayment.items.historyData, "update");
 
 		materialPayment.btns.refundBtn.addClass("hide");
@@ -408,7 +408,7 @@ jQuery(function($) {
 		materialPayment.modals.collectModal.modal("show");
 	}
 
-	//收款
+	// 收款
 	function collect(){
 
 		if (com.validate("collectModal", "#materialPayment")) return false;
@@ -429,7 +429,7 @@ jQuery(function($) {
 			url =  api.payment.collectMaterialPayment;
 			objectName = "materialPayment";
 
-			//批量收款参数
+			// 批量收款参数
 			if (materialPayment.isCollects)  {
 				url =  api.payment.collectMaterialPayments;
 				objectName = "materialReceipt";
@@ -500,16 +500,17 @@ jQuery(function($) {
 			materialPayment.modals.collectModal.modal("hide");
 
 			com.showConfirm("是否需要打印当前收款对应的收据信息?", function(result) {
-				params.mrId = isCollects ? res.materialReceipt.mrId : res.materialPayment.mrId;
-				params.decorationOrderMOrderId = payment.material.orderId;
-				com.popup("专用收款收据__装修单号:" + payment.material.orderId  ,api.index.materialPaymentReceiptIndex.url ,function () {
+				params.payment.mrId = isCollects ? res.materialReceipt.mrId : res.materialPayment.mrId;
+				params.payment.orderId = payment.material.orderId;
+				params.payment.cid = payment.material.customer.cid;
+				com.popup("专用收款收据__装修单号:" + payment.material.orderId, api.index.materialPaymentReceiptIndex.url, function () {
 					parent.layer.getFrameIndex(window.name);
 				},null,true);
 			});
 		});
 	}
 
-	//批量收款
+	// 批量收款
 	com.focusPage('a[name="collects"]', '#pagenation').click(function () {
 
 		var $inputs = com.focusPage('input[name="mpIds"]:checked', '#resultList');
@@ -571,7 +572,7 @@ jQuery(function($) {
 		initCollect(materialPayment.payment, true);
 	});
 
-	//合计
+	// 合计
 	com.focusPage('a[name="showTotal"]', '#pagenation').click(function () {
 		var $total = 0;
 		var $inputs = com.focusPage('input[name="mpIds"]:checked');
@@ -589,12 +590,12 @@ jQuery(function($) {
 		}), com.showAlert(com.info, '<h3>合计金额: ' + $total + '</h3>'));
 	});
 
-	//全选
+	// 全选
 	com.focusPage('a[name="checks"]', '#pagenation').click(function(){
 		paymentUtils.checkAll();
 	});
 
-	//批量确认
+	// 批量确认
 	com.focusPage('a[name="confirms"]', '#pagenation').click(function(){
 		var options = {};
 		var $inputs = com.focusPage('input[name="mpIds"]:checked');
@@ -617,7 +618,7 @@ jQuery(function($) {
 		});
 	});
 
-	//导出
+	// 导出
 	com.focusPage('a[name="import"]', '#pagenation').click(function () {
 		if(com.focusPage('span[name="totalRecords"]').text() == 0){
 			com.showAlert(com.warning, "请通过条件进行查询");

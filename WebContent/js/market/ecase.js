@@ -1,5 +1,5 @@
 jQuery(function($) {
-    
+
     var decorationCase = {
         saveBtn: null,
         modal: null,
@@ -10,14 +10,16 @@ jQuery(function($) {
         validator: null,
         ecityItem: []
     };
-    
+
     decorationCase.saveBtn = com.focusPage("#saveBtn").on("click", saveCaseData);
 
     decorationCase.modal = com.focusPage("#caseModal");
-    decorationCase.modal.on('show.bs.modal',function(e){
+    decorationCase.modal.on('show.bs.modal', function(e) {
+
         com.clearValidator();
     });
-    decorationCase.modal.on('hidden.bs.modal', function () {
+    decorationCase.modal.on('hidden.bs.modal', function() {
+
         decorationCase.editFlag = false;
         decorationCase.items.cycle.removeAttr("disabled");
     });
@@ -37,7 +39,8 @@ jQuery(function($) {
     decorationCase.items.comment = com.focusPage("#comment");
     decorationCase.validateFlag = com.focusPage("#validateFlag");
 
-    com.post(api.ds.market, {}, function(res){
+    com.post(api.ds.market, {}, function(res) {
+
         decorationCase.items.room.bindData(res.room, "key", "value");
         decorationCase.items.livingRoom.bindData(res.livingRoom, "key", "value");
     }, null, false);
@@ -48,20 +51,25 @@ jQuery(function($) {
 
     decorationCase.items.cycle.attr("disabled", "disabled");
 
-    com.post(api.market.queryEcity, {}, function(res){
+    com.post(api.market.queryEcity, {}, function(res) {
+
         var ecitys = res.ecitys;
-        $.each(ecitys, function(i, v){
+        $.each(ecitys, function(i, v) {
+
             decorationCase.ecityItem[v.ecid] = v.city;
         })
     }, null, false);
 
-    var displayFunc  = (function(){
-        var renderList = function(tableId,listData){
+    var displayFunc = (function() {
+
+        var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-            if(listData && listData.length){
-                $.each(listData,function(i, v){
+            if (listData && listData.length) {
+                $.each(listData, function(i, v) {
+
                     var $liLine = creatLine(v);
                     $liLine.appendTo($ul);
                 });
@@ -70,7 +78,8 @@ jQuery(function($) {
             }
         };
 
-        var creatLine = function(v){
+        var creatLine = function(v) {
+
             var that = this;
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.villageName));
@@ -79,11 +88,11 @@ jQuery(function($) {
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html("编辑");
             var $btnDrawing = $('<a></a>').addClass('btn btn-minier btn-success').html("图片");
-            var $btnStatus = $('<input />').attr("type","checkbox").addClass('ace ace-switch ace-switch-5').prop("id", v.hsid);
+            var $btnStatus = $('<input />').attr("type", "checkbox").addClass('ace ace-switch ace-switch-5').prop("id", v.hsid);
 
-            if(v.status == 0){
+            if (v.status == 0) {
                 $btnStatus.attr("checked", false);
-            }else if(v.status == 1){
+            } else if (v.status == 1) {
                 $btnStatus.attr("checked", true);
             }
 
@@ -92,32 +101,22 @@ jQuery(function($) {
             var designerName;
             var supervisorName;
 
-            if(v.designer.name == null){
+            if (v.designer.name == null) {
                 designerName = "无";
-            }else{
+            } else {
                 designerName = v.designer.name;
             }
 
-            if(v.supervisor.name == null){
+            if (v.supervisor.name == null) {
                 supervisorName = "无";
-            }else{
+            } else {
                 supervisorName = v.supervisor.name;
             }
 
-            var propertyArr = [
-                ["城市:", decorationCase.ecityItem[v.cityId], "grey"],
-                ["楼盘名称:", v.villageName, "grey"],
-                ["设计师:", designerName, "grey"],
-                ["监理:", supervisorName, "grey"],
-                ["风格:", v.style, "red"],
-                ["类型:", decorationCase.type[v.type], "red"],
-                ["户型:", v.houseType, "red"],
-                ["面积:", v.area + "平", "blue"],
-                ["周期:", v.cycle + "天", "blue"],
-                ["说明:", v.comment, "grey"]
-            ];
+            var propertyArr = [["城市:", decorationCase.ecityItem[v.cityId], "grey"], ["楼盘名称:", v.villageName, "grey"], ["设计师:", designerName, "grey"], ["监理:", supervisorName, "grey"], ["风格:", v.style, "red"], ["类型:", decorationCase.type[v.type], "red"], ["户型:", v.houseType, "red"], ["面积:", v.area + "平", "blue"], ["周期:", v.cycle + "天", "blue"], ["说明:", v.comment, "grey"]];
 
-            $.each(propertyArr, function (index, value) {
+            $.each(propertyArr, function(index, value) {
+
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
@@ -128,37 +127,37 @@ jQuery(function($) {
 
             $liLine.append($h3).append($ulProperty);
 
-            //编辑
-            $btnEdit.click(function(){
-                
+            // 编辑
+            $btnEdit.click(function() {
+
                 decorationCase.items.type.unbind("change");
-                
+
                 cycleChange(decorationCase.items.type, v.cycle);
-                
+
                 com.focusPage("#validateDiv").attr("style", "display:none");
                 com.cleanTypeahead('designer');
                 com.cleanTypeahead('supervisor');
 
-                if(v.type == 0){
+                if (v.type == 0) {
                     decorationCase.items.cycle.attr("disabled", "disabled");
-                }else if(v.type == 1){
+                } else if (v.type == 1) {
                     decorationCase.items.cycle.removeAttr("disabled");
                 }
 
                 com.updateTypeahead('city', v.cityId, decorationCase.ecityItem[v.cityId]);
 
-                if(v.designer.name != null){
+                if (v.designer.name != null) {
                     com.updateTypeahead('designer', v.designer.euid, v.designer.name);
                 }
 
-                if(v.supervisor.name != null){
+                if (v.supervisor.name != null) {
                     com.updateTypeahead('supervisor', v.supervisor.euid, v.supervisor.name);
                 }
 
                 decorationCase.items.villageName.val(v.villageName);
                 decorationCase.items.style.val(v.style);
                 decorationCase.items.type.val(v.type);
-                decorationCase.items.room.val(v.houseType.substring(0,2));
+                decorationCase.items.room.val(v.houseType.substring(0, 2));
                 decorationCase.items.livingRoom.val(v.houseType.substring(2));
                 decorationCase.items.area.val(v.area);
                 decorationCase.items.cycle.val(v.cycle);
@@ -169,13 +168,18 @@ jQuery(function($) {
                 com.focusPage("#caseModal").modal("show");
             });
 
-            //图片
-            $btnDrawing.click(function(){
+            // 图片
+            $btnDrawing.click(function() {
+
                 com.focusPage("#epicture").html("");
-                com.post(api.market.queryEpictureByCid, {"epicture.cid" : v.cid}, function(data){
+                com.post(api.market.queryEpictureByCid, {
+                    "epicture.cid": v.cid
+                }, function(data) {
+
                     var pictures = data.epictures;
-                    if(pictures && pictures.length){
-                        $.each(pictures, function(i, d){
+                    if (pictures && pictures.length) {
+                        $.each(pictures, function(i, d) {
+
                             appendGalleryElement("epicture", d.epid, d.url, 0, "", api.market.deleteEpicture, v.cid, api.market.updateEcase);
                         });
                         com.popup4photos("#epicture");
@@ -186,13 +190,14 @@ jQuery(function($) {
                 com.focusPage("#epicturePage").modal("show");
             });
 
-            //启用禁用
-            $btnStatus.click(function(){
+            // 启用禁用
+            $btnStatus.click(function() {
+
                 var checkedFlag = $btnStatus.prop("checked");
-                if(checkedFlag){
+                if (checkedFlag) {
                     com.focusPage("#" + v.cid).prop("checked", false);
                     updateCaseStatus(v.cid, 1);
-                }else{
+                } else {
                     updateCaseStatus(v.cid, 0);
                 }
             });
@@ -201,22 +206,25 @@ jQuery(function($) {
         };
 
         return {
-            init : function(tableId,listData){
+            init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
+                renderList(tableId, listData);
             },
-            drawLine : function(v){
+            drawLine: function(v) {
+
                 return creatLine(v);
             }
         }
     })();
 
     var searcher = new Searcher();
-    var conditionList = ["market-ecase-city", "market-designer","market-supervisor", "market-picture-type", "market-style", "market-houseType", "market-area"];
+    var conditionList = ["market-ecase-city", "market-designer", "market-supervisor", "market-picture-type", "market-style", "market-houseType", "market-area"];
 
-    searcher.init(conditionList, "condList", api.market.pageEcase, function(data){
+    searcher.init(conditionList, "condList", api.market.pageEcase, function(data) {
+
         displayFunc.init('resultList', data);
-    }, "pagenation", "casePostData", null, false, null, function(){
+    }, "pagenation", "casePostData", null, false, null, function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addCase').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -225,33 +233,33 @@ jQuery(function($) {
         return [$adda];
     });
 
-    //添加
-    com.focusPage('a[name="addCase"]', '#pagenation').click(function(){
-        
+    // 添加
+    com.focusPage('a[name="addCase"]', '#pagenation').click(function() {
+
         decorationCase.items.type.unbind("change");
-        
+
         cycleChange(decorationCase.items.type, null);
-        
+
         com.cleanItems(decorationCase.items);
         com.clearValidator("caseModal");
-        
+
         com.cleanTypeahead('city');
         com.cleanTypeahead('designer');
         com.cleanTypeahead('supervisor');
-        
+
         decorationCase.items.cycle.attr("disabled", "disabled");
-        
+
         com.focusPage("#validateDiv").attr("style", "display:none");
         com.focusPage("#caseModal").modal("show");
     });
 
-    function saveCaseData(){
-        
-        if(com.validate("caseModal")){
+    function saveCaseData() {
+
+        if (com.validate("caseModal")) {
             return false;
         }
 
-        if(decorationCase.items.designer.val() == "" && decorationCase.items.supervisor.val() == ""){
+        if (decorationCase.items.designer.val() == "" && decorationCase.items.supervisor.val() == "") {
             com.focusPage("#validateDiv").attr("style", "display:display");
             return false;
         }
@@ -269,15 +277,17 @@ jQuery(function($) {
             'caser.comment': decorationCase.items.comment.val()
         };
 
-        if(decorationCase.editFlag){
+        if (decorationCase.editFlag) {
             decorationCase.editFlag = false;
             options["caser.cid"] = decorationCase.cid;
-            com.post(api.market.updateEcase, options, function(res){
+            com.post(api.market.updateEcase, options, function(res) {
+
                 com.showAlert(com.info, "修改成功");
                 searcher.doSearch();
             });
-        }else{
-            com.post(api.market.addEcase, options, function(res){
+        } else {
+            com.post(api.market.addEcase, options, function(res) {
+
                 com.showAlert(com.info, "创建成功");
                 searcher.doSearch();
             });
@@ -286,29 +296,33 @@ jQuery(function($) {
         com.focusPage("#caseModal").modal("hide");
     }
 
-    //更新状态
-    function updateCaseStatus(cid, cvalue){
-        
+    // 更新状态
+    function updateCaseStatus(cid, cvalue) {
+
         var options = {};
         options["caser.cid"] = cid;
         options["caser.status"] = cvalue;
 
-        com.post(api.market.updateEcaseForStatus, options, function(res){
+        com.post(api.market.updateEcaseForStatus, options, function(res) {
+
             com.focusPage("#" + cid).prop("checked", true);
             searcher.doSearch();
         });
     }
 
-    function initUploadBtn(cid){
-        
-        com.uploadify("#epictureUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {'uploadType': 2}, 10, function(data){
-            
+    function initUploadBtn(cid) {
+
+        com.uploadify("#epictureUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {
+            'uploadType': 2
+        }, 10, function(data) {
+
             var options = {};
 
             options["epicture.cid"] = cid;
             options["epicture.url"] = data.resUrl;
 
-            com.post(api.market.addEpicture, options, function(res){
+            com.post(api.market.addEpicture, options, function(res) {
+
                 var pic = res.epicture;
                 appendGalleryElement("epicture", pic.epid, data.resUrl, 0, "", api.market.deleteEpicture, cid, api.market.updateEcase);
                 com.popup4photos("#epicture");
@@ -316,49 +330,55 @@ jQuery(function($) {
         });
     }
 
-    function appendGalleryElement(galleryId, imgId, imgUrl, type, editUrl, deleteUrl, cid, defaultUrl){
-        
+    function appendGalleryElement(galleryId, imgId, imgUrl, type, editUrl, deleteUrl, cid, defaultUrl) {
+
         var gallery = com.focusPage("#" + galleryId);
-        
-        var imgLi = $("<li></li>").attr("id", "gallery_li"+imgId).addClass("text-center").css("border-color", "#ddd").appendTo(gallery);
+
+        var imgLi = $("<li></li>").attr("id", "gallery_li" + imgId).addClass("text-center").css("border-color", "#ddd").appendTo(gallery);
         var img = $('<img />');
         var imgA = $("<a></a>").css("height", "150px").append(img).appendTo(imgLi);
-        
+
         com.showImg(img, imgUrl, 150, 150, '', null, type);
-        
+
         var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
-        var toolsA = $("<a></a>").attr("href", "#").on("click", function(){
+        var toolsA = $("<a></a>").attr("href", "#").on("click", function() {
+
             var options = {};
             options["epicture.epid"] = imgId;
 
-            com.post(deleteUrl, options, function(res){
-                com.focusPage("#gallery_li"+imgId).remove();
+            com.post(deleteUrl, options, function(res) {
+
+                com.focusPage("#gallery_li" + imgId).remove();
             });
         }).appendTo(toolsDiv);
         $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
 
-        var toolsB = $("<a></a>").attr("href", "#").on("click", function(){
+        var toolsB = $("<a></a>").attr("href", "#").on("click", function() {
+
             var options = {};
             options["caser.cid"] = cid;
             options["caser.defaultUrl"] = imgUrl;
 
-            com.post(defaultUrl, options, function(res){
+            com.post(defaultUrl, options, function(res) {
+
                 com.showAlert(com.info, "图片设置成功");
             });
         }).appendTo(toolsDiv);
         $("<i></i>").addClass("icon-ok green").appendTo(toolsB);
     }
 
-    function cycleChange(tag, cycleValue){
-        tag.on("change", function(){
-            if(decorationCase.items.type.val() == 0){
+    function cycleChange(tag, cycleValue) {
+
+        tag.on("change", function() {
+
+            if (decorationCase.items.type.val() == 0) {
                 decorationCase.items.cycle.attr("disabled", "disabled");
-                if(cycleValue != null){
+                if (cycleValue != null) {
                     decorationCase.items.cycle.val(0);
                 }
-            }else if(decorationCase.items.type.val() == 1){
+            } else if (decorationCase.items.type.val() == 1) {
                 decorationCase.items.cycle.removeAttr("disabled");
-                if(cycleValue != null){
+                if (cycleValue != null) {
                     decorationCase.items.cycle.val(cycleValue);
                 }
             }

@@ -101,13 +101,13 @@ $(function(){
             });
 
             $btnRecord.click(function(){
-                params.vid = v.vid;
+                params.customer.vid = v.vid;
                 com.popup4page("#vscoreRecordPopUp", api.index.vrecord.url, "记录");
             });
 
             $btnDel.click(function(){
-                params.unionId = v.unionId;
-                params.id = 1;
+                params.customer.unionId = v.unionId;
+                params.customer.id = 1;
                 com.popup4page("#vscoreRecordPopUp", api.index.vscoreRecord.url, "积分");
             });
 

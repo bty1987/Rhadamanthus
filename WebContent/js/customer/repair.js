@@ -1,13 +1,13 @@
 jQuery(function ($) {
 
     var repair = {
-        aid: params.aid,
+        aid: params.customer.aid,
         resultList: com.focusPage("#resultList"),
         addRepair: com.focusPage("#addRepair"),
         submitBtn: com.focusPage("#submitBtn"),
         schedule: com.focusPage("#schedule"),
         items: {
-            content: com.focusPage("#content"),
+            content: com.focusPage("#content")
         },
         addRepairModal: com.focusPage("#addRepairModal"),
         addSaveBtn: com.focusPage("#addSaveBtn"),

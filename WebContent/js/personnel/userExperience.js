@@ -45,7 +45,7 @@ jQuery(function($) {
         }
     };
 
-    com.post(api.personel.queryUserExperienceByUid,{"userExperience.uid": params.uid}, function (data) {
+    com.post(api.personel.queryUserExperienceByUid,{"userExperience.uid": params.personel.uid}, function (data) {
         initList(data.userExperiences);
     }, function (e) {
         com.showAlert(com.error, e.errorMsg);

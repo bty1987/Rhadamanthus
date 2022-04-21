@@ -266,8 +266,8 @@ $(function () {
             });
 
             $record.click(function () {
-                params.csid = v.csid;
-                com.popup4page('#customerRecordPopup', "views/customer/customerRecord.html","记录内容");
+                params.customer.csid = v.csid;
+                com.popup4page('#customerRecordPopup', api.index.customerRecord.url, "记录内容");
             });
 
             $release.click(function () {

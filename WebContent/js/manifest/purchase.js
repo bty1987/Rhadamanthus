@@ -115,7 +115,7 @@ $(function () {
             $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
             $btnView.click(function () {
-                params["purchase.pid"] = v.pid;
+                params.manifest.pid = v.pid;
                 com.popup4page("#layerPopUp","views/manifest/purchase4view.html","查看__采购单号 : " + v.no)
             });
 
@@ -126,12 +126,12 @@ $(function () {
                 	return false;
                 }
                 
-                params["purchase.pid"] = v.pid;
+                params.manifest.pid = v.pid;
                 com.popup4page("#layerPopUp","views/manifest/purchase2edit.html","修改__采购单号 : " + v.no)
             });
 
             $btnIn.click(function () {
-                params["purchase.pid"] = v.pid;
+                params.manifest.pid = v.pid;
                 com.popup4page("#layerPopUp","views/manifest/purchase2in.html","入库__采购单号 : " + v.no)
             });
 
@@ -200,7 +200,7 @@ $(function () {
         	$pids.push($check.attr("data-pid"));
         }
         
-        params["purchase.pids"] = $pids;
+        params.manifest.pids = $pids;
 
         com.popup4page("#layerPopUp","views/manifest/purchase2batchin.html","批量入库");
     }
