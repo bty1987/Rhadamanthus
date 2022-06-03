@@ -377,6 +377,7 @@ $.extend(api, {decoration: {
         changeDecorationForStatus: {url: "changeDecorationForStatus.do"},
         changeDecorationForRepairStatus : {url: "changeDecorationForRepairStatus.do"},
         changeDecorationForHouse: {url: "changeDecorationForHouse.do"},
+        changeDecorationForCustomer: {url: "changeDecorationForCustomer.do"},
         subDecorationForQuotationTime: {url: "subDecorationForQuotationTime.do"},
 
         pageDecorationHolonomy: {

@@ -176,6 +176,7 @@ jQuery(function() {
             "occessories.isLift": com.focusPage('#isLift').val(),
             "occessories.isExceed": com.focusPage('#isExceed').val(),
             "occessories.isAttic": com.focusPage('#isAttic').val(),
+            "occessories.comment": com.focusPage('#comment').val(),
         };
 
         $list && $list.length && $.each($list, function(i, v) {

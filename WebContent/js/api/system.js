@@ -68,6 +68,10 @@ $.extend(api, {
             url: "updateCity.do",
             server: "communion"
         },
+        updateCityForPosition: {
+            url: "updateCityForPosition.do",
+            server: "communion"
+        },
         deleteCity: {
             url: "deleteCity.do",
             server: "communion"
@@ -93,6 +97,10 @@ $.extend(api, {
         },
         updateCityProper: {
             url: "updateCityProper.do",
+            server: "communion"
+        },
+        updateCityProperForPosition: {
+            url: "updateCityProperForPosition.do",
             server: "communion"
         },
         deleteCityProper: {

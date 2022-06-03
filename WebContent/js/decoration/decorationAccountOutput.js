@@ -12,8 +12,9 @@ jQuery(function($) {
     var drawTime = "";
 
     com.post(api.decoration.queryDecorationActivityByOrderId, {
-        "decorationActivity.orderId": params.decoration.orderId
+        "decorationActivity.orderId": decoration.orderId
     }, function(res) {
+
         if (res.decorationActivitys.length > 0)
             decorationActivity = res.decorationActivitys[0].activity.name;
     }, null, false);
@@ -21,6 +22,7 @@ jQuery(function($) {
     com.post(api.construction.queryAcceptance, {
         "acceptance.orderId": params.decoration.orderId
     }, function(res) {
+
         drawTime = res.acceptance.acceptanceTime;
     }, null, false);
 

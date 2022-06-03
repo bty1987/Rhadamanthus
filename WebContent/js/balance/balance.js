@@ -1,6 +1,7 @@
 jQuery(function($) {
 
     var balance = {
+
         btns: {
             addConfirmBtn: com.focusPage("#addConfirmBtn"),
         },
@@ -22,12 +23,14 @@ jQuery(function($) {
     balance.btns.addConfirmBtn.bindClick(addBalance);
 
     balance.modals.addModal.on("hide.bs.modal", function() {
+
         com.cleanItems(balance.items);
         com.clearValidator();
         com.closeTip();
     });
 
     com.post(api.ds.balance, {}, function(res) {
+
         balance.items.type.bindData(res.isType, "key", "value");
         balance.isType = res.isType.split("key", "value");
         balance.isStatus = res.isStatus.split("key", "value");
@@ -46,9 +49,8 @@ jQuery(function($) {
 
             if (listData && listData.length) {
                 $.each(listData, function(i, v) {
-                    var $liLine = creatLine(v);
 
-                    $liLine.appendTo($ul);
+                    creatLine(v).appendTo($ul);
                 });
 
                 $ul.appendTo($tableWrap);
@@ -68,10 +70,21 @@ jQuery(function($) {
             var $btnBalanceDetail = $("<a></a>").addClass("btn btn-minier btn-success").html("结算明细");
             var $btnApportDetail = $("<a></a>").addClass("btn btn-minier btn-warning").html("分摊明细");
             var $btnBalanceSales = $("<a></a>").addClass("btn btn-minier btn-inverse").html("结算销售");
+            var $btnBalanceCutpay = $("<a></a>").addClass("btn btn-minier btn-yellow").html("结算扣款");
 
-            var propertyArr = [["归属人: ", v.belonger.userName, "grey"], ["创建人: ", v.creater.userName, "grey"], ["创建时间: ", v.createTime, "grey"], ["金额: ", v.amount, "blue"], ["余额: ", v.surplus, "blue"], ["类型: ", balance.isType[v.type], "red"], ["状态: ", balance.isStatus[v.status], "red"], ];
+            var propertyArr = [];
+
+            propertyArr.push(["归属人: ", v.belonger.userName, "grey"]);
+            propertyArr.push(["创建人: ", v.creater.userName, "grey"]);
+            propertyArr.push(["创建时间: ", v.createTime, "green"]);
+            propertyArr.push(["金额: ", v.amount, "blue"]);
+            propertyArr.push(["扣款总额: ", v.cutpay, "blue"]);
+//            propertyArr.push(["余额: ", v.surplus, "blue"]);
+            propertyArr.push(["类型: ", balance.isType[v.type], "red"]);
+            propertyArr.push(["状态: ", balance.isStatus[v.status], "red"]);
 
             $.each(propertyArr, function(index, value) {
+
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -79,50 +92,60 @@ jQuery(function($) {
             });
 
             $liLine.append($h3).append($ulProperty);
-            $btnDiv.append($btnBalance).append($btnPayBalance).append($btnBalanceDetail).append($btnApportDetail).append($btnBalanceSales);
+            $btnDiv.append($btnBalanceSales).append($btnBalanceCutpay);
             $h3.append($title).append($btnDiv);
 
             $btnBalance.click(function() {
 
-            	params.balance.bid = v.bid;
+                params.balance.bid = v.bid;
                 params.balance.uid = v.belonger.uid;
                 params.balance.surplus = v.surplus;
 
                 com.popup4page("#stockRecordPopUp", api.index.balanceBalanceIndex.url, "结算", "", function() {
-                    balanceSearcher.doSearch();
+
+                    searcher.doSearch();
                 });
             });
 
             $btnPayBalance.click(function() {
 
-            	params.balance.bid = v.bid;
+                params.balance.bid = v.bid;
                 params.balance.uid = v.belonger.uid;
                 params.balance.surplus = v.surplus;
 
                 com.popup4page("#stockRecordPopUp", api.index.payBalanceIndex.url, "出纳", "", function() {
-                    balanceSearcher.doSearch();
+
+                    searcher.doSearch();
                 });
             });
 
             $btnBalanceDetail.click(function() {
 
-            	params.balance.bid = v.bid;
+                params.balance.bid = v.bid;
 
                 com.popup4page("#stockRecordPopUp", api.index.balanceDetailIndex.url, "结算明细");
             });
 
             $btnApportDetail.click(function() {
 
-            	params.balance.bid = v.bid;
+                params.balance.bid = v.bid;
 
                 com.popup4page("#stockRecordPopUp", api.index.apportDetailIndex.url, "分摊明细");
             });
 
             $btnBalanceSales.click(function() {
 
-            	params.balance.bid = v.bid;
+                params.balance.bid = v.bid;
 
                 com.popup4page("#stockRecordPopUp", api.index.balanceSalesIndex.url, "销售单");
+            });
+
+            $btnBalanceCutpay.click(function() {
+
+                params.balance.bid = v.bid;
+
+                com.popup4page("#stockRecordPopUp", api.index.balanceCutpayIndex.url, "结算扣款");
+
             });
 
             return $liLine;
@@ -130,35 +153,41 @@ jQuery(function($) {
 
         return {
             init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function(v) {
+
                 return creatLine(v);
             }
         }
     })();
 
-    var balanceSearcher = new Searcher();
+    var searcher = new Searcher();
 
-    balanceSearcher.init(["balance-balance-no", "balance-balance-type", "balance-balance-status"], "condList", api.balance.pageBalance, function(data) {
+    searcher.init(["balance-balance-no", "balance-balance-type", "balance-balance-status"], "condList", api.balance.pageBalance, function(data) {
+
         displayFunc.init('resultList', data);
     }, "pagenation", "balancePostData", null, false, null, function() {
 
-        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addBalance').css("margin", "0px 3px");
-        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-        var $addspan = $('<span></span>').text('添加').appendTo($adda);
+//        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addBalance').css("margin", "0px 3px");
+//        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+//        var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        return [$adda];
+//        return [$adda];
     }, 'resultList');
 
     com.focusPage("#addBalance").click(function() {
+
         balance.modals.addModal.modal("show");
     });
 
     function addBalance() {
 
-        if (com.validate('addModal')) { return false; };
+        if (com.validate('addModal')) {
+            return false;
+        }
 
         var options = {
             "balance.belonger.userId": com.typeahead("belongerName"),
@@ -167,8 +196,9 @@ jQuery(function($) {
         }
 
         com.post(api.balance.addBalance, options, function(res) {
+
             com.showAlert(com.info, "操作成功");
-            balanceSearcher.doSearch();
+            searcher.doSearch();
         });
 
         balance.modals.addModal.modal("hide");

@@ -618,6 +618,15 @@ Condition.addupRule("sales", {
             validata: null
         }
     },
+    "oales-no": {
+        label: "外销单号",
+        type: "text",
+        submitConfig: {
+            name: "no",
+            op: "eq",
+            validate: null
+        }
+    },
     "oales-orderId": {
         label: "装修单号",
         type: "text",
@@ -659,7 +668,7 @@ Condition.addupRule("sales", {
         label: "品牌",
         type: "text",
         submitConfig: {
-            name: "oalesBrand",
+            name: "brand",
             op: "eq",
             validata: null
         }
@@ -668,7 +677,7 @@ Condition.addupRule("sales", {
         label: "品类",
         type: "text",
         submitConfig: {
-            name: "oalesCategory",
+            name: "category",
             op: "eq",
             validata: null
         }

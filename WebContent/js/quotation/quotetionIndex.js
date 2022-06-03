@@ -1,9 +1,15 @@
 $(function() {
+
     var quotetion = {
+
         quotetionList: com.focusPage("#quotetionList"),
-        quotetionModal: com.focusPage('#quotetionModal'),
-        replicaQuotetionModal: com.focusPage('#replicaQuotetionModal'),
-        quotetionItems: {
+
+        modals: {
+            updateQuotetionModal: com.focusPage('#updateQuotetionModal'),
+            replicaQuotetionModal: com.focusPage('#replicaQuotetionModal'),
+        },
+
+        items: {
             qid: com.focusPage("#quotetionid"),
             name: com.focusPage("#name"),
             version: com.focusPage("#version"),
@@ -11,14 +17,33 @@ $(function() {
             content: com.focusPage("#content"),
             replicaType: com.focusPage("#replicaType"),
             quotetionNo: com.focusPage("#quotetionNo"),
-            quotationNames: com.focusPage('#quotationNames'),
+            quotation: com.focusPage('#quotation'),
             replicaOrderId: com.focusPage('#replicaOrderId'),
+
+            replicaQuotetionNo: com.focusPage("#replicaQuotetionNo"),
+            cloneOrderId: com.focusPage("#cloneOrderId"),
         },
+
+        btns: {
+
+            createQuotetionBtn: com.focusPage("#createQuotetionBtn"),
+            copyQuotetionBtn: com.focusPage("#copyQuotetionBtn"),
+            compareQuotetionBtn: com.focusPage("#compareQuotetionBtn"),
+
+            updateQuotetionBtn: com.focusPage("#updateQuotetionBtn", "#updateQuotetionModal"),
+            replicaQuotetionBtn: com.focusPage("#replicaQuotetionBtn", "#replicaQuotetionModal"),
+        },
+
+        quotetion: null,
+        cuotetion: null,
+
         canChangeStatus: 0,
         editFlg: 0,
         version: [],
+
         leftflg: false,
         rightflg: false,
+
         replicaType: [{
             "key": "0",
             "value": "唯一编号"
@@ -28,137 +53,153 @@ $(function() {
         }, ],
     };
 
-    com.focusPage('#quotetion-statement').statement("报价", "报价信息列表");
+    com.focusPage('#quotetion-statement').statement("报价", "报价列表");
 
     com.post(api.quotation.queryQuotationVersion, {}, function(res) {
+
         $.each(res.quotationVersions, function(i, val) {
+
             quotetion.version[val.no] = val.name;
         });
-        quotetion.quotetionItems.quotationVersion.bindData(res.quotationVersions, 'no', 'name');
+
+        quotetion.items.quotationVersion.bindData(res.quotationVersions, 'no', 'name');
     }, null, false);
 
-    quotetion.quotetionItems.replicaType.bindData(quotetion.replicaType, 'key', 'value');
+    quotetion.items.replicaType.bindData(quotetion.replicaType, 'key', 'value');
 
-    quotetion.quotetionItems.replicaOrderId.on("blur", function() {
+    quotetion.items.replicaOrderId.on("blur", function() {
+
         var options = {
             "quotation.orderId": $(this).val()
         };
         com.post(api.quotation.queryQuotationByOrderId, options, function(res) {
-            quotetion.quotetionItems.quotationNames.bindData(res.quotations, 'qid', 'name');
+
+            quotetion.items.quotation.bindData(res.quotations, 'qid', 'name');
         });
     });
 
-    com.focusPage('#createQuotetion').on('click', function() {
-        quotetion.editFlg = 0;
+    quotetion.btns.createQuotetionBtn.on('click', function() {
+
+        quotetion.quotetion = null;
+
         com.clearValidator();
-        com.cleanItems(quotetion.quotetionItems);
-        quotetion.quotetionItems.quotationVersion.get(0).selectedIndex = 0;
-        quotetion.quotetionItems.version.removeClass("hide");
-        quotetion.quotetionItems.quotationVersion.removeAttr("disabled");
-        quotetion.quotetionModal.modal("show");
+        com.cleanItems(quotetion.items);
+
+        quotetion.items.version.removeClass("hide");
+        quotetion.items.quotationVersion.removeAttr("disabled");
+
+        quotetion.modals.updateQuotetionModal.modal("show");
     });
 
-    com.focusPage('#replicaQuotetion').on('click', function() {
+    quotetion.btns.copyQuotetionBtn.on('click', function() {
+
         com.clearValidator();
-        com.cleanItems(quotetion.quotetionItems);
-        quotetion.quotetionItems.replicaType.on("change", function(e) {
-            $this = $(this);
-            if ($this.val() == 0) {
-                com.focusPage("#Bquoteno").removeClass("hide");
-                com.focusPage("#bOrderId").addClass("hide");
+        com.cleanItems(quotetion.items);
+
+        quotetion.items.replicaType.on("change", function(e) {
+
+            var that = $(this);
+
+            if (that.val() == 0) {
+                quotetion.items.replicaQuotetionNo.removeClass("hide");
+                quotetion.items.cloneOrderId.addClass("hide");
             } else {
-                com.focusPage("#Bquoteno").addClass("hide");
-                com.focusPage("#bOrderId").removeClass("hide");
+                quotetion.items.replicaQuotetionNo.addClass("hide");
+                quotetion.items.cloneOrderId.removeClass("hide");
             }
-            quotetion.quotetionItems.replicaOrderId.val("");
-            quotetion.quotetionItems.quotetionNo.val("");
-            quotetion.quotetionItems.quotationNames.bindData([], 'qid', 'quotationName');
+
+            quotetion.items.replicaOrderId.val("");
+            quotetion.items.quotetionNo.val("");
+            quotetion.items.quotation.bindData([], 'qid', 'quotationName');
         }).trigger("change");
-        quotetion.replicaQuotetionModal.modal("show");
+
+        quotetion.modals.replicaQuotetionModal.modal("show");
     });
 
-    com.focusPage('#quotesaveBtn').bindClick(function() {
+    quotetion.btns.updateQuotetionBtn.bindClick(function() {
 
-        if (com.validate("quotetionModal")) { return; }
-
-        if (quotetion.editFlg == 0) {
-            var options = {
-                "quotetion.name": quotetion.quotetionItems.name.val(),
-                "quotetion.version": quotetion.quotetionItems.quotationVersion.val(),
-                "quotetion.content": quotetion.quotetionItems.content.val(),
-            };
-            com.post(api.quotation.addQuotetion, options, function(res) {
-                com.showAlert(com.info, "操作成功");
-                quotetion.quotetionModal.modal("hide");
-                drawquotetion(res.quotetion);
-            }, null, false);
-        } else if (quotetion.editFlg == 1) {
-            var options = {
-                "quotetion.qid": quotetion.quotetionItems.qid.val(),
-                "quotetion.name": quotetion.quotetionItems.name.val(),
-                "quotetion.version": quotetion.quotetionItems.quotationVersion.val(),
-                "quotetion.content": quotetion.quotetionItems.content.val(),
-            };
-
-            com.post(api.quotation.updateQuotetion, options, function(res) {
-                com.showAlert(com.info, "操作成功");
-                quotetion.quotetionModal.modal("hide");
-                com.focusPage("#h4name_" + quotetion.quotetionItems.qid.val()).text(quotetion.quotetionItems.name.val());
-                com.focusPage("#content_" + quotetion.quotetionItems.qid.val()).text('备注:' + quotetion.quotetionItems.content.val());
-            }, null, false);
-        } else {
-            var options = {
-                "quotetion.qid": quotetion.quotetionItems.qid.val(),
-                "quotetion.name": quotetion.quotetionItems.name.val(),
-                "quotetion.content": quotetion.quotetionItems.content.val(),
-            };
-            com.post(api.quotation.copyQuotetion, options, function(res) {
-                com.showAlert(com.info, "操作成功");
-                quotetion.quotetionItems.version.removeClass("hide");
-                quotetion.quotetionModal.modal("hide");
-                drawquotetion(res.quotetion);
-            }, null, false);
+        if (com.validate("updateQuotetionModal")) {
+            return false;
         }
+
+        var url = api.quotation.addQuotetion;
+        var options = {
+            "quotetion.name": quotetion.items.name.val(),
+            "quotetion.version": quotetion.items.quotationVersion.val(),
+            "quotetion.content": quotetion.items.content.val(),
+        }
+
+        if (quotetion.quotetion && !quotetion.cuotetion) {
+            url = api.quotation.updateQuotetion;
+            options["quotetion.qid"] = quotetion.quotetion.qid;
+        }
+
+        if (!quotetion.quotetion && quotetion.cuotetion) {
+            url = api.quotation.copyQuotetion;
+            options["quotetion.qid"] = quotetion.cuotetion.qid;
+        }
+
+        com.post(url, options, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+
+            initQuotetionList();
+
+            quotetion.modals.updateQuotetionModal.modal("hide");
+        }, null, false);
+
     });
 
-    com.focusPage("#replicaBtn").bindClick(function() {
+    quotetion.btns.replicaQuotetionBtn.bindClick(function() {
 
-        if (com.validate("replicaQuotetionModal")) { return; }
+        if (com.validate("replicaQuotetionModal")) {
+            return false;
+        }
 
         var options = {};
 
-        if (quotetion.quotetionItems.replicaType.val() == 0) {
+        if (quotetion.items.replicaType.val() == 0) {
             options = {
-                "quotetion.no": quotetion.quotetionItems.quotetionNo.val(),
+                "quotetion.no": quotetion.items.quotetionNo.val(),
             };
             com.post(api.quotation.cloneQuotetion, options, function(res) {
+
                 com.showAlert(com.info, "操作成功");
-                quotetion.replicaQuotetionModal.modal("hide");
-                drawquotetion(res.quotetion);
-            }, null, false);
+
+                initQuotetionList();
+
+                quotetion.modals.replicaQuotetionModal.modal("hide");
+            });
         } else {
             options = {
-                "quotetion.qid": quotetion.quotetionItems.quotationNames.val(),
+                "quotetion.qid": quotetion.items.quotation.val(),
             };
             com.post(api.quotation.replicaQuotetion, options, function(res) {
+
                 com.showAlert(com.info, "操作成功");
-                quotetion.replicaQuotetionModal.modal("hide");
-                drawquotetion(res.quotetion);
-            }, null, false);
+
+                initQuotetionList();
+
+                quotetion.modals.replicaQuotetionModal.modal("hide");
+            });
         }
     }, 5000);
 
     initQuotetionList();
 
     function initQuotetionList() {
+
         quotetion.quotetionList.html("");
         com.post(api.quotation.queryQuotetion, {}, function(res) {
-            if (res.errorCode == 0) {
-                if (res.quotetions == null || res.quotetions.length == 0) { return; }
-                $.each(res.quotetions, function(i, v) {
-                    drawquotetion(v);
-                });
+
+            if (res.quotetions == null || res.quotetions.length == 0) {
+                return false;
             }
+
+            $.each(res.quotetions, function(i, v) {
+
+                drawquotetion(v);
+            });
         });
     }
 
@@ -196,59 +237,59 @@ $(function() {
         var deleteBtn = $('<a></a>').addClass('btn btn-minier btn-danger').append($('<i>').addClass('icon-copy')).text('删除').attr('id', 'deleteQuotation_' + qid).attr('data-qid', qid).attr('data-name', quo.name).appendTo(quotationWidgetToolDiv);
 
         // 复制
-        com.focusPage("#copyQuotation_" + qid).on('click', function() {
-            quotetion.editFlg = 2;
+        copyBtn.on('click', function() {
+
+            quotetion.quotetion = null;
+            quotetion.cuotetion = quo;
+
             com.clearValidator();
-            com.cleanItems(quotetion.quotetionItems);
-            quotetion.quotetionItems.qid.val($(this).attr("data-qid"));
-            com.post(api.quotation.queryQuotetionByQid, {
-                "quotetion.qid": $(this).attr("data-qid")
-            }, function(res) {
-                if (res.quotetion != null) {
-                    quotetion.quotetionItems.version.addClass("hide");
-                    quotetion.quotetionModal.modal("show");
-                }
-            });
+            com.cleanItems(quotetion.items);
+
+            quotetion.items.version.addClass("hide");
+
+            quotetion.modals.updateQuotetionModal.modal("show");
         });
 
         // 修改更新
-        com.focusPage("#editQuotation_" + qid).on('click', function() {
-            quotetion.editFlg = 1;
+        editBtn.on('click', function() {
+
+            quotetion.quotetion = quo;
+            quotetion.cuotetion = null;
+
             com.clearValidator();
-            com.post(api.quotation.queryQuotetionByQid, {
-                "quotetion.qid": $(this).attr("data-qid")
-            }, function(res) {
-                if (res.quotetion != null) {
-                    quotetion.quotetionItems.version.addClass("hide");
-                    quotetion.quotetionItems.quotationVersion.attr("disabled", "disabled");
-                    quotetion.quotetionItems.qid.val(res.quotetion.qid);
-                    quotetion.quotetionItems.name.val(res.quotetion.name);
-                    quotetion.quotetionItems.quotationVersion.val(res.quotetion.version);
-                    quotetion.quotetionItems.content.val(res.quotetion.content);
-                    quotetion.quotetionModal.modal("show");
-                }
-            });
+            com.cleanItems(quotetion.items);
+
+            quotetion.items.version.addClass("hide");
+            quotetion.items.quotationVersion.attr("disabled", "disabled");
+
+            quotetion.items.qid.val(quo.qid);
+            quotetion.items.name.val(quo.name);
+            quotetion.items.quotationVersion.val(quo.version);
+            quotetion.items.content.val(quo.content);
+
+            quotetion.modals.updateQuotetionModal.modal("show");
         });
 
         // 报价
-        com.focusPage("#editQuotationDetail_" + qid).on('click', function() {
+        enterBtn.on('click', function() {
 
-            params.quotation.quotetionId = $(this).attr("data-qid");
+            params.quotation.quotetion = quo;
 
             com.switchPage(api.index.quotetionPartIndex.url);
         });
 
         // 删除
-        com.focusPage("#deleteQuotation_" + qid).on('click', function() {
+        deleteBtn.on('click', function() {
 
-            var dataname = $(this).attr("data-name");
             var option = {
-                "quotetion.qid": $(this).attr("data-qid")
+                "quotetion.qid": quo.qid
             };
 
-            com.showConfirm("确定要删除报价: " + dataname, function() {
+            com.showConfirm("确定要删除报价: " + quo.name, function() {
+
                 com.post(api.quotation.deleteQuotetion, option, function(res) {
-                    com.focusPage("#quotationDiv_" + res.quotetion.qid).remove();
+
+                    initQuotetionList();
                 });
             });
         });

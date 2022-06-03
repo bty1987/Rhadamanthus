@@ -2,49 +2,77 @@ jQuery(function($) {
 
     var activityItem = {
 
+        awardStock: null,
+
         saveBtn: com.focusPage("#saveActivityItemBtn"),
         cancelBtn: com.focusPage("#cancelBtn"),
 
         modals: {
             activityItemModal: com.focusPage("#activityItemModal")
         },
+
         items: {
-            awardStockshide: com.focusPage("#awardStockshide"),
-            activityName: com.focusPage("#activityNames"),
-            activityItems: com.focusPage("#activityItems"),
-            name: com.focusPage("#awardStocksname"),
-            awardStockstype: com.focusPage("#awardStockstype"),
-            money: com.focusPage("#money"),
-            integral: com.focusPage("#integral")
+            activityName: com.focusPage("#activityName", "#activityItem"),
+            activityItems: com.focusPage("#activityItems", "#activityItem"),
+
+            name: com.focusPage("#name", "#activityItemModal"),
+            money: com.focusPage("#money", "#activityItemModal"),
+            integral: com.focusPage("#integral", "#activityItemModal")
         },
 
         activityItemPostData: {
             aid: params.infomation.aid,
             activityName: params.infomation.activityName
-        }
+        },
+
+        type: {},
+        storeroom: {}
     };
 
     activityItem.saveBtn.bindClick(saveData);
-    activityItem.items.awardStockstype.change(changeAwardStock);
 
     activityItem.modals.activityItemModal.on("hide.bs.modal", function() {
 
+        activityItem.awardStock = null;
+
         com.clearValidator();
         com.cleanItems(activityItem.items);
-        activityItem.items.awardStockshide.addClass("hide");
+
+        com.cleanTypeahead(activityItem.items.name);
+        com.closeTip();
     });
 
     com.post(api.ds.information, {
         "timestamp": new Date().getTime()
     }, function(res) {
 
-        activityItem.items.awardStockstype.bindData(res.activityItemType, "key", "value", true);
+        activityItem.type = res.awardStockType.split("key", "value");
+        activityItem.storeroom = res.awardStoreRoom.split("key", "value");
+
     }, null, false);
 
-    activityItem.items.activityName.text(activityItem.activityItemPostData.activityName);
+    activityItem.items.activityName.text(params.infomation.activityName);
+
+    com.initTypeahead(activityItem.items.name, api.information.queryAwardStockByName, "awardStock.name", {}, "awardStocks", "asId", function(v) {
+
+        return v.name + "-" + activityItem.type[v.type] + "-" + activityItem.storeroom[v.storeroom];
+    }, function(list, k, v) {
+
+        $.each(list, function(i, e) {
+
+            if (e.asId != k)
+                return true;
+
+            activityItem.awardStock = e;
+
+            return false;
+        })
+
+        return v;
+    });
 
     com.post(api.information.queryActivityItemByAid, {
-        "activity.aid": activityItem.activityItemPostData.aid
+        "activity.aid": params.infomation.aid
     }, function(res) {
 
         var activityItems = res.activityItems;
@@ -52,8 +80,7 @@ jQuery(function($) {
         $.each(activityItems, function(i, v) {
 
             addActivityItemForDiv(activityItem.items.activityItems, v);
-        })
-
+        });
     });
 
     function addActivityItemForDiv(_activityItems, _activityItem) {
@@ -100,58 +127,32 @@ jQuery(function($) {
     com.focusPage("#addBtn").on("click", function() {
 
         activityItem.modals.activityItemModal.modal("show");
-
-        activityItem.editFlag = false;
     });
 
     function saveData() {
 
-        if (com.validate('form')) {
+        if (com.validate('activityItemModal')) {
             return false;
         }
 
         var options = {
-            "activity.aid": activityItem.activityItemPostData.aid,
-            "activityItem.asid": activityItem.items.name.val(),
+            "activity.aid": params.infomation.aid,
+            "activityItem.asid": com.typeahead(activityItem.items.name),
             "activityItem.money": activityItem.items.money.val(),
             "activityItem.integral": activityItem.items.integral.val(),
-            "activityItem.type": activityItem.items.awardStockstype.val(),
-            "activityItem.activity": activityItem.activityItemPostData.activityName
+            "activityItem.type": activityItem.awardStock.type,
+            "activityItem.activity": params.infomation.activityName
         };
 
         com.post(api.information.addActivityItem, options, function(res) {
 
             com.showAlert(com.info, "操作成功");
 
-            if (activityItem.editFlag) {
-                com.focusPage("#pricing_" + activityItem.activityItemPostData.aiid).remove();
-            }
-
             addActivityItemForDiv(activityItem.items.activityItems, res.activityItem);
 
         });
 
         activityItem.modals.activityItemModal.modal("hide");
-    }
-
-    function changeAwardStock() {
-
-        if (activityItem.items.awardStockstype.val() == "")
-            return false;
-
-        var awardStockstypes = activityItem.items.awardStockstype.val();
-
-        var options = {
-            "awardStock.type": awardStockstypes,
-            "awardStock.storeroom": params.infomation.type
-        };
-
-        com.post(api.information.queryAwardStockByType, options, function(res) {
-
-            activityItem.items.name.bindData(res.awardStocks, "asId", "name", true);
-        });
-
-        activityItem.items.awardStockshide.removeClass("hide");
     }
 
     function deleteActivityItem(aiId, activityItemName) {

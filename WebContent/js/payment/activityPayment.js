@@ -300,7 +300,7 @@ jQuery(function ($) {
 
         activityPayment.payment = payment;
 
-        paymentUtils.showPos(activityPayment, {"pointofsales.pid": payment.mno, "pointofsales.type": 5}, [0, 1]);
+        paymentUtils.showPos(activityPayment, {"paytran.orderId": payment.mno, "paytran.type": 5}, [0, 1]);
 
         activityPayment.items.referMoney.val(payment.money).attr("disabled", "disabled");
 

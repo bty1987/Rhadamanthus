@@ -2,6 +2,7 @@ jQuery(function($) {
 
     // 隐藏触发
     com.focusPage("#processInfo").on('hide.bs.modal', function() {
+
         com.focusPage("#processfield").empty();
         com.focusPage("#processitem").empty();
         com.focusPage("#processcomment").empty();
@@ -10,11 +11,13 @@ jQuery(function($) {
     var displayFunc = (function() {
 
         var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
                 $.each(listData, function(i, v) {
+
                     var $liLine = creatLine(v);
 
                     $liLine.appendTo($ul);
@@ -41,6 +44,7 @@ jQuery(function($) {
             var propertyArr = [["名称:", v.name, "grey"], ["编号:", v.no, "blue"], ["code:", v.code, "grey"], ["状态:", v.status == 0 ? "启用" : "禁用", "red"]];
 
             $.each(propertyArr, function(index, value) {
+
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
@@ -53,6 +57,7 @@ jQuery(function($) {
 
             // 编辑
             $btnEdit.click(function() {
+
                 // 显示表单
                 params.approval.process = v;
                 com.popup4page("#layerPopUp", api.index.createProcessIndex.url, "审批");
@@ -61,22 +66,27 @@ jQuery(function($) {
             // 启禁用
             !v.status && $statusSwitch.prop("checked", true);
             $statusSwitch.click(function() {
+
                 var options = {};
 
                 options["process.pid"] = v.pid;
                 options["process.status"] = v.status == 0 ? 1 : 0;
 
                 com.post(api.approval.updateProcessForStatus, options, function(res) {
+
                     searcher.doSearch();
                 });
             });
 
             // 删除
             $btnDel.click(function() {
+
                 com.showConfirm("确认要删除当前表单吗?", function(res) {
+
                     com.post(api.approval.deleteProcess, {
                         "process.pid": v.pid
                     }, function(res) {
+
                         com.showAlert(com.info, "删除成功");
                         searcher.doSearch();
                     });
@@ -88,10 +98,12 @@ jQuery(function($) {
 
         return {
             init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function(v) {
+
                 return creatLine(v);
             }
         };
@@ -100,6 +112,7 @@ jQuery(function($) {
     var searcher = new Searcher();
 
     searcher.init(["approval-process-no", "approval-process-name", "approval-process-status"], "condList", api.approval.pageProcess, function(data) {
+
         displayFunc.init('resultList', data);
     }, "pagenation", "processPostData", null, false, null, function() {
 
@@ -115,8 +128,8 @@ jQuery(function($) {
         params.approval.process = null;
 
         com.popup4page("#layerPopUp", api.index.createProcessIndex.url, "审批", null, function() {
+
             searcher.doSearch();
-            console.log(111)
         });
     });
 

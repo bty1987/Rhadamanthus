@@ -248,6 +248,20 @@
     {"key" : "0", "value" : "启用"},
     {"key" : "1", "value" : "禁用"}
   ],
+  "chatingStatus": [
+    {"key" : "0", "value" : "启用"},
+    {"key" : "1", "value" : "禁用"}
+  ],
+  "chatingType": [
+    {"key" : "0", "value" : "文本"},
+    {"key" : "2", "value" : "应用"}
+  ],
+  "chatingAtttype": [
+    {"key" : "0", "value" : "装修"},
+    {"key" : "1", "value" : "工程"},
+    {"key" : "2", "value" : "主材"},
+    {"key" : "3", "value" : "其他"}
+  ],
   "errorCode": 0,
   "errorMsg": null
 }

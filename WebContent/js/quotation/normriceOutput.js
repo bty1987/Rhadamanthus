@@ -226,7 +226,7 @@ function printNormriceForWorker(schedule) {
     return contentHtml;
 }
 
-function printAdditem(schedule) {
+function printNromadd(schedule) {
 
     var contentHtml = '';
 
@@ -242,25 +242,35 @@ function printAdditem(schedule) {
     itemIndex = 0;
     total = 0;
 
-    com.post(api.data.queryAdditem, {
-        "additem.constructionNode.sort": schedule
+    com.post(api.quotation.queryNormriceItem, {
+        "normriceItem.qid": params.quotation.quotationId
     }, function(res) {
 
-        $.each(res.additems, function(i, v) {
+        $.each(res.normriceItems, function(i, v) {
+
+            if (v.constructionNode.sort != schedule)
+                return true;
+
+            var trannum = parseFloat(v.trannum == '0' ? 1 : v.trannum);
+            var salary = parseFloat(v.salary);
+
+            var normrice = utils.accMul(v.num, utils.accMul(trannum, salary));
+
+            total = utils.accAdd(total, normrice);
 
             contentHtml += '<tr bgcolor="#FFFFFF">';
-            contentHtml += '<td width="8%" align="center"></td>';
-            contentHtml += '<td width="12%" align="center"></td>';
+            contentHtml += '<td width="8%" align="center">' + (itemIndex + 1) + '</td>';
+            contentHtml += '<td width="12%" align="center">附加</td>';
             contentHtml += '<td width="20%" align="center">' + v.name + '</td>';
-            contentHtml += '<td width="9%" align="center"></td>';
-            contentHtml += '<td width="9%" align="center"></td>';
-            contentHtml += '<td width="9%" align="center"></td>';
-            contentHtml += '<td width="9%" align="center"></td>';
-            contentHtml += '<td width="8%" align="center"></td>';
+            contentHtml += '<td width="9%" align="center">' + v.unit + '</td>';
+            contentHtml += '<td width="9%" align="center">' + v.num + '</td>';
+            contentHtml += '<td width="9%" align="center">' + v.unit + '</td>';
+            contentHtml += '<td width="9%" align="center">' + v.salary + '</td>';
+            contentHtml += '<td width="8%" align="center">' + normrice + '</td>';
             contentHtml += '</tr>';
 
+            itemIndex++;
         });
-
     }, null, false);
 
     contentHtml += '<tr bgcolor="#FFFFFF">';
@@ -275,7 +285,7 @@ function printAdditem(schedule) {
     contentHtml += '<td width="9%" align="center"></td>';
     contentHtml += '<td width="9%" align="center"></td>';
     contentHtml += '<td width="9%" align="center">总额</td>';
-    contentHtml += '<td width="8%" align="center">0</td>';
+    contentHtml += '<td width="8%" align="center">' + total + '</td>';
     contentHtml += '</tr>';
 
     return contentHtml;
@@ -389,7 +399,7 @@ function generatePrintPage(type, subtype, workType, company, orderType, showType
     }
 
     if ((subtype & 8) == 8) {
-        html += printAdditem(workType);
+        html += printNromadd(workType);
     }
 
     html += printFooter();

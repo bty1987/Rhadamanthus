@@ -106,10 +106,12 @@ jQuery(function($) {
         name: "发送",
         clazz: "btn-danger",
         handle: function(v) {
+
             send(v.sid);
             return false;
         },
         show: function(v) {
+
             return v.status == 0;
         }
     }];
@@ -182,8 +184,6 @@ jQuery(function($) {
 
     function save() {
 
-        console.log("save")
-
         if (com.validate('makeSurveyModal'))
             return false;
 
@@ -195,6 +195,7 @@ jQuery(function($) {
         };
 
         com.post(api.customer.makeSurvey, options, function(res) {
+
             send(res.survey.sid);
         });
 
@@ -210,8 +211,10 @@ jQuery(function($) {
             };
 
             com.post(api.customer.sendSurvey, options, function() {
+
                 searcher.doSearch();
             }, function() {
+
                 searcher.doSearch();
             });
         });

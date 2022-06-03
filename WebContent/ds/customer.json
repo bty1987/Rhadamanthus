@@ -96,6 +96,14 @@
     {"key":"0","value":"已选"},
     {"key":"1","value":"未选"}
   ],
+  "droupStatus": [
+    {"key":"0","value":"有效"},
+    {"key":"1","value":"无效"}
+  ],
+  "droupIsHandle": [
+    {"key":"0","value":"客户"},
+    {"key":"1","value":"处理"}
+  ],
   "errorCode": 0,
   "errorMsg": ""
 }

@@ -126,7 +126,7 @@ jQuery(function ($) {
 
     searcher.base("condList", "pagenation", "resultList", api.data.pagePaymentType);
 
-    searcher.condition(["data-paymentType-type", "data-paymentType-paytype", "data-paymentType-status"]);
+    searcher.condition(["data-paymentType-name", "data-paymentType-type", "data-paymentType-paytype", "data-paymentType-status"]);
 
     searcher.history("paymentTypePostData");
 

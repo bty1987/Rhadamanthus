@@ -17,7 +17,96 @@ Condition.addupRule("quotation", {
         }
     },
 
-    "selection-orderId": {
+    "presignProduce-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "eq",
+            validate: null
+        }
+    },
+    "presignProduce-status": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                key: "0",
+                value: "初始"
+            }, {
+                key: "1",
+                value: "发布"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "presignItem-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "eq",
+            validate: null
+        }
+    },
+    "presignItem-status": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                key: "0",
+                value: "启用"
+            }, {
+                key: "1",
+                value: "禁用"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "presignItem-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                key: "0",
+                value: "基础"
+            }, {
+                key: "1",
+                value: "工程"
+            }, {
+                key: "2",
+                value: "主材"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    // 报价-预签单
+    "protation-decoration-orderId": {
         label: "装修单号",
         type: "text",
         submitConfig: {
@@ -29,6 +118,451 @@ Condition.addupRule("quotation", {
             }
         }
     },
+    "protation-decoration-village": {
+        label: "楼盘",
+        type: "autofill",
+        submitConfig: {
+            name: "villageId",
+            op: "eq ",
+            validate: null
+        },
+        dataSource: {
+            url: api.data.queryVillageForNameByPinyin,
+            postData: {},
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "protation-decoration-designer": {
+        label: "设计师",
+        type: "autofill",
+        submitConfig: {
+            name: "designerId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": 3,
+                "departmentType.name": ""
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "protation-decoration-salesman": {
+        label: "业务员",
+        type: "autofill",
+        submitConfig: {
+            name: "salesmanId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": 3,
+                "departmentType.name": ""
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "protation-decoration-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "decorationOrderStatus",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.decoration,
+            postData: {
+                "timestamp": new Date().getTime()
+            },
+            listPath: "decorationOrderStatus",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "protation-createTime": {
+        label: "创建时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "createTime",
+            op: "cn",
+            validate: null
+        }
+    },
+    "protation-status": {
+        label: "预签状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.quotation,
+            listPath: "protationStatus",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    // 报价-报价单
+    "quotation-decoration-orderId": {
+        label: "装修单号",
+        type: "text",
+        submitConfig: {
+            name: "orderId",
+            op: "eq",
+            validate: {
+                "reg": /^[A-Z0-9]*$/,
+                "msg": "格式不正确A-Z,0-9"
+            }
+        }
+    },
+    "quotation-decoration-village": {
+        label: "楼盘",
+        type: "autofill",
+        submitConfig: {
+            name: "villageId",
+            op: "eq ",
+            validate: null
+        },
+        dataSource: {
+            url: api.data.queryVillageForNameByPinyin,
+            postData: {},
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "quotation-decoration-designer": {
+        label: "设计师",
+        type: "autofill",
+        submitConfig: {
+            name: "designerId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": 3,
+                "departmentType.name": ""
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "quotation-decoration-salesman": {
+        label: "业务员",
+        type: "autofill",
+        submitConfig: {
+            name: "salesmanId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": 3,
+                "departmentType.name": ""
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "quotation-decoration-status": {
+        label: "订单状态",
+        type: "select",
+        submitConfig: {
+            name: "decorationOrderStatus",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.decoration,
+            postData: {
+                "timestamp": new Date().getTime()
+            },
+            listPath: "decorationOrderStatus",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "quotation-createTime": {
+        label: "创建时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "createTime",
+            op: "cn",
+            validate: null
+        }
+    },
+    "quotation-status": {
+        label: "报价状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.quotation,
+            postData: {
+                "timestamp": new Date().getTime()
+            },
+            listPath: "quotationStatus",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    // 报价-拓展单
+    "extension-decoration-orderId": {
+        label: "装修单号",
+        type: "text",
+        submitConfig: {
+            name: "orderId",
+            op: "eq",
+            validate: {
+                "reg": /^[A-Z0-9]*$/,
+                "msg": "格式不正确A-Z,0-9"
+            }
+        }
+    },
+    "extension-decoration-village": {
+        label: "楼盘",
+        type: "autofill",
+        submitConfig: {
+            name: "villageId",
+            op: "eq ",
+            validate: null
+        },
+        dataSource: {
+            url: api.data.queryVillageForNameByPinyin,
+            postData: {},
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "extension-decoration-designer": {
+        label: "设计师",
+        type: "autofill",
+        submitConfig: {
+            name: "designerId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": 3,
+                "departmentType.name": ""
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "extension-salesman": {
+        label: "业务员",
+        type: "autofill",
+        submitConfig: {
+            name: "salesmanId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": 3,
+                "departmentType.name": ""
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "extension-decoration-status": {
+        label: "订单状态",
+        type: "select",
+        submitConfig: {
+            name: "decorationOrderStatus",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.decoration,
+            postData: {
+                "timestamp": new Date().getTime()
+            },
+            listPath: "decorationOrderStatus",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "extension-createTime": {
+        label: "创建时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "createTime",
+            op: "eq",
+            validate: null
+        }
+    },
+    "extension-status": {
+        label: "扩展状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.quotation,
+            postData: {
+                "timestamp": new Date().getTime()
+            },
+            listPath: "extensionStatus",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    // 选材单
+    "selection-decoration-orderId": {
+        label: "装修单号",
+        type: "text",
+        submitConfig: {
+            name: "orderId",
+            op: "eq",
+            validate: {
+                "reg": /^[A-Z0-9]*$/,
+                "msg": "格式不正确A-Z,0-9"
+            }
+        }
+    },
+    "selection-decoration-village": {
+        label: "楼盘",
+        type: "autofill",
+        submitConfig: {
+            name: "villageId",
+            op: "eq ",
+            validate: null
+        },
+        dataSource: {
+            url: api.data.queryVillageForNameByPinyin,
+            postData: {},
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    "selection-decoration-designer": {
+        label: "设计师",
+        type: "autofill",
+        submitConfig: {
+            name: "designerId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": 3,
+                "departmentType.name": ""
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    "selection-decoration-salesman": {
+        label: "业务员",
+        type: "autofill",
+        submitConfig: {
+            name: "salesmanId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": 3,
+                "departmentType.name": ""
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    "selection-createTime": {
+        label: "创建时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "createTime",
+            op: "eq",
+            validate: null
+        }
+    },
+
+    "selection-decoration-status": {
+        label: "订单状态",
+        type: "select",
+        submitConfig: {
+            name: "decorationOrderStatus",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.decoration,
+            postData: {
+                "timestamp": new Date().getTime()
+            },
+            listPath: "decorationOrderStatus",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    "selection-status": {
+        label: "选材状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                key: "0",
+                value: "初始"
+            }, {
+                key: "1",
+                value: "锁定"
+            }, ],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
     "selection-item-status": {
         label: "状态",
         type: "select",
@@ -144,94 +678,103 @@ Condition.addupRule("quotation", {
             validate: null
         }
     },
-    "presignProduce-name": {
-        label: "名称",
+
+    // 报价-定额单
+    "norm-decoration-orderId": {
+        label: "装修单号",
         type: "text",
         submitConfig: {
-            name: "name",
+            name: "orderId",
             op: "eq",
-            validate: null
+            validate: {
+                "reg": /^[A-Z0-9]*$/,
+                "msg": "格式不正确A-Z,0-9"
+            }
         }
     },
-    "presignProduce-status": {
-        label: "类型",
-        type: "select",
+    "norm-decoration-village": {
+        label: "楼盘",
+        type: "autofill",
         submitConfig: {
-            name: "status",
-            op: "eq",
+            name: "villageId",
+            op: "eq ",
             validate: null
         },
         dataSource: {
-            url: null,
-            postData: null,
-            listPath: [{
-                key: "0",
-                value: "初始"
-            }, {
-                key: "1",
-                value: "发布"
-            }],
+            url: api.data.queryVillageForNameByPinyin,
+            postData: {},
+            listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
         }
     },
-    "presignItem-name": {
-        label: "名称",
-        type: "text",
+    "norm-decoration-designer": {
+        label: "设计师",
+        type: "autofill",
         submitConfig: {
-            name: "name",
-            op: "eq",
-            validate: null
-        }
-    },
-    "presignItem-status": {
-        label: "类型",
-        type: "select",
-        submitConfig: {
-            name: "status",
+            name: "designerId",
             op: "eq",
             validate: null
         },
         dataSource: {
-            url: null,
-            postData: null,
-            listPath: [{
-                key: "0",
-                value: "启用"
-            }, {
-                key: "1",
-                value: "禁用"
-            }],
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": 3,
+                "departmentType.name": ""
+            },
+            listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
         }
     },
-    "presignItem-type": {
-        label: "类型",
-        type: "select",
+    "norm-decoration-salesman": {
+        label: "业务员",
+        type: "autofill",
         submitConfig: {
-            name: "type",
+            name: "salesmanId",
             op: "eq",
             validate: null
         },
         dataSource: {
-            url: null,
-            postData: null,
-            listPath: [{
-                key: "0",
-                value: "基础"
-            }, {
-                key: "1",
-                value: "工程"
-            }, {
-                key: "2",
-                value: "主材"
-            }],
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": 3,
+                "departmentType.name": ""
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "norm-createTime": {
+        label: "创建时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "createTime",
+            op: "eq",
+            validate: null
+        }
+    },
+    "norm-decoration-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "decorationOrderStatus",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.decoration,
+            postData: {
+                "timestamp": new Date().getTime()
+            },
+            listPath: "decorationOrderStatus",
             keyPath: "key",
             valuePath: "value"
         }
     },
 
+    // 报价-增减单
     "addreduce-orderId": {
         label: "装修单号",
         type: "text",
@@ -300,4 +843,40 @@ Condition.addupRule("quotation", {
             }
         }
     },
+    "addreduce-isaffirm": {
+        label: "客户确认",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.quotation,
+            postData: {
+                "timestamp": new Date().getTime()
+            },
+            listPath: "addReduceisAffirmDict",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "addreduce-createTime": {
+        label: "创建时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "createTime",
+            op: "eq",
+            validate: null
+        }
+    },
+    "addreduce-affirmTime": {
+        label: "确认时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "affirmTime",
+            op: "eq",
+            validate: null
+        }
+    }
 });

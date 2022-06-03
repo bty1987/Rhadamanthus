@@ -15,10 +15,20 @@ $(function() {
             produce: com.focusPage("#produce", "#protationModal"),
             comment: com.focusPage("#comment", "#protationModal"),
             preferPrice: com.focusPage("#preferPrice", "#protationModal"),
-            managePrice: com.focusPage("#managePrice", "#protationModal")
+            managePrice: com.focusPage("#managePrice", "#protationModal"),
+            decorationInfo: com.focusPage("#decorationInfo"),
+        },
+
+        datasets: {
+
+            status: {},
+
+            decorationStatus: {},
         },
 
         orderId: params.quotation.orderId,
+
+        pageType: params.urlLoadParams.type,
 
         editFlg: 0,
         leftflg: false,
@@ -29,7 +39,19 @@ $(function() {
     com.post(api.quotation.queryPresignProduce, {}, function(res) {
 
         protation.items.produce.bindData(res.presignProduces, "ppid", "name");
-    })
+    });
+
+    com.post(api.ds.decoration, {}, function(res) {
+
+        protation.datasets.decorationStatus = res.decorationOrderStatus.split("key", "value");
+
+    }, null, false);
+
+    com.post(api.ds.quotation, {}, function(res) {
+
+        protation.datasets.status = res.protationStatus.split("key", "value");
+
+    }, null, false);
 
     com.focusPage('#fl-statement').statement("装修单", "预签");
 
@@ -97,8 +119,6 @@ $(function() {
         }
     });
 
-    initProtationList();
-
     function initProtationList() {
 
         var protationList = com.focusPage("#protationList").html("");
@@ -135,28 +155,6 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.set("pageltList", "pageltList", "protationList", api.quotation.queryProtationByOrderId, {
-        "protation.orderId": protation.orderId,
-    }, null, null, "protations", true);
-
-    var cardprops = [{
-        field: "name",
-        name: "名称",
-        prop: "name"
-    }, {
-        field: "createTime",
-        name: "时间",
-        prop: "createTime"
-    }, {
-        field: "totalPrice",
-        name: "总价",
-        prop: "totalPrice"
-    }, {
-        field: "comment",
-        name: "备注",
-        prop: "comment"
-    }];
-
     var cardbtns = [{
         name: "修改",
         clazz: "btn-blue",
@@ -184,10 +182,13 @@ $(function() {
         clazz: "btn-success",
         handle: function(v) {
 
-            params.quotation.orderId = v.orderId;
+            params.historyPage = api.index.protationIndex.url;
+
+            v.orderId = v.decoration ? v.decoration = v.decoration.orderId : v.orderId;
+
             params.quotation.protation = v;
 
-            com.switchPage("views/quotation/protationPart.html");
+            com.switchPage(api.index.protationPart.url);
         }
     }, {
         name: "删除",
@@ -286,6 +287,205 @@ $(function() {
         }
     }];
 
-    searcher.card("name", cardprops, cardbtns).render();
+    if (protation.pageType == null) {
 
+        initProtationList();
+
+        searcher.set("pageltList", "pageltList", "resultList", api.quotation.queryProtationByOrderId, {
+            "protation.orderId": protation.orderId,
+        }, null, null, "protations", true);
+
+        var cardprops = [{
+            field: "name",
+            name: "名称",
+            prop: "name"
+        }, {
+            field: "createTime",
+            name: "时间",
+            prop: "createTime"
+        }, {
+            field: "totalPrice",
+            name: "总价",
+            prop: "totalPrice"
+        }, {
+            field: "comment",
+            name: "备注",
+            prop: "comment"
+        }];
+
+        searcher.card("name", cardprops, cardbtns);
+    }
+
+    if (protation.pageType == "page") {
+
+        protation.items.decorationInfo.addClass("hide");
+
+        com.focusPage('#fl-statement').addClass("hide");
+        com.focusPage('#hr-dotted').addClass("hide");
+        com.focusPage('#dotted').addClass("hide");
+
+        searcher.base("condList", "pagenation", "resultList", api.quotation.pageProtation);
+        searcher.condition(["quotation-protation-decoration-orderId", "quotation-protation-decoration-village", "quotation-protation-decoration-designer", "quotation-protation-decoration-salesman", "quotation-protation-decoration-status", "quotation-protation-createTime", "quotation-protation-status"]);
+
+        var cardprops = [{
+            field: "decoration.orderId",
+            name: "装修单号",
+            prop: "decoration.orderId",
+            clazz: "blue"
+        }, {
+            field: "name",
+            name: "楼盘",
+            prop: "decoration.house.village.name",
+            clazz: "grey"
+        }, {
+            field: "houseNumber",
+            name: "楼号",
+            prop: "decoration.house.houseNumber",
+            clazz: "grey"
+        }, {
+            field: "name",
+            name: "客户名",
+            prop: "decoration.customer.name",
+            clazz: "grey"
+        }, {
+            field: "currentName",
+            name: "设计师",
+            prop: "decoration.designer.currentName",
+            clazz: "grey"
+        }, {
+            field: "currentName",
+            name: "业务员",
+            prop: "decoration.salesman.currentName",
+            clazz: "grey"
+        }, {
+            field: "buildArea",
+            name: "面积",
+            prop: "decoration.house.buildArea",
+            clazz: "blue"
+        }, {
+            field: "decoration.status",
+            name: "订单状态",
+            prop: "decoration.status",
+            dataset: protation.datasets.decorationStatus,
+            clazz: "red"
+        }, {
+            type: "newline"
+        }, {
+            field: "name",
+            name: "名称",
+            prop: "name",
+            clazz: "grey"
+        }, {
+            field: "createTime",
+            name: "创建时间",
+            prop: "createTime",
+            clazz: "green"
+        }, {
+            field: "creater.currentName",
+            name: "创建人",
+            prop: "creater.currentName",
+            clazz: "grey"
+        }, {
+            field: "quotePrice",
+            name: "起报价",
+            prop: "quotePrice",
+            clazz: "blue"
+        }, {
+            field: "quoteArea",
+            name: "起报面积",
+            prop: "quoteArea",
+            clazz: "blue"
+        }, {
+            field: "unitPrice",
+            name: "计价单价",
+            prop: "unitPrice",
+            clazz: "blue"
+        }, {
+            field: "profitRate",
+            name: "利润率",
+            prop: "profitRate",
+            clazz: "blue"
+        }, {
+            field: "basicPrice",
+            name: "基础额",
+            prop: "basicPrice",
+            clazz: "blue"
+        }, {
+            field: "comdPrice",
+            name: "工程额",
+            prop: "comdPrice",
+            clazz: "blue"
+        }, {
+            field: "commPrice",
+            name: "主材额",
+            prop: "commPrice",
+            clazz: "blue"
+        }, {
+            field: "adddPrice",
+            name: "增工额",
+            prop: "adddPrice",
+            clazz: "blue"
+        }, {
+            field: "addmPrice",
+            name: "增主额",
+            prop: "addmPrice",
+            clazz: "blue"
+        }, {
+            field: "subdPrice",
+            name: "减工额",
+            prop: "subdPrice",
+            clazz: "blue"
+        }, {
+            field: "submPrice",
+            name: "减主额",
+            prop: "submPrice",
+            clazz: "blue"
+        }, {
+            field: "totalPrice",
+            name: "总额",
+            prop: "totalPrice",
+            clazz: "blue"
+        }, {
+            field: "mostPrice",
+            name: "主材成本",
+            prop: "mostPrice",
+            clazz: "grey"
+        }, {
+            field: "costRate",
+            name: "工程增项成本比例",
+            prop: "costRate",
+            clazz: "blue"
+        }, {
+            field: "mostRate",
+            name: "主材增项成本比例",
+            prop: "mostRate",
+            clazz: "blue"
+        }, {
+            field: "totalCost",
+            name: "成本总额",
+            prop: "totalCost",
+            clazz: "blue"
+        }, {
+            field: "totalProfit",
+            name: "利润总额",
+            prop: "totalProfit",
+            clazz: "blue"
+        }, {
+            field: "comment",
+            name: "备注",
+            prop: "comment",
+            clazz: "grey"
+        }, {
+            field: "status",
+            name: "状态",
+            prop: "status",
+            dataset: protation.datasets.status,
+            clazz: "red"
+        }];
+
+        searcher.line("decoration.orderId", cardprops, cardbtns);
+
+    }
+
+    searcher.render();
 });

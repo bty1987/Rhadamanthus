@@ -1,0 +1,94 @@
+<div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="widget-box">
+                <div class="widget-header header-color-blue"><div class="orange">*橙色名称标签为必填信息</div></div>
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <div class="row">
+
+                            <div class="col-md-12">
+                                <div class="form-group col-sm-6 customer">
+                                    <label for="key1" class="col-sm-3 control-label no-padding-right orange">甲方</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-customer-name" type="text" class="col-sm-7 col-xs-10 conitem v_required" maxlength="32" data-toggle="popover" data-trigger='manual' value="0">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="agentId" class="col-sm-3 control-label no-padding-right orange">身份证号</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-agent-ident" type="text" class="col-sm-7 col-xs-10 conitem v_required" value="/" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 agent" id="agentor">
+
+                                <hr>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="agentName" class="col-sm-3 control-label no-padding-right orange">甲方代理人</label>
+                                    <div class="col-sm-9">
+                                        <input id="sin-agent-name" type="text" maxlength="32" class="col-sm-7 col-xs-10 conitem v_required" value="/" data-toggle="popover" data-trigger='manual'>
+                                    </div>
+                                </div>
+
+                            </div> 
+
+                            <div class="col-md-12 company">
+
+                                <hr>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="companyName" class="col-sm-3 control-label no-padding-right orange">公司名称</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-company-name" type="text" class="col-sm-7 col-xs-10 conitem v_required" value='/' maxlength="32" data-toggle="popover" data-trigger='manual'>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-12">
+                                <hr>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="villageName" class="col-sm-3 control-label no-padding-right orange">楼盘</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-village-name" type="text" class="col-sm-4 conitem v_required" data-placement="top" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-sm-6">
+                                    <label for="housenumber" class="col-sm-3 control-label no-padding-right orange">楼号</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-housenumber" type="text" class="col-sm-6 conitem v_required" data-placement="top" />
+                                    </div>
+                                </div>
+
+                               <div class="form-group  col-sm-6">
+                                    <label class="col-sm-3 control-label no-padding-right orange" for="con-valid-start-date">有效开始时间</label>
+                                    <div class="col-sm-9">
+                                        <input class="date-picker-date col-xs-12 col-sm-7 v_required" id="con-valid-start-date" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group  col-sm-6">
+                                    <label class="col-sm-3 control-label no-padding-right orange" for="con-valid-end-date">有效结束时间</label>
+                                    <div class="col-sm-9">
+                                        <input class="date-picker-date col-xs-12 col-sm-7 v_required" id="con-valid-end-date" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/contract/C-003-D-0-0004.js']);
+</script>

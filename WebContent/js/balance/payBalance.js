@@ -2,8 +2,10 @@ jQuery(function($) {
 
     var payBalance = {
 
-        refundBtn: com.focusPage("#refundBtn"),
-        cancellBtn: com.focusPage("#cancelBtn"),
+        btns: {
+            refundBtn: com.focusPage("#refundBtn"),
+            cancellBtn: com.focusPage("#cancelBtn"),
+        },
 
         items: {
             list: com.focusPage('#list'),
@@ -21,7 +23,7 @@ jQuery(function($) {
 
     queryAccountes();
 
-    payBalance.refundBtn.click(function() {
+    payBalance.btns.refundBtn.click(function() {
 
         if (com.validate('list', 'bottom')) {
             return false;
@@ -77,7 +79,7 @@ jQuery(function($) {
 
     });
 
-    payBalance.cancellBtn.click(function() {
+    payBalance.btns.cancellBtn.click(function() {
         com.closePopup();
     });
 

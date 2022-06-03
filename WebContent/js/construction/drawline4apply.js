@@ -1,41 +1,41 @@
-jQuery(function ($) {
+jQuery(function($) {
 
     var drawline = {
-            
+
         dlid: null,
 
         btns: {
-            saveInfoBtn : com.focusPage("#saveInfoBtn"),
-            saveBtn : com.focusPage("#saveBtn"),
-            updateBtn : com.focusPage("#updateBtn"),
+            saveInfoBtn: com.focusPage("#saveInfoBtn"),
+            saveBtn: com.focusPage("#saveBtn"),
+            updateBtn: com.focusPage("#updateBtn"),
         },
 
-        modals : {
-            constructionInfoModal : com.focusPage("#constructionInfoModal"),
-            applyModal : com.focusPage("#applyModal"),
-            editModal : com.focusPage("#editModal"),
-            updateModal : com.focusPage("#updateModal")
+        modals: {
+            constructionInfoModal: com.focusPage("#constructionInfoModal"),
+            applyModal: com.focusPage("#applyModal"),
+            editModal: com.focusPage("#editModal"),
+            updateModal: com.focusPage("#updateModal")
         },
 
         items: {
-            
+
             applayTime: com.focusPage("#applayTime"),
-            
+
             dlid: com.focusPage("#dlid"),
             actualDate: com.focusPage("#actualDate"),
             startTime: com.focusPage("#startTime"),
             endTime: com.focusPage("#endTime"),
             drawLineGroup: com.focusPage("#drawLineGroup"),
 
-            ishovel  : com.focusPage("#ishovel"),
-            iskey  : com.focusPage("#iskey"),
-            timeLimit : com.focusPage("#timeLimit"),
-            finishTime : com.focusPage("#finishTime"),
-            keyTime : com.focusPage("#keyTime"),
-            drawlineTime : com.focusPage("#drawlineTime"),
-            designTime : com.focusPage("#designTime"),
-            isCeremony  : com.focusPage("#isCeremony"),
-            comment   : com.focusPage("#comment")
+            ishovel: com.focusPage("#ishovel"),
+            iskey: com.focusPage("#iskey"),
+            timeLimit: com.focusPage("#timeLimit"),
+            finishTime: com.focusPage("#finishTime"),
+            keyTime: com.focusPage("#keyTime"),
+            drawlineTime: com.focusPage("#drawlineTime"),
+            designTime: com.focusPage("#designTime"),
+            isCeremony: com.focusPage("#isCeremony"),
+            comment: com.focusPage("#comment")
         }
     };
 
@@ -43,22 +43,26 @@ jQuery(function ($) {
     drawline.btns.saveBtn.bindClick(saveData);
     drawline.btns.updateBtn.bindClick(updateData);
 
-    drawline.modals.constructionInfoModal.on("hide.bs.modal", function(){
+    drawline.modals.constructionInfoModal.on("hide.bs.modal", function() {
+
         com.cleanItems(drawline.items);
         com.closeTip();
     });
 
-    drawline.modals.applyModal.on("hide.bs.modal", function(){
+    drawline.modals.applyModal.on("hide.bs.modal", function() {
+
         com.cleanItems(drawline.items);
         com.closeTip();
     });
 
-    drawline.modals.editModal.on("hide.bs.modal", function(){
+    drawline.modals.editModal.on("hide.bs.modal", function() {
+
         com.cleanItems(drawline.items);
         com.closeTip();
     });
-    
-    drawline.modals.updateModal.on("hide.bs.modal", function(){
+
+    drawline.modals.updateModal.on("hide.bs.modal", function() {
+
         com.cleanItems(drawline.items);
         com.closeTip();
     });
@@ -70,26 +74,30 @@ jQuery(function ($) {
     com.datetime(drawline.items.drawlineTime);
     com.datetime(drawline.items.designTime);
     com.datetime(drawline.items.startTime, "time");
-    com.datetime(drawline.items.endTime,"time");
+    com.datetime(drawline.items.endTime, "time");
 
-    com.post(api.ds.construction, {}, function (res) {
+    com.post(api.ds.construction, {}, function(res) {
+
         drawline.items.ishovel.bindData(res.isHovel, "key", "value", false);
         drawline.items.iskey.bindData(res.isKey, "key", "value", false);
         drawline.items.isCeremony.bindData(res.isCeremony, "key", "value", false);
     });
 
-    com.post(api.data.queryDrawlineGroup, {}, function (res) {
+    com.post(api.data.queryDrawlineGroup, {}, function(res) {
+
         drawline.items.drawLineGroup.bindData(res.drawLineGroups, 'gid', 'name');
     });
 
-    var displayFunc = (function () {
+    var displayFunc = (function() {
 
-        var renderList = function (tableId, listData) {
+        var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
-                $.each(listData, function (i, v) {
+                $.each(listData, function(i, v) {
+
                     creatLine(v).appendTo($ul);
                 });
 
@@ -97,7 +105,7 @@ jQuery(function ($) {
             }
         };
 
-        var creatLine = function (v) {
+        var creatLine = function(v) {
 
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.decoration.orderId));
@@ -108,17 +116,10 @@ jQuery(function ($) {
             var $btnDraw = $('<a></a>').addClass('btn btn-minier btn-success').html('放线');
             var $btnReset = $('<a></a>').addClass('btn btn-minier btn-inverse').html('重置');
 
-            var propertyArr = [
-                ["楼盘地址:", v.decoration.house.village.name + ' ' + v.decoration.house.houseNumber, "grey"],
-                ["设计师:", v.decoration.designer.currentName, "grey"],
-                ["面积:", v.decoration.house.buildArea, "blue"],
-                ["申请人:", v.appler.currentName, "grey"],
-                ["申请时间:", v.applayTime, "green"],
-                ["放线次数:", v.count, "blue"],
-                ["描述:", v.content, "grey"]
-            ];
+            var propertyArr = [["楼盘地址:", v.decoration.house.village.name + ' ' + v.decoration.house.houseNumber, "grey"], ["设计师:", v.decoration.designer.currentName, "grey"], ["面积:", v.decoration.house.buildArea, "blue"], ["申请人:", v.appler.currentName, "grey"], ["申请时间:", v.applayTime, "green"], ["放线次数:", v.count, "blue"], ["描述:", v.content, "grey"]];
 
-            $.each(propertyArr, function (index, value) {
+            $.each(propertyArr, function(index, value) {
+
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -129,19 +130,23 @@ jQuery(function ($) {
 
             $liLine.append($h3).append($ulProperty);
 
-            $btnInfo.click(function(){
+            $btnInfo.click(function() {
+
                 viewConstructionInfo(v.decoration.orderId);
             });
-            
-            $btnUpdate.click(function(){
+
+            $btnUpdate.click(function() {
+
                 showUpdate(v);
             });
 
-            $btnDraw.click(function () {
+            $btnDraw.click(function() {
+
                 showEdit(v);
             });
-            
-            $btnReset.click(function () {
+
+            $btnReset.click(function() {
+
                 reset(v.dlid);
             });
 
@@ -149,34 +154,37 @@ jQuery(function ($) {
         };
 
         return {
-            init: function (tableId, listData) {
+            init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
-            drawLine: function (v) {
+            drawLine: function(v) {
+
                 return creatLine(v);
             }
         }
     })();
 
     var searcher = new Searcher();
-    searcher.init(['construction-orderId', 'construction-designer', "construction-salesman", "construction-drawLine-applayTime"], "condList", api.construction.pageDrawLineForPlan, function (data) {
+    searcher.init(['construction-orderId', 'construction-designer', "construction-salesman", "construction-drawLine-applayTime"], "condList", api.construction.pageDrawLineForPlan, function(data) {
+
         displayFunc.init('resultList', data);
     }, "pagenation", "drawLineApplyPostData");
 
     com.focusPage("#condList").append('<button id="showDrawLineApplyInfos" style="marg" class="btn btn-xs btn-yellow btn-search">申请信息</button>');
-    
+
     function showUpdate(v) {
 
         com.clearValidator();
-        
+
         drawline.dlid = v.dlid;
 
         drawline.items.applayTime.val(v.applayTime);
 
         drawline.modals.updateModal.modal("show");
     }
-    
+
     function showEdit(v) {
 
         com.clearValidator();
@@ -187,32 +195,38 @@ jQuery(function ($) {
 
         drawline.modals.editModal.modal("show");
     }
-    
+
     function reset(dlid) {
-        com.showConfirm("确认重置申请吗?", function(){
-            com.post(api.construction.failureDrawLine, {"drawLine.dlid": dlid}, function (res) {
+
+        com.showConfirm("确认重置申请吗?", function() {
+
+            com.post(api.construction.failureDrawLine, {
+                "drawLine.dlid": dlid
+            }, function(res) {
+
                 com.showAlert(com.info, "操作成功");
                 searcher.doSearch();
             });
         });
     }
-    
-    function updateData(){
-        
+
+    function updateData() {
+
         if (com.validate("updateModal")) {
             return false;
         }
-        
+
         var options = {
             "drawLine.dlid": drawline.dlid,
             "drawLine.applayTime": drawline.items.applayTime.val() + " 00:00:00"
         }
-        
-        com.post(api.construction.updateDrawLine, options, function (res) {
+
+        com.post(api.construction.updateDrawLine, options, function(res) {
+
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
         });
-        
+
         drawline.modals.updateModal.modal("hide");
     }
 
@@ -226,31 +240,34 @@ jQuery(function ($) {
         var end = Date.parse(drawline.items.actualDate.val().replace("-", "/") + " " + drawline.items.endTime.val());
 
         if (start == NaN || end == NaN || start >= end) {
-            com.showAlert(com.info,"起始时间和结束时间非法");
+            com.showAlert(com.info, "起始时间和结束时间非法");
             return;
         }
-        
+
         var options = {
             "drawLine.dlid": drawline.items.dlid.val(),
-            "drawLine.startTime":drawline.items.actualDate.val() + " " + drawline.items.startTime.val(),
+            "drawLine.startTime": drawline.items.actualDate.val() + " " + drawline.items.startTime.val(),
             "drawLine.endTime": drawline.items.actualDate.val() + " " + drawline.items.endTime.val(),
             "drawLine.group.gid": drawline.items.drawLineGroup.val()
 
         };
-        
-        com.post(api.construction.resetDrawLine, options, function (res) {
+
+        com.post(api.construction.resetDrawLine, options, function(res) {
+
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
         });
-        
+
         drawline.modals.editModal.modal("hide");
     }
 
-    com.focusPage('#showDrawLineApplyInfos').click(function () {
+    com.focusPage('#showDrawLineApplyInfos').click(function() {
+
         drawline.modals.applyModal.modal("show");
     });
 
-    drawline.modals.applyModal.on('shown.bs.modal', function (e) {
+    drawline.modals.applyModal.on('shown.bs.modal', function(e) {
+
         initPlan();
     });
 
@@ -260,8 +277,8 @@ jQuery(function ($) {
         com.focusPage('#calendar').fullCalendar('today');
 
         com.focusPage('#calendar').fullCalendar($.extend(com.calendardefault, {
-            events: function (start, end, callback) {
-                
+            events: function(start, end, callback) {
+
                 var startTime = com.dateFormat(new Date(start));
                 var endTime = com.dateFormat(new Date(end));
 
@@ -270,12 +287,12 @@ jQuery(function ($) {
                     "drawLine.endTime": endTime
                 };
 
-                com.post(api.construction.countDrawLine, options, function (res) {
-                    
+                com.post(api.construction.countDrawLine, options, function(res) {
+
                     var counts = res.count;
                     var events = [];
 
-                    for (var i in counts) {
+                    for ( var i in counts) {
 
                         var _ = counts[i];
                         var _date = _[1] + "";
@@ -297,7 +314,9 @@ jQuery(function ($) {
 
     function viewConstructionInfo(orderId) {
 
-        com.post(api.construction.queryConstructionInfoByOrderId, {"constructionInfo.orderId": orderId}, function (res) {
+        com.post(api.construction.queryConstructionInfoByOrderId, {
+            "constructionInfo.orderId": orderId
+        }, function(res) {
 
             data = res.constructionInfo;
 
@@ -307,17 +326,17 @@ jQuery(function ($) {
             drawline.items.iskey.val(data.iskey);
             drawline.items.isCeremony.val(data.isCeremony);
             drawline.items.timeLimit.val(data.timeLimit);
-            if(data.finishTime != null){
-                drawline.items.finishTime.val(data.finishTime.substr(0,10));
+            if (data.finishTime != null) {
+                drawline.items.finishTime.val(data.finishTime.substr(0, 10));
             }
-            if(data.keyTime != null){
-                drawline.items.keyTime.val(data.keyTime.substr(0,10));
+            if (data.keyTime != null) {
+                drawline.items.keyTime.val(data.keyTime.substr(0, 10));
             }
-            if(data.drawlineTime != null){
-                drawline.items.drawlineTime.val(data.drawlineTime.substr(0,10));
+            if (data.drawlineTime != null) {
+                drawline.items.drawlineTime.val(data.drawlineTime.substr(0, 10));
             }
-            if(data.designTime != null){
-                drawline.items.designTime.val(data.designTime.substr(0,10));
+            if (data.designTime != null) {
+                drawline.items.designTime.val(data.designTime.substr(0, 10));
             }
             drawline.items.comment.val(data.comment);
         });
@@ -328,21 +347,22 @@ jQuery(function ($) {
     function saveInfoData() {
 
         var options = {
-            "constructionInfo.orderId" : drawline.items.orderId,
-            "constructionInfo.timeLimit" : drawline.items.timeLimit.val(),
+            "constructionInfo.orderId": drawline.items.orderId,
+            "constructionInfo.decoration.orderId": drawline.items.orderId,
+            "constructionInfo.timeLimit": drawline.items.timeLimit.val(),
             "constructionInfo.ishovel": drawline.items.ishovel.val(),
             "constructionInfo.iskey": drawline.items.iskey.val(),
-            "constructionInfo.isCeremony" : drawline.items.isCeremony.val(),
-            "constructionInfo.finishTime" : drawline.items.finishTime.val() + " 00:00:00",
-            "constructionInfo.keyTime" : drawline.items.keyTime.val() + " 00:00:00",
-            "constructionInfo.drawlineTime" : drawline.items.drawlineTime.val() + " 00:00:00",
-            "constructionInfo.designTime" : drawline.items.designTime.val() + " 00:00:00",
+            "constructionInfo.isCeremony": drawline.items.isCeremony.val(),
+            "constructionInfo.finishTime": drawline.items.finishTime.val() + " 00:00:00",
+            "constructionInfo.keyTime": drawline.items.keyTime.val() + " 00:00:00",
+            "constructionInfo.drawlineTime": drawline.items.drawlineTime.val() + " 00:00:00",
+            "constructionInfo.designTime": drawline.items.designTime.val() + " 00:00:00",
             "constructionInfo.comment": drawline.items.comment.val()
         };
 
-        com.post(api.construction.updateConstructionInfoByOrderId, options, function (res) {
+        com.post(api.construction.updateConstructionInfoByOrderId, options, function(res) {
 
-            com.showAlert(com.info,"操作成功");
+            com.showAlert(com.info, "操作成功");
 
             drawline.modals.constructionInfoModal.modal("hide");
 

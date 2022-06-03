@@ -35,6 +35,7 @@ jQuery(function($) {
         salaryType: {},
         twoType: {},
         twotype: {},
+        pageType: params.urlLoadParams.type,
 
     };
 
@@ -94,11 +95,11 @@ jQuery(function($) {
 
     searcher.base("condList", "pagenation", "resultList", api.salary.pageWorkerSalary);
 
-    searcher.condition(["salary-orderId", "salary-salaryWorkduty", "salary-jober", "salary-salaryschedule", "salary-worker-count", 'salary-salarystatus', "salary-createTime", 'salary-approveTime']);
+    searcher.condition(["salary-orderId", "salary-salaryWorkduty", "salary-jober", 'salary-checker', "salary-salaryschedule", "salary-worker-count", 'salary-salarystatus', 'salary-isCheck', "salary-createTime", 'salary-approveTime', 'salary-checkTime']);
 
     searcher.history("workersalaryPostData");
 
-    searcher.button([{
+    searcher.button(salary.pageType == "checker" ? [] : [{
         id: "select",
         name: "全选",
         clazz: "btn-yellow",
@@ -161,16 +162,6 @@ jQuery(function($) {
         prop: "decoration.supervisor.userName",
         clazz: "grey"
     }, {
-        field: "creater",
-        name: "创建人",
-        prop: "creater.userName",
-        clazz: "grey"
-    }, {
-        field: "createTime",
-        name: "创建时间",
-        prop: "createTime",
-        clazz: "green"
-    }, {
         field: "workerId",
         name: "工人工号",
         prop: "user.userId",
@@ -191,16 +182,6 @@ jQuery(function($) {
         prop: "schedule",
         dataset: salary.constructionSchedule,
         clazz: "red"
-    }, {
-        field: "approver",
-        name: "审批人",
-        prop: "approver.currentName",
-        clazz: "grey"
-    }, {
-        field: "approveTime",
-        name: "审批时间",
-        prop: "approveTime",
-        clazz: "green"
     }, {
         field: "type",
         name: "类型",
@@ -268,7 +249,51 @@ jQuery(function($) {
             "2": "已发送"
         },
         clazz: "red"
-    }, ];
+    }, {
+        field: "isCheck",
+        name: "质检状态 ",
+        prop: "isCheck",
+        dataset: {
+            "0": "初始",
+            "1": "确认",
+        },
+        clazz: "red"
+    }, {
+        field: "creater",
+        name: "创建人",
+        prop: "creater.userName",
+        clazz: "grey"
+    }, {
+        field: "approver",
+        name: "审批人",
+        prop: "approver.currentName",
+        clazz: "grey"
+    }, {
+        field: "checker",
+        name: "质检人 ",
+        prop: "checker.currentName",
+        clazz: "grey"
+    }, {
+        field: "createTime",
+        name: "创建时间",
+        prop: "createTime",
+        clazz: "green"
+    }, {
+        field: "approveTime",
+        name: "审批时间",
+        prop: "approveTime",
+        clazz: "green"
+    }, {
+        field: "checkTime",
+        name: "质检时间 ",
+        prop: "checkTime",
+        clazz: "green"
+    }, {
+        field: "totalArea",
+        name: "总面积 ",
+        prop: "decoration.house.totalArea",
+        clazz: "green"
+    }];
 
     var linebtns = [{
         name: "通过",
@@ -280,8 +305,9 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 0;
+            return salary.pageType != "checker" && v.status == 0;
         }
+
     }, {
         name: "驳回",
         clazz: "btn-danger",
@@ -292,11 +318,11 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 1;
+            return salary.pageType != "checker" && v.status == 1;
         }
     }, {
         name: "撤销",
-        clazz: "btn-yellow",
+        clazz: "btn-warning",
         handle: function(v) {
 
             deletebystatus(v);
@@ -304,11 +330,11 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 0;
+            return salary.pageType != "checker" && v.status == 0;
         }
     }, {
         name: "发送通知",
-        clazz: "btn-success",
+        clazz: "btn-info",
         handle: function(v) {
 
             send(v);
@@ -316,11 +342,11 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.isSend == 0 && v.status == 1;
+            return salary.pageType != "checker" && v.isSend == 0 && v.status == 1;
         }
     }, {
         name: "取消通知",
-        clazz: "btn-yellow",
+        clazz: "btn-danger",
         handle: function(v) {
 
             cancel(v);
@@ -328,16 +354,27 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.isSend == 1;
+            return salary.pageType != "checker" && v.isSend == 1;
         }
     }, {
         name: "图片",
-        clazz: "btn-yellow",
+        clazz: "btn-pink",
         handle: function(v) {
 
             params.salary.wsid = v.wsid;
-
             managedrawing(v.wsid);
+        }
+    }, {
+        name: "质检",
+        clazz: "btn-purple",
+        handle: function(v) {
+
+            check(v);
+            return false;
+        },
+        show: function(v) {
+
+            return salary.pageType == "checker" && v.isCheck != 1;
         }
     }, ];
 
@@ -385,7 +422,7 @@ jQuery(function($) {
             return false;
         }
 
-        com.post(api.salary.pageWorkerSalary, $.extend({}, params.salary.workersalaryPostData, {
+        com.post(api.salary.pageWorkerSalary, $.extend({}, params.workersalaryPostData, {
             "paging.noPage": 1
         }), function(res) {
 
@@ -415,7 +452,7 @@ jQuery(function($) {
 
     com.focusPage('a[name="adopt"]', '#pagenation').click(function(v) {
 
-        var checkbox = com.focusPage('input[name="check"]:checked');
+        var checkbox = searcher.checks();
 
         var options = {};
         var cwsids = [];
@@ -480,6 +517,16 @@ jQuery(function($) {
     function refuse(v) {
 
         com.post(api.salary.rejectWorkerSalary, {
+            "workerSalary.wsid": v.wsid
+        }, function(res) {
+
+            searcher.doSearch();
+        });
+    }
+
+    function check(v) {
+
+        com.post(api.salary.checkWsorkerSalary, {
             "workerSalary.wsid": v.wsid
         }, function(res) {
 

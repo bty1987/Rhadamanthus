@@ -23,6 +23,9 @@ $.extend(api.index, {
     balanceSales2print: {
         url: "/views/balance/balanceSales2print.html"
     },
+    balanceCutpayIndex: {
+        url: "/views/balance/balanceCutpay.html"
+    },
 
 });
 
@@ -34,7 +37,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["amount", "surplus"]
+                args: ["amount", "surplus", "cutpay"]
             }]
         },
         queryBalance: {
@@ -270,6 +273,24 @@ $.extend(api, {
         unlockBalanceSales: {
             url: "unlockBalanceSales.do",
             demo: true
+        },
+
+        queryBalanceCutpay : {
+            url : "queryBalanceCutpay.do",
+            demo : true,
+            type: "query",
+            tranargs: [{
+                result: "balanceCutpays",
+                args: ["money", "cutpay"]
+            }]
+        },
+
+        addBalanceCutpay : {
+            url : "addBalanceCutpay.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceCutpay.money"]
+            }
         },
 
     }

@@ -46,6 +46,7 @@ jQuery(function($) {
     }
 
     com.post(api.common.current, {}, function(res) {
+
         contractEdit.current = new Date(res.current);
     }, null, false);
 
@@ -54,7 +55,7 @@ jQuery(function($) {
     contractEdit.cover["cov-sign-day"] = com.dateFormat(contractEdit.current, "dd");
 
     com.post(api.data.queryCustomerById, {
-        "customer.cid": params.cid
+        "customer.cid": params.decoration.cid
     }, function(res) {
 
         var customer = res.customer;
@@ -132,10 +133,12 @@ jQuery(function($) {
     }, null, false);
 
     com.focusPage('#talkingList').click(function() {
+
         contractEdit.modal.talkingModal.modal("hide");
     });
 
     com.focusPage(".makeup.conitem").dblclick(function() {
+
         talkingData($(this).attr("id"), {
             "types[0]": 0,
             "types[1]": 1
@@ -149,19 +152,22 @@ jQuery(function($) {
         console.log(content);
 
         com.post(api.data.queryTalking, options, function(res) {
+
             displayFunc.init("talkingList", res.talkings);
             contractEdit.modal.talkingModal.modal("show");
         });
-    };
+    }
 
     var displayFunc = (function() {
 
         var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
                 $.each(listData, function(i, v) {
+
                     creatLine(v).appendTo($ul);
                 });
                 $ul.appendTo($tableWrap);
@@ -177,6 +183,7 @@ jQuery(function($) {
             var propertyArr = [[" ", v.content, 'grey']];
 
             $.each(propertyArr, function(index, value) {
+
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
@@ -186,6 +193,7 @@ jQuery(function($) {
             $liLine.append($divBtnWrap).append($ulProperty);
 
             return $liLine.click(function() {
+
                 var $tmp = com.focusPage("#" + contractEdit.$input);
                 var value = $tmp.val();
                 $tmp.val(value + v.content + "\n");
@@ -194,6 +202,7 @@ jQuery(function($) {
 
         return {
             init: function(tableId, listData) {
+
                 if (!listData.length) {
                     var $resultList = com.focusPage('#' + tableId).addClass('dz-default dz-message').html('');
                     var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
@@ -206,6 +215,7 @@ jQuery(function($) {
                 }
             },
             drawLine: function(v) {
+
                 return creatLine(v);
             }
         };
@@ -221,6 +231,7 @@ jQuery(function($) {
         var data = {};
 
         $.each(conitems, function(i, e) {
+
             var content = $(e);
             data[content.attr("id")] = content.val();
         });
@@ -270,6 +281,7 @@ jQuery(function($) {
             console.log(options);
 
             com.post(api.decoration.addDecorationContract, options, function(res) {
+
                 com.closePopup();
             });
         });

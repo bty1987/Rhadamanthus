@@ -186,8 +186,6 @@ $(function () {
         
         var plans = [];
         
-        console.log(options);
-        
         com.post(api.information.existPlan, options, function(res){
             plans = res.plans;
         }, null, false);

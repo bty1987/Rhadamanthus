@@ -208,7 +208,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "paging-data",
-                args: ["total", "award", "profit"]
+                args: ["total", "award", "profit", "cost", "threshold"]
             }]
         },
         queryOalesByOrderId: {
@@ -216,7 +216,7 @@ $.extend(api, {
             type: "query",
             tranargs: [{
                 result: "oaleses",
-                args: ["total", "award", "profit"]
+                args: ["total", "award", "profit", "cost", "threshold"]
             }]
         },
         addOales: {

@@ -19,6 +19,7 @@ jQuery(function($) {
             price: com.focusPage("#price", "#createPresignItemModal"),
             type: com.focusPage("#type", "#createPresignItemModal"),
             onetype: com.focusPage("#onetype", "#createPresignItemModal"),
+            content: com.focusPage("#content", "#createPresignItemModal"),
         },
 
         status: {},
@@ -30,6 +31,7 @@ jQuery(function($) {
     };
 
     com.post(api.ds.quotation, {}, function(res) {
+
         presignItem.status = res.presignItemStatus.split("key", "value");
         presignItem.type = res.presignItemType.split("key", "value");
 
@@ -37,6 +39,7 @@ jQuery(function($) {
     }, null, false);
 
     presignItem.modals.createPresignItemModal.on('hide.bs.modal', function() {
+
         com.clearValidator();
         com.cleanItems(presignItem.items);
     });
@@ -98,6 +101,11 @@ jQuery(function($) {
         prop: "onetype",
         clazz: "red",
         dataset: presignItem.onetype
+    }, {
+        fieId: "content",
+        name: "说明",
+        prop: "content",
+        clazz: "grey"
     }, ];
 
     var linebtns = [{
@@ -113,6 +121,7 @@ jQuery(function($) {
             presignItem.items.price.val(v.price);
             presignItem.items.type.val(v.type);
             presignItem.items.onetype.val(v.onetype);
+            presignItem.items.content.val(v.content);
 
             presignItem.modals.createPresignItemModal.modal("show");
 
@@ -126,6 +135,7 @@ jQuery(function($) {
             com.post(api.quotation.deletePresignItem, {
                 "presignItem.piid": v.piid
             }, function(res) {
+
                 searcher.doSearch();
             });
 
@@ -145,6 +155,7 @@ jQuery(function($) {
             return false;
         },
         init: function(v) {
+
             return !v.status;
         }
     }, ];
@@ -152,6 +163,7 @@ jQuery(function($) {
     searcher.line("name", lineprops, linebtns).render();
 
     com.focusPage('#createPresignItem', '#pagenation1').on("click", function() {
+
         presignItem.piid = null;
         presignItem.modals.createPresignItemModal.modal("show");
     });
@@ -171,6 +183,7 @@ jQuery(function($) {
             "presignItem.price": presignItem.items.price.val(),
             "presignItem.type": presignItem.items.type.val(),
             "presignItem.onetype": presignItem.items.onetype.val(),
+            "presignItem.content": presignItem.items.content.val(),
         };
 
         if (presignItem.piid) {
@@ -179,6 +192,7 @@ jQuery(function($) {
         }
 
         com.post(url, options, function() {
+
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
         });

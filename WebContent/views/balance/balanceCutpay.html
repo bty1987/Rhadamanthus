@@ -1,0 +1,55 @@
+<div id="fl-statement"><div class="page-header"><h1>结算单<small><i class="icon-double-angle-right"></i>结算扣款</small></h1></div></div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="row" style="margin-left:10px;margin-right:10px">
+            <div id="balanceCutpays"></div>
+            <div>
+                <div>
+                    <a class="btn btn-minier btn-primary pull-left" id="addBalanceCutpayBtn" style="margin-top: 7px;margin-left: 2px"><i class="icon-plus bigger-110"></i>添加</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="balanceCutpayModal" tabindex="-1">
+    <div class="modal-dialog" style="margin-top: 10%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="addModalLabel">结算扣款</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-md-3 control-label no-padding-right">金额</label>
+                        <div class="col-md-9">
+                            <input type="text" class="col-xs-10 col-sm-6 v_float_3" id="money" name="money" data-required="1" data-toggle="popover" data-trigger='manual'>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right ">类型</label>
+                        <div class="col-md-9">
+                            <select id='types' class='col-xs-10 col-sm-6'></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">说明</label>
+                        <div class="col-sm-9">
+                            <textarea id="comment" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveBtn" class="btn btn-primary">确认</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $.loadScript(['js/balance/balanceCutpay.js']);
+</script>

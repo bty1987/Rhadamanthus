@@ -167,11 +167,11 @@ jQuery(function($) {
 
     if ((params.quotation.subtype & 8) == 8) {
 
-        com.post(api.quotation.queryQuotationNormoodItem, {
-            "quotationNormoodItem.qid": params.quotation.quotationId
+        com.post(api.quotation.queryNormoodItem, {
+            "normoodItem.qid": params.quotation.quotationId
         }, function(res) {
 
-            normoods = res.quotationNormoodItems;
+            normoods = res.normoodItems;
         }, null, false);
     }
 

@@ -169,11 +169,11 @@ jQuery(function($) {
 
                     vpayment.mno = v.mno;
 
-                    com.post(api.payment.queryPointofsales, {
-                        "pointofsales.pid": v.mno,
-                        "pointofsales.type": 5
+                    com.post(api.payment.queryPaytran, {
+                        "paytran.pid": v.mno,
+                        "paytran.type": 5
                     }, function(res) {
-                        $.each(res.pointofsaleses, function(i, v) {
+                        $.each(res.paytrans, function(i, v) {
                             if (v.status == 0 || v.status == 1)
                                 addPos(v);
                         });
@@ -282,7 +282,7 @@ jQuery(function($) {
 
             $btnPrint.click(function() {
 
-                params.information.vpayment = v;
+                params.infomation.vpayment = v;
                 com.popup("专用收款收据__会员编号:" + v.mno, api.index.vpaymentReceiptIndex.url, function() {
                     parent.layer.getFrameIndex(window.name);
                 }, null, true);
@@ -442,11 +442,11 @@ jQuery(function($) {
 
             vpayment.mno = mnoId[0];
 
-            com.post(api.payment.queryPointofsales, {
-                "pointofsales.pid": mnoId[0],
-                "pointofsales.type": 5
+            com.post(api.payment.queryPaytran, {
+                "paytran.pid": mnoId[0],
+                "paytran.type": 5
             }, function(res) {
-                $.each(res.pointofsaleses, function(i, v) {
+                $.each(res.paytrans, function(i, v) {
                     if (v.status == 0 || v.status == 1)
                         addPos(v);
                 });
@@ -561,7 +561,7 @@ jQuery(function($) {
             return false;
         }
 
-        var posids = {};
+        var ptids = {};
         var positems = com.focusPage(".positem");
 
         $.each(positems, function(i, v) {
@@ -571,7 +571,7 @@ jQuery(function($) {
 
             _bank = utils.accAdd(parseFloat(data.money), _bank);
 
-            posids["posids[" + i + "]"] = data.posid;
+            ptids["ptids[" + i + "]"] = data.ptid;
         });
 
         var bankitems = com.focusPage(".bankitem");
@@ -621,7 +621,7 @@ jQuery(function($) {
             "vreceipt.comment": des,
         };
 
-        $.extend(option, {}, posids);
+        $.extend(option, {}, ptids);
 
         $.each(vpids, function(i, v) {
             option["vpayments[" + i + "].vpid"] = v;
@@ -693,7 +693,7 @@ jQuery(function($) {
 
         var bankMoneyLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('刷卡金额').appendTo(bankDiv);
         var bankMoneyDiv = $('<div></div>').addClass('col-sm-9').appendTo(bankDiv);
-        var bankMoneyInput = $('<input></input>').addClass("col-sm-6 v_float_3").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bank_" + index).appendTo(bankMoneyDiv);
+        var bankMoneyInput = $('<input/>').addClass("col-sm-6 v_float_3").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bank_" + index).appendTo(bankMoneyDiv);
 
         var posSendBtn = $('<button></button>').addClass('btn btn-minier btn-orange pull-right inline').text("POS推送").attr("id", "posSend_" + index).attr("index", index).appendTo(bankMoneyDiv).click(function() {
             var _index = $(this).attr("index");
@@ -701,25 +701,17 @@ jQuery(function($) {
             if (com.validate("bankDiv_" + _index))
                 return false;
 
-            var vticket = null;
-
-            com.post(api.information.queryVticketByNo, {
-                "vticket.tno": vpayment.mno
-            }, function(res) {
-                vticket = res.vticket;
-            }, null, false);
-
             var options = {
-                "pointofsales.pid": vpayment.mno,
-                "pointofsales.type": 5,
-                "pointofsales.no": com.focusPage("#bankName_" + _index).val(),
-                "pointofsales.sn": com.focusPage("#pos_" + _index).val(),
-                "pointofsales.money": com.focusPage("#bank_" + _index).val(),
-                "pointofsales.way": com.focusPage("#posway_" + _index).val(),
-            }
+                "paytran.pid": vpayment.mno,
+                "paytran.type": 5,
+                "paytran.no": com.focusPage("#bankName_" + _index).val(),
+                "paytran.sn": com.focusPage("#pos_" + _index).val(),
+                "paytran.money": com.focusPage("#bank_" + _index).val(),
+                "paytran.way": com.focusPage("#posway_" + _index).val()
+            };
 
-            com.post(api.payment.addPointofsales, options, function(res) {
-                addPos(res.pointofsales);
+            com.post(api.payment.addPaytran, options, function(res) {
+                addPos(res.paytran);
 
                 $("#bankDiv_" + _index).remove();
                 var bankAdd = com.focusPage("#bankAdd");
@@ -732,7 +724,7 @@ jQuery(function($) {
 
         var bankDateLabel = $('<label></label>').addClass('col-sm-3 control-label no-padding-right').text('日期').appendTo(bankDiv);
         var bankDateDiv = $('<div></div>').addClass('col-sm-9').appendTo(bankDiv);
-        var bankDateInput = $('<input></input>').addClass("date-picker-date col-sm-6 v_required").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bankDate_" + index).attr("data-date-format", "yyyy-mm-dd").val(currentData).appendTo(bankDateDiv);
+        var bankDateInput = $('<input/>').addClass("date-picker-date col-sm-6 v_required").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bankDate_" + index).attr("data-date-format", "yyyy-mm-dd").val(currentData).appendTo(bankDateDiv);
         com.datetime(bankDateInput);
 
         var poswayDiv = $('<select></select>').addClass("col-sm-5 pull-right inline").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("id", "posway_" + index).appendTo(bankDateDiv);
@@ -755,12 +747,12 @@ jQuery(function($) {
 
         var posDivGroup = com.focusPage("#posDivGroup");
 
-        var ul = $("<ul></ul>").addClass("list-unstyled fl-inline-list clearfix positem").attr("id", "pos" + v.posid).appendTo(posDivGroup);
+        var ul = $("<ul></ul>").addClass("list-unstyled fl-inline-list clearfix positem").attr("id", "pos" + v.ptid).appendTo(posDivGroup);
         var liname = $("<li></li>").append($("<strong></strong>").text("名称:")).append($("<b></b>").addClass("grey").text(v.no)).appendTo(ul);
         var limoney = $("<li></li>").append($("<strong></strong>").text("金额:")).append($("<b></b>").addClass("blue").text(v.money)).appendTo(ul);
 
         ul.attr({
-            "data-posid": v.posid,
+            "data-ptid": v.ptid,
             "data-type": v.type,
             "data-no": v.no,
             "data-money": v.money,
@@ -774,12 +766,12 @@ jQuery(function($) {
             return false;
         }
 
-        var btns = $("<li></li>").attr("id", "posbtns" + v.posid).appendTo(ul);
-        var check = $("<button></button>").addClass("btn btn-minier btn-orange pull-right inline").text("验证").attr("id", "poscheck" + v.posid).appendTo(btns);
-        var cancel = $("<button></button>").addClass("btn btn-minier btn-danger pull-right inline hide").text("撤销").attr("id", "poscancel" + v.posid).appendTo(btns);
+        var btns = $("<li></li>").attr("id", "posbtns" + v.ptid).appendTo(ul);
+        var check = $("<button></button>").addClass("btn btn-minier btn-orange pull-right inline").text("验证").attr("id", "poscheck" + v.ptid).appendTo(btns);
+        var cancel = $("<button></button>").addClass("btn btn-minier btn-danger pull-right inline hide").text("撤销").attr("id", "poscancel" + v.ptid).appendTo(btns);
 
         ul.attr({
-            "data-posid": v.posid,
+            "data-ptid": v.ptid,
             "data-type": v.type,
             "data-no": v.no,
             "data-money": v.money,
@@ -791,32 +783,32 @@ jQuery(function($) {
 
             var options =
 
-            com.post(api.payment.checkPointofsales, {
-                "pointofsales.posid": v.posid
+            com.post(api.payment.checkPaytran, {
+                "paytran.ptid": v.ptid
             }, function(res) {
 
-                var pointofsales = res.pointofsales;
+                var paytran = res.paytran;
 
-                var posid = pointofsales.posid;
-                var posul = com.focusPage("#pos" + posid);
+                var ptid = paytran.ptid;
+                var posul = com.focusPage("#pos" + ptid);
 
-                if (pointofsales.status == 0)
+                if (paytran.status == 0)
                     return false;
 
-                if (pointofsales.status != 1) {
+                if (paytran.status != 1) {
                     posul.remove();
                     com.showAlert(com.error, "POS支付失败");
                 }
 
                 posul.attr({
-                    "data-status": pointofsales.status,
-                    "data-createtime": pointofsales.createTime
+                    "data-status": paytran.status,
+                    "data-createtime": paytran.createTime
                 });
 
-                $("<li></li>").append($("<strong></strong>").text("时间:")).append($("<b></b>").addClass("blue").text(pointofsales.createTime)).appendTo(posul);
+                $("<li></li>").append($("<strong></strong>").text("时间:")).append($("<b></b>").addClass("blue").text(paytran.createTime)).appendTo(posul);
                 $("<li></li>").append($("<strong></strong>").text("状态:")).append($("<b></b>").addClass("red").text("已付款")).appendTo(posul);
 
-                com.focusPage("#posbtns" + posid).remove();
+                com.focusPage("#posbtns" + ptid).remove();
             });
 
             return false;
@@ -824,10 +816,10 @@ jQuery(function($) {
 
         cancel.click(function() {
 
-            com.post(api.payment.cancelPointofsales, {
-                "pointofsales.posid": v.posid
+            com.post(api.payment.cancelPaytran, {
+                "paytran.ptid": v.ptid
             }, function(res) {
-                com.focusPage("#pos" + res.pointofsales.posid).remove();
+                com.focusPage("#pos" + res.paytran.ptid).remove();
             });
 
             return false;

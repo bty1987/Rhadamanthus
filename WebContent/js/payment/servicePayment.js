@@ -196,7 +196,7 @@ jQuery(function($) {
                     com.showAlert(com.error, "当前服务费已交满,不能重复交款!");
                     return false;
                 }
-				paymentUtils.showPos(servicePayment, {"pointofsales.pid": v.decoration.orderId}, [0, 1]);
+				paymentUtils.showPos(servicePayment, {"paytran.orderId": v.decoration.orderId}, [0, 1]);
 				initCollect(v);
 			});
 

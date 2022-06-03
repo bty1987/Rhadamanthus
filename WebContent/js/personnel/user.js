@@ -127,7 +127,7 @@
                         ["职位:", v.duty.name, "grey"],
                         ["角色:", v.role.name, "grey"],
                         ["联系方式:", v.phone, "grey"],
-                        ["身份证:", v.identity, "grey"]
+                        ["身份证:", v.identity.replace(/(\d{6})\d{8}(\w{4})/, '$1********$2'), "grey"]
                     ];
 
                     $.each(propertyArr, function (index,value) {

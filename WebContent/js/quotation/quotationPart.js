@@ -766,9 +766,11 @@ var QuotationDetail = (function(){
 					data.quotationFunctionAreas.length && $.each(data.quotationFunctionAreas, function(i, v){
 					    
 						var sum = 0, sumd = 0,sumdp = 0, $dmoney;
+						
 						var $domain = painter.createdomain(v);
 						
 						that.insertDomainByOrder(v.functionAreaOrder, $domain, $aimDomains, false);
+						
 						sum = parseFloat($domain.attr('data-undisPrice'));
 						sumdp = parseFloat($domain.attr('data-disPrice'));
 						sumd = parseFloat($domain.attr('data-desTotalprice'));
@@ -1485,7 +1487,7 @@ var QuotationDetail = (function(){
 
 			$domain.append($dhead).append(dv.type == 0 ? null : $ul).append($dbody);
 			
-			var param = dv.quotationFunctionAreaParam ? dv.quotationFunctionAreaParam : {"girth": 0, "area": 0, "height": 0, "holeLength": 0, "holeHeight": 0};
+			var param = dv.quotationFunctionAreaParam ? dv.quotationFunctionAreaParam : {"girth": 0, "area": 0, "height": 0, "holeLength": 0, "holeHeight": 0, "windowLength": 0, "windowHeight": 0, "beamLength": 0, "beamHeight": 0};
 
 			if(dv.quotationFunctionAreaItems.length) {
 			    
@@ -1514,7 +1516,7 @@ var QuotationDetail = (function(){
 	                        "f": param.windowLength, "g": param.windowHeight, 
 	                        "h": param.beamLength, "i": param.beamHeight, 
 	                    });
-	                    
+					    
 	                    v.formula = utils.changeThrDecimal(isNaN(eval(v.formula)) ? 0 : eval(v.formula));
 					}
 					

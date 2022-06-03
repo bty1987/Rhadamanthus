@@ -104,7 +104,7 @@ $(function(){
     function saveData() {
         if (!com.validate('backVisitModal')) {
             var a = {
-                "backVisit.orderId" : params.orderId,
+                "backVisit.orderId": params.decoration.orderId,
                 "backVisit.content": backVisit.backVisitItems.backVisitContent.val()
             };
             var people = backVisit.backVisitItems.backVisitNoticePeople.val().split(',');

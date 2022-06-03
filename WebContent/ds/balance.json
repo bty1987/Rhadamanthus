@@ -20,6 +20,9 @@
   ],  "balanceSalesGrade" :[
       {"key":"A", "value":"A"},
       {"key":"B", "value":"B"}
+  ],  "balanceCutpayType" :[
+      {"key":"0", "value":"扣款"},
+      {"key":"1", "value":"返款"}
   ],
   "errorCode": 0,
   "errorMsg": null

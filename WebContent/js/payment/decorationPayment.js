@@ -271,7 +271,7 @@ jQuery(function($) {
                 
 				decorationPayment.typeUpdate = 1;
 				
-				if(v.oneType == 0) paymentUtils.showPos(decorationPayment, {"pointofsales.pid": v.decoration.orderId}, [0, 1]);
+				if(v.oneType == 0) paymentUtils.showPos(decorationPayment, {"paytran.orderId": v.decoration.orderId}, [0, 1]);
 				
             	initCollect(v);
             });

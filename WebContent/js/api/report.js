@@ -135,7 +135,7 @@ $.extend(api, {
             demo: true,
             tranargs: [{
                 result: "paging-data",
-                args: ["cs2", "cs3", "cs4", "cs5"]
+                args: ["cs0", "cs1", "cs2", "cs3", "cs4", "cs5", "cs6", "cs7"]
             }]
         },
         updataDecoration7Construction: {
@@ -149,8 +149,8 @@ $.extend(api, {
         rankAddReduce: {
             url: "rankAddReduce.do",
             type: "query",
-            tranargs:[{
-                result:"addReduceRankVOs",
+            tranargs: [{
+                result: "addReduceRankVOs",
                 args: ["total"]
             }]
         },

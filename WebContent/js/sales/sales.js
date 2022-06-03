@@ -80,6 +80,7 @@ $(function() {
         fullpayStatus: {},
         ctypes: {},
         projectStatus: {},
+        typeness: {},
 
         postData: "salesPostData",
         pageType: params['urlLoadParams'].type,
@@ -123,6 +124,10 @@ $(function() {
     com.post(api.ds.construction, {}, function(res) {
 
         sales.projectStatus = res.constructionSchedule.split("key", "value");
+    });
+    com.post(api.ds.decoration, {}, function(res) {
+
+        sales.typeness = res.typeness.split("key", "value");
     });
 
     // 活动名
@@ -445,6 +450,7 @@ $(function() {
 
                             var decorationInfo = res.decoration;
                             com.focusPage("#orderId").html(decorationInfo.orderId);// 装修单号
+                            com.focusPage("#typeness").html(sales.typeness[decorationInfo.projectStatus]);// 装修单类型
                             com.focusPage("#address").html(decorationInfo.house.village.name + '' + decorationInfo.house.houseNumber);// 装修楼盘地址
                             com.focusPage("#designer").html(decorationInfo.designer.currentName == null ? "无" : decorationInfo.designer.currentName);// 装修设计师
                             com.focusPage("#escorter").html(decorationInfo.escorter.currentName == null ? "无" : decorationInfo.escorter.currentName);// 装修跟单员

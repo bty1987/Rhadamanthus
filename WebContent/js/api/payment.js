@@ -467,35 +467,35 @@ $.extend(api, {payment: {
 		}]
 	},
 
-	pagePointofsales: {
-		url: "pagePointofsales.do",
+	pagePaytran: {
+		url: "pagePaytran.do",
 		type: "query",
 		tranargs: [{
 			result: "paging-data",
 			args: ["money"]
 		}]
 	},
-	queryPointofsales: {
-		url: "queryPointofsales.do",
+	queryPaytran: {
+		url: "queryPaytran.do",
 		type: "query",
 		tranargs: [{
-			result: "pointofsaleses",
+			result: "paytrans",
 			args: ["money"]
 		}]
 	},
-	addPointofsales: {
-		url: "addPointofsales.do",
+	addPaytran: {
+		url: "addPaytran.do",
 		type: "update",
 		tranargs: {
-			args: ["pointofsales.money"],
+			args: ["paytran.money"],
 			query: [{
-                result: "pointofsales", 
+                result: "paytran",
                 args: ["money"]
             }]
 		}
 	},
-	checkPointofsales: {url : "checkPointofsales.do"}, //无需要更改数值
-	cancelPointofsales: {url : "cancelPointofsales.do"},
+	checkPaytran: {url : "checkPaytran.do"}, //无需要更改数值
+	cancelPaytran: {url : "cancelPaytran.do"},
 	
 	pageActivityPayment: {
 		url: "pageActivityPayment.do",
