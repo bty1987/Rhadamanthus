@@ -46,15 +46,18 @@ public class OalesDaoImpl extends DaoImpl<OalesPO> implements OalesDao {
 			String data = filter.getData();
 			String op = filter.getOp();
 
-			if ("orderId".equals(field)) {
-				query.add(query.getCriterion("orderId", data, op));
-			} else if ("createTimeOales".equals(field)) {
+			if ("no".equals(field)) {
+				query.add(query.getCriterion("no", data, op));
+			} else if ("orderId".equals(field)) {
+				query.alias("decoration", "decoration");
+				query.add(query.getCriterion("decoration.orderId", data, op));
+			} else if ("createTime".equals(field)) {
 				query.timeranges("createTime", data);
 			} else if ("status".equals(field)) {
 				query.add(query.getCriterion("status", Short.valueOf(data), op));
-			} else if ("oalesBrand".equals(field)) {
+			} else if ("brand".equals(field)) {
 				query.add(query.getCriterion("brand", data, op));
-			} else if ("oalesCategory".equals(field)) {
+			} else if ("category".equals(field)) {
 				query.add(query.getCriterion("category", data, op));
 			}
 		}

@@ -2,13 +2,13 @@ package com.fanglin.quotation.dao.impl;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.quotation.dao.ExtensionDao;
+import com.fanglin.quotation.po.ExtensionDO;
 import com.fanglin.quotation.po.ExtensionPO;
 import com.fanglin.utils.Paging;
 
@@ -17,6 +17,22 @@ public class ExtensionDaoImpl extends DaoImpl<ExtensionPO> implements ExtensionD
 
 	public ExtensionDaoImpl() {
 		super(ExtensionPO.class);
+	}
+
+	@Override
+	public List<ExtensionDO> pageExtension(Paging paging, List<Filter> filters, Integer company) {
+
+		PagingQuery<ExtensionDO> query = pagingQuery(paging, ExtensionDO.class);
+
+		query.alias("decoration", "decoration");
+
+		query.add(query.getCriterion("decoration.company", company, "eq"));
+
+		queryFilterExcute(query, filters);
+
+		query.desc("createTime");
+
+		return query.list();
 	}
 
 	@Override
@@ -45,13 +61,34 @@ public class ExtensionDaoImpl extends DaoImpl<ExtensionPO> implements ExtensionD
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
+		if (filters == null) return;
+
 		for (Filter filter : filters) {
-			if (StringUtils.isNotEmpty(filter.getData())) {
-				if (ExtensionPO.COLUMN_ORDERID_STR.equals(filter.getField())) {
-					query.add(query.getCriterion(filter.getField(), filter.getData(), filter.getOp()));
-				}
+
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
+
+			if (ExtensionPO.COLUMN_ORDERID_STR.equals(field)) {
+				query.add(query.getCriterion("decoration.orderId", data, op));
+			} else if ("villageId".equals(field)) {
+				query.alias("decoration.house", "house");
+				query.alias("house.village", "village");
+				query.add(query.getCriterion("village.no", data, op));
+			} else if ("designerId".equals(field)) {
+				query.alias("decoration.designer", "designer");
+				query.add(query.getCriterion("designer.userId", data, op));
+			} else if ("salesmanId".equals(field)) {
+				query.alias("decoration.salesman", "salesman");
+				query.add(query.getCriterion("salesman.userId", data, op));
+			} else if ("createTime".equals(field)) {
+				query.timeranges("createTime", "createTime", data);
+			} else if ("decorationOrderStatus".equals(field)) {
+				query.alias("decoration", "decoration");
+				query.add(query.getCriterion("decoration.status", Short.valueOf(data), op));
+			} else if ("status".equals(field)) {
+				query.add(query.getCriterion(field, Short.parseShort(data), op));
 			}
 		}
 	}
-
 }

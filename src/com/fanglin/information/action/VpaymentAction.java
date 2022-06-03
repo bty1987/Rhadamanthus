@@ -37,7 +37,7 @@ public class VpaymentAction extends BaseListAction {
 
 	private List<VpaymentVO> vpayments;
 
-	private List<Long> posids;
+	private List<Long> ptids;
 
 	@Action(value = "pageVpayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageVpayment() throws FLException {
@@ -58,7 +58,7 @@ public class VpaymentAction extends BaseListAction {
 	@Action(value = "collectVpayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String collectVpayment() throws FLException {
 
-		vpaymentService.collectVpayment(vpayments, vreceipt, posids, queryUserId());
+		vpaymentService.collectVpayment(vpayments, vreceipt, ptids, queryUserId());
 
 		return SUCCESS;
 	}
@@ -111,12 +111,12 @@ public class VpaymentAction extends BaseListAction {
 		this.vpayments = vpayments;
 	}
 
-	public List<Long> getPosids() {
-		return posids;
+	public List<Long> getPtids() {
+		return ptids;
 	}
 
-	public void setPosids(List<Long> posids) {
-		this.posids = posids;
+	public void setPtids(List<Long> ptids) {
+		this.ptids = ptids;
 	}
 
 }

@@ -162,10 +162,12 @@ public class CustomerServiceImpl implements CustomerService {
 		for (CustomerPhonePO customerPhonePO : customerPhonePOs) {
 
 			if (customerPhone.getCid() != null && customerPhonePO.getCid() == customerPhone.getCid()) {
+				customerPhone.setCid(customerPhonePO.getCid());
 				throw new FLException(130006, "客户电话已存在");
 			}
 
 			if (customerPhonePO.getStatus() == CustomerPhonePO.STATUS_ENABLE_INT) {
+				customerPhone.setCid(customerPhonePO.getCid());
 				throw new FLException(130006, "客户电话已存在");
 			}
 		}
@@ -308,6 +310,28 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int updateCustomerForBase(CustomerVO customerVO) throws FLException {
+
+		CustomerPO customerPO = customerDao.get(customerVO.getCid());
+
+		if (customerPO == null) {
+			throw new FLException(130002, "客户信息不存在");
+		}
+
+		customerDao.update(customerPO);
+
+		customerPO.setCompanyNo(customerVO.getCompanyNo());
+		customerPO.setCompanyName(customerVO.getCompanyName());
+		customerPO.setCompanyAddr(customerVO.getCompanyAddr());
+		customerPO.setCompanyPhone(customerVO.getCompanyPhone());
+		customerPO.setCompanyBank(customerVO.getCompanyBank());
+		customerPO.setCompanyBankno(customerVO.getCompanyBankno());
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int updateCustomerPhoneForStatus(CustomerPhoneVO customerPhoneVO) throws FLException {
 
 		CustomerPhonePO customerPhonePO = customerPhoneDao.get(customerPhoneVO.getCpid());
@@ -396,6 +420,28 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int resetCustomer(CustomerVO customerVO) throws FLException {
+
+		CustomerPO customerPO = customerDao.get(customerVO.getCid());
+
+		if (customerPO == null) {
+			throw new FLException(130002, "客户信息不存在");
+		}
+
+		if (customerPO.getStatus() != CustomerPO.STATUS_INIT_INT) {
+			throw new FLException(130028, "客户状态不可操作");
+		}
+
+		customerPO.setToken(null);
+		customerPO.setSignno(null);
+
+		customerDao.update(customerPO);
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public String authCustomer(CustomerVO customerVO) throws FLException {
 
 		CustomerPO customerPO = customerDao.get(customerVO.getCid());
@@ -466,4 +512,5 @@ public class CustomerServiceImpl implements CustomerService {
 
 		return 0;
 	}
+
 }

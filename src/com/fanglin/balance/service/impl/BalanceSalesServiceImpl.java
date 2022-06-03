@@ -8,6 +8,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.fanglin.balance.dao.BalanceDao;
 import com.fanglin.balance.dao.BalanceSalesBalanceDao;
 import com.fanglin.balance.dao.BalanceSalesDao;
 import com.fanglin.balance.po.BalancePO;
@@ -49,6 +51,9 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 	private BalanceSalesDao balanceSalesDao;
 
 	@Autowired
+	private BalanceDao balanceDao;
+
+	@Autowired
 	private BalanceSalesBalanceDao balanceSalesBalanceDao;
 
 	@Autowired
@@ -68,9 +73,10 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 		BalanceSalesVO balanceSalesVO;
 
 		for (BalanceSalesPO balanceSalesPO : balanceSalesPOs) {
-			balanceSalesVO = new BalanceSalesVO(new BrandVO(), new UserBaseVO());
-			BeanUtil.copyPropertie(balanceSalesPO, balanceSalesVO, Arrays.asList("brand", "creater"));
+			balanceSalesVO = new BalanceSalesVO(new BrandVO(), new UserBaseVO(), new UserBaseVO());
+			BeanUtil.copyPropertie(balanceSalesPO, balanceSalesVO, Arrays.asList("brand", "creater", "balancer"));
 			BeanUtil.copyProperties(balanceSalesPO.getCreater(), balanceSalesVO.getCreater(), Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
+			BeanUtil.copyProperties(balanceSalesPO.getBalancer(), balanceSalesVO.getBalancer(), Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
 			BeanUtil.copyPropertie(balanceSalesPO.getBrand(), balanceSalesVO.getBrand(), Arrays.asList("category", "supplier"));
 
 			balanceSalesVOs.add(balanceSalesVO);
@@ -209,7 +215,7 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int balanceBalanceSales(BalanceSalesVO balanceSalesVO) throws FLException {
+	public int balanceBalanceSales(BalanceSalesVO balanceSalesVO, String userId) throws FLException {
 		
 		BalanceSalesPO balanceSalesPO = balanceSalesDao.get(balanceSalesVO.getBsid());
 		
@@ -220,7 +226,14 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 		if (balanceSalesPO.getStatus() != BalanceSalesPO.STATUS_UNLOCK_INT) {
 			throw new FLException(350018 , "结算销售不可操作");
 		}
+		
+		UserPO balancer = userDao.queryUserByUserId(userId);
+		
+		balanceSalesPO.setBalancer(balancer);
+		balanceSalesPO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
 		balanceSalesPO.setStatus(BalanceSalesPO.STATUS_ENABLE_CHECK_INT);
+		
+		balanceSalesDao.update(balanceSalesPO);
 		
 		BalancePO balancePO = new BalancePO(new UserPO(), new UserPO());
 		
@@ -232,7 +245,6 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 
 		String no = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
 
-
 		balancePO.setNo(no);
 		balancePO.setType(BalanceSalesPO.STATUS_INIT_INT);
 		balancePO.setBelonger(balanceSalesPO.getCreater());
@@ -242,9 +254,12 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 		balancePO.setAmount(balanceSalesPO.getPayment());
 		balancePO.setSurplus(balanceSalesPO.getPayment());
 
-		balanceSalesDao.save(balancePO);
-		
-		
+		balanceDao.save(balancePO);
+
+		balanceSalesPO.setBid(balancePO.getBid());
+
+		balanceSalesDao.update(balanceSalesPO);
+
 		return 0;
 	}
 

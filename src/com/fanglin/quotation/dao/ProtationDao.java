@@ -14,9 +14,14 @@ package com.fanglin.quotation.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
+import com.fanglin.core.vo.Filter;
+import com.fanglin.quotation.po.ProtationDO;
 import com.fanglin.quotation.po.ProtationPO;
+import com.fanglin.utils.Paging;
 
 public interface ProtationDao extends Dao<ProtationPO> {
+
+	public List<ProtationDO> pageProtation(Paging paging, List<Filter> filters, Integer company);
 
 	public List<ProtationPO> queryProtationByOrderId(String orderId);
 

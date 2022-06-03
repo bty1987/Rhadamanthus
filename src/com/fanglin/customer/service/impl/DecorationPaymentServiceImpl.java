@@ -33,6 +33,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 				decorationPaymentVO = new DecorationPaymentVO();
 
+				decorationPaymentVO.setDpid(decorationPaymentPO.getDpid());
 				decorationPaymentVO.setOrderId(decorationPaymentVO.getOrderId());
 				decorationPaymentVO.setReferMoney(decorationPaymentPO.getReferMoney());
 				decorationPaymentVO.setPaymentStatus(decorationPaymentPO.getPaymentStatus());

@@ -21,8 +21,8 @@ import com.fanglin.sales.vo.SalesVO;
 @Controller
 public class SalesCommonAction extends BaseListAction {
 
-	private static final long serialVersionUID = 1L;
-	
+	private static final long serialVersionUID = 2808000962786771301L;
+
 	@Autowired
 	private SalesActivityItemService salesActivityItemService;
 	

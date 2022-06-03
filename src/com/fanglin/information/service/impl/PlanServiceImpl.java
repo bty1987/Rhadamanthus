@@ -16,6 +16,7 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.data.common.dao.TaskDao;
 import com.fanglin.data.common.vo.TaskVO;
 import com.fanglin.data.po.TaskPO;
+import com.fanglin.dingding.service.MessageService;
 import com.fanglin.information.dao.PlanDao;
 import com.fanglin.information.dao.PlanParamDao;
 import com.fanglin.information.po.PlanPO;
@@ -47,6 +48,9 @@ public class PlanServiceImpl implements PlanService {
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private MessageService messageService;
 
 	@Autowired
 	private SystemConfigDao systemConfigDao;
@@ -211,7 +215,7 @@ public class PlanServiceImpl implements PlanService {
 			throw new FLException(160029, "计划不可操作");
 		}
 
-		if (userPO.getStatus() != 0) {
+		if (userPO.getStatus() != PlanPO.STATUS_INIT_INT) {
 			throw new FLException(160029, "计划不可操作");
 		}
 
@@ -271,7 +275,7 @@ public class PlanServiceImpl implements PlanService {
 			throw new FLException(160029, "计划不可操作");
 		}
 
-		if (planPO.getStatus() != 0) {
+		if (planPO.getStatus() != PlanPO.STATUS_INIT_INT) {
 			throw new FLException(160029, "计划不可操作");
 		}
 
@@ -292,7 +296,7 @@ public class PlanServiceImpl implements PlanService {
 			throw new FLException(160028, "计划不存在");
 		}
 
-		if (planPO.getStatus() != 0 && planPO.getStatus() != 4) {
+		if (planPO.getStatus() != PlanPO.STATUS_INIT_INT && planPO.getStatus() != PlanPO.STATUS_IMME_INT) {
 			throw new FLException(160029, "计划不可操作");
 		}
 
@@ -300,7 +304,13 @@ public class PlanServiceImpl implements PlanService {
 
 		planDao.update(planPO);
 
+		if (planPO.getStatus() == PlanPO.STATUS_SUCCESS_INT || planPO.getStatus() == PlanPO.STATUS_FAIL_INT) {
+
+			String content = String.format("%s 时间创建的 %s 计划 , 已完成 . ", planPO.getCreateTime(), planPO.getTask().getName());
+
+			messageService.sendMessage(planPO.getCreater().getUserId(), "计划", content, null, planPO.getCreater().getCompany());
+		}
+
 		return 0;
 	}
-
 }

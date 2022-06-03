@@ -7,15 +7,15 @@ import com.fanglin.data.quotation.vo.NormpackVO;
 import com.fanglin.utils.Paging;
 
 public interface NormpackService {
-	
-	public void pageNormpack(Paging paging, List<Filter> filters);
-	
-	public List<NormpackVO> queryNormpack(NormpackVO normpackVO);
-	
-	public int addNormpack(NormpackVO normpackVO);
-	
+
+	public void pageNormpack(Paging paging, List<Filter> filters, int company);
+
+	public List<NormpackVO> queryNormpack(NormpackVO normpackVO, int company);
+
+	public int addNormpack(NormpackVO normpackVO, int company);
+
 	public int updateNormpackForStatus(NormpackVO normpackVO);
-	
+
 	public int deleteNormpack(NormpackVO normpackVO);
-	
+
 }

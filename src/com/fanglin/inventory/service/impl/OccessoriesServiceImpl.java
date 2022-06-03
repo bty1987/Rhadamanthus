@@ -71,6 +71,8 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 			occessoriesVO.getCreater().setBaseInfo(occessoriesPO.getCreater());
 			occessoriesVO.getSupervisor().setBaseInfo(occessoriesPO.getSupervisor());
 
+			occessoriesVO.getSupplier().setBaseInfo(occessoriesPO.getSupplier());
+
 			occessoriesPO.getDecoration().ptvcascade(occessoriesVO.getDecoration());
 
 			occessoriesVOs.add(occessoriesVO);
@@ -96,6 +98,7 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 			occessoriesVO.getCreater().setBaseInfo(occessoriesPO.getCreater());
 			occessoriesVO.getSupervisor().setBaseInfo(occessoriesPO.getSupervisor());
+			occessoriesVO.getSupplier().setBaseInfo(occessoriesPO.getSupplier());
 
 			occessoriesPO.getDecoration().ptvcascade(occessoriesVO.getDecoration());
 
@@ -138,6 +141,7 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 		}
 
 		occessoriesPO.setDecoration(decorationPO);
+		occessoriesPO.setComment(occessoriesVO.getComment());
 
 		occessoriesDao.save(occessoriesPO);
 
@@ -161,12 +165,11 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 			throw new FLException(260023, "辅料单不存在");
 		}
 
-		if (occessoriesPO.getStatus() != OccessoriesPO.STATUS_INIT_INT) {
+		if (occessoriesPO.getStatus() != OccessoriesPO.STATUS_INIT_INT & occessoriesPO.getStatus() != OccessoriesPO.STATUS_BIND_INT) {
 			throw new FLException(260024, "辅料单状态不可操作");
 		}
 
 		occessoriesPO.setSupplier(userDao.get(occessoriesVO.getSupplier().getUid()));
-
 		occessoriesPO.setStatus(OccessoriesPO.STATUS_BIND_INT);
 
 		occessoriesDao.update(occessoriesPO);
@@ -190,6 +193,7 @@ public class OccessoriesServiceImpl implements OccessoriesService {
 
 		occessoriesPO.setStatus(OccessoriesPO.STATUS_DELIVE_INT);
 		occessoriesPO.setDeliveTime(DateUtil.getDateToTimestamp(new Date()));
+		occessoriesPO.setContent(occessoriesVO.getContent());
 
 		occessoriesDao.update(occessoriesPO);
 

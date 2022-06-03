@@ -31,6 +31,8 @@ public class BalanceVO implements Serializable {
 
 	private Long surplus;
 
+	private Long cutpay;
+
 	private Short type;
 
 	private Short status;
@@ -120,6 +122,14 @@ public class BalanceVO implements Serializable {
 
 	public void setSurplus(Long surplus) {
 		this.surplus = surplus;
+	}
+
+	public Long getCutpay() {
+		return cutpay;
+	}
+
+	public void setCutpay(Long cutpay) {
+		this.cutpay = cutpay;
 	}
 
 	public Short getType() {

@@ -24,6 +24,8 @@ public class PresignItemVO implements Serializable {
 
 	private Short status;
 
+	private String content;
+
 	public PresignItemVO() {
 		super();
 	}
@@ -98,6 +100,14 @@ public class PresignItemVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 }

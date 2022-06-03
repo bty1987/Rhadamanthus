@@ -31,6 +31,12 @@ public class OccessoriesPO implements Serializable {
 
 	public static final String COLUMN_CREATETIME_STR = "createTime";
 
+	public static final String COLUMN_DELIVETIME_STR = "deliveTime";
+
+	public static final String COLUMN_RECRIVETIME_STR = "receiveTime";
+
+	public static final String COLUMN_BALANCETIME_STR = "balanceTime";
+
 	public static final String COLUMN_ORDERID_STR = "orderId";
 
 	public static final String COLUMN_STATUS_STR = "status";
@@ -80,6 +86,10 @@ public class OccessoriesPO implements Serializable {
 	private short status;
 
 	private int company; // 公司
+
+	private String comment; // 备注
+
+	private String content; // 说明
 
 	public OccessoriesPO() {
 		super();
@@ -243,6 +253,24 @@ public class OccessoriesPO implements Serializable {
 
 	public void setIsAttic(short isAttic) {
 		this.isAttic = isAttic;
+	}
+
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	@Column(name = "content")
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 	public OccessoriesPO init(String no, String orderId, UserPO creater, int company, short isEnter, short isLift, short isExceed, short isAttic) {

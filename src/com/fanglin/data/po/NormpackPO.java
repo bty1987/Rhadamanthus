@@ -12,14 +12,14 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "normpack", catalog = "data")
-public class NormpackPO implements Serializable{
+public class NormpackPO implements Serializable {
 
 	private static final long serialVersionUID = -1109476732868699253L;
-	
+
 	public static final String COLUMN_CNID_STR = "constructionNode.cnid";
-	
+
 	public static final short STATUS_START_SHORT = 0;
-	
+
 	public static final short STATUS_STOP_SHORT = 1;
 
 	private long npid;
@@ -27,6 +27,8 @@ public class NormpackPO implements Serializable{
 	private String name;
 
 	private short status;
+
+	private int company;
 
 	public NormpackPO() {
 		super();
@@ -51,7 +53,7 @@ public class NormpackPO implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
@@ -59,6 +61,15 @@ public class NormpackPO implements Serializable{
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
 	}
 
 }

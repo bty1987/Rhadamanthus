@@ -44,6 +44,14 @@ public class QuotationAction extends BaseListAction {
 
 	private Map<String, List<String>> configs;
 
+	@Action(value = "pageQuotation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageQuotation() throws FLException {
+
+		quotationService.pageQuotation(getPaging(), getFilters(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryQuotationByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationByOrderId() {
 

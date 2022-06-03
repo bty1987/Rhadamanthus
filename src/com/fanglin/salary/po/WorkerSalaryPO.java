@@ -33,6 +33,8 @@ public class WorkerSalaryPO implements Serializable {
 
 	public static final String COLUMN_APPROVETIME_STR = "approveTime";
 
+	public static final String COLUMN_CHECKTIME_STR = "checkTime";
+
 	public static final String COLUMN_STATUS_STR = "status";
 
 	public static final short STATUS_INIT_INT = 0; // 初始
@@ -85,6 +87,10 @@ public class WorkerSalaryPO implements Serializable {
 
 	public static final short ISAPPR_APPRED_INT = 2; // 已发
 
+	public static final short ISCHECK_UNCHECK_INT = 0; // 初始
+
+	public static final short ISCHECK_CHECK_INT = 1; // 确认
+
 	private long wsid;
 
 	private DecorationPO decoration;
@@ -135,6 +141,12 @@ public class WorkerSalaryPO implements Serializable {
 
 	private int company;
 
+	private short isCheck;
+
+	private UserPO checker;
+
+	private Timestamp checkTime;
+
 	public WorkerSalaryPO init(UserPO worker, UserPO creater, String comment, int company) {
 
 		setUser(worker);
@@ -181,12 +193,13 @@ public class WorkerSalaryPO implements Serializable {
 		super();
 	}
 
-	public WorkerSalaryPO(DecorationPO decoration, UserPO user, UserPO creater, UserPO approver) {
+	public WorkerSalaryPO(DecorationPO decoration, UserPO user, UserPO creater, UserPO approver, UserPO checker) {
 		super();
 		this.decoration = decoration;
 		this.user = user;
 		this.creater = creater;
 		this.approver = approver;
+		this.checker = checker;
 	}
 
 	public WorkerSalaryPO(DecorationPO decoration, UserPO user, UserPO creater) {
@@ -241,24 +254,6 @@ public class WorkerSalaryPO implements Serializable {
 		this.user = user;
 	}
 
-	@Column(name = "createTime")
-	public Timestamp getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Timestamp createTime) {
-		this.createTime = createTime;
-	}
-
-	@Column(name = "balanceTime")
-	public Timestamp getBalanceTime() {
-		return balanceTime;
-	}
-
-	public void setBalanceTime(Timestamp balanceTime) {
-		this.balanceTime = balanceTime;
-	}
-
 	@Column(name = "salary")
 	public long getSalary() {
 		return salary;
@@ -296,15 +291,6 @@ public class WorkerSalaryPO implements Serializable {
 		this.decoration = decoration;
 	}
 
-	@Column(name = "approveTime")
-	public Timestamp getApproveTime() {
-		return approveTime;
-	}
-
-	public void setApproveTime(Timestamp approveTime) {
-		this.approveTime = approveTime;
-	}
-
 	@Column(name = "subtype")
 	public short getSubtype() {
 		return subtype;
@@ -312,15 +298,6 @@ public class WorkerSalaryPO implements Serializable {
 
 	public void setSubtype(short subtype) {
 		this.subtype = subtype;
-	}
-
-	@Column(name = "comment")
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -334,6 +311,16 @@ public class WorkerSalaryPO implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ruid", referencedColumnName = "uid")
+	public UserPO getChecker() {
+		return checker;
+	}
+
+	public void setChecker(UserPO checker) {
+		this.checker = checker;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "auid", referencedColumnName = "uid")
 	public UserPO getApprover() {
 		return approver;
@@ -341,15 +328,6 @@ public class WorkerSalaryPO implements Serializable {
 
 	public void setApprover(UserPO approver) {
 		this.approver = approver;
-	}
-
-	@Column(name = "company")
-	public int getCompany() {
-		return company;
-	}
-
-	public void setCompany(int company) {
-		this.company = company;
 	}
 
 	@Column(name = "csid")
@@ -431,6 +409,69 @@ public class WorkerSalaryPO implements Serializable {
 
 	public void setIsAppr(short isAppr) {
 		this.isAppr = isAppr;
+	}
+
+	@Column(name = "isCheck")
+	public short getIsCheck() {
+		return isCheck;
+	}
+
+	public void setIsCheck(short isCheck) {
+		this.isCheck = isCheck;
+	}
+
+	@Column(name = "createTime")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	@Column(name = "balanceTime")
+	public Timestamp getBalanceTime() {
+		return balanceTime;
+	}
+
+	public void setBalanceTime(Timestamp balanceTime) {
+		this.balanceTime = balanceTime;
+	}
+
+	@Column(name = "approveTime")
+	public Timestamp getApproveTime() {
+		return approveTime;
+	}
+
+	public void setApproveTime(Timestamp approveTime) {
+		this.approveTime = approveTime;
+	}
+
+	@Column(name = "checkTime")
+	public Timestamp getCheckTime() {
+		return checkTime;
+	}
+
+	public void setCheckTime(Timestamp checkTime) {
+		this.checkTime = checkTime;
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
+
+	@Column(name = "comment")
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 }

@@ -36,23 +36,25 @@ public class AoodsDaoImpl extends DaoImpl<AoodsPO> implements AoodsDao {
 
 		return query.list();
 	}
-	
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<AoodsPO> queryAoods(long atid, Short atttype, int bompany) {
-		
+	public List<AoodsPO> queryAoods(Long atid, Short atttype, int bompany) {
+
 		Criteria query = session().createCriteria(AoodsPO.class);
-		
-		query.add(Restrictions.eq("accessoriesType.atid", atid)).add(Restrictions.eq(AoodsPO.COLUMN_STATUS_STR, AoodsPO.STATUS_ENABLE_INT)).add(Restrictions.eq("bompany", bompany));
-	
-		if(atttype!=null){
-			
+
+		query.add(Restrictions.eq(AoodsPO.COLUMN_STATUS_STR, AoodsPO.STATUS_ENABLE_INT)).add(Restrictions.eq("bompany", bompany));
+
+		if (atid != null) {
+			query.add(Restrictions.eq("accessoriesType.atid", atid));
+		}
+
+		if (atttype != null) {
+
 			query.add(Restrictions.eq("atttype", atttype));
 		}
-		
+
 		return query.list();
-	
 	}
 
 	@Override
@@ -96,8 +98,7 @@ public class AoodsDaoImpl extends DaoImpl<AoodsPO> implements AoodsDao {
 
 	private void queryFilterExcute(PagingQuery<AoodsPO> query, List<Filter> filters) throws FLException {
 
-		if (filters == null)
-			return;
+		if (filters == null) return;
 
 		for (Filter filter : filters) {
 
@@ -115,11 +116,10 @@ public class AoodsDaoImpl extends DaoImpl<AoodsPO> implements AoodsDao {
 				query.add(Restrictions.eq("status", Short.valueOf(filter.getData())));
 			} else if (AoodsPO.COLUMN_BOMPANY_STR.equals(field)) {
 				query.add(Restrictions.eq("bompany", CompanyServiceImpl.decode(data)));
-			} else if (AoodsPO.COLUMN_STATUS_ATTTYPE.equals(field)){
-				query.add(Restrictions.eq("atttype",Short.valueOf(filter.getData())));
+			} else if (AoodsPO.COLUMN_STATUS_ATTTYPE.equals(field)) {
+				query.add(Restrictions.eq("atttype", Short.valueOf(filter.getData())));
 			}
 		}
 	}
-
 
 }

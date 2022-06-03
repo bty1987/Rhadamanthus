@@ -25,12 +25,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.common.dao.ServiceRecordDao;
 import com.fanglin.common.po.ServiceRecordPO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.QuotationVersionPO;
 import com.fanglin.data.quotation.dao.QuotationItemDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.quotation.dao.AddReduceItemDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
@@ -41,6 +44,7 @@ import com.fanglin.quotation.dao.QuotetionFunctionAreaDao;
 import com.fanglin.quotation.dao.QuotetionFunctionAreaItemDao;
 import com.fanglin.quotation.dao.SelectionDao;
 import com.fanglin.quotation.dao.SelectionItemDao;
+import com.fanglin.quotation.po.QuotationDO;
 import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.po.QuotationPO;
@@ -54,6 +58,7 @@ import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
+import com.fanglin.utils.Paging;
 
 @Service("quotationService")
 @Transactional(readOnly = true)
@@ -106,6 +111,31 @@ public class QuotationServiceImpl implements QuotationService {
 
 	@Autowired
 	private SelectionService selectionService;
+
+	@Override
+	public void pageQuotation(Paging paging, List<Filter> filters, Integer company) throws FLException {
+
+		List<QuotationDO> quotationDOs = quotationDao.pageQuotation(paging, filters, company);
+
+		List<QuotationVO> quotationVOs = new ArrayList<QuotationVO>();
+
+		for (QuotationDO quotationDO : quotationDOs) {
+
+			QuotationVO quotationVO = new QuotationVO(new DecorationVO(), new UserBaseVO());
+
+			quotationVO.getDecoration().setSupervisor(new UserBaseVO());
+
+			BeanUtil.copyPropertie(quotationDO, quotationVO, Arrays.asList("decoration", "creater"));
+
+			BeanUtil.copyProperties(quotationDO.getCreater(), quotationVO.getCreater(), Arrays.asList("duty", "dept", "role"));
+
+			quotationDO.getDecoration().ptvcascade(quotationVO.getDecoration());
+
+			quotationVOs.add(quotationVO);
+		}
+		paging.setData(quotationVOs);
+
+	}
 
 	@Override
 	public QuotationVO queryQuotationByQid(long qId) {
@@ -202,7 +232,7 @@ public class QuotationServiceImpl implements QuotationService {
 
 		quotationDao.save(quotationPO);
 
-		selectionService.addSelection(quotationPO.getQid());
+		selectionService.addSelection(quotationPO.getQid(), userId);
 
 		BeanUtil.copyProperties(quotationPO, quotationVO, Arrays.asList("creater"));
 
@@ -409,7 +439,7 @@ public class QuotationServiceImpl implements QuotationService {
 
 		quotationDao.save(quotationPO);
 
-		selectionService.addSelection(quotationPO.getQid());
+		selectionService.addSelection(quotationPO.getQid(), userId);
 
 		copyQuotetion(quotationPO.getQid(), copyQuotetionPO.getQid());
 
@@ -477,7 +507,7 @@ public class QuotationServiceImpl implements QuotationService {
 
 		quotationDao.save(quotationPO);
 
-		selectionService.addSelection(quotationPO.getQid());
+		selectionService.addSelection(quotationPO.getQid(), userId);
 
 		copyQuotation(replicaQId, quotationPO.getQid());
 
@@ -519,6 +549,7 @@ public class QuotationServiceImpl implements QuotationService {
 		}
 
 		BeanUtil.copyProperties(quotationVO, quotationPO, Arrays.asList("qid", "creater"));
+
 		quotationPO.setOrderId(orderId);
 		quotationPO.setCreater(userDao.queryUserByUserId(userId));
 		quotationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
@@ -536,7 +567,7 @@ public class QuotationServiceImpl implements QuotationService {
 		}
 		quotationDao.save(quotationPO);
 
-		selectionService.addSelection(quotationPO.getQid());
+		selectionService.addSelection(quotationPO.getQid(), userId);
 
 		copyQuotation(copyQId, quotationPO.getQid());
 
@@ -679,6 +710,7 @@ public class QuotationServiceImpl implements QuotationService {
 		}
 
 		quotationDao.deleteById(qId); // 删除报价
+
 		selectionDao.deleteSelectionByQid(qId);// 删除选材
 
 		return 0;
@@ -761,5 +793,4 @@ public class QuotationServiceImpl implements QuotationService {
 
 		return quotationPO;
 	}
-
 }

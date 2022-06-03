@@ -16,11 +16,12 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
-import com.fanglin.personel.po.UserPO;
+import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class ProtationVO implements Serializable {
 
-	private static final long serialVersionUID = -3071996221463110945L;
+	private static final long serialVersionUID = 3783839894798170014L;
 
 	private Long pid;
 
@@ -28,11 +29,13 @@ public class ProtationVO implements Serializable {
 
 	private String orderId;
 
+	private DecorationVO decoration;
+
 	private String name;
 
 	private Timestamp createTime;
 
-	private UserPO creater;
+	private UserBaseVO creater;
 
 	private Long quotePrice;
 
@@ -80,6 +83,16 @@ public class ProtationVO implements Serializable {
 
 	private String comment;
 
+	public ProtationVO() {
+		super();
+	}
+
+	public ProtationVO(DecorationVO decoration, UserBaseVO creater) {
+		super();
+		this.decoration = decoration;
+		this.creater = creater;
+	}
+
 	public Long getPid() {
 		return pid;
 	}
@@ -104,6 +117,14 @@ public class ProtationVO implements Serializable {
 		this.orderId = orderId;
 	}
 
+	public DecorationVO getDecoration() {
+		return decoration;
+	}
+
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -121,11 +142,11 @@ public class ProtationVO implements Serializable {
 		this.createTime = createTime;
 	}
 
-	public UserPO getCreater() {
+	public UserBaseVO getCreater() {
 		return creater;
 	}
 
-	public void setCreater(UserPO creater) {
+	public void setCreater(UserBaseVO creater) {
 		this.creater = creater;
 	}
 

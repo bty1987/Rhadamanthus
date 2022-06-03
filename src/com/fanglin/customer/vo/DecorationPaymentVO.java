@@ -9,6 +9,8 @@ public class DecorationPaymentVO implements Serializable {
 
 	private static final long serialVersionUID = 8484894874127122141L;
 
+	private Long dpid;
+
 	private String orderId;
 
 	private Long referMoney;
@@ -22,6 +24,14 @@ public class DecorationPaymentVO implements Serializable {
 	private Short paymentStatus;
 
 	private String paymentType;
+
+	public Long getDpid() {
+		return dpid;
+	}
+
+	public void setDpid(Long dpid) {
+		this.dpid = dpid;
+	}
 
 	public String getOrderId() {
 		return orderId;

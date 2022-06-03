@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.dingding.po.Department;
+import com.fanglin.dingding.bean.Department;
 import com.fanglin.dingding.utils.DDApi;
 import com.fanglin.dingding.utils.HttpHelper;
 import com.fanglin.system.dao.CompanyDao;

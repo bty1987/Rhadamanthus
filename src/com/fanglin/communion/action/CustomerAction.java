@@ -139,6 +139,18 @@ public class CustomerAction extends BaseListAction {
 		return "success";
 	}
 
+	@Action(value = "updateCustomerForBase", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateCustomerForBase() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		customerService.updateCustomerForBase(customer);
+
+		return "success";
+	}
+
 	@Action(value = "updateCustomerPhoneForStatus", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateCustomerPhoneForStatus() throws FLException {
 
@@ -183,6 +195,18 @@ public class CustomerAction extends BaseListAction {
 		}
 
 		customerService.registCustomer(customer);
+
+		return "success";
+	}
+
+	@Action(value = "resetCustomer", results = { @org.apache.struts2.convention.annotation.Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String resetCustomer() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		customerService.resetCustomer(customer);
 
 		return "success";
 	}

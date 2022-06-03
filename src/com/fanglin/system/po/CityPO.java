@@ -21,7 +21,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "city", catalog = "communion")
 public class CityPO implements Serializable {
@@ -29,31 +28,31 @@ public class CityPO implements Serializable {
 	private static final long serialVersionUID = -5885986511194210020L;
 
 	public static final String COLUMN_NO_STR = "no";
-	
+
 	public static final String COLUMN_NAME_STR = "name";
-	
+
 	public static final String COLUMN_PROVINCE_STR = "province";
-	
+
 	public static final String COLUMN_RID_STR = "rid";
-	
+
 	public static final String COLUMN_PINYIN_STR = "pinyin";
-	
+
 	private int cid;
-	
+
 	private RegionPO region;
 
 	private String no;
 
 	private String name;
-	
+
 	private String province;
-	
+
 	private String pinyin;
 
-	private double x;
-	
-	private double y;
-	
+	private int x;
+
+	private int y;
+
 	@Id
 	@GeneratedValue
 	@Column(name = "cid")
@@ -64,17 +63,17 @@ public class CityPO implements Serializable {
 	public void setCid(int cid) {
 		this.cid = cid;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(nullable = false, name = "rid", referencedColumnName="rid")
-	public RegionPO getRegion(){
+	@JoinColumn(nullable = false, name = "rid", referencedColumnName = "rid")
+	public RegionPO getRegion() {
 		return region;
 	}
 
-	public void setRegion(RegionPO region){
+	public void setRegion(RegionPO region) {
 		this.region = region;
 	}
-	
+
 	@Column(name = "no")
 	public String getNo() {
 		return no;
@@ -92,12 +91,12 @@ public class CityPO implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@Column(name = "province")
 	public String getProvince() {
 		return province;
 	}
-	
+
 	public void setProvince(String province) {
 		this.province = province;
 	}
@@ -112,21 +111,21 @@ public class CityPO implements Serializable {
 	}
 
 	@Column(name = "x")
-	public double getX() {
+	public int getX() {
 		return x;
 	}
 
-	public void setX(double x) {
+	public void setX(int x) {
 		this.x = x;
 	}
 
 	@Column(name = "y")
-	public double getY() {
+	public int getY() {
 		return y;
 	}
 
-	public void setY(double y) {
+	public void setY(int y) {
 		this.y = y;
 	}
-	
+
 }

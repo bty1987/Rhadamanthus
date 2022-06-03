@@ -46,11 +46,11 @@ import com.fanglin.payment.po.AdvancePaymentPO;
 import com.fanglin.payment.po.DecorationPaymentPO;
 import com.fanglin.payment.po.DecorationReceiptPO;
 import com.fanglin.payment.po.PaymentPO;
-import com.fanglin.payment.po.PointofsalesPO;
+import com.fanglin.payment.po.PaytranPO;
 import com.fanglin.payment.service.AdvancePaymentService;
 import com.fanglin.payment.service.DecorationPaymentService;
 import com.fanglin.payment.service.PaymentService;
-import com.fanglin.payment.service.PointofsalesService;
+import com.fanglin.payment.service.PaytranService;
 import com.fanglin.payment.vo.DecorationPaymentVO;
 import com.fanglin.payment.vo.DecorationReceiptVO;
 import com.fanglin.payment.vo.PaymentVO;
@@ -105,7 +105,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 	private DecorationActivityItemDao decorationActivityItemDao;
 
 	@Autowired
-	private PointofsalesService pointofsalesService;
+	private PaytranService paytranService;
 
 	@Autowired
 	private DecorationAdditionService decorationAdditionService;
@@ -450,7 +450,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int collectDecorationPayment(DecorationPaymentVO decorationPaymentVO, List<Long> posids, String userId, Integer company) throws Exception {
+	public int collectDecorationPayment(DecorationPaymentVO decorationPaymentVO, List<Long> ptids, String userId, Integer company) throws FLException {
 
 		// 这里的realMoney保留是想用作之后的判断
 		long realMoney = 0;
@@ -604,8 +604,8 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		decorationPaymentVO.setDrId(decorationReceiptPO.getDrId());
 
 		// 更新销售点信息
-		if (posids != null && posids.size() > 0) {
-			pointofsalesService.updatePointofsales(posids, decorationReceiptPO.getDrId(), PointofsalesPO.STATUS_USED_INT, PointofsalesPO.TYPE_DECORATION_INT);
+		if (ptids != null && ptids.size() > 0) {
+			paytranService.updatePaytran(ptids, decorationReceiptPO.getDrId(), PaytranPO.STATUS_USED_INT, PaytranPO.TYPE_DECORATION_INT);
 		}
 
 		if (decorationPO.getSupervisor() != null) {
@@ -619,7 +619,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int refundDecorationPayment(DecorationPaymentVO decorationPaymentVO, String userId, Integer company) throws Exception {
+	public int refundDecorationPayment(DecorationPaymentVO decorationPaymentVO, String userId, Integer company) throws FLException {
 
 		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.get(decorationPaymentVO.getDpid());
 
@@ -711,7 +711,7 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int confirmDecorationPayment(List<Long> ids, String confirmUserId) throws Exception {
+	public int confirmDecorationPayment(List<Long> ids, String confirmUserId) throws FLException {
 
 		List<DecorationPaymentPO> decorationPaymentPOs = decorationPaymentDao.queryDecorationPaymentByDpids(ids);
 
@@ -796,11 +796,6 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		decorationReceiptDao.update(decorationReceiptPO);
 
-		return 0;
-	}
-
-	@Override
-	public int deleteDecorationPaymentById(DecorationPaymentVO payment) {
 		return 0;
 	}
 

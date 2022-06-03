@@ -14,17 +14,17 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.EmemberDao;
 import com.fanglin.customer.po.EmemberPO;
 import com.fanglin.dingding.service.MessageService;
+import com.fanglin.information.dao.VticketDao;
+import com.fanglin.information.po.VticketPO;
 import com.fanglin.payment.dao.ActivityPaymentDao;
 import com.fanglin.payment.dao.ActivityReceiptDao;
-import com.fanglin.information.dao.VticketDao;
 import com.fanglin.payment.po.ActivityPaymentPO;
 import com.fanglin.payment.po.ActivityReceiptPO;
-import com.fanglin.information.po.VticketPO;
+import com.fanglin.payment.po.PaytranPO;
 import com.fanglin.payment.service.ActivityPaymentService;
-import com.fanglin.payment.service.PointofsalesService;
+import com.fanglin.payment.service.PaytranService;
 import com.fanglin.payment.vo.ActivityPaymentVO;
 import com.fanglin.payment.vo.ActivityReceiptVO;
-import com.fanglin.payment.po.PointofsalesPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -55,7 +55,7 @@ public class ActivityPaymentServiceImpl implements ActivityPaymentService {
 	private EmemberDao ememberDao;
 
 	@Autowired
-	private PointofsalesService pointofsalesService;
+	private PaytranService paytranService;
 
 	@Override
 	public void pageActivityPayment(Paging paging, List<Filter> filters, ActivityPaymentVO activityPaymentVO) {
@@ -123,7 +123,7 @@ public class ActivityPaymentServiceImpl implements ActivityPaymentService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int collectActivityPayment(List<ActivityPaymentVO> activityPayments, ActivityReceiptVO activityReceiptVO, List<Long> posids, String userId) throws FLException {
+	public int collectActivityPayment(List<ActivityPaymentVO> activityPayments, ActivityReceiptVO activityReceiptVO, List<Long> ptids, String userId) throws FLException {
 
 		ActivityReceiptPO activityReceiptPO = new ActivityReceiptPO();
 
@@ -205,8 +205,8 @@ public class ActivityPaymentServiceImpl implements ActivityPaymentService {
 
 		EmemberPO ememberPO = ememberDao.queryEmemberByNo(mno);
 
-		if (posids != null && posids.size() > 0) {
-			pointofsalesService.updatePointofsales(posids, activityReceiptPO.getArid(), PointofsalesPO.STATUS_USED_INT, PointofsalesPO.TYPE_ACTIVITY_INT);
+		if (ptids != null && ptids.size() > 0) {
+			paytranService.updatePaytran(ptids, activityReceiptPO.getArid(), PaytranPO.STATUS_USED_INT, PaytranPO.TYPE_ACTIVITY_INT);
 		}
 
 		if (ememberPO != null) {

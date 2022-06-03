@@ -26,7 +26,7 @@ public class SurveyPO implements Serializable {
 
 	public static final String COLUMN_ORDERID_STR = "orderId";
 
-	public static final short STATUS_HANDLE_INT = 1;
+	public static final short STATUS_HANDLE_INT = 0;
 
 	private long sid;
 
@@ -41,6 +41,10 @@ public class SurveyPO implements Serializable {
 	private Timestamp createTime;
 
 	private short status;
+
+	private int company;
+
+	private Timestamp sendTime;
 
 	private List<SurveyItemPO> items;
 
@@ -117,6 +121,24 @@ public class SurveyPO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
+
+	@Column(name = "sendTime")
+	public Timestamp getSendTime() {
+		return sendTime;
+	}
+
+	public void setSendTime(Timestamp sendTime) {
+		this.sendTime = sendTime;
 	}
 
 	@OneToMany(mappedBy = "sid", fetch = FetchType.LAZY)

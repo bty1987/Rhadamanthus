@@ -39,6 +39,14 @@ public class ProtationAction extends BaseListAction {
 
 	private List<ProtationVO> protations;
 
+	@Action(value = "pageProtation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageProtation() throws FLException {
+
+		protationService.pageProtation(getPaging(), getFilters(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryProtationByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryProtationByOrderId() {
 
@@ -109,7 +117,7 @@ public class ProtationAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "lockProtation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String lockProtation() throws FLException {
 
@@ -117,7 +125,7 @@ public class ProtationAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "unlockProtation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String unlockProtation() throws FLException {
 

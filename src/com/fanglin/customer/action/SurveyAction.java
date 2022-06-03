@@ -31,7 +31,7 @@ public class SurveyAction extends BaseListAction {
 	@Action(value = "pageSurvey", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSurvey() throws FLException {
 
-		surveyService.pageSurvey(getPaging(), getFilters());
+		surveyService.pageSurvey(getPaging(), getFilters(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -63,7 +63,7 @@ public class SurveyAction extends BaseListAction {
 	@Action(value = "makeSurvey", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String makeSurvey() throws FLException {
 
-		surveyService.makeSurvey(survey, queryUserId());
+		surveyService.makeSurvey(survey, queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}

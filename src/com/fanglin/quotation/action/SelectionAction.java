@@ -24,6 +24,14 @@ public class SelectionAction extends BaseListAction {
 
 	private SelectionVO selection;
 
+	@Action(value = "pageSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageSelection() throws FLException {
+
+		selectionService.pageSelection(getPaging(), getFilters(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "querySelectionByQid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String querySelectionByQid() throws FLException {
 
@@ -51,7 +59,7 @@ public class SelectionAction extends BaseListAction {
 	@Action(value = "addSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addSelection() throws FLException {
 
-		selection = selectionService.addSelection(selection);
+		selection = selectionService.addSelection(selection, queryUserId());
 
 		return SUCCESS;
 	}

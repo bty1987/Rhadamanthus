@@ -39,7 +39,7 @@ public class PaymentAction extends BaseListAction {
 
 	private List<Long> paymentIds;
 
-	private List<Long> posids;
+	private List<Long> ptids;
 
 	@Action(value = "pagePayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pagePayment() throws FLException {
@@ -68,7 +68,7 @@ public class PaymentAction extends BaseListAction {
 	@Action(value = "collectPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String collectPayment() throws FLException {
 
-		paymentService.collectPayment(payment, queryUserId(), posids);
+		paymentService.collectPayment(payment, queryUserId(), ptids);
 
 		return SUCCESS;
 	}
@@ -129,12 +129,12 @@ public class PaymentAction extends BaseListAction {
 		this.paymentIds = paymentIds;
 	}
 
-	public List<Long> getPosids() {
-		return posids;
+	public List<Long> getPtids() {
+		return ptids;
 	}
 
-	public void setPosids(List<Long> posids) {
-		this.posids = posids;
+	public void setPtids(List<Long> ptids) {
+		this.ptids = ptids;
 	}
 
 }

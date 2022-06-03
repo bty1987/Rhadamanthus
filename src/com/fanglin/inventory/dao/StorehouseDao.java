@@ -22,7 +22,7 @@ public interface StorehouseDao extends Dao<StorehousePO> {
 
 	public List<StorehousePO> pageStorehouse(Paging paging, List<Filter> filters);
 
-	public List<StorehousePO> queryStorehouse(List<Filter> filters);
+	public List<StorehousePO> queryStorehouse();
 
 	public StorehousePO queryStroehouseByCode(String code);
 

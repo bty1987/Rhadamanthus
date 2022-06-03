@@ -31,10 +31,11 @@ import com.fanglin.payment.dao.AdvanceReceiptDao;
 import com.fanglin.payment.dao.PaymentDao;
 import com.fanglin.payment.po.AdvancePaymentPO;
 import com.fanglin.payment.po.AdvanceReceiptPO;
+import com.fanglin.payment.po.PaymentDO;
 import com.fanglin.payment.po.PaymentPO;
-import com.fanglin.payment.po.PointofsalesPO;
+import com.fanglin.payment.po.PaytranPO;
 import com.fanglin.payment.service.PaymentService;
-import com.fanglin.payment.service.PointofsalesService;
+import com.fanglin.payment.service.PaytranService;
 import com.fanglin.payment.vo.PaymentVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
@@ -70,25 +71,29 @@ public class PaymentServiceImpl implements PaymentService {
 	private DecorationService decorationService;
 
 	@Autowired
-	private PointofsalesService pointofsalesService;
+	private DecorationAdditionService decorationAdditionService;
 
 	@Autowired
-	private DecorationAdditionService decorationAdditionService;
+	private PaytranService paytranService;
 
 	@Override
 	public void pagePayment(Paging paging, List<Filter> filters, PaymentVO payment, int company) {
 
-		if (filters.size() == 0)
-			return;
+		if (filters.size() == 0) return;
 
-		if (payment != null)
-			payment.filter(filters);
+		if (payment != null) payment.filter(filters);
 
-		List<PaymentPO> paymentPOs = paymentDao.pagePayment(paging, filters, company);
+		List<PaymentDO> paymentDOs = paymentDao.pagePayment(paging, filters, company);
 		List<PaymentVO> paymentVOs = new ArrayList<PaymentVO>();
 
-		for (PaymentPO paymentPO : paymentPOs) {
-			paymentVOs.add(paymentPOToVO(paymentPO));
+		for (PaymentDO paymentDO : paymentDOs) {
+
+			PaymentVO paymentVO = new PaymentVO();
+
+			paymentDO.dtv(paymentVO);
+
+			paymentVOs.add(paymentVO);
+
 		}
 
 		paging.setData(paymentVOs);
@@ -102,7 +107,13 @@ public class PaymentServiceImpl implements PaymentService {
 		List<PaymentVO> paymentVOs = new ArrayList<PaymentVO>();
 
 		for (PaymentPO paymentPO : paymentPOs) {
-			paymentVOs.add(paymentPOToVO(paymentPO));
+
+			PaymentVO payment = new PaymentVO();
+
+			paymentPO.ptv(payment);
+
+			paymentVOs.add(payment);
+
 		}
 
 		return paymentVOs;
@@ -123,18 +134,17 @@ public class PaymentServiceImpl implements PaymentService {
 			throw new FLException(150026, "收据不存在");
 		}
 
-		PaymentVO payment = paymentPOToVO(paymentPO);
+		paymentPO.ptv(paymentVO);
 
-		return payment;
+		return paymentVO;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int collectPayment(PaymentVO paymentVO, String userId, List<Long> posids) throws FLException {
+	public int collectPayment(PaymentVO paymentVO, String userId, List<Long> ptids) throws FLException {
 
 		long customerId = paymentVO.getCustomer().getCid();
 
-		// 这里暂留是因为后面的paymentPO需要给customer赋值
 		CustomerPO customerPO = customerDao.get(customerId);
 
 		if (customerPO == null) {
@@ -191,7 +201,14 @@ public class PaymentServiceImpl implements PaymentService {
 		advanceReceiptPO.setCollecterName(user.getUserName());
 		advanceReceiptPO.setConfirmerName("");
 
-		PaymentPO paymentPO = new PaymentPO();
+		PaymentPO paymentPO = null;
+
+		if (paymentVO.getPid() != null) {
+			paymentPO = paymentDao.get(paymentVO.getPid());
+		} else {
+			paymentPO = new PaymentPO();
+		}
+
 		BeanUtil.copyProperties(paymentVO, paymentPO, Arrays.asList("customer", "collectUser"));
 
 		paymentPO.setBalance(overBalance);
@@ -205,7 +222,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 		advancePaymentDao.saveOrUpdate(advancePaymentPO);
 		advanceReceiptDao.save(advanceReceiptPO);
-		paymentDao.save(paymentPO);
+		paymentDao.saveOrUpdate(paymentPO);
 
 		paymentVO.setPid(paymentPO.getPid());
 
@@ -229,8 +246,8 @@ public class PaymentServiceImpl implements PaymentService {
 		}
 
 		// 更新销售点信息
-		if (posids != null && posids.size() > 0) {
-			pointofsalesService.updatePointofsales(posids, advanceReceiptPO.getArId(), PointofsalesPO.STATUS_USED_INT, PointofsalesPO.TYPE_ADVANCE_INT);
+		if (ptids != null && ptids.size() > 0) {
+			paytranService.updatePaytran(ptids, advanceReceiptPO.getArId(), PaytranPO.STATUS_USED_INT, PaytranPO.TYPE_ADVANCE_INT);
 		}
 
 		return 0;
@@ -428,7 +445,7 @@ public class PaymentServiceImpl implements PaymentService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int returnPayment(PaymentVO paymentVO, String userId) throws FLException {
-		
+
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(paymentVO.getOrderId());
 
 		if (decorationPO == null) {
@@ -442,16 +459,16 @@ public class PaymentServiceImpl implements PaymentService {
 		if (customerPO == null) {
 			throw new FLException(230001, "客户信息不存在");
 		}
-		
+
 		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByOrderId(paymentVO.getOrderId());
-		
+
 		if (advancePaymentPO == null) {
 			advancePaymentPO = new AdvancePaymentPO(new DecorationPO(paymentVO.getOrderId()));
 			advancePaymentDao.save(advancePaymentPO);
 		}
 
 		Short paymentType = paymentVO.getPaymentType();
-		
+
 		long balance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, paymentType);
 		long recharge = gatherPayment(paymentVO);
 
@@ -487,7 +504,7 @@ public class PaymentServiceImpl implements PaymentService {
 
 		paymentDao.save(paymentPO);
 		advancePaymentDao.update(advancePaymentPO);
-		
+
 		return 0;
 	}
 
@@ -585,18 +602,18 @@ public class PaymentServiceImpl implements PaymentService {
 
 			String newPaymentType = "";
 			switch (_paymentType) {
-			case 0:
-				newPaymentType = "合同预付款";
-				break;
-			case 1:
-				newPaymentType = "工程预付款";
-				break;
-			case 2:
-				newPaymentType = "主材预付款";
-				break;
-			case 3:
-				newPaymentType = "正林预付款";
-				break;
+				case 0:
+					newPaymentType = "合同预付款";
+					break;
+				case 1:
+					newPaymentType = "工程预付款";
+					break;
+				case 2:
+					newPaymentType = "主材预付款";
+					break;
+				case 3:
+					newPaymentType = "正林预付款";
+					break;
 			}
 
 			if (paymentName.equals(PaymentPO.PAYMENT_DECORETION_PAYMENTNAME_STR)) {
@@ -623,28 +640,6 @@ public class PaymentServiceImpl implements PaymentService {
 		}
 
 		return paymentVO;
-	}
-
-	public PaymentVO paymentPOToVO(PaymentPO paymentPO) {
-
-		PaymentVO paymentVO = new PaymentVO();
-
-		AdvanceReceiptPO advanceReceiptPO = paymentPO.getAdvanceReceipt();
-
-		BeanUtil.copyProperties(paymentPO, paymentVO, Arrays.asList("customer", "collectUser", "confirmUser"));
-		BeanUtil.copyProperties(advanceReceiptPO, paymentVO, Arrays.asList("customer", "collectUser", "confirmUser", "status", "type"));
-
-		paymentVO.setCustomer(new CustomerVO());
-		BeanUtil.copyProperties(paymentPO.getCustomer(), paymentVO.getCustomer());
-
-		paymentVO.setCollectUser(new UserBaseVO());
-		BeanUtil.copyProperties(advanceReceiptPO.getCollecter(), paymentVO.getCollectUser(), Arrays.asList("dept", "duty"));
-
-		paymentVO.setConfirmUser(new UserBaseVO());
-		BeanUtil.copyProperties(advanceReceiptPO.getConfirmer(), paymentVO.getConfirmUser(), Arrays.asList("dept", "duty"));
-
-		return paymentVO;
-
 	}
 
 }

@@ -61,6 +61,14 @@ public class QuotationNormAction extends BaseListAction {
 
 	private Short schedule;
 
+	@Action(value = "pageQuotationNorm", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageQuotationNorm() throws FLException {
+
+		quotationNormService.pageQuotationNorm(getPaging(), getFilters(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryQuotationNormood", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryQuotationNormood() throws FLException {
 

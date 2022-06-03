@@ -7,7 +7,6 @@ import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.vo.UserBaseVO;
-import com.fanglin.personel.vo.UserVO;
 
 public class OccessoriesVO implements Serializable {
 
@@ -23,7 +22,7 @@ public class OccessoriesVO implements Serializable {
 
 	private UserBaseVO supervisor;
 
-	private UserVO supplier;
+	private UserBaseVO supplier;
 
 	private Timestamp createTime; // 创建时间
 
@@ -47,17 +46,22 @@ public class OccessoriesVO implements Serializable {
 
 	private UserBaseVO balancer;// 结算人
 
+	private String comment;
+
+	private String content;
+
 	public OccessoriesVO() {
 		super();
 	}
 
-	public OccessoriesVO(DecorationVO decoration, UserBaseVO creater, UserBaseVO supervisor, UserBaseVO confirmer, UserBaseVO balancer) {
+	public OccessoriesVO(DecorationVO decoration, UserBaseVO creater, UserBaseVO supervisor, UserBaseVO supplier, UserBaseVO balancer) {
 
 		super();
 
 		this.decoration = decoration;
 		this.creater = creater;
 		this.supervisor = supervisor;
+		this.supplier = supplier;
 		this.balancer = balancer;
 	}
 
@@ -185,11 +189,11 @@ public class OccessoriesVO implements Serializable {
 		this.company = company;
 	}
 
-	public UserVO getSupplier() {
+	public UserBaseVO getSupplier() {
 		return supplier;
 	}
 
-	public void setSupplier(UserVO supplier) {
+	public void setSupplier(UserBaseVO supplier) {
 		this.supplier = supplier;
 	}
 
@@ -199,6 +203,22 @@ public class OccessoriesVO implements Serializable {
 
 	public void setBalancer(UserBaseVO balancer) {
 		this.balancer = balancer;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 }

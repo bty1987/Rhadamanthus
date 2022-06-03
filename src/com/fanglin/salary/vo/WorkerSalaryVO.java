@@ -44,15 +44,21 @@ public class WorkerSalaryVO implements Serializable {
 
 	private Short isAppr;
 
+	private Short isCheck;
+
 	private Short status;
 
 	private UserBaseVO user;
 
 	private UserBaseVO creater;
 
+	private UserBaseVO checker;
+
 	private UserBaseVO approver;
 
 	private Timestamp createTime;
+
+	private Timestamp checkTime;
 
 	private Timestamp approveTime;
 
@@ -66,12 +72,13 @@ public class WorkerSalaryVO implements Serializable {
 		super();
 	}
 
-	public WorkerSalaryVO(DecorationVO decoration, UserBaseVO user, UserBaseVO creater, UserBaseVO approver) {
+	public WorkerSalaryVO(DecorationVO decoration, UserBaseVO user, UserBaseVO creater, UserBaseVO approver, UserBaseVO checker) {
 		super();
 		this.decoration = decoration;
 		this.user = user;
 		this.creater = creater;
 		this.approver = approver;
+		this.checker = checker;
 	}
 
 	public Long getWsid() {
@@ -122,30 +129,20 @@ public class WorkerSalaryVO implements Serializable {
 		this.creater = creater;
 	}
 
+	public UserBaseVO getChecker() {
+		return checker;
+	}
+
+	public void setChecker(UserBaseVO checker) {
+		this.checker = checker;
+	}
+
 	public UserBaseVO getApprover() {
 		return approver;
 	}
 
 	public void setApprover(UserBaseVO approver) {
 		this.approver = approver;
-	}
-
-	@JSON(format = "yyyy-MM-dd HH:mm:ss")
-	public Timestamp getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Timestamp createTime) {
-		this.createTime = createTime;
-	}
-
-	@JSON(format = "yyyy-MM-dd HH:mm:ss")
-	public Timestamp getBalanceTime() {
-		return balanceTime;
-	}
-
-	public void setBalanceTime(Timestamp balanceTime) {
-		this.balanceTime = balanceTime;
 	}
 
 	public Long getSalary() {
@@ -156,14 +153,6 @@ public class WorkerSalaryVO implements Serializable {
 		this.salary = salary;
 	}
 
-	public Short getType() {
-		return type;
-	}
-
-	public void setType(Short type) {
-		this.type = type;
-	}
-
 	public Short getStatus() {
 		return status;
 	}
@@ -172,29 +161,12 @@ public class WorkerSalaryVO implements Serializable {
 		this.status = status;
 	}
 
-	@JSON(format = "yyyy-MM-dd HH:mm:ss")
-	public Timestamp getApproveTime() {
-		return approveTime;
-	}
-
-	public void setApproveTime(Timestamp approveTime) {
-		this.approveTime = approveTime;
-	}
-
 	public Short getSubtype() {
 		return subtype;
 	}
 
 	public void setSubtype(Short subtype) {
 		this.subtype = subtype;
-	}
-
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
 	}
 
 	public Long getCsid() {
@@ -219,6 +191,14 @@ public class WorkerSalaryVO implements Serializable {
 
 	public void setDeposit(Long deposit) {
 		this.deposit = deposit;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
 	}
 
 	public Short getOnetype() {
@@ -269,12 +249,65 @@ public class WorkerSalaryVO implements Serializable {
 		this.isAppr = isAppr;
 	}
 
+	public Short getIsCheck() {
+		return isCheck;
+	}
+
+	public void setIsCheck(Short isCheck) {
+		this.isCheck = isCheck;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getBalanceTime() {
+		return balanceTime;
+	}
+
+	public void setBalanceTime(Timestamp balanceTime) {
+		this.balanceTime = balanceTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getApproveTime() {
+		return approveTime;
+	}
+
+	public void setApproveTime(Timestamp approveTime) {
+		this.approveTime = approveTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
 	public Timestamp getFinishTime() {
 		return finishTime;
 	}
 
 	public void setFinishTime(Timestamp finishTime) {
 		this.finishTime = finishTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getCheckTime() {
+		return checkTime;
+	}
+
+	public void setCheckTime(Timestamp checkTime) {
+		this.checkTime = checkTime;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 }

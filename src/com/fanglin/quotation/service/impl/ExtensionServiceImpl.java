@@ -13,10 +13,14 @@ import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.quotation.dao.ExtensionDao;
 import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
 import com.fanglin.quotation.dao.SelectionItemDao;
+import com.fanglin.quotation.po.ExtensionDO;
 import com.fanglin.quotation.po.ExtensionItemPO;
 import com.fanglin.quotation.po.ExtensionPO;
 import com.fanglin.quotation.po.QuotationPO;
@@ -49,6 +53,33 @@ public class ExtensionServiceImpl implements ExtensionService {
 	@Autowired
 	private ExtensionItemServiceImpl extensionItemService;
 
+	@Autowired
+	private UserDao userDao;
+
+	@Override
+	public void pageExtension(Paging paging, List<Filter> filters, Integer company) throws FLException {
+
+		List<ExtensionDO> extensionDOs = extensionDao.pageExtension(paging, filters, company);
+
+		List<ExtensionVO> extensionVOs = new ArrayList<ExtensionVO>();
+
+		for (ExtensionDO extensionDO : extensionDOs) {
+
+			ExtensionVO extensionVO = new ExtensionVO(new DecorationVO(), new UserBaseVO());
+
+			extensionVO.getDecoration().setSupervisor(new UserBaseVO());
+
+			BeanUtil.copyPropertie(extensionDO, extensionVO, Arrays.asList("decoration", "creater"));
+			BeanUtil.copyProperties(extensionDO.getCreater(), extensionVO.getCreater(), Arrays.asList("duty", "dept", "role"));
+
+			extensionDO.getDecoration().ptvcascade(extensionVO.getDecoration());
+
+			extensionVOs.add(extensionVO);
+		}
+
+		paging.setData(extensionVOs);
+	}
+
 	@Override
 	public void pageExtensionByOrderId(Paging paging, List<Filter> filters, ExtensionVO extensionVO) {
 
@@ -60,7 +91,7 @@ public class ExtensionServiceImpl implements ExtensionService {
 		for (ExtensionPO extensionPO : extensionPOs) {
 			extensionVO = new ExtensionVO();
 
-			BeanUtil.copyProperties(extensionPO, extensionVO);
+			BeanUtil.copyProperties(extensionPO, extensionVO, Arrays.asList("creater"));
 
 			extensionVOs.add(extensionVO);
 		}
@@ -93,7 +124,7 @@ public class ExtensionServiceImpl implements ExtensionService {
 			throw new FLException(200027, "扩展项不存在");
 		}
 
-		BeanUtil.copyProperties(extensionPO, extensionVO);
+		BeanUtil.copyProperties(extensionPO, extensionVO, Arrays.asList("creater"));
 
 		extensionVO.setExtensionItems(handleExtensionItem(extensionPO.getEid()));
 
@@ -102,14 +133,15 @@ public class ExtensionServiceImpl implements ExtensionService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void addExtension(ExtensionVO extensionVO) throws FLException {
+	public void addExtension(ExtensionVO extensionVO, String userId) throws FLException {
 
 		ExtensionPO extensionPO = new ExtensionPO();
 
-		BeanUtil.copyProperties(extensionVO, extensionPO);
+		BeanUtil.copyProperties(extensionVO, extensionPO, Arrays.asList("creater"));
 
 		checkExtension(extensionPO);
 
+		extensionPO.setCreater(userDao.queryUserByUserId(userId));
 		extensionPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		extensionPO.setStatus(ExtensionPO.STATUS_INIT_SHORT);
 
@@ -173,7 +205,7 @@ public class ExtensionServiceImpl implements ExtensionService {
 		for (ExtensionPO extensionPO : extensionPOs) {
 			extensionVO = new ExtensionVO();
 
-			BeanUtil.copyProperties(extensionPO, extensionVO);
+			BeanUtil.copyProperties(extensionPO, extensionVO, Arrays.asList("creater"));
 
 			extensionVO.setExtensionItems(handleExtensionItem(extensionPO.getEid()));
 
@@ -221,4 +253,5 @@ public class ExtensionServiceImpl implements ExtensionService {
 			throw new FLException(200033, "报价已锁定");
 		}
 	}
+
 }

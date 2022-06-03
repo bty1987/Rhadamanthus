@@ -23,7 +23,7 @@ public class BalanceSalesPO implements java.io.Serializable {
 	private static final long serialVersionUID = 1311080100330609447L;
 
 	public static final String COLUMN_BALANCE_STR = "balance.bid";
-	
+
 	public static final String COLUMN_CUID_STR = "cuid";
 
 	public static final String COLUMN_GRADE_STR = "grade";
@@ -32,11 +32,11 @@ public class BalanceSalesPO implements java.io.Serializable {
 
 	public static final String COLUMN_NAME_STR = "name";
 
-	public static final short STATUS_INIT_INT = 0;//初始
-	
-	public static final short STATUS_UNLOCK_INT = 1;//锁定
-	
-	public static final short STATUS_ENABLE_CHECK_INT = 2;//结算
+	public static final short STATUS_INIT_INT = 0;// 初始
+
+	public static final short STATUS_UNLOCK_INT = 1;// 锁定
+
+	public static final short STATUS_ENABLE_CHECK_INT = 2;// 结算
 
 	private long bsid;
 
@@ -59,12 +59,16 @@ public class BalanceSalesPO implements java.io.Serializable {
 	private short status;
 
 	private int company;
-	
+
 	private UserPO creater;
 
 	private Timestamp createTime;
 
-	public BalanceSalesPO(){
+	private UserPO balancer;
+
+	private Timestamp balanceTime;
+
+	public BalanceSalesPO() {
 		super();
 	}
 
@@ -174,7 +178,7 @@ public class BalanceSalesPO implements java.io.Serializable {
 	public void setCompany(int company) {
 		this.company = company;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = true, name = "cuid", referencedColumnName = "uid")
 	public UserPO getCreater() {
@@ -192,6 +196,25 @@ public class BalanceSalesPO implements java.io.Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "buid", referencedColumnName = "uid")
+	public UserPO getBalancer() {
+		return balancer;
+	}
+
+	public void setBalancer(UserPO balancer) {
+		this.balancer = balancer;
+	}
+
+	@Column(name = "balanceTime")
+	public Timestamp getBalanceTime() {
+		return balanceTime;
+	}
+
+	public void setBalanceTime(Timestamp balanceTime) {
+		this.balanceTime = balanceTime;
 	}
 
 }

@@ -89,7 +89,7 @@ public class BalanceSalesAction extends BaseListAction {
 	@Action(value = "balanceBalanceSales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String balanceBalanceSales() throws FLException {
 
-		balanceSalesService.balanceBalanceSales(balanceSales);
+		balanceSalesService.balanceBalanceSales(balanceSales, queryUserId());
 
 		return SUCCESS;
 	}

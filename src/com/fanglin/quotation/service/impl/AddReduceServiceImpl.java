@@ -111,11 +111,13 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 		for (AddReduceDO addReduceDO : addReduceDOs) {
 
-			addReduceVO = new AddReduceVO(new DecorationVO());
+			addReduceVO = new AddReduceVO(new DecorationVO(), new UserBaseVO());
 
 			addReduceVO.getDecoration().setSupervisor(new UserBaseVO());
 
-			BeanUtil.copyPropertie(addReduceDO, addReduceVO, Arrays.asList("decoration"));
+			BeanUtil.copyPropertie(addReduceDO, addReduceVO, Arrays.asList("decoration", "creater"));
+
+			BeanUtil.copyProperties(addReduceDO.getCreater(), addReduceVO.getCreater(), Arrays.asList("duty", "dept", "role"));
 
 			addReduceDO.getDecoration().ptvcascade(addReduceVO.getDecoration());
 
@@ -165,7 +167,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 			throw new FLException(200060, "增减单不存在");
 		}
 
-		BeanUtil.copyProperties(addReducePO, addReduceVO);
+		BeanUtil.copyProperties(addReducePO, addReduceVO, Arrays.asList("creater"));
 
 		addReduceVO.setAddReduceItems(handleAddReduceItem(addReducePO.getArId()));
 
@@ -181,7 +183,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 			throw new FLException(200060, "增减单不存在");
 		}
 
-		BeanUtil.copyProperties(addReducePO, addReduceVO);
+		BeanUtil.copyProperties(addReducePO, addReduceVO, Arrays.asList("creater"));
 
 		addReduceVO.setAddReduceItems(handleAddReduceItem(addReducePO.getArId()));
 
@@ -200,12 +202,13 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addAddReduce(AddReduceVO addReduceVO) {
+	public int addAddReduce(AddReduceVO addReduceVO, String userId) {
 
 		AddReducePO addReducePO = new AddReducePO();
 
-		BeanUtil.copyProperties(addReduceVO, addReducePO, Arrays.asList("arId"));
+		BeanUtil.copyProperties(addReduceVO, addReducePO, Arrays.asList("arId", "creater"));
 
+		addReducePO.setCreater(userDao.queryUserByUserId(userId));
 		addReducePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		addReducePO.setStatus(AddReducePO.STATUS_UNSUBMIT_INT);
 
@@ -216,6 +219,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 		addReducePO.setDisPrice(0);
 		addReducePO.setUncalPrice(0);
 		addReducePO.setCalPrice(0);
+		addReducePO.setConsPrice(0);
 
 		addReduceDao.save(addReducePO);
 
@@ -238,6 +242,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 		addReducePO.setDisPrice(addReduceVO.getDisPrice());
 		addReducePO.setUncalPrice(addReduceVO.getUncalPrice());
 		addReducePO.setCalPrice(addReduceVO.getCalPrice());
+		addReducePO.setConsPrice(addReduceVO.getConsPrice());
 
 		addReduceDao.update(addReducePO);
 
@@ -260,14 +265,15 @@ public class AddReduceServiceImpl implements AddReduceService {
 			throw new FLException(200061, "增减单状态不可操作");
 		}
 
-		addReducePO.setTotal(addReduceVO.getTotal());
+		addReducePO.setDiscount(addReduceVO.getDiscount());
 		addReducePO.setManagePrice(addReduceVO.getManagePrice());
 		addReducePO.setManageRate(addReduceVO.getManageRate());
 		addReducePO.setUndisPrice(addReduceVO.getUndisPrice());
 		addReducePO.setDisPrice(addReduceVO.getDisPrice());
 		addReducePO.setUncalPrice(addReduceVO.getUncalPrice());
 		addReducePO.setCalPrice(addReduceVO.getCalPrice());
-		addReducePO.setDiscount(addReduceVO.getDiscount());
+		addReducePO.setConsPrice(addReduceVO.getConsPrice());
+		addReducePO.setTotal(addReduceVO.getTotal());
 
 		addReduceDao.update(addReducePO);
 
@@ -394,6 +400,8 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 			addReducePO.setIsAffirm(addReducePO.ISAFFIRM_CONFIRMED_INT);
 
+			addReducePO.setAffirmTime(DateUtil.getDateToTimestamp(new Date()));
+
 			addReduceDao.update(addReducePO);
 		}
 
@@ -423,6 +431,8 @@ public class AddReduceServiceImpl implements AddReduceService {
 		}
 
 		addReducePO.setStatus(AddReducePO.STATUS_CONFIRMED_INT);
+
+		addReducePO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
 
 		addReduceDao.update(addReducePO);
 
@@ -515,7 +525,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 			AddReduceVO addReduceVO = new AddReduceVO();
 
-			BeanUtil.copyProperties(addReducePO, addReduceVO);
+			BeanUtil.copyProperties(addReducePO, addReduceVO, Arrays.asList("creater"));
 
 			addReduceVO.setAddReduceItems(handleAddReduceItem(addReducePO.getArId()));
 
@@ -538,13 +548,15 @@ public class AddReduceServiceImpl implements AddReduceService {
 	}
 
 	public static void convertAddReduceVOToPOForAdvance(AddReduceVO addReduceVO, AddReducePO addReducePO) {
-		addReducePO.setTotal(addReduceVO.getTotal());
+
 		addReducePO.setManageRate(addReduceVO.getManageRate());
 		addReducePO.setManagePrice(addReduceVO.getManagePrice());
 		addReducePO.setUndisPrice(addReduceVO.getUndisPrice());
 		addReducePO.setDisPrice(addReduceVO.getDisPrice());
 		addReducePO.setUncalPrice(addReduceVO.getUncalPrice());
 		addReducePO.setCalPrice(addReduceVO.getCalPrice());
+		addReducePO.setConsPrice(addReduceVO.getConsPrice());
+		addReducePO.setTotal(addReduceVO.getTotal());
 	}
 
 }

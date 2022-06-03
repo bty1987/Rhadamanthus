@@ -1,7 +1,9 @@
 package com.fanglin.payment.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
+
 import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,71 +18,73 @@ import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "servicepayment", catalog = "payment")
-public class ServicePaymentPO  implements java.io.Serializable {
+public class ServicePaymentPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 5195595430982438028L;
-	
+
 	public static final String COLUMN_ORDERID_STR = "decoration.orderId";
-	
+
 	public static final String COLUMN_DESIGNER_STR = "designer.userName";
-	
+
 	public static final String COLUMN_VILLAGE_VILLAGENAME_STR = "village.name";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final short COLUMN_INITIALSTATUS_INT = 0;
-	
+
 	public static final short COLUMN_STYPE_INT = 0;
-	
+
 	public static final short COLUMN_TTYPE_INT = 1;
-	
-	public static final short COLUMN_PAIDFORSTATUS_INT = 1; 
-	
-	public static final short COLUMN_CONFIRMEDSTATUS_INT = 2; 
-	
+
+	public static final short COLUMN_PAIDFORSTATUS_INT = 1;
+
+	public static final short COLUMN_CONFIRMEDSTATUS_INT = 2;
+
+	public static final short COLUMN_STATUS_CANCELED_INT = 3;
+
 	public static final long COLUMN_MONEY_INT = 0;
-	
+
 	private long spid;
-	
+
 	private ServiceReceiptPO serviceReceipt;
-	
+
 	private DecorationPO decoration;
-	
+
 	private int pid;
-	
+
 	private short type;
-	
+
 	private short status;
-	
+
 	private UserPO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private long serviceMoney;
-	
+
 	private long advanceMoney;
-	
+
 	private String comment;
-	
+
 	private int company;
-	
+
 	public ServicePaymentPO() {
 		super();
 	}
-	
+
 	public ServicePaymentPO(DecorationPO decoration) {
 		super();
 		this.decoration = decoration;
 	}
-	
-	public ServicePaymentPO(UserPO creater,DecorationPO decoration) {
+
+	public ServicePaymentPO(UserPO creater, DecorationPO decoration) {
 		super();
 		this.creater = creater;
 		this.decoration = decoration;
 	}
-	
+
 	@Id
-	@GeneratedValue(strategy = IDENTITY) 
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "spid")
 	public long getSpid() {
 		return spid;
@@ -89,7 +93,7 @@ public class ServicePaymentPO  implements java.io.Serializable {
 	public void setSpid(long spid) {
 		this.spid = spid;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "srid", referencedColumnName = "srid")
 	public ServiceReceiptPO getServiceReceipt() {
@@ -109,7 +113,7 @@ public class ServicePaymentPO  implements java.io.Serializable {
 	public void setDecoration(DecorationPO decoration) {
 		this.decoration = decoration;
 	}
-	
+
 	@Column(name = "type")
 	public short getType() {
 		return type;
@@ -191,5 +195,5 @@ public class ServicePaymentPO  implements java.io.Serializable {
 	public void setCompany(int company) {
 		this.company = company;
 	}
-	
+
 }

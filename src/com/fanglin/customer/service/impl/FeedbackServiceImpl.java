@@ -19,6 +19,7 @@ import com.fanglin.customer.service.FeedbackService;
 import com.fanglin.customer.vo.FeedbackVO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -36,6 +37,9 @@ public class FeedbackServiceImpl implements FeedbackService {
 
 	@Autowired
 	private DecorationDao decorationDao;
+
+	@Autowired
+	private CompanyDao companyDao;
 
 	@Override
 	public void pageFeedback(Paging paging, List<Filter> filters, int company) {
@@ -66,7 +70,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 		BeanUtil.copyPropertie(feedbackVO, feedbackPO, Arrays.asList("company"));
 
 		feedbackPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		feedbackPO.setCompany(new CompanyPO(CompanyPO.TYPE_HEADQUARTER_INT));
+		feedbackPO.setCompany(companyDao.get(CompanyPO.TYPE_HEADQUARTER_INT));
 
 		if (feedbackVO.getOrderId() != null) {
 

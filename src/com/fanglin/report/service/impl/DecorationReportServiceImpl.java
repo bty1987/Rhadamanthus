@@ -129,103 +129,87 @@ public class DecorationReportServiceImpl implements DecorationReportService {
 		List<Object[]> decorationConstruction1 = (List<Object[]>) decorationReportDao.countDecorationForAchievement1(startTime, endTime, company);
 		List<Object[]> decorationConstruction2 = (List<Object[]>) decorationReportDao.countDecorationForAchievement2(startTime, endTime, company);
 		List<Object[]> decorationConstruction3 = (List<Object[]>) decorationReportDao.countDecorationForAchievement3(startTime, endTime, company);
+		List<Object[]> decorationConstruction4 = (List<Object[]>) decorationReportDao.countDecorationForAchievement4(startTime, endTime, company);
 
-		Map<Integer, DecorationAchievementPO> decorationAchievementPOs1 = new HashMap<Integer, DecorationAchievementPO>();
+		Map<String, DecorationAchievementPO> decorationAchievementPOs1 = new HashMap<String, DecorationAchievementPO>();
 
 		for (int i = 0; i < decorationConstruction1.size(); i++) {
 
 			Integer did = (Integer) decorationConstruction1.get(i)[0];
+			Short typeness = (Short) decorationConstruction1.get(i)[1];
 
-			decorationAchievementPOs1.put(did, new DecorationAchievementPO(new DepartmentPO()));
+			String key = String.valueOf(did) + String.valueOf(typeness);
 
-			DecorationAchievementPO decorationAchievementPO = decorationAchievementPOs1.get(did);
+			decorationAchievementPOs1.put(key, new DecorationAchievementPO(new DepartmentPO()));
+
+			DecorationAchievementPO decorationAchievementPO = decorationAchievementPOs1.get(key);
 
 			decorationAchievementPO.setDepartment(new DepartmentPO(did));
-			decorationAchievementPO.setCs0((Long) decorationConstruction1.get(i)[1]);// 签单数
-			decorationAchievementPO.setCs2((Long) decorationConstruction1.get(i)[2]);// 签单额
-			decorationAchievementPO.setCs3((Long) decorationConstruction1.get(i)[3]);// 净业绩
+			decorationAchievementPO.setTypeness(typeness);// 类型
+			decorationAchievementPO.setCs0((Long) decorationConstruction1.get(i)[2]);// 签单数
+			decorationAchievementPO.setCs2((Long) decorationConstruction1.get(i)[3]);// 签单额
+			decorationAchievementPO.setCs3((Long) decorationConstruction1.get(i)[4]);// 净业绩
 		}
 
 		for (int i = 0; i < decorationConstruction2.size(); i++) {
 
 			Integer did = (Integer) decorationConstruction2.get(i)[0];
+			Short typeness = (Short) decorationConstruction2.get(i)[1];
 
-			if (!decorationAchievementPOs1.containsKey(did)) {
-				decorationAchievementPOs1.put(did, new DecorationAchievementPO(new DepartmentPO()));
+			String key = String.valueOf(did) + String.valueOf(typeness);
+
+			if (!decorationAchievementPOs1.containsKey(key)) {
+				decorationAchievementPOs1.put(key, new DecorationAchievementPO(new DepartmentPO()));
 			}
 
-			DecorationAchievementPO decorationAchievementPO = decorationAchievementPOs1.get(did);
+			DecorationAchievementPO decorationAchievementPO = decorationAchievementPOs1.get(key);
 
-			decorationAchievementPO.setCs1((Long) decorationConstruction2.get(i)[1]);// 设计数
-			decorationAchievementPO.setCs4((Long) decorationConstruction2.get(i)[2]);// 设计额
+			decorationAchievementPO.setDepartment(new DepartmentPO(did));
+			decorationAchievementPO.setTypeness(typeness);// 类型
+			decorationAchievementPO.setCs1((Long) decorationConstruction2.get(i)[2]);// 设计数
+			decorationAchievementPO.setCs4((Long) decorationConstruction2.get(i)[3]);// 设计额
 		}
 
 		for (int i = 0; i < decorationConstruction3.size(); i++) {
 
 			Integer did = (Integer) decorationConstruction3.get(i)[0];
+			Short typeness = (Short) decorationConstruction3.get(i)[1];
 
-			if (!decorationAchievementPOs1.containsKey(did)) {
-				decorationAchievementPOs1.put(did, new DecorationAchievementPO(new DepartmentPO()));
+			String key = String.valueOf(did) + String.valueOf(typeness);
+
+			if (!decorationAchievementPOs1.containsKey(key)) {
+				decorationAchievementPOs1.put(key, new DecorationAchievementPO(new DepartmentPO()));
 			}
 
-			DecorationAchievementPO decorationAchievementPO = decorationAchievementPOs1.get(did);
+			DecorationAchievementPO decorationAchievementPO = decorationAchievementPOs1.get(key);
 
-			decorationAchievementPO.setCs5((Long) decorationConstruction3.get(i)[1]);// 服务费
+			decorationAchievementPO.setDepartment(new DepartmentPO(did));
+			decorationAchievementPO.setTypeness(typeness);// 类型
+			decorationAchievementPO.setCs5((Long) decorationConstruction3.get(i)[2]);// 服务费
 		}
-
-		for (Entry<Integer, DecorationAchievementPO> entry : decorationAchievementPOs1.entrySet()) {
-
-			decorationReportDao.updataDecoration7Achievement(entry.getKey(), year, month, entry.getValue().getCs0(), entry.getValue().getCs1(), entry.getValue().getCs2(), entry.getValue().getCs3(), entry.getValue().getCs4(), entry.getValue().getCs5(), company);
-		}
-
-		List<Object[]> decorationConstruction4 = (List<Object[]>) decorationReportDao.countDecorationForAchievement4(startTime, endTime, company);
-		List<Object[]> decorationConstruction5 = (List<Object[]>) decorationReportDao.countDecorationForAchievement5(startTime, endTime, company);
-		List<Object[]> decorationConstruction6 = (List<Object[]>) decorationReportDao.countDecorationForAchievement6(startTime, endTime, company);
-
-		Map<Integer, DecorationAchievementPO> decorationAchievementPOs2 = new HashMap<Integer, DecorationAchievementPO>();
 
 		for (int i = 0; i < decorationConstruction4.size(); i++) {
 
 			Integer did = (Integer) decorationConstruction4.get(i)[0];
+			Short typeness = (Short) decorationConstruction4.get(i)[1];
 
-			decorationAchievementPOs2.put(did, new DecorationAchievementPO(new DepartmentPO()));
+			String key = String.valueOf(did) + String.valueOf(typeness);
 
-			DecorationAchievementPO decorationAchievementPO = decorationAchievementPOs2.get(did);
+			if (!decorationAchievementPOs1.containsKey(key)) {
+				decorationAchievementPOs1.put(key, new DecorationAchievementPO(new DepartmentPO()));
+			}
+
+			DecorationAchievementPO decorationAchievementPO = decorationAchievementPOs1.get(key);
 
 			decorationAchievementPO.setDepartment(new DepartmentPO(did));
-			decorationAchievementPO.setCs0((Long) decorationConstruction4.get(i)[1]);// 签单数
-			decorationAchievementPO.setCs2((Long) decorationConstruction4.get(i)[2]);// 签单额
-			decorationAchievementPO.setCs3((Long) decorationConstruction4.get(i)[3]);// 净业绩
+			decorationAchievementPO.setTypeness(typeness);// 类型
+			decorationAchievementPO.setCs6((Long) decorationConstruction4.get(i)[2]);// 未签单设计户数
+			decorationAchievementPO.setCs7((Long) decorationConstruction4.get(i)[3]);// 未签单设计费
 		}
 
-		for (int i = 0; i < decorationConstruction5.size(); i++) {
+		for (Entry<String, DecorationAchievementPO> entry : decorationAchievementPOs1.entrySet()) {
 
-			Integer did = (Integer) decorationConstruction5.get(i)[0];
-
-			if (!decorationAchievementPOs2.containsKey(did)) {
-				decorationAchievementPOs2.put(did, new DecorationAchievementPO(new DepartmentPO()));
-			}
-			DecorationAchievementPO decorationAchievementPO = decorationAchievementPOs2.get(did);
-
-			decorationAchievementPO.setCs1((Long) decorationConstruction5.get(i)[1]);// 设计数
-			decorationAchievementPO.setCs4((Long) decorationConstruction5.get(i)[2]);// 设计额
-		}
-
-		for (int i = 0; i < decorationConstruction6.size(); i++) {
-
-			Integer did = (Integer) decorationConstruction6.get(i)[0];
-
-			if (!decorationAchievementPOs2.containsKey(did)) {
-				decorationAchievementPOs2.put(did, new DecorationAchievementPO(new DepartmentPO()));
-			}
-			DecorationAchievementPO decorationAchievementPO = decorationAchievementPOs2.get(did);
-
-			decorationAchievementPO.setCs5((Long) decorationConstruction6.get(i)[1]);// 服务费
-		}
-
-		for (Entry<Integer, DecorationAchievementPO> entry : decorationAchievementPOs2.entrySet()) {
-
-			decorationReportDao.updataDecoration7Achievement(entry.getKey(), year, month, entry.getValue().getCs0(), entry.getValue().getCs1(), entry.getValue().getCs2(), entry.getValue().getCs3(), entry.getValue().getCs4(), entry.getValue().getCs5(), company);
+			decorationReportDao.updataDecoration7Achievement(entry.getValue().getDepartment().getDid(), year, month, entry.getValue().getTypeness(), entry.getValue().getCs0(), entry.getValue().getCs1(), entry.getValue().getCs2(), entry.getValue().getCs3(), entry.getValue().getCs4(), entry.getValue().getCs5(), entry.getValue().getCs6(), entry.getValue().getCs7(), company);
 		}
 
 	}

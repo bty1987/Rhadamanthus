@@ -35,8 +35,8 @@ public class ActivityPaymentAction extends BaseListAction {
 
 	private List<ActivityPaymentVO> activityPayments;
 
-	private List<Long> posids;
-	
+	private List<Long> ptids;
+
 	private List<List<String>> counts;
 
 	@Action(value = "pageActivityPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
@@ -62,7 +62,7 @@ public class ActivityPaymentAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "countActivityPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String countActivityPayment() throws FLException {
 
@@ -82,7 +82,7 @@ public class ActivityPaymentAction extends BaseListAction {
 	@Action(value = "collectActivityPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String collectActivityPayment() throws FLException {
 
-		activityPaymentService.collectActivityPayment(activityPayments, activityReceipt, posids, queryUserId());
+		activityPaymentService.collectActivityPayment(activityPayments, activityReceipt, ptids, queryUserId());
 
 		return SUCCESS;
 	}
@@ -111,12 +111,12 @@ public class ActivityPaymentAction extends BaseListAction {
 		this.activityPayments = activityPayments;
 	}
 
-	public List<Long> getPosids() {
-		return posids;
+	public List<Long> getPtids() {
+		return ptids;
 	}
 
-	public void setPosids(List<Long> posids) {
-		this.posids = posids;
+	public void setPtids(List<Long> ptids) {
+		this.ptids = ptids;
 	}
 
 	public List<List<String>> getCounts() {

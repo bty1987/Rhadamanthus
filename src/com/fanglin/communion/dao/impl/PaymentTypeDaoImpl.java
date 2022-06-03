@@ -82,6 +82,8 @@ public class PaymentTypeDaoImpl extends DaoImpl<PaymentTypePO> implements Paymen
 				query.add(query.getCriterion("kiname", data, op));
 			} else if ("status".equals(field)) {
 				query.add(query.getCriterion("status", Short.valueOf(data), op));
+			} else if ("name".equals(field)) {
+				query.add(query.getCriterion("name", data, op));
 			}
 		}
 	}

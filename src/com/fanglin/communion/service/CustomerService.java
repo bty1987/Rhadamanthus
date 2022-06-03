@@ -37,11 +37,15 @@ public interface CustomerService {
 
 	public int updateCustomer(CustomerVO customerVO) throws FLException;
 
+	public int updateCustomerForBase(CustomerVO customerVO) throws FLException;
+
 	public int updateCustomerPhoneForStatus(CustomerPhoneVO customerPhoneVO) throws FLException;
 
 	public int updateCustomerPhoneForDefault(CustomerPhoneVO customerPhoneVO) throws FLException;
 
 	public int registCustomer(CustomerVO customerVO) throws FLException;
+
+	public int resetCustomer(CustomerVO customerVO) throws FLException;
 
 	public String authCustomer(CustomerVO customerVO) throws FLException;
 

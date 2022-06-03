@@ -8,8 +8,8 @@ import com.fanglin.customer.po.SurveyPO;
 import com.fanglin.utils.Paging;
 
 public interface SurveyDao extends Dao<SurveyPO> {
-	
-	public List<SurveyPO> pageSurvey(Paging paging, List<Filter> filters);
+
+	public List<SurveyPO> pageSurvey(Paging paging, List<Filter> filters, int company);
 
 	public List<SurveyPO> querySurveyByOrderId(String orderId);
 

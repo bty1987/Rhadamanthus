@@ -207,7 +207,7 @@ public class PaymentContractServiceImpl implements PaymentContractService {
 			throw new FLException(150066, "合同状态不可操作");
 		}
 
-		Signature.autosign(signetPO.getSignno(), paymentContractPO, signetPO.getSignid(), 200.0, 200.0);
+		Signature.autosign(signetPO.getSignno(), signetPO.getKeyword(), paymentContractPO, signetPO.getSignid());
 
 		paymentContractPO.setComsignTime(DateUtil.getDateToTimestamp(new Date()));
 

@@ -55,7 +55,7 @@ public class DecorationPaymentAction extends BaseListAction {
 
 	private Timestamp dateTime;
 
-	private List<Long> posids;
+	private List<Long> ptids;
 
 	@Action(value = "pageDecorationPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageDecorationPayment() throws FLException {
@@ -124,7 +124,7 @@ public class DecorationPaymentAction extends BaseListAction {
 	@Action(value = "collectDecorationPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String collectDecorationPayment() throws FLException, Exception {
 
-		decorationPaymentService.collectDecorationPayment(decorationPayment, posids, queryUserId(), queryCompany());
+		decorationPaymentService.collectDecorationPayment(decorationPayment, ptids, queryUserId(), queryCompany());
 
 		return SUCCESS;
 	}
@@ -209,12 +209,12 @@ public class DecorationPaymentAction extends BaseListAction {
 		this.decorationReceipt = decorationReceipt;
 	}
 
-	public List<Long> getPosids() {
-		return posids;
+	public List<Long> getPtids() {
+		return ptids;
 	}
 
-	public void setPosids(List<Long> posids) {
-		this.posids = posids;
+	public void setPtids(List<Long> ptids) {
+		this.ptids = ptids;
 	}
 
 }

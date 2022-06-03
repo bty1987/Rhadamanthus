@@ -23,6 +23,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "addreduce", catalog = "quotation")
@@ -68,6 +69,8 @@ public class AddReduceDO implements Serializable {
 
 	private short type;
 
+	private short atttype;
+
 	private short paytype;
 
 	private long undisPrice;
@@ -82,6 +85,8 @@ public class AddReduceDO implements Serializable {
 
 	private int manageRate;
 
+	private long consPrice;
+
 	private long total;
 
 	private int discount;
@@ -90,7 +95,13 @@ public class AddReduceDO implements Serializable {
 
 	private short isAffirm;
 
+	private UserPO creater;
+
 	private Timestamp createTime;
+
+	private Timestamp confirmTime;
+
+	private Timestamp affirmTime;
 
 	private String content;
 
@@ -121,6 +132,15 @@ public class AddReduceDO implements Serializable {
 
 	public void setType(short type) {
 		this.type = type;
+	}
+
+	@Column(name = "atttype")
+	public short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(short atttype) {
+		this.atttype = atttype;
 	}
 
 	@Column(name = "paytype")
@@ -186,6 +206,15 @@ public class AddReduceDO implements Serializable {
 		this.discount = discount;
 	}
 
+	@Column(name = "consPrice")
+	public long getConsPrice() {
+		return consPrice;
+	}
+
+	public void setConsPrice(long consPrice) {
+		this.consPrice = consPrice;
+	}
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
@@ -249,4 +278,31 @@ public class AddReduceDO implements Serializable {
 		this.manageRate = manageRate;
 	}
 
+	@Column(name = "confirmTime")
+	public Timestamp getConfirmTime() {
+		return confirmTime;
+	}
+
+	public void setConfirmTime(Timestamp confirmTime) {
+		this.confirmTime = confirmTime;
+	}
+
+	@Column(name = "affirmTime")
+	public Timestamp getAffirmTime() {
+		return affirmTime;
+	}
+
+	public void setAffirmTime(Timestamp affirmTime) {
+		this.affirmTime = affirmTime;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cuid", referencedColumnName = "uid")
+	public UserPO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
+	}
 }

@@ -19,12 +19,14 @@ public class SurveyDaoImpl extends DaoImpl<SurveyPO> implements SurveyDao {
 	}
 
 	@Override
-	public List<SurveyPO> pageSurvey(Paging paging, List<Filter> filters) {
+	public List<SurveyPO> pageSurvey(Paging paging, List<Filter> filters, int company) {
 		PagingQuery<SurveyPO> query = pagingQuery(paging, SurveyPO.class);
+
+		query.add(Restrictions.eq("company", company));
 
 		queryFilterExecute(query, filters);
 
-		query.asc("sid");
+		query.desc("sid");
 
 		return query.list();
 	}
@@ -48,6 +50,10 @@ public class SurveyDaoImpl extends DaoImpl<SurveyPO> implements SurveyDao {
 			String op = filter.getOp();
 			if ("orderId".equals(field)) {
 				query.add(query.getCriterion("orderId", data, op));
+			} else if ("createTime".equals(field)) {
+				query.timeranges("createTime", data);
+			} else if ("sendTime".equals(field)) {
+				query.timeranges("sendTime", data);
 			}
 		}
 

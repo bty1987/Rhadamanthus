@@ -42,6 +42,8 @@ public class PresignItemPO implements Serializable {
 
 	private short status;
 
+	private String content;
+
 	public PresignItemPO() {
 		super();
 	}
@@ -132,6 +134,15 @@ public class PresignItemPO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "content")
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 }

@@ -24,7 +24,7 @@ public interface BalanceSalesService {
 
 	public int updateBalanceSales(BalanceSalesVO balanceSales) throws FLException;
 	
-	public int balanceBalanceSales(BalanceSalesVO balanceSalesVO) throws FLException;
+	public int balanceBalanceSales(BalanceSalesVO balanceSalesVO, String userId) throws FLException;
 	
 	public int lockBalanceSales(BalanceSalesVO balanceSalesVO) throws FLException;
 	

@@ -28,9 +28,9 @@ public class QuotationRankDaoImpl extends DaoImpl<AddReducePO> implements Quotat
 	@Override
 	public List<?> rankAddReduce(int company) {
 
-		String sql = "select t.name as name,t.count as count,t.total as total from (select sv.currentname as name, count(ar.arid) as `count`, sum(ar.total) as `total`  from quotation.addreduce ar, decoration.decoration d, communion.user sv where ar.orderId = d.orderId and d.svuid = sv.uid and d.company = :companyA and ar.status in (0, 1) group by sv.uid) t order by t.count desc limit 10";
+		String sql = "select t.name as name,t.count as count,t.total as total from (select sv.currentname as name, count(ar.arid) as `count`, sum(ar.consprice) as `total`  from quotation.addreduce ar, decoration.decoration d, communion.user sv where ar.orderId = d.orderId and d.svuid = sv.uid and d.company = :company and ar.status in (0, 1) and ar.atttype = 0 group by sv.uid) t order by t.total desc limit 10";
 
-		return session().createSQLQuery(sql).setInteger("companyA", company).list();
+		return session().createSQLQuery(sql).setInteger("company", company).list();
 	}
 
 }

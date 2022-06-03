@@ -136,6 +136,13 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 				query.timeranges(WorkerSalaryPO.COLUMN_APPROVETIME_STR, data);
 			} else if ("createTime".equals(filter.getField())) {
 				query.timeranges(WorkerSalaryPO.COLUMN_CREATETIME_STR, data);
+			} else if ("checkTime".equals(filter.getField())) {
+				query.timeranges(WorkerSalaryPO.COLUMN_CHECKTIME_STR, data);
+			} else if ("checker".equals(filet)) {
+				query.alias("checker", "checker");
+				query.add(query.getCriterion("checker.userId", data, op));
+			} else if ("isCheck".equals(filet)) {
+				query.add(query.getCriterion("isCheck", Short.valueOf(data), op));
 			}
 		}
 	}

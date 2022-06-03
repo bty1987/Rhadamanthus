@@ -23,8 +23,8 @@ import com.fanglin.information.po.VticketPO;
 import com.fanglin.information.service.VpaymentService;
 import com.fanglin.information.vo.VpaymentVO;
 import com.fanglin.information.vo.VreceiptVO;
-import com.fanglin.payment.dao.PointofsalesDao;
-import com.fanglin.payment.po.PointofsalesPO;
+import com.fanglin.payment.dao.PaytranDao;
+import com.fanglin.payment.po.PaytranPO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -55,7 +55,7 @@ public class VpaymentServiceImpl implements VpaymentService {
 	private EmemberDao ememberDao;
 
 	@Autowired
-	private PointofsalesDao pointofsalesDao;
+	private PaytranDao paytranDao;
 
 	@Override
 	public void pageVpayment(Paging paging, List<Filter> filters, VpaymentVO vpaymentVO) {
@@ -153,7 +153,7 @@ public class VpaymentServiceImpl implements VpaymentService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int collectVpayment(List<VpaymentVO> vpayments, VreceiptVO vreceiptVO, List<Long> posids, String userId) throws FLException {
+	public int collectVpayment(List<VpaymentVO> vpayments, VreceiptVO vreceiptVO, List<Long> ptids, String userId) throws FLException {
 
 		VreceiptPO vreceiptPO = new VreceiptPO();
 
@@ -235,8 +235,8 @@ public class VpaymentServiceImpl implements VpaymentService {
 
 		EmemberPO ememberPO = ememberDao.queryEmemberByNo(mno);
 
-		if (posids != null && posids.size() > 0) {
-			pointofsalesDao.updatePointofsales(posids, vreceiptPO.getVrid(), PointofsalesPO.STATUS_USED_INT, PointofsalesPO.TYPE_ACTIVITY_INT);
+		if (ptids != null && ptids.size() > 0) {
+			paytranDao.updatePaytran(ptids, vreceiptPO.getVrid(), PaytranPO.STATUS_USED_INT, PaytranPO.TYPE_ACTIVITY_INT);
 		}
 
 		if (ememberPO != null) {
