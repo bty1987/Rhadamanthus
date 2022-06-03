@@ -292,7 +292,6 @@ jQuery(function ($) {
 
     decorationDetail.activitys = com.focusPage("#activitys");
     decorationDetail.activityItems = com.focusPage("#activityItems");
-    decorationDetail.activityItemsBtn = com.focusPage("#activityItemsBtn");
     decorationDetail.activityPriceInfo = com.focusPage("#activityPriceInfo");
     decorationDetail.salesActivityItems = com.focusPage("#salesActivityItems")
 
@@ -624,39 +623,7 @@ jQuery(function ($) {
     com.focusPage('#customerChangeBtn').on("click", function () {
 
         com.clearValidator();
-        com.post(api.data.queryCustomerById, {"customer.cid": decorationDetail.customer.cid}, function (res) {
-            res = res.customer;
-
-            decorationDetail.customerItems.customerName.val(res.name);
-            decorationDetail.customerItems.identity.val(res.identity);
-            decorationDetail.customerItems.officer.val(res.officer);
-            decorationDetail.customerItems.passport.val(res.passport);
-            decorationDetail.customerItems.qq.val(res.qq);
-            decorationDetail.customerItems.wechat.val(res.wechat);
-            decorationDetail.customerItems.email.val(res.email);
-            decorationDetail.customerItems.address.val(res.address);
-            decorationDetail.customerItems.relationshipType.val(res.relationshipType);
-            decorationDetail.customerItems.gender.prop('checked', com.genderType[res.gender]);
-            decorationDetail.customerItems.type.val(res.type);
-            decorationDetail.customerItems.companyNo.val(res.companyNo);
-            decorationDetail.customerItems.companyName.val(res.companyName);
-            decorationDetail.customerItems.companyAddr.val(res.companyAddr);
-            decorationDetail.customerItems.companyPhone.val(res.companyPhone);
-            decorationDetail.customerItems.companyBank.val(res.companyBank);
-            decorationDetail.customerItems.companyBankno.val(res.companyBankno);
-
-            com.focusPage("#comName").text(decorationDetail.customerTypes[res.type]+"名称");
-            com.focusPage("#comPhone").text(decorationDetail.customerTypes[res.type]+"电话");
-            if(res.type == 1) {
-                $("#phoneList").parent().attr("style", "height: 815px;");
-                com.focusPage(".companyitem", "#customerChangeModal").show();
-            } else {
-                $("#phoneList").parent().attr("style", "height: 715px;");
-            }
-        });
-        com.post(api.data.queryCustomerPhoneByCid, {"customerPhone.cid": decorationDetail.customer.cid}, function (res) {
-            showPhone('phoneList', res.customerPhones);
-        }, null, false);
+        refreshCustomerInformation(decorationDetail.customer.cid, 1);
 
         decorationDetail.customerChangeModal.modal("show");
     });
@@ -958,28 +925,24 @@ jQuery(function ($) {
 	initWizard(decorationDetail);
 
     // 发送按钮
-    com.focusPage("#activityItemsBtn").on("click", "#btnNotice", function() {
+    com.focusPage("#btnNotice").on("click", "#btnNotice", function() {
 
         var $inputs = com.focusPage('input[name="daiIds"]:checked');
-        var daiId = $inputs.val();
+        
+        if ($inputs.length == 0) {
+            com.showAlert(com.info, "无选中奖品");
+            return false;
+        }
+        
+        var daiids = "";
+        
         $.each($inputs, function(i, v) {
-
-            var $v = $(v);
-            if ($v.val()) {
-                if ($inputs.val() != $v.val()) {
-                    daiId += "," + $v.val();
-                }
-            }
+            daiids +=  $(v).val() + ",";
         });
 
-        if (daiId == null) {
-            com.showAlert(com.info, "无选中奖品");
-            return;
-        }
-
         var options = {
-            "decorationActivityItem.content": daiId,
-            "decorationActivityItem.orderId": decorationDetail.orderId
+            "decorationActivityItem.orderId": decorationDetail.orderId,
+            "decorationActivityItem.content": daiids,
         };
 
         com.showConfirm("是否发送查看通知", function() {
@@ -987,7 +950,6 @@ jQuery(function ($) {
             
                 com.showAlert(com.info, "操作成功");
             });
-        
         });
 
     });
@@ -1084,6 +1046,74 @@ jQuery(function ($) {
 
 	});
 
+    function refreshCustomerInformation(cid, type) {
+
+        com.post(api.data.queryCustomerById, {"customer.cid": cid}, function (res) {
+            res = res.customer;
+
+            if (type == 2) decorationDetail.items.customer.val(res.name);
+
+            decorationDetail.customerItems.customerName.val(res.name);
+            decorationDetail.customerItems.identity.val(res.identity);
+            decorationDetail.customerItems.officer.val(res.officer);
+            decorationDetail.customerItems.passport.val(res.passport);
+            decorationDetail.customerItems.qq.val(res.qq);
+            decorationDetail.customerItems.wechat.val(res.wechat);
+            decorationDetail.customerItems.email.val(res.email);
+            decorationDetail.customerItems.address.val(res.address);
+            decorationDetail.customerItems.relationshipType.val(res.relationshipType);
+            decorationDetail.customerItems.gender.prop('checked', com.genderType[res.gender]);
+            decorationDetail.customerItems.type.val(res.type);
+            decorationDetail.customerItems.companyNo.val(res.companyNo);
+            decorationDetail.customerItems.companyName.val(res.companyName);
+            decorationDetail.customerItems.companyAddr.val(res.companyAddr);
+            decorationDetail.customerItems.companyPhone.val(res.companyPhone);
+            decorationDetail.customerItems.companyBank.val(res.companyBank);
+            decorationDetail.customerItems.companyBankno.val(res.companyBankno);
+
+            com.focusPage("#comName").text(decorationDetail.customerTypes[res.type]+"名称");
+            com.focusPage("#comPhone").text(decorationDetail.customerTypes[res.type]+"电话");
+            if(res.type == 1) {
+                $("#phoneList").parent().attr("style", "height: 815px;");
+                com.focusPage(".companyitem", "#customerChangeModal").show();
+            } else {
+                $("#phoneList").parent().attr("style", "height: 715px;");
+            }
+
+            decorationDetail.customer.status = res.status;
+
+            if(res.status != 0){
+                decorationDetail.customerItems.customerName.attr("readonly", "readonly");
+                decorationDetail.customerItems.gender.prop("disabled", true);
+                decorationDetail.customerItems.identity.attr("readonly", "readonly");
+                decorationDetail.customerItems.officer.attr("readonly", "readonly");
+                decorationDetail.customerItems.passport.attr("readonly", "readonly");
+                decorationDetail.customerItems.qq.attr("readonly", "readonly");
+                decorationDetail.customerItems.wechat.attr("readonly", "readonly");
+                decorationDetail.customerItems.email.attr("readonly", "readonly");
+                decorationDetail.customerItems.relationshipType.prop("disabled", true);
+                decorationDetail.customerItems.address.attr("readonly", "readonly");
+                decorationDetail.customerItems.type.prop("disabled", true);
+            } else {
+                decorationDetail.customerItems.customerName.removeAttr('readonly');
+                decorationDetail.customerItems.gender.removeAttr('disabled');
+                decorationDetail.customerItems.identity.removeAttr('readonly');
+                decorationDetail.customerItems.officer.removeAttr('readonly');
+                decorationDetail.customerItems.passport.removeAttr('readonly');
+                decorationDetail.customerItems.qq.removeAttr('readonly');
+                decorationDetail.customerItems.wechat.removeAttr('readonly');
+                decorationDetail.customerItems.email.removeAttr('readonly');
+                decorationDetail.customerItems.relationshipType.removeAttr('disabled');
+                decorationDetail.customerItems.address.removeAttr('readonly');
+                decorationDetail.customerItems.type.removeAttr('disabled');
+            };
+        });
+
+        com.post(api.data.queryCustomerPhoneByCid, {"customerPhone.cid": decorationDetail.customer.cid}, function (res) {
+            showPhone('phoneList', res.customerPhones);
+        }, null, false);
+    }
+
     function saveBaseDecorationInfo() {
         if (com.validate("step1")) {
             return;
@@ -1148,7 +1178,7 @@ jQuery(function ($) {
                     params.decoration.convertActivityItemId = decorationDetail.convertActivityItemId;// 全局变量活动
                     params.decoration.activity = decorationDetail.activity;
                     decorationUtils.decorationActivityInfo(decorationDetail.activitys, wizard["activityBtnMethod"], decorationDetail.orderId);
-                    decorationUtils.decorationActivityItemInfo(decorationDetail.activityPriceInfo, decorationDetail.activityItems, decorationDetail.activityItemsBtn, wizard["uiBtnMethod"], decorationDetail.orderId, decorationActivity);
+                    decorationUtils.decorationActivityItemInfo(decorationDetail.activityPriceInfo, decorationDetail.activityItems, wizard["uiBtnMethod"], decorationDetail.orderId, decorationActivity);
                     decorationUtils.decorationSalesActivityItemInfo(decorationDetail.salesActivityItems,decorationDetail.orderId,wizard["uiBtnMethod"], salesActivityItem);
                     break;
                 case "belong":
@@ -1191,7 +1221,7 @@ jQuery(function ($) {
                     params.decoration.convertActivityItemId = decorationDetail.convertActivityItemId;
                     params.decoration.activity = decorationDetail.activity;
                     decorationUtils.decorationActivityInfo(decorationDetail.activitys, wizard["activityBtnMethod"], decorationDetail.orderId);
-                    decorationUtils.decorationActivityItemInfo(decorationDetail.activityPriceInfo, decorationDetail.activityItems, decorationDetail.activityItemsBtn, wizard["uiBtnMethod"], decorationDetail.orderId, decorationActivity);
+                    decorationUtils.decorationActivityItemInfo(decorationDetail.activityPriceInfo, decorationDetail.activityItems, wizard["uiBtnMethod"], decorationDetail.orderId, decorationActivity);
                     decorationUtils.decorationSalesActivityItemInfo(decorationDetail.salesActivityItems,decorationDetail.orderId,wizard["uiBtnMethod"], salesActivityItem);
                     break;
                 case "belong":
@@ -1379,18 +1409,33 @@ jQuery(function ($) {
     }
 
     function checkPhone(cid, $id) {
-    	  if ($id.val() == "") {
-    		  decorationDetail.customer.repeatFlg = true;
+          if ($id.val() == "") {
+              decorationDetail.customer.repeatFlg = true;
           } else {
               com.post(api.data.checkCustomerForPhone, {
                   "customerPhone.cid": null,
                   "customerPhone.phone": $id.val(),
                   "customerPhone.status": null
               }, function (res) {
-            	  decorationDetail.customer.repeatFlg = false;
+                  decorationDetail.customer.repeatFlg = false;
               }, function (res) {
-            	  decorationDetail.customer.repeatFlg = true;
-                  com.showTip($id, "电话信息已存在", "bottom");
+                  decorationDetail.customer.repeatFlg = true;
+                  
+                  com.showConfirm("电话信息已存在,确认要更改装修单归属客户吗?", function() {
+
+                      var options = {
+                          "decoration.orderId": decorationDetail.orderId,
+                          "decoration.customer.cid": res.customerPhone.cid
+                      };
+
+                      com.post(api.decoration.changeDecorationForCustomer, options, function(res) {
+
+                          com.showAlert(com.info, "更改客户成功");
+                          decorationDetail.customer.cid = res.decoration.customer.cid;
+                          refreshCustomerInformation(decorationDetail.customer.cid, 2);
+                      }, null, false);
+                  });
+
               }, false);
 
           }
@@ -1400,8 +1445,9 @@ jQuery(function ($) {
         if (com.validate("customerChangeModal")) {
             return;
         }
-        
-        var url = api.data.updateCustomer;;
+
+        decorationDetail.customer.status == 0 ? url = api.data.updateCustomer : url = api.data.updateCustomerForBase;
+
         var options = {
             "customer.cid": decorationDetail.customer.cid,
             "customer.name": decorationDetail.customerItems.customerName.val(),
@@ -1425,6 +1471,7 @@ jQuery(function ($) {
 
         com.post(url, options, function (res) {
             com.showAlert(com.info, "操作成功");
+            decorationDetail.items.customer.val(decorationDetail.customerItems.customerName.val());
             decorationDetail.customerChangeModal.modal("hide");
         });
 

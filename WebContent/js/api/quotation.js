@@ -29,20 +29,20 @@ $.extend(api.index, {
     },
 
     addReduceIndex: {
-        url: "/views/quotation/addReduce.html"
+        url: "/views/quotation/addReduceIndex.html"
     },
-    addReduceDetailIndex: {
-        url: "/views/quotation/addReduceDetail.html"
+    addReducePartIndex: {
+        url: "/views/quotation/addReducePart.html"
     },
     addReduceOutputIndex: {
         url: "/views/quotation/addReduceOutput.html"
     },
 
     extensionIndex: {
-        url: "/views/quotation/extension.html"
+        url: "/views/quotation/extensionIndex.html"
     },
-    extensionDetailIndex: {
-        url: "/views/quotation/extensionDetail.html"
+    extensionPartIndex: {
+        url: "/views/quotation/extensionPart.html"
     },
 
     quotetionIndex: {
@@ -56,6 +56,9 @@ $.extend(api.index, {
     },
 
     selectionIndex: {
+        url: "/views/quotation/selectionIndex.html"
+    },
+    selectionPartIndex: {
         url: "/views/quotation/selectionPart.html"
     },
     selectionOutputIndex: {
@@ -72,6 +75,9 @@ $.extend(api.index, {
         url: "/views/quotation/protationOutput.html"
     },
 
+    normIndex: {
+        url: "/views/quotation/normIndex.html"
+    },
     normPart: {
         url: "/views/quotation/normPart.html"
     },
@@ -493,6 +499,18 @@ $.extend(api, {
             url: "unlockProtation.do"
         },
 
+        pageProtation: {
+            url: "pageProtation.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["quotePrice", "quoteArea", "unitPrice", "costPrice", "profitRate", "basicPrice", "comdPrice", "commPrice", "adddPrice", "addmPrice", "subdPrice", "submPrice", "totalPrice", "mostPrice", "costRate", "mostRate", "totalCost", "totalProfit"]
+            }, {
+                result: "paging-data-decoration-house",
+                args: ["buildArea"]
+            }]
+        },
+
         queryProtationCost: {
             url: "queryProtationCost.do",
             type: "query",
@@ -502,6 +520,18 @@ $.extend(api, {
             }]
         },
 
+        pageQuotation: {
+            url: "pageQuotation.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["discount", "totalPrice", "undisPrice", "disPrice", "manageRate", "managePrice", "trafficRate", "trafficPrice", "basePrice", "costPrice", "notSalesmanRate"]
+            }, {
+                result: "paging-data-decoration-house",
+                args: ["buildArea"]
+            }]
+        },
         queryQuotationByOrderId: {
             url: "queryQuotationByOrderId.do",
             demo: true,
@@ -704,6 +734,17 @@ $.extend(api, {
             }
         },
 
+        pageExtension: {
+            url: "pageExtension.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["undisPrice", "total"]
+            }, {
+                result: "paging-data-decoration-house",
+                args: ["buildArea"]
+            }]
+        },
         pageExtensionByOrderId: {
             url: "pageExtensionByOrderId.do",
             type: "query",
@@ -924,6 +965,17 @@ $.extend(api, {
             }
         },
         // -------- 选材单 -------------------------
+        pageSelection: {
+            url: "pageSelection.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["total", "quotationTotal", "extensionAddTotal", "extensionReduceTotal", "addReduceAddTotal", "addReduceMinusTotal"]
+            }, {
+                result: "paging-data-decoration-house",
+                args: ["buildArea"]
+            }]
+        },
         querySelectionByOrderId: {
             url: "querySelectionByOrderId.do",
             demo: true,
@@ -1073,6 +1125,17 @@ $.extend(api, {
         },
 
         // -------- 定额 -------------------------
+        pageNormtion: {
+            url: "pageNormtion.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["moodTotal"]
+            }, {
+                result: "paging-data-decoration-house",
+                args: ["buildArea"]
+            }]
+        },
         queryQuotationNormood: {
             url: "queryQuotationNormood.do",
             type: "query",
@@ -1087,55 +1150,55 @@ $.extend(api, {
                 args: ["purchase", "selling", "pieceNum"]
             }]
         },
-        queryQuotationNormoodItem: {
-            url: "queryQuotationNormoodItem.do",
+        queryNormoodItem: {
+            url: "queryNormoodItem.do",
             demo: true,
             type: "query",
             tranargs: [{
-                result: "quotationNormoodItems",
+                result: "normoodItems",
                 args: ["normnum", "storenum"]
             }]
         },
         // 增加方法
-        addQuotationNormoodItem: {
-            url: "addQuotationNormoodItem.do",
+        addNormoodItem: {
+            url: "addNormoodItem.do",
             type: "update",
             tranargs: {
-                args: ["quotationNormoodItem.normnum", "quotationNormoodItem.storenum"],
+                args: ["normoodItem.normnum", "normoodItem.storenum"],
                 query: [{
-                    result: "quotationNormoodItems",
+                    result: "normoodItems",
                     args: ["normnum", "storenum"]
                 }]
             }
         },
         // 删除方法
-        deleteQuotationNormoodItem: {
-            url: "deleteQuotationNormoodItem.do",
+        deleteNormoodItem: {
+            url: "deleteNormoodItem.do",
             intercept: true
         },
 
-        queryQuotationNormriceItem: {
-            url: "queryQuotationNormriceItem.do",
+        queryNormriceItem: {
+            url: "queryNormriceItem.do",
             demo: true,
             type: "query",
             tranargs: [{
-                result: "quotationNormriceItems",
+                result: "normriceItems",
                 args: ["trannum", "salary", "num"]
             }]
         },
-        addQuotationNormriceItem: {
-            url: "addQuotationNormriceItem.do",
+        addNormriceItem: {
+            url: "addNormriceItem.do",
             type: "update",
             tranargs: {
-                args: ["quotationNormriceItem.trannum", "quotationNormriceItem.salary", "quotationNormriceItem.num"],
+                args: ["normriceItem.trannum", "normriceItem.salary", "normriceItem.num"],
                 query: [{
-                    result: "quotationNormriceItem",
+                    result: "normriceItem",
                     args: ["trannum", "salary", "num"]
                 }]
             },
         },
-        deleteQuotationNormriceItem: {
-            url: "deleteQuotationNormriceItem.do",
+        deleteNormriceItem: {
+            url: "deleteNormriceItem.do",
             intercept: true
         },
 

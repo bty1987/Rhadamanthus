@@ -21,6 +21,7 @@ jQuery(function ($) {
             atttype: com.focusPage("#atttype", "#oalesModal"),
             cost: com.focusPage('#cost', "#oalesModal"),
             threshold: com.focusPage("#threshold", "#oalesModal"),
+            materialer: com.focusPage("#materialer", "#oalesModal"),
 
             upcost: com.focusPage('#upcost', "#totalModal"),
             upthreshold: com.focusPage('#upthreshold', "#totalModal"),
@@ -29,6 +30,7 @@ jQuery(function ($) {
             profit: com.focusPage('#profit', "#totalModal"),
             newTotal: com.focusPage('#newTotal', "#totalModal"),
             updateService: com.focusPage('#updateService', "#totalModal"),
+            upmaterialer: com.focusPage('#upmaterialer', "#totalModal"),
             updateComment: com.focusPage('#updateComment', "#totalModal"),
         },
 
@@ -44,6 +46,16 @@ jQuery(function ($) {
     oales.modals.oalesModal.on('hide.bs.modal', function (e) {
 
         com.cleanTypeahead("brandName");
+        com.cleanTypeahead("service");
+        com.cleanTypeahead("materialer");
+        com.cleanItems(oales.items);
+        com.closeTip();
+    });
+
+    oales.modals.totalModal.on('hide.bs.modal', function (e) {
+
+        com.cleanTypeahead("service");
+        com.cleanTypeahead("materialer");
         com.cleanItems(oales.items);
         com.closeTip();
     });
@@ -67,7 +79,7 @@ jQuery(function ($) {
     com.initTypeahead('updateService', api.personel.queryUserByPinyin, "pinyinName", {
         "user.status": 0,
         "departmentType.name": ""
-    }, 'autoFillKeyValue', 'key', 'value', null);
+    }, 'autoFillKeyValue', 'key', 'value',null   );
     com.initTypeahead('materialer', api.personel.queryUserByPinyin, "pinyinName", {
         "user.status": 0,
         "departmentType.name": ""
@@ -90,7 +102,7 @@ jQuery(function ($) {
     var searcher = new Searcher();
 
     searcher.base("condList", "pagenation", "resultList", api.sales.pageOales);
-    searcher.condition(['sales-oales-orderId', "sales-oales-createTime", "sales-oales-status", "sales-oales-brand", "sales-oales-category"]);
+    searcher.condition(['sales-oales-no', 'sales-oales-orderId', 'sales-oales-createTime', 'sales-oales-status', 'sales-oales-brand', 'sales-oales-category']);
     searcher.history("oalsePostData");
 
     searcher.button([{
@@ -190,18 +202,21 @@ jQuery(function ($) {
         clazz: "btn-success",
         handle: function (v) {
             oales.oid= v.oid;
-            oales.items.updateService.val(v.servicer.currentName);
+            com.updateTypeahead('updateService', v.servicer.userId, v.servicer.userName);
+            com.updateTypeahead('upmaterialer', v.materialer.userId, v.materialer.userName);
             oales.items.brandName.val(v.awardType);
             oales.items.newTotal.val(v.total);
             oales.items.award.val(v.award);
             oales.items.profit.val(v.profit);
             oales.items.updateComment.val(v.comment);
+            oales.items.upcost.val(v.cost);
+            oales.items.upthreshold.val(v.threshold);
             oales.modals.totalModal.modal("show");
             return false;
         },
         show: function(v) {
 
-            return v.status == 0;
+            return (v.status == 0) || (v.status == 2);
         }
     }, {
         name: "删除",
@@ -212,7 +227,7 @@ jQuery(function ($) {
 
         },
         show: function (v) {
-            return  v.status == 0;
+            return (v.status == 0) || (v.status == 2);
         }
     },{
         name: "完结",
@@ -232,7 +247,7 @@ jQuery(function ($) {
             confirmOales(v.oid);
         },
         show: function (v) {
-            return  v.status == 0;
+            return (v.status == 0) || (v.status == 2);
         }
     },{
         name: "复核",
@@ -294,11 +309,12 @@ jQuery(function ($) {
 
         oales.modals.oalesModal.modal("hide");
     }
-
     function total() {
 
         if (com.validate('totalModal'))
             return false;
+
+        var url = api.sales.updateOales;
 
         var options = {
             "oales.oid": oales.oid,
@@ -313,7 +329,7 @@ jQuery(function ($) {
             "oales.comment": oales.items.updateComment.val(),
         };
 
-        com.post(api.sales.updateOales, options, function (res) {
+        com.post(url, options, function (res) {
             searcher.doSearch();
         });
 

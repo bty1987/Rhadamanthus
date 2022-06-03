@@ -1,15 +1,15 @@
 jQuery(function ($) {
-    pointofsales = {
+    paytran = {
         paymentTypes: {},
         pointStatus: {}
     };
 
     com.post(api.ds.payment, {}, function (res) {
         $.each(res.receiptPaymentType, function (i, v) {
-            pointofsales.paymentTypes[v.key] = v.value;
+            paytran.paymentTypes[v.key] = v.value;
         });
         $.each(res.pointStatus, function (i, v) {
-            pointofsales.pointStatus[v.key] = v.value;
+            paytran.pointStatus[v.key] = v.value;
         });
 
     }, null, false);
@@ -30,12 +30,12 @@ jQuery(function ($) {
 
         var creatLine = function (v) {
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(pointofsales.paymentTypes[v.type]));
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(paytran.paymentTypes[v.type]));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var propertyArr = [
                 ["收据名称:", v.no, "blue"],
                 ["机器编号:", v.sn, "blue"],
-                ["状态:", pointofsales.pointStatus[v.status] , "red"],
+                ["状态:", paytran.pointStatus[v.status] , "red"],
                 ["金额:", v.money, "green"],
                 ["创建人:", v.creater.currentName, "grey"],
                 ["创建时间:", v.createTime, "green"]
@@ -66,7 +66,7 @@ jQuery(function ($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["payment-point-sn", "payment-paymentType", "payment-createTime", "payment-point-status", "payment-activity-creater-name"], "condList", api.payment.pagePointofsales, function (data) {
+    searcher.init(["payment-point-sn", "payment-paymentType", "payment-createTime", "payment-point-status", "payment-activity-creater-name"], "condList", api.payment.pagePaytran, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "receiptPostData", null, false, null, null);
 });

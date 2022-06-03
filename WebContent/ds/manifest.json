@@ -75,8 +75,16 @@
         {"key":"1","value":"否"}
     ],
     "occessoriesisLift": [
-        {"key":"0","value":"是"},
-        {"key":"1","value":"否"}
+        {"key":"0","value":"有"},
+        {"key":"1","value":"无"}
+    ],
+    "occessoriesisExceed": [
+        {"key":"0","value":"有"},
+        {"key":"1","value":"无"}
+    ],
+    "occessoriesisAttic": [
+        {"key":"0","value":"有"},
+        {"key":"1","value":"无"}
     ],
     "occessoriesisCostType": [
         {"key": "0", "value": "车运费"},

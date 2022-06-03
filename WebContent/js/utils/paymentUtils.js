@@ -68,7 +68,7 @@ var paymentUtils = {
 
             bank = utils.accAdd(parseFloat(data.money), bank);
 
-            options["posids[" + i + "]"] = data.posid;
+            options["ptids[" + i + "]"] = data.ptid;
         }
 
         options[name + ".bank"] = bank;
@@ -259,11 +259,11 @@ var paymentUtils = {
 
     showPos: function(payment, options, status) {
 
-        com.post(api.payment.queryPointofsales, options, function(res) {
+        com.post(api.payment.queryPaytran, options, function(res) {
 
-            $.each(res.pointofsaleses, function(i, v) {
+            $.each(res.paytrans, function(i, v) {
 
-                if (status.indexOf(v.status) < 0)
+                if (status.indexOf(v.status) < 0 || v.pid != 0)
                     return true;
 
                 paymentUtils.addPos(payment, v);
@@ -284,18 +284,18 @@ var paymentUtils = {
         }
 
         var options = {
-            "pointofsales.pid": orderId,
-            "pointofsales.type": type,
-            "pointofsales.no": com.typeahead(payment.items.bankName),
-            "pointofsales.sn": payment.posValues[com.typeahead(payment.items.bankName)].value, // 收据类型中pos的value值
-            "pointofsales.money": payment.items.bank.val(),
-            "pointofsales.way": payment.items.posway.val()
+            "paytran.orderId": orderId,
+            "paytran.type": type,
+            "paytran.no": com.typeahead(payment.items.bankName),
+            "paytran.sn": payment.posValues[com.typeahead(payment.items.bankName)].value, // 收据类型中pos的value值
+            "paytran.money": payment.items.bank.val(),
+            "paytran.way": payment.items.posway.val()
         };
 
-        com.post(api.payment.addPointofsales, options, function(res) {
+        com.post(api.payment.addPaytran, options, function(res) {
 
-            res.pointofsales.status = 0;
-            paymentUtils.addPos(payment, res.pointofsales);
+            res.paytran.status = 0;
+            paymentUtils.addPos(payment, res.paytran);
         });
 
         payment.items.bankName.removeClass("v_required v_typeahead");
@@ -309,12 +309,12 @@ var paymentUtils = {
 
         var posDivGroup = payment.items.posGroup;
 
-        var ul = $("<ul></ul>").addClass("list-unstyled fl-inline-list clearfix positem").attr("id", "pos" + v.posid).appendTo(posDivGroup);
+        var ul = $("<ul></ul>").addClass("list-unstyled fl-inline-list clearfix positem").attr("id", "pos" + v.ptid).appendTo(posDivGroup);
         var liname = $("<li></li>").append($("<strong></strong>").text("名称:")).append($("<b></b>").addClass("grey").text(v.no)).appendTo(ul);
         var limoney = $("<li></li>").append($("<strong></strong>").text("金额:")).append($("<b></b>").addClass("blue").text(v.money)).appendTo(ul);
 
         ul.attr({
-            "data-posid": v.posid,
+            "data-ptid": v.ptid,
             "data-type": v.type,
             "data-no": v.no,
             "data-money": v.money,
@@ -328,40 +328,40 @@ var paymentUtils = {
             return false;
         }
 
-        var btns = $("<li></li>").attr("id", "posbtns" + v.posid).appendTo(ul);
-        var check = $("<button></button>").addClass("btn btn-minier btn-orange pull-right inline").text("验证").attr("id", "poscheck" + v.posid).appendTo(btns);
-        var cancel = $("<button></button>").addClass("btn btn-minier btn-danger pull-right inline hide").text("撤销").attr("id", "poscancel" + v.posid).appendTo(btns);
+        var btns = $("<li></li>").attr("id", "posbtns" + v.ptid).appendTo(ul);
+        var check = $("<button></button>").addClass("btn btn-minier btn-orange pull-right inline").text("验证").attr("id", "poscheck" + v.ptid).appendTo(btns);
+        var cancel = $("<button></button>").addClass("btn btn-minier btn-danger pull-right inline hide").text("撤销").attr("id", "poscancel" + v.ptid).appendTo(btns);
 
         check.click(function() {
 
-            com.post(api.payment.checkPointofsales, {
-                "pointofsales.posid": v.posid
+            com.post(api.payment.checkPaytran, {
+                "paytran.ptid": v.ptid
             }, function(res) {
 
-                var pointofsales = res.pointofsales;
+                var paytran = res.paytran;
 
-                var posid = pointofsales.posid;
-                var posul = com.focusPage("#pos" + posid);
+                var ptid = paytran.ptid;
+                var posul = com.focusPage("#pos" + ptid);
 
-                if (pointofsales.status == 0)
+                if (paytran.status == 0)
                     return false;
 
-                if (pointofsales.status != 1) {
+                if (paytran.status != 1) {
                     posul.remove();
                     com.showAlert(com.error, "POS支付失败");
                 }
 
-                posul.data().status = pointofsales.status;
-                posul.data().createtime = pointofsales.createTime;
+                posul.data().status = paytran.status;
+                posul.data().createtime = paytran.createTime;
                 posul.attr({
-                    "data-status": pointofsales.status,
-                    "data-createtime": pointofsales.createTime
+                    "data-status": paytran.status,
+                    "data-createtime": paytran.createTime
                 });
 
-                $("<li></li>").append($("<strong></strong>").text("时间:")).append($("<b></b>").addClass("blue").text(pointofsales.createTime)).appendTo(posul);
+                $("<li></li>").append($("<strong></strong>").text("时间:")).append($("<b></b>").addClass("blue").text(paytran.createTime)).appendTo(posul);
                 $("<li></li>").append($("<strong></strong>").text("状态:")).append($("<b></b>").addClass("red").text("已付款")).appendTo(posul);
 
-                com.focusPage("#posbtns" + posid).remove();
+                com.focusPage("#posbtns" + ptid).remove();
             });
 
             return false;
@@ -369,11 +369,11 @@ var paymentUtils = {
 
         cancel.click(function() {
 
-            com.post(api.payment.cancelPointofsales, {
-                "pointofsales.posid": v.posid
+            com.post(api.payment.cancelPaytran, {
+                "paytran.ptid": v.ptid
             }, function(res) {
 
-                com.focusPage("#pos" + res.pointofsales.posid).remove();
+                com.focusPage("#pos" + res.paytran.ptid).remove();
             });
 
             return false;
@@ -900,9 +900,8 @@ var paymentUtils = {
 
             com.post(api.payment.sendPaymentContract, {
                 "paymentContract.pcid": paymentContract.pcid,
-                "paymentContract.paymentType": 2
+                "paymentContract.type": 2
             }, function(res) {
-
                 com.showAlert(com.info, "发送成功");
             });
         });

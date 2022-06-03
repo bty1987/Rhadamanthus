@@ -472,8 +472,8 @@ $(function () {
     function saveMap() {
         var params = {
             'village.no': village.currentVill.no,
-            'village.x': village.currentVill.tempPoint.x,
-            'village.y': village.currentVill.tempPoint.y
+            'village.x': village.currentVill.tempPoint.x * 1000000,
+            'village.y': village.currentVill.tempPoint.y * 1000000
         };
 
         com.post(api.data.updateVillageForPosition, params, function (res) {
@@ -486,7 +486,7 @@ $(function () {
     function editPosition(vill) {
         // 初始化地图 创建地图函数
         mp = createMap();
-
+        
         village.mapItems.no.val(vill.no);
         village.mapItems.name.val(vill.name);
         village.mapItems.city.val(vill.cityProper.city.name);
@@ -497,8 +497,8 @@ $(function () {
 
         village.currentVill = vill;
 
-        var x = vill.x;
-        var y = vill.y;
+        var x = vill.x / 1000000;
+        var y = vill.y / 1000000;
 
         village.currentVill.tempPoint = {
             x: x,
@@ -510,8 +510,8 @@ $(function () {
         mp = createMap();
         var vill = village.currentVill;
         var name = vill.name;
-        var x = vill.x;
-        var y = vill.y;
+        var x = vill.x / 1000000;
+        var y = vill.y / 1000000;
         var count = vill.count;
         var comment = name + "已完成订单" + count + "套";
 

@@ -263,8 +263,17 @@ $.extend(api, {customer: {
     },
     queryFeedbackDrawing: {url:"queryFeedbackDrawing.do"},
     addFeedbackDrawing: {url:"addFeedbackDrawing.do"},
-	
-	
+
+
+    pageDroup: {url:"pageDroup.do"},
+    queryDroup: {url:"queryDroup.do"},
+    updateDroup: {url:"updateDroup.do"},
+    deleteDroup: {url:"deleteDroup.do"},
+    bindDroup: {url:"bindDroup.do"},
+    pageConversation: {url:"pageConversation.do"},
+    requestConversation: {url:"requestConversation.do"},
+    responseConversation: {url:"responseConversation.do"},
+    deleteConversation: {url:"deleteConversation.do"},
 }});
 
 

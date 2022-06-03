@@ -185,6 +185,7 @@ $(function() {
         var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
         var $btnImport = $('<a></a>').addClass('btn btn-minier btn-dark').html('导出').appendTo($divBtnWrap);
+        var $btnSend = $('<a></a>').addClass('btn btn-minier btn-info').html('发送').appendTo($divBtnWrap);
 
         var $divWarp = com.focusPage("#paramsOrder").append($h4);
 
@@ -218,6 +219,11 @@ $(function() {
         $btnImport.click(function() {
 
             imports();
+        });
+
+        $btnSend.click(function() {
+
+            sends();
         });
 
         return $divWarp;
@@ -383,21 +389,28 @@ $(function() {
                     "margin": "5px 0px",
                     "min-height": "127px"
                 }).attr("id", "pricing_" + v.saiid);
-                var widgetBox = $("<div></div>").addClass("module_activity_border").appendTo(pricingSpan);
+                var widgetBox = $("<div></div>").appendTo(pricingSpan);
 
-                var widgetBody = $("<div></div>").appendTo(widgetBox);
-                var widgetMain = $("<div></div>").addClass("widget-main no-padding").appendTo(widgetBody);
+                // var widgetBody = $("<div></div>").appendTo(widgetBox);
+                // var widgetMain = $("<div></div>").addClass("widget-main no-padding").appendTo(widgetBody);
 
-                var widgetHeader = $("<div></div>").attr("id", "widgetHeader_" + v.saiid).appendTo(widgetMain);
+                var widgetBody = $("<ul class='item-list fl-table-list ui-sortable'></ul>").attr("data-type", v.type).appendTo(widgetBox);
+                var widgetMain = $('<li class="item-orange clearfix"></li>').appendTo(widgetBody);
 
-                var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.name);
+                // var widgetHeader = $("<div></div>").attr("id", "widgetHeader_" + v.saiid).appendTo(widgetMain);
+
+                var widgetHeader = $("<h3 class='oid'></h3>").attr("id", "widgetHeader_" + v.saiid).appendTo(widgetMain);
+                var title = $('<small class="blue"></small>').text(v.name);
+
+                var $span = $('<span></span>').addClass('lbl blue bigger-150');
                 var $label = $('<label></label>');
                 var $input = $('<input></input>').attr({
                     "type": "checkbox",
                     "name": "saiids",
                     "class": "ace ace-checkbox-2"
                 }).val(v.saiid);
-                widgetHeader.append($label.append($input).append($span));
+
+                widgetHeader.append($label.append($input).append($span)).append(title);
 
                 var ul = $("<ul></ul>").addClass("list-unstyled fl-inline-list clearfix").css("padding-left", "12px").appendTo(widgetMain);
                 var nameLi = $("<li></li>").appendTo(ul);
@@ -470,6 +483,8 @@ $(function() {
 
         if (salesActivityItem.pagetype == "advance" || salesActivityItem.pagetype == "activity") {
             uiPgDiv.append(abateBtn).append(receiveBtn).append(refundBtn).append(deliveBtn).append(unrefundBtn).append(expendBtn).append(discountBtn);
+        }if (salesActivityItem.pagetype == "dompany") {
+            uiPgDiv.append(abateBtn);
         }
 
         // 失效按钮
@@ -640,24 +655,20 @@ $(function() {
 
     }
 
-    // 发送按钮
-    com.focusPage('#btnNotice').click(function() {
+    function sends() {
 
         var $inputs = com.focusPage('input[name="saiids"]:checked');
-        var saiid = $inputs.val();
+
+        var saiid = "";
+
         $.each($inputs, function(i, v) {
 
-            var $v = $(v);
-            if ($v.val()) {
-                if ($inputs.val() != $v.val()) {
-                    saiid += "," + $v.val();
-                }
-            }
+            saiid += $(v).val() + ",";
         });
 
         var options = {
+            "orderId": salesActivityItem.orderId,
             "salesActivityItem.content": saiid,
-            "orderId": salesActivityItem.orderId
         };
 
         com.showConfirm("是否发送查看通知", function() {
@@ -667,10 +678,8 @@ $(function() {
                 com.showAlert(com.info, "操作成功");
                 searcher.doSearch();
             });
-
         });
-
-    });
+    }
 
     // 领取物品
     com.focusPage("#submitSalesActivityItemBtn").on("click", function() {

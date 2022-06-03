@@ -30,7 +30,7 @@ $(function() {
 
         url: api.quotation.pageSelectionItem,
         pageType: params.urlLoadParams.type,
-        query: ["quotation-selection-orderId", "quotation-selection-category", "quotation-selection-brand", "quotation-selection-item-name"],
+        query: ["quotation-selection-decoration-orderId", "quotation-selection-category", "quotation-selection-brand", "quotation-selection-item-name"],
 
         selectList: [],
     };
@@ -94,16 +94,19 @@ $(function() {
     }
 
     com.post(api.ds.quotation, {}, function(res) {
+
         selectionItem.statusList = res.selectionItemStatus.split("key", "value");
         selectionItem.typeList = res.selectionItemType.split("key", "value");
     }, null, false);
 
     selectionItem.modals.updateSelectionItemModal.on("hide.bs.modal", function() {
+
         com.clearValidator();
         com.cleanItems(selectionItem.items);
     });
 
     selectionItem.modals.finishSelectionItemModal.on("hide.bs.modal", function() {
+
         com.clearValidator();
         com.cleanItems(selectionItem.items);
     });
@@ -116,11 +119,13 @@ $(function() {
         $('input[type=checkbox][name=selectionItem]').prop('checked', false);
 
         var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId).empty();
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
                 $.each(listData, function(i, v) {
+
                     creatLine(v).appendTo($ul);
                 });
 
@@ -207,6 +212,7 @@ $(function() {
             }
 
             $.each(propertyArr, function(index, value) {
+
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -214,6 +220,7 @@ $(function() {
             });
 
             $.each(_propertyArr, function(index, value) {
+
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -250,6 +257,7 @@ $(function() {
             $liLine.append($h3).append($ulProperty).append($_ulProperty);
 
             $btnCompile.click(function(e) {
+
                 selectionItem.editFlg = true;
                 selectionItem.parameters.siid = v.siid;
 
@@ -259,6 +267,7 @@ $(function() {
             });
 
             $btnRran.click(function(e) {
+
                 selectionItem.editFlg = false;
                 selectionItem.parameters.siid = v.siid;
                 selectionItem.items.num.val(v.num);
@@ -280,15 +289,18 @@ $(function() {
                 }
 
                 com.post(api.quotation.checkSelectionItem, option, function(e) {
+
                     searcher.doSearch();
                     com.showAlert(com.info, "操作成功");
                 });
             });
 
             $btnConfirm.click(function(e) {
+
                 com.post(api.quotation.confirmSelectionItem, {
                     "selectionItem.siid": v.siid
                 }, function(e) {
+
                     searcher.doSearch();
                     com.showAlert(com.info, "操作成功");
                 });
@@ -304,33 +316,40 @@ $(function() {
             });
 
             $btnReview.click(function(e) {
+
                 com.post(api.quotation.reviewSelectionItem, {
                     "selectionItems[0].siid": v.siid
                 }, function(e) {
+
                     searcher.doSearch();
                     com.showAlert(com.info, "操作成功");
                 });
             });
 
             $btnBalance.click(function(e) {
+
                 com.post(api.quotation.balanceSelectionItem, {
                     "selectionItems[0].siid": v.siid
                 }, function(e) {
+
                     searcher.doSearch();
                     com.showAlert(com.info, "操作成功");
                 });
             });
 
             $btnDel.click(function(e) {
+
                 com.post(api.quotation.cutoffSelectionItem, {
                     "selectionItem.siid": v.siid
                 }, function(e) {
+
                     searcher.doSearch();
                     com.showAlert(com.info, "操作成功");
                 })
             })
 
             $btnPrint.click(function(e) {
+
                 com.post(api.quotation.querySelectionByOrderId, {
                     "selection.orderId": v.decoration.orderId
                 }, function(res) {
@@ -347,10 +366,12 @@ $(function() {
 
         return {
             init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function(v) {
+
                 return creatLine(v);
             }
         };
@@ -374,6 +395,7 @@ $(function() {
         var $checkExportspan = $('<span></span>').text('导出').appendTo($checkaExportSelects);
         // 导出单击事件
         $checkaExportSelects.click(function() {
+
             pageExportStoreImport();
         });
 
@@ -431,6 +453,7 @@ $(function() {
 
                 list: res.paging.data
             }, function(v) {
+
                 v.num = [2, 4].indexOf(v.type) != -1 ? -v.num : v.num;
                 v.status = selectionItem.statusList[v.status];
                 v.type = selectionItem.typeList[v.type];
@@ -440,13 +463,16 @@ $(function() {
     }
 
     com.focusPage('#checks').click(function() {
+
         checkAll();
     });
 
     com.focusPage('#batchDelivery').click(function() {
+
         bulkOperation(api.quotation.tranSelectionItem, 'delivery');
     });
     com.focusPage('#batchBalance').click(function() {
+
         bulkOperation(api.quotation.balanceSelectionItem, 'balance');
     });
 
@@ -460,10 +486,12 @@ $(function() {
         }
 
         $.each(selectionItem.selectList, function(i, v) {
+
             options["selectionItems[" + i + "].siid"] = v;
         });
 
         com.post(url, options, function(res) {
+
             searcher.doSearch();
             com.showAlert(com.info, "操作成功");
         });
@@ -524,6 +552,7 @@ $(function() {
         }
 
         com.post(url, options, function(res) {
+
             searcher.doSearch();
             com.showAlert(com.info, "操作成功");
         });
@@ -547,6 +576,7 @@ $(function() {
         };
 
         com.post(api.quotation.finishSelectionItem, options, function(res) {
+
             searcher.doSearch();
             com.showAlert(com.info, "操作成功");
         });

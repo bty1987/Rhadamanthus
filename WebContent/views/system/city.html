@@ -57,8 +57,62 @@
     		</div>
   		</div>
   	</div>
+  	
+  	
+  	<div class="modal fade" id="mapModal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title">城市地址</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal" id="mapForm">
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="no">城市编号</label>
+							<div class="col-sm-9">
+								<input disabled type="text" name="no" maxlength="10" class="col-xs-10 col-sm-6 v_required v_no" />
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right orange" for="name">城市名称</label>
+							<div class="col-sm-9">
+								<input disabled class="col-xs-10 col-sm-6 v_required v_name" maxlength="20" type="text" name="name" id="name" data-toggle="popover" data-trigger='manual'/>
+								<button type="button" id="placeBtn" class="btn btn-success" style="padding: 2px 12px;">确定位置</button>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group" style="display: none">
+							<label class="col-sm-3 control-label no-padding-right" for="city">城市名称</label>
+							<div class="col-sm-9">
+								<input disabled class="col-xs-10 col-sm-6 v_required v_name" id="city" data-toggle="popover" data-trigger='manual'/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+
+						<div class="form-group" id="mapContainer"></div>
+					</form>
+				</div>
+				<div class="modal-footer">
+				    <button type="button" name="resetPositionBtn" class="btn btn-warning">重选位置</button>
+				    <button type="button" name="resetMapBtn" class="btn btn-success">重新加载地图</button>
+					<button type="button" id="saveMapBtn" class="btn btn-primary">保存</button>
+					<button type="button" id="cancelMapBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <script type="text/javascript">
-	$.loadScript(['js/system/city.js']);
+    $(function(){
+        $.getScript('http://api.map.baidu.com/getscript?v=2.0&ak=49YYCNGougjjYuqAZKqzkBEx', function(){
+			$.loadScript(['js/system/city.js']);
+        });
+    });
 </script>

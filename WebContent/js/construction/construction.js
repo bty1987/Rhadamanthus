@@ -77,11 +77,13 @@ jQuery(function($) {
     var displayFunc = (function() {
 
         var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId).empty();
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
                 $.each(listData, function(i, v) {
+
                     creatLine(v).appendTo($ul);
                 });
 
@@ -110,6 +112,7 @@ jQuery(function($) {
             var propertyArr = [["楼盘名:", v.decoration.house.village.name + " " + v.decoration.house.houseNumber, "grey"], ["设计师:", v.decoration.designer.userName, "grey"], ["监理:", v.decoration.supervisor ? v.decoration.supervisor.userName : "", "grey"], ["总价:", v.decoration.orderTotalPrice, "blue"], ["面积:", v.decoration.house.buildArea, "blue"], ["进度:", construction.constructionNodes[v.decoration.projectStatus], "red"], ["辅料额上限:", v.accessoryLimit, "blue"], ["工费额上限:", v.salaryLimit, "blue"], ["辅料总额:", v.accessoryTotal, "blue"], ["工费总额:", v.salaryTotal, "blue"], ["锁定人:", v.locker ? v.locker.currentName : "", "grey"], ["锁定时间:", v.lockTime, "green"], ["辅料控制:", construction.isAccessory[v.accessory], "red"], ];
 
             $.each(propertyArr, function(index, value) {
+
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
@@ -127,38 +130,47 @@ jQuery(function($) {
             $liLine.append($h3).append($ulProperty);
 
             $btnView.click(function() {
+
                 viewSupervisionDetail(v.decoration.orderId);
             });
 
             $btnInfo.click(function() {
+
                 viewConstructionInfo(v.decoration.orderId);
             });
 
             $btnAddReduce.click(function() {
+
                 viewAddReduceIndex(v.decoration.orderId, v.decoration.type);
             });
 
             $btnRe.click(function() {
+
                 viewReworkIndex(v.decoration.orderId);
             });
 
             $btnAcs.click(function() {
+
                 viewAccessory(v.cid, v.decoration.orderId);
             });
 
             $btnMoney.click(function() {
+
                 viewDelGold(v.decoration.orderId);
             });
 
             $btnOpen.click(function() {
+
                 accessoryOpen(v.cid);
             });
 
             $btnLock.click(function() {
+
                 accessoryLock(v.cid);
             });
 
             $btnUpdate.click(function() {
+
                 construction.cid = v.cid;
                 construction.updateItems.accessoryLimit.val(v.accessoryLimit);
                 construction.updateItems.salaryLimit.val(v.salaryLimit);
@@ -171,10 +183,12 @@ jQuery(function($) {
 
         return {
             init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function(v) {
+
                 return creatLine(v);
             }
         }
@@ -183,6 +197,7 @@ jQuery(function($) {
     var seacher = new Searcher();
 
     seacher.init(['construction-orderId', 'construction-village-name', 'construction-houseNumber-name', 'construction-designer', 'construction-schedule', 'construction-projectStatusFlag'], "constructionCondList", api.construction.pageConstructionForBase, function(list) {
+
         displayFunc.init('constructionResultList', list);
     }, "constructionPagenation", "constructionPostData", null, false, null, null, "constructionResultList");
 
@@ -262,6 +277,7 @@ jQuery(function($) {
         com.post(api.construction.openAccessory, {
             "construction.cid": cid
         }, function(res) {
+
             com.showAlert(com.info, "创建辅料单状态开启");
             seacher.doSearch();
         });
@@ -272,6 +288,7 @@ jQuery(function($) {
         com.post(api.construction.lockAccessory, {
             "construction.cid": cid
         }, function(res) {
+
             com.showAlert(com.info, "创建辅料单状态锁定");
             seacher.doSearch();
         });
@@ -281,6 +298,7 @@ jQuery(function($) {
 
         var options = {
             "constructionInfo.orderId": construction.items.orderId,
+            "constructionInfo.decoration.orderId": construction.items.orderId,
             "constructionInfo.timeLimit": construction.items.timeLimit.val(),
             "constructionInfo.ishovel": construction.items.ishovel.val(),
             "constructionInfo.iskey": construction.items.iskey.val(),

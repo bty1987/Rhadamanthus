@@ -2,12 +2,15 @@ jQuery(function($) {
 
     var balanceBalance = {
 
-        refundBtn: com.focusPage("#refundBtn"),
-        cancellBtn: com.focusPage("#cancelBtn"),
+        btns: {
+            refundBtn: com.focusPage("#refundBtn"),
+            cancellBtn: com.focusPage("#cancelBtn"),
+        },
 
         items: {
             list: com.focusPage('#list'),
         },
+
         surplus: params.balance.surplus,
     };
 
@@ -24,7 +27,7 @@ jQuery(function($) {
 
     queryAccountes();
 
-    balanceBalance.refundBtn.click(function() {
+    balanceBalance.btns.refundBtn.click(function() {
 
         if (com.validate('list', 'bottom')) { return false; }
 
@@ -89,7 +92,7 @@ jQuery(function($) {
 
     });
 
-    balanceBalance.cancellBtn.click(function() {
+    balanceBalance.btns.cancellBtn.click(function() {
         com.closePopup();
     });
 

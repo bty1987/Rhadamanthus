@@ -130,32 +130,51 @@ jQuery(function($) {
 
     function editCustomer(v){
 
-        com.focusPage("#phonehide").css({"display":"none"});
+        if(v.status == 0){
+            $("#customerhide").show();
 
-        customer.items.customerName.val(v.name);
-        customer.items.identity.val(v.identity);
-        customer.items.officer.val(v.officer);
-        customer.items.passport.val(v.passport) ;
-        customer.items.qq.val(v.qq);
-        customer.items.wechat.val(v.wechat);
-        customer.items.email.val(v.email);
-        customer.items.address.val(v.address);
-        customer.items.relationshipType.val(v.relationshipType);
+            com.focusPage("#phonehide").css({"display":"none"});
 
-        customer.items.gender.prop('checked', com.genderType[v.gender]);
+            customer.items.customerName.val(v.name).prop("disabled", false);
+            customer.items.identity.val(v.identity);
+            customer.items.officer.val(v.officer);
+            customer.items.passport.val(v.passport) ;
+            customer.items.qq.val(v.qq);
+            customer.items.wechat.val(v.wechat);
+            customer.items.email.val(v.email);
+            customer.items.address.val(v.address);
+            customer.items.relationshipType.val(v.relationshipType);
 
-        customer.items.type.val(v.type);
+            customer.items.gender.prop('checked', com.genderType[v.gender]);
 
-        customer.items.companyNo.val(v.companyNo);
-        customer.items.companyName.val(v.companyName);
-        customer.items.companyAddr.val(v.companyAddr);
-        customer.items.companyPhone.val(v.companyPhone);
-        customer.items.companyBank.val(v.companyBank);
-        customer.items.companyBankno.val(v.companyBankno);
+            customer.items.type.val(v.type).prop("disabled", false);
 
-        if(v.type == 1) com.focusPage(".companyitem", "#customerModal").show();
+            customer.items.companyNo.val(v.companyNo);
+            customer.items.companyName.val(v.companyName);
+            customer.items.companyAddr.val(v.companyAddr);
+            customer.items.companyPhone.val(v.companyPhone);
+            customer.items.companyBank.val(v.companyBank);
+            customer.items.companyBankno.val(v.companyBankno);
 
-        customer.modals.customerModal.modal("show");
+            if(v.type == 1) com.focusPage(".companyitem", "#customerModal").show();
+
+            customer.modals.customerModal.modal("show");
+            
+        }else if (v.status == 1){
+            $("#customerhide").hide();
+
+            customer.items.customerName.val(v.name).prop("disabled", true);
+            customer.items.type.val(v.type).prop("disabled", true);
+            customer.items.companyNo.val(v.companyNo);
+            customer.items.companyName.val(v.companyName);
+            customer.items.companyAddr.val(v.companyAddr);
+            customer.items.companyPhone.val(v.companyPhone);
+            customer.items.companyBank.val(v.companyBank);
+            customer.items.companyBankno.val(v.companyBankno);
+            
+            customer.modals.customerModal.modal("show");
+        }
+       
     }
 
     function saveData(){
@@ -188,9 +207,23 @@ jQuery(function($) {
             "customer.companyBankno": customer.items.companyBankno.val(),
         };
 
+        var option = {
+            "customer.type": customer.items.type.val(),
+            "customer.name": customer.items.customerName.val(),
+            "customer.companyNo": customer.items.companyNo.val(),
+            "customer.companyName": customer.items.companyName.val(),
+            "customer.companyAddr": customer.items.companyAddr.val(),
+            "customer.companyPhone": customer.items.companyPhone.val(),
+            "customer.companyBank": customer.items.companyBank.val(),
+            "customer.companyBankno": customer.items.companyBankno.val(),
+        };
+
         if(customer.cid){
             url = api.data.updateCustomer;
             options['customer.cid'] = customer.cid;
+            
+            url = api.data.updateCustomerForBase;
+            option['customer.cid'] = customer.cid;
         }else {
             url = api.data.addCustomer;
 
@@ -203,6 +236,10 @@ jQuery(function($) {
             searcher.doSearch();
         });
 
+        com.post(url, option, function(res){
+            searcher.doSearch();
+        });
+        
         customer.modal.modal("hide");
     }
 

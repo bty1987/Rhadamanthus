@@ -18,4 +18,22 @@ Condition.addupRule("report", {
             validate: null
         }
     },
+    "typeness": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "typeness",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.decoration,
+            postData: {
+                "timestamp": new Date().getTime()
+            },
+            listPath: "typeness",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
 });

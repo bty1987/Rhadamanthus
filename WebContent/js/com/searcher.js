@@ -649,7 +649,7 @@ var Searcher = function() {
         if (props.length == 0) {
             return !dataset ? o[prop] : dataset[o[prop]];
         } else if (o[prop]) {
-            return getElement(o[prop], props);
+            return getElement(o[prop], props, dataset);
         }
 
         return "";
@@ -817,9 +817,9 @@ var Searcher = function() {
 
                             var props = {
                                 "type": "checkbox",
-                                "name": value.field,
+                                "name": "check",
                                 "id": "check",
-                                "class": "ace ace-checkbox-2",
+                                "class": "ace ace-checkbox-2 searcher-checkbox",
                             }
 
                             props[value.field] = v[value.prop];
@@ -961,7 +961,7 @@ var Searcher = function() {
                                 "type": "checkbox",
                                 "name": "check",
                                 "id": "check",
-                                "class": "ace ace-checkbox-2",
+                                "class": "ace ace-checkbox-2 searcher-checkbox",
                             }
 
                             props[value.field] = v[value.prop];
@@ -1164,6 +1164,11 @@ var Searcher = function() {
             }
 
             return this;
+        },
+
+        checks: function() {
+
+            return com.focusPage('.searcher-checkbox:checked', "#" + basicConf.$resulter);
         },
 
         isPage: function(isPage) {

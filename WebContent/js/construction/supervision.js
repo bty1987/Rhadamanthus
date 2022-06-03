@@ -71,11 +71,13 @@ $(function() {
     var displayFunc = (function() {
 
         var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId).empty();
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
                 $.each(listData, function(i, v) {
+
                     creatLine(v).appendTo($ul);
                 });
 
@@ -102,6 +104,7 @@ $(function() {
             var propertyArr = [["楼盘名:", v.house.village.name + " " + v.house.houseNumber, "grey"], ["设计师:", v.designer.userName, "grey"], ["监理:", v.supervisor ? v.supervisor.userName : "", "grey"], ["总价:", v.orderTotalPrice, "blue"], ["面积:", v.house.buildArea, "blue"], ["进度:", constructionNodes.constructionSchedule[v.projectStatus], "red"]];
 
             $.each(propertyArr, function(index, value) {
+
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
@@ -113,22 +116,27 @@ $(function() {
             $liLine.append($h3).append($ulProperty);
 
             $btnView.click(function() {
+
                 viewSupervisionDetail(v.orderId);
             });
 
             $btnInfo.click(function() {
+
                 viewConstructionInfo(v.orderId);
             });
 
             $btnAddReduce.click(function() {
+
                 viewAddReduceIndex(v.orderId, v.type);
             });
 
             $btnRe.click(function() {
+
                 viewReworkIndex(v.orderId);
             });
 
             $btnMoney.click(function() {
+
                 viewDelGold(v.orderId);
             });
 
@@ -146,6 +154,7 @@ $(function() {
                 com.post(api.quotation.queryQuotationForDefaultByOrderId, {
                     "quotation.orderId": v.orderId
                 }, function(res) {
+
                     constructionNodes.quotationDetail.quotation = res.quotation;
                 }, null, false);
 
@@ -167,10 +176,12 @@ $(function() {
 
         return {
             init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function(v) {
+
                 return creatLine(v);
             }
         }
@@ -179,6 +190,7 @@ $(function() {
     var seacher = new Searcher();
 
     seacher.init(['construction-orderId', 'construction-village-name', 'construction-houseNumber-name', 'construction-designer', 'construction-schedule', 'construction-projectStatusFlag'], "supervisionCondList", api.construction.pageConstruction, function(list) {
+
         displayFunc.init('supervisionResultList', list);
     }, "supervisionPagenation", "supervisionSeacherPostData", null, false, null, null, "supervisionResultList");
 
@@ -248,6 +260,7 @@ $(function() {
 
         var options = {
             "constructionInfo.orderId": constructionNodes.items.orderId,
+            "constructionInfo.decoration.orderId": constructionNodes.items.orderId,
             "constructionInfo.timeLimit": constructionNodes.items.timeLimit.val(),
             "constructionInfo.ishovel": constructionNodes.items.ishovel.val(),
             "constructionInfo.iskey": constructionNodes.items.iskey.val(),
@@ -276,6 +289,7 @@ $(function() {
         var $subtypes = com.focusPage('input[name="type"]:checked', '#subtype');
 
         $.each($subtypes, function(i, v) {
+
             params.quotation.subtype = parseInt(params.quotation.subtype) + parseInt($(v).attr('value'));
         });
 
@@ -293,6 +307,7 @@ $(function() {
         var $subtypes = com.focusPage('input[name="type"]:checked', '#subtype');
 
         $.each($subtypes, function(i, v) {
+
             params.quotation.subtype = parseInt(params.quotation.subtype) + parseInt($(v).attr('value'));
         });
 

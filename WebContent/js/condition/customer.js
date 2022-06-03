@@ -333,5 +333,64 @@ Condition.addupRule("customer", {
             validate: null
         }
     },
+    "droup-orderId" : {
+        label:"装修单号",
+        type:"text",
+        submitConfig : {
+            name : "orderId",
+            op : "eq",
+            validate:null
+        }
+    },
+    "droup-updateTime": {
+        label: "更新时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "updateTime",
+            op: "cn",
+            validate: null
+        }
+    },
+    "droup-handleTime" : {
+        label:"处理时间",
+        type:"dateRangePicker",
+        submitConfig : {
+            name : "handleTime",
+            op : "eq",
+            validate:null
+        }
+    },
+    "droup-status":{
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.customer,
+            postData: {},
+            listPath: "droupStatus",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },"droup-isHandle":{
+    label: "处理状态",
+        type: "select",
+        submitConfig: {
+        name: "isHandle",
+            op: "eq",
+            validate: null
+    },
+    dataSource: {
+        url: api.ds.customer,
+            postData: {},
+        listPath: "droupIsHandle",
+            keyPath: "key",
+            valuePath: "value"
+    }
+},
+
 
 });

@@ -10,21 +10,23 @@ Condition.addupRule("salary", {
         },
         dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status":"" },
+            postData: {
+                "user.status": ""
+            },
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
         }
     },
-    "orderId" : {
-        label:"装修单号",
-        type:"text",
-        submitConfig : {
-            name : "orderId",
-            op : "eq",
-            validate:{
-                "reg" : /^[A-Z0-9]*$/,
-                "msg" : "格式不正确A-Z,0-9"
+    "orderId": {
+        label: "装修单号",
+        type: "text",
+        submitConfig: {
+            name: "orderId",
+            op: "eq",
+            validate: {
+                "reg": /^[A-Z0-9]*$/,
+                "msg": "格式不正确A-Z,0-9"
             }
         }
     },
@@ -39,7 +41,13 @@ Condition.addupRule("salary", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{key: "0", value: "普通"}, {key: "1", value: "装修款"}],
+            listPath: [{
+                key: "0",
+                value: "普通"
+            }, {
+                key: "1",
+                value: "装修款"
+            }],
             keyPath: "key",
             valuePath: "value"
         }
@@ -55,12 +63,15 @@ Condition.addupRule("salary", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [{key: "0", value: "初始"}],
+            listPath: [{
+                key: "0",
+                value: "初始"
+            }],
             keyPath: "key",
             valuePath: "value"
         }
     },
-    "createTime":{
+    "createTime": {
         label: "创建时间",
         type: "dateRangePicker",
         submitConfig: {
@@ -69,7 +80,16 @@ Condition.addupRule("salary", {
             validate: null
         }
     },
-    "operateTime":{
+    "checkTime": {
+        label: "质检时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "checkTime",
+            op: "between",
+            validate: null
+        }
+    },
+    "operateTime": {
         label: "操作时间",
         type: "dateRangePicker",
         submitConfig: {
@@ -89,12 +109,19 @@ Condition.addupRule("salary", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [
-                {key: "0", value: "初始"},
-                {key: "1", value: "通过"},
-                {key: "2", value: "拒绝"},
-                {key: "3", value: "撤销"}
-            ],
+            listPath: [{
+                key: "0",
+                value: "初始"
+            }, {
+                key: "1",
+                value: "通过"
+            }, {
+                key: "2",
+                value: "拒绝"
+            }, {
+                key: "3",
+                value: "撤销"
+            }],
             keyPath: "key",
             valuePath: "value"
         }
@@ -109,7 +136,27 @@ Condition.addupRule("salary", {
         },
         dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status":"" },
+            postData: {
+                "user.status": ""
+            },
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "checker": {
+        label: "质检人",
+        type: "autofill",
+        submitConfig: {
+            name: "checker",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": ""
+            },
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
@@ -123,7 +170,7 @@ Condition.addupRule("salary", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
+        dataSource: {// 从后台取数据的各种配置
             url: api.ds.construction,
             postData: {},
             listPath: "constructionSchedule",
@@ -158,12 +205,41 @@ Condition.addupRule("salary", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [
-                {key: "0", value: "初始"},
-                {key: "1", value: "通过"},
-                {key: "2", value: "驳回"},
-                {key: "3", value: "撤销"}
-            ],
+            listPath: [{
+                key: "0",
+                value: "初始"
+            }, {
+                key: "1",
+                value: "通过"
+            }, {
+                key: "2",
+                value: "驳回"
+            }, {
+                key: "3",
+                value: "撤销"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "isCheck": {
+        label: "质检状态",
+        type: "select",
+        submitConfig: {
+            name: "isCheck",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                key: "0",
+                value: "初始"
+            }, {
+                key: "1",
+                value: "确认"
+            }],
             keyPath: "key",
             valuePath: "value"
         }
@@ -188,10 +264,13 @@ Condition.addupRule("salary", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [
-                {key: "1", value: "单条"},
-                {key: "2", value: "多条"}
-            ],
+            listPath: [{
+                key: "1",
+                value: "单条"
+            }, {
+                key: "2",
+                value: "多条"
+            }],
             keyPath: "key",
             valuePath: "value"
         }

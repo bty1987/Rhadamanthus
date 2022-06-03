@@ -50,11 +50,12 @@ jQuery(function($) {
     }
 
     com.post(api.common.current, {}, function(res) {
+
         contractEdit.current = new Date(res.current);
     }, null, false);
 
     com.post(api.data.queryCustomerById, {
-        "customer.cid": params.cid
+        "customer.cid": params.decoration.cid
     }, function(res) {
 
         var customer = res.customer;
@@ -120,6 +121,7 @@ jQuery(function($) {
         var data = {};
 
         $.each(conitems, function(i, e) {
+
             var content = $(e);
             data[content.attr("id")] = content.val();
         });
@@ -158,6 +160,7 @@ jQuery(function($) {
             console.log(options);
 
             com.post(api.decoration.addDecorationContract, options, function(res) {
+
                 com.closePopup();
             });
         });

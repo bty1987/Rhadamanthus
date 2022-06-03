@@ -24,8 +24,17 @@ $(function() {
         pageType: params.urlLoadParams.type,
     };
 
+    com.post(api.ds.manifest, {}, function(res) {
+
+        occessories.status = res.occessoriesStatus.split("key", "value");
+        occessories.isEnter = res.occessoriesisEnter.split("key", "value");
+        occessories.isLift = res.occessoriesisLift.split("key", "value");
+        occessories.isExceed = res.occessoriesisExceed.split("key", "value");
+        occessories.isAttic = res.occessoriesisAttic.split("key", "value");
+    }, null, false);
+
     var url = api.inventory.pageOccessories;
-    var conditions = ['inventory-accessories-orderId', 'inventory-occessories-no', 'inventory-accessories-createrName', 'inventory-accessories-createTime', 'inventory-occessories-status', 'inventory-occessories-isEnter', 'inventory-occessories-isLift'];
+    var conditions = ['inventory-accessories-orderId', 'inventory-occessories-no', 'inventory-accessories-createrName', 'inventory-occessories-status', 'inventory-occessories-isEnter', 'inventory-occessories-isLift', 'inventory-accessories-createTime', ];
     var options = {};
 
     if (occessories.pageType == "supplier") {
@@ -35,14 +44,17 @@ $(function() {
         options = $.extend({}, options, {
             "occessories.status": 2
         });
+        conditions = conditions.concat(['inventory-accessories-deliveTime']);
     } else if (occessories.pageType == "receive") {
         options = $.extend({}, options, {
             "occessories.status": 3
         });
+        conditions = conditions.concat(['inventory-accessories-deliveTime', 'inventory-accessories-receiveTime']);
     } else if (occessories.pageType == "balance") {
         options = $.extend({}, options, {
             "occessories.status": 4
         });
+        conditions = conditions.concat(['inventory-accessories-deliveTime', 'inventory-accessories-receiveTime', 'inventory-accessories-balanceTime']);
     } else if (occessories.pageType == "bind") {
         options = $.extend({}, options, {
             "occessories.status": 1
@@ -52,12 +64,6 @@ $(function() {
             "occessories.status": 0
         });
     }
-    com.post(api.ds.manifest, {}, function(res) {
-
-        occessories.status = res.occessoriesStatus.split("key", "value");
-        occessories.isEnter = res.occessoriesisEnter.split("key", "value");
-        occessories.isLift = res.occessoriesisLift.split("key", "value");
-    }, null, false);
 
     occessories.modals.bindOccessoriesModal.on("hide.bs.modal", function(e) {
 
@@ -67,14 +73,6 @@ $(function() {
     com.initTypeahead('supplier', api.personel.querySupplierByPinyin, "supplier.pinYin", {
         "user.status": 0
     }, "suppliers", "uid", "userName", null);
-
-    var searcher = new Searcher();
-
-    searcher.base("condList", "pagenation", "resultList", url);
-
-    searcher.condition(conditions);
-    searcher.history("accessoriesPostData");
-    searcher.param(options);
 
     var lineprops = [{
         fieId: "no",
@@ -107,10 +105,42 @@ $(function() {
         prop: "supervisor.currentName",
         clazz: "grey"
     }, {
+        field: "supplier",
+        name: "厂商",
+        prop: "supplier.currentName",
+        clazz: "grey"
+    },{
         field: "createTime",
         name: "创建时间",
         prop: "createTime",
         clazz: "green"
+    }, {
+        field: "deliveTime",
+        name: "送货时间",
+        prop: "deliveTime",
+        clazz: "green",
+        show: function(v) {
+
+            return [2, 3, 4].indexOf(v.status) != -1;
+        }
+    }, {
+        field: "receiveTime",
+        name: "到货时间",
+        prop: "receiveTime",
+        clazz: "green",
+        show: function(v) {
+
+            return [3, 4].indexOf(v.status) != -1;
+        }
+    }, {
+        field: "balanceTime",
+        name: "结算时间",
+        prop: "balanceTime",
+        clazz: "green",
+        show: function(v) {
+
+            return [4].indexOf(v.status) != -1;
+        }
     }, {
         field: "status",
         name: "状态",
@@ -128,20 +158,38 @@ $(function() {
         name: "有无电梯",
         prop: "isLift",
         clazz: "red",
-        dataset: occessories.isEnter
+        dataset: occessories.isLift
     }, {
         field: "isExceed",
         name: "有无超阶",
         prop: "isExceed",
         clazz: "red",
-        dataset: occessories.isEnter
+        dataset: occessories.isExceed
     }, {
         field: "isAttic",
-        name: "有无超阶",
+        name: "有无阁楼",
         prop: "isAttic",
         clazz: "red",
-        dataset: occessories.isEnter
+        dataset: occessories.isAttic
+    }, {
+        field: "comment",
+        name: "备注",
+        prop: "comment",
+        clazz: "grey"
+    }, {
+        field: "content",
+        name: "说明",
+        prop: "content",
+        clazz: "grey"
     }, ];
+
+    var searcher = new Searcher();
+
+    searcher.base("condList", "pagenation", "resultList", url);
+
+    searcher.condition(conditions);
+    searcher.history("accessoriesPostData");
+    searcher.param(options);
 
     var linebtns = [{
         name: "到货",
@@ -243,7 +291,7 @@ $(function() {
         },
         show: function(v) {
 
-            return v.status == 0;
+            return v.status == 0 || (occessories.pageType == "bind" && v.status == 1);
         }
     }, {
         name: "查看",
@@ -297,7 +345,7 @@ $(function() {
         }
     }, ];
 
-    searcher.toble(lineprops, linebtns).render();
+    searcher.line("no", lineprops, linebtns).render();
 
     function saveData() {
 

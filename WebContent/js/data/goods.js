@@ -29,14 +29,17 @@ $(function() {
     }], "gid", "goods");
 
     com.post(api.data.queryCategory, {}, function(res) {
+
         goods.items.category.bindData(res.categorys, "categoryName", "categoryName");
     });
 
     com.post(api.common.queryMeasurementUnit, {}, function(res) {
+
         goods.items.measurementUnit.bindData(res.measurementUnits, "name", "name");
     });
 
     com.post(api.data.queryAccessoriesType, {}, function(res) {
+
         goods.items.accessoriesType.bindData(res.accessoriesTypes, 'atid', 'name', true);
     });
 
@@ -51,6 +54,7 @@ $(function() {
                 com.post(api.data.queryBrandByBid, {
                     "brand.bid": k
                 }, function(res) {
+
                     goods.items.category.val(res.brand.categoryName);
                 });
             }
@@ -62,6 +66,7 @@ $(function() {
     var displayFunc = (function() {
 
         var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
 
             if (listData && listData.length) {
@@ -71,6 +76,7 @@ $(function() {
                 $tableWrap.append($ulTitle).append($ulData);
 
                 $.each(listData, function(i, v) {
+
                     var $liLine = creatLine(i, v, i == listData.length - 1);
 
                     $liLine.appendTo($ulTitle);
@@ -90,6 +96,7 @@ $(function() {
             var titleName = '编号,商品,条形码,品类,品牌,单位,控价,售价,件数,辅类,类型,状态';
 
             $.each(titleName.split(','), function(i, v) {
+
                 var $cell = $('<div></div>').addClass('cell').html(v);
                 $cell.appendTo($contentWrap);
             });
@@ -107,12 +114,11 @@ $(function() {
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col12');
-            // 显示字段
-            var propertyArr = [
-            // v.gid,
-            [v.no, 'blue'], [v.name, 'grey'], [v.barcode, 'blue'], [v.category, 'grey'], [v.brand, 'grey'], [v.measurementUnit, 'grey'], [v.purchase, 'blue'], [v.selling, 'blue'], [v.pieceNum, 'blue'], [v.accessoriesType.name, 'grey'], [v.type == "0" ? "商品" : "套餐", 'red'], [v.status == "0" ? "启用" : "禁用", 'red']];
+
+            var propertyArr = [[v.no, 'blue'], [v.name, 'grey'], [v.barcode, 'blue'], [v.category, 'grey'], [v.brand, 'grey'], [v.measurementUnit, 'grey'], [v.purchase, 'blue'], [v.selling, 'blue'], [v.pieceNum, 'blue'], [v.accessoriesType.name, 'grey'], [v.type == "0" ? "商品" : "套餐", 'red'], [v.status == "0" ? "启用" : "禁用", 'red']];
 
             $.each(propertyArr, function(i, v) {
+
                 var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
@@ -127,7 +133,7 @@ $(function() {
             var $btnColor = $('<li></li>').append($('<a></a>').html('颜色'));
             var $btnFormat = $('<li></li>').append($('<a></a>').html('规格'));
             var $btnPrice = $('<li></li>').append($('<a></a>').html('价格'));
-            // var $btnSuit = $('<li></li>').append($('<a></a>').html('查看'));
+            var $btnSuit = $('<li></li>').append($('<a></a>').html('查看'));
             var $btnStart = $('<li></li>').append($('<a></a>').html('启用'));
             var $btnStop = $('<li></li>').append($('<a></a>').html('禁用'));
 
@@ -193,10 +199,12 @@ $(function() {
 
         return {
             init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function(v) {
+
                 return creatLine(v);
             }
         };
@@ -205,6 +213,7 @@ $(function() {
     var goodsSeacher = new Searcher();
 
     goodsSeacher.init(['data-goods-no', 'data-goods-name', 'data-goods-barcode', 'data-goods-brand-name', 'data-goods-status'], "condList", api.data.pageGoods, function(data) {
+
         displayFunc.init('resultList', data);
     }, "pagenation", "goodsPostData", null, false, null, function() {
 
@@ -261,6 +270,7 @@ $(function() {
     }, 'resultList');
 
     goods.submitBtn.click(function() {
+
         saveData();
     });
 
@@ -272,6 +282,7 @@ $(function() {
         };
 
         com.post(api.data.updateGoodsForStatus, options, function(res) {
+
             com.showAlert(com.info, "操作成功");
             goodsSeacher.doSearch();
         });
@@ -279,7 +290,9 @@ $(function() {
 
     function saveData() {
 
-        if (com.validate("formGoods", "right")) { return false; }
+        if (com.validate("formGoods", "right")) {
+            return false;
+        }
 
         var gid = goods.gid;
         var atid = goods.items.accessoriesType.val();
@@ -306,6 +319,7 @@ $(function() {
         }
 
         com.post(url, options, function(res) {
+
             com.closePopup();
             goodsSeacher.doSearch();
         });

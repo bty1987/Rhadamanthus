@@ -85,7 +85,7 @@ $(function() {
 
             $divBtnWrap.append($invalid).appendTo($h3);
 
-            var propertyArr = [["装修单: ", v.decoration.orderId, "#7FBF3F"], ["地址: ", v.decoration.house.village.name + " " + v.decoration.house.houseNumber, "#7FBF3F"], ["创建时间: ", v.createTime, "#7FBF3F"], ["金额: ", v.total, "#2ECCFA"], ];
+            var propertyArr = [["装修单: ", v.decoration.orderId, "#7FBF3F"], ["地址: ", v.decoration.house.village.name + " " + v.decoration.house.houseNumber, "#7FBF3F"], ["创建时间: ", v.createTime, "#7FBF3F"], ["金额: ", v.consPrice, "#2ECCFA"], ];
 
             var $label = $('<label></label>');
 

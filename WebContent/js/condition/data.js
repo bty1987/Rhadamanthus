@@ -320,7 +320,7 @@ Condition.addupRule("data", {
             name: "materialBrandName",// 接口中的参数名
             op: "eq",// 查询方式
             validate: null
-        // 校验规则
+            // 校验规则
         },
         dataSource: {// 从后台取数据的各种配置
             url: api.data.queryBrandByPinyin,// 获取数据要调用的接口
@@ -934,6 +934,31 @@ Condition.addupRule("data", {
             }],
             keyPath: "key",
             valuePath: "value"
+        }
+    },
+    "chating-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.data,
+            postData: {},
+            listPath: "chatingType",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "paymentType-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
         }
     },
     "paymentType-type": {

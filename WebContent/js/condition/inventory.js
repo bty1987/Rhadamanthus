@@ -55,10 +55,37 @@ Condition.addupRule("inventory", {
     },
     "accessories-createTime": {
         label: "创建时间",
-        type: "datePicker",
+        type: "dateRangePicker",
         submitConfig: {
             name: "createTime",
-            op: "between",
+            op: "cn",
+            validate: null
+        }
+    },
+    "accessories-deliveTime": {
+        label: "送货时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "deliveTime",
+            op: "cn",
+            validate: null
+        }
+    },
+    "accessories-receiveTime": {
+        label: "到货时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "receiveTime",
+            op: "cn",
+            validate: null
+        }
+    },
+    "accessories-balanceTime": {
+        label: "结算时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "balanceTime",
+            op: "cn",
             validate: null
         }
     },

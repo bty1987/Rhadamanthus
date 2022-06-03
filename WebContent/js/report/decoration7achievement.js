@@ -18,6 +18,7 @@ $(function() {
         },
 
         current: "",
+        typeness: [],
     };
 
     // 清空弹窗显示
@@ -27,11 +28,16 @@ $(function() {
         com.cleanItems(decoration7Achievement.items);
     });
 
+    com.post(api.ds.decoration, {}, function(res) {
+
+        decoration7Achievement.typeness = res.typeness.split("key", "value");
+    }, null, false);
+
     var searcher = new Searcher();
 
     searcher.base("condList", "decoration7Achievement", "resultList", api.report.queryDecoration7Achievement);
 
-    searcher.condition(["report-year", "report-month"]);
+    searcher.condition(["report-year", "report-month", "report-typeness"]);
 
     searcher.history("decoration7AchievementPostData");
 
@@ -69,6 +75,12 @@ $(function() {
         },
         clazz: "grey"
     }, {
+        field: "typeness",
+        name: "类型",
+        prop: "typeness",
+        clazz: "red",
+        dataset: decoration7Achievement.typeness
+    }, {
         field: "cs0",
         name: "签单户数",
         prop: "cs0",
@@ -86,7 +98,10 @@ $(function() {
     }, {
         field: "cs3",
         name: "工程净业绩",
-        prop: "cs3",
+        prop: function(v) {
+
+            return (v.cs3 + v.cs4);
+        },
         clazz: "grey"
     }, {
         field: "cs4",

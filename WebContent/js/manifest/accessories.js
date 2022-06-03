@@ -7,16 +7,19 @@ $(function() {
     };
 
     com.post(api.ds.manifest, {}, function(res) {
+
         accessories.status = res.accessoriesStatus.split("key", "value");
     }, null, false);
 
     com.post(api.data.queryConstructionNode, {}, function(res) {
+
         accessories.schedule = res.constructionNodes.split("sort", "name");
     }, null, false);
 
     var displayFunc = (function() {
 
         var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
 
             if (listData && listData.length) {
@@ -27,6 +30,7 @@ $(function() {
                 $tableWrap.append($ulTitle).append($ulData);
 
                 $.each(listData, function(i, v) {
+
                     creatLine(i, v, i == listData.length - 1).appendTo($ulTitle);
                 });
             }
@@ -43,6 +47,7 @@ $(function() {
             var titleName = '辅料单号,装修单号,创建人,创建时间,审批人,审批时间,施工环节,状态';
 
             $.each(titleName.split(','), function(i, v) {
+
                 var $cell = $('<div></div>').addClass('cell').html(v);
                 $cell.appendTo($contentWrap);
             });
@@ -75,6 +80,7 @@ $(function() {
             var propertyArr = [[v.no, 'blue'], [v.orderId, 'blue'], [v.creater.userName, 'grey'], [v.createTime, 'green'], [v.approver.userName, 'grey'], [v.approverTime, 'green'], [accessories.schedule[v.schedule], 'red'], [accessories.status[v.status], 'red'], ];
 
             $.each(propertyArr, function(i, v) {
+
                 var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
@@ -134,9 +140,11 @@ $(function() {
                 }
 
                 com.showConfirm("确认到货?", function() {
+
                     com.post(api.inventory.deliveAccessories, {
                         "accessories.aid": v.aid
                     }, function() {
+
                         com.showAlert(com.info, "操作成功");
                         searcher.doSearch();
                     })
@@ -165,9 +173,11 @@ $(function() {
                 }
 
                 com.showConfirm("是否确认拒绝辅料单", function() {
+
                     com.post(api.inventory.refuseAccessories, {
                         "accessories.aid": v.aid
                     }, function() {
+
                         com.showAlert(com.info, "操作成功");
                         searcher.doSearch();
                     })
@@ -195,9 +205,11 @@ $(function() {
                 }
 
                 com.showConfirm("是否确认预出辅料单", function() {
+
                     com.post(api.inventory.preoutAccessories, {
                         "accessories.aid": v.aid
                     }, function() {
+
                         com.showAlert(com.info, "操作成功");
                         searcher.doSearch();
                     })
@@ -207,6 +219,7 @@ $(function() {
             $btnReturn.click(function() {
 
                 params.manifest.aid = v.aid;
+                params.manifest.accessories = v;
 
                 com.popup4page('#layerPopUp', "views/manifest/accessories4refund.html", "辅料单 : " + v.no);
             });
@@ -230,10 +243,12 @@ $(function() {
 
         return {
             init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function(v) {
+
                 return creatLine(v);
             }
         };
@@ -243,11 +258,14 @@ $(function() {
     var _Array = ['inventory-accessories-orderId', 'inventory-accessories-no', 'inventory-accessories-createrName', 'inventory-accessories-approverName', 'inventory-accessories-createTime', 'inventory-accessories-approverTime', 'inventory-accessories-stauts'];
 
     searcher.init(_Array, "condList", api.inventory.pageAccessories, function(data) {
+
         displayFunc.init('resultList', data);
     }, "pagenation", "accessoriesPostData", null, false, null, function() {
+
         var $adda = $('<a></a>').addClass('btn btn-success btn-minier pull-left').attr('name', 'shipment').css('margin-top', '-2px').html('批量出货');
 
         $adda.click(function() {
+
             batchout();
         });
 
@@ -279,19 +297,24 @@ $(function() {
         params.manifest.aids = $aids;
 
         com.popup4page('#layerPopUp', "views/manifest/accessories2batchout.html", "批量出货", function() {
+
             searcher.doSearch();
         });
     }
 
     // 打印货单项
     function printAccessoriesItem(aid, no) {
+
         com.popup4frame("辅料单号" + no, api.index.accessoriesPrintIndex.url, function() {
+
             parent.layer.getFrameIndex(window.name);
             searcher.doSearch();
         }, null, function(layero) {
+
             com.post(api.inventory.updateAccessoriesForPrint, {
                 "accessories.aid": aid
             }, function(res) {
+
                 layero.find("iframe").contents().find("#printNum").text("打印次数:" + res.accessories.printnum)
             }, null, false)
         });

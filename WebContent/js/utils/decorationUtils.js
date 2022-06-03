@@ -62,6 +62,7 @@ var decorationUtils = {
 
                 if (listData && listData.length) {
                     $.each(listData, function(i, v) {
+
                         creatLine(v).appendTo($ulsalesResult);
                     });
 
@@ -354,7 +355,7 @@ var decorationUtils = {
 
                 if (purCategory.indexOf(v.sales.category) == -1) {
                     purCategory.push(v.sales.category);
-                };
+                }
 
                 if (unpCategory.indexOf(v.sales.category) != -1 && unpCategory.splice(unpCategory.indexOf(v.sales.category), 1))
                     ;
@@ -589,7 +590,7 @@ var decorationUtils = {
         });
 
     },
-    decorationActivityItemInfo: function(infopack, itempack, btnItempack, uiBtnMethod, orderId, config) {
+    decorationActivityItemInfo: function(infopack, itempack, uiBtnMethod, orderId, config) {
 
         com.post(api.decoration.queryDecorationActivityItem, {
             "decoration.orderId": orderId
@@ -601,13 +602,12 @@ var decorationUtils = {
             var thingCut = 0;
 
             itempack.html("");
-            btnItempack.html("");
 
-            var node = params.decoration.decorationActivityViewNode;
-            var nodeContent = params.decoration.decorationActivityViewNodeContent;
+            var nodeBtnSend = params.decoration.decorationActivityBtnSend;
+            var nodeContent = params.decoration.decorationActivityContent;
 
-            if (node == "btnSend") {
-                var btnNotice = $("<a></a>").addClass("btn btn-minier btn-inverse pull-left").attr("id", "btnNotice").html("<i class='icon-mail-forward bigger-110'></i>发送</a>").prependTo(btnItempack);
+            if (nodeBtnSend == "btnSend") {
+                com.focusPage("#btnNotice").removeClass("hide");
             }
 
             for ( var i = 0; i < decorationActivityItems.length; i++) { // 0: 初始 , 1: 失效 , 2: 已领 , 3: 退货 , 4: 配送 , 5: 未退 , 6: 升级 , 7: 补款
@@ -631,7 +631,7 @@ var decorationUtils = {
 
         });
     },
-    addActivityItemForDiv: function(itempack, _activityItem, uiBtnMethod, config, node) {
+    addActivityItemForDiv: function(itempack, _activityItem, uiBtnMethod, config, nodeContent) {
 
         if (_activityItem.state == 1)
             return false;
@@ -678,7 +678,7 @@ var decorationUtils = {
         var totalState = $("<strong></strong>").text("合计:").appendTo(totalLi);
         var totalSpan = $("<span></span>").addClass("blue").attr("id", "total_" + _activityItem.daiId).text(utils.accMul(_activityItem.money, _activityItem.num)).appendTo(totalLi);
 
-        if (node == "content") {
+        if (nodeContent == "content") {
             var isStockLi = $("<li></li>").appendTo(ul);
             var isStockState = $("<strong></strong>").text("是否计入库存:").appendTo(isStockLi);
             var isStockSpan = $("<span></span>").addClass("red").attr("id", "isStock_" + _activityItem.daiId).text(config.isStatus[_activityItem.isStock]).appendTo(isStockLi);

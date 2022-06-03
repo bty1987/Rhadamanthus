@@ -15,6 +15,7 @@ $(function() {
         },
 
         drawingModal: com.focusPage('#drawingModal').on("show.bs.modal", function(a) {
+
             com.clearValidator();
         }),
 
@@ -31,12 +32,14 @@ $(function() {
     soods.updateSoodsItemBtn.bindClick(updateData);
 
     soods.addSoodsModal.on("hide.bs.modal", function(e) {
+
         com.clearValidator();
         com.cleanTypeahead("goodsName");
         com.cleanItems(soods.items);
     });
 
     soods.updateSoodsModal.on("hide.bs.modal", function(e) {
+
         com.clearValidator();
         com.cleanItems(soods.uitems);
     });
@@ -48,11 +51,13 @@ $(function() {
     var displayFunc = (function() {
 
         var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
                 $.each(listData, function(i, v) {
+
                     creatLine(v).appendTo($ul);
                 });
 
@@ -109,6 +114,7 @@ $(function() {
             }
 
             $.each(propertyArr, function(index, value) {
+
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -136,12 +142,15 @@ $(function() {
             });
 
             $btnCompile.click(function() {
+
                 soods.sid = v.sid;
                 soods.updateSoodsModal.modal("show");
             });
 
             $btnDelete.click(function() {
+
                 com.showConfirm("是否确认删除", function() {
+
                     var options = {
                         "soods.sid": v.sid,
                         "soods.status": v.status,
@@ -151,6 +160,7 @@ $(function() {
             });
 
             $drawingedit.click(function() {
+
                 params.sid = v.sid;
                 soods.vid = v.sid;
                 managedrawing(v.sid);
@@ -163,6 +173,7 @@ $(function() {
                 options["soodes[" + [0] + "].status"] = $statusSwitch.prop("checked") ? 0 : 1;
 
                 com.post(api.data.updateSoodsForStatus, options, function() {
+
                     searcher.doSearch();
                 });
             });
@@ -172,10 +183,12 @@ $(function() {
 
         return {
             init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function(v) {
+
                 return creatLine(v);
             }
         }
@@ -185,18 +198,19 @@ $(function() {
     var condCodeArrs = ["data-soods-name", "data-soods-category", "data-soods-brand", "data-soods-status"];
 
     searcher.init(condCodeArrs, "condList", api.data.pageSoods, function(data) {
+
         displayFunc.init('resultList', data);
     }, "pagenation", "soodsPostData", null, false, null, function() {
 
-        var $impa = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'import');
+        var $impa = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'import');
         var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
         var $impspan = $('<span></span>').text('导出').appendTo($impa);
 
-        var $starta = $('<a></a>').addClass('btn btn-minier btn-pink pull-left').attr('name', 'start').css("margin", "0px 3px");
+        var $starta = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'start').css("margin", "0px 3px");
         var $starti = $('<i></i>').addClass('icon-ok bigger-110').appendTo($starta);
         var $startspan = $('<span></span>').text('启用').appendTo($starta);
 
-        var $stopa = $('<a></a>').addClass('btn btn-minier btn-pink pull-left').attr('name', 'stop').css("margin", "0px 3px");
+        var $stopa = $('<a></a>').addClass('btn btn-minier btn-danger pull-left').attr('name', 'stop').css("margin", "0px 3px");
         var $stopi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($stopa);
         var $stopspan = $('<span></span>').text('禁用').appendTo($stopa);
 
@@ -207,25 +221,31 @@ $(function() {
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
         $adda.click(function(e) {
+
             soods.addSoodsModal.modal("show");
         });
 
         $impa.click(function() {
+
             exportPurchase();
         });
 
         $starta.click(function() {
+
             batchUpdateStatus(0);
         });
 
         $stopa.click(function() {
+
             batchUpdateStatus(1);
         });
+
         if (soods.pageType == "basic") {
             return [$adda];
         } else {
             return [$impa, $starta, $stopa];
         }
+
     }, 'resultList');
 
     function batchUpdateStatus(status) {
@@ -235,7 +255,9 @@ $(function() {
         var options = {};
 
         $.each(checkbox, function(i, v) {
+
             var $v = $(v);
+
             if ($v.val()) {
                 options["soodes[" + i + "].sid"] = $v.val();
                 options["soodes[" + i + "].status"] = status;
@@ -243,6 +265,7 @@ $(function() {
         });
 
         com.post(api.data.updateSoodsForStatus, options, function(res) {
+
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
         });
@@ -266,22 +289,29 @@ $(function() {
         }), function(res) {
 
             $.exceler({
-                column: [["名称: ", 'goods.name'], ["品牌: ", 'goods.brand'], ["品类: ", 'goods.category'], ["单位: ", 'goods.measurementUnit'], ["结算价: ", 'selling'], ["数量: ", 'num'], ["状态: ", 'status == 0 ? "有效" : "无效"']],
+                column: [["名称: ", 'goods.name'], ["品牌: ", 'goods.brand'], ["品类: ", 'goods.category'], ["单位: ", 'goods.measurementUnit'], ["结算价: ", 'selling'], ["数量: ", 'num'], ["状态: ", 'status']],
                 list: res.paging.data
+            }, function(v) {
+
+                v.status = v.status == 0 ? "有效" : "无效";
             });
         });
     }
 
     function deleteSoods(options) {
+
         com.post(api.data.deleteSoods, options, function(res) {
+
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
         }, null, false);
-
-    };
+    }
 
     function updateData() {
-        if (com.validate('updateSoodsModal')) { return false; }
+
+        if (com.validate('updateSoodsModal')) {
+            return false;
+        }
 
         var option = {
             "soods.sid": soods.sid,
@@ -289,17 +319,19 @@ $(function() {
         };
 
         com.post(api.data.updateSoods, option, function(e) {
+
             displayFunc.init();
             com.showAlert(com.info, "操作成功");
             soods.updateSoodsModal.modal("hide");
             searcher.doSearch();
         });
-
     }
 
     function saveData() {
 
-        if (com.validate('addSoodsModal')) { return false; }
+        if (com.validate('addSoodsModal')) {
+            return false;
+        }
 
         var gid = com.typeahead("goodsName");
 
@@ -316,6 +348,7 @@ $(function() {
         };
 
         com.post(api.data.addSoods, option, function(e) {
+
             displayFunc.init();
             com.showAlert(com.info, "操作成功");
             soods.addSoodsModal.modal("hide");
@@ -323,15 +356,18 @@ $(function() {
     }
     // 显示图片
     function managedrawing(sid) {
+
         soods.drawingModal.modal("show");
         com.focusPage('#soodsDrawing').html("");
         com.post(api.communion.queryDataDrawing, {
             "dataDrawing.sid": sid,
             "dataDrawing.type": 4
         }, function(data) {
+
             var soodsSourcePics = data.dataDrawings;
             if (soodsSourcePics && soodsSourcePics.length) {
                 $.each(soodsSourcePics, function(i, value) {
+
                     appendGalleryElement("soodsDrawing", value);
                 });
                 com.popup4photos("#soodsDrawing");
@@ -345,6 +381,7 @@ $(function() {
         com.uploadify("#soodsUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {
             'uploadType': 0
         }, 1, function(data) {
+
             var options = {};
 
             options["dataDrawing.sid"] = params.sid;
@@ -354,6 +391,7 @@ $(function() {
             options["dataDrawing.type"] = 4;
 
             com.post(api.communion.addDataDrawing, options, function(res) {
+
                 var drawing = res.dataDrawing;
 
                 appendGalleryElement("soodsDrawing", drawing);
@@ -365,19 +403,26 @@ $(function() {
     }
 
     function appendGalleryElement(galleryId, value) {
+
         var gallery = com.focusPage("#" + galleryId);
+
         var imgLi = $("<li></li>").attr("id", "gallery_li" + value.ddid).addClass("text-center col-sm-4").css("border", "0px").css("border-color", "white").css("padding", "0px").css("height", "150px").css("width", "150px").appendTo(gallery);
         var img = $('<img/>');
         var imgA = $("<a></a>").addClass('cboxElement').attr("target", "_blank").css("height", "150px").append(img).appendTo(imgLi);
+
         com.showImg(img, value.drawingUrl, 150, 150, value.name, null, value.drawingType);
+
         var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
         var toolsA = $("<a></a>").attr("href", "#").on("click", function() {
+
             com.post(api.communion.deleteDataDrawing, {
                 "dataDrawing.ddid": value.ddid
             }, function(res) {
+
                 com.focusPage("#gallery_li" + value.ddid).remove();
             });
         }).appendTo(toolsDiv);
+
         $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
     }
 

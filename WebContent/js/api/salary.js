@@ -20,8 +20,11 @@ $.extend(api, {salary: {
         url: "pageWorkerSalary.do",
         type: "query", 
         tranargs: [{
-            result: "paging-data", 
-            args: ["money", "deposit", "salary"]
+            result: "paging-data",
+            args: ["money", "deposit", "salary"],
+        },{
+            result: "paging-data-decoration-house",
+            args: ["totalArea"],
         }]
     },
     pageWorkerSalaryByUserId: {
@@ -77,6 +80,7 @@ $.extend(api, {salary: {
     },
     adoptWorkerSalary:{url: "adoptWorkerSalary.do"},
     rejectWorkerSalary:{url: "rejectWorkerSalary.do"},
+    checkWsorkerSalary:{url: "checkWsorkerSalary.do"},
     deleteWorkerSalary:{url: "deleteWorkerSalary.do"},
 	batchImportWorkerSalary:{url: "batchImportWorkerSalary.do"},
     importWorkerSalary:{url: "importWorkerSalary.do"},

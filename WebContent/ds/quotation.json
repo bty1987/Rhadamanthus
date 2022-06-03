@@ -66,21 +66,7 @@
         {"key":"3", "value":"报价中报价项"},
         {"key":"4", "value":"增项中报价项"},
         {"key":"5", "value":"拓展中报价项"}
-    ], "selectionItemStatus": [
-		{"key":"0", "value":"选材完毕"},
-		{"key":"1", "value":"预计配送"},
-		{"key":"2", "value":"审核下单"},
-		{"key":"3", "value":"厂商接单"},
-		{"key":"4", "value":"退补完毕"},
-		{"key":"5", "value":"厂商确认"},
-		{"key":"6", "value":"财务结算"}
-	], "selectionItemType": [
-		{"key":"0", "value":"报价项"},
-		{"key":"1", "value":"拓展增"},
-		{"key":"2", "value":"拓展减"},
-		{"key":"3", "value":"增减增"},
-		{"key":"4", "value":"增减减"}
-	],
+    ],
 	"isCountManageRule": [
 		{"company":"1", "value": true},
 		{"company":"2", "value": false},
@@ -89,6 +75,10 @@
 	"addReduceType": [
         {"key":"0", "value":"增项"},
         {"key":"1", "value":"减项"}
+    ],
+    "addReduceAtttype": [
+        {"key":"0", "value":"工程"},
+        {"key":"1", "value":"主材"}
     ],
 	"addReducePaytype": [
 	    {"key":"0", "value":"付款"},
@@ -119,6 +109,52 @@
         {"key":"1", "value":"工程"},
         {"key":"2", "value":"主材"}
     ],
+    "protationStatus": [
+    	{"key":"0", "value":"启用"},
+        {"key":"1", "value":"禁用"},
+        {"key":"2", "value":"锁定"}
+    ],
+    
+    "quotationStatus": [
+        {"key":"0", "value":"启用"},
+        {"key":"1", "value":"禁用"},
+        {"key":"2", "value":"锁定"}
+    ],
+    "quotationDefault": [
+        {"key":"0", "value":"非默认"},
+        {"key":"1", "value":"默认"}
+    ],
+    
+    "extensionStatus": [
+        {"key":"0", "value":"初始"},
+        {"key":"1", "value":"锁定"}
+    ],
+    "extensionType": [
+        {"key":"0", "value":"增项"},
+        {"key":"1", "value":"减项"}
+    ],
+    
+    "selectionStatus": [
+        {"key":"0", "value":"初始"},
+        {"key":"1", "value":"锁定"}
+    ],
+    
+    "selectionItemStatus": [
+        {"key":"0", "value":"选材完毕"},
+        {"key":"1", "value":"预计配送"},
+        {"key":"2", "value":"审核下单"},
+        {"key":"3", "value":"厂商接单"},
+        {"key":"4", "value":"退补完毕"},
+        {"key":"5", "value":"厂商确认"},
+        {"key":"6", "value":"财务结算"}
+    ], "selectionItemType": [
+        {"key":"0", "value":"报价项"},
+        {"key":"1", "value":"拓展增"},
+        {"key":"2", "value":"拓展减"},
+        {"key":"3", "value":"增减增"},
+        {"key":"4", "value":"增减减"}
+    ],
+    
     "errorCode": 0,
     "errorMsg": null
 }

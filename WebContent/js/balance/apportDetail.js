@@ -6,14 +6,17 @@ $(function() {
              addApportDetailBtn:com.focusPage("#addApportDetailBtn"),// 添加
              saveBtn:com.focusPage("#saveBtn"),
              cancelBtn:com.focusPage("#cancelBtn"),
-         },
+        },
+
         modals: {
             apportDetailModal:com.focusPage("#apportDetailModal"),
         },
+
         items: {
             money: com.focusPage("#money"),
             comment: com.focusPage("#comment"),
         },
+
         bid: params.balance.bid,
     };
 

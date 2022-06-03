@@ -238,7 +238,7 @@ $(function () {
             //收款弹窗
             $btnCollect.click(function () {
 
-                if([2, 3, 8].contains(v.type)) paymentUtils.showPos(salesPayment, {"pointofsales.pid": v.sales.orderId}, [0, 1]);
+                if([2, 3, 8].contains(v.type)) paymentUtils.showPos(salesPayment, {"paytran.orderId": v.sales.orderId}, [0, 1]);
 
                 initCollect(v, false);
 
@@ -544,7 +544,7 @@ $(function () {
         salesPayment.payment = {"spid": payment.spid, "referMoney": sumMoney, "type": payment.type, "status": payment.status};
         salesPayment.payment.sales = {"sid": payment.sid,  "orderId": payment.orderid, "grade": payment.grade};
 
-        if([2, 3, 8].contains(payment.type)) paymentUtils.showPos(salesPayment, {"pointofsales.pid": payment.orderid}, [0, 1]);
+        if([2, 3, 8].contains(payment.type)) paymentUtils.showPos(salesPayment, {"paytran.orderId": payment.orderid}, [0, 1]);
 
         initCollect(salesPayment.payment, true);
     });

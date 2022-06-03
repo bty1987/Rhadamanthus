@@ -238,6 +238,7 @@ function printCostTable(subtype, showType) {
     var quotationFunctionAreas = quotationUtils.quotationDetail.quotationFunctionAreaItemCs;
 
     $.each(quotationFunctionAreas, function(i, v) {
+
         var sum = 0.0;
         var preSum = 0.0;
 
@@ -306,6 +307,7 @@ function printCostTable(subtype, showType) {
 }
 
 function printCustomerTable(subtype, orderType) {
+
     var index = 0;
     var contentHtml = '';
 
@@ -351,6 +353,7 @@ function printCustomerTable(subtype, orderType) {
         contentHtml += '</tr>';
 
         $.each(v, function(j, qv) {
+
             if (subtype.indexOf(-2) != -1 || subtype.indexOf(qv.subtype) != -1) {
 
                 // 装修单类型是整装，不计算功能区显示项
@@ -482,7 +485,9 @@ function printWorkTable(workType) {
 
     $.each(quotationFunctionAreas, function(i, v) {
 
-        if (!workType || workType != i.split('-')[1]) { return true; }
+        if (!workType || workType != i.split('-')[1]) {
+            return true;
+        }
 
         var itemIndex = 0;
 
@@ -645,9 +650,7 @@ jQuery(function($) {
     company = parent.company;
     params = parent.params;
 
-    printConf = params.quotation.printConf;
-
-    console.log(printConf)
+    printConf = params.quotation.quotation.printConf;
 
     printConf.showType = {
         "itemtype": printConf.type,
@@ -660,18 +663,21 @@ jQuery(function($) {
     com.post(url, {
         "quotation.qid": printConf.quotationId
     }, function(res) {
+
         quotationUtils.quotationDetail.quotation = res.quotation;
     }, null, false);
 
     com.post(api.decoration.queryDecorationForCommonByOrderId, {
         "decoration.orderId": params.quotation.orderId
     }, function(res) {
+
         quotationUtils.quotationDetail.quotation.decoration = res.decoration;
     }, null, false);
 
     com.post(api.quotation.queryQuotationFunctionAreaByQuotationId, {
         "quotation.qid": printConf.quotationId
     }, function(res) {
+
         quotationUtils.quotationDetail.quotationFunctionAreas = res.quotationFunctionAreas;
     }, null, false);
 
@@ -680,6 +686,7 @@ jQuery(function($) {
     com.post(api.quotation.queryExtensionByOrderId, {
         "extension.orderId": params.quotation.orderId
     }, function(res) {
+
         quotationUtils.quotationDetail.extensions = res.extensions;
     }, null, false);
 
@@ -688,13 +695,15 @@ jQuery(function($) {
     com.post(api.addReduce.queryAddReduceByOrderId, {
         'addReduce.orderId': params.quotation.orderId
     }, function(res) {
+
         quotationUtils.quotationDetail.addReduces = res.addReduces;
     }, null, false);
 
     com.post(api.quotation.queryQuotationNormrice, {
         "quotation.qid": printConf.quotationId
     }, function(res) {
-        quotationUtils.quotationNormriceProcessing(res.quotationFunctionAreas);
+
+        quotationUtils.quotationNormriceProcessing(res.quotationFunctionAreas, [], []);
     }, null, false);
 
     quotationUtils.statisticalQuotationItem(quotationUtils.quotationDetail.quotationFunctionAreas, quotationUtils.quotationDetail.addReduces, quotationUtils.quotationDetail.extensions);
@@ -705,11 +714,12 @@ jQuery(function($) {
 
     quotationUtils.quotationDetail.TotalPrice = quotationUtils.quotationTotal();
 
-    generatePrintPage(printConf.layout, printConf.itemtype, printConf.workType, params.company.drganization.name, params.quotation.orderType, printConf.quotation.showType);
+    generatePrintPage(printConf.layout, printConf.itemtype, printConf.workType, params.company.drganization.name, params.quotation.orderType, printConf.showType);
 
 });
 
 function generatePrintPage(type, subtype, workType, company, orderType, showType) {
+
     var html = "";
 
     if (type == '1') {

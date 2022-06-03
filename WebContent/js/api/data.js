@@ -144,6 +144,10 @@ $.extend(api, {
             url: "updateCustomer.do",
             server: "communion"
         },
+        updateCustomerForBase: {
+            url: "updateCustomerForBase.do",
+            server: "communion"
+        },
         addCustomerPhone: {
             url: "addCustomerPhone.do",
             server: "communion"
@@ -170,6 +174,10 @@ $.extend(api, {
             url: "registCustomer.do",
             server: "communion"
         },
+        resetCustomer: {
+            url: "resetCustomer.do",
+            server: "communion"
+        },
         authCustomer: {
             url: "authCustomer.do",
             server: "communion"
@@ -180,6 +188,10 @@ $.extend(api, {
         },
         signateCustomer: {
             url: "signateCustomer.do",
+            server: "communion"
+        },
+        resetCustomer: {
+            url: "resetCustomer.do",
             server: "communion"
         },
 
@@ -444,6 +456,25 @@ $.extend(api, {
         },
         deleteSurveyTemplate: {
             url: "deleteSurveyTemplate.do"
+        },
+
+        pageChating: {
+            url: "pageChating.do"
+        },
+        queryChating: {
+            url: "queryChating.do"
+        },
+        addChating: {
+            url: "addChating.do"
+        },
+        updateChating: {
+            url: "updateChating.do"
+        },
+        updateChatingForStatus: {
+            url: "updateChatingForStatus.do"
+        },
+        deleteChating: {
+            url: "deleteChating.do"
         },
 
         pageConstructionCost: {

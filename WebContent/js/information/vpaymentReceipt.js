@@ -34,7 +34,7 @@ jQuery(function($) {
     }, null, false);
 
     com.post(queryVpaymentByVrid, {
-        "vpayment.vreceipt.vrid": params.information.vpayment.vrid
+        "vpayment.vreceipt.vrid": params.infomation.vpayment.vrid
     }, function(res) {
 
         var vpayments = res.vpayments;
@@ -76,7 +76,7 @@ jQuery(function($) {
     var queryVreceiptByVrid = api.information.queryVreceiptByVrid;
 
     com.post(queryVreceiptByVrid, {
-        "vreceipt.vrid": params.information.vpayment.vrid
+        "vreceipt.vrid": params.infomation.vpayment.vrid
     }, function(res) {
 
         var vreceipt = res.vreceipt;
@@ -119,7 +119,7 @@ jQuery(function($) {
         var paymentItems = receipt.paymentItems;
         var receiptItems = receipt.receiptItems;
 
-        var srId = parent.params.information.vpayment.vrid;
+        var srId = parent.params.infomation.vpayment.vrid;
         var noInit = "000000000000" + srId;
 
         var no = noInit.substring(srId.length, noInit.length);

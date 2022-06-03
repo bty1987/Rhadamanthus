@@ -22,7 +22,9 @@
             com.post(api.system.queryServer, {
                 "user.userId": res.userInfo.user.userId
             }, function(res) {
+
                 $.each(res.servers, function(i, v) {
+
                     config[v.name] = v.host;
                 });
             }, null, false);
@@ -36,12 +38,14 @@
         });
 
         interval = setInterval(function() {
+
             com._post_(api.home.library, {
                 "userId": params.userInfo.user.userId,
                 "redis": 0,
                 "api": "system.login.index",
                 "loginTime": window.loginTime
             }, function(res) {
+
                 if (res.code != 0) {
                     alert('账号在其他设备上登录!');
 
@@ -74,11 +78,13 @@
         com.post(api.system.queryCompanyByCid, {
             "company.cid": res.userInfo.user.companys
         }, function(data) {
+
             params.company = data.company;
             $(".companyinfo .companyName").text(data.company.name);
         });
 
     }, function(res) {
+
         if (parent.window.isPC) {
             nwRestart();
         } else {
@@ -99,6 +105,7 @@
         if (data != "") {
             var elements = com.focusPage(":contains('" + data + "')");
             $.each(elements, function(i, e) {
+
                 var _e = $(e);
                 if (_e.children().length == 0) {
                     _e.addClass('marksearch');
@@ -106,6 +113,7 @@
             });
         }
     }).keypress(function(event) {
+
         if (event.keyCode == 13)
             return false;
     });
@@ -142,6 +150,7 @@
             var $btn = $("<button></button>").addClass("btn btn-link col-md-4").text(v.company.name).appendTo(companyGroup);
 
             $btn.click(function() {
+
                 return changeCompany(v.company);
             });
 
@@ -151,6 +160,7 @@
                 var $a = $('<a></a>').attr('data-cid', v.company.cid).text(v.company.name).appendTo($li);
 
                 $a.click(function(e) {
+
                     return changeCompany(v.company);
                 });
             }
@@ -162,6 +172,7 @@
                 var $a = $('<a></a>').text("更多公司").appendTo($li);
 
                 $a.click(function(e) {
+
                     com.popup4model($('#layerCompany'), '切换公司');
                 });
             }
@@ -196,6 +207,7 @@
             com.post(api.system.queryCompanyByCid, {
                 "company.cid": company.cid
             }, function(res) {
+
                 params.company = res.company;
                 $(".companyinfo .companyName").text(res.company.name)
             });
@@ -210,6 +222,7 @@
     $.breadcrumb('icon-home', ['首页']);
 
     $("#logout").on("click", function(e) {
+
         if (parent.window.isPC) {
             nwRestart();
         } else {
@@ -319,6 +332,7 @@
     });
 
     $("#userLock").on("click", function(i) {
+
         doLocking();
     });
 
@@ -379,6 +393,7 @@
     params.homeLoader = false;
 
     Pace.on('hide', function() {
+
         if (config && !params.homeLoader) {
             $('#navbar').fadeIn();
             $('#main-container').fadeIn();
@@ -422,6 +437,7 @@
         });
 
         $main.click(function() {
+
             $('li', $tree).removeClass('open').removeClass('active');
             $main.addClass('active');
             $(this).attr({
@@ -438,18 +454,22 @@
         }
 
         $.each(treeData, function(i, v) {
+
             arr = menuArr['level' + v.level];
             arr[arr.length] = v;
         });
 
         $.each(menuArr, function(key, val) {
+
             menuArr[key] = val.sort(function(a, b) {
+
                 return a.order - b.order
             });
         });
 
         if (menuArr.level1.length) {
             $.each(menuArr.level1, function(i, v) {
+
                 var $li = $('<li></li>');
                 var $a = $('<a href="#"></a>').attr({
                     'menuText': v.name
@@ -464,6 +484,7 @@
 
         if (menuArr.level2.length) {
             $.each(menuArr.level2, function(i, v) {
+
                 var $li = $('<li></li>');
                 var $a = $('<a></a>').attr({
                     // 'href': v.url ? v.url : '#',
@@ -508,6 +529,7 @@
         }
 
         $("a", $tree).on("click", function(e) {
+
             $this = $(this);
 
             var hrefStr = $this.attr("href");
@@ -525,6 +547,7 @@
                     $(_list.get(0)).siblings('li').removeClass('active');
                     $this.parent().siblings('li').removeClass('active').removeClass('open');
                     $.each($this.parent().siblings('li'), function(i, v) {
+
                         $(v).find('li.active').removeClass('active');
                     });
                     $this.parent('li').addClass('active');
@@ -534,10 +557,26 @@
                     com.post(api.system.checkModule, {
                         "module.mid": mid
                     }, function(res) {
+
                         var module = res.module
 
                         if (module) {
-                            params['urlLoadParams'] = com.splitUrl(module.url);
+                            params.urlLoadParams = com.splitUrl(module.url);
+
+                            if (params.urlLoadParams.open && params.urlLoadParams.open == "popup") {
+
+                                com.popup4frame(module.name, module.url);
+
+                                return false;
+                            }
+
+                            if (params.urlLoadParams.open && params.urlLoadParams.open == "window") {
+
+                                window.open(module.url);
+
+                                return false;
+                            }
+
                             com.loadPage(module.url, $this);
                         } else {
                             com.showAlert(com.warning, "无操作权限")
@@ -574,6 +613,7 @@
     });
 
     function navControl($this) {
+
         if ($this.data('level') == 1) {
             $('.level1').removeClass('level1');
             $this.addClass('level1');
@@ -588,6 +628,7 @@
 
                 $a = $('<a href=' + $this.attr("href") + '>' + $this.text() + '</a>');
                 $a.on('click', function(e) {
+
                     e.preventDefault();
                     com.switchPage(e.target.href);
                 });
@@ -600,6 +641,7 @@
 
                 $a = $('<a href=' + $this.attr("href") + '>' + $this.text() + '</a>');
                 $a.on('click', function(e) {
+
                     e.preventDefault();
                     com.switchPage(e.target.href);
                 });
@@ -622,10 +664,12 @@
 
         // 禁止右键刷新
         document.oncontextmenu = function() {
+
             return false
         };
         // 禁止F5刷新
         document.onkeydown = function(e) {
+
             var ev = window.event || e;
             var code = ev.keyCode || ev.which;
             if (code == 116) {
@@ -641,6 +685,7 @@
         };
 
         $("#lockSubmit").on("click", function() {
+
             lockSubmit();
         });
     }
@@ -651,9 +696,11 @@
 
         window.notOperate = false; // 可以正常请求
         document.oncontextmenu = function() {
+
             return true;
         };
         document.onkeydown = function(e) {
+
             var ev = window.event || e;
             var code = ev.keyCode || ev.which;
             if (code == 116) {
@@ -697,12 +744,14 @@
                     });
 
                     interval = setInterval(function() {
+
                         com._post_(api.home.library, {
                             "userId": params.userInfo.user.userId,
                             "redis": 0,
                             "api": "system.login.index",
                             "loginTime": window.loginTime
                         }, function(res) {
+
                             if (res.code != 0) {
                                 alert('账号在其他设备上登录!');
 
@@ -753,11 +802,13 @@
                             errorLockCount = 0;
 
                             $("#lockSubmit").on("click", function(e) {
+
                                 isF5 = true;
                                 window.location.href = "/";
                             });
 
                             document.onkeydown = function(e) {
+
                                 var _e = e || event;
                                 if (_e.keyCode == 13) {
                                     $("#lockSubmit").click();
@@ -773,6 +824,7 @@
 
     // 收起全部菜单
     function foldMenu() {
+
         $('li', 'ul.nav-list').removeClass('open').removeClass('active');
         $('ul.nav-list li').first().addClass('active');
     }

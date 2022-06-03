@@ -236,7 +236,7 @@ jQuery(function($) {
 			// 收款
             $btnCollect.click(function(){
 
-				if([2, 3].contains(v.paymentType)) paymentUtils.showPos(materialPayment, {"pointofsales.pid": v.material.orderId}, [0, 1]);
+				if([2, 3].contains(v.paymentType)) paymentUtils.showPos(materialPayment, {"paytran.orderId": v.material.orderId}, [0, 1]);
 
 				initCollect(v, false);
 
@@ -567,7 +567,7 @@ jQuery(function($) {
 		materialPayment.payment = {"mpid": payment.mpid, "referMoney": sumMoney, "paymentType": payment.paymenttype, "paymentStatus": payment.paymentstatus};
 		materialPayment.payment.material = {"orderId": payment.orderid, "grade": payment.grade};
 
-		if([2, 3].contains(payment.paymenttype)) paymentUtils.showPos(materialPayment, {"pointofsales.pid": payment.orderid}, [0, 1]);
+		if([2, 3].contains(payment.paymenttype)) paymentUtils.showPos(materialPayment, {"paytran.orderId": payment.orderid}, [0, 1]);
 
 		initCollect(materialPayment.payment, true);
 	});

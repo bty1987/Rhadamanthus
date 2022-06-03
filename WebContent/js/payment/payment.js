@@ -218,12 +218,13 @@ jQuery(function($) {
 
             var $btnCollect = $('<a></a>').addClass('btn btn-minier btn-primary').html('收款');
             var $btnCashout = $('<a></a>').addClass('btn btn-minier btn-warning').html('提款');
+            var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-orange').html('验证');
 
 			var $btnDecorationInfo = $('<a></a>').addClass('btn btn-minier btn-yellow').html('装修单信息');
 			var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-info').html('打印');
 			var $btnUpdateP = $('<a></a>').addClass('btn btn-minier btn-success').html('更新');
 
-			var project =  ["common", "pos"].contains(payment.type) ? v.decoration : v;
+			var project =  ["common", "pos", "check"].contains(payment.type) ? v.decoration : v;
             var propertyArr = paymentUtils.getPropertyArr(payment, v, project, payment.statusData);
 
             $.each(propertyArr, function (index,value) {
@@ -240,16 +241,18 @@ jQuery(function($) {
 
 			if (payment.pageConfig.pageBtn.contains("collect")) $divBtnWrap.append($btnCollect);
 			if (payment.pageConfig.pageBtn.contains("withdraw")) $divBtnWrap.append($btnCashout);
+
 			if (v.status != 0 && payment.pageConfig.pageBtn.contains("decorationInfo")) $divBtnWrap.append($btnDecorationInfo);
 			if (v.status != 0 && payment.pageConfig.pageBtn.contains("print")) $divBtnWrap.append($btnPrint);
 			if (v.status == 1 && v.type != 2 && v.transfer == 0 && payment.pageConfig.pageBtn.contains("update")) $divBtnWrap.append($btnUpdateP);
+			if (v.status == 0 && v.type == 1 && payment.pageConfig.pageBtn.contains("check")) $divBtnWrap.append($btnCheck);
 
 			//收款
             $btnCollect.click(function(){
             	v.decoration.paymentType = "收款";
 				payment.typeUpdate = 0;
 
-				paymentUtils.showPos(payment, {"pointofsales.pid": v.decoration.orderId}, [0, 1]);
+				paymentUtils.showPos(payment, {"paytran.orderId": v.decoration.orderId}, [0, 1]);
 
             	initCollect(v.decoration);
             });
@@ -285,6 +288,23 @@ jQuery(function($) {
 				com.popup("专用收款收据__装修单号:" + v.orderId, api.index.paymentReceiptIndex.url, function () {
 					parent.layer.getFrameIndex(window.name);
 				},null,true)
+			});
+
+			//验证
+			$btnCheck.click(function(){
+				//pid是唯一的 + type可以定位到唯一的paytran
+				// pos推送生产的paytran没有pid, pid=0,只有orderId, 小程序端生成的paytran有pid and orderId
+				var checkOptions = {
+					"paytran.pid": v.pid,
+					"paytran.type": 0
+				};
+
+				com.showConfirm("是否验证收款信息?", function(result) {
+					com.post(api.payment.checkPaytran, checkOptions, function(res){
+						searcher.doSearch();
+						com.showAlert(com.info, "验证成功")
+					});
+				});
 			});
 
             return $liLine;
@@ -422,7 +442,7 @@ jQuery(function($) {
 		var url = "";
 		var realPayment = 0;
 		var options = {};
-		var posids = {};
+		var ptids = {};
 
 		options["payment.customer.cid"] = payment.payment.customer.cid;
 		options["payment.paymentType"] = payment.items.advanceType.val();
@@ -466,7 +486,7 @@ jQuery(function($) {
 			options["payment.comment"] = payment.items.des.val().trim();
 			options["payment.uniqueid"] = new Date().getTime();
 
-			$.extend(options, {}, posids);
+			$.extend(options, {}, ptids);
 
 		}else if(payment.typeUpdate == 1){
 

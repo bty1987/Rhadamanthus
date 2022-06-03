@@ -17,6 +17,7 @@ jQuery(function($) {
             authentication: com.focusPage("#authentication"),
             sendAuth: com.focusPage("#sendAuth"),
             confirm: com.focusPage("#confirm"),
+            reset: com.focusPage("#reset"),
             signBtn: com.focusPage("#signBtn", "#decorationContractModal"),
             backBtn: com.focusPage("#backBtn"),
         },
@@ -452,6 +453,17 @@ jQuery(function($) {
         });
 
         decorationContract.modals.decorationContractModal.modal("hide");
+    });
+
+    decorationContract.btns.reset.on('click', function() {
+
+        com.showConfirm("是否重置客户认证", function() {
+
+            com.post(api.data.resetCustomer, {
+                "customer.cid": params.decoration.cid
+            });
+        });
+
     });
 
     function sendNotice(title, dcid, type) {

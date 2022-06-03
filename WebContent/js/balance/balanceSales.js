@@ -24,6 +24,7 @@ jQuery(function($) {
     };
 
     com.post(api.ds.balance, {}, function(res) {
+
         balanceSales.status = res.balanceSalesStatus.split("key", "value");
     }, null, false);
 
@@ -31,7 +32,7 @@ jQuery(function($) {
 
     var seacher = new Searcher();
 
-    seacher.base("condList", "pagenation", "resultList", api.balance.pageBalanceSales);
+    seacher.base("condList1", "pagenation1", "resultList1", api.balance.pageBalanceSales);
 
     seacher.condition(["balance-balanceSelse-name", "balance-balanceSelse-status", "balance-balanceSelse-brand", "balance-balanceSelse-grade", "balance-balanceSelse-createTime", "balance-balanceSelse-creater"]);
 
@@ -91,15 +92,15 @@ jQuery(function($) {
         prop: "createTime",
         clazz: "green"
     }, {
-        field : "balancer",
-        name : "结算人",
-        prop : "balancer.userName",
-        clazz : "grey"
+        field: "balancer",
+        name: "结算人",
+        prop: "balancer.userName",
+        clazz: "grey"
     }, {
-        field : "balanceTime",
-        name : "结算时间",
-        prop : "balanceTime",
-        clazz : "green"
+        field: "balanceTime",
+        name: "结算时间",
+        prop: "balanceTime",
+        clazz: "green"
     }, ];
 
     var linebtus = [{
@@ -125,6 +126,7 @@ jQuery(function($) {
             return false;
         },
         show: function(v) {
+
             return (v.status == 0);
         }
     }, {
@@ -135,6 +137,7 @@ jQuery(function($) {
             com.post(api.balance.balanceBalanceSales, {
                 "balanceSales.bsid": v.bsid
             }, function() {
+
                 com.showAlert(com.info, "结算成功");
                 seacher.doSearch();
             });
@@ -142,6 +145,7 @@ jQuery(function($) {
             return false;
         },
         show: function(v) {
+
             return (v.status == 1);
         }
     }, {
@@ -152,6 +156,7 @@ jQuery(function($) {
             com.post(api.balance.lockBalanceSales, {
                 "balanceSales.bsid": v.bsid
             }, function() {
+
                 com.showAlert(com.info, "锁定成功");
                 seacher.doSearch();
             });
@@ -159,6 +164,7 @@ jQuery(function($) {
             return false;
         },
         show: function(v) {
+
             return (v.status == 0);
         }
     }, {
@@ -169,6 +175,7 @@ jQuery(function($) {
             com.post(api.balance.unlockBalanceSales, {
                 "balanceSales.bsid": v.bsid
             }, function() {
+
                 com.showAlert(com.info, "解锁成功");
                 seacher.doSearch();
             });
@@ -176,6 +183,7 @@ jQuery(function($) {
             return false;
         },
         show: function(v) {
+
             return (v.status == 1);
         }
     }, {
@@ -191,6 +199,7 @@ jQuery(function($) {
             return false;
         },
         show: function(v) {
+
             return (v.status != 0);
         }
     }, {
@@ -206,13 +215,14 @@ jQuery(function($) {
             return false;
         },
         show: function(v) {
+
             return (v.status != 0);
         }
     }, ];
 
     seacher.line("name", lineprops, linebtus).render();
 
-    com.focusPage('#createBalanceSales', '#pagenation').on("click", function() {
+    com.focusPage('#createBalanceSales').on("click", function() {
 
         balanceSales.modals.createBalanceSalesModal.modal("show");
     });
@@ -229,6 +239,7 @@ jQuery(function($) {
         };
 
         com.post(api.balance.createBalanceSales, options, function() {
+
             com.showAlert(com.info, "操作成功");
             seacher.doSearch();
         });
@@ -247,6 +258,7 @@ jQuery(function($) {
         };
 
         com.post(api.balance.updateBalanceSales, options, function() {
+
             com.showAlert(com.info, "操作成功");
             seacher.doSearch();
         });
