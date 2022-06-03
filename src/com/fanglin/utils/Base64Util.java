@@ -52,5 +52,13 @@ public class Base64Util {
 
 		System.out.println(JSONObject.toJSON(params));
 
+		String str = "baitianyu";
+
+		String en = Base64UtilEncoder(str);
+
+		System.out.println(en);
+
+		System.out.println(Base64UtilDecoder(en));
+
 	}
 }

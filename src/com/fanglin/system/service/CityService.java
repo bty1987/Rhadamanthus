@@ -18,21 +18,23 @@ import com.fanglin.system.vo.CityVO;
 import com.fanglin.utils.Paging;
 
 public interface CityService {
-	
+
 	public void pageCity(Paging paging, List<Filter> filters);
-	
+
 	public List<CityVO> queryCity();
-	
+
 	public CityVO queryCityByCid(CityVO cityVO) throws FLException;
-	
+
 	public List<CityVO> queryCityByRid(CityVO cityVO);
-	
+
 	public List<CityVO> queryCityByName(CityVO cityVO);
-	
+
 	public void addCity(CityVO cityVO);
 
 	public void updateCity(CityVO cityVO) throws FLException;
-	
+
+	public int updateCityForPosition(CityVO cityVO) throws FLException;
+
 	public int deleteCity(List<Integer> cids) throws FLException;
 
 }

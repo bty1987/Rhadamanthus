@@ -62,14 +62,20 @@ public class OccessoriesDaoImpl extends DaoImpl<OccessoriesPO> implements Occess
 
 			if ("createrName".equals(field)) {
 				query.alias("creater", "creater");
-				query.add(query.getCriterion(OccessoriesPO.COLUMN_CREATER_USERID_STR, data, op));
-			} else if (OccessoriesPO.COLUMN_ORDERID_STR.equals(field)) {
+				query.add(query.getCriterion("creater.userId", data, op));
+			} else if ("orderId".equals(field)) {
 				query.alias("decoration", "decoration");
 				query.add(query.getCriterion("decoration.orderId", data, op));
-			} else if (OccessoriesPO.COLUMN_NO_STR.equals(field)) {
-				query.add(query.getCriterion(OccessoriesPO.COLUMN_NO_STR, data, op));
-			} else if (OccessoriesPO.COLUMN_CREATETIME_STR.equals(field)) {
-				query.timeranges(OccessoriesPO.COLUMN_CREATETIME_STR, data);
+			} else if ("no".equals(field)) {
+				query.add(query.getCriterion("no", data, op));
+			} else if ("createTime".equals(field)) {
+				query.timeranges("createTime", data);
+			} else if ("deliveTime".equals(field)) {
+				query.timeranges("deliveTime", data);
+			} else if ("receiveTime".equals(field)) {
+				query.timeranges("receiveTime", data);
+			} else if ("balanceTime".equals(field)) {
+				query.timeranges("balanceTime", data);
 			} else if ("status".equals(field)) {
 				query.add(query.getCriterion(field, Short.valueOf(data), op));
 			} else if ("isEnter".equals(field)) {

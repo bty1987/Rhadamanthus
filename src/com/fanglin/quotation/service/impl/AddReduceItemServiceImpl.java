@@ -158,8 +158,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 
 			BeanUtil.copyProperties(addReduceItemVO, addReduceItemPO);
 
-			if (addReduceItemVO.getQuoteItemId() != null)
-				addReduceItemPO.setQiid(addReduceItemVO.getQuoteItemId());
+			if (addReduceItemVO.getQuoteItemId() != null) addReduceItemPO.setQiid(addReduceItemVO.getQuoteItemId());
 
 			addReduceItemPO.setQuotationFunctionArea(quotationFunctionAreaPO);
 
@@ -357,8 +356,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 
 		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.get(addReducePO.getDpId());
 
-		if (decorationPaymentPO == null)
-			return 0;
+		if (decorationPaymentPO == null) return 0;
 
 		if (decorationPaymentPO.getPaymentStatus() != DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT) {
 			throw new FLException(140035, "当前增减项款项状态不可操作");
@@ -373,8 +371,7 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 
 	private void addSelectionItem(AddReducePO addReducePO, AddReduceItemPO addReduceItemPO, Long areaId) throws FLException {
 
-		if (addReducePO.getType() == 0)
-			return;
+		if (addReducePO.getType() == 0) return;
 
 		SelectionItemPO querySelectionItem = null;
 

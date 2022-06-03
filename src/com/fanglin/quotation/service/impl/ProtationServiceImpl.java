@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.po.PresignCostPO;
 import com.fanglin.data.po.PresignItemPO;
 import com.fanglin.data.po.PresignProducePO;
@@ -29,11 +30,14 @@ import com.fanglin.data.quotation.dao.PresignItemDao;
 import com.fanglin.data.quotation.dao.PresignProduceDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.quotation.dao.ProtationCostDao;
 import com.fanglin.quotation.dao.ProtationDao;
 import com.fanglin.quotation.dao.ProtationItemDao;
 import com.fanglin.quotation.po.ProtationCostPO;
+import com.fanglin.quotation.po.ProtationDO;
 import com.fanglin.quotation.po.ProtationItemPO;
 import com.fanglin.quotation.po.ProtationPO;
 import com.fanglin.quotation.service.ProtationService;
@@ -42,6 +46,7 @@ import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
+import com.fanglin.utils.Paging;
 
 @Service("protationService")
 @Transactional(readOnly = true)
@@ -73,6 +78,31 @@ public class ProtationServiceImpl implements ProtationService {
 
 	@Autowired
 	private UserDao userDao;
+
+	@Override
+	public void pageProtation(Paging paging, List<Filter> filters, Integer company) throws FLException {
+
+		List<ProtationDO> protationDOs = protationDao.pageProtation(paging, filters, company);
+
+		List<ProtationVO> protationVOs = new ArrayList<ProtationVO>();
+
+		for (ProtationDO protationDO : protationDOs) {
+
+			ProtationVO protationVO = new ProtationVO(new DecorationVO(), new UserBaseVO());
+
+			protationVO.getDecoration().setSupervisor(new UserBaseVO());
+
+			BeanUtil.copyPropertie(protationDO, protationVO, Arrays.asList("decoration", "creater"));
+
+			BeanUtil.copyProperties(protationDO.getCreater(), protationVO.getCreater(), Arrays.asList("duty", "dept", "role"));
+
+			protationDO.getDecoration().ptvcascade(protationVO.getDecoration());
+
+			protationVOs.add(protationVO);
+		}
+		paging.setData(protationVOs);
+
+	}
 
 	@Override
 	public List<ProtationVO> queryProtationByOrderId(ProtationVO protationVO) {

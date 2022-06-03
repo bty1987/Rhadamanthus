@@ -12,7 +12,7 @@ public class BalanceSalesVO implements java.io.Serializable {
 	private static final long serialVersionUID = -9145874726355093442L;
 
 	private Long bsid;
-	
+
 	private Long bid;
 
 	private String name;
@@ -38,12 +38,14 @@ public class BalanceSalesVO implements java.io.Serializable {
 	private String categoryId;
 
 	private String categoryName;
-	
+
 	private UserBaseVO creater;
 
 	private Timestamp createTime;
-	
-	
+
+	private UserBaseVO balancer;
+
+	private Timestamp balanceTime;
 
 	public BalanceSalesVO() {
 		super();
@@ -54,7 +56,14 @@ public class BalanceSalesVO implements java.io.Serializable {
 		this.brand = brand;
 		this.creater = creater;
 	}
-	
+
+	public BalanceSalesVO(BrandVO brand, UserBaseVO creater, UserBaseVO balancer) {
+		super();
+		this.brand = brand;
+		this.creater = creater;
+		this.balancer = balancer;
+	}
+
 	public Long getBsid() {
 		return bsid;
 	}
@@ -62,7 +71,7 @@ public class BalanceSalesVO implements java.io.Serializable {
 	public void setBsid(Long bsid) {
 		this.bsid = bsid;
 	}
-	
+
 	public Long getBid() {
 		return bid;
 	}
@@ -183,5 +192,22 @@ public class BalanceSalesVO implements java.io.Serializable {
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
-	
+
+	public UserBaseVO getBalancer() {
+		return balancer;
+	}
+
+	public void setBalancer(UserBaseVO balancer) {
+		this.balancer = balancer;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getBalanceTime() {
+		return balanceTime;
+	}
+
+	public void setBalanceTime(Timestamp balanceTime) {
+		this.balanceTime = balanceTime;
+	}
+
 }

@@ -10,7 +10,7 @@ import com.fanglin.utils.Paging;
 
 public interface OccessoriesService {
 
-	public void pageOccessories(Paging paging, List<Filter> filters, int company, OccessoriesVO occessoriesVO);
+	public void pageOccessories(Paging paging, List<Filter> filters, int company, OccessoriesVO occessories);
 
 	public void pageOccessoriesForSupplier(Paging paging, List<Filter> filters, String userId, OccessoriesVO occessoriesVO);
 

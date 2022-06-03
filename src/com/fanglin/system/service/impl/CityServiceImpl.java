@@ -43,7 +43,7 @@ public class CityServiceImpl implements CityService {
 
 	@Autowired
 	private CountingService countingService;
-	
+
 	@Autowired
 	private CityProperDao cityProper;
 
@@ -161,8 +161,8 @@ public class CityServiceImpl implements CityService {
 		cityPO.setRegion(new RegionPO(cityVO.getRegion().getRid()));
 		BeanUtil.copyProperties(cityVO.getRegion(), cityPO.getRegion());
 
-		cityPO.setPinyin((String)PinYin4Util.getPinyin(cityVO.getName()).get(0));
-		
+		cityPO.setPinyin((String) PinYin4Util.getPinyin(cityVO.getName()).get(0));
+
 		cityDao.save(cityPO);
 	}
 
@@ -171,7 +171,7 @@ public class CityServiceImpl implements CityService {
 	public void updateCity(CityVO cityVO) throws FLException {
 
 		CityPO cityPO = cityDao.get(cityVO.getCid());
-		
+
 		if (cityPO == null) {
 			throw new FLException(230019, "城市不存在");
 		}
@@ -181,27 +181,46 @@ public class CityServiceImpl implements CityService {
 		cityPO.setRegion(new RegionPO(cityVO.getRegion().getRid()));
 		BeanUtil.copyProperties(cityVO.getRegion(), cityPO.getRegion());
 
-		cityPO.setPinyin((String)PinYin4Util.getPinyin(cityVO.getName()).get(0));
+		cityPO.setPinyin((String) PinYin4Util.getPinyin(cityVO.getName()).get(0));
 
 		cityDao.update(cityPO);
 	}
 
 	@Override
 	@Transactional
+	public int updateCityForPosition(CityVO cityVO) throws FLException {
+
+		CityPO cityPO = cityDao.get(cityVO.getCid());
+
+		if (cityPO == null) {
+			throw new FLException(230019, "城市不存在");
+		}
+
+		cityPO.setX(cityVO.getX());
+		cityPO.setY(cityVO.getY());
+
+		cityDao.update(cityPO);
+
+		return 0;
+
+	}
+
+	@Override
+	@Transactional
 	public int deleteCity(List<Integer> cids) throws FLException {
-		
-		for(int cid: cids){
-			
+
+		for (int cid : cids) {
+
 			CityPO cityPO = cityDao.get(cid);
-			
-			if(cityPO != null){
+
+			if (cityPO != null) {
 
 				int count = cityProper.countCityProperByCid(cid);
-				
-				if(count > 0){
+
+				if (count > 0) {
 					throw new FLException(230006, String.format("城市[%s]已被引用, 不能被删除", cid));
 				}
-				
+
 				cityDao.delete(cityPO);
 			}
 		}

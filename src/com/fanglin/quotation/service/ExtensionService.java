@@ -9,13 +9,15 @@ import com.fanglin.utils.Paging;
 
 public interface ExtensionService {
 
+	public void pageExtension(Paging paging, List<Filter> filters, Integer company) throws FLException;
+
 	public void pageExtensionByOrderId(Paging paging, List<Filter> filters, ExtensionVO extensionVO);
 
 	public List<ExtensionVO> queryExtensionByOrderId(ExtensionVO extensionVO);
 
 	public ExtensionVO queryExtensionByEid(ExtensionVO extensionVO) throws FLException;
 
-	public void addExtension(ExtensionVO extensionVO) throws FLException;
+	public void addExtension(ExtensionVO extensionVO, String userId) throws FLException;
 
 	public void updateExtension(ExtensionVO extensionVO) throws FLException;
 

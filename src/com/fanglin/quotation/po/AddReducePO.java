@@ -16,8 +16,13 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "addreduce", catalog = "quotation")
@@ -75,7 +80,15 @@ public class AddReducePO implements Serializable {
 
 	private short type;
 
+	private short atttype;
+
 	private short paytype;
+
+	private int discount;
+
+	private long managePrice;
+
+	private int manageRate;
 
 	private long undisPrice;
 
@@ -85,19 +98,21 @@ public class AddReducePO implements Serializable {
 
 	private long calPrice;
 
-	private long managePrice;
-
-	private int manageRate;
+	private long consPrice;
 
 	private long total;
-
-	private int discount;
 
 	private short status;
 
 	private short isAffirm;
 
+	private UserPO creater;
+
 	private Timestamp createTime;
+
+	private Timestamp confirmTime;
+
+	private Timestamp affirmTime;
 
 	private String content;
 
@@ -120,6 +135,15 @@ public class AddReducePO implements Serializable {
 		this.orderId = orderId;
 	}
 
+	@Column(name = "dpId")
+	public long getDpId() {
+		return dpId;
+	}
+
+	public void setDpId(long dpId) {
+		this.dpId = dpId;
+	}
+
 	@Column(name = "type")
 	public short getType() {
 		return type;
@@ -127,6 +151,15 @@ public class AddReducePO implements Serializable {
 
 	public void setType(short type) {
 		this.type = type;
+	}
+
+	@Column(name = "atttype")
+	public short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(short atttype) {
+		this.atttype = atttype;
 	}
 
 	@Column(name = "paytype")
@@ -138,13 +171,31 @@ public class AddReducePO implements Serializable {
 		this.paytype = paytype;
 	}
 
-	@Column(name = "total")
-	public long getTotal() {
-		return total;
+	@Column(name = "discount")
+	public int getDiscount() {
+		return discount;
 	}
 
-	public void setTotal(long total) {
-		this.total = total;
+	public void setDiscount(int discount) {
+		this.discount = discount;
+	}
+
+	@Column(name = "managePrice")
+	public long getManagePrice() {
+		return managePrice;
+	}
+
+	public void setManagePrice(long managePrice) {
+		this.managePrice = managePrice;
+	}
+
+	@Column(name = "manageRate")
+	public int getManageRate() {
+		return manageRate;
+	}
+
+	public void setManageRate(int manageRate) {
+		this.manageRate = manageRate;
 	}
 
 	@Column(name = "undisPrice")
@@ -183,13 +234,22 @@ public class AddReducePO implements Serializable {
 		this.calPrice = calPrice;
 	}
 
-	@Column(name = "discount")
-	public int getDiscount() {
-		return discount;
+	@Column(name = "consPrice")
+	public long getConsPrice() {
+		return consPrice;
 	}
 
-	public void setDiscount(int discount) {
-		this.discount = discount;
+	public void setConsPrice(long consPrice) {
+		this.consPrice = consPrice;
+	}
+
+	@Column(name = "total")
+	public long getTotal() {
+		return total;
+	}
+
+	public void setTotal(long total) {
+		this.total = total;
 	}
 
 	@Column(name = "status")
@@ -199,6 +259,15 @@ public class AddReducePO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "isAffirm")
+	public short getIsAffirm() {
+		return isAffirm;
+	}
+
+	public void setIsAffirm(short isAffirm) {
+		this.isAffirm = isAffirm;
 	}
 
 	@Column(name = "createTime")
@@ -219,40 +288,31 @@ public class AddReducePO implements Serializable {
 		this.content = content;
 	}
 
-	@Column(name = "dpId")
-	public long getDpId() {
-		return dpId;
+	@Column(name = "confirmTime")
+	public Timestamp getConfirmTime() {
+		return confirmTime;
 	}
 
-	public void setDpId(long dpId) {
-		this.dpId = dpId;
+	public void setConfirmTime(Timestamp confirmTime) {
+		this.confirmTime = confirmTime;
 	}
 
-	@Column(name = "managePrice")
-	public long getManagePrice() {
-		return managePrice;
+	@Column(name = "affirmTime")
+	public Timestamp getAffirmTime() {
+		return affirmTime;
 	}
 
-	public void setManagePrice(long managePrice) {
-		this.managePrice = managePrice;
+	public void setAffirmTime(Timestamp affirmTime) {
+		this.affirmTime = affirmTime;
 	}
 
-	@Column(name = "manageRate")
-	public int getManageRate() {
-		return manageRate;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cuid", referencedColumnName = "uid")
+	public UserPO getCreater() {
+		return creater;
 	}
 
-	public void setManageRate(int manageRate) {
-		this.manageRate = manageRate;
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
 	}
-
-	@Column(name = "isAffirm")
-	public short getIsAffirm() {
-		return isAffirm;
-	}
-
-	public void setIsAffirm(short isAffirm) {
-		this.isAffirm = isAffirm;
-	}
-
 }

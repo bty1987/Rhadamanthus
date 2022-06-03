@@ -21,6 +21,8 @@ public interface WorkerSalaryService {
 
 	public int rejectWorkerSalary(WorkerSalaryVO workerSalarys, String userId, int company) throws FLException;
 
+	public int checkWsorkerSalary(WorkerSalaryVO workerSalarys, String userId) throws FLException;
+
 	public int deleteWorkerSalary(WorkerSalaryVO workerSalarys, String userId, int company) throws FLException;
 
 	public int collectWorkerDeposit(WorkerSalaryVO workerSalarys, String userId, int company) throws FLException;

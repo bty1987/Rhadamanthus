@@ -27,6 +27,8 @@ public class DecorationAchievementPO implements java.io.Serializable {
 
 	private int month; // 月份
 
+	private short typeness; // 类型
+
 	private long cs0; // 签单数
 
 	private long cs1; // 设计数
@@ -38,6 +40,10 @@ public class DecorationAchievementPO implements java.io.Serializable {
 	private long cs4; // 设计额
 
 	private long cs5; // 服务费
+
+	private long cs6; // 未签单设计户数
+
+	private long cs7; // 未签单设计费
 
 	private int company; // 公司
 
@@ -85,6 +91,15 @@ public class DecorationAchievementPO implements java.io.Serializable {
 
 	public void setMonth(int month) {
 		this.month = month;
+	}
+
+	@Column(name = "typeness")
+	public short getTypeness() {
+		return typeness;
+	}
+
+	public void setTypeness(short typeness) {
+		this.typeness = typeness;
 	}
 
 	@Column(name = "cs0")
@@ -139,6 +154,24 @@ public class DecorationAchievementPO implements java.io.Serializable {
 
 	public void setCs5(long cs5) {
 		this.cs5 = cs5;
+	}
+
+	@Column(name = "cs6")
+	public long getCs6() {
+		return cs6;
+	}
+
+	public void setCs6(long cs6) {
+		this.cs6 = cs6;
+	}
+
+	@Column(name = "cs7")
+	public long getCs7() {
+		return cs7;
+	}
+
+	public void setCs7(long cs7) {
+		this.cs7 = cs7;
 	}
 
 	@Column(name = "company")

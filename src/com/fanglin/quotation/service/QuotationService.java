@@ -15,9 +15,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.quotation.vo.QuotationVO;
+import com.fanglin.utils.Paging;
 
 public interface QuotationService {
+
+	public void pageQuotation(Paging paging, List<Filter> filters, Integer company) throws FLException;
 
 	public QuotationVO queryQuotationByQid(long qId);
 

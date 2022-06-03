@@ -68,7 +68,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 		for (WorkerSalaryPO workerSalaryPO : WorkerSalaryPOs) {
 
-			WorkerSalaryVO workerSalaryVO = new WorkerSalaryVO(new DecorationVO(), new UserBaseVO(new DutyVO()), new UserBaseVO(), new UserBaseVO());
+			WorkerSalaryVO workerSalaryVO = new WorkerSalaryVO(new DecorationVO(), new UserBaseVO(new DutyVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
 			if (workerSalaryPO.getDecoration() != null) {
 
@@ -80,7 +80,8 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 			BeanUtil.copyProperties(workerSalaryPO.getApprover(), workerSalaryVO.getApprover(), Arrays.asList("dept", "role", "duty"));
 			BeanUtil.copyProperties(workerSalaryPO.getCreater(), workerSalaryVO.getCreater(), Arrays.asList("dept", "role", "duty"));
-			BeanUtil.copyProperties(workerSalaryPO, workerSalaryVO, Arrays.asList("decoration", "user", "creater", "approver"));
+			BeanUtil.copyProperties(workerSalaryPO.getChecker(), workerSalaryVO.getChecker(), Arrays.asList("dept", "role", "duty"));
+			BeanUtil.copyProperties(workerSalaryPO, workerSalaryVO, Arrays.asList("decoration", "user", "creater", "approver", "checker"));
 			BeanUtil.copyProperties(workerSalaryPO.getUser(), workerSalaryVO.getUser(), Arrays.asList("dept", "role", "duty"));
 			BeanUtil.copyProperties(workerSalaryPO.getUser().getDuty(), workerSalaryVO.getUser().getDuty(), Arrays.asList("departmentType"));
 
@@ -97,7 +98,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 		for (WorkerSalaryPO workerSalaryPO : workerSalaryPOs) {
 
-			WorkerSalaryVO workerSalaryVO = new WorkerSalaryVO(new DecorationVO(), new UserBaseVO(new DutyVO()), new UserBaseVO(), new UserBaseVO());
+			WorkerSalaryVO workerSalaryVO = new WorkerSalaryVO(new DecorationVO(), new UserBaseVO(new DutyVO()), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
 			if (workerSalaryPO.getDecoration() != null) {
 
@@ -109,7 +110,8 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 			BeanUtil.copyProperties(workerSalaryPO.getApprover(), workerSalaryVO.getApprover(), Arrays.asList("dept", "role", "duty"));
 			BeanUtil.copyProperties(workerSalaryPO.getCreater(), workerSalaryVO.getCreater(), Arrays.asList("dept", "role", "duty"));
-			BeanUtil.copyProperties(workerSalaryPO, workerSalaryVO, Arrays.asList("decoration", "user", "creater", "approver"));
+			BeanUtil.copyProperties(workerSalaryPO.getChecker(), workerSalaryVO.getChecker(), Arrays.asList("dept", "role", "duty"));
+			BeanUtil.copyProperties(workerSalaryPO, workerSalaryVO, Arrays.asList("decoration", "user", "creater", "approver", "checker"));
 			BeanUtil.copyProperties(workerSalaryPO.getUser(), workerSalaryVO.getUser(), Arrays.asList("dept", "role", "duty"));
 			BeanUtil.copyProperties(workerSalaryPO.getUser().getDuty(), workerSalaryVO.getUser().getDuty(), Arrays.asList("departmentType"));
 
@@ -130,9 +132,9 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 		for (WorkerSalaryPO workerSalaryPO : workerSalaryPOs) {
 
-			WorkerSalaryVO workerSalaryvo = new WorkerSalaryVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+			WorkerSalaryVO workerSalaryvo = new WorkerSalaryVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
-			BeanUtil.copyProperties(workerSalaryPO, workerSalaryvo, Arrays.asList("user", "decoration", "creater", "approver"));
+			BeanUtil.copyProperties(workerSalaryPO, workerSalaryvo, Arrays.asList("user", "decoration", "creater", "approver", "checker"));
 			BeanUtil.copyProperties(workerSalaryPO.getUser(), workerSalaryvo.getUser(), Arrays.asList("dept", "role", "duty"));
 
 			workerSalarys.add(workerSalaryvo);
@@ -350,10 +352,38 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 			workerSalaryPO.setApprover(approver);
 			workerSalaryPO.setCount(0);
 			workerSalaryPO.setIsAppr(WorkerSalaryPO.ISAPPR_APPR_INT);
+
 			workerSalaryDao.update(workerSalaryPO);
 
-			workerSalaryDao.updateWorkerSalary(workerSalaryPO.getDecoration().getOrderId(), workerSalaryPO.getCsid());
+			if (workerSalaryPO.getDecoration() != null) {
+				workerSalaryDao.updateWorkerSalary(workerSalaryPO.getDecoration().getOrderId(), workerSalaryPO.getCsid());
+			}
 		}
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int checkWsorkerSalary(WorkerSalaryVO workerSalaryVO, String userId) throws FLException {
+
+		UserPO checker = userDao.queryUserByUserId(userId);
+
+		WorkerSalaryPO workerSalaryPO = workerSalaryDao.get(workerSalaryVO.getWsid());
+
+		if (workerSalaryPO == null) {
+			throw new FLException(280001, "薪资信息不存在");
+		}
+
+		if (workerSalaryPO.getIsCheck() != WorkerSalaryPO.ISCHECK_UNCHECK_INT) {
+			throw new FLException(280002, "工费状态不可操作");
+		}
+
+		workerSalaryPO.setIsCheck(WorkerSalaryPO.ISCHECK_CHECK_INT);
+		workerSalaryPO.setCheckTime(new Timestamp(System.currentTimeMillis()));
+		workerSalaryPO.setChecker(checker);
+
+		workerSalaryDao.update(workerSalaryPO);
 
 		return 0;
 	}
@@ -391,7 +421,9 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 			workerSalaryDao.update(workerSalaryPO);
 
-			workerSalaryDao.updateWorkerSalary(workerSalaryPO.getDecoration().getOrderId(), workerSalaryPO.getCsid());
+			if (workerSalaryPO.getDecoration() != null) {
+				workerSalaryDao.updateWorkerSalary(workerSalaryPO.getDecoration().getOrderId(), workerSalaryPO.getCsid());
+			}
 		}
 
 		return 0;

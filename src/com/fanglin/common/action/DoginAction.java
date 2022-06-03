@@ -22,7 +22,7 @@ import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.dingding.po.User;
+import com.fanglin.dingding.bean.User;
 import com.fanglin.dingding.service.AuthService;
 import com.fanglin.dingding.service.UserService;
 import com.fanglin.utils.LogUtils;

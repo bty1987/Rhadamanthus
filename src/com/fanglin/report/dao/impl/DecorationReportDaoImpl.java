@@ -108,77 +108,59 @@ public class DecorationReportDaoImpl extends DaoImpl<DecorationReportPO> impleme
 		query.executeUpdate();
 	}
 
+	// 签单户数,工程合同额,工程净业绩
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Object[]> countDecorationForAchievement1(String startTime, String endTime, int company) {
-		String sql = "select dr.did AS did, count(*) AS cs0, sum(d.orderTotalPrice) AS cs2, sum(orderTotalPrice - (q.managePrice / (q.manageRate + d.notSalesmanRate) * d.notSalesmanRate) - couponCut - thingCut) AS cs3 from decoration.decoration d, quotation.quotation q, communion.user du, communion.department dd, communion.department dr where d.contractTime > :startTime and d.contractTime < :endTime and d.company = :company and d.orderId = q.orderId and q.defaults = 1 and d.dsuid = du.uid and du.deptid = dd.did and dd.fdid = dr.did group by dr.did;";
+		String sql = "select regionds.did AS did, d.typeness AS typeness, sum(belongds.rate) AS cs0, sum(d.orderTotalPrice * (belongds.rate/1000)) AS cs2, sum((orderTotalPrice - ( q.managePrice / ( q.manageRate + d.notSalesmanRate ) * d.notSalesmanRate ) - couponCut - thingCut) * (belongds.rate/1000)) AS cs3 from decoration.decoration d, quotation.quotation q, communion.department regionds, decoration.decorationbelong belongds where d.contractTime > :startTime and d.contractTime < :endTime and regionds.company = :company and d.orderId = belongds.orderId and d.orderId = q.orderId and belongds.rid = regionds.dId and belongds.`status` = 0 and belongds.`type` = 0 and q.defaults = 1 group by regionds.did, d.typeness;";
 
 		SQLQuery query = (SQLQuery) session().createSQLQuery(sql.toString()).setString("startTime", startTime).setString("endTime", endTime).setInteger("company", company);
-		query.addScalar("did", StandardBasicTypes.INTEGER).addScalar("cs0", StandardBasicTypes.LONG).addScalar("cs2", StandardBasicTypes.LONG).addScalar("cs3", StandardBasicTypes.LONG);
+		query.addScalar("did", StandardBasicTypes.INTEGER).addScalar("typeness", StandardBasicTypes.SHORT).addScalar("cs0", StandardBasicTypes.LONG).addScalar("cs2", StandardBasicTypes.LONG).addScalar("cs3", StandardBasicTypes.LONG);
 
 		return query.list();
 	}
 
+	// 设计户数,设计费
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Object[]> countDecorationForAchievement2(String startTime, String endTime, int company) {
-		String sql = "select dr.did AS did, count(*) AS cs1, sum(dp.refermoney) AS cs4 from payment.decorationpayment dp, payment.decorationreceipt dr, decoration.decoration d, communion.user du, communion.department dd, communion.department dr where dp.drid = dr.drid and dr.collectTime > :startTime and dr.collectTime < :endTime and dp.company = :company and dp.orderId = d.orderId and d.dsuid = du.uid and du.deptid = dd.did and dd.fdid = dr.did group by dr.did;";
+		String sql = "select regionds.did AS did, d.typeness AS typeness, sum(belongds.rate) AS cs1, sum( dp.refermoney * (belongds.rate/1000)) AS cs4 from payment.decorationpayment dp, payment.decorationreceipt dr, decoration.decoration d, communion.department regionds, decoration.decorationbelong belongds, communion.PaymentType cp where dr.collectTime > :startTime and dr.collectTime < :endTime and regionds.company = :company and dp.drid = dr.drid and d.orderId = belongds.orderId and dp.orderId = d.orderId and belongds.rid = regionds.dId and belongds.`status` = 0 and belongds.`type` = 0 and dp.ptid = cp.ptid and cp.paytype = 0 and cp.bustype = 0 and cp.atttype = 0 and dp.paymentStatus in ( 1, 2 ) group by regionds.did, d.typeness;";
 
 		SQLQuery query = (SQLQuery) session().createSQLQuery(sql.toString()).setString("startTime", startTime).setString("endTime", endTime).setInteger("company", company);
-		query.addScalar("did", StandardBasicTypes.INTEGER).addScalar("cs1", StandardBasicTypes.LONG).addScalar("cs4", StandardBasicTypes.LONG);
+		query.addScalar("did", StandardBasicTypes.INTEGER).addScalar("typeness", StandardBasicTypes.SHORT).addScalar("cs1", StandardBasicTypes.LONG).addScalar("cs4", StandardBasicTypes.LONG);
 
 		return query.list();
 	}
 
+	// 服务费
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Object[]> countDecorationForAchievement3(String startTime, String endTime, int company) {
-		String sql = "select dr.did AS did, sum(sp.serviceMoney) AS cs5 from payment.servicepayment sp, payment.servicereceipt sr, decoration.decoration d, communion.user du, communion.department dd, communion.department dr where sp.srid = sr.srid and sr.collectTime > :startTime and sr.collectTime < :endTime and sp.company = :company and sp.orderId = d.orderId and d.dsuid = du.uid and du.deptid = dd.did and dd.fdid = dr.did group by dr.did;";
+		String sql = "select regionds.did AS did, d.typeness AS typeness, sum( sp.serviceMoney * (belongds.rate/1000)) AS cs5 from payment.servicepayment sp, payment.servicereceipt sr, decoration.decoration d, communion.department regionds, decoration.decorationbelong belongds where sr.collectTime > :startTime and sr.collectTime < :endTime and regionds.company = :company and sp.srid = sr.srid and sp.orderId = d.orderId and d.orderId = belongds.orderId and belongds.rid = regionds.dId and belongds.`status` = 0 and belongds.`type` = 0 group by regionds.did, d.typeness;";
 
 		SQLQuery query = (SQLQuery) session().createSQLQuery(sql.toString()).setString("startTime", startTime).setString("endTime", endTime).setInteger("company", company);
-		query.addScalar("did", StandardBasicTypes.INTEGER).addScalar("cs5", StandardBasicTypes.LONG);
+		query.addScalar("did", StandardBasicTypes.INTEGER).addScalar("typeness", StandardBasicTypes.SHORT).addScalar("cs5", StandardBasicTypes.LONG);
 
 		return query.list();
 	}
 
+	// 未签单设计户数,未签单设计户费
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<Object[]> countDecorationForAchievement4(String startTime, String endTime, int company) {
-		String sql = "select sr.did AS did, count(*) AS cs0, sum(d.orderTotalPrice) AS cs2, sum(orderTotalPrice - (q.managePrice / (q.manageRate + d.notSalesmanRate) * d.notSalesmanRate) - couponCut - thingCut) AS cs3 from decoration.decoration d, quotation.quotation q, communion.user su, communion.department sd, communion.department sr where d.contractTime > :startTime and d.contractTime < :endTime and d.company = :company and d.orderId = q.orderId and q.defaults = 1 and d.smuid = su.uid and su.deptid = sd.did and sd.fdid = sr.did group by sr.did;";
+		String sql = "select regionds.did AS did, d.typeness AS typeness, sum(belongds.rate) AS cs6, sum(dp.refermoney * (belongds.rate/1000)) AS cs7 from payment.decorationpayment dp, payment.decorationreceipt dr, decoration.decoration d, communion.department regionds, decoration.decorationbelong belongds, communion.PaymentType cp where dr.collectTime > :startTime and dr.collectTime < :endTime and regionds.company = :company  and dp.drid = dr.drid and d.orderId = belongds.orderId and dp.orderId = d.orderId and belongds.rid = regionds.dId and belongds.`status` = 0 and belongds.`type` = 0 and d.status not in (3, 7) and dp.ptid = cp.ptid and cp.paytype = 0 and cp.bustype = 0 and cp.atttype = 0 and dp.paymentStatus in (1, 2) group by regionds.did, d.typeness;";
 
 		SQLQuery query = (SQLQuery) session().createSQLQuery(sql.toString()).setString("startTime", startTime).setString("endTime", endTime).setInteger("company", company);
-		query.addScalar("did", StandardBasicTypes.INTEGER).addScalar("cs0", StandardBasicTypes.LONG).addScalar("cs2", StandardBasicTypes.LONG).addScalar("cs3", StandardBasicTypes.LONG);
+		query.addScalar("did", StandardBasicTypes.INTEGER).addScalar("typeness", StandardBasicTypes.SHORT).addScalar("cs6", StandardBasicTypes.LONG).addScalar("cs7", StandardBasicTypes.LONG);
 
 		return query.list();
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public List<Object[]> countDecorationForAchievement5(String startTime, String endTime, int company) {
-		String sql = "select sr.did AS did, count(*) cs1, sum(dp.refermoney) AS cs4 from payment.decorationpayment dp, payment.decorationreceipt dr, decoration.decoration d, communion.user su, communion.department sd, communion.department sr where dp.drid = dr.drid and dr.collectTime > :startTime and dr.collectTime < :endTime and dp.company = :company and dp.orderId = d.orderId and d.smuid = su.uid and su.deptid = sd.did and sd.fdid = sr.did group by sr.did;";
+	public int updataDecoration7Achievement(int did, int year, int month, short typeness, long cs0, long cs1, long cs2, long cs3, long cs4, long cs5, long cs6, long cs7, int company) {
 
-		SQLQuery query = (SQLQuery) session().createSQLQuery(sql.toString()).setString("startTime", startTime).setString("endTime", endTime).setInteger("company", company);
-		query.addScalar("did", StandardBasicTypes.INTEGER).addScalar("cs1", StandardBasicTypes.LONG).addScalar("cs4", StandardBasicTypes.LONG);
-
-		return query.list();
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<Object[]> countDecorationForAchievement6(String startTime, String endTime, int company) {
-		String sql = "select sr.did AS did, sum(sp.serviceMoney) AS cs5 from payment.servicepayment sp, payment.servicereceipt sr, decoration.decoration d, communion.user su, communion.department sd, communion.department sr where sp.srid = sr.srid and sr.collectTime > :startTime and sr.collectTime < :endTime and sp.company = :company and sp.orderId = d.orderId and d.smuid = su.uid and su.deptid = sd.did and sd.fdid = sr.did group by sr.did;";
-
-		SQLQuery query = (SQLQuery) session().createSQLQuery(sql.toString()).setString("startTime", startTime).setString("endTime", endTime).setInteger("company", company);
-		query.addScalar("did", StandardBasicTypes.INTEGER).addScalar("cs5", StandardBasicTypes.LONG);
-
-		return query.list();
-	}
-
-	@Override
-	public int updataDecoration7Achievement(int did, int year, int month, long cs0, long cs1, long cs2, long cs3, long cs4, long cs5, int company) {
-
-		String sql = "REPLACE INTO report.decoration7achievement (did, year, month, cs0, cs1, cs2, cs3, cs4, cs5, company) VALUES (:did, :year, :month, :cs0, :cs1, :cs2, :cs3, :cs4, :cs5, :company);";
-		session().createSQLQuery(sql).setInteger("did", did).setInteger("year", year).setInteger("month", month).setLong("cs0", cs0).setLong("cs1", cs1).setLong("cs2", cs2).setLong("cs3", cs3).setLong("cs4", cs4).setLong("cs5", cs5).setInteger("company", company).executeUpdate();
+		String sql = "REPLACE INTO report.decoration7achievement (did, year, month, typeness, cs0, cs1, cs2, cs3, cs4, cs5, cs6, cs7, company) VALUES (:did, :year, :month, :typeness, :cs0, :cs1, :cs2, :cs3, :cs4, :cs5, :cs6, :cs7, :company);";
+		session().createSQLQuery(sql).setInteger("did", did).setInteger("year", year).setInteger("month", month).setShort("typeness", typeness).setLong("cs0", cs0).setLong("cs1", cs1).setLong("cs2", cs2).setLong("cs3", cs3).setLong("cs4", cs4).setLong("cs5", cs5).setLong("cs6", cs6).setLong("cs7", cs7).setInteger("company", company).executeUpdate();
 
 		return 0;
 	}
@@ -189,11 +171,14 @@ public class DecorationReportDaoImpl extends DaoImpl<DecorationReportPO> impleme
 
 				String field = filter.getField();
 				String data = filter.getData();
+				String op = filter.getOp();
 
 				if ("year".equals(field)) {
 					query.add(Restrictions.eq("year", Integer.valueOf(data)));
 				} else if ("month".equals(field)) {
 					query.add(Restrictions.eq("month", Integer.valueOf(data)));
+				} else if ("typeness".equals(field)) {
+					query.add(query.getCriterion("typeness", Short.valueOf(data), op));
 				}
 			}
 		}

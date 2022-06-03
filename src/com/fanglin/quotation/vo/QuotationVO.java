@@ -16,6 +16,9 @@ import java.sql.Timestamp;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.personel.vo.UserBaseVO;
+
 public class QuotationVO implements Serializable {
 
 	private static final long serialVersionUID = -62258203481876631L;
@@ -23,6 +26,8 @@ public class QuotationVO implements Serializable {
 	private Long qid;
 
 	private String orderId;
+
+	private DecorationVO decoration;
 
 	private Integer notSalesmanRate;
 
@@ -32,7 +37,7 @@ public class QuotationVO implements Serializable {
 
 	private String style;
 
-	private Integer creater;
+	private UserBaseVO creater;
 
 	private Timestamp createTime;
 
@@ -68,6 +73,12 @@ public class QuotationVO implements Serializable {
 		super();
 	}
 
+	public QuotationVO(DecorationVO decoration, UserBaseVO creater) {
+		super();
+		this.decoration = decoration;
+		this.creater = creater;
+	}
+
 	public QuotationVO(Long qid) {
 		super();
 		this.qid = qid;
@@ -89,6 +100,14 @@ public class QuotationVO implements Serializable {
 		this.orderId = orderId;
 	}
 
+	public DecorationVO getDecoration() {
+		return decoration;
+	}
+
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -105,11 +124,11 @@ public class QuotationVO implements Serializable {
 		this.style = style;
 	}
 
-	public Integer getCreater() {
+	public UserBaseVO getCreater() {
 		return creater;
 	}
 
-	public void setCreater(Integer creater) {
+	public void setCreater(UserBaseVO creater) {
 		this.creater = creater;
 	}
 

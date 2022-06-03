@@ -20,7 +20,7 @@ public interface VpaymentService {
 
 	public int createVpayment(VpaymentVO vpaymentVO, String usreId) throws FLException;
 
-	public int collectVpayment(List<VpaymentVO> vpayments, VreceiptVO vreceiptVO, List<Long> posids, String userId) throws FLException;
+	public int collectVpayment(List<VpaymentVO> vpayments, VreceiptVO vreceiptVO, List<Long> ptids, String userId) throws FLException;
 
 	public int deleteVpaymentId(VpaymentVO vpaymentVO);
 

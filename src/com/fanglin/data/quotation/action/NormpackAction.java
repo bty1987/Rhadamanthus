@@ -17,41 +17,41 @@ import com.fanglin.data.quotation.vo.NormpackVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class NormpackAction extends BaseListAction{
+public class NormpackAction extends BaseListAction {
 
 	private static final long serialVersionUID = -514623839013952517L;
-	
+
 	@Autowired
-	private NormpackService normpackService; 
-	
+	private NormpackService normpackService;
+
 	private List<NormpackVO> normpacks;
-	
+
 	private NormpackVO normpack;
-	
+
 	@Action(value = "pageNormpack", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageNormpack() throws FLException {
 
-		normpackService.pageNormpack(getPaging(), getFilters());
+		normpackService.pageNormpack(getPaging(), getFilters(), queryCompany());
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryNormpack", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryNormpack() throws FLException {
 
-		normpacks = normpackService.queryNormpack(normpack);
+		normpacks = normpackService.queryNormpack(normpack, queryCompany());
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addNormpack", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addNormpack() throws FLException {
 
-		normpackService.addNormpack(normpack);
+		normpackService.addNormpack(normpack, queryCompany());
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateNormpackForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateNormpackForStatus() throws FLException {
 
@@ -59,7 +59,7 @@ public class NormpackAction extends BaseListAction{
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "deleteNormpack", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteNormpack() throws FLException {
 
@@ -82,5 +82,5 @@ public class NormpackAction extends BaseListAction{
 
 	public void setNormpack(NormpackVO normpack) {
 		this.normpack = normpack;
-	}	
+	}
 }

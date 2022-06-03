@@ -1,12 +1,18 @@
 package com.fanglin.quotation.po;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "selection", catalog = "quotation")
@@ -43,6 +49,10 @@ public class SelectionPO implements Serializable {
 	private long addReduceAddTotal;// 增减增总额
 
 	private long addReduceMinusTotal;// 增减减总额
+
+	private Timestamp createTime;
+
+	private UserPO creater;
 
 	public SelectionPO() {
 		super();
@@ -147,5 +157,24 @@ public class SelectionPO implements Serializable {
 
 	public void setAddReduceMinusTotal(long addReduceMinusTotal) {
 		this.addReduceMinusTotal = addReduceMinusTotal;
+	}
+
+	@Column(name = "createTime")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cuid", referencedColumnName = "uid")
+	public UserPO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
 	}
 }

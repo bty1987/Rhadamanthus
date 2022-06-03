@@ -16,26 +16,26 @@ import java.io.Serializable;
 public class CityProperVO implements Serializable {
 
 	private static final long serialVersionUID = 20145246885240346L;
-	
+
 	private Integer cpid;
-	
+
 	private String no;
-	
+
 	private String name;
-	
+
 	private CityVO city;
-	
-	private Double x;
-	
-	private Double y;
-	
+
+	private Integer x;
+
+	private Integer y;
+
 	public CityProperVO() {
 		super();
 	}
-	
+
 	public CityProperVO(CityVO city) {
-	    super();
-	    this.city = city;
+		super();
+		this.city = city;
 	}
 
 	public Integer getCpid() {
@@ -62,27 +62,27 @@ public class CityProperVO implements Serializable {
 		this.name = name;
 	}
 
-	public CityVO getCity(){
+	public CityVO getCity() {
 		return city;
 	}
 
-	public void setCity(CityVO city){
+	public void setCity(CityVO city) {
 		this.city = city;
 	}
 
-	public Double getX() {
+	public Integer getX() {
 		return x;
 	}
 
-	public void setX(Double x) {
+	public void setX(Integer x) {
 		this.x = x;
 	}
 
-	public Double getY() {
+	public Integer getY() {
 		return y;
 	}
 
-	public void setY(Double y) {
+	public void setY(Integer y) {
 		this.y = y;
 	}
 

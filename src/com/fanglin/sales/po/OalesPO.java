@@ -23,6 +23,8 @@ public class OalesPO implements Serializable {
 
 	private static final long serialVersionUID = -7914043988412844614L;
 
+	public static final String COLUMN_NO_STR = "no";
+
 	public static final String COLUMN_ORDERID_STR = "orderId";
 
 	public static final short STATUS_INIT_INT = 0;// 初始

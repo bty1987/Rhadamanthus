@@ -361,6 +361,9 @@ public abstract class GenericDaoImpl implements GenericDao {
 				int offset = totalCount % (paging.getRows()) == 0 ? 0 : 1;
 				paging.setTotalPage(totalCount / (paging.getRows()) + offset);
 			} else {
+
+				if (criterions == null || criterions.size() == 0) return results;
+
 				Criteria c = criteria(true);
 				results = c.list();
 			}
@@ -386,7 +389,7 @@ public abstract class GenericDaoImpl implements GenericDao {
 
 			List<T> results = Collections.EMPTY_LIST;
 
-			if (pagingFlag) {
+			if (pagingFlag && paging.getNoPage() == 0) {
 				if (!query) {
 					paging.setPage(1);
 				}
@@ -396,6 +399,9 @@ public abstract class GenericDaoImpl implements GenericDao {
 				int offset = totalCount % (paging.getRows()) == 0 ? 0 : 1;
 				paging.setTotalPage(totalCount / (paging.getRows()) + offset);
 			} else {
+
+				if (where == null || "".equals(where)) return results;
+
 				results = createQuery(hql).list();
 			}
 

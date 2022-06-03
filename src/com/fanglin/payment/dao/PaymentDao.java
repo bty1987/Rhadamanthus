@@ -13,17 +13,18 @@ import java.util.List;
 
 import com.fanglin.core.dao.Dao;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.payment.po.PaymentDO;
 import com.fanglin.payment.po.PaymentPO;
 import com.fanglin.utils.Paging;
 
 public interface PaymentDao extends Dao<PaymentPO> {
 
-	public List<PaymentPO> pagePayment(Paging paging, List<Filter> filters, int company);
-	
+	public List<PaymentDO> pagePayment(Paging paging, List<Filter> filters, int company);
+
 	public List<PaymentPO> queryPayment(List<Filter> filters);
-	
+
 	public List<PaymentPO> queryPaymentByOrderId(String orderId);
-	
+
 	public List<PaymentPO> queryPaymentByReceiptId(long arId);
-	
+
 }

@@ -34,7 +34,7 @@ public interface AddReduceService {
 
 	public void sendAddReduce(AddReduceVO addReduceVO) throws FLException;
 
-	public int addAddReduce(AddReduceVO addReduceVO);
+	public int addAddReduce(AddReduceVO addReduceVO, String userId);
 
 	public int updateAddReduce(AddReduceVO addReduceVO) throws FLException;
 

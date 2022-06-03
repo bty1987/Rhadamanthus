@@ -28,6 +28,14 @@ public class ExtensionAction extends BaseListAction {
 
 	private ExtensionVO extension;
 
+	@Action(value = "pageExtension", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageExtension() throws FLException {
+
+		extensionService.pageExtension(getPaging(), getFilters(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "pageExtensionByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageExtensionByOrderId() {
 
@@ -55,7 +63,7 @@ public class ExtensionAction extends BaseListAction {
 	@Action(value = "addExtension", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addExtension() throws FLException {
 
-		extensionService.addExtension(extension);
+		extensionService.addExtension(extension, queryUserId());
 
 		return SUCCESS;
 	}

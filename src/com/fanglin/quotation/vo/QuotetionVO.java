@@ -39,7 +39,7 @@ public class QuotetionVO implements Serializable {
 
 	private Integer trafficRate;
 
-	private Integer costPrice;
+	private Long costPrice;
 
 	private String content;
 
@@ -172,11 +172,11 @@ public class QuotetionVO implements Serializable {
 		this.basePrice = basePrice;
 	}
 
-	public Integer getCostPrice() {
+	public Long getCostPrice() {
 		return costPrice;
 	}
 
-	public void setCostPrice(Integer costPrice) {
+	public void setCostPrice(Long costPrice) {
 		this.costPrice = costPrice;
 	}
 

@@ -22,39 +22,39 @@ import com.fanglin.payment.vo.MaterialReceiptVO;
 import com.fanglin.utils.Paging;
 
 public interface MaterialPaymentService {
-	
+
 	public void pageMaterialPayment(Paging paging, List<Filter> filters, MaterialPaymentVO materialPaymentVO, int company);
-	
+
 	public List<MaterialPaymentVO> queryMaterialPaymentByOrderId(MaterialPaymentVO materialPaymentVO, List<Filter> filters, int company);
-	
+
 	public List<MaterialPaymentVO> queryMaterialPaymentByMid(MaterialPaymentVO materialPaymentVO);
-	
+
 	public List<MaterialPaymentVO> queryMaterialPaymentForNotInitByMrId(MaterialReceiptVO materialReceiptVO);
-	
+
 	public void checkMaterialPayment(MaterialPaymentVO materialPaymentVO) throws FLException;
-	
+
 	public void addMaterialPaymentForDeposit(MaterialPaymentVO materialPaymentVO, String userId) throws FLException;
-	
+
 	public void addMaterialPaymentForFullpay(MaterialPaymentVO materialPaymentVO, String userId) throws FLException;
-	
+
 	public int cancelMaterialPaymentForDeposit(MaterialPaymentVO materialPaymentVO) throws FLException;
-	
+
 	public int cancelMaterialPaymentForFullpay(MaterialPaymentVO materialPaymentVO) throws FLException;
-	
+
 	public int changeMaterialPaymentForTime(MaterialPaymentVO materialPaymentVO, Timestamp dateTime, String userId) throws FLException;
-	
-	public int collectMaterialPayment(MaterialPaymentVO materialPaymentVO, List<Long> posids, String userId, Integer company) throws FLException;
-	
-	public int collectMaterialPayments(MaterialVO materialVO, List<MaterialPaymentVO> materialPaymentVOs, MaterialReceiptVO materialReceiptVO, List<Long> posids, String userId, Integer company) throws FLException;
-	
+
+	public int collectMaterialPayment(MaterialPaymentVO materialPaymentVO, List<Long> ptids, String userId, Integer company) throws FLException;
+
+	public int collectMaterialPayments(MaterialVO materialVO, List<MaterialPaymentVO> materialPaymentVOs, MaterialReceiptVO materialReceiptVO, List<Long> ptids, String userId, Integer company) throws FLException;
+
 	public int refundMaterialPayment(MaterialPaymentVO materialPaymentVO, String userId, Integer company) throws FLException;
-	
-	public int updateMaterialPayment(MaterialPaymentVO materialPaymentVO,MaterialReceiptVO materialReceiptVO) throws FLException;
-	
+
+	public int updateMaterialPayment(MaterialPaymentVO materialPaymentVO, MaterialReceiptVO materialReceiptVO) throws FLException;
+
 	public void confirmMaterialPayment(List<Long> mpIds, String userId) throws FLException;
-	
+
 	public void refundMaterialPaymentForDeposit(MaterialPaymentVO materialPaymentVO, String userId) throws FLException;
-	
+
 	public int refundMaterialPaymentForCoupon(MaterialVO materialVO, String userId) throws FLException;
 
 }

@@ -1,6 +1,12 @@
 package com.fanglin.quotation.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+
+import org.apache.struts2.json.annotations.JSON;
+
+import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class SelectionVO implements Serializable {
 
@@ -9,6 +15,8 @@ public class SelectionVO implements Serializable {
 	private Long sid;// 选材单ID
 
 	private String orderId;// 装修单号
+
+	private DecorationVO decoration;
 
 	private Long qid;// 报价ID
 
@@ -28,8 +36,18 @@ public class SelectionVO implements Serializable {
 
 	private Long addReduceMinusTotal;// 增减减总额
 
+	private Timestamp createTime;
+
+	private UserBaseVO creater;
+
 	public SelectionVO() {
 		super();
+	}
+
+	public SelectionVO(DecorationVO decoration, UserBaseVO creater) {
+		super();
+		this.decoration = decoration;
+		this.creater = creater;
 	}
 
 	public Long getSid() {
@@ -46,6 +64,14 @@ public class SelectionVO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	public DecorationVO getDecoration() {
+		return decoration;
+	}
+
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
 	}
 
 	public Long getQid() {
@@ -118,5 +144,22 @@ public class SelectionVO implements Serializable {
 
 	public void setAddReduceMinusTotal(Long addReduceMinusTotal) {
 		this.addReduceMinusTotal = addReduceMinusTotal;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
+	public UserBaseVO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserBaseVO creater) {
+		this.creater = creater;
 	}
 }

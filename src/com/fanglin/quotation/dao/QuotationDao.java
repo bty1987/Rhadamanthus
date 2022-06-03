@@ -14,9 +14,14 @@ package com.fanglin.quotation.dao;
 import java.util.List;
 
 import com.fanglin.core.dao.Dao;
+import com.fanglin.core.vo.Filter;
+import com.fanglin.quotation.po.QuotationDO;
 import com.fanglin.quotation.po.QuotationPO;
+import com.fanglin.utils.Paging;
 
 public interface QuotationDao extends Dao<QuotationPO> {
+
+	public List<QuotationDO> pageQuotation(Paging paging, List<Filter> filters, Integer company);
 
 	public List<QuotationPO> queryQuotationByOrderId(String orderId);
 

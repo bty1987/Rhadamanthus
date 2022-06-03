@@ -13,8 +13,10 @@ import org.springframework.stereotype.Controller;
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.payment.bean.Wxpay;
 import com.fanglin.payment.service.ActivityPaymentService;
 import com.fanglin.payment.service.PaymentContractService;
+import com.fanglin.payment.service.PaytranService;
 import com.fanglin.payment.vo.ActivityPaymentVO;
 import com.fanglin.payment.vo.PaymentContractVO;
 
@@ -31,11 +33,16 @@ public class PaymentCommonAction extends BaseListAction {
 	@Autowired
 	private PaymentContractService paymentContractService;
 
+	@Autowired
+	private PaytranService paytranService;
+
 	private List<PaymentContractVO> paymentContracts;
 
 	private PaymentContractVO paymentContract;
 
 	private ActivityPaymentVO activityPayment;
+
+	private Wxpay wxpay;
 
 	private String redirect;
 
@@ -95,6 +102,14 @@ public class PaymentCommonAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "wxpay", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String wxpay() throws FLException {
+
+		paytranService.wxpay(wxpay, queryCompany());
+
+		return SUCCESS;
+	}
+
 	public ActivityPaymentVO getActivityPayment() {
 		return activityPayment;
 	}
@@ -117,6 +132,14 @@ public class PaymentCommonAction extends BaseListAction {
 
 	public void setPaymentContract(PaymentContractVO paymentContract) {
 		this.paymentContract = paymentContract;
+	}
+
+	public Wxpay getWxpay() {
+		return wxpay;
+	}
+
+	public void setWxpay(Wxpay wxpay) {
+		this.wxpay = wxpay;
 	}
 
 	public String getRedirect() {

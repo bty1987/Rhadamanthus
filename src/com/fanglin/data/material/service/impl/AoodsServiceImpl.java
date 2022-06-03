@@ -54,7 +54,9 @@ public class AoodsServiceImpl implements AoodsService {
 			BeanUtil.copyProperties(aoodsPO.getAccessoriesType(), aoodsVO.getAccessoriesType(), Arrays.asList("workType"));
 
 			if (aoodsPO.getBompany() != 0) {
+
 				CompanyPO companyPO = companyDao.get(aoodsPO.getBompany());
+
 				aoodsVO.setBompany(companyPO.getName());
 			}
 
@@ -63,13 +65,13 @@ public class AoodsServiceImpl implements AoodsService {
 
 		paging.setData(AoodsVOs);
 	}
-	
+
 	@Override
-	public List<AoodsVO> queryAoods(AoodsVO aoodsVO,  String orderId){
-		
+	public List<AoodsVO> queryAoods(AoodsVO aoodsVO, String orderId) {
+
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
 
-		List<AoodsPO> aoodsPOs = aoodsDao.queryAoods(aoodsVO.getAccessoriesType().getAtid(),aoodsVO.getAtttype(),decorationPO.getCompany());
+		List<AoodsPO> aoodsPOs = aoodsDao.queryAoods(aoodsVO.getAccessoriesType().getAtid(), aoodsVO.getAtttype(), decorationPO.getCompany());
 		List<AoodsVO> AoodsVOs = new ArrayList<AoodsVO>();
 
 		for (AoodsPO aoodsPO : aoodsPOs) {
@@ -77,8 +79,10 @@ public class AoodsServiceImpl implements AoodsService {
 			aoodsVO = new AoodsVO(new GoodsVO(), new AccessoriesTypeVO());
 
 			BeanUtil.copyProperties(aoodsPO, aoodsVO, Arrays.asList("goods", "accessoriesType", "bompany"));
+
 			aoodsVO.setGid(aoodsPO.getGoods().getGid());
 			aoodsVO.setName(aoodsPO.getGoods().getName());
+
 			BeanUtil.copyProperties(aoodsPO.getGoods(), aoodsVO.getGoods(), Arrays.asList("accessoriesType"));
 			BeanUtil.copyProperties(aoodsPO.getAccessoriesType(), aoodsVO.getAccessoriesType(), Arrays.asList("workType"));
 
@@ -101,8 +105,10 @@ public class AoodsServiceImpl implements AoodsService {
 			aoodsVO = new AoodsVO(new GoodsVO(), new AccessoriesTypeVO());
 
 			BeanUtil.copyProperties(aoodsPO, aoodsVO, Arrays.asList("goods", "accessoriesType", "bompany"));
+
 			aoodsVO.setGid(aoodsPO.getGoods().getGid());
 			aoodsVO.setName(aoodsPO.getGoods().getName());
+
 			BeanUtil.copyProperties(aoodsPO.getGoods(), aoodsVO.getGoods(), Arrays.asList("accessoriesType"));
 			BeanUtil.copyProperties(aoodsPO.getAccessoriesType(), aoodsVO.getAccessoriesType(), Arrays.asList("workType"));
 
@@ -123,8 +129,10 @@ public class AoodsServiceImpl implements AoodsService {
 			aoodsVO = new AoodsVO(new GoodsVO(), new AccessoriesTypeVO());
 
 			BeanUtil.copyProperties(aoodsPO, aoodsVO, Arrays.asList("goods", "accessoriesType", "bompany"));
+
 			aoodsVO.setGid(aoodsPO.getGoods().getGid());
 			aoodsVO.setName(aoodsPO.getGoods().getName());
+
 			BeanUtil.copyProperties(aoodsPO.getGoods(), aoodsVO.getGoods(), Arrays.asList("accessoriesType"));
 			BeanUtil.copyProperties(aoodsPO.getAccessoriesType(), aoodsVO.getAccessoriesType(), Arrays.asList("workType"));
 
@@ -180,7 +188,7 @@ public class AoodsServiceImpl implements AoodsService {
 		aoodsPO.setBompany(cid);
 		aoodsPO.setAtttype(aoodsVO.getAtttype());
 		aoodsPO.setBalance(aoodsVO.getBalance());
-		
+
 		aoodsDao.update(aoodsPO);
 
 		return 0;

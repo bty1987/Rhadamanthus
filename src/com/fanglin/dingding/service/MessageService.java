@@ -14,11 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.dingding.po.AppMessageDelivery;
-import com.fanglin.dingding.po.LinkMessage;
-import com.fanglin.dingding.po.MessageDelivery;
-import com.fanglin.dingding.po.OAMessage;
-import com.fanglin.dingding.po.TextMessage;
+import com.fanglin.dingding.bean.LinkMessage;
+import com.fanglin.dingding.bean.OAMessage;
+import com.fanglin.dingding.bean.TextMessage;
 import com.fanglin.dingding.utils.DDApi;
 import com.fanglin.dingding.utils.HttpHelper;
 import com.fanglin.dingding.utils.WXApi;
@@ -41,7 +39,7 @@ public class MessageService {
 	@Autowired
 	private SystemConfigDao systemConfigDao;
 
-	public short sendMessage(String receiveId, String senderName, String contents, long aimid, int company) throws FLException {
+	public short sendMessage(String receiveId, String senderName, String contents, Long aimid, int company) throws FLException {
 
 		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(company));
 
@@ -53,30 +51,28 @@ public class MessageService {
 			return -1;
 		}
 
-		AppMessageDelivery appMessageDelivery = new AppMessageDelivery(receiveId, "", deliverValue.getValue());
+		OAMessage oa = new OAMessage();
 
-		OAMessage oaMessage = new OAMessage();
-
-		oaMessage.message_url = String.format(jumpValue.getValue(), aimid);
+		if (aimid != null) {
+			oa.setMessage_url(String.format(jumpValue.getValue(), aimid));
+		}
 
 		OAMessage.Head head = new OAMessage.Head();
 
 		head.bgcolor = "FFDFD130";
-		oaMessage.head = head;
+		oa.setHead(head);
 		OAMessage.Body body = new OAMessage.Body();
 
 		body.content = "内容  : " + contents;
 		body.author = "发送人 : " + senderName;
 
-		oaMessage.body = body;
-
-		appMessageDelivery.withMessage(oaMessage);
+		oa.setBody(body);
 
 		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
 
 		String url = String.format(DDApi.DDAPI_MESSAGE_SEND_STR, oapiHost.getValue(), accessToken);
 
-		JSONObject json = HttpHelper.httpPost(url, appMessageDelivery.toJsonObject());
+		JSONObject json = HttpHelper.httpPost(url, oa.delivery(deliverValue.getValue(), receiveId, ""));
 
 		if (json == null) {
 			throw new FLException(270007, "发送消息失败");
@@ -158,13 +154,10 @@ public class MessageService {
 
 		String url = String.format(DDApi.DDAPI_ROBOT_SEND_STR, oapiHost.getValue(), accessToken);
 
-		MessageDelivery messageDelivery = new MessageDelivery();
-		TextMessage textMessage = new TextMessage(message);
-
-		messageDelivery.withMessage(textMessage);
+		TextMessage text = new TextMessage(message);
 
 		try {
-			HttpHelper.httpPost(url, messageDelivery.toJsonObject());
+			HttpHelper.httpPost(url, text.delivery());
 		} catch (Exception e) {
 			LogUtils.logging(logger, url, -1, e.getMessage());
 		}
@@ -184,14 +177,12 @@ public class MessageService {
 			return -1;
 		}
 
-		LinkMessage linkMessage = new LinkMessage(String.format(jumpUrl.getValue(), args), "", title, content);
-
-		MessageDelivery messageDelivery = new MessageDelivery().withMessage(linkMessage);
+		LinkMessage link = new LinkMessage(String.format(jumpUrl.getValue(), args), "", title, content);
 
 		JSONObject json = null;
 
 		try {
-			json = HttpHelper.httpPost(url, messageDelivery.toJsonObject());
+			json = HttpHelper.httpPost(url, link.delivery());
 		} catch (Exception e) {
 			LogUtils.logging(logger, url, -1, e.getMessage());
 		}

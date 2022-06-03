@@ -5,10 +5,15 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "extension", catalog = "quotation")
@@ -41,6 +46,8 @@ public class ExtensionPO implements Serializable {
 	private long total;
 
 	private short status;
+
+	private UserPO creater;
 
 	private Timestamp createTime;
 
@@ -127,6 +134,16 @@ public class ExtensionPO implements Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cuid", referencedColumnName = "uid")
+	public UserPO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
 	}
 
 }

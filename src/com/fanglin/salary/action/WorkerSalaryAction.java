@@ -80,6 +80,14 @@ public class WorkerSalaryAction extends BaseListAction {
 		return "success";
 	}
 
+	@Action(value = "checkWsorkerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String checkWsorkerSalary() throws FLException {
+
+		workerSalaryService.checkWsorkerSalary(workerSalary, queryUserId());
+
+		return "success";
+	}
+
 	@Action(value = "deleteWorkerSalary", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String deleteWorkerSalary() throws FLException {
 

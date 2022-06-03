@@ -25,6 +25,7 @@ import com.fanglin.common.dao.ServiceRecordDao;
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.po.ServiceRecordPO;
 import com.fanglin.common.service.CountingService;
+import com.fanglin.communion.dao.CustomerDao;
 import com.fanglin.communion.dao.CustomerPhoneDao;
 import com.fanglin.communion.dao.HouseDao;
 import com.fanglin.communion.po.CustomerPO;
@@ -168,6 +169,9 @@ public class DecorationServiceImpl implements DecorationService {
 
 	@Autowired
 	private CustomerPhoneDao customerPhoneDao;
+
+	@Autowired
+	private CustomerDao customerDao;
 
 	@Override
 	public void pageDecoration(Paging paging, List<Filter> filters, Authentication authentication, List<Short> statuses) {
@@ -1407,6 +1411,28 @@ public class DecorationServiceImpl implements DecorationService {
 			decoration.setRepairStatus(decorationVO.getRepairStatus());
 			decorationDao.update(decoration);
 		}
+
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void changeDecorationForCustomer(DecorationVO decorationVO) throws FLException {
+
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationVO.getOrderId());
+
+		// 判断装修单是否存在
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		CustomerPO customerPO = customerDao.get(decorationVO.getCustomer().getCid());
+
+		if (customerPO == null) {
+			throw new FLException(130002, "客户不存在");
+		}
+
+		decorationPO.setCustomer(customerPO);
+		decorationDao.update(decorationPO);
 
 	}
 }

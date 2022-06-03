@@ -14,6 +14,8 @@ public class DecorationAchievementVO implements java.io.Serializable {
 
 	private Integer month;
 
+	private Short typeness;
+
 	private Long cs0;
 
 	private Long cs1;
@@ -25,6 +27,10 @@ public class DecorationAchievementVO implements java.io.Serializable {
 	private Long cs4;
 
 	private Long cs5;
+
+	private Long cs6;
+
+	private Long cs7;
 
 	private Integer company;
 
@@ -67,6 +73,14 @@ public class DecorationAchievementVO implements java.io.Serializable {
 
 	public void setMonth(Integer month) {
 		this.month = month;
+	}
+
+	public Short getTypeness() {
+		return typeness;
+	}
+
+	public void setTypeness(Short typeness) {
+		this.typeness = typeness;
 	}
 
 	public Long getCs0() {
@@ -115,6 +129,22 @@ public class DecorationAchievementVO implements java.io.Serializable {
 
 	public void setCs5(Long cs5) {
 		this.cs5 = cs5;
+	}
+
+	public Long getCs6() {
+		return cs6;
+	}
+
+	public void setCs6(Long cs6) {
+		this.cs6 = cs6;
+	}
+
+	public Long getCs7() {
+		return cs7;
+	}
+
+	public void setCs7(Long cs7) {
+		this.cs7 = cs7;
 	}
 
 	public Integer getCompany() {

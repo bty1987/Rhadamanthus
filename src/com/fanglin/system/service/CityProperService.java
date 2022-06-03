@@ -19,23 +19,25 @@ import com.fanglin.system.vo.CityProperVO;
 import com.fanglin.utils.Paging;
 
 public interface CityProperService {
-	
+
 	public void pageCityProper(Paging paging, List<Filter> filters);
-	
+
 	public List<CityProperVO> queryCityProper();
-	
+
 	public CityProperVO queryCityProperByCpid(CityProperVO cityProperVO);
-	
+
 	public List<CityProperVO> queryCityProperByCid(CityProperVO cityProperVO);
-	
+
 	public List<CityProperVO> queryCityProperByName(CityProperVO cityProperVO);
-	
+
 	public void addCityProper(CityProperVO cityProperVO) throws FLException;
-	
+
 	public void updateCityProper(CityProperVO cityProperVO) throws FLException;
-	
+
+	public int updateCityProperForPosition(CityProperVO cityProperVO) throws FLException;
+
 	public void deleteCityProperByCpid(Integer cpid);
-	
+
 	public String deleteCityProper(List<Integer> cpids);
-	
+
 }

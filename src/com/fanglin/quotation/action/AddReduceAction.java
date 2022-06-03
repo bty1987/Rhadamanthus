@@ -80,9 +80,9 @@ public class AddReduceAction extends BaseListAction {
 	}
 
 	@Action(value = "addAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addAddReduce() {
+	public String addAddReduce() throws FLException {
 
-		addReduceService.addAddReduce(addReduce);
+		addReduceService.addAddReduce(addReduce, queryUserId());
 
 		return SUCCESS;
 	}

@@ -55,6 +55,8 @@ public class BalancePO implements java.io.Serializable {
 
 	private long surplus;
 
+	private long cutpay;
+
 	private short type;
 
 	private short status;
@@ -154,6 +156,15 @@ public class BalancePO implements java.io.Serializable {
 
 	public void setSurplus(long surplus) {
 		this.surplus = surplus;
+	}
+
+	@Column(name = "cutpay")
+	public long getCutpay() {
+		return cutpay;
+	}
+
+	public void setCutpay(long cutpay) {
+		this.cutpay = cutpay;
 	}
 
 	@Column(name = "type")

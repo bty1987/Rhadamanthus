@@ -32,93 +32,105 @@ import com.fanglin.utils.SystemConfig;
 public class CityProperAction extends BaseListAction {
 
 	private static final long serialVersionUID = 3246937855994579649L;
-	
+
 	@Autowired
 	private CityProperService cityProperService;
-	
+
 	private List<CityProperVO> cityPropers;
-	
+
 	private CityProperVO cityProper;
-	
+
 	private List<Integer> cpids;
-	
+
 	@Action(value = "pageCityProper", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageCityProper(){
-		
+	public String pageCityProper() {
+
 		cityProperService.pageCityProper(getPaging(), getFilters());
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryCityProper", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryCityProper(){
-		
+	public String queryCityProper() {
+
 		cityPropers = cityProperService.queryCityProper();
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryCityProperByCpid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryCityProperByCpid(){
-		
+	public String queryCityProperByCpid() {
+
 		cityProper = cityProperService.queryCityProperByCpid(cityProper);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryCityProperByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryCityProperByCid(){
-		
+	public String queryCityProperByCid() {
+
 		cityPropers = cityProperService.queryCityProperByCid(cityProper);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryCityProperByName", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageCityProperByName(){
-		
+	public String pageCityProperByName() {
+
 		cityPropers = cityProperService.queryCityProperByName(cityProper);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addCityProper", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addCityProper() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+	public String addCityProper() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		cityProperService.addCityProper(cityProper);
-		
+
 		return SUCCESS;
 	}
 
 	@Action(value = "updateCityProper", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateCityProper() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+	public String updateCityProper() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		cityProperService.updateCityProper(cityProper);
-		
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateCityProperForPosition", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateCityProperForPosition() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		cityProperService.updateCityProperForPosition(cityProper);
+
 		return SUCCESS;
 	}
 
 	@Action(value = "deleteCityProper", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteCityProper() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+	public String deleteCityProper() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		String quotedCityProper = cityProperService.deleteCityProper(cpids);
-		
-		if(!quotedCityProper.equals("")){
+
+		if (!quotedCityProper.equals("")) {
 			throw new FLException(230003, String.format("城区[%s]已被引用,不能被删除", quotedCityProper));
 		}
-		
+
 		return SUCCESS;
 	}
 
@@ -138,11 +150,11 @@ public class CityProperAction extends BaseListAction {
 		this.cpids = cpids;
 	}
 
-	public CityProperVO getCityProper(){
+	public CityProperVO getCityProper() {
 		return cityProper;
 	}
 
-	public void setCityProper(CityProperVO cityProper){
+	public void setCityProper(CityProperVO cityProper) {
 		this.cityProper = cityProper;
 	}
 

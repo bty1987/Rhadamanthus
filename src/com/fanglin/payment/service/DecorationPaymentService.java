@@ -41,14 +41,12 @@ public interface DecorationPaymentService {
 
 	public int changeDecorationPaymentForTime(DecorationPaymentVO decorationPaymentVO, Timestamp dateTime, String userId) throws FLException;
 
-	public int collectDecorationPayment(DecorationPaymentVO decorationPaymentVO, List<Long> posids, String userId, Integer company) throws FLException, Exception;
+	public int collectDecorationPayment(DecorationPaymentVO decorationPaymentVO, List<Long> ptids, String userId, Integer company) throws FLException;
 
-	public int refundDecorationPayment(DecorationPaymentVO decorationPaymentVO, String userId, Integer company) throws FLException, Exception;
+	public int refundDecorationPayment(DecorationPaymentVO decorationPaymentVO, String userId, Integer company) throws FLException;
 
-	public int confirmDecorationPayment(List<Long> paymentIds, String userId) throws FLException, Exception;
+	public int confirmDecorationPayment(List<Long> paymentIds, String userId) throws FLException;
 
 	public int updateDecorationPayment(DecorationPaymentVO decorationPaymentVO) throws FLException;
-
-	public int deleteDecorationPaymentById(DecorationPaymentVO decorationPaymentVO);
 
 }

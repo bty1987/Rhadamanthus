@@ -14,8 +14,10 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
+
 import com.fanglin.communion.vo.CustomerVO;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
 public class PaymentVO implements Serializable {
@@ -23,57 +25,61 @@ public class PaymentVO implements Serializable {
 	private static final long serialVersionUID = -4900471974953513592L;
 
 	private Long pid;
-	
+
 	private String orderId;
-	
+
+	private DecorationVO decoration;
+
 	private CustomerVO customer;
-	
+
 	private Long balance = 0L;
-	
+
 	private Long recharge = 0L;
-	
+
 	private Short type;
-	
+
 	private Short paymentType;
-	
+
+	private Timestamp createTime;
+
 	private UserBaseVO collectUser;
-	
+
 	private Timestamp collectTime;
-	
+
 	private UserBaseVO confirmUser;
-	
+
 	private Timestamp confirmTime;
-	
+
 	private Short status;
-	
+
 	private Long cash = 0L;
-	
+
 	private String cashInfo;
-	
+
 	private Long bank = 0L;
-	
+
 	private String bankInfo;
-	
+
 	private Long checkv = 0L;
-	
+
 	private String checkvBank;
-	
+
 	private Long installment = 0L;
-	
+
 	private String installmentBank;
-	
+
 	private Long accounts = 0L;
-	
+
 	private String accountsBank;
-	
+
 	private Long transfer = 0L;
-	
+
 	private String comment;
-	
+
 	private String uniqueid;
-	
+
 	private Long arId;
-	
+
 	public PaymentVO() {
 		super();
 	}
@@ -99,6 +105,14 @@ public class PaymentVO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	public DecorationVO getDecoration() {
+		return decoration;
+	}
+
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
 	}
 
 	public CustomerVO getCustomer() {
@@ -139,6 +153,15 @@ public class PaymentVO implements Serializable {
 
 	public void setPaymentType(Short paymentType) {
 		this.paymentType = paymentType;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
 	}
 
 	public UserBaseVO getCollectUser() {
@@ -300,7 +323,7 @@ public class PaymentVO implements Serializable {
 		if (getStatus() != null) {
 			filters.add(new Filter("status", String.valueOf(getStatus()), "eq"));
 		}
-		
+
 		if (getType() != null) {
 			filters.add(new Filter("type", String.valueOf(getType()), "eq"));
 		}

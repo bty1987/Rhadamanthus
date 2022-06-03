@@ -32,53 +32,53 @@ import com.fanglin.personel.vo.UserBaseVO;
 public class StorehouseAction extends BaseListAction {
 
 	private static final long serialVersionUID = -3140016731366048717L;
-	
+
 	@Autowired
 	private StorehouseService storehouseService;
-	
+
 	private StorehouseVO storehouse;
-	
+
 	private List<StorehouseVO> storehouses;
-	
+
 	private UserBaseVO user;
-	
+
 	@Action(value = "pageStorehouse", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageStorehouse(){
-		
+	public String pageStorehouse() {
+
 		storehouseService.pageStorehouse(getPaging(), getFilters());
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryStorehouse", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryStorehouse(){
-		
-		storehouses = storehouseService.queryStorehouse(getFilters());
-		
+	public String queryStorehouse() {
+
+		storehouses = storehouseService.queryStorehouse(storehouse);
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryStorehouseForSelf", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryStorehouseForSelf() throws FLException{
-		
+	public String queryStorehouseForSelf() throws FLException {
+
 		storehouses = storehouseService.queryStorehouseByUserId(new UserBaseVO(queryUserId()));
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addStorehouse", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addStorehouse() throws FLException{
-		
+	public String addStorehouse() throws FLException {
+
 		storehouseService.addStorehouse(storehouse);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateStorehouseForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateStorehouseForStatus() throws FLException{
-		
+	public String updateStorehouseForStatus() throws FLException {
+
 		storehouseService.updateStorehouseForStatus(storehouse);
-		
+
 		return SUCCESS;
 	}
 
@@ -105,5 +105,5 @@ public class StorehouseAction extends BaseListAction {
 	public void setUser(UserBaseVO user) {
 		this.user = user;
 	}
-	
+
 }

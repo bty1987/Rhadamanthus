@@ -62,7 +62,7 @@ public class OalesServiceImpl implements OalesService {
 
 		for (OalesPO oalesPO : oalesPOs) {
 
-			OalesVO oalesVO = new OalesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+			OalesVO oalesVO = new OalesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
 			BeanUtil.copyProperties(oalesPO, oalesVO, Arrays.asList("decoration", "house", "customer", "supplier", "creater", "servicer", "checker", "materialer"));
 
@@ -70,6 +70,7 @@ public class OalesServiceImpl implements OalesService {
 			BeanUtil.copyProperties(oalesPO.getSupplier(), oalesVO.getSupplier(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyProperties(oalesPO.getServicer(), oalesVO.getServicer(), Arrays.asList("dept", "duty"));
 			BeanUtil.copyProperties(oalesPO.getChecker(), oalesVO.getChecker(), Arrays.asList("dept", "duty"));
+			BeanUtil.copyProperties(oalesPO.getMaterialer(), oalesVO.getMaterialer(), Arrays.asList("dept", "duty"));
 
 			oalesPO.getDecoration().ptvcascade(oalesVO.getDecoration());
 
@@ -87,7 +88,7 @@ public class OalesServiceImpl implements OalesService {
 
 		for (OalesPO oalesPO : oalesPOs) {
 
-			oalesVO = new OalesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
+			oalesVO = new OalesVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO(), new UserBaseVO());
 
 			BeanUtil.copyProperties(oalesPO, oalesVO, Arrays.asList("decoration", "house", "customer", "supplier", "creater", "servicer", "checker", "materialer"));
 
@@ -95,6 +96,7 @@ public class OalesServiceImpl implements OalesService {
 			BeanUtil.copyProperties(oalesPO.getSupplier(), oalesVO.getSupplier(), Arrays.asList("dept", "role", "duty"));
 			BeanUtil.copyProperties(oalesPO.getServicer(), oalesVO.getServicer(), Arrays.asList("dept", "role", "duty"));
 			BeanUtil.copyProperties(oalesPO.getChecker(), oalesVO.getChecker(), Arrays.asList("dept", "role", "duty"));
+			BeanUtil.copyProperties(oalesPO.getMaterialer(), oalesVO.getMaterialer(), Arrays.asList("dept", "duty"));
 
 			oalesVOs.add(oalesVO);
 		}
@@ -121,6 +123,7 @@ public class OalesServiceImpl implements OalesService {
 		BrandPO brandPO = brandDao.get(oalesVO.getBid());
 
 		String currentDate = DateUtil.current("yyMMdd").toString();
+
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_OALES_INT, currentDate, company);
 		String no = companyPO.getShortname() + currentDate + FormatUtil.fillZero(FormatUtil.offset(count), "0000");
 

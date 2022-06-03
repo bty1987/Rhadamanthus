@@ -15,7 +15,7 @@ import java.util.Date;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.payment.po.PointofsalesPO;
+import com.fanglin.payment.po.PaytranPO;
 import com.fanglin.utils.Arith;
 import com.newland.nlpush.sdk.java.NLApiFactory;
 import com.newland.nlpush.sdk.java.NLTransApi;
@@ -43,7 +43,7 @@ public class Airpos {
 		System.out.println(targetSn);
 	}
 
-	public static void send(String way, PointofsalesPO pointofsalesPO) throws FLException {
+	public static void pospay(String way, PaytranPO paytranPO) throws FLException {
 
 		NLTransApi nlTransApi = NLApiFactory.createNLTransApi();
 
@@ -51,22 +51,24 @@ public class Airpos {
 
 			String outOrderNo = String.valueOf(new Date().getTime());
 
-			String msgId = nlTransApi.transCollection(way, outOrderNo, String.valueOf(Arith.div(pointofsalesPO.getMoney(), 10000l))).execute(pointofsalesPO.getSn());
+			String msgId = nlTransApi.transCollection(way, outOrderNo, String.valueOf(Arith.div(paytranPO.getMoney(), 10000l))).execute(paytranPO.getSn());
 
-			pointofsalesPO.setMsgId(msgId);
-			pointofsalesPO.setOutOrderNo(outOrderNo);
+			paytranPO.setMsgId(msgId);
+			paytranPO.setOutOrderNo(outOrderNo);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-			throw new FLException(150044, "推送失败");
+			paytranPO.setStatus(PaytranPO.STATUS_FAIL_INT);
+			paytranPO.setRstcode("150044");
+			paytranPO.setRstmsg("推送失败");
 		}
 	}
 
-	public static void check(PointofsalesPO pointofsalesPO) throws FLException {
+	public static void check(PaytranPO paytranPO) throws FLException {
 
 		NLTransApi nlTransApi = NLApiFactory.createNLTransApi();
 
 		try {
-			BeanQuery query = nlTransApi.msgQuery(pointofsalesPO.getSn(), pointofsalesPO.getMsgId());
+			BeanQuery query = nlTransApi.msgQuery(paytranPO.getSn(), paytranPO.getMsgId());
 
 			System.out.println(query.state);
 			System.out.println(query.handlemsg);
@@ -81,21 +83,21 @@ public class Airpos {
 				String code = response.getString("responseCode");
 
 				if ("00".equals(code)) {
-					pointofsalesPO.setStatus(PointofsalesPO.STATUS_SUCCESS_INT);
+					paytranPO.setStatus(PaytranPO.STATUS_SUCCESS_INT);
 				} else {
-					pointofsalesPO.setStatus(PointofsalesPO.STATUS_FAIL_INT);
-					pointofsalesPO.setRstcode(response.getString("responseCode"));
-					pointofsalesPO.setRstmsg(response.getString("message"));
+					paytranPO.setStatus(PaytranPO.STATUS_FAIL_INT);
+					paytranPO.setRstcode(response.getString("responseCode"));
+					paytranPO.setRstmsg(response.getString("message"));
 				}
 
 			} else if ("03".equals(query.state)) {
-				pointofsalesPO.setStatus(PointofsalesPO.STATUS_FAIL_INT);
-				pointofsalesPO.setRstcode("03");
-				pointofsalesPO.setRstmsg("POS支付不存在");
+				paytranPO.setStatus(PaytranPO.STATUS_FAIL_INT);
+				paytranPO.setRstcode("03");
+				paytranPO.setRstmsg("转换款不存在");
 			} else if ("01".equals(query.state)) {
-				throw new FLException(150045, "POS支付正在处理");
+				throw new FLException(150045, "转换款支付正在处理");
 			} else if ("04".equals(query.state)) {
-				throw new FLException(150045, "POS支付正在处理");
+				throw new FLException(150045, "转换款支付正在处理");
 			}
 		} catch (FLException e) {
 			throw e;

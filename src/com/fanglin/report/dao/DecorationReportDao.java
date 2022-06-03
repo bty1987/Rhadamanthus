@@ -34,10 +34,6 @@ public interface DecorationReportDao extends Dao<DecorationReportPO> {
 
 	public List<Object[]> countDecorationForAchievement4(String startTime, String endTime, int company);
 
-	public List<Object[]> countDecorationForAchievement5(String startTime, String endTime, int company);
-
-	public List<Object[]> countDecorationForAchievement6(String startTime, String endTime, int company);
-
-	public int updataDecoration7Achievement(int did, int year, int month, long cs0, long cs1, long cs2, long cs3, long cs4, long cs5, int company);
+	public int updataDecoration7Achievement(int did, int year, int month, short typeness, long cs0, long cs1, long cs2, long cs3, long cs4, long cs5, long cs6, long cs7, int company);
 
 }

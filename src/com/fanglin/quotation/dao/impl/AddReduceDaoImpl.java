@@ -38,6 +38,8 @@ public class AddReduceDaoImpl extends DaoImpl<AddReducePO> implements AddReduceD
 
 		PagingQuery<AddReduceDO> query = pagingQuery(paging, AddReduceDO.class);
 
+		query.alias("decoration", "decoration");
+
 		query.add(query.getCriterion("decoration.company", company, "eq"));
 
 		queryFilterExcute(query, filters);
@@ -94,7 +96,6 @@ public class AddReduceDaoImpl extends DaoImpl<AddReducePO> implements AddReduceD
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		query.alias("decoration", "decoration");
 		if (filters == null || filters.size() == 0) return;
 
 		for (Filter filter : filters) {
@@ -103,13 +104,7 @@ public class AddReduceDaoImpl extends DaoImpl<AddReducePO> implements AddReduceD
 			String data = filter.getData();
 			String op = filter.getOp();
 
-			if (field.startsWith("village")) {
-				query.alias("decoration.house", "house");
-				query.alias("house.village", "village");
-			}
-
 			if (AddReducePO.COLUMN_ORDERID_STR.equals(field)) {
-				query.alias("decoration", "decoration");
 				query.add(query.getCriterion("decoration.orderId", data, op));
 			} else if (AddReducePO.COLUMN_STATUS_STR.equals(field)) {
 				query.add(query.getCriterion(field, Short.parseShort(data), op));
@@ -117,18 +112,27 @@ public class AddReduceDaoImpl extends DaoImpl<AddReducePO> implements AddReduceD
 				query.add(query.getCriterion(field, Short.parseShort(data), op));
 			} else if (AddReducePO.COLUMN_PAYTYPE_STR.equals(field)) {
 				query.add(query.getCriterion(field, Short.parseShort(data), op));
+			} else if ("isAffirm".equals(field)) {
+				query.add(query.getCriterion(field, Short.parseShort(data), op));
 			} else if ("designerId".equals(field)) {
 				query.alias("decoration.designer", "designer");
 				query.add(query.getCriterion("designer.userId", data, op));
 			} else if ("buildArea".equals(field)) {
-				int dataF = Integer.parseInt(data);
 				query.alias("decoration.house", "house");
-				query.add(query.getCriterion("house.buildArea", Arith.mul(dataF, 1000000), op));
+				query.add(query.getCriterion("house.buildArea", Arith.mul(Integer.parseInt(data), 1000000), op));
 			} else if ("houseNumber".equals(field)) {
 				query.alias("decoration.house", "house");
 				query.add(query.getCriterion("house.houseNumber", data, op));
 			} else if ("villageId".equals(field)) {
+				query.alias("decoration.house", "house");
+				query.alias("house.village", "village");
 				query.add(query.getCriterion("village.no", data, op));
+			} else if ("createTime".equals(field)) {
+				query.timeranges("createTime", "createTime", data);
+			} else if ("confirmTime".equals(field)) {
+				query.timeranges("confirmTime", "confirmTime", data);
+			} else if ("affirmTime".equals(field)) {
+				query.timeranges("affirmTime", "affirmTime", data);
 			}
 		}
 	}

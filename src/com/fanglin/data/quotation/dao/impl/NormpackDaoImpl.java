@@ -19,9 +19,13 @@ public class NormpackDaoImpl extends DaoImpl<NormpackPO> implements NormpackDao 
 	}
 
 	@Override
-	public List<NormpackPO> pageNormpack(Paging paging, List<Filter> filters) {
+	public List<NormpackPO> pageNormpack(Paging paging, List<Filter> filters, Integer company) {
 
 		PagingQuery<NormpackPO> query = pagingQuery(paging, NormpackPO.class);
+
+		if (company != null) {
+			query.add(Restrictions.eq("company", company));
+		}
 
 		queryFilterExcute(query, filters);
 
@@ -30,14 +34,13 @@ public class NormpackDaoImpl extends DaoImpl<NormpackPO> implements NormpackDao 
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<NormpackPO> queryNormpack() {
-		return session().createCriteria(NormpackPO.class).add(Restrictions.eq("status", NormpackPO.STATUS_START_SHORT)).list();
+	public List<NormpackPO> queryNormpack(int company) {
+		return session().createCriteria(NormpackPO.class).add(Restrictions.eq("company", company)).add(Restrictions.eq("status", NormpackPO.STATUS_START_SHORT)).list();
 	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters == null)
-			return;
+		if (filters == null) return;
 
 		for (Filter filter : filters) {
 

@@ -40,15 +40,9 @@ public class StorehouseDaoImpl extends DaoImpl<StorehousePO> implements Storehou
 	}
 
 	@Override
-	public List<StorehousePO> queryStorehouse(List<Filter> filters) {
-
-		PagingQuery<StorehousePO> query = pagingQuery(new Paging(), StorehousePO.class);
-
-		queryFilterExcute(query, filters);
-
-		query.notPaging();
-
-		return query.list();
+	@SuppressWarnings("unchecked")
+	public List<StorehousePO> queryStorehouse() {
+		return session().createCriteria(StorehousePO.class).add(Restrictions.eq(StorehousePO.COLUMN_STATUS_STR, StorehousePO.STATUS_ENABLE_INT)).list();
 	}
 
 	@Override
@@ -69,9 +63,9 @@ public class StorehouseDaoImpl extends DaoImpl<StorehousePO> implements Storehou
 					query.add(query.getCriterion(StorehousePO.COLUMN_NAME_STR, data, op));
 				} else if (StorehousePO.COLUMN_CODE_STR.equals(field)) {
 					query.add(query.getCriterion(StorehousePO.COLUMN_CODE_STR, data, op));
-				} else if(field.equals("status")){ 
-					query.add(query.getCriterion("status", Short.parseShort(data), op)); 
-				} 
+				} else if (field.equals("status")) {
+					query.add(query.getCriterion("status", Short.parseShort(data), op));
+				}
 
 			}
 		}

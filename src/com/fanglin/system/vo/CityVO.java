@@ -14,30 +14,30 @@ import java.io.Serializable;
 public class CityVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private Integer cid;
 
 	private String no;
-	
+
 	private String name;
-	
+
 	private String province;
-	
+
 	private RegionVO region;
-	
-	private Double x;
-	
-	private Double y;
-	
+
+	private Integer x;
+
+	private Integer y;
+
 	public CityVO() {
 		super();
 	}
-	
+
 	public CityVO(String no) {
 		super();
 		this.no = no;
 	}
-	
+
 	public Integer getCid() {
 		return cid;
 	}
@@ -61,36 +61,36 @@ public class CityVO implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public String getProvince() {
 		return province;
 	}
-	
+
 	public void setProvince(String province) {
 		this.province = province;
 	}
 
-	public RegionVO getRegion(){
+	public RegionVO getRegion() {
 		return region;
 	}
 
-	public void setRegion(RegionVO region){
+	public void setRegion(RegionVO region) {
 		this.region = region;
 	}
 
-	public Double getX() {
+	public Integer getX() {
 		return x;
 	}
 
-	public void setX(Double x) {
+	public void setX(Integer x) {
 		this.x = x;
 	}
 
-	public Double getY() {
+	public Integer getY() {
 		return y;
 	}
 
-	public void setY(Double y) {
+	public void setY(Integer y) {
 		this.y = y;
 	}
 

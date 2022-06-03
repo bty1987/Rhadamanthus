@@ -18,7 +18,7 @@ public interface ActivityPaymentService {
 
 	public int createActivityPayment(ActivityPaymentVO activityPaymentVO, String usreId) throws FLException;
 
-	public int collectActivityPayment(List<ActivityPaymentVO> activityPayments, ActivityReceiptVO activityReceiptVO, List<Long> posids, String userId) throws FLException;
+	public int collectActivityPayment(List<ActivityPaymentVO> activityPayments, ActivityReceiptVO activityReceiptVO, List<Long> ptids, String userId) throws FLException;
 
 	public int deleteActivityPaymentId(ActivityPaymentVO activityPaymentVO);
 

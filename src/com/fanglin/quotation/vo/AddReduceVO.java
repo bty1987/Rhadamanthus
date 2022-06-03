@@ -18,6 +18,7 @@ import java.util.List;
 import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class AddReduceVO implements Serializable {
 
@@ -33,7 +34,15 @@ public class AddReduceVO implements Serializable {
 
 	private Short type;
 
+	private Short atttype;
+
 	private Short paytype;
+
+	private Integer discount;
+
+	private Long managePrice;
+
+	private Integer manageRate;
 
 	private Long undisPrice;
 
@@ -43,13 +52,9 @@ public class AddReduceVO implements Serializable {
 
 	private Long calPrice;
 
-	private Long managePrice;
-
-	private Integer manageRate;
+	private Long consPrice;
 
 	private Long total;
-
-	private Integer discount;
 
 	private Short status;
 
@@ -57,7 +62,13 @@ public class AddReduceVO implements Serializable {
 
 	private Timestamp createTime;
 
+	private Timestamp confirmTime;
+
+	private Timestamp affirmTime;
+
 	private String content;
+
+	private UserBaseVO creater;
 
 	private List<AddReduceItemVO> addReduceItems;
 
@@ -65,9 +76,10 @@ public class AddReduceVO implements Serializable {
 		super();
 	}
 
-	public AddReduceVO(DecorationVO decoration) {
+	public AddReduceVO(DecorationVO decoration, UserBaseVO creater) {
 		super();
 		this.decoration = decoration;
+		this.creater = creater;
 	}
 
 	public Long getArId() {
@@ -94,12 +106,28 @@ public class AddReduceVO implements Serializable {
 		this.decoration = decoration;
 	}
 
+	public Long getDpId() {
+		return dpId;
+	}
+
+	public void setDpId(Long dpId) {
+		this.dpId = dpId;
+	}
+
 	public Short getType() {
 		return type;
 	}
 
 	public void setType(Short type) {
 		this.type = type;
+	}
+
+	public Short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(Short atttype) {
+		this.atttype = atttype;
 	}
 
 	public Short getPaytype() {
@@ -110,12 +138,28 @@ public class AddReduceVO implements Serializable {
 		this.paytype = paytype;
 	}
 
-	public Long getTotal() {
-		return total;
+	public Integer getDiscount() {
+		return discount;
 	}
 
-	public void setTotal(Long total) {
-		this.total = total;
+	public void setDiscount(Integer discount) {
+		this.discount = discount;
+	}
+
+	public Long getManagePrice() {
+		return managePrice;
+	}
+
+	public void setManagePrice(Long managePrice) {
+		this.managePrice = managePrice;
+	}
+
+	public Integer getManageRate() {
+		return manageRate;
+	}
+
+	public void setManageRate(Integer manageRate) {
+		this.manageRate = manageRate;
 	}
 
 	public Long getUndisPrice() {
@@ -150,12 +194,36 @@ public class AddReduceVO implements Serializable {
 		this.calPrice = calPrice;
 	}
 
-	public Integer getDiscount() {
-		return discount;
+	public Long getConsPrice() {
+		return consPrice;
 	}
 
-	public void setDiscount(Integer discount) {
-		this.discount = discount;
+	public void setConsPrice(Long consPrice) {
+		this.consPrice = consPrice;
+	}
+
+	public Long getTotal() {
+		return total;
+	}
+
+	public void setTotal(Long total) {
+		this.total = total;
+	}
+
+	public Short getStatus() {
+		return status;
+	}
+
+	public void setStatus(Short status) {
+		this.status = status;
+	}
+
+	public Short getIsAffirm() {
+		return isAffirm;
+	}
+
+	public void setIsAffirm(Short isAffirm) {
+		this.isAffirm = isAffirm;
 	}
 
 	@JSON(format = "yyyy-MM-dd")
@@ -167,44 +235,12 @@ public class AddReduceVO implements Serializable {
 		this.createTime = createTime;
 	}
 
-	public Short getStatus() {
-		return status;
-	}
-
-	public void setStatus(Short status) {
-		this.status = status;
-	}
-
 	public String getContent() {
 		return content;
 	}
 
 	public void setContent(String content) {
 		this.content = content;
-	}
-
-	public Long getDpId() {
-		return dpId;
-	}
-
-	public void setDpId(Long dpId) {
-		this.dpId = dpId;
-	}
-
-	public Long getManagePrice() {
-		return managePrice;
-	}
-
-	public void setManagePrice(Long managePrice) {
-		this.managePrice = managePrice;
-	}
-
-	public Integer getManageRate() {
-		return manageRate;
-	}
-
-	public void setManageRate(Integer manageRate) {
-		this.manageRate = manageRate;
 	}
 
 	public List<AddReduceItemVO> getAddReduceItems() {
@@ -215,12 +251,29 @@ public class AddReduceVO implements Serializable {
 		this.addReduceItems = addReduceItems;
 	}
 
-	public Short getIsAffirm() {
-		return isAffirm;
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getConfirmTime() {
+		return confirmTime;
 	}
 
-	public void setIsAffirm(Short isAffirm) {
-		this.isAffirm = isAffirm;
+	public void setConfirmTime(Timestamp confirmTime) {
+		this.confirmTime = confirmTime;
 	}
 
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getAffirmTime() {
+		return affirmTime;
+	}
+
+	public void setAffirmTime(Timestamp affirmTime) {
+		this.affirmTime = affirmTime;
+	}
+
+	public UserBaseVO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserBaseVO creater) {
+		this.creater = creater;
+	}
 }

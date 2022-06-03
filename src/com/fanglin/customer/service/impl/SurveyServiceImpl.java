@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.dao.SurveyDao;
 import com.fanglin.customer.dao.SurveyItemDao;
@@ -55,9 +56,9 @@ public class SurveyServiceImpl implements SurveyService {
 	private UserDao userdDao;
 
 	@Override
-	public void pageSurvey(Paging paging, List<Filter> filters) {
+	public void pageSurvey(Paging paging, List<Filter> filters, int company) {
 
-		List<SurveyPO> surveyPOs = surveyDao.pageSurvey(paging, filters);
+		List<SurveyPO> surveyPOs = surveyDao.pageSurvey(paging, filters, company);
 		List<SurveyVO> surveyVOs = new ArrayList<SurveyVO>();
 
 		for (SurveyPO surveyPO : surveyPOs) {
@@ -87,7 +88,7 @@ public class SurveyServiceImpl implements SurveyService {
 
 			surveyVOs.add(surveyVO);
 		}
-		
+
 		return surveyVOs;
 	}
 
@@ -123,11 +124,16 @@ public class SurveyServiceImpl implements SurveyService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int sendSurvey(SurveyVO surveyVO) {
 
 		SurveyPO surveyPO = surveyDao.get(surveyVO.getSid());
 
 		String orderId = surveyPO.getOrderId();
+
+		surveyPO.setSendTime(DateUtil.getDateToTimestamp(new Date()));
+
+		surveyDao.save(surveyPO);
 
 		System.out.println(String.format("pages/survery/survery?sid=%s", surveyPO.getSid()));
 
@@ -138,9 +144,13 @@ public class SurveyServiceImpl implements SurveyService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int makeSurvey(SurveyVO surveyVO, String userId) {
+	public int makeSurvey(SurveyVO surveyVO, String userId, int company) throws FLException {
 
 		SurveyTemplatePO surveyTemplatePO = surveyTemplateDao.get(surveyVO.getStid());
+
+		if (surveyTemplatePO == null) {
+			throw new FLException(130096, "调研模板不存在");
+		}
 
 		SurveyPO surveyPO = new SurveyPO();
 
@@ -153,6 +163,7 @@ public class SurveyServiceImpl implements SurveyService {
 		surveyPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		surveyPO.setOrderId(surveyVO.getOrderId());
 		surveyPO.setStid(surveyTemplatePO.getStid());
+		surveyPO.setCompany(company);
 
 		surveyDao.save(surveyPO);
 

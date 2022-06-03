@@ -72,7 +72,7 @@ public class OalesVO implements Serializable {
 		super();
 	}
 
-	public OalesVO(DecorationVO decoration, UserBaseVO creater, UserBaseVO supplier, UserBaseVO servicer, UserBaseVO checker) {
+	public OalesVO(DecorationVO decoration, UserBaseVO creater, UserBaseVO supplier, UserBaseVO servicer, UserBaseVO checker, UserBaseVO materialer) {
 
 		super();
 
@@ -81,6 +81,7 @@ public class OalesVO implements Serializable {
 		this.supplier = supplier;
 		this.servicer = servicer;
 		this.checker = checker;
+		this.materialer = materialer;
 	}
 
 	public UserBaseVO getChecker() {

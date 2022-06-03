@@ -20,15 +20,15 @@ import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.utils.Paging;
 
 public interface StorehouseService {
-	
+
 	public void pageStorehouse(Paging paging, List<Filter> filters);
-	
-	public List<StorehouseVO> queryStorehouse(List<Filter> filters);
-	
+
+	public List<StorehouseVO> queryStorehouse(StorehouseVO storehouseVO);
+
 	public List<StorehouseVO> queryStorehouseByUserId(UserBaseVO user);
-	
+
 	public int addStorehouse(StorehouseVO storehouseVO) throws FLException;
-	
+
 	public int updateStorehouseForStatus(StorehouseVO storehouseVO) throws FLException;
 
 }

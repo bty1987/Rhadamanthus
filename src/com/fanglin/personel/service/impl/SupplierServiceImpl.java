@@ -168,19 +168,19 @@ public class SupplierServiceImpl implements SupplierService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void updateSupplier(UserVO supplier) throws FLException {
-		
+
 		UserPO supplierPO = supplierDao.get(supplier.getUid());
-		
+
 		if (supplierPO == null) {
 			throw new FLException(190012, "厂商不存在");
 		}
-		
+
 		supplierPO.setUserName(supplier.getUserName());
+		supplierPO.setCurrentName(supplier.getCurrentName());
 		supplierPO.setPhone(supplier.getPhone());
 		supplierPO.setOldUserId(supplier.getOldUserId());
-		
+
 		supplierDao.update(supplierPO);
-		
 	}
 
 	private UserVO convertBean(UserPO userPO) throws FLException {

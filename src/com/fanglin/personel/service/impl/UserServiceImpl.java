@@ -850,8 +850,6 @@ public class UserServiceImpl implements UserService {
 
 		BeanUtil.copyProperties(userPO, userVO, Arrays.asList("role", "dept", "duty", "password", "company"));
 
-		userVO.setIdentity(userVO.getIdentity().substring(0, 5) + "********" + userVO.getIdentity().substring(14, 18));
-
 		if (userPO.getDuty() != null) {
 			BeanUtil.copyProperties(userPO.getDuty(), userVO.getDuty(), Arrays.asList("departmentType"));
 		}

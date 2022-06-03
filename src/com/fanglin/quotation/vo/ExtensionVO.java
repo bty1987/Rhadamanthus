@@ -6,6 +6,9 @@ import java.util.List;
 
 import org.apache.struts2.json.annotations.JSON;
 
+import com.fanglin.decoration.vo.DecorationVO;
+import com.fanglin.personel.vo.UserBaseVO;
+
 public class ExtensionVO implements Serializable {
 
 	private static final long serialVersionUID = -2564433879094155683L;
@@ -13,6 +16,8 @@ public class ExtensionVO implements Serializable {
 	private Long eid;
 
 	private String orderId;
+
+	private DecorationVO decoration;
 
 	private Short type;
 
@@ -28,7 +33,19 @@ public class ExtensionVO implements Serializable {
 
 	private String content;
 
+	private UserBaseVO creater;
+
 	private List<ExtensionItemVO> extensionItems;
+
+	public ExtensionVO() {
+		super();
+	}
+
+	public ExtensionVO(DecorationVO decoration, UserBaseVO creater) {
+		super();
+		this.decoration = decoration;
+		this.creater = creater;
+	}
 
 	public Long getEid() {
 		return eid;
@@ -44,6 +61,14 @@ public class ExtensionVO implements Serializable {
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	public DecorationVO getDecoration() {
+		return decoration;
+	}
+
+	public void setDecoration(DecorationVO decoration) {
+		this.decoration = decoration;
 	}
 
 	public Short getType() {
@@ -109,6 +134,14 @@ public class ExtensionVO implements Serializable {
 
 	public void setExtensionItems(List<ExtensionItemVO> extensionItems) {
 		this.extensionItems = extensionItems;
+	}
+
+	public UserBaseVO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserBaseVO creater) {
+		this.creater = creater;
 	}
 
 }

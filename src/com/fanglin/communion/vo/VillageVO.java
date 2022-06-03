@@ -26,9 +26,9 @@ public class VillageVO implements Serializable {
 
 	private String content;
 
-	private Double x;
+	private Integer x;
 
-	private Double y;
+	private Integer y;
 
 	private Short status;
 
@@ -117,19 +117,19 @@ public class VillageVO implements Serializable {
 		this.content = content;
 	}
 
-	public Double getX() {
+	public Integer getX() {
 		return x;
 	}
 
-	public void setX(Double x) {
+	public void setX(Integer x) {
 		this.x = x;
 	}
 
-	public Double getY() {
+	public Integer getY() {
 		return y;
 	}
 
-	public void setY(Double y) {
+	public void setY(Integer y) {
 		this.y = y;
 	}
 
