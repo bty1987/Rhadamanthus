@@ -14,279 +14,105 @@ package com.fanglin.utils;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.beans.BeansException;
-import org.springframework.beans.FatalBeanException;
-
 public class BeanUtil extends org.springframework.beans.BeanUtils {
 
-	public static void copyProperties(Object source, Object target, List<String> ignores) {
-
-		if (source == null) {
-			target = null;
-			return;
-		}
-
-		if (target == null)
-			throw new IllegalArgumentException("Target must not be null");
-
-		Class<?> actualEditable = target.getClass();
-		PropertyDescriptor[] targetPds = getPropertyDescriptors(actualEditable);
-
-		for (PropertyDescriptor targetPd : targetPds) {
-			if (!ignores.contains(targetPd.getName())) {
-				if (targetPd.getWriteMethod() != null) {
-					PropertyDescriptor sourcePd = getPropertyDescriptor(source.getClass(), targetPd.getName());
-					if (sourcePd != null && sourcePd.getReadMethod() != null) {
-						try {
-							Method readMethod = sourcePd.getReadMethod();
-
-							if (!Modifier.isPublic(readMethod.getDeclaringClass().getModifiers())) {
-								readMethod.setAccessible(true);
-							}
-							Object value = readMethod.invoke(source);
-							// 这里判断以下value是否为空 当然这里也能进行一些特殊要求的处理 例如绑定时格式转换等等
-							if (value != null) {
-								Method writeMethod = targetPd.getWriteMethod();
-								if (!Modifier.isPublic(writeMethod.getDeclaringClass().getModifiers())) {
-									writeMethod.setAccessible(true);
-								}
-								writeMethod.invoke(target, value);
-							}
-						} catch (Throwable ex) {
-							System.out.println(sourcePd);
-							throw new FatalBeanException("Could not copy properties from source to target", ex);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	public static void copyProperties(Object source, Object target, String... ignores) {
-
-		if (source == null) {
-			target = null;
-			return;
-		}
-
-		List<String> _ignores = Arrays.asList(ignores);
-
-		if (target == null)
-			throw new IllegalArgumentException("TOarget must not be null");
-
-		Class<?> actualEditable = target.getClass();
-		PropertyDescriptor[] targetPds = getPropertyDescriptors(actualEditable);
-
-		for (PropertyDescriptor targetPd : targetPds) {
-
-			if (!_ignores.contains(targetPd.getName())) {
-				if (targetPd.getWriteMethod() != null) {
-					PropertyDescriptor sourcePd = getPropertyDescriptor(source.getClass(), targetPd.getName());
-					if (sourcePd != null && sourcePd.getReadMethod() != null) {
-						try {
-							Method readMethod = sourcePd.getReadMethod();
-
-							if (!Modifier.isPublic(readMethod.getDeclaringClass().getModifiers())) {
-								readMethod.setAccessible(true);
-							}
-							Object value = readMethod.invoke(source);
-							// 这里判断以下value是否为空 当然这里也能进行一些特殊要求的处理 例如绑定时格式转换等等
-							if (value != null) {
-								Method writeMethod = targetPd.getWriteMethod();
-								if (!Modifier.isPublic(writeMethod.getDeclaringClass().getModifiers())) {
-									writeMethod.setAccessible(true);
-								}
-								writeMethod.invoke(target, value);
-							}
-						} catch (Throwable ex) {
-							System.out.println(sourcePd);
-							throw new FatalBeanException("Could not copy properties from source to target", ex);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	public static Object copyPropertie(Object source, Object target, List<String> ignores) {
-
-		if (source == null) {
-			target = null;
-		} else {
-
-			if (target == null)
-				throw new IllegalArgumentException("TOarget must not be null");
-
-			Class<?> actualEditable = target.getClass();
-			PropertyDescriptor[] targetPds = getPropertyDescriptors(actualEditable);
-
-			for (PropertyDescriptor targetPd : targetPds) {
-				if (!ignores.contains(targetPd.getName())) {
-					if (targetPd.getWriteMethod() != null) {
-						PropertyDescriptor sourcePd = getPropertyDescriptor(source.getClass(), targetPd.getName());
-						if (sourcePd != null && sourcePd.getReadMethod() != null) {
-							try {
-								Method readMethod = sourcePd.getReadMethod();
-
-								if (!Modifier.isPublic(readMethod.getDeclaringClass().getModifiers())) {
-									readMethod.setAccessible(true);
-								}
-								Object value = readMethod.invoke(source);
-								// 这里判断以下value是否为空 当然这里也能进行一些特殊要求的处理 例如绑定时格式转换等等
-								if (value != null) {
-									Method writeMethod = targetPd.getWriteMethod();
-									if (!Modifier.isPublic(writeMethod.getDeclaringClass().getModifiers())) {
-										writeMethod.setAccessible(true);
-									}
-									writeMethod.invoke(target, value);
-								}
-							} catch (Throwable ex) {
-								System.out.println(sourcePd);
-								throw new FatalBeanException("Could not copy properties from source to target", ex);
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return target;
+	public static Object copyPropertie(Object source, Object target) {
+		return copy(source, target, null);
 	}
 
 	public static Object copyPropertie(Object source, Object target, String... ignores) {
-
-		if (source == null) {
-			target = null;
-		} else {
-
-			List<String> _ignores = Arrays.asList(ignores);
-
-			if (target == null)
-				throw new IllegalArgumentException("TOarget must not be null");
-
-			Class<?> actualEditable = target.getClass();
-			PropertyDescriptor[] targetPds = getPropertyDescriptors(actualEditable);
-
-			for (PropertyDescriptor targetPd : targetPds) {
-				if (!_ignores.contains(targetPd.getName())) {
-					if (targetPd.getWriteMethod() != null) {
-						PropertyDescriptor sourcePd = getPropertyDescriptor(source.getClass(), targetPd.getName());
-						if (sourcePd != null && sourcePd.getReadMethod() != null) {
-							try {
-								Method readMethod = sourcePd.getReadMethod();
-
-								if (!Modifier.isPublic(readMethod.getDeclaringClass().getModifiers())) {
-									readMethod.setAccessible(true);
-								}
-								Object value = readMethod.invoke(source);
-								// 这里判断以下value是否为空 当然这里也能进行一些特殊要求的处理 例如绑定时格式转换等等
-								if (value != null) {
-									Method writeMethod = targetPd.getWriteMethod();
-									if (!Modifier.isPublic(writeMethod.getDeclaringClass().getModifiers())) {
-										writeMethod.setAccessible(true);
-									}
-									writeMethod.invoke(target, value);
-								}
-							} catch (Throwable ex) {
-								System.out.println(sourcePd);
-								throw new FatalBeanException("Could not copy properties from source to target", ex);
-							}
-						}
-					}
-				}
-			}
-		}
-
-		return target;
+		return copy(source, target, Arrays.asList(ignores));
 	}
 
-	public static void copyProperties(Object source, Object target) throws BeansException {
-
-		if (source == null) {
-			target = null;
-			return;
-		}
-
-		if (target == null)
-			throw new IllegalArgumentException("TOarget must not be null");
-
-		Class<?> actualEditable = target.getClass();
-		PropertyDescriptor[] targetPds = getPropertyDescriptors(actualEditable);
-
-		for (PropertyDescriptor targetPd : targetPds) {
-			if (targetPd.getWriteMethod() != null) {
-				PropertyDescriptor sourcePd = getPropertyDescriptor(source.getClass(), targetPd.getName());
-
-				if (sourcePd != null && sourcePd.getReadMethod() != null) {
-
-					try {
-						Method readMethod = sourcePd.getReadMethod();
-
-						if (!Modifier.isPublic(readMethod.getDeclaringClass().getModifiers())) {
-							readMethod.setAccessible(true);
-						}
-						Object value = readMethod.invoke(source);
-						// 这里判断以下value是否为空 当然这里也能进行一些特殊要求的处理 例如绑定时格式转换等等
-
-						if (value != null) {
-							Method writeMethod = targetPd.getWriteMethod();
-							if (!Modifier.isPublic(writeMethod.getDeclaringClass().getModifiers())) {
-								writeMethod.setAccessible(true);
-							}
-							writeMethod.invoke(target, value);
-						}
-					} catch (Throwable ex) {
-						System.out.println(sourcePd);
-						throw new FatalBeanException("Could not copy properties from source to target", ex);
-					}
-				}
-			}
-		}
+	public static Object copyPropertie(Object source, Object target, List<String> ignores) {
+		return copy(source, target, ignores);
 	}
 
-	public static Object copyPropertie(Object source, Object target) {
+	public static void copyProperties(Object source, Object target) {
+		copy(source, target, null);
+	}
 
-		if (source == null) {
-			target = null;
-		} else {
+	public static void copyProperties(Object source, Object target, String... ignores) {
+		copy(source, target, Arrays.asList(ignores));
+	}
 
-			if (target == null)
-				throw new IllegalArgumentException("TOarget must not be null");
+	public static void copyProperties(Object source, Object target, List<String> ignores) {
+		copy(source, target, ignores);
+	}
 
-			Class<?> actualEditable = target.getClass();
-			PropertyDescriptor[] targetPds = getPropertyDescriptors(actualEditable);
+	public static Object copy(Object source, Object target, List<String> ignores) {
 
-			for (PropertyDescriptor targetPd : targetPds) {
-				if (targetPd.getWriteMethod() != null) {
-					PropertyDescriptor sourcePd = getPropertyDescriptor(source.getClass(), targetPd.getName());
+		if (source == null && target == null) {
+			System.out.println("target object and source object are null");
+			return null;
+		}
 
-					if (sourcePd != null && sourcePd.getReadMethod() != null) {
+		if (source == null && target != null) {
+			System.out.println(String.format("source object is null, class of target is %s", target.getClass()));
+			return null;
+		}
 
-						try {
-							Method readMethod = sourcePd.getReadMethod();
+		if (source != null && target == null) {
+			System.out.println(String.format("target object is null, class of source is %s", source.getClass()));
+			return null;
+		}
 
-							if (!Modifier.isPublic(readMethod.getDeclaringClass().getModifiers())) {
-								readMethod.setAccessible(true);
-							}
-							Object value = readMethod.invoke(source);
-							// 这里判断以下value是否为空 当然这里也能进行一些特殊要求的处理 例如绑定时格式转换等等
+		if (ignores == null) {
+			ignores = new ArrayList<String>();
+		}
 
-							if (value != null) {
-								Method writeMethod = targetPd.getWriteMethod();
-								if (!Modifier.isPublic(writeMethod.getDeclaringClass().getModifiers())) {
-									writeMethod.setAccessible(true);
-								}
-								writeMethod.invoke(target, value);
-							}
-						} catch (Throwable ex) {
-							System.out.println(sourcePd);
-							throw new FatalBeanException("Could not copy properties from source to target", ex);
-						}
-					}
-				}
+		PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(target.getClass());
+
+		for (PropertyDescriptor targetPropertyDescriptor : propertyDescriptors) {
+
+			if (ignores.contains(targetPropertyDescriptor.getName())) continue;
+
+			if (targetPropertyDescriptor.getWriteMethod() == null) continue;
+
+			PropertyDescriptor sourcePropertyDescriptor = getPropertyDescriptor(source.getClass(), targetPropertyDescriptor.getName());
+
+			if (sourcePropertyDescriptor == null || sourcePropertyDescriptor.getReadMethod() == null) continue;
+
+			// System.out.println(sourcePropertyDescriptor.getPropertyType().getSimpleName());
+			// System.out.println(targetPropertyDescriptor.getPropertyType().getSimpleName());
+			// System.out.println(String.format("%s value type between <%s> and <%s> is different", sourcePropertyDescriptor.getName(), source.getClass().getName(), target.getClass().getName()));
+
+			Method sourceReadMethod = sourcePropertyDescriptor.getReadMethod();
+
+			if (sourceReadMethod == null) continue;
+
+			if (!Modifier.isPublic(sourceReadMethod.getDeclaringClass().getModifiers())) {
+				sourceReadMethod.setAccessible(true);
+			}
+
+			Object sourceValue = null;
+
+			try {
+				sourceValue = sourceReadMethod.invoke(source);
+			} catch (Exception e) {
+				System.out.println(String.format("get %s value of source object is failed, exception is <%s>", sourcePropertyDescriptor.getName(), e.getMessage()));
+				continue;
+			}
+
+			if (sourceValue == null) continue;
+
+			Method targetWriteMethod = targetPropertyDescriptor.getWriteMethod();
+
+			if (targetWriteMethod == null) continue;
+
+			if (!Modifier.isPublic(targetWriteMethod.getDeclaringClass().getModifiers())) {
+				targetWriteMethod.setAccessible(true);
+			}
+
+			try {
+				targetWriteMethod.invoke(target, sourceValue);
+			} catch (Exception e) {
+				System.out.println(String.format("set %s value of target object is failed, exception is <%s>", targetWriteMethod.getName(), e.getMessage()));
+				continue;
 			}
 		}
 
