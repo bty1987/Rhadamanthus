@@ -138,6 +138,10 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Se
 			}
 
 			if (au == null) {
+				au = (String) request.getAttribute("authentication");
+			}
+
+			if (au == null) {
 				throw new FLException(110005, "系统处理问题");
 			}
 
