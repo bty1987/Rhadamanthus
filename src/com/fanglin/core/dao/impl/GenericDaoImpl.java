@@ -342,6 +342,10 @@ public abstract class GenericDaoImpl implements GenericDao {
 
 			if (pagingFlag && paging.getNoPage() == 0) {
 
+				// 降级处理
+				if (paging.getRows() > 10 && paging.getPage() >= 30) return results;
+				if (paging.getPage() >= 60) return results;
+
 				boolean query = true;
 
 				// 统计数据总数
