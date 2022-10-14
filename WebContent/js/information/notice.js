@@ -34,25 +34,19 @@ $(function(){
     notice.items.isPublic.switchBtn("isOrNot");
 
     if(notice.pageType == "notice"){
-        notice.type = 1;
+        notice.type = constant.information().notice.TYPE_NOTICE_INT;
     }else if(notice.pageType == "expert"){
-        notice.type = 2;
+        notice.type = constant.information().notice.TYPE_ACTIVITY_INT;
     }
 
     notice.modals.noticeModal.on("hide.bs.modal", function () {
         com.clearValidator();
         com.cleanItems(notice.items);
     });
-
-    com.post(api.ds.information, {}, function(res){
-        notice.items.prioritySel.bindData(res.noticePriority, "key", "value");
-        notice.items.typeSel.bindData(res.noticeType, "key", "value");
-
-        notice.noticeType = res.noticeType.split("key", "value");
-        notice.noticePriority = res.noticePriority.split("key", "value");
-        notice.noticeIsPublic = res.noticeIsPublic.split("key", "value");
-
-    },null,false);
+    
+    notice.items.prioritySel.bindData(constant.information().notice.priority.datas, "key", "value"); 
+    
+    notice.items.typeSel.bindData(constant.information().notice.type.datas, "key", "value"); 
 
     bindUploadfiy();
 
@@ -90,9 +84,9 @@ $(function(){
 
             var propertyArr = [
                 ["发布人:", v.creater.currentName, "grey"],
-                ["类型:", notice.noticeType[v.type], "red"],
-                ["优先级:", notice.noticePriority[v.priority], "red"],
-                ["公开:", notice.noticeIsPublic[v.isPublic], "red"],
+                ["类型:", constant.information().notice.type.keys[v.type], "red"],
+                ["优先级:", constant.information().notice.priority.keys[v.priority], "red"],
+                ["公开:", constant.information().notice.isPublic.keys[v.isPublic], "red"],
                 ["状态:", starts <= myDate && end >= myDate ? "有效":"无效", "red"],
                 ["开始时间:", v.startTime, "green"],
                 ["结束时间:", v.endTime, "green"],
@@ -117,7 +111,7 @@ $(function(){
 
             if(v.creater.uid == params.userInfo.user.uid){}
 
-            if(v.isPublic == 1) {
+            if(v.isPublic == constant.information().notice.ISPUBLIC_DEPARTMENTOPEN_INT) {
                 $divBtnWrap.append($management).appendTo($h3);
 
                 var $liDepts = $('<li></li>');
@@ -131,7 +125,7 @@ $(function(){
             $liLine.append($h3).append($ulProperty).append($ulDept);
 
             if(starts <= myDate && end >=myDate){
-                if(v.isPublic == 1) {
+                if(v.isPublic == constant.information().notice.ISPUBLIC_DEPARTMENTOPEN_INT) {
                     $liLine.append($h3).append($ulProperty).append($ulDept);
                 }else{
                     $liLine.append($h3).append($ulProperty).append($ulDept);
@@ -156,7 +150,7 @@ $(function(){
                 notice.items.prioritySel.val(v.priority);
                 notice.items.startTime.val(v.startTime);
                 notice.items.endTime.val(v.endTime);
-                notice.items.isPublic.prop("checked", v.isPublic == 0);
+                notice.items.isPublic.prop("checked", v.isPublic == constant.information().notice.ISPUBLIC_OPEN_INT);
                 notice.items.contents.val(v.contents);
                 notice.items.filePath.val(v.filePath);
                 notice.items.fileName.val(v.fileName);

@@ -97,7 +97,8 @@
 		{"key":"2", "value":"主材款"},
 		{"key":"3", "value":"销售款"},
 		{"key":"4", "value":"服务款"},
-		{"key":"5", "value":"活动款"}
+		{"key":"5", "value":"活动款"},
+		{"key":"6", "value":"转换款"}
 	], "receiptType": [
 		{"key":"0", "value":"现金"},
 		{"key":"1", "value":"银行"},

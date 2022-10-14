@@ -1,4 +1,4 @@
-$(function() {
+﻿$(function() {
 
     var quotation = {
 
@@ -16,14 +16,6 @@ $(function() {
             style: com.focusPage("#style"),
             content: com.focusPage("#content"),
             quotetionNo: com.focusPage("#quotetionNo"),
-        },
-
-        datasets: {
-
-            status: {},
-            defaults: {},
-
-            decorationStatus: {},
         },
 
         orderId: params.quotation.orderId,
@@ -45,19 +37,6 @@ $(function() {
             "value": "装修单号"
         }, ]
     };
-
-    com.post(api.ds.decoration, {}, function(res) {
-
-        quotation.datasets.decorationStatus = res.decorationOrderStatus.split("key", "value");
-
-    }, null, false);
-
-    com.post(api.ds.quotation, {}, function(res) {
-
-        quotation.datasets.status = res.quotationStatus.split("key", "value");
-        quotation.datasets.defaults = res.quotationDefault.split("key", "value");
-
-    }, null, false);
 
     quotation.items.replicaType.bindData(quotation.compareType, 'key', 'value');
     quotation.items.replicaOrderId.on("blur", function() {
@@ -213,8 +192,6 @@ $(function() {
 
     function initQuotationList() {
 
-        var quotationList = com.focusPage("#quotationList").html("");
-
         com.post(api.decoration.queryDecorationForCommonByOrderId, {
             "decoration.orderId": quotation.orderId
         }, function(res) {
@@ -246,6 +223,18 @@ $(function() {
     var searcher = new Searcher();
 
     if (quotation.pageType == null) {
+
+        com.focusPage('#fl-statement').statement("报价", "报价").show();
+        com.focusPage('#decorationInfo').show();
+
+        com.focusPage("#pagenation").hide();
+
+        initQuotationList();
+
+        searcher.set("pageltList", "pageltList", "resultList", api.quotation.queryQuotationByOrderId, {
+            "quotation.orderId": quotation.orderId
+        }, null, null, "quotations", true);
+
         var cardbtns = [{
             name: "复制",
             clazz: "btn-yellow",
@@ -324,7 +313,7 @@ $(function() {
             clazz: "btn-inverse aababa",
             handle: function(v) {
 
-                if (v.defaults == 0) {
+                if (v.defaults == constant.quotation().quotation.DEFAULTS_NONDEFAULT_INT) {
                     quotation.defaultsQid = v.qid;
                     var that = $(this);
                     var options = {
@@ -345,7 +334,7 @@ $(function() {
             },
             show: function(v) {
 
-                return (v.defaults == 0);
+                return (v.defaults == constant.quotation().quotation.DEFAULTS_NONDEFAULT_INT);
             }
         }, {
             name: "锁定",
@@ -368,7 +357,7 @@ $(function() {
             },
             show: function(v) {
 
-                return (v.status == 0);
+                return (v.status == constant.quotation().quotation.STATUS_INIT_INT);
             }
         }, {
             name: "解锁",
@@ -389,7 +378,7 @@ $(function() {
             },
             show: function(v) {
 
-                return (v.status == 1);
+                return (v.status == constant.quotation().quotation.STATUS_LOCK_INT);
             }
         }, {
             type: "newline"
@@ -421,14 +410,6 @@ $(function() {
             }
         }];
 
-        com.focusPage('#fl-statement').statement("装修单", "报价").show();
-
-        initQuotationList();
-
-        searcher.set("pageltList", "pageltList", "quotationList", api.quotation.queryQuotationByOrderId, {
-            "quotation.orderId": quotation.orderId
-        }, null, null, "quotations", true);
-
         var cardprops = [{
             field: "name",
             name: "名称",
@@ -455,6 +436,12 @@ $(function() {
     }
 
     if (quotation.pageType == "page") {
+
+        com.focusPage("#quotationIndexPageContent").removeClass("page-content");
+
+        searcher.base("condList", "pagenation", "resultList", api.quotation.pageQuotation);
+        searcher.condition(["quotation-quotation-decoration-orderId", "quotation-quotation-decoration-village", "quotation-quotation-decoration-designer", "quotation-quotation-decoration-salesman", "quotation-quotation-decoration-status", "quotation-quotation-createTime", "quotation-quotation-status"]);
+        searcher.history("quotationPostData");
 
         var cardbtns = [{
             name: "查看",
@@ -492,7 +479,7 @@ $(function() {
             clazz: "btn-inverse aababa",
             handle: function(v) {
 
-                if (v.defaults == 0) {
+                if (v.defaults == constant.quotation().quotation.DEFAULTS_NONDEFAULT_INT) {
                     quotation.defaultsQid = v.qid;
                     var that = $(this);
                     var options = {
@@ -513,7 +500,7 @@ $(function() {
             },
             show: function(v) {
 
-                return (v.defaults == 0);
+                return (v.defaults == constant.quotation().quotation.DEFAULTS_NONDEFAULT_INT);
             }
         }, {
             name: "锁定",
@@ -536,7 +523,7 @@ $(function() {
             },
             show: function(v) {
 
-                return (v.status == 0);
+                return (v.status == constant.quotation().quotation.STATUS_INIT_INT);
             }
         }, {
             name: "解锁",
@@ -557,7 +544,7 @@ $(function() {
             },
             show: function(v) {
 
-                return (v.status == 1);
+                return (v.status == constant.quotation().quotation.STATUS_LOCK_INT);
             }
         }, {
             name: "删除",
@@ -583,13 +570,6 @@ $(function() {
                 });
             }
         }];
-
-        com.focusPage("#decorationInfo").addClass("hide");
-        com.focusPage("#hr-dotted1").addClass("hide");
-        com.focusPage("#hr-dotted2").addClass("hide");
-
-        searcher.base("condList", "pagenation", "resultList", api.quotation.pageQuotation);
-        searcher.condition(["quotation-quotation-decoration-orderId", "quotation-quotation-decoration-village", "quotation-quotation-decoration-designer", "quotation-quotation-decoration-salesman", "quotation-quotation-decoration-status", "quotation-quotation-createTime", "quotation-quotation-status"]);
 
         var cardprops = [{
             field: "decoration.orderId",
@@ -630,7 +610,7 @@ $(function() {
             field: "decoration.status",
             name: "订单状态",
             prop: "decoration.status",
-            dataset: quotation.datasets.decorationStatus,
+            dataset: constant.decoration().decoration.status.keys,
             clazz: "red"
         }, {
             type: "newline"
@@ -683,13 +663,13 @@ $(function() {
             field: "defaults",
             name: "默认标识",
             prop: "defaults",
-            dataset: quotation.datasets.defaults,
+            dataset: constant.quotation().quotation.defaults.keys,
             clazz: "red"
         }, {
             field: "status",
             name: "状态",
             prop: "status",
-            dataset: quotation.datasets.status,
+            dataset: constant.quotation().quotation.status.keys,
             clazz: "red"
         }, {
             field: "content",

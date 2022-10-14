@@ -32,19 +32,6 @@ jQuery(function($) {
         contractEdit.current = new Date(res.current);
     }, null, false);
 
-    com.post(api.data.queryCustomerById, {
-        "customer.cid": params.decoration.cid
-    }, function(res) {
-
-        var customer = res.customer;
-
-        com.focusPage("#con-customer-name", "#form").val(customer.name);
-        com.focusPage("#sin-customer-phone", "#form").val(customer.phone);
-        com.focusPage("#sin-customer-ident", "#form").val(customer.identity);
-
-        contractEdit.customer = customer;
-    });
-
     com.post(api.decoration.queryDecorationForCommonByOrderId, {
         "decoration.orderId": contractEdit.decorationOrderId
     }, function(res) {
@@ -53,6 +40,13 @@ jQuery(function($) {
         var house = data.house;
         var village = house.village;
         var proper = village.cityProper;
+        var customer = res.decoration.customer;
+
+        com.focusPage("#con-customer-name", "#form").val(customer.name);
+        com.focusPage("#sin-customer-phone", "#form").val(customer.phone);
+        com.focusPage("#sin-customer-ident", "#form").val(customer.identity);
+
+        contractEdit.customer = customer;
 
         contractEdit.decoration = data;
     });

@@ -1,8 +1,8 @@
-$(function () {
-	
+$(function() {
+
     var Signing = {
-    	        
-        getNoticeDOM: function (notice) {
+
+        getNoticeDOM: function(notice) {
 
             var $wrap = $('<div class="alert alert-info clearfix" style="padding: 2px 10x;"></div>');
             var $title = $('<div><i class="icon-hand-right green"></i></div>');
@@ -11,7 +11,8 @@ $(function () {
             var priorityText = "重要";
             var priorityStyle = "label-warning";
 
-            $('<small class="detail" style="cursor:pointer">  [详细]</small>').on(ace.click_event, function () {
+            $('<small class="detail" style="cursor:pointer">  [详细]</small>').on(ace.click_event, function() {
+
                 com.showInfo(notice.theme, notice.contents);
                 return false;
             }).appendTo($theme);
@@ -28,14 +29,11 @@ $(function () {
             }
 
             $('<span class="label arrowed-in pull-right" style="line-height: 17px;">' + priorityText + '</span>').addClass(priorityStyle).appendTo($title);
-            var $contents = $('<div class="col-xs-12"><div style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;margin-right:50px;">'
-                + notice.contents + '</div><abbr title="' + notice.contents + '"></abbr></div>');
-            var $bottomInfo = $('<small><div class="pull-right"><span><i class="icon-time bigger-110"></i>&nbsp;'
-                + notice.startTime + ' 至 ' + notice.endTime + '</span>&nbsp;&nbsp;<span><i class="icon-user bigger-110"></i>&nbsp;'
-                + notice.creater.userName + '</span>&nbsp;&nbsp;</div></small>');
+            var $contents = $('<div class="col-xs-12"><div style="text-overflow: ellipsis;white-space: nowrap;overflow: hidden;margin-right:50px;">' + notice.contents + '</div><abbr title="' + notice.contents + '"></abbr></div>');
+            var $bottomInfo = $('<small><div class="pull-right"><span><i class="icon-time bigger-110"></i>&nbsp;' + notice.startTime + ' 至 ' + notice.endTime + '</span>&nbsp;&nbsp;<span><i class="icon-user bigger-110"></i>&nbsp;' + notice.creater.userName + '</span>&nbsp;&nbsp;</div></small>');
             if (notice.filePath != undefined && notice.filePath != null && notice.filePath != "") {
-            	var openWin = "com.popup('" + notice.theme + "', '" + config.media + notice.filePath + "');";
-            	
+                var openWin = "com.popup('" + notice.theme + "', '" + config.media + notice.filePath + "');";
+
                 $(".pull-right", $bottomInfo).append('<span><i class="icon-download-alt bigger-110"></i>&nbsp;<a href=' + config.media + notice.filePath + "?t=" + new Date().getTime() + ' onclick="' + openWin + ' return false;">查看附件</a></span>');
             }
 
@@ -43,40 +41,51 @@ $(function () {
 
             return $wrap;
         },
-        loadNotices: function () {
-            
-            com.post(api.information.pageNoticeForSeenByType, {"paging.rows": 5, "paging.page": 1, "notice.type": 1}, function (data) {
-                if (data.paging.data && data.paging.data.length > 0){
-                	$.each(data.paging.data, function (i, v) {
+        loadNotices: function() {
+
+            com.post(api.information.pageNoticeForSeenByType, {
+                "paging.rows": 5,
+                "paging.page": 1,
+                "notice.type": 1
+            }, function(data) {
+
+                if (data.paging.data && data.paging.data.length > 0) {
+                    $.each(data.paging.data, function(i, v) {
+
                         Signing.getNoticeDOM(v).appendTo($("#noticeList").html(''));
                     });
-                }else {
-                	var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($("#noticeList").html(''));
-        	    	var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
-        	    	var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
+                } else {
+                    var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($("#noticeList").html(''));
+                    var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
+                    var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
                 }
             }, null, false);
 
         },
-        loadActivities: function () {
-            
-            com.post(api.information.pageNoticeForSeenByType, {"paging.rows": 5, "paging.page": 1, "notice.type": 2}, function (data) {
-            	
-                if(data.paging.data && data.paging.data.length > 0){
-                	$.each(data.paging.data, function (i, v) {
+        loadActivities: function() {
+
+            com.post(api.information.pageNoticeForSeenByType, {
+                "paging.rows": 5,
+                "paging.page": 1,
+                "notice.type": 2
+            }, function(data) {
+
+                if (data.paging.data && data.paging.data.length > 0) {
+                    $.each(data.paging.data, function(i, v) {
+
                         Signing.getNoticeDOM(v).appendTo($("#activityList").html(''));
                     });
-        		}else{
-        	    	var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($("#activityList").html(''));
-        	    	var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
-        	    	var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
-        		}
-                
+                } else {
+                    var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($("#activityList").html(''));
+                    var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
+                    var $span = $('<span></span>').text('无可用数据提供').appendTo($mesg);
+                }
+
             }, null, false);
 
         },
-        noticeOptions:{
-        	"deptId": params.userInfo.user.dept.no,
+        noticeOptions: {
+            "deptId": params.userInfo.user.dept.no,
             "company": params.company.no,
             "redis": 0
         }
@@ -84,55 +93,63 @@ $(function () {
 
     Signing.loadNotices();
     Signing.loadActivities();
-    
-    com.focusPage("h4[name='versionCode']").text(config.versionCode);
-    com.post(api.ds.system, {}, function(res){
 
-    	var ablockList = com.focusPage("#ablockList");
-    	
-    	$.each(res.ablocks, function(i,v){
-    		
-    		var $div = $('<div></div>').addClass(v[0]).html(v[1]).appendTo(ablockList);
-    		var $button = $('<button></button>').addClass('close').attr({'data-dismiss':'alert','type':'button'}).appendTo($div);
-    		var $i_remove = $('<i></i>').addClass('icon-remove').appendTo($button);
-    		
-    	});
-    	
-    	var advertList = com.focusPage("#advertList");
-    	
-    	$.each(res.adverts, function(i,v){
-    		var $div = $('<div></div>').html(v).appendTo(advertList.find("div:first"));
-    	});
-    	
-    	carousel.render({
-    	    elem: advertList,
-    	    width: "100%",
-    	    height: "180px",
-    	    anim: "fade",
-    	    interval: 4000,
-    	    arrow: "none",
-    	    indicator: "none"
-    	});
-    	
-    	com.focusPage("#updateBook").click(function(){
-    		setTimeout(function () {
-    			com.focusPage(".lead").html(res.tips[Math.floor(Math.random() * res.tips.length)]);
-            }, 1580);
-        	
+    com.focusPage("h4[name='versionCode']").text(config.versionCode);
+    com.post(api.ds.system, {}, function(res) {
+
+        var ablockList = com.focusPage("#ablockList");
+
+        $.each(res.ablocks, function(i, v) {
+
+            var $div = $('<div></div>').addClass(v[0]).html(v[1]).appendTo(ablockList);
+            var $button = $('<button></button>').addClass('close').attr({
+                'data-dismiss': 'alert',
+                'type': 'button'
+            }).appendTo($div);
+            var $i_remove = $('<i></i>').addClass('icon-remove').appendTo($button);
+
         });
-        
+
+        var advertList = com.focusPage("#advertList");
+
+        $.each(res.adverts, function(i, v) {
+
+            var $div = $('<div></div>').html(v).appendTo(advertList.find("div:first"));
+        });
+
+        carousel.render({
+            elem: advertList,
+            width: "100%",
+            height: "180px",
+            anim: "fade",
+            interval: 4000,
+            arrow: "none",
+            indicator: "none"
+        });
+
+        com.focusPage("#updateBook").click(function() {
+
+            setTimeout(function() {
+
+                com.focusPage(".lead").html(res.tips[Math.floor(Math.random() * res.tips.length)]);
+            }, 1580);
+
+        });
+
         com.focusPage("h4[name='versionCode']").after($(res.versionInfo ? res.versionInfo : "<p>版本信息</p>"));
-        
+
         com.focusPage(".lead").html(res.tips[Math.floor(Math.random() * res.tips.length)]);
 
-        com.focusPage("#moreMainMaterial").click(function(){
-        	com.showInfo('选材','正在筹建中 , 敬请期待');
+        com.focusPage("#moreMainMaterial").click(function() {
+
+            com.showInfo('选材', '正在筹建中 , 敬请期待');
         });
-        
-        com.focusPage("#moreFuMaterial").click(function(){
-        	com.showInfo('选材','正在筹建中 , 敬请期待');
+
+        com.focusPage("#moreFuMaterial").click(function() {
+
+            com.showInfo('选材', '正在筹建中 , 敬请期待');
         });
-        
+
         res.power && (layer.open({
             type: 1,
             title: false,
@@ -143,127 +160,200 @@ $(function () {
             btn: ['祝福'],
             moveType: 1,
             content: res.power,
-            success: function(layero){
+            success: function(layero) {
+
                 layero.find('.layui-layer-btn').css('text-align', 'center');
             }
         }));
     });
-    
-    com.post(api.system.queryModuleForLink, {"module.system": 1}, function(res){
-    	
-    	var data = res.modules;
-    	var arry = [], datas = [];
-    	var length = $('.submenu li a').length;
-    	
-    	for(var i = 0;i < length; i++){
-    		var menutext = $('.submenu li a:eq('+i+')').attr('menutext');
-    		var url = $('.submenu li a:eq('+i+')').attr('href');
-    		var mid = $('.submenu li a:eq('+i+')').attr('mid');
-    		var icon = $('.submenu li a:eq('+i+') i').attr('class');
-    		arry.push({"name":menutext,"url":url,"mid":mid,"icon":icon});
-    	}
-    	
-    	var array = arry.slice(0,8);
-    	
-    	if(data.length < 8){
-    		if(data.length == 0){
-    			num = array;
-    		}else{
-    			$.each(data,function(i,v){
-        			if(!v.url || v.url == "") return true;
-        			datas.push(v)
-        			num = datas.concat(array.slice(0,8 - datas.length))
-        		});
-    		}
-        }else{
-        	num = data;
+
+    com.post(api.system.queryModuleForLink, {
+        "module.system": 1
+    }, function(res) {
+
+        var data = res.modules;
+        var arry = [], datas = [];
+        var length = $('.submenu li a').length;
+
+        for ( var i = 0; i < length; i++) {
+            var menutext = $('.submenu li a:eq(' + i + ')').attr('menutext');
+            var url = $('.submenu li a:eq(' + i + ')').attr('href');
+            var mid = $('.submenu li a:eq(' + i + ')').attr('mid');
+            var icon = $('.submenu li a:eq(' + i + ') i').attr('class');
+            arry.push({
+                "name": menutext,
+                "url": url,
+                "mid": mid,
+                "icon": icon
+            });
         }
-    	
-    	$.each(num, function(i, v){
-    		
-           if($(".btn-fastlink").length >= 8) return false;
-           var $div = $('<div></div>').addClass('col-sm-3 col-xs-6').appendTo(linklist);
-           var $a = $('<a></a>').addClass("btn btn-app btn-fastlink no-radius no-hover").attr({href: v.url, mid: v.mid, menutext: v.name, icon: v.icon}).appendTo($div);
-           var $i = $('<i></i>').addClass(v.icon).appendTo($a);
-           var $span = $('<span></span>').text(v.name).appendTo($a);
-            
-           $a.click(function(){
-                params['urlLoadParams'] = com.splitUrl(v.url);
-                com.loadPage(v.url, $(this));
+
+        var array = arry.slice(0, 8);
+
+        if (data.length < 8) {
+            if (data.length == 0) {
+                num = array;
+            } else {
+                $.each(data, function(i, v) {
+
+                    if (!v.url || v.url == "")
+                        return true;
+                    datas.push(v)
+                    num = datas.concat(array.slice(0, 8 - datas.length))
+                });
+            }
+        } else {
+            num = data;
+        }
+
+        $.each(num, function(i, v) {
+
+            if ($(".btn-fastlink").length >= 8)
+                return false;
+
+            var $div = $('<div></div>').addClass('col-sm-3 col-xs-6').appendTo(linklist);
+            var $a = $('<a></a>').addClass("btn btn-app btn-fastlink no-radius no-hover").attr({
+                href: v.url,
+                mid: v.mid,
+                menutext: v.name,
+                icon: v.icon
+            }).appendTo($div);
+
+            var $i = $('<i></i>').addClass(v.icon).appendTo($a);
+            var $span = $('<span></span>').text(v.name).appendTo($a);
+
+            $a.click(function() {
+
+                com.post(api.system.checkModule, {
+                    "module.mid": v.mid
+                }, function(res) {
+
+                    var module = res.module
+
+                    if (module) {
+
+                        params.urlLoadParams = com.splitUrl(module.url);
+
+                        if (params.urlLoadParams.open && params.urlLoadParams.open == "popup") {
+                            com.popup4frame(module.name, module.url);
+                            return false;
+                        }
+
+                        if (params.urlLoadParams.open && params.urlLoadParams.open == "window") {
+                            window.open(module.url);
+                            return false;
+                        }
+
+                        com.loadPage(module.url, $a);
+                    } else {
+                        com.showAlert(com.warning, "无操作权限")
+                    }
+
+                });
+
                 return false;
             });
         });
     });
-    
-    com.post(api.approval.countApprovalForSend, {}, function(res){
+
+    com.post(api.approval.countApprovalForSend, {}, function(res) {
+
         res.count && $("span[name='approvalSendCount']").text(res.count);
     });
-    
-    com.post(api.approval.countApprovalForReceive, {}, function(res){
+
+    com.post(api.approval.countApprovalForReceive, {}, function(res) {
+
         res.count && $("span[name='approvalReceiveCount']").text(res.count);
     });
+
+    com.charts("designtop", "designtop", api.home.library, $.extend({}, {
+        "redis": 1,
+        "type": 0,
+        "api": "report.decoration.cs8",
+        "company": params.company.cid,
+    }), "", {}, null, params.reporter.top);
+
+    com.charts("salestop", "salestop", api.home.library, $.extend({}, {
+        "redis": 1,
+        "type": 1,
+        "api": "report.decoration.cs8",
+        "company": params.company.cid,
+    }), "", {}, null, params.reporter.top);
+
+    com.charts("worktop", "worktop", api.home.library, $.extend({}, {
+        "redis": 1,
+        "api": "report.construction.ccs10",
+        "company": params.company.cid,
+    }), "", {}, null, params.reporter.top);
 
     loadMessageCount();
 
     com.showImg($("#personalPic"), params.userInfo.user.userPhoto, 180, 180, '');
     com.showImg($("#userImg"), params.userInfo.user.userPhoto, 30, 30, '');
 
-    com.post(api.common.wmCode, {}, function (res) {
+    com.post(api.common.wmCode, {}, function(res) {
+
         var img = new Image();
         img.src = res.watermark;
         url = 'url("' + img.src + '")';
         $("#fl-container").css('background-size', '300px').css('background-image', url).css('bottom', '0');
     }, null, false);
-    
+
     $("#homeTab").click(function() {
+
         $('.breadcrumb').empty().append('<i class="fa fa-fw icon-home"></i>&nbsp;&nbsp;&nbsp;首页');
     });
-    
+
     $("#calendarTab").click(function() {
+
         $('.breadcrumb').empty().append('<i class="fa fa-fw icon-calendar"></i>&nbsp;&nbsp;&nbsp;日历');
     });
 
-    $('#moreActivity').click(function () {
+    $('#moreActivity').click(function() {
+
         params["notice.type"] = 2;
         com.loadPage(api.index.moreNoticesIndex.url, $(this));
     });
 
-    $('#moreNotice').click(function () {
+    $('#moreNotice').click(function() {
+
         params["notice.type"] = 1;
         com.loadPage(api.index.moreNoticesIndex.url, $(this));
     });
 
-    $('#updateNotices').click(function () {
+    $('#updateNotices').click(function() {
+
         Signing.loadNotices();
     });
-    $('#updateActivities').click(function () {
+    $('#updateActivities').click(function() {
+
         Signing.loadActivities();
     });
-    
+
     var date = new Date();
     var d = date.getDate();
     var m = date.getMonth();
     var y = date.getFullYear();
-    
+
     var calendar = $('#calendar').fullCalendar($.extend(com.calendardefault, {
         selectable: true,
         selectHelper: true,
-        select: function (start, end, allDay) {
-            
+        select: function(start, end, allDay) {
+
             var items = {
                 title: com.focusPage('#addEvent [name="title"]'),
                 content: com.focusPage('#addEvent [name="content"]'),
             };
-            
+
             com.cleanItems(items);
-            
+
             layer.open({
                 type: 1,
                 title: false,
                 content: com.focusPage("#addEvent"),
                 area: "450px",
                 btn: ["确认", "取消"],
-                yes: function (index) {
+                yes: function(index) {
 
                     if (com.validate('addEvent')) {
                         return false;
@@ -275,9 +365,9 @@ $(function () {
                         "event.showDate": $.fullCalendar.formatDate(start, "yyyy-MM-dd")
                     };
 
-                    com.post(api.information.addEvent, params, function (res) {
+                    com.post(api.information.addEvent, params, function(res) {
 
-                        calendar.fullCalendar('renderEvent',{
+                        calendar.fullCalendar('renderEvent', {
                             title: res.event.title,
                             start: new Date(res.event.showDate),
 
@@ -287,65 +377,70 @@ $(function () {
                             content: res.event.content,
                             eid: res.event.eid
                         }, true);
-                        
+
                         layer.close(index)
                     });
-                }, 
-                btn2: function(index){
+                },
+                btn2: function(index) {
+
                     layer.close(index);
                 }
             });
 
             calendar.fullCalendar('unselect');
         },
-        eventClick: function (calEvent, jsEvent, view) {
-            
-            com.focusPage('#showEvent [name="title"]').html(calEvent.title),
-            com.focusPage('#showEvent [name="content"]').html(calEvent.content),
-            com.focusPage('#showEvent [name="creater"]').html(calEvent.creater.currentName),
-            com.focusPage('#showEvent [name="createTime"]').html(calEvent.createTime)
-            
+        eventClick: function(calEvent, jsEvent, view) {
+
+            com.focusPage('#showEvent [name="title"]').html(calEvent.title);
+            com.focusPage('#showEvent [name="content"]').html(calEvent.content);
+            com.focusPage('#showEvent [name="creater"]').html(calEvent.creater.currentName);
+            com.focusPage('#showEvent [name="createTime"]').html(calEvent.createTime);
+
             layer.open({
                 type: 1,
                 title: false,
                 content: com.focusPage("#showEvent"),
                 area: "300px",
                 btn: ["删除", "取消"],
-                yes: function (index) {
+                yes: function(index) {
 
                     com.post(api.information.deleteEvent, {
                         "event.eid": calEvent.eid
-                    }, function () {
-                        calendar.fullCalendar('removeEvents', function (ev) {
+                    }, function() {
+
+                        calendar.fullCalendar('removeEvents', function(ev) {
+
                             return (ev._id == calEvent._id);
                         });
                         layer.close(index);
                     });
-                }, 
-                btn2: function(index){
+                },
+                btn2: function(index) {
+
                     layer.close(index);
                 }
             });
         },
         handleWindowResize: true,
-        events: function (start, end, callback) {
+        events: function(start, end, callback) {
 
             var viewStart = $.fullCalendar.formatDate(start, "yyyy-MM-dd");
             var viewEnd = $.fullCalendar.formatDate(end, "yyyy-MM-dd");
-            $("#calendar").fullCalendar('removeEvents');//清空事件
+            $("#calendar").fullCalendar('removeEvents');// 清空事件
 
             com.post(api.information.queryEvent, {
                 "event.beginDate": viewStart,
                 "event.endDate": viewEnd
-            }, function (data) {
+            }, function(data) {
 
                 var resultCollection = data.events;
 
-                if (!resultCollection.length) return;
+                if (!resultCollection.length)
+                    return false;
 
                 var events = [];
 
-                $.each(resultCollection, function (index, term) {
+                $.each(resultCollection, function(index, term) {
 
                     var start = new Date(term.showDate);
                     var end = new Date(term.endDate || term.showDate);
@@ -362,71 +457,85 @@ $(function () {
                     });
                 });
                 callback(events);
-            }, null);//把从后台取出的数据进行封装以后在页面上以fullCalendar的方式进行显示
+            }, null);// 把从后台取出的数据进行封装以后在页面上以fullCalendar的方式进行显示
         },
-        viewDisplay: function (view) {
-        },//动态把数据查出,按照月份动态查询
-        dayClick: function (date, allDay, jsEvent, view) {
-            var selectdate = $.fullCalendar.formatDate(date, "yyyy-MM-dd");//选择当前日期的时间转换
+        viewDisplay: function(view) {
+
+        },// 动态把数据查出,按照月份动态查询
+        dayClick: function(date, allDay, jsEvent, view) {
+
+            var selectdate = $.fullCalendar.formatDate(date, "yyyy-MM-dd");// 选择当前日期的时间转换
             return false;
-        },//日期点击后弹出的jq ui的框,添加日程记录
-        loading: function (bool) {
-            if (bool) $('#loading').show();
-            else $('#loading').hide();
+        },// 日期点击后弹出的jq ui的框,添加日程记录
+        loading: function(bool) {
+
+            if (bool) {
+                $('#loading').show();
+            } else {
+                $('#loading').hide();
+            }
         },
         weekMode: 'variable'
     }));
-    
-    $("#closeAllPage").click(function(){
-        
+
+    $("#closeAllPage").click(function() {
+
         $(".flpage.nav-tab").removeClass("active");
         $(".flpage.tab-pane").removeClass("active");
         $("#home #homeNav.nav.nav-tabs .flpage.nav-tab:gt(1)").remove();
         $("#home .flpage.tab-content div.flpage.tab-pane:gt(1)").remove();
-        
+
         $("#homeNav > #operateTab").removeClass("open");
         $("#homeNav > #homeTab").addClass("active");
         $(".flpage > #homePage").addClass("active");
-        
+
         $.breadcrumb('icon-home', ['首页']);
-        
+
         return false;
     });
-    
+
     $('.flpage.nav-tab').bind({
         contextmenu: function() {
+
             return false;
         },
         mousedown: function(e) {
-            if (3 == e.which) $("#dropdown").css({'top': 1,'left': e.pageX - 190}).addClass('show');  // 右击
+
+            if (3 == e.which) {
+                $("#dropdown").css({
+                    'top': 1,
+                    'left': e.pageX - 190
+                }).addClass('show'); // 右击
+            }
         }
     });
     $('#calendarTab').removeClass('active');
     $('#calendarPage').removeClass('in active');
-    $('#calendarTab').click(function () {
+    $('#calendarTab').click(function() {
+
         setTimeout("$('#calendar').fullCalendar('rerenderEvents')", 500)
     });
-    
+
     drawWeather();
 
-    function drawWeather(){
-        
+    function drawWeather() {
+
         var $weatherList = $('#weatherList');
-        
-        com._post_(api.home.library,{
+
+        com._post_(api.home.library, {
             "redis": 0,
             "api": "system.login.weather",
             "loginTime": window.loginTime,
             "code": params.company.code,
-        }, function(res){
-            
-            if(typeof res == 'string') var data = JSON.parse(res)
-            else if(typeof res == 'object') var data = res
-            
+        }, function(res) {
+
+            if (typeof res == 'string')
+                var data = JSON.parse(res)
+            else if (typeof res == 'object')
+                var data = res
+
             var v = data;
-            
-            console.log(v)
-            
+
             var $item = $('<div></div>').addClass('col-sm-12 message-bar weather item center').appendTo($weatherList);
             var $title = $('<span></span>').addClass('blue bigger-200 weather title').text(v.name).appendTo($item);
             $('<div class="hr hr5 hr-dotted"></div>').appendTo($item);
@@ -438,31 +547,31 @@ $(function () {
             var $content = $('<span></span>').addClass('grey bigger-120').html(v.weather.wind_dir + v.weather.wind_class).appendTo($item);
 
             return false;
-            
-            $.each(data, function(i, v){
-                var $item = $('<div></div>').addClass('col-sm-12 message-bar weather item').appendTo($weatherList);
-                var $title = $('<span></span>').addClass('blue bigger-160 weather title').text(v.name).appendTo($item);
-                var $content = $('<span></span>').addClass('grey bigger-90').html(v.weather.text + '&nbsp;&nbsp;温度：' + v.weather.temp + '°C' + '&nbsp;&nbsp;湿度：' + v.weather.rh + '&nbsp;&nbsp;' + v.weather.wind_dir + v.weather.wind_class).appendTo($item);
-            });
         });
     }
+
 });
 
 function loadMessageCount() {
-    com.post(api.information.countMessage, {}, function (res) {
+
+    com.post(api.information.countMessage, {}, function(res) {
+
         if (res.messageCount == 0) {
             $("#messageCount").remove();
         } else {
+
+            var count = res.messageCount > 99 ? "99+" : res.messageCount;
+
             if ($("#messageCount").length == 0) {
-                $("#messageBtn").append("<span id='messageCount' class='badge badge-pink'>" + res.messageCount + "</span>");
+                $("#messageBtn").append("<span id='messageCount' class='badge badge-pink'>" + count + "</span>");
             } else {
-                $("#messageCount").text(res.messageCount);
+                $("#messageCount").text(count);
             }
         }
         $("span[name='messageCount']").text(res.messageCount);
-    }, function (res) {
+    }, function(res) {
+
         console.log("get message count fail...");
     });
-    
-}
 
+}

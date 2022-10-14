@@ -35,11 +35,7 @@ jQuery(function ($) {
         com.closeTip();
     });
 
-    com.post(api.ds.construction, {}, function (res) {
-        backVisit.backVisitTypeData = res.backVisitTypeData.split("key", "value");
-
-        backVisit.items.backVisitType.bindData(res.backVisitTypeData, "key", "value", false);
-    });
+    backVisit.items.backVisitType.bindData(constant.construction().customerServiceBackVisit.backVisitTypeData.datas,"key","value");
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
@@ -71,7 +67,7 @@ jQuery(function ($) {
                 ["楼盘地址:", v.orderAddr, "grey"],
                 ["客户名:", v.customerName, "grey"],
                 ["时间:", v.backVisitTime, "green"],
-                ["类型:", backVisit.backVisitTypeData[v.backVisitType], "red "],
+                ["类型:", constant.construction().customerServiceBackVisit.backVisitTypeData.keys[v.backVisitType], "red "],
                 ["备注:", v.backVisitDes, "grey"]
             ];
 

@@ -20,13 +20,13 @@ jQuery(function($) {
     com = parent.com;
     printer = parent.printer;
 
-    com.post(api.common.queryReceiptType, {}, function(res) {
+    com.post(api.data.queryReceiptType, {}, function(res) {
 
         $.each(res.receiptTypes, function(i, v) {
 
-            if (v.type == 2) {
+            if (v.type == parent.constant.data().receiptType.TYPE_CARD_INT) {
                 receipt.bankInfo[v.no] = v.name;
-            } else if (v.type == 3) {
+            } else if (v.type == parent.constant.data().receiptType.TYPE_BANK_INT) {
                 receipt.checkBankInfo[v.no] = v.name;
             }
         });
@@ -52,10 +52,10 @@ jQuery(function($) {
             return;
         }
 
-        if (payment.paymentType == 0) {
+        if (payment.paymentType == parent.constant.payment.advancePayment.PAYMENTTYPE_BALANCE_INT) {
             receipt.organizationName = parent.params.company.drganization.name + "收款收据";
             receipt.organization = parent.params.company.drganization.name;
-        } else if (payment.paymentType == 2) {
+        } else if (payment.paymentType == parent.constant.payment.advancePayment.PAYMENTTYPE_MATERIAL_INT) {
             receipt.organizationName = parent.params.company.srganization.name + "代收款收据";
             receipt.organization = parent.params.company.srganization.name;
         }
@@ -129,7 +129,7 @@ jQuery(function($) {
     }, null, false);
 
     paymentUtils.initSignet(receipt.htmlName);
-    paymentUtils.initQrcode(receipt.htmlName);
+    paymentUtils.initQrcode(receipt.htmlName, receipt.htmlName+"paymentContractQrcodeModal");
     paymentUtils.bindSignet($("#" + receipt.htmlName + "signets"));
     paymentUtils.showContractBtn(arid, 0, printer.args, commonInfo.customerName, receipt);
 
@@ -237,16 +237,16 @@ jQuery(function($) {
 
         var newPaymentType;
         switch (type) {
-            case 0:
+            case parent.constant.payment.advancePayment.PAYMENTTYPE_BALANCE_INT:
                 newPaymentType = "合同预付款";
                 break;
-            case 1:
+            case parent.constant.payment.advancePayment.PAYMENTTYPE_PROJECT_INT:
                 newPaymentType = "工程预付款";
                 break;
-            case 2:
+            case parent.constant.payment.advancePayment.PAYMENTTYPE_MATERIAL_INT:
                 newPaymentType = "主材预付款";
                 break;
-            case 3:
+            case parent.constant.payment.advancePayment.PAYMENTTYPE_ZATERIAL_INT:
                 newPaymentType = "正林预付款";
                 break;
         }

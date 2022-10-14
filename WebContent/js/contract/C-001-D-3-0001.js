@@ -54,11 +54,15 @@ jQuery(function($) {
         contractEdit.current = new Date(res.current);
     }, null, false);
 
-    com.post(api.data.queryCustomerById, {
-        "customer.cid": params.decoration.cid
+    com.post(api.decoration.queryDecorationForCommonByOrderId, {
+        "decoration.orderId": contractEdit.decorationOrderId
     }, function(res) {
 
-        var customer = res.customer;
+        var data = res.decoration;
+        var house = data.house;
+        var village = house.village;
+        var proper = village.cityProper;
+        var customer = res.decoration.customer;
 
         com.focusPage("#con-customer-name", "#form").val(customer.name);
         com.focusPage("#sin-customer-phone", "#form").val(customer.phone);
@@ -72,6 +76,8 @@ jQuery(function($) {
         com.focusPage("#con-company-phone", "#form").val(customer.companyPhone);
 
         contractEdit.cover["sin-company-phone"] = customer.companyPhone;
+
+        contractEdit.decoration = data;
     }, null, false);
 
     if (contractEdit.contractArgs.company == "1" && contractEdit.customer.type == 0) {
@@ -82,18 +88,6 @@ jQuery(function($) {
 
         return false;
     }
-
-    com.post(api.decoration.queryDecorationForCommonByOrderId, {
-        "decoration.orderId": contractEdit.decorationOrderId
-    }, function(res) {
-
-        var data = res.decoration;
-        var house = data.house;
-        var village = house.village;
-        var proper = village.cityProper;
-
-        contractEdit.decoration = data;
-    });
 
     com.post(api.decoration.queryDecorationHolonomy, {
         "decorationHolonomy.decoration.orderId": contractEdit.decorationOrderId

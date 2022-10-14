@@ -17,16 +17,17 @@
         
         btn:{
             saveBtns: com.focusPage("#saveBtns").on("click",saveBtns),
+            save: com.focusPage("#save").on("click",save),
         },
         
         modals: {
             pictureModal: com.focusPage("#pictureModal"),
+            transferModal: com.focusPage("#transferModal"),
         },
         items: {
             userPhoto : com.focusPage("#userPhoto", "#pictureModal"),
             identityPathF :  com.focusPage("#identityPathF", "#pictureModal"),
             identityPathB : com.focusPage("#identityPathB", "#pictureModal"),
-
         },
         postData: null,
         isExpert: true
@@ -83,10 +84,6 @@
         [{"id": "saveUserBtn", "clazz": "btn btn-primary", "name": "保存"}]
     );
 
-    com.post(api.ds.personel, {timestamp: (new Date).getTime()},function(a) {
-        user.statusType = a.statusType;
-    }, null, false);
-
     // 获取部门类型
     com.post(api.communion.queryDepartmentType, {}, function(res){
         user.deptType = res.departmentTypes;
@@ -114,11 +111,13 @@
                     var $deleteDD = $('<a></a>').addClass('btn btn-minier btn-danger').html('从钉钉删除');
                     var $userexception = $('<a></a>').addClass('btn btn-minier btn-pink').html('工作经历');
                     var $btnlookContract= $('<a></a>').addClass('btn btn-minier btn-purple').html('查看合同');
-					var $btnlookEducation= $('<a></a>').addClass('btn btn-minier btn-yellow').html('教育信息');
-					var $btnlookOperation= $('<a></a>').addClass('btn btn-minier btn-blue').html('工作信息');
-					var $btnDetail= $('<a></a>').addClass('btn btn-minier btn-success').html('简单查看');
-					var $btnPrint= $('<a></a>').addClass('btn btn-minier btn-warning').html('打印');
-					var $btnPicture= $('<a></a>').addClass('btn btn-minier btn-purple').html('图片');
+                    var $btnlookEducation= $('<a></a>').addClass('btn btn-minier btn-yellow').html('教育信息');
+                    var $btnlookOperation= $('<a></a>').addClass('btn btn-minier btn-blue').html('工作信息');
+                    var $btnDetail= $('<a></a>').addClass('btn btn-minier btn-success').html('简单查看');
+                    var $btnPrint= $('<a></a>').addClass('btn btn-minier btn-warning').html('打印');
+                    var $btnPicture= $('<a></a>').addClass('btn btn-minier btn-purple').html('图片');
+                    var $btnOffjob= $('<a></a>').addClass('btn btn-minier btn-inverse').html('离职');
+                    var $btnTransfer= $('<a></a>').addClass('btn btn-minier btn-danger').html('调职');
 
                     var propertyArr = [
                         ["员工编号:", v.userId, "grey"],
@@ -269,7 +268,7 @@
                             }
 
                             com.post(api.dd.queryDDUser, {"user.userid": v.userId}, function (res) {
-                                if(res.user.userid != null){
+                                if(res.user && res.user.userid != null){
                                     com.post(api.dd.updateDDUser, params, function(data){
                                         if($.trim(data.errcode) == $.trim(0) ){
                                             com.showAlert(com.info, "更新成功");
@@ -335,48 +334,62 @@
                         });
                     });
 
-					$btnlookContract.click(function(){
-						params.personel.uid = v.uid;
-						com.popup4page("#layerPopUp", api.index.userContract.url, "合同信息", null, function () {
+                    $btnlookContract.click(function(){
+                        params.personel.uid = v.uid;
+                        com.popup4page("#layerPopUp", api.index.userContract.url, "合同信息", null, function () {
                             userSeacher.doSearch();
                         });
-					});
+                    });
 
-					$btnlookEducation.click(function(){
-						params.personel.uid = v.uid;
-						com.popup4page("#layerPopUp", api.index.userEducation.url, "教育信息", null, function () {
+                    $btnlookEducation.click(function(){
+                        params.personel.uid = v.uid;
+                        com.popup4page("#layerPopUp", api.index.userEducation.url, "教育信息", null, function () {
                             userSeacher.doSearch();
                         });
-					});
+                    });
 
-					$btnlookOperation.click(function(){
-						params.personel.uid = v.uid;
-						com.popup4page("#layerPopUp", api.index.userOperation.url, "工作信息", null, function () {
+                    $btnlookOperation.click(function(){
+                        params.personel.uid = v.uid;
+                        com.popup4page("#layerPopUp", api.index.userOperation.url, "工作信息", null, function () {
                             userSeacher.doSearch();
                         });
-					});
+                    });
 
-					$btnDetail.click(function(){
-					    params.personel.userId = v.userId;
-						params.personel.uid = v.uid;
-						params.personel.isExpert = user.isExpert;
-						com.popup4page("#layerPopUp", api.index.userDetail.url, "人员信息", null, function () {
+                    $btnDetail.click(function(){
+                        params.personel.userId = v.userId;
+                        params.personel.uid = v.uid;
+                        params.personel.isExpert = user.isExpert;
+                        com.popup4page("#layerPopUp", api.index.userDetail.url, "人员信息", null, function () {
                             userSeacher.doSearch();
                         });
-					});
+                    });
 
-					$btnPrint.click(function(){
-					    params.personel.userId = v.userId;
-						params.personel.uid = v.uid;
-						com.popup("方林装饰应聘登记表", api.index.userPrint.url, null, null, true);
-					});
-					
-					$btnPicture.click(function(){
-			            user.modals.pictureModal.modal("show");
-			            params.personel.userId = v.userId;
-			            params.personel.uid = v.uid;
+                    $btnPrint.click(function(){
+                        params.personel.userId = v.userId;
+                        params.personel.uid = v.uid;
+                        com.popup("方林装饰应聘登记表", api.index.userPrint.url, null, null, true);
+                    });
+                    
+                    $btnPicture.click(function(){
+                        user.modals.pictureModal.modal("show");
+                        params.personel.userId = v.userId;
+                        params.personel.uid = v.uid;
                         initUser(v);
 
+                    });
+
+                    $btnOffjob.click(function(){
+                        com.post(api.personel.quitUser, {"user.userId" : v.userId}, function(v){
+                            com.showAlert(com.info, "离职成功");
+                            userSeacher.doSearch();
+                        });
+                    });
+                    
+                    $btnTransfer.click(function(){
+                        user.modals.transferModal.modal("show");
+                        params.personel.userId = v.userId;
+                        transfer(v);
+                        return false;
                     });
 
                     // 删除点击事件
@@ -391,11 +404,11 @@
                             com.post(api.dd.queryDDUser, {"user.userid": v.userId}, function (res) {
                                 if(res.user.name != null){
                                    com.post(api.dd.deleteDDUser, {"user.userid":  v.userId}, function(data){
-                                	   if($.trim(data.errcode) == $.trim(0) ){
-                                		   com.showAlert(com.info, "删除成功");
-                                		   } else {
-                                       	   com.showAlert(com.error,"删除失败");
-                                       	   }
+                                       if($.trim(data.errcode) == $.trim(0) ){
+                                           com.showAlert(com.info, "删除成功");
+                                           } else {
+                                           com.showAlert(com.error,"删除失败");
+                                           }
                                        });
                                   }else{
                                     com.showAlert(com.error, "钉钉中没有该用户, 无法删除");
@@ -405,14 +418,18 @@
                     });
 
                     $userexception.unbind().bind('click',function(){
-                    	params.personel.uid = v.uid;
-						com.popup4page("#layerPopUp", api.index.userExperience.url, "工作经历", null, function () {
+                        params.personel.uid = v.uid;
+                        com.popup4page("#layerPopUp", api.index.userExperience.url, "工作经历", null, function () {
                             userSeacher.doSearch();
                         });
                     });
                     
-                    $divBtnWrap.append($qrcode).append($btnCheck).append($btnEdit).append($addDD).append($updateDD).append($deleteDD).append($userexception).append($btnlookContract).append($btnlookEducation).append($btnlookOperation).append($btnDetail).append($btnPrint).append($btnPicture).appendTo($h3);
-
+                    if(v.status == constant.personel.user.STATUS_ONJOB_INT){
+                        $divBtnWrap.append($qrcode).append($btnCheck).append($btnEdit).append($addDD).append($updateDD).append($deleteDD).append($userexception).append($btnlookContract).append($btnlookEducation).append($btnlookOperation).append($btnDetail).append($btnPrint).append($btnPicture).append($btnOffjob).append($btnTransfer).appendTo($h3);    
+                    }else{
+                        $divBtnWrap.append($btnCheck).append($btnEdit).append($userexception).append($btnlookContract).append($btnlookEducation).append($btnlookOperation).append($btnDetail).append($btnPrint).append($btnPicture).append($btnOffjob).append($btnTransfer).appendTo($h3);
+                    }
+                    
                     $liLine.append($urldiv).append($h3).append($ulProperty).appendTo($ul);
                 });
 
@@ -475,28 +492,28 @@
     
     com.uploadify(user.items.import, "上传文件", api.salary.importUserSalary, 'btn btn-success col-sm-12', '*.xls;*.xlsx', {'uploadType': 4}, 1);
 
-	com.focusPage('a[name="export"]','#pagenation').click(function(){
+    com.focusPage('a[name="export"]','#pagenation').click(function(){
         com.popup4page("#layerPopUp", api.index.userOutputIndex.url, "导出人员信息", null, function () {
             userSeacher.doSearch();
         });
     });
-	
+    
     // 添加人员(简化版)
     user.saveBtn = com.focusPage("#saveUserBtn").on("click", saveData);
     user.cancelBtn = com.focusPage("#cancelUserBtn").on("click",function() {
         user.simpleAddUserModal.modal("hide");
     });
 
-    user.items.loginId = com.focusPage("#loginId");
-    user.items.userName = com.focusPage("#userName");
-    user.items.currentName = com.focusPage("#currentName");
-    user.items.gender = com.focusPage("#gender").switchBtn("gender");
-    user.items.identity = com.focusPage("#identity");
-    user.items.phone = com.focusPage("#phone");
-    user.items.deptSel = com.focusPage("#deptSel");
-    user.items.dutySel = com.focusPage("#dutySel");
-    user.items.deptTypeSel = com.focusPage("#deptTypeSel");
-    user.items.statusSel = com.focusPage("#statusSel");
+     user.items.loginId = com.focusPage("#loginId");
+     user.items.userName = com.focusPage("#userName");
+     user.items.currentName = com.focusPage("#currentName");
+     user.items.gender = com.focusPage("#gender").switchBtn("gender");
+     user.items.identity = com.focusPage("#identity");
+     user.items.phone = com.focusPage("#phone");
+     user.items.deptSel = com.focusPage("#deptSel");
+     user.items.dutySel = com.focusPage("#dutySel");
+     user.items.deptTypeSel = com.focusPage("#deptTypeSel");
+     user.items.statusSel = com.focusPage("#statusSel");
     
     user.items.deptTypeSel.on("change", function(b, d) {
         
@@ -513,7 +530,7 @@
     }).trigger("change");
 
     user.items.deptTypeSel.bindData(user.deptType, "dtid", "name");
-    user.items.statusSel.bindData(user.statusType, "key", "value");
+    user.items.statusSel.bindData(constant.personel.user.status.datas, "key", "value");
 
     function saveData() {
         
@@ -564,7 +581,7 @@
         };
 
         com.post(api.personel.addUser, options, function(res){
-        	
+            
             com.showAlert(com.info, "操作成功");
             user.simpleAddUserModal.modal("hide");
         });
@@ -622,4 +639,56 @@
         com.focusPage("#picture2").val(data.resUrl);
         com.focusPage("#identityPathB").attr("href", com.showImg(com.focusPage("#showImg2"), data.resUrl, 360, 260, ''));
     });
+    
+    
+    user.items.dept = com.focusPage("#dept","#transferModal");
+    user.items.duty = com.focusPage("#duty","#transferModal");
+    user.items.deptType = com.focusPage("#deptType","#transferModal");
+
+    user.items.deptType.on("change", function(b, d) {
+   
+    com.post(api.system.queryDutyByDtid,{"duty.departmentType.dtid" :$(this).val()},function(res){
+        user.dutyTypeMap = res.dutys;
+        user.items.duty.bindData(user.dutyTypeMap,"did","name");
+    });
+   
+    com.post(api.communion.queryDepartmentByDtid, {"dept.type.dtid": $(this).val()}, function(res) {
+        user.items.dept.bindData(res.deptList, "did", "name");
+        d && d();
+    });
+       
+    }).trigger("change");
+
+    user.items.deptType.bindData(user.deptType, "dtid", "name");
+    
+    function transfer(v){
+
+        user.items.deptType.val(v.dept.type.dtid).trigger("change",function() {
+            user.items.dept.val(v.dept.did);
+            user.items.duty.val(v.duty.did);
+        }),
+
+        user.modals.transferModal.modal("show");
+    }
+    
+    function save(){
+        
+        if(com.validate('transferModal'))  return false;
+        
+        parms = {
+            "user.userId": params.personel.userId,
+            "user.dtid": user.items.deptType.val(),
+            "user.dept.did": user.items.dept.val(),
+            "user.duty.did": user.items.duty.val(),
+        };
+
+        com.post(api.personel.tranUser, parms, function(res){
+
+            com.showAlert(com.info, "调职成功");
+
+            user.modals.transferModal.modal("hide");
+
+            userSeacher.doSearch();
+        });
+    };
 });

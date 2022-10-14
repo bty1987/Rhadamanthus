@@ -1,6 +1,5 @@
-
 Condition.addupRule("customer", {
-    
+
     "no": {
         label: "客户编号",
         type: "text",
@@ -31,7 +30,7 @@ Condition.addupRule("customer", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
+        dataSource: {// 从后台取数据的各种配置
             url: api.ds.data,
             postData: {},
             listPath: "relationshipType",
@@ -55,7 +54,7 @@ Condition.addupRule("customer", {
             valuePath: "value"
         }
     },
-    
+
     "service-orderId": {
         label: "装修单号",
         type: "text",
@@ -78,7 +77,9 @@ Condition.addupRule("customer", {
         },
         dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status":"0" },
+            postData: {
+                "user.status": "0"
+            },
             listPath: "userBases",
             keyPath: "userId",
             valuePath: "currentName"
@@ -94,7 +95,9 @@ Condition.addupRule("customer", {
         },
         dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status":"" },
+            postData: {
+                "user.status": ""
+            },
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
@@ -127,12 +130,19 @@ Condition.addupRule("customer", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [
-                {"key":"0","value":"初始"},
-                {"key":"1","value":"处理"},
-                {"key":"2","value":"完结"},
-                {"key":"3","value":"关闭"}
-            ],
+            listPath: [{
+                "key": "0",
+                "value": "初始"
+            }, {
+                "key": "1",
+                "value": "处理"
+            }, {
+                "key": "2",
+                "value": "完结"
+            }, {
+                "key": "3",
+                "value": "关闭"
+            }],
             keyPath: "key",
             valuePath: "value"
         }
@@ -148,21 +158,26 @@ Condition.addupRule("customer", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [
-                {"key":"0","value":"普通"},
-                {"key":"1","value":"重大"},
-                {"key":"2","value":"危机"}
-            ],
+            listPath: [{
+                "key": "0",
+                "value": "普通"
+            }, {
+                "key": "1",
+                "value": "重大"
+            }, {
+                "key": "2",
+                "value": "危机"
+            }],
             keyPath: "key",
             valuePath: "value"
         }
     },
-    
-    "customerSource-phone" :{
+
+    "customerSource-phone": {
         label: "客源电话",
         type: "text",
         submitConfig: {
-            name: "customerSourcePhone",
+            name: "phone",
             op: "eq",
             validate: {
                 "reg": /^[0-9]*$/,
@@ -170,14 +185,114 @@ Condition.addupRule("customer", {
             }
         }
     },
-    
-    "v-name" : {
-        label:"客户名称",
-        type:"text",
-        submitConfig : {
-            name : "name",
-            op : "eq",
-            validate:null
+    "customerSource-village": {
+        label: "楼盘",
+        type: "autofill",
+        submitConfig: {
+            name: "village",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.data.queryVillageForNameByPinyin,
+            postData: {},
+            listPath: "autoFillKeyValue",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "customerSource-createTime": {
+        label: "创建时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "createTime",
+            op: "eq",
+            validate: null
+        }
+    },
+    "customerSource-designer": {
+        label: "归属设计师",
+        type: "autofill",
+        submitConfig: {
+            name: "designer",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": 0,
+                "departmentType.name": ""
+            },
+            listPath: "userBases",
+            keyPath: "uid",
+            valuePath: "currentName"
+        }
+    },
+    "customerSource-salesman": {
+        label: "归属业务员",
+        type: "autofill",
+        submitConfig: {
+            name: "salesman",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.personel.queryUserByPinyin,
+            postData: {
+                "user.status": 0,
+                "departmentType.name": ""
+            },
+            listPath: "userBases",
+            keyPath: "uid",
+            valuePath: "currentName"
+        }
+    },
+    "customerSource-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                "key": "0",
+                "value": "初始"
+            }, {
+                "key": "1",
+                "value": "初审"
+            }, {
+                "key": "2",
+                "value": "提交"
+            }, {
+                "key": "3",
+                "value": "确认"
+            }, {
+                "key": "4",
+                "value": "审批"
+            }, {
+                "key": "5",
+                "value": "绑定"
+            }, {
+                "key": "6",
+                "value": "拒绝"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    "v-name": {
+        label: "客户名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "eq",
+            validate: null
         }
     },
     "v-type": {
@@ -191,15 +306,18 @@ Condition.addupRule("customer", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [
-                {"key":"0","value":"保修"},
-                {"key":"1","value":"投诉"}
-            ],
+            listPath: [{
+                "key": "0",
+                "value": "保修"
+            }, {
+                "key": "1",
+                "value": "投诉"
+            }],
             keyPath: "key",
             valuePath: "value"
         }
     },
-    
+
     "feedback-createTime": {
         label: "创建时间",
         type: "dateRangePicker",
@@ -209,22 +327,22 @@ Condition.addupRule("customer", {
             validate: null
         }
     },
-    "feedback-orderId" : {
-        label:"装修单号",
-        type:"text",
-        submitConfig : {
-            name : "orderId",
-            op : "eq",
-            validate:null
+    "feedback-orderId": {
+        label: "装修单号",
+        type: "text",
+        submitConfig: {
+            name: "orderId",
+            op: "eq",
+            validate: null
         }
     },
-    "feedback-phone" : {
-        label:"电话",
-        type:"text",
-        submitConfig : {
-            name : "phone",
-            op : "cn",
-            validate:null
+    "feedback-phone": {
+        label: "电话",
+        type: "text",
+        submitConfig: {
+            name: "phone",
+            op: "cn",
+            validate: null
         }
     },
     "feedback-type": {
@@ -238,27 +356,32 @@ Condition.addupRule("customer", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [
-                {"key":"0","value":"反馈"},
-                {"key":"1","value":"投诉"},
-                {"key":"2","value":"维修"}
-            ],
+            listPath: [{
+                "key": "0",
+                "value": "反馈"
+            }, {
+                "key": "1",
+                "value": "投诉"
+            }, {
+                "key": "2",
+                "value": "维修"
+            }],
             keyPath: "key",
             valuePath: "value"
         }
     },
-    
+
     "member-no": {
         label: "会员编号",
         type: "text",
         submitConfig: {
             name: "no",
             op: "eq",
-            validate:null,
+            validate: null,
         }
     },
 
-    "member-phone" :{
+    "member-phone": {
         label: "手机号",
         type: "text",
         submitConfig: {
@@ -270,14 +393,14 @@ Condition.addupRule("customer", {
             }
         }
     },
-    
-    "vscoreRecord-type" : {
-        label:"积分类型",
-        type:"select",
-        submitConfig : {
-            name : "VscoreRecordType",
-            op : "eq",
-            validate:null
+
+    "vscoreRecord-type": {
+        label: "积分类型",
+        type: "select",
+        submitConfig: {
+            name: "VscoreRecordType",
+            op: "eq",
+            validate: null
         },
         dataSource: {
             url: api.ds.data,
@@ -287,32 +410,32 @@ Condition.addupRule("customer", {
             valuePath: "value"
         }
     },
-    
-    "group-name" : {
-        label:"名称",
-        type:"text",
-        submitConfig : {
-            name : "name",
-            op : "eq",
-            validate:null
+
+    "group-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "eq",
+            validate: null
         }
     },
-    "group-orderId" : {
-        label:"装修单号",
-        type:"text",
-        submitConfig : {
-            name : "orderId",
-            op : "eq",
-            validate:null
+    "group-orderId": {
+        label: "装修单号",
+        type: "text",
+        submitConfig: {
+            name: "orderId",
+            op: "eq",
+            validate: null
         }
     },
-    "survey-orderId" : {
-        label:"装修单号",
-        type:"text",
-        submitConfig : {
-            name : "orderId",
-            op : "eq",
-            validate:null
+    "survey-orderId": {
+        label: "装修单号",
+        type: "text",
+        submitConfig: {
+            name: "orderId",
+            op: "eq",
+            validate: null
         }
     },
     "survey-createTime": {
@@ -333,13 +456,13 @@ Condition.addupRule("customer", {
             validate: null
         }
     },
-    "droup-orderId" : {
-        label:"装修单号",
-        type:"text",
-        submitConfig : {
-            name : "orderId",
-            op : "eq",
-            validate:null
+    "droup-orderId": {
+        label: "装修单号",
+        type: "text",
+        submitConfig: {
+            name: "orderId",
+            op: "eq",
+            validate: null
         }
     },
     "droup-updateTime": {
@@ -351,16 +474,16 @@ Condition.addupRule("customer", {
             validate: null
         }
     },
-    "droup-handleTime" : {
-        label:"处理时间",
-        type:"dateRangePicker",
-        submitConfig : {
-            name : "handleTime",
-            op : "eq",
-            validate:null
+    "droup-handleTime": {
+        label: "处理时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "handleTime",
+            op: "eq",
+            validate: null
         }
     },
-    "droup-status":{
+    "droup-status": {
         label: "状态",
         type: "select",
         submitConfig: {
@@ -375,22 +498,22 @@ Condition.addupRule("customer", {
             keyPath: "key",
             valuePath: "value"
         }
-    },"droup-isHandle":{
-    label: "处理状态",
+    },
+    "droup-isHandle": {
+        label: "处理状态",
         type: "select",
         submitConfig: {
-        name: "isHandle",
+            name: "isHandle",
             op: "eq",
             validate: null
-    },
-    dataSource: {
-        url: api.ds.customer,
+        },
+        dataSource: {
+            url: api.ds.customer,
             postData: {},
-        listPath: "droupIsHandle",
+            listPath: "droupIsHandle",
             keyPath: "key",
             valuePath: "value"
-    }
-},
-
+        }
+    },
 
 });

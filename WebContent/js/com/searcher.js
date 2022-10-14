@@ -875,7 +875,7 @@ var Searcher = function() {
                         if (value.click && typeof value.click == "function") {
                             $liProperty.click(function() {
 
-                                value.click(v);
+                                value.click($(this), v);
                             }).css("cursor", "pointer");
                         }
                     });

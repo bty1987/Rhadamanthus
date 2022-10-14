@@ -32,8 +32,6 @@ jQuery(function($) {
     com.post(api.ds.balance, {}, function(res) {
 
         balance.items.type.bindData(res.isType, "key", "value");
-        balance.isType = res.isType.split("key", "value");
-        balance.isStatus = res.isStatus.split("key", "value");
     }, null, false);
 
     com.initTypeahead('belongerName', api.personel.queryUserByPinyin, "pinyinName", {
@@ -80,8 +78,8 @@ jQuery(function($) {
             propertyArr.push(["金额: ", v.amount, "blue"]);
             propertyArr.push(["扣款总额: ", v.cutpay, "blue"]);
 //            propertyArr.push(["余额: ", v.surplus, "blue"]);
-            propertyArr.push(["类型: ", balance.isType[v.type], "red"]);
-            propertyArr.push(["状态: ", balance.isStatus[v.status], "red"]);
+            propertyArr.push(["类型: ", constant.balance().balance.type.keys[v.type], "red"]);
+            propertyArr.push(["状态: ", constant.balance().balance.status.keys[v.status], "red"]);
 
             $.each(propertyArr, function(index, value) {
 
@@ -143,7 +141,7 @@ jQuery(function($) {
             $btnBalanceCutpay.click(function() {
 
                 params.balance.bid = v.bid;
-
+                params.balance.uid = v.belonger.uid;
                 com.popup4page("#stockRecordPopUp", api.index.balanceCutpayIndex.url, "结算扣款");
 
             });

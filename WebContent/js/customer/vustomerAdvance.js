@@ -68,7 +68,7 @@ $(function(){
                 ["推荐人电话:", v.referphone, "blue"],
                 ["创建时间:", v.createTime, "grey"],
                 ["合同额:", v.contractPrice, "blue"],
-                ["状态:", v.status == 0 ? "有效" : "无效", "red"],
+                ["状态:", constant.customer().vustomerAdvance.status.keys[v.status], "red"],
                 ["说明:", v.comment, "grey"]
             ];
 

@@ -25,12 +25,7 @@ $(function() {
 
     activity.saveBtn.bindClick(saveData);
 
-    com.post(api.ds.information, {}, function(res) {
-
-        activity.items.types.bindData(res.activityTypes, "key", "value", true);
-
-        activity.types = res.activityTypes.split("key", "value");
-    }, null, false);
+    activity.items.types.bindData(constant.information().activity.type.datas, "key", "value");
 
     activity.modals.activityModal.on("hide.bs.modal", function() {
 
@@ -77,7 +72,7 @@ $(function() {
             });
             var $span = $('<span></span>').addClass('lbl status-lbl');
 
-            var propertyArr = [["创建人:", v.creater.currentName, "grey"], ["开始时间:", v.startTime, "green"], ["结束时间:", v.endTime, "green"], ["状态:", v.status == 0 ? "有效" : "无效", "red"], ["类型:", activity.types[v.type], "red"], ["倍数:", v.multiple, "blue"], ["默认标识:", v.defaults == 0 ? "默认" : "普通", "red"], ["说明:", v.content, "grey"]];
+            var propertyArr = [["创建人:", v.creater.currentName, "grey"], ["开始时间:", v.startTime, "green"], ["结束时间:", v.endTime, "green"], ["状态:", v.status == constant.information().activity.STATUS_VALID_INT ? "有效" : "无效", "red"], ["类型:", constant.information().activity.type.keys[v.type], "red"], ["倍数:", v.multiple, "blue"], ["默认标识:", v.defaults == constant.information().activity.DEFAULTS_DEFAULT_INT ? "默认" : "普通", "red"], ["说明:", v.content, "grey"]];
 
             $.each(propertyArr, function(index, value) {
 
@@ -113,7 +108,7 @@ $(function() {
 
             $default.click(function() {
 
-                if (v.defaults == 0) {
+                if (v.defaults == constant.information().activity.DEFAULTS_DEFAULT_INT) {
                     com.showAlert(com.warning, "该活动已是默认活动");
                     return false;
                 }

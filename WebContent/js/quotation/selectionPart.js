@@ -3,6 +3,9 @@ var selectionDetail = (function() {
     var selection = {
         basicParams: {},
         nowEditQuote: null,
+        datasets: {
+            status: {}
+        },
         btns: {
             saveSelectionBtn: com.focusPage('#saveSelectionBtn'),
             returnBtn: com.focusPage('#returnBtn'),
@@ -11,7 +14,8 @@ var selectionDetail = (function() {
             printFinanceBtn: com.focusPage('#printFinanceBtn')
         },
         modals: {
-            quotationItemSoodsModal: com.focusPage('#quotationItemSoodsModal')
+            quotationItemSoodsModal: com.focusPage('#quotationItemSoodsModal'),
+            quotationItemMateria: com.focusPage('#quotationItemMateria')
         },
         items: {
             goodsName: com.focusPage('#goodsName')
@@ -55,6 +59,114 @@ var selectionDetail = (function() {
                     com.closePopover();
                 });
             });
+
+            com.focusPage('#sendSelectionBtn').on('click', function() {
+
+                com.post(api.quotation.querySelectionByQid, {
+                    'selection.qid': selection.quotation.qid
+                }, function(v) {
+
+                    var options = {
+                        "selection.sid": v.selection.sid,
+                        "selection.orderId": v.selection.orderId,
+                        "selection.affirmTime": v.selection.affirmTime
+                    };
+
+                    com.post(api.quotation.sendSelection, options, function(res) {
+
+                        com.showAlert(com.info, "操作成功");
+                    });
+
+                }, null, false);
+
+            });
+
+            saveMaterialBtn: com.focusPage('#saveMaterialBtn').on('click', function() {
+
+                selection.modals.quotationItemMateria.modal("show");
+                var cardbtns = [{
+                    name: "添加",
+                    clazz: "btn-success",
+                    handle: function(soods) {
+
+                        var option = {
+                            "selectionItem.goods.gid": soods.goods.gid,
+                            "selectionItem.postprice": soods.selling,
+                            "selectionItem.preprice": 0,
+                            "selectionItem.initNum": 0,
+                            "selectionItem.num": 0,
+                            "selectionItem.quoteId": soods.sid,
+                            "selectionItem.type": constant.quotation().selectionItem.TYPE_ALONE_INT,
+                            "selectionItem.areaId": 0,
+                            "selectionItem.areaName": '未匹配',
+                            "selection.sid": selection.basicParams['selection.sid'],
+                            "selection.quotationTotal": selection.basicParams['selection.quotationTotal'],
+                            "selection.extensionAddTotal": selection.basicParams['selection.extensionAddTotal'],
+                            "selection.extensionReduceTotal": selection.basicParams['selection.extensionReduceTotal'],
+                            "selection.addReduceAddTotal": selection.basicParams['selection.addReduceAddTotal'],
+                            "selection.addReduceMinusTotal": selection.basicParams['selection.addReduceMinusTotal']
+                        };
+
+                        com.post(api.quotation.addSelectionItem, option, function(res) {
+
+                            painter.createSelectionItem(res.selectionItem);
+
+                            com.showAlert(com.info, "操作成功");
+                        }, null, false);
+
+                        selection.modals.quotationItemMateria.modal("hide");
+                    }
+                }];
+
+                var searcher = new Searcher();
+
+                searcher.base("condLists", "pagenations", "resultLists", api.data.pageSoods);
+                searcher.condition(["data-soods-name"]);
+                searcher.history("pagegoodsPostData");
+                searcher.param({
+                    "soods.status": 0
+                })
+
+                var selecprops = [{
+                    field: "goods.brand",
+                    name: "品牌",
+                    prop: "goods.brand",
+                    clazz: "grey"
+                }, {
+                    field: "goods.category",
+                    name: "品类",
+                    prop: "goods.category",
+                    clazz: "grey"
+                }, {
+                    field: "goods.measurementUnit",
+                    name: "单位",
+                    prop: "goods.measurementUnit",
+                    clazz: "red"
+                }, {
+                    field: "selling",
+                    name: "结算价",
+                    prop: "selling",
+                    clazz: "blue",
+                    show: function(v) {
+
+                        return false;
+                    }
+                }, {
+                    field: "num",
+                    name: "数量",
+                    prop: "num",
+                    clazz: "blue"
+                }, {
+                    field: "status",
+                    name: "状态",
+                    prop: "status",
+                    dataset: constant.quotation().selectionItem.status.keys,
+                    clazz: "red"
+                }]
+
+                searcher.line("goods.name", selecprops, cardbtns).render();
+
+            });
         },
         calculatePrice: function(selling, num) {
 
@@ -76,21 +188,22 @@ var selectionDetail = (function() {
 
             selection.selectionBox.find('.widget-box').each(function(i, v) {
 
-                var type = $(this).attr('data-type');
+                var type = parseInt($(this).attr('data-type'));
+
                 switch (type) {
-                    case "0":
+                    case constant.quotation().selectionItem.TYPE_QUOTATION_INT:
                         quotationTotal = utils.accAdd($(this).attr('data-total'), quotationTotal);
                         break;
-                    case "1":
+                    case constant.quotation().selectionItem.TYPE_EXTENSIONADD_INT:
                         extensionAddTotal = utils.accAdd($(this).attr('data-total'), extensionAddTotal);
                         break;
-                    case "2":
+                    case constant.quotation().selectionItem.TYPE_EXTENSIONMINUS_INT:
                         extensionReduceTotal = utils.accAdd($(this).attr('data-total'), extensionReduceTotal);
                         break;
-                    case "3":
+                    case constant.quotation().selectionItem.TYPE_ADDITEM_INT:
                         addReduceAddTotal = utils.accAdd($(this).attr('data-total'), addReduceAddTotal);
                         break;
-                    case "4":
+                    case constant.quotation().selectionItem.TYPE_MINUSITEM_INT:
                         addReduceMinusTotal = utils.accAdd($(this).attr('data-total'), addReduceMinusTotal);
                         break;
                 }
@@ -149,7 +262,7 @@ var selectionDetail = (function() {
                     var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
                     var $btnSoods = $('<a></a>').addClass('btn btn-minier btn-success').html('添加');
 
-                    var propertyArr = [["品牌: ", v.goods.brand, "grey"], ["品类: ", v.goods.category, "grey"], ["单位: ", v.goods.measurementUnit, "grey"], ["数量: ", v.num, "blue"], ["状态: ", v.status == 0 ? "有效" : "无效", "red"], ["报价名称: ", v.quotationItem.name, "grey"], ["报价版本: ", v.quotationItem.version.name, "grey"], ];
+                    var propertyArr = [["品牌: ", v.goods.brand, "grey"], ["品类: ", v.goods.category, "grey"], ["单位: ", v.goods.measurementUnit, "grey"], ["数量: ", v.num, "blue"], ["状态: ", constant.data().goods.status.keys[v.status], "red"], ["报价名称: ", v.quotationItem.name, "grey"], ["报价版本: ", v.quotationItem.version.name, "grey"], ];
 
                     $.each(propertyArr, function(index, value) {
 
@@ -190,7 +303,8 @@ var selectionDetail = (function() {
 
                 displayFunc.init("resultList", data);
             }, "pagenation", "selectionItemSoodsPostData", {
-                "soodsItem.quotationItem.qiid": quotationItemId
+                "soodsItem.quotationItem.qiid": quotationItemId,
+                "soodsItem.status": constant.data().goods.STATUS_ENABLE_INT
             }, false, null, null);
 
         },
@@ -273,6 +387,7 @@ var selectionDetail = (function() {
             com.post(api.quotation.deleteSelectionItem, option, function(e) {
 
                 $selectionItemLi.attr("data-price", 0).empty();
+                $selectionItemLi.parent("div.alone").remove();
                 com.showAlert(com.info, "操作成功");
             }, function(res) {
 
@@ -368,7 +483,7 @@ var selectionDetail = (function() {
 
             var $btnSelection = $('<a></a>').addClass(' btn btn-minier btn-inverse').html('选材').css('visibility', 'hidden');
 
-            if (data.quotationItemId != null && data.quotationItemId != 0 && data.type != 4) {
+            if (data.quotationItemId != null && data.quotationItemId != 0 && data.type != constant.quotation().selectionItem.TYPE_MINUSITEM_INT) {
                 $btnSelection.css('visibility', 'visible');
             }
 
@@ -389,7 +504,20 @@ var selectionDetail = (function() {
 
             var $selectionItemLi = com.focusPage('#' + data.areaId + '-' + data.quoteId + '-' + data.type).empty();
 
-            var lineSet = [['name green', data.goods.name], ['num blue', [2, 4].indexOf(data.type) != -1 ? -data.num : data.num]];
+            if (data.type == constant.quotation().selectionItem.TYPE_ALONE_INT) {
+                var _list = com.focusPage("div[data-type=5]").find(".fl-quo-list.list");
+                var $rowDiv = $('<div></div>').addClass('row alone').css({
+                    'border-bottom': '1px solid #dce8f1',
+                    'margin': '0 2px 0 2px'
+                }).appendTo(_list);
+                var $quoteItemLi = $('<li></li>').addClass('fl-quo-item col-md-6').css({
+                    'border': 'none',
+                    'border-right': '1px solid #dce8f1'
+                }).appendTo($rowDiv);
+                $selectionItemLi = $('<li></li>').addClass("fl-quo-item col-md-6").appendTo($rowDiv);
+            }
+
+            var lineSet = [['name green', data.goods.name], ['num blue', [constant.quotation().selectionItem.TYPE_EXTENSIONMINUS_INT, constant.quotation().selectionItem.TYPE_MINUSITEM_INT].indexOf(data.type) != -1 ? -data.num : data.num]];
 
             $.each(lineSet, function(i, v) {
 
@@ -444,9 +572,11 @@ var selectionDetail = (function() {
 
             editFlg ? quotationId = params.quotation.quotation.qid : com.post(api.quotation.queryQuotationForDefaultByOrderId, {
                 'quotation.orderId': orderId
-            }, function(e) {
+            }, function(res) {
 
-                quotationId = e.quotation.qid;
+                quotationId = res.quotation.qid;
+
+                selection.quotation = res.quotation;
             }, null, false);
 
             if (!quotationId) {
@@ -510,7 +640,7 @@ var selectionDetail = (function() {
                         if (res.quotationFunctionAreas && res.quotationFunctionAreas.length) {
                             $.each(res.quotationFunctionAreas, function(i, v) {
 
-                                v.type != 0 ? createItem(v, selectionItemType) : null;
+                                v.type != constant.quotation().selectionItem.TYPE_QUOTATION_INT ? createItem(v, selectionItemType) : null;
                             });
                         }
                     }, null, false);
@@ -522,7 +652,7 @@ var selectionDetail = (function() {
                         if (res.extensions && res.extensions.length) {
                             $.each(res.extensions, function(i, v) {
 
-                                selectionItemType = v.type == 0 ? 1 : 2;
+                                selectionItemType = v.type == constant.quotation().selectionItem.TYPE_QUOTATION_INT ? constant.quotation().selectionItem.TYPE_EXTENSIONADD_INT : constant.quotation().selectionItem.TYPE_EXTENSIONMINUS_INT;
                                 createItem(v, selectionItemType);
                             });
                         }
@@ -535,11 +665,13 @@ var selectionDetail = (function() {
                         if (res.addReduces && res.addReduces.length) {
                             $.each(res.addReduces, function(i, v) {
 
-                                selectionItemType = v.type == 0 ? 3 : 4;
+                                selectionItemType = v.type == constant.quotation().selectionItem.TYPE_QUOTATION_INT ? constant.quotation().selectionItem.TYPE_ADDITEM_INT : constant.quotation().selectionItem.TYPE_MINUSITEM_INT;
                                 createItem(v, selectionItemType);
                             });
                         }
                     }, null, false);
+
+                    createItem({}, constant.quotation().selectionItem.TYPE_ALONE_INT);
 
                     com.post(api.quotation.querySelectionItem, {
                         'selection.sid': selection.basicParams['selection.sid']
@@ -568,12 +700,12 @@ var selectionDetail = (function() {
                 var selectionBox = selection.selectionBox;
 
                 var subtypes = [0, 1];
-                var name = type === 0 ? functionArea.functionAreaName : selectionItem.type[type];
+                var name = type == constant.quotation().selectionItem.TYPE_QUOTATION_INT ? functionArea.functionAreaName : type == constant.quotation().selectionItem.TYPE_ALONE_INT ? "未匹配" : selectionItem.type[type];
 
                 var $domain = painter.createFunctionArea(name, type);
-                var $ul = $('<ul></ul>').addClass('fl-quo-list');
+                var $ul = $('<ul></ul>').addClass('fl-quo-list list');
 
-                if (type === 0) {
+                if (type === constant.quotation().selectionItem.TYPE_QUOTATION_INT) {
                     $.each(functionArea.quotationFunctionAreaItems, function(i, v) {
 
                         if (!subtypes.includes(v.subtype)) {
@@ -582,7 +714,7 @@ var selectionDetail = (function() {
                             $ul.append($quoteItem);
                         }
                     });
-                } else if (type === 1 || type === 2) {
+                } else if (type === constant.quotation().selectionItem.TYPE_EXTENSIONADD_INT || type === constant.quotation().selectionItem.TYPE_EXTENSIONMINUS_INT) {
                     com.post(api.quotation.queryExtensionItemByEid, {
                         'extensionItem.eid': functionArea.eid
                     }, function(res) {
@@ -596,7 +728,7 @@ var selectionDetail = (function() {
                             }
                         });
                     }, null, false);
-                } else {
+                } else if (type == constant.quotation().selectionItem.TYPE_ADDITEM_INT || type == constant.quotation().selectionItem.TYPE_MINUSITEM_INT) {
                     com.post(api.addReduce.queryAddReduceItemByAddReduceId, {
                         'addReduce.arId': functionArea.arId
                     }, function(res) {
@@ -628,7 +760,7 @@ var selectionDetail = (function() {
 
                 var preprice, quotationItemId, data;
 
-                if (type == 0) {
+                if (type == constant.quotation().selectionItem.TYPE_QUOTATION_INT) {
 
                     data = {
                         "areaId": rawData.quotationFunctionAreaId,
@@ -640,8 +772,8 @@ var selectionDetail = (function() {
                         "quotationFunctionAreaName": functionAreaName,
                         "preprice": rawData.unitPrice,
                     }
-                } else if (type == 1 || type == 2) {
-                    preprice = functionArea.type == 0 ? rawData.addPrice : rawData.subPrice;
+                } else if (type == constant.quotation().selectionItem.TYPE_EXTENSIONADD_INT || type == constant.quotation().selectionItem.TYPE_EXTENSIONMINUS_INT) {
+                    preprice = functionArea.type == constant.quotation().selectionItem.TYPE_QUOTATION_INT ? rawData.addPrice : rawData.subPrice;
 
                     data = {
                         "areaId": rawData.eid,
@@ -653,9 +785,9 @@ var selectionDetail = (function() {
                         "quotationFunctionAreaName": rawData.quotationFunctionAreaName,
                         "preprice": preprice,
                     }
-                } else if (type == 3 || type == 4) {
+                } else if (type == constant.quotation().selectionItem.TYPE_ADDITEM_INT || type == constant.quotation().selectionItem.TYPE_MINUSITEM_INT) {
 
-                    if (functionArea.type == 0) {
+                    if (functionArea.type == constant.quotation().selectionItem.TYPE_QUOTATION_INT) {
                         quotationItemId = rawData.quoteItemId;
                         preprice = rawData.addPrice;
                     } else {

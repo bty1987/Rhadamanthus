@@ -1,17 +1,70 @@
-﻿$(function(){
+﻿$(function() {
 
-    /**
-     * 回调函数必须提供 init(tableId, result.list)方法
-     * tableId ,用来显示的div的id
-     * result.list 列表的json数组
-     * */
-    var displayFunc  = (function(){
-        var renderList = function(tableId,listData){
+    var company = {
+
+        company: null,
+        atttype: [],
+
+        items: {
+
+            cid: com.focusPage("#cid"),
+            no: com.focusPage("#no"),
+            code: com.focusPage("#code"),
+            name: com.focusPage("#name"),
+            shortname: com.focusPage("#shortname"),
+            fullname: com.focusPage("#fullname"),
+            address: com.focusPage("#address"),
+            corporation: com.focusPage("#corporation"),
+            phone: com.focusPage("#phone"),
+            atttype: com.focusPage("#atttype"),
+
+            drganization: com.focusPage("#drganization"),
+            srganization: com.focusPage("#srganization"),
+        },
+
+        modals: {
+            updateCompanyModal: com.focusPage("#updateCompanyModal"),
+            updateOrganizationModal: com.focusPage("#updateOrganizationModal"),
+        },
+
+        btns: {
+            updateCompanyBtn: com.focusPage("#updateCompanyBtn").on("click", saveData),// 绑定事件
+            updateOrganizationBtn: com.focusPage("#updateOrganizationBtn").on("click", updateOrganization),// 绑定事件
+        },
+
+        validator: {
+            company: {
+                type: "v_company",
+                regex: /^([1-9]\d|\d)$/,
+                errorMsg: "请输入0~99数字 (如:1)."
+            }
+        },
+    };
+
+    com.post(api.ds.system, {}, function(res) {
+
+        com.focusPage("#atttype").bindData(res.atttype, "key", "value");
+        company.atttype = res.atttype.split("key", "value");
+    }, null, false);
+
+    company.modals.updateCompanyModal.on('shown.bs.modal', function(e) {
+
+        com.clearValidator();
+        com.clearValidator(com.focusPage("#no").attr("id"), true);
+    });
+
+    $.extend(com.validator, company.validator); // 将多个对象合并成一个对象
+
+    var displayFunc = (function() {
+
+        var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-            if(listData && listData.length){
-                $.each(listData,function(i, v){
+            if (listData && listData.length) {
+                $.each(listData, function(i, v) {
+
                     creatLine(v).appendTo($ul);
                 });
 
@@ -19,240 +72,207 @@
             }
         };
 
-        var creatLine = function(v){   //页面中的一条数据
-			var $liLine = $('<li></li>').addClass('item-orange clearfix');
-			var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.no + " "+ v.name));
-			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+        var creatLine = function(v) { // 页面中的一条数据
 
-			var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
-			var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
-			var $btnOrganization = $('<a></a>').addClass('btn btn-minier btn-success').html('组织');
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.no + " " + v.name));
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-			var propertyArr = [
-			   	["编号: ", v.no, "grey"],
-			   	["全名: ", v.fullname, "grey"],
-			   	["地址: ", v.address, "grey"],
-			   	["法人: ", v.corporation, "grey"],
-			   	["电话: ", v.phone, "grey"],
-				["装修组织: ", com.checkNull(v.drganization.name, "无"), "grey"],
-				["销售组织: ", com.checkNull(v.srganization.name, "无"), "grey"]
-			 ];
-			$.each(propertyArr, function (index,value) {
-	               var $liProperty = $('<li></li>').appendTo($ulProperty);
-	               $('<strong></strong>').html(value[0]).appendTo($liProperty);
-	               $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-	           });
-			
-			//启用禁用
-			var $btnStatus = $('<div></div>').addClass('pull-right');
-			var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"}).appendTo($btnStatus);
-			var $span = $('<span></span>').addClass('lbl status-lbl').appendTo($btnStatus);
-			
-			v.status == 0 && $statusSwitch.prop("checked", true);
-            $statusSwitch.switchBtn("status-lbl").on("click",function() {
-                $statusSwitch.prop("checked") ? (updateStatus(v.cid, 0, function(){$statusSwitch.removeAttr("checked")})) : (updateStatus(v.cid, 1,function(){$statusSwitch.prop("checked")}));
+            var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
+            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
+            var $btnOrganization = $('<a></a>').addClass('btn btn-minier btn-success').html('组织');
+
+            var propertyArr = [["编号: ", v.no, "grey"], ["code: ", v.code, "gery"], ["全名: ", v.fullname, "grey"], ["短名: ", v.shortname, "gery"], ["地址: ", v.address, "grey"], ["法人: ", v.corporation, "grey"], ["电话: ", v.phone, "grey"], ["装修组织: ", com.checkNull(v.drganization.name, "无"), "grey"], ["销售组织: ", com.checkNull(v.srganization.name, "无"), "grey"], ["业务类型: ", company.atttype[v.atttype], "red"]];
+            $.each(propertyArr, function(index, value) {
+
+                var $liProperty = $('<li></li>').appendTo($ulProperty);
+                $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
             });
 
-			$divBtnWrap.append($btnEdit).append($btnEdit).append($btnStatus).appendTo($h3);
-			$divBtnWrap.append($btnOrganization).append($btnOrganization).append($btnStatus).appendTo($h3);
+            // 启用禁用
+            var $btnStatus = $('<div></div>').addClass('pull-right');
+            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({
+                "type": "checkbox"
+            }).appendTo($btnStatus);
+            var $span = $('<span></span>').addClass('lbl status-lbl').appendTo($btnStatus);
+
+            v.status == 0 && $statusSwitch.prop("checked", true);
+            $statusSwitch.switchBtn("status-lbl").on("click", function() {
+
+                $statusSwitch.prop("checked") ? (updateStatus(v.cid, 0, function() {
+
+                    $statusSwitch.removeAttr("checked")
+                })) : (updateStatus(v.cid, 1, function() {
+
+                    $statusSwitch.prop("checked")
+                }));
+            });
+
+            $divBtnWrap.append($btnEdit).append($btnEdit).append($btnStatus).appendTo($h3);
+            $divBtnWrap.append($btnOrganization).append($btnOrganization).append($btnStatus).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
-           //编辑按钮的点击事件
-            $btnEdit.click(function(){
+            $btnEdit.click(function() {
+
+                company.company = v;
+
                 edit(v);
             });
-            
-            //组织按钮的点击事件
-            $btnOrganization.click(function(){
-            	company.currentCompany = v;
-            	organization(v);
-            	
+
+            $btnOrganization.click(function() {
+
+                company.company = v;
+
+                organization(v);
             });
-			
-			return $liLine;
+
+            return $liLine;
         };
-      
+
         return {
-            init : function(tableId,listData){
-				com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
+            init: function(tableId, listData) {
+
+                com.focusPage('#' + tableId).html(null);
+                renderList(tableId, listData);
             },
-            drawLine : function(v){
+            drawLine: function(v) {
+
                 return creatLine(v);
             }
         };
     })();
 
-   com.initTypeahead('drganization', api.system.queryOrganization, "name", {}, 'organizations', 'oid', 'name' ,null);
-   com.initTypeahead('srganization', api.system.queryOrganization, "name", {}, 'organizations', 'oid', 'name' ,null);
+    com.initTypeahead('drganization', api.system.queryOrganization, "organization.name", {}, 'organizations', 'oid', 'name', null);
+    com.initTypeahead('srganization', api.system.queryOrganization, "organization.name", {}, 'organizations', 'oid', 'name', null);
 
-   var searcher = new Searcher();
+    var searcher = new Searcher();
 
-	searcher.init( ["system-company-name"], "condList", api.system.pageCompany, function(data){
+    searcher.init(["system-company-name", "system-company-status", "system-company-atttype"], "condList", api.system.pageCompany, function(data) {
+
         displayFunc.init('resultList', data);
-    }, "pagenation", "companyPostData", null, false, null, function(){
-    	
-    	var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addCompany').css("margin", "0px 3px");
-    	var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-    	var $addspan = $('<span></span>').text('添加').appendTo($adda);
+    }, "pagenation", "companyPostData", null, false, null, function() {
 
-    	return [$adda];
-    });
-    
-    //定义全局变量  json
-    var company = {
-		saveBtn: com.focusPage("#saveAddItemBtn").on("click", saveData),//绑定事件
-		OrganBtn: com.focusPage("#OrganizationBtn").on("click", saveDatas),//绑定事件
-		cancelBtn: null,
-		modal: null,
-		modals: null,
-		companyItems: {},
-		currentCompany: {},
-		validator: {
-			company: {
-				type: "v_company",
-				regex: /^([1-9]\d|\d)$/,
-				errorMsg: "请输入0~99数字 (如:1)."
-			}
-		},
-		editFlg: false,
-		repeatFlg:false
-	};
-    	
-   //给全局变量赋值(主要操作是制定页面标签)
-//	company.saveBtn = com.focusPage("#saveAddItemBtn").on("click", saveData);
-    company.cancelBtn = com.focusPage("#cancelBtn");
-	company.OrganizationBtn = com.focusPage("#OrganizationBtn");
-	company.modal = com.focusPage("#addItemModal");
-	company.modals = com.focusPage("#updateOrganizationModal");
-	company.companyItems.cid = com.focusPage("#cid");
-	company.companyItems.fullname = com.focusPage("#fullname");
-	company.companyItems.address = com.focusPage("#address");
-	company.companyItems.corporation = com.focusPage("#corporation");
-	company.companyItems.phone = com.focusPage("#phone");
-	company.companyItems.name = com.focusPage("#_name");
-	company.companyItems.drganization = com.focusPage("#drganization");
-	company.companyItems.srganization = com.focusPage("#srganization");
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addCompany').css("margin", "0px 3px");
+        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-	company.companyItems.no = com.focusPage("#no").on("blur",function(){
-		$this = $(this);
-		if($this.val() == "") {
-			return;
-		}
-	});
-
-	company.modal.on('shown.bs.modal', function(e){
-		com.clearValidator();
-		com.clearValidator(com.focusPage("#no").attr("id"), true);
-	});
-	$.extend(com.validator, company.validator); //将多个对象合并成一个对象
-
-
-    //编辑
-    function edit(row){
-    	//给页面标签赋值
-		company.editFlg=true;
-		company.repeatFlg=false;
-
-		company.companyItems.cid.val(row.cid);
-		company.companyItems.no.val(row.no);
-		company.companyItems.name.val(row.name);
-		company.companyItems.fullname.val(row.fullname);
-		company.companyItems.address.val(row.address);
-		company.companyItems.corporation.val(row.corporation);
-		
-		company.companyItems.no.prop("disabled", true);
-
-		company.modal.modal("show"); //弹出弹层
-    }
-
-	//组织
-	function organization(row){
-		//给页面标签赋值
-		company.editFlg=true;
-		company.repeatFlg=false;
-		
-		company.companyItems.drganization.val(row.drganization.name);
-		company.companyItems.srganization.val(row.srganization.name);
-				
-		company.modals.modal("show"); //弹出弹层
-	}
-
-    //保存
-    function saveData(){
-    	if(com.validate("addItemModal")|| company.repeatFlg) return false;
-    	
-    	var url;
-    	var options = {
-    		"company.no":company.companyItems.no.val(),
-    		"company.name": com.focusPage('#_name').val(),
-    		"company.fullname": com.focusPage('#fullname').val(),
-    		"company.address": com.focusPage('#address').val(),
-    		"company.corporation": com.focusPage('#corporation').val(),
-    		"company.phone": com.focusPage('#phone').val(),
-
-    	};
-
-    	if(company.editFlg) {
-    		url = api.system.updateCompany;
-    		options["company.cid"] = company.companyItems.cid.val();
-    	}else{
-    		url = api.system.addCompany;
-    	}
-    	com.post(url, options, successCallback);
-
-		company.modal.modal("hide");
-    }
-    
-	//组织保存
-	function saveDatas(){
-		
-		if(com.validate("updateOrganizationModal")) return false;
-		
-		var options = {
-			"company.cid": company.currentCompany.cid,
-			"company.no": company.currentCompany.no,
-			"company.name": company.currentCompany.name,
-			"company.fullname": company.currentCompany.fullname,
-			"company.address": company.currentCompany.address,
-			"company.corporation": company.currentCompany.corporation,
-			"company.phone": company.currentCompany.phone,
-			"company.drganization.oid": com.typeahead(company.companyItems.drganization),
-			"company.srganization.oid": com.typeahead(company.companyItems.srganization)
-			
-		};
-		
-		var url = api.system.updateCompany;
-		
-		com.post(url, options, successCallback);
-		
-		company.modals.modal("hide");
-	}
-
-    //添加
-    com.focusPage('[name="addCompany"]', com.focusPage('#pagenation')).on("click",function(){  //选择器 [属性名="属性值"]  匿名函数
-		company.editFlg = false;
-		company.companyItems.no.prop("disabled", false);
-		com.cleanItems(company.companyItems);
-		company.modal.modal("show");
+        return [$adda];
     });
 
-	//启用禁用功能
-	function updateStatus(id, status, failcallBack) {
-		com.post(api.system.updateCompanyForStatus, {
-			"company.cid": id,
-			"company.status": status
-		}, function () {
+    // 编辑
+    function edit(row) {
 
-		}, function () {
-			failcallBack && failcallBack();
-		});
-	}
-	//刷新
-    function successCallback(){
-    	//$('button.btn-search','#condList').click();//调用成功后,执行查询操作  
-		searcher.doSearch();//调用成功后,执行com.Seacher中的doSeach方法
+        company.items.cid.val(row.cid);
+        company.items.no.val(row.no);
+        company.items.code.val(row.code);
+        company.items.name.val(row.name);
+        company.items.shortname.val(row.shortname);
+        company.items.fullname.val(row.fullname);
+        company.items.address.val(row.address);
+        company.items.corporation.val(row.corporation);
+        company.items.phone.val(row.phone);
+        company.items.atttype.val(row.atttype);
+
+        company.items.no.prop("disabled", true);
+
+        company.modals.updateCompanyModal.modal("show"); // 弹出弹层
     }
+
+    // 组织
+    function organization(row) {
+
+        com.updateTypeahead(company.items.drganization, row.drganization.oid, row.drganization.name);
+        com.updateTypeahead(company.items.srganization, row.srganization.oid, row.srganization.name);
+
+        company.modals.updateOrganizationModal.modal("show"); // 弹出弹层
+    }
+
+    // 保存
+    function saveData() {
+
+        if (com.validate("updateCompanyModal"))
+            return false;
+
+        var url = api.system.addCompany;
+        var options = {
+            "company.no": company.items.no.val(),
+            "company.code": company.items.code.val(),
+            "company.name": company.items.name.val(),
+            "company.shortname": company.items.shortname.val(),
+            "company.fullname": company.items.fullname.val(),
+            "company.address": company.items.address.val(),
+            "company.corporation": company.items.corporation.val(),
+            "company.phone": company.items.phone.val(),
+            "company.atttype": company.items.atttype.val(),
+        };
+
+        if (company.company) {
+            url = api.system.updateCompany;
+            options["company.cid"] = company.company.cid;
+        }
+
+        com.post(url, options, function(res) {
+
+            searcher.doSearch();
+        });
+
+        company.modals.updateCompanyModal.modal("hide");
+    }
+
+    // 组织保存
+    function updateOrganization() {
+
+        if (com.validate("updateOrganizationModal"))
+            return false;
+
+        var options = {
+            "company.cid": company.company.cid,
+            "company.no": company.company.no,
+            "company.code": company.company.code,
+            "company.name": company.company.name,
+            "company.shortname": company.company.shortname,
+            "company.fullname": company.company.fullname,
+            "company.address": company.company.address,
+            "company.corporation": company.company.corporation,
+            "company.phone": company.company.phone,
+            "company.atttype": company.company.atttype,
+
+            "company.drganization.oid": com.typeahead(company.items.drganization),
+            "company.srganization.oid": com.typeahead(company.items.srganization)
+
+        };
+
+        var url = api.system.updateCompany;
+
+        com.post(url, options, function(res) {
+
+            searcher.doSearch();
+        });
+
+        company.modals.updateOrganizationModal.modal("hide");
+    }
+
+    // 添加
+    com.focusPage('[name="addCompany"]', com.focusPage('#pagenation')).on("click", function() {
+
+        company.company = null;
+
+        company.items.no.prop("disabled", false);
+        com.cleanItems(company.items);
+
+        company.modals.updateCompanyModal.modal("show");
+    });
+
+    // 启用禁用功能
+    function updateStatus(id, status, failcallBack) {
+
+        com.post(api.system.updateCompanyForStatus, {
+            "company.cid": id,
+            "company.status": status
+        });
+    }
+
 });

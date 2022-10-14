@@ -182,16 +182,16 @@ Condition.addupRule("salary", {
         label: "施工节点",
         type: "select",
         submitConfig: {
-            name: "schedule",
+            name: "cnid",
             op: "eq",
             validate: null
         },
-        dataSource: {
-            url: api.ds.construction,
+        dataSource: {// 从后台取数据的各种配置
+            url: api.data.queryConstructionNode,
             postData: {},
-            listPath: "constructionSchedule",
-            keyPath: "key",
-            valuePath: "value"
+            listPath: "constructionNodes",
+            keyPath: "cnid",
+            valuePath: "name"
         }
     },
     "salarystatus": {

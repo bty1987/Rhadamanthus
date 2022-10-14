@@ -89,7 +89,6 @@ $(function() {
         name: {},
         activity: "",
     };
-
     var pageConfig = drawNode.getConfig(params['urlLoadParams'].type);
     com.initTypeahead('uSalesman', api.personel.queryUserByPinyin, "pinyinName", {
         "user.status": 0,
@@ -107,28 +106,6 @@ $(function() {
         "user.status": 0,
         "departmentType.name": ""
     }, 'autoFillKeyValue', 'key', 'value', null);
-    // 初始化状态/结算状态
-    com.post(api.ds.sales, {}, function(res) {
-
-        sales.statues = res.statues.split("key", "value");
-        sales.balanceStatuses = res.balanceStatuses.split("key", "value");
-        sales.depositpayStatus = res.depositpayStatus.split("key", "value");
-        sales.fullpayStatus = res.fullpayStatus.split("key", "value");
-    }, null, false);
-
-    com.post(api.ds.data, {}, function(res) {
-
-        sales.ctypes = res.ctypes.split("key", "value");
-    });
-
-    com.post(api.ds.construction, {}, function(res) {
-
-        sales.projectStatus = res.constructionSchedule.split("key", "value");
-    });
-    com.post(api.ds.decoration, {}, function(res) {
-
-        sales.typeness = res.typeness.split("key", "value");
-    });
 
     // 活动名
     com.post(api.information.queryActivityForValid, {
@@ -149,7 +126,6 @@ $(function() {
     sales.postData = sales.pageType == "sales" ? sales.postData : ("salesFor" + pageConfig.postDataName);
 
     sales.btns.repositBtns.bindClick(repositBtnsData);
-
     var displayFunc = (function() {
 
         var renderList = function(tableId, listData) {
@@ -238,7 +214,7 @@ $(function() {
                                 propertyArr.push(["补款时间:", v.fullpayTime, "green"]);
                                 break;
                             case "status":
-                                propertyArr.push(["状态:", sales.statues[v.status], "red"]);
+                                propertyArr.push(["状态:", constant.sales().sales.status.keys[v.status], "red"]);
                                 break;
                             case "finisher":
                                 propertyArr.push(["完结人:", v.finisher.currentName, "red"]);
@@ -247,13 +223,13 @@ $(function() {
                                 propertyArr.push(["完结时间:", v.finishTime, "green"]);
                                 break;
                             case "balanceStatus":
-                                propertyArr.push(["结算状态:", sales.balanceStatuses[v.balanceStatus], "red"]);
+                                propertyArr.push(["结算状态:", constant.sales().sales.balanceStatus.keys[v.balanceStatus], "red"]);
                                 break;
                             case "depositpayStatus":
-                                propertyArr.push(["定金状态:", sales.depositpayStatus[v.depositpayStatus], "red"]);
+                                propertyArr.push(["定金状态:", constant.sales().sales.depositpayStatus.keys[v.depositpayStatus], "red"]);
                                 break;
                             case "fullpayStatus":
-                                propertyArr.push(["补款状态:", sales.fullpayStatus[v.fullpayStatus], "red"]);
+                                propertyArr.push(["补款状态:", constant.sales().sales.fullpayStatus.keys[v.fullpayStatus], "red"]);
                                 break;
                             case "grade":
                                 propertyArr.push(["等级:", v.grade, "red"]);
@@ -315,12 +291,12 @@ $(function() {
                                 $btnDiv.append($btnCollect);
                                 break;
                             case "add":
-                                if (v.fullpayStatus == -1) {
+                                if (v.fullpayStatus == constant.sales().sales.FULLPAYSTATUS_INIT_SHORT) {
                                     $btnDiv.append($btnAdd);
                                 }
                                 break;
                             case "supplement":
-                                if (v.fullpayStatus != -1) {
+                                if (v.fullpayStatus != constant.sales().sales.FULLPAYSTATUS_INIT_SHORT) {
                                     $btnDiv.append($btnSupplement);
                                 }
                                 break;
@@ -328,17 +304,17 @@ $(function() {
                                 $btnDiv.append($btnRefund);
                                 break;
                             case "terminal":
-                                if (v.status != 4) {
+                                if (v.status != constant.sales().sales.STATUS_WAST_INT) {
                                     $btnDiv.append($terminal);
                                 }
                                 break;
                             case "print":
-                                if (v.status != 4) {
+                                if (v.status != constant.sales().sales.STATUS_WAST_INT) {
                                     $btnDiv.append($btnPrint);
                                 }
                                 break;
                             case "act":
-                                if (v.status != 4) {
+                                if (v.status != constant.sales().sales.STATUS_WAST_INT) {
                                     $btnDiv.append($btnAct);
                                 }
                                 break;
@@ -348,17 +324,17 @@ $(function() {
                                 }
                                 break;
                             case "money":
-                                if (v.status != 4) {
+                                if (v.status != constant.sales().sales.STATUS_WAST_INT) {
                                     $btnDiv.append($btnMoney);
                                 }
                                 break;
                             case "finish":
-                                if (v.status != 4) {
+                                if (v.status != constant.sales().sales.STATUS_WAST_INT) {
                                     $btnDiv.append($finish);
                                 }
                                 break;
                             case "saledelivery":
-                                if ([0, 5].indexOf(v.status) != -1 && [1, 2].indexOf(v.fullpayStatus) != -1) {
+                                if ([0, 5].indexOf(v.status) != -1 && [1, 2].indexOf(v.fullpayStatus) != constant.sales().sales.FULLPAYSTATUS_INIT_SHORT) {
                                     $btnDiv.append($btnDelivery);
                                 }
                                 break;
@@ -450,12 +426,14 @@ $(function() {
 
                             var decorationInfo = res.decoration;
                             com.focusPage("#orderId").html(decorationInfo.orderId);// 装修单号
-                            com.focusPage("#typeness").html(sales.typeness[decorationInfo.projectStatus]);// 装修单类型
                             com.focusPage("#address").html(decorationInfo.house.village.name + '' + decorationInfo.house.houseNumber);// 装修楼盘地址
                             com.focusPage("#designer").html(decorationInfo.designer.currentName == null ? "无" : decorationInfo.designer.currentName);// 装修设计师
                             com.focusPage("#escorter").html(decorationInfo.escorter.currentName == null ? "无" : decorationInfo.escorter.currentName);// 装修跟单员
                             com.focusPage("#supervisor").html(decorationInfo.supervisor.currentName == null ? "无" : decorationInfo.supervisor.currentName);// 装修监理
-                            com.focusPage("#projectStatus").html(sales.projectStatus[decorationInfo.projectStatus]);
+
+                            com.focusPage("#typeness").html(constant.decoration().decoration.typeness.keys[decorationInfo.typeness]);
+                            com.focusPage("#projectStatus").html(constant.construction().constructionSchedule.status.keys[decorationInfo.projectStatus]);
+
                             sales.modals.decorationInfo.modal("show");
                         });
 
@@ -465,7 +443,7 @@ $(function() {
                     $btnMoney.click(function() {
 
                         sales.sales = v;
-                        if (v.fullpayStatus == 3) {
+                        if (v.fullpayStatus == constant.sales().sales.FULLPAYSTATUS_APPROVAL_INT) {
                             com.showAlert(com.warning, "款项正在审批中,无法进行操作");
                             return false;
                         }
@@ -784,7 +762,7 @@ $(function() {
             'sales.sid': sales.sales.sid
         }, function(res) {
 
-            if (res.sales.otherStatus == 1) {
+            if (res.sales.otherStatus == constant.sales().sales.OTHERSTATUS_FILLING_INT) {
 
                 com.popup4mini("#miniPopUp", "#layerSubmit", "补款审批", "", function() {
 
@@ -844,7 +822,7 @@ $(function() {
             'sales.sid': sales.sales.sid
         }, function(res) {
 
-            if (res.sales.otherStatus == 1) {
+            if (res.sales.otherStatus == constant.sales().sales.OTHERSTATUS_FILLING_INT) {
 
                 com.popup4mini("#miniPopUp", "#layerSubmit", "补款退款审批", "", function() {
 
@@ -1060,7 +1038,7 @@ $(function() {
             return false;
         }
 
-        if (depositpayStatus == -1 && fullpayStatus == -1) { // 未交定金和补款
+        if (depositpayStatus == constant.sales().sales.DESPOSITPAYSTATUS_INIT_SHORT && fullpayStatus == constant.sales().sales.FULLPAYSTATUS_INIT_SHORT) { // 未交定金和补款
 
             sales.btns.couponBtn.removeClass('hide');// 劵信息修改按钮
             sales.btns.malingBtn.removeClass('hide');// 抹零修改按钮
@@ -1077,7 +1055,7 @@ $(function() {
             calcFullpayment(total);
         }
 
-        if (depositpayStatus == -1 && fullpayStatus == 0) {
+        if (depositpayStatus == constant.sales().sales.DESPOSITPAYSTATUS_INIT_SHORT && fullpayStatus == constant.sales().sales.FULLPAYSTATUS_UNPAY_SHORT) {
 
             sales.btns.fullCancelBtn.removeClass('hide');
 
@@ -1090,7 +1068,7 @@ $(function() {
             sales.items.realFullPayment.val(sales.items.fullPayment.val());
         }
 
-        if (depositpayStatus == 0 && fullpayStatus == -1) {
+        if (depositpayStatus == constant.sales().sales.DESPOSITPAYSTATUS_UNPAY_SHORT && fullpayStatus == constant.sales().sales.FULLPAYSTATUS_INIT_SHORT) {
 
             sales.items.depositPayment.val(depositpay);
             sales.items.realDepositPayment.val(depositpay);
@@ -1103,7 +1081,7 @@ $(function() {
             sales.btns.malingBtn.removeClass('hide');
         }
 
-        if (depositpayStatus == 1 && fullpayStatus == -1) {
+        if (depositpayStatus == constant.sales().sales.DESPOSITPAYSTATUS_PAYED_SHORT && fullpayStatus == constant.sales().sales.FULLPAYSTATUS_INIT_SHORT) {
 
             sales.btns.depositRefundBtn.removeClass('hide');
             sales.btns.fullPaymentBtn.removeClass('hide');
@@ -1118,7 +1096,7 @@ $(function() {
             calcFullpayment(total);
         }
 
-        if (depositpayStatus == 2 && fullpayStatus == -1) {
+        if (depositpayStatus == constant.sales().sales.DESPOSITPAYSTATUS_CONFIRM_SHORT && fullpayStatus == constant.sales().sales.FULLPAYSTATUS_INIT_SHORT) {
 
             sales.btns.couponBtn.removeClass('hide');
             sales.btns.malingBtn.removeClass('hide');
@@ -1133,7 +1111,7 @@ $(function() {
             calcFullpayment(total);
         }
 
-        if (fullpayStatus == -1 && depositpayStatus == 1) {
+        if (fullpayStatus == constant.sales().sales.FULLPAYSTATUS_INIT_SHORT && depositpayStatus == constant.sales().sales.DESPOSITPAYSTATUS_PAYED_SHORT) {
 
             sales.btns.fullCancelBtn.addClass('hide');
             sales.btns.fullPaymentBtn.removeClass('hide');
@@ -1151,7 +1129,7 @@ $(function() {
             calcFullpayment(total);
         }
 
-        if (fullpayStatus == 0 && depositpayStatus == 1) {
+        if (fullpayStatus == constant.sales().sales.FULLPAYSTATUS_UNPAY_SHORT && depositpayStatus == constant.sales().sales.DESPOSITPAYSTATUS_PAYED_SHORT) {
 
             sales.items.depositPayment.val(depositpay);
             sales.items.realDepositPayment.val(depositpay);
@@ -1171,7 +1149,7 @@ $(function() {
             sales.items.fullPaymentInfo.html("提交中");
         }
 
-        if (fullpayStatus == 0 && depositpayStatus == 2) {
+        if (fullpayStatus == constant.sales().sales.FULLPAYSTATUS_UNPAY_SHORT && depositpayStatus == constant.sales().sales.DESPOSITPAYSTATUS_CONFIRM_SHORT) {
 
             sales.items.depositPayment.val(depositpay);
             sales.items.realDepositPayment.val(depositpay);
@@ -1190,7 +1168,7 @@ $(function() {
             sales.items.fullPaymentInfo.html("提交中");
         }
 
-        if (fullpayStatus == 1 && depositpayStatus == -1) {
+        if (fullpayStatus == constant.sales().sales.FULLPAYSTATUS_PAYED_SHORT && depositpayStatus == constant.sales().sales.DESPOSITPAYSTATUS_INIT_SHORT) {
 
             sales.items.realDepositPayment.val('');
             sales.items.depositPayment.val('');
@@ -1201,7 +1179,7 @@ $(function() {
             sales.items.fullPaymentInfo.html("已收款");
         }
 
-        if (fullpayStatus == 1 && depositpayStatus == 1) {
+        if (fullpayStatus == constant.sales().sales.FULLPAYSTATUS_PAYED_SHORT && depositpayStatus == constant.sales().sales.DESPOSITPAYSTATUS_PAYED_SHORT) {
 
             sales.items.realDepositPayment.val(depositpay);
             sales.items.depositPayment.val(depositpay);
@@ -1220,7 +1198,7 @@ $(function() {
             sales.items.fullPaymentInfo.html("已收款");
         }
 
-        if (fullpayStatus == 1 && depositpayStatus == 2) {
+        if (fullpayStatus == constant.sales().sales.FULLPAYSTATUS_PAYED_SHORT && depositpayStatus == constant.sales().sales.DESPOSITPAYSTATUS_CONFIRM_SHORT) {
 
             sales.items.realDepositPayment.val(depositpay);
             sales.items.depositPayment.val(depositpay);
@@ -1239,7 +1217,7 @@ $(function() {
             sales.items.fullPaymentInfo.html("已收款");
         }
 
-        if (fullpayStatus == 2 && depositpayStatus == -1) {
+        if (fullpayStatus == constant.sales().sales.FULLPAYSTATUS_CONFIRM_SHORT && depositpayStatus == constant.sales().sales.DESPOSITPAYSTATUS_INIT_SHORT) {
 
             sales.items.realDepositPayment.val('');
             sales.items.depositPayment.val('');
@@ -1250,7 +1228,7 @@ $(function() {
             sales.items.fullPaymentInfo.html("已确认");
         }
 
-        if (fullpayStatus == 2 && depositpayStatus == 1) {
+        if (fullpayStatus == constant.sales().sales.FULLPAYSTATUS_CONFIRM_SHORT && depositpayStatus == constant.sales().sales.DESPOSITPAYSTATUS_PAYED_SHORT) {
 
             sales.items.realDepositPayment.val(depositpay);
             sales.items.depositPayment.val(depositpay);
@@ -1269,7 +1247,7 @@ $(function() {
             sales.items.fullPaymentInfo.html("已确认");
         }
 
-        if (fullpayStatus == 2 && depositpayStatus == 2) {
+        if (fullpayStatus == constant.sales().sales.FULLPAYSTATUS_CONFIRM_SHORT && depositpayStatus == constant.sales().sales.DESPOSITPAYSTATUS_CONFIRM_SHORT) {
 
             sales.items.realDepositPayment.val(depositpay);
             sales.items.depositPayment.val(depositpay);
@@ -1288,7 +1266,7 @@ $(function() {
             sales.items.fullPaymentInfo.html("已确认");
         }
 
-        if (fullpayStatus == -1 && sales.items.fullPayment.val() < 0 && depositpayStatus != 0) {
+        if (fullpayStatus == constant.sales().sales.FULLPAYSTATUS_INIT_SHORT && sales.items.fullPayment.val() < 0 && depositpayStatus != constant.sales().sales.DESPOSITPAYSTATUS_UNPAY_SHORT) {
 
             calcFullpayment(total);
 
@@ -1296,7 +1274,7 @@ $(function() {
             sales.btns.fullPaymentBtn.addClass('hide');
         }
 
-        if (depositpayStatus == 0) {
+        if (depositpayStatus == constant.sales().sales.DESPOSITPAYSTATUS_UNPAY_SHORT) {
             sales.btns.depositPrintBtn.removeClass('hide');
         }
 
@@ -1348,7 +1326,7 @@ $(function() {
                     var $h3 = $('<h3></h3>').addClass('oid');
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
-                    var propertyArr = [["结算ID:", v.bbid, "grey"], ["品牌ID:", v.bid, "grey"], ["类型:", sales.ctypes[v.ctype], "red"], ["结算值:", v.cvalue, "red"], ["说明:", v.comment, "grey"], ];
+                    var propertyArr = [["结算ID:", v.bbid, "grey"], ["品牌ID:", v.bid, "grey"], ["类型:", constant.data().brandBalance.ctype.keys[v.ctype], "red"], ["结算值:", v.cvalue, "red"], ["说明:", v.comment, "grey"], ];
 
                     var $label = $('<label></label>').addClass('control-label').css({
                         'color': 'grey',

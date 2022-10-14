@@ -35,6 +35,7 @@ jQuery(function($) {
 
     if (contractEdit.contractArgs.company != "1") {
         com.focusPage(".company", "#form").hide();
+        com.focusPage(".agentor", "#form").hide();
     }
 
     if (contractEdit.contractArgs.company == "1") {
@@ -49,23 +50,6 @@ jQuery(function($) {
         contractEdit.current = new Date(res.current);
     }, null, false);
 
-    com.post(api.data.queryCustomerById, {
-        "customer.cid": params.decoration.cid
-    }, function(res) {
-
-        var customer = res.customer;
-
-        com.focusPage("#con-customer-name", "#form").val(customer.name);
-        com.focusPage("#con-agent-ident", "#form").val(customer.identity);
-
-        contractEdit.customer = customer;
-
-        contractEdit.cover["sin-agent-name"] = customer.name;
-
-        com.focusPage("#con-company-name", "#form").val(customer.companyName);
-
-    }, null, false);
-
     com.post(api.decoration.queryDecorationForCommonByOrderId, {
         "decoration.orderId": contractEdit.decorationOrderId
     }, function(res) {
@@ -74,10 +58,29 @@ jQuery(function($) {
         var house = data.house;
         var village = house.village;
         var proper = village.cityProper;
+        var customer = res.decoration.customer;
+
+        com.focusPage("#con-customer-name", "#form").val(customer.name);
+        com.focusPage("#con-customer-ident", "#form").val(customer.identity);
+
+        contractEdit.customer = customer;
+
+        contractEdit.cover["con-customer-name"] = customer.name;
+        contractEdit.cover["con-customer-phone"] = customer.phone;
+        com.focusPage("#con-company-name", "#form").val(customer.companyName);
 
         com.focusPage("#con-village-name", "#form").val(village.name);
         com.focusPage("#con-housenumber", "#form").val(house.houseNumber);
-    });
+    }, null, false);
+
+    if (contractEdit.contractArgs.company == "1" && contractEdit.customer.type == 0) {
+
+        com.showAlert(com.warning, "客户类型为个人");
+
+        com.focusPage("#contractPopUp").empty();
+
+        return false;
+    }
 
     com.focusPage("#preservation").unbind("click").on('click', function() {
 
@@ -102,9 +105,13 @@ jQuery(function($) {
         data["sin-sign-date1"] = com.dateFormat(contractEdit.current, "yyyy年MM月dd日");
 
         if (contractEdit.contractArgs.company == "1") {
-            delete data["con-customer-name"];
+            delete data["con-customer-ident"];
+            delete data["con-customer-phone"];
+            delete data["sin-agent-name"];
+        }
 
-            data["sin-agent-name"] = data["con-company-name"];
+        if (contractEdit.contractArgs.company != "1") {
+            delete data["sin-agent-name"];
         }
 
         com.showConfirm("请仔细认真检查合同填写内容", function() {
@@ -114,6 +121,7 @@ jQuery(function($) {
                 "decorationContract.contract.cid": params.decoration.contractargs.cid,
                 "data": JSON.stringify(data)
             };
+
             com.post(api.decoration.addDecorationContract, options, function(res) {
 
                 com.closePopup();

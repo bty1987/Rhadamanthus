@@ -32,11 +32,15 @@ jQuery(function($) {
     contractEdit.cover["cov-sign-month"] = com.dateFormat(contractEdit.current, "MM");
     contractEdit.cover["cov-sign-day"] = com.dateFormat(contractEdit.current, "dd");
 
-    com.post(api.data.queryCustomerById, {
-        "customer.cid": params.decoration.cid
+    com.post(api.decoration.queryDecorationForCommonByOrderId, {
+        "decoration.orderId": contractEdit.decorationOrderId
     }, function(res) {
 
-        var customer = res.customer;
+        var data = res.decoration;
+        var house = data.house;
+        var village = house.village;
+        var proper = village.cityProper;
+        var customer = res.decoration.customer;
 
         com.focusPage("#con-customer-name", "#form").val(customer.name);
         com.focusPage("#con-customer-phone", "#form").val(customer.phone);
@@ -47,16 +51,6 @@ jQuery(function($) {
         contractEdit.cover["cov-orderId"] = contractEdit.decorationOrderId;
         contractEdit.cover["cov-customer-name"] = customer.name;
         contractEdit.cover["cov-customer-phone"] = customer.phone == "" ? "" : customer.phone;
-    });
-
-    com.post(api.decoration.queryDecorationForCommonByOrderId, {
-        "decoration.orderId": contractEdit.decorationOrderId
-    }, function(res) {
-
-        var data = res.decoration;
-        var house = data.house;
-        var village = house.village;
-        var proper = village.cityProper;
 
         com.focusPage("#con-province-name", "#form").val(proper.city.province);
         com.focusPage("#con-city-name", "#form").val(proper.city.name);

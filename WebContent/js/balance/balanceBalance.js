@@ -16,10 +16,10 @@ jQuery(function($) {
 
     function queryAccountes() {
 
-        com.post(api.balance.queryAccount, {
-            "account.belonger.uid": params.balance.uid
+        com.post(api.balance.queryBalanceAccount, {
+            "balanceAccount.belonger.uid": params.balance.uid
         }, function(res) {
-            $.each(res.accountes, function(i, v) {
+            $.each(res.balanceAccountes, function(i, v) {
                 resultList(i, v);
             });
         }, null, false);
@@ -64,8 +64,8 @@ jQuery(function($) {
                 return false;
             }
 
-            options["accountes[" + i + "].money"] = crnum;
-            options["accountes[" + i + "].aid"] = $line.attr("data-miid");
+            options["balanceAccountes[" + i + "].money"] = crnum;
+            options["balanceAccountes[" + i + "].baid"] = $line.attr("data-miid");
 
             if (balanceBalance.surplus > 0) {
                 if (total > balanceBalance.surplus) {
@@ -98,7 +98,7 @@ jQuery(function($) {
 
     function resultList(i, v) {
         var $line = addline(i + 1).appendTo(balanceBalance.items.list).attr({
-            "data-miid": v.aid,
+            "data-miid": v.baid,
         });
         $line.find('div.name').text(v.name);
         $line.find('div.belonger').text(v.belonger.currentName);

@@ -65,7 +65,7 @@ jQuery(function($) {
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
             var $btnAward = $('<a></a>').addClass('btn btn-minier btn-inverse').html("奖品");// 活动物品
 
-            var propertyArr = [["姓名:", v.name, "grey"], ["电话:", v.phone, "grey"], ["地址:", v.address, "grey"], ["装修单号:", v.orderId, "grey"], ["归属人:", v.belonger.userName, "grey"], ["归属部门:", v.department.name, "grey"], ["归属分区:", v.region.name, "grey"], ["创建人:", v.creater.userName, "grey"], ["创建时间:", v.createTime, "green"], ["是否注册:", v.isregist == 0 ? "未注册" : "已注册", "red"], ["是否到场:", v.iscome == 0 ? "未到场" : "已到场", "red"]];
+            var propertyArr = [["姓名:", v.name, "grey"], ["电话:", v.phone, "grey"], ["地址:", v.address, "grey"], ["装修单号:", v.orderId, "grey"], ["归属人:", v.belonger.userName, "grey"], ["归属部门:", v.department.name, "grey"], ["归属分区:", v.region.name, "grey"], ["创建人:", v.creater.userName, "grey"], ["创建时间:", v.createTime, "green"], ["是否注册:", v.isregist == constant.information().vticket.ISREGIST_NO_INT ? "未注册" : "已注册", "red"], ["是否到场:", v.iscome == constant.information().vticket.ISCOME_NO_INT ? "未到场" : "已到场", "red"]];
 
             $.each(propertyArr, function(index, value) {
 

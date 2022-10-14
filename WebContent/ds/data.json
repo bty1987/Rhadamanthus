@@ -257,10 +257,51 @@
     {"key" : "2", "value" : "应用"}
   ],
   "chatingAtttype": [
-    {"key" : "0", "value" : "装修"},
-    {"key" : "1", "value" : "工程"},
+    {"key" : "0", "value" : "客户"},
+    {"key" : "1", "value" : "装修"},
     {"key" : "2", "value" : "主材"},
-    {"key" : "3", "value" : "其他"}
+    {"key" : "3", "value" : "工程"},
+    {"key" : "4", "value" : "款项"},
+    {"key" : "5", "value" : "其他"}
+  ],
+  "chartType": [
+	{"key" : "1", "value" : "装修"},
+	{"key" : "2", "value" : "销售"},
+	{"key" : "3", "value" : "工程"},
+    {"key" : "4", "value" : "款项"}	
+  ],
+  "chartLevel": [
+	{"key" : "0", "value" : "集团"},
+	{"key" : "1", "value" : "公司"},
+	{"key" : "2", "value" : "大区"},
+    {"key" : "3", "value" : "部门"}	
+  ],
+  "custypeStatus": [
+    {"key" : "0", "value" : "启用"},
+    {"key" : "1", "value" : "禁用"}
+  ],
+  "custypeAtttype": [
+    {"key" : "0", "value" : "预付款"},
+    {"key" : "1", "value" : "装修款"},
+    {"key" : "2", "value" : "主材款"},
+    {"key" : "3", "value" : "销售款"},
+    {"key" : "4", "value" : "服务款"},
+    {"key" : "5", "value" : "活动款"},
+    {"key" : "6", "value" : "转换款"}
+  ],
+  "custypeDgrade": [
+    {"key" : "A", "value" : "A"},
+    {"key" : "B", "value" : "B"},
+    {"key" : "C", "value" : "C"}
+  ],
+  "custypeSgrade": [
+    {"key" : "A", "value" : "A"},
+    {"key" : "B", "value" : "B"},
+    {"key" : "", "value" : "无"}
+  ],
+  "constantStatus": [
+    {"key" : "0", "value" : "启用"},
+    {"key" : "1", "value" : "禁用"}
   ],
   "errorCode": 0,
   "errorMsg": null

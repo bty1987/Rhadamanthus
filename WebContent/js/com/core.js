@@ -744,7 +744,7 @@
 
         var _ = container.attr('data-typeahead-key');
         if (isKey)
-            _ = container.val();
+            _ = container.attr('data-typeahead-value');
         if (!defaults)
             defaults = '';
         return _ ? _ : defaults;
@@ -891,7 +891,7 @@
         else
             return false;
 
-        container.val(value).attr('data-typeahead-key', key);
+        container.val(value).attr('data-typeahead-key', key).attr("data-typeahead-value", value);
     },
     /**
      * 重置自动补全数据源
@@ -1524,7 +1524,11 @@
 
             $chart.hideLoading();
             if (excuter && typeof (excuter) == 'function')
-                excuter(res);
+                excuter(res, $element);
+
+            if (res.type == "number" || res.type == "table" || res.type == "top")
+                return false;
+
             $chart.setOption($.extend($options, res.option));
         });
 
@@ -1625,16 +1629,20 @@
             'fileTypeExts': fileTypeExts, // 允许上传的文件后缀
             'fileSizeLimit': '5MB', // 上传文件的大小限制
             'queueSizeLimit': limit, // 上传数量
-            'onUploadSuccess': function(file, data, response) { // 上传到服务器,服务器返回相应信息到data里
+            'onUploadSuccess': function(file, data) { // 上传到服务器,服务器返回相应信息到data里
 
-                var datas = eval("(" + data + ")");
-                if (datas.errorCode == 0 && typeof (success) == "function") {
-                    success(datas, file);
+                var result = JSON.parse(data);
+
+                if (result.errorCode == 0 && typeof (success) == "function") {
+
+                    if (typeof (success) == "function")
+                        success(result, file);
                 } else {
+
                     com.showAlert(com.error, "上传失败");
-                    console.log(datas);
+
                     if (typeof (fail) == "function")
-                        fail(datas);
+                        fail(result);
                 }
             },
             'onQueueComplete': function() {

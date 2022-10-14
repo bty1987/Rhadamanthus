@@ -133,6 +133,13 @@
 									<span class="lbl"></span>
 								</div>
 							</div>
+							<div class="col-md-12">
+								<div class="form-group">
+									<label class=" col-md-5 no-padding-right">管理费折扣</label>
+									<input type="checkbox" id="isCountManageDiscount" class="ace"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
 
 							<div class="col-md-12 hr hr-16"></div>
 
@@ -539,6 +546,38 @@
                     </div>
                     <div class="modal-body">
                         <form class="form-horizontal">
+                            
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="signPrice">签单额</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="signPrice" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' readonly="readonly"/>
+                                </div>
+                            </div>
+                            <div class="space-4"></div>
+                            
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="factPrice">实收额</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="factPrice" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' readonly="readonly"/>
+                                </div>
+                            </div>
+                            <div class="space-4"></div>
+                            
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="managePrices">管理费</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="managePrices" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' readonly="readonly"/>
+                                </div>
+                            </div>
+                            <div class="space-4"></div>
+                            
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="factDiscount">实际折扣</label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="factDiscount" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual' readonly="readonly"/>
+                                </div>
+                            </div>
+                            <div class="space-4"></div>
                             
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right" for="originDiscount">原折扣</label>

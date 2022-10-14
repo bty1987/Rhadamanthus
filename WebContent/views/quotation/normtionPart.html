@@ -30,14 +30,22 @@
                     <div class="widget-body">
                         <div class="widget-main">
                             <div class="row">
-                                <div id="functionAreaSumList" class="col-md-12">
+                                <div id="normoodSumList" class="col-md-12">
 									<div class="form-group">
-									    <label class=" col-md-6  no-padding-right">材料定额总量:</label>
+									    <label class=" col-md-6  no-padding-right">打包定额总量:</label>
 									    <label id="normnumtotal" class=" col-md-6  no-padding-left">0.00</label>
 									</div>
 									<div class="form-group">
-									    <label class=" col-md-6  no-padding-right">材料库房总量:</label>
+									    <label class=" col-md-6  no-padding-right">打包库房总量:</label>
 									    <label id="storenumtotal" class=" col-md-6  no-padding-left">0.00</label>
+									</div>
+									<div class="form-group">
+									    <label class=" col-md-6  no-padding-right">材料定额总量:</label>
+									    <label id="normnumtotals" class=" col-md-6  no-padding-left">0.00</label>
+									</div>
+									<div class="form-group">
+									    <label class=" col-md-6  no-padding-right">材料库房总量:</label>
+									    <label id="storenumtotals" class=" col-md-6  no-padding-left">0.00</label>
 									</div>
 								</div>
                                 <div class="col-md-12 hr hr-14"></div>
@@ -51,10 +59,14 @@
 					<div class="widget-body">
 					    <div class="widget-main">
 					        <div class="row">
-					            <div id="functionAreaSumList" class="col-md-12">
+					            <div id="normriceSumList" class="col-md-12">
+									<div class="form-group">
+									    <label class=" col-md-6  no-padding-right">附加定额总额:</label>
+									    <label id="normricetotal" class=" col-md-6  no-padding-left">0.00</label>
+									</div>
 									<div class="form-group">
 									    <label class=" col-md-6  no-padding-right">工费定额总额:</label>
-									    <label id="normricetotal" class=" col-md-6  no-padding-left">0.00</label>
+									    <label id="normricetotals" class=" col-md-6  no-padding-left">0.00</label>
 									</div>
 								</div>
 					            <div class="col-md-12 hr hr-14"></div>
@@ -125,7 +137,7 @@
 			            <div class="modal-body clearfix"></div>
 			
 			            <div class="modal-footer">
-			                <button type="button" id="addQuotationNormoodItem" class="btn btn-primary">保存</button>
+			                <button type="button" id="addNormoodItem" class="btn btn-primary">保存</button>
 			                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
 			            </div>
 			        </div>
@@ -145,7 +157,7 @@
 			            <div class="modal-body clearfix"></div>
 			
 			            <div class="modal-footer">
-			                <button type="button" id="addQuotationNormriceItem" class="btn btn-primary">保存</button>
+			                <button type="button" id="addNormriceItem" class="btn btn-primary">保存</button>
 			                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
 			            </div>
 			        </div>
@@ -158,5 +170,5 @@
 </div>
 
 <script>
-    $.loadScript(['js/quotation/normPart.js']); 
+    $.loadScript(['js/quotation/normtionPart.js']);
 </script>

@@ -200,15 +200,11 @@ $(function() {
             }
 
             if (selectionItem.pageType == "supplier" || (v.status >= 4 && selectionItem.pageType != "material")) {// 显示结算价
-                var postpriceArr = ["结算价:", v.postprice, "blue"];
-                var prepriceArr = ["预算金额:", v.preprice, "blue"];
-
-                propertyArr.splice(6, 0, postpriceArr, prepriceArr);
+                propertyArr.splice(6, 0, ["结算价:", v.postprice, "blue"], ["预算金额:", v.preprice, "blue"]);
             }
 
             if (selectionItem.pageType == "expert") {
-                var prepriceArr = ["报价项单价:", v.preprice, "blue"];
-                propertyArr.splice(6, 0, prepriceArr);
+                propertyArr.splice(6, 0, ["报价版本:", v.decoration.version.name, "blue"], ["报价项单价:", v.preprice, "blue"]);
             }
 
             $.each(propertyArr, function(index, value) {

@@ -28,16 +28,9 @@ $(function () {
 	        com.closeTip();
 	    });
 
-	    com.post(api.ds.customer, {}, function (res) {
-	    	revisits.items.type.bindData(res.revisitType, "key", "value");
-	    	revisits.revisitType = res.revisitType.split("key", "value");
-	    }, null, false);
-	    
-	    com.post(api.ds.customer, {}, function (res) {
-	    	revisits.items.gladness.bindData(res.revisitGladness, "key", "value");
-	    	revisits.revisitGladness = res.revisitGladness.split("key", "value");
-	    }, null, false); 
-	    
+    revisits.items.type.bindData(constant.customer().revisit.type.datas,"key","value");
+    revisits.items.gladness.bindData(constant.customer().revisit.status.datas,"key","value");
+
       var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
@@ -73,11 +66,11 @@ $(function () {
             var propertyArr = [
                 ["回访id:", v.rid, "grey"],
                 ["装修单号:", v.decoration.orderId, "grey"],
-                ["类型:", v.type == 0 ? "保修" : "投诉", "red"],
+                ["类型:", constant.customer().revisit.type.keys[v.type], "red"],
                 ["引用id:", v.ident, "grey"],
                 ["操作人:", v.creater.currentName, "grey"],
                 ["创建时间:", v.createTime, "grey"],
-                ["满意度:", revisit.gladness[v.gladness], "red"],
+                ["满意度: ", constant.customer().revisit.status.keys[v.gladness], "red"],
                 ["内容:", v.content, "grey"],
             ];
            

@@ -50,11 +50,8 @@ jQuery(function($) {
         com.closeTip();
     });
 
-    com.post(api.ds.construction, {}, function(res) {
-        constructionAccessory.items.checkup.bindData(res.isCheckup, "key", "value");
-        constructionAccessory.addItems.addCheckup.bindData(res.isCheckup, "key", "value");
-        constructionAccessory.isCheckup = res.isCheckup.split("key", "value");
-    }, null, false);
+    constructionAccessory.items.checkup.bindData(constant.construction().constructionAccessory.isCheckup.datas,"key","value");
+    constructionAccessory.addItems.addCheckup.bindData(constant.construction().constructionAccessory.isCheckup.datas,"key","value");
 
     com.initTypeahead("goodsName", api.data.queryAoodsByName, "aoods.goods.name", {
         "orderId": constructionAccessory.orderId
@@ -104,7 +101,7 @@ jQuery(function($) {
 
             var $btnUpdate = $("<a></a>").addClass("btn btn-minier btn-yellow").html("更新");
 
-            var propertyArr = [["商品编号: ", v.aoods.goods.no, "grey"], ["品类: ", v.aoods.goods.category, "grey"], ["品牌: ", v.aoods.goods.brand, "grey"], ["单位: ", v.aoods.goods.measurementUnit, "red"], ["辅类名称: ", v.aoods.accessoriesType.name, "grey"], ["数量限制: ", v.numLimit, "blue"], ["数量: ", v.num, "blue"], ["总额: ", v.total, "blue"], ["验证标识: ", constructionAccessory.isCheckup[v.checkup], "red"], ];
+            var propertyArr = [["商品编号: ", v.aoods.goods.no, "grey"], ["品类: ", v.aoods.goods.category, "grey"], ["品牌: ", v.aoods.goods.brand, "grey"], ["单位: ", v.aoods.goods.measurementUnit, "red"], ["辅类名称: ", v.aoods.accessoriesType.name, "grey"], ["数量限制: ", v.numLimit, "blue"], ["数量: ", v.num, "blue"], ["总额: ", v.total, "blue"], ["验证标识: ", constant.construction().constructionAccessory.isCheckup.keys[v.checkup], "red"], ];
 
             $.each(propertyArr, function(index, value) {
                 var $liProperty = $('<li></li>');

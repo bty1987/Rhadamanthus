@@ -14,8 +14,8 @@ jQuery(function($) {
 
     function queryAccountes() {
 
-        com.post(api.balance.queryAccountForTeller, {}, function (res) {
-            $.each(res.accountes, function(i, v) {
+        com.post(api.balance.queryBalanceAccountForTeller, {}, function (res) {
+            $.each(res.balanceAccountes, function(i, v) {
                 resultList(i, v);
             });
         }, null, false);
@@ -66,8 +66,8 @@ jQuery(function($) {
                 return false;
             }
 
-            options["accountes[" + i + "].money"] = crnum;
-            options["accountes[" + i + "].aid"] = $line.attr("data-miid");
+            options["balanceAccountes[" + i + "].money"] = crnum;
+            options["balanceAccountes[" + i + "].baid"] = $line.attr("data-miid");
 
         }
 
@@ -85,7 +85,7 @@ jQuery(function($) {
 
     function resultList(i, v) {
         var $line = addline(i + 1).appendTo(payBalance.items.list).attr({
-            "data-miid": v.aid,
+            "data-miid": v.baid,
         });
         $line.find('div.name').text(v.name);
         $line.find('div.belonger').text(v.belonger.currentName);

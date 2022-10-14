@@ -5,6 +5,7 @@ $(function() {
     utils = parent.utils;
     params = parent.params;
     printer = parent.printer;
+    constant = parent.constant;
 
     var index = 0;
     var $total = 0;
@@ -12,7 +13,8 @@ $(function() {
     var $totalDeposit = 0;
 
     var decoration = {};
-    var orderType = {};
+    // 订单类型
+    var orderType = constant.decoration.decoration.typeness.keys;
     var decorationHolonomy = {};
     var materialBalance;
     var brandName = [];
@@ -25,12 +27,6 @@ $(function() {
     }, function(res) {
 
         decoration = res.decoration;
-    }, null, false);
-
-    // 订单类型
-    com.post(api.ds.decoration, {}, function(res) {
-
-        orderType = res.typeness.split("key", "value");
     }, null, false);
 
     // 配比金额(主材总额)
@@ -117,7 +113,8 @@ $(function() {
 
                 if (purCategory.indexOf(v.sales.category) == -1) {
                     purCategory.push(v.sales.category);
-                };
+                }
+                ;
 
                 if (unpCategory.indexOf(v.sales.category) != -1 && unpCategory.splice(unpCategory.indexOf(v.sales.category), 1))
                     ;

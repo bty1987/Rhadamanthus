@@ -1,7 +1,7 @@
 
 Condition.addupRule("balance", {
     
-    "account-name": {
+    "balanceAccount-name": {
         label: "名称",
         type: "text",
         submitConfig: {
@@ -10,7 +10,7 @@ Condition.addupRule("balance", {
             validate: null
         }
     },
-    "account-status": {
+    "balanceAccount-status": {
         label: "状态",
         type: "select",
         submitConfig: {
@@ -149,5 +149,29 @@ Condition.addupRule("balance", {
             valuePath: "value"
         }
     },
-
+    "balanceDccount-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "eq",
+            validate: null
+        }
+    },
+    "balanceDccount-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{key: "0", value: "有效"}, {key: "1", value: "失效"}],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
 });

@@ -69,6 +69,13 @@ $.extend(api, {payment: {
 		}
 	},
 	confirmPayment: {url: "confirmPayment.do"},
+	addPayment: {
+		url: "addPayment.do",
+		type: "update",
+		tranargs: {
+			args: ["payment.balance", "payment.recharge"]
+		}
+	},
 	updatePayment: {
 		url: "updatePayment.do",
 		type: "update",
@@ -83,6 +90,7 @@ $.extend(api, {payment: {
 			args: ["payment.cash", "payment.bank", "payment.checkv"]
 		}
 	},
+	sendPayment: {url: "sendPayment.do"},
 	
 	pageDecorationPayment: {
 		url: "pageDecorationPayment.do",
@@ -158,6 +166,7 @@ $.extend(api, {payment: {
 	confirmDecorationPayment: {url: "confirmDecorationPayment.do"},
 	changeDecorationPaymentForTime: {url: "changeDecorationPaymentForTime.do"},	
 	exportDecorationPayment: {url: "exportDecorationPayment.do"},
+	sendDecorationPayment: {url : "sendDecorationPayment.do"},
 
 	pageMaterialPayment: {
 		url: "pageMaterialPayment.do",
@@ -389,6 +398,7 @@ $.extend(api, {payment: {
 			args: ["salesReceipt.cash", "salesReceipt.bank", "salesReceipt.checkv", "salesReceipt.advance", "salesReceipt.coupon"]
 		}
 	},
+	sendSalesPayment: {url : "sendSalesPayment.do"},
 
 	collectServicePayment: {
 		url: "collectServicePayment.do",
@@ -496,7 +506,9 @@ $.extend(api, {payment: {
 	},
 	checkPaytran: {url : "checkPaytran.do"}, //无需要更改数值
 	cancelPaytran: {url : "cancelPaytran.do"},
-	
+	sendPaytran: {url : "sendPaytran.do"},
+	posPay: {url : "posPay.do"},
+
 	pageActivityPayment: {
 		url: "pageActivityPayment.do",
         type: "query",

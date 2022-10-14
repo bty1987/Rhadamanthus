@@ -53,36 +53,44 @@ $(function() {
     $.extend(com.validator, quotationItem.validator);
 
     com.post(api.ds.quotation, {}, function(a) {
-        quotationItem.items.type.bindData(a.quotationItemType.slice(0, 2), "key", "value");
+
+        quotationItem.items.type.bindData(a.quotationItemType.slice(0, 4), "key", "value");
         quotationItem.types = a.quotationItemType.split("key", "value");
     }, null, false);
 
     com.post(api.quotation.queryQuotationType, {}, function(a) {
+
         quotationItem.items.quotationType.bindData(a.quotationTypes, "id", "name");
         quotationItem.items.quotationType.prepend("<option value='0' selected='selected'>请选择</option>");
     }, null, false);
 
     com.post(api.quotation.queryQuotationClassification, {}, function(a) {
+
         quotationItem.items.quotationClassification.bindData(a.quotationClassifications, "id", "name");
     });
 
     com.post(api.common.queryMeasurementUnit, {}, function(a) {
+
         quotationItem.items.measurementUnit.bindData(a.measurementUnits, "id", "name");
     });
 
     com.post(api.common.queryWorkType, {}, function(a) {
+
         quotationItem.items.workType.bindData(a.workTypes, "id", "name");
     });
 
     com.post(api.quotation.queryQuotationVersion, {}, function(a) {
+
         quotationItem.items.version.bindData(a.quotationVersions, "no", "name");
     });
 
     quotationItem.items.no.on("blur", function() {
+
         checkItemName();
     });
 
     quotationItem.items.version.on("change", function() {
+
         checkItemName();
     });
 
@@ -105,6 +113,7 @@ $(function() {
     });
 
     quotationItem.modals.quotationItemModal.on('hide.bs.modal', function() {
+
         com.clearValidator();
         com.clearValidator("no", true);
         com.cleanItems(quotationItem.items);
@@ -118,11 +127,13 @@ $(function() {
     var displayFunc = (function() {
 
         var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
                 $.each(listData, function(i, v) {
+
                     var $liLine = creatLine(v);
 
                     $liLine.appendTo($ul);
@@ -133,6 +144,7 @@ $(function() {
         };
 
         var creatLine = function(v) {
+
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.name));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -163,6 +175,7 @@ $(function() {
             var propertyArr = [["编号: ", no, "grey"], ["业务: ", quotationItem.types[v.type], "red"], ["类型: ", v.category.name, "red"], ["分类: ", v.classification.name, "red"], ["大类: ", v.bigCategory.name, "red"], ["小类: ", v.smallCategory.name, "red"], ["单位: ", v.unit.name, "red"], ["工种: ", v.workType.name, "red"], ["增补价 :", v.addPrice, "blue"], ["单价: ", v.unitPrice, "blue"], ["退减价: ", v.subPrice, "blue"], ["版本: ", v.version.name, "grey"], ["说明: ", v.comment, "grey"], ];
 
             $.each(propertyArr, function(index, value) {
+
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -186,12 +199,14 @@ $(function() {
             $liLine.append($h3).append($ulProperty);
 
             $btnEdit.click(function() {
+
                 queryQuotationBigCategory(v.qtid);
                 queryQuotationSmallCategory(v.qtid);
                 edit(v);
             });
 
             $btnCopySoods.click(function() {
+
                 quotationItem.modals.selectItemModal.modal("show");
                 initQuotationItemList(v.version.no);
 
@@ -221,18 +236,24 @@ $(function() {
 
             !v.status && $statusSwitch.prop("checked", true);
             $statusSwitch.switchBtn("status-lbl").on("click", function() {
+
                 $statusSwitch.prop("checked") ? (updateStatus(v.qiid, 0, function() {
+
                     $statusSwitch.removeAttr("checked");
                 })) : (updateStatus(v.qiid, 1, function() {
+
                     $statusSwitch.prop("checked");
                 }));
             });
 
             v.discount && $discountSwitch.prop("checked", true);
             $discountSwitch.switchBtn("discount-lbl").on("click", function() {
+
                 $discountSwitch.prop("checked") ? (updateDiscount(v.qiid, 1, function() {
+
                     $discountSwitch.removeAttr("checked");
                 })) : (updateDiscount(v.qiid, 0, function() {
+
                     $discountSwitch.prop("checked");
                 }));
             });
@@ -242,10 +263,12 @@ $(function() {
 
         return {
             init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function(v) {
+
                 return creatLine(v);
             }
         };
@@ -254,8 +277,10 @@ $(function() {
     var _condArr = ['data-quotation-item-name', 'data-quotation-item-type', 'data-quotation-item-classification', 'data-quotation-item-bigcategory', 'data-quotation-item-smallcategory', 'data-quotation-version'];
     var quotationItemSeacher = new Searcher();
     quotationItemSeacher.init(_condArr, "condList", api.quotation.pageQuotationItem, function(data) {
+
         displayFunc.init('resultList', data);
     }, "pagenation", "quotationItemPostData", null, false, null, function() {
+
         if (quotation.pageType == "selection")
             return false;
 
@@ -276,6 +301,7 @@ $(function() {
 
     // 添加按钮
     com.focusPage('a[name="add"]', '#pagenation').click(function() {
+
         quotationItem.editFlg = false;
 
         quotationItem.items.no.prop("disabled", false);
@@ -286,12 +312,14 @@ $(function() {
 
     // 导入按钮
     com.focusPage('a[name="import"]').on("click", function() {
+
         com.focusPage('#importModal').modal("show");
     });
 
     com.uploadify("#import", "上传文件", api.quotation.importQuotationItem, 'btn btn-success col-sm-12', "*.xls;*.xlsx;", {
         'uploadType': 4
     }, 1, function(data) {
+
         quotationItemSeacher.doSearch();
     });
 
@@ -316,6 +344,7 @@ $(function() {
                 column: [['编号', 'no'], ['名称', 'name'], ['版本', 'version.name'], ['类型', 'category.name'], ['分类', 'classification.name'], ['大类', 'bigCategory.name'], ['小类', 'smallCategory.name'], ['单位', 'unit.name'], ['工种', 'workType.name'], ['增补价', 'addPrice'], ['单价', 'unitPrice'], ['退减价', 'subPrice'], ['是否打折', 'discount'], ['启用/禁用', 'status'], ['说明', 'comment'], ],
                 list: res.paging.data,
             }, function(v) {
+
                 v.discount = v.discount == 0 ? '不打折' : '打折';
                 v.status = v.status == 0 ? '启用' : '禁用';
             });
@@ -408,12 +437,14 @@ $(function() {
             }
 
             com.post(url, option, function(res) {
+
                 com.showAlert(com.info, "保存成功");
                 quotationItemSeacher.doSearch();
                 quotationItem.modals.quotationItemModal.modal("hide");
             }, null, false);
         }
-    };
+    }
+    ;
 
     // 启用禁用功能
     function updateStatus(id, status, failcallBack) {
@@ -422,7 +453,8 @@ $(function() {
             "quotationItem.qiid": id,
             "quotationItem.status": status
         });
-    };
+    }
+    ;
 
     // 是否打折设置
     function updateDiscount(id, discount, failcallBack) {
@@ -431,33 +463,42 @@ $(function() {
             "quotationItem.qiid": id,
             "quotationItem.discount": discount
         });
-    };
+    }
+    ;
 
     function queryQuotationBigCategory(quotationType) {
+
         com.post(api.quotation.queryQuotationBigCategory, {
             "quotationBigCategory.qtid": quotationType
         }, function(a) {
+
             quotationItem.items.quotationBigCategory.bindData(a.quotationBigCategorys, "id", "name");
             quotationItem.items.quotationBigCategory.prepend("<option value='0' selected='selected'>请选择类型</option>");
         }, null, false);
-    };
+    }
+    ;
 
     function queryQuotationSmallCategory(quotationType) {
+
         com.post(api.quotation.queryQuotationSmallCategory, {
             "quotationSmallCategory.qtid": quotationType
         }, function(a) {
+
             quotationItem.items.quotationSmallCategory.bindData(a.quotationSmallCategorys, "id", "name");
             quotationItem.items.quotationSmallCategory.prepend("<option value='0' selected='selected'>请选择类型</option>");
         }, null, false);
-    };
+    }
+    ;
 
     function openModal() {
+
         quotationItem.items.quotationBigCategory.html('');
         quotationItem.items.quotationSmallCategory.html('');
         quotationItem.items.quotationBigCategory.prepend("<option value='0' selected='selected'>请选择类型</option>");
         quotationItem.items.quotationSmallCategory.prepend("<option value='0' selected='selected'>请选择类型</option>");
         quotationItem.items.unitPrice.removeAttr('readonly').val('');
-    };
+    }
+    ;
 
     function checkItemName() {
 
@@ -470,6 +511,7 @@ $(function() {
                 "quotationItem.version.id": version,
             };
             com.post(api.quotation.queryQuotationItemByItemIdAVersionId, option, function(res) {
+
                 if (res.quotationItem && res.quotationItem.qiid) {
                     com.showTips(quotationItem.items.no, "该版本的项目编号已存在", true);
                     quotationItem.repeatFlg = true;
@@ -479,7 +521,8 @@ $(function() {
                 }
             });
         }
-    };
+    }
+    ;
 
     function initQuotationItemList(versionId) {
 
@@ -490,11 +533,13 @@ $(function() {
         var quoDisplayFunc = (function() {
 
             var renderList = function(tableId, listData) {
+
                 var $tableWrap = com.focusPage('#' + tableId);
                 var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
                 if (listData && listData.length) {
                     $.each(listData, function(i, v) {
+
                         creatLine(v).appendTo($ul);
                     });
 
@@ -503,6 +548,7 @@ $(function() {
             };
 
             var creatLine = function(v) {
+
                 var $liLine = $('<li></li>').addClass('item-blue clearfix');
                 var $h3 = $('<h3></h3>').addClass('oid').css({
                     "margin-bottom": 0
@@ -519,6 +565,7 @@ $(function() {
                 var propertyArr = [["类型: ", v.category.name, "red"], ["分类: ", v.classification.name, "red"], ["大类: ", v.bigCategory.name, "red"], ["小类: ", v.smallCategory.name, "red"], ["单位: ", v.unit.name, "red"], ["工种: ", v.workType.name, "red"], ["单价: ", v.unitPrice, "blue"], ["版本: ", v.version.name, "grey"], ];
 
                 $.each(propertyArr, function(index, value) {
+
                     var $liProperty = $('<li></li>');
                     $('<strong></strong>').html(value[0]).appendTo($liProperty);
                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -538,6 +585,7 @@ $(function() {
                     }
 
                     com.post(api.data.copySoods, options, function(res) {
+
                         quotationItem.modals.selectItemModal.modal("hide");
                     });
                 });
@@ -547,10 +595,12 @@ $(function() {
 
             return {
                 init: function(tableId, listData) {
+
                     com.focusPage('#' + tableId).html(null);
                     renderList(tableId, listData);
                 },
                 drawLine: function(v) {
+
                     return creatLine(v);
                 }
             };
@@ -561,6 +611,7 @@ $(function() {
         var quotationSeacher = new Searcher();
 
         quotationSeacher.init(condArr, "quoCondList", api.quotation.pageQuotationItemByVersionId, function(data) {
+
             quoDisplayFunc.init('quoResultList', data);
         }, "quoPagenation", "quotationFuncAreaPostData", extraParams);
 

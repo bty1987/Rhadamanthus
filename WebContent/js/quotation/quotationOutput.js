@@ -73,6 +73,10 @@ function printProjectTable(subtype, showType) {
             if (subtype.indexOf(qv.subtype) == -1)
                 return true;
 
+            if (!showType.showStandardPrice && [0, 4, 5].indexOf(qv.type) != -1) {
+                qv.total = utils.changeThrDecimal(utils.accMul(qv.num, qv.unitPrice));
+            }
+
             var no = offset == 0 || [0, 4, 5].indexOf(qv.type) == -1 ? "-" : "QI_" + (Array(5).join('0') + (qv.quotationItemId - offset)).slice(-5);
 
             contentHtml += '<tr bgcolor="#FFFFFF">';
@@ -157,6 +161,10 @@ function printFinanceTable(subtype, showType) {
         contentHtml += '</tr>';
 
         $.each(v, function(j, qv) {
+
+            if (!showType.showStandardPrice && [0, 4, 5].indexOf(qv.type) != -1) {
+                qv.total = utils.changeThrDecimal(utils.accMul(qv.num, qv.unitPrice));
+            }
 
             if (subtype.indexOf(-2) != -1 || subtype.indexOf(qv.subtype) != -1) {
 

@@ -2,15 +2,6 @@ jQuery(function ($) {
 
     var constructionNodes = {};
 
-    com.post(api.data.queryConstructionNode,{}, function (res) {
-        constructionNodes = res.constructionNodes.split("sort", "name");
-
-        constructionNodes[0] = "初始";
-        constructionNodes[1] = "开工";
-        constructionNodes[2] = "完工";
-
-    }, null, false);
-
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
@@ -42,7 +33,7 @@ jQuery(function ($) {
                 ["设计师:", v.designer.userName, "grey"],
                 ["监理:", v.supervisor ? v.supervisor.userName : "", "grey"],
                 ["面积:", v.house.buildArea, "blue"],
-                ["进度:", constructionNodes[v.projectStatus], "red"]
+                ["进度:", constant.decoration().decoration.projectStatus.keys[v.projectStatus], "red"]
             ];
 
             $.each(propertyArr, function (index, value) {

@@ -188,6 +188,7 @@ jQuery(function($) {
 
             businessCard.userPhoto = data.resUrl;
             businessCard.items.path.val(data.resUrl);
+            businessCard.items.filesize.val(data.filesize);
 
             appendGalleryElement("userPhoto", data.resUrl, 0);
 

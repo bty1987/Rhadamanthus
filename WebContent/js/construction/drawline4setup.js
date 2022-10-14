@@ -2,6 +2,8 @@ jQuery(function($) {
 
     var drawline = {
 
+        dlid: null,
+
         btns: {
             saveInfoBtn: com.focusPage("#saveInfoBtn"),
             saveBtn: com.focusPage("#saveBtn"),
@@ -37,6 +39,8 @@ jQuery(function($) {
             isCeremony: com.focusPage("#isCeremony"),
             comment: com.focusPage("#comment"),
             contructionNodes: com.focusPage("#contructionNodes"),
+
+            status: com.focusPage("#status")
         },
 
         drawLineGroup: [],
@@ -94,21 +98,10 @@ jQuery(function($) {
     com.datetime(drawline.items.startTime, "time");
     com.datetime(drawline.items.endTime, "time");
 
-    com.post(api.ds.construction, {}, function(res) {
-
-        drawline.items.ishovel.bindData(res.isHovel, "key", "value", false);
-        drawline.items.iskey.bindData(res.isKey, "key", "value", false);
-        drawline.items.isCeremony.bindData(res.isCeremony, "key", "value", false);
-
-    });
-
-    com.post(api.ds.construction, {}, function(res) {
-
-        $.each(res.drawLineStatus, function(i, v) {
-
-            drawline.status[v.key] = v.value;
-        })
-    }, null, false);
+    drawline.items.ishovel.bindData(constant.construction().constructionInfo.isHovel.datas,"key","value");
+    drawline.items.iskey.bindData(constant.construction().constructionInfo.isKey.datas,"key","value");
+    drawline.items.isCeremony.bindData(constant.construction().constructionInfo.isCeremony.datas,"key","value");
+    drawline.items.status.bindData(constant.construction().drawLine.status.datas,"key","value");
 
     com.post(api.data.queryDrawlineGroup, {}, function(res) {
 
@@ -173,7 +166,7 @@ jQuery(function($) {
             }
             var actualTime = v.actualTime;
 
-            var propertyArr = [["楼盘地址:", v.decoration.house.village.name + ' ' + v.decoration.house.houseNumber, "grey"], ["面积:", v.decoration.house.buildArea, "blue"], ["合同额:", v.decoration.orderTotalPrice, "blue"], ["申请人:", v.appler.currentName, "grey"], ["设计师:", v.decoration.designer.currentName, "grey"], ["监理:", v.decoration.supervisor == null ? "" : v.decoration.supervisor.currentName, "grey"], ["设计师:", v.decoration.designer.currentName, "grey"], ["放线时间:", actualTime, "green"], ["开始时间:", startTime, "green"], ["结束时间:", endTime, "green"], ["报价版本:", v.decoration.version.name, "green"], ["状态:", drawline.status[v.status], "red"], ["描述:", v.content, "grey"]];
+            var propertyArr = [["楼盘地址:", v.decoration.house.village.name + ' ' + v.decoration.house.houseNumber, "grey"], ["面积:", v.decoration.house.buildArea, "blue"], ["合同额:", v.decoration.orderTotalPrice, "blue"], ["申请人:", v.appler.currentName, "grey"], ["设计师:", v.decoration.designer.currentName, "grey"], ["监理:", v.decoration.supervisor == null ? "" : v.decoration.supervisor.currentName, "grey"], ["设计师:", v.decoration.designer.currentName, "grey"], ["放线时间:", actualTime, "green"], ["开始时间:", startTime, "green"], ["结束时间:", endTime, "green"], ["报价版本:", v.decoration.version.name, "green"], ["状态:", constant.construction().drawLine.status.keys[v.status], "red"], ["描述:", v.content, "grey"]];
 
             $.each(propertyArr, function(index, value) {
 
@@ -183,7 +176,7 @@ jQuery(function($) {
                 $liProperty.appendTo($ulProperty);
             });
 
-            if (drawline.pageType != "open" && v.status == 1) {
+            if (drawline.pageType != "open" && v.status == constant.construction().drawLine.STATUS_APPLICATION_INT) {
                 $divBtnWrap.append($btnInfo).append($btnEdit).append($btnDeplory).append($btnReset).append($successBtn).appendTo($h3);
             }
 
@@ -344,6 +337,9 @@ jQuery(function($) {
     function success(v) {
 
         // var option = {"drawLine.dlid": v.dlid};
+
+        drawline.dlid = v.dlid;
+
         drawline.modals.contructionNodeModal.modal("show");
         drawline.items.contructionNodes.html("");
 
@@ -380,7 +376,7 @@ jQuery(function($) {
                 "type": "checkbox",
                 "name": "sorts",
                 "sort": value.sort,
-                "dlid": v.dlid,
+                "cnid": value.cnid,
                 "checked": "checked"
             }).addClass('ace ace-checkbox-2');
 
@@ -429,13 +425,14 @@ jQuery(function($) {
         var $inputs = com.focusPage('input[name="sorts"]:checked', '#contructionNodes');
 
         var option = {
-            "drawLine.dlid": $inputs.attr('dlid')
+            "drawLine.dlid": drawline.dlid
         };
 
         $.each($inputs, function(i, v) {
 
             var $input = $(v);
 
+            option["constructionNodes[" + i + "].cnid"] = $input.attr('cnid');
             option["constructionNodes[" + i + "].sort"] = $input.attr('sort');
             option["constructionNodes[" + i + "].timeLimit"] = $("input[text_sort=" + $input.attr('sort') + "]").val();
 

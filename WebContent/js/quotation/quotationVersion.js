@@ -14,8 +14,11 @@ $(function() {
             trafficDiscount: com.focusPage("#trafficDiscount", "#updateQuotationVersionModal").switchBtn(),
             manageRate: com.focusPage("#manageRate", "#updateQuotationVersionModal"),
             manageDiscount: com.focusPage("#manageDiscount", "#updateQuotationVersionModal").switchBtn(),
+            taxRate: com.focusPage("#taxRate", "#updateQuotationVersionModal"),
+            taxDiscount: com.focusPage("input[name=taxDiscount]", "#updateQuotationVersionModal"),
+            manageTaxDiscount: com.focusPage("#manageTaxDiscount", "#updateQuotationVersionModal"),
+            totalTaxDiscount: com.focusPage("#totalTaxDiscount", "#updateQuotationVersionModal"),
 
-            defaultFlag: com.focusPage("#defaultFlag", "#updateQuotationVersionModal").switchBtn(),
             type: com.focusPage("#type", "#updateQuotationVersionModal"),
             offset: com.focusPage("#offset", "#updateQuotationVersionModal"),
             comment: com.focusPage("#comment", "#updateQuotationVersionModal"),
@@ -82,6 +85,19 @@ $(function() {
         },
         clazz: "red"
     }, {
+        field: "taxRate",
+        name: "税金比例",
+        prop: "taxRate",
+        clazz: "blue"
+    }, {
+        field: "taxDiscount",
+        name: "税金折扣",
+        prop: function(v) {
+
+            return v.taxDiscount == 0 ? '管理税金' : v.taxDiscount == 1 ? '总额税金' : '-';
+        },
+        clazz: "red"
+    }, {
         field: "type",
         name: "类型",
         prop: "type",
@@ -117,6 +133,14 @@ $(function() {
             return false;
         }
     }, {
+        name: "导出报价项",
+        clazz: "btn-pink",
+        handle: function(v) {
+
+            expdebjx(v);
+            return false;
+        }
+    }, {
         name: "导出定额材料",
         clazz: "btn-info",
         handle: function(v) {
@@ -129,6 +153,23 @@ $(function() {
         handle: function(v) {
             expdegf(v);
             return false;
+        }
+    }, {
+        name: "默认",
+        type: "switch",
+        clazz: "default-lbl",
+        handle: function(v, check) {
+
+            com.post(api.quotation.updateQuotationVersionForDefault, {
+                "quotationVersion.no": v.no,
+                "quotationVersion.defaultFlag": check ? 1 : 0
+            });
+
+            return false;
+        },
+        init: function(v) {
+
+            return v.defaultFlag;
         }
     }, ];
 
@@ -154,6 +195,7 @@ $(function() {
         quotationVersion.items.name.val(b.name);
         quotationVersion.items.trafficRate.val(b.trafficRate);
         quotationVersion.items.manageRate.val(b.manageRate);
+        quotationVersion.items.taxRate.val(b.taxRate);
         quotationVersion.items.type.val(b.type);
         quotationVersion.items.offset.val(b.offset);
 
@@ -161,7 +203,8 @@ $(function() {
 
         quotationVersion.items.trafficDiscount.prop("checked", b.trafficDiscount == 1);
         quotationVersion.items.manageDiscount.prop("checked", b.manageDiscount == 1);
-        quotationVersion.items.defaultFlag.prop("checked", b.defaultFlag == 1);
+        quotationVersion.items.manageTaxDiscount.prop("checked", b.taxDiscount == 0);
+        quotationVersion.items.totalTaxDiscount.prop("checked", b.taxDiscount == 1);
 
         quotationVersion.modals.updateQuotationVersionModal.modal("show");
     }
@@ -180,8 +223,9 @@ $(function() {
             "quotationVersion.trafficDiscount": quotationVersion.items.trafficDiscount.prop("checked") ? 1 : 0,
             "quotationVersion.manageRate": quotationVersion.items.manageRate.val(),
             "quotationVersion.manageDiscount": quotationVersion.items.manageDiscount.prop("checked") ? 1 : 0,
+            "quotationVersion.taxRate": quotationVersion.items.taxRate.val(),
+            "quotationVersion.taxDiscount": quotationVersion.items.taxDiscount.prop("checked") ? 0 : 1,
             "quotationVersion.type": quotationVersion.items.type.val(),
-            "quotationVersion.defaultFlag": quotationVersion.items.defaultFlag.prop("checked") ? 1 : 0,
             "quotationVersion.offset": quotationVersion.items.offset.val(),
             "quotationVersion.comment": quotationVersion.items.comment.val(),
         };
@@ -252,6 +296,36 @@ $(function() {
                 list: res.paging.data,
             }, function(v) {
                 v.status = v.status == 0 ? '有效' : v.status == 1 ? '无效' : '---';
+            });
+        });
+    }
+
+    function expdebjx(v) {
+
+        if (com.focusPage('span[name="totalRecords"]').text() == 0) {
+            com.showAlert(com.warning, "请通过条件进行查询");
+            return false;
+        }
+        if (com.focusPage('span[name="totalRecords"]').text() > 2000) {
+            com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
+            return false;
+        }
+        var quotationVersionPostData = params.quotationVersionPostData;
+
+        com.post(api.quotation.pageQuotationItem, $.extend({}, quotationVersionPostData, {
+            "paging.noPage": 1,
+            "filters[0].field": "versionId",
+            "filters[0].data": v.no,
+            "filters[0].op": "eq"
+        }), function(res) {
+
+            $.exceler({
+                column: [['编号', 'no'], ['名称', 'name'], ['版本', 'version.name'], ['类型', 'category.name'], ['分类', 'classification.name'], ['大类', 'bigCategory.name'], ['小类', 'smallCategory.name'], ['单位', 'unit.name'], ['工种', 'workType.name'], ['增补价', 'addPrice'], ['单价', 'unitPrice'], ['退减价', 'subPrice'], ['是否打折', 'discount'], ['状态', 'status'], ['说明', 'comment'], ],
+                list: res.paging.data,
+            }, function(v) {
+
+                v.discount = v.discount == 0 ? '不打折' : '打折';
+                v.status = v.status == 0 ? '启用' : '禁用';
             });
         });
     }

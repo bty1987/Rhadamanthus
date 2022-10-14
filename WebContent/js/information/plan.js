@@ -36,15 +36,14 @@ $(function () {
     com.datetime(plan.items.executeDate);
     com.datetime(plan.items.executeTime, "time");
 
-    com.post(api.ds.information, {}, function(res) {
-        plan.status = res.planStatus.split("key", "value");
-    }, null, false);
-
     com.post(api.data.queryTask, {"task.level": 0}, function (res) {
         plan.plugins = res.tasks.split("keyWord", "plugins");
+        plan.week = res.tasks.split("keyWord", "week");
+        plan.day = res.tasks.split("keyWord", "day");
+        plan.hour = res.tasks.split("keyWord", "hour");
     }, null, false);
 
-    com.post(api.data.queryTaskRoleRightByUserId, {"taskRoleRight.rid": params.userInfo.user.role.rid}, function (res) {
+    com.post(api.data.queryTaskRoleRightForSelf, {}, function (res) {
         var task = [];
 
         $.each(res.taskRoleRights, function(i, v){
@@ -85,7 +84,7 @@ $(function () {
         {field: "args", name: "参数", prop: "args", clazz: "grey"},
         {field: "executeTime", name: "执行时间", prop: "executeTime", clazz: "green"},
         {field: "schedule", name: "进度", prop: "schedule", clazz: "grey"},
-        {field: "status", name: "状态", prop: "status", dataset: plan.status, clazz: "red"},
+        {field: "status", name: "状态", prop: "status", dataset: constant.information().plan.status.keys, clazz: "red"},
         {field: "info", name: "结果信息", prop: "info", clazz: "grey"},
     ];
     
@@ -94,7 +93,7 @@ $(function () {
             window.open(config.media + v.resultFilepath);
             return false;
         }, show: function(v){
-            return (v.resultFilepath != null && v.resultFilepath.length != 0) && (v.status == 2);
+            return (v.resultFilepath != null && v.resultFilepath.length != 0) && (v.status == constant.information().plan.STATUS_SUCCESS_INT);
         }},
         {name: "日志", clazz: "btn-danger", handle: function(v){
             window.open(config.media + v.infoFilepath);
@@ -106,7 +105,7 @@ $(function () {
             cancel(v);
             return false;
         }, show: function(v){
-            return (v.status == 0) && (v.executeTime != null && v.executeTime.length != 0) && (Number(v.executeTime) > Number(plan.currentTime));
+            return (v.status == constant.information().plan.STATUS_INIT_INT) && (v.executeTime != null && v.executeTime.length != 0) && (Number(v.executeTime) > Number(plan.currentTime));
         }},
     ];
     
@@ -138,6 +137,21 @@ $(function () {
         if (com.validate('addplanModal'))
             return false;
 
+        var str = new Date().getDay();
+        var sty = new Date().getDate();
+        var sts = new Date().getHours();
+
+        var keyword = $("#task").val();
+        plan.keyword = keyword;
+        var week = plan.week[keyword];
+        var day = plan.day[keyword];
+        var hour = plan.hour[keyword];
+
+        if(!(new RegExp(week).test(str) && new RegExp(day).test(sty) && new RegExp(hour).test(sts))){
+            com.showAlert(com.warning, "当前任务不可用");
+            return false;  
+        }
+
         var options = {
             "plan.task.keyWord": plan.items.task.val()
         };
@@ -146,7 +160,7 @@ $(function () {
         var results = cuts.split(",");
         var args = "";
         var flag = false;
-        
+
         $.each(results, function (i, v) {
 
             if (v == "C") {
@@ -168,28 +182,28 @@ $(function () {
             com.showAlert(com.warning, "上传文件不能为空!");
             return false;
         }
-        
+
         args = args.substring(0, args.length - 1);
-        
+
         var date = plan.items.executeDate.val();
         var time = plan.items.executeTime.val();
-        
+
         var executeTime = date.replace(/-/g, '').substr(2) + time.replace(/:/g, '').substr(0, 4);
-        
+
         options["plan.args"] = args;
         options["plan.executeTime"] = executeTime;
-        
+
         if(executeTime < plan.current){
             com.showAlert(com.warning, "执行时间已超时");
             return false;
         }
-        
+
         var plans = [];
-        
+
         com.post(api.information.existPlan, options, function(res){
             plans = res.plans;
         }, null, false);
-        
+
         if(plans && plans.length != 0){
             com.showSelection("该计划已经成功执行, 是否直接下载", {"下载": function(){
                 window.open(config.media + plans[0].resultFilepath);

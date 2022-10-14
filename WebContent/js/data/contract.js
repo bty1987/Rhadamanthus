@@ -23,6 +23,7 @@ jQuery(function($) {
     }, 1, function(data) {
 
         contract.items.path.val(data.resUrl);
+        contract.items.filesize.val(data.filesize);
     });
 
     contract.btns.saveBtn.click(saveData);

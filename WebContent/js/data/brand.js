@@ -7,21 +7,24 @@ jQuery(function($) {
         saveBtn: null,
         cancelBtn: null,
         modal: null,
-
         btns: {
-            saveBtn: com.focusPage("#saveBtn").on("click", saveData)
+            saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+            saveDelivery: com.focusPage("#saveDelivery").on("click", saveDelivery),
         },
 
         items: {
+            itemlist: com.focusPage("#itemlist", "#deliveryModal"),
             name: com.focusPage("#name", "#brandModal"),
             category: com.focusPage("#category", "#brandModal"),
             supplier: com.focusPage("#supplier", "#brandModal"),
             kino: com.focusPage("#kino", "#brandModal"),
             kiname: com.focusPage("#kiname", "#brandModal"),
+
         },
 
         modals: {
             brandModal: com.focusPage("#brandModal"),
+            deliveryModal: com.focusPage("#deliveryModal"),
         },
 
         validator: {
@@ -40,10 +43,22 @@ jQuery(function($) {
         com.clearValidator();
     });
 
+    brand.modals.deliveryModal.on('show.bs.modal', function(e) {
+
+        com.clearValidator();
+    });
+
     brand.modals.brandModal.on('hide.bs.modal', function(e) {
 
         com.clearValidator();
         com.cleanTypeahead('supplier');
+        com.closeTip();
+    });
+
+    brand.modals.deliveryModal.on('hide.bs.modal', function(e) {
+        com.clearValidator();
+        com.focusPage("input[type='checkbox']").removeAttr("checked");
+        // com.focusPage(":checked").prop("checked",false);
         com.closeTip();
     });
 
@@ -80,6 +95,7 @@ jQuery(function($) {
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
+            var $btnDelivery = $('<a></a>').addClass('btn btn-minier btn-yellow').html('配送状态');
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
             var $btnBalance = $('<a></a>').addClass('btn btn-minier btn-danger').html('结算');
 
@@ -98,13 +114,18 @@ jQuery(function($) {
                 $liProperty.appendTo($ulProperty);
             });
 
-            $divBtnWrap.append($btnEdit).append($btnBalance).appendTo($h3);
+            $divBtnWrap.append($btnDelivery).append($btnEdit).append($btnBalance).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
             $btnEdit.click(function() {
 
                 editBrand(v);
+            });
+
+            $btnDelivery.click(function() {
+
+                editDelivery(v);
             });
 
             $btnBalance.click(function() {
@@ -167,6 +188,67 @@ jQuery(function($) {
         brand.modals.brandModal.modal("show");
     }
 
+    var contentDiv = $('<div class="col-md-12 hr8"></div>').appendTo(brand.items.itemlist);
+
+    $.each(constant.right().salesDeliveryStatusRight.status.keys, function(i, v) {
+        contentDiv.prepend(line(i, v));
+    });
+    function line(i, v) {
+        var $div = $('<div></div>').addClass('dd-handle clearfix').text(v).appendTo(contentDiv);
+
+        var $input = $('<input name="checkbox">').attr({
+            type: 'checkbox',
+            name: v,
+        }).addClass('ace').val(i);
+
+        var $indexCheck = $('<div></div>').addClass('checkbox pull-right').css({
+            'margin-bottom': '0',
+            'margin-top': '-5px'
+        });
+
+        var $label = $('<label></label>').append($input).append('<span class="lbl"></span>');
+
+        $indexCheck.append($label).appendTo($div);
+    }
+
+    function editDelivery(v) {
+
+        brand.brand = v;
+
+        com.post(api.right.querySalesDeliveryStatusRight, {
+            "salesDeliveryStatusRight.bid": brand.brand.bid
+        }, function(res) {
+
+            $.each(res.salesDeliveryStatusRights, function(i, v) {
+                com.focusPage("input[type='checkbox'][value='" + v.status + "']").prop({
+                    "checked": "checked"
+                });
+            });
+
+        });
+
+        brand.modals.deliveryModal.modal("show");
+    }
+
+    function saveDelivery() {
+
+        var options = {};
+
+        com.focusPage("input[type='checkbox']:checked").each(function(i, v) {
+
+            var that = $(this);
+
+            options["salesDeliveryStatusRights[" + i + "].name"] = that.attr("name");
+            options["salesDeliveryStatusRights[" + i + "].bid"] = brand.brand.bid;
+            options["salesDeliveryStatusRights[" + i + "].status"] = that.val();
+        });
+
+        com.post(api.right.updateSalesDeliveryStatusRight, options, function(res) {
+
+            brand.modals.deliveryModal.modal("hide");
+        });
+    }
+
     function saveData() {
 
         if (com.validate('brandModal'))
@@ -194,5 +276,5 @@ jQuery(function($) {
 
         brand.modals.brandModal.modal("hide");
     }
-
 });
+

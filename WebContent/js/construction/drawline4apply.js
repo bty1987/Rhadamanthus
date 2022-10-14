@@ -76,12 +76,9 @@ jQuery(function($) {
     com.datetime(drawline.items.startTime, "time");
     com.datetime(drawline.items.endTime, "time");
 
-    com.post(api.ds.construction, {}, function(res) {
-
-        drawline.items.ishovel.bindData(res.isHovel, "key", "value", false);
-        drawline.items.iskey.bindData(res.isKey, "key", "value", false);
-        drawline.items.isCeremony.bindData(res.isCeremony, "key", "value", false);
-    });
+    drawline.items.ishovel.bindData(constant.construction().constructionInfo.isHovel.datas,"key","value");
+    drawline.items.iskey.bindData(constant.construction().constructionInfo.isKey.datas,"key","value");
+    drawline.items.isCeremony.bindData(constant.construction().constructionInfo.isCeremony.datas,"key","value");
 
     com.post(api.data.queryDrawlineGroup, {}, function(res) {
 

@@ -64,27 +64,6 @@ jQuery(function($) {
         contractEdit.item.houseType.bindData(res.houseClass, 'key', 'value');
     });
 
-    com.post(api.data.queryCustomerById, {
-        "customer.cid": params.decoration.cid
-    }, function(res) {
-
-        var customer = res.customer;
-
-        com.focusPage("#con-customer-name", "#form").val(customer.name);
-        com.focusPage("#con-customer-phone", "#form").val(customer.phone);
-        com.focusPage("#con-customer-ident", "#form").val(customer.identity);
-        com.focusPage("#con-bank-man", "#form").val(customer.name);
-        com.focusPage("#con-bank-no", "#form").val(customer.companyBankno);
-        com.focusPage("#con-bank-name", "#form").val(customer.companyBank);
-        com.focusPage("#con-bank-phone", "#form").val(customer.phone);
-
-        contractEdit.customer = customer;
-
-        contractEdit.cover["cov-orderId"] = contractEdit.decorationOrderId;
-        contractEdit.cover["cov-customer-name"] = customer.name;
-        contractEdit.cover["cov-customer-phone"] = customer.phone;
-    });
-
     com.post(api.construction.queryConstructionInfoByOrderId, {
         "constructionInfo.orderId": contractEdit.decorationOrderId
     }, function(result) {
@@ -123,6 +102,21 @@ jQuery(function($) {
         var house = data.house;
         var village = house.village;
         var proper = village.cityProper;
+        var customer = res.decoration.customer;
+
+        com.focusPage("#con-customer-name", "#form").val(customer.name);
+        com.focusPage("#con-customer-phone", "#form").val(customer.phone);
+        com.focusPage("#con-customer-ident", "#form").val(customer.identity);
+        com.focusPage("#con-bank-man", "#form").val(customer.name);
+        com.focusPage("#con-bank-no", "#form").val(customer.companyBankno);
+        com.focusPage("#con-bank-name", "#form").val(customer.companyBank);
+        com.focusPage("#con-bank-phone", "#form").val(customer.phone);
+
+        contractEdit.customer = customer;
+
+        contractEdit.cover["cov-orderId"] = contractEdit.decorationOrderId;
+        contractEdit.cover["cov-customer-name"] = customer.name;
+        contractEdit.cover["cov-customer-phone"] = customer.phone;
 
         com.focusPage("#con-province-name", "#form").val(proper.city.province);
         com.focusPage("#con-city-name", "#form").val(proper.city.name);
@@ -193,8 +187,7 @@ jQuery(function($) {
             displayFunc.init("talkingList", res.talkings);
             contractEdit.modal.talkingModal.modal("show");
         }, null, false);
-    }
-    ;
+    };
 
     var displayFunc = (function() {
 

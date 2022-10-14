@@ -1,13 +1,44 @@
-
 Condition.addupRule("system", {
-    
+
     "company-name": {
         label: "名称",
         type: "text",
         submitConfig: {
             name: "name",
-            op: "cn",
+            op: "eq",
             validate: null
+        }
+    },
+    "company-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.system,
+            postData: {},
+            listPath: "status",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "company-atttype": {
+        label: "业务类型",
+        type: "select",
+        submitConfig: {
+            name: "atttype",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.system,
+            postData: {},
+            listPath: "atttype",
+            keyPath: "key",
+            valuePath: "value"
         }
     },
     "region-name": {
@@ -69,30 +100,30 @@ Condition.addupRule("system", {
             validate: null
         }
     },
-    "role-no":{
-        label:"角色编号",
-        type:"text",
-        submitConfig:{
-            name:"roleNo",// 字段
-            op:"eq",// 查询方式
-            validate:null
+    "role-no": {
+        label: "角色编号",
+        type: "text",
+        submitConfig: {
+            name: "roleNo",// 字段
+            op: "eq",// 查询方式
+            validate: null
         }
     },
     "role-name": {
-        label:"角色名称",
-        type:"autofill",
-        submitConfig:{
-            name:"roleId",// 字段
-            op:"eq",// 查询方式
-            validate:null
+        label: "角色名称",
+        type: "autofill",
+        submitConfig: {
+            name: "roleId",// 字段
+            op: "eq",// 查询方式
+            validate: null
         },
         dataSource: {
             url: api.system.queryRoleByName,// 请求接口
-            postData: {},//获取数据时的请求参数
+            postData: {},// 获取数据时的请求参数
             listPath: "roleList",// 返回值
             keyPath: "rid",// 元素的key值
             valuePath: "name",// 元素的value值
-            query:"role.name"// 请求参数
+            query: "role.name"// 请求参数
         }
     },
     "config": {
@@ -146,6 +177,40 @@ Condition.addupRule("system", {
             op: "cn",
             validate: null
         }
-    }
+    },
 
+    "operation-name": {
+        label: "操作说明",
+        type: "text",
+        submitConfig: {
+            name: "operationName",
+            op: "cn",
+            validate: null
+        }
+    },
+    "operation-operation": {
+        label: "操作",
+        type: "text",
+        submitConfig: {
+            name: "operation",
+            op: "cn",
+            validate: null
+        }
+    },
+    "operation-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "operationType",// 字段
+            op: "eq",// 查询方式
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.system,// 请求接口
+            postData: {},// 获取数据时的请求参数
+            listPath: "operationType",
+            keyPath: "key",// 元素的key值
+            valuePath: "value",// 元素的value值
+        }
+    },
 });

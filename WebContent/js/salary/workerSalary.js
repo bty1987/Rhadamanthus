@@ -31,7 +31,6 @@ jQuery(function($) {
         salaryStatus: {},
         type: {},
         oneType: {},
-        constructionSchedule: {},
         salaryType: {},
         twoType: {},
         twotype: {},
@@ -78,16 +77,6 @@ jQuery(function($) {
         salary.twoType = data.SalaryTwoType.split("key", "oneType");
         salary.twotype = data.SalaryTwoType.split("key", "name");
         salary.items.workersalarySubtype.bindData(twotypes, "key", "name");
-
-    }, null, false);
-
-    com.post(api.data.queryConstructionNode, {}, function(res) {
-
-        salary.constructionSchedule = res.constructionNodes.split("sort", "name");
-
-        salary.constructionSchedule[0] = "初始";
-        salary.constructionSchedule[1] = "开工";
-        salary.constructionSchedule[2] = "完工";
 
     }, null, false);
 
@@ -179,8 +168,8 @@ jQuery(function($) {
     }, {
         field: "schedule",
         name: "施工节点",
-        prop: "schedule",
-        dataset: salary.constructionSchedule,
+        prop: "cnid",
+        dataset: constant.decoration.decoration.projectStatus.keys,
         clazz: "red"
     }, {
         field: "type",
@@ -427,7 +416,7 @@ jQuery(function($) {
         }), function(res) {
 
             $.exceler({
-                column: [["装修单号", "decoration.orderId"], ['楼盘地址', "decoration.house"], ["等级", "decoration.grade"], ['监理编号', 'decoration.supervisorId'], ['监理', 'decoration.supervisor'], ["工费Id", "wsid"], ["工人姓名", "user.userName"], ["工人工号", "user.userId"], ["工种", "user.duty.name"], ["创建人", "creater.userName"], ["创建时间", "createTime"], ["审批人", 'approver.userName'], ["审批时间", "approveTime"], ['操作金额', 'money'], ['工费', 'salary'], ['质保金', 'deposit'], ['施工节点', 'schedule'], ['工种', 'user.duty.name'], ['类型', 'type'], ['一类', 'onetype'], ['二类', 'twotype'], ['计数', 'count'], ['备注', 'comment'], ['状态', "status"]],
+                column: [["装修单号", "decoration.orderId"], ['楼盘地址', "decoration.house"], ["等级", "decoration.grade"], ['监理编号', 'decoration.supervisorId'], ['监理', 'decoration.supervisor'], ["工费Id", "wsid"], ["工人姓名", "user.userName"], ["工人工号", "user.userId"], ["工种", "user.duty.name"], ["创建人", "creater.userName"], ["创建时间", "createTime"], ["审批人", 'approver.userName'], ["审批时间", "approveTime"], ["质检时间", "checkTime"], ['操作金额', 'money'], ['工费', 'salary'], ['质保金', 'deposit'], ['施工节点', 'schedule'], ['工种', 'user.duty.name'], ['类型', 'type'], ['一类', 'onetype'], ['二类', 'twotype'], ['计数', 'count'], ['备注', 'comment'], ['状态', "status"]],
                 list: res.paging.data
 
             }, function(v) {
@@ -442,7 +431,7 @@ jQuery(function($) {
                 v.decoration.house = (v.decoration.house == null ? "" : v.decoration.house.village.name + "" + v.decoration.house.houseNumber);
 
                 v.status = salary.salaryStatus[v.status];
-                v.schedule = v.schedule == 0 ? "" : salary.constructionSchedule[v.schedule];
+                v.schedule = v.schedule == 0 ? "" : constant.decoration.decoration.projectStatus.keys[v.cnid];
                 v.type = salary.type[v.type];
                 v.onetype = salary.oneType[v.onetype];
 
@@ -639,6 +628,7 @@ jQuery(function($) {
             options["salaryDrawing.drawingUrl"] = data.resUrl;
             options["salaryDrawing.drawingType"] = 0;
             options["salaryDrawing.type"] = 0;
+            options["salaryDrawing.filesize"] = data.filesize;
 
             com.post(api.salary.addSalaryDrawing, options, function(res) {
 

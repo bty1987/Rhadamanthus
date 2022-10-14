@@ -6,10 +6,10 @@
   ],  "isStatus" :[
       {"key":"0", "value":"初始"},
       {"key":"1", "value":"完结"}
-  ],  "isAccountType" :[
+  ],  "isBalanceAccountType" :[
       {"key":"0", "value":"结算"},
       {"key":"1", "value":"出纳"}
-  ], "isAccountStatus" :[
+  ], "isBalanceAccountStatus" :[
       {"key":"0", "value":"有效"},
       {"key":"1", "value":"无效"}
   ], "balanceSalesStatus" :[
@@ -21,6 +21,9 @@
       {"key":"A", "value":"A"},
       {"key":"B", "value":"B"}
   ],  "balanceCutpayType" :[
+      {"key":"0", "value":"扣款"},
+      {"key":"1", "value":"返款"}
+  ],  "balanceDccountType" :[
       {"key":"0", "value":"扣款"},
       {"key":"1", "value":"返款"}
   ],

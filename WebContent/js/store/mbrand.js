@@ -27,6 +27,7 @@ $(function() {
     }, 1, function(data) {
 
         mbrand.items.path.val(data.resUrl);
+        mbrand.items.filesize.val(data.filesize);
 
         com.showImg(mbrand.items.brandImg, data.resUrl, 150, 150, '', null, 0);
     });

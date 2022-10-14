@@ -15,6 +15,7 @@ var printAddReduceDetail = (function() {
     var printer = {
 
         printBody: function() {
+
             var that = this;
 
             var html = "";
@@ -31,6 +32,7 @@ var printAddReduceDetail = (function() {
             $("#content").html(html);
         },
         printItem: function(addReduces) {
+
             var addReduceTotalPrice = 0;
             var html = "";
 
@@ -87,6 +89,7 @@ var printAddReduceDetail = (function() {
             return html;
         },
         init: function() {
+
             printer.printBody();
         }
     };
@@ -101,6 +104,7 @@ var printAddReduceDetail = (function() {
             com.post(api.decoration.queryDecorationForCommonByOrderId, {
                 "decoration.orderId": orderId
             }, function(res) {
+
                 addReduceDetail.decoration = res.decoration;
             }, null, false);
 
@@ -108,6 +112,7 @@ var printAddReduceDetail = (function() {
             com.post(api.quotation.queryQuotationForDefaultByOrderId, {
                 "quotation.orderId": orderId
             }, function(res) {
+
                 addReduceDetail.quotation = res.quotation;
             }, null, false);
 
@@ -119,6 +124,7 @@ var printAddReduceDetail = (function() {
                 var addReduceIds = {};
 
                 $.each(result.addReduces, function(i, v) {
+
                     if (params.quotation.arids.indexOf(v.arId) == -1)
                         return true;
 
@@ -128,7 +134,7 @@ var printAddReduceDetail = (function() {
                         "measurementUnit": "-",
                         "num": "-",
                         "unitPrice": "-",
-                        "total": v.managePrice,
+                        "total": v.manageDiscount == 1 ? utils.changeThrDecimal(utils.accMul(v.managePrice, utils.accDiv(v.discount == 0 ? addReduceDetail.quotation.discount : discount, 10))) : v.managePrice,
                         "type": v.type,
                     }, ];
 
@@ -162,11 +168,10 @@ var printAddReduceDetail = (function() {
                     var addReduceType = [1, 3, 4, 5].indexOf(addReduceItem.type) != -1 ? 1 : 0;
 
                     var discount = null;
-                    // 增项, 不打折
-                    if (addReduceType == 0) {
+
+                    if (addReduceType == 0) { // 增项, 不打折
                         discount = 1;
-                        // 减项项目类型为 4(增项中报价项), 5(拓展中报价项) 不打折
-                    } else if (addReduceItem.type == 4 || addReduceItem.type == 5) {
+                    } else if (addReduceItem.type == 4 || addReduceItem.type == 5) { // 减项项目类型为 4(增项中报价项), 5(拓展中报价项) 不打折
                         discount = 1;
                         // 装修单类型为2 (半价, 满减, 减上减) 打折
                     } else if (decorationType == 2) {
@@ -192,5 +197,6 @@ var printAddReduceDetail = (function() {
 })();
 
 jQuery(function($) {
+
     printAddReduceDetail.init();
 });

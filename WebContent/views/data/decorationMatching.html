@@ -6,8 +6,7 @@
             <div id="list" style="margin-left:10px"></div>
 
             <h3 class="clearfix">
-                <a class="btn btn-minier btn-success" id="addBtn"><i
-                        class="icon-plus"></i>添加</a>
+                <a class="btn btn-minier btn-success" id="addBtn"><i class="icon-plus"></i>添加</a>
             </h3>
         </div>
     </div>
@@ -61,7 +60,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right" for="service">服务配比</label>
                     <div class="col-sm-9">
-                        <input type="text" id="service" maxlength="12" class="col-xs-10 col-sm-7 v_required v_discount" data-toggle="popover" data-trigger='manual' />
+                        <input type="text" id="service" maxlength="12" class="col-xs-10 col-sm-7 v_required v_float_3" data-toggle="popover" data-trigger='manual' />
                     </div>
                 </div>
 
@@ -71,6 +70,44 @@
                         <div class="col-sm-12" id="vision"></div>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="vision">默认显示</label>
+                    <div class="col-sm-9">
+                        <input type="checkbox" id="isShow" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
+                        <span class="lbl isOrNot"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="vision">车运费是否打折</label>
+                    <div class="col-sm-9">
+                        <input type="checkbox" id="trafficDiscount" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
+                        <span class="lbl isOrNot"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="vision">管理费是否打折</label>
+                    <div class="col-sm-9">
+                        <input type="checkbox" id="manageDiscount" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
+                        <span class="lbl isOrNot"></span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right">税金折扣</label>
+	                <div class="col-sm-9">
+	                    <input type="radio" id="manageTaxDiscount" checked="checked" name="taxDiscount" class="ace"/>
+	                    <span class="lbl"></span>
+	                    <label>管理税金</label>
+	
+	                    <input type="radio" id="totalTaxDiscount" name="taxDiscount" class="ace"/>
+	                    <span class="lbl"></span>
+	                    <label>总额税金</label>
+	                </div>
+                </div>
+                <div class="space-4"></div>
 
                 <div class="form-group">
                     <label class="col-sm-3 control-label no-padding-right" for="comment">说明</label>

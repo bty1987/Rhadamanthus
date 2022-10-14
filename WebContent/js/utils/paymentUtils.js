@@ -31,6 +31,8 @@ var paymentUtils = {
         if (type == 2)
             payment.items.bankCheckbox.attr("disabled", "disabled");
 
+        com.selectTypeahead(payment.items.bankName, payment.bankGrade, "key", "value", null);
+
     },
     paramBank: function(payment, receipt, name, options, type) {
 
@@ -64,7 +66,7 @@ var paymentUtils = {
             if (data.status == 0)
                 return -1;
 
-            bankInfo += data.no + "|" + data.money + "|" + data.createtime + "#";
+            bankInfo += data.no + "|" + data.money + "|" + data.createtime + "|" + data.ptid + "#";
 
             bank = utils.accAdd(parseFloat(data.money), bank);
 
@@ -270,7 +272,7 @@ var paymentUtils = {
             });
         });
     },
-    pushPos: function(payment, type, orderId) {
+    pushPos: function(payment, orderId) {
 
         payment.items.bankName.addClass("v_required v_typeahead");
         payment.items.bank.addClass("v_required v_float_3");
@@ -283,13 +285,14 @@ var paymentUtils = {
             return false;
         }
 
+        // 转换款使用之后会更新成是哪个类型的款项使用的
         var options = {
             "paytran.orderId": orderId,
-            "paytran.type": type,
+            "paytran.type": payment.typeNo,
+            "paytran.atttype": payment.atttype,
             "paytran.no": com.typeahead(payment.items.bankName),
             "paytran.sn": payment.posValues[com.typeahead(payment.items.bankName)].value, // 收据类型中pos的value值
-            "paytran.money": payment.items.bank.val(),
-            "paytran.way": payment.items.posway.val()
+            "paytran.money": payment.items.bank.val()
         };
 
         com.post(api.payment.addPaytran, options, function(res) {
@@ -329,8 +332,48 @@ var paymentUtils = {
         }
 
         var btns = $("<li></li>").attr("id", "posbtns" + v.ptid).appendTo(ul);
-        var check = $("<button></button>").addClass("btn btn-minier btn-orange pull-right inline").text("验证").attr("id", "poscheck" + v.ptid).appendTo(btns);
-        var cancel = $("<button></button>").addClass("btn btn-minier btn-danger pull-right inline hide").text("撤销").attr("id", "poscancel" + v.ptid).appendTo(btns);
+        var send = $("<button></button>").addClass("btn btn-minier btn-warning pull-right inline hide").text("POS推送").attr("id", "possend" + v.ptid);
+        var wechatSend = $("<button></button>").addClass("btn btn-minier btn-success pull-right inline hide").text("微信推送").attr("id", "wechatSend" + v.ptid);
+        var collectCode = $("<button></button>").addClass("btn btn-minier btn-purple pull-right inline hide").text("收款码").attr("id", "collectCode" + v.ptid);
+        var check = $("<button></button>").addClass("btn btn-minier btn-orange pull-right inline").text("验证").attr("id", "poscheck" + v.ptid);
+        var cancel = $("<button></button>").addClass("btn btn-minier btn-danger pull-right inline hide").text("撤销").attr("id", "poscancel" + v.ptid);
+
+        btns.append(send).append(wechatSend).append(check).append(cancel);
+
+        send.click(function() {
+
+            var sendOption = {
+                "paytran.ptid": v.ptid,
+                "paytran.way": payment.items.posway.val()
+            };
+
+            com.post(api.payment.posPay, sendOption, function(res) {
+
+                com.showAlert(com.info, "推送成功");
+            });
+
+            return false;
+        });
+
+        wechatSend.click(function() {
+
+            com.showConfirm("是否发送付款通知", function() {
+
+                com.post(api.payment.sendPaytran, {
+                    "paytran.ptid": v.ptid
+                }, function(res) {
+
+                    com.showAlert(com.info, "发送成功");
+                });
+            });
+
+            return false;
+        });
+
+        collectCode.click(function() {
+
+            return false;
+        });
 
         check.click(function() {
 
@@ -388,11 +431,12 @@ var paymentUtils = {
             "margin-bottom": "5px",
             "margin-right": "5px"
         }).appendTo(com.focusPage("#couponGroup"));
-        var typeVal = com.focusPage("#couponType").attr("data-typeahead-key");
+        var typeVal = com.typeahead("couponType", "", false);
+        var couponName = com.typeahead("couponType", "", true);
         var couponMoney = com.focusPage("#couponVal").val();
         var $span = $("<span></span>").css({
             'color': '#fff'
-        }).attr('typeName', typeVal).attr('money', couponMoney).html(typeVal).appendTo($li);
+        }).attr('typeName', typeVal).attr('money', couponMoney).html(couponName).appendTo($li);
         var $spanTwo = $("<span></span>").css({
             'font-size': '16px',
             'color': '#fff',
@@ -407,7 +451,7 @@ var paymentUtils = {
         });
     },
 
-    splitBankInfo: function(bank, bankInfo, bankArray) {
+    splitBankInfo: function(bank, bankInfo, bankArray, flag) {
 
         var info = bank + ", ";
         if (bankInfo.indexOf("#") != -1) {
@@ -415,6 +459,10 @@ var paymentUtils = {
             for ( var i = 1; i < utils.accSub(_s.length, 1); i++) {
                 var _i = _s[i].split('|');
                 info += bankArray[_i[0]] + " " + _i[1] + ", ";
+
+                if (flag) {
+                    info +=  _i[2] + ", ";
+                }
             }
         } else {
             info += bankArray[bankInfo] + " " + bank;
@@ -422,10 +470,17 @@ var paymentUtils = {
         return info;
     },
 
-    splitCoupon: function(coupon, couponInfo) {
+    splitCoupon: function(coupon, couponInfo, couponArray) {
 
-        couponInfo = coupon + couponInfo.split('#').join(' ');
-        return couponInfo;
+        var _info = coupon + ", ";
+        if (couponInfo.indexOf("#") != -1) {
+            var _s = couponInfo.split('#');
+            for ( var i = 1; i < utils.accSub(_s.length, 1); i++) {
+                var _i = _s[i].split(':');
+                _info += couponArray[_i[0]][1] + " " + _i[1] + ", ";
+            }
+        }
+        return _info;
     },
 
     // 通过grade筛选符合条件的参数
@@ -454,14 +509,14 @@ var paymentUtils = {
             });
         });
 
-        com.selectTypeahead(payment.items.bankName, payment.bankGrade, "key", "value", null);
+        com.resetTypeahead(payment.items.bankName, payment.bankGrade)
     },
 
     // 获取收款类型的基础信息 info信息是分页显示信息的, util和cash,bank,checkv是下拉框信息(下拉框不显示禁用)
     getReceiptType: function(payment) {
 
         var notCouponPageName = ["payment", "paymentCheck", "service", "serviceCheck", "paymentPos", "servicePos"];
-        com.post(api.common.queryReceiptType, {}, function(res) {
+        com.post(api.data.queryReceiptType, {}, function(res) {
 
             $.each(res.receiptTypes, function(i, v) {
 
@@ -555,7 +610,7 @@ var paymentUtils = {
         payment.installment != null && payment.installment != "0" ? styleArr.push(["分期:", payment.installment, "blue"]) : true;
         payment.accounts != null && payment.accounts != "0" ? styleArr.push(["对公帐户:", payment.accounts, "blue"]) : true;
         payment.advance != null && payment.advance != "0" ? styleArr.push(["预付款:", payment.advance, "blue"]) : true;
-        payment.coupon != null && payment.coupon != "0" ? styleArr.push(["优惠券:", paymentUtils.splitCoupon(payment.coupon, payment.couponInfo), "blue"]) : true;
+        payment.coupon != null && payment.coupon != "0" ? styleArr.push(["优惠券:", paymentUtils.splitCoupon(payment.coupon, payment.couponInfo, paymentPageData.couponTypeData), "blue"]) : true;
         payment.transfer != null && payment.transfer != "0" ? styleArr.push(["预付款转换:", payment.transfer, "blue"]) : true;
 
         var $ulStyle = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').appendTo(div);
@@ -833,8 +888,11 @@ var paymentUtils = {
         };
 
         com.post(api.payment.queryPaymentContract, options, function(res) {
+
             paymentContract = res.paymentContract;
-        }, function() {}, false);
+        }, function() {
+
+        }, false);
 
         if (!paymentContract) {
             $("#" + htmlFlag + "createSign").show().unbind("click").click(function() {
@@ -876,7 +934,10 @@ var paymentUtils = {
 
             com.closePopup();
             com.popup4frame("客户签", res.redirect, null, function() {
-                com.popup("专用收款收据__装修单号:" + orderId, url, function() {}, null, true);
+
+                com.popup("专用收款收据__装修单号:" + orderId, url, function() {
+
+                }, null, true);
             });
         });
     },
@@ -902,6 +963,7 @@ var paymentUtils = {
                 "paymentContract.pcid": paymentContract.pcid,
                 "paymentContract.type": 2
             }, function(res) {
+
                 com.showAlert(com.info, "发送成功");
             });
         });
@@ -1003,8 +1065,9 @@ var paymentUtils = {
         });
     },
 
-    initSignet: function(htmlName){
-        com.initForm($("#"+htmlName+"paymentContractModal"), "印章", [{
+    initSignet: function(htmlName) {
+
+        com.initForm($("#" + htmlName + "paymentContractModal"), "印章", [{
             "id": htmlName + "signets",
             "type": "select",
             "clazz": "",
@@ -1017,8 +1080,9 @@ var paymentUtils = {
         }]);
     },
 
-    initQrcode: function(htmlName){
-        com.initForm($("#"+htmlName+"paymentContractQrcodeModal"), "二维码", [{
+    initQrcode: function(htmlName, id) {
+
+        com.initForm($("#" + id), "二维码", [{
             "id": htmlName + "qrcode",
             "type": "div",
             "clazz": "qrcode"

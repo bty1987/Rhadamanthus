@@ -38,21 +38,6 @@ $(function() {
 
     salesDelivery.postData = "salesDeliveryFor" + salesDelivery.pageType + "PostData";
 
-    com.post(api.ds.sales, {}, function(res) {
-
-        salesDelivery.statusList = res.deliveryStatus.split("key", "value");
-    }, null, false);
-
-    com.post(api.ds.decoration, {}, function(res) {
-
-        salesDelivery.typenessList = res.typeness.split("key", "value");
-    }, null, false);
-
-    com.post(api.ds.construction, {}, function(res) {
-
-        salesDelivery.projectStatus = res.constructionSchedule.split("key", "value");
-    });
-
     initUploadBtn();
     var displayFunc = (function() {
 
@@ -150,7 +135,7 @@ $(function() {
                         propertyArr.push(["品类:", v.salesItem.goods.category, "grey"]);
                         break;
                     case "status":
-                        propertyArr.push(["配送状态:", salesDelivery.statusList[v.status], "red"]);
+                        propertyArr.push(["配送状态:", constant.sales().salesDeliveryItem.status.keys[v.status], "red"]);
                         break;
                     case "refundNum":
                         propertyArr.push(["退货数量:", utils.changeThrDecimal(v.salesItem.initnum - v.salesItem.num), "blue"]);
@@ -219,8 +204,8 @@ $(function() {
                     com.focusPage("#designer").html(decorationInfo.designer.currentName == null ? "无" : decorationInfo.designer.currentName);// 装修设计师
                     com.focusPage("#escorter").html(decorationInfo.escorter.currentName == null ? "无" : decorationInfo.escorter.currentName);// 装修跟单员
                     com.focusPage("#supervisor").html(decorationInfo.supervisor.currentName == null ? "无" : decorationInfo.supervisor.currentName);// 装修监理
-                    com.focusPage("#typeness").html(salesDelivery.typenessList[decorationInfo.typeness]);
-                    com.focusPage("#projectStatus").html(salesDelivery.projectStatus[decorationInfo.projectStatus]);
+                    com.focusPage("#typeness").html(constant.decoration().decoration.typeness.keys[decorationInfo.typeness]);
+                    com.focusPage("#projectStatus").html(constant.construction().constructionSchedule.status.keys[decorationInfo.projectStatus]);
 
                     salesDelivery.modals.decorationInfo.modal("show");
                 });
@@ -412,7 +397,7 @@ $(function() {
             if (salesPictures && salesPictures.length) {
                 $.each(salesPictures, function(i, value) {
 
-                    if (value.status == 0) {
+                    if (value.status == constant.sales().salesPicture.STATUS_YES_SHORT) {
                         appendGalleryElement("salesDrawing", value);
                     }
 
@@ -458,6 +443,7 @@ $(function() {
             options["salesPicture.path"] = data.resUrl;
             options["salesPicture.siid"] = salesDelivery.salesItem.siid;
             options["salesPicture.type"] = 0;
+            options["salesPicture.filesize"] = data.filesize;
 
             com.post(api.sales.addSalesPicture, options, function(res) {
 

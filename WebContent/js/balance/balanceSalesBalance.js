@@ -12,17 +12,15 @@ $(function() {
     com.focusPage('#fl-statement').statement("结算销售", "明细");
 
     com.post(api.ds.payment, {}, function(res) {
+
         balanceSalesBalance.types = res.balanceType.split("key", "value");
         balanceSalesBalance.statues = res.balanceStatus.split("key", "value");
-    }, null, false);
-
-    com.post(api.ds.sales, {}, function(res) {
-        balanceSalesBalance.onetypes = res.oneType.split("key", "value");
     }, null, false);
 
     com.post(api.balance.queryBalanceSalesByBsid, {
         "balanceSales.bsid": balanceSalesBalance.bsid
     }, function(res) {
+
         balanceSales = res.balanceSales;
     }, null, false);
 
@@ -30,11 +28,13 @@ $(function() {
 
         // 通过数据集完成每行数据对应的展现处理过程 , 利用creatLine完成每行对应数据的渲染
         var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
                 $.each(listData, function(i, v) {
+
                     creatLine(v).appendTo($ul);
                 });
 
@@ -51,9 +51,10 @@ $(function() {
             var $title = $('<small></small>').addClass('blue').html(' ' + v.salesBalance.sales.no).appendTo($h3);
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').appendTo($liLine);
 
-            var propertyArr = [["装修单号:", v.salesBalance.sales.orderId, "blue"], ["楼盘地址:", v.salesBalance.sales.house.village.name + " " + v.salesBalance.sales.house.houseNumber, "grey"], ["品类:", v.salesBalance.sales.category, "grey"], ["品牌:", v.salesBalance.sales.brand, "grey"], ["类型:", balanceSalesBalance.types[v.salesBalance.type], "red"], ["结算值:", v.salesBalance.pbalance, "blue"], ["一类:", balanceSalesBalance.onetypes[v.salesBalance.onetype], "red"], ["状态:", balanceSalesBalance.statues[v.salesBalance.status], "red"], ];
+            var propertyArr = [["装修单号:", v.salesBalance.sales.orderId, "blue"], ["楼盘地址:", v.salesBalance.sales.house.village.name + " " + v.salesBalance.sales.house.houseNumber, "grey"], ["品类:", v.salesBalance.sales.category, "grey"], ["品牌:", v.salesBalance.sales.brand, "grey"], ["类型:", balanceSalesBalance.types[v.salesBalance.type], "red"], ["结算值:", v.salesBalance.pbalance, "blue"], ["一类:", constant.sales().salesBalance.onetype.keys[v.salesBalance.onetype], "red"], ["状态:", constant.balance().balanceSales.status.keys[v.salesBalance.status], "red"], ];
 
             $.each(propertyArr, function(index, value) {
+
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -71,8 +72,8 @@ $(function() {
             var allowance = Math.round(v.salesBalance.allowance);
             var comProfits = null;
 
-            if (oneType == 0) {
-                if (Type == 3) {
+            if (oneType == constant.sales().salesBalance.ONETYPE_INIT_INT) {
+                if (Type == constant.sales().salesBalance.TYPE_DEPOSITPAY_INT) {
                     venderMaling = 0;
                     allowance = 0;
                     salesRevenue = v.salesBalance.sales.depositpay;
@@ -85,24 +86,25 @@ $(function() {
                 }
                 comProfits = utils.accDiv(utils.accSub(salesRevenue, accountsPayable), utils.accAdd(salesRevenue, venderMaling));
             }
-            if (oneType == 1) {
+            if (oneType == constant.sales().salesBalance.ONETYPE_REFUND_INT) {
                 venderMaling = 0;
                 salesRevenue = v.salesBalance.total;
                 salesAmount = utils.accAdd(v.salesBalance.total, allowance);
                 accountsPayable = v.salesBalance.pbalance;
                 comProfits = utils.accDiv(utils.accSub(salesRevenue, accountsPayable), utils.accSub(salesRevenue, venderMaling));
             }
-            if (oneType == 2 || oneType == 3) {
+            if (oneType == constant.sales().salesBalance.ONETYPE_ALLBACK_INT || oneType == constant.sales().salesBalance.ONETYPE_DBACKORDER_INT) {
                 salesRevenue = v.salesBalance.total;
                 salesAmount = utils.accAdd(utils.accSub(v.salesBalance.total, venderMaling), allowance);
                 accountsPayable = utils.accAdd(v.salesBalance.pbalance, venderMaling);
                 comProfits = utils.accDiv(utils.accSub(salesRevenue, accountsPayable), utils.accSub(salesRevenue, venderMaling));
             }
 
-            var detailArr = [
-                ["供应商减免金额: ", venderMaling, "blue"], ["折扣/抹零金额: ", allowance, "blue"], ["销售收入: ", utils.changeThrDecimal(salesRevenue), "blue"], ["销售金额: ", utils.changeThrDecimal(salesAmount), "blue"], ["销售成本: ", v.salesBalance.pbalance, "blue"], ["应付账款: ", utils.changeThrDecimal(accountsPayable), "blue"], ["结算利润: ", utils.changeThrDecimal(utils.accSub(salesAmount, v.salesBalance.pbalance)), "blue"], ["公司利润: ", utils.changeThrDecimal(utils.accSub(salesRevenue, accountsPayable)), "blue"], ["收款时间: ", v.salesBalance.createTime, "green"], ["销售成本比例: ", salesAmount == 0 ? 0 : utils.changeTwoDecimal(utils.accDiv(v.salesBalance.pbalance, salesAmount)), "blue"], ["结算利润占比: ", salesAmount == 0 ? 0 : utils.changeTwoDecimal(utils.accDiv(utils.accSub(salesAmount, v.salesBalance.pbalance), salesAmount)), "blue"], ["公司利润占比: ", salesAmount == 0 ? 0 : utils.changeTwoDecimal(comProfits), "blue"], ["主材打折占比: ", salesAmount == 0 ? 0 : utils.changeTwoDecimal(utils.accSub(1, utils.accDiv(allowance, salesAmount))), "blue"], ];
+            var detailArr = [["供应商减免金额: ", venderMaling, "blue"], ["折扣/抹零金额: ", allowance, "blue"], ["销售收入: ", utils.changeThrDecimal(salesRevenue), "blue"], ["销售金额: ", utils.changeThrDecimal(salesAmount), "blue"], ["销售成本: ", v.salesBalance.pbalance, "blue"], ["应付账款: ", utils.changeThrDecimal(accountsPayable), "blue"], ["结算利润: ", utils.changeThrDecimal(utils.accSub(salesAmount, v.salesBalance.pbalance)), "blue"], ["公司利润: ", utils.changeThrDecimal(utils.accSub(salesRevenue, accountsPayable)), "blue"], ["收款时间: ", v.salesBalance.createTime, "green"], ["销售成本比例: ", salesAmount == 0 ? 0 : utils.changeTwoDecimal(utils.accDiv(v.salesBalance.pbalance, salesAmount)), "blue"], ["结算利润占比: ", salesAmount == 0 ? 0 : utils.changeTwoDecimal(utils.accDiv(utils.accSub(salesAmount, v.salesBalance.pbalance), salesAmount)), "blue"], ["公司利润占比: ", salesAmount == 0 ? 0 : utils.changeTwoDecimal(comProfits), "blue"],
+                ["主材打折占比: ", salesAmount == 0 ? 0 : utils.changeTwoDecimal(utils.accSub(1, utils.accDiv(allowance, salesAmount))), "blue"], ];
 
             $.each(detailArr, function(index, value) {
+
                 var $liProperty = $('<li></li>').appendTo($ulDetail);
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -112,11 +114,12 @@ $(function() {
             var $unbound = $('<a></a>').addClass('btn btn-minier btn-yellow').html('解绑');
             $divBtnWrap.append($unbound).appendTo($h3);
 
-            if (balanceSales.status != 0) {
+            if (balanceSales.status != constant.balance().balanceSales.STATUS_INIT_INT) {
                 $divBtnWrap.hide();
             }
 
             $unbound.click(function() {
+
                 com.showConfirm("确定解除绑定", function() {
 
                     var options = {};
@@ -128,6 +131,7 @@ $(function() {
                     com.post(api.balance.queryBalanceSalesByBsid, {
                         "balanceSales.bsid": balanceSalesBalance.bsid
                     }, function(res) {
+
                         balanceSales = res.balanceSales;
                     }, null, false);
 
@@ -139,6 +143,7 @@ $(function() {
                     options["balanceSalesBalances[0].bsbid"] = bsbid;
 
                     com.post(api.balance.unbindBalanceSales, options, function(res) {
+
                         com.showAlert(com.info, "操作成功");
                         searcher.doSearch();
                     });
@@ -149,10 +154,12 @@ $(function() {
         // 返回结果给searcher , searcher利用返回的方法完成具体分页显示的过程
         return {
             init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function(v) {
+
                 return creatLine(v);
             }
         };
@@ -160,9 +167,10 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.init([], "condList1", api.balance.pageBalanceSalesBalance, function(data) {
-        displayFunc.init('resultList1', data);
-    }, "pagenation1", "balanceSalesBalancePostData", {
+    searcher.init([], "bsbcondList", api.balance.pageBalanceSalesBalance, function(data) {
+
+        displayFunc.init('bsbresultList', data);
+    }, "bsbpagenation", "balanceSalesBalancePostData", {
         "balanceSales.bsid": balanceSalesBalance.bsid
     }, false, null, function() {
 
@@ -190,12 +198,12 @@ $(function() {
             com.popup("明细表", api.index.balanceSales2print.url, null, null, true);
         });
 
-        if (balanceSales.status == 0) {
+        if (balanceSales.status == constant.balance().balanceSales.STATUS_INIT_INT) {
             $adda.hide();
             $profitPrint.hide();
         }
 
         return [$adda, $profitPrint];
-    }, 'resultList1');
+    }, 'bsbresultList');
 
 });

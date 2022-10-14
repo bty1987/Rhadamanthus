@@ -1,0 +1,14 @@
+<div class="row">
+    <div class="col-sm-12" id="customize"></div>
+</div>
+
+<script>
+    $(function(){
+        $.loadScript(['js/report/chart.js']);
+    });
+    
+    $("#ace-settings-btn").on(ace.click_event, function () {
+        $(this).toggleClass("open");
+        $("#ace-settings-box").toggleClass("open");
+    });
+</script>

@@ -52,6 +52,7 @@ jQuery(function($) {
     vpayment.collectPaymentBtn.bindClick(collectPayments);
 
     vpayment.modals.vpaymentModal.on("hide.bs.modal", function() {
+
         com.clearValidator();
         com.cleanTypeahead("brand");
         com.cleanItems(vpayment.items);
@@ -60,43 +61,40 @@ jQuery(function($) {
     com.initTypeahead('brand', api.data.queryBrandByPinyin, "pinyinName", {}, "autoFillKeyValue", "value", "value", null);
     com.selectTypeahead("couponType", vpayment.couponType, 'key', 'value', null);
 
-    com.post(api.ds.information, {}, function(res) {
+    vpayment.items.type.bindData(constant.information().vpayment.type.datas, "key", "value");
 
-        vpayment.items.type.bindData(res.vpayment, "key", "value", false);
-        com.focusPage("#cashInfo").bindData(res.ways, "key", "value", false);
+    com.focusPage("#cashInfo").bindData(constant.information().vpayment.ways.datas, "key", "value");
 
-        vpayment.type = res.vpayment.split("key", "value");
-        vpayment.banks = res.banks.split("key", "value");
+    $.each(constant.information().vpayment.posway.datas, function(i, v) {
 
-        vpayment.posway = res.posway.split("key", "value");
-        vpayment.pos = res.pos.split("key", "value");
+        vpayment._posway.push(v);
+    });
 
-        $.each(res.posway, function(i, v) {
-            vpayment._posway.push(v);
-        });
+    $.each(constant.information().vpayment.pos.datas, function(i, v) {
 
-        $.each(res.pos, function(i, v) {
-            vpayment._pos.push(v);
-        });
+        vpayment._pos.push(v);
+    });
 
-        $.each(res.banks, function(i, v) {
-            vpayment._banks.push(v);
-        });
+    $.each(constant.information().vpayment.banks.datas, function(i, v) {
 
-        $.each(res.couponType, function(i, v) {
-            vpayment.couponType.push(v);
-        });
+        vpayment._banks.push(v);
+    });
 
-    }, null, false);
+    $.each(constant.information().vpayment.couponType.datas, function(i, v) {
+
+        vpayment.couponType.push(v);
+    });
 
     var displayFunc = (function() {
 
         var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
                 $.each(listData, function(i, v) {
+
                     creatLine(v).appendTo($ul);
                 });
 
@@ -113,7 +111,7 @@ jQuery(function($) {
 
             var $btnCol = $('<a></a>').addClass('btn btn-minier btn-primary').html('收款');
 
-            var propertyArr = [["会员号:", v.mno, "grey"], ["创建人:", v.creater.currentName, "grey"], ["创建时间:", v.createTime, "green"], ["收款人:", v.collecter.currentName, "grey"], ["收款时间:", v.collectTime, "green"], ["类型:", vpayment.type[v.type], "red"], ["品类:", v.category == null || v.category == "" ? "---" : v.category, "grey"], ["品牌:", v.brand == null || v.brand == "" ? "---" : v.brand, "grey"], ["应收金额:", v.money, "blue"], ["状态:", v.status == 1 ? "已付款" : "未付款", "red"], ["备注:", v.comment, "grey"]];
+            var propertyArr = [["会员号:", v.mno, "grey"], ["创建人:", v.creater.currentName, "grey"], ["创建时间:", v.createTime, "green"], ["收款人:", v.collecter.currentName, "grey"], ["收款时间:", v.collectTime, "green"], ["类型:", constant.information().vpayment.type.keys[v.type], "red"], ["品类:", v.category == null || v.category == "" ? "---" : v.category, "grey"], ["品牌:", v.brand == null || v.brand == "" ? "---" : v.brand, "grey"], ["应收金额:", v.money, "blue"], ["状态:", v.status == constant.information().vpayment.STATUS_PAYED_INT ? "已付款" : "未付款", "red"], ["备注:", v.comment, "grey"]];
 
             var $label = $('<label></label>').addClass('control-label').css({
                 'color': 'grey',
@@ -134,11 +132,12 @@ jQuery(function($) {
                 "status": v.status,
             }).addClass('ace ace-checkbox-2');
 
-            var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(vpayment.type[v.type]);
+            var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(constant.information().vpayment.type.keys[v.type]);
 
             _label.append($input).append(_span).appendTo($label);
 
             $.each(propertyArr, function(index, value) {
+
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
@@ -154,6 +153,7 @@ jQuery(function($) {
             $btnCol.click(function() {
 
                 com.popup4model("#layerAdd", "收款", function() {
+
                     com.cleanItems(vpayment.items);
                     vpayment.items.couponUl.empty();
 
@@ -173,8 +173,10 @@ jQuery(function($) {
                         "paytran.pid": v.mno,
                         "paytran.type": 5
                     }, function(res) {
+
                         $.each(res.paytrans, function(i, v) {
-                            if (v.status == 0 || v.status == 1)
+
+                            if (v.status == constant.information().vpayment.STATUS_INIT_INT || v.status == constant.information().vpayment.STATUS_PAYED_INT)
                                 addPos(v);
                         });
                     });
@@ -197,10 +199,12 @@ jQuery(function($) {
 
         return {
             init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function(v) {
+
                 return creatLine(v);
             }
         };
@@ -209,10 +213,11 @@ jQuery(function($) {
     var searcher = new Searcher();
 
     searcher.init(["information-v-payment-no", "information-v-payment-brand", "information-v-payment-creater-name"], "condList", api.information.pageVpayment, function(data) {
+
         displayFunc.init('resultList', data);
 
     }, "pagenation", "vpaymentPostData", {
-        "vpayment.status": 0
+        "vpayment.status": constant.information().vpayment.STATUS_INIT_INT
     }, false, null, function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'createVpayment').css("margin", "0px 3px");
@@ -229,11 +234,13 @@ jQuery(function($) {
     var hdisplayFunc = (function() {
 
         var hrenderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
                 $.each(listData, function(i, v) {
+
                     var $liLine = hcreatLine(v);
                     $liLine.appendTo($ul);
                 });
@@ -252,7 +259,7 @@ jQuery(function($) {
 
             var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-pink').html('打印');
 
-            var propertyArr = [["会员号:", v.mno, "grey"], ["创建人:", v.creater.currentName, "grey"], ["创建时间:", v.createTime, "blue"], ["收款人:", v.collecter.currentName, "grey"], ["收款时间:", v.collectTime, "blue"], ["类型:", vpayment.type[v.type], "red"], ["品类:", v.category == null || v.category == "" ? "---" : v.category, "grey"], ["品牌:", v.brand == null || v.brand == "" ? "---" : v.brand, "grey"], ["应收金额:", v.money, "blue"], ["状态:", v.status == 1 ? "已付款" : "未付款", "red"], ["备注:", v.comment, "grey"]];
+            var propertyArr = [["会员号:", v.mno, "grey"], ["创建人:", v.creater.currentName, "grey"], ["创建时间:", v.createTime, "blue"], ["收款人:", v.collecter.currentName, "grey"], ["收款时间:", v.collectTime, "blue"], ["类型:", constant.information().vpayment.type.keys[v.type], "red"], ["品类:", v.category == null || v.category == "" ? "---" : v.category, "grey"], ["品牌:", v.brand == null || v.brand == "" ? "---" : v.brand, "grey"], ["应收金额:", v.money, "blue"], ["状态:", v.status == constant.information().vpayment.STATUS_PAYED_INT ? "已付款" : "未付款", "red"], ["备注:", v.comment, "grey"]];
 
             var $label = $('<label></label>').addClass('control-label').css({
                 'color': 'grey',
@@ -262,11 +269,12 @@ jQuery(function($) {
 
             var _label = $('<label></label>');
 
-            var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(vpayment.type[v.type]);
+            var _span = $('<span></span>').addClass('lbl blue bigger-150').css('font-weight', 'bold').html(constant.information().vpayment.type.keys[v.type]);
 
             _label.append(_span).appendTo($label);
 
             $.each(propertyArr, function(index, value) {
+
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
@@ -284,6 +292,7 @@ jQuery(function($) {
 
                 params.infomation.vpayment = v;
                 com.popup("专用收款收据__会员编号:" + v.mno, api.index.vpaymentReceiptIndex.url, function() {
+
                     parent.layer.getFrameIndex(window.name);
                 }, null, true);
 
@@ -293,6 +302,7 @@ jQuery(function($) {
 
             v.cash != null && v.cash != "0" ? styleArr.push(["现金:", v.cash, "blue"]) : true;
             v.bank != null && v.bank != "0" ? styleArr.push(["银行:", (function(bank, bankInfo) {
+
                 var info = bank + ", ";
                 var _s = bankInfo.split('#');
                 for ( var i = 1; i < _s.length - 1; i++) {
@@ -304,6 +314,7 @@ jQuery(function($) {
             v.coupon != null && v.coupon != "0" ? styleArr.push(["优惠券:", v.coupon + v.couponInfo.split('#').join(' '), "blue"]) : true;
 
             $.each(styleArr, function(index, value) {
+
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -319,10 +330,12 @@ jQuery(function($) {
 
         return {
             init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 hrenderList(tableId, listData);
             },
             drawLine: function(v) {
+
                 return hcreatLine(v);
             }
         };
@@ -330,10 +343,12 @@ jQuery(function($) {
 
     var hsearcher = new Searcher();
     hsearcher.init(["information-v-payment-no", "information-v-payment-brand", "information-v-payment-creater-name"], "hcondList", api.information.pageVpayment, function(data) {
+
         hdisplayFunc.init('hresultList', data);
     }, "hpagenation", "hvpaymentPostData", {
-        "vpayment.status": 1
+        "vpayment.status": constant.information().vpayment.STATUS_PAYED_INT
     }, false, null, function() {
+
     }, 'hresultList');
 
     com.focusPage('#createVpayment', '#pagenation').click(function() {
@@ -380,6 +395,7 @@ jQuery(function($) {
         vpayment.vpaymentPostData.paymentInfo = [];
 
         $.each($inputs, function(i, v) {
+
             var $input = $(v);
 
             var row = {
@@ -404,11 +420,13 @@ jQuery(function($) {
         });
 
         $.each(mnoIdArr, function(i, v) {
+
             if ($.inArray(v, mnoId) == -1) {
                 mnoId.push(v);
             }
         });
         $.each(flags, function(i, v) {
+
             if (["1"].indexOf(v) != -1) {
                 flag = 1;
             }
@@ -446,8 +464,10 @@ jQuery(function($) {
                 "paytran.pid": mnoId[0],
                 "paytran.type": 5
             }, function(res) {
+
                 $.each(res.paytrans, function(i, v) {
-                    if (v.status == 0 || v.status == 1)
+
+                    if (v.status == constant.information().vpayment.STATUS_INIT_INT || v.status == constant.information().vpayment.STATUS_PAYED_INT)
                         addPos(v);
                 });
             });
@@ -483,7 +503,9 @@ jQuery(function($) {
         vpayment.items.couponType.addClass("v_typeahead");
         vpayment.items.couponVal.addClass("v_float_3");
 
-        if (com.validate("couponInputs")) { return false; }
+        if (com.validate("couponInputs")) {
+            return false;
+        }
 
         var $li = $("<li></li>").css({
             "background-color": "#91b8d0",
@@ -503,6 +525,7 @@ jQuery(function($) {
         }).appendTo($li);
 
         $a.click(function() {
+
             $li.remove();
         });
 
@@ -513,7 +536,9 @@ jQuery(function($) {
 
     function saveData() {
 
-        if (com.validate('redact')) { return false; }
+        if (com.validate('redact')) {
+            return false;
+        }
 
         var brand = vpayment.items.brand.val();
 
@@ -528,6 +553,7 @@ jQuery(function($) {
         };
 
         com.post(api.information.createVpayment, options, function(res) {
+
             searcher.doSearch();
             com.showAlert(com.info, "操作成功");
         });
@@ -540,7 +566,9 @@ jQuery(function($) {
         vpayment.items.couponType.removeClass("v_typeahead");
         vpayment.items.couponVal.removeClass("v_float_3");
 
-        if (com.validate('layerAdd')) { return false; }
+        if (com.validate('layerAdd')) {
+            return false;
+        }
 
         var bankAdd = com.focusPage("#bankAdd");
 
@@ -565,6 +593,7 @@ jQuery(function($) {
         var positems = com.focusPage(".positem");
 
         $.each(positems, function(i, v) {
+
             var data = $(v).data();
 
             _bankInfo += data.no + "|" + data.money + "|" + data.createtime + "#";
@@ -595,6 +624,7 @@ jQuery(function($) {
 
         var des = com.focusPage('#collectDes').val();
         com.focusPage("#couponUl li").each(function(i, e) {
+
             var _ = $(e);
             var item = _.children("span");
             var money = parseFloat(item.attr("money"));
@@ -624,16 +654,19 @@ jQuery(function($) {
         $.extend(option, {}, ptids);
 
         $.each(vpids, function(i, v) {
+
             option["vpayments[" + i + "].vpid"] = v;
         });
 
         com.post(api.information.collectVpayment, option, function() {
+
             com.closePopup();
             com.showAlert(com.info, "收款成功");
             searcher.doSearch();
             hsearcher.doSearch();
         });
-    };
+    }
+    ;
 
     function checkPaymentHideFlag() {
 
@@ -657,8 +690,10 @@ jQuery(function($) {
         var $input = com.focusPage('input[type="checkbox"]', '#form');
 
         $.each($input, function(i, v) {
+
             var $v = $(v);
             $v.click(function() {
+
                 var id = $v.attr('key') + "Div";
 
                 if ($v.is(':checked')) {
@@ -684,6 +719,7 @@ jQuery(function($) {
         var bankNameSelect = $('<select></select>').addClass('col-sm-6 v_required').attr("id", "bankName_" + index).attr("data-toggle", "popover").attr("data-trigger", "manual").bindData(vpayment._banks, 'key', 'value').appendTo(bankNameDiv);
 
         var bankDelBtn = $('<button></button>').addClass('btn btn-minier btn-danger pull-right inline').text("删除").attr("id", "bankDel_" + index).attr("index", index).appendTo(bankNameDiv).click(function() {
+
             com.focusPage("#bankDiv_" + $(this).attr("index")).remove();
             var bankAdd = com.focusPage("#bankAdd");
             var num = bankAdd.attr("num");
@@ -696,6 +732,7 @@ jQuery(function($) {
         var bankMoneyInput = $('<input/>').addClass("col-sm-6 v_float_3").attr("data-toggle", "popover").attr("data-trigger", "manual").attr("type", "text").attr("id", "bank_" + index).appendTo(bankMoneyDiv);
 
         var posSendBtn = $('<button></button>').addClass('btn btn-minier btn-orange pull-right inline').text("POS推送").attr("id", "posSend_" + index).attr("index", index).appendTo(bankMoneyDiv).click(function() {
+
             var _index = $(this).attr("index");
 
             if (com.validate("bankDiv_" + _index))
@@ -704,6 +741,7 @@ jQuery(function($) {
             var options = {
                 "paytran.pid": vpayment.mno,
                 "paytran.type": 5,
+                "paytran.atttype": 0,
                 "paytran.no": com.focusPage("#bankName_" + _index).val(),
                 "paytran.sn": com.focusPage("#pos_" + _index).val(),
                 "paytran.money": com.focusPage("#bank_" + _index).val(),
@@ -711,6 +749,7 @@ jQuery(function($) {
             };
 
             com.post(api.payment.addPaytran, options, function(res) {
+
                 addPos(res.paytran);
 
                 $("#bankDiv_" + _index).remove();
@@ -819,6 +858,7 @@ jQuery(function($) {
             com.post(api.payment.cancelPaytran, {
                 "paytran.ptid": v.ptid
             }, function(res) {
+
                 com.focusPage("#pos" + res.paytran.ptid).remove();
             });
 

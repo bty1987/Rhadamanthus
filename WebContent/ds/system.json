@@ -44,5 +44,27 @@
     ],
 
     "errorCode": 0,
-    "errorMsg": ""
+    "errorMsg": "",
+
+    "status": [
+        {"key" : "0", "value" : "启用"},
+        {"key" : "1", "value" : "禁用"}
+    ],
+    "atttype": [
+        {"key" : "0", "value" : "集团"},
+        {"key" : "1", "value" : "装修"},
+        {"key" : "2", "value" : "家居"},
+        {"key" : "3", "value" : "工程"},
+        {"key" : "4", "value" : "建材"},
+        {"key" : "5", "value" : "房产"},
+        {"key" : "6", "value" : "科技"},
+        {"key" : "7", "value" : "其他"}
+    ],
+    
+    "operationType": [
+	    {"key":"0","value":"权限"},
+	    {"key":"1","value":"免检"},
+	    {"key":"2","value":"通用"},
+	    {"key":"3","value":"钉钉"}
+    ]
 }

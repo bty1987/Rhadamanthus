@@ -14,6 +14,7 @@ jQuery(function($) {
         modals: {
             approveModal: com.focusPage("#approveModal")
         },
+
         items:{
             approver: com.focusPage("#approver"),
             type: com.focusPage("#type"),
@@ -73,7 +74,7 @@ jQuery(function($) {
             var propertyArr = [
                 ["编号:", userBase.userId, "grey"],
                 ["职位:", userBase.duty.name, "grey"],
-                ["类型:", approve.approvalType[v.type], "red"],
+                ["类型:", constant.approval().approval.type.keys[v.type], "red"],
                 ["说明:", v.comment, "grey"]
             ];
 

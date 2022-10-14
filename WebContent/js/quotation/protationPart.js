@@ -1,4 +1,4 @@
-var ProtationDetail = (function() {
+var protationPart = (function() {
 
     var quo = {
 
@@ -6,18 +6,15 @@ var ProtationDetail = (function() {
         versionId: null, // 预签版本
         basicParams: null,
 
-        quoModals: {},
-        settingBtns: {},
-        quoteCalculation: {},
-        machingType: {},
-        typeness: {},
+        modals: {},
+        btns: {},
 
         // 定义左下角按钮重定义及指定弹窗显示
         initSettingBtns: function() {
 
             var that = this;
 
-            that.settingBtns = {
+            that.btns = {
                 // 保存
                 $btnSave: com.focusPage('#saveProtationBtn').bindClick(function() { // 保存预签信息
 
@@ -29,12 +26,9 @@ var ProtationDetail = (function() {
                 // 打印
                 $btnPrint: com.focusPage('#printFinanceBtn').click(function() {
 
-                    com.post(api.quotation.queryProtationByOrderId, {
-                        "protation.pid": quo.protationId
-                    }, function(res) {
+                    params.quotation.protationId = quo.protationId;
 
-                        com.popup("打印预签", api.index.protationOutputIndex.url, null, null, true);
-                    }, null, false);
+                    com.popup("打印预签", api.index.protationOutputIndex.url, null, null, true);
                 }),
                 // 返回
                 $btnBack: com.focusPage('#detailBckBtn').on('click', function() {
@@ -62,7 +56,7 @@ var ProtationDetail = (function() {
 
             var that = this;
 
-            that.quoModals = {
+            that.modals = {
                 // 添加默认预签项
                 $quoteModal: com.focusPage("#protationItemModal").on("show.bs.modal", function(a) {
 
@@ -82,41 +76,41 @@ var ProtationDetail = (function() {
                 extraParams["types[1]"] = 2;
             }
 
-            // 初始化预签项选择弹层
-            var _condArr = ["quotation-presignItem-name", "quotation-presignItem-type"];
             var searcher = new Searcher();
-            searcher.init(_condArr, "condList", api.quotation.pagePresignItem, function(data) {
+            searcher.init(["quotation-presignItem-name", "quotation-presignItem-type"], "condList", api.quotation.pagePresignItem, function(data) {
 
                 var $tableWrap = com.focusPage('#resultList').empty();
-                var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+                var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($tableWrap);
 
-                if (data && data.length) {
-                    $.each(data, function(i, v) {
+                if (!data || data.length == 0)
+                    return false;
 
-                        painter.createQuoteModalItem(v).appendTo($ul);
-                    });
-                    $ul.appendTo($tableWrap);
-                    // "pagequotetionItemByVersionId里面的quote.quotesRecord"
-                    if (quote.quotesRecord.length) {
-                        $.each(quote.quotesRecord, function(index, val) {
+                $.each(data, function(i, v) {
 
-                            var $input = com.focusPage('input[name="modalQuots"][value="' + $(val).val() + '"]');
-                            $input.length && ($input.prop('checked', true));
-                        });
-                    }
-                }
-            }, "pagenation", "protationDetailItemPostData", extraParams);
+                    painter.createQuoteModalItem(v).appendTo($ul);
+                });
+
+                if (quote.quotesRecord.length == 0)
+                    return false;
+
+                $.each(quote.quotesRecord, function(index, val) {
+
+                    var $input = com.focusPage('input[name="modalQuots"][value="' + $(val).val() + '"]');
+                    $input.length && ($input.prop('checked', true));
+                });
+            }, "pagenation", "protationPartItemPostData", extraParams);
 
             return that;
         },
-        // 统计车运费管理费总价折扣价
         calculateQuoFees: function(func) {
 
             var basic = 0, comd = 0, comm = 0, addd = 0, addm = 0, subd = 0, subm = 0, total = 0, cost = 0, profit = 0;
 
-            // 左上角展示区
             var $domains = com.focusPage('#functionAreaDetailList .widget-box');
-            if (!$domains.length) { return; }
+
+            if (!$domains.length) {
+                return false;
+            }
 
             $domains.each(function() {
 
@@ -178,7 +172,7 @@ var ProtationDetail = (function() {
 
             com.focusPage('#sumquoSumMoney').text(total);
         },
-        // 计算功能区总价和折扣总价
+
         calculateDomainFees: function($domain, func) {
 
             var basic = 0, comd = 0, comm = 0, addd = 0, addm = 0, subd = 0, subm = 0, cost = 0, total = 0;
@@ -199,19 +193,19 @@ var ProtationDetail = (function() {
 
                 cost = utils.changeThrDecimal(utils.accAdd(cost, _cost));
 
-                if (_type == 0)
+                if (_type == constant.quotation().protationItem.TYPE_BASE_INT)
                     basic = utils.changeThrDecimal(utils.accAdd(basic, _total));
-                if (_type == 1)
+                if (_type == constant.quotation().protationItem.TYPE_PROJECT_INT)
                     comd = utils.changeThrDecimal(utils.accAdd(comd, _total));
-                if (_type == 2)
+                if (_type == constant.quotation().protationItem.TYPE_PRINCIPAL_INT)
                     comm = utils.changeThrDecimal(utils.accAdd(comm, _total));
-                if (_type == 3)
+                if (_type == constant.quotation().protationItem.TYPE_ADDWORK_INT)
                     addd = utils.changeThrDecimal(utils.accAdd(addd, _total));
-                if (_type == 4)
+                if (_type == constant.quotation().protationItem.TYPE_ADDMAIN_INT)
                     addm = utils.changeThrDecimal(utils.accAdd(addm, _total));
-                if (_type == 5)
+                if (_type == constant.quotation().protationItem.TYPE_CUTWORK_INT)
                     subd = utils.changeThrDecimal(utils.accAdd(subd, _total));
-                if (_type == 6)
+                if (_type == constant.quotation().protationItem.TYPE_CUTMAIN_INT)
                     subm = utils.changeThrDecimal(utils.accAdd(subm, _total));
 
             });
@@ -238,17 +232,17 @@ var ProtationDetail = (function() {
             var _total = 0;
             var _cost = 0;
 
-            if (type == 0) {
+            if (type == constant.quotation().protationItem.TYPE_BASE_INT) {
                 _total = utils.changeThrDecimal(utils.accMul(price, utils.accSub(num, basicNum)));
                 _cost = utils.changeThrDecimal(utils.accMul(cost, utils.accSub(num, basicNum)));
             }
 
-            if (type == 3 || type == 4) { // 个性
+            if (type == constant.quotation().protationItem.TYPE_ADDWORK_INT || type == constant.quotation().protationItem.TYPE_ADDMAIN_INT) { // 个性
                 _total = utils.changeThrDecimal(utils.accMul(price, num));
                 _cost = utils.changeThrDecimal(utils.accMul(cost, num));
             }
 
-            if (type == 5 || type == 6) { // 增主材
+            if (type == constant.quotation().protationItem.TYPE_CUTWORK_INT || type == constant.quotation().protationItem.TYPE_CUTMAIN_INT) { // 增主材
                 _total = utils.changeThrDecimal(utils.accMul(price, num));
                 _cost = utils.changeThrDecimal(utils.accMul(cost, num));
             }
@@ -282,12 +276,12 @@ var ProtationDetail = (function() {
             com.focusPage('#addFunctionAreaItemsBtn').click(function() {
 
                 quote.addDefaultQuotes();
-                quo.quoModals.$quoteModal.modal("hide");
+                quo.modals.$quoteModal.modal("hide");
             });
         },
         deleteQuotesToDomain: function() {
 
-            quo.quoModals.$quoteModal.on('hide.bs.modal', function() {
+            quo.modals.$quoteModal.on('hide.bs.modal', function() {
 
                 quote.quotesRecord = [];
             });
@@ -310,32 +304,31 @@ var ProtationDetail = (function() {
         getNumCellFocus: function($line) {
 
             var that = this;
-            // 选中后代中带有*class的标签
+
             var $numCell = $line.find('.cell.formula');
             var $editInput = that.$nowEditInput ? that.$nowEditInput : $line.parents('.widget-body-inner').find('.fl-quo-input');
-            // 预签项的模块
+
             domain.nowEditDomain = $line.parents('.widget-box');
             quote.checkedStyle($line);
-            // 选中元素中input标签 val赋值为$numCell的文本值 并且点击input标签获取焦点 .focus()获取焦点 .select()选中
+
             $editInput.removeClass('hide').appendTo($numCell).find('input').val($numCell.find('.cell-wrap').text()).focus().select();
+
             that.$nowLine = $line;
             that.$nowEditInput = $editInput;
             that.$nowEditInput.find('input').off('keydown').on("keydown", function(e) {
 
-                var $input = $(this);
-                that.bindInputKeydown($input.val(), e);
+                that.bindInputKeydown($(this).val(), e);
             });
         },
-        // 回车添加
-        bindInputKeydown: function(formula, e) {
+        bindInputKeydown: function(formula, e) { // 回车添加
 
             var that = this;
             var $line = null;
-            // keyCode码 13为回车符
-            if (e.keyCode == 13) {
+
+            if (e.keyCode == 13) { // keyCode码 13为回车符
                 try {
                     formula = formula.replace(/\s+/g, "");
-                    var test = /([\D][\.][\D])|([\d][\.][\D])|([\D][\.][\d])|(\.$)|(^\.)|([\+\-\*\/\(][\+\-\*\/])|([^\d|^\+|^\-|^\*|^\/|^\.|^\(|^\)])/;
+                    var test = /([\D][\.][\D])|([\d][\.][\D])|([\D][\.][\d])|(\.$)|(^\.)/;
                     if (test.test(formula) || formula == null || formula == '') {
                         that.hideInputWrap();
                         return false;
@@ -351,7 +344,6 @@ var ProtationDetail = (function() {
                 }
 
                 var oldFormula = that.$nowLine.find('.cell.formula .cell-wrap').text();
-
                 var oldNum = that.$nowLine.find('.cell.num .cell-wrap').text();
 
                 // 赋值给外部的公式显示
@@ -365,12 +357,10 @@ var ProtationDetail = (function() {
 
                 // 获取预签项的类型
                 var _type = that.$nowLine.find('.type').attr('data-type');
-
                 var _num = that.$nowLine.find('.num .cell-wrap').text();
-
                 var _basicNum = that.$nowLine.find('.unit .cell-wrap').text();
 
-                if (_type == 0 && _num < _basicNum) {
+                if (_type == constant.quotation().protationItem.TYPE_BASE_INT && _num < _basicNum) {
                     com.showAlert(com.warning, "工程量不能小于基础数量");
                     return false;
                 }
@@ -379,10 +369,11 @@ var ProtationDetail = (function() {
                     "protationItem.piid": that.$nowLine.find('input[name="deleteItems"]').val(), // 预签项Id, 可空 ;
                     "protationItem.name": that.$nowLine.find('.name .cell-wrap').text(), // 预签项名
 
-                    "protationItem.cost": that.$nowLine.find('.unitprice').attr("data-cost"),
                     "protationItem.price": that.$nowLine.find('.unitprice .cell-wrap').text(), // 单价 ;
                     "protationItem.num": that.$nowLine.find('.num .cell-wrap').text(), // 数量;
                     "protationItem.type": that.$nowLine.find('.type').attr("data-type"), // 类型
+
+                    "protationItem.ppiid": that.$nowLine.attr("data-ppiid"),
                 };
 
                 that.$nowLine.find('input[name="deleteItems"]').val(that.$nowLine.find('input[name="deleteItems"]').val());
@@ -407,82 +398,51 @@ var ProtationDetail = (function() {
                 } else {
                     that.hideInputWrap();
                 }
-                return;
+
+                return false;
             }
+
             // 如果按键为上 调整焦点到功能区内上一个预签项
             if (e.keyCode == 38) {
+
                 $line = that.$nowLine.prev('.fl-quo-item.item');
+
                 if ($line.length) {
                     that.getNumCellFocus($line);
                 } else {
                     that.hideInputWrap();
                 }
-                return;
+
+                return false;
             }
+
             // 如果按键为下 调整焦点到功能区内的下一个预签项
             if (e.keyCode == 40) {
+
                 $line = that.$nowLine.next('.fl-quo-item.item');
+
                 if ($line.length) {
                     that.getNumCellFocus($line);
                 } else {
                     that.hideInputWrap();
                 }
-                return;
+
+                return false;
             }
         },
         hideInputWrap: function() {
 
-            if (!this.$nowEditInput) { return; }// $nowEditInput?
-            this.$nowEditInput.addClass('hide');
-            // this.$nowEditInput = null;
-        },
-        // 批量删除预签项
-        deleteQuoteInBatches: function($domain) {
-
-            $domain.find('.fl-quo-input').insertAfter($domain.find('.fl-quo-list.items')).addClass('hide');
-
-            var that = this;
-            var $quos = com.focusPage('[name="deleteItems"]:checked', $domain);
-            var $q1 = [], $q2 = [];
-            var _params = {};
-
-            if (!$quos.length) { return false; }
-
-            $quos.length && $.each($quos, function(i, v) {
-
-                if ($(v).val()) {
-                    _params['qfaiIds[' + $q1.length + ']'] = $(v).val();
-                    $q1[$q1.length] = v;
-                } else {
-                    $q2[$q2.length] = v;
-                }
-            });
-
-            $q2.length && $.each($q2, function(i, v) {
-
-                $(v).parents('li.fl-quo-item.item').remove();
-            });
-
-            if ($q1.length) {
-                $.each($q1, function(i, v) {
-
-                    $(v).parents('li.fl-quo-item.item').remove();
-                });
-                var _fee = quo.calculateDomainFees(domain.nowEditDomain);
-                com.focusPage('[data-qfaid="' + domain.nowEditDomain.attr('data-qfaid') + '"]', '#functionAreaSumList').find('label.no-padding-left').text(_fee);
-                quo.calculateQuoFees();
-                _params = $.extend({}, _params, quo.basicParams, {
-                    "quotetionFunctionArea.qfaId": domain.nowEditDomain.attr('data-qfaid')
-                });
-                com.post(api.quotation.deleteQuotetionFunctionAreaItem, _params, function(res) {
-
-                }, null, false);
+            if (!this.$nowEditInput) {
+                return false;
             }
+
+            this.$nowEditInput.addClass('hide');
         },
         // 删除预签项
         deleteQuote: function($quote) {
 
             var that = this;
+
             var _pid = $quote.find('input[type="checkbox"]').val();
             var _params = {};
 
@@ -505,7 +465,8 @@ var ProtationDetail = (function() {
                 }, null, false);
             }
         },
-        /*
+
+        /**
          * 添加预签项的时候记住上一页选中的预签项 参数 $input : 正在操作的input标签 ischecked : 选举中或取消选中
          */
         recordQuots: function($input, ischecked) {
@@ -521,10 +482,14 @@ var ProtationDetail = (function() {
                 });
             }
         },
-        // 点击页面其他位置时清除表格行的选中样式
+
+        /**
+         * 点击页面其他位置时清除表格行的选中样式
+         */
         clearQuoteSelected: function() {
 
             var that = this;
+
             $('body').click(function(e) {
 
                 if (!com.focusPage(e.target).is('.cell-wrap') && !com.focusPage(e.target).is('[data-action="collapse"]')) {
@@ -532,7 +497,10 @@ var ProtationDetail = (function() {
                 }
             });
         },
-        // 删除上一个选中的预签项选中样式 并添加当前预签项选中样式
+
+        /**
+         * 删除上一个选中的预签项选中样式 并添加当前预签项选中样式
+         */
         checkedStyle: function($item) {
 
             com.focusPage('.fl-quo-item.item.current').removeClass('current');
@@ -546,7 +514,7 @@ var ProtationDetail = (function() {
                 try {
                     var formula = that.val();
                     formula = formula.replace(/\s+/g, "");
-                    var test = /([\D][\.][\D])|([\d][\.][\D])|([\D][\.][\d])|(\.$)|(^\.)|([\+\-\*\/\(][\+\-\*\/])|([^\d|^\+|^\-|^\*|^\/|^\.|^\(|^\)])/;
+                    var test = /([\D][\.][\D])|([\d][\.][\D])|([\D][\.][\d])|(\.$)|(^\.)/;
                     if (test.test(formula) || formula == null || formula == '') {
                         com.focusPage('#num').val('');
                         return false;
@@ -569,24 +537,29 @@ var ProtationDetail = (function() {
 
             var _arrs = quote.quotesRecord;
             var _index = domain.nowEditDomain.find('.fl-quo-item.item').length;
-
             var _areaType = domain.nowEditDomain.attr("data-areatype");
-            if (!_arrs.length) { return; }
+
+            if (!_arrs.length) {
+                return false;
+            }
 
             $.each(_arrs, function(i, v) {
 
                 var $this = com.focusPage(v);
 
-                if ($this.val() && com.focusPage('input[data-qiid="' + $this.val() + '"]', domain.nowEditDomain).length) { return false; }
+                if ($this.val() && com.focusPage('input[data-qiid="' + $this.val() + '"]', domain.nowEditDomain).length) {
+                    return false;
+                }
 
                 var type = parseInt($this.attr("data-type"));
 
-                if (type == 0 && _areaType != 0)
-                    return true;
-                if ([1, 2].indexOf(type) != -1 && _areaType != 2)
+                if (type == constant.quotation().protationItem.TYPE_BASE_INT && _areaType != 0)
                     return true;
 
-                if ([1, 2].indexOf(type) != -1)
+                if ([constant.quotation().protationItem.TYPE_PROJECT_INT, constant.quotation().protationItem.TYPE_PRINCIPAL_INT].indexOf(type) != -1 && _areaType != 2)
+                    return true;
+
+                if ([constant.quotation().protationItem.TYPE_PROJECT_INT, constant.quotation().protationItem.TYPE_PRINCIPAL_INT].indexOf(type) != -1)
                     type = type + 2;
 
                 var _quotval = {
@@ -594,12 +567,11 @@ var ProtationDetail = (function() {
                     "basicNum": $this.attr('data-itemUnite'),
                     "formula": '0',
                     "num": 0,
-                    "qfaiid": "",
-                    "qfaid": "",
                     "qiid": "",
                     "type": type,
                     "price": $this.attr('data-itemPrice'),
                     "cost": $this.attr('data-cost'),
+                    "ppiid": $this.val(),
                 };
 
                 var $item = painter.createQuote(_index + i + 1, _quotval).appendTo(domain.nowEditDomain.find('.fl-quo-list.items'));
@@ -621,8 +593,7 @@ var ProtationDetail = (function() {
             var $domain, $dhead, $dname, $dtoolbar, $btns = {}, $dbody, $dbodyInner, $list, $input;
 
             var _btnSet = {
-                "$btnAdd": ["添加工程项", '<i class="bigger-125 icon-plus purple"></i>', dv.type == 0 || dv.type == 2],
-                // "$btnDelQuo": ["批量删除项", '<i class="bigger-125 icon-remove pink"></i>', dv.type!=0],
+                "$btnAdd": ["添加工程项", '<i class="bigger-125 icon-plus purple"></i>', dv.type == constant.quotation().protationItem.TYPE_BASE_INT || dv.type == constant.quotation().protationItem.TYPE_PRINCIPAL_INT],
                 "$btnFold": ["折叠", '<i class="bigger-125 icon-chevron-up" functionindexdata="1" id="oneChevron_1"></i>', true]
             };
 
@@ -639,7 +610,7 @@ var ProtationDetail = (function() {
             });
 
             $dhead = $('<div></div>').addClass('widget-header');
-            $dname = $('<h5></h5>').append($('<em></em>').text(dv.type == 0 ? '' : dv.functionAreaOrder)).append('  ').append($('<strong></strong>').html(dv.name));
+            $dname = $('<h5></h5>').append($('<em></em>').text(dv.type == constant.quotation().protationItem.TYPE_BASE_INT ? '' : dv.functionAreaOrder)).append('  ').append($('<strong></strong>').html(dv.name));
             $dtoolbar = $('<div></div>').addClass('widget-toolbar no-border');
 
             $.each(_btnSet, function(k, v) {
@@ -691,25 +662,25 @@ var ProtationDetail = (function() {
 
                     var $item = that.createQuote(i + 1, v).appendTo($list);
 
-                    if (v.type == 0) {
+                    if (v.type == constant.quotation().protationItem.TYPE_BASE_INT) {
                         cost = utils.changeThrDecimal(utils.accAdd(cost, utils.accMul(v.cost, utils.accSub(v.num, v.basicNum))));
                     } else {
                         cost = utils.changeThrDecimal(utils.accAdd(cost, utils.accMul(v.cost, v.num)));
                     }
 
-                    if (v.type == 0)
+                    if (v.type == constant.quotation().protationItem.TYPE_BASE_INT)
                         basic = utils.changeThrDecimal(utils.accAdd(basic, utils.accMul(v.price, utils.accSub(v.num, v.basicNum))));
-                    if (v.type == 1)
+                    if (v.type == constant.quotation().protationItem.TYPE_PROJECT_INT)
                         comd = utils.changeThrDecimal(utils.accAdd(comd, utils.accMul(v.price, v.num)));
-                    if (v.type == 2)
+                    if (v.type == constant.quotation().protationItem.TYPE_PRINCIPAL_INT)
                         comm = utils.changeThrDecimal(utils.accAdd(comm, utils.accMul(v.price, v.num)));
-                    if (v.type == 3)
+                    if (v.type == constant.quotation().protationItem.TYPE_ADDWORK_INT)
                         addd = utils.changeThrDecimal(utils.accAdd(addd, utils.accMul(v.price, v.num)));
-                    if (v.type == 4)
+                    if (v.type == constant.quotation().protationItem.TYPE_ADDMAIN_INT)
                         addm = utils.changeThrDecimal(utils.accAdd(addm, utils.accMul(v.price, v.num)));
-                    if (v.type == 5)
+                    if (v.type == constant.quotation().protationItem.TYPE_CUTWORK_INT)
                         subd = utils.changeThrDecimal(utils.accAdd(subd, utils.accMul(v.price, v.num)));
-                    if (v.type == 6)
+                    if (v.type == constant.quotation().protationItem.TYPE_CUTMAIN_INT)
                         subm = utils.changeThrDecimal(utils.accAdd(subm, utils.accMul(v.price, v.num)));
                 });
             }
@@ -719,13 +690,8 @@ var ProtationDetail = (function() {
                 domain.nowEditDomain = $domain;
                 var areatype = $(this).parents(".widget-box.transparent").attr("data-areatype");
                 quo.initQuoModals(areatype);
-                quo.quoModals.$quoteModal.modal("show");
+                quo.modals.$quoteModal.modal("show");
                 com.focusPage('#addItemFunctionAreaIndex').val(dv.qfaId);
-            });
-
-            $btns.$btnDelQuo && $btns.$btnDelQuo.click(function() {// 批量删除预签项
-
-                quote.deleteQuoteInBatches($domain);
             });
 
             $domain.attr('data-cost', cost);
@@ -753,47 +719,48 @@ var ProtationDetail = (function() {
 
             var _typeName = "-";
 
-            if (qv.type == 0) {
+            if (qv.type == constant.quotation().protationItem.TYPE_BASE_INT) {
                 _typeName = "信息";
                 _total = utils.changeThrDecimal(utils.accMul(_unitPrice, utils.accSub(_num, qv.basicNum)));
-                _cost = utils.changeThrDecimal(utils.accMul(qv.cost, utils.accSub(_num, qv.basicNum)));
             }
 
-            if (_type == 1 || qv.type == 2) { // 基础工程
+            if (_type == constant.quotation().protationItem.TYPE_PROJECT_INT || qv.type == constant.quotation().protationItem.TYPE_PRINCIPAL_INT) { // 基础工程
                 _typeName = "基础";
             }
 
-            if (qv.type == 3 || qv.type == 4) { // 个性
+            if (qv.type == constant.quotation().protationItem.TYPE_ADDWORK_INT || qv.type == constant.quotation().protationItem.TYPE_ADDMAIN_INT) { // 个性
                 _typeName = "个性";
                 _total = utils.changeThrDecimal(utils.accMul(_unitPrice, _num));
             }
 
-            if (qv.type == 5 || qv.type == 6) { // 增主材
+            if (qv.type == constant.quotation().protationItem.TYPE_CUTWORK_INT || qv.type == constant.quotation().protationItem.TYPE_CUTMAIN_INT) { // 增主材
                 _typeName = "减项";
                 _total = utils.changeThrDecimal(utils.accMul(_unitPrice, _num));
             }
 
-            var _lineSet = [["line", linenum, ["data-areaType", qv.areaType]], // 编号
-            ["formula", qv.num ? qv.num : "0"], // 公式
-            ["num", qv.num, ["data-subtype", qv.subtype]], // 数量
-            ["name", qv.name, ["data-piid", qv.piid]], // 预签名称
-            ["type", _typeName, ["data-type", qv.type]], ["unit", qv.basicNum], // 单位
-            ["worktype", qv.workType], // 工种
-            ["price unitprice", _unitPrice, ["data-cost", qv.cost]], // 单价
-            ["price discountprice", _unitPrice, ["data-discount", 0]], // 折扣后的价格 将折扣存入
-            ["price totalprice-discount", _total], // 根据类型计算(数量*折扣)
-            ];
+            var _lineSet = [];
+
+            _lineSet.push(["line", linenum, ["data-areaType", qv.areaType]]); // 编号
+            _lineSet.push(["formula", qv.num ? qv.num : "0"]); // 公式
+            _lineSet.push(["num", qv.num, ["data-subtype", qv.subtype]]); // 数量
+            _lineSet.push(["name", qv.name, ["data-piid", qv.piid]]); // 预签名称
+            _lineSet.push(["type", _typeName, ["data-type", qv.type]]);
+            _lineSet.push(["unit", qv.basicNum]); // 单位
+            _lineSet.push(["worktype", qv.workType]); // 工种
+            _lineSet.push(["price unitprice", _unitPrice, ["data-cost", qv.cost]]); // 单价
+            _lineSet.push(["price discountprice", _unitPrice]);
+            _lineSet.push(["price totalprice-discount", _total]);
 
             var $btnCell, $btnCellWrap, $inputLable, $input, $ispan, $btnDel;
 
             $.each(_lineSet, function(i, v) {
 
-                var $cell = $('<div></div>').addClass('cell ' + v[0]);
-                var $cellWrap = $('<div></div>').addClass('cell-wrap').html(v[1]);
+                var $cell = $('<div></div>').addClass('cell ' + v[0]).appendTo($item);
+                var $cellWrap = $('<div></div>').addClass('cell-wrap').html(v[1]).appendTo($cell);
+
                 if (v[2]) {
                     $cell.attr(v[2][0], v[2][1]);
                 }
-                $cell.append($cellWrap).appendTo($item);
             });
 
             $btnCell = $('<div></div>').addClass('cell btns');
@@ -804,6 +771,7 @@ var ProtationDetail = (function() {
                 "role": "checkbox",
                 "name": "deleteItems",
                 "data-qiid": qv.qiid ? qv.qiid : "",
+                "data-ppiid": qv.ppiid,
             }).val(qv.piid);
             $ispan = $('<span></span>').addClass('lbl align-top');
 
@@ -818,13 +786,13 @@ var ProtationDetail = (function() {
             }).append('<i class="bigger-125 icon-remove pink"></i>').mouseenter(function() {
 
                 // com.showTip(this, "删除预签项", "top");
-            }); // 初始化提示框
+            });
 
-            if (qv.type == 0) {
+            if (qv.type == constant.quotation().protationItem.TYPE_BASE_INT) {
                 $input.attr("disabled", "disabled");
             }
 
-            if (qv.type == 1 || qv.type == 2) {
+            if (qv.type == constant.quotation().protationItem.TYPE_PROJECT_INT || qv.type == constant.quotation().protationItem.TYPE_PRINCIPAL_INT) {
                 $input.attr("disabled", "disabled");
             }
 
@@ -841,10 +809,10 @@ var ProtationDetail = (function() {
 
                 e.stopPropagation();
 
-                if ([0, 3, 4, 5, 6].indexOf(qv.type) != -1)
+                if ([constant.quotation().protationItem.TYPE_BASE_INT, constant.quotation().protationItem.TYPE_ADDWORK_INT, constant.quotation().protationItem.TYPE_ADDMAIN_INT, constant.quotation().protationItem.TYPE_CUTWORK_INT, constant.quotation().protationItem.TYPE_CUTMAIN_INT].indexOf(qv.type) != -1)
                     quote.deleteQuote($item);
 
-                if ([1, 2].indexOf(qv.type) != -1) {
+                if ([constant.quotation().protationItem.TYPE_PROJECT_INT, constant.quotation().protationItem.TYPE_PRINCIPAL_INT].indexOf(qv.type) != -1) {
 
                     var _domain = com.focusPage('.widget-box[data-pfaid="4"]').find(".fl-quo-list.items");
                     var _index = _domain.find(".fl-quo-item").length;
@@ -854,6 +822,7 @@ var ProtationDetail = (function() {
                     args.type = args.type + 4;
                     args.num = 0;
                     args.piid = null;
+                    args.ppiid = qv.ppiid;
 
                     painter.createQuote(_index + 1, args).appendTo(_domain);
                 }
@@ -863,6 +832,8 @@ var ProtationDetail = (function() {
 
             $item.attr('data-total', _total);
             $item.attr('data-cost', _cost);
+
+            $item.attr("data-ppiid", qv.ppiid);
 
             return $item;
         },
@@ -879,12 +850,10 @@ var ProtationDetail = (function() {
             $label.append($radio).append($span);
             return $label;
         },
-        // 创建添加预签项天窗中的预签项
 
+        // 创建添加预签项天窗中的预签项
         createQuoteModalItem: function(v) {
 
-            // "创建添加预签项天窗中的预签项"
-            // "画弹窗的预签项"
             var $liLine = $('<li></li>').addClass('item-blue clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').css({
                 "margin-bottom": 0
@@ -901,11 +870,16 @@ var ProtationDetail = (function() {
                 "data-itemUnite": v.basicNum,
                 "data-des": v.common,
                 "data-type": v.type,
-            }).val(v.qiid);
+            }).val(v.piid);
             var $span = $('<span></span>').addClass('lbl blue bigger-150').text(v.name);
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
-            var propertyArr = [["类型:", v.type, "red"], ["单位:", v.basicNum, "red"], ["单价:", v.price, "blue"], ["版本:", v.ppid, "grey"], ];
+            var propertyArr = [];
+
+            propertyArr.push(["类型: ", v.type, "red"]);
+            propertyArr.push(["单位: ", v.basicNum, "red"]);
+            propertyArr.push(["单价: ", v.price, "blue"]);
+            propertyArr.push(["说明: ", v.content, "grey"]);
 
             $.each(propertyArr, function(index, value) {
 
@@ -1147,13 +1121,5 @@ var ProtationDetail = (function() {
 
 $(function() {
 
-    $.extend(com.validator, {
-        manageRate: {
-            type: "v_manageRate",
-            regex: /^(1\.0{1,3}|1|0\.[0-9]{1,3})$/,
-            errorMsg: "请输入0到1之间的小数"
-        }
-    });
-
-    ProtationDetail.init();
+    protationPart.init();
 });

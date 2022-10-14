@@ -1,4 +1,5 @@
-﻿$(function(){
+﻿$(function() {
+
     var user = {
         statusType: [],
         deptType: [],
@@ -9,49 +10,51 @@
         editLoginId: null,
         deptList: {},
         loginFlag: true,
-        simpleAddUserModal:null
+        simpleAddUserModal: null
     };
 
     user.simpleAddUserModal = com.focusPage("#simpleAddUserModal");
-    user.simpleAddUserModal.on('hide.bs.modal',function(e){
+    user.simpleAddUserModal.on('hide.bs.modal', function(e) {
+
         com.cleanItems(user.items);
         com.closeTip();
     });
 
-    com.post(api.ds.personel, {timestamp: (new Date).getTime()},function(a) {
+    com.post(api.ds.personel, {
+        timestamp: (new Date).getTime()
+    }, function(a) {
+
         user.statusType = a.statusType;
     }, null, false);
 
     // 获取部门类型
-    com.post(api.communion.queryDepartmentType, {}, function(res){
+    com.post(api.communion.queryDepartmentType, {}, function(res) {
+
         user.deptType = res.departmentTypes;
     }, null, false);
 
-    var displayFunc  = (function(){
-        var renderList = function(tableId, listData){
+    var displayFunc = (function() {
+
+        var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-            if(listData && listData.length){
-                $.each(listData, function(i, v){
+            if (listData && listData.length) {
+                $.each(listData, function(i, v) {
+
                     var $liLine = $('<li></li>').addClass('item-orange clearfix');
                     var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.userName));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                     var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
                     var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-blue').html('查看');
                     var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-success').html('编辑');
-                    var $userexception=$('<a></a>').addClass('btn btn-minier btn-pink').html('工作经历');
+                    var $userexception = $('<a></a>').addClass('btn btn-minier btn-pink').html('工作经历');
 
-                    var propertyArr = [
-                        ["员工编号:", v.userId, "grey"],
-                        ["用户名:", v.loginId, "grey"],
-                        ["部门:", v.dept.name, "grey"],
-                        ["职位:", v.duty.name, "grey"],
-                        ["角色:", v.role.name, "grey"],
-                        ["联系方式:", v.phone, "grey"]
-                    ];
+                    var propertyArr = [["员工编号:", v.userId, "grey"], ["用户名:", v.loginId, "grey"], ["部门:", v.dept.name, "grey"], ["职位:", v.duty.name, "grey"], ["角色:", v.role.name, "grey"], ["联系方式:", v.phone, "grey"]];
 
-                    $.each(propertyArr, function (index,value) {
+                    $.each(propertyArr, function(index, value) {
+
                         var $liProperty = $('<li></li>');
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
                         $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -59,50 +62,59 @@
                     });
 
                     // 查看
-                    $btnCheck.click(function(){
+                    $btnCheck.click(function() {
+
                         com.focusPage("text").css("line-height", "27px");
-                        com.post(api.personel.queryUserInfoByUserId, {"userInfo.user.userId": v.userId}, function(res){
+                        com.post(api.personel.queryUserInfoByUserId, {
+                            "userInfo.user.userId": v.userId
+                        }, function(res) {
+
                             bindUserInfo(res.userInfo);
                             com.focusPage("#checkUserInfo").modal('show');
                         });
                     });
 
-                    $btnEdit.click(function(){
+                    $btnEdit.click(function() {
+
                         params.personel.userId = v.userId;
-                        com.popup4page("#layerPopUp", api.index.userEditIndex.url, "编辑", null, function () {
+                        com.popup4page("#layerPopUp", api.index.userEditIndex.url, "编辑", null, function() {
+
                             userSeacher.doSearch();
                         });
                     });
 
-                    com.focusPage('#closeM').click(function(){
+                    com.focusPage('#closeM').click(function() {
+
                         com.focusPage("#tree3").removeData("tree");
                     });
-                    
-                    $userexception.unbind().bind('click',function(){
+
+                    $userexception.unbind().bind('click', function() {
+
                         com.focusPage('#userExpModal').modal('show');
                         com.focusPage('#userException').html("");
 
                         var $uli = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-                       
-                        var  userExperiences=null;
 
-                        com.post(api.personel.queryUserExperienceByUid,{"userExperience.uid":v.uid},function(res) {
+                        var userExperiences = null;
+
+                        com.post(api.personel.queryUserExperienceByUid, {
+                            "userExperience.uid": v.uid
+                        }, function(res) {
+
                             userExperiences = res.userExperiences;
                         }, null, false);
 
-                        if(userExperiences && userExperiences.length){
-                            $.each(userExperiences,function(ind, val){
+                        if (userExperiences && userExperiences.length) {
+                            $.each(userExperiences, function(ind, val) {
+
                                 var $liLi = $('<li></li>').addClass('item-blue clearfix');
                                 var $ulPro = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                                 var $h2 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + val.type));
 
-                                var ecperienceArr = [
-                                    ["类型:", val.type, "red"],
-                                    ["备注:", val.comment, "grey"],
-                                    ["调动时间:",val.createTime,"green"]
-                                ];
+                                var ecperienceArr = [["类型:", val.type, "red"], ["备注:", val.comment, "grey"], ["调动时间:", val.createTime, "green"]];
 
-                                $.each(ecperienceArr, function (index,value) {
+                                $.each(ecperienceArr, function(index, value) {
+
                                     var $liPro = $('<li></li>');
                                     $('<strong></strong>').html(value[0]).appendTo($liPro);
                                     $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liPro);
@@ -124,9 +136,10 @@
             }
         };
         return {
-            init : function(tableId,listData){
+            init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
+                renderList(tableId, listData);
             }
         }
     })();
@@ -134,9 +147,11 @@
 
     var userSeacher = new Searcher();
 
-    userSeacher.init( _condArr, "condList", api.personel.pageUser, function(data){
+    userSeacher.init(_condArr, "condList", api.personel.pageUser, function(data) {
+
         displayFunc.init('resultList', data);
-    }, "pagenation", "userPostData", null, false, null, function(){
+    }, "pagenation", "userPostData", null, false, null, function() {
+
         var $addaS = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'addUserSimple').css("margin", "0px 3px");
         var $addiS = $('<i></i>').addClass('icon-plus bigger-110').appendTo($addaS);
         var $addspanS = $('<span></span>').text('添加-简化').appendTo($addaS);
@@ -152,40 +167,57 @@
         return [$addaS, $adda, $importa];
     });
 
-    com.focusPage('a[name="addUser"]','#pagenation').click(function(){
+    com.focusPage('a[name="addUser"]', '#pagenation').click(function() {
+
         params.personel.userId = null;
-        com.popup4page("#layerPopUp", api.index.userEditIndex.url, "添加", null, function () {
+        com.popup4page("#layerPopUp", api.index.userEditIndex.url, "添加", null, function() {
+
             com.closePopup();
             userSeacher.doSearch();
         });
     });
 
-    com.focusPage('a[name="addUserSimple"]','#pagenation').click(function(){
+    com.focusPage('a[name="addUserSimple"]', '#pagenation').click(function() {
+
         user.simpleAddUserModal.modal("show");
     });
 
-    com.focusPage('a[name="import"]','#pagenation').click(function(){
+    com.focusPage('a[name="import"]', '#pagenation').click(function() {
+
         com.focusPage('#importModal').modal("show");
     });
-    
-    com.uploadify("#import", "上传文件", api.salary.importUserSalary, 'btn btn-success col-sm-12', '*.xls;*.xlsx', {'uploadType': 4}, 1);
+
+    com.uploadify("#import", "上传文件", api.salary.importUserSalary, 'btn btn-success col-sm-12', '*.xls;*.xlsx', {
+        'uploadType': 4
+    }, 1);
 
     // 添加人员(简化版)
     user.saveBtn = com.focusPage("#saveUserBtn").on("click", saveData);
-    user.cancelBtn = com.focusPage("#cancelUserBtn").on("click",function() {
+    user.cancelBtn = com.focusPage("#cancelUserBtn").on("click", function() {
+
         user.simpleAddUserModal.modal("hide");
     });
 
-    user.items.loginId = com.focusPage("#loginId").on("blur", function() {
-        $this = $(this);
-        void 0 == $this.val() || "" == $this.val().trim() || $this.val() == user.editLoginId ? (com.showTip(com.focusPage("#loginId"),"用户名不能为空", "right"), user.repeatFlg = !1) : com.post(api.personel.queryUserByLoginId, {
-            "user.loginId": $this.val()
-        }, function(res) {
-            user.loginFlag =false;
-            com.showTips(com.focusPage("#loginId"),"用户名已存在", "right");
-        }, function(res){
-            user.loginFlag =true;
-        });
+    user.items.loginId = com.focusPage("#loginId", "#userinfo").on("blur", function() {
+
+        var $this = $(this);
+        var loginId = loginId;
+
+        if (0 == loginId || "" == loginId.trim() || loginId == user.editLoginId) {
+            com.showTip(com.focusPage("#loginId", "#userinfo"), "用户名不能为空", "right");
+            user.repeatFlg = false;
+        } else {
+            com.post(api.personel.queryUserByLoginId, {
+                "user.loginId": loginId
+            }, function(res) {
+
+                user.loginFlag = false;
+                com.showTip(com.focusPage("#loginId", "#userinfo"), "用户名已存在", "right");
+            }, function(res) {
+
+                user.loginFlag = true;
+            });
+        }
     });
 
     user.items.userName = com.focusPage("#userName");
@@ -199,31 +231,39 @@
     user.items.deptTypeSel = com.focusPage("#deptTypeSel");
     user.items.deptTypeSel.bindData(user.deptType, "dtid", "name");
     user.items.deptTypeSel.on("change", function(b, d) {
-        com.post(api.system.queryDutyByDtid,{"duty.departmentType.dtid" :$(this).val()},function(res){
-            user.dutyTypeMap=res.dutys;
-            user.items.dutySel.bindData(user.dutyTypeMap,"did","name");
-        },null,false);
-        com.post(api.communion.queryDepartmentByDtid, {"dept.type.dtid": $(this).val()}, function(res) {
+
+        com.post(api.system.queryDutyByDtid, {
+            "duty.departmentType.dtid": $(this).val()
+        }, function(res) {
+
+            user.dutyTypeMap = res.dutys;
+            user.items.dutySel.bindData(user.dutyTypeMap, "did", "name");
+        }, null, false);
+        com.post(api.communion.queryDepartmentByDtid, {
+            "dept.type.dtid": $(this).val()
+        }, function(res) {
+
             user.items.deptSel.bindData(res.deptList, "did", "name");
             d && d();
-        },null,false);
+        }, null, false);
     }).trigger("change");
 
-    user.items.statusSel = com.focusPage("#statusSel").bindData(user.statusType,"key", "value");
+    user.items.statusSel = com.focusPage("#statusSel").bindData(constant.personel().user.status.datas, "key", "value");
 
     com.datetime(com.focusPage("#birthday"));
 
     function saveData() {
-        if( "" == user.items.loginId.val().trim() || user.items.loginId.val() == null) {
-            com.showTip(com.focusPage("#loginId"),"用户名不能为空","bottom");
-            user.loginFlag=false
+
+        if ("" == user.items.loginId.val().trim() || user.items.loginId.val() == null) {
+            com.showTip(com.focusPage("#loginId"), "用户名不能为空", "bottom");
+            user.loginFlag = false
         }
 
         if (!com.validate("simpleAddUserModal") && !user.repeatFlg && user.loginFlag) {
             var options = {
                 "userInfo.user.userName": user.items.userName.val().trim(),
                 "userInfo.user.currentName": user.items.currentName.val(),
-                "userInfo.user.gender":  com.genderType[user.items.gender.prop("checked")],
+                "userInfo.user.gender": com.genderType[user.items.gender.prop("checked")],
                 "userInfo.user.birthday": user.items.birthday.val(),
                 "userInfo.user.identity": user.items.identity.val(),
                 "userInfo.user.phone": user.items.phone.val(),
@@ -248,7 +288,8 @@
                 "userInfo.bankCardNum": ""
             };
 
-            com.post(api.personel.addUser, options, function(res){
+            com.post(api.personel.addUser, options, function(res) {
+
                 com.showAlert(com.info, "操作成功");
                 com.closePopup();
             });
@@ -256,7 +297,8 @@
     }
 
     // 查看页面绑定人员信息
-    function bindUserInfo($userInfo){
+    function bindUserInfo($userInfo) {
+
         com.focusPage("#userIdCheck").html(com.checkNull($userInfo.user.userId, "无"));
         com.focusPage("#oldUserIdCheck").html(com.checkNull($userInfo.user.oldUserId, "无"));
         com.focusPage("#userNameCheck").html($userInfo.user.userName);
@@ -291,7 +333,7 @@
         com.focusPage("#deptSelCheck").html($userInfo.user.dept.name);
         com.focusPage("#dutySelCheck").html($userInfo.user.duty.name);
 
-        com.focusPage("#statusSelCheck").html(user.statusType[$userInfo.user.status].value);
+        com.focusPage("#statusSelCheck").html(constant.personel().user.status.datas[$userInfo.user.status].value);
         com.focusPage("#employWaySelCheck").html(com.checkNull($userInfo.employWay, "无"));
         com.focusPage("#employTypeSelCheck").html(com.checkNull($userInfo.employType, "无"));
         com.focusPage("#recommendManCheck").html(com.checkNull($userInfo.recommendMan, "无"));

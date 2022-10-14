@@ -39,13 +39,10 @@ var decorationUtils = {
         var purCategory = [];
         var unpCategory = [];
 
-        com.post(api.ds.sales, {}, function(res) {
-
-            $statues = res.statues.split("key", "value");
-            $balanceStatuses = res.balanceStatuses.split("key", "value");
-            $depositpayStatus = res.depositpayStatus.split("key", "value");
-            $fullpayStatus = res.fullpayStatus.split("key", "value");
-        }, null, false);
+        $statues = constant.sales().sales.status.keys;
+        $balanceStatuses = constant.sales().sales.balanceStatus.keys;
+        $depositpayStatus = constant.sales().sales.depositpayStatus.keys;
+        $fullpayStatus = constant.sales().sales.fullpayStatus.keys;
 
         com.focusPage("a[name='consumptionDetailsPrint']").click(function() {
 
@@ -661,7 +658,7 @@ var decorationUtils = {
 
         var nameLi = $("<li></li>").appendTo(ul);
         var typeLi = $("<strong></strong>").text("类型:").appendTo(nameLi);
-        var typeSpan = $("<span></span>").attr("id", "type_" + _activityItem.daiId).text(config.types[_activityItem.type]).appendTo(nameLi);
+        var typeSpan = $("<span></span>").attr("id", "type_" + _activityItem.daiId).attr("type", _activityItem.type).text(config.types[_activityItem.type]).appendTo(nameLi);
         var $stateTypeLi = $("<li></li>").appendTo(ul);
         var $stateTypeStrong = $("<strong></strong>").text("状态类型:").appendTo($stateTypeLi);
         var $stateTypeSpan = $("<span></span>").addClass("red").attr("id", "stateType_" + _activityItem.daiId).text(config.stateTypes[_activityItem.stateType]).appendTo($stateTypeLi);
@@ -684,7 +681,7 @@ var decorationUtils = {
             var isStockSpan = $("<span></span>").addClass("red").attr("id", "isStock_" + _activityItem.daiId).text(config.isStatus[_activityItem.isStock]).appendTo(isStockLi);
             var isPreforLi = $("<li></li>").appendTo(ul);
             var isPreforState = $("<strong></strong>").text("是否计入业绩:").appendTo(isPreforLi);
-            var isPreforSpan = $("<span></span>").addClass("red").attr("id", "isPrefor_" + _activityItem.daiId).text(config.isStatus[_activityItem.isPrefor]).appendTo(isPreforLi);
+            var isPreforSpan = $("<span></span>").addClass("red").attr("id", "isPrefor_" + _activityItem.daiId).attr("isPrefor", _activityItem.isPrefor).text(config.isStatus[_activityItem.isPrefor]).appendTo(isPreforLi);
             var isPaymentLi = $("<li></li>").appendTo(ul);
             var isPaymentState = $("<strong></strong>").text("是否计入金额:").appendTo(isPaymentLi);
             var isPaymentSpan = $("<span></span>").addClass("red").attr("id", "isPayment_" + _activityItem.daiId).text(config.isStatus[_activityItem.isPayment]).appendTo(isPaymentLi);
@@ -1276,7 +1273,8 @@ var decorationUtils = {
                 "decorationPicture.name": data.strutsUploadsFileName,
                 "decorationPicture.content": "",
                 "decorationPicture.orderId": params.decoration.orderId,
-                "decorationPicture.type": type
+                "decorationPicture.type": type,
+                "decorationPicture.filesize": data.filesize,
             };
 
             com.post(api.decoration.addDecorationPicture, options, function(res) {
@@ -1536,7 +1534,7 @@ var decorationUtils = {
 
             res = res.decorationHolonomy;
 
-            com.focusPage('#projectPrice').html(com.checkNull(res.projectPrice + res.managePrice), 0);
+            com.focusPage('#projectPrice').html(com.checkNull(utils.changeTwoDecimal(utils.accAdd(res.projectPrice, res.managePrice))), 0);
             com.focusPage('#managePrice').html(com.checkNull(res.managePrice), 0);
             com.focusPage('#materialPrice').html(com.checkNull(res.materialPrice), 0);
             com.focusPage('#servicePrice').html(com.checkNull(res.servicePrice), 0);
@@ -1903,7 +1901,7 @@ var decorationUtils = {
     },
     init: function() {
 
-        com.post(api.common.queryReceiptType, {}, function(res) {
+        com.post(api.data.queryReceiptType, {}, function(res) {
 
             decorationUtils.qualityIds = {
                 "supervisor": "",
@@ -1969,20 +1967,19 @@ var decorationUtils = {
     },
     countTatol: function(daiId) {
 
-        com.focusPage("#pricing_" + daiId + " .module_activity_border").data("total", 0);
-        var coupon = 0;
-        var thing = 0;
+        var total = com.focusPage("#total_" + daiId).text();
+        var coupon = com.focusPage("#_couponCut strong").text();
+        var thing = com.focusPage("#_thingCut strong").text();
+        var type = com.focusPage("#type_" + daiId).attr("type");
+        var isPrefor = com.focusPage("#isPrefor_" + daiId).attr("isPrefor");
 
-        $.each(com.focusPage(".module_activity_border"), function(i, e) {
+        if (type == 0 && isPrefor == 0) {
+            coupon = utils.accSub(coupon, total);
+        }
+        if (type == 1 && isPrefor == 0) {
+            thing = utils.accSub(thing, total);
+        }
 
-            var _ = $(e);
-            if (_.data().type == 0) {
-                coupon += _.data().total;
-            } else if (_.data().type == 1) {
-                thing += _.data().total
-            }
-
-        });
         com.focusPage("#_couponCut strong").html(coupon);
         com.focusPage("#_thingCut strong").html(thing);
         com.focusPage("#_detail strong").html(utils.accAdd(coupon, thing));

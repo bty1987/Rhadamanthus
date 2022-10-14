@@ -54,11 +54,17 @@ jQuery(function($) {
     contractEdit.cover["cov-sign-month"] = com.dateFormat(contractEdit.current, "MM");
     contractEdit.cover["cov-sign-day"] = com.dateFormat(contractEdit.current, "dd");
 
-    com.post(api.data.queryCustomerById, {
-        "customer.cid": params.decoration.cid
+    var decoration = [];
+
+    com.post(api.decoration.queryDecorationForCommonByOrderId, {
+        "decoration.orderId": contractEdit.decorationOrderId
     }, function(res) {
 
-        var customer = res.customer;
+        decoration = res.decoration;
+        var house = decoration.house;
+        var village = house.village;
+        var proper = village.cityProper;
+        var customer = res.decoration.customer;
 
         com.focusPage("#con-customer-name", "#form").val(customer.name);
         com.focusPage("#sin-customer-phone", "#form").val(customer.phone);
@@ -76,6 +82,12 @@ jQuery(function($) {
 
         contractEdit.cover["sin-company-phone"] = customer.companyPhone;
 
+        contractEdit.decoration = decoration;
+
+        contractEdit.cover["cov-buildarea"] = decoration.house.buildArea;
+        contractEdit.cover["cov-address"] = decoration.house.village.name + " " + decoration.house.houseNumber;
+        contractEdit.cover["cov-designer-name"] = decoration.designer.currentName;
+        contractEdit.cover["cov-designer-phone"] = decoration.designer.phone;
     }, null, false);
 
     if (contractEdit.contractArgs.company == "1" && contractEdit.customer.type == 0) {
@@ -87,33 +99,21 @@ jQuery(function($) {
         return false;
     }
 
-    com.post(api.decoration.queryDecorationForCommonByOrderId, {
-        "decoration.orderId": contractEdit.decorationOrderId
-    }, function(res) {
-
-        var data = res.decoration;
-        var house = data.house;
-        var village = house.village;
-        var proper = village.cityProper;
-
-        contractEdit.decoration = data;
-
-        contractEdit.cover["cov-buildarea"] = data.house.buildArea;
-        contractEdit.cover["cov-address"] = data.house.village.name + " " + data.house.houseNumber;
-        contractEdit.cover["cov-designer-name"] = data.designer.currentName;
-        contractEdit.cover["cov-designer-phone"] = data.designer.phone;
-    });
-
     com.post(api.quotation.queryQuotationForDefaultByOrderId, {
         "quotation.orderId": contractEdit.decorationOrderId
     }, function(res) {
 
         var quotation = res.quotation;
-        var preprice = parseInt(utils.accAdd(quotation.undisPrice, utils.accAdd(quotation.disPrice, utils.accAdd(quotation.trafficPrice, quotation.managePrice))))
+        var preprice = parseInt(utils.accAdd(quotation.undisPrice, utils.accAdd(quotation.disPrice, utils.accAdd(quotation.trafficPrice, quotation.managePrice))));
 
         com.focusPage("#con-quotation-total", "#form").val(preprice);
-        com.focusPage("#con-quotation-total-undis", "#form").val(parseInt(utils.accSub(preprice, quotation.managePrice)));
-        com.focusPage("#con-manage-total", "#form").val(quotation.managePrice);
+
+        if (decoration.typeness != constant.decoration().decoration.TYPENESS_NEWFULLREDUCTION_INT) {
+            com.focusPage("#con-quotation-total-undis", "#form").val(parseInt(utils.accSub(preprice, quotation.managePrice)));
+            com.focusPage("#con-manage-total", "#form").val(quotation.managePrice);
+        } else {
+            com.focusPage(".total", "#form").hide();
+        }
 
         contractEdit.quotation = quotation;
     });
@@ -126,6 +126,9 @@ jQuery(function($) {
 
         if (!holonomy.servicePrice)
             holonomy.servicePrice = 0;
+
+        if (!holonomy.materialPrice)
+            holonomy.materialPrice = 0;
 
         com.focusPage("#con-material-total", "#form").val(parseInt(holonomy.materialPrice));
         com.focusPage("#con-service-total", "#form").val(holonomy.servicePrice);
@@ -157,12 +160,15 @@ jQuery(function($) {
 
         data["con-material-total-cn"] = utils.getCNMoney(parseFloat(data["con-material-total"]));
         data["con-quotation-total-cn"] = utils.getCNMoney(parseFloat(data["con-quotation-total"]));
-        data["con-quotation-total-undis-cn"] = utils.getCNMoney(parseFloat(data["con-quotation-total-undis"]));
-        data["con-manage-total-cn"] = utils.getCNMoney(parseFloat(data["con-manage-total"]));
 
         data["con-sign-year"] = com.dateFormat(contractEdit.current, "yyyy");
         data["con-sign-month"] = com.dateFormat(contractEdit.current, "MM");
         data["con-sign-day"] = com.dateFormat(contractEdit.current, "dd");
+
+        if (decoration.typeness != constant.decoration().decoration.TYPENESS_NEWFULLREDUCTION_INT) {
+            data["con-quotation-total-undis-cn"] = utils.getCNMoney(parseFloat(data["con-quotation-total-undis"]));
+            data["con-manage-total-cn"] = utils.getCNMoney(parseFloat(data["con-manage-total"]));
+        }
 
         if (contractEdit.contractArgs.company == "1") {
             delete data["con-customer-ident"];

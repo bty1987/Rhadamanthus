@@ -5,6 +5,10 @@ $(function() {
         control: "",
         color: "blue",
         fullscreen: com.focusPage('#fullscreen'),
+        startscreen: com.focusPage("#startscreen"),
+        stopscreen: com.focusPage("#stopscreen").click(stopScroll),
+
+        intervals: [],
     };
 
     scrolling.fullscreen.click(function() {
@@ -19,25 +23,34 @@ $(function() {
         com.focusPage('#scrolling4addreduce1').css('color', '#c5e2ff');
         com.focusPage('#scrolling4addreduce2').css('color', '#c5e2ff');
         com.focusPage('#scrolling4addreduce3').css('color', '#c5e2ff');
+
         scrolling.control = "#c5e2ff";
         scrolling.color = "#c5e2ff";
         scrolling.scrolling.find('small').css('color', '#c5e2ff');
         com.focusPage('#scrolling4addreduce').find('b').addClass('#c5e2ff');
+
         scrolling.fullscreen.hide();
+        scrolling.stopscreen.hide();
     });
 
     $(document).keyup(function(event) {
 
         if (event.keyCode == 27) {
+
             scrolling.scrolling.removeClass('full-Screen').css('background-color', '');
+
             com.focusPage('#scrolling4addreduce1').css('color', '');
             com.focusPage('#scrolling4addreduce2').css('color', '');
             com.focusPage('#scrolling4addreduce3').css('color', '');
+
             scrolling.scrolling.find('small').css('color', 'blue');
             scrolling.control = "";
             scrolling.color = "blue";
+
             com.focusPage('#scrolling4addreduce').find('b').removeClass();
+
             scrolling.fullscreen.show();
+            scrolling.stopscreen.show();
         }
     });
 
@@ -76,30 +89,19 @@ $(function() {
 
             var $liLine = $('<li></li>').addClass('item item-orange clearfix');
 
-            var supervisor = "监理名称: " + com.checkNull(v.decoration.supervisor.currentName, "") + "  装修单: " + v.decoration.orderId + "  地址: " + v.decoration.house.village.name + " " + v.decoration.house.houseNumber + "  金额: " + v.total;
+            var supervisor = "监理: " + com.checkNull(v.decoration.supervisor.currentName, "") + "  装修单: " + v.decoration.orderId + "  地址: " + v.decoration.house.village.name + " " + v.decoration.house.houseNumber + " 创建时间: " + v.createTime + "  金额: <span style='color: red;'>" + v.consPrice + "</span>";
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').css('color', scrolling.color).html(supervisor));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-            var $invalid = $('<div></div>').addClass('pull-right');
-
-            $divBtnWrap.append($invalid).appendTo($h3);
+            $divBtnWrap.appendTo($h3);
 
             var propertyArr = [["装修单: ", v.decoration.orderId, "#7FBF3F"], ["地址: ", v.decoration.house.village.name + " " + v.decoration.house.houseNumber, "#7FBF3F"], ["创建时间: ", v.createTime, "#7FBF3F"], ["金额: ", v.consPrice, "#2ECCFA"], ];
 
             var $label = $('<label></label>');
 
-            $.each(propertyArr, function(index, value) {
-
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(scrolling.control).css('color', value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
             $h3.append($divBtnWrap).append($label);
 
-            $liLine.append($h3).append($ulProperty);
+            $liLine.append($h3);
 
             return $liLine;
         };
@@ -161,7 +163,6 @@ $(function() {
         options["paging.page"] = start;
 
         var interval = 0;
-
         var index = 0;
 
         com.post(api, options, function(res) {
@@ -169,6 +170,9 @@ $(function() {
             render(element, res.paging.data);
 
             interval = setInterval(function() {
+
+                if ($("#scrolling4addreduce").length == 0)
+                    stopScroll();
 
                 if ($("#" + element).length == 0) {
                     clearInterval(interval);
@@ -182,13 +186,17 @@ $(function() {
 
                     com.post(api, options, function(res) {
 
-                        if (res.paging.data.length < res["paging.rows"]) {
-                            options["paging.page"] = start;
+                        if (res.paging.data.length < res.paging.rows) {
+                            options["paging.page"] = start - offset;
                         }
+
                         render(element, res.paging.data);
                     });
                 }
+
             }, 3000);
+
+            scrolling.intervals.push(interval);
         });
     }
 
@@ -201,33 +209,64 @@ $(function() {
 
             render(element, res.addReduceRankVOs);
 
-            if ($("#" + element).find("li.item-orange").length < limit) {
+            interval = setInterval(function() {
 
-                options["paging.page"] = options["paging.page"] + offset;
+                if ($("#scrolling4addreduce").length == 0)
+                    stopScroll();
 
-                com.post(api, options, function(res) {
+                var ele = $("#" + element);
+                var obj = ele.find("li.item-orange")[0]
 
-                    if (res.addReduceRankVOs.length < res["paging.rows"]) {
-                        options["paging.page"] = start;
-                    }
-                    render(element, res.addReduceRankVOs);
-                });
-            }
+                var agent = $(obj).clone();
+
+                obj.remove();
+
+                agent.appendTo(ele.find("ul.item-list"));
+
+            }, 3000);
+
+            scrolling.intervals.push(interval);
 
         });
     }
-    scroll("scrolling4addreduce1", api.addReduce.pageAddReduce, 30, 20, 0, 2, {
-        "addReduce.type": 0,
-        "addReduce.status": 0,
-        "addReduce.paytype": 0
-    }, displayFunc.renderList);
 
-    scroll("scrolling4addreduce2", api.addReduce.pageAddReduce, 30, 20, 1, 2, {
-        "addReduce.type": 0,
-        "addReduce.status": 0,
-        "addReduce.paytype": 0
-    }, displayFunc.renderList);
-    ranks("scrolling4addreduce3", api.report.rankAddReduce, 10, 11, 1, 2, {
+    function startScroll() {
 
-    }, displayFunc.rankeList);
+        ranks("scrolling4addreduce3", api.report.rankAddReduce, 10, 11, 1, 2, {
+
+        }, displayFunc.rankeList);
+
+        scroll("scrolling4addreduce1", api.addReduce.pageAddReduce, 30, 20, 0, 2, {
+            "addReduce.type": 0,
+            "addReduce.paytype": 0,
+            "addReduce.atttype": 0,
+            "statuses[0]": 0,
+            "statuses[1]": 1,
+        }, displayFunc.renderList);
+
+        scroll("scrolling4addreduce2", api.addReduce.pageAddReduce, 30, 20, 1, 2, {
+            "addReduce.type": 0,
+            "addReduce.paytype": 0,
+            "addReduce.atttype": 0,
+            "statuses[0]": 0,
+            "statuses[1]": 1,
+        }, displayFunc.renderList);
+
+        params.intervals = $.extend({}, params.intervals, {
+            "scrolling4addreduce": scrolling.intervals
+        });
+    }
+
+    function stopScroll() {
+
+        $.each(params.intervals.scrolling4addreduce, function(i, v) {
+
+            clearInterval(v);
+        });
+
+        params.intervals.scrolling4addreduce = [];
+    }
+
+    startScroll();
+
 });

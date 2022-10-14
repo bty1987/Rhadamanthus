@@ -94,6 +94,22 @@ Condition.addupRule("data", {
             valuePath: "value"
         }
     },
+    "receiptType-fund": {
+        label: "资金类型",
+        type: "select",
+        submitConfig: {
+            name: "fund",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {// 从后台取数据的各种配置
+            url: api.ds.data,
+            postData: {},
+            listPath: "receiptTypeFund",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
 
     "quotation-version-no": {
         label: "版本编号",
@@ -320,7 +336,7 @@ Condition.addupRule("data", {
             name: "materialBrandName",// 接口中的参数名
             op: "eq",// 查询方式
             validate: null
-            // 校验规则
+        // 校验规则
         },
         dataSource: {// 从后台取数据的各种配置
             url: api.data.queryBrandByPinyin,// 获取数据要调用的接口
@@ -797,6 +813,38 @@ Condition.addupRule("data", {
             validate: null
         }
     },
+    "chart-type": {
+        label: "类型",
+        type: "select",
+        submitConfig: {
+            name: "type",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.data,
+            postData: {},
+            listPath: "chartType",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "chart-level": {
+        label: "等级",
+        type: "select",
+        submitConfig: {
+            name: "level",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.data,
+            postData: {},
+            listPath: "chartLevel",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
 
     "contract-name": {
         label: "名称",
@@ -1008,6 +1056,68 @@ Condition.addupRule("data", {
             keyPath: "key",
             valuePath: "value"
         }
-    }
+    },
+    "custype-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
+        }
+    },
+    "custype-status": {
+        label: "状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.data,
+            postData: null,
+            listPath: "custypeStatus",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
+    "constant-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
+        }
+    },
+    "constant-module": {
+        label: "模块",
+        type: "text",
+        submitConfig: {
+            name: "module",
+            op: "cn",
+            validate: null
+        }
+    },
+    "constant-field": {
+        label: "字段",
+        type: "text",
+        submitConfig: {
+            name: "field",
+            op: "cn",
+            validate: null
+        }
+    },
+    "constant-key": {
+        label: "键",
+        type: "text",
+        submitConfig: {
+            name: "key",
+            op: "cn",
+            validate: null
+        }
+    },
 
 });

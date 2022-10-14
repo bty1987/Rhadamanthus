@@ -54,25 +54,9 @@ jQuery(function($) {
     com.datetime(construction.items.drawlineTime);
     com.datetime(construction.items.designTime);
 
-    com.post(api.data.queryConstructionNode, {}, function(res) {
-
-        construction.constructionNodes = res.constructionNodes.split("sort", "name");
-
-        construction.constructionNodes[0] = "初始";
-        construction.constructionNodes[1] = "开工";
-        construction.constructionNodes[2] = "完工";
-
-    }, null, false);
-
-    com.post(api.ds.construction, {}, function(res) {
-
-        construction.isAccessory = res.isAccessory.split("key", "value");
-
-        construction.items.ishovel.bindData(res.isHovel, "key", "value", false);
-        construction.items.iskey.bindData(res.isKey, "key", "value", false);
-        construction.items.isCeremony.bindData(res.isCeremony, "key", "value", false);
-
-    }, null, false);
+    construction.items.ishovel.bindData(constant.construction().constructionInfo.isHovel.datas,"key","value");
+    construction.items.iskey.bindData(constant.construction().constructionInfo.isKey.datas,"key","value");
+    construction.items.isCeremony.bindData(constant.construction().constructionInfo.isCeremony.datas,"key","value");
 
     var displayFunc = (function() {
 
@@ -109,7 +93,7 @@ jQuery(function($) {
             var $btnLock = $('<a></a>').addClass('btn btn-minier btn-pink').html('辅料锁定');
             var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-yellow').html("更新");
 
-            var propertyArr = [["楼盘名:", v.decoration.house.village.name + " " + v.decoration.house.houseNumber, "grey"], ["设计师:", v.decoration.designer.userName, "grey"], ["监理:", v.decoration.supervisor ? v.decoration.supervisor.userName : "", "grey"], ["总价:", v.decoration.orderTotalPrice, "blue"], ["面积:", v.decoration.house.buildArea, "blue"], ["进度:", construction.constructionNodes[v.decoration.projectStatus], "red"], ["辅料额上限:", v.accessoryLimit, "blue"], ["工费额上限:", v.salaryLimit, "blue"], ["辅料总额:", v.accessoryTotal, "blue"], ["工费总额:", v.salaryTotal, "blue"], ["锁定人:", v.locker ? v.locker.currentName : "", "grey"], ["锁定时间:", v.lockTime, "green"], ["辅料控制:", construction.isAccessory[v.accessory], "red"], ];
+            var propertyArr = [["楼盘名:", v.decoration.house.village.name + " " + v.decoration.house.houseNumber, "grey"], ["设计师:", v.decoration.designer.userName, "grey"], ["监理:", v.decoration.supervisor ? v.decoration.supervisor.userName : "", "grey"], ["总价:", v.decoration.orderTotalPrice, "blue"], ["面积:", v.decoration.house.buildArea, "blue"], ["进度:", constant.decoration().decoration.projectStatus.keys[v.decoration.projectStatus], "red"], ["辅料额上限:", v.accessoryLimit, "blue"], ["工费额上限:", v.salaryLimit, "blue"], ["辅料总额:", v.accessoryTotal, "blue"], ["工费总额:", v.salaryTotal, "blue"], ["锁定人:", v.locker ? v.locker.currentName : "", "grey"], ["锁定时间:", v.lockTime, "green"], ["辅料控制:", constant.construction().construction.isAccessory.keys[v.accessory], "red"], ];
 
             $.each(propertyArr, function(index, value) {
 
@@ -121,9 +105,9 @@ jQuery(function($) {
 
             $divBtnWrap.append($btnInfo).append($btnView).append($btnAddReduce).append($btnRe).append($btnAcs).append($btnUpdate).appendTo($h3);
 
-            if (v.accessory == 1) {
+            if (v.accessory == constant.construction().construction.ISACCESSORY_DISABLE_INT) {
                 $divBtnWrap.append($btnOpen);
-            } else if (v.accessory == 0) {
+            } else if (v.accessory == constant.construction().construction.ISACCESSORY_ENABLE_INT) {
                 $divBtnWrap.append($btnLock);
             }
 

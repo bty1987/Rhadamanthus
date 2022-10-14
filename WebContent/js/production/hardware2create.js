@@ -272,7 +272,8 @@ $(function (){
 
             var option = {
                 "hardware.hid": v.hid,
-                "hardware.path": data.resUrl
+                "hardware.path": data.resUrl,
+                "hardware.filesize": data.filesize
             };
             
             com.post(api.production.updateHardware,option,function(res){

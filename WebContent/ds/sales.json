@@ -30,7 +30,7 @@
     "refundType": [
         {"key":"1","value":"退货"},
         {"key":"2","value":"全退"},
-        {"key":"3","value":"倒单 "}
+        {"key":"3","value":"倒单"}
     ],
     "depositpayStatus": [
         {"key":"-1","value":"初始"},
@@ -58,19 +58,20 @@
     ],
     "oalesStatus": [
         {"key":"0","value":"初始"},
-        {"key":"1","value":"确认"},
-        {"key":"2","value":"驳回"},
-        {"key":"3","value":"复核"},
-        {"key":"4","value":"完结"}
+        {"key":"1","value":"提交"},
+        {"key":"2","value":"确认"},
+        {"key":"3","value":"驳回"},
+        {"key":"4","value":"复核"},
+        {"key":"5","value":"完结"}
     ],
     "oalesAtttype": [
-        {"key":"1","value":"内购"},
-        {"key":"2","value":"外购"}
+        {"key":"0","value":"内购"},
+        {"key":"1","value":"外购"}
     ],
     "oalesAwardType": [
-        {"key":"1","value":"设计部"},
-        {"key":"2","value":"服务部"},
-        {"key":"3","value":"工程部"}
+        {"key":"0","value":"设计部"},
+        {"key":"1","value":"服务部"},
+        {"key":"2","value":"工程部"}
     ],
     "isAffirm": [
         {"key":"0","value":"初始"},

@@ -46,11 +46,11 @@ jQuery(function($) {
         contractEdit.current = new Date(res.current);
     }, null, false);
 
-    com.post(api.data.queryCustomerById, {
-        "customer.cid": params.decoration.cid
+    com.post(api.decoration.queryDecorationForCommonByOrderId, {
+        "decoration.orderId": contractEdit.decorationOrderId
     }, function(res) {
 
-        var customer = res.customer;
+        var customer = res.decoration.customer;
 
         com.focusPage("#con-customer-name", "#form").val(customer.name);
         com.focusPage("#sin-customer-phone", "#form").val(customer.phone);

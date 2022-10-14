@@ -26,13 +26,13 @@ jQuery(function($) {
 
     params = parent.params;
 
-    com.post(api.common.queryReceiptType, {}, function(res) {
+    com.post(api.data.queryReceiptType, {}, function(res) {
 
         $.each(res.receiptTypes, function(i, v) {
 
-            if (v.type == 2) {
+            if (v.type == parent.constant.data().receiptType.TYPE_CARD_INT) {
                 receipt.bankInfo[v.no] = v.name;
-            } else if (v.type == 3) {
+            } else if (v.type == parent.constant.data().receiptType.TYPE_BANK_INT) {
                 receipt.checkBankInfo[v.no] = v.name;
             }
         });
@@ -124,7 +124,7 @@ jQuery(function($) {
     }
 
     paymentUtils.initSignet(receipt.htmlName);
-    paymentUtils.initQrcode(receipt.htmlName);
+    paymentUtils.initQrcode(receipt.htmlName, receipt.htmlName+"paymentContractQrcodeModal");
     paymentUtils.bindSignet($("#" + receipt.htmlName + "signets"));
     paymentUtils.showContractBtn(params.payment.drId, 1, printer.args, receipt.order.customer.name, receipt);
 

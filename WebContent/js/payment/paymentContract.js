@@ -2,42 +2,31 @@ jQuery(function($) {
 
     var paymentContract = {
      
-    pcid : null,
-      
-    modals: {
-    	qrcodeModal: null,
-    	paymentContractModal: com.focusPage("#paymentContractModal")
-    },
-    items: {
-        orderId: com.focusPage("#orderId"),
-        paymentType: com.focusPage("#paymentType"),
-        viewpdf: com.focusPage("#viewpdf"),
-        download: com.focusPage("#download"),
-        signet: com.focusPage("#signet"),
-        creater: com.focusPage("#creater"),
-        signner: com.focusPage("#signner"),
-        createTime: com.focusPage("#createTime"),
-        comsignTime: com.focusPage("#comsignTime"),
-        cussignTime: com.focusPage("#cussignTime"),
-        
-        qrcode: null,
-    }, 
-    btns: {
-    	signBtn: com.focusPage("#signBtn", "#paymentContractModal")
-    },
-    paymentTypes: {
-    	0 :'预付款',
-    	1 :'装修款',
-    	2 :'主材款',
-    	3 :'销售款',
-    	4 :'服务款'
-    },
-    status: {
-    	0 :'初始',
-    	1 :'已签',
-    	2 :'失效',
-    	3 :'归档'
-    }
+        pcid : null,
+
+        modals: {
+            qrcodeModal: null,
+            paymentContractModal: com.focusPage("#paymentContractModal")
+        },
+        items: {
+            orderId: com.focusPage("#orderId"),
+            paymentType: com.focusPage("#paymentType"),
+            viewpdf: com.focusPage("#viewpdf"),
+            download: com.focusPage("#download"),
+            signet: com.focusPage("#signet"),
+            creater: com.focusPage("#creater"),
+            signner: com.focusPage("#signner"),
+            createTime: com.focusPage("#createTime"),
+            comsignTime: com.focusPage("#comsignTime"),
+            cussignTime: com.focusPage("#cussignTime"),
+
+            qrcode: null
+        },
+        btns: {
+            signBtn: com.focusPage("#signBtn", "#paymentContractModal")
+        },
+        paymentTypes: constant.payment.receipt.paymentType.keys,
+        status: constant.payment.paymentContract.status.keys
     };
  	
     paymentContract.modals.qrcodeModal = com.initForm("qrcodeModal", "二维码", [{"id": "qrcode", "type": "div", "clazz": "qrcode"}], []);
@@ -80,7 +69,7 @@ jQuery(function($) {
         	paymentContract.modals.paymentContractModal.modal("show");
         	
         }, show: function(v){
-            return (v.status != 3);
+            return (v.status != constant.payment.paymentContract.STATUS_FILE_INT);
         }},
         {name: "客户签", clazz: "btn-warning", handle: function(v){
         	var decoration = {};
@@ -91,7 +80,7 @@ jQuery(function($) {
            	com.popup4frame("客户签", res.redirect);
            });
         }, show: function(v){
-            return (v.status != 3);
+            return (v.status != constant.payment.paymentContract.STATUS_FILE_INT);
         }},
         {name: "已签", clazz: "btn-inverse", handle: function(v){
             com.post(api.payment.affixPaymentContract, {"paymentContract.pcid": v.pcid}, function(){
@@ -100,7 +89,7 @@ jQuery(function($) {
             });
                 return false;
             }, show: function(v){
-                return (v.status == 0);
+                return (v.status == constant.payment.paymentContract.STATUS_VALID_INT);
         }},
         {name: "失效", clazz: "btn-danger", handle: function(v){
         	com.post(api.payment.expirePaymentContract , {"paymentContract.pcid" : v.pcid}, function(){
@@ -109,7 +98,7 @@ jQuery(function($) {
             });
                 return false;
             }, show: function(v){
-                return (v.status == 0);
+                return (v.status == constant.payment.paymentContract.STATUS_VALID_INT);
         }},
         {name: "归档", clazz: "btn-pink", handle: function(v){
         	com.post(api.payment.filingPaymentContract , {"paymentContract.pcid" : v.pcid}, function(){
@@ -118,10 +107,10 @@ jQuery(function($) {
             });
                 return false;
             }, show: function(v){
-                return (v.status == 1);
+                return (v.status == constant.payment.paymentContract.STATUS_SIGN_INT);
         }},
         {name: "下载", clazz: "btn-purple", handle: function(v){
-        	if(v.status == 3) window.open(v.download);
+        	if(v.status == constant.payment.paymentContract.STATUS_FILE_INT) window.open(v.download);
             else com.popup("装修单: " + v.orderId + " 合同", config.media + v.path);
         }},
         {name: "二维查看", clazz: "btn-yellow", handle: function(v){
@@ -134,7 +123,7 @@ jQuery(function($) {
             
             paymentContract.modals.qrcodeModal.modal('show');
         }, show: function(v){
-            return (v.status != 3);
+            return (v.status != constant.payment.paymentContract.STATUS_FILE_INT);
         }},
         {name: "二维签名", clazz: "btn-success", handle: function(v){
         	 paymentContract.items.qrcode.html("").qrcode({
@@ -146,7 +135,7 @@ jQuery(function($) {
              
         	 paymentContract.modals.qrcodeModal.modal('show');
         }, show: function(v){
-            return (v.status != 3);
+            return (v.status != constant.payment.paymentContract.STATUS_FILE_INT);
         }},
         {name: "二维客签", clazz: "btn-warning", handle: function(v){
         	 paymentContract.items.qrcode.html("").qrcode({
@@ -158,21 +147,21 @@ jQuery(function($) {
              
         	 paymentContract.modals.qrcodeModal.modal('show');
         }, show: function(v){
-            return (v.status != 3);
+            return (v.status != constant.payment.paymentContract.STATUS_FILE_INT);
         }},
         {name: "签名通知", clazz: "btn-inverse", handle: function(v){
         	com.showConfirm("是否发送签章通知", function () {
                 com.post(api.payment.sendPaymentContract, {"paymentContract.pcid" : v.pcid,"paymentContract.type" : 1});
             });
         }, show: function(v){
-            return (v.status != 3);
+            return (v.status != constant.payment.paymentContract.STATUS_FILE_INT);
         }},
         {name: "客签通知", clazz: "btn-danger", handle: function(v){
         	com.showConfirm("是否发送签订通知", function () {
                 com.post(api.payment.sendPaymentContract, {"paymentContract.pcid" : v.pcid,"paymentContract.type" : 2});
             });
         }, show: function(v){
-            return (v.status != 3);
+            return (v.status != constant.payment.paymentContract.STATUS_FILE_INT);
         }},
         {name: "查看通知", clazz: "btn-pink", handle: function(v){
         	com.showConfirm("是否发送查看通知", function () {
@@ -184,7 +173,7 @@ jQuery(function($) {
                 com.post(api.payment.sendPaymentContract, {"paymentContract.pcid" : v.pcid,"paymentContract.type" : 4});
             });
         }, show: function(v){
-            return (v.status != 3);
+            return (v.status != constant.payment.paymentContract.STATUS_FILE_INT);
         }}
     ];
   

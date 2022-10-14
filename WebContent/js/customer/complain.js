@@ -3,17 +3,8 @@ jQuery(function($) {
     var complain = {
 
         cid: null,
-        complainLevel:{},
-        complainStatus:{},
-        complainGladness :{},
         editFlg: false
     };
-
-    com.post(api.ds.customer, {}, function(res){
-        complain.complainLevel = res.complainLevel.split("key", "value");
-        complain.complainStatus = res.complainStatus.split("key", "value");
-        complain.complainGladness = res.complainGladness.split("key", "value");
-    },null ,false);
 
     var displayFunc  = (function(){
 
@@ -49,9 +40,9 @@ jQuery(function($) {
                 ["创建时间: ", v.createTime, "green"],
                 ["操作时间: ", v.updateTime, "green"],
                 ["完成时间: ", v.finishTime, "green"],
-                ["等级: ", complain.complainLevel[v.level], "red"],
-                ["状态: ", complain.complainStatus[v.status], "red"],
-                ["满意度: ", complain.complainGladness[v.gladness], "red"],
+                ["等级: ", constant.customer().complain.complainType.keys[v.level], "red"],
+                ["状态: ", constant.customer().complain.status.keys[v.status], "red"],
+                ["满意度: ", constant.customer().complain.complainStatus.keys[v.gladness], "red"],
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -63,9 +54,9 @@ jQuery(function($) {
 
             $liLine.append($h3).append($ulProperty);
             $btnDiv.append($btnComplaint);
-            if(v.status == 1){
+            if(v.status == constant.customer().complain.STATUS_DISPOSE_SHORT){
                 $btnDiv.append($btnFinish);
-            }else if(v.status == 2){
+            }else if(v.status == constant.customer().complain.STATUS_END_SHORT){
                 $btnDiv.append($btnClose);
             }
             $h3.append($title).append($btnDiv);

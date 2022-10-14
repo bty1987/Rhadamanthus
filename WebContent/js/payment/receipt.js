@@ -1,7 +1,7 @@
 jQuery(function ($) {
     receipt = {
-        paymentTypes: {},
-        receiptTypes: {},
+        paymentTypes: constant.payment.receipt.paymentType.keys,
+        receiptTypes: constant.payment.receiptType.receiptType.keys,
         items: {
             executeDates: com.focusPage("#executeDates"),
             executeTimes: com.focusPage("#executeTimes")
@@ -18,20 +18,6 @@ jQuery(function ($) {
     receipt.modals.receiptModal.on('hide.bs.modal', function () {
         com.closeTip();
     });
-
-    com.post(api.ds.payment, {}, function (res) {
-        var paymentTypes = res.receiptPaymentType;
-        var receiptTypes = res.receiptType;
-
-        $.each(paymentTypes, function (i, v) {
-            receipt.paymentTypes[v.key] = v.value;
-        });
-
-        $.each(receiptTypes, function (i, v) {
-            receipt.receiptTypes[v.key] = v.value;
-        });
-
-    }, null, false);
 
     var displayFunc = (function () {
         var renderList = function (tableId, listData) {
@@ -139,11 +125,14 @@ jQuery(function ($) {
 
         options["plan.args"] = com.focusPage("#idreceiptTimes").val();
 
-        var times = receipt.items.executeDates.val() + ' ' + receipt.items.executeTimes.val();
-        var executeTime = new Date(times);
+        var times = new Date(receipt.items.executeDates.val() + ' ' + receipt.items.executeTimes.val());
 
-        if (planUtils.TimeComparison(executeTime, config.planTimeLimit)) {
-            options["plan.executeTime"] = times;
+        var date = receipt.items.executeDates.val();
+        var time = receipt.items.executeTimes.val();
+        var executeTime = date.replace(/-/g, '').substr(2) + time.replace(/:/g, '').substr(0, 4);
+
+        if (planUtils.TimeComparison(times, config.planTimeLimit)) {
+            options["plan.executeTime"] = executeTime;
         } else {
             com.showAlert(com.warning, "执行时间请大于当前时间" + config.planTimeLimit + "分钟!");
             return;

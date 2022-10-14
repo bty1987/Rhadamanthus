@@ -44,8 +44,8 @@ jQuery(function($){
             var propertyArr = [
                 ["积分操作:", v.score, "grey"],
                 ["操作时间:", v.operateTime, "green"],
-                ["类型:", v.type == 0 ? "新增" : "提取",'red'],
-                ["状态:", v.status!=0?(v.status==1?"通过":"拒绝"):"初始", 'red']
+                ["类型:", constant.customer().vscoreRecord.type.keys[v.type],'red'],
+                ["状态:", constant.customer().vscoreRecord.status.keys[v.status], 'red']
             ];
 
             $.each(propertyArr ,function(index, value){
@@ -55,9 +55,9 @@ jQuery(function($){
                 $liProperty.appendTo($ulProperty);
             });
 
-            if(v.status == 0){
+            if(v.status == constant.customer().vscoreRecord.STATUS_INIT_INT){
                 $divBtnWrap.appendTo($h3);
-            }else if(v.status == 1 || v.status == 2){
+            }else if(v.status == constant.customer().vscoreRecord.STATUS_ADOPT_INT || v.status == constant.customer().vscoreRecord.STATUS_REFUSE_INT){
                 $divBtnWrap;
             }
 
@@ -130,8 +130,8 @@ jQuery(function($){
                 var propertyArr = [
                     ["积分操作:", v.score, "grey"],
                     ["操作时间:", v.operateTime, "green"],
-                    ["类型:", v.type == 0 ? "新增" : "提取",'red'],
-                    ["状态:", v.status!=0?(v.status==1?"通过":"拒绝"):"初始" , 'red']
+                    ["类型:", constant.customer().vscoreRecord.type.keys[v.type],'red'],
+                    ["状态:", constant.customer().vscoreRecord.status.keys[v.status], 'red']
                 ];
 
                 $.each(propertyArr ,function(index, value){
@@ -141,9 +141,9 @@ jQuery(function($){
                     $liProperty.appendTo($ulProperty);
                 });
 
-                if(v.status == 0){
+                if(v.status == constant.customer().vscoreRecord.STATUS_INIT_INT){
                     $divBtnWrap.append($btnPass).append($btndown).appendTo($h3);
-                }else if(v.status == 1 || v.status == 2){
+                }else if(v.status == constant.customer().vscoreRecord.STATUS_ADOPT_INT || v.status == constant.customer().vscoreRecord.STATUS_REFUSE_INT){
                     $divBtnWrap;
                 }
 

@@ -679,6 +679,35 @@ Condition.addupRule("quotation", {
         }
     },
 
+    "selection-affirmTime": {
+        label: "确认时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "affirmTime",
+            op: "eq",
+            validate: null
+        }
+    },
+
+    "selection-isAffirm": {
+        label: "客户确认",
+        type: "select",
+        submitConfig: {
+            name: "isAffirm",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.ds.quotation,
+            postData: {
+                "timestamp": new Date().getTime()
+            },
+            listPath: "addReduceisAffirmDict",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
     // 报价-定额单
     "norm-decoration-orderId": {
         label: "装修单号",

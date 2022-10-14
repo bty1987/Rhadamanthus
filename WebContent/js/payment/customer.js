@@ -18,7 +18,7 @@ jQuery(function ($) {
             selectBtn: com.focusPage("#selectBtn", "#paymentCustomer").click(query),
             resetBtn: com.focusPage("#resetBtn", "#paymentCustomer").click(reset),
             collectBtn: com.focusPage("#collectBtn", "#paymentCustomer").click(showCollectModel),
-            posPush: com.focusPage("#posPush", "#paymentCustomer"),
+            creatPaytran: com.focusPage("#creatPaytran", "#paymentCustomer"),
             collectMoney: com.focusPage("#collect", "#paymentCustomer").click(collectMoney)
 
         },
@@ -31,20 +31,15 @@ jQuery(function ($) {
         posValues: {},
 
         pageConfig: {},
-        salesPaymentTypeData: {},
-        count: 0
+        salesPaymentTypeData: constant.payment.materialPayment.paymentType.keys,
+        count: 0,
+        typeNo: 6,
+        atttype: 0
     };
 
-    com.post(api.ds.payment, {}, function (res) {
-        for (var i = 0; i < res.materialPaymentType.length; i++) {
-            var paymentType = res.materialPaymentType[i];
-            customerPayment.salesPaymentTypeData[paymentType.key] = paymentType.value;
-        }
+    customerPayment.items.posway.bindData(constant.payment.receiptType.posway.datas, "key", "value");
 
-        customerPayment.items.posway.bindData(res.posway, "key", "value");
-    }, null, false);
-
-    com.post(api.common.queryReceiptTypeByType, {"receiptType.type": 2}, function(res){
+    com.post(api.data.queryReceiptTypeByType, {"receiptType.type": 2}, function(res){
         $.each(res.receiptTypes, function(i, v){
             customerPayment.posValues[v.no] = v;
             customerPayment.bankUtil.push({"key": v.no, "value": v.name});
@@ -63,8 +58,8 @@ jQuery(function ($) {
     });
 
     //pos推送
-    customerPayment.btns.posPush.unbind().click(function(){
-        paymentUtils.pushPos(customerPayment, 0, customerPayment.items.orderNumber.val());
+    customerPayment.btns.creatPaytran.unbind().click(function(){
+        paymentUtils.pushPos(customerPayment, customerPayment.items.orderNumber.val());
         return false;
     });
 

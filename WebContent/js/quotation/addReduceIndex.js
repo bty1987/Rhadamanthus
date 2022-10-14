@@ -43,6 +43,8 @@ jQuery(function($) {
         }, function(res) {
 
             drawdecoration(res.decoration);
+
+            addReduce.decoration = res.decoration;
         }, null, false);
 
     }
@@ -66,16 +68,6 @@ jQuery(function($) {
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('业务员: ' + decoration.salesman.currentName)).appendTo($info);
     }
 
-    com.post(api.ds.quotation, {}, function(res) {
-
-        addReduce.types = res.addReduceType.split("key", "value");
-        addReduce.paytypes = res.addReducePaytype.split("key", "value");
-        addReduce.statuses = res.addReduceStatus.split("key", "value");
-        addReduce.atttypes = res.addReduceAtttype.split("key", "value");
-        addReduce.isAffirms = res.addReduceisAffirmDict.split("key", "value");
-
-    }, null, false);
-
     var searcher = new Searcher();
 
     var linebtns = [{
@@ -98,7 +90,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return ((v.status == 0 || v.status == 1) && v.paytype == 0 && v.type == 0);
+            return ((v.status == constant.quotation().addreduce.STATUS_UNSUBMIT_INT || v.status == constant.quotation().addreduce.STATUS_SUBMIT_INT) && v.paytype == constant.quotation().addreduce.PAYTYPE_PAY_INT && v.type == constant.quotation().addreduce.TYPE_ADD_INT);
         }
     }, {
         name: "特批",
@@ -109,7 +101,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return ((v.status == 0 || v.status == 1) && v.paytype == 0 && v.type == 0);
+            return ((v.status == constant.quotation().addreduce.STATUS_UNSUBMIT_INT || v.status == constant.quotation().addreduce.STATUS_SUBMIT_INT) && v.paytype == constant.quotation().addreduce.PAYTYPE_PAY_INT && v.type == constant.quotation().addreduce.TYPE_ADD_INT);
         }
     }, {
         name: "不退",
@@ -120,7 +112,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return ((v.status == 0 || v.status == 1) && v.paytype == 0 && v.type == 1);
+            return ((v.status == constant.quotation().addreduce.STATUS_UNSUBMIT_INT || v.status == constant.quotation().addreduce.STATUS_SUBMIT_INT) && v.paytype == constant.quotation().addreduce.PAYTYPE_PAY_INT && v.type == constant.quotation().addreduce.TYPE_REDUCE_INT);
         }
     }, {
         name: "确认",
@@ -134,7 +126,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return ((v.status == 0 || v.status == 1) && (v.paytype == 1 || v.paytype == 2));
+            return ((v.status == constant.quotation().addreduce.STATUS_UNSUBMIT_INT || v.status == constant.quotation().addreduce.STATUS_SUBMIT_INT) && (v.paytype == constant.quotation().addreduce.PAYTYPE_COM_INT || v.paytype == constant.quotation().addreduce.PAYTYPE_ARO_INT));
         }
     }, {
         name: "删除",
@@ -148,14 +140,15 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == 0 || v.status == 1);
+            return (v.status == constant.quotation().addreduce.STATUS_UNSUBMIT_INT || v.status == constant.quotation().addreduce.STATUS_SUBMIT_INT);
         }
     }, ];
 
     if (addReduce.pageType == null) {
 
-        com.focusPage('#fl-statement').statement("装修单", "增减项").show();
+        com.focusPage('#fl-statement').statement("报价", "增减单").show();
         com.focusPage('#decorationInfo').show();
+
         com.focusPage("#pagenation").hide();
 
         initDecorationInfo();
@@ -176,13 +169,13 @@ jQuery(function($) {
             name: "类别",
             prop: "type",
             clazz: "red",
-            dataset: addReduce.types
+            dataset: constant.quotation().addreduce.type.keys
         }, {
             field: "atttype",
             name: "类型",
             prop: "atttype",
             clazz: "red",
-            dataset: addReduce.atttypes
+            dataset: constant.quotation().addreduce.atttype.keys
         }, {
             field: "undisPrice",
             name: "非打折总额",
@@ -196,7 +189,10 @@ jQuery(function($) {
         }, {
             field: "managePrice",
             name: "管理费",
-            prop: "managePrice",
+            prop: function(v) {
+
+                return v.manageDiscount == constant.quotation().addreduce.MANAGEDISCOUNT_DISCOUNT_INT ? utils.changeThrDecimal(utils.accMul(v.managePrice, utils.accDiv(v.discount == 0 ? addReduce.decoration.discount : v.discount, 10))) : v.managePrice;
+            },
             clazz: "blue"
         }, {
             field: "consPrice",
@@ -213,19 +209,19 @@ jQuery(function($) {
             name: "状态",
             prop: "status",
             clazz: "red",
-            dataset: addReduce.statuses
+            dataset: constant.quotation().addreduce.status.keys
         }, {
             field: "paytype",
             name: "付款类型",
             prop: "paytype",
             clazz: "red",
-            dataset: addReduce.paytypes
+            dataset: constant.quotation().addreduce.paytype.keys
         }, {
             field: "isAffirm",
             name: "是否确认",
             prop: "isAffirm",
             clazz: "red",
-            dataset: addReduce.isAffirms
+            dataset: constant.quotation().addreduce.isAffirm.keys
         }, {
             field: "createTime",
             name: "创建时间",
@@ -251,18 +247,31 @@ jQuery(function($) {
     if (addReduce.pageType == "page") {
 
         com.focusPage("#addReducePageContent").removeClass("page-content");
-        com.focusPage("#btnList").addClass("hide")
 
         params.quotation.atttype = params['urlLoadParams'].atttype;
 
         searcher.base("condList", "pagenation", "resultList", api.addReduce.pageAddReduce);
         searcher.condition(["quotation-addreduce-orderId", "quotation-addreduce-designer", "quotation-addreduce-village", "quotation-addreduce-houseNumber", "quotation-addreduce-houseArea", "quotation-addreduce-isaffirm", "quotation-addreduce-createTime", "quotation-addreduce-affirmTime"]);
+        searcher.history("addReducePostData");
 
         var lineprops = [{
             field: "decoration.orderId",
             name: "装修单号",
             prop: "decoration.orderId",
-            clazz: "grey"
+            clazz: "blue",
+            click: function(btn, v) {
+
+                com.post(api.decoration.queryDecorationForCommonByOrderId, {
+                    "decoration.orderId": v.decoration.orderId
+                }, function(res) {
+
+                    var decoration = res.decoration;
+                    var address = decoration.house.village.cityProper.city.name + ' ' + decoration.house.village.cityProper.name + ' ' + decoration.house.village.name + ' ' + decoration.house.houseNumber;
+                    var typeness = constant.decoration().decoration.typeness.keys[decoration.typeness];
+
+                    com.showTip(btn, "装修单号:" + decoration.orderId + "<br\>楼盘地址:" + address + "<br\>类型:" + typeness + "<br\>等级:" + decoration.grade, "bottom");
+                });
+            }
         }, {
             field: "name",
             name: "楼盘",
@@ -300,13 +309,13 @@ jQuery(function($) {
             name: "类别",
             prop: "type",
             clazz: "red",
-            dataset: addReduce.types
+            dataset: constant.quotation().addreduce.type.keys
         }, {
             field: "atttype",
             name: "类型",
             prop: "atttype",
             clazz: "red",
-            dataset: addReduce.atttypes
+            dataset: constant.quotation().addreduce.atttype.keys
         }, {
             field: "undisPrice",
             name: "非打折总额",
@@ -325,7 +334,10 @@ jQuery(function($) {
         }, {
             field: "managePrice",
             name: "管理费",
-            prop: "managePrice",
+            prop: function(v) {
+
+                return v.manageDiscount == constant.quotation().addreduce.MANAGEDISCOUNT_DISCOUNT_INT ? utils.changeThrDecimal(utils.accMul(v.managePrice, utils.accDiv(v.discount == 0 ? v.decoration.discount : v.discount, 10))) : v.managePrice;
+            },
             clazz: "blue"
         }, {
             field: "total",
@@ -337,19 +349,25 @@ jQuery(function($) {
             name: "状态",
             prop: "status",
             clazz: "red",
-            dataset: addReduce.statuses
+            dataset: constant.quotation().addreduce.status.keys
         }, {
             field: "paytype",
             name: "付款类型",
             prop: "paytype",
             clazz: "red",
-            dataset: addReduce.paytypes
+            dataset: constant.quotation().addreduce.paytype.keys
         }, {
             field: "isAffirm",
             name: "是否确认",
             prop: "isAffirm",
             clazz: "red",
-            dataset: addReduce.isAffirms
+            dataset: constant.quotation().addreduce.isAffirm.keys
+        }, {
+            field: "manageDiscount",
+            name: "管理费折扣",
+            prop: "manageDiscount",
+            clazz: "red",
+            dataset: constant.quotation().addreduce.manageDiscount.keys
         }, {
             field: "createTime",
             name: "创建时间",
@@ -477,7 +495,7 @@ jQuery(function($) {
         };
 
         url = api.addReduce.addAddReduce;
-        options["addReduce.status"] = 0;
+        options["addReduce.status"] = constant.quotation().addreduce.STATUS_UNSUBMIT_INT;
         options["addReduce.total"] = 0;
         options["addReduce.managePrice"] = 0;
 

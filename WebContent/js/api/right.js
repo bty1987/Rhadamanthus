@@ -42,6 +42,9 @@ $.extend(api, {right: {
     updateSalesFunctionRight: {url: "updateSalesFunctionRight.do"},
 
     queryCustomerOriginFunctionRight: {url: "queryCustomerOriginFunctionRight.do"},
-    updateCustomerOriginFunctionRight: {url: "updateCustomerOriginFunctionRight.do"}
+    updateCustomerOriginFunctionRight: {url: "updateCustomerOriginFunctionRight.do"},
+
+    querySalesDeliveryStatusRight: {url: "querySalesDeliveryStatusRight.do"},
+    updateSalesDeliveryStatusRight: {url: "updateSalesDeliveryStatusRight.do"}
 
 }});

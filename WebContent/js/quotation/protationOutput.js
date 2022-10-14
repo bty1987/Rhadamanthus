@@ -1,6 +1,7 @@
 function printHeader(headStr) {
 
     var headHtml = "";
+
     headHtml += '<table style="font-size: 14px" width="100%" bgcolor="#000000" border="0" cellpadding="1" cellspacing="0">';
     headHtml += '<tbody><tr bgcolor="#FFFFFF">';
     headHtml += '<td colspan="8" style="font-size: 20px" align="center"> <b>' + headStr + '</b></td>';
@@ -28,7 +29,8 @@ function printProjectTable() {
 
     var index = 0;
     var contentHtml = '';
-    var protations = protationsa;
+    var protationItems = protationItems;
+
     contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
     contentHtml += '<tbody><tr bgcolor="#FFFFFF">';
     contentHtml += '<td width="4%" align="center">序号</td>';
@@ -41,7 +43,9 @@ function printProjectTable() {
 
     contentHtml += '<table style="font-size: 12px" width="100%" bgcolor="#000000" border="1" cellpadding="1" cellspacing="0">';
     contentHtml += '<tbody>';
-    $.each(protations, function(i, qv) {
+
+    $.each(protationItems, function(i, qv) {
+
         contentHtml += '<tr bgcolor="#FFFFFF">';
         contentHtml += '<td width="4%" align="center">' + (index + 1) + '</td>';
         contentHtml += '<td width="7%" align="center">' + qv.piid + '</td>';
@@ -49,6 +53,7 @@ function printProjectTable() {
         contentHtml += '<td width="5%" align="center">' + qv.num + '</td>';
         contentHtml += '<td width="5%" align="center">' + qv.price + '</td>';
         contentHtml += '</tr>';
+
         index++;
     });
 
@@ -75,6 +80,7 @@ function printProjectTable() {
 }
 
 jQuery(function($) {
+
     api = parent.api;
     config = parent.config;
     server = parent.server;
@@ -82,30 +88,37 @@ jQuery(function($) {
     com = parent.com;
     company = parent.company;
     params = parent.params;
-    pid = params.protationId
+
+    pid = params.quotation.protationId
     protation = null;
-    protationsa = null;
+    protationItems = null;
+
     quotationUtils.quotationDetail = {};
-    var url = api.quotation.queryProtationByPid;
+
     com.post(api.quotation.queryProtationByPid, {
         "protation.pid": pid
     }, function(res) {
+
         protation = res;
     }, null, false);
 
     com.post(api.quotation.queryProtationItemByPid, {
         "protationItem.pid": pid
     }, function(res) {
-        protationsa = res.protationItems;
+
+        protationItems = res.protationItems;
     }, null, false);
+
     generatePrintPage();
 
 })
 
 function generatePrintPage() {
+
     var html = "";
 
     html += printHeader("装修单预签");
     html += printProjectTable();
+
     $("#protationLits").html(html)
 }

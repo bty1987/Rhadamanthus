@@ -1,5 +1,6 @@
 
 $(function () {
+
     var salesPayment = {
         htmlName: "sales",
         depage: params['urlLoadParams'].depage,
@@ -57,7 +58,7 @@ $(function () {
 
             checkvAdd: com.focusPage("#checkvAdd", "#salesPayment"),
             couponAdd: com.focusPage("#couponAdd", "#salesPayment"),
-            posPush: com.focusPage("#posSend", "#salesPayment")
+            createPaytran: com.focusPage("#createPaytran", "#salesPayment")
         },
 
         modals: {
@@ -89,9 +90,13 @@ $(function () {
         functions: [],
         spids: [],
         isCollects: false,
-        salesPaymentTypeData: {},
-        decorationType: [],
-        pageConfig: {}
+        salesPaymentTypeData: constant.payment.materialPayment.paymentType.keys,
+        decorationType: constant.decoration().decoration.typeness.datas,
+        pageConfig: {},
+        typeNo: 3,
+        atttype: 1,
+        collectType: [constant.payment.materialPayment.PAYMENTTYPE_TYPE_DEPOSIT_INT, constant.payment.materialPayment.PAYMENTTYPE_TYPE_FULL_INT, constant.payment.materialPayment.PAYMENTTYPE_TYPE_DEPOSIT_NOTREFUND_INT],
+        refundType:[constant.payment.materialPayment.PAYMENTTYPE_TYPE_REJECT_INT, constant.payment.materialPayment.PAYMENTTYPE_TYPE_FULL_REFUND_INT, constant.payment.materialPayment.PAYMENTTYPE_TYPE_COUPON_REFUND_INT, constant.payment.materialPayment.PAYMENTTYPE_TYPE_DEPOSIT_REFUND_INT]
     };
 
     //隐藏触发
@@ -118,18 +123,7 @@ $(function () {
         com.cleanItems(salesPayment.items);
     });
 
-    com.post(api.ds.payment, {}, function (res) {
-        for (var i = 0; i < res.materialPaymentType.length; i++) {
-            var paymentType = res.materialPaymentType[i];
-            salesPayment.salesPaymentTypeData[paymentType.key] = paymentType.value;
-        }
-
-        salesPayment.items.posway.bindData(res.posway, "key", "value");
-    }, null, false);
-
-    com.post(api.ds.decoration, {}, function(res){
-        salesPayment.decorationType = res.typeness;
-    }, null, false);
+    salesPayment.items.posway.bindData(constant.payment.receiptType.posway.datas, "key", "value");
 
     //checkbox选中时联动
     com.focusPage("#collectModal :checkbox", "#salesPayment").on("change", function(){
@@ -163,8 +157,8 @@ $(function () {
 
     salesPayment.btns.refundBtn.bindClick(collect);
 
-    salesPayment.btns.posPush.unbind().click(function(){
-        paymentUtils.pushPos(salesPayment, 3, salesPayment.payment.sales.orderId);
+    salesPayment.btns.createPaytran.unbind().click(function(){
+        paymentUtils.pushPos(salesPayment, salesPayment.payment.sales.orderId);
         return false;
     });
 
@@ -202,6 +196,9 @@ $(function () {
             var $btnCollect = $('<a></a>').addClass('btn btn-minier').html('收款');
             var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-info').html('打印');
             var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-success').html('更新');
+            var $btnCode = $('<a></a>').addClass('btn btn-minier btn-success').html('收款码');
+            var $btnCodePush = $('<a></a>').addClass('btn btn-minier btn-pink').html('微信推送');
+            var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-orange').html('验证');
 
             var propertyArr = paymentUtils.getPropertyArr(salesPayment, v, v.sales, salesPayment.paymentStatusArray);
 
@@ -225,20 +222,23 @@ $(function () {
             $divBtnWrap.appendTo($h3);
             $liLine.append($h3).append($ulProperty);
 
-            if ([2, 3, 8].indexOf(v.type) != -1) $btnCollect.text('收款').addClass("btn-info");
-            if ([4, 5, 6, 7].indexOf(v.type) != -1) $btnCollect.text('退款').addClass("btn-danger");
+            if (salesPayment.collectType.indexOf(v.type) != -1) $btnCollect.text('收款').addClass("btn-info");
+            if (salesPayment.refundType.indexOf(v.type) != -1) $btnCollect.text('退款').addClass("btn-danger");
 
             if(salesPayment.pageConfig.pageBtn.contains("payway")) paymentUtils.drawHistoryData(salesPayment, v.salesReceipt, $liLine, "");
 
             if (salesPayment.pageConfig.pageBtn.contains("decorationInfo")) $divBtnWrap.append($btnDecorationInfo);
             if(salesPayment.pageConfig.pageBtn.contains("collect")) $divBtnWrap.append($btnCollect);
-            if(v.status != 0 && salesPayment.pageConfig.pageBtn.contains("print")) $divBtnWrap.append($btnPrint);
-            if(v.status == 1 && salesPayment.pageConfig.pageBtn.contains("update")) $divBtnWrap.append($btnUpdate);
+            if(v.status != constant.payment.materialPayment.STATUS_INIT_INT && salesPayment.pageConfig.pageBtn.contains("print")) $divBtnWrap.append($btnPrint);
+            if(v.status == constant.payment.materialPayment.STATUS_COLLECT_INT && salesPayment.pageConfig.pageBtn.contains("update")) $divBtnWrap.append($btnUpdate);
+            if (v.status == constant.payment.materialPayment.STATUS_INIT_INT && salesPayment.collectType.indexOf(v.type) != -1 && salesPayment.pageConfig.pageBtn.contains("collectCode")) $divBtnWrap.append($btnCode);
+            if (v.status == constant.payment.materialPayment.STATUS_INIT_INT && salesPayment.collectType.indexOf(v.type) != -1 && salesPayment.pageConfig.pageBtn.contains("codePush")) $divBtnWrap.append($btnCodePush);
+            if (v.status == constant.payment.materialPayment.STATUS_INIT_INT && salesPayment.collectType.indexOf(v.type) != -1 && salesPayment.pageConfig.pageBtn.contains("check")) $divBtnWrap.append($btnCheck);
 
             //收款弹窗
             $btnCollect.click(function () {
 
-                if([2, 3, 8].contains(v.type)) paymentUtils.showPos(salesPayment, {"paytran.orderId": v.sales.orderId}, [0, 1]);
+                if(salesPayment.collectType.contains(v.type)) paymentUtils.showPos(salesPayment, {"paytran.orderId": v.sales.orderId, "paytran.atttype": salesPayment.atttype}, [0, 1]);
 
                 initCollect(v, false);
 
@@ -264,6 +264,42 @@ $(function () {
 
                 initUpdate(v);
 
+            });
+
+            //验证
+            $btnCheck.click(function(){
+                //pid是唯一的 + type可以定位到唯一的paytran
+                // pos推送生产的paytran没有pid, pid=0,只有orderId, 小程序端生成的paytran有pid and orderId
+                var checkOptions = {
+                    "paytran.pid": v.spid,
+                    "paytran.type": 3,
+                    "paytran.atttype": 1
+                };
+
+                com.showConfirm("是否验证收款信息?", function(result) {
+                    com.post(api.payment.checkPaytran, checkOptions, function(res){
+                        searcher.doSearch();
+                        com.showAlert(com.info, "验证成功")
+                    });
+                });
+            });
+
+            //二维码
+            $btnCode.click(function () {
+                com.focusPage("#salesCodeQrcodeModal").html("");
+                paymentUtils.initQrcode("salesPayment", "salesCodeQrcodeModal"); //收款码
+                paymentUtils.showQRCode("salesPaymentqrcode", "http://fanglin.vip/wx/wxpay?orderId="+v.sales.orderId+"&paymentType=3"+"&pid="+ v.spid, "salesCodeQrcodeModal");
+            });
+
+            //微信推送
+            $btnCodePush.click(function () {
+                com.showConfirm("是否发送付款通知", function() {
+                    com.post(api.payment.sendSalesPayment, {
+                        "salesPayment.spid": v.spid
+                    }, function(res) {
+                        com.showAlert(com.info, "发送成功");
+                    });
+                });
             });
 
             return $liLine;
@@ -339,7 +375,7 @@ $(function () {
         salesPayment.items.referMoney.val(payment.referMoney).attr("disabled", "disabled");
         salesPayment.items.comment.removeAttr("disabled");
 
-        var type = [4, 5, 6, 7].contains(payment.type) ? 1 : 0; // 0: 收款类型 , 1: 退款类型
+        var type = salesPayment.refundType.contains(payment.type) ? 1 : 0; // 0: 收款类型 , 1: 退款类型
 
         if(salesPayment.pageConfig.paytypes.contains("cash")) paymentUtils.initCash(salesPayment);
         if(salesPayment.pageConfig.paytypes.contains("bank")) paymentUtils.initBank(salesPayment, type);
@@ -422,7 +458,7 @@ $(function () {
 
         var payment = salesPayment.payment;
 
-        if([2, 3, 8].contains(payment.type) && payment.status == 0){
+        if(salesPayment.collectType.contains(payment.type) && payment.status == 0){
             url =  api.payment.collectSalesPayment;
 
             //批量收款参数
@@ -438,10 +474,10 @@ $(function () {
                 options["salesPayment.sales.sid"] = payment.sales.sid;
             }
 
-        }else if([4, 5, 6, 7].contains(payment.type) && payment.status == 0){
+        }else if(salesPayment.refundType.contains(payment.type) && payment.status == 0){
             url = api.payment.refundSalesPayment;
             type = 1;
-        }else if(payment.status == 1){
+        }else if(payment.status == constant.payment.materialPayment.STATUS_COLLECT_INT){
             url = api.payment.updateSalesPayment;
             type = 2;
         }
@@ -516,7 +552,7 @@ $(function () {
                 _grade = $input.attr("data-grade");
             }
 
-            if ([4, 5, 6, 7].contains(parseInt($input.attr("data-type")))) {
+            if (salesPayment.refundType.contains(parseInt($input.attr("data-type")))) {
                 flag = true;
                 com.showAlert(com.warning, "批量收款不支持退款");
                 return false;
@@ -544,7 +580,7 @@ $(function () {
         salesPayment.payment = {"spid": payment.spid, "referMoney": sumMoney, "type": payment.type, "status": payment.status};
         salesPayment.payment.sales = {"sid": payment.sid,  "orderId": payment.orderid, "grade": payment.grade};
 
-        if([2, 3, 8].contains(payment.type)) paymentUtils.showPos(salesPayment, {"paytran.orderId": payment.orderid}, [0, 1]);
+        if(salesPayment.collectType.contains(payment.type)) paymentUtils.showPos(salesPayment, {"paytran.orderId": payment.orderid, "paytran.atttype": salesPayment.atttype}, [0, 1]);
 
         initCollect(salesPayment.payment, true);
     });
@@ -560,7 +596,7 @@ $(function () {
             var $type = parseInt($that.attr('data-type'));
             var $referMoney = $that.attr('data-refermoney');
 
-            if ([4, 5, 6, 7].indexOf($type) != -1) {
+            if (salesPayment.refundType.indexOf($type) != -1) {
                 $total = utils.accSub($total, $referMoney);
             } else {
                 $total = utils.accAdd($total, $referMoney);
@@ -630,30 +666,27 @@ $(function () {
             }, function (v) {
                 v.salesReceipt.collecter = v.salesReceipt.collecter == null ? {"salesReceipt.collecter": ""} : v.salesReceipt.collecter;
                 if (v.salesReceipt.bank != null && v.salesReceipt.bank != 0) {
-                    var $info = ' ';
-                    var _s = v.salesReceipt.bankInfo.split('#');
-                    for (var i = 1; i < _s.length - 1; i++) {
-                        var _i = _s[i].split('|');
-                        $info += salesPayment.bankInfo[_i[0]] + " " + _i[1] + ", " + _i[2] + ", ";
-                    }
-
-                    v.salesReceipt.bankInfo = $info;
+                    v.salesReceipt.bankInfo = paymentUtils.splitBankInfo('', v.salesReceipt.bankInfo, salesPayment.bankInfo, true);
                 }
 
                 if (v.salesReceipt.checkv!= null && v.salesReceipt.checkv != 0) {
                     var checkBankInfoStr = v.salesReceipt.checkvBank;
                     if(checkBankInfoStr.indexOf("#") != -1){
-                        var $checkvInfo = ' ';
-                        var _c = v.salesReceipt.checkvBank.split('#');
-                        for(var i=1;i<_c.length-1;i++){
-                            var _i = _c[i].split('|');
-                            $checkvInfo += salesPayment.checkvInfo[_i[0]] + " " + _i[1] + ", " + _i[2] + ", ";
-                        }
-
-                        v.salesReceipt.checkvBank = $checkvInfo;
+                        v.salesReceipt.checkvBank = paymentUtils.splitBankInfo('', v.salesReceipt.checkvBank, salesPayment.checkvInfo, true);
                     }else{
                         v.salesReceipt.checkvBank = v.salesReceipt.checkv != null && v.salesReceipt.checkv != "0" ? salesPayment.checkvInfo[v.salesReceipt.checkvBank] : '';
                     }
+                }
+
+                if(v.salesReceipt.coupon != null && v.salesReceipt.coupon != 0){
+                    var $couponInfo = ' ';
+                    var _info = v.salesReceipt.couponInfo.split('#');
+                    for(var i=1;i<_info.length-1;i++){
+                        var _i = _info[i].split(':');
+                        $couponInfo += salesPayment.couponTypeData[_i[0]][1] + " " + _i[1] + ", ";
+                    }
+
+                    v.salesReceipt.couponInfo = $couponInfo;
                 }
 
                 v.salesReceipt.installBank = v.salesReceipt.installment != null && v.salesReceipt.installment != "0" ? salesPayment.bankInfo[v.salesReceipt.installBank] : '';

@@ -11,9 +11,7 @@ jQuery(function ($) {
         submitBtn: com.focusPage("#submitBtn")
     };
 
-    com.post(api.ds.customer, {}, function (data) {
-        repairPay.items.type.bindData(data.repairPayType, "key", "value", true, false);
-    }, null, false);
+   repairPay.items.type.bindData(constant.customer().aepairPay.type.datas,"key","value", true, false);
 
     function renderList() {
         com.post(api.customer.queryRepairpay, {"repairpay.aid": repairPay.aid}, function (data) {
@@ -44,7 +42,7 @@ jQuery(function ($) {
 
             var $liLine = $('<li></li>').addClass('item-blue clearfix');
             var $span = $('<small></small>').addClass('oid blue').css('padding-left', '10px').html(v.money);
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.type == 0 ? "款项" : v.status == 1 ? "扣款" : "成本")).append($span);
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.type == constant.customer().aepairPay.TYPE_MONEY_INT ? "款项" : v.status ==  constant.customer().aepairPay.TYPE_PAID_INT ? "扣款" : "成本")).append($span);
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
@@ -53,9 +51,9 @@ jQuery(function ($) {
             var propertyArr = [
                 ["创建人:", v.creater.currentName, "grey"],
                 ["创建时间:", v.createTime, "grey"],
-                ["类型:", v.type==0? "款项" : v.status == 1 ? "扣款" : "成本", "red"],
+                ["类型:", constant.customer().aepairPay.type.keys[v.type], "red"],
                 ["金额:", v.money, "blue"],
-                ["状态:", v.status == 0 ? "初始" : v.status == 1 ? "已付款" : "已确认", "red"]
+                ["状态:", constant.customer().aepairPay.status.keys[v.status], "red"]
             ];
 
             $.each(propertyArr, function (index, value) {

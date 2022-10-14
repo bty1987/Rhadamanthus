@@ -22,10 +22,6 @@ jQuery(function ($) {
         com.clearValidator();
     });
 
-    com.post(api.ds.customer, {}, function (data) {
-        repair.schedule.bindData(data.repairSchedule, "key", "value", true, false);
-    }, null, false);
-
     function renderList() {
         com.post(api.customer.queryRepair, {"repair.aid": repair.aid}, function (data) {
             displayFunc.init(repair.resultList, data.repairs);
@@ -69,7 +65,7 @@ jQuery(function ($) {
                 ["更新人:", v.updater.currentName, "grey"],
                 ["更新时间:", v.updateTime, "green"],
                 ["维修人:", v.repaier.currentName, "grey"],
-                ["状态:", v.status == 0 ? "初始" : v.status == 1 ? "维修" : v.status == 2 ? "完工" : "关闭", "red"],
+                ["状态:", constant.customer().repair.status.keys[v.status], "red"],
                 ["内容:", v.content, "grey"]
             ];
 
@@ -80,9 +76,9 @@ jQuery(function ($) {
                 $liProperty.appendTo($ulProperty);
             });
 
-            v.status == 0 && $divBtnWrap.append($btnRepair).appendTo($h3);
-            v.status == 1 && $divBtnWrap.append($btnFinish).appendTo($h3);
-            v.status == 2 && $divBtnWrap.appendTo($h3);
+            v.status == constant.customer().repair.STATUS_INIT_INT && $divBtnWrap.append($btnRepair).appendTo($h3);
+            v.status == constant.customer().repair.STATUS_REPAIR_INT && $divBtnWrap.append($btnFinish).appendTo($h3);
+            v.status == constant.customer().repair.STATUS_FINISHED_INT && $divBtnWrap.appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 

@@ -2,8 +2,8 @@
 jQuery(function($) {
 	var receipt = {
 		htmlName: "material",
-		paymentTypeData: {},
-		advanceTypeData: {"0":"-"},
+		paymentTypeData: parent.constant.payment.materialPayment.paymentType.keys,
+		advanceTypeData: parent.constant.payment.materialPayment.advanceType.keys,
 		commonInfo: {},
 		paymentItems: [],
 		receiptItems: [],
@@ -24,11 +24,11 @@ jQuery(function($) {
 
 	params = parent.params;
 
-	com.post(api.common.queryReceiptType, {}, function (res) {
+	com.post(api.data.queryReceiptType, {}, function (res) {
 		$.each(res.receiptTypes, function (i, v) {
-			if (v.type == 2) {
+			if (v.type == parent.constant.data().receiptType.TYPE_CARD_INT) {
 				receipt.bankInfo[v.no] = v.name;
-			} else if (v.type == 3) {
+			} else if (v.type == parent.constant.data().receiptType.TYPE_BANK_INT) {
 				receipt.checkBankInfo[v.no] = v.name;
 			}
 		});
@@ -37,18 +37,6 @@ jQuery(function($) {
 	var queryDecorationForCommonByOrderId = api.decoration.queryDecorationForCommonByOrderId;
 	var queryMaterialPaymentForNotInitByMrId = api.payment.queryMaterialPaymentForNotInitByMrId;
 
-	com.post(api.ds.payment, {}, function(res){
-		for(var i=0;i<res.advanceType.length;i++){
-			var type = res.advanceType[i];
-			receipt.advanceTypeData[type.key] = type.value;
-		}
-		
-		for(var i=0;i<res.materialPaymentType.length;i++){
-			var paymentType = res.materialPaymentType[i];
-			receipt.paymentTypeData[paymentType.key] = paymentType.value;
-		}
-	}, null, false);
-	
 	com.post(queryDecorationForCommonByOrderId, {"decoration.orderId":params.payment.orderId}, function(res){
 		var decorationOrder = res.decoration;
 		var commonInfo = {};
@@ -154,7 +142,7 @@ jQuery(function($) {
 	}
 
 	paymentUtils.initSignet(receipt.htmlName);
-	paymentUtils.initQrcode(receipt.htmlName);
+	paymentUtils.initQrcode(receipt.htmlName, receipt.htmlName+"paymentContractQrcodeModal");
 	paymentUtils.bindSignet($("#" + receipt.htmlName + "signets"));
 	paymentUtils.showContractBtn(params.payment.mrId, 2, printer.args, receipt.commonInfo.customerName, receipt);
 

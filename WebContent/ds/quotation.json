@@ -7,8 +7,10 @@
     ], "quotationItemType": [
         {"key":"0", "value":"普通"},
         {"key":"1", "value":"成本"},
+        {"key":"4", "value":"非业绩"},
+        {"key":"5", "value":"隐藏"},
         {"key":"2", "value":"自定义"},
-        {"key":"3", "value":"不计"}
+        {"key":"3", "value":"不计"}       
     ], "quotationType": [
 		{"key":"1", "value":"普通"},
 		{"key":"2", "value":"大宅"}
@@ -55,7 +57,8 @@
         {"key":"1", "value":"工程量"},
         {"key":"2", "value":"功能区总额"},
         {"key":"3", "value":"不计算"},
-        {"key":"4", "value":"成本"}
+        {"key":"4", "value":"成本"},
+        {"key":"5", "value":"非业绩"}
     ], "setpackage": [
         {"key":"499", "value":"499"},
         {"key":"599", "value":"699"}
@@ -96,6 +99,10 @@
 		{"key":"0", "value":"未确认"},
 		{"key":"1", "value":"客户确认"}
 	],
+	"addReduceManageDiscount": [
+		{"key":"0", "value":"不打折"},
+		{"key":"1", "value":"打折"}
+	],
 	"presignProduceStatus": [
         {"key":"0", "value":"启用"},
         {"key":"1", "value":"禁用"}
@@ -117,8 +124,7 @@
     
     "quotationStatus": [
         {"key":"0", "value":"启用"},
-        {"key":"1", "value":"禁用"},
-        {"key":"2", "value":"锁定"}
+        {"key":"1", "value":"锁定"}
     ],
     "quotationDefault": [
         {"key":"0", "value":"非默认"},
@@ -139,6 +145,11 @@
         {"key":"1", "value":"锁定"}
     ],
     
+    "selectionPartStatus": [
+        {"key":"0", "value":"有效"},
+        {"key":"1", "value":"无效"}
+    ],
+    
     "selectionItemStatus": [
         {"key":"0", "value":"选材完毕"},
         {"key":"1", "value":"预计配送"},
@@ -152,7 +163,8 @@
         {"key":"1", "value":"拓展增"},
         {"key":"2", "value":"拓展减"},
         {"key":"3", "value":"增减增"},
-        {"key":"4", "value":"增减减"}
+        {"key":"4", "value":"增减减"},
+        {"key":"5", "value":"选材项"}
     ],
     
     "errorCode": 0,

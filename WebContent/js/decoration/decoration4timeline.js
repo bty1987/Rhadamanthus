@@ -13,20 +13,12 @@ $(function() {
 
     var constructionParams = {};
     var constructerParams = {};
-    var construcionScheName = {};
+    var construcionScheName = constant.decoration.decoration.projectStatus.keys;
 
     com.focusPage('#oid').text(order.oid);
 
     com.focusPage('.widget-box').addClass('flloading');
     com.focusPage('.widget-box', '#orderId').removeClass('flloading');
-
-    com.post(api.ds.construction, {}, function(res) {
-
-        $.each(res.constructionSchedule, function(i, v) {
-
-            construcionScheName[v.key] = v.value;
-        });
-    }, null, false);
 
     var initPhotoSwipeFromDOM = function(gallerySelector) {
 
@@ -93,7 +85,9 @@ $(function() {
                 return (el.tagName && el.tagName.toUpperCase() === 'FIGURE');
             });
 
-            if (!clickedListItem) { return; }
+            if (!clickedListItem) {
+                return false;
+            }
 
             // find index of clicked item by looping through all child nodes
             // alternatively, you may define index via data- attribute
@@ -165,7 +159,9 @@ $(function() {
             }
 
             // exit if index not found
-            if (isNaN(options.index)) { return; }
+            if (isNaN(options.index)) {
+                return false;
+            }
 
             if (disableAnimation) {
                 options.showAnimationDuration = 0;

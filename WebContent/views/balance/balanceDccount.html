@@ -1,0 +1,113 @@
+<div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="condList" class="fl_search clearfix"></div> <!-- 查询条件-->
+            <div id="resultList" class="clearfix tab-pane active"></div> <!--查询结果-->
+            <div id="pagenation" class="fl-page-wrap clearfix"></div> <!--分页-->
+        </div>
+    </div>
+
+    <div class="modal fade" id="createBalanceDccountModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="bdid">扣款</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <form class="form-horizontal">
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                        <div class="form-group">
+                                            <label for="name" class="col-sm-3 control-label no-padding-right orange">名称</label>
+                                            <div class="col-md-9">
+                                                <input type="text" id="name" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'/>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="belonger" class="col-sm-3 control-label no-padding-right orange">归属人</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" id="belonger" class="col-xs-10 col-sm-6 v_required v_typeahead" data-placeholder="请输入归属人" data-toggle="popover" data-trigger='manual' data-placement="bottom"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label no-padding-right orange">总额</label>
+                                            <div class="col-md-9">
+                                                <input type="text" class="col-xs-10 col-sm-6 v_float_3" id="cutpay" name="cutpay" data-required="1" data-toggle="popover" data-trigger='manual'>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-right orange">类型</label>
+                                            <div class="col-md-9">
+                                                <select id='type' class='col-xs-10 col-sm-6'></select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-right">说明</label>
+                                            <div class="col-sm-9">
+                                                <textarea id="comment" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
+                                            </div>
+                                       </div>
+                                       <div class="form-group">
+                                           <label class="col-sm-3 control-label no-padding-right orange" for="startTime">开始时间</label>
+                                           <div class="col-sm-9">
+                                               <input class="col-sm-7 col-xs-10 date-picker-date v_required" id="startTime" type="text" data-date-format="yyyy-mm-dd">
+                                           </div>
+                                       </div>
+                                       <div class="form-group">
+                                           <label class="col-sm-3 control-label no-padding-right orange" for="endTime">结束时间</label>
+                                           <div class="col-sm-9">
+                                               <input class="col-sm-7 col-xs-10 date-picker-date v_required" id="endTime" type="text" data-date-format="yyyy-mm-dd">
+                                           </div>
+                                       </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button type="button" id="saveBtn" class="btn btn-primary">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="updateBalanceDccountModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabe2">更新</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+
+                        <div class="form-group">
+                            <label for="name" class="col-sm-3 control-label no-padding-right orange">名称</label>
+                            <div class="col-md-9">
+                                <input type="text" id="updata" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="updateBtn" class="btn btn-primary">保存</button>
+                    <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="stockRecordPopUp" class="portlet box page-content"></div>
+
+<script type="text/javascript">
+    $.loadScript(['js/balance/balanceDccount.js']);
+</script>

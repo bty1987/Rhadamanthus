@@ -23,16 +23,11 @@ jQuery(function($) {
         status: {},
     };
 
-    com.post(api.ds.balance, {}, function(res) {
-
-        balanceSales.status = res.balanceSalesStatus.split("key", "value");
-    }, null, false);
-
     com.initTypeahead("brand", api.data.queryBrandByPinyin, "pinyinName", {}, "brands", "bid", "name", null);
 
     var seacher = new Searcher();
 
-    seacher.base("condList1", "pagenation1", "resultList1", api.balance.pageBalanceSales);
+    seacher.base("bscondList", "bspagenation", "bsresultList", api.balance.pageBalanceSales);
 
     seacher.condition(["balance-balanceSelse-name", "balance-balanceSelse-status", "balance-balanceSelse-brand", "balance-balanceSelse-grade", "balance-balanceSelse-createTime", "balance-balanceSelse-creater"]);
 
@@ -55,7 +50,7 @@ jQuery(function($) {
         name: "状态",
         prop: "status",
         clazz: "red",
-        dataset: balanceSales.status
+        dataset: constant.balance().balanceSales.status.keys
     }, {
         fieId: "grade",
         name: "等级",
@@ -127,7 +122,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == 0);
+            return (v.status == constant.balance().balanceSales.STATUS_INIT_INT);
         }
     }, {
         name: "结算",
@@ -146,7 +141,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == 1);
+            return (v.status == constant.balance().balanceSales.STATUS_UNLOCK_INT);
         }
     }, {
         name: "锁定",
@@ -165,7 +160,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == 0);
+            return (v.status == constant.balance().balanceSales.STATUS_INIT_INT);
         }
     }, {
         name: "解锁",
@@ -184,7 +179,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status == 1);
+            return (v.status == constant.balance().balanceSales.STATUS_UNLOCK_INT);
         }
     }, {
         name: "明细打印",
@@ -200,7 +195,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status != 0);
+            return (v.status != constant.balance().balanceSales.STATUS_INIT_INT);
         }
     }, {
         name: "利润打印",
@@ -216,7 +211,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return (v.status != 0);
+            return (v.status != constant.balance().balanceSales.STATUS_INIT_INT);
         }
     }, ];
 

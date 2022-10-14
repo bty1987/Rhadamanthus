@@ -29,7 +29,7 @@ $(function() {
 
             var $liLine = $('<li></li>').addClass('item-orange clearfix ');
 
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').text(v.type == 0 ? "反馈" : v.type == 1 ? "投诉" : "维修"));
+            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').text(v.type == constant.customer.feedback.STATUS_FEEDBACK_INT ? "反馈" : v.type == constant.customer.feedback.STATUS_COMPLAINT_INT ? "投诉" : "维修"));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
@@ -41,7 +41,7 @@ $(function() {
 
             com.showImg(img, v.picture, 75, 75, '', null, 0);
 
-            var propertyArr = [["装修单号:", v.orderId, "blue"], ["创建时间: ", v.createTime, "green"], ["电话:", v.phone, "grey"], ["类型:", v.type == 0 ? "反馈" : v.type == 1 ? "投诉" : "维修", "red"], ["公司:", v.company, "grey"], ["说明: ", v.content, "grey"], ];
+            var propertyArr = [["装修单号:", v.orderId, "blue"], ["创建时间: ", v.createTime, "green"], ["电话:", v.phone, "grey"], ["类型:", constant.customer().feedback.status.keys[v.type], "red"], ["公司:", v.company, "grey"], ["说明: ", v.content, "grey"], ];
 
             $.each(propertyArr, function(index, value) {
 

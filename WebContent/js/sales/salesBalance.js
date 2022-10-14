@@ -45,29 +45,7 @@ $(function() {
         salesBalance.postData = "salesBalanceForPompanyPostData";
     }
 
-    com.post(api.ds.decoration, {}, function(res) {
-
-        salesBalance.typeness = res.typeness.split("key", "value");
-    });
-
-    com.post(api.ds.construction, {}, function(res) {
-
-        salesBalance.projectStatus = res.constructionSchedule.split("key", "value");
-    });
-
-    com.post(api.ds.payment, {}, function(res) {
-
-        salesBalance.balanceType = res.balanceType.split("key", "value");
-        salesBalance.status = res.balanceStatus.split("key", "value");
-        salesBalance.paymentType = res.materialPaymentType.split("key", "value");
-    }, null, false);
-
-    com.post(api.ds.sales, {}, function(res) {
-
-        salesBalance.oneType = res.oneType.split("key", "value");
-    }, null, false);
-
-    com.post(api.common.queryReceiptType, {}, function(res) {
+    com.post(api.data.queryReceiptType, {}, function(res) {
 
         salesBalance.paymentStatus.cash = [];
         salesBalance.paymentStatus.bank = [];
@@ -128,9 +106,9 @@ $(function() {
                     var $btnBalanceItem = $('<a></a>').addClass('btn btn-minier btn-pink').html('子项');
                     var $btnStatus = $('<a></a>').addClass('btn btn-minier btn-purple').html('反结');
 
-                    var coupon = v.onetype == 1 ? 0 : v.sales.coupon;
-                    var maling = v.onetype == 1 ? 0 : v.sales.maling;
-                    var venderMaling = v.onetype == 1 ? 0 : v.sales.venderMaling;
+                    var coupon = v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? constant.sales().salesBalance.ONETYPE_INIT_INT : v.sales.coupon;
+                    var maling = v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? constant.sales().salesBalance.ONETYPE_INIT_INT : v.sales.maling;
+                    var venderMaling = v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? constant.sales().salesBalance.ONETYPE_INIT_INT : v.sales.venderMaling;
                     var propertyArr = [];
                     var styleArr = [];
                     $.each(pageConfig.propertyArr, function(pi, pv) {
@@ -203,7 +181,7 @@ $(function() {
                                 propertyArr.push(["券信息:", v.sales.couponInfo, "grey"]);
                                 break;
                             case "type":
-                                propertyArr.push(["类型:", salesBalance.balanceType[v.type], "red"]);
+                                propertyArr.push(["类型:", constant.sales().salesBalance.type.keys[v.type], "red"]);
                                 break;
                             case "voster":
                                 propertyArr.push(["厂结人:", v.voster.currentName, "red"]);
@@ -215,10 +193,11 @@ $(function() {
                                 styleArr.push(["总价:", v.total, "blue"]);
                                 break;
                             case "oneType":
-                                styleArr.push(["一类:", salesBalance.oneType[v.onetype], "red"]);
+                                styleArr.push(["一类:", constant.sales().salesBalance.onetype.keys[v.onetype], "red"]);
                                 break;
                             case "status":
-                                styleArr.push(["状态:", salesBalance.status[v.status], "red"]);
+                                styleArr.push(["状态:", constant.sales().salesBalance.status.keys[v.status], "red"]);
+
                                 break;
                         }
                     });
@@ -296,7 +275,7 @@ $(function() {
 
                     // 装修单显示详情
                     $btnDecoration.click(function() {
-
+                        console.log(v.sales.orderId);
                         com.focusPage("text").css("line-height", "27px");
                         com.post(api.decoration.queryDecorationByOrderId, {
                             "decorationOrderId": v.sales.orderId
@@ -309,8 +288,8 @@ $(function() {
                             com.focusPage("#designer").html(decorationInfo.designer.currentName == null ? "无" : decorationInfo.designer.currentName);// 装修设计师
                             com.focusPage("#escorter").html(decorationInfo.escorter.currentName == null ? "无" : decorationInfo.escorter.currentName);// 装修跟单员
                             com.focusPage("#supervisor").html(decorationInfo.supervisor.currentName == null ? "无" : decorationInfo.supervisor.currentName);// 装修监理
-                            com.focusPage("#typeness").html(salesBalance.typeness[decorationInfo.typeness]);
-                            com.focusPage("#projectStatus").html(salesBalance.projectStatus[decorationInfo.projectStatus]);
+                            com.focusPage("#typeness").html(constant.decoration().decoration.typeness.keys[decorationInfo.typeness]);
+                            com.focusPage("#projectStatus").html(constant.construction().constructionSchedule.status.keys[decorationInfo.projectStatus]);
 
                             salesBalance.modals.decorationInfo.modal("show");
                         });
@@ -319,7 +298,7 @@ $(function() {
 
                     $btnVbalanceValue.click(function(e) {
 
-                        if (v.status != 0) {
+                        if (v.status != constant.sales().salesBalance.STATUS_PREBALANCE_INT) {
                             com.showAlert(com.warning, "非预结算状态下不允许进行厂商结算");
                             return false;
                         }
@@ -338,7 +317,7 @@ $(function() {
 
                     $btnVbalance.click(function(e) {
 
-                        if (v.status != 0) {
+                        if (v.status != constant.sales().salesBalance.STATUS_PREBALANCE_INT) {
                             com.showAlert(com.warning, "非预结算状态下不允许进行厂商结算");
                             return false;
                         }
@@ -366,7 +345,7 @@ $(function() {
 
                     $btnBalanceValue.click(function(e) {
 
-                        if (v.status != 1) {
+                        if (v.status != constant.sales().salesBalance.STATUS_VENDORBALANCE_INT) {
                             com.showAlert(com.warning, "非厂商结算状态下不允许进行结算");
                             return false;
                         }
@@ -386,7 +365,7 @@ $(function() {
 
                     $btnBalance.click(function(e) {
 
-                        if (v.status != 1) {
+                        if (v.status != constant.sales().salesBalance.STATUS_VENDORBALANCE_INT) {
                             com.showAlert(com.warning, "非厂商结算状态下不允许进行结算");
                             return false;
                         }
@@ -605,8 +584,8 @@ $(function() {
                 v.venderTime = v.venderTime == null ? '' : v.venderTime;
                 v.postTime = v.postTime == null ? '' : v.postTime;
                 v.poster.currentName = v.poster.currentName == null ? '' : v.poster.currentName;
-                v.status = v.status == 0 ? '预结算' : v.status == 1 ? "厂商结算" : "结算";
-                v.type = v.type == 0 ? "购货" : v.type == 1 ? "预结算退货" : "结算退货";
+                v.status = v.status == constant.sales().salesBalance.STATUS_PREBALANCE_INT ? '预结算' : v.status == constant.sales().salesBalance.STATUS_VENDORBALANCE_INT ? "厂商结算" : "结算";
+                v.type = v.type == constant.sales().salesBalance.TYPE_INIT_INT ? "购货" : v.type == constant.sales().salesBalance.TYPE_PREBALANCEREFUNDS_INT ? "预结算退货" : "结算退货";
                 v.voster.currentName = v.voster.currentName == null ? '' : v.voster.currentName;
             });
         });
@@ -667,13 +646,13 @@ $(function() {
             var pbalance = input.attr("data-pbalance");
             var sbid = input.attr("data-sbid");
 
-            if (flag && status != 0) {
+            if (flag && status != constant.sales().salesBalance.STATUS_PREBALANCE_INT) {
                 com.showAlert(com.warning, "非预结算状态下不允许进行厂商结算");
                 return false;
             } else if (flag && vbalance == 0) {
                 com.showAlert(com.warning, "厂商结算值未填写 , 请检查");
                 return false;
-            } else if (!flag && status != 1) {
+            } else if (!flag && status != constant.sales().salesBalance.STATUS_VENDORBALANCE_INT) {
                 com.showAlert(com.warning, "非厂商结算状态下不允许进行结算");
                 return false;
             } else if (!flag && pbalance == 0) {
@@ -715,7 +694,7 @@ $(function() {
             var supplier = input.attr('data-supplier');
             var sbid = input.attr('data-sbid');
 
-            if (status != 2) {
+            if (status != constant.sales().salesBalance.STATUS_BALANCE_INT) {
                 com.showAlert(com.warning, "请选择结算状态的结算单");
                 return false;
             }

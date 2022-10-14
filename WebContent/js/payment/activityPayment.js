@@ -47,7 +47,7 @@ jQuery(function ($) {
             collectBtn: com.focusPage("#collectBtn", "#activityPayment"),
 
             couponAdd: com.focusPage("#couponAdd", "#activityPayment"),
-            posPush: com.focusPage("#posSend", "#activityPayment")
+            createPaytran: com.focusPage("#createPaytran", "#activityPayment")
         },
 
         modals: {
@@ -72,11 +72,12 @@ jQuery(function ($) {
         apids: [],
         isCollects: false,
 
-        activityCouponType: [],
-        paymentType: [],
-        pageConfig: {}
+        activityCouponType: constant.payment.activityPayment.activityCouponType.datas,
+        paymentType: constant.payment.activityPayment.paymentType.keys,
+        pageConfig: {},
+        typeNo: 5,
+        atttype: 0
     };
-
 
     //隐藏触发
     activityPayment.modals.createModal.on("hide.bs.modal", function () {
@@ -102,18 +103,13 @@ jQuery(function ($) {
         activityPayment.items.bank.removeClass("v_required v_float_3");
     });
 
-    com.post(api.ds.payment, {}, function (res) {
+    activityPayment.creareItems.type.bindData(constant.payment.activityPayment.paymentType.datas, "key", "value", false);
+    activityPayment.items.posway.bindData(constant.payment.receiptType.posway.datas, "key", "value");
+    com.focusPage("#cashInfo", "#activityPayment").bindData(constant.payment.activityPayment.ways.datas, "key", "value", false);
 
-        activityPayment.creareItems.type.bindData(res.activityPayment, "key", "value", false);
-        activityPayment.paymentType = res.activityPayment.split("key", "value");
-        com.focusPage("#cashInfo", "#activityPayment").bindData(res.ways, "key", "value", false);
-        activityPayment.items.posway.bindData(res.posway, "key", "value");
-
-        $.each(res.activityCouponType, function(i,v) {
-            activityPayment.activityCouponType.push(v);
-        });
-
-    }, null, false);
+    $.each(activityPayment.activityCouponType , function(i,v) {
+        activityPayment.couponTypeData[v.key] = [v.key, v.value];
+    });
 
     //checkbox选中时联动
     com.focusPage("#collectModal :checkbox", "#activityPayment").on("change", function(){
@@ -126,10 +122,10 @@ jQuery(function ($) {
         checked ? boxdiv.show() : boxdiv.hide();
     });
 
-    com.post(api.common.queryReceiptType, {}, function(res){
+    com.post(api.data.queryReceiptType, {}, function(res){
         $.each(res.receiptTypes, function(i, v){
-            if(v.type == 2){
-                if(v.status == 1){
+            if(v.type == constant.data().receiptType.TYPE_CARD_INT){
+                if(v.status == constant.data().receiptType.STATUS_ENABLE_INT){
                     activityPayment.bank.push(v);
                     activityPayment.posValues[v.no] = v;
                     activityPayment.bankUtil.push({"key": v.no, "value": v.name});
@@ -146,8 +142,8 @@ jQuery(function ($) {
     activityPayment.btns.collectBtn.bindClick(collect);
     activityPayment.btns.saveBtn.bindClick(create);
 
-    activityPayment.btns.posPush.unbind().click(function(){
-        paymentUtils.pushPos(activityPayment, 5, activityPayment.payment.mno);
+    activityPayment.btns.createPaytran.unbind().click(function(){
+        paymentUtils.pushPos(activityPayment, activityPayment.payment.mno);
         return false;
     });
 
@@ -300,7 +296,7 @@ jQuery(function ($) {
 
         activityPayment.payment = payment;
 
-        paymentUtils.showPos(activityPayment, {"paytran.orderId": payment.mno, "paytran.type": 5}, [0, 1]);
+        paymentUtils.showPos(activityPayment, {"paytran.orderId": payment.mno, "paytran.type": 5, "paytran.atttype": activityPayment.atttype}, [0, 1]);
 
         activityPayment.items.referMoney.val(payment.money).attr("disabled", "disabled");
 
@@ -409,10 +405,10 @@ jQuery(function ($) {
     activityPayment.creareItems.type.on('change', function () {
         var way = activityPayment.creareItems.type.val();
 
-        if (way == 0 || way == 1) {
+        if (way == constant.payment.activityPayment.PAYMENTTYPE_DECORATIONPAYMENT_INT || way == constant.payment.activityPayment.PAYMENTTYPE_DECORATIONPAYMENT_DEPOSIT_INT) {
             activityPayment.creareItems.brand.attr('readonly', "readonly").removeClass('v_typeahead');
             com.updateTypeahead("brand", "", "");
-        } else if (way == 2 || way == 3) {
+        } else if (way == constant.payment.activityPayment.PAYMENTTYPE_MATERIALPAYMENT_INT || way == constant.payment.activityPayment.PAYMENTTYPE_MATERIALPAYMENT_DEPOSIT_INT) {
             activityPayment.creareItems.brand.removeAttr('readonly').addClass('v_typeahead');
         }
     });

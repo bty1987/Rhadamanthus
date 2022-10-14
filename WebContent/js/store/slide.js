@@ -25,6 +25,7 @@ $(function() {
     }, 10, function(data) {
 
         slide.items.path.val(data.resUrl);
+        slide.items.filesize.val(data.filesize);
 
         com.showImg(slide.items.img, data.resUrl, 150, 150, '', null, 0);
     });

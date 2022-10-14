@@ -25,6 +25,7 @@ jQuery(function ($) {
         orderId: null,
         status: {},
         isHandle: {},
+        contype:{},
         count: 1,
         or: 0, // 0:数据可继续加载 1:数据已加载完 跳出
     };
@@ -54,33 +55,63 @@ jQuery(function ($) {
     }, "autoFillKeyValue", "key", "value", null);
 
 
-    com.post(api.ds.customer, {}, function (res) {
-        droup.status = res.droupStatus.split("key", "value");
-        droup.isHandle = res.droupIsHandle.split("key", "value");
-    }, null, false);
-
     function line(v) {
 
-        var sevenDiv = $('<div class="itemdiv dialogdiv"></div>');
+        if(v.contype == constant.customer().droup.TYPE_CUSTOMER_INT){
+            var sevenDiv = $('<div class="itemdiv dialogdiv customer"></div>');
+        }else if (v.contype == constant.customer().droup.TYPE_RENOVATION_INT){
+            var sevenDiv = $('<div class="itemdiv dialogdiv decoration"></div>');
+        }else if (v.contype == constant.customer().droup.TYPE_MATERIAL_INT){
+            var sevenDiv = $('<div class="itemdiv dialogdiv material"></div>');
+        }else if (v.contype == constant.customer().droup.TYPE_ENGINEERING_INT){
+            var sevenDiv = $('<div class="itemdiv dialogdiv project"></div>');
+        }else if (v.contype == constant.customer().droup.TYPE_MONEY_INT){
+            var sevenDiv = $('<div class="itemdiv dialogdiv payment"></div>');
+        }else if (v.contype == constant.customer().droup.TYPE_OTHER_INT){
+            var sevenDiv = $('<div class="itemdiv dialogdiv rests"></div>');
+        }
         var eightDiv = $('<div class="user"></div>').appendTo(sevenDiv);
 
         var img = $('<img src="assets/altogether/images/avatar2.png"/>').appendTo(eightDiv);
         com.showImg(img, v.creater.userPhoto, 50, 50, '');
-        var nineDiv = $('<div class="body"></div>').appendTo(sevenDiv);
+        var nineDiv = $('<div class="body" style="border: 2px solid #fee188"></div>').appendTo(sevenDiv);
         var tenDiv = $('<div class="time"></div>').appendTo(nineDiv);
         var time = $('<i class="icon-time"></i>').appendTo(tenDiv);
         var span = $('<span class="green"></span>').html(v.createTime).appendTo(tenDiv);
+        var contype = $('<a style="margin-left: 5px; color: #000000"></a>').html(droup.contype[v.contype]).appendTo(tenDiv);
 
-        // 判断当前对话类型 0.文本 1.图片 2.应用
-        if (v.type == 0) {
+        // 0: 客户 1: 装修 2: 主材 3: 工程 4: 款项 5: 其他
+        if (v.contype == constant.customer().droup.TYPE_RENOVATION_INT){
+            nineDiv.css("border-color","#9585bf")
+        }else if (v.contype == constant.customer().droup.TYPE_MATERIAL_INT) {
+            nineDiv.css("border-color","#a0a0a0");
+        }else if (v.contype == constant.customer().droup.TYPE_ENGINEERING_INT) {
+            nineDiv.css("border-color","#d6487e");
+        }else if (v.contype == constant.customer().droup.TYPE_MONEY_INT) {
+            nineDiv.css("border-color","#d15b47");
+        }else if (v.contype == constant.customer().droup.TYPE_OTHER_INT) {
+            nineDiv.css("border-color","#303030");
+        }
+
+        // 判断当前对话类型 0: 文本 1: 图片 2: 应用 3: 语音
+        if (v.type == constant.customer().droup.TYPE_TEEXT_INT) {
             var twelveDiv = $('<div class="text"></div>').html(v.content).appendTo(nineDiv);
             var thirteenDiv = $('<div class="tools"></div>').appendTo(nineDiv);
             var a = $('<a class="btn btn-minier" name="remove">删除</a>').appendTo(thirteenDiv);
-        } else if (v.type == 1) {
-            var photo = $('<img class="text" style="width: 250px; height: 150px" />').appendTo(nineDiv);
-            com.showImg(photo, v.path, 250, 150, '', null, 0);
+        } else if (v.type == constant.customer().droup.TYPE_PICTURE_INT) {
+
+            var photo = $('<img class="text" style="width: 250px; height: 150px"/>').appendTo(nineDiv);
+            var or = v.path.indexOf("group");
+            if (or == 0){
+                com.showImg(photo, v.path, 250, 150, '', null, 0);
+            }else if(or == -1){
+                console.log(1);
+                com.showImg(photo, v.path, 0, 0, '250x150', null, 1);
+            }
             var eighteenDiv = $('<div class="tools"></div>').appendTo(nineDiv);
             var a = $('<a class="btn btn-minier" name="remove">删除</a>').appendTo(eighteenDiv);
+        } else if (v.type == constant.customer().droup.TYPE_VOICE_INT) {
+            return ;
         }
         return sevenDiv;
     }
@@ -120,9 +151,34 @@ jQuery(function ($) {
                     _sevenDiv.remove();
                 });
             });
-            var form = $('<form></form>').appendTo(oneDiv);
-            var fourteen = $('<div class="form-actions"></div>').appendTo(form);
-            var fifteen = $('<div class="input-group"></div>').appendTo(fourteen);
+            var box = $('<div></div>').appendTo(oneDiv);
+            var buttonOne = $('<button class="btn btn-minier btn-yellow" type="button" id="saveOne" style="width: 50px; height: 30px">客户</button>').appendTo(box);
+            var buttonTwo = $('<button class="btn btn-minier btn-purple" type="button" id="saveTwo" style="margin-left: 10px; width: 50px; height: 30px">装修</button>').appendTo(box);
+            var buttonThree = $('<button class="btn btn-minier btn-grey" type="button" id="saveThree" style="margin-left: 10px; width: 50px; height: 30px">主材</button>').appendTo(box);
+            var buttonFour = $('<button class="btn btn-minier btn-pink" type="button" id="saveFour" style="margin-left: 10px; width: 50px; height: 30px">工程</button>').appendTo(box);
+            var buttonFive = $('<button class="btn btn-minier btn-danger" type="button" id="saveFive" style="margin-left: 10px; width: 50px; height: 30px">款项</button>').appendTo(box);
+            var buttonSix = $('<button class="btn btn-minier btn-inverse" type="button" id="saveSix" style="margin-left: 10px; width: 50px; height: 30px">其他</button>').appendTo(box);
+            com.focusPage("#saveOne").click(function () {
+                com.focusPage(".customer").toggle();
+            });
+            com.focusPage("#saveTwo").click(function () {
+                com.focusPage(".decoration").toggle();
+            });
+            com.focusPage("#saveThree").click(function () {
+                com.focusPage(".material").toggle();
+            });
+            com.focusPage("#saveFour").click(function () {
+                com.focusPage(".project").toggle();
+            });
+            com.focusPage("#saveFive").click(function () {
+                com.focusPage(".payment").toggle();
+            });
+            com.focusPage("#saveSix").click(function () {
+                com.focusPage(".rests").toggle();
+            });
+            // var form = $('<form></form>').appendTo(oneDiv);
+            // var fourteen = $('<div class="form-actions"></div>').appendTo(form);
+            var fifteen = $('<div class="input-group"  style="margin-top: 10px"></div>').appendTo(oneDiv);
             var input = $('<input placeholder="请输入" type="text" class="form-control" id="enter" name="message">').appendTo(fifteen);
             var sp = $('<span class="input-group-btn"></span>').appendTo(fifteen);
             var btn = $('<button class="btn btn-sm btn-info no-radius" type="button" id="sendBtn">发送</button>').appendTo(sp);
@@ -135,6 +191,7 @@ jQuery(function ($) {
                 var options = {
                     "conversation.orderId": v.decoration.orderId,
                     "conversation.type": 0,
+                    "conversation.contype": 5,
                     "conversation.content": com.focusPage("#enter").val(),
                     "conversation.path": "",
                     "conversation.width": 0,
@@ -145,7 +202,8 @@ jQuery(function ($) {
                     var item = line(res.conversation);
 
                     sixDiv.append(item);
-                    $('#scrollDiv').scrollTop($('#scrollDiv')[0].scrollHeight)
+
+                    $('#scrollDiv').scrollTop($('#scrollDiv')[0].scrollHeight);
                 });
                 com.focusPage("#enter").val('');
             });
@@ -158,10 +216,12 @@ jQuery(function ($) {
                 var options = {
                     "conversation.orderId": v.decoration.orderId,
                     "conversation.type": 1,
+                    "conversation.contype": 5,
                     "conversation.content": "",
                     "conversation.path": data.resUrl,
                     "conversation.width": 250,
                     "conversation.height": 150,
+                    "conversation.filesize": data.filesize
                 };
                 com.post(url, options, function (res) {
 
@@ -182,16 +242,29 @@ jQuery(function ($) {
                         "filters[0].data": v.decoration.orderId,
                         "filters[0].op": "eq"
                     }, function (res) {
-                        if (droup.count < res.paging.totalPage){
+                        if (droup.count <= res.paging.totalPage){
                             $.each(res.paging.data, function (i, v) {
 
                                 sixDiv.prepend(line(v));
+                                $("a[name='remove']").click(function () {
+
+                                    var _sevenDiv = $(this).parents(".dialogdiv");
+
+                                    var url = api.customer.deleteConversation;
+                                    var options = {
+                                        "conversation.cid": v.cid,
+                                    };
+                                    com.post(url, options, function (res) {
+
+                                        com.showAlert(com.info, "操作成功");
+                                    });
+                                    _sevenDiv.remove();
+                                });
                             });
                         }
                         if (res.paging.data.length < 10) {
                             droup.or = 1;
                         }
-
                     });
                 }
             });
@@ -261,13 +334,13 @@ jQuery(function ($) {
         name: "状态",
         prop: "status",
         clazz: "red",
-        dataset: droup.status
+        dataset: constant.customer().droup.status.keys
     }, {
         fieId: "isHandle",
         name: "处理状态",
         prop: "isHandle",
         clazz: "red",
-        dataset: droup.isHandle
+        dataset: constant.customer().droup.type.keys
     },];
 
     var linebtns = [{

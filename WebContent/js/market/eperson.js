@@ -219,6 +219,7 @@ jQuery(function($) {
 
             eperson.imgUrl = data.resUrl;
             eperson.items.path.val(data.resUrl);
+            eperson.items.filesize.val(data.filesize);
 
             appendGalleryElement("imgUrl", data.resUrl, 0);
 

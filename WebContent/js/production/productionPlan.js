@@ -165,7 +165,8 @@ $(function(){
 
                     var option = {
                         "productionPlan.ppid": v.ppid,
-                        "productionPlan.path": data.resUrl
+                        "productionPlan.path": data.resUrl,
+                        "productionPlan.filesize": data.filesize
                     };
 
                     com.post(api.production.updateProductionPlan,option,function(res){

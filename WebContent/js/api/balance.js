@@ -26,7 +26,9 @@ $.extend(api.index, {
     balanceCutpayIndex: {
         url: "/views/balance/balanceCutpay.html"
     },
-
+    balanceDccountDetailIndex: {
+        url: "/views/balance/balanceDccountDetail.html"
+    },
 });
 
 $.extend(api, {
@@ -59,19 +61,19 @@ $.extend(api, {
             url: "balanceBalance.do",
             type: "update",
             tranargs: {
-                args: ["accountes.money"]
+                args: ["balanceAccountes.money"]
             }
         },
         payBalance: {
             url: "payBalance.do",
             type: "update",
             tranargs: {
-                args: ["accountes.money"]
+                args: ["balanceAccountes.money"]
             }
         },
 
-        pageAccount: {
-            url: "pageAccount.do",
+        pageBalanceAccount: {
+            url: "pageBalanceAccount.do",
             demo: true,
             type: "query",
             tranargs: [{
@@ -79,39 +81,39 @@ $.extend(api, {
                 args: ["referMoney", "realMoney", "surplus"]
             }]
         },
-        queryAccount: {
-            url: "queryAccount.do",
+        queryBalanceAccount: {
+            url: "queryBalanceAccount.do",
             demo: true,
             type: "query",
             tranargs: [{
-                result: "accountes",
+                result: "balanceAccountes",
                 args: ["realMoney", "referMoney", "surplus"]
             }]
         },
-        queryAccountForTeller: {
-            url: "queryAccountForTeller.do",
+        queryBalanceAccountForTeller: {
+            url: "queryBalanceAccountForTeller.do",
             demo: true,
             type: "query",
             tranargs: [{
-                result: "accountes",
+                result: "balanceAccountes",
                 args: ["realMoney", "referMoney", "surplus"]
             }]
         },
-        addAccount: {
-            url: "addAccount.do",
+        addBalanceAccount: {
+            url: "addBalanceAccount.do",
             demo: true
         },
-        updateAccountForStatus: {
-            url: "updateAccountForStatus.do",
+        updateBalanceAccountForStatus: {
+            url: "updateBalanceAccountForStatus.do",
             demo: true
         },
 
-        withdrawAccount: {
-            url: "withdrawAccount.do",
+        withdrawBalanceAccount: {
+            url: "withdrawBalanceAccount.do",
             demo: true,
             type: "update",
             tranargs: {
-                args: ["account.money"]
+                args: ["balanceAccount.money"]
             }
         },
 
@@ -275,17 +277,17 @@ $.extend(api, {
             demo: true
         },
 
-        queryBalanceCutpay : {
+        queryBalanceCutpay: {
             url : "queryBalanceCutpay.do",
             demo : true,
             type: "query",
             tranargs: [{
                 result: "balanceCutpays",
-                args: ["money", "cutpay"]
+                args: ["money", "cutpay", "total"]
             }]
         },
 
-        addBalanceCutpay : {
+        addBalanceCutpay: {
             url : "addBalanceCutpay.do",
             type: "update",
             tranargs: {
@@ -293,5 +295,56 @@ $.extend(api, {
             }
         },
 
+        pageBalanceCutpay: {
+            url: "pageBalanceCutpay.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["cutpay", "surplus", "total", "money"]
+            }]
+        },
+
+        deductBalanceCutpay: {
+            url : "deductBalanceCutpay.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceCutpay.money"]
+            }
+        },
+
+        pageBalanceDccount: {
+            url: "pageBalanceDccount.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["cutpay", "surplus"]
+            }]
+        },
+        queryBalanceDccount: {
+            url: "queryBalanceDccount.do",
+            demo: true,
+            type: "query",
+            tranargs: [{
+                result: "balanceDccountes",
+                args: ["cutpay", "surplus"]
+            }]
+        },
+        addBalanceDccount: {
+            url: "addBalanceDccount.do",
+            type: "update",
+            tranargs: {
+                args: ["balanceDccount.cutpay", "balanceDccount.surplus"]
+            }
+        },
+        updateBalanceDccountForStatus: {
+            url: "updateBalanceDccountForStatus.do",
+            demo: true
+        },
+        updateBalanceDccount: {
+            url: "updateBalanceDccount.do",
+            demo: true
+        },
     }
 });

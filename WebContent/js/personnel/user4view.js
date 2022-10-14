@@ -11,19 +11,6 @@ $(function() {
         isExpert: params.personel.isExpert
     };
 
-    com.post(api.ds.personel, {
-        timestamp: (new Date).getTime()
-    }, function(a) {
-
-        userView.statusType = a.statusType;
-        userView.politicalType = a.politicalType;
-        userView.householdType = a.householdType;
-        userView.educationType = a.educationType;
-        userView.userLevel = a.userLevel;
-        userView.employWay = a.employWay;
-        userView.insuranceType = a.insuranceType;
-    }, null, false);
-
     function getBirthday(idCard) {
 
         var birthday = "";
@@ -78,13 +65,13 @@ $(function() {
         com.focusPage("#clanerComCheck").html(com.checkNull($userInfo.clanerCom, "无"));
         com.focusPage("#ageCheck").html(calaAge(getBirthday($userInfo.user.identity)));
         com.focusPage("#birthdayCheck").html(getBirthday($userInfo.user.identity));
-        com.focusPage("#politicalSelCheck").html(com.checkNull(userView.politicalType[$userInfo.political].value, "无"));
+        com.focusPage("#politicalSelCheck").html(com.checkNull(constant.personel().userInfo.political.datas[$userInfo.political].value, "无"));
         com.focusPage("#jobYearsCheck").html(com.checkNull($userInfo.jobYears, "无"));
         com.focusPage("#identityCheck").html($userInfo.user.identity);
         com.focusPage("#phoneCheck").html($userInfo.user.phone);
         com.focusPage("#addressCheck").html(com.checkNull($userInfo.address, "无"));
         com.focusPage("#hometownAddressCheck").html(com.checkNull($userInfo.hometownAddress, "无"));
-        com.focusPage("#householdSelCheck").html(com.checkNull(userView.householdType[$userInfo.householdType].value, "无"));
+        com.focusPage("#householdSelCheck").html(com.checkNull(constant.personel().userInfo.householdType.datas[$userInfo.householdType].value, "无"));
         com.focusPage("#emergencyManCheck").html(com.checkNull($userInfo.emergencyMan, "无"));
         com.focusPage("#hobbyCheck").html(com.checkNull($userInfo.hobby, "无"));
         com.focusPage("#commentCheck").html(com.checkNull($userInfo.comment, "无"));
@@ -94,7 +81,7 @@ $(function() {
         com.focusPage("#isPresentGraduateCheck").html(com.checkNull($userInfo.isPresentGraduate == 0 ? "是" : "否", "无"));
         com.focusPage("#graduateTimeCheck").html(com.checkNull($userInfo.graduateTime, "无"));
         com.focusPage("#schoolCheck").html(com.checkNull($userInfo.school, "无"));
-        com.focusPage("#educationSelCheck").html(com.checkNull(userView.educationType[$userInfo.education].value, "无"));
+        com.focusPage("#educationSelCheck").html(com.checkNull(constant.personel().userInfo.education.datas[$userInfo.education].value, "无"));
         com.focusPage("#specialtyCheck").html(com.checkNull($userInfo.specialty, "无"));
         com.focusPage("#isMarriedCheck").html(com.checkNull($userInfo.isMarried == 0 ? "已婚" : "未婚", "无"));
         com.focusPage("#isBirthCheck").html(com.checkNull($userInfo.isBirth == 0 ? "已育" : "未育", "无"));
@@ -108,7 +95,7 @@ $(function() {
         com.focusPage("#loverCheck").html(com.checkNull($userInfo.lover, "无"));
         com.focusPage("#loginIdCheck").html($userInfo.user.loginId);
         com.focusPage("#companyCheck").html(com.checkNull($userInfo.user.companys, "无"));
-        com.focusPage("#levelCheck").html(com.checkNull(userView.userLevel[$userInfo.level].value, "无"));
+        com.focusPage("#levelCheck").html(com.checkNull(constant.personel().userInfo.level.datas[$userInfo.level].value, "无"));
         com.focusPage("#deptTypeSelCheck").html($userInfo.user.duty.departmentType.name);
         com.focusPage("#deptSelCheck").html($userInfo.user.dept.name);
         com.focusPage("#dutySelCheck").html($userInfo.user.duty.name);
@@ -117,8 +104,8 @@ $(function() {
         com.focusPage("#preformNumCheck").html(com.checkNull($userInfo.preformNum, "无"));
         com.focusPage("#fignTimeCheck").html(com.checkNull($userInfo.fignTime, "无"));
 
-        com.focusPage("#statusSelCheck").html(userView.statusType[$userInfo.user.status].value);
-        com.focusPage("#employWaySelCheck").html(com.checkNull(userView.employWay[$userInfo.employWay].value, "无"));
+        com.focusPage("#statusSelCheck").html(constant.personel().user.status.datas[$userInfo.user.status].value);
+        com.focusPage("#employWaySelCheck").html(com.checkNull(constant.personel().userInfo.employWay.datas[$userInfo.employWay].value, "无"));
         com.focusPage("#employTypeSelCheck").html(com.checkNull($userInfo.employType == 0 ? "正式" : "试用", "无"));
         com.focusPage("#recommendManCheck").html(com.checkNull($userInfo.recommendMan, "无"));
         com.focusPage("#entryTimeCheck").html(com.checkNull($userInfo.entryTime, "无"));
@@ -130,7 +117,7 @@ $(function() {
         com.focusPage("#serviceYearsCheck").html(getDateYearSub($userInfo.entryTime));
         com.focusPage("#isContractCheck").html(com.checkNull($userInfo.isContract == 0 ? "是" : "否", "无"));
         com.focusPage("#isInsuranceCheck").html(com.checkNull($userInfo.isInsurance == 0 ? "是" : "否", "无"));
-        com.focusPage("#insuranceTypeCheck").html($userInfo.isInsurance == 0 ? userView.insuranceType[$userInfo.insuranceType].value : "无");
+        com.focusPage("#insuranceTypeCheck").html($userInfo.isInsurance == 0 ? constant.personel().userInfo.insuranceType.datas[$userInfo.insuranceType].value : "无");
         com.focusPage("#insuranceTimeCheck").html(com.checkNull($userInfo.insuranceTime, "无"));
         com.focusPage("#pensionNumCheck").html(com.checkNull($userInfo.pensionNum, "无"));
         com.focusPage("#medicalNumCheck").html(com.checkNull($userInfo.medicalNum, "无"));

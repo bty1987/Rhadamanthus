@@ -1,71 +1,92 @@
-jQuery(function ($) {
+jQuery(function($) {
 
-    var displayFunc = (function () {
+    var chart = {
 
-        var renderList = function (tableId, listData) {
-            var $tableWrap = com.focusPage('#' + tableId);
-            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+        items: {},
 
-            if (listData && listData.length) {
-                $.each(listData, function (i, v) {
-                    var $liLine = creatLine(v);
+        modals: {},
 
-                    $liLine.appendTo($ul);
-                });
+        btns: {},
 
-                $ul.appendTo($tableWrap);
-            }
-        };
+        dataset: {},
 
-        var creatLine = function (v) {
+    }
 
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.no));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+    com.post(api.ds.data, {}, function(res) {
 
-            var propertyArr = [
-                ["名称: ", v.name, "grey"],
-                ["接口: ", v.api, "grey"],
-                ["方法: ", v.method, "grey"],
-                ["参数: ", v.param, "grey"],
-                ["样式: ", v.style, "grey"],
-                ["类型: ", v.clazz, "red"],
-                ["说明: ", v.comment, "grey"],
-            ];
-
-            $.each(propertyArr, function (index, value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $liLine.append($h3).append($ulProperty);
-
-            return $liLine;
-        };
-
-        return {
-            init: function (tableId, listData) {
-                com.focusPage('#' + tableId).html(null);
-                renderList(tableId, listData);
-            },
-            drawLine: function (v) {
-                return creatLine(v);
-            }
-        };
-    })();
+        chart.dataset.type = res.chartType.split("key", "value");
+        chart.dataset.level = res.chartLevel.split("key", "value");
+    }, null, false);
 
     var searcher = new Searcher();
 
-    searcher.init(["data-chart-no", "data-chart-name"], "condList", api.data.pageChart, function (data) {
-    	
-        displayFunc.init('resultList', data);
-    }, "pagenation", "brandPostData", null, false, null, function () {
-    	
-        return [];
-    });
+    searcher.base("condList", "pagenation", "resultList", api.data.pageChart);
 
+    searcher.condition(["data-chart-no", "data-chart-name", "data-chart-type", "data-chart-level"]);
+
+    searcher.history("brandPostData");
+
+    var lineprops = [{
+        fieId: "no",
+        name: "编号",
+        prop: "no",
+        clazz: "grey"
+    }, {
+        fieId: "name",
+        name: "名称",
+        prop: "name",
+        clazz: "grey"
+    }, {
+        fieId: "api",
+        name: "接口",
+        prop: "api",
+        clazz: "grey"
+    }, {
+        fieId: "method",
+        name: "方法",
+        prop: "method",
+        clazz: "grey"
+    }, {
+        fieId: "param",
+        name: "参数",
+        prop: "param",
+        clazz: "grey"
+    }, {
+        fieId: "style",
+        name: "样式",
+        prop: "style",
+        clazz: "grey"
+    }, {
+        fieId: "clazz",
+        name: "类型",
+        prop: "clazz",
+        clazz: "red"
+    }, {
+        fieId: "type",
+        name: "类型",
+        prop: "type",
+        clazz: "red",
+        dataset: chart.dataset.type
+    }, {
+        fieId: "sort",
+        name: "排序",
+        prop: "sort",
+        clazz: "blue"
+    }, {
+        fieId: "level",
+        name: "等级",
+        prop: "level",
+        clazz: "grey",
+        dataset: chart.dataset.level
+    }, {
+        fieId: "comment",
+        name: "说明",
+        prop: "comment",
+        clazz: "grey"
+    }];
+
+    var linebtns = [];
+
+    searcher.line("name", lineprops, linebtns).render();
 
 });
