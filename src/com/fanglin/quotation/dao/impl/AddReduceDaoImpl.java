@@ -18,6 +18,7 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
+import com.alibaba.fastjson.JSONArray;
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.quotation.dao.AddReduceDao;
@@ -81,8 +82,8 @@ public class AddReduceDaoImpl extends DaoImpl<AddReducePO> implements AddReduceD
 	}
 
 	@Override
-	public AddReducePO queryAddReduce(Long decorationPaymentId) {
-		return (AddReducePO) createCriteria(AddReducePO.class).add(Restrictions.eq(AddReducePO.COLUMN_DPID_STR, decorationPaymentId)).uniqueResult();
+	public AddReducePO queryAddReduce(Long dpid) {
+		return (AddReducePO) createCriteria(AddReducePO.class).add(Restrictions.eq(AddReducePO.COLUMN_DPID_STR, dpid)).setMaxResults(1).uniqueResult();
 	}
 
 	@Override
@@ -108,9 +109,13 @@ public class AddReduceDaoImpl extends DaoImpl<AddReducePO> implements AddReduceD
 				query.add(query.getCriterion("decoration.orderId", data, op));
 			} else if (AddReducePO.COLUMN_STATUS_STR.equals(field)) {
 				query.add(query.getCriterion(field, Short.parseShort(data), op));
+			} else if ("statuses".equals(field)) {
+				query.add(query.getCriterion("status", filter.getShorts(), "in"));
 			} else if (AddReducePO.COLUMN_TYPE_STR.equals(field)) {
 				query.add(query.getCriterion(field, Short.parseShort(data), op));
 			} else if (AddReducePO.COLUMN_PAYTYPE_STR.equals(field)) {
+				query.add(query.getCriterion(field, Short.parseShort(data), op));
+			} else if (AddReducePO.COLUMN_ATTTYPE_STR.equals(field)) {
 				query.add(query.getCriterion(field, Short.parseShort(data), op));
 			} else if ("isAffirm".equals(field)) {
 				query.add(query.getCriterion(field, Short.parseShort(data), op));
@@ -136,4 +141,11 @@ public class AddReduceDaoImpl extends DaoImpl<AddReducePO> implements AddReduceD
 			}
 		}
 	}
+
+	public static void main(String[] args) {
+
+		System.out.println(JSONArray.toJSON("1,2,3".split(",")));
+
+	}
+
 }

@@ -2,7 +2,7 @@ package com.fanglin.data.common.vo;
 
 import java.io.Serializable;
 
-public class DecorationMatchingVO implements Serializable{
+public class DecorationMatchingVO implements Serializable {
 
 	private static final long serialVersionUID = 3595233427267249608L;
 
@@ -11,7 +11,7 @@ public class DecorationMatchingVO implements Serializable{
 	private String name;
 
 	private Short type;
-	
+
 	private Short typeness;
 
 	private Integer base;
@@ -24,10 +24,18 @@ public class DecorationMatchingVO implements Serializable{
 
 	private Short vision;
 
+	private Short isShow;
+
+	private Short trafficDiscount;
+
+	private Short manageDiscount;
+
+	private Short taxDiscount;
+
 	private String comment;
 
 	private Integer company;
-	
+
 	public DecorationMatchingVO() {
 		super();
 	}
@@ -107,6 +115,38 @@ public class DecorationMatchingVO implements Serializable{
 
 	public void setVision(Short vision) {
 		this.vision = vision;
+	}
+
+	public Short getIsShow() {
+		return isShow;
+	}
+
+	public void setIsShow(Short isShow) {
+		this.isShow = isShow;
+	}
+
+	public Short getTrafficDiscount() {
+		return trafficDiscount;
+	}
+
+	public void setTrafficDiscount(Short trafficDiscount) {
+		this.trafficDiscount = trafficDiscount;
+	}
+
+	public Short getManageDiscount() {
+		return manageDiscount;
+	}
+
+	public void setManageDiscount(Short manageDiscount) {
+		this.manageDiscount = manageDiscount;
+	}
+
+	public Short getTaxDiscount() {
+		return taxDiscount;
+	}
+
+	public void setTaxDiscount(Short taxDiscount) {
+		this.taxDiscount = taxDiscount;
 	}
 
 	public String getComment() {

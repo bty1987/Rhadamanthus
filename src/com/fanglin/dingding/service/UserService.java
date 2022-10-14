@@ -49,7 +49,7 @@ public class UserService {
 
 		if (json == null) {
 			throw new FLException(270003, "获取人员信息失败");
-		}else if(json.getInteger("errcode") != 0){
+		} else if (json.getInteger("errcode") != 0) {
 			System.out.println(url);
 			System.out.println(String.format("%d-%s", json.getInteger("errcode"), json.getString("errmsg")));
 		}
@@ -69,7 +69,8 @@ public class UserService {
 
 		if (json == null) {
 			throw new FLException(270003, "获取人员信息失败");
-		}else if(json.getInteger("errcode") != 0){
+		} else if (json.getInteger("errcode") != 0) {
+
 			System.out.println(url);
 			System.out.println(String.format("%d-%s", json.getInteger("errcode"), json.getString("errmsg")));
 		}
@@ -97,7 +98,7 @@ public class UserService {
 
 		if (json == null) {
 			throw new FLException(270004, "添加人员信息失败");
-		}else if(json.getInteger("errcode") != 0){
+		} else if (json.getInteger("errcode") != 0) {
 			System.out.println(url);
 			System.out.println(String.format("%d-%s", json.getInteger("errcode"), json.getString("errmsg")));
 		}
@@ -123,10 +124,10 @@ public class UserService {
 		String url = String.format(DDApi.DDAPI_UPDATE_USER_STR, oapiHost.getValue(), accessToken);
 
 		JSONObject json = HttpHelper.httpPost(url, JSONObject.parseObject(JSONObject.toJSONString(user)));
-		
+
 		if (json == null) {
 			throw new FLException(270005, "更新人员信息失败");
-		}else if(json.getInteger("errcode") != 0){
+		} else if (json.getInteger("errcode") != 0) {
 			System.out.println(url);
 			System.out.println(String.format("%d-%s", json.getInteger("errcode"), json.getString("errmsg")));
 		}
@@ -145,10 +146,10 @@ public class UserService {
 		String url = String.format(DDApi.DDAPI_DELETE_USER_STR, oapiHost.getValue(), accessToken, user.getUserid());
 
 		JSONObject json = HttpHelper.httpGet(url);
-		
+
 		if (json == null) {
 			throw new FLException(270006, "删除人员信息失败");
-		}else if(json.getInteger("errcode") != 0){
+		} else if (json.getInteger("errcode") != 0) {
 			System.out.println(url);
 			System.out.println(String.format("%d-%s", json.getInteger("errcode"), json.getString("errmsg")));
 		}

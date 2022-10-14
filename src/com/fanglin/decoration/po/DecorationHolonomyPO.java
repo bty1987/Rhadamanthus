@@ -45,10 +45,20 @@ public class DecorationHolonomyPO implements java.io.Serializable {
 
 	private long projectPrice;
 
+	private int trafficRate;
+
+	private short trafficDiscount;
+
 	private long managePrice;
 
 	private int manageRate;
-	
+
+	private short manageDiscount;
+
+	private int taxRate;
+
+	private short taxDiscount;
+
 	private long originMaterialPrice;
 
 	private long materialPrice;
@@ -129,6 +139,24 @@ public class DecorationHolonomyPO implements java.io.Serializable {
 		this.projectPrice = projectPrice;
 	}
 
+	@Column(name = "trafficRate")
+	public int getTrafficRate() {
+		return trafficRate;
+	}
+
+	public void setTrafficRate(int trafficRate) {
+		this.trafficRate = trafficRate;
+	}
+
+	@Column(name = "trafficDiscount")
+	public short getTrafficDiscount() {
+		return trafficDiscount;
+	}
+
+	public void setTrafficDiscount(short trafficDiscount) {
+		this.trafficDiscount = trafficDiscount;
+	}
+
 	@Column(name = "managePrice")
 	public long getManagePrice() {
 		return managePrice;
@@ -145,6 +173,33 @@ public class DecorationHolonomyPO implements java.io.Serializable {
 
 	public void setManageRate(int manageRate) {
 		this.manageRate = manageRate;
+	}
+
+	@Column(name = "manageDiscount")
+	public short getManageDiscount() {
+		return manageDiscount;
+	}
+
+	public void setManageDiscount(short manageDiscount) {
+		this.manageDiscount = manageDiscount;
+	}
+
+	@Column(name = "taxRate")
+	public int getTaxRate() {
+		return taxRate;
+	}
+
+	public void setTaxRate(int taxRate) {
+		this.taxRate = taxRate;
+	}
+
+	@Column(name = "taxDiscount")
+	public short getTaxDiscount() {
+		return taxDiscount;
+	}
+
+	public void setTaxDiscount(short taxDiscount) {
+		this.taxDiscount = taxDiscount;
 	}
 
 	@Column(name = "originMaterialPrice")
@@ -200,7 +255,7 @@ public class DecorationHolonomyPO implements java.io.Serializable {
 	public void setServicePaidup(long servicePaidup) {
 		this.servicePaidup = servicePaidup;
 	}
-	
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;

@@ -46,6 +46,14 @@ public class VticketAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "pageVticketForSelf", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageVticketForSelf() throws FLException {
+
+		vticketService.pageVticketForBelonger(getPaging(), getFilters(), queryUserId());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "createVticket", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String createVticket() throws FLException {
 

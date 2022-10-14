@@ -9,13 +9,15 @@ import com.fanglin.utils.Paging;
 
 public interface OalesService {
 
-	public void pageOales(Paging paging, List<Filter> filters, int company) throws FLException;
+	public void pageOales(Paging paging, List<Filter> filters, int company, List<Short> statuses) throws FLException;
 
 	public List<OalesVO> queryOalesByOrderId(OalesVO oalesVO);
 
 	public void addOales(OalesVO oalesVO, String userId, int company) throws FLException;
 
 	public void updateOales(OalesVO oalesVO) throws FLException;
+
+	public void submitOales(OalesVO oales) throws FLException;
 
 	public void confirmOales(OalesVO oalesVO) throws FLException;
 

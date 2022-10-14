@@ -23,32 +23,42 @@ public class SoodsItemDaoImpl extends DaoImpl<SoodsItemPO> implements SoodsItemD
 	public List<SoodsItemPO> pageSoodsItem(Paging paging, List<Filter> filters, int company) {
 
 		PagingQuery<SoodsItemPO> query = pagingQuery(paging, SoodsItemPO.class);
+
 		query.add(query.getCriterion("company", company, "eq"));
+
 		queryFilterExcute(query, filters);
 
 		return query.list();
 	}
 
 	@Override
-	public List<SoodsItemPO> pageSoodsItemByQiid(Paging paging, List<Filter> filters, long qiid) {
+	public List<SoodsItemPO> pageSoodsItemByQiid(Paging paging, List<Filter> filters, long qiid, Short status) {
 
 		PagingQuery<SoodsItemPO> query = pagingQuery(paging, SoodsItemPO.class);
 
 		query.alias("quotationItem", "quotationItem");
 		query.add(query.getCriterion("quotationItem.qiid", qiid, "eq"));
 
+		if (status != null) {
+			query.add(Restrictions.eq("status", status));
+		}
+
 		queryFilterExcute(query, filters);
 
 		return query.list();
 	}
 
 	@Override
-	public List<SoodsItemPO> pageSoodsItemBySid(Paging paging, List<Filter> filters, long sid) {
+	public List<SoodsItemPO> pageSoodsItemBySid(Paging paging, List<Filter> filters, long sid, Short status) {
 
 		PagingQuery<SoodsItemPO> query = pagingQuery(paging, SoodsItemPO.class);
 
 		query.alias("soods", "soods");
 		query.add(query.getCriterion("soods.sid", sid, "eq"));
+
+		if (status != null) {
+			query.add(Restrictions.eq("status", status));
+		}
 
 		queryFilterExcute(query, filters);
 
@@ -107,8 +117,7 @@ public class SoodsItemDaoImpl extends DaoImpl<SoodsItemPO> implements SoodsItemD
 
 	private void queryFilterExcute(PagingQuery<SoodsItemPO> query, List<Filter> filters) {
 
-		if (filters == null)
-			return;
+		if (filters == null) return;
 
 		for (Filter filter : filters) {
 

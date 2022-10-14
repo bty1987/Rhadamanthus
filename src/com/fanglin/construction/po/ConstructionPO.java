@@ -29,84 +29,86 @@ import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name="construction", catalog = "construction")
-public class ConstructionPO implements Serializable{
+@Table(name = "construction", catalog = "construction")
+public class ConstructionPO implements Serializable {
 
 	private static final long serialVersionUID = -3113263670279309498L;
-	
+
 	public static final String COLUMN_ORDERID_STR = "decoration.orderId";
-	
+
 	public static final String COLUMN_SCHEDULE_STR = "schedule";
-	
+
 	public static final String COLUMN_SUPERVISORQUALITYID_STR = "supervisor";
-	
+
 	public static final String COLUMN_CHANSTATUS_STR = "chanStatus";
-	
+
 	public static final String COLUMN_ACCEPTANCEFLAG_STR = "acceptanceFlag";
-	
-	public static final int SCHEDULE_TYPE_CHAN_INT = 1;
-	
-	public static final int SCHEDULE_TYPE_PUTLINE_INT = 2;
-	
-	public static final int SCHEDULE_TYPE_WATERWAYCIRCUIT_INT = 3;
-	
-	public static final int SCHEDULE_TYPE_BRICKLAY_INT = 4;
-	
-	public static final int SCHEDULE_TYPE_GROUNDLEVELING_INT = 5;
-	
-	public static final int SCHEDULE_TYPE_CARPENT_INT = 6;
-	
-	public static final int SCHEDULE_TYPE_OIL_INT = 7;
-	
-	public static final int SCHEDULE_TYPE_WATERWAYCIRCUITCHECK_INT = 8;
-	
-	public static final int SCHEDULE_TYPE_CLEANING_INT = 9;
-	
+
 	public static final String COLUMN_CID_STR = "cid";
-	
+
+	public static final int SCHEDULE_TYPE_CHAN_INT = 1;
+
+	public static final int SCHEDULE_TYPE_PUTLINE_INT = 2;
+
+	public static final int SCHEDULE_TYPE_WATERWAYCIRCUIT_INT = 3;
+
+	public static final int SCHEDULE_TYPE_BRICKLAY_INT = 4;
+
+	public static final int SCHEDULE_TYPE_GROUNDLEVELING_INT = 5;
+
+	public static final int SCHEDULE_TYPE_CARPENT_INT = 6;
+
+	public static final int SCHEDULE_TYPE_OIL_INT = 7;
+
+	public static final int SCHEDULE_TYPE_WATERWAYCIRCUITCHECK_INT = 8;
+
+	public static final int SCHEDULE_TYPE_CLEANING_INT = 9;
+
 	public static final short ACCESSORY_OPEN_SHORT = 0;
-	
+
 	public static final short ACCESSORY_LOCK_SHORT = 1;
-	
+
 	private long cid;
-	
+
 	private DecorationPO decoration;
-	
-	private UserPO	supervisor;
-	
+
+	private UserPO supervisor;
+
+	private long cnid;
+
 	private int schedule;
-	
+
 	private Timestamp startTime;
-	
+
 	private Timestamp endTime;
-	
+
 	private short accessory;
-	
+
 	private long accessoryLimit;
-	
+
 	private long salaryLimit;
-	
+
 	private long accessoryTotal;
-	
+
 	private long salaryTotal;
-	
+
 	private Timestamp createTime;
-	
+
 	private Timestamp finishTime;
-	
+
 	private UserPO locker;
-	
+
 	private Timestamp lockTime;
 
 	public ConstructionPO() {
 		super();
 	}
-	
+
 	public ConstructionPO(DecorationPO decoration) {
 		super();
 		this.decoration = decoration;
 	}
-	
+
 	public ConstructionPO(DecorationPO decoration, UserPO supervisor) {
 		super();
 		this.decoration = decoration;
@@ -121,7 +123,7 @@ public class ConstructionPO implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "suid", referencedColumnName="uid")	
+	@JoinColumn(name = "suid", referencedColumnName = "uid")
 	public UserPO getSupervisor() {
 		return supervisor;
 	}
@@ -129,20 +131,20 @@ public class ConstructionPO implements Serializable{
 	public void setSupervisor(UserPO supervisor) {
 		this.supervisor = supervisor;
 	}
-	
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name="cid")
-	public long getCid(){
+	@Column(name = "cid")
+	public long getCid() {
 		return cid;
 	}
 
-	public void setCid(long cid){
+	public void setCid(long cid) {
 		this.cid = cid;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "orderId", referencedColumnName="orderId")
+	@JoinColumn(name = "orderId", referencedColumnName = "orderId")
 	public DecorationPO getDecoration() {
 		return decoration;
 	}
@@ -151,17 +153,25 @@ public class ConstructionPO implements Serializable{
 		this.decoration = decoration;
 	}
 
+	@Column(name = "cnid")
+	public long getCnid() {
+		return cnid;
+	}
 
-	@Column(name="schedule")
-	public int getSchedule(){
+	public void setCnid(long cnid) {
+		this.cnid = cnid;
+	}
+
+	@Column(name = "schedule")
+	public int getSchedule() {
 		return schedule;
 	}
 
-	public void setSchedule(int schedule){
+	public void setSchedule(int schedule) {
 		this.schedule = schedule;
 	}
-	
-	@Column(name="startTime")
+
+	@Column(name = "startTime")
 	public Timestamp getStartTime() {
 		return startTime;
 	}
@@ -169,8 +179,8 @@ public class ConstructionPO implements Serializable{
 	public void setStartTime(Timestamp startTime) {
 		this.startTime = startTime;
 	}
-	
-	@Column(name="endTime")
+
+	@Column(name = "endTime")
 	public Timestamp getEndTime() {
 		return endTime;
 	}
@@ -178,8 +188,8 @@ public class ConstructionPO implements Serializable{
 	public void setEndTime(Timestamp endTime) {
 		this.endTime = endTime;
 	}
-	
-	@Column(name="accessory")
+
+	@Column(name = "accessory")
 	public short getAccessory() {
 		return accessory;
 	}
@@ -187,8 +197,8 @@ public class ConstructionPO implements Serializable{
 	public void setAccessory(short accessory) {
 		this.accessory = accessory;
 	}
-	
-	@Column(name="accessoryLimit")
+
+	@Column(name = "accessoryLimit")
 	public long getAccessoryLimit() {
 		return accessoryLimit;
 	}
@@ -197,7 +207,7 @@ public class ConstructionPO implements Serializable{
 		this.accessoryLimit = accessoryLimit;
 	}
 
-	@Column(name="salaryLimit")
+	@Column(name = "salaryLimit")
 	public long getSalaryLimit() {
 		return salaryLimit;
 	}
@@ -206,7 +216,7 @@ public class ConstructionPO implements Serializable{
 		this.salaryLimit = salaryLimit;
 	}
 
-	@Column(name="accessoryTotal")
+	@Column(name = "accessoryTotal")
 	public long getAccessoryTotal() {
 		return accessoryTotal;
 	}
@@ -215,7 +225,7 @@ public class ConstructionPO implements Serializable{
 		this.accessoryTotal = accessoryTotal;
 	}
 
-	@Column(name="salaryTotal")
+	@Column(name = "salaryTotal")
 	public long getSalaryTotal() {
 		return salaryTotal;
 	}
@@ -224,7 +234,7 @@ public class ConstructionPO implements Serializable{
 		this.salaryTotal = salaryTotal;
 	}
 
-	@Column(name="createTime")
+	@Column(name = "createTime")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -233,7 +243,7 @@ public class ConstructionPO implements Serializable{
 		this.createTime = createTime;
 	}
 
-	@Column(name="finishTime")
+	@Column(name = "finishTime")
 	public Timestamp getFinishTime() {
 		return finishTime;
 	}
@@ -243,7 +253,7 @@ public class ConstructionPO implements Serializable{
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "luid", referencedColumnName="uid")	
+	@JoinColumn(name = "luid", referencedColumnName = "uid")
 	public UserPO getLocker() {
 		return locker;
 	}
@@ -252,7 +262,7 @@ public class ConstructionPO implements Serializable{
 		this.locker = locker;
 	}
 
-	@Column(name="lockTime")
+	@Column(name = "lockTime")
 	public Timestamp getLockTime() {
 		return lockTime;
 	}
@@ -260,5 +270,5 @@ public class ConstructionPO implements Serializable{
 	public void setLockTime(Timestamp lockTime) {
 		this.lockTime = lockTime;
 	}
-	
+
 }

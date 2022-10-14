@@ -1,23 +1,32 @@
 package com.fanglin.system.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+
+import org.apache.struts2.json.annotations.JSON;
+
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class RoleVO implements Serializable {
 
 	private static final long serialVersionUID = 9045008682677539729L;
-	
+
 	private Integer rid;
 
 	private String no;
-	
+
 	private String name;
 
 	protected String content;
-	
-	private Integer company; 
-	
+
+	private Integer company;
+
 	private String pinyin;
-	
+
+	private UserBaseVO creater;
+
+	private Timestamp createTime;
+
 	public RoleVO(Integer rid) {
 		super();
 		this.rid = rid;
@@ -28,7 +37,12 @@ public class RoleVO implements Serializable {
 		this.no = no;
 	}
 
-	public RoleVO(){
+	public RoleVO(UserBaseVO creater) {
+		super();
+		this.creater = creater;
+	}
+
+	public RoleVO() {
 		super();
 	}
 
@@ -80,5 +94,21 @@ public class RoleVO implements Serializable {
 		this.pinyin = pinyin;
 	}
 
-	
+	public UserBaseVO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserBaseVO creater) {
+		this.creater = creater;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
+	}
+
 }

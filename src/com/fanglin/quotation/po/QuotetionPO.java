@@ -45,9 +45,19 @@ public class QuotetionPO implements Serializable {
 
 	private int manageRate;
 
+	private short manageDiscount;
+
 	private long trafficPrice;
 
 	private int trafficRate;
+
+	private short trafficDiscount;
+
+	private long taxPrice;
+
+	private int taxRate;
+
+	private short taxDiscount;
 
 	private long costPrice;
 
@@ -181,6 +191,15 @@ public class QuotetionPO implements Serializable {
 		this.manageRate = manageRate;
 	}
 
+	@Column(name = "manageDiscount")
+	public short getManageDiscount() {
+		return manageDiscount;
+	}
+
+	public void setManageDiscount(short manageDiscount) {
+		this.manageDiscount = manageDiscount;
+	}
+
 	@Column(name = "trafficPrice")
 	public long getTrafficPrice() {
 		return trafficPrice;
@@ -197,6 +216,42 @@ public class QuotetionPO implements Serializable {
 
 	public void setTrafficRate(int trafficRate) {
 		this.trafficRate = trafficRate;
+	}
+
+	@Column(name = "trafficDiscount")
+	public short getTrafficDiscount() {
+		return trafficDiscount;
+	}
+
+	public void setTrafficDiscount(short trafficDiscount) {
+		this.trafficDiscount = trafficDiscount;
+	}
+
+	@Column(name = "taxPrice")
+	public long getTaxPrice() {
+		return taxPrice;
+	}
+
+	public void setTaxPrice(long taxPrice) {
+		this.taxPrice = taxPrice;
+	}
+
+	@Column(name = "taxRate")
+	public int getTaxRate() {
+		return taxRate;
+	}
+
+	public void setTaxRate(int taxRate) {
+		this.taxRate = taxRate;
+	}
+
+	@Column(name = "taxDiscount")
+	public short getTaxDiscount() {
+		return taxDiscount;
+	}
+
+	public void setTaxDiscount(short taxDiscount) {
+		this.taxDiscount = taxDiscount;
 	}
 
 	@Column(name = "basePrice")

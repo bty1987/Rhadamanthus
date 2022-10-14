@@ -253,4 +253,12 @@ public class NormtionAction extends BaseListAction {
 		this.schedule = schedule;
 	}
 
+	public NormtionVO getNormtion() {
+		return normtion;
+	}
+
+	public void setNormtion(NormtionVO normtion) {
+		this.normtion = normtion;
+	}
+
 }

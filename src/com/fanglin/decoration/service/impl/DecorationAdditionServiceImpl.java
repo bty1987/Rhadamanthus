@@ -114,30 +114,30 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 		QuotationPO quotationPO = quotationDao.queryQuotationForDefaultByOrderId(decorationVO.getOrderId());
 
 		short status = decorationPO.getStatus();
-		short projectStatus = decorationPO.getProjectStatus();
+		long projectStatus = decorationPO.getProjectStatus();
 
 		short schedule = 0;// 默认值 0.订单生成
 
-		if (quotationPO != null && schedule < 1)// 判断报价信息是否存在, 存在 值为1.预算
-			schedule = 1;
+		if (quotationPO != null && schedule < 1) // 判断报价信息是否存在, 存在 值为1.预算
+		schedule = 1;
 
-		if (status == DecorationPO.STATUS_SIGNED_INT && schedule < 2)// 判断装修单状态是否为3, 是 值为 2.合同签单
-			schedule = 2;
+		if (status == DecorationPO.STATUS_SIGNED_INT && schedule < 2) // 判断装修单状态是否为3, 是 值为 2.合同签单
+		schedule = 2;
 
-		if (decorationPO.getSourceStatus() == DecorationPO.STATUS_CONTRACT_CONFIRMATION_INT && schedule < 3)// 判断装修确认状态是否为1, 是 值为 3.签单设计方案完成
-			schedule = 3;
+		if (decorationPO.getSourceStatus() == DecorationPO.STATUS_CONTRACT_CONFIRMATION_INT && schedule < 3) // 判断装修确认状态是否为1, 是 值为 3.签单设计方案完成
+		schedule = 3;
 
-		if (decorationPO.getSourceStatus() == DecorationPO.STATUS_SETTING_OUT_CONFIRMATION_INT && schedule < 4)// 判断装修确认状态是否为2, 是 值为 4.开工设计方案完成
-			schedule = 4;
+		if (decorationPO.getSourceStatus() == DecorationPO.STATUS_SETTING_OUT_CONFIRMATION_INT && schedule < 4) // 判断装修确认状态是否为2, 是 值为 4.开工设计方案完成
+		schedule = 4;
 
-		if (projectStatus >= ConstructionPO.SCHEDULE_TYPE_WATERWAYCIRCUIT_INT && schedule < (short) (projectStatus + 2))// 判断装修单工程状态是否为3-13, 是 值为5-15.铲大白 - 保洁
-			schedule = (short) (projectStatus + 2);
+		if (projectStatus >= ConstructionPO.SCHEDULE_TYPE_WATERWAYCIRCUIT_INT && schedule < (short) (projectStatus + 2)) // 判断装修单工程状态是否为3-13, 是 值为5-15.铲大白 - 保洁
+		schedule = (short) (projectStatus + 2);
 
-		if (status == DecorationPO.STATUS_FINAL_INT && schedule < 16)// 判断装修单状态是否为7, 是 值为 16.决算
-			schedule = 16;
+		if (status == DecorationPO.STATUS_FINAL_INT && schedule < 16) // 判断装修单状态是否为7, 是 值为 16.决算
+		schedule = 16;
 
-		if (projectStatus == ConstructionPO.SCHEDULE_TYPE_PUTLINE_INT)// 判断装修单工程状态是否为2, 是 值为 17.工程完工
-			schedule = 17;
+		if (projectStatus == ConstructionPO.SCHEDULE_TYPE_PUTLINE_INT) // 判断装修单工程状态是否为2, 是 值为 17.工程完工
+		schedule = 17;
 
 		return schedule;
 	}
@@ -158,7 +158,7 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 
 		short decorationPayScale = (short) (factPrice != 0 ? Arith.mul(Arith.div(payTotal, factPrice), 100) : 0);
 
-		decorationPO.setPaySacle(decorationPayScale);
+		decorationPO.setPaySacle(decorationPayScale > 100 ? (short) 100 : decorationPayScale);
 
 		decorationDao.update(decorationPO);
 	}
@@ -172,7 +172,7 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 		long priceTotal = 0;
 
 		salesPaymentDao.flush();
-		
+
 		saleTotal = salesPaymentDao.amountSalesPayment(orderId);
 
 		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByOrderId(orderId);
@@ -202,7 +202,7 @@ public class DecorationAdditionServiceImpl implements DecorationAdditionService 
 				decorationHolonomyDao.update(decorationHolonomyPO);
 			}
 		}
-   
+
 		short saleScale = (short) (priceTotal != 0 ? Arith.mul(Arith.div(saleTotal, priceTotal), 100) : DecorationPO.TYPE_INIT_SALESCALE_INT);
 
 		decorationPO.setSaleScale(saleScale);

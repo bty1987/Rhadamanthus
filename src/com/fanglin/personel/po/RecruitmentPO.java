@@ -14,125 +14,141 @@ import javax.persistence.Table;
 @Table(name = "recruitment", catalog = "communion")
 public class RecruitmentPO implements Serializable {
 
-	private  static final long serialVersionUID = 1L;
-	
-	public static final String COLUMN_STATUS_STR = "status";
-	
-	public static final short STATUS_INIT_INT = 0;//初始
-	
-	public static final short STATUS_ENTRY_INT = 1;//入职
-	
-	public static final short STATUS_CANCEL_INT = 2;//作废
+	private static final long serialVersionUID = 1L;
 
-	private  long rid;
-	 
+	public static final String COLUMN_STATUS_STR = "status";
+
+	public static final short STATUS_INIT_INT = 0;// 初始
+
+	public static final short STATUS_ENTRY_INT = 1;// 入职
+
+	public static final short STATUS_CANCEL_INT = 2;// 作废
+
+	public static final short EMPLOYWAY_CAMPUS_INT = 0;// 校园招聘
+
+	public static final short EMPLOYWAY_NETWORK_INT = 1;// 网络招聘
+
+	public static final short EMPLOYWAY_INSIDEI_INT = 2;// 内部推荐
+
+	public static final short EMPLOYWAY_ACTIVE_INT = 3;// 主动应聘
+
+	public static final short EMPLOYWAY_HEADHUNTING_INT = 4;// 猎头
+
+	public static final short POLITICAL_MASSES_INT = 0;// 群众
+
+	public static final short POLITICAL_TEAM_INT = 1;// 团员
+
+	public static final short POLITICAL_PARTY_INT = 2;// 党员
+
+	private long rid;
+
 	private String name;
-	 
+
 	private String identity;
 
 	private String nation;
-	 
+
 	private String place;
-	 
+
 	private int weight;
-	 
+
 	private int height;
-	 
+
 	private short employWay;
-	 
+
 	private short householdType;
-	 
+
 	private short political;
-	 
+
 	private short education;
-	 
+
 	private String phone;
-	 
+
 	private String wechat;
-	 
+
 	private String qq;
-	 
+
 	private String address;
-	 
+
 	private String nativePlace;
-	 
+
 	private String hometownPlace;
-	 
+
 	private String specialty;
-	 
+
 	private String emergencyMan;
-	 
+
 	private String emergencyPhone;
-	 
+
 	private short isMarried;
-	 
+
 	private short isBirth;
-	 
+
 	private short isHouse;
-	 
+
 	private short isCar;
-	 
+
 	private short isHouseLoan;
-	 
+
 	private short isCarLoan;
-	 
+
 	private short isCarID;
-	 
+
 	private short isPassID;
-	 
+
 	private short isHMID;
-	 
+
 	private short isTWID;
-	 
+
 	private short isContract;
-	 
+
 	private short isSnsurance;
-	 
+
 	private short isFire;
-	 
+
 	private short isCnsurance;
-	 
+
 	private short isCompete;
-	 
+
 	private short isTrain;
-	 
+
 	private short isCriminal;
-	 
+
 	private short isDisease;
-	
+
 	private short status;
-	
+
 	private String photoPath;
-	 
+
 	private String identityPathF;
-	
+
 	private String identityPathB;
 
-	public RecruitmentPO(){
+	public RecruitmentPO() {
 		super();
 	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
-	@Column(name= "rid")
+	@Column(name = "rid")
 	public long getRid() {
 		return rid;
 	}
-	
+
 	public void setRid(long rid) {
 		this.rid = rid;
 	}
-	
-	@Column(name= "name")
+
+	@Column(name = "name")
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	@Column(name= "identity")
+
+	@Column(name = "identity")
 	public String getIdentity() {
 		return identity;
 	}
@@ -140,8 +156,8 @@ public class RecruitmentPO implements Serializable {
 	public void setIdentity(String identity) {
 		this.identity = identity;
 	}
-	
-	@Column(name= "nation")
+
+	@Column(name = "nation")
 	public String getNation() {
 		return nation;
 	}
@@ -149,8 +165,8 @@ public class RecruitmentPO implements Serializable {
 	public void setNation(String nation) {
 		this.nation = nation;
 	}
-	
-	@Column(name= "place")
+
+	@Column(name = "place")
 	public String getPlace() {
 		return place;
 	}
@@ -158,8 +174,8 @@ public class RecruitmentPO implements Serializable {
 	public void setPlace(String place) {
 		this.place = place;
 	}
-	
-	@Column(name= "weight")
+
+	@Column(name = "weight")
 	public int getWeight() {
 		return weight;
 	}
@@ -167,8 +183,8 @@ public class RecruitmentPO implements Serializable {
 	public void setWeight(int weight) {
 		this.weight = weight;
 	}
-	
-	@Column(name= "height")
+
+	@Column(name = "height")
 	public int getHeight() {
 		return height;
 	}
@@ -176,8 +192,8 @@ public class RecruitmentPO implements Serializable {
 	public void setHeight(int height) {
 		this.height = height;
 	}
-	
-	@Column(name= "employWay")
+
+	@Column(name = "employWay")
 	public short getEmployWay() {
 		return employWay;
 	}
@@ -185,8 +201,8 @@ public class RecruitmentPO implements Serializable {
 	public void setEmployWay(short employWay) {
 		this.employWay = employWay;
 	}
-	
-	@Column(name= "householdType")
+
+	@Column(name = "householdType")
 	public short getHouseholdType() {
 		return householdType;
 	}
@@ -194,8 +210,8 @@ public class RecruitmentPO implements Serializable {
 	public void setHouseholdType(short householdType) {
 		this.householdType = householdType;
 	}
-	
-	@Column(name= "political")
+
+	@Column(name = "political")
 	public short getPolitical() {
 		return political;
 	}
@@ -203,8 +219,8 @@ public class RecruitmentPO implements Serializable {
 	public void setPolitical(short political) {
 		this.political = political;
 	}
-	
-	@Column(name= "education")
+
+	@Column(name = "education")
 	public short getEducation() {
 		return education;
 	}
@@ -212,8 +228,8 @@ public class RecruitmentPO implements Serializable {
 	public void setEducation(short education) {
 		this.education = education;
 	}
-	
-	@Column(name= "phone")
+
+	@Column(name = "phone")
 	public String getPhone() {
 		return phone;
 	}
@@ -221,8 +237,8 @@ public class RecruitmentPO implements Serializable {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	
-	@Column(name= "wechat")
+
+	@Column(name = "wechat")
 	public String getWechat() {
 		return wechat;
 	}
@@ -230,8 +246,8 @@ public class RecruitmentPO implements Serializable {
 	public void setWechat(String wechat) {
 		this.wechat = wechat;
 	}
-	
-	@Column(name= "qq")
+
+	@Column(name = "qq")
 	public String getQq() {
 		return qq;
 	}
@@ -239,8 +255,8 @@ public class RecruitmentPO implements Serializable {
 	public void setQq(String qq) {
 		this.qq = qq;
 	}
-	
-	@Column(name= "address")
+
+	@Column(name = "address")
 	public String getAddress() {
 		return address;
 	}
@@ -248,8 +264,8 @@ public class RecruitmentPO implements Serializable {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	
-	@Column(name= "nativePlace")
+
+	@Column(name = "nativePlace")
 	public String getNativePlace() {
 		return nativePlace;
 	}
@@ -257,8 +273,8 @@ public class RecruitmentPO implements Serializable {
 	public void setNativePlace(String nativePlace) {
 		this.nativePlace = nativePlace;
 	}
-	
-	@Column(name= "hometownPlace")
+
+	@Column(name = "hometownPlace")
 	public String getHometownPlace() {
 		return hometownPlace;
 	}
@@ -266,8 +282,8 @@ public class RecruitmentPO implements Serializable {
 	public void setHometownPlace(String hometownPlace) {
 		this.hometownPlace = hometownPlace;
 	}
-	
-	@Column(name= "specialty")
+
+	@Column(name = "specialty")
 	public String getSpecialty() {
 		return specialty;
 	}
@@ -275,8 +291,8 @@ public class RecruitmentPO implements Serializable {
 	public void setSpecialty(String specialty) {
 		this.specialty = specialty;
 	}
-	
-	@Column(name= "emergencyMan")
+
+	@Column(name = "emergencyMan")
 	public String getEmergencyMan() {
 		return emergencyMan;
 	}
@@ -284,8 +300,8 @@ public class RecruitmentPO implements Serializable {
 	public void setEmergencyMan(String emergencyMan) {
 		this.emergencyMan = emergencyMan;
 	}
-	
-	@Column(name= "emergencyPhone")
+
+	@Column(name = "emergencyPhone")
 	public String getEmergencyPhone() {
 		return emergencyPhone;
 	}
@@ -293,8 +309,8 @@ public class RecruitmentPO implements Serializable {
 	public void setEmergencyPhone(String emergencyPhone) {
 		this.emergencyPhone = emergencyPhone;
 	}
-	
-	@Column(name= "isMarried")
+
+	@Column(name = "isMarried")
 	public short getIsMarried() {
 		return isMarried;
 	}
@@ -302,8 +318,8 @@ public class RecruitmentPO implements Serializable {
 	public void setIsMarried(short isMarried) {
 		this.isMarried = isMarried;
 	}
-	
-	@Column(name= "isBirth")
+
+	@Column(name = "isBirth")
 	public short getIsBirth() {
 		return isBirth;
 	}
@@ -311,8 +327,8 @@ public class RecruitmentPO implements Serializable {
 	public void setIsBirth(short isBirth) {
 		this.isBirth = isBirth;
 	}
-	
-	@Column(name= "isHouse")
+
+	@Column(name = "isHouse")
 	public short getIsHouse() {
 		return isHouse;
 	}
@@ -320,8 +336,8 @@ public class RecruitmentPO implements Serializable {
 	public void setIsHouse(short isHouse) {
 		this.isHouse = isHouse;
 	}
-	
-	@Column(name= "isCar")
+
+	@Column(name = "isCar")
 	public short getIsCar() {
 		return isCar;
 	}
@@ -329,8 +345,8 @@ public class RecruitmentPO implements Serializable {
 	public void setIsCar(short isCar) {
 		this.isCar = isCar;
 	}
-	
-	@Column(name= "isHouseLoan")
+
+	@Column(name = "isHouseLoan")
 	public short getIsHouseLoan() {
 		return isHouseLoan;
 	}
@@ -338,8 +354,8 @@ public class RecruitmentPO implements Serializable {
 	public void setIsHouseLoan(short isHouseLoan) {
 		this.isHouseLoan = isHouseLoan;
 	}
-	
-	@Column(name= "isCarLoan")
+
+	@Column(name = "isCarLoan")
 	public short getIsCarLoan() {
 		return isCarLoan;
 	}
@@ -347,8 +363,8 @@ public class RecruitmentPO implements Serializable {
 	public void setIsCarLoan(short isCarLoan) {
 		this.isCarLoan = isCarLoan;
 	}
-	
-	@Column(name= "isCarID")
+
+	@Column(name = "isCarID")
 	public short getIsCarID() {
 		return isCarID;
 	}
@@ -356,8 +372,8 @@ public class RecruitmentPO implements Serializable {
 	public void setIsCarID(short isCarID) {
 		this.isCarID = isCarID;
 	}
-	
-	@Column(name= "isPassID")
+
+	@Column(name = "isPassID")
 	public short getIsPassID() {
 		return isPassID;
 	}
@@ -365,8 +381,8 @@ public class RecruitmentPO implements Serializable {
 	public void setIsPassID(short isPassID) {
 		this.isPassID = isPassID;
 	}
-	
-	@Column(name= "isHMID")
+
+	@Column(name = "isHMID")
 	public short getIsHMID() {
 		return isHMID;
 	}
@@ -374,8 +390,8 @@ public class RecruitmentPO implements Serializable {
 	public void setIsHMID(short isHMID) {
 		this.isHMID = isHMID;
 	}
-	
-	@Column(name= "isTWID")
+
+	@Column(name = "isTWID")
 	public short getIsTWID() {
 		return isTWID;
 	}
@@ -383,8 +399,8 @@ public class RecruitmentPO implements Serializable {
 	public void setIsTWID(short isTWID) {
 		this.isTWID = isTWID;
 	}
-	
-	@Column(name= "isContract")
+
+	@Column(name = "isContract")
 	public short getIsContract() {
 		return isContract;
 	}
@@ -392,8 +408,8 @@ public class RecruitmentPO implements Serializable {
 	public void setIsContract(short isContract) {
 		this.isContract = isContract;
 	}
-	
-	@Column(name= "isSnsurance")
+
+	@Column(name = "isSnsurance")
 	public short getIsSnsurance() {
 		return isSnsurance;
 	}
@@ -401,8 +417,8 @@ public class RecruitmentPO implements Serializable {
 	public void setIsSnsurance(short isSnsurance) {
 		this.isSnsurance = isSnsurance;
 	}
-	
-	@Column(name= "isFire")
+
+	@Column(name = "isFire")
 	public short getIsFire() {
 		return isFire;
 	}
@@ -410,8 +426,8 @@ public class RecruitmentPO implements Serializable {
 	public void setIsFire(short isFire) {
 		this.isFire = isFire;
 	}
-	
-	@Column(name= "isCnsurance")
+
+	@Column(name = "isCnsurance")
 	public short getIsCnsurance() {
 		return isCnsurance;
 	}
@@ -419,8 +435,8 @@ public class RecruitmentPO implements Serializable {
 	public void setIsCnsurance(short isCnsurance) {
 		this.isCnsurance = isCnsurance;
 	}
-	
-	@Column(name= "isCompete")
+
+	@Column(name = "isCompete")
 	public short getIsCompete() {
 		return isCompete;
 	}
@@ -428,8 +444,8 @@ public class RecruitmentPO implements Serializable {
 	public void setIsCompete(short isCompete) {
 		this.isCompete = isCompete;
 	}
-	
-	@Column(name= "isTrain")
+
+	@Column(name = "isTrain")
 	public short getIsTrain() {
 		return isTrain;
 	}
@@ -437,8 +453,8 @@ public class RecruitmentPO implements Serializable {
 	public void setIsTrain(short isTrain) {
 		this.isTrain = isTrain;
 	}
-	
-	@Column(name= "isCriminal")
+
+	@Column(name = "isCriminal")
 	public short getIsCriminal() {
 		return isCriminal;
 	}
@@ -446,8 +462,8 @@ public class RecruitmentPO implements Serializable {
 	public void setIsCriminal(short isCriminal) {
 		this.isCriminal = isCriminal;
 	}
-	
-	@Column(name= "isDisease")
+
+	@Column(name = "isDisease")
 	public short getIsDisease() {
 		return isDisease;
 	}
@@ -456,7 +472,7 @@ public class RecruitmentPO implements Serializable {
 		this.isDisease = isDisease;
 	}
 
-	@Column(name= "status")
+	@Column(name = "status")
 	public short getStatus() {
 		return status;
 	}
@@ -465,7 +481,7 @@ public class RecruitmentPO implements Serializable {
 		this.status = status;
 	}
 
-	@Column(name= "photoPath")
+	@Column(name = "photoPath")
 	public String getPhotoPath() {
 		return photoPath;
 	}
@@ -473,8 +489,8 @@ public class RecruitmentPO implements Serializable {
 	public void setPhotoPath(String photoPath) {
 		this.photoPath = photoPath;
 	}
-	
-	@Column(name= "identityPathF")
+
+	@Column(name = "identityPathF")
 	public String getIdentityPathF() {
 		return identityPathF;
 	}
@@ -483,7 +499,7 @@ public class RecruitmentPO implements Serializable {
 		this.identityPathF = identityPathF;
 	}
 
-	@Column(name= "identityPathB")
+	@Column(name = "identityPathB")
 	public String getIdentityPathB() {
 		return identityPathB;
 	}

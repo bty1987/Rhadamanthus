@@ -11,9 +11,11 @@ public interface AwardStockService {
 
 	public void pageAwardStock(Paging paging, List<Filter> filters, int company);
 
-	public AwardStockVO queryAwardStockByAsid(AwardStockVO awardStockVO) throws FLException;
-
 	public List<AwardStockVO> queryAwardStockByType(AwardStockVO awardStockVO, int company);
+
+	public List<AwardStockVO> queryAwardStockByName(AwardStockVO awardStock, int company);
+
+	public AwardStockVO queryAwardStockByAsid(AwardStockVO awardStockVO) throws FLException;
 
 	public void addAwardStock(AwardStockVO awardStockVO, String userId, int company) throws FLException;
 
@@ -26,7 +28,5 @@ public interface AwardStockService {
 	public void updateAwardStockForCG(AwardStockVO awardStockVO, String userId) throws FLException;
 
 	public void checkAwardStock(AwardStockVO awardStockVO, String userId) throws FLException;
-
-	public List<AwardStockVO> queryAwardStockByName(AwardStockVO awardStock, int company);
 
 }

@@ -37,6 +37,8 @@ public class SelectionDO implements Serializable {
 
 	private short status;// 状态 , 0: 初始 , 1: 锁定
 
+	private short isAffirm;// 是否确认 , 0: 未确认 , 1: 客户确认
+
 	private int company;
 
 	private long total;// 总额
@@ -51,7 +53,9 @@ public class SelectionDO implements Serializable {
 
 	private long addReduceMinusTotal;// 增减减总额
 
-	private Timestamp createTime;
+	private Timestamp createTime;// 创建时间
+
+	private Timestamp affirmTime;// 确认时间
 
 	private UserPO creater;
 
@@ -92,6 +96,15 @@ public class SelectionDO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "isAffirm")
+	public short getIsAffirm() {
+		return isAffirm;
+	}
+
+	public void setIsAffirm(short isAffirm) {
+		this.isAffirm = isAffirm;
 	}
 
 	@Column(name = "company")
@@ -164,6 +177,15 @@ public class SelectionDO implements Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	@Column(name = "affirmTime")
+	public Timestamp getAffirmTime() {
+		return affirmTime;
+	}
+
+	public void setAffirmTime(Timestamp affirmTime) {
+		this.affirmTime = affirmTime;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

@@ -79,6 +79,8 @@ public class DecorationContractPO implements Serializable, Contract {
 
 	private short ishow;
 
+	private int filesize;
+
 	public DecorationContractPO() {
 		super();
 	}
@@ -267,6 +269,15 @@ public class DecorationContractPO implements Serializable, Contract {
 
 	public void setIshow(short ishow) {
 		this.ishow = ishow;
+	}
+
+	@Column(name = "filesize")
+	public int getFilesize() {
+		return filesize;
+	}
+
+	public void setFilesize(int filesize) {
+		this.filesize = filesize;
 	}
 
 }

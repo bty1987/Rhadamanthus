@@ -13,24 +13,23 @@ package com.fanglin.utils;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 public class IPUtil {
 
-	public static boolean ipMatches(String sourceIP, String rexIP){
-		if(rexIP == null){
+	public static boolean ipMatches(String sourceIP, String rexIP) {
+		if (rexIP == null) {
 			return false;
 		}
 
-		if(sourceIP == null){
+		if (sourceIP == null) {
 			return false;
 		}
 
 		String[] sourceArray = sourceIP.split("\\.");
 		String[] rexArray = rexIP.split("\\.");
 
-		for(int i = 0; i < rexArray.length; i++){
+		for (int i = 0; i < rexArray.length; i++) {
 
-			if(!"*".equals(rexArray[i]) && !rexArray[i].equals(sourceArray[i])){
+			if (!"*".equals(rexArray[i]) && !rexArray[i].equals(sourceArray[i])) {
 				return false;
 			}
 		}
@@ -41,24 +40,26 @@ public class IPUtil {
 	/*
 	 * 获得远程的Ip
 	 */
-	public static String getIpAddr(HttpServletRequest request){
+	public static String getIpAddr(HttpServletRequest request) {
+
 		String ip = request.getHeader("x-forwarded-for");
 
-		if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)){
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
 			ip = request.getHeader("Proxy-Client-IP");
 		}
 
-		if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)){
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
 			ip = request.getHeader("WL-Proxy-Client-IP");
 		}
 
-		if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)){
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
 			ip = request.getRemoteAddr();
 		}
-		
-		if(ip.contains(",")){
+
+		if (ip.contains(",")) {
 			ip = ip.split(",")[0];
 		}
+
 		return ip;
 	}
 

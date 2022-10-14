@@ -14,9 +14,11 @@ public class ActivityItemPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -7540185816527717351L;
 
-	public static final short TYPE_COUPON_INT = 0;
+	public static final short TYPE_COUPON_INT = 0;// 券
 
-	public static final short TYPE_THING_INT = 1;
+	public static final short TYPE_THING_INT = 1;// 物品
+
+	public static final short TYPE_REDPACKAGE_INT = 2;// 红包
 
 	public static final String COLUMN_AID_STR = "aid";
 

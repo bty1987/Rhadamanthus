@@ -42,14 +42,14 @@ public class SoodsServiceImpl implements SoodsService {
 	private BrandDao brandDao;
 
 	@Override
-	public void pageSoods(Paging paging, List<Filter> filters, int company) {
+	public void pageSoods(Paging paging, List<Filter> filters, SoodsVO soodsVO, int company) {
 
-		List<SoodsPO> soodsPOs = soodsDao.pageSoods(paging, filters, company);
+		List<SoodsPO> soodsPOs = soodsDao.pageSoods(paging, filters, soodsVO.getStatus(), company);
 		List<SoodsVO> soodsVOs = new ArrayList<SoodsVO>();
 
 		for (SoodsPO soodsPO : soodsPOs) {
 
-			SoodsVO soodsVO = new SoodsVO(new GoodsVO(), new QuotationItemVO(new QuotationVersionVO()));
+			soodsVO = new SoodsVO(new GoodsVO(), new QuotationItemVO(new QuotationVersionVO()));
 
 			BeanUtil.copyProperties(soodsPO, soodsVO, Arrays.asList("goods"));
 			BeanUtil.copyProperties(soodsPO.getGoods(), soodsVO.getGoods(), Arrays.asList("accessoriesType"));
@@ -142,8 +142,7 @@ public class SoodsServiceImpl implements SoodsService {
 
 			SoodsPO soodsPO = soodsDao.get(soods.getSid());
 
-			if (soodsPO == null)
-				continue;
+			if (soodsPO == null) continue;
 
 			soodsPO.setStatus(soods.getStatus());
 

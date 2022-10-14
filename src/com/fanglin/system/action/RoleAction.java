@@ -79,7 +79,7 @@ public class RoleAction extends BaseListAction {
 		    throw new FLException(-1, "无操作权限");
 		}
 		
-		roleService.addRole(role,queryCompany());
+		roleService.addRole(role,queryCompany(),queryUserId());
 		
 	    return SUCCESS;
 	}

@@ -8,46 +8,51 @@ import org.apache.struts2.json.annotations.JSON;
 import com.fanglin.personel.vo.UserVO;
 
 public class SalaryDrawingVO implements Serializable {
-	
+
 	private static final long serialVersionUID = 4578938237466779278L;
 
-	private long sdid;
-	
-	private long sid;
-	
+	private Long sdid;
+
+	private Long sid;
+
 	private String name;
-	
+
 	private String drawingUrl;
-	
-	private short drawingType;
-	
-	private short type;
-	
+
+	private Integer filesize;
+
+	private Short drawingType;
+
 	private Object creater;
-	
+
 	private Timestamp createTime;
-	
+
+	private Short status;
+
+	private Short type;
+
 	public SalaryDrawingVO() {
 		super();
 	}
-	
+
 	public SalaryDrawingVO(UserVO creater) {
 		super();
 		this.creater = creater;
 	}
-	public long getSdid() {
+
+	public Long getSdid() {
 		return sdid;
 	}
 
-	public void setSdid(long sdid) {
+	public void setSdid(Long sdid) {
 		this.sdid = sdid;
 	}
 
-	public long getSid() {
+	public Long getSid() {
 		return sid;
 	}
 
-	public void setSid(long sid) {
+	public void setSid(Long sid) {
 		this.sid = sid;
 	}
 
@@ -67,19 +72,27 @@ public class SalaryDrawingVO implements Serializable {
 		this.drawingUrl = drawingUrl;
 	}
 
-	public short getDrawingType() {
+	public Short getDrawingType() {
 		return drawingType;
 	}
 
-	public void setDrawingType(short drawingType) {
+	public void setDrawingType(Short drawingType) {
 		this.drawingType = drawingType;
 	}
 
-	public short getType() {
+	public Integer getFilesize() {
+		return filesize;
+	}
+
+	public void setFilesize(Integer filesize) {
+		this.filesize = filesize;
+	}
+
+	public Short getType() {
 		return type;
 	}
 
-	public void setType(short type) {
+	public void setType(Short type) {
 		this.type = type;
 	}
 
@@ -100,14 +113,12 @@ public class SalaryDrawingVO implements Serializable {
 		this.createTime = createTime;
 	}
 
-	public short getStatus() {
+	public Short getStatus() {
 		return status;
 	}
 
-	public void setStatus(short status) {
+	public void setStatus(Short status) {
 		this.status = status;
 	}
-
-	private short status;
 
 }

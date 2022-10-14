@@ -20,7 +20,7 @@ import com.fanglin.utils.Paging;
 
 public interface AddReduceService {
 
-	public void pageAddReduce(Paging paging, List<Filter> filters, AddReduceVO addReduceVO, Integer company) throws FLException;
+	public void pageAddReduce(Paging paging, List<Filter> filters, AddReduceVO addReduceVO, List<Short> statuses, Integer company) throws FLException;
 
 	public void pageAddReduceByOrderId(Paging paging, List<Filter> filters, AddReduceVO addReduceVO) throws FLException;
 

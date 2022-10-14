@@ -21,25 +21,27 @@ import com.fanglin.system.vo.RoleVO;
 import com.fanglin.utils.Paging;
 
 public interface OperationService {
-	
+
 	public void pageOperation(Paging paging, List<Filter> filters);
-	
+
 	public List<OperationVO> queryOperation(OperationVO operationVO);
-	
+
 	public List<OperationVO> queryOperationByUserId(OperationVO operationVO, UserVO userVO) throws FLException;
-	
+
 	public List<OperationVO> queryOperationByRid(OperationVO operationVO, RoleVO roleVO) throws FLException;
-	
-	public boolean checkOperation(String operation) throws FLException;
-	
+
+	public OperationVO checkOperation(OperationVO operationVO) throws FLException;
+
 	public boolean checkOperation(String userId, String operation, short rollcall) throws FLException;
-	
-	public int updateRoleOperationByRid(List<Integer> oids, OperationVO operationVO, RoleVO roleVO) throws FLException;
-	
-	public int updateRoleOperationByUserId(List<Integer> oids, OperationVO operationVO, UserVO userVO) throws FLException;
-	
-	public int deleteOperation(OperationVO operationVO) throws FLException;
-	
+
 	public void addOperation(OperationVO operationVO) throws FLException;
+
+	public int updateOpperation(OperationVO operationVO) throws FLException;
+
+	public int updateRoleOperationByRid(List<Integer> oids, RoleVO roleVO, String userId) throws FLException;
+
+	public int updateRoleOperationByUserId(List<Integer> oids, UserVO userVO, String userId) throws FLException;
+
+	public int deleteOperation(OperationVO operationVO) throws FLException;
 
 }

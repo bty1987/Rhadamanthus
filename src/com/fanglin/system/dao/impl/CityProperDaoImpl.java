@@ -51,35 +51,34 @@ public class CityProperDaoImpl extends DaoImpl<CityProperPO> implements CityProp
 	public List<CityProperPO> queryCityProperByCids(List<Integer> cids) {
 		return session().createCriteria(CityProperPO.class).add(Restrictions.in("city.cid", cids)).list();
 	}
-	
+
 	@Override
 	public int countCityProperByCid(Integer cid) {
-	    String sql = "select count(*) from communion.cityProper where cid = :cid";
-	    BigInteger count = (BigInteger)session().createSQLQuery(sql).setInteger("cid", cid.intValue()).uniqueResult();
+		String sql = "select count(*) from communion.cityProper where cid = :cid";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("cid", cid.intValue()).uniqueResult();
 
-	    return count.intValue();
-	  }
+		return count.intValue();
+	}
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters != null) {
+		if (filters == null) return;
 
-			query.alias("city", "city");
+		query.alias("city", "city");
 
-			for (Filter filter : filters) {
+		for (Filter filter : filters) {
 
-				String field = filter.getField();
-				String data = filter.getData();
-				String op = filter.getOp();
+			String field = filter.getField();
+			String data = filter.getData();
+			String op = filter.getOp();
 
-				if(CityProperPO.COLUMN_NAME_STR.equals(field)){
-					query.add(query.getCriterion(CityProperPO.COLUMN_NAME_STR, data, op));
-				}else if("cityId".equals(field)){
-					query.add(query.getCriterion("city.cid", Integer.valueOf(data), op));
-				}else if("regionId".equals(field)){
-					query.alias("city.region", "region");
-					query.add(query.getCriterion("region.rid", Integer.valueOf(data), op));
-				}
+			if (CityProperPO.COLUMN_NAME_STR.equals(field)) {
+				query.add(query.getCriterion(CityProperPO.COLUMN_NAME_STR, data, op));
+			} else if ("cityId".equals(field)) {
+				query.add(query.getCriterion("city.cid", Integer.valueOf(data), op));
+			} else if ("regionId".equals(field)) {
+				query.alias("city.region", "region");
+				query.add(query.getCriterion("region.rid", Integer.valueOf(data), op));
 			}
 		}
 	}

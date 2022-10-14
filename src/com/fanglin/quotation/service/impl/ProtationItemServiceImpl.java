@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.po.PresignItemPO;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.quotation.dao.ProtationDao;
@@ -54,7 +55,14 @@ public class ProtationItemServiceImpl implements ProtationItemService {
 
 			protationItemVO = new ProtationItemVO();
 
-			BeanUtil.copyPropertie(protationItemPO, protationItemVO);
+			BeanUtil.copyPropertie(protationItemPO, protationItemVO, Arrays.asList("item", "content"));
+
+			if (protationItemPO.getItem() != null) {
+				protationItemVO.setPpiid(protationItemPO.getItem().getPiid());
+				protationItemVO.setContent(protationItemPO.getItem().getContent());
+			} else {
+				protationItemVO.setContent("");
+			}
 
 			protationItemVOs.add(protationItemVO);
 		}
@@ -89,9 +97,11 @@ public class ProtationItemServiceImpl implements ProtationItemService {
 
 			ProtationItemPO protationItemPO = new ProtationItemPO();
 
-			BeanUtil.copyPropertie(protationItemVO, protationItemPO);
+			BeanUtil.copyPropertie(protationItemVO, protationItemPO, Arrays.asList("item", "content"));
 
 			protationItemPO.setPid(protationPO.getPid());
+
+			if (protationItemVO.getPpiid() != null) protationItemPO.setItem(new PresignItemPO(protationItemVO.getPpiid()));
 
 			protationItemDao.save(protationItemPO);
 

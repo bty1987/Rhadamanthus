@@ -57,7 +57,7 @@ public class ModuleAction extends BaseListAction {
 	@Action(value = "queryModule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryModule() {
 
-		modules = moduleService.queryModuleBySystem(module);
+		modules = moduleService.queryModule(module);
 
 		return SUCCESS;
 	}
@@ -65,7 +65,7 @@ public class ModuleAction extends BaseListAction {
 	@Action(value = "queryModuleForLogin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryModuleForLogin() throws FLException {
 
-		modules = moduleService.queryModuleByRid(module, new RoleVO(queryRoleId()));
+		modules = moduleService.queryModuleByUserId(module, new UserVO(queryUserId()));
 
 		return SUCCESS;
 	}
@@ -121,7 +121,7 @@ public class ModuleAction extends BaseListAction {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		moduleService.updateRoleModuleByRid(module, role, modules, queryRoleId());
+		moduleService.updateRoleModuleByRid(module, role, modules, queryRoleId(), queryUserId());
 
 		return SUCCESS;
 	}

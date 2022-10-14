@@ -40,7 +40,7 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 		query.add(query.getCriterion("decoration.company", company, "eq"));
 
 		queryFilterExcute(query, filters);
-		
+
 		query.desc("cid");
 
 		return query.list();
@@ -82,7 +82,7 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 		query.add(query.getCriterion("decoration.company", company, "eq"));
 
 		queryFilterExcute(query, filters);
-		
+
 		query.desc("cid");
 
 		return query.list();
@@ -96,7 +96,7 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 		query.add(query.getCriterion("decoration.company", company, "eq"));
 
 		queryFilterExcute(query, filters);
-		
+
 		query.desc("cid");
 
 		return query.list();
@@ -165,6 +165,8 @@ public class ConstructionDaoImpl extends DaoImpl<ConstructionPO> implements Cons
 					query.add(query.getCriterion("village.no", data, op));
 				} else if (ConstructionPO.COLUMN_SCHEDULE_STR.equals(field)) {
 					query.add(Restrictions.eq(field, Integer.valueOf(data)));
+				} else if ("cnid".equals(field)) {
+					query.add(Restrictions.eq(field, Long.valueOf(data)));
 				} else if ("projectStatus".equals(field) && !"other".equals(data)) {
 					if ("未完工".equals(data)) {
 						query.add(query.getCriterion("decoration.projectStatus", DecorationPO.PROJECTSTATUS_START_INT, "ne"));

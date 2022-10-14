@@ -75,6 +75,11 @@ public class LoginAction extends BaseListAction {
 		String ip = IPUtil.getIpAddr(request);
 
 		try {
+
+			if (SystemConfig.getString("disable") != null && !SystemConfig.getString("disable").equals(loginId)) {
+				throw new FLException(110018, "平台暂停使用");
+			}
+
 			String verifyCode = AESHelper.decrypt(securityCode, SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv"));
 
 			if (verifyCode == null || !verifyCode.equals(inputCode)) {
@@ -140,6 +145,10 @@ public class LoginAction extends BaseListAction {
 			String code = request.getParameter("code");
 			String secret = request.getParameter("secret");
 
+			if (SystemConfig.getString("disable") != null && !SystemConfig.getString("disable").equals(userId)) {
+				throw new FLException(110018, "平台暂停使用");
+			}
+
 			setAuthentication(loginService.requestAuthCode(userId, code, secret));
 		} catch (FLException e) {
 			setErrorCode(e.getCode());
@@ -181,6 +190,10 @@ public class LoginAction extends BaseListAction {
 
 		try {
 			if (getAuthentication() == null) {
+				throw new FLException(110008, "验证信息错误");
+			}
+
+			if (user == null) {
 				throw new FLException(110008, "验证信息错误");
 			}
 

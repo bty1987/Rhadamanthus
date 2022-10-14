@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.balance.service.BalanceService;
-import com.fanglin.balance.vo.AccountVO;
+import com.fanglin.balance.vo.BalanceAccountVO;
 import com.fanglin.balance.vo.BalanceVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
@@ -29,7 +29,7 @@ public class BalanceAction extends BaseListAction {
 
 	private List<BalanceVO> balances;
 
-	private List<AccountVO> accountes;
+	private List<BalanceAccountVO> balanceAccountes;
 
 	@Action(value = "pageBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageBalance() throws FLException {
@@ -58,7 +58,7 @@ public class BalanceAction extends BaseListAction {
 	@Action(value = "balanceBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String balanceBalance() throws FLException {
 
-		balanceService.balanceBalance(balance, accountes, queryUserId());
+		balanceService.balanceBalance(balance, balanceAccountes, queryUserId());
 
 		return SUCCESS;
 	}
@@ -67,7 +67,7 @@ public class BalanceAction extends BaseListAction {
 	@Action(value = "payBalance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String payBalance() throws FLException {
 
-		balanceService.payBalance(balance, accountes, queryUserId());
+		balanceService.payBalance(balance, balanceAccountes, queryUserId());
 
 		return SUCCESS;
 	}
@@ -88,12 +88,13 @@ public class BalanceAction extends BaseListAction {
 		this.balances = balances;
 	}
 
-	public List<AccountVO> getAccountes() {
-		return accountes;
+	public List<BalanceAccountVO> getBalanceAccountes() {
+		return balanceAccountes;
 	}
 
-	public void setAccountes(List<AccountVO> accountes) {
-		this.accountes = accountes;
+	public void setBalanceAccountes(List<BalanceAccountVO> balanceAccountes) {
+		this.balanceAccountes = balanceAccountes;
 	}
+
 
 }

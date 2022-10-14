@@ -89,6 +89,7 @@ public class DecorationPictureServiceImpl implements DecorationPictureService {
 		decorationPicturePO.setUploadTime(DateUtil.getDateToTimestamp(new Date()));
 		decorationPicturePO.setName(String.format("%s.%s", _name.substring(0, _name.length() > 8 ? 8 : _name.length()), _suffix));
 		decorationPicturePO.setStatus(DecorationPicturePO.STATUS_ENABLE_INT);
+		decorationPicturePO.setFilesize(decorationPictureVO.getFilesize());
 
 		decorationPictureDao.save(decorationPicturePO);
 

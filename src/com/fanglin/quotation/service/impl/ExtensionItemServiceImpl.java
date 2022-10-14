@@ -90,7 +90,7 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 
 			BeanUtil.copyProperties(extensionItemVO, extensionItemPO, Arrays.asList("quotationFunctionArea"));
 
-			extensionItemPO.setQiid(extensionItemVO.getQuoteItemId());
+			if (extensionItemVO.getQuoteItemId() != null) extensionItemPO.setQiid(extensionItemVO.getQuoteItemId());
 
 			extensionItemPO.setQuotationFunctionArea(new QuotationFunctionAreaPO(extensionItemVO.getQuotationFunctionAreaId()));
 		} else {
@@ -106,12 +106,16 @@ public class ExtensionItemServiceImpl implements ExtensionItemService {
 			extensionItemPO.setQuotationFunctionArea(new QuotationFunctionAreaPO(extensionItemVO.getQuotationFunctionAreaId()));
 		}
 
+		extensionItemPO.setNum(extensionItemVO.getNum());
+		extensionItemPO.setInitnum(extensionItemVO.getNum());
+
+		extensionItemDao.saveOrUpdate(extensionItemPO);
+
 		extensionPO.setUndisPrice(extensionVO.getUndisPrice());
 		extensionPO.setDisPrice(extensionVO.getDisPrice());
 		extensionPO.setTotal(extensionVO.getTotal());
 
 		extensionDao.update(extensionPO);
-		extensionItemDao.saveOrUpdate(extensionItemPO);
 
 		extensionItemVO.setEiid(extensionItemPO.getEiid());
 

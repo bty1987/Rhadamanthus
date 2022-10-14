@@ -7,22 +7,23 @@
  * @Author		: LY
  * @Describing	: 
  */
+
 package com.fanglin.system.vo;
 
 import java.io.Serializable;
 
 public class OrganizationVO implements Serializable {
-	
+
 	private static final long serialVersionUID = -4157191376799023013L;
-	
+
 	private Long oid;
 
 	private String no;
 
 	private String name;
-	
+
 	private String pinyin;
-	
+
 	private Short status;
 
 	public OrganizationVO() {

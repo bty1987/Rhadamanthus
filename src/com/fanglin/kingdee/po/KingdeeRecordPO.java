@@ -14,19 +14,21 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "kingdeeRecord", catalog = "platform")
 public class KingdeeRecordPO implements Serializable {
-	
+
 	private static final long serialVersionUID = -8903497496550527323L;
 
+	public static final String COLUMN_KRID_STR = "krid";
+
 	private long krid;
-	
+
 	private String orderId;
-	
+
 	private long rtid;
-	
+
 	private String type;
-	
+
 	private String message;
-	
+
 	private Timestamp createTime;
 
 	public KingdeeRecordPO() {

@@ -17,13 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.common.dao.TokenDao;
-import com.fanglin.common.po.TokenPO;
 import com.fanglin.common.service.LoginService;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;
 import com.fanglin.core.security.MD5Helper;
 import com.fanglin.core.vo.Authentication;
+import com.fanglin.factory.dao.TokenDao;
+import com.fanglin.factory.po.TokenPO;
 import com.fanglin.personel.dao.UserCompanyDao;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserCompanyPO;
@@ -74,6 +74,10 @@ public class LoginServiceImpl implements LoginService {
 				throw new FLException(110004, "该用户不能登陆系统");
 			}
 
+			if (userPO.getStatus() != UserPO.STATUS_ONJOB_INT) {
+				throw new FLException(110004, "该用户不能登陆系统");
+			}
+
 			$company = userPO.getCompany();
 
 			authentication = new Authentication(userPO.getUserId(), userPO.getCurrentName(), userPO.getRole().getRid(), (new Date()).getTime(), true, $company, userPO.getFreedom());
@@ -103,6 +107,10 @@ public class LoginServiceImpl implements LoginService {
 			UserPO userPO = userDao.queryUserByUserId(authentication.getUserId());
 
 			if (userPO == null) {
+				throw new FLException(110004, "该用户不能登陆系统");
+			}
+
+			if (userPO.getStatus() != UserPO.STATUS_ONJOB_INT) {
 				throw new FLException(110004, "该用户不能登陆系统");
 			}
 

@@ -25,6 +25,10 @@ public class DecorationPaymentVO implements Serializable {
 
 	private String paymentType;
 
+	private Short onetype;
+
+	private Short sort;
+
 	public Long getDpid() {
 		return dpid;
 	}
@@ -88,6 +92,22 @@ public class DecorationPaymentVO implements Serializable {
 
 	public void setPaymentType(String paymentType) {
 		this.paymentType = paymentType;
+	}
+
+	public Short getOnetype() {
+		return onetype;
+	}
+
+	public void setOnetype(Short onetype) {
+		this.onetype = onetype;
+	}
+
+	public Short getSort() {
+		return sort;
+	}
+
+	public void setSort(Short sort) {
+		this.sort = sort;
 	}
 
 }

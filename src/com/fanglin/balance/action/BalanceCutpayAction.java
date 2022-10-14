@@ -28,6 +28,14 @@ public class BalanceCutpayAction extends BaseListAction {
 
 	private List<BalanceCutpayVO> balanceCutpays;
 
+	@Action(value = "pageBalanceCutpay", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageBalanceCutpay() throws FLException {
+
+		balanceCutpayService.pageBalanceCutpay(getPaging(), getFilters(), balanceCutpay);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryBalanceCutpay", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryBalanceCutpay() throws FLException {
 
@@ -39,11 +47,19 @@ public class BalanceCutpayAction extends BaseListAction {
 	@Action(value = "addBalanceCutpay", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addBalanceCutpay() throws FLException {
 
-		balanceCutpayService.addBalanceCutpay(balanceCutpay,queryUserId());
+		balanceCutpayService.addBalanceCutpay(balanceCutpay, queryUserId());
 
 		return SUCCESS;
 	}
-	
+
+	@Action(value = "deductBalanceCutpay", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String deductBalanceCutpay() throws FLException {
+
+		balanceCutpayService.deductBalanceCutpay(balanceCutpay, queryUserId());
+
+		return SUCCESS;
+	}
+
 	public BalanceCutpayVO getBalanceCutpay() {
 		return balanceCutpay;
 	}

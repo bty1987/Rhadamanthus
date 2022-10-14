@@ -27,7 +27,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.dingding.service.CallbackService;
 
-@ParentPackage("login")
+@ParentPackage("base")
 @Namespace("/")
 @Controller
 public class DTalkCallback extends BaseListAction {
@@ -38,11 +38,11 @@ public class DTalkCallback extends BaseListAction {
 	private CallbackService ddCallbackService;
 
 	private String signature;
-	
+
 	private String msg_signature;
 
 	private String timestamp;
-	
+
 	private String timeStamp;
 
 	private String nonce;
@@ -51,39 +51,39 @@ public class DTalkCallback extends BaseListAction {
 
 	@Action(value = "dtalkCallback", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String dtalkCallback() throws FLException {
-		
+
 		JSONObject params = JSONObject.parseObject(getRequestPostData(request));
-		
+
 		encrypt = params.getString("encrypt");
-		
+
 		packageEcrypt(ddCallbackService.callback(signature, nonce, timestamp, encrypt));
 
 		return SUCCESS;
 	}
-	
-    private String getRequestPostData(HttpServletRequest request){
-    	
-        try {
+
+	private String getRequestPostData(HttpServletRequest request) {
+
+		try {
 			int contentLength = request.getContentLength();
-			
-			if(contentLength<0){
-			    return "";
+
+			if (contentLength < 0) {
+				return "";
 			}
-			
+
 			byte buffer[] = new byte[contentLength];
-			
+
 			for (int i = 0; i < contentLength;) {
-			    int len = request.getInputStream().read(buffer, i, contentLength - i);
-			    
-			    if (len == -1) break;
-			    
-			    i += len;
+				int len = request.getInputStream().read(buffer, i, contentLength - i);
+
+				if (len == -1) break;
+
+				i += len;
 			}
 			return new String(buffer, "utf-8");
 		} catch (Exception e) {
 			return "";
 		}
-    }
+	}
 
 	public String getSignature() {
 		return signature;
@@ -132,8 +132,8 @@ public class DTalkCallback extends BaseListAction {
 	public void setTimeStamp(String timeStamp) {
 		this.timeStamp = timeStamp;
 	}
-	
-	private void packageEcrypt(Map<String, String> encryptResult){
+
+	private void packageEcrypt(Map<String, String> encryptResult) {
 		setMsg_signature(encryptResult.get("msg_signature"));
 		setTimeStamp(encryptResult.get("timeStamp"));
 		setNonce(encryptResult.get("nonce"));

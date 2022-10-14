@@ -18,7 +18,7 @@ import com.fanglin.quotation.po.NormriceItemPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.service.NormriceItemService;
 import com.fanglin.quotation.vo.NormriceItemVO;
-import com.fanglin.quotation.vo.QuotationVO;
+import com.fanglin.quotation.vo.NormtionVO;
 import com.fanglin.utils.BeanUtil;
 
 @Service("normriceItemService")
@@ -29,10 +29,10 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 	private NormriceItemDao normriceItemDao;
 
 	@Autowired
-	private QuotationDao quotationDao;
+	private NormaddDaoImpl normaddDaoImpl;
 
 	@Autowired
-	private NormaddDaoImpl normaddDaoImpl;
+	private QuotationDao quotationDao;
 
 	@Override
 	public List<NormriceItemVO> queryNormriceItem(NormriceItemVO normriceItem) {
@@ -55,9 +55,9 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addNormriceItem(QuotationVO quotationVO, NormriceItemVO normriceItemVO) throws FLException {
+	public int addNormriceItem(NormtionVO normtionVO, NormriceItemVO normriceItemVO) throws FLException {
 
-		QuotationPO quotationPO = checkQuotationForStatusByEnabled(quotationVO.getQid());
+		QuotationPO quotationPO = checkQuotationForStatusByEnabled(normtionVO.getQid());
 
 		NormaddPO normaddPO = normaddDaoImpl.get(normriceItemVO.getSid());
 
@@ -90,13 +90,15 @@ public class NormriceItemServiceImpl implements NormriceItemService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int deleteNormriceItem(NormriceItemVO normriceItemVO) throws FLException {
+	public int deleteNormriceItem(NormtionVO normtionVO, NormriceItemVO normriceItemVO) throws FLException {
 
 		NormriceItemPO normriceItemPO = normriceItemDao.get(normriceItemVO.getNpiid());
 
 		if (normriceItemPO == null) {
-
+			return 0;
 		}
+
+		checkQuotationForStatusByEnabled(normriceItemPO.getQid());
 
 		normriceItemDao.delete(normriceItemPO);
 

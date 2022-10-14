@@ -94,10 +94,27 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 	}
 
 	@Override
-	public int countSelectionItem(String orderId, long areaId) {
+	public SelectionItemPO pickSelectionItem(String orderId, Long qiid) {
+
+		String sql = String.format("select {sit.*} from data.soodsitem sis, quotation.selectionitem sit where sis.qiid = :qiid and sis.sid = sit.quoteId and sit.orderId = :orderId and sit.type = :type");
+
+		return (SelectionItemPO) session().createSQLQuery(sql).addEntity("sit", SelectionItemPO.class).setString("orderId", orderId).setLong("qiid", qiid == null ? -1 : qiid).setShort("type", SelectionItemPO.TYPE_ALONE_SHORT).setMaxResults(1).uniqueResult();
+	}
+
+	@Override
+	public int countSelectionItem(String orderId, Long areaId) {
 
 		String sql = "SELECT count(*) FROM quotation.selectionitem WHERE orderId = :orderId AND areaId = :areaId";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString(SelectionItemPO.COLUMN_ORDERID_STR, orderId).setLong(SelectionItemPO.COLUMN_AREAID_STR, areaId).uniqueResult();
+
+		return count == null ? 0 : count.intValue();
+	}
+
+	@Override
+	public int countSelectionItem(String orderId, short type) {
+
+		String sql = "SELECT count(*) FROM quotation.selectionitem WHERE orderId = :orderId AND type = :type";
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setString(SelectionItemPO.COLUMN_ORDERID_STR, orderId).setLong("type", type).uniqueResult();
 
 		return count == null ? 0 : count.intValue();
 	}
@@ -122,8 +139,7 @@ public class SelectionItemDaoImpl extends DaoImpl<SelectionItemPO> implements Se
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters == null)
-			return;
+		if (filters == null) return;
 
 		for (Filter filter : filters) {
 

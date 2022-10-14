@@ -53,7 +53,11 @@ public class PlanPO implements Serializable {
 
 	private String resultFilepath;
 
+	private int resultFileSize;
+
 	private String infoFilepath;
+
+	private int infoFileSize;
 
 	private short schedule;
 
@@ -173,6 +177,24 @@ public class PlanPO implements Serializable {
 
 	public void setCompany(int company) {
 		this.company = company;
+	}
+
+	@Column(name = "resultFileSize")
+	public int getResultFileSize() {
+		return resultFileSize;
+	}
+
+	public void setResultFileSize(int resultFileSize) {
+		this.resultFileSize = resultFileSize;
+	}
+
+	@Column(name = "infoFileSize")
+	public int getInfoFileSize() {
+		return infoFileSize;
+	}
+
+	public void setInfoFileSize(int infoFileSize) {
+		this.infoFileSize = infoFileSize;
 	}
 
 }

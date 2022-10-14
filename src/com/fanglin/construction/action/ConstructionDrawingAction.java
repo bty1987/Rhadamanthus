@@ -26,65 +26,62 @@ import com.fanglin.construction.vo.ConstructionVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 
-
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class ConstructionDrawingAction extends BaseListAction{
+public class ConstructionDrawingAction extends BaseListAction {
 
 	private static final long serialVersionUID = 1830437899502700214L;
-	
+
 	@Autowired
 	private ConstructionDrawingService constructionDrawingService;
-	
+
 	private ConstructionDrawingVO constructionDrawing;
-	
+
 	private ConstructionVO construction;
-	
+
 	private List<ConstructionDrawingVO> constructionDrawings;
-	
-	private List<String> drawingUrls;
-	
+
 	@Action(value = "queryConstructionDrawingByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryConstructionDrawingByOrderId() throws FLException{
-		
+	public String queryConstructionDrawingByOrderId() throws FLException {
+
 		constructionDrawings = constructionDrawingService.queryConstructionDrawingByOrderId(construction, constructionDrawing);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryConstructionDrawingByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryConstructionDrawingByCid(){
-		
+	public String queryConstructionDrawingByCid() {
+
 		constructionDrawings = constructionDrawingService.queryConstructionDrawingByCid(constructionDrawing);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addConstructionDrawing", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addConstructionDrawing() throws FLException{
-		
+	public String addConstructionDrawing() throws FLException {
+
 		constructionDrawingService.addConstructionDrawing(constructionDrawing, queryUserId(), queryCompany());
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addConstructionDrawings", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addConstructionDrawings() throws FLException{
-		
-		constructionDrawings = constructionDrawingService.addConstructionDrawings(constructionDrawing, drawingUrls, queryUserId());
-		
+	public String addConstructionDrawings() throws FLException {
+
+		constructionDrawings = constructionDrawingService.addConstructionDrawings(constructionDrawings, queryUserId());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "deleteConstructionDrawing", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String deleteConstructionDrawing(){
-		
+	public String deleteConstructionDrawing() {
+
 		constructionDrawingService.deleteConstructionDrawingByCdId(constructionDrawing);
-		
+
 		return SUCCESS;
 	}
-	
+
 	public ConstructionDrawingVO getConstructionDrawing() {
 		return constructionDrawing;
 	}
@@ -92,7 +89,7 @@ public class ConstructionDrawingAction extends BaseListAction{
 	public void setConstructionDrawing(ConstructionDrawingVO constructionDrawing) {
 		this.constructionDrawing = constructionDrawing;
 	}
-	
+
 	public ConstructionVO getConstruction() {
 		return construction;
 	}
@@ -109,12 +106,4 @@ public class ConstructionDrawingAction extends BaseListAction{
 		this.constructionDrawings = constructionDrawings;
 	}
 
-	public List<String> getDrawingUrls() {
-		return drawingUrls;
-	}
-
-	public void setDrawingUrls(List<String> drawingUrls) {
-		this.drawingUrls = drawingUrls;
-	}
-	
 }

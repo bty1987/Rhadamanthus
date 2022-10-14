@@ -28,48 +28,50 @@ import javax.persistence.Table;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name="constructiondrawing", catalog = "construction")
-public class ConstructionDrawingPO implements Serializable{
+@Table(name = "constructiondrawing", catalog = "construction")
+public class ConstructionDrawingPO implements Serializable {
 
 	private static final long serialVersionUID = 7271383081662976002L;
-	
+
 	public static final String COLUMN_CDID_STR = "cdId";
-	
+
 	public static final String COLUMN_CID_STR = "cid";
-	
+
 	public static final String COLUMN_TYPE_STR = "type";
-	
+
 	public static final String COLUMN_SCHEDULE_STR = "schedule";
-	
+
 	private int cdId;
-	
+
 	private long cid;
-	
+
 	private String drawingName;
-	
+
 	private String drawingUrl;
-	
+
 	private String drawingAddUrl;
-	
+
+	private int filesize;
+
 	private short type;
-	
+
 	private UserPO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private short schedule;
 
 	@Id
-	@GeneratedValue(strategy=IDENTITY)
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "cdId")
-	public int getCdId(){
+	public int getCdId() {
 		return this.cdId;
 	}
 
-	public void setCdId(int cdId){
+	public void setCdId(int cdId) {
 		this.cdId = cdId;
 	}
-	
+
 	@Column(name = "cid")
 	public long getCid() {
 		return cid;
@@ -79,31 +81,40 @@ public class ConstructionDrawingPO implements Serializable{
 		this.cid = cid;
 	}
 
-	@Column(name="drawingName")
-	public String getDrawingName(){
+	@Column(name = "drawingName")
+	public String getDrawingName() {
 		return drawingName;
 	}
 
-	public void setDrawingName(String drawingName){
+	public void setDrawingName(String drawingName) {
 		this.drawingName = drawingName;
 	}
-	
+
 	@Column(name = "drawingUrl")
-	public String getDrawingUrl(){
+	public String getDrawingUrl() {
 		return drawingUrl;
 	}
 
-	public void setDrawingUrl(String drawingUrl){
+	public void setDrawingUrl(String drawingUrl) {
 		this.drawingUrl = drawingUrl;
 	}
 
-	@Column(name="drawingAddUrl")
-	public String getDrawingAddUrl(){
+	@Column(name = "drawingAddUrl")
+	public String getDrawingAddUrl() {
 		return drawingAddUrl;
 	}
 
-	public void setDrawingAddUrl(String drawingAddUrl){
+	public void setDrawingAddUrl(String drawingAddUrl) {
 		this.drawingAddUrl = drawingAddUrl;
+	}
+
+	@Column(name = "filesize")
+	public int getFilesize() {
+		return filesize;
+	}
+
+	public void setFilesize(int filesize) {
+		this.filesize = filesize;
 	}
 
 	@Column(name = "type")
@@ -114,9 +125,9 @@ public class ConstructionDrawingPO implements Serializable{
 	public void setType(short type) {
 		this.type = type;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cuid", referencedColumnName="uid")
+	@JoinColumn(name = "cuid", referencedColumnName = "uid")
 	public UserPO getCreater() {
 		return creater;
 	}
@@ -142,6 +153,5 @@ public class ConstructionDrawingPO implements Serializable{
 	public void setSchedule(short schedule) {
 		this.schedule = schedule;
 	}
-	
-	
+
 }

@@ -15,11 +15,13 @@ import com.fanglin.construction.po.ConstructionInfoDO;
 import com.fanglin.construction.po.ConstructionInfoPO;
 import com.fanglin.construction.service.ConstructionInfoService;
 import com.fanglin.construction.vo.ConstructionInfoVO;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.Paging;
 
@@ -96,7 +98,7 @@ public class ConstructionInfoServiceImpl implements ConstructionInfoService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateConstructionInfoByOrderId(ConstructionInfoVO constructionInfoVO) {
+	public void updateConstructionInfoByOrderId(ConstructionInfoVO constructionInfoVO) throws FLException {
 
 		ConstructionInfoPO constructIoninfoPO = constructionInfoDao.queryConstructionInfoByOrderId(constructionInfoVO.getOrderId());
 
@@ -109,6 +111,13 @@ public class ConstructionInfoServiceImpl implements ConstructionInfoService {
 		constructionInfoDao.saveOrUpdate(constructIoninfoPO);
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(constructionInfoVO.getOrderId());
+
+		if (decorationPO != null && constructionInfoVO.getDecoration() != null && constructionInfoVO.getDecoration().getConpany() != null) {
+
+			decorationPO.setConpany(CompanyServiceImpl.decode(constructionInfoVO.getDecoration().getConpany()));
+
+			decorationDao.update(decorationPO);
+		}
 
 		if (decorationPO != null && constructionInfoVO.getDecoration().getHouse() != null && constructionInfoVO.getDecoration().getHouse().getQuoteArea() != null) {
 

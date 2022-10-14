@@ -213,7 +213,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	@Override
 	public DecorationPO queryDecorationByHid(long hid, int company) {
 
-		List<Short> statuss = Arrays.asList(DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT);
+		List<Short> statuss = Arrays.asList(DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT, DecorationPO.STATUS_FINAL_INT, DecorationPO.STATUS_COMPLETED_INT);
 
 		return (DecorationPO) session().createCriteria(DecorationPO.class).createAlias("house", "house").add(Restrictions.eq("house.hid", hid)).add(Restrictions.not(Restrictions.in("status", statuss))).add(Restrictions.eq("company", company)).uniqueResult();
 	}
@@ -227,7 +227,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 	@SuppressWarnings("unchecked")
 	public List<DecorationPO> queryDecorationByCustomer(Long cid, String customerId, int company) {
 
-		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_COMPLETED_INT, DecorationPO.STATUS_TERMINATION_INT });
+		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_WASTE_INT, DecorationPO.STATUS_TERMINATION_INT, DecorationPO.STATUS_FINAL_INT, DecorationPO.STATUS_COMPLETED_INT });
 
 		Criteria criteria = session().createCriteria(DecorationPO.class).add(Restrictions.eq("company", company)).createAlias("customer", "customer").add(Restrictions.not(Restrictions.in("status", status)));
 
@@ -334,7 +334,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 				} else if ("status".equals(field)) {
 					query.add(query.getCriterion("status", Short.valueOf(data), op));
 				} else if ("statuses".equals(field)) {
-					query.add(query.getCriterion("status", filter.getRange(), op));
+					query.add(query.getCriterion("status", filter.getShorts(), op));
 				} else if ("otherStatus".equals(field)) {
 					query.add(query.getCriterion("otherStatus", data, "and"));
 				} else if ("designerId".equals(field)) {
@@ -388,7 +388,7 @@ public class DecorationDaoImpl extends DaoImpl<DecorationPO> implements Decorati
 				} else if ("designStatus".equals(field)) {
 					query.add(query.getCriterion("designStatus", Short.valueOf(data), op));
 				} else if ("projectStatus".equals(field)) {
-					query.add(query.getCriterion("projectStatus", Short.valueOf(data), op));
+					query.add(query.getCriterion("projectStatus", Long.valueOf(data), op));
 				} else if ("sourceStatus".equals(field)) {
 					query.add(query.getCriterion("sourceStatus", Short.valueOf(data), op));
 				} else if ("repairStatus".equals(field)) {

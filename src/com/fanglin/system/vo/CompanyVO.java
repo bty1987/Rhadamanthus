@@ -14,6 +14,8 @@ public class CompanyVO implements Serializable {
 
 	private String name;
 
+	private String shortname;
+
 	private String fullname;
 
 	private String address;
@@ -21,10 +23,12 @@ public class CompanyVO implements Serializable {
 	private String corporation;
 
 	private String phone;
-	
+
 	private OrganizationVO drganization;
-	
+
 	private OrganizationVO srganization;
+
+	private Short atttype;
 
 	private Short status;
 
@@ -75,6 +79,14 @@ public class CompanyVO implements Serializable {
 		this.name = name;
 	}
 
+	public String getShortname() {
+		return shortname;
+	}
+
+	public void setShortname(String shortname) {
+		this.shortname = shortname;
+	}
+
 	public String getFullname() {
 		return fullname;
 	}
@@ -121,6 +133,14 @@ public class CompanyVO implements Serializable {
 
 	public void setSrganization(OrganizationVO srganization) {
 		this.srganization = srganization;
+	}
+
+	public Short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(Short atttype) {
+		this.atttype = atttype;
 	}
 
 	public Short getStatus() {

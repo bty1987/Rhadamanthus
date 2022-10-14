@@ -19,7 +19,7 @@ import com.fanglin.utils.Paging;
 
 public interface PaymentDao extends Dao<PaymentPO> {
 
-	public List<PaymentDO> pagePayment(Paging paging, List<Filter> filters, int company);
+	public List<PaymentDO> pagePayment(Paging paging, List<Filter> filters);
 
 	public List<PaymentPO> queryPayment(List<Filter> filters);
 

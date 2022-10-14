@@ -51,6 +51,7 @@ import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.po.QuotetionFunctionAreaItemPO;
 import com.fanglin.quotation.po.QuotetionFunctionAreaPO;
 import com.fanglin.quotation.po.QuotetionPO;
+import com.fanglin.quotation.po.SelectionItemPO;
 import com.fanglin.quotation.service.QuotationService;
 import com.fanglin.quotation.service.SelectionService;
 import com.fanglin.quotation.vo.QuotationVO;
@@ -220,7 +221,11 @@ public class QuotationServiceImpl implements QuotationService {
 		quotationPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
 		quotationPO.setManageRate(quotationVersionPO.getManageRate());
+		quotationPO.setManageDiscount(quotationVersionPO.getManageDiscount());
 		quotationPO.setTrafficRate(quotationVersionPO.getTrafficRate());
+		quotationPO.setTrafficDiscount(quotationVersionPO.getTrafficDiscount());
+		quotationPO.setTaxRate(quotationVersionPO.getTaxRate());
+		quotationPO.setTaxDiscount(quotationVersionPO.getTaxDiscount());
 		quotationPO.setDiscount(10000);
 		QuotationPO defaultQuotationPO = quotationDao.queryQuotationForDefaultByOrderId(orderId);
 
@@ -249,8 +254,12 @@ public class QuotationServiceImpl implements QuotationService {
 		QuotationFunctionAreaItemPO managePrice = QuotationFunctionAreaItemPO.factoryToInstance(autogeneration.getQfaId(), index);
 		convertQuotationPOForAdvance(managePrice, "管理费", "", "其他", quotationVersionPO.getManageRate(), "0", 0, QuotationFunctionAreaItemPO.TYPE_MANAGE_INT, quotationVersionPO.getManageDiscount(), autogeneration, "", QuotationFunctionAreaItemPO.SUBTYPE_QUOTATION_ENGINEERING_SHORT);
 
+		QuotationFunctionAreaItemPO taxPrice = QuotationFunctionAreaItemPO.factoryToInstance(autogeneration.getQfaId(), index);
+		convertQuotationPOForAdvance(taxPrice, "税金", "", "其他", quotationVersionPO.getTaxRate(), "0", 0, QuotationFunctionAreaItemPO.TYPE_TAX_INT, quotationVersionPO.getTaxDiscount(), autogeneration, "", QuotationFunctionAreaItemPO.SUBTYPE_QUOTATION_ENGINEERING_SHORT);
+
 		quotationFunctionAreaItemDao.save(trafficPrice);
 		quotationFunctionAreaItemDao.save(managePrice);
+		quotationFunctionAreaItemDao.save(taxPrice);
 
 		return 0;
 	}
@@ -320,6 +329,26 @@ public class QuotationServiceImpl implements QuotationService {
 			decorationDao.update(decorationPO);
 		}
 
+		QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.queryQuotationFunctionAreaForTypeByQuotationId(quotationVO.getQid(), QuotationFunctionAreaPO.TYPE_MANAGEMENT_INT);
+
+		if (quotationVO.getTrafficDiscount() != null) {
+			QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemForTypeByQuotationFunctionAreaId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex()), quotationFunctionAreaPO.getQfaId(), QuotationFunctionAreaItemPO.TYPE_TRAFFIC_INT);
+			quotationFunctionAreaItemPO.setDiscount((quotationVO.getTrafficDiscount()));
+			quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
+		}
+
+		if (quotationVO.getManageDiscount() != null) {
+			QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemForTypeByQuotationFunctionAreaId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex()), quotationFunctionAreaPO.getQfaId(), QuotationFunctionAreaItemPO.TYPE_MANAGE_INT);
+			quotationFunctionAreaItemPO.setDiscount((quotationVO.getManageDiscount()));
+			quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
+		}
+
+		if (quotationVO.getTaxDiscount() != null) {
+			QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemForTypeByQuotationFunctionAreaId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex()), quotationFunctionAreaPO.getQfaId(), QuotationFunctionAreaItemPO.TYPE_TAX_INT);
+			quotationFunctionAreaItemPO.setDiscount((quotationVO.getTaxDiscount()));
+			quotationFunctionAreaItemDao.update(quotationFunctionAreaItemPO);
+		}
+
 		quotationDao.update(quotationPO);
 
 		return 0;
@@ -358,6 +387,10 @@ public class QuotationServiceImpl implements QuotationService {
 
 		if (quotationPO == null) {
 			throw new FLException(200003, "报价不存在");
+		}
+
+		if (selectionItemDao.countSelectionItem(quotationPO.getOrderId(), SelectionItemPO.TYPE_ALONE_SHORT) != 0) {
+			throw new FLException(200041, "存在未关联选材项");
 		}
 
 		quotationPO.setStatus(QuotationPO.STATUS_LOCK_INT);
@@ -595,16 +628,26 @@ public class QuotationServiceImpl implements QuotationService {
 
 	public static void convertQuotationVOToPOForAdvance(QuotationVO quotationVO, QuotationPO quotationPO) {
 
+		quotationPO.setBasePrice(quotationVO.getBasePrice());
+		quotationPO.setUndisPrice(quotationVO.getUndisPrice());
+		quotationPO.setDisPrice(quotationVO.getDisPrice());
+
 		quotationPO.setDiscount(quotationVO.getDiscount());
 		quotationPO.setTotalPrice(quotationVO.getTotalPrice());
+
+		quotationPO.setTrafficPrice(quotationVO.getTrafficPrice());
+		quotationPO.setTrafficRate(quotationVO.getTrafficRate());
 		quotationPO.setManagePrice(quotationVO.getManagePrice());
 		quotationPO.setManageRate(quotationVO.getManageRate());
-		quotationPO.setTrafficPrice(quotationVO.getTrafficPrice());
-		quotationPO.setUndisPrice(quotationVO.getUndisPrice());
-		quotationPO.setTrafficRate(quotationVO.getTrafficRate());
-		quotationPO.setDisPrice(quotationVO.getDisPrice());
-		quotationPO.setBasePrice(quotationVO.getBasePrice());
+		quotationPO.setTaxPrice(quotationVO.getTaxPrice());
+		quotationPO.setTaxRate(quotationVO.getTaxRate());
+
 		quotationPO.setCostPrice(quotationVO.getCostPrice());
+		quotationPO.setUnachePrice(quotationVO.getUnachePrice());
+
+		if (quotationVO.getTrafficDiscount() != null) quotationPO.setTrafficDiscount(quotationVO.getTrafficDiscount());
+		if (quotationVO.getManageDiscount() != null) quotationPO.setManageDiscount(quotationVO.getManageDiscount());
+		if (quotationVO.getTaxDiscount() != null) quotationPO.setTaxDiscount(quotationVO.getTaxDiscount());
 	}
 
 	@Transactional(rollbackFor = Exception.class)

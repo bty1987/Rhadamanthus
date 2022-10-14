@@ -47,7 +47,7 @@ public class CustomerOriginDaoImpl extends DaoImpl<CustomerOriginPO> implements 
 			String data = filter.getData();
 			String op = filter.getOp();
 
-			if ("customerSourcePhone".equals(field)) {
+			if ("phone".equals(field)) {
 				query.add(query.getCriterion("phone", data, op));
 			} else if ("creater".equals(field)) {
 				query.add(Restrictions.eq(CustomerOriginPO.COLUMN_CREATER_STR, Integer.valueOf(data)));
@@ -61,8 +61,12 @@ public class CustomerOriginDaoImpl extends DaoImpl<CustomerOriginPO> implements 
 				query.add(Restrictions.eq(CustomerOriginPO.COLUMN_SALESMAN_STR, Integer.valueOf(data)));
 			} else if ("status".equals(field)) {
 				query.add(query.getCriterion("status", Short.valueOf(data), op));
+			} else if ("village".equals(field)) {
+				query.alias("village", "village");
+				query.add(query.getCriterion("village.no", String.valueOf(data), op));
+			} else if ("createTime".equals(field)) {
+				query.timeranges("createTime", data);
 			}
 		}
 	}
-
 }

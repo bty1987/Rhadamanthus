@@ -39,10 +39,12 @@ public class AddReduceAction extends BaseListAction {
 
 	private AddReduceVO addReduce;
 
+	private List<Short> statuses;
+
 	@Action(value = "pageAddReduce", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageAddReduce() throws FLException {
 
-		addReduceService.pageAddReduce(getPaging(), getFilters(), addReduce, queryCompany());
+		addReduceService.pageAddReduce(getPaging(), getFilters(), addReduce, statuses, queryCompany());
 
 		return SUCCESS;
 	}
@@ -149,6 +151,14 @@ public class AddReduceAction extends BaseListAction {
 
 	public void setAddReduces(List<AddReduceVO> addReduces) {
 		this.addReduces = addReduces;
+	}
+
+	public List<Short> getStatuses() {
+		return statuses;
+	}
+
+	public void setStatuses(List<Short> statuses) {
+		this.statuses = statuses;
 	}
 
 }

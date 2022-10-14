@@ -22,6 +22,7 @@ import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.system.service.OrganizationService;
 import com.fanglin.system.vo.OrganizationVO;
+import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -32,48 +33,60 @@ public class OrganizationAction extends BaseListAction {
 
 	@Autowired
 	private OrganizationService organizationService;
-	
+
 	private List<OrganizationVO> organizations;
-	
+
 	private OrganizationVO organization;
-	
+
 	@Action(value = "pageOrganization", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String pageOrganization(){
-		
-		organizationService.pageOrganization(getPaging(), getFilters());
-		
+	public String pageOrganization() throws FLException {
+
+		organizationService.pageOrganization(getPaging(), getFilters(), queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryOrganization", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryOrganization() throws FLException {
+
+		organizations = organizationService.queryOrganization(organization, queryCompany());
+
 		return SUCCESS;
 	}
 
 	@Action(value = "addOrganization", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addOrganization() throws FLException{
-		
-		organizationService.addOrganization(organization);
-		
+	public String addOrganization() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		organizationService.addOrganization(organization, queryCompany());
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateOrganization", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateOrganization() throws FLException{
-		
+	public String updateOrganization() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
 		organizationService.updateOrganization(organization);
-		
+
 		return SUCCESS;
 	}
 
 	@Action(value = "updateOrganizationForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateOrganizationForStatus() throws FLException{
-		
+	public String updateOrganizationForStatus() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
 		organizationService.updateOrganizationForStatus(organization);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "queryOrganization", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryOrganization() throws FLException{
-		
-		organizations = organizationService.queryOrganization(organization, queryCompany());
-		
+
 		return SUCCESS;
 	}
 

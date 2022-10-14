@@ -19,13 +19,19 @@ public class ConversationVO implements Serializable {
 
 	private Short atttype;
 
+	private Short contype;
+
 	private String content;
 
 	private String path;
 
+	private Integer filesize;
+
 	private Integer width;
 
 	private Integer height;
+
+	private UserBaseVO focuser;
 
 	private UserBaseVO creater;
 
@@ -74,6 +80,14 @@ public class ConversationVO implements Serializable {
 		this.atttype = atttype;
 	}
 
+	public Short getContype() {
+		return contype;
+	}
+
+	public void setContype(Short contype) {
+		this.contype = contype;
+	}
+
 	public String getContent() {
 		return content;
 	}
@@ -90,6 +104,14 @@ public class ConversationVO implements Serializable {
 		this.path = path;
 	}
 
+	public Integer getFilesize() {
+		return filesize;
+	}
+
+	public void setFilesize(Integer filesize) {
+		this.filesize = filesize;
+	}
+
 	public Integer getWidth() {
 		return width;
 	}
@@ -104,6 +126,14 @@ public class ConversationVO implements Serializable {
 
 	public void setHeight(Integer height) {
 		this.height = height;
+	}
+
+	public UserBaseVO getFocuser() {
+		return focuser;
+	}
+
+	public void setFocuser(UserBaseVO focuser) {
+		this.focuser = focuser;
 	}
 
 	public UserBaseVO getCreater() {

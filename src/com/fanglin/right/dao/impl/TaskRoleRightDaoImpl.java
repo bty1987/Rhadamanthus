@@ -18,17 +18,22 @@ public class TaskRoleRightDaoImpl extends DaoImpl<TaskRoleRightPO> implements Ta
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<TaskRoleRightPO> queryTaskRoleRightByUserId(long rid) {
+	public List<TaskRoleRightPO> queryTaskRoleRight(int rid) {
 		return session().createCriteria(TaskRoleRightPO.class).add(Restrictions.eq("rid", rid)).list();
 	}
 
 	@Override
-	public void deleteTaskRoleRight(long rid) {
+	@SuppressWarnings("unchecked")
+	public List<TaskRoleRightPO> queryTaskRoleRight(List<Integer> rids) {
+		return session().createCriteria(TaskRoleRightPO.class).add(Restrictions.in("rid", rids)).list();
+	}
+
+	@Override
+	public void deleteTaskRoleRight(int rid) {
 
 		String sql = "DELETE FROM `data`.taskroleright WHERE rid = :rid";
 
 		session().createSQLQuery(sql).setLong("rid", rid).executeUpdate();
-
 	}
 
 }

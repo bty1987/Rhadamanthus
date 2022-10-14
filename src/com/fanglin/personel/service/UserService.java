@@ -46,9 +46,9 @@ public interface UserService {
 
 	public void checkUserForPassword(String userId, String password, String rePassword) throws FLException;
 
-	public void addUser(UserInfoVO userInfoVO, List<UserContractVO> userContractVOs, List<UserEducationVO> userEducationVOs, List<UserOperationVO> userOperationVOs, int company) throws FLException;
+	public void addUser(UserInfoVO userInfoVO, List<UserContractVO> userContractVOs, List<UserEducationVO> userEducationVOs, List<UserOperationVO> userOperationVOs, int company, String userId) throws FLException;
 
-	public void updateUser(UserInfoVO userInfoVO, int company) throws FLException;
+	public void updateUser(UserInfoVO userInfoVO, int company, String userId) throws FLException;
 
 	public void updateUserForPhoto(UserVO userVO) throws FLException;
 
@@ -56,12 +56,16 @@ public interface UserService {
 
 	public void updateUserForIsLogin(UserVO userVO) throws FLException;
 
-	public void updateUserForAdvance(UserVO userVO, int rid) throws FLException;
+	public void updateUserForAdvance(UserVO userVO, int rid, String userId) throws FLException;
 
 	public void updateUserForProfile(UserInfoVO userInfoVO) throws FLException;
 
 	public void resetPassword(UserVO userVO, Integer company) throws FLException;
 
 	public void defaultPassword(String userId, int company) throws FLException;
+
+	public void quitUser(UserVO userVO, String userId) throws FLException;
+
+	public void tranUser(UserVO userVO, String userId) throws FLException;
 
 }

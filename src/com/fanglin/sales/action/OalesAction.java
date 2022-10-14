@@ -28,10 +28,12 @@ public class OalesAction extends BaseListAction {
 
 	private List<OalesVO> oaleses;
 
+	private List<Short> statuses;
+
 	@Action(value = "pageOales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageOales() throws FLException {
 
-		oalesService.pageOales(getPaging(), getFilters(), queryCompany());
+		oalesService.pageOales(getPaging(), getFilters(), queryCompany(), statuses);
 
 		return SUCCESS;
 	}
@@ -56,6 +58,14 @@ public class OalesAction extends BaseListAction {
 	public String updateOales() throws FLException {
 
 		oalesService.updateOales(oales);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "submitOales", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String submitOales() throws FLException {
+
+		oalesService.submitOales(oales);
 
 		return SUCCESS;
 	}
@@ -114,6 +124,14 @@ public class OalesAction extends BaseListAction {
 
 	public void setOaleses(List<OalesVO> oaleses) {
 		this.oaleses = oaleses;
+	}
+
+	public List<Short> getStatuses() {
+		return statuses;
+	}
+
+	public void setStatuses(List<Short> statuses) {
+		this.statuses = statuses;
 	}
 
 }

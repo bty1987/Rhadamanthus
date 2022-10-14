@@ -15,10 +15,15 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.data.po.PresignItemPO;
 
 @Entity
 @Table(name = "protationitem", catalog = "quotation")
@@ -29,6 +34,8 @@ public class ProtationItemPO implements Serializable {
 	private long piid;
 
 	private long pid;
+
+	private PresignItemPO item;
 
 	private String name;
 
@@ -114,6 +121,16 @@ public class ProtationItemPO implements Serializable {
 
 	public void setType(short type) {
 		this.type = type;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ppiid", referencedColumnName = "piid")
+	public PresignItemPO getItem() {
+		return item;
+	}
+
+	public void setItem(PresignItemPO item) {
+		this.item = item;
 	}
 
 }

@@ -21,6 +21,10 @@ public class DecorationVO implements Serializable {
 
 	private Short type;
 
+	private Short typeness;
+
+	private Short salesScale;
+
 	private UserBaseVO designer;
 
 	private UserBaseVO salesman;
@@ -94,6 +98,22 @@ public class DecorationVO implements Serializable {
 
 	public void setType(Short type) {
 		this.type = type;
+	}
+
+	public Short getTypeness() {
+		return typeness;
+	}
+
+	public void setTypeness(Short typeness) {
+		this.typeness = typeness;
+	}
+
+	public Short getSalesScale() {
+		return salesScale;
+	}
+
+	public void setSalesScale(Short salesScale) {
+		this.salesScale = salesScale;
 	}
 
 	public UserBaseVO getDesigner() {

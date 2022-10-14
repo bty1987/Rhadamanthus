@@ -1,5 +1,6 @@
 package com.fanglin.sales.dao.impl;
 
+import java.math.BigInteger;
 import java.util.List;
 
 import org.hibernate.criterion.Restrictions;
@@ -58,10 +59,19 @@ public class SalesDeliveryItemDaoImpl extends DaoImpl<SalesDeliveryItemPO> imple
 		return (SalesDeliveryItemPO) session().createCriteria(SalesDeliveryItemPO.class).add(Restrictions.eq(SalesDeliveryItemPO.COLUMN_SIID_LONG, siid)).uniqueResult();
 	}
 
+	@Override
+	public int countSalesDeliveryItem(long sid, short status) {
+
+		String sql = "SELECT count(*) FROM sales.salesdeliveryitem where sid = :sid and status < :status";
+
+		BigInteger count = (BigInteger) session().createSQLQuery(sql).setLong("sid", sid).setShort("status", status).uniqueResult();
+
+		return count.intValue();
+	}
+
 	private void queryFilterExcute(PagingQuery<SalesDeliveryItemPO> query, List<Filter> filters) {
 
-		if (filters == null)
-			return;
+		if (filters == null) return;
 
 		for (Filter filter : filters) {
 
@@ -76,7 +86,7 @@ public class SalesDeliveryItemDaoImpl extends DaoImpl<SalesDeliveryItemPO> imple
 			} else if ("status".equals(field)) {
 				query.add(query.getCriterion("status", Short.valueOf(data), op));
 			} else if ("statuses".equals(field)) {
-				query.add(query.getCriterion("status", filter.getRange(), "in"));
+				query.add(query.getCriterion("status", filter.getShorts(), "in"));
 			} else if (SalesDeliveryItemPO.COLUMN_SALESBRAND_STR.equals(field)) {
 				query.add(query.getCriterion(SalesDeliveryItemPO.COLUMN_SALESBRAND_STR, data, op));
 			} else if (SalesDeliveryItemPO.COLUMN_SALESORDERID_STR.equals(field)) {

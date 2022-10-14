@@ -24,11 +24,11 @@ import com.fanglin.system.po.RoleOperationPO;
 
 @Repository("roleOperationDao")
 public class RoleOperationDaoImpl extends DaoImpl<RoleOperationPO> implements RoleOperationDao {
-	
-	public RoleOperationDaoImpl(){
+
+	public RoleOperationDaoImpl() {
 		super(RoleOperationPO.class);
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<RoleOperationPO> queryRoleOperationByRid(int rId) {
@@ -36,39 +36,44 @@ public class RoleOperationDaoImpl extends DaoImpl<RoleOperationPO> implements Ro
 	}
 
 	@Override
-	public RoleOperationPO queryRoleOperationByOperationARid(String operation, int rid) {
+	public RoleOperationPO queryRoleOperation(String operation, int rid) {
 		return (RoleOperationPO) session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.eq("rid", rid)).add(Restrictions.eq("operation.operation", operation)).add(Restrictions.eq("operation.status", OperationPO.STATUS_ENABLE_INT)).uniqueResult();
 	}
 
 	@Override
-	public RoleOperationPO queryRoleOperationByRidAOid(int rid, int oid) {
+	public RoleOperationPO queryRoleOperation(int rid, int oid) {
 		return (RoleOperationPO) session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.eq("rid", rid)).add(Restrictions.eq("operation.oid", oid)).uniqueResult();
 	}
 
 	@Override
+	public RoleOperationPO queryRoleOperation(List<Integer> rids, int oid) {
+		return (RoleOperationPO) session().createCriteria(RoleOperationPO.class).createAlias("operation", "operation").add(Restrictions.in("rid", rids)).add(Restrictions.eq("operation.oid", oid)).uniqueResult();
+	}
+
+	@Override
 	public int countRoleOperationByOid(int oid) {
-		
+
 		String sql = "select count(*) from communion.roleoperation where oid = :oid";
 		BigInteger count = (BigInteger) session().createSQLQuery(sql).setInteger("oid", oid).uniqueResult();
-		
+
 		return count.intValue();
 	}
-	
+
 	@Override
 	public int deleteRoleOperationByRid(int rid) {
-		
+
 		String sql = "delete from communion.roleoperation where rid = :rid";
 		session().createSQLQuery(sql).setInteger("rid", rid).executeUpdate();
-		
+
 		return 0;
 	}
-	
+
 	@Override
 	public int deleteRoleOperationByOId(int oid) {
-		
+
 		String sql = "delete from communion.roleoperation where oid = :oid";
 		session().createSQLQuery(sql).setInteger("oid", oid).executeUpdate();
-		
+
 		return 0;
 	}
 

@@ -203,6 +203,19 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 	}
 
 	@Override
+	public SalesPaymentVO querySalesPaymentBySpid(SalesPaymentVO salesPaymentVO) {
+
+		SalesPaymentPO salesPaymentPO = salesPaymentDao.get(salesPaymentVO.getSpid());
+
+		SalesPaymentVO salesPayment = new SalesPaymentVO(new UserBaseVO(), new SalesVO(new HouseVO(new VillageVO(new CityProperVO(new CityVO()))), new CustomerVO(), new UserBaseVO(), new DepartmentVO(), new DepartmentVO(), new UserBaseVO(), new DepartmentVO(), new UserBaseVO()), new SalesReceiptVO(new UserBaseVO(), new UserBaseVO()));
+
+		salesPaymentVO = salesPaymentPOToVO(salesPaymentPO, salesPayment);
+
+		return salesPaymentVO;
+
+	}
+
+	@Override
 	public long amountSalesPayment(SalesPaymentVO salesPayment) {
 
 		String orderId = null;
@@ -319,12 +332,16 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 			throw new FLException(150017, "项目总额与款项额不符");
 		}
 
-		if (sales.getTotal() != salesItemDao.countSalesItemForAmount(sid)) {
+		if (sales.getTotal() != salesItemDao.amountSalesItem(sid)) {
 			throw new FLException(150017, "项目总额与款项额不符");
 		}
 
 		if (sales.getStatus() != 0) {
 			throw new FLException(260022, "销售单状态不可操作");
+		}
+
+		if (salesItemDao.countSalesItem(sid) == 0) {
+			throw new FLException(260060, "销售项数量不足");
 		}
 
 		if (salesPaymentVO.getReferMoney() < 0) {
@@ -1100,6 +1117,21 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 		}
 
 		salesReceiptDao.update(salesReceiptPO);
+
+	}
+
+	@Override
+	public void sendSalesPayment(SalesPaymentVO salesPaymentVO) throws FLException {
+
+		SalesPaymentPO salesPaymentPO = salesPaymentDao.get(salesPaymentVO.getSpid());
+
+		if (salesPaymentPO == null) {
+			throw new FLException(150003, "款项不存在");
+		}
+
+		String orderId = salesPaymentPO.getSales().getOrderId();
+
+		decorationService.sendMessage(orderId, "销售收款", String.format("销售待付款金额%.3f元", Arith.div(salesPaymentPO.getReferMoney(), 1000.0)), String.format("pages/payInfo/payInfo?orderId=%s&pid=%s&paymentType=3", orderId, salesPaymentPO.getSpid()));
 
 	}
 

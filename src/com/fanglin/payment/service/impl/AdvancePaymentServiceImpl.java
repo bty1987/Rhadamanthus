@@ -196,7 +196,7 @@ public class AdvancePaymentServiceImpl implements AdvancePaymentService {
 
 		advanceReceiptDao.save(advanceReceiptPO);
 
-		BeanUtil.copyProperties(paymentVO, paymentPO, Arrays.asList("customer", "collectUser"));
+		BeanUtil.copyProperties(paymentVO, paymentPO, Arrays.asList("customer", "collectUser", "company"));
 
 		paymentPO.setBalance(overBalance);
 		paymentPO.setCustomer(customerPO);

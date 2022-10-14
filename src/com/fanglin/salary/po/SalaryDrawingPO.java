@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
 import com.fanglin.personel.po.UserPO;
 
 @Entity
@@ -18,9 +19,9 @@ import com.fanglin.personel.po.UserPO;
 public class SalaryDrawingPO implements Serializable {
 
 	private static final long serialVersionUID = -1415708618939227278L;
-	
+
 	public static final String COLUMN_SID_STR = "sid";
-	
+
 	public static final String COLUMN_TYPE_STR = "type";
 
 	public static final short STATUS_INIT_INT = 0;
@@ -28,32 +29,34 @@ public class SalaryDrawingPO implements Serializable {
 	public static final short STATUS_DISABLE_INT = 1;
 
 	private long sdid;
-	
+
 	private long sid;
-	
+
 	private String name;
-	
+
 	private String drawingUrl;
-	
+
 	private short drawingType;
-	
+
+	private int filesize;
+
 	private short type;
-	
+
 	private UserPO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private short status;
-	
+
 	public SalaryDrawingPO() {
 		super();
 	}
-	
+
 	public SalaryDrawingPO(UserPO creater) {
 		super();
 		this.creater = creater;
 	}
-	
+
 	@Id
 	@GeneratedValue
 	@Column(name = "sdid")
@@ -64,6 +67,7 @@ public class SalaryDrawingPO implements Serializable {
 	public void setSdid(long sdid) {
 		this.sdid = sdid;
 	}
+
 	@Column(name = "sid")
 	public long getSid() {
 		return sid;
@@ -72,6 +76,7 @@ public class SalaryDrawingPO implements Serializable {
 	public void setSid(long sid) {
 		this.sid = sid;
 	}
+
 	@Column(name = "name")
 	public String getName() {
 		return name;
@@ -80,6 +85,7 @@ public class SalaryDrawingPO implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	@Column(name = "drawingUrl")
 	public String getDrawingUrl() {
 		return drawingUrl;
@@ -88,6 +94,7 @@ public class SalaryDrawingPO implements Serializable {
 	public void setDrawingUrl(String drawingUrl) {
 		this.drawingUrl = drawingUrl;
 	}
+
 	@Column(name = "drawingType")
 	public short getDrawingType() {
 		return drawingType;
@@ -96,6 +103,16 @@ public class SalaryDrawingPO implements Serializable {
 	public void setDrawingType(short drawingType) {
 		this.drawingType = drawingType;
 	}
+
+	@Column(name = "filesize")
+	public int getFilesize() {
+		return filesize;
+	}
+
+	public void setFilesize(int filesize) {
+		this.filesize = filesize;
+	}
+
 	@Column(name = "type")
 	public short getType() {
 		return type;
@@ -104,6 +121,7 @@ public class SalaryDrawingPO implements Serializable {
 	public void setType(short type) {
 		this.type = type;
 	}
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "creater", referencedColumnName = "uid")
 	public UserPO getCreater() {
@@ -113,6 +131,7 @@ public class SalaryDrawingPO implements Serializable {
 	public void setCreater(UserPO creater) {
 		this.creater = creater;
 	}
+
 	@Column(name = "createTime")
 	public Timestamp getCreateTime() {
 		return createTime;
@@ -121,6 +140,7 @@ public class SalaryDrawingPO implements Serializable {
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;

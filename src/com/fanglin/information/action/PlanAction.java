@@ -60,6 +60,14 @@ public class PlanAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updatePlanForAdvance", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updatePlanSchedule() throws FLException {
+
+		planService.updatePlanForAdvance(plan);
+
+		return SUCCESS;
+	}
+
 	public PlanVO getPlan() {
 		return plan;
 	}

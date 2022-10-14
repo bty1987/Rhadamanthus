@@ -46,7 +46,7 @@ public class SecretServiceImpl implements SecretService {
 	@Override
 	public List<String> OXCKSFRD() {
 
-		List<CompanyPO> companyPOs = companyDao.queryCompany();
+		List<CompanyPO> companyPOs = companyDao.queryCompany(null);
 		List<String> authentications = new ArrayList<String>();
 
 		UserPO userPO = userDao.queryUserByUserId("hades");

@@ -27,7 +27,7 @@ public class BalanceDetailPO implements java.io.Serializable {
 	
 	private BalancePO balance;
 	
-	private AccountPO account;
+	private BalanceAccountPO account;
 	
 	private UserPO operater;
 	
@@ -39,7 +39,7 @@ public class BalanceDetailPO implements java.io.Serializable {
 		super();
 	}
 	
-	public BalanceDetailPO(AccountPO account, UserPO operater) {
+	public BalanceDetailPO(BalanceAccountPO account, UserPO operater) {
 		super();
 		this.account = account;
 		this.operater = operater;
@@ -67,12 +67,12 @@ public class BalanceDetailPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false, name = "aid", referencedColumnName = "aid")
-	public AccountPO getAccount() {
+	@JoinColumn(nullable = false, name = "baid", referencedColumnName = "baid")
+	public BalanceAccountPO getAccount() {
 		return account;
 	}
 
-	public void setAccount(AccountPO account) {
+	public void setAccount(BalanceAccountPO account) {
 		this.account = account;
 	}
 

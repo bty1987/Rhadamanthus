@@ -22,58 +22,66 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-
 @Entity
-@Table(name="constructionschedule", catalog = "construction")
-public class ConstructionSchedulePO implements Serializable{
+@Table(name = "constructionschedule", catalog = "construction")
+public class ConstructionSchedulePO implements Serializable {
 
 	private static final long serialVersionUID = -4715729970075470712L;
-	
+
 	public static final String COLUMN_CSID_STR = "csId";
-	
+
 	public static final String COLUMN_CID_STR = "cid";
-	
+
 	public static final String COLUMN_ORDERID_STR = "orderId";
-	
+
 	public static final String COLUMN_SCHEDULE_STR = "schedule";
-	
+
+	public static final String COLUMN_CNID_STR = "cnid";
+
 	public static final short STATUS_INIT_INT = 0;
-	
+
 	public static final short STATUS_BEGIN_INT = 1;
-	
+
 	public static final short STATUS_FINISH_INT = 2;
-	
+
 	public static final short CHECKOUT_VALID_INT = 0;
-	
+
 	public static final short CHECKOUT_PASS_INT = 1;
-	
+
 	private long csid;
-	
+
 	private long cid;
-	
+
 	private String orderId;
-	
+
+	private long cnid;
+
 	private Timestamp startTime;
-	
+
 	private Timestamp endTime;
-	
+
 	private short status;
-	
+
 	private short checkout;
-	
+
 	private short schedule;
-	
+
 	public ConstructionSchedulePO() {
 		super();
 	}
 
-	public ConstructionSchedulePO(long cid, String orderId, Timestamp startTime, Timestamp endTime, short schedule) {
+	public ConstructionSchedulePO(long cid, String orderId, Timestamp startTime, Timestamp endTime, short schedule, long cnid) {
+
 		super();
+
 		this.cid = cid;
 		this.orderId = orderId;
+
+		this.cnid = cnid;
+		this.schedule = schedule;
+
 		this.startTime = startTime;
 		this.endTime = endTime;
-		this.schedule = schedule;
 	}
 
 	@Id
@@ -103,6 +111,15 @@ public class ConstructionSchedulePO implements Serializable{
 
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
+	}
+
+	@Column(name = "cnid")
+	public long getCnid() {
+		return cnid;
+	}
+
+	public void setCnid(long cnid) {
+		this.cnid = cnid;
 	}
 
 	@Column(name = "startTime")
@@ -149,5 +166,5 @@ public class ConstructionSchedulePO implements Serializable{
 	public void setSchedule(short schedule) {
 		this.schedule = schedule;
 	}
-	
+
 }

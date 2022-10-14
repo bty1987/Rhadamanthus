@@ -15,13 +15,13 @@ public class Wxpay {
 
 	// args of system
 
-	private Long paymentptid;
+	private Long paymentptid; // 转换款id
 
-	private Long paymentid;
+	private Long paymentid; // 各款项id
 
 	private String paymentOrderId;
 
-	private Short paymentType;
+	private Short paymentType; // 各款项类型
 
 	private Long paymentMoney;
 
@@ -29,7 +29,7 @@ public class Wxpay {
 
 	// avancePaymentType
 
-	private Short paymentAttrType;
+	private Short paymentAttrType; // 业务类型-装修/主材
 
 	// args of wechat pay
 

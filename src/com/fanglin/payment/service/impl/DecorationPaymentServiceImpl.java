@@ -23,14 +23,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.common.dao.ServiceRecordDao;
 import com.fanglin.common.po.ServiceRecordPO;
-import com.fanglin.communion.dao.PaymentTypeDao;
 import com.fanglin.communion.po.CustomerPO;
-import com.fanglin.communion.po.PaymentTypePO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.customer.service.DecorationService;
 import com.fanglin.data.common.dao.PaymentScaleItemDao;
+import com.fanglin.data.common.dao.PaymentTypeDao;
 import com.fanglin.data.po.PaymentScaleItemPO;
+import com.fanglin.data.po.PaymentTypePO;
 import com.fanglin.decoration.dao.DecorationActivityItemDao;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationActivityItemPO;
@@ -59,6 +59,8 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.quotation.dao.AddReduceDao;
 import com.fanglin.quotation.po.AddReducePO;
+import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -115,6 +117,12 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 	@Autowired
 	private PaymentTypeDao paymentTypeDao;
+
+	@Autowired
+	private SystemConfigDao systemConfigDao;
+
+	@Autowired
+	private com.fanglin.dingding.service.MessageService messageDDService;
 
 	@Override
 	public void pageDecorationPayment(Paging paging, List<Filter> filters, DecorationPaymentVO decorationPaymentVO, Integer company) {
@@ -209,6 +217,19 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		}
 
 		return decorationPaymentVOs;
+	}
+
+	@Override
+	public DecorationPaymentVO queryDecorationPaymentByDpid(DecorationPaymentVO decorationPaymentVO) {
+
+		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.get(decorationPaymentVO.getDpid());
+
+		DecorationPaymentVO decorationPayment = new DecorationPaymentVO();
+
+		BeanUtil.copyProperties(decorationPaymentPO, decorationPayment, Arrays.asList("decoration", "creater", "collecter", "confirmer"));
+
+		return decorationPayment;
+
 	}
 
 	@Override
@@ -372,11 +393,15 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			decorationPaymentDao.save(decorationPayment);
 		}
 
-		if (cost > 0) {
-			DecorationPaymentPO decorationPayment = new DecorationPaymentPO();
+		SystemConfigPO ptid = systemConfigDao.querySystemConfig("PAYMENT_TYPE_SUPROFIT_INT", company);
 
-			decorationPayment.setReferMoney(cost);
-			decorationPayment.setPaymentType("超惠包");
+		if (cost > 0 && ptid != null) {
+			DecorationPaymentPO decorationPayment = new DecorationPaymentPO();
+			PaymentTypePO paymentType = paymentTypeDao.get(Long.parseLong(ptid.getValue()));
+
+			decorationPayment.setReferMoney(Arith.mul(Arith.div(cost, 1000000), 1000000));
+			decorationPayment.setPaymentType(paymentType.getName());
+			decorationPayment.setPtid(paymentType.getPtid());
 			decorationPayment.setSort((short) 0);
 			decorationPayment.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 
@@ -482,12 +507,24 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 
 		DecorationPO decorationPO = decorationPaymentPO.getDecoration();
 
-		String paymentType = decorationPaymentPO.getPaymentType();
+		PaymentTypePO paymentTypePO = paymentTypeDao.get(decorationPaymentPO.getPtid());
+
+		if (paymentTypePO != null) {
+			if (decorationPO.getPaySacle() < paymentTypePO.getPayScale()) {
+				throw new FLException(120018, "装修款比例不足");
+			}
+
+			if (decorationPO.getSaleScale() < paymentTypePO.getSaleScale()) {
+				throw new FLException(120033, "销售比例不足");
+			}
+		}
 
 		if (decorationPO.getStatus() == DecorationPO.STATUS_INIT_INT) {
 			decorationPO.setStatus(DecorationPO.STATUS_DEPOSIT_INT);
 			decorationPO.setDepositTime(DateUtil.getDateToTimestamp(new Date()));
 		}
+
+		String paymentType = decorationPaymentPO.getPaymentType();
 
 		if (paymentType.contains(DecorationPaymentPO.PAYMENTTYPE_REFUND_STR) || paymentType.equals(DecorationPaymentPO.PAYMENTTYPE_REDUCE_STR)) {
 			decorationReceiptPO.setType(DecorationReceiptPO.RECEIPT_TYPE_REFUND_INT);
@@ -599,6 +636,13 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			addReducePO.setStatus(AddReducePO.STATUS_PAYED_INT);
 
 			addReduceDao.update(addReducePO);
+
+			// 增项款发送群通知
+			SystemConfigPO key = systemConfigDao.querySystemConfig("MESSAGE_DING_GROUP_ADDREDUCE", company);
+
+			if (key != null) {
+				messageDDService.sendMessage(key.getValue(), String.format("装修单:%s, 地址:%s %s, 完成增减项收款.", decorationPO.getOrderId(), decorationPO.getHouse().getVillage().getName(), decorationPO.getHouse().getHouseNumber()));
+			}
 		}
 
 		decorationPaymentVO.setDrId(decorationReceiptPO.getDrId());
@@ -697,6 +741,14 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 			addReducePO.setStatus(AddReducePO.STATUS_PAYED_INT);
 
 			addReduceDao.update(addReducePO);
+
+			// 减项款发送群通知
+			SystemConfigPO key = systemConfigDao.querySystemConfig("MESSAGE_DING_GROUP_ADDREDUCE", company);
+
+			if (key != null) {
+				DecorationPO decorationPO = decorationPaymentPO.getDecoration();
+				messageDDService.sendMessage(key.getValue(), String.format("装修单:%s, 地址:%s %s, 完成增减项收款.", decorationPO.getOrderId(), decorationPO.getHouse().getVillage().getName(), decorationPO.getHouse().getHouseNumber()));
+			}
 		}
 
 		decorationPaymentVO.setDrId(decorationReceiptPO.getDrId());
@@ -797,6 +849,34 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 		decorationReceiptDao.update(decorationReceiptPO);
 
 		return 0;
+	}
+
+	@Override
+	public void sendDecorationPayment(DecorationPaymentVO decorationPaymentVO) throws FLException {
+
+		DecorationPaymentPO decorationPaymentPO = decorationPaymentDao.get(decorationPaymentVO.getDpid());
+
+		if (decorationPaymentPO == null) {
+			throw new FLException(150003, "款项不存在");
+		}
+
+		String orderId = decorationPaymentPO.getDecoration().getOrderId();
+
+		short sort = decorationPaymentPO.getSort();
+
+		// 装修款收款过程利用排序字段控制收款顺序
+		if (sort > 1) {
+			DecorationPaymentPO prevDecorationPaymentPO = decorationPaymentDao.queryDecorationPaymentByOrderIdAndSort(orderId, (short) (sort - 1));
+
+			if (prevDecorationPaymentPO != null) {
+				if (prevDecorationPaymentPO.getPaymentStatus() == (DecorationPaymentPO.PAYMENTSTATUS_UNPAY_INT)) {
+					throw new FLException(150009, "前置款项未处理");
+				}
+			}
+		}
+
+		decorationService.sendMessage(orderId, "装修收款", String.format("装修待付款金额%.3f元", Arith.div(decorationPaymentPO.getReferMoney(), 1000.0)), String.format("pages/payInfo/payInfo?orderId=%s&pid=%s&paymentType=1", orderId, decorationPaymentPO.getDpid()));
+
 	}
 
 	private DecorationPaymentVO changePOToVO(DecorationPaymentPO decorationPaymentPO) {

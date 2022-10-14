@@ -11,9 +11,9 @@ public interface SoodsItemDao extends Dao<SoodsItemPO> {
 
 	public List<SoodsItemPO> pageSoodsItem(Paging paging, List<Filter> filters, int company);
 
-	public List<SoodsItemPO> pageSoodsItemByQiid(Paging paging, List<Filter> filters, long qiid);
+	public List<SoodsItemPO> pageSoodsItemByQiid(Paging paging, List<Filter> filters, long qiid, Short status);
 
-	public List<SoodsItemPO> pageSoodsItemBySid(Paging paging, List<Filter> filters, long sid);
+	public List<SoodsItemPO> pageSoodsItemBySid(Paging paging, List<Filter> filters, long sid, Short status);
 
 	public List<SoodsItemPO> querySoodsItemByQiid(long qiid);
 

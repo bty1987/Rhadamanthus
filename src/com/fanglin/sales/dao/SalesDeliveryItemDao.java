@@ -17,4 +17,6 @@ public interface SalesDeliveryItemDao extends Dao<SalesDeliveryItemPO> {
 
 	public SalesDeliveryItemPO querySalesDeliveryItemBySiid(Long siid);
 
+	public int countSalesDeliveryItem(long sid, short status);
+
 }

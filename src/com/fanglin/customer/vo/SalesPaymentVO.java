@@ -9,6 +9,8 @@ public class SalesPaymentVO implements Serializable {
 
 	private static final long serialVersionUID = -4752837520740789732L;
 
+	private Long spid;
+
 	private String orderId;
 
 	private Long money;
@@ -20,6 +22,14 @@ public class SalesPaymentVO implements Serializable {
 	private String brand;
 
 	private Timestamp collectTime;
+
+	public Long getSpid() {
+		return spid;
+	}
+
+	public void setSpid(Long spid) {
+		this.spid = spid;
+	}
 
 	public String getOrderId() {
 		return orderId;

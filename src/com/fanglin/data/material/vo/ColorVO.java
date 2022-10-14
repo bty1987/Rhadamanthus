@@ -10,6 +10,8 @@ public class ColorVO implements Serializable {
 
 	private Long gid;
 
+	private GoodsVO goods;
+
 	private String name;
 
 	private Short status;
@@ -21,6 +23,11 @@ public class ColorVO implements Serializable {
 	public ColorVO(Long cid) {
 		super();
 		this.cid = cid;
+	}
+
+	public ColorVO(GoodsVO goods) {
+		super();
+		this.goods = goods;
 	}
 
 	public Long getCid() {
@@ -37,6 +44,14 @@ public class ColorVO implements Serializable {
 
 	public void setGid(Long gid) {
 		this.gid = gid;
+	}
+
+	public GoodsVO getGoods() {
+		return goods;
+	}
+
+	public void setGoods(GoodsVO goods) {
+		this.goods = goods;
 	}
 
 	public String getName() {

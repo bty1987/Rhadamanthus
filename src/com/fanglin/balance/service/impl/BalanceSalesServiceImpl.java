@@ -43,10 +43,10 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 
 	@Autowired
 	private CompanyDao companyDao;
-	
+
 	@Autowired
 	private CountingService countingService;
-	
+
 	@Autowired
 	private BalanceSalesDao balanceSalesDao;
 
@@ -58,7 +58,7 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 
 	@Autowired
 	private SalesBalanceDao salesBalanceDao;
-	
+
 	@Autowired
 	private UserDao userDao;
 
@@ -88,13 +88,14 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int createBalanceSales(BalanceSalesVO balanceSalesVO, String userId, int company) throws FLException {
-	
+
 		BrandPO brand = brandDao.queryBrandByBid(balanceSalesVO.getBrand().getBid());
-		
+
 		UserPO userPO = userDao.queryUserByUserId(userId);
 		BalanceSalesPO balanceSalesPO = new BalanceSalesPO(brand);
 
-		BeanUtil.copyPropertie(balanceSalesVO, balanceSalesPO, Arrays.asList("brand", "creater"));
+		BeanUtil.copyPropertie(balanceSalesVO, balanceSalesPO, Arrays.asList("brand", "creater", "balancer"));
+
 		balanceSalesPO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		balanceSalesPO.setCreater(userPO);
 		balanceSalesPO.setGrade(balanceSalesVO.getGrade());
@@ -113,9 +114,10 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 		List<BalanceSalesPO> balanceSalesPOs = balanceSalesDao.queryBalanceSales(balanceSalesVO.getName(), company);
 
 		for (BalanceSalesPO balanceSalesPO : balanceSalesPOs) {
+
 			balanceSalesVO = new BalanceSalesVO(new BrandVO(), new UserBaseVO());
 
-			BeanUtil.copyPropertie(balanceSalesPO, balanceSalesVO, Arrays.asList("brand", "creater"));
+			BeanUtil.copyPropertie(balanceSalesPO, balanceSalesVO, Arrays.asList("brand", "creater", "balancer"));
 			BeanUtil.copyPropertie(balanceSalesPO.getBrand(), balanceSalesVO.getBrand(), Arrays.asList("supplier"));
 
 			balanceSalesVOs.add(balanceSalesVO);
@@ -130,7 +132,8 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 		BalanceSalesPO balanceSalesPO = balanceSalesDao.get(balanceSalesVO.getBsid());
 
 		balanceSalesVO = new BalanceSalesVO(new BrandVO(), new UserBaseVO());
-		BeanUtil.copyPropertie(balanceSalesPO, balanceSalesVO, Arrays.asList("brand", "creater"));
+
+		BeanUtil.copyPropertie(balanceSalesPO, balanceSalesVO, Arrays.asList("brand", "creater", "balancer"));
 		BeanUtil.copyPropertie(balanceSalesPO.getBrand(), balanceSalesVO.getBrand(), Arrays.asList("supplier"));
 		BeanUtil.copyProperties(balanceSalesPO.getCreater(), balanceSalesVO.getCreater(), Arrays.asList("role", "dept", "duty", "password", "identity", "company"));
 
@@ -176,13 +179,12 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 
 		for (BalanceSalesBalanceVO balanceSalesBalanceVO : balanceSalesBalance) {
 			BalanceSalesBalancePO balanceSalesBalancePO = balanceSalesBalanceDao.get(balanceSalesBalanceVO.getBsbid());
-			if(balanceSalesBalancePO == null)
-				continue;
-			
+			if (balanceSalesBalancePO == null) continue;
+
 			SalesBalancePO salesBalancePO = balanceSalesBalancePO.getSalesBalance();
-			
+
 			salesBalancePO.setCheckStatus(SalesBalancePO.CHECKSTATUS_INIT_INT);
-			
+
 			salesBalanceDao.update(salesBalancePO);
 			balanceSalesBalanceDao.deleteById(balanceSalesBalanceVO.getBsbid());
 		}
@@ -196,49 +198,50 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 
 		return 0;
 	}
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int updateBalanceSales(BalanceSalesVO balanceSales) throws FLException {
 		BalanceSalesPO balanceSalesPO = balanceSalesDao.get(balanceSales.getBsid());
 		if (balanceSalesPO == null) {
-			throw new FLException(350017 ,"结算销售不存在");
+			throw new FLException(350017, "结算销售不存在");
 		}
-		if (balanceSalesPO.getStatus() != 0){
-			throw new FLException(350018  ,"结算销售不可操作");
+		if (balanceSalesPO.getStatus() != 0) {
+			throw new FLException(350018, "结算销售不可操作");
 		}
 		balanceSalesPO.setName(balanceSales.getName());
 
 		balanceSalesDao.update(balanceSalesPO);
-		
+
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int balanceBalanceSales(BalanceSalesVO balanceSalesVO, String userId) throws FLException {
-		
+
 		BalanceSalesPO balanceSalesPO = balanceSalesDao.get(balanceSalesVO.getBsid());
-		
-		if(balanceSalesPO ==null){
+
+		if (balanceSalesPO == null) {
 			throw new FLException(350017, "结算销售不存在");
 		}
-		
+
 		if (balanceSalesPO.getStatus() != BalanceSalesPO.STATUS_UNLOCK_INT) {
-			throw new FLException(350018 , "结算销售不可操作");
+			throw new FLException(350018, "结算销售不可操作");
 		}
-		
+
 		UserPO balancer = userDao.queryUserByUserId(userId);
-		
+
 		balanceSalesPO.setBalancer(balancer);
 		balanceSalesPO.setBalanceTime(DateUtil.getDateToTimestamp(new Date()));
 		balanceSalesPO.setStatus(BalanceSalesPO.STATUS_ENABLE_CHECK_INT);
-		
+
 		balanceSalesDao.update(balanceSalesPO);
-		
+
 		BalancePO balancePO = new BalancePO(new UserPO(), new UserPO());
-		
+
 		CompanyPO companyPO = companyDao.get(balanceSalesPO.getCompany());
-		
+
 		String currentDate = DateUtil.current("yyMMdd").toString();
 
 		int count = countingService.queryCountingByTypeDate(CountingPO.TYPE_INVENTORY_SO_INT, currentDate, balanceSalesPO.getCompany());
@@ -250,7 +253,7 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 		balancePO.setBelonger(balanceSalesPO.getCreater());
 		balancePO.setCreater(balanceSalesPO.getCreater());
 		balancePO.setCompany(balanceSalesPO.getCompany());
-		balancePO.setCreateTime(balanceSalesPO.getCreateTime());
+		balancePO.setCreateTime(DateUtil.getDateToTimestamp(new Date()));
 		balancePO.setAmount(balanceSalesPO.getPayment());
 		balancePO.setSurplus(balanceSalesPO.getPayment());
 
@@ -265,40 +268,39 @@ public class BalanceSalesServiceImpl implements BalanceSalesService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int lockBalanceSales(BalanceSalesVO balanceSalesVO)throws FLException {
-		
+	public int lockBalanceSales(BalanceSalesVO balanceSalesVO) throws FLException {
+
 		BalanceSalesPO balanceSalesPO = balanceSalesDao.get(balanceSalesVO.getBsid());
-		
-		if(balanceSalesPO ==null){
+
+		if (balanceSalesPO == null) {
 			throw new FLException(350017, "结算销售不存在");
 		}
-		
+
 		if (balanceSalesPO.getStatus() != BalanceSalesPO.STATUS_INIT_INT) {
 			throw new FLException(350018, "结算销售不可操作");
 		}
-		
+
 		balanceSalesPO.setStatus(BalanceSalesPO.STATUS_UNLOCK_INT);
-		
-		
+
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int unlockBalanceSales(BalanceSalesVO balanceSalesVO)throws FLException {
-		
+	public int unlockBalanceSales(BalanceSalesVO balanceSalesVO) throws FLException {
+
 		BalanceSalesPO balanceSalesPO = balanceSalesDao.get(balanceSalesVO.getBsid());
-		
-		if(balanceSalesPO ==null){
+
+		if (balanceSalesPO == null) {
 			throw new FLException(350017, "结算销售不存在");
 		}
-		
+
 		if (balanceSalesPO.getStatus() != BalanceSalesPO.STATUS_UNLOCK_INT) {
 			throw new FLException(350018, "结算销售不可操作");
 		}
-		
+
 		balanceSalesPO.setStatus(BalanceSalesPO.STATUS_INIT_INT);
-		
+
 		return 0;
 	}
 

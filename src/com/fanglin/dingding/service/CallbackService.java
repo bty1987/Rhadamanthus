@@ -24,6 +24,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.dingtalk.oapi.lib.aes.DingTalkEncryptException;
 import com.dingtalk.oapi.lib.aes.DingTalkEncryptor;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.decoration.service.DecorationAccountService;
+import com.fanglin.decoration.service.DecorationContractService;
+import com.fanglin.decoration.service.DecorationService;
+import com.fanglin.decoration.vo.DecorationAccountVO;
+import com.fanglin.decoration.vo.DecorationContractVO;
+import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.dingding.utils.HttpHelper;
 import com.fanglin.system.dao.SystemConfigDao;
 
@@ -34,6 +40,19 @@ public class CallbackService {
 	@Autowired
 	private SystemConfigDao systemConfigDao;
 
+	@Autowired
+	private DecorationService decorationService;
+
+	@Autowired
+	private DecorationAccountService decorationAccountService;
+
+	@Autowired
+	private DecorationContractService decorationContractService;
+
+	@Autowired
+	private ApprovalService approvalService;
+
+	@Transactional(rollbackFor = Exception.class)
 	public Map<String, String> callback(String signature, String nonce, String timestamp, String encrypt) throws FLException {
 
 		String suiteKey = systemConfigDao.querySystemConfig("suiteKey").value("");
@@ -59,17 +78,51 @@ public class CallbackService {
 			throw new FLException(270009, "回调解密失败");
 		}
 
-		String eventType = response.getString("EventType");
-		System.out.println(String.format("钉钉回调,类型:%s", eventType));
+		String event = response.getString("EventType");
 
-		System.out.println(response.toJSONString());
+		if ("check_url".equals(event)) {
 
-		if ("check_url".equals(eventType)) {
-
+			System.out.println(response.toJSONString());
 		}
 
-		if ("bpms_instance_change".equals(eventType)) {
-			
+		if ("bpms_instance_change".equals(event)) {
+
+			String userId = response.getString("staffId");
+			String code = response.getString("processCode");
+			String type = response.getString("type");
+			String result = response.getString("result");
+
+			String no = response.getString("processInstanceId");
+
+			if ("PROC-EEA1011C-8ABD-47F1-983F-68F3D5EA1D4A".equals(code) && "finish".equals(type) && "agree".equals(result)) {
+
+				String orderId = approvalService.getApproval(no, "TextField-IG4N9OD3");
+
+				System.out.println(response.toJSONString());
+				System.out.println(orderId);
+
+				decorationContractService.resignDecorationContract(new DecorationContractVO(orderId), userId);
+			}
+
+			if ("PROC-94A6270F-10A1-45E4-B9A3-86EB39ED0D6E".equals(code) && "finish".equals(type) && "agree".equals(result)) {
+
+				String orderId = approvalService.getApproval(no, "TextField-IG4UCGW1");
+
+				System.out.println(response.toJSONString());
+				System.out.println(orderId);
+
+				decorationService.obsoleteDecoration(new DecorationVO(orderId), userId);
+			}
+
+			if ("PROC-B852629C-D4F7-44E1-A9E2-6E1F830E38CB".equals(code) && "finish".equals(type) && "agree".equals(result)) {
+
+				String orderId = approvalService.getApproval(no, "TextField-K2AD4O5B");
+
+				System.out.println(response.toJSONString());
+				System.out.println(orderId);
+
+				decorationAccountService.makeDecorationAccount(new DecorationAccountVO(orderId), userId);
+			}
 		}
 
 		try {
@@ -95,24 +148,24 @@ public class CallbackService {
 		params.put("aes_key", "1234567890123456789012345678901234567890123");
 		params.put("url", "http://223.100.27.233:30080/dtalkCallback.do");
 
-		 JSONObject response = HttpHelper.httpPost(url, params);
-		 System.out.println(response);
+		JSONObject response = HttpHelper.httpPost(url, params);
+		System.out.println(response);
 
-//		 DingTalkEncryptor dingTalkEncryptor = new DingTalkEncryptor("fanglinserver", "1234567890123456789012345678901234567890123", suiteKey);
-//		 plainText = dingTalkEncryptor.getDecryptMsg(signature, timestamp,	 nonce, encrypt);
+		// DingTalkEncryptor dingTalkEncryptor = new DingTalkEncryptor("fanglinserver", "1234567890123456789012345678901234567890123", suiteKey);
+		// plainText = dingTalkEncryptor.getDecryptMsg(signature, timestamp, nonce, encrypt);
 
-//		 DingTalkEncryptor dingTalkEncryptor = new DingTalkEncryptor("fanglinserver", "1234567890123456789012345678901234567890123", "ding3749e8fc3efe4a82");
-//		 System.out.println(dingTalkEncryptor.getEncryptedMap("test", new Date().getTime(), "fanglinserver"));
+		// DingTalkEncryptor dingTalkEncryptor = new DingTalkEncryptor("fanglinserver", "1234567890123456789012345678901234567890123", "ding3749e8fc3efe4a82");
+		// System.out.println(dingTalkEncryptor.getEncryptedMap("test", new Date().getTime(), "fanglinserver"));
 
-		 url = "http://223.100.27.233:30080/dtalkCallback.do?signature=f265261f57281e2e5bf9fdbaea6be0e1f3414660&timestamp=1550996709595&nonce=mEBhVJN1";
-//		url = "http://223.100.27.233:30080/dtalkCallback.do";
+		url = "http://223.100.27.233:30080/dtalkCallback.do?signature=f265261f57281e2e5bf9fdbaea6be0e1f3414660&timestamp=1550996709595&nonce=mEBhVJN1";
+		// url = "http://223.100.27.233:30080/dtalkCallback.do";
 
 		params = new JSONObject();
-		
+
 		params.put("encrypt", "vGRmkC7+A/yIxK3DrUnET596r7sjNYB5UTybm6j+eQ1w2BIFOzGGNQXpECeKYB6MGDSUXu9D7yvXQ9Ymvezv3IE4Y/KvyBTIq8eSYXE3cXNij8JCeiiNz+d8eLmvgu4e");
-//		
-//		JSONObject response = HttpHelper.httpPost(url, params);
-//		System.out.println(response);
+		//
+		// JSONObject response = HttpHelper.httpPost(url, params);
+		// System.out.println(response);
 
 	}
 

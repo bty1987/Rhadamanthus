@@ -97,6 +97,10 @@ public class DroupServiceImpl implements DroupService {
 			throw new FLException(140013, "订单不存在");
 		}
 
+		String houseNumber = decorationPO.getHouse().getHouseNumber();
+
+		String name = decorationPO.getHouse().getVillage().getName();
+
 		DroupPO droupPO = droupDao.queryDroup(orderId, null, null);
 
 		if (droupPO != null) {
@@ -105,7 +109,7 @@ public class DroupServiceImpl implements DroupService {
 
 		Group group = new Group().init();
 
-		group.setName(orderId);
+		group.setName(orderId + houseNumber + name);
 		group.setOwner(userId);
 
 		group.getUsers().add(userId);

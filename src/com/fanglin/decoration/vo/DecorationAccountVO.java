@@ -7,13 +7,13 @@ public class DecorationAccountVO implements Serializable {
 	private static final long serialVersionUID = 1175981581653015544L;
 
 	private Long daid;
-	
+
 	private String name;
 
 	private String orderId;
 
 	private Short type;
-	
+
 	private Short typeness;
 
 	private Short arcal;
@@ -33,7 +33,7 @@ public class DecorationAccountVO implements Serializable {
 	private Long difference;
 
 	private Long coupon;
-	
+
 	private Long internal;
 
 	private Long fulldel;
@@ -41,6 +41,15 @@ public class DecorationAccountVO implements Serializable {
 	private Long cashback;
 
 	private String comment;
+
+	public DecorationAccountVO() {
+		super();
+	}
+
+	public DecorationAccountVO(String orderId) {
+		super();
+		this.orderId = orderId;
+	}
 
 	public Long getDaid() {
 		return daid;

@@ -24,9 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
-import com.fanglin.communion.dao.ReceiptTypeDao;
-import com.fanglin.communion.po.ReceiptTypePO;
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.data.common.dao.ReceiptTypeDao;
+import com.fanglin.data.po.ReceiptTypePO;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.finance.dao.AccountDao;
 import com.fanglin.finance.dao.AssistantDao;

@@ -37,14 +37,32 @@ public class RoleModuleDaoImpl extends DaoImpl<RoleModulePO> implements RoleModu
 
 	@Override
 	@SuppressWarnings("unchecked")
+	public List<RoleModulePO> queryRoleModule(List<Integer> rids, short system) {
+		return session().createCriteria(RoleModulePO.class).createAlias("module", "module").add(Restrictions.in("rid", rids)).add(Restrictions.eq("module.system", system)).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
 	public List<RoleModulePO> queryRoleModule(int rid, int level, short system) {
 		return session().createCriteria(RoleModulePO.class).createAlias("module", "module").add(Restrictions.eq("rid", rid)).add(Restrictions.eq("module.level", level)).add(Restrictions.eq("module.system", system)).list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
+	public List<RoleModulePO> queryRoleModule(List<Integer> rids, int level, short system) {
+		return session().createCriteria(RoleModulePO.class).createAlias("module", "module").add(Restrictions.in("rid", rids)).add(Restrictions.eq("module.level", level)).add(Restrictions.eq("module.system", system)).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
 	public List<RoleModulePO> queryRoleModuleForLink(int rid, short system) {
 		return session().createCriteria(RoleModulePO.class).createAlias("module", "module").add(Restrictions.eq("rid", rid)).add(Restrictions.eq("link", ModulePO.LINK_LINK_INT)).add(Restrictions.eq("module.system", system)).list();
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public List<RoleModulePO> queryRoleModuleForLink(List<Integer> rids, short system) {
+		return session().createCriteria(RoleModulePO.class).createAlias("module", "module").add(Restrictions.in("rid", rids)).add(Restrictions.eq("link", ModulePO.LINK_LINK_INT)).add(Restrictions.eq("module.system", system)).list();
 	}
 
 	@Override

@@ -1,13 +1,19 @@
 package com.fanglin.system.po;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "role", catalog = "communion")
@@ -30,9 +36,18 @@ public class RolePO implements Serializable {
 	private int company;
 
 	private String pinyin;
+	
+	private UserPO creater;
+	
+	private Timestamp createTime;
 
 	public RolePO() {
 		super();
+	}
+	
+	public RolePO(UserPO creater) {
+		super();
+		this.creater = creater;
 	}
 
 	public RolePO(int rid) {
@@ -108,6 +123,25 @@ public class RolePO implements Serializable {
 
 	public void setPinyin(String pinyin) {
 		this.pinyin = pinyin;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cuid", referencedColumnName = "uid")
+	public UserPO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
+	}
+	
+	@Column(name = "createTime")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
 	}
 
 }

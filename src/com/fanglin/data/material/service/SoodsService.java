@@ -9,7 +9,7 @@ import com.fanglin.utils.Paging;
 
 public interface SoodsService {
 
-	public void pageSoods(Paging paging, List<Filter> filters, int company);
+	public void pageSoods(Paging paging, List<Filter> filters, SoodsVO soodsVO, int company);
 
 	public List<SoodsVO> querySoodsByName(SoodsVO soodsVO, int company);
 

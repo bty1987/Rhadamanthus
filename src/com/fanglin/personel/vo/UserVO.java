@@ -24,27 +24,25 @@ public class UserVO implements Serializable {
 
 	private String userId;
 
-	private String oldUserId;
-
-	private RoleVO role;
-
-	private String companys;
-
-	private DepartmentVO dept;
-
 	private String loginId;
 
-	private String password;
+	private String oldUserId;
 
 	private String userName;
 
-	private String pinYin;
-
 	private String currentName;
 
-	private Short status;
+	private String pinYin;
+
+	private RoleVO role;
+
+	private DepartmentVO dept;
+
+	private String dutyName;
 
 	private DutyVO duty;
+
+	private String password;
 
 	private String gender;
 
@@ -54,19 +52,23 @@ public class UserVO implements Serializable {
 
 	private String userPhoto;
 
+	private String identityPathF;
+
+	private String identityPathB;
+
 	private Short isLogin;
 
 	private Short extranet;
 
 	private Short freedom;
 
-	private String dutyName;
+	private Short status;
 
 	private Short isUpdate;
 
-	private String identityPathF;
+	private String companyNo;
 
-	private String identityPathB;
+	private String companys;
 
 	public UserVO() {
 		super();
@@ -253,14 +255,6 @@ public class UserVO implements Serializable {
 		return companys;
 	}
 
-	public void setCompanys(String companys) {
-		this.companys = companys;
-	}
-
-	public String getDutyName() {
-		return dutyName;
-	}
-
 	public void setDutyName(String dutyName) {
 		this.dutyName = dutyName;
 	}
@@ -289,17 +283,33 @@ public class UserVO implements Serializable {
 		this.identityPathB = identityPathB;
 	}
 
+	public String getCompanyNo() {
+		return companyNo;
+	}
+
+	public void setCompanyNo(String companyNo) {
+		this.companyNo = companyNo;
+	}
+
+	public void setCompanys(String companys) {
+		this.companys = companys;
+	}
+
+	public String getDutyName() {
+		return dutyName;
+	}
+
 	public UserVO setBaseInfo(UserPO userPO) {
 
-		if (userPO != null) {
-			setUid(userPO.getUid());
-			setUserId(userPO.getUserId());
-			setCurrentName(userPO.getCurrentName());
-			setUserName(userPO.getUserName());
-			setUserPhoto(userPO.getUserPhoto());
-			setPhone(userPO.getPhone());
-			setDutyName(userPO.getDuty().getName());
-		}
+		if (userPO == null) return this;
+
+		setUid(userPO.getUid());
+		setUserId(userPO.getUserId());
+		setCurrentName(userPO.getCurrentName());
+		setUserName(userPO.getUserName());
+		setUserPhoto(userPO.getUserPhoto());
+		setPhone(userPO.getPhone());
+		setDutyName(userPO.getDuty().getName());
 
 		return this;
 	}

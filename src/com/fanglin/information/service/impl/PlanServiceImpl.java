@@ -29,6 +29,7 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
+import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -300,7 +301,10 @@ public class PlanServiceImpl implements PlanService {
 			throw new FLException(160029, "计划不可操作");
 		}
 
-		BeanUtil.copyPropertie(planVO, planPO, Arrays.asList("task", "args", "createTime", "executeTime"));
+		BeanUtil.copyPropertie(planVO, planPO, Arrays.asList("task", "args", "createTime", "executeTime", "resultFileSize", "infoFileSize"));
+
+		planPO.setResultFileSize(Arith.add(planVO.getResultFileSize(), planPO.getResultFileSize()));
+		planPO.setInfoFileSize(Arith.add(planVO.getInfoFileSize(), planPO.getInfoFileSize()));
 
 		planDao.update(planPO);
 

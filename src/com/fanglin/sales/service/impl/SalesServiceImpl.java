@@ -34,7 +34,9 @@ import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.sales.dao.SalesDao;
+import com.fanglin.sales.dao.SalesDeliveryItemDao;
 import com.fanglin.sales.dao.SalesItemDao;
+import com.fanglin.sales.po.SalesDeliveryItemPO;
 import com.fanglin.sales.po.SalesItemPO;
 import com.fanglin.sales.po.SalesPO;
 import com.fanglin.sales.service.SalesService;
@@ -58,6 +60,9 @@ public class SalesServiceImpl implements SalesService {
 
 	@Autowired
 	private SalesDao salesDao;
+
+	@Autowired
+	private SalesDeliveryItemDao salesDeliveryItemDao;
 
 	@Autowired
 	private UserDao userDao;
@@ -559,6 +564,10 @@ public class SalesServiceImpl implements SalesService {
 			throw new FLException(260022, "销售单状态不可操作");
 		}
 
+		if (salesDeliveryItemDao.countSalesDeliveryItem(salesVO.getSid(), SalesDeliveryItemPO.STATUS_FINISH_INT) > 0) {
+			throw new FLException(260066, "配送项状态不可操作");
+		}
+
 		salesPO.setStatus(SalesPO.STATUS_END_SHORT);
 		salesPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
 		salesPO.setFinisher(finisher);
@@ -567,5 +576,4 @@ public class SalesServiceImpl implements SalesService {
 
 		return 0;
 	}
-
 }

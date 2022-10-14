@@ -16,34 +16,36 @@ import com.fanglin.personel.po.UserPO;
 
 @Entity
 @Table(name = "salesPicture", catalog = "sales")
-public class SalesPicturePO implements Serializable{
+public class SalesPicturePO implements Serializable {
 
 	private static final long serialVersionUID = -5096185617415787865L;
-	
+
 	public static final String COLUMN_SID_STR = "sid";
-	
+
 	public static final String COLUMN_SIID_STR = "siid";
-	
+
 	public static final short STATUS_YES_SHORT = 0;
-	
+
 	public static final short STATUS_DEL_SHORT = 1;
-	
+
 	private long spid;
-	
+
 	private long sid;
-	
+
 	private long siid;
-	
+
 	private String name;
-	
+
 	private String path;
-	
+
+	private int filesize;
+
 	private short type;
-	
+
 	UserPO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private short status;
 
 	public SalesPicturePO() {
@@ -51,7 +53,7 @@ public class SalesPicturePO implements Serializable{
 		// TODO Auto-generated constructor stub
 	}
 
-	public SalesPicturePO(long spid, long sid, long siid, String name,String path, short type, UserPO creater, Timestamp createTime,short status) {
+	public SalesPicturePO(long spid, long sid, long siid, String name, String path, short type, UserPO creater, Timestamp createTime, short status) {
 		super();
 		this.spid = spid;
 		this.sid = sid;
@@ -109,6 +111,15 @@ public class SalesPicturePO implements Serializable{
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+
+	@Column(name = "filesize")
+	public int getFilesize() {
+		return filesize;
+	}
+
+	public void setFilesize(int filesize) {
+		this.filesize = filesize;
 	}
 
 	@Column(name = "type")

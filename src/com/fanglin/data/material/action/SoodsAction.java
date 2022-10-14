@@ -31,7 +31,7 @@ public class SoodsAction extends BaseListAction {
 	@Action(value = "pageSoods", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageSoods() throws FLException {
 
-		soodsService.pageSoods(getPaging(), getFilters(), queryCompany());
+		soodsService.pageSoods(getPaging(), getFilters(), soods, queryCompany());
 
 		return SUCCESS;
 	}

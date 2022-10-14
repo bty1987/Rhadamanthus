@@ -20,9 +20,15 @@ public interface RoleModuleDao extends Dao<RoleModulePO> {
 
 	public List<RoleModulePO> queryRoleModule(int rid, short system);
 
+	public List<RoleModulePO> queryRoleModule(List<Integer> rids, short system);
+
 	public List<RoleModulePO> queryRoleModule(int rid, int level, short system);
 
+	public List<RoleModulePO> queryRoleModule(List<Integer> rids, int level, short system);
+
 	public List<RoleModulePO> queryRoleModuleForLink(int rid, short system);
+
+	public List<RoleModulePO> queryRoleModuleForLink(List<Integer> rids, short system);
 
 	public RoleModulePO queryRoleModule(int rid, int mid);
 

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.fanglin.core.action.BaseListAction;
+import com.fanglin.core.interceptor.FLException;
 import com.fanglin.right.service.TaskRoleRightService;
 import com.fanglin.right.vo.TaskRoleRightVO;
 
@@ -29,28 +30,28 @@ public class TaskRoleRightAction extends BaseListAction {
 
 	private List<Long> tids;
 
-	@Action(value = "queryTaskRoleRightByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryTaskRoleRightByUserId() {
+	@Action(value = "queryTaskRoleRightByRid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryTaskRoleRightByRid() {
 
-		taskRoleRights = taskRoleRightService.queryTaskRoleRightByUserId(taskRoleRight);
+		taskRoleRights = taskRoleRightService.queryTaskRoleRightByRid(taskRoleRight);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryTaskRoleRightForSelf", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryTaskRoleRightByUserId() throws FLException {
+
+		taskRoleRights = taskRoleRightService.queryTaskRoleRightForSelf(queryUserId());
 
 		return SUCCESS;
 	}
 
 	@Action(value = "updateTaskRoleRight", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateTaskRoleRight() {
+	public String updateTaskRoleRight() throws FLException {
 
-		taskRoleRightService.updateTaskRoleRight(taskRoleRight, tids);
+		taskRoleRightService.updateTaskRoleRight(taskRoleRight, tids, queryUserId());
 
 		return SUCCESS;
-	}
-
-	public TaskRoleRightService getTaskRoleRightService() {
-		return taskRoleRightService;
-	}
-
-	public void setTaskRoleRightService(TaskRoleRightService taskRoleRightService) {
-		this.taskRoleRightService = taskRoleRightService;
 	}
 
 	public List<TaskRoleRightVO> getTaskRoleRights() {

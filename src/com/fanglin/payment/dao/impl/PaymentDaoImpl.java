@@ -29,7 +29,7 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 	}
 
 	@Override
-	public List<PaymentDO> pagePayment(Paging paging, List<Filter> filters, int company) {
+	public List<PaymentDO> pagePayment(Paging paging, List<Filter> filters) {
 
 		PagingQuery<PaymentDO> query = pagingQuery(paging, PaymentDO.class);
 
@@ -66,7 +66,6 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 		if (filters != null) {
 
 			query.alias("customer", "customer");
-			query.alias("advanceReceipt", "advanceReceipt");
 
 			for (Filter filter : filters) {
 
@@ -78,11 +77,15 @@ public class PaymentDaoImpl extends DaoImpl<PaymentPO> implements PaymentDao {
 					query.alias("decoration", "decoration");
 					query.add(query.getCriterion("decoration.orderId", filter));
 				} else if ("collectTime".equals(filter.getField())) {
+					query.alias("advanceReceipt", "advanceReceipt");
 					query.timeranges("advanceReceipt.collectTime", "advanceReceipt.collectTime", filter.getData());
 				} else if ("confirmTime".equals(filter.getField())) {
+					query.alias("advanceReceipt", "advanceReceipt");
 					query.timeranges("advanceReceipt.confirmTime", "advanceReceipt.confirmTime", filter.getData());
 				} else if ("status".equals(filter.getField())) {
 					query.add(query.getCriterion("status", Short.valueOf(filter.getData()), filter.getOp()));
+				} else if ("company".equals(filter.getField())) {
+					query.add(query.getCriterion("company", Integer.valueOf(filter.getData()), filter.getOp()));
 				}
 			}
 		}

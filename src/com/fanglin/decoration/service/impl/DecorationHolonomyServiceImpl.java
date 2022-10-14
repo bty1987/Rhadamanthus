@@ -54,8 +54,7 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 	@Override
 	public void pageDecorationHolonomy(Paging paging, List<Filter> filters, int company) {
 
-		if (filters.size() == 0)
-			return;
+		if (filters.size() == 0) return;
 
 		List<DecorationHolonomyPO> decorationHolonomyPOs = decorationHolonomyDao.pagedecorationHolonomy(paging, filters, company);
 		List<DecorationHolonomyVO> decorationHolonomyVOs = new ArrayList<DecorationHolonomyVO>();
@@ -150,9 +149,6 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 			BeanUtil.copyProperties(decorationHolonomyVO, decorationHolonomyPO, Arrays.asList("decoration"));
 		}
 
-		// 管理费比例
-		int manageRate = Arith.add(quotationPO.getManageRate(), decorationPO.getNotSalesmanRate());
-
 		Long projectPrice = Arith.add(Arith.add(quotationPO.getDisPrice(), quotationPO.getUndisPrice()), quotationPO.getTrafficPrice());
 
 		Long remainder = projectPrice % decorationHolonomyVO.getDiscountBase();
@@ -160,11 +156,11 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 		// 折后工程额 :工程总额
 		Long disprojectPrice = Arith.mul(Arith.div(Arith.add(Arith.div(Arith.mul(Arith.sub(projectPrice, remainder), decorationHolonomyVO.getDiscount()), 10000), remainder), 1000000), 1000000);
 
-		// 管理费= 工程总额1 * 管理费比例
-		Long managePrice = Arith.mul(Arith.div(Arith.mul(projectPrice, manageRate), 1000000), 1000000);
+		// 管理费
+		Long managePrice = decorationHolonomyVO.getManageDiscount() == 1 ? Arith.mul(quotationPO.getManagePrice(), Arith.div(decorationHolonomyVO.getDiscount(), 10000)) : quotationPO.getManagePrice();
 
 		// 工程基础额 与报价额相同
-		Long projectBase = Arith.add(projectPrice, managePrice);
+		Long projectBase = Arith.add(projectPrice, quotationPO.getManagePrice());
 
 		// 主材总额 = 工程总额 * 主材配比
 		Long materialPrice = Arith.mul(Arith.div(Arith.mul(projectBase, decorationHolonomyVO.getMaching()), 1000000), 1000000);
@@ -178,8 +174,6 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 		decorationHolonomyPO.setMaterialPrice(materialPrice);
 		decorationHolonomyPO.setServicePrice(servicePrice);
 		decorationHolonomyPO.setServiceRate(serviceRate);
-		decorationHolonomyPO.setName(decorationHolonomyVO.getName());
-		decorationHolonomyPO.setDiscountBase(decorationHolonomyVO.getDiscountBase());
 		decorationHolonomyPO.setProjectBase(projectBase);
 
 		decorationHolonomyPO.setMaterialPaidup(DecorationHolonomyPO.MONEY_SERVICEPAIDUP_INT);
@@ -195,7 +189,6 @@ public class DecorationHolonomyServiceImpl implements DecorationHolonomyService 
 		decorationHolonomyVO.setManagePrice(managePrice);
 		decorationHolonomyVO.setMaterialPrice(materialPrice);
 		decorationHolonomyVO.setServicePrice(servicePrice);
-		decorationHolonomyVO.setProjectBase(decorationHolonomyVO.getProjectBase());
 		decorationHolonomyVO.setProjectBase(projectBase);
 
 	}

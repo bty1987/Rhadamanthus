@@ -30,4 +30,6 @@ public interface QuotationVersionService {
 
 	public void updateQuotationVersion(QuotationVersionVO quotationVersionVO) throws FLException;
 
+	public int updateQuotationVersionForDefault(QuotationVersionVO quotationVersionVO, int company) throws FLException;
+
 }

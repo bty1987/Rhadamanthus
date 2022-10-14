@@ -15,12 +15,11 @@ import java.util.List;
 import com.fanglin.core.dao.Dao;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.system.po.OrganizationPO;
-import com.fanglin.system.vo.OrganizationVO;
 import com.fanglin.utils.Paging;
 
 public interface OrganizationDao extends Dao<OrganizationPO> {
-	
-	public List<OrganizationPO> pageOrganization(Paging paging, List<Filter> filters);
-	
-	public List<OrganizationPO> queryOrganization(OrganizationVO organizationVO, Integer company);
+
+	public List<OrganizationPO> pageOrganization(Paging paging, List<Filter> filters, Integer company);
+
+	public List<OrganizationPO> queryOrganization(String name, Integer company);
 }

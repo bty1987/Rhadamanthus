@@ -14,10 +14,12 @@ package com.fanglin.payment.dao.impl;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+
 import com.fanglin.core.dao.impl.DaoImpl;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.payment.dao.DecorationPaymentDao;
@@ -27,20 +29,20 @@ import com.fanglin.utils.Paging;
 @Repository("decorationPaymentDao")
 public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> implements DecorationPaymentDao {
 
-	public DecorationPaymentDaoImpl(){
+	public DecorationPaymentDaoImpl() {
 		super(DecorationPaymentPO.class);
 	}
-	
+
 	@Override
-	public List<DecorationPaymentPO> pageDecorationPayment(Paging paging, List<Filter> filters){
+	public List<DecorationPaymentPO> pageDecorationPayment(Paging paging, List<Filter> filters) {
 		PagingQuery<DecorationPaymentPO> query = pagingQuery(paging, DecorationPaymentPO.class);
-		
+
 		queryFilterExcute(query, filters);
 		query.asc("createTime");
-		
+
 		return query.list();
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public List<DecorationPaymentPO> queryDecorationPaymentByDpids(List<Long> dpids) {
@@ -48,25 +50,25 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 	}
 
 	@Override
-	public List<DecorationPaymentPO> queryDecorationPaymentByOrderId(List<Filter> filters){
-		
+	public List<DecorationPaymentPO> queryDecorationPaymentByOrderId(List<Filter> filters) {
+
 		PagingQuery<DecorationPaymentPO> query = pagingQuery(new Paging(), DecorationPaymentPO.class);
-		
+
 		queryFilterExcute(query, filters);
 		query.asc("createTime");
 		query.notPaging();
-		
+
 		return query.list();
 	}
 
 	@Override
-	public DecorationPaymentPO queryDecorationPaymentByOrderIdAType(String orderId, String paymentType){
+	public DecorationPaymentPO queryDecorationPaymentByOrderIdAType(String orderId, String paymentType) {
 		return (DecorationPaymentPO) session().createCriteria(DecorationPaymentPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).add(Restrictions.eq("paymentType", paymentType)).uniqueResult();
 	}
-	
+
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<DecorationPaymentPO> queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(String orderId, Short[] paymentStatus, short oneType, short twoType){
+	public List<DecorationPaymentPO> queryDecorationPaymentByOrderIdAStatusAOneTypeATwoType(String orderId, Short[] paymentStatus, short oneType, short twoType) {
 		return session().createCriteria(DecorationPaymentPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).add(Restrictions.in("paymentStatus", paymentStatus)).add(Restrictions.eq("oneType", oneType)).add(Restrictions.eq("twoType", twoType)).list();
 	}
 
@@ -81,7 +83,7 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 	public List<DecorationPaymentPO> queryDecorationPaymentByDrid(long drid) {
 		return session().createCriteria(DecorationPaymentPO.class).createAlias("decorationReceipt", "decorationReceipt").add(Restrictions.eq("decorationReceipt.drid", drid)).list();
 	}
-	
+
 	@Override
 	public DecorationPaymentPO queryDecorationPaymentByOrderIdAndSort(String orderId, short sort) {
 		return (DecorationPaymentPO) session().createCriteria(DecorationPaymentPO.class).createAlias("decoration", "decoration").add(Restrictions.eq("decoration.orderId", orderId)).add(Restrictions.eq("sort", sort)).add(Restrictions.eq("oneType", DecorationPaymentPO.ONETYPE_ADD_INT)).add(Restrictions.eq("twoType", DecorationPaymentPO.TWOTYPE_DEAL_INT)).uniqueResult();
@@ -89,114 +91,114 @@ public class DecorationPaymentDaoImpl extends DaoImpl<DecorationPaymentPO> imple
 
 	@Override
 	public int changeDecorationPaymentForOrderId(String oldOrderId, String newOrderId) {
-		
+
 		String sql = "update payment.decorationpayment set orderId=:newOrderId where orderId=:oldOrderId";
-	    
-	    session().createSQLQuery(sql).setString("newOrderId", newOrderId).setString("oldOrderId", oldOrderId).executeUpdate();
-		
+
+		session().createSQLQuery(sql).setString("newOrderId", newOrderId).setString("oldOrderId", oldOrderId).executeUpdate();
+
 		return 0;
 	}
-	
+
 	@Override
-	public int deleteDecorationPaymentForBase(String orderId){
-		
-		String sql = "delete from payment.decorationpayment where orderId=:orderId and paymentType <> :paymentTypes and onetype = :onetype and twotype = :twotype";
-	    
-	    return session().createSQLQuery(sql).setString("orderId", orderId).setString("paymentTypes", DecorationPaymentPO.PAYMENTTYPE_DESIGN_STR).setInteger("onetype", DecorationPaymentPO.ONETYPE_ADD_INT).setInteger("twotype", DecorationPaymentPO.TWOTYPE_DEAL_INT).executeUpdate();
+	public int deleteDecorationPaymentForBase(String orderId) {
+
+		String sql = "delete from payment.decorationpayment where orderId=:orderId and onetype = :onetype and twotype = :twotype";
+
+		return session().createSQLQuery(sql).setString("orderId", orderId).setInteger("onetype", DecorationPaymentPO.ONETYPE_ADD_INT).setInteger("twotype", DecorationPaymentPO.TWOTYPE_DEAL_INT).executeUpdate();
 	}
 
 	@Override
 	public long amountDecorationPayment(String orderId, Short[] paymentStatus, short oneType, short twoType) {
 		String sql = "SELECT SUM(referMoney) from payment.decorationpayment where orderId = :orderId AND paymentStatus IN :paymentStatus AND onetype = :oneType AND twotype = :twoType";
 		BigDecimal sqlQuery = (BigDecimal) session().createSQLQuery(sql).setString("orderId", orderId).setParameterList("paymentStatus", paymentStatus).setShort("oneType", oneType).setShort("twoType", twoType).uniqueResult();
-		
+
 		return sqlQuery == null ? 0 : sqlQuery.longValue();
 	}
 
 	@Override
 	public int countDecorationPayment(String orderId, List<Short> onetypes, List<Short> twotypes, List<Short> statuses) {
-		
+
 		String sql = "SELECT count(*) from payment.decorationpayment dp where dp.orderId = :orderId ";
-		
+
 		if (onetypes.size() > 0) {
 			sql = sql.concat(" AND dp.onetype IN :onetypes ");
 		}
-		
+
 		if (twotypes.size() > 0) {
 			sql = sql.concat(" AND dp.twotype IN :twotypes ");
 		}
-		
+
 		if (statuses.size() > 0) {
 			sql = sql.concat(" AND dp.paymentStatus IN :statuses ");
 		}
-		
+
 		Query query = session().createSQLQuery(sql).setString("orderId", orderId);
-		
+
 		if (onetypes.size() > 0) {
 			query.setParameterList("onetypes", onetypes);
 		}
-		
+
 		if (twotypes.size() > 0) {
 			query.setParameterList("twotypes", twotypes);
 		}
-		
+
 		if (statuses.size() > 0) {
 			query.setParameterList("statuses", statuses);
 		}
-		
+
 		return ((BigInteger) query.uniqueResult()).intValue();
 	}
 
-	private void queryFilterExcute(PagingQuery<DecorationPaymentPO> query,List<Filter> filters){
-		
-		if(filters != null){
+	private void queryFilterExcute(PagingQuery<DecorationPaymentPO> query, List<Filter> filters) {
+
+		if (filters != null) {
 			query.alias("decoration", "order");
 			query.alias("order.house", "house");
 			query.alias("house.village", "village");
 			query.alias("order.designer", "designer");
-			
-			for(Filter filter: filters){
-				if(StringUtils.isNotEmpty(filter.getData())){
-					if("orderId".equals(filter.getField())){
+
+			for (Filter filter : filters) {
+				if (StringUtils.isNotEmpty(filter.getData())) {
+					if ("orderId".equals(filter.getField())) {
 						query.add(query.getCriterion("order.orderId", filter.getData(), filter.getOp()));
-					}else if("designer".equals(filter.getField())){
+					} else if ("designer".equals(filter.getField())) {
 						query.add(query.getCriterion("designer.userId", filter.getData(), filter.getOp()));
-					}else if("village".equals(filter.getField())){
+					} else if ("village".equals(filter.getField())) {
 						query.add(query.getCriterion("village.no", filter.getData(), filter.getOp()));
-					}else if("houseNumber".equals(filter.getField())){
+					} else if ("houseNumber".equals(filter.getField())) {
 						query.add(query.getCriterion("house.houseNumber", filter.getData(), filter.getOp()));
-					}else if("collectUser".equals(filter.getField())){
+					} else if ("collectUser".equals(filter.getField())) {
 						query.alias("decorationReceipt", "decorationReceipt");
 						query.alias("decorationReceipt.collecter", "collecter");
 						query.add(query.getCriterion("collecter.currentName", filter.getData(), filter.getOp()));
-					}else if("collectTime".equals(filter.getField())){
-						
+					} else if ("collectTime".equals(filter.getField())) {
+
 						query.alias("decorationReceipt", "decorationReceipt");
-						
-						if("between".equals(filter.getOp())){
+
+						if ("between".equals(filter.getOp())) {
 							query.timeranges("decorationReceipt.collectTime", "decorationReceipt.collectTime", filter.getData());
-						}else{
+						} else {
 							query.add(query.getCriterion("decorationReceipt.collectTime", filter.getData(), filter.getOp()));
 						}
-					}else if("confirmTime".equals(filter.getField())){
-						
+					} else if ("confirmTime".equals(filter.getField())) {
+
 						query.alias("decorationReceipt", "decorationReceipt");
-						
+
 						query.timeranges("decorationReceipt.confirmTime", "decorationReceipt.confirmTime", filter.getData());
-						
-					}else if("paymentStatus".equals(filter.getField())){
+
+					} else if ("paymentStatus".equals(filter.getField())) {
 						query.add(query.getCriterion("paymentStatus", Short.valueOf(filter.getData()), filter.getOp()));
-					}else if("createTime".equals(filter.getField())){
-						if("between".equals(filter.getOp())){
+					} else if ("createTime".equals(filter.getField())) {
+						if ("between".equals(filter.getOp())) {
 							query.timeranges("createTime", "createTime", filter.getData());
-						}else{
+						} else {
 							query.add(query.getCriterion("createTime", filter.getData(), filter.getOp()));
 						}
-					}else if("company".equals(filter.getField())){
+					} else if ("company".equals(filter.getField())) {
 						query.add(query.getCriterion(filter.getField(), Integer.valueOf(filter.getData()), filter.getOp()));
-					}else if("oneType".equals(filter.getField())){
+					} else if ("oneType".equals(filter.getField())) {
 						query.add(query.getCriterion(filter.getField(), Short.valueOf(filter.getData()), filter.getOp()));
-					}else {
+					} else {
 						query.add(query.getCriterion(filter.getField(), filter.getData().split(","), filter.getOp()));
 					}
 				}

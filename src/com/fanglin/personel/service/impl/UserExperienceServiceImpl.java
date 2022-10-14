@@ -9,6 +9,7 @@
 package com.fanglin.personel.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,7 @@ public class UserExperienceServiceImpl implements UserExperienceService {
 
 			UserExperienceVO userExperienceVO = new UserExperienceVO();
 
-			BeanUtil.copyProperties(userExperiencePO, userExperienceVO);
+			BeanUtil.copyProperties(userExperiencePO, userExperienceVO, Arrays.asList("creater"));
 
 			userExperienceVOs.add(userExperienceVO);
 		}
@@ -65,7 +66,7 @@ public class UserExperienceServiceImpl implements UserExperienceService {
 
 		UserExperiencePO userExperiencePO = userExperienceDao.get(userExperienceVO.getUpid());
 
-		BeanUtil.copyPropertie(userExperienceVO, userExperiencePO);
+		BeanUtil.copyPropertie(userExperienceVO, userExperiencePO, Arrays.asList("creater"));
 
 		userExperienceDao.update(userExperiencePO);
 

@@ -35,9 +35,19 @@ public class QuotetionVO implements Serializable {
 
 	private Integer manageRate;
 
+	private Short manageDiscount;
+
 	private Long trafficPrice;
 
 	private Integer trafficRate;
+
+	private Short trafficDiscount;
+
+	private Long taxPrice;
+
+	private Integer taxRate;
+
+	private Short taxDiscount;
 
 	private Long costPrice;
 
@@ -148,6 +158,14 @@ public class QuotetionVO implements Serializable {
 		this.manageRate = manageRate;
 	}
 
+	public Short getManageDiscount() {
+		return manageDiscount;
+	}
+
+	public void setManageDiscount(Short manageDiscount) {
+		this.manageDiscount = manageDiscount;
+	}
+
 	public Long getTrafficPrice() {
 		return trafficPrice;
 	}
@@ -162,6 +180,38 @@ public class QuotetionVO implements Serializable {
 
 	public void setTrafficRate(Integer trafficRate) {
 		this.trafficRate = trafficRate;
+	}
+
+	public Short getTrafficDiscount() {
+		return trafficDiscount;
+	}
+
+	public void setTrafficDiscount(Short trafficDiscount) {
+		this.trafficDiscount = trafficDiscount;
+	}
+
+	public Long getTaxPrice() {
+		return taxPrice;
+	}
+
+	public void setTaxPrice(Long taxPrice) {
+		this.taxPrice = taxPrice;
+	}
+
+	public Integer getTaxRate() {
+		return taxRate;
+	}
+
+	public void setTaxRate(Integer taxRate) {
+		this.taxRate = taxRate;
+	}
+
+	public Short getTaxDiscount() {
+		return taxDiscount;
+	}
+
+	public void setTaxDiscount(Short taxDiscount) {
+		this.taxDiscount = taxDiscount;
 	}
 
 	public Long getBasePrice() {

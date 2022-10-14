@@ -31,19 +31,19 @@ public class ActivityPO implements java.io.Serializable {
 
 	public static final String COLUMN_DEFAULTS_STR = "defaults";
 
-	public static final short STATUS_VALID_INT = 0;
+	public static final short STATUS_VALID_INT = 0; // 有效
 
-	public static final short STATUS_UNVALID_INT = 1;
+	public static final short STATUS_UNVALID_INT = 1; // 失效
 
-	public static final short DEFAULTS_DEFAULT_INT = 0;
+	public static final short DEFAULTS_DEFAULT_INT = 0; // 默认
 
-	public static final short DEFAULTS_COMMON_INT = 1;
+	public static final short DEFAULTS_COMMON_INT = 1; // 普通
 
-	public static final short TYPE_DECORATION_INT = 1;
+	public static final short TYPE_DECORATION_INT = 1; // 装修
 
-	public static final short TYPE_MATERIAL_INT = 2;
+	public static final short TYPE_MATERIAL_INT = 2; // 主材
 
-	public static final short TYPE_SALES_INT = 3;
+	public static final short TYPE_SALES_INT = 3;// 销售
 
 	private long aid;
 

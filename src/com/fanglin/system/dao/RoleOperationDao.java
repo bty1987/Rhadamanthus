@@ -17,17 +17,19 @@ import com.fanglin.core.dao.Dao;
 import com.fanglin.system.po.RoleOperationPO;
 
 public interface RoleOperationDao extends Dao<RoleOperationPO> {
-	
+
 	public List<RoleOperationPO> queryRoleOperationByRid(int rid);
-	
-	public RoleOperationPO queryRoleOperationByOperationARid(String operation, int rid);
-	
-	public RoleOperationPO queryRoleOperationByRidAOid(int rid, int oid);
-	
+
+	public RoleOperationPO queryRoleOperation(String operation, int rid);
+
+	public RoleOperationPO queryRoleOperation(int rid, int oid);
+
+	public RoleOperationPO queryRoleOperation(List<Integer> rids, int oid);
+
 	public int countRoleOperationByOid(int oid);
-	
+
 	public int deleteRoleOperationByRid(int rid);
-	
+
 	public int deleteRoleOperationByOId(int oId);
-	
+
 }

@@ -46,6 +46,10 @@ public class QuotationVersionPO implements Serializable {
 
 	private short manageDiscount;
 
+	private int taxRate;
+
+	private short taxDiscount;
+
 	private int offset;
 
 	private short type;
@@ -126,6 +130,24 @@ public class QuotationVersionPO implements Serializable {
 
 	public void setManageDiscount(short manageDiscount) {
 		this.manageDiscount = manageDiscount;
+	}
+
+	@Column(name = "taxRate")
+	public int getTaxRate() {
+		return taxRate;
+	}
+
+	public void setTaxRate(int taxRate) {
+		this.taxRate = taxRate;
+	}
+
+	@Column(name = "taxDiscount")
+	public short getTaxDiscount() {
+		return taxDiscount;
+	}
+
+	public void setTaxDiscount(short taxDiscount) {
+		this.taxDiscount = taxDiscount;
 	}
 
 	@Column(name = "offset")

@@ -100,7 +100,7 @@ public class QuotetionFunctionAreaItemServiceImpl implements QuotetionFunctionAr
 
 		QuotetionServiceImpl.convertQuotetionVOToPOForAdvance(quotetionVO, quotetionPO);
 
-		List<Short> types = Arrays.asList(QuotetionFunctionAreaItemPO.TYPE_QUOTATION_COMMON_SHORT, QuotetionFunctionAreaItemPO.TYPE_QUOTATION_CUSTOMER_SHORT, QuotetionFunctionAreaItemPO.TYPE_QUOTATION_FIX_SHORT);
+		List<Short> types = Arrays.asList(QuotetionFunctionAreaItemPO.TYPE_TRAFFIC_INT, QuotetionFunctionAreaItemPO.TYPE_MANAGE_INT);
 
 		QuotetionFunctionAreaPO quotetionFunctionAreaPO = quotetionFunctionAreaDao.queryQuotetionFunctionAreaForTypeByQuotetionId(quotetionVO.getQid(), QuotetionFunctionAreaPO.TYPE_MANAGEMENT_INT);
 
@@ -112,7 +112,7 @@ public class QuotetionFunctionAreaItemServiceImpl implements QuotetionFunctionAr
 
 		short type = quotetionFunctionAreaItemPO.getType();
 
-		if (!types.contains(type)) {
+		if (types.contains(type)) {
 
 			quotetionFunctionAreaItemPO.setUnitPrice(quotetionFunctionAreaItemVO.getUnitPrice());
 

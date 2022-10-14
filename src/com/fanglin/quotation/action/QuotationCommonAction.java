@@ -23,7 +23,9 @@ import org.springframework.stereotype.Controller;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.quotation.service.AddReduceService;
+import com.fanglin.quotation.service.SelectionService;
 import com.fanglin.quotation.vo.AddReduceVO;
+import com.fanglin.quotation.vo.SelectionVO;
 
 @ParentPackage("common")
 @Namespace("/")
@@ -38,6 +40,11 @@ public class QuotationCommonAction extends BaseListAction {
 	private List<AddReduceVO> addReduces;
 
 	private AddReduceVO addReduce;
+
+	@Autowired
+	private SelectionService selectionService;
+
+	private SelectionVO selection;
 
 	@Action(value = "queryAddReduceByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryAddReduceByOrderId() throws FLException {
@@ -63,6 +70,14 @@ public class QuotationCommonAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "affirmSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String affirmSelection() throws FLException {
+
+		selectionService.affirmSelection(selection, queryCompany());
+
+		return SUCCESS;
+	}
+
 	public AddReduceVO getAddReduce() {
 		return addReduce;
 	}
@@ -77,6 +92,14 @@ public class QuotationCommonAction extends BaseListAction {
 
 	public void setAddReduces(List<AddReduceVO> addReduces) {
 		this.addReduces = addReduces;
+	}
+
+	public SelectionVO getSelection() {
+		return selection;
+	}
+
+	public void setSelection(SelectionVO selection) {
+		this.selection = selection;
 	}
 
 }

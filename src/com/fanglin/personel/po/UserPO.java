@@ -47,6 +47,10 @@ public class UserPO implements Serializable {
 
 	public static final short EXTRANET_QCODE_INT = 4;
 
+	public static final short EXTRANET_WEB_INT = 8;
+
+	public static final short EXTRANET_PC_INT = 16;
+
 	public static final short FREEDOM_TIMEOUT_INT = 1;
 
 	public static final short FREEDOM_ROLLCALL_INT = 2;

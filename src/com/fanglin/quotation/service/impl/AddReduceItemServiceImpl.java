@@ -188,9 +188,10 @@ public class AddReduceItemServiceImpl implements AddReduceItemService {
 			} else if (addReduceItemPO.getType() == AddReduceItemPO.TYPE_EXTENSION_ITEM_INT) {
 				areaId = handleExtensionItem(addReduceItemPO, addReduceItemPO.getQuoteItemId(), addReduceItemVO.getNum(), addReduceItemPO.getNum());
 			}
-
-			addReduceItemPO.setNum(addReduceItemVO.getNum());
 		}
+
+		addReduceItemPO.setNum(addReduceItemVO.getNum());
+		addReduceItemPO.setInitnum(addReduceItemVO.getNum());
 
 		handleDecorationPayment(addReducePO);
 

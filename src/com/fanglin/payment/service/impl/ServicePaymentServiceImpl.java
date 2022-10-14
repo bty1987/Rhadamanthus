@@ -253,9 +253,9 @@ public class ServicePaymentServiceImpl implements ServicePaymentService {
 
 		DecorationPO decoration = decorationDao.queryDecorationByOrderId(servicePaymentVO.getDecoration().getOrderId());
 
-		ServicePaymentPO servicePaymentPO = new ServicePaymentPO(new DecorationPO());
+		ServicePaymentPO servicePaymentPO = new ServicePaymentPO(decoration);
+
 		BeanUtil.copyProperties(servicePaymentVO, servicePaymentPO, Arrays.asList("decoration", "creater", "collecter", "confirmer", "serviceReceipt"));
-		BeanUtil.copyProperties(decoration, servicePaymentPO.getDecoration(), Arrays.asList("house", "customer", "designer", "salesman", "supervisor", "version", "createUser", "quoter", "escorter"));
 
 		UserPO userPO = userDao.queryUserByUserId(cuid);
 		servicePaymentPO.setCreater(userPO);

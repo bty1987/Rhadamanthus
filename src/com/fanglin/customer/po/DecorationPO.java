@@ -98,7 +98,9 @@ public class DecorationPO implements Serializable {
 		BeanUtil.copyPropertie(decorationPO.getSalesman(), decorationVO.getSalesman(), Arrays.asList("dept", "duty"));
 		BeanUtil.copyPropertie(decorationPO.getSupervisor(), decorationVO.getSupervisor(), Arrays.asList("dept", "duty"));
 
-		decorationVO.setType(decorationPO.getTypeness());
+		decorationVO.setType(decorationPO.getType());
+		decorationVO.setTypeness(decorationPO.getTypeness());
+		decorationVO.setSalesScale(decorationPO.getSaleScale());
 		decorationVO.setCustomerId(decorationPO.getCustomer().getCid());
 		decorationVO.setContractTime(decorationPO.getContractTime());
 		decorationVO.setAddress(decorationPO.getHouse().getVillage().getName() + " " + decorationPO.getHouse().getHouseNumber());

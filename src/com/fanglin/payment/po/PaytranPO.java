@@ -20,6 +20,20 @@ public class PaytranPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 7824990482786583843L;
 
+	public static final String COLUMN_ORDERID_STR = "orderId";
+
+	public static final String COLUMN_PID_STR = "pid";
+
+	public static final String COLUMN_RID_STR = "rid";
+
+	public static final String COLUMN_TYPE_STR = "type";
+
+	public static final String COLUMN_ATTTYPE_STR = "atttype";
+
+	public static final String COLUMN_STATUS_STR = "status";
+
+	public static final String COLUMN_CUSERID_STR = "creater.userId";
+
 	public static final short STATUS_INIT_INT = 0; // 初始
 
 	public static final short STATUS_SUCCESS_INT = 1; // 成功
@@ -28,7 +42,7 @@ public class PaytranPO implements java.io.Serializable {
 
 	public static final short STATUS_INVALID_INT = 3; // 失效
 
-	public static final short STATUS_USED_INT = 4;
+	public static final short STATUS_USED_INT = 4; // 已用
 
 	public static final short TYPE_ADVANCE_INT = 0; // 预付款
 
@@ -42,6 +56,12 @@ public class PaytranPO implements java.io.Serializable {
 
 	public static final short TYPE_ACTIVITY_INT = 5; // 活动款
 
+	public static final short TYPE_PAYTRAN_INT = 6; // 转换款
+
+	public static final short ATTTYPE_DECORATION_INT = 0; // 装修
+
+	public static final short ATTTYPE_MATERIAL_INT = 1; // 主材
+
 	private long ptid;
 
 	private String orderId;
@@ -51,6 +71,10 @@ public class PaytranPO implements java.io.Serializable {
 	private long rid;
 
 	private short type;
+
+	private short atttype; // 0:装修 1:主材
+
+	private long ctid;
 
 	private String no;
 
@@ -81,11 +105,12 @@ public class PaytranPO implements java.io.Serializable {
 		this.creater = creater;
 	}
 
-	public PaytranPO(String orderId, long pid, short type, String no, short status, long money) {
+	public PaytranPO(String orderId, long pid, short type, short atttype, String no, short status, long money) {
 		super();
 		this.orderId = orderId;
 		this.pid = pid;
 		this.type = type;
+		this.atttype = atttype;
 		this.no = no;
 		this.status = status;
 		this.money = money;
@@ -136,6 +161,24 @@ public class PaytranPO implements java.io.Serializable {
 
 	public void setType(short type) {
 		this.type = type;
+	}
+
+	@Column(name = "atttype")
+	public short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(short atttype) {
+		this.atttype = atttype;
+	}
+
+	@Column(name = "ctid")
+	public long getCtid() {
+		return ctid;
+	}
+
+	public void setCtid(long ctid) {
+		this.ctid = ctid;
 	}
 
 	@Column(name = "no")

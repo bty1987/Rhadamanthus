@@ -12,13 +12,19 @@ public class BalanceCutpayVO implements java.io.Serializable {
 
 	private Long bcid;
 
+	private String name;
+
 	private BalanceVO balance;
+
+	private BalanceCutpayVO cutpay;
+
+	private BalanceDccountVO dccount;
 
 	private UserBaseVO operater;
 
 	private Timestamp operateTime;
 
-	private Long cutpay;
+	private Long total;
 
 	private Integer money;
 
@@ -41,6 +47,14 @@ public class BalanceCutpayVO implements java.io.Serializable {
 		this.operater = operater;
 	}
 
+	public BalanceCutpayVO(BalanceVO balance, UserBaseVO operater, BalanceDccountVO dccount, BalanceCutpayVO cutpay) {
+		super();
+		this.balance = balance;
+		this.operater = operater;
+		this.dccount = dccount;
+		this.cutpay = cutpay;
+	}
+
 	public Long getBcid() {
 		return bcid;
 	}
@@ -55,6 +69,14 @@ public class BalanceCutpayVO implements java.io.Serializable {
 
 	public void setBalance(BalanceVO balance) {
 		this.balance = balance;
+	}
+
+	public BalanceCutpayVO getCutpay() {
+		return cutpay;
+	}
+
+	public void setCutpay(BalanceCutpayVO cutpay) {
+		this.cutpay = cutpay;
 	}
 
 	public UserBaseVO getOperater() {
@@ -74,12 +96,12 @@ public class BalanceCutpayVO implements java.io.Serializable {
 		this.operateTime = operateTime;
 	}
 
-	public Long getCutpay() {
-		return cutpay;
+	public Long getTotal() {
+		return total;
 	}
 
-	public void setCutpay(Long cutpay) {
-		this.cutpay = cutpay;
+	public void setTotal(Long total) {
+		this.total = total;
 	}
 
 	public Integer getMoney() {
@@ -104,6 +126,22 @@ public class BalanceCutpayVO implements java.io.Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public BalanceDccountVO getDccount() {
+		return dccount;
+	}
+
+	public void setDccount(BalanceDccountVO dccount) {
+		this.dccount = dccount;
 	}
 
 }

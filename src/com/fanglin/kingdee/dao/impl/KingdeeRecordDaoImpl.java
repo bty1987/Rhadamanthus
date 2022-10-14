@@ -13,7 +13,7 @@ import com.fanglin.utils.Paging;
 @Repository("kingdeeRecordDao")
 public class KingdeeRecordDaoImpl extends DaoImpl<KingdeeRecordPO> implements KingdeeRecordDao {
 
-	public KingdeeRecordDaoImpl(){
+	public KingdeeRecordDaoImpl() {
 		super(KingdeeRecordPO.class);
 	}
 
@@ -24,13 +24,14 @@ public class KingdeeRecordDaoImpl extends DaoImpl<KingdeeRecordPO> implements Ki
 
 		queryFilterExcute(query, filters);
 
+		query.desc(KingdeeRecordPO.COLUMN_KRID_STR);
+
 		return query.list();
 	}
-	
+
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters == null)
-			return;
+		if (filters == null) return;
 
 		for (Filter filter : filters) {
 

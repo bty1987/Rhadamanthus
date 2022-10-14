@@ -27,7 +27,10 @@ import com.fanglin.dingding.bean.AppMessage;
 import com.fanglin.dingding.bean.Group;
 import com.fanglin.dingding.bean.ImageMessage;
 import com.fanglin.dingding.bean.TextMessage;
+import com.fanglin.dingding.bean.VoiceMessage;
 import com.fanglin.dingding.service.GroupService;
+import com.fanglin.information.po.MessagePO;
+import com.fanglin.information.service.MessageService;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
@@ -56,6 +59,9 @@ public class ConversationServiceImpl implements ConversationService {
 
 	@Autowired
 	private DecorationService decorationService;
+
+	@Autowired
+	private MessageService messageService;
 
 	@Override
 	public void pageConversation(Paging paging, List<Filter> filters) {
@@ -137,7 +143,18 @@ public class ConversationServiceImpl implements ConversationService {
 			message = new AppMessage(conversationPO.getContent(), String.format("http://www.fanglinserver.com/test/dingding/decoration/decorationorder.html?orderId=%s", conversationPO.getOrderId()), "查看更多").delivery();
 		}
 
+		if (conversationPO.getType() == ConversationPO.TYPE_VOICE_INT) {
+			message = new VoiceMessage(conversationVO.getContent(), conversationVO.getWidth()).delivery();
+		}
+
 		groupService.send(group, message, decorationPO.getCompany());
+
+		if (conversationVO.getFocuser().getUserId() != null && !conversationVO.getFocuser().getUserId().equals("")) {
+
+			UserPO focuser = userdDao.queryUserByUserId(conversationVO.getFocuser().getUserId());
+			messageService.sendMessage(conversationVO.getFocuser().getUserId(), "", conversationVO.getContent(), MessagePO.TYPE_SEND_PERSONEL_INT, focuser.getCompany());
+
+		}
 	}
 
 	@Override
@@ -203,7 +220,7 @@ public class ConversationServiceImpl implements ConversationService {
 
 		String content = String.format("装修单号:%s, 有一条新消息, 请查收.", orderId);
 
-		decorationService.sendMessage(orderId, "消息提醒", content, String.format("pages/conversation/conversation?orderId=%s", orderId));
+		decorationService.sendMessage(orderId, "消息提醒", content, String.format("pages/customer/conversation?orderId=%s", orderId));
 	}
 
 	@Override

@@ -28,6 +28,8 @@ public class DecorationPictureVO implements Serializable {
 
 	private String path;
 
+	private Integer filesize;
+
 	private Timestamp uploadTime;
 
 	protected String content;
@@ -93,6 +95,14 @@ public class DecorationPictureVO implements Serializable {
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+
+	public Integer getFilesize() {
+		return filesize;
+	}
+
+	public void setFilesize(Integer filesize) {
+		this.filesize = filesize;
 	}
 
 	public String getContent() {

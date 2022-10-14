@@ -7,13 +7,13 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.system.po.CompanyPO;
 import com.fanglin.utils.Paging;
 
-public interface CompanyDao extends Dao<CompanyPO>{
-	
+public interface CompanyDao extends Dao<CompanyPO> {
+
 	public List<CompanyPO> pageCompany(Paging paging, List<Filter> filters);
-	
-	public List<CompanyPO> queryCompany();
-	
+
+	public List<CompanyPO> queryCompany(Short atttype);
+
 	public CompanyPO queryCompanyByName(String name);
-	
+
 	public CompanyPO queryCompanyByNo(int no);
 }

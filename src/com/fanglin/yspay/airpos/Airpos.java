@@ -14,6 +14,7 @@ package com.fanglin.yspay.airpos;
 import java.util.Date;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fanglin.communion.po.CustypePO;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.payment.po.PaytranPO;
 import com.fanglin.utils.Arith;
@@ -43,7 +44,7 @@ public class Airpos {
 		System.out.println(targetSn);
 	}
 
-	public static void pospay(String way, PaytranPO paytranPO) throws FLException {
+	public static void pospay(String way, PaytranPO paytranPO, CustypePO custypePO) throws FLException {
 
 		NLTransApi nlTransApi = NLApiFactory.createNLTransApi();
 
@@ -63,7 +64,7 @@ public class Airpos {
 		}
 	}
 
-	public static void check(PaytranPO paytranPO) throws FLException {
+	public static void check(PaytranPO paytranPO, CustypePO custypePO) throws FLException {
 
 		NLTransApi nlTransApi = NLApiFactory.createNLTransApi();
 

@@ -85,6 +85,8 @@ public class AddReduceDO implements Serializable {
 
 	private int manageRate;
 
+	private short manageDiscount;
+
 	private long consPrice;
 
 	private long total;
@@ -276,6 +278,15 @@ public class AddReduceDO implements Serializable {
 
 	public void setManageRate(int manageRate) {
 		this.manageRate = manageRate;
+	}
+
+	@Column(name = "manageDiscount")
+	public short getManageDiscount() {
+		return manageDiscount;
+	}
+
+	public void setManageDiscount(short manageDiscount) {
+		this.manageDiscount = manageDiscount;
 	}
 
 	@Column(name = "confirmTime")

@@ -32,13 +32,21 @@ public class VpaymentPO implements Serializable {
 
 	public static final String COLUMN_EXPIRE_STR = "expire";
 
-	public static final short STATUS_INIT_INT = 0;
+	public static final short STATUS_INIT_INT = 0; // 未付款
 
-	public static final short STATUS_PAYED_INT = 1;
+	public static final short STATUS_PAYED_INT = 1; // 已付款
 
-	public static final short EXPIRE_INIT_INT = 0;
+	public static final short EXPIRE_INIT_INT = 0; // 有效
 
-	public static final short EXPIRE_INVALID_INT = 1;
+	public static final short EXPIRE_INVALID_INT = 1;// 到期
+
+	public static final short TYPE_RENOVATION_INT = 0; // 装修款
+
+	public static final short TYPE_RENOVATIONDEPOSIT_INT = 1; // 装修定金
+
+	public static final short TYPE_PRINCIPAL_INT = 2; // 主材款
+
+	public static final short TYPE_PRINCIPALDEPOSIT_INT = 3; // 主材定金
 
 	private long vpid;
 
@@ -52,7 +60,7 @@ public class VpaymentPO implements Serializable {
 
 	private Timestamp createTime;// 创建时间
 
-	private short type;// 类型 , 0: 装修款 , 1: 主材款
+	private short type;// 类型 , 0: 装修款 , 1: 装修定金 , 2: 主材款 , 3: 主材定金
 
 	private String category;
 

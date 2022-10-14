@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.security.AESHelper;
 import com.fanglin.personel.dao.UserCompanyDao;
+import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserCompanyPO;
+import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.service.UserCompanyService;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.personel.vo.UserCompanyVO;
@@ -32,6 +34,9 @@ public class UserCompanyServiceImpl implements UserCompanyService {
 	@Autowired
 	private CompanyDao companyDao;
 
+	@Autowired
+	private UserDao userDao;
+
 	@Override
 	public List<UserCompanyVO> queryUserCompany(UserBaseVO userVO) throws FLException {
 
@@ -42,9 +47,9 @@ public class UserCompanyServiceImpl implements UserCompanyService {
 
 		for (UserCompanyPO userCompanyPO : userCompanyPOs) {
 
-			userCompanyVO = new UserCompanyVO(new CompanyVO());
+			userCompanyVO = new UserCompanyVO(new CompanyVO(), new UserBaseVO());
 
-			BeanUtil.copyProperties(userCompanyPO, userCompanyVO, Arrays.asList("company"));
+			BeanUtil.copyProperties(userCompanyPO, userCompanyVO, Arrays.asList("company", "creater"));
 
 			BeanUtil.copyProperties(userCompanyPO.getCompany(), userCompanyVO.getCompany(), Arrays.asList("cid", "drganization", "srganization"));
 
@@ -63,14 +68,20 @@ public class UserCompanyServiceImpl implements UserCompanyService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int updateUserCompany(UserBaseVO userVO, List<String> cids) throws FLException {
+	public int updateUserCompany(UserBaseVO userVO, List<String> cids, String userId) throws FLException {
 
 		int uid = userVO.getUid();
 
 		userCompanyDao.deleteUserCompany(uid);
 
-		if (cids == null)
-			return 0;
+		UserPO operater = userDao.queryUserByUserId(userId);
+
+		UserPO userPO = userDao.get(uid);
+
+		if (cids == null) return 0;
+
+		if (operater.getRole().getRid() == userPO.getRole().getRid()) return 0;
+		if (userPO.getRole().getLevel() >= operater.getRole().getLevel()) return 0;
 
 		for (String encrypt : cids) {
 
@@ -88,14 +99,9 @@ public class UserCompanyServiceImpl implements UserCompanyService {
 				throw new FLException(230015, "公司不存在");
 			}
 
-			userCompanyDao.save(new UserCompanyPO(uid, companyPO));
+			userCompanyDao.save(new UserCompanyPO(uid, companyPO, operater));
 		}
 
 		return 0;
-	}
-
-	public static void main(String[] args) throws Exception {
-		System.out.println(FormatUtil.decodeCompany(AESHelper.decrypt("f3jfJcbxHbdXJs3xJKtDCw==", "844dd1be967b6e9e", "cdb421d038104126")));
-		new UserCompanyPO(34, new CompanyPO(0));
 	}
 }

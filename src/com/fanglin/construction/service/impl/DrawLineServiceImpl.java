@@ -50,6 +50,7 @@ import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -111,8 +112,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 
 		List<DrawLineVO> drawLineVOs = new ArrayList<DrawLineVO>();
 
-		if (filters.size() == 0)
-			return drawLineVOs;
+		if (filters.size() == 0) return drawLineVOs;
 
 		List<String> files = new ArrayList<String>();
 		for (Filter filter : filters) {
@@ -222,6 +222,13 @@ public class DrawLineServiceImpl implements DrawLineService {
 			constructionAccessoryDao.makeConstructionAccessory(_constructionPO.getCid(), ccid);
 		}
 
+		if (drawLineVO.getDecoration().getDompany() != "") {
+
+			decorationPO.setConpany(CompanyServiceImpl.decode(drawLineVO.getDecoration().getDompany()));
+
+			decorationDao.update(decorationPO);
+		}
+
 		return 0;
 	}
 
@@ -297,7 +304,7 @@ public class DrawLineServiceImpl implements DrawLineService {
 			Timestamp startTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(constructionInfo.getDrawlineTime()), timelimit));
 			Timestamp endTime = DateUtil.getDateToTimestamp(DateUtil.plusDay(DateUtil.getTimestampToDate(constructionInfo.getDrawlineTime()), timelimit + constructionNodeVO.getTimeLimit()));
 
-			constructionScheduleDao.save(new ConstructionSchedulePO(cid, orderId, startTime, endTime, constructionNodeVO.getSort()));
+			constructionScheduleDao.save(new ConstructionSchedulePO(cid, orderId, startTime, endTime, constructionNodeVO.getSort(), constructionNodeVO.getCnid()));
 
 			timelimit = timelimit + constructionNodeVO.getTimeLimit();
 		}

@@ -63,7 +63,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 	@Autowired
 	private ServiceRecordDao serviceRecordDao;
-	
+
 	@Autowired
 	private DecorationService decorationService;
 
@@ -191,7 +191,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		decorationActivityItemPO.setReceiveUserName(receiver.getCurrentName());
 
 		decorationActivityItemDao.update(decorationActivityItemPO);
-
+		decorationActivityItemDao.flush();
 		subDecorationForCut(decorationPO, decorationActivityItemPO);
 
 		return 0;
@@ -295,7 +295,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		decorationActivityItemPO.setReceiveUserName(operater.getCurrentName());
 
 		decorationActivityItemDao.update(decorationActivityItemPO);
-
+		decorationActivityItemDao.flush();
 		AwardStockPO awardStockPO = awardStockDao.get(decorationActivityItemPO.getAsid());
 
 		if (decorationActivityItemPO.getIsStock() == DecorationActivityItemPO.ISSTOCK_CAL_INT) {
@@ -326,7 +326,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(140030, "订单活动物品不存在");
 		}
 
-		List<Short> status = Arrays.asList(new Short[] { DecorationActivityItemPO.STATUS_RECEIVE_INT, DecorationActivityItemPO.STATUS_DELIVERY_INT ,DecorationActivityItemPO.STATUS_DISCOUNT_INT});
+		List<Short> status = Arrays.asList(new Short[] { DecorationActivityItemPO.STATUS_RECEIVE_INT, DecorationActivityItemPO.STATUS_DELIVERY_INT, DecorationActivityItemPO.STATUS_DISCOUNT_INT });
 
 		if (!status.contains(decorationActivityItemPO.getState())) {
 			throw new FLException(140057, "订单活动奖品不可操作");
@@ -341,7 +341,7 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_CONSUME_INT);
 
 		decorationActivityItemDao.update(decorationActivityItemPO);
-
+		decorationActivityItemDao.flush();
 		subDecorationForCut(decorationPO, decorationActivityItemPO);
 
 		return 0;
@@ -372,12 +372,12 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 		decorationActivityItemPO.setState(DecorationActivityItemPO.STATUS_DISCOUNT_INT);
 
 		decorationActivityItemDao.update(decorationActivityItemPO);
-
+		decorationActivityItemDao.flush();
 		subDecorationForCut(decorationPO, decorationActivityItemPO);
 
 		return 0;
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int amountDecorationActivityItem(DecorationVO decorationVO, String userId) throws FLException {
@@ -394,22 +394,11 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 			throw new FLException(140004, "装修单状态不可操作");
 		}
 
-		List<DecorationActivityItemPO> decorationActivityItemPOs = decorationActivityItemDao.queryDecorationActivityItemByOrderId(orderId);
+		List<Short> states = Arrays.asList(DecorationActivityItemPO.STATUS_INIT_INT, DecorationActivityItemPO.STATUS_RECEIVE_INT, DecorationActivityItemPO.STATUS_DELIVERY_INT, DecorationActivityItemPO.STATUS_WAIT_INT, DecorationActivityItemPO.STATUS_UPGRADE_INT);
 
-		long couponCut = 0;
-		long thingCut = 0;
+		long couponCut = decorationActivityItemDao.amountDecorationActivityItemForIsPrefor(orderId, DecorationActivityItemPO.TYPE_COUPON_INT, states, DecorationActivityItemPO.ISPREFOR_CAL_INT);
+		long thingCut = decorationActivityItemDao.amountDecorationActivityItemForIsPrefor(orderId, DecorationActivityItemPO.TYPE_THING_INT, states, DecorationActivityItemPO.ISPREFOR_CAL_INT);
 
-		List<Short> types = Arrays.asList(DecorationActivityItemPO.TYPE_COUPON_INT, DecorationActivityItemPO.TYPE_SPECIALCOUPON_INT);
-		List<Short> states = Arrays.asList(DecorationActivityItemPO.STATUS_UNVALID_INT, DecorationActivityItemPO.STATUS_RETREAT_INT, DecorationActivityItemPO.STATUS_CONSUME_INT);
-
-		for (DecorationActivityItemPO decorationActivityItemPO : decorationActivityItemPOs) {
-
-			if (types.contains(decorationActivityItemPO.getType()) && !states.contains(decorationActivityItemPO.getState()) && decorationActivityItemPO.getIsPrefor() == DecorationActivityItemPO.ISPREFOR_CAL_INT) {
-				couponCut = Arith.add(couponCut, Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));
-			} else if (Arrays.asList(DecorationActivityItemPO.TYPE_THING_INT, DecorationActivityItemPO.TYPE_SPECIALARTICLE_INT).contains(decorationActivityItemPO.getType()) && decorationActivityItemPO.getIsPrefor() == DecorationActivityItemPO.ISPREFOR_CAL_INT) {
-				thingCut = Arith.add(thingCut, Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));
-			}
-		}
 		decorationPO.setCouponCut(couponCut);
 		decorationPO.setThingCut(thingCut);
 		decorationPO.setFactPrice(Arith.sub(decorationPO.getOrderTotalPrice(), couponCut));
@@ -423,14 +412,10 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 
 	private void subDecorationForCut(DecorationPO decorationPO, DecorationActivityItemPO decorationActivityItemPO) {
 
-		long couponCut = decorationPO.getCouponCut();
-		long thingCut = decorationPO.getThingCut();
+		List<Short> states = Arrays.asList(DecorationActivityItemPO.STATUS_INIT_INT, DecorationActivityItemPO.STATUS_RECEIVE_INT, DecorationActivityItemPO.STATUS_DELIVERY_INT, DecorationActivityItemPO.STATUS_WAIT_INT, DecorationActivityItemPO.STATUS_UPGRADE_INT);
 
-		if (Arrays.asList(DecorationActivityItemPO.TYPE_COUPON_INT, DecorationActivityItemPO.TYPE_SPECIALCOUPON_INT).contains(decorationActivityItemPO.getType()) && decorationActivityItemPO.getIsPrefor() == DecorationActivityItemPO.ISPREFOR_CAL_INT) {
-			couponCut = Arith.sub(couponCut, Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));
-		} else if (Arrays.asList(DecorationActivityItemPO.TYPE_THING_INT, DecorationActivityItemPO.TYPE_SPECIALARTICLE_INT).contains(decorationActivityItemPO.getType()) && decorationActivityItemPO.getIsPrefor() == DecorationActivityItemPO.ISPREFOR_CAL_INT) {
-			thingCut = Arith.sub(thingCut, Arith.mul(decorationActivityItemPO.getMoney(), decorationActivityItemPO.getNum()));
-		}
+		long couponCut = decorationActivityItemDao.amountDecorationActivityItemForIsPrefor(decorationPO.getOrderId(), DecorationActivityItemPO.TYPE_COUPON_INT, states, DecorationActivityItemPO.ISPREFOR_CAL_INT);
+		long thingCut = decorationActivityItemDao.amountDecorationActivityItemForIsPrefor(decorationPO.getOrderId(), DecorationActivityItemPO.TYPE_THING_INT, states, DecorationActivityItemPO.ISPREFOR_CAL_INT);
 
 		decorationPO.setCouponCut(couponCut);
 		decorationPO.setThingCut(thingCut);
@@ -440,20 +425,20 @@ public class DecorationActivityItemServiceImpl implements DecorationActivityItem
 	}
 
 	@Override
-	public void sendDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO)throws FLException {
-		
+	public void sendDecorationActivityItem(DecorationActivityItemVO decorationActivityItemVO) throws FLException {
+
 		String orderId = decorationActivityItemVO.getOrderId();
 
 		System.out.println(String.format("pages/activityItemDetail/activityItemDetail?orderId=%s&daiIds=%s", orderId, decorationActivityItemVO.getContent()));
 
 		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 请您确认本次需要领取的礼品信息，您确认后代表无问题，可以自取或在服务群内委托设计师代领转交您，点【详情】查看", orderId), String.format("pages/activityItemDetail/activityItemDetail?orderId=%s&daiIds=%s", orderId, decorationActivityItemVO.getContent()));
-		
+
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int affirmDecorationActivityItem(List<DecorationActivityItemVO> decorationActivityItems)throws FLException {
-		
+	public int affirmDecorationActivityItem(List<DecorationActivityItemVO> decorationActivityItems) throws FLException {
+
 		for (DecorationActivityItemVO decorationActivityItem : decorationActivityItems) {
 
 			DecorationActivityItemPO decorationActivityItemPO = decorationActivityItemDao.get(decorationActivityItem.getDaiId());

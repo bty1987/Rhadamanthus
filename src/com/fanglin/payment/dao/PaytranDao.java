@@ -11,7 +11,7 @@ public interface PaytranDao extends Dao<PaytranPO> {
 
 	public List<PaytranPO> pagePaytran(Paging paging, List<Filter> filters);
 
-	public List<PaytranPO> queryPaytran(String orderId, Short type, Long rid, Long pid);
+	public List<PaytranPO> queryPaytran(String orderId, Short type, Short atttype, Long rid, Long pid, Short status);
 
 	// 这里接口原本没有rid, 是后增加的, 应该是根据当前收据对应的推送信息更新而不是全部更新
 	public void updatePaytran(List<Long> ptids, Long rid, Short status, Short type);

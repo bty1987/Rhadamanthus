@@ -126,7 +126,11 @@ public class QuotetionServiceImpl implements QuotetionService {
 		quotetionPO.setNo(UUIDUtil.getUuid().substring(0, 15));
 		quotetionPO.setDiscount(10000);
 		quotetionPO.setManageRate(quotationVersionPO.getManageRate());
+		quotetionPO.setManageDiscount(quotationVersionPO.getManageDiscount());
 		quotetionPO.setTrafficRate(quotationVersionPO.getTrafficRate());
+		quotetionPO.setTrafficDiscount(quotationVersionPO.getTrafficDiscount());
+		quotetionPO.setTaxRate(quotationVersionPO.getTaxRate());
+		quotetionPO.setTaxDiscount(quotationVersionPO.getTaxDiscount());
 
 		quotetionDao.save(quotetionPO);
 
@@ -140,16 +144,17 @@ public class QuotetionServiceImpl implements QuotetionService {
 		quotetionFunctionAreaDao.save(autogeneration);
 
 		QuotetionFunctionAreaItemPO trafficPrice = QuotetionFunctionAreaItemPO.factoryToInstance(autogeneration.getQfaId(), index);
-
-		convertQuotetionPOForAdvance(trafficPrice, "车运费", "", "其他", quotationVersionPO.getTrafficRate(), "0", 0, QuotationFunctionAreaItemPO.TYPE_TRAFFIC_INT, quotationVersionPO.getTrafficDiscount(), autogeneration, "", QuotetionFunctionAreaItemPO.SUBTYPE_QUOTATION_ENGINEERING_SHORT);
-
-		quotetionFunctionAreaItemDao.save(trafficPrice);
+		convertQuotetionPOForAdvance(trafficPrice, "车运费", "", "其他", quotationVersionPO.getTrafficRate(), "0", 0, QuotetionFunctionAreaItemPO.TYPE_TRAFFIC_INT, quotationVersionPO.getTrafficDiscount(), autogeneration, "", QuotetionFunctionAreaItemPO.SUBTYPE_QUOTATION_ENGINEERING_SHORT);
 
 		QuotetionFunctionAreaItemPO managePrice = QuotetionFunctionAreaItemPO.factoryToInstance(autogeneration.getQfaId(), index);
+		convertQuotetionPOForAdvance(managePrice, "管理费", "", "其他", quotationVersionPO.getManageRate(), "0", 0, QuotetionFunctionAreaItemPO.TYPE_MANAGE_INT, quotationVersionPO.getManageDiscount(), autogeneration, "", QuotetionFunctionAreaItemPO.SUBTYPE_QUOTATION_ENGINEERING_SHORT);
 
-		convertQuotetionPOForAdvance(managePrice, "管理费", "", "其他", quotationVersionPO.getManageRate(), "0", 0, QuotetionFunctionAreaItemPO.TYPE_QUOTATION_MANAGE_SHORT, quotationVersionPO.getManageDiscount(), autogeneration, "", QuotetionFunctionAreaItemPO.SUBTYPE_QUOTATION_ENGINEERING_SHORT);
+		QuotetionFunctionAreaItemPO taxPrice = QuotetionFunctionAreaItemPO.factoryToInstance(autogeneration.getQfaId(), index);
+		convertQuotetionPOForAdvance(taxPrice, "税金", "", "其他", quotationVersionPO.getTaxRate(), "0", 0, QuotetionFunctionAreaItemPO.TYPE_TAX_INT, quotationVersionPO.getTaxDiscount(), autogeneration, "", QuotetionFunctionAreaItemPO.SUBTYPE_QUOTATION_ENGINEERING_SHORT);
 
+		quotetionFunctionAreaItemDao.save(trafficPrice);
 		quotetionFunctionAreaItemDao.save(managePrice);
+		quotetionFunctionAreaItemDao.save(taxPrice);
 
 		return 0;
 	}
@@ -176,6 +181,26 @@ public class QuotetionServiceImpl implements QuotetionService {
 		QuotetionPO quotetionPO = checkQuotetionForStatusByEnabled(quotetionVO.getQid());
 
 		convertQuotetionVOToPOForAdvance(quotetionVO, quotetionPO);
+
+		QuotetionFunctionAreaPO quotetionFunctionAreaPO = quotetionFunctionAreaDao.queryQuotetionFunctionAreaForTypeByQuotetionId(quotetionVO.getQid(), QuotetionFunctionAreaPO.TYPE_MANAGEMENT_INT);
+
+		if (quotetionVO.getTrafficDiscount() != null) {
+			QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO = quotetionFunctionAreaItemDao.queryQuotetionFunctionAreaItemForTypeByQuotetionFunctionAreaId(QuotetionFunctionAreaItemPO.factoryToClazz(quotetionFunctionAreaPO.getQfaId(), quotetionFunctionAreaPO.getIndex()), quotetionFunctionAreaPO.getQfaId(), QuotetionFunctionAreaItemPO.TYPE_TRAFFIC_INT);
+			quotetionFunctionAreaItemPO.setDiscount(quotetionVO.getTrafficDiscount());
+			quotetionFunctionAreaItemDao.update(quotetionFunctionAreaItemPO);
+		}
+
+		if (quotetionVO.getManageDiscount() != null) {
+			QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO = quotetionFunctionAreaItemDao.queryQuotetionFunctionAreaItemForTypeByQuotetionFunctionAreaId(QuotetionFunctionAreaItemPO.factoryToClazz(quotetionFunctionAreaPO.getQfaId(), quotetionFunctionAreaPO.getIndex()), quotetionFunctionAreaPO.getQfaId(), QuotetionFunctionAreaItemPO.TYPE_MANAGE_INT);
+			quotetionFunctionAreaItemPO.setDiscount(quotetionVO.getManageDiscount());
+			quotetionFunctionAreaItemDao.update(quotetionFunctionAreaItemPO);
+		}
+
+		if (quotetionVO.getTaxDiscount() != null) {
+			QuotetionFunctionAreaItemPO quotetionFunctionAreaItemPO = quotetionFunctionAreaItemDao.queryQuotetionFunctionAreaItemForTypeByQuotetionFunctionAreaId(QuotetionFunctionAreaItemPO.factoryToClazz(quotetionFunctionAreaPO.getQfaId(), quotetionFunctionAreaPO.getIndex()), quotetionFunctionAreaPO.getQfaId(), QuotetionFunctionAreaItemPO.TYPE_TAX_INT);
+			quotetionFunctionAreaItemPO.setDiscount(quotetionVO.getTaxDiscount());
+			quotetionFunctionAreaItemDao.update(quotetionFunctionAreaItemPO);
+		}
 
 		quotetionDao.update(quotetionPO);
 
@@ -398,10 +423,18 @@ public class QuotetionServiceImpl implements QuotetionService {
 		quotetionPO.setTotalPrice(quotetionVO.getTotalPrice());
 		quotetionPO.setUndisPrice(quotetionVO.getUndisPrice());
 		quotetionPO.setDisPrice(quotetionVO.getDisPrice());
+
 		quotetionPO.setManagePrice(quotetionVO.getManagePrice());
 		quotetionPO.setManageRate(quotetionVO.getManageRate());
 		quotetionPO.setTrafficPrice(quotetionVO.getTrafficPrice());
 		quotetionPO.setTrafficRate(quotetionVO.getTrafficRate());
+		quotetionPO.setTaxPrice(quotetionVO.getTaxPrice());
+		quotetionPO.setTaxRate(quotetionVO.getTaxRate());
+
+		if (quotetionVO.getTrafficDiscount() != null) quotetionPO.setTrafficDiscount(quotetionVO.getTrafficDiscount());
+		if (quotetionVO.getManageDiscount() != null) quotetionPO.setManageDiscount(quotetionVO.getManageDiscount());
+		if (quotetionVO.getTaxDiscount() != null) quotetionPO.setTaxDiscount(quotetionVO.getTaxDiscount());
+
 		quotetionPO.setCostPrice(quotetionVO.getCostPrice());
 
 	}

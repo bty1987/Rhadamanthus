@@ -44,6 +44,7 @@ public interface DDApi {
 
 	public static final String DDAPI_GET_DEPARTMENT_LIST_STR = "%s/department/list_parent_depts?access_token=%s&userId=%s";
 
+	public static final String DDAPI_GET_PROCESS_INSTANCE_STR = "%s/topapi/processinstance/get?access_token=%s";
 	public static final String DDAPI_CREATE_PROCESS_INSTANCE_STR = "%s/topapi/processinstance/create?access_token=%s";
 
 	public static final String DDAPI_UPLOAD_MEDIA_STR = "%s/media/upload?access_token=%s";

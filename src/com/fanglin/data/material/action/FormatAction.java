@@ -28,27 +28,43 @@ public class FormatAction extends BaseListAction {
 
 	private FormatVO format;
 
-	@Action(value = "queryFormatByGid", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	@Action(value = "pageFormat", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageFormat() throws FLException {
+
+		formatService.pageFormat(getPaging(), getFilters(), queryCompany());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryFormatByGid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryFormatByGid() {
+
 		formats = formatService.queryFormatByGid(format);
+
 		return SUCCESS;
 	}
 
-	@Action(value = "queryFormatForEnableByGid", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	@Action(value = "queryFormatForEnableByGid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryFormatForEnableByGid() {
+
 		formats = formatService.queryFormatForEnableByGid(format);
+
 		return SUCCESS;
 	}
 
-	@Action(value = "addFormat", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	@Action(value = "addFormat", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String addFormat() throws FLException {
+
 		formatService.addFormat(format);
+
 		return SUCCESS;
 	}
 
-	@Action(value = "updateFormatForStatus", results = { @Result(name = "success", type = "json", params = {"ignoreHierarchy", "false" }) }, params = { "contentType","text/html" })
+	@Action(value = "updateFormatForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateFormatForStatus() throws FLException {
+
 		formatService.updateFormatForStatus(format);
+
 		return SUCCESS;
 	}
 

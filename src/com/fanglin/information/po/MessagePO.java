@@ -18,9 +18,11 @@ public class MessagePO implements Serializable {
 
 	private static final long serialVersionUID = 7068359813579637502L;
 
+	public static final short STATUS_UNREAD_INT = 0;
+
 	public static final short STATUS_READED_INT = 1;
 
-	public static final short STATUS_UNREAD_INT = 0;
+	public static final short STATUS_NOTISSUED_INT = 2;
 
 	public static final short DRESULT_SUCCESS_INT = 0;
 
@@ -47,6 +49,8 @@ public class MessagePO implements Serializable {
 	private UserPO receiver;
 
 	private UserPO sender;
+
+	private long group;
 
 	private short type;
 
@@ -98,6 +102,15 @@ public class MessagePO implements Serializable {
 
 	public void setSender(UserPO sender) {
 		this.sender = sender;
+	}
+
+	@Column(name = "`group`")
+	public long getGroup() {
+		return group;
+	}
+
+	public void setGroup(long group) {
+		this.group = group;
 	}
 
 	@Column(nullable = false)

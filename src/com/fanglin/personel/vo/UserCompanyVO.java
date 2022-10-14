@@ -1,6 +1,9 @@
 package com.fanglin.personel.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+
+import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.system.vo.CompanyVO;
 
@@ -14,13 +17,18 @@ public class UserCompanyVO implements Serializable {
 
 	private CompanyVO company;
 
+	private UserBaseVO creater;
+
+	private Timestamp createTime;
+
 	public UserCompanyVO() {
 		super();
 	}
 
-	public UserCompanyVO(CompanyVO company) {
+	public UserCompanyVO(CompanyVO company, UserBaseVO creater) {
 		super();
 		this.company = company;
+		this.creater = creater;
 	}
 
 	public long getUcid() {
@@ -45,6 +53,23 @@ public class UserCompanyVO implements Serializable {
 
 	public void setCompany(CompanyVO company) {
 		this.company = company;
+	}
+
+	public UserBaseVO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserBaseVO creater) {
+		this.creater = creater;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
 	}
 
 }

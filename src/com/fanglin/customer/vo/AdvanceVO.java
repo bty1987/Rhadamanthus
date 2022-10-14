@@ -6,6 +6,8 @@ public class AdvanceVO implements Serializable {
 
 	private static final long serialVersionUID = -2112643806945178036L;
 
+	private String orderId;
+
 	private Long customerId;
 
 	private Long balance;
@@ -15,6 +17,14 @@ public class AdvanceVO implements Serializable {
 	private Long projectBalance;
 
 	private Long zhenglinBalance;
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
 
 	public Long getCustomerId() {
 		return customerId;

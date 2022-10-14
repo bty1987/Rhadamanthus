@@ -52,6 +52,8 @@ public class QuotationItemPO implements Serializable {
 
 	public static final short TYPE_IGNORE_INT = 3;
 
+	public static final short TYPE_UNACHE_INT = 4;
+
 	private long qiid;
 
 	private String no;
@@ -260,26 +262,19 @@ public class QuotationItemPO implements Serializable {
 
 		BeanUtil.copyProperties(this, quotationItemVO, Arrays.asList("version", "category", "classification", "bigCategory", "smallCategory", "unit", "workType"));
 
-		if (quotationItemVO.getVersion() != null)
-			BeanUtil.copyPropertie(getQuotationVersion(), quotationItemVO.getVersion());
+		if (quotationItemVO.getVersion() != null) BeanUtil.copyPropertie(getQuotationVersion(), quotationItemVO.getVersion());
 
-		if (quotationItemVO.getCategory() != null)
-			BeanUtil.copyPropertie(getQuotationType(), quotationItemVO.getCategory());
+		if (quotationItemVO.getCategory() != null) BeanUtil.copyPropertie(getQuotationType(), quotationItemVO.getCategory());
 
-		if (quotationItemVO.getClassification() != null)
-			BeanUtil.copyPropertie(getQuotationClassification(), quotationItemVO.getClassification());
+		if (quotationItemVO.getClassification() != null) BeanUtil.copyPropertie(getQuotationClassification(), quotationItemVO.getClassification());
 
-		if (quotationItemVO.getBigCategory() != null)
-			BeanUtil.copyPropertie(getQuotationBigCategory(), quotationItemVO.getBigCategory());
+		if (quotationItemVO.getBigCategory() != null) BeanUtil.copyPropertie(getQuotationBigCategory(), quotationItemVO.getBigCategory());
 
-		if (quotationItemVO.getSmallCategory() != null)
-			BeanUtil.copyPropertie(getQuotationSmallCategory(), quotationItemVO.getSmallCategory());
+		if (quotationItemVO.getSmallCategory() != null) BeanUtil.copyPropertie(getQuotationSmallCategory(), quotationItemVO.getSmallCategory());
 
-		if (quotationItemVO.getUnit() != null)
-			BeanUtil.copyPropertie(getMeasurementUnit(), quotationItemVO.getUnit());
+		if (quotationItemVO.getUnit() != null) BeanUtil.copyPropertie(getMeasurementUnit(), quotationItemVO.getUnit());
 
-		if (quotationItemVO.getWorkType() != null)
-			BeanUtil.copyPropertie(getWorkType(), quotationItemVO.getWorkType());
+		if (quotationItemVO.getWorkType() != null) BeanUtil.copyPropertie(getWorkType(), quotationItemVO.getWorkType());
 
 		return quotationItemVO;
 	}

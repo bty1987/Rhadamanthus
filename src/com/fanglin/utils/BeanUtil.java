@@ -47,17 +47,17 @@ public class BeanUtil extends org.springframework.beans.BeanUtils {
 	public static Object copy(Object source, Object target, List<String> ignores) {
 
 		if (source == null && target == null) {
-			System.out.println("target object and source object are null");
+			// System.out.println("target object and source object are null");
 			return null;
 		}
 
 		if (source == null && target != null) {
-			System.out.println(String.format("source object is null, class of target is %s", target.getClass()));
+			// System.out.println(String.format("source object is null, class of target is %s", target.getClass()));
 			return null;
 		}
 
 		if (source != null && target == null) {
-			System.out.println(String.format("target object is null, class of source is %s", source.getClass()));
+			// System.out.println(String.format("target object is null, class of source is %s", source.getClass()));
 			return null;
 		}
 
@@ -94,7 +94,7 @@ public class BeanUtil extends org.springframework.beans.BeanUtils {
 			try {
 				sourceValue = sourceReadMethod.invoke(source);
 			} catch (Exception e) {
-				System.out.println(String.format("get %s value of source object is failed, exception is <%s>", sourcePropertyDescriptor.getName(), e.getMessage()));
+				System.out.println(String.format("%s get %s value of source object is failed, exception is <%s>", source.getClass().toString(), sourcePropertyDescriptor.getName(), e.getMessage()));
 				continue;
 			}
 
@@ -111,7 +111,7 @@ public class BeanUtil extends org.springframework.beans.BeanUtils {
 			try {
 				targetWriteMethod.invoke(target, sourceValue);
 			} catch (Exception e) {
-				System.out.println(String.format("set %s value of target object is failed, exception is <%s>", targetWriteMethod.getName(), e.getMessage()));
+				System.out.println(String.format("%s set %s value of target object is failed, exception is <%s>", target.getClass().toString(), targetWriteMethod.getName(), e.getMessage()));
 				continue;
 			}
 		}

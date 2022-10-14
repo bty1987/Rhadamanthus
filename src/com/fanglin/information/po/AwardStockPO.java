@@ -16,6 +16,8 @@ public class AwardStockPO implements java.io.Serializable {
 
 	public static final short STATUS_ABLE_SHORT = 0;
 
+	public static final short STATUS_DISABLE_SHORT = 1;
+
 	public static final String STATUS_TYPE_STR = "type";
 
 	public static final String STATUS_STOREROOM_STR = "storeroom";
@@ -34,7 +36,15 @@ public class AwardStockPO implements java.io.Serializable {
 
 	public static final short ISPREFOR_CAL_INT = 0; // 计算业绩
 
+	public static final short ISPREFOR_NCAL_INT = 1; // 不计算业绩
+
 	public static final short ISSTOCK_CAL_INT = 0; // 计算库存
+
+	public static final short ISSTOCK_NCAL_INT = 1; // 不计算库存
+
+	public static final short ISPAYMENT_CAL_INT = 0; // 计入金额
+
+	public static final short ISPAYMENT_NCAL_INT = 1; // 不计入金额
 
 	public static final short STOREROOM_DECORATION_INT = 1; // 装修
 
@@ -42,7 +52,23 @@ public class AwardStockPO implements java.io.Serializable {
 
 	public static final short STOREROOM_MATERIAL_INT = 3; // 主材
 
-	public static final short ISPAYMENT_CAL_INT = 0; // 计入金额
+	public static final short SUBTYPE_BEDARTICLE_INT = 0; // 床上用品
+
+	public static final short SUBTYPE_ELECTRICAPPLIANCE_INT = 1; // 电器
+
+	public static final short SUBTYPE_KITCHENWARE_INT = 2; // 厨具
+
+	public static final short SUBTYPE_ARTICLES_INT = 3; // 日用品
+
+	public static final short SUBTYPE_CASHASSETS_INT = 4; // 现金资产
+
+	public static final short SUBTYPE_FOOD_INT = 5; // 食品
+
+	public static final short SUBTYPE_SANITARYWARE_INT = 6; // 洁具
+
+	public static final short SUBTYPE_TOOL_INT = 7; // 工具
+
+	public static final short SUBTYPE_OTHER_INT = 8; // 其他
 
 	private long asId;
 

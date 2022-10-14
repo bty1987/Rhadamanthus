@@ -80,6 +80,8 @@ public class PaymentVO implements Serializable {
 
 	private Long arId;
 
+	private String company;
+
 	public PaymentVO() {
 		super();
 	}
@@ -318,7 +320,15 @@ public class PaymentVO implements Serializable {
 		this.arId = arId;
 	}
 
-	public PaymentVO filter(List<Filter> filters) {
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
+	public PaymentVO filter(List<Filter> filters, int company) {
 
 		if (getStatus() != null) {
 			filters.add(new Filter("status", String.valueOf(getStatus()), "eq"));
@@ -326,6 +336,10 @@ public class PaymentVO implements Serializable {
 
 		if (getType() != null) {
 			filters.add(new Filter("type", String.valueOf(getType()), "eq"));
+		}
+
+		if (getCompany() != null) {
+			filters.add(new Filter("company", String.valueOf(company), "eq"));
 		}
 
 		return this;

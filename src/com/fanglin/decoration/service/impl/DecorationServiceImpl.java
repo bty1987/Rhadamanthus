@@ -84,6 +84,7 @@ import com.fanglin.right.po.DecorationSalesmanDepartmentRightPO;
 import com.fanglin.right.po.DecorationStatusRightPO;
 import com.fanglin.system.dao.CompanyDao;
 import com.fanglin.system.po.CompanyPO;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -186,7 +187,7 @@ public class DecorationServiceImpl implements DecorationService {
 
 		if (userPO == null) return;
 
-		filters.add(new Filter("statuses", statuses, "in"));
+		filters.add(new Filter("statuses", statuses, "in", Filter.RANGE_TYPE_SHORT_INT));
 
 		List<DecorationPO> decorationPOs = decorationDao.pageDecoration(paging, filters);
 		List<DecorationVO> decorationVOs = new ArrayList<DecorationVO>();
@@ -724,26 +725,16 @@ public class DecorationServiceImpl implements DecorationService {
 			throw new FLException(230015, "公司不存在");
 		}
 
+		decorationVO.setDompany(CompanyServiceImpl.encode(decorationPO.getCompany()));
+		decorationVO.setConpany(CompanyServiceImpl.encode(decorationPO.getConpany()));
+
 		return decorationVO;
 	}
 
 	@Override
 	public DecorationVO queryDecorationForCommonByOrderId(DecorationVO decorationVO, String userId) throws FLException {
 
-		List<Short> unstatus = Arrays.asList(new Short[] { DecorationPO.STATUS_SIGNED_INT, DecorationPO.STATUS_TERMINATION_INT, DecorationPO.STATUS_COMPLETED_INT });
-
 		decorationVO = queryDecorationByOrderId(decorationVO.getOrderId());
-
-		Short status = decorationVO.getStatus();
-
-		if (!unstatus.contains(status)) {
-
-			UserPO userPO = userDao.queryUserByUserId(userId);
-
-			if (userPO != null && !userPO.getDept().getName().contains("客服")) {
-				decorationVO.getCustomer().setConfidentialInfo();
-			}
-		}
 
 		return decorationVO;
 	}

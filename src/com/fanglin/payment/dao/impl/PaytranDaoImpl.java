@@ -32,24 +32,32 @@ public class PaytranDaoImpl extends DaoImpl<PaytranPO> implements PaytranDao {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<PaytranPO> queryPaytran(String orderId, Short type, Long rid, Long pid) {
+	public List<PaytranPO> queryPaytran(String orderId, Short type, Short atttype, Long rid, Long pid, Short status) {
 
 		Criteria criteria = session().createCriteria(PaytranPO.class);
 
 		if (orderId != null) {
-			criteria.add(Restrictions.eq("orderId", orderId));
+			criteria.add(Restrictions.eq(PaytranPO.COLUMN_ORDERID_STR, orderId));
 		}
 
 		if (type != null) {
-			criteria.add(Restrictions.eq("type", type));
+			criteria.add(Restrictions.eq(PaytranPO.COLUMN_TYPE_STR, type));
+		}
+
+		if (atttype != null) {
+			criteria.add(Restrictions.eq(PaytranPO.COLUMN_ATTTYPE_STR, atttype));
 		}
 
 		if (rid != null) {
-			criteria.add(Restrictions.eq("rid", rid));
+			criteria.add(Restrictions.eq(PaytranPO.COLUMN_RID_STR, rid));
 		}
 
 		if (pid != null) {
-			criteria.add(Restrictions.eq("pid", pid));
+			criteria.add(Restrictions.eq(PaytranPO.COLUMN_PID_STR, pid));
+		}
+
+		if (status != null) {
+			criteria.add(Restrictions.eq(PaytranPO.COLUMN_STATUS_STR, status));
 		}
 
 		return criteria.list();
@@ -96,13 +104,15 @@ public class PaytranDaoImpl extends DaoImpl<PaytranPO> implements PaytranDao {
 				if ("sn".equals(field)) {
 					query.add(query.getCriterion(field, data, op));
 				} else if ("paymentType".equals(field)) {
-					query.add(query.getCriterion("type", Short.valueOf(data), op));
+					query.add(query.getCriterion(PaytranPO.COLUMN_TYPE_STR, Short.valueOf(data), op));
 				} else if ("createTime".equals(field)) {
 					query.timeranges(field, field, data);
 				} else if ("status".equals(field)) {
 					query.add(query.getCriterion(field, Short.valueOf(data), op));
 				} else if ("creater".equals(field)) {
-					query.add(Restrictions.eq("creater.userId", data));
+					query.add(Restrictions.eq(PaytranPO.COLUMN_CUSERID_STR, data));
+				} else if ("orderId".equals(field)) {
+					query.add(query.getCriterion(field, data, op));
 				}
 			}
 		}
