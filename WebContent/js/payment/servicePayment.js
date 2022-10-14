@@ -3,7 +3,7 @@ jQuery(function($) {
 		htmlName: "service",
 		type: params['urlLoadParams'].paytype,
 		paytypes: [],
-		paymentStatusArray: ["未付款", "已付款", "已确认"],
+		paymentStatusArray: constant.payment.materialPayment.status.keys,
 		payment: null,
 
 		items: {
@@ -48,7 +48,7 @@ jQuery(function($) {
 
 			checkvAdd: com.focusPage("#checkvAdd", "#servicePayment"),
 			couponAdd: com.focusPage("#couponAdd", "#servicePayment"),
-			posPush: com.focusPage("#posSend", "#servicePayment")
+			createPaytran: com.focusPage("#createPaytran", "#servicePayment")
 		},
 
 		modals: {
@@ -77,7 +77,9 @@ jQuery(function($) {
 		extraParams: {},
 		functions: [],
 		isCollect: "",
-		pageConfig: {}
+		pageConfig: {},
+		typeNo: 4,
+		atttype: 0
 	};
 
 	//隐藏触发
@@ -98,9 +100,7 @@ jQuery(function($) {
 		com.closeTip();
 	});
 
-	com.post(api.ds.payment, {}, function(res){
-		servicePayment.items.posway.bindData(res.posway, "key", "value");
-	});
+	servicePayment.items.posway.bindData(constant.payment.receiptType.posway.datas, "key", "value");
 
 	com.focusPage("#collectModal :checkbox", "#servicePayment").on("change", function(){
 
@@ -127,8 +127,8 @@ jQuery(function($) {
 
 	servicePayment.btns.collectBtn.bindClick(collect);
 
-	servicePayment.btns.posPush.unbind().click(function(){
-		paymentUtils.pushPos(servicePayment, 4,  servicePayment.payment.decoration.orderId);
+	servicePayment.btns.createPaytran.unbind().click(function(){
+		paymentUtils.pushPos(servicePayment, servicePayment.payment.decoration.orderId);
 		return false;
 	});
 
@@ -158,7 +158,7 @@ jQuery(function($) {
 			if (servicePayment.pageConfig.pageBtn.contains("selectall")) $input.appendTo($label);
 
 			var $span = $('<span></span>').addClass('lbl blue bigger-150').html('服务款').appendTo($label);
-			if (!(["common", "pos"].contains(servicePayment.type))) $span.html(v.type == 0 ? '收款' : '退款');
+			if (!(["common", "pos"].contains(servicePayment.type))) $span.html(v.type == constant.payment.servicePayment.TYPE_COLLECT_INT ? '收款' : '退款');
 			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
@@ -184,8 +184,8 @@ jQuery(function($) {
 
 			if (servicePayment.pageConfig.pageBtn.contains("serviceCollect")) $divBtnWrap.append($btnService);
 			if (servicePayment.pageConfig.pageBtn.contains("serviceRefund")) $divBtnWrap.append($btnRefunds);
-			if (v.status != 0 && servicePayment.pageConfig.pageBtn.contains("print")) $divBtnWrap.append($btnPrint);
-			if (v.status == 1 && servicePayment.pageConfig.pageBtn.contains("update")) $divBtnWrap.append($btnUpdate);
+			if (v.status != constant.payment.materialPayment.STATUS_INIT_INT && servicePayment.pageConfig.pageBtn.contains("print")) $divBtnWrap.append($btnPrint);
+			if (v.status == constant.payment.materialPayment.STATUS_COLLECT_INT && servicePayment.pageConfig.pageBtn.contains("update")) $divBtnWrap.append($btnUpdate);
 
 			//服务费收款
 			$btnService.click(function(){
@@ -196,7 +196,7 @@ jQuery(function($) {
                     com.showAlert(com.error, "当前服务费已交满,不能重复交款!");
                     return false;
                 }
-				paymentUtils.showPos(servicePayment, {"paytran.orderId": v.decoration.orderId}, [0, 1]);
+				paymentUtils.showPos(servicePayment, {"paytran.orderId": v.decoration.orderId, "paytran.atttype": servicePayment.atttype}, [0, 1]);
 				initCollect(v);
 			});
 
@@ -483,27 +483,13 @@ jQuery(function($) {
 				list: res.paging.data
 			}, function(v){
 				if(v.serviceReceipt.bank != null && v.serviceReceipt.bank != 0){
-					var $info = ' ';
-					var _s = v.serviceReceipt.bankInfo.split('#');
-					for(var i=1;i<_s.length-1;i++){
-						var _i = _s[i].split('|');
-						$info += servicePayment.bankInfo[_i[0]] + " " + _i[1] + ", " + _i[2] + ", ";
-					}
-
-					v.serviceReceipt.bankInfo = $info;
+					v.serviceReceipt.bankInfo = paymentUtils.splitBankInfo('', v.serviceReceipt.bankInfo, servicePayment.bankInfo, true);
 				}
 
 				if(v.serviceReceipt.checkv != null && v.serviceReceipt.checkv != 0){
 					var checkvInfoStr = v.serviceReceipt.checkvBank;
 					if(checkvInfoStr.indexOf("#") != -1){
-						var $checkvInfo = ' ';
-						var _c = v.serviceReceipt.checkvBank.split('#');
-						for(var i=1;i<_c.length-1;i++){
-							var _i = _c[i].split('|');
-							$checkvInfo += servicePayment.checkvInfo[_i[0]] + " " + _i[1] + ", " + _i[2] + ", ";
-						}
-
-						v.serviceReceipt.checkvBank = $checkvInfo;
+						v.serviceReceipt.checkvBank = paymentUtils.splitBankInfo('', v.serviceReceipt.checkvBank, servicePayment.checkvInfo, true);
 					}else{
 						v.serviceReceipt.checkvBank = v.serviceReceipt.checkv != null && v.serviceReceipt.checkv != "0" ? servicePayment.checkvInfo[v.serviceReceipt.checkvBank] : '';
 					}

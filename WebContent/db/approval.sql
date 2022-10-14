@@ -4,6 +4,7 @@ USE `approval`;
 DROP TABLE IF EXISTS `approval`;
 CREATE TABLE `approval` (
   `aid` int(11) NOT NULL AUTO_INCREMENT,
+  `orderId` varchar(15) DEFAULT '' COMMENT '装修单号',
   `ruid` int(11) DEFAULT NULL COMMENT '接收人ID',
   `suid` int(11) NOT NULL COMMENT '发送人ID',
   `type` tinyint(1) NOT NULL COMMENT '类型,1: 客户信息修改, 2: 楼盘信息修改, 3: 装修单归属修改, 4: 报价折扣修改, 5: 装修退款, 6: 主材退货, 7: 主材场外退款, 8: 装修活动申请, 9: 主材补款提交, 10: 销售退货, 11: 商品库存调拨',
@@ -19,7 +20,8 @@ CREATE TABLE `approval` (
   PRIMARY KEY (`aid`),
   KEY `indexone` (`ruid`),
   KEY `indextwo` (`suid`),
-  KEY `indexthr` (`ident`)
+  KEY `indexthr` (`ident`),
+  KEY `indexfor` (`createTime`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='审批表';
 
 DROP TABLE IF EXISTS `approvalcustomer`;
@@ -230,7 +232,7 @@ CREATE TABLE `approvalsalesrefund` (
   `aid` int(11) NOT NULL,
   `sid` int(11) NOT NULL,
   `refund` bigint(10) NOT NULL,
-  `type` tinyint(4) NOT NULL,
+  `type` tinyint(1) NOT NULL,
   PRIMARY KEY (`asrid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售退货审批表';
 

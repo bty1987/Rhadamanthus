@@ -1,10 +1,10 @@
-$(function(){
+$(function() {
 
     var worksheet = {
 
         saveBtn: com.focusPage("#saveBtn"),
         handBtn: com.focusPage("#handBtn"),
-        cancelBtn : com.focusPage("#cancelBtn"),
+        cancelBtn: com.focusPage("#cancelBtn"),
 
         modals: {
             addWorksheetModal: com.focusPage("#addWorksheetModal"),
@@ -12,36 +12,35 @@ $(function(){
         },
         items: {
             module: com.focusPage("#module"),
-            content : com.focusPage("#content"),
+            content: com.focusPage("#content"),
             result: com.focusPage("#result")
         },
 
         wsid: null,
 
-        status:{},
+        status: {},
 
     };
 
     worksheet.saveBtn.bindClick(saveData);
     worksheet.handBtn.bindClick(handData);
 
-    com.focusPage(".modal").on("hide.bs.modal", function () {
+    com.focusPage(".modal").on("hide.bs.modal", function() {
+
         com.clearValidator();
         com.cleanItems(worksheet.items);
     });
 
-    com.post(api.ds.information, {}, function (res) {
-        worksheet.status = res.worksheetStatus.split("key", "value");
-    });
+    var displayFunc = (function() {
 
-    var displayFunc  = (function(){
+        var renderList = function(tableId, listData) {
 
-        var renderList = function(tableId,listData){
             var $tableWrap = com.focusPage('#' + tableId).empty();
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-            if(listData && listData.length){
-                $.each(listData,function(i, v){
+            if (listData && listData.length) {
+                $.each(listData, function(i, v) {
+
                     var $liLine = creatLine(v);
 
                     $liLine.appendTo($ul);
@@ -51,7 +50,7 @@ $(function(){
             }
         };
 
-        var creatLine = function(v){
+        var creatLine = function(v) {
 
             var $liLine = $('<li></li>').addClass('item-blue clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.module));
@@ -64,39 +63,37 @@ $(function(){
             var createTime = v.createTime.replace('T', ' ');
             var handTime = handTime == null ? v.handTime : v.handTime.replace('T', ' ');
 
-            var propertyArr = [
-                ["单号:", v.code, "grey"],
-                ["内容:", v.content, "grey"],
-                ["创建人:", v.creater.currentName, "grey"],
-                ["创建时间:", createTime, "green"],
-                ["处理人:", v.handler.currentName, "grey"],
-                ["处理时间:", handTime, "green"],
-                ["状态:", worksheet.status[v.status], "red"],
-                ["结果:", v.result, "grey" ]
-            ];
+            var propertyArr = [["单号:", v.code, "grey"], ["内容:", v.content, "grey"], ["创建人:", v.creater.currentName, "grey"], ["创建时间:", createTime, "green"], ["处理人:", v.handler.currentName, "grey"], ["处理时间:", handTime, "green"], ["状态:", constant.information().worksheet.status.keys[v.status], "red"], ["结果:", v.result, "grey"]];
 
-            $.each(propertyArr, function (index,value) {
+            $.each(propertyArr, function(index, value) {
+
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                 $liProperty.appendTo($ulProperty);
             });
 
-            if(v.status == 0)
+            if (v.status == constant.information().worksheet.STATUS_INIT_INT)
                 $divBtnWrap.append($btnCancel).append($btnHanl).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
-            $btnCancel.click(function () {
+            $btnCancel.click(function() {
+
                 com.showConfirm("确定取消吗?", function(reslut) {
-                    com.post(api.information.cancelWorksheet, {"worksheet.wsid": v.wsid}, function(res){
+
+                    com.post(api.information.cancelWorksheet, {
+                        "worksheet.wsid": v.wsid
+                    }, function(res) {
+
                         worksheetSeacher.doSearch();
                         com.showAlert(com.info, "操作成功");
                     });
                 });
             });
 
-            $btnHanl.click(function () {
+            $btnHanl.click(function() {
+
                 worksheet.wsid = v.wsid;
                 worksheet.modals.handWorksheetModal.modal("show");
             });
@@ -105,20 +102,23 @@ $(function(){
         };
 
         return {
-            init : function(tableId,listData){
+            init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
+                renderList(tableId, listData);
             },
-            drawLine : function(v){
+            drawLine: function(v) {
+
                 return creatLine(v);
             }
         };
     })();
 
     var worksheetSeacher = new Searcher();
-    worksheetSeacher.init( ['information-worksheet-code', 'information-worksheet-status', 'information-worksheet-creater', 'information-worksheet-handler'], "condList", api.information.pageWorksheet, function(list){
+    worksheetSeacher.init(['information-worksheet-code', 'information-worksheet-status', 'information-worksheet-creater', 'information-worksheet-handler'], "condList", api.information.pageWorksheet, function(list) {
+
         displayFunc.init('resultList', list);
-    }, "pagenation", "worksheetSeacherPostData", null, false, null, function(){
+    }, "pagenation", "worksheetSeacherPostData", null, false, null, function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addWorksheet').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -128,19 +128,22 @@ $(function(){
     });
 
     com.focusPage("#addWorksheet").click(function() {
+
         worksheet.modals.addWorksheetModal.modal("show");
     });
 
-    function saveData(){
+    function saveData() {
 
-        if(com.validate('addWorksheetModal')) return false;
+        if (com.validate('addWorksheetModal'))
+            return false;
 
         var options = {
             "worksheet.module": worksheet.items.module.val(),
             "worksheet.content": worksheet.items.content.val()
         };
 
-        com.post(api.information.addWorksheet, options, function(res){
+        com.post(api.information.addWorksheet, options, function(res) {
+
             worksheetSeacher.doSearch();
             com.showAlert(com.info, "操作成功");
         });
@@ -149,14 +152,16 @@ $(function(){
 
     function handData() {
 
-        if(com.validate('handWorksheetModal')) return false;
+        if (com.validate('handWorksheetModal'))
+            return false;
 
         var options = {
             "worksheet.wsid": worksheet.wsid,
             "worksheet.result": worksheet.items.result.val()
         };
 
-        com.post(api.information.handleWorksheet, options, function(res){
+        com.post(api.information.handleWorksheet, options, function(res) {
+
             worksheetSeacher.doSearch();
             com.showAlert(com.info, "操作成功");
         });

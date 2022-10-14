@@ -4,31 +4,38 @@
         saveBtn: null,
         cancellBtn: null,
         saveBtnRepair: null,
+
         modal: null,
-        orderItems: {},
+
         typeness: {},
         sourceStatus: {},
-        decorationOrderStatus: {},
+        decorationStatus: {},
         repairStatus: {},
         balanceStatus: {},
 
         orderStatus: [],
         businessDepartments: [],
         postParam: {},
+
         repairModal: null,
 
         editFlag: false,
-        infoItems: {},
-        repairStatusItem: com.focusPage("#repairStatusItem"),
 
         paymentTypes: {},
         violation: com.focusPage("#violation"),
 
-        drawContractItems: {
+        signItems: {
             coupon: com.focusPage("#coupon"),
             thing: com.focusPage("#thing"),
             netperfor: com.focusPage("#netperfor"),
-            comperfor: com.focusPage("#comperfor")
+            comperfor: com.focusPage("#comperfor"),
+            conpanyName: com.focusPage("#conpanyName", "#drawContractModal"),
+            conpany: com.focusPage("#conpany", "#drawContractModal"),
+        },
+        orderItems: {},
+        infoItems: {},
+        repairItems: {
+            status: com.focusPage("#repairStatus"),
         },
 
         projectStatusArr: {},
@@ -36,8 +43,9 @@
 
     };
 
-    order.cancelBtn = com.focusPage("#cancelBtn");
     order.saveBtnRepair = com.focusPage("#saveBtnRepair");
+    order.contractBtn = com.focusPage("#contractBtn");
+
     order.decorationModal = com.focusPage("#decorationModal");
     order.agreementModal = com.focusPage("#agreementModal");
     order.drawLineModal = com.focusPage("#drawLineModal");
@@ -45,13 +53,12 @@
     order.customerInfoModal = com.focusPage("#customerInfoModal");
     order.drawContractModal = com.focusPage("#drawContractModal");
     order.prosignModal = com.focusPage("#prosignModal");
-    order.contractBtn = com.focusPage("#contractBtn");
     order.repairModal = com.focusPage("#repairModal");
 
     // 签订合同
     order.drawContractModal.on('hide.bs.modal', function(e) {
 
-        com.cleanItems(order.drawContractItems);
+        com.cleanItems(order.signItems);
         com.closeTip();
     });
 
@@ -83,6 +90,7 @@
         com.closeTip();
     });
 
+    order.infoItems.conpanyName = com.focusPage("#conpanyName");
     order.infoItems.timeLimit = com.focusPage("#timeLimit");
     order.infoItems.quoteArea = com.focusPage("#quoteArea");
     order.infoItems.ishovel = com.focusPage("#ishovel");
@@ -99,6 +107,7 @@
     order.infoItems.prosignPrice = com.focusPage("#prosignPrice");
     order.infoItems.balance = com.focusPage("#balance");
     order.infoItems.deocBalance = com.focusPage("#deocBalance");
+    order.infoItems.dlmConpany = com.focusPage("#dlmConpany");
 
     com.datetime(order.infoItems.finishTime);
     com.datetime(order.infoItems.keyTime);
@@ -127,7 +136,7 @@
     com.focusPage("#applayDrawLineBtn").on("click", function() {
 
         if (com.validate("drawLineModal")) {
-            return;
+            return false;
         }
         com.showConfirm("确认申请放线吗?", function() {
 
@@ -136,6 +145,10 @@
                 "drawLine.applayTime": order.infoItems.applayTime.val() + " 00:00:00",
                 "drawLine.decoration.orderId": com.focusPage("#dischargeLineOrderId").val(),
             };
+
+            if (order.infoItems.dlmConpany.val()) {
+                options["drawLine.decoration.dompany"] = order.infoItems.dlmConpany.val();
+            }
 
             com.post(api.construction.applayDrawLine, options);
 
@@ -296,54 +309,39 @@
             "constructionInfo.isConfirmPricture": 1
         };
 
+        if (order.infoItems.dlmConpany.val()) {
+            options["constructionInfo.decoration.conpany"] = order.infoItems.dlmConpany.val();
+        }
+
         com.post(api.construction.updateConstructionInfoByOrderId, options, function(res) {
 
             com.showAlert(com.info, "操作成功");
         });
     });
 
-    com.post(api.ds.construction, {}, function(res) {
+    order.infoItems.ishovel.bindData(constant.construction().constructionInfo.isHovel.datas, "key", "value", false);
+    order.infoItems.iskey.bindData(constant.construction().constructionInfo.isKey.datas, "key", "value", false);
+    order.infoItems.isCeremony.bindData(constant.construction().constructionInfo.isCeremony.datas, "key", "value", false);
+    order.projectStatusArr = constant.decoration.decoration.projectStatus.keys;
 
-        order.infoItems.ishovel.bindData(res.isHovel, "key", "value", false);
-        order.infoItems.iskey.bindData(res.isKey, "key", "value", false);
-        order.infoItems.isCeremony.bindData(res.isCeremony, "key", "value", false);
+    com.post(api.system.queryCompany, {
+        "company.atttype": "3"
+    }, function(res) {
 
-        $.each(res.constructionSchedule, function(i, v) {
-
-            order.projectStatusArr[v.key] = v.value;
-        });
+        order.infoItems.dlmConpany.bindData(res.companys, "cid", "name", false);
+        order.signItems.conpany.bindData(res.companys, "cid", "name", false);
     });
 
-    com.post(api.ds.decoration, {}, function(res) {
+    order.repairItems.status.bindData(constant.decoration.decoration.repairStatus.datas, "key", "value");
 
-        order.repairStatusItem.bindData(res.repairStatus, "key", "value");
-        $.each(res.decorationOrderStatus, function(i, v) {
+    order.decorationStatus = constant.decoration.decoration.status.keys;
+    order.typeness = constant.decoration.decoration.typeness.keys;
+    order.sourceStatus = constant.decoration.decoration.sourceStatus.keys;
+    order.designStatusArr = constant.decoration.decoration.designStatus.keys;
+    order.repairStatus = constant.decoration.decoration.repairStatus.keys;
+    order.balanceStatus = constant.decoration.decoration.balanceStatus.keys;
 
-            order.decorationOrderStatus[v.key] = v.value;
-        });
-        $.each(res.typeness, function(i, v) {
-
-            order.typeness[v.key] = v.value;
-        });
-        $.each(res.sourceStatus, function(i, v) {
-
-            order.sourceStatus[v.key] = v.value;
-        });
-        $.each(res.designStatus, function(i, v) {
-
-            order.designStatusArr[v.key] = v.value;
-        });
-        $.each(res.repairStatus, function(i, v) {
-
-            order.repairStatus[v.key] = v.value;
-        });
-        $.each(res.balanceStatus, function(i, v) {
-
-            order.balanceStatus[v.key] = v.value;
-        });
-
-    }, null, false);
-
+    // 合同终止内违约金显示
     com.post(api.data.queryPaymentType, {
         "paymentType.type": 1,
         "paymentType.atttype": 4
@@ -352,11 +350,14 @@
         $.each(res.paymentTypes, function(i, v) {
 
             var $div = $('<div class="form-group"></div>');
+
             $('<label for="refundValue" class="col-sm-3 control-label no-padding-right"></label>').html(v.name).appendTo($div);
             $('<div class="col-sm-9"></div>').append($('<input id="backup_' + v.ptid + '" class="col-xs-10 col-sm-5 v_required v_float_3" type="text" data-toggle="popover" data-trigger="manual"/>')).appendTo($div);
 
             order.violation.append($div);
             order.paymentTypes[v.ptid] = v.name;
+            order.infoItems["backup_" + v.ptid] = com.focusPage("#backup_" + v.ptid);
+
         });
     }, null, false);
 
@@ -416,8 +417,8 @@
                             case "villageName":
                                 propertyArr.push(["楼盘:", (v.house.village.cityProper.city.name == null ? " " : v.house.village.cityProper.city.name) + " " + (v.house.village.cityProper == null ? " " : v.house.village.cityProper.name) + " " + v.house.village.name, "grey"]);
                                 break;
-                            case "houseNumber":
-                                if ([2, 3, 4, 6, 7].contains(v.status)) {
+                            case "houseNumber":// 2, 3, 4, 6, 7
+                                if ([constant.decoration.decoration.STATUS_PROSIGN_INT, constant.decoration.decoration.STATUS_SIGNED_INT, constant.decoration.decoration.STATUS_RESIGNED_INT, constant.decoration.decoration.STATUS_TERMINATION_INT, constant.decoration.decoration.STATUS_FINAL_INT].contains(v.status)) {
                                     propertyArr.push(["楼号:", (v.house.houseNumber == null ? " " : v.house.houseNumber), "grey"]);
                                 }
                                 break;
@@ -452,7 +453,12 @@
                                 propertyArr.push(["报价额:", v.quotationPrice, "blue"]);
                                 break;
                             case "couponCut":
-                                propertyArr.push(["券优惠:", v.couponCut, "blue"]);
+                                var _text = $("<text>券优惠:</text>");
+                                var _info = $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
+
+                                    couponCut(_text, v.orderId);
+                                });
+                                propertyArr.push([_text, v.couponCut, "blue", _info]);
                                 break;
                             case "factPrice":
                                 propertyArr.push(["实收额:", v.factPrice, "blue"]);
@@ -480,7 +486,7 @@
                                 propertyArr.push(["类型:", order.typeness[v.typeness], "red"]);
                                 break;
                             case "decorationStatus":
-                                propertyArr.push(["状态:", order.decorationOrderStatus[v.status], "red"]);
+                                propertyArr.push(["状态:", order.decorationStatus[v.status], "red"]);
                                 break;
                             case "sourceStatus":
                                 propertyArr.push(["确认状态:", order.sourceStatus[v.sourceStatus], "red"]);
@@ -517,10 +523,13 @@
 
                     $.each(propertyArr, function(index, value) {
 
-                        var $liProperty = $('<li></li>');
+                        var $liProperty = $('<li></li>').appendTo($ulProperty);
+
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
                         $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                        $liProperty.appendTo($ulProperty);
+
+                        if (value.length == 4)
+                            $('<span></span>').html(value[3]).appendTo($liProperty);
                     });
 
                     btnView.click(function() {
@@ -660,23 +669,25 @@
 
                         balanceOrder(v.orderId);
                     });
+
                     btnRepair.click(function() {
 
                         repairOrder(v.orderId);
                     });
+
                     $.each(pageConfig.pageBtn, function(k, b) {
 
                         switch (b) {
                             case "view":// 查看
                                 $divBtnWrap.append(btnView);
                                 break;
-                            case "prosign":// 预签
-                                if ([0, 1].indexOf(v.status) != -1) {
+                            case "prosign":// 预签 (1 ,2)
+                                if ([constant.decoration.decoration.STATUS_INIT_INT, constant.decoration.decoration.STATUS_DEPOSIT_INT].indexOf(v.status) != -1) {
                                     $divBtnWrap.append(btnProsign);
                                 }
                                 break;
-                            case "pcontract":// 预签合同
-                                if ([0, 1].indexOf(v.status) != -1) {
+                            case "pcontract":// 预签合同 (1 ,2)
+                                if ([constant.decoration.decoration.STATUS_INIT_INT, constant.decoration.decoration.STATUS_DEPOSIT_INT].indexOf(v.status) != -1) {
                                     $divBtnWrap.append(btnPcontract);
                                 }
                                 break;
@@ -686,21 +697,21 @@
                             case "line":// 放线
                                 $divBtnWrap.append(btnLine);
                                 break;
-                            case "contract":// 合同
-                                if ([0, 1, 2, 3, 4, 8].indexOf(v.status) != -1) {
+                            case "contract":// 合同 (0, 1, 2, 3, 4, 8)
+                                if ([constant.decoration.decoration.STATUS_INIT_INT, constant.decoration.decoration.STATUS_DEPOSIT_INT, constant.decoration.decoration.STATUS_PROSIGN_INT, constant.decoration.decoration.STATUS_SIGNED_INT, constant.decoration.decoration.STATUS_RESIGNED_INT, constant.decoration.decoration.STATUS_COMPLETED_INT].indexOf(v.status) != -1) {
                                     $divBtnWrap.append(btnContract);
                                 }
                                 break;
-                            case "contractc":// 合同(设计)
-                                if ([0, 1, 2, 3, 4, 8].indexOf(v.status) != -1) {
+                            case "contractc":// 合同(设计) (0, 1, 2, 3, 4, 8)
+                                if ([constant.decoration.decoration.STATUS_INIT_INT, constant.decoration.decoration.STATUS_DEPOSIT_INT, constant.decoration.decoration.STATUS_PROSIGN_INT, constant.decoration.decoration.STATUS_SIGNED_INT, constant.decoration.decoration.STATUS_RESIGNED_INT, constant.decoration.decoration.STATUS_COMPLETED_INT].indexOf(v.status) != -1) {
                                     $divBtnWrap.append(btnContractc);
                                 }
                                 break;
                             case "scal":// 扣款
                                 $divBtnWrap.append(btnScal);
                                 break;
-                            case "price":// 报价
-                                if ([0, 1, 2, 4].indexOf(v.status) != -1) {
+                            case "price":// 报价 (0, 1, 2, 4)
+                                if ([constant.decoration.decoration.STATUS_INIT_INT, constant.decoration.decoration.STATUS_DEPOSIT_INT, constant.decoration.decoration.STATUS_PROSIGN_INT, constant.decoration.decoration.STATUS_RESIGNED_INT].indexOf(v.status) != -1) {
                                     $divBtnWrap.append(btnPrice);
                                 }
                                 break;
@@ -710,31 +721,31 @@
                             case "selection":// 选材
                                 $divBtnWrap.append(btnSelect);
                                 break;
-                            case "btnAddReduce":// 增减项
-                                if ([3, 8].indexOf(v.status) != -1) {
+                            case "btnAddReduce":// 增减项 (3, 8)
+                                if ([constant.decoration.decoration.STATUS_SIGNED_INT, constant.decoration.decoration.STATUS_COMPLETED_INT].indexOf(v.status) != -1) {
                                     $divBtnWrap.append(btnAddReduce);
                                 }
                                 break;
-                            case "btnAddReduceD":// 增减项
-                                if ([3, 8].indexOf(v.status) != -1) {
+                            case "btnAddReduceD":// 增减项 (3, 8)
+                                if ([constant.decoration.decoration.STATUS_SIGNED_INT, constant.decoration.decoration.STATUS_COMPLETED_INT].indexOf(v.status) != -1) {
                                     $divBtnWrap.append(btnAddReduceD);
                                 }
                                 break;
-                            case "btnAddReduceM":// 增减项
-                                if ([3, 8].indexOf(v.status) != -1) {
+                            case "btnAddReduceM":// 增减项 (3, 8)
+                                if ([constant.decoration.decoration.STATUS_SIGNED_INT, constant.decoration.decoration.STATUS_COMPLETED_INT].indexOf(v.status) != -1) {
                                     $divBtnWrap.append(btnAddReduceM);
                                 }
                                 break;
-                            case "extension":// 扩展项
-                                if ([0, 1, 2, 3, 4, 8].indexOf(v.status) != -1) {
+                            case "extension":// 扩展项 (0, 1, 2, 3, 4, 8)
+                                if ([constant.decoration.decoration.STATUS_INIT_INT, constant.decoration.decoration.STATUS_DEPOSIT_INT, constant.decoration.decoration.STATUS_PROSIGN_INT, constant.decoration.decoration.STATUS_SIGNED_INT, constant.decoration.decoration.STATUS_RESIGNED_INT, constant.decoration.decoration.STATUS_COMPLETED_INT].indexOf(v.status) != -1) {
                                     $divBtnWrap.append(btnExtension);
                                 }
                                 break;
                             case "info":// 信息周
                                 $divBtnWrap.append(btnInfo);
                                 break;
-                            case "cal":// 决算
-                                if ([3, 7, 8].indexOf(v.status) != -1) {
+                            case "cal":// 决算 (3, 7, 8)
+                                if ([constant.decoration.decoration.STATUS_SIGNED_INT, constant.decoration.decoration.STATUS_FINAL_INT, constant.decoration.decoration.STATUS_COMPLETED_INT].indexOf(v.status) != -1) {
                                     $divBtnWrap.append(btnCal);
                                 }
                                 break;
@@ -747,23 +758,23 @@
                             case "sctivity":// 活动物品
                                 $divBtnWrap.append(btnSctivity);
                                 break;
-                            case "delete":// 废单
-                                if (v.status != 3 && v.status != 5 && v.status != 6) {
+                            case "delete":// 废单 (3, 5, 6)
+                                if (v.status != constant.decoration.decoration.STATUS_SIGNED_INT && v.status != constant.decoration.decoration.STATUS_WASTE_INT && v.status != constant.decoration.decoration.STATUS_TERMINATION_INT) {
                                     $divBtnWrap.append(btnDelete);
                                 }
                                 break;
-                            case "sign":// 签订合同
-                                if ([1, 2, 4].indexOf(v.status) != -1) {
+                            case "sign":// 签订合同 (1, 2, 4)
+                                if ([constant.decoration.decoration.STATUS_DEPOSIT_INT, constant.decoration.decoration.STATUS_PROSIGN_INT, constant.decoration.decoration.STATUS_RESIGNED_INT].indexOf(v.status) != -1) {
                                     $divBtnWrap.append(btnSign);
                                 }
                                 break;
-                            case "terminal":// 合同终止
-                                if ([2, 3].indexOf(v.status) != -1) {
+                            case "terminal":// 合同终止 (2, 3)
+                                if ([constant.decoration.decoration.STATUS_PROSIGN_INT, constant.decoration.decoration.STATUS_SIGNED_INT].indexOf(v.status) != -1) {
                                     $divBtnWrap.append(btnTerminal);
                                 }
                                 break;
-                            case "resign":// 重新签合同
-                                if (v.status == 3) {
+                            case "resign":// 重新签合同 (3)
+                                if (v.status == constant.decoration.decoration.STATUS_SIGNED_INT) {
                                     $divBtnWrap.append(btnResign);
                                 }
                                 break;
@@ -866,11 +877,20 @@
             com.focusPage("#designerName").html(v.designer.currentName == null ? "暂无" : v.designer.currentName);
             com.focusPage("#salesmanName").html(v.salesman.currentName == null ? "暂无" : v.salesman.currentName);
 
+            var decoration = null;
+
             com.post(api.decoration.queryDecorationForCommonByOrderId, {
                 "decoration.orderId": v.orderId
             }, function(res) {
 
-                order.infoItems.quoteArea.val(res.decoration.house.quoteArea);
+                decoration = res.decoration;
+            }, null, false);
+
+            com.post(api.system.queryCompanyByCid, {
+                "company.cid": decoration.conpany
+            }, function(res) {
+
+                com.focusPage("#conpanyName").html(res.company.name);
             });
 
             com.post(api.construction.queryConstructionInfoByOrderId, {
@@ -879,6 +899,8 @@
 
                 var datas = result.constructionInfo;
 
+                order.infoItems.dlmConpany.val(0);
+                order.infoItems.quoteArea.val(decoration.house.quoteArea);
                 order.infoItems.timeLimit.val(datas.timeLimit);
                 order.infoItems.ishovel.val(datas.ishovel);
                 order.infoItems.iskey.val(datas.iskey);
@@ -953,10 +975,55 @@
             com.switchPage(api.index.extensionIndex.url);
         };
 
+        // 券优惠
+        var couponCut = function(btn, orderId) {
+
+            com.post(api.decoration.queryDecorationActivityItem, {
+                "decoration.orderId": orderId
+            }, function(res) {
+
+                var decorationActivityItems = res.decorationActivityItems;
+
+                var couponCut1 = 0;
+                var couponCut2 = 0;
+                var couponCut3 = 0;
+                var couponCut4 = 0;
+                var thingCut = 0;
+
+                for ( var i = 0; i < decorationActivityItems.length; i++) { // 0: 初始 , 1: 失效 , 2: 已领 , 3: 退货 , 4: 配送 , 5: 未退 , 6: 升级 , 7: 补款
+
+                    var item = decorationActivityItems[i];
+
+                    if (item.type == 0 && [constant.decoration.decorationActivityItem.STATUS_INIT_INT, constant.decoration.decorationActivityItem.STATUS_RECEIVE_INT, constant.decoration.decorationActivityItem.STATUS_DELIVERY_INT, constant.decoration.decorationActivityItem.STATUS_WAIT_INT, constant.decoration.decorationActivityItem.STATUS_UPGRADE_INT].indexOf(item.state) != -1 && item.isPrefor == constant.decoration.decorationActivityItem.ISAFFIRM_INITIA_INT) {// 0卷, 02456状态, 0计业绩
+                        couponCut1 = utils.accAdd(couponCut1, utils.accMul(item.money, item.num));
+                    } else if (item.type == 1 && [constant.decoration.decorationActivityItem.STATUS_INIT_INT, constant.decoration.decorationActivityItem.STATUS_RECEIVE_INT, constant.decoration.decorationActivityItem.STATUS_DELIVERY_INT, constant.decoration.decorationActivityItem.STATUS_WAIT_INT, constant.decoration.decorationActivityItem.STATUS_UPGRADE_INT].indexOf(item.state) != -1 && item.isPrefor == constant.decoration.decorationActivityItem.ISAFFIRM_INITIA_INT) {// 1物品, 02456状态, 0计业绩
+                        thingCut = utils.accAdd(thingCut, utils.accMul(item.money, item.num));
+                    }
+
+                    // 0卷, 02456状态, 0计金额 (计入金额类型)
+                    if (item.type == 0 && [constant.decoration.decorationActivityItem.STATUS_INIT_INT, constant.decoration.decorationActivityItem.STATUS_RECEIVE_INT, constant.decoration.decorationActivityItem.STATUS_DELIVERY_INT, constant.decoration.decorationActivityItem.STATUS_WAIT_INT, constant.decoration.decorationActivityItem.STATUS_UPGRADE_INT].indexOf(item.state) != -1 && item.isPayment == constant.decoration.decorationActivityItem.ISAFFIRM_INITIA_INT) {
+                        couponCut2 = utils.accAdd(couponCut2, utils.accMul(item.money, item.num));
+                    }
+                    // 0卷, 02456状态, 1不计金额 (不计入金额类型)
+                    if (item.type == 0 && [constant.decoration.decorationActivityItem.STATUS_INIT_INT, constant.decoration.decorationActivityItem.STATUS_RECEIVE_INT, constant.decoration.decorationActivityItem.STATUS_DELIVERY_INT, constant.decoration.decorationActivityItem.STATUS_WAIT_INT, constant.decoration.decorationActivityItem.STATUS_UPGRADE_INT].indexOf(item.state) != -1 && item.isPayment == constant.decoration.decorationActivityItem.ISSTATUS_UNCAL_INT) {
+                        couponCut3 = utils.accAdd(couponCut3, utils.accMul(item.money, item.num));
+                    }
+                    // 0卷, 02456状态, 1不计业绩 (不计入业绩类型)
+                    if (item.type == 0 && [constant.decoration.decorationActivityItem.STATUS_INIT_INT, constant.decoration.decorationActivityItem.STATUS_RECEIVE_INT, constant.decoration.decorationActivityItem.STATUS_DELIVERY_INT, constant.decoration.decorationActivityItem.STATUS_WAIT_INT, constant.decoration.decorationActivityItem.STATUS_UPGRADE_INT].indexOf(item.state) != -1 && item.isPrefor == constant.decoration.decorationActivityItem.ISSTATUS_UNCAL_INT) {
+                        couponCut4 = utils.accAdd(couponCut4, utils.accMul(item.money, item.num));
+                    }
+
+                }
+
+                com.showTip(btn, "券优惠:" + couponCut1 + "<br\>物品优惠:" + thingCut + "<br\>优惠总额:" + utils.accAdd(couponCut1, thingCut) + "<br\>计入金额类型:" + couponCut2 + "<br\>不计入金额类型:" + couponCut3 + "<br\>计入业绩类型:" + couponCut1 + "<br\>不计入业绩类型:" + couponCut4);
+
+            });
+        };
+
         // 决算
         function viewDecorationFinalSettlement(orderId, typeness, status) {
 
-            params.quotation.orderId = orderId
+            params.quotation.orderId = orderId;
             params.decoration.orderId = orderId;
             params.decoration.typeness = typeness;
             params.decoration.status = status;
@@ -1028,18 +1095,35 @@
         // 签订合同
         function signOrder(orderId, customerId, orderTotalPrice, notSalesmanRate, coupon, thing) {
 
+            order.signItems.conpany.val(0);
             var cId = params.decoration.customerId;
 
-            // 通过订单编号获取默认报价信息
+            var decoration = null;
+
+            com.post(api.decoration.queryDecorationForCommonByOrderId, {
+                "decoration.orderId": orderId
+            }, function(res) {
+
+                decoration = res.decoration;
+            }, null, false);
+
+            com.post(api.system.queryCompanyByCid, {
+                "company.cid": decoration.conpany
+            }, function(res) {
+
+                order.signItems.conpanyName.html(res.company.name);
+            });
+
             com.post(api.quotation.queryQuotationForDefaultByOrderId, {
                 "quotation.orderId": orderId
             }, function(res) {
 
                 var netperfor = 0;
                 var comperfor = 0;
+
                 if (res.quotation.qid == null) {
                     com.showAlert(com.error, "报价不存在");
-                    return;
+                    return false;
                 }
                 order.drawContractModal.modal("show");
 
@@ -1051,19 +1135,21 @@
                 comperfor = utils.changeTwoDecimal(utils.accDiv(utils.accAdd(utils.accSub(utils.accMul(utils.accSub(contract, notpoint), 0.38), Offer), utils.accSub(orderTotalPrice, contract)), 0.38));
 
                 var options = {
-                    "decorationContract.orderId": orderId
+                    "decoration.orderId": orderId
                 };
 
-                order.drawContractItems.coupon.html("券优惠 : " + coupon);
-                order.drawContractItems.thing.html("物品优惠 : " + thing);
-                order.drawContractItems.netperfor.val(netperfor);// 净业绩
-                order.drawContractItems.comperfor.val(comperfor);// 复合业绩
+                order.signItems.coupon.html("券优惠 : " + coupon);
+                order.signItems.thing.html("物品优惠 : " + thing);
+                order.signItems.netperfor.val(netperfor);// 净业绩
+                order.signItems.comperfor.val(comperfor);// 复合业绩
 
                 com.focusPage("#contractBtn").unbind('click').on("click", function() {
 
                     if (com.validate("drawContractModal")) {
                         return false;
                     }
+
+                    options["decoration.dompany"] = order.signItems.conpany.val();
 
                     if (utils.accSub(orderTotalPrice, res.quotation.totalPrice) > 100) {
                         com.showConfirm("合同金额与报价金额相差大于100，确认签单?", function() {
@@ -1091,7 +1177,7 @@
             }, function() {
 
                 com.showAlert(com.error, "报价不存在");
-                return;
+                return false;
             }, false);
         }
 
@@ -1126,7 +1212,7 @@
                     decorationPaymentInfo = "无付款信息";
                 }
 
-                com.focusPage("#decorationStatus").html(order.decorationOrderStatus[status]);
+                com.focusPage("#decorationStatus").html(order.decorationStatus[status]);
                 com.focusPage("#precontractPrice").val(precontractPrice);
                 com.focusPage("#decorationPaymentInfo").html(decorationPaymentInfo);
                 com.focusPage("#backup").val(0);
@@ -1208,7 +1294,7 @@
 
                 var options = {
                     "decoration.orderId": orderId,
-                    "decoration.repairStatus": order.repairStatusItem.val(),
+                    "decoration.repairStatus": order.repairItems.status.val(),
                 };
 
                 com.post(api.decoration.changeDecorationForRepairStatus, options, function(res) {
@@ -1274,10 +1360,10 @@
                 list: res.paging.data
             }, function(v) {
 
-                v.status = order.decorationOrderStatus[v.status];
+                v.status = order.decorationStatus[v.status];
                 v.projectStatus = order.projectStatusArr[v.projectStatus];
                 v.typeness = order.typeness[v.typeness];
-                if ([2, 3, 4, 6, 7].indexOf(v.status) == -1)
+                if ([constant.decoration.decoration.STATUS_PROSIGN_INT, constant.decoration.decoration.STATUS_SIGNED_INT, constant.decoration.decoration.STATUS_RESIGNED_INT, constant.decoration.decoration.STATUS_TERMINATION_INT, constant.decoration.decoration.STATUS_FINAL_INT].indexOf(v.status) == -1)
                     v.house.houseNumber = '';
             });
 

@@ -1,142 +1,196 @@
-$(function(){
+$(function() {
 
-    var fatherModuleArr = null;
+    var operations = {
 
-    var Operation = (function(){
+        items: {
+            name: com.focusPage('#name', "#addOperation"),
+            operation: com.focusPage('#operation', "#addOperation"),
+            type: com.focusPage("#type", "#addOperation"),
+            module: com.focusPage('#module', "#addOperation"),
+        },
 
-        var createLine = function(v){
+        btns: {
+            saveBtn: com.focusPage("#saveBtn").on("click", saveData),
+        },
 
-            var $liLine = $('<li></li>').addClass('item-orange clearfix');
-            var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.operation));
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+        modals: {
+            addOperationModal: com.focusPage("#addOperation"),
+        },
 
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-yellow').html('删除');
+        datasets: {
+            modules: [],
+        },
 
-            var propertyArr = [
-                ["编号:", v.oid, "grey"],
-                ["操作说明:", v.name, "grey"],
-                ["模块:", v.module  ? v.module.name : "---", "grey"],
-            ];
-
-            $.each(propertyArr, function (index,value) {
-                var $liProperty = $('<li></li>');
-                $('<strong></strong>').html(value[0]).appendTo($liProperty);
-                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-                $liProperty.appendTo($ulProperty);
-            });
-
-            $divBtnWrap.append($btnDel);
-
-            $divBtnWrap.appendTo($h3);
-
-            $liLine.append($h3).append($ulProperty);
-
-            $btnDel.click(function(){
-                deleteOperation(v.oid);
-            });
-
-            return $liLine;
-        };
-
-        return {
-            renderList : function(listData, tableId){
-                var $tableWrap = com.focusPage('#' + tableId).empty();
-                if(listData && listData.length){
-
-                    var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
-                    $ul.appendTo($tableWrap);
-
-                    $.each(listData, function(i, v){
-                        var $li = createLine(v);
-                        $li.appendTo($ul);
-                    });
-                }
-            }
-        };
-    })();
-
-    com.post(api.system.queryModule, {'module.system' : parent.config.system}, function(data){
-        fatherModuleArr =  data.modules;
-    }, null, false);
-
-    function search(){
-        com.post(api.system.queryOperation, {'operation.system': parent.config.system}, function(data){
-            Operation.renderList( data.operations ,'operationTable');
-        }, null, false);
-    }
-
-    search();
-
-    var operation = {
-
-        modal : com.focusPage('#operationModal').on("show.bs.modal", function(a) {
-            com.clearValidator();
-            com.clearValidator("#materialModelName", !0);
-            com.clearValidator("#materialModelNo", !0)
-        }),
-        btnAdd : com.focusPage('#addModule').click(function(){
-            com.focusPage('#operationModal').modal("show");
-        }),
-        saveBtn: com.focusPage("#saveBtn").on("click", saveData),
-        operationModalItems : {
-            operation  : com.focusPage('#operation'),
-            operationName : com.focusPage('#operationName'),
-            fatherModule : com.focusPage('#fatherModule').typeahead({
-
-                list: [],
-                source: function (query, process) {
-
-
-                    var level = com.focusPage('#level').val() - 1;
-
-                    var result = $.map(fatherModuleArr, function(val){
-                        return val.name.indexOf(query) == -1 ? null : val;
-                    });
-
-                    result = result.length ? result : fatherModuleArr;
-
-                    this.options.callback.call(this,result);
-                }, matcher: function (item) {
-                    return true;
-                }, callback: function(data){
-                    this.flprocess(data ,'mid', 'name');
-                },
-                isResultTypeMap : true //必填值为true,获取key,value的标识,
-                , flupdater: function(k,v){//下拉列表选中时的一些处理,必填对选中项的key和value做处理
-                    //k: key, v:value
-                    return v;
-                }
-            })
-        }
+        oid: null,
     };
 
-    //保存
+    com.post(api.ds.system, {}, function(res) {
+
+        operations.items.type.bindData(res.operationType, "key", "value");
+    });
+
+    com.post(api.system.queryModule, {
+        'module.system': parent.config.system
+    }, function(data) {
+
+        operations.datasets.modules = data.modules;
+    }, null, false);
+
+    operations.items.module.typeahead({
+
+        list: [],
+        source: function(query, process) {
+
+            var level = com.focusPage('#level').val() - 1;
+
+            var result = $.map(operations.datasets.modules, function(val) {
+
+                return val.name.indexOf(query) == -1 ? null : val;
+            });
+
+            result = result.length ? result : operations.datasets.modules;
+
+            this.options.callback.call(this, result);
+        },
+        matcher: function(item) {
+
+            return true;
+        },
+        callback: function(data) {
+
+            this.flprocess(data, 'mid', 'name');
+        },
+        isResultTypeMap: true, // 必填值为true,获取key,value的标识,
+        flupdater: function(k, v) {// 下拉列表选中时的一些处理,必填对选中项的key和value做处理
+
+            return v;
+        }
+    });
+
+    var searcher = new Searcher();
+
+    searcher.base("condList", "pagenation", "resultList", api.system.pageOperation);
+
+    searcher.condition(["system-operation-name", "system-operation-operation", "system-operation-type"]);
+
+    searcher.history("modulePostData");
+
+    searcher.button([{
+        id: "add",
+        name: "添加",
+        clazz: "btn-success",
+        icon: "icon-plus"
+    }]);
+
+    var lineprops = [{
+        field: "oid",
+        name: "编号",
+        prop: "oid",
+        clazz: "grey"
+    }, {
+        field: "name",
+        name: "操作说明",
+        prop: "name",
+        clazz: "grey"
+    }, {
+        field: "module",
+        name: "模块",
+        prop: function(v) {
+
+            return v.module ? v.module.name : "---"
+        },
+        clazz: "grey"
+    }, {
+        field: "type",
+        name: "类型",
+        prop: function(v) {
+
+            return v.type == 0 ? "权限" : v.type == 1 ? "免检" : v.type == 2 ? "通用" : "钉钉"
+        },
+        clazz: "grey",
+    }, {
+        field: "operation",
+        name: "操作",
+        prop: "operation",
+        clazz: "grey"
+    }];
+
+    var linebtns = [{
+        name: "编辑",
+        clazz: "btn-success",
+        handle: function(v) {
+
+            operations.oid = v.oid;
+            com.focusPage('#addOperationDialog').text('编辑');
+
+            operations.items.name.val(v.name);
+            operations.items.operation.val(v.operation);
+            operations.items.type.val(v.type);
+
+            if (v.module) {
+                com.updateTypeahead("module", v.module.mid, v.module.name);
+            }
+
+            operations.modals.addOperationModal.modal("show");
+
+            return false;
+        }
+    }, {
+        name: "删除",
+        clazz: "btn-yellow",
+        handle: function(v) {
+
+            com.showConfirm("是否确定删除", function() {
+
+                com.post(api.system.deleteOperation, {
+                    "operation.oid": v.oid,
+                }, function() {
+
+                    searcher.doSearch();
+                });
+            });
+        }
+    }, ];
+
+    searcher.line("name", lineprops, linebtns).render();
+
+    com.focusPage('a[name="add"]', '#pagenation').click(function() {
+
+        com.cleanItems(operations.items);
+
+        operations.oid = null;
+
+        com.focusPage('#addOperation').modal("show");
+    });
+
+    // 保存
     function saveData() {
-        
-        if (com.validate("operationModal")) {
+
+        if (com.validate("addOperation")) {
             return false;
         }
 
+        var url;
         var params = {
-            "operation.name": operation.operationModalItems.operationName.val(),
-            "operation.operation": operation.operationModalItems.operation.val(),
-            "operation.module.mid": operation.operationModalItems.fatherModule.attr('data-typeahead-key'),
-            "operation.system": config.system
+            "operation.name": operations.items.name.val(),
+            "operation.operation": operations.items.operation.val(),
+            "operation.module.mid": com.typeahead("module"),
+            "operation.system": config.system,
+            "operation.type": operations.items.type.val()
         };
 
-        com.post(api.system.addOperation, params,function(a) {
-            search();
-        });
-        
-        operation.modal.modal('hide');
-    }
+        if (operations.oid) {
+            params["operation.oid"] = operations.oid;
 
-    function deleteOperation(oid){
-        com.showConfirm("是否确定删除", function() {
-            com.post(api.system.deleteOperation, {"operation.oid": oid}, function(){
-                search();
-            });
+            url = api.system.updateOpperation;
+        } else {
+            url = api.system.addOperation;
+        }
+
+        com.post(url, params, function() {
+
+            searcher.doSearch();
+            operations.modals.addOperationModal.modal("hide");
         });
     }
 

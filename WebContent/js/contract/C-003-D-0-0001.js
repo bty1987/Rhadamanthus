@@ -72,11 +72,11 @@ jQuery(function($) {
         contractEdit.item.houseType.bindData(res.houseClass, 'key', 'value');
     });
 
-    com.post(api.data.queryCustomerById, {
-        "customer.cid": params.decoration.cid
+    com.post(api.decoration.queryDecorationForCommonByOrderId, {
+        "decoration.orderId": contractEdit.decorationOrderId
     }, function(res) {
 
-        var customer = res.customer;
+        var customer = res.decoration.customer;
 
         com.focusPage("#con-customer-name", "#form").val(customer.name);
         com.focusPage("#con-customer-phone", "#form").val(customer.phone);
@@ -207,18 +207,21 @@ jQuery(function($) {
     });
 
     quotationUtils.quotationDetail = {
-            protation: {},
-            protationItems: {}
+        protation: {},
+        protationItems: {}
     };
 
-    com.post(api.quotation.queryProtationForDefaultByOrderId, {"protation.orderId": contractEdit.decorationOrderId}, function(res){
-        quotationUtils.quotationDetail.protation = res.protation;
-      }, null, false);
+    com.post(api.quotation.queryProtationForDefaultByOrderId, {
+        "protation.orderId": contractEdit.decorationOrderId
+    }, function(res) {
 
-    if(!quotationUtils.quotationDetail.protation.pid) {
-      com.showAlert(com.warning, "无预签信息");
-      com.focusPage("#contractPopUp").html("");
-      return false;
+        quotationUtils.quotationDetail.protation = res.protation;
+    }, null, false);
+
+    if (!quotationUtils.quotationDetail.protation.pid) {
+        com.showAlert(com.warning, "无预签信息");
+        com.focusPage("#contractPopUp").html("");
+        return false;
     }
 
     com.post(api.quotation.queryProtationItemByPid, {
@@ -236,7 +239,7 @@ jQuery(function($) {
         "headers": ["序号", "名称"],
         "colWidthPercent": [1, 3],
         "headersAlignment": 1,
-        "cellHorizontalAlignment": 1,
+        "cellHorizontalAlignment": 0,
         "cellVerticalAlignment": 5,
         "datas": []
     };
@@ -407,6 +410,7 @@ jQuery(function($) {
                 "decorationContract.orderId": params.decoration.orderId,
                 "decorationContract.contract.cid": params.decoration.contractargs.cid,
                 "data": JSON.stringify(data),
+                "table": JSON.stringify(contractEdit.table)
             };
 
             com.post(api.decoration.addDecorationContract, options, function(res) {

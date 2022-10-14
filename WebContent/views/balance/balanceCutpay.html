@@ -6,7 +6,10 @@
             <div id="balanceCutpays"></div>
             <div>
                 <div>
-                    <a class="btn btn-minier btn-primary pull-left" id="addBalanceCutpayBtn" style="margin-top: 7px;margin-left: 2px"><i class="icon-plus bigger-110"></i>添加</a>
+                    <a class="btn btn-minier btn-primary pull-left" id="balanceCutpayBtn" style="margin-top: 7px;margin-left: 2px"><i class="icon-plus bigger-110"></i>添加</a>
+                </div>
+                <div>
+                    <a class="btn btn-minier btn-danger pull-left" id="addBalanceCutpayBtn" style="margin-top: 7px;margin-left: 4px"><i class="icon-plus bigger-110"></i>扣款账户</a>
                 </div>
             </div>
         </div>
@@ -23,15 +26,15 @@
             <div class="modal-body">
                 <form class="form-horizontal">
                     <div class="form-group">
-                        <label class="col-md-3 control-label no-padding-right">金额</label>
+                        <label for="name" class="col-sm-3 control-label no-padding-right">名称</label>
                         <div class="col-md-9">
-                            <input type="text" class="col-xs-10 col-sm-6 v_float_3" id="money" name="money" data-required="1" data-toggle="popover" data-trigger='manual'>
+                            <input type="text" id="name" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'/>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right ">类型</label>
+                        <label class="col-md-3 control-label no-padding-right">金额</label>
                         <div class="col-md-9">
-                            <select id='types' class='col-xs-10 col-sm-6'></select>
+                            <input type="text" class="col-xs-10 col-sm-6 v_float_3" id="money" name="money" data-required="1" data-toggle="popover" data-trigger='manual'>
                         </div>
                     </div>
                     <div class="form-group">
@@ -47,6 +50,91 @@
                 <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
             </div>
         </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="deductBalanceCutpayModal" tabindex="-1">
+    <div class="modal-dialog" style="margin-top: 10%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="addModalLabel">抵扣</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-md-3 control-label no-padding-right">金额</label>
+                        <div class="col-md-9">
+                            <input type="text" class="col-xs-10 col-sm-6 v_float_3" id="deductMoney" name="money" data-required="1" data-toggle="popover" data-trigger='manual'>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">说明</label>
+                        <div class="col-sm-9">
+                            <textarea id="deductComment" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveDeductBtn" class="btn btn-primary">确认</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="addBalanceCutpayModal" tabindex="-1">
+    <div class="modal-dialog" style="margin-top: 10%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="addModalLabel">扣款</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="name" class="col-sm-3 control-label no-padding-right">名称</label>
+                        <div class="col-md-9">
+                            <input type="text" id="balanceCutpayName" class="col-xs-10 col-sm-6 v_required" data-toggle="popover" data-trigger='manual'/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right ">扣款账户</label>
+                        <div class="col-md-9">
+                            <select id='balanceDccountName' class='col-xs-10 col-sm-6'></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label no-padding-right">账户余额</label>
+                        <div class="col-md-9">
+                            <input type="text" class="col-xs-10 col-sm-6 v_float_3" id="balanceDccountSurplus" data-required="1" data-toggle="popover" data-trigger='manual' readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-3 control-label no-padding-right">金额</label>
+                        <div class="col-md-9">
+                            <input type="text" class="col-xs-10 col-sm-6 v_float_3" id="balanceCutpayMoney" name="money" data-required="1" data-toggle="popover" data-trigger='manual'>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right">说明</label>
+                        <div class="col-sm-9">
+                            <textarea id="balanceCutpayComment" maxlength="128" class="col-xs-10 col-sm-6" rows="3"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="saveAddBtn" class="btn btn-primary">确认</button>
+                <button type="button" id="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+
     </div>
 </div>
 

@@ -51,27 +51,21 @@ $(function() {
     awardStock.saveBtn.bindClick(saveData);
     awardStock.updateBtn.bindClick(updateData);
 
-    com.post(api.ds.information, {}, function(res) {
-        awardStock.items.storeroom.bindData(res.awardStoreRoom, "key", "value", false);
-        awardStock.items.subtype.bindData(res.awardSubtype, "key", "value", false);
-        awardStock.items.type.bindData(res.awardStockType, "key", "value", false);
-        awardStock.items.isPrefor.bindData(res.isPreforType, "key", "value", false);
-        awardStock.items.isStock.bindData(res.isStockType, "key", "value", false);
-        awardStock.items.isPayment.bindData(res.isPaymentType, "key", "value", false);
+    awardStock.items.storeroom.bindData(constant.information().awardStock.storeroom.datas, "key", "value");
+    awardStock.items.subtype.bindData(constant.information().awardStock.subtype.datas, "key", "value");
+    awardStock.items.type.bindData(constant.information().awardStock.type.datas, "key", "value");
+    awardStock.items.isPrefor.bindData(constant.information().awardStock.isPrefor.datas, "key", "value");
+    awardStock.items.isStock.bindData(constant.information().awardStock.isStock.datas, "key", "value");
+    awardStock.items.isPayment.bindData(constant.information().awardStock.isPayment.datas, "key", "value");
 
-        $.each(res.awardRecordSubtype, function(i, v) {
-            if (v.key != 1 && v.key % 2 == 0) {
-                awardStock.subtypeOfWarehousing.push(v);
-            } else {
-                awardStock.subtypeOfWarehousend.push(v);
-            }
-        });
+    $.each(constant.information().awardStock.subtype.datas, function(i, v) {
 
-        awardStock.storeroom = res.awardStoreRoom.split("key", "value");
-        awardStock.subtype = res.awardSubtype.split("key", "value");
-        awardStock.type = res.awardStockType.split("key", "value");
-
-    }, null, false);
+        if (v.key != 1 && v.key % 2 == 0) {
+            awardStock.subtypeOfWarehousing.push(v);
+        } else {
+            awardStock.subtypeOfWarehousend.push(v);
+        }
+    });
 
     var searcher = new Searcher();
 
@@ -80,6 +74,7 @@ $(function() {
     searcher.condition(['information-award-no', 'information-award-name', 'information-awardStock-type', 'information-awardStock-subtype', 'information-awardStock-room']);
 
     searcher.button(function() {
+
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addAwardStock').css('margin', '0px 3px');
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
@@ -106,19 +101,19 @@ $(function() {
         "field": "type",
         "name": "类型",
         prop: "type",
-        dataset: awardStock.type,
+        dataset: constant.information().awardStock.type.keys,
         clazz: "grey"
     }, {
         "field": "subtype",
         "name": "子类",
         prop: "subtype",
-        dataset: awardStock.subtype,
+        dataset: constant.information().awardStock.subtype.keys,
         clazz: "grey"
     }, {
         "field": "storeroom",
         "name": "库房",
         prop: "storeroom",
-        dataset: awardStock.storeroom,
+        dataset: constant.information().awardStock.storeroom.keys,
         clazz: "grey"
     }, {
         "field": "format",
@@ -129,37 +124,25 @@ $(function() {
         "field": "status",
         "name": "状态",
         prop: "status",
-        dataset: {
-            0: "启用",
-            1: "禁用"
-        },
+        dataset: constant.information().awardStock.status.keys,
         clazz: "grey"
     }, {
         "field": "isStock",
         "name": "库存标识",
         prop: "isStock",
-        dataset: {
-            0: "加入库存",
-            1: "不加入库存"
-        },
+        dataset: constant.information().awardStock.isStock.keys,
         clazz: "red"
     }, {
         "field": "isPrefor",
         "name": "业绩标识",
         prop: "isPrefor",
-        dataset: {
-            0: "计算业绩",
-            1: "不计算业绩"
-        },
+        dataset: constant.information().awardStock.isPrefor.keys,
         clazz: "red"
     }, {
         "field": "isPayment",
         "name": "金额标识",
         prop: "isPayment",
-        dataset: {
-            0: "计入金额",
-            1: "不计入金额"
-        },
+        dataset: constant.information().awardStock.isPayment.keys,
         clazz: "red"
     }, {
         "field": "content",
@@ -171,7 +154,8 @@ $(function() {
     var linebtns = [{
         name: "启用",
         handle: function(v) {
-            if (v.status == 0) {
+
+            if (v.status == constant.information().awardStock.STATUS_ABLE_SHORT) {
                 com.showAlert(com.warning, '已启用');
                 return false;
             }
@@ -181,7 +165,8 @@ $(function() {
     }, {
         name: "禁用",
         handle: function(v) {
-            if (v.status == 1) {
+
+            if (v.status == constant.information().awardStock.STATUS_DISABLE_SHORT) {
                 com.showAlert(com.warning, '已禁用');
                 return false;
             }
@@ -191,15 +176,18 @@ $(function() {
     }, {
         name: "入库",
         handle: function(v) {
-            if (v.isStock == 1) {
+
+            if (v.isStock == constant.information().awardStock.ISSTOCK_NCAL_INT) {
                 com.showAlert(com.warning, "此商品禁止入库!");
                 return false;
             }
 
             com.popup4model('#layerAdd2', '奖品入库', function() {
+
                 awardStock.asid = v.asId;
                 awardStock.flag = 3;
             }, null, function() {
+
                 com.cleanItems(awardStock.items);
 
                 awardStock.items.no2.val(v.no).attr('disabled', 'disabled');
@@ -218,12 +206,14 @@ $(function() {
     }, {
         name: "出库",
         handle: function(v) {
-            if (v.isStock == 1) {
+
+            if (v.isStock == constant.information().awardStock.ISSTOCK_NCAL_INT) {
                 com.showAlert(com.warning, "此商品禁止出库!");
                 return false;
             }
 
             com.popup4model('#layerAdd2', '奖品出库', function() {
+
                 com.cleanItems(awardStock.items);
 
                 awardStock.items.no2.val(v.no).attr('disabled', 'disabled');
@@ -245,16 +235,19 @@ $(function() {
     }, {
         name: "盘点",
         handle: function(v) {
-            if (v.isStock == 1) {
+
+            if (v.isStock == constant.information().awardStock.ISSTOCK_NCAL_INT) {
                 com.showAlert(com.warning, "此商品禁止盘点!");
                 return false;
             }
 
             com.popup4model('#layerAdd2', '盘点', function() {
+
                 awardStock.asid = v.asId;
                 awardStock.num = v.num;
                 awardStock.flag = 1;
             }, null, function() {
+
                 com.cleanItems(awardStock.items);
 
                 awardStock.items.no2.val(v.no).attr('disabled', 'disabled');
@@ -271,10 +264,13 @@ $(function() {
     }, {
         name: "编辑",
         handle: function(v) {
+
             com.popup4model('#layerAdd1', '奖品更新', function() {
+
                 awardStock.asid = v.asId;
                 awardStock.flag = 4;
             }, null, function() {
+
                 com.cleanItems(awardStock.items);
 
                 awardStock.items.no.val(v.no).attr('disabled', 'disabled');
@@ -295,6 +291,7 @@ $(function() {
     }, {
         name: "记录",
         handle: function(v) {
+
             params.infomation.asid = v.asId;
             com.popup4page('#stockRecordPopUp', api.index.stockRecord.url, "奖品纪录");
         }
@@ -305,6 +302,7 @@ $(function() {
     com.focusPage("#addAwardStock").click(function() {
 
         com.popup4model('#layerAdd1', '添加奖品', function() {
+
             com.cleanItems(awardStock.items);
 
             awardStock.moneys.show();
@@ -365,6 +363,7 @@ $(function() {
         }
 
         com.post(url, options, function() {
+
             com.closePopup();
             searcher.doSearch();
         })
@@ -373,7 +372,9 @@ $(function() {
 
     function updateData() {
 
-        if (com.validate('checkstorer')) { return false; }
+        if (com.validate('checkstorer')) {
+            return false;
+        }
 
         var url = null;
         var options = {
@@ -401,6 +402,7 @@ $(function() {
         }
 
         com.post(url, options, function() {
+
             com.closePopup();
             searcher.doSearch();
         })

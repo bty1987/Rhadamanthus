@@ -35,7 +35,7 @@ jQuery(function() {
 
     salesPaymentForStatus.salesCollectionPostData["salesPayment.sales.sid"] = params.sales.sales.sid;
 
-    com.post(api.common.queryReceiptType, {}, function(res) {
+    com.post(api.data.queryReceiptType, {}, function(res) {
 
         $.each(res.receiptTypes, function(i, v) {
 

@@ -95,7 +95,8 @@
   ],
   "messageStatus" : [
     {"key":"0","value":"未读"},
-    {"key":"1","value":"已读"}
+    {"key":"1","value":"已读"},
+    {"key":"2","value":"未发"}
   ],
   "stopReason": [
     {"key":"1","value":"主叫挂断"},

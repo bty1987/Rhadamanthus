@@ -2,9 +2,9 @@ jQuery(function($) {
 
     var receipt = {
         htmlName: "sales",
-        paymentTypeData: {},
-        advanceTypeData: {"0": "-"},
-        decorationTypeData: {},
+        paymentTypeData: parent.constant.payment.materialPayment.paymentType.keys,
+        advanceTypeData: parent.constant.payment.salesPayment.advanceType.keys,
+        decorationTypeData: parent.constant.decoration().decoration.typeness.datas,
         commonInfo: {},
         paymentItems: [],
         receiptItems: [],
@@ -25,13 +25,13 @@ jQuery(function($) {
 
     params = parent.params;
 
-    com.post(api.common.queryReceiptType, {}, function(res) {
+    com.post(api.data.queryReceiptType, {}, function(res) {
 
         $.each(res.receiptTypes, function(i, v) {
 
-            if (v.type == 2) {
+            if (v.type == parent.constant.data().receiptType.TYPE_CARD_INT) {
                 receipt.bankInfo[v.no] = v.name;
-            } else if (v.type == 3) {
+            } else if (v.type == parent.constant.data().receiptType.TYPE_BANK_INT) {
                 receipt.checkBankInfo[v.no] = v.name;
             }
         });
@@ -39,25 +39,6 @@ jQuery(function($) {
     }, null, false);
 
     var querySalesPaymentForNotInitBySrId = api.payment.querySalesPaymentForNotInitBySrid;
-
-    com.post(api.ds.payment, {}, function(res) {
-
-        for ( var i = 0; i < res.advanceTypeForSalesMaterial.length; i++) {
-            var type = res.advanceTypeForSalesMaterial[i];
-            receipt.advanceTypeData[type.key] = type.value;
-        }
-
-        for ( var i = 0; i < res.materialPaymentType.length; i++) {
-            var paymentType = res.materialPaymentType[i];
-            receipt.paymentTypeData[paymentType.key] = paymentType.value;
-        }
-
-    }, null, false);
-
-    com.post(api.ds.decoration, {}, function(res) {
-
-        receipt.decorationTypeData = res.typeness;
-    }, null, false);
 
     com.post(querySalesPaymentForNotInitBySrId, {"salesReceipt.srId": params.payment.srId}, function(res) {
 
@@ -177,7 +158,7 @@ jQuery(function($) {
     }
 
     paymentUtils.initSignet(receipt.htmlName);
-    paymentUtils.initQrcode(receipt.htmlName);
+    paymentUtils.initQrcode(receipt.htmlName, receipt.htmlName+"paymentContractQrcodeModal");
     paymentUtils.bindSignet($("#" + receipt.htmlName + "signets"));
     paymentUtils.showContractBtn(params.payment.srId, 3, printer.args, receipt.commonInfo.customerName, receipt);
 
@@ -226,6 +207,7 @@ jQuery(function($) {
         var amountReceiptTd = $('<td style="width: 35%; text-align: center;"></td>').html('<strong>收款金额(元)</strong>').appendTo(receReceiptTr);
 
         var drawpaymentWay = "";
+
         for ( var i = 0; i < receiptItems.length; i++) {
             var receiptItem = receiptItems[i];
 

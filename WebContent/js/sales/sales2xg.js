@@ -14,17 +14,12 @@ $(function () {
 
     com.datetime(com.focusPage('#layerAdd input[name="manifestTime"]'));
 
-    com.post(api.ds.sales, {}, function (res) {
-        manifest.status = res.statues.split("key", "value");
-        manifest.balanceStatus = res.balanceStatuses.split("key", "value");
-    }, null, false);
-
     //查询仓库名称
     com.post(api.inventory.queryStorehouseForSelf, {}, function (res) {
         var storehousesStatus = [];
 
         $.each(res.storehouses, function (i, v) {
-            if (v.status == 0) {
+            if (v.status == constant.sales().sales.STATUS_INIT_INT) {
                 storehousesStatus.push(v);
             }
         });
@@ -94,10 +89,11 @@ $(function () {
                                 propertyArr.push(["全款时间:", v.fullpayTime, "green"]);
                                 break;
                             case "status":
-                                propertyArr.push(["状态:", manifest.status[v.status], "red"]);
+                                propertyArr.push(["状态:", constant.sales().sales.status.keys[v.status], "red"]);
                                 break;
                             case "balanceStatus":
-                                propertyArr.push(["结算状态:", manifest.balanceStatus[v.balanceStatus], "red"]);
+                                propertyArr.push(["结算状态:", constant.sales().sales.balanceStatus.keys[v.balanceStatus], "red"]);
+
                                 break;
                             case "grade":
                                 propertyArr.push(["等级:", v.grade, "red"]);
@@ -172,7 +168,7 @@ $(function () {
 
                         manifest.salesXG_params["sids[0]"] = v.sid;
 
-                        if (v.fullpayStatus != 2) {
+                        if (v.fullpayStatus != constant.sales().sales.FULLPAYSTATUS_CONFIRM_SHORT) {
                             com.showAlert(com.warning, "此销售单补款未确认,无法转出库单");
                             return false;
                         }
@@ -418,7 +414,7 @@ $(function () {
                     var $this = $(v);
                     fullPayStatus.push($this.attr('data-fullPayStatus'));
                     $sids.push($this.attr('data-sid'));
-                    if (fullPayStatus[i] == 2 && flag) {
+                    if (fullPayStatus[i] == constant.sales().sales.FULLPAYSTATUS_CONFIRM_SHORT && flag) {
                         manifest.salesXG_params["sids[" + i + "]"] = $sids[i];
                     } else {
                         manifest.salesXG_params = {};

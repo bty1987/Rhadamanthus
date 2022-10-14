@@ -3,21 +3,36 @@ $(function() {
     var balanceCutpay = {
 
         btns: {
-            addBalanceCutpayBtn:com.focusPage("#addBalanceCutpayBtn"),// 添加
+            addBalanceCutpayBtn:com.focusPage("#balanceCutpayBtn"),// 添加
             saveBtn:com.focusPage("#saveBtn"),
             cancelBtn:com.focusPage("#cancelBtn"),
+            saveDeductBtn:com.focusPage("#saveDeductBtn"),
+            addBalanceDccountBtn:com.focusPage("#addBalanceCutpayBtn"),
+            saveAddBtn:com.focusPage("#saveAddBtn"),
         },
 
         modals: {
             balanceCutpayModal:com.focusPage("#balanceCutpayModal"),
+            deductBalanceCutpayModal:com.focusPage("#deductBalanceCutpayModal"),
+            addBalanceCutpayModal:com.focusPage("#addBalanceCutpayModal")
         },
 
         items: {
             money: com.focusPage("#money"),
-            type: com.focusPage("#types"),
             comment: com.focusPage("#comment"),
+            name: com.focusPage("#name"),
+            deductMoney: com.focusPage("#deductMoney"),
+            deductComment: com.focusPage("#deductComment"),
+            balanceCutpayName: com.focusPage("#balanceCutpayName"),
+            balanceDccountName: com.focusPage("#balanceDccountName"),
+            balanceDccountSurplus: com.focusPage("#balanceDccountSurplus"),
+            balanceCutpayMoney: com.focusPage("#balanceCutpayMoney"),
+            balanceCutpayComment: com.focusPage("#balanceCutpayComment"),
         },
 
+        uid: params.balance.uid,
+        bcid: null,
+        deductName: null,
         bid: params.balance.bid,
         balanceCutpayType: {}
     };
@@ -28,10 +43,37 @@ $(function() {
         com.closeTip();
     });
 
-    com.post(api.ds.balance, {}, function(res) {
-        com.focusPage("#types").bindData(res.balanceCutpayType, "key", "value");
-        balanceCutpay.balanceCutpayType = res.balanceCutpayType.split("key", "value");
+    balanceCutpay.modals.addBalanceCutpayModal.on("hide.bs.modal", function(e) {
+        com.clearValidator();
+        com.cleanTypeahead("name1");
+        com.cleanItems(balanceCutpay.items);
+    });
+
+    com.post(api.balance.queryBalanceDccount, {"balanceDccount.belonger.uid": balanceCutpay.uid}, function(res) {
+
+        var balanceDccountes = [];
+        balanceDccountes.push({name:" "});
+
+        $.each(res.balanceDccountes, function(i, v) {
+            if (v.status == 0){
+                balanceDccountes.push(v);
+            }
+        });
+
+        com.focusPage("#balanceDccountName").bindData(balanceDccountes, "bdid", "name");
     }, null, false);
+
+    balanceCutpay.items.balanceDccountName.on('change', function() {
+
+        com.post(api.balance.queryBalanceDccount, {"balanceDccount.belonger.uid": balanceCutpay.uid}, function(res) {
+
+            $.each(res.balanceDccountes, function(i, v) {
+                if(com.focusPage("#balanceDccountName").val() == v.bdid){
+                    com.focusPage("#balanceDccountSurplus").val(v.surplus);
+                }
+            });
+        });
+    });
 
     var searcher = new Searcher();
 
@@ -40,41 +82,76 @@ $(function() {
     }, null, null, "balanceCutpays", true);
 
     var lineprops = [{
+        fieId: "operater.currentName",
+        name: "操作人",
+        prop: "operater.currentName",
+        clazz: "grey",
+    },{
         fieId: "operateTime",
         name: "操作时间",
         prop: "operateTime",
-        clazz: "green"
+        clazz: "green",
+    }, {
+        field: "cutpay.name",
+        name: "关联扣款",
+        prop: "cutpay.name",
+        clazz: "grey",
+    }, {
+        field: "dccount.name",
+        name: "关联扣款账户",
+        prop: "dccount.name",
+        clazz: "grey",
     }, {
         field: "money",
         name: "金额",
         prop: "money",
-        clazz: "blue"
+        clazz: "blue",
     }, {
-        fieId: "cutpay",
+        fieId: "total",
         name: "总额",
-        prop: "cutpay",
+        prop: "total",
         clazz: "blue",
     }, {
         fieId: "type",
         name: "类型",
         prop: "type",
         clazz: "red",
-        dataset: balanceCutpay.balanceCutpayType
+        dataset: constant.balance().balanceCutpay.type.keys,
     }, {
         fieId: "comment",
         name: "说明",
         prop: "comment",
-        clazz: "grey"
+        clazz: "grey",
     },];
 
-    var linebtns = [];
+    var linebtns = [{
+        name: "抵扣",
+        clazz: "btn-yellow",
+        handle: function(v) {
 
-    searcher.line("operater.currentName", lineprops, linebtns).render();
+            balanceCutpay.deductName = v.name;
+            balanceCutpay.bcid = v.bcid;
+            deductBalanceCutpay(v);
+            return false;
+        }
+    },];
 
-    com.focusPage('#addBalanceCutpayBtn').on("click", function () {
+    searcher.line("name", lineprops, linebtns).render();
+
+    com.focusPage('#balanceCutpayBtn').on("click", function () {
 
         balanceCutpay.modals.balanceCutpayModal.modal("show");
     });
+
+    com.focusPage('#addBalanceCutpayBtn').on("click", function () {
+
+        balanceCutpay.modals.addBalanceCutpayModal.modal("show");
+    });
+
+    function deductBalanceCutpay(v) {
+
+        balanceCutpay.modals.deductBalanceCutpayModal.modal("show");
+    };
 
     balanceCutpay.btns.saveBtn.on("click", function() {
 
@@ -84,7 +161,8 @@ $(function() {
 
         var options ={
             "balanceCutpay.balance.bid" : balanceCutpay.bid,
-            "balanceCutpay.type": balanceCutpay.items.type.val(),
+            "balanceCutpay.name": balanceCutpay.items.name.val(),
+            "balanceCutpay.type": constant.balance().balanceCutpay.TYPE_CUTPAY_INT,
             "balanceCutpay.money": balanceCutpay.items.money.val(),
             "balanceCutpay.comment": balanceCutpay.items.comment.val(),
         };
@@ -98,4 +176,50 @@ $(function() {
         balanceCutpay.modals.balanceCutpayModal.modal("hide");
     });
 
+    balanceCutpay.btns.saveDeductBtn.on("click", function() {
+        if (com.validate('deductBalanceCutpayModal')) {
+            return false;
+        };
+
+        var options ={
+            "balanceCutpay.balance.bid": balanceCutpay.bid,
+            "balanceCutpay.bcid": balanceCutpay.bcid,
+            "balanceCutpay.name": balanceCutpay.deductName,
+            "balanceCutpay.type": constant.balance().balanceCutpay.TYPE_UNCUTPAY_INT,
+            "balanceCutpay.money": balanceCutpay.items.deductMoney.val(),
+            "balanceCutpay.comment": balanceCutpay.items.deductComment.val(),
+        };
+
+        com.post(api.balance.deductBalanceCutpay, options, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
+        });
+
+        balanceCutpay.modals.deductBalanceCutpayModal.modal("hide");
+    });
+
+    balanceCutpay.btns.saveAddBtn.on("click", function() {
+
+        if (com.validate('addBalanceCutpayModal')) {
+            return false;
+        };
+
+        var options ={
+            "balanceCutpay.balance.bid" : balanceCutpay.bid,
+            "balanceCutpay.dccount.bdid" : balanceCutpay.items.balanceDccountName.val(),
+            "balanceCutpay.name": balanceCutpay.items.balanceCutpayName.val(),
+            "balanceCutpay.type": constant.balance().balanceCutpay.TYPE_CUTPAY_INT,
+            "balanceCutpay.money": balanceCutpay.items.balanceCutpayMoney.val(),
+            "balanceCutpay.comment": balanceCutpay.items.balanceCutpayComment.val(),
+        };
+
+        com.post(api.balance.addBalanceCutpay, options, function(res) {
+
+            com.showAlert(com.info, "添加成功");
+            searcher.doSearch();
+        });
+
+        balanceCutpay.modals.addBalanceCutpayModal.modal("hide");
+    });
 });

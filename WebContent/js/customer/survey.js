@@ -26,13 +26,6 @@ jQuery(function($) {
         checked: {}
     };
 
-    com.post(api.ds.customer, {}, function(res) {
-
-        survey.status = res.surveyStatus.split("key", "value");
-        survey.type = res.surveyItemType.split("key", "value");
-        survey.checked = res.surveyOptionChecked.split("key", "value");
-    }, null, false);
-
     survey.modals.surveyModal.on('hide.bs.modal', function(e) {
 
         com.cleanItems(survey.items);
@@ -90,7 +83,7 @@ jQuery(function($) {
         name: "状态",
         prop: "status",
         clazz: "red",
-        dataset: survey.status
+        dataset: constant.customer().survey.status.keys
     }];
 
     var linebtns = [{
@@ -112,7 +105,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return v.status == 0;
+            return v.status == constant.customer().survey.STATUS_INIT_INT;
         }
     }];
 
@@ -133,22 +126,22 @@ jQuery(function($) {
 
             $.each(res.survey.items, function(i, v) {
 
-                if (v.type != 0) {
+                if (v.type != constant.customer().survey.TYPE_SELECT_INT) {
                     var contentDiv = $('<div class="col-md-12 hr8"></div>').appendTo(survey.items.itemlist);
                     var titleSpan = $('<span class="col-md-12"></span>').html((i) + ". " + v.name).appendTo(contentDiv);
                 }
 
-                if (v.type == 0) {
+                if (v.type == constant.customer().survey.TYPE_TEXT_INT) {
                     survey.items.title.html(v.content);
-                } else if (v.type == 1) {
+                } else if (v.type == constant.customer().survey.TYPE_INPUT_INT) {
                     var textArea = $('<textarea class="col-md-12" disabled></textarea>').html(v.content).appendTo(contentDiv);
-                } else if (v.type == 2) {
+                } else if (v.type == constant.customer().survey.TYPE_SINGLE_INT) {
                     var ridioDivAll = $('<div class="col-md-12 control-group"></div>').appendTo(contentDiv);
                     $.each(v.options, function(j, option) {
 
                         elect(ridioDivAll, option);
                     });
-                } else if (v.type == 3) {
+                } else if (v.type == constant.customer().survey.TYPE_MULTIPLE_INT) {
                     var checkDivAll = $('<div class="col-md-12 control-group"></div>').appendTo(contentDiv);
                     $.each(v.options, function(j, option) {
 

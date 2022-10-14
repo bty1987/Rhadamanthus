@@ -560,6 +560,15 @@ $.extend(api, {
             url: "updateAccessoriesType.do"
         },
 
+        pageColor: {
+            url: "pageColor.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data-goods",
+                args: ["purchase", "selling", "pieceNum"]
+            }]
+        },
+
         queryColorByGid: {
             url: "queryColorByGid.do"
         },
@@ -571,6 +580,15 @@ $.extend(api, {
         },
         updateColorForStatus: {
             url: "updateColorForStatus.do"
+        },
+
+        pageFormat: {
+            url: "pageFormat.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data-goods",
+                args: ["purchase", "selling", "pieceNum"]
+            }]
         },
 
         queryFormatByGid: {
@@ -665,6 +683,18 @@ $.extend(api, {
         },
         updateGoodsForStatus: {
             url: "updateGoodsForStatus.do"
+        },
+
+        pagePrice: {
+            url: "pagePrice.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["purchase", "selling", "cvalue"]
+            }, {
+                result: "paging-data-goods",
+                args: ["purchase", "selling", "pieceNum"]
+            }]
         },
 
         queryPriceByGid: {
@@ -1040,8 +1070,12 @@ $.extend(api, {
                 args: ["decorationMatching.base", "decorationMatching.discount", "decorationMatching.material", "decorationMatching.service"]
             }
         },
-        queryTaskRoleRightByUserId: {
-            url: "queryTaskRoleRightByUserId.do"
+
+        queryTaskRoleRightByRid: {
+            url: "queryTaskRoleRightByRid.do"
+        },
+        queryTaskRoleRightForSelf: {
+            url: "queryTaskRoleRightForSelf.do"
         },
         updateTaskRoleRight: {
             url: "updateTaskRoleRight.do"
@@ -1219,6 +1253,36 @@ $.extend(api, {
             url: "deleteNormpackItem.do"
         },
 
+        pageReceiptType: {
+            url: "pageReceiptType.do"
+        },
+        queryReceiptType: {
+            url: "queryReceiptType.do",
+            demo: true
+        },
+        queryReceiptTypeByType: {
+            url: "queryReceiptTypeByType.do"
+        },
+        addReceiptType: {
+            url: "addReceiptType.do"
+        },
+        updateReceiptType: {
+            url: "updateReceiptType.do"
+        },
+        updateReceiptTypeForStatus: {
+            url: "updateReceiptTypeForStatus.do"
+        },
+
+        queryReceiptTypeItem: {
+            url: "queryReceiptTypeItem.do"
+        },
+        addReceiptTypeItem: {
+            url: "addReceiptTypeItem.do"
+        },
+        deleteReceiptTypeItem: {
+            url: "deleteReceiptTypeItem.do"
+        },
+
         pagePaymentType: {
             url: "pagePaymentType.do",
             type: "query",
@@ -1245,7 +1309,6 @@ $.extend(api, {
         },
         addPaymentType: {
             url: "addPaymentType.do",
-            server: "communion",
             type: "update",
             tranargs: {
                 args: ["paymentType.taxrate"]
@@ -1253,16 +1316,92 @@ $.extend(api, {
         },
         updatePaymentType: {
             url: "updatePaymentType.do",
-            server: "communion",
             type: "update",
             tranargs: {
                 args: ["paymentType.taxrate"]
             }
         },
         updatePaymentTypeForStatus: {
-            url: "updatePaymentTypeForStatus.do",
-            server: 'communion'
-        }
+            url: "updatePaymentTypeForStatus.do"
+        },
 
+        pageCustype: {
+            url: "pageCustype.do"
+        },
+        queryCustype: {
+            url: "queryCustype.do"
+        },
+        addCustype: {
+            url: "addCustype.do"
+        },
+        updateCustype: {
+            url: "updateCustype.do"
+        },
+        pageFlowpath: {
+            url: "pageFlowpath.do"
+        },
+        queryFlowpath: {
+            url: "queryFlowpath.do"
+        },
+        addFlowpath: {
+            url: "addFlowpath.do"
+        },
+        updateFlowpath: {
+            url: "updateFlowpath.do"
+        },
+        deleteFlowpath: {
+            url: "deleteFlowpath.do"
+        },
+
+        queryFlowitem: {
+            url: "queryFlowitem.do",
+            type: "query",
+            tranargs: [{
+                result: "flowitems",
+                args: ["x", "y"]
+            }]
+        },
+        addFlowitem: {
+            url: "addFlowitem.do",
+            intercept: true,
+            type: "update",
+            tranargs: {
+                args: ["flowitems.x", "flowitems.y"],
+                query: [{
+                    result: "flowitems",
+                    args: ["x", "y"]
+                }]
+            }
+        },
+        deleteFlowItem: {
+            intercept: true,
+            url: "deleteFlowItem.do"
+
+        },
+
+        pageConstant: {
+            url: "pageConstant.do",
+            server: "communion"
+        },
+        queryConstant: {
+            url: "queryConstant.do",
+            server: "communion"
+        },
+        addConstant: {
+            url: "addConstant.do",
+            server: "communion"
+        },
+        updateConstant: {
+            url: "updateConstant.do",
+            server: "communion"
+        },
+        updateConstantForStatus: {
+            url: "updateConstantForStatus.do",
+            server: "communion"
+        },
+        deleteConstant: {
+            url: "deleteConstant.do",
+            server: "communion"
+        },
     }
 });

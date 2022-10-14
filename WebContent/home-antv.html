@@ -191,6 +191,41 @@
 											</div>
 										</div>
 									</div>
+                                    
+                                    <div class="homePanel col-sm-6" id="rankInfo">
+                                        <div class="widget-box transparent">
+                                            <div class="widget-header widget-header-flat">
+                                                <h4 class="lighter">
+                                                    <i class="icon-bar-chart"></i>
+                                                    <span>排名</span>
+                                                </h4>
+                                                <div class="widget-toolbar no-border">
+                                                    <ul class="nav nav-tabs" id="recent-tab">
+                                                        <li class="active">
+                                                            <a data-toggle="tab" href="#designtop">设计</a>
+                                                        </li>
+                                                        <li class="">
+                                                            <a data-toggle="tab" href="#salestop">业务</a>
+                                                        </li>
+                                                        <li>
+                                                            <a data-toggle="tab" href="#worktop">工程</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+        
+                                            <div class="widget-body">
+                                                <div class="widget-main padding-4">
+                                                    <div class="tab-content padding-8 overflow-visible">
+                                                        <div class="tab-pane active" id="designtop"></div>
+                                                        <div class="tab-pane" id="salestop"></div>
+                                                        <div class="tab-pane" id="worktop"></div>
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
 								</div>
 							</div>
 							
@@ -328,7 +363,7 @@
 
 <script>
     $(function(){
-        $.loadScript(['js/home-antv.js', 'js/com/reporter.js']);
+        $.loadScript(['js/com/reporter.js', 'js/home-antv.js', ]);
     });
     
     $("#ace-settings-btn").on(ace.click_event, function () {

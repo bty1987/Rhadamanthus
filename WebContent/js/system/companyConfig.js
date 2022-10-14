@@ -18,7 +18,7 @@ jQuery(function ($) {
         wizardSept[info.step] = true;
 
     }).on('finished', function(e) {
-    	//com.switchPage("/views/system/company.html");
+    	// com.switchPage("/views/system/company.html");
     });
 
     // 1.报价版本
@@ -58,7 +58,7 @@ jQuery(function ($) {
     );
 
     var companyConfig = {
-        /*  1.  */
+        /* 1. */
         quotationVersion: {
             saveQuotation: com.focusPage("#saveQuotationBtn").on("click", saveQuotation),
             cancelQuotation: com.focusPage("#cancelQuotationBtn"),
@@ -100,7 +100,7 @@ jQuery(function ($) {
             repeatFlg: false,
             editFlag: false
         },
-        /*  3.  */
+        /* 3. */
         paymentScale: {
             saveBtn: com.focusPage("#savePaymentScale").on("click", savePaymentScale),
             cancelBtn: null,
@@ -112,7 +112,7 @@ jQuery(function ($) {
             list:[],
             psid:null
         },
-        /*  5.  */
+        /* 5. */
         drawLine: {
             addmodal : com.focusPage("#drawLineModal"),
             groupadd : {
@@ -131,7 +131,7 @@ jQuery(function ($) {
                 }
             }
         },
-        /*  6. */
+        /* 6. */
         receiptType: {
             saveBtn: com.focusPage("#saveReceiptTypeBtn").on("click", saveReceiptType),
             cancelBtn: null,
@@ -197,7 +197,7 @@ jQuery(function ($) {
                     break;
                 case 'constructionNode':
                     propertyArr = [
-                        [params.company.name], //公司名称为当前公司
+                        [params.company.name], // 公司名称为当前公司
                         [data.name]
                     ];
                     break;
@@ -262,7 +262,7 @@ jQuery(function ($) {
     }, "drawlineGroupPagenation");
 
     var receiptTypeSearcher = new Searcher();
-    receiptTypeSearcher.init(null, null, api.common.pageReceiptType, function (data) {
+    receiptTypeSearcher.init(null, null, api.data.pageReceiptType, function (data) {
         displayFunc.init('receiptType', ["名称","键值","类型","状态"], data, 'receiptType');
     }, "receiptTypePagenation");
     
@@ -358,13 +358,13 @@ jQuery(function ($) {
             }
 
             com.post(url, options, function (res) {
-                //刷新页面所有条件,点击保存之后 刷新页面条件 重新载入
+                // 刷新页面所有条件,点击保存之后 刷新页面条件 重新载入
                 com.showAlert(com.info, "操作成功");
                 drawLineSearcher.doSearch();
             },function(){
                 com.showAlert(com.error, "放线小组已存在");
             });
-            //隐藏动态框
+            // 隐藏动态框
             companyConfig.drawLine.addmodal.modal("hide");
         }
 
@@ -376,7 +376,7 @@ jQuery(function ($) {
         });
         com.focusPage('#drawLineGroup').css('border-color', '');
     }
-    //6.
+    // 6.
     function saveReceiptType() {
         var options = {
             "receiptType.name" : com.focusPage("#name").val(),
@@ -387,14 +387,14 @@ jQuery(function ($) {
             return;
         }
         if(companyConfig.receiptType.editFlg){
-            com.post(api.common.addReceiptType,options,function () {
+            com.post(api.data.addReceiptType,options,function () {
                 receiptTypeSearcher.doSearch();
                 com.showAlert(com.info, "添加成功");
                 companyConfig.receiptType.modal.modal("hide")
             })
         }else{
             options["receiptType.rtId"] = companyConfig.receiptType.items.rtId.val();
-            com.post(api.common.updateReceiptType,options,function () {
+            com.post(api.data.updateReceiptType,options,function () {
                 receiptTypeSearcher.doSearch();
                 com.showAlert(com.info, "修改成功");
                 companyConfig.receiptType.modal.modal("hide")

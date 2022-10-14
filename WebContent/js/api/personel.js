@@ -120,6 +120,14 @@ $.extend(api, {
             url: "updateUserForPhoto.do",
             server: "communion"
         },
+        quitUser: {
+            url: "quitUser.do",
+            server: "communion"
+        },
+        tranUser: {
+            url: "tranUser.do",
+            server: "communion"
+        },
         resetPassword: {
             url: "resetPassword.do",
             server: "communion"
@@ -370,6 +378,13 @@ $.extend(api, {
         },
         deleteRecruitmentOperation: {
             url: "deleteRecruitmentOperation.do"
+        },
+
+        queryUserRole: {
+            url: "queryUserRole.do"
+        },
+        updateUserRole: {
+            url: "updateUserRole.do"
         },
 
     }

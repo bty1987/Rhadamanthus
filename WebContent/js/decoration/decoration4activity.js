@@ -624,25 +624,16 @@ jQuery(function($) {
             });
         });
     }
+    com.focusPage("#receiveType").bindData(constant.decoration.decorationActivityItem.stateType.datas, "key", "value", false);
+    com.focusPage("#receiveTypes").bindData(constant.decoration.decorationActivityItem.stateType.datas, "key", "value", false);
+    com.focusPage("#receiveTypess").bindData(constant.decoration.decorationActivityItem.stateType.datas, "key", "value", false);
+    com.focusPage("#receiveType1").bindData(constant.decoration.decorationActivityItem.stateType.datas, "key", "value", false);
 
-    com.post(api.ds.decoration, {}, function(res) {
-
-        com.focusPage("#receiveType").bindData(res.receiveType, "key", "value", false);
-        com.focusPage("#receiveTypes").bindData(res.receiveType, "key", "value", false);
-        com.focusPage("#receiveTypess").bindData(res.receiveType, "key", "value", false);
-        com.focusPage("#receiveType1").bindData(res.receiveType, "key", "value", false);
-
-        decorationActivity.stateTypes = res.receiveType.split("key", "value");
-        decorationActivity.states = res.activityItemType.split("key", "value");
-        decorationActivity.isStatus = res.isStatus.split("key", "value");
-        decorationActivity.isAffirms = res.isAffirms.split("key", "value");
-
-    }, null, false);
-
-    com.post(api.ds.information, {}, function(res) {
-
-        decorationActivity.types = res.activityItemType.split("key", "value");
-    }, null, false);
+    decorationActivity.stateTypes = constant.decoration.decorationActivityItem.stateType.keys;
+    decorationActivity.states = constant.decoration.decorationActivityItem.status.keys;
+    decorationActivity.isStatus = constant.decoration.decorationActivityItem.isStatus.keys;
+    decorationActivity.isAffirms = constant.decoration.decorationActivityItem.isAffirm.keys;
+    decorationActivity.types = constant.information().awardStock.type.keys;
 
     // 领取活动物品
     function receiveDecorationActivityItem(daiId) {
@@ -727,8 +718,6 @@ jQuery(function($) {
 
                 com.showAlert(com.info, "物品补款成功");
                 var daiId = res.decorationActivityItem.daiId;
-
-                decorationUtils.countTatol(daiId);
 
                 com.focusPage("#state_" + daiId).text("补款");
             });

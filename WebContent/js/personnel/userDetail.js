@@ -196,27 +196,19 @@ $(function(){
     userDetail.items.preformNums = com.focusPage('#preformNums', '#updateUserQiTaModal');
     
 	com.post(api.ds.personel, {timestamp: (new Date).getTime()},function(a) {
-		userDetail.statusType = a.statusType;
-		userDetail.politicalType = a.politicalType;
-		userDetail.householdType = a.householdType;
-		userDetail.educationType = a.educationType;
-		userDetail.userLevel = a.userLevel;
-		userDetail.employWay = a.employWay;
-		userDetail.insuranceType = a.insuranceType;
-		userDetail.employType = a.employType;
 		userDetail.items.status.bindData(a.contractStatus , "key", "value");
 		userDetail.items.rank_sequence.bindData(a.rank_sequence, "key", "value");
 	    userDetail.items.rank_level.bindData(a.rank_level, "key", "value");
 	    userDetail.items.form.bindData(a.form, "key", "value");
     }, null, false);
 	
-	userDetail.items.politicals.bindData(userDetail.politicalType, "key", "value");
-	userDetail.items.insuranceTypes.bindData(userDetail.insuranceType, "key", "value");
-	userDetail.items.employWays.bindData(userDetail.employWay, "key", "value");
-	userDetail.items.employTypes.bindData(userDetail.employType, "key", "value");
-	userDetail.items.educations.bindData(userDetail.educationType, "key", "value");
-	userDetail.items.levels.bindData(userDetail.userLevel, "key", "value");
-	userDetail.items.householdTypes.bindData(userDetail.householdType, "key", "value");
+	userDetail.items.politicals.bindData(constant.personel.userInfo.political.datas, "key", "value");
+	userDetail.items.insuranceTypes.bindData(constant.personel.userInfo.insuranceType.datas, "key", "value");
+	userDetail.items.employWays.bindData(constant.personel.userInfo.employWay.datas, "key", "value");
+	userDetail.items.employTypes.bindData(constant.personel.userInfo.employType.datas, "key", "value");
+	userDetail.items.educations.bindData(constant.personel.userInfo.education.datas, "key", "value");
+	userDetail.items.levels.bindData(constant.personel.userInfo.level.datas, "key", "value");
+	userDetail.items.householdTypes.bindData(constant.personel.userInfo.householdType.datas, "key", "value");
 	
 	function getBirthday(idCard) {
 		  var birthday = "";
@@ -267,7 +259,7 @@ $(function(){
             com.focusPage('#userBirthday').html(getBirthday($userInfo.user.identity));
             com.focusPage('#userHeight').html($userInfo.height + 'cm');
             com.focusPage('#userWeight').html($userInfo.weight + 'kg');
-            com.focusPage('#userPolitical').html(userDetail.politicalType[$userInfo.political].value);
+            com.focusPage('#userPolitical').html(constant.personel.userInfo.political.datas[$userInfo.political].value);
             com.focusPage('#userNation').html(com.checkNull($userInfo.nation, "无"));
             com.focusPage('#userHobby').html(com.checkNull($userInfo.hobby, "无"));
             com.focusPage('#userQQ').html(com.checkNull($userInfo.qq, "无"));
@@ -282,7 +274,7 @@ $(function(){
             com.focusPage('#userPreformNum').html(com.checkNull($userInfo.preformNum, "无"));
             com.focusPage('#userFormTime').html(com.checkNull($userInfo.formTime, "无"));
             com.focusPage('#userIsInsurance').html(userDetail.isOrNot[$userInfo.isInsurance]);
-            com.focusPage('#userInsuranceType').html(userDetail.insuranceType[$userInfo.insuranceType].value);
+            com.focusPage('#userInsuranceType').html(constant.personel.userInfo.insuranceType.datas[$userInfo.insuranceType].value);
             com.focusPage('#userInsuranceTime').html(com.checkNull($userInfo.insuranceTime, "无"));
             com.focusPage('#userPensionNum').html(com.checkNull($userInfo.pensionNum, "无"));
             com.focusPage('#userMedicalNum').html(com.checkNull($userInfo.medicalNum, "无"));
@@ -297,7 +289,7 @@ $(function(){
             com.focusPage('#userDuty').html($userInfo.user.duty.name);
             com.focusPage('#userRole').html($userInfo.user.role.name);
             com.focusPage('#userDept').html($userInfo.user.dept.name);
-            com.focusPage('#userLevel').html(userDetail.userLevel[$userInfo.level].value);
+            com.focusPage('#userLevel').html(constant.personel.userInfo.level.datas[$userInfo.level].value);
             
             com.focusPage('#userIsMarried').html($userInfo.isMarried == 0 ? "已婚" : "未婚");
             com.focusPage('#userIsBirth').html($userInfo.isBirth == 0 ? "已育" : "未育");
@@ -307,7 +299,7 @@ $(function(){
             com.focusPage('#userIsPassID').html(userDetail.isOrHave[$userInfo.isPassID]);
             com.focusPage('#userIsHMID').html(userDetail.isOrHave[$userInfo.isHMID]);
             com.focusPage('#userIsTWID').html(userDetail.isOrHave[$userInfo.isTWID]);
-            com.focusPage('#userHouseholdType').html(userDetail.householdType[$userInfo.householdType].value);
+            com.focusPage('#userHouseholdType').html(constant.personel.userInfo.householdType.datas[$userInfo.householdType].value);
             com.focusPage('#userHometownAddress').html(com.checkNull($userInfo.hometownAddress, "无"));
             com.focusPage('#userAddress').html(com.checkNull($userInfo.address, "无"));
             com.focusPage('#userLover').html(com.checkNull($userInfo.lover, "无"));
@@ -319,16 +311,16 @@ $(function(){
             
             com.focusPage('#userFirstTime').html(com.checkNull($userInfo.firstTime, "无"));
             com.focusPage('#userEntryTime').html(com.checkNull($userInfo.entryTime, "无"));
-            com.focusPage('#userEmployWay').html(userDetail.employWay[$userInfo.employWay].value);
+            com.focusPage('#userEmployWay').html(constant.personel.userInfo.employWay.datas[$userInfo.employWay].value);
             com.focusPage('#userRecommendMan').html(com.checkNull($userInfo.recommendMan, "无"));
             com.focusPage('#userJobYears').html(com.checkNull($userInfo.jobYears, "无"));
-            com.focusPage('#userEmployType').html(userDetail.employType[$userInfo.employType].value);
+            com.focusPage('#userEmployType').html(constant.personel.userInfo.employType.datas[$userInfo.employType].value);
             com.focusPage('#userEmployTime').html(com.checkNull($userInfo.employTime, "无"));
             com.focusPage('#userServiceYears').html(getDateYearSub($userInfo.entryTime));
             com.focusPage('#userIsPresentGraduate').html(userDetail.isOrNot[$userInfo.isPresentGraduate]);
             com.focusPage('#userGraduateTime').html(com.checkNull($userInfo.graduateTime, "无"));
             com.focusPage('#userSchool').html(com.checkNull($userInfo.school, "无"));
-            com.focusPage('#userEducation').html(userDetail.educationType[$userInfo.education].value);
+            com.focusPage('#userEducation').html(constant.personel.userInfo.education.datas[$userInfo.education].value);
             com.focusPage('#userSpecialty').html(com.checkNull($userInfo.specialty, "无"));
             
             com.focusPage('#userPalary').html(com.checkNull($userInfo.palary, "无"));
@@ -834,7 +826,7 @@ $(function(){
         			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').appendTo($div);
 					var propertyArr = [
 					                ["名称:", v.name, "grey"],
-					                ["状态:", userDetail.status[v.status], "red"],
+					                ["状态:", constant.personel.userInfo.status.keys[v.status], "red"],
 					                ["签订时间:", v.signTime, "green"],
 					                ["开始时间:",v.startTime,"green" ],
 					                ["结束时间:",v.endTime, "green" ],
@@ -1114,7 +1106,8 @@ $(function(){
                 "userInfo.emergencyPhone":v.emergencyPhone,
                 "userInfo.qq":v.qq,
                 "userInfo.wechat":v.wechat,
-                "userInfo.email":v.email
+                "userInfo.email":v.email,
+                "userInfo.user.filesize":data.filesize
             };
 
             com.post(api.personel.updateUserForBaseInfo, parm, function(res){

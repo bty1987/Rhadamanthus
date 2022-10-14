@@ -6,7 +6,7 @@ jQuery(function($) {
         tableList:[],
         args:null,
 
-        paymentTypeData: {},
+        paymentTypeData: parent.constant.payment.activityPayment.paymentType.keys,
         advanceTypeData: {"0":"-"},
 
         commonInfo: {},
@@ -22,14 +22,6 @@ jQuery(function($) {
     params = parent.params;
 
     var queryActivityPaymentByArid = api.payment.queryActivityPaymentByArid;
-
-    com.post(api.ds.payment, {}, function(res){
-        for(var i=0;i<res.activityPayment.length;i++){
-            var paymentType = res.activityPayment[i];
-            receipt.paymentTypeData[paymentType.key] = paymentType.value;
-        }
-
-    }, null, false);
 
     com.post(queryActivityPaymentByArid, {"activityPayment.activityReceipt.arid":params.payment.activityPayment.arid}, function(res){
 
@@ -173,7 +165,7 @@ jQuery(function($) {
         var renReceiptTd = $('<td colspan="2"></td>').text('人民币大写: ' + utils.getCNMoney(total)).appendTo(moneyReceiptTr);
         var renMoneyReceiptTd = $('<td colspan="2"></td>').text('实收: ¥' + total).appendTo(moneyReceiptTr);
 
-        var summaryReceiptTr = $('<tr></tr>').appendTo(receiptTable);;
+        var summaryReceiptTr = $('<tr></tr>').appendTo(receiptTable);
         var summaryReceiptTd = $('<td colspan="4"></td>').appendTo(summaryReceiptTr);
         var summaryReceiptDiv = $('<div style="text-align: right; padding-right: 150px;"></div>').appendTo(summaryReceiptTd);
         var receReceiptSpan = $('<span></span>').text('收款人:' + receipt.activityReceipt.collecter.currentName).appendTo(summaryReceiptDiv);

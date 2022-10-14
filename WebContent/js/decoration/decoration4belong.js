@@ -6,24 +6,19 @@ jQuery(function($) {
         decorationOrderStatus: {}
     };
 
-    com.post(api.ds.decoration, {}, function(res) {
-        $.each(res.decorationOrderStatus, function(i, v) {
-            decorationBelong.decorationOrderStatus[v.key] = v.value;
-        });
-
-        $.each(res.typeness, function(i, v) {
-            decorationBelong.decorationType[v.key] = v.value;
-        });
-    }, null, false);
+    decorationBelong.decorationOrderStatus = constant.decoration.decoration.status.keys;
+    decorationBelong.decorationType = constant.decoration.decoration.typeness.keys;
 
     var displayFunc = (function() {
 
         var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
                 $.each(listData, function(i, v) {
+
                     var $liLine = creatLine(v);
 
                     $liLine.appendTo($ul);
@@ -34,6 +29,7 @@ jQuery(function($) {
         };
 
         var creatLine = function(v) {
+
             var $liLine = $('<li></li>').addClass('item-blue clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.orderId));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -46,6 +42,7 @@ jQuery(function($) {
             var propertyArr = [["楼盘地址:", v.house.village.name + " " + v.house.houseNumber, "grey"], ["客户名:", v.customer.name, "grey"], ["设计部:", v.designer.dept.name, "grey"], ["设计师:", v.designer.currentName, "grey"], ["业务部:", v.salesman.dept.name, "grey"], ["业务员:", v.salesman.currentName, "grey"], ["面积:", v.house.buildArea, "blue"], ["合同报价:", v.orderTotalPrice, "blue"], ["量房时间:", v.measureTime, "green"], ["类型:", decorationBelong.decorationType[v.type], "red"], ["状态:", decorationBelong.decorationOrderStatus[v.status], "red"]];
 
             $.each(propertyArr, function(index, value) {
+
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -57,14 +54,17 @@ jQuery(function($) {
             $liLine.append($h3).append($ulProperty);
 
             $btnLook.click(function() {
+
                 viewDecorationBelongDetail(v.orderId);
             });
 
             $btnDesign.click(function() {
+
                 changeDecorationBelongDesigner(v.orderId);
             });
 
             $btnSalesman.click(function() {
+
                 changeDecorationBelongBussiness(v.orderId);
             });
 
@@ -73,10 +73,12 @@ jQuery(function($) {
 
         return {
             init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function(v) {
+
                 return creatLine(v);
             }
         };
@@ -87,6 +89,7 @@ jQuery(function($) {
     var searcher = new Searcher();
 
     searcher.init(_condArr, "condList", api.decoration.pageDecorationForBelong, function(data) {
+
         displayFunc.init('resultList', data);
     }, "pagenation", "decorationBelongPostData");
 

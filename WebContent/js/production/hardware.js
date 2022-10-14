@@ -291,6 +291,7 @@ $(function(){
 
             if (data.errorCode == 0) {
                 option["hardware.path"] = data.resUrl;
+                option["hardware.filesize"] = data.filesize;
             }else{
                 com.showAlert(com.warning, "上传失败");
             }

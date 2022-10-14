@@ -2,13 +2,19 @@ $(function() {
 
     var soods = {
         gid: null,
+        keyword: null,
         items: {
             selling: com.focusPage("#selling"),
             goods: com.focusPage("#goodsName"),
             name: com.focusPage("#name"),
             quote: com.focusPage("#quote"),
             num: com.focusPage("#num"),
-            soodsnum: com.focusPage("#soodsnum")
+            soodsnum: com.focusPage("#soodsnum"),
+
+            executeTimes: com.focusPage("#executeTimes"),
+            executeDates: com.focusPage("#executeDates"),
+
+            filePath: com.focusPage("#filePath"),
         },
         uitems: {
             uSelling: com.focusPage("#uSelling")
@@ -18,6 +24,10 @@ $(function() {
 
             com.clearValidator();
         }),
+        btns: {
+            importBtn: com.focusPage("#importBtn"),
+            exportBtn: com.focusPage("#exportBtn")
+        },
 
         addSoodsModal: com.focusPage("#addSoodsModal"),
         updateSoodsModal: com.focusPage("#updateSoodsModal"),
@@ -27,6 +37,9 @@ $(function() {
         withdrawBtn: com.focusPage("#withdrawBtn"),
         pageType: params.urlLoadParams.type,
     };
+
+    com.datetime(soods.items.executeDates, "date", false);
+    com.datetime(soods.items.executeTimes, "time", false);
 
     soods.withdrawBtn.bindClick(saveData);
     soods.updateSoodsItemBtn.bindClick(updateData);
@@ -42,6 +55,11 @@ $(function() {
 
         com.clearValidator();
         com.cleanItems(soods.uitems);
+    });
+
+    soods.btns.importBtn.click(function() {
+
+        planMission("import");
     });
 
     initUploadBtn();
@@ -200,11 +218,17 @@ $(function() {
     searcher.init(condCodeArrs, "condList", api.data.pageSoods, function(data) {
 
         displayFunc.init('resultList', data);
-    }, "pagenation", "soodsPostData", null, false, null, function() {
+    }, "pagenation", "soodsPostData", {
+        "soods.sid": 0
+    }, false, null, function() {
 
         var $impa = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'import');
         var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
         var $impspan = $('<span></span>').text('导出').appendTo($impa);
+
+        var $upda = $('<a></a>').addClass('btn btn-minier btn-pink pull-left').attr('name', 'update').css("margin", "0px 3px");
+        var $updi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($upda);
+        var $updspan = $('<span></span>').text('批量更新').appendTo($upda);
 
         var $starta = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'start').css("margin", "0px 3px");
         var $starti = $('<i></i>').addClass('icon-ok bigger-110').appendTo($starta);
@@ -230,6 +254,21 @@ $(function() {
             exportPurchase();
         });
 
+        $upda.click(function() {
+
+            soods.keyword = "update_data_soods";
+
+            var form = com.focusPage("#updateForm");
+
+            com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
+            com.focusPage("#fileUpload").removeClass("hide");
+
+            soods.btns.importBtn.removeClass("hide");
+            soods.btns.exportBtn.addClass("hide");
+
+            com.popup4model("#updateMa", "批量更新")
+        });
+
         $starta.click(function() {
 
             batchUpdateStatus(0);
@@ -243,7 +282,7 @@ $(function() {
         if (soods.pageType == "basic") {
             return [$adda];
         } else {
-            return [$impa, $starta, $stopa];
+            return [$impa, $upda, $starta, $stopa];
         }
 
     }, 'resultList');
@@ -289,7 +328,7 @@ $(function() {
         }), function(res) {
 
             $.exceler({
-                column: [["名称: ", 'goods.name'], ["品牌: ", 'goods.brand'], ["品类: ", 'goods.category'], ["单位: ", 'goods.measurementUnit'], ["结算价: ", 'selling'], ["数量: ", 'num'], ["状态: ", 'status']],
+                column: [["名称: ", 'goods.name'], ["选材ID: ", 'sid'], ["品牌: ", 'goods.brand'], ["品类: ", 'goods.category'], ["单位: ", 'goods.measurementUnit'], ["结算价: ", 'selling'], ["数量: ", 'num'], ["状态: ", 'status']],
                 list: res.paging.data
             }, function(v) {
 
@@ -389,6 +428,7 @@ $(function() {
             options["dataDrawing.drawingUrl"] = data.resUrl;
             options["dataDrawing.drawingType"] = 0;
             options["dataDrawing.type"] = 4;
+            options["dataDrawing.filesize"] = data.filesize;
 
             com.post(api.communion.addDataDrawing, options, function(res) {
 
@@ -424,6 +464,62 @@ $(function() {
         }).appendTo(toolsDiv);
 
         $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
+    }
+
+    com.uploadify("#attachment", "上传文件", api.common.uploadOther, 'btn btn-sm btn-primary lineheight0', "*.xls;*.xlsx", {
+        'uploadType': 3
+    }, 1, function(data) {
+
+        0 == data.errorCode ? com.focusPage("#filePath").val(data.resUrl) : alert(data.errorMsg);
+    });
+
+    // 导入创建计划
+    function planMission(type) {
+
+        if (com.validate("uploaddiv")) {
+            return false;
+        }
+
+        var args = "";
+
+        if (type == "import") {
+
+            var filePath = soods.items.filePath.val();
+
+            if (filePath == null || filePath == "") {
+                com.showAlert(com.warning, "上传文件不能为空");
+                return false;
+            }
+
+            args = filePath;
+        } else {
+            return false;
+        }
+
+        var date = soods.items.executeDates.val();
+        var time = soods.items.executeTimes.val();
+
+        var executeTime = date.replace(/-/g, '').substr(2) + time.replace(/:/g, '').substr(0, 4);
+
+        var times = soods.items.executeDates.val() + ' ' + soods.items.executeTimes.val();
+        var checkTime = new Date(times);
+
+        if (!planUtils.TimeComparison(checkTime, config.planTimeLimit)) {
+            com.showAlert(com.warning, "执行时间请大于当前时间" + config.planTimeLimit + "分钟");
+            return false;
+        }
+
+        var options = {
+            "plan.task.keyWord": soods.keyword,
+            "plan.executeTime": executeTime,
+            "plan.args": args
+        };
+
+        com.post(api.information.createPlan, options, function(res) {
+
+            com.showAlert(com.info, "计划创建成功");
+            com.closePopup();
+        });
     }
 
 });

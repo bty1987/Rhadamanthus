@@ -180,9 +180,9 @@ $(function ($) {
     })();
 
     var searcher = new Searcher();
-    var _condArr = ["data-receiptType-name","data-receiptType-type","data-receiptType-status"];
+    var _condArr = ["data-receiptType-name","data-receiptType-type","data-receiptType-status","data-receiptType-fund"];
 
-    searcher.init(_condArr, "condList", api.common.pageReceiptType, function (data) {
+    searcher.init(_condArr, "condList", api.data.pageReceiptType, function (data) {
         displayFunc.init('resultList', data);
     }, "pagenation", "ReceiptTypePostData", null, false, null, function () {
 
@@ -215,14 +215,14 @@ $(function ($) {
             return;
         }
         if(editFlg){
-            com.post(api.common.addReceiptType, options, function () {
+            com.post(api.data.addReceiptType, options, function () {
                 searcher.doSearch();
                 com.showAlert(com.info, "添加成功");
                 receiptType.modal.receiptTypeModal.modal("hide")
             })
         }else{
             options["receiptType.rtId"] = receiptType.items.rtId.val();
-            com.post(api.common.updateReceiptType, options, function () {
+            com.post(api.data.updateReceiptType, options, function () {
                 searcher.doSearch();
                 com.showAlert(com.info, "修改成功");
                 receiptType.modal.receiptTypeModal.modal("hide")
@@ -231,7 +231,7 @@ $(function ($) {
     }
 
     function updateStatus(id, status, failcallBack) {
-        com.post(api.common.updateReceiptTypeForStatus, {
+        com.post(api.data.updateReceiptTypeForStatus, {
             "receiptType.rtId": id,
             "receiptType.status": status
         }, function () {
@@ -252,7 +252,7 @@ $(function ($) {
             "receiptTypeItem.paytype": receiptType.receiptTypeItems.paytype.val()
         };
 
-        com.post(api.common.addReceiptTypeItem, options, function(res){
+        com.post(api.data.addReceiptTypeItem, options, function(res){
             if (res.errorMsg != null) {
                 com.showAlert(com.warning, res.errorMsg);
                 return;

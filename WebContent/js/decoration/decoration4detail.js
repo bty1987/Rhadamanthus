@@ -147,11 +147,14 @@ jQuery(function ($) {
         $.each(res.relationshipType, function (i, k) {
             decorationDetail.relationshipTypes.push(k.key);
         });
+
         $.each(res.customerType, function (i,v) {
             decorationDetail.customerTypes[v.key] = v.value;
         });
+
         decorationDetail.customerItems.type.bindData(res.customerType, "key", "value", false);
         decorationDetail.customerItems.relationshipType.bindData(decorationDetail.relationshipTypes, "key", "value", false);
+
 
     }, null, false);
 
@@ -362,35 +365,30 @@ jQuery(function ($) {
     decorationPayment.postParam["decorationPayment.decoration.orderId"] = decorationDetail.orderId;
 
     com.post(api.ds.decoration, {}, function (res) {
-        
-        decorationDetail.items.orderType.bindData(res.typeness, 'key', 'value');
-        decorationDetail.items.houseType.bindData(res.houseType, 'key', 'value');
-        decorationDetail.items.houseClass.bindData(res.houseClass, 'key', 'value');
-        decorationDetail.items.grade.bindData(res.orderGrade, 'key', 'value');
-
-        decorationDetail.decorationOrderStatus = res.decorationOrderStatus.split("key", "value");
         decorationDetail.type = res.typeness.split("key", "type");
-        decorationDetail.typeness = res.typeness.split("key", "value");
-
-        
-        decorationActivity.stateTypes = res.receiveType.split("key", "value");
-        decorationActivity.states = res.activityItemType.split("key", "value");
-        decorationActivity.isStatus = res.isStatus.split("key", "value");
-        decorationActivity.isAffirms = res.isAffirms.split("key", "value");
-        
     }, null, false);
     
-    com.post(api.ds.information, {}, function (res) {
-        decorationActivity.types = res.activityItemType.split("key", "value");
-        salesActivityItem.salesActivityItemType = res.activityItemType.split("key", "value");
-    }, null, false);
+    decorationDetail.items.orderType.bindData(constant.decoration.decoration.typeness.datas, 'key', 'value');
+    decorationDetail.items.houseType.bindData(constant.decoration.decoration.houseType.datas, 'key', 'value');
+    decorationDetail.items.houseClass.bindData(constant.decoration.decoration.houseClass.datas, 'key', 'value');
+    decorationDetail.items.grade.bindData(constant.decoration.decoration.grade.datas, 'key', 'value');
+    
+    decorationDetail.decorationOrderStatus = constant.decoration.decoration.status.keys;
+    decorationDetail.typeness = constant.decoration.decoration.typeness.keys;
+    decorationActivity.stateTypes = constant.decoration.decorationActivityItem.stateType.keys;
+    decorationActivity.states = constant.decoration.decorationActivityItem.status.keys;
+    decorationActivity.isStatus = constant.decoration.decorationActivityItem.isStatus.keys;
+    decorationActivity.isAffirms = constant.decoration.decorationActivityItem.isAffirm.keys;
+    
+    decorationActivity.types = constant.information().awardStock.type.keys;
+    salesActivityItem.salesActivityItemType = constant.sales().salesActivityItem.type.keys;
 
     com.post(api.ds.manifest, {}, function (res) {
         salesActivityItem.salesActivityItemState = res.salesActivityItemType.split("key", "value");
     }, null, false);
 
     com.post(api.data.queryConstructionNode, {}, function(res){
-        com.focusPage("#quotationCNSelect").bindData(res.constructionNodes, "sort", "name");
+        com.focusPage("#quotationCNSelect").bindData(res.constructionNodes, "cnid", "name");
     });
     
     com.initTypeahead('quoterId', api.personel.queryUserByPinyin, "pinyinName", {
@@ -710,10 +708,10 @@ jQuery(function ($) {
         decorationDetail.quotationTotalPriceModal.modal("show");
     });
 
-    com.focusPage("#btnOtherPayment").on('click', function (res) {
+    queryPaymentType({"paymentType.type": 1, "paymentType.atttype": 0});
+    queryPaymentType({"paymentType.type": 1, "paymentType.atttype": 3});
 
-        queryPaymentType({"paymentType.type": 1, "paymentType.atttype": 0});
-        queryPaymentType({"paymentType.type": 1, "paymentType.atttype": 3});
+    com.focusPage("#btnOtherPayment").on('click', function (res) {
 
         decorationDetail.paymentItems.otherPaymentType.bindData(decorationDetail.paymentTypes, "ptid", "name");
 
@@ -773,7 +771,7 @@ jQuery(function ($) {
 
     com.focusPage("#saveOtherPaymentBtn").on("click", function (res) {
         if (com.validate("otherPaymentModal")) {
-            return;
+            return false;
         }
 
         var options = {
@@ -795,14 +793,14 @@ jQuery(function ($) {
     com.focusPage("#saveGenerateDecorationPaymentBtn").bindClick(function (res) {
 
         if (com.validate("quotationTotalPriceModal")) {
-            return;
+            return false;
         }
 
         var psId = com.focusPage("#paymentScale").find('input:checked').attr('psid');
 
         if (psId == null || psId == "") {
             com.showAlert(com.warning, "请选择款项比例!");
-            return;
+            return false;
         }
 
         var options = {
@@ -815,20 +813,26 @@ jQuery(function ($) {
         if (decorationDetail.orderType == 2) { // 半价/满减/捡捡
 
             var manageRate = 0;
+            var trafficRate = 0;
+            var taxRate = 0;
             // 通过订单编号获取默认报价信息
             com.post(api.quotation.queryQuotationForDefaultByOrderId, {"quotation.orderId": decorationDetail.orderId}, function (res) {
 
                 if (res.quotation.manageRate != null && res.quotation.manageRate != 0) {
                     manageRate = res.quotation.manageRate;
+                    trafficRate = res.quotation.trafficRate;
+                    taxRate = res.quotation.taxRate;
                 } else {
                     // 通过报价版本编号查询版本信息
                     com.post(api.quotation.queryQuotationVersionByVersionId, {"quotationVersion.versionId": decorationDetail.versionId}, function (data) {
                         manageRate = data.quotationVersion.manageRate;
+                        trafficRate = data.quotationVersion.trafficRate;
+                        taxRate = data.quotationVersion.taxRate;
                     }, null, false);
                 }
             }, function (e) {
                 com.showAlert(com.error, e.errorMsg);
-                return;
+                return false;
             }, false);
 
             var id = decorationDetail.items.decorationDiscount.val();
@@ -839,6 +843,9 @@ jQuery(function ($) {
             var maching = decorationMaching.material;
             var discount = decorationMaching.discount;
             var names = decorationMaching.name;
+            var manageDiscount = decorationMaching.manageDiscount;
+            var trafficDiscount = decorationMaching.trafficDiscount;
+            var taxDiscount = decorationMaching.taxDiscount;
 
             options = {
                 "decorationHolonomy.decoration.orderId": decorationDetail.orderId,
@@ -849,7 +856,12 @@ jQuery(function ($) {
                 "decorationHolonomy.status": 0,
                 "decorationHolonomy.psId": psId,
                 "decorationHolonomy.discountBase": discountBase,
-                "decorationHolonomy.name": names
+                "decorationHolonomy.name": names,
+                "decorationHolonomy.manageDiscount": manageDiscount,
+                "decorationHolonomy.trafficRate": trafficRate,
+                "decorationHolonomy.trafficDiscount": trafficDiscount,
+                "decorationHolonomy.taxRate": taxRate,
+                "decorationHolonomy.taxDiscount": taxDiscount,
             };
 
             com.post(api.decoration.makeDecorationHolonomy, options, function (res) {
@@ -1513,9 +1525,7 @@ jQuery(function ($) {
     }
 
     function binding(idName) {
-        com.post(api.ds.decoration, {}, function (res) {
-            com.focusPage("#" + idName).bindData(res.receiveType, "key", "value", false);
-        });
+        com.focusPage("#" + idName).bindData(constant.decoration.decorationActivityItem.stateType.datas, "key", "value", false);
     }
 
     function queryPaymentType(options){

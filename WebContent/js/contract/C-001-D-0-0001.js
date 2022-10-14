@@ -73,60 +73,6 @@ jQuery(function($) {
         contractEdit.item.houseType.bindData(res.houseClass, 'key', 'value');
     });
 
-    com.post(api.data.queryCustomerById, {
-        "customer.cid": params.decoration.cid
-    }, function(res) {
-
-        var customer = res.customer;
-
-        com.focusPage("#con-customer-name", "#form").val(customer.name);
-        com.focusPage("#con-customer-phone", "#form").val(customer.phone);
-        com.focusPage("#con-customer-ident", "#form").val(customer.identity);
-        com.focusPage("#con-bank-man", "#form").val(customer.name);
-        com.focusPage("#con-bank-no", "#form").val(customer.companyBankno);
-        com.focusPage("#con-bank-name", "#form").val(customer.companyBank);
-        com.focusPage("#con-bank-phone", "#form").val(customer.phone);
-
-        contractEdit.customer = customer;
-
-        contractEdit.cover["cov-orderId"] = contractEdit.decorationOrderId;
-        contractEdit.cover["cov-customer-name"] = customer.name;
-        contractEdit.cover["cov-customer-phone"] = customer.phone;
-        contractEdit.cover["sin-customer-name"] = customer.name;
-        contractEdit.cover["sin-customer-phone"] = customer.phone;
-        contractEdit.cover["sin-customer-ident"] = customer.identity;
-
-        com.focusPage("#con-company-no", "#form").val(customer.companyNo);
-        com.focusPage("#con-company-name", "#form").val(customer.companyName);
-        com.focusPage("#con-company-name1", "#form").val(customer.companyName);
-        com.focusPage("#con-company-phone", "#form").val(customer.companyPhone);
-        com.focusPage("#con-company-addr", "#form").val(customer.companyAddr);
-        com.focusPage("#con-company-bank", "#form").val(customer.companyBank);
-        com.focusPage("#con-company-bankno", "#form").val(customer.companyBankno);
-    }, null, false);
-
-    if (contractEdit.contractArgs.company == "1" && contractEdit.customer.type == 0) {
-
-        com.showAlert(com.warning, "客户类型为个人");
-
-        com.focusPage("#contractPopUp").empty();
-
-        return false;
-    }
-
-    com.post(api.construction.queryConstructionInfoByOrderId, {
-        "constructionInfo.orderId": contractEdit.decorationOrderId
-    }, function(result) {
-
-        var datas = result.constructionInfo;
-
-        com.focusPage("#con-work-number", "#form").val(datas.timeLimit);
-
-        com.datetime(com.focusPage("#con-work-year", "#form").val(datas.finishTime ? datas.finishTime.substr(0, 4) : ""), "year");
-        com.datetime(com.focusPage("#con-work-month", "#form").val(datas.finishTime ? datas.finishTime.substr(5, 2) : ""), "month");
-        com.datetime(com.focusPage("#con-work-day", "#form").val(datas.finishTime ? datas.finishTime.substr(8, 2) : ""), "day");
-    });
-
     // 通过装修单号获取装修款项信息
     com.post(api.payment.queryDecorationPaymentByOrderId, {
         "decorationPayment.decoration.orderId": contractEdit.decorationOrderId
@@ -152,6 +98,32 @@ jQuery(function($) {
         var house = data.house;
         var village = house.village;
         var proper = village.cityProper;
+        var customer = res.decoration.customer;
+
+        com.focusPage("#con-customer-name", "#form").val(customer.name);
+        com.focusPage("#con-customer-phone", "#form").val(customer.phone);
+        com.focusPage("#con-customer-ident", "#form").val(customer.identity);
+        com.focusPage("#con-bank-man", "#form").val(customer.name);
+        com.focusPage("#con-bank-no", "#form").val(customer.companyBankno);
+        com.focusPage("#con-bank-name", "#form").val(customer.companyBank);
+        com.focusPage("#con-bank-phone", "#form").val(customer.phone);
+
+        contractEdit.customer = customer;
+
+        contractEdit.cover["cov-orderId"] = contractEdit.decorationOrderId;
+        contractEdit.cover["cov-customer-name"] = customer.name;
+        contractEdit.cover["cov-customer-phone"] = customer.phone;
+        contractEdit.cover["sin-customer-name"] = customer.name;
+        contractEdit.cover["sin-customer-phone"] = customer.phone;
+        contractEdit.cover["sin-customer-ident"] = customer.identity;
+
+        com.focusPage("#con-company-no", "#form").val(customer.companyNo);
+        com.focusPage("#con-company-name", "#form").val(customer.companyName);
+        com.focusPage("#con-company-name1", "#form").val(customer.companyName);
+        com.focusPage("#con-company-phone", "#form").val(customer.companyPhone);
+        com.focusPage("#con-company-addr", "#form").val(customer.companyAddr);
+        com.focusPage("#con-company-bank", "#form").val(customer.companyBank);
+        com.focusPage("#con-company-bankno", "#form").val(customer.companyBankno);
 
         com.focusPage("#con-province-name", "#form").val(proper.city.province);
         com.focusPage("#con-city-name", "#form").val(proper.city.name);
@@ -175,6 +147,28 @@ jQuery(function($) {
         contractEdit.cover["cov-address"] = data.house.village.name + " " + data.house.houseNumber;
         contractEdit.cover["cov-designer-name"] = data.designer.currentName;
         contractEdit.cover["cov-designer-phone"] = data.designer.phone;
+    }, null, false);
+
+    if (contractEdit.contractArgs.company == "1" && contractEdit.customer.type == 0) {
+
+        com.showAlert(com.warning, "客户类型为个人");
+
+        com.focusPage("#contractPopUp").empty();
+
+        return false;
+    }
+
+    com.post(api.construction.queryConstructionInfoByOrderId, {
+        "constructionInfo.orderId": contractEdit.decorationOrderId
+    }, function(result) {
+
+        var datas = result.constructionInfo;
+
+        com.focusPage("#con-work-number", "#form").val(datas.timeLimit);
+
+        com.datetime(com.focusPage("#con-work-year", "#form").val(datas.finishTime ? datas.finishTime.substr(0, 4) : ""), "year");
+        com.datetime(com.focusPage("#con-work-month", "#form").val(datas.finishTime ? datas.finishTime.substr(5, 2) : ""), "month");
+        com.datetime(com.focusPage("#con-work-day", "#form").val(datas.finishTime ? datas.finishTime.substr(8, 2) : ""), "day");
     });
 
     com.post(api.decoration.queryDecorationActivityByOrderId, {
@@ -192,7 +186,7 @@ jQuery(function($) {
         quotationFunctionAreas: {}
     };
     params.showType = {
-        itemtype: 7
+        itemtype: 31
     };
 
     com.post(api.quotation.queryQuotationForDefaultByOrderId, {
@@ -251,7 +245,7 @@ jQuery(function($) {
         "headers": ["序号", "项目名称", "单位", "数量", "工艺做法及材料说明"],
         "colWidthPercent": [1, 3, 1, 1, 5],
         "headersAlignment": 1,
-        "cellHorizontalAlignment": 1,
+        "cellHorizontalAlignment": 0,
         "cellVerticalAlignment": 5,
         "datas": []
     };
@@ -416,13 +410,8 @@ jQuery(function($) {
             data["con-contract-rtotal-cn"] = utils.getCNMoney(parseFloat(data["con-contract-rtotal"]));
             data["con-design-money-cn"] = utils.getCNMoney(parseFloat(data["con-design-money"]));
 
-            // data["sin-customer-name"] = data["con-customer-name"];
-            // data["sin-customer-phone"] = data["con-customer-phone"];
-            // data["sin-customer-ident"] = data["con-customer-ident"];
-
             if (contractEdit.contractArgs.company == "1") {
                 delete data["con-customer-ident"];
-                // delete data["sin-customer-ident"];
                 delete data["cov-customer-name"];
 
                 data["cov-company-name"] = data["con-company-name"];

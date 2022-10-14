@@ -14,7 +14,8 @@ $(function() {
         totalCost: 0,
         totalPayable: 0,
         totalSettlementProfit: 0,
-        totalCompanyProfit: 0
+        totalCompanyProfit: 0,
+        totalService: 0
     };
 
     var balanceSales = {};
@@ -72,7 +73,7 @@ $(function() {
         var tr1 = $('<tr style="font-size: 7px;"></tr>').appendTo(table);
         var td1 = $('<td colspan="4" style="border: 1px solid;"></td>').text("供应商名称：" + brand.name).appendTo(tr1);
         var td2 = $('<td colspan="3" style="border: 1px solid;"></td>').text("负责对账员：" + creater.userName).appendTo(tr1);
-        var td3 = $('<td colspan="4" style="border: 1px solid;"></td>').text("单号：" + balanceSales.name).appendTo(tr1);
+        var td3 = $('<td colspan="5" style="border: 1px solid;"></td>').text("单号：" + balanceSales.name).appendTo(tr1);
         var tr2 = $('<tr colspan="11" style="border: 1px solid;height: 60px;text-align: center; font-size: 7px;"></tr>').appendTo(table);
 
         var num = utils.changeThrDecimal(options.totalPayable);
@@ -91,7 +92,8 @@ $(function() {
         var td11 = $('<td rowspan="1" style="border: 1px solid;"></td>').text("销售成本（厂商结款额）").appendTo(tr3);
         var td12 = $('<td rowspan="1" style="border: 1px solid;"></td>').text("厂商抹零").appendTo(tr3);
         var td13 = $('<td rowspan="1" style="border: 1px solid;"></td>').text("应付账款").appendTo(tr3);
-        var td14 = $('<td rowspan="1" style="border: 1px solid;"></td>').text("备注").appendTo(tr3);
+        var td14 = $('<td rowspan="1" style="border: 1px solid;"></td>').text("服务费金额").appendTo(tr3);
+        var td15 = $('<td rowspan="1" style="border: 1px solid;"></td>').text("备注").appendTo(tr3);
         return table;
     }
 
@@ -143,7 +145,8 @@ $(function() {
             var td22 = $('<td style="border: 1px solid;"></td>').text(v.salesBalance.pbalance).appendTo(tr4);
             var td29 = $('<td style="border: 1px solid;"></td>').text(venderMaling).appendTo(tr4);
             var td24 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(accountsPayable)).appendTo(tr4);
-            var td25 = $('<td style="border: 1px solid;"></td>').text(v.salesBalance.comment).appendTo(tr4);
+            var td25 = $('<td style="border: 1px solid;"></td>').text(utils.accSub(utils.changeThrDecimal(salesRevenue), utils.changeThrDecimal(accountsPayable))).appendTo(tr4);
+            var td26 = $('<td style="border: 1px solid;"></td>').text(v.salesBalance.comment).appendTo(tr4);
 
             options.totalIncome = utils.accAdd(options.totalIncome, salesRevenue);// 合计销售收入
             options.totalSalesAmount = utils.accAdd(options.totalSalesAmount, salesAmount);// 合计销售金额
@@ -151,6 +154,7 @@ $(function() {
             options.totalDiscount = utils.accAdd(options.totalDiscount, allowance);// 合计折扣/抹零金额
             options.totalPayable = utils.accAdd(options.totalPayable, accountsPayable);// 合计应付账款
             options.totalRelief = utils.accAdd(options.totalRelief, venderMaling);// 合计供应商减免金额
+            options.totalService = utils.accAdd(options.totalService, utils.accSub(utils.changeThrDecimal(salesRevenue), utils.changeThrDecimal(accountsPayable)));
         });
     }
 
@@ -166,7 +170,8 @@ $(function() {
         var td33 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(options.totalCost)).appendTo(tr5);
         var td46 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(options.totalRelief)).appendTo(tr5);
         var td35 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(options.totalPayable)).appendTo(tr5);
-        var td36 = $('<td style="border: 1px solid;"></td>').text("").appendTo(tr5);
+        var td36 = $('<td style="border: 1px solid;"></td>').text(utils.changeThrDecimal(options.totalService)).appendTo(tr5);
+        var td37 = $('<td style="border: 1px solid;"></td>').text("").appendTo(tr5);
     }
 
     function createPreHeader() {
@@ -244,6 +249,7 @@ $(function() {
                 accountsPayable = utils.accAdd(v.salesBalance.pbalance, venderMaling);
                 venderMaling = (-venderMaling);
             }
+
             index = index + 1;
             var tr4 = $('<tr style="border: 1px solid;height: 25px;text-align: center;font-size: 5px;"></tr>').appendTo(tabody);
             var td24 = $('<td style="border: 1px solid;"></td>').text(index).appendTo(tr4);

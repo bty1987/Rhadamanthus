@@ -13,6 +13,8 @@ jQuery(function ($) {
             paytype: com.focusPage("#paytype"),
             bustype: com.focusPage("#bustype"),
             atttype: com.focusPage("#atttype"),
+            payScale: com.focusPage("#payScale"),
+            saleScale: com.focusPage("#saleScale"),
             code: com.focusPage("#code"),
             taxrate: com.focusPage("#taxrate"),
             kino: com.focusPage("#kino"),
@@ -154,6 +156,8 @@ jQuery(function ($) {
                     break;
             }
         }, clazz: "red"},
+        {fieId:"payScale",name: "付款比例", prop: "payScale", clazz:"blue"},
+        {fieId:"saleScale",name: "销售比例", prop: "saleScale", clazz:"blue"},
         {fieId:"code", name: "索引", prop: function(v){
 
             switch(v.type) {
@@ -180,6 +184,8 @@ jQuery(function ($) {
     var linebtns = [
         {name: "更新", clazz: "btn-yellow", handle: function(v){
             paymentType.ptid = v.ptid;
+            paymentType.items.payScale.val(v.payScale);
+            paymentType.items.saleScale.val(v.saleScale);
             paymentType.items.taxrate.val(v.taxrate == 0 ? "" : v.taxrate);
             paymentType.items.kino.val(v.kino);
             paymentType.items.kiname.val(v.kiname);
@@ -216,6 +222,8 @@ jQuery(function ($) {
 
         var url;
         var options = {
+            "paymentType.payScale" : paymentType.items.payScale.val(),
+            "paymentType.saleScale" : paymentType.items.saleScale.val(),
             "paymentType.taxrate": paymentType.items.taxrate.val() == "" ? 0 : paymentType.items.taxrate.val(),
             "paymentType.kino": paymentType.items.kino.val(),
             "paymentType.kiname": paymentType.items.kiname.val(),

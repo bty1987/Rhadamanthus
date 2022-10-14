@@ -43,8 +43,6 @@ jQuery(function($) {
 
     com.post(api.ds.balance, {}, function (res) {
         accountes.addItems.type.bindData(res.isAccountType, "key", "value");
-        accountes.isAccountType = res.isAccountType.split("key", "value");
-        accountes.isAccountStatus = res.isAccountStatus.split("key", "value");
     }, null, false);
 
     com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name" : "", "user.status" : 0}, "autoFillKeyValue", "key", "value", null);
@@ -88,8 +86,8 @@ jQuery(function($) {
                 ["应付额:", v.referMoney, "grey"],
                 ["实付额:", v.realMoney, "grey"],
                 ["余额:", v.surplus, "grey"],
-                ["类型:",accountes.isAccountType[v.type], "red"],
-                ["状态:", accountes.isAccountStatus[v.status], "red"],
+                ["类型:", constant.balance.account.type.keys[v.type], "red"],
+                ["状态:", constant.balance.account.status.keys[v.status], "red"],
             ];
 
             $.each(propertyArr, function (index, value) {

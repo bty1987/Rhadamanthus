@@ -122,6 +122,50 @@
     </div>
 </div>
 
+<div class="modal fade" id="transferModal" tabindex="-1">
+	<div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="addItemDialog">人员调职</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+	
+	                <div class="form-group">
+	                    <label class="col-sm-3 control-label no-padding-right orange" for="deptType">部门类型</label>
+	                    <div class="col-sm-9">
+	                        <select class="col-sm-7 col-xs-10 v_required" id="deptType" data-toggle="popover" data-trigger='manual'></select>
+	                    </div>
+	                </div>
+	
+	                <div class="form-group">
+	                    <label class="col-sm-3 control-label no-padding-right orange" for="dept">部门</label>
+	                    <div class="col-sm-9">
+	                        <select class="col-sm-7 col-xs-10 v_required" id="dept" data-toggle="popover" data-trigger='manual'></select>
+	                    </div>
+	                </div>
+	
+	                <div class="form-group">
+	                    <label class="col-sm-3 control-label no-padding-right orange" for="duty">职位</label>
+	                    <div class="col-sm-9">
+	                        <select class="col-sm-7 col-xs-10 v_required" id="duty" data-toggle="popover" data-trigger='manual'></select>
+	                    </div>
+	                </div>
+	
+	            </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" id="save" class="btn btn-primary">保存</button>
+                <button type="button" id="cancel" class="btn btn-default" data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
 	$.loadScript(['js/personnel/user.js']);
 </script>

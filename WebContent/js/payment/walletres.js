@@ -1,7 +1,7 @@
 $(function() {
 
     var walletres = {
-        walletresType: {},
+        walletresType: constant.payment.walletres.type.keys,
         item: {
             type: com.focusPage("#type")
         }
@@ -9,16 +9,11 @@ $(function() {
 
     upload(com.focusPage("#pictureUpload"), "上传图片");
 
-    com.post(api.ds.payment, "", function(data) {
-
-        $.each(data.walletresType, function(i, v) {
-
-            drawPicDiv(v.key + "Pictures", v.value);
-            walletres.walletresType[v.key] = v.value;
-        });
-
-        walletres.item.type.bindData(data.walletresType, "key", "value")
+    $.each(constant.payment.walletres.type.datas, function(i, v) {
+        drawPicDiv(v.key + "Pictures", v.value);
     });
+
+    walletres.item.type.bindData(constant.payment.walletres.type.datas, "key", "value");
 
     com.post(api.payment.queryWalletres, {"walletres.wid": params.payment.wid}, function(res) {
 
@@ -43,7 +38,8 @@ $(function() {
                 "walletres.name": data.strutsUploadsFileName,
                 "walletres.path": data.resUrl,
                 "walletres.type": com.focusPage("#type").val(),
-                "walletres.comment": ""
+                "walletres.comment": "",
+                "walletres.filesize": data.filesize
             };
 
             com.post(api.payment.addWalletres, options, function(res) {

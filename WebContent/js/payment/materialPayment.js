@@ -1,10 +1,11 @@
 
 jQuery(function($) {
+
 	var materialPayment = {
 		htmlName: "material",
 		type: params['urlLoadParams'].paytype,
 		paytypes: [],
-		paymentStatusArray: ["未付款", "已付款", "已确认"],
+		paymentStatusArray: constant.payment.materialPayment.status.keys,
 		payment: null,
 
 		items: {
@@ -55,7 +56,7 @@ jQuery(function($) {
 
 			checkvAdd: com.focusPage("#checkvAdd", "#materialPayment"),
 			couponAdd: com.focusPage("#couponAdd", "#materialPayment"),
-			posPush: com.focusPage("#posSend", "#materialPayment")
+			createPaytran: com.focusPage("#createPaytran", "#materialPayment")
 		},
 
 		modals: {
@@ -89,9 +90,13 @@ jQuery(function($) {
 		functions: [],
 		mpids: [],
 		isCollects: false,
-		materialPaymentTypeData: {},
-		decorationType: [],
-		pageConfig: {}
+		materialPaymentTypeData: constant.payment.materialPayment.paymentType.keys,
+		decorationType: constant.decoration().decoration.typeness.datas,
+		pageConfig: {},
+		typeNo: 2,
+		atttype: 1,
+		collectType: [constant.payment.materialPayment.PAYMENTTYPE_TYPE_DEPOSIT_INT, constant.payment.materialPayment.PAYMENTTYPE_TYPE_FULL_INT],
+		refundType:[constant.payment.materialPayment.PAYMENTTYPE_TYPE_REJECT_INT, constant.payment.materialPayment.PAYMENTTYPE_TYPE_FULL_REFUND_INT, constant.payment.materialPayment.PAYMENTTYPE_TYPE_COUPON_REFUND_INT, constant.payment.materialPayment.PAYMENTTYPE_TYPE_DEPOSIT_REFUND_INT]
 	};
 
 	// 隐藏触发
@@ -118,19 +123,8 @@ jQuery(function($) {
 		com.cleanItems(materialPayment.items);
 	});
 
-	com.post(api.ds.payment, {}, function(res){
-		materialPayment.items.advanceType.bindData(res.advanceType, 'key', 'value');
-		materialPayment.items.posway.bindData(res.posway, "key", "value");
-
-		for(var i=0;i<res.materialPaymentType.length;i++){
-			var paymentType = res.materialPaymentType[i];
-			materialPayment.materialPaymentTypeData[paymentType.key] = paymentType.value;
-		}
-	}, null, false);
-
-	com.post(api.ds.decoration, {}, function(res){
-		materialPayment.decorationType = res.typeness;
-	}, null, false);
+	materialPayment.items.advanceType.bindData(constant.payment.materialPayment.advanceType.datas, 'key', 'value');
+	materialPayment.items.posway.bindData(constant.payment.receiptType.posway.datas, "key", "value");
 
 	// checkbox选中时联动
 	com.focusPage("#collectModal :checkbox", "#materialPayment").on("change", function(){
@@ -160,8 +154,8 @@ jQuery(function($) {
 
 	materialPayment.btns.refundBtn.bindClick(collect);
 
-	materialPayment.btns.posPush.unbind().click(function(){
-		paymentUtils.pushPos(materialPayment, 2, materialPayment.payment.material.orderId);
+	materialPayment.btns.createPaytran.unbind().click(function(){
+		paymentUtils.pushPos(materialPayment, materialPayment.payment.material.orderId);
 		return false;
 	});
 
@@ -230,13 +224,13 @@ jQuery(function($) {
 
 			if (materialPayment.pageConfig.pageBtn.contains("decorationInfo")) $divBtnWrap.append($btnDecoration);
 			if(materialPayment.pageConfig.pageBtn.contains("collect")) $divBtnWrap.append($btnCollect);
-			if(v.paymentStatus != 0 && materialPayment.pageConfig.pageBtn.contains("print")) $divBtnWrap.append($btnPrint);
-			if(v.paymentStatus == 1 && materialPayment.pageConfig.pageBtn.contains("update")) $divBtnWrap.append($btnUpdate);
+			if(v.paymentStatus != constant.payment.materialPayment.STATUS_INIT_INT && materialPayment.pageConfig.pageBtn.contains("print")) $divBtnWrap.append($btnPrint);
+			if(v.paymentStatus == constant.payment.materialPayment.STATUS_COLLECT_INT && materialPayment.pageConfig.pageBtn.contains("update")) $divBtnWrap.append($btnUpdate);
 
 			// 收款
             $btnCollect.click(function(){
 
-				if([2, 3].contains(v.paymentType)) paymentUtils.showPos(materialPayment, {"paytran.orderId": v.material.orderId}, [0, 1]);
+				if(materialPayment.collectType.contains(v.paymentType)) paymentUtils.showPos(materialPayment, {"paytran.orderId": v.material.orderId, "paytran.atttype": materialPayment.atttype}, [0, 1]);
 
 				initCollect(v, false);
 
@@ -340,7 +334,7 @@ jQuery(function($) {
 		materialPayment.items.referMoney.val(payment.referMoney).attr("disabled", "disabled");
 		materialPayment.items.comment.removeAttr("disabled");
 
-		var type = [4, 5, 6, 7].contains(payment.paymentType) ? 1 : 0; // 0: 收款类型 , 1: 退款类型
+		var type = materialPayment.refundType.contains(payment.paymentType) ? 1 : 0; // 0: 收款类型 , 1: 退款类型
 
 		if(materialPayment.pageConfig.paytypes.contains("cash")) paymentUtils.initCash(materialPayment);
 		if(materialPayment.pageConfig.paytypes.contains("bank")) paymentUtils.initBank(materialPayment, type);
@@ -351,7 +345,6 @@ jQuery(function($) {
 
 		// 根据装修单等级获取收据类型等级
 		var grade = payment.material.grade == "B" ? "B" : "";
-
 
 		// 根据等级在数组中筛选出符合要求的用于显示
 		paymentUtils.initBankGrade(materialPayment, grade);
@@ -425,7 +418,7 @@ jQuery(function($) {
 
 		var payment = materialPayment.payment;
 
-		if([2, 3].contains(payment.paymentType) && payment.paymentStatus == 0){
+		if(materialPayment.collectType.contains(payment.paymentType) && payment.paymentStatus == 0){
 			url =  api.payment.collectMaterialPayment;
 			objectName = "materialPayment";
 
@@ -443,7 +436,7 @@ jQuery(function($) {
 				}
 			}
 
-		}else if([4, 5, 6, 7].contains(payment.paymentType) && payment.paymentStatus == 0){
+		}else if(materialPayment.refundType.contains(payment.paymentType) && payment.paymentStatus == 0){
 			url = api.payment.refundMaterialPayment;
 			objectName = "materialPayment";
 			type = 1;
@@ -533,7 +526,7 @@ jQuery(function($) {
 				_grade = $input.attr("data-grade");
 			}
 
-			if ([4, 5, 6, 7].contains(parseInt($input.attr("data-paymenttype")))) {
+			if (materialPayment.refundType.contains(parseInt($input.attr("data-paymenttype")))) {
 				flag = true;
 				com.showAlert(com.warning, "批量收款不支持退款");
 				return false;
@@ -567,7 +560,7 @@ jQuery(function($) {
 		materialPayment.payment = {"mpid": payment.mpid, "referMoney": sumMoney, "paymentType": payment.paymenttype, "paymentStatus": payment.paymentstatus};
 		materialPayment.payment.material = {"orderId": payment.orderid, "grade": payment.grade};
 
-		if([2, 3].contains(payment.paymenttype)) paymentUtils.showPos(materialPayment, {"paytran.orderId": payment.orderid}, [0, 1]);
+		if(materialPayment.collectType.contains(payment.paymenttype)) paymentUtils.showPos(materialPayment, {"paytran.orderId": payment.orderid, "paytran.atttype": materialPayment.atttype}, [0, 1]);
 
 		initCollect(materialPayment.payment, true);
 	});
@@ -582,7 +575,7 @@ jQuery(function($) {
 			var $type = parseInt($that.attr('data-paymentType'));
 			var $referMoney = $that.attr('data-refermoney');
 
-			if ([4, 5, 6, 7].indexOf($type) != -1) {
+			if (materialPayment.refundType.indexOf($type) != -1) {
 				$total = utils.accSub($total, $referMoney);
 			} else {
 				$total = utils.accAdd($total, $referMoney);
@@ -655,37 +648,34 @@ jQuery(function($) {
 			}, function(v){
 				v.collecter = v.collecter == null ? {"collecter" : ""} : v.collecter;
 				if(v.bank != null && v.bank != 0){
-					var $info = ' ';
-					var _s = v.bankInfo.split('#');
-					for(var i=1;i<_s.length-1;i++){
-						var _i = _s[i].split('|');
-						$info += materialPayment.bankInfo[_i[0]] + " " + _i[1] + ", " + _i[2] + ", ";
-					}
-
-					v.bankInfo = $info;
+					v.bankInfo = paymentUtils.splitBankInfo('', v.bankInfo, materialPayment.bankInfo, true);
 				}
 
 				if(v.checkv != null && v.checkv != 0){
 					var checkvInfoStr = v.checkvBank;
 					if(checkvInfoStr.indexOf("#") != -1){
-						var $checkvInfo = ' ';
-						var _c = v.checkvBank.split('#');
-						for(var i=1;i<_c.length-1;i++){
-							var _i = _c[i].split('|');
-							$checkvInfo += materialPayment.checkvInfo[_i[0]] + " " + _i[1] + ", " + _i[2] + ", ";
-						}
-
-						v.checkvBank = $checkvInfo;
+						v.checkvBank = paymentUtils.splitBankInfo('', v.checkvBank, materialPayment.checkvInfo, true);
 					}else{
 						v.checkvBank = v.checkv != null && v.checkv != "0" ? materialPayment.checkvInfo[v.checkvBank] : '';
 					}
+				}
+
+				if(v.coupon != null && v.coupon != 0){
+					var $couponInfo = ' ';
+					var _info = v.couponInfo.split('#');
+					for(var i=1;i<_info.length-1;i++){
+						var _i = _info[i].split(':');
+						$couponInfo += materialPayment.couponTypeData[_i[0]][1] + " " + _i[1] + ", ";
+					}
+
+					v.couponInfo = $couponInfo;
 				}
 
 				v.installmentBank = v.installment != null && v.installment != "0" ? materialPayment.bankInfo[v.installmentBank] : '';
 				v.accountsBank = v.accounts != null && v.accounts != "0" ? materialPayment.accountsInfo[v.accountsBank] : '';
 
 				v.paymentType = materialPayment.materialPaymentTypeData[v.paymentType];
-				v.paymentStatus = v.paymentStatus == 1 ? '已付款' : '已确认';
+				v.paymentStatus = v.paymentStatus == constant.payment.materialPayment.STATUS_COLLECT_INT ? '已付款' : '已确认';
 			});
 		});
 	});

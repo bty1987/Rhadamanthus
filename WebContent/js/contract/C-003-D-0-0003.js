@@ -78,37 +78,6 @@ jQuery(function($) {
         contractEdit.item.houseType.bindData(res.houseClass, 'key', 'value');
     });
 
-    com.post(api.data.queryCustomerById, {
-        "customer.cid": params.decoration.cid
-    }, function(res) {
-
-        var customer = res.customer;
-
-        com.focusPage("#con-customer-name", "#form").val(customer.name);
-        com.focusPage("#con-customer-phone", "#form").val(customer.phone);
-        com.focusPage("#con-customer-ident", "#form").val(customer.identity);
-
-        contractEdit.customer = customer;
-
-        contractEdit.cover["cov-orderId"] = contractEdit.decorationOrderId;
-        contractEdit.cover["sin-customer-ident"] = customer.identity;
-        contractEdit.cover["sin-customer-name"] = customer.name;
-
-        com.focusPage("#con-company-name", "#form").val(customer.companyName);
-
-        contractEdit.cover["cov-company-name"] = customer.companyName;
-
-    }, null, false);
-
-    if (contractEdit.contractArgs.company == "1" && contractEdit.customer.type == 0) {
-
-        com.showAlert(com.warning, "客户类型为个人");
-
-        com.focusPage("#contractPopUp").empty();
-
-        return false;
-    }
-
     // 通过装修单号获取装修款项信息
     com.post(api.payment.queryDecorationPaymentByOrderId, {
         "decorationPayment.decoration.orderId": contractEdit.decorationOrderId
@@ -134,6 +103,21 @@ jQuery(function($) {
         var house = data.house;
         var village = house.village;
         var proper = village.cityProper;
+        var customer = res.decoration.customer;
+
+        com.focusPage("#con-customer-name", "#form").val(customer.name);
+        com.focusPage("#con-customer-phone", "#form").val(customer.phone);
+        com.focusPage("#con-customer-ident", "#form").val(customer.identity);
+
+        contractEdit.customer = customer;
+
+        contractEdit.cover["cov-orderId"] = contractEdit.decorationOrderId;
+        contractEdit.cover["sin-customer-ident"] = customer.identity;
+        contractEdit.cover["sin-customer-name"] = customer.name;
+
+        com.focusPage("#con-company-name", "#form").val(customer.companyName);
+
+        contractEdit.cover["cov-company-name"] = customer.companyName;
 
         com.focusPage("#con-province-name", "#form").val(proper.city.province);
         com.focusPage("#con-city-name", "#form").val(proper.city.name);
@@ -147,7 +131,16 @@ jQuery(function($) {
 
         contractEdit.cover["cov-address"] = data.house.village.name + " " + data.house.houseNumber;
 
-    });
+    }, null, false);
+
+    if (contractEdit.contractArgs.company == "1" && contractEdit.customer.type == 0) {
+
+        com.showAlert(com.warning, "客户类型为个人");
+
+        com.focusPage("#contractPopUp").empty();
+
+        return false;
+    }
 
     com.focusPage('#talkingList').click(function() {
 

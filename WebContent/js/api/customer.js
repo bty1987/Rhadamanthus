@@ -8,7 +8,7 @@
     repairPay: {url: "/views/customer/repairPay.html"},
     complaint: {url: "/views/customer/complaint.html"},
     crowdUser: {url: "/views/customer/crowdUser.html"},
-    customerRecord: {url: "/views/customer/customerRecord.html"}
+    customerRecord: {url: "/views/customer/customerRecord.html"},
 });
 
 $.extend(api, {customer: {

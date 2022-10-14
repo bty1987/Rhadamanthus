@@ -26,19 +26,6 @@ jQuery(function($) {
         pageType: params.urlLoadParams.type,
     };
 
-    com.post(api.ds.decoration, {}, function(res) {
-
-        extension.datasets.decorationStatus = res.decorationOrderStatus.split("key", "value");
-
-    }, null, false);
-
-    com.post(api.ds.quotation, {}, function(res) {
-
-        extension.datasets.status = res.extensionStatus.split("key", "value");
-        extension.datasets.types = res.extensionType.split("key", "value");
-
-    }, null, false);
-
     function initDecorationInfo() {
 
         var quotationList = com.focusPage("#quotationList").html("");
@@ -54,11 +41,6 @@ jQuery(function($) {
 
     var extraParams = {
         "extension.orderId": extension.orderId
-    };
-
-    var typeDict = {
-        "0": "增项",
-        "1": "减项"
     };
 
     function initQuotationList() {
@@ -126,7 +108,10 @@ jQuery(function($) {
 
     if (extension.pageType == null) {
 
-        com.focusPage('#condList').addClass("hide");
+        com.focusPage('#fl-statement').statement("报价", "扩展").show();
+        com.focusPage('#decorationInfo').show();
+
+        com.focusPage("#pagenation").hide();
 
         initQuotationList();
 
@@ -135,7 +120,7 @@ jQuery(function($) {
             name: "类型",
             prop: "type",
             clazz: "red",
-            dataset: typeDict,
+            dataset: constant.quotation().extension.type.keys,
         }, {
             field: "undisPrice",
             name: "打折项总额",
@@ -160,7 +145,7 @@ jQuery(function($) {
             field: "status",
             name: "状态",
             prop: "status",
-            dataset: extension.datasets.status,
+            dataset: constant.quotation().extension.status.keys,
             clazz: "red"
         }, {
             field: "content",
@@ -176,7 +161,7 @@ jQuery(function($) {
 
     if (extension.pageType == "page") {
 
-        extension.items.decorationInfo.addClass("hide");
+        com.focusPage("#extensionPageContent").removeClass("page-content");
 
         com.focusPage('#add').addClass("hide");
         com.focusPage('#btnBack').addClass("hide");
@@ -184,6 +169,7 @@ jQuery(function($) {
 
         searcher.base("condList", "pagenation", "resultList", api.quotation.pageExtension);
         searcher.condition(["quotation-extension-decoration-orderId", "quotation-extension-decoration-village", "quotation-extension-decoration-designer", "quotation-extension-decoration-salesman", "quotation-extension-decoration-status", "quotation-extension-createTime", "quotation-extension-status"]);
+        searcher.history("extensionPostData");
 
         var lineprops = [{
             field: "decoration.orderId",
@@ -224,7 +210,7 @@ jQuery(function($) {
             field: "decoration.status",
             name: "订单状态",
             prop: "decoration.status",
-            dataset: extension.datasets.decorationStatus,
+            dataset: constant.decoration().decoration.status.keys,
             clazz: "red"
         }, {
             type: "newline"
@@ -233,7 +219,7 @@ jQuery(function($) {
             name: "类型",
             prop: "type",
             clazz: "red",
-            dataset: typeDict,
+            dataset: constant.quotation().extension.type.keys,
         }, {
             field: "undisPrice",
             name: "打折项总额",
@@ -258,7 +244,7 @@ jQuery(function($) {
             field: "status",
             name: "状态",
             prop: "status",
-            dataset: extension.datasets.status,
+            dataset: constant.quotation().extension.status.keys,
             clazz: "red"
         }, {
             field: "content",
@@ -315,7 +301,7 @@ jQuery(function($) {
             "extension.content": extension.items.addExtensionDes.val(),
             "extension.type": extension.items.addExtensionType.val(),
             "extension.orderId": extension.orderId,
-            "extension.status": 0,
+            "extension.status": constant.quotation().extension.STATUS_INIT_SHORT,
             "extension.total": 0
         };
 

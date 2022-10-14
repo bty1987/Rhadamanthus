@@ -264,6 +264,7 @@ $(function () {
             options["dataDrawing.drawingUrl"] = data.resUrl;
             options["dataDrawing.drawingType"] = 0;
             options["dataDrawing.type"] = 0;
+            options["dataDrawing.filesize"] = data.filesize;
 
             com.post(api.communion.addDataDrawing, options, function (res) {
                 

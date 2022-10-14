@@ -40,22 +40,9 @@ $(function() {
     com.datetime(constructionNodes.items.drawlineTime);
     com.datetime(constructionNodes.items.designTime);
 
-    com.post(api.ds.construction, {}, function(res) {
-
-        constructionNodes.items.ishovel.bindData(res.isHovel, "key", "value", false);
-        constructionNodes.items.iskey.bindData(res.isKey, "key", "value", false);
-        constructionNodes.items.isCeremony.bindData(res.isCeremony, "key", "value", false);
-    });
-
-    com.post(api.data.queryConstructionNode, {}, function(res) {
-
-        constructionNodes.constructionSchedule = res.constructionNodes.split("sort", "name");
-
-        constructionNodes.constructionSchedule[0] = "初始";
-        constructionNodes.constructionSchedule[1] = "开工";
-        constructionNodes.constructionSchedule[2] = "完工";
-
-    }, null, false);
+    constructionNodes.items.ishovel.bindData(constant.construction().constructionInfo.isHovel.datas,"key","value");
+    constructionNodes.items.iskey.bindData(constant.construction().constructionInfo.isKey.datas,"key","value");
+    constructionNodes.items.isCeremony.bindData(constant.construction().constructionInfo.isCeremony.datas,"key","value");
 
     var displayFunc = (function() {
 
@@ -87,7 +74,7 @@ $(function() {
             var $btnInfo = $('<a></a>').addClass('btn btn-minier btn-yellow').html("信息");
             var $btnView = $('<a></a>').addClass('btn btn-minier btn-success').html("查看");
 
-            var propertyArr = [["楼盘名:", v.house.village.name, "grey"], ["设计师:", v.designer.userName, "grey"], ["监理:", v.supervisor ? v.supervisor.userName : "", "grey"], ["总价:", v.orderTotalPrice, "blue"], ["面积:", v.house.buildArea, "blue"], ["进度:", constructionNodes.constructionSchedule[v.projectStatus], "red"]];
+            var propertyArr = [["楼盘名:", v.house.village.name, "grey"], ["设计师:", v.designer.userName, "grey"], ["监理:", v.supervisor ? v.supervisor.userName : "", "grey"], ["总价:", v.orderTotalPrice, "blue"], ["面积:", v.house.buildArea, "blue"], ["进度:", constant.decoration().decoration.projectStatus.keys[v.projectStatus], "red"]];
 
             $.each(propertyArr, function(index, value) {
 

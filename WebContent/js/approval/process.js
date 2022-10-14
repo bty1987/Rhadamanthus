@@ -35,9 +35,7 @@ jQuery(function($) {
 
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
             var $btnStatus = $('<div></div>').addClass('pull-right');
-            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({
-                "type": "checkbox"
-            });
+            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type": "checkbox"});
             var $span = $('<span></span>').addClass('lbl status-lbl');
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html('删除');
 

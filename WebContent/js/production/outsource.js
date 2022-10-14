@@ -293,7 +293,8 @@ $(function(){
 		com.uploadify("#importProductionPicture", "上传文件", api.common.uploadOther, 'btn btn-success col-sm-12', "*.xlsx", "'uploadType': 2", 1, function(data) {
 			var option = {
 					"outsource.oid": v.oid,
-					"outsource.path": data.resUrl
+					"outsource.path": data.resUrl,
+					"outsource.filesize": data.filesize
 			};
 			com.post(api.production.updateOutsource,option,function(res){
 				com.showAlert(com.info, "操作成功");

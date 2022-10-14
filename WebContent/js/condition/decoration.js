@@ -556,16 +556,16 @@ Condition.addupRule("decoration", {
             url: api.data.queryConstructionNode,
             postData: {},
             listPath: "constructionNodes",
-            keyPath: "sort",
+            keyPath: "cnid",
             valuePath: "name",
             appresult: [{
-                "sort": 0,
+                "cnid": 0,
                 "name": "初始"
             }, {
-                "sort": 1,
+                "cnid": 1,
                 "name": "开工"
             }, {
-                "sort": 2,
+                "cnid": 2,
                 "name": "完工"
             }]
         }

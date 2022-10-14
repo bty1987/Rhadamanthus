@@ -13,13 +13,7 @@ $(function() {
             decorationStatus: {},
 
         },
-    }
-
-    com.post(api.ds.decoration, {}, function(res) {
-
-        norm.datasets.decorationStatus = res.decorationOrderStatus.split("key", "value");
-
-    }, null, false);
+    };
 
     var cardbtns = [{
         name: "查看",
@@ -37,8 +31,11 @@ $(function() {
 
     var searcher = new Searcher();
 
+    com.focusPage("#normIndexPageContent").removeClass("page-content");
+
     searcher.base("condList", "pagenation", "resultList", api.quotation.pageNormtion);
     searcher.condition(["quotation-norm-decoration-orderId", "quotation-norm-decoration-village", "quotation-norm-decoration-designer", "quotation-norm-decoration-salesman", "quotation-norm-decoration-status", "quotation-norm-createTime"]);
+    searcher.history("normPostData");
 
     var normprops = [{
         field: "decoration.orderId",
@@ -79,7 +76,7 @@ $(function() {
         field: "decoration.status",
         name: "订单状态",
         prop: "decoration.status",
-        dataset: norm.datasets.decorationStatus,
+        dataset: constant.decoration().decoration.status.keys,
         clazz: "red"
     }, {
         type: "newline"

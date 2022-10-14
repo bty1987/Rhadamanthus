@@ -11,11 +11,6 @@ $(function() {
         accessories.status = res.accessoriesStatus.split("key", "value");
     }, null, false);
 
-    com.post(api.data.queryConstructionNode, {}, function(res) {
-
-        accessories.schedule = res.constructionNodes.split("sort", "name");
-    }, null, false);
-
     var displayFunc = (function() {
 
         var renderList = function(tableId, listData) {
@@ -77,7 +72,7 @@ $(function() {
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(_label));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col8');
 
-            var propertyArr = [[v.no, 'blue'], [v.orderId, 'blue'], [v.creater.userName, 'grey'], [v.createTime, 'green'], [v.approver.userName, 'grey'], [v.approverTime, 'green'], [accessories.schedule[v.schedule], 'red'], [accessories.status[v.status], 'red'], ];
+            var propertyArr = [[v.no, 'blue'], [v.orderId, 'blue'], [v.creater.userName, 'grey'], [v.createTime, 'green'], [v.approver.userName, 'grey'], [v.approverTime, 'green'], [constant.data.construction.node.keys[v.cnid], 'red'], [accessories.status[v.status], 'red'], ];
 
             $.each(propertyArr, function(i, v) {
 

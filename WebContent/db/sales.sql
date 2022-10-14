@@ -1,6 +1,40 @@
 CREATE DATABASE  IF NOT EXISTS `sales` ;
 USE `sales`;
 
+DROP TABLE IF EXISTS `oales`;
+CREATE TABLE `oales` (
+  `oid` int(11) NOT NULL AUTO_INCREMENT,
+  `no` varchar(20) NOT NULL,
+  `orderId` varchar(15) NOT NULL,
+  `hid` int(11) NOT NULL DEFAULT '0',
+  `cid` int(11) NOT NULL DEFAULT '0',
+  `cuid` int(11) NOT NULL,
+  `suid` int(11) DEFAULT NULL,
+  `svuid` int(11) DEFAULT NULL,
+  `mauid` int(11) DEFAULT NULL COMMENT '主材员',
+  `chuid` int(11) DEFAULT NULL,
+  `bid` int(11) NOT NULL,
+  `category` varchar(32) NOT NULL,
+  `brand` varchar(32) NOT NULL,
+  `threshold` int(11) NOT NULL DEFAULT '0' COMMENT '系数',
+  `profit` bigint(10) NOT NULL DEFAULT '0',
+  `award` bigint(10) NOT NULL DEFAULT '0',
+  `cost` int(11) NOT NULL DEFAULT '0' COMMENT '成本',
+  `total` bigint(10) NOT NULL DEFAULT '0',
+  `createTime` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `confirmTime` timestamp NULL DEFAULT NULL COMMENT '确认时间',
+  `checkTime` timestamp NULL DEFAULT NULL COMMENT '复核时间',
+  `finishTime` timestamp NULL DEFAULT NULL COMMENT '完结时间',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `atttype` tinyint(1) NOT NULL DEFAULT '0',
+  `awardType` tinyint(1) NOT NULL DEFAULT '0',
+  `comment` varchar(128) DEFAULT '',
+  `company` int(11) NOT NULL,
+  PRIMARY KEY (`oid`),
+  KEY `indexone` (`orderId`),
+  KEY `indextwo` (`suid`)
+) ENGINE=InnoDB AUTO_INCREMENT=141 DEFAULT CHARSET=utf8 COMMENT='外销单表';
+
 DROP TABLE IF EXISTS `refunds`;
 CREATE TABLE `refunds` (
   `rid` int(11) NOT NULL AUTO_INCREMENT,
@@ -91,17 +125,19 @@ CREATE TABLE `salesactivityitem` (
   `type` tinyint(1) NOT NULL,
   `state` tinyint(1) NOT NULL,
   `isStock` tinyint(1) NOT NULL,
+  `isAffirm` tinyint(1) NOT NULL COMMENT '0: 未确认, 1: 客户确认',
   `num` int(8) NOT NULL,
   `money` int(8) NOT NULL,
-  `content` varchar(64) DEFAULT NULL,
+  `integral` int(11) NOT NULL DEFAULT '0' COMMENT '积分',
   `cuid` int(11) NOT NULL,
-  `createTime` timestamp NULL DEFAULT NULL,
   `ouid` int(11) DEFAULT NULL,
+  `createTime` timestamp NULL DEFAULT NULL,
   `operateTime` timestamp NULL DEFAULT NULL,
   `integral` int(11) NOT NULL DEFAULT '0' COMMENT '积分',
+  `content` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`saiid`),
   KEY `indexone` (`orderId`)
-) ENGINE=InnoDB AUTO_INCREMENT=27447 DEFAULT CHARSET=utf8 COMMENT='销售活动';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='销售活动';
 
 DROP TABLE IF EXISTS `salesbalance`;
 CREATE TABLE `salesbalance` (
@@ -238,6 +274,7 @@ CREATE TABLE `salespicture` (
   `siid` int(11) DEFAULT NULL COMMENT '销售项ID',
   `name` varchar(64) NOT NULL COMMENT '名称',
   `path` varchar(255) NOT NULL COMMENT '路径',
+  `filesize` int(10) DEFAULT '0',
   `type` tinyint(1) NOT NULL COMMENT '类型 1.配送',
   `cuid` int(11) NOT NULL COMMENT '创建人id',
   `createTime` timestamp NULL DEFAULT NULL COMMENT '创建时间',

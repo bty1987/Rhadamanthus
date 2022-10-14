@@ -24,16 +24,10 @@ jQuery(function($) {
         },
         cid : null
     };
-    
-    
-	com.post(api.ds.customer, {}, function(res) {
-		cppoint.items.type.bindData(res.type, "key","value");
-	});
-    
-	com.post(api.ds.customer, {}, function(res) {
-		cppoint.items.pointType.bindData(res.typePoint, "key","value");
-	});
-  
+
+    cppoint.items.type.bindData(constant.customer().cppoint.type.datas,"key","value");
+    cppoint.items.pointType.bindData(constant.customer().cppoint.cppointType.datas,"key","value");
+
     cppoint.btns.saveBtn.on("click", saveData);
 
     cppoint.modals.handleCppointModal.on('hide.bs.modal', function(e) {
@@ -159,9 +153,9 @@ jQuery(function($) {
         var type = cppoint.items.type.val();
         var pointType = cppoint.items.pointType.val();
         
-        var url = type == "0" ? api.customer.addupCppoint : api.customer.useupCppoint;
+        var url = type == "TYPE_RENOVARION_INT" ? api.customer.addupCppoint : api.customer.useupCppoint;
         
-        options[pointType == "0" ? "cppoint.dpoint" : "cppoint.spoint"] = cppoint.items.point.val();      
+        options[pointType == "TYPE_ACCUMULATION_INT" ? "cppoint.dpoint" : "cppoint.spoint"] = cppoint.items.point.val();      
         
         com.post(url, options, function(res) {
             com.showAlert(com.info, "操作成功");
@@ -188,8 +182,8 @@ jQuery(function($) {
             var $h2 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html('操作人:' + val.operater.userName));
 
             var ecperienceArr = [
-                ["类型:", val.pointType == 0 ? "装修" : "销售", "red"],
-                ["操作类型:", val.type == 0 ? "累积" : "消耗", "red"],
+                ["类型:", constant.customer().cppoint.type.keys[val.pointType], "red"],
+                ["操作类型:", constant.customer().cppoint.cppointType.keys[val.type], "red"],
                 ["积分:", val.point, "blue"],
                 ["剩余积分:", val.balance, "blue"],
                 ["操作时间:", val.operateTime, "green"], 

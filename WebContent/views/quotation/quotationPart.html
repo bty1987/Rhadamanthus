@@ -47,6 +47,14 @@
                                         <label class=" col-md-6 no-padding-right">成本总额</label>
                                         <label id="costPrice" class="col-md-6 no-padding-left">0.00</label>
                                     </div>
+                                    <div class="form-group">
+                                        <label class=" col-md-6 no-padding-right">非业绩总额</label>
+                                        <label id="unachePrice" class="col-md-6 no-padding-left">0.00</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-6 no-padding-right">税金</label>
+                                        <label id="taxPrices" class="col-md-6 no-padding-left">0.00</label>
+                                    </div>
 									<div class="form-group">
 										<label class=" col-md-6 no-padding-right">总价</label>
 										<label id="sumLabSumMoney" class="col-md-6 no-padding-left">0.00</label>
@@ -173,82 +181,85 @@
 									</div>
 								</div>
 								<div class="space-4"></div>
-                                
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label no-padding-right" for="girth">周长</label>
-                                    <div class="col-md-9">
-                                        <input type="text" id="girth" data-toggle="popover" data-trigger='manual' maxlength='3' class="col-xs-10 col-md-5 v_required v_float_3" />
-                                    </div>
-                                </div>
-                                <div class="space-4"></div>
-                                
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label no-padding-right" for="area">面积</label>
-                                    <div class="col-md-9">
-                                        <input type="text" id="area" data-toggle="popover" data-trigger='manual' maxlength='3' class="col-xs-10 col-md-5 v_required v_float_3" />
-                                    </div>
-                                </div>
-                                <div class="space-4"></div>
-                                
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label no-padding-right" for="height">举架</label>
-                                    <div class="col-md-9">
-                                        <input type="text" id="height" data-toggle="popover" data-trigger='manual' maxlength='3' class="col-xs-10 col-md-5 v_required v_float_3" />
-                                    </div>
-                                </div>
-                                <div class="space-4"></div>
-                                
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label no-padding-right" for="height">洞长</label>
-                                    <div class="col-md-9">
-                                        <input type="text" id="holeLength" data-toggle="popover" data-trigger='manual' maxlength='3' class="col-xs-10 col-md-5 v_required v_float_3" />
-                                    </div>
-                                </div>
-                                <div class="space-4"></div>
-                                
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label no-padding-right" for="height">洞高</label>
-                                    <div class="col-md-9">
-                                        <input type="text" id="holeHeight" data-toggle="popover" data-trigger='manual' maxlength='3' class="col-xs-10 col-md-5 v_required v_float_3" />
-                                    </div>
-                                </div>
-                                <div class="space-4"></div>
-                                
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label no-padding-right" for="height">窗长</label>
-                                    <div class="col-md-9">
-                                        <input type="text" id="windowLength" data-toggle="popover" data-trigger='manual' maxlength='3' class="col-xs-10 col-md-5 v_required v_float_3" />
-                                    </div>
-                                </div>
-                                <div class="space-4"></div>
-                                
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label no-padding-right" for="height">窗高</label>
-                                    <div class="col-md-9">
-                                        <input type="text" id="windowHeight" data-toggle="popover" data-trigger='manual' maxlength='3' class="col-xs-10 col-md-5 v_required v_float_3" />
-                                    </div>
-                                </div>
-                                <div class="space-4"></div>
-                                
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label no-padding-right" for="height">梁长</label>
-                                    <div class="col-md-9">
-                                        <input type="text" id="beamLength" data-toggle="popover" data-trigger='manual' maxlength='3' class="col-xs-10 col-md-5 v_required v_float_3" />
-                                    </div>
-                                </div>
-                                <div class="space-4"></div>
-                                
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label no-padding-right" for="height">梁高</label>
-                                    <div class="col-md-9">
-                                        <input type="text" id="beamHeight" data-toggle="popover" data-trigger='manual' maxlength='3' class="col-xs-10 col-md-5 v_required v_float_3" />
-                                    </div>
-                                </div>
-                                <div class="space-4"></div>
+								
+								<div class="parameter">
+									<div class="form-group">
+	                                    <label class="col-md-3 control-label no-padding-right" for="girth">周长</label>
+	                                    <div class="col-md-9">
+	                                        <input type="text" id="girth" data-toggle="popover" data-trigger='manual' maxlength='3' class="col-xs-10 col-md-5 v_required v_float_3" />
+	                                    </div>
+	                                </div>
+	                                <div class="space-4"></div>
+	                                
+	                                <div class="form-group">
+	                                    <label class="col-md-3 control-label no-padding-right" for="area">面积</label>
+	                                    <div class="col-md-9">
+	                                        <input type="text" id="area" data-toggle="popover" data-trigger='manual' maxlength='3' class="col-xs-10 col-md-5 v_required v_float_3" />
+	                                    </div>
+	                                </div>
+	                                <div class="space-4"></div>
+	                                
+	                                <div class="form-group">
+	                                    <label class="col-md-3 control-label no-padding-right" for="height">举架</label>
+	                                    <div class="col-md-9">
+	                                        <input type="text" id="height" data-toggle="popover" data-trigger='manual' maxlength='3' class="col-xs-10 col-md-5 v_required v_float_3" />
+	                                    </div>
+	                                </div>
+	                                <div class="space-4"></div>
+	                                
+	                                <div class="form-group">
+	                                    <label class="col-md-3 control-label no-padding-right" for="height">洞长</label>
+	                                    <div class="col-md-9">
+	                                        <input type="text" id="holeLength" data-toggle="popover" data-trigger='manual' maxlength='3' class="col-xs-10 col-md-5 v_required v_float_3" />
+	                                    </div>
+	                                </div>
+	                                <div class="space-4"></div>
+	                                
+	                                <div class="form-group a">
+	                                    <label class="col-md-3 control-label no-padding-right" for="height">洞高</label>
+	                                    <div class="col-md-9">
+	                                        <input type="text" id="holeHeight" data-toggle="popover" data-trigger='manual' maxlength='3' class="col-xs-10 col-md-5 v_required v_float_3" />
+	                                    </div>
+	                                </div>
+	                                <div class="space-4"></div>
+	                                
+	                                <div class="form-group">
+	                                    <label class="col-md-3 control-label no-padding-right" for="height">窗长</label>
+	                                    <div class="col-md-9">
+	                                        <input type="text" id="windowLength" data-toggle="popover" data-trigger='manual' maxlength='3' class="col-xs-10 col-md-5 v_required v_float_3" />
+	                                    </div>
+	                                </div>
+	                                <div class="space-4"></div>
+	                                
+	                                <div class="form-group">
+	                                    <label class="col-md-3 control-label no-padding-right" for="height">窗高</label>
+	                                    <div class="col-md-9">
+	                                        <input type="text" id="windowHeight" data-toggle="popover" data-trigger='manual' maxlength='3' class="col-xs-10 col-md-5 v_required v_float_3" />
+	                                    </div>
+	                                </div>
+	                                <div class="space-4"></div>
+	                                
+	                                <div class="form-group">
+	                                    <label class="col-md-3 control-label no-padding-right" for="height">梁长</label>
+	                                    <div class="col-md-9">
+	                                        <input type="text" id="beamLength" data-toggle="popover" data-trigger='manual' maxlength='3' class="col-xs-10 col-md-5 v_required v_float_3" />
+	                                    </div>
+	                                </div>
+	                                <div class="space-4"></div>
+	                                
+	                                <div class="form-group">
+	                                    <label class="col-md-3 control-label no-padding-right" for="height">梁高</label>
+	                                    <div class="col-md-9">
+	                                        <input type="text" id="beamHeight" data-toggle="popover" data-trigger='manual' maxlength='3' class="col-xs-10 col-md-5 v_required v_float_3" />
+	                                    </div>
+	                                </div>
+	                                <div class="space-4"></div>
+								</div>                                                                
 							</form>
 						</div>
 
 						<div class="modal-footer">
+							<button type="button" id="paramsFunctionAreasBtn" class="btn btn-success">参数</button>
 							<button type="button" id="saveFunctionAreaBtn" class="btn btn-primary">保存</button>
 							<button type="button" id="cancelFunctionAreaBtn" class="btn btn-default" data-dismiss="modal">取消</button>
 						</div>
@@ -450,14 +461,21 @@
                             <h4 class="modal-title">总价计算</h4>
                         </div>
                         <div class="modal-body" >
-							<div class="col-md-12" style="margin-bottom: 10px">
-								<label class="control-label no-padding-right pull-left" for="calDiscount">折扣</label>
-								<div class="col-md-9">
-									<input type="text" id="calDiscount" class="col-xs-10 col-md-3 v_required v_float"  data-toggle="popover" data-trigger='manual' maxlength='4'/>
-								</div>
-							</div>
-							<div style="height: 40px;"></div>
-							<div class="fl-quo-cal"></div>
+							<div class="row">
+    							<div class="col-md-12" style="margin-bottom: 10px">
+    								<label class="control-label no-padding-right pull-left" for="calDiscount">折扣</label>
+    								<div class="col-md-9">
+    									<input type="text" id="calDiscount" class="col-xs-10 col-md-3 v_required v_float"  data-toggle="popover" data-trigger='manual' maxlength='4'/>
+										<div class="action-buttons">
+		                                    <a id="calculateTotalFeeBtns" class="btn btn-primary btn-xs" style="margin-left: 10px;">计算</a>
+                                            <a id="machingMoreBtn" class="btn btn-success btn-xs">更多</a>
+                                 	   </div>
+    								</div>
+    							</div>
+    
+    							<div class="col-md-12 machingInfos" style="margin-bottom: 10px"></div>
+    							<div class="col-md-12 fl-quo-cal"></div>
+                            </div>
 
                         </div>
 
@@ -499,7 +517,7 @@
 						</div>
 					</div>
 				</div>
-			</div>
+			</div>					
 
 			<div class="modal fade" id="quotationStatisticalModal" tabindex="-1">
 				<div class="modal-dialog" style="width:70%;">

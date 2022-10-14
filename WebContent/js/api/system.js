@@ -72,6 +72,7 @@ $.extend(api, {
             url: "updateCityForPosition.do",
             server: "communion"
         },
+
         deleteCity: {
             url: "deleteCity.do",
             server: "communion"
@@ -205,6 +206,10 @@ $.extend(api, {
             url: "queryOperation.do",
             demo: true
         },
+        pageOperation: {
+            url: "pageOperation.do",
+            demo: true
+        },
         queryOperationForLogin: {
             url: "queryOperationForLogin.do",
             demo: true
@@ -219,6 +224,10 @@ $.extend(api, {
         },
         addOperation: {
             url: "addOperation.do",
+            server: "communion"
+        },
+        updateOpperation: {
+            url: "updateOpperation.do",
             server: "communion"
         },
         updateRoleOperationByRid: {
@@ -443,7 +452,8 @@ $.extend(api, {
     home: {
         library: {
             url: "library",
-            server: "library"
+            server: "library",
+            intercept: true
         }
     }
 });

@@ -1501,9 +1501,9 @@ body .layer-alert-error {
 
 .infobox.homeindex {
 	height: 100px;
-    padding: 20px 5px;
+    padding: 20px 10px;
     border: 0px;
-    width: 170px;
+    width: 50%;
     background-color: transparent;
 }
 

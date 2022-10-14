@@ -31,6 +31,7 @@ jQuery(function($) {
     }
 
     com.post(api.ds.data, {}, function(res) {
+
         signet.status = res.signetStatus.split("key", "value");
         signet.type = res.signetType.split("key", "value");
         signet.items.type.bindData(res.signetType, "key", "value");
@@ -48,6 +49,7 @@ jQuery(function($) {
     }, 1, function(data) {
 
         signet.items.path.val(data.resUrl);
+        signet.items.filesize.val(data.filesize);
 
         com.showImg(signet.items.signetImg, data.resUrl, 150, 150, '', null, 0);
     });
@@ -123,101 +125,123 @@ jQuery(function($) {
         name: "更新",
         clazz: "btn-yellow",
         handle: function(v) {
+
             signet.sid = v.sid;
 
             com.popup4model('#layerAdd', '编辑', null, function() {
+
                 com.clearValidator();
             }, function() {
+
                 initUpdate(v);
             });
             return false;
         },
         show: function(v) {
+
             return (v.status == 0);
         }
     }, {
         name: "注册",
         clazz: "btn-success",
         handle: function(v) {
+
             com.post(api.data.registSignet, {
                 "signet.sid": v.sid
             }, function(res) {
+
                 searcher.doSearch();
             });
             return false;
         },
         show: function(v) {
+
             return (v.status == 0);
         }
     }, {
         name: "认证",
         clazz: "btn-warning",
         handle: function(v) {
+
             com.post(api.data.authSignet, {
                 "signet.sid": v.sid
             }, function(res) {
+
                 showQRCode(res.signet.path);
             });
             return false;
         },
         show: function(v) {
+
             return (v.status == 1);
         }
     }, {
         name: "确认",
         clazz: "btn-inverse",
         handle: function(v) {
+
             com.post(api.data.confirmSignet, {
                 "signet.sid": v.sid
             }, function(res) {
+
                 searcher.doSearch();
             });
             return false;
         },
         show: function(v) {
+
             return (v.status == 2);
         }
     }, {
         name: "签章",
         clazz: "btn-danger",
         handle: function(v) {
+
             com.post(api.data.signateSignet, {
                 "signet.sid": v.sid,
                 "signet.data": config.media + v.path
             }, function(res) {
+
                 searcher.doSearch();
             });
             return false;
         },
         show: function(v) {
+
             return (v.status == 3);
         }
     }, {
         name: "自动授权",
         clazz: "btn-yellow",
         handle: function(v) {
+
             com.post(api.data.autoSignet, {
                 "signet.sid": v.sid
             }, function(res) {
+
                 com.popup("自动签认证", res.signet.path);
             });
             return false;
         },
         show: function(v) {
+
             return (v.status == 3);
         }
     }, {
         name: "二维授权",
         clazz: "btn-success",
         handle: function(v) {
+
             com.post(api.data.autoSignet, {
                 "signet.sid": v.sid
             }, function(res) {
+
                 showQRCode(res.signet.path);
             });
             return false;
         },
         show: function(v) {
+
             return (v.status == 3);
         }
     }, {
@@ -231,6 +255,7 @@ jQuery(function($) {
             return false;
         },
         show: function(v) {
+
             return (v.status == 3);
         }
     }, {
@@ -241,42 +266,69 @@ jQuery(function($) {
             signet.sid = v.sid;
 
             com.popup4model('#copySignet', '复制', null, function() {
+
                 com.clearValidator();
             }, function() {
+
                 initUpdate(v);
             });
             return false;
         },
         show: function(v) {
+
             return (v.status == 3);
         }
     }, {
         name: "作废",
         clazz: "btn-danger",
         handle: function(v) {
+
             com.showConfirm("是否确认作废 " + v.name + " 签章", function() {
+
                 com.post(api.data.cancelSignet, {
                     "signet.sid": v.sid
                 }, function(res) {
+
                     searcher.doSearch();
                 });
             });
             return false;
         },
         show: function(v) {
+
             return v.status != 5;
         }
-    }, ]
+    }, {
+        name: "编辑",
+        clazz: "btn-yellow",
+        handle: function(v) {
+
+            signet.sid = v.sid;
+
+            com.popup4model('#layerAdd', '编辑', null, function() {
+
+                com.clearValidator();
+            }, function() {
+
+                editSignet(v);
+            });
+            return false;
+        }
+    }]
 
     searcher.line("name", lineprops, linebtns).render();
 
-    com.focusPage("#addSignet").click(function() {
+    com.focusPage("#addSignet").click(function(v) {
+
+        addSignet(v);
+
         signet.sid = null;
 
         com.clearImg(signet.items.signetImg);
         com.cleanItems(signet.items);
 
         com.popup4model('#layerAdd', '添加', null, function() {
+
             com.clearValidator();
         });
     });
@@ -303,6 +355,7 @@ jQuery(function($) {
         }
 
         com.post(url, options, function(res) {
+
             com.closePopup();
             searcher.doSearch();
         });
@@ -321,19 +374,36 @@ jQuery(function($) {
         };
 
         com.post(url, options, function(res) {
+
             com.closePopup();
             searcher.doSearch();
         });
     }
 
+    function addSignet(v) {
+
+        signet.items.no.prop('disabled', false);
+        signet.items.type.prop('disabled', false);
+        signet.items.path.prop('disabled', false);
+    }
+
     function initUpdate(v) {
 
-        signet.items.no.val(v.no);
+        signet.items.no.val(v.no).prop("disabled", false);
         signet.items.name.val(v.name);
         signet.items.keyword.val(v.keyword);
-        signet.items.type.val(v.type);
-        signet.items.path.val(v.path);
+        signet.items.type.val(v.type).prop("disabled", false);
+        signet.items.path.val(v.path).prop("disabled", false);
+        signet.imgsrc = com.showImg(signet.items.signetImg, v.path, 150, 150, '', null, 0);
+    }
 
+    function editSignet(v) {
+
+        signet.items.no.val(v.no).prop("disabled", true);
+        signet.items.name.val(v.name);
+        signet.items.keyword.val(v.keyword);
+        signet.items.type.val(v.type).prop("disabled", true);
+        signet.items.path.val(v.path).prop("disabled", true);
         signet.imgsrc = com.showImg(signet.items.signetImg, v.path, 150, 150, '', null, 0);
     }
 

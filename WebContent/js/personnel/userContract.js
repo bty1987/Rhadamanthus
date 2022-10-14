@@ -4,7 +4,7 @@ jQuery(function($) {
             uid: params.personel.uid,
             ucid: null,
             modals: {
-            	addContractModal: com.focusPage("#addContractModal")
+                addContractModal: com.focusPage("#addContractModal")
             },
             items:{},
             flag: true
@@ -18,8 +18,8 @@ jQuery(function($) {
     userContract.items.comment = com.focusPage("#comment");
     
     com.post(api.ds.personel, {}, function(res){
-		userContract.items.status.bindData(res.contractStatus , "key", "value");
-	}, null, false);
+        userContract.items.status.bindData(res.contractStatus , "key", "value");
+    }, null, false);
     
     var initList = function (listData) {
 
@@ -27,7 +27,7 @@ jQuery(function($) {
         var $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list');
 
         if(!listData.length){
-        	
+            
             var $resultList = com.focusPage("#list").addClass('dz-default dz-message').html('');
             var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($resultList);
             var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
@@ -51,7 +51,7 @@ jQuery(function($) {
                     ["开始时间:", v.startTime, "green"],
                     ["结束时间:",v.endTime,"green" ],
                     ["创建时间:",v.createTime, "green" ],
-                    ["状态:",v.status == 0 ? "有效" : "无效", "blue" ],
+                    ["状态:",v.status == constant.personel.userInfo.STATUS_EFFECTIVE_INT ? "有效" : "无效", "blue" ], 
                     ["说明:",v.comment, "grey" ],
                 ];
 
@@ -67,20 +67,20 @@ jQuery(function($) {
                 $h3.append($title).append($btnDel).append($btnUpdate);
 
                 $btnDel.bindClick(function(){
-                	deleteContract(v.ucId);
+                    deleteContract(v.ucId);
                 });
                 
                 $btnUpdate.click(function(){
-                	userContract.flag = false;
-                	userContract.ucid = v.ucId;
-                	
-                	userContract.items.name.val(v.name);
-                	userContract.items.signTime.val(v.signTime)
+                    userContract.flag = false;
+                    userContract.ucid = v.ucId;
+                    
+                    userContract.items.name.val(v.name);
+                    userContract.items.signTime.val(v.signTime)
                     userContract.items.startTime.val(v.startTime);
                     userContract.items.endTime.val(v.endTime);
                     userContract.items.status.val(v.status);
                     userContract.items.comment.val(v.comment);
-                	userContract.modals.addContractModal.modal("show");
+                    userContract.modals.addContractModal.modal("show");
                 });
                 
             });
@@ -105,8 +105,8 @@ jQuery(function($) {
     };
     
     com.focusPage('#addBtn').click(function () {
-    	userContract.flag = true;
-    	userContract.modals.addContractModal.modal("show");
+        userContract.flag = true;
+        userContract.modals.addContractModal.modal("show");
     });
     
     userContract.modals.addContractModal.on("hide.bs.modal", function () {
@@ -114,43 +114,43 @@ jQuery(function($) {
         com.cleanItems(userContract.items);
     });
     
-	function deleteContract(ucid){
+    function deleteContract(ucid){
 
-	    com.post(api.personel.deleteUserContract, {"userContract.ucId": ucid}, function(){
-	    	
-	    	com.showAlert(com.info, "操作成功");
-	    	
-	    	queryUserContract(userContract.uid);
-	    	
-	    },null,false);
-	}
+        com.post(api.personel.deleteUserContract, {"userContract.ucId": ucid}, function(){
+            
+            com.showAlert(com.info, "操作成功");
+            
+            queryUserContract(userContract.uid);
+            
+        },null,false);
+    }
     
     com.focusPage("#saveBtn").bindClick(function(){
-    	
+        
         if(com.validate("addContractModal")){
             return false;
         }
-    	
-    	var options = {
-    		"userContract.uid": userContract.uid,
-    		"userContract.name": userContract.items.name.val(),
-    		"userContract.signTime": userContract.items.signTime.val(),
-    		"userContract.startTime": userContract.items.startTime.val(),
-    		"userContract.endTime": userContract.items.endTime.val(),
-    		"userContract.status": userContract.items.status.val(),
-    		"userContract.comment": userContract.items.comment.val()
-    	};
-    	
-    	var url = "";
-    	userContract.flag ? url = api.personel.addUserContract : (url = api.personel.updateUserContract, options['userContract.ucId'] = userContract.ucid);
-    	
-    	com.post(url, options, function(res){
-    		
-    		com.showAlert(com.info, "操作成功");
-    		queryUserContract(userContract.uid);
+        
+        var options = {
+            "userContract.uid": userContract.uid,
+            "userContract.name": userContract.items.name.val(),
+            "userContract.signTime": userContract.items.signTime.val(),
+            "userContract.startTime": userContract.items.startTime.val(),
+            "userContract.endTime": userContract.items.endTime.val(),
+            "userContract.status": userContract.items.status.val(),
+            "userContract.comment": userContract.items.comment.val()
+        };
+        
+        var url = "";
+        userContract.flag ? url = api.personel.addUserContract : (url = api.personel.updateUserContract, options['userContract.ucId'] = userContract.ucid);
+        
+        com.post(url, options, function(res){
             
-    		userContract.modals.addContractModal.modal("hide");
-    	}, null, false);
+            com.showAlert(com.info, "操作成功");
+            queryUserContract(userContract.uid);
+            
+            userContract.modals.addContractModal.modal("hide");
+        }, null, false);
     });
 
 });

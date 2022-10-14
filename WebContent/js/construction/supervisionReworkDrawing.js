@@ -41,7 +41,8 @@ jQuery(function ($) {
             "reworkDrawing.rwId": params.construction.rwId,
             "reworkDrawing.rwdName": "",
             "reworkDrawing.rwdUrl": data.resUrl,
-            "reworkDrawing.rwdAddUrl": ""
+            "reworkDrawing.rwdAddUrl": "",
+            "reworkDrawing.filesize": data.filesize
         };
 
         com.post(api.construction.addReworkDrawing, options, function (res) {

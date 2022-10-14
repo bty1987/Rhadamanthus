@@ -445,13 +445,12 @@ $(function() {
                 var isAffirmState = $("<strong></strong>").text("是否确认:").appendTo(isAffirmLi);
                 var isAffirmSpan = $("<span></span>").addClass("red").attr("id", "money_" + v.saiid).text(salesActivityItem.isAffirm[v.isAffirm]).appendTo(isAffirmLi);
 
-                var uiPgDiv = $("<div></div>").addClass("ui-pg-div").css({
-                    "padding-left": "12px",
-                    "margin-bottom": "5px"
-                }).appendTo(widgetBody);
+                var uiPgDiv = $("<div></div>").addClass("ui-pg-div").appendTo(widgetMain);
+
                 if (uiBtnMethod != null) {
                     uiBtnMethod(uiPgDiv, v);
                 }
+
                 salesActivityContent.append(pricingSpan)
             });
         });
@@ -483,7 +482,8 @@ $(function() {
 
         if (salesActivityItem.pagetype == "advance" || salesActivityItem.pagetype == "activity") {
             uiPgDiv.append(abateBtn).append(receiveBtn).append(refundBtn).append(deliveBtn).append(unrefundBtn).append(expendBtn).append(discountBtn);
-        }if (salesActivityItem.pagetype == "dompany") {
+        }
+        if (salesActivityItem.pagetype == "dompany") {
             uiPgDiv.append(abateBtn);
         }
 
@@ -668,6 +668,7 @@ $(function() {
 
         var options = {
             "orderId": salesActivityItem.orderId,
+            "salesActivityItem.orderId": salesActivityItem.orderId,
             "salesActivityItem.content": saiid,
         };
 

@@ -83,17 +83,20 @@ jQuery(function($) {
     }
 
     com.post(api.ds.approval, {}, function(res) {
+
         approvalTrack.approvalTypeData = res.approvalType.split("key", "value");
         approvalTrack.approvalStatus = res.approvalStatus.split("key", "value");
     }, null, false);
 
     com.post(api.ds.decoration, {}, function(res) {
+
         approvalTrack.typenesses = res.typeness.split("key", "value");
     }, null, false);
 
     approvalTrack.btns.submitBtn.on("click", approve);
 
     approvalTrack.modals.approveModal.on('hide.bs.modal', function(e) {
+
         com.clearValidator();
         com.cleanItems(approvalTrack.items);
     });
@@ -130,7 +133,7 @@ jQuery(function($) {
         field: "status",
         name: "状态",
         prop: "status",
-        dataset: approvalTrack.approvalStatus,
+        dataset: constant.approval().approval.status.keys,
         clazz: "red"
     }, {
         field: "contents",
@@ -151,49 +154,59 @@ jQuery(function($) {
     var linebtns = [{
         name: "详情",
         handle: function(v) {
+
             queryInformationItem(v.aid, v.type);
             return false;
         },
         show: function(v) {
-            return [6, 8, 10, 14, 17].indexOf(v.type) != -1;
+
+            return [constant.approval().approval.TYPE_MATERIAL_REFUND_INT, constant.approval().approval.TYPE_DECORATION_ACTIVITY_INT, constant.approval().approval.TYPE_SALESREFUND_PAYMENT_INT, constant.approval().approval.TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT, constant.approval().approval.TYPE_CUSTOMER_ORIGIN_INT].indexOf(v.type) != -1;
         }
     }, {
         name: "客户确认",
         clazz: "btn-warning",
         handle: function(v) {
+
             affirm(v.aid);
             return false;
         },
         show: function(v) {
+
             return false;
         }
     }, {
         name: "通过",
         clazz: "btn-success",
         handle: function(v) {
+
             proapprove(v.aid, api.approval.approveApproval, "通过");
             return false;
         },
         show: function(v) {
-            return [0, 5, 6].indexOf(v.status) != -1 && params.urlLoadParams.type != 'send';
+
+            return [constant.approval().approval.STATUS_INIT_INT, constant.approval().approval.STATUS_CONFIRM_INT, constant.approval().approval.STATUS_CONFIRMED_INT].indexOf(v.status) != -1 && params.urlLoadParams.type != 'send';
         }
     }, {
         name: "拒绝",
         clazz: "btn-danger",
         handle: function(v) {
+
             proapprove(v.aid, api.approval.refuseApproval, "拒绝");
             return false;
         },
         show: function(v) {
-            return [0, 5, 6].indexOf(v.status) != -1 && params.urlLoadParams.type != 'send';
+
+            return [constant.approval().approval.STATUS_INIT_INT, constant.approval().approval.STATUS_CONFIRM_INT, constant.approval().approval.STATUS_CONFIRMED_INT].indexOf(v.status) != -1 && params.urlLoadParams.type != 'send';
         }
     }, ];
 
     searcher.line(function(v) {
-        return approvalTrack.approvalTypeData[v.type]
+
+        return constant.approval().approval.type.keys[v.type];
     }, lineprops, linebtns).render();
 
     function proapprove(aid, submitUrl, result) {
+
         approvalTrack.aid = aid;
         approvalTrack.submitUrl = submitUrl;
         approvalTrack.items.annotate.val("");
@@ -202,12 +215,14 @@ jQuery(function($) {
     }
 
     function approve() {
+
         var options = {
             "approval.aid": approvalTrack.aid,
             "approval.annotate": approvalTrack.items.annotate.val(),
         };
 
         com.post(approvalTrack.submitUrl, options, function(res) {
+
             searcher.doSearch();
 
             approvalTrack.aid = null;
@@ -218,20 +233,24 @@ jQuery(function($) {
     }
 
     function affirm(aid) {
+
         var options = {
             "approval.aid": aid
         };
         com.post(api.approval.affirmApproval, options, function(res) {
+
             searcher.doSearch();
         });
     };
 
     com.focusPage('#addappro', '#pagenation').on("click", function() {
+
         approvalTrack.aid = null;
         approvalTrack.modals.approveModal.modal("show");
     });
 
     function queryInformationItem(aid, type) {
+
         if (com.focusPage('#itemList').children()) {
             com.focusPage('#itemList').empty();
         }
@@ -252,15 +271,15 @@ jQuery(function($) {
             var data = $.isArray(res[itemInfo.resultname]) ? res[itemInfo.resultname] : [res[itemInfo.resultname]];
 
             $.each(data, function(i, v) {
+
                 $.each(itemInfo.args, function(j, e) {
 
                     if (e[2] == "type")
-                        infoList.append(approvalUtils.addspan(e[0], e[1], approvalTrack.type[getElement(v, e[2].split('.'))]));
+                        infoList.append(approvalUtils.addspan(e[0], e[1], constant.information().awardStock.type.keys[getElement(v, e[2].split('.'))]));
                     if (e[2] == "stateType")
                         infoList.append(approvalUtils.addspan(e[0], e[1], approvalTrack.stateType[getElement(v, e[2].split('.'))]));
                     if (e[2] == "typeness")
-                        infoList.append(approvalUtils.addspan(e[0], e[1], approvalTrack.typenesses[getElement(v, e[2].split('.'))]));
-
+                        infoList.append(approvalUtils.addspan(e[0], e[1], constant.decoration().decoration.typeness.keys[getElement(v, e[2].split('.'))]));
                     if (e[2] != "type" && e[2] != "stateType" && e[2] != "typeness")
                         infoList.append(approvalUtils.addspan(e[0], e[1], getElement(v, e[2].split('.'))));
                 });
@@ -284,10 +303,13 @@ jQuery(function($) {
     }
 
     function getElement(o, props) {
+
         var prop = props.shift();
         if (props.length == 0) {
             return o[prop];
-        } else if (o[prop]) { return getElement(o[prop], props); }
+        } else if (o[prop]) {
+            return getElement(o[prop], props);
+        }
         return "";
     }
 });

@@ -7,8 +7,8 @@
                     <div class="widget-main">
                         <div class="row">
 
-                            <div class="col-md-12">
-                                <div class="form-group col-sm-6 customer">
+                            <div class="col-md-12 customer">
+                                <div class="form-group col-sm-6">
                                     <label for="key1" class="col-sm-3 control-label no-padding-right orange">甲方</label>
                                     <div class="col-sm-9">
                                         <input id="con-customer-name" type="text" class="col-sm-7 col-xs-10 conitem v_required" maxlength="32" data-toggle="popover" data-trigger='manual' value="0">
@@ -18,7 +18,7 @@
                                 <div class="form-group col-sm-6">
                                     <label for="agentId" class="col-sm-3 control-label no-padding-right orange">身份证号</label>
                                     <div class="col-sm-9">
-                                        <input id="con-agent-ident" type="text" class="col-sm-7 col-xs-10 conitem v_required" value="/" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                        <input id="con-customer-ident" type="text" class="col-sm-7 col-xs-10 conitem v_required" value="/" data-toggle="popover" data-placement="bottom" data-trigger="manual">
                                     </div>
                                 </div>
                             </div>
@@ -34,6 +34,12 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group col-sm-6 agentor">
+                                    <label for="agentId" class="col-sm-3 control-label no-padding-right orange">身份证号</label>
+                                    <div class="col-sm-9">
+                                        <input id="con-agent-ident" type="text" class="col-sm-7 col-xs-10 conitem v_required" value="/" data-toggle="popover" data-placement="bottom" data-trigger="manual">
+                                    </div>
+                                </div>
                             </div> 
 
                             <div class="col-md-12 company">
@@ -50,6 +56,7 @@
                             </div>
 
                             <div class="col-md-12">
+
                                 <hr>
 
                                 <div class="form-group col-sm-6">
@@ -66,7 +73,7 @@
                                     </div>
                                 </div>
 
-                               <div class="form-group  col-sm-6">
+                                <div class="form-group  col-sm-6">
                                     <label class="col-sm-3 control-label no-padding-right orange" for="con-valid-start-date">有效开始时间</label>
                                     <div class="col-sm-9">
                                         <input class="date-picker-date col-xs-12 col-sm-7 v_required" id="con-valid-start-date" type="text" readonly="readonly" data-date-format="yyyy-mm-dd" data-toggle="popover" data-trigger='manual'/>

@@ -1,4 +1,5 @@
 $(function() {
+
     var auditRecord = {
         arid: 0,
         aid: 0,
@@ -62,13 +63,9 @@ $(function() {
 
     };
     var auditRecordPostdata = {};
-    var status = {};
-    com.post(api.ds.decoration, {}, function(res) {
-        auditScalePage.status.bindData(res.auditScaleStatus, "key", "value");
-        $.each(res.auditScaleStatus, function(i, v) {
-            status[v.key] = v.value;
-        });
-    });
+    var status = constant.decoration.auditRecord.status.keys;
+
+    auditScalePage.status.bindData(constant.decoration.auditRecord.status.datas, "key", "value");
 
     var auditScalePostdata = {};
 
@@ -84,17 +81,21 @@ $(function() {
     };
 
     com.post(api.ds.decoration, {}, function(res) {
+
         $.each(res.perCharge, function(i, v) {
+
             perCharge[v.key] = v.value;
         });
     });
 
     auditRecordPage.changeAuditRecordModel.on('hide.bs.modal', function(e) {
+
         com.cleanItems(auditRecordPage);
         com.closeTip();
     });
 
     auditScalePage.auditScaleModel.on('hide.bs.modal', function(e) {
+
         clearAuditScaleModel();
         com.closeTip();
     });
@@ -103,9 +104,11 @@ $(function() {
         "duty": "",
         "user.status": 0
     }, "autoFillKeyValue", "key", "value", function(list, key, value) {
+
         com.post(api.personel.queryUserByUserId, {
             "user.userId": key
         }, function(res) {
+
             auditScalePage.deptId.val(res.user.dept.name);
         });
         return value;
@@ -135,10 +138,12 @@ $(function() {
     }
 
     auditRecord.rollback && auditRecordPage.btnBack.click(function() {
+
         com.switchPage(auditRecord.rollback);
     });
 
     function initPageScale() {
+
         var $Scale = com.focusPage('#auditS').html('');
         var $zone = $('<div></div>').addClass('dropzone dz-clickable').css('margin', '20px').css('border', '0px').appendTo($Scale);
         var $mesg = $('<div></div>').addClass('dz-default dz-message').appendTo($zone);
@@ -148,11 +153,13 @@ $(function() {
     var displayFunc = (function() {
 
         var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
                 $.each(listData, function(i, v) {
+
                     var type = {
                         "0": "未处理",
                         "1": "已处理"
@@ -172,6 +179,7 @@ $(function() {
                     var propertyArr = [["单价:", v.unitprice, "grey"], ["数量:", v.num, "blue"], ["折扣:", v.discount, "blue"], ["总价:", total, "blue"], ["状态:", type[v.status], "red"]];
 
                     $.each(propertyArr, function(index, value) {
+
                         var $liProperty = $('<li></li>');
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
                         $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -179,14 +187,17 @@ $(function() {
                     });
 
                     $btnView.click(function() {
+
                         viewAuditScale(v.arid);
                     });
 
                     $btnChange.click(function() {
+
                         changeAuditRecord(v.arid, v.unitprice, v.num, v.discount, v.comment);
                     });
 
                     $btnMake.bindClick(function() {
+
                         makeAuditRecord(total, v.arid);
                     });
                     if (auditRecord.auditStatusType == 'admin') {
@@ -208,10 +219,12 @@ $(function() {
         };
         // 人员扣款
         var viewAuditScale = function(arid) {
+
             initPages(arid);
         };
         // 修改
         var changeAuditRecord = function(arid, untiprice, num, discount, comment) {
+
             auditRecordPage.comment.val(comment);
             auditRecordPage.untiPrice.val(untiprice);
             auditRecordPage.num.val(num);
@@ -223,11 +236,14 @@ $(function() {
         };
         // 生成人员扣款
         var makeAuditRecord = function(total, arid) {
+
             com.post(api.decoration.makeAuditScale, makeAuditScalesPostdata(0, arid, auditRecord.designerId, auditRecord.deptId, ((utils.accMul(total, perCharge["designer"])) / 10), 0), function(res) {
+
                 com.showAlert(com.info, "生成人员成功");
                 initPage();
                 initPages(arid);
             }, function(e) {
+
                 com.showAlert(com.error, e.errorMsg);
                 initPages(arid);
             });
@@ -235,6 +251,7 @@ $(function() {
 
         return {
             init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             }
@@ -242,6 +259,7 @@ $(function() {
     })();
 
     function makeAuditRecordPostParam(arid, aid, comment, unitprice, num, discount, status, orderId) {
+
         auditRecordPostdata = {};
         if (arid) {
             auditRecordPostdata[auditRecordPostdataStr.arid] = arid;
@@ -271,6 +289,7 @@ $(function() {
     }
 
     function makeAuditScalesPostdata(i, arid, userId, deptId, money, type) {
+
         auditScalePostdata = {};
         if (arid) {
             auditScalePostdata["auditScales[" + i + "].auditRecord.arid"] = arid;
@@ -291,14 +310,17 @@ $(function() {
     }
 
     function initPage() {
+
         com.post(api.decoration.queryAuditRecordByOrderId, {
             "auditRecord.audit.decoration.orderId": auditRecord.decorationOrderId
         }, function(res) {
+
             if (res.auditRecords && res.auditRecords.length) {
                 auditRecord.aid = res.auditRecords[0].audit.aid;
             }
             displayFunc.init('auditR', res.auditRecords);
         }, function(e) {
+
             com.showAlert(com.error, e.errorMsg);
         });
     }
@@ -306,13 +328,17 @@ $(function() {
     function initBtn() {
 
         auditRecordPage.add.click(function() {
+
             clearAuditRecordModel();
             auditRecordPage.changeAuditRecordModel.attr("type", "addR");
             auditRecordPage.changeAuditRecordModel.modal("show");
 
         });
         auditRecordPage.saveBtn.click(function() {
-            if (com.validate("auditRecordModel")) { return; }
+
+            if (com.validate("auditRecordModel")) {
+                return false;
+            }
 
             if (auditRecordPage.discount.val() == 1 || auditRecordPage.discount.val() >= 10) {
                 com.showTip(com.focusPage("#discount"), "折扣只能输入1-10的数字", "right");
@@ -322,23 +348,27 @@ $(function() {
             var type = auditRecordPage.changeAuditRecordModel.attr("type");
             if (type == "addR") {
                 com.post(api.decoration.addAuditRecord, makeAuditRecordPostParam(null, auditRecord.aid, auditRecordPage.comment.val(), auditRecordPage.untiPrice.val(), auditRecordPage.num.val(), auditRecordPage.discount.val(), null, auditRecord.decorationOrderId), function(res) {
+
                     com.showAlert(com.info, "添加成功");
                     auditRecordPage.changeAuditRecordModel.modal("hide");
                     clearAuditRecordModel();
                     initPage();
                 }, function(e) {
+
                     auditRecordPage.changeAuditRecordModel.modal("hide");
                     clearAuditRecordModel();
                     com.showAlert(com.error, e.errorMsg);
                 });
             } else if (type == "change") {
                 com.post(api.decoration.updateAuditRecord, makeAuditRecordPostParam(auditRecordPage.changeAuditRecordModel.attr("arid"), auditRecord.aid, auditRecordPage.comment.val(), auditRecordPage.untiPrice.val(), auditRecordPage.num.val(), auditRecordPage.discount.val()), function(res) {
+
                     com.showAlert(com.info, "修改成功");
                     auditRecordPage.changeAuditRecordModel.modal("hide");
                     clearAuditRecordModel();
                     initPage();
                     initPages(auditRecordPage.changeAuditRecordModel.attr("arid"));
                 }, function(e) {
+
                     auditRecordPage.changeAuditRecordModel.modal("hide");
                     clearAuditRecordModel();
                     com.showAlert(com.error, e.errorMsg);
@@ -347,44 +377,55 @@ $(function() {
 
         });
         auditRecordPage.cancelBtn.click(function() {
+
             clearAuditRecordModel();
             auditRecordPage.changeAuditRecordModel.modal("hide");
         });
 
         auditScalePage.add.click(function() {
+
             auditScalePage.auditScaleModel.modal("show");
         });
 
         auditScalePage.saveBtn.click(function() {
-            if (com.validate("auditScaleModel")) { return; }
+
+            if (com.validate("auditScaleModel")) {
+                return false;
+            }
 
             com.post(api.decoration.addAuditScale, makeAuditScalePostdata(null, auditScale.arid, com.typeahead("userId"), auditScalePage.deptId.val(), auditScalePage.money.val(), 0), function(res) {
+
                 com.showAlert(com.info, "添加成功");
                 auditScalePage.auditScaleModel.modal("hide");
                 clearAuditScaleModel();
                 initPages(auditScale.arid);
             }, function(e) {
+
                 auditScalePage.auditScaleModel.modal("hide");
                 clearAuditScaleModel();
                 com.showAlert(com.error, e.errorMsg);
             });
         });
         auditScalePage.cancelBtn.click(function() {
+
             clearAuditScaleModel();
             auditScalePage.auditScaleModel.modal("hide");
         });
 
     }
     function clearAuditScaleModel() {
+
         com.cleanTypeahead('userId');
         auditScalePage.deptId.val("");
         auditScalePage.money.val("");
 
     }
     function clearAuditScaleStatusModel() {
+
         auditScalePage.status.val("");
     }
     function clearAuditRecordModel() {
+
         auditRecordPage.comment.val("");
         auditRecordPage.untiPrice.val("");
         auditRecordPage.num.val("");
@@ -393,11 +434,13 @@ $(function() {
     var displayFuncs = (function() {
 
         var renderLists = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
                 $.each(listData, function(i, v) {
+
                     var $liLine = $('<li></li>').addClass('item-orange clearfix');
                     var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.belongUser.currentName));
                     var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -409,16 +452,19 @@ $(function() {
                     var propertyArr = [["扣款金额:", v.money, "grey"], ["职位:", v.type == 0 ? "设计师" : "设计部经理", "grey"], ["扣款状态:", status[v.status], "red"]];
 
                     $.each(propertyArr, function(index, value) {
+
                         var $liProperty = $('<li></li>');
                         $('<strong></strong>').html(value[0]).appendTo($liProperty);
                         $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                         $liProperty.appendTo($ulProperty);
                     });
                     $confirm.click(function() {
+
                         changeAuditScaleStatus(v.asid);
                     });
 
                     $btnDel.bindClick(function() {
+
                         delAuditScale(v.asid);
                     });
                     if (auditRecord.auditStatusType == 'admin') {
@@ -443,9 +489,12 @@ $(function() {
         };
         // 修改
         var changeAuditScaleStatus = function(asid) {
+
             com.showConfirm("确认提交扣款信息?", function() {
+
                 // 如果为ture
                 com.post(api.decoration.updateAuditScaleForStatus, makeAuditScalePostdata(asid, null, null, null, null, null, 1), function(res) {
+
                     com.showAlert(com.info, "操作成功");
                     initPages(auditScale.arid);
                 });
@@ -453,11 +502,15 @@ $(function() {
         };
         // 删除人员扣款
         var delAuditScale = function(asid) {
+
             com.showConfirm("确认删除审核记录?", function() {
+
                 com.post(api.decoration.deleteAuditScale, makeAuditScalePostdata(asid), function(res) {
+
                     com.showAlert(com.info, "删除成功");
                     initPages(auditScale.arid);
                 }, function(e) {
+
                     com.showAlert(com.error, e.errorMsg);
                 });
             });
@@ -465,6 +518,7 @@ $(function() {
 
         return {
             inits: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 renderLists(tableId, listData);
             }
@@ -472,15 +526,19 @@ $(function() {
     })();
 
     function initPages(arid) {
+
         com.post(api.decoration.queryAuditScaleByArid, makeAuditScalePostdata(null, arid), function(res) {
+
             auditScalePage.add.css('visibility', 'visible');
             auditScale.arid = arid;
             displayFuncs.inits('auditS', res.auditScales);
         }, function(e) {
+
             com.showAlert(com.error, e.errorMsg);
         });
     }
     function makeAuditScalePostdata(asid, arid, userId, deptId, money, type, status) {
+
         auditScalePostdata = {};
         if (arid) {
             auditScalePostdata[auditScalePostdataStr.arid] = arid;

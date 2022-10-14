@@ -1,8 +1,9 @@
 
 <div id="quotationIndexPageContent" class="page-content">
-	<div id="fl-statement"></div>
 
-	<div class="clearfix" id="decorationInfo">
+	<div id="fl-statement" style="display: none;"></div>
+
+	<div class="clearfix" id="decorationInfo" style="display: none;">
 		<div class="col-xs-6">
 			<a href="#" id="createQuotation" class="btn btn-default btn-app btn-sm radius-4" style="padding: 5px 0;">
 				<i class="icon-plus-sign bigger-230"></i>
@@ -27,23 +28,12 @@
         
 	</div>
 	
-	<div class="hr hr16 hr-dotted" id="hr-dotted1"></div>
-
 	<div class="row">
 		<div class="col-xs-12">
 			<div class="" id="quotationList"></div>
 			<div id="condList" class="fl_search clearfix"></div> <!-- 查询条件 -->
         	<div id="resultList" class="clearfix tab-pane active"></div>
         	<div id="pagenation" class="fl-page-wrap clearfix"></div> <!-- 分页 -->
-		</div>
-		
-	</div>
-
-	<div class="hr hr32" id="hr-dotted2"></div>
-
-	<div class="row">
-		<div class="col-xs-12">
-			<div class="" id="quotationList2"></div>
 		</div>
 	</div>
 
@@ -259,6 +249,7 @@
 		</div>
 	</div>
 </div>
+
 <script type="text/javascript">
 	$.loadScript(['js/quotation/quotationIndex.js']);
 </script>

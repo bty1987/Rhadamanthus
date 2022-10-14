@@ -25,6 +25,10 @@
                                         <label id="costPrice" class="col-md-6 no-padding-left">0.00</label>
                                     </div>
                                     <div class="form-group">
+                                        <label class="col-md-6 no-padding-right">税金</label>
+                                        <label id="taxPrices" class="col-md-6 no-padding-left">0.00</label>
+                                    </div>
+                                    <div class="form-group">
                                         <label class=" col-md-6  no-padding-right">总价:</label>
                                         <label id="sumquoSumMoney" class=" col-md-4  no-padding-left">0.00</label>
                                     </div>
@@ -362,15 +366,21 @@
                             <h4 class="modal-title">总价计算</h4>
                         </div>
                         <div class="modal-body" >
-                            <div class="col-md-12" style="margin-bottom: 10px">
-                                <label class="control-label no-padding-right pull-left" for="calDiscount">折扣</label>
-                                <div class="col-md-9">
-                                    <input type="text" id="calculateDiscount" class="col-xs-10 col-md-3 v_required v_float"  data-toggle="popover" data-trigger='manual' maxlength='4'/>
-                                </div>
+                            <div class="row">
+    							<div class="col-md-12" style="margin-bottom: 10px">
+    								<label class="control-label no-padding-right pull-left" for="calDiscount">折扣</label>
+    								<div class="col-md-9">
+    									<input type="text" id="calculateDiscount" class="col-xs-10 col-md-3 v_required v_float"  data-toggle="popover" data-trigger='manual' maxlength='4'/>
+										<div class="action-buttons">
+		                                    <a id="calculateBtns" class="btn btn-primary btn-xs" style="margin-left: 10px;">计算</a>
+                                            <a id="machingMoreBtn" class="btn btn-success btn-xs">更多</a>
+                                 	   </div>
+    								</div>
+    							</div>
+    
+    							<div class="col-md-12 machingInfos" style="margin-bottom: 10px"></div>
+    							<div class="col-md-12 fl-quo-cal"></div>
                             </div>
-                            <div style="height: 40px;"></div>
-                            <div class="fl-quo-cal"></div>
-
                         </div>
 
                         <div class="modal-footer">
@@ -439,7 +449,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>           
 
             <div class="modal fade" id="quotationStatisticalModal" tabindex="-1" data-backdrop="static">
                 <div class="modal-dialog" style="width:70%">

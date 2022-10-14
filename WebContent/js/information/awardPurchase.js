@@ -26,22 +26,19 @@ jQuery(function($) {
     };
 
     awardPurchase.modals.awardPurchaseModal.on('hide.bs.modal', function(e) {
+
         com.cleanTypeahead("awardStock");
         com.cleanItems(awardPurchase.items);
         com.closeTip();
     });
 
-    com.post(api.ds.information, {}, function(res) {
-        awardPurchase.status = res.awardPurchaseStatus.split("key", "value");
-        awardPurchase.storeroom = res.awardStoreRoom.split("key", "value");
-    }, null, false);
-
     com.initTypeahead('awardStock', api.information.queryAwardStockByName, "awardStock.name", {}, "awardStocks", "asId", function(v) {
 
-        return v.name + "-" + awardPurchase.storeroom[v.storeroom];
+        return v.name + "-" + constant.information().activityItem.storeroom.keys[v.storeroom];
     }, null);
 
     awardPurchase.modals.awardPurchaseModal.on('hide.bs.modal', function() {
+
         com.clearValidator();
         com.cleanItems(awardPurchase.items);
     });
@@ -83,7 +80,7 @@ jQuery(function($) {
         name: "状态",
         prop: "status",
         clazz: "red",
-        dataset: awardPurchase.status
+        dataset: constant.information().awardPurchase.status.keys
     }, {
         field: "creater",
         name: "创建人",
@@ -125,16 +122,19 @@ jQuery(function($) {
         name: "采购",
         clazz: "btn-yellow",
         handle: function(v) {
+
             com.post(api.information.purchaseAwardPurchase, {
                 "awardPurchase.apid": v.apid
             }, function(res) {
+
                 searcher.doSearch();
                 com.showAlert(com.info, "操作成功");
             });
             return false;
         },
         show: function(v) {
-            return (v.status == 0);
+
+            return (v.status == constant.information().awardPurchase.STATUS_INIT_INT);
         }
     }, {
         name: "入库",
@@ -146,28 +146,33 @@ jQuery(function($) {
             return false;
         },
         show: function(v) {
-            return (v.status == 1);
+
+            return (v.status == constant.information().awardPurchase.STATUS_PROC_INT);
         }
     }, {
         name: "结算",
         clazz: "btn-success",
         handle: function(v) {
+
             awardPurchase.apid = v.apid;
             account(v);
             return false;
         },
         show: function(v) {
-            return (v.status == 2);
+
+            return (v.status == constant.information().awardPurchase.STATUS_WARE_INT);
         }
     }, {
         name: "撤销",
         clazz: "btn-danger",
         handle: function(v) {
+
             saveC(v.apid);
             return false;
         },
         show: function(v) {
-            return (v.status == 0);
+
+            return (v.status == constant.information().awardPurchase.STATUS_INIT_INT);
         }
     }, ];
 
@@ -179,14 +184,17 @@ jQuery(function($) {
     });
 
     function warehouse(v) {
+
         awardPurchase.modals.purchaseModal.modal("show");
     }
 
     function account(v) {
+
         awardPurchase.modals.bapriceModal.modal("show");
     }
 
     function saveW() {
+
         if (com.validate('purchaseModal'))
             return false;
 
@@ -197,6 +205,7 @@ jQuery(function($) {
         };
 
         com.post(url, options, function(res) {
+
             searcher.doSearch();
         });
 
@@ -215,6 +224,7 @@ jQuery(function($) {
         };
 
         com.post(url, options, function(res) {
+
             searcher.doSearch();
         });
 
@@ -228,6 +238,7 @@ jQuery(function($) {
         }
 
         com.post(api.information.cancelAwardPurchase, options, function(res) {
+
             searcher.doSearch();
         });
     }
@@ -252,6 +263,7 @@ jQuery(function($) {
         };
 
         com.post(url, options, function(res) {
+
             searcher.doSearch();
         });
 

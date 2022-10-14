@@ -26,8 +26,8 @@ jQuery(function ($) {
             transferBtn: com.focusPage("#transferBtn", "#wallet"),
             transfergetCode: com.focusPage("#transfergetCode", "#wallet")
         },
-        types: [],
-        status: [],
+        types: constant.payment.wallet.type.keys,
+        status: constant.payment.wallet.status.keys,
         currentWallet: null,
         //phoneCode: null,
         phoneCode: "1111",
@@ -74,16 +74,6 @@ jQuery(function ($) {
         wallet.currentWallet = null;
         wallet.phoneCode = null;
     });
-
-    com.post(api.ds.payment, {}, function (res) {
-        $.each(res.walletType, function (i, v) {
-            wallet.types[v.key] = v.value;
-        });
-
-        $.each(res.walletStatus, function (i, v) {
-            wallet.status[v.key] = v.value;
-        });
-    }, null, false);
 
     com.initTypeahead('transferUser', api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'autoFillKeyValue', 'key', 'value',null);
 

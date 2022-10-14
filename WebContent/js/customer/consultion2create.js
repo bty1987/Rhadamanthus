@@ -36,45 +36,6 @@ $(function() {
     // 获得页面控制参数
     var pageConfig = drawNode.getConfig(params.urlLoadParams.depage);
 
-    com.post(api.ds.decoration, {}, function(res) {
-        $.each(res.typeness, function(i, v) {
-            consultion.typeness[v.key] = v.value;
-        });
-        $.each(res.decorationOrderStatus, function(i, v) {
-            consultion.decorationOrderStatus[v.key] = v.value;
-        });
-        $.each(res.designStatus, function(i, v) {
-            consultion.designStatus[v.key] = v.value;
-        });
-        $.each(res.sourceStatus, function(i, v) {
-            consultion.sourceStatus[v.key] = v.value;
-        });
-    }, null, false);
-
-    com.post(api.ds.customer, {}, function(res) {
-        $.each(res.aepair_status, function(i, v) {
-            consultion.aepairStatus[v.key] = v.value;
-        });
-
-        $.each(res.aepair_gladness, function(i, v) {
-            consultion.aepairGladness[v.key] = v.value;
-        });
-
-        $.each(res.complainLevel, function(i, v) {
-            consultion.complainLevel[v.key] = v.value;
-        });
-
-        $.each(res.complainStatus, function(i, v) {
-            consultion.complainStatus[v.key] = v.value;
-        });
-
-        $.each(res.complainGladness, function(i, v) {
-            consultion.complainGladness[v.key] = v.value;
-        });
-
-        consultion.complainItems.complainLevel.bindData(res.complainLevel, "key", "value");
-    }, null, false);
-
     // 隐藏触发
     consultion.modals.addAepairModal.on('hide.bs.modal', function() {
         com.cleanItems(consultion.aepairItems);
@@ -117,7 +78,7 @@ $(function() {
             var $btnView = $("<a></a>").addClass("btn btn-minier btn-yellow").html("查看");
             var $btnBind = $("<a></a>").addClass("btn btn-minier btn-success").html("绑定");
 
-            var propertyArr = [["楼盘地址: ", (v.house.village.cityProper.city.name == null ? " " : v.house.village.cityProper.city.name) + " " + (v.house.village.cityProper == null ? " " : v.house.village.cityProper.name) + " " + v.house.village.name + " " + (v.house.houseNumber == null ? " " : v.house.houseNumber), "grey"], ["客户名: ", v.customer.name, "grey"], ["设计部: ", v.designer.dept.name, "grey"], ["设计师: ", v.designer.currentName, "grey"], ["业务部: ", v.salesman.dept.name, "grey"], ["业务员: ", v.salesman.currentName, "grey"], ["面积: ", v.house.buildArea, "blue"], ["创建时间: ", v.createTime, "green"], ["类型: ", consultion.typeness[v.typeness], "red"], ["状态: ", consultion.decorationOrderStatus[v.status], "red"], ["设计状态: ", consultion.designStatus[v.designStatus], "red"], ["确认状态: ", consultion.sourceStatus[v.sourceStatus], "red"], ["工程状态: ", consultion.projectStatusArr[v.projectStatus], "red"]];
+            var propertyArr = [["楼盘地址: ", (v.house.village.cityProper.city.name == null ? " " : v.house.village.cityProper.city.name) + " " + (v.house.village.cityProper == null ? " " : v.house.village.cityProper.name) + " " + v.house.village.name + " " + (v.house.houseNumber == null ? " " : v.house.houseNumber), "grey"], ["客户名: ", v.customer.name, "grey"], ["设计部: ", v.designer.dept.name, "grey"], ["设计师: ", v.designer.currentName, "grey"], ["业务部: ", v.salesman.dept.name, "grey"], ["业务员: ", v.salesman.currentName, "grey"], ["面积: ", v.house.buildArea, "blue"], ["创建时间: ", v.createTime, "green"], ["类型: ", constant.decoration().decoration.typeness.keys[v.typeness], "red"],[ "状态: ", constant.decoration().decoration.status.keys[v.status], "red" ], ["设计状态: ", constant.decoration().decoration.designStatus.keys[v.designStatus], "red"], ["确认状态: ", constant.decoration().decoration.sourceStatus.keys[v.sourceStatus], "red"], ["工程状态: ", consultion.projectStatusArr[v.projectStatus], "red"]];
 
             $.each(propertyArr, function(index, value) {
                 var $liProperty = $('<li></li>');
@@ -305,7 +266,7 @@ $(function() {
             var aepairs = res.aepairs;
 
             $.each(aepairs, function(i, v) {
-                var optionAepairArr = [["装修单号: ", com.checkNull(v.decoration.orderId), "blue"], ["创建人: ", v.creater.currentName, "grey"], ["操作人: ", v.updater.currentName, "grey"], ["创建时间: ", v.createTime, "green"], ["预计完成时间: ", v.targetTime, "green"], ["更新时间: ", v.updateTime, "green"], ["完成时间: ", v.finishTime, "green"], ["状态: ", consultion.aepairStatus[v.status], "red"], ["维修费用: ", v.outlay, "green"], ["已付费用: ", v.outpay, "green"], ["满意度: ", consultion.aepairGladness[v.gladness], "grey"]];
+                var optionAepairArr = [["装修单号: ", com.checkNull(v.decoration.orderId), "blue"], ["创建人: ", v.creater.currentName, "grey"], ["操作人: ", v.updater.currentName, "grey"], ["创建时间: ", v.createTime, "green"], ["预计完成时间: ", v.targetTime, "green"], ["更新时间: ", v.updateTime, "green"], ["完成时间: ", v.finishTime, "green"], ["状态: ", constant.customer().aepair.status.keys[v.status], "red"], ["维修费用: ", v.outlay, "green"], ["已付费用: ", v.outpay, "green"], ["满意度: ", constant.customer().aepair.aepairStatus.keys[v.gladness], "grey"]];
                 drawRecord(com.focusPage("#aepairTypeUl"), optionAepairArr, v.comment, "aepair");
             });
         });
@@ -317,7 +278,7 @@ $(function() {
             var complains = res.complains;
 
             $.each(complains, function(i, v) {
-                var optionComplainArr = [["装修单号: ", com.checkNull(v.decoration.orderId), "blue"], ["创建人: ", v.creater.currentName, "grey"], ["操作人: ", v.updater.currentName, "grey"], ["创建时间: ", v.createTime, "green"], ["操作时间: ", v.updateTime, "green"], ["完成时间: ", v.finishTime, "green"], ["等级: ", consultion.complainLevel[v.level], "green"], ["状态: ", consultion.complainStatus[v.status], "red"], ["满意度: ", consultion.complainGladness[v.gladness], "grey"]];
+                var optionComplainArr = [["装修单号: ", com.checkNull(v.decoration.orderId), "blue"], ["创建人: ", v.creater.currentName, "grey"], ["操作人: ", v.updater.currentName, "grey"], ["创建时间: ", v.createTime, "green"], ["操作时间: ", v.updateTime, "green"], ["完成时间: ", v.finishTime, "green"], ["等级: ", constant.customer().complain.complainType.keys[v.level], "green"], ["状态: ", constant.customer().aepair.status.keys[v.status], "red"], ["满意度: ", constant.customer().aepair.aepairStatus.keys[v.gladness], "grey"]];
                 drawRecord(com.focusPage("#complainTypeUl"), optionComplainArr, v.decoration.orderId, "complain");
             });
         });
@@ -338,7 +299,7 @@ $(function() {
 
     // 画装修单基础信息
     function drawDecorationInfo(decoration) {
-        var optionArr = [["装修单号: ", decoration.orderId, "blue"], ["楼盘地址: ", (decoration.house.village.cityProper.city.name == null ? " " : decoration.house.village.cityProper.city.name) + " " + (decoration.house.village.cityProper == null ? " " : decoration.house.village.cityProper.name) + " " + decoration.house.village.name + " " + (decoration.house.houseNumber == null ? " " : decoration.house.houseNumber), "grey"], ["客户名: ", decoration.customer.name, "grey"], ["面积: ", decoration.house.buildArea, "blue"], ["创建时间: ", decoration.createTime, "green"], ["类型: ", consultion.typeness[decoration.typeness], "red"], ["状态: ", consultion.decorationOrderStatus[decoration.status], "red"]];
+        var optionArr = [["装修单号: ", decoration.orderId, "blue"], ["楼盘地址: ", (decoration.house.village.cityProper.city.name == null ? " " : decoration.house.village.cityProper.city.name) + " " + (decoration.house.village.cityProper == null ? " " : decoration.house.village.cityProper.name) + " " + decoration.house.village.name + " " + (decoration.house.houseNumber == null ? " " : decoration.house.houseNumber), "grey"], ["客户名: ", decoration.customer.name, "grey"], ["面积: ", decoration.house.buildArea, "blue"], ["创建时间: ", decoration.createTime, "green"], ["类型: ", constant.decoration().decoration.typeness.keys[decoration.typeness], "red"], [ "状态: ", constant.decoration().decoration.status.keys[decoration.status], "red" ]];
 
         $.each(optionArr, function(index, value) {
             var $Lics = $('<li></li>').css({

@@ -41,30 +41,37 @@ $(function() {
     }], "gid", "goods");
 
     com.post(api.data.queryCategory, {}, function(res) {
+
         goods.items.category.bindData(res.categorys, "categoryName", "categoryName");
     });
 
     com.post(api.common.queryMeasurementUnit, {}, function(res) {
+
         goods.items.measurementUnit.bindData(res.measurementUnits, "name", "name");
     });
 
     com.post(api.data.queryAccessoriesType, {}, function(res) {
+
         goods.items.accessoriesType.bindData(res.accessoriesTypes, 'atid', 'name', true);
     });
 
     goods.btns.submitBtn.click(function() {
+
         saveData();
     });
 
     goods.btns.importBtn.click(function() {
+
         planMission("import");
     });
 
     goods.btns.exportBtn.click(function() {
+
         planMission("export");
     });
 
     com.initTypeahead("brand", api.data.queryBrandByPinyin, "pinyinName", {}, "brands", "bid", "name", function(list, k, v) {
+
         $.each(list, function(index, val) {
 
             if (val.bid == k) {
@@ -74,6 +81,7 @@ $(function() {
                 com.post(api.data.queryBrandByBid, {
                     "brand.bid": k
                 }, function(res) {
+
                     goods.items.category.val(res.brand.categoryName);
                 });
             }
@@ -85,6 +93,7 @@ $(function() {
     var displayFunc = (function() {
 
         var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
 
             if (listData && listData.length) {
@@ -94,6 +103,7 @@ $(function() {
                 $tableWrap.append($ulTitle).append($ulData);
 
                 $.each(listData, function(i, v) {
+
                     var $liLine = creatLine(i, v, i == listData.length - 1);
 
                     $liLine.appendTo($ulTitle);
@@ -113,6 +123,7 @@ $(function() {
             var titleName = '编号,商品,条形码,品类,品牌,单位,控价,售价,件数,辅类,类型,状态';
 
             $.each(titleName.split(','), function(i, v) {
+
                 var $cell = $('<div></div>').addClass('cell').html(v);
                 $cell.appendTo($contentWrap);
             });
@@ -136,6 +147,7 @@ $(function() {
             [v.no, 'blue'], [v.name, 'grey'], [v.barcode, 'blue'], [v.category, 'grey'], [v.brand, 'grey'], [v.measurementUnit, 'grey'], [v.purchase, 'blue'], [v.selling, 'blue'], [v.pieceNum, 'blue'], [v.accessoriesType.name, 'grey'], [v.type == "0" ? "商品" : "套餐", 'red'], [v.status == "0" ? "启用" : "禁用", 'red']];
 
             $.each(propertyArr, function(i, v) {
+
                 var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
@@ -245,10 +257,12 @@ $(function() {
 
         return {
             init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function(v) {
+
                 return creatLine(v);
             }
         };
@@ -257,6 +271,7 @@ $(function() {
     var goodsSeacher = new Searcher();
 
     goodsSeacher.init(['data-goods-no', 'data-goods-name', 'data-goods-barcode', 'data-goods-brand-name', 'data-goods-status'], "condList", api.data.pageGoodsForAdvance, function(data) {
+
         displayFunc.init('resultList', data);
     }, "pagenation", "goodsAdvancePostData", null, false, null, function() {
 
@@ -266,39 +281,43 @@ $(function() {
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        var $addaImportGood = $('<a></a>').addClass('btn btn-minier btn-warning pull-left').attr('name', 'importGoods').css({
-            'margin-left': '4px'
-        });
-        var $addaGoodi = $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($addaImportGood);
-        var $addaGoodspan = $('<span></span>').text('导入商品').appendTo($addaImportGood);
+        var $addaExportGoods = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'importGoods').css('margin', '0px 3px');
+        var $addaExporti = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($addaExportGoods);
+        var $addaExportspan = $('<span></span>').text('导出').appendTo($addaExportGoods);
 
-        var $addaImportColor = $('<a></a>').addClass('btn btn-minier btn-danger pull-left').attr('name', 'importGoods').css({
+        var $exportGroup = $("<div></div>").addClass("btn-group pull-left");
+        var $addaExport = $('<button></button>').addClass('btn btn-minier btn-success dropdown-toggle').attr("data-toggle", "dropdown").attr('name', 'importGoods').css({
             'margin-left': '4px'
-        });
-        var $addaColori = $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($addaImportColor);
-        var $addaColorspan = $('<span></span>').text('导入颜色').appendTo($addaImportColor);
+        }).appendTo($exportGroup);
+        $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($addaExport);
+        $('<span></span>').text('导出').appendTo($addaExport);
+        $('<span></span>').addClass('icon-caret-down icon-on-right').appendTo($addaExport);
 
-        var $addaImportFormat = $('<a></a>').addClass('btn btn-minier btn-purple pull-left').attr('name', 'importGoods').css({
-            'margin-left': '4px'
-        });
-        var $addaFormati = $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($addaImportFormat);
-        var $addaFormatspan = $('<span></span>').text('导入规格').appendTo($addaImportFormat);
+        var $addExportUl = $("<ul></ul>").addClass("dropdown-menu dropdown-inverse").appendTo($exportGroup);
+        var $exportGoods = $("<li></li>").append($("<a></a>").attr("href", "#").text("导出商品")).appendTo($addExportUl);
+        var $exportColor = $("<li></li>").append($("<a></a>").attr("href", "#").text("导出颜色")).appendTo($addExportUl);
+        var $exportFormat = $("<li></li>").append($("<a></a>").attr("href", "#").text("导出规格")).appendTo($addExportUl);
+        var $exportPrice = $("<li></li>").append($("<a></a>").attr("href", "#").text("导出价格")).appendTo($addExportUl);
 
-        var $addaImportPrice = $('<a></a>').addClass('btn btn-minier btn-pink pull-left').attr('name', 'importGoods').css({
+        var $importGroup = $("<div></div>").addClass("btn-group pull-left");
+        var $addaImport = $('<button></button>').addClass('btn btn-minier btn-warning dropdown-toggle').attr("data-toggle", "dropdown").attr('name', 'importGoods').css({
             'margin-left': '4px'
-        });
-        var $addaPricei = $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($addaImportPrice);
-        var $addaPricespan = $('<span></span>').text('导入价格').appendTo($addaImportPrice);
+        }).appendTo($importGroup);
+        $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($addaImport);
+        $('<span></span>').text('导入').appendTo($addaImport);
+        $('<span></span>').addClass('icon-caret-down icon-on-right').appendTo($addaImport);
+
+        var $addImportUl = $("<ul></ul>").addClass("dropdown-menu dropdown-inverse").appendTo($importGroup);
+        var $importGoods = $("<li></li>").append($("<a></a>").attr("href", "#").text("导入商品")).appendTo($addImportUl);
+        var $importColor = $("<li></li>").append($("<a></a>").attr("href", "#").text("导入颜色")).appendTo($addImportUl);
+        var $importFormat = $("<li></li>").append($("<a></a>").attr("href", "#").text("导入规格")).appendTo($addImportUl);
+        var $importPrice = $("<li></li>").append($("<a></a>").attr("href", "#").text("导入价格")).appendTo($addImportUl);
 
         var $deleteImportPrice = $('<a></a>').addClass('btn btn-minier btn-inverse pull-left').attr('name', 'importGoods').css({
             'margin-left': '4px'
         });
         var $deletePricei = $('<i></i>').addClass('icon-cloud-upload bigger-110').appendTo($deleteImportPrice);
         var $deletePricespan = $('<span></span>').text('删除价格').appendTo($deleteImportPrice);
-
-        var $addaExportGoods = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'importGoods');
-        var $addaExporti = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($addaExportGoods);
-        var $addaExportspan = $('<span></span>').text('商品导出').appendTo($addaExportGoods);
 
         $adda.click(function() {
 
@@ -312,7 +331,12 @@ $(function() {
             com.popup4model("#addLayer", "添加")
         });
 
-        $addaImportGood.click(function() {
+        $addaExportGoods.click(function() {
+
+            pageGoodExport();
+        });
+
+        $importGoods.click(function() {
 
             goods.keyword = "import_goods";
 
@@ -327,7 +351,7 @@ $(function() {
             com.popup4model("#importGoods", "导入商品")
         });
 
-        $addaImportColor.click(function() {
+        $importColor.click(function() {
 
             goods.keyword = "import_color";
 
@@ -342,7 +366,7 @@ $(function() {
             com.popup4model("#importColor", "导入颜色")
         });
 
-        $addaImportFormat.click(function() {
+        $importFormat.click(function() {
 
             goods.keyword = "import_format";
 
@@ -357,7 +381,7 @@ $(function() {
             com.popup4model("#importFormat", "导入规格")
         });
 
-        $addaImportPrice.click(function() {
+        $importPrice.click(function() {
 
             goods.keyword = "import_price";
 
@@ -387,19 +411,9 @@ $(function() {
             com.popup4model("#deletePrice", "删除价格")
         });
 
-        $addaExportGoods.click(function() {
+        $exportGoods.click(function() {
 
             var total = com.focusPage('span[name="totalRecords"]').text();
-
-            if (total == 0) {
-                com.showAlert(com.warning, "请通过条件进行查询");
-                return false;
-            }
-
-            if (com.focusPage('span[name="totalRecords"]').text() > 1000) {
-                com.showAlert(com.warning, "查询结果大于阀值 , 导出失败");
-                return false;
-            }
 
             goods.keyword = "export_inventory_goods";
 
@@ -414,10 +428,61 @@ $(function() {
             com.popup4model("#exportGoods", "导出商品")
         });
 
+        $exportColor.click(function() {
+
+            var total = com.focusPage('span[name="totalRecords"]').text();
+
+            goods.keyword = "export_goods_color";
+
+            var form = com.focusPage("#exportModalForm");
+
+            com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
+            com.focusPage("#fileUpload").addClass("hide");
+
+            goods.btns.importBtn.addClass("hide");
+            goods.btns.exportBtn.removeClass("hide");
+
+            com.popup4model("#exportModal", "导出颜色")
+        });
+
+        $exportFormat.click(function() {
+
+            var total = com.focusPage('span[name="totalRecords"]').text();
+
+            goods.keyword = "export_goods_format";
+
+            var form = com.focusPage("#exportModalForm");
+
+            com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
+            com.focusPage("#fileUpload").addClass("hide");
+
+            goods.btns.importBtn.addClass("hide");
+            goods.btns.exportBtn.removeClass("hide");
+
+            com.popup4model("#exportModal", "导出规格")
+        });
+
+        $exportPrice.click(function() {
+
+            var total = com.focusPage('span[name="totalRecords"]').text();
+
+            goods.keyword = "export_goods_price";
+
+            var form = com.focusPage("#exportModalForm");
+
+            com.focusPage("#uploaddiv").removeClass("hide").appendTo(form);
+            com.focusPage("#fileUpload").addClass("hide");
+
+            goods.btns.importBtn.addClass("hide");
+            goods.btns.exportBtn.removeClass("hide");
+
+            com.popup4model("#exportModal", "导出价格")
+        });
+
         if (goods.pageType == "basic") {
-            return [$adda];
+            return [$adda, $addaExportGoods];
         } else {
-            return [$addaExportGoods, $addaImportGood, $addaImportColor, $addaImportFormat, $addaImportPrice, $deleteImportPrice, $adda];
+            return [$exportGroup, $importGroup, $deleteImportPrice, $adda];
         }
 
     }, 'resultList');
@@ -430,6 +495,7 @@ $(function() {
         };
 
         com.post(api.data.updateGoodsForStatus, options, function(res) {
+
             com.showAlert(com.info, "操作成功");
             goodsSeacher.doSearch();
         });
@@ -437,7 +503,9 @@ $(function() {
 
     function saveData() {
 
-        if (com.validate("formAdvance", "right")) { return false; }
+        if (com.validate("formAdvance", "right")) {
+            return false;
+        }
 
         var gid = goods.gid;
         var atid = goods.items.accessoriesType.val();
@@ -464,6 +532,7 @@ $(function() {
         }
 
         com.post(url, options, function(res) {
+
             com.closePopup();
             goodsSeacher.doSearch();
         });
@@ -484,7 +553,9 @@ $(function() {
     // 导入创建计划
     function planMission(type) {
 
-        if (com.validate("uploaddiv")) { return false; }
+        if (com.validate("uploaddiv")) {
+            return false;
+        }
 
         var args = "";
 
@@ -493,16 +564,17 @@ $(function() {
             var filtersName = ['data-goods-no', 'data-goods-name', 'data-goods-barcode', 'data-goods-brand-name', 'data-goods-status'];
 
             $.each(filtersName, function(i, v) {
+
                 var val = com.focusPage("[name='" + v + "']").val();
                 var columnName = $("[name='" + v + "']").attr("data-rqs");
+
                 if (val != "undefined" && val != null && val != "") {
                     args = args + columnName + "-" + val + ",";
                 }
             });
 
             if (args == null || args == "") {
-                com.showAlert(com.warning, "请通过条件进行查询");
-                return false;
+                args = ","
             }
 
         } else if (type == "import") {
@@ -539,6 +611,7 @@ $(function() {
         };
 
         com.post(api.information.createPlan, options, function(res) {
+
             com.showAlert(com.info, "计划创建成功");
             com.closePopup();
         });
@@ -547,7 +620,30 @@ $(function() {
     com.uploadify("#attachment", "上传文件", api.common.uploadOther, 'btn btn-sm btn-primary lineheight0', "*.xls;*.xlsx", {
         'uploadType': 3
     }, 1, function(data) {
+
         0 == data.errorCode ? com.focusPage("#filePath").val(data.resUrl) : alert(data.errorMsg);
     });
+
+    function pageGoodExport() {
+
+        if (com.focusPage('span[name="totalRecords"]').text() == 0) {
+            com.showAlert(com.warning, "请通过条件进行查询");
+            return false;
+        }
+
+        if (com.focusPage('span[name="totalRecords"]').text() > 3000) {
+            com.showAlert(com.warning, "查询结果大于阀值 , 不能完成导出动作");
+            return false;
+        }
+
+        com.post(api.data.pageGoodsForAdvance, $.extend({}, params.goodsAdvancePostData, {
+            "paging.noPage": 1
+        }), function(res) {
+            $.exceler({
+                column: [['商品ID', 'gid'], ['商品编码', 'no'], ['商品名称', 'name'], ['条形码', 'barcode'], ['品类', 'category'], ['品牌', 'brand'], ['单位', 'measurementUnit'], ['件数', 'pieceNum'], ['类型', 'type']],
+                list: res.paging.data
+            });
+        });
+    }
 
 });

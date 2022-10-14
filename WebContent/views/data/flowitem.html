@@ -1,0 +1,58 @@
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>工程</title>
+        <script src="../../assets/altogether/js/jquery-2.0.3.min.js"></script>
+        <script src="../../assets/altogether/js/drawflow.min.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="../../assets/altogether/css/drawflow.min.css" />
+        <link rel="stylesheet" type="text/css" href="../../css/flow.css" />
+
+    </head>
+    <body>
+
+    <div class="wrapper">
+        <div class="col" id="col">
+            <div class="drag-drawflow" draggable="true" data-node="facebook">
+                <i class="start"></i>
+                <span> 开始节点</span>
+            </div>
+            <div class="drag-drawflow" draggable="true" data-node="log">
+                <i class="fas fa-file-signature"></i>
+                <span> 结束节点 </span>
+            </div>
+            <div class="drag-drawflow" draggable="true"  data-node="template">
+                <i class="text"></i>
+                <span> 备注</span>
+            </div>
+            <div class="drag-drawflow" draggable="true"   data-node="dbclick">
+                <i class="fas fa-mouse"></i>
+                <span> 单节点</span>
+            </div>
+        </div>
+
+        <div class="col-right">
+
+            <div id="drawflow">
+
+                <div class="btn-export" id="exporter">保存</div>
+
+                <div class="btn-clear" id="clearer">清空</div>
+
+                <button class="small">缩小</button>
+                <button class="reduction">还原</button>
+                <button class="big">放大</button>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        parent.$.loadScript(['js/data/flowitem.js'], "../../", window.frameElement, $);
+    </script>
+
+    </body>
+</html>

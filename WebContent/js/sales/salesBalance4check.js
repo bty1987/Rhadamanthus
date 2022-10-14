@@ -27,19 +27,7 @@ $(function() {
 
     salesBalance.btns.balanceSalesBtn.click(balanceSales);
 
-    com.post(api.ds.payment, {}, function(res) {
-
-        salesBalance.balanceType = res.balanceType.split("key", "value");
-        salesBalance.status = res.balanceStatus.split("key", "value");
-        salesBalance.salesPaymentType = res.materialPaymentType.split("key", "value");
-    }, null, false);
-
-    com.post(api.ds.sales, {}, function(res) {
-
-        salesBalance.oneType = res.oneType.split("key", "value");
-    }, null, false);
-
-    com.post(api.common.queryReceiptType, {}, function(res) {
+    com.post(api.data.queryReceiptType, {}, function(res) {
 
         salesBalance.salesPaymentForStatus.cash = [];
         salesBalance.salesPaymentForStatus.bank = [];
@@ -55,19 +43,19 @@ $(function() {
 
         $.each(res.receiptTypes, function(i, v) {
 
-            if (v.type == 1) {
+            if (v.type == constant.data().receiptType.TYPE_CASH_INT) {
                 salesBalance.salesPaymentForStatus.cash.push(v);
                 salesBalance.salesPaymentForStatus.cashInfo[v.no] = v.name;
-            } else if (v.type == 2) {
+            } else if (v.type == constant.data().receiptType.TYPE_BANK_INT) {
                 salesBalance.salesPaymentForStatus.bank.push(v);
                 salesBalance.salesPaymentForStatus.bankInfo[v.no] = v.name;
-            } else if (v.type == 3) {
+            } else if (v.type == constant.data().receiptType.TYPE_CHECK_INT) {
                 salesBalance.salesPaymentForStatus.checkBank.push(v);
                 salesBalance.salesPaymentForStatus.checkBankInfo[v.no] = v.name;
-            } else if (v.type == 4) {
+            } else if (v.type == constant.data().receiptType.TYPE_ACCOUNT_INT) {
                 salesBalance.salesPaymentForStatus.accounts.push(v);
                 salesBalance.salesPaymentForStatus.accountsInfo[v.no] = v.name;
-            } else if (v.type == 5) {
+            } else if (v.type == constant.data().receiptType.TYPE_COUPON_INT) {
                 salesBalance.salesPaymentForStatus.couponType.push(v);
                 salesBalance.salesPaymentForStatus.couponTypeData[v.no] = [v.no, v.name];
             }
@@ -95,9 +83,9 @@ $(function() {
                     var $btnPayment = $('<a></a>').addClass('btn btn-minier btn-danger').html('款项');
                     var $btnBalanceItem = $('<a></a>').addClass('btn btn-minier btn-pink').html('子项');
 
-                    var coupon = v.onetype == 1 ? 0 : v.sales.coupon;
-                    var maling = v.onetype == 1 ? 0 : v.sales.maling;
-                    var venderMaling = v.onetype == 1 ? 0 : v.sales.venderMaling;
+                    var coupon = v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? constant.sales().salesBalance.ONETYPE_INIT_INT : v.sales.coupon;
+                    var maling = v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? constant.sales().salesBalance.ONETYPE_INIT_INT : v.sales.maling;
+                    var venderMaling = v.onetype == constant.sales().salesBalance.ONETYPE_REFUND_INT ? constant.sales().salesBalance.ONETYPE_INIT_INT : v.sales.venderMaling;
                     var propertyArr = [];
                     var styleArr = [];
                     var checkArr = [];
@@ -167,7 +155,7 @@ $(function() {
                                 propertyArr.push(["券信息:", v.sales.couponInfo, "grey"]);
                                 break;
                             case "type":
-                                propertyArr.push(["类型:", salesBalance.balanceType[v.type], "red"]);
+                                propertyArr.push(["类型:", constant.sales().salesBalance.type.keys[v.type], "red"]);
                                 break;
                             case "allowance":
                                 styleArr.push(["补贴:", v.allowance, "blue"]);
@@ -182,10 +170,10 @@ $(function() {
                                 styleArr.push(["厂商结算时间:", v.venderTime, "green"]);
                                 break;
                             case "oneType":
-                                styleArr.push(["一类:", salesBalance.oneType[v.onetype], "red"]);
+                                styleArr.push(["一类:", constant.sales().salesBalance.onetype.keys[v.onetype], "red"]);
                                 break;
                             case "status":
-                                styleArr.push(["状态:", salesBalance.status[v.status], "red"]);
+                                styleArr.push(["状态:", constant.sales().salesBalance.status.keys[v.status], "red"]);
                                 break;
                             case "realSalesTotal":
                                 checkArr.push(["实际销售额:", realSalesTotal, "blue"]);
@@ -270,7 +258,7 @@ $(function() {
 
                     $btnPayment.click(function(e) {
 
-                        params.sales.sales = sales;
+                        params.sales.sales = v.sales;
                         params.sales.type = "balance";
 
                         com.popup4page("#viewPopUp", "views/sales/sales4payment.html", "收款");
@@ -345,7 +333,7 @@ $(function() {
                 var $liLine = $('<li></li>').addClass('item-orange clearfix');
                 var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
                 var $h3 = $('<h3></h3>').addClass('oid');
-                var $small = $('<small></small>').addClass('blue').html(salesBalance.salesPaymentType[v.type]);
+                var $small = $('<small></small>').addClass('blue').html(constant.payment().materialPayment.paymentType.keys[v.type]);
                 var propertyArr = [["销售单号:", v.sales.no, "blue"], ["品类:", v.sales.category, "grey"], ["品牌:", v.sales.brand, "grey"], ["应收额:", v.referMoney, "blue"], ["收款时间:", v.salesReceipt.collectTime, "green"], ["确认时间:", v.salesReceipt.confirmTime, "green"], ["状态:", v.status == 0 ? '初始' : v.status == 1 ? '待确认' : '已确认', "red"]];
                 $.each(propertyArr, function(index, value) {
 
@@ -504,7 +492,7 @@ $(function() {
             var _income = 0;
             var _payment = 0;
 
-            if (oneType == 0) {
+            if (oneType == constant.sales().salesBalance.ONETYPE_INIT_INT) {
                 if (type == 3) {
                     venderMaling = 0;
                     _income = depositpay;
@@ -514,11 +502,11 @@ $(function() {
                     _payment = utils.accSub(pbalance, venderMaling);
                 }
             }
-            if (oneType == 1) {
+            if (oneType == constant.sales().salesBalance.ONETYPE_REFUND_INT) {
                 _income = total;
                 _payment = pbalance;
             }
-            if (oneType == 2 || oneType == 3) {
+            if (oneType == constant.sales().salesBalance.ONETYPE_ALLBACK_INT || oneType == constant.sales().salesBalance.ONETYPE_DBACKORDER_INT) {
                 _income = total;
                 _payment = utils.accAdd(pbalance, venderMaling);
             }
@@ -530,20 +518,14 @@ $(function() {
             payment = utils.accAdd(payment, _payment);
             profit = utils.accAdd(profit, _profit);
 
-            if (status != 2) {
+            if (status != constant.sales().salesBalance.STATUS_BALANCE_INT) {
                 com.showAlert(com.warning, "请选择结算状态的结算单");
-                return false;
-            }
-
-            if (brand.bid != null && bid && bid != brand.bid) {
-                com.showAlert(com.warning, "品牌不一致");
                 return false;
             }
 
             options["balanceSalesBalances[" + index + "].salesBalance.sbid"] = sbid;
             index += 1;
         }
-        ;
 
         if (!options)
             return false;

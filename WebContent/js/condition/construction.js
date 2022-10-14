@@ -1,15 +1,14 @@
-
 Condition.addupRule("construction", {
 
-    "orderId" : {
-        label:"装修单号",
-        type:"text",
-        submitConfig : {
-            name : "orderId",
-            op : "eq",
-            validate:{
-                "reg" : /^[A-Z0-9]*$/,
-                "msg" : "格式不正确A-Z,0-9"
+    "orderId": {
+        label: "装修单号",
+        type: "text",
+        submitConfig: {
+            name: "orderId",
+            op: "eq",
+            validate: {
+                "reg": /^[A-Z0-9]*$/,
+                "msg": "格式不正确A-Z,0-9"
             }
         }
     },
@@ -39,35 +38,39 @@ Condition.addupRule("construction", {
         }
     },
     "designer": {
-        label: "设计师",//中文名
-        type: "autofill",//类型
-        submitConfig: {//向后台提交的配置
-            name: "designer",//接口中的参数名
-            op: "eq",//查询方式
-            validate: null//校验规则
+        label: "设计师",// 中文名
+        type: "autofill",// 类型
+        submitConfig: {// 向后台提交的配置
+            name: "designer",// 接口中的参数名
+            op: "eq",// 查询方式
+            validate: null
+        // 校验规则
         },
-        dataSource: {//从后台取数据的各种配置
-            url: api.personel.queryUserByPinyin,//获取数据要调用的接口
-            postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
-            listPath: "autoFillKeyValue",//响应list的json路径
-            keyPath: "key",//用来向后台提交的字段的json路径
-            valuePath: "value"//用来在页面显示的字段的json路径
+        dataSource: {// 从后台取数据的各种配置
+            url: api.personel.queryUserByPinyin,// 获取数据要调用的接口
+            postData: {
+                "user.status": 0,
+                "departmentType.name": ""
+            },// 获取数据时的请求参数
+            listPath: "autoFillKeyValue",// 响应list的json路径
+            keyPath: "key",// 用来向后台提交的字段的json路径
+            valuePath: "value"// 用来在页面显示的字段的json路径
         }
     },
     "schedule": {
         label: "进度",
         type: "select",
         submitConfig: {
-            name: "schedule",
+            name: "cnid",
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
-            url: api.ds.construction,
-            postData: {"timestamp": (new Date).getTime()},
-            listPath: "constructionSchedule",
-            keyPath: "key",
-            valuePath: "value"
+        dataSource: {// 从后台取数据的各种配置
+            url: api.data.queryConstructionNode,
+            postData: {},
+            listPath: "constructionNodes",
+            keyPath: "cnid",
+            valuePath: "name"
         }
     },
     "projectStatusFlag": {
@@ -78,31 +81,38 @@ Condition.addupRule("construction", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
+        dataSource: {// 从后台取数据的各种配置
             url: null,
             postData: null,
-            listPath: [
-                {key: "未完工", value: "未完工"},
-                {key: "已完工", value: "已完工"}
-            ],
+            listPath: [{
+                key: "未完工",
+                value: "未完工"
+            }, {
+                key: "已完工",
+                value: "已完工"
+            }],
             keyPath: "key",
             valuePath: "value"
         }
     },
     "supervisor": {
-        label: "监理",//中文名
-        type: "autofill",//类型
-        submitConfig: {//向后台提交的配置
-            name: "supervisor",//接口中的参数名
-            op: "eq",//查询方式
-            validate: null//校验规则
+        label: "监理",// 中文名
+        type: "autofill",// 类型
+        submitConfig: {// 向后台提交的配置
+            name: "supervisor",// 接口中的参数名
+            op: "eq",// 查询方式
+            validate: null
+        // 校验规则
         },
-        dataSource: {//从后台取数据的各种配置
-            url: api.personel.queryUserByPinyin,//获取数据要调用的接口
-            postData: {"user.status":3,"departmentType.name":"工程部"},//获取数据时的请求参数
-            listPath: "autoFillKeyValue",//响应list的json路径
-            keyPath: "key",//用来向后台提交的字段的json路径
-            valuePath: "value"//用来在页面显示的字段的json路径
+        dataSource: {// 从后台取数据的各种配置
+            url: api.personel.queryUserByPinyin,// 获取数据要调用的接口
+            postData: {
+                "user.status": 3,
+                "departmentType.name": "工程部"
+            },// 获取数据时的请求参数
+            listPath: "autoFillKeyValue",// 响应list的json路径
+            keyPath: "key",// 用来向后台提交的字段的json路径
+            valuePath: "value"// 用来在页面显示的字段的json路径
         }
     },
     "acceptanceFlag": {
@@ -113,13 +123,16 @@ Condition.addupRule("construction", {
             op: "eq",
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
+        dataSource: {// 从后台取数据的各种配置
             url: null,
             postData: null,
-            listPath: [
-                {key: "notAcceptanced", value: "未验收"},
-                {key: "acceptanced", value: "已验收"}
-            ],
+            listPath: [{
+                key: "notAcceptanced",
+                value: "未验收"
+            }, {
+                key: "acceptanced",
+                value: "已验收"
+            }],
             keyPath: "key",
             valuePath: "value"
         }
@@ -127,19 +140,139 @@ Condition.addupRule("construction", {
     "salesman": {
         label: "业务员",
         type: "autofill",
-        submitConfig: {//向后台提交的配置
-            name: "salesman",//接口中的参数名
-            op: "eq",//查询方式
+        submitConfig: {// 向后台提交的配置
+            name: "salesman",// 接口中的参数名
+            op: "eq",// 查询方式
             validate: null
         },
-        dataSource: {//从后台取数据的各种配置
-            url: api.personel.queryUserByPinyin,//获取数据要调用的接口
-            postData: {"user.status":0,"departmentType.name":""},//获取数据时的请求参数
-            listPath: "autoFillKeyValue",//响应list的json路径
-            keyPath: "key",//用来向后台提交的字段的json路径
-            valuePath: "value"//用来在页面显示的字段的json路径
+        dataSource: {// 从后台取数据的各种配置
+            url: api.personel.queryUserByPinyin,// 获取数据要调用的接口
+            postData: {
+                "user.status": 0,
+                "departmentType.name": ""
+            },// 获取数据时的请求参数
+            listPath: "autoFillKeyValue",// 响应list的json路径
+            keyPath: "key",// 用来向后台提交的字段的json路径
+            valuePath: "value"// 用来在页面显示的字段的json路径
         }
     },
+
+    "schedule-decoration-design-region": {
+        label: "设计中心",
+        type: "autofill",
+        submitConfig: {// 向后台提交的配置
+            name: "designerRegionId",// 接口中的参数名
+            op: "eq",// 查询方式
+            validate: null
+        },
+        dataSource: {// 从后台取数据的各种配置
+            url: api.communion.queryDepartmentByName,// 获取数据要调用的接口
+            query: "dept.name",
+            postData: {
+                "dept.type.dtid": 1
+            },// 获取数据时的请求参数
+            listPath: "deptList",// 响应list的json路径
+            keyPath: "no",// 用来向后台提交的字段的json路径
+            valuePath: "name"// 用来在页面显示的字段的json路径
+        }
+    },
+    "schedule-decoration-design-dept": {
+        label: "设计部",
+        type: "autofill",
+        submitConfig: {
+            name: "designerDepartmentId",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: api.communion.queryDepartmentByName,
+            query: "dept.name",
+            postData: {
+                "dept.type.dtid": 2
+            },// 获取数据时的请求参数
+            listPath: "deptList",
+            keyPath: "no",
+            valuePath: "name"
+        }
+    },
+    "schedule-decoration-status": {
+        label: "订单状态",
+        type: "select",
+        submitConfig: {
+            name: "decorationStatus",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                "key": "0",
+                "value": "初始"
+            }, {
+                "key": "1",
+                "value": "开工"
+            }, {
+                "key": "2",
+                "value": "完工"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "schedule-decoration-createTime": {
+        label: "创建时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "createTime",
+            op: "between",
+            validate: null
+        }
+    },
+    "schedule-startTime": {
+        label: "开工时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "startTime",
+            op: "between",
+            validate: null
+        }
+    },
+    "schedule-endTime": {
+        label: "完工时间",
+        type: "dateRangePicker",
+        submitConfig: {
+            name: "endTime",
+            op: "between",
+            validate: null
+        }
+    },
+    "schedule-status": {
+        label: "环节状态",
+        type: "select",
+        submitConfig: {
+            name: "status",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: [{
+                "key": "0",
+                "value": "初始"
+            }, {
+                "key": "1",
+                "value": "开工"
+            }, {
+                "key": "2",
+                "value": "完工"
+            }],
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+
     "drawLine-actualDate": {
         label: "放线时间",
         type: "datePicker",
@@ -170,11 +303,16 @@ Condition.addupRule("construction", {
         dataSource: {
             url: null,
             postData: null,
-            listPath: [
-                {"key": "1", "value": "申请放线"},
-                {"key": "3", "value": "放线失败"},
-                {"key": "2", "value": "放线成功"}
-            ],
+            listPath: [{
+                "key": "1",
+                "value": "申请放线"
+            }, {
+                "key": "3",
+                "value": "放线失败"
+            }, {
+                "key": "2",
+                "value": "放线成功"
+            }],
             keyPath: "key",
             valuePath: "value"
         }
@@ -233,40 +371,5 @@ Condition.addupRule("construction", {
             validate: null
         }
     },
-    "designerRegionId": {
-        label: "设计中心",
-        type: "autofill",
-        submitConfig: {//向后台提交的配置
-            name: "designerRegionId",//接口中的参数名
-            op: "eq",//查询方式
-            validate: null
-        },
-        dataSource: {//从后台取数据的各种配置
-            url: api.communion.queryDepartmentByName,//获取数据要调用的接口
-            query: "dept.name",
-            postData: {"dept.type.dtid": 1},//获取数据时的请求参数
-            listPath: "deptList",//响应list的json路径
-            keyPath: "no",//用来向后台提交的字段的json路径
-            valuePath: "name"//用来在页面显示的字段的json路径
-        }
-    },
-    "designerDepartmentId": {
-        label: "设计部",
-        type: "autofill",
-        submitConfig: {
-            name: "designerDepartmentId",
-            op: "eq",
-            validate: null
-        },
-        dataSource: {
-            url: api.communion.queryDepartmentByName,
-            query: "dept.name",
-            postData: {"dept.type.dtid": 2},//获取数据时的请求参数
-            listPath: "deptList",
-            keyPath: "no",
-            valuePath: "name"
-        }
-    },
 
-	
-})
+});

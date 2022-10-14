@@ -17,8 +17,8 @@ $(function() {
             bindCardBtn: com.focusPage("#bindCardBtn", "#walletard"),
             bindCardgetCode: com.focusPage("#bindCardgetCode", "#walletard")
         },
-        status: [],
-        types: [],
+        status: constant.payment.walletard.status.keys,
+        types: constant.payment.walletard.type.keys,
         phoneCode: "1111",
         countdown: 60
     };
@@ -36,20 +36,7 @@ $(function() {
         walletard.phoneCode = null;
     });
 
-    com.post(api.ds.payment, {}, function(res) {
-
-        $.each(res.walletardStatus, function(i, v) {
-
-            walletard.status[v.key] = v.value;
-        });
-
-        $.each(res.walletardType, function(i, v) {
-
-            walletard.types[v.key] = v.value;
-        });
-
-        walletard.items.type.bindData(res.walletardType, "key", "value");
-    }, null, false);
+    walletard.items.type.bindData(constant.payment.walletard.type.datas, "key", "value");
 
     com.datetime(com.focusPage("#validTime"));
 

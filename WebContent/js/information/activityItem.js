@@ -42,20 +42,11 @@ jQuery(function($) {
         com.closeTip();
     });
 
-    com.post(api.ds.information, {
-        "timestamp": new Date().getTime()
-    }, function(res) {
-
-        activityItem.type = res.awardStockType.split("key", "value");
-        activityItem.storeroom = res.awardStoreRoom.split("key", "value");
-
-    }, null, false);
-
     activityItem.items.activityName.text(params.infomation.activityName);
 
     com.initTypeahead(activityItem.items.name, api.information.queryAwardStockByName, "awardStock.name", {}, "awardStocks", "asId", function(v) {
 
-        return v.name + "-" + activityItem.type[v.type] + "-" + activityItem.storeroom[v.storeroom];
+        return v.name + "-" + constant.information().activityItem.type.keys[v.type] + "-" + constant.information().activityItem.storeroom.keys[v.storeroom];
     }, function(list, k, v) {
 
         $.each(list, function(i, e) {
@@ -91,13 +82,13 @@ jQuery(function($) {
         var widgetHeader = $("<div></div>").addClass("widget-header").appendTo(widgetBox);
         var widgetHeaderH5 = $("<h5></h5>").addClass("bigger lighter").appendTo(widgetHeader);
 
-        if (_activityItem.type == 0) {
+        if (_activityItem.type == constant.information().activityItem.TYPE_COUPON_INT) {
             widgetHeader.addClass("header-color-blue");
             widgetHeaderH5.text("券");
-        } else if (_activityItem.type == 1) {
+        } else if (_activityItem.type == constant.information().activityItem.TYPE_THING_INT) {
             widgetHeader.addClass("header-color-green");
             widgetHeaderH5.text("物品");
-        } else if (_activityItem.type == 2) {
+        } else if (_activityItem.type == constant.information().activityItem.TYPE_REDPACKAGE_INT) {
             widgetHeader.addClass("header-color-red");
             widgetHeaderH5.text("红包");
         }

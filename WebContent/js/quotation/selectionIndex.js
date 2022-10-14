@@ -17,18 +17,6 @@ $(function() {
         },
     }
 
-    com.post(api.ds.decoration, {}, function(res) {
-
-        selection.datasets.decorationStatus = res.decorationOrderStatus.split("key", "value");
-
-    }, null, false);
-
-    com.post(api.ds.quotation, {}, function(res) {
-
-        selection.datasets.status = res.selectionStatus.split("key", "value");
-
-    }, null, false);
-
     var cardbtns = [{
         name: "查看",
         clazz: "btn-success",
@@ -45,8 +33,11 @@ $(function() {
 
     var searcher = new Searcher();
 
+    com.focusPage("#selectionIndexPageContent").removeClass("page-content");
+
     searcher.base("condList", "pagenation", "resultList", api.quotation.pageSelection);
-    searcher.condition(["quotation-selection-decoration-orderId", "quotation-selection-decoration-village", "quotation-selection-decoration-designer", "quotation-selection-decoration-salesman", "quotation-selection-decoration-status", "quotation-selection-status", "quotation-selection-createTime"]);
+    searcher.condition(["quotation-selection-decoration-orderId", "quotation-selection-decoration-village", "quotation-selection-decoration-designer", "quotation-selection-decoration-salesman", "quotation-selection-decoration-status", "quotation-selection-status", "quotation-selection-createTime", "quotation-selection-affirmTime", "quotation-selection-isAffirm"]);
+    searcher.history("selectionPostData");
 
     var selecprops = [{
         field: "decoration.orderId",
@@ -87,7 +78,7 @@ $(function() {
         field: "decoration.status",
         name: "订单状态",
         prop: "decoration.status",
-        dataset: selection.datasets.decorationStatus,
+        dataset: constant.decoration().decoration.status.keys,
         clazz: "red"
     }, {
         type: "newline"
@@ -95,6 +86,11 @@ $(function() {
         field: "createTime",
         name: "创建时间",
         prop: "createTime",
+        clazz: "green"
+    }, {
+        field: "affirmTime",
+        name: "确认时间",
+        prop: "affirmTime",
         clazz: "green"
     }, {
         field: "creater.currentName",
@@ -135,7 +131,13 @@ $(function() {
         field: "status",
         name: "状态",
         prop: "status",
-        dataset: selection.datasets.status,
+        dataset: constant.quotation().selection.status.keys,
+        clazz: "red"
+    }, {
+        field: "isAffirm",
+        name: "客户确认",
+        prop: "isAffirm",
+        dataset: constant.quotation().selection.isAffirm.keys,
         clazz: "red"
     }];
 

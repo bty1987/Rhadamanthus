@@ -1,4 +1,4 @@
-jQuery(function () {
+jQuery(function() {
 
     var accessories = {
         cid: null,
@@ -31,21 +31,15 @@ jQuery(function () {
 
     com.datetime(accessories.rightitems.fetchTime, "date", false);
 
-    com.post(api.data.queryConstructionNode, {}, function (res) {
-        $.each(res.constructionNodes, function (i, v) {
-            accessories.constructionNode[v.sort] = v.name;
-        });
-    });
-
-    accessories.leftitems.goodsName.on("focus", function () {
+    accessories.leftitems.goodsName.on("focus", function() {
 
         if (accessories.postData.orderId == null) {
             return false;
         }
 
-        com.initTypeahead("goodsName", api.data.queryAoodsByName, "aoods.goods.name", {}, "aoodes", "gid", "name", function (list, k, v) {
+        com.initTypeahead("goodsName", api.data.queryAoodsByName, "aoods.goods.name", {}, "aoodes", "gid", "name", function(list, k, v) {
 
-            $.each(list, function (index, val) {
+            $.each(list, function(index, val) {
 
                 if (val.goods.gid == k) {
 
@@ -62,7 +56,7 @@ jQuery(function () {
         });
     });
 
-    com.focusPage("#add").click(function () {
+    com.focusPage("#add").click(function() {
 
         if (com.validate("left", "left")) {
             return false;
@@ -83,8 +77,11 @@ jQuery(function () {
         var $h4 = $('<h4></h4>').html(name + ' ' + no).attr('gid', gid);
 
         var $delete = $('<div></div>').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-danger btn-minier').html('删除'));
-        var $query = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-primary btn-minier').html('查看')).click(function () {
-            com.focusPage('#viewPopUp').attr({'data-gid': gid});
+        var $query = $('<div></div>').css('margin-right', '5px').addClass('pull-right action-button').append($('<a></a>').addClass('btn btn-primary btn-minier').html('查看')).click(function() {
+
+            com.focusPage('#viewPopUp').attr({
+                'data-gid': gid
+            });
             com.popup4page('#viewPopUp', "views/sales/salesItem4package.html", "查看套餐");
         });
 
@@ -100,17 +97,20 @@ jQuery(function () {
 
         com.cleanItems(accessories.leftitems);
 
-        $delete.click(function () {
+        $delete.click(function() {
+
             $(this).parents('.list-group-item').remove();
             com.focusPage('.list-group-item:last').css("border-bottom", "solid 1px");
         });
     });
 
-    com.focusPage('#refresh').click(function () {
+    com.focusPage('#refresh').click(function() {
+
         com.cleanItems(accessories.leftitems);
     });
 
     function addSpan(sValue, sclass, bValue, color, attrs, addData) {
+
         var $span = $('<span></span>').addClass(sclass);
         var $b = $('<b></b>');
         if (sValue != null) {
@@ -126,7 +126,7 @@ jQuery(function () {
         return $span;
     }
 
-    accessories.rightitems.orderId.on("change", function () {
+    accessories.rightitems.orderId.on("change", function() {
 
         var orderId = accessories.rightitems.orderId.val();
 
@@ -134,7 +134,7 @@ jQuery(function () {
             "decoration.orderId": orderId
         };
 
-        com.post(api.decoration.queryDecorationForCommonByOrderId, option, function (data) {
+        com.post(api.decoration.queryDecorationForCommonByOrderId, option, function(data) {
 
             accessories.rightitems.supervisorName.val(data.decoration.supervisor.userId != null ? data.decoration.supervisor.currentName : "---");
             accessories.rightitems.orderAddr.val(data.decoration.house.village.name + " " + data.decoration.house.houseNumber);
@@ -144,24 +144,29 @@ jQuery(function () {
             accessories.postData.supervisor = data.decoration.supervisor.userId;
             accessories.postData.house = data.decoration.house.hid;
 
-        }, function (e) {
+        }, function(e) {
+
             com.showAlert(com.warning, "装修单不存在");
             com.cleanItems(accessories.rightitems);
         });
 
-        com.post(api.construction.queryConstructionScheduleByOrderId, {"constructionSchedule.orderId": orderId}, function (res) {
+        com.post(api.construction.queryConstructionScheduleByOrderId, {
+            "constructionSchedule.orderId": orderId
+        }, function(res) {
 
             var schedules = res.constructionSchedules;
 
-            $.each(schedules, function (i, v) {
+            $.each(schedules, function(i, v) {
+
                 accessories.cid = v.cid;
-                v.name = accessories.constructionNode[v.schedule];
+                v.name = constant.data.construction.node.keys[v.cnid];
             });
-            accessories.rightitems.schedule.bindData(res.constructionSchedules, "schedule", "name");
+
+            accessories.rightitems.schedule.bindData(res.constructionSchedules, "cnid", "name");
         });
     });
 
-    com.focusPage('#submit').click(function () {
+    com.focusPage('#submit').click(function() {
 
         var $list = com.focusPage('.list-group-item');
 
@@ -175,7 +180,8 @@ jQuery(function () {
         }
 
         var total = 0;
-        $list && $list.length && $.each($list, function (i, v) {
+        $list && $list.length && $.each($list, function(i, v) {
+
             var $v = $(v);
             total += utils.accMul($v.attr('data-num'), $v.attr('data-selling'));
         });
@@ -184,12 +190,14 @@ jQuery(function () {
             "accessories.orderId": accessories.postData.orderId,
             "accessories.supervisor.userId": accessories.postData.supervisor,
             "accessories.fetchTime": accessories.rightitems.fetchTime.val() + " 00:00:00",
+            "accessories.cnid": accessories.rightitems.schedule.val(),
             "accessories.schedule": accessories.rightitems.schedule.val(),
             "accessories.comment": accessories.rightitems.comment.val(),
             "accessories.total": total
         };
 
-        $list && $list.length && $.each($list, function (i, v) {
+        $list && $list.length && $.each($list, function(i, v) {
+
             var $v = $(v);
 
             options["accessoriesItems[" + i + "].goods.gid"] = $v.attr('data-gid');
@@ -199,7 +207,8 @@ jQuery(function () {
             options["accessoriesItems[" + i + "].total"] = utils.accMul($v.attr('data-num'), $v.attr('data-selling'));
         });
 
-        com.post(api.inventory.addAccessories, options, function (data) {
+        com.post(api.inventory.addAccessories, options, function(data) {
+
             com.showAlert(com.info, "操作成功");
 
             com.cleanItems(accessories.rightitems);

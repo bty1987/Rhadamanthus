@@ -7,7 +7,7 @@
 		</div>
 	</div>
 
-	<div class="modal fade" id="addItemModal" tabindex="-1">
+	<div class="modal fade" id="updateCompanyModal" tabindex="-1">
 		<div class="modal-dialog">
 			<div class="modal-content col-md-12">
 				<div class="modal-header">
@@ -27,9 +27,23 @@
 						</div>
 						<div class="space-4"></div>
 						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="_name">名称</label>
+							<label class="col-sm-3 control-label no-padding-right" for="code">code</label>
 							<div class="col-sm-9">
-								<input type="text" id="_name" class="col-xs-10 col-sm-5 v_required"  data-toggle="popover" data-trigger='manual' maxlength="32"/>
+								<input type="text" id="code" class="col-xs-10 col-sm-5 v_required"  data-toggle="popover" data-trigger='manual' maxlength="32"/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="shortname">短名</label>
+							<div class="col-sm-9">
+								<input type="text" id="shortname" class="col-xs-10 col-sm-5 v_required"  data-toggle="popover" data-trigger='manual' maxlength="32"/>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="name">名称</label>
+							<div class="col-sm-9">
+								<input type="text" id="name" class="col-xs-10 col-sm-5 v_required"  data-toggle="popover" data-trigger='manual' maxlength="32"/>
 							</div>
 						</div>
 							<div class="space-4"></div>
@@ -61,11 +75,18 @@
 							</div>
 						</div>
 						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="phone">业务类型</label>
+							<div class="col-sm-9">
+								<select id="atttype" class="col-xs-10 col-sm-5 v_required" data-toggle="popover" data-trigger='manual'></select>
+							</div>
+						</div>
+						<div class="space-4"></div>
 					</form>
 				</div>
 				<div class="modal-footer">
-					<button type="button" id="saveAddItemBtn" class="btn btn-primary">保存</button>
-					<button type="button" id="cancelAddItemBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" id="updateCompanyBtn" class="btn btn-primary">保存</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
 				</div>
 			</div>
 		</div>
@@ -96,8 +117,8 @@
 					</form>
 				</div>
 				<div class="modal-footer">
-					<button type="button" id="OrganizationBtn" class="btn btn-primary">保存</button>
-					<button type="button" id="cancelAddItemBtn" class="btn btn-default" data-dismiss="modal">取消</button>
+					<button type="button" id="updateOrganizationBtn" class="btn btn-primary">保存</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
 				</div>
 			</div>
 		</div>

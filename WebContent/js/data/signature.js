@@ -102,7 +102,8 @@ jQuery(function($) {
     }, 5, function(data) {
         com.post(api.data.addSignature, {
             "signature.customerId": signature.signno,
-            "signature.path": "http://www.fanglinserver.com/" + data.resUrl
+            "signature.path": "http://www.fanglinserver.com/" + data.resUrl,
+            "signature.filesize": data.filesize
         }, function(res) {
             showSignature();
         });

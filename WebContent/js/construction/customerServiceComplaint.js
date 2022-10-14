@@ -1,4 +1,4 @@
-jQuery(function ($) {
+jQuery(function($) {
 
     var complaint = {
 
@@ -16,18 +16,18 @@ jQuery(function ($) {
 
         items: {
 
-            orderId : com.focusPage("#orderId"),
-            customerName : com.focusPage("#customerName"),
-            complaintLevel : com.focusPage("#complaintLevel"),
-            complaintTime : com.focusPage("#complaintTime"),
-            complaintDes : com.focusPage("#complaintDes"),
-            complaintType : com.focusPage("#complaintType"),
+            orderId: com.focusPage("#orderId"),
+            customerName: com.focusPage("#customerName"),
+            complaintLevel: com.focusPage("#complaintLevel"),
+            complaintTime: com.focusPage("#complaintTime"),
+            complaintDes: com.focusPage("#complaintDes"),
+            complaintType: com.focusPage("#complaintType"),
 
-            handleOrderId : com.focusPage("#handleOrderId"),
-            handleCustomerName : com.focusPage("#handleCustomerName"),
-            handleComplaintLevel : com.focusPage("#handleComplaintLevel"),
-            handleComplaintType : com.focusPage("#handleComplaintType"),
-            complaintHandleDes : com.focusPage("#complaintHandleDes")
+            handleOrderId: com.focusPage("#handleOrderId"),
+            handleCustomerName: com.focusPage("#handleCustomerName"),
+            handleComplaintLevel: com.focusPage("#handleComplaintLevel"),
+            handleComplaintType: com.focusPage("#handleComplaintType"),
+            complaintHandleDes: com.focusPage("#complaintHandleDes")
         },
 
         levelDict: {},
@@ -36,52 +36,45 @@ jQuery(function ($) {
         editFlag: false,
         repeatFlg: false
     };
-    
+
     com.focusPage('#fl-statement').statement("客服控制", "投诉");
 
     com.datetime(complaint.items.complaintTime);
-    
+
     complaint.btns.saveBtn.bindClick(saveData);
     complaint.btns.saveHandleBtn.bindClick(saveHandleData);
 
-    complaint.modals.modal.on("hide.bs.modal", function(){
+    complaint.modals.modal.on("hide.bs.modal", function() {
 
         com.cleanItems(complaint.items);
         com.closeTip();
     });
 
-    complaint.modals.handleModal.on("hide.bs.modal", function(){
+    complaint.modals.handleModal.on("hide.bs.modal", function() {
 
         com.cleanItems(complaint.items);
         com.closeTip();
     });
 
-    complaint.modals.modal.on('show.bs.modal', function (e) {
+    complaint.modals.modal.on('show.bs.modal', function(e) {
+
         com.clearValidator();
     });
-    complaint.modals.handleModal.on('show.bs.modal', function (e) {
+    complaint.modals.handleModal.on('show.bs.modal', function(e) {
+
         com.clearValidator();
     });
 
-    com.post(api.ds.construction, {}, function (res) {
-        complaint.levelDict = res.levelDict.split("key", "value");
+    var displayFunc = (function() {
 
-        complaint.items.complaintLevel.bindData(res.levelDict, "key", "value", false);
-    });
+        var renderList = function(tableId, listData) {
 
-    com.post(api.ds.construction, {}, function (res) {
-        complaint.typeDict = res.typeDict.split("key", "value");
-
-        complaint.items.complaintType.bindData(res.typeDict, "key", "value", false);
-    });
-
-    var displayFunc = (function () {
-        var renderList = function (tableId, listData) {
             var $tableWrap = com.focusPage('#' + tableId).empty();
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
-                $.each(listData, function (i, v) {
+                $.each(listData, function(i, v) {
+
                     var $liLine = creatLine(v);
 
                     $liLine.appendTo($ul);
@@ -91,7 +84,8 @@ jQuery(function ($) {
             }
         };
 
-        var creatLine = function (v) {
+        var creatLine = function(v) {
+
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(v.orderId));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -101,25 +95,16 @@ jQuery(function ($) {
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-danger').html("删除");
 
             var disposeStatus;
-            if (v.status == 0) {
+            if (v.status == constant.construction().customerServiceComplaint.COMPLAINT_STATUS_TYPE_INIT_INT) {
                 disposeStatus = "未处理";
-            } else if (v.status == 1) {
+            } else if (v.status == constant.construction().customerServiceComplaint.COMPLAINT_STATUS_TYPE_HANDLE_INT) {
                 disposeStatus = "已处理";
             }
 
-            var propertyArr = [
-                ["客户名:", v.customerName, "grey"],
-                ["创建人:", v.createrName, "grey"],
-                ["操作人:", v.operaterName, "grey"],
-                ["等级:", complaint.levelDict[v.level], null],
-                ["类型:", complaint.typeDict[v.type], "red "],
-                ["时间:", v.createTime, "green "],
-                ["备注:", v.des, "grey"],
-                ["状态:", disposeStatus, "grey"],
-                ["处理信息:", v.handle, "grey"]
-            ];
+            var propertyArr = [["客户名:", v.customerName, "grey"], ["创建人:", v.createrName, "grey"], ["操作人:", v.operaterName, "grey"], ["等级:", constant.construction().customerServiceComplaint.levelDict.keys[v.level], null], ["类型:", constant.construction().customerServiceComplaint.typeDict.keys[v.type], "red "], ["时间:", v.createTime, "green "], ["备注:", v.des, "grey"], ["状态:", disposeStatus, "grey"], ["处理信息:", v.handle, "grey"]];
 
-            $.each(propertyArr, function (index, value) {
+            $.each(propertyArr, function(index, value) {
+
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2] ? value[2] : "").appendTo($liProperty);
@@ -130,11 +115,13 @@ jQuery(function ($) {
 
             $liLine.append($h3).append($ulProperty);
 
-            $btnEdit.click(function () {
+            $btnEdit.click(function() {
+
                 dialogCustomerServiceComplaintHandle(v);
             });
-            $btnDel.click(function () {
-                if (v.status == 1) {
+            $btnDel.click(function() {
+
+                if (v.status == constant.construction().customerServiceComplaint.COMPLAINT_STATUS_TYPE_HANDLE_INT) {
                     com.showAlert(com.warning, "当前信息已处理，不能删除");
                     return;
                 }
@@ -145,22 +132,25 @@ jQuery(function ($) {
         };
 
         return {
-            init: function (tableId, listData) {
+            init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
-            drawLine: function (v) {
+            drawLine: function(v) {
+
                 return creatLine(v);
             }
         }
     })();
 
     var searcher = new Searcher();
-    searcher.init([], "condList", api.construction.pageCustomerServiceComplaint, function (list) {
+    searcher.init([], "condList", api.construction.pageCustomerServiceComplaint, function(list) {
+
         displayFunc.init('resultList', list);
     }, "pagenation", "searcherPostData", {
         "customerServiceComplaint.orderId": params.construction.orderId
-    }, false, null, function () {
+    }, false, null, function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('id', 'add').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -169,7 +159,8 @@ jQuery(function ($) {
         return [$adda];
     });
 
-    com.focusPage('#add', '#pagenation').click(function () {
+    com.focusPage('#add', '#pagenation').click(function() {
+
         complaint.editFlag = false;
 
         complaint.items.orderId.val(params.construction.orderId);
@@ -183,6 +174,7 @@ jQuery(function ($) {
     });
 
     function saveData() {
+
         if (com.validate("complaintModal") || complaint.repeatFlg)
             return;
 
@@ -211,7 +203,7 @@ jQuery(function ($) {
     }
 
     function saveHandleData() {
-        
+
         if (com.validate("complaintHandleModal"))
             return false;
 
@@ -232,10 +224,12 @@ jQuery(function ($) {
 
     function removeRow(id) {
 
-        com.showConfirm("确认删除投诉吗?", function () {
+        com.showConfirm("确认删除投诉吗?", function() {
 
-                com.post(api.construction.deleteCustomerServiceComplaint, {"cscIds[0]": id}, successCallback);
-            
+            com.post(api.construction.deleteCustomerServiceComplaint, {
+                "cscIds[0]": id
+            }, successCallback);
+
         });
     }
 
@@ -262,6 +256,7 @@ jQuery(function ($) {
     }
 
     function successCallback(result) {
+
         searcher.doSearch();
     }
 

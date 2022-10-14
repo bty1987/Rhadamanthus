@@ -62,10 +62,7 @@ jQuery(function($) {
         decorationContract.authFlag = [1, 2].indexOf(decoration.customer.status) != -1;
     });
 
-    com.post(api.ds.decoration, {}, function(res) {
-
-        decorationContract.status = res.contractStatus.split("key", "value");
-    }, null, false);
+    decorationContract.status = constant.decoration.decorationContract.status.keys;
 
     com.post(api.data.querySignet, {}, function(res) {
 
@@ -90,10 +87,10 @@ jQuery(function($) {
         var $info = $('<div></div>').css("padding", "5px").appendTo($main);
 
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('姓名: ' + decoration.customer.name)).appendTo($info);
-        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('电话: ' + (decoration.customer.phone == "" ? "暂无" : decoration.customer.phone))).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('电话: ' + (decoration.customer.phone == "" || decoration.customer.phone == null ? "暂无" : [3, 6, 8].indexOf(decoration.status) == -1 ? decoration.customer.phone.replace(/^(\d{3})\d+(\d{4})$/, "$1****$2") : decoration.customer.phone))).appendTo($info);
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('地址: ' + (decoration.customer.address == "" ? "暂无" : decoration.customer.address))).appendTo($info);
         $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('客户关系: ' + decoration.customer.relationshipType)).appendTo($info);
-        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('身份证: ' + (decoration.customer.identity == "" ? "暂无" : decoration.customer.identity))).appendTo($info);
+        $('<div></div>').append($('<label></label>').attr('for', 'form-field').text('身份证: ' + (decoration.customer.identity == "" || decoration.customer.identity == null ? "暂无" : decoration.customer.identity.replace(/(.{6}).*(.{4})/, '$1********$2')))).appendTo($info);
 
         var $widget2 = $('<div></div>').addClass("").prependTo(decorationContract.decorationInfo);
         var $box2 = $('<div></div>').addClass("widget-box").appendTo($widget2);

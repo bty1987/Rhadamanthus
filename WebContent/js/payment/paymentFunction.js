@@ -78,32 +78,32 @@ jQuery(function($) {
 
                 $label.append($input).append($span).appendTo($div);
 
-                if(v.type == 1){
+                if(v.type == constant.payment.paymentFunction.TYPE_API_INT){
                     $input.attr("type", "radio");
                     $div.appendTo(paymentFunction.items.apiData);
                 }
 
-                if(v.type == 2){
+                if(v.type == constant.payment.paymentFunction.TYPE_CONDITION_INT){
                     $div.appendTo(paymentFunction.items.condArrData);
                 }
 
-                if(v.type == 3){
+                if(v.type == constant.payment.paymentFunction.TYPE_FIELD_INT){
                     $div.appendTo(paymentFunction.items.fieldData);
                 }
 
-                if(v.type == 4){
+                if(v.type == constant.payment.paymentFunction.TYPE_FUNCTION_INT){
                     $div.appendTo(paymentFunction.items.functionData);
                 }
 
-                if(v.type == 5){
+                if(v.type == constant.payment.paymentFunction.TYPE_NODE_INT){
                     $div.appendTo(paymentFunction.items.typeData);
                 }
 
-                if(v.type == 6){
+                if(v.type == constant.payment.paymentFunction.TYPE_STATUS_INT){
                     $div.appendTo(paymentFunction.items.statusData);
                 }
 
-                if(v.type == 7){
+                if(v.type == constant.payment.paymentFunction.TYPE_PAYTYPE_INT){
                     $div.appendTo(paymentFunction.items.payData);
                 }
 

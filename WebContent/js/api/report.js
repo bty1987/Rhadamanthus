@@ -138,6 +138,26 @@ $.extend(api, {
                 args: ["cs0", "cs1", "cs2", "cs3", "cs4", "cs5", "cs6", "cs7"]
             }]
         },
+        querySales7Achievement: {
+            url: "querySales7Achievement.do",
+            type: "query",
+            demo: true,
+            tranargs: [{
+                result: "paging-data",
+                args: ["cs0", "cs1", "cs2", "cs3", "cs4", "cs5", "cs6", "cs7"]
+            }]
+        },
+        queryUser7Achievement: {
+            url: "queryUser7Achievement.do",
+            type: "query",
+            demo: true
+        },
+        queryConstruction7Achievement: {
+            url: "queryConstruction7Achievement.do"
+        },
+        queryApproval7Achievement: {
+            url: "queryApproval7Achievement.do"
+        },
         updataDecoration7Construction: {
             url: "updataDecoration7Construction.do",
             demo: true

@@ -1,18 +1,8 @@
 $(function () {
     var walletran = {
-        status: [],
-        types: []
+        status: constant.payment.walletran.status.keys,
+        types: constant.payment.walletran.type.keys
     };
-
-    com.post(api.ds.payment, {}, function(res){
-        $.each(res.walletranStatus, function(i, v){
-            walletran.status[v.key] = v.value;
-        });
-
-        $.each(res.walletranType, function(i, v){
-            walletran.types[v.key] = v.value;
-        });
-    }, null, false);
 
     initRecord();
 

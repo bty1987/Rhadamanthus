@@ -104,6 +104,14 @@
     {"key":"0","value":"客户"},
     {"key":"1","value":"处理"}
   ],
+  "droupContype": [
+    {"key":"0","value":"客户"},
+    {"key":"1","value":"装修"},
+    {"key":"2","value":"主材"},
+    {"key":"3","value":"工程"},
+    {"key":"4","value":"款项"},
+    {"key":"5","value":"其他"}
+  ],
   "errorCode": 0,
   "errorMsg": ""
 }

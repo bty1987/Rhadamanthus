@@ -62,20 +62,33 @@
                         <div class="space-4"></div>
                         
                         <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right " for="taxRate">税金比例</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="taxRate" class="col-xs-10 col-sm-5 v_float v_required" data-toggle="popover" data-trigger='manual'/>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                        
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">税金折扣</label>
+                            <div class="col-sm-9">
+                                <input type="radio" id="manageTaxDiscount" checked="checked" name="taxDiscount" class="ace"/>
+                                <span class="lbl"></span>
+                                <label>管理税金</label>
+
+                                <input type="radio" id="totalTaxDiscount" name="taxDiscount" class="ace"/>
+                                <span class="lbl"></span>
+                                <label>总额税金</label>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                        
+                        <div class="form-group">
                             <label class="col-sm-3 control-label no-padding-right" for="type">类型</label>
                             <div class="col-sm-9">
                                 <select id="type" class="col-xs-10 col-sm-5 v_required ace"></select>
                             </div>
                         </div>
-                        <div class="space-4"></div>
-
-						<div class="form-group">
-							<label class="col-sm-3 control-label no-padding-right" for="defaultFlag">默认</label>
-							<div class="col-sm-9">
-								<input type="checkbox" id="defaultFlag" class="ace"/>
-								<span class="lbl default-lbl"></span>
-							</div>
-						</div>
 						<div class="space-4"></div>
 
 					    <div class="form-group">

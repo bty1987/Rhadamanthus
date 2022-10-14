@@ -225,7 +225,7 @@ $(function() {
 
         var $addaExportGoods = $('<a></a>').addClass('btn btn-minier btn-success pull-left').attr('name', 'importGoods');
         var $addaExporti = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($addaExportGoods);
-        var $addaExportspan = $('<span></span>').text('商品导出').appendTo($addaExportGoods);
+        var $addaExportspan = $('<span></span>').text('导出').appendTo($addaExportGoods);
 
         $adda.click(function() {
 

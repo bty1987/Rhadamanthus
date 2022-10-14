@@ -25,13 +25,15 @@ Condition.addupRule("inventory", {
         label: "创建人",
         type: "autofill",
         submitConfig: {
-            name: "createrName",//后台判断匹配
+            name: "createrName",// 后台判断匹配
             op: "eq",
             validate: null
         },
         dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status": ""},
+            postData: {
+                "user.status": ""
+            },
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
@@ -47,7 +49,9 @@ Condition.addupRule("inventory", {
         },
         dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status": ""},
+            postData: {
+                "user.status": ""
+            },
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"
@@ -91,7 +95,7 @@ Condition.addupRule("inventory", {
     },
     "accessories-approverTime": {
         label: "审批时间",
-        type: "datePicker",
+        type: "dateRangePicker",
         submitConfig: {
             name: "approverTime",
             op: "between",
@@ -194,7 +198,9 @@ Condition.addupRule("inventory", {
         },
         dataSource: {
             url: api.personel.queryUserByPinyin,
-            postData: {"user.status": ""},
+            postData: {
+                "user.status": ""
+            },
             listPath: "autoFillKeyValue",
             keyPath: "key",
             valuePath: "value"

@@ -79,12 +79,12 @@ $(function () {
                 ["操作人:", v.updater.currentName, "grey"],
                 ["操作时间:", v.updateTime, "green"],
                 ["维修人:", v.repaier.currentName, "grey"],
-                ["状态:", v.status == 0 ? "初始" : v.status == 1 ? "维修" : v.status == 2 ? "完工" : "关闭", "red"],
-                ["水:", v.onestate == 0 ? "初始" : v.onestate == 1 ? "维修" : "完工", "red"],
-                ["电:", v.twostate == 0 ? "初始" : v.twostate == 1 ? "维修" : "完工", "red"],
-                ["瓦:", v.thrstate == 0 ? "初始" : v.thrstate == 1 ? "维修" : "完工", "red"],
-                ["木:", v.forstate == 0 ? "初始" : v.forstate == 1 ? "维修" : "完工", "red"],
-                ["油:", v.fivstate == 0 ? "初始" : v.fivstate == 1 ? "维修" : "完工", "red"],
+                ["状态:", constant.customer().aepair.status.keys[v.status], "red"],
+                ["水:", constant.customer().aepair.oneState.keys[v.onestate], "red"],
+                ["电:", constant.customer().aepair.twoState.keys[v.twostate], "red"],
+                ["瓦:", constant.customer().aepair.thrState.keys[v.thrstate], "red"],
+                ["木:", constant.customer().aepair.forState.keys[v.forstate], "red"],
+                ["油:", constant.customer().aepair.fivState.keys[v.fivstate], "red"],
                 ["说明:", v.comment, "grey"]
             ];
 

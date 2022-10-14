@@ -54,11 +54,7 @@ $(function (){
         com.cleanItems(complaint.complackItems);
     });
 
-    com.post(api.ds.customer, {}, function (res) {
-        complaint.items.type.bindData(res.complaintType, "key", "value");
-        complaint.complaintType = res.complaintType.split("key", "value");
-        complaint.complaintStatus = res.complaintStatus.split("key", "value");
-    }, null, false);
+    complaint.items.type.bindData(constant.customer().complaint.type.datas,"key","value");
 
     com.initTypeahead("staffName", api.personel.queryUserByPinyin, "pinyinName", {"user.status":0,"departmentType.name":""}, 'userBases', 'uid', 'currentName',function(list, k, v){
         $.each(list, function(index, val){
@@ -103,7 +99,7 @@ $(function (){
                 var $btnComplaintClose = $("<a></a>").addClass('btn btn-minier btn-inverse').html("关闭");
 
                 var propertyArr = [
-                    ["类型:", complaint.complaintType[v.type], "red"],
+                    ["类型:", constant.customer().complaint.type.keys[v.type], "red"],
                     ["部门:",v.dept.name , "grey"],
                     ["品牌:", v.brand.name , "grey"],
                     ["创建人: ", v.creater.currentName, "grey"],
@@ -111,7 +107,7 @@ $(function (){
                     ["创建时间: ", v.createTime, "grey"],
                     ["操作时间: ", v.updateTime, "grey"],
                     ["完成时间: ", v.finishTime, "grey"],
-                    ["状态:", complaint.complaintStatus[v.status], "red"],
+                    ["状态:", constant.customer().complaint.status.keys[v.status], "red"],
                     ["内容:", v.content, "grey"]
                 ];
 
@@ -124,12 +120,12 @@ $(function (){
 
                 $liLine.append($h3).append($ulProperty);
                 $btnDiv.append($btnComplaink);
-                if(v.status == 0) {
+                if(v.status == constant.customer().complaint.status.STATUS_INIT_INT) {
                     $btnDiv.append($btnComplainkContent);
                 }
-                if(v.status == 1) {
+                if(v.status == constant.customer().complaint.status.STATUS_HANDLE_INT) {
                     $btnDiv.append($btnComplaintFinish);
-                } else if(v.status == 2) {
+                } else if(v.status == constant.customer().complaint.status.STATUS_END_INT) {
                     $btnDiv.append($btnComplaintClose);
                 }
 

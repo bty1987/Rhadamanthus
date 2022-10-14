@@ -57,10 +57,7 @@ jQuery(function($) {
 
     com.post(api.ds.personel, {}, function(res) {
         com.focusPage("#employWay").bindData(res.employWay, "key", "value");
-        recruitment.employWay = res.employWay.split("key", "value");
         com.focusPage("#education").bindData(res.education, "key", "value");
-        recruitment.education = res.education.split("key", "value");
-        recruitment.status = res.status.split("key", "value");
     }, null, false);
 
     com.post(api.communion.queryDepartmentType, {}, function(res){
@@ -104,14 +101,21 @@ jQuery(function($) {
     }).trigger("change");
 
     recruitment.items.userName.on("blur", function() {
-        "" ==  recruitment.items.userName.val().trim() ? (com.showTip(com.focusPage("#userName","#enterModal"), "用户名不能为空", "right"), recruitment.loginFlag = false) : com.post(api.personel.queryUserByLoginId, {
-            "user.loginId": recruitment.items.userName.val()
-        }, function(res) {
+        if("" ==  recruitment.items.userName.val().trim()){
+            com.showTip(com.focusPage("#userName","#enterModal"), "用户名不能为空", "right");
             recruitment.loginFlag = false;
-            com.showTip(com.focusPage("#userName","#enterModal"), "用户名已存在", "right");
-        }, function(res){
-            recruitment.loginFlag =true;
-        });
+        }else{
+            com.post(api.personel.queryUserByLoginId, {
+                "user.loginId": recruitment.items.userName.val()
+            }, function(res) {
+                
+                recruitment.loginFlag = false;
+                com.showTip(com.focusPage("#userName","#enterModal"), "用户名已存在", "right");
+            }, function(res){
+                
+                recruitment.loginFlag =true;
+            });
+        }
     });
 
     var searcher = new Searcher();
@@ -128,9 +132,9 @@ jQuery(function($) {
         {field: "identity", name: "身份证号", prop: "identity", clazz: "grey"},
         {field: "place", name: "地址", prop: "place", clazz: "grey"},
         {field: "phone", name: "电话", prop: "phone", clazz: "grey"},
-        {field: "employWay", name: "应聘方式", prop: "employWay", clazz: "red", dataset: recruitment.employWay},
-        {field: "education", name: "学历", prop: "education", clazz: "red", dataset: recruitment.education},
-        {field: "status", name: "状态", prop: "status", clazz: "red", dataset: recruitment.status},
+        {field: "employWay", name: "应聘方式", prop: "employWay", clazz: "red", dataset: constant.personel().recruitment.employWay.keys},
+        {field: "education", name: "学历", prop: "education", clazz: "red", dataset: constant.personel().recruitment.education.keys},
+        {field: "status", name: "状态", prop: "status", clazz: "red", dataset: constant.personel().recruitment.status.keys},
     ];
 
     // 字段上的功能按钮
@@ -140,7 +144,7 @@ jQuery(function($) {
                 com.popup4page("#layerPopUp", api.index.selectRecruitment.url, "查看 ");
                 return false;
             },show: function(v){
-                return (v.status !=2);
+                return (v.status != constant.personel().recruitment.STATUS_CANCEL_INT);
             }
         },
         {name: "入职", clazz: "btn-yellow", handle: function(v){
@@ -148,7 +152,7 @@ jQuery(function($) {
             recruitment.rid=v.rid;
                 return false;
             },show: function(v){
-                return (v.status == 0);
+                return (v.status == constant.personel().recruitment.STATUS_INIT_INT);
             }
         },
         {name: "编辑", clazz: "btn-success", handle: function (v) {
@@ -158,7 +162,7 @@ jQuery(function($) {
                 });
                 return false;
             },show: function(v){
-                return (v.status == 0);
+                return (v.status == constant.personel().recruitment.STATUS_INIT_INT);
             }
         },
         {name: "教育信息", clazz: "btn-yellow", handle: function (v) {
@@ -166,7 +170,7 @@ jQuery(function($) {
                 com.popup4page("#layerPopUp", api.index.recruitmentEducation.url, "教育信息");
                 return false;
             },show: function(v){
-                return (v.status == 0);
+                return (v.status == constant.personel().recruitment.STATUS_INIT_INT);
             }
         },
         {name: "工作信息", clazz: "btn-pink", handle: function (v) {
@@ -174,7 +178,7 @@ jQuery(function($) {
                 com.popup4page("#layerPopUp", api.index.recruitmentOperation.url, "工作信息");
                 return false;
             },show: function(v){
-                return (v.status == 0);
+                return (v.status == constant.personel().recruitment.STATUS_INIT_INT);
             }
         },
         {name: "作废", clazz: "btn-inverse", handle: function(v){
@@ -184,7 +188,7 @@ jQuery(function($) {
                 });
                 return false;
             }, show: function(v){
-                return(v.status == 0);
+                return(v.status == constant.personel().recruitment.STATUS_INIT_INT);
             }
         },
         {name: "图片", clazz: "btn-purple", handle: function(v){
@@ -193,7 +197,7 @@ jQuery(function($) {
             initUser(v);
             return false;
             },show: function(v){
-                 return(v.status == 0);
+                 return(v.status == constant.personel().recruitment.STATUS_INIT_INT);
             }
         },
     ];

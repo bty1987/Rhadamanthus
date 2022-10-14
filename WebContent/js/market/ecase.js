@@ -320,6 +320,7 @@ jQuery(function($) {
 
             options["epicture.cid"] = cid;
             options["epicture.url"] = data.resUrl;
+            options["epicture.filesize"] = data.filesize;
 
             com.post(api.market.addEpicture, options, function(res) {
 

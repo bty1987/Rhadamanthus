@@ -1,6 +1,8 @@
 jQuery(function($) {
+
 	var payment = {
 		htmlName: "payment",
+		depage: params['urlLoadParams'].depage,
 		type: params['urlLoadParams'].paytype,
 		paytypes: [],
 		payment: null,
@@ -43,17 +45,26 @@ jQuery(function($) {
 			orderId : com.focusPage("#decorationOrderId", "#payment")
 		},
 
+		createCollectPaymentItems: {
+			collect_orderId: com.focusPage("#collect_orderId", "#payment"),
+			collect_advance_type: com.focusPage("#collect_advance_type", "#payment"),
+			collect_money: com.focusPage("#collect_money", "#payment")
+		},
+
 		btns: {
 			collectBtn: com.focusPage("#collectBtn", "#payment"),
 			createBtn: com.focusPage("#createBtn", "#payment"),
+			confirmBtn: com.focusPage("#confirmBtn", "#payment"),
 
 			checkvAdd: com.focusPage("#checkvAdd", "#payment"),
-			posPush: com.focusPage("#posSend", "#payment")
+			createPaytran: com.focusPage("#createPaytran", "#payment")
 		},
 
 		modals: {
 			collectModal: com.focusPage("#collectModal", "#payment"),
-			createModal: com.focusPage("#createPaymentModal", "#payment")
+			createModal: com.focusPage("#createPaymentModal", "#payment"),
+			createCollectPaymentModal: com.focusPage("#createCollectPaymentModal", "#payment"),
+			collectCodeQrcodeModal: com.focusPage("#collectCodeQrcodeModal").prop("id", params['urlLoadParams'].paytype+"collectCodeQrcodeModal")
 		},
 
 		cash: [],
@@ -78,13 +89,16 @@ jQuery(function($) {
 		conditions: [],
 		extraParams: {},
 		functions: [],
-		decorationType: [],
+		decorationType: constant.decoration().decoration.typeness.datas,
 
-		typeData: [],
-		paymentTypeData: [],
-		statusData: [],
+		typeData: constant.payment.advancePayment.type.keys,
+		paymentTypeData: constant.payment.advancePayment.paymentType.keys,
+		statusData: constant.payment.payment.status.keys,
 		typeUpdate: "",
-		pageConfig: {}
+		currentOrderId: "",
+		pageConfig: {},
+		typeNo: 0,
+		atttype: 0
 	};
 
 	//隐藏触发
@@ -101,30 +115,13 @@ jQuery(function($) {
 		payment.items.bank.removeClass("v_required v_float_3");
 
 		payment.payment = null;
+		payment.atttype = 0;
 
 		com.closeTip();
 		com.cleanItems(payment.items);
 	});
 
-	com.post(api.ds.payment, {}, function(res){
-		$.each(res.type, function (i,v) {
-			payment.typeData[v.key] = v.value;
-		});
-
-		$.each(res.paymentType, function (i,v) {
-			payment.paymentTypeData[v.key] = v.value;
-		});
-
-		$.each(res.status, function (i,v) {
-			payment.statusData[v.key] = v.value;
-		});
-
-		payment.items.posway.bindData(res.posway, "key", "value");
-	}, null, false);
-
-	com.post(api.ds.decoration, {}, function(res){
-		payment.decorationType = res.typeness;
-	}, null, false);
+	payment.items.posway.bindData(constant.payment.receiptType.posway.datas, "key", "value");
 
 	com.focusPage("#collectModal :checkbox", "#payment").on("change", function(){
 		var that = $(this);
@@ -150,8 +147,8 @@ jQuery(function($) {
 
 	payment.btns.collectBtn.bindClick(collect);
 
-	payment.btns.posPush.unbind().click(function(){
-		paymentUtils.pushPos(payment, 0, payment.payment.orderId);
+	payment.btns.createPaytran.unbind().click(function(){
+		paymentUtils.pushPos(payment, payment.payment.orderId);
 		return false;
 	});
 
@@ -165,6 +162,23 @@ jQuery(function($) {
 			com.showAlert(com.info, "创建成功");
 			searcher.doSearch();
 			payment.modals.createModal.modal("hide");
+		});
+	});
+
+	payment.btns.confirmBtn.bindClick(function(){
+		if(com.validate("createCollectPaymentModal")) return;
+
+		var url = api.payment.addPayment;
+		var options = {
+			"payment.orderId": payment.createCollectPaymentItems.collect_orderId.val(),
+			"payment.paymentType": payment.createCollectPaymentItems.collect_advance_type.val(),
+			"payment.recharge": payment.createCollectPaymentItems.collect_money.val()
+		};
+
+		com.post(url, options, function(res){
+			com.showAlert(com.info, "创建成功");
+			searcher.doSearch();
+			payment.modals.createCollectPaymentModal.modal("hide");
 		});
 	});
 
@@ -184,6 +198,15 @@ jQuery(function($) {
 		getReceiptTypeForGrade(payment.items.advanceType.val(), currentGrade);
 		payment.items.bankName.data('typeahead').options.list = payment.bankGrade;
 
+		if (payment.items.advanceType.val() == '0') {
+			payment.atttype = 0;
+		} else {
+			payment.atttype = 1;
+		}
+
+		// 转换款
+		payment.items.posGroup.html("");
+		paymentUtils.showPos(payment, {"paytran.orderId": payment.currentOrderId, "paytran.atttype": payment.atttype}, [0, 1]);
 	});
 
 	//不同页面的不同参数
@@ -218,7 +241,9 @@ jQuery(function($) {
 
             var $btnCollect = $('<a></a>').addClass('btn btn-minier btn-primary').html('收款');
             var $btnCashout = $('<a></a>').addClass('btn btn-minier btn-warning').html('提款');
-            var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-orange').html('验证');
+            var $btnCode = $('<a></a>').addClass('btn btn-minier btn-success').html('收款码');
+            var $btnCodePush = $('<a></a>').addClass('btn btn-minier btn-pink').html('微信推送');
+			var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-orange').html('验证');
 
 			var $btnDecorationInfo = $('<a></a>').addClass('btn btn-minier btn-yellow').html('装修单信息');
 			var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-info').html('打印');
@@ -242,17 +267,20 @@ jQuery(function($) {
 			if (payment.pageConfig.pageBtn.contains("collect")) $divBtnWrap.append($btnCollect);
 			if (payment.pageConfig.pageBtn.contains("withdraw")) $divBtnWrap.append($btnCashout);
 
-			if (v.status != 0 && payment.pageConfig.pageBtn.contains("decorationInfo")) $divBtnWrap.append($btnDecorationInfo);
-			if (v.status != 0 && payment.pageConfig.pageBtn.contains("print")) $divBtnWrap.append($btnPrint);
-			if (v.status == 1 && v.type != 2 && v.transfer == 0 && payment.pageConfig.pageBtn.contains("update")) $divBtnWrap.append($btnUpdateP);
-			if (v.status == 0 && v.type == 1 && payment.pageConfig.pageBtn.contains("check")) $divBtnWrap.append($btnCheck);
+			if (v.status != constant.payment.payment.STATUS_INIT_INT && payment.pageConfig.pageBtn.contains("decorationInfo")) $divBtnWrap.append($btnDecorationInfo);
+			if (v.status != constant.payment.payment.STATUS_INIT_INT && payment.pageConfig.pageBtn.contains("print")) $divBtnWrap.append($btnPrint);
+			if (v.status == constant.payment.payment.STATUS_PAID_INT && v.type != constant.payment.advancePayment.TYPE_PAYED_INT && v.transfer == 0 && payment.pageConfig.pageBtn.contains("update")) $divBtnWrap.append($btnUpdateP);
+			if (v.status == constant.payment.payment.STATUS_INIT_INT && v.type == constant.payment.advancePayment.TYPE_COLLECTION_INT && payment.pageConfig.pageBtn.contains("collectCode")) $divBtnWrap.append($btnCode);
+			if (v.status == constant.payment.payment.STATUS_INIT_INT && v.type == constant.payment.advancePayment.TYPE_COLLECTION_INT && payment.pageConfig.pageBtn.contains("codePush")) $divBtnWrap.append($btnCodePush);
+			if (v.status == constant.payment.payment.STATUS_INIT_INT && v.type == constant.payment.advancePayment.TYPE_COLLECTION_INT && payment.pageConfig.pageBtn.contains("check")) $divBtnWrap.append($btnCheck);
 
 			//收款
             $btnCollect.click(function(){
             	v.decoration.paymentType = "收款";
 				payment.typeUpdate = 0;
+				payment.currentOrderId = v.decoration.orderId;
 
-				paymentUtils.showPos(payment, {"paytran.orderId": v.decoration.orderId}, [0, 1]);
+				paymentUtils.showPos(payment, {"paytran.orderId": v.decoration.orderId, "paytran.atttype": payment.atttype}, [0, 1]);
 
             	initCollect(v.decoration);
             });
@@ -277,15 +305,15 @@ jQuery(function($) {
 
 			//查看装修单
 			$btnDecorationInfo.click(function(){
-				paymentUtils.decorationInfoShow(v.orderId, payment.decorationType);
+				paymentUtils.decorationInfoShow(v.decoration.orderId, payment.decorationType);
 			});
 
 			//打印
 			$btnPrint.click(function(){
 				params.payment.pid = v.pid;
-				params.payment.orderId = v.orderId;
+				params.payment.orderId = v.decoration.orderId;
 				params.payment.cid = v.customer.cid;
-				com.popup("专用收款收据__装修单号:" + v.orderId, api.index.paymentReceiptIndex.url, function () {
+				com.popup("专用收款收据__装修单号:" + v.decoration.orderId, api.index.paymentReceiptIndex.url, function () {
 					parent.layer.getFrameIndex(window.name);
 				},null,true)
 			});
@@ -296,13 +324,32 @@ jQuery(function($) {
 				// pos推送生产的paytran没有pid, pid=0,只有orderId, 小程序端生成的paytran有pid and orderId
 				var checkOptions = {
 					"paytran.pid": v.pid,
-					"paytran.type": 0
+					"paytran.type": 0,
+					"paytran.atttype": v.paymentType == 2 ? 1 : 0
 				};
 
 				com.showConfirm("是否验证收款信息?", function(result) {
 					com.post(api.payment.checkPaytran, checkOptions, function(res){
 						searcher.doSearch();
 						com.showAlert(com.info, "验证成功")
+					});
+				});
+			});
+
+			//二维码
+			$btnCode.click(function () {
+				com.focusPage("#"+payment.type+"collectCodeQrcodeModal").html("");
+				paymentUtils.initQrcode("collect", payment.type+"collectCodeQrcodeModal"); //收款码
+				paymentUtils.showQRCode("collectqrcode", "http://fanglin.vip/wx/wxpay?orderId="+v.decoration.orderId+"&paymentType=0"+"&pid="+ v.pid, payment.type+"collectCodeQrcodeModal");
+			});
+
+			//微信推送
+			$btnCodePush.click(function () {
+				com.showConfirm("是否发送付款通知", function() {
+					com.post(api.payment.sendPayment, {
+						"payment.pid": v.pid
+					}, function(res) {
+						com.showAlert(com.info, "发送成功");
 					});
 				});
 			});
@@ -332,13 +379,17 @@ jQuery(function($) {
 		extraParams["payment.type"] = payment.pageConfig.typeExtraParam[0];
 	}
 
+	if (payment.depage != null && payment.depage != "") {
+		extraParams["payment.company"] = payment.depage;
+	}
+
 	searcher.init(payment.pageConfig.condArr, "condList", payment.pageConfig.apiPage, function(data){
 		displayFunc.init('resultList', data);
 	}, "pagenation", "paymentPostData"+payment.type, extraParams, false, null, function(){
 
-		var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'createPayment').css("margin", "0px 3px");
+		var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'createAdvance').css("margin", "0px 3px");
 		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-		var $addspan = $('<span></span>').text('创建预付款').appendTo($adda);
+		var $addspan = $('<span></span>').text('创建账户').appendTo($adda);
 
 		var $checka = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'checks').css("margin", "0px 3px");
 		var $checki = $('<i></i>').addClass('icon-check bigger-110').appendTo($checka);
@@ -352,12 +403,17 @@ jQuery(function($) {
 		var $impi = $('<i></i>').addClass('icon-download-alt bigger-110').appendTo($impa);
 		var $impspan = $('<span></span>').text('导出').appendTo($impa);
 
+		var $collecta = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('name', 'createPayment').css("margin", "0px 3px");
+		var $collecti = $('<i></i>').addClass('icon-plus bigger-110').appendTo($collecta);
+		var $collectspan = $('<span></span>').text('生成预付款').appendTo($collecta);
+
 		var btnParams = [];
 
 		if(payment.pageConfig.pageBtn.contains("createAdvance")) btnParams.push($adda);
 		if(payment.pageConfig.pageBtn.contains("selectall")) btnParams.push($checka);
 		if(payment.pageConfig.pageBtn.contains("confirms")) btnParams.push($confirma);
 		if(payment.pageConfig.pageBtn.contains("export")) btnParams.push($impa);
+		if(payment.pageConfig.pageBtn.contains("createPayment")) btnParams.push($collecta);
 
 		return btnParams;
 	});
@@ -370,9 +426,6 @@ jQuery(function($) {
 
 		payment.payment = decoration;
 
-		// 根据等级在数组中筛选出符合要求的用于显示
-		getReceiptTypeForGrade(0, decoration.grade);
-
 		payment.items.myModalLabel.text(decoration.paymentType+"信息");
 		payment.items.paymentMethod.text(decoration.paymentType+"方式");
 		payment.btns.collectBtn.text(decoration.paymentType);
@@ -381,6 +434,9 @@ jQuery(function($) {
 		if(payment.pageConfig.paytypes.contains("cash")) paymentUtils.initCash(payment);
 		if(payment.pageConfig.paytypes.contains("bank")) paymentUtils.initBank(payment, payment.typeUpdate);
 		if(payment.pageConfig.paytypes.contains("checkv")) paymentUtils.initCheckv(payment);
+
+		// 根据等级在数组中筛选出符合要求的用于显示
+		getReceiptTypeForGrade(0, decoration.grade);
 
 		payment.modals.collectModal.attr("grade", decoration.grade);
 
@@ -543,10 +599,16 @@ jQuery(function($) {
 
 	}
 
-	//创建预付款
-	com.focusPage('a[name="createPayment"]', '#pagenation').click(function(){
+	//创建预付款账户
+	com.focusPage('a[name="createAdvance"]', '#pagenation').click(function(){
 		com.cleanItems(payment.createItems);
 		payment.modals.createModal.modal("show");
+	});
+
+	//生成预付款
+	com.focusPage('a[name="createPayment"]', '#pagenation').click(function(){
+		com.cleanItems(payment.createCollectPaymentItems);
+		payment.modals.createCollectPaymentModal.modal("show");
 	});
 
 	//全选
@@ -591,7 +653,7 @@ jQuery(function($) {
 		com.post(api.payment.pagePayment, $.extend({}, params["paymentPostData"+payment.type], {"paging.noPage": 1}), function(res){
 			$.exceler({
 				column : [
-					["装修单号","orderId"],
+					["装修单号","decoration.orderId"],
 					['收款类型','type'],
 					['预付款类型','paymentType'],
 					['操作金额','recharge'],
@@ -610,27 +672,13 @@ jQuery(function($) {
 			}, function(v){
 				v.collectUser = v.collectUser == null ? {"collectUser": ""} : v.collectUser;
 				if(v.bank != null && v.bank != 0){
-					var $info = ' ';
-					var _s = v.bankInfo.split('#');
-					for(var i=1;i<_s.length-1;i++){
-						var _i = _s[i].split('|');
-						$info += payment.bankInfo[_i[0]] + " " + _i[1] + ", " + _i[2] + ", ";
-					}
-
-					v.bankInfo = $info;
+					v.bankInfo = paymentUtils.splitBankInfo('', v.bankInfo, payment.bankInfo, true);
 				}
 
 				if(v.checkv != null && v.checkv != 0){
 					var checkvInfoStr = v.checkvBank;
 					if(checkvInfoStr.indexOf("#") != -1){
-						var $checkvInfo = ' ';
-						var _c = v.checkvBank.split('#');
-						for(var i=1;i<_c.length-1;i++){
-							var _i = _c[i].split('|');
-							$checkvInfo += payment.checkvInfo[_i[0]] + " " + _i[1] + ", " + _i[2] + ", ";
-						}
-
-						v.checkvBank = $checkvInfo;
+						v.checkvBank = paymentUtils.splitBankInfo('', v.checkvBank, payment.checkvInfo, true);
 					}else{
 						v.checkvBank = v.checkv != null && v.checkv != "0" ? payment.checkvInfo[v.checkvBank] : '';
 					}
@@ -652,13 +700,13 @@ jQuery(function($) {
 			payment.bankGrade = payment.bankUtil;
 			payment.checkvGrade = payment.checkvUtil;
 		}else{
-			if(paymentType == 0){
+			if(paymentType == constant.payment.advancePayment.PAYMENTTYPE_BALANCE_INT){
 				if(decorationGrade == "A" || decorationGrade == "C"){
 					gradeParam = "A";
 				}else{
 					gradeParam = "";
 				}
-			}else if(paymentType  == 2){
+			}else if(paymentType  == constant.payment.advancePayment.PAYMENTTYPE_MATERIAL_INT){
 				if(decorationGrade == "C"){
 					gradeParam = "B";
 				}else{

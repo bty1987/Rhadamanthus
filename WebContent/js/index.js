@@ -18,6 +18,16 @@
 
         params.userInfo = res.userInfo;
 
+        if (parent.window.isPC && (res.userInfo.user.extranet & 16) != 16) {
+            alert('无使用该平台权限');
+            nwRestart();
+        }
+
+        if (!parent.window.isPC && (res.userInfo.user.extranet & 8) != 8) {
+            alert('无使用该平台权限');
+            window.location.href = '/';
+        }
+
         if (!config.intranet) {
             com.post(api.system.queryServer, {
                 "user.userId": res.userInfo.user.userId
@@ -29,6 +39,27 @@
                 });
             }, null, false);
         }
+
+        Constant().init();
+
+        com._post_(api.home.library, {
+            "api": "system.login.upgrade",
+            "userId": res.userInfo.user.userId,
+        }, function(res) {
+
+            if (res.code != 0) {
+                alert(res.msg);
+
+                window.onbeforeunload = null;
+                com.deleteCookie("authentication");
+
+                if (parent.window.isPC) {
+                    nwRestart();
+                } else {
+                    window.location.href = '/';
+                }
+            }
+        }, null, false);
 
         com._post_(api.home.library, {
             "userId": params.userInfo.user.userId,
@@ -136,9 +167,10 @@
     }, function(res) {
 
         var companysel = $('#companysel').html("");
-        var moreCompany = $("#moreCompany").html("");
+        // var moreCompany = $("#moreCompany").html("");
 
         var companyGroup = null;
+        var companys = [];
 
         $.each(res.userCompanys, function(i, v) {
 
@@ -176,6 +208,15 @@
                     com.popup4model($('#layerCompany'), '切换公司');
                 });
             }
+
+            companys.push(v.company);
+        });
+
+        com.selectTypeahead($('#typeaheadCompany'), companys, "cid", "name", function(list, k, v) {
+
+            changeCompany({
+                "cid": k
+            });
         });
     }, null, false);
 
@@ -197,6 +238,14 @@
             params.authentication = res.authentication;
             window.authentication = res.authentication;
 
+            com.post(api.system.queryCompanyByCid, {
+                "company.cid": company.cid
+            }, function(res) {
+
+                params.company = res.company;
+                $(".companyinfo .companyName").text(res.company.name)
+            }, null, false);
+
             com.switchPage(api.index.homeIndex.url, true);
 
             // 切换公司后 目录所有菜单收起
@@ -204,15 +253,9 @@
 
             companysel.parent().removeClass("open");
 
-            com.post(api.system.queryCompanyByCid, {
-                "company.cid": company.cid
-            }, function(res) {
-
-                params.company = res.company;
-                $(".companyinfo .companyName").text(res.company.name)
-            });
-
             com.closePopup();
+
+            Constant().init();
 
         }, null, false);
 
@@ -449,6 +492,13 @@
             return false;
         });
 
+        if (params.userInfo.user.password == "resetPassword") {
+
+            com.showAlert(com.warning, "请重置密码 , 重新登陆.");
+
+            return false;
+        }
+
         if (!treeData || !treeData.length) {
             return;
         }
@@ -472,7 +522,8 @@
 
                 var $li = $('<li></li>');
                 var $a = $('<a href="#"></a>').attr({
-                    'menuText': v.name
+                    'menuText': v.name,
+                    'module': v.module,
                 });
                 var $i = $('<i></i>').addClass(v.icon);
                 var $span = $('<span></span>').addClass('menu-text').text(v.name);
@@ -488,9 +539,10 @@
                 var $li = $('<li></li>');
                 var $a = $('<a></a>').attr({
                     // 'href': v.url ? v.url : '#',
-                    'href': 'bty.html',
+                    'href': 'baitianyu',
                     'mid': v.mid,
                     'menuText': v.name,
+                    'module': v.module,
                     'helpKey': v.helpKey
                 });
                 var $i = $('<i></i>').addClass(v.icon);
@@ -508,12 +560,17 @@
         if (menuArr.level3.length) {
             $.each(menuArr.level3, function(i, v) {
 
+                if (v.access == 1) {
+                    return true;
+                }
+
                 var $li = $('<li></li>');
                 var $a = $('<a></a>').attr({
                     // 'href': v.url ? v.url : '#',
                     'href': 'bty.html',
                     'mid': v.mid,
                     'menuText': v.name,
+                    'module': v.module,
                     'helpKey': v.helpKey
                 });
                 var $i = $('<i></i>').addClass(v.icon);
@@ -534,6 +591,11 @@
 
             var hrefStr = $this.attr("href");
             var mid = $this.attr("mid");
+            var module = $this.attr("module");
+
+            if (module && (!constant[module] || !constant[module]["update"])) {
+                Constant().module(module);
+            }
 
             if ($this.siblings('ul').length) {
                 if (!$this.parent('li').hasClass('active')) {

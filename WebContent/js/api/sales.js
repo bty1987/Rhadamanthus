@@ -241,6 +241,9 @@ $.extend(api, {
         confirmOales: {
             url: "confirmOales.do"
         },
+        submitOales: {
+            url: "submitOales.do"
+        },
 
         rejectOales: {
             url: "rejectOales.do"

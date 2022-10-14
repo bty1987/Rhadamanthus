@@ -8100,12 +8100,12 @@ th .lbl:only-child,td .lbl:only-child {
     box-shadow: none
 }
 
-.widget-toolbar>.nav-tabs>li:not (.active )>a {
+.widget-toolbar>.nav-tabs>li:not(.active )>a {
     border-color: transparent;
     background-color: transparent
 }
 
-.widget-toolbar>.nav-tabs>li:not (.active )>a:hover {
+.widget-toolbar>.nav-tabs>li:not(.active )>a:hover {
     background-color: transparent
 }
 

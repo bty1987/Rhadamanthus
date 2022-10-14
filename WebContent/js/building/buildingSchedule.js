@@ -193,6 +193,7 @@ jQuery(function($) {
             options["buildingDrawing.drawingUrl"] = data.resUrl;
             options["buildingDrawing.drawingType"] = 0;
             options["buildingDrawing.type"] = 3;
+            options["buildingDrawing.filesize"] = data.filesize;
 
             com.post(api.building.addBuildingDrawing, options, function(res) {
 

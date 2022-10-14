@@ -8,20 +8,6 @@ jQuery(function($) {
         editFlg: false,
     };
 
-    com.post(api.ds.decoration, {}, function(res){
-        constructionInfo.typeness = res.typeness.split("key", "value");
-    },null ,false);
-
-    com.post(api.data.queryConstructionNode,{}, function(res){
-
-        constructionInfo.projectStatus = res.constructionNodes.split("sort", "name");
-
-        constructionInfo.projectStatus[0] = "初始";
-        constructionInfo.projectStatus[1] = "开工";
-        constructionInfo.projectStatus[2] = "完工";
-
-    },null ,false);
-
     var displayFunc  = (function(){
 
         var renderList = function(tableId,listData){
@@ -60,8 +46,8 @@ jQuery(function($) {
                 ["预计设计完成时间: ", v.designTime, "green"],
                 ["合同方案确认时间: ", v.decoration.sdesignTime, "green"],
                 ["放线方案确认时间: ", v.decoration.edesignTime, "green"],
-                ["装修单类型: ", constructionInfo.typeness[v.decoration.typeness], "red"],
-                ["工程状态: ", constructionInfo.projectStatus[v.decoration.projectStatus], "red"],
+                ["装修单类型: ", constant.decoration().decoration.typeness.keys[v.decoration.typeness], "red"],
+                ["工程状态: ", constant.decoration().decoration.projectStatus.keys[v.decoration.projectStatus], "red"],
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -148,8 +134,8 @@ jQuery(function($) {
                 v.finishTime = (v.finishTime == null ? "" : v.finishTime);
                 v.decoration.sdesignTime = (v.decoration.sdesignTime == null ? "" : v.decoration.sdesignTime);
                 v.decoration.edesignTime = (v.decoration.edesignTime == null ? "" : v.decoration.edesignTime);
-                v.decoration.typeness = constructionInfo.typeness[v.decoration.typeness];
-                v.decoration.projectStatus = constructionInfo.projectStatus[v.decoration.projectStatus];
+                v.decoration.typeness = constant.decoration().decoration.typeness.keys[v.decoration.typeness];
+                v.decoration.projectStatus = constant.decoration().decoration.projectStatus.keys[v.decoration.projectStatus];
             });
         });
     });
