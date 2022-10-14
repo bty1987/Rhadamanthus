@@ -34,6 +34,10 @@ public interface PaymentService {
 
 	public int returnPayment(PaymentVO paymentVO, String userId) throws FLException;
 
+	public void addPayment(PaymentVO paymentVO, String userId) throws FLException;
+
 	public int updatePayment(PaymentVO paymentVO) throws FLException;
+
+	public void sendPayment(PaymentVO payment) throws FLException;
 
 }

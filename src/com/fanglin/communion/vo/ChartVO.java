@@ -7,21 +7,27 @@ public class ChartVO implements Serializable {
 	private static final long serialVersionUID = -294430963799274732L;
 
 	private Long cid;
-	
+
 	private String no;
 
 	private String name;
-	
+
+	private Short type;
+
+	private Short level;
+
 	private String api;
-	
+
 	private String method;
-	
+
 	private String param;
-	
+
 	private String style;
-	
+
 	private String clazz;
-	
+
+	private Integer sort;
+
 	private String comment;
 
 	public ChartVO() {
@@ -50,6 +56,22 @@ public class ChartVO implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Short getType() {
+		return type;
+	}
+
+	public void setType(Short type) {
+		this.type = type;
+	}
+
+	public Short getLevel() {
+		return level;
+	}
+
+	public void setLevel(Short level) {
+		this.level = level;
 	}
 
 	public String getApi() {
@@ -92,6 +114,14 @@ public class ChartVO implements Serializable {
 		this.clazz = clazz;
 	}
 
+	public Integer getSort() {
+		return sort;
+	}
+
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
+
 	public String getComment() {
 		return comment;
 	}
@@ -99,6 +129,5 @@ public class ChartVO implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
 
 }

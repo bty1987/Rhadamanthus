@@ -97,8 +97,7 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 
 	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
 
-		if (filters == null)
-			return;
+		if (filters == null) return;
 
 		for (Filter filter : filters) {
 
@@ -118,8 +117,12 @@ public class WorkerSalaryDaoImpl extends DaoImpl<WorkerSalaryPO> implements Work
 			} else if ("orderId".equals(filet)) {
 				query.alias("decoration", "decoration");
 				query.add(query.getCriterion("decoration.orderId", data, op));
+			} else if ("csid".equals(filet)) {
+				query.add(Restrictions.eq("csid", Long.valueOf(data)));
 			} else if ("schedule".equals(filet)) {
 				query.add(Restrictions.eq("schedule", Short.valueOf(data)));
+			} else if ("cnid".equals(filet)) {
+				query.add(Restrictions.eq("cnid", Long.valueOf(data)));
 			} else if ("duty".equals(filet)) {
 				query.alias("user", "user");
 				query.alias("user.duty", "duty");

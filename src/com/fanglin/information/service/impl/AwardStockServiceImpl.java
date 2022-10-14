@@ -51,7 +51,7 @@ public class AwardStockServiceImpl implements AwardStockService {
 
 		paging.setData(awardStockVOs);
 	}
- 
+
 	@Override
 	public List<AwardStockVO> queryAwardStockByType(AwardStockVO awardStock, int company) {
 
@@ -65,6 +65,24 @@ public class AwardStockServiceImpl implements AwardStockService {
 			BeanUtil.copyProperties(awardStockPO, awardStockVO);
 
 			awardStockVOs.add(awardStockVO);
+		}
+
+		return awardStockVOs;
+	}
+
+	@Override
+	public List<AwardStockVO> queryAwardStockByName(AwardStockVO awardStock, int company) {
+
+		List<AwardStockPO> awardStockPOs = awardStockDao.queryAwardStockByName(awardStock.getName(), 10, company);
+		List<AwardStockVO> awardStockVOs = new ArrayList<AwardStockVO>();
+
+		for (AwardStockPO awardStockPO : awardStockPOs) {
+
+			awardStock = new AwardStockVO();
+
+			BeanUtil.copyProperties(awardStockPO, awardStock);
+
+			awardStockVOs.add(awardStock);
 		}
 
 		return awardStockVOs;
@@ -227,24 +245,6 @@ public class AwardStockServiceImpl implements AwardStockService {
 		awardStockPO.setStatus(awardStockVO.getStatus());
 
 		awardStockDao.update(awardStockPO);
-	}
-
-	@Override
-	public List<AwardStockVO> queryAwardStockByName(AwardStockVO awardStock, int company) {
-		
-		List<AwardStockPO> awardStockPOs = awardStockDao.queryAwardStockByName(awardStock.getName(), 10, company);
-		List<AwardStockVO> awardStockVOs = new ArrayList<AwardStockVO>();
-		
-		for(AwardStockPO awardStockPO: awardStockPOs){
-					
-			awardStock = new AwardStockVO();
-			
-			BeanUtil.copyProperties(awardStockPO, awardStock);
-				
-			awardStockVOs.add(awardStock);
-		}
-		
-		return awardStockVOs;
 	}
 
 }

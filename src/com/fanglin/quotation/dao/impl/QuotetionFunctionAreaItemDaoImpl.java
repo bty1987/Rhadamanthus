@@ -24,6 +24,11 @@ public class QuotetionFunctionAreaItemDaoImpl extends DaoImpl<QuotetionFunctionA
 	}
 
 	@Override
+	public QuotetionFunctionAreaItemPO queryQuotetionFunctionAreaItemForTypeByQuotetionFunctionAreaId(Class<?> clazz, Long quotetionFunctionAreaId, Short type) {
+		return (QuotetionFunctionAreaItemPO) session().createCriteria(clazz).add(Restrictions.eq("quotetionFunctionArea.qfaId", quotetionFunctionAreaId)).add(Restrictions.eq("type", type)).uniqueResult();
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<QuotetionFunctionAreaItemPO> queryQuotetionFunctionAreaItemByFunctionAreaId(Class<?> clazz, long qfaid) {
 		return session().createCriteria(clazz).add(Restrictions.eq("qfaid", qfaid)).list();

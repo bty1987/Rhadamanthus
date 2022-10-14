@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
+import com.fanglin.customer.service.DecorationService;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.decoration.vo.DecorationVO;
@@ -42,6 +43,9 @@ public class SelectionServiceImpl implements SelectionService {
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private DecorationService decorationService;
 
 	@Override
 	public void pageSelection(Paging paging, List<Filter> filters, Integer company) throws FLException {
@@ -142,6 +146,33 @@ public class SelectionServiceImpl implements SelectionService {
 		return 0;
 	}
 
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public int affirmSelection(SelectionVO selectionVO, int company) throws FLException {
+
+		SelectionPO selectionPO = selectionDao.get(selectionVO.getSid());
+
+		if (selectionPO == null) {
+			throw new FLException(200035, "选材单不存在");
+		}
+
+		selectionPO.setIsAffirm(selectionPO.ISAFFIRM_CONFIRMED_INT);
+
+		selectionDao.update(selectionPO);
+
+		return 0;
+	}
+
+	@Override
+	public void sendSelection(SelectionVO selectionVO) throws FLException {
+
+		String orderId = selectionVO.getOrderId();
+
+		System.out.println(String.format("pages/selectionDetail/selectionDetail?orderId=%s", orderId));
+
+		decorationService.sendMessage(orderId, "装修单", String.format("装修单号:%s, 请您点【详情】查看选材明细，并正式给予点【确认】。", orderId), String.format("pages/selectionDetail/selectionDetail?orderId=%s", orderId));
+	}
+
 	private SelectionPO saveSelection(Long qid, String userId) throws FLException {
 
 		QuotationPO quotationPO = quotationDao.get(qid);
@@ -167,4 +198,5 @@ public class SelectionServiceImpl implements SelectionService {
 
 		return selectionPO;
 	}
+
 }

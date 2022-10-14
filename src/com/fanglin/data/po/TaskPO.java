@@ -21,7 +21,7 @@ public class TaskPO implements Serializable {
 	public static final String COLUMN_STATUS_STR = "status";
 
 	public static final String COLUMN_SHOW_STR = "isShow";
-	
+
 	public static final String COLUMN_LEVEL_STR = "level";
 
 	public static final String COLUMN_KEYWORD_STR = "keyWord";
@@ -60,10 +60,17 @@ public class TaskPO implements Serializable {
 
 	private long handle;
 
+	private int server;
+
+	private String week;
+
+	private String day;
+
+	private String hour;
+
 	private short status;
 
 	private short isShow;
-	
 
 	public TaskPO() {
 		super();
@@ -128,6 +135,42 @@ public class TaskPO implements Serializable {
 
 	public void setHandle(long handle) {
 		this.handle = handle;
+	}
+
+	@Column(name = "server")
+	public int getServer() {
+		return server;
+	}
+
+	public void setServer(int server) {
+		this.server = server;
+	}
+
+	@Column(name = "week")
+	public String getWeek() {
+		return week;
+	}
+
+	public void setWeek(String week) {
+		this.week = week;
+	}
+
+	@Column(name = "day")
+	public String getDay() {
+		return day;
+	}
+
+	public void setDay(String day) {
+		this.day = day;
+	}
+
+	@Column(name = "hour")
+	public String getHour() {
+		return hour;
+	}
+
+	public void setHour(String hour) {
+		this.hour = hour;
 	}
 
 	@Column(name = "status")

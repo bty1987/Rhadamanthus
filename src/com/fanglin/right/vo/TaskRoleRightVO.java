@@ -1,8 +1,12 @@
 package com.fanglin.right.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+
+import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.data.common.vo.TaskVO;
+import com.fanglin.personel.vo.UserBaseVO;
 
 public class TaskRoleRightVO implements Serializable {
 
@@ -10,17 +14,22 @@ public class TaskRoleRightVO implements Serializable {
 
 	private Long trrid;
 
-	private Long rid;
+	private Integer rid;
 
 	private TaskVO task;
+
+	private UserBaseVO creater;
+
+	private Timestamp createTime;
 
 	public TaskRoleRightVO() {
 		super();
 	}
 
-	public TaskRoleRightVO(TaskVO task) {
+	public TaskRoleRightVO(TaskVO task, UserBaseVO creater) {
 		super();
 		this.task = task;
+		this.creater = creater;
 	}
 
 	public Long getTrrid() {
@@ -31,11 +40,11 @@ public class TaskRoleRightVO implements Serializable {
 		this.trrid = trrid;
 	}
 
-	public Long getRid() {
+	public Integer getRid() {
 		return rid;
 	}
 
-	public void setRid(Long rid) {
+	public void setRid(Integer rid) {
 		this.rid = rid;
 	}
 
@@ -45,6 +54,23 @@ public class TaskRoleRightVO implements Serializable {
 
 	public void setTask(TaskVO task) {
 		this.task = task;
+	}
+
+	public UserBaseVO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserBaseVO creater) {
+		this.creater = creater;
+	}
+
+	@JSON(format = "yyyy-MM-dd HH:mm:ss")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
 	}
 
 }

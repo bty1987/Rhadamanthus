@@ -57,12 +57,14 @@ public class CompanyPO implements Serializable {
 	private String address;
 
 	private String corporation;
-	
+
 	private String phone;
-	
+
 	private OrganizationPO drganization;
-	
+
 	private OrganizationPO srganization;
+
+	private short atttype;
 
 	private short status;
 
@@ -101,6 +103,7 @@ public class CompanyPO implements Serializable {
 		this.no = no;
 	}
 
+	@Column(name = "code")
 	public String getCode() {
 		return code;
 	}
@@ -181,6 +184,15 @@ public class CompanyPO implements Serializable {
 
 	public void setSrganization(OrganizationPO srganization) {
 		this.srganization = srganization;
+	}
+
+	@Column(name = "atttype")
+	public short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(short atttype) {
+		this.atttype = atttype;
 	}
 
 	@Column(name = "status")

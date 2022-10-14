@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.approval.dao.ApprovalDao;
 import com.fanglin.core.interceptor.FLException;
-import com.fanglin.core.vo.Authentication;
 import com.fanglin.decoration.dao.DecorationDao;
 import com.fanglin.decoration.dao.DecorationOperateDao;
 import com.fanglin.decoration.dao.impl.DecorationAccountDaoImpl;
@@ -92,7 +91,7 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void makeDecorationAccount(DecorationAccountVO decorationAccountVO, Authentication authentication) throws FLException {
+	public void makeDecorationAccount(DecorationAccountVO decorationAccountVO, String userId) throws FLException {
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(decorationAccountVO.getOrderId());
 
@@ -116,7 +115,7 @@ public class DecorationAccountServiceImpl implements DecorationAccountService {
 			// throw new FLException(150030, "存在未处理款项");
 		}
 
-		UserPO operater = userDao.queryUserByUserId(authentication.getUserId());
+		UserPO operater = userDao.queryUserByUserId(userId);
 		decorationOperateDao.save(new DecorationOperatePO().account(decorationAccountVO.getOrderId(), operater));
 
 		decorationPO.setStatus(DecorationPO.STATUS_FINAL_INT);

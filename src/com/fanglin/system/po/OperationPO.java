@@ -1,14 +1,14 @@
 package com.fanglin.system.po;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import static javax.persistence.GenerationType.IDENTITY;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
@@ -16,26 +16,36 @@ import javax.persistence.Table;
 public class OperationPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 6057537266407674722L;
-	
+
 	public static final String COLUMN_OPERATION_STR = "operation";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final short STATUS_ENABLE_INT = 0;
-	
+
 	public static final short THROUGH_PASS_INT = 1;
-	
+
+	public static final short THROUGH_COMMON_INT = 2;
+
+	public static final short THROUGH_DINGTALK_INT = 3;
+
+	public static final short THROUGH_COMMUNION_INT = 4;
+
 	private int oid;
-	
+
 	private ModulePO module;
-	
+
 	private String name;
-	
+
 	private String operation;
-	
+
+	private short system;
+
 	private short status;
-	
+
 	private short through;
+
+	private short type;
 
 	public OperationPO() {
 		super();
@@ -90,6 +100,15 @@ public class OperationPO implements java.io.Serializable {
 		this.operation = operation;
 	}
 
+	@Column(name = "system")
+	public short getSystem() {
+		return system;
+	}
+
+	public void setSystem(short system) {
+		this.system = system;
+	}
+
 	@Column(name = "status")
 	public short getStatus() {
 		return status;
@@ -106,6 +125,15 @@ public class OperationPO implements java.io.Serializable {
 
 	public void setThrough(short through) {
 		this.through = through;
+	}
+
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
 	}
 
 }

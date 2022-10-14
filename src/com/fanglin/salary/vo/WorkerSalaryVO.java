@@ -28,6 +28,8 @@ public class WorkerSalaryVO implements Serializable {
 
 	private Long salary;
 
+	private Long cnid;
+
 	private Short schedule;
 
 	private Short type;
@@ -215,6 +217,14 @@ public class WorkerSalaryVO implements Serializable {
 
 	public void setTwotype(Short twotype) {
 		this.twotype = twotype;
+	}
+
+	public Long getCnid() {
+		return cnid;
+	}
+
+	public void setCnid(Long cnid) {
+		this.cnid = cnid;
 	}
 
 	public Short getSchedule() {

@@ -75,6 +75,12 @@ public class Signature {
 		}
 	}
 
+	public static String KEYWORD_STRATEGY_ALL_STR = "0";
+
+	public static String KEYWORD_STRATEGY_FIRST_STR = "1";
+
+	public static String KEYWORD_STRATEGY_LAST_STR = "2";
+
 	public static List<SignatureVO> query(SignatureVO signatureVO) throws FLException {
 
 		String customerId = signatureVO.getCustomerId();
@@ -511,10 +517,14 @@ public class Signature {
 	}
 
 	public static void autosign(String signno, String keyword, Contract contract) throws FLException {
-		Signature.autosign(signno, keyword, contract, null);
+		Signature.autosign(signno, keyword, contract, null, Signature.KEYWORD_STRATEGY_ALL_STR);
 	}
 
 	public static void autosign(String signno, String keyword, Contract contract, String signatureId) throws FLException {
+		Signature.autosign(signno, keyword, contract, signatureId, Signature.KEYWORD_STRATEGY_ALL_STR);
+	}
+
+	public static void autosign(String signno, String keyword, Contract contract, String signatureId, String keywordStrategy) throws FLException {
 
 		FddClientBase base = new FddClientBase(APPID, APPSECRET, VERSION, HOST);
 
@@ -529,7 +539,7 @@ public class Signature {
 
 		req.setClient_role("1"); // 客户角色 , 接入平台
 		req.setPosition_type("0");
-		req.setKeyword_strategy("0"); // 签章策略 , 0: 所有 , 1: 第一个 , 2: 最后一个
+		req.setKeyword_strategy(keywordStrategy); // 签章策略 , 0: 所有 , 1: 第一个 , 2: 最后一个
 
 		String result = (signatureId == null || "".equals(signatureId)) ? base.invokeExtSignAuto(req) : base.invokeExtSignAuto(req, signatureId);
 

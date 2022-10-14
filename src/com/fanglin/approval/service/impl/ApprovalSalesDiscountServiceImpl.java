@@ -69,11 +69,11 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 			throw new FLException(260021, "销售单不存在");
 		}
 
-		if (salesPO.getFullpayStatus() != SalesPO.FULLPAYSTATUS_INIT_SHORT && salesPO.getFullpayStatus() != (short) 3) {// 不等于-1
+		if (salesPO.getFullpayStatus() != SalesPO.FULLPAYSTATUS_INIT_SHORT) {
 			throw new FLException(260012, "销售订单当前状态不能提交补款");
 		}
 
-		salesPO.setFullpayStatus((short) 3);
+		salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_APPROVAL_INT);
 
 		salesDao.update(salesPO);
 
@@ -117,9 +117,7 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 			throw new FLException(260021, "销售单不存在");
 		}
 
-		int fullStatus = salesPO.getFullpayStatus();
-
-		if (fullStatus != SalesPO.FULLPAYSTATUS_INIT_SHORT && fullStatus != (short) 3) {
+		if (salesPO.getFullpayStatus() != SalesPO.FULLPAYSTATUS_APPROVAL_INT) {
 			throw new FLException(260012, "销售订单当前状态不能提交补款");
 		}
 
@@ -165,10 +163,13 @@ public class ApprovalSalesDiscountServiceImpl implements ApprovalSalesDiscountSe
 			throw new FLException(260021, "销售单不存在");
 		}
 
-		salesPO.setFullpay(0);
-		salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_INIT_SHORT);
+		if (salesPO.getFullpayStatus() == SalesPO.FULLPAYSTATUS_APPROVAL_INT) {
 
-		salesDao.update(salesPO);
+			salesPO.setFullpay(0);
+			salesPO.setFullpayStatus(SalesPO.FULLPAYSTATUS_INIT_SHORT);
+
+			salesDao.update(salesPO);
+		}
 
 		return 0;
 	}

@@ -15,6 +15,7 @@ import com.fanglin.dingding.bean.User;
 import com.fanglin.dingding.utils.DDApi;
 import com.fanglin.dingding.utils.HttpHelper;
 import com.fanglin.system.dao.SystemConfigDao;
+import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.po.SystemConfigPO;
 import com.fanglin.utils.FormatUtil;
 
@@ -31,11 +32,58 @@ public class ApprovalService {
 	@Autowired
 	private SystemConfigDao systemConfigDao;
 
+	public JSONObject getApproval(String no) throws FLException {
+
+		SystemConfigPO oapiHost = systemConfigDao.querySystemConfig("oapiHost");
+		String accessToken = authDDService.getAccessToken(FormatUtil.encodeCompany(CompanyPO.TYPE_HEADQUARTER_INT));
+
+		String url = String.format(DDApi.DDAPI_GET_PROCESS_INSTANCE_STR, oapiHost.getValue(), accessToken);
+
+		JSONObject params = new JSONObject();
+
+		params.put("process_instance_id", no);
+
+		JSONObject response = HttpHelper.httpPost(url, params);
+
+		if (response != null && response.getInteger("errcode") == 0) {
+			return response.getJSONObject("process_instance");
+		} else {
+			System.out.println(url);
+			System.out.println(params.toJSONString());
+			System.out.println(response.toJSONString());
+			System.out.println(String.format("%d-%s", response.getInteger("errcode"), response.getString("errmsg")));
+
+			throw new FLException(270014, String.format("%d-%s", response.getInteger("errcode"), response.getString("errmsg")));
+		}
+	}
+
+	public String getApproval(String no, String field) throws FLException {
+
+		JSONObject infos = getApproval(no);
+
+		JSONArray values = infos.getJSONArray("form_component_values");
+
+		for (Object value : values) {
+
+			JSONObject info = (JSONObject) value;
+
+			if (field.equals(info.getString("id"))) {
+				return info.getString("value");
+			}
+		}
+
+		return "";
+	}
+
 	public String initiateApproval(String processCode, String senderId, String approver, String copy, String copyPosition, JSONArray formComponentValues, int company) throws FLException {
 
 		User sender = userDDService.getUser(senderId, company);
 
 		if (sender == null) {
+			throw new FLException(270003, "获取人员信息失败");
+		}
+
+		if (sender.getDepartment() == null) {
 			throw new FLException(270003, "获取人员信息失败");
 		}
 

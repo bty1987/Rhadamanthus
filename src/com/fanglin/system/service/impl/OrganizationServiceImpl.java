@@ -34,9 +34,9 @@ public class OrganizationServiceImpl implements OrganizationService {
 	private OrganizationDao organizationDao;
 
 	@Override
-	public void pageOrganization(Paging paging, List<Filter> filters) {
+	public void pageOrganization(Paging paging, List<Filter> filters, Integer company) {
 
-		List<OrganizationPO> organizationPOs = organizationDao.pageOrganization(paging, filters);
+		List<OrganizationPO> organizationPOs = organizationDao.pageOrganization(paging, filters, company);
 		List<OrganizationVO> organizationVOs = new ArrayList<OrganizationVO>();
 
 		for (OrganizationPO organizationPO : organizationPOs) {
@@ -54,7 +54,7 @@ public class OrganizationServiceImpl implements OrganizationService {
 	@Override
 	public List<OrganizationVO> queryOrganization(OrganizationVO organizationVO, Integer company) {
 
-		List<OrganizationPO> organizationPOs = organizationDao.queryOrganization(organizationVO, company);
+		List<OrganizationPO> organizationPOs = organizationDao.queryOrganization(organizationVO.getName(), company);
 		List<OrganizationVO> organizationVOs = new ArrayList<OrganizationVO>();
 
 		for (OrganizationPO organizationPO : organizationPOs) {
@@ -71,13 +71,14 @@ public class OrganizationServiceImpl implements OrganizationService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int addOrganization(OrganizationVO organizationItem) {
+	public int addOrganization(OrganizationVO organization, Integer company) {
 
 		OrganizationPO organizationPO = new OrganizationPO();
 
-		BeanUtil.copyProperties(organizationItem, organizationPO);
+		BeanUtil.copyProperties(organization, organizationPO);
 
 		organizationPO.setPinyin(PinYin4Util.getPinyin(organizationPO.getName()).get(0));
+		organizationPO.setCompany(company);
 
 		organizationDao.save(organizationPO);
 

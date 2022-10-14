@@ -22,6 +22,8 @@ public class SelectionVO implements Serializable {
 
 	private Short status;// 状态 , 0: 初始 , 1: 锁定
 
+	private Short isAffirm;// 是否确认 , 0: 未确认 , 1: 客户确认
+
 	private Integer company;// 公司
 
 	private Long total;// 总额
@@ -36,7 +38,9 @@ public class SelectionVO implements Serializable {
 
 	private Long addReduceMinusTotal;// 增减减总额
 
-	private Timestamp createTime;
+	private Timestamp createTime;// 创建时间
+
+	private Timestamp affirmTime;// 确认时间
 
 	private UserBaseVO creater;
 
@@ -88,6 +92,14 @@ public class SelectionVO implements Serializable {
 
 	public void setStatus(Short status) {
 		this.status = status;
+	}
+
+	public Short getIsAffirm() {
+		return isAffirm;
+	}
+
+	public void setIsAffirm(Short isAffirm) {
+		this.isAffirm = isAffirm;
 	}
 
 	public Integer getCompany() {
@@ -153,6 +165,15 @@ public class SelectionVO implements Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	@JSON(format = "yyyy-MM-dd")
+	public Timestamp getAffirmTime() {
+		return affirmTime;
+	}
+
+	public void setAffirmTime(Timestamp affirmTime) {
+		this.affirmTime = affirmTime;
 	}
 
 	public UserBaseVO getCreater() {

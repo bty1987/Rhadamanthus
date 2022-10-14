@@ -9,16 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fanglin.balance.dao.AccountDao;
+import com.fanglin.balance.dao.BalanceAccountDao;
 import com.fanglin.balance.dao.ApportDetailDao;
 import com.fanglin.balance.dao.BalanceDao;
 import com.fanglin.balance.dao.BalanceDetailDao;
-import com.fanglin.balance.po.AccountPO;
+import com.fanglin.balance.po.BalanceAccountPO;
 import com.fanglin.balance.po.ApportDetailPO;
 import com.fanglin.balance.po.BalanceDetailPO;
 import com.fanglin.balance.po.BalancePO;
 import com.fanglin.balance.service.BalanceService;
-import com.fanglin.balance.vo.AccountVO;
+import com.fanglin.balance.vo.BalanceAccountVO;
 import com.fanglin.balance.vo.BalanceVO;
 import com.fanglin.common.po.CountingPO;
 import com.fanglin.common.service.CountingService;
@@ -52,7 +52,7 @@ public class BalanceServiceImpl implements BalanceService {
 	private CompanyDao companyDao;
 
 	@Autowired
-	private AccountDao accountDao;
+	private BalanceAccountDao accountDao;
 
 	@Autowired
 	private BalanceDetailDao balanceDetailDao;
@@ -142,7 +142,7 @@ public class BalanceServiceImpl implements BalanceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int balanceBalance(BalanceVO balanceVO, List<AccountVO> accounts, String userId) throws FLException {
+	public int balanceBalance(BalanceVO balanceVO, List<BalanceAccountVO> accounts, String userId) throws FLException {
 
 		BalancePO balancePO = balanceDao.get(balanceVO.getBid());
 
@@ -152,9 +152,9 @@ public class BalanceServiceImpl implements BalanceService {
 
 		UserPO creater = userDao.queryUserByUserId(userId);
 
-		for (AccountVO accountVO : accounts) {
+		for (BalanceAccountVO accountVO : accounts) {
 
-			AccountPO accountPO = accountDao.get(accountVO.getAid());
+			BalanceAccountPO accountPO = accountDao.get(accountVO.getBaid());
 
 			if (accountPO == null) {
 				throw new FLException(350001, "帐户不存在");
@@ -180,7 +180,7 @@ public class BalanceServiceImpl implements BalanceService {
 
 			balancePO.setSurplus(Arith.sub(balancePO.getSurplus(), accountVO.getMoney()));
 
-			BalanceDetailPO balanceDetailPO = new BalanceDetailPO(new AccountPO(), new UserPO());
+			BalanceDetailPO balanceDetailPO = new BalanceDetailPO(new BalanceAccountPO(), new UserPO());
 
 			balanceDetailPO.setAccount(accountPO);
 			balanceDetailPO.setBalance(balancePO);
@@ -208,7 +208,7 @@ public class BalanceServiceImpl implements BalanceService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int payBalance(BalanceVO balanceVO, List<AccountVO> accounts, String userId) throws FLException {
+	public int payBalance(BalanceVO balanceVO, List<BalanceAccountVO> accounts, String userId) throws FLException {
 
 		BalancePO balancePO = balanceDao.get(balanceVO.getBid());
 
@@ -218,9 +218,9 @@ public class BalanceServiceImpl implements BalanceService {
 
 		UserPO creater = userDao.queryUserByUserId(userId);
 
-		for (AccountVO accountVO : accounts) {
+		for (BalanceAccountVO accountVO : accounts) {
 
-			AccountPO accountPO = accountDao.get(accountVO.getAid());
+			BalanceAccountPO accountPO = accountDao.get(accountVO.getBaid());
 
 			if (accountPO == null) {
 				throw new FLException(350001, "帐户不存在");
@@ -230,7 +230,7 @@ public class BalanceServiceImpl implements BalanceService {
 
 			balancePO.setSurplus(Arith.sub(balancePO.getSurplus(), accountVO.getMoney()));
 
-			BalanceDetailPO balanceDetailPO = new BalanceDetailPO(new AccountPO(), new UserPO());
+			BalanceDetailPO balanceDetailPO = new BalanceDetailPO(new BalanceAccountPO(), new UserPO());
 
 			balanceDetailPO.setAccount(accountPO);
 			balanceDetailPO.setBalance(balancePO);

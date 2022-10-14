@@ -28,65 +28,73 @@ import com.fanglin.core.interceptor.FLException;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class ConstructionScheduleAction extends BaseListAction{
+public class ConstructionScheduleAction extends BaseListAction {
 
 	private static final long serialVersionUID = 1830437899502700213L;
-	
+
 	@Autowired
 	private ConstructionScheduleService constructionScheduleService;
-	
+
 	private ConstructionScheduleVO constructionSchedule;
-	
+
 	private List<ConstructionScheduleVO> constructionSchedules;
-	
+
+	@Action(value = "pageConstructionSchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageConstructionSchedule() throws FLException {
+
+		constructionScheduleService.pageConstructionSchedule(getPaging(), getFilters(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryConstructionScheduleByOrderId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryConstructionScheduleByOrderId(){
-		
+	public String queryConstructionScheduleByOrderId() throws FLException {
+
 		constructionSchedules = constructionScheduleService.queryConstructionScheduleByOrderId(constructionSchedule);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryConstructionScheduleByCid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryConstructionScheduleByCid(){
-		
+	public String queryConstructionScheduleByCid() throws FLException {
+
 		constructionSchedules = constructionScheduleService.queryConstructionScheduleByCid(constructionSchedule);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryConstructionScheduleByOrderIdASchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryConstructionScheduleByOrderIdASchedule() throws FLException{
-		
+	public String queryConstructionScheduleByOrderIdASchedule() throws FLException {
+
 		constructionSchedule = constructionScheduleService.queryConstructionScheduleByOrderIdASchedule(constructionSchedule);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "beginConstructionSchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String beginConstructionSchedule() throws FLException{
-		
+	public String beginConstructionSchedule() throws FLException {
+
 		constructionScheduleService.beginConstructionSchedule(constructionSchedule);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "finishConstructionSchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String finishConstructionSchedule() throws FLException{
-		
+	public String finishConstructionSchedule() throws FLException {
+
 		constructionScheduleService.finishConstructionSchedule(constructionSchedule);
-		
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "checkoutConstructionSchedule", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String checkoutConstructionSchedule() throws FLException{
-		
+	public String checkoutConstructionSchedule() throws FLException {
+
 		constructionScheduleService.checkoutConstructionSchedule(constructionSchedule);
-		
+
 		return SUCCESS;
 	}
-	
+
 	public ConstructionScheduleVO getConstructionSchedule() {
 		return constructionSchedule;
 	}
@@ -99,8 +107,7 @@ public class ConstructionScheduleAction extends BaseListAction{
 		return constructionSchedules;
 	}
 
-	public void setConstructionSchedules(
-			List<ConstructionScheduleVO> constructionSchedules) {
+	public void setConstructionSchedules(List<ConstructionScheduleVO> constructionSchedules) {
 		this.constructionSchedules = constructionSchedules;
 	}
 

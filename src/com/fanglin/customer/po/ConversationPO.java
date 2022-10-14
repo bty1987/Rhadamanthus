@@ -34,6 +34,8 @@ public class ConversationPO implements Serializable {
 
 	public static final short TYPE_APP_INT = 2;
 
+	public static final short TYPE_VOICE_INT = 3;
+
 	private long cid;
 
 	private String orderId;
@@ -42,9 +44,13 @@ public class ConversationPO implements Serializable {
 
 	private short atttype;
 
+	private short contype;
+
 	private String content;
 
 	private String path;
+
+	private int filesize;
 
 	private int width;
 
@@ -99,6 +105,15 @@ public class ConversationPO implements Serializable {
 		return atttype;
 	}
 
+	public void setContype(short contype) {
+		this.contype = contype;
+	}
+
+	@Column(name = "contype")
+	public short getContype() {
+		return contype;
+	}
+
 	public void setAtttype(short atttype) {
 		this.atttype = atttype;
 	}
@@ -119,6 +134,15 @@ public class ConversationPO implements Serializable {
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+
+	@Column(name = "filesize")
+	public int getFilesize() {
+		return filesize;
+	}
+
+	public void setFilesize(int filesize) {
+		this.filesize = filesize;
 	}
 
 	@Column(name = "width")

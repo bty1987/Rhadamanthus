@@ -26,7 +26,7 @@ import com.fanglin.utils.BeanUtil;
 @Service("constructionDrawingService")
 @Transactional(readOnly = true)
 public class ConstructionDrawingServiceImpl implements ConstructionDrawingService {
-	
+
 	@Autowired
 	private SystemConfigDao systemConfigDao;
 
@@ -95,20 +95,20 @@ public class ConstructionDrawingServiceImpl implements ConstructionDrawingServic
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int addConstructionDrawing(ConstructionDrawingVO constructionDrawingVO, String userId, int company) throws FLException {
-		
+
 		long cid = constructionDrawingVO.getCid();
 		short type = constructionDrawingVO.getType();
-		
+
 		SystemConfigPO constructionDrawingLimit = systemConfigDao.querySystemConfig("constructiondrawinglimit", company);
-		
-		if(constructionDrawingDao.countConstructionDrawing(cid, type) >= (constructionDrawingLimit == null ? 5 : Integer.valueOf(constructionDrawingLimit.getValue()))){
+
+		if (constructionDrawingDao.countConstructionDrawing(cid, type) >= (constructionDrawingLimit == null ? 5 : Integer.valueOf(constructionDrawingLimit.getValue()))) {
 			throw new FLException(110017, "资源数已达上限");
 		}
-		
+
 		ConstructionDrawingPO constructionDrawingPO = new ConstructionDrawingPO();
 
 		BeanUtil.copyProperties(constructionDrawingVO, constructionDrawingPO, Arrays.asList("creater"));
-		
+
 		constructionDrawingPO.setCreater(userDao.queryUserByUserId(userId));
 		constructionDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 
@@ -121,19 +121,19 @@ public class ConstructionDrawingServiceImpl implements ConstructionDrawingServic
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public List<ConstructionDrawingVO> addConstructionDrawings(ConstructionDrawingVO constructionDrawingVO, List<String> drawingUrls, String userId) {
+	public List<ConstructionDrawingVO> addConstructionDrawings(List<ConstructionDrawingVO> constructionDrawings, String userId) {
 
 		List<ConstructionDrawingVO> constructionDrawingVOs = new ArrayList<ConstructionDrawingVO>();
 
-		for (String drawingUrl : drawingUrls) {
+		UserPO creater = userDao.queryUserByUserId(userId);
+
+		for (ConstructionDrawingVO constructionDrawing : constructionDrawings) {
 
 			ConstructionDrawingPO constructionDrawingPO = new ConstructionDrawingPO();
 
-			BeanUtil.copyProperties(constructionDrawingVO, constructionDrawingPO, Arrays.asList("creater"));
-			constructionDrawingPO.setDrawingUrl(drawingUrl);
+			BeanUtil.copyProperties(constructionDrawing, constructionDrawingPO, Arrays.asList("creater"));
 			// 新添加的创建人和创建时间
-			UserPO userC = userDao.queryUserByUserId(userId);
-			constructionDrawingPO.setCreater(userC);
+			constructionDrawingPO.setCreater(creater);
 			constructionDrawingPO.setCreateTime(new Timestamp(System.currentTimeMillis()));
 
 			constructionDrawingDao.save(constructionDrawingPO);

@@ -8,68 +8,68 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.fanglin.communion.po.ReceiptTypePO;
+import com.fanglin.data.po.ReceiptTypePO;
 
 @Entity
 @Table(name = "subject", catalog = "finance")
 public class SubjectPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 4194029261037679840L;
-	
+
 	public static final String COLUMN_SID_STR = "sid";
-	
+
 	public static final String COLUMN_NAME_STR = "name";
-	
+
 	public static final String COLUMN_ONECODE_STR = "oneCode";
-	
+
 	public static final String COLUMN_TWOCODE_STR = "twoCode";
-	
+
 	public static final String COLUMN_THRCODE_STR = "thrCode";
-	
+
 	public static final String COLUMN_CODE_STR = "code";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
 	public static final String COLUMN_LIMITS_STR = "limits";
-	
+
 	public static final String COLUMN_DIRECTION_STR = "direction";
-	
+
 	public static final short STATUS_ENABLE_INT = 0;
-	
+
 	public static final short STATUS_DISABLE_INT = 1;
-	
+
 	public static final short LIMITS_ENABLE_INT = 1;
-	
+
 	public static final short LIMITS_DISABLED_INT = 0;
-	
+
 	public static final short CODE_LENGTH_LEVEL_ONE_INT = 4;
-	
+
 	public static final short CODE_LENGTH_LEVEL_TWO_INT = 3;
-	
+
 	public static final short CODE_LENGTH_LEVEL_THR_INT = 3;
-	
+
 	public static final short CODE_LENGTH_INT = 10;
 
 	private long sid;
-	
+
 	private short level;
-	
+
 	private String oneCode;
-	
+
 	private String twoCode;
-	
+
 	private String thrCode;
-	
+
 	private String name;
-	
+
 	private short status;
-	
+
 	private short limits;
-	
+
 	private String code;
-	
+
 	private short direction;
-	
+
 	private String assistant;
 
 	public SubjectPO() {
@@ -190,8 +190,8 @@ public class SubjectPO implements java.io.Serializable {
 	public void setAssistant(String assistant) {
 		this.assistant = assistant;
 	}
-	
-	public SubjectPO toSubjectPO(ReceiptTypePO receiptTypePO){
+
+	public SubjectPO toSubjectPO(ReceiptTypePO receiptTypePO) {
 		return new SubjectPO(receiptTypePO.getOneCode(), receiptTypePO.getTwoCode(), receiptTypePO.getThrCode(), receiptTypePO.getSubjectName(), receiptTypePO.getDirection());
 	}
 

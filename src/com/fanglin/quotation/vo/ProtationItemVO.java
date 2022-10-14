@@ -21,6 +21,8 @@ public class ProtationItemVO implements Serializable {
 
 	private Long pid;
 
+	private Long ppiid;
+
 	private String name;
 
 	private Integer basicNum;
@@ -32,6 +34,8 @@ public class ProtationItemVO implements Serializable {
 	private Integer num;
 
 	private Short type;
+
+	private String content;
 
 	public Long getPiid() {
 		return piid;
@@ -95,6 +99,22 @@ public class ProtationItemVO implements Serializable {
 
 	public void setType(Short type) {
 		this.type = type;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public Long getPpiid() {
+		return ppiid;
+	}
+
+	public void setPpiid(Long ppiid) {
+		this.ppiid = ppiid;
 	}
 
 }

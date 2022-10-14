@@ -25,17 +25,17 @@ import com.fanglin.utils.Paging;
 @Repository("operationDao")
 public class OperationDaoImpl extends DaoImpl<OperationPO> implements OperationDao {
 
-	public OperationDaoImpl(){
+	public OperationDaoImpl() {
 		super(OperationPO.class);
 	}
 
 	@Override
 	public List<OperationPO> pageOperation(Paging paging, List<Filter> filters) {
-		
+
 		PagingQuery<OperationPO> query = pagingQuery(paging, OperationPO.class);
-		
+
 		queryFilterExcute(query, filters);
-		
+
 		return query.list();
 	}
 
@@ -49,9 +49,24 @@ public class OperationDaoImpl extends DaoImpl<OperationPO> implements OperationD
 	public OperationPO queryOperationByOperation(String operation) {
 		return (OperationPO) session().createCriteria(OperationPO.class).add(Restrictions.eq(OperationPO.COLUMN_OPERATION_STR, operation)).add(Restrictions.eq(OperationPO.COLUMN_STATUS_STR, OperationPO.STATUS_ENABLE_INT)).uniqueResult();
 	}
-	
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
-		
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+		if (filters != null) {
+			for (Filter filter : filters) {
+
+				String field = filter.getField();
+				String data = filter.getData();
+				String op = filter.getOp();
+
+				if ("operationName".equals(field)) {
+					query.add(query.getCriterion("name", String.valueOf(data), op));
+				} else if ("operation".equals(field)) {
+					query.add(query.getCriterion("operation", String.valueOf(data), op));
+				} else if ("operationType".equals(field)) {
+					query.add(query.getCriterion("type", Short.valueOf(data), op));
+				}
+			}
+		}
 	}
 
 }

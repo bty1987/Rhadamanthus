@@ -19,58 +19,58 @@ import org.apache.struts2.json.annotations.JSON;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.vo.UserBaseVO;
 
-public class ConstructionVO implements Serializable{
+public class ConstructionVO implements Serializable {
 
 	private static final long serialVersionUID = -6183413787236101280L;
-	
+
 	private Long cid;
-	
+
 	private String orderId;
-	
+
 	private DecorationVO decoration;
-	
+
 	private UserBaseVO supervisor;
-	
-	private String supervisorQualityName;
-	
+
+	private Long cnid;
+
 	private Integer schedule;
-	
+
 	private Short accessory;
-	
+
 	private Long accessoryLimit;
-	
+
 	private Long salaryLimit;
-	
+
 	private Long accessoryTotal;
-	
+
 	private Long salaryTotal;
-	
+
 	private UserBaseVO locker;
-	
+
 	private Timestamp lockTime;
-	
+
 	public ConstructionVO() {
 		super();
 	}
-	
+
 	public ConstructionVO(UserBaseVO supervisor) {
 		super();
 		this.supervisor = supervisor;
 	}
 
-	public ConstructionVO(DecorationVO decoration,UserBaseVO supervisor) {
+	public ConstructionVO(DecorationVO decoration, UserBaseVO supervisor) {
 		super();
 		this.decoration = decoration;
 		this.supervisor = supervisor;
 	}
-	
-	public ConstructionVO(DecorationVO decoration,UserBaseVO supervisor, UserBaseVO locker) {
+
+	public ConstructionVO(DecorationVO decoration, UserBaseVO supervisor, UserBaseVO locker) {
 		super();
 		this.decoration = decoration;
 		this.supervisor = supervisor;
 		this.locker = locker;
 	}
-	
+
 	public UserBaseVO getSupervisor() {
 		return supervisor;
 	}
@@ -87,14 +87,14 @@ public class ConstructionVO implements Serializable{
 		this.cid = cid;
 	}
 
-	public String getOrderId(){
+	public String getOrderId() {
 		return orderId;
 	}
 
-	public void setOrderId(String orderId){
+	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
-	
+
 	public DecorationVO getDecoration() {
 		return decoration;
 	}
@@ -103,20 +103,20 @@ public class ConstructionVO implements Serializable{
 		this.decoration = decoration;
 	}
 
-	public Integer getSchedule(){
+	public Long getCnid() {
+		return cnid;
+	}
+
+	public void setCnid(Long cnid) {
+		this.cnid = cnid;
+	}
+
+	public Integer getSchedule() {
 		return schedule;
 	}
 
-	public void setSchedule(Integer schedule){
+	public void setSchedule(Integer schedule) {
 		this.schedule = schedule;
-	}
-
-	public String getSupervisorQualityName(){
-		return supervisorQualityName;
-	}
-
-	public void setSupervisorQualityName(String supervisorQualityName){
-		this.supervisorQualityName = supervisorQualityName;
 	}
 
 	public Short getAccessory() {

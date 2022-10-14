@@ -1,6 +1,7 @@
 package com.fanglin.personel.po;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,19 +26,25 @@ public class UserCompanyPO implements Serializable {
 
 	private CompanyPO company;
 
+	private UserPO creater;
+
+	private Timestamp createTime;
+
 	public UserCompanyPO() {
 		super();
 	}
 
-	public UserCompanyPO(CompanyPO company) {
+	public UserCompanyPO(CompanyPO company, UserPO creater) {
 		super();
 		this.company = company;
+		this.creater = creater;
 	}
 
-	public UserCompanyPO(int uid, CompanyPO company) {
+	public UserCompanyPO(int uid, CompanyPO company, UserPO creater) {
 		super();
 		this.uid = uid;
 		this.company = company;
+		this.creater = creater;
 	}
 
 	@Id
@@ -68,6 +75,25 @@ public class UserCompanyPO implements Serializable {
 
 	public void setCompany(CompanyPO company) {
 		this.company = company;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cuid", referencedColumnName = "uid")
+	public UserPO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
+	}
+
+	@Column(name = "createTime")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
 	}
 
 }

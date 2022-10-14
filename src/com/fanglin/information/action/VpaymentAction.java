@@ -47,6 +47,14 @@ public class VpaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "queryVpaymentByNo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryVpaymentByNo() throws FLException {
+
+		vpayments = vpaymentService.queryVpaymentByNo(vpayment);
+
+		return SUCCESS;
+	}
+
 	@Action(value = "createVpayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String createVpayment() throws FLException {
 

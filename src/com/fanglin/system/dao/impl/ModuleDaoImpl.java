@@ -13,6 +13,7 @@ package com.fanglin.system.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -24,25 +25,36 @@ import com.fanglin.utils.Paging;
 
 @Repository("moduleDao")
 public class ModuleDaoImpl extends DaoImpl<ModulePO> implements ModuleDao {
-	
-	public ModuleDaoImpl(){
+
+	public ModuleDaoImpl() {
 		super(ModulePO.class);
 	}
 
 	@Override
 	public List<ModulePO> pageModule(Paging paging, List<Filter> filters) {
-		
+
 		PagingQuery<ModulePO> query = pagingQuery(paging, ModulePO.class);
-		
+
 		queryFilterExcute(query, filters);
-		
+
 		return query.list();
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<ModulePO> queryModule() {
-		return session().createCriteria(ModulePO.class).list();
+	public List<ModulePO> queryModule(Short system, Short level) {
+
+		Criteria query = session().createCriteria(ModulePO.class);
+
+		if (system != null) {
+			query.add(Restrictions.eq("system", system));
+		}
+
+		if (level != null) {
+			query.add(Restrictions.eq("level", level));
+		}
+
+		return query.list();
 	}
 
 	@Override
@@ -50,21 +62,21 @@ public class ModuleDaoImpl extends DaoImpl<ModulePO> implements ModuleDao {
 	public List<ModulePO> queryModuleBySystem(short system) {
 		return session().createCriteria(ModulePO.class).add(Restrictions.eq("system", system)).list();
 	}
-	
+
 	@Override
-	public int deleteModuleForSubByMid(int mId) {
-		
+	public int deleteModule(int mId) {
+
 		String sql = "delete from communion.module where fatherModuleId in ((select o.mId from (select * from communion.module where fatherModuleId = :mId) o))";
 		session().createSQLQuery(sql).setInteger("mId", mId).executeUpdate();
-		
+
 		sql = "delete from communion.module where fatherModuleId = :mId";
 		session().createSQLQuery(sql).setInteger("mId", mId).executeUpdate();
-		
+
 		return 0;
 	}
-	
-	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters){
-		
+
+	private void queryFilterExcute(PagingQuery<?> query, List<Filter> filters) {
+
 	}
 
 }

@@ -17,45 +17,61 @@ import com.fanglin.data.material.vo.ColorVO;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class ColorAction extends BaseListAction{
-	
+public class ColorAction extends BaseListAction {
+
 	private static final long serialVersionUID = -1633891301538362524L;
-	
+
 	@Autowired
 	private ColorService colorService;
-	
+
 	private List<ColorVO> colors;
-	
+
 	private ColorVO color;
-	
+
+	@Action(value = "pageColor", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String pageColor() throws FLException {
+
+		colorService.pageColor(getPaging(), getFilters(), queryCompany());
+
+		return SUCCESS;
+	}
+
 	@Action(value = "queryColorByGid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryColorByGid(){
+	public String queryColorByGid() {
+
 		colors = colorService.queryColorByGid(color);
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryColorForEnableByGid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryColorForEnableByGid(){
+	public String queryColorForEnableByGid() {
+
 		colors = colorService.queryColorForEnableByGid(color);
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "addColor", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String addColor() throws FLException{
+	public String addColor() throws FLException {
+
 		colorService.addColor(color);
+
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateColorForStatus", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String updateColorForStatus() throws FLException{
+	public String updateColorForStatus() throws FLException {
+
 		colorService.updataColorForStatus(color);
+
 		return SUCCESS;
 	}
-	
+
 	public List<ColorVO> getColors() {
 		return colors;
 	}
-	
+
 	public void setColors(List<ColorVO> colors) {
 		this.colors = colors;
 	}
@@ -67,5 +83,5 @@ public class ColorAction extends BaseListAction{
 	public void setColor(ColorVO color) {
 		this.color = color;
 	}
-	
+
 }

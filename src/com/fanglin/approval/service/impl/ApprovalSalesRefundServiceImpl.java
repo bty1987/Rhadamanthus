@@ -173,8 +173,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 
 		for (ApprovalSalesRefundItemVO approvalSalesRefundItemVO : approvalSalesRefundItemVOs) {
 
-			if (approvalSalesRefundItemVO == null)
-				continue;
+			if (approvalSalesRefundItemVO == null) continue;
 
 			SalesItemPO salesItemPO = salesItemDao.get(approvalSalesRefundItemVO.getSalesItem().getSiid());
 
@@ -346,7 +345,7 @@ public class ApprovalSalesRefundServiceImpl implements ApprovalSalesRefundServic
 			salesPO.setStatus(approvalSalesRefundPO.getType());
 		}
 
-		salesPO.setAmount(salesItemDao.countSalesItemForAmount(salesPO.getSid()));
+		salesPO.setAmount(salesItemDao.amountSalesItem(salesPO.getSid()));
 
 		salesDao.update(salesPO);
 

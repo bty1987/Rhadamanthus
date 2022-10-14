@@ -39,6 +39,8 @@ public class FunctionAreaPO implements Serializable {
 
 	public static final short TYPE_COST_INT = 4;
 
+	public static final short TYPE_UNACHE_INT = 5;
+
 	private long faid;
 
 	private String no;

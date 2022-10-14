@@ -201,6 +201,7 @@ public class WorkerSalaryServiceImpl implements WorkerSalaryService {
 
 			workerSalaryPO.setSchedule(constructionSchedulePO.getSchedule());
 			workerSalaryPO.setCsid(workerSalaryVO.getCsid());
+			workerSalaryPO.setCnid(constructionSchedulePO.getCnid());
 
 			workerSalaryPO.setCount(workerSalaryDao.countWorkerSalary(decorationPO.getOrderId(), workerSalaryPO.getCsid()) + 1);
 		}

@@ -17,68 +17,124 @@ public class UserInfoPO implements java.io.Serializable {
 
 	private static final long serialVersionUID = -3915898990885585486L;
 
+	public static final short POLITICAL_MASSES_INT = 0;// 群众
+
+	public static final short POLITICAL_TEAM_INT = 1;// 团员
+
+	public static final short POLITICAL_PARTY_INT = 2;// 党员
+
+	public static final short HOUSEHOLDTYPE_COUNTRYSIDE_INT = 0;// 农村
+
+	public static final short HOUSEHOLDTYPE_TOWN_INT = 1;// 城镇
+
+	public static final short EDUCATION_SMALLSCHOLL_INT = 0;// 小学
+
+	public static final short EDUCATION_FIRSTSCHOLL_INT = 1;// 初中
+
+	public static final short EDUCATION_MIDDLEJUNIOR_INT = 2;// 中专
+
+	public static final short EDUCATION_HIGHSCHOLL_INT = 3;// 高中
+
+	public static final short EDUCATION_JUNIORCOLLEGE_INT = 4; // 大专
+
+	public static final short EDUCATION_UNDERGRADUATE_INT = 5;// 本科
+
+	public static final short EDUCATION_GRADUATESTUDENT_INT = 6;// 研究生
+
+	public static final short EMPLOYTYPE_FORMAL_INT = 0;// 正式
+
+	public static final short EMPLOYTYPE_TRIAL_INT = 1;// 试用
+
+	public static final short LEVEL_STAFF_INT = 0;// 员工
+
+	public static final short LEVEL_CORESTAFF_INT = 1;// 核心员工
+
+	public static final short LEVEL_EXECUTIVEDIRECTOR_INT = 2;// 主管
+
+	public static final short LEVEL_MANAGER_INT = 3;// 经理
+
+	public static final short LEVEL_CHAIRMAN_INT = 4; // 总监及以上
+
+	public static final short EMPLOYWAY_CAMPUS_INT = 0;// 校园招聘
+
+	public static final short EMPLOYWAY_NETWORK_INT = 1;// 网络招聘
+
+	public static final short EMPLOYWAY_INSIDEI_INT = 2;// 内部推荐
+
+	public static final short EMPLOYWAY_ACTIVE_INT = 3;// 主动应聘
+
+	public static final short EMPLOYWAY_HEADHUNTING_INT = 4; // 猎头
+
+	public static final short INSURANCETYPE_SOCIALSECURITY_INT = 0;// 社保
+
+	public static final short INSURANCETYPE_COMMERCIALINSURANCE_INT = 1; // 商业保险
+
+	public static final short FORM_OUTPUTVALUE_INT = 0;// 产值
+
+	public static final short FORM_NONOUTPUTVALUE_INT = 1; // 非产值
+
 	private long uiid;
 
 	private UserPO user;
-	
+
 	private short level;
-	
+
 	private int gender;
-	
+
 	private int height;
-	
+
 	private int weight;
-	
+
 	private short political;
-	
+
 	private String nation;
-	
+
 	private String hobby;
-	
+
 	private String qq;
 
 	private String wechat;
 
 	private String email;
-	
+
 	private short isMarried;
-	
+
 	private short isBirth;
 
 	private short isHouseLoan;
 
 	private short isCarLoan;
-	
+
 	private short isCarID;
-	
+
 	private short isPassID;
-	
+
 	private short isHMID;
-	
+
 	private short isTWID;
-	
+
 	private short householdType;
-	
+
 	private String hometownAddress;
 
 	private String address;
-	
+
 	private String lover;
-	
+
 	private String claner;
-	
+
 	private String clanerCom;
-	
+
 	private String emergencyMan;
 
 	private String emergencyPhone;
-	
+
 	private UserPO fangliner;
-	
+
 	private String firstTime;
-	
+
 	private String entryTime;
-	
+
 	private short employWay;
 
 	private String recommendMan;
@@ -102,21 +158,21 @@ public class UserInfoPO implements java.io.Serializable {
 	private String isContract;
 
 	private String signTime;
-	
+
 	private String eignTime;
-	
+
 	private String fignTime;
-	
+
 	private int signNum;
 
 	private String preformNum;
-	
+
 	private String formTime;
-	
+
 	private short isInsurance;
-	
+
 	private short insuranceType;
-	
+
 	private String insuranceTime;
 
 	private String pensionNum;
@@ -124,23 +180,23 @@ public class UserInfoPO implements java.io.Serializable {
 	private String medicalNum;
 
 	private String publicNum;
-	
+
 	private String palary;
 
 	private String salary;
-	
+
 	private String bank;
 
 	private String bankCardNum;
-	
+
 	private String comment;
-	
+
 	private String rank;
-	
+
 	private short form;
-	
+
 	private String hometownPlace;
-	
+
 	public UserInfoPO() {
 		super();
 	}
@@ -712,6 +768,5 @@ public class UserInfoPO implements java.io.Serializable {
 	public void setHometownPlace(String hometownPlace) {
 		this.hometownPlace = hometownPlace;
 	}
-
 
 }

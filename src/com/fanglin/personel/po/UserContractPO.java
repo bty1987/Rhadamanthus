@@ -24,34 +24,38 @@ import javax.persistence.Table;
 public class UserContractPO implements Serializable {
 
 	private static final long serialVersionUID = 8111974803190366547L;
-	
+
+	public static final short STATUS_EFFECTIVE_INT = 0;// 有效
+
+	public static final short STATUS_INVALID_INT = 1; // 无效
+
 	private long ucId;
 
 	private long uid;
-	
+
 	private String no;
-	
+
 	private String name;
-	
+
 	private String signTime;
-	
+
 	private String startTime;
-	
+
 	private String endTime;
-	
+
 	private Timestamp createTime;
-	
+
 	private short status;
-	
+
 	private String comment;
-	
-	public UserContractPO(){
+
+	public UserContractPO() {
 		super();
 	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ucId") 
+	@Column(name = "ucId")
 	public long getUcId() {
 		return ucId;
 	}
@@ -60,7 +64,7 @@ public class UserContractPO implements Serializable {
 		this.ucId = ucId;
 	}
 
-	@Column(name = "uid") 
+	@Column(name = "uid")
 	public long getUid() {
 		return uid;
 	}
@@ -69,7 +73,7 @@ public class UserContractPO implements Serializable {
 		this.uid = uid;
 	}
 
-	@Column(name = "no") 
+	@Column(name = "no")
 	public String getNo() {
 		return no;
 	}
@@ -78,7 +82,7 @@ public class UserContractPO implements Serializable {
 		this.no = no;
 	}
 
-	@Column(name = "name") 
+	@Column(name = "name")
 	public String getName() {
 		return name;
 	}
@@ -87,7 +91,7 @@ public class UserContractPO implements Serializable {
 		this.name = name;
 	}
 
-	@Column(name = "signTime") 
+	@Column(name = "signTime")
 	public String getSignTime() {
 		return signTime;
 	}
@@ -96,7 +100,7 @@ public class UserContractPO implements Serializable {
 		this.signTime = signTime;
 	}
 
-	@Column(name = "startTime") 
+	@Column(name = "startTime")
 	public String getStartTime() {
 		return startTime;
 	}
@@ -105,7 +109,7 @@ public class UserContractPO implements Serializable {
 		this.startTime = startTime;
 	}
 
-	@Column(name = "endTime") 
+	@Column(name = "endTime")
 	public String getEndTime() {
 		return endTime;
 	}
@@ -114,7 +118,7 @@ public class UserContractPO implements Serializable {
 		this.endTime = endTime;
 	}
 
-	@Column(name = "createTime") 
+	@Column(name = "createTime")
 	public Timestamp getCreateTime() {
 		return createTime;
 	}
@@ -123,7 +127,7 @@ public class UserContractPO implements Serializable {
 		this.createTime = createTime;
 	}
 
-	@Column(name = "status") 
+	@Column(name = "status")
 	public short getStatus() {
 		return status;
 	}
@@ -132,7 +136,7 @@ public class UserContractPO implements Serializable {
 		this.status = status;
 	}
 
-	@Column(name = "comment") 
+	@Column(name = "comment")
 	public String getComment() {
 		return comment;
 	}

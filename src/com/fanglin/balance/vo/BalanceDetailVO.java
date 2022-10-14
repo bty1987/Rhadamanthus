@@ -13,7 +13,7 @@ public class BalanceDetailVO implements Serializable {
 
 	private Long bdid;
 
-	private AccountVO account;
+	private BalanceAccountVO account;
 
 	private BalanceVO balance;
 
@@ -27,7 +27,7 @@ public class BalanceDetailVO implements Serializable {
 		super();
 	}
 	
-	public BalanceDetailVO(AccountVO account,
+	public BalanceDetailVO(BalanceAccountVO account,
 			UserBaseVO operater) {
 		super();
 		this.account = account;
@@ -42,11 +42,11 @@ public class BalanceDetailVO implements Serializable {
 		this.bdid = bdid;
 	}
 
-	public AccountVO getAccount() {
+	public BalanceAccountVO getAccount() {
 		return account;
 	}
 
-	public void setAccount(AccountVO account) {
+	public void setAccount(BalanceAccountVO account) {
 		this.account = account;
 	}
 

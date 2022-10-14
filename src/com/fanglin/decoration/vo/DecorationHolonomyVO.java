@@ -18,9 +18,19 @@ public class DecorationHolonomyVO implements Serializable {
 
 	private Long projectPrice;
 
+	private Integer trafficRate;
+
+	private Short trafficDiscount;
+
 	private Long managePrice;
 
 	private Integer manageRate;
+
+	private Short manageDiscount;
+
+	private Integer taxRate;
+
+	private Short taxDiscount;
 
 	private Long originMaterialPrice;
 
@@ -37,11 +47,10 @@ public class DecorationHolonomyVO implements Serializable {
 	private Short status;
 
 	private Long psId;
-	
+
 	private Long discountBase;
 
 	private Long projectBase;
-	
 
 	public DecorationHolonomyVO() {
 		super();
@@ -100,6 +109,22 @@ public class DecorationHolonomyVO implements Serializable {
 		this.projectPrice = projectPrice;
 	}
 
+	public Integer getTrafficRate() {
+		return trafficRate;
+	}
+
+	public void setTrafficRate(Integer trafficRate) {
+		this.trafficRate = trafficRate;
+	}
+
+	public Short getTrafficDiscount() {
+		return trafficDiscount;
+	}
+
+	public void setTrafficDiscount(Short trafficDiscount) {
+		this.trafficDiscount = trafficDiscount;
+	}
+
 	public Long getManagePrice() {
 		return managePrice;
 	}
@@ -114,6 +139,30 @@ public class DecorationHolonomyVO implements Serializable {
 
 	public void setManageRate(Integer manageRate) {
 		this.manageRate = manageRate;
+	}
+
+	public Short getManageDiscount() {
+		return manageDiscount;
+	}
+
+	public void setManageDiscount(Short manageDiscount) {
+		this.manageDiscount = manageDiscount;
+	}
+
+	public Integer getTaxRate() {
+		return taxRate;
+	}
+
+	public void setTaxRate(Integer taxRate) {
+		this.taxRate = taxRate;
+	}
+
+	public Short getTaxDiscount() {
+		return taxDiscount;
+	}
+
+	public void setTaxDiscount(Short taxDiscount) {
+		this.taxDiscount = taxDiscount;
 	}
 
 	public Long getOriginMaterialPrice() {
@@ -163,7 +212,6 @@ public class DecorationHolonomyVO implements Serializable {
 	public void setServicePaidup(Long servicePaidup) {
 		this.servicePaidup = servicePaidup;
 	}
-
 
 	public Short getStatus() {
 		return status;

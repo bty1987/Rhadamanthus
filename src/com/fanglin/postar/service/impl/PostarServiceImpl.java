@@ -57,7 +57,13 @@ public class PostarServiceImpl implements PostarService {
 		Long ptid = Long.valueOf(ptidStr.substring(0, Arith.sub(ptidStr.length(), 4)));
 
 		PaytranPO paytranPO = paytranDao.get(ptid);
+
+		if (paytranPO.getStatus() != PaytranPO.STATUS_INIT_INT) {
+			throw new FLException(150047, "转换款支付不可操作");
+		}
+
 		paytranPO.setStatus(PaytranPO.STATUS_SUCCESS_INT);
+		paytranPO.setMsgId(args.getString("ORDER_NO"));
 
 		paytranDao.update(paytranPO);
 		paytranDao.flush();
@@ -65,6 +71,8 @@ public class PostarServiceImpl implements PostarService {
 		wxpay.setPaymentptid(ptid);
 		wxpay.setPaymentMoney(Arith.mul(Long.parseLong(args.getString("NETR_AMT")), 10000));
 
-		paytranService.makePayment(wxpay, "wechat", 1);
+		if (paytranPO.getPid() == 0) return;
+
+		paytranService.makePayment(wxpay, "wechat");
 	}
 }

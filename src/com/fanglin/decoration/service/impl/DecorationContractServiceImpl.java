@@ -56,6 +56,7 @@ import com.fanglin.quotation.po.ProtationPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.system.dao.SystemConfigDao;
 import com.fanglin.system.po.SystemConfigPO;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.Arith;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
@@ -388,7 +389,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public int signDecorationContract(DecorationContractVO decorationContractVO, Authentication authentication) throws FLException {
+	public int signDecorationContract(DecorationVO decorationVO, Authentication authentication) throws FLException {
 
 		List<Short> status = Arrays.asList(new Short[] { DecorationPO.STATUS_INIT_INT, DecorationPO.STATUS_DEPOSIT_INT, DecorationPO.STATUS_PROSIGN_INT, DecorationPO.STATUS_RESIGNED_INT });
 		Short[] paymentStatus = new Short[] { DecorationPaymentPO.PAYMENTSTATUS_PAY_INT, DecorationPaymentPO.PAYMENTSTATUS_CONFIRM_INT };
@@ -396,7 +397,7 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		boolean resignFlag = false;
 		boolean prosignFlag = false;
 
-		String orderId = decorationContractVO.getOrderId();
+		String orderId = decorationVO.getOrderId();
 		String userId = authentication.getUserId();
 
 		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
@@ -461,13 +462,17 @@ public class DecorationContractServiceImpl implements DecorationContractService 
 		decorationPO.setStatus(DecorationPO.STATUS_SIGNED_INT);
 		decorationPO.setContracter(operater);
 
-		List<DecorationBelongPO> designerOrderBelongInfoPOs = decorationBelongDao.queryDecorationBelongForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT);
-		List<DecorationBelongPO> salemsanOrderBelongInfoPOs = decorationBelongDao.queryDecorationBelongForCurrentByOrderIdAType(decorationContractVO.getOrderId(), DecorationBelongPO.BELONGTYPE_SALESMAN_INT);
+		List<DecorationBelongPO> designerOrderBelongInfoPOs = decorationBelongDao.queryDecorationBelongForCurrentByOrderIdAType(decorationVO.getOrderId(), DecorationBelongPO.BELONGTYPE_DESIGN_INT);
+		List<DecorationBelongPO> salemsanOrderBelongInfoPOs = decorationBelongDao.queryDecorationBelongForCurrentByOrderIdAType(decorationVO.getOrderId(), DecorationBelongPO.BELONGTYPE_SALESMAN_INT);
 		DecorationAdditionPO decorationAdditionPO = decorationAdditionDao.queryDecorationAdditionByOrderId(orderId);
 
 		if (!resignFlag) {
 			decorationPO.setDesignStatus(DecorationPO.DESIGNSTATUS_CONDUCT_INT);
 			decorationPO.setContractTime(DateUtil.getDateToTimestamp(new Date()));
+		}
+
+		if (decorationVO.getConpany() != null) {
+			decorationPO.setConpany(CompanyServiceImpl.decode(decorationVO.getDompany()));
 		}
 
 		decorationDao.update(decorationPO);

@@ -1,4 +1,4 @@
-package com.fanglin.quotation.po;
+﻿package com.fanglin.quotation.po;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -46,6 +46,8 @@ public class SelectionItemPO implements Serializable {
 	public static final short TYPE_ADDITEM_SHORT = 3;// 类型, 增项
 
 	public static final short TYPE_MINUSITEM_SHORT = 4;// 类型, 减项
+
+	public static final short TYPE_ALONE_SHORT = 5; // 类型 , 未匹配
 
 	public static final short STATUS_INIT_SHORT = 0;// 状态, 初始
 

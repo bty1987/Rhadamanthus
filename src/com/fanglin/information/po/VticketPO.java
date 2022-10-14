@@ -35,7 +35,11 @@ public class VticketPO implements java.io.Serializable {
 
 	public static final String COLUMN_EXPIRE_STR = "expire";
 
+	public static final short ISCOME_NO_INT = 0;
+
 	public static final short ISCOME_YES_INT = 1;
+
+	public static final short ISREGIST_NO_INT = 0;
 
 	public static final short ISREGIST_YES_INT = 1;
 

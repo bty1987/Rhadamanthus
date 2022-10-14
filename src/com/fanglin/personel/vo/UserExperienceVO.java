@@ -22,13 +22,24 @@ public class UserExperienceVO implements Serializable {
 
 	private Integer uid;
 
+	private UserBaseVO operator;
+
 	private String type;
 
 	private Timestamp createTime;
 
 	private String comment;
-	
+
 	private Timestamp operateTime;
+
+	public UserExperienceVO() {
+		super();
+	}
+
+	public UserExperienceVO(UserBaseVO operator) {
+		super();
+		this.operator = operator;
+	}
 
 	public Long getUpid() {
 		return upid;
@@ -70,7 +81,7 @@ public class UserExperienceVO implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 	@JSON(format = "yyyy-MM-dd")
 	public Timestamp getOperateTime() {
 		return operateTime;
@@ -80,4 +91,11 @@ public class UserExperienceVO implements Serializable {
 		this.operateTime = operateTime;
 	}
 
+	public UserBaseVO getOperator() {
+		return operator;
+	}
+
+	public void setOperator(UserBaseVO operator) {
+		this.operator = operator;
+	}
 }

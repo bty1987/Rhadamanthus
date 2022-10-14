@@ -27,54 +27,68 @@ import com.fanglin.personel.po.UserPO;
 public class NoticePO implements Serializable {
 
 	private static final long serialVersionUID = 134049609579042097L;
-	
+
 	public static final String COLUMN_COMPANY_STR = "company";
-	
+
 	public static final String NOTICE_STATUS_VALID_STR = "有效";
-	
+
 	public static final String NOTICE_STATUS_INVALID_STR = "失效";
-	
-	public static final short ISPUBLIC_PUBLIC_INT = 0; 
-	
+
+	public static final short ISPUBLIC_PUBLIC_INT = 0;
+
+	public static final short PRIORITY_ORDINARY_INT = 0; // 普通
+
+	public static final short PRIORITY_IMPORTANT_INT = 1; // 重要
+
+	public static final short PRIORITY_URGENT_INT = 2; // 紧急
+
+	public static final short TYPE_NOTICE_INT = 1; // 通知
+
+	public static final short TYPE_ACTIVITY_INT = 2; // 活动
+
+	public static final short ISPUBLIC_OPEN_INT = 0; // 公开
+
+	public static final short ISPUBLIC_DEPARTMENTOPEN_INT = 1; // 部门公开
+
 	private long nid;
-	
+
 	private UserPO creater;
-	
+
 	private String theme;
-	
+
 	private short type;
-	
+
 	private short priority;
-	
+
 	private String startTime;
-	
+
 	private String endTime;
-	
+
 	private String publishTime;
-	
+
 	private short isPublic;
-	
+
 	private String contents;
-	
+
 	private String depts;
-	
+
 	private String filePath;
-	
+
 	private int company;
-	
+
 	private String fileName;
-	
-	public NoticePO(){
+
+	public NoticePO() {
 		super();
 	}
-	
+
 	public NoticePO(UserPO creater) {
 		this.creater = creater;
 	}
 
 	@Id
 	@GeneratedValue
-	@Column(name="nid")
+	@Column(name = "nid")
 	public long getNid() {
 		return nid;
 	}
@@ -93,79 +107,79 @@ public class NoticePO implements Serializable {
 		this.creater = creater;
 	}
 
-	@Column(name="theme")
-	public String getTheme(){
+	@Column(name = "theme")
+	public String getTheme() {
 		return theme;
 	}
 
-	public void setTheme(String theme){
+	public void setTheme(String theme) {
 		this.theme = theme;
 	}
 
-	@Column(name="type")
-	public short getType(){
+	@Column(name = "type")
+	public short getType() {
 		return type;
 	}
 
-	public void setType(short type){
+	public void setType(short type) {
 		this.type = type;
 	}
 
-	@Column(name="priority")
-	public short getPriority(){
+	@Column(name = "priority")
+	public short getPriority() {
 		return priority;
 	}
 
-	public void setPriority(short priority){
+	public void setPriority(short priority) {
 		this.priority = priority;
 	}
 
-	@Column(name="startTime")
-	public String getStartTime(){
+	@Column(name = "startTime")
+	public String getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(String startTime){
+	public void setStartTime(String startTime) {
 		this.startTime = startTime;
 	}
 
-	@Column(name="endTime")
-	public String getEndTime(){
+	@Column(name = "endTime")
+	public String getEndTime() {
 		return endTime;
 	}
 
-	public void setEndTime(String endTime){
+	public void setEndTime(String endTime) {
 		this.endTime = endTime;
 	}
 
-	@Column(name="publishTime")
-	public String getPublishTime(){
+	@Column(name = "publishTime")
+	public String getPublishTime() {
 		return publishTime;
 	}
 
-	public void setPublishTime(String publishTime){
+	public void setPublishTime(String publishTime) {
 		this.publishTime = publishTime;
 	}
 
-	@Column(name="isPublic")
-	public short getIsPublic(){
+	@Column(name = "isPublic")
+	public short getIsPublic() {
 		return isPublic;
 	}
 
-	public void setIsPublic(short isPublic){
+	public void setIsPublic(short isPublic) {
 		this.isPublic = isPublic;
 	}
 
-	@Column(name="contents")
-	public String getContents(){
+	@Column(name = "contents")
+	public String getContents() {
 		return contents;
 	}
 
-	public void setContents(String contents){
+	public void setContents(String contents) {
 		this.contents = contents;
 	}
-	
-	@Column(name="depts")
+
+	@Column(name = "depts")
 	public String getDepts() {
 		return depts;
 	}
@@ -174,16 +188,16 @@ public class NoticePO implements Serializable {
 		this.depts = depts;
 	}
 
-	@Column(name="filePath")
-	public String getFilePath(){
+	@Column(name = "filePath")
+	public String getFilePath() {
 		return filePath;
 	}
 
-	public void setFilePath(String filePath){
+	public void setFilePath(String filePath) {
 		this.filePath = filePath;
 	}
 
-	@Column(name="company")
+	@Column(name = "company")
 	public int getCompany() {
 		return company;
 	}
@@ -192,7 +206,7 @@ public class NoticePO implements Serializable {
 		this.company = company;
 	}
 
-	@Column(name="fileName")
+	@Column(name = "fileName")
 	public String getFileName() {
 		return fileName;
 	}
@@ -200,7 +214,5 @@ public class NoticePO implements Serializable {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
-	
-	
-	
+
 }

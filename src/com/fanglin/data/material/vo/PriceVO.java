@@ -10,6 +10,8 @@ public class PriceVO implements Serializable {
 
 	private Long gid;
 
+	private GoodsVO goods;
+
 	private String name;
 
 	private Short type; // 0-正价/1-特价
@@ -23,8 +25,17 @@ public class PriceVO implements Serializable {
 	private Integer cvalue; // 结算值 , 点位结算对应结算值为0~1之前三位小数 , 底价结算对应结算值为浮点数
 
 	private String content;
-	
-	private Short status;  //状态, 0:启用,1:禁用
+
+	private Short status; // 状态, 0:启用,1:禁用
+
+	public PriceVO() {
+		super();
+	}
+
+	public PriceVO(GoodsVO goods) {
+		super();
+		this.goods = goods;
+	}
 
 	public Long getPid() {
 		return pid;
@@ -40,6 +51,14 @@ public class PriceVO implements Serializable {
 
 	public void setGid(Long gid) {
 		this.gid = gid;
+	}
+
+	public GoodsVO getGoods() {
+		return goods;
+	}
+
+	public void setGoods(GoodsVO goods) {
+		this.goods = goods;
 	}
 
 	public String getName() {

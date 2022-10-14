@@ -3,34 +3,40 @@ package com.fanglin.system.vo;
 import java.io.Serializable;
 import java.util.Set;
 
+import com.fanglin.system.po.ModulePO;
+
 public class ModuleVO implements Serializable {
-	
+
 	private static final long serialVersionUID = 5406770839477574587L;
-	
+
 	private Integer mid;
 
 	private ModuleVO fatherModule;
-	
+
 	private String name;
-	
+
 	private String alias;
-	
+
+	private String module;
+
 	private String icon;
-	
+
 	private String url;
-	
+
 	private Short level;
-	
+
 	private Short system;
-	
+
 	private Short order;
-	
+
 	private Set<OperationVO> operations;
-	
+
 	private String helpKey;
-	
+
 	private Short link;
-	
+
+	private Short access;
+
 	public Integer getMid() {
 		return mid;
 	}
@@ -61,6 +67,14 @@ public class ModuleVO implements Serializable {
 
 	public void setAlias(String alias) {
 		this.alias = alias;
+	}
+
+	public String getModule() {
+		return module;
+	}
+
+	public void setModule(String module) {
+		this.module = module;
 	}
 
 	public String getIcon() {
@@ -126,5 +140,30 @@ public class ModuleVO implements Serializable {
 	public void setLink(Short link) {
 		this.link = link;
 	}
-	
+
+	public Short getAccess() {
+		return access;
+	}
+
+	public void setAccess(Short access) {
+		this.access = access;
+	}
+
+	public ModuleVO setFatherModule(ModulePO modulePO) {
+
+		if (modulePO == null) return this;
+
+		setMid(modulePO.getMid());
+		setFatherModule(modulePO.getFatherModule());
+		setName(modulePO.getName());
+		setAlias(modulePO.getAlias());
+		setIcon(modulePO.getIcon());
+		setUrl(modulePO.getUrl());
+		setLevel(modulePO.getLevel());
+		setSystem(modulePO.getSystem());
+		setOrder(modulePO.getOrder());
+		setHelpKey(modulePO.getHelpKey());
+
+		return this;
+	}
 }

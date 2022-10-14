@@ -54,12 +54,10 @@ public class CompanyServiceImpl implements CompanyService {
 	}
 
 	@Override
-	public List<CompanyVO> queryCompany() throws FLException {
+	public List<CompanyVO> queryCompany(CompanyVO companyVO) throws FLException {
 
-		List<CompanyPO> companyPOs = companyDao.queryCompany();
+		List<CompanyPO> companyPOs = companyDao.queryCompany(companyVO == null ? null : companyVO.getAtttype());
 		List<CompanyVO> companyVOs = new ArrayList<CompanyVO>();
-
-		CompanyVO companyVO;
 
 		for (CompanyPO companyPO : companyPOs) {
 
@@ -172,10 +170,13 @@ public class CompanyServiceImpl implements CompanyService {
 		}
 
 		companyPO.setName(companyVO.getName());
+		companyPO.setCode(companyVO.getCode());
+		companyPO.setShortname(companyVO.getShortname());
 		companyPO.setFullname(companyVO.getFullname());
 		companyPO.setAddress(companyVO.getAddress());
 		companyPO.setCorporation(companyVO.getCorporation());
 		companyPO.setPhone(companyVO.getPhone());
+		companyPO.setAtttype(companyVO.getAtttype());
 
 		if (companyVO.getDrganization() != null) {
 			companyPO.setDrganization(new OrganizationPO(companyVO.getDrganization().getOid()));

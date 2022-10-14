@@ -12,15 +12,21 @@ public class QuotetionFunctionAreaItemPO implements Serializable {
 
 	public static final short SUBTYPE_QUOTATION_MATERIAL_SHORT = 1;
 
-	public static final short TYPE_QUOTATION_COMMON_SHORT = 0;
+	public static final short TYPE_COMMON_INT = 0;
 
-	public static final short TYPE_QUOTATION_CUSTOMER_SHORT = 1;
+	public static final short TYPE_CUSTOM_INT = 1;
 
-	public static final short TYPE_QUOTATION_TRAFFIC_SHORT = 2;
+	public static final short TYPE_TRAFFIC_INT = 2;
 
-	public static final short TYPE_QUOTATION_MANAGE_SHORT = 3;
+	public static final short TYPE_MANAGE_INT = 3;
 
-	public static final short TYPE_QUOTATION_FIX_SHORT = 4;
+	public static final short TYPE_IGNORE_INT = 4;
+
+	public static final short TYPE_COST_INT = 5;
+
+	public static final short TYPE_UNACHE_INT = 6;
+
+	public static final short TYPE_TAX_INT = 8;
 
 	private long qfaiId;
 

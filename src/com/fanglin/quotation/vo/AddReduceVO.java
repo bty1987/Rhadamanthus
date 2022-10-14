@@ -44,6 +44,8 @@ public class AddReduceVO implements Serializable {
 
 	private Integer manageRate;
 
+	private Short manageDiscount;
+
 	private Long undisPrice;
 
 	private Long disPrice;
@@ -160,6 +162,14 @@ public class AddReduceVO implements Serializable {
 
 	public void setManageRate(Integer manageRate) {
 		this.manageRate = manageRate;
+	}
+
+	public Short getManageDiscount() {
+		return manageDiscount;
+	}
+
+	public void setManageDiscount(Short manageDiscount) {
+		this.manageDiscount = manageDiscount;
 	}
 
 	public Long getUndisPrice() {

@@ -216,6 +216,7 @@ public class ProtationServiceImpl implements ProtationService {
 			protationItemPO.setPrice(presignItemPO.getPrice());
 			protationItemPO.setType(presignItemPO.getType());
 			protationItemPO.setNum(presignItemPO.getBasicNum());
+			protationItemPO.setItem(presignItemPO);
 
 			protationItemDao.save(protationItemPO);
 		}

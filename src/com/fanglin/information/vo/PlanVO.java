@@ -28,7 +28,11 @@ public class PlanVO implements Serializable {
 
 	private String resultFilepath;
 
+	private Integer resultFileSize;
+
 	private String infoFilepath;
+
+	private Integer infoFileSize;
 
 	private Short schedule;
 
@@ -160,6 +164,22 @@ public class PlanVO implements Serializable {
 		}
 
 		return this;
+	}
+
+	public Integer getResultFileSize() {
+		return resultFileSize;
+	}
+
+	public void setResultFileSize(Integer resultFileSize) {
+		this.resultFileSize = resultFileSize;
+	}
+
+	public Integer getInfoFileSize() {
+		return infoFileSize;
+	}
+
+	public void setInfoFileSize(Integer infoFileSize) {
+		this.infoFileSize = infoFileSize;
 	}
 
 }

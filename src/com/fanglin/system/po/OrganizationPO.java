@@ -23,29 +23,31 @@ import javax.persistence.Table;
 public class OrganizationPO implements Serializable {
 
 	private static final long serialVersionUID = 8157546327772267001L;
-	
+
 	public static final String COLUMN_NO_STR = "no";
-	
+
 	public static final String COLUMN_NAME_STR = "name";
-	
+
 	public static final String COLUMN_STATUS_STR = "status";
-	
+
+	public static final String COLUMN_COMPANY_STR = "company";
+
 	public static final short STATUS_ENABLE_INT = 0; // 启用
-	
+
 	public static final short STATUS_DISABLE_INT = 1; // 禁用
-	
+
 	private long oid;
 
 	private String no;
 
 	private String name;
-	
+
 	private String pinyin;
-	
+
 	private short status;
-	
+
 	private Integer company;
-	
+
 	public OrganizationPO() {
 		super();
 	}

@@ -92,7 +92,7 @@ public class HouseServiceImpl implements HouseService {
 
 		housePO.setVillage(villagePO);
 		housePO.setCompany(company);
-		
+
 		houseDao.save(housePO);
 
 		BeanUtil.copyProperties(housePO, houseVO, Arrays.asList("village"));
@@ -137,7 +137,7 @@ public class HouseServiceImpl implements HouseService {
 		}
 
 		BeanUtil.copyProperties(houseVO, housePO, Arrays.asList("village", "hid", "company", "no", "houseNumber", "built", "unit", "floor", "door"));
-		
+
 		houseDao.update(housePO);
 
 		BeanUtil.copyProperties(housePO, houseVO, Arrays.asList("village"));

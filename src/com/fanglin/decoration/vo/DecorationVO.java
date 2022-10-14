@@ -48,6 +48,10 @@ public class DecorationVO implements Serializable {
 
 	private UserBaseVO escorter;
 
+	private UserBaseVO contractUserId;
+
+	private QuotationVersionVO version;
+
 	private Short type;
 
 	private Short typeness;
@@ -61,8 +65,6 @@ public class DecorationVO implements Serializable {
 	private String houseClass;
 
 	private Short resourceType;
-
-	private UserBaseVO contractUserId;
 
 	private Timestamp contractTime;
 
@@ -86,7 +88,7 @@ public class DecorationVO implements Serializable {
 
 	private Short designStatus;
 
-	private Short projectStatus;
+	private Long projectStatus;
 
 	private Short sourceStatus;
 
@@ -95,8 +97,6 @@ public class DecorationVO implements Serializable {
 	private Short balanceStatus;
 
 	private Integer otherStatus;
-
-	private QuotationVersionVO version;
 
 	private Long orderTotalPrice;
 
@@ -112,8 +112,6 @@ public class DecorationVO implements Serializable {
 
 	private Long precontractPrice;
 
-	private String dompany;
-
 	private Short paySacle;
 
 	private Short saleScale;
@@ -126,8 +124,17 @@ public class DecorationVO implements Serializable {
 
 	private Integer company;
 
+	private String dompany;
+
+	private String conpany;
+
 	public DecorationVO() {
 		super();
+	}
+
+	public DecorationVO(String orderId) {
+		super();
+		this.orderId = orderId;
 	}
 
 	public DecorationVO(CustomerVO customer, HouseVO house) {
@@ -320,11 +327,11 @@ public class DecorationVO implements Serializable {
 		this.designStatus = designStatus;
 	}
 
-	public Short getProjectStatus() {
+	public Long getProjectStatus() {
 		return projectStatus;
 	}
 
-	public void setProjectStatus(Short projectStatus) {
+	public void setProjectStatus(Long projectStatus) {
 		this.projectStatus = projectStatus;
 	}
 
@@ -406,14 +413,6 @@ public class DecorationVO implements Serializable {
 
 	public void setBusitype(Long busitype) {
 		this.busitype = busitype;
-	}
-
-	public String getDompany() {
-		return dompany;
-	}
-
-	public void setDompany(String dompany) {
-		this.dompany = dompany;
 	}
 
 	public UserBaseVO getQuoter() {
@@ -513,10 +512,6 @@ public class DecorationVO implements Serializable {
 		this.grade = grade;
 	}
 
-	public void vtp(DecorationPO decorationPO) {
-		BeanUtil.copyProperties(this, decorationPO, Arrays.asList("house", "customer", "designer", "salesman", "supervisor", "version", "createUser", "quoter", "escorter", "contractUserId"));
-	}
-
 	public String getScale() {
 		return scale;
 	}
@@ -539,6 +534,26 @@ public class DecorationVO implements Serializable {
 
 	public void setCompany(Integer company) {
 		this.company = company;
+	}
+
+	public String getDompany() {
+		return dompany;
+	}
+
+	public void setDompany(String dompany) {
+		this.dompany = dompany;
+	}
+
+	public String getConpany() {
+		return conpany;
+	}
+
+	public void setConpany(String conpany) {
+		this.conpany = conpany;
+	}
+
+	public void vtp(DecorationPO decorationPO) {
+		BeanUtil.copyProperties(this, decorationPO, Arrays.asList("house", "customer", "designer", "salesman", "supervisor", "version", "createUser", "quoter", "escorter", "contractUserId", "conpany"));
 	}
 
 }

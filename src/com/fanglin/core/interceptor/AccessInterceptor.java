@@ -17,9 +17,9 @@ import com.fanglin.core.vo.Authentication;
 import com.fanglin.core.vo.Duthentication;
 import com.fanglin.personel.service.UserService;
 import com.fanglin.personel.vo.UserVO;
-import com.fanglin.system.po.CompanyPO;
 import com.fanglin.system.po.OperationPO;
 import com.fanglin.system.service.OperationService;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.system.vo.OperationVO;
 import com.fanglin.utils.Constant;
 import com.fanglin.utils.CookieUtil;
@@ -80,7 +80,7 @@ public class AccessInterceptor extends AbstractInterceptor {
 
 				invocation.invoke();
 
-			} else if (request.getHeader("x-ddpaas-signature") != null) {
+			} else if (request.getHeader("x-ddpaas-signature") != null && operationVO.getThrough() != null && operationVO.getThrough() == OperationPO.THROUGH_DINGTALK_INT) {
 
 				new Duthentication().check(request.getHeader("x-ddpaas-signature"), request.getHeader("x-ddpaas-signature-timestamp"));
 
@@ -92,13 +92,17 @@ public class AccessInterceptor extends AbstractInterceptor {
 
 				UserVO userVO = userService.queryUserByUserId(new UserVO(userId));
 
-				Authentication authentication = new Authentication(userId, userVO.getCurrentName(), userVO.getRole().getRid(), 0l, false, CompanyPO.TYPE_HEADQUARTER_INT, Authentication.TIMEOUT_INT);
+				Authentication authentication = new Authentication(userId, userVO.getCurrentName(), userVO.getRole().getRid(), 0l, false, CompanyServiceImpl.decode(userVO.getCompanyNo()), Authentication.TIMEOUT_INT);
 
 				request.setAttribute("authentication", AESHelper.encrypt(authentication.getAuthenticationStr(), SystemConfig.getString("encryptKey"), SystemConfig.getString("encryptIv")));
 
 				invocation.invoke();
 
 			} else {
+
+				if (operationVO.getThrough() != null && operationVO.getThrough() == OperationPO.THROUGH_COMMUNION_INT && SystemConfig.getString("communion") == null) {
+					throw new FLException(-1, "无操作权限");
+				}
 
 				if ($authentication == null) {
 					$authentication = CookieUtil.getCookie(request, Constant.COOKIE_AUTHENTICATION);

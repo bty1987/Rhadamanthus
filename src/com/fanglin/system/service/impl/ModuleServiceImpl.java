@@ -24,7 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.core.vo.Filter;
 import com.fanglin.personel.dao.UserDao;
+import com.fanglin.personel.dao.UserRoleDao;
 import com.fanglin.personel.po.UserPO;
+import com.fanglin.personel.po.UserRolePO;
 import com.fanglin.personel.vo.UserVO;
 import com.fanglin.system.dao.ModuleDao;
 import com.fanglin.system.dao.RoleDao;
@@ -54,6 +56,9 @@ public class ModuleServiceImpl implements ModuleService {
 	@Autowired
 	private RoleModuleDao roleModuleDao;
 
+	@Autowired
+	private UserRoleDao userRoleDao;
+
 	@Override
 	public void pageModule(Paging paging, List<Filter> filters) {
 
@@ -73,36 +78,18 @@ public class ModuleServiceImpl implements ModuleService {
 	}
 
 	@Override
-	public List<ModuleVO> queryModule() {
+	public List<ModuleVO> queryModule(ModuleVO moduleVO) {
 
-		List<ModulePO> modulePOs = moduleDao.queryModule();
+		List<ModulePO> modulePOs = moduleDao.queryModule(moduleVO.getSystem(), moduleVO.getLevel());
 		List<ModuleVO> moduleVOs = new ArrayList<ModuleVO>();
 
 		for (ModulePO modulePO : modulePOs) {
 
-			ModuleVO moduleVO = new ModuleVO();
+			moduleVO = new ModuleVO();
 
 			convertModule(modulePO, moduleVO);
 
 			moduleVOs.add(moduleVO);
-		}
-
-		return moduleVOs;
-	}
-
-	@Override
-	public List<ModuleVO> queryModuleBySystem(ModuleVO moduleVO) {
-
-		List<ModulePO> modulePOs = moduleDao.queryModuleBySystem(moduleVO.getSystem());
-		List<ModuleVO> moduleVOs = new ArrayList<ModuleVO>();
-
-		for (ModulePO modulePO : modulePOs) {
-
-			ModuleVO _moduleVO = new ModuleVO();
-
-			convertModule(modulePO, _moduleVO);
-
-			moduleVOs.add(_moduleVO);
 		}
 
 		return moduleVOs;
@@ -118,6 +105,7 @@ public class ModuleServiceImpl implements ModuleService {
 		}
 
 		if (RolePO.SUPER_NO_STR.equals(rolePO.getNo())) {
+
 			List<ModulePO> modulePOs = moduleDao.queryModuleBySystem(moduleVO.getSystem());
 			List<ModuleVO> moduleVOs = new ArrayList<ModuleVO>();
 
@@ -137,7 +125,7 @@ public class ModuleServiceImpl implements ModuleService {
 			Map<Integer, ModuleVO> modules = new HashMap<Integer, ModuleVO>();
 
 			for (RoleModulePO roleModulePO : roleModulePOs) {
-				convertModule(modules, roleModulePO.getModule());
+				convertModule(modules, roleModulePO.getModule(), roleModulePO.getLink(), roleModulePO.getAccess());
 			}
 
 			return new ArrayList<ModuleVO>(modules.values());
@@ -158,7 +146,7 @@ public class ModuleServiceImpl implements ModuleService {
 		Map<Integer, ModuleVO> modules = new HashMap<Integer, ModuleVO>();
 
 		for (RoleModulePO roleModulePO : roleModulePOs) {
-			convertModule(modules, roleModulePO.getModule());
+			convertModule(modules, roleModulePO.getModule(), roleModulePO.getLink(), roleModulePO.getAccess());
 		}
 
 		return new ArrayList<ModuleVO>(modules.values());
@@ -174,6 +162,7 @@ public class ModuleServiceImpl implements ModuleService {
 		}
 
 		if (UserPO.SUPER_USERID_STR.equals(userPO.getUserId())) {
+
 			List<ModulePO> modulePOs = moduleDao.queryModuleBySystem(moduleVO.getSystem());
 			List<ModuleVO> moduleVOs = new ArrayList<ModuleVO>();
 
@@ -182,17 +171,28 @@ public class ModuleServiceImpl implements ModuleService {
 
 				convertModule(modulePO, _moduleVO);
 
-				moduleVOs.add(moduleVO);
+				moduleVOs.add(_moduleVO);
 			}
 
 			return moduleVOs;
 		} else {
-			List<RoleModulePO> roleModulePOs = roleModuleDao.queryRoleModule(userPO.getRole().getRid(), moduleVO.getSystem());
+
+			List<UserRolePO> userRolePOs = userRoleDao.queryUserRole(userPO.getUid());
+
+			if (userRolePOs == null || userRolePOs.size() == 0) return new ArrayList<ModuleVO>();
+
+			List<Integer> rids = new ArrayList<Integer>(userRolePOs.size());
+
+			for (UserRolePO userRolePO : userRolePOs) {
+				rids.add(userRolePO.getRole().getRid());
+			}
+
+			List<RoleModulePO> roleModulePOs = roleModuleDao.queryRoleModule(rids, moduleVO.getSystem());
 
 			Map<Integer, ModuleVO> modules = new HashMap<Integer, ModuleVO>();
 
 			for (RoleModulePO roleModulePO : roleModulePOs) {
-				convertModule(modules, roleModulePO.getModule());
+				convertModule(modules, roleModulePO.getModule(), roleModulePO.getLink(), roleModulePO.getAccess());
 			}
 
 			return new ArrayList<ModuleVO>(modules.values());
@@ -226,47 +226,13 @@ public class ModuleServiceImpl implements ModuleService {
 			throw new FLException(-1, "无操作权限");
 		}
 
+		if (roleModulePO != null && roleModulePO.getAccess() == ModulePO.ACCESS_DISABLE_INT) {
+			throw new FLException(-1, "无操作权限");
+		}
+
 		convertModule(modulePO, moduleVO);
 
 		return moduleVO;
-	}
-
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public int updateRoleModuleByRid(ModuleVO moduleVO, RoleVO roleVO, List<ModuleVO> modules, int rid) throws FLException {
-
-		RolePO rolePO = roleDao.get(roleVO.getRid());
-
-		if (rolePO == null) {
-			throw new FLException(230010, "角色不存在");
-		}
-
-		RolePO roleCO = roleDao.get(rid);
-
-		if (roleCO == null) {
-			throw new FLException(230010, "角色不存在");
-		}
-
-		if (roleCO.getRid() == rolePO.getRid()) {
-			throw new FLException(-1, "无操作权限");
-		}
-
-		if (roleCO.getLevel() < rolePO.getLevel()) {
-			throw new FLException(-1, "无操作权限");
-		}
-
-		roleModuleDao.deleteRoleModuleByRid(rolePO.getRid(), moduleVO.getSystem());
-
-		if (modules != null && modules.size() > 0) {
-			for (ModuleVO module : modules) {
-
-				RoleModulePO userModulePO = new RoleModulePO(new ModulePO(module.getMid()), rolePO.getRid(), module.getLink() != null ? ModulePO.LINK_LINK_INT : ModulePO.LINK_NO_INT);
-
-				roleModuleDao.save(userModulePO);
-			}
-		}
-
-		return 0;
 	}
 
 	@Override
@@ -295,6 +261,48 @@ public class ModuleServiceImpl implements ModuleService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
+	public int updateRoleModuleByRid(ModuleVO moduleVO, RoleVO roleVO, List<ModuleVO> modules, int rid, String userId) throws FLException {
+
+		RolePO rolePO = roleDao.get(roleVO.getRid());
+
+		if (rolePO == null) {
+			throw new FLException(230010, "角色不存在");
+		}
+
+		RolePO roleCO = roleDao.get(rid);
+
+		if (roleCO == null) {
+			throw new FLException(230010, "角色不存在");
+		}
+
+		if (roleCO.getRid() == rolePO.getRid()) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		if (roleCO.getLevel() < rolePO.getLevel()) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		roleModuleDao.deleteRoleModuleByRid(rolePO.getRid(), moduleVO.getSystem());
+
+		UserPO operator = userDao.queryUserByUserId(userId);
+
+		if (modules == null) return 0;
+		if (modules.size() == 0) return 0;
+		if (modules.size() >= 60 && !operator.getRole().getNo().equals(RolePO.SUPER_NO_STR)) throw new FLException(-1, "无操作权限");
+
+		for (ModuleVO module : modules) {
+
+			RoleModulePO userModulePO = new RoleModulePO(new ModulePO(module.getMid()), rolePO.getRid(), module.getLink(), module.getAccess(), operator);
+
+			roleModuleDao.save(userModulePO);
+		}
+
+		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public int deleteModule(ModuleVO moduleVO) throws FLException {
 
 		int mid = moduleVO.getMid();
@@ -303,7 +311,7 @@ public class ModuleServiceImpl implements ModuleService {
 			throw new FLException(230012, "模块已经被引用,不能被删除");
 		}
 
-		moduleDao.deleteModuleForSubByMid(mid);
+		moduleDao.deleteModule(mid);
 		moduleDao.deleteById(mid);
 
 		return 0;
@@ -324,17 +332,20 @@ public class ModuleServiceImpl implements ModuleService {
 		return 0;
 	}
 
-	private int convertModule(Map<Integer, ModuleVO> modules, ModulePO modulePO) {
+	private int convertModule(Map<Integer, ModuleVO> modules, ModulePO modulePO, Short link, Short access) {
 
 		ModuleVO moduleVO = new ModuleVO();
 
 		BeanUtil.copyProperties(modulePO, moduleVO, Arrays.asList("fatherModule", "operations"));
 
+		moduleVO.setLink(link);
+		moduleVO.setAccess(access);
+
 		ModulePO fatherModulePO = modulePO.getFatherModule();
 
 		if (fatherModulePO != null) {
 
-			convertModule(modules, fatherModulePO);
+			convertModule(modules, fatherModulePO, link, access);
 
 			ModuleVO fatherModuleVO = new ModuleVO();
 

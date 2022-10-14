@@ -109,6 +109,8 @@ public class WorkerSalaryPO implements Serializable {
 
 	private short schedule;
 
+	private long cnid;
+
 	private short type;
 
 	private short subtype;
@@ -123,6 +125,8 @@ public class WorkerSalaryPO implements Serializable {
 
 	private short isAppr;
 
+	private short isCheck;
+
 	private short status;
 
 	private UserPO user;
@@ -131,21 +135,19 @@ public class WorkerSalaryPO implements Serializable {
 
 	private UserPO approver;
 
+	private UserPO checker;
+
 	private Timestamp createTime;
 
 	private Timestamp approveTime;
 
 	private Timestamp balanceTime;
 
+	private Timestamp checkTime;
+
 	private String comment;
 
 	private int company;
-
-	private short isCheck;
-
-	private UserPO checker;
-
-	private Timestamp checkTime;
 
 	public WorkerSalaryPO init(UserPO worker, UserPO creater, String comment, int company) {
 
@@ -373,6 +375,15 @@ public class WorkerSalaryPO implements Serializable {
 
 	public void setTwotype(short twotype) {
 		this.twotype = twotype;
+	}
+
+	@Column(name = "cnid")
+	public long getCnid() {
+		return cnid;
+	}
+
+	public void setCnid(long cnid) {
+		this.cnid = cnid;
 	}
 
 	@Column(name = "schedule")

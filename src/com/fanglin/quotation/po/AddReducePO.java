@@ -38,6 +38,8 @@ public class AddReducePO implements Serializable {
 
 	public static final String COLUMN_PAYTYPE_STR = "paytype";
 
+	public static final String COLUMN_ATTTYPE_STR = "atttype";
+
 	public static final String COLUMN_TOTAL_STR = "total";
 
 	public static final String COLUMN_STATUS_STR = "status";
@@ -89,6 +91,8 @@ public class AddReducePO implements Serializable {
 	private long managePrice;
 
 	private int manageRate;
+
+	private short manageDiscount;
 
 	private long undisPrice;
 
@@ -196,6 +200,15 @@ public class AddReducePO implements Serializable {
 
 	public void setManageRate(int manageRate) {
 		this.manageRate = manageRate;
+	}
+
+	@Column(name = "manageDiscount")
+	public short getManageDiscount() {
+		return manageDiscount;
+	}
+
+	public void setManageDiscount(short manageDiscount) {
+		this.manageDiscount = manageDiscount;
 	}
 
 	@Column(name = "undisPrice")

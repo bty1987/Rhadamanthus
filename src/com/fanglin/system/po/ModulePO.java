@@ -23,6 +23,10 @@ public class ModulePO implements Serializable {
 
 	public static final short LINK_NO_INT = 1;
 
+	public static final short ACCESS_ENABLE_INT = 0;
+
+	public static final short ACCESS_DISABLE_INT = 1;
+
 	private int mid;
 
 	private ModulePO fatherModule;
@@ -30,6 +34,8 @@ public class ModulePO implements Serializable {
 	private String name;
 
 	private String alias;
+
+	private String module;
 
 	private String icon;
 
@@ -89,6 +95,15 @@ public class ModulePO implements Serializable {
 
 	public void setAlias(String alias) {
 		this.alias = alias;
+	}
+
+	@Column(name = "module")
+	public String getModule() {
+		return module;
+	}
+
+	public void setModule(String module) {
+		this.module = module;
 	}
 
 	@Column(name = "icon")

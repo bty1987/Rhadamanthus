@@ -16,26 +16,28 @@ import java.sql.Timestamp;
 
 import com.fanglin.personel.po.UserPO;
 
-public class ConstructionDrawingVO implements Serializable{
+public class ConstructionDrawingVO implements Serializable {
 
 	private static final long serialVersionUID = 6352865797932189706L;
 
 	private Integer cdId;
-	
+
 	private Long cid;
-	
+
 	private String drawingName;
-	
+
 	private String drawingUrl;
-	
+
 	private String drawingAddUrl;
-	
+
+	private Integer filesize;
+
 	private Short type;
-	
+
 	private UserPO creater;
-	
+
 	private Timestamp createTime;
-	
+
 	private Short schedule;
 
 	public Integer getCdId() {
@@ -78,6 +80,14 @@ public class ConstructionDrawingVO implements Serializable{
 		this.drawingAddUrl = drawingAddUrl;
 	}
 
+	public Integer getFilesize() {
+		return filesize;
+	}
+
+	public void setFilesize(Integer filesize) {
+		this.filesize = filesize;
+	}
+
 	public Short getType() {
 		return type;
 	}
@@ -109,5 +119,5 @@ public class ConstructionDrawingVO implements Serializable{
 	public void setSchedule(Short schedule) {
 		this.schedule = schedule;
 	}
-	
+
 }

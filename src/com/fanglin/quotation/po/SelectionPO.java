@@ -28,6 +28,8 @@ public class SelectionPO implements Serializable {
 
 	public static final short STATUS_INIT_INT = 0;// 状态, 初始
 
+	public final short ISAFFIRM_CONFIRMED_INT = 1;
+
 	private long sid;// 选材单ID
 
 	private String orderId;// 装修单号
@@ -35,6 +37,8 @@ public class SelectionPO implements Serializable {
 	private long qid;// 报价ID
 
 	private short status;// 状态 , 0: 初始 , 1: 锁定
+
+	private short isAffirm;// 是否确认 , 0: 未确认 , 1: 客户确认
 
 	private int company;
 
@@ -50,7 +54,9 @@ public class SelectionPO implements Serializable {
 
 	private long addReduceMinusTotal;// 增减减总额
 
-	private Timestamp createTime;
+	private Timestamp createTime;// 创建时间
+
+	private Timestamp affirmTime;// 确认时间
 
 	private UserPO creater;
 
@@ -94,6 +100,15 @@ public class SelectionPO implements Serializable {
 
 	public void setStatus(short status) {
 		this.status = status;
+	}
+
+	@Column(name = "isAffirm")
+	public short getIsAffirm() {
+		return isAffirm;
+	}
+
+	public void setIsAffirm(short isAffirm) {
+		this.isAffirm = isAffirm;
 	}
 
 	@Column(name = "company")
@@ -166,6 +181,15 @@ public class SelectionPO implements Serializable {
 
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
+	}
+
+	@Column(name = "affirmTime")
+	public Timestamp getAffirmTime() {
+		return affirmTime;
+	}
+
+	public void setAffirmTime(Timestamp affirmTime) {
+		this.affirmTime = affirmTime;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)

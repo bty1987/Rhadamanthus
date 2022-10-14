@@ -14,8 +14,11 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -28,16 +31,23 @@ public class UserExperiencePO implements Serializable {
 
 	private int uid;
 
+	private UserPO operator;
+
 	private String type;
 
 	private Timestamp createTime;
 
 	private String comment;
-	
+
 	private Timestamp operateTime;
 
 	public UserExperiencePO() {
 		super();
+	}
+
+	public UserExperiencePO(UserPO operator) {
+		super();
+		this.operator = operator;
 	}
 
 	@Id
@@ -77,7 +87,7 @@ public class UserExperiencePO implements Serializable {
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
-	
+
 	@Column(name = "comment")
 	public String getComment() {
 		return comment;
@@ -86,7 +96,7 @@ public class UserExperiencePO implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 	@Column(name = "operateTime")
 	public Timestamp getOperateTime() {
 		return operateTime;
@@ -94,6 +104,16 @@ public class UserExperiencePO implements Serializable {
 
 	public void setOperateTime(Timestamp operateTime) {
 		this.operateTime = operateTime;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ouid", referencedColumnName = "uid")
+	public UserPO getOperator() {
+		return operator;
+	}
+
+	public void setOperator(UserPO operator) {
+		this.operator = operator;
 	}
 
 }

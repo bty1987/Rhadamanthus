@@ -21,6 +21,10 @@ public class PaytranVO implements Serializable {
 
 	private Short type;
 
+	private Short atttype;
+
+	private Long ctid;
+
 	private String no;
 
 	private String sn;
@@ -95,6 +99,22 @@ public class PaytranVO implements Serializable {
 
 	public void setType(Short type) {
 		this.type = type;
+	}
+
+	public Short getAtttype() {
+		return atttype;
+	}
+
+	public void setAtttype(Short atttype) {
+		this.atttype = atttype;
+	}
+
+	public Long getCtid() {
+		return ctid;
+	}
+
+	public void setCtid(Long ctid) {
+		this.ctid = ctid;
 	}
 
 	public String getNo() {

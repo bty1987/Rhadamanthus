@@ -31,6 +31,10 @@ public class QuotationVersionVO implements Serializable {
 
 	private Short manageDiscount;
 
+	private Integer taxRate;
+
+	private Short taxDiscount;
+
 	private Integer offset;
 
 	private Short type;
@@ -93,6 +97,22 @@ public class QuotationVersionVO implements Serializable {
 
 	public void setManageDiscount(Short manageDiscount) {
 		this.manageDiscount = manageDiscount;
+	}
+
+	public Integer getTaxRate() {
+		return taxRate;
+	}
+
+	public void setTaxRate(Integer taxRate) {
+		this.taxRate = taxRate;
+	}
+
+	public Short getTaxDiscount() {
+		return taxDiscount;
+	}
+
+	public void setTaxDiscount(Short taxDiscount) {
+		this.taxDiscount = taxDiscount;
 	}
 
 	public Integer getOffset() {

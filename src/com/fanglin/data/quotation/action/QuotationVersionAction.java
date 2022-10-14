@@ -79,6 +79,14 @@ public class QuotationVersionAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "updateQuotationVersionForDefault", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateQuotationVersionForDefault() throws FLException {
+
+		quotationVersionService.updateQuotationVersionForDefault(quotationVersion, queryCompany());
+
+		return SUCCESS;
+	}
+
 	public List<QuotationVersionVO> getQuotationVersions() {
 		return quotationVersions;
 	}

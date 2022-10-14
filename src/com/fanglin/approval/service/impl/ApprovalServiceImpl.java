@@ -171,53 +171,53 @@ public class ApprovalServiceImpl implements ApprovalService {
 		short type = approvalPO.getType();
 
 		switch (type) {
-		case ApprovalPO.APPROVAL_TYPE_CUSTOMER_INT:
-			// approvalDecorationCustomerService.approvalForCustomer(approvalPO);
-			break;
-		case ApprovalPO.APPROVAL_TYPE_VILLAGE_INT:
-			// aprovalDecorationHouseService.approvalDecorationHouse(approvalPO);
-			break;
-		case ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT:
-			approvalDecorationBelongService.approveForDecorationBelong(approvalPO);
-			break;
-		case ApprovalPO.APPROVAL_TYPE_QUOTATION_DISCOUNT_INT:
-			approvalQuotationDiscountService.approveForQuotationDiscount(approvalPO);
-			break;
-		case ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT:
-			approvalDecorationRefundService.approveForDecorationRefund(approvalPO);
-			break;
-		case ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT:
-			approvalMaterialRefundService.approveForMaterialRefund(approvalPO);
-			break;
-		case ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT:
-			approvalDecorationActivityService.approveForDecorationActivity(approvalPO);
-			break;
-		case ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT:
-			approvalMaterialFullPaymentService.approveForMaterialFullPayment(approvalPO);
-			break;
-		case ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT:
-			approvalSalesRefundService.approveForSalesRefund(approvalPO);
-			break;
-		case ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT:
-			approvalManifestDBService.approvalManifestDB(approvalPO);
-			break;
-		case ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT:
-			approvalSalesDiscountService.approveForSalesDiscount(approvalPO);
-			break;
-		case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT:
-			approvalCustomerOriginTDecorationService.approveForCustomerOriginTDecoration(approvalPO);
-			break;
-		case ApprovalPO.APPROVAL_TYPE_DECORATION_HOLONOMY_INT:
-			approvalDecorationHolonomyService.approveForDecorationHolonomy(approvalPO);
-			break;
-		case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_INT:
-			approvalCustomerOriginService.approveForCustomerOrigin(approvalPO);
-			break;
-		case ApprovalPO.APPROVAL_TYPE_SALESDAYMENT_INT:
-			approvalSalesDaymentService.approveForSalesDayment(approvalPO);
-			break;
-		default:
-			break;
+			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_INT:
+				// approvalDecorationCustomerService.approvalForCustomer(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_VILLAGE_INT:
+				// aprovalDecorationHouseService.approvalDecorationHouse(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT:
+				approvalDecorationBelongService.approveForDecorationBelong(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_QUOTATION_DISCOUNT_INT:
+				approvalQuotationDiscountService.approveForQuotationDiscount(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT:
+				approvalDecorationRefundService.approveForDecorationRefund(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT:
+				approvalMaterialRefundService.approveForMaterialRefund(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_DECORATION_ACTIVITY_INT:
+				approvalDecorationActivityService.approveForDecorationActivity(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT:
+				approvalMaterialFullPaymentService.approveForMaterialFullPayment(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT:
+				approvalSalesRefundService.approveForSalesRefund(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_MANIFESTDB_INT:
+				approvalManifestDBService.approvalManifestDB(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT:
+				approvalSalesDiscountService.approveForSalesDiscount(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT:
+				approvalCustomerOriginTDecorationService.approveForCustomerOriginTDecoration(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_DECORATION_HOLONOMY_INT:
+				approvalDecorationHolonomyService.approveForDecorationHolonomy(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_INT:
+				approvalCustomerOriginService.approveForCustomerOrigin(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_SALESDAYMENT_INT:
+				approvalSalesDaymentService.approveForSalesDayment(approvalPO);
+				break;
+			default:
+				break;
 		}
 
 		approvalDao.update(approvalPO);
@@ -267,11 +267,11 @@ public class ApprovalServiceImpl implements ApprovalService {
 		short type = approvalPO.getType();
 
 		switch (type) {
-		case ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT:
-			approvalDecorationBelongService.confirmForDecorationBelong(approvalPO);
-			break;
-		default:
-			break;
+			case ApprovalPO.APPROVAL_TYPE_ORDER_BELONG_INT:
+				approvalDecorationBelongService.confirmForDecorationBelong(approvalPO);
+				break;
+			default:
+				break;
 		}
 
 		approvalPO.setStatus(ApprovalPO.APPROVAL_STATUS_CONFIRMED_INT);
@@ -323,29 +323,26 @@ public class ApprovalServiceImpl implements ApprovalService {
 		short type = approvalPO.getType();
 
 		switch (type) {
-		case ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT:
-			approvalMaterialFullPaymentService.refuseForMaterialFullPayment(approvalPO);
-			break;
-		case ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT:
-			approvalMaterialRefundService.refuseForMaterialRefund(approvalPO);
-			break;
-		case ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT:
-			approvalDecorationRefundService.refuseForDecorationRefund(approvalPO);
-			break;
-		case ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT:
-			approvalSalesRefundService.refuseForSalesRefund(approvalPO);
-			break;
-		case ApprovalPO.APPROVAL_TYPE_SALES_DIACOUNT_INT:
-			approvalSalesDiscountService.refuseForSalesDiscount(approvalPO);
-			break;
-		case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT:
-			approvalCustomerOriginTDecorationService.refuseForCustomerOriginTDecoration(approvalPO);
-			break;
-		case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_INT:
-			approvalCustomerOriginService.refuseForCustomerOrigin(approvalPO);
-			break;
-		default:
-			break;
+			case ApprovalPO.APPROVAL_TYPE_MATERIAL_FULL_PAYMENT_INT:
+				approvalMaterialFullPaymentService.refuseForMaterialFullPayment(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_MATERIAL_REFUND_INT:
+				approvalMaterialRefundService.refuseForMaterialRefund(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_DECORATION_REFUND_INT:
+				approvalDecorationRefundService.refuseForDecorationRefund(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_SALESREFUND_PAYMENT_INT:
+				approvalSalesRefundService.refuseForSalesRefund(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_T_DECORATION_INT:
+				approvalCustomerOriginTDecorationService.refuseForCustomerOriginTDecoration(approvalPO);
+				break;
+			case ApprovalPO.APPROVAL_TYPE_CUSTOMER_ORIGIN_INT:
+				approvalCustomerOriginService.refuseForCustomerOrigin(approvalPO);
+				break;
+			default:
+				break;
 		}
 
 		approvalPO.setApprovalTime(DateUtil.getDateToTimestamp(new Date()));

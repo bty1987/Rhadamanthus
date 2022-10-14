@@ -22,9 +22,13 @@ public interface SelectionItemDao extends Dao<SelectionItemPO> {
 
 	public SelectionItemPO querySelectionItem(String orderId, long areaId, long quoteId, short type);
 
+	public SelectionItemPO pickSelectionItem(String orderId, Long qiid);
+
 	public List<SelectionItemPD> querySelectionItemDBySid(long sid);
 
-	public int countSelectionItem(String orderId, long areaId);
+	public int countSelectionItem(String orderId, Long quoteId);
+
+	public int countSelectionItem(String orderId, short type);
 
 	public int countSelectionItem(String orderId, long areaId, long quoteId);
 

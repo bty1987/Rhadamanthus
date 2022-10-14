@@ -7,7 +7,9 @@ import com.fanglin.right.po.TaskRoleRightPO;
 
 public interface TaskRoleRightDao extends Dao<TaskRoleRightPO> {
 
-	List<TaskRoleRightPO> queryTaskRoleRightByUserId(long rid);
+	public List<TaskRoleRightPO> queryTaskRoleRight(int rid);
 
-	public void deleteTaskRoleRight(long rid);
+	public List<TaskRoleRightPO> queryTaskRoleRight(List<Integer> rids);
+
+	public void deleteTaskRoleRight(int rid);
 }

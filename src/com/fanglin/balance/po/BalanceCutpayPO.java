@@ -27,13 +27,19 @@ public class BalanceCutpayPO implements java.io.Serializable {
 
 	private long bcid;
 
+	private String name;
+
 	private BalancePO balance;
+
+	private BalanceCutpayPO cutpay;
+
+	private BalanceDccountPO dccount;
 
 	private UserPO operater;
 
 	private Timestamp operateTime;
 
-	private long cutpay;
+	private long total;
 
 	private int money;
 
@@ -48,6 +54,12 @@ public class BalanceCutpayPO implements java.io.Serializable {
 	public BalanceCutpayPO(BalancePO balance) {
 		super();
 		this.balance = balance;
+	}
+
+	public BalanceCutpayPO(BalancePO balance, BalanceDccountPO dccount) {
+		super();
+		this.balance = balance;
+		this.dccount = dccount;
 	}
 
 	@Id
@@ -72,6 +84,16 @@ public class BalanceCutpayPO implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "bccid", referencedColumnName = "bcid")
+	public BalanceCutpayPO getCutpay() {
+		return cutpay;
+	}
+
+	public void setCutpay(BalanceCutpayPO cutpay) {
+		this.cutpay = cutpay;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = true, name = "ouid", referencedColumnName = "uid")
 	public UserPO getOperater() {
 		return operater;
@@ -90,15 +112,6 @@ public class BalanceCutpayPO implements java.io.Serializable {
 		this.operateTime = operateTime;
 	}
 
-	@Column(name = "cutpay")
-	public long getCutpay() {
-		return cutpay;
-	}
-
-	public void setCutpay(long cutpay) {
-		this.cutpay = cutpay;
-	}
-
 	@Column(name = "money")
 	public int getMoney() {
 		return money;
@@ -106,6 +119,15 @@ public class BalanceCutpayPO implements java.io.Serializable {
 
 	public void setMoney(int money) {
 		this.money = money;
+	}
+
+	@Column(name = "total")
+	public long getTotal() {
+		return total;
+	}
+
+	public void setTotal(long total) {
+		this.total = total;
 	}
 
 	@Column(name = "type")
@@ -124,6 +146,25 @@ public class BalanceCutpayPO implements java.io.Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	@Column(name = "name")
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "bdid", referencedColumnName = "bdid")
+	public BalanceDccountPO getDccount() {
+		return dccount;
+	}
+
+	public void setDccount(BalanceDccountPO dccount) {
+		this.dccount = dccount;
 	}
 
 }

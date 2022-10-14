@@ -22,6 +22,14 @@ public class TaskVO implements Serializable {
 
 	private Long handle;
 
+	private Integer server;
+
+	private String week;
+
+	private String day;
+
+	private String hour;
+
 	private Short status;
 
 	private Short isShow;
@@ -76,6 +84,38 @@ public class TaskVO implements Serializable {
 
 	public void setHandle(Long handle) {
 		this.handle = handle;
+	}
+
+	public Integer getServer() {
+		return server;
+	}
+
+	public void setServer(Integer server) {
+		this.server = server;
+	}
+
+	public String getWeek() {
+		return week;
+	}
+
+	public void setWeek(String week) {
+		this.week = week;
+	}
+
+	public String getDay() {
+		return day;
+	}
+
+	public void setDay(String day) {
+		this.day = day;
+	}
+
+	public String getHour() {
+		return hour;
+	}
+
+	public void setHour(String hour) {
+		this.hour = hour;
 	}
 
 	public Short getStatus() {

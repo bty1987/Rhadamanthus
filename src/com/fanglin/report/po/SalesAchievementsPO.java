@@ -1,0 +1,175 @@
+package com.fanglin.report.po;
+
+import static javax.persistence.GenerationType.IDENTITY;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import com.fanglin.communion.po.DepartmentPO;
+
+@Entity
+@Table(name = "sales7Achievement", catalog = "report")
+public class SalesAchievementsPO implements java.io.Serializable {
+
+	private static final long serialVersionUID = 5182211068186799506L;
+
+	private long said;
+
+	private DepartmentPO department; // 部门
+
+	private int year; // 年份
+
+	private int month; // 月份
+
+	private long cs0; // 销售单数
+
+	private long cs1; // 定金总额
+
+	private long cs2; // 补款总额
+
+	private long cs3; // 补款数
+
+	private long cs4; // 退货单数
+
+	private long cs5; // 退货总额
+
+	private long cs6; // 结算单数
+
+	private long cs7; // 结算总额
+
+	private int company; // 公司
+
+	public SalesAchievementsPO() {
+		super();
+	}
+
+	public SalesAchievementsPO(DepartmentPO department) {
+		super();
+		this.department = department;
+	}
+
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "said")
+	public long getSaid() {
+		return said;
+	}
+
+	public void setSaid(long said) {
+		this.said = said;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = true, name = "did", referencedColumnName = "did")
+	public DepartmentPO getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(DepartmentPO department) {
+		this.department = department;
+	}
+
+	public int getYear() {
+		return year;
+	}
+
+	public void setYear(int year) {
+		this.year = year;
+	}
+
+	public int getMonth() {
+		return month;
+	}
+
+	public void setMonth(int month) {
+		this.month = month;
+	}
+
+	@Column(name = "cs0")
+	public long getCs0() {
+		return cs0;
+	}
+
+	public void setCs0(long cs0) {
+		this.cs0 = cs0;
+	}
+
+	@Column(name = "cs1")
+	public long getCs1() {
+		return cs1;
+	}
+
+	public void setCs1(long cs1) {
+		this.cs1 = cs1;
+	}
+
+	@Column(name = "cs2")
+	public long getCs2() {
+		return cs2;
+	}
+
+	public void setCs2(long cs2) {
+		this.cs2 = cs2;
+	}
+
+	@Column(name = "cs3")
+	public long getCs3() {
+		return cs3;
+	}
+
+	public void setCs3(long cs3) {
+		this.cs3 = cs3;
+	}
+
+	@Column(name = "cs4")
+	public long getCs4() {
+		return cs4;
+	}
+
+	public void setCs4(long cs4) {
+		this.cs4 = cs4;
+	}
+
+	@Column(name = "cs5")
+	public long getCs5() {
+		return cs5;
+	}
+
+	public void setCs5(long cs5) {
+		this.cs5 = cs5;
+	}
+
+	@Column(name = "cs6")
+	public long getCs6() {
+		return cs6;
+	}
+
+	public void setCs6(long cs6) {
+		this.cs6 = cs6;
+	}
+
+	@Column(name = "cs7")
+	public long getCs7() {
+		return cs7;
+	}
+
+	public void setCs7(long cs7) {
+		this.cs7 = cs7;
+	}
+
+	@Column(name = "company")
+	public int getCompany() {
+		return company;
+	}
+
+	public void setCompany(int company) {
+		this.company = company;
+	}
+
+}

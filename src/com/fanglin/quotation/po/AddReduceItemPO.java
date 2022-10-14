@@ -49,6 +49,8 @@ public class AddReduceItemPO implements java.io.Serializable {
 
 	private int subPrice; // 退减价
 
+	private int initnum;
+
 	private int num;
 
 	private short discount;
@@ -151,6 +153,15 @@ public class AddReduceItemPO implements java.io.Serializable {
 
 	public void setSubPrice(int subPrice) {
 		this.subPrice = subPrice;
+	}
+
+	@Column(name = "initnum")
+	public int getInitnum() {
+		return initnum;
+	}
+
+	public void setInitnum(int initnum) {
+		this.initnum = initnum;
 	}
 
 	@Column(name = "num")

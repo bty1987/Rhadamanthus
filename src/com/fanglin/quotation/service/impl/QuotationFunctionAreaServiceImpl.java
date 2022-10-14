@@ -224,8 +224,16 @@ public class QuotationFunctionAreaServiceImpl implements QuotationFunctionAreaSe
 					itemType = QuotationFunctionAreaItemPO.TYPE_COST_INT;
 				}
 
+				if (functionAreaItemPO.getFunctionArea().getType() == FunctionAreaPO.TYPE_UNACHE_INT) {
+					itemType = QuotationFunctionAreaItemPO.TYPE_UNACHE_INT;
+				}
+
 				if (quotationItemPO.getType() == QuotationItemPO.TYPE_COST_INT) {
 					itemType = QuotationFunctionAreaItemPO.TYPE_COST_INT;
+				}
+
+				if (quotationItemPO.getType() == QuotationItemPO.TYPE_UNACHE_INT) {
+					itemType = QuotationFunctionAreaItemPO.TYPE_UNACHE_INT;
 				}
 
 				quotationFunctionAreaItemVO.setSubtype((short) functionAreaItemPO.getQuotationItem().getQuotationType().getId());

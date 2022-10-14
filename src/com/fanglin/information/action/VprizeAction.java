@@ -28,10 +28,20 @@ public class VprizeAction extends BaseListAction {
 
 	private VprizeVO vprize;
 
+	private String no;
+
 	@Action(value = "pageVprize", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageVprize() {
 
 		vprizeService.pageVprice(getPaging(), getFilters());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "queryVprizeByNo", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String queryVprizeByNo() throws FLException {
+
+		vprizes = vprizeService.queryVprizeByNo(no);
 
 		return SUCCESS;
 	}
@@ -74,6 +84,14 @@ public class VprizeAction extends BaseListAction {
 
 	public void setVprize(VprizeVO vprize) {
 		this.vprize = vprize;
+	}
+
+	public String getNo() {
+		return no;
+	}
+
+	public void setNo(String no) {
+		this.no = no;
 	}
 
 }

@@ -88,7 +88,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 	private DecorationService decorationService;
 
 	@Override
-	public void pageAddReduce(Paging paging, List<Filter> filters, AddReduceVO addReduceVO, Integer company) throws FLException {
+	public void pageAddReduce(Paging paging, List<Filter> filters, AddReduceVO addReduceVO, List<Short> statuses, Integer company) throws FLException {
 
 		if (addReduceVO != null && addReduceVO.getOrderId() != null) {
 			filters.add(new Filter(AddReducePO.COLUMN_ORDERID_STR, addReduceVO.getOrderId(), "eq"));
@@ -104,6 +104,14 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 		if (addReduceVO != null && addReduceVO.getPaytype() != null) {
 			filters.add(new Filter(AddReducePO.COLUMN_PAYTYPE_STR, String.valueOf(addReduceVO.getPaytype()), "eq"));
+		}
+
+		if (addReduceVO != null && addReduceVO.getAtttype() != null) {
+			filters.add(new Filter(AddReducePO.COLUMN_ATTTYPE_STR, String.valueOf(addReduceVO.getAtttype()), "eq"));
+		}
+
+		if (statuses != null) {
+			filters.add(new Filter("statuses", statuses, "eq", Filter.RANGE_TYPE_SHORT_INT));
 		}
 
 		List<AddReduceDO> addReduceDOs = addReduceDao.pageAddReduce(paging, filters, company);
@@ -268,6 +276,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 		addReducePO.setDiscount(addReduceVO.getDiscount());
 		addReducePO.setManagePrice(addReduceVO.getManagePrice());
 		addReducePO.setManageRate(addReduceVO.getManageRate());
+		addReducePO.setManageDiscount(addReduceVO.getManageDiscount());
 		addReducePO.setUndisPrice(addReduceVO.getUndisPrice());
 		addReducePO.setDisPrice(addReduceVO.getDisPrice());
 		addReducePO.setUncalPrice(addReduceVO.getUncalPrice());
@@ -551,6 +560,7 @@ public class AddReduceServiceImpl implements AddReduceService {
 
 		addReducePO.setManageRate(addReduceVO.getManageRate());
 		addReducePO.setManagePrice(addReduceVO.getManagePrice());
+		addReducePO.setManageDiscount(addReduceVO.getManageDiscount());
 		addReducePO.setUndisPrice(addReduceVO.getUndisPrice());
 		addReducePO.setDisPrice(addReduceVO.getDisPrice());
 		addReducePO.setUncalPrice(addReduceVO.getUncalPrice());

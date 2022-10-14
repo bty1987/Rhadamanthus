@@ -93,6 +93,10 @@ public class SelectionDaoImpl extends DaoImpl<SelectionPO> implements SelectionD
 				query.add(query.getCriterion(field, Short.parseShort(data), op));
 			} else if ("createTime".equals(field)) {
 				query.timeranges("createTime", "createTime", data);
+			} else if ("isAffirm".equals(field)) {
+				query.add(query.getCriterion(field, Short.parseShort(data), op));
+			} else if ("affirmTime".equals(field)) {
+				query.timeranges("affirmTime", "affirmTime", data);
 			}
 		}
 	}

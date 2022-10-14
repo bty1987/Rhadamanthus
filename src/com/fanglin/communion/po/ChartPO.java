@@ -17,32 +17,38 @@ public class ChartPO implements Serializable {
 	private static final long serialVersionUID = 5983631940623723314L;
 
 	private long cid;
-	
+
 	private String no;
 
 	private String name;
-	
+
+	private short type;
+
+	private short level;
+
 	private String api;
-	
+
 	private String method;
-	
+
 	private String param;
-	
+
 	private String style;
-	
+
 	private String clazz;
-	
+
+	private int sort;
+
 	private String comment;
 
 	public ChartPO() {
 		super();
 	}
-	
+
 	public ChartPO(long cid) {
 		super();
 		this.cid = cid;
 	}
-	
+
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "cid")
@@ -70,6 +76,24 @@ public class ChartPO implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Column(name = "type")
+	public short getType() {
+		return type;
+	}
+
+	public void setType(short type) {
+		this.type = type;
+	}
+
+	@Column(name = "level")
+	public short getLevel() {
+		return level;
+	}
+
+	public void setLevel(short level) {
+		this.level = level;
 	}
 
 	@Column(name = "api")
@@ -117,6 +141,15 @@ public class ChartPO implements Serializable {
 		this.clazz = clazz;
 	}
 
+	@Column(name = "sort")
+	public int getSort() {
+		return sort;
+	}
+
+	public void setSort(int sort) {
+		this.sort = sort;
+	}
+
 	@Column(name = "comment")
 	public String getComment() {
 		return comment;
@@ -125,6 +158,5 @@ public class ChartPO implements Serializable {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-
 
 }

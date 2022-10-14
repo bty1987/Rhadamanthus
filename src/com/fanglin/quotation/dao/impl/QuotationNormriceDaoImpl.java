@@ -37,7 +37,7 @@ public class QuotationNormriceDaoImpl extends DaoImpl<QuotationFunctionAreaItemM
 	@SuppressWarnings("unchecked")
 	public List<T> queryQuotationFunctionAreaItem(short index, long functionAreaId, Short schedule) {
 
-		String sql = String.format("select i.*, m.*, n.* from quotation.quotationfunctionareaitem%d i, data.normrice m, communion.constructionnode n where i.quotationFunctionAreaId = :functionAreaId and i.quotationItemId = m.qiid and m.cnid = n.cnid", index);
+		String sql = String.format("select i.*, m.*, n.* from quotation.quotationfunctionareaitem%d i, data.normrice m, data.constructionnode n where i.quotationFunctionAreaId = :functionAreaId and i.quotationItemId = m.qiid and m.cnid = n.cnid", index);
 
 		if (schedule != null) {
 			sql = String.format("%s and n.sort = :schedule", sql);
@@ -58,7 +58,7 @@ public class QuotationNormriceDaoImpl extends DaoImpl<QuotationFunctionAreaItemM
 	@SuppressWarnings("unchecked")
 	public List<T> queryExtensionItem(long eid, Short schedule) {
 
-		String sql = "select i.*, m.*, n.* from quotation.extensionitem i, data.normrice m, communion.constructionnode n where i.eid = :eid and i.qiid = m.qiid and m.cnid = n.cnid";
+		String sql = "select i.*, m.*, n.* from quotation.extensionitem i, data.normrice m, data.constructionnode n where i.eid = :eid and i.qiid = m.qiid and m.cnid = n.cnid";
 
 		if (schedule != null) {
 			sql = String.format("%s and n.sort = :schedule", sql);
@@ -79,7 +79,7 @@ public class QuotationNormriceDaoImpl extends DaoImpl<QuotationFunctionAreaItemM
 	@SuppressWarnings("unchecked")
 	public List<T> queryAddReduceItem(long arid, Short schedule) {
 
-		String sql = "select i.*, m.*, n.* from quotation.addreduceitem i, data.normrice m, communion.constructionnode n where i.arid = :arid and i.qiid = m.qiid and m.cnid = n.cnid";
+		String sql = "select i.*, m.*, n.* from quotation.addreduceitem i, data.normrice m, data.constructionnode n where i.arid = :arid and i.qiid = m.qiid and m.cnid = n.cnid";
 
 		if (schedule != null) {
 			sql = String.format("%s and n.sort = :schedule", sql);
@@ -100,7 +100,7 @@ public class QuotationNormriceDaoImpl extends DaoImpl<QuotationFunctionAreaItemM
 	@SuppressWarnings("unchecked")
 	public List<T> amountQuotationNormrice(short index, long functionAreaId) {
 
-		String sql = String.format("select m.*, n.*, sum(m.salary) as amount from quotation.quotationfunctionareaitem%d i, data.normrice m, communion.constructionnode n where i.quotationFunctionAreaId = :functionAreaId and i.quotationItemId = m.qiid and m.cnid = n.cnid group by n.cnid", index);
+		String sql = String.format("select m.*, n.*, sum(m.salary) as amount from quotation.quotationfunctionareaitem%d i, data.normrice m, data.constructionnode n where i.quotationFunctionAreaId = :functionAreaId and i.quotationItemId = m.qiid and m.cnid = n.cnid group by n.cnid", index);
 
 		return session().createSQLQuery(sql).addEntity(NormricePO.class).addEntity(ConstructionNodePO.class).addScalar("amount", StandardBasicTypes.LONG).setLong("functionAreaId", functionAreaId).list();
 	}
@@ -109,7 +109,7 @@ public class QuotationNormriceDaoImpl extends DaoImpl<QuotationFunctionAreaItemM
 	@SuppressWarnings("unchecked")
 	public List<T> amountExtensionNormrice(long eid) {
 
-		String sql = "select m.*, n.*, sum(m.salary) as amount from quotation.extensionitem i, data.normrice m, communion.constructionnode n where i.eid = :eid and i.qiid = m.qiid and m.cnid = n.cnid group by n.cnid";
+		String sql = "select m.*, n.*, sum(m.salary) as amount from quotation.extensionitem i, data.normrice m, data.constructionnode n where i.eid = :eid and i.qiid = m.qiid and m.cnid = n.cnid group by n.cnid";
 
 		return session().createSQLQuery(sql).addEntity(NormricePO.class).addEntity(ConstructionNodePO.class).addScalar("amount", StandardBasicTypes.LONG).setLong("eid", eid).list();
 	}
@@ -118,7 +118,7 @@ public class QuotationNormriceDaoImpl extends DaoImpl<QuotationFunctionAreaItemM
 	@SuppressWarnings("unchecked")
 	public List<T> amountAddReduceNormrice(long arid) {
 
-		String sql = "select m.*, n.*, sum(m.salary) as amount from quotation.addreduceitem i, data.normrice m, communion.constructionnode n where i.arid = :arid and i.qiid = m.qiid and m.cnid = n.cnid group by n.cnid";
+		String sql = "select m.*, n.*, sum(m.salary) as amount from quotation.addreduceitem i, data.normrice m, data.constructionnode n where i.arid = :arid and i.qiid = m.qiid and m.cnid = n.cnid group by n.cnid";
 
 		return session().createSQLQuery(sql).addEntity(NormricePO.class).addEntity(ConstructionNodePO.class).addScalar("amount", StandardBasicTypes.LONG).setLong("arid", arid).list();
 	}

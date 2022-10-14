@@ -16,7 +16,7 @@ import com.fanglin.decoration.po.DecorationPO;
 import com.fanglin.personel.po.UserPO;
 
 @Entity
-@Table(name = "quotationnorm", catalog = "quotation")
+@Table(name = "normtion", catalog = "quotation")
 public class NormtionDO implements Serializable {
 
 	private static final long serialVersionUID = -5581027521647679878L;

@@ -2,6 +2,8 @@ package com.fanglin.system.po;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fanglin.personel.po.UserPO;
+
 @Entity
 @Table(name = "rolemodule", catalog = "communion")
 public class RoleModulePO implements java.io.Serializable {
@@ -18,22 +22,33 @@ public class RoleModulePO implements java.io.Serializable {
 	private static final long serialVersionUID = -6081152605726686260L;
 
 	private int rmId;
-	
+
 	private int rid;
-	
+
 	private ModulePO module;
-	
+
 	private short link;
-	
+
+	private short access;
+
+	private UserPO creater;
+
+	private Timestamp createTime;
+
 	public RoleModulePO() {
 		super();
 	}
-	
-	public RoleModulePO(ModulePO module, int rid, short link) {
+
+	public RoleModulePO(ModulePO module, int rid, short link, short access, UserPO creater) {
+
 		super();
+
 		this.module = module;
 		this.rid = rid;
 		this.link = link;
+		this.access = access;
+
+		this.creater = creater;
 	}
 
 	@Id
@@ -72,6 +87,33 @@ public class RoleModulePO implements java.io.Serializable {
 
 	public void setLink(short link) {
 		this.link = link;
+	}
+
+	public short getAccess() {
+		return access;
+	}
+
+	public void setAccess(short access) {
+		this.access = access;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "cuid", referencedColumnName = "uid")
+	public UserPO getCreater() {
+		return creater;
+	}
+
+	public void setCreater(UserPO creater) {
+		this.creater = creater;
+	}
+
+	@Column(name = "createTime")
+	public Timestamp getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Timestamp createTime) {
+		this.createTime = createTime;
 	}
 
 }

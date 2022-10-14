@@ -7,7 +7,7 @@ import org.apache.struts2.json.annotations.JSON;
 
 import com.fanglin.personel.vo.UserBaseVO;
 
-public class SalesPictureVO implements Serializable{
+public class SalesPictureVO implements Serializable {
 
 	private static final long serialVersionUID = -804325790993801836L;
 
@@ -20,6 +20,8 @@ public class SalesPictureVO implements Serializable{
 	private String name;
 
 	private String path;
+
+	private Integer filesize;
 
 	private Short type;
 
@@ -37,8 +39,8 @@ public class SalesPictureVO implements Serializable{
 		super();
 		this.creater = creater;
 	}
-	
-	public SalesPictureVO(Long spid, Long sid, Long siid, String name,String path, Short type, UserBaseVO creater, Timestamp createTime,Short status) {
+
+	public SalesPictureVO(Long spid, Long sid, Long siid, String name, String path, Short type, UserBaseVO creater, Timestamp createTime, Short status) {
 		super();
 		this.spid = spid;
 		this.sid = sid;
@@ -89,6 +91,14 @@ public class SalesPictureVO implements Serializable{
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+
+	public Integer getFilesize() {
+		return filesize;
+	}
+
+	public void setFilesize(Integer filesize) {
+		this.filesize = filesize;
 	}
 
 	public Short getType() {

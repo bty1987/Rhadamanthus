@@ -26,6 +26,8 @@ public class MessageVO implements Serializable {
 
 	private UserVO sender;
 
+	private Long group;
+
 	private Short type;
 
 	private Short subtype;
@@ -78,6 +80,14 @@ public class MessageVO implements Serializable {
 
 	public void setSender(UserVO sender) {
 		this.sender = sender;
+	}
+
+	public Long getGroup() {
+		return group;
+	}
+
+	public void setGroup(Long group) {
+		this.group = group;
 	}
 
 	public short getType() {

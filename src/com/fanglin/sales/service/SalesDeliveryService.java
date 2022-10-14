@@ -27,5 +27,4 @@ public interface SalesDeliveryService {
 
 	public void updateSalesDeliveryItem(SalesDeliveryItemVO salesDeliveryItem) throws FLException;
 
-
 }

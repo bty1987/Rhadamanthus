@@ -27,6 +27,8 @@ public class AddReduceItemVO implements java.io.Serializable {
 
 	private Integer subPrice;
 
+	private Integer initnum;
+
 	private Integer num;
 
 	private Long quotationFunctionAreaId;
@@ -141,6 +143,14 @@ public class AddReduceItemVO implements java.io.Serializable {
 
 	public void setSubPrice(Integer subPrice) {
 		this.subPrice = subPrice;
+	}
+
+	public Integer getInitnum() {
+		return initnum;
+	}
+
+	public void setInitnum(Integer initnum) {
+		this.initnum = initnum;
 	}
 
 	public Integer getNum() {

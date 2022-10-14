@@ -19,9 +19,15 @@ public class OalesDaoImpl extends DaoImpl<OalesPO> implements OalesDao {
 	}
 
 	@Override
-	public List<OalesPO> pageOales(Paging paging, List<Filter> filters) {
+	public List<OalesPO> pageOales(Paging paging, List<Filter> filters, List<Short> statuses, int company) {
 
 		PagingQuery<OalesPO> query = pagingQuery(paging, OalesPO.class);
+
+		query.add(query.getCriterion(OalesPO.COLUMN_COMPANY_STR, company, "eq"));
+
+		if (statuses != null) {
+			query.add(Restrictions.in("status", statuses));
+		}
 
 		queryFilterExecute(query, filters);
 

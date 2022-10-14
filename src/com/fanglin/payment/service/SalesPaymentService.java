@@ -19,6 +19,8 @@ public interface SalesPaymentService {
 
 	public List<SalesPaymentVO> querySalesPaymentForNotInitBySrid(SalesReceiptVO salesReceipt);
 
+	public SalesPaymentVO querySalesPaymentBySpid(SalesPaymentVO salesPayment);
+
 	public long amountSalesPayment(SalesPaymentVO salesPayment);
 
 	public int addSalesPaymentForDeposit(SalesPaymentVO salesPaymentVO, String userId, int company) throws FLException;
@@ -42,5 +44,7 @@ public interface SalesPaymentService {
 	public int refundSalesPaymentForCoupon(SalesVO salesVO, String userId) throws FLException;
 
 	public void updateSalesPayment(SalesPaymentVO salesPayment, SalesReceiptVO salesReceipt) throws FLException;
+
+	public void sendSalesPayment(SalesPaymentVO salesPayment) throws FLException;
 
 }

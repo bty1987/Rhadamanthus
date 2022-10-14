@@ -9,7 +9,7 @@ import com.fanglin.utils.Paging;
 
 public interface OalesDao extends Dao<OalesPO> {
 
-	public List<OalesPO> pageOales(Paging paging, List<Filter> filters);
+	public List<OalesPO> pageOales(Paging paging, List<Filter> filters, List<Short> statuses, int company);
 
 	public List<OalesPO> queryOalesByOrderId(String orderId);
 

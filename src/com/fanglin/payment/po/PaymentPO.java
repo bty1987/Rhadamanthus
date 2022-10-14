@@ -236,7 +236,7 @@ public class PaymentPO implements Serializable {
 
 	public void ptv(PaymentVO paymentVO) {
 
-		BeanUtil.copyProperties(this, paymentVO, Arrays.asList("decoration", "customer", "collectUser", "confirmUser"));
+		BeanUtil.copyProperties(this, paymentVO, Arrays.asList("decoration", "customer", "collectUser", "confirmUser", "company"));
 
 		paymentVO.setCustomer(new CustomerVO());
 		BeanUtil.copyProperties(this.getCustomer(), paymentVO.getCustomer());

@@ -17,8 +17,8 @@ import com.fanglin.utils.SystemConfig;
 
 @Repository("decorationBalanceDao")
 public class DecorationBalanceDaoImpl extends DaoImpl<DecorationBalancePO> implements DecorationBalanceDao {
-	
-	public DecorationBalanceDaoImpl(){
+
+	public DecorationBalanceDaoImpl() {
 		super(DecorationBalancePO.class);
 	}
 
@@ -36,7 +36,7 @@ public class DecorationBalanceDaoImpl extends DaoImpl<DecorationBalancePO> imple
 
 	@Override
 	public DecorationBalancePO queryDecorationBalance(Long doid) {
-		
+
 		return (DecorationBalancePO) session().createCriteria(DecorationBalancePO.class).createAlias("decoration", "decoration").add(Restrictions.eq(DecorationBalancePO.COLUMN_DOID_STR, doid)).uniqueResult();
 	}
 
@@ -122,7 +122,7 @@ public class DecorationBalanceDaoImpl extends DaoImpl<DecorationBalancePO> imple
 				} else if ("status".equals(field)) {
 					query.add(query.getCriterion("decoration.status", Short.valueOf(data), op));
 				} else if ("statuses".equals(field)) {
-					query.add(query.getCriterion("status", filter.getRange(), op));
+					query.add(query.getCriterion("status", filter.getShorts(), op));
 				} else if ("otherStatus".equals(field)) {
 					query.add(query.getCriterion("otherStatus", data, "and"));
 				} else if ("designerId".equals(field)) {
@@ -176,7 +176,7 @@ public class DecorationBalanceDaoImpl extends DaoImpl<DecorationBalancePO> imple
 				} else if ("designStatus".equals(field)) {
 					query.add(query.getCriterion("decoration.designStatus", Short.valueOf(data), op));
 				} else if ("projectStatus".equals(field)) {
-					query.add(query.getCriterion("decoration.projectStatus", Short.valueOf(data), op));
+					query.add(query.getCriterion("decoration.projectStatus", Long.valueOf(data), op));
 				} else if ("sourceStatus".equals(field)) {
 					query.add(query.getCriterion("decoration.sourceStatus", Short.valueOf(data), op));
 				} else if ("repairStatus".equals(field)) {

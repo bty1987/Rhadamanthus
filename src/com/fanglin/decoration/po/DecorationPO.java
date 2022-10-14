@@ -64,11 +64,11 @@ public class DecorationPO implements Serializable {
 
 	public static final short STATUS_COMPLETED_INT = 8;// 完工
 
-	public static final short PROJECTSTATUS_INITIAL_INT = 0; // 初始
+	public static final long PROJECTSTATUS_INITIAL_INT = 0; // 初始
 
-	public static final short PROJECTSTATUS_START_INT = 1; // 开工
+	public static final long PROJECTSTATUS_START_INT = 1; // 开工
 
-	public static final short PROJECTSTATUS_FINISH_INT = 2; // 完工
+	public static final long PROJECTSTATUS_FINISH_INT = 2; // 完工
 
 	public static final short DESIGNSTATUS_INITIA_INT = 0;// 待设计
 
@@ -168,7 +168,7 @@ public class DecorationPO implements Serializable {
 
 	private short designStatus;
 
-	private short projectStatus;
+	private long projectStatus;
 
 	private short sourceStatus;
 
@@ -184,13 +184,15 @@ public class DecorationPO implements Serializable {
 
 	private int quotationTimeLimit;
 
-	private int company;
-
 	private short paySacle;
 
 	private short saleScale;
 
 	private int discount;
+
+	private int company;
+
+	private int conpany;
 
 	public DecorationPO() {
 	}
@@ -384,11 +386,11 @@ public class DecorationPO implements Serializable {
 		this.designStatus = designStatus;
 	}
 
-	public short getProjectStatus() {
+	public long getProjectStatus() {
 		return projectStatus;
 	}
 
-	public void setProjectStatus(short projectStatus) {
+	public void setProjectStatus(long projectStatus) {
 		this.projectStatus = projectStatus;
 	}
 
@@ -493,6 +495,14 @@ public class DecorationPO implements Serializable {
 		this.company = company;
 	}
 
+	public int getConpany() {
+		return conpany;
+	}
+
+	public void setConpany(int conpany) {
+		this.conpany = conpany;
+	}
+
 	public int getQuotationTimeLimit() {
 		return quotationTimeLimit;
 	}
@@ -593,7 +603,7 @@ public class DecorationPO implements Serializable {
 		this.accountTime = accountTime;
 	}
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(nullable = true, name = "orderId", referencedColumnName = "orderId", insertable = false, updatable = false)
 	public DecorationAdditionPO getAddition() {
 		return addition;
@@ -622,7 +632,7 @@ public class DecorationPO implements Serializable {
 	}
 
 	private void ptv(DecorationVO decorationVO) {
-		BeanUtil.copyProperties(this, decorationVO, Arrays.asList("house", "customer", "designer", "salesman", "supervisor", "version", "creater", "quoter", "escorter", "contractUserId"));
+		BeanUtil.copyProperties(this, decorationVO, Arrays.asList("house", "customer", "designer", "salesman", "supervisor", "version", "creater", "quoter", "escorter", "contractUserId", "conpany"));
 
 		if (decorationVO.getOrderTotalPrice() == null) {
 			decorationVO.setOrderTotalPrice(new Long(0));
@@ -636,7 +646,7 @@ public class DecorationPO implements Serializable {
 
 		CustomerVO customerVO = new CustomerVO();
 		BeanUtil.copyProperties(this.getCustomer(), customerVO);
-		customerVO.setConfidentialInfo();
+
 		decorationVO.setCustomer(customerVO);
 
 		decorationVO.setDesigner(new UserBaseVO());

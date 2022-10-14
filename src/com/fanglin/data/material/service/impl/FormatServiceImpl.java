@@ -1,7 +1,7 @@
 package com.fanglin.data.material.service.impl;
 
 import java.util.ArrayList;
-
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,84 +9,107 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fanglin.core.interceptor.FLException;
+import com.fanglin.core.vo.Filter;
 import com.fanglin.data.material.dao.FormatDao;
 import com.fanglin.data.material.service.FormatService;
 import com.fanglin.data.material.vo.FormatVO;
+import com.fanglin.data.material.vo.GoodsVO;
+import com.fanglin.data.po.FormatGO;
 import com.fanglin.data.po.FormatPO;
 import com.fanglin.utils.BeanUtil;
+import com.fanglin.utils.Paging;
 
 @Service("formatService")
-@Transactional(readOnly=true)
-public class FormatServiceImpl implements FormatService{
-	
+@Transactional(readOnly = true)
+public class FormatServiceImpl implements FormatService {
+
 	@Autowired
 	private FormatDao formatDao;
-	
+
 	@Override
-	public List<FormatVO> queryFormatByGid(FormatVO formatVO) {
-		
-		List<FormatPO> formatPOs = formatDao.queryFormatByGid(formatVO.getGid());
+	public void pageFormat(Paging paging, List<Filter> filters, int company) {
+
+		List<FormatGO> formatGOs = formatDao.pageFormat(paging, filters, company);
 		List<FormatVO> formatVOs = new ArrayList<FormatVO>();
-		
-		for(FormatPO formatPO: formatPOs){
-			
-			formatVO = new FormatVO();
-			
-			BeanUtil.copyProperties(formatPO, formatVO);
-			
+
+		for (FormatGO formatGO : formatGOs) {
+
+			FormatVO formatVO = new FormatVO(new GoodsVO());
+
+			BeanUtil.copyProperties(formatGO, formatVO, Arrays.asList("goods"));
+			BeanUtil.copyProperties(formatGO.getGoods(), formatVO.getGoods(), Arrays.asList("accessoriesType"));
+
 			formatVOs.add(formatVO);
 		}
-		
+
+		paging.setData(formatVOs);
+	}
+
+	@Override
+	public List<FormatVO> queryFormatByGid(FormatVO formatVO) {
+
+		List<FormatPO> formatPOs = formatDao.queryFormatByGid(formatVO.getGid());
+		List<FormatVO> formatVOs = new ArrayList<FormatVO>();
+
+		for (FormatPO formatPO : formatPOs) {
+
+			formatVO = new FormatVO();
+
+			BeanUtil.copyProperties(formatPO, formatVO);
+
+			formatVOs.add(formatVO);
+		}
+
 		return formatVOs;
 	}
 
 	@Override
 	public List<FormatVO> queryFormatForEnableByGid(FormatVO formatVO) {
-		
+
 		List<FormatPO> formatPOs = formatDao.queryFormatForEnableByGid(formatVO.getGid());
 		List<FormatVO> formatVOs = new ArrayList<FormatVO>();
-		
-		for(FormatPO formatPO: formatPOs){
-			
+
+		for (FormatPO formatPO : formatPOs) {
+
 			formatVO = new FormatVO();
-			
+
 			BeanUtil.copyProperties(formatPO, formatVO);
-			
+
 			formatVOs.add(formatVO);
 		}
-		
+
 		return formatVOs;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int addFormat(FormatVO formatVO) throws FLException {
-		
+
 		FormatPO formatPO = new FormatPO();
-		
+
 		BeanUtil.copyProperties(formatVO, formatPO);
-		
+
 		formatPO.setStatus(FormatPO.STATUS_ENABLE_INT);
-		
+
 		formatDao.save(formatPO);
-		
+
 		return 0;
 	}
 
 	@Override
-	@Transactional(rollbackFor=Exception.class)
+	@Transactional(rollbackFor = Exception.class)
 	public int updateFormatForStatus(FormatVO formatVO) throws FLException {
-		
+
 		FormatPO formatPO = formatDao.get(formatVO.getFid());
-		
-		if(formatPO == null){
+
+		if (formatPO == null) {
 			throw new FLException(260015, "规格不存在");
 		}
-		
+
 		formatPO.setStatus(formatVO.getStatus());
-		
+
 		formatDao.update(formatPO);
-		
+
 		return 0;
 	}
 

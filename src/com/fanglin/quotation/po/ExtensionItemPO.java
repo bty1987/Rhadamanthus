@@ -39,6 +39,8 @@ public class ExtensionItemPO implements Serializable {
 
 	private int subPrice; // 退减价
 
+	private int initnum;
+
 	private int num;
 
 	private QuotationFunctionAreaPO quotationFunctionArea;
@@ -141,6 +143,15 @@ public class ExtensionItemPO implements Serializable {
 
 	public void setSubPrice(int subPrice) {
 		this.subPrice = subPrice;
+	}
+
+	@Column(name = "initnum")
+	public int getInitnum() {
+		return initnum;
+	}
+
+	public void setInitnum(int initnum) {
+		this.initnum = initnum;
 	}
 
 	@Column(name = "num")

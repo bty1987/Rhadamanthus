@@ -32,6 +32,7 @@ import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.system.service.impl.CompanyServiceImpl;
 import com.fanglin.utils.BeanUtil;
 import com.fanglin.utils.DateUtil;
 import com.fanglin.utils.Paging;
@@ -93,28 +94,28 @@ public class ConstructionServiceImpl implements ConstructionService {
 
 		paging.setData(decorationVOs);
 	}
-	
+
 	@Override
-	public void pageConstructionForBase(Paging paging, List<Filter> filters,Integer company) {
-		
+	public void pageConstructionForBase(Paging paging, List<Filter> filters, Integer company) {
+
 		List<ConstructionPO> constructionPOs = constructionDao.pageConstructionForBase(paging, filters, company);
 		List<ConstructionVO> constructionVOs = new ArrayList<ConstructionVO>();
-		
+
 		ConstructionVO constructionVO;
 		for (ConstructionPO constructionPO : constructionPOs) {
-			
+
 			constructionVO = new ConstructionVO(new DecorationVO(), new UserBaseVO(), new UserBaseVO());
 
 			BeanUtil.copyProperties(constructionPO, constructionVO, Arrays.asList("decoration", "supervisor", "locker"));
 			BeanUtil.copyProperties(decorationPOToVO(constructionPO.getDecoration()), constructionVO.getDecoration());
 			BeanUtil.copyProperties(constructionPO.getSupervisor(), constructionVO.getSupervisor(), Arrays.asList("duty", "dept"));
 			BeanUtil.copyProperties(constructionPO.getLocker(), constructionVO.getLocker(), Arrays.asList("duty", "dept"));
-			
+
 			constructionVOs.add(constructionVO);
 		}
-		
+
 		paging.setData(constructionVOs);
-		
+
 	}
 
 	@Override
@@ -145,14 +146,14 @@ public class ConstructionServiceImpl implements ConstructionService {
 		BeanUtil.copyProperties(constructionPO, constructionVO, Arrays.asList("decoration", "supervisor", "locker"));
 
 		constructionVO.setSupervisor(new UserBaseVO());
-		
+
 		constructionVO.setLocker(new UserBaseVO());
 
 		if (constructionPO.getSupervisor() != null) {
 			BeanUtil.copyProperties(constructionPO.getSupervisor(), constructionVO.getSupervisor(), Arrays.asList("duty", "dept"));
 		}
-		
-		if(constructionPO.getLocker() != null) {
+
+		if (constructionPO.getLocker() != null) {
 			BeanUtil.copyProperties(constructionPO.getLocker(), constructionVO.getLocker(), Arrays.asList("duty", "dept"));
 		}
 
@@ -175,6 +176,10 @@ public class ConstructionServiceImpl implements ConstructionService {
 			throw new FLException(120020, "工程信息不存在");
 		}
 
+		if (constructionVO.getDecoration() != null && constructionVO.getDecoration().getConpany() != null) {
+			decorationPO.setConpany(CompanyServiceImpl.decode(constructionVO.getDecoration().getConpany()));
+		}
+
 		UserPO supervisor = userDao.queryUserByUserId(constructionVO.getSupervisor().getUserId());
 
 		constructionPO.setSupervisor(supervisor);
@@ -185,62 +190,62 @@ public class ConstructionServiceImpl implements ConstructionService {
 
 		decorationDao.update(decorationPO);
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int openAccessory(ConstructionVO constructionVO) throws FLException {
-		
+
 		ConstructionPO constructionPO = constructionDao.get(constructionVO.getCid());
-		
+
 		if (constructionPO == null) {
 			throw new FLException(120020, "工程信息不存在");
 		}
-		
+
 		constructionPO.setAccessory(ConstructionPO.ACCESSORY_OPEN_SHORT);
-		
+
 		constructionDao.update(constructionPO);
-		
+
 		return 0;
 	}
-	
+
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int updateConstructionForAdvance(ConstructionVO constructionVO) throws FLException {
-		
+
 		ConstructionPO constructionPO = constructionDao.get(constructionVO.getCid());
-		
+
 		if (constructionPO == null) {
 			throw new FLException(120020, "工程信息不存在");
 		}
-		
+
 		constructionPO.setAccessoryLimit(constructionVO.getAccessoryLimit());
 		constructionPO.setSalaryLimit(constructionVO.getSalaryLimit());
-		
+
 		constructionDao.update(constructionPO);
-		
+
 		return 0;
 	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public int lockAccessory(ConstructionVO constructionVO, String userId) throws FLException {
-		
+
 		ConstructionPO constructionPO = constructionDao.get(constructionVO.getCid());
-			
+
 		if (constructionPO == null) {
 			throw new FLException(120020, "工程信息不存在");
-		}	
-		
+		}
+
 		UserPO locker = userDao.queryUserByUserId(userId);
-		
+
 		constructionPO.setAccessory(ConstructionPO.ACCESSORY_LOCK_SHORT);
-		
+
 		constructionPO.setLocker(locker);
-		
+
 		constructionPO.setLockTime(DateUtil.getDateToTimestamp(new Date()));
 
 		constructionDao.update(constructionPO);
-				
+
 		return 0;
 	}
 

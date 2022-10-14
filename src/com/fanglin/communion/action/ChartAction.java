@@ -14,6 +14,7 @@ import com.fanglin.communion.vo.ChartVO;
 import com.fanglin.core.action.BaseListAction;
 import com.fanglin.core.interceptor.FLException;
 import com.fanglin.system.vo.RoleVO;
+import com.fanglin.utils.SystemConfig;
 
 @ParentPackage("base")
 @Namespace("/")
@@ -24,25 +25,19 @@ public class ChartAction extends BaseListAction {
 
 	@Autowired
 	private ChartService chartService;
-	
+
 	private List<ChartVO> charts;
-	
+
+	private ChartVO chart;
+
 	private RoleVO role;
-	
+
 	private List<Long> cids;
-	
+
 	@Action(value = "pageChart", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String pageChart() {
 
 		chartService.pageChart(getPaging(), getFilters());
-
-		return SUCCESS;
-	}
-	
-	@Action(value = "queryChart", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
-	public String queryChart() throws FLException {
-
-		charts = chartService.queryChart();
 
 		return SUCCESS;
 	}
@@ -54,7 +49,7 @@ public class ChartAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "queryChartByRid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String queryChartByRid() throws FLException {
 
@@ -62,15 +57,19 @@ public class ChartAction extends BaseListAction {
 
 		return SUCCESS;
 	}
-	
+
 	@Action(value = "updateRoleChartByRid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
 	public String updateRoleChartByRid() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
 
 		chartService.updateRoleChartByRid(role, cids, queryRoleId());
 
 		return SUCCESS;
 	}
-	
+
 	public RoleVO getRole() {
 		return role;
 	}
@@ -86,13 +85,21 @@ public class ChartAction extends BaseListAction {
 	public void setCids(List<Long> cids) {
 		this.cids = cids;
 	}
-	
+
 	public List<ChartVO> getCharts() {
 		return charts;
 	}
 
 	public void setCharts(List<ChartVO> charts) {
 		this.charts = charts;
+	}
+
+	public ChartVO getChart() {
+		return chart;
+	}
+
+	public void setChart(ChartVO chart) {
+		this.chart = chart;
 	}
 
 }

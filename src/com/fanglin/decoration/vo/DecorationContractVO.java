@@ -46,12 +46,19 @@ public class DecorationContractVO implements Serializable {
 
 	private Short ishow;
 
+	private Integer filesize;
+
 	private List<DecorationPaymentVO> payments;
 
 	private List<Integer> paymentRates;
 
 	public DecorationContractVO() {
 		super();
+	}
+
+	public DecorationContractVO(String orderId) {
+		super();
+		this.orderId = orderId;
 	}
 
 	public DecorationContractVO(ContractVO contract, UserBaseVO creater, UserBaseVO signner, UserBaseVO filinner) {
@@ -208,6 +215,14 @@ public class DecorationContractVO implements Serializable {
 
 	public void setPaymentRates(List<Integer> paymentRates) {
 		this.paymentRates = paymentRates;
+	}
+
+	public Integer getFilesize() {
+		return filesize;
+	}
+
+	public void setFilesize(Integer filesize) {
+		this.filesize = filesize;
 	}
 
 }

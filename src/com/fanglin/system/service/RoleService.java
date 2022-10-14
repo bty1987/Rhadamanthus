@@ -17,7 +17,7 @@ public interface RoleService {
 	
 	public List<RoleVO> queryRoleByName(RoleVO roleVO, Integer company);
 	
-	public int addRole(RoleVO roleVO,Integer company) throws FLException;
+	public int addRole(RoleVO roleVO,Integer company, String userId) throws FLException;
 	
 	public int updateRole(RoleVO roleVO);
 

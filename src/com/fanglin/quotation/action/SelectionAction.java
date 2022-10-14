@@ -64,6 +64,14 @@ public class SelectionAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "sendSelection", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String sendSelection() throws FLException {
+
+		selectionService.sendSelection(selection);
+
+		return SUCCESS;
+	}
+
 	public SelectionVO getSelection() {
 		return selection;
 	}

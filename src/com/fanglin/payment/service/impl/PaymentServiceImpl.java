@@ -81,9 +81,9 @@ public class PaymentServiceImpl implements PaymentService {
 
 		if (filters.size() == 0) return;
 
-		if (payment != null) payment.filter(filters);
+		if (payment != null) payment.filter(filters, company);
 
-		List<PaymentDO> paymentDOs = paymentDao.pagePayment(paging, filters, company);
+		List<PaymentDO> paymentDOs = paymentDao.pagePayment(paging, filters);
 		List<PaymentVO> paymentVOs = new ArrayList<PaymentVO>();
 
 		for (PaymentDO paymentDO : paymentDOs) {
@@ -126,12 +126,6 @@ public class PaymentServiceImpl implements PaymentService {
 
 		if (paymentPO == null) {
 			throw new FLException(150003, "款项不存在");
-		}
-
-		AdvanceReceiptPO advanceReceiptPO = paymentPO.getAdvanceReceipt();
-
-		if (advanceReceiptPO == null) {
-			throw new FLException(150026, "收据不存在");
 		}
 
 		paymentPO.ptv(paymentVO);
@@ -209,7 +203,7 @@ public class PaymentServiceImpl implements PaymentService {
 			paymentPO = new PaymentPO();
 		}
 
-		BeanUtil.copyProperties(paymentVO, paymentPO, Arrays.asList("customer", "collectUser"));
+		BeanUtil.copyProperties(paymentVO, paymentPO, Arrays.asList("customer", "collectUser", "company"));
 
 		paymentPO.setBalance(overBalance);
 		paymentPO.setCustomer(customerPO);
@@ -336,7 +330,7 @@ public class PaymentServiceImpl implements PaymentService {
 		advanceReceiptDao.save(advanceReceiptPO);
 
 		PaymentPO paymentPO = new PaymentPO();
-		BeanUtil.copyProperties(paymentVO, paymentPO, Arrays.asList("customer", "collectUser", "type"));
+		BeanUtil.copyProperties(paymentVO, paymentPO, Arrays.asList("customer", "collectUser", "type", "company"));
 
 		paymentPO.setCustomer(customerPO);
 		paymentPO.setBalance(overBalance);
@@ -422,7 +416,7 @@ public class PaymentServiceImpl implements PaymentService {
 		advanceReceiptDao.save(advanceReceiptPO);
 
 		PaymentPO paymentPO = new PaymentPO();
-		BeanUtil.copyProperties(paymentVO, paymentPO, Arrays.asList("customer", "collectUser", "type"));
+		BeanUtil.copyProperties(paymentVO, paymentPO, Arrays.asList("customer", "collectUser", "type", "company"));
 
 		paymentPO.setCustomer(customerPO);
 		paymentPO.setBalance(overBalance);
@@ -490,7 +484,7 @@ public class PaymentServiceImpl implements PaymentService {
 		advanceReceiptDao.save(advanceReceiptPO);
 
 		PaymentPO paymentPO = new PaymentPO();
-		BeanUtil.copyProperties(paymentVO, paymentPO, Arrays.asList("customer", "collectUser", "type"));
+		BeanUtil.copyProperties(paymentVO, paymentPO, Arrays.asList("customer", "collectUser", "type", "company"));
 
 		paymentPO.setCustomer(customerPO);
 		paymentPO.setBalance(overBalance);
@@ -506,6 +500,44 @@ public class PaymentServiceImpl implements PaymentService {
 		advancePaymentDao.update(advancePaymentPO);
 
 		return 0;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void addPayment(PaymentVO paymentVO, String userId) throws FLException {
+
+		String orderId = paymentVO.getOrderId();
+		short paymentType = paymentVO.getPaymentType();
+		long recharge = paymentVO.getRecharge();
+
+		AdvancePaymentPO advancePaymentPO = advancePaymentDao.queryAdvancePaymentByOrderId(orderId);
+		DecorationPO decorationPO = decorationDao.queryDecorationByOrderId(orderId);
+
+		if (decorationPO == null) {
+			throw new FLException(140013, "订单不存在");
+		}
+
+		UserPO creater = userDao.queryUserByUserId(userId);
+
+		if (advancePaymentPO == null) {
+			advancePaymentPO = new AdvancePaymentPO();
+			advancePaymentPO.setDecoration(decorationPO);
+		}
+
+		long oldBalance = AdvancePaymentServiceImpl.getCustomerBalanceByType(advancePaymentPO, paymentType);
+		long balance = Arith.add(oldBalance, recharge);
+
+		PaymentPO paymentPO = new PaymentPO();
+		BeanUtil.copyProperties(paymentVO, paymentPO, Arrays.asList("advanceReceipt", "customer", "creater", "company"));
+		paymentPO.setCustomer(decorationPO.getCustomer());
+		paymentPO.setCreater(creater);
+		paymentPO.setType(PaymentPO.PAYMENT_TYPE_COLLECTION_INT);
+		paymentPO.setBalance(balance);
+		paymentPO.setUniqueid(String.valueOf(new Date().getTime()));
+		paymentPO.setCompany(decorationPO.getCompany());
+
+		paymentDao.save(paymentPO);
+
 	}
 
 	@Override
@@ -559,6 +591,21 @@ public class PaymentServiceImpl implements PaymentService {
 		advanceReceiptDao.update(advanceReceiptPO);
 
 		return 0;
+	}
+
+	@Override
+	public void sendPayment(PaymentVO paymentVO) throws FLException {
+
+		PaymentPO paymentPO = paymentDao.get(paymentVO.getPid());
+
+		if (paymentPO == null) {
+			throw new FLException(150003, "款项不存在");
+		}
+
+		String orderId = paymentPO.getOrderId();
+
+		decorationService.sendMessage(orderId, "装修收款", String.format("装修待付款金额%.3f元", Arith.div(paymentPO.getRecharge(), 1000.0)), String.format("pages/payInfo/payInfo?orderId=%s&pid=%s&paymentType=0", paymentPO.getOrderId(), paymentPO.getPid()));
+
 	}
 
 	// 计算各个付款方式总共的操作金额
@@ -641,5 +688,4 @@ public class PaymentServiceImpl implements PaymentService {
 
 		return paymentVO;
 	}
-
 }

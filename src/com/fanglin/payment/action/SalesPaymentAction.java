@@ -170,6 +170,14 @@ public class SalesPaymentAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "sendSalesPayment", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String sendSalesPayment() throws FLException {
+
+		salesPaymentService.sendSalesPayment(salesPayment);
+
+		return SUCCESS;
+	}
+
 	public SalesPaymentVO getSalesPayment() {
 		return salesPayment;
 	}

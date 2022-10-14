@@ -10,6 +10,8 @@ public class FormatVO implements Serializable {
 
 	private Long gid;
 
+	private GoodsVO goods;
+
 	private String info;
 
 	private Short status;
@@ -21,6 +23,11 @@ public class FormatVO implements Serializable {
 	public FormatVO(Long fid) {
 		super();
 		this.fid = fid;
+	}
+
+	public FormatVO(GoodsVO goods) {
+		super();
+		this.goods = goods;
 	}
 
 	public Long getFid() {
@@ -37,6 +44,14 @@ public class FormatVO implements Serializable {
 
 	public void setGid(Long gid) {
 		this.gid = gid;
+	}
+
+	public GoodsVO getGoods() {
+		return goods;
+	}
+
+	public void setGoods(GoodsVO goods) {
+		this.goods = goods;
 	}
 
 	public String getInfo() {

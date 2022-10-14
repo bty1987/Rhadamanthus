@@ -38,6 +38,8 @@ public class DecorationPaymentServiceImpl implements DecorationPaymentService {
 				decorationPaymentVO.setReferMoney(decorationPaymentPO.getReferMoney());
 				decorationPaymentVO.setPaymentStatus(decorationPaymentPO.getPaymentStatus());
 				decorationPaymentVO.setPaymentType(decorationPaymentPO.getPaymentType());
+				decorationPaymentVO.setOnetype(decorationPaymentPO.getOneType());
+				decorationPaymentVO.setSort(decorationPaymentPO.getSort());
 
 				if (decorationPaymentPO.getDecorationReceipt() != null) {
 					decorationPaymentVO.setCollectTime(decorationPaymentPO.getDecorationReceipt().getCollectTime());

@@ -46,6 +46,10 @@ public class UserAction extends BaseListAction {
 
 	private UserInfoVO userInfo;
 
+	private String userId;
+
+	private String approve;
+
 	private String pinyinName;
 
 	private String duty;
@@ -170,7 +174,7 @@ public class UserAction extends BaseListAction {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		userService.addUser(userInfo, userContracts, userEducations, userOperations, queryCompany());
+		userService.addUser(userInfo, userContracts, userEducations, userOperations, queryCompany(), queryUserId());
 
 		return SUCCESS;
 	}
@@ -182,7 +186,7 @@ public class UserAction extends BaseListAction {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		userService.updateUser(userInfo, queryCompany());
+		userService.updateUser(userInfo, queryCompany(), queryUserId());
 
 		return SUCCESS;
 	}
@@ -198,7 +202,7 @@ public class UserAction extends BaseListAction {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		userService.updateUserForAdvance(user, queryRoleId());
+		userService.updateUserForAdvance(user, queryRoleId(), queryUserId());
 
 		return SUCCESS;
 	}
@@ -211,6 +215,30 @@ public class UserAction extends BaseListAction {
 		}
 
 		userService.updateUserForPhoto(user);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "quitUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String quitUser() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		if ("agree".equals(approve)) userService.quitUser(new UserVO(userId), queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "tranUser", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String tranUser() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		if ("agree".equals(approve)) userService.tranUser(new UserVO(userId), queryUserId());
 
 		return SUCCESS;
 	}
@@ -412,6 +440,22 @@ public class UserAction extends BaseListAction {
 
 	public void setUserOperations(List<UserOperationVO> userOperations) {
 		this.userOperations = userOperations;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getApprove() {
+		return approve;
+	}
+
+	public void setApprove(String approve) {
+		this.approve = approve;
 	}
 
 }

@@ -20,6 +20,8 @@ public class AccessoriesVO implements Serializable {
 
 	private Long csid;
 
+	private Long cnid;
+
 	private HouseVO house;
 
 	private UserBaseVO supervisor;
@@ -37,17 +39,17 @@ public class AccessoriesVO implements Serializable {
 	private Short schedule;
 
 	private Short status;
-	
+
 	private Long total;
-	
+
 	private Integer printnum;
-	
+
 	private String comment;
-	
+
 	private UserBaseVO deliver;
-	
+
 	private Timestamp deliverTime;
-	
+
 	public AccessoriesVO() {
 		super();
 	}
@@ -96,6 +98,14 @@ public class AccessoriesVO implements Serializable {
 
 	public void setCsid(Long csid) {
 		this.csid = csid;
+	}
+
+	public Long getCnid() {
+		return cnid;
+	}
+
+	public void setCnid(Long cnid) {
+		this.cnid = cnid;
 	}
 
 	public HouseVO getHouse() {

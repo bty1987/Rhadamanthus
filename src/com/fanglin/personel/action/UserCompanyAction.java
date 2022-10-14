@@ -47,7 +47,7 @@ public class UserCompanyAction extends BaseListAction {
 			throw new FLException(-1, "无操作权限");
 		}
 
-		userCompanyService.updateUserCompany(user, cids);
+		userCompanyService.updateUserCompany(user, cids, queryUserId());
 
 		return SUCCESS;
 	}

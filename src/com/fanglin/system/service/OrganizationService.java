@@ -19,11 +19,11 @@ import com.fanglin.utils.Paging;
 
 public interface OrganizationService {
 
-	public void pageOrganization(Paging paging, List<Filter> filters);
+	public void pageOrganization(Paging paging, List<Filter> filters, Integer company);
 
 	public List<OrganizationVO> queryOrganization(OrganizationVO organizationVO, Integer company);
 
-	public int addOrganization(OrganizationVO organizationItem);
+	public int addOrganization(OrganizationVO organizationItem, Integer company);
 
 	public void updateOrganization(OrganizationVO organizationVO) throws FLException;
 

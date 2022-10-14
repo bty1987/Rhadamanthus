@@ -41,56 +41,58 @@ public class AccessoriesPO implements Serializable {
 
 	public static final String COLUMN_NO_STR = "no";
 
-	public static final short STATUS_INIT_INT = 0;  //初始
-	
-	public static final short STATUS_ADVANCE_INT = 1;  //预出
+	public static final short STATUS_INIT_INT = 0; // 初始
 
-	public static final short STATUS_BATCHOUT_INT = 2;  //出货
+	public static final short STATUS_ADVANCE_INT = 1; // 预出
 
-	public static final short STATUS_REJECT_INT = 3;   //撤销
+	public static final short STATUS_BATCHOUT_INT = 2; // 出货
 
-	public static final short STATUS_UNDO_INT = 4;   //拒绝
+	public static final short STATUS_REJECT_INT = 3; // 撤销
 
-	public static final short STATUS_RETURN_INT = 5;  //退回
-	
-	public static final short STATUS_DELIVER_INT = 6;  //到货
+	public static final short STATUS_UNDO_INT = 4; // 拒绝
+
+	public static final short STATUS_RETURN_INT = 5; // 退回
+
+	public static final short STATUS_DELIVER_INT = 6; // 到货
 
 	private long aid;
 
 	private String no;
 
 	private String orderId;
-	
+
 	private long csid;
-	
+
+	private long cnid;
+
 	private HousePO house;
-	
+
 	private UserPO supervisor;
 
 	private UserPO creater;
-	
+
 	private UserPO approver;
+
+	private UserPO deliver;
 
 	private Timestamp createTime;
 
 	private Timestamp approverTime;
 
-	private Timestamp fetchTime; 
+	private Timestamp fetchTime;
+
+	private Timestamp deliverTime;
 
 	private short status;
-	
+
 	private short schedule;
-	
-	private int printnum;    //打印次数
+
+	private int printnum; // 打印次数
+
+	private String comment;
 
 	private int company;
-	
-	private String comment;
-	
-	private UserPO deliver;
-	
-	private Timestamp deliverTime;
-	
+
 	public AccessoriesPO() {
 		super();
 	}
@@ -136,6 +138,7 @@ public class AccessoriesPO implements Serializable {
 		this.orderId = orderId;
 	}
 
+	@Column(name = "csid")
 	public long getCsid() {
 		return csid;
 	}
@@ -143,7 +146,16 @@ public class AccessoriesPO implements Serializable {
 	public void setCsid(long csid) {
 		this.csid = csid;
 	}
-	
+
+	@Column(name = "cnid")
+	public long getCnid() {
+		return cnid;
+	}
+
+	public void setCnid(long cnid) {
+		this.cnid = cnid;
+	}
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "hid", referencedColumnName = "hid")
 	public HousePO getHouse() {
@@ -153,7 +165,7 @@ public class AccessoriesPO implements Serializable {
 	public void setHouse(HousePO house) {
 		this.house = house;
 	}
-	
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "suid", referencedColumnName = "uid")
 	public UserPO getSupervisor() {
@@ -192,7 +204,7 @@ public class AccessoriesPO implements Serializable {
 	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
-	
+
 	@Column(name = "approverTime")
 	public Timestamp getApproverTime() {
 		return approverTime;
@@ -227,7 +239,7 @@ public class AccessoriesPO implements Serializable {
 	public void setStatus(short status) {
 		this.status = status;
 	}
-	
+
 	@Column(name = "printnum")
 	public int getPrintnum() {
 		return printnum;
@@ -245,7 +257,7 @@ public class AccessoriesPO implements Serializable {
 	public void setCompany(int company) {
 		this.company = company;
 	}
-	
+
 	@Column(name = "comment")
 	public String getComment() {
 		return comment;
@@ -265,7 +277,6 @@ public class AccessoriesPO implements Serializable {
 		this.deliver = deliver;
 	}
 
-	
 	@Column(name = "deliverTime")
 	public Timestamp getDeliverTime() {
 		return deliverTime;
@@ -275,23 +286,26 @@ public class AccessoriesPO implements Serializable {
 		this.deliverTime = deliverTime;
 	}
 
-	public AccessoriesPO init(String no, String orderId, long csid, HousePO house, UserPO creater, Timestamp fetchTime, short schedule, String comment, int company){
-		
+	public AccessoriesPO init(String no, String orderId, long csid, long cnid, HousePO house, UserPO creater, Timestamp fetchTime, short schedule, String comment, int company) {
+
 		setNo(no);
 		setOrderId(orderId);
-		setCsid(csid);
 		setHouse(house);
-		
+
+		setCsid(csid);
+		setCnid(cnid);
+		setSchedule(schedule);
+
 		setCreater(creater);
 		setFetchTime(fetchTime);
-		
+
 		setCreateTime(DateUtil.getDateToTimestamp(new Date()));
-		setSchedule(schedule);
+
 		setStatus(AccessoriesPO.STATUS_INIT_INT);
 		setComment(comment);
-		
+
 		setCompany(company);
-		
+
 		return this;
 	}
 }

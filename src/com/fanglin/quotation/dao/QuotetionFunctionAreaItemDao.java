@@ -11,6 +11,8 @@ public interface QuotetionFunctionAreaItemDao extends Dao<QuotetionFunctionAreaI
 
 	public QuotetionFunctionAreaItemPO queryQuotetionFunctionAreaItemByQfaiId(Class<?> clazz, long qfaiId);
 
+	public QuotetionFunctionAreaItemPO queryQuotetionFunctionAreaItemForTypeByQuotetionFunctionAreaId(Class<?> clazz, Long quotetionFunctionAreaId, Short type);
+
 	public List<QuotetionFunctionAreaItemPO> queryQuotetionFunctionAreaItemByFunctionAreaId(Class<?> clazz, long qfaid);
 
 	public int updateQuotetionFunctionAreaItemForIndex(String table, QuotetionFunctionAreaItemVO quotetionFunctionAreaItemVO) throws FLException;

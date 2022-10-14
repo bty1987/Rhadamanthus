@@ -38,17 +38,41 @@ public class AwardRecordPO implements java.io.Serializable {
 
 	public static final short ONETYPE_DECORATION_INT = 1;// 装修
 
-	public static final short ONETYPE_MATERIAL_INT = 2;// 主材
+	public static final short ONETYPE_SALES_INT = 2;// 销售
 
-	public static final short ONETYPE_SALES_INT = 3;// 销售
+	public static final short ONETYPE_MATERIAL_INT = 3;// 主材
 
 	public static final short SUBTYPE_INWARE_INT = 0; // 入库
+
+	public static final short SUBTYPE_XG_INT = 1; // 出库
+
+	public static final short SUBTYPE_SURPLUS_INT = 2; // 盘盈
+
+	public static final short SUBTYPE_LOSSES_INT = 3; // 盘亏
 
 	public static final short SUBTYPE_RECEIVE_INT = 5;// 领取
 
 	public static final short SUBTYPE_REFUND_INT = 6;// 退货
 
 	public static final short SUBTYPE_DELIVERY_INT = 7;// 配送
+
+	public static final short SUBTYPE_PURCHASE_INT = 8;// 采购
+
+	public static final short SUBTYPE_LOSS_INT = 9;// 赔偿
+
+	public static final short SUBTYPE_COMPANY_INT = 10;// 公司回库
+
+	public static final short SUBTYPE_PURCHASES_INT = 11;// 自购
+
+	public static final short SUBTYPE_REMAINDER_INT = 12;// 剩余回库
+
+	public static final short SUBTYPE_WELFARE_INT = 13;// 福利
+
+	public static final short SUBTYPE_GIVE_INT = 14;// 厂家赠送
+
+	public static final short SUBTYPE_MARKETING_INT = 15;// 营销
+
+	public static final short SUBTYPE_CROSSACCOUNT_INT = 17;// 跨帐
 
 	private long arid;
 

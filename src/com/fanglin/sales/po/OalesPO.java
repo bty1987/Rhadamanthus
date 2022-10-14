@@ -25,17 +25,21 @@ public class OalesPO implements Serializable {
 
 	public static final String COLUMN_NO_STR = "no";
 
+	public static final String COLUMN_COMPANY_STR = "company";
+
 	public static final String COLUMN_ORDERID_STR = "orderId";
 
 	public static final short STATUS_INIT_INT = 0;// 初始
 
-	public static final short STATUS_CONFIRM_INI = 1;// 确认
+	public static final short STATUS_SUBMIT_INI = 1;// 提交
 
-	public static final short STATUS_REJECT_INT = 2;// 驳回
+	public static final short STATUS_CONFIRM_INI = 2;// 确认
 
-	public static final short STATUS_CHECK_INT = 3;// 复核
+	public static final short STATUS_REJECT_INT = 3;// 驳回
 
-	public static final short STATUS_FINISH_INI = 4;// 完结
+	public static final short STATUS_CHECK_INT = 4;// 复核
+
+	public static final short STATUS_FINISH_INI = 5;// 完结
 
 	private long oid;
 

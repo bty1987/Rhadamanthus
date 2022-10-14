@@ -20,11 +20,15 @@ public class SoodsDaoImpl extends DaoImpl<SoodsPO> implements SoodsDao {
 	}
 
 	@Override
-	public List<SoodsPO> pageSoods(Paging paging, List<Filter> filters, int company) {
+	public List<SoodsPO> pageSoods(Paging paging, List<Filter> filters, Short status, int company) {
 
 		PagingQuery<SoodsPO> query = pagingQuery(paging, SoodsPO.class);
 
 		query.add(query.getCriterion("company", company, "eq"));
+
+		if (status != null) {
+			query.add(Restrictions.eq("status", status));
+		}
 
 		queryFilterExcute(query, filters);
 
@@ -48,8 +52,7 @@ public class SoodsDaoImpl extends DaoImpl<SoodsPO> implements SoodsDao {
 
 	private void queryFilterExcute(PagingQuery<SoodsPO> query, List<Filter> filters) {
 
-		if (filters == null)
-			return;
+		if (filters == null) return;
 
 		for (Filter filter : filters) {
 

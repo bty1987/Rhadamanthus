@@ -22,6 +22,8 @@ import com.fanglin.data.material.vo.GoodsVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
+import com.fanglin.right.dao.SalesDeliveryStatusRightDao;
+import com.fanglin.right.po.SalesDeliveryStatusRightPO;
 import com.fanglin.sales.dao.SalesDao;
 import com.fanglin.sales.dao.SalesDeliveryItemDao;
 import com.fanglin.sales.dao.SalesItemDao;
@@ -52,10 +54,13 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 	@Autowired
 	private SalesItemDao salesItemDao;
 
+	@Autowired
+	private SalesDeliveryStatusRightDao salesDeliveryStatusRightDao;
+
 	@Override
 	public void pageSalesDeliveryItem(Paging paging, List<Filter> filters, int company, List<Short> statuses) {
 
-		filters.add(new Filter("statuses", statuses, "in"));
+		filters.add(new Filter("statuses", statuses, "in", Filter.RANGE_TYPE_SHORT_INT));
 
 		List<SalesDeliveryItemPO> salesDeliveryItemPOs = salesDeliveryItemDao.pageSalesDeliveryItem(paging, filters, company);
 		List<SalesDeliveryItemVO> salesDeliveryItemVOs = ptv(salesDeliveryItemPOs);
@@ -105,6 +110,12 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 		salesDeliveryItemPO.setStatus(SalesDeliveryItemPO.STATUS_TRAN_INT);
 		salesDeliveryItemPO.setTranTime(DateUtil.getDateToTimestamp(new Date()));
 
+		List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBid());
+
+		if (rights != null && rights.size() != 0) {
+			checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_TRAN_INT, traner);
+		}
+
 		salesDeliveryItemDao.update(salesDeliveryItemPO);
 	}
 
@@ -123,10 +134,15 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 		}
 
 		UserPO checker = userDao.queryUserByUserId(userId);
-
 		salesDeliveryItemPO.setChecker(checker);
 		salesDeliveryItemPO.setStatus(SalesDeliveryItemPO.STATUS_CHECK_INT);
 		salesDeliveryItemPO.setCheckTime(DateUtil.getDateToTimestamp(new Date()));
+
+		List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBid());
+
+		if (rights != null && rights.size() != 0) {
+			checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_CHECK_INT, checker);
+		}
 
 		salesDeliveryItemDao.update(salesDeliveryItemPO);
 	}
@@ -135,25 +151,30 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 	@Transactional(rollbackFor = Exception.class)
 	public void confirmSalesDeliveryItem(List<SalesDeliveryItemVO> salesDeliveryItems, String userId) throws FLException {
 
+		UserPO confirmer = userDao.queryUserByUserId(userId);
+
 		for (SalesDeliveryItemVO salesDeliveryItemVO : salesDeliveryItems) {
 
-			SalesDeliveryItemPO salesDeliveryItemPOs = salesDeliveryItemDao.get(salesDeliveryItemVO.getSdiid());
+			SalesDeliveryItemPO salesDeliveryItemPO = salesDeliveryItemDao.get(salesDeliveryItemVO.getSdiid());
 
-			if (salesDeliveryItemPOs == null) {
+			if (salesDeliveryItemPO == null) {
 				continue;
 			}
 
-			if (salesDeliveryItemPOs.getStatus() != SalesDeliveryItemPO.STATUS_CHECK_INT) {
+			if (salesDeliveryItemPO.getStatus() != SalesDeliveryItemPO.STATUS_CHECK_INT) {
 				continue;
 			}
 
-			UserPO confirmer = userDao.queryUserByUserId(userId);
+			salesDeliveryItemPO.setConfirmer(confirmer);
+			salesDeliveryItemPO.setStatus(SalesDeliveryItemPO.STATUS_CONFIRM_INT);
+			salesDeliveryItemPO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
+			List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBid());
 
-			salesDeliveryItemPOs.setConfirmer(confirmer);
-			salesDeliveryItemPOs.setStatus(SalesDeliveryItemPO.STATUS_CONFIRM_INT);
-			salesDeliveryItemPOs.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
+			if (rights != null && rights.size() != 0) {
+				checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_CONFIRM_INT, confirmer);
+			}
 
-			salesDeliveryItemDao.update(salesDeliveryItemPOs);
+			salesDeliveryItemDao.update(salesDeliveryItemPO);
 		}
 	}
 
@@ -176,6 +197,11 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 		salesDeliveryItemPO.setFinisher(finisher);
 		salesDeliveryItemPO.setStatus(SalesDeliveryItemPO.STATUS_FINISH_INT);
 		salesDeliveryItemPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
+		List<SalesDeliveryStatusRightPO> rights = salesDeliveryStatusRightDao.querySalesDeliveryStatusRight(salesDeliveryItemPO.getSales().getBid());
+
+		if (rights != null && rights.size() != 0) {
+			checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_FINISH_INT, finisher);
+		}
 
 		salesDeliveryItemDao.update(salesDeliveryItemPO);
 	}
@@ -237,6 +263,54 @@ public class SalesDeliveryServiceImpl implements SalesDeliveryService {
 		salesDeliveryItemPO.setComment(salesDeliveryItem.getComment());
 
 		salesDeliveryItemDao.update(salesDeliveryItemPO);
+	}
+
+	private void checkSalesDeliveryItem(SalesDeliveryItemPO salesDeliveryItemPO, List<SalesDeliveryStatusRightPO> rights, Short status, UserPO userPO) {
+
+		List<Short> statuses = new ArrayList<Short>();
+
+		for (SalesDeliveryStatusRightPO salesDeliveryStatusRightPO : rights) {
+			statuses.add(salesDeliveryStatusRightPO.getStatus());
+		}
+
+		if (!statuses.contains(status)) return;
+
+		switch (status) {
+			case SalesDeliveryItemPO.STATUS_TRAN_INT:
+
+				salesDeliveryItemPO.setStatus(SalesDeliveryItemPO.STATUS_TRAN_INT);
+				salesDeliveryItemPO.setTraner(userPO);
+				salesDeliveryItemPO.setTranTime(DateUtil.getDateToTimestamp(new Date()));
+
+				checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_CHECK_INT, userPO);
+
+				break;
+			case SalesDeliveryItemPO.STATUS_CHECK_INT:
+
+				salesDeliveryItemPO.setStatus(SalesDeliveryItemPO.STATUS_CHECK_INT);
+				salesDeliveryItemPO.setChecker(userPO);
+				salesDeliveryItemPO.setCheckTime(DateUtil.getDateToTimestamp(new Date()));
+
+				checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_CONFIRM_INT, userPO);
+
+				break;
+			case SalesDeliveryItemPO.STATUS_CONFIRM_INT:
+
+				salesDeliveryItemPO.setStatus(SalesDeliveryItemPO.STATUS_CONFIRM_INT);
+				salesDeliveryItemPO.setConfirmer(userPO);
+				salesDeliveryItemPO.setConfirmTime(DateUtil.getDateToTimestamp(new Date()));
+
+				checkSalesDeliveryItem(salesDeliveryItemPO, rights, SalesDeliveryItemPO.STATUS_FINISH_INT, userPO);
+
+				break;
+			case SalesDeliveryItemPO.STATUS_FINISH_INT:
+
+				salesDeliveryItemPO.setStatus(SalesDeliveryItemPO.STATUS_FINISH_INT);
+				salesDeliveryItemPO.setFinisher(userPO);
+				salesDeliveryItemPO.setFinishTime(DateUtil.getDateToTimestamp(new Date()));
+
+				break;
+		}
 	}
 
 	private List<SalesDeliveryItemVO> ptv(List<SalesDeliveryItemPO> salesDeliveryItemPOs) {

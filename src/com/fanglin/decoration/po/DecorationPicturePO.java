@@ -51,6 +51,8 @@ public class DecorationPicturePO implements Serializable {
 
 	private String path;
 
+	private int filesize;
+
 	private Timestamp uploadTime;
 
 	private String content;
@@ -116,6 +118,15 @@ public class DecorationPicturePO implements Serializable {
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+
+	@Column(name = "filesize")
+	public int getFilesize() {
+		return filesize;
+	}
+
+	public void setFilesize(int filesize) {
+		this.filesize = filesize;
 	}
 
 	@Column(name = "content")

@@ -16,23 +16,13 @@ import com.fanglin.core.vo.Filter;
 import com.fanglin.data.material.dao.GoodsDao;
 import com.fanglin.data.material.vo.GoodsVO;
 import com.fanglin.data.po.GoodsPO;
-import com.fanglin.data.po.QuotationItemPO;
-import com.fanglin.data.quotation.dao.QuotationItemDao;
 import com.fanglin.decoration.vo.DecorationVO;
 import com.fanglin.personel.dao.UserDao;
 import com.fanglin.personel.po.UserPO;
 import com.fanglin.personel.vo.UserBaseVO;
-import com.fanglin.quotation.dao.AddReduceItemDao;
-import com.fanglin.quotation.dao.ExtensionItemDao;
 import com.fanglin.quotation.dao.QuotationDao;
-import com.fanglin.quotation.dao.QuotationFunctionAreaDao;
-import com.fanglin.quotation.dao.QuotationFunctionAreaItemDao;
 import com.fanglin.quotation.dao.SelectionDao;
 import com.fanglin.quotation.dao.SelectionItemDao;
-import com.fanglin.quotation.po.AddReduceItemPO;
-import com.fanglin.quotation.po.ExtensionItemPO;
-import com.fanglin.quotation.po.QuotationFunctionAreaItemPO;
-import com.fanglin.quotation.po.QuotationFunctionAreaPO;
 import com.fanglin.quotation.po.QuotationPO;
 import com.fanglin.quotation.po.SelectionItemPD;
 import com.fanglin.quotation.po.SelectionItemPO;
@@ -57,21 +47,6 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 	@Autowired
 	private QuotationDao quotationDao;
-
-	@Autowired
-	private QuotationItemDao quotationItemDao;
-
-	@Autowired
-	private QuotationFunctionAreaDao quotationFunctionAreaDao;
-
-	@Autowired
-	private QuotationFunctionAreaItemDao quotationFunctionAreaItemDao;
-
-	@Autowired
-	private ExtensionItemDao extensionItemDao;
-
-	@Autowired
-	private AddReduceItemDao addReduceItemDao;
 
 	@Autowired
 	private BrandDao brandDao;
@@ -193,42 +168,7 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 
 		SelectionItemPO _selectionItemPO = selectionItemDao.querySelectionItem(selectionVO.getSid(), selectionItemVO.getAreaId(), selectionItemVO.getQuoteId(), selectionItemVO.getType());
 
-		if (_selectionItemPO == null) {
-
-			Short type = selectionItemVO.getType();
-			Integer unitPrice = selectionItemVO.getPostprice();
-
-			QuotationItemPO quotationItemPO = null;
-
-			if (type == SelectionItemPO.TYPE_QUOTATION_SHORT) {
-
-				QuotationFunctionAreaPO quotationFunctionAreaPO = quotationFunctionAreaDao.get(selectionItemVO.getAreaId());
-				QuotationFunctionAreaItemPO quotationFunctionAreaItemPO = quotationFunctionAreaItemDao.queryQuotationFunctionAreaItemByQfaiId(QuotationFunctionAreaItemPO.factoryToClazz(quotationFunctionAreaPO.getQfaId(), quotationFunctionAreaPO.getIndex()), selectionItemVO.getQuoteId());
-
-				if (quotationFunctionAreaItemPO != null)
-					quotationItemPO = quotationFunctionAreaItemPO.getQuotationItem();
-
-			} else if (type == SelectionItemPO.TYPE_EXTENSIONADD_SHORT || type == SelectionItemPO.TYPE_EXTENSIONMINUS_SHORT) {
-
-				ExtensionItemPO extensionItemPO = extensionItemDao.get(selectionItemVO.getQuoteId());
-
-				if (extensionItemPO != null)
-					quotationItemPO = quotationItemDao.get(extensionItemPO.getQiid());
-
-			} else if (type == SelectionItemPO.TYPE_ADDITEM_SHORT || type == SelectionItemPO.TYPE_MINUSITEM_SHORT) {
-
-				AddReduceItemPO addReduceItemPO = addReduceItemDao.get(selectionItemVO.getQuoteId());
-
-				if (addReduceItemPO != null)
-					quotationItemPO = quotationItemDao.get(addReduceItemPO.getQiid());
-			}
-
-			if (quotationItemPO != null)
-				unitPrice = quotationItemPO.getUnitPrice();
-
-			if (selectionItemVO.getPostprice() > unitPrice) {
-				throw new FLException(130037, "选材结算金额不符");
-			}
+		if (_selectionItemPO == null || _selectionItemPO.getType() == SelectionItemPO.TYPE_ALONE_SHORT) {
 
 			SelectionItemPO selectionItemPO = new SelectionItemPO();
 
@@ -569,21 +509,21 @@ public class SelectionItemServiceImpl implements SelectionItemService {
 		int oldSelling = Arith.mul(selectionItemPO.getNum(), selectionItemPO.getPostprice());
 
 		switch (selectionItemPO.getType()) {
-		case SelectionItemPO.TYPE_QUOTATION_SHORT:
-			selectionPO.setQuotationTotal(Arith.add(Arith.sub(selectionPO.getQuotationTotal(), oldSelling), newSelling));
-			break;
-		case SelectionItemPO.TYPE_EXTENSIONADD_SHORT:
-			selectionPO.setExtensionAddTotal(Arith.add(Arith.sub(selectionPO.getExtensionAddTotal(), oldSelling), newSelling));
-			break;
-		case SelectionItemPO.TYPE_EXTENSIONMINUS_SHORT:
-			selectionPO.setExtensionReduceTotal(Arith.add(Arith.sub(selectionPO.getExtensionReduceTotal(), oldSelling), newSelling));
-			break;
-		case SelectionItemPO.TYPE_ADDITEM_SHORT:
-			selectionPO.setAddReduceAddTotal(Arith.add(Arith.sub(selectionPO.getAddReduceAddTotal(), oldSelling), newSelling));
-			break;
-		case SelectionItemPO.TYPE_MINUSITEM_SHORT:
-			selectionPO.setAddReduceMinusTotal(Arith.add(Arith.sub(selectionPO.getAddReduceMinusTotal(), oldSelling), newSelling));
-			break;
+			case SelectionItemPO.TYPE_QUOTATION_SHORT:
+				selectionPO.setQuotationTotal(Arith.add(Arith.sub(selectionPO.getQuotationTotal(), oldSelling), newSelling));
+				break;
+			case SelectionItemPO.TYPE_EXTENSIONADD_SHORT:
+				selectionPO.setExtensionAddTotal(Arith.add(Arith.sub(selectionPO.getExtensionAddTotal(), oldSelling), newSelling));
+				break;
+			case SelectionItemPO.TYPE_EXTENSIONMINUS_SHORT:
+				selectionPO.setExtensionReduceTotal(Arith.add(Arith.sub(selectionPO.getExtensionReduceTotal(), oldSelling), newSelling));
+				break;
+			case SelectionItemPO.TYPE_ADDITEM_SHORT:
+				selectionPO.setAddReduceAddTotal(Arith.add(Arith.sub(selectionPO.getAddReduceAddTotal(), oldSelling), newSelling));
+				break;
+			case SelectionItemPO.TYPE_MINUSITEM_SHORT:
+				selectionPO.setAddReduceMinusTotal(Arith.add(Arith.sub(selectionPO.getAddReduceMinusTotal(), oldSelling), newSelling));
+				break;
 		}
 
 		long addTotal = Arith.add(Arith.add(selectionPO.getQuotationTotal(), selectionPO.getExtensionAddTotal()), selectionPO.getAddReduceAddTotal());

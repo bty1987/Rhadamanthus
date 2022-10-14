@@ -68,7 +68,7 @@ public class OccessoriesCostServiceImpl implements OccessoriesCostService {
 		OccessoriesCostPO occessoriesCostPO = occessoriesCostDao.get(occessoriesCostVO.getOcid());
 
 		if (occessoriesCostPO == null) {
-
+			throw new FLException(260071, "外辅费用不存在");
 		}
 
 		occessoriesCostPO.setPrice(occessoriesCostVO.getPrice());

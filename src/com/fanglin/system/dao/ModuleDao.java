@@ -22,10 +22,10 @@ public interface ModuleDao extends Dao<ModulePO> {
 
 	public List<ModulePO> pageModule(Paging paging, List<Filter> filters);
 
-	public List<ModulePO> queryModule();
+	public List<ModulePO> queryModule(Short system, Short level);
 
 	public List<ModulePO> queryModuleBySystem(short system);
 
-	public int deleteModuleForSubByMid(int mId);
+	public int deleteModule(int mId);
 
 }

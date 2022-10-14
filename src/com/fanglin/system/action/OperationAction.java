@@ -31,112 +31,123 @@ import com.fanglin.utils.SystemConfig;
 @ParentPackage("base")
 @Namespace("/")
 @Controller
-public class OperationAction extends BaseListAction{
+public class OperationAction extends BaseListAction {
 
 	private static final long serialVersionUID = 4693120315577831019L;
-	
+
 	@Autowired
 	private OperationService operationService;
-	
+
 	private List<OperationVO> operations;
-	
+
 	private List<Integer> oids;
-	
+
 	private UserVO user;
-	
+
 	private OperationVO operation;
-	
+
 	private RoleVO role;
-	
-	@Action(value = "pageOperation", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) } )
-	public String pageOperation(){
-		
+
+	@Action(value = "pageOperation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) })
+	public String pageOperation() {
+
 		operationService.pageOperation(getPaging(), getFilters());
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "queryOperation", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) } )
-	public String queryOperation(){
-		
-		operations = operationService.queryOperation(operation);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "queryOperationForLogin", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) } )
-	public String queryOperationForLogin() throws FLException{
-		
-		operations = operationService.queryOperationByUserId(operation, new UserVO(queryUserId()));
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "queryOperationByUserId", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) } )
-	public String queryOperationByUserId() throws FLException{
-		
-		operations = operationService.queryOperationByUserId(operation, user);
-		
-		return SUCCESS;
-	}
-	
-	@Action(value = "queryOperationByRid", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) } )
-	public String queryOperationByRid() throws FLException{
-		
-		operations = operationService.queryOperationByRid(operation, role);
-		
+
 		return SUCCESS;
 	}
 
-	
-	@Action(value = "updateRoleOperationByRid", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) } )
-	public String updateRoleOperationByRid() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
-		}
-		
-		operationService.updateRoleOperationByRid(oids, operation, role);
-		
+	@Action(value = "queryOperation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) })
+	public String queryOperation() {
+
+		operations = operationService.queryOperation(operation);
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "updateRoleOperationByUserId", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) } )
-	public String updateRoleOperationByUserId() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
-		}
-		
-		operationService.updateRoleOperationByUserId(oids, operation, user);
-		
+
+	@Action(value = "queryOperationForLogin", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) })
+	public String queryOperationForLogin() throws FLException {
+
+		operations = operationService.queryOperationByUserId(operation, new UserVO(queryUserId()));
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "deleteOperation", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) } )
-	public String deleteOperation() throws FLException{
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
-		}
-		
-		operationService.deleteOperation(operation);
-		
+
+	@Action(value = "queryOperationByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) })
+	public String queryOperationByUserId() throws FLException {
+
+		operations = operationService.queryOperationByUserId(operation, user);
+
 		return SUCCESS;
 	}
-	
-	@Action(value = "addOperation", results = { @Result(name = "success", type = "json" , params={"ignoreHierarchy","false"}) } )
+
+	@Action(value = "queryOperationByRid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) })
+	public String queryOperationByRid() throws FLException {
+
+		operations = operationService.queryOperationByRid(operation, role);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "addOperation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) })
 	public String addOperation() throws FLException {
-		
-		if(SystemConfig.getString("communion") == null){
-		    throw new FLException(-1, "无操作权限");
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
 		}
-		
+
 		operationService.addOperation(operation);
-		
+
 		return SUCCESS;
 	}
-	
+
+	@Action(value = "updateOpperation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String updateOpperation() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		operationService.updateOpperation(operation);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateRoleOperationByRid", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) })
+	public String updateRoleOperationByRid() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		operationService.updateRoleOperationByRid(oids, role, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "updateRoleOperationByUserId", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) })
+	public String updateRoleOperationByUserId() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		operationService.updateRoleOperationByUserId(oids, user, queryUserId());
+
+		return SUCCESS;
+	}
+
+	@Action(value = "deleteOperation", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) })
+	public String deleteOperation() throws FLException {
+
+		if (SystemConfig.getString("communion") == null) {
+			throw new FLException(-1, "无操作权限");
+		}
+
+		operationService.deleteOperation(operation);
+
+		return SUCCESS;
+	}
+
 	public List<OperationVO> getOperations() {
 		return operations;
 	}

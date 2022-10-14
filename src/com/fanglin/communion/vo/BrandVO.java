@@ -27,10 +27,10 @@ public class BrandVO implements java.io.Serializable {
 	private String kino;
 
 	private String kiname;
-	
+
 	private UserBaseVO supplier;
-	
-	public BrandVO(){
+
+	public BrandVO() {
 		super();
 	}
 

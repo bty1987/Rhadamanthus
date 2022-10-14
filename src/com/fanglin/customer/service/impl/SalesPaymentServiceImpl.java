@@ -33,6 +33,7 @@ public class SalesPaymentServiceImpl implements SalesPaymentService {
 
 				salesPaymentVO = new SalesPaymentVO();
 
+				salesPaymentVO.setSpid(salesPaymentPO.getSpid());
 				salesPaymentVO.setOrderId(salesPaymentPO.getSales().getOrderId());
 				salesPaymentVO.setMoney(salesPaymentPO.getReferMoney());
 				salesPaymentVO.setStatus(salesPaymentPO.getStatus());

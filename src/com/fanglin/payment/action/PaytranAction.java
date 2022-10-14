@@ -68,6 +68,22 @@ public class PaytranAction extends BaseListAction {
 		return SUCCESS;
 	}
 
+	@Action(value = "sendPaytran", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String sendPaytran() throws FLException {
+
+		paytranService.sendPaytran(paytran);
+
+		return SUCCESS;
+	}
+
+	@Action(value = "posPay", results = { @Result(name = "success", type = "json", params = { "ignoreHierarchy", "false" }) }, params = { "contentType", "text/html" })
+	public String posPay() throws FLException {
+
+		paytranService.posPay(paytran, queryCompany());
+
+		return SUCCESS;
+	}
+
 	public List<PaytranVO> getPaytrans() {
 		return paytrans;
 	}
