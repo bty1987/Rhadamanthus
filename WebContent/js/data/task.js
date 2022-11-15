@@ -36,7 +36,7 @@ $(function() {
 
     var taskSeacher = new Searcher();
 
-    taskSeacher.base("condList", "pagenation", "resultList", api.data.pageTask);
+    taskSeacher.base("condList", "pagenation", "resultList", api.communion.pageTask);
 
     taskSeacher.condition(["data-task-name", "data-task-isShow", "data-task-status", "data-task-level"]);
 
@@ -126,7 +126,7 @@ $(function() {
         type: "switch",
         clazz: "status-lbl",
         handle: function(v, check) {
-            com.post(api.data.updateTaskForStatus, {
+            com.post(api.communion.updateTaskForStatus, {
                 "task.tid": v.tid,
                 "task.status": check ? 0 : 1
             });
@@ -140,7 +140,7 @@ $(function() {
         type: "switch",
         clazz: "display-lbl",
         handle: function(v, check) {
-            com.post(api.data.updateTaskForIsShow, {
+            com.post(api.communion.updateTaskForIsShow, {
                 "task.tid": v.tid,
                 "task.isShow": check ? 0 : 1
             });
@@ -167,7 +167,7 @@ $(function() {
         if (com.validate('addtaskModal'))
             return false;
 
-        var url = api.data.addTask;
+        var url = api.communion.addTask;
         var options = {
             "task.name": task.items.name.val(),
             "task.filepath": task.items.filepath.val(),
@@ -179,7 +179,7 @@ $(function() {
         };
 
         if (task.tid) {
-            url = api.data.updateTask;
+            url = api.communion.updateTask;
             options["task.tid"] = task.Items.tid;
         }
 

@@ -12,7 +12,7 @@
 
     <!-- altogether -->
     <link rel="stylesheet" href="assets/altogether/css/pace.min.css" />
-    <script type="text/javascript" src='assets/altogether/js/pace.min.js'></script>
+    <script type="text/javascript" src='assets/altogether/js/pace.min.js' data-pace-options='{"ajax": false}'></script>
     <!-- altogether end -->
     
     <script type="text/javascript">
@@ -64,27 +64,27 @@
         var csses = "";
         
         /* altogether */
-        csses += '<link rel="stylesheet" href="assets/altogether/css/font-awesome.min.css?version=' + versionCode + '" />';
-        csses += '<link rel="stylesheet" href="assets/altogether/css/locking.css?version=' + versionCode + '" />'; /*  lockscreen */
-        csses += '<link rel="stylesheet" href="assets/altogether/css/layui.css?version=' + versionCode + '" />'; /*  lockscreen */
+        csses += '<link rel="stylesheet" href="assets/altogether/css/font-awesome.min.css" />';
+        csses += '<link rel="stylesheet" href="assets/altogether/css/locking.css" />'; /*  lockscreen */
+        csses += '<link rel="stylesheet" href="assets/altogether/css/layui.css" />'; /*  lockscreen */
         /* altogether end */
         
         /* ace */
-        csses += '<link rel="stylesheet" href="assets/ace/css/bootstrap.min.css?version=' + versionCode + '" />'; // basic styles
-        csses += '<link rel="stylesheet" href="assets/ace/css/font-awesome-fa.min.css?version=' + versionCode + '" />';
-        csses += '<link rel="stylesheet" href="assets/ace/css/fullcalendar.css?version=' + versionCode + '" />';
-        csses += '<link rel="stylesheet" href="assets/ace/css/huploadify.css?version=' + versionCode + '" />';
-        csses += '<link rel="stylesheet" href="assets/ace/css/ace.css?version=' + versionCode + '" />';
+        csses += '<link rel="stylesheet" href="assets/ace/css/bootstrap.min.css" />'; // basic styles
+        csses += '<link rel="stylesheet" href="assets/ace/css/font-awesome-fa.min.css" />';
+        csses += '<link rel="stylesheet" href="assets/ace/css/fullcalendar.css" />';
+        csses += '<link rel="stylesheet" href="assets/ace/css/huploadify.css" />';
+        csses += '<link rel="stylesheet" href="assets/ace/css/ace.css" />';
         /* ace end */
 
-        csses += '<link rel="stylesheet" href="' + server + 'css/main.css?version=' + versionCode + '" />';
+        csses += '<link rel="stylesheet" href="' + server + 'css/main.css" />';
 
         document.write(csses);
 
         var jses = "";
 
         if(!window.jQuery){
-            jses += '<script src="' + server + 'assets/altogether/js/jquery-2.0.3.min.js?version=' + versionCode + '"><\/script>';
+            jses += '<script src="' + server + 'assets/altogether/js/jquery-2.0.3.min.js"><\/script>';
         }
 
         document.write(jses);
@@ -171,7 +171,7 @@
                     <li class="green">
                         <a href="#" id="versionInfo">
                             <i class="icon-bookmark"></i>
-                            <span class="user-info"><small>版本</small><small><span id="versionCode"></span></small></span>
+                            <span class="user-info"><small>版本<span id="versionName"></span></small><small><span id="versionCode"></span></small></span>
                         </a>
                     </li>
                     <li class="light-blue">
@@ -271,7 +271,13 @@
     </div>
     
     <div id="layerCompany" style="display: none;">
-        <form class="form-horizontal" id="moreCompany" style="padding: 10px 30px 0 30px;"></form>
+        <form class="form-horizontal" id="moreCompany" style="padding: 10px 30px 0 30px;">
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <input type="text" id="typeaheadCompany" placeholder="请输入公司名称" class="col-sm-12">
+                </div>
+            </div>
+        </form>
     </div>
 	
     <script src="assets/altogether/js/jquery-2.0.3.min.js"></script>
@@ -288,7 +294,7 @@
 
     <script src="assets/altogether/js/layui.js"></script> <!-- layui tools -->
 
-    <script src="assets/altogether/js/typeahead-bs2.min.js"></script> <!-- auto fill --> 
+    <script src="assets/altogether/js/typeahead.min.js"></script> <!-- auto fill --> 
     <script src="assets/altogether/js/tag.js"></script>
     <script src="assets/altogether/js/base64.js"></script> <!--  --> 
     <script src="assets/altogether/js/html2canvas.js"></script> <!-- export tools -->
@@ -312,26 +318,27 @@
 
         var jses = "";
 
-        jses += '<script src="js/com/config.js?version=' + versionCode + '"><\/script>';
-        jses += '<script src="js/com/server.js?version=' + versionCode + '"><\/script>';
-        jses += '<script src="js/com/api.js?version=' + versionCode + '"><\/script>';
-        jses += '<script src="js/com/load.js?version=' + versionCode + '"><\/script>';
-        jses += '<script src="js/com/version.js?version=' + versionCode + '"><\/script>';
-        jses += '<script src="js/com/params.js?version=' + versionCode + '"><\/script>';
-        jses += '<script src="js/com/utils.js?version=' + versionCode + '"><\/script>';
-        jses += '<script src="js/com/error.js?version=' + versionCode + '"><\/script>';
-        jses += '<script src="js/com/core.js?version=' + versionCode + '"><\/script>';
-        jses += '<script src="js/com/validator.js?version=' + versionCode + '"><\/script>';
-        jses += '<script src="js/com/condition.js?version=' + versionCode + '"><\/script>';
-        jses += '<script src="js/com/searcher.js?version=' + versionCode + '"><\/script>';
-        jses += '<script src="js/com/exporter.js?version=' + versionCode + '"><\/script>';
-        jses += '<script src="js/com/printer.js?version=' + versionCode + '"><\/script>';
-        jses += '<script src="js/index.js?version=' + versionCode + '"><\/script>';
+        jses += '<script src="js/com/config.js"><\/script>';
+        jses += '<script src="js/com/server.js"><\/script>';
+        jses += '<script src="js/com/api.js"><\/script>';
+        jses += '<script src="js/com/load.js"><\/script>';
+        jses += '<script src="js/com/version.js"><\/script>';
+        jses += '<script src="js/com/params.js"><\/script>';
+        jses += '<script src="js/com/utils.js"><\/script>';
+        jses += '<script src="js/com/error.js"><\/script>';
+        jses += '<script src="js/com/core.js"><\/script>';
+        jses += '<script src="js/com/validator.js"><\/script>';
+        jses += '<script src="js/com/condition.js"><\/script>';
+        jses += '<script src="js/com/searcher.js"><\/script>';
+        jses += '<script src="js/com/exporter.js"><\/script>';
+        jses += '<script src="js/com/printer.js"><\/script>';
+        jses += '<script src="js/com/constant.js"><\/script>';
+        jses += '<script src="js/index.js"><\/script>';
 
         if(!parent.window.isPC && !parent.window.isEncryption){
             document.write(jses);
         }else if(parent.window.isPC && !parent.window.isEncryption){
-            jses += '<script src="js/com/nw.js?version=' + versionCode + '"><\/script>';
+            jses += '<script src="js/com/nw.js"><\/script>';
             document.write(jses);
         }else if(parent.window.isPC && parent.window.isEncryption){
 
@@ -346,9 +353,11 @@
             win.evalNWBin(null, 'js/com/condition.bin');
             win.evalNWBin(null, 'js/com/searcher.bin');
             win.evalNWBin(null, 'js/com/exporter.bin');
+            win.evalNWBin(null, 'js/com/constant.bin');
             win.evalNWBin(null, 'js/index.bin');
             win.evalNWBin(null, 'js/com/nw.bin');
             win.evalNWBin(null, 'js/com/printer.bin');
+            
         }
 
         //$(function(){

@@ -393,7 +393,10 @@ $.extend(api, {
         addOrganization: {
             url: "addOrganization.do",
             server: "communion"
-        }
+        },
+        queryOperationForSelf: {
+            url: "queryOperationForSelf.do"
+        },
     }
 });
 
@@ -444,7 +447,6 @@ $.extend(api, {
             url: "deleteVersion.do",
             server: "communion"
         }
-
     }
 });
 

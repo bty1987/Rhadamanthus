@@ -29,10 +29,12 @@
     $.extend(com.validator, functionArea.validator);
 
     com.post(api.ds.quotation, {}, function(res) {
+
         functionArea.items.type.bindData(res.functionType, 'key', 'value');
     });
 
     com.post(api.quotation.queryQuotationVersion, {}, function(res) {
+
         functionArea.items.versionId.bindData(res.quotationVersions, "no", "name");
     });
 
@@ -56,11 +58,13 @@
     var displayFunc = (function() {
 
         var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
                 $.each(listData, function(i, v) {
+
                     creatLine(v).appendTo($ul);
                 });
 
@@ -69,6 +73,7 @@
         };
 
         var creatLine = function(v) {
+
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid').append($('<small></small>').addClass('blue').html(' ' + v.name));
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
@@ -81,18 +86,21 @@
             var propertyArr = [["编号: ", v.no, "grey"], ["报价版本: ", v.version.no, "grey"], ["类型: ", v.functionAreaType, "red"], ["总价: ", v.total, "blue"], ["排序: ", v.functionAreaOrder, "blue"], ];
 
             $.each(propertyArr, function(index, value) {
+
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                 $liProperty.appendTo($ulProperty);
             });
 
-            $divBtnWrap.append($btnEdit).append($btnDel).append($btnAssign).appendTo($h3);
+            $divBtnWrap.append($btnEdit).append($btnAssign).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
             $btnEdit.click(function() {
+
                 com.showConfirm("功能区的类型修改,会清空以前包含的报价项,是否确认修改?", function() {
+
                     editFunctionArea(v);
                 });
             });
@@ -105,6 +113,7 @@
             });
 
             $btnDel.click(function() {
+
                 removeFunctionArea(v.faid);
             });
 
@@ -113,10 +122,12 @@
 
         return {
             init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function(v) {
+
                 return creatLine(v);
             }
         };
@@ -126,6 +137,7 @@
 
     var searcher = new Searcher();
     searcher.init(_condArr, "condList", api.quotation.pageFunctionArea, function(data) {
+
         displayFunc.init('resultList', data);
     }, "pagenation", "functionAreaPostData", null, false, null, function() {
 
@@ -197,6 +209,7 @@
         }
 
         com.post(url, options, function() {
+
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
             functionArea.modals.functionAreaModal.modal("hide");
@@ -205,7 +218,9 @@
 
     // 功能区删除事件
     function removeFunctionArea(faid) {
+
         com.showConfirm("是否确认删除", function() {
+
             com.post(api.quotation.deleteFunctionArea, {
                 "functionArea.faid": faid
             }, function() {

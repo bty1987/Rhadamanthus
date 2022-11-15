@@ -5,13 +5,14 @@
         items :{
             no : com.focusPage("#deptId"),
             name : com.focusPage("#deptName"),
-            fatherdept : com.focusPage("#fatherdept"),//部门
-            deptype : com.focusPage("#deptype"),//部门类型
+            fatherdept : com.focusPage("#fatherdept"),// 部门
+            deptype : com.focusPage("#deptype"),// 部门类型
             kino : com.focusPage("#kino"),
             kiname : com.focusPage("#kiname"),
             manager : com.focusPage("#manager"),
             comment : com.focusPage("#des"),
-            isdet : com.focusPage("#isdet"),//是否定岗
+            isdet : com.focusPage("#isdet"),// 是否定岗
+            code : com.focusPage("#code"),
             
         },
         modals : {
@@ -72,6 +73,7 @@
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
             var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
+            var $updateDD = $('<a></a>').addClass('btn btn-minier btn-success').html('同步钉钉信息');
 
             var $btnStatus = $('<div></div>').addClass('pull-right');
             var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
@@ -85,7 +87,8 @@
                 ["金蝶名称:", com.checkNull(v.kiname, "无"), "grey"],
                 ["管理人员:", com.checkNull(v.manager.userName, "无"), "grey"],
                 ["是否定岗:", com.checkNull(v.isdet == 1?"定岗":"开放"), "grey"],
-                ["描述:", v.comment  == ""?'无': v.comment , "grey"]
+                ["描述:", v.comment  == ""?'无': v.comment , "grey"],
+                ["code:", v.code  == null?'无': v.code , "grey"]
             ];
 
             $.each(propertyArr, function (index, value) {
@@ -100,7 +103,7 @@
             if(type == 'dutment'){
             	$divBtnWrap.append($btnDutment).appendTo($h3);
             }else{
-            	$divBtnWrap.append($btnEdit).append($btnStatus).appendTo($h3);
+            	$divBtnWrap.append($btnEdit).append($updateDD).append($btnStatus).appendTo($h3);
             }
 
             $liLine.append($h3).append($ulProperty);
@@ -178,6 +181,7 @@
         department.items.kiname.val(dept.kiname);
         department.items.comment .val(dept.comment);
         department.items.isdet.val(dept.isdet);
+        department.items.code.val(dept.code);
         if(dept.manager) com.updateTypeahead("manager", dept.manager.userId, dept.manager.currentName);
 
         department.modals.modal.modal("show");
@@ -209,7 +213,8 @@
             'dept.kiname': department.items.kiname.val(),
             'dept.manager.userId': com.typeahead("manager"),
             'dept.comment': department.items.comment.val(),
-            'dept.isdet': department.items.isdet.val()
+            'dept.isdet': department.items.isdet.val(),
+            'dept.code': department.items.code.val()
         };
 
         department.editFlg ? (url=api.communion.updateDepartment,options['dept.did'] = department.items.did) : (url = api.communion.addDepartment);

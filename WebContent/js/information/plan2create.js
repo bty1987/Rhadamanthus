@@ -48,7 +48,7 @@ jQuery(function ($) {
     });
 
 
-    com.post(api.data.queryTask, {"task.level": 1}, function (res) {
+    com.post(api.communion.queryTask, {"task.level": 1}, function (res) {
         var task = []
 
         $.each(res.tasks, function (i, v) {
@@ -290,7 +290,7 @@ jQuery(function ($) {
 
         plan2create.tid = plan2create.items.taskPlan.find("option:selected").attr('other');
 
-        com.post(api.data.queryTaskParam, {"taskParam.tid":  plan2create.tid}, function (res) {
+        com.post(api.communion.queryTaskParam, {"taskParam.tid":  plan2create.tid}, function (res) {
 
             var taskParams = res.taskParams;
 

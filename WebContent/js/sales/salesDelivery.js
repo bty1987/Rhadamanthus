@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
 
     var salesDelivery = {
 
@@ -16,7 +16,7 @@ $(function() {
             saveEditBtn: com.focusPage("#saveEditBtn"),
             cancelEditBtn: com.focusPage("#cancelEditBtn"),
         },
-        drawingModal: com.focusPage('#drawingModal').on("show.bs.modal", function(a) {
+        drawingModal: com.focusPage('#drawingModal').on("show.bs.modal", function (a) {
 
             com.clearValidator();
         }),
@@ -39,15 +39,15 @@ $(function() {
     salesDelivery.postData = "salesDeliveryFor" + salesDelivery.pageType + "PostData";
 
     initUploadBtn();
-    var displayFunc = (function() {
+    var displayFunc = (function () {
 
-        var renderList = function(tableId, listData) {
+        var renderList = function (tableId, listData) {
 
             var $tableWrap = com.focusPage('#' + tableId).empty();
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
-                $.each(listData, function(i, v) {
+                $.each(listData, function (i, v) {
 
                     creatLine(v).appendTo($ul);
                 });
@@ -56,7 +56,7 @@ $(function() {
             }
         };
 
-        var creatLine = function(v) {
+        var creatLine = function (v) {
 
             var $liLine = $('<li></li>').addClass('item-blue clearfix');
             var $h3 = $('<h3></h3>').addClass('oid');
@@ -86,7 +86,7 @@ $(function() {
 
             var propertyArr = [];
 
-            $.each(pageConfig.propertyArr, function(pi, pv) {
+            $.each(pageConfig.propertyArr, function (pi, pv) {
 
                 switch (pv) {
                     case "salesno":
@@ -152,7 +152,7 @@ $(function() {
                 }
             });
 
-            $.each(propertyArr, function(index, value) {
+            $.each(propertyArr, function (index, value) {
 
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
@@ -162,7 +162,7 @@ $(function() {
 
             $divBtnWrap.append($btnDecoration);
 
-            $.each(pageConfig.pageBtn, function(k, b) {
+            $.each(pageConfig.pageBtn, function (k, b) {
 
                 switch (b) {
                     case "tran":
@@ -189,13 +189,13 @@ $(function() {
             $divBtnWrap.appendTo($h3);
             $liLine.append($h3).append($ulProperty);
 
-            $btnDecoration.click(function() {
+            $btnDecoration.click(function () {
 
                 com.focusPage("text").css("line-height", "27px");
 
                 com.post(api.decoration.queryDecorationByOrderId, {
                     "decorationOrderId": v.sales.orderId
-                }, function(res) {
+                }, function (res) {
 
                     var decorationInfo = res.decoration;
 
@@ -205,52 +205,50 @@ $(function() {
                     com.focusPage("#escorter").html(decorationInfo.escorter.currentName == null ? "无" : decorationInfo.escorter.currentName);// 装修跟单员
                     com.focusPage("#supervisor").html(decorationInfo.supervisor.currentName == null ? "无" : decorationInfo.supervisor.currentName);// 装修监理
                     com.focusPage("#typeness").html(constant.decoration().decoration.typeness.keys[decorationInfo.typeness]);
-                    com.focusPage("#projectStatus").html(constant.construction().constructionSchedule.status.keys[decorationInfo.projectStatus]);
+                    com.focusPage("#projectStatus").html(constant.decoration().decoration.projectStatus.keys[decorationInfo.projectStatus]);
 
                     salesDelivery.modals.decorationInfo.modal("show");
                 });
             });
 
-            $btnTran.click(function(e) {
-
-                com.post(api.sales.tranSalesDeliveryItem, {
-                    "salesDeliveryItem.sdiid": v.sdiid
-                }, function(e) {
-
-                    searcher.doSearch();
-                    com.showAlert(com.info, "操作成功");
-                });
-            });
-
-            $btnCheck.click(function(e) {
-
-                com.post(api.sales.checkSalesDeliveryItem, {
-                    "salesDeliveryItem.sdiid": v.sdiid
-                }, function(e) {
+            $btnTran.click(function (e) {
+                var option = {};
+                option["salesDeliveryItems[0].sdiid"] = v.sdiid;
+                com.post(api.sales.tranSalesDeliveryItem, option, function (e) {
 
                     searcher.doSearch();
                     com.showAlert(com.info, "操作成功");
                 });
             });
 
-            $btnConfirm.click(function(e) {
+            $btnCheck.click(function (e) {
+                var option = {};
+                option["salesDeliveryItems[0].sdiid"] = v.sdiid;
+                com.post(api.sales.checkSalesDeliveryItem, option, function (e) {
+
+                    searcher.doSearch();
+                    com.showAlert(com.info, "操作成功");
+                });
+            });
+
+            $btnConfirm.click(function (e) {
 
                 var option = {};
                 option["salesDeliveryItems[0].sdiid"] = v.sdiid;
-                com.post(api.sales.confirmSalesDeliveryItem, option, function(e) {
+                com.post(api.sales.confirmSalesDeliveryItem, option, function (e) {
 
                     searcher.doSearch();
                     com.showAlert(com.info, "操作成功");
                 });
             });
 
-            $btnFinish.click(function(e) {
+            $btnFinish.click(function (e) {
+                var option = {};
+                option["salesDeliveryItems[0].sdiid"] = v.sdiid;
 
-                com.showConfirm('确认销售项配送完结?', function() {
+                com.showConfirm('确认销售项配送完结?', function () {
 
-                    com.post(api.sales.finishSalesDeliveryItem, {
-                        "salesDeliveryItem.sdiid": v.sdiid
-                    }, function(e) {
+                    com.post(api.sales.finishSalesDeliveryItem, option, function (e) {
 
                         searcher.doSearch();
                         com.showAlert(com.info, "操作成功");
@@ -258,7 +256,7 @@ $(function() {
                 });
             });
 
-            $btnEdit.click(function(e) {
+            $btnEdit.click(function (e) {
 
                 salesDelivery.items.sdiid = v.sdiid;
                 if (v.protranTime != null) {
@@ -271,7 +269,7 @@ $(function() {
                 salesDelivery.modals.editModal.modal("show");
             });
 
-            $btnPicture.click(function(e) {
+            $btnPicture.click(function (e) {
 
                 salesDelivery.salesItem = v.salesItem;
 
@@ -282,35 +280,49 @@ $(function() {
         };
 
         return {
-            init: function(tableId, listData) {
+            init: function (tableId, listData) {
 
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
-            drawLine: function(v) {
+            drawLine: function (v) {
 
                 return creatLine(v);
             }
         };
     })();
 
-    $.each(pageConfig.extraParam, function(i, v) {
+    $.each(pageConfig.extraParam, function (i, v) {
 
         salesDelivery.extraParams["statuses[" + i + "]"] = v;
     });
 
     var searcher = new Searcher();
 
-    searcher.init(pageConfig.condArr, "condList", pageConfig.apiPage, function(data) {
+    searcher.init(pageConfig.condArr, "condList", pageConfig.apiPage, function (data) {
 
         displayFunc.init('resultList', data);
-    }, "pagenation", salesDelivery.postData, salesDelivery.extraParams, false, null, function() {
+    }, "pagenation", salesDelivery.postData, salesDelivery.extraParams, false, null, function () {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'collects').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('确认').appendTo($adda);
 
-        $adda.click(function(e) {
+        var $addp = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'collects').css("margin", "0px 3px");
+        var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($addp);
+        var $addspan = $('<span></span>').text('配送').appendTo($addp);
+
+        var $adds = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'collects').css("margin", "0px 3px");
+        var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($adds);
+        var $addspan = $('<span></span>').text('审核').appendTo($adds);
+
+        var $addw = $('<a></a>').addClass('btn btn-minier btn-info pull-left').attr('name', 'collects').css("margin", "0px 3px");
+        var $addi = $('<i></i>').addClass('icon-ok bigger-110').appendTo($addw);
+        var $addspan = $('<span></span>').text('完结').appendTo($addw);
+
+
+
+        $adda.click(function (e) {
 
             e.stopPropagation();
 
@@ -326,23 +338,136 @@ $(function() {
 
             }
 
-            $.each($inputs, function(i, v) {
+            $.each($inputs, function (i, v) {
 
                 var $this = $(v);
 
                 option["salesDeliveryItems[" + i + "].sdiid"] = $this.attr('data-sdiid');
             });
 
-            com.showConfirm('确定要将选中的配送项进行确认吗?', function(index, layero) {
+            com.showConfirm('确定要将选中的配送项进行确认吗?', function (index, layero) {
 
-                com.post(api.sales.confirmSalesDeliveryItem, option, function(res) {
+                com.post(api.sales.confirmSalesDeliveryItem, option, function (res) {
 
                     com.showAlert(com.info, "操作成功");
                     searcher.doSearch();
 
                 });
 
-            }, function() {
+            }, function () {
+
+                searcher.doSearch();
+            });
+        });
+
+        $addp.click(function (e) {
+
+            e.stopPropagation();
+
+            var option = {};
+
+            var $inputs = com.focusPage('input[name="salesDelivery"]:checked', '#resultList');
+
+            if (!$inputs.length) {
+
+                com.showAlert(com.warning, "请选择需要进行配送的配送项");
+
+                return;
+
+            }
+
+            $.each($inputs, function (i, v) {
+
+                var $this = $(v);
+
+                option["salesDeliveryItems[" + i + "].sdiid"] = $this.attr('data-sdiid');
+            });
+
+            com.showConfirm('确定要将选中的配送项进行配送吗?', function (index, layero) {
+
+                com.post(api.sales.tranSalesDeliveryItem, option, function (res) {
+
+                    com.showAlert(com.info, "操作成功");
+                    searcher.doSearch();
+
+                });
+
+            }, function () {
+
+                searcher.doSearch();
+            });
+        });
+        $adds.click(function (e) {
+
+            e.stopPropagation();
+
+            var option = {};
+
+            var $inputs = com.focusPage('input[name="salesDelivery"]:checked', '#resultList');
+
+            if (!$inputs.length) {
+
+                com.showAlert(com.warning, "请选择需要进行审核的配送项");
+
+                return;
+
+            }
+
+            $.each($inputs, function (i, v) {
+
+                var $this = $(v);
+
+                option["salesDeliveryItems[" + i + "].sdiid"] = $this.attr('data-sdiid');
+            });
+
+            com.showConfirm('确定要将选中的配送项进行审核吗?', function (index, layero) {
+
+                com.post(api.sales.checkSalesDeliveryItem, option, function (res) {
+
+                    com.showAlert(com.info, "操作成功");
+                    searcher.doSearch();
+
+                });
+
+            }, function () {
+
+                searcher.doSearch();
+            });
+        });
+
+        $addw.click(function (e) {
+
+            e.stopPropagation();
+
+            var option = {};
+
+            var $inputs = com.focusPage('input[name="salesDelivery"]:checked', '#resultList');
+
+            if (!$inputs.length) {
+
+                com.showAlert(com.warning, "请选择需要进行完结的配送项");
+
+                return;
+
+            }
+
+            $.each($inputs, function (i, v) {
+
+                var $this = $(v);
+
+                option["salesDeliveryItems[" + i + "].sdiid"] = $this.attr('data-sdiid');
+            });
+
+            com.showConfirm('确定要将选中的配送项进行完结吗?', function (index, layero) {
+
+                com.post(api.sales.finishSalesDeliveryItem, option, function (res) {
+
+                    com.showAlert(com.info, "操作成功");
+                    searcher.doSearch();
+
+                });
+
+            }, function () {
 
                 searcher.doSearch();
             });
@@ -350,13 +475,21 @@ $(function() {
 
         if (salesDelivery.pageType == "check") {
             return [$adda];
+        } else if (salesDelivery.pageType == "init") {
+            return [$addp];
+        } else if (salesDelivery.pageType == "tran") {
+            return [$adds];
+        } else if (salesDelivery.pageType == "confirm") {
+            return [$addw];
         } else {
             return [];
         }
 
+
+
     }, 'resultList');
 
-    salesDelivery.btns.saveEditBtn.on('click', function() {
+    salesDelivery.btns.saveEditBtn.on('click', function () {
 
         if (com.validate('EditModal')) {
             return false;
@@ -368,7 +501,7 @@ $(function() {
             "salesDeliveryItem.protranTime": String(salesDelivery.items.protranTime.val()).substring(0, 10) + " 00:00:00"
         };
 
-        com.post(api.sales.updateSalesDeliveryItem, options, function(res) {
+        com.post(api.sales.updateSalesDeliveryItem, options, function (res) {
 
             com.showAlert(com.info, "操作成功");
             salesDelivery.items.protranTime.val("");
@@ -378,7 +511,7 @@ $(function() {
         }, null, false);
     });
 
-    salesDelivery.btns.cancelEditBtn.on('click', function() {
+    salesDelivery.btns.cancelEditBtn.on('click', function () {
 
         salesDelivery.items.protranTime.val("");
         salesDelivery.items.comment.val("");
@@ -391,11 +524,11 @@ $(function() {
 
         com.post(api.sales.querySalesPicture, {
             "salesPicture.siid": salesDelivery.salesItem.siid
-        }, function(data) {
+        }, function (data) {
 
             var salesPictures = data.salesPictures;
             if (salesPictures && salesPictures.length) {
-                $.each(salesPictures, function(i, value) {
+                $.each(salesPictures, function (i, value) {
 
                     if (value.status == constant.sales().salesPicture.STATUS_YES_SHORT) {
                         appendGalleryElement("salesDrawing", value);
@@ -408,6 +541,7 @@ $(function() {
 
         salesDelivery.drawingModal.modal("show");
     }
+
     function appendGalleryElement(galleryId, value) {
 
         var gallery = com.focusPage("#" + galleryId);
@@ -417,11 +551,11 @@ $(function() {
         var imgA = $("<a></a>").addClass('cboxElement').attr("target", "_blank").css("height", "150px").append(img).appendTo(imgLi);
         com.showImg(img, value.path, 150, 150, value.name, null, value.type);
         var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
-        var toolsA = $("<a></a>").attr("href", "#").on("click", function() {
+        var toolsA = $("<a></a>").attr("href", "#").on("click", function () {
 
             com.post(api.sales.deleteSalesPicture, {
                 "salesPicture.spid": value.spid
-            }, function(res) {
+            }, function (res) {
 
                 com.focusPage("#gallery_li" + value.spid).remove();
             });
@@ -435,7 +569,7 @@ $(function() {
 
         com.uploadify("#salesUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {
             'uploadType': 0
-        }, 5, function(data) {
+        }, 5, function (data) {
 
             var options = {};
             options["salesPicture.sid"] = salesDelivery.salesItem.sid;
@@ -445,7 +579,7 @@ $(function() {
             options["salesPicture.type"] = 0;
             options["salesPicture.filesize"] = data.filesize;
 
-            com.post(api.sales.addSalesPicture, options, function(res) {
+            com.post(api.sales.addSalesPicture, options, function (res) {
 
                 var salesPicture = res.salesPicture;
 

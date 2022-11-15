@@ -505,41 +505,6 @@ $.extend(api, {
         updateConstructionCostForStatus: {
             url: "updateConstructionCostForStatus.do"
         },
-        // 任务
-        pageTask: {
-            url: "pageTask.do"
-        },
-        queryTask: {
-            url: "queryTask.do"
-        },
-        addTask: {
-            url: "addTask.do"
-        },
-        updateTaskForStatus: {
-            url: "updateTaskForStatus.do"
-        },
-        updateTaskForIsShow: {
-            url: "updateTaskForIsShow.do"
-        },
-
-        pageTaskParam: {
-            url: "pageTaskParam.do"
-        },
-        queryTaskParam: {
-            url: "queryTaskParam.do"
-        },
-        addTaskParam: {
-            url: "addTaskParam.do"
-        },
-        updateTaskParam: {
-            url: "updateTaskParam.do"
-        },
-        updateTaskParamForStatus: {
-            url: "updateTaskParamForStatus.do"
-        },
-        deleteTaskParam: {
-            url: "deleteTaskParam.do"
-        },
 
         pageAccessoriesType: {
             url: "pageAccessoriesType.do"
@@ -1071,16 +1036,6 @@ $.extend(api, {
             }
         },
 
-        queryTaskRoleRightByRid: {
-            url: "queryTaskRoleRightByRid.do"
-        },
-        queryTaskRoleRightForSelf: {
-            url: "queryTaskRoleRightForSelf.do"
-        },
-        updateTaskRoleRight: {
-            url: "updateTaskRoleRight.do"
-        },
-
         queryBrandBalance: {
             url: "queryBrandBalance.do",
             type: "query",
@@ -1114,6 +1069,9 @@ $.extend(api, {
         },
         updateContractForStatus: {
             url: "updateContractForStatus.do"
+        },
+        countContract: {
+            url: "countContract.do"
         },
 
         pageSignet: {
@@ -1329,10 +1287,12 @@ $.extend(api, {
             url: "pageCustype.do"
         },
         queryCustype: {
-            url: "queryCustype.do"
+            url: "queryCustype.do",
+            server: "communion"
         },
         addCustype: {
-            url: "addCustype.do"
+            url: "addCustype.do",
+            server: "communion"
         },
         updateCustype: {
             url: "updateCustype.do"

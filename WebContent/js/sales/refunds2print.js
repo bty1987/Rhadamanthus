@@ -5,25 +5,18 @@ $(function() {
     utils = parent.utils;
     params = parent.params;
     printer = parent.printer;
-
     var options = {
         amountInTotal: 0,
         numberOfCases: 0,
         designer: null,// 设计师
-        supervisor: null
+        supervisor: null,
     };
-
+    
     var data = params.sales.sales;
     var refunds = params.sales.refunds;
 
     var trList = $("#refundsReslist");
     var querySalesItemBySid = api.sales.queryRefundsItemBySid;
-
-    // 初始化状态/结算状态
-    com.post(api.ds.sales, {}, function(res) {
-
-        options.statues = res.statues.split("key", "value");
-    }, null, false);
 
     com.post(api.decoration.queryDecorationByOrderId, {
         "decorationOrderId": data.orderId

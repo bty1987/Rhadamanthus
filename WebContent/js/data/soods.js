@@ -139,7 +139,7 @@ $(function() {
                 $liProperty.appendTo($ulProperty);
             });
             if (soods.pageType == "basic") {
-                $divBtnWrap.append($btnDelete).append($btnProject).append($drawingedit).appendTo($h3);
+                $divBtnWrap.append($btnProject).append($drawingedit).appendTo($h3);
             } else {
                 $divBtnWrap.append($btnProject).append($btnCompile).appendTo($h3);
             }

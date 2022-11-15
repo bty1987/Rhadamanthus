@@ -320,7 +320,7 @@ var QuotationDetail = (function() {
 
             _dtransfee = utils.changeThrDecimal(utils.accMul(_transfee, _transDiscount)); // 车运费*车运费折扣
             _dmanagefee = utils.changeThrDecimal(utils.accMul(utils.accMul(utils.accAdd(utils.accAdd(_undisPrice, _disPrice), _transfee), _manageRate), _manageDiscount)); // (未计算车运费之前的总价格+车运费)*管理费比例*管理费折扣
-            _taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT ? _taxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _taxRate)) : _taxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _managefee), _taxRate));
+            _taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT ? _taxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _taxRate)) : _taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT ? _taxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _managefee), _taxRate)) : _taxfee = 0;
 
             _total = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _managefee), _taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT ? _taxfee : 0), utils.accAdd(1, utils.accMul(_taxRate, _taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT ? 1 : 0)))); // 未计算车运费之前的总价格+车运费+管理费(未打折的总价格)
 
@@ -533,7 +533,7 @@ var QuotationDetail = (function() {
                     v.isShow = $(this).is(":checked") == false ? constant.data().decorationMatching.ISSHOW_HIDE_INT : constant.data().decorationMatching.ISSHOW_SHOW_INT;
                 });
 
-                v.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT ? _ddtaxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(_undisPrice, _disPrice), _dtransfee), _dtaxRate)) : _ddtaxfee = utils.accMul(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _managefee), _taxRate);
+                v.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT ? _ddtaxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(_undisPrice, _disPrice), _dtransfee), _dtaxRate)) : v.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT ? _ddtaxfee = utils.accMul(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _managefee), _taxRate) : _ddtaxfee = 0;
 
                 _ddtotal = utils.changeThrDecimal(utils.accMul(utils.accAdd(total, v.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT ? _ddtaxfee : 0), utils.accAdd(1, utils.accMul(_dtaxRate, v.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT ? 1 : 0))));
 
@@ -1139,14 +1139,21 @@ var QuotationDetail = (function() {
                     if ((v.vision & 2) != constant.data().decorationMatching.VISION_QUOTECOUNT_INT || v.type != constant.decoration().decoration.TYPE_HOLONOMY_INT)
                         return true;
 
+                    var taxCost = com.focusPage('#taxCost');
+
+                    _taxDiscount = taxCost.find('.discountprice').attr('data-discount');
+
                     var params = {
                         "value": v.base,
                         "data-name": v.name,
                         "data-baseDiscount": v.discount,
                         "data-trafficDiscount": v.trafficDiscount,
                         "data-manageDiscount": v.manageDiscount,
-                        "data-taxDiscount": v.taxDiscount
-                    } // 打折标识 , 名称样式不同
+                    };// 打折标识 , 名称样式不同
+
+                    if (_taxDiscount != null) {
+                        params["data-taxDiscount"] = v.taxDiscount;
+                    }
 
                     var radio = $('<div class="radio no-padding" style="margin-bottom:10px"></div>');
                     var lableInput = $('<label></label>').append($('<input type="radio" name="basePrice" class="ace"></input>').attr(params)).append('<sapn class="lbl"></sapn>');
@@ -2553,7 +2560,7 @@ var QuotationDetail = (function() {
                     _dtransfee = utils.accMul(_transfee, _transDiscount); // 车运费*车运费折扣
                     _dmanagefee = utils.accMul(utils.accMul(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _manageRate), _manageDiscount); // (未计算车运费之前的总价格+车运费)*管理费比例*管理费折扣,管理费
 
-                    _taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT ? _taxfee = utils.accMul(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _taxRate) : _taxfee = utils.accMul(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _managefee), _taxRate);
+                    _taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT ? _taxfee = utils.accMul(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _taxRate) : _taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT ? _taxfee = utils.accMul(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _managefee), _taxRate) : _taxfee = 0;
 
                     _total = utils.accMul(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _managefee), _taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT ? _taxfee : 0), utils.accAdd(1, utils.accMul(_taxRate, _taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT ? 1 : 0))); // 未计算车运费之前的总价格+车运费+管理费=(未打折的总价格)
 

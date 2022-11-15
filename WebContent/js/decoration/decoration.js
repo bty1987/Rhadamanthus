@@ -200,12 +200,22 @@
 
     com.focusPage("#refundContractBtn").on("click", function() {
 
+        var receiverId = com.focusPage("#approveTerminalManSel").find('input:checked').attr('userid');
+
+        if (receiverId == null || receiverId == "") {
+            com.showAlert(com.error, "请选择审批人!");
+            return false;
+        }
+
         if (com.validate("refundContractModal")) {
-            return;
+            return false;
         }
 
         var options = {
-            "decoration.orderId": params.decoration.orderId
+            "approval.receiver.userId": receiverId,
+            "approval.comment": "",
+
+            "approvalDecorationTerminal.orderId": params.decoration.orderId
         };
 
         var index = 0;
@@ -215,8 +225,8 @@
 
             var referMoney = com.focusPage("#backup_" + i).val();
 
-            options["decorationPayments[" + index + "].paymentType"] = v;
-            options["decorationPayments[" + index + "].referMoney"] = referMoney;
+            options["approvalDecorationTerminalItems[" + index + "].paymentType"] = v;
+            options["approvalDecorationTerminalItems[" + index + "].referMoney"] = referMoney;
             index++;
 
             backup = utils.accAdd(backup, parseFloat(referMoney));
@@ -224,14 +234,85 @@
 
         if (backup > order.paymentValue) {
             com.showAlert(com.error, "违约金额与已付款金额不匹配");
-            return;
+            return false;
         }
 
-        com.post(api.decoration.terminalDecoration, options, function(res) {
+        var decoration = null;
+        var items = [];
+        var details = "";
 
-            com.showAlert(com.info, "申请成功");
-            searcher.doSearch();
-            com.focusPage("#" + params.decoration.rowId + "_terminalBtn").css("display", "none");
+        com.post(api.decoration.queryDecorationForCommonByOrderId, {
+            "decoration.orderId": params.decoration.orderId
+        }, function(res) {
+
+            decoration = res.decoration;
+        }, null, false);
+
+        if (!decoration) {
+            com.showAlert(com.error, "装修单不存在");
+            return false;
+        }
+
+        $.each(order.paymentTypes, function(i, v) {
+
+            details = details + v + ": " + com.focusPage("#backup_" + i).val() + "\n";
+        });
+
+        var args = [{
+            "name": "装修单号",
+            "value": decoration.orderId
+        }, {
+            "name": "城市",
+            "value": decoration.house.village.cityProper.city.name
+        }, {
+            "name": "城区",
+            "value": decoration.house.village.cityProper.name
+        }, {
+            "name": "地址",
+            "value": decoration.house.village.name + " " + decoration.house.houseNumber
+        }, {
+            "name": "签单时间",
+            "value": decoration.status == constant.decoration().decoration.STATUS_PROSIGN_INT ? decoration.precontractTime : decoration.contractTime
+        }, {
+            "name": "签单额",
+            "value": decoration.orderTotalPrice
+        }, {
+            "name": "实收额",
+            "value": decoration.factPrice
+        }, {
+            "name": "装修单类型",
+            "value": constant.decoration().decoration.typeness.keys[decoration.typeness]
+        }, {
+            "name": "设计师",
+            "value": decoration.designer.currentName
+        }, {
+            "name": "设计部",
+            "value": decoration.designer.dept.name
+        }, {
+            "name": "设计分区",
+            "value": decoration.designer.dept.fatherDept.name
+        }, {
+            "name": "业务员",
+            "value": decoration.salesman.currentName
+        }, {
+            "name": "参与活动",
+            "value": ""
+        }, {
+            "name": "监理",
+            "value": decoration.supervisor.currentName ? decoration.supervisor.currentName : ""
+        }, {
+            "name": "款项信息",
+            "value": details
+        }, ];
+
+        if (com.focusPage("#dingApprove", "#violation").prop("checked")) {
+            options["code"] = "PROC-9B7CBC59-96FB-4941-BF01-608DB3E37C5E";
+            options["forms"] = JSON.stringify(args);
+        }
+
+        com.post(api.approval.submitApprovalForDecorationTerminal, options, function(res) {
+
+            com.showAlert(com.info, "提交成功");
         });
 
         order.refundContractModal.modal("hide");
@@ -359,6 +440,18 @@
             order.infoItems["backup_" + v.ptid] = com.focusPage("#backup_" + v.ptid);
 
         });
+
+        var $div = $('<div class="form-group"></div>');
+        $('<label for="refundValue" class="col-sm-3 control-label no-padding-right"></label>').html("审批人").appendTo($div);
+        $('<div class="col-sm-9"></div>').append($('<div id="approveTerminalManSel" class="col-xs-10 col-sm-6 "></div>')).appendTo($div);
+        order.violation.append($div);
+
+        var $div = $('<div class="form-group"></div>');
+        $('<label for="dingApprove" class="col-sm-3 control-label no-padding-right"></label>').html("钉钉同步").appendTo($div);
+        $('<div class="col-sm-9"></div>').append($('<input class="ace ace-switch ace-switch-5" type="checkbox" id="dingApprove"><span class="lbl status-lbl"></span>')).appendTo($div);
+        ''
+        order.violation.append($div);
+
     }, null, false);
 
     /**
@@ -447,7 +540,16 @@
                                 propertyArr.push(["预签额:", v.precontractPrice, "blue"]);
                                 break;
                             case "orderTotalPrice":
-                                propertyArr.push(["签单额:", v.orderTotalPrice, "blue"]);
+                                var _text = $("<text>签单额:</text>");
+                                var _info = null;
+
+                                if ([constant.decoration.decoration.STATUS_SIGNED_INT, constant.decoration.decoration.STATUS_RESIGNED_INT, constant.decoration.decoration.STATUS_TERMINATION_INT, constant.decoration.decoration.STATUS_FINAL_INT].contains(v.status)) {
+                                    _info = $('<i class="icon-info-sign blue" style="padding-left: 2px; cursor: pointer"></i>').click(function() {
+
+                                        netPerformance(_text, v);
+                                    });
+                                }
+                                propertyArr.push([_text, v.orderTotalPrice, "blue", _info]);
                                 break;
                             case "quotationPrice":
                                 propertyArr.push(["报价额:", v.quotationPrice, "blue"]);
@@ -633,9 +735,11 @@
 
                     });
 
+                    // 合同终止
                     btnTerminal.click(function() {
 
                         terminalOrder(v.orderId, v.status, v.precontractPrice);
+                        approvalUtils.initqueryApprovalUser("approveTerminalManSel", 19);
                     });
 
                     btnResign.click(function() {
@@ -1018,6 +1122,23 @@
                 com.showTip(btn, "券优惠:" + couponCut1 + "<br\>物品优惠:" + thingCut + "<br\>优惠总额:" + utils.accAdd(couponCut1, thingCut) + "<br\>计入金额类型:" + couponCut2 + "<br\>不计入金额类型:" + couponCut3 + "<br\>计入业绩类型:" + couponCut1 + "<br\>不计入业绩类型:" + couponCut4);
 
             });
+        };
+
+        // 净业绩
+        var netPerformance = function(btn, decoration) {
+
+            var quotation = {};
+            com.post(api.quotation.queryQuotationForDefaultByOrderId, {
+                "quotation.orderId": decoration.orderId
+            }, function(res) {
+
+                quotation = res.quotation;
+            }, null, false);
+
+            var feiTi = utils.accMul(utils.accAdd(quotation.disPrice, utils.accAdd(quotation.undisPrice, quotation.trafficPrice)), decoration.notSalesmanRate);
+            // 净业绩 = 签单额-非业务人员提点金额-优惠券-赠送礼品-非计入业绩
+            var netPerformance = utils.accSub(utils.accSub(utils.accSub(utils.accSub(decoration.orderTotalPrice, feiTi), decoration.couponCut), decoration.thingCut), quotation.unachePrice);
+            com.showTip(btn, "净业绩:" + netPerformance);
         };
 
         // 决算

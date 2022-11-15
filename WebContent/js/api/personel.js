@@ -56,6 +56,12 @@ $.extend(api.index, {
     macontrol: {
         url: "/views/personnel/macontrol.html"
     },
+    userContracts: {
+        url: "/views/personnel/userContracts.html"
+    },
+    userContract4create: {
+        url: "/views/personnel/userContract4create.html"
+    },
 
 });
 
@@ -384,7 +390,52 @@ $.extend(api, {
             url: "queryUserRole.do"
         },
         updateUserRole: {
-            url: "updateUserRole.do"
+            url: "updateUserRole.do",
+            server: "communion"
+        },
+
+        registUser: {
+            url: "registUser.do"
+        },
+        resetUser: {
+            url: "resetUser.do"
+        },
+        authUser: {
+            url: "authUser.do"
+        },
+        confirmUser: {
+            url: "confirmUser.do"
+        },
+        signateUser: {
+            url: "signateUser.do"
+        },
+
+        sendUserContractForAuth: {
+            url: "sendUserContractForAuth.do"
+        },
+        sendUserContract: {
+            url: "sendUserContract.do"
+        },
+        redirectUserContract: {
+            url: "redirectUserContract.do"
+        },
+        viewUserContract: {
+            url: "viewUserContract.do"
+        },
+        signUserContractForCompany: {
+            url: "signUserContractForCompany.do"
+        },
+        signUserContractForUser: {
+            url: "signUserContractForUser.do"
+        },
+        affixUserContract: {
+            url: "affixUserContract.do"
+        },
+        expireUserContract: {
+            url: "expireUserContract.do"
+        },
+        filingUserContract: {
+            url: "filingUserContract.do"
         },
 
     }

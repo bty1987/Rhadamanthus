@@ -194,21 +194,18 @@ $(function(){
     userDetail.items.bankCardNums = com.focusPage('#bankCardNums', '#updateUserQiTaModal');
     userDetail.items.comments = com.focusPage('#comments', '#updateUserQiTaModal');
     userDetail.items.preformNums = com.focusPage('#preformNums', '#updateUserQiTaModal');
-    
-	com.post(api.ds.personel, {timestamp: (new Date).getTime()},function(a) {
-		userDetail.items.status.bindData(a.contractStatus , "key", "value");
-		userDetail.items.rank_sequence.bindData(a.rank_sequence, "key", "value");
-	    userDetail.items.rank_level.bindData(a.rank_level, "key", "value");
-	    userDetail.items.form.bindData(a.form, "key", "value");
-    }, null, false);
 	
-	userDetail.items.politicals.bindData(constant.personel.userInfo.political.datas, "key", "value");
-	userDetail.items.insuranceTypes.bindData(constant.personel.userInfo.insuranceType.datas, "key", "value");
-	userDetail.items.employWays.bindData(constant.personel.userInfo.employWay.datas, "key", "value");
-	userDetail.items.employTypes.bindData(constant.personel.userInfo.employType.datas, "key", "value");
-	userDetail.items.educations.bindData(constant.personel.userInfo.education.datas, "key", "value");
-	userDetail.items.levels.bindData(constant.personel.userInfo.level.datas, "key", "value");
-	userDetail.items.householdTypes.bindData(constant.personel.userInfo.householdType.datas, "key", "value");
+	userDetail.items.status.bindData(constant.personel().userInfo.status.datas , "key", "value");
+	userDetail.items.rank_sequence.bindData(constant.personel().userInfo.rank_sequence.datas, "key", "value");
+	userDetail.items.rank_level.bindData(constant.personel().userInfo.rank_level.datas, "key", "value");
+	userDetail.items.form.bindData(constant.personel().userInfo.form.datas, "key", "value");
+	userDetail.items.politicals.bindData(constant.personel().userInfo.political.datas, "key", "value");
+	userDetail.items.insuranceTypes.bindData(constant.personel().userInfo.insuranceType.datas, "key", "value");
+	userDetail.items.employWays.bindData(constant.personel().userInfo.employWay.datas, "key", "value");
+	userDetail.items.employTypes.bindData(constant.personel().userInfo.employType.datas, "key", "value");
+	userDetail.items.educations.bindData(constant.personel().userInfo.education.datas, "key", "value");
+	userDetail.items.levels.bindData(constant.personel().userInfo.level.datas, "key", "value");
+	userDetail.items.householdTypes.bindData(constant.personel().userInfo.householdType.datas, "key", "value");
 	
 	function getBirthday(idCard) {
 		  var birthday = "";

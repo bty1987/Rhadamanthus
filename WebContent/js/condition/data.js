@@ -170,6 +170,15 @@ Condition.addupRule("data", {
             valuePath: "name"
         }
     },
+    "quotation-ctem-name": {
+        label: "名称",
+        type: "text",
+        submitConfig: {
+            name: "name",
+            op: "cn",
+            validate: null
+        }
+    },
     "quotation-item-name": {
         label: "名称",
         type: "text",
@@ -867,6 +876,22 @@ Condition.addupRule("data", {
             url: api.ds.data,
             postData: {},
             listPath: "contractStatus",
+            keyPath: "key",
+            valuePath: "value"
+        }
+    },
+    "contract-atttype": {
+        label: "业务类型",
+        type: "select",
+        submitConfig: {
+            name: "atttype",
+            op: "eq",
+            validate: null
+        },
+        dataSource: {
+            url: null,
+            postData: null,
+            listPath: constant.data().contract.atttype.datas,
             keyPath: "key",
             valuePath: "value"
         }

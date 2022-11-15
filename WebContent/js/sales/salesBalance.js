@@ -275,7 +275,6 @@ $(function() {
 
                     // 装修单显示详情
                     $btnDecoration.click(function() {
-                        console.log(v.sales.orderId);
                         com.focusPage("text").css("line-height", "27px");
                         com.post(api.decoration.queryDecorationByOrderId, {
                             "decorationOrderId": v.sales.orderId
@@ -289,7 +288,7 @@ $(function() {
                             com.focusPage("#escorter").html(decorationInfo.escorter.currentName == null ? "无" : decorationInfo.escorter.currentName);// 装修跟单员
                             com.focusPage("#supervisor").html(decorationInfo.supervisor.currentName == null ? "无" : decorationInfo.supervisor.currentName);// 装修监理
                             com.focusPage("#typeness").html(constant.decoration().decoration.typeness.keys[decorationInfo.typeness]);
-                            com.focusPage("#projectStatus").html(constant.construction().constructionSchedule.status.keys[decorationInfo.projectStatus]);
+                            com.focusPage("#projectStatus").html(constant.decoration().decoration.projectStatus.keys[decorationInfo.projectStatus]);
 
                             salesBalance.modals.decorationInfo.modal("show");
                         });

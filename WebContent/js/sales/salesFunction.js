@@ -74,24 +74,24 @@ jQuery(function ($) {
                 var $span = $('<span></span>').addClass('lbl blue').text(v.name);
                 $label.append($input).append($span).appendTo($div);
 
-                if (v.type == 1) {
+                if (v.type == constant.sales().salesFunction.TYPE_API_INT) {
                     $input.attr("type", "radio");
                     $div.appendTo(salesFunction.items.apiData);
                 }
 
-                if (v.type == 2) {
+                if (v.type == constant.sales().salesFunction.TYPE_CONDITION_INT) {
                     $div.appendTo(salesFunction.items.condArrData);
                 }
 
-                if (v.type == 3) {
+                if (v.type == constant.sales().salesFunction.TYPE_FILID_INT) {
                     $div.appendTo(salesFunction.items.fieldData);
                 }
 
-                if (v.type == 4) {
+                if (v.type == constant.sales().salesFunction.TYPE_FUNCTION_INT) {
                     $div.appendTo(salesFunction.items.functionData);
                 }
 
-                if (v.type == 6) {
+                if (v.type == constant.sales().salesFunction.TYPE_STATUS_INT) {
                     $div.appendTo(salesFunction.items.statusData);
                 }
 

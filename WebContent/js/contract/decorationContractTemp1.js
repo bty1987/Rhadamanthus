@@ -378,7 +378,7 @@ jQuery(function($) {
 
             var options = {
                 "decorationContract.orderId": params.decoration.orderId,
-                "decorationContract.contract.cid": params.decoration.contractargs.cid,
+                "contract.cid": params.decoration.contractargs.cid,
                 "data": JSON.stringify(data),
                 "table": JSON.stringify(contractEdit.table)
             };

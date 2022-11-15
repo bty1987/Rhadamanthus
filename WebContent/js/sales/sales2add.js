@@ -195,7 +195,7 @@ jQuery(function() {
 
         $h4.append($delete).append($btnEdit).append($btnQCheck).append($btnCheck).append($input).appendTo(sales.$liList);
 
-        if (v.goods.type == 1)
+        if (v.goods.type == constant.data().goods.TYPE_SUIT_INT)
             $h4.append($views);
 
         var propertyArr = [['品类: ', v.goods.category], ['品牌: ', v.goods.brand], ['单位: ', v.goods.measurementUnit], ['颜色: ', v.color.name], ['规格: ', v.format.info], ['售价: ', v.selling, 'blue'], ['折扣价: ', v.disPrice, 'blue'], ['折让价: ', v.price, 'blue'], ['数量: ', v.num, 'red num'], ['总价: ', v.total, 'blue total'], ['备注: ', v.comment]];
@@ -352,7 +352,7 @@ jQuery(function() {
 
         var $otherStatus = ($selling != $disPrice || com.focusPage("[data-otherStatus=1]").length > 0) ? 1 : 0;
 
-        if (price.ctype == 0 && $disPrice < price.purchase) {
+        if (price.ctype == constant.sales().salesItem.CTYPE_RESERVEPRICE_INT && $disPrice < price.purchase) {
 
             setTimeout(function() {
 

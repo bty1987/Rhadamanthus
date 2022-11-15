@@ -373,7 +373,7 @@ jQuery(function($) {
         }
     }, ];
 
-    searcher.card("contract.name", lineprops, cardbtns).render();
+    searcher.card("name", lineprops, cardbtns).render();
 
     decorationContract.btns.backBtn.on("click", function() {
 

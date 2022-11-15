@@ -88,6 +88,7 @@ jQuery(function($) {
     com = parent.com;
     company = parent.company;
     params = parent.params;
+    constant = parent.constant;
 
     pid = params.quotation.protationId
     protation = null;

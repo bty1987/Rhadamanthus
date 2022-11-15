@@ -73,9 +73,7 @@ jQuery(function($) {
                 $liProperty.appendTo($ulProperty);
             });
 
-            $divBtnWrap.append(errlog).appendTo($h3);
-            $divBtnWrap.append($btncancel).appendTo($h3);
-            $divBtnWrap.append($btnliuc).appendTo($h3);
+            $divBtnWrap.append(errlog).append($btnliuc).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
             errlog.click(function() {

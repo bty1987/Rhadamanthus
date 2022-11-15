@@ -36,22 +36,16 @@ $(function () {
     com.datetime(plan.items.executeDate);
     com.datetime(plan.items.executeTime, "time");
 
-    com.post(api.data.queryTask, {"task.level": 0}, function (res) {
+    com.post(api.communion.queryTask, {"task.level": 0}, function (res) {
         plan.plugins = res.tasks.split("keyWord", "plugins");
         plan.week = res.tasks.split("keyWord", "week");
         plan.day = res.tasks.split("keyWord", "day");
         plan.hour = res.tasks.split("keyWord", "hour");
     }, null, false);
 
-    com.post(api.data.queryTaskRoleRightForSelf, {}, function (res) {
-        var task = [];
-
-        $.each(res.taskRoleRights, function(i, v){
-
-            task.push(v.task);
-        });
-
-        plan.items.task.bindData(task, "keyWord", "name", false);
+    com.post(api.communion.queryTaskForSelf, {}, function (res) {
+        
+        plan.items.task.bindData(res.tasks, "keyWord", "name", false);
     }, null, false);
 
     planUtils.bindUploadBtn("#attachment", 1070);

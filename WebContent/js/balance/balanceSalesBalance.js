@@ -11,11 +11,8 @@ $(function() {
 
     com.focusPage('#fl-statement').statement("结算销售", "明细");
 
-    com.post(api.ds.payment, {}, function(res) {
-
-        balanceSalesBalance.types = res.balanceType.split("key", "value");
-        balanceSalesBalance.statues = res.balanceStatus.split("key", "value");
-    }, null, false);
+    balanceSalesBalance.types = constant.sales().salesBalance.type.keys;
+    balanceSalesBalance.statues = constant.sales().salesBalance.status.keys;
 
     com.post(api.balance.queryBalanceSalesByBsid, {
         "balanceSales.bsid": balanceSalesBalance.bsid

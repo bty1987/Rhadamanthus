@@ -17,9 +17,7 @@ jQuery(function($) {
     userContract.items.status = com.focusPage("#status");
     userContract.items.comment = com.focusPage("#comment");
     
-    com.post(api.ds.personel, {}, function(res){
-        userContract.items.status.bindData(res.contractStatus , "key", "value");
-    }, null, false);
+    userContract.items.status.bindData(constant.personel().userInfo.status.datas, "key", "value");
     
     var initList = function (listData) {
 
@@ -67,12 +65,12 @@ jQuery(function($) {
                 $h3.append($title).append($btnDel).append($btnUpdate);
 
                 $btnDel.bindClick(function(){
-                    deleteContract(v.ucId);
+                    deleteContract(v.ucid);
                 });
                 
                 $btnUpdate.click(function(){
                     userContract.flag = false;
-                    userContract.ucid = v.ucId;
+                    userContract.ucid = v.ucid;
                     
                     userContract.items.name.val(v.name);
                     userContract.items.signTime.val(v.signTime)
@@ -116,7 +114,7 @@ jQuery(function($) {
     
     function deleteContract(ucid){
 
-        com.post(api.personel.deleteUserContract, {"userContract.ucId": ucid}, function(){
+        com.post(api.personel.deleteUserContract, {"userContract.ucid": ucid}, function(){
             
             com.showAlert(com.info, "操作成功");
             
@@ -142,7 +140,7 @@ jQuery(function($) {
         };
         
         var url = "";
-        userContract.flag ? url = api.personel.addUserContract : (url = api.personel.updateUserContract, options['userContract.ucId'] = userContract.ucid);
+        userContract.flag ? url = api.personel.addUserContract : (url = api.personel.updateUserContract, options['userContract.ucid'] = userContract.ucid);
         
         com.post(url, options, function(res){
             

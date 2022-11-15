@@ -6,7 +6,7 @@ jQuery(function($) {
 
             no: com.focusPage("#roleId"),
             name: com.focusPage("#roleName"),
-            content: com.focusPage("#roleDes"),
+            content: com.focusPage("#content"),
 
             chainList: com.focusPage("#chainList"),
             currentchainPage: com.focusPage("#currentchainPage"),
@@ -17,6 +17,8 @@ jQuery(function($) {
             taskList: com.focusPage("#taskList"),
             taskPermList: com.focusPage("#taskPermList"),
 
+            currentOperation: com.focusPage("#currentOperation"),
+            operation: com.focusPage("#operation"),
         },
 
         modals: {
@@ -94,8 +96,24 @@ jQuery(function($) {
         });
     });
 
-    com.post(api.data.queryTask, {
-        "task.level": 0
+    com.post(api.data.queryChart, {
+        "chart.cid": 0
+    }, function(res) {
+
+        $.each(res.charts, function(i, v) {
+
+            var $tag = $("<div></div>").addClass("tag").appendTo(role.items.chartList);
+            var $check = $("<input></input>").attr({
+                "type": "checkbox",
+                "cid": v.cid
+            }).addClass("ace").appendTo($tag);
+            var $lbl = $("<span></span>").addClass("lbl").appendTo($tag);
+            var $span = $("<span></span>").text(v.name).appendTo($tag);
+        });
+    });
+
+    com.post(api.communion.queryTaskForSelf, {
+
     }, function(res) {
 
         $.each(res.tasks, function(i, v) {
@@ -112,24 +130,33 @@ jQuery(function($) {
 
             $div.append($input).append($span).appendTo(role.items.taskList);
         });
-
     });
 
-    com.post(api.data.queryChart, {
-        "chart.cid": 0
-    }, function(res) {
+    com.post(api.system.queryOperationForSelf, {
+        'operation.system': 1,
+        'operation.type': 0,
+    }, function(data) {
 
-        $.each(res.charts, function(i, v) {
+        $.each(data.operations, function(i, v) {
 
-            var $tag = $("<div></div>").addClass("tag").appendTo(role.items.chartList);
-            var $check = $("<input></input>").attr({
-                "type": "checkbox",
-                "cid": v.cid
-            }).addClass("ace").appendTo($tag);
-            var $lbl = $("<span></span>").addClass("lbl").appendTo($tag);
-            var $span = $("<span></span>").text(v.name).appendTo($tag);
+            if (v.type != 0)
+                return true;
+
+            var $div = $('<div class="tag"></div>');
+
+            var $indexInput = $('<input/>').attr({
+                type: "checkbox",
+                value: v.name,
+                name: "operation",
+                "id": v.oid,
+                class: "ace",
+            }).val(v.oid);
+
+            var $span = $('<span></span>').html(v.name).addClass('lbl');
+
+            $div.append($indexInput).append($span).appendTo(role.items.operation);
         });
-    });
+    }, null, false);
 
     var displayFunc = (function() {
 
@@ -191,7 +218,7 @@ jQuery(function($) {
                 role.modals.moduleModal.modal('show');
             });
 
-            $btnTask.bind('click', function() {
+            $btnTask.bind('click', function(rid) {
 
                 role.rid = v.rid;
 
@@ -199,20 +226,21 @@ jQuery(function($) {
 
                 com.focusPage("input[type='checkbox']", "#taskList").prop("checked", false);
 
-                com.post(api.data.queryTaskRoleRightByRid, {
-                    "taskRoleRight.rid": v.rid
+                com.post(api.communion.queryTaskByRid, {
+                    "role.rid": v.rid
                 }, function(res) {
 
-                    $.each(res.taskRoleRights, function(i, v) {
+                    $.each(res.tasks, function(i, v) {
 
                         var $div = $('<div></div>').appendTo(role.items.taskPermList);
-                        var $span = $('<span class="tag"></span>').html(v.task.name).appendTo($div);
+                        var $span = $('<span class="tag"></span>').html(v.name).appendTo($div);
 
-                        com.focusPage("#" + v.task.tid, "#taskList").prop("checked", true);
+                        com.focusPage("#" + v.tid, "#taskList").prop("checked", true);
                     });
                 });
 
                 role.modals.taskModal.modal("show");
+
             });
 
             $officeModule.click(function() {
@@ -228,7 +256,27 @@ jQuery(function($) {
 
                 role.rid = v.rid;
 
-                queryOperationByRoleId(v.rid);
+                role.items.currentOperation.html("");
+
+                com.focusPage("input[type='checkbox']", "#operation").prop("checked", false);
+
+                // 获取角色的操作
+                com.post(api.system.queryOperationByRid, {
+                    'operation.system': 1,
+                    "role.rid": v.rid
+                }, function(data) {
+
+                    if (data.operations.length) {
+                        $.each(data.operations, function(i, v) {
+
+                            var $div = $('<div></div>').appendTo(role.items.currentOperation);
+                            var $span = $('<span class="tag"></span>').html(v.name).appendTo($div);
+
+                            com.focusPage("#" + v.oid, "#operation").prop("checked", true);
+
+                        });
+                    }
+                }, null, false);
 
                 role.modals.operationModal.modal('show');
             });
@@ -562,44 +610,6 @@ jQuery(function($) {
         });
     }
 
-    function queryOperationByRoleId(rid) {
-
-        var $wrap = com.focusPage('#operationModal').find('.modal-body').empty();
-
-        com.post(api.system.queryOperation, {
-            'operation.system': 1
-        }, function(data) {
-
-            if (data.operations.length) {
-                $.each(data.operations, function(i, v) {
-
-                    var $indexInput = $('<input>').attr({
-                        type: 'checkbox',
-                        name: 'operation',
-                        'data-oid': v.oid
-                    }).addClass('ace').val(v.oid);
-
-                    var $label = $('<label style="margin-right:20px;display: inline-block;min-width: 25%;"></label>').append($indexInput).append('<span class="lbl">' + v.name + '</span>').appendTo($wrap);
-
-                });
-            }
-        }, null, false);
-
-        // 获取角色的操作
-        com.post(api.system.queryOperationByRid, {
-            'operation.system': 1,
-            "role.rid": rid
-        }, function(data) {
-
-            if (data.operations.length) {
-                $.each(data.operations, function(i, v) {
-
-                    $wrap.find('input[value="' + v.oid + '"]').prop('checked', true);
-                });
-            }
-        }, null, false);
-    }
-
     function editRole(rid, no, name, content) {
 
         role.rid = rid;
@@ -682,7 +692,7 @@ jQuery(function($) {
         var $inputs = com.focusPage('input[name="corporabtask"]:checked');
 
         var params = {
-            "taskRoleRight.rid": role.rid
+            "role.rid": role.rid
         };
 
         $.each($inputs, function(i, v) {
@@ -695,7 +705,7 @@ jQuery(function($) {
             params["tids[" + i + "]"] = row.tid;
         });
 
-        com.post(api.data.updateTaskRoleRight, params, function(res) {
+        com.post(api.communion.updateRoleTask, params, function(res) {
 
             role.rid = null;
 

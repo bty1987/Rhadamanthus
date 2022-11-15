@@ -2,14 +2,10 @@ $(function() {
 
     var refund = {
         sid: params.sales.sales.sid,
-        sales: params.sales.sales
+        sales: params.sales.sales,
+        refundType: constant.sales().refunds.type.keys,
     };
     com.focusPage('#fl-statement').statement("销售单", "退货");
-
-    com.post(api.ds.sales, {}, function(res) {
-
-        refund.refundType = res.refundType.split("key", "value");
-    }, null, false);
 
     com.post(api.sales.queryRefundsBySid, {
         "refunds.sid": refund.sid
@@ -21,7 +17,6 @@ $(function() {
         var $ul;
 
         $.each(res.refundses, function(i, v) {
-
             if ($list.indexOf(v.rid) == -1) {
                 $list.push(v.rid);
                 $ul = $('<ul></ul>').addClass('item-list ui-sortable  fl-table-list').attr("id", v.rid).css("margin-bottom", "20px");
@@ -32,9 +27,9 @@ $(function() {
             var $small = $('<small></small>').addClass('blue').html(refund.sales.no);
             var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
 
-            var $print = $('<a></a>').addClass('btn btn-minier btn-pink').attr("id", v.rid).attr("type", refund.refundType[v.type]).attr("createTime", v.createTime).attr('total', v.total).html('打印').appendTo($btnDiv);
+            var $print = $('<a></a>').addClass('btn btn-minier btn-pink').attr("id", v.rid).attr("type", constant.sales().refunds.type.keys[v.type]).attr("createTime", v.createTime).attr('total', v.total).html('打印').appendTo($btnDiv);
 
-            var propertyArr = [["商品品类:", refund.sales.category, "grey"], ["商品品牌:", refund.sales.brand, "grey"], ["退款总额:", v.total, "blue"], ["类型:", refund.refundType[v.type], "red"], ["创建人:", v.creater.currentName, "grey"], ["创建时间:", v.createTime, "green"], ["备注:", v.comment, "grey"]];
+            var propertyArr = [["商品品类:", refund.sales.category, "grey"], ["商品品牌:", refund.sales.brand, "grey"], ["退款总额:", v.total, "blue"], ["类型:", constant.sales().refunds.type.keys[v.type], "red"], ["创建人:", v.creater.currentName, "grey"], ["创建时间:", v.createTime, "green"], ["备注:", v.comment, "grey"]];
 
             $.each(propertyArr, function(index, value) {
 

@@ -233,17 +233,23 @@ $(function() {
 
     function drawQuotaion(conf) {
 
-        var row = createDiv("row").append(createDiv("col-md-8").append(createDiv("form-group").append(createLabel("col-md-2 control-label no-padding-right", "显示方式", "showWay"), createDiv("col-md-6").append(createSelect("showWay", "col-md-6", [{
-            "text": "功能区分组",
-            "value": 0
-        }, {
-            "text": "工种分组",
-            "value": 1
-        }]).prop("disabled", false)))), createDiv("col-md-4 text-right").append(createDiv("form-group").append(createDiv("col-md-12").append($("<p></p>").append(createButton(conf, "btnPrintDefaultQuotationInfo", "btn btn-primary", "打印报价", null, '<i class="icon-print bigger-120"></i>'), createButton(conf, "btnPrintQuotationCN", "btn btn-info", "打印定额", null, '<i class="icon-print bigger-120"></i>'))))), createDiv("col-md-12", "quotationItemListDiv"));
+        var row = createDiv("row");
+        var $sortable = createDiv("widget-container-span ui-sortable");
+        var $tabbable = createDiv("tabbable").appendTo($sortable);
+        var $myTab = createUl("myTab", "nav nav-tabs", "margin-top: 7px;").appendTo($tabbable);
 
-        if (!checkButton(conf, com.focusPage("#quotationType"))) {
-            com.focusPage("#quotationType").hide();
-        }
+        var quotationFunctionAreaDetail = createLi("active").append($("<a></a>").attr("data-toggle", "tab").attr("href", "#ribbonSubset").css("color", "#4383b4").append($("<strong></strong>").text("功能区分组")));
+        var quotationWorkerTypeDetail = createLi().append($("<a></a>").attr("data-toggle", "tab").attr("href", "#workTypeSubset").css("color", "#4383b4").append($("<strong></strong>").text("工种分组")));
+        var quotationSelectionCategoryDetail = createLi().append($("<a></a>").attr("data-toggle", "tab").attr("href", "#selectionCategory").css("color", "#4383b4").append($("<strong></strong>").text("选材品类")));
+        var quotationButtonsDetail = createDiv("pull-right action-buttons").append(createButton(conf, "btnPrintDefaultQuotationInfo", "btn btn-xs btn-primary", "打印报价", null, '<i class="icon-print bigger-120"></i>'), createButton(conf, "btnPrintQuotationCN", "btn btn-xs btn-info", "打印定额", null, '<i class="icon-print bigger-120"></i>'));
+        $myTab.append(quotationFunctionAreaDetail);
+        $myTab.append(quotationWorkerTypeDetail);
+        $myTab.append(quotationSelectionCategoryDetail);
+        $myTab.append(quotationButtonsDetail);
+
+        var $tabContent = createDiv("tab-content").append(createDiv("tab-pane  in active", "ribbonSubset"), createDiv("tab-pane", "workTypeSubset"), createDiv("tab-pane", "selectionCategory"));
+        $tabbable.append($tabContent);
+        $sortable.appendTo(row);
 
         return [row];
     }
