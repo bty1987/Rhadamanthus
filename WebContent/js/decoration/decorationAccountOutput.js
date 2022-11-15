@@ -7,7 +7,6 @@ jQuery(function($) {
     var decoration = params.decoration.decoration;
     var accountBasic = params.decoration.accountBasic;
     var orderTypeness = params.decoration.orderTypeness;
-
     var decorationActivity = "";
     var drawTime = "";
 
@@ -79,5 +78,9 @@ jQuery(function($) {
     $("#preferences").text(accountBasic.preferences);
     $("#fulldel").text(accountBasic.fulldel);
     $("#cashback").text(accountBasic.cashback);
+
+    $("#companyBank").text(decoration.customer.companyBank == null ? " " : decoration.customer.companyBank);
+    $("#companyName").text(decoration.customer.name);
+    $("#companyBankno").text(decoration.customer.companyBankno == null ? " " : decoration.customer.companyBankno);
 
 });

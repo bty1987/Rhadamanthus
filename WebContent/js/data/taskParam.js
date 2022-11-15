@@ -59,7 +59,7 @@ $(function() {
     }, null, false);
 
     if (taskParam.pageType != "task") {
-        com.post(api.data.queryTaskParam, {
+        com.post(api.communion.queryTaskParam, {
             "taskParam.tid": params.data.task.tid
         }, function(res) {
             taskParam.unionParams = res.taskParams.split("tpid", "name");
@@ -147,7 +147,7 @@ $(function() {
 
             $btnDelete.click(function() {
                 com.showConfirm("是否确认删除", function() {
-                    com.post(api.data.deleteTaskParam, {
+                    com.post(api.communion.deleteTaskParam, {
                         "taskParam.tpid": v.tpid
                     }, function() {
                         searcher.doSearch();
@@ -164,7 +164,7 @@ $(function() {
                     "taskParam.status": cvalue
                 }
 
-                com.post(api.data.updateTaskParamForStatus, options, function(res) {
+                com.post(api.communion.updateTaskParamForStatus, options, function(res) {
                     cvalue == 0 ? com.showAlert(com.info, "已启用") : com.showAlert(com.info, "已禁用");
                     searcher.doSearch();
                 });
@@ -185,7 +185,7 @@ $(function() {
 
     var searcher = new Searcher();
 
-    searcher.init(['data-taskParam-module'], "taskParamCondList", api.data.pageTaskParam, function(data) {
+    searcher.init(['data-taskParam-module'], "taskParamCondList", api.communion.pageTaskParam, function(data) {
         displayFunc.init('taskParamResultList', data);
     }, "taskParamPagenation", "taskParamPostData", null, false, null, function() {
 
@@ -193,7 +193,9 @@ $(function() {
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        if (taskParam.pageType != "task") { return [$adda]; }
+        if (taskParam.pageType != "task") {
+            return [$adda];
+        }
         return [];
     }, 'resultList');
 
@@ -224,7 +226,7 @@ $(function() {
             "taskParam.comment": taskParam.items.comment.val(),
         };
 
-        taskParam.editFlg ? url = api.data.addTaskParam : url = api.data.updateTaskParam, options["taskParam.tpid"] = taskParam.tpid;
+        taskParam.editFlg ? url = api.communion.addTaskParam : url = api.communion.updateTaskParam, options["taskParam.tpid"] = taskParam.tpid;
 
         com.post(url, options, function() {
             com.focusPage('#list').empty();

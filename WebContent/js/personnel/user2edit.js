@@ -251,23 +251,19 @@ jQuery(function(a) {
         });
     }
 
-    com.post(api.ds.personel, {}, function(res) {
+    user.politicalType = constant.personel().userInfo.political.datas;
+    user.educationType = constant.personel().userInfo.education.datas;
+    user.statusType = constant.personel().user.status.datas;
+    user.employWayType = constant.personel().userInfo.employWay.datas;
+    user.employType = constant.personel().userInfo.employType.datas;
+    user.userLevel = constant.personel().userInfo.level.datas;
+    user.insuranceType = constant.personel().userInfo.insuranceType.datas;
+    user.contractStatus = constant.personel().userInfo.status.datas;
+    user.experienceType = constant.personel().userInfo.experienceType.keys;
 
-        user.politicalType = res.politicalType;
-        user.householdType = res.householdType;
-        user.educationType = res.educationType;
-        user.statusType = res.statusType;
-        user.employWayType = res.employWay;
-        user.employType = res.employType;
-        user.experienceType = res.experienceType;
-        user.userLevel = res.userLevel;
-        user.insuranceType = res.insuranceType;
-        user.contractStatus = res.contractStatus;
-
-        com.focusPage("#rank_sequence").bindData(res.rank_sequence, "key", "value");
-        com.focusPage("#rank_level").bindData(res.rank_level, "key", "value");
-        com.focusPage("#formSel").bindData(res.form, "key", "value");
-    }, null, false);
+    com.focusPage("#rank_sequence").bindData(constant.personel().userInfo.rank_sequence.datas, "key", "value");
+    com.focusPage("#rank_level").bindData(constant.personel().userInfo.rank_level.datas, "key", "value");
+    com.focusPage("#formSel").bindData(constant.personel().userInfo.form.datas, "key", "value");
 
     user.cItems.contractName = com.focusPage('#contractName', '#addContractModal');
     user.cItems.contractSignTime = com.focusPage('#contractSignTime', '#addContractModal');

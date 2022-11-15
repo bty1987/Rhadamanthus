@@ -41,9 +41,7 @@ jQuery(function($) {
         com.cleanItems(balanceAccountes.items);
     });
 
-    com.post(api.ds.balance, {}, function (res) {
-        balanceAccountes.addItems.type.bindData(res.isBalanceAccountType, "key", "value");
-    }, null, false);
+    balanceAccountes.addItems.type.bindData(constant.balance().balanceAccount.type.datas, "key", "value");
 
     com.initTypeahead('belonger', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name" : "", "user.status" : 0}, "autoFillKeyValue", "key", "value", null);
 

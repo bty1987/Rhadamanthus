@@ -26,9 +26,45 @@
                     <div class="space-4"></div>
                     
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="extranet">外网权限</label>
+                        <label class="col-sm-3 control-label no-padding-right" for="qcode">扫码控制</label>
                         <div class="col-sm-9">
-                            <input type="checkbox" id="extranet" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
+                            <input type="checkbox" id="qcode" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
+                            <span class="lbl isOrNot"></span>
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="ips">IP控制</label>
+                        <div class="col-sm-9">
+                            <input type="checkbox" id="ips" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
+                            <span class="lbl isOrNot"></span>
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="macs">MAC控制</label>
+                        <div class="col-sm-9">
+                            <input type="checkbox" id="macs" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
+                            <span class="lbl isOrNot"></span>
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+                    
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="webs">WEB控制</label>
+                        <div class="col-sm-9">
+                            <input type="checkbox" id="webs" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
+                            <span class="lbl isOrNot"></span>
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+                    
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="pcs">PC控制</label>
+                        <div class="col-sm-9">
+                            <input type="checkbox" id="pcs" class="col-sm-7 col-xs-10 ace ace-switch ace-switch-5"/>
                             <span class="lbl isOrNot"></span>
                         </div>
                     </div>
@@ -37,11 +73,11 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-right" for="roleSel">角色</label>
                         <div class="col-sm-9">
-                            <select class="col-sm-7 col-xs-10 v_required" id="roleSel" data-toggle="popover" data-trigger='manual'></select>
+                            <input type="text" id="roleSel" class="col-sm-7 col-xs-10 v_typeahead v_required" data-toggle="popover" data-placement="bottom" data-trigger="manual" />
                         </div>
                     </div>
                     <div class="space-4"></div>
-                    
+
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-right" for="oldcompany">现在公司</label>
                         <div class="col-sm-9">

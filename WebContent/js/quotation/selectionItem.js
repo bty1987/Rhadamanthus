@@ -51,38 +51,38 @@ $(function() {
         selectionItem.postData = "selectionItemForExpertPostData";
     } else if (selectionItem.pageType == "init") {
         selectionItem.status = {
-            "selectionItem.status": 0
+            "selectionItem.status": constant.quotation().selectionItem.STATUS_INIT_INT
         };
         selectionItem.postData = "selectionItemForInitPostData";
     } else if (selectionItem.pageType == "tran") {
         selectionItem.status = {
-            "selectionItem.status": 1
+            "selectionItem.status": constant.quotation().selectionItem.STATUS_TRAN_INT
         };
         selectionItem.postData = "selectionItemForTranPostData";
     } else if (selectionItem.pageType == "check") {
         selectionItem.status = {
-            "selectionItem.status": 2
+            "selectionItem.status": constant.quotation().selectionItem.STATUS_CHECK_INT
         };
         selectionItem.postData = "selectionItemForCheckPostData";
     } else if (selectionItem.pageType == "confirm") {
         selectionItem.status = {
-            "selectionItem.status": 3
+            "selectionItem.status": constant.quotation().selectionItem.STATUS_CONFIRM_INT
         };
         selectionItem.postData = "selectionItemForConfirmPostData";
     } else if (selectionItem.pageType == "finish") {
         selectionItem.status = {
-            "selectionItem.status": 4
+            "selectionItem.status": constant.quotation().selectionItem.STATUS_FINISH_INT
         };
         selectionItem.postData = "selectionItemForFinishPostData";
     } else if (selectionItem.pageType == "review") {
         selectionItem.status = {
-            "selectionItem.status": 5
+            "selectionItem.status": constant.quotation().selectionItem.STATUS_REVIEW_INT
         };
         selectionItem.postData = "selectionItemForReviewPostData";
     } else if (selectionItem.pageType == "balance") {
         selectionItem.query = selectionItem.query.concat(["quotation-selection-item-balanceTime"])
         selectionItem.status = {
-            "selectionItem.status": 6
+            "selectionItem.status": constant.quotation().selectionItem.STATUS_BALANCE_INT
         };
         selectionItem.postData = "selectionItemForBalancePostData";
     } else if (selectionItem.pageType == "material") {
@@ -146,7 +146,7 @@ $(function() {
             var $btnCheck = $('<a></a>').addClass('btn btn-minier btn-warning').html('审核');
             var $btnConfirm = $('<a></a>').addClass('btn btn-minier btn-inverse').html('确认');
             var $btnFinish = $('<a></a>').addClass('btn btn-minier btn-danger').html('完结');
-            var $btnReview = $('<a></a>').addClass('btn btn-minier btn-inverse').html('核对');
+            var $btnReview = $('<a></a>').addClass('btn btn-minier btn-pink').html('核对');
             var $btnBalance = $('<a></a>').addClass('btn btn-minier btn-info').html('结算');
             var $btnDel = $('<a></a>').addClass('btn btn-minier btn-pink').html('删除');
             var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-purple').html('打印');
@@ -276,8 +276,8 @@ $(function() {
             $btnCheck.click(function(e) {
 
                 var option = {
-                    "selectionItem.siid": v.siid,
-                    "selectionItem.checker": null,
+                    "selectionItems[0].siid": v.siid,
+                    "selectionItems[0].checker": null,
                 };
 
                 if (selectionItem.escorter) {
@@ -294,7 +294,7 @@ $(function() {
             $btnConfirm.click(function(e) {
 
                 com.post(api.quotation.confirmSelectionItem, {
-                    "selectionItem.siid": v.siid
+                    "selectionItems[0].siid": v.siid
                 }, function(e) {
 
                     searcher.doSearch();
@@ -411,6 +411,26 @@ $(function() {
             btns.push($a);
         }
 
+        if (selectionItem.pageType == "tran" || selectionItem.pageType == "expert") {
+            var $a = createbtn("batchCheck", "批量审核", "btn-warning");
+            btns.push($a);
+        }
+
+        if (selectionItem.pageType == "check" || selectionItem.pageType == "expert" || selectionItem.pageType == "supplier") {
+            var $a = createbtn("batchConfirm", "批量确认", "btn-inverse");
+            btns.push($a);
+        }
+
+        if (selectionItem.pageType == "confirm" || selectionItem.pageType == "expert") {
+            var $a = createbtn("batchFinish", "批量完结", "btn-danger");
+            btns.push($a);
+        }
+
+        if (selectionItem.pageType == "finish" || selectionItem.pageType == "expert" || selectionItem.pageType == "supplier") {
+            var $a = createbtn("batchReview", "批量核对", "btn-pink");
+            btns.push($a);
+        }
+
         function createbtn(id, text, color) {
 
             var $a = $('<a></a>').addClass('btn btn-minier pull-left ' + color).attr({
@@ -471,6 +491,23 @@ $(function() {
 
         bulkOperation(api.quotation.balanceSelectionItem, 'balance');
     });
+    com.focusPage('#batchCheck').click(function() {
+
+        bulkOperation(api.quotation.checkSelectionItem, 'check');
+    });
+    com.focusPage('#batchConfirm').click(function() {
+
+        bulkOperation(api.quotation.confirmSelectionItem, 'confirm');
+    });
+    com.focusPage('#batchFinish').click(function() {
+
+        bulkOperation(api.quotation.finishSelectionItem, 'finish');
+
+    });
+    com.focusPage('#batchReview').click(function() {
+
+        bulkOperation(api.quotation.reviewSelectionItem, 'review');
+    });
 
     function bulkOperation(url, type) {
 
@@ -484,12 +521,16 @@ $(function() {
         $.each(selectionItem.selectList, function(i, v) {
 
             options["selectionItems[" + i + "].siid"] = v;
+            if (url == api.quotation.finishSelectionItem) {
+                options["selectionItems[" + i + "].refnum"] = 0;
+            }
         });
 
         com.post(url, options, function(res) {
 
             searcher.doSearch();
             com.showAlert(com.info, "操作成功");
+            selectionItem.selectList = [];
         });
     }
 
@@ -567,8 +608,8 @@ $(function() {
         }
 
         var options = {
-            "selectionItem.refnum": selectionItem.items.refnum.val(),
-            "selectionItem.siid": selectionItem.parameters.siid
+            "selectionItems[0].refnum": selectionItem.items.refnum.val(),
+            "selectionItems[0].siid": selectionItem.parameters.siid
         };
 
         com.post(api.quotation.finishSelectionItem, options, function(res) {

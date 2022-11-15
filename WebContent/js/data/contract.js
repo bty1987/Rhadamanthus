@@ -12,11 +12,18 @@ jQuery(function($) {
             title: com.focusPage("#title"),
             page: com.focusPage("#page"),
             path: com.focusPage("#path"),
+            atttype: com.focusPage("#atttype"),
         },
 
         cid: null,
 
-    }
+    };
+
+    contract.items.page.bindData(constant.data().contract.type.datas.sort(function(a, b) {
+
+        return a.key < b.key ? -1 : 1;
+    }), "key", "value");
+    contract.items.atttype.bindData(constant.data().contract.atttype.datas, "key", "value");
 
     com.uploadify("#fileUpload", "上传模版", api.common.uploadOther, 'btn btn-success', '*.pdf', {
         'uploadType': 2
@@ -32,7 +39,7 @@ jQuery(function($) {
 
     searcher.base("condList", "pagenation", "resultList", api.data.pageContract);
 
-    searcher.condition(["data-contract-name", "data-contract-status"]);
+    searcher.condition(["data-contract-name", "data-contract-status", "data-contract-atttype"]);
 
     searcher.history("contractPostData");
 
@@ -44,6 +51,11 @@ jQuery(function($) {
     }]);
 
     var lineprops = [{
+        field: "no",
+        name: "编号",
+        prop: "no",
+        clazz: "grey"
+    }, {
         field: "name",
         name: "名称",
         prop: "name",
@@ -57,13 +69,23 @@ jQuery(function($) {
         field: "page",
         name: "页面",
         prop: "page",
-        clazz: "grey"
+        clazz: "grey",
+        show: function(v) {
+
+            return false;
+        }
+    }, {
+        field: "atttype",
+        name: "业务类型",
+        prop: "atttype",
+        dataset: constant.data().contract.atttype.keys,
+        clazz: "red"
     }, {
         field: "status",
         name: "状态",
         prop: function(v) {
 
-            return v.status == 0 ? "启用" : "禁用"
+            return v.status == 0 ? "启用" : "禁用";
         },
         clazz: "red"
     }, ];
@@ -89,32 +111,30 @@ jQuery(function($) {
             return v.status == 0;
         }
     }, {
-        name: "启用",
-        clazz: "btn-success",
-        handle: function(v) {
+        name: "状态",
+        type: "switch",
+        clazz: "status-lbl",
+        handle: function(v, flag) {
 
-            updateStatus(v.cid, 0);
+            updateStatus(v.cid, flag ? 0 : 1);
+
             return false;
         },
-        show: function(v) {
+        init: function(v) {
 
-            return v.status == 1;
-        }
-    }, {
-        name: "禁用",
-        clazz: "btn-danger",
-        handle: function(v) {
-
-            updateStatus(v.cid, 1);
-            return false;
+            return !v.status;
         },
-        show: function(v) {
+    }, ];
 
-            return v.status == 0;
+    searcher.line("name", lineprops, linebtns).render();
+
+    com.post(api.data.countContract, {}, function(res) {
+
+        if (res.count > constant.data().contract.CONTRACT_COUNT_LIMIT_INT) {
+
+            com.focusPage('#addContract', '#pagenation').hide();
         }
-    }, ]
-
-    searcher.line("no", lineprops, linebtns).render();
+    });
 
     com.focusPage('#addContract', '#pagenation').on("click", function() {
 
@@ -135,6 +155,7 @@ jQuery(function($) {
         contract.items.title.val(v.title);
         contract.items.page.val(v.page);
         contract.items.path.val(v.path);
+        contract.items.atttype.val(v.atttype);
     }
 
     function saveData() {
@@ -150,7 +171,8 @@ jQuery(function($) {
             "contract.page": contract.items.page.val(),
             "contract.path": contract.items.path.val(),
             "contract.url": config.server + contract.items.path.val(),
-        }
+            "contract.atttype": contract.items.atttype.val(),
+        };
 
         if (contract.cid) {
             options["contract.cid"] = contract.cid;

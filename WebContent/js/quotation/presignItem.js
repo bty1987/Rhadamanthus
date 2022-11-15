@@ -140,6 +140,10 @@ jQuery(function($) {
             });
 
             return false;
+        },
+        show: function(v) {
+
+            return false;
         }
     }, {
         name: "状态",

@@ -657,6 +657,7 @@ jQuery(function($) {
     com = parent.com;
     company = parent.company;
     params = parent.params;
+    constant = parent.constant;
 
     printConf = params.quotation.quotation.printConf;
 

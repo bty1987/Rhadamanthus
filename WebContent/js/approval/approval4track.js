@@ -82,16 +82,9 @@ jQuery(function($) {
         approvalTrack.condition = ["approval-sender-name", "approval-type", "approval-status"];
     }
 
-    com.post(api.ds.approval, {}, function(res) {
-
-        approvalTrack.approvalTypeData = res.approvalType.split("key", "value");
-        approvalTrack.approvalStatus = res.approvalStatus.split("key", "value");
-    }, null, false);
-
-    com.post(api.ds.decoration, {}, function(res) {
-
-        approvalTrack.typenesses = res.typeness.split("key", "value");
-    }, null, false);
+    approvalTrack.approvalTypeData = constant.approval().approval.type.keys;
+    approvalTrack.approvalStatus = constant.approval().approval.status.keys;
+    approvalTrack.typenesses = constant.decoration().decoration.typeness.keys;
 
     approvalTrack.btns.submitBtn.on("click", approve);
 
@@ -184,7 +177,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return [constant.approval().approval.STATUS_INIT_INT, constant.approval().approval.STATUS_CONFIRM_INT, constant.approval().approval.STATUS_CONFIRMED_INT].indexOf(v.status) != -1 && params.urlLoadParams.type != 'send';
+            return [constant.approval().approval.STATUS_INIT_INT, constant.approval().approval.STATUS_CONFIRM_INT, constant.approval().approval.STATUS_CONFIRMED_INT].indexOf(v.status) != -1 && params.urlLoadParams.type != 'send' && v.piid == null;
         }
     }, {
         name: "拒绝",
@@ -196,7 +189,7 @@ jQuery(function($) {
         },
         show: function(v) {
 
-            return [constant.approval().approval.STATUS_INIT_INT, constant.approval().approval.STATUS_CONFIRM_INT, constant.approval().approval.STATUS_CONFIRMED_INT].indexOf(v.status) != -1 && params.urlLoadParams.type != 'send';
+            return [constant.approval().approval.STATUS_INIT_INT, constant.approval().approval.STATUS_CONFIRM_INT, constant.approval().approval.STATUS_CONFIRMED_INT].indexOf(v.status) != -1 && params.urlLoadParams.type != 'send' && v.piid == null;
         }
     }, ];
 
@@ -277,7 +270,7 @@ jQuery(function($) {
                     if (e[2] == "type")
                         infoList.append(approvalUtils.addspan(e[0], e[1], constant.information().awardStock.type.keys[getElement(v, e[2].split('.'))]));
                     if (e[2] == "stateType")
-                        infoList.append(approvalUtils.addspan(e[0], e[1], approvalTrack.stateType[getElement(v, e[2].split('.'))]));
+                        infoList.append(approvalUtils.addspan(e[0], e[1], constant.decoration().decorationActivityItem.stateType.keys[getElement(v, e[2].split('.'))]));
                     if (e[2] == "typeness")
                         infoList.append(approvalUtils.addspan(e[0], e[1], constant.decoration().decoration.typeness.keys[getElement(v, e[2].split('.'))]));
                     if (e[2] != "type" && e[2] != "stateType" && e[2] != "typeness")

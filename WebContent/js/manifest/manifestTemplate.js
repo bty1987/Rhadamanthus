@@ -1,4 +1,4 @@
-$(function () {
+$(function() {
 
     var manifestTemplate = {
         items: {
@@ -9,9 +9,10 @@ $(function () {
         }
     };
 
-    var displayFunc = (function () {
+    var displayFunc = (function() {
 
-        var renderList = function (tableId, listData) {
+        var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
 
             if (listData && listData.length) {
@@ -20,7 +21,8 @@ $(function () {
                 var $ulData = $('<ul></ul>').addClass('flex-table');
                 $tableWrap.append($ulTitle).append($ulData);
 
-                $.each(listData, function (i, v) {
+                $.each(listData, function(i, v) {
+
                     var $liLine = creatLine(i, v);
 
                     $liLine.appendTo($ulTitle);
@@ -28,7 +30,7 @@ $(function () {
             }
         };
 
-        var createTableTitle = function () {
+        var createTableTitle = function() {
 
             var $ulTitle = $('<ul></ul>').addClass('flex-table');
             var $liTitle = $('<li></li>').addClass('line table-title');
@@ -38,7 +40,8 @@ $(function () {
 
             var titleName = '名称,说明,状态';
 
-            $.each(titleName.split(','), function (i, v) {
+            $.each(titleName.split(','), function(i, v) {
+
                 var $cell = $('<div></div>').addClass('cell').html(v);
                 $cell.appendTo($contentWrap);
             });
@@ -50,20 +53,17 @@ $(function () {
             return $ulTitle;
         };
 
-        var creatLine = function (i, v, lastFlag) {
+        var creatLine = function(i, v, lastFlag) {
 
             var $liLine = $('<li></li>').addClass('line');
 
             var $indexWrap = $('<div></div>').addClass('line-wrap order').html($('<div></div>').addClass('cell index').html(i + 1));
             var $contentWrap = $('<div></div>').addClass('line-wrap  content col3');
 
-            var propertyArr = [
-                [v.name, 'grey'],
-                [v.comment, 'grey'],
-                [v.status == "0" ? "启用" : "禁用", 'red']
-            ];
+            var propertyArr = [[v.name, 'grey'], [v.comment, 'grey'], [v.status == "0" ? "启用" : "禁用", 'red']];
 
-            $.each(propertyArr, function (i, v) {
+            $.each(propertyArr, function(i, v) {
+
                 var $cell = $('<div></div>').addClass('cell ' + v[1]).html(v[0]);
                 $cell.appendTo($contentWrap);
             });
@@ -75,29 +75,27 @@ $(function () {
             var $btn = $('<button></button>').addClass('btn btn-primary dropdown-toggle').attr('data-toggle', 'dropdown').append('操作').append('<i class="icon-angle-down"></i>');
             var $btnUl = $('<ul></ul>').addClass('dropdown-menu').addClass(lastFlag ? 'bottom-up' : '');
 
-
             var $btnEdit = $('<li></li>').append($('<a></a>').html('编辑'));
             var $btnStart = $('<li></li>').append($('<a></a>').html('启用'));
             var $btnStop = $('<li></li>').append($('<a></a>').html('禁用'));
             var $btnDel = $('<li></li>').append($('<a></a>').html('删除'));
             var $btnBinbing = $('<li></li>').append($('<a></a>').html('绑定'));
 
-
-            $btnUl.append($btnEdit).append($btnStart).append($btnStop).append($btnDel).append($btnBinbing);
+            $btnUl.append($btnEdit).append($btnStart).append($btnStop).append($btnBinbing);
             $btnGroup.append($btn).append($btnUl).appendTo($cellOption);
             $cellOption.appendTo($optionWrap);
 
             $liLine.append($indexWrap).append($contentWrap).append($optionWrap);
 
-            $btnEdit.click(function () {
+            $btnEdit.click(function() {
 
                 manifestTemplate.items.mtid.val(v.mtid);
                 manifestTemplate.items.name.val(v.name);
                 manifestTemplate.items.comment.val(v.comment);
-                com.popup4model("#layerAdd","编辑");
+                com.popup4model("#layerAdd", "编辑");
             });
 
-            $btnStart.click(function () {
+            $btnStart.click(function() {
 
                 if (v.status == 0) {
                     com.showAlert(com.warning, "已启用");
@@ -107,12 +105,13 @@ $(function () {
                 com.post(api.inventory.updateManifestTemplateForStatus, {
                     "manifestTemplate.mtid": v.mtid,
                     "manifestTemplate.status": 0
-                }, function (res) {
+                }, function(res) {
+
                     searcher.doSearch();
                 });
             });
 
-            $btnStop.click(function () {
+            $btnStop.click(function() {
 
                 if (v.status == 1) {
                     com.showAlert(com.warning, "已禁用");
@@ -122,23 +121,28 @@ $(function () {
                 com.post(api.inventory.updateManifestTemplateForStatus, {
                     "manifestTemplate.mtid": v.mtid,
                     "manifestTemplate.status": 1
-                }, function (res) {
+                }, function(res) {
+
                     searcher.doSearch();
                 });
             });
 
-            $btnDel.click(function () {
-                com.showConfirm('是否确定删除', function () {
+            $btnDel.click(function() {
+
+                com.showConfirm('是否确定删除', function() {
+
                     com.post(api.inventory.deleteManifestTemplate, {
                         "manifestTemplate.mtid": v.mtid
-                    }, function (res) {
+                    }, function(res) {
+
                         searcher.doSearch();
                     });
                 })
             });
 
-            /*绑定*/
-            $btnBinbing.click(function () {
+            /* 绑定 */
+            $btnBinbing.click(function() {
+
                 params.manifest.manifestTemplate.mtid = v.mtid;
                 com.switchPage('views/manifest/manifestTemplateItem.html');
             });
@@ -147,11 +151,13 @@ $(function () {
         };
 
         return {
-            init: function (tableId, listData) {
+            init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
-            drawLine: function (v) {
+            drawLine: function(v) {
+
                 return creatLine(v);
             }
         };
@@ -159,24 +165,26 @@ $(function () {
 
     var searcher = new Searcher();
 
-    searcher.init(['data-manifest-template-name'], "condList", api.inventory.pageManifestTemplate, function (data) {
+    searcher.init(['data-manifest-template-name'], "condList", api.inventory.pageManifestTemplate, function(data) {
+
         displayFunc.init('resultList', data);
-    }, "pagenation", "manifestTemplatePostData", null, false, null, function () {
+    }, "pagenation", "manifestTemplatePostData", null, false, null, function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('name', 'addQuotationVersion').css('margin', '0px 3px');
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
         var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-        $adda.click(function () {
-            clearForm('form1');
-            com.popup4model('#layerAdd',"添加");
-        });
+        $adda.click(function() {
 
+            clearForm('form1');
+            com.popup4model('#layerAdd', "添加");
+        });
 
         return [$adda];
     }, 'resultList');
 
-    manifestTemplate.items.submitBtn.click(function () {
+    manifestTemplate.items.submitBtn.click(function() {
+
         saveData(manifestTemplate.items.mtid.val())
     });
 
@@ -190,7 +198,7 @@ $(function () {
 
     function saveData(mtid) {
 
-        if (com.validate('layerAdd','right')) {
+        if (com.validate('layerAdd', 'right')) {
             return false;
         }
 
@@ -205,7 +213,8 @@ $(function () {
             options["manifestTemplate.mtid"] = mtid;
         }
 
-        com.post(url, options, function (res) {
+        com.post(url, options, function(res) {
+
             com.clearValidator();
             manifestTemplate.items.mtid.val("");
             com.closePopup();

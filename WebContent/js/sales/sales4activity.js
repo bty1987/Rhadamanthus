@@ -29,11 +29,11 @@ $(function() {
         },
 
         activity: {},
-        activityItemType: {},
-        depositpayStatus: {},
-        fullpayStatus: {},
-        type: {},
-        isAffirm: {},
+        activityItemType: constant.decoration().decorationActivityItem.status.keys,
+        depositpayStatus: constant.sales().sales.depositpayStatus.keys,
+        fullpayStatus: constant.sales().sales.fullpayStatus.keys,
+        type: constant.sales().salesActivityItem.type.keys,
+        isAffirm: constant.sales().salesActivityItem.isAffirm.keys,
 
         saiid: null,
         url: null,
@@ -50,22 +50,6 @@ $(function() {
         com.resetTypeahead("paperName", []);
         com.clearValidator();
     });
-
-    com.post(api.ds.sales, {}, function(res) {
-
-        salesActivityItem.depositpayStatus = res.depositpayStatus.split("key", "value");
-        salesActivityItem.fullpayStatus = res.fullpayStatus.split("key", "value");
-        salesActivityItem.type = res.type.split("key", "value");
-        salesActivityItem.isAffirm = res.isAffirm.split("key", "value");
-    }, null, false);
-
-    com.post(api.ds.manifest, {}, function(res) {
-
-        $.each(res.salesActivityItemType, function(i, v) {
-
-            salesActivityItem.activityItemType[v.key] = v.value;
-        })
-    }, null, false);
 
     com.focusPage("#thingsAdd").unbind().click(function() {
 
@@ -382,7 +366,7 @@ $(function() {
 
             $.each(salesActivityItems, function(i, v) {
 
-                if (v.state == 1)
+                if (v.state == constant.sales().salesActivityItem.STATUS_UNVALID_INT)
                     return true;
 
                 var pricingSpan = $("<div></div>").addClass("col-md-6").css({
@@ -617,15 +601,6 @@ $(function() {
     }
 
     function imports() {
-
-        com.post(api.ds.information, {}, function(res) {
-
-            awardStockType = res.awardStockType.split("key", "value");
-            awardStockSubType = res.awardSubtype.split("key", "value");
-            awardRecordType = res.StockType.split("key", "value");
-            awardRecordSubType = res.awardRecordSubtype.split("key", "value");
-            storeroom = res.awardStoreRoom.split("key", "value");
-        }, null, false);
 
         com.post(api.decoration.queryDecorationByOrderId, {
             "decorationOrderId": salesActivityItem.orderId

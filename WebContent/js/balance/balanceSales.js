@@ -129,9 +129,12 @@ jQuery(function($) {
         clazz: "btn-danger",
         handle: function(v) {
 
-            com.post(api.balance.balanceBalanceSales, {
-                "balanceSales.bsid": v.bsid
-            }, function() {
+            var options = {
+                "balanceSales.bsid": v.bsid,
+                "balanceSales.payment": v.grade == "A" ? v.income : v.payment
+            };
+
+            com.post(api.balance.balanceBalanceSales, options, function() {
 
                 com.showAlert(com.info, "结算成功");
                 seacher.doSearch();

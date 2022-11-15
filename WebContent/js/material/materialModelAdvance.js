@@ -1,10 +1,8 @@
 $(function () {
 
     /**
-     * 回调函数必须提供 init(tableId, result.list)方法
-     * tableId ，用来显示的div的id
-     * result.list 列表的json数组
-     * */
+     * 回调函数必须提供 init(tableId, result.list)方法 tableId ，用来显示的div的id result.list 列表的json数组
+     */
     var displayFunc = (function () {
 
         var renderList = function (tableId, listData) {
@@ -56,7 +54,7 @@ $(function () {
 
             $btnStatus.append($statusSwitch).append($span);
 
-            $divBtnWrap.append($btnEdit).append($btnAdvance).append($btnDelete).append($btnStatus).appendTo($h3);
+            $divBtnWrap.append($btnEdit).append($btnAdvance).append($btnStatus).appendTo($h3);
 
             $liLine.append($h3).append($ulProperty);
 
@@ -202,7 +200,7 @@ $(function () {
         com.focusPage("#measurementUnitId").bindData(materialModel.data.measurementUnitData, "id", "name");
     });
 
-    //添加按钮
+    // 添加按钮
     com.focusPage('a[name="add"]', '#pagenation').click(function () {
         materialModel.editFlg = !1;
 
@@ -259,7 +257,7 @@ $(function () {
         com.focusPage('#importModal').modal("show");
     });
 
-    //保存
+    // 保存
     function saveData() {
         
         if(com.validate("materialModelModal") || !materialModel.editFlg) return false;
@@ -309,7 +307,7 @@ $(function () {
         materialModel.advanceModal.modal("hide");
     }
 
-    //删除
+    // 删除
     function deleteMaterial(mmid) {
         var c = {};
 
@@ -320,7 +318,7 @@ $(function () {
         });
     }
 
-    //编辑按钮
+    // 编辑按钮
     function editMaterial(c) {
         materialModel.editFlg = !0;
         materialModel.materialModelItems.mmId.val(c.mmId);
@@ -366,7 +364,7 @@ $(function () {
         materialModel.advanceModal.modal("show");
     }
 
-    //启用禁用功能
+    // 启用禁用功能
     function updateStatus(mmid, status, failcallBack) {
         com.post(api.material.updateMaterialModelForStatus, {
             "materialModel.mmId": mmid,

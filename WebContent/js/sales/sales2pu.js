@@ -2,8 +2,8 @@ $(function () {
 
     var salesPU = {
         _params: {},
-        status: {},
-        balanceStatus: {},
+        status: constant.sales().sales.status.keys,
+        balanceStatus: constant.sales().sales.balanceStatus.keys,
         btns: {
             puSaveBtn: com.focusPage("#puSaveBtn")
         }
@@ -12,11 +12,6 @@ $(function () {
     var pageConfig = drawNode.getConfig(params['urlLoadParams'].type);
 
     com.datetime(com.focusPage('#layerAdd input[name="deliveryTime"]'));
-
-    com.post(api.ds.sales, {}, function (res) {
-        salesPU.status = res.statues.split("key", "value");
-        salesPU.balanceStatus = res.balanceStatuses.split("key", "value");
-    }, null, false);
 
     var displayFunc = (function () {
 
@@ -158,7 +153,7 @@ $(function () {
 
                         salesPU._params["sids[0]"] = v.sid;
 
-                        if (v.fullpayStatus == 2) {
+                        if (v.fullpayStatus == constant.sales().sales.FULLPAYSTATUS_CONFIRM_SHORT) {
                             com.focusPage('#layerAdd').attr({'data-sid': v.sid});
                             com.popup4model('#layerAdd', "转采购单", "", function () {
                                 com.clearValidator();
@@ -390,7 +385,7 @@ $(function () {
                         var $this = $(v);
                         fullPayStatus.push($this.attr('data-fullPayStatus'));
                         $sids.push($this.attr('data-sid'));
-                        if (fullPayStatus[i] == 2 && flag) {
+                        if (fullPayStatus[i] == constant.sales().sales.FULLPAYSTATUS_CONFIRM_SHORT && flag) {
                             salesPU._params["sids[" + i + "]"] = $sids[i];
                         } else {
                             salesPU._params = {};

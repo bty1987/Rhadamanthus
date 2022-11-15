@@ -4,15 +4,10 @@ $(function() {
         sbid: params.sales.salesBalance.sbid,
         sid: params.sales.sales.sid,
 
-        deliveryStatus: {},
+        deliveryStatus: constant.sales().salesDeliveryItem.status.keys,
     };
 
     com.focusPage('#fl-statement').statement("销售单", "销售项");
-
-    com.post(api.ds.sales, {}, function(res) {
-
-        salesItem.deliveryStatus = res.deliveryStatus.split("key", "value");
-    }, null, false);
 
     function initList(tableId, listData) {
 
@@ -28,7 +23,7 @@ $(function() {
                 var $small = $('<small></small>').addClass('blue').html(v.salesItem.goods.name);
                 var $btnDiv = $('<div></div>').addClass('action-buttons pull-right');
 
-                var propertyArr = [["商品品类:", v.salesItem.goods.category, "grey", "category"], ["商品颜色:", v.salesItem.color.name, "grey", "color"], ["商品规格:", v.salesItem.format.info, "grey", "format"], ["售价:", v.salesItem.selling, "blue", "selling"], ["折扣价:", v.salesItem.disPrice, "blue", "disPrice"], ["折让价:", v.salesItem.price, "blue", "price"], ["数量:", v.num, "blue", "num"], ["总价:", v.total, "blue", "total"], ["配送状态:", salesItem.deliveryStatus[v.salesItem.deliveryStatus], "red"], ["结算方式:", v.ctype == 0 ? "底价" : "点位", "red", "ctype"], ["结算值:", v.cvalue, "blue", "cvalue"], ["备注:", v.salesItem.comment, "grey", "comment"]];
+                var propertyArr = [["商品品类:", v.salesItem.goods.category, "grey", "category"], ["商品颜色:", v.salesItem.color.name, "grey", "color"], ["商品规格:", v.salesItem.format.info, "grey", "format"], ["售价:", v.salesItem.selling, "blue", "selling"], ["折扣价:", v.salesItem.disPrice, "blue", "disPrice"], ["折让价:", v.salesItem.price, "blue", "price"], ["数量:", v.num, "blue", "num"], ["总价:", v.total, "blue", "total"], ["配送状态:", constant.sales().salesDeliveryItem.status.keys[v.salesItem.deliveryStatus], "red"], ["结算方式:", v.ctype == 0 ? "底价" : "点位", "red", "ctype"], ["结算值:", v.cvalue, "blue", "cvalue"], ["备注:", v.salesItem.comment, "grey", "comment"]];
 
                 $.each(propertyArr, function(index, value) {
 

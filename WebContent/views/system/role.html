@@ -127,7 +127,23 @@
                     </button>
                     <h4 class="modal-title">操作配置</h4>
                 </div>
-                <div class="modal-body"></div>
+
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="currentOperation">现有操作</label>
+                            <div class="col-sm-9">
+                                <div class="tags" style="border: 0px" id="currentOperation"></div>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right">操作</label>
+                            <div id="operation" class="tags" style="border: 0px"></div>
+                        </div>
+                    </form>
+                </div>
+
                 <div class="modal-footer">
                     <button type="button" name="saveBtn" class="btn btn-primary">保存</button>
                     <button type="button" name="cancelBtn" class="btn btn-default" data-dismiss="modal">取消</button>

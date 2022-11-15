@@ -246,6 +246,7 @@ jQuery(function($) {
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
+            var $btnPosPush = $('<a></a>').addClass('btn btn-minier btn-danger').html('推送');
             var $btnCollect = $('<a></a>').addClass('btn btn-minier').html('收款');
             var $btnDetail = $('<a></a>').addClass('btn btn-minier btn-yellow').html('增减明细');
             var $btnRefund = $('<a></a>').addClass('btn btn-minier btn-danger').html('退款');
@@ -283,6 +284,8 @@ jQuery(function($) {
 
             if (v.twoType == constant.payment.decorationPayment.TWOTYPE_ADD_REDUCE_INT && decorationPayment.pageConfig.pageBtn.contains("addreduce"))
                 $divBtnWrap.append($btnDetail);
+            if (v.paymentStatus == constant.payment.decorationPayment.PAYMENTSTATUS_UNPAY_INT && v.oneType == constant.payment.decorationPayment.ONETYPE_ADD_INT && decorationPayment.pageConfig.pageBtn.contains("posPush"))
+                $divBtnWrap.append($btnPosPush);
             if (decorationPayment.pageConfig.pageBtn.contains("collect"))
                 $divBtnWrap.append($btnCollect);
             if (v.paymentStatus != constant.payment.decorationPayment.PAYMENTSTATUS_UNPAY_INT && decorationPayment.pageConfig.pageBtn.contains("print"))
@@ -379,8 +382,8 @@ jQuery(function($) {
                 // pos推送生产的paytran没有pid, pid=0,只有orderId, 小程序端生成的paytran有pid and orderId
                 var checkOptions = {
                     "paytran.pid": v.dpid,
-                    "paytran.type": 1,
-                    "paytran.atttype": 0
+                    "paytran.type": constant.payment.receipt.PAYMENTTYPE_DECORATION_INT,
+                    "paytran.atttype": constant.payment.paytran.ATTTYPE_DECORATION_INT
                 };
 
                 com.showConfirm("是否验证收款信息?", function(result) {
@@ -411,6 +414,38 @@ jQuery(function($) {
                     }, function(res) {
 
                         com.showAlert(com.info, "发送成功");
+                    });
+                });
+            });
+
+            // pos推送
+            $btnPosPush.click(function() {
+                var bankVal = com.typeahead(decorationPayment.htmlName+"paytranBankName");
+                var bankDiv = com.focusPage("#"+decorationPayment.htmlName+"paytranBankName");
+
+                if (bankVal == "" || bankDiv.val() == "") {
+                    com.showAlert(com.warning, "请使用匹配数据.");
+                    return false;
+                }
+
+                var options = {
+                    "paytran.orderId": v.decoration.orderId,
+                    "paytran.pid": v.dpid,
+                    "paytran.type": constant.payment.receipt.PAYMENTTYPE_DECORATION_INT,
+                    "paytran.atttype": constant.payment.paytran.ATTTYPE_DECORATION_INT,
+                    "paytran.no": com.typeahead(bankDiv),
+                    "paytran.sn": decorationPayment.posValues[bankVal].value, // 收据类型中pos的value值
+                    "paytran.money": v.referMoney
+                };
+
+                com.post(api.payment.addPaytran, options, function(res) {
+                    var sendOption = {
+                        "paytran.ptid": res.paytran.ptid,
+                        "paytran.way": "wxpay"
+                    };
+
+                    com.post(api.payment.posPay, sendOption, function(res) {
+                        com.showAlert(com.info, "推送成功");
                     });
                 });
             });
@@ -469,6 +504,9 @@ jQuery(function($) {
 
         return btnParams;
     });
+
+    // 要在searcher后面
+    paymentUtils.pushPosBank(decorationPayment.type == "common", decorationPayment.bankUtil, com.focusPage("#condList", "#decorationPaymentList"), decorationPayment.htmlName);
 
     // 退款审批
     decorationPayment.btns.approveBtn.on('click', function() {

@@ -317,7 +317,7 @@
 
             _dtransfee = utils.changeThrDecimal(utils.accMul(_transfee, _transDiscount)); // 车运费*车运费折扣
             _dmanagefee = utils.changeThrDecimal(utils.accMul(utils.accMul(utils.accAdd(utils.accAdd(_undisPrice, _disPrice), _transfee), _manageRate), _manageDiscount)); // (打折项总额+不打折项总额+车运费)*管理费比例*管理费折扣
-            _taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT ? _taxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _taxRate)) : _taxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _managefee), _taxRate));
+            _taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT ? _taxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _taxRate)) : _taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT ? _taxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _managefee), _taxRate)) : _taxfee = 0;
             _total = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _managefee), _taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT ? _taxfee : 0), utils.accAdd(1, utils.accMul(_taxRate, _taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT ? 1 : 0)))); // 未计算车运费之前的总价格+车运费+管理费(未打折的总价格)
 
             if (quo.basicParams["quotetion.basePrice"] && quo.basicParams["quotetion.basePrice"] != 0) {
@@ -539,7 +539,7 @@
                     v.isShow = $(this).is(":checked") == false ? constant.data().decorationMatching.ISSHOW_HIDE_INT : constant.data().decorationMatching.ISSHOW_SHOW_INT;
                 });
 
-                v.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT ? _ddtaxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(_undisPrice, _disPrice), _dtransfee), _dtaxRate)) : _ddtaxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_undisPrice, _disPrice), _dtransfee), _managefee), _dmanagefee), _dtaxRate));
+                v.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT ? _ddtaxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(_undisPrice, _disPrice), _dtransfee), _dtaxRate)) : v.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT ? _ddtaxfee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_undisPrice, _disPrice), _dtransfee), _managefee), _dmanagefee), _dtaxRate)) : _ddtaxfee = 0;
                 _ddtotal = utils.changeThrDecimal(utils.accMul(utils.accAdd(total, v.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT ? _ddtaxfee : 0), utils.accAdd(1, utils.accMul(_dtaxRate, v.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT ? 1 : 0))));
 
                 if (v.base && v.base != 0) {
@@ -2247,7 +2247,7 @@
                     _managefee = utils.changeThrDecimal(utils.accMul(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _manageRate)); // (未计算车运费之前的总价格+车运费)*管理费
                     _dtransfee = utils.changeThrDecimal(utils.accMul(_transfee, _transDiscount)); // 车运费*车运费折扣
                     _dmanagefee = utils.changeThrDecimal(utils.accMul(utils.accMul(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _manageRate), _manageDiscount)); // (未计算车运费之前的总价格+车运费)*管理费比例*管理费折扣
-                    _taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT ? _taxfee = utils.accMul(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _taxRate) : _taxfee = utils.accMul(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _managefee), _taxRate);
+                    _taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT ? _taxfee = utils.accMul(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _taxRate) : _taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT ? _taxfee = utils.accMul(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _managefee), _taxRate) : _taxfee = 0;
                     _total = utils.accMul(utils.accAdd(utils.accAdd(utils.accAdd(utils.accAdd(_disPrice, _undisPrice), _transfee), _managefee), _taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT ? 0 : _taxfee), utils.accAdd(1, utils.accMul(_taxRate, _taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT ? 1 : 0))); // 未计算车运费之前的总价格+车运费+管理费=(未打折的总价格)
 
                     if (quo.basicParams["quotetion.basePrice"] && quo.basicParams["quotetion.totalPrice"] != 0) {

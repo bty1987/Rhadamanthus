@@ -1,8 +1,6 @@
 ﻿$(function() {
 
     Api().init('js/api/');
-    Condition = Condition(api);
-    Condition.init('js/condition/');
     Validator().init();
     Printer().init();
 
@@ -42,6 +40,9 @@
 
         Constant().init();
 
+        Condition = Condition(api);
+        Condition.init('js/condition/');
+
         com._post_(api.home.library, {
             "api": "system.login.upgrade",
             "userId": res.userInfo.user.userId,
@@ -78,7 +79,7 @@
             }, function(res) {
 
                 if (res.code != 0) {
-                    alert('账号在其他设备上登录!');
+                    alert('登录超时,请重新登录.');
 
                     window.onbeforeunload = null;
                     com.deleteCookie("authentication");
@@ -149,6 +150,7 @@
             return false;
     });
 
+    $("#versionName").text(parent.window.isPC ? "(PC)" : "(WEB)");
     $("#versionCode").text(config.versionCode);
 
     $(".userProfile").attr("href", api.index.userProfile.url + "?timestamp=" + new Date().getTime());
@@ -815,7 +817,7 @@
                         }, function(res) {
 
                             if (res.code != 0) {
-                                alert('账号在其他设备上登录!');
+                                alert('登录超时,请重新登录.');
 
                                 window.onbeforeunload = null;
                                 com.deleteCookie("authentication");

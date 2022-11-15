@@ -237,12 +237,18 @@ $.extend(api, {
         deleteOales: {
             url: "deleteOales.do"
         },
+        abateOales: {
+            url: "abateOales.do"
+        },
 
         confirmOales: {
             url: "confirmOales.do"
         },
         submitOales: {
             url: "submitOales.do"
+        },
+        cancelOales: {
+            url: "cancelOales.do"
         },
 
         rejectOales: {
@@ -255,6 +261,39 @@ $.extend(api, {
 
         finishOales: {
             url: "finishOales.do"
+        },
+        pageOalesPay: {
+            url: "pageOalesPay.do",
+            type: "query",
+            tranargs: [{
+                result: "paging-data",
+                args: ["money"]
+            }]
+        },
+        queryOalesPay: {
+            url: "queryOalesPay.do",
+            type: "query",
+            tranargs: [{
+                result: "oalesPays",
+                args: ["money"]
+            }]
+        },
+        addOalesPay: {
+            url: "addOalesPay.do",
+            type: "update",
+            tranargs: {
+                args: ["oalesPay.money"]
+            }
+        },
+        updateOalesPay: {
+            url: "updateOalesPay.do",
+            type: "update",
+            tranargs: {
+                args: ["oalesPay.money"]
+            }
+        },
+        deleteOalesPay: {
+            url: "deleteOalesPay.do"
         },
 
         pageSalesBalance: {

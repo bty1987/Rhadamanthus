@@ -6,6 +6,7 @@ var printselectionDetail = (function() {
     utils = parent.utils;
     com = parent.com;
     params = parent.params;
+    constant = parent.constant;
 
     var selectionDetail = {
         decoration: {},
@@ -147,19 +148,7 @@ var printselectionDetail = (function() {
             contentHtml += '<td height="10"></td>';
             contentHtml += '</tr>';
             contentHtml += '<tr>';
-            contentHtml += '<td width="10%"><b>客户签字:______________</b></td>';
-            contentHtml += '<td width="10%"><b>时间:______________</b></td>';
-            contentHtml += '<td width="10%"><b>设计师签字:______________</b></td>';
-            contentHtml += '<td width="10%"><b>时间:______________</b></td>';
-            contentHtml += '<td width="10%"><b>预算员签字:______________</b></td>';
-            contentHtml += '<td width="10%"><b>时间:______________</b></td>';
-            contentHtml += '<td width="10%"><b>主材管家签字:______________</b></td>';
-            contentHtml += '<td width="10%"><b>时间:______________</b></td>';
-            contentHtml += '</tr>';
-            contentHtml += '<tr>';
-            contentHtml += '<td height="10"></td>';
-            contentHtml += '</tr>';
-            contentHtml += '<td colspan="8" width="100%" style="font-size: 15px"><b>注: 选材单一经确认签字, 开工前可对所选产品进行一次变更, 且最多变更两个品类. </b></td>';
+            contentHtml += '<td colspan="8" width="100%" style="font-size: 15px"><b>注: 开工放线当日起，48小时内是允许变更一次主材，且最多只允许变更两个品类，如超期发生主材变更，每变更一个品类，客户主材工期自动顺延7个工作日. </b></td>';
             contentHtml += '</tr>';
             contentHtml += '<tr></tr></tbody></table>';
 
@@ -173,12 +162,14 @@ var printselectionDetail = (function() {
             selectionDetail.orderId = params.quotation.orderId;
 
             com.post(api.ds.quotation, {}, function(res) {
+
                 selectionDetail.types = res.selectionItemType.split("key", "value");
             }, null, false);
 
             com.post(api.decoration.queryDecorationForCommonByOrderId, {
                 "decoration.orderId": selectionDetail.orderId
             }, function(res) {
+
                 selectionDetail.decoration = res.decoration;
             }, null, false);
 
@@ -187,6 +178,7 @@ var printselectionDetail = (function() {
             com.post(api.quotation.querySelectionItemByOrderId, {
                 "selectionItem.decoration.orderId": selectionDetail.orderId
             }, function(res) {
+
                 selectionItems = res.selectionItems;
             }, null, false);
 
@@ -195,6 +187,7 @@ var printselectionDetail = (function() {
             com.post(api.quotation.queryQuotationForDefaultByOrderId, {
                 "quotation.orderId": selectionDetail.orderId
             }, function(res) {
+
                 quotation = res.quotation;
             }, null, false);
 
@@ -207,6 +200,7 @@ var printselectionDetail = (function() {
                 $.each(res.quotationFunctionAreas, function(i, v) {
 
                     $.each(v.quotationFunctionAreaItems, function(vi, vv) {
+
                         quotationFunctionAreaItems[vv.qfaiId] = vv;
                     });
                 });
@@ -221,6 +215,7 @@ var printselectionDetail = (function() {
                 $.each(res.extensions, function(i, v) {
 
                     $.each(v.extensionItems, function(vi, vv) {
+
                         extensionItems[vv.eiid] = vv;
                     });
                 });
@@ -236,6 +231,7 @@ var printselectionDetail = (function() {
                 $.each(res.addReduces, function(i, v) {
 
                     $.each(v.addReduceItems, function(vi, vv) {
+
                         addReduceItems[vv.ariId] = vv;
                     });
                 });
@@ -254,5 +250,6 @@ var printselectionDetail = (function() {
 })();
 
 jQuery(function($) {
+
     printselectionDetail.init();
 });

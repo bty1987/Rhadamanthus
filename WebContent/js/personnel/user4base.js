@@ -20,12 +20,7 @@
         com.closeTip();
     });
 
-    com.post(api.ds.personel, {
-        timestamp: (new Date).getTime()
-    }, function(a) {
-
-        user.statusType = a.statusType;
-    }, null, false);
+    user.statusType = constant.personel().user.status.datas;
 
     // 获取部门类型
     com.post(api.communion.queryDepartmentType, {}, function(res) {

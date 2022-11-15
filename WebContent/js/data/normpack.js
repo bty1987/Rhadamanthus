@@ -22,23 +22,27 @@ jQuery(function($) {
     normpack.btns.saveBtn.bindClick(saveData);
 
     normpack.modals.addModal.on("hide.bs.modal", function() {
+
         com.cleanItems(normpack.items);
         com.clearValidator();
         com.closeTip();
     });
 
     com.post(api.ds.data, {}, function(res) {
+
         normpack.status = res.costStatus.split("key", "value");
     }, null, false);
 
     var displayFunc = (function() {
 
         var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
             if (listData && listData.length) {
                 $.each(listData, function(i, v) {
+
                     var $liLine = creatLine(v);
 
                     $liLine.appendTo($ul);
@@ -49,6 +53,7 @@ jQuery(function($) {
         };
 
         var creatLine = function(v) {
+
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid');
             var $title = $('<small></small>').addClass('blue').html(' ' + v.name);
@@ -66,6 +71,7 @@ jQuery(function($) {
             var propertyArr = [["状态: ", normpack.status[v.status], "red"], ];
 
             $.each(propertyArr, function(index, value) {
+
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -74,16 +80,19 @@ jQuery(function($) {
 
             $invalid.append($statusSwitch).append($span);
             $liLine.append($h3).append($ulProperty);
-            $btnDiv.append($invalid).append($btnDelete).append($btnProject);
+            $btnDiv.append($invalid).append($btnProject);
             $h3.append($title).append($btnDiv);
 
             !v.status && $statusSwitch.prop("checked", true);
 
             $btnDelete.click(function() {
+
                 com.showConfirm("是否确认删除", function() {
+
                     com.post(api.data.deleteNormpack, {
                         "normpack.npid": v.npid
                     }, function() {
+
                         searcher.doSearch();
                         com.showAlert(com.info, "操作成功");
                     });
@@ -91,14 +100,17 @@ jQuery(function($) {
             })
 
             $btnProject.click(function() {
+
                 params.data.normpack = v;
                 com.popup4page("#layerPopUp", "views/data/normpackItem.html", "项目", null, function() {
+
                     com.closePopup();
                     searcher.doSearch();
                 });
             });
 
             $invalid.click(function() {
+
                 var cvalue = $statusSwitch.prop("checked") ? 0 : 1;
 
                 var options = {
@@ -107,6 +119,7 @@ jQuery(function($) {
                 }
 
                 com.post(api.data.updateNormpackForStatus, options, function(res) {
+
                     cvalue == 0 ? com.showAlert(com.info, "已启用") : com.showAlert(com.info, "已禁用");
                     searcher.doSearch();
                 });
@@ -117,10 +130,12 @@ jQuery(function($) {
 
         return {
             init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
                 renderList(tableId, listData);
             },
             drawLine: function(v) {
+
                 return creatLine(v);
             }
         }
@@ -141,12 +156,16 @@ jQuery(function($) {
     });
 
     com.focusPage('#addItemBtn').click(function() {
+
         normpack.modals.addModal.modal("show");
     });
 
     function saveData() {
 
-        if (com.validate('addModal')) { return false; };
+        if (com.validate('addModal')) {
+            return false;
+        }
+        ;
 
         var options = {
             'normpack.name': normpack.items.name.val(),
@@ -154,6 +173,7 @@ jQuery(function($) {
         };
 
         com.post(api.data.addNormpack, options, function(res) {
+
             com.closePopup();
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();

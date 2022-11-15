@@ -1,174 +1,198 @@
-$(function () {
+$(function() {
 
-  var talking = {
-	saveBtn : com.focusPage("#saveBtn"),
-	tranpackBtn : com.focusPage("#tranpackBtn"),
-	
-	modals: {
-		talkingModal: com.focusPage("#talkingModal")
-	},
-	items : {
-		name :com.focusPage("#name"),
-		type : com.focusPage("#type"),
-		content : com.focusPage("#content")
-	  },
-	editFlg : false,
-	talkingType : {},
-	talkingStatus : {}
-	};
+    var talking = {
+        saveBtn: com.focusPage("#saveBtn"),
+        tranpackBtn: com.focusPage("#tranpackBtn"),
 
-	talking.saveBtn.bindClick(saveData);
+        modals: {
+            talkingModal: com.focusPage("#talkingModal")
+        },
+        items: {
+            name: com.focusPage("#name"),
+            type: com.focusPage("#type"),
+            content: com.focusPage("#content")
+        },
+        editFlg: false,
+        talkingType: {},
+        talkingStatus: {}
+    };
 
-	talking.modals.talkingModal.on("hide.bs.modal", function(){
-		com.clearValidator();
-		com.cleanItems(talking.items);
-	});
+    talking.saveBtn.bindClick(saveData);
 
-	com.post(api.ds.data, {}, function (res) {
-		talking.items.type.bindData(res.talkingType, "key", "value");
-		talking.talkingType = res.talkingType.split("key", "value");
-		talking.talkingStatus = res.talkingStatus.split("key", "value");
-	},null, false);
+    talking.modals.talkingModal.on("hide.bs.modal", function() {
 
-	var displayFunc = (function(){
+        com.clearValidator();
+        com.cleanItems(talking.items);
+    });
 
-		var renderList = function (tableId, listData) {
-			var $tableWrap = com.focusPage('#' + tableId).empty();
-			var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
+    com.post(api.ds.data, {}, function(res) {
 
-			if (listData && listData.length) {
-				$.each(listData, function (i, v) {
-					var $liLine = creatLine(v);
+        talking.items.type.bindData(res.talkingType, "key", "value");
+        talking.talkingType = res.talkingType.split("key", "value");
+        talking.talkingStatus = res.talkingStatus.split("key", "value");
+    }, null, false);
 
-					$liLine.appendTo($ul);
-				});
+    var displayFunc = (function() {
 
-				$ul.appendTo($tableWrap);
-			}
-		};
+        var renderList = function(tableId, listData) {
 
-		var  creatLine = function(v) {
+            var $tableWrap = com.focusPage('#' + tableId).empty();
+            var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-			var $liLine = $('<li></li>').addClass('item-orange clearfix');
-			var $h3 = $('<h3></h3>').addClass("oid").append($('<small></small>').addClass('blue').html(v.name));
-			var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
-			var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
+            if (listData && listData.length) {
+                $.each(listData, function(i, v) {
 
-			var $invalid = $('<div></div>').addClass('pull-right');
-			var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
-			var $span = $('<span></span>').addClass('lbl status-lbl');
+                    var $liLine = creatLine(v);
 
-			var $btnUpdate = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('更新');
-			var $btnDelete = $('<a></a>').addClass(' btn btn-minier btn-success').html('删除');
+                    $liLine.appendTo($ul);
+                });
 
-			$invalid.append($statusSwitch).append($span);
-			$divBtnWrap.append($btnUpdate).append($btnDelete).append($invalid).appendTo($h3);
+                $ul.appendTo($tableWrap);
+            }
+        };
 
-			var propertyArr = [
-				["名称:",v.name,"grey"],
-				["类型:",talking.talkingType[v.type],"grey"],
-				["内容:",v.content,"grey"],
-				["状态 :",talking.talkingStatus[v.status],"red"]
-			];
+        var creatLine = function(v) {
 
-			$.each(propertyArr, function (index,value) {
-				var $liProperty = $('<li></li>');
-				$('<strong></strong>').html(value[0]).appendTo($liProperty);
-				$('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
-				$liProperty.appendTo($ulProperty);
-			});
+            var $liLine = $('<li></li>').addClass('item-orange clearfix');
+            var $h3 = $('<h3></h3>').addClass("oid").append($('<small></small>').addClass('blue').html(v.name));
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
+            var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
-			$liLine.append($h3).append($ulProperty);
+            var $invalid = $('<div></div>').addClass('pull-right');
+            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({
+                "type": "checkbox"
+            });
+            var $span = $('<span></span>').addClass('lbl status-lbl');
 
-			$btnDelete.click(function () {
-				com.showConfirm("是否确认删除", function(){
-					deleteTalking(v.tid);
-				});
-			});
+            var $btnUpdate = $('<a></a>').addClass(' btn btn-minier btn-yellow').html('更新');
+            var $btnDelete = $('<a></a>').addClass(' btn btn-minier btn-success').html('删除');
 
-			!v.status ? $statusSwitch.prop("checked", true) : $statusSwitch.prop("checked", false);
+            $invalid.append($statusSwitch).append($span);
+            $divBtnWrap.append($btnUpdate).append($invalid).appendTo($h3);
 
-			$invalid.click(function(){
-				var cvalue = $statusSwitch.prop("checked") ? 0:1;
+            var propertyArr = [["名称:", v.name, "grey"], ["类型:", talking.talkingType[v.type], "grey"], ["内容:", v.content, "grey"], ["状态 :", talking.talkingStatus[v.status], "red"]];
 
-				updateTalkingForStatus(v.tid, cvalue);
-			});
+            $.each(propertyArr, function(index, value) {
 
-			$btnUpdate.click(function () {
+                var $liProperty = $('<li></li>');
+                $('<strong></strong>').html(value[0]).appendTo($liProperty);
+                $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
+                $liProperty.appendTo($ulProperty);
+            });
+
+            $liLine.append($h3).append($ulProperty);
+
+            $btnDelete.click(function() {
+
+                com.showConfirm("是否确认删除", function() {
+
+                    deleteTalking(v.tid);
+                });
+            });
+
+            !v.status ? $statusSwitch.prop("checked", true) : $statusSwitch.prop("checked", false);
+
+            $invalid.click(function() {
+
+                var cvalue = $statusSwitch.prop("checked") ? 0 : 1;
+
+                updateTalkingForStatus(v.tid, cvalue);
+            });
+
+            $btnUpdate.click(function() {
+
                 talking.editFlg = false;
-				talking.items.tid = v.tid;
-				talking.items.name.val(v.name);
-				talking.items.type.val(v.type);
-				talking.items.content.val(v.content);
+                talking.items.tid = v.tid;
+                talking.items.name.val(v.name);
+                talking.items.type.val(v.type);
+                talking.items.content.val(v.content);
 
-				talking.modals.talkingModal.modal("show");
-			});
+                talking.modals.talkingModal.modal("show");
+            });
 
-			return $liLine;
-		};
-		return {
-			init : function(tableId,listData){
-				com.focusPage('#' + tableId).html(null);
-				renderList(tableId,listData);
-			},
-			drawLine : function(v){
-				return creatLine(v);
-			}
-		};
-	})();
-	
-	var searcher = new Searcher();
+            return $liLine;
+        };
+        return {
+            init: function(tableId, listData) {
 
-	searcher.init( ["data-talking-name","data-talking-type","data-talking-status"], "creatLine", api.data.pageTalking, function(data){
-		displayFunc.init('resultList', data);
-	}, "pageTalking", "pageTalkingPost", null, false, null,function(res){
-		var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addTalking').css("margin", "0px 3px");
-		var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
-		var $addspan = $('<span></span>').text('添加').appendTo($adda);
+                com.focusPage('#' + tableId).html(null);
+                renderList(tableId, listData);
+            },
+            drawLine: function(v) {
 
-		return [$adda];
-	},"resultList");
+                return creatLine(v);
+            }
+        };
+    })();
 
-	com.focusPage("#addTalking").click(function() {
-		talking.editFlg = true;
-		talking.modals.talkingModal.modal("show");
-	});
+    var searcher = new Searcher();
 
-	function updateTalkingForStatus(tid, newstatus){
-		com.post(api.data.updateTalkingForStatus, {"talking.tid": tid, "talking.status": newstatus }, function (res) {
-			newstatus == 0 ? com.showAlert(com.info, "已启动") : com.showAlert(com.info, "已禁用");
-			searcher.doSearch();
-		},null, false);
+    searcher.init(["data-talking-name", "data-talking-type", "data-talking-status"], "creatLine", api.data.pageTalking, function(data) {
 
-	};
+        displayFunc.init('resultList', data);
+    }, "pageTalking", "pageTalkingPost", null, false, null, function(res) {
 
-	function deleteTalking(tid){
-		com.post(api.data.deleteTalking, {"talking.tid": tid}, function (res) {
-			com.showAlert(com.info, "操作成功");
-			searcher.doSearch();
-		},null, false);
+        var $adda = $('<a></a>').addClass('btn btn-minier btn-primary pull-left').attr('id', 'addTalking').css("margin", "0px 3px");
+        var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
+        var $addspan = $('<span></span>').text('添加').appendTo($adda);
 
-	};
+        return [$adda];
+    }, "resultList");
 
-	function saveData(options){
+    com.focusPage("#addTalking").click(function() {
 
-		var url,options;
+        talking.editFlg = true;
+        talking.modals.talkingModal.modal("show");
+    });
 
-		options = {
-		"talking.name": talking.items.name.val(),
-		"talking.type":  talking.items.type.val(),
-		"talking.content":  talking.items.content.val()
-		};
+    function updateTalkingForStatus(tid, newstatus) {
 
-		talking.editFlg ? url = api.data.addTalking : url = api.data.updateTalking, options["talking.tid"] = talking.items.tid;
+        com.post(api.data.updateTalkingForStatus, {
+            "talking.tid": tid,
+            "talking.status": newstatus
+        }, function(res) {
 
-		com.post(url, options, function (res) {
-			com.closePopup();
-			com.showAlert(com.info, "操作成功");
-			searcher.doSearch();
-		},null, false);
+            newstatus == 0 ? com.showAlert(com.info, "已启动") : com.showAlert(com.info, "已禁用");
+            searcher.doSearch();
+        }, null, false);
 
-		talking.modals.talkingModal.modal("hide");
-	};
+    }
+    ;
+
+    function deleteTalking(tid) {
+
+        com.post(api.data.deleteTalking, {
+            "talking.tid": tid
+        }, function(res) {
+
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
+        }, null, false);
+
+    }
+    ;
+
+    function saveData(options) {
+
+        var url, options;
+
+        options = {
+            "talking.name": talking.items.name.val(),
+            "talking.type": talking.items.type.val(),
+            "talking.content": talking.items.content.val()
+        };
+
+        talking.editFlg ? url = api.data.addTalking : url = api.data.updateTalking, options["talking.tid"] = talking.items.tid;
+
+        com.post(url, options, function(res) {
+
+            com.closePopup();
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
+        }, null, false);
+
+        talking.modals.talkingModal.modal("hide");
+    }
+    ;
 
 });

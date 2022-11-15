@@ -34,12 +34,9 @@ jQuery(function($) {
     /**
      * 初始化页面变量中的状态/类型等信息 , 同时判断是否需要绑定数据
      */
-    com.post(api.ds.approval, {"timestamp": new Date().getTime()}, function(res) {
-        approve.items.type.bindData(res.approvalType, "key", "value", false);
 
-        approve.approvalType = res.approvalType.split("key", "value");
-
-    }, null, false);
+    approve.items.type.bindData(constant.approval().approval.type.datas, "key", "value", false);
+    approve.approvalType = constant.approval().approval.type.keys;
 
     /**
      * 分页中 , 显示数据(每行)的处理方法 , 每行显示内容大致分为三个部分 , 行标题 , 行内容 , 行按钮集

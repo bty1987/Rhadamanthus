@@ -193,6 +193,7 @@ $(function () {
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons');
 
             var $btnDecorationInfo = $('<a></a>').addClass('btn btn-minier btn-yellow').html('装修单信息');
+            var $btnPosPush = $('<a></a>').addClass('btn btn-minier btn-danger').html('推送');
             var $btnCollect = $('<a></a>').addClass('btn btn-minier').html('收款');
             var $btnPrint = $('<a></a>').addClass('btn btn-minier btn-info').html('打印');
             var $btnUpdate = $('<a></a>').addClass('btn btn-minier btn-success').html('更新');
@@ -228,6 +229,8 @@ $(function () {
             if(salesPayment.pageConfig.pageBtn.contains("payway")) paymentUtils.drawHistoryData(salesPayment, v.salesReceipt, $liLine, "");
 
             if (salesPayment.pageConfig.pageBtn.contains("decorationInfo")) $divBtnWrap.append($btnDecorationInfo);
+
+            if (v.status == constant.payment.materialPayment.STATUS_INIT_INT && salesPayment.collectType.indexOf(v.type) != -1 && salesPayment.pageConfig.pageBtn.contains("posPush")) $divBtnWrap.append($btnPosPush);
             if(salesPayment.pageConfig.pageBtn.contains("collect")) $divBtnWrap.append($btnCollect);
             if(v.status != constant.payment.materialPayment.STATUS_INIT_INT && salesPayment.pageConfig.pageBtn.contains("print")) $divBtnWrap.append($btnPrint);
             if(v.status == constant.payment.materialPayment.STATUS_COLLECT_INT && salesPayment.pageConfig.pageBtn.contains("update")) $divBtnWrap.append($btnUpdate);
@@ -272,8 +275,8 @@ $(function () {
                 // pos推送生产的paytran没有pid, pid=0,只有orderId, 小程序端生成的paytran有pid and orderId
                 var checkOptions = {
                     "paytran.pid": v.spid,
-                    "paytran.type": 3,
-                    "paytran.atttype": 1
+                    "paytran.type": constant.payment.receipt.PAYMENTTYPE_SALES_INT,
+                    "paytran.atttype": constant.payment.paytran.ATTTYPE_MATERIAL_INT
                 };
 
                 com.showConfirm("是否验证收款信息?", function(result) {
@@ -298,6 +301,38 @@ $(function () {
                         "salesPayment.spid": v.spid
                     }, function(res) {
                         com.showAlert(com.info, "发送成功");
+                    });
+                });
+            });
+
+            // pos推送
+            $btnPosPush.click(function() {
+                var bankVal = com.typeahead(salesPayment.htmlName+"paytranBankName");
+                var bankDiv = com.focusPage("#"+salesPayment.htmlName+"paytranBankName");
+
+                if (bankVal == "" || bankDiv.val() == "") {
+                    com.showAlert(com.warning, "请使用匹配数据.");
+                    return false;
+                }
+
+                var options = {
+                    "paytran.orderId": v.sales.orderId,
+                    "paytran.pid": v.spid,
+                    "paytran.type": constant.payment.receipt.PAYMENTTYPE_SALES_INT,
+                    "paytran.atttype": constant.payment.paytran.ATTTYPE_MATERIAL_INT,
+                    "paytran.no": com.typeahead(bankDiv),
+                    "paytran.sn": salesPayment.posValues[bankVal].value, // 收据类型中pos的value值
+                    "paytran.money": v.referMoney
+                };
+
+                com.post(api.payment.addPaytran, options, function(res) {
+                    var sendOption = {
+                        "paytran.ptid": res.paytran.ptid,
+                        "paytran.way": "wxpay"
+                    };
+
+                    com.post(api.payment.posPay, sendOption, function(res) {
+                        com.showAlert(com.info, "推送成功");
                     });
                 });
             });
@@ -362,6 +397,9 @@ $(function () {
         return btnParams;
 
     }, 'resultList');
+
+    // 要在searcher后面
+    paymentUtils.pushPosBank(salesPayment.type == "common", salesPayment.bankUtil, com.focusPage("#condList", "#salesPaymentList"), salesPayment.htmlName);
 
     //初始化模态框
     function initCollect(payment, isCollects){

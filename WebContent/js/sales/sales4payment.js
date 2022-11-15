@@ -39,19 +39,19 @@ jQuery(function() {
 
         $.each(res.receiptTypes, function(i, v) {
 
-            if (v.type == 1) {
+            if (v.type == constant.data().receiptType.TYPE_CASH_INT) {
                 salesPaymentForStatus.cash.push(v);
                 salesPaymentForStatus.cashInfo[v.no] = v.name;
-            } else if (v.type == 2) {
+            } else if (v.type == constant.data().receiptType.TYPE_CARD_INT) {
                 salesPaymentForStatus.bank.push(v);
                 salesPaymentForStatus.bankInfo[v.no] = v.name;
-            } else if (v.type == 3) {
+            } else if (v.type == constant.data().receiptType.TYPE_BANK_INT) {
                 salesPaymentForStatus.checkBank.push(v);
                 salesPaymentForStatus.checkBankInfo[v.no] = v.name;
-            } else if (v.type == 4) {
+            } else if (v.type == constant.data().receiptType.TYPE_PUBLIC_INT) {
                 salesPaymentForStatus.accounts.push(v);
                 salesPaymentForStatus.accountsInfo[v.no] = v.name;
-            } else if (v.type == 5) {
+            } else if (v.type == constant.data().receiptType.TYPE_COUPON_INT) {
                 salesPaymentForStatus.couponType.push(v);
                 salesPaymentForStatus.couponTypeData[v.no] = [v.no, v.name];
             }

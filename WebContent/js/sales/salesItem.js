@@ -29,15 +29,10 @@ $(function() {
         options: {},
         approvalType: null,
 
-        deliveryStatus: {},
+        deliveryStatus: constant.sales().salesDeliveryItem.status.keys,
     };
 
     com.focusPage('#fl-statement').statement("销售单", "子项");
-
-    com.post(api.ds.sales, {}, function(res) {
-
-        salesItem.deliveryStatus = res.deliveryStatus.split("key", "value");
-    }, null, false);
 
     com.post(api.sales.querySalesBySid, {
         "sales.sid": salesItem.sid
@@ -46,7 +41,7 @@ $(function() {
         salesItem.sales = res.sales;
     }, null, false);
 
-    if ((salesItem.sales.fullpayStatus != 2 && salesItem.sales.status != 4) || salesItem.dompany == "dompany" || salesItem.dompany == "pompany") {
+    if ((salesItem.sales.fullpayStatus != constant.sales().sales.FULLPAYSTATUS_CONFIRM_SHORT && salesItem.sales.status != constant.sales().sales.STATUS_WAST_INT) || salesItem.dompany == "dompany" || salesItem.dompany == "pompany") {
         hideButtons([salesItem.btns.refundBtn, salesItem.btns.refundCancelBtn, salesItem.btns.refundCommitBtn, salesItem.btns.fullRefundBtn, salesItem.btns.reOrderBtn]);
     }
 
@@ -75,7 +70,7 @@ $(function() {
                 var $btnEdit = $('<a></a>').addClass('btn btn-minier btn-yellow').html('编辑');
                 var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-success').html('删除');
 
-                var propertyArr = [["商品品类:", v.goods.category, "grey"], ["商品颜色:", v.color.name, "grey"], ["商品规格:", v.format.info, "grey"], ["售价:", v.selling, "blue"], ["折扣价:", v.disPrice, "blue"], ["折让价:", v.price, "blue"], ["数量:", v.num, "blue itemnum"], ["总价:", v.total, "blue"], ["结算值:", v.cvalue, "blue"], ["结算方式:", v.ctype == 0 ? "底价" : "点位", "red"], ["类型:", v.priceType == "0" ? "正价" : "特价", "red"], ["配送状态:", salesItem.deliveryStatus[v.deliveryStatus], "red"], ["备注:", v.comment, "grey"]];
+                var propertyArr = [["商品品类:", v.goods.category, "grey"], ["商品颜色:", v.color.name, "grey"], ["商品规格:", v.format.info, "grey"], ["售价:", v.selling, "blue"], ["折扣价:", v.disPrice, "blue"], ["折让价:", v.price, "blue"], ["数量:", v.num, "blue itemnum"], ["总价:", v.total, "blue"], ["结算值:", v.cvalue, "blue"], ["结算方式:", v.ctype == 0 ? "底价" : "点位", "red"], ["类型:", v.priceType == "0" ? "正价" : "特价", "red"], ["配送状态:", constant.sales().salesDeliveryItem.status.keys[v.deliveryStatus], "red"], ["备注:", v.comment, "grey"]];
 
                 $.each(propertyArr, function(index, value) {
 
@@ -89,7 +84,7 @@ $(function() {
                 $liLine.append($h3).append($ulProperty);
 
                 if (salesItem.dompany != "dompany" && salesItem.dompany != "pompany") {
-                    if (salesItem.sales.fullpayStatus == -1 && salesItem.sales.status != 4) {
+                    if (salesItem.sales.fullpayStatus == constant.sales().sales.FULLPAYSTATUS_INIT_SHORT && salesItem.sales.status != constant.sales().sales.STATUS_WAST_INT) {
                         $btnDiv.append($btnEdit).append($btnDelete);
                     }
                 }
@@ -199,7 +194,7 @@ $(function() {
 
     salesItem.btns.refundBtn.click(function() {
 
-        if (salesItem.sales.status != 0 && salesItem.sales.status != 5) {
+        if (salesItem.sales.status != constant.sales().sales.STATUS_INIT_INT && salesItem.sales.status != constant.sales().sales.STATUS_END_INT) {
             com.showAlert(com.error, "该订单状态不能退货");
             return false;
         }
@@ -215,7 +210,7 @@ $(function() {
     // 退货确定按钮
     salesItem.btns.refundCommitBtn.click(function() {
 
-        salesItem.approvalType = 1;
+        salesItem.approvalType = constant.sales().refunds.STATUS_TYPE_REFUNDS_INT;
 
         if (!calcRefundData(false))
             return false;
@@ -234,9 +229,9 @@ $(function() {
     // 全退
     salesItem.btns.fullRefundBtn.click(function() {
 
-        salesItem.approvalType = 2;
+        salesItem.approvalType = constant.sales().refunds.STATUS_TYPE_FULLY_INT;
 
-        if (salesItem.sales.status != 0 && salesItem.sales.status != 5) {
+        if (salesItem.sales.status != constant.sales().sales.STATUS_INIT_INT && salesItem.sales.status != constant.sales().sales.STATUS_END_INT) {
             com.showAlert(com.error, "该订单状态不能全退");
             return false;
         }
@@ -260,8 +255,8 @@ $(function() {
     // 倒单
     salesItem.btns.reOrderBtn.click(function() {
 
-        salesItem.approvalType = 3;
-        if (salesItem.sales.status != 0 && salesItem.sales.status != 5) {
+        salesItem.approvalType = constant.sales().refunds.STATUS_TYPE_RESENDING_INT;
+        if (salesItem.sales.status != constant.sales().sales.STATUS_INIT_INT && salesItem.sales.status != constant.sales().sales.STATUS_END_INT) {
             com.showAlert(com.error, "该订单状态不能倒单");
             return false;
         }
@@ -337,18 +332,42 @@ $(function() {
         if (com.validate('miniPopUp', 'right')) {
             return false;
         }
+
         var radios = com.focusPage("#salesItemDetialapprover").find('input:checked').attr('userid');
+
         if (radios == null || radios == "") {
             com.showAlert(com.warning, "请选择审批人");
             return false;
         }
+
+        var args = [{
+            "name": "装修单号",
+            "value": salesItem.sales.orderId
+        }, {
+            "name": "设计部",
+            "value": salesItem.sales.dept.name
+        }, {
+            "name": "品牌",
+            "value": salesItem.sales.brand
+        }, {
+            "name": "实退款金额",
+            "value": parseInt(salesItem.items.refundTotal.val())
+        }, {
+            "name": "办理状态",
+            "value": constant.sales().refunds.type.keys[salesItem.approvalType]
+        }, {
+            "name": "退货原因",
+            "value": $("#refundDes").val()
+        }, ]
 
         var options = {
             "approval.receiver.userId": com.focusPage("#salesItemDetialapprover").find('input:checked').attr('userid'),
             "approval.comment": $("#refundDes").val(),
             "approvalSalesRefund.sid": salesItem.sid,
             "approvalSalesRefund.type": salesItem.approvalType,
-            "approvalSalesRefund.refund": parseInt(salesItem.items.refundTotal.val())
+            "approvalSalesRefund.refund": parseInt(salesItem.items.refundTotal.val()),
+        // "code": "PROC-97944EDE-7422-4C82-9018-EEC50441408E",
+        // "forms": JSON.stringify(args)
         };
 
         com.post(api.approval.submitApprovalForSalesRefund, $.extend(options, salesItem.options), function() {

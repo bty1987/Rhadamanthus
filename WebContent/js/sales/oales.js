@@ -25,6 +25,11 @@ jQuery(function ($) {
             awardType: com.focusPage('#awardType', "#oalesModal"),
         },
 
+        drawingModal: com.focusPage('#drawingModal').on("show.bs.modal", function(a) {
+
+            com.clearValidator();
+        }),
+
         oid: null,
         bid: null,
         house: null,
@@ -34,6 +39,8 @@ jQuery(function ($) {
 
         pageType: params.urlLoadParams.pagetype
     };
+
+
 
     oales.modals.oalesModal.on('hide.bs.modal', function (e) {
 
@@ -209,7 +216,6 @@ jQuery(function ($) {
         clazz: "btn-success",
         handle: function (v) {
             oales.oid= v.oid;
-            console.log(v);
             oales.items.total.val(v.total);
             com.updateTypeahead('materialer', v.materialer.userId, v.materialer.userName);
             oales.items.orderId.val(v.decoration.orderId);
@@ -262,6 +268,18 @@ jQuery(function ($) {
             return v.status == constant.sales().oales.STATUS_INIT_INT;
         }
     },{
+        name: "撤销",
+        clazz: "btn-search",
+        handle: function (v) {
+
+            revocation(v.oid);
+
+        },
+        show: function (v) {
+            return  (oales.pageType == "material" && v.status == constant.sales().oales.STATUS_SUBMIT_INI);
+
+        }
+    },{
         name: "完结",
         clazz: "btn-inverse",
         handle: function (v) {
@@ -303,8 +321,35 @@ jQuery(function ($) {
         show: function (v) {
             return  (oales.pageType == "finance" && v.status == constant.sales().oales.STATUS_CONFIRM_INI);
         }
+    },{
+        name: "废单",
+        clazz: "btn-inverse",
+        handle: function (v) {
+            invalid(v.oid);
+        },
+        show: function (v) {
+            return  (v.status != constant.sales().oales.STATUS_INVALID_INI);
+        }
+    }, {
+        name: "付款",
+        clazz: "btn-purple",
+        handle: function (v) {
+            payment(v);
+        },
+        show: function (v) {
+            return  (v.status != constant.sales().oales.STATUS_INVALID_INI);
+        }
+    }, {
+        name: "图片",
+        clazz: "btn-primary",
+        handle: function (v) {
+            managedrawing(v);
+            initUploadBtn(v);
+        },
+        show: function (v) {
+            return  (v.status != constant.sales().oales.STATUS_INVALID_INI);
+        }
     },
-
     ];
 
     searcher.line("no", lineprops, linebtns).render();
@@ -362,6 +407,33 @@ jQuery(function ($) {
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();
         });
+
+    }
+
+    function revocation(oid) {
+
+        var options = {
+            "oales.oid": oid,
+        };
+        com.post(api.sales.cancelOales, options, function (res) {
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
+        });
+
+    }
+    function invalid(oid){
+        var options = {
+            "oales.oid": oid,
+        };
+        com.post(api.sales.abateOales, options, function (res) {
+            com.showAlert(com.info, "操作成功");
+            searcher.doSearch();
+        });
+    }
+    function payment(v) {
+        params.sales.oales = v;
+
+        com.popup4page("#oalesPayPopUp", "/views/sales/oalesPay.html", "销售付款");
 
     }
 
@@ -424,4 +496,76 @@ jQuery(function ($) {
         });
 
     }
+
+    function managedrawing(v) {
+
+        com.focusPage('#salesDrawing').html("");
+
+        com.post(api.sales.querySalesPicture, {
+            "salesPicture.siid": v.oid
+        }, function(data) {
+            var salesPictures = data.salesPictures;
+            if (salesPictures && salesPictures.length) {
+                $.each(salesPictures, function(i, value) {
+                    if (value.status == constant.sales().salesPicture.STATUS_YES_SHORT) {
+                        appendGalleryElement("salesDrawing", value);
+                    }
+
+                });
+                com.popup4photos(com.focusPage("#salesDrawing"));
+            }
+        }, null, false);
+
+        oales.drawingModal.modal("show");
+    }
+
+    function appendGalleryElement(galleryId, value) {
+
+        var gallery = com.focusPage("#" + galleryId);
+        var imgLi = $("<li></li>").attr("id", "gallery_li" + value.spid).addClass("text-center col-sm-4").css("border", "0px").css("border-color", "white").css("padding", "0px").css("height", "150px").css("width", "150px").appendTo(gallery);
+        var img = $('<img/>');
+        var $imgA = $('<a></a>').attr('data-rel', 'colorbox').addClass('cboxElement').attr('href', com.showImg(img, value.path, 200, 200, '200x200')).attr('target', '_blank').append(img).appendTo(imgLi);
+        var imgA = $("<a></a>").addClass('cboxElement').attr("target", "_blank").css("height", "150px").append(img).appendTo(imgLi);
+        com.showImg(img, value.path, 150, 150, value.name, null, 0);
+        var toolsDiv = $("<div></div>").addClass("tools tools-bottom").appendTo(imgLi);
+        var toolsA = $("<a></a>").attr("href", "#").on("click", function() {
+
+            com.post(api.sales.deleteSalesPicture, {
+                "salesPicture.spid": value.spid
+            }, function(res) {
+
+                com.focusPage("#gallery_li" + value.spid).remove();
+            });
+        }).appendTo(toolsDiv);
+        $("<i></i>").addClass("icon-remove red").appendTo(toolsA);
+
+    }
+    function initUploadBtn(v) {
+
+        com.uploadify("#salesUpload", "上传图片", api.common.uploadImg, 'btn btn-success', '*.jpg;*.jpeg;*.gif;*.png', {
+            'uploadType': 0
+        }, 5, function(data) {
+
+            var options = {};
+            options["salesPicture.sid"] = v.oid;
+            options["salesPicture.siid"] = v.oid;
+            options["salesPicture.name"] = data.strutsUploadsFileName;
+            options["salesPicture.path"] = data.resUrl;
+            options["salesPicture.type"] = 2;
+            options["salesPicture.filesize"] = data.filesize;
+            com.post(api.sales.addSalesPicture, options, function(res) {
+
+                var salesPicture = res.salesPicture;
+
+                appendGalleryElement("salesDrawing", salesPicture);
+
+                com.popup4photos("#salesDrawing");
+
+            });
+
+            searcher.doSearch();
+        });
+    }
+
+
 });

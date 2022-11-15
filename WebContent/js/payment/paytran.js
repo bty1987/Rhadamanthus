@@ -71,7 +71,7 @@ jQuery(function($) {
 
         if (!paytran.decoration) return false;
 
-        var grade = null;
+        var grade = "";
         var atttype = paytran.items.atttype.val();
 
         if (atttype == constant.payment.paytran.ATTTYPE_DECORATION_INT) {
@@ -79,8 +79,6 @@ jQuery(function($) {
         } else if (atttype == constant.payment.paytran.ATTTYPE_MATERIAL_INT) {
             grade = paytran.decoration.grade == "C" ? "B" : "";
         }
-
-        if (!grade) return false;
 
         com.selectTypeahead(paytran.items.bankName, paytran.bankGrade, "key", "value", null);
         paymentUtils.initBankGrade(paytran, grade);

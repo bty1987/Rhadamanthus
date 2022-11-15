@@ -19,7 +19,7 @@ jQuery(function($) {
         orderId: params.decoration.orderId
     };
 
-    com.post(api.data.queryContract, {}, function(res) {
+    com.post(api.data.queryContract, {"contract.atttype": constant.data().contract.ATTTYPE_DECORATION_INT}, function(res) {
         addDecorationContract.items.contract.bindData(res.contracts, "cid", "name", " ");
 
         addDecorationContract.contracts = res.contracts.split("cid", "page");

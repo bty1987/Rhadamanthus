@@ -194,7 +194,7 @@ $(function() {
                     });
                 }
 
-            }, 3000);
+            }, 5000);
 
             scrolling.intervals.push(interval);
         });
@@ -223,7 +223,7 @@ $(function() {
 
                 agent.appendTo(ele.find("ul.item-list"));
 
-            }, 3000);
+            }, 5000);
 
             scrolling.intervals.push(interval);
 

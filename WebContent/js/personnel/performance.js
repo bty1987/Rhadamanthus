@@ -27,17 +27,15 @@ $(function () {
         com.cleanItems(performance.items);
         com.closeTip();
     });
-
-    com.post(api.ds.personel, {}, function(res){
-        com.focusPage("#performanceType").bindData(res.perType, "key", "value");
-        $.each(res.perType,function (i,val) {
-            performanceType[val.key] = val.value;
-        });
-        com.focusPage("#performanceLevel").bindData(res.level, "key", "value");
-        $.each(res.level,function (i,val) {
-            performanceLevel[val.key] = val.value;
-        });
-    }, null, false);
+    
+    com.focusPage("#performanceType").bindData(constant.personel().performance.type.datas, "key", "value");
+    $.each(constant.personel().performance.type.datas,function (i,val) {
+        performanceType[val.key] = val.value;
+    });
+    com.focusPage("#performanceLevel").bindData(constant.personel().performance.level.datas, "key", "value");
+    $.each(constant.personel().performance.level.datas,function (i,val) {
+        performanceLevel[val.key] = val.value;
+    });
 
     com.initTypeahead('users', api.personel.queryUserByPinyin, "pinyinName", {"departmentType.name":"", "user.status":0}, "autoFillKeyValue", "key", "value", null);
 

@@ -2,6 +2,8 @@ $(function() {
 
     var quotationVersion = {
 
+        taxDiscounts: 0,
+
         modals: {
             updateQuotationVersionModal: com.focusPage("#updateQuotationVersionModal").on("show.bs.modal", function(a) {
                 com.clearValidator();
@@ -18,6 +20,7 @@ $(function() {
             taxDiscount: com.focusPage("input[name=taxDiscount]", "#updateQuotationVersionModal"),
             manageTaxDiscount: com.focusPage("#manageTaxDiscount", "#updateQuotationVersionModal"),
             totalTaxDiscount: com.focusPage("#totalTaxDiscount", "#updateQuotationVersionModal"),
+            notTaxDiscount: com.focusPage("#notTaxDiscount", "#updateQuotationVersionModal"),
 
             type: com.focusPage("#type", "#updateQuotationVersionModal"),
             offset: com.focusPage("#offset", "#updateQuotationVersionModal"),
@@ -69,7 +72,8 @@ $(function() {
         field: "trafficDiscount",
         name: "车运费折扣",
         prop: function(v) {
-            return v.trafficDiscount == 0 ? '不打折' : v.trafficDiscount == 1 ? '打折' : '-';
+
+            return constant.data().quotationVersion.trafficDiscount.keys[v.trafficDiscount];
         },
         clazz: "red"
     }, {
@@ -81,7 +85,8 @@ $(function() {
         field: "manageDiscount",
         name: "管理费折扣",
         prop: function(v) {
-            return v.manageDiscount == 0 ? '不打折' : v.manageDiscount == 1 ? '打折' : '-';
+
+            return constant.data().quotationVersion.manageDiscount.keys[v.manageDiscount];
         },
         clazz: "red"
     }, {
@@ -94,7 +99,7 @@ $(function() {
         name: "税金折扣",
         prop: function(v) {
 
-            return v.taxDiscount == 0 ? '管理税金' : v.taxDiscount == 1 ? '总额税金' : '-';
+            return constant.data().quotationVersion.taxDiscount.keys[v.taxDiscount];
         },
         clazz: "red"
     }, {
@@ -107,7 +112,8 @@ $(function() {
         field: "defaultFlag",
         name: "默认",
         prop: function(v) {
-            return v.defaultFlag == 0 ? '否' : v.defaultFlag == 1 ? '是' : '-';
+
+            return constant.data().quotationVersion.defaultFlag.keys[v.defaultFlag];
         },
         clazz: "red"
     }, {
@@ -184,6 +190,7 @@ $(function() {
         quotationVersion.qvid = null;
         quotationVersion.no = null;
         com.cleanItems(quotationVersion.items);
+        quotationVersion.items.notTaxDiscount.prop("checked", true);
 
         quotationVersion.modals.updateQuotationVersionModal.modal("show");
     });
@@ -201,13 +208,24 @@ $(function() {
 
         quotationVersion.items.comment.val(b.comment);
 
-        quotationVersion.items.trafficDiscount.prop("checked", b.trafficDiscount == 1);
-        quotationVersion.items.manageDiscount.prop("checked", b.manageDiscount == 1);
-        quotationVersion.items.manageTaxDiscount.prop("checked", b.taxDiscount == 0);
-        quotationVersion.items.totalTaxDiscount.prop("checked", b.taxDiscount == 1);
+        quotationVersion.items.trafficDiscount.prop("checked", b.trafficDiscount == constant.data().quotationVersion.TRAFFIC_DISCOUNT_INT);
+        quotationVersion.items.manageDiscount.prop("checked", b.manageDiscount == constant.data().quotationVersion.MANAGE_DISCOUNT_INT);
+        quotationVersion.items.notTaxDiscount.prop("checked", b.taxDiscount == constant.data().quotationVersion.TAX_NOTTAXDISCOUNT_INT);
+        quotationVersion.items.manageTaxDiscount.prop("checked", b.taxDiscount == constant.data().quotationVersion.TAX_NODISCOUNT_INT);
+        quotationVersion.items.totalTaxDiscount.prop("checked", b.taxDiscount == constant.data().quotationVersion.TAX_DISCOUNT_INT);
 
         quotationVersion.modals.updateQuotationVersionModal.modal("show");
     }
+
+    quotationVersion.items.taxDiscount.on('click', function() {
+
+        if (quotationVersion.items.manageTaxDiscount.prop("checked") == true) {
+            quotationVersion.taxDiscounts = constant.data().quotationVersion.TAX_NODISCOUNT_INT;
+        } else if (quotationVersion.items.totalTaxDiscount.prop("checked") == true) {
+            quotationVersion.taxDiscounts = constant.data().quotationVersion.TAX_DISCOUNT_INT;
+        }
+
+    });
 
     function saveData() {
 
@@ -220,11 +238,11 @@ $(function() {
         var options = {
             "quotationVersion.name": quotationVersion.items.name.val(),
             "quotationVersion.trafficRate": quotationVersion.items.trafficRate.val(),
-            "quotationVersion.trafficDiscount": quotationVersion.items.trafficDiscount.prop("checked") ? 1 : 0,
+            "quotationVersion.trafficDiscount": quotationVersion.items.trafficDiscount.prop("checked") ? constant.data().quotationVersion.TRAFFIC_DISCOUNT_INT : constant.data().quotationVersion.TRAFFIC_NODISCOUNT_INT,
             "quotationVersion.manageRate": quotationVersion.items.manageRate.val(),
-            "quotationVersion.manageDiscount": quotationVersion.items.manageDiscount.prop("checked") ? 1 : 0,
+            "quotationVersion.manageDiscount": quotationVersion.items.manageDiscount.prop("checked") ? constant.data().quotationVersion.MANAGE_DISCOUNT_INT : constant.data().quotationVersion.MANAGE_NODISCOUNT_INT,
             "quotationVersion.taxRate": quotationVersion.items.taxRate.val(),
-            "quotationVersion.taxDiscount": quotationVersion.items.taxDiscount.prop("checked") ? 0 : 1,
+            "quotationVersion.taxDiscount": quotationVersion.items.taxDiscount.prop("checked") ? constant.data().quotationVersion.TAX_NOTTAXDISCOUNT_INT : quotationVersion.taxDiscounts,
             "quotationVersion.type": quotationVersion.items.type.val(),
             "quotationVersion.offset": quotationVersion.items.offset.val(),
             "quotationVersion.comment": quotationVersion.items.comment.val(),

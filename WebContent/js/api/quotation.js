@@ -194,6 +194,26 @@ $.extend(api, {
             url: "deleteFunctionArea.do"
         },
 
+        pageQuotationCtem: {
+            url: "pageQuotationCtem.do"
+        },
+
+        queryQuotationCtem: {
+            url: "queryQuotationCtem.do"
+        },
+
+        addQuotationCtem: {
+            url: "addQuotationCtem.do"
+        },
+
+        updateQuotationCtem: {
+            url: "updateQuotationCtem.do"
+        },
+
+        updateQuotationCtemForStatus: {
+            url: "updateQuotationCtemForStatus.do"
+        },
+
         pageQuotationItem: {
             url: "pageQuotationItem.do",
             demo: true,
@@ -1112,7 +1132,7 @@ $.extend(api, {
             intercept: true,
             type: "update",
             tranargs: {
-                args: ["selectionItem.refnum"]
+                args: ["selectionItems.refnum"]
             }
         },
         reviewSelectionItem: {

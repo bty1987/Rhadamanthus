@@ -1,4 +1,3 @@
-
 jQuery(function($) {
 
     var normadd = {
@@ -13,45 +12,51 @@ jQuery(function($) {
             addModal: com.focusPage("#addModal"),
         },
 
-        items:{
+        items: {
             name: com.focusPage("#name"),
-            node : com.focusPage("#node"),
-            unit : com.focusPage("#unit"),
-            price : com.focusPage("#price"),
+            node: com.focusPage("#node"),
+            unit: com.focusPage("#unit"),
+            price: com.focusPage("#price"),
         },
-        status : {},
-        node:{},
-        unit : {},
+        status: {},
+        node: {},
+        unit: {},
     };
 
     normadd.btns.saveBtn.bindClick(saveData);
 
-    normadd.modals.addModal .on("hide.bs.modal", function () {
+    normadd.modals.addModal.on("hide.bs.modal", function() {
+
         com.cleanItems(normadd.items);
         com.clearValidator();
         com.closeTip();
     });
 
-    com.post(api.ds.data, {}, function(res){
-    	normadd.status = res.costStatus.split("key", "value");
-    },null ,false);
+    com.post(api.ds.data, {}, function(res) {
 
-    com.post(api.common.queryMeasurementUnit, {}, function (res) {
-    	normadd.items.unit.bindData(res.measurementUnits, "name", "name");
-    });
-
-    com.post(api.data.queryConstructionNode,{}, function(res){
-    	normadd.items.node.bindData(res.constructionNodes, "cnid", "name", false);
+        normadd.status = res.costStatus.split("key", "value");
     }, null, false);
 
-    var displayFunc  = (function(){
+    com.post(api.common.queryMeasurementUnit, {}, function(res) {
 
-        var renderList = function(tableId,listData){
+        normadd.items.unit.bindData(res.measurementUnits, "name", "name");
+    });
+
+    com.post(api.data.queryConstructionNode, {}, function(res) {
+
+        normadd.items.node.bindData(res.constructionNodes, "cnid", "name", false);
+    }, null, false);
+
+    var displayFunc = (function() {
+
+        var renderList = function(tableId, listData) {
+
             var $tableWrap = com.focusPage('#' + tableId);
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable');
 
-            if(listData && listData.length){
-                $.each(listData,function(i, v){
+            if (listData && listData.length) {
+                $.each(listData, function(i, v) {
+
                     var $liLine = creatLine(v);
 
                     $liLine.appendTo($ul);
@@ -61,7 +66,8 @@ jQuery(function($) {
             }
         };
 
-        var creatLine = function(v){
+        var creatLine = function(v) {
+
             var $liLine = $('<li></li>').addClass('item-orange clearfix');
             var $h3 = $('<h3></h3>').addClass('oid');
             var $title = $('<small></small>').addClass('blue').html(' ' + v.name);
@@ -69,18 +75,16 @@ jQuery(function($) {
             var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix');
 
             var $invalid = $('<div></div>').addClass('pull-right');
-            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({"type" : "checkbox"});
+            var $statusSwitch = $('<input/>').addClass('ace ace-switch ace-switch-5').prop({
+                "type": "checkbox"
+            });
             var $span = $('<span></span>').addClass('lbl status-lbl');
             var $btnDelete = $('<a></a>').addClass('btn btn-minier btn-yellow').html('删除');
 
-            var propertyArr = [
-                ["工程节点: ", v.constructionNode.name, "grey"],
-                ["状态: ", normadd.status[v.status], "red"],
-                ["单位: ", v.unit, "grey"],
-                ["单价: ", v.price, "grey"],
-            ];
+            var propertyArr = [["工程节点: ", v.constructionNode.name, "grey"], ["状态: ", normadd.status[v.status], "red"], ["单位: ", v.unit, "grey"], ["单价: ", v.price, "grey"], ];
 
-            $.each(propertyArr, function (index, value) {
+            $.each(propertyArr, function(index, value) {
+
                 var $liProperty = $('<li></li>');
                 $('<strong></strong>').html(value[0]).appendTo($liProperty);
                 $('<b></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
@@ -89,43 +93,52 @@ jQuery(function($) {
 
             $invalid.append($statusSwitch).append($span);
             $liLine.append($h3).append($ulProperty);
-            $btnDiv.append($invalid).append($btnDelete);
+            $btnDiv.append($invalid);
             $h3.append($title).append($btnDiv);
 
             !v.status && $statusSwitch.prop("checked", true);
 
-            $btnDelete.click(function(){
-                com.showConfirm("是否确认删除", function(){
-                    com.post(api.data.deleteNormadd, {"normadd.naid" : v.naid}, function () {
+            $btnDelete.click(function() {
+
+                com.showConfirm("是否确认删除", function() {
+
+                    com.post(api.data.deleteNormadd, {
+                        "normadd.naid": v.naid
+                    }, function() {
+
                         searcher.doSearch();
                         com.showAlert(com.info, "操作成功");
                     });
                 });
             })
 
-            $invalid.click(function(){
-                 var cvalue = $statusSwitch.prop("checked") ? 0:1;
+            $invalid.click(function() {
 
-                 var options = {
-                     "normadd.naid": v.naid,
-                     "normadd.status": cvalue
-                 }
+                var cvalue = $statusSwitch.prop("checked") ? 0 : 1;
 
-                 com.post(api.data.updateNormaddForStatus, options, function(res){
-                     cvalue == 0? com.showAlert(com.info, "已启用") : com.showAlert(com.info, "已禁用");
-                     searcher.doSearch();
-                 });
+                var options = {
+                    "normadd.naid": v.naid,
+                    "normadd.status": cvalue
+                }
+
+                com.post(api.data.updateNormaddForStatus, options, function(res) {
+
+                    cvalue == 0 ? com.showAlert(com.info, "已启用") : com.showAlert(com.info, "已禁用");
+                    searcher.doSearch();
+                });
             });
 
             return $liLine;
         };
 
         return {
-            init : function(tableId,listData){
+            init: function(tableId, listData) {
+
                 com.focusPage('#' + tableId).html(null);
-                renderList(tableId,listData);
+                renderList(tableId, listData);
             },
-            drawLine : function(v){
+            drawLine: function(v) {
+
                 return creatLine(v);
             }
         }
@@ -133,10 +146,10 @@ jQuery(function($) {
 
     var searcher = new Searcher();
 
-    searcher.init(["data-quotation-normadd-name" , "data-quotation-normadd-status"], "condList", api.data.pageNormadd, function(data){
+    searcher.init(["data-quotation-normadd-name", "data-quotation-normadd-status"], "condList", api.data.pageNormadd, function(data) {
 
         displayFunc.init('resultList', data);
-    }, "pagenation", "normaddPostData",null, false, null, function(){
+    }, "pagenation", "normaddPostData", null, false, null, function() {
 
         var $adda = $('<a></a>').addClass('btn btn-minier btn-yellow pull-left').attr('id', 'normaddBtn').css("margin", "0px 3px");
         var $addi = $('<i></i>').addClass('icon-plus bigger-110').appendTo($adda);
@@ -145,15 +158,17 @@ jQuery(function($) {
         return [$adda];
     });
 
-    com.focusPage('#normaddBtn').click(function(){
-    	normadd.modals.addModal.modal("show");
+    com.focusPage('#normaddBtn').click(function() {
+
+        normadd.modals.addModal.modal("show");
     });
 
-    function saveData(){
+    function saveData() {
 
         if (com.validate('addModal')) {
             return false;
-        };
+        }
+        ;
 
         var options = {
             'normadd.name': normadd.items.name.val(),
@@ -163,7 +178,8 @@ jQuery(function($) {
 
         };
 
-        com.post(api.data.addNormadd, options, function(res){
+        com.post(api.data.addNormadd, options, function(res) {
+
             com.closePopup();
             com.showAlert(com.info, "操作成功");
             searcher.doSearch();

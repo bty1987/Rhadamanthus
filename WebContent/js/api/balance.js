@@ -264,7 +264,10 @@ $.extend(api, {
 
         balanceBalanceSales: {
             url: "balanceBalanceSales.do",
-            demo: true
+            type: "update",
+            tranargs: {
+                args: ["balanceSales.income", "balanceSales.payment"]
+            }
         },
 
         lockBalanceSales: {

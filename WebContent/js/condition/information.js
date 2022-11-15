@@ -353,7 +353,7 @@ Condition.addupRule("information", {
             validate:null
         },
         dataSource: {
-            url: api.data.queryTask,
+            url: api.communion.queryTask,
             postData: {"task.level": 0},
             listPath: "tasks",
             keyPath: "tid",

@@ -126,6 +126,10 @@ jQuery(function($) {
                     searcher.doSearch();
                 });
             });
+        },
+        show: function(v) {
+
+            return false;
         }
     }, {
         name: "状态",

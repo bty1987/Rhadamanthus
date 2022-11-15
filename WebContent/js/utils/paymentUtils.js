@@ -1087,5 +1087,16 @@ var paymentUtils = {
             "type": "div",
             "clazz": "qrcode"
         }], []);
+    },
+
+    pushPosBank: function(flag, bankUtil, id, html) {
+        var $span = $('<span></span>').addClass('fl-filter-inline pull-right');
+        var $label = $('<label></label>').html("默认方式:");
+        var $input = $('<input/>').prop("id", html+"paytranBankName").attr({"type":"text", "data-type":"autofill", "autocomplete":"off"});
+        $span.append($label).append($input);
+
+        if (flag) $span.appendTo(id);
+
+        com.selectTypeahead($input, bankUtil, "key", "value", null);
     }
 };

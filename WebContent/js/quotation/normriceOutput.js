@@ -318,6 +318,7 @@ jQuery(function($) {
     com = parent.com;
     company = parent.company;
     params = parent.params;
+    constant = parent.constant;
 
     quotationUtils.quotationDetail = {};
     var url = api.quotation.queryQuotationById;

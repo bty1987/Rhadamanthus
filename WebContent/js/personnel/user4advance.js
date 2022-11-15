@@ -22,7 +22,7 @@
 
             roleSel: com.focusPage("#roleSel"),
             company: com.focusPage("#company"),
-            currentcompany: com.focusPage("#currentcompany"),
+            usercompany: com.focusPage("#usercompany", "#userCompanyModal"),
             taskpermissions: com.focusPage("#taskpermissions"),
             oldcompany: com.focusPage("#oldcompany"),
 
@@ -36,11 +36,12 @@
             advanceCancelBtn: com.focusPage("#advanceCancelBtn"),
 
             saveRoleBtn: com.focusPage("#saveRoleBtn").on("click", saveUserRole),
+            saveCompanyBtn: com.focusPage("#saveCompanyBtn").on("click", saveUserCompany),
         },
 
         modals: {
             userAdvanceModal: com.focusPage("#userAdvanceModal"),
-            userCompanyModal: com.focusPage("#companyModal"),
+            userCompanyModal: com.focusPage("#userCompanyModal"),
             usertaskModal: com.focusPage("#taskModal"),
             userRoleModal: com.focusPage("#userRoleModal"),
         },
@@ -55,7 +56,7 @@
 
     }, null, false);
 
-    com.post(api.data.queryTask, {
+    com.post(api.communion.queryTask, {
         "task.level": 0
     }, function(res) {
 
@@ -73,11 +74,9 @@
             "margin-right": "5px"
         }).attr("rid", k).appendTo(user.items.selectrole);
 
-        var $type = user.items.role.val();
-
         var $span = $("<span></span>").css({
             'color': '#fff'
-        }).attr('role', $type).attr('rid', user.items.role.attr('data-typeahead-key')).html($type).appendTo($li);
+        }).attr('role', v).attr('rid', user.items.role.attr('data-typeahead-key')).html(v).appendTo($li);
         var $a = $("<a></a>").addClass("glyphicon glyphicon-remove").css({
             'color': '#d15b47'
         }).appendTo($li);
@@ -89,7 +88,7 @@
 
         com.cleanItems(user.items);
 
-        return '';
+        return "";
     });
 
     var displayFunc = (function() {
@@ -156,19 +155,22 @@
 
                     $company.unbind().bind('click', function() {
 
+                        user.user.uid = v.uid;
+
                         $("#companydiv").empty();
-                        var userCompanys = {};
-                        var cids = [];
                         var companyname = [];
+
                         var options = {
                             "user.uid": v.uid
                         };
+
+                        user.items.usercompany.html("");
+
                         user.modals.userCompanyModal.modal("show");
 
                         com.post(api.personel.queryUserCompany, options, function(res) {
 
-                            userCompanys = res.userCompanys;
-                            $.each(userCompanys, function(i, va) {
+                            $.each(res.userCompanys, function(i, va) {
 
                                 companyname.push(va.company.name);
                             });
@@ -191,37 +193,13 @@
                                 $input.attr("checked", true);
                             }
                         });
-                        user.items.currentcompany.html("");
+
                         companyname && companyname.length && $.each(companyname, function(i, v) {
 
-                            var $div = $('<div></div>').appendTo(user.items.currentcompany);
+                            var $div = $('<div></div>').appendTo(user.items.usercompany);
                             var $span = $('<span class="tag"></span>').html(v).appendTo($div);
                         });
-                        com.focusPage('button[name="saveCompanyBtn"]').unbind().bind('click', function() {
 
-                            var $inputs = com.focusPage('input[name="corporab"]:checked');
-
-                            user.modals.userCompanyModal.modal("hide");
-                            var params = {
-                                "user.uid": v.uid
-                            }
-                            $.each($inputs, function(i, v) {
-
-                                var $input = $(v);
-
-                                var row = {
-                                    "vpid": $input.attr('id')
-                                };
-
-                                params["cids[" + i + "]"] = row.vpid;
-                            });
-                            com.post(api.personel.updateUserCompany, params, function(res) {
-
-                                if (res != null) {
-                                    com.showAlert(com.info, "操作成功");
-                                }
-                            }, null, false);
-                        });
                     });
 
                     $btnMacontrol.click(function() {
@@ -348,10 +326,8 @@
                 }], userList;
                 var $list = $('.modal-body', $dialog);
                 $list.empty();
-                com.post(api.ds.decoration, {}, function(data) {
 
-                    list = list.concat(data.decorationOrderStatus);
-                }, null, false);
+                list = list.concat(constant.decoration().decoration.status.datas);
 
                 com.post(api.right.queryDecorationStatusRightByUserId, {
                     "user.userId": userId
@@ -752,8 +728,6 @@
 
     function saveUserRole() {
 
-        console.log("save")
-
         var $span = com.focusPage('#roles>li');
 
         var params = {
@@ -771,11 +745,34 @@
             params["rids[" + i + "]"] = row.vpid;
         });
 
-        console.log(params)
-
         com.post(api.personel.updateUserRole, params, function(res) {
 
             user.modals.userRoleModal.modal("hide");
+        });
+    }
+
+    function saveUserCompany() {
+
+        var $inputs = com.focusPage('input[name="corporab"]:checked');
+
+        var params = {
+            "user.uid": user.user.uid
+        };
+
+        $.each($inputs, function(i, v) {
+
+            var $input = $(v);
+
+            var row = {
+                "vpid": $input.attr('id')
+            };
+
+            params["cids[" + i + "]"] = row.vpid;
+        });
+
+        com.post(api.personel.updateUserCompany, params, function(res) {
+
+            user.modals.userCompanyModal.modal("hide");
         });
     }
 

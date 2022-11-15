@@ -1,7 +1,7 @@
-$(function () {
+$(function() {
 
     var paymentScale = {
-            
+
         btns: {
             addBtn: com.focusPage("#addBtn"),
             saveBtn: com.focusPage("#savePaymenScaleBtn")
@@ -31,90 +31,106 @@ $(function () {
             }
         }
     };
-    
+
     $.extend(com.validator, paymentScale.validator);
-    
+
     paymentScale.saveBtn = com.focusPage("#saveBtn").on("click", saveData);
     paymentScale.items.names = com.focusPage("#names");
     paymentScale.items.comment = com.focusPage("#comment");
 
-    paymentScale.modals.itemModal.on('hide.bs.modal', function (e) {
+    paymentScale.modals.itemModal.on('hide.bs.modal', function(e) {
+
         com.closeTip();
         com.clearValidator();
         com.cleanItems(paymentScale.scaleItems);
     });
 
-    var displayFunc = (function () {
-        
-        var renderList = function (tableId, listData) {
+    var displayFunc = (function() {
+
+        var renderList = function(tableId, listData) {
+
             if (listData && listData.length) {
-                $.each(listData, function (i, v) {
+                $.each(listData, function(i, v) {
+
                     creatLine(tableId, v);
                 });
             }
         };
 
-        var creatLine = function (tableId, v) {
+        var creatLine = function(tableId, v) {
+
             var $div = $('<div></div>').appendTo(com.focusPage('#' + tableId));
             var $ul = $('<ul></ul>').addClass('item-list fl-table-list ui-sortable').appendTo($div);
             var $liLine = $('<li></li>').addClass('item-orange clearfix').appendTo($ul);
             var $h3 = $('<h3 ></h3>').addClass('oid').append($('<small style="font-size:22px;"></small>').addClass('blue')).appendTo($liLine);
-            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').css({'margin-top': '10px'}).appendTo($h3);
+            var $ulProperty = $('<ul></ul>').addClass('list-unstyled fl-inline-list clearfix').css({
+                'margin-top': '10px'
+            }).appendTo($h3);
             var $divBtnWrap = $('<div></div>').addClass('pull-right action-buttons').appendTo($ulProperty);
             var $btnshow = $('<a></a>').addClass('btn btn-minier btn-yellow').html('查看').appendTo($divBtnWrap);
-            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success ').html('删除').appendTo($divBtnWrap);
-            var propertyArr = [
-                ["款项名称:", v.name, "grey"],
-                ["说明:", v.comment, "grey"]
-            ];
+            var $btnDel = $('<a></a>').addClass('btn btn-minier btn-success ').html('删除');
+            var propertyArr = [["款项名称:", v.name, "grey"], ["说明:", v.comment, "grey"]];
 
-            $.each(propertyArr, function (index, value) {
+            $.each(propertyArr, function(index, value) {
+
                 var $liProperty = $('<li></li>');
                 $('<strong style="font-size:15px ; padding-bottom: 50px;"  ></strong>').html(value[0]).appendTo($liProperty);
                 $('<b style="font-size:15px"></b>').html(value[1]).addClass(value[2]).appendTo($liProperty);
                 $liProperty.appendTo($ulProperty);
             });
 
-            $btnshow.click(function () {
+            $btnshow.click(function() {
+
                 showPaymentScaleItem(v);
             });
 
-            $btnDel.click(function () {
+            $btnDel.click(function() {
+
                 deletePaymentScale(v.psid);
             });
         };
 
         return {
-            init: function (tableId, listData) {
+            init: function(tableId, listData) {
+
                 renderList(tableId, listData);
             },
-            drawLine: function (v) {
+            drawLine: function(v) {
+
                 return creatLine(v);
             }
         };
     })();
-    
+
     reloadPaymentScale();
     queryPaymnetType();
-    
-    function reloadPaymentScale(){
-        
+
+    function reloadPaymentScale() {
+
         var resultList = com.focusPage('#resultList').html("");
-        
+
         var $h3 = $('<h3 style="font-size:22px;"></h3>').addClass('blue').html(params.company.name).appendTo(resultList);
-        
-        com.post(api.data.queryPaymentScaleByCid, {"paymentScale.cid": params.company.cid}, function (data) {
+
+        com.post(api.data.queryPaymentScaleByCid, {
+            "paymentScale.cid": params.company.cid
+        }, function(data) {
+
             displayFunc.init('resultList', data.paymentScales);
         });
     }
 
     function deletePaymentScale(psid) {
-        com.post(api.data.deletePaymentScale, {"paymentScale.psid": psid}, function () {
+
+        com.post(api.data.deletePaymentScale, {
+            "paymentScale.psid": psid
+        }, function() {
+
             reloadPaymentScale();
         });
     }
 
-    paymentScale.btns.addBtn.click(function () {
+    paymentScale.btns.addBtn.click(function() {
+
         com.cleanItems(paymentScale.items);
         paymentScale.modals.paymentScaleModal.modal("show");
     });
@@ -125,30 +141,45 @@ $(function () {
 
         paymentList.html("");
         paymentScale.psid = res.psid;
-        
-        com.post(api.data.queryPaymentScaleItemByPsid, {"paymentScaleItem.psid": res.psid}, function (data) {
-            
-            $.each(data.paymentScaleItems, function (i, v) {
+
+        com.post(api.data.queryPaymentScaleItemByPsid, {
+            "paymentScaleItem.psid": res.psid
+        }, function(data) {
+
+            $.each(data.paymentScaleItems, function(i, v) {
 
                 var $diva = $('<div></div>').addClass("col-sm-12").attr("name", v.psiid).css({
                     "margin-bottom": "8px",
                     "padding": '0px 50px'
                 });
                 var $div = $('<div></div>').addClass("marginBottom-50px");
-                var $namediv = $('<div></div>').css({'float': 'left', 'margin-right': '40px'});
+                var $namediv = $('<div></div>').css({
+                    'float': 'left',
+                    'margin-right': '40px'
+                });
                 var $namelabel = $('<label><b>款项名 : </b></label>').appendTo($namediv);
                 var $nameSpan = $('<span></span>').text(v.name).appendTo($namelabel);
 
-                var $sacldiv = $('<div></div>').css({'float': 'left', 'margin-right': '40px'}).attr("id", v.psiid);
+                var $sacldiv = $('<div></div>').css({
+                    'float': 'left',
+                    'margin-right': '40px'
+                }).attr("id", v.psiid);
                 var $sacllabel = $('<label><b>款项比例 : </b></label>').appendTo($sacldiv);
                 var $saclSpan = $('<span></span>').text(v.scale).appendTo($sacllabel);
 
-                var $sortdiv = $('<div></div>').css({'float': 'left', 'margin-right': '40px'});
+                var $sortdiv = $('<div></div>').css({
+                    'float': 'left',
+                    'margin-right': '40px'
+                });
                 var $sortlabel = $('<label><b>比例顺序 : </b></label>').appendTo($sortdiv);
                 var $sortSpan = $('<span></span>').text(v.sort).appendTo($sortlabel);
 
-                var $delete = $("<button>删除</button>").addClass("btn btn-xs btn-danger pull-right").click(function () {
-                    com.post(api.data.deletePaymentScaleItem, {"paymentScaleItem.psiid": v.psiid}, function () {
+                var $delete = $("<button>删除</button>").addClass("btn btn-xs btn-danger pull-right").click(function() {
+
+                    com.post(api.data.deletePaymentScaleItem, {
+                        "paymentScaleItem.psiid": v.psiid
+                    }, function() {
+
                         $delete.parents('div[name="' + v.psiid + '"]').remove();
                     });
                     return false;
@@ -157,14 +188,15 @@ $(function () {
                 $diva.append($div).append($namediv).append($sacldiv).append($sortdiv).append($delete).appendTo(paymentList);
             });
         });
-        
+
         paymentScale.modals.itemModal.modal("show");
     }
 
-    paymentScale.btns.saveBtn.on("click", function () {
-        
-        if (com.validate("itemModal")) return false;
-        
+    paymentScale.btns.saveBtn.on("click", function() {
+
+        if (com.validate("itemModal"))
+            return false;
+
         var options = {
             "paymentScaleItem.ptid": paymentScale.scaleItems.paymentType.val(),
             "paymentScaleItem.psid": paymentScale.psid,
@@ -172,29 +204,33 @@ $(function () {
             "paymentScaleItem.sort": paymentScale.scaleItems.sort.val()
         };
 
-        com.post(api.data.addPaymentScaleItem, options, function () {
+        com.post(api.data.addPaymentScaleItem, options, function() {
+
             reloadPaymentScale();
             paymentScale.modals.itemModal.modal("hide");
         });
     });
 
     function saveData() {
-        
-        if (com.validate("form1")) return false; 
-        
+
+        if (com.validate("form1"))
+            return false;
+
         var options = {
             "paymentScale.cid": params.company.cid,
             "paymentScale.name": paymentScale.items.names.val(),
             "paymentScale.comment": paymentScale.items.comment.val()
         };
-        
-        com.post(api.data.addPaymentScale, options, function () {
+
+        com.post(api.data.addPaymentScale, options, function() {
+
             reloadPaymentScale();
             paymentScale.modals.paymentScaleModal.modal("hide");
         });
     }
 
-    function queryPaymnetType(){
+    function queryPaymnetType() {
+
         var options = {
             "paymentType.type": 1,
             "paymentType.paytype": 0,
@@ -202,7 +238,8 @@ $(function () {
             "paymentType.atttype": 1
         };
 
-        com.post(api.data.queryPaymentType, options, function(res){
+        com.post(api.data.queryPaymentType, options, function(res) {
+
             paymentScale.scaleItems.paymentType.bindData(res.paymentTypes, "ptid", "name");
         })
     }

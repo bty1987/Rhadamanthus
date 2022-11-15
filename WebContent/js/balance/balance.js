@@ -29,10 +29,7 @@ jQuery(function($) {
         com.closeTip();
     });
 
-    com.post(api.ds.balance, {}, function(res) {
-
-        balance.items.type.bindData(res.isType, "key", "value");
-    }, null, false);
+    balance.items.type.bindData(constant.balance().balance.type.datas, "key", "value");
 
     com.initTypeahead('belongerName', api.personel.queryUserByPinyin, "pinyinName", {
         "user.status": 0

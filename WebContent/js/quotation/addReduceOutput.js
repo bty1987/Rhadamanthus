@@ -5,6 +5,7 @@ var printAddReduceDetail = (function() {
     server = parent.server;
     utils = parent.utils;
     com = parent.com;
+    constant = parent.constant;
 
     var addReduceDetail = {
         items: {},
